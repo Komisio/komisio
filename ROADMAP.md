@@ -14,7 +14,7 @@ are English; the normal UI supports Swedish and English.
 
 | Milestone | Status | Remaining boundary |
 |---|---|---|
-| M0 | Implemented locally | Public repository authorized under Komisio; initial remote CI pending |
+| M0 | Implemented locally | Published under Komisio; CI results are reported in GitHub Actions |
 | M1 | Main journeys verified locally | Production SMTP and broader recovery/error cases |
 | M2 | Implemented and tested | Review with the owner in the GUI |
 | M3 | Implemented and tested | Automatic invitation email and broader multi-user pilot |
@@ -23,9 +23,9 @@ are English; the normal UI supports Swedish and English.
 | M6 | Not started | Real workflow decisions before financial schema |
 
 The active database contains only stores, memberships, profiles, invitations and
-access events. The earlier financial schema stays in experiments. The owner has selected the Komisio organization and authorized a public repository.
-The first publication is being prepared; the configured CI is not evidence of a
-successful GitHub run.
+access events. The earlier financial schema stays in experiments. The public repository is https://github.com/Komisio/komisio. The initial platform
+is committed on main. Current remote check results are available in GitHub Actions;
+local checks alone are not evidence of a successful remote run.
 
 The tenant remains one store. A user may belong to several stores; chain grouping
 is a later explicit decision.
@@ -209,8 +209,8 @@ SMTP account, AI model key or financial data model was introduced.
 1. Owner walkthrough of registration, store creation, invitations and account UI.
 2. Fix issues from that walkthrough and broaden the pilot to three users with
    owner/admin/readonly roles, invitation expiry/reissue and recovery edge cases.
-3. Complete publication under Komisio/komisio and verify the configured CI
-   on an actual remote run.
+3. Review GitHub Actions results for the published revision and maintain
+   the contribution workflow as collaborators join.
 4. Configure a test deployment and production-grade email, decide MFA recovery
    and support identity verification, and demonstrate backup/restore.
 5. Once the platform gate is accepted, define and build the minimal intake flow.

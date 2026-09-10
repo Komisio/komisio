@@ -31,8 +31,10 @@ will be introduced only with a concrete domain operation and approval boundaries
 
 Final local handover checks passed: three browser journeys against both the
 development server and the standalone production server, production build,
-TypeScript, lint and formatting. The owner has authorized publication under
-https://github.com/Komisio/komisio; initial remote CI is pending. All browser identities are synthetic example.test users.
+TypeScript, lint and formatting. The public source repository is
+https://github.com/Komisio/komisio. Remote check results are available at
+https://github.com/Komisio/komisio/actions; distinguish those results from the
+local checks recorded here. All browser identities are synthetic example.test users.
 
 ## Environment correction
 

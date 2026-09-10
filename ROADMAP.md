@@ -201,8 +201,8 @@ role denial, stale tenant forms, access removal, desktop/mobile views, language
 selection, password recovery and MFA. See docs/PLATFORM-STATUS.md for the final
 browser outcome and remaining limitations.
 
-All data used is synthetic and local. No production service, remote repository,
-SMTP account, AI model key or financial data model was introduced.
+All test data is synthetic. Source is published at https://github.com/Komisio/komisio.
+No production service, SMTP account, AI model key or financial data model was introduced.
 
 ## Next concrete work
 

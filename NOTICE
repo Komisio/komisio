@@ -1,0 +1,49 @@
+Komisio
+Copyright 2026 Inority AB
+
+This product is licensed under the GNU Affero General Public License v3.0
+or later (AGPL-3.0-or-later). See the LICENSE file for the full license text.
+
+---
+
+Extension exception
+
+As an additional permission under section 7 of the AGPL-3.0, third-party
+extensions that interact with Komisio solely through the documented Extension
+API (docs/EXTENSIONS.md) are not considered derivative works of Komisio and
+may be licensed under any terms, including proprietary terms. This exception
+does not extend to modifications of Komisio itself.
+
+---
+
+Third-party source code
+
+No source code from other projects is included in this repository. If a file
+is ever ported from another project, it must retain that project's copyright
+notice and be listed here.
+
+---
+
+Third-party dependencies
+
+Runtime and development packages are locked in package-lock.json. License
+metadata below was read from the installed package manifests on 2026-09-10;
+retain the packages' own notices when distributing builds. This is the direct
+ dependency inventory, not an exhaustive transitive-license audit.
+
+| Dependency | License | Use |
+|------------|---------|-----|
+| Next.js, React, React DOM | MIT | Application |
+| @supabase/ssr, @supabase/supabase-js | MIT | Sessions and database API |
+| Zod | MIT | Input validation |
+| @radix-ui/react-slot | MIT | UI composition |
+| class-variance-authority | Apache-2.0 | UI variants |
+| clsx, tailwind-merge | MIT | UI classes |
+| lucide-react | ISC | Icons |
+| Tailwind CSS, @tailwindcss/postcss | MIT | Build tooling |
+| TypeScript | Apache-2.0 | Development |
+| ESLint, eslint-config-next, Prettier | MIT | Development |
+| @types/node, @types/react, @types/react-dom | MIT | Development |
+| Vitest, pg | MIT | Tests |
+| @playwright/test | Apache-2.0 | Browser tests |
+| pgTAP | PostgreSQL | Database tests |

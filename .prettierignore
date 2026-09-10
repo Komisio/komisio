@@ -1,0 +1,10 @@
+node_modules
+.next
+package-lock.json
+private
+experiments
+test-results
+playwright-report
+supabase/.temp
+supabase/.branches
+next-env.d.ts

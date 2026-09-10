@@ -1,0 +1,41 @@
+name: Platform checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  platform:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.117.0
+      - name: Start isolated local Supabase with test inbox
+        run: |
+          node scripts/prepare-local.mjs
+          supabase start -x studio,imgproxy,edge-runtime,logflare,vector > /dev/null
+      - run: node scripts/configure-local.mjs
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm test
+      - run: npm run build
+      - run: npm run typecheck
+      - run: npm run test:db
+      - run: npm run test:concurrency
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - name: Stop local services
+        if: always()
+        run: supabase stop

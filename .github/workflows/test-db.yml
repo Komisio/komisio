@@ -25,6 +25,10 @@ jobs:
       - name: Start isolated local Supabase with test inbox
         run: |
           node scripts/prepare-local.mjs
+          # The Supabase GHCR mirror does not publish this maintenance version.
+          rest_version=$(cat supabase/.temp/rest-version)
+          docker pull "postgrest/postgrest:${rest_version}"
+          docker tag "postgrest/postgrest:${rest_version}" "ghcr.io/supabase/postgrest:${rest_version}"
           supabase start -x studio,imgproxy,edge-runtime,logflare,vector > /dev/null
       - run: node scripts/configure-local.mjs
       - run: npm run lint

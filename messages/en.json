@@ -239,7 +239,9 @@
     "member.removed": "Member access removed",
     "member.role_changed": "Member role changed",
     "inspection.archived": "Item draft archived",
-    "inspection.reopened": "Item draft reopened"
+    "inspection.reopened": "Item draft reopened",
+    "reception.created": "Reception started",
+    "reception.sources_saved": "Reception evidence saved"
   },
   "errors": {
     "FORBIDDEN": "You do not have permission to do this.",

@@ -1330,3 +1330,126 @@ test('bag queue finds older receipts and keeps seller filters while paging', asy
   ).toBeVisible()
   await expect(queue).toHaveCount(0)
 })
+
+test('reception sources persist through authenticated API without a bag or GUI', async ({
+  page,
+}) => {
+  const run = Date.now().toString(36)
+  await register(
+    page,
+    `reception-${run}@example.test`,
+    `K!${randomBytes(16).toString('hex')}`,
+  )
+  await page.getByLabel('Butikens namn').fill('E2E Reception')
+  await page.getByLabel('Butikens identifierare').fill(`reception-${run}`)
+  await page.getByRole('button', { name: 'Skapa min butik' }).click()
+  await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
+  const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
+  const post = (data: object) =>
+    page.request.post('/api/intake', {
+      headers: { Origin: 'http://127.0.0.1:3000' },
+      data,
+    })
+  const seller = await post({
+    action: 'registerSeller',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    name: 'Reception TEST',
+    email: '',
+    phone: '00000',
+  })
+  expect(seller.status()).toBe(200)
+  const created = await post({
+    action: 'createReception',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    sellerId: (await seller.json()).id,
+  })
+  expect(created.status()).toBe(200)
+  const sessionId = (await created.json()).id,
+    path = `/api/reception/${sessionId}`
+  const empty = await page.request.get(path)
+  expect(empty.status()).toBe(200)
+  expect(await empty.json()).toMatchObject({
+    status: 'empty',
+    persisted: true,
+    revision: 0,
+  })
+  const command = {
+    action: 'saveReceptionSources',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    sessionId,
+    expectedRevision: 0,
+    sources: [
+      {
+        id: crypto.randomUUID(),
+        kind: 'observation',
+        reference: 'Synthetic staff observation',
+        observation: 'Blue jacket, visible tear',
+      },
+    ],
+  }
+  expect((await post(command)).status()).toBe(200)
+  expect((await post(command)).status()).toBe(200)
+  const saved = await page.request.get(path)
+  expect(
+    saved
+      .headers()
+      ['cache-control'].split(',')
+      .map((value) => value.trim()),
+  ).toContain('no-store')
+  expect(await saved.json()).toMatchObject({
+    status: 'ready',
+    persisted: true,
+    session: { sessionId, tenantId, revision: 1, sources: command.sources },
+  })
+  expect(
+    (await post({ ...command, requestId: crypto.randomUUID() })).status(),
+  ).toBe(409)
+  expect(
+    (
+      await post({
+        ...command,
+        requestId: crypto.randomUUID(),
+        expectedRevision: 1,
+        sources: [
+          {
+            ...command.sources[0],
+            observation: 'Changed under same source ID',
+          },
+        ],
+      })
+    ).status(),
+  ).toBe(409)
+  expect(
+    (
+      await post({
+        ...command,
+        requestId: crypto.randomUUID(),
+        expectedRevision: 1,
+        sources: [{ ...command.sources[0], kind: 'photo' }],
+      })
+    ).status(),
+  ).toBe(400)
+  await page.goto('/intake')
+  await expect(page.locator('.intake-bag')).toHaveCount(0)
+  const otherStore = await page.request.post('/api/platform', {
+    headers: { Origin: 'http://127.0.0.1:3000' },
+    data: {
+      action: 'create',
+      requestId: crypto.randomUUID(),
+      name: 'Reception Other',
+      slug: `rec-other-${run}`,
+    },
+  })
+  expect(otherStore.status()).toBe(200)
+  expect((await page.request.get(path)).status()).toBe(404)
+  expect(
+    (await post({ ...command, requestId: crypto.randomUUID() })).status(),
+  ).toBe(409)
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Logga ut' }).click()
+  await expect(page).toHaveURL(/\/login/)
+  expect((await page.request.get(path)).status()).toBe(401)
+})

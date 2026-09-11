@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { cookies } from 'next/headers'
 import { notFound, redirect } from 'next/navigation'
 import { platformContext } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
@@ -14,7 +15,9 @@ export default async function Invite({
   const { token } = await params
   if (!/^[a-f0-9]{64}$/.test(token)) notFound()
   const ctx = await platformContext()
-  const d = dictionary(ctx?.locale)
+  const d = dictionary(
+    ctx?.locale ?? (await cookies()).get('komisio-locale')?.value,
+  )
   const next = encodeURIComponent(`/invite/${token}`)
   if (ctx?.mfaRequired) redirect(`/mfa?next=${next}`)
   return (

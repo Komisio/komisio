@@ -57,6 +57,19 @@ test('failed confirmation preserves a safe invitation destination', async ({
   ).toHaveAttribute('href', `/login?next=${encodeURIComponent(invitationPath)}`)
 })
 
+test('anonymous invitation uses the selected language', async ({ page }) => {
+  await page.goto('/login')
+  await page.getByRole('button', { name: 'English', exact: true }).click()
+  await page.goto(`/invite/${'b'.repeat(64)}`)
+  await expect(
+    page.getByRole('heading', { name: "You're invited.", exact: true }),
+  ).toBeVisible()
+  await page.getByRole('link', { name: 'Create account', exact: true }).click()
+  await expect(
+    page.getByText('You followed a store invitation.', { exact: false }),
+  ).toBeVisible()
+})
+
 async function confirmEmail(page: Page, email: string, subjectPart = '') {
   let link = ''
   await expect

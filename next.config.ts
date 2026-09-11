@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next'
 const config: NextConfig = {
-  output: 'standalone',
+  // Vercel packages its own functions; standalone is for self-hosting.
+  output: process.env.VERCEL === '1' ? undefined : 'standalone',
   poweredByHeader: false,
   devIndicators: false,
   async headers() {

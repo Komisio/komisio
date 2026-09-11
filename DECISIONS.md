@@ -1,5 +1,7 @@
 # Decision Log
 
+[2026-09-11] Use Vercel-managed output when VERCEL=1 and retain standalone output for self-hosting: the first hosted build reproduced Next.js 16.3 issue #96646 (missing next-server.js.nft.json during Vercel packaging). No application or database behavior changes. Reference: https://github.com/vercel/next.js/issues/96646.
+
 One line per decision: `[YYYY-MM-DD] <decision>: <why>`. Appended by agents
 and humans when a non-obvious choice is made. Read before re-litigating a past
 decision. Open product questions live in `docs/open-questions.md` and move here

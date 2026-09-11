@@ -39,6 +39,22 @@ test('failed confirmation preserves a safe invitation destination', async ({
     'href',
     `/register?next=${encodeURIComponent(invitationPath)}`,
   )
+  await expect(
+    page.getByText('Logga in med den e-postadress som fick inbjudan.', {
+      exact: false,
+    }),
+  ).toBeVisible()
+  await page.getByRole('link', { name: 'Skapa konto', exact: true }).click()
+  await expect(
+    page.getByText('Du har följt en butiksinbjudan.', { exact: false }),
+  ).toBeVisible()
+  await page.getByRole('button', { name: 'English', exact: true }).click()
+  await expect(
+    page.getByText('You followed a store invitation.', { exact: false }),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('link', { name: 'Sign in', exact: true }),
+  ).toHaveAttribute('href', `/login?next=${encodeURIComponent(invitationPath)}`)
 })
 
 async function confirmEmail(page: Page, email: string, subjectPart = '') {

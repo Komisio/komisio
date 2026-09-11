@@ -53,8 +53,8 @@ will be introduced only with a concrete domain operation and approval boundaries
   password recovery before creating a store, MFA and invalid callbacks.
 
 The initial handover passed three browser journeys against both development
-and standalone servers. The current suite has four journeys, including callback
-recovery; the standalone run and PR CI pass. Production build, TypeScript, lint
+and standalone servers. The current suite has five journeys, including callback
+recovery and cross-store admin/readonly roles; the standalone run and PR CI pass. Production build, TypeScript, lint
 and formatting are also checked. The public source repository is
 https://github.com/Komisio/komisio. Remote check results are available at
 https://github.com/Komisio/komisio/actions; distinguish those results from the
@@ -78,7 +78,12 @@ self-host testing. See `next.config.ts` and `docs/SELF-HOSTING.md`.
 
 ## Remaining before broadening the pilot
 
-1. Owner walkthrough and usability feedback, then broader three-user role journeys.
+Use the [pilot acceptance checklist](PILOT-ACCEPTANCE.md) for the owner walkthrough
+and operational decisions. It is a plan for verification, not completed evidence.
+
+1. Owner walkthrough and usability feedback. Three-user/two-store role journeys
+   now pass locally and in [PR #5 CI](https://github.com/Komisio/komisio/pull/5);
+   repeat the relevant scenarios in the hosted pilot.
 2. Complete hosted invitation acceptance with the latest link and matching
    verified account, and verify hosted password recovery. Email transport has
    been observed; these complete journeys remain distinct acceptance checks.

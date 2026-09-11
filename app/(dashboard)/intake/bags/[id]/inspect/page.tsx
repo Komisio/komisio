@@ -4,23 +4,24 @@ import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { InspectionForm } from '@/components/intake/inspection-form'
+import {
+  inspectionNavigation,
+  inspectionHref,
+} from '@/lib/intake/inspection-navigation'
 
 export default async function InspectBag({
   params,
   searchParams,
 }: {
   params: Promise<{ id: string }>
-  searchParams: Promise<{ draft?: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const ctx = await requirePlatform()
   const { id } = await params
-  const { draft } = await searchParams
-  if (
-    !z.uuid().safeParse(id).success ||
-    (draft !== undefined && !z.uuid().safeParse(draft).success)
-  )
-    notFound()
+  const navigation = inspectionNavigation.safeParse(await searchParams)
+  if (!z.uuid().safeParse(id).success || !navigation.success) notFound()
+  const { draft, version, historyBefore, after, before } = navigation.data
   const tenantId = ctx.active!.id
   const { data: bag, error } = await ctx.client
     .from('bag_receipts')
@@ -31,15 +32,17 @@ export default async function InspectBag({
   if (error) throw new Error('Unable to load inspection bag')
   if (!bag) notFound()
   const columns = 'draft_id,revision,description,category,condition,saved_at'
+  let listQuery = ctx.client
+    .from('inspection_current')
+    .select(columns)
+    .eq('tenant_id', tenantId)
+    .eq('bag_id', id)
+    .order('draft_id', { ascending: !before })
+    .limit(21)
+  if (after) listQuery = listQuery.gt('draft_id', after)
+  if (before) listQuery = listQuery.lt('draft_id', before)
   const [list, selected] = await Promise.all([
-    ctx.client
-      .from('inspection_current')
-      .select(columns)
-      .eq('tenant_id', tenantId)
-      .eq('bag_id', id)
-      .order('saved_at', { ascending: false })
-      .order('draft_id')
-      .limit(50),
+    listQuery,
     draft
       ? ctx.client
           .from('inspection_current')
@@ -53,6 +56,44 @@ export default async function InspectBag({
   if (list.error || selected.error)
     throw new Error('Unable to load inspection drafts')
   if (draft && !selected.data) notFound()
+  const extra = (list.data?.length ?? 0) > 20
+  const items = (list.data ?? []).slice(0, 20)
+  if (before) items.reverse()
+  const hasPrevious = before ? extra : !!after
+  const hasNext = before ? true : extra
+  const [history, historical] = await Promise.all([
+    draft
+      ? ctx.client
+          .from('inspection_draft_revisions')
+          .select('revision,saved_at')
+          .eq('tenant_id', tenantId)
+          .eq('bag_id', id)
+          .eq('draft_id', draft)
+          .lte(
+            'revision',
+            Math.min(
+              selected.data!.revision,
+              historyBefore ? historyBefore - 1 : 2147483647,
+            ),
+          )
+          .order('revision', { ascending: false })
+          .limit(21)
+      : Promise.resolve({ data: null, error: null }),
+    version
+      ? ctx.client
+          .from('inspection_draft_revisions')
+          .select(columns)
+          .eq('tenant_id', tenantId)
+          .eq('bag_id', id)
+          .eq('draft_id', draft!)
+          .eq('revision', version)
+          .maybeSingle()
+      : Promise.resolve({ data: null, error: null }),
+  ])
+  if (history.error || historical.error)
+    throw new Error('Unable to load inspection history')
+  if (version && !historical.data) notFound()
+  const past = (history.data ?? []).slice(0, 20)
   const d = dictionary(ctx.locale),
     s = d.inspection
   return (
@@ -73,7 +114,7 @@ export default async function InspectBag({
         </Link>
       </div>
       {bag.note && <p>{bag.note}</p>}
-      {ctx.active!.role !== 'readonly' && (
+      {ctx.active!.role !== 'readonly' && !version && (
         <InspectionForm
           key={`${tenantId}:${id}:${draft ?? 'new'}`}
           tenantId={tenantId}
@@ -82,14 +123,106 @@ export default async function InspectBag({
           d={d}
         />
       )}
+      {historical.data && (
+        <section className="card intake-form inspection-historical">
+          <h2>
+            {s.historical} {historical.data.revision}
+          </h2>
+          <p>{s.historicalHint}</p>
+          <dl>
+            {(['description', 'category', 'condition'] as const).map(
+              (field) => (
+                <div key={field}>
+                  <dt>{s[field]}</dt>
+                  <dd>{historical.data![field] || '—'}</dd>
+                </div>
+              ),
+            )}
+          </dl>
+          <Link
+            className="text-link"
+            href={inspectionHref({ draft, after, before })}
+          >
+            {s.current}
+          </Link>
+        </section>
+      )}
+      {selected.data && (
+        <section className="card intake-form">
+          <h2>{s.savedDetails}</h2>
+          <p>{selected.data.description}</p>
+          <p>{selected.data.category}</p>
+          <p>{selected.data.condition}</p>
+          <p>
+            {s.version} {selected.data.revision}
+          </p>
+        </section>
+      )}
+      {draft && (
+        <section className="card intake-form inspection-history">
+          <h2>{s.history}</h2>
+          <p>{s.historyHint}</p>
+          <ul>
+            {past.map((entry) => (
+              <li key={entry.revision}>
+                <Link
+                  className="text-link"
+                  href={inspectionHref({
+                    draft,
+                    version: entry.revision,
+                    historyBefore,
+                    after,
+                    before,
+                  })}
+                >
+                  {s.version} {entry.revision}
+                </Link>{' '}
+                ·{' '}
+                {new Date(entry.saved_at).toLocaleString(
+                  ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',
+                  { timeZone: 'Europe/Stockholm' },
+                )}
+              </li>
+            ))}
+          </ul>
+          {!past.length && <p>{s.noHistory}</p>}
+          <nav className="row" aria-label={s.history}>
+            {(history.data?.length ?? 0) > 20 && (
+              <Link
+                className="text-link"
+                href={inspectionHref({
+                  draft,
+                  version,
+                  historyBefore: past.at(-1)!.revision,
+                  after,
+                  before,
+                })}
+              >
+                {s.older}
+              </Link>
+            )}
+            {historyBefore && (
+              <Link
+                className="text-link"
+                href={inspectionHref({ draft, version, after, before })}
+              >
+                {s.latest}
+              </Link>
+            )}
+          </nav>
+        </section>
+      )}
       <section className="card intake-form">
         <h2>{s.list}</h2>
         <p>{s.listHint}</p>
-        {!list.data?.length && <p>{s.empty}</p>}
+        {!items.length && <p>{after || before ? s.emptyPage : s.empty}</p>}
         <ul>
-          {list.data?.map((item) => (
+          {items.map((item) => (
             <li key={item.draft_id} className="inspection-item">
-              <Link className="text-link" href={`?draft=${item.draft_id}`}>
+              <Link
+                className="text-link"
+                href={inspectionHref({ draft: item.draft_id, after, before })}
+              >
                 {item.description}
               </Link>
               <p>
@@ -105,18 +238,43 @@ export default async function InspectBag({
             </li>
           ))}
         </ul>
+        <nav className="row" aria-label={s.pages}>
+          {hasPrevious && items[0] && (
+            <Link
+              className="text-link"
+              href={inspectionHref({
+                draft,
+                version,
+                historyBefore,
+                before: items[0].draft_id,
+              })}
+            >
+              {s.previous}
+            </Link>
+          )}
+          {hasNext && items.at(-1) && (
+            <Link
+              className="text-link"
+              href={inspectionHref({
+                draft,
+                version,
+                historyBefore,
+                after: items.at(-1)!.draft_id,
+              })}
+            >
+              {s.next}
+            </Link>
+          )}
+          {(after || before) && (
+            <Link
+              className="text-link"
+              href={inspectionHref({ draft, version, historyBefore })}
+            >
+              {s.first}
+            </Link>
+          )}
+        </nav>
       </section>
-      {selected.data && (
-        <section className="card intake-form">
-          <h2>{s.savedDetails}</h2>
-          <p>{selected.data.description}</p>
-          <p>{selected.data.category}</p>
-          <p>{selected.data.condition}</p>
-          <p>
-            {s.version} {selected.data.revision}
-          </p>
-        </section>
-      )}
     </>
   )
 }

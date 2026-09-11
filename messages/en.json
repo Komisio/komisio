@@ -259,8 +259,21 @@
     "version": "Saved revision",
     "reload": "Open current revision (unsaved edits will be lost)",
     "list": "Saved item drafts",
-    "listHint": "The 50 most recently saved drafts in this bag. Older drafts remain available through their direct links.",
+    "listHint": "20 drafts per page in a fixed order that does not change when a new revision is saved. New drafts can arrive while you browse.",
     "empty": "No item drafts saved yet.",
-    "savedDetails": "Latest saved details"
+    "savedDetails": "Latest saved details",
+    "pages": "Browse item drafts",
+    "previous": "Previous items",
+    "next": "Next items",
+    "first": "First page",
+    "emptyPage": "No item drafts on this page. Return to the first page.",
+    "historical": "Historical revision",
+    "historicalHint": "This revision is read-only. Open the current draft to make a new change.",
+    "current": "Open current draft",
+    "history": "Revision history",
+    "historyHint": "Saved revisions are preserved. Select a revision to see past details and compare them with the latest.",
+    "older": "Older revisions",
+    "latest": "Latest revisions",
+    "noHistory": "No revisions on this page."
   }
 }

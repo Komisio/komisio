@@ -128,7 +128,98 @@ test('saved inspection drafts resume safely and preserve conflicting edits', asy
     await expect(page.locator('.inspection-item')).toContainText(
       'Sparad version 2',
     )
+    const selectedDraft = String(stored!.draftId)
+    await page
+      .locator('.inspection-history')
+      .getByRole('link', { name: 'Sparad version 1', exact: true })
+      .click()
+    await expect(page.locator('.inspection-historical')).toContainText(
+      'TEST blå jacka <script>literal</script>',
+    )
+    await expect(page.getByLabel('Beskrivning av varan')).toHaveCount(0)
+    await expect(
+      page.getByText('TEST blå bomullsjacka', { exact: true }).last(),
+    ).toBeVisible()
+    await page.getByRole('link', { name: 'Öppna aktuellt utkast' }).click()
+    await expect(page.getByLabel('Beskrivning av varan')).toHaveValue(
+      'TEST blå bomullsjacka',
+    )
+    // More than one page of immutable revisions and distinct drafts.
+    for (let revision = 2; revision < 22; revision++) {
+      expect(
+        (
+          await post({
+            action: 'saveInspection',
+            tenantId,
+            requestId: crypto.randomUUID(),
+            bagId,
+            draftId: selectedDraft,
+            expectedRevision: revision,
+            fields: {
+              description: `TEST historical revision ${revision + 1}`,
+              category: '',
+              condition: '',
+            },
+          })
+        ).status(),
+      ).toBe(200)
+    }
+    await page.goto(`${path}?draft=${selectedDraft}`)
+    await expect(page.locator('.inspection-history li')).toHaveCount(20)
+    await page.getByRole('link', { name: 'Äldre versioner' }).click()
+    await expect(page.locator('.inspection-history li')).toHaveCount(2)
+    await page
+      .locator('.inspection-history')
+      .getByRole('link', { name: 'Sparad version 1', exact: true })
+      .click()
+    await expect(page.locator('.inspection-historical')).toContainText(
+      'TEST blå jacka <script>literal</script>',
+    )
+    for (let item = 0; item < 21; item++) {
+      expect(
+        (
+          await post({
+            action: 'saveInspection',
+            tenantId,
+            requestId: crypto.randomUUID(),
+            bagId,
+            draftId: crypto.randomUUID(),
+            expectedRevision: 0,
+            fields: {
+              description: `TEST paged item ${item}`,
+              category: '',
+              condition: '',
+            },
+          })
+        ).status(),
+      ).toBe(200)
+    }
+    await page.goto(path)
+    await expect(page.locator('.inspection-item')).toHaveCount(20)
+    const firstPage = await page.locator('.inspection-item a').allTextContents()
+    await page.getByRole('link', { name: 'Nästa varor' }).click()
+    await expect(page.locator('.inspection-item')).toHaveCount(2)
+    const lastPage = await page.locator('.inspection-item a').allTextContents()
+    expect(new Set([...firstPage, ...lastPage]).size).toBe(22)
+    await page.getByRole('link', { name: 'Föregående varor' }).click()
+    await expect(page.locator('.inspection-item')).toHaveCount(20)
+    expect(await page.locator('.inspection-item a').allTextContents()).toEqual(
+      firstPage,
+    )
+    await page.goto(`${path}?draft=${selectedDraft}&version=1`)
+    await expect(page.locator('.inspection-historical')).toContainText(
+      'TEST blå jacka <script>literal</script>',
+    )
+    await page.goto(`${path}?draft=${selectedDraft}&version=999`)
+    await expect(page.locator('.inspection-historical')).toHaveCount(0)
+    await expect(
+      page.getByRole('button', { name: 'Spara utkast', exact: true }),
+    ).toHaveCount(0)
+    await page.goto(`${path}?draft=${selectedDraft}&version=1`)
     await page.setViewportSize({ width: 390, height: 844 })
+    await expect(page.locator('.inspection-historical')).toContainText(
+      'TEST blå jacka <script>literal</script>',
+    )
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= window.innerWidth,
@@ -138,6 +229,9 @@ test('saved inspection drafts resume safely and preserve conflicting edits', asy
       path: 'test-results/inspection-mobile.png',
       fullPage: true,
     })
+    await page
+      .locator('.inspection-historical')
+      .screenshot({ path: 'test-results/inspection-history-mobile.png' })
   } finally {
     await stale.close()
   }

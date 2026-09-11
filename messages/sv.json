@@ -259,8 +259,21 @@
     "version": "Sparad version",
     "reload": "Öppna aktuell version (osparade ändringar försvinner)",
     "list": "Sparade varuutkast",
-    "listHint": "De 50 senast sparade utkasten i denna påse. Du kan öppna äldre utkast via deras direktlänk.",
+    "listHint": "20 utkast per sida, i en fast ordning som inte ändras när du sparar en ny version. Nya utkast kan tillkomma medan du bläddrar.",
     "empty": "Inga varuutkast är sparade ännu.",
-    "savedDetails": "Senast sparade uppgifter"
+    "savedDetails": "Senast sparade uppgifter",
+    "pages": "Bläddra bland varuutkast",
+    "previous": "Föregående varor",
+    "next": "Nästa varor",
+    "first": "Första sidan",
+    "emptyPage": "Inga varuutkast på denna sida. Gå tillbaka till första sidan.",
+    "historical": "Historisk version",
+    "historicalHint": "Denna version är skrivskyddad. Öppna aktuellt utkast för att göra en ny ändring.",
+    "current": "Öppna aktuellt utkast",
+    "history": "Versionshistorik",
+    "historyHint": "Sparade versioner bevaras. Välj en version för att se tidigare uppgifter och jämföra med de senaste.",
+    "older": "Äldre versioner",
+    "latest": "Senaste versionerna",
+    "noHistory": "Inga versioner på denna sida."
   }
 }

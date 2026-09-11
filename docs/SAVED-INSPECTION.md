@@ -13,10 +13,20 @@ links to the saved draft or to the next new item. Reopen a draft to edit it.
 Unsaved edits are browser-only and lost when leaving/reloading, as the form says.
 A successful save survives reload and can be resumed by other permitted staff.
 
-The page lists the latest revision of the 50 most recently saved drafts in the
-bag. Direct draft links resolve independently of this list. Pagination, history
-browsing, retirement of mistaken drafts and completion of an entire bag remain
-follow-up work; do not interpret an absent list row as deletion.
+The page lists 20 drafts at a time in stable draft-ID order with next/previous
+navigation. Editing a draft does not move it between pages. New drafts can be
+inserted while browsing, so this is a live list rather than a point-in-time
+snapshot; return to the first page to browse again. Direct draft links resolve
+independently of the currently displayed page.
+
+Selecting a draft exposes its revision history, 20 versions at a time. Each
+version has a direct link and timestamp. A historical version is read-only and
+appears alongside the latest saved details for comparison. The editor is absent
+when a historical revision is selected; an explicit link returns to the current
+draft. No restore/overwrite action exists. All historical reads use the caller's
+session, current store, bag and draft filters; invalid or inaccessible references
+do not reveal a different store's data. Draft retirement and completion of an
+entire bag remain follow-up work.
 
 ## Shared engine and minimal persistence
 
@@ -48,7 +58,7 @@ Audit records contain references/revision, not descriptive or contact content.
 
 ## Verification and deployment
 
-Local verification covers 139 database assertions, 47 unit tests, a real
+Local verification covers 139 database assertions, 50 unit tests, a real
 two-connection edit/retry race and a browser journey with saved-state reload,
 lost successful response, duplicate retry, stale tab, literal text and mobile
 layout. Full project browser/lint/type/build and exact-head CI are checked before
@@ -57,6 +67,10 @@ membership, MFA, cross-store bags, immutable history and anonymous denial.
 The inspection form stays disabled until client handlers are attached. A
 delayed-JavaScript regression test demonstrated the pre-hydration editing gap
 before the fix and passes with this guard; stale edits remain unchanged.
+The history/pagination extension covers 22 revisions and 22 drafts, forward and
+backward paging without duplicates, opening revision 1 outside the latest history
+page, read-only historical rendering, current comparison and absent revisions.
+It introduces no migration, new dependency, model provider or authorization rule.
 
 Apply additive migration `20260911180000_inspection_drafts.sql` to the verified
 staging project before application merge/deployment. The existing intake flag

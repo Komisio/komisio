@@ -13,5 +13,8 @@ export async function GET(request: Request) {
         new URL(safeNext(url.searchParams.get('next')), base),
       )
   }
-  return NextResponse.redirect(new URL('/login?error=callback', base))
+  const login = new URL('/login?error=callback', base)
+  const destination = safeNext(url.searchParams.get('next'))
+  if (destination !== '/') login.searchParams.set('next', destination)
+  return NextResponse.redirect(login)
 }

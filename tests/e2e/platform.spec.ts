@@ -22,6 +22,25 @@ test('invalid callbacks stay local and anonymous writes are denied', async ({
   ).toBeVisible()
 })
 
+test('failed confirmation preserves a safe invitation destination', async ({
+  page,
+}) => {
+  const invitationPath = `/invite/${'a'.repeat(64)}`
+  await page.goto(
+    `/auth/callback?code=invalid&next=${encodeURIComponent(invitationPath)}`,
+  )
+  const destination = new URL(page.url())
+  expect(destination.pathname).toBe('/login')
+  expect(destination.searchParams.get('error')).toBe('callback')
+  expect(destination.searchParams.get('next')).toBe(invitationPath)
+  await expect(
+    page.getByRole('link', { name: 'Skapa konto', exact: true }),
+  ).toHaveAttribute(
+    'href',
+    `/register?next=${encodeURIComponent(invitationPath)}`,
+  )
+})
+
 async function confirmEmail(page: Page, email: string, subjectPart = '') {
   let link = ''
   await expect

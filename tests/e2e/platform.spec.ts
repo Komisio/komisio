@@ -132,8 +132,14 @@ test('register, verify, create stores, invite, isolate and administer access', a
   await register(page, email, password)
   await expect(page).toHaveURL(/\/onboarding/)
   await page.getByLabel('Butikens namn').fill('E2E Gröna Garderoben')
-  await page.getByLabel('Butikens identifierare').fill(`garden-${run}`)
-  await page.getByRole('button', { name: 'Skapa min butik' }).click()
+  await page.getByLabel('Butikens namn').press('Tab')
+  const storeIdentifier = page.getByLabel('Butikens identifierare')
+  await expect(storeIdentifier).toBeFocused()
+  await expect(storeIdentifier).toHaveAccessibleDescription(
+    'Små bokstäver, siffror och bindestreck. Till exempel min-secondhand.',
+  )
+  await storeIdentifier.fill(`garden-${run}`)
+  await storeIdentifier.press('Enter')
   await expect(page.getByRole('heading', { name: 'Välkommen.' })).toBeVisible()
   const tenantA = await page.getByLabel('Aktiv butik').first().inputValue()
   await page.goto('/account')

@@ -54,6 +54,9 @@ lost successful response, duplicate retry, stale tab, literal text and mobile
 layout. Full project browser/lint/type/build and exact-head CI are checked before
 merge. Database tests also cover readonly, another staff editor, revoked
 membership, MFA, cross-store bags, immutable history and anonymous denial.
+The inspection form stays disabled until client handlers are attached. A
+delayed-JavaScript regression test demonstrated the pre-hydration editing gap
+before the fix and passes with this guard; stale edits remain unchanged.
 
 Apply additive migration `20260911180000_inspection_drafts.sql` to the verified
 staging project before application merge/deployment. The existing intake flag

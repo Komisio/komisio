@@ -78,7 +78,21 @@ test('saved inspection drafts resume safely and preserve conflicting edits', asy
   await expect(page.locator('.inspection-item')).toHaveCount(1)
   const stale = await page.context().newPage()
   try {
-    await stale.goto(page.url())
+    let release!: () => void
+    const gate = new Promise<void>((resolve) => {
+      release = resolve
+    })
+    await stale.route('**/_next/static/**/*.js', async (route) => {
+      await gate
+      await route.continue()
+    })
+    try {
+      await stale.goto(page.url(), { waitUntil: 'commit' })
+      await expect(stale.getByLabel('Beskrivning av varan')).toBeDisabled()
+    } finally {
+      release()
+    }
+    await expect(stale.getByLabel('Beskrivning av varan')).toBeEnabled()
     await stale
       .getByLabel('Beskrivning av varan')
       .fill('Min osparade alternativa beskrivning')

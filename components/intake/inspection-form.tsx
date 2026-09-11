@@ -1,9 +1,13 @@
 'use client'
-import { useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import type { Dictionary } from '@/lib/i18n'
 import type { SavedInspection } from '@/lib/engine/inspection'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+
+const subscribe = () => () => {}
+const clientReady = () => true
+const serverReady = () => false
 
 export function InspectionForm({
   tenantId,
@@ -17,6 +21,8 @@ export function InspectionForm({
   d: Dictionary
 }) {
   const [base] = useState(current)
+  // SSR fields must not accept edits before React attaches change/save handlers.
+  const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const [draftId] = useState(() => current?.draft_id ?? crypto.randomUUID())
   const [saved, setSaved] = useState(false)
   const [dirty, setDirty] = useState(false)
@@ -67,7 +73,7 @@ export function InspectionForm({
       <form onSubmit={submit} onChange={() => setDirty(true)}>
         <fieldset
           className="intake-fields"
-          disabled={action.busy || action.locked}
+          disabled={!ready || action.busy || action.locked}
         >
           <div className="field">
             <label htmlFor="item-description">{s.description}</label>
@@ -115,7 +121,10 @@ export function InspectionForm({
             </a>
           </p>
         )}
-        <Button disabled={action.busy || action.needsReload} type="submit">
+        <Button
+          disabled={!ready || action.busy || action.needsReload}
+          type="submit"
+        >
           {action.busy ? d.intake.busy : s.save}
         </Button>
       </form>

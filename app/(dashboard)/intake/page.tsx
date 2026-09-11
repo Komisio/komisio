@@ -196,6 +196,12 @@ export default async function Intake({
             }
             return (
               <li key={bag.id} className="intake-bag">
+                <Link
+                  className="text-link"
+                  href={`/intake/bags/${bag.id}/inspect`}
+                >
+                  {dictionary(ctx.locale).inspection.title}
+                </Link>
                 <div>
                   <strong>
                     {d.bag} K-{bag.reference}

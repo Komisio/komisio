@@ -24,7 +24,7 @@ are English; the normal UI supports Swedish and English.
 | M2 | Implemented and tested | Review with the owner in the GUI |
 | M3 | Local journeys tested; hosted invitation email received | Resolve hosted acceptance issue and broaden multi-user pilot |
 | M4 | In progress | Hosted/self-host deployment validation, recovery operations, backup/restore exercise |
-| M5 | Bag receiving and staff agreement evidence deployed to staging | Resumable inspection and scoped agent adapter |
+| M5 | Bag receiving and staff agreement evidence deployed; saved inspection implemented | Hosted inspection verification and scoped agent adapter |
 | M6 | Not started | Real workflow decisions before financial schema |
 
 The active database contains stores, memberships, profiles, invitations,
@@ -218,8 +218,8 @@ key or financial data model has been introduced.
 ## Next concrete work
 
 The next domain delivery follows [AI-first inspection](docs/AI-FIRST-INSPECTION.md):
-the pure descriptive proposal contract is implemented, while saved inspection
-drafts and the inspection GUI are next. Optional model assistance and scoped
+the pure descriptive proposal contract, saved inspection drafts and staff GUI
+are implemented (see [delivery details](docs/SAVED-INSPECTION.md)). Optional model assistance and scoped
 agent execution build on those same operations. Bag receiving and agreement
 evidence are already active in staging; the remaining platform work below stays
 open alongside that domain work.

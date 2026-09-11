@@ -89,8 +89,10 @@ proposal's owner clarification for scope and outstanding details.
 - **Inspection architecture decided 2026-09-11:** manual entry and optional AI
   suggestions share a strict descriptive draft contract. Suggestions cannot set
   financial or acceptance fields; skills are guidance, not authorization. See
-  [AI-first inspection](AI-FIRST-INSPECTION.md). Draft persistence, correction,
-  retention and the commercial acceptance operation remain separate work.
+  [AI-first inspection](AI-FIRST-INSPECTION.md). Shared descriptive drafts now
+  persist as append-only revisions under existing staff roles; saved progress
+  survives reload. Draft retirement/correction presentation, retention and the
+  commercial acceptance operation remain separate work.
 
 - Minimum contact for the staff pilot is a name and email or phone (documented
   assumption in DECISIONS.md). What stronger identity and agreement evidence are

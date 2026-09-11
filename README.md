@@ -60,8 +60,9 @@ Accounting integrations are planned; Komisio is not a bookkeeping application.
 The first store operation is deliberately small: **register a seller, receive
 a bag and print its label**. Staff reviews the contents later. This gated pilot
 is now enabled in the hosted staging preview and can also run locally after
-migration and activation. The next staff slice adds [versioned seller agreements
-and external approval evidence](docs/SELLER-AGREEMENTS.md). Space booking, seller
+migration and activation. Staff can use [versioned seller agreements
+and external approval evidence](docs/SELLER-AGREEMENTS.md) and save
+[descriptive item drafts during inspection](docs/SAVED-INSPECTION.md). Space booking, seller
 signatures, sales and payouts follow as separate workflows. See the
 [implementation sequence](docs/SELLER-FLOW-IMPLEMENTATION.md) and
 [open domain questions](docs/open-questions.md).
@@ -74,7 +75,7 @@ use test data rather than real consignor or financial records.
 
 | Available in the current platform | Still being built or planned |
 | --- | --- |
-| Registration, email confirmation, login and password recovery | Item inspection and inventory |
+| Registration, email confirmation, login and password recovery | Inspection completion and saleable inventory |
 | Store creation and switching between your stores | Sales, returns and commission |
 | Profiles and optional authenticator-app MFA | Settlements and payouts |
 | Membership administration and four access roles | Accounting and other integration extensions |
@@ -82,6 +83,7 @@ use test data rather than real consignor or financial records.
 | Access log and responsive Swedish/English interface | Billing and commercial hosted plans |
 | Seller registration, bag receiving and printable labels | Seller portal and digital signatures |
 | Versioned store agreements and staff-recorded approval evidence | Space booking and booking fees |
+| Resumable descriptive item drafts with protected revision history | AI suggestions, commercial acceptance and POS publication |
 
 Hosted onboarding and invitation edge cases are still being validated during
 the pilot. See [platform status](docs/PLATFORM-STATUS.md) for details and

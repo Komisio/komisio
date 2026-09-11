@@ -1,6 +1,144 @@
 import { test, expect, type Page } from '@playwright/test'
 import { randomBytes, createHmac } from 'node:crypto'
 
+test('saved inspection drafts resume safely and preserve conflicting edits', async ({
+  page,
+}) => {
+  const run = Date.now().toString(36)
+  await register(
+    page,
+    `inspection-${run}@example.test`,
+    `K!${randomBytes(16).toString('hex')}`,
+  )
+  await page.getByLabel('Butikens namn').fill('E2E Inspection')
+  await page.getByLabel('Butikens identifierare').fill(`inspection-${run}`)
+  await page.getByRole('button', { name: 'Skapa min butik' }).click()
+  await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
+  const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
+  const post = (data: object) =>
+    page.request.post('/api/intake', {
+      headers: { Origin: 'http://127.0.0.1:3000' },
+      data,
+    })
+  const seller = await post({
+    action: 'registerSeller',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    name: 'Inspection TEST',
+    email: '',
+    phone: '00000',
+  })
+  expect(seller.status()).toBe(200)
+  const received = await post({
+    action: 'receiveBag',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    sellerId: (await seller.json()).id,
+    note: 'Synthetic bag',
+    expectedAgreementId: null,
+  })
+  expect(received.status()).toBe(200)
+  const bagId = (await received.json()).id
+  const path = `/intake/bags/${bagId}/inspect`
+  await page.goto(path)
+  await page
+    .getByLabel('Beskrivning av varan')
+    .fill('TEST blå jacka <script>literal</script>')
+  await page.getByLabel('Kategori (valfritt)').fill('Kläder')
+  await page
+    .getByLabel('Skick och anmärkningar (valfritt)')
+    .fill('Litet hål i ärmen')
+  await expect(page.getByText('Du har osparade ändringar.')).toBeVisible()
+  let stored: Record<string, unknown> | undefined
+  await page.route(
+    '**/api/intake',
+    async (route) => {
+      stored = route.request().postDataJSON()
+      const response = await route.fetch()
+      expect(response.status()).toBe(200)
+      await route.abort('failed')
+    },
+    { times: 1 },
+  )
+  await page.getByRole('button', { name: 'Spara utkast', exact: true }).click()
+  await expect(page.locator('.form-error')).toBeVisible()
+  await expect(page.getByLabel('Beskrivning av varan')).toBeDisabled()
+  await page.getByRole('button', { name: 'Spara utkast', exact: true }).click()
+  await expect(page.getByRole('status')).toContainText(
+    'Varuutkastet är sparat.',
+  )
+  await page.getByRole('link', { name: 'Öppna sparat utkast' }).click()
+  await expect(page.getByLabel('Beskrivning av varan')).toHaveValue(
+    'TEST blå jacka <script>literal</script>',
+  )
+  await page.reload()
+  await expect(
+    page.getByLabel('Skick och anmärkningar (valfritt)'),
+  ).toHaveValue('Litet hål i ärmen')
+  await expect(page.locator('.inspection-item')).toHaveCount(1)
+  const stale = await page.context().newPage()
+  try {
+    let release!: () => void
+    const gate = new Promise<void>((resolve) => {
+      release = resolve
+    })
+    await stale.route('**/_next/static/**/*.js', async (route) => {
+      await gate
+      await route.continue()
+    })
+    try {
+      await stale.goto(page.url(), { waitUntil: 'commit' })
+      await expect(stale.getByLabel('Beskrivning av varan')).toBeDisabled()
+    } finally {
+      release()
+    }
+    await expect(stale.getByLabel('Beskrivning av varan')).toBeEnabled()
+    await stale
+      .getByLabel('Beskrivning av varan')
+      .fill('Min osparade alternativa beskrivning')
+    await page.getByLabel('Beskrivning av varan').fill('TEST blå bomullsjacka')
+    await page
+      .getByRole('button', { name: 'Spara utkast', exact: true })
+      .click()
+    await expect(page.getByRole('status')).toContainText(
+      'Varuutkastet är sparat.',
+    )
+    await stale
+      .getByRole('button', { name: 'Spara utkast', exact: true })
+      .click()
+    await expect(stale.locator('.form-error')).toContainText(
+      'Utkastet har ändrats',
+    )
+    await expect(stale.getByLabel('Beskrivning av varan')).toHaveValue(
+      'Min osparade alternativa beskrivning',
+    )
+    await expect(
+      stale.getByRole('button', { name: 'Spara utkast', exact: true }),
+    ).toBeDisabled()
+    expect((await post(stored!)).status()).toBe(200)
+    await page.getByRole('link', { name: 'Öppna sparat utkast' }).click()
+    await expect(page.getByLabel('Beskrivning av varan')).toHaveValue(
+      'TEST blå bomullsjacka',
+    )
+    await expect(page.locator('.inspection-item')).toHaveCount(1)
+    await expect(page.locator('.inspection-item')).toContainText(
+      'Sparad version 2',
+    )
+    await page.setViewportSize({ width: 390, height: 844 })
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+    await page.screenshot({
+      path: 'test-results/inspection-mobile.png',
+      fullPage: true,
+    })
+  } finally {
+    await stale.close()
+  }
+})
+
 test('versioned agreement evidence gates new receipts and preserves old ones', async ({
   page,
 }) => {

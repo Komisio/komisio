@@ -237,6 +237,49 @@ try {
   console.log(
     'PASS: publication and receipt serialize; concurrent publishers cannot silently replace each other.',
   )
+  const inspectionDraft = randomUUID()
+  const raceInspection = await Promise.all(
+    sessions.map(({ c }) =>
+      c
+        .query(
+          "select save_inspection_draft($1,$2,$3,$4,0,'Test jacket','','') as id",
+          [tenant, randomUUID(), bag, inspectionDraft],
+        )
+        .then(
+          () => 'saved',
+          (e) => {
+            if (e.message.includes('INSPECTION_DRAFT_CHANGED')) return 'stale'
+            throw e
+          },
+        ),
+    ),
+  )
+  if (
+    raceInspection.filter((r) => r === 'saved').length !== 1 ||
+    raceInspection.filter((r) => r === 'stale').length !== 1
+  )
+    throw new Error('Concurrent inspection edits did not reject stale revision')
+  const replayId = randomUUID()
+  const replayInspection = await Promise.all(
+    sessions.map(({ c }) =>
+      c.query(
+        "select save_inspection_draft($1,$2,$3,$4,1,'Updated jacket','Clothes','') as id",
+        [tenant, replayId, bag, inspectionDraft],
+      ),
+    ),
+  )
+  const revisions = await setup.query(
+    'select count(*)::int as count from inspection_draft_revisions where draft_id=$1',
+    [inspectionDraft],
+  )
+  if (
+    replayInspection.some((r) => r.rows[0].id !== replayId) ||
+    revisions.rows[0].count !== 2
+  )
+    throw new Error('Concurrent inspection retry duplicated revision')
+  console.log(
+    'PASS: concurrent inspection edits reject stale revisions; identical retries persist once.',
+  )
 } finally {
   await Promise.allSettled(clients.map((c) => c.end()))
   await admin.query(`drop database if exists "${database}"`)

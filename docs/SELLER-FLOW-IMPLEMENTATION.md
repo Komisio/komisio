@@ -35,7 +35,8 @@ behavior have not been verified. No implementation or assets were copied.
    external evidence reference; QR registration and verified linking of contacts.
    Decide required agreement checkpoints and language fallback. Never infer
    acceptance from the absence of a translation or from possession of a bag label.
-3. **Inspection:** claim/resume a bag, register items, apply tenant price approval
+3. **Inspection:** [shared descriptive drafts](SAVED-INSPECTION.md) can now be
+   saved and resumed per bag. Later: apply tenant price approval
    and rejected-item policy, explicitly finish inspection. Add correction events
    for mistaken receipts before external pilot use. Manual entry works without AI.
 4. **Optional receiving channels:** self-drop-off and pickup, with separate

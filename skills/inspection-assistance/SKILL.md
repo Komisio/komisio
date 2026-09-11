@@ -23,7 +23,9 @@ adapters are in `docs/AI-FIRST-INSPECTION.md`.
    suggestion to a draft is not saved acceptance or permission to sell.
 6. If assistance fails, keep manual editing available. Never claim saved progress,
    a printed label, an email, a sale or a payout without a corresponding confirmed
-   operation result. There is currently no inspection save operation.
+   operation result. Staff can now save descriptive drafts through the shared
+   engine, but no agent endpoint or model adapter is enabled. A saved draft is
+   still not commercial acceptance or sale eligibility.
 
 Skills guide behavior. Authentication, tenant isolation, approval and financial
 invariants must be enforced by code and the database independently of this file.

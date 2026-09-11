@@ -151,6 +151,14 @@ export function AuthForm({
                 ? d.loginIntro
                 : d.passwordHint}
           </p>
+          {destination.startsWith('/invite/') &&
+            (mode === 'register' || mode === 'login') && (
+              <p className="notice">
+                {mode === 'register'
+                  ? d.invitedRegisterIntro
+                  : d.invitedLoginIntro}
+              </p>
+            )}
           <form onSubmit={submit}>
             {mode !== 'password' && (
               <div className="field">

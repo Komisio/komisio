@@ -1,6 +1,9 @@
 # Hosted staging deployment
 
-Status: preparation implemented, external deployment not yet verified.
+Status (2026-09-11): deployed to https://komisio-staging.vercel.app with hosted
+Supabase and Resend. Registration and invitation-email receipt have been
+confirmed by the owner. Full invitation acceptance and operational recovery
+remain under validation; see [platform status](PLATFORM-STATUS.md).
 
 ## Selected services
 
@@ -9,8 +12,9 @@ Status: preparation implemented, external deployment not yet verified.
 - Resend for Supabase Auth SMTP and optional invitation email.
 
 Create resources under Komisio-controlled accounts. The operating company,
-billing contact, sender domain and stable staging origin must be selected by the
-owner. Do not attach unrelated employer/customer accounts. This document does not
+billing contact and future production setup remain owner decisions. The pilot
+uses the verified `komisio.com` sender domain and the staging origin above.
+Do not attach unrelated employer/customer accounts. This document does not
 authorize purchases beyond the owner's agreed setup.
 
 ## Configure the test deployment

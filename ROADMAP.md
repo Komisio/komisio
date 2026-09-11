@@ -1,6 +1,11 @@
 # Development roadmap
 
-Updated: 2026-09-10. Sequence: **platform and usable web UI first, store operations second**.
+Updated: 2026-09-11. Sequence: **platform and usable web UI first, store operations second**.
+
+The platform is deployed to staging, and registration plus invitation-email
+receipt have been confirmed. Hosted invitation acceptance remains unresolved.
+See [current platform evidence](docs/PLATFORM-STATUS.md) and the
+[11 September work plan](docs/DAY-PLAN-2026-09-11.md).
 
 The owner has requested registration, tenant creation, login, user administration and a coherent GUI before consignment logic. This roadmap supersedes the earlier instruction to build intake immediately after the database foundation. The status below distinguishes the implemented local preview from the remaining pilot and domain work.
 
@@ -14,10 +19,10 @@ are English; the normal UI supports Swedish and English.
 
 | Milestone | Status | Remaining boundary |
 |---|---|---|
-| M0 | Implemented locally | Published under Komisio; CI results are reported in GitHub Actions |
-| M1 | Main journeys verified locally | Production SMTP and broader recovery/error cases |
+| M0 | Implemented locally and deployed to staging | Maintain passing CI and reproducible setup |
+| M1 | Local journeys and hosted registration verified | Hosted recovery and broader error cases |
 | M2 | Implemented and tested | Review with the owner in the GUI |
-| M3 | Implemented and tested; pilot email transport added | Verify hosted email delivery and broaden multi-user pilot |
+| M3 | Local journeys tested; hosted invitation email received | Resolve hosted acceptance issue and broaden multi-user pilot |
 | M4 | In progress | Hosted/self-host deployment validation, recovery operations, backup/restore exercise |
 | M5 | Not started | Minimal consignor/intake flow after the platform gate |
 | M6 | Not started | Real workflow decisions before financial schema |
@@ -202,7 +207,8 @@ selection, password recovery and MFA. See docs/PLATFORM-STATUS.md for the final
 browser outcome and remaining limitations.
 
 All test data is synthetic. Source is published at https://github.com/Komisio/komisio.
-No production service, SMTP account, AI model key or financial data model was introduced.
+Staging now has SMTP and invitation email. No production store service, AI model
+key or financial data model has been introduced.
 
 ## Next concrete work
 
@@ -211,7 +217,7 @@ No production service, SMTP account, AI model key or financial data model was in
    owner/admin/readonly roles, invitation expiry/reissue and recovery edge cases.
 3. Review GitHub Actions results for the published revision and maintain
    the contribution workflow as collaborators join.
-4. Configure the prepared Vercel/Supabase Stockholm test deployment and Resend
-   email using docs/HOSTED-STAGING.md, decide MFA recovery
+4. Complete validation of the Vercel/Supabase Stockholm staging deployment and
+   Resend email using docs/HOSTED-STAGING.md, decide MFA recovery
    and support identity verification, and demonstrate backup/restore.
 5. Once the platform gate is accepted, define and build the minimal intake flow.

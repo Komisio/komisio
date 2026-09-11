@@ -45,7 +45,12 @@ run the application on the host with local Supabase containers. A packaged
 application Docker image/Compose deployment has not been built or validated.
 Do not describe this development installation as an external production service.
 
-## External test deployment: still to validate
+## External test deployment
+
+The hosted staging deployment is running on Vercel and Supabase. See
+[platform status](PLATFORM-STATUS.md) for verified journeys and remaining gates.
+The steps below describe setup requirements, not a completed validation of every
+self-hosted topology.
 
 Use the same app against hosted Supabase or a complete self-hosted Supabase stack
 (Auth and API included; a bare PostgreSQL database alone is insufficient).

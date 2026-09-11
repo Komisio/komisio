@@ -16,13 +16,34 @@ export default async function BagLabel({
   if (!z.uuid().safeParse(id).success) notFound()
   const { data: bag, error } = await ctx.client
     .from('bag_receipts')
-    .select('reference,received_at')
+    .select('reference,received_at,agreement_version_id,agreement_evidence_id')
     .eq('tenant_id', ctx.active!.id)
     .eq('id', id)
     .maybeSingle()
   if (error) throw new Error('Unable to load bag label')
   if (!bag) notFound()
   const d = dictionary(ctx.locale).intake
+  const a = dictionary(ctx.locale).agreements
+  const [version, evidence] = await Promise.all([
+    bag.agreement_version_id
+      ? ctx.client
+          .from('seller_agreement_versions')
+          .select('id,version,title')
+          .eq('tenant_id', ctx.active!.id)
+          .eq('id', bag.agreement_version_id)
+          .maybeSingle()
+      : Promise.resolve({ data: null, error: null }),
+    bag.agreement_evidence_id
+      ? ctx.client
+          .from('seller_agreement_evidence')
+          .select('reference,recorded_at')
+          .eq('tenant_id', ctx.active!.id)
+          .eq('id', bag.agreement_evidence_id)
+          .maybeSingle()
+      : Promise.resolve({ data: null, error: null }),
+  ])
+  if (version.error || evidence.error)
+    throw new Error('Unable to load receipt agreement')
   return (
     <>
       <div className="page-heading no-print">
@@ -49,6 +70,27 @@ export default async function BagLabel({
           {d.back}
         </Link>
       </div>
+      <section className="card intake-form no-print">
+        <h2>{a.receiptAgreement}</h2>
+        {version.data ? (
+          <>
+            <Link
+              className="text-link"
+              href={`/intake/agreements?version=${version.data.id}`}
+            >
+              {version.data.title} · {a.version} {version.data.version}
+            </Link>
+            <p>
+              {evidence.data
+                ? `${a.staffRecorded}: ${evidence.data.reference}`
+                : a.noEvidence}
+            </p>
+          </>
+        ) : (
+          <p>{a.noReceiptAgreement}</p>
+        )}
+        <p>{a.evidenceNote}</p>
+      </section>
     </>
   )
 }

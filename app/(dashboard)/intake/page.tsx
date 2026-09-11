@@ -3,8 +3,14 @@ import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
-import type { Seller, BagReceipt } from '@/lib/engine/intake'
+import type {
+  Seller,
+  BagReceipt,
+  SellerAgreement,
+  AgreementEvidence,
+} from '@/lib/engine/intake'
 import { ReceivingPanel } from '@/components/intake/receiving-panel'
+import { EvidenceRecorder } from '@/components/intake/agreement-forms'
 
 export default async function Intake({
   searchParams,
@@ -14,11 +20,13 @@ export default async function Intake({
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const ctx = await requirePlatform()
   const active = ctx.active!
-  const d = dictionary(ctx.locale).intake
+  const all = dictionary(ctx.locale)
+  const d = all.intake
+  const a = all.agreements
   const params = await searchParams
   const q = typeof params.q === 'string' ? params.q.trim().slice(0, 120) : ''
   const selectedId = z.uuid().safeParse(params.seller)
-  const [sellers, bags, selected] = await Promise.all([
+  const [sellers, bags, selected, agreementResult] = await Promise.all([
     ctx.client
       .from('sellers')
       .select('id,name,email,phone')
@@ -42,15 +50,41 @@ export default async function Intake({
           .eq('id', selectedId.data)
           .maybeSingle()
       : Promise.resolve({ data: null, error: null }),
+    ctx.client
+      .from('seller_agreement_versions')
+      .select('*')
+      .eq('tenant_id', active.id)
+      .order('version', { ascending: false })
+      .limit(1)
+      .maybeSingle(),
   ])
-  if (sellers.error || bags.error || selected.error)
+  if (sellers.error || bags.error || selected.error || agreementResult.error)
     throw new Error('Unable to load intake')
+  const agreement = agreementResult.data as SellerAgreement | null
+  const evidenceResult =
+    agreement && selected.data
+      ? await ctx.client
+          .from('seller_agreement_evidence')
+          .select('id,agreement_id,reference,recorded_at')
+          .eq('tenant_id', active.id)
+          .eq('agreement_id', agreement.id)
+          .eq('seller_id', selected.data.id)
+          .order('recorded_at', { ascending: false })
+          .order('id')
+          .limit(1)
+          .maybeSingle()
+      : { data: null, error: null }
+  if (evidenceResult.error) throw new Error('Unable to load agreement evidence')
+  const evidence = evidenceResult.data as AgreementEvidence | null
   return (
     <>
       <div className="page-heading">
         <div className="eyebrow">{active.name}</div>
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
+        <Link className="text-link" href="/intake/agreements">
+          {a.manage}
+        </Link>
       </div>
       <p className="intake-notice">{d.pilot}</p>
       <div className="intake-grid">
@@ -91,16 +125,66 @@ export default async function Intake({
           {!sellers.data?.length && <p>{d.noSellers}</p>}
           <small>{d.limit}</small>
         </section>
-        {active.role !== 'readonly' ? (
-          <ReceivingPanel
-            key={`${active.id}:${selected.data?.id ?? 'new'}`}
-            tenantId={active.id}
-            seller={selected.data as Seller | null}
-            d={d}
-          />
-        ) : (
-          <p>{d.readOnly}</p>
-        )}
+        <div>
+          {selected.data && agreement && (
+            <section className="card intake-form agreement-at-intake">
+              <h2>{a.evidenceHeading}</h2>
+              <p>
+                <strong>
+                  {agreement.title} · {a.version} {agreement.version}
+                </strong>
+                <br />
+                {a.language}:{' '}
+                {agreement.language === 'sv' ? 'Svenska' : 'English'}
+              </p>
+              <p>
+                {agreement.required_before_receipt ? a.required : a.optional}
+              </p>
+              <details>
+                <summary>{a.view}</summary>
+                <div className="agreement-text">{agreement.body}</div>
+              </details>
+              <p>{evidence ? a.available : a.missing}</p>
+              {evidence ? (
+                <p>
+                  {a.staffRecorded}:{' '}
+                  {new Date(evidence.recorded_at).toLocaleString(
+                    ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',
+                    { timeZone: 'Europe/Stockholm' },
+                  )}
+                  <br />
+                  {evidence.reference}
+                </p>
+              ) : (
+                active.role !== 'readonly' && (
+                  <EvidenceRecorder
+                    key={`${active.id}:${selected.data.id}:${agreement.id}`}
+                    tenantId={active.id}
+                    sellerId={selected.data.id}
+                    agreementId={agreement.id}
+                    d={all}
+                  />
+                )
+              )}
+            </section>
+          )}
+          {active.role !== 'readonly' ? (
+            <ReceivingPanel
+              key={`${active.id}:${selected.data?.id ?? 'new'}`}
+              tenantId={active.id}
+              seller={selected.data as Seller | null}
+              d={d}
+              expectedAgreementId={agreement?.id ?? null}
+              agreementBlocked={Boolean(
+                selected.data &&
+                agreement?.required_before_receipt &&
+                !evidence,
+              )}
+            />
+          ) : (
+            <p>{d.readOnly}</p>
+          )}
+        </div>
       </div>
       <section className="card intake-form">
         <h2>{d.queue}</h2>

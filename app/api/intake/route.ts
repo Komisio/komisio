@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       const { value, done } = await reader.read()
       if (done) break
       size += value.byteLength
-      if (size > 10000) {
+      if (size > 64000) {
         await reader.cancel()
         return reply({ error: 'INVALID_INPUT' }, 413)
       }
@@ -45,6 +45,11 @@ export async function POST(request: Request) {
       return reply({ error: 'TENANT_CHANGED' }, 409)
     if (ctx.active.role === 'readonly')
       return reply({ error: 'FORBIDDEN' }, 403)
+    if (
+      parsed.data.action === 'publishAgreement' &&
+      !['owner', 'admin'].includes(ctx.active.role)
+    )
+      return reply({ error: 'FORBIDDEN' }, 403)
     const result = await executeIntake(ctx.client, parsed.data)
     if (result.error) {
       const code =
@@ -54,10 +59,20 @@ export async function POST(request: Request) {
           'REQUEST_CONFLICT',
           'SELLER_NOT_FOUND',
           'INVALID_INPUT',
+          'AGREEMENT_CHANGED',
+          'AGREEMENT_REQUIRED',
         ].find((v) => result.error!.message.includes(v)) ?? 'REQUEST_FAILED'
       return reply(
         { error: code },
-        code === 'FORBIDDEN' ? 403 : code === 'REQUEST_CONFLICT' ? 409 : 400,
+        code === 'FORBIDDEN'
+          ? 403
+          : [
+                'REQUEST_CONFLICT',
+                'AGREEMENT_CHANGED',
+                'AGREEMENT_REQUIRED',
+              ].includes(code)
+            ? 409
+            : 400,
       )
     }
     return reply({ ok: true, id: result.data })

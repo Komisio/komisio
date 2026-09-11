@@ -2,6 +2,7 @@ import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { can } from '@/lib/platform/permissions'
 import { TenantForm } from '@/components/platform/tenant-form'
+import Link from 'next/link'
 export default async function Settings() {
   const ctx = await requirePlatform()
   const d = dictionary(ctx.locale)
@@ -21,6 +22,11 @@ export default async function Settings() {
         <div className="eyebrow">{active.name}</div>
         <h1>{d.tenant}</h1>
         <p>{d.tenantIntro}</p>
+        {process.env.KOMISIO_INTAKE_ENABLED === 'true' && (
+          <Link className="text-link" href="/intake/agreements">
+            {d.agreements.manage}
+          </Link>
+        )}
       </div>
       <div className="settings-grid">
         <section className="card">

@@ -6,6 +6,40 @@ const identity = {
   requestId: '10000000-0000-4000-8000-000000000002',
 }
 describe('intake command boundary', () => {
+  it('requires explicit publication policy and language and bounds legal text', () => {
+    const input = {
+      ...identity,
+      action: 'publishAgreement',
+      expectedCurrentId: null,
+      title: 'Terms',
+      body: 'Test terms',
+      language: 'sv',
+      required: true,
+    }
+    expect(intakeCommand.safeParse(input).success).toBe(true)
+    expect(
+      intakeCommand.safeParse({ ...input, required: 'true' }).success,
+    ).toBe(false)
+    expect(
+      intakeCommand.safeParse({ ...input, language: 'unknown' }).success,
+    ).toBe(false)
+    expect(
+      intakeCommand.safeParse({ ...input, body: 'x'.repeat(12001) }).success,
+    ).toBe(false)
+  })
+  it('requires an identifiable external evidence reference', () => {
+    const input = {
+      ...identity,
+      action: 'recordEvidence',
+      sellerId: identity.requestId,
+      agreementId: identity.requestId,
+      reference: '  ',
+    }
+    expect(intakeCommand.safeParse(input).success).toBe(false)
+    expect(
+      intakeCommand.parse({ ...input, reference: ' Paper TEST-1 ' }),
+    ).toMatchObject({ reference: 'Paper TEST-1' })
+  })
   it('requires a contact channel without requiring an email account', () => {
     const input = {
       ...identity,

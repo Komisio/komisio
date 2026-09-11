@@ -72,6 +72,12 @@ changes; direct table mutations are denied. See
 `docs/SELLER-FLOW-IMPLEMENTATION.md` for activation and remaining workflow scope.
 There are still no item, financial or agreement-acceptance tables or agent writes.
 
+The staff agreement-evidence slice adds immutable `seller_agreement_versions`
+and `seller_agreement_evidence`. It records external evidence, not a seller's
+electronic acceptance. Receiving preserves exact version/evidence references;
+publication and receiving serialize with membership changes. See
+`docs/SELLER-AGREEMENTS.md` for the policy, replay and deployment contract.
+
 ```
 ┌───────────────────────────────────────────────────────────────┐
 │  UI (web, later PWA for consignors)      MCP server (agents)   │  surfaces

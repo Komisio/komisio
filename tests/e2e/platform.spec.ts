@@ -1,6 +1,178 @@
 import { test, expect, type Page } from '@playwright/test'
 import { randomBytes, createHmac } from 'node:crypto'
 
+test('versioned agreement evidence gates new receipts and preserves old ones', async ({
+  page,
+}) => {
+  const run = Date.now().toString(36)
+  await register(
+    page,
+    `agreements-${run}@example.test`,
+    `K!${randomBytes(16).toString('hex')}`,
+  )
+  await page.getByLabel('Butikens namn').fill('E2E Avtalsbutiken')
+  await page.getByLabel('Butikens identifierare').fill(`agreements-${run}`)
+  await page.getByRole('button', { name: 'Skapa min butik' }).click()
+  await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
+  const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
+  await page.goto('/intake/agreements')
+  await page.getByLabel('Avtalets rubrik').fill('TEST Villkor 1')
+  await page
+    .getByLabel('Avtalstext', { exact: true })
+    .fill('Endast fiktiva testvillkor. <script>Not executable</script>')
+  await page.getByLabel('Kräv registrerat underlag', { exact: false }).check()
+  await page.getByLabel('Jag har granskat texten', { exact: false }).check()
+  const publishResponse = page.waitForResponse(
+    (r) => r.url().endsWith('/api/intake') && r.request().method() === 'POST',
+  )
+  await page
+    .getByRole('button', { name: 'Publicera version', exact: true })
+    .click()
+  const published = await publishResponse
+  expect(published.status()).toBe(200)
+  const version1 = (await published.json()).id
+  await expect(page.getByRole('status')).toContainText(
+    'Avtalsversionen är publicerad',
+  )
+  await expect(page.locator('.agreement-text')).toContainText(
+    '<script>Not executable</script>',
+  )
+  await page.goto('/intake')
+  await page.getByLabel('Säljarens namn').fill('Avtalssäljare TEST')
+  await page.getByLabel('Telefon', { exact: true }).fill('0000000000')
+  await page.getByRole('button', { name: 'Spara säljare' }).click()
+  await expect(
+    page.getByRole('heading', { name: 'Ta emot en påse' }),
+  ).toBeVisible()
+  const sellerUrl = page.url()
+  const sellerId = new URL(sellerUrl).searchParams.get('seller')!
+  await expect(
+    page.getByRole('button', { name: 'Bekräfta mottagandet' }),
+  ).toBeDisabled()
+  const denied = await page.request.post('/api/intake', {
+    headers: { Origin: 'http://127.0.0.1:3000' },
+    data: {
+      action: 'receiveBag',
+      tenantId,
+      sellerId,
+      requestId: crypto.randomUUID(),
+      note: '',
+      expectedAgreementId: version1,
+    },
+  })
+  expect(denied.status()).toBe(409)
+  expect((await denied.json()).error).toBe('AGREEMENT_REQUIRED')
+  await page
+    .getByLabel('Hänvisning till underlag', { exact: true })
+    .fill('TEST-PAPPER-1, fiktivt underlag')
+  await page
+    .getByLabel('Jag har kontrollerat att underlaget', { exact: false })
+    .check()
+  await page
+    .getByRole('button', { name: 'Registrera underlag', exact: true })
+    .click()
+  await expect(
+    page.getByText('Underlag finns för aktuell version', { exact: true }),
+  ).toBeVisible()
+  await page.getByLabel('Jag bekräftar att påsen', { exact: false }).check()
+  const receiptResponse = page.waitForResponse(
+    (r) => r.url().endsWith('/api/intake') && r.request().method() === 'POST',
+  )
+  await page.getByRole('button', { name: 'Bekräfta mottagandet' }).click()
+  const receipt = await receiptResponse
+  expect(receipt.status()).toBe(200)
+  const receiptId = (await receipt.json()).id
+  const replayCommand = receipt.request().postDataJSON()
+  await expect(page.locator('.intake-bag')).toHaveCount(1)
+  const stale = await page.context().newPage()
+  const stalePublisher = await page.context().newPage()
+  try {
+    await stalePublisher.goto('/intake/agreements')
+    await stalePublisher
+      .getByLabel('Avtalets rubrik')
+      .fill('Unpublished older draft')
+    await stalePublisher
+      .getByLabel('Jag har granskat texten', { exact: false })
+      .check()
+    await stale.goto(sellerUrl)
+    await stale
+      .getByLabel('Kännetecken på påsen (valfritt)')
+      .fill('Stale form bag')
+    await stale.getByLabel('Jag bekräftar att påsen', { exact: false }).check()
+    await page.goto('/intake/agreements')
+    await page.getByLabel('Avtalets rubrik').fill('TEST Villkor 2')
+    await page
+      .getByLabel('Avtalstext', { exact: true })
+      .fill('New fictional terms, not a real seller contract.')
+    await page.getByLabel('Avtalets språk').selectOption('en')
+    await page.getByLabel('Jag har granskat texten', { exact: false }).check()
+    await page
+      .getByRole('button', { name: 'Publicera version', exact: true })
+      .click()
+    await expect(page.getByRole('status')).toContainText(
+      'Avtalsversionen är publicerad',
+    )
+    await stalePublisher
+      .getByRole('link', { name: /Version 1.*TEST Villkor 1/ })
+      .click()
+    await expect(stalePublisher).toHaveURL(/version=/)
+    await expect(stalePublisher.getByLabel('Avtalets rubrik')).toHaveValue(
+      'Unpublished older draft',
+    )
+    await stalePublisher
+      .getByRole('button', { name: 'Publicera version', exact: true })
+      .click()
+    await expect(
+      stalePublisher
+        .getByRole('alert')
+        .filter({ hasText: 'Avtalet har ändrats' }),
+    ).toBeVisible()
+    await stale.getByRole('button', { name: 'Bekräfta mottagandet' }).click()
+    await expect(
+      stale.getByRole('alert').filter({ hasText: 'Avtalet har ändrats' }),
+    ).toBeVisible()
+    await expect(
+      stale.getByRole('button', { name: 'Bekräfta mottagandet' }),
+    ).toBeDisabled()
+    const replay = await page.request.post('/api/intake', {
+      headers: { Origin: 'http://127.0.0.1:3000' },
+      data: replayCommand,
+    })
+    expect(replay.status()).toBe(200)
+    expect((await replay.json()).id).toBe(receiptId)
+    await page.goto(`/intake/bags/${receiptId}`)
+    await expect(
+      page.getByRole('link', { name: 'TEST Villkor 1 · Version 1' }),
+    ).toBeVisible()
+    await expect(
+      page.getByText(
+        'Registrerat av personal: TEST-PAPPER-1, fiktivt underlag',
+      ),
+    ).toBeVisible()
+    await expect(page.locator('.bag-label')).not.toContainText('TEST-PAPPER-1')
+    await page.goto(sellerUrl)
+    await expect(
+      page.getByText('Underlag saknas för aktuell version', { exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: 'Bekräfta mottagandet' }),
+    ).toBeDisabled()
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.screenshot({
+      path: 'test-results/agreement-intake-mobile.png',
+      fullPage: true,
+    })
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+  } finally {
+    await stale.close()
+    await stalePublisher.close()
+  }
+})
+
 test('staff receives a bag, retries safely and prints a private label', async ({
   page,
 }) => {

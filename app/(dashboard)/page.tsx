@@ -92,7 +92,13 @@ export default async function Home() {
       </div>
       <p className="footnote">
         <Sprout size={16} />
-        {d.foundationNote}
+        {process.env.KOMISIO_INTAKE_ENABLED === 'true' ? (
+          <Link className="text-link" href="/intake">
+            {d.intake.title} – {d.intake.intro}
+          </Link>
+        ) : (
+          d.foundationNote
+        )}
       </p>
       <p className="footnote">
         <CircleHelp size={14} />

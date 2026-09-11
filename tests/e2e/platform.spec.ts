@@ -267,6 +267,153 @@ test('register, verify, create stores, invite, isolate and administer access', a
   await staffContext.close()
 })
 
+test('admin and readonly permissions stay scoped to each store', async ({
+  browser,
+  page,
+}) => {
+  const run = Date.now().toString(36)
+  const password = `K!${randomBytes(16).toString('hex')}`
+  const adminEmail = `admin-${run}@example.test`
+  const readerEmail = `reader-${run}@example.test`
+  const adminContext = await browser.newContext()
+  const readerContext = await browser.newContext()
+  const admin = await adminContext.newPage()
+  const reader = await readerContext.newPage()
+  async function command(actor: Page, data: object) {
+    return actor.request.post('/api/platform', {
+      headers: { Origin: 'http://127.0.0.1:3000' },
+      data,
+    })
+  }
+  try {
+    await register(page, `roles-owner-${run}@example.test`, password)
+    await page.getByLabel('Butikens namn').fill('E2E Role Store')
+    await page.getByLabel('Butikens identifierare').fill(`roles-${run}`)
+    await page.getByRole('button', { name: 'Skapa min butik' }).click()
+    await expect(
+      page.getByRole('heading', { name: 'Välkommen.' }),
+    ).toBeVisible()
+    const tenantA = await page.getByLabel('Aktiv butik').first().inputValue()
+    const invitation = await command(page, {
+      action: 'invite',
+      tenantId: tenantA,
+      email: adminEmail,
+      role: 'admin',
+    })
+    expect(invitation.ok()).toBe(true)
+    const adminInvite = (await invitation.json()).inviteUrl
+    await register(admin, adminEmail, password, new URL(adminInvite).pathname)
+    await admin
+      .getByRole('button', { name: 'Acceptera inbjudan', exact: true })
+      .click()
+    await expect(
+      admin.getByRole('heading', { name: 'Välkommen.' }),
+    ).toBeVisible()
+    await admin.goto('/members')
+    await expect(
+      admin.getByLabel('Roll', { exact: true }).locator('option'),
+    ).toHaveCount(2)
+    expect(
+      (
+        await command(admin, {
+          action: 'invite',
+          tenantId: tenantA,
+          email: `elevated-${run}@example.test`,
+          role: 'admin',
+        })
+      ).status(),
+    ).toBe(403)
+    expect(
+      (
+        await command(admin, {
+          action: 'rename',
+          tenantId: tenantA,
+          name: 'E2E Admin Renamed',
+        })
+      ).ok(),
+    ).toBe(true)
+    const readerInvitation = await command(admin, {
+      action: 'invite',
+      tenantId: tenantA,
+      email: readerEmail,
+      role: 'readonly',
+    })
+    expect(readerInvitation.ok()).toBe(true)
+    await register(
+      reader,
+      readerEmail,
+      password,
+      new URL((await readerInvitation.json()).inviteUrl).pathname,
+    )
+    await reader
+      .getByRole('button', { name: 'Acceptera inbjudan', exact: true })
+      .click()
+    await expect(
+      reader.getByRole('heading', { name: 'Välkommen.' }),
+    ).toBeVisible()
+    await reader.goto('/members')
+    await expect(
+      reader.getByRole('button', { name: 'Bjud in', exact: true }),
+    ).toHaveCount(0)
+    expect(
+      (
+        await command(reader, {
+          action: 'rename',
+          tenantId: tenantA,
+          name: 'Forbidden rename',
+        })
+      ).status(),
+    ).toBe(403)
+    expect(
+      (
+        await command(reader, {
+          action: 'invite',
+          tenantId: tenantA,
+          email: `denied-${run}@example.test`,
+          role: 'staff',
+        })
+      ).status(),
+    ).toBe(403)
+    await reader.goto('/onboarding')
+    await reader.getByLabel('Butikens namn').fill('E2E Reader Own Store')
+    await reader.getByLabel('Butikens identifierare').fill(`reader-own-${run}`)
+    await reader.getByRole('button', { name: 'Skapa min butik' }).click()
+    await expect(
+      reader.getByRole('heading', { name: 'Välkommen.' }),
+    ).toBeVisible()
+    const tenantB = await reader.getByLabel('Aktiv butik').first().inputValue()
+    expect(tenantB).not.toBe(tenantA)
+    expect(
+      (
+        await command(reader, {
+          action: 'rename',
+          tenantId: tenantB,
+          name: 'E2E Owner Rename',
+        })
+      ).ok(),
+    ).toBe(true)
+    expect(
+      (await command(admin, { action: 'select', tenantId: tenantB })).ok(),
+    ).toBe(false)
+    await reader.getByLabel('Aktiv butik').first().selectOption(tenantA)
+    await expect(reader.locator('.page-heading .eyebrow')).toHaveText(
+      'E2E Admin Renamed',
+    )
+    expect(
+      (
+        await command(reader, {
+          action: 'rename',
+          tenantId: tenantA,
+          name: 'Still forbidden',
+        })
+      ).status(),
+    ).toBe(403)
+  } finally {
+    await adminContext.close()
+    await readerContext.close()
+  }
+})
+
 function totp(secret: string) {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
   const bits = secret

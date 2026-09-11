@@ -1,53 +1,111 @@
-# Komisio
+<p align="center">
+  <img src="docs/images/komisio-hero.svg" alt="Komisio. Second-hand deserves first-class software." width="100%">
+</p>
 
-Open-source consignment software for second-hand stores: consignors, intake,
-items, sales, commission, settlements and payouts. Built to be operated by
-people **or by AI agents**, with the rules that protect consignors' money
-enforced in the database and proven by tests.
+<p align="center">
+  <strong>Give great things a second life. Give your store a better system.</strong><br>
+  Open-source software for second-hand stores selling on consignment.<br>
+  Built in the open. Designed for people and, next, their AI agents.
+</p>
 
-Komisio does not do bookkeeping. It produces bookkeeping data and hands it to an
-accounting system through an extension.
+<p align="center">
+  <a href="https://github.com/Komisio/komisio/actions/workflows/test-db.yml"><img src="https://github.com/Komisio/komisio/actions/workflows/test-db.yml/badge.svg" alt="Platform checks"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0--or--later-163F35" alt="AGPL-3.0-or-later"></a>
+  <a href="ROADMAP.md"><img src="https://img.shields.io/badge/status-platform_preview-D7EBA5?labelColor=163F35" alt="Platform preview"></a>
+</p>
 
-- License: AGPL-3.0-or-later (`LICENSE`), with an exception for extensions that
-  use only the documented extension API (`NOTICE`).
-- Language: code, comments, commits and documentation in English; the user
-  interface in Swedish and English; Swedish legal terms kept where precision
-  requires it (`CONTRIBUTING.md`).
+<p align="center">
+  <a href="https://komisio-staging.vercel.app">Explore the preview</a> ·
+  <a href="#run-it-locally">Run it locally</a> ·
+  <a href="ROADMAP.md">Roadmap</a> ·
+  <a href="CONTRIBUTING.md">Build with us</a>
+</p>
 
-## Status: platform preview
+## Your stock is unique. Your software should keep up.
 
-The application now implements email registration/confirmation, login/logout,
-password recovery, optional TOTP MFA, store creation/switching, user profiles,
-email-bound invitation links, membership/role administration and an access log.
-It has an original responsive web UI in Swedish and English. Invitations are
-shared by link by default; optional Resend delivery for allowlisted pilot
-mailboxes is available. See [hosted staging setup](docs/HOSTED-STAGING.md).
+A jacket comes in. Someone else owns it. Your store sells it. You keep a
+commission. They get their share. Every item has a story — and someone waiting
+to be paid.
 
-The foundation below has been extended to support these platform flows.
+Komisio is being built around that reality: the handover, the people, the sale
+and the settlement. Sweden first, with Nordic ambitions. A focused system for
+the shops giving things another life.
 
-Phase 0 establishes the project, not the product:
+**Less chasing spreadsheets. More running your store.** That's the goal.
 
-| Area | Deliverable | Where |
-|---|---|---|
-| Project and open source | repository layout, license, contribution rules, CI | this file, `CONTRIBUTING.md`, `DCO`, `.github/workflows` |
-| Decisions | one line per non-obvious choice, with its reason | `DECISIONS.md` |
-| Technical foundation | a small runnable project: local database, additive migrations, automated tests, CI configuration | `supabase/` |
-| Core and extensions | boundaries between engine, storage, UI, AI/MCP and integrations | `ARCHITECTURE.md`, `docs/EXTENSIONS.md` |
-| AI working practices | agent instructions, change and verification rules, approval principles | `CLAUDE.md`, `AGENTS.md` |
-| Domain understanding | concrete use cases and open questions, before the data model | `docs/open-questions.md`, `docs/first-slice.md`, `skills/` |
+## Small team. Big ambition. Open source.
 
-The active schema covers identity and access only: stores, membership, profiles,
-invitations and access events. The earlier financial schema remains an
-experiment: `experiments/2026-09-schema-sketch/`.
+**Your store, your team.** Create a store, invite colleagues and give each person
+the right access. The foundation includes owner, admin, staff and read-only
+roles, store switching and a web interface in Swedish and English.
 
-## Running
+**AI should do the legwork. You keep control.** Our architectural direction is
+one shared engine for the interface, extensions and AI agents. Agents should
+prepare work for approval, with permissions and business rules enforced by the
+system. The agent runtime and consignment engine are still ahead of us.
 
-Requires Node.js (24 LTS recommended), npm, Supabase CLI 2.117.0 and Docker.
-On Windows the helper scripts also find Docker Desktop's default installation.
-The startup helper pins PostgREST v14.18 to avoid a fresh-session timing bug in
-the CLI's default image; see `docs/SELF-HOSTING.md`.
+**Open means you can look under the hood.** Inspect the code, run the current
+platform locally and help shape what comes next. AGPL-3.0-or-later, with a
+documented extension exception. No AI subscription is needed to run the preview.
+
+**Focused on second-hand. Connected to the rest.** Komisio is intended to
+produce bookkeeping data for systems such as Accounted and Fortnox.
+Accounting integrations are planned; Komisio is not a bookkeeping application.
+
+## From handover to payout
+
+![Planned workflow: receive an item, sell it, settle the consignor's share. These operations are not implemented yet.](docs/images/komisio-flow.svg)
+
+The first store operation will be deliberately small: **register a consignor
+and receive an item**. Sales, returns, commission, settlements and payouts will
+follow as validated workflows. See the [first slice](docs/first-slice.md) and
+[open domain questions](docs/open-questions.md).
+
+## What can I use today?
+
+**This is a working platform preview, not a finished store system.**
+The [hosted preview](https://komisio-staging.vercel.app) is a test environment;
+use test data rather than real consignor or financial records.
+
+| Available in the current platform | Still being built or planned |
+| --- | --- |
+| Registration, email confirmation, login and password recovery | Consignors, item intake and inventory |
+| Store creation and switching between your stores | Sales, returns and commission |
+| Profiles and optional authenticator-app MFA | Settlements and payouts |
+| Membership administration and four access roles | Accounting and other integration extensions |
+| Email-bound invitation links and optional pilot email delivery | AI agent tools and approval workflows |
+| Access log and responsive Swedish/English interface | Billing and commercial hosted plans |
+
+Hosted onboarding and invitation edge cases are still being validated during
+the pilot. See [platform status](docs/PLATFORM-STATUS.md) for details and
+[the roadmap](ROADMAP.md) for acceptance gates.
+
+### Free core. Optional convenience.
+
+The intended model is a **free tier** and a **199 SEK/month hosted tier** focused
+on managed integrations and automation. This is the product direction, not an
+available subscription: billing, exact plan limits and launch terms are not
+implemented or finalized. The source is available now under the project license.
+
+## Help build the system you wish existed
+
+You don't need to write code to make Komisio better.
+
+- **Run a second-hand store?** [Share a workflow](https://github.com/Komisio/komisio/issues/new): how you receive items, agree commissions or prepare payouts. Use fictional examples and leave out personal data.
+- **Care about great software?** Try the platform and tell us where it feels confusing. Clear bug reports, accessibility feedback and translations all help.
+- **Want to build?** Start with the [contribution guide](CONTRIBUTING.md) and [roadmap](ROADMAP.md). For larger changes, open an issue first so we can agree on the scope.
+
+If this is the kind of software you want to see in the world, **give the repo a
+star and follow along.** We're early enough for your input to matter.
+
+## Run it locally
+
+Requires Node.js (24 LTS recommended), npm, Docker and Supabase CLI 2.117.0.
+The initial container download can take a few minutes.
 
 ```bash
+git clone https://github.com/Komisio/komisio.git
+cd komisio
 npm ci
 npm run db:start
 npm run db:migrate
@@ -55,53 +113,49 @@ node scripts/configure-local.mjs
 npm run dev
 ```
 
-Open `http://127.0.0.1:3000`. Register your account and confirm the email in
-the local test inbox at `http://127.0.0.1:54324`. The setup helper writes only
-the public client key to ignored `.env.local`; there is no application service
-role key. The local configuration enables email confirmation and TOTP.
+Open <http://127.0.0.1:3000>. Register and confirm your email in the local test
+inbox at <http://127.0.0.1:54324>, using the same browser.
 
-The checked-in local email limit is for development, not a production policy.
-Do not reset an existing database to apply changes; use `npm run db:migrate`.
+The helper writes public local client settings to ignored `.env.local`;
+it needs no application service-role key. Do not run it over existing hosted
+settings. Apply changes with `npm run db:migrate`; do not reset an existing database.
+
+This runs the app locally with Supabase containers. A packaged application
+Docker deployment is not yet available. See [self-hosting](docs/SELF-HOSTING.md)
+and [hosted staging setup](docs/HOSTED-STAGING.md) for configuration and limits.
+
+## For the curious and the builders
+
+Next.js · React · TypeScript · Supabase (PostgreSQL, Auth and row-level security).
+The active schema is intentionally limited to identity and access. Domain
+workflows come before a financial data model.
+
+| Start here | What you'll find |
+| --- | --- |
+| [Architecture](ARCHITECTURE.md) | Target boundaries for the core, UI, AI and extensions |
+| [Decisions](DECISIONS.md) | What we've chosen and why |
+| [Roadmap](ROADMAP.md) | Milestones and acceptance scenarios |
+| [Extensions](docs/EXTENSIONS.md) | The proposed integration contract |
+| [Agent instructions](CLAUDE.md) | How AI-assisted contributions are governed |
+| [Domain knowledge](skills/) | Working notes for humans and agents |
+| [Security](SECURITY.md) | Reporting vulnerabilities and access principles |
+
+Application routes live in `app/`, shared UI in `components/`, identity and
+permissions in `lib/platform/`, database migrations and tests in `supabase/`,
+and translations in `messages/`. Earlier schema explorations live in
+`experiments/`; they are not the active product model.
 
 Checks: `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`,
 `npm run test:db`, `npm run test:concurrency` and `npm run test:e2e`.
-Browser tests use synthetic `example.test` accounts and create E2E-labelled
-stores in the local database. They must not target a production environment.
+Browser tests use synthetic accounts and must target only a local test environment.
 
-## Repository map
+## License
 
-```
-ARCHITECTURE.md      how the system is put together and why parts are rigid
-DECISIONS.md         decision log, one line per decision with its reason
-CLAUDE.md            rules for AI agents working in this repo (source of truth)
-AGENTS.md            entry point for agents that do not read CLAUDE.md
-CONTRIBUTING.md      how to contribute; language, commits, DCO, tests
-SECURITY.md          reporting and access principles
-NOTICE               copyright, license exception, third-party notices
-docs/                extensions contract, self-hosting, open questions,
-                     the first vertical slice
-skills/              domain knowledge for agents and humans (Swedish consignment rules)
-supabase/            migrations and pgTAP tests — the runnable foundation
-app/                 auth, onboarding and signed-in web routes
-components/          shared UI and platform forms
-lib/platform/        request context, permissions, validation and types
-lib/supabase/        browser/server session clients
-messages/            Swedish and English UI text
-tests/               unit and browser tests
-ROADMAP.md           delivery milestones and acceptance scenarios
-experiments/         explorations that are not decisions
-```
+[AGPL-3.0-or-later](LICENSE), with an [exception for extensions](NOTICE) using
+only the documented extension API. Contributions use the [DCO](DCO), with
+signed-off commits and no CLA. Code, comments and documentation are in English;
+the application speaks Swedish and English.
 
-Verification and limitations: `docs/PLATFORM-STATUS.md`.
+---
 
-## Next
-
-Complete and review the platform preview before starting store operations.
-`ROADMAP.md` defines the remaining pilot/deployment work and acceptance gates.
-The project repository is https://github.com/Komisio/komisio. The original
-application repositories remain separate; they supply workflow questions only.
-A public source repository does not mean a production service is available.
-
-The first consignment slice, *register a consignor and receive an item*, follows
-the platform completion gate. See `docs/first-slice.md`. No financial data model
-until the relevant questions in `docs/open-questions.md` are answered.
+**Good things deserve another life. Good software deserves to be open.**

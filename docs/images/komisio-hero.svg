@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="620" viewBox="0 0 1280 620" role="img" aria-labelledby="title desc">
+<title id="title">Komisio — Second-hand deserves first-class software.</title>
+<desc id="desc">Original evergreen and lime artwork with overlapping circular-economy price tags.</desc>
+<rect width="1280" height="620" rx="24" fill="#143e34"/>
+<circle cx="1170" cy="40" r="310" fill="#1b4b3e"/><circle cx="1100" cy="600" r="275" fill="#194739"/>
+<g font-family="Arial, Helvetica, sans-serif">
+<text x="72" y="104" fill="#f4f6ec" font-size="49" font-weight="700" letter-spacing="-2">komisio.</text>
+<text x="74" y="174" fill="#bed0b8" font-size="15" font-weight="700" letter-spacing="3">A NEW LIFE FOR SECOND-HAND SOFTWARE</text>
+<g fill="#f4f6ec" font-size="68" font-weight="700" letter-spacing="-2"><text x="70" y="280">Second-hand</text><text x="70" y="357">deserves</text><text x="70" y="434" fill="#dcf0a4">first-class software.</text></g>
+<text x="74" y="548" fill="#c7d7c5" font-size="19">OPEN SOURCE · SWEDEN FIRST · BUILT IN THE OPEN</text></g>
+<g transform="translate(934 139) rotate(15 110 155)"><path d="M0 67 64 0h144l35 67v255H0Z" fill="#87b49a"/><circle cx="118" cy="44" r="12" fill="#143e34"/></g>
+<g transform="translate(886 159) rotate(-11 110 155)"><path d="M0 65 55 0h137l48 65v245H0Z" fill="#dcefaa"/><circle cx="118" cy="37" r="11" fill="#143e34"/>
+<path d="M85 157a45 45 0 0 1 73-33m4-25 1 29-29-1M154 185a45 45 0 0 1-73 33m-4 25-1-29 29 1" fill="none" stroke="#214c3b" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="120" y="281" text-anchor="middle" fill="#214c3b" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" letter-spacing="2">ANOTHER CHAPTER</text></g></svg>

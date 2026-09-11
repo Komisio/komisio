@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="380" viewBox="0 0 1280 380" role="img" aria-labelledby="title desc">
+<title id="title">One item. A whole journey.</title><desc id="desc">Planned workflow: receive, sell, settle. Concept illustration, not a product screenshot. These operations are not implemented yet.</desc>
+<rect width="1280" height="380" rx="24" fill="#f1f3e9"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#173e33">
+<text x="48" y="64" font-size="29" font-weight="700">One item. A whole journey.</text><text x="48" y="95" font-size="16" fill="#52675a">THE WORKFLOW WE'RE BUILDING TOWARDS</text>
+<g transform="translate(48 130)"><rect width="365" height="171" rx="16" fill="#fff"/><text x="25" y="43" font-size="15" fill="#65785e">01 / RECEIVE</text><text x="25" y="84" font-size="27" font-weight="700">A new arrival.</text><text x="25" y="118" font-size="18">The item. Its owner. The agreement.</text></g>
+<g transform="translate(458 130)"><rect width="365" height="171" rx="16" fill="#fff"/><text x="25" y="43" font-size="15" fill="#65785e">02 / SELL</text><text x="25" y="84" font-size="27" font-weight="700">The next chapter.</text><text x="25" y="118" font-size="18">A new home. A recorded sale.</text></g>
+<g transform="translate(868 130)"><rect width="364" height="171" rx="16" fill="#dcefaa"/><text x="25" y="43" font-size="15" fill="#47613e">03 / SETTLE</text><text x="25" y="84" font-size="27" font-weight="700">Everyone's share.</text><text x="25" y="118" font-size="18">Clear commission. Traceable payout.</text></g>
+<text x="428" y="225" font-size="25">→</text><text x="838" y="225" font-size="25">→</text>
+<text x="48" y="345" font-size="15" fill="#52675a">ROADMAP CONCEPT · Store operations are not available in the current platform preview.</text></g></svg>

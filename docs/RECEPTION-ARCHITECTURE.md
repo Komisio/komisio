@@ -42,6 +42,10 @@ belong in protected object storage with database references, not Git or skills.
 
 ## Alternatives and consequences
 
+The [durable-source slice](DURABLE-RECEPTION.md) now adds authenticated session
+creation and immutable textual source snapshots. The pure previews above remain
+previews: proposal, review and seller-decision persistence are still separate.
+
 Reject a chat agent with direct SQL, a copied legacy item schema, and mandatory
 fake bag receipts for wall reception. Shared contracts require explicit adapters
 but let camera hardware, model and interface change independently.

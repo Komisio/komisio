@@ -342,6 +342,69 @@ try {
   console.log(
     'PASS: archive/edit race rejects stale operations; concurrent status retries persist once.',
   )
+
+  const receptionId = randomUUID()
+  await sessions[0].c.query('select create_reception_session($1,$2,$3)', [
+    tenant,
+    receptionId,
+    seller,
+  ])
+  const receptionSources = JSON.stringify([
+    {
+      id: randomUUID(),
+      kind: 'observation',
+      reference: 'Synthetic race',
+      observation: 'Blue jacket',
+    },
+  ])
+  const raceSources = await Promise.all(
+    sessions.map(({ c }) =>
+      c
+        .query('select save_reception_sources($1,$2,$3,0,$4::jsonb)', [
+          tenant,
+          randomUUID(),
+          receptionId,
+          receptionSources,
+        ])
+        .then(
+          () => 'saved',
+          (e) => {
+            if (e.message.includes('RECEPTION_CHANGED')) return 'stale'
+            throw e
+          },
+        ),
+    ),
+  )
+  if (
+    raceSources.filter((r) => r === 'saved').length !== 1 ||
+    raceSources.filter((r) => r === 'stale').length !== 1
+  )
+    throw new Error('Reception race did not reject stale snapshot')
+  const receptionRequest = randomUUID()
+  const receptionRetry = await Promise.all(
+    sessions.map(({ c }) =>
+      c.query('select save_reception_sources($1,$2,$3,1,$4::jsonb) as id', [
+        tenant,
+        receptionRequest,
+        receptionId,
+        receptionSources,
+      ]),
+    ),
+  )
+  const receptionCount = (
+    await setup.query(
+      'select count(*)::int as count from reception_source_revisions where session_id=$1',
+      [receptionId],
+    )
+  ).rows[0].count
+  if (
+    receptionCount !== 2 ||
+    receptionRetry.some((r) => r.rows[0].id !== receptionRequest)
+  )
+    throw new Error('Reception replay duplicated history')
+  console.log(
+    'PASS: concurrent reception snapshots reject stale writes; identical retries persist once.',
+  )
 } finally {
   await Promise.allSettled(clients.map((c) => c.end()))
   await admin.query(`drop database if exists "${database}"`)

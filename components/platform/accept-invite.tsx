@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 import type { Dictionary } from '@/lib/i18n'
 import { useCommand } from './use-command'
 import { Button } from '@/components/ui/button'
@@ -19,6 +20,14 @@ export function AcceptInvite({ d, token }: { d: Dictionary; token: string }) {
         {d.acceptInvite}
       </Button>
       <Feedback error={action.error} />
+      {action.error && (
+        <div>
+          <p>{d.inviteRecovery}</p>
+          <Link href="/" className="text-link">
+            {d.home}
+          </Link>
+        </div>
+      )}
     </>
   )
 }

@@ -10,12 +10,17 @@ import type {
   AgreementEvidence,
 } from '@/lib/engine/intake'
 import { ReceivingPanel } from '@/components/intake/receiving-panel'
+import {
+  bagQueueNavigation,
+  bagQueueHref,
+  readBagQueue,
+} from '@/lib/engine/bag-queue'
 import { EvidenceRecorder } from '@/components/intake/agreement-forms'
 
 export default async function Intake({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; seller?: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const ctx = await requirePlatform()
@@ -25,7 +30,10 @@ export default async function Intake({
   const a = all.agreements
   const params = await searchParams
   const q = typeof params.q === 'string' ? params.q.trim().slice(0, 120) : ''
-  const selectedId = z.uuid().safeParse(params.seller)
+  const navigation = bagQueueNavigation.safeParse(params)
+  if (!navigation.success) notFound()
+  const filters = navigation.data
+  const selectedId = z.uuid().safeParse(filters.seller)
   const [sellers, bags, selected, agreementResult] = await Promise.all([
     ctx.client
       .from('sellers')
@@ -35,13 +43,7 @@ export default async function Intake({
       .order('name')
       .order('id')
       .limit(50),
-    ctx.client
-      .from('bag_receipts')
-      .select('id,seller_id,reference,note,received_at,sellers(name)')
-      .eq('tenant_id', active.id)
-      .order('received_at', { ascending: false })
-      .order('id')
-      .limit(50),
+    readBagQueue(ctx.client, active.id, params),
     selectedId.success
       ? ctx.client
           .from('sellers')
@@ -58,7 +60,7 @@ export default async function Intake({
       .limit(1)
       .maybeSingle(),
   ])
-  if (sellers.error || bags.error || selected.error || agreementResult.error)
+  if (sellers.error || selected.error || agreementResult.error)
     throw new Error('Unable to load intake')
   const agreement = agreementResult.data as SellerAgreement | null
   const evidenceResult =
@@ -186,11 +188,44 @@ export default async function Intake({
           )}
         </div>
       </div>
-      <section className="card intake-form">
+      <section className="card intake-form" id="bag-queue">
         <h2>{d.queue}</h2>
         <p>{d.queueHint}</p>
+        <p>
+          {selected.data ? d.bagsFor + ': ' + selected.data.name : d.allSellers}
+        </p>
+        <form action="/intake#bag-queue" className="field">
+          {filters.seller && (
+            <input type="hidden" name="seller" value={filters.seller} />
+          )}
+          <label htmlFor="bag-search">{d.bagSearch}</label>
+          <div className="row">
+            <input
+              id="bag-search"
+              name="bag"
+              defaultValue={filters.bag || ''}
+              maxLength={20}
+              placeholder="K-123"
+              pattern="[ ]*([Kk][ ]*-[ ]*)?[1-9][0-9]*[ ]*|"
+            />
+            <button className="btn btn-secondary">{d.findBag}</button>
+          </div>
+        </form>
+        <div className="row">
+          <Link
+            className="text-link"
+            href={bagQueueHref({ seller: filters.seller })}
+          >
+            {d.clearBagSearch}
+          </Link>
+          {filters.seller && (
+            <Link className="text-link" href={bagQueueHref({})}>
+              {d.showAllBags}
+            </Link>
+          )}
+        </div>
         <ul className="intake-list">
-          {bags.data?.map((row) => {
+          {bags.items.map((row) => {
             const bag = row as unknown as BagReceipt & {
               sellers: { name: string } | null
             }
@@ -227,7 +262,41 @@ export default async function Intake({
             )
           })}
         </ul>
-        {!bags.data?.length && <p>{d.empty}</p>}
+        {!bags.items.length && <p>{d.noMatchingBags}</p>}
+        <nav className="row" aria-label={d.bagPages}>
+          {bags.hasNewer && bags.items[0] && (
+            <Link
+              className="text-link"
+              href={bagQueueHref({
+                seller: filters.seller,
+                bag: filters.bag,
+                newer: bags.items[0].reference,
+              })}
+            >
+              {d.newerBags}
+            </Link>
+          )}
+          {bags.hasOlder && bags.items.at(-1) && (
+            <Link
+              className="text-link"
+              href={bagQueueHref({
+                seller: filters.seller,
+                bag: filters.bag,
+                older: bags.items.at(-1)!.reference,
+              })}
+            >
+              {d.olderBags}
+            </Link>
+          )}
+          {(filters.older || filters.newer) && (
+            <Link
+              className="text-link"
+              href={bagQueueHref({ seller: filters.seller, bag: filters.bag })}
+            >
+              {d.firstBags}
+            </Link>
+          )}
+        </nav>
       </section>
     </>
   )

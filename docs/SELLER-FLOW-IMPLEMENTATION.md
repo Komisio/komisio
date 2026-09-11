@@ -70,6 +70,11 @@ reviewed additive migration through the hosted deployment procedure. Set
 UI routes and API stay unavailable until enabled. Disabling hides the surface
 without deleting receipts. This release does not automatically migrate staging.
 
+**Staging update, 11 September:** the owner authorized direct activation of tested
+features. The bag-receiving migration is applied and the flag is enabled on the
+staging deployment. Future migrations still require explicit target verification;
+activation no longer requires a separate owner decision.
+
 ## Verification of the first delivery
 
 Locally verified with synthetic data: 74 pgTAP assertions, 30 unit tests, eight
@@ -82,5 +87,30 @@ layout and print media were inspected; physical printer hardware was not tested.
 Self-review covered authenticated RPC grants, tenant/seller foreign keys, RLS,
 MFA, membership removal, duplicate/replayed writes, request-size limits, origin
 checks and contact visibility. There was no independent reviewer. Hosted
-activation and an authenticated hosted receiving walkthrough remain separate
-from this local evidence; CI is checked before merge.
+activation and an authenticated hosted receiving walkthrough are recorded in
+HOSTED-STAGING.md separately from this local evidence; CI is checked before merge.
+
+## Next implementation: seller agreement evidence
+
+Proposed bounded slice under the owner's autonomous-development authorization:
+
+- Owners/admins publish a new immutable version of the store's own plain-text
+  agreement. Komisio does not generate or claim to validate legal terms.
+- Staff sees the exact current version while registering or receiving from a
+  seller. Missing translations must be visible, not treated as acceptance.
+- Initially distinguish staff-recorded evidence of an external acceptance from
+  the later seller-authenticated web/BankID acceptance. Never present a staff
+  checkbox as the seller's digital signature.
+- Let the tenant choose whether recorded acceptance is required before receipt.
+  Existing tenants start without a new blocking requirement. Changing that policy
+  must not rewrite previous receipts or previously accepted agreement versions.
+- When receipt requires evidence, the database checks the seller, tenant and
+  current agreement together; retrying an earlier receipt returns its original
+  result even after the tenant publishes a new agreement version.
+- Record the exact agreement/evidence reference on a new receipt. Use the shared
+  engine and authenticated RPCs; test cross-tenant references, role boundaries,
+  version replacement and concurrent publication/receiving before activation.
+
+This is the implementation contract for the next slice, not a live agreement or
+signature feature. BankID, legal interpretation and payout authorization remain
+separate from recording the store's agreement evidence.

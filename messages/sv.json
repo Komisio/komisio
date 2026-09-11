@@ -80,7 +80,8 @@
     "failed": "Det gick inte att bekräfta resultatet. Försök igen med samma uppgifter. Kontrollera listan innan du börjar om.",
     "changed": "Aktiv butik har ändrats. Ladda om sidan innan du fortsätter.",
     "denied": "Du saknar behörighet. Ladda om sidan för att kontrollera din åtkomst.",
-    "inspectionChanged": "Utkastet har ändrats sedan du öppnade det. Dina uppgifter finns kvar här. Kopiera det du vill behålla innan du öppnar aktuell version."
+    "inspectionChanged": "Utkastet har ändrats sedan du öppnade det. Dina uppgifter finns kvar här. Kopiera det du vill behålla innan du öppnar aktuell version.",
+    "inspectionUnavailable": "Utkastets status har ändrats eller utkastet kan inte längre redigeras. Dina uppgifter finns kvar här. Öppna aktuell version innan du fortsätter."
   },
   "brand": "Komisio",
   "tagline": "Mer utrymme för det som får nytt liv.",
@@ -225,7 +226,9 @@
     "invitation.revoked": "En inbjudan återkallades",
     "invitation.accepted": "En inbjudan accepterades",
     "member.removed": "En medlems tillgång togs bort",
-    "member.role_changed": "En medlems roll ändrades"
+    "member.role_changed": "En medlems roll ändrades",
+    "inspection.archived": "Ett varuutkast arkiverades",
+    "inspection.reopened": "Ett varuutkast återöppnades"
   },
   "errors": {
     "FORBIDDEN": "Du har inte behörighet att göra detta.",
@@ -260,7 +263,7 @@
     "reload": "Öppna aktuell version (osparade ändringar försvinner)",
     "list": "Sparade varuutkast",
     "listHint": "20 utkast per sida, i en fast ordning som inte ändras när du sparar en ny version. Nya utkast kan tillkomma medan du bläddrar.",
-    "empty": "Inga varuutkast är sparade ännu.",
+    "empty": "Inga utkast i detta urval.",
     "savedDetails": "Senast sparade uppgifter",
     "pages": "Bläddra bland varuutkast",
     "previous": "Föregående varor",
@@ -274,6 +277,19 @@
     "historyHint": "Sparade versioner bevaras. Välj en version för att se tidigare uppgifter och jämföra med de senaste.",
     "older": "Äldre versioner",
     "latest": "Senaste versionerna",
-    "noHistory": "Inga versioner på denna sida."
+    "noHistory": "Inga versioner på denna sida.",
+    "archive": "Arkivera utkast",
+    "reopen": "Återöppna utkast",
+    "archiveHint": "Åtgärden gäller den senast sparade versionen. Spara eventuella beskrivningsändringar först. Arkivering ändrar inte vad som har hänt med den fysiska varan.",
+    "reason": "Anledning",
+    "confirmStatus": "Jag bekräftar ändringen av utkastets status.",
+    "confirmChange": "Bekräfta ändringen",
+    "statusSaved": "Statusändringen är registrerad.",
+    "active": "Aktivt",
+    "archived": "Arkiverat",
+    "filterActive": "Aktiva utkast",
+    "filterArchived": "Arkiverade utkast",
+    "filterAll": "Alla utkast",
+    "filterLabel": "Visa utkast"
   }
 }

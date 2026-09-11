@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   saveInspectionCommand,
+  archiveInspectionCommand,
   applyInspectionProposal,
   editInspectionDraft,
   inspectionProposal,
@@ -152,4 +153,29 @@ describe('inspection proposal boundary', () => {
       draft: { fields: { description: text } },
     })
   })
+})
+
+it('requires an explicit reviewed status change and reason', () => {
+  const command = {
+    action: 'archiveInspection',
+    tenantId: id(1),
+    requestId: id(4),
+    bagId: id(2),
+    draftId: id(3),
+    expectedRevision: 1,
+    archived: true,
+    reason: ' Duplicate ',
+  }
+  expect(archiveInspectionCommand.parse(command).reason).toBe('Duplicate')
+  for (const patch of [
+    { reason: '' },
+    { reason: '  ' },
+    { reason: 'x'.repeat(501) },
+    { expectedRevision: 0 },
+    { archived: undefined },
+    { price: 100 },
+  ])
+    expect(
+      archiveInspectionCommand.safeParse({ ...command, ...patch }).success,
+    ).toBe(false)
 })

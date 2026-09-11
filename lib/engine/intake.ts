@@ -1,9 +1,10 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { saveInspectionCommand } from './inspection'
+import { saveInspectionCommand, archiveInspectionCommand } from './inspection'
 
 export const intakeCommand = z.discriminatedUnion('action', [
   saveInspectionCommand,
+  archiveInspectionCommand,
   z
     .object({
       action: z.literal('registerSeller'),
@@ -46,6 +47,16 @@ export const intakeCommand = z.discriminatedUnion('action', [
 export async function executeIntake(client: SupabaseClient, input: unknown) {
   const c = intakeCommand.parse(input)
   switch (c.action) {
+    case 'archiveInspection':
+      return client.rpc('set_inspection_archived', {
+        p_tenant: c.tenantId,
+        p_request: c.requestId,
+        p_bag: c.bagId,
+        p_draft: c.draftId,
+        p_expected: c.expectedRevision,
+        p_archived: c.archived,
+        p_reason: c.reason,
+      })
     case 'saveInspection':
       return client.rpc('save_inspection_draft', {
         p_tenant: c.tenantId,

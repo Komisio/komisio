@@ -32,3 +32,12 @@ describe('inspection read navigation', () => {
     )
   })
 })
+
+it('defaults to active drafts and only accepts known status filters', () => {
+  expect(inspectionNavigation.parse({}).status).toBe('active')
+  for (const status of ['active', 'archived', 'all'])
+    expect(inspectionNavigation.parse({ status }).status).toBe(status)
+  expect(inspectionNavigation.safeParse({ status: 'deleted' }).success).toBe(
+    false,
+  )
+})

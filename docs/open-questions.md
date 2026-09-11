@@ -91,8 +91,9 @@ proposal's owner clarification for scope and outstanding details.
   financial or acceptance fields; skills are guidance, not authorization. See
   [AI-first inspection](AI-FIRST-INSPECTION.md). Shared descriptive drafts now
   persist as append-only revisions under existing staff roles; saved progress
-  survives reload. Draft retirement/correction presentation, retention and the
-  commercial acceptance operation remain separate work.
+  survives reload. Draft archive/reopen now requires a reason and preserves every
+  version. Retention, physical goods disposition and commercial acceptance remain
+  separate work.
 
 - Minimum contact for the staff pilot is a name and email or phone (documented
   assumption in DECISIONS.md). What stronger identity and agreement evidence are

@@ -3,10 +3,13 @@ import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
-import { InspectionForm } from '@/components/intake/inspection-form'
+import {
+  InspectionForm,
+  InspectionArchiveForm,
+} from '@/components/intake/inspection-form'
 import {
   inspectionNavigation,
-  inspectionHref,
+  inspectionHref as navigationHref,
 } from '@/lib/intake/inspection-navigation'
 
 export default async function InspectBag({
@@ -21,7 +24,11 @@ export default async function InspectBag({
   const { id } = await params
   const navigation = inspectionNavigation.safeParse(await searchParams)
   if (!z.uuid().safeParse(id).success || !navigation.success) notFound()
-  const { draft, version, historyBefore, after, before } = navigation.data
+  const { draft, version, historyBefore, after, before, status } =
+    navigation.data
+  const inspectionHref = (
+    params: Record<string, string | number | undefined>,
+  ) => navigationHref({ status, ...params })
   const tenantId = ctx.active!.id
   const { data: bag, error } = await ctx.client
     .from('bag_receipts')
@@ -31,7 +38,8 @@ export default async function InspectBag({
     .maybeSingle()
   if (error) throw new Error('Unable to load inspection bag')
   if (!bag) notFound()
-  const columns = 'draft_id,revision,description,category,condition,saved_at'
+  const columns =
+    'draft_id,revision,description,category,condition,saved_at,archived,change_reason'
   let listQuery = ctx.client
     .from('inspection_current')
     .select(columns)
@@ -39,6 +47,8 @@ export default async function InspectBag({
     .eq('bag_id', id)
     .order('draft_id', { ascending: !before })
     .limit(21)
+  if (status !== 'all')
+    listQuery = listQuery.eq('archived', status === 'archived')
   if (after) listQuery = listQuery.gt('draft_id', after)
   if (before) listQuery = listQuery.lt('draft_id', before)
   const [list, selected] = await Promise.all([
@@ -65,7 +75,7 @@ export default async function InspectBag({
     draft
       ? ctx.client
           .from('inspection_draft_revisions')
-          .select('revision,saved_at')
+          .select('revision,saved_at,archived,change_reason')
           .eq('tenant_id', tenantId)
           .eq('bag_id', id)
           .eq('draft_id', draft)
@@ -114,9 +124,20 @@ export default async function InspectBag({
         </Link>
       </div>
       {bag.note && <p>{bag.note}</p>}
-      {ctx.active!.role !== 'readonly' && !version && (
-        <InspectionForm
-          key={`${tenantId}:${id}:${draft ?? 'new'}`}
+      {ctx.active!.role !== 'readonly' &&
+        !version &&
+        !selected.data?.archived && (
+          <InspectionForm
+            key={`${tenantId}:${id}:${draft ?? 'new'}`}
+            tenantId={tenantId}
+            bagId={id}
+            current={selected.data}
+            d={d}
+          />
+        )}
+      {selected.data && ctx.active!.role !== 'readonly' && !version && (
+        <InspectionArchiveForm
+          key={draft}
           tenantId={tenantId}
           bagId={id}
           current={selected.data}
@@ -129,6 +150,12 @@ export default async function InspectBag({
             {s.historical} {historical.data.revision}
           </h2>
           <p>{s.historicalHint}</p>
+          <p>{historical.data.archived ? s.archived : s.active}</p>
+          {historical.data.change_reason && (
+            <p>
+              {s.reason}: {historical.data.change_reason}
+            </p>
+          )}
           <dl>
             {(['description', 'category', 'condition'] as const).map(
               (field) => (
@@ -150,6 +177,12 @@ export default async function InspectBag({
       {selected.data && (
         <section className="card intake-form">
           <h2>{s.savedDetails}</h2>
+          <p>{selected.data.archived ? s.archived : s.active}</p>
+          {selected.data.change_reason && (
+            <p>
+              {s.reason}: {selected.data.change_reason}
+            </p>
+          )}
           <p>{selected.data.description}</p>
           <p>{selected.data.category}</p>
           <p>{selected.data.condition}</p>
@@ -177,7 +210,7 @@ export default async function InspectBag({
                 >
                   {s.version} {entry.revision}
                 </Link>{' '}
-                ·{' '}
+                · {entry.archived ? s.archived : s.active} ·{' '}
                 {new Date(entry.saved_at).toLocaleString(
                   ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',
                   { timeZone: 'Europe/Stockholm' },
@@ -215,6 +248,22 @@ export default async function InspectBag({
       <section className="card intake-form">
         <h2>{s.list}</h2>
         <p>{s.listHint}</p>
+        <nav className="row" aria-label={s.filterLabel}>
+          {(['active', 'archived', 'all'] as const).map((value) => (
+            <Link
+              key={value}
+              className="text-link"
+              aria-current={status === value ? 'page' : undefined}
+              href={inspectionHref({ status: value, draft, version })}
+            >
+              {value === 'active'
+                ? s.filterActive
+                : value === 'archived'
+                  ? s.filterArchived
+                  : s.filterAll}
+            </Link>
+          ))}
+        </nav>
         {!items.length && <p>{after || before ? s.emptyPage : s.empty}</p>}
         <ul>
           {items.map((item) => (
@@ -230,6 +279,7 @@ export default async function InspectBag({
               </p>
               <small>
                 {s.version} {item.revision} ·{' '}
+                {item.archived ? s.archived : s.active} ·{' '}
                 {new Date(item.saved_at).toLocaleString(
                   ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',
                   { timeZone: 'Europe/Stockholm' },

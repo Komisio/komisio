@@ -44,6 +44,28 @@ export type InspectionDraft = z.infer<typeof inspectionDraft>
 export type InspectionProposal = z.infer<typeof inspectionProposal>
 export type InspectionField = z.infer<typeof fieldName>
 
+// Persisted revision is separate from the in-memory edit revision above.
+export const saveInspectionCommand = z.strictObject({
+  action: z.literal('saveInspection'),
+  tenantId: z.uuid(),
+  requestId: z.uuid(),
+  bagId: z.uuid(),
+  draftId: z.uuid(),
+  expectedRevision: z.number().int().min(0).max(2147483646),
+  fields: inspectionFields.extend({
+    description: z.string().trim().min(1).max(1000),
+  }),
+})
+
+export type SavedInspection = {
+  draft_id: string
+  revision: number
+  description: string
+  category: string
+  condition: string
+  saved_at: string
+}
+
 /** Pure draft operation; no persistence, authorization, approval or model call. */
 export function editInspectionDraft(
   input: unknown,

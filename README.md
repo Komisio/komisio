@@ -82,6 +82,7 @@ use test data rather than real consignor or financial records.
 | Access log and responsive Swedish/English interface | Billing and commercial hosted plans |
 | Seller registration, bag receiving and printable labels | Seller portal and digital signatures |
 | Versioned store agreements and staff-recorded approval evidence | Space booking and booking fees |
+| Resumable descriptive item drafts with protected revision history | AI suggestions, commercial acceptance and POS publication |
 
 Hosted onboarding and invitation edge cases are still being validated during
 the pilot. See [platform status](docs/PLATFORM-STATUS.md) for details and

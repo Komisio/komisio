@@ -124,6 +124,13 @@ protect human edits from stale suggestions. This is not a permission boundary,
 saved item or live AI feature. See [the inspection ADR](docs/AI-FIRST-INSPECTION.md)
 for the Accounted reference, database/skill split and next implementation steps.
 
+The staff GUI now saves descriptive drafts through the shared intake engine and
+`save_inspection_draft` RPC. One append-only `inspection_draft_revisions` table
+preserves revisions; the caller-secured `inspection_current` view presents the
+latest state. Persisted revisions protect concurrent staff edits and are separate
+from the pure contract's in-memory proposal counter. See
+[saved inspection](docs/SAVED-INSPECTION.md) for retries, roles and activation.
+
 ## Invariants the core will enforce
 
 Written here as intent; each becomes a `DECISIONS.md` line and a test when the

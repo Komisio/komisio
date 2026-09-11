@@ -42,7 +42,7 @@
   "intake": {
     "title": "Inlämningar",
     "intro": "Ta emot påsen nu. Gå igenom innehållet senare.",
-    "pilot": "Pilot: mottagningen registrerar att butiken har påsen. Registrerat avtalsunderlag är inte en digital signatur. Granskning och försäljning kommer senare. Ingen e-post skickas.",
+    "pilot": "Pilot: mottagningen registrerar att butiken har påsen. Registrerat avtalsunderlag är inte en digital signatur. Varuutkast kan sparas vid genomgången; försäljning kommer senare. Ingen e-post skickas.",
     "find": "Hitta säljare",
     "search": "Sök på namn",
     "searchButton": "Sök",
@@ -61,7 +61,7 @@
     "saveBag": "Bekräfta mottagandet",
     "saved": "Påsen är registrerad. Du kan nu skriva ut etiketten.",
     "queue": "Mottagna påsar",
-    "queueHint": "De 50 senast mottagna påsarna. Genomgång av innehållet kommer i nästa steg.",
+    "queueHint": "De 50 senast mottagna påsarna. Öppna en påse för att beskriva innehållet och spara varuutkast.",
     "empty": "Inga påsar har tagits emot ännu.",
     "bag": "Påse",
     "awaiting": "Inväntar genomgång",
@@ -79,7 +79,8 @@
     "busy": "Sparar…",
     "failed": "Det gick inte att bekräfta resultatet. Försök igen med samma uppgifter. Kontrollera listan innan du börjar om.",
     "changed": "Aktiv butik har ändrats. Ladda om sidan innan du fortsätter.",
-    "denied": "Du saknar behörighet. Ladda om sidan för att kontrollera din åtkomst."
+    "denied": "Du saknar behörighet. Ladda om sidan för att kontrollera din åtkomst.",
+    "inspectionChanged": "Utkastet har ändrats sedan du öppnade det. Dina uppgifter finns kvar här. Kopiera det du vill behålla innan du öppnar aktuell version."
   },
   "brand": "Komisio",
   "tagline": "Mer utrymme för det som får nytt liv.",
@@ -215,6 +216,7 @@
   "events": {
     "seller.registered": "En säljare registrerades",
     "bag.received": "En påse togs emot",
+    "inspection.saved": "Ett varuutkast sparades",
     "agreement.published": "En avtalsversion publicerades",
     "agreement.evidence_recorded": "Avtalsunderlag registrerades",
     "tenant.created": "Butiken skapades",
@@ -236,5 +238,29 @@
     "LAST_OWNER": "Butiken måste ha minst en ägare. Utse en annan ägare först.",
     "TENANT_CHANGED": "Den aktiva butiken har ändrats. Ladda om sidan innan du fortsätter.",
     "REQUEST_FAILED": "Det gick inte att spara. Försök igen."
+  },
+  "inspection": {
+    "title": "Gå igenom påsen",
+    "pilot": "Spara beskrivningar av varorna och fortsätt senare. Utkasten är inte godkända för försäljning.",
+    "bag": "Visa påsetikett",
+    "add": "Lägg till varuutkast",
+    "edit": "Redigera varuutkast",
+    "description": "Beskrivning av varan",
+    "category": "Kategori (valfritt)",
+    "condition": "Skick och anmärkningar (valfritt)",
+    "save": "Spara utkast",
+    "saved": "Varuutkastet är sparat.",
+    "savedHint": "Versionen finns kvar när du kommer tillbaka. Den godkänner inte varan för försäljning.",
+    "resume": "Öppna sparat utkast",
+    "another": "Lägg till nästa vara",
+    "unsaved": "Du har osparade ändringar.",
+    "newHint": "Nytt utkast – ännu inte sparat.",
+    "saveHint": "Spara innan du lämnar sidan. Osparade ändringar försvinner vid omladdning. Undvik personuppgifter i beskrivningen.",
+    "version": "Sparad version",
+    "reload": "Öppna aktuell version (osparade ändringar försvinner)",
+    "list": "Sparade varuutkast",
+    "listHint": "De 50 senast sparade utkasten i denna påse. Du kan öppna äldre utkast via deras direktlänk.",
+    "empty": "Inga varuutkast är sparade ännu.",
+    "savedDetails": "Senast sparade uppgifter"
   }
 }

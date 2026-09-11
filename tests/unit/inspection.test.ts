@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  saveInspectionCommand,
   applyInspectionProposal,
   editInspectionDraft,
   inspectionProposal,
@@ -31,6 +32,26 @@ const proposal = {
 }
 
 describe('inspection proposal boundary', () => {
+  it('requires a description, exact persisted revision and no financial fields for saving', () => {
+    const command = {
+      action: 'saveInspection',
+      tenantId: draft.tenantId,
+      requestId: id(5),
+      bagId: draft.bagId,
+      draftId: draft.draftId,
+      expectedRevision: 0,
+      fields: draft.fields,
+    }
+    expect(saveInspectionCommand.safeParse(command).success).toBe(true)
+    for (const input of [
+      { ...command, expectedRevision: -1 },
+      { ...command, expectedRevision: 2147483647 },
+      { ...command, price: 100 },
+      { ...command, fields: { ...draft.fields, description: ' ' } },
+      { ...command, fields: { ...draft.fields, vat: 25 } },
+    ])
+      expect(saveInspectionCommand.safeParse(input).success).toBe(false)
+  })
   it('applies only explicitly selected fields without mutating either input', () => {
     const result = applyInspectionProposal(draft, proposal, ['category'])
     expect(result.fields).toEqual({ ...draft.fields, category: 'Outerwear' })

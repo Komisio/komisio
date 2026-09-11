@@ -1,6 +1,6 @@
 # ADR: shared inspection drafts before item persistence
 
-**Status:** Accepted for the proposal contract; persistence and adapters remain planned.
+**Status:** Accepted. The proposal contract and staff draft persistence are implemented; model and agent adapters remain planned.
 **Date:** 2026-09-11
 **Deciders:** Implemented under the owner's autonomous-development authorization and explicit AI-first direction.
 
@@ -61,8 +61,9 @@ selection, contract versions and use without a model. Text stays untrusted data;
 future GUI adapters must render it as text, and model adapters must isolate it
 from instructions. The pure functions provide no prompt-injection guarantee.
 
-There is no inspection screen, saved item, model call, MCP endpoint or durable
-approval in this change. `previewInspection` explicitly reports `persisted: false`
+The subsequent [saved inspection delivery](SAVED-INSPECTION.md) adds a staff
+screen and descriptive draft persistence. There is still no saleable item, model
+call, MCP endpoint or durable agent approval. `previewInspection` itself reports `persisted: false`
 and `availableForSale: false`. Schema version 1 is a draft interchange contract,
 not a database schema or promise that an item has been accepted. Input provenance
 must be attached by a trusted adapter when suggestions become persistent; a
@@ -85,5 +86,5 @@ model-supplied provider name is not trusted provenance.
 5. Define commercial acceptance/pricing and rejected-goods handling from tenant
    workflows before adding sale eligibility, POS publication or financial fields.
 
-The pure contract can ship without a migration or staging flag. The existing
-receiving and agreement screens remain the currently usable store workflow.
+The pure contract shipped without a migration. Saved staff drafts use the
+additive migration and existing intake flag described in SAVED-INSPECTION.md.

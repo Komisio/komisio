@@ -61,6 +61,9 @@ export async function POST(request: Request) {
           'INVALID_INPUT',
           'AGREEMENT_CHANGED',
           'AGREEMENT_REQUIRED',
+          'INSPECTION_DRAFT_CHANGED',
+          'INSPECTION_CONTEXT_CHANGED',
+          'BAG_NOT_FOUND',
         ].find((v) => result.error!.message.includes(v)) ?? 'REQUEST_FAILED'
       return reply(
         { error: code },
@@ -70,6 +73,8 @@ export async function POST(request: Request) {
                 'REQUEST_CONFLICT',
                 'AGREEMENT_CHANGED',
                 'AGREEMENT_REQUIRED',
+                'INSPECTION_DRAFT_CHANGED',
+                'INSPECTION_CONTEXT_CHANGED',
               ].includes(code)
             ? 409
             : 400,

@@ -65,6 +65,9 @@ export default async function BagLabel({
         <p>{d.awaiting}</p>
       </article>
       <div className="row no-print">
+        <Link className="text-link" href={`/intake/bags/${id}/inspect`}>
+          {dictionary(ctx.locale).inspection.title}
+        </Link>
         <PrintLabel label={d.print} />
         <Link className="text-link" href="/intake">
           {d.back}

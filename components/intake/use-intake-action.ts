@@ -36,6 +36,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
           'INVALID_INPUT',
           'AGREEMENT_CHANGED',
           'AGREEMENT_REQUIRED',
+          'INSPECTION_DRAFT_CHANGED',
         ].includes(result.error)
         if (definitive) {
           pending.current = null
@@ -43,21 +44,27 @@ export function useIntakeAction(d: Dictionary['intake']) {
         }
         if (
           result.error === 'AGREEMENT_CHANGED' ||
-          result.error === 'TENANT_CHANGED'
+          result.error === 'TENANT_CHANGED' ||
+          result.error === 'INSPECTION_DRAFT_CHANGED' ||
+          result.error === 'INSPECTION_CONTEXT_CHANGED'
         )
           setNeedsReload(true)
         setError(
-          result.error === 'AGREEMENT_CHANGED'
-            ? d.agreementChanged
-            : result.error === 'AGREEMENT_REQUIRED'
-              ? d.agreementRequired
-              : result.error === 'INVALID_INPUT'
-                ? d.invalid
-                : result.error === 'TENANT_CHANGED'
-                  ? d.changed
-                  : ['FORBIDDEN', 'AUTH_REQUIRED'].includes(result.error)
-                    ? d.denied
-                    : d.failed,
+          result.error === 'INSPECTION_DRAFT_CHANGED'
+            ? d.inspectionChanged
+            : result.error === 'INSPECTION_CONTEXT_CHANGED'
+              ? d.changed
+              : result.error === 'AGREEMENT_CHANGED'
+                ? d.agreementChanged
+                : result.error === 'AGREEMENT_REQUIRED'
+                  ? d.agreementRequired
+                  : result.error === 'INVALID_INPUT'
+                    ? d.invalid
+                    : result.error === 'TENANT_CHANGED'
+                      ? d.changed
+                      : ['FORBIDDEN', 'AUTH_REQUIRED'].includes(result.error)
+                        ? d.denied
+                        : d.failed,
         )
         if (result.error === 'AGREEMENT_REQUIRED') router.refresh()
         return null

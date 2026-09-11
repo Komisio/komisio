@@ -42,7 +42,7 @@
   "intake": {
     "title": "Intake",
     "intro": "Receive the bag now. Review its contents later.",
-    "pilot": "Pilot: receiving records that the store has the bag. Recorded agreement evidence is not an electronic signature. Inspection and sales come later. No email is sent.",
+    "pilot": "Pilot: receiving records that the store has the bag. Recorded agreement evidence is not an electronic signature. Item drafts can be saved during inspection; sales come later. No email is sent.",
     "find": "Find a seller",
     "search": "Search by name",
     "searchButton": "Search",
@@ -61,7 +61,7 @@
     "saveBag": "Confirm receipt",
     "saved": "The bag is registered. You can now print its label.",
     "queue": "Received bags",
-    "queueHint": "The 50 most recently received bags. Reviewing contents comes in the next step.",
+    "queueHint": "The 50 most recently received bags. Open a bag to describe its contents and save item drafts.",
     "empty": "No bags received yet.",
     "bag": "Bag",
     "awaiting": "Awaiting inspection",
@@ -79,7 +79,8 @@
     "busy": "Saving…",
     "failed": "Could not confirm the result. Retry with the same details. Check the list before starting again.",
     "changed": "The active store changed. Reload this page before continuing.",
-    "denied": "You do not have permission. Reload the page to check your access."
+    "denied": "You do not have permission. Reload the page to check your access.",
+    "inspectionChanged": "The draft changed after you opened it. Your edits remain here. Copy anything you want to keep before opening the current revision."
   },
   "brand": "Komisio",
   "tagline": "More room for things to live again.",
@@ -215,6 +216,7 @@
   "events": {
     "seller.registered": "Seller registered",
     "bag.received": "Bag received",
+    "inspection.saved": "Item draft saved",
     "agreement.published": "Agreement version published",
     "agreement.evidence_recorded": "Agreement evidence recorded",
     "tenant.created": "Store created",
@@ -236,5 +238,29 @@
     "LAST_OWNER": "The store must have at least one owner. Appoint another owner first.",
     "TENANT_CHANGED": "The active store has changed. Reload the page before continuing.",
     "REQUEST_FAILED": "Your changes could not be saved. Please try again."
+  },
+  "inspection": {
+    "title": "Inspect the bag",
+    "pilot": "Save item descriptions and continue later. Drafts are not approved for sale.",
+    "bag": "View bag label",
+    "add": "Add item draft",
+    "edit": "Edit item draft",
+    "description": "Item description",
+    "category": "Category (optional)",
+    "condition": "Condition and observations (optional)",
+    "save": "Save draft",
+    "saved": "Item draft saved.",
+    "savedHint": "This revision will be available when you return. It does not approve the item for sale.",
+    "resume": "Open saved draft",
+    "another": "Add next item",
+    "unsaved": "You have unsaved changes.",
+    "newHint": "New draft – not saved yet.",
+    "saveHint": "Save before leaving this page. Unsaved edits are lost on reload. Avoid personal information in descriptions.",
+    "version": "Saved revision",
+    "reload": "Open current revision (unsaved edits will be lost)",
+    "list": "Saved item drafts",
+    "listHint": "The 50 most recently saved drafts in this bag. Older drafts remain available through their direct links.",
+    "empty": "No item drafts saved yet.",
+    "savedDetails": "Latest saved details"
   }
 }

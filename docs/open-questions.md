@@ -8,7 +8,11 @@ Answered questions move to `DECISIONS.md`.
 The [intake workflow proposal](INTAKE-WORKFLOW-PROPOSAL.md) adds concrete review
 scenarios for physical receipt versus acceptance, minimum consignor identity,
 price timing, batch retry outcomes and draft ownership/retention. These remain
-open and must be resolved before the corresponding persistence is introduced.
+partly open and must be resolved before the corresponding persistence is introduced.
+The owner has confirmed bag-first receiving with later inspection, tenant-specific
+approval/receipt policies, optional self-drop-off and pickup, and space booking
+supporting both seller-operated sales and a shared store checkout. See the
+proposal's owner clarification for scope and outstanding details.
 
 ## Tenancy
 
@@ -60,6 +64,8 @@ open and must be resolved before the corresponding persistence is introduced.
    *Sketch assumed:* at approval.
 9. **Which payout rails are needed first?** Swish, bank file, cash at the
    counter, manual.
+   **Partly answered 2026-09-11:** investigate Stripe for seller payouts.
+   Provider suitability, funding, onboarding and payout rules are not yet decided.
 
 ## Settlements and documents
 
@@ -73,8 +79,23 @@ open and must be resolved before the corresponding persistence is introduced.
 
 12. **Which sales channels in the first year?** POS (Zettle for the certified
     cash register), web shop, marketplaces (Tradera, etc.).
+    **Partly answered 2026-09-11:** Komisio is not initially a POS; integrate with
+    external POS such as Zettle or Shopify POS. Prioritization remains open.
 13. **Does anything in the core need to satisfy kassaregisterlagen directly,
     or is that fully delegated to the POS provider?**
+
+## Intake and space booking follow-up
+
+- Minimum contact for the staff pilot is a name and email or phone (documented
+  assumption in DECISIONS.md). What stronger identity and agreement evidence are
+  needed before commercial acceptance or seller-portal access remains open.
+- How is custody confirmed for self-drop-off and pickup, and can one handover
+  contain several bags?
+- Which booking fee bases, payment methods, cancellation and refund rules are
+  required? Stripe for payouts does not decide how booking fees are collected.
+- Can sales modes coexist within a tenant, and how are individual bookings assigned?
+- What sales information can Komisio obtain when sellers operate their own checkout?
+- Which policy version applies to an existing handover or booking after settings change?
 
 ## Platform pilot
 

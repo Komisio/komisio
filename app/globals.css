@@ -1,4 +1,104 @@
 @import 'tailwindcss';
+.intake-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.intake-form {
+  padding: 24px;
+  min-width: 0;
+}
+.intake-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.intake-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+}
+.intake-seller {
+  display: block;
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+.intake-seller small {
+  display: block;
+}
+.intake-seller[aria-current='true'] {
+  background: var(--mint);
+}
+.intake-bag {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+.intake-bag > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.intake-confirm {
+  display: flex;
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 20px;
+}
+.intake-confirm input {
+  width: 20px;
+  min-height: 20px;
+  flex-shrink: 0;
+}
+.intake-notice,
+.intake-success {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  margin: 20px 0;
+}
+.bag-label {
+  border: 2px solid var(--ink);
+  background: white;
+  padding: 24px;
+  max-width: 380px;
+  margin-bottom: 24px;
+  overflow-wrap: anywhere;
+}
+.bag-label h2 {
+  font-size: 32px;
+  margin: 16px 0;
+}
+@media (max-width: 700px) {
+  .intake-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media print {
+  body:has(.bag-label) * {
+    visibility: hidden;
+  }
+  body .bag-label,
+  body .bag-label * {
+    visibility: visible;
+  }
+  body .bag-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    width: 90mm;
+    max-width: 100%;
+    break-inside: avoid;
+  }
+  .no-print {
+    display: none;
+  }
+}
 @theme {
   --color-forest: #183f35;
   --color-paper: #f7f8f5;

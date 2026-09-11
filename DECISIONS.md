@@ -1,5 +1,11 @@
 # Decision Log
 
+[2026-09-11] The owner authorized autonomous workflow analysis and implementation, including reasonable assumptions, commits, PRs and green-CI merges. First domain delivery now receives a bag for later inspection, not priced items at the counter. Add only tenant-scoped sellers and immutable bag receipts; no VAT, commission, sale, agreement-acceptance or payout model is introduced.
+[2026-09-11] Staff, admins and owners may register sellers and receive bags; readonly members may view these operational records. Seller contacts are separate from staff/auth identities and grant no login or membership. Require a name and either email or phone initially; never automatically merge matching contacts. A receipt records custody only and does not attest agreement acceptance or authorize sale.
+[2026-09-11] Each bag is received separately with a stable client operation UUID, a globally unique printable reference, authenticated actor and timestamp. Retrying the same actor/payload returns the existing receipt; reusing a request ID with different content fails. Printing never creates data. No edit/delete API is exposed for custody evidence; correction operations follow in a later slice.
+[2026-09-11] Tenant-configurable pricing approval, rejected-goods handling, agreement/receipt policies, self-drop-off, pickup and space booking are confirmed product scope. Bookings must support both seller-operated sales and shared store checkout. Implement these in successive slices; do not expose settings that falsely imply unavailable functionality. Stripe is a payout integration candidate; external POS owns checkout. Fee collection and provider suitability remain unimplemented.
+[2026-09-11] Gate the initial receiving surface behind server-side KOMISIO_INTAKE_ENABLED=true until its additive migration has been applied in the target environment. The flag grants no data access: session/MFA checks, membership, SQL authorization and RLS remain mandatory.
+
 [2026-09-11] Use Vercel-managed output when VERCEL=1 and retain standalone output for self-hosting: the first hosted build reproduced Next.js 16.3 issue #96646 (missing next-server.js.nft.json during Vercel packaging). No application or database behavior changes. Reference: https://github.com/vercel/next.js/issues/96646.
 
 One line per decision: `[YYYY-MM-DD] <decision>: <why>`. Appended by agents

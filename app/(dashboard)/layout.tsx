@@ -27,6 +27,7 @@ export default async function DashboardLayout({
   }
   return (
     <Shell
+      intakeEnabled={process.env.KOMISIO_INTAKE_ENABLED === 'true'}
       d={dictionary(ctx.locale)}
       tenants={ctx.tenants}
       active={ctx.active!}

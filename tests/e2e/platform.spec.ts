@@ -1,6 +1,120 @@
 import { test, expect, type Page } from '@playwright/test'
 import { randomBytes, createHmac } from 'node:crypto'
 
+test('staff receives a bag, retries safely and prints a private label', async ({
+  page,
+}) => {
+  const run = Date.now().toString(36)
+  await register(
+    page,
+    `intake-${run}@example.test`,
+    `K!${randomBytes(16).toString('hex')}`,
+  )
+  await page.getByLabel('Butikens namn').fill('E2E Påsmottagning')
+  await page.getByLabel('Butikens identifierare').fill(`intake-${run}`)
+  await page.getByRole('button', { name: 'Skapa min butik' }).click()
+  await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
+  const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
+  await page.goto('/intake')
+  await page.getByLabel('Säljarens namn').fill('Test Säljare')
+  await page.getByLabel('E-post', { exact: true }).fill('seller@example.test')
+  await page.getByRole('button', { name: 'Spara säljare' }).click()
+  await expect(
+    page.getByRole('heading', { name: 'Ta emot en påse' }),
+  ).toBeVisible()
+  await page.getByLabel('Kännetecken på påsen (valfritt)').fill('Blå tygpåse')
+  await page.getByRole('checkbox').check()
+  const saved = page.waitForResponse(
+    (r) => r.url().endsWith('/api/intake') && r.request().method() === 'POST',
+  )
+  await page.getByRole('button', { name: 'Bekräfta mottagandet' }).click()
+  const response = await saved
+  expect(response.status()).toBe(200)
+  const original = response.request().postDataJSON()
+  const replay = await page.request.post('/api/intake', {
+    headers: { Origin: 'http://127.0.0.1:3000' },
+    data: original,
+  })
+  expect(replay.status()).toBe(200)
+  expect((await replay.json()).id).toBe((await response.json()).id)
+  const conflict = await page.request.post('/api/intake', {
+    headers: { Origin: 'http://127.0.0.1:3000' },
+    data: { ...original, note: 'Changed' },
+  })
+  expect(conflict.status()).toBe(409)
+  const stale = await page.request.post('/api/intake', {
+    headers: { Origin: 'http://127.0.0.1:3000' },
+    data: { ...original, tenantId: '10000000-0000-4000-8000-000000000001' },
+  })
+  expect(stale.status()).toBe(409)
+  expect(original.tenantId).toBe(tenantId)
+  await expect(page.getByRole('status')).toContainText('Påsen är registrerad')
+  await expect(page.locator('.intake-bag')).toHaveCount(1)
+  await page
+    .getByRole('status')
+    .getByRole('link', { name: 'Visa etikett' })
+    .click()
+  await expect(page.locator('.bag-label')).toContainText('E2E Påsmottagning')
+  await expect(page.locator('.bag-label')).not.toContainText(
+    'seller@example.test',
+  )
+  await expect(page.locator('.bag-label')).not.toContainText('Test Säljare')
+  await page.evaluate(() => {
+    window.print = () => {
+      document.body.dataset.printed = 'yes'
+    }
+  })
+  await page.getByRole('button', { name: 'Skriv ut etikett' }).click()
+  await expect(page.locator('body')).toHaveAttribute('data-printed', 'yes')
+  await page.emulateMedia({ media: 'print' })
+  await expect(page.locator('.bag-label')).toBeVisible()
+  await page.screenshot({ path: 'test-results/bag-label.png', fullPage: true })
+  await page.emulateMedia({ media: 'screen' })
+  await page.getByRole('link', { name: 'Till inlämningar' }).click()
+  await expect(page).toHaveURL(/\/intake$/)
+  await page.reload()
+  await expect(page.locator('.intake-bag')).toHaveCount(1)
+  await page.getByRole('link').filter({ hasText: 'Test Säljare' }).click()
+  await expect(
+    page.getByRole('heading', { name: 'Ta emot en påse' }),
+  ).toBeVisible()
+  await page
+    .getByLabel('Kännetecken på påsen (valfritt)')
+    .fill('Lost response bag')
+  await page.getByRole('checkbox').check()
+  let loseResponse = true
+  await page.route('**/api/intake', async (route) => {
+    if (loseResponse) {
+      loseResponse = false
+      const persisted = await route.fetch()
+      expect(persisted.status()).toBe(200)
+      await route.abort('failed')
+    } else await route.continue()
+  })
+  await page.getByRole('button', { name: 'Bekräfta mottagandet' }).click()
+  await expect(
+    page
+      .getByRole('alert')
+      .filter({ hasText: 'Det gick inte att bekräfta resultatet' }),
+  ).toBeVisible()
+  await expect(
+    page.getByLabel('Kännetecken på påsen (valfritt)'),
+  ).toBeDisabled()
+  await page.getByRole('button', { name: 'Försök igen' }).click()
+  await expect(page.getByRole('status')).toContainText('Påsen är registrerad')
+  await expect(page.locator('.intake-bag')).toHaveCount(2)
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.screenshot({
+    path: 'test-results/intake-mobile.png',
+    fullPage: true,
+  })
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true)
+})
+
 test('invalid callbacks stay local and anonymous writes are denied', async ({
   page,
 }) => {

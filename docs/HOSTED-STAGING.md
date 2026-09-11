@@ -5,6 +5,30 @@ Supabase and Resend. Registration and invitation-email receipt have been
 confirmed by the owner. Full invitation acceptance and operational recovery
 remain under validation; see [platform status](PLATFORM-STATUS.md).
 
+## Bag-receiving activation, 11 September 2026
+
+The owner permits completed, tested functions to be activated directly in staging
+while there are no external end users. The bag-receiving migration was reviewed
+with a remote dry run, applied additively to the linked staging project, and its
+version was verified against the local migration history. No reset or seed ran.
+
+`KOMISIO_INTAKE_ENABLED=true` is set on the Vercel Production target of the
+**staging project**. That Vercel target name does not make this a production store
+service. The application was redeployed from merge commit
+`cb39c5d3c0ee19b6d54be30fffca34692a79e381` after PR #13 passed its checks.
+
+The authenticated staging walkthrough registered a clearly marked synthetic
+seller and received one synthetic bag through the normal GUI. It sent no email
+and made no payment. Persistence was checked after navigation/reload and the
+individual label was verified without seller contact information. Physical
+printing was not exercised. The test record remains visibly marked as test data.
+Login/register reachability and anonymous mutation denial were also checked.
+This does not resolve the older invitation-acceptance or recovery pilot items.
+
+For future slices: verify the staging target and green revision, apply reviewed
+additive migrations, activate/redeploy and exercise the changed hosted journey.
+Keep financial provider transactions and production activation separately scoped.
+
 ## Selected services
 
 - Vercel Pro, Stockholm (`arn1`); Next.js preset, Node.js 24, repository root.

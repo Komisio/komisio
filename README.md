@@ -59,8 +59,8 @@ Accounting integrations are planned; Komisio is not a bookkeeping application.
 
 The first store operation is deliberately small: **register a seller, receive
 a bag and print its label**. Staff reviews the contents later. This gated pilot
-is available locally after migration and activation; the hosted preview does
-not enable it automatically. Agreements, space booking, sales and payouts follow
+is now enabled in the hosted staging preview and can also run locally after
+migration and activation. Agreements, space booking, sales and payouts follow
 as separate workflows. See the [implementation sequence](docs/SELLER-FLOW-IMPLEMENTATION.md) and
 [open domain questions](docs/open-questions.md).
 

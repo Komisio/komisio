@@ -1214,3 +1214,119 @@ test('archived inspection drafts preserve history and require explicit reopening
     'TEST duplicate draft',
   )
 })
+
+test('bag queue finds older receipts and keeps seller filters while paging', async ({
+  page,
+}) => {
+  const run = Date.now().toString(36)
+  await register(
+    page,
+    `queue-${run}@example.test`,
+    `K!${randomBytes(16).toString('hex')}`,
+  )
+  await page.getByLabel('Butikens namn').fill('E2E Bag queue')
+  await page.getByLabel('Butikens identifierare').fill(`queue-${run}`)
+  await page.getByRole('button', { name: 'Skapa min butik' }).click()
+  await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
+  const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
+  const post = async (data: object) => {
+    const r = await page.request.post('/api/intake', {
+      headers: { Origin: 'http://127.0.0.1:3000' },
+      data,
+    })
+    expect(r.status()).toBe(200)
+    return (await r.json()).id as string
+  }
+  const sellerId = await post({
+    action: 'registerSeller',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    name: 'Queue Alpha',
+    email: '',
+    phone: '00000',
+  })
+  const otherId = await post({
+    action: 'registerSeller',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    name: 'Queue Beta',
+    email: '',
+    phone: '00000',
+  })
+  const expected: string[] = []
+  for (let i = 0; i < 51; i++)
+    expected.push(
+      await post({
+        action: 'receiveBag',
+        tenantId,
+        requestId: crypto.randomUUID(),
+        sellerId,
+        note: 'Synthetic queue receipt',
+        expectedAgreementId: null,
+      }),
+    )
+  await post({
+    action: 'receiveBag',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    sellerId: otherId,
+    note: 'Other seller bag',
+    expectedAgreementId: null,
+  })
+  await page.goto(`/intake?seller=${sellerId}#bag-queue`)
+  const queue = page.locator('#bag-queue')
+  await expect(queue.locator('.intake-bag')).toHaveCount(20)
+  await expect(queue).not.toContainText('Queue Beta')
+  const ids = async () =>
+    queue
+      .locator('.intake-bag a.text-link')
+      .evaluateAll((links) =>
+        links.map((a) => a.getAttribute('href')!.split('/')[3]),
+      )
+  const first = await ids()
+  await queue.getByRole('link', { name: 'Äldre påsar', exact: true }).click()
+  await expect(queue.locator('.intake-bag')).toHaveCount(20)
+  await expect(page).toHaveURL(new RegExp(`seller=${sellerId}`))
+  await expect(
+    queue.locator('.intake-bag a.text-link').first(),
+  ).toHaveAttribute('href', '/intake/bags/' + expected[30] + '/inspect')
+  const second = await ids()
+  await queue.getByRole('link', { name: 'Äldre påsar', exact: true }).click()
+  await expect(queue.locator('.intake-bag')).toHaveCount(11)
+  const third = await ids()
+  expect([...first, ...second, ...third]).toEqual([...expected].reverse())
+  const oldestLabel = await queue
+    .locator('.intake-bag strong')
+    .last()
+    .innerText()
+  const oldestNumber = oldestLabel.match(/K-(\d+)/)![1]
+  await queue.getByRole('link', { name: 'Nyare påsar', exact: true }).click()
+  await expect(queue.locator('.intake-bag')).toHaveCount(20)
+  await expect(
+    queue.locator('.intake-bag a.text-link').first(),
+  ).toHaveAttribute('href', '/intake/bags/' + expected[30] + '/inspect')
+  expect(await ids()).toEqual(second)
+  await queue.getByLabel('Sök på påsnummer').fill(`K-${oldestNumber}`)
+  await queue.getByRole('button', { name: 'Hitta påse' }).click()
+  await expect(queue.locator('.intake-bag')).toHaveCount(1)
+  expect(await ids()).toEqual([expected[0]])
+  await expect(page).not.toHaveURL(/older=/)
+  await page.goto(`/intake?seller=${otherId}&bag=${oldestNumber}#bag-queue`)
+  await expect(queue.locator('.intake-bag')).toHaveCount(0)
+  await expect(queue).toContainText('Inga påsar matchar detta urval.')
+  await queue.getByRole('link', { name: 'Visa alla säljares påsar' }).click()
+  await expect(queue.locator('.intake-bag')).toHaveCount(20)
+  await expect(queue).toContainText('Queue Beta')
+  await page.setViewportSize({ width: 390, height: 844 })
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true)
+  await queue.screenshot({ path: 'test-results/bag-queue-mobile.png' })
+  await page.goto('/intake?older=1&newer=2')
+  await expect(
+    page.getByRole('heading', { name: 'Sidan kunde inte hittas.' }),
+  ).toBeVisible()
+  await expect(queue).toHaveCount(0)
+})

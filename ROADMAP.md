@@ -24,7 +24,7 @@ are English; the normal UI supports Swedish and English.
 | M2 | Implemented and tested | Review with the owner in the GUI |
 | M3 | Local journeys tested; hosted invitation email received | Resolve hosted acceptance issue and broaden multi-user pilot |
 | M4 | In progress | Hosted/self-host deployment validation, recovery operations, backup/restore exercise |
-| M5 | Bag receiving and staff agreement evidence deployed; saved inspection implemented | Hosted inspection verification and scoped agent adapter |
+| M5 | Bag receiving, agreement evidence, versioned inspection and archive/reopen verified in staging | Searchable paged bag queue implemented; scoped agent adapter and commercial acceptance remain separate |
 | M6 | Not started | Real workflow decisions before financial schema |
 
 The active database contains stores, memberships, profiles, invitations,

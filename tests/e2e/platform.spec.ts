@@ -70,6 +70,48 @@ test('anonymous invitation uses the selected language', async ({ page }) => {
   ).toBeVisible()
 })
 
+test('selected English survives confirmation and store creation', async ({
+  page,
+}) => {
+  const run = Date.now().toString(36)
+  await page.goto('/register')
+  await page.getByRole('button', { name: 'English', exact: true }).click()
+  await page
+    .getByLabel('Email address', { exact: true })
+    .fill(`english-${run}@example.test`)
+  await page
+    .getByLabel('Password', { exact: true })
+    .fill(`K!${randomBytes(16).toString('hex')}`)
+  await page
+    .getByRole('button', { name: 'Create account', exact: true })
+    .click()
+  await expect(
+    page.getByText('Check your email and follow the link', { exact: false }),
+  ).toBeVisible()
+  await confirmEmail(page, `english-${run}@example.test`)
+  await expect(page.getByLabel('Store name', { exact: true })).toBeVisible()
+  await page.getByLabel('Store name', { exact: true }).fill('E2E English Store')
+  await page
+    .getByLabel('Store identifier', { exact: true })
+    .fill(`english-${run}`)
+  await page
+    .getByRole('button', { name: 'Create my store', exact: true })
+    .click()
+  await expect(page.getByLabel('Active store').first()).toBeVisible()
+  await page.reload()
+  await expect(page.getByLabel('Active store').first()).toBeVisible()
+  await page.goto('/account')
+  await page.getByLabel('Language', { exact: true }).selectOption('sv')
+  await page.getByRole('button', { name: 'Save changes', exact: true }).click()
+  await expect(
+    page.getByRole('heading', { name: 'Mitt konto', exact: true }),
+  ).toBeVisible()
+  await page.reload()
+  await expect(
+    page.getByRole('heading', { name: 'Mitt konto', exact: true }),
+  ).toBeVisible()
+})
+
 async function confirmEmail(page: Page, email: string, subjectPart = '') {
   let link = ''
   await expect

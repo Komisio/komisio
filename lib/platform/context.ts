@@ -1,4 +1,6 @@
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
+import { resolveLocale } from '@/lib/i18n'
 import { serverClient } from '@/lib/supabase/server'
 import type { Tenant } from './types'
 import type { Role } from './permissions'
@@ -45,7 +47,10 @@ export async function platformContext() {
     active,
     mfaRequired,
     profile: profile.data,
-    locale: profile.data?.locale === 'en' ? ('en' as const) : ('sv' as const),
+    locale: resolveLocale(
+      (await cookies()).get('komisio-locale')?.value,
+      profile.data?.locale,
+    ),
   }
 }
 export async function requirePlatform(tenantRequired = true) {

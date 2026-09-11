@@ -7,6 +7,20 @@ import {
 } from '../../lib/platform/validation'
 import sv from '../../messages/sv.json'
 import en from '../../messages/en.json'
+import { resolveLocale } from '../../lib/i18n'
+
+describe('language preference', () => {
+  it('retains an explicit browser choice over a default or different profile', () => {
+    expect(resolveLocale('en', 'sv')).toBe('en')
+    expect(resolveLocale('sv', 'en')).toBe('sv')
+    expect(resolveLocale('en')).toBe('en')
+  })
+  it('uses the saved profile or Swedish when no supported browser choice exists', () => {
+    expect(resolveLocale(undefined, 'en')).toBe('en')
+    expect(resolveLocale('unsupported', 'en')).toBe('en')
+    expect(resolveLocale('unsupported', 'unsupported')).toBe('sv')
+  })
+})
 describe('permission boundaries', () => {
   it('never treats read access as administration', () => {
     expect(can('readonly', 'members.manage')).toBe(false)

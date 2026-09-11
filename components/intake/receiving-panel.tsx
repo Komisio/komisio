@@ -11,10 +11,14 @@ export function ReceivingPanel({
   tenantId,
   seller,
   d,
+  expectedAgreementId = null,
+  agreementBlocked = false,
 }: {
   tenantId: string
   seller: Seller | null
   d: Dictionary['intake']
+  expectedAgreementId?: string | null
+  agreementBlocked?: boolean
 }) {
   const router = useRouter()
   const pending = useRef<Record<string, unknown> | null>(null)
@@ -22,9 +26,10 @@ export function ReceivingPanel({
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [bagId, setBagId] = useState('')
+  const [needsReload, setNeedsReload] = useState(false)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (busy) return
+    if (busy || needsReload || (agreementBlocked && !pending.current)) return
     const form = event.currentTarget
     const fields = new FormData(form)
     const command =
@@ -36,6 +41,7 @@ export function ReceivingPanel({
             requestId: crypto.randomUUID(),
             sellerId: seller.id,
             note: String(fields.get('note') ?? '').trim(),
+            expectedAgreementId,
           }
         : {
             action: 'registerSeller',
@@ -66,6 +72,20 @@ export function ReceivingPanel({
       })
       const result = await response.json()
       if (!response.ok) {
+        if (result.error === 'AGREEMENT_CHANGED') {
+          pending.current = null
+          setLocked(false)
+          setNeedsReload(true)
+          setError(d.agreementChanged)
+          return
+        }
+        if (result.error === 'AGREEMENT_REQUIRED') {
+          pending.current = null
+          setLocked(false)
+          setError(d.agreementRequired)
+          router.refresh()
+          return
+        }
         if (result.error === 'INVALID_INPUT') {
           pending.current = null
           setLocked(false)
@@ -153,7 +173,16 @@ export function ReceivingPanel({
           )}
         </fieldset>
         {error && <p role="alert">{error}</p>}
-        <Button type="submit" disabled={busy}>
+        {seller && agreementBlocked && <p>{d.agreementRequired}</p>}
+        {needsReload && (
+          <a className="text-link" href={`/intake?seller=${seller?.id ?? ''}`}>
+            {d.reload}
+          </a>
+        )}
+        <Button
+          type="submit"
+          disabled={busy || needsReload || (agreementBlocked && !locked)}
+        >
           {busy ? d.busy : locked ? d.retry : seller ? d.saveBag : d.saveSeller}
         </Button>
       </form>

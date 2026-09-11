@@ -154,6 +154,89 @@ try {
   console.log(
     'PASS: two authenticated receipt requests raced; one bag and one audit event persisted.',
   )
+  const ownerResult = await setup.query(
+    "select user_id from tenant_members where tenant_id=$1 and role='owner'",
+    [tenant],
+  )
+  const publishingActor = ownerResult.rows[0].user_id
+  for (const { c } of sessions)
+    await c.query("select set_config('request.jwt.claims',$1,false)", [
+      JSON.stringify({ sub: publishingActor, role: 'authenticated' }),
+    ])
+  const agreement1 = randomUUID(),
+    racingBag = randomUUID()
+  await setup.query('begin')
+  await setup.query('select id from tenants where id=$1 for update', [tenant])
+  const publish = sessions[0].c.query(
+    "select publish_seller_agreement($1,$2,null,'Test','Fictional test','sv',true)",
+    [tenant, agreement1],
+  )
+  const receiveDuringPublish = sessions[1].c
+    .query(
+      "select receive_bag_with_agreement($1,$2,$3,'Racing publication',null)",
+      [tenant, racingBag, seller],
+    )
+    .then(
+      () => 'received',
+      (e) => {
+        if (e.message.includes('AGREEMENT_CHANGED')) return 'changed'
+        throw e
+      },
+    )
+  let agreementWaiting = 0
+  for (let i = 0; i < 100; i++) {
+    const result = await setup.query(
+      "select count(*)::int as waiting from pg_stat_activity where application_name like 'owner_race_%' and wait_event_type='Lock'",
+    )
+    agreementWaiting = result.rows[0].waiting
+    if (agreementWaiting === 2) break
+    await pause(20)
+  }
+  await setup.query('commit')
+  await publish
+  const receivingOutcome = await receiveDuringPublish
+  const racingEvidence = await setup.query(
+    'select agreement_version_id from bag_receipts where id=$1',
+    [racingBag],
+  )
+  if (
+    agreementWaiting !== 2 ||
+    (receivingOutcome === 'changed' && racingEvidence.rowCount !== 0) ||
+    (receivingOutcome === 'received' &&
+      (racingEvidence.rowCount !== 1 ||
+        racingEvidence.rows[0].agreement_version_id !== null))
+  )
+    throw new Error(
+      'Receipt crossed an inconsistent agreement publication boundary',
+    )
+  const publicationResults = await Promise.all(
+    sessions.map(({ c }) =>
+      c
+        .query(
+          "select publish_seller_agreement($1,$2,$3,'Next','Fictional next','en',false)",
+          [tenant, randomUUID(), agreement1],
+        )
+        .then(
+          () => 'published',
+          (e) => {
+            if (e.message.includes('AGREEMENT_CHANGED')) return 'changed'
+            throw e
+          },
+        ),
+    ),
+  )
+  const versions = await setup.query(
+    'select count(*)::int as count from seller_agreement_versions where tenant_id=$1',
+    [tenant],
+  )
+  if (
+    publicationResults.filter((r) => r === 'published').length !== 1 ||
+    versions.rows[0].count !== 2
+  )
+    throw new Error('Concurrent publications overwrote an unreviewed version')
+  console.log(
+    'PASS: publication and receipt serialize; concurrent publishers cannot silently replace each other.',
+  )
 } finally {
   await Promise.allSettled(clients.map((c) => c.end()))
   await admin.query(`drop database if exists "${database}"`)

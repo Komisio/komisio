@@ -1,4 +1,34 @@
 @import 'tailwindcss';
+textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+  resize: vertical;
+}
+.agreement-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 20px 0;
+  padding: 16px;
+  background: var(--paper);
+  border-radius: 8px;
+}
+.agreement-at-intake {
+  margin-bottom: 24px;
+}
+.agreement-evidence-form {
+  margin-top: 16px;
+}
+summary {
+  cursor: pointer;
+  color: var(--ink);
+  padding: 8px 0;
+}
 .intake-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -90,7 +90,12 @@ checks and contact visibility. There was no independent reviewer. Hosted
 activation and an authenticated hosted receiving walkthrough are recorded in
 HOSTED-STAGING.md separately from this local evidence; CI is checked before merge.
 
-## Next implementation: seller agreement evidence
+## Seller agreement evidence implementation
+
+The first staff slice is implemented as described in
+[Seller agreement evidence](SELLER-AGREEMENTS.md). It publishes immutable versions,
+records external evidence and checks receipt prerequisites. Seller-authenticated
+approval and BankID remain future work.
 
 Proposed bounded slice under the owner's autonomous-development authorization:
 
@@ -111,6 +116,6 @@ Proposed bounded slice under the owner's autonomous-development authorization:
   engine and authenticated RPCs; test cross-tenant references, role boundaries,
   version replacement and concurrent publication/receiving before activation.
 
-This is the implementation contract for the next slice, not a live agreement or
+This is the contract for the implemented staff-evidence slice, not a digital
 signature feature. BankID, legal interpretation and payout authorization remain
 separate from recording the store's agreement evidence.

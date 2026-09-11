@@ -95,7 +95,11 @@ proposal's owner clarification for scope and outstanding details.
   required? Stripe for payouts does not decide how booking fees are collected.
 - Can sales modes coexist within a tenant, and how are individual bookings assigned?
 - What sales information can Komisio obtain when sellers operate their own checkout?
-- Which policy version applies to an existing handover or booking after settings change?
+- **Partly answered 2026-09-11:** new bag receipts preserve the exact current
+  agreement version and staff-recorded evidence, and settings changes do not
+  rewrite prior receipts. Booking quote/version rules remain separate work.
+- How should mistaken agreement evidence be corrected/revoked, and when must
+  external evidence be reverified? This must precede external seller pilot use.
 
 ## Platform pilot
 

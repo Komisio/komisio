@@ -27,6 +27,8 @@ export function Shell({
   intakeEnabled?: boolean
 }) {
   const pathname = usePathname()
+  const isActive = (path: string) =>
+    pathname === path || (path !== '/' && pathname.startsWith(`${path}/`))
   const router = useRouter()
   const action = useCommand(d)
   const links = [
@@ -89,8 +91,8 @@ export function Shell({
               <Link
                 key={path}
                 href={path}
-                className={`nav-link ${pathname === path ? 'active' : ''}`}
-                aria-current={pathname === path ? 'page' : undefined}
+                className={`nav-link ${isActive(path) ? 'active' : ''}`}
+                aria-current={isActive(path) ? 'page' : undefined}
               >
                 <Icon size={17} strokeWidth={1.7} />
                 {label}
@@ -123,7 +125,9 @@ export function Shell({
         <span className="breadcrumb">
           {active.name}
           <span style={{ padding: '0 12px' }}>/</span>
-          {links.find((l) => l.path === pathname)?.label ?? d.home}
+          {pathname === '/intake/agreements'
+            ? d.agreements.title
+            : (links.find((l) => isActive(l.path))?.label ?? d.home)}
         </span>
         <div className="desktop-only row">
           <span className="badge">{d.roles[active.role]}</span>
@@ -142,8 +146,8 @@ export function Shell({
           <Link
             key={path}
             href={path}
-            className={`nav-link ${pathname === path ? 'active' : ''}`}
-            aria-current={pathname === path ? 'page' : undefined}
+            className={`nav-link ${isActive(path) ? 'active' : ''}`}
+            aria-current={isActive(path) ? 'page' : undefined}
           >
             <Icon size={19} />
             {label}

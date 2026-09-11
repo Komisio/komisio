@@ -5,6 +5,11 @@ become schema, rules or tests. Each question lists what it affects and the
 candidate answer the schema sketch assumed (see `experiments/2026-09-schema-sketch`).
 Answered questions move to `DECISIONS.md`.
 
+The [intake workflow proposal](INTAKE-WORKFLOW-PROPOSAL.md) adds concrete review
+scenarios for physical receipt versus acceptance, minimum consignor identity,
+price timing, batch retry outcomes and draft ownership/retention. These remain
+open and must be resolved before the corresponding persistence is introduced.
+
 ## Tenancy
 
 1. ~~What is the tenant: the store or the chain?~~ **Answered 2026-09-10

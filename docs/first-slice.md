@@ -1,5 +1,10 @@
 # First vertical slice: register a consignor and receive an item
 
+Before implementing this sketch, review the
+[intake workflow proposal](INTAKE-WORKFLOW-PROPOSAL.md). It questions price timing,
+batch outcomes and the distinction between a seller proposal and physical receipt.
+Those are pending decisions, not permission to implement a larger schema.
+
 Scheduled as M5 in `../ROADMAP.md`, after registration, login, tenant onboarding,
 user administration and the platform GUI are usable. This is the first
 consignment slice, not the first application slice. It is chosen because it tests the

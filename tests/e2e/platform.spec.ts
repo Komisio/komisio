@@ -119,7 +119,7 @@ test('register, verify, create stores, invite, isolate and administer access', a
   await expect(
     page.getByText('Inbjudningslänken är klar', { exact: true }),
   ).toBeVisible()
-  const invite = await page
+  const supersededInvite = await page
     .getByRole('textbox', { name: 'Inbjudningslänken är klar' })
     .inputValue()
   await expect(
@@ -127,9 +127,38 @@ test('register, verify, create stores, invite, isolate and administer access', a
       'Dela länken med mottagaren. Automatisk e-post är inte aktiverad.',
     ),
   ).toBeVisible()
+  // A replacement invalidates the earlier link, but not the recipient's account.
+  await page.getByRole('button', { name: 'Bjud in', exact: true }).click()
+  await expect(
+    page.getByRole('textbox', { name: 'Inbjudningslänken är klar' }),
+  ).not.toHaveValue(supersededInvite)
+  const invite = await page
+    .getByRole('textbox', { name: 'Inbjudningslänken är klar' })
+    .inputValue()
+  const wrongIdentity = await page.request.post('/api/platform', {
+    headers: { Origin: 'http://127.0.0.1:3000' },
+    data: {
+      action: 'accept',
+      token: new URL(invite).pathname.split('/').pop(),
+    },
+  })
+  expect(wrongIdentity.status()).toBe(400)
+  expect((await wrongIdentity.json()).error).toBe('INVITATION_INVALID')
   const staffContext = await browser.newContext()
   const staff = await staffContext.newPage()
-  await register(staff, staffEmail, password, new URL(invite).pathname)
+  await register(
+    staff,
+    staffEmail,
+    password,
+    new URL(supersededInvite).pathname,
+  )
+  await staff
+    .getByRole('button', { name: 'Acceptera inbjudan', exact: true })
+    .click()
+  await expect(
+    staff.getByRole('alert').filter({ hasText: 'Inbjudan är ogiltig' }),
+  ).toBeVisible()
+  await staff.goto(invite)
   await expect(
     staff.getByRole('button', { name: 'Acceptera inbjudan', exact: true }),
   ).toBeVisible()
@@ -137,6 +166,15 @@ test('register, verify, create stores, invite, isolate and administer access', a
     .getByRole('button', { name: 'Acceptera inbjudan', exact: true })
     .click()
   await expect(staff.getByRole('heading', { name: 'Välkommen.' })).toBeVisible()
+  const replay = await staff.request.post('/api/platform', {
+    headers: { Origin: 'http://127.0.0.1:3000' },
+    data: {
+      action: 'accept',
+      token: new URL(invite).pathname.split('/').pop(),
+    },
+  })
+  expect(replay.status()).toBe(400)
+  expect((await replay.json()).error).toBe('INVITATION_INVALID')
   await staff.goto('/members')
   await expect(
     staff.getByText('Du kan se vilka som arbetar här.'),

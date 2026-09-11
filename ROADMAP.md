@@ -161,7 +161,11 @@ Platform completion gate: a person who did not develop Komisio can register, cre
 
 ## M5: first store operation and first agent integration
 
-After the platform gate, implement `docs/first-slice.md`: register a consignor and receive an item. Reconfirm the minimal data from the store workflow. Keep commission, VAT and settlement decisions out of this slice.
+The owner authorized starting the first domain slice on 11 September while the
+remaining hosted pilot checks stay tracked separately. The bag-first clarification
+supersedes the earlier item-at-counter sketch: register a seller, receive a bag,
+and print its label. See `docs/SELLER-FLOW-IMPLEMENTATION.md` for the reviewed
+workflow and sequence. Keep commission, VAT and settlement out of this slice.
 
 Build the human flow through the domain engine first. Then expose that same small operation through a scoped MCP adapter, including identified actor, preview, approval where required, idempotent execution and audit. A machine credential is a separate actor/credential with explicit scopes, not another human tenant role. Its effective rights cannot exceed its tenant and delegated permissions. Account/owner administration stays outside the first agent scope.
 
@@ -220,4 +224,7 @@ key or financial data model has been introduced.
 4. Complete validation of the Vercel/Supabase Stockholm staging deployment and
    Resend email using docs/HOSTED-STAGING.md, decide MFA recovery
    and support identity verification, and demonstrate backup/restore.
-5. Once the platform gate is accepted, define and build the minimal intake flow.
+5. Validate the gated bag-receiving pilot with the owner, then implement agreement
+   evidence and seller access, inspection, optional receiving channels, space
+   booking with both checkout modes, and finally POS/ledger/payout integration.
+   Exact fee and financial rules remain separate decisions.

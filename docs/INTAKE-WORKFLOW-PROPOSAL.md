@@ -3,6 +3,46 @@
 Proposal for owner review, 11 September 2026. **Not an implemented feature or an
 approved financial model.** The platform acceptance gate remains open.
 
+## Owner clarification, 11 September 2026
+
+The following requirements supersede the item-at-counter proposal below. They
+describe product scope, not implemented behavior or an approved payment model.
+
+- Receive a bag first; staff inspects and registers its contents later. An item
+  description or price is therefore not required to acknowledge bag receipt.
+- Staff can register sellers manually. Sellers can also self-register through
+  a QR code at the counter. Print a bag label linking the bag to the seller.
+- Authenticated self-drop-off and pickup from registered sellers are optional
+  tenant capabilities. Their detailed handover and verification steps remain open.
+- Price approval, treatment of rejected goods, and agreement/receipt requirements
+  are tenant-configurable. Email receipt is a likely normal option, not a mandated
+  default. Review the old agreement flows before specifying approval evidence.
+- Sellers should follow their submissions and sales in the web/app and request
+  payouts. BankID is a desired identity integration. Stripe is to be investigated
+  for seller payouts, not assumed to provide a suitable money flow already.
+- Komisio is initially not a POS. Sales should integrate with external systems
+  such as Zettle POS or Shopify POS; no connector capability is verified here.
+- Optional space booking supports premises or other areas such as flea markets,
+  with a seller fee calculated under tenant-specific rules.
+- Both seller-operated sales at a booked space and store-operated sales through
+  a shared checkout must be supported. Do not assume that seller-operated sales
+  pass through the store or create a store liability to the seller.
+
+Recommended next slice: find/register a seller, record the applicable agreement
+step, receive a bag, print/reprint its label, and show the inspection queue.
+Multiple bags per handover are a proposal still to validate.
+
+Configuration design proposal: a tenant enables supported capabilities and
+policies; each booking identifies its sales mode. Avoid a generic workflow
+builder initially. Permissions, tenant isolation and auditable financial writes
+remain mandatory. How policy changes affect existing agreements and bookings
+must be decided explicitly; do not silently apply new terms to old handovers.
+
+Before implementation, inventory the earlier agreement and booking journeys as
+behavioral evidence, challenge unnecessary steps, and define the minimum seller
+identity, agreement evidence, bag custody, fee rules and payment responsibilities.
+No old code or schema is to be copied.
+
 ## What the earlier prototypes teach us
 
 This review covers the earlier mobile app's capture/review/submit journey and
@@ -38,7 +78,7 @@ Both can eventually use the same underlying operations, with different
 permissions and an explicit receiving step. Do not expose staff authority to a
 seller merely because both interfaces collect similar information.
 
-## Proposed first staff journey
+## Earlier first staff journey (superseded by bag-first clarification)
 
 1. **Who is handing things in?** Find an existing consignor or create a minimal
    contact. Show the active store throughout. Warn about possible matches and
@@ -93,7 +133,7 @@ This scenario should determine the workflow, rather than the existing table fiel
 | AI fails or times out | Manual receiving still works and user-entered data remains |
 | A seller submits photos remotely | Nothing is marked physically received without authorized staff action |
 
-## Decisions needed from the owner
+## Original review questions (see clarification above for partial answers)
 
 1. **Receipt versus acceptance:** can the shop hold unpriced or unapproved goods,
    and what does it give the consignor as evidence at that point?

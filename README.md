@@ -42,7 +42,8 @@ roles, store switching and a web interface in Swedish and English.
 **AI should do the legwork. You keep control.** Our architectural direction is
 one shared engine for the interface, extensions and AI agents. Agents should
 prepare work for approval, with permissions and business rules enforced by the
-system. The agent runtime and consignment engine are still ahead of us.
+system. The first receiving engine is available as a gated pilot; the agent
+runtime and financial operations are still ahead of us.
 
 **Open means you can look under the hood.** Inspect the code, run the current
 platform locally and help shape what comes next. AGPL-3.0-or-later, with a
@@ -56,9 +57,11 @@ Accounting integrations are planned; Komisio is not a bookkeeping application.
 
 ![Planned workflow: receive an item, sell it, settle the consignor's share. These operations are not implemented yet.](docs/images/komisio-flow.svg)
 
-The first store operation will be deliberately small: **register a consignor
-and receive an item**. Sales, returns, commission, settlements and payouts will
-follow as validated workflows. See the [first slice](docs/first-slice.md) and
+The first store operation is deliberately small: **register a seller, receive
+a bag and print its label**. Staff reviews the contents later. This gated pilot
+is available locally after migration and activation; the hosted preview does
+not enable it automatically. Agreements, space booking, sales and payouts follow
+as separate workflows. See the [implementation sequence](docs/SELLER-FLOW-IMPLEMENTATION.md) and
 [open domain questions](docs/open-questions.md).
 
 ## What can I use today?

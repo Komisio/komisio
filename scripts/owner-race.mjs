@@ -106,6 +106,54 @@ try {
   console.log(
     'PASS: two non-superuser sessions raced; one change succeeded, one was blocked, one owner remains.',
   )
+  // Two browser retries by the same actor must resolve one custody event.
+  const seller = randomUUID(),
+    bag = randomUUID()
+  for (const { c } of sessions) {
+    await c.query("select set_config('request.jwt.claims',$1,false)", [
+      JSON.stringify({ sub: u1, role: 'authenticated' }),
+    ])
+  }
+  await sessions[0].c.query(
+    "select register_seller($1,$2,'Race seller','seller@example.test','')",
+    [tenant, seller],
+  )
+  await setup.query('begin')
+  await setup.query('select id from tenants where id=$1 for update', [tenant])
+  const receipts = sessions.map(({ c }) =>
+    c.query("select receive_bag($1,$2,$3,'Concurrent bag') as id", [
+      tenant,
+      bag,
+      seller,
+    ]),
+  )
+  let receiptWaiting = 0
+  for (let i = 0; i < 100; i++) {
+    const result = await setup.query(
+      "select count(*)::int as waiting from pg_stat_activity where application_name like 'owner_race_%' and wait_event_type='Lock'",
+    )
+    receiptWaiting = result.rows[0].waiting
+    if (receiptWaiting === 2) break
+    await pause(20)
+  }
+  await setup.query('commit')
+  const receiptResults = await Promise.all(receipts)
+  const evidence = await setup.query(
+    "select (select count(*) from bag_receipts where id=$1)::int as bags, (select count(*) from access_events where target_id=$1 and action='bag.received')::int as events",
+    [bag],
+  )
+  if (
+    receiptWaiting !== 2 ||
+    receiptResults.some((r) => r.rows[0].id !== bag) ||
+    evidence.rows[0].bags !== 1 ||
+    evidence.rows[0].events !== 1
+  )
+    throw new Error(
+      'Concurrent receipt replay duplicated or lost custody evidence',
+    )
+  console.log(
+    'PASS: two authenticated receipt requests raced; one bag and one audit event persisted.',
+  )
 } finally {
   await Promise.allSettled(clients.map((c) => c.end()))
   await admin.query(`drop database if exists "${database}"`)

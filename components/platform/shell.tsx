@@ -16,6 +16,7 @@ export function Shell({
   active,
   email,
   name,
+  intakeEnabled = false,
 }: {
   children: React.ReactNode
   d: Dictionary
@@ -23,12 +24,16 @@ export function Shell({
   active: Tenant
   email: string
   name: string
+  intakeEnabled?: boolean
 }) {
   const pathname = usePathname()
   const router = useRouter()
   const action = useCommand(d)
   const links = [
     { path: '/', label: d.home, icon: House },
+    ...(intakeEnabled
+      ? [{ path: '/intake', label: d.intake.title, icon: Plus }]
+      : []),
     { path: '/members', label: d.members, icon: Users },
     { path: '/settings', label: d.tenant, icon: Settings2 },
     { path: '/account', label: d.account, icon: UserRound },
@@ -78,17 +83,19 @@ export function Shell({
         </div>
         <div className="nav-label eyebrow">{d.platform}</div>
         <nav aria-label={d.platform}>
-          {links.slice(0, 3).map(({ path, label, icon: Icon }) => (
-            <Link
-              key={path}
-              href={path}
-              className={`nav-link ${pathname === path ? 'active' : ''}`}
-              aria-current={pathname === path ? 'page' : undefined}
-            >
-              <Icon size={17} strokeWidth={1.7} />
-              {label}
-            </Link>
-          ))}
+          {links
+            .filter((link) => link.path !== '/account')
+            .map(({ path, label, icon: Icon }) => (
+              <Link
+                key={path}
+                href={path}
+                className={`nav-link ${pathname === path ? 'active' : ''}`}
+                aria-current={pathname === path ? 'page' : undefined}
+              >
+                <Icon size={17} strokeWidth={1.7} />
+                {label}
+              </Link>
+            ))}
         </nav>
         <div className="sidebar-footer">
           <p style={{ fontSize: 11, padding: '0 12px' }}>{d.help}</p>

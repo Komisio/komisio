@@ -65,6 +65,13 @@ pilot work.
 
 ## The five layers and their boundaries
 
+The first gated domain slice now adds `sellers` and `bag_receipts` behind
+`lib/engine/intake.ts` and authenticated `/api/intake`. Bag receipt means physical
+custody only. SQL functions validate role/MFA and serialize with membership
+changes; direct table mutations are denied. See
+`docs/SELLER-FLOW-IMPLEMENTATION.md` for activation and remaining workflow scope.
+There are still no item, financial or agreement-acceptance tables or agent writes.
+
 ```
 ┌───────────────────────────────────────────────────────────────┐
 │  UI (web, later PWA for consignors)      MCP server (agents)   │  surfaces

@@ -1,4 +1,14 @@
-# First vertical slice: register a consignor and receive an item
+# First vertical slice: register a seller and receive a bag
+
+**Superseded sketch below.** The owner confirmed on 11 September that sellers
+drop off bags for later inspection and authorized implementation. The current
+scope is described in [Seller journeys](SELLER-FLOW-IMPLEMENTATION.md): two
+minimal records (seller and bag receipt), a shared engine and staff web surface,
+database isolation/replay tests and repeatable labels. No item pricing or MCP
+write endpoint is part of this first delivery. The original sketch is retained
+below as historical context, not an instruction to create its tables.
+
+## Historical item-at-counter sketch
 
 Before implementing this sketch, review the
 [intake workflow proposal](INTAKE-WORKFLOW-PROPOSAL.md). It questions price timing,

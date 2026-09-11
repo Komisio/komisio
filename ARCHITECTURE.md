@@ -115,6 +115,15 @@ publication and receiving serialize with membership changes. See
    cash-register law live in `skills/` as readable knowledge for agents and
    people, and are codified only when a decision requires it.
 
+## Inspection preparation
+
+`lib/engine/inspection.ts` implements a pure, versioned descriptive draft and
+suggestion contract. It can be used by manual and future model adapters without
+network access or persistence. Explicit field selection and revision matching
+protect human edits from stale suggestions. This is not a permission boundary,
+saved item or live AI feature. See [the inspection ADR](docs/AI-FIRST-INSPECTION.md)
+for the Accounted reference, database/skill split and next implementation steps.
+
 ## Invariants the core will enforce
 
 Written here as intent; each becomes a `DECISIONS.md` line and a test when the

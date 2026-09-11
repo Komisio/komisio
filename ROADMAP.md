@@ -24,11 +24,12 @@ are English; the normal UI supports Swedish and English.
 | M2 | Implemented and tested | Review with the owner in the GUI |
 | M3 | Local journeys tested; hosted invitation email received | Resolve hosted acceptance issue and broaden multi-user pilot |
 | M4 | In progress | Hosted/self-host deployment validation, recovery operations, backup/restore exercise |
-| M5 | Not started | Minimal consignor/intake flow after the platform gate |
+| M5 | Bag receiving and staff agreement evidence deployed to staging | Resumable inspection and scoped agent adapter |
 | M6 | Not started | Real workflow decisions before financial schema |
 
-The active database contains only stores, memberships, profiles, invitations and
-access events. The earlier financial schema stays in experiments. The public repository is https://github.com/Komisio/komisio. The initial platform
+The active database contains stores, memberships, profiles, invitations,
+access events, sellers, bag receipts and versioned staff agreement evidence.
+The earlier financial schema stays in experiments. The public repository is https://github.com/Komisio/komisio. The initial platform
 is committed on main. Current remote check results are available in GitHub Actions;
 local checks alone are not evidence of a successful remote run.
 
@@ -215,6 +216,13 @@ Staging now has SMTP and invitation email. No production store service, AI model
 key or financial data model has been introduced.
 
 ## Next concrete work
+
+The next domain delivery follows [AI-first inspection](docs/AI-FIRST-INSPECTION.md):
+the pure descriptive proposal contract is implemented, while saved inspection
+drafts and the inspection GUI are next. Optional model assistance and scoped
+agent execution build on those same operations. Bag receiving and agreement
+evidence are already active in staging; the remaining platform work below stays
+open alongside that domain work.
 
 1. Owner walkthrough of registration, store creation, invitations and account UI.
 2. Fix issues from that walkthrough and broaden the pilot to three users with

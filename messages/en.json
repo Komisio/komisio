@@ -241,7 +241,8 @@
     "inspection.archived": "Item draft archived",
     "inspection.reopened": "Item draft reopened",
     "reception.created": "Reception started",
-    "reception.sources_saved": "Reception evidence saved"
+    "reception.sources_saved": "Reception evidence saved",
+    "reception.review_published": "Reception review prepared"
   },
   "errors": {
     "FORBIDDEN": "You do not have permission to do this.",

@@ -405,6 +405,100 @@ try {
   console.log(
     'PASS: concurrent reception snapshots reject stale writes; identical retries persist once.',
   )
+
+  const reviewSources = [
+    {
+      id: randomUUID(),
+      kind: 'price-evidence',
+      reference: 'TEST appraisal',
+      observation: 'Fictional price',
+    },
+  ]
+  await sessions[0].c.query(
+    'select save_reception_sources($1,$2,$3,2,$4::jsonb)',
+    [tenant, randomUUID(), receptionId, JSON.stringify(reviewSources)],
+  )
+  const reviewTerms = (
+    await setup.query(
+      'select id from seller_agreement_versions where tenant_id=$1 order by version desc limit 1',
+      [tenant],
+    )
+  ).rows[0].id
+  const suggestions = JSON.stringify({
+    metadata: {
+      description: {
+        value: 'TEST garment',
+        sourceIds: [reviewSources[0].id],
+        certainty: 'observed',
+      },
+    },
+    price: {
+      currency: 'SEK',
+      amount: '250.00',
+      rationale: 'TEST only',
+      sourceIds: [reviewSources[0].id],
+    },
+    questions: [],
+  })
+  const expiry = new Date(Date.now() + 3600000).toISOString()
+  const reviewRace = await Promise.all(
+    sessions.map(({ c }) =>
+      c
+        .query(
+          'select publish_reception_review($1,$2,$3,3,null,$4,$5::jsonb,$6)',
+          [tenant, randomUUID(), receptionId, reviewTerms, suggestions, expiry],
+        )
+        .then(
+          () => 'published',
+          (e) => {
+            if (e.message.includes('RECEPTION_REVIEW_CHANGED')) return 'stale'
+            throw e
+          },
+        ),
+    ),
+  )
+  if (
+    reviewRace.filter((r) => r === 'published').length !== 1 ||
+    reviewRace.filter((r) => r === 'stale').length !== 1
+  )
+    throw new Error('Review publishers overwrote unreviewed state')
+  const previousReview = (
+    await setup.query(
+      'select id from reception_reviews_current where session_id=$1',
+      [receptionId],
+    )
+  ).rows[0].id
+  const reviewRequest = randomUUID()
+  const reviewRetries = await Promise.all(
+    sessions.map(({ c }) =>
+      c.query(
+        'select publish_reception_review($1,$2,$3,3,$4,$5,$6::jsonb,$7) as id',
+        [
+          tenant,
+          reviewRequest,
+          receptionId,
+          previousReview,
+          reviewTerms,
+          suggestions,
+          expiry,
+        ],
+      ),
+    ),
+  )
+  const reviewCount = (
+    await setup.query(
+      'select count(*)::int as count from reception_reviews where session_id=$1',
+      [receptionId],
+    )
+  ).rows[0].count
+  if (
+    reviewCount !== 2 ||
+    reviewRetries.some((r) => r.rows[0].id !== reviewRequest)
+  )
+    throw new Error('Review retries duplicated snapshot')
+  console.log(
+    'PASS: concurrent review publication requires expected previous review; retries persist once.',
+  )
 } finally {
   await Promise.allSettled(clients.map((c) => c.end()))
   await admin.query(`drop database if exists "${database}"`)

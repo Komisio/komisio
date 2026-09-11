@@ -70,6 +70,10 @@ export async function POST(request: Request) {
           'RECEPTION_NOT_FOUND',
           'RECEPTION_CHANGED',
           'RECEPTION_SOURCE_CHANGED',
+          'RECEPTION_REVIEW_CHANGED',
+          'RECEPTION_REVIEW_EXPIRED',
+          'RECEPTION_UNKNOWN_SOURCE',
+          'RECEPTION_PRICE_EVIDENCE_REQUIRED',
         ].find((v) => result.error!.message.includes(v)) ?? 'REQUEST_FAILED'
       return reply(
         { error: code },
@@ -85,6 +89,8 @@ export async function POST(request: Request) {
                 'INSPECTION_STATUS_UNCHANGED',
                 'RECEPTION_CHANGED',
                 'RECEPTION_SOURCE_CHANGED',
+                'RECEPTION_REVIEW_CHANGED',
+                'RECEPTION_REVIEW_EXPIRED',
               ].includes(code)
             ? 409
             : 400,

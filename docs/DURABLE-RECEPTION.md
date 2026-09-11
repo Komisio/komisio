@@ -50,6 +50,7 @@ checks alone do not prove seller review or vision. Retain the additive schema
 and history on rollback; restore a compatible prior app or hide intake during a
 forward fix. Do not delete evidence to recover from an application error.
 
-Next: proposal/review/decision persistence and separately scoped seller access,
+The [review snapshot slice](RECEPTION-REVIEWS.md) adds complete immutable staff
+review versions. Next: seller-decision persistence and separately scoped access,
 then private images and a real optional provider adapter. Seller mobile approval,
 live vision and MCP are not implemented by this slice.

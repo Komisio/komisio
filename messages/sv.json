@@ -241,7 +241,8 @@
     "inspection.archived": "Ett varuutkast arkiverades",
     "inspection.reopened": "Ett varuutkast återöppnades",
     "reception.created": "En mottagning startades",
-    "reception.sources_saved": "Underlag för mottagningen sparades"
+    "reception.sources_saved": "Underlag för mottagningen sparades",
+    "reception.review_published": "Ett granskningsunderlag sparades"
   },
   "errors": {
     "FORBIDDEN": "Du har inte behörighet att göra detta.",

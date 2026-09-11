@@ -1434,6 +1434,101 @@ test('reception sources persist through authenticated API without a bag or GUI',
   ).toBe(400)
   await page.goto('/intake')
   await expect(page.locator('.intake-bag')).toHaveCount(0)
+
+  const priceSource = {
+    id: crypto.randomUUID(),
+    kind: 'price-evidence',
+    reference: 'TEST appraisal',
+    observation: 'Fictional 250 SEK',
+  }
+  const revisedSources = [...command.sources, priceSource]
+  expect(
+    (
+      await post({
+        ...command,
+        requestId: crypto.randomUUID(),
+        expectedRevision: 1,
+        sources: revisedSources,
+      })
+    ).status(),
+  ).toBe(200)
+  const agreement = await post({
+    action: 'publishAgreement',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    expectedCurrentId: null,
+    title: 'TEST review terms',
+    body: 'Fictional terms only.',
+    language: 'en',
+    required: false,
+  })
+  expect(agreement.status()).toBe(200)
+  const reviewCommand = {
+    action: 'publishReceptionReview',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    sessionId,
+    sourceRevision: 2,
+    previousReviewId: null,
+    agreementId: (await agreement.json()).id,
+    expiresAt: new Date(Date.now() + 3600000).toISOString(),
+    suggestions: {
+      metadata: {
+        description: {
+          value: 'Blue jacket, visible tear',
+          sourceIds: [command.sources[0].id],
+          certainty: 'observed',
+        },
+      },
+      price: {
+        currency: 'SEK',
+        amount: '250.00',
+        rationale: 'TEST appraisal',
+        sourceIds: [priceSource.id],
+      },
+      questions: [],
+    },
+  }
+  expect((await post(reviewCommand)).status()).toBe(200)
+  expect((await post(reviewCommand)).status()).toBe(200)
+  expect(
+    (await (await page.request.get(path)).json()).latestReview,
+  ).toMatchObject({
+    id: reviewCommand.requestId,
+    version: 1,
+    sourceCurrent: true,
+    expired: false,
+    suggestions: reviewCommand.suggestions,
+    terms: {
+      versionId: reviewCommand.agreementId,
+      body: 'Fictional terms only.',
+    },
+  })
+  expect(
+    (await post({ ...reviewCommand, requestId: crypto.randomUUID() })).status(),
+  ).toBe(409)
+  expect(
+    (
+      await post({
+        ...command,
+        requestId: crypto.randomUUID(),
+        expectedRevision: 2,
+        sources: revisedSources,
+      })
+    ).status(),
+  ).toBe(200)
+  expect(
+    (await (await page.request.get(path)).json()).latestReview,
+  ).toMatchObject({ id: reviewCommand.requestId, sourceCurrent: false })
+  expect(
+    (
+      await post({
+        ...reviewCommand,
+        requestId: crypto.randomUUID(),
+        previousReviewId: reviewCommand.requestId,
+      })
+    ).status(),
+  ).toBe(409)
   const otherStore = await page.request.post('/api/platform', {
     headers: { Origin: 'http://127.0.0.1:3000' },
     data: {

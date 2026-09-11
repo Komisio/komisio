@@ -52,8 +52,9 @@ export function TenantForm({ d, tenant }: { d: Dictionary; tenant?: Tenant }) {
             maxLength={63}
             autoCapitalize="none"
             spellCheck={false}
+            aria-describedby="slug-hint"
           />
-          <small>{d.slugHint}</small>
+          <small id="slug-hint">{d.slugHint}</small>
         </div>
       )}
       <Button disabled={action.busy}>

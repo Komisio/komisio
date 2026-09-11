@@ -86,6 +86,15 @@ proposal's owner clarification for scope and outstanding details.
 
 ## Intake and space booking follow-up
 
+- **Owner direction 2026-09-11:** support single-garment wall/vision reception
+  with metadata and a sourced selling-price proposal, then seller mobile review.
+  This complements bag-first receiving. The owner authorizes reasonable
+  implementation assumptions and autonomous delivery; see
+  [reception architecture](RECEPTION-ARCHITECTURE.md). First contracts are pure
+  previews, not persisted consent. Real identity verification, accepted price
+  evidence, complete commercial terms and unattended store acceptance remain
+  explicit external-pilot gates. No commission/VAT/payout rule is decided here.
+
 - **Inspection architecture decided 2026-09-11:** manual entry and optional AI
   suggestions share a strict descriptive draft contract. Suggestions cannot set
   financial or acceptance fields; skills are guidance, not authorization. See

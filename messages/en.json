@@ -114,6 +114,8 @@
   "mfaRecovery": "Keep your authenticator safe. Recovery of a lost factor requires help from the operator in this version.",
   "inviteAcceptTitle": "You're invited.",
   "inviteAcceptIntro": "Accept using the same email address the invitation was created for.",
+  "inviteSwitchAccount": "Wrong account? Sign out here and sign in with the email address that received the invitation. You will return to this link.",
+  "inviteRecovery": "Open the latest invitation in your inbox. A new invitation replaces earlier links. Already accepted? Go to the overview. If it still does not work, ask the store administrator for a new invitation.",
   "acceptInvite": "Accept invitation",
   "signedInAs": "Signed in as",
   "inviteLogin": "Sign in or create an account to accept your invitation.",

@@ -158,6 +158,23 @@ test('register, verify, create stores, invite, isolate and administer access', a
   await expect(
     staff.getByRole('alert').filter({ hasText: 'Inbjudan är ogiltig' }),
   ).toBeVisible()
+  await expect(
+    staff.getByText('Öppna den senaste inbjudan', { exact: false }),
+  ).toBeVisible()
+  await staff.setViewportSize({ width: 390, height: 844 })
+  await staff.screenshot({
+    path: 'test-results/invitation-recovery-mobile.png',
+    fullPage: true,
+  })
+  await staff.getByRole('button', { name: 'Logga ut', exact: true }).click()
+  await expect(staff).toHaveURL(new RegExp('/login\\?next='))
+  expect(new URL(staff.url()).searchParams.get('next')).toBe(
+    new URL(supersededInvite).pathname,
+  )
+  await staff.getByLabel('E-postadress', { exact: true }).fill(staffEmail)
+  await staff.getByLabel('Lösenord', { exact: true }).fill(password)
+  await staff.getByRole('button', { name: 'Logga in', exact: true }).click()
+  await expect(staff).toHaveURL(supersededInvite)
   await staff.goto(invite)
   await expect(
     staff.getByRole('button', { name: 'Acceptera inbjudan', exact: true }),

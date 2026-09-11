@@ -114,6 +114,8 @@
   "mfaRecovery": "Förvara din autentiseringsapp säkert. Återställning av förlorad faktor kräver hjälp av driftansvarig i denna version.",
   "inviteAcceptTitle": "Du är inbjuden.",
   "inviteAcceptIntro": "Acceptera inbjudan med samma e-postadress som den skickades till.",
+  "inviteSwitchAccount": "Fel konto? Logga ut här och logga in med den e-postadress som fick inbjudan. Du kommer tillbaka till den här länken.",
+  "inviteRecovery": "Öppna den senaste inbjudan i din inkorg. En ny inbjudan ersätter tidigare länkar. Har du redan accepterat? Gå till översikten. Om det fortfarande inte fungerar, be butikens administratör om en ny inbjudan.",
   "acceptInvite": "Acceptera inbjudan",
   "signedInAs": "Inloggad som",
   "inviteLogin": "Logga in eller skapa ett konto för att acceptera inbjudan.",

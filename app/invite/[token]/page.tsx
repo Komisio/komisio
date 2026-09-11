@@ -5,6 +5,7 @@ import { dictionary } from '@/lib/i18n'
 import { Brand } from '@/components/platform/brand'
 import { AcceptInvite } from '@/components/platform/accept-invite'
 import { Button } from '@/components/ui/button'
+import { SignOut } from '@/components/platform/sign-out'
 export default async function Invite({
   params,
 }: {
@@ -28,6 +29,8 @@ export default async function Invite({
               {d.signedInAs} <strong>{ctx.user.email}</strong>
             </p>
             <AcceptInvite d={d} token={token} />
+            <p>{d.inviteSwitchAccount}</p>
+            <SignOut d={d} next={`/invite/${token}`} />
           </>
         ) : (
           <>

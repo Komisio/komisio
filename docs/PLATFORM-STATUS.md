@@ -44,7 +44,7 @@ will be introduced only with a concrete domain operation and approval boundaries
 ## Local evidence
 
 - 44 pgTAP assertions pass against PostgreSQL 17 in local Supabase.
-- 26 unit tests pass for platform rules, validation, return URLs, messages and
+- 28 unit tests pass for platform rules, validation, return URLs, language preference, messages and
   invitation-email transport behavior.
 - A real two-connection test proves concurrent owner demotions leave one owner.
 - Lint, formatting, TypeScript and production build checks are run locally.
@@ -53,8 +53,9 @@ will be introduced only with a concrete domain operation and approval boundaries
   password recovery before creating a store, MFA and invalid callbacks.
 
 The initial handover passed three browser journeys against both development
-and standalone servers. The current suite has five journeys, including callback
-recovery and cross-store admin/readonly roles; the standalone run and PR CI pass. Production build, TypeScript, lint
+and standalone servers. The current suite has seven journeys, including callback
+recovery, cross-store admin/readonly roles and English onboarding continuity;
+the standalone run and PR CI pass. Production build, TypeScript, lint
 and formatting are also checked. The public source repository is
 https://github.com/Komisio/komisio. Remote check results are available at
 https://github.com/Komisio/komisio/actions; distinguish those results from the

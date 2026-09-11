@@ -58,6 +58,8 @@ export const saveInspectionCommand = z.strictObject({
 })
 
 export type SavedInspection = {
+  archived: boolean
+  change_reason: string
   draft_id: string
   revision: number
   description: string
@@ -65,6 +67,17 @@ export type SavedInspection = {
   condition: string
   saved_at: string
 }
+
+export const archiveInspectionCommand = z.strictObject({
+  action: z.literal('archiveInspection'),
+  tenantId: z.uuid(),
+  requestId: z.uuid(),
+  bagId: z.uuid(),
+  draftId: z.uuid(),
+  expectedRevision: z.number().int().min(1).max(2147483646),
+  archived: z.boolean(),
+  reason: z.string().trim().min(1).max(500),
+})
 
 /** Pure draft operation; no persistence, authorization, approval or model call. */
 export function editInspectionDraft(

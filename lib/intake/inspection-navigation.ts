@@ -7,6 +7,7 @@ const revision = z
   .pipe(z.number().int().max(2147483647))
 export const inspectionNavigation = z
   .object({
+    status: z.enum(['active', 'archived', 'all']).default('active'),
     draft: z.uuid().optional(),
     version: revision.optional(),
     historyBefore: revision.optional(),

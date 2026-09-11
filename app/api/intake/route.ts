@@ -63,6 +63,9 @@ export async function POST(request: Request) {
           'AGREEMENT_REQUIRED',
           'INSPECTION_DRAFT_CHANGED',
           'INSPECTION_CONTEXT_CHANGED',
+          'INSPECTION_ARCHIVED',
+          'INSPECTION_STATUS_UNCHANGED',
+          'INSPECTION_NOT_FOUND',
           'BAG_NOT_FOUND',
         ].find((v) => result.error!.message.includes(v)) ?? 'REQUEST_FAILED'
       return reply(
@@ -75,6 +78,8 @@ export async function POST(request: Request) {
                 'AGREEMENT_REQUIRED',
                 'INSPECTION_DRAFT_CHANGED',
                 'INSPECTION_CONTEXT_CHANGED',
+                'INSPECTION_ARCHIVED',
+                'INSPECTION_STATUS_UNCHANGED',
               ].includes(code)
             ? 409
             : 400,

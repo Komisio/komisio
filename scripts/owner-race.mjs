@@ -280,6 +280,68 @@ try {
   console.log(
     'PASS: concurrent inspection edits reject stale revisions; identical retries persist once.',
   )
+
+  const raceStatus = await Promise.all(
+    [
+      sessions[0].c.query(
+        "select set_inspection_archived($1,$2,$3,$4,2,true,'Duplicate draft')",
+        [tenant, randomUUID(), bag, inspectionDraft],
+      ),
+      sessions[1].c.query(
+        "select save_inspection_draft($1,$2,$3,$4,2,'Competing description','','')",
+        [tenant, randomUUID(), bag, inspectionDraft],
+      ),
+    ].map((p) =>
+      p.then(
+        () => 'saved',
+        (e) => {
+          if (e.message.includes('INSPECTION_DRAFT_CHANGED')) return 'stale'
+          throw e
+        },
+      ),
+    ),
+  )
+  if (
+    raceStatus.filter((r) => r === 'saved').length !== 1 ||
+    raceStatus.filter((r) => r === 'stale').length !== 1
+  )
+    throw new Error('Status/edit race did not reject stale operation')
+  const currentStatus = (
+    await setup.query(
+      'select archived,revision from inspection_current where draft_id=$1',
+      [inspectionDraft],
+    )
+  ).rows[0]
+  const statusRequest = randomUUID()
+  const statusRetries = await Promise.all(
+    sessions.map(({ c }) =>
+      c.query(
+        "select set_inspection_archived($1,$2,$3,$4,$5,$6,'Concurrent status retry') as id",
+        [
+          tenant,
+          statusRequest,
+          bag,
+          inspectionDraft,
+          currentStatus.revision,
+          !currentStatus.archived,
+        ],
+      ),
+    ),
+  )
+  const statusCount = (
+    await setup.query(
+      'select count(*)::int as count from inspection_draft_revisions where draft_id=$1',
+      [inspectionDraft],
+    )
+  ).rows[0].count
+  if (
+    statusCount !== 4 ||
+    statusRetries.some((r) => r.rows[0].id !== statusRequest)
+  )
+    throw new Error('Status retry duplicated revisions')
+  console.log(
+    'PASS: archive/edit race rejects stale operations; concurrent status retries persist once.',
+  )
 } finally {
   await Promise.allSettled(clients.map((c) => c.end()))
   await admin.query(`drop database if exists "${database}"`)

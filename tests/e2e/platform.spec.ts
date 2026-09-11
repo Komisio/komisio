@@ -1090,3 +1090,127 @@ test('password recovery and MFA protect the authenticated platform', async ({
   await page.getByRole('button', { name: 'Verifiera kod' }).click()
   await expect(page.getByRole('heading', { name: 'Välkommen.' })).toBeVisible()
 })
+
+test('archived inspection drafts preserve history and require explicit reopening', async ({
+  page,
+}) => {
+  const run = Date.now().toString(36)
+  await register(
+    page,
+    `archive-${run}@example.test`,
+    `K!${randomBytes(16).toString('hex')}`,
+  )
+  await page.getByLabel('Butikens namn').fill('E2E Archive')
+  await page.getByLabel('Butikens identifierare').fill(`archive-${run}`)
+  await page.getByRole('button', { name: 'Skapa min butik' }).click()
+  await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
+  const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
+  const post = (data: object) =>
+    page.request.post('/api/intake', {
+      headers: { Origin: 'http://127.0.0.1:3000' },
+      data,
+    })
+  const seller = await post({
+    action: 'registerSeller',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    name: 'Archive TEST',
+    email: '',
+    phone: '00000',
+  })
+  expect(seller.status()).toBe(200)
+  const bag = await post({
+    action: 'receiveBag',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    sellerId: (await seller.json()).id,
+    note: 'Synthetic archive test',
+    expectedAgreementId: null,
+  })
+  expect(bag.status()).toBe(200)
+  const bagId = (await bag.json()).id,
+    draftId = crypto.randomUUID()
+  const original = {
+    action: 'saveInspection',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    bagId,
+    draftId,
+    expectedRevision: 0,
+    fields: {
+      description: 'TEST archive jacket',
+      category: '',
+      condition: 'Original description',
+    },
+  }
+  expect((await post(original)).status()).toBe(200)
+  const path = `/intake/bags/${bagId}/inspect?draft=${draftId}`
+  await page.goto(path)
+  const stale = await page.context().newPage()
+  await stale.goto(path)
+  await stale
+    .getByLabel('Beskrivning av varan')
+    .fill('Unsaved stale description')
+  await page
+    .getByRole('button', { name: 'Arkivera utkast', exact: true })
+    .click()
+  await page
+    .getByLabel('Anledning', { exact: true })
+    .fill('TEST duplicate draft')
+  await page.getByLabel('Jag bekräftar ändringen av utkastets status.').check()
+  let archiveCommand: Record<string, unknown> | undefined
+  await page.route(
+    '**/api/intake',
+    async (route) => {
+      archiveCommand = route.request().postDataJSON()
+      await route.continue()
+    },
+    { times: 1 },
+  )
+  await page.getByRole('button', { name: 'Bekräfta ändringen' }).click()
+  await expect(page.getByText('Statusändringen är registrerad.')).toBeVisible()
+  await expect(page.getByLabel('Beskrivning av varan')).toHaveCount(0)
+  await expect(page.locator('.inspection-item')).toHaveCount(0)
+  await page
+    .getByRole('link', { name: 'Arkiverade utkast', exact: true })
+    .click()
+  await expect(page.locator('.inspection-item')).toHaveCount(1)
+  await stale.getByRole('button', { name: 'Spara utkast', exact: true }).click()
+  await expect(stale.getByRole('alert')).toBeVisible()
+  await expect(stale.getByLabel('Beskrivning av varan')).toHaveValue(
+    'Unsaved stale description',
+  )
+  await stale.close()
+  await page.goto(path)
+  await page
+    .getByRole('button', { name: 'Återöppna utkast', exact: true })
+    .click()
+  await page
+    .getByLabel('Anledning', { exact: true })
+    .fill('TEST reopen after review')
+  await page.getByLabel('Jag bekräftar ändringen av utkastets status.').check()
+  await page.getByRole('button', { name: 'Bekräfta ändringen' }).click()
+  await expect(page.getByText('Statusändringen är registrerad.')).toBeVisible()
+  expect(archiveCommand).toBeDefined()
+  expect((await post(archiveCommand!)).status()).toBe(200)
+  expect((await post(original)).status()).toBe(200)
+  await page.goto(path)
+  await expect(page.getByLabel('Beskrivning av varan')).toHaveValue(
+    'TEST archive jacket',
+  )
+  await expect(page.locator('.inspection-item')).toHaveCount(1)
+  await expect(page.locator('.inspection-history li')).toHaveCount(3)
+  await page.goto(`${path}&version=2`)
+  await expect(page.locator('.inspection-historical')).toContainText(
+    'Arkiverat',
+  )
+  await expect(page.locator('.inspection-historical')).toContainText(
+    'TEST duplicate draft',
+  )
+  await expect(page.getByLabel('Beskrivning av varan')).toHaveCount(0)
+  await page.goto(`${path}&version=1`)
+  await expect(page.locator('.inspection-historical')).toContainText('Aktivt')
+  await expect(page.locator('.inspection-historical')).not.toContainText(
+    'TEST duplicate draft',
+  )
+})

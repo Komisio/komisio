@@ -10,6 +10,115 @@ const subscribe = () => () => {}
 const clientReady = () => true
 const serverReady = () => false
 
+export function InspectionArchiveForm({
+  tenantId,
+  bagId,
+  current,
+  d,
+}: {
+  tenantId: string
+  bagId: string
+  current: SavedInspection
+  d: Dictionary
+}) {
+  const [open, setOpen] = useState(false)
+  // Capture the reviewed version when the user opens this operation.
+  const [base, setBase] = useState(current)
+  const [saved, setSaved] = useState(false)
+  const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
+  const action = useIntakeAction(d.intake)
+  const router = useRouter(),
+    s = d.inspection
+  const href = `/intake/bags/${bagId}/inspect?draft=${current.draft_id}`
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const values = new FormData(event.currentTarget)
+    const result = await action.run({
+      action: 'archiveInspection',
+      tenantId,
+      requestId: crypto.randomUUID(),
+      bagId,
+      draftId: base.draft_id,
+      expectedRevision: base.revision,
+      archived: !base.archived,
+      reason: values.get('reason'),
+    })
+    if (result) {
+      setSaved(true)
+      router.refresh()
+    }
+  }
+  if (saved)
+    return (
+      <section className="card intake-form" role="status">
+        <p>{s.statusSaved}</p>
+        <a className="text-link" href={href}>
+          {s.current}
+        </a>
+      </section>
+    )
+  return (
+    <section className="card intake-form inspection-archive">
+      {!open ? (
+        <Button
+          disabled={!ready}
+          onClick={() => {
+            setBase(current)
+            setOpen(true)
+          }}
+        >
+          {current.archived ? s.reopen : s.archive}
+        </Button>
+      ) : (
+        <>
+          <h2>{base.archived ? s.reopen : s.archive}</h2>
+          <p>{s.archiveHint}</p>
+          <p>
+            {s.version} {base.revision} · {base.description}
+          </p>
+          <form onSubmit={submit}>
+            <fieldset
+              className="intake-fields"
+              disabled={!ready || action.busy || action.locked}
+            >
+              <div className="field">
+                <label htmlFor="archive-reason">{s.reason}</label>
+                <textarea
+                  id="archive-reason"
+                  name="reason"
+                  required
+                  maxLength={500}
+                  rows={3}
+                />
+              </div>
+              <label className="intake-confirm">
+                <input type="checkbox" required />
+                {s.confirmStatus}
+              </label>
+            </fieldset>
+            {action.error && (
+              <p className="form-error" role="alert">
+                {action.error}
+              </p>
+            )}
+            {action.needsReload && (
+              <a className="text-link" href={href}>
+                {s.reload}
+              </a>
+            )}
+            <Button
+              type="submit"
+              disabled={!ready || action.busy || action.needsReload}
+            >
+              {action.busy ? d.intake.busy : s.confirmChange}
+            </Button>
+          </form>
+        </>
+      )}
+    </section>
+  )
+}
+
 export function InspectionForm({
   tenantId,
   bagId,

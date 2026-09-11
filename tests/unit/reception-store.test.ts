@@ -28,3 +28,42 @@ it('accepts bounded staff source commands and rejects unsupported authority/phot
       false,
     )
 })
+
+it('requires a complete explicit review command rather than inferred approval', () => {
+  const command = {
+    action: 'publishReceptionReview',
+    tenantId: id,
+    requestId: id,
+    sessionId: id,
+    sourceRevision: 1,
+    previousReviewId: null,
+    agreementId: id,
+    expiresAt: '2026-09-13T00:00:00Z',
+    suggestions: {
+      metadata: {
+        description: {
+          value: 'Jacket',
+          sourceIds: [id],
+          certainty: 'observed',
+        },
+      },
+      price: {
+        currency: 'SEK',
+        amount: '250.00',
+        rationale: 'TEST',
+        sourceIds: [id],
+      },
+      questions: [],
+    },
+  }
+  expect(intakeCommand.safeParse(command).success).toBe(true)
+  for (const patch of [
+    { previousReviewId: undefined },
+    { suggestions: { ...command.suggestions, price: null } },
+    { suggestions: { ...command.suggestions, questions: ['Need evidence'] } },
+    { approved: true },
+  ])
+    expect(intakeCommand.safeParse({ ...command, ...patch }).success).toBe(
+      false,
+    )
+})

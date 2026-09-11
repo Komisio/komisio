@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { platformContext } from '@/lib/platform/context'
-import { readReceptionSession } from '@/lib/engine/reception-store'
+import {
+  readReceptionSession,
+  readReceptionReview,
+} from '@/lib/engine/reception-store'
 
 export async function GET(
   _request: Request,
@@ -21,7 +24,20 @@ export async function GET(
     if (!ctx || ctx.mfaRequired) return reply({ error: 'AUTH_REQUIRED' }, 401)
     if (!ctx.active) return reply({ error: 'NOT_FOUND' }, 404)
     const reception = await readReceptionSession(ctx.client, ctx.active.id, id)
-    return reception ? reply(reception) : reply({ error: 'NOT_FOUND' }, 404)
+    if (!reception) return reply({ error: 'NOT_FOUND' }, 404)
+    const review = await readReceptionReview(ctx.client, ctx.active.id, id)
+    return reply({
+      ...reception,
+      latestReview: review
+        ? {
+            ...review,
+            sourceCurrent:
+              reception.status === 'ready' &&
+              reception.session.revision === review.sourceRevision,
+            expired: Date.parse(review.expiresAt) <= Date.now(),
+          }
+        : null,
+    })
   } catch {
     return reply({ error: 'REQUEST_FAILED' }, 500)
   }

@@ -67,6 +67,10 @@ test('saved inspection drafts resume safely and preserve conflicting edits', asy
   await expect(page.getByRole('status')).toContainText(
     'Varuutkastet är sparat.',
   )
+  await expect(page.locator('.inspection-item')).toHaveCount(1)
+  await expect(page.getByText('Inga varuutkast är sparade ännu.')).toHaveCount(
+    0,
+  )
   await page.getByRole('link', { name: 'Öppna sparat utkast' }).click()
   await expect(page.getByLabel('Beskrivning av varan')).toHaveValue(
     'TEST blå jacka <script>literal</script>',

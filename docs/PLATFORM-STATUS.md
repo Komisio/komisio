@@ -52,12 +52,18 @@ or external Supabase deployment is not yet validated.
 ## Remaining before external pilot
 
 1. Owner walkthrough and usability feedback, then broader three-user role journeys.
-2. Real SMTP and automated invitation-email delivery; local verification/recovery
-   email currently goes to the test inbox and invites are manually shared links.
+2. Verify real SMTP and invitation-email delivery. Resend transport with a pilot
+   recipient allowlist is implemented; it still needs hosted configuration and
+   inbox verification. Local auth email goes to the test inbox.
 3. Lost-MFA-device recovery procedure, operator identity verification and audit.
 4. Account lifecycle/retention decisions, deployment configuration, monitoring,
    backup/restore exercise and clean-environment deployment verification.
-5. An actual passing remote CI run on the published revision.
+5. Maintain passing remote CI for each deployed revision. The initial published
+   platform passed https://github.com/Komisio/komisio/actions/runs/34531135876.
+
+Staging preparation now includes Vercel Stockholm configuration, build-time
+configuration checks, and a read-only remote reachability script. Follow
+`docs/HOSTED-STAGING.md`; external deployment and inbox delivery are not yet verified.
 
 The next domain slice after the platform gate is registering a consignor and
 receiving an item. Financial rules remain open until a real store flow requires

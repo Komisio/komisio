@@ -29,6 +29,7 @@ export function MembersPanel({
 }) {
   const action = useCommand(d)
   const [inviteUrl, setInviteUrl] = useState('')
+  const [delivery, setDelivery] = useState('manual')
   const [copied, setCopied] = useState(false)
   const [change, setChange] = useState<{
     userId: string
@@ -42,6 +43,7 @@ export function MembersPanel({
   const manage = can(tenant.role, 'members.manage')
   async function invite(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    setInviteUrl('')
     const form = new FormData(e.currentTarget)
     const result = await action.run({
       action: 'invite',
@@ -51,6 +53,7 @@ export function MembersPanel({
     })
     if (result?.inviteUrl) {
       setInviteUrl(result.inviteUrl)
+      setDelivery(result.delivery ?? 'manual')
       setCopied(false)
     }
   }
@@ -105,7 +108,13 @@ export function MembersPanel({
             <div className="notice notice-success">
               <strong>{d.inviteReady}</strong>
               <p style={{ margin: '6px 0 12px', color: 'inherit' }}>
-                {d.inviteDelivery}
+                {delivery === 'accepted'
+                  ? d.inviteEmailAccepted
+                  : delivery === 'unconfirmed'
+                    ? d.inviteEmailUnconfirmed
+                    : delivery === 'restricted'
+                      ? d.inviteEmailRestricted
+                      : d.inviteDelivery}
               </p>
               <input
                 value={inviteUrl}

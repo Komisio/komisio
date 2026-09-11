@@ -20,7 +20,8 @@ The application now implements email registration/confirmation, login/logout,
 password recovery, optional TOTP MFA, store creation/switching, user profiles,
 email-bound invitation links, membership/role administration and an access log.
 It has an original responsive web UI in Swedish and English. Invitations are
-shared by link; automatic invitation-email delivery is not configured.
+shared by link by default; optional Resend delivery for allowlisted pilot
+mailboxes is available. See [hosted staging setup](docs/HOSTED-STAGING.md).
 
 The foundation below has been extended to support these platform flows.
 

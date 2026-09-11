@@ -76,9 +76,10 @@ Answered questions move to `DECISIONS.md`.
 14. **Answered:** use the Komisio GitHub organization and a public komisio
     repository, administered from the owner's personal account. This does not
     decide the future operating company or change existing copyright attribution.
-15. Which SMTP provider, sender identity and test deployment should be used?
-    Verification/recovery email currently goes to the local test inbox; team
-    invitations are shared as links and are not emailed automatically.
+15. **Partly answered:** Vercel/Supabase in Stockholm and Resend were selected
+    for staging. Sender identity, billing company and exact staging origin remain
+    open. Invitation transport is implemented for allowlisted pilot mailboxes;
+    external email delivery and hosted Auth SMTP are not yet verified.
 16. When must store administrators use MFA or reauthenticate? Enrollment is
     optional; once enabled it is enforced at both application and database levels.
 17. How will an operator verify identity for a lost MFA device? There is no

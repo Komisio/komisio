@@ -1,0 +1,5 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "regions": ["arn1"],
+  "buildCommand": "node scripts/check-hosted-env.mjs && npm run build"
+}

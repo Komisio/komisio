@@ -103,6 +103,11 @@ test('register, verify, create stores, invite, isolate and administer access', a
   const invite = await page
     .getByRole('textbox', { name: 'Inbjudningslänken är klar' })
     .inputValue()
+  await expect(
+    page.getByText(
+      'Dela länken med mottagaren. Automatisk e-post är inte aktiverad.',
+    ),
+  ).toBeVisible()
   const staffContext = await browser.newContext()
   const staff = await staffContext.newPage()
   await register(staff, staffEmail, password, new URL(invite).pathname)

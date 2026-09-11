@@ -21,7 +21,11 @@ export function useCommand(d: Dictionary) {
       if (!response.ok) throw new Error(result.error)
       setSuccess(d.saved)
       router.refresh()
-      return result as { data?: string; inviteUrl?: string }
+      return result as {
+        data?: string
+        inviteUrl?: string
+        delivery?: 'accepted' | 'manual' | 'restricted' | 'unconfirmed'
+      }
     } catch (e) {
       const key = e instanceof Error ? e.message : ''
       setError(

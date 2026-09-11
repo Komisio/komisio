@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { platformContext } from '@/lib/platform/context'
 import { commandSchema, errorCode } from '@/lib/platform/validation'
 import { can } from '@/lib/platform/permissions'
+import { sendInvitationEmail } from '@/lib/platform/invitation-email'
 
 export async function POST(request: Request) {
   const requestId = randomUUID()
@@ -98,10 +99,20 @@ export async function POST(request: Request) {
       const code = errorCode(result.error.message, result.error.code)
       return reply({ error: code }, code === 'FORBIDDEN' ? 403 : 400)
     }
+    // Send only after the database has authorized and created the invitation.
+    const delivery =
+      command.action === 'invite' && inviteUrl
+        ? await sendInvitationEmail({
+            invitationId: result.data,
+            email: command.email,
+            inviteUrl,
+            locale: context.locale,
+          })
+        : undefined
     return reply({
       ok: true,
       data: result.data,
-      ...(inviteUrl ? { inviteUrl, emailSent: false } : {}),
+      ...(inviteUrl ? { inviteUrl, delivery } : {}),
     })
   } catch {
     // Never log request bodies, passwords or invitation tokens.

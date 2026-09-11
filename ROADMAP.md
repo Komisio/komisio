@@ -17,7 +17,7 @@ are English; the normal UI supports Swedish and English.
 | M0 | Implemented locally | Published under Komisio; CI results are reported in GitHub Actions |
 | M1 | Main journeys verified locally | Production SMTP and broader recovery/error cases |
 | M2 | Implemented and tested | Review with the owner in the GUI |
-| M3 | Implemented and tested | Automatic invitation email and broader multi-user pilot |
+| M3 | Implemented and tested; pilot email transport added | Verify hosted email delivery and broaden multi-user pilot |
 | M4 | In progress | Hosted/self-host deployment validation, recovery operations, backup/restore exercise |
 | M5 | Not started | Minimal consignor/intake flow after the platform gate |
 | M6 | Not started | Real workflow decisions before financial schema |
@@ -211,6 +211,7 @@ No production service, SMTP account, AI model key or financial data model was in
    owner/admin/readonly roles, invitation expiry/reissue and recovery edge cases.
 3. Review GitHub Actions results for the published revision and maintain
    the contribution workflow as collaborators join.
-4. Configure a test deployment and production-grade email, decide MFA recovery
+4. Configure the prepared Vercel/Supabase Stockholm test deployment and Resend
+   email using docs/HOSTED-STAGING.md, decide MFA recovery
    and support identity verification, and demonstrate backup/restore.
 5. Once the platform gate is accepted, define and build the minimal intake flow.

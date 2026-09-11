@@ -26,8 +26,9 @@ It does not need or store an application service-role credential.
 Use 127.0.0.1 consistently: cookies and allowed callbacks are origin-specific.
 Register in the application and follow the local email confirmation link in the
 same browser that requested it (PKCE). Invited colleagues need the matching,
-verified email address. Team invitation links are generated for manual sharing;
-automatic invitation-email transport is not implemented.
+verified email address. Team invitation links default to manual sharing.
+Optional Resend delivery to allowlisted pilot mailboxes is implemented; see
+`docs/HOSTED-STAGING.md`. Hosted delivery still needs provider configuration.
 
 Stop the web server before building/running the production process:
 

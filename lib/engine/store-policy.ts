@@ -33,6 +33,8 @@ export const storePolicyBody = z.strictObject({
   minPayoutThreshold: decimal,
   // VAT modes (P2 S10, docs/VAT-CASES.md): optional, chosen by the tenant with its accountant.
   ...vatPolicyShape,
+  // Built-in assistance (P1 S9): the tenant switches it on; the server holds the kill switch.
+  assistanceEnabled: z.boolean().optional(),
 })
 
 export type StorePolicyBody = z.infer<typeof storePolicyBody>

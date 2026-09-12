@@ -13,6 +13,7 @@ vi.mock('../../lib/engine/reception-store', () => ({
 }))
 vi.mock('../../lib/assistance/reception-config', () => ({
   receptionAIConfig: mocks.config,
+  resolveReceptionAssistance: mocks.config,
 }))
 vi.mock('../../lib/engine/reception-assistance', async (importOriginal) => ({
   ...(await importOriginal<object>()),

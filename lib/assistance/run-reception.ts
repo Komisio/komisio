@@ -6,7 +6,7 @@ import {
 import { readReceptionSession } from '../engine/reception-store'
 import { readReceptionPhoto } from '../engine/reception-photos'
 import { suggestReception } from './reception'
-import { receptionAIConfig } from './reception-config'
+import { resolveReceptionAssistance } from './reception-config'
 import { receptionImage } from './reception-image'
 import { openAIReception, receptionPromptVersion } from './openai-reception'
 
@@ -23,7 +23,7 @@ export async function runReceptionAssistance(
   const state = await readReceptionSession(client, c.tenantId, c.sessionId)
   if (state?.status !== 'ready' || state.session.revision !== c.revision)
     throw new Error('RECEPTION_CHANGED')
-  const config = receptionAIConfig(c.tenantId)
+  const config = await resolveReceptionAssistance(client, c.tenantId)
   if (!config) return { status: 'unavailable' as const, proposal: null }
   const photos = state.session.sources.filter((s) => s.kind === 'photo')
   if (photos.length > 3) throw new Error('ASSISTANCE_IMAGE_LIMIT')

@@ -74,6 +74,7 @@ export function StorePolicyForm({
               ]),
             ),
             vatRatePercent: rate === '' ? undefined : Number(rate),
+            assistanceEnabled: f.get('assistanceEnabled') === 'on',
             ...Object.fromEntries(
               Object.keys(choices).map((key) => [key, f.get(key)]),
             ),
@@ -257,6 +258,18 @@ export function StorePolicyForm({
                 defaultValue={base.policy.vatRatePercent ?? ''}
               />
             </div>
+          </fieldset>
+          <fieldset>
+            <legend>{t.assistance}</legend>
+            <p>{t.assistanceIntro}</p>
+            <label className="intake-confirm">
+              <input
+                type="checkbox"
+                name="assistanceEnabled"
+                defaultChecked={base.policy.assistanceEnabled === true}
+              />
+              {t.assistanceEnabled}
+            </label>
           </fieldset>
           {editable && (
             <label className="intake-confirm">

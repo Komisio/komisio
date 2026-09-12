@@ -95,3 +95,10 @@ The web build remains independent; Vercel does not host this stdio process.
 Official references checked 2026-09-12:
 [SDK stdio server](https://ts.sdk.modelcontextprotocol.io/v2/get-started/first-server),
 [MCP authorization and stdio environment credentials](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization).
+
+The read scope also provides `komisio_list_receptions`: a bounded, stage-filtered
+queue using the same engine as the operator UI. Optional `stage`, `before` and
+`beforeId` arguments cannot select another tenant. Results include seller display
+names (untrusted data), version references, response and link state, but no contact
+details, capability links or images. A seller-approved review is not a sellable
+item. Cursor paging is read-time, not a snapshot across subsequent calls.

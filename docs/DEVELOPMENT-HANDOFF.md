@@ -5,12 +5,19 @@ Read CLAUDE.md first. All statuses below are evidence, not inferred completion.
 
 ## Current slice
 
-P2 — specify and implement the shared reception work queue.
-Branch: docs/reception-queue-contract. Implemented SQL read, typed shared engine,
-translated stage filters and cursor paging. Migration20260912073000 applied
-LOCALLY ONLY; do not edit it. Lint/typecheck/build and94 unit tests passed.
-Queue SQL tests and seller browser journey are being finalized before PR.
-No remote migration or deployment yet. Next: PR, exact-head CI, migration then merge.
+P2/P6 — reception queue and scoped MCP queue read, with P3 follow-up specification.
+PR36: queue UI/engine/read RPC, head9c4174e; initial CI failure was an ambiguous
+Search button, now corrected and operator browser test passed locally.23 queue
+SQL assertions and seller approval/queue browser journey passed. Migration
+20260912073000 is locally applied; check private log for remote application before
+retrying. Do not modify an applied migration.
+
+PR37: branch feat/mcp-reception-queue, initially stacked on PR36. Actual MCP stdio
+checks, lint/typecheck/build and94 unit tests passed locally. No additional migration.
+Queue tool uses existing read scope and configured tenant, never agent-selected
+authority. P3 is documented in STORE-FOLLOW-UP.md. P4 generic completion/acceptance
+is deferred because its commercial meaning requires the existing open terms decisions.
+Check current PR base/head/CI and deployment before merging or claiming live status.
 
 P1 PR35 merged as d5f7348cc85a7fb1f178ee068b043e6e8e3dbac1 after exact-head
 CI34678106622 passed. Local lint/typecheck/build,94 unit tests and the existing
@@ -29,10 +36,10 @@ modified by the fix.315 SQL assertions and real HTTP/race checks passed locally.
 
 ## Next three actions
 
-1. Finish P2 test evidence and open its PR; use the private log for newest results.
-2. Verify exact-head CI; dry-run expected staging migration, apply then merge and
-   verify deployment. Authenticated hosted queue walkthrough remains a pilot check.
-3. Continue P3 store follow-up specification; no guessed commercial/financial rules.
+1. Finish PR36 exact-head CI, expected staging migration and merge/deployment.
+2. Ensure PR37 targets main after parent merge; verify current-head CI and merge.
+3. Record staged evidence and remaining P4/P5 commercial prerequisites. Hosted
+   authenticated queue walkthrough and representative AI quality remain separate.
 
 ## Known limitations / do not accidentally enable
 

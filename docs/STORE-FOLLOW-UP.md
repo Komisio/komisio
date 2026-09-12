@@ -53,8 +53,10 @@ an explicit commercial decision; the queue's display logic cannot decide that.
 
 Retries return the original successful result, conflicting/stale requests fail,
 and corrections append a new auditable decision. No financial schema is designed
-until those requirements can be tested. Background agent writes additionally need
-identified actor/scope, durable staging and approval, which do not yet exist.
+until those requirements can be tested. Durable staging and staff decisions now
+exist for review publication only (STAGED-OPERATIONS.md). Future acceptance needs
+its own validated operation kind, risk and approval contract; that execution path
+and hosted delegated agent credentials do not yet exist.
 
 ## Article/label and integration boundary
 

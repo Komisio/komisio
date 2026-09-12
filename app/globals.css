@@ -1006,3 +1006,22 @@ small {
   height: 20px;
   margin-top: 2px;
 }
+.reception-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.reception-workspace > section {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.reception-terms {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 16px 0;
+}
+.reception-result {
+  margin-top: 24px;
+  overflow-wrap: anywhere;
+}

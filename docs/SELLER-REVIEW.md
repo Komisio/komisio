@@ -39,8 +39,10 @@ The mobile page supports registration/confirmation, sign-in, account switching,
 exact terms and approve/decline. It requires reading acknowledgement before the
 approve button is enabled. Password recovery currently leads to account settings;
 the seller can reopen their review link afterwards. Phone-only identification,
-BankID, external review-mail delivery and a staff reception workspace are future
-steps. There is still no live AI, photo capture or image storage in this slice.
+BankID and external review-mail delivery are future steps. The
+[operator workspace](RECEPTION-WORKSPACE.md) now exposes preparation and link
+management through the same engine. There is still no live AI, photo capture or
+image storage in this slice.
 
 Apply 20260912001000_seller_review.sql and the additive projection correction
 20260912001100 before deploying the dependent application. Both are additive;

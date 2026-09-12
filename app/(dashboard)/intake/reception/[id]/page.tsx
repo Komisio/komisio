@@ -1,0 +1,186 @@
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { z } from 'zod'
+import { requirePlatform } from '@/lib/platform/context'
+import { dictionary } from '@/lib/i18n'
+import {
+  readReceptionSession,
+  readReceptionReview,
+} from '@/lib/engine/reception-store'
+import { readManualReception } from '@/lib/engine/manual-reception'
+import {
+  ReceptionObservation,
+  PublishReview,
+  ReviewAccess,
+} from '@/components/reception/operator'
+export default async function Reception({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
+  const id = z.uuid().safeParse((await params).id)
+  if (!id.success) notFound()
+  const ctx = await requirePlatform(),
+    tenant = ctx.active!,
+    all = dictionary(ctx.locale),
+    d = all.reception
+  const reception = await readReceptionSession(ctx.client, tenant.id, id.data)
+  if (!reception) notFound()
+  const state = reception.status === 'ready' ? reception.session : reception
+  const sources = reception.status === 'ready' ? reception.session.sources : []
+  const [seller, terms, review] = await Promise.all([
+    ctx.client
+      .from('sellers')
+      .select('name,email,phone')
+      .eq('tenant_id', tenant.id)
+      .eq('id', state.sellerId)
+      .single(),
+    ctx.client
+      .from('seller_agreement_versions')
+      .select('id,title,body,language,version')
+      .eq('tenant_id', tenant.id)
+      .order('version', { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+    readReceptionReview(ctx.client, tenant.id, id.data),
+  ])
+  if (seller.error || terms.error)
+    throw new Error('Unable to read reception context')
+  const prepared = readManualReception(sources),
+    write = tenant.role !== 'readonly'
+  const current = review?.sourceRevision === state.revision,
+    expired = review?.expired ?? false
+  const canPublish =
+    prepared &&
+    terms.data &&
+    (!review || !current || expired || review.terms.versionId !== terms.data.id)
+  return (
+    <>
+      <Link className="text-link" href="/intake/reception">
+        {d.back}
+      </Link>
+      <div className="page-heading">
+        <div className="eyebrow">{tenant.name}</div>
+        <h1>{seller.data.name}</h1>
+        <p>
+          {d.sessionId}: {id.data}
+        </p>
+        <p>
+          {d.recipient}: {seller.data.email || seller.data.phone}
+        </p>
+      </div>
+      <p className="intake-notice">{d.manual}</p>
+      <div className="intake-grid reception-workspace">
+        <section className="card intake-form">
+          <h2>{d.observe}</h2>
+          <p>
+            {d.sourceVersion} {state.revision}
+          </p>
+          {write ? (
+            <ReceptionObservation
+              key={state.revision}
+              tenantId={tenant.id}
+              sessionId={id.data}
+              revision={state.revision}
+              sources={sources}
+              initial={prepared?.input ?? null}
+              d={d}
+            />
+          ) : (
+            <p>{d.readonly}</p>
+          )}
+        </section>
+        <section className="card intake-form">
+          <h2>{d.preview}</h2>
+          {!prepared ? (
+            <p>{d.needSources}</p>
+          ) : (
+            <>
+              <p>{prepared.input.description}</p>
+              <h3>
+                {d.price}: {prepared.input.amount} SEK
+              </h3>
+              <p>{prepared.suggestions.price?.rationale}</p>
+            </>
+          )}
+          {!terms.data ? (
+            <p>
+              <Link href="/intake/agreements" className="text-link">
+                {d.needTerms}
+              </Link>
+            </p>
+          ) : (
+            <>
+              <h3>
+                {terms.data.title} ({d.version} {terms.data.version})
+              </h3>
+              <div lang={terms.data.language} className="reception-terms">
+                {terms.data.body}
+              </div>
+            </>
+          )}
+          {write && canPublish && terms.data && prepared ? (
+            <PublishReview
+              key={`${state.revision}-${review?.id ?? 'none'}-${terms.data.id}`}
+              tenantId={tenant.id}
+              sessionId={id.data}
+              revision={state.revision}
+              previousId={review?.id ?? null}
+              agreementId={terms.data.id}
+              suggestions={prepared.suggestions}
+              d={d}
+            />
+          ) : current && !expired ? (
+            <p>{d.published}</p>
+          ) : null}
+        </section>
+      </div>
+      {review && (
+        <section className="card intake-form reception-result">
+          <h2>
+            {d.sellerStep} — {d.version} {review.version}
+          </h2>
+          <p>{review.suggestions.metadata.description?.value}</p>
+          <p>
+            {d.price}: {review.suggestions.price?.amount} SEK
+          </p>
+          <p>{review.terms.title}</p>
+          <details>
+            <summary>{d.exactTerms}</summary>
+            <div className="reception-terms" lang={review.terms.language}>
+              {review.terms.body}
+            </div>
+          </details>
+          <p>
+            {all.reviewExpires}{' '}
+            {new Date(review.expiresAt).toLocaleString(
+              ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',
+              { timeZone: 'Europe/Stockholm' },
+            )}{' '}
+            (Europe/Stockholm)
+          </p>
+          {(!current || expired) && <p role="status">{d.stale}</p>}
+          <p role="status">
+            {review.response
+              ? review.response.decision === 'approve'
+                ? all.reviewApproved
+                : all.reviewDeclined
+              : d.awaiting}
+          </p>
+          {write && (
+            <ReviewAccess
+              key={review.id}
+              tenantId={tenant.id}
+              reviewId={review.id}
+              access={review.access}
+              available={current && !expired}
+              email={review.sellerEmail}
+              d={d}
+            />
+          )}
+        </section>
+      )}
+    </>
+  )
+}

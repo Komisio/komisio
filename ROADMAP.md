@@ -8,8 +8,9 @@ durable observation snapshots and reviewed prices/terms, secure mobile seller
 response, protected image capture and an optional model adapter. The shared engine
 must support these workflows without a GUI dependency. Mobile response is now
 implemented for verified email plus a personal capability link; see
-[seller review](docs/SELLER-REVIEW.md) for exact boundaries. A usable staff reception
-workspace, private photos and live AI remain next. No seller response publishes
+[seller review](docs/SELLER-REVIEW.md) for exact boundaries. The
+[operator workspace](docs/RECEPTION-WORKSPACE.md) now provides guided manual preparation
+through those same operations. Private photos and live AI remain next. No seller response publishes
 inventory or authorizes payouts.
 
 The platform is deployed to staging, and registration plus invitation-email

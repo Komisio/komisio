@@ -19,23 +19,42 @@ const ore = z.number().int().nonnegative().max(99_999_999_999)
 /** Rate in basis points: 25 % is 2500. */
 export const rateBasisPoints = z.number().int().min(0).max(10_000)
 
-/** Tenant policy keys from docs/VAT-CASES.md. Merged into the store policy body
- * once P1 S1 lands; until then it stands alone. No default mode: the tenant chooses. */
-export const vatPolicy = z.strictObject({
+/** Tenant policy keys from docs/VAT-CASES.md, spread into the store policy body
+ * (lib/engine/store-policy.ts). All optional: absent mode means the tenant has not
+ * chosen, absent rate means 25.00. Komisio never picks a mode for a store. */
+export const vatPolicyShape = {
   vatModeConsignmentPrivate: z
     .enum(['consignment_margin', 'consignment_full'])
     .optional(),
   vatModeStoreOwned: z.enum(['store_margin', 'store_full']).optional(),
-  vatRatePercent: z.string().regex(/^(?:100|\d{1,2})\.\d{2}$/),
-})
+  vatRatePercent: z.number().nonnegative().max(100).multipleOf(0.01).optional(),
+}
+/** Non-strict so a whole store policy can be passed; extra keys are ignored. */
+export const vatPolicy = z.object(vatPolicyShape)
 export type VatPolicy = z.infer<typeof vatPolicy>
-export const defaultVatPolicy: VatPolicy = { vatRatePercent: '25.00' }
+export const DEFAULT_VAT_RATE_PERCENT = 25
 
-/** '25.00' → 2500, exact decimal text only. */
-export function rateBasisPointsFromPercent(percent: string) {
-  const m = /^(\d{1,3})\.(\d{2})$/.exec(percent)
+/** 25 → 2500; two-decimal percent to basis points without float drift. */
+export function rateBasisPointsFromPercent(percent: number) {
+  const m = /^(\d{1,3})\.(\d{2})$/.exec(
+    z
+      .number()
+      .nonnegative()
+      .max(100)
+      .multipleOf(0.01)
+      .parse(percent)
+      .toFixed(2),
+  )
   if (!m) throw new Error('INVALID_INPUT')
   return rateBasisPoints.parse(Number(m[1]) * 100 + Number(m[2]))
+}
+
+/** The tenant's rate in basis points, 25 % when the policy does not set one. */
+export function vatRateBasisPoints(policyInput: unknown) {
+  const p = vatPolicy.parse(policyInput)
+  return rateBasisPointsFromPercent(
+    p.vatRatePercent ?? DEFAULT_VAT_RATE_PERCENT,
+  )
 }
 
 export const vatLineContext = z.strictObject({

@@ -5,7 +5,7 @@ import {
   vatWorkedExamples,
   selectVatMode,
   vatPolicy,
-  defaultVatPolicy,
+  vatRateBasisPoints,
   rateBasisPointsFromPercent,
 } from '../../lib/engine/vat'
 
@@ -40,7 +40,7 @@ it('selects one mode per line from item facts and tenant policy', () => {
   const policy = {
     vatModeConsignmentPrivate: 'consignment_margin',
     vatModeStoreOwned: 'store_margin',
-    vatRatePercent: '25.00',
+    vatRatePercent: 25,
   }
   const line = (
     ownership: 'consignment' | 'store',
@@ -62,34 +62,37 @@ it('selects one mode per line from item facts and tenant policy', () => {
   ).toBe('store_full')
 })
 it('refuses to guess a mode the tenant has not chosen', () => {
+  const unchosen = {}
   expect(() =>
     selectVatMode(
       { ownership: 'consignment', sellerTaxable: false, marginAttested: false },
-      defaultVatPolicy,
+      unchosen,
     ),
   ).toThrow('VAT_MODE_NOT_SET')
   expect(() =>
     selectVatMode(
       { ownership: 'store', sellerTaxable: false, marginAttested: true },
-      defaultVatPolicy,
+      unchosen,
     ),
   ).toThrow('VAT_MODE_NOT_SET')
   // A business seller needs no private-seller choice.
   expect(
     selectVatMode(
       { ownership: 'consignment', sellerTaxable: true, marginAttested: false },
-      defaultVatPolicy,
+      unchosen,
     ),
   ).toBe('consignment_business')
   expect(() => vatPolicy.parse({ vatRatePercent: '25' })).toThrow()
-  expect(() => vatPolicy.parse({ vatRatePercent: 25 })).toThrow()
+  expect(() => vatPolicy.parse({ vatRatePercent: 25.001 })).toThrow()
+  expect(vatRateBasisPoints(unchosen)).toBe(2500)
 })
-it('converts exact percent text to basis points', () => {
-  expect(rateBasisPointsFromPercent('25.00')).toBe(2500)
-  expect(rateBasisPointsFromPercent('12.50')).toBe(1250)
-  expect(rateBasisPointsFromPercent('0.00')).toBe(0)
-  expect(() => rateBasisPointsFromPercent('25')).toThrow()
-  expect(() => rateBasisPointsFromPercent('100.01')).toThrow()
+it('converts two-decimal percents to basis points without drift', () => {
+  expect(rateBasisPointsFromPercent(25)).toBe(2500)
+  expect(rateBasisPointsFromPercent(12.5)).toBe(1250)
+  expect(rateBasisPointsFromPercent(0.29)).toBe(29)
+  expect(rateBasisPointsFromPercent(0)).toBe(0)
+  expect(() => rateBasisPointsFromPercent(25.001)).toThrow()
+  expect(() => rateBasisPointsFromPercent(100.01)).toThrow()
 })
 it('never uses floating point for large amounts', () => {
   // 99 999 999 999 öre × 2500 exceeds 2^53; BigInt keeps it exact.

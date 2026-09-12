@@ -127,6 +127,20 @@ proposal's owner clarification for scope and outstanding details.
   approval of a review as item-level evidence only, and shared meaning of
   category and condition across drafts and reviews.
 
+## Raised by the functional roadmap (2026-09-12)
+
+See [functional roadmap](FUNCTIONAL-ROADMAP.md), section 8.
+
+- Which optional tenant lifecycle policy is needed first? The earlier
+  100-hours concept is a candidate, not a global default.
+- Bag-label printing is already requested and implemented. Which additional
+  purposes are needed first (item, onboarding slip, markdown)?
+- Is a store-owned (purchased) item in scope for the first sale slice, or
+  consignment only?
+- Which POS is first: Zettle or Shopify POS?
+- Tenant-configurable receipt and seller-visibility channels are confirmed.
+  Which delivery channel is first, and which messages need fixed wording?
+
 ## Platform pilot
 
 14. **Answered:** use the Komisio GitHub organization and a public komisio

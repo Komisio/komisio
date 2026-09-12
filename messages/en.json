@@ -438,6 +438,15 @@
     "queueAll": "All stages",
     "queueEmpty": "No receptions at this stage.",
     "queueNext": "Show older receptions",
+    "custody": "Physical custody",
+    "custodyHelp": "Record that the garment is physically in the store. A session, photos or a seller approval never prove custody. Required before the item can be accepted.",
+    "custodyNote": "Note (optional, for example where it hangs)",
+    "custodyConfirm": "I confirm that the store has received this garment.",
+    "custodyRecord": "Record custody",
+    "custodyRecorded": "Custody recorded",
+    "custodyMissing": "No custody recorded",
+    "custodyReference": "Garment",
+    "custodyPrint": "Print garment label",
     "queueStages": {
       "preparing": "Preparing",
       "needs_review": "New review needed",
@@ -456,7 +465,8 @@
       "publish_fresh_review": "Next: check the details and publish a fresh review if the proposal still applies.",
       "issue_review_link": "Next: open the reception and create the personal seller link. No email is sent automatically.",
       "replace_review_link": "Next: open the reception and create a replacement link if the review should be shared again.",
-      "await_seller_response": "Next: await the seller response. Creating a link does not mean the seller has read the review."
+      "await_seller_response": "Next: await the seller response. Creating a link does not mean the seller has read the review.",
+      "record_custody": "Next: record physical custody of the garment. The seller has approved; nothing proves the garment is in the store yet."
     },
     "history": {
       "title": "Version history",

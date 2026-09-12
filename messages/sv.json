@@ -438,6 +438,15 @@
     "queueAll": "Alla lägen",
     "queueEmpty": "Inga mottagningar i detta läge.",
     "queueNext": "Visa äldre mottagningar",
+    "custody": "Fysiskt mottagande",
+    "custodyHelp": "Registrera att plagget finns fysiskt i butiken. En session, bilder eller ett säljargodkännande bevisar aldrig mottagande. Krävs innan varan kan accepteras.",
+    "custodyNote": "Anteckning (valfri, till exempel var plagget hänger)",
+    "custodyConfirm": "Jag bekräftar att butiken har tagit emot detta plagg.",
+    "custodyRecord": "Registrera mottagande",
+    "custodyRecorded": "Mottagande registrerat",
+    "custodyMissing": "Inget mottagande registrerat",
+    "custodyReference": "Plagg",
+    "custodyPrint": "Skriv ut plaggetikett",
     "queueStages": {
       "preparing": "Under förberedelse",
       "needs_review": "Behöver nytt underlag",
@@ -456,7 +465,8 @@
       "publish_fresh_review": "Nästa steg: granska uppgifterna och publicera ett nytt underlag om erbjudandet fortfarande gäller.",
       "issue_review_link": "Nästa steg: öppna mottagningen och skapa säljarens personliga länk. Inget mejl skickas automatiskt.",
       "replace_review_link": "Nästa steg: öppna mottagningen och skapa en ersättningslänk om underlaget ska delas igen.",
-      "await_seller_response": "Nästa steg: invänta säljarens svar. En skapad länk innebär inte att säljaren har läst underlaget."
+      "await_seller_response": "Nästa steg: invänta säljarens svar. En skapad länk innebär inte att säljaren har läst underlaget.",
+      "record_custody": "Nästa steg: registrera fysiskt mottagande av plagget. Säljaren har godkänt, men inget bevisar ännu att plagget finns i butiken."
     },
     "history": {
       "title": "Versionshistorik",

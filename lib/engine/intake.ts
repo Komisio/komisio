@@ -34,6 +34,13 @@ export const intakeCommand = z.discriminatedUnion('action', [
     expectedAgreementId: z.uuid().nullable().default(null),
   }),
   z.object({
+    action: z.literal('receiveGarment'),
+    tenantId: z.uuid(),
+    requestId: z.uuid(),
+    sessionId: z.uuid(),
+    note: z.string().trim().max(500),
+  }),
+  z.object({
     action: z.literal('publishAgreement'),
     tenantId: z.uuid(),
     requestId: z.uuid(),
@@ -74,6 +81,13 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_agreement: c.agreementId,
         p_suggestions: c.suggestions,
         p_expires: c.expiresAt,
+      })
+    case 'receiveGarment':
+      return client.rpc('receive_garment', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_session: c.sessionId,
+        p_note: c.note,
       })
     case 'createReception':
       return client.rpc('create_reception_session', {

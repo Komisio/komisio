@@ -17,6 +17,11 @@ import {
   PublishReview,
   ReviewAccess,
 } from '@/components/reception/operator'
+import { RecordCustody } from '@/components/reception/custody'
+import {
+  readGarmentReceipt,
+  garmentReference,
+} from '@/lib/engine/garment-receipts'
 export default async function Reception({
   params,
 }: {
@@ -33,7 +38,7 @@ export default async function Reception({
   if (!reception) notFound()
   const state = reception.status === 'ready' ? reception.session : reception
   const sources = reception.status === 'ready' ? reception.session.sources : []
-  const [seller, terms, review, policy] = await Promise.all([
+  const [seller, terms, review, policy, custody] = await Promise.all([
     ctx.client
       .from('sellers')
       .select('name,email,phone')
@@ -49,6 +54,7 @@ export default async function Reception({
       .maybeSingle(),
     readReceptionReview(ctx.client, tenant.id, id.data),
     readStorePolicy(ctx.client, tenant.id),
+    readGarmentReceipt(ctx.client, tenant.id, id.data),
   ])
   if (seller.error || terms.error)
     throw new Error('Unable to read reception context')
@@ -88,6 +94,43 @@ export default async function Reception({
           {d.history.title}
         </Link>
       </p>
+      <section className="card intake-form reception-result">
+        <h2>{d.custody}</h2>
+        <p>{d.custodyHelp}</p>
+        {custody ? (
+          <>
+            <p role="status">
+              <strong>
+                {d.custodyReference} {garmentReference(custody.reference)}
+              </strong>{' '}
+              · {d.custodyRecorded}{' '}
+              {new Date(custody.received_at).toLocaleString(
+                ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',
+                { timeZone: 'Europe/Stockholm' },
+              )}
+              {custody.note ? ` · ${custody.note}` : ''}
+            </p>
+            <Link
+              className="text-link"
+              href={`/intake/reception/${id.data}/label`}
+            >
+              {d.custodyPrint}
+            </Link>
+          </>
+        ) : (
+          <>
+            <p role="status">{d.custodyMissing}</p>
+            {write && (
+              <RecordCustody
+                tenantId={tenant.id}
+                sessionId={id.data}
+                d={d}
+                intake={all.intake}
+              />
+            )}
+          </>
+        )}
+      </section>
       <section className="card intake-form reception-result">
         <h2>{d.photos}</h2>
         {write && (

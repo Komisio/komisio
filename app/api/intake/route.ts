@@ -75,6 +75,7 @@ export async function POST(request: Request) {
           'RECEPTION_REVIEW_EXPIRED',
           'RECEPTION_UNKNOWN_SOURCE',
           'RECEPTION_PRICE_EVIDENCE_REQUIRED',
+          'GARMENT_ALREADY_RECEIVED',
         ].find((v) => result.error!.message.includes(v)) ?? 'REQUEST_FAILED'
       return reply(
         { error: code },
@@ -93,6 +94,7 @@ export async function POST(request: Request) {
                 'RECEPTION_SOURCE_CHANGED',
                 'RECEPTION_REVIEW_CHANGED',
                 'RECEPTION_REVIEW_EXPIRED',
+                'GARMENT_ALREADY_RECEIVED',
               ].includes(code)
             ? 409
             : 400,

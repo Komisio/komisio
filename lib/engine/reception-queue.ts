@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { readGarmentReceipts } from './garment-receipts'
 
 export const receptionStage = z.enum([
   'preparing',
@@ -58,12 +59,25 @@ export async function readReceptionQueue(
     p_before_id: p.beforeId ?? null,
   })
   if (error) throw new Error('Unable to read reception queue')
-  const rows = z.array(row).max(21).parse(data),
-    items = rows.slice(0, 20).map((item) => ({
+  const rows = z.array(row).max(21).parse(data)
+  const custody = await readGarmentReceipts(
+    client,
+    p.tenantId,
+    rows.slice(0, 20).map((r) => r.session_id),
+  )
+  const items = rows.slice(0, 20).map((item) => {
+    const received = custody.has(item.session_id)
+    return {
       ...item,
-      nextStep: nextStep[item.stage],
+      custody: received,
+      // Custody is the next step once the seller side is settled and nothing physical is recorded yet.
+      nextStep:
+        item.stage === 'approved' && !received
+          ? ('record_custody' as const)
+          : nextStep[item.stage],
       guidanceOnly: true as const,
-    }))
+    }
+  })
   const last = items.at(-1)
   return {
     items,

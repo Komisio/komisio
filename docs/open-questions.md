@@ -165,10 +165,12 @@ wording is decided per template when the notification policy is built.
 
 ## P1 S1 implementation clarification
 
-P1-SLICES.md asks for defaults from the consignment skill, but that skill does
-not specify the commission rate, sale duration, markdown schedule,
-end-of-period action or minimum payout amount. The basis is described only
-as common practice, with inclusive selected in the earlier question sketch.
-Fable/owner must pin the complete default body before a no-policy tenant can
-receive implicit commercial terms. The validator can proceed with explicit
-values; it must not fabricate defaults. The owner was asked on 2026-09-12.
+**Answered by the owner 2026-09-13:** Fable's skill section "Default store
+policy" at snapshot `17e73c8` supplies the defaults, confirmed directly by the
+owner. Store commission 60 percent inclusive; sale duration 42 days; markdowns
+10/25/50 percent at day 14/28/42; charity at period end; unsold notification
+day 60; minimum payout SEK 100; delegated pricing; agreement required at
+publication and acceptance, optional at bag receipt. These are pilot defaults,
+not law. The S1 validator includes `unsoldNotifyAfterDays`; assistance enablement
+remains S9. No missing-default blocker remains. P2 execution and VAT questions
+remain separate. Fable's newer commits are held until PR58 is complete.

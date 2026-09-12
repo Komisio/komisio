@@ -13,6 +13,11 @@ id and access events; tables are append-only with immutability triggers; RLS
 selects for members; every agent write is a pending operation with a risk
 level; no edit to an applied migration; no reset of the shared database.
 
+Coordination update 2026-09-13: S0 per-kind dispatch is required before S4
+but does not block S1. The full S0 specification lives in Fable
+snapshot `17e73c8`; per owner request that newer snapshot is not integrated
+until PR58 is complete.
+
 ## S1. Store policy
 
 Purpose: one versioned policy record per tenant that the intake commands read,
@@ -27,6 +32,7 @@ replacing hard-coded behaviour and the single `required_before_receipt` flag.
   default `staff_receipt`), `sellerReviewMode` (`delegated` | `per_item`;
   default `delegated`), `salePeriodDays`, `markdownSteps` (list of
   `{afterDays, percent}`), `endOfPeriodAction` (`charity` | `return`),
+  `unsoldNotifyAfterDays` (nonnegative integer; owner addition 2026-09-13),
   `minPayoutThreshold` (numeric). Defaults for a tenant with no version come
   from constants that mirror `skills/consignment-sweden/SKILL.md`; the skill
   is the documentation of the defaults, the constants are the enforcement.

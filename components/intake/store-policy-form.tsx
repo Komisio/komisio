@@ -40,6 +40,11 @@ export function StorePolicyForm({
     agreementRequiredFor: ['bag_receipt', 'review_publication', 'acceptance'],
     custodySources: ['staff_receipt', 'locker', 'seller_dropoff'],
   } as const
+  // VAT modes are optional choices; an empty selection stays unchosen.
+  const vatModes = {
+    vatModeConsignmentPrivate: ['consignment_margin', 'consignment_full'],
+    vatModeStoreOwned: ['store_margin', 'store_full'],
+  } as const
   return (
     <section className="card intake-form" aria-label={t.title}>
       <h2>{t.title}</h2>
@@ -59,8 +64,16 @@ export function StorePolicyForm({
           const f = new FormData(e.currentTarget)
           const input = { ...base.policy, markdownSteps: steps }
           for (const key of numbers) input[key] = Number(f.get(key))
+          const rate = String(f.get('vatRatePercent') ?? '')
           const candidate = storePolicyBody.safeParse({
             ...input,
+            ...Object.fromEntries(
+              Object.keys(vatModes).map((key) => [
+                key,
+                f.get(key) || undefined,
+              ]),
+            ),
+            vatRatePercent: rate === '' ? undefined : Number(rate),
             ...Object.fromEntries(
               Object.keys(choices).map((key) => [key, f.get(key)]),
             ),
@@ -208,6 +221,42 @@ export function StorePolicyForm({
                 {t.add}
               </Button>
             )}
+          </fieldset>
+          <fieldset>
+            <legend>{t.vat}</legend>
+            <p>{t.vatIntro}</p>
+            {Object.entries(vatModes).map(([key, options]) => (
+              <div className="field" key={key}>
+                <label htmlFor={`policy-${key}`}>
+                  {t[key as keyof typeof vatModes]}
+                </label>
+                <select
+                  id={`policy-${key}`}
+                  name={key}
+                  defaultValue={base.policy[key as keyof typeof vatModes] ?? ''}
+                >
+                  <option value="">{t.vatNotChosen}</option>
+                  {options.map((value) => (
+                    <option key={value} value={value}>
+                      {t[value]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ))}
+            <div className="field">
+              <label htmlFor="policy-vatRatePercent">{t.vatRatePercent}</label>
+              <input
+                id="policy-vatRatePercent"
+                name="vatRatePercent"
+                type="number"
+                min={0}
+                max={100}
+                step={0.01}
+                placeholder="25"
+                defaultValue={base.policy.vatRatePercent ?? ''}
+              />
+            </div>
           </fieldset>
           {editable && (
             <label className="intake-confirm">

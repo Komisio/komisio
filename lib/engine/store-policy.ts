@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { z } from 'zod'
+import { vatPolicyShape } from './vat'
 
 // Boundary validation only. SQL owns numeric persistence and calculations.
 const decimal = z
@@ -30,6 +31,8 @@ export const storePolicyBody = z.strictObject({
   markdownSteps: z.array(z.strictObject({ afterDays: days, percent })),
   endOfPeriodAction: z.enum(['charity', 'return']),
   minPayoutThreshold: decimal,
+  // VAT modes (P2 S10, docs/VAT-CASES.md): optional, chosen by the tenant with its accountant.
+  ...vatPolicyShape,
 })
 
 export type StorePolicyBody = z.infer<typeof storePolicyBody>

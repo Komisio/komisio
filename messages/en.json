@@ -609,7 +609,17 @@
     "saved": "Policy published.",
     "confirm": "I have reviewed the terms and want to publish a new version.",
     "noTerms": "No agreement is attached to this review; store policy permits this.",
-    "legacy": "An existing agreement requirement at bag receipt still applies."
+    "legacy": "An existing agreement requirement at bag receipt still applies.",
+    "vat": "VAT treatment",
+    "vatIntro": "Which VAT treatment applies is the store's decision, made together with its accountant. Komisio computes the selected mode exactly per sale line and records mode, basis and amount; it does not judge whether the choice is correct for your store. No sale can be recorded until both modes are chosen.",
+    "vatModeConsignmentPrivate": "Consignment goods from private sellers",
+    "vatModeStoreOwned": "Store-owned goods",
+    "vatRatePercent": "VAT rate (%)",
+    "vatNotChosen": "Not chosen",
+    "consignment_margin": "VAT on the store's commission only",
+    "consignment_full": "VAT on the whole sale price",
+    "store_margin": "Margin scheme per item, when eligibility is attested",
+    "store_full": "VAT on the whole sale price"
   },
   "purchases": {
     "title": "Purchases",

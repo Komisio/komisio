@@ -609,7 +609,17 @@
     "saved": "Policyn är publicerad.",
     "confirm": "Jag har granskat villkoren och vill publicera en ny version.",
     "noTerms": "Inget avtal knutet till detta underlag; butikspolicyn tillåter det.",
-    "legacy": "Ett befintligt avtals krav vid påsmottagning gäller fortfarande."
+    "legacy": "Ett befintligt avtals krav vid påsmottagning gäller fortfarande.",
+    "vat": "Momshantering",
+    "vatIntro": "Vilken momshantering som gäller är butikens beslut, taget tillsammans med er redovisningskonsult. Komisio räknar det valda läget exakt per försäljningsrad och sparar läge, underlag och belopp; Komisio bedömer inte om valet är rätt för er butik. Ingen försäljning kan registreras förrän båda lägena är valda.",
+    "vatModeConsignmentPrivate": "Inlämnade varor från privatpersoner",
+    "vatModeStoreOwned": "Butiksägda varor",
+    "vatRatePercent": "Momssats (%)",
+    "vatNotChosen": "Inte valt",
+    "consignment_margin": "Moms bara på butikens provision",
+    "consignment_full": "Moms på hela försäljningspriset",
+    "store_margin": "Vinstmarginalbeskattning per vara när underlaget är intygat",
+    "store_full": "Moms på hela försäljningspriset"
   },
   "purchases": {
     "title": "Inköp",

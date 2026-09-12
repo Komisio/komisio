@@ -476,7 +476,9 @@
         "observation": "Observation",
         "price-evidence": "Price evidence"
       }
-    }
+    },
+    "confirmFact": "I have reviewed this fact and its sources",
+    "confirmPrice": "I have reviewed the price and its evidence."
   },
   "operations": {
     "title": "Proposed operations",
@@ -540,7 +542,8 @@
     "confirmField": "I have reviewed the change to",
     "staleInspection": "The draft has changed or been archived. Reject this proposal and review the current draft.",
     "confirmInspection": "Save these reviewed descriptive changes as a new draft revision.",
-    "draftVersion": "draft revision"
+    "draftVersion": "draft revision",
+    "confirmPrice": "I have reviewed the price and its evidence."
   },
   "reviewPhotoAlt": "Photo included in this review",
   "reviewPhotos": "Photos in this review",

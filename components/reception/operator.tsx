@@ -10,6 +10,11 @@ import {
   exactPrice,
   manualReceptionSources,
 } from '@/lib/engine/manual-reception'
+import {
+  receptionReviewFields,
+  reviewReceptionFacts,
+  type ReceptionReviewField,
+} from '@/lib/engine/reception-fact-review'
 import { Button } from '@/components/ui/button'
 type D = Dictionary['reception']
 function useWrite(d: D) {
@@ -237,6 +242,7 @@ export function PublishReview({
   previousId,
   agreementId,
   suggestions,
+  requireFieldReview = false,
   d,
 }: {
   tenantId: string
@@ -245,15 +251,43 @@ export function PublishReview({
   previousId: string | null
   agreementId: string
   suggestions: ReceptionSuggestions
+  requireFieldReview?: boolean
   d: D
 }) {
   const action = useWrite(d),
-    [confirmed, setConfirmed] = useState(false)
+    [confirmed, setConfirmed] = useState(false),
+    [selected, setSelected] = useState<ReceptionReviewField[]>([])
+  const review = requireFieldReview
+    ? reviewReceptionFacts(suggestions, selected)
+    : { suggestions, complete: true }
+  const fields = requireFieldReview ? receptionReviewFields(suggestions) : []
   return (
     <div>
+      {fields.map((field) => (
+        <label key={field} className="intake-confirm">
+          <input
+            type="checkbox"
+            name={`review-${field}`}
+            checked={selected.includes(field)}
+            disabled={action.locked}
+            onChange={(e) => {
+              setSelected(
+                e.target.checked
+                  ? [...selected, field]
+                  : selected.filter((f) => f !== field),
+              )
+              setConfirmed(false)
+            }}
+          />
+          {field === 'price'
+            ? d.confirmPrice
+            : `${d.confirmFact}: ${d.aiFields[field]}`}
+        </label>
+      ))}
       <label className="intake-confirm">
         <input
           type="checkbox"
+          name="review-final"
           checked={confirmed}
           disabled={action.locked}
           onChange={(e) => setConfirmed(e.target.checked)}
@@ -262,8 +296,11 @@ export function PublishReview({
       </label>
       <p>{d.expiry}</p>
       <Button
-        disabled={!confirmed || action.busy || action.reload}
+        disabled={
+          !confirmed || !review.complete || action.busy || action.reload
+        }
         onClick={async () => {
+          if (!confirmed || !review.complete) return
           const result = await action.run('/api/intake', {
             action: 'publishReceptionReview',
             tenantId,
@@ -272,7 +309,7 @@ export function PublishReview({
             sourceRevision: revision,
             previousReviewId: previousId,
             agreementId,
-            suggestions,
+            suggestions: review.suggestions,
             expiresAt: new Date(Date.now() + 86400000).toISOString(),
           })
           if (result) action.router.refresh()

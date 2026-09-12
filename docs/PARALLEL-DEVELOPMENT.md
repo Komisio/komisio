@@ -46,10 +46,13 @@ reviewed and integrated in PR45. PR46-PR48 subsequently delivered shared
 inspection reads, bag discovery and unsaved inspection previews. PR49's
 `feat/staged-inspection-edits` extends the existing T3
 mechanism with descriptive inspection edits; it does not create a competing
-write table or a commercial rule. That slice is delivered in PR49. Astra now
-implements the roadmap's unsaved inspection-to-reception comparison through a
-shared read/pure contract (INSPECTION-RECEPTION-PREVIEW.md), without sources or
-commercial writes. See DEVELOPMENT-HANDOFF.md and the private checkpoint.
+write table or a commercial rule. That slice is delivered in PR49. PR50 delivers the roadmap's
+unsaved inspection-to-reception comparison without sources or commercial writes.
+Astra's current slice adds explicit per-fact and price review to built-in AI
+publication and staged reception decisions (RECEPTION-FACT-REVIEW.md). It uses
+the existing write paths and adds no schema. See DEVELOPMENT-HANDOFF.md and the
+private checkpoint.
+
 
 Coordinate shared files such as DECISIONS.md, dictionaries, package manifests,
 migrations and handover notes. One release owner merges changes after exact-head

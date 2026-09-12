@@ -123,3 +123,15 @@ price, terms, a session or consent. A4 semantic equivalence remains unconfirmed.
 The preparation checklist does not search other receptions or agreements and
 cannot establish that they are missing. Use shared pure comparison in staff UI
 and an authenticated exact-revision read in MCP; no migration or persistence.
+
+
+## 2026-09-12 — Per-fact staff review of reception suggestions
+
+Implement roadmap P1's explicit review in the built-in AI publication UI and
+staged reception decisions. Each included descriptive field and the price require
+confirmation; model-supplied observed certainty does not count. A shared pure
+helper validates selections and leaves unchecked candidate fields tentative.
+The final publication confirmation remains separate and clears when selections
+change. No new authorization, financial rule, audit table or migration is added;
+existing SQL publication/decision guards remain authoritative. Rejecting a staged
+proposal requires no field confirmation; exact-request retry stays locked.

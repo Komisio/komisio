@@ -476,7 +476,9 @@
         "observation": "Observation",
         "price-evidence": "Prisunderlag"
       }
-    }
+    },
+    "confirmFact": "Jag har granskat uppgiften och dess källor",
+    "confirmPrice": "Jag har granskat priset och prisunderlaget."
   },
   "operations": {
     "title": "Föreslagna åtgärder",
@@ -540,7 +542,8 @@
     "confirmField": "Jag har granskat ändringen av",
     "staleInspection": "Utkastet har ändrats eller arkiverats. Avvisa förslaget och granska det aktuella utkastet.",
     "confirmInspection": "Jag vill spara dessa granskade beskrivningsändringar som en ny utkastversion.",
-    "draftVersion": "utkastversion"
+    "draftVersion": "utkastversion",
+    "confirmPrice": "Jag har granskat priset och prisunderlaget."
   },
   "reviewPhotoAlt": "Bild som ingår i detta underlag",
   "reviewPhotos": "Bilder i detta underlag",

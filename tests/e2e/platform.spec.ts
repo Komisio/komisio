@@ -2079,7 +2079,16 @@ test('operator reception guides saved evidence, exact review and link replacemen
       exact: true,
     }),
   ).toBeVisible()
-  await approved.getByRole('checkbox').check()
+  await expect(approved.getByRole('checkbox')).toHaveCount(3)
+  await approved.locator('input[name="checked"]').check()
+  await approved
+    .getByRole('button', { name: 'Godkänn och publicera', exact: true })
+    .click()
+  await expect(approved.locator('.badge')).toHaveText('Väntar på beslut')
+  await approved.locator('input[name="field-description"]').check()
+  await approved.locator('input[name="field-price"]').check()
+  await expect(approved.locator('input[name="checked"]')).not.toBeChecked()
+  await approved.locator('input[name="checked"]').check()
   await approved
     .getByRole('button', { name: 'Godkänn och publicera', exact: true })
     .click()
@@ -2099,7 +2108,6 @@ test('operator reception guides saved evidence, exact review and link replacemen
     }),
   ).toBeDisabled()
   await expect(rejected.getByRole('alert')).toContainText('har ändrats')
-  await rejected.getByRole('checkbox').check()
   await rejected.getByRole('button', { name: 'Avvisa', exact: true }).click()
   await expect(rejected.locator('.badge')).toHaveText('Avvisat')
   await page.goto('/intake/operations')
@@ -2232,10 +2240,45 @@ test('AI HTTP fixture stages a sourced proposal before explicit staff publicatio
     await page.request.get(`/api/reception/${sessionId}`)
   ).json()
   expect(before.latestReview).toBeNull()
-  await panel.getByRole('checkbox').check()
+  await expect(panel.getByRole('checkbox')).toHaveCount(3)
+  const final = panel.locator('input[name="review-final"]')
+  await final.check()
+  await expect(
+    panel.getByRole('button', { name: 'Publicera granskat underlag' }),
+  ).toBeDisabled()
+  await panel.locator('input[name="review-description"]').check()
+  await expect(final).not.toBeChecked()
+  await final.check()
+  await expect(
+    panel.getByRole('button', { name: 'Publicera granskat underlag' }),
+  ).toBeDisabled()
+  await panel.locator('input[name="review-price"]').check()
+  await expect(final).not.toBeChecked()
+  await final.check()
+  let publishedRequest: Record<string, unknown> | undefined
+  await page.route('**/api/intake', async (route) => {
+    const body = route.request().postDataJSON()
+    if (body.action !== 'publishReceptionReview') {
+      await route.continue()
+      return
+    }
+    if (!publishedRequest) {
+      publishedRequest = body
+      const response = await route.fetch()
+      expect(response.status()).toBe(200)
+      await route.abort('failed')
+    } else {
+      expect(body).toEqual(publishedRequest)
+      await route.continue()
+    }
+  })
   await panel
     .getByRole('button', { name: 'Publicera granskat underlag' })
     .click()
+  await expect(panel.getByRole('alert')).toBeVisible()
+  for (const checkbox of await panel.getByRole('checkbox').all())
+    await expect(checkbox).toBeDisabled()
+  await panel.getByRole('button', { name: 'Försök igen', exact: true }).click()
   await expect(
     page.getByRole('heading', { name: /Säljarens beslut/ }),
   ).toBeVisible()
@@ -2248,6 +2291,8 @@ test('AI HTTP fixture stages a sourced proposal before explicit staff publicatio
   expect(after.latestReview.suggestions.metadata.description.value).toContain(
     'HTTP FIXTURE',
   )
+  expect(after.latestReview.id).toBe(publishedRequest!.requestId)
+  expect(after.latestReview.version).toBe(1)
   expect(after.latestReview.response).toBeNull()
   expect(after.latestReview.access).toBeNull()
   const limited = await page.request.post('/api/reception/assistance', {
@@ -2528,6 +2573,8 @@ test('staged inspection edits require field review and preserve stale drafts', a
       ).rows[0].n,
     ).toBe(0)
     await form.locator('input[name="field-category"]').check()
+    await expect(form.locator('input[name="checked"]')).not.toBeChecked()
+    await form.locator('input[name="checked"]').check()
     await approve.click()
     await expect(page.locator('li.card .badge')).toHaveText(
       'Godkänt och utfört',

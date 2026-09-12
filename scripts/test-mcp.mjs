@@ -426,7 +426,15 @@ try {
     name: 'komisio_propose_reception_review',
     arguments: proposal,
   })
-  assert(!replayed.isError)
+  assert(!replayed.isError, JSON.stringify(replayed.content))
+  const storedExpiry = await db.query(
+    'select expires_at from pending_operations where id=$1',
+    [proposalId],
+  )
+  assert.equal(
+    storedExpiry.rows[0].expires_at.toISOString(),
+    proposal.expiresAt,
+  )
   for (const args of [
     { ...proposal, requestId: randomUUID(), sourceRevision: current },
     { ...proposal, requestId: randomUUID(), riskLevel: 'low' },

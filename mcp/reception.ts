@@ -162,7 +162,9 @@ export function receptionTools(client: SupabaseClient, config: MCPConfig) {
         kind: 'publishReceptionReview',
         payload,
         actorLabel: mcpActorLabel,
-        expiresAt: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
+        // A retry must preserve the exact operation envelope. Never derive this
+        // from the request clock; the proposed review already has a fixed expiry.
+        expiresAt: payload.expiresAt,
       })
       if (result.error)
         throw new Error(operationErrorCode(result.error.message))

@@ -43,6 +43,8 @@ Derived status for lists: `open`, `expired`, `executed`, `failed`, `rejected`.
   against the current revision, then stages. It returns `persisted:true`,
   `staged:true`, `executed:false`, `requiresApproval:true` and the operation ID.
   An optional `requestId` lets a host retry a lost response safely.
+  The operation expires at the proposed review's fixed `expiresAt`, so a retry
+  carries the identical envelope and never extends the approval window.
 - Web: `/intake/operations` lists the newest 50 proposals for the active store
   with their derived status. Staff approve or reject with an optional reason
   after confirming they checked the reception. Readonly can view.

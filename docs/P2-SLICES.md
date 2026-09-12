@@ -33,6 +33,10 @@ Purpose: the modes, their arithmetic and their policy keys, before S11.
   store's, made with its accountant.
 - No table migration beyond the policy keys. Exit: every mode has a tested
   function in both places and the settings page can select it.
+- Status 2026-09-13: arithmetic, mode selection and the policy fragment
+  (`vatPolicy` in `lib/engine/vat.ts`, SQL `komisio_private.vat_for_line`)
+  delivered. Folding the keys into the store policy body and the settings
+  page follows once S1 is merged.
 
 ## S11. Sales with lines
 
@@ -46,7 +50,7 @@ Purpose: the sale as a fact from a POS, idempotent, with frozen basis.
   jsonb, VAT mode, VAT amount, agreement version, seller terms
   version). Both immutable.
 - `record_sale(p_tenant, p_id, p_provider, p_external_id, p_occurred_at,
-  p_currency, p_lines)`: staff or integration actor; every item must be
+p_currency, p_lines)`: staff or integration actor; every item must be
   accepted and on sale; commission and seller credit computed from the
   item's frozen terms; replay by external id returns the existing sale;
   a different payload under the same external id fails. Marks items sold

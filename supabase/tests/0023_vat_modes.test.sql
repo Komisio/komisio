@@ -1,0 +1,26 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+-- Same worked examples as tests/unit/vat.test.ts; the two must never disagree.
+select is(komisio_private.vat_for_line('consignment_margin',25000,10000,null,2500),3000::bigint,'consignment margin: VAT on commission only');
+select is(komisio_private.vat_for_line('consignment_full',25000,null,null,2500),5000::bigint,'consignment full: VAT on whole price');
+select is(komisio_private.vat_for_line('consignment_business',25000,null,null,2500),5000::bigint,'business seller: sale VAT on whole price');
+select is(komisio_private.commission_invoice_vat(12000,2500),3000::bigint,'business seller: VAT added on net commission');
+select is(komisio_private.vat_for_line('store_margin',25000,null,15000,2500),2000::bigint,'store margin: VAT on positive margin');
+select is(komisio_private.vat_for_line('store_margin',10000,null,15000,2500),0::bigint,'store margin: negative margin gives zero');
+select is(komisio_private.vat_for_line('store_full',25000,null,null,2500),5000::bigint,'store full: VAT on whole price');
+select is(komisio_private.vat_for_line('store_full',999,null,null,2500),200::bigint,'199.8 rounds half up to 200');
+select is(komisio_private.vat_for_line('store_full',1,null,null,2500),0::bigint,'0.2 rounds to 0');
+select is(komisio_private.vat_for_line('store_full',7,null,null,1000),1::bigint,'0.636 rounds to 1');
+select is(komisio_private.commission_invoice_vat(1,2500),0::bigint,'0.25 rounds to 0');
+select is(komisio_private.commission_invoice_vat(2,2500),1::bigint,'0.5 rounds half up to 1');
+select is(komisio_private.vat_for_line('store_full',99999999999,null,null,2500),20000000000::bigint,'large amounts stay exact');
+select is(komisio_private.vat_for_line('store_full',25000,null,null,0),0::bigint,'zero rate gives zero');
+select throws_like($$select komisio_private.vat_for_line('consignment_margin',25000,null,null,2500)$$,'%VAT_BASIS_MISSING%','margin mode needs seller credit');
+select throws_like($$select komisio_private.vat_for_line('store_margin',25000,null,null,2500)$$,'%VAT_BASIS_MISSING%','store margin needs purchase price');
+select throws_like($$select komisio_private.vat_for_line('agency',25000,null,null,2500)$$,'%INVALID_INPUT%','unknown mode rejected');
+select throws_like($$select komisio_private.vat_for_line('store_full',-1,null,null,2500)$$,'%INVALID_INPUT%','negative price rejected');
+select throws_like($$select komisio_private.vat_for_line('store_full',100,null,null,10001)$$,'%INVALID_INPUT%','rate above 100 percent rejected');
+select ok(not has_function_privilege('authenticated','komisio_private.vat_for_line(text,bigint,bigint,bigint,integer)','execute'),'arithmetic is private; engine functions call it');
+select * from finish();
+rollback;

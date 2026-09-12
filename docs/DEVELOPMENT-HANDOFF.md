@@ -4,7 +4,45 @@ Updated 2026-09-12. Read CLAUDE.md first, then this file and the
 [active day plan](DAY-PLAN-2026-09-12.md). Git, CI and deployment records take
 precedence over narrative. This file supersedes older slice status notes.
 
-## Current work
+## Latest verified feature checkpoint
+
+Feature release: [PR56](https://github.com/Komisio/komisio/pull/56), merged as
+`cdd6f4ab9feb8de418e29c58fb4498c7b302ac4d`. Platform CI34702956792 passed exact
+head `43be88be6b378ec3c265afa554e2319c67908eac`; staging deployment6411441589 succeeded.
+Later documentation-only commits do not imply another feature release. Check
+Git/CI and the private checkpoint for work started after this record.
+
+Claude Fable 5.1 is lead architect. The evolving FUNCTIONAL-ROADMAP.md governs new
+work; all 100-hours functionality is excluded from v1. Fable's last inspected
+snapshot was 4593bd0 and its worktree was not changed. Recheck before integrating.
+
+| Recent capability | Delivery | Contract |
+| --- | --- | --- |
+| Staged review and inspection edits | PR43,44,49 | STAGED-OPERATIONS.md |
+| Shared bag discovery, inspection reads/previews and preparation | PR46-50 | INSPECTION-READ.md, INSPECTION-RECEPTION-PREVIEW.md |
+| Per-fact review and exact decision retries | PR51,52 | RECEPTION-FACT-REVIEW.md |
+| Staff filters and older-operation pages | PR53 | OPERATION-QUEUE-PAGING.md |
+| Provider-independent evidence minimization | PR54 | RECEPTION-EVIDENCE-PORT.md |
+| Scoped local MCP operation discovery | PR55 | MCP-OPERATION-DISCOVERY.md |
+| Exact prior-publication comparison | PR56 | RECEPTION-REVIEW-COMPARISON.md |
+
+PR56 validation: 117 local units, real MCP, two operation browser journeys,
+lint/types/build/scoped formatting, and full platform CI passed. The latest
+database suite has 490 assertions. CI includes database, concurrency, Storage,
+browser and isolated AI HTTP fixture checks. PR55 traverses 115 mixed-kind
+proposals; PR56 retains the pinned baseline after a newer publication. These
+are synthetic local tests. Hosted public forms and anonymous mutation/operation
+guards passed. **Authenticated hosted walkthrough remains unverified.** Public
+smoke is not proof of that journey. No live model quality/cost, camera wall,
+POS, sale or payout is verified or activated by these changes; no hosted delegated
+agent was installed.
+
+Recent migrations 20260912140000,20260912150000,20260912160000,20260912170000 and
+20260912173000 are applied BOTH locally and in staging and must not be edited.
+Verify actual ledgers before applying anything; never reset the shared database.
+PR54 and PR56 have no migration.
+
+## Delivery history
 
 PR43 is merged as43d26f0b75f69b3e932b67561ab6c613184285ff. Exact-head
 CI34689526103 passed on d4804033a90a41b5a10e62364104c15aa13d109c.
@@ -109,13 +147,10 @@ uses the shared kind-filtered page read.490 SQL,113 units, realstdio115 mixed-ki
 proposals, staff paging browser and lint/types/build/format passed. No hosted agent
 or live model. Authenticated hosted queue walkthrough remains unverified.
 
-Current slice: `feat/reception-review-comparison` adds a read-only comparison with
-the exact previousReviewId publication in staged reception UI/MCP detail. It flags
-changed descriptive facts/citations, price/rationale/citations and source/agreement
-versions. All field confirmations remain required; no prior seller consent is
-inherited.117 units, real MCP including pinned baseline after newer publication,
-and two operation browser journeys pass, with lint/types/build/scoped formatting.
-PR/CI/release remain pending; see private checkpoint. No migration or live provider.
+PR56 is delivered as recorded above. The exact prior-publication comparison is
+shared by staff/MCP detail. All field confirmations remain required; no previous
+seller response is inherited. No implementation from this slice remains uncommitted
+or pending release. No migration or live provider was added.
 
 The prior PR40 work below is completed: merged6329b6ec95df1af3db8534921966f274f82f9e95,
 exact-head CI34687228721 passed, staging deployment6408441889 succeeded.
@@ -154,11 +189,18 @@ Do not impersonate the owner or change their existing seller responses.
 
 ## Next three actions
 
-1. Verify preview deltas/no-op/clearing, stale and archived denial, unknown fields,
-   tenant/identity/MFA and unchanged persistence through the real MCP harness.
-2. Run scoped checks and release a PR only after exact-head green CI. No migration.
-3. Keep any future saved agent draft change behind an explicit staged operation
-   and human field review. Do not convert it into observed reception evidence.
+1. Read the latest FUNCTIONAL-ROADMAP.md, Fable branch and actual Git/PR state.
+   Coordinate architecture with Fable; do not repeat delivered T3/T5, queues,
+   previews or comparisons. Preserve another model's worktree.
+2. Complete the authenticated staging pilot walkthrough with authorized synthetic
+   accounts: invitation/recovery, seller exact-version response, staff comparison
+   and queue paging. Record actual results separately from local fixtures. Do not
+   impersonate the owner or overwrite existing seller responses. Real email needs
+   its own authorization under the day plan.
+3. Resolve convergence A1-A4 and item-bound commercial terms (open questions 2/3)
+   before implementing acceptance. Until resolved, choose a bounded nonfinancial
+   roadmap slice or pilot gap. Keep shared engine/UI/MCP boundaries and exact-head
+   CI; never invent a generic accepted/done flag to clear queues.
 
 ## Architecture and remaining gates
 
@@ -183,8 +225,9 @@ Do not impersonate the owner or change their existing seller responses.
 A replacement can continue the current branch after inspecting status and PRs.
 A parallel contributor must use a separate worktree and a clearly bounded task;
 never switch branches or edit files in the other model's working directory.
-Read [parallel development guide](PARALLEL-DEVELOPMENT.md). Fable is working under
-the owner's explicit T3 assignment, not an automatically spawned worker.
+Read [parallel development guide](PARALLEL-DEVELOPMENT.md). Fable is the
+owner-appointed lead architect. Its earlier explicit T3 assignment is delivered,
+not an outstanding design-only task.
 
 ## Operations
 

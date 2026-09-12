@@ -54,9 +54,10 @@ uncertain responses. PR53 delivers filtered operation queue pages;
 migration20260912170000 is applied locally and in staging and must not be edited.
 PR54 delivers the narrowed assistance evidence port. PR55 delivers scoped MCP
 operation discovery;173000 is applied locally and in staging and is immutable.
-Astra's current slice compares staged reception proposals against the exact prior
-publication in shared UI/MCP detail, without new writes or schema. See
-RECEPTION-REVIEW-COMPARISON.md, DEVELOPMENT-HANDOFF.md and private checkpoint.
+PR56 delivers the pinned prior-publication comparison in shared staff/MCP detail.
+No feature implementation is pending from that slice. The current closeout updates
+documentation only; read DEVELOPMENT-HANDOFF.md and the private checkpoint for the
+latest branch, CI and deployment state before taking over.
 
 Coordinate shared files such as DECISIONS.md, dictionaries, package manifests,
 migrations and handover notes. One release owner merges changes after exact-head

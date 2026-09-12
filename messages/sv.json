@@ -610,5 +610,29 @@
     "confirm": "Jag har granskat villkoren och vill publicera en ny version.",
     "noTerms": "Inget avtal knutet till detta underlag; butikspolicyn tillåter det.",
     "legacy": "Ett befintligt avtals krav vid påsmottagning gäller fortfarande."
+  },
+  "purchases": {
+    "title": "Inköp",
+    "intro": "Butiksägda varor kommer in här, aldrig via inlämningsflödena.",
+    "notice": "Ett inköp är ett faktum om vad butiken köpt och för hur mycket. Det är ännu ingen vara till salu; acceptans följer.",
+    "registerHeading": "Registrera ett inköp",
+    "registerHint": "En registrering per köpt vara. Spara kvittot eller anteckningen; dess referens krävs.",
+    "price": "Inköpspris",
+    "priceHint": "SEK, till exempel 150 eller 150,50.",
+    "priceInvalid": "Ange ett pris med högst två decimaler.",
+    "evidence": "Underlagsreferens",
+    "evidenceHint": "Kvittonummer, eller en anteckning om vem som sålde och när. Undvik personnummer.",
+    "note": "Leverantörsanteckning (valfri)",
+    "marginEligible": "Berättigar till vinstmarginalbeskattning: köpt från privatperson utan moms, med dokumentation per vara",
+    "marginHint": "Detta intygar du nu, vid inköpet. Butikens momsläge avgör hur det används vid försäljning.",
+    "confirm": "Jag bekräftar att butiken köpt denna vara och att underlagsreferensen stämmer.",
+    "register": "Registrera inköp",
+    "registered": "Inköpet är registrerat.",
+    "recent": "Senaste inköp",
+    "recentHint": "De 20 senaste inköpen. Äldre nås från sina varor när de accepterats.",
+    "reference": "Inköp",
+    "marginYes": "vinstmarginal",
+    "marginNo": "full moms",
+    "empty": "Inga inköp registrerade ännu."
   }
 }

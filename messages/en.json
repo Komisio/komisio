@@ -610,5 +610,29 @@
     "confirm": "I have reviewed the terms and want to publish a new version.",
     "noTerms": "No agreement is attached to this review; store policy permits this.",
     "legacy": "An existing agreement requirement at bag receipt still applies."
+  },
+  "purchases": {
+    "title": "Purchases",
+    "intro": "Store-owned goods enter here, never through the consignment paths.",
+    "notice": "A purchase is a fact about what the store bought and for how much. It is not yet an item for sale; acceptance follows.",
+    "registerHeading": "Register a purchase",
+    "registerHint": "One registration per item bought. Keep the receipt or note; its reference is required.",
+    "price": "Purchase price",
+    "priceHint": "SEK, for example 150 or 150.50.",
+    "priceInvalid": "Enter a price with up to two decimals.",
+    "evidence": "Evidence reference",
+    "evidenceHint": "Receipt number, or a note of who sold it and when. Avoid personal identity numbers.",
+    "note": "Supplier note (optional)",
+    "marginEligible": "Margin scheme eligible: bought from a private person without VAT, with per-item documentation",
+    "marginHint": "This is attested now, at the purchase, by you. The store's VAT mode decides how it is used at sale.",
+    "confirm": "I confirm that the store bought this item and that the evidence reference is correct.",
+    "register": "Register purchase",
+    "registered": "The purchase is registered.",
+    "recent": "Recent purchases",
+    "recentHint": "The 20 latest purchases. Older ones are reachable from their items once accepted.",
+    "reference": "Purchase",
+    "marginYes": "margin scheme",
+    "marginNo": "full VAT",
+    "empty": "No purchases registered yet."
   }
 }

@@ -95,7 +95,9 @@ publication and receiving serialize with membership changes. See
 1. **Engine.** All writes with financial consequence — item state, recording
    a sale, a return, ledger entries, payouts, settlements — go through one
    engine. The UI and the MCP server are two callers of the same functions;
-   neither has its own write path.
+   neither has its own write path. The first [local MCP adapter](mcp/README.md)
+   exposes authenticated reads and unsaved reception previews only. It has no
+   write executor, hosted OAuth or automatic model invocation.
 2. **Database as boundary.** Tenant isolation, role permissions and business
    rules are enforced by PostgreSQL (RLS, grants, triggers) and proven by
    pgTAP tests against a real database. Application code that hits a

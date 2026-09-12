@@ -80,7 +80,10 @@ proposal's owner clarification for scope and outstanding details.
 12. **Which sales channels in the first year?** POS (Zettle for the certified
     cash register), web shop, marketplaces (Tradera, etc.).
     **Partly answered 2026-09-11:** Komisio is not initially a POS; integrate with
-    external POS such as Zettle or Shopify POS. Prioritization remains open.
+    external POS such as Zettle or Shopify POS.
+    **Partly answered 2026-09-12:** Zettle is the first POS integration;
+    Shopify POS follows on the same adapter contract. Web shop and
+    marketplaces remain open.
 13. **Does anything in the core need to satisfy kassaregisterlagen directly,
     or is that fully delegated to the POS provider?**
 
@@ -131,15 +134,12 @@ proposal's owner clarification for scope and outstanding details.
 
 See [functional roadmap](FUNCTIONAL-ROADMAP.md), section 8.
 
-- Which optional tenant lifecycle policy is needed first? The earlier
-  100-hours concept is excluded from version 1 (owner decision, 2026-09-12).
-- Bag-label printing is already requested and implemented. Which additional
-  purposes are needed first (item, onboarding slip, markdown)?
-- Is a store-owned (purchased) item in scope for the first sale slice, or
-  consignment only?
-- Which POS is first: Zettle or Shopify POS?
-- Tenant-configurable receipt and seller-visibility channels are confirmed.
-  Which delivery channel is first, and which messages need fixed wording?
+~~Lifecycle policy, label purposes, store-owned items, first POS, seller
+notification channel.~~ **Answered 2026-09-12 (DECISIONS.md):** the hourly
+price-decay concept is outside version 1; four label templates on day one
+(bag, item, onboarding slip, markdown); store-owned items are in the first
+sale slice; Zettle first; e-mail first, push later. Which messages need fixed
+wording is decided per template when the notification policy is built.
 
 ## Platform pilot
 

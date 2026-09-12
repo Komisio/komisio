@@ -28,8 +28,9 @@ visibility and payout requests; space booking with both seller-run checkout and
 shared store checkout. Komisio initially integrates with POS. Free access and
 SEK 199/month are the pricing direction; entitlements, AI costs and billing remain
 separate decisions. BankID and Stripe are candidates to investigate, not delivered
-identity or payout integrations. Purchased-versus-consigned ownership remains an
-open question; the two confirmed booking modes do not answer it.
+identity or payout integrations. Owner answers on 2026-09-12: store-owned
+(purchased) items are in scope for the first sale slice; Zettle is the first
+POS; four label templates ship on day one; sellers are notified by e-mail first.
 
 ## 1. Reading the earlier system
 
@@ -63,9 +64,8 @@ Three observations shape the rest of this document:
    and statuses are not authoritative financial requirements.
 3. **The seller-facing flow was the differentiator.** Hand in a bag or a box,
    get a QR, follow items and balance in the app, request payout, read a
-   statement. The 100-hours concept (three weeks at fixed price, then a week of
-   hourly price decay with digital price screens, then charity or return) was
-   an earlier store concept, not a global Komisio rule.
+   statement. The earlier store's hourly price-decay concept is excluded from
+   version 1 by the owner and is not planned below.
 
 ## 2. Principles for the new Komisio
 
@@ -111,7 +111,7 @@ not every legacy capability in that row or readiness for an external pilot.
 | Host tenant dashboard (GMV, integration health, risk score) | Report generated for the operator, not a screen | Report | P6 |
 | Tenant backups and restore (snapshots, restore jobs, SLA document) | Platform backup/restore procedure and restore exercise; scoped export/support procedures before external pilot | Ops, Engine | Pilot gate |
 | Developer portal: public API v1 (items, sellers, sales, payouts, submissions), OAuth clients, token info | MCP is the API for agents; a scoped REST subset for POS/webshop partners with OAuth client credentials | Integration | P5 |
-| Mobile admin: push notification settings (seller notified on registered/placed/sold, admins on sale) | Notification policy per tenant; delivery via push and email; content written by the model within a template | Engine, Agent | P2 |
+| Mobile admin: push notification settings (seller notified on registered/placed/sold, admins on sale) | Notification policy per tenant; e-mail first (decided 2026-09-12), push to the seller app later; content written by the model within a fixed, store-editable template; every send logged | Engine, Agent | P2 (push: P4) |
 | Page visit tracking, application packages (kiosk and print service downloads) | Dropped (tracking); print service download becomes a release asset | – | – |
 
 ### 3.2 Sellers
@@ -144,10 +144,10 @@ not every legacy capability in that row or readiness for an external pilot.
 
 | Earlier capability | New Komisio | Form | Phase |
 | --- | --- | --- | --- |
-| Item statuses Draft/Registered/InStore/Ready/Sold/Donated/ReturnedToSeller; flow status; ownership consignment or store-owned | Item created by commercial acceptance ([convergence ADR](INTAKE-CONVERGENCE.md)); statuses as facts with actor; ownership per item | Engine | P1 |
+| Item statuses Draft/Registered/InStore/Ready/Sold/Donated/ReturnedToSeller; flow status; ownership consignment or store-owned | Item created by commercial acceptance ([convergence ADR](INTAKE-CONVERGENCE.md)); statuses as facts with actor; ownership per item, store-owned items included from the first sale slice (decided 2026-09-12) | Engine | P1 |
 | Initial and current price, price changes with events, bulk discount, "last price change / next price change" | Price is an append-only series per item; every change has actor and reason; bulk change is one staged operation | Engine, Staged op | P1 |
 | Kompis price reduction schedule (day 14: 10 %, day 28: 25 %, day 42: 50 %, notify seller day 60) and AI price schedule per article | Markdown agent: tenant policy defines steps; the agent proposes markdowns weekly as one staged operation; auto-execute per scope when the owner enables it | Agent, Staged op | P3 |
-| 100-hours concept: after three weeks move to the 100-hours section, price falls every hour from 100/200/300 kr to 1 kr, digital price screens, Saturday charity | Lifecycle policy per tenant with named stages; hourly decay as a policy the engine evaluates; a public price feed for screens | Engine, Integration | Excluded from v1 |
+| Sale period with end-of-period action (charity or return) | Lifecycle policy per tenant: sale period, markdown steps, end-of-period action; the engine evaluates it and the lifecycle queue shows what is due. The earlier hourly price-decay concept is excluded from v1 | Engine | P2 |
 | Donation/return queue: near, overdue, scheduled move date, extend lifecycle by days, mark donated or returned, reprint labels | Lifecycle queue derived from item facts and policy; extend, donate, return as engine operations with custody consequences | Engine, UI | P2 |
 | Item journey: events (created, status, price, listed, sold, donated, returned, synced, label printed, AI suggested/accepted/corrected, duplicate dismissed) | Item events are the audit stream; AI provenance events included (future slice) | Engine | P1 |
 | Multilingual item descriptions (eight locales, regenerate, per-locale edits) | Description generated per locale on demand from the accepted facts; edits stored as new versions | Agent | P4 |
@@ -166,7 +166,7 @@ not every legacy capability in that row or readiness for an external pilot.
 | Returns and refunds; refund payout review flag ("needs review", mark resolved) | Return as a fact that reverses the seller credit per open question 7; review flag when a payout already happened | Engine | P2 |
 | Payment intents (kiosk/Stripe), sale confirm endpoint for kiosk | Not in core; POS owns checkout (decided). A kiosk is an integration calling the sale operation | Integration | P5 |
 | Economy dashboard: revenue, VAT, commission, net, receipts, returns, per period, currency normalisation | Weekly and monthly brief written by the agent from the same read model; one dashboard page | Report, UI | P3 |
-| Zettle: pull purchases, push items and images, sync status, last sync, manual sync, auto-sync with lease | Zettle adapter: pull sales (P2), push accepted items (P3) | Integration | P2/P3 |
+| Zettle: pull purchases, push items and images, sync status, last sync, manual sync, auto-sync with lease | Zettle is the first POS (decided 2026-09-12): pull sales (P2), push accepted items (P3) | Integration | P2/P3 |
 | Shopify and Shopify POS: webhooks, push items and inventory, pull sales, included categories, location | Shopify adapter after Zettle, same contract | Integration | P3 |
 | Square, Lightspeed provider names reserved | Same adapter contract; built on demand | Integration | Later |
 
@@ -220,7 +220,7 @@ not every legacy capability in that row or readiness for an external pilot.
 
 | Earlier capability | New Komisio | Form | Phase |
 | --- | --- | --- | --- |
-| Printers register (path, IP, port, model, DPI, type), labels register (ZPL with placeholders), printer-label bindings with events (bag on intake, item, shelf, storage, pickup, donation/return, quality, transfer, shipping, markdown), automatic print on save | One label engine: templates per purpose shipped with the product, a printer list per store (the second small register), print requested by the engine on events; ZPL rendered server-side | Engine, Integration | P2 |
+| Printers register (path, IP, port, model, DPI, type), labels register (ZPL with placeholders), printer-label bindings with events (bag on intake, item, shelf, storage, pickup, donation/return, quality, transfer, shipping, markdown), automatic print on save | One label engine: four templates on day one (bag, item, onboarding slip, markdown; decided 2026-09-12), a printer list per store (the second small register), print requested by the engine on events; ZPL rendered server-side | Engine, Integration | P2 |
 | Print service (local Windows service on port 8080, USB and TCP) | Keep the idea, rebuild as a small local agent that polls or receives print jobs from the hosted service; USB and TCP; signed release asset | Integration | P2 |
 | Bulk reprint, printing details for the mobile app | Engine operations | Engine | P2 |
 
@@ -229,7 +229,6 @@ not every legacy capability in that row or readiness for an external pilot.
 | Earlier capability | New Komisio | Form | Phase |
 | --- | --- | --- | --- |
 | Mobile browse of items in store by tenant, item detail, change store, test access code for unlisted stores | Public read model per store; seller app and web page share it; test-code gating as store visibility policy | UI | P4 |
-| Digital price screens for the 100-hours section | Historical concept only; excluded from version 1 | Integration | Excluded from v1 |
 | Public Kompis | See 3.9 | Agent | P5 |
 
 ## 4. What is dropped, and what replaces the outcome
@@ -309,41 +308,35 @@ resolution of convergence and terms questions.
 | --- | --- | --- | --- |
 | P0 (implemented baseline; pilot gates open) | Foundation and reception | Tenancy, users, MFA, agreements, bag receipts, inspection drafts, single-garment reception with optional AI adapter, seller mobile review, staged operations, MCP reads and propose | – |
 | P1 | Accept and hold | Convergence ADR assumptions, custody event for garments, commercial acceptance command creating items with frozen terms, item events, price series, staff mobile reception, per-fact AI confirmation, unified assistance port | Questions 2, 3; ADR A1–A4 |
-| P2 | Sell and settle | First selected POS sales pull, sale lines with VAT freeze, returns, seller ledger and balance, payout request/approve/pay (manual rail), statements, labels and local print agent, lifecycle queue, batch reception, duplicate check, notifications, communication log, usage metering, staff agent tools (analytics, price proposals), bulk staged ops | Questions 5, 7, 8, 9, 10, 12 |
-| P3 | Run the store | Markdown agent with policy (excluding the 100-hours concept), day close and Fortnox export, Swish and Stripe payout rails, settlement batch, insights brief, visual pricing evidence, Shopify adapter, self drop-off handover with QR, store profile | Questions 4, 6, 9, 11, 12 |
+| P2 | Sell and settle | Zettle sales pull, sale lines with VAT freeze for consignment and store-owned items, returns, seller ledger and balance, payout request/approve/pay (manual rail), statements, four label templates and the local print agent, lifecycle queue, batch reception, duplicate check, e-mail notifications, communication log, usage metering, staff agent tools (analytics, price proposals), bulk staged ops | Questions 5, 7, 8, 9, 10, 12 |
+| P3 | Run the store | Markdown agent with policy, day close and Fortnox export, Swish and Stripe payout rails, settlement batch, insights brief, visual pricing evidence, Shopify adapter, self drop-off handover with QR, store profile | Questions 4, 6, 9, 11, 12 |
 | P4 | Bookings and assistants | Sections, layout, pricing rules, bookings and charges; web copilot over MCP; onboarding conversation; multilingual descriptions; semantic search; identify by image and AR; public browse; pricing coach | Booking fee questions |
 | P5 | Open up | Partner REST subset with OAuth clients, import wizard as staged op, kiosk integration contract, voice adapter, public buyer assistant, self-service export automation, quality and fraud proposals | – |
 | P6 | Commercial | Hosted tier subscription in Stripe, AI quota mapping, operator report | Pricing decisions |
 
-## 8. Questions this document raises
+## 8. Questions this document raised
 
-Added to [open questions](open-questions.md) as a block:
-
-- Which optional tenant lifecycle policies belong in the first pilot? The
-  100-hours concept is explicitly excluded from version 1 by the owner.
-- Bag-label printing is already requested and implemented. Which additional
-  label purposes are needed first (item, onboarding slip, markdown)?
-- Is a store-owned (purchased) item in scope for the first sale slice, or
-  consignment only?
-- Which POS is first: Zettle (earlier implementation) or Shopify POS?
-- Receipt and seller-visibility channels must be tenant-configurable. Which
-  delivery channel is implemented first, and which messages require fixed wording?
+Answered by the owner on 2026-09-12 and recorded in DECISIONS.md: the hourly
+price-decay concept is outside version 1; four label templates on day one (bag,
+item, onboarding slip, markdown); store-owned items are in the first sale slice;
+Zettle is the first POS; sellers are notified by e-mail first, push later. Which
+messages need fixed wording is decided per template when the notification
+policy is built (P2): the model writes inside a fixed, store-editable template.
 
 ## 9. Coverage accounting
 
-Counting capabilities, not screens. Capability rows in section 3: 81.
+Counting capabilities, not screens. Capability rows in section 3: 80, after
+the owner excluded the hourly price-decay concept and its price screens.
 
 | Treatment | Rows | Meaning |
 | --- | --- | --- |
-| Recreated in the same form (engine, UI, integration) | 49 | Same outcome, same kind of surface |
+| Recreated in the same form (engine, UI, integration) | 48 | Same outcome, same kind of surface |
 | Transformed (agent, staged operation, report, operations procedure) | 31 | Same outcome, reached through a conversation, an approval or a generated report instead of a register or a screen |
 | Dropped without replacement | 1 | Page-visit tracking and in-database application packages |
 
-These historical counts predate the owner's exclusion of 100-hours functionality
-from v1 and must not be used as v1 coverage totals.
-The original inventory proposes retaining outcomes for eighty of 81 rows.
-This measures the proposal, not implementation coverage, verified quality or an
-owner commitment to build 98 percent of the legacy product. The registers and admin
+The inventory proposes retaining outcomes for 79 of 80 rows. This measures
+the proposal, not implementation coverage, verified quality or an owner
+commitment to build 99 percent of the legacy product. The registers and admin
 surfaces listed in section 4 are inside the transformed rows, each with what
 replaces it, so a reader can dispute any single row. Not counted: the books
 demo module, which had no product function.

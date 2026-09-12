@@ -80,3 +80,26 @@ Questions without an answer are in `docs/open-questions.md`.
 Answer domain questions from this file. If the answer is **[to verify]**, say
 so. If the answer is not here, add the question to `docs/open-questions.md`
 and ask; do not guess.
+
+## Default store policy (pilot defaults, not law)
+
+These are the values the engine uses for a tenant that has not published a
+store policy. They mirror what the earlier Swedish store ran with and are
+overridable per tenant (and, for commission, per seller). They are product
+defaults, not legal requirements; nothing here decides VAT treatment.
+
+| Key | Default | Basis |
+| --- | --- | --- |
+| `commissionBasis` | `inclusive` | Private sellers are quoted a share of the sale price including VAT **[verified: practice, see Commission and VAT above]** |
+| `commissionRatePercent` | `60.00` | The store keeps 60 %, the seller receives 40 % of the sale price; the earlier store's published terms **[default, not verified as market norm]** |
+| `agreementRequiredFor` | `["review_publication","acceptance"]` | A published agreement is needed before an offer or an acceptance; optional at bag receipt (owner decision 2026-09-12) |
+| `custodySources` | `["staff_receipt"]` | Staff attest custody (owner decision 2026-09-12) |
+| `sellerReviewMode` | `delegated` | The seller delegates pricing to the store (owner decision 2026-09-12) |
+| `salePeriodDays` | `42` | Six weeks; the earlier store's markdown ladder ended at day 42 |
+| `markdownSteps` | `[{"afterDays":14,"percent":10},{"afterDays":28,"percent":25},{"afterDays":42,"percent":50}]` | The earlier store's Kompis ladder: minus 10 % at day 14, 25 % at day 28, 50 % at day 42 |
+| `endOfPeriodAction` | `charity` | The earlier store donated unsold goods after the period; `return` is the alternative |
+| `unsoldNotifyAfterDays` | `60` | The seller is told an item is still unsold at day 60 |
+| `minPayoutThreshold` | `100.00` | SEK; the earlier store's seller-facing text stated a 100 kr minimum |
+| `assistanceEnabled` | `false` | AI assistance is off until the store turns it on (P1 S9) |
+
+Amounts are SEK with two decimals in policy and öre in the database.

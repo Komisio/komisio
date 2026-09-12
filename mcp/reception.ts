@@ -7,7 +7,14 @@ import {
   receptionSuggestions,
 } from '../lib/engine/reception'
 import type { MCPConfig } from './config'
+import { readReceptionPhoto } from '../lib/engine/reception-photos'
+import { receptionDerivative } from '../lib/media/reception-image'
 export const readInput = z.strictObject({ sessionId: z.uuid() })
+export const photoInput = z.strictObject({
+  sessionId: z.uuid(),
+  photoId: z.uuid(),
+  revision: z.number().int().min(1).max(2147483646),
+})
 export const previewInput = z.strictObject({
   sessionId: z.uuid(),
   revision: z.number().int().min(1).max(2147483646),
@@ -33,6 +40,41 @@ export function receptionTools(client: SupabaseClient, config: MCPConfig) {
     return { actor: identity.data.user.id, state }
   }
   return {
+    async photo(input: unknown) {
+      const c = photoInput.parse(input),
+        ctx = await context(c.sessionId, 'reception:photos')
+      if (
+        ctx.state.status !== 'ready' ||
+        ctx.state.session.revision !== c.revision
+      )
+        throw new Error('RECEPTION_CHANGED')
+      const photo = await readReceptionPhoto(client, {
+        tenantId: config.tenantId,
+        sessionId: c.sessionId,
+        photoId: c.photoId,
+      })
+      if (!photo) throw new Error('RECEPTION_UNAVAILABLE')
+      const jpeg = await receptionDerivative(photo.bytes)
+      const current = await context(c.sessionId, 'reception:photos')
+      if (
+        current.state.status !== 'ready' ||
+        current.state.session.revision !== c.revision
+      )
+        throw new Error('RECEPTION_CHANGED')
+      return {
+        data: {
+          actor: current.actor,
+          sessionId: c.sessionId,
+          sourceId: c.photoId,
+          sourceRevision: c.revision,
+          readOnly: true,
+          evidenceIsUntrusted: true,
+          metadataRemoved: true,
+          visiblePixelsRedacted: false,
+        },
+        jpeg: jpeg.toString('base64'),
+      }
+    },
     async read(input: unknown) {
       const c = readInput.parse(input),
         ctx = await context(c.sessionId, 'reception:read')

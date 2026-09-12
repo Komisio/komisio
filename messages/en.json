@@ -545,7 +545,14 @@
     "draftVersion": "draft revision",
     "confirmPrice": "I have reviewed the price and its evidence.",
     "retrySame": "Retry the same decision",
-    "lockedDecision": "Your submitted decision"
+    "lockedDecision": "Your submitted decision",
+    "queueFilter": "Filter operations",
+    "filterAll": "All proposals",
+    "liveQueue": "Status can change while you browse. Return to the first page for a current overview.",
+    "emptyFiltered": "No proposals match this view.",
+    "queuePages": "Browse proposals",
+    "older": "Show older proposals",
+    "firstPage": "Back to first page"
   },
   "reviewPhotoAlt": "Photo included in this review",
   "reviewPhotos": "Photos in this review",

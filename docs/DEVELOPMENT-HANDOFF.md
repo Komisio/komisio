@@ -78,15 +78,24 @@ operation browser journeys, isolated HTTP fixture with lost-response retry and
 lint/types/build passed. No migration or model activation. Hosted authenticated
 walkthrough remains pending.
 
-Current slice: `fix/operation-decision-retry` freezes the complete staff decision
-envelope and locks inputs after submission. The browser regression reproduced
-that reason remained editable after an approval committed but its response was
-lost. The fix offers only exact retry and covers both post-commit approval and
-pre-server rejection interruption. Existing SQL authorization/idempotency remain
-unchanged; no migration. 107 units, lint/typecheck/build/scoped formatting and both operation browser
-journeys pass. The new regression failed before the fix and now verifies exact
-retries for both failure boundaries, preserving reasons and one decision each.
-PR/CI/release remain pending. See STAGED-OPERATIONS.md and private checkpoint.
+PR52 is delivered: merge4795bb67328abdace330ca747ec893b1b0b33545,
+exact-head CI34699068301 passed on34219485c5d75a81dc26499875e949ca6eae62c4.
+Deployment6410687357 succeeded. Decision retries now freeze the complete envelope
+and lock inputs after submission. Browser checks cover lost post-commit approval
+and pre-server rejection responses, exact retry bodies and one decision each.
+107 units, lint/types/build and both operation browser journeys passed. No migration.
+Hosted public guards passed; authenticated hosted walkthrough remains pending.
+
+Current slice: `feat/operation-queue-pages` adds read-only status filtering and
+20-row keyset pages to the staff proposal queue. The legacy newest-50 RPC remains
+compatible. Migration20260912170000 is applied locally and is immutable; staging
+application and PR/CI/release are pending. Contract: OPERATION-QUEUE-PAGING.md.
+Local SQL475 and unit110 assertions pass, with lint/types/build/format and three
+relevant browser journeys (paging, inspection decisions and reception review).
+Paging checks all55 proposals, tied microseconds, retained filters, mobile
+wrapping and invalid-cursor denial. CI and release remain pending; see the private
+checkpoint and GitHub before claiming delivery.
+No new table, commercial rule, agent write or live provider activation.
 
 The prior PR40 work below is completed: merged6329b6ec95df1af3db8534921966f274f82f9e95,
 exact-head CI34687228721 passed, staging deployment6408441889 succeeded.

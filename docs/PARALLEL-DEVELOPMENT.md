@@ -49,10 +49,12 @@ mechanism with descriptive inspection edits; it does not create a competing
 write table or a commercial rule. That slice is delivered in PR49. PR50 delivers the roadmap's
 unsaved inspection-to-reception comparison without sources or commercial writes.
 PR51 delivers explicit per-fact and price review in built-in AI publication and
-staged reception decisions. Astra's current slice fixes uncertain decision retries:
-freeze the complete first envelope and lock inputs, preserving existing SQL
-idempotency and authority. No schema change. See DEVELOPMENT-HANDOFF.md and the
-private checkpoint.
+staged reception decisions. PR52 delivers exact staff-decision retries after
+uncertain responses. Astra's current slice pages and filters the existing staff
+operation queue through an additive RLS-enforced read RPC, preserving the legacy
+RPC and all decision commands. Migration20260912170000 is already applied locally
+and must not be edited. See OPERATION-QUEUE-PAGING.md, DEVELOPMENT-HANDOFF.md and
+the private checkpoint for current CI/staging status.
 
 Coordinate shared files such as DECISIONS.md, dictionaries, package manifests,
 migrations and handover notes. One release owner merges changes after exact-head

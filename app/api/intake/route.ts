@@ -46,7 +46,7 @@ export async function POST(request: Request) {
     if (ctx.active.role === 'readonly')
       return reply({ error: 'FORBIDDEN' }, 403)
     if (
-      parsed.data.action === 'publishAgreement' &&
+      ['publishAgreement', 'publishStorePolicy'].includes(parsed.data.action) &&
       !['owner', 'admin'].includes(ctx.active.role)
     )
       return reply({ error: 'FORBIDDEN' }, 403)
@@ -60,6 +60,7 @@ export async function POST(request: Request) {
           'SELLER_NOT_FOUND',
           'INVALID_INPUT',
           'AGREEMENT_CHANGED',
+          'POLICY_CHANGED',
           'AGREEMENT_REQUIRED',
           'INSPECTION_DRAFT_CHANGED',
           'INSPECTION_CONTEXT_CHANGED',
@@ -82,6 +83,7 @@ export async function POST(request: Request) {
           : [
                 'REQUEST_CONFLICT',
                 'AGREEMENT_CHANGED',
+                'POLICY_CHANGED',
                 'AGREEMENT_REQUIRED',
                 'INSPECTION_DRAFT_CHANGED',
                 'INSPECTION_CONTEXT_CHANGED',

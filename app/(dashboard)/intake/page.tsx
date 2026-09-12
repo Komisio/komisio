@@ -1,3 +1,4 @@
+import { readStorePolicy } from '@/lib/engine/store-policy'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
@@ -25,6 +26,7 @@ export default async function Intake({
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const ctx = await requirePlatform()
   const active = ctx.active!
+  const policy = await readStorePolicy(ctx.client, active.id)
   const all = dictionary(ctx.locale)
   const d = all.intake
   const a = all.agreements
@@ -188,7 +190,8 @@ export default async function Intake({
               expectedAgreementId={agreement?.id ?? null}
               agreementBlocked={Boolean(
                 selected.data &&
-                agreement?.required_before_receipt &&
+                (agreement?.required_before_receipt ||
+                  policy.policy.agreementRequiredFor.includes('bag_receipt')) &&
                 !evidence,
               )}
             />

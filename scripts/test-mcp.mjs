@@ -123,6 +123,7 @@ try {
   })
   const catalog = await both.listTools()
   assert.deepEqual(catalog.tools.map((t) => t.name).sort(), [
+    'komisio_get_store_policy',
     'komisio_list_reception_operations',
     'komisio_list_receptions',
     'komisio_preview_reception',
@@ -136,6 +137,22 @@ try {
         t.inputSchema.additionalProperties === false &&
         t.annotations.readOnlyHint,
     ),
+  )
+  const policyRead = await both.callTool({
+    name: 'komisio_get_store_policy',
+    arguments: {},
+  })
+  assert(!policyRead.isError)
+  assert.equal(policyRead.structuredContent.policy.commissionRatePercent, 60)
+  assert.equal(policyRead.structuredContent.version, 0)
+  assert.equal(policyRead.structuredContent.readOnly, true)
+  assert(
+    (
+      await both.callTool({
+        name: 'komisio_get_store_policy',
+        arguments: { tenantId: randomUUID() },
+      })
+    ).isError,
   )
   const read = await both.callTool({
     name: 'komisio_read_reception',
@@ -309,6 +326,7 @@ try {
     (await readonly.listTools()).tools.map((t) => t.name),
     [
       'komisio_list_reception_operations',
+      'komisio_get_store_policy',
       'komisio_read_reception_history',
       'komisio_list_receptions',
       'komisio_read_reception',

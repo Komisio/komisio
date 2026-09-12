@@ -1,3 +1,4 @@
+import { readStorePolicy } from '@/lib/engine/store-policy'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
@@ -32,7 +33,7 @@ export default async function Reception({
   if (!reception) notFound()
   const state = reception.status === 'ready' ? reception.session : reception
   const sources = reception.status === 'ready' ? reception.session.sources : []
-  const [seller, terms, review] = await Promise.all([
+  const [seller, terms, review, policy] = await Promise.all([
     ctx.client
       .from('sellers')
       .select('name,email,phone')
@@ -47,6 +48,7 @@ export default async function Reception({
       .limit(1)
       .maybeSingle(),
     readReceptionReview(ctx.client, tenant.id, id.data),
+    readStorePolicy(ctx.client, tenant.id),
   ])
   if (seller.error || terms.error)
     throw new Error('Unable to read reception context')
@@ -56,8 +58,12 @@ export default async function Reception({
     expired = review?.expired ?? false
   const canPublish =
     prepared &&
-    terms.data &&
-    (!review || !current || expired || review.terms.versionId !== terms.data.id)
+    (terms.data ||
+      !policy.policy.agreementRequiredFor.includes('review_publication')) &&
+    (!review ||
+      !current ||
+      expired ||
+      (review.terms?.versionId ?? null) !== (terms.data?.id ?? null))
   return (
     <>
       <Link className="text-link" href="/intake/reception">
@@ -119,6 +125,9 @@ export default async function Reception({
           sources={sources}
           available={!!receptionAIConfig(tenant.id)}
           terms={terms.data}
+          agreementRequired={policy.policy.agreementRequiredFor.includes(
+            'review_publication',
+          )}
           previousId={review?.id ?? null}
           d={d}
         />
@@ -159,7 +168,11 @@ export default async function Reception({
           {!terms.data ? (
             <p>
               <Link href="/intake/agreements" className="text-link">
-                {d.needTerms}
+                {policy.policy.agreementRequiredFor.includes(
+                  'review_publication',
+                )
+                  ? d.needTerms
+                  : all.storePolicy.noTerms}
               </Link>
             </p>
           ) : (
@@ -172,14 +185,14 @@ export default async function Reception({
               </div>
             </>
           )}
-          {write && canPublish && terms.data && prepared ? (
+          {write && canPublish && prepared ? (
             <PublishReview
-              key={`${state.revision}-${review?.id ?? 'none'}-${terms.data.id}`}
+              key={`${state.revision}-${review?.id ?? 'none'}-${terms.data?.id ?? 'none'}`}
               tenantId={tenant.id}
               sessionId={id.data}
               revision={state.revision}
               previousId={review?.id ?? null}
-              agreementId={terms.data.id}
+              agreementId={terms.data?.id ?? null}
               suggestions={prepared.suggestions}
               d={d}
             />
@@ -197,16 +210,18 @@ export default async function Reception({
           <p>
             {d.price}: {review.suggestions.price?.amount} SEK
           </p>
-          <p>{review.terms.title}</p>
+          <p>{review.terms?.title ?? all.storePolicy.noTerms}</p>
           <p>
             {d.sharedPhotos}: {review.photos.length}
           </p>
-          <details>
-            <summary>{d.exactTerms}</summary>
-            <div className="reception-terms" lang={review.terms.language}>
-              {review.terms.body}
-            </div>
-          </details>
+          {review.terms && (
+            <details>
+              <summary>{d.exactTerms}</summary>
+              <div className="reception-terms" lang={review.terms.language}>
+                {review.terms.body}
+              </div>
+            </details>
+          )}
           <p>
             {all.reviewExpires}{' '}
             {new Date(review.expiresAt).toLocaleString(
@@ -223,7 +238,7 @@ export default async function Reception({
                 : all.staffReviewDeclined
               : d.awaiting}
           </p>
-          {write && (
+          {write && review.terms && (
             <ReviewAccess
               key={review.id}
               tenantId={tenant.id}

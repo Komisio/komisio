@@ -1,3 +1,4 @@
+import { raceStorePolicy } from './store-policy-race.mjs'
 import { raceInspectionApproval } from './inspection-operation-race.mjs'
 import pg from 'pg'
 import { randomUUID } from 'node:crypto'
@@ -75,6 +76,7 @@ try {
       return { c, uid }
     }),
   )
+  await raceStorePolicy({ setup, sessions, tenant })
   await setup.query('begin')
   await setup.query('select id from tenants where id=$1 for update', [tenant])
   const attempts = sessions.map(async ({ c, uid }) => {

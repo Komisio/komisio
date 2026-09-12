@@ -296,17 +296,21 @@ export function OperationQueue({
                   {s.reference ? <p>{s.reference}</p> : <p>{d.photoNotice}</p>}
                 </div>
               ))}
-              <h3>
-                {reviewContext.terms.title} · {reviewContext.terms.version}
-              </h3>
-              <p>{reviewContext.terms.id}</p>
-              <div
-                className="reception-terms"
-                lang={reviewContext.terms.language}
-                style={{ whiteSpace: 'pre-wrap' }}
-              >
-                {reviewContext.terms.body}
-              </div>
+              {reviewContext.terms && (
+                <>
+                  <h3>
+                    {reviewContext.terms.title} · {reviewContext.terms.version}
+                  </h3>
+                  <p>{reviewContext.terms.id}</p>
+                  <div
+                    className="reception-terms"
+                    lang={reviewContext.terms.language}
+                    style={{ whiteSpace: 'pre-wrap' }}
+                  >
+                    {reviewContext.terms.body}
+                  </div>
+                </>
+              )}
               {!o.outcome && reviewContext.stale && (
                 <p role="alert">{d.staleContext}</p>
               )}

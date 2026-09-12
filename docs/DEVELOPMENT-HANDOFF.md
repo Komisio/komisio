@@ -1,33 +1,45 @@
 # Development handover
 
-## Active P1 work after the day-window close
+## Active P1 work: S1 ready for CI and staging
 
-Implementation branch: `astra/p1-store-policy`, draft PR58. It includes the
-original Fable snapshot `6181413`; Fable's newer commits through `17e73c8`
-have only been read. Per the owner's 2026-09-13 instruction, do not merge or
-cherry-pick those newer commits before PR58 is complete. Fable's worktree is
-untouched. S0 per-kind dispatch must precede S4, but does not block S1.
+Branch `astra/p1-store-policy`, PR58. Fable snapshot `6181413` is included;
+newer Fable commits through `17e73c8` were read only and must not be integrated
+until PR58 completes (owner instruction). S0 is required before S4, not S1.
+The owner confirmed the skill defaults directly on 2026-09-13.
 
-S1 is **started, not delivered**. The strict policy validator and isolated
-`defaultStorePolicy()` factory now use the owner-confirmed pilot values.
-`unsoldNotifyAfterDays` is included; assistance activation remains S9. There
-is no unresolved default-value question. Defaults are not VAT rules or
-authority to execute markdowns, charity disposal, notifications or payouts.
-No runtime caller, migration or staging behavior has changed yet.
+S1 now has strict policy validation, isolated pilot defaults, append-only SQL
+policy versions, owner/admin publication, member reads, exact replay including
+expected predecessor, MFA/RLS and tenant serialization. Settings have a sv/en
+form usable at phone width. MCP `komisio_get_store_policy` uses reception:read
+and the host-pinned tenant. Existing receipt and publication commands evaluate
+the effective agreement policy; legacy required-before-receipt is retained.
+Optional review agreements use null consistently; no invented contract or
+seller invitation without terms. Agent proposals reevaluate policy on approval.
 
-Continue S1 in this branch: pgTAP first, additive immutable policy storage,
-role/MFA enforcement, tenant locking, exact retry (including expected previous
-version) and current-policy reads. Update receipt/publication commands while
-preserving the legacy receipt agreement requirement. Review publication also
-needs nullable agreement references and consistent read/schema handling when
-policy makes the agreement optional; never simply remove the SQL input check.
-Add settings UI and scoped MCP read, run browser/SQL/concurrency/CI checks and
-review staging migration before delivery. Then S2/S3 and S4 acceptance, with
-S0 in place before S4. Delegated pricing is normal; per-item review is opt-in.
+Local evidence: 126 unit tests, lint/types, production build, real stdio MCP,
+529 pgTAP tests, concurrent
+publication and browser publication at 390px including lost-response retry,
+stale-tab rejection and agreement-free publication. Formatting passes with
+Windows line endings respected (`--end-of-line auto`); Linux CI uses the
+unchanged strict format command. Exact latest CI/staging
+status is in PR58, not implied by this pre-release checkpoint.
 
-Local 2026-09-13 checkpoint: 126 unit tests passed (nine store-policy tests),
-lint, typecheck and production build passed. SQL and browser behavior remain
-unchanged. S1 remains a draft until all the remaining parts pass. Historical day-window results below describe main.
+Three additive migrations (20260913010000, 20260913011000, 20260913012000) are
+already applied locally and immutable. Apply only these reviewed versions in
+staging after exact-head CI. They preserve existing rows. No automatic markdown,
+notification, charity action, payout, VAT calculation or live model activation.
+S6 queue/link behavior remains future work; S1 records delegated mode but does
+not claim the complete delegated acceptance journey.
+
+Rollback: preserve policy/history rows; disable intake if a release breaks
+receiving or exposes data and ship a reviewed correction. An old web build
+cannot safely read newly published reviews with null agreement ids, so do not
+blindly roll back to a pre-S1 build after such a review exists. Check migration
+list and linked project before deployment. Production pilot gates remain open.
+
+Next after PR58: integrate the held Fable document updates as a reviewed
+snapshot, then S0/S2/S3 before S4 acceptance. Continue autonomously; ask only
+for genuinely new product decisions, not routine implementation details.
 
 ## Latest verified feature checkpoint
 

@@ -1,7 +1,12 @@
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { z } from 'zod'
 
 // Boundary validation only. SQL owns numeric persistence and calculations.
-const decimal = z.number().nonnegative().multipleOf(0.01)
+const decimal = z
+  .number()
+  .nonnegative()
+  .max(Number.MAX_SAFE_INTEGER)
+  .multipleOf(0.01)
 const percent = decimal.max(100)
 const days = z.number().int().nonnegative()
 
@@ -51,4 +56,28 @@ export function defaultStorePolicy(): StorePolicyBody {
     unsoldNotifyAfterDays: 60,
     minPayoutThreshold: 100,
   })
+}
+
+export const publishStorePolicyCommand = z.strictObject({
+  action: z.literal('publishStorePolicy'),
+  tenantId: z.uuid(),
+  requestId: z.uuid(),
+  expectedCurrentId: z.uuid().nullable(),
+  policy: storePolicyBody,
+})
+export const effectiveStorePolicy = z.strictObject({
+  id: z.uuid().nullable(),
+  version: z.number().int().nonnegative(),
+  policy: storePolicyBody,
+})
+export async function readStorePolicy(
+  client: SupabaseClient,
+  tenantInput: string,
+) {
+  const tenantId = z.uuid().parse(tenantInput)
+  const result = await client.rpc('current_store_policy', {
+    p_tenant: tenantId,
+  })
+  if (result.error) throw new Error('FORBIDDEN')
+  return effectiveStorePolicy.parse(result.data)
 }

@@ -381,6 +381,13 @@
     "retry": "Svaret kunde inte bekräftas. Försök igen med samma uppgifter eller ladda om och kontrollera vad som sparats.",
     "retryButton": "Försök igen",
     "reload": "Ladda om sparat läge",
-    "invalid": "Kontrollera fälten. Ange ett positivt pris i kronor med högst två decimaler, beskrivning, källa och motivering."
+    "invalid": "Kontrollera fälten. Ange ett positivt pris i kronor med högst två decimaler, beskrivning, källa och motivering.",
+    "photoFailed": "Bilden kunde inte bekräftas sparad. Försök igen med samma fil, eller ladda om och kontrollera mottagningen.",
+    "photoAlt": "Privat bild från mottagningen",
+    "photoInvalid": "Välj en JPEG- eller PNG-bild på högst 3 MB. En mottagning kan ha högst 20 källor totalt.",
+    "photoSelect": "Välj eller ta en bild",
+    "photos": "Bilder från mottagningen",
+    "photoHelp": "JPEG eller PNG, högst 3 MB. Bilden sparas privat för butikens personal. AI-analys och bildvisning för säljaren är ännu inte anslutna.",
+    "photoSave": "Spara bild till mottagningen"
   }
 }

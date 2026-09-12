@@ -33,8 +33,8 @@ Lost link-issuance responses use the replacement recovery documented in
 
 Readonly users can inspect the review but do not receive write controls. The
 source/review response still does not establish physical custody, sale eligibility,
-general seller agreement evidence or payout authorization. Protected photos,
-live AI and authenticated agent transport remain next; this GUI does not replace
+general seller agreement evidence or payout authorization. [Private staff photos](RECEPTION-PHOTOS.md)
+are now supported. Live AI and authenticated agent transport remain next; this GUI does not replace
 those adapters or label manual preparation as AI output.
 
 The browser journey exercises real operator controls, a deliberately lost success

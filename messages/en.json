@@ -381,6 +381,13 @@
     "retry": "The response could not be confirmed. Retry the same information or reload and check what was saved.",
     "retryButton": "Retry",
     "reload": "Reload saved state",
-    "invalid": "Check the fields. Enter a positive price with up to two decimal places, description, evidence source and rationale."
+    "invalid": "Check the fields. Enter a positive price with up to two decimal places, description, evidence source and rationale.",
+    "photoFailed": "The photo save could not be confirmed. Retry the same file, or reload and check the reception.",
+    "photoAlt": "Private reception photo",
+    "photoInvalid": "Choose a JPEG or PNG up to 3 MB. A reception can contain up to 20 sources in total.",
+    "photoSelect": "Choose or capture a photo",
+    "photos": "Reception photos",
+    "photoHelp": "JPEG or PNG, up to 3 MB. Stored privately for store staff. AI analysis and seller photo display are not connected yet.",
+    "photoSave": "Save photo to reception"
   }
 }

@@ -1025,3 +1025,16 @@ small {
   margin-top: 24px;
   overflow-wrap: anywhere;
 }
+.reception-photos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 16px;
+}
+.reception-photos img {
+  width: 220px;
+  max-width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+  border-radius: 8px;
+}

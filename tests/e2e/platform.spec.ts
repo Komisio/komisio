@@ -1912,3 +1912,123 @@ test('operator reception guides saved evidence, exact review and link replacemen
     page.getByRole('link', { name: /Operator TEST Seller/ }),
   ).toBeVisible()
 })
+test('private reception photo uploads attach immutably and require staff access', async ({
+  page,
+}) => {
+  const run = Date.now().toString(36)
+  await register(
+    page,
+    `photo-${run}@example.test`,
+    `K!${randomBytes(16).toString('hex')}`,
+  )
+  await page.getByLabel('Butikens namn').fill('E2E Photos')
+  await page.getByLabel('Butikens identifierare').fill(`photo-${run}`)
+  await page.getByRole('button', { name: 'Skapa min butik' }).click()
+  await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
+  const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
+  const post = (data: object) =>
+    page.request.post('/api/intake', {
+      headers: { Origin: 'http://127.0.0.1:3000' },
+      data,
+    })
+  const seller = await post({
+    action: 'registerSeller',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    name: 'Photo TEST',
+    email: '',
+    phone: '0000',
+  })
+  const reception = await post({
+    action: 'createReception',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    sellerId: (await seller.json()).id,
+  })
+  const sessionId = (await reception.json()).id
+  const png = Buffer.from(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+j6l8AAAAASUVORK5CYII=',
+    'base64',
+  )
+  await page.goto(`/intake/reception/${sessionId}`)
+  await page.getByLabel('Välj eller ta en bild').setInputFiles({
+    name: 'synthetic.png',
+    mimeType: 'image/png',
+    buffer: png,
+  })
+  await page
+    .getByRole('button', { name: 'Spara bild till mottagningen' })
+    .click()
+  await expect(
+    page.getByText('Sparad källversion 1', { exact: true }),
+  ).toBeVisible()
+  const image = page.getByAltText('Privat bild från mottagningen')
+  await expect(image).toBeVisible()
+  await expect
+    .poll(() =>
+      image.evaluate(
+        (img: HTMLImageElement) => img.complete && img.naturalWidth > 0,
+      ),
+    )
+    .toBe(true)
+  const state = await (
+      await page.request.get(`/api/reception/${sessionId}`)
+    ).json(),
+    source = state.session.sources[0]
+  const endpoint = `/api/reception/${sessionId}/photo?photo=${source.id}`
+  const imageResponse = await page.request.get(endpoint)
+  expect(imageResponse.status()).toBe(200)
+  expect(imageResponse.headers()['cache-control']).toContain('no-store')
+  expect(await imageResponse.body()).toEqual(png)
+  const retry = () =>
+    page.request.post(`${endpoint}&tenant=${tenantId}`, {
+      headers: { Origin: 'http://127.0.0.1:3000', 'Content-Type': 'image/png' },
+      data: png,
+    })
+  expect((await retry()).status()).toBe(200)
+  const changed = Buffer.from(png)
+  changed[changed.length - 1] ^= 1
+  expect(
+    (
+      await page.request.post(`${endpoint}&tenant=${tenantId}`, {
+        headers: { Origin: 'http://127.0.0.1:3000' },
+        data: changed,
+      })
+    ).status(),
+  ).toBe(400)
+  expect(
+    (
+      await page.request.post(
+        `/api/reception/${sessionId}/photo?photo=${crypto.randomUUID()}&tenant=${tenantId}`,
+        {
+          headers: {
+            Origin: 'http://127.0.0.1:3000',
+            'Content-Type': 'image/png',
+          },
+          data: '<svg>not PNG</svg>',
+        },
+      )
+    ).status(),
+  ).toBe(400)
+  const publicResponse = await page.request.get(
+    `http://127.0.0.1:54321/storage/v1/object/public/reception-photos/${source.reference}`,
+  )
+  expect(publicResponse.ok()).toBe(false)
+  const unrelated = await page.request.post('/api/platform', {
+    headers: { Origin: 'http://127.0.0.1:3000' },
+    data: {
+      action: 'create',
+      name: 'Photo other store',
+      slug: `photo-other-${run}`,
+      requestId: crypto.randomUUID(),
+    },
+  })
+  expect(unrelated.status()).toBe(200)
+  expect((await page.request.get(endpoint)).status()).toBe(404)
+  await page
+    .getByRole('button', { name: 'Logga ut', exact: true })
+    .first()
+    .click()
+  await expect(page).toHaveURL(/\/login/)
+  expect((await page.request.get(endpoint)).status()).toBe(401)
+})

@@ -26,7 +26,15 @@ try {
  create table auth.mfa_factors(user_id uuid,status text);
  create function auth.jwt() returns jsonb language sql stable as 'select coalesce(nullif(current_setting(''request.jwt.claims'',true),'''')::jsonb,''{}''::jsonb)';
  create function auth.uid() returns uuid language sql stable as 'select (auth.jwt()->>''sub'')::uuid';
- grant usage on schema auth to authenticated;`)
+ grant usage on schema auth to authenticated;
+ -- Minimal Storage metadata contract for engine concurrency tests; real Storage is tested separately.
+ create schema storage;
+ create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
+ create table storage.objects(id uuid primary key default gen_random_uuid(),bucket_id text references storage.buckets(id),name text,owner_id text,metadata jsonb,unique(bucket_id,name));
+ alter table storage.objects enable row level security;
+ grant usage on schema storage to authenticated,anon;
+ grant select,insert,update,delete on storage.objects to authenticated;
+ grant select on storage.buckets to authenticated;`)
   for (const file of (
     await readdir(new URL('../supabase/migrations/', import.meta.url))
   ).sort())

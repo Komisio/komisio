@@ -18,8 +18,8 @@ contract in lib/engine/reception.ts.
   use the existing same-origin, body-bounded /api/intake endpoint.
 
 Initial sources are staff-entered observation or price-evidence text. References
-are evidence labels, not executable URLs or verified prices. Photo kinds are
-rejected until a protected capture adapter validates object ownership. The AI
+are evidence labels, not executable URLs or verified prices. [Photo sources](RECEPTION-PHOTOS.md)
+now require an existing private object in the same tenant/session. The AI
 port cannot directly write sources or manufacture trusted provenance.
 
 ## Database boundary
@@ -51,6 +51,6 @@ and history on rollback; restore a compatible prior app or hide intake during a
 forward fix. Do not delete evidence to recover from an application error.
 
 The [review snapshot slice](RECEPTION-REVIEWS.md) adds complete immutable staff
-review versions. Next: seller-decision persistence and separately scoped access,
-then private images and a real optional provider adapter. Seller mobile approval,
-live vision and MCP are not implemented by this slice.
+review versions. [Seller responses](SELLER-REVIEW.md) and [private staff images](RECEPTION-PHOTOS.md)
+are implemented separately. Live model inference, seller image delivery and MCP
+remain future work.

@@ -99,7 +99,13 @@ export const saveReceptionSourcesCommand = z.strictObject({
   sessionId: z.uuid(),
   expectedRevision: z.number().int().min(0).max(2147483646),
   sources: receptionSession.shape.sources.refine((sources) =>
-    sources.every((source) => source.kind !== 'photo'),
+    sources.every(
+      (source) =>
+        source.kind !== 'photo' ||
+        /^[a-f0-9-]{36}\/[a-f0-9-]{36}\/[a-f0-9-]{36}\.(png|jpg)$/.test(
+          source.reference,
+        ),
+    ),
   ),
 })
 

@@ -543,7 +543,9 @@
     "staleInspection": "Utkastet har ändrats eller arkiverats. Avvisa förslaget och granska det aktuella utkastet.",
     "confirmInspection": "Jag vill spara dessa granskade beskrivningsändringar som en ny utkastversion.",
     "draftVersion": "utkastversion",
-    "confirmPrice": "Jag har granskat priset och prisunderlaget."
+    "confirmPrice": "Jag har granskat priset och prisunderlaget.",
+    "retrySame": "Försök igen med samma beslut",
+    "lockedDecision": "Ditt skickade beslut"
   },
   "reviewPhotoAlt": "Bild som ingår i detta underlag",
   "reviewPhotos": "Bilder i detta underlag",

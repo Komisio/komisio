@@ -135,3 +135,13 @@ The final publication confirmation remains separate and clears when selections
 change. No new authorization, financial rule, audit table or migration is added;
 existing SQL publication/decision guards remain authoritative. Rejecting a staged
 proposal requires no field confirmation; exact-request retry stays locked.
+
+
+## 2026-09-12 — Exact retry of an uncertain staff operation decision
+
+Freeze the complete first decision request in the staff UI and lock its inputs.
+After an unknown response, expose only an explicit same-decision retry; do not
+let edits to reason or approval/rejection reuse that request ID. Existing SQL
+idempotency and authorization stay unchanged. Test both a committed approval with
+a lost response and a rejection interrupted before reaching the server. No new
+business rule or migration is required.

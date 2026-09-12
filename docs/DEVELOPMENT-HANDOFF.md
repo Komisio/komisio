@@ -69,15 +69,24 @@ session, price, terms or acceptance are created. 103 units, real MCP, two saved/
 archive browser journeys and lint/types/build passed. No migration. Hosted
 in-session preparation walkthrough remains unverified.
 
-Current slice: `feat/reception-fact-confirmation` implements roadmap P1's explicit
-review of every included AI fact and the price before the final staff confirmation.
-The same field catalogue serves staged reception decisions. Unchecked model facts
-remain tentative; changing field selections clears final confirmation. Existing
-SQL guards and immutable write paths remain authoritative; no migration or new
-financial rule. See RECEPTION-FACT-REVIEW.md. 107 units, lint/typecheck/build, scoped formatting and both operation browser
-journeys pass. The isolated HTTP-provider fixture also passes partial confirmation,
-final-confirmation reset and lost-response exact-request retry, with one review.
-PR/CI/release remain pending; private checkpoint records the next action.
+PR51 is delivered: mergedef9d4eac23fc7eac3d3f21a8279de18e8a2f462;
+exact-head CI34698048312 passed on6f1466c285f9fa0d8961d941684e3419d816ddc3.
+Deployment6410499325 succeeded; hosted public forms and operation guards pass.
+Included AI facts and price require separate staff confirmation before final
+publication; staged reception decisions share the catalogue. 107 units, two
+operation browser journeys, isolated HTTP fixture with lost-response retry and
+lint/types/build passed. No migration or model activation. Hosted authenticated
+walkthrough remains pending.
+
+Current slice: `fix/operation-decision-retry` freezes the complete staff decision
+envelope and locks inputs after submission. The browser regression reproduced
+that reason remained editable after an approval committed but its response was
+lost. The fix offers only exact retry and covers both post-commit approval and
+pre-server rejection interruption. Existing SQL authorization/idempotency remain
+unchanged; no migration. 107 units, lint/typecheck/build/scoped formatting and both operation browser
+journeys pass. The new regression failed before the fix and now verifies exact
+retries for both failure boundaries, preserving reasons and one decision each.
+PR/CI/release remain pending. See STAGED-OPERATIONS.md and private checkpoint.
 
 The prior PR40 work below is completed: merged6329b6ec95df1af3db8534921966f274f82f9e95,
 exact-head CI34687228721 passed, staging deployment6408441889 succeeded.

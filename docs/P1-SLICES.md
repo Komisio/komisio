@@ -25,7 +25,7 @@ three more kinds.
   (structural validation plus the same preconditions the engine enforces,
   raising the engine's error codes) and
   `komisio_private.op_execute_<kind>(p_tenant uuid, p_operation uuid,
-  p_payload jsonb) returns uuid` (calls the engine function).
+p_payload jsonb) returns uuid` (calls the engine function).
 - `propose_operation` and `decide_operation` keep their signatures and
   become short dispatchers: a `case op.kind` with one line per kind, no
   dynamic SQL. Risk level per kind lives in one small
@@ -84,6 +84,9 @@ without making `sellers` mutable.
 - Surface: a section on the seller view. Agent tools: read effective terms,
   propose seller terms (staged, risk `low`).
 - Migration: yes.
+- Status 2026-09-13: table, publish and effective read, engine command, seller
+  page with form and history delivered. The staged kind `proposeSellerTerms`
+  and the MCP read tool follow with S4's operations work.
 
 ## S3. Garment custody
 
@@ -121,7 +124,7 @@ terms. This is the centre of P1.
   append-only price series with actor and reason; the first row is the
   accepted price.
 - `accept_item(p_tenant, p_id, p_origin_kind, p_origin_ref, p_custody_ref,
-  p_price)`: staff; checks the origin is current (latest draft revision or
+p_price)`: staff; checks the origin is current (latest draft revision or
   latest review with current sources), custody present when required by the
   origin kind, agreement prerequisite per policy, seller review requirement
   per policy (`per_item` demands an approve response on that exact review;

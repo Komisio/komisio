@@ -84,6 +84,14 @@ export default async function Reception({
         <p>
           {d.recipient}: {seller.data.email || seller.data.phone}
         </p>
+        <p>
+          <Link
+            className="text-link"
+            href={`/intake/sellers/${state.sellerId}`}
+          >
+            {all.sellerTerms.title}
+          </Link>
+        </p>
       </div>
       <p className="intake-notice">{d.manual}</p>
       <p>

@@ -46,17 +46,6 @@ export function ReceptionAssistance({
     candidate.price &&
     candidate.questions.length === 0 &&
     terms
-  const reviewed = candidate
-    ? {
-        ...candidate,
-        metadata: Object.fromEntries(
-          Object.entries(candidate.metadata).map(([key, fact]) => [
-            key,
-            { ...fact, certainty: 'observed' as const },
-          ]),
-        ),
-      }
-    : null
   return (
     <section className="card intake-form reception-result">
       <h2>{d.aiTitle}</h2>
@@ -178,14 +167,15 @@ export function ReceptionAssistance({
               </div>
             </>
           )}
-          {ready && reviewed && terms ? (
+          {ready && candidate && terms ? (
             <PublishReview
               tenantId={tenantId}
               sessionId={sessionId}
               revision={revision}
               previousId={previousId}
               agreementId={terms.id}
-              suggestions={reviewed}
+              suggestions={candidate}
+              requireFieldReview
               d={d}
             />
           ) : (

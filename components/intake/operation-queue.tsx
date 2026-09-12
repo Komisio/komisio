@@ -5,6 +5,10 @@ import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import type { PendingOperation } from '@/lib/engine/operations'
 import type { OperationReviewContext } from '@/lib/engine/operation-review'
+import {
+  receptionReviewFields,
+  type ReceptionReviewField,
+} from '@/lib/engine/reception-fact-review'
 import { Button } from '@/components/ui/button'
 type D = Dictionary['operations']
 
@@ -18,13 +22,14 @@ function Decision({
   tenantId: string
   operation: PendingOperation
   canApprove: boolean
-  fieldsToConfirm?: ('description' | 'category' | 'condition')[]
+  fieldsToConfirm?: ReceptionReviewField[]
   d: D
 }) {
   const router = useRouter()
   const [busy, setBusy] = useState(false),
     [error, setError] = useState(''),
-    [reload, setReload] = useState(false)
+    [reload, setReload] = useState(false),
+    [confirmed, setConfirmed] = useState(false)
   // One request ID per decision attempt; a retry of a lost response reuses it.
   const requestId = useRef(crypto.randomUUID())
   const running = useRef(false)
@@ -90,12 +95,27 @@ function Decision({
       </div>
       {fieldsToConfirm.map((field) => (
         <label className="intake-confirm" key={field}>
-          <input type="checkbox" name={`field-${field}`} required />
-          {d.confirmField}: {d.fields[field]}
+          <input
+            type="checkbox"
+            name={`field-${field}`}
+            required
+            disabled={busy || reload}
+            onChange={() => setConfirmed(false)}
+          />
+          {field === 'price'
+            ? d.confirmPrice
+            : `${d.confirmField}: ${d.fields[field]}`}
         </label>
       ))}
       <label className="intake-confirm">
-        <input type="checkbox" name="checked" required />
+        <input
+          type="checkbox"
+          name="checked"
+          required
+          checked={confirmed}
+          disabled={busy || reload}
+          onChange={(e) => setConfirmed(e.target.checked)}
+        />
         {operation.kind === 'saveInspectionDraft'
           ? d.confirmInspection
           : d.confirm}
@@ -278,7 +298,9 @@ export function OperationQueue({
               fieldsToConfirm={
                 reviewContext.kind === 'inspection'
                   ? reviewContext.changes.map((c) => c.field)
-                  : []
+                  : o.kind === 'publishReceptionReview'
+                    ? receptionReviewFields(o.payload.suggestions)
+                    : []
               }
               d={d}
             />

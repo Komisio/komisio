@@ -102,3 +102,14 @@ Implementation references checked 2026-09-12:
 [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs),
 [Sharp output metadata defaults](https://sharp.pixelplumbing.com/api-output/) and
 [Sharp input bounds](https://sharp.pixelplumbing.com/api-constructor/).
+
+
+## Explicit fact review
+
+The staff UI requires confirmation for each included descriptive field and the
+price/evidence, followed by the existing final publication confirmation. A model's
+observed label never counts as staff confirmation; unchecked fields stay tentative.
+Changing a selection clears the final confirmation. Missing description/price or
+remaining questions still block publication. A lost publication response locks
+selections and retries the exact existing request; no second provider call occurs.
+See [review contract](RECEPTION-FACT-REVIEW.md).

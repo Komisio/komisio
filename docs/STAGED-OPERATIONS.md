@@ -86,3 +86,10 @@ field confirmation; stale or archived drafts cannot be overwritten. Inspection
 and reception MCP reads remain separately scoped and kind-checked. The unsaved
 preview tool remains read-only. See [contract](STAGED-INSPECTION.md) for the
 strict payload, retry behavior, actor attribution and release boundary.
+
+
+Staff reception approval now requires each included descriptive field and price
+to be checked before final confirmation. This shares the pure field catalogue
+with built-in AI review; it is a review aid, not a new SQL permission or proof of
+attention. Rejection remains available without confirmations. See
+[per-fact review](RECEPTION-FACT-REVIEW.md).

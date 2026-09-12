@@ -61,14 +61,23 @@ staff field confirmation. 452 SQL assertions, 99 units, real MCP, concurrent
 approval/edit, new inspection and existing reception browser journeys passed.
 Hosted authenticated walkthrough remains pending; no model was activated.
 
-Current slice: `feat/inspection-reception-readiness`, the roadmap's unsaved
-comparison from saved draft to reception requirements. UI and opt-in MCP share
-the same pure mapping. It creates no sources, session, price, terms or acceptance;
-other receptions and agreements are not searched. Contract:
-INSPECTION-RECEPTION-PREVIEW.md. No migration or new dependency.
-Local checks pass: 103 unit tests, real MCP exact-revision/scope/identity/MFA
-checks, both saved/archive inspection browser journeys, lint/typecheck/build.
-PR/CI/release remain pending; private checkpoint has exact state.
+PR50 is delivered: merge34ee75036616d4fccf2f52c99b961682cf9faa8f,
+exact-head CI34697041680 passed on76a9d32284867fdb42327105c9d787c9c3450772.
+Deployment6410294531 succeeded; public forms and inspection login guard pass.
+Saved inspection preparation shares a pure UI/MCP comparison; no sourced facts,
+session, price, terms or acceptance are created. 103 units, real MCP, two saved/
+archive browser journeys and lint/types/build passed. No migration. Hosted
+in-session preparation walkthrough remains unverified.
+
+Current slice: `feat/reception-fact-confirmation` implements roadmap P1's explicit
+review of every included AI fact and the price before the final staff confirmation.
+The same field catalogue serves staged reception decisions. Unchecked model facts
+remain tentative; changing field selections clears final confirmation. Existing
+SQL guards and immutable write paths remain authoritative; no migration or new
+financial rule. See RECEPTION-FACT-REVIEW.md. 107 units, lint/typecheck/build, scoped formatting and both operation browser
+journeys pass. The isolated HTTP-provider fixture also passes partial confirmation,
+final-confirmation reset and lost-response exact-request retry, with one review.
+PR/CI/release remain pending; private checkpoint records the next action.
 
 The prior PR40 work below is completed: merged6329b6ec95df1af3db8534921966f274f82f9e95,
 exact-head CI34687228721 passed, staging deployment6408441889 succeeded.

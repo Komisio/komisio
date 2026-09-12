@@ -462,6 +462,50 @@
       }
     }
   },
+  "operations": {
+    "title": "Föreslagna åtgärder",
+    "intro": "Förslag från AI-agenter väntar här. Inget publiceras förrän en i personalen godkänner det.",
+    "notice": "Ett godkännande utför samma åtgärd som du själv kunde ha gjort, registrerad i ditt namn. Ett förslag är aldrig ett faktum. Godkänt underlag är inte kommersiellt accepterat.",
+    "empty": "Inga föreslagna åtgärder.",
+    "proposedBy": "Föreslaget av",
+    "riskLevel": "Risk",
+    "validUntil": "Giltigt till",
+    "openReception": "Öppna mottagningen",
+    "sourceRevision": "källversion",
+    "price": "Föreslaget försäljningspris",
+    "reason": "Motivering (valfri)",
+    "confirm": "Jag har kontrollerat mottagningen, uppgifterna, prisunderlaget och de aktuella villkoren.",
+    "approve": "Godkänn och publicera",
+    "reject": "Avvisa",
+    "busy": "Registrerar…",
+    "decided": "Beslut",
+    "alreadyDecided": "Förslaget är redan avgjort. Ladda om för att se utfallet.",
+    "expired": "Förslaget har löpt ut och kan inte godkännas. Be om ett nytt förslag.",
+    "denied": "Du saknar behörighet. Ladda om sidan för att kontrollera din åtkomst.",
+    "failed": "Beslutet kunde inte genomföras. Ladda om och kontrollera det sparade utfallet innan du beslutar igen.",
+    "retry": "Svaret kunde inte bekräftas. Ladda om och kontrollera det sparade utfallet innan du beslutar igen.",
+    "reload": "Ladda om",
+    "kinds": {
+      "publishReceptionReview": "Publicera granskat underlag till säljaren"
+    },
+    "risk": { "low": "Låg", "medium": "Medel", "high": "Hög" },
+    "status": {
+      "open": "Väntar på beslut",
+      "expired": "Har löpt ut",
+      "executed": "Godkänt och utfört",
+      "failed": "Godkänt men misslyckades",
+      "rejected": "Avvisat"
+    },
+    "fields": {
+      "description": "Beskrivning",
+      "category": "Kategori",
+      "color": "Färg",
+      "brand": "Varumärke",
+      "size": "Storlek",
+      "material": "Material",
+      "condition": "Skick"
+    }
+  },
   "reviewPhotoAlt": "Bild som ingår i detta underlag",
   "reviewPhotos": "Bilder i detta underlag",
   "reviewPhotoError": "Bilderna kunde inte laddas. Ladda om sidan innan du godkänner."

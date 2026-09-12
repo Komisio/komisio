@@ -88,6 +88,10 @@ export default async function Intake({
           <Link className="text-link" href="/intake/reception">
             {all.reception.title}
           </Link>
+          {' · '}
+          <Link className="text-link" href="/intake/operations">
+            {all.operations.title}
+          </Link>
         </p>
         <Link className="text-link" href="/intake/agreements">
           {a.manage}

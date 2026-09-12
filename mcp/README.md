@@ -4,13 +4,14 @@ This is a real stdio Model Context Protocol adapter using the official TypeScrip
 SDK. It is separate from the web app and optional model-provider integration.
 It exposes narrow tools through the same reception engine:
 
-| Tool                           | Scope             | Effect                                                                                   |
-| ------------------------------ | ----------------- | ---------------------------------------------------------------------------------------- |
-| komisio_list_receptions        | reception:read    | Read a bounded queue with shared next-step guidance, not commercial acceptance           |
-| komisio_read_reception_history | reception:read    | Read bounded version summaries, with separate source/review cursors; no images or links  |
-| komisio_read_reception         | reception:read    | Read one saved session and its source snapshot                                           |
-| komisio_preview_reception      | reception:preview | Validate a source-bound proposal against the current revision; return an unsaved preview |
-| komisio_read_reception_photo   | reception:photos  | Read one attached photo at the exact current revision as native MCP image content        |
+| Tool                             | Scope             | Effect                                                                                        |
+| -------------------------------- | ----------------- | --------------------------------------------------------------------------------------------- |
+| komisio_list_receptions          | reception:read    | Read a bounded queue with shared next-step guidance, not commercial acceptance                |
+| komisio_read_reception_history   | reception:read    | Read bounded version summaries, with separate source/review cursors; no images or links       |
+| komisio_read_reception           | reception:read    | Read one saved session and its source snapshot                                                |
+| komisio_preview_reception        | reception:preview | Validate a source-bound proposal against the current revision; return an unsaved preview      |
+| komisio_read_reception_photo     | reception:photos  | Read one attached photo at the exact current revision as native MCP image content             |
+| komisio_propose_reception_review | reception:propose | Stage a complete review for staff approval; publishes nothing (see docs/STAGED-OPERATIONS.md) |
 
 Every data call verifies the configured user token with Supabase Auth and checks
 current store membership and required MFA in the database. The store is pinned in
@@ -30,7 +31,8 @@ environment variables to the child process:
   a service-role key, password or refresh token
 - `KOMISIO_MCP_TENANT_ID`: exactly one store UUID
 - `KOMISIO_MCP_SCOPES`: an explicit comma-separated subset of `reception:read`,
-  `reception:preview`, `reception:photos`. Photo access is opt-in, not implied by read.
+  `reception:preview`, `reception:photos`, `reception:propose`. Photo access and
+  staging are opt-in, not implied by read.
 
 Have the host launch `node --import tsx mcp/stdio.ts` with the repository as its
 working directory. Use the direct command, not a shell that prints banners to
@@ -81,8 +83,15 @@ Preview output explicitly includes `persisted:false`, `staged:false`,
 are tentative even if the caller claimed they were observed. Nothing is saved or
 available for sale. There is no automatic GUI import of an external preview yet.
 
-Future durable agent writes need a separately reviewed pending-operation contract,
-actor attribution, approval surface, expiry/replay behavior and executor tests.
+## Proposals are staged, not executed
+
+With the separate `reception:propose` scope, `komisio_propose_reception_review`
+stages a complete, source-cited review as a pending operation. The response says
+`staged:true` and `executed:false`. A staff member approves or rejects it at
+`/intake/operations`; approval publishes the review as that person. The host
+cannot approve, cannot raise the risk level and cannot skip the preflight checks.
+See [staged operations](../docs/STAGED-OPERATIONS.md) for the contract.
+
 Future hosted MCP needs audience-bound OAuth, discovery and scoped delegation;
 ordinary Supabase user tokens must not become pass-through HTTP MCP credentials.
 

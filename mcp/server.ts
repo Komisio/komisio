@@ -7,8 +7,10 @@ import {
   previewInput,
   photoInput,
   queueInput,
+  proposeInput,
   receptionTools,
 } from './reception'
+import { operationErrorCodes } from '../lib/engine/operations'
 const annotations = {
   readOnlyHint: true,
   destructiveHint: false,
@@ -48,6 +50,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           'RECEPTION_CHANGED',
           'RECEPTION_UNKNOWN_SOURCE',
           'RECEPTION_PRICE_EVIDENCE_REQUIRED',
+          ...operationErrorCodes,
         ].includes(e.message)
           ? e.message
           : 'INVALID_OR_UNAVAILABLE'
@@ -97,6 +100,22 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         annotations,
       },
       (input) => result(async () => ({ data: await ops.preview(input) })),
+    )
+  if (config.scopes.includes('reception:propose'))
+    server.registerTool(
+      'komisio_propose_reception_review',
+      {
+        description:
+          'Stage a complete, source-cited review of the current reception revision for staff approval. Nothing is published, sent or approved by this call; a person decides in Komisio. Returns the pending operation ID.',
+        inputSchema: proposeInput,
+        annotations: {
+          readOnlyHint: false,
+          destructiveHint: false,
+          idempotentHint: true,
+          openWorldHint: false,
+        },
+      },
+      (input) => result(async () => ({ data: await ops.propose(input) })),
     )
   if (config.scopes.includes('reception:photos'))
     server.registerTool(

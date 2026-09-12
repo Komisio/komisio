@@ -3,6 +3,7 @@ const scope = z.enum([
   'reception:read',
   'reception:preview',
   'reception:photos',
+  'reception:propose',
 ])
 export const mcpConfig = z.strictObject({
   url: z.url().refine((value) => {
@@ -21,7 +22,7 @@ export const mcpConfig = z.strictObject({
   scopes: z
     .array(scope)
     .min(1)
-    .max(3)
+    .max(4)
     .refine((s) => new Set(s).size === s.length),
 })
 export type MCPConfig = z.infer<typeof mcpConfig>

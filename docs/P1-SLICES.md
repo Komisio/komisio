@@ -206,6 +206,9 @@ pages.
   with camera capture, and add a scan-to-open for bag and garment references.
 - No migration; browser journeys at 390 px for reception with photo, garment
   custody and acceptance.
+- Status 2026-09-13: the garment journey runs custody and acceptance at 390 px
+  in CI and the photo input already asks for the camera. Scan-to-open for bag
+  and garment references remains.
 
 ## S9. Assistance port per feature
 

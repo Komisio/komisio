@@ -118,6 +118,14 @@ proposal's owner clarification for scope and outstanding details.
   rewrite prior receipts. Booking quote/version rules remain separate work.
 - How should mistaken agreement evidence be corrected/revoked, and when must
   external evidence be reverified? This must precede external seller pilot use.
+- **Raised 2026-09-12 ([intake convergence](INTAKE-CONVERGENCE.md)):** the two
+  intake paths apply different agreement prerequisites (a review needs a
+  published version, a bag receipt does not) and only the bag path has a
+  custody fact. Four assumptions (A1 to A4) are listed in that ADR for the owner
+  to confirm before an acceptance command is designed: staff-attested custody for
+  wall garments, one tenant policy for the agreement prerequisite, seller
+  approval of a review as item-level evidence only, and shared meaning of
+  category and condition across drafts and reviews.
 
 ## Platform pilot
 

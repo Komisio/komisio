@@ -2687,3 +2687,110 @@ test('staged inspection edits require field review and preserve stale drafts', a
     await db.end()
   }
 })
+
+test('operation queue pages reach older proposals and retain status filters', async ({
+  page,
+}) => {
+  const run = Date.now().toString(36),
+    email = `queue-pages-${run}@example.test`
+  await register(page, email, `K!${randomBytes(16).toString('hex')}`)
+  await page.getByLabel('Butikens namn').fill('E2E Queue pages')
+  await page.getByLabel('Butikens identifierare').fill(`queue-pages-${run}`)
+  await page.getByRole('button', { name: 'Skapa min butik' }).click()
+  await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
+  const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
+  const { Client } = createRequire(import.meta.url)('pg')
+  const db = new Client({
+    connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+  })
+  await db.connect()
+  try {
+    const actor = (
+      await db.query('select id from auth.users where email=$1', [email])
+    ).rows[0].id
+    // Read-only history fixtures: tied microsecond timestamps; not command preflight evidence.
+    await db.query(
+      `insert into pending_operations(id,tenant_id,kind,risk_level,payload,actor_kind,actor_label,proposed_by,expires_at,created_at)
+      select gen_random_uuid(),$1,'saveInspectionDraft','low',
+      jsonb_build_object('bagId',gen_random_uuid(),'draftId',gen_random_uuid(),'expectedRevision',1,'fields',jsonb_build_object('description','Paging fixture '||g,'category','','condition','')),
+      'agent','paging-fixture',$2,case when g=1 then now()-interval '1 hour' else now()+interval '1 day' end,
+      '2026-09-01 12:00:00.123456+00'::timestamptz+(g/5)*interval '1 microsecond'
+      from generate_series(1,55) g`,
+      [tenantId, actor],
+    )
+    await page.goto('/intake/operations')
+    const rows = page.getByRole('link', {
+      name: 'Granska f\u00f6rslaget',
+      exact: true,
+    })
+    async function older() {
+      const previous = await rows.first().getAttribute('href')
+      const link = page.getByRole('link', {
+        name: 'Visa \u00e4ldre f\u00f6rslag',
+      })
+      const destination = await link.getAttribute('href')
+      await link.click()
+      await expect(page).toHaveURL(`http://127.0.0.1:3000${destination}`)
+      await expect(rows.first()).not.toHaveAttribute('href', previous!)
+    }
+    const seen: string[] = []
+    for (const count of [20, 20, 15]) {
+      await expect(rows).toHaveCount(count)
+      seen.push(
+        ...(await rows.evaluateAll((links) =>
+          links.map((link) => link.getAttribute('href')!),
+        )),
+      )
+      if (count === 20) await older()
+    }
+    expect(new Set(seen).size).toBe(55)
+    await expect(
+      page.getByRole('link', { name: 'Visa \u00e4ldre f\u00f6rslag' }),
+    ).toHaveCount(0)
+    const filters = page.getByRole('navigation', {
+      name: 'Filtrera \u00e5tg\u00e4rder',
+    })
+    await filters.locator('a[href$="status=open"]').click()
+    await expect(rows).toHaveCount(20)
+    expect(new URL(page.url()).searchParams.has('beforeId')).toBe(false)
+    await older()
+    await expect(rows).toHaveCount(20)
+    expect(new URL(page.url()).searchParams.get('status')).toBe('open')
+    expect(new URL(page.url()).searchParams.get('beforeCreated')).toMatch(
+      /\.\d{6}/,
+    )
+    await older()
+    await expect(rows).toHaveCount(14)
+    await page.getByRole('link', { name: 'Till f\u00f6rsta sidan' }).click()
+    await expect(rows).toHaveCount(20)
+    expect(new URL(page.url()).searchParams.get('status')).toBe('open')
+    expect(new URL(page.url()).searchParams.has('beforeId')).toBe(false)
+    await filters.locator('a[href$="status=expired"]').click()
+    await expect(rows).toHaveCount(1)
+    await page.setViewportSize({ width: 375, height: 812 })
+    expect(
+      await filters.evaluate((el) => el.scrollWidth <= el.clientWidth),
+    ).toBe(true)
+    await filters.locator('a[href$="status=rejected"]').click()
+    await expect(rows).toHaveCount(0)
+    await expect(
+      page.getByText('Inga f\u00f6rslag matchar den h\u00e4r vyn.'),
+    ).toBeVisible()
+    await page.goto(`/intake/operations?beforeId=${crypto.randomUUID()}`)
+    // Streamed Next.js notFound renders a denial page with HTTP 200.
+    await expect(
+      page.getByRole('heading', { name: 'Sidan kunde inte hittas.' }),
+    ).toBeVisible()
+    await expect(rows).toHaveCount(0)
+    expect(
+      (
+        await db.query(
+          'select count(*)::int n from operation_decisions where tenant_id=$1',
+          [tenantId],
+        )
+      ).rows[0].n,
+    ).toBe(0)
+  } finally {
+    await db.end()
+  }
+})

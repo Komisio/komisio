@@ -545,7 +545,14 @@
     "draftVersion": "utkastversion",
     "confirmPrice": "Jag har granskat priset och prisunderlaget.",
     "retrySame": "Försök igen med samma beslut",
-    "lockedDecision": "Ditt skickade beslut"
+    "lockedDecision": "Ditt skickade beslut",
+    "queueFilter": "Filtrera åtgärder",
+    "filterAll": "Alla förslag",
+    "liveQueue": "Status kan ändras medan du bläddrar. Gå till första sidan för en aktuell överblick.",
+    "emptyFiltered": "Inga förslag matchar den här vyn.",
+    "queuePages": "Bläddra bland förslag",
+    "older": "Visa äldre förslag",
+    "firstPage": "Till första sidan"
   },
   "reviewPhotoAlt": "Bild som ingår i detta underlag",
   "reviewPhotos": "Bilder i detta underlag",

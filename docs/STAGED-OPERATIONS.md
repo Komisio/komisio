@@ -106,3 +106,9 @@ an already stored matching decision is returned without executing again. A known
 HTTP rejection requires reloading the saved state. Reloading the page intentionally
 reads authoritative state; it does not silently recreate an old decision request.
 No database change, storage of browser credentials or new authority is introduced.
+
+
+The staff queue now has a separate paged read contract in
+[OPERATION-QUEUE-PAGING.md](OPERATION-QUEUE-PAGING.md). Status filters and older-page
+links keep historical proposals reachable; decision authority stays in the same
+commands. The original newest-50 RPC remains available for existing callers.

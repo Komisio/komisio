@@ -145,3 +145,13 @@ let edits to reason or approval/rejection reuse that request ID. Existing SQL
 idempotency and authorization stay unchanged. Test both a committed approval with
 a lost response and a rejection interrupted before reaching the server. No new
 business rule or migration is required.
+
+
+## 2026-09-12 — Paged and filtered staff operation queue
+
+Add a bounded authenticated read so older open proposals are not hidden by the
+legacy newest-50 window. Preserve operation_queue(uuid) compatibility; the new
+read uses existing derived status and an exclusive creation-time/UUID cursor.
+The engine returns 20 rows plus next-page guidance, retaining timestamp precision.
+No status, authorization or write semantics change. SQL tests precede the additive
+read-function migration; no new core table or financial rule is introduced.

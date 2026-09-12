@@ -336,6 +336,9 @@ small {
   gap: 12px;
   align-items: center;
 }
+.operation-navigation {
+  flex-wrap: wrap;
+}
 .between {
   display: flex;
   justify-content: space-between;

@@ -25,14 +25,14 @@ proposal's owner clarification for scope and outstanding details.
 
 ## Consignment terms
 
-2. **Is the commission stated inclusive or exclusive of VAT towards the
-   consignor?** Private consignors are usually quoted a percentage of the
-   sale price; business consignors may be invoiced commission plus VAT.
-   *Sketch assumed:* a per-agreement flag, default inclusive.
-3. **Which terms are frozen per item at intake, and which follow the current
-   agreement?** Commission rate, sale period, markdown schedule, end-of-period
-   action.
-   *Sketch assumed:* commission terms frozen at intake; everything else live.
+2. ~~Is the commission stated inclusive or exclusive of VAT towards the
+   consignor?~~ **Answered 2026-09-12 (DECISIONS.md):** configurable per
+   tenant with a default from the consignment skill, and overridable per
+   seller by a flag (business sellers may be invoiced commission plus VAT).
+3. ~~Which terms are frozen per item at intake, and which follow the current
+   agreement?~~ **Answered 2026-09-12 (DECISIONS.md):** commission rate,
+   sale period, markdown steps and end-of-period action are all frozen per
+   item at commercial acceptance; a later policy change never rewrites them.
 4. **How is price reduction over time decided and applied?** Fixed schedule
    per agreement, per category, or per item; automatic or proposed for
    approval.

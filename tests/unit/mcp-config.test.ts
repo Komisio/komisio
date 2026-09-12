@@ -23,11 +23,21 @@ it('denies unknown/wildcard scopes and unpinned stores', () => {
     'reception:publish',
     '',
     'reception:read,tenant:admin',
+    'reception:read,reception:read',
   ])
     expect(() =>
       readMCPConfig({ ...env, KOMISIO_MCP_SCOPES: scopes }),
     ).toThrow()
   expect(() => readMCPConfig({ ...env, KOMISIO_MCP_TENANT_ID: '*' })).toThrow()
+})
+it('requires explicit photo scope rather than expanding ordinary reads', () => {
+  expect(readMCPConfig(env).scopes).not.toContain('reception:photos')
+  expect(
+    readMCPConfig({
+      ...env,
+      KOMISIO_MCP_SCOPES: 'reception:read,reception:preview,reception:photos',
+    }).scopes,
+  ).toHaveLength(3)
 })
 it('allows HTTPS or loopback only and rejects URL-embedded credentials', () => {
   for (const url of [

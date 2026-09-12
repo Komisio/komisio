@@ -2,12 +2,13 @@
 
 This is a real stdio Model Context Protocol adapter using the official TypeScript
 SDK. It is separate from the web app and optional model-provider integration.
-It exposes two narrow tools through the same reception engine:
+It exposes narrow tools through the same reception engine:
 
-| Tool                      | Scope             | Effect                                                                                   |
-| ------------------------- | ----------------- | ---------------------------------------------------------------------------------------- |
-| komisio_read_reception    | reception:read    | Read one saved session and its source snapshot                                           |
-| komisio_preview_reception | reception:preview | Validate a source-bound proposal against the current revision; return an unsaved preview |
+| Tool                         | Scope             | Effect                                                                                   |
+| ---------------------------- | ----------------- | ---------------------------------------------------------------------------------------- |
+| komisio_read_reception       | reception:read    | Read one saved session and its source snapshot                                           |
+| komisio_preview_reception    | reception:preview | Validate a source-bound proposal against the current revision; return an unsaved preview |
+| komisio_read_reception_photo | reception:photos  | Read one attached photo at the exact current revision as native MCP image content        |
 
 Every data call verifies the configured user token with Supabase Auth and checks
 current store membership and required MFA in the database. The store is pinned in
@@ -26,7 +27,8 @@ environment variables to the child process:
 - `KOMISIO_MCP_ACCESS_TOKEN`: a current authenticated **user access token**, never
   a service-role key, password or refresh token
 - `KOMISIO_MCP_TENANT_ID`: exactly one store UUID
-- `KOMISIO_MCP_SCOPES`: `reception:read`, `reception:preview`, or both comma-separated
+- `KOMISIO_MCP_SCOPES`: an explicit comma-separated subset of `reception:read`,
+  `reception:preview`, `reception:photos`. Photo access is opt-in, not implied by read.
 
 Have the host launch `node --import tsx mcp/stdio.ts` with the repository as its
 working directory. Use the direct command, not a shell that prints banners to
@@ -42,9 +44,27 @@ sandbox. No token is accepted as a tool argument or passed through a remote MCP
 endpoint. Do not expose the stdio process over an unauthenticated network bridge.
 
 Tool responses go to the MCP host and may be sent to its chosen model. Evidence
-notes can contain private text; there is no automatic redaction. No photo bytes or
-seller contact lookup are exposed. Komisio does not pay for or select the external
+notes can contain private text; there is no automatic redaction. With the photo
+scope, the host also receives reduced garment images. Seller contact lookup is
+not exposed. Komisio does not pay for or select the external
 host's model. Built-in reception inference has separate configuration and limits.
+
+## Opt-in vision input
+
+`komisio_read_reception_photo` accepts only session ID, attached photo ID and
+exact current revision. It reads the private original with the authenticated
+engine, decodes/minimizes it through `lib/media/`, then rechecks membership/MFA
+and revision before returning. No remote image URL or Storage path is accepted.
+The result contains one native MCP `image` block (JPEG, at most 1536 pixels per
+edge and 1 MiB), plus actor, source ID and source revision in structured content.
+Hosts must support a response buffer of at least 2 MiB for base64 image content.
+
+Embedded metadata is removed. Visible people, labels and instructions in the
+pixels remain untrusted; minimization is not redaction or authenticity checking.
+The host may send the image to its own model. Nothing is persisted, published or
+sent to Komisio's configured provider by this tool. A subsequent proposal preview
+must still cite the exact source IDs and independently pass current-revision
+checks. Price still requires price evidence; a photo does not create market data.
 
 ## Preview is not a staged write
 

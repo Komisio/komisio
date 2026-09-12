@@ -1,5 +1,9 @@
 import { z } from 'zod'
-const scope = z.enum(['reception:read', 'reception:preview'])
+const scope = z.enum([
+  'reception:read',
+  'reception:preview',
+  'reception:photos',
+])
 export const mcpConfig = z.strictObject({
   url: z.url().refine((value) => {
     const url = new URL(value)
@@ -14,7 +18,11 @@ export const mcpConfig = z.strictObject({
   key: z.string().min(1),
   token: z.string().min(1),
   tenantId: z.uuid(),
-  scopes: z.array(scope).min(1).max(2),
+  scopes: z
+    .array(scope)
+    .min(1)
+    .max(3)
+    .refine((s) => new Set(s).size === s.length),
 })
 export type MCPConfig = z.infer<typeof mcpConfig>
 export function readMCPConfig(

@@ -5,6 +5,7 @@ import { randomUUID, randomBytes } from 'node:crypto'
 import { existsSync } from 'node:fs'
 import assert from 'node:assert/strict'
 import pg from 'pg'
+import sharp from 'sharp'
 if (existsSync('.env.local')) process.loadEnvFile('.env.local')
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL,
   key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
@@ -54,12 +55,25 @@ try {
     p_id: session,
     p_seller: seller,
   })
+  const photoId = randomUUID(),
+    photoPath = `${tenant}/${session}/${photoId}.jpg`
+  const original = await sharp({
+    create: { width: 40, height: 60, channels: 3, background: '#25547e' },
+  })
+    .withExif({ IFD0: { Artist: 'PRIVATE MCP FIXTURE' } })
+    .jpeg()
+    .toBuffer()
+  const uploaded = await app.storage
+    .from('reception-photos')
+    .upload(photoPath, original, { contentType: 'image/jpeg', upsert: false })
+  assert.ifError(uploaded.error)
   await rpc('save_reception_sources', {
     p_tenant: tenant,
     p_request: randomUUID(),
     p_session: session,
     p_expected: 0,
     p_sources: [
+      { id: photoId, kind: 'photo', reference: photoPath, observation: '' },
       {
         id: source,
         kind: 'observation',
@@ -82,7 +96,7 @@ try {
         KOMISIO_MCP_SCOPES: scopes,
       },
       stderr: 'pipe',
-      maxBufferSize: 1048576,
+      maxBufferSize: 2097152,
     })
     clients.push(client)
     await client.connect(transport)
@@ -108,6 +122,51 @@ try {
   assert(!read.isError)
   assert.equal(read.structuredContent.source.session.revision, 1)
   assert(!JSON.stringify(read).includes('mcp-seller@example.test'))
+  await assert.rejects(
+    both.callTool({
+      name: 'komisio_read_reception_photo',
+      arguments: { sessionId: session, photoId, revision: 1 },
+    }),
+    /not found/,
+  )
+  const photos = await connect('reception:photos')
+  assert.deepEqual(
+    (await photos.listTools()).tools.map((t) => t.name),
+    ['komisio_read_reception_photo'],
+  )
+  const photo = await photos.callTool({
+    name: 'komisio_read_reception_photo',
+    arguments: { sessionId: session, photoId, revision: 1 },
+  })
+  assert(!photo.isError)
+  assert.equal(photo.structuredContent.sourceId, photoId)
+  assert.equal(photo.structuredContent.sourceRevision, 1)
+  assert.equal(photo.structuredContent.actor, uid)
+  assert(!JSON.stringify(photo.structuredContent).includes(photoPath))
+  const image = photo.content.find((c) => c.type === 'image')
+  assert.equal(image.mimeType, 'image/jpeg')
+  const metadata = await sharp(Buffer.from(image.data, 'base64')).metadata()
+  assert.equal(metadata.width, 40)
+  assert.equal(metadata.exif, undefined)
+  assert.equal(metadata.xmp, undefined)
+  for (const args of [
+    { sessionId: session, photoId, revision: 2 },
+    { sessionId: session, photoId: randomUUID(), revision: 1 },
+    {
+      sessionId: session,
+      photoId,
+      revision: 1,
+      url: 'https://untrusted.example/image.jpg',
+    },
+  ])
+    assert(
+      (
+        await photos.callTool({
+          name: 'komisio_read_reception_photo',
+          arguments: args,
+        })
+      ).isError,
+    )
   const suggestions = {
     metadata: {
       description: {
@@ -134,7 +193,7 @@ try {
   )
   const stale = await both.callTool({
     name: 'komisio_preview_reception',
-    arguments: { sessionId: session, revision: 0, suggestions },
+    arguments: { sessionId: session, revision: 2, suggestions },
   })
   assert(stale.isError)
   const unknown = await both.callTool({
@@ -183,6 +242,14 @@ try {
   )
   assert(
     (
+      await photos.callTool({
+        name: 'komisio_read_reception_photo',
+        arguments: { sessionId: session, photoId, revision: 1 },
+      })
+    ).isError,
+  )
+  assert(
+    (
       await both.callTool({
         name: 'komisio_read_reception',
         arguments: { sessionId: session },
@@ -195,7 +262,7 @@ try {
   )
   assert.deepEqual(records.rows[0], { sources: 1, reviews: 0, attempts: 0 })
   console.log(
-    'PASS: real stdio MCP negotiation, strict tools, authenticated reads, unsaved source-bound preview, scope/tenant/invalid-token/MFA denial, no source/review/model writes.',
+    'PASS: real stdio MCP negotiation, authenticated reads, opt-in minimized image/provenance, unsaved preview, scope/tenant/invalid-token/MFA/stale denial, no source/review/model writes.',
   )
 } finally {
   await Promise.allSettled(clients.map((client) => client.close()))

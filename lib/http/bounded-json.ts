@@ -1,6 +1,6 @@
 /** Limit streamed bytes, including requests without Content-Length. */
 export async function boundedJson(
-  request: Request,
+  request: Pick<Request, 'body'>,
   limit = 4096,
 ): Promise<unknown> {
   const reader = request.body?.getReader()

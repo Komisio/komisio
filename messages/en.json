@@ -332,7 +332,31 @@
   "reception": {
     "title": "Garment reception",
     "intro": "One garment, one reviewed proposal and the seller decision.",
-    "manual": "Manual mode. Vision and AI are not connected yet. Staff supplies the description and price evidence.",
+    "manual": "Describe the garment manually or use AI suggestions if enabled for this store. Staff reviews the evidence before the seller responds.",
+    "aiTitle": "AI suggestions",
+    "aiNotice": "Running analysis sends this reception's photos, notes and price evidence to OpenAI. Use garment evidence without personal information. Embedded image metadata is removed, but visible text and people are not redacted. Maximum three photos per run.",
+    "aiUnavailable": "AI is not enabled for this store. You can continue with the manual description and price evidence.",
+    "aiGenerate": "Analyze evidence with AI",
+    "aiWorking": "Analyzing…",
+    "aiCandidate": "Suggestion for review – not published",
+    "aiUnverified": "AI suggestion, needs checking",
+    "aiSources": "Show source evidence",
+    "aiUnknown": "Evidence missing",
+    "aiQuestions": "Unresolved questions",
+    "aiReviewNotice": "Check every fact, the price and the terms. The confirmation below means you as staff have reviewed the suggestion. The seller responds separately.",
+    "aiIncomplete": "This suggestion cannot be shared yet. Use the manual path to complete or correct the evidence; outstanding questions must be resolved first.",
+    "aiLimit": "Store limit reached: ten attempts in 24 hours and at least 20 seconds between attempts.",
+    "aiFailed": "No usable AI suggestion was received. Evidence may have changed. Reload to check the reception; a new run counts as a new attempt.",
+    "aiTransient": "The suggestion is saved only when you explicitly publish a reviewed version. Reloading loses an unsaved suggestion. Failed or interrupted runs also count toward the limit.",
+    "aiFields": {
+      "description": "Description",
+      "category": "Category",
+      "color": "Color",
+      "brand": "Brand",
+      "size": "Size",
+      "material": "Material",
+      "condition": "Condition"
+    },
     "seller": "Select registered seller",
     "start": "Start reception",
     "search": "Search seller by name",
@@ -387,7 +411,7 @@
     "photoInvalid": "Choose a JPEG or PNG up to 3 MB. A reception can contain up to 20 sources in total.",
     "photoSelect": "Choose or capture a photo",
     "photos": "Reception photos",
-    "photoHelp": "JPEG or PNG, up to 3 MB. Stored privately for store staff. AI analysis and seller photo display are not connected yet.",
+    "photoHelp": "JPEG or PNG, up to 3 MB and 20 megapixels. Saved privately for store staff. Sellers cannot view photos yet.",
     "photoSave": "Save photo to reception"
   }
 }

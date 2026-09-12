@@ -9,6 +9,8 @@ import {
 } from '@/lib/engine/reception-store'
 import { readManualReception } from '@/lib/engine/manual-reception'
 import { PhotoUpload } from '@/components/reception/photo-upload'
+import { ReceptionAssistance } from '@/components/reception/assistance'
+import { receptionAIConfig } from '@/lib/assistance/reception-config'
 import {
   ReceptionObservation,
   PublishReview,
@@ -99,6 +101,20 @@ export default async function Reception({
             ))}
         </div>
       </section>
+      {write && (
+        <ReceptionAssistance
+          key={`ai-${state.revision}-${review?.id ?? 'none'}-${terms.data?.id ?? 'none'}`}
+          tenantId={tenant.id}
+          sessionId={id.data}
+          sellerId={state.sellerId}
+          revision={state.revision}
+          sources={sources}
+          available={!!receptionAIConfig(tenant.id)}
+          terms={terms.data}
+          previousId={review?.id ?? null}
+          d={d}
+        />
+      )}
       <div className="intake-grid reception-workspace">
         <section className="card intake-form">
           <h2>{d.observe}</h2>

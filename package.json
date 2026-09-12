@@ -17,6 +17,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
+    "test:assistance": "node scripts/test-assistance.mjs",
     "test:db": "node scripts/supabase.mjs test db",
     "db:start": "node scripts/prepare-local.mjs && node scripts/supabase.mjs start",
     "db:migrate": "node scripts/supabase.mjs migration up --local",
@@ -32,6 +33,7 @@
     "next": "16.3.4",
     "react": "19.3.0",
     "react-dom": "19.3.0",
+    "sharp": "0.35.4",
     "tailwind-merge": "^3.0.0",
     "zod": "^4.0.0"
   },

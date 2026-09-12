@@ -2079,6 +2079,14 @@ test('operator reception guides saved evidence, exact review and link replacemen
       exact: true,
     }),
   ).toBeVisible()
+  const comparison = approved.getByRole('region', {
+    name: '\u00c4ndringar sedan tidigare publicering',
+  })
+  await expect(comparison).toBeVisible()
+  await expect(
+    comparison.getByText('Efter: Agent proposal to approve', { exact: true }),
+  ).toBeVisible()
+  await expect(comparison.getByText(/F\u00f6re:/)).toBeVisible()
   await expect(approved.getByRole('checkbox')).toHaveCount(3)
   await approved.locator('input[name="checked"]').check()
   await approved

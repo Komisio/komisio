@@ -552,7 +552,14 @@
     "emptyFiltered": "No proposals match this view.",
     "queuePages": "Browse proposals",
     "older": "Show older proposals",
-    "firstPage": "Back to first page"
+    "firstPage": "Back to first page",
+    "firstPublication": "This is the first publication; there is no earlier review to compare.",
+    "comparisonTitle": "Changes since the prior publication",
+    "previousVersion": "Compared with review version",
+    "comparisonNotice": "Earlier seller responses do not apply to this proposal. Review every field and the proposed evidence and terms.",
+    "noComparedChanges": "No changes in the compared fields. Still review the complete new proposal.",
+    "sourceVersionChanged": "The source version has changed. Review the evidence even if the facts look unchanged.",
+    "agreementVersionChanged": "The agreement version has changed. Read the proposed terms below."
   },
   "reviewPhotoAlt": "Photo included in this review",
   "reviewPhotos": "Photos in this review",

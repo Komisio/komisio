@@ -297,11 +297,13 @@ external pilot, verify identity/recovery and invitation flows, tenant isolation,
 backup/restore, privacy/retention and export/support procedures, plus a complete
 authenticated hosted journey. These gates are not deferred to P5.
 
-The next safe implementation slice is a descriptive draft-to-reception preview:
-compare the bag draft with the sourced review contract without creating an item,
-recording custody, changing terms or publishing. Missing evidence and questions
-remain explicit. Acceptance design follows only after convergence and terms
-questions are resolved.
+The descriptive draft-to-reception preview is delivered in PR50: it compares the
+saved draft with the sourced review contract without creating an item, recording
+custody, changing terms or publishing. Explicit per-fact review followed in PR51;
+PR54 narrowed the shared assistance evidence port and PR55 added scoped operation
+discovery. These are bounded parts of the phases below, not completed P1/P2 phases.
+Current evidence is in DEVELOPMENT-HANDOFF.md. Acceptance design still requires
+resolution of convergence and terms questions.
 
 | Phase | Theme | Slices | Needs from owner |
 | --- | --- | --- | --- |

@@ -1,3 +1,4 @@
+import { compareReceptionReview } from './reception-review-comparison'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
@@ -111,6 +112,7 @@ export async function readOperationReview(
     currentSource,
     currentAgreement,
     currentReview,
+    previousReview,
   ] = await Promise.all([
     client
       .from('seller_agreement_versions')
@@ -152,6 +154,15 @@ export async function readOperationReview(
       .order('version', { ascending: false })
       .limit(1)
       .maybeSingle(),
+    p.previousReviewId
+      ? client
+          .from('reception_reviews')
+          .select('id,version,source_revision,agreement_id,suggestions')
+          .eq('tenant_id', tenantId)
+          .eq('session_id', p.sessionId)
+          .eq('id', p.previousReviewId)
+          .single()
+      : Promise.resolve({ data: null, error: null }),
   ])
   if (
     [
@@ -161,6 +172,7 @@ export async function readOperationReview(
       currentSource,
       currentAgreement,
       currentReview,
+      previousReview,
     ].some((r) => r.error)
   )
     throw new Error('OPERATION_NOT_FOUND')
@@ -189,6 +201,7 @@ export async function readOperationReview(
     operation,
     context: {
       kind: 'reception' as const,
+      comparison: compareReceptionReview(previousReview.data, p),
       terms: z
         .object({
           id: z.uuid(),

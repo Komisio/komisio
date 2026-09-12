@@ -552,7 +552,14 @@
     "emptyFiltered": "Inga förslag matchar den här vyn.",
     "queuePages": "Bläddra bland förslag",
     "older": "Visa äldre förslag",
-    "firstPage": "Till första sidan"
+    "firstPage": "Till första sidan",
+    "firstPublication": "Detta är den första publiceringen; det finns inget tidigare underlag att jämföra med.",
+    "comparisonTitle": "Ändringar sedan tidigare publicering",
+    "previousVersion": "Jämfört med underlag version",
+    "comparisonNotice": "Tidigare säljarsvar gäller inte detta förslag. Granska varje uppgift och de föreslagna källorna och villkoren.",
+    "noComparedChanges": "Inga ändringar i de jämförda uppgifterna. Granska ändå hela det nya underlaget.",
+    "sourceVersionChanged": "Källversionen har ändrats. Granska underlaget även om uppgifterna ser likadana ut.",
+    "agreementVersionChanged": "Avtalsversionen har ändrats. Läs de föreslagna villkoren nedan."
   },
   "reviewPhotoAlt": "Bild som ingår i detta underlag",
   "reviewPhotos": "Bilder i detta underlag",

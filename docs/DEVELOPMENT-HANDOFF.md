@@ -101,14 +101,21 @@ assistance port minimizes evidence before adapters and marks all descriptive
 output tentative.113 units, isolated HTTP publication/retry browser fixture and
 lint/types/build/format passed. No migration, prompt or model activation.
 
-Current slice: `feat/mcp-operation-discovery` adds local scoped list tools for
-reception and inspection operation summaries, using the shared paged engine.
-Migration20260912173000 is applied locally and immutable; staging is pending.
-Kind filtering happens before limiting; the existing staff RPC delegates to the
-same read. SQL490, unit113, real stdio MCP with115 mixed-kind proposals and the
-staff paging browser pass, with lint/types/build/scoped formatting. PR/CI/release
-remain pending; see the private checkpoint for latest evidence. No new scope, table or write; no live model. Hosted
-in-session queue walkthrough remains unverified. See MCP-OPERATION-DISCOVERY.md.
+PR55 is delivered: merge6f3b15fae2b7a72fa2b23c27b38acd697d5eb86b,
+exact-head CI34702073038 passed on68849e7eff3f5ee4f5d4613640bbda55a0420f32.
+Deployment6411278707 succeeded and public guards passed. Migration20260912173000
+is applied BOTH locally and in staging, immutable. Local scoped MCP discovery
+uses the shared kind-filtered page read.490 SQL,113 units, realstdio115 mixed-kind
+proposals, staff paging browser and lint/types/build/format passed. No hosted agent
+or live model. Authenticated hosted queue walkthrough remains unverified.
+
+Current slice: `feat/reception-review-comparison` adds a read-only comparison with
+the exact previousReviewId publication in staged reception UI/MCP detail. It flags
+changed descriptive facts/citations, price/rationale/citations and source/agreement
+versions. All field confirmations remain required; no prior seller consent is
+inherited.117 units, real MCP including pinned baseline after newer publication,
+and two operation browser journeys pass, with lint/types/build/scoped formatting.
+PR/CI/release remain pending; see private checkpoint. No migration or live provider.
 
 The prior PR40 work below is completed: merged6329b6ec95df1af3db8534921966f274f82f9e95,
 exact-head CI34687228721 passed, staging deployment6408441889 succeeded.

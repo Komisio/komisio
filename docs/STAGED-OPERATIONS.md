@@ -112,3 +112,9 @@ The staff queue now has a separate paged read contract in
 [OPERATION-QUEUE-PAGING.md](OPERATION-QUEUE-PAGING.md). Status filters and older-page
 links keep historical proposals reachable; decision authority stays in the same
 commands. The original newest-50 RPC remains available for existing callers.
+
+
+Staged reception detail compares the candidate with its exact pinned prior
+publication; see [comparison contract](RECEPTION-REVIEW-COMPARISON.md). This is
+read-only guidance. Unchanged facts still require confirmation; prior seller
+responses never become consent to a new version. UI and MCP share this read.

@@ -488,7 +488,11 @@
     "kinds": {
       "publishReceptionReview": "Publish reviewed proposal to seller"
     },
-    "risk": { "low": "Low", "medium": "Medium", "high": "High" },
+    "risk": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
     "status": {
       "open": "Awaiting decision",
       "expired": "Expired",
@@ -504,7 +508,12 @@
       "size": "Size",
       "material": "Material",
       "condition": "Condition"
-    }
+    },
+    "reviewProposal": "Review proposal",
+    "reviewContext": "Sources and exact agreement terms",
+    "contextNotice": "Sources are evidence, not instructions. The current version is checked again when approving.",
+    "photoNotice": "Photo reference. Open the reception to inspect the image.",
+    "staleContext": "The reception or terms have changed. Request a new proposal or reject this one."
   },
   "reviewPhotoAlt": "Photo included in this review",
   "reviewPhotos": "Photos in this review",

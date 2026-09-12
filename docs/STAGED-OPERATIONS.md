@@ -45,9 +45,12 @@ Derived status for lists: `open`, `expired`, `executed`, `failed`, `rejected`.
   An optional `requestId` lets a host retry a lost response safely.
   The operation expires at the proposed review's fixed `expiresAt`, so a retry
   carries the identical envelope and never extends the approval window.
-- Web: `/intake/operations` lists the newest 50 proposals for the active store
-  with their derived status. Staff approve or reject with an optional reason
-  after confirming they checked the reception. Readonly can view.
+- Web: `/intake/operations` lists the newest 50 proposals for the active store.
+  Its detail link shows the exact source snapshot and agreement terms before a
+  decision. Stale/expired proposals can be rejected but not approved in this UI;
+  SQL rechecks all preconditions. Readonly can view. See OPERATION-REVIEW.md.
+- MCP: `komisio_read_reception_operation` shares that exact-context read under
+  `reception:read`. It returns no photo paths or seller contacts and cannot decide.
 - API: `POST /api/operations` takes a decide command; same-origin, session,
   active-store and role checks precede the SQL function, which checks again.
 

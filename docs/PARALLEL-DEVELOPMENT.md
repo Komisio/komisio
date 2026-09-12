@@ -25,16 +25,17 @@ The T3 implementation stages agent proposals for staff decisions through the
 shared engine, including pending-operation persistence. Its existence is
 authorized; correctness and release still require review and tests.
 
-The observed branch is `fable/review-2026-09-12`: T3 at `a86870e`, seller-read
-lock changes at `cfcf303`, and T5 prompt-version protection at `aabdb13`.
-These are branch checkpoints, not claims of applied migrations or green CI.
-The working directory also reported modifications when inspected; leave it
-untouched and obtain the final committed handover before integrating further work.
+Fable's fixed snapshot `f734f95` was integrated in PR43, merged and deployed.
+T3, seller-read lock changes and T5 passed integrated CI. Both new migrations
+are applied locally and in staging and must not be edited. Subsequent commits on
+`fable/review-2026-09-12` are separate work; inspect them before integration.
+Leave Fable's active worktree untouched.
 
 Fable owns its implementation branch. Astra owns integration review, coordinating
-local migration/MCP/concurrency verification, and the release PR/CI/staging path
-after a stable handover. Do not implement a competing pending-operation subsystem.
-T5 already has a commit; inspect its tests and scope before treating it as new work.
+local migration/MCP/concurrency verification, and the release PR/CI/staging path.
+Do not implement a competing pending-operation subsystem or repeat T5.
+Astra's current slice is exact source/terms context for pending-operation review;
+see OPERATION-REVIEW.md and DEVELOPMENT-HANDOFF.md for release status.
 
 Coordinate shared files such as DECISIONS.md, dictionaries, package manifests,
 migrations and handover notes. One release owner merges changes after exact-head

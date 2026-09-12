@@ -41,7 +41,7 @@ export const operationStatus = z.enum([
   'failed',
   'rejected',
 ])
-const row = z.object({
+export const operationRow = z.object({
   id: z.uuid(),
   kind: operationKind,
   risk_level: z.enum(['low', 'medium', 'high']),
@@ -60,7 +60,7 @@ const row = z.object({
   decided_by: z.uuid().nullable(),
   decided_at: z.iso.datetime({ offset: true }).nullable(),
 })
-export type PendingOperation = z.infer<typeof row>
+export type PendingOperation = z.infer<typeof operationRow>
 export const operationErrorCodes = [
   'FORBIDDEN',
   'AUTH_REQUIRED',
@@ -117,5 +117,5 @@ export async function readOperationQueue(
     p_tenant: z.uuid().parse(tenantInput),
   })
   if (error) throw new Error('Unable to read operation queue')
-  return z.array(row).max(50).parse(data)
+  return z.array(operationRow).max(50).parse(data)
 }

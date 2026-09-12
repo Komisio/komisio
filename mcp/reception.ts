@@ -1,4 +1,8 @@
 import { randomUUID } from 'node:crypto'
+import {
+  readOperationReview,
+  operationReviewInput,
+} from '../lib/engine/operation-review'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { readReceptionSession } from '../lib/engine/reception-store'
@@ -72,6 +76,14 @@ export function receptionTools(client: SupabaseClient, config: MCPConfig) {
     return { actor, state }
   }
   return {
+    async operationReview(input: unknown) {
+      const c = operationReviewInput.parse(input),
+        actor = await identityContext('reception:read')
+      return {
+        actor,
+        ...(await readOperationReview(client, config.tenantId, c)),
+      }
+    },
     async history(input: unknown) {
       const c = receptionHistoryInput.parse(input),
         actor = await identityContext('reception:read')

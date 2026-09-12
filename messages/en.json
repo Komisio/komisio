@@ -521,7 +521,8 @@
     "reload": "Reload",
     "kinds": {
       "publishReceptionReview": "Publish reviewed proposal to seller",
-      "saveInspectionDraft": "Save descriptive inspection draft"
+      "saveInspectionDraft": "Save descriptive inspection draft",
+      "acceptItem": "Accept origin as item"
     },
     "risk": {
       "low": "Low",
@@ -543,6 +544,19 @@
       "size": "Size",
       "material": "Material",
       "condition": "Condition"
+    },
+    "confirmAcceptance": "I have checked custody, the origin and the price and approve accepting this item under the terms in force.",
+    "acceptItem": "Approve and accept item",
+    "openOrigin": "Open origin",
+    "proposedPrice": "Proposed price",
+    "acceptanceContext": "Acceptance check",
+    "acceptanceNotice": "The origin must be current and in custody. Approval runs the acceptance command, which re-checks agreement evidence and the seller review mode. A different person than the proposer must approve.",
+    "alreadyAccepted": "This origin is already accepted as an item.",
+    "staleAcceptance": "The origin changed or was already accepted. Reject this proposal.",
+    "originKinds": {
+      "inspection_draft": "Bag item draft",
+      "reception_review": "Reception review",
+      "purchase": "Store purchase"
     },
     "reviewProposal": "Review proposal",
     "reviewContext": "Sources and exact agreement terms",

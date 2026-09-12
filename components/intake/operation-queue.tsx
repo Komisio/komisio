@@ -138,7 +138,9 @@ function Decision({
         />
         {operation.kind === 'saveInspectionDraft'
           ? d.confirmInspection
-          : d.confirm}
+          : operation.kind === 'acceptItem'
+            ? d.confirmAcceptance
+            : d.confirm}
       </label>
       {error && <p role="alert">{error}</p>}
       {reload ? (
@@ -157,7 +159,9 @@ function Decision({
               ? d.reject
               : operation.kind === 'saveInspectionDraft'
                 ? d.saveDraft
-                : d.approve}
+                : operation.kind === 'acceptItem'
+                  ? d.acceptItem
+                  : d.approve}
           </p>
           <Button type="button" disabled={busy} onClick={() => void send()}>
             {busy ? d.busy : d.retrySame}
@@ -170,7 +174,9 @@ function Decision({
               ? d.busy
               : operation.kind === 'saveInspectionDraft'
                 ? d.saveDraft
-                : d.approve}
+                : operation.kind === 'acceptItem'
+                  ? d.acceptItem
+                  : d.approve}
           </Button>
           <Button
             type="submit"
@@ -261,6 +267,30 @@ export function OperationQueue({
                 )}
               </dl>
             </>
+          ) : o.kind === 'acceptItem' ? (
+            <>
+              <p>
+                <Link
+                  className="text-link"
+                  href={
+                    o.payload.originKind === 'reception_review'
+                      ? `/intake/reception/${o.payload.originId}`
+                      : o.payload.originKind === 'purchase'
+                        ? '/intake/purchases'
+                        : `/intake/bags?draft=${o.payload.originId}`
+                  }
+                >
+                  {d.openOrigin}
+                </Link>{' '}
+                · {d.originKinds[o.payload.originKind]}
+                {o.payload.originRevision !== null
+                  ? ` · ${d.draftVersion} ${o.payload.originRevision}`
+                  : ''}
+              </p>
+              <p>
+                {d.proposedPrice}: {(o.payload.priceOre / 100).toFixed(2)} SEK
+              </p>
+            </>
           ) : (
             <>
               <p>
@@ -332,6 +362,18 @@ export function OperationQueue({
               ))}
               {!o.outcome && reviewContext.stale && (
                 <p role="alert">{d.staleInspection}</p>
+              )}
+            </section>
+          )}
+          {reviewContext?.kind === 'acceptance' && (
+            <section aria-label={d.acceptanceContext}>
+              <h3>{d.acceptanceContext}</h3>
+              <p>{d.acceptanceNotice}</p>
+              {reviewContext.alreadyAccepted && !o.outcome && (
+                <p role="alert">{d.alreadyAccepted}</p>
+              )}
+              {!o.outcome && reviewContext.stale && (
+                <p role="alert">{d.staleAcceptance}</p>
               )}
             </section>
           )}

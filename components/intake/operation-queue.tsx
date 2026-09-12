@@ -29,13 +29,19 @@ function Decision({
   const [busy, setBusy] = useState(false),
     [error, setError] = useState(''),
     [reload, setReload] = useState(false),
-    [confirmed, setConfirmed] = useState(false)
-  // One request ID per decision attempt; a retry of a lost response reuses it.
-  const requestId = useRef(crypto.randomUUID())
+    [confirmed, setConfirmed] = useState(false),
+    [attempted, setAttempted] = useState<'approve' | 'reject' | null>(null)
+  // Freeze the whole envelope: an unknown response may already have committed.
+  const pending = useRef<{
+    tenantId: string
+    operationId: string
+    requestId: string
+    decision: 'approve' | 'reject'
+    reason: string
+  } | null>(null)
   const running = useRef(false)
-  async function decide(decision: 'approve' | 'reject', reason: string) {
-    if (running.current || reload || (decision === 'approve' && !canApprove))
-      return
+  async function send() {
+    if (running.current || reload || !pending.current) return
     running.current = true
     setBusy(true)
     setError('')
@@ -43,13 +49,7 @@ function Decision({
       const response = await fetch('/api/operations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tenantId,
-          requestId: requestId.current,
-          operationId: operation.id,
-          decision,
-          reason,
-        }),
+        body: JSON.stringify(pending.current),
       })
       const result = await response.json()
       if (!response.ok) {
@@ -73,11 +73,25 @@ function Decision({
       setBusy(false)
     }
   }
+  function decide(decision: 'approve' | 'reject', reason: string) {
+    if (pending.current || reload || (decision === 'approve' && !canApprove))
+      return
+    pending.current = {
+      tenantId,
+      operationId: operation.id,
+      requestId: crypto.randomUUID(),
+      decision,
+      reason,
+    }
+    setAttempted(decision)
+    void send()
+  }
   return (
     <form
       className="intake-fields"
       onSubmit={(event) => {
         event.preventDefault()
+        if (pending.current) return
         const reason = String(
           new FormData(event.currentTarget).get('reason') ?? '',
         )
@@ -91,7 +105,12 @@ function Decision({
     >
       <div className="field">
         <label htmlFor={`reason-${operation.id}`}>{d.reason}</label>
-        <input id={`reason-${operation.id}`} name="reason" maxLength={500} />
+        <input
+          id={`reason-${operation.id}`}
+          name="reason"
+          maxLength={500}
+          disabled={!!attempted || reload}
+        />
       </div>
       {fieldsToConfirm.map((field) => (
         <label className="intake-confirm" key={field}>
@@ -99,7 +118,7 @@ function Decision({
             type="checkbox"
             name={`field-${field}`}
             required
-            disabled={busy || reload}
+            disabled={!!attempted || reload}
             onChange={() => setConfirmed(false)}
           />
           {field === 'price'
@@ -113,7 +132,7 @@ function Decision({
           name="checked"
           required
           checked={confirmed}
-          disabled={busy || reload}
+          disabled={!!attempted || reload}
           onChange={(e) => setConfirmed(e.target.checked)}
         />
         {operation.kind === 'saveInspectionDraft'
@@ -122,9 +141,27 @@ function Decision({
       </label>
       {error && <p role="alert">{error}</p>}
       {reload ? (
-        <Button variant="secondary" onClick={() => window.location.reload()}>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => window.location.reload()}
+        >
           {d.reload}
         </Button>
+      ) : attempted ? (
+        <div>
+          <p>
+            {d.lockedDecision}:{' '}
+            {attempted === 'reject'
+              ? d.reject
+              : operation.kind === 'saveInspectionDraft'
+                ? d.saveDraft
+                : d.approve}
+          </p>
+          <Button type="button" disabled={busy} onClick={() => void send()}>
+            {busy ? d.busy : d.retrySame}
+          </Button>
+        </div>
       ) : (
         <div className="row">
           <Button type="submit" value="approve" disabled={busy || !canApprove}>

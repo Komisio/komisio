@@ -93,3 +93,16 @@ to be checked before final confirmation. This shares the pure field catalogue
 with built-in AI review; it is a review aid, not a new SQL permission or proof of
 attention. Rejection remains available without confirmations. See
 [per-fact review](RECEPTION-FACT-REVIEW.md).
+
+
+## Uncertain decision responses
+
+The staff decision UI freezes the complete first submitted envelope: tenant,
+operation, request ID, decision and reason. During a pending request and after an
+unknown network result, inputs stay locked and only retrying that exact envelope
+is offered. A retry does not ask the user to approve again or switch to rejection.
+SQL still rechecks identity, membership/MFA and the existing request-id contract;
+an already stored matching decision is returned without executing again. A known
+HTTP rejection requires reloading the saved state. Reloading the page intentionally
+reads authoritative state; it does not silently recreate an old decision request.
+No database change, storage of browser credentials or new authority is introduced.

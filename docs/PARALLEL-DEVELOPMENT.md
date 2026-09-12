@@ -48,11 +48,11 @@ inspection reads, bag discovery and unsaved inspection previews. PR49's
 mechanism with descriptive inspection edits; it does not create a competing
 write table or a commercial rule. That slice is delivered in PR49. PR50 delivers the roadmap's
 unsaved inspection-to-reception comparison without sources or commercial writes.
-Astra's current slice adds explicit per-fact and price review to built-in AI
-publication and staged reception decisions (RECEPTION-FACT-REVIEW.md). It uses
-the existing write paths and adds no schema. See DEVELOPMENT-HANDOFF.md and the
+PR51 delivers explicit per-fact and price review in built-in AI publication and
+staged reception decisions. Astra's current slice fixes uncertain decision retries:
+freeze the complete first envelope and lock inputs, preserving existing SQL
+idempotency and authority. No schema change. See DEVELOPMENT-HANDOFF.md and the
 private checkpoint.
-
 
 Coordinate shared files such as DECISIONS.md, dictionaries, package manifests,
 migrations and handover notes. One release owner merges changes after exact-head

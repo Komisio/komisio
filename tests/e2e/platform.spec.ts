@@ -2575,7 +2575,37 @@ test('staged inspection edits require field review and preserve stale drafts', a
     await form.locator('input[name="field-category"]').check()
     await expect(form.locator('input[name="checked"]')).not.toBeChecked()
     await form.locator('input[name="checked"]').check()
+    await form.getByRole('textbox').fill('Reviewed fixture fields')
+    const attempts = new Map<string, Record<string, unknown>[]>()
+    await page.route('**/api/operations', async (route) => {
+      const body = route.request().postDataJSON(),
+        prior = attempts.get(body.operationId) ?? []
+      prior.push(body)
+      attempts.set(body.operationId, prior)
+      if (prior.length === 1) {
+        // Approval commits before the response is lost; rejection never reaches the server.
+        if (body.operationId === operationId)
+          expect((await route.fetch()).status()).toBe(200)
+        await route.abort('failed')
+      } else {
+        expect(body).toEqual(prior[0])
+        await route.continue()
+      }
+    })
     await approve.click()
+    await expect(form.getByRole('alert')).toBeVisible()
+    await expect(form.getByRole('textbox')).toBeDisabled()
+    for (const checkbox of await form.getByRole('checkbox').all())
+      await expect(checkbox).toBeDisabled()
+    await expect(
+      form.getByRole('button', { name: 'Avvisa', exact: true }),
+    ).toHaveCount(0)
+    await form
+      .getByRole('button', {
+        name: 'Försök igen med samma beslut',
+        exact: true,
+      })
+      .click()
     await expect(page.locator('li.card .badge')).toHaveText(
       'Godkänt och utfört',
     )
@@ -2604,8 +2634,47 @@ test('staged inspection edits require field review and preserve stale drafts', a
       'har ändrats',
     )
     // Rejecting never requires approving any field, including a stale proposal.
+    await page
+      .locator('form.intake-fields')
+      .getByRole('textbox')
+      .fill('Reject stale fixture')
     await page.getByRole('button', { name: 'Avvisa', exact: true }).click()
+    await expect(
+      page.locator('form.intake-fields').getByRole('alert'),
+    ).toBeVisible()
+    await expect(
+      page.locator('form.intake-fields').getByRole('textbox'),
+    ).toBeDisabled()
+    expect(
+      (
+        await db.query(
+          'select count(*)::int n from operation_decisions where operation_id=$1',
+          [rejectedId],
+        )
+      ).rows[0].n,
+    ).toBe(0)
+    await page
+      .getByRole('button', {
+        name: 'Försök igen med samma beslut',
+        exact: true,
+      })
+      .click()
     await expect(page.locator('li.card .badge')).toHaveText('Avvisat')
+    expect(attempts.get(operationId)).toHaveLength(2)
+    expect(attempts.get(rejectedId)).toHaveLength(2)
+    const decisions = (
+      await db.query(
+        'select operation_id,reason from operation_decisions where operation_id=any($1::uuid[])',
+        [[operationId, rejectedId]],
+      )
+    ).rows
+    expect(decisions).toEqual(
+      expect.arrayContaining([
+        { operation_id: operationId, reason: 'Reviewed fixture fields' },
+        { operation_id: rejectedId, reason: 'Reject stale fixture' },
+      ]),
+    )
+    expect(decisions).toHaveLength(2)
     expect(
       (
         await db.query(

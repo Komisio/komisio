@@ -543,7 +543,9 @@
     "staleInspection": "The draft has changed or been archived. Reject this proposal and review the current draft.",
     "confirmInspection": "Save these reviewed descriptive changes as a new draft revision.",
     "draftVersion": "draft revision",
-    "confirmPrice": "I have reviewed the price and its evidence."
+    "confirmPrice": "I have reviewed the price and its evidence.",
+    "retrySame": "Retry the same decision",
+    "lockedDecision": "Your submitted decision"
   },
   "reviewPhotoAlt": "Photo included in this review",
   "reviewPhotos": "Photos in this review",

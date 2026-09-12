@@ -18,7 +18,7 @@ through those same operations. [Private staff photos](docs/RECEPTION-PHOTOS.md)
 are now supported. The [optional AI adapter](docs/RECEPTION-ASSISTANCE.md) provides
 bounded, source-linked suggestions and explicit staff review; staging remains
 unconfigured. A [local MCP adapter](mcp/README.md) now exposes authenticated reads
-and unsaved proposal previews. Hosted agent OAuth, durable agent staging, seller
+and unsaved proposal previews. Hosted agent OAuth, durable agent staging and
 live model evaluation remain next. Seller photo delivery and approval have now
 been verified by the owner in staging, including the saved staff-side response
 after PR33. No seller response publishes

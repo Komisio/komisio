@@ -8,7 +8,7 @@ Read CLAUDE.md first. All statuses below are evidence, not inferred completion.
 P0 — publish today's roadmap and correct stale status pointers.
 Branch: docs/day-roadmap-2026-09-12. Base main:0ac4b0404295907b028db337004f5d5052d039fb.
 Documentation only; no application or database changes in this slice.
-Next: commit/open PR, verify exact-head CI, merge; then start P1.
+PR34 is open. Next: verify its exact-head CI, merge; then start P1.
 
 ## Last verified delivery
 
@@ -22,7 +22,7 @@ modified by the fix.315 SQL assertions and real HTTP/race checks passed locally.
 
 ## Next three actions
 
-1. Complete P0 PR and checkpoint its evidence here or in the local handover.
+1. Complete P0 PR34 and checkpoint its evidence here or in the local handover.
 2. Find shared response copy in messages/ and components/reception/; separate
    staff reporting from seller confirmation without changing stored decisions.
 3. Inspect current reception list queries and specify derived queue states before

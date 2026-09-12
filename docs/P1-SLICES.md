@@ -176,6 +176,11 @@ Purpose: make the built seller-review flow opt-in (A3).
   facts, not as something to approve, unless the tenant uses `per_item`.
 - No migration: queue and UI derive from the policy; pgTAP for the stage
   derivation in both modes; browser journey for delegated publication.
+- Status 2026-09-13: stage derivation in SQL (`reception_queue` replaced
+  additively) with `awaiting_custody`, `ready_to_accept` and `accepted`;
+  pgTAP for both modes; delegated notice on the reception page. The seller
+  link remains optional in delegated mode; hiding it and the seller-app
+  wording follow with the seller app work.
 
 ## S7. Provenance into items
 

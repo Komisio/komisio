@@ -447,7 +447,11 @@
     "custodyMissing": "Inget mottagande registrerat",
     "custodyReference": "Plagg",
     "custodyPrint": "Skriv ut plaggetikett",
+    "delegatedNotice": "Butiken sätter priset (delegerad prissättning enligt butikspolicyn). Säljarlänken är valfri; acceptans kräver inte säljarens svar.",
     "queueStages": {
+      "awaiting_custody": "Väntar på mottagande",
+      "ready_to_accept": "Redo att acceptera",
+      "accepted": "Accepterad som vara",
       "preparing": "Under förberedelse",
       "needs_review": "Behöver nytt underlag",
       "approved": "Godkänt av säljaren",
@@ -458,6 +462,8 @@
       "awaiting_seller": "Inväntar säljarens svar"
     },
     "queueNextSteps": {
+      "accept_item": "Nästa steg: acceptera varan under gällande villkor. Butiken sätter priset om inte policyn kräver säljarens godkännande.",
+      "item_accepted": "Klart: varan är accepterad. Fortsättningen sker i varulistan.",
       "prepare_evidence": "Nästa steg: komplettera bilder, beskrivning och prisunderlag.",
       "review_changed_evidence": "Nästa steg: granska ändringarna och publicera ett nytt underlag för säljarens svar.",
       "check_store_acceptance_requirements": "Nästa steg: Kontrollera mottaget plagg och säljarvillkor inför butikens beslut. Försäljningsstart stöds ännu inte.",

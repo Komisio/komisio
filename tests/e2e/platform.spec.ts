@@ -1790,13 +1790,13 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   ).toHaveCount(0)
   const saved = await page.request.get(`/api/reception/${sessionId}`)
   expect((await saved.json()).latestReview.response.decision).toBe('approve')
-  await page.goto('/intake/reception?stage=approved')
+  await page.goto('/intake/reception?stage=awaiting_custody')
   await expect(
     page.getByRole('heading', { name: 'Mottagningskö' }),
   ).toBeVisible()
   await expect(
     page.locator(`a[href="/intake/reception/${sessionId}"]`),
-  ).toContainText('Godkänt av säljaren')
+  ).toContainText('Väntar på mottagande')
   // Seller approval never proves the garment is in the store: custody comes first.
   await expect(
     page.locator(`a[href="/intake/reception/${sessionId}"]`),
@@ -1816,16 +1816,16 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   await expect(
     page.getByLabel('Anteckning (valfri, till exempel var plagget hänger)'),
   ).toHaveCount(0)
-  await page.goto('/intake/reception?stage=approved')
+  await page.goto('/intake/reception?stage=ready_to_accept')
   await expect(
     page.locator(`a[href="/intake/reception/${sessionId}"]`),
-  ).toContainText('Kontrollera mottaget plagg och säljarvillkor')
+  ).toContainText('acceptera varan under gällande villkor')
   await page.getByLabel('Visa läge').selectOption('declined')
   await page.getByRole('button', { name: 'Visa läge', exact: true }).click()
   await expect(
     page.locator(`a[href="/intake/reception/${sessionId}"]`),
   ).toHaveCount(0)
-  await page.getByLabel('Visa läge').selectOption('approved')
+  await page.getByLabel('Visa läge').selectOption('ready_to_accept')
   await page.getByRole('button', { name: 'Visa läge', exact: true }).click()
   await expect(
     page.locator(`a[href="/intake/reception/${sessionId}"]`),

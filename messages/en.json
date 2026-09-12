@@ -447,7 +447,11 @@
     "custodyMissing": "No custody recorded",
     "custodyReference": "Garment",
     "custodyPrint": "Print garment label",
+    "delegatedNotice": "The store sets the price (delegated pricing per store policy). The seller link is optional; acceptance does not need the seller's answer.",
     "queueStages": {
+      "awaiting_custody": "Awaiting custody",
+      "ready_to_accept": "Ready to accept",
+      "accepted": "Accepted as item",
       "preparing": "Preparing",
       "needs_review": "New review needed",
       "approved": "Seller approved",
@@ -458,6 +462,8 @@
       "awaiting_seller": "Awaiting seller response"
     },
     "queueNextSteps": {
+      "accept_item": "Next: accept the item under the terms in force. The store sets the price unless the policy requires the seller's approval.",
+      "item_accepted": "Done: the item is accepted. Further steps happen in the items list.",
       "prepare_evidence": "Next: complete photos, description and price evidence.",
       "review_changed_evidence": "Next: check the changes and publish a new review for the seller to answer.",
       "check_store_acceptance_requirements": "Next: check the received garment and seller terms before the store decision. Starting sales is not yet supported.",

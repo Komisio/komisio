@@ -103,3 +103,55 @@ defaults, not legal requirements; nothing here decides VAT treatment.
 | `assistanceEnabled` | `false` | AI assistance is off until the store turns it on (P1 S9) |
 
 Amounts are SEK with two decimals in policy and öre in the database.
+
+## VAT cases (P2 S10 draft, every case [to verify])
+
+The engine-facing table is `docs/VAT-CASES.md`. This section is the reasoning
+and the sources to check. Nothing here is verified; do not compute VAT from it.
+
+**The central question.** In försäljningskommission the store sells in its own
+name on the consignor's behalf. Swedish VAT law treats a commissionaire who
+sells goods in its own name as if it had itself acquired and supplied the
+goods **[to verify: mervärdesskattelagen (2023:200), the rule on supply
+through a commissionaire; cite chapter and section]**. If that holds, then for
+goods received from a private person the store has "acquired" the goods from
+someone who could not charge VAT, which is exactly the situation the margin
+scheme (vinstmarginalbeskattning, VMB) covers **[to verify: ML 20 kap. on
+used goods, and Skatteverket's guidance on kommissionsförsäljning av begagnade
+varor]**. Under that reading:
+
+- Case C1: the store's margin is the sale price minus what the consignor
+  receives, which is the commission; VAT is due on that margin only, and the
+  consignor's share carries no VAT. This is the treatment the earlier system
+  called "commission ex VAT, deduct VAT".
+- Case C2: charging VAT on the whole sale price to a consumer, which the
+  earlier system used as its default, would overstate VAT if C1 is the correct
+  reading. Keep it as a case so that a store that has been applying it can be
+  migrated deliberately, not silently.
+
+**Business consignors (C3).** When the consignor is VAT-registered the store's
+commission is a service supplied to the consignor and is invoiced with VAT at
+the standard rate **[verified in outline: ML, services at 25 %; verify section
+and whether an invoice is mandatory]**. Whether the goods themselves then
+carry full VAT on the sale depends on the same commissionaire rule as above
+**[to verify]**.
+
+**Store-owned goods (C4, C5).** Goods bought from a private person and resold
+may use VMB per item when purchase and sale are documented per item, the
+margin is price minus purchase price, and a negative margin gives no VAT and
+cannot offset a positive one under the per-item method **[verified in outline:
+ML 20 kap.; verify the simplified method threshold and the documentation
+requirement]**. Eligibility must be attested when the item is bought; this is
+why acceptance of a purchase origin records who attested it. Goods bought with
+deductible VAT, or without evidence, sell with full VAT (C5).
+
+**Rate and rounding.** Standard rate 25 % **[verified: ML, standard rate]**; no
+reduced rate applies to second-hand clothing or household goods **[to
+verify]**. Per-line rounding to öre, half up, totals as sums of lines
+**[design decision, not law]**.
+
+**What must happen before any case is marked verified.** The owner or the
+store's accountant confirms the source for each case, one worked example in
+öre per case is agreed and written into `docs/VAT-CASES.md`, and the case
+status there changes to `verified: <source>`. Until then the engine records
+the case and basis and leaves the VAT amount empty.

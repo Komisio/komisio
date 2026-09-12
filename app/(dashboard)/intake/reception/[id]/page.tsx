@@ -18,6 +18,8 @@ import {
   ReviewAccess,
 } from '@/components/reception/operator'
 import { RecordCustody } from '@/components/reception/custody'
+import { AcceptItemForm } from '@/components/intake/accept-item-form'
+import { readItemForOrigin } from '@/lib/engine/items'
 import {
   readGarmentReceipt,
   garmentReference,
@@ -58,6 +60,12 @@ export default async function Reception({
   ])
   if (seller.error || terms.error)
     throw new Error('Unable to read reception context')
+  const accepted = await readItemForOrigin(
+    ctx.client,
+    tenant.id,
+    'reception_review',
+    id.data,
+  )
   const prepared = readManualReception(sources),
     write = tenant.role !== 'readonly'
   const current = review?.sourceRevision === state.revision,
@@ -138,6 +146,30 @@ export default async function Reception({
             )}
           </>
         )}
+      </section>
+      <section className="card intake-form reception-result">
+        <h2>{all.items.acceptHeading}</h2>
+        <p>{all.items.acceptHint}</p>
+        {accepted ? (
+          <p role="status">
+            {all.items.alreadyAccepted}{' '}
+            <Link className="text-link" href={`/intake/items/${accepted.id}`}>
+              {all.items.open}
+            </Link>
+          </p>
+        ) : !custody || !review ? (
+          <p role="status">{all.items.acceptBlocked}</p>
+        ) : write ? (
+          <AcceptItemForm
+            tenantId={tenant.id}
+            originKind="reception_review"
+            originId={id.data}
+            originRevision={review.version}
+            defaultPrice={review.suggestions.price?.amount}
+            d={all.items}
+            intake={all.intake}
+          />
+        ) : null}
       </section>
       <section className="card intake-form reception-result">
         <h2>{d.photos}</h2>

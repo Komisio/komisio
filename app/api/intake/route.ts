@@ -77,6 +77,11 @@ export async function POST(request: Request) {
           'RECEPTION_PRICE_EVIDENCE_REQUIRED',
           'GARMENT_ALREADY_RECEIVED',
           'SELLER_TERMS_CHANGED',
+          'ORIGIN_NOT_FOUND',
+          'ITEM_EXISTS',
+          'CUSTODY_REQUIRED',
+          'SELLER_APPROVAL_REQUIRED',
+          'PRICE_NOT_APPROVED',
         ].find((v) => result.error!.message.includes(v)) ?? 'REQUEST_FAILED'
       return reply(
         { error: code },
@@ -97,6 +102,10 @@ export async function POST(request: Request) {
                 'RECEPTION_REVIEW_EXPIRED',
                 'GARMENT_ALREADY_RECEIVED',
                 'SELLER_TERMS_CHANGED',
+                'ITEM_EXISTS',
+                'CUSTODY_REQUIRED',
+                'SELLER_APPROVAL_REQUIRED',
+                'PRICE_NOT_APPROVED',
               ].includes(code)
             ? 409
             : 400,

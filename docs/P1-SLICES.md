@@ -143,6 +143,11 @@ p_price)`: staff; checks the origin is current (latest draft revision or
   for propose plus approval by a second user; browser journeys for both
   origins.
 - Migration: yes.
+- Status 2026-09-13: tables, accept_item for all three origins, engine
+  command, accept actions on the reception, inspection and purchases pages,
+  items list and detail delivered with pgTAP for every precondition. The
+  staged kind `acceptItem`, the MCP tool, the two-connection race script and
+  the browser journeys follow in a separate slice.
 
 ## S5. Purchase registration
 

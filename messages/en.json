@@ -705,7 +705,8 @@
     },
     "eventKinds": {
       "accepted": "Accepted",
-      "price_set": "Price set"
+      "price_set": "Price set",
+      "provenance": "Provenance recorded"
     }
   },
   "purchases": {

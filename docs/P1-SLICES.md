@@ -189,6 +189,11 @@ Purpose: keep the AI provenance the origin recorded.
 - At acceptance, copy the origin's per-fact confirmation record (PR51) and
   the model attempt reference into `item_events` as one `provenance` event.
 - No migration beyond S4; tests assert the event exists and cites the origin.
+- Status 2026-09-13: delivered as migration `20260913210000` (event kind
+  `provenance`, private helper `komisio_private.item_provenance`, accept_item
+  re-declared with one extra insert); pgTAP covers review provenance with a
+  model attempt, a draft produced by an approved agent proposal, and that
+  purchases carry none.
 
 ## S8. Staff mobile reception
 

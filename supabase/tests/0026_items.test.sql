@@ -35,7 +35,7 @@ select is((current_setting('test.terms')::jsonb->>'salePeriodDays')::int,42,'sal
 select is((select custody_kind from items where id=current_setting('test.item1')::uuid),'bag','bag custody referenced');
 select is((select seller_id from items where id=current_setting('test.item1')::uuid),current_setting('test.seller')::uuid,'seller referenced');
 select is((select price_ore from item_prices where item_id=current_setting('test.item1')::uuid),25000::bigint,'first price row is the accepted price');
-select is((select count(*) from item_events where item_id=current_setting('test.item1')::uuid),2::bigint,'accepted and price_set events');
+select is((select count(*) from item_events where item_id=current_setting('test.item1')::uuid),3::bigint,'accepted, price_set and provenance events');
 -- Later policy or seller terms never touch the frozen item.
 select set_config('test.body',(current_store_policy(current_setting('test.tenant')::uuid)->'policy')::text,true);
 select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,current_setting('test.body')::jsonb || '{"commissionRatePercent":40}');

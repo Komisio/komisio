@@ -30,13 +30,19 @@ Fable's fixed4593bd0 inventory is a reviewed proposal, not a feature-parity mand
 Prototype claims, financial assumptions, AI/GUI absolutism, pilot timing and the
 convergence proposal's evidenced terms were clarified. Documentation only.
 
-Current slice: `feat/shared-inspection-read` extracts the bag inspection UI's
-bounded draft/current/history reads into the shared engine. An explicit
-`inspection:read` MCP tool reuses it and omits bag notes. No new migration,
-source conversion, model call or acceptance. First real MCP checks pass (23 drafts,
-24 versions, cursor/filter/history behavior, identity/tenant/MFA and invalid input).
-Saved/archive browser journeys passed (2/2), as did lint, scoped formatting,
-typecheck/build and99 units. PR/CI and deployment are pending. See INSPECTION-READ.md.
+PR46 is delivered: merge425f95604a25ff9f56a310065095426716771760 after
+CI34692709538 passed exact head8c099fc31317458acb8d3dfb310d4b58447110cb.
+Deployment6409463453 succeeded. Shared saved inspection reads serve UI and opt-in
+MCP. Real MCP pagination/history/denial checks and both local saved/archive browser
+journeys passed, with lint/types/build and99 units. Hosted public guards passed;
+an authenticated hosted inspection remains pending. No migration.
+
+Current slice: `feat/mcp-bag-discovery` exposes the existing bag queue through
+`komisio_list_bags` under `inspection:read`. Printed-number lookup and bounded
+paging return only bag ID, reference and received time, enabling draft discovery
+without seller lookup. No new queue, database change or UI behavior. Real MCP
+lookup/paging/denial checks, lint, scoped formatting, typecheck/build and99 units
+passed. PR/CI and release pending; see INSPECTION-READ.md and mcp/README.md.
 
 The prior PR40 work below is completed: merged6329b6ec95df1af3db8534921966f274f82f9e95,
 exact-head CI34687228721 passed, staging deployment6408441889 succeeded.
@@ -75,13 +81,11 @@ Do not impersonate the owner or change their existing seller responses.
 
 ## Next three actions
 
-1. Verify shared inspection reads through existing saved/archive browser journeys,
-   lint/types/build and the real MCP suite; review the extracted UI behavior.
-2. Commit, open a scoped PR and require exact-head green CI before merge. No
-   migration; verify the matching staging deployment and anonymous page guard.
-3. Refine the future draft-to-reception preview without inventing source citations,
-   observed certainty or commercial acceptance. Hosted user-only pilot checks
-   and commercial terms decisions remain outstanding.
+1. Verify real MCP bag-number lookup, bidirectional paging and scope/identity/
+   tenant/MFA denial; confirm no seller fields or notes escape the adapter.
+2. Run scoped checks and release a PR only after exact-head green CI. No migration.
+3. Continue the nonfinancial preview contract or independent pilot gates; never
+   convert bag text into verified reception evidence without a source contract.
 
 ## Architecture and remaining gates
 

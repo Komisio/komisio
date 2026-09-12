@@ -6,6 +6,7 @@ It exposes narrow tools through the same intake engine:
 
 | Tool                             | Scope             | Effect                                                                                        |
 | -------------------------------- | ----------------- | --------------------------------------------------------------------------------------------- |
+| komisio_list_bags                | inspection:read   | Find a printed bag number or page through bag IDs; no seller data or notes                    |
 | komisio_read_inspection          | inspection:read   | Read bounded saved bag drafts and exact history; no notes, contacts or writes                 |
 | komisio_read_reception_operation | reception:read    | Read exact staged proposal sources and agreement terms; no decision                           |
 | komisio_list_receptions          | reception:read    | Read a bounded queue with shared next-step guidance, not commercial acceptance                |
@@ -130,3 +131,10 @@ historical version when requested. Historical data does not authorize a write;
 engine commands recheck revisions. No source or certainty is invented from draft
 text. Bag notes and contact lookup are excluded; descriptions and change reasons
 remain untrusted staff-entered text. See [shared inspection read](../docs/INSPECTION-READ.md).
+
+Use `komisio_list_bags` with `{ "bag": "K-123" }` to find the bag's ID, then pass
+that ID to `komisio_read_inspection`. An empty argument object lists the newest20
+receipts. Pass the returned `older` or `newer` string to page in one direction.
+Exact number lookup and paging reuse the staff bag queue engine. Results contain
+only bag ID, printed reference and received time; no seller names, contacts or
+bag notes. The tool does not record a new receipt or confirm an individual item.

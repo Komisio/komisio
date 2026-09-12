@@ -13,7 +13,11 @@ export async function testInspectionMCP({
 }) {
   const bag = randomUUID(),
     otherBag = randomUUID()
-  for (const id of [bag, otherBag])
+  for (const id of [
+    bag,
+    otherBag,
+    ...Array.from({ length: 21 }, () => randomUUID()),
+  ])
     await rpc('receive_bag', {
       p_tenant: tenant,
       p_id: id,
@@ -57,10 +61,74 @@ export async function testInspectionMCP({
   const tools = (await client.listTools()).tools
   assert.deepEqual(
     tools.map((t) => t.name),
-    ['komisio_read_inspection'],
+    ['komisio_list_bags', 'komisio_read_inspection'],
   )
   assert.equal(tools[0].annotations.readOnlyHint, true)
   assert.equal(tools[0].inputSchema.additionalProperties, false)
+  async function list(args = {}) {
+    const r = await client.callTool({
+      name: 'komisio_list_bags',
+      arguments: args,
+    })
+    assert(!r.isError, JSON.stringify(r.content))
+    return r.structuredContent
+  }
+  const knownBags = (
+    await db.query(
+      'select id,reference from bag_receipts where tenant_id=$1 order by reference desc',
+      [tenant],
+    )
+  ).rows
+  const page1 = await list()
+  assert.equal(page1.items.length, 20)
+  assert.deepEqual(
+    page1.items.map((x) => x.bagId),
+    knownBags.slice(0, 20).map((x) => x.id),
+  )
+  assert.equal(page1.newer, null)
+  assert.equal(page1.availableForSale, false)
+  assert.equal(page1.evidenceIsUntrusted, true)
+  for (const row of page1.items)
+    assert.deepEqual(Object.keys(row).sort(), [
+      'bagId',
+      'receivedAt',
+      'reference',
+    ])
+  assert(!JSON.stringify(page1).includes('PRIVATE BAG NOTE'))
+  const page2 = await list({ older: page1.older })
+  assert.deepEqual(
+    page2.items.map((x) => x.bagId),
+    knownBags.slice(20).map((x) => x.id),
+  )
+  assert.equal(page2.older, null)
+  assert.deepEqual((await list({ newer: page2.newer })).items, page1.items)
+  const bagRef = String(knownBags.find((x) => x.id === bag).reference)
+  const lookup = await list({ bag: `K-${bagRef}` })
+  assert.equal(lookup.items.length, 1)
+  assert.equal(lookup.items[0].bagId, bag)
+  assert.equal(lookup.items[0].reference, `K-${bagRef}`)
+  assert.equal(
+    (await list({ bag: String(Number.MAX_SAFE_INTEGER) })).items.length,
+    0,
+  )
+  for (const args of [
+    { seller },
+    { tenantId: tenant },
+    { limit: 500 },
+    { bag: 'id.gt.0' },
+    { bag: '9007199254740992' },
+    { older: '0' },
+    { older: '2', newer: '3' },
+  ])
+    assert(
+      (await client.callTool({ name: 'komisio_list_bags', arguments: args }))
+        .isError,
+      JSON.stringify(args),
+    )
+  await assert.rejects(
+    receptionClient.callTool({ name: 'komisio_list_bags', arguments: {} }),
+    /not found/,
+  )
   async function read(args) {
     const r = await client.callTool({
       name: 'komisio_read_inspection',
@@ -130,6 +198,10 @@ export async function testInspectionMCP({
     await connect('inspection:read', 'invalid-token'),
     await connect('inspection:read', token, randomUUID()),
   ]) {
+    assert(
+      (await denied.callTool({ name: 'komisio_list_bags', arguments: {} }))
+        .isError,
+    )
     assert(
       (
         await denied.callTool({

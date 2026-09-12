@@ -441,6 +441,25 @@
       "issue_review_link": "Next: open the reception and create the personal seller link. No email is sent automatically.",
       "replace_review_link": "Next: open the reception and create a replacement link if the review should be shared again.",
       "await_seller_response": "Next: await the seller response. Creating a link does not mean the seller has read the review."
+    },
+    "history": {
+      "title": "Version history",
+      "notice": "Summary of saved sources and published proposals. Each response applies only to its proposal version. This is not store acceptance or a complete agreement and image history.",
+      "reviews": "Published proposals",
+      "sources": "Saved sources",
+      "sourceRevision": "Source revision",
+      "empty": "No versions on this page.",
+      "approved": "The seller approved this version.",
+      "declined": "The seller declined this version.",
+      "unanswered": "No response recorded for this version at read time.",
+      "olderReviews": "Older proposals",
+      "olderSources": "Older source revisions",
+      "latest": "Show latest versions",
+      "kinds": {
+        "photo": "Photo",
+        "observation": "Observation",
+        "price-evidence": "Price evidence"
+      }
     }
   },
   "reviewPhotoAlt": "Photo included in this review",

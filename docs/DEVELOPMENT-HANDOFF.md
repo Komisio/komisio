@@ -1,95 +1,88 @@
 # Development handover
 
-Updated:2026-09-12. Active plan: [daytime roadmap](DAY-PLAN-2026-09-12.md).
-Read CLAUDE.md first. All statuses below are evidence, not inferred completion.
+Updated 2026-09-12. Read CLAUDE.md first, then this file and the
+[active day plan](DAY-PLAN-2026-09-12.md). Git, CI and deployment records take
+precedence over narrative. This file supersedes older slice status notes.
 
-## Current slice
+## Current work
 
-Shared reception next-step guidance, branch `feat/reception-next-step`, based on
-main `5f910f533819f53a2a34b27b5928626b86c8f01b` (PR38 merged, deployment6407662441
-succeeded). The engine derives guidance from the existing validated queue stage;
-UI and MCP consume the same result. No migration, new permissions or commercial
-transition. MCP stdio tests, typecheck, lint,94 unit tests and production build
-passed locally. The existing seller browser journey also passed (1/1).
-PR39 contains this slice; consult GitHub for exact-head CI, merge and deployment evidence.
+PR40, branch `feat/reception-history`: read-only reception history shared by the
+staff UI and local MCP. Source and review lists have separate bounded cursors.
+Old seller responses stay attached to their exact proposal version. No new table,
+migration, commercial transition, contact lookup or image access.
+[Contract and limitations](RECEPTION-HISTORY.md).
 
-Next independent slice: readable reception evidence/review history using existing
-immutable records and tenant authorization. Commercial acceptance remains gated
-by the unresolved item-bound terms in open-questions.md. Hosted login blocks only
-the authenticated staging walkthrough, not local implementation or CI.
+Local checks passed: lint/typecheck/build,94 unit tests, real MCP stdio with22
+source revisions (pagination and invalid cursor/identity/tenant/MFA denial), and
+seller browser journey1/1 (old approval, newer decline and review pagination).
+Changed-file formatting passed. The full local Windows format check flags
+unchanged CRLF files; Linux CI remains the release gate. No database reset needed.
 
-## Previous slice (completed)
+GitHub CI for PR40 is pending. Re-read its full head SHA and checks before merge.
+Do not claim this history slice is live until its merge deployment succeeds.
+The branch was based on PR39; PR39 has now merged, and PR40 targets main.
 
-P7 — targeted pilot verification, branch test/reception-queue-pilot. PR36/37 are
-merged; main1c12df7487cc00f778a60232b69adab43c0bddc2 and staging deployment6407541716
-are verified published. Migration20260912073000 is applied locally AND in staging.
-There is no pending production migration. New work is tests/documentation only:
-expired-link historical approval and actual browser filter interaction.
-Hosted staff session redirected to login on fresh navigation; no credentials were
-changed or account impersonated. A fresh authenticated hosted walkthrough remains.
+## Verified recent deliveries
 
-The prior delivery detail below is historical; do not redo its merges/migration.
+| Delivery | Evidence |
+| --- | --- |
+| Shared queue next-step guidance, PR39 | Exact-head CI34686842356 passed on dddb2098af52dda6d5fc6c5aafbb7575fe52f315. Merged as9cd6c5d810e45f680d2dd60ab2a615f767f5987d; deployment6408356330 succeeded. Public login/register and anonymous-mutation denial verified. No migration. |
+| Queue pilot regressions, PR38 | Merged as5f910f533819f53a2a34b27b5928626b86c8f01b; deployment6407662441 succeeded. Expired-link historical approval and actual browser filters tested. |
+| Queue and MCP read, PR36/37 | Merged and deployed through1c12df7487cc00f778a60232b69adab43c0bddc2. Migration20260912073000 applied locally AND in staging; never edit it. |
+| Seller photo fix, PR33 | Migration20260912060000 applied locally AND in staging. Owner confirmed displayed image, seller approval button and saved response in staff view. |
 
-P2/P6 — reception queue and scoped MCP queue read, with P3 follow-up specification.
-PR36: queue UI/engine/read RPC, head9c4174e; initial CI failure was an ambiguous
-Search button, now corrected and operator browser test passed locally.23 queue
-SQL assertions and seller approval/queue browser journey passed. Migration
-20260912073000 is locally applied; check private log for remote application before
-retrying. Do not modify an applied migration.
-
-PR37: branch feat/mcp-reception-queue, initially stacked on PR36. Actual MCP stdio
-checks, lint/typecheck/build and94 unit tests passed locally. No additional migration.
-Queue tool uses existing read scope and configured tenant, never agent-selected
-authority. P3 is documented in STORE-FOLLOW-UP.md. P4 generic completion/acceptance
-is deferred because its commercial meaning requires the existing open terms decisions.
-Check current PR base/head/CI and deployment before merging or claiming live status.
-
-P1 PR35 merged as d5f7348cc85a7fb1f178ee068b043e6e8e3dbac1 after exact-head
-CI34678106622 passed. Local lint/typecheck/build,94 unit tests and the existing
-seller browser journey passed. No database changes. Hosted authenticated copy
-walkthrough remains separate from deployment and public health checks.
-
-## Last verified delivery
-
-PR33 fixed hosted seller-photo authorization: Storage performs an authenticated
-info request before download. Both now retain recipient/capability/MFA and exact
-pinned-image checks. Applied migration:20260912060000_seller_photo_info.sql.
-CI34676644352 passed; merge0ac4b0404295907b028db337004f5d5052d039fb;
-staging deployment6406537848 succeeded. Owner subsequently confirmed image,
-approval button and saved response in the staff view. No account or review was
-modified by the fix.315 SQL assertions and real HTTP/race checks passed locally.
+A fresh hosted staff navigation later redirected to login. Cached UI was not
+accepted as evidence of an active session. Authenticated hosted walkthrough is
+still pending; this only blocks hosted verification, not independent development.
+Do not impersonate the owner or change their existing seller responses.
 
 ## Next three actions
 
-1. Finish the P7 targeted browser test and commit/open its test/documentation PR.
-2. Verify exact-head CI and merge; no database migration is part of this slice.
-3. Preserve the hosted login requirement and P4/P5 open commercial prerequisites;
-   do not invent additional core tables just to keep the automation busy.
+1. Verify PR40 exact-head CI; resolve any failure, then merge and confirm the
+   matching staging deployment. No migration is needed.
+2. Update this checkpoint with the merge/deployment evidence. Test the hosted
+   history/queue when a fresh authorized staff session becomes available.
+3. Continue a bounded independent slice: specify safe import of an external AI
+   preview into staff review, or improve exact historical evidence navigation.
+   Start with the operation contract; never silently save or publish model output.
 
-## Known limitations / do not accidentally enable
+## Architecture and remaining gates
 
-- Seller response is not commercial acceptance, POS publication or payout.
-- AI provider is optional and not live-verified; no borrowed credentials.
-- MCP currently reads/images/previews only; no durable agent approval runtime.
-- Full hosted staff invitation acceptance, operational recovery and backup/restore
-  need separate verification; earlier platform status is historical.
-- Bag-first intake and garment reception are distinct; never create fake custody.
-- Unknown financial and retention rules remain in open-questions.md.
+- Core and database own identity, tenant isolation, exact versions and immutable
+  decisions. UI/MCP are adapters; skills provide guidance, not authorization.
+- Historical approval is not current approval, physical custody, commercial
+  acceptance, POS publication or a payable balance. No generic completion flag.
+- Commercial acceptance still requires item-bound terms decisions in
+  [open questions](open-questions.md). Continue independent work while unresolved.
+- Built-in AI provider remains optional and unverified live. No borrowed tokens,
+  paid provider activation or live POS writes are authorized by this day plan.
+- Local MCP reads/images/previews only; no durable pending-operation runtime,
+  hosted delegated login or automatic GUI import of external previews exists.
+- Bag receiving and single-garment reception are distinct workflows.
+- History is a summary, not complete historic agreement/image access or a legal
+  audit. See RECEPTION-HISTORY.md before extending it.
+- Invitation acceptance, account recovery, retention and backup/restore need
+  their own verification before external pilot use.
 
-## Operational continuation
+## Another model or parallel contributor
 
-Repository: C:\Workspace\Inority\komisio; public remote: Komisio/komisio.
-Use personal GitHub configuration recorded in ignored private/staging-handoff.md;
-never use Valmet identity. PowerShell commands should use login:false.
-Local Supabase normally runs on54321/54322; inspect running services before starting
-another app. Do not reset the database to make a test pass.
-Standard commands are in package.json and CLAUDE.md. Public health checks cannot
-substitute for an authenticated hosted workflow. Existing private handovers contain
-host/project identifiers and deployment steps without requiring new credentials.
+A replacement can continue the current branch after inspecting status and PRs.
+A parallel contributor must use a separate worktree and a clearly bounded task;
+never switch branches or edit files in the other model's working directory.
+Read [parallel development guide](PARALLEL-DEVELOPMENT.md). No Fable worker has
+been started or assigned automatically.
 
-## Checkpoint history
+## Operations
 
-- 2026-09-12: Owner verified full image → seller approval → staff response path
-  after PR33. Daytime roadmap authorized; overnight deadline is superseded.
-- 2026-09-12: P0 started. Documentation is the only changed work; no running local
-  app started by this slice. Recheck Git and remote state before continuing.
+Repository: C:\Workspace\Inority\komisio, public remote Komisio/komisio.
+Use the personal GitHub configuration recorded in ignored
+private/staging-handoff.md, never Valmet identity. Use PowerShell login:false.
+Local Supabase normally runs on54321/54322. Inspect running processes before
+starting an app; do not reset the database to make a test pass.
+
+Before tests/merge, append a private checkpoint with branch, full SHA, PR, exact
+checks, migrations, deployment and next action. Never store secrets in that log.
+Use signed-off commits and green exact-head CI. The owner's daytime authorization
+covers staging releases; hosted user-only verification must be labeled separately.
+The day plan ends at18:00 Europe/Stockholm unless the owner changes it. Maximize
+useful progress within scope; do not pause development to conserve weekly quota.

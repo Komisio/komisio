@@ -10,6 +10,10 @@ import type { MCPConfig } from './config'
 import { readReceptionPhoto } from '../lib/engine/reception-photos'
 import { receptionDerivative } from '../lib/media/reception-image'
 import {
+  readReceptionHistory,
+  receptionHistoryInput,
+} from '../lib/engine/reception-history'
+import {
   readReceptionQueue,
   receptionStage,
 } from '../lib/engine/reception-queue'
@@ -58,6 +62,14 @@ export function receptionTools(client: SupabaseClient, config: MCPConfig) {
     return { actor, state }
   }
   return {
+    async history(input: unknown) {
+      const c = receptionHistoryInput.parse(input),
+        actor = await identityContext('reception:read')
+      return {
+        actor,
+        ...(await readReceptionHistory(client, config.tenantId, c)),
+      }
+    },
     async queue(input: unknown) {
       const c = queueInput.parse(input),
         actor = await identityContext('reception:read')

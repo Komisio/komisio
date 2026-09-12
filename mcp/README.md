@@ -6,6 +6,8 @@ It exposes narrow tools through the same intake engine:
 
 | Tool                                 | Scope              | Effect                                                                                                 |
 | ------------------------------------ | ------------------ | ------------------------------------------------------------------------------------------------------ |
+| komisio_list_inspection_operations   | inspection:read    | Page through inspection operation status summaries; no payload, people or decisions                    |
+| komisio_list_reception_operations    | reception:read     | Page through reception operation status summaries; no inspection access                                |
 | komisio_propose_inspection_edit      | inspection:propose | Stage a complete descriptive edit against an exact saved revision; staff approval required             |
 | komisio_read_inspection_operation    | inspection:read    | Read exact staged inspection before/after and decision; no reception access                            |
 | komisio_prepare_inspection_reception | inspection:preview | Compare a saved draft with reception requirements; unsourced candidates and unassessed next steps only |
@@ -171,3 +173,14 @@ actual draft provenance and steps to check. It does not read other receptions,
 prices or agreements, does not assert they are missing, and does not create source
 IDs or a publishable review. The staff inspection page shows the same comparison
 under an expandable preparation section. See [contract](../docs/INSPECTION-RECEPTION-PREVIEW.md).
+
+## Find pending operations
+
+The two operation list tools accept status (all/open/expired/executed/failed/rejected)
+and optional paired beforeCreated/beforeId from nextBefore. Each returns at most20
+summary rows; reuse the cursor exactly without rounding timestamps. Kind is fixed
+by the tool and tenant by the host before database limiting. The list is live;
+return to the first page for current status. Use the corresponding exact operation
+read for details. No payload, identity, actor label or decision reason is listed.
+See [discovery contract](../docs/MCP-OPERATION-DISCOVERY.md). These are local stdio
+tools, not a new hosted AI assistant or delegated credential.

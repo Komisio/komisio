@@ -24,3 +24,9 @@ status filters, invalid paired cursors, outsider/anonymous/MFA denial, readonly
 access and no mutation. The UI exposes no decision outside the existing exact
 operation detail page. Apply the additive read function before deploying its
 caller; rollback can use the old RPC without changing data or dropping history.
+
+
+Scoped MCP discovery adds a kind-filtered shared read in migration20260912173000.
+The four-argument page RPC delegates to it with all kinds; the legacy newest50
+RPC stays unchanged. Kind is filtered before limiting. See
+[MCP-OPERATION-DISCOVERY.md](MCP-OPERATION-DISCOVERY.md).

@@ -168,3 +168,14 @@ or a sandbox for arbitrary in-process code. Validate returned candidates against
 an isolated trusted snapshot, then mark every returned descriptive fact tentative
 regardless of provider certainty. Staff confirmation and engine publication rules
 stay unchanged. No new provider, prompt wording, reservation rule or migration.
+
+
+## 2026-09-12 - Scoped MCP operation discovery
+
+Expose paged operation summaries through existing reception:read and inspection:read
+MCP scopes. The host pins operation kind and tenant; models supply only the existing
+status/cursor input. Apply kind filtering before the database page limit. Preserve
+the four-argument paged RPC as a delegating compatibility wrapper and the legacy
+newest-50 RPC unchanged. Return only IDs, kind, risk, derived status and timestamps;
+no payload, people, actor label, decision reason or write. Existing scoped exact
+operation reads supply details on demand. No new scope, table or authorization.

@@ -62,6 +62,7 @@ export async function testInspectionMCP({
   assert.deepEqual(
     tools.map((t) => t.name),
     [
+      'komisio_list_inspection_operations',
       'komisio_read_inspection_operation',
       'komisio_list_bags',
       'komisio_read_inspection',

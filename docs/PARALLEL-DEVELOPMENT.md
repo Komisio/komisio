@@ -52,10 +52,11 @@ PR51 delivers explicit per-fact and price review in built-in AI publication and
 staged reception decisions. PR52 delivers exact staff-decision retries after
 uncertain responses. PR53 delivers filtered operation queue pages;
 migration20260912170000 is applied locally and in staging and must not be edited.
-Astra's current slice narrows the existing assistance port to source evidence and
-normalizes all adapter facts to tentative before staff review. It changes no
-prompt, provider setting, database or authorization. See RECEPTION-EVIDENCE-PORT.md,
-DEVELOPMENT-HANDOFF.md and the private checkpoint for current test/release status.
+PR54 delivers the narrowed assistance evidence port. Astra's current slice adds
+scoped MCP discovery of staged operation summaries through the shared paged read.
+Migration20260912173000 is applied locally and immutable, staging still pending.
+No new scope, table or write. See MCP-OPERATION-DISCOVERY.md, DEVELOPMENT-HANDOFF.md
+and the private checkpoint for current test/release status.
 
 Coordinate shared files such as DECISIONS.md, dictionaries, package manifests,
 migrations and handover notes. One release owner merges changes after exact-head

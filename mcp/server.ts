@@ -1,3 +1,5 @@
+import { listScopedOperations } from './operation-discovery'
+import { operationPageInput } from '../lib/engine/operation-page'
 import { inspectionReceptionInput } from '../lib/engine/inspection-reception-preview'
 import { prepareInspectionReceptionTool } from './inspection'
 import { McpServer } from '@modelcontextprotocol/server'
@@ -76,6 +78,24 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           : 'INVALID_OR_UNAVAILABLE'
       return { isError: true, content: [{ type: 'text' as const, text: code }] }
     }
+  }
+  for (const [scope, name] of [
+    ['reception:read', 'komisio_list_reception_operations'],
+    ['inspection:read', 'komisio_list_inspection_operations'],
+  ] as const) {
+    if (config.scopes.includes(scope))
+      server.registerTool(
+        name,
+        {
+          description: `List up to20 staged operation summaries for ${scope === 'reception:read' ? 'reception reviews' : 'inspection edits'} in the configured store. Filter by status and continue with the exact returned cursor. No payload, people, decision reasons or writes. Read exact details with the corresponding read operation tool; status is guidance only.`,
+          inputSchema: operationPageInput,
+          annotations,
+        },
+        (input) =>
+          result(async () => ({
+            data: await listScopedOperations(client, config, input, scope),
+          })),
+      )
   }
   if (config.scopes.includes('inspection:propose'))
     server.registerTool(

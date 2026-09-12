@@ -322,6 +322,8 @@
   "reviewResponseError": "Your response could not be confirmed. Check the status and retry if no response was saved. The store may have changed the review.",
   "reviewLogin": "Sign in or create an account with the email address the store registered for you.",
   "reviewApproved": "Your approval is saved for this version. The store will handle the next step.",
+  "staffReviewApproved": "The seller approved this review. Approval applies to this version and does not make the garment available for sale.",
+  "staffReviewDeclined": "The seller declined this review. The response applies to this version. A changed proposal needs to be published as a new review.",
   "reviewVersion": "Review version",
   "reviewTitle": "Your garment, your decision",
   "reviewBrand": "Brand",

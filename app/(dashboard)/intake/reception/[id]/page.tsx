@@ -211,8 +211,8 @@ export default async function Reception({
           <p role="status">
             {review.response
               ? review.response.decision === 'approve'
-                ? all.reviewApproved
-                : all.reviewDeclined
+                ? all.staffReviewApproved
+                : all.staffReviewDeclined
               : d.awaiting}
           </p>
           {write && (

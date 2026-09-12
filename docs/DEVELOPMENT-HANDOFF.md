@@ -10,8 +10,8 @@ main `5f910f533819f53a2a34b27b5928626b86c8f01b` (PR38 merged, deployment64076624
 succeeded). The engine derives guidance from the existing validated queue stage;
 UI and MCP consume the same result. No migration, new permissions or commercial
 transition. MCP stdio tests, typecheck, lint,94 unit tests and production build
-passed locally. The existing seller browser journey is being verified before
-commit/PR; consult GitHub for exact-head CI, merge and deployment evidence.
+passed locally. The existing seller browser journey also passed (1/1).
+PR39 contains this slice; consult GitHub for exact-head CI, merge and deployment evidence.
 
 Next independent slice: readable reception evidence/review history using existing
 immutable records and tenant authorization. Commercial acceptance remains gated

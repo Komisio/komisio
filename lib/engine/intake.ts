@@ -1,4 +1,5 @@
 import { publishStorePolicyCommand } from './store-policy'
+import { publishSellerTermsCommand } from './seller-terms'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { saveInspectionCommand, archiveInspectionCommand } from './inspection'
@@ -10,6 +11,7 @@ import {
 
 export const intakeCommand = z.discriminatedUnion('action', [
   publishStorePolicyCommand,
+  publishSellerTermsCommand,
   publishReceptionReviewCommand,
   createReceptionCommand,
   saveReceptionSourcesCommand,
@@ -80,6 +82,16 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_id: c.requestId,
         p_expected_current: c.expectedCurrentId,
         p_policy: c.policy,
+      })
+    case 'publishSellerTerms':
+      return client.rpc('publish_seller_terms', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_seller: c.sellerId,
+        p_expected_current: c.expectedCurrentId,
+        p_basis: c.commissionBasis,
+        p_rate: c.commissionRatePercent,
+        p_notes: c.notes,
       })
     case 'publishReceptionReview':
       return client.rpc('publish_reception_review', {

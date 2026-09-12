@@ -99,7 +99,6 @@ stale/archive/role/MFA and commits decision plus save atomically; retry semantic
 remain exact-envelope. Staff field confirmations are a UI review aid, not a new
 authorization boundary. See docs/STAGED-INSPECTION.md and the associated SQL tests.
 
-
 ## 2026-09-12 — Lead architect, roadmap baseline and v1 exclusion
 
 The owner appointed Claude Fable 5.1 as lead architect and selected
@@ -112,7 +111,6 @@ dedicated lifecycle stage and associated screens/feed. Do not build v1 dependenc
 on it. This scope decision does not change access controls or resolve outstanding
 financial rules. No database migration is needed for this documentation decision.
 
-
 ## 2026-09-12 — Unsaved inspection-to-reception preparation
 
 Following FUNCTIONAL-ROADMAP.md, compare only descriptive fields from an existing
@@ -123,7 +121,6 @@ price, terms, a session or consent. A4 semantic equivalence remains unconfirmed.
 The preparation checklist does not search other receptions or agreements and
 cannot establish that they are missing. Use shared pure comparison in staff UI
 and an authenticated exact-revision read in MCP; no migration or persistence.
-
 
 ## 2026-09-12 — Per-fact staff review of reception suggestions
 
@@ -136,7 +133,6 @@ change. No new authorization, financial rule, audit table or migration is added;
 existing SQL publication/decision guards remain authoritative. Rejecting a staged
 proposal requires no field confirmation; exact-request retry stays locked.
 
-
 ## 2026-09-12 — Exact retry of an uncertain staff operation decision
 
 Freeze the complete first decision request in the staff UI and lock its inputs.
@@ -146,7 +142,6 @@ idempotency and authorization stay unchanged. Test both a committed approval wit
 a lost response and a rejection interrupted before reaching the server. No new
 business rule or migration is required.
 
-
 ## 2026-09-12 — Paged and filtered staff operation queue
 
 Add a bounded authenticated read so older open proposals are not hidden by the
@@ -155,7 +150,6 @@ read uses existing derived status and an exclusive creation-time/UUID cursor.
 The engine returns 20 rows plus next-page guidance, retaining timestamp precision.
 No status, authorization or write semantics change. SQL tests precede the additive
 read-function migration; no new core table or financial rule is introduced.
-
 
 ## 2026-09-12 - Provider-independent evidence boundary
 
@@ -169,7 +163,6 @@ an isolated trusted snapshot, then mark every returned descriptive fact tentativ
 regardless of provider certainty. Staff confirmation and engine publication rules
 stay unchanged. No new provider, prompt wording, reservation rule or migration.
 
-
 ## 2026-09-12 - Scoped MCP operation discovery
 
 Expose paged operation summaries through existing reception:read and inspection:read
@@ -179,7 +172,6 @@ the four-argument paged RPC as a delegating compatibility wrapper and the legacy
 newest-50 RPC unchanged. Return only IDs, kind, risk, derived status and timestamps;
 no payload, people, actor label, decision reason or write. Existing scoped exact
 operation reads supply details on demand. No new scope, table or authorization.
-
 
 ## 2026-09-12 - Compare a staged review with its exact prior publication
 
@@ -222,3 +214,5 @@ persistence, authorization, financial rule or migration.
 [2026-09-13] PR59 independently merged S0 and applied migration 20260913090000 while PR58 was in review. S1 reconciles against published main aa19a0b without importing Fables unmerged work. A later additive migration restores S0 dispatch and adds policy-aware nullable-agreement validation/preflight, so fresh installs and backfilled staging migrations converge. No applied migration or history record is edited.
 [2026-09-13] A garment received outside a bag gets its own custody fact, garment_receipts, recorded once per reception session by staff with a printable reference (G-n) and an optional note; a session, photos or a seller approval never prove custody, and commercial acceptance of a garment origin will require this receipt: confirms convergence assumption A1 for the default custody source; locker and seller drop-off sources are added when the store policy (P1 S1) allows them.
 [2026-09-13] Store-owned goods are registered as purchase_receipts with price in öre, a required evidence reference and margin-scheme eligibility attested by the registering staff member at the purchase: the owner decided purchases enter separately from consignment (2026-09-12), and eligibility must be attested when the goods are bought, so it is a fact on the purchase that acceptance copies and the VAT mode consumes, never re-derived later.
+
+[2026-09-13] Seller terms are append-only versions per seller with a nullable commission basis and rate, where null means follow the store policy; effective_seller_terms merges the current policy with the seller's latest version at read time and is what commercial acceptance (S4) freezes onto the item: the owner asked for a per-seller flag and rate override without making sellers mutable. Staff may publish seller terms because they agree them at the counter, while the store policy stays owner or admin; the staged agent kind for proposing seller terms follows with S4's operations work.

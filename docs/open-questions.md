@@ -25,14 +25,14 @@ proposal's owner clarification for scope and outstanding details.
 
 ## Consignment terms
 
-2. **Is the commission stated inclusive or exclusive of VAT towards the
-   consignor?** Private consignors are usually quoted a percentage of the
-   sale price; business consignors may be invoiced commission plus VAT.
-   *Sketch assumed:* a per-agreement flag, default inclusive.
-3. **Which terms are frozen per item at intake, and which follow the current
-   agreement?** Commission rate, sale period, markdown schedule, end-of-period
-   action.
-   *Sketch assumed:* commission terms frozen at intake; everything else live.
+2. ~~Is the commission stated inclusive or exclusive of VAT towards the
+   consignor?~~ **Answered 2026-09-12 (DECISIONS.md):** configurable per
+   tenant with a default from the consignment skill, and overridable per
+   seller by a flag (business sellers may be invoiced commission plus VAT).
+3. ~~Which terms are frozen per item at intake, and which follow the current
+   agreement?~~ **Answered 2026-09-12 (DECISIONS.md):** commission rate,
+   sale period, markdown steps and end-of-period action are all frozen per
+   item at commercial acceptance; a later policy change never rewrites them.
 4. **How is price reduction over time decided and applied?** Fixed schedule
    per agreement, per category, or per item; automatic or proposed for
    approval.
@@ -41,48 +41,55 @@ proposal's owner clarification for scope and outstanding details.
 
 ## Ownership and VAT
 
-5. **Does the store only sell on commission, or does it also buy used goods
-   and resell them?** If both: what evidence makes an item eligible for the
-   margin scheme (vinstmarginalbeskattning), and who attests it?
-   *Sketch assumed:* both models, an explicit `vmb_eligible` flag per item,
-   VAT treatment derived and frozen per sale line together with its basis.
-   The exact VAT cases must be specified against Skatteverket's guidance and
-   verified before they become rules.
-6. **What does the accounting export need per day?** Per VAT treatment, per
-   payment method, per channel; whether consignor payouts are reported as
-   client funds.
+5. ~~Does the store only sell on commission, or does it also buy used goods
+   and resell them?~~ **Answered 2026-09-12 (DECISIONS.md):** both; VAT
+   treatment is frozen per sale line together with its basis. **Answered
+   2026-09-13:** the VAT mode is a tenant setting chosen with the store's
+   accountant; Komisio computes the selected mode deterministically
+   (docs/VAT-CASES.md) and does not decide legality. Margin eligibility for
+   store-owned goods is attested per item at acceptance.
+6. ~~What does the accounting export need per day?~~ **Answered 2026-09-12
+   (DECISIONS.md):** per VAT treatment and per payment method, seller
+   balances reported as a liability to sellers; Fortnox first. Per-channel
+   split follows when a second channel exists.
 
 ## Sales, returns and payouts
 
-7. **What happens on a customer return?** Full or partial refund; whether the
-   consignor's credit is reversed in full; whether the item goes back on the
-   floor automatically.
-   *Sketch assumed:* full reversal of the consignor credit, item back to
-   `for_sale`, both sale lines kept in history.
-8. **When are payout funds considered reserved?** At approval, at transfer,
-   or at confirmation. Affects what a consignor sees as their balance.
-   *Sketch assumed:* at approval.
-9. **Which payout rails are needed first?** Swish, bank file, cash at the
-   counter, manual.
-   **Partly answered 2026-09-11:** investigate Stripe for seller payouts.
-   Provider suitability, funding, onboarding and payout rules are not yet decided.
+7. ~~What happens on a customer return?~~ **Answered 2026-09-12
+   (DECISIONS.md):** full reversal of the seller credit, item back to for
+   sale, both sale lines kept; a return after a payout is flagged for review.
+   Partial refunds remain a later decision.
+8. ~~When are payout funds considered reserved?~~ **Answered 2026-09-12
+   (DECISIONS.md):** at staff approval of the request; the seller sees
+   available minus reserved.
+9. ~~Which payout rails are needed first?~~ **Answered 2026-09-12
+   (DECISIONS.md):** manual "paid" with a reference first; Swish and Stripe
+   as adapters in P3. Provider suitability for those adapters is still to be
+   investigated.
 
 ## Settlements and documents
 
-10. **Is the settlement statement a document the consignor receives, or an
-    internal period close?** Affects numbering, immutability and retention.
-    *Sketch assumed:* a numbered, immutable document corrected by credit note.
-11. **What must be retained, for how long, and where?** Consignment
-    agreements, settlement statements, receipts.
+10. ~~Is the settlement statement a document the consignor receives, or an
+    internal period close?~~ **Answered 2026-09-12 (DECISIONS.md):** a
+    numbered, immutable document the seller receives, corrected by credit note.
+11. ~~What must be retained, for how long, and where?~~ **Answered
+    2026-09-12 (DECISIONS.md):** seven years for settlement statements and
+    receipt evidence, in the database with immutability; agreements for as
+    long as an item under them can still be settled, and at least seven years.
 
 ## Channels and compliance
 
 12. **Which sales channels in the first year?** POS (Zettle for the certified
     cash register), web shop, marketplaces (Tradera, etc.).
     **Partly answered 2026-09-11:** Komisio is not initially a POS; integrate with
-    external POS such as Zettle or Shopify POS. Prioritization remains open.
-13. **Does anything in the core need to satisfy kassaregisterlagen directly,
-    or is that fully delegated to the POS provider?**
+    external POS such as Zettle or Shopify POS.
+    **Partly answered 2026-09-12:** Zettle is the first POS integration;
+    Shopify POS follows on the same adapter contract. Web shop and
+    marketplaces remain open.
+13. ~~Does anything in the core need to satisfy kassaregisterlagen directly,
+    or is that fully delegated to the POS provider?~~ **Answered 2026-09-12
+    (DECISIONS.md):** fully delegated to the POS provider; the core never
+    presents itself as a cash register.
 
 ## Intake and space booking follow-up
 
@@ -131,15 +138,12 @@ proposal's owner clarification for scope and outstanding details.
 
 See [functional roadmap](FUNCTIONAL-ROADMAP.md), section 8.
 
-- Which optional tenant lifecycle policy is needed first? The earlier
-  100-hours concept is excluded from version 1 (owner decision, 2026-09-12).
-- Bag-label printing is already requested and implemented. Which additional
-  purposes are needed first (item, onboarding slip, markdown)?
-- Is a store-owned (purchased) item in scope for the first sale slice, or
-  consignment only?
-- Which POS is first: Zettle or Shopify POS?
-- Tenant-configurable receipt and seller-visibility channels are confirmed.
-  Which delivery channel is first, and which messages need fixed wording?
+~~Lifecycle policy, label purposes, store-owned items, first POS, seller
+notification channel.~~ **Answered 2026-09-12 (DECISIONS.md):** the hourly
+price-decay concept is outside version 1; four label templates on day one
+(bag, item, onboarding slip, markdown); store-owned items are in the first
+sale slice; Zettle first; e-mail first, push later. Which messages need fixed
+wording is decided per template when the notification policy is built.
 
 ## Platform pilot
 

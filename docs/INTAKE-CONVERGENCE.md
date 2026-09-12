@@ -1,8 +1,8 @@
 # ADR: where the two intake paths meet
 
-Status: proposed, specification only. No migration, engine command or UI is
-introduced by this document. Assumptions are marked and listed at the end so
-the owner can confirm or overturn each one separately.
+Status: accepted with owner answers on 2026-09-12 (see the assumptions table
+at the end). Specification only: no migration, engine command or UI is
+introduced by this document.
 
 ## Context
 
@@ -96,13 +96,24 @@ Commission basis and VAT treatment (questions 2, 5), frozen term set
 and any POS or label format. This ADR proposes the shape of the convergence
 so those answers land in one place.
 
-## Assumptions to confirm
+## Assumptions, answered by the owner 2026-09-12
 
-| # | Assumption | If wrong |
-| --- | --- | --- |
-| A1 | Staff attest custody of wall garments with a receipt-like event | Acceptance for garments needs another custody source (camera pairing, seller drop-off) |
-| A2 | Pilot policy: agreement required for review publication and acceptance, optional at bag receipt | Change the policy default; the mechanism is the same |
-| A3 | Seller approval of a review is item-level evidence, not general agreement acceptance | Reviews would need to carry the full agreement acceptance flow |
-| A4 | Category and condition mean the same in drafts and reviews | Add a mapping at acceptance or split the fields |
+| # | Assumption | Answer | Consequence |
+| --- | --- | --- | --- |
+| A1 | Staff attest custody of wall garments with a receipt-like event | Yes by default, configurable per tenant | Custody event exists for both paths; a tenant policy may allow another custody source (locker, seller drop-off) later |
+| A2 | Agreement required for review publication and acceptance, optional at bag receipt | Yes by default, configurable per tenant | The agreement prerequisite is one tenant policy evaluated identically by all three commands |
+| A3 | Seller approval of a review is item-level evidence | Overturned. By default the store sets the price and the seller has delegated that decision to the store (and its AI and statistics); no per-item approval is required. Per-item seller review stays available as an opt-in tenant policy | Acceptance does not require a seller response unless the tenant policy demands it; the existing review and response flow becomes the opt-in path; the general agreement (with evidence or authenticated acceptance) is the seller's consent to delegated pricing |
+| A4 | Category and condition mean the same in drafts and reviews | Owner: category and condition are two separate things | Both paths carry category and condition as two distinct facts; neither is derived from the other and they are never merged; acceptance takes both from the origin without mapping |
 
-Answered assumptions move to DECISIONS.md; overturned ones change this file.
+Decision 4 above ("the seller's approval counts as agreement evidence for that
+item only") therefore applies only when the tenant has enabled per-item seller
+review. Decision 5 stands: whatever was evidenced at acceptance is frozen.
+
+## Store-owned items
+
+Owner decision 2026-09-12: a store-owned item enters through a separate
+purchase registration without a seller, or through the POS integration
+(Zettle first, then Shopify POS) when the POS already knows the item. It
+never enters through the consignment paths. The acceptance command therefore
+has a third origin, `purchase`, with no seller, no agreement and no seller
+consent, and ownership `store` frozen at acceptance.

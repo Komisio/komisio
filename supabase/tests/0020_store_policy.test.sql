@@ -1,6 +1,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 select no_plan();
+select ok(pg_get_functiondef('public.propose_operation'::regproc) like '%op_preflight_publish_reception_review%','S1 retains S0 per-kind dispatcher');
 insert into auth.users(id,email,email_confirmed_at) values
  ('f0000000-0000-4000-8000-000000000001','policy-owner@example.test',now()),
  ('f0000000-0000-4000-8000-000000000002','policy-reader@example.test',now()),

@@ -3,8 +3,9 @@
 ## Active P1 work: S1 ready for CI and staging
 
 Branch `astra/p1-store-policy`, PR58. Fable snapshot `6181413` is included;
-newer Fable commits through `17e73c8` were read only and must not be integrated
-until PR58 completes (owner instruction). S0 is required before S4, not S1.
+PR59 independently merged/applied S0 during this work. PR58 now merges the
+already-published main snapshot `aa19a0b` and adds a compatibility migration
+for S1/S0, tested with both fresh-install and staging-backfill migration order. No unpublished Fable work is included. S0 is in place before S4.
 The owner confirmed the skill defaults directly on 2026-09-13.
 
 S1 now has strict policy validation, isolated pilot defaults, append-only SQL
@@ -17,14 +18,15 @@ Optional review agreements use null consistently; no invented contract or
 seller invitation without terms. Agent proposals reevaluate policy on approval.
 
 Local evidence: 126 unit tests, lint/types, production build, real stdio MCP,
-529 pgTAP tests, concurrent
+540 pgTAP tests, concurrent
 publication and browser publication at 390px including lost-response retry,
 stale-tab rejection and agreement-free publication. Formatting passes with
 Windows line endings respected (`--end-of-line auto`); Linux CI uses the
 unchanged strict format command. Exact latest CI/staging
 status is in PR58, not implied by this pre-release checkpoint.
 
-Three additive migrations (20260913010000, 20260913011000, 20260913012000) are
+Four additive migrations (20260913010000, 20260913011000, 20260913012000,
+20260913200000) are
 already applied locally and immutable. Apply only these reviewed versions in
 staging after exact-head CI. They preserve existing rows. No automatic markdown,
 notification, charity action, payout, VAT calculation or live model activation.
@@ -37,8 +39,8 @@ cannot safely read newly published reviews with null agreement ids, so do not
 blindly roll back to a pre-S1 build after such a review exists. Check migration
 list and linked project before deployment. Production pilot gates remain open.
 
-Next after PR58: integrate the held Fable document updates as a reviewed
-snapshot, then S0/S2/S3 before S4 acceptance. Continue autonomously; ask only
+Next after PR58: coordinate against the latest Fable roadmap and delivered
+S0; S2/S3 must precede S4 acceptance. Continue autonomously; ask only
 for genuinely new product decisions, not routine implementation details.
 
 ## Latest verified feature checkpoint

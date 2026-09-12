@@ -118,3 +118,25 @@ Staged reception detail compares the candidate with its exact pinned prior
 publication; see [comparison contract](RECEPTION-REVIEW-COMPARISON.md). This is
 read-only guidance. Unchanged facts still require confirmation; prior seller
 responses never become consent to a new version. UI and MCP share this read.
+
+## Adding a kind
+
+Since migration 20260913090000 the kind-specific logic lives in private
+functions and the two public functions only dispatch. To add a kind:
+
+1. `komisio_private.operation_risk`: one `when` line returning `low`,
+   `medium` or `high`.
+2. `komisio_private.op_validate_<kind>(jsonb)`: structural validation, and
+   one `when` line in `valid_operation_payload`.
+3. `komisio_private.op_preflight_<kind>(tenant, payload) returns jsonb`: the
+   same preconditions the engine function enforces, raising the engine's
+   error codes; returns the audit detail. One `when` line in
+   `propose_operation`.
+4. `komisio_private.op_execute_<kind>(tenant, operation, payload) returns
+   uuid`: calls the engine function. One `when` line in `decide_operation`.
+5. Extend the `pending_operations` kind check constraint, the zod
+   discriminated unions in `lib/engine/operations.ts`, and the MCP scope if
+   agents may propose it.
+
+Every step is additive; the dispatchers are re-declared with one new line
+each, never rewritten in substance.

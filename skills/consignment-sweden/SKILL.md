@@ -80,3 +80,79 @@ Questions without an answer are in `docs/open-questions.md`.
 Answer domain questions from this file. If the answer is **[to verify]**, say
 so. If the answer is not here, add the question to `docs/open-questions.md`
 and ask; do not guess.
+
+## Default store policy (pilot defaults, not law)
+
+These are the values the engine uses for a tenant that has not published a
+store policy. They mirror what the earlier Swedish store ran with and are
+overridable per tenant (and, for commission, per seller). They are product
+defaults, not legal requirements; nothing here decides VAT treatment.
+
+| Key | Default | Basis |
+| --- | --- | --- |
+| `commissionBasis` | `inclusive` | Private sellers are quoted a share of the sale price including VAT **[verified: practice, see Commission and VAT above]** |
+| `commissionRatePercent` | `60.00` | The store keeps 60 %, the seller receives 40 % of the sale price; the earlier store's published terms **[default, not verified as market norm]** |
+| `agreementRequiredFor` | `["review_publication","acceptance"]` | A published agreement is needed before an offer or an acceptance; optional at bag receipt (owner decision 2026-09-12) |
+| `custodySources` | `["staff_receipt"]` | Staff attest custody (owner decision 2026-09-12) |
+| `sellerReviewMode` | `delegated` | The seller delegates pricing to the store (owner decision 2026-09-12) |
+| `salePeriodDays` | `42` | Six weeks; the earlier store's markdown ladder ended at day 42 |
+| `markdownSteps` | `[{"afterDays":14,"percent":10},{"afterDays":28,"percent":25},{"afterDays":42,"percent":50}]` | The earlier store's Kompis ladder: minus 10 % at day 14, 25 % at day 28, 50 % at day 42 |
+| `endOfPeriodAction` | `charity` | The earlier store donated unsold goods after the period; `return` is the alternative |
+| `unsoldNotifyAfterDays` | `60` | The seller is told an item is still unsold at day 60 |
+| `minPayoutThreshold` | `100.00` | SEK; the earlier store's seller-facing text stated a 100 kr minimum |
+| `assistanceEnabled` | `false` | AI assistance is off until the store turns it on (P1 S9) |
+
+Amounts are SEK with two decimals in policy and öre in the database.
+
+## VAT modes (tenant setting; legal sources [to verify] by the store's accountant)
+
+The engine-facing table is `docs/VAT-CASES.md`. This section is the reasoning
+and the sources to check. Nothing here is verified; do not compute VAT from it.
+
+**The central question.** In försäljningskommission the store sells in its own
+name on the consignor's behalf. Swedish VAT law treats a commissionaire who
+sells goods in its own name as if it had itself acquired and supplied the
+goods **[to verify: mervärdesskattelagen (2023:200), the rule on supply
+through a commissionaire; cite chapter and section]**. If that holds, then for
+goods received from a private person the store has "acquired" the goods from
+someone who could not charge VAT, which is exactly the situation the margin
+scheme (vinstmarginalbeskattning, VMB) covers **[to verify: ML 20 kap. on
+used goods, and Skatteverket's guidance on kommissionsförsäljning av begagnade
+varor]**. Under that reading:
+
+- Case C1: the store's margin is the sale price minus what the consignor
+  receives, which is the commission; VAT is due on that margin only, and the
+  consignor's share carries no VAT. This is the treatment the earlier system
+  called "commission ex VAT, deduct VAT".
+- Case C2: charging VAT on the whole sale price to a consumer, which the
+  earlier system used as its default, would overstate VAT if C1 is the correct
+  reading. Keep it as a case so that a store that has been applying it can be
+  migrated deliberately, not silently.
+
+**Business consignors (C3).** When the consignor is VAT-registered the store's
+commission is a service supplied to the consignor and is invoiced with VAT at
+the standard rate **[verified in outline: ML, services at 25 %; verify section
+and whether an invoice is mandatory]**. Whether the goods themselves then
+carry full VAT on the sale depends on the same commissionaire rule as above
+**[to verify]**.
+
+**Store-owned goods (C4, C5).** Goods bought from a private person and resold
+may use VMB per item when purchase and sale are documented per item, the
+margin is price minus purchase price, and a negative margin gives no VAT and
+cannot offset a positive one under the per-item method **[verified in outline:
+ML 20 kap.; verify the simplified method threshold and the documentation
+requirement]**. Eligibility must be attested when the item is bought; this is
+why acceptance of a purchase origin records who attested it. Goods bought with
+deductible VAT, or without evidence, sell with full VAT (C5).
+
+**Rate and rounding.** Standard rate 25 % **[verified: ML, standard rate]**; no
+reduced rate applies to second-hand clothing or household goods **[to
+verify]**. Per-line rounding to öre, half up, totals as sums of lines
+**[design decision, not law]**.
+
+**Who decides.** Owner decision 2026-09-13: the VAT treatment is a tenant
+setting. Each store selects its modes in the store policy, with its
+accountant, and Komisio computes the selected mode exactly as documented in
+`docs/VAT-CASES.md`. The `[to verify]` marks above are for the store's
+accountant, not a gate in the engine; Komisio never claims that a mode is
+the legally correct one for a given store, and the settings page says so.

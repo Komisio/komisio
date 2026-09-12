@@ -1,5 +1,9 @@
 # Autonomous reception delivery
 
+Archived overnight execution window. The owner's daytime continuation is in
+[DAY-PLAN-2026-09-12.md](DAY-PLAN-2026-09-12.md); its schedule supersedes the
+deadline below. Use [DEVELOPMENT-HANDOFF.md](DEVELOPMENT-HANDOFF.md) to resume.
+
 Owner authorization: build the single-garment vision-to-seller-decision flow
 independently, using reasonable assumptions, commits, PRs and staging. Work ends
 2026-09-12 06:10 Europe/Stockholm (04:10 UTC). This replaces the earlier GUI-first

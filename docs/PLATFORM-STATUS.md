@@ -1,5 +1,13 @@
 # Platform preview status
 
+Historical foundation snapshot below. For the current delivery state, see
+[development handover](DEVELOPMENT-HANDOFF.md) and the
+[daytime plan](DAY-PLAN-2026-09-12.md). Reception sessions, source revisions,
+reviews, seller responses and protected photos are now implemented. The owner
+verified hosted image display, seller approval and staff-visible response after
+PR33 on 12 September. Older counts and "not implemented" statements below refer
+to the foundation stage, not the current repository.
+
 Updated 2026-09-11. The platform runs locally and in a hosted staging preview at
 https://komisio-staging.vercel.app. It is not a production store service.
 

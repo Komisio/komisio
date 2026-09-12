@@ -2,6 +2,10 @@
 
 Updated: 2026-09-12. Current priority: **AI-first garment reception through shared engine operations, with thin operator and seller surfaces**.
 
+Active execution plan: [12 September daytime roadmap](docs/DAY-PLAN-2026-09-12.md).
+Resume from [development handover](docs/DEVELOPMENT-HANDOFF.md), checking Git and
+open PRs before starting a new slice. The earlier overnight window has ended.
+
 The platform-first milestones below describe the foundation. The owner's latest
 direction is the [single-garment reception plan](docs/AUTONOMOUS-INTAKE-2026-09-12.md):
 durable observation snapshots and reviewed prices/terms, secure mobile seller
@@ -14,8 +18,10 @@ through those same operations. [Private staff photos](docs/RECEPTION-PHOTOS.md)
 are now supported. The [optional AI adapter](docs/RECEPTION-ASSISTANCE.md) provides
 bounded, source-linked suggestions and explicit staff review; staging remains
 unconfigured. A [local MCP adapter](mcp/README.md) now exposes authenticated reads
-and unsaved proposal previews. Hosted agent OAuth, durable agent staging, seller
-photo delivery and live model evaluation remain next. No seller response publishes
+and unsaved proposal previews. Hosted agent OAuth, durable agent staging and
+live model evaluation remain next. Seller photo delivery and approval have now
+been verified by the owner in staging, including the saved staff-side response
+after PR33. No seller response publishes
 inventory or authorizes payouts.
 
 The platform is deployed to staging, and registration plus invitation-email

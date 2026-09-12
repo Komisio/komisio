@@ -130,6 +130,8 @@ try {
   assert(!queue.isError)
   assert.equal(queue.structuredContent.items[0].session_id, session)
   assert.equal(queue.structuredContent.readOnly, true)
+  assert.equal(queue.structuredContent.items[0].nextStep, 'prepare_evidence')
+  assert.equal(queue.structuredContent.items[0].guidanceOnly, true)
   assert(!JSON.stringify(queue).includes('mcp-seller@example.test'))
   for (const args of [
     { tenantId: randomUUID() },

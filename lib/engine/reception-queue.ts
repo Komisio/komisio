@@ -11,6 +11,17 @@ export const receptionStage = z.enum([
   'link_revoked',
   'awaiting_seller',
 ])
+// Guidance only: these codes never authorize or execute a transition.
+const nextStep = {
+  preparing: 'prepare_evidence',
+  needs_review: 'review_changed_evidence',
+  approved: 'check_store_acceptance_requirements',
+  declined: 'review_seller_decline',
+  expired: 'publish_fresh_review',
+  ready_to_share: 'issue_review_link',
+  link_revoked: 'replace_review_link',
+  awaiting_seller: 'await_seller_response',
+} as const satisfies Record<z.infer<typeof receptionStage>, string>
 export const receptionQueueInput = z
   .object({
     tenantId: z.uuid(),
@@ -48,7 +59,11 @@ export async function readReceptionQueue(
   })
   if (error) throw new Error('Unable to read reception queue')
   const rows = z.array(row).max(21).parse(data),
-    items = rows.slice(0, 20)
+    items = rows.slice(0, 20).map((item) => ({
+      ...item,
+      nextStep: nextStep[item.stage],
+      guidanceOnly: true as const,
+    }))
   const last = items.at(-1)
   return {
     items,

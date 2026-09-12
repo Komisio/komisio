@@ -1,3 +1,4 @@
+import { readStorePolicy } from './store-policy'
 import { compareReceptionReview } from './reception-review-comparison'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
@@ -105,6 +106,7 @@ export async function readOperationReview(
     }
   }
   const p = publishReceptionReviewPayload.parse(pending.data.payload)
+  const policy = await readStorePolicy(client, tenantId)
   const [
     terms,
     sources,
@@ -114,12 +116,14 @@ export async function readOperationReview(
     currentReview,
     previousReview,
   ] = await Promise.all([
-    client
-      .from('seller_agreement_versions')
-      .select('id,title,body,language,version')
-      .eq('tenant_id', tenantId)
-      .eq('id', p.agreementId)
-      .single(),
+    p.agreementId
+      ? client
+          .from('seller_agreement_versions')
+          .select('id,title,body,language,version')
+          .eq('tenant_id', tenantId)
+          .eq('id', p.agreementId)
+          .single()
+      : Promise.resolve({ data: null, error: null }),
     client
       .from('reception_source_revisions')
       .select('sources')
@@ -192,8 +196,10 @@ export async function readOperationReview(
     decided_at: d?.created_at ?? null,
   })
   const stale =
+    (p.agreementId === null &&
+      policy.policy.agreementRequiredFor.includes('review_publication')) ||
     currentSource.data?.revision !== p.sourceRevision ||
-    currentAgreement.data?.id !== p.agreementId ||
+    (currentAgreement.data?.id ?? null) !== p.agreementId ||
     (currentReview.data?.id ?? null) !== p.previousReviewId
   return {
     readOnly: true as const,
@@ -210,6 +216,7 @@ export async function readOperationReview(
           language: z.string(),
           version: z.number().int(),
         })
+        .nullable()
         .parse(terms.data),
       sources: receptionSession.shape.sources
         .parse(sources.data?.sources)

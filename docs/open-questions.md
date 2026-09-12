@@ -166,3 +166,15 @@ wording is decided per template when the notification policy is built.
     Metadata stripping does not redact visible people or labels. Camera placement,
     capture consent, retention periods and controlled orphan cleanup must be
     decided before an external vision pilot. No facial recognition is planned.
+
+## P1 S1 implementation clarification
+
+**Answered by the owner 2026-09-13:** Fable's skill section "Default store
+policy" at snapshot `17e73c8` supplies the defaults, confirmed directly by the
+owner. Store commission 60 percent inclusive; sale duration 42 days; markdowns
+10/25/50 percent at day 14/28/42; charity at period end; unsold notification
+day 60; minimum payout SEK 100; delegated pricing; agreement required at
+publication and acceptance, optional at bag receipt. These are pilot defaults,
+not law. The S1 validator includes `unsoldNotifyAfterDays`; assistance enablement
+remains S9. No missing-default blocker remains. P2 execution and VAT questions
+remain separate. Fable's newer commits are held until PR58 is complete.

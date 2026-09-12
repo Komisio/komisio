@@ -6,7 +6,7 @@ const baseline = z.object({
   id: z.uuid(),
   version: z.number().int().positive(),
   source_revision: z.number().int().positive(),
-  agreement_id: z.uuid(),
+  agreement_id: z.uuid().nullable(),
   suggestions: receptionSuggestions,
 })
 const sameIds = (a: string[], b: string[]) =>

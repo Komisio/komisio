@@ -50,6 +50,7 @@ replacing hard-coded behaviour and the single `required_before_receipt` flag.
   default `staff_receipt`), `sellerReviewMode` (`delegated` | `per_item`;
   default `delegated`), `salePeriodDays`, `markdownSteps` (list of
   `{afterDays, percent}`), `endOfPeriodAction` (`charity` | `return`),
+  `unsoldNotifyAfterDays` (nonnegative integer; owner addition 2026-09-13),
   `minPayoutThreshold` (numeric). Defaults for a tenant with no version come
   from constants that mirror `skills/consignment-sweden/SKILL.md`; the skill
   is the documentation of the defaults, the constants are the enforcement.

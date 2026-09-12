@@ -249,7 +249,7 @@ export function PublishReview({
   sessionId: string
   revision: number
   previousId: string | null
-  agreementId: string
+  agreementId: string | null
   suggestions: ReceptionSuggestions
   requireFieldReview?: boolean
   d: D

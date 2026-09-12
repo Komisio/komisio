@@ -9,7 +9,7 @@ export const publishReceptionReviewCommand = z.strictObject({
   sessionId: z.uuid(),
   sourceRevision: z.number().int().min(1).max(2147483646),
   previousReviewId: z.uuid().nullable(),
-  agreementId: z.uuid(),
+  agreementId: z.uuid().nullable(),
   expiresAt: z.iso.datetime(),
   suggestions: receptionSuggestions.refine(
     (s) =>
@@ -47,12 +47,14 @@ export async function readReceptionReview(
     .maybeSingle()
   if (error) throw new Error('Unable to read reception review')
   if (!review) return null
-  const { data: terms, error: termsError } = await client
-    .from('seller_agreement_versions')
-    .select('id,title,body,language')
-    .eq('tenant_id', tenantId)
-    .eq('id', review.agreement_id)
-    .single()
+  const { data: terms, error: termsError } = review.agreement_id
+    ? await client
+        .from('seller_agreement_versions')
+        .select('id,title,body,language')
+        .eq('tenant_id', tenantId)
+        .eq('id', review.agreement_id)
+        .single()
+    : { data: null, error: null }
   if (termsError) throw new Error('Unable to read review terms')
   const { data: access, error: accessError } = await client
     .from('reception_access_events')
@@ -87,12 +89,14 @@ export async function readReceptionReview(
         }
       : null,
     response,
-    terms: {
-      versionId: terms.id,
-      title: terms.title,
-      body: terms.body,
-      language: terms.language,
-    },
+    terms: terms
+      ? {
+          versionId: terms.id,
+          title: terms.title,
+          body: terms.body,
+          language: terms.language,
+        }
+      : null,
   }
 }
 export const saveReceptionSourcesCommand = z.strictObject({

@@ -2802,3 +2802,116 @@ test('operation queue pages reach older proposals and retain status filters', as
     await db.end()
   }
 })
+
+test('store policy publishes safely and supports agreement-free staff review', async ({
+  page,
+}) => {
+  const run = Date.now().toString(36)
+  await register(
+    page,
+    `policy-${run}@example.test`,
+    `K!${randomBytes(16).toString('hex')}`,
+  )
+  await page.getByLabel('Butikens namn').fill('E2E Policy')
+  await page.getByLabel('Butikens identifierare').fill(`policy-${run}`)
+  await page.getByRole('button', { name: 'Skapa min butik' }).click()
+  await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
+  const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/settings')
+  const section = page.getByRole('region', { name: 'Butikspolicy' })
+  await expect(section.getByLabel('Butikens provision (%)')).toHaveValue('60')
+  const stale = await page.context().newPage()
+  await stale.goto('/settings')
+  await section.getByLabel('Butikens provision (%)').fill('55.25')
+  await section.getByLabel('Publicering av underlag', { exact: true }).uncheck()
+  await section
+    .getByLabel('Jag har granskat villkoren', { exact: false })
+    .check()
+  let envelope: unknown
+  await page.route(
+    '**/api/intake',
+    async (route) => {
+      envelope = route.request().postDataJSON()
+      const response = await route.fetch()
+      expect(response.status()).toBe(200)
+      await route.abort('failed')
+    },
+    { times: 1 },
+  )
+  await section.getByRole('button', { name: 'Publicera policy' }).click()
+  await expect(section.getByRole('alert')).toBeVisible()
+  await expect(section.getByLabel('Butikens provision (%)')).toBeDisabled()
+  await page.route(
+    '**/api/intake',
+    async (route) => {
+      expect(route.request().postDataJSON()).toEqual(envelope)
+      await route.continue()
+    },
+    { times: 1 },
+  )
+  await section
+    .getByRole('button', { name: 'Försök igen', exact: true })
+    .click()
+  await expect(
+    section.getByText('Publicerad version 1', { exact: true }),
+  ).toBeVisible()
+  await expect(section.getByLabel('Butikens provision (%)')).toHaveValue(
+    '55.25',
+  )
+  await stale.getByLabel('Jag har granskat villkoren', { exact: false }).check()
+  await stale.getByRole('button', { name: 'Publicera policy' }).click()
+  await expect(
+    stale.getByRole('region', { name: 'Butikspolicy' }).getByRole('alert'),
+  ).toBeVisible()
+  await stale.close()
+  const post = async (data: object) => {
+    const response = await page.request.post('/api/intake', {
+      headers: { Origin: 'http://127.0.0.1:3000' },
+      data,
+    })
+    expect(response.status()).toBe(200)
+    return (await response.json()).id as string
+  }
+  const sellerId = await post({
+    action: 'registerSeller',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    name: 'Policy seller',
+    email: 'policy-seller@example.test',
+    phone: '',
+  })
+  const sessionId = await post({
+    action: 'createReception',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    sellerId,
+  })
+  await page.goto(`/intake/reception/${sessionId}`)
+  await page.getByLabel('Beskriv plagget').fill('Synthetic policy jacket')
+  await page
+    .getByLabel('Föreslaget försäljningspris', { exact: true })
+    .fill('100')
+  await page.getByLabel('Prisunderlagets källa').fill('Synthetic appraisal')
+  await page.getByLabel('Motivera prisförslaget').fill('Only a test')
+  await page
+    .getByRole('button', { name: 'Spara beskrivning och prisunderlag' })
+    .click()
+  await expect(
+    page.getByText('Sparad källversion 1', { exact: true }),
+  ).toBeVisible()
+  await page.locator('input[name="review-final"]').check()
+  await page
+    .getByRole('button', { name: 'Publicera granskat underlag' })
+    .click()
+  await expect(
+    page.getByRole('heading', { name: '3. Säljarens beslut — version 1' }),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: 'Skapa personlig länk' }),
+  ).toHaveCount(0)
+  await page.reload()
+  await expect(
+    page.getByText('Synthetic policy jacket', { exact: true }).first(),
+  ).toBeVisible()
+})

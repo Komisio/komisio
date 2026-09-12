@@ -184,3 +184,11 @@ return to the first page for current status. Use the corresponding exact operati
 read for details. No payload, identity, actor label or decision reason is listed.
 See [discovery contract](../docs/MCP-OPERATION-DISCOVERY.md). These are local stdio
 tools, not a new hosted AI assistant or delegated credential.
+
+### Effective store policy
+
+`komisio_get_store_policy` uses `reception:read` and accepts an empty object.
+The host pins the tenant. It returns the effective policy with its version/id
+(version 0 and null id mean pilot defaults), plus read-only/untrusted/guidance
+markers. It cannot publish policy or enable AI. Role and MFA checks are enforced
+both at the tool boundary and in SQL. S1 does not add an agent policy-write tool.

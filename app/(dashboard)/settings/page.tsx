@@ -1,3 +1,5 @@
+import { readStorePolicy } from '@/lib/engine/store-policy'
+import { StorePolicyForm } from '@/components/intake/store-policy-form'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { can } from '@/lib/platform/permissions'
@@ -7,6 +9,10 @@ export default async function Settings() {
   const ctx = await requirePlatform()
   const d = dictionary(ctx.locale)
   const active = ctx.active!
+  const policy =
+    process.env.KOMISIO_INTAKE_ENABLED === 'true'
+      ? await readStorePolicy(ctx.client, active.id)
+      : null
   const events = can(active.role, 'audit.read')
     ? await ctx.client
         .from('access_events')
@@ -28,6 +34,15 @@ export default async function Settings() {
           </Link>
         )}
       </div>
+      {policy && (
+        <StorePolicyForm
+          key={`${active.id}-${policy.id ?? 'default'}`}
+          tenantId={active.id}
+          current={policy}
+          editable={['owner', 'admin'].includes(active.role)}
+          d={d}
+        />
+      )}
       <div className="settings-grid">
         <section className="card">
           <h2>{d.tenantIdentity}</h2>

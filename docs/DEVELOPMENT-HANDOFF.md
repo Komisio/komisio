@@ -1,8 +1,47 @@
 # Development handover
 
-Updated 2026-09-12. Read CLAUDE.md first, then this file and the
-[active day plan](DAY-PLAN-2026-09-12.md). Git, CI and deployment records take
-precedence over narrative. This file supersedes older slice status notes.
+## Active P1 work: S1 ready for CI and staging
+
+Branch `astra/p1-store-policy`, PR58. Fable snapshot `6181413` is included;
+PR59 independently merged/applied S0 during this work. PR58 now merges the
+already-published main snapshot `aa19a0b` and adds a compatibility migration
+for S1/S0, tested with both fresh-install and staging-backfill migration order. No unpublished Fable work is included. S0 is in place before S4.
+The owner confirmed the skill defaults directly on 2026-09-13.
+
+S1 now has strict policy validation, isolated pilot defaults, append-only SQL
+policy versions, owner/admin publication, member reads, exact replay including
+expected predecessor, MFA/RLS and tenant serialization. Settings have a sv/en
+form usable at phone width. MCP `komisio_get_store_policy` uses reception:read
+and the host-pinned tenant. Existing receipt and publication commands evaluate
+the effective agreement policy; legacy required-before-receipt is retained.
+Optional review agreements use null consistently; no invented contract or
+seller invitation without terms. Agent proposals reevaluate policy on approval.
+
+Local evidence: 126 unit tests, lint/types, production build, real stdio MCP,
+540 pgTAP tests, concurrent
+publication and browser publication at 390px including lost-response retry,
+stale-tab rejection and agreement-free publication. Formatting passes with
+Windows line endings respected (`--end-of-line auto`); Linux CI uses the
+unchanged strict format command. Exact latest CI/staging
+status is in PR58, not implied by this pre-release checkpoint.
+
+Four additive migrations (20260913010000, 20260913011000, 20260913012000,
+20260913200000) are
+already applied locally and immutable. Apply only these reviewed versions in
+staging after exact-head CI. They preserve existing rows. No automatic markdown,
+notification, charity action, payout, VAT calculation or live model activation.
+S6 queue/link behavior remains future work; S1 records delegated mode but does
+not claim the complete delegated acceptance journey.
+
+Rollback: preserve policy/history rows; disable intake if a release breaks
+receiving or exposes data and ship a reviewed correction. An old web build
+cannot safely read newly published reviews with null agreement ids, so do not
+blindly roll back to a pre-S1 build after such a review exists. Check migration
+list and linked project before deployment. Production pilot gates remain open.
+
+Next after PR58: coordinate against the latest Fable roadmap and delivered
+S0; S2/S3 must precede S4 acceptance. Continue autonomously; ask only
+for genuinely new product decisions, not routine implementation details.
 
 ## Latest verified feature checkpoint
 

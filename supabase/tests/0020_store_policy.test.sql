@@ -1,0 +1,82 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+select ok(pg_get_functiondef('public.propose_operation'::regproc) like '%op_preflight_publish_reception_review%','S1 retains S0 per-kind dispatcher');
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000000001','policy-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000002','policy-reader@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000003','policy-staff@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000004','policy-outsider@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000001","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Policy test','policy-test',gen_random_uuid())::text,true);
+select set_config('test.other',create_tenant('Other policy','policy-other',gen_random_uuid())::text,true);
+select set_config('test.body',(current_store_policy(current_setting('test.tenant')::uuid)->'policy')::text,true);
+select is((current_setting('test.body')::jsonb->>'commissionRatePercent')::numeric,60::numeric,'store keeps60 percent');
+select is(current_setting('test.body')::jsonb->>'sellerReviewMode','delegated','delegated default');
+select is(current_setting('test.body')::jsonb->'markdownSteps','[{"afterDays":14,"percent":10},{"afterDays":28,"percent":25},{"afterDays":42,"percent":50}]'::jsonb,'exact pilot markdowns');
+select is((current_store_policy(current_setting('test.tenant')::uuid)->>'version')::int,0,'defaults have version0');
+select set_config('test.id',gen_random_uuid()::text,true);
+select is(publish_store_policy(current_setting('test.tenant')::uuid,current_setting('test.id')::uuid,null,current_setting('test.body')::jsonb),current_setting('test.id')::uuid,'owner publishes');
+select is(publish_store_policy(current_setting('test.tenant')::uuid,current_setting('test.id')::uuid,null,current_setting('test.body')::jsonb),current_setting('test.id')::uuid,'exact retry');
+select throws_like($$select publish_store_policy(current_setting('test.tenant')::uuid,current_setting('test.id')::uuid,gen_random_uuid(),current_setting('test.body')::jsonb)$$,'%REQUEST_CONFLICT%','retry binds expected predecessor');
+select throws_like($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,current_setting('test.body')::jsonb)$$,'%POLICY_CHANGED%','stale publication rejected');
+select throws_like($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id')::uuid,current_setting('test.body')::jsonb || '{"commissionRatePercent":100.01}')$$,'%INVALID_INPUT%','percentage bound');
+select throws_like($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id')::uuid,current_setting('test.body')::jsonb || '{"minPayoutThreshold":0.001}')$$,'%INVALID_INPUT%','no fractional ore');
+select throws_like($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id')::uuid,current_setting('test.body')::jsonb || '{"unknown":true}')$$,'%INVALID_INPUT%','unknown key rejected');
+select throws_like($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id')::uuid,current_setting('test.body')::jsonb - 'salePeriodDays')$$,'%INVALID_INPUT%','missing key rejected');
+select throws_like($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id')::uuid,current_setting('test.body')::jsonb || '{"custodySources":["locker","locker"]}')$$,'%INVALID_INPUT%','duplicate subset rejected');
+select throws_ok($$update store_policy_versions set version=2$$,'42501',null,'direct update denied');
+select throws_ok($$delete from store_policy_versions$$,'42501',null,'direct delete denied');
+reset role;
+select throws_like($$update store_policy_versions set version=2 where tenant_id=current_setting('test.tenant')::uuid$$,'%IMMUTABLE_STORE_POLICY%','privileged updates immutable');
+insert into tenant_members(tenant_id,user_id,role) values
+ (current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000000002','readonly'),
+ (current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000000003','staff');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000002","role":"authenticated"}';
+select is((current_store_policy(current_setting('test.tenant')::uuid)->>'version')::int,1,'readonly reads published policy');
+select throws_ok($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id')::uuid,current_setting('test.body')::jsonb)$$,'42501',null,'readonly cannot publish');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000003","role":"authenticated"}';
+select throws_ok($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id')::uuid,current_setting('test.body')::jsonb)$$,'42501',null,'staff cannot publish');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000004","role":"authenticated"}';
+select throws_ok($$select current_store_policy(current_setting('test.tenant')::uuid)$$,'42501',null,'outsider cannot read defaults or policy');
+select is((select count(*) from store_policy_versions),0::bigint,'RLS denies outsider');
+set local role anon;
+select throws_ok($$select current_store_policy(current_setting('test.tenant')::uuid)$$,'42501',null,'anonymous denied');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000001","role":"authenticated"}';
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Synthetic seller','seller@policy.test','')::text,true);
+select lives_ok($$select receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',null)$$,'default bag receipt does not require terms');
+select set_config('test.policy2',publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id')::uuid,current_setting('test.body')::jsonb || '{"agreementRequiredFor":["bag_receipt"]}')::text,true);
+select throws_like($$select receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',null)$$,'%AGREEMENT_REQUIRED%','policy requires agreement evidence for receipt');
+select set_config('test.session',create_reception_session(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid)::text,true);
+select save_reception_sources(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,0,
+ '[{"id":"f0000000-0000-4000-8000-000000000011","kind":"observation","reference":"Staff","observation":"Synthetic jacket"},{"id":"f0000000-0000-4000-8000-000000000012","kind":"price-evidence","reference":"Staff estimate","observation":"100 SEK"}]'::jsonb);
+select set_config('test.suggestions','{"metadata":{"description":{"value":"Synthetic jacket","sourceIds":["f0000000-0000-4000-8000-000000000011"],"certainty":"observed"}},"price":{"currency":"SEK","amount":"100.00","rationale":"Staff estimate","sourceIds":["f0000000-0000-4000-8000-000000000012"]},"questions":[]}',true);
+select set_config('test.review',gen_random_uuid()::text,true);
+select lives_ok($$select publish_reception_review(current_setting('test.tenant')::uuid,current_setting('test.review')::uuid,current_setting('test.session')::uuid,1,null,null,current_setting('test.suggestions')::jsonb,now()+interval '1 day')$$,'optional agreement permits publication without invented terms');
+select set_config('test.operation',gen_random_uuid()::text,true);
+select lives_ok($$select propose_operation(current_setting('test.tenant')::uuid,current_setting('test.operation')::uuid,'publishReceptionReview',jsonb_build_object('sessionId',current_setting('test.session'),'sourceRevision',1,'previousReviewId',current_setting('test.review'),'agreementId',null,'expiresAt',(now()+interval '1 day')::text,'suggestions',current_setting('test.suggestions')::jsonb),'policy-test-agent',now()+interval '1 day')$$,'agent may stage optional-agreement publication');
+select set_config('test.policy3',publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.policy2')::uuid,current_setting('test.body')::jsonb)::text,true);
+select lives_ok($$select publish_reception_review(current_setting('test.tenant')::uuid,current_setting('test.review')::uuid,current_setting('test.session')::uuid,1,null,null,current_setting('test.suggestions')::jsonb,now()+interval '1 day')$$,'publication retry survives policy change');
+select throws_like($$select publish_reception_review(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,1,current_setting('test.review')::uuid,null,current_setting('test.suggestions')::jsonb,now()+interval '1 day')$$,'%AGREEMENT_REQUIRED%','default publication requires agreement');
+select lives_ok($$select decide_operation(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.operation')::uuid,'approved','')$$,'staged approval records a policy-change failure');
+select is((select error_code from operation_decisions where operation_id=current_setting('test.operation')::uuid),'AGREEMENT_REQUIRED','execution reevaluates current policy');
+select is((select count(*) from reception_reviews where session_id=current_setting('test.session')::uuid),1::bigint,'failed execution publishes no review');
+select is(publish_store_policy(current_setting('test.tenant')::uuid,current_setting('test.id')::uuid,null,current_setting('test.body')::jsonb),current_setting('test.id')::uuid,'old policy retry survives newer versions');
+select is((current_store_policy(current_setting('test.tenant')::uuid)->>'version')::int,3,'retry does not overwrite latest');
+select is((current_store_policy(current_setting('test.other')::uuid)->>'version')::int,0,'tenant policies isolated');
+select set_config('test.agreement',publish_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'Synthetic terms','Only a test','en',true)::text,true);
+select throws_like($$select receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',current_setting('test.agreement')::uuid)$$,'%AGREEMENT_REQUIRED%','legacy required receipt cannot be loosened by new policy');
+select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,'Synthetic attestation');
+select lives_ok($$select receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',current_setting('test.agreement')::uuid)$$,'evidence permits receipt');
+select throws_like($$select set_reception_access(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.review')::uuid,null,repeat('a',64))$$,'%REVIEW_UNAVAILABLE%','cannot invite seller to approve nonexistent terms');
+reset role;
+insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values(gen_random_uuid(),'f0000000-0000-4000-8000-000000000001','totp','verified',now(),now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000001","role":"authenticated","aal":"aal1"}';
+select throws_ok($$select current_store_policy(current_setting('test.tenant')::uuid)$$,'42501',null,'MFA read enforced');
+select throws_ok($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id')::uuid,current_setting('test.body')::jsonb)$$,'42501',null,'MFA write enforced');
+select * from finish();
+rollback;

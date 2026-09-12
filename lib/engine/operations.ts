@@ -13,7 +13,7 @@ export const publishReceptionReviewPayload = z.strictObject({
   sessionId: z.uuid(),
   sourceRevision: z.number().int().min(1).max(2147483646),
   previousReviewId: z.uuid().nullable(),
-  agreementId: z.uuid(),
+  agreementId: z.uuid().nullable(),
   expiresAt: z.iso.datetime(),
   suggestions: receptionSuggestions.refine(
     (s) =>

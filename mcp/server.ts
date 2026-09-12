@@ -1,3 +1,6 @@
+import { z } from 'zod'
+import { readStorePolicy } from '../lib/engine/store-policy'
+import { requireMCPIdentity } from './identity'
 import { listScopedOperations } from './operation-discovery'
 import { operationPageInput } from '../lib/engine/operation-page'
 import { inspectionReceptionInput } from '../lib/engine/inspection-reception-preview'
@@ -97,6 +100,28 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           })),
       )
   }
+  if (config.scopes.includes('reception:read'))
+    server.registerTool(
+      'komisio_get_store_policy',
+      {
+        description:
+          'Read the effective store policy for the host-pinned tenant. Pilot defaults are not law, seller agreement evidence or execution authority. No writes.',
+        inputSchema: z.strictObject({}),
+        annotations,
+      },
+      () =>
+        result(async () => {
+          await requireMCPIdentity(client, config, 'reception:read')
+          return {
+            data: {
+              readOnly: true,
+              evidenceIsUntrusted: true,
+              guidanceOnly: true,
+              ...(await readStorePolicy(client, config.tenantId)),
+            },
+          }
+        }),
+    )
   if (config.scopes.includes('inspection:propose'))
     server.registerTool(
       'komisio_propose_inspection_edit',

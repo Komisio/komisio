@@ -18,6 +18,7 @@ export function ReceptionAssistance({
   available,
   terms,
   previousId,
+  agreementRequired = true,
   d,
 }: {
   tenantId: string
@@ -33,6 +34,7 @@ export function ReceptionAssistance({
     language: string
     version: number
   } | null
+  agreementRequired?: boolean
   previousId: string | null
   d: Dictionary['reception']
 }) {
@@ -167,13 +169,13 @@ export function ReceptionAssistance({
               </div>
             </>
           )}
-          {ready && candidate && terms ? (
+          {ready && candidate && (terms || !agreementRequired) ? (
             <PublishReview
               tenantId={tenantId}
               sessionId={sessionId}
               revision={revision}
               previousId={previousId}
-              agreementId={terms.id}
+              agreementId={terms?.id ?? null}
               suggestions={candidate}
               requireFieldReview
               d={d}

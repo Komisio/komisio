@@ -1830,6 +1830,27 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   await expect(
     page.locator(`a[href="/intake/reception/${sessionId}"]`),
   ).toBeVisible()
+  // Delegated pricing: the store accepts the garment under the terms in force.
+  await page.goto(`/intake/reception/${sessionId}`)
+  const acceptForm = page.locator('form', {
+    has: page.getByRole('button', { name: 'Acceptera vara' }),
+  })
+  await expect(acceptForm.getByLabel('Accepterat pris')).toHaveValue(/\d/)
+  await acceptForm.getByRole('checkbox').check()
+  await acceptForm.getByRole('button', { name: 'Acceptera vara' }).click()
+  await expect(
+    page.getByRole('link', { name: 'Öppna varan' }).first(),
+  ).toBeVisible()
+  await page.getByRole('link', { name: 'Öppna varan' }).first().click()
+  await expect(
+    page.getByRole('heading', { name: 'Vara Inlämnat plagg' }),
+  ).toBeVisible()
+  await expect(page.getByText('Frysta villkor')).toBeVisible()
+  await expect(page.getByText('Ursprung dokumenterat')).toBeVisible()
+  await page.goto('/intake/reception?stage=accepted')
+  await expect(
+    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+  ).toContainText('Accepterad som vara')
   expect((await access(reviewId, accessId, false)).status()).toBe(200)
   expect((await mobile.request.get(photoUrl)).status()).toBe(404)
   await mobile.reload()

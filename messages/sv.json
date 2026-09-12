@@ -415,7 +415,23 @@
     "photos": "Bilder från mottagningen",
     "photoHelp": "JPEG eller PNG, högst 3 MB och 20 megapixlar. Originalet är privat för personalen. Nya uppladdningar får en mindre kopia utan kamerametadata som följer med nästa publicerade underlag. Granska även personer och etiketter i bilden. Äldre bilder kan sakna kopia; redan publicerade underlag ändras aldrig.",
     "photoSave": "Spara bild till mottagningen",
-    "sharedPhotos": "Bilder som ingår i publicerad version"
+    "sharedPhotos": "Bilder som ingår i publicerad version",
+    "queueTitle": "Mottagningskö",
+    "queueHelp": "Läget gäller det senaste underlaget. Säljarens godkännande innebär inte att plagget är tillgängligt för försäljning.",
+    "queueFilter": "Visa läge",
+    "queueAll": "Alla lägen",
+    "queueEmpty": "Inga mottagningar i detta läge.",
+    "queueNext": "Visa äldre mottagningar",
+    "queueStages": {
+      "preparing": "Under förberedelse",
+      "needs_review": "Behöver nytt underlag",
+      "approved": "Godkänt av säljaren",
+      "declined": "Avvisat av säljaren",
+      "expired": "Svarstiden har gått ut",
+      "ready_to_share": "Redo att dela",
+      "link_revoked": "Länken är återkallad",
+      "awaiting_seller": "Inväntar säljarens svar"
+    }
   },
   "reviewPhotoAlt": "Bild som ingår i detta underlag",
   "reviewPhotos": "Bilder i detta underlag",

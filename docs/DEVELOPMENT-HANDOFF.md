@@ -5,11 +5,17 @@ Read CLAUDE.md first. All statuses below are evidence, not inferred completion.
 
 ## Current slice
 
-P1 — separate staff response reporting from seller confirmation.
-Branch: fix/staff-seller-response-copy. PR34 merged as a0d2c74 after exact-head
-CI34677629830 passed. Changed reception detail page and Swedish/English messages;
-no database changes. Lint, typecheck,94 unit tests and production build pass.
-Existing seller browser journey is running; next commit/open PR and verify CI.
+P2 — specify and implement the shared reception work queue.
+Branch: docs/reception-queue-contract. Implemented SQL read, typed shared engine,
+translated stage filters and cursor paging. Migration20260912073000 applied
+LOCALLY ONLY; do not edit it. Lint/typecheck/build and94 unit tests passed.
+Queue SQL tests and seller browser journey are being finalized before PR.
+No remote migration or deployment yet. Next: PR, exact-head CI, migration then merge.
+
+P1 PR35 merged as d5f7348cc85a7fb1f178ee068b043e6e8e3dbac1 after exact-head
+CI34678106622 passed. Local lint/typecheck/build,94 unit tests and the existing
+seller browser journey passed. No database changes. Hosted authenticated copy
+walkthrough remains separate from deployment and public health checks.
 
 ## Last verified delivery
 
@@ -23,11 +29,10 @@ modified by the fix.315 SQL assertions and real HTTP/race checks passed locally.
 
 ## Next three actions
 
-1. Complete P1 browser check, signed-off commit and PR; verify exact-head CI.
-2. Merge and verify staging; record the result before beginning P2.
-3. P2 currently starts from a direct20-row session query in
-   app/(dashboard)/intake/reception/page.tsx. Move queue reads into the shared
-   engine with derived current-version states and bounded pagination.
+1. Finish P2 test evidence and open its PR; use the private log for newest results.
+2. Verify exact-head CI; dry-run expected staging migration, apply then merge and
+   verify deployment. Authenticated hosted queue walkthrough remains a pilot check.
+3. Continue P3 store follow-up specification; no guessed commercial/financial rules.
 
 ## Known limitations / do not accidentally enable
 

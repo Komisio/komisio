@@ -70,6 +70,15 @@ select set_config('test.cursor_id',(select session_id::text from reception_queue
 select set_config('test.cursor_time',(select created_at::text from reception_queue(current_setting('test.tenant')::uuid) offset 19 limit 1),true);
 select is((select count(*) from reception_queue(current_setting('test.tenant')::uuid,null,current_setting('test.cursor_time')::timestamptz,current_setting('test.cursor_id')::uuid)),6::bigint,'same-time cursor reaches remaining rows');
 reset role;
+-- Historical approval happened before expiry; the deadline must not erase it.
+insert into public.reception_access_events(id,tenant_id,review_id,version,token_hash,created_by,created_at)
+select gen_random_uuid(),tenant_id,id,1,encode(sha256(convert_to(repeat('d',64),'UTF8')),'hex'),created_by,expires_at-interval '2 hours' from public.reception_reviews where session_id=current_setting('test.session')::uuid and version=3;
+insert into public.reception_responses(id,tenant_id,review_id,access_id,decision,created_by,created_at)
+select gen_random_uuid(),a.tenant_id,a.review_id,a.id,'approve','b0000000-0000-4000-8000-000000000002',a.created_at+interval '1 hour' from public.reception_access_events a join public.reception_reviews r on r.id=a.review_id where r.session_id=current_setting('test.session')::uuid and r.version=3;
+set local role authenticated;
+select is((select stage from reception_queue(current_setting('test.tenant')::uuid,'approved')),'approved','expiry does not erase an earlier approval');
+select is((select link_state from reception_queue(current_setting('test.tenant')::uuid,'approved')),'expired','answered expired link remains unavailable');
+reset role;
 insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values(gen_random_uuid(),'b0000000-0000-4000-8000-000000000001','totp','verified',now(),now());
 set local role authenticated;
 select throws_ok($$select * from reception_queue(current_setting('test.tenant')::uuid)$$,'42501',null,'MFA enforced');

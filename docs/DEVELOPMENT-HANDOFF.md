@@ -5,6 +5,16 @@ Read CLAUDE.md first. All statuses below are evidence, not inferred completion.
 
 ## Current slice
 
+P7 — targeted pilot verification, branch test/reception-queue-pilot. PR36/37 are
+merged; main1c12df7487cc00f778a60232b69adab43c0bddc2 and staging deployment6407541716
+are verified published. Migration20260912073000 is applied locally AND in staging.
+There is no pending production migration. New work is tests/documentation only:
+expired-link historical approval and actual browser filter interaction.
+Hosted staff session redirected to login on fresh navigation; no credentials were
+changed or account impersonated. A fresh authenticated hosted walkthrough remains.
+
+The prior delivery detail below is historical; do not redo its merges/migration.
+
 P2/P6 — reception queue and scoped MCP queue read, with P3 follow-up specification.
 PR36: queue UI/engine/read RPC, head9c4174e; initial CI failure was an ambiguous
 Search button, now corrected and operator browser test passed locally.23 queue
@@ -36,10 +46,10 @@ modified by the fix.315 SQL assertions and real HTTP/race checks passed locally.
 
 ## Next three actions
 
-1. Finish PR36 exact-head CI, expected staging migration and merge/deployment.
-2. Ensure PR37 targets main after parent merge; verify current-head CI and merge.
-3. Record staged evidence and remaining P4/P5 commercial prerequisites. Hosted
-   authenticated queue walkthrough and representative AI quality remain separate.
+1. Finish the P7 targeted browser test and commit/open its test/documentation PR.
+2. Verify exact-head CI and merge; no database migration is part of this slice.
+3. Preserve the hosted login requirement and P4/P5 open commercial prerequisites;
+   do not invent additional core tables just to keep the automation busy.
 
 ## Known limitations / do not accidentally enable
 

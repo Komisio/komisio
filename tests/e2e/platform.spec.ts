@@ -1785,6 +1785,16 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   await expect(
     page.locator(`a[href="/intake/reception/${sessionId}"]`),
   ).toContainText('Godkänt av säljaren')
+  await page.getByLabel('Visa läge').selectOption('declined')
+  await page.getByRole('button', { name: 'Visa läge', exact: true }).click()
+  await expect(
+    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+  ).toHaveCount(0)
+  await page.getByLabel('Visa läge').selectOption('approved')
+  await page.getByRole('button', { name: 'Visa läge', exact: true }).click()
+  await expect(
+    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+  ).toBeVisible()
   expect((await access(reviewId, accessId, false)).status()).toBe(200)
   expect((await mobile.request.get(photoUrl)).status()).toBe(404)
   await mobile.reload()

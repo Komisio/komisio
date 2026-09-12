@@ -1,6 +1,8 @@
 # Reception queue contract
 
-Status: implemented locally; remote CI and deployment pending. Day-plan P2.
+Status: merged in PR36 and deployed to staging, with exact-head CI passed. Day-plan P2.
+Local authenticated browser filtering is tested; fresh hosted staff verification
+still needs a signed-in session. The existing browser session has expired.
 No new persistence is required. `reception_queue` reads under existing RLS;
 `lib/engine/reception-queue.ts` validates the paged result for the thin list UI.
 The queue is a staff read model over reception sessions, source revisions,

@@ -646,6 +646,62 @@
     "history": "Historik",
     "noHistory": "Inga versioner ännu."
   },
+  "items": {
+    "title": "Varor",
+    "item": "Vara",
+    "intro": "En vara finns först när butiken accepterat ett ursprung under kända villkor. Ursprunget förblir beviset; varan fryser villkoren.",
+    "list": "Accepterade varor",
+    "empty": "Inga varor accepterade ännu.",
+    "acceptHeading": "Acceptera som vara",
+    "acceptHint": "Acceptansen fryser provision, säljperiod och avtalsbevis som gäller just nu. Den kräver mottagande och, enligt butikspolicyn, avtalsbevis. Den startar ingen försäljning.",
+    "acceptBlocked": "Acceptans kräver ett publicerat underlag och registrerat mottagande.",
+    "alreadyAccepted": "Accepterad som vara.",
+    "open": "Öppna varan",
+    "price": "Accepterat pris",
+    "priceHint": "SEK, till exempel 250 eller 250,50. I läget per vara måste priset vara det säljaren godkänt.",
+    "priceInvalid": "Ange ett pris med högst två decimaler.",
+    "confirm": "Jag bekräftar att butiken accepterar denna vara under gällande villkor.",
+    "accept": "Acceptera vara",
+    "accepted": "Varan är accepterad.",
+    "backToList": "Tillbaka till varor",
+    "acceptedAt": "Accepterad",
+    "openOrigin": "Öppna ursprunget",
+    "terms": "Frysta villkor",
+    "termsHint": "Sparade vid acceptansen och ändras aldrig. Senare policy eller säljarvillkor gäller bara senare varor.",
+    "commission": "Butikens provision",
+    "purchasePrice": "Inköpspris",
+    "salePeriod": "Säljperiod",
+    "days": "dagar",
+    "evidence": "Avtalsbevis",
+    "custody": "Mottagande",
+    "prices": "Prishistorik",
+    "events": "Händelser",
+    "originKinds": {
+      "inspection_draft": "Vara från påse",
+      "reception_review": "Inlämnat plagg",
+      "purchase": "Butiksinköp"
+    },
+    "ownershipKinds": {
+      "consignment": "inlämnad",
+      "store": "butiksägd"
+    },
+    "evidenceKinds": {
+      "staff_recorded": "avtalsbevis registrerat av personal",
+      "seller_response": "säljarens godkännande av underlaget",
+      "none": "inget"
+    },
+    "custodyKinds": {
+      "bag": "påskvitto",
+      "garment": "plaggkvitto"
+    },
+    "priceReasons": {
+      "accepted": "accepterat pris"
+    },
+    "eventKinds": {
+      "accepted": "Accepterad",
+      "price_set": "Pris satt"
+    }
+  },
   "purchases": {
     "title": "Inköp",
     "intro": "Butiksägda varor kommer in här, aldrig via inlämningsflödena.",

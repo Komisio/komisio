@@ -1,6 +1,8 @@
 import { prepareInspectionReception } from '@/lib/engine/inspection-reception-preview'
 import { InspectionPreparation } from '@/components/intake/inspection-preparation'
 import { readInspection } from '@/lib/engine/inspection-read'
+import { readItemForOrigin } from '@/lib/engine/items'
+import { AcceptItemForm } from '@/components/intake/accept-item-form'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
@@ -55,6 +57,14 @@ export default async function InspectBag({
   })
   const d = dictionary(ctx.locale),
     s = d.inspection
+  const acceptedItem = selected
+    ? await readItemForOrigin(
+        ctx.client,
+        tenantId,
+        'inspection_draft',
+        selected.draft_id,
+      )
+    : null
   return (
     <>
       <div className="page-heading">
@@ -136,6 +146,34 @@ export default async function InspectBag({
           <p>
             {s.version} {selected.revision}
           </p>
+        </section>
+      )}
+      {selected && !version && (
+        <section className="card intake-form">
+          <h2>{d.items.acceptHeading}</h2>
+          <p>{d.items.acceptHint}</p>
+          {acceptedItem ? (
+            <p role="status">
+              {d.items.alreadyAccepted}{' '}
+              <Link
+                className="text-link"
+                href={`/intake/items/${acceptedItem.id}`}
+              >
+                {d.items.open}
+              </Link>
+            </p>
+          ) : selected.archived ? (
+            <p role="status">{s.archived}</p>
+          ) : ctx.active!.role !== 'readonly' ? (
+            <AcceptItemForm
+              tenantId={tenantId}
+              originKind="inspection_draft"
+              originId={selected.draft_id}
+              originRevision={selected.revision}
+              d={d.items}
+              intake={d.intake}
+            />
+          ) : null}
         </section>
       )}
       {selected && !selected.archived && !version && (

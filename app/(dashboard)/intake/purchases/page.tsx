@@ -4,6 +4,8 @@ import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { PurchaseForm } from '@/components/intake/purchase-form'
+import { AcceptItemForm } from '@/components/intake/accept-item-form'
+import { readItemsForOrigins } from '@/lib/engine/items'
 
 const row = z.object({
   id: z.uuid(),
@@ -41,6 +43,12 @@ export default async function Purchases() {
     .array(row)
     .max(20)
     .parse(data ?? [])
+  const accepted = await readItemsForOrigins(
+    ctx.client,
+    active.id,
+    'purchase',
+    purchases.map((p) => p.id),
+  )
   return (
     <>
       <div className="page-heading">
@@ -85,6 +93,25 @@ export default async function Purchases() {
                     · {p.evidence_reference}
                     {p.supplier_note ? ` · ${p.supplier_note}` : ''}
                   </small>
+                  {accepted.has(p.id) ? (
+                    <p>
+                      <Link
+                        className="text-link"
+                        href={`/intake/items/${accepted.get(p.id)!.id}`}
+                      >
+                        {all.items.alreadyAccepted} {all.items.open}
+                      </Link>
+                    </p>
+                  ) : active.role !== 'readonly' ? (
+                    <AcceptItemForm
+                      tenantId={active.id}
+                      originKind="purchase"
+                      originId={p.id}
+                      originRevision={null}
+                      d={all.items}
+                      intake={all.intake}
+                    />
+                  ) : null}
                 </div>
               </li>
             ))}

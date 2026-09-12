@@ -646,6 +646,62 @@
     "history": "History",
     "noHistory": "No versions yet."
   },
+  "items": {
+    "title": "Items",
+    "item": "Item",
+    "intro": "An item exists only after the store accepts an origin under known terms. The origin stays the evidence; the item freezes the terms.",
+    "list": "Accepted items",
+    "empty": "No items accepted yet.",
+    "acceptHeading": "Accept as item",
+    "acceptHint": "Acceptance freezes the commission, sale period and agreement evidence in force right now. It requires custody and, per store policy, agreement evidence. It does not start a sale.",
+    "acceptBlocked": "Acceptance needs a published review and recorded custody.",
+    "alreadyAccepted": "Accepted as an item.",
+    "open": "Open item",
+    "price": "Accepted price",
+    "priceHint": "SEK, for example 250 or 250.50. In per-item mode the price must equal the one the seller approved.",
+    "priceInvalid": "Enter a price with up to two decimals.",
+    "confirm": "I confirm that the store accepts this item under the terms in force.",
+    "accept": "Accept item",
+    "accepted": "The item is accepted.",
+    "backToList": "Back to items",
+    "acceptedAt": "Accepted",
+    "openOrigin": "Open origin",
+    "terms": "Frozen terms",
+    "termsHint": "Recorded at acceptance and never changed. Later policy or seller terms apply to later items only.",
+    "commission": "Store commission",
+    "purchasePrice": "Purchase price",
+    "salePeriod": "Sale period",
+    "days": "days",
+    "evidence": "Agreement evidence",
+    "custody": "Custody",
+    "prices": "Price history",
+    "events": "Events",
+    "originKinds": {
+      "inspection_draft": "Bag item",
+      "reception_review": "Reception garment",
+      "purchase": "Store purchase"
+    },
+    "ownershipKinds": {
+      "consignment": "consignment",
+      "store": "store-owned"
+    },
+    "evidenceKinds": {
+      "staff_recorded": "staff-recorded agreement evidence",
+      "seller_response": "seller approval of the review",
+      "none": "none"
+    },
+    "custodyKinds": {
+      "bag": "bag receipt",
+      "garment": "garment receipt"
+    },
+    "priceReasons": {
+      "accepted": "accepted price"
+    },
+    "eventKinds": {
+      "accepted": "Accepted",
+      "price_set": "Price set"
+    }
+  },
   "purchases": {
     "title": "Purchases",
     "intro": "Store-owned goods enter here, never through the consignment paths.",

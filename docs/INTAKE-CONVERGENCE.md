@@ -54,13 +54,14 @@ settlement exist, and every later slice (labels, POS, returns, payout) doubles.
    general acceptance of the store's agreement. Bag-path evidence remains a
    staff-recorded reference to an external approval. Both are recorded on the
    item at acceptance as "evidence of terms", with their kind. *(Assumption A3.)*
-5. **Frozen at acceptance, not before.** The acceptance command freezes the
-   terms that open question 3 lists (commission basis, sale period, markdown,
-   end-of-period action) per item, from the tenant's policy at that moment.
-   Until questions 2 and 3 are answered, the command cannot be built; this ADR
-   only fixes that they are frozen per item at acceptance and never inherited
-   from a later policy change. The descriptive fields, price and photos come
-   from the origin and are frozen by reference.
+5. **Acceptance must preserve the terms actually evidenced.** The exact frozen
+   term set and timing remain open question 3. A seller response already pins a
+   review and agreement version; later tenant policy cannot silently replace
+   those terms at acceptance. If the store requires changed terms, the future
+   command must require appropriate new evidence rather than treating the old
+   approval as consent to the change. Questions 2 and 3 must be answered before
+   implementation. Descriptive fields, price and photos retain their origin
+   references; this proposal does not select a financial schema.
 
 ## What each path keeps and drops
 
@@ -84,7 +85,7 @@ settlement exist, and every later slice (labels, POS, returns, payout) doubles.
 - Staged operations (docs/STAGED-OPERATIONS.md) get their second kind when
   acceptance exists: an agent may propose acceptance, at a risk level above
   `low`, which by the existing rule requires a different approver than the
-  session that proposed it.
+  authenticated identity that proposed it, not merely another session.
 - Retention and correction rules for custody events follow those already
   decided for bag receipts: no edit, no delete, corrections as new rows.
 
@@ -92,7 +93,7 @@ settlement exist, and every later slice (labels, POS, returns, payout) doubles.
 
 Commission basis and VAT treatment (questions 2, 5), frozen term set
 (question 3), price reduction (4), what the seller sees of an accepted item,
-and any POS or label format. This ADR only fixes the shape of the convergence
+and any POS or label format. This ADR proposes the shape of the convergence
 so those answers land in one place.
 
 ## Assumptions to confirm

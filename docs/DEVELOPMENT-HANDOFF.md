@@ -16,13 +16,21 @@ including database, concurrency, Storage and AI HTTP fixture checks. Hosted
 anonymous guards passed; an authenticated hosted decision remains unverified.
 Fable's fixed f734f95 snapshot was integrated; its active worktree is untouched.
 
-Current slice: `feat/operation-review-context` adds a shared exact proposal-context
-read, a staff detail page and a read-only MCP tool. No new migration. Queue actions
-lead to the detail before deciding. Stale/expired proposals cannot be approved in
-this UI but can be rejected; SQL remains the transactional authority. Local lint,
-typecheck/build,99 units, real MCP and operator browser (1/1) pass. The browser
-asserts exact terms, approval, then stale approval denial and successful rejection.
-PR/CI and deployment remain pending. See OPERATION-REVIEW.md.
+PR44 is delivered: merge d01a23b1e8399e3cd500ee26060412c5e798bb07;
+CI34690891690 passed exact head4b4affbf2c64d1b9a6db2cf05d0a1c3d40f444ac;
+staging deployment6409115564 succeeded. Exact source and agreement context now
+precedes staff approval and shares a read with MCP. Local lint/format/types/build,
+99 units, real MCP and operator browser passed; CI also passed. Stale proposals
+cannot be approved in the UI but can be rejected. Hosted public guards passed;
+fresh authenticated hosted review is still pending. No migration.
+
+Current slice: `docs/functional-roadmap-review` integrates Fable's fixed4593bd0
+inventory as a reviewed proposal, not a feature-parity mandate. It corrects legacy
+prototype claims, financial assumptions, AI/GUI absolutism and pilot gate timing.
+The convergence proposal must preserve evidenced terms rather than silently use
+new tenant policy. No code, schema or domain rule is introduced. Fable's active
+worktree remains untouched. Relative links, UTF-8, the81-row inventory and scoped
+diff checks passed. PR/CI and merge remain pending.
 
 The prior PR40 work below is completed: merged6329b6ec95df1af3db8534921966f274f82f9e95,
 exact-head CI34687228721 passed, staging deployment6408441889 succeeded.
@@ -61,11 +69,12 @@ Do not impersonate the owner or change their existing seller responses.
 
 ## Next three actions
 
-1. Verify exact proposal context through real MCP and staff browser tests, including
-   stale proposals, tenant/identity/MFA denial and photo-path omission.
-2. Review, commit and open the scoped PR; require exact-head green CI before merge.
-3. Verify the matching staging deployment and save remaining pilot checks. Inspect
-   Fable's latest committed work before selecting another overlapping scope.
+1. Validate the reviewed roadmap, links and status claims; publish through a
+   scoped PR with exact-head green CI. No migration or product deployment needed.
+2. Specify a bounded descriptive draft-to-reception preview from existing
+   contracts, retaining missing evidence and avoiding acceptance/custody writes.
+3. Continue independent pilot gates; a fresh authenticated hosted walkthrough
+   and commercial terms decisions remain outstanding.
 
 ## Architecture and remaining gates
 

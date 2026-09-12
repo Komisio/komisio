@@ -6,6 +6,7 @@ import {
   receptionSuggestions,
 } from '../../lib/engine/reception'
 import { suggestReception } from '../../lib/assistance/reception'
+import { reviewReceptionFacts } from '../../lib/engine/reception-fact-review'
 
 const id = (n: number) =>
   `10000000-0000-4000-8000-${String(n).padStart(12, '0')}`
@@ -74,9 +75,14 @@ describe('headless garment reception contract', () => {
       new AbortController().signal,
     )
     expect(result.status).toBe('proposed')
+    const reviewed = reviewReceptionFacts(result.proposal!.suggestions, [
+      'description',
+      'price',
+    ])
+    expect(reviewed.complete).toBe(true)
     const prepared = prepareSellerReview(
       session,
-      result.proposal,
+      { ...result.proposal, suggestions: reviewed.suggestions },
       id(8),
       terms,
       '2026-09-13T00:00:00Z',

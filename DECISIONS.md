@@ -155,3 +155,16 @@ read uses existing derived status and an exclusive creation-time/UUID cursor.
 The engine returns 20 rows plus next-page guidance, retaining timestamp precision.
 No status, authorization or write semantics change. SQL tests precede the additive
 read-function migration; no new core table or financial rule is introduced.
+
+
+## 2026-09-12 - Provider-independent evidence boundary
+
+Narrow the existing reception assistance port to garment source evidence only.
+The shared orchestrator, not each individual provider, omits tenant/session/seller
+identities, source revision and photo Storage references before calling adapters.
+Source IDs remain for citation validation; supplied text and visible pixels remain
+untrusted and may contain personal data. This is field minimization, not redaction
+or a sandbox for arbitrary in-process code. Validate returned candidates against
+an isolated trusted snapshot, then mark every returned descriptive fact tentative
+regardless of provider certainty. Staff confirmation and engine publication rules
+stay unchanged. No new provider, prompt wording, reservation rule or migration.

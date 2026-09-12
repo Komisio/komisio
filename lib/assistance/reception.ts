@@ -1,12 +1,20 @@
-import {
-  prepareReceptionProposal,
-  receptionSession,
-  type ReceptionSession,
-} from '../engine/reception'
+import { prepareReceptionProposal, receptionSession } from '../engine/reception'
+
+export type ReceptionEvidence = {
+  sources: Array<
+    { id: string; observation: string } & (
+      | { kind: 'photo' }
+      | { kind: 'observation' | 'price-evidence'; reference: string }
+    )
+  >
+}
 
 export type ReceptionAssistance = {
   // Provider output is untrusted. The orchestrator binds identity and provenance.
-  suggest: (session: ReceptionSession, signal: AbortSignal) => Promise<unknown>
+  suggest: (
+    evidence: ReceptionEvidence,
+    signal: AbortSignal,
+  ) => Promise<unknown>
 }
 
 /** Optional replaceable port; no provider call or credentials in the core. */
@@ -19,11 +27,24 @@ export async function suggestReception(
   const session = receptionSession.parse(input)
   if (!adapter) return { status: 'unavailable' as const, proposal: null }
   signal.throwIfAborted()
-  // Isolate input: an adapter must not mutate the source set used for validation.
-  const candidate = await adapter.suggest(structuredClone(session), signal)
+  // Minimize before provider code runs; retain the isolated session for validation.
+  const evidence: ReceptionEvidence = {
+    sources: session.sources.map((source) => ({
+      id: source.id,
+      observation: source.observation,
+      ...(source.kind === 'photo'
+        ? { kind: source.kind }
+        : { kind: source.kind, reference: source.reference }),
+    })),
+  }
+  const candidate = await adapter.suggest(evidence, signal)
   signal.throwIfAborted()
+  const proposal = prepareReceptionProposal(session, candidate, proposalId)
+  // This applies to every adapter; model certainty cannot attest staff review.
+  for (const fact of Object.values(proposal.suggestions.metadata))
+    if (fact) fact.certainty = 'tentative'
   return {
     status: 'proposed' as const,
-    proposal: prepareReceptionProposal(session, candidate, proposalId),
+    proposal,
   }
 }

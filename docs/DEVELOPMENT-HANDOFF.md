@@ -6,6 +6,20 @@ precedence over narrative. This file supersedes older slice status notes.
 
 ## Current work
 
+Coordination update: the owner explicitly authorized Fable's T3 implementation.
+See PARALLEL-DEVELOPMENT.md for current responsibilities and observed commits.
+Do not start a competing pending-operation design. Fable's T3, seller-read lock
+change and T5 prompt guard need integrated verification before release. They are
+not in main at this checkpoint. Do not mutate the active Fable worktree or apply
+its migrations to the shared database without coordinating a stable handover.
+
+The prior PR40 work below is completed: merged6329b6ec95df1af3db8534921966f274f82f9e95,
+exact-head CI34687228721 passed, staging deployment6408441889 succeeded.
+PR41 merge3a88a228d5027ca6324bdea327360809d1f107f4 added the merge policy;
+ruleset23035301 actively requires PR and platform checks with no bypass actors.
+
+## Completed history slice
+
 PR40, branch `feat/reception-history`: read-only reception history shared by the
 staff UI and local MCP. Source and review lists have separate bounded cursors.
 Old seller responses stay attached to their exact proposal version. No new table,
@@ -18,9 +32,7 @@ seller browser journey1/1 (old approval, newer decline and review pagination).
 Changed-file formatting passed. The full local Windows format check flags
 unchanged CRLF files; Linux CI remains the release gate. No database reset needed.
 
-GitHub CI for PR40 is pending. Re-read its full head SHA and checks before merge.
-Do not claim this history slice is live until its merge deployment succeeds.
-The branch was based on PR39; PR39 has now merged, and PR40 targets main.
+PR40 is merged and deployed as recorded above; do not repeat its release.
 
 ## Verified recent deliveries
 
@@ -38,13 +50,12 @@ Do not impersonate the owner or change their existing seller responses.
 
 ## Next three actions
 
-1. Verify PR40 exact-head CI; resolve any failure, then merge and confirm the
-   matching staging deployment. No migration is needed.
-2. Update this checkpoint with the merge/deployment evidence. Test the hosted
-   history/queue when a fresh authorized staff session becomes available.
-3. Continue a bounded independent slice: specify safe import of an external AI
-   preview into staff review, or improve exact historical evidence navigation.
-   Start with the operation contract; never silently save or publish model output.
+1. Obtain a stable committed Fable handover and review T3 plus its tests, keeping
+   the current main merge policy when integrating the branch.
+2. Coordinate migration verification and real MCP/concurrency/browser tests;
+   record which database was used. No shared database reset.
+3. Open the implementation PR, require exact-head green CI, apply reviewed staging
+   migrations and verify deployment. Document remaining hosted-only checks.
 
 ## Architecture and remaining gates
 
@@ -56,8 +67,8 @@ Do not impersonate the owner or change their existing seller responses.
   [open questions](open-questions.md). Continue independent work while unresolved.
 - Built-in AI provider remains optional and unverified live. No borrowed tokens,
   paid provider activation or live POS writes are authorized by this day plan.
-- Local MCP reads/images/previews only; no durable pending-operation runtime,
-  hosted delegated login or automatic GUI import of external previews exists.
+- Main's local MCP reads/images/previews only. T3 pending operations exist on
+  Fable's branch and await integration; hosted delegated login is still separate.
 - Bag receiving and single-garment reception are distinct workflows.
 - History is a summary, not complete historic agreement/image access or a legal
   audit. See RECEPTION-HISTORY.md before extending it.
@@ -69,8 +80,8 @@ Do not impersonate the owner or change their existing seller responses.
 A replacement can continue the current branch after inspecting status and PRs.
 A parallel contributor must use a separate worktree and a clearly bounded task;
 never switch branches or edit files in the other model's working directory.
-Read [parallel development guide](PARALLEL-DEVELOPMENT.md). No Fable worker has
-been started or assigned automatically.
+Read [parallel development guide](PARALLEL-DEVELOPMENT.md). Fable is working under
+the owner's explicit T3 assignment, not an automatically spawned worker.
 
 ## Operations
 

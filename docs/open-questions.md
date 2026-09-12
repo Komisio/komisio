@@ -127,6 +127,19 @@ proposal's owner clarification for scope and outstanding details.
   approval of a review as item-level evidence only, and shared meaning of
   category and condition across drafts and reviews.
 
+## Raised by the functional roadmap (2026-09-12)
+
+See [functional roadmap](FUNCTIONAL-ROADMAP.md), section 8.
+
+- Does the 100-hours concept belong in the core as a lifecycle policy, or is
+  it one store's configuration of a generic price-decay policy?
+- Which label purposes are needed on day one (bag, item, onboarding slip,
+  markdown)?
+- Is a store-owned (purchased) item in scope for the first sale slice, or
+  consignment only?
+- Which POS is first: Zettle or Shopify POS?
+- Do sellers get push notifications, e-mail, or both, and who writes the text?
+
 ## Platform pilot
 
 14. **Answered:** use the Komisio GitHub organization and a public komisio

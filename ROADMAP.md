@@ -233,6 +233,13 @@ key or financial data model has been introduced.
 
 ## Next concrete work
 
+The garment-reception path now includes private photo capture, optional bounded
+AI suggestions, staff publication, exact mobile seller review with pinned images,
+and local MCP reads/previews. See [reception architecture](docs/RECEPTION-ARCHITECTURE.md).
+Live model evaluation, physical camera integration, hosted agent authorization
+and durable staged agent writes remain separate deliveries. No seller response
+automatically creates a sale, POS item or payout.
+
 The next domain delivery follows [AI-first inspection](docs/AI-FIRST-INSPECTION.md):
 the pure descriptive proposal contract, saved inspection drafts and staff GUI
 are implemented (see [delivery details](docs/SAVED-INSPECTION.md)). Optional model assistance and scoped

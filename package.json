@@ -23,7 +23,8 @@
     "test:db": "node scripts/supabase.mjs test db",
     "db:start": "node scripts/prepare-local.mjs && node scripts/supabase.mjs start",
     "db:migrate": "node scripts/supabase.mjs migration up --local",
-    "test:concurrency": "node scripts/owner-race.mjs"
+    "test:concurrency": "node scripts/owner-race.mjs",
+    "test:seller-photos": "node --import tsx scripts/test-seller-photos.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "2.0.0",

@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test'
 import { randomBytes, createHmac } from 'node:crypto'
 import { createRequire } from 'node:module'
+import sharp from 'sharp'
 
 test('saved inspection drafts resume safely and preserve conflicting edits', async ({
   page,
@@ -1586,6 +1587,21 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   })
   const sessionId = (await session.json()).id,
     sourceId = crypto.randomUUID()
+  const photoId = crypto.randomUUID()
+  const png = await sharp({
+    create: { width: 32, height: 48, channels: 3, background: '#24649b' },
+  })
+    .png()
+    .toBuffer()
+  const upload = await page.request.post(
+    `/api/reception/${sessionId}/photo?photo=${photoId}&tenant=${tenantId}`,
+    {
+      headers: { Origin: 'http://127.0.0.1:3000', 'Content-Type': 'image/png' },
+      data: png,
+    },
+  )
+  expect(upload.status()).toBe(200)
+  const photoSource = (await upload.json()).source
   expect(
     (
       await post({
@@ -1595,6 +1611,7 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
         sessionId,
         expectedRevision: 0,
         sources: [
+          photoSource,
           {
             id: sourceId,
             kind: 'price-evidence',
@@ -1661,6 +1678,8 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   const issued = await access(reviewId, null)
   expect(issued.status()).toBe(200)
   const { path, id: accessId } = await issued.json()
+  const photoUrl = `/api/seller${path}/photo/${photoId}`
+  expect((await page.request.get(photoUrl)).status()).toBe(404)
   // Store owner is not the intended seller despite holding the link.
   await page.goto(path)
   await expect(
@@ -1674,6 +1693,7 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
     viewport: { width: 390, height: 844 },
   })
   const mobile = await sellerContext.newPage()
+  expect((await mobile.request.get(photoUrl)).status()).toBe(404)
   await mobile.goto(path)
   await expect(
     mobile.getByRole('link', { name: 'Skapa konto', exact: true }),
@@ -1709,6 +1729,42 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
     path: 'private/seller-review-mobile.png',
     fullPage: true,
   })
+  const sellerPhoto = mobile.getByAltText('Bild som ingår i detta underlag')
+  await expect(sellerPhoto).toBeVisible()
+  await expect
+    .poll(() =>
+      sellerPhoto.evaluate(
+        (img: HTMLImageElement) => img.complete && img.naturalWidth === 32,
+      ),
+    )
+    .toBe(true)
+  const imageResponse = await mobile.request.get(photoUrl)
+  expect(imageResponse.status()).toBe(200)
+  expect(imageResponse.headers()['cache-control']).toContain('no-store')
+  expect(imageResponse.headers()['content-type']).toBe('image/jpeg')
+  expect(
+    (
+      await mobile.request.get(
+        `/api/reception/${sessionId}/photo?photo=${photoId}`,
+      )
+    ).status(),
+  ).toBe(404)
+  await mobile.getByRole('checkbox').check()
+  // A failed included image blocks the UI approval, but not declining.
+  await mobile.route(`**${photoUrl}`, (route) => route.abort())
+  await mobile.reload()
+  await expect(
+    mobile.getByText('Bilderna kunde inte laddas.', { exact: false }),
+  ).toBeVisible()
+  await mobile.getByRole('checkbox').check()
+  await expect(
+    mobile.getByRole('button', { name: 'Godkänn detta underlag' }),
+  ).toBeDisabled()
+  await expect(
+    mobile.getByRole('button', { name: 'Avvisa underlaget' }),
+  ).toBeEnabled()
+  await mobile.unroute(`**${photoUrl}`)
+  await mobile.reload()
   await mobile.getByRole('checkbox').check()
   await mobile.getByRole('button', { name: 'Godkänn detta underlag' }).click()
   await expect(
@@ -1723,6 +1779,7 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   const saved = await page.request.get(`/api/reception/${sessionId}`)
   expect((await saved.json()).latestReview.response.decision).toBe('approve')
   expect((await access(reviewId, accessId, false)).status()).toBe(200)
+  expect((await mobile.request.get(photoUrl)).status()).toBe(404)
   await mobile.reload()
   await expect(
     mobile.getByText('Underlaget är inte tillgängligt.', { exact: false }),
@@ -2082,10 +2139,11 @@ test('private reception photo uploads attach immutably and require staff access'
     sellerId: (await seller.json()).id,
   })
   const sessionId = (await reception.json()).id
-  const png = Buffer.from(
-    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+j6l8AAAAASUVORK5CYII=',
-    'base64',
-  )
+  const png = await sharp({
+    create: { width: 32, height: 48, channels: 3, background: '#24649b' },
+  })
+    .png()
+    .toBuffer()
   await page.goto(`/intake/reception/${sessionId}`)
   await page.getByLabel('Välj eller ta en bild').setInputFiles({
     name: 'synthetic.png',

@@ -325,7 +325,7 @@
   "reviewVersion": "Underlag version",
   "reviewTitle": "Ditt plagg, ditt beslut",
   "reviewBrand": "Varumärke",
-  "reviewConfirm": "Jag har läst beskrivningen, prisförslaget och villkoren ovan.",
+  "reviewConfirm": "Jag har granskat beskrivningen, eventuella bilder, prisförslaget och villkoren ovan.",
   "audit.reception.access_issued": "Granskningslänk skapad",
   "audit.reception.access_revoked": "Granskningslänk återkallad",
   "audit.reception.seller_responded": "Säljaren svarade på underlaget",
@@ -385,7 +385,7 @@
     "needSources": "Spara en beskrivning och ett prisunderlag först.",
     "needTerms": "Butiken behöver publicera säljarvillkor först",
     "version": "version",
-    "confirm": "Jag har kontrollerat beskrivningen, prisunderlaget och de fullständiga villkoren ovan.",
+    "confirm": "Jag har granskat beskrivningen, bilderna, prisunderlaget och de fullständiga villkoren ovan.",
     "expiry": "Den publicerade versionen gäller i 24 timmar. Ingen länk eller e-post skickas automatiskt.",
     "publish": "Publicera granskat underlag",
     "published": "Denna källversion är publicerad. Hantera länken nedan.",
@@ -411,7 +411,11 @@
     "photoInvalid": "Välj en JPEG- eller PNG-bild på högst 3 MB. En mottagning kan ha högst 20 källor totalt.",
     "photoSelect": "Välj eller ta en bild",
     "photos": "Bilder från mottagningen",
-    "photoHelp": "JPEG eller PNG, högst 3 MB och 20 megapixlar. Bilden sparas privat för butikens personal. Säljaren ser ännu inte bilderna.",
-    "photoSave": "Spara bild till mottagningen"
-  }
+    "photoHelp": "JPEG eller PNG, högst 3 MB och 20 megapixlar. Originalet är privat för personalen. Nya uppladdningar får en mindre kopia utan kamerametadata som följer med nästa publicerade underlag. Granska även personer och etiketter i bilden. Äldre bilder kan sakna kopia; redan publicerade underlag ändras aldrig.",
+    "photoSave": "Spara bild till mottagningen",
+    "sharedPhotos": "Bilder som ingår i publicerad version"
+  },
+  "reviewPhotoAlt": "Bild som ingår i detta underlag",
+  "reviewPhotos": "Bilder i detta underlag",
+  "reviewPhotoError": "Bilderna kunde inte laddas. Ladda om sidan innan du godkänner."
 }

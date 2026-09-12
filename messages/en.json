@@ -325,7 +325,7 @@
   "reviewVersion": "Review version",
   "reviewTitle": "Your garment, your decision",
   "reviewBrand": "Brand",
-  "reviewConfirm": "I have read the description, proposed price and terms above.",
+  "reviewConfirm": "I have reviewed the description, any included photos, proposed price and terms above.",
   "audit.reception.access_issued": "Review link issued",
   "audit.reception.access_revoked": "Review link revoked",
   "audit.reception.seller_responded": "Seller responded to review",
@@ -385,7 +385,7 @@
     "needSources": "Save a description and price evidence first.",
     "needTerms": "The store needs to publish seller terms first",
     "version": "version",
-    "confirm": "I have checked the description, price evidence and full terms above.",
+    "confirm": "I have checked the description, photos, price evidence and full terms above.",
     "expiry": "The published version is valid for 24 hours. No link or email is sent automatically.",
     "publish": "Publish reviewed proposal",
     "published": "This source version is published. Manage the link below.",
@@ -411,7 +411,11 @@
     "photoInvalid": "Choose a JPEG or PNG up to 3 MB. A reception can contain up to 20 sources in total.",
     "photoSelect": "Choose or capture a photo",
     "photos": "Reception photos",
-    "photoHelp": "JPEG or PNG, up to 3 MB and 20 megapixels. Saved privately for store staff. Sellers cannot view photos yet.",
-    "photoSave": "Save photo to reception"
-  }
+    "photoHelp": "JPEG or PNG, up to 3 MB and 20 megapixels. Originals are private to staff. New uploads get a reduced copy without camera metadata for the next published review. Check visible people and labels too. Older photos may lack a copy; published reviews never change.",
+    "photoSave": "Save photo to reception",
+    "sharedPhotos": "Photos included in the published version"
+  },
+  "reviewPhotoAlt": "Photo included in this review",
+  "reviewPhotos": "Photos in this review",
+  "reviewPhotoError": "The photos could not be loaded. Reload the page before approving."
 }

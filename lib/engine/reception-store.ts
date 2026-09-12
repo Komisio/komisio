@@ -36,12 +36,14 @@ export async function readReceptionReview(
   const tenantId = z.uuid().parse(tenantInput),
     sessionId = z.uuid().parse(sessionInput)
   const { data: review, error } = await client
-    .from('reception_reviews_current')
+    .from('reception_reviews')
     .select(
-      'id,version,source_revision,agreement_id,seller_email,suggestions,expires_at',
+      'id,version,source_revision,agreement_id,seller_email,suggestions,expires_at,photo_sources',
     )
     .eq('tenant_id', tenantId)
     .eq('session_id', sessionId)
+    .order('version', { ascending: false })
+    .limit(1)
     .maybeSingle()
   if (error) throw new Error('Unable to read reception review')
   if (!review) return null
@@ -72,6 +74,7 @@ export async function readReceptionReview(
     id: review.id,
     version: review.version,
     sourceRevision: review.source_revision,
+    photos: z.array(z.uuid()).max(20).parse(review.photo_sources),
     suggestions: receptionSuggestions.parse(review.suggestions),
     expiresAt: review.expires_at,
     expired: Date.parse(review.expires_at) <= Date.now(),

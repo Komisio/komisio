@@ -70,7 +70,6 @@ the same operations. Those changes need not rewrite seller identity or historica
 decisions. Camera pairing, hosted delegation and agent write approval still need
 their own authorization and tests before activation.
 
-This follows the shared-engine and staged-operation direction in the reviewed
-[Accounted architecture](https://github.com/erp-mafia/accounted/blob/91ab339a863239650f77eae8ab9d415574a90632/ARCHITECTURE.md).
-It does not imply feature parity or copying Accounted's accounting model. The
-[reception ADR](RECEPTION-ARCHITECTURE.md) records the actual scope and trade-offs.
+This follows the shared-engine and staged-operation direction fixed in
+`ARCHITECTURE.md`. The [reception ADR](RECEPTION-ARCHITECTURE.md) records the
+actual scope and trade-offs.

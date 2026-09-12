@@ -6,17 +6,16 @@
 
 ## Context and reference
 
-The owner wants Accounted's engine-first approach, with the earlier Komisio used
-for workflow evidence only. A received bag is custody; describing its contents
-is preparation; commercial acceptance and making goods available for sale are
-separate decisions. A large inherited item schema would conflate these steps.
+The owner wants the engine-first approach fixed in `ARCHITECTURE.md`, with the
+earlier Komisio used for workflow evidence only. A received bag is custody;
+describing its contents is preparation; commercial acceptance and making goods
+available for sale are separate decisions. A large inherited item schema would
+conflate these steps.
 
-Accounted's [architecture at the reviewed revision](https://github.com/erp-mafia/accounted/blob/91ab339a863239650f77eae8ab9d415574a90632/ARCHITECTURE.md)
-describes a common bookkeeping engine, draft/commit operations, database-enforced
-invariants, optional extensions and an authenticated MCP surface with staged
-posting. Komisio adopts those architectural boundaries, not their accounting
-rules, code, table names or current tool count. The reference is design evidence,
-not an independent security audit of Accounted.
+The boundaries adopted here are a common engine, draft/commit operations,
+database-enforced invariants, optional extensions and an authenticated MCP
+surface with staged posting. Nothing in this ADR decides accounting rules,
+table names or tool count.
 
 ## Decision
 

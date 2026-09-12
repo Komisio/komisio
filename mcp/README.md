@@ -86,13 +86,12 @@ actor attribution, approval surface, expiry/replay behavior and executor tests.
 Future hosted MCP needs audience-bound OAuth, discovery and scoped delegation;
 ordinary Supabase user tokens must not become pass-through HTTP MCP credentials.
 
-## Accounted reference and validation
+## Tool contract and validation
 
-The reviewed [Accounted MCP contract](https://github.com/erp-mafia/accounted/blob/91ab339a863239650f77eae8ab9d415574a90632/extensions/general/mcp-server/README.md)
-informs strict schemas, explicit scope mapping, stable tool definitions and clear
-staged-operation envelopes. Accounted has a substantially larger hosted MCP,
-OAuth and pending-operation implementation. Komisio's local preview is a smaller
-first slice, not feature parity. No Accounted source code was copied.
+The tool contract is deliberately strict: closed input schemas, an explicit scope
+map, stable tool definitions and a clear envelope that states what was and was
+not persisted. Komisio's local preview is a first slice; hosted MCP, OAuth and
+pending operations follow separately.
 
 `npm run test:mcp` creates synthetic data in local Supabase and connects through
 real stdio with the official client. It tests protocol negotiation, strict catalog,

@@ -8,13 +8,13 @@ The owner wants vision-assisted reception and seller approval on mobile rather
 than expanding CRUD screens. Bag receipts and descriptive drafts remain useful,
 but do not represent wall reception, image provenance or seller consent.
 
-[Accounted architecture, pinned reviewed revision](https://github.com/erp-mafia/accounted/blob/91ab339a863239650f77eae8ab9d415574a90632/ARCHITECTURE.md)
-separates engine, database enforcement, extensions and agent access. Posting from
-agents is staged for approval, with separate workflow skills. Komisio has shared
-staff operations and database controls, a local read/preview MCP adapter, but no hosted MCP, extension runtime or
-unattended vision hardware. An optional inference adapter now demonstrates these
-boundaries through the reception workflow; it requires explicit configuration.
-No source code is copied from Accounted.
+The architecture separates engine, database enforcement, extensions and agent
+access (`ARCHITECTURE.md`). Writes from agents are staged for approval, with
+separate workflow skills. Komisio has shared staff operations and database
+controls, a local read/preview MCP adapter, but no hosted MCP, extension runtime
+or unattended vision hardware. An optional inference adapter now demonstrates
+these boundaries through the reception workflow; it requires explicit
+configuration.
 
 ## Decision
 

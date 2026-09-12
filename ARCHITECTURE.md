@@ -125,7 +125,7 @@ suggestion contract. It can be used by manual and future model adapters without
 network access or persistence. Explicit field selection and revision matching
 protect human edits from stale suggestions. This is not a permission boundary,
 saved item or live AI feature. See [the inspection ADR](docs/AI-FIRST-INSPECTION.md)
-for the Accounted reference, database/skill split and next implementation steps.
+for the database/skill split and next implementation steps.
 
 The staff GUI now saves descriptive drafts through the shared intake engine and
 `save_inspection_draft` RPC. One append-only `inspection_draft_revisions` table

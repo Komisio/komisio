@@ -1,6 +1,7 @@
 'use client'
 import { useRef, useState } from 'react'
 import Link from 'next/link'
+import { ReceptionComparison } from './reception-comparison'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import type { PendingOperation } from '@/lib/engine/operations'
@@ -278,6 +279,9 @@ export function OperationQueue({
             <Link className="text-link" href={`/intake/operations/${o.id}`}>
               {d.reviewProposal}
             </Link>
+          )}
+          {reviewContext?.kind === 'reception' && (
+            <ReceptionComparison comparison={reviewContext.comparison} d={d} />
           )}
           {reviewContext?.kind === 'reception' && (
             <section aria-label={d.reviewContext}>

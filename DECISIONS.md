@@ -179,3 +179,14 @@ the four-argument paged RPC as a delegating compatibility wrapper and the legacy
 newest-50 RPC unchanged. Return only IDs, kind, risk, derived status and timestamps;
 no payload, people, actor label, decision reason or write. Existing scoped exact
 operation reads supply details on demand. No new scope, table or authorization.
+
+
+## 2026-09-12 - Compare a staged review with its exact prior publication
+
+Read the prior immutable review identified by previousReviewId within the same
+tenant and reception. Show changed descriptive values/citation sets, price with
+rationale/citations, and source/agreement version changes. A first publication has
+no baseline. This is read-only guidance, not seller consent, acceptance, proof of
+unchanged evidence or a complete legal diff. All field confirmations and existing
+SQL current-version checks still apply; no prior decision is inherited. No new
+persistence, authorization, financial rule or migration.

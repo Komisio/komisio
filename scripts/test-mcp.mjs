@@ -562,6 +562,52 @@ try {
     staleDetail.structuredContent.context.terms.body,
     'Fictional terms',
   )
+  const revisionOperation = randomUUID()
+  const revisedSuggestions = structuredClone(complete)
+  revisedSuggestions.metadata.description.value = 'Revised fixture jacket'
+  revisedSuggestions.price.rationale = 'Revised fixture rationale'
+  const revisionStaged = await proposer.callTool({
+    name: 'komisio_propose_reception_review',
+    arguments: {
+      ...proposal,
+      requestId: revisionOperation,
+      previousReviewId: proposalId,
+      suggestions: revisedSuggestions,
+    },
+  })
+  assert(!revisionStaged.isError, JSON.stringify(revisionStaged.content))
+  const revisionDetail = await both.callTool({
+    name: 'komisio_read_reception_operation',
+    arguments: { operationId: revisionOperation },
+  })
+  assert(!revisionDetail.isError)
+  const comparison = revisionDetail.structuredContent.context.comparison
+  assert.equal(comparison.previousReviewId, proposalId)
+  assert.equal(comparison.previousVersion, 1)
+  assert.equal(
+    comparison.fields[0].before.value,
+    complete.metadata.description.value,
+  )
+  assert.equal(comparison.fields[0].after.value, 'Revised fixture jacket')
+  assert.equal(comparison.price.before.amount, comparison.price.after.amount)
+  assert.equal(comparison.price.after.rationale, 'Revised fixture rationale')
+  assert.equal(comparison.agreementChanged, false)
+  assert.equal(comparison.sourceRevisionChanged, false)
+  const revised = await app.rpc('decide_operation', {
+    p_tenant: tenant,
+    p_id: randomUUID(),
+    p_operation: revisionOperation,
+    p_decision: 'approved',
+    p_reason: 'Fixture revision',
+  })
+  assert.ifError(revised.error)
+  const historical = await both.callTool({
+    name: 'komisio_read_reception_operation',
+    arguments: { operationId: revisionOperation },
+  })
+  assert(!historical.isError)
+  assert.equal(historical.structuredContent.operation.outcome, 'executed')
+  assert.deepEqual(historical.structuredContent.context.comparison, comparison)
   const discovery = await testOperationDiscovery({
     connect,
     rpc,
@@ -664,9 +710,9 @@ try {
     'select (select count(*) from reception_source_revisions where session_id=$1)::int sources,(select count(*) from reception_reviews where session_id=$1)::int reviews,(select count(*) from reception_assistance_attempts where session_id=$1)::int attempts',
     [session],
   )
-  // 22 seeded history revisions plus the restored-evidence revision; the only
-  // review came from the staff-approved staged operation, not from a tool.
-  assert.deepEqual(records.rows[0], { sources: 23, reviews: 1, attempts: 0 })
+  // 22 seeded history revisions plus the restored-evidence revision; both
+  // reviews came from staff-approved staged operations, not from a tool.
+  assert.deepEqual(records.rows[0], { sources: 23, reviews: 2, attempts: 0 })
   console.log(
     'PASS: real stdio MCP negotiation, authenticated reads, opt-in minimized image/provenance, unsaved preview, staged proposal with staff approval, scope/tenant/invalid-token/MFA/stale denial, no direct source/review/model writes.',
   )

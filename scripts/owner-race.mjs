@@ -499,6 +499,61 @@ try {
   console.log(
     'PASS: concurrent review publication requires expected previous review; retries persist once.',
   )
+  const sellerUser = randomUUID(),
+    accessRequest = randomUUID()
+  await setup.query(
+    "insert into auth.users(id,email,email_confirmed_at) values($1,'seller@example.test',now())",
+    [sellerUser],
+  )
+  await sessions[0].c.query(
+    "select set_reception_access($1,$2,$3,null,encode(sha256(convert_to(repeat('c',64),'UTF8')),'hex'))",
+    [tenant, accessRequest, reviewRequest],
+  )
+  for (const { c } of sessions)
+    await c.query("select set_config('request.jwt.claims',$1,false)", [
+      JSON.stringify({ sub: sellerUser, role: 'authenticated' }),
+    ])
+  const decisionRace = await Promise.all(
+    sessions.map(({ c }, i) =>
+      c
+        .query("select respond_to_reception_review(repeat('c',64),$1,$2,$3)", [
+          randomUUID(),
+          reviewRequest,
+          i === 0 ? 'approve' : 'decline',
+        ])
+        .then(
+          () => 'saved',
+          (e) => {
+            if (e.message.includes('REVIEW_ALREADY_ANSWERED')) return 'answered'
+            throw e
+          },
+        ),
+    ),
+  )
+  if (
+    decisionRace.filter((r) => r === 'saved').length !== 1 ||
+    decisionRace.filter((r) => r === 'answered').length !== 1
+  )
+    throw new Error('Conflicting seller decisions both persisted')
+  const response = (
+    await setup.query(
+      'select id,decision from reception_responses where review_id=$1',
+      [reviewRequest],
+    )
+  ).rows[0]
+  const responseRetries = await Promise.all(
+    sessions.map(({ c }) =>
+      c.query(
+        "select respond_to_reception_review(repeat('c',64),$1,$2,$3) as id",
+        [response.id, reviewRequest, response.decision],
+      ),
+    ),
+  )
+  if (responseRetries.some((r) => r.rows[0].id !== response.id))
+    throw new Error('Seller decision retry did not resolve original')
+  console.log(
+    'PASS: concurrent seller approval/decline persists once; same-actor retries return original response.',
+  )
 } finally {
   await Promise.allSettled(clients.map((c) => c.end()))
   await admin.query(`drop database if exists "${database}"`)

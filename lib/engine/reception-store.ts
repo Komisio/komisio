@@ -50,12 +50,36 @@ export async function readReceptionReview(
     .eq('id', review.agreement_id)
     .single()
   if (termsError) throw new Error('Unable to read review terms')
+  const { data: access, error: accessError } = await client
+    .from('reception_access_events')
+    .select('id,version,token_hash')
+    .eq('review_id', review.id)
+    .eq('tenant_id', tenantId)
+    .order('version', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  if (accessError) throw new Error('Unable to read review access')
+  const { data: response, error: responseError } = await client
+    .from('reception_responses')
+    .select('decision,created_at')
+    .eq('review_id', review.id)
+    .eq('tenant_id', tenantId)
+    .maybeSingle()
+  if (responseError) throw new Error('Unable to read review response')
   return {
     id: review.id,
     version: review.version,
     sourceRevision: review.source_revision,
     suggestions: receptionSuggestions.parse(review.suggestions),
     expiresAt: review.expires_at,
+    access: access
+      ? {
+          id: access.id,
+          version: access.version,
+          enabled: access.token_hash !== null,
+        }
+      : null,
+    response,
     terms: {
       versionId: terms.id,
       title: terms.title,

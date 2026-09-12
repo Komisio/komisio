@@ -1,6 +1,16 @@
 # Development roadmap
 
-Updated: 2026-09-11. Sequence: **platform and usable web UI first, store operations second**.
+Updated: 2026-09-12. Current priority: **AI-first garment reception through shared engine operations, with thin operator and seller surfaces**.
+
+The platform-first milestones below describe the foundation. The owner's latest
+direction is the [single-garment reception plan](docs/AUTONOMOUS-INTAKE-2026-09-12.md):
+durable observation snapshots and reviewed prices/terms, secure mobile seller
+response, protected image capture and an optional model adapter. The shared engine
+must support these workflows without a GUI dependency. Mobile response is now
+implemented for verified email plus a personal capability link; see
+[seller review](docs/SELLER-REVIEW.md) for exact boundaries. A usable staff reception
+workspace, private photos and live AI remain next. No seller response publishes
+inventory or authorizes payouts.
 
 The platform is deployed to staging, and registration plus invitation-email
 receipt have been confirmed. Hosted invitation acceptance remains unresolved.

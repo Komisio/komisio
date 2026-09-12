@@ -1548,3 +1548,214 @@ test('reception sources persist through authenticated API without a bag or GUI',
   await expect(page).toHaveURL(/\/login/)
   expect((await page.request.get(path)).status()).toBe(401)
 })
+test('seller reviews exact terms on mobile without becoming a store member', async ({
+  page,
+  browser,
+}) => {
+  const run = Date.now().toString(36),
+    sellerEmail = `seller-review-${run}@example.test`
+  await register(
+    page,
+    `review-owner-${run}@example.test`,
+    `K!${randomBytes(16).toString('hex')}`,
+  )
+  await page.getByLabel('Butikens namn').fill('E2E Review Store')
+  await page.getByLabel('Butikens identifierare').fill(`review-${run}`)
+  await page.getByRole('button', { name: 'Skapa min butik' }).click()
+  await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
+  const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
+  const post = (data: object) =>
+    page.request.post('/api/intake', {
+      headers: { Origin: 'http://127.0.0.1:3000' },
+      data,
+    })
+  const seller = await post({
+    action: 'registerSeller',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    name: 'TEST Seller',
+    email: sellerEmail,
+    phone: '',
+  })
+  const session = await post({
+    action: 'createReception',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    sellerId: (await seller.json()).id,
+  })
+  const sessionId = (await session.json()).id,
+    sourceId = crypto.randomUUID()
+  expect(
+    (
+      await post({
+        action: 'saveReceptionSources',
+        tenantId,
+        requestId: crypto.randomUUID(),
+        sessionId,
+        expectedRevision: 0,
+        sources: [
+          {
+            id: sourceId,
+            kind: 'price-evidence',
+            reference: 'Private TEST internal appraisal',
+            observation: 'Fictional blue jacket appraisal: 250 SEK',
+          },
+        ],
+      })
+    ).status(),
+  ).toBe(200)
+  const terms = await post({
+    action: 'publishAgreement',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    expectedCurrentId: null,
+    title: 'TEST terms',
+    body: 'Fictional seller terms. No real transaction.',
+    language: 'en',
+    required: false,
+  })
+  const reviewId = crypto.randomUUID()
+  const reviewCommand = {
+    action: 'publishReceptionReview',
+    tenantId,
+    requestId: reviewId,
+    sessionId,
+    sourceRevision: 1,
+    previousReviewId: null,
+    agreementId: (await terms.json()).id,
+    expiresAt: new Date(Date.now() + 3600000).toISOString(),
+    suggestions: {
+      metadata: {
+        description: {
+          value: 'Blue TEST jacket',
+          sourceIds: [sourceId],
+          certainty: 'observed',
+        },
+      },
+      price: {
+        currency: 'SEK',
+        amount: '250.00',
+        rationale: 'TEST appraisal, not live AI.',
+        sourceIds: [sourceId],
+      },
+      questions: [],
+    },
+  }
+  expect((await post(reviewCommand)).status()).toBe(200)
+  const access = (
+    reviewId: string,
+    previousId: string | null,
+    enabled = true,
+  ) =>
+    page.request.post('/api/reception/access', {
+      headers: { Origin: 'http://127.0.0.1:3000' },
+      data: {
+        tenantId,
+        reviewId,
+        requestId: crypto.randomUUID(),
+        previousId,
+        enabled,
+      },
+    })
+  const issued = await access(reviewId, null)
+  expect(issued.status()).toBe(200)
+  const { path, id: accessId } = await issued.json()
+  // Store owner is not the intended seller despite holding the link.
+  await page.goto(path)
+  await expect(
+    page.getByText('Underlaget är inte tillgängligt.', { exact: false }),
+  ).toBeVisible()
+  await expect(page.getByText('Blue TEST jacket', { exact: true })).toHaveCount(
+    0,
+  )
+  const sellerContext = await browser.newContext({
+    baseURL: 'http://127.0.0.1:3000',
+    viewport: { width: 390, height: 844 },
+  })
+  const mobile = await sellerContext.newPage()
+  await mobile.goto(path)
+  await expect(
+    mobile.getByRole('link', { name: 'Skapa konto', exact: true }),
+  ).toBeVisible()
+  await register(
+    mobile,
+    sellerEmail,
+    `K!${randomBytes(16).toString('hex')}`,
+    path,
+  )
+  await expect(mobile).toHaveURL(path)
+  await expect(
+    mobile.getByText('Blue TEST jacket', { exact: true }),
+  ).toBeVisible()
+  await expect(
+    mobile.getByText('Fictional seller terms. No real transaction.', {
+      exact: true,
+    }),
+  ).toBeVisible()
+  await expect(
+    mobile.getByText('Private TEST internal appraisal', { exact: true }),
+  ).toHaveCount(0)
+  await expect(mobile.getByLabel('Aktiv butik')).toHaveCount(0)
+  await expect(
+    mobile.getByRole('button', { name: 'Godkänn detta underlag' }),
+  ).toBeDisabled()
+  expect(
+    await mobile.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true)
+  await mobile.screenshot({
+    path: 'private/seller-review-mobile.png',
+    fullPage: true,
+  })
+  await mobile.getByRole('checkbox').check()
+  await mobile.getByRole('button', { name: 'Godkänn detta underlag' }).click()
+  await expect(
+    mobile.getByText('Ditt godkännande är sparat för denna version.', {
+      exact: false,
+    }),
+  ).toBeVisible()
+  await mobile.reload()
+  await expect(
+    mobile.getByRole('button', { name: 'Godkänn detta underlag' }),
+  ).toHaveCount(0)
+  const saved = await page.request.get(`/api/reception/${sessionId}`)
+  expect((await saved.json()).latestReview.response.decision).toBe('approve')
+  expect((await access(reviewId, accessId, false)).status()).toBe(200)
+  await mobile.reload()
+  await expect(
+    mobile.getByText('Underlaget är inte tillgängligt.', { exact: false }),
+  ).toBeVisible()
+  const secondId = crypto.randomUUID()
+  expect(
+    (
+      await post({
+        ...reviewCommand,
+        requestId: secondId,
+        previousReviewId: reviewId,
+      })
+    ).status(),
+  ).toBe(200)
+  const second = await (await access(secondId, null)).json()
+  await mobile.goto(second.path)
+  await mobile.getByRole('button', { name: 'Avvisa underlaget' }).click()
+  await expect(
+    mobile.getByText('Du har avvisat denna version.', { exact: false }),
+  ).toBeVisible()
+  // Neither response gave staff write capability.
+  expect(
+    (
+      await mobile.request.post('/api/reception/access', {
+        headers: { Origin: 'http://127.0.0.1:3000' },
+        data: {
+          tenantId,
+          reviewId: secondId,
+          requestId: crypto.randomUUID(),
+          previousId: second.id,
+          enabled: false,
+        },
+      })
+    ).status(),
+  ).toBe(409)
+  await sellerContext.close()
+})

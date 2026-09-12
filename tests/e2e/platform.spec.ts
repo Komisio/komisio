@@ -1759,3 +1759,156 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   ).toBe(409)
   await sellerContext.close()
 })
+test('operator reception guides saved evidence, exact review and link replacement', async ({
+  page,
+}) => {
+  const run = Date.now().toString(36)
+  await register(
+    page,
+    `operator-${run}@example.test`,
+    `K!${randomBytes(16).toString('hex')}`,
+  )
+  await page.getByLabel('Butikens namn').fill('E2E Operator')
+  await page.getByLabel('Butikens identifierare').fill(`operator-${run}`)
+  await page.getByRole('button', { name: 'Skapa min butik' }).click()
+  await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
+  const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
+  const post = (data: object) =>
+    page.request.post('/api/intake', {
+      headers: { Origin: 'http://127.0.0.1:3000' },
+      data,
+    })
+  expect(
+    (
+      await post({
+        action: 'registerSeller',
+        tenantId,
+        requestId: crypto.randomUUID(),
+        name: 'Operator TEST Seller',
+        email: `operator-seller-${run}@example.test`,
+        phone: '',
+      })
+    ).status(),
+  ).toBe(200)
+  expect(
+    (
+      await post({
+        action: 'publishAgreement',
+        tenantId,
+        requestId: crypto.randomUUID(),
+        expectedCurrentId: null,
+        title: 'Operator TEST terms',
+        body: 'Fictional reviewed terms for browser test only.',
+        language: 'en',
+        required: false,
+      })
+    ).status(),
+  ).toBe(200)
+  await page.goto('/intake')
+  await page
+    .getByRole('link', { name: 'Mottagning av plagg', exact: true })
+    .click()
+  await page.getByLabel('Sök säljare på namn').fill('Operator TEST')
+  await page.getByRole('button', { name: 'Sök', exact: true }).click()
+  await expect(page.getByLabel('Välj registrerad säljare')).toContainText(
+    'Operator TEST Seller',
+  )
+  await page
+    .getByRole('button', { name: 'Starta mottagning', exact: true })
+    .click()
+  await expect(page).toHaveURL(/\/intake\/reception\/[a-f0-9-]+$/)
+  const receptionPath = new URL(page.url()).pathname,
+    sessionId = receptionPath.split('/').pop()
+  const stale = await page.context().newPage()
+  await stale.goto(receptionPath)
+  await page.getByLabel('Beskriv plagget').fill('Blue operator TEST jacket')
+  await page
+    .getByLabel('Föreslaget försäljningspris', { exact: true })
+    .fill('250,50')
+  await page.getByLabel('Prisunderlagets källa').fill('TEST staff appraisal')
+  await page
+    .getByLabel('Motivera prisförslaget')
+    .fill('Fictional condition assessment, no live AI.')
+  // Lose a successful response once. A retry must retain the exact request/source IDs.
+  let dropped = false
+  await page.route('**/api/intake', async (route) => {
+    const data = route.request().postDataJSON()
+    if (data.action === 'saveReceptionSources' && !dropped) {
+      dropped = true
+      await route.fetch()
+      await route.abort()
+      return
+    }
+    await route.continue()
+  })
+  await page
+    .getByRole('button', { name: 'Spara beskrivning och prisunderlag' })
+    .click()
+  await expect(
+    page.getByRole('alert').filter({ hasText: 'Svaret kunde inte bekräftas' }),
+  ).toBeVisible()
+  await page.getByRole('button', { name: 'Försök igen', exact: true }).click()
+  await expect(
+    page.getByText('Sparad källversion 1', { exact: true }),
+  ).toBeVisible()
+  await page.unroute('**/api/intake')
+  await expect(
+    page.getByRole('button', { name: 'Publicera granskat underlag' }),
+  ).toBeDisabled()
+  await page.getByRole('checkbox').check()
+  await page
+    .getByRole('button', { name: 'Publicera granskat underlag' })
+    .click()
+  await expect(
+    page.getByRole('heading', { name: '3. Säljarens beslut — version 1' }),
+  ).toBeVisible()
+  await page.getByRole('button', { name: 'Skapa personlig länk' }).click()
+  await expect(page.getByLabel('Länk till säljarens granskning')).toHaveValue(
+    /\/review\/[a-f0-9]{64}$/,
+  )
+  const firstLink = await page
+    .getByLabel('Länk till säljarens granskning')
+    .inputValue()
+  await page.getByRole('button', { name: 'Ersätt tidigare länk' }).click()
+  await expect(
+    page.getByLabel('Länk till säljarens granskning'),
+  ).not.toHaveValue(firstLink)
+  await page.getByRole('button', { name: 'Återkalla länken' }).click()
+  await expect(page.getByLabel('Länk till säljarens granskning')).toHaveCount(0)
+  await page.reload()
+  await expect(page.getByLabel('Beskriv plagget')).toHaveValue(
+    'Blue operator TEST jacket',
+  )
+  const current = await (
+    await page.request.get(`/api/reception/${sessionId}`)
+  ).json()
+  expect(current.session.revision).toBe(1)
+  expect(current.latestReview.access.enabled).toBe(false)
+  await stale.getByLabel('Beskriv plagget').fill('Stale edit')
+  await stale
+    .getByLabel('Föreslaget försäljningspris', { exact: true })
+    .fill('300')
+  await stale.getByLabel('Prisunderlagets källa').fill('TEST')
+  await stale.getByLabel('Motivera prisförslaget').fill('TEST')
+  await stale
+    .getByRole('button', { name: 'Spara beskrivning och prisunderlag' })
+    .click()
+  await expect(
+    stale.getByRole('button', { name: 'Ladda om sparat läge' }),
+  ).toBeVisible()
+  await stale.close()
+  await page.setViewportSize({ width: 390, height: 844 })
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true)
+  await page.screenshot({
+    path: 'private/operator-reception-mobile.png',
+    fullPage: true,
+  })
+  await page.getByRole('link', { name: 'Till mottagningarna' }).click()
+  await expect(
+    page.getByRole('link', { name: /Operator TEST Seller/ }),
+  ).toBeVisible()
+})

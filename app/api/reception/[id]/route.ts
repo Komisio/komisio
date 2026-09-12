@@ -34,7 +34,7 @@ export async function GET(
             sourceCurrent:
               reception.status === 'ready' &&
               reception.session.revision === review.sourceRevision,
-            expired: Date.parse(review.expiresAt) <= Date.now(),
+            expired: review.expired,
           }
         : null,
     })

@@ -84,6 +84,11 @@ export default async function Intake({
         <div className="eyebrow">{active.name}</div>
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
+        <p>
+          <Link className="text-link" href="/intake/reception">
+            {all.reception.title}
+          </Link>
+        </p>
         <Link className="text-link" href="/intake/agreements">
           {a.manage}
         </Link>

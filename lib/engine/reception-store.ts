@@ -37,7 +37,9 @@ export async function readReceptionReview(
     sessionId = z.uuid().parse(sessionInput)
   const { data: review, error } = await client
     .from('reception_reviews_current')
-    .select('id,version,source_revision,agreement_id,suggestions,expires_at')
+    .select(
+      'id,version,source_revision,agreement_id,seller_email,suggestions,expires_at',
+    )
     .eq('tenant_id', tenantId)
     .eq('session_id', sessionId)
     .maybeSingle()
@@ -72,6 +74,8 @@ export async function readReceptionReview(
     sourceRevision: review.source_revision,
     suggestions: receptionSuggestions.parse(review.suggestions),
     expiresAt: review.expires_at,
+    expired: Date.parse(review.expires_at) <= Date.now(),
+    sellerEmail: review.seller_email,
     access: access
       ? {
           id: access.id,

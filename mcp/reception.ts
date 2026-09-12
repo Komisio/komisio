@@ -9,6 +9,20 @@ import {
 import type { MCPConfig } from './config'
 import { readReceptionPhoto } from '../lib/engine/reception-photos'
 import { receptionDerivative } from '../lib/media/reception-image'
+import {
+  readReceptionQueue,
+  receptionStage,
+} from '../lib/engine/reception-queue'
+export const queueInput = z
+  .strictObject({
+    stage: receptionStage.optional(),
+    before: z.iso.datetime({ offset: true }).optional(),
+    beforeId: z.uuid().optional(),
+  })
+  .refine(
+    (v) => Boolean(v.before) === Boolean(v.beforeId),
+    'Both cursor fields are required',
+  )
 export const readInput = z.strictObject({ sessionId: z.uuid() })
 export const photoInput = z.strictObject({
   sessionId: z.uuid(),
@@ -21,10 +35,7 @@ export const previewInput = z.strictObject({
   suggestions: receptionSuggestions,
 })
 export function receptionTools(client: SupabaseClient, config: MCPConfig) {
-  async function context(
-    sessionId: string,
-    required: MCPConfig['scopes'][number],
-  ) {
+  async function identityContext(required: MCPConfig['scopes'][number]) {
     if (!config.scopes.includes(required)) throw new Error('SCOPE_REQUIRED')
     const identity = await client.auth.getUser(config.token)
     if (identity.error || !identity.data.user?.email_confirmed_at)
@@ -35,11 +46,33 @@ export function receptionTools(client: SupabaseClient, config: MCPConfig) {
       !['owner', 'admin', 'staff', 'readonly'].includes(role.data)
     )
       throw new Error('FORBIDDEN')
+    return identity.data.user.id
+  }
+  async function context(
+    sessionId: string,
+    required: MCPConfig['scopes'][number],
+  ) {
+    const actor = await identityContext(required)
     const state = await readReceptionSession(client, config.tenantId, sessionId)
     if (!state) throw new Error('RECEPTION_UNAVAILABLE')
-    return { actor: identity.data.user.id, state }
+    return { actor, state }
   }
   return {
+    async queue(input: unknown) {
+      const c = queueInput.parse(input),
+        actor = await identityContext('reception:read')
+      const queue = await readReceptionQueue(client, {
+        ...c,
+        tenantId: config.tenantId,
+      })
+      return {
+        actor,
+        readOnly: true,
+        evidenceIsUntrusted: true,
+        availableForSale: false,
+        ...queue,
+      }
+    },
     async photo(input: unknown) {
       const c = photoInput.parse(input),
         ctx = await context(c.sessionId, 'reception:photos')

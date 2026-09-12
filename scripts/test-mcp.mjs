@@ -105,6 +105,7 @@ try {
   const both = await connect('reception:read,reception:preview')
   const catalog = await both.listTools()
   assert.deepEqual(catalog.tools.map((t) => t.name).sort(), [
+    'komisio_list_receptions',
     'komisio_preview_reception',
     'komisio_read_reception',
   ])
@@ -122,6 +123,28 @@ try {
   assert(!read.isError)
   assert.equal(read.structuredContent.source.session.revision, 1)
   assert(!JSON.stringify(read).includes('mcp-seller@example.test'))
+  const queue = await both.callTool({
+    name: 'komisio_list_receptions',
+    arguments: { stage: 'preparing' },
+  })
+  assert(!queue.isError)
+  assert.equal(queue.structuredContent.items[0].session_id, session)
+  assert.equal(queue.structuredContent.readOnly, true)
+  assert(!JSON.stringify(queue).includes('mcp-seller@example.test'))
+  for (const args of [
+    { tenantId: randomUUID() },
+    { stage: 'for_sale' },
+    { beforeId: randomUUID() },
+  ]) {
+    assert(
+      (
+        await both.callTool({
+          name: 'komisio_list_receptions',
+          arguments: args,
+        })
+      ).isError,
+    )
+  }
   await assert.rejects(
     both.callTool({
       name: 'komisio_read_reception_photo',
@@ -209,7 +232,7 @@ try {
   const readonly = await connect('reception:read')
   assert.deepEqual(
     (await readonly.listTools()).tools.map((t) => t.name),
-    ['komisio_read_reception'],
+    ['komisio_list_receptions', 'komisio_read_reception'],
   )
   await assert.rejects(
     readonly.callTool({
@@ -228,6 +251,16 @@ try {
     ).isError,
   )
   const cross = await connect('reception:read', token, randomUUID())
+  for (const denied of [invalid, cross]) {
+    assert(
+      (
+        await denied.callTool({
+          name: 'komisio_list_receptions',
+          arguments: {},
+        })
+      ).isError,
+    )
+  }
   assert(
     (
       await cross.callTool({
@@ -239,6 +272,10 @@ try {
   await db.query(
     "insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values($1,$2,'totp','verified',now(),now())",
     [randomUUID(), uid],
+  )
+  assert(
+    (await both.callTool({ name: 'komisio_list_receptions', arguments: {} }))
+      .isError,
   )
   assert(
     (

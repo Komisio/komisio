@@ -5,11 +5,16 @@ Read CLAUDE.md first. All statuses below are evidence, not inferred completion.
 
 ## Current slice
 
-P1 — separate staff response reporting from seller confirmation.
-Branch: fix/staff-seller-response-copy. PR34 merged as a0d2c74 after exact-head
-CI34677629830 passed. Changed reception detail page and Swedish/English messages;
-no database changes. Lint, typecheck,94 unit tests and production build pass.
-Existing seller browser journey is running; next commit/open PR and verify CI.
+P2 — specify and implement the shared reception work queue.
+Branch: docs/reception-queue-contract. Contract in RECEPTION-QUEUE.md is specified,
+not implemented. No runtime code or migrations changed in this slice yet.
+Next: record decision, write SQL tests, implement one bounded RLS-backed read,
+then shared engine and thin UI. Avoid duplicating the state rules in adapters.
+
+P1 PR35 merged as d5f7348cc85a7fb1f178ee068b043e6e8e3dbac1 after exact-head
+CI34678106622 passed. Local lint/typecheck/build,94 unit tests and the existing
+seller browser journey passed. No database changes. Hosted authenticated copy
+walkthrough remains separate from deployment and public health checks.
 
 ## Last verified delivery
 
@@ -23,11 +28,10 @@ modified by the fix.315 SQL assertions and real HTTP/race checks passed locally.
 
 ## Next three actions
 
-1. Complete P1 browser check, signed-off commit and PR; verify exact-head CI.
-2. Merge and verify staging; record the result before beginning P2.
-3. P2 currently starts from a direct20-row session query in
-   app/(dashboard)/intake/reception/page.tsx. Move queue reads into the shared
-   engine with derived current-version states and bounded pagination.
+1. Read RECEPTION-QUEUE.md and existing RLS/read RPC conventions; record decision.
+2. Add SQL regression coverage before the additive read-function migration.
+3. Replace the direct20-row query in app/(dashboard)/intake/reception/page.tsx
+   with the shared paged engine query, translated statuses and filtering.
 
 ## Known limitations / do not accidentally enable
 

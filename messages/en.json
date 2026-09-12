@@ -304,7 +304,23 @@
     "filterActive": "Active drafts",
     "filterArchived": "Archived drafts",
     "filterAll": "All drafts",
-    "filterLabel": "Show drafts"
+    "filterLabel": "Show drafts",
+    "preparation": {
+      "title": "Prepare this draft for reception",
+      "notice": "Compare the saved description with what a seller review needs. Nothing is copied, published or approved here.",
+      "savedOnly": "Only this saved version is shown. Unsaved edits are not included; save and refresh before reviewing new changes.",
+      "candidates": "Descriptive values to review",
+      "unverified": "These values have not been checked against reception sources. Confirm the description, category and condition before using them.",
+      "next": "Steps to check before publishing a seller review",
+      "notChecked": "Other receptions, prices and agreements have not been checked here. No reception is linked automatically.",
+      "steps": {
+        "select_reception": "Choose or create a reception for the same seller and garment.",
+        "record_descriptive_sources": "Record sources that support the descriptive values. A draft reference is not a reception source.",
+        "review_sourced_price": "Review a selling price supported by price evidence.",
+        "select_published_terms": "Select the published agreement version the seller will read.",
+        "review_facts": "Review each fact and resolve open questions before publishing."
+      }
+    }
   },
   "reviewDecline": "Decline this review",
   "reviewColor": "Colour",

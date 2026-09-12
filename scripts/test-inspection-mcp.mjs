@@ -225,7 +225,7 @@ export async function testInspectionMCP({
   const previewer = await connect('inspection:preview')
   assert.deepEqual(
     (await previewer.listTools()).tools.map((t) => t.name),
-    ['komisio_preview_inspection'],
+    ['komisio_prepare_inspection_reception', 'komisio_preview_inspection'],
   )
   const candidate = {
     bagId: bag,
@@ -302,6 +302,59 @@ export async function testInspectionMCP({
         })
       ).isError,
     )
+  const preparationInput = { bagId: bag, draftId: ids[1], expectedRevision: 1 }
+  const prepare = (args = preparationInput) =>
+    previewer.callTool({
+      name: 'komisio_prepare_inspection_reception',
+      arguments: args,
+    })
+  const preparation = await prepare()
+  assert(!preparation.isError, JSON.stringify(preparation.content))
+  assert.equal(preparation.structuredContent.origin.revision, 1)
+  assert.equal(preparation.structuredContent.candidates[0].value, 'Draft 1')
+  assert.equal(preparation.structuredContent.readyToPublish, false)
+  assert.equal(preparation.structuredContent.otherRecordsChecked, false)
+  for (const key of ['persisted', 'staged', 'approved', 'availableForSale'])
+    assert.equal(preparation.structuredContent[key], false)
+  for (const text of [
+    'PRIVATE BAG NOTE',
+    'sourceIds',
+    'sellerId',
+    'agreementId',
+    'suggestions',
+  ])
+    assert(!JSON.stringify(preparation.structuredContent).includes(text))
+  for (const args of [
+    { ...preparationInput, expectedRevision: 2 },
+    { ...preparationInput, draftId: draft, expectedRevision: 24 },
+    { ...preparationInput, bagId: otherBag },
+    { ...preparationInput, draftId: randomUUID() },
+    { ...preparationInput, tenantId: tenant },
+    { ...preparationInput, sourceIds: [randomUUID()] },
+    { ...preparationInput, expectedRevision: 0 },
+    { ...preparationInput, approved: true },
+    { ...preparationInput, fields: { description: 'Unsaved replacement' } },
+  ])
+    assert((await prepare(args)).isError, JSON.stringify(args))
+  await assert.rejects(
+    client.callTool({
+      name: 'komisio_prepare_inspection_reception',
+      arguments: preparationInput,
+    }),
+    /not found/,
+  )
+  for (const denied of [
+    await connect('inspection:preview', 'invalid-token'),
+    await connect('inspection:preview', token, randomUUID()),
+  ])
+    assert(
+      (
+        await denied.callTool({
+          name: 'komisio_prepare_inspection_reception',
+          arguments: preparationInput,
+        })
+      ).isError,
+    )
   const unchanged = (
     await db.query(
       'select revision,description,category from inspection_current where draft_id=$1',
@@ -324,6 +377,8 @@ export async function testInspectionMCP({
     p_category: 'Garment',
     p_condition: 'Needs inspection',
   })
+  assert((await prepare()).isError)
+  assert(!(await prepare({ ...preparationInput, expectedRevision: 2 })).isError)
   assert((await preview()).isError)
   assert(!(await preview({ ...candidate, expectedRevision: 2 })).isError)
   const stager = await connect('inspection:propose')
@@ -447,6 +502,7 @@ export async function testInspectionMCP({
     client,
     bag,
     previewer,
+    preparationInput: { ...preparationInput, expectedRevision: 2 },
     stager,
     stagedInput: command,
     previewInput: { ...candidate, expectedRevision: 2 },

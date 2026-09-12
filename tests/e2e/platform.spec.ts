@@ -82,6 +82,13 @@ test('saved inspection drafts resume safely and preserve conflicting edits', asy
     page.getByLabel('Skick och anmärkningar (valfritt)'),
   ).toHaveValue('Litet hål i ärmen')
   await expect(page.locator('.inspection-item')).toHaveCount(1)
+  const preparation = page.locator('.inspection-preparation')
+  await preparation.locator('summary').click()
+  await expect(preparation).toContainText(
+    'TEST blå jacka <script>literal</script>',
+  )
+  await expect(preparation).toContainText('Osparade ändringar ingår inte')
+  await expect(preparation.getByRole('button')).toHaveCount(0)
   const stale = await page.context().newPage()
   try {
     let release!: () => void
@@ -103,6 +110,10 @@ test('saved inspection drafts resume safely and preserve conflicting edits', asy
       .getByLabel('Beskrivning av varan')
       .fill('Min osparade alternativa beskrivning')
     await page.getByLabel('Beskrivning av varan').fill('TEST blå bomullsjacka')
+    await expect(preparation).toContainText(
+      'TEST blå jacka <script>literal</script>',
+    )
+    await expect(preparation).not.toContainText('TEST blå bomullsjacka')
     await page
       .getByRole('button', { name: 'Spara utkast', exact: true })
       .click()
@@ -139,6 +150,7 @@ test('saved inspection drafts resume safely and preserve conflicting edits', asy
       'TEST blå jacka <script>literal</script>',
     )
     await expect(page.getByLabel('Beskrivning av varan')).toHaveCount(0)
+    await expect(page.locator('.inspection-preparation')).toHaveCount(0)
     await expect(
       page.getByText('TEST blå bomullsjacka', { exact: true }).last(),
     ).toBeVisible()

@@ -111,3 +111,15 @@ All 100-hours functionality is outside version 1, including its hourly markdowns
 dedicated lifecycle stage and associated screens/feed. Do not build v1 dependencies
 on it. This scope decision does not change access controls or resolve outstanding
 financial rules. No database migration is needed for this documentation decision.
+
+
+## 2026-09-12 — Unsaved inspection-to-reception preparation
+
+Following FUNCTIONAL-ROADMAP.md, compare only descriptive fields from an existing
+saved inspection draft with the existing reception contract. Keep the actual
+bag/draft/revision provenance separate from reception source IDs. Candidate text
+is untrusted, unsourced and requires review; do not manufacture observed facts,
+price, terms, a session or consent. A4 semantic equivalence remains unconfirmed.
+The preparation checklist does not search other receptions or agreements and
+cannot establish that they are missing. Use shared pure comparison in staff UI
+and an authenticated exact-revision read in MCP; no migration or persistence.

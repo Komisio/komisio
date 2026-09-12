@@ -1,3 +1,5 @@
+import { inspectionReceptionInput } from '../lib/engine/inspection-reception-preview'
+import { prepareInspectionReceptionTool } from './inspection'
 import { McpServer } from '@modelcontextprotocol/server'
 import { inspectionReadInput } from '../lib/engine/inspection-read'
 import {
@@ -101,6 +103,20 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       (input) =>
         result(async () => ({
           data: await readInspectionOperationTool(client, config, input),
+        })),
+    )
+  if (config.scopes.includes('inspection:preview'))
+    server.registerTool(
+      'komisio_prepare_inspection_reception',
+      {
+        description:
+          'Compare an exact saved inspection draft with reception requirements. Returns unverified candidate text and steps to check, not sourced facts or a publishable review. Reads no other receptions, prices or terms; creates nothing.',
+        inputSchema: inspectionReceptionInput,
+        annotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await prepareInspectionReceptionTool(client, config, input),
         })),
     )
   if (config.scopes.includes('inspection:preview'))

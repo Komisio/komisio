@@ -1,5 +1,34 @@
 # Development handover
 
+## Active P1 work after the day-window close
+
+Owner supplied Fable snapshot `6181413` (three commits above `7709232`).
+Implementation branch: `astra/p1-store-policy`, based on that exact snapshot;
+Fable's worktree is untouched. Read `P1-SLICES.md` before continuing.
+Owner decisions supersede earlier acceptance blockers: delegated pricing is
+normal, per-item seller review is opt-in, frozen item terms and three origins
+are approved. Do not extend the optional seller-review path as P1's main flow.
+
+Local checkpoint validation: 123 unit tests passed (including six new policy
+tests), lint, typecheck, production build and scoped formatting passed. No SQL
+or browser behavior changed; GitHub CI has not yet run at this checkpoint.
+
+S1 is **started, not delivered**. `lib/engine/store-policy.ts` validates an
+explicit strict policy body; six unit tests exercise it. No runtime caller,
+SQL migration, policy defaults or staging behavior has changed. The commercial
+defaults referred to by S1 are absent from the skill; clarification is recorded
+in `open-questions.md` and has been requested from the owner/Fable. No guessed
+defaults are present. P2 VAT and payout rules remain separate open questions.
+
+Continue S1 in this branch, one slice PR: obtain/pin the complete defaults,
+write pgTAP before the additive policy migration, implement publish/read with
+role/MFA, tenant locking, exact retry and expected-previous checks, then update
+both receipt/publication commands (preserve the legacy agreement requirement).
+Add the settings surface and scoped read tool, run browser/SQL/concurrency/CI
+checks and review the staging migration before delivery. Follow with S2/S3,
+then S4 acceptance; S4 depends on effective seller terms and custody.
+
+
 Updated 2026-09-12. Read CLAUDE.md first, then this file and the
 [active day plan](DAY-PLAN-2026-09-12.md). Git, CI and deployment records take
 precedence over narrative. This file supersedes older slice status notes.

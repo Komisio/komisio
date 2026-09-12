@@ -162,3 +162,13 @@ wording is decided per template when the notification policy is built.
     Metadata stripping does not redact visible people or labels. Camera placement,
     capture consent, retention periods and controlled orphan cleanup must be
     decided before an external vision pilot. No facial recognition is planned.
+
+## P1 S1 implementation clarification
+
+P1-SLICES.md asks for defaults from the consignment skill, but that skill does
+not specify the commission rate, sale duration, markdown schedule,
+end-of-period action or minimum payout amount. The basis is described only
+as common practice, with inclusive selected in the earlier question sketch.
+Fable/owner must pin the complete default body before a no-policy tenant can
+receive implicit commercial terms. The validator can proceed with explicit
+values; it must not fabricate defaults. The owner was asked on 2026-09-12.

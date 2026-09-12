@@ -3,6 +3,13 @@
 Status: P3 specification. No commercial acceptance or new persistence implemented.
 The queue is the work organizer; it is not an inventory or custody ledger.
 
+The shared queue engine now returns a `nextStep` code and `guidanceOnly: true`
+for every row. The staff UI translates that code; `komisio_list_receptions`
+returns the same guidance. This is read-only advice, not an authorization,
+pending command or persisted transition. An approved proposal explicitly points
+staff to physical receipt and actual seller terms; sale activation is not yet
+supported. Link guidance does not send mail or prove that a seller read a link.
+
 ## State boundaries
 
 1. Reception session: store/seller context. No proof of physical custody.

@@ -431,6 +431,16 @@
       "ready_to_share": "Ready to share",
       "link_revoked": "Link revoked",
       "awaiting_seller": "Awaiting seller response"
+    },
+    "queueNextSteps": {
+      "prepare_evidence": "Next: complete photos, description and price evidence.",
+      "review_changed_evidence": "Next: check the changes and publish a new review for the seller to answer.",
+      "check_store_acceptance_requirements": "Next: check the received garment and seller terms before the store decision. Starting sales is not yet supported.",
+      "review_seller_decline": "Next: inspect the declined review. Any changes require a new review.",
+      "publish_fresh_review": "Next: check the details and publish a fresh review if the proposal still applies.",
+      "issue_review_link": "Next: open the reception and create the personal seller link. No email is sent automatically.",
+      "replace_review_link": "Next: open the reception and create a replacement link if the review should be shared again.",
+      "await_seller_response": "Next: await the seller response. Creating a link does not mean the seller has read the review."
     }
   },
   "reviewPhotoAlt": "Photo included in this review",

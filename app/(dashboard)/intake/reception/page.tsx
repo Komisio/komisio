@@ -133,6 +133,7 @@ export default async function Receptions({
                   >
                     <strong>{r.seller_name}</strong>
                     <span>{d.queueStages[r.stage]}</span>
+                    <small>{d.queueNextSteps[r.nextStep]}</small>
                     <small>
                       {new Date(r.created_at).toLocaleString(
                         ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',

@@ -431,6 +431,16 @@
       "ready_to_share": "Redo att dela",
       "link_revoked": "Länken är återkallad",
       "awaiting_seller": "Inväntar säljarens svar"
+    },
+    "queueNextSteps": {
+      "prepare_evidence": "Nästa steg: komplettera bilder, beskrivning och prisunderlag.",
+      "review_changed_evidence": "Nästa steg: granska ändringarna och publicera ett nytt underlag för säljarens svar.",
+      "check_store_acceptance_requirements": "Nästa steg: Kontrollera mottaget plagg och säljarvillkor inför butikens beslut. Försäljningsstart stöds ännu inte.",
+      "review_seller_decline": "Nästa steg: granska det avvisade underlaget. Eventuella ändringar kräver ett nytt underlag.",
+      "publish_fresh_review": "Nästa steg: granska uppgifterna och publicera ett nytt underlag om erbjudandet fortfarande gäller.",
+      "issue_review_link": "Nästa steg: öppna mottagningen och skapa säljarens personliga länk. Inget mejl skickas automatiskt.",
+      "replace_review_link": "Nästa steg: öppna mottagningen och skapa en ersättningslänk om underlaget ska delas igen.",
+      "await_seller_response": "Nästa steg: invänta säljarens svar. En skapad länk innebär inte att säljaren har läst underlaget."
     }
   },
   "reviewPhotoAlt": "Bild som ingår i detta underlag",

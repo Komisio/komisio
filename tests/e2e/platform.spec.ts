@@ -1785,6 +1785,9 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   await expect(
     page.locator(`a[href="/intake/reception/${sessionId}"]`),
   ).toContainText('Godkänt av säljaren')
+  await expect(
+    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+  ).toContainText('Kontrollera mottaget plagg och säljarvillkor')
   await page.getByLabel('Visa läge').selectOption('declined')
   await page.getByRole('button', { name: 'Visa läge', exact: true }).click()
   await expect(

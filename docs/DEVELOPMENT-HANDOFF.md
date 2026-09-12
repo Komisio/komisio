@@ -5,6 +5,21 @@ Read CLAUDE.md first. All statuses below are evidence, not inferred completion.
 
 ## Current slice
 
+Shared reception next-step guidance, branch `feat/reception-next-step`, based on
+main `5f910f533819f53a2a34b27b5928626b86c8f01b` (PR38 merged, deployment6407662441
+succeeded). The engine derives guidance from the existing validated queue stage;
+UI and MCP consume the same result. No migration, new permissions or commercial
+transition. MCP stdio tests, typecheck, lint,94 unit tests and production build
+passed locally. The existing seller browser journey is being verified before
+commit/PR; consult GitHub for exact-head CI, merge and deployment evidence.
+
+Next independent slice: readable reception evidence/review history using existing
+immutable records and tenant authorization. Commercial acceptance remains gated
+by the unresolved item-bound terms in open-questions.md. Hosted login blocks only
+the authenticated staging walkthrough, not local implementation or CI.
+
+## Previous slice (completed)
+
 P7 — targeted pilot verification, branch test/reception-queue-pilot. PR36/37 are
 merged; main1c12df7487cc00f778a60232b69adab43c0bddc2 and staging deployment6407541716
 are verified published. Migration20260912073000 is applied locally AND in staging.

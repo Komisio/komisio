@@ -1,3 +1,4 @@
+import { raceInspectionApproval } from './inspection-operation-race.mjs'
 import pg from 'pg'
 import { randomUUID } from 'node:crypto'
 import { readFile, readdir } from 'node:fs/promises'
@@ -678,6 +679,7 @@ try {
   console.log(
     'PASS: concurrent approvals of one staged proposal execute once; identical decision retries resolve the original.',
   )
+  await raceInspectionApproval({ setup, sessions, tenant, bag })
   // A seller read must not wait for the tenant lock; the seller response must.
   await sessions[0].c.query(
     "select set_reception_access($1,$2,$3,null,encode(sha256(convert_to(repeat('e',64),'UTF8')),'hex'))",

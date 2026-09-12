@@ -132,7 +132,7 @@ proposal's owner clarification for scope and outstanding details.
 See [functional roadmap](FUNCTIONAL-ROADMAP.md), section 8.
 
 - Which optional tenant lifecycle policy is needed first? The earlier
-  100-hours concept is a candidate, not a global default.
+  100-hours concept is excluded from version 1 (owner decision, 2026-09-12).
 - Bag-label printing is already requested and implemented. Which additional
   purposes are needed first (item, onboarding slip, markdown)?
 - Is a store-owned (purchased) item in scope for the first sale slice, or

@@ -1,6 +1,13 @@
 # Functional roadmap: capabilities and proposed delivery order
 
-Status: reviewed proposal, 2026-09-12. Fable's inventory at `4593bd0` describes
+Status: owner-selected evolving development baseline, 2026-09-12.
+Claude Fable 5.1 is the owner-appointed lead architect. Consult the latest version
+before selecting work. All 100-hours functionality is excluded from version 1,
+including hourly price decay, dedicated lifecycle stages and associated digital
+price screens/feeds. Historical mentions below are inventory only, not v1 scope.
+This exclusion does not remove ordinary agreed return/donation workflows.
+
+Inventory provenance: Fable's inventory at `4593bd0` describes
 functionality found in the earlier back office, mobile app and print service.
 Those systems had no store users and included prototypes; finding an implementation
 is not evidence of a working production flow or a requirement to retain it.
@@ -140,7 +147,7 @@ not every legacy capability in that row or readiness for an external pilot.
 | Item statuses Draft/Registered/InStore/Ready/Sold/Donated/ReturnedToSeller; flow status; ownership consignment or store-owned | Item created by commercial acceptance ([convergence ADR](INTAKE-CONVERGENCE.md)); statuses as facts with actor; ownership per item | Engine | P1 |
 | Initial and current price, price changes with events, bulk discount, "last price change / next price change" | Price is an append-only series per item; every change has actor and reason; bulk change is one staged operation | Engine, Staged op | P1 |
 | Kompis price reduction schedule (day 14: 10 %, day 28: 25 %, day 42: 50 %, notify seller day 60) and AI price schedule per article | Markdown agent: tenant policy defines steps; the agent proposes markdowns weekly as one staged operation; auto-execute per scope when the owner enables it | Agent, Staged op | P3 |
-| 100-hours concept: after three weeks move to the 100-hours section, price falls every hour from 100/200/300 kr to 1 kr, digital price screens, Saturday charity | Lifecycle policy per tenant with named stages; hourly decay as a policy the engine evaluates; a public price feed for screens | Engine, Integration | P3 |
+| 100-hours concept: after three weeks move to the 100-hours section, price falls every hour from 100/200/300 kr to 1 kr, digital price screens, Saturday charity | Lifecycle policy per tenant with named stages; hourly decay as a policy the engine evaluates; a public price feed for screens | Engine, Integration | Excluded from v1 |
 | Donation/return queue: near, overdue, scheduled move date, extend lifecycle by days, mark donated or returned, reprint labels | Lifecycle queue derived from item facts and policy; extend, donate, return as engine operations with custody consequences | Engine, UI | P2 |
 | Item journey: events (created, status, price, listed, sold, donated, returned, synced, label printed, AI suggested/accepted/corrected, duplicate dismissed) | Item events are the audit stream; AI provenance events included (future slice) | Engine | P1 |
 | Multilingual item descriptions (eight locales, regenerate, per-locale edits) | Description generated per locale on demand from the accepted facts; edits stored as new versions | Agent | P4 |
@@ -222,7 +229,7 @@ not every legacy capability in that row or readiness for an external pilot.
 | Earlier capability | New Komisio | Form | Phase |
 | --- | --- | --- | --- |
 | Mobile browse of items in store by tenant, item detail, change store, test access code for unlisted stores | Public read model per store; seller app and web page share it; test-code gating as store visibility policy | UI | P4 |
-| Digital price screens for the 100-hours section | Public price feed for the lifecycle stage; screen is a web page | Integration | P3 |
+| Digital price screens for the 100-hours section | Historical concept only; excluded from version 1 | Integration | Excluded from v1 |
 | Public Kompis | See 3.9 | Agent | P5 |
 
 ## 4. What is dropped, and what replaces the outcome
@@ -301,7 +308,7 @@ questions are resolved.
 | P0 (implemented baseline; pilot gates open) | Foundation and reception | Tenancy, users, MFA, agreements, bag receipts, inspection drafts, single-garment reception with optional AI adapter, seller mobile review, staged operations, MCP reads and propose | – |
 | P1 | Accept and hold | Convergence ADR assumptions, custody event for garments, commercial acceptance command creating items with frozen terms, item events, price series, staff mobile reception, per-fact AI confirmation, unified assistance port | Questions 2, 3; ADR A1–A4 |
 | P2 | Sell and settle | First selected POS sales pull, sale lines with VAT freeze, returns, seller ledger and balance, payout request/approve/pay (manual rail), statements, labels and local print agent, lifecycle queue, batch reception, duplicate check, notifications, communication log, usage metering, staff agent tools (analytics, price proposals), bulk staged ops | Questions 5, 7, 8, 9, 10, 12 |
-| P3 | Run the store | Markdown agent with policy, 100-hours lifecycle and price feed, day close and Fortnox export, Swish and Stripe payout rails, settlement batch, insights brief, visual pricing evidence, Shopify adapter, self drop-off handover with QR, store profile | Questions 4, 6, 9, 11, 12 |
+| P3 | Run the store | Markdown agent with policy (excluding the 100-hours concept), day close and Fortnox export, Swish and Stripe payout rails, settlement batch, insights brief, visual pricing evidence, Shopify adapter, self drop-off handover with QR, store profile | Questions 4, 6, 9, 11, 12 |
 | P4 | Bookings and assistants | Sections, layout, pricing rules, bookings and charges; web copilot over MCP; onboarding conversation; multilingual descriptions; semantic search; identify by image and AR; public browse; pricing coach | Booking fee questions |
 | P5 | Open up | Partner REST subset with OAuth clients, import wizard as staged op, kiosk integration contract, voice adapter, public buyer assistant, self-service export automation, quality and fraud proposals | – |
 | P6 | Commercial | Hosted tier subscription in Stripe, AI quota mapping, operator report | Pricing decisions |
@@ -311,7 +318,7 @@ questions are resolved.
 Added to [open questions](open-questions.md) as a block:
 
 - Which optional tenant lifecycle policies belong in the first pilot? The
-  earlier 100-hours concept is a candidate, not a global default.
+  100-hours concept is explicitly excluded from version 1 by the owner.
 - Bag-label printing is already requested and implemented. Which additional
   label purposes are needed first (item, onboarding slip, markdown)?
 - Is a store-owned (purchased) item in scope for the first sale slice, or
@@ -330,6 +337,8 @@ Counting capabilities, not screens. Capability rows in section 3: 81.
 | Transformed (agent, staged operation, report, operations procedure) | 31 | Same outcome, reached through a conversation, an approval or a generated report instead of a register or a screen |
 | Dropped without replacement | 1 | Page-visit tracking and in-database application packages |
 
+These historical counts predate the owner's exclusion of 100-hours functionality
+from v1 and must not be used as v1 coverage totals.
 The original inventory proposes retaining outcomes for eighty of 81 rows.
 This measures the proposal, not implementation coverage, verified quality or an
 owner commitment to build 98 percent of the legacy product. The registers and admin

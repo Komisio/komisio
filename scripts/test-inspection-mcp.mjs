@@ -61,7 +61,11 @@ export async function testInspectionMCP({
   const tools = (await client.listTools()).tools
   assert.deepEqual(
     tools.map((t) => t.name),
-    ['komisio_list_bags', 'komisio_read_inspection'],
+    [
+      'komisio_read_inspection_operation',
+      'komisio_list_bags',
+      'komisio_read_inspection',
+    ],
   )
   assert.equal(tools[0].annotations.readOnlyHint, true)
   assert.equal(tools[0].inputSchema.additionalProperties, false)
@@ -322,15 +326,129 @@ export async function testInspectionMCP({
   })
   assert((await preview()).isError)
   assert(!(await preview({ ...candidate, expectedRevision: 2 })).isError)
+  const stager = await connect('inspection:propose')
+  const op = randomUUID(),
+    rejectedOp = randomUUID()
+  const command = {
+    requestId: op,
+    expiresAt: new Date(Date.now() + 3600000).toISOString(),
+    bagId: bag,
+    draftId: ids[2],
+    expectedRevision: 1,
+    fields: {
+      description: 'Staged inspection description',
+      category: 'Garment',
+      condition: 'Good',
+    },
+  }
+  const propose = (args) =>
+    stager.callTool({
+      name: 'komisio_propose_inspection_edit',
+      arguments: args,
+    })
+  const staged = await propose(command)
+  assert(!staged.isError, JSON.stringify(staged.content))
+  assert.equal(staged.structuredContent.staged, true)
+  assert.equal(staged.structuredContent.executed, false)
+  assert(!(await propose(command)).isError)
+  assert(!(await propose({ ...command, requestId: rejectedOp })).isError)
+  const detail = await client.callTool({
+    name: 'komisio_read_inspection_operation',
+    arguments: { operationId: op },
+  })
+  assert(!detail.isError, JSON.stringify(detail.content))
+  assert.equal(detail.structuredContent.context.before.description, 'Draft 2')
+  assert.equal(
+    detail.structuredContent.context.after.description,
+    command.fields.description,
+  )
+  assert.equal(detail.structuredContent.context.kind, 'inspection')
+  assert.equal(detail.structuredContent.context.canApprove, true)
+  assert(
+    (
+      await receptionClient.callTool({
+        name: 'komisio_read_reception_operation',
+        arguments: { operationId: op },
+      })
+    ).isError,
+  )
+  assert.equal(
+    (
+      await db.query(
+        'select revision from inspection_current where draft_id=$1',
+        [ids[2]],
+      )
+    ).rows[0].revision,
+    1,
+  )
+  for (const args of [
+    { ...command, fields: { ...command.fields, price: '20.00' } },
+    { ...command, requestId: randomUUID(), expectedRevision: 0 },
+    { ...command, fields: { ...command.fields, description: 'Changed retry' } },
+    { ...command, expiresAt: new Date(Date.now() + 7200000).toISOString() },
+    {
+      ...command,
+      requestId: randomUUID(),
+      fields: {
+        description: 'Draft 2',
+        category: 'Garment',
+        condition: 'Needs inspection',
+      },
+    },
+  ])
+    assert((await propose(args)).isError)
+  await assert.rejects(
+    client.callTool({
+      name: 'komisio_propose_inspection_edit',
+      arguments: command,
+    }),
+    /not found/,
+  )
+  await rpc('decide_operation', {
+    p_tenant: tenant,
+    p_id: randomUUID(),
+    p_operation: op,
+    p_decision: 'approved',
+    p_reason: 'Fixture staff review',
+  })
+  await rpc('decide_operation', {
+    p_tenant: tenant,
+    p_id: randomUUID(),
+    p_operation: rejectedOp,
+    p_decision: 'rejected',
+    p_reason: 'Fixture rejection',
+  })
+  assert(!(await propose(command)).isError) // Lost proposal response still replays after execution.
+  const saved = (
+    await db.query(
+      'select id,revision,description,created_by from inspection_current where draft_id=$1',
+      [ids[2]],
+    )
+  ).rows[0]
+  assert.equal(saved.id, op)
+  assert.equal(saved.revision, 2)
+  assert.equal(saved.description, command.fields.description)
+  assert.equal(saved.created_by, staged.structuredContent.actor)
+  const historical = await client.callTool({
+    name: 'komisio_read_inspection_operation',
+    arguments: { operationId: op },
+  })
+  assert.equal(
+    historical.structuredContent.context.before.description,
+    'Draft 2',
+  )
+  assert.equal(historical.structuredContent.operation.outcome, 'executed')
   const counts = await db.query(
     'select count(*)::int n from inspection_draft_revisions where bag_id=$1',
     [bag],
   )
-  assert.equal(counts.rows[0].n, 47)
+  assert.equal(counts.rows[0].n, 48)
   return {
     client,
     bag,
     previewer,
+    stager,
+    stagedInput: command,
     previewInput: { ...candidate, expectedRevision: 2 },
   }
 }

@@ -4,6 +4,65 @@ import type { MCPConfig } from './config'
 import { readInspection } from '../lib/engine/inspection-read'
 import { requireMCPIdentity } from './identity'
 import { readBagQueue } from '../lib/engine/bag-queue'
+import {
+  saveInspectionDraftPayload,
+  proposeOperation,
+  operationErrorCode,
+} from '../lib/engine/operations'
+import { readOperationReview } from '../lib/engine/operation-review'
+
+export const proposeInspectionInput = saveInspectionDraftPayload.extend({
+  requestId: z.uuid(),
+  expiresAt: z.iso.datetime(),
+})
+export async function proposeInspectionTool(
+  client: SupabaseClient,
+  config: MCPConfig,
+  input: unknown,
+) {
+  const { requestId, expiresAt, ...payload } =
+    proposeInspectionInput.parse(input)
+  const actor = await requireMCPIdentity(client, config, 'inspection:propose')
+  const result = await proposeOperation(client, {
+    tenantId: config.tenantId,
+    requestId,
+    expiresAt,
+    kind: 'saveInspectionDraft',
+    payload,
+    actorLabel: 'komisio-mcp',
+  })
+  if (result.error) throw new Error(operationErrorCode(result.error.message))
+  return {
+    actor,
+    actorLabel: 'komisio-mcp',
+    operationId: requestId,
+    bagId: payload.bagId,
+    draftId: payload.draftId,
+    baseRevision: payload.expectedRevision,
+    persisted: true,
+    staged: true,
+    executed: false,
+    requiresApproval: true,
+    availableForSale: false,
+    riskLevel: 'low',
+  }
+}
+export async function readInspectionOperationTool(
+  client: SupabaseClient,
+  config: MCPConfig,
+  input: unknown,
+) {
+  const actor = await requireMCPIdentity(client, config, 'inspection:read')
+  return {
+    actor,
+    ...(await readOperationReview(
+      client,
+      config.tenantId,
+      input,
+      'saveInspectionDraft',
+    )),
+  }
+}
 import { previewSavedInspection } from '../lib/engine/inspection-preview'
 
 export async function previewInspectionTool(

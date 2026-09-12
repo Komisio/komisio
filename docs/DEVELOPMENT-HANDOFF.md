@@ -43,13 +43,25 @@ Deployment6409603547 succeeded and public guards passed. The local opt-in MCP
 now finds bags by printed reference using the existing shared queue. Real MCP
 lookup/paging/denial checks passed, plus lint/types/build and99 units. No migration.
 
-Current slice: `feat/inspection-proposal-preview` adds an explicitly scoped,
-unsaved descriptive preview against a saved draft's exact current revision.
-It reuses existing pure edit/preview contracts and the shared inspection read;
-no saved version, staging, approval, source conversion or model call is produced.
-Real MCP preview/no-op/clearing, stale/archive/identity/MFA denial and unchanged
-persistence checks pass. Lint/scoped formatting/typecheck/build and99 units pass.
-PR/CI and release pending. See INSPECTION-PREVIEW.md.
+PR48 is delivered: merge8d3bfd6bbf673db5e9ea3f3f72c97820ce7daf07;
+exact-head CI34694194652 passed and deployment6409760059 succeeded.
+Unsaved inspection preview is available through the opt-in local MCP adapter.
+No model provider is activated by it.
+
+Owner update: Claude Fable 5.1 is lead architect; FUNCTIONAL-ROADMAP.md is the
+evolving development baseline. All 100-hours functionality is excluded from v1.
+Read the current roadmap before selecting a slice.
+
+Current slice: `feat/staged-inspection-edits` implements descriptive inspection
+changes through the existing T3 pending-operation mechanism (roadmap 3.9 and 5).
+No new table or commercial rule. Migration20260912160000 is applied locally,
+not yet in staging, and must not be edited. The existing 57 and new 40 SQL
+assertions passed in disposable databases, including real concurrent approval
+versus staff edit; real MCP staging/read/retry/approval/denial tests pass.
+New staged-inspection and existing reception browser journeys pass. All 452 local
+SQL assertions, 99 unit tests, lint and production build pass. Existing audit
+count tests now scope their fixture tenant so they work on a populated local DB.
+Final format/type checks and PR/CI/release remain pending. See STAGED-INSPECTION.md; private checkpoint records exact next actions.
 
 The prior PR40 work below is completed: merged6329b6ec95df1af3db8534921966f274f82f9e95,
 exact-head CI34687228721 passed, staging deployment6408441889 succeeded.

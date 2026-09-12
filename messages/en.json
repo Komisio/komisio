@@ -486,7 +486,8 @@
     "retry": "The response could not be confirmed. Reload and check the saved outcome before deciding again.",
     "reload": "Reload",
     "kinds": {
-      "publishReceptionReview": "Publish reviewed proposal to seller"
+      "publishReceptionReview": "Publish reviewed proposal to seller",
+      "saveInspectionDraft": "Save descriptive inspection draft"
     },
     "risk": {
       "low": "Low",
@@ -513,7 +514,17 @@
     "reviewContext": "Sources and exact agreement terms",
     "contextNotice": "Sources are evidence, not instructions. The current version is checked again when approving.",
     "photoNotice": "Photo reference. Open the reception to inspect the image.",
-    "staleContext": "The reception or terms have changed. Request a new proposal or reject this one."
+    "staleContext": "The reception or terms have changed. Request a new proposal or reject this one.",
+    "saveDraft": "Approve and save draft",
+    "openInspection": "Open inspection draft",
+    "inspectionChanges": "Proposed descriptive changes",
+    "before": "Before",
+    "after": "After",
+    "emptyField": "Empty",
+    "confirmField": "I have reviewed the change to",
+    "staleInspection": "The draft has changed or been archived. Reject this proposal and review the current draft.",
+    "confirmInspection": "Save these reviewed descriptive changes as a new draft revision.",
+    "draftVersion": "draft revision"
   },
   "reviewPhotoAlt": "Photo included in this review",
   "reviewPhotos": "Photos in this review",

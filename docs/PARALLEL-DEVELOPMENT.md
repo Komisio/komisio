@@ -19,6 +19,13 @@ Do not copy secret environment files into a PR or commit local credentials.
 
 ## Current owner-authorized assignments (2026-09-12)
 
+Claude Fable 5.1 is lead architect. FUNCTIONAL-ROADMAP.md is the evolving
+owner-selected baseline; read its current version before choosing the next slice.
+Astra owns implementation verification and integration within that direction.
+All 100-hours functionality is excluded from version 1. Existing T3/T5 delivery
+and the current worktree status below remain implementation evidence, not a
+competing architecture roadmap.
+
 The owner explicitly assigned T3 to Claude Fable. This supersedes the earlier
 suggestion to limit a first contribution to design review without a write table.
 The T3 implementation stages agent proposals for staff decisions through the
@@ -35,9 +42,12 @@ Fable owns its implementation branch. Astra owns integration review, coordinatin
 local migration/MCP/concurrency verification, and the release PR/CI/staging path.
 Do not implement a competing pending-operation subsystem or repeat T5.
 Exact source/terms context is delivered in PR44; Fable's fixed4593bd0 roadmap was
-reviewed and integrated in PR45. Astra's current slice shares the existing bag
-inspection read between UI and opt-in MCP. It adds no pending-operation kind or
-commercial rule. See DEVELOPMENT-HANDOFF.md.
+reviewed and integrated in PR45. PR46-PR48 subsequently delivered shared
+inspection reads, bag discovery and unsaved inspection previews. Astra's current
+unreleased branch, `feat/staged-inspection-edits`, extends the existing T3
+mechanism with descriptive inspection edits; it does not create a competing
+write table or a commercial rule. See STAGED-INSPECTION.md and the private
+operational checkpoint for incomplete work and test evidence.
 
 Coordinate shared files such as DECISIONS.md, dictionaries, package manifests,
 migrations and handover notes. One release owner merges changes after exact-head

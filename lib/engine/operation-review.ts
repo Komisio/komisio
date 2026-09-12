@@ -1,6 +1,12 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { operationRow, publishReceptionReviewPayload } from './operations'
+import {
+  operationRow,
+  publishReceptionReviewPayload,
+  saveInspectionDraftPayload,
+  type PendingOperation,
+} from './operations'
+import { inspectionFields } from './inspection'
 import { receptionSession } from './reception'
 
 export const operationReviewInput = z.strictObject({ operationId: z.uuid() })
@@ -10,6 +16,7 @@ export async function readOperationReview(
   client: SupabaseClient,
   tenantInput: string,
   input: unknown,
+  allowedKind?: PendingOperation['kind'],
 ) {
   const tenantId = z.uuid().parse(tenantInput)
   const { operationId } = operationReviewInput.parse(input)
@@ -28,6 +35,74 @@ export async function readOperationReview(
     .eq('id', operationId)
     .maybeSingle()
   if (pending.error || !pending.data) throw new Error('OPERATION_NOT_FOUND')
+  if (allowedKind && pending.data.kind !== allowedKind)
+    throw new Error('OPERATION_NOT_FOUND')
+  if (pending.data.kind === 'saveInspectionDraft') {
+    const p = saveInspectionDraftPayload.parse(pending.data.payload)
+    const [base, current, decision] = await Promise.all([
+      client
+        .from('inspection_draft_revisions')
+        .select('description,category,condition')
+        .eq('tenant_id', tenantId)
+        .eq('bag_id', p.bagId)
+        .eq('draft_id', p.draftId)
+        .eq('revision', p.expectedRevision)
+        .single(),
+      client
+        .from('inspection_current')
+        .select('revision,archived')
+        .eq('tenant_id', tenantId)
+        .eq('bag_id', p.bagId)
+        .eq('draft_id', p.draftId)
+        .maybeSingle(),
+      client
+        .from('operation_decisions')
+        .select('id,outcome,result_id,error_code,reason,decided_by,created_at')
+        .eq('tenant_id', tenantId)
+        .eq('operation_id', operationId)
+        .maybeSingle(),
+    ])
+    if (base.error || current.error || decision.error)
+      throw new Error('OPERATION_NOT_FOUND')
+    const d = decision.data,
+      expired = Date.parse(pending.data.expires_at) <= Date.now()
+    const operation = operationRow.parse({
+      ...pending.data,
+      status: d?.outcome ?? (expired ? 'expired' : 'open'),
+      decision_id: d?.id ?? null,
+      outcome: d?.outcome ?? null,
+      result_id: d?.result_id ?? null,
+      error_code: d?.error_code ?? null,
+      reason: d?.reason ?? null,
+      decided_by: d?.decided_by ?? null,
+      decided_at: d?.created_at ?? null,
+    })
+    const before = inspectionFields.parse(base.data),
+      after = p.fields
+    const fields = ['description', 'category', 'condition'] as const
+    const stale =
+      current.data?.revision !== p.expectedRevision || !!current.data?.archived
+    return {
+      readOnly: true as const,
+      evidenceIsUntrusted: true as const,
+      operation,
+      context: {
+        kind: 'inspection' as const,
+        before,
+        after,
+        changes: fields
+          .filter((f) => before[f] !== after[f])
+          .map((field) => ({
+            field,
+            before: before[field],
+            after: after[field],
+          })),
+        stale,
+        canApprove: !d && !expired && !stale,
+        guidanceOnly: true as const,
+      },
+    }
+  }
   const p = publishReceptionReviewPayload.parse(pending.data.payload)
   const [
     terms,
@@ -113,6 +188,7 @@ export async function readOperationReview(
     evidenceIsUntrusted: true as const,
     operation,
     context: {
+      kind: 'reception' as const,
       terms: z
         .object({
           id: z.uuid(),

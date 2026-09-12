@@ -2396,3 +2396,166 @@ test('private reception photo uploads attach immutably and require staff access'
   await expect(page).toHaveURL(/\/login/)
   expect((await page.request.get(endpoint)).status()).toBe(401)
 })
+
+test('staged inspection edits require field review and preserve stale drafts', async ({
+  page,
+}) => {
+  const run = Date.now().toString(36),
+    email = `staged-inspection-${run}@example.test`
+  await register(page, email, `K!${randomBytes(16).toString('hex')}`)
+  await page.getByLabel('Butikens namn').fill('E2E Staged Inspection')
+  await page
+    .getByLabel('Butikens identifierare')
+    .fill(`staged-inspection-${run}`)
+  await page.getByRole('button', { name: 'Skapa min butik' }).click()
+  await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
+  const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
+  const post = (data: object) =>
+    page.request.post('/api/intake', {
+      headers: { Origin: 'http://127.0.0.1:3000' },
+      data,
+    })
+  const seller = await post({
+    action: 'registerSeller',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    name: 'Staged TEST',
+    email: '',
+    phone: '00000',
+  })
+  expect(seller.status()).toBe(200)
+  const receipt = await post({
+    action: 'receiveBag',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    sellerId: (await seller.json()).id,
+    note: '',
+    expectedAgreementId: null,
+  })
+  expect(receipt.status()).toBe(200)
+  const bagId = (await receipt.json()).id,
+    draftId = crypto.randomUUID()
+  const saved = await post({
+    action: 'saveInspection',
+    tenantId,
+    requestId: crypto.randomUUID(),
+    bagId,
+    draftId,
+    expectedRevision: 0,
+    fields: {
+      description: 'Original TEST coat',
+      category: 'Clothes',
+      condition: 'Good',
+    },
+  })
+  expect(saved.status()).toBe(200)
+  const { Client } = createRequire(import.meta.url)('pg')
+  const db = new Client({
+    connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+  })
+  await db.connect()
+  const operationId = crypto.randomUUID(),
+    rejectedId = crypto.randomUUID()
+  try {
+    const actor = (
+      await db.query('select id from auth.users where email=$1', [email])
+    ).rows[0].id
+    await db.query('begin')
+    await db.query('set local role authenticated')
+    await db.query("select set_config('request.jwt.claims',$1,true)", [
+      JSON.stringify({ sub: actor, role: 'authenticated' }),
+    ])
+    for (const id of [operationId, rejectedId]) {
+      await db.query(
+        "select propose_operation($1,$2,'saveInspectionDraft',$3::jsonb,'browser-fixture',now()+interval '1 hour')",
+        [
+          tenantId,
+          id,
+          JSON.stringify({
+            bagId,
+            draftId,
+            expectedRevision: 1,
+            fields: {
+              description: 'Proposed TEST coat',
+              category: '',
+              condition: 'Good',
+            },
+          }),
+        ],
+      )
+    }
+    await db.query('commit')
+    await page.goto(`/intake/operations/${operationId}`)
+    await expect(
+      page.getByText('Före: Original TEST coat', { exact: true }),
+    ).toBeVisible()
+    const form = page.locator('form.intake-fields')
+    await expect(form.getByRole('checkbox')).toHaveCount(3)
+    const approve = form.getByRole('button', {
+      name: 'Godkänn och spara utkast',
+      exact: true,
+    })
+    await approve.click()
+    expect(
+      (
+        await db.query(
+          'select count(*)::int n from operation_decisions where operation_id=$1',
+          [operationId],
+        )
+      ).rows[0].n,
+    ).toBe(0)
+    await form.locator('input[name="checked"]').check()
+    await form.locator('input[name="field-description"]').check()
+    await approve.click()
+    expect(
+      (
+        await db.query(
+          'select count(*)::int n from operation_decisions where operation_id=$1',
+          [operationId],
+        )
+      ).rows[0].n,
+    ).toBe(0)
+    await form.locator('input[name="field-category"]').check()
+    await approve.click()
+    await expect(page.locator('li.card .badge')).toHaveText(
+      'Godkänt och utfört',
+    )
+    const rows = (
+      await db.query(
+        'select id,revision,description,category,created_by from inspection_draft_revisions where draft_id=$1 order by revision',
+        [draftId],
+      )
+    ).rows
+    expect(rows).toHaveLength(2)
+    expect(rows[1]).toMatchObject({
+      id: operationId,
+      revision: 2,
+      description: 'Proposed TEST coat',
+      category: '',
+      created_by: actor,
+    })
+    await page.goto(`/intake/operations/${rejectedId}`)
+    await expect(
+      page.getByRole('button', {
+        name: 'Godkänn och spara utkast',
+        exact: true,
+      }),
+    ).toBeDisabled()
+    await expect(page.locator('li.card').getByRole('alert')).toContainText(
+      'har ändrats',
+    )
+    // Rejecting never requires approving any field, including a stale proposal.
+    await page.getByRole('button', { name: 'Avvisa', exact: true }).click()
+    await expect(page.locator('li.card .badge')).toHaveText('Avvisat')
+    expect(
+      (
+        await db.query(
+          'select count(*)::int n from inspection_draft_revisions where draft_id=$1',
+          [draftId],
+        )
+      ).rows[0].n,
+    ).toBe(2)
+  } finally {
+    await db.end()
+  }
+})

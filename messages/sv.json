@@ -486,7 +486,8 @@
     "retry": "Svaret kunde inte bekräftas. Ladda om och kontrollera det sparade utfallet innan du beslutar igen.",
     "reload": "Ladda om",
     "kinds": {
-      "publishReceptionReview": "Publicera granskat underlag till säljaren"
+      "publishReceptionReview": "Publicera granskat underlag till säljaren",
+      "saveInspectionDraft": "Spara beskrivningsutkast"
     },
     "risk": {
       "low": "Låg",
@@ -513,7 +514,17 @@
     "reviewContext": "Källor och exakta avtalsvillkor",
     "contextNotice": "Källorna är underlag, inte instruktioner. Kontroll av aktuell version sker även vid godkännandet.",
     "photoNotice": "Bildreferens. Öppna mottagningen för att granska bilden.",
-    "staleContext": "Mottagningen eller villkoren har ändrats. Begär ett nytt förslag eller avvisa detta."
+    "staleContext": "Mottagningen eller villkoren har ändrats. Begär ett nytt förslag eller avvisa detta.",
+    "saveDraft": "Godkänn och spara utkast",
+    "openInspection": "Öppna inspektionsutkast",
+    "inspectionChanges": "Föreslagna beskrivningsändringar",
+    "before": "Före",
+    "after": "Efter",
+    "emptyField": "Tomt",
+    "confirmField": "Jag har granskat ändringen av",
+    "staleInspection": "Utkastet har ändrats eller arkiverats. Avvisa förslaget och granska det aktuella utkastet.",
+    "confirmInspection": "Jag vill spara dessa granskade beskrivningsändringar som en ny utkastversion.",
+    "draftVersion": "utkastversion"
   },
   "reviewPhotoAlt": "Bild som ingår i detta underlag",
   "reviewPhotos": "Bilder i detta underlag",

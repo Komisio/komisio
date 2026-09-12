@@ -24,13 +24,19 @@ precedes staff approval and shares a read with MCP. Local lint/format/types/buil
 cannot be approved in the UI but can be rejected. Hosted public guards passed;
 fresh authenticated hosted review is still pending. No migration.
 
-Current slice: `docs/functional-roadmap-review` integrates Fable's fixed4593bd0
-inventory as a reviewed proposal, not a feature-parity mandate. It corrects legacy
-prototype claims, financial assumptions, AI/GUI absolutism and pilot gate timing.
-The convergence proposal must preserve evidenced terms rather than silently use
-new tenant policy. No code, schema or domain rule is introduced. Fable's active
-worktree remains untouched. Relative links, UTF-8, the81-row inventory and scoped
-diff checks passed. PR/CI and merge remain pending.
+PR45 is delivered: merge8439ed0bedeab5f3ad4359f3821b81547eb8db6c after
+CI34691645794 passed exact head11ea89d3eeeffe0375136d17947b937820451f31.
+Fable's fixed4593bd0 inventory is a reviewed proposal, not a feature-parity mandate.
+Prototype claims, financial assumptions, AI/GUI absolutism, pilot timing and the
+convergence proposal's evidenced terms were clarified. Documentation only.
+
+Current slice: `feat/shared-inspection-read` extracts the bag inspection UI's
+bounded draft/current/history reads into the shared engine. An explicit
+`inspection:read` MCP tool reuses it and omits bag notes. No new migration,
+source conversion, model call or acceptance. First real MCP checks pass (23 drafts,
+24 versions, cursor/filter/history behavior, identity/tenant/MFA and invalid input).
+Saved/archive browser journeys passed (2/2), as did lint, scoped formatting,
+typecheck/build and99 units. PR/CI and deployment are pending. See INSPECTION-READ.md.
 
 The prior PR40 work below is completed: merged6329b6ec95df1af3db8534921966f274f82f9e95,
 exact-head CI34687228721 passed, staging deployment6408441889 succeeded.
@@ -69,11 +75,12 @@ Do not impersonate the owner or change their existing seller responses.
 
 ## Next three actions
 
-1. Validate the reviewed roadmap, links and status claims; publish through a
-   scoped PR with exact-head green CI. No migration or product deployment needed.
-2. Specify a bounded descriptive draft-to-reception preview from existing
-   contracts, retaining missing evidence and avoiding acceptance/custody writes.
-3. Continue independent pilot gates; a fresh authenticated hosted walkthrough
+1. Verify shared inspection reads through existing saved/archive browser journeys,
+   lint/types/build and the real MCP suite; review the extracted UI behavior.
+2. Commit, open a scoped PR and require exact-head green CI before merge. No
+   migration; verify the matching staging deployment and anonymous page guard.
+3. Refine the future draft-to-reception preview without inventing source citations,
+   observed certainty or commercial acceptance. Hosted user-only pilot checks
    and commercial terms decisions remain outstanding.
 
 ## Architecture and remaining gates

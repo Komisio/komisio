@@ -1,3 +1,4 @@
+import { readInspection } from '@/lib/engine/inspection-read'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
@@ -30,80 +31,26 @@ export default async function InspectBag({
     params: Record<string, string | number | undefined>,
   ) => navigationHref({ status, ...params })
   const tenantId = ctx.active!.id
-  const { data: bag, error } = await ctx.client
-    .from('bag_receipts')
-    .select('reference,note')
-    .eq('tenant_id', tenantId)
-    .eq('id', id)
-    .maybeSingle()
-  if (error) throw new Error('Unable to load inspection bag')
-  if (!bag) notFound()
-  const columns =
-    'draft_id,revision,description,category,condition,saved_at,archived,change_reason'
-  let listQuery = ctx.client
-    .from('inspection_current')
-    .select(columns)
-    .eq('tenant_id', tenantId)
-    .eq('bag_id', id)
-    .order('draft_id', { ascending: !before })
-    .limit(21)
-  if (status !== 'all')
-    listQuery = listQuery.eq('archived', status === 'archived')
-  if (after) listQuery = listQuery.gt('draft_id', after)
-  if (before) listQuery = listQuery.lt('draft_id', before)
-  const [list, selected] = await Promise.all([
-    listQuery,
-    draft
-      ? ctx.client
-          .from('inspection_current')
-          .select(columns)
-          .eq('tenant_id', tenantId)
-          .eq('bag_id', id)
-          .eq('draft_id', draft)
-          .maybeSingle()
-      : Promise.resolve({ data: null, error: null }),
-  ])
-  if (list.error || selected.error)
-    throw new Error('Unable to load inspection drafts')
-  if (draft && !selected.data) notFound()
-  const extra = (list.data?.length ?? 0) > 20
-  const items = (list.data ?? []).slice(0, 20)
-  if (before) items.reverse()
-  const hasPrevious = before ? extra : !!after
-  const hasNext = before ? true : extra
-  const [history, historical] = await Promise.all([
-    draft
-      ? ctx.client
-          .from('inspection_draft_revisions')
-          .select('revision,saved_at,archived,change_reason')
-          .eq('tenant_id', tenantId)
-          .eq('bag_id', id)
-          .eq('draft_id', draft)
-          .lte(
-            'revision',
-            Math.min(
-              selected.data!.revision,
-              historyBefore ? historyBefore - 1 : 2147483647,
-            ),
-          )
-          .order('revision', { ascending: false })
-          .limit(21)
-      : Promise.resolve({ data: null, error: null }),
-    version
-      ? ctx.client
-          .from('inspection_draft_revisions')
-          .select(columns)
-          .eq('tenant_id', tenantId)
-          .eq('bag_id', id)
-          .eq('draft_id', draft!)
-          .eq('revision', version)
-          .maybeSingle()
-      : Promise.resolve({ data: null, error: null }),
-  ])
-  if (history.error || historical.error)
-    throw new Error('Unable to load inspection history')
-  if (version && !historical.data) notFound()
-  const past = (history.data ?? []).slice(0, 20)
+  const {
+    bag,
+    items,
+    selected,
+    historical,
+    past,
+    historyHasMore,
+    hasPrevious,
+    hasNext,
+  } = await readInspection(ctx.client, tenantId, {
+    bagId: id,
+    ...navigation.data,
+  }).catch((error: unknown) => {
+    if (
+      error instanceof Error &&
+      ['INSPECTION_UNAVAILABLE', 'FORBIDDEN'].includes(error.message)
+    )
+      notFound()
+    throw error
+  })
   const d = dictionary(ctx.locale),
     s = d.inspection
   return (
@@ -124,36 +71,34 @@ export default async function InspectBag({
         </Link>
       </div>
       {bag.note && <p>{bag.note}</p>}
-      {ctx.active!.role !== 'readonly' &&
-        !version &&
-        !selected.data?.archived && (
-          <InspectionForm
-            key={`${tenantId}:${id}:${draft ?? 'new'}`}
-            tenantId={tenantId}
-            bagId={id}
-            current={selected.data}
-            d={d}
-          />
-        )}
-      {selected.data && ctx.active!.role !== 'readonly' && !version && (
+      {ctx.active!.role !== 'readonly' && !version && !selected?.archived && (
+        <InspectionForm
+          key={`${tenantId}:${id}:${draft ?? 'new'}`}
+          tenantId={tenantId}
+          bagId={id}
+          current={selected}
+          d={d}
+        />
+      )}
+      {selected && ctx.active!.role !== 'readonly' && !version && (
         <InspectionArchiveForm
           key={draft}
           tenantId={tenantId}
           bagId={id}
-          current={selected.data}
+          current={selected}
           d={d}
         />
       )}
-      {historical.data && (
+      {historical && (
         <section className="card intake-form inspection-historical">
           <h2>
-            {s.historical} {historical.data.revision}
+            {s.historical} {historical.revision}
           </h2>
           <p>{s.historicalHint}</p>
-          <p>{historical.data.archived ? s.archived : s.active}</p>
-          {historical.data.change_reason && (
+          <p>{historical.archived ? s.archived : s.active}</p>
+          {historical.change_reason && (
             <p>
-              {s.reason}: {historical.data.change_reason}
+              {s.reason}: {historical.change_reason}
             </p>
           )}
           <dl>
@@ -161,7 +106,7 @@ export default async function InspectBag({
               (field) => (
                 <div key={field}>
                   <dt>{s[field]}</dt>
-                  <dd>{historical.data![field] || '—'}</dd>
+                  <dd>{historical![field] || '—'}</dd>
                 </div>
               ),
             )}
@@ -174,20 +119,20 @@ export default async function InspectBag({
           </Link>
         </section>
       )}
-      {selected.data && (
+      {selected && (
         <section className="card intake-form">
           <h2>{s.savedDetails}</h2>
-          <p>{selected.data.archived ? s.archived : s.active}</p>
-          {selected.data.change_reason && (
+          <p>{selected.archived ? s.archived : s.active}</p>
+          {selected.change_reason && (
             <p>
-              {s.reason}: {selected.data.change_reason}
+              {s.reason}: {selected.change_reason}
             </p>
           )}
-          <p>{selected.data.description}</p>
-          <p>{selected.data.category}</p>
-          <p>{selected.data.condition}</p>
+          <p>{selected.description}</p>
+          <p>{selected.category}</p>
+          <p>{selected.condition}</p>
           <p>
-            {s.version} {selected.data.revision}
+            {s.version} {selected.revision}
           </p>
         </section>
       )}
@@ -220,7 +165,7 @@ export default async function InspectBag({
           </ul>
           {!past.length && <p>{s.noHistory}</p>}
           <nav className="row" aria-label={s.history}>
-            {(history.data?.length ?? 0) > 20 && (
+            {historyHasMore && (
               <Link
                 className="text-link"
                 href={inspectionHref({

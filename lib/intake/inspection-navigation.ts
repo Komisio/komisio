@@ -1,3 +1,4 @@
+import { inspectionReadOptions } from '../engine/inspection-read'
 import { z } from 'zod'
 
 const revision = z
@@ -7,17 +8,14 @@ const revision = z
   .pipe(z.number().int().max(2147483647))
 export const inspectionNavigation = z
   .object({
-    status: z.enum(['active', 'archived', 'all']).default('active'),
+    status: z.enum(['active', 'archived', 'all']).optional(),
     draft: z.uuid().optional(),
     version: revision.optional(),
     historyBefore: revision.optional(),
     after: z.uuid().optional(),
     before: z.uuid().optional(),
   })
-  .refine(
-    (v) =>
-      !(v.after && v.before) && (!(v.version || v.historyBefore) || !!v.draft),
-  )
+  .pipe(inspectionReadOptions)
 
 // URLs contain identifiers only. Display text never becomes a query expression.
 export function inspectionHref(

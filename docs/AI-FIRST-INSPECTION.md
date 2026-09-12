@@ -61,8 +61,8 @@ future GUI adapters must render it as text, and model adapters must isolate it
 from instructions. The pure functions provide no prompt-injection guarantee.
 
 The subsequent [saved inspection delivery](SAVED-INSPECTION.md) adds a staff
-screen and descriptive draft persistence. There is still no saleable item, model
-call, MCP endpoint or durable agent approval. `previewInspection` itself reports `persisted: false`
+screen and descriptive draft persistence. The shared read (INSPECTION-READ.md) now serves the UI and opt-in inspection MCP.
+There is still no saleable item, model call or durable agent write for bag drafts. `previewInspection` itself reports `persisted: false`
 and `availableForSale: false`. Schema version 1 is a draft interchange contract,
 not a database schema or promise that an item has been accepted. Input provenance
 must be attached by a trusted adapter when suggestions become persistent; a

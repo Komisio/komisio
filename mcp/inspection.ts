@@ -4,6 +4,19 @@ import type { MCPConfig } from './config'
 import { readInspection } from '../lib/engine/inspection-read'
 import { requireMCPIdentity } from './identity'
 import { readBagQueue } from '../lib/engine/bag-queue'
+import { previewSavedInspection } from '../lib/engine/inspection-preview'
+
+export async function previewInspectionTool(
+  client: SupabaseClient,
+  config: MCPConfig,
+  input: unknown,
+) {
+  const actor = await requireMCPIdentity(client, config, 'inspection:preview')
+  return {
+    actor,
+    ...(await previewSavedInspection(client, config.tenantId, input)),
+  }
+}
 
 // Strings preserve the printed reference/cursor interchange; engine validates
 // normalization and safe integer bounds before constructing the database query.

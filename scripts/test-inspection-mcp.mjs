@@ -218,10 +218,119 @@ export async function testInspectionMCP({
     }),
     /not found/,
   )
+  const previewer = await connect('inspection:preview')
+  assert.deepEqual(
+    (await previewer.listTools()).tools.map((t) => t.name),
+    ['komisio_preview_inspection'],
+  )
+  const candidate = {
+    bagId: bag,
+    draftId: ids[1],
+    expectedRevision: 1,
+    suggestions: { description: 'Proposed description', category: '' },
+  }
+  async function preview(args = candidate) {
+    return previewer.callTool({
+      name: 'komisio_preview_inspection',
+      arguments: args,
+    })
+  }
+  const proposed = await preview()
+  assert(!proposed.isError, JSON.stringify(proposed.content))
+  const output = proposed.structuredContent
+  assert.equal(output.baseRevision, 1)
+  for (const key of ['persisted', 'staged', 'approved', 'availableForSale'])
+    assert.equal(output[key], false)
+  assert.equal(output.before.description, 'Draft 1')
+  assert.equal(output.after.description, 'Proposed description')
+  assert.equal(output.after.category, '')
+  assert.equal(output.after.condition, 'Needs inspection')
+  assert.deepEqual(
+    output.changes.map((x) => x.field),
+    ['description', 'category'],
+  )
+  assert.equal(output.revision, undefined)
+  assert.equal(output.bag, undefined)
+  assert.equal(output.history, undefined)
+  assert(!JSON.stringify(output).includes('PRIVATE BAG NOTE'))
+  const noop = await preview({
+    ...candidate,
+    suggestions: { description: 'Draft 1' },
+  })
+  assert(!noop.isError)
+  assert.deepEqual(noop.structuredContent.changes, [])
+  for (const args of [
+    { ...candidate, draftId: draft, expectedRevision: 24 },
+    { ...candidate, expectedRevision: 2 },
+    { ...candidate, bagId: otherBag },
+    { ...candidate, draftId: randomUUID() },
+    { ...candidate, tenantId: tenant },
+    { ...candidate, approved: true },
+    { ...candidate, suggestions: {} },
+    { ...candidate, suggestions: { description: '   ' } },
+    { ...candidate, suggestions: { price: '100.00' } },
+    { ...candidate, suggestions: { description: 'x'.repeat(1001) } },
+  ])
+    assert((await preview(args)).isError, JSON.stringify(args))
+  await assert.rejects(
+    client.callTool({
+      name: 'komisio_preview_inspection',
+      arguments: candidate,
+    }),
+    /not found/,
+  )
+  await assert.rejects(
+    previewer.callTool({
+      name: 'komisio_read_inspection',
+      arguments: { bagId: bag },
+    }),
+    /not found/,
+  )
+  for (const denied of [
+    await connect('inspection:preview', 'invalid-token'),
+    await connect('inspection:preview', token, randomUUID()),
+  ])
+    assert(
+      (
+        await denied.callTool({
+          name: 'komisio_preview_inspection',
+          arguments: candidate,
+        })
+      ).isError,
+    )
+  const unchanged = (
+    await db.query(
+      'select revision,description,category from inspection_current where draft_id=$1',
+      [ids[1]],
+    )
+  ).rows[0]
+  assert.deepEqual(unchanged, {
+    revision: 1,
+    description: 'Draft 1',
+    category: 'Garment',
+  })
+  // A real staff edit invalidates the old base, even though no preview was saved.
+  await rpc('save_inspection_draft', {
+    p_tenant: tenant,
+    p_request: randomUUID(),
+    p_bag: bag,
+    p_draft: ids[1],
+    p_expected: 1,
+    p_description: 'Staff edited',
+    p_category: 'Garment',
+    p_condition: 'Needs inspection',
+  })
+  assert((await preview()).isError)
+  assert(!(await preview({ ...candidate, expectedRevision: 2 })).isError)
   const counts = await db.query(
     'select count(*)::int n from inspection_draft_revisions where bag_id=$1',
     [bag],
   )
-  assert.equal(counts.rows[0].n, 46)
-  return { client, bag }
+  assert.equal(counts.rows[0].n, 47)
+  return {
+    client,
+    bag,
+    previewer,
+    previewInput: { ...candidate, expectedRevision: 2 },
+  }
 }

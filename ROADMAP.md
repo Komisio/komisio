@@ -11,7 +11,9 @@ implemented for verified email plus a personal capability link; see
 [seller review](docs/SELLER-REVIEW.md) for exact boundaries. The
 [operator workspace](docs/RECEPTION-WORKSPACE.md) now provides guided manual preparation
 through those same operations. [Private staff photos](docs/RECEPTION-PHOTOS.md)
-are now supported; seller photo delivery and live AI remain next. No seller response publishes
+are now supported. The [optional AI adapter](docs/RECEPTION-ASSISTANCE.md) provides
+bounded, source-linked suggestions and explicit staff review; staging remains
+unconfigured. Seller photo delivery and live model evaluation remain next. No seller response publishes
 inventory or authorizes payouts.
 
 The platform is deployed to staging, and registration plus invitation-email

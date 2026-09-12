@@ -5,9 +5,9 @@ uploadReceptionPhoto operation. Files are capped at 3 MiB, 8192 pixels per edge
 and 20 million declared pixels. Signature/dimension checks run during upload and
 download, independent of claimed MIME type. They are not full decoding,
 authenticity verification or proof that a garment matches a seller. Original
-bytes and embedded metadata are retained privately; no AI provider receives them
-in this slice. A future outbound adapter must address metadata minimization and
-decoding failures explicitly.
+bytes and embedded metadata are retained privately. The separate optional
+[assistance adapter](RECEPTION-ASSISTANCE.md) decodes and minimizes derivatives
+before any explicitly configured provider transmission; originals are not sent.
 
 The private reception-photos bucket has matching size/type restrictions and
 Storage RLS bound to a real tenant/session path. Staff may insert and read;

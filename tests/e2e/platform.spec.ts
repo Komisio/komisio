@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test'
 import { randomBytes, createHmac } from 'node:crypto'
+import { createRequire } from 'node:module'
 
 test('saved inspection drafts resume safely and preserve conflicting edits', async ({
   page,
@@ -1912,6 +1913,141 @@ test('operator reception guides saved evidence, exact review and link replacemen
     page.getByRole('link', { name: /Operator TEST Seller/ }),
   ).toBeVisible()
 })
+test('AI HTTP fixture stages a sourced proposal before explicit staff publication', async ({
+  page,
+}) => {
+  test.skip(
+    process.env.KOMISIO_TEST_AI_HTTP_FIXTURE !== 'enabled',
+    'Dedicated local fixture runner only; no live provider',
+  )
+  const tenantId = process.env.KOMISIO_RECEPTION_AI_TENANTS!,
+    run = Date.now().toString(36),
+    email = `ai-fixture-${run}@example.test`
+  await register(page, email, `K!${randomBytes(16).toString('hex')}`)
+  await expect(page).toHaveURL(/\/onboarding/)
+  // Test fixture only, fixed LOCAL database; no hosted administrative credential.
+  const { Client } = createRequire(import.meta.url)('pg')
+  const fixture = new Client({
+    connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+  })
+  await fixture.connect()
+  try {
+    const user = await fixture.query(
+      'select id from auth.users where email=$1',
+      [email],
+    )
+    await fixture.query(
+      'insert into tenants(id,name,slug,created_by) values($1,$2,$3,$4)',
+      [tenantId, 'HTTP fixture store', `ai-${run}`, user.rows[0].id],
+    )
+  } finally {
+    await fixture.end()
+  }
+  expect(
+    (
+      await page.request.post('/api/platform', {
+        headers: { Origin: 'http://127.0.0.1:3000' },
+        data: { action: 'select', tenantId },
+      })
+    ).status(),
+  ).toBe(200)
+  const post = (data: object) =>
+    page.request.post('/api/intake', {
+      headers: { Origin: 'http://127.0.0.1:3000' },
+      data: { ...data, tenantId, requestId: crypto.randomUUID() },
+    })
+  const seller = await post({
+    action: 'registerSeller',
+    name: 'AI HTTP fixture seller',
+    email: 'fixture-seller@example.test',
+    phone: '',
+  })
+  expect(seller.status()).toBe(200)
+  const receipt = await post({
+      action: 'createReception',
+      sellerId: (await seller.json()).id,
+    }),
+    sessionId = (await receipt.json()).id
+  expect(
+    (
+      await post({
+        action: 'publishAgreement',
+        expectedCurrentId: null,
+        title: 'HTTP fixture terms',
+        body: 'TEST ONLY – no real agreement.',
+        language: 'en',
+        required: false,
+      })
+    ).status(),
+  ).toBe(200)
+  await page.goto(`/intake/reception/${sessionId}`)
+  await page.getByLabel('Beskriv plagget').fill('Synthetic blue jacket')
+  await page
+    .getByLabel('Föreslaget försäljningspris', { exact: true })
+    .fill('250')
+  await page.getByLabel('Prisunderlagets källa').fill('Fixture store appraisal')
+  await page
+    .getByLabel('Motivera prisförslaget')
+    .fill('Fictional test price, no market data')
+  await page
+    .getByRole('button', { name: 'Spara beskrivning och prisunderlag' })
+    .click()
+  await expect(
+    page.getByText('Sparad källversion 1', { exact: true }),
+  ).toBeVisible()
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page
+    .getByRole('button', { name: 'Analysera underlaget med AI' })
+    .click()
+  const panel = page.locator('section').filter({
+    has: page.getByRole('heading', { name: 'AI-förslag', exact: true }),
+  })
+  await expect(
+    panel.getByText('HTTP FIXTURE – blue jacket, not live AI', { exact: true }),
+  ).toBeVisible()
+  await expect(
+    panel.getByText('AI-förslag, behöver kontrolleras', { exact: true }),
+  ).toBeVisible()
+  await expect(
+    panel.getByText('TEST ONLY – no real agreement.', { exact: true }),
+  ).toBeVisible()
+  await expect(
+    panel.getByRole('button', { name: 'Publicera granskat underlag' }),
+  ).toBeDisabled()
+  const before = await (
+    await page.request.get(`/api/reception/${sessionId}`)
+  ).json()
+  expect(before.latestReview).toBeNull()
+  await panel.getByRole('checkbox').check()
+  await panel
+    .getByRole('button', { name: 'Publicera granskat underlag' })
+    .click()
+  await expect(
+    page.getByRole('heading', { name: /Säljarens beslut/ }),
+  ).toBeVisible()
+  const after = await (
+    await page.request.get(`/api/reception/${sessionId}`)
+  ).json()
+  expect(after.latestReview.suggestions.metadata.description.certainty).toBe(
+    'observed',
+  )
+  expect(after.latestReview.suggestions.metadata.description.value).toContain(
+    'HTTP FIXTURE',
+  )
+  expect(after.latestReview.response).toBeNull()
+  expect(after.latestReview.access).toBeNull()
+  const limited = await page.request.post('/api/reception/assistance', {
+    headers: { Origin: 'http://127.0.0.1:3000' },
+    data: { tenantId, sessionId, revision: 1, requestId: crypto.randomUUID() },
+  })
+  expect(limited.status()).toBe(429)
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true)
+})
+
 test('private reception photo uploads attach immutably and require staff access', async ({
   page,
 }) => {
@@ -1976,6 +2112,31 @@ test('private reception photo uploads attach immutably and require staff access'
     ).json(),
     source = state.session.sources[0]
   const endpoint = `/api/reception/${sessionId}/photo?photo=${source.id}`
+  const unavailable = await page.request.post('/api/reception/assistance', {
+    headers: { Origin: 'http://127.0.0.1:3000' },
+    data: { tenantId, sessionId, revision: 1, requestId: crypto.randomUUID() },
+  })
+  expect(unavailable.status()).toBe(200)
+  expect(await unavailable.json()).toEqual({
+    status: 'unavailable',
+    proposal: null,
+  })
+  await expect(
+    page.getByText('AI är inte aktiverat för denna butik.', { exact: false }),
+  ).toBeVisible()
+  expect(
+    (
+      await page.request.post('/api/reception/assistance', {
+        headers: { Origin: 'https://unrelated.example.test' },
+        data: {
+          tenantId,
+          sessionId,
+          revision: 1,
+          requestId: crypto.randomUUID(),
+        },
+      })
+    ).status(),
+  ).toBe(403)
   const imageResponse = await page.request.get(endpoint)
   expect(imageResponse.status()).toBe(200)
   expect(imageResponse.headers()['cache-control']).toContain('no-store')

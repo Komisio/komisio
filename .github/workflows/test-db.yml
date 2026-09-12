@@ -42,6 +42,7 @@ jobs:
       - run: npm run test:concurrency
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+      - run: npm run test:assistance
       - name: Stop local services
         if: always()
         run: supabase stop

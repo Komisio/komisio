@@ -34,8 +34,10 @@ Lost link-issuance responses use the replacement recovery documented in
 Readonly users can inspect the review but do not receive write controls. The
 source/review response still does not establish physical custody, sale eligibility,
 general seller agreement evidence or payout authorization. [Private staff photos](RECEPTION-PHOTOS.md)
-are now supported. Live AI and authenticated agent transport remain next; this GUI does not replace
-those adapters or label manual preparation as AI output.
+are now supported. [Optional AI assistance](RECEPTION-ASSISTANCE.md) offers a
+separate sourced candidate for explicit staff review when configured; missing
+configuration stays visibly unavailable. Live provider evaluation and authenticated
+agent transport remain next. Manual preparation is never labelled model output.
 
 The browser journey exercises real operator controls, a deliberately lost success
 response, exact review publication, rapid link replacement/revocation, stale-editor

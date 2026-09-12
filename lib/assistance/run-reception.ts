@@ -1,0 +1,68 @@
+import type { SupabaseClient } from '@supabase/supabase-js'
+import {
+  assistanceCommand,
+  reserveReceptionAssistance,
+} from '../engine/reception-assistance'
+import { readReceptionSession } from '../engine/reception-store'
+import { readReceptionPhoto } from '../engine/reception-photos'
+import { suggestReception } from './reception'
+import { receptionAIConfig } from './reception-config'
+import { receptionImage } from './reception-image'
+import { openAIReception, receptionPromptVersion } from './openai-reception'
+
+/** All caller identities/objects come from authenticated database reads, never model output. */
+export async function runReceptionAssistance(
+  client: SupabaseClient,
+  input: unknown,
+  signal: AbortSignal,
+) {
+  const c = assistanceCommand.parse(input)
+  const role = await client.rpc('tenant_role', { p_tenant: c.tenantId })
+  if (role.error || !['owner', 'admin', 'staff'].includes(role.data))
+    throw new Error('FORBIDDEN')
+  const state = await readReceptionSession(client, c.tenantId, c.sessionId)
+  if (state?.status !== 'ready' || state.session.revision !== c.revision)
+    throw new Error('RECEPTION_CHANGED')
+  const config = receptionAIConfig(c.tenantId)
+  if (!config) return { status: 'unavailable' as const, proposal: null }
+  const photos = state.session.sources.filter((s) => s.kind === 'photo')
+  if (photos.length > 3) throw new Error('ASSISTANCE_IMAGE_LIMIT')
+  signal.throwIfAborted()
+  if (
+    !(await reserveReceptionAssistance(
+      client,
+      c,
+      config.model,
+      receptionPromptVersion,
+    ))
+  )
+    throw new Error('ASSISTANCE_ALREADY_ATTEMPTED')
+  const images = new Map<string, string>()
+  for (const source of photos) {
+    signal.throwIfAborted()
+    const photo = await readReceptionPhoto(client, {
+      tenantId: c.tenantId,
+      sessionId: c.sessionId,
+      photoId: source.id,
+    })
+    if (!photo) throw new Error('ASSISTANCE_IMAGE_UNAVAILABLE')
+    images.set(source.id, await receptionImage(photo.bytes))
+  }
+  const result = await suggestReception(
+    state.session,
+    c.requestId,
+    openAIReception(config, images),
+    signal,
+  )
+  const current = await readReceptionSession(client, c.tenantId, c.sessionId),
+    currentRole = await client.rpc('tenant_role', { p_tenant: c.tenantId })
+  if (
+    currentRole.error ||
+    !['owner', 'admin', 'staff'].includes(currentRole.data)
+  )
+    throw new Error('FORBIDDEN')
+  if (current?.status !== 'ready' || current.session.revision !== c.revision)
+    throw new Error('RECEPTION_CHANGED')
+  signal.throwIfAborted()
+  return result
+}

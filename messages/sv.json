@@ -332,7 +332,31 @@
   "reception": {
     "title": "Mottagning av plagg",
     "intro": "Ett plagg, ett granskat underlag och säljarens beslut.",
-    "manual": "Manuellt läge. Bildanalys och AI är ännu inte anslutna. Personalen står för beskrivning och prisunderlag.",
+    "manual": "Beskriv plagget manuellt eller använd AI-förslag om butiken har aktiverat det. Personalen granskar underlaget innan säljaren får ta ställning.",
+    "aiTitle": "AI-förslag",
+    "aiNotice": "Vid en körning skickas mottagningens bilder, anteckningar och prisunderlag till OpenAI. Använd endast plaggunderlag utan personuppgifter. Inbäddade bildmetadata tas bort, men text och personer som syns på bilden gör det inte. Högst tre bilder per körning.",
+    "aiUnavailable": "AI är inte aktiverat för denna butik. Du kan fortsätta med den manuella beskrivningen och prisunderlaget.",
+    "aiGenerate": "Analysera underlaget med AI",
+    "aiWorking": "Analyserar…",
+    "aiCandidate": "Förslag att granska – inte publicerat",
+    "aiUnverified": "AI-förslag, behöver kontrolleras",
+    "aiSources": "Visa källunderlag",
+    "aiUnknown": "Saknar underlag",
+    "aiQuestions": "Frågor som återstår",
+    "aiReviewNotice": "Kontrollera varje uppgift, priset och villkoren. Bekräftelsen nedan innebär att du som personal har granskat förslaget. Säljaren lämnar sitt svar separat.",
+    "aiIncomplete": "Förslaget kan inte delas ännu. Använd den manuella vägen för att komplettera eller korrigera underlaget; kvarstående frågor måste lösas först.",
+    "aiLimit": "Butikens gräns är nådd: högst tio försök under 24 timmar och minst 20 sekunder mellan försöken.",
+    "aiFailed": "Inget användbart AI-förslag kunde hämtas. Underlaget kan ha ändrats. Ladda om för att kontrollera mottagningen; en ny körning räknas som ett nytt försök.",
+    "aiTransient": "Förslaget sparas först när du uttryckligen publicerar en granskad version. Omladdning tappar ett osparat förslag. Även misslyckade eller avbrutna körningar räknas mot gränsen.",
+    "aiFields": {
+      "description": "Beskrivning",
+      "category": "Kategori",
+      "color": "Färg",
+      "brand": "Varumärke",
+      "size": "Storlek",
+      "material": "Material",
+      "condition": "Skick"
+    },
     "seller": "Välj registrerad säljare",
     "start": "Starta mottagning",
     "search": "Sök säljare på namn",
@@ -387,7 +411,7 @@
     "photoInvalid": "Välj en JPEG- eller PNG-bild på högst 3 MB. En mottagning kan ha högst 20 källor totalt.",
     "photoSelect": "Välj eller ta en bild",
     "photos": "Bilder från mottagningen",
-    "photoHelp": "JPEG eller PNG, högst 3 MB. Bilden sparas privat för butikens personal. AI-analys och bildvisning för säljaren är ännu inte anslutna.",
+    "photoHelp": "JPEG eller PNG, högst 3 MB och 20 megapixlar. Bilden sparas privat för butikens personal. Säljaren ser ännu inte bilderna.",
     "photoSave": "Spara bild till mottagningen"
   }
 }

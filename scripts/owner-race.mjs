@@ -507,6 +507,38 @@ try {
   console.log(
     'PASS: concurrent review publication requires expected previous review; retries persist once.',
   )
+  const aiRequest = randomUUID()
+  const aiRace = await Promise.all(
+    sessions.map(({ c }) =>
+      c.query(
+        "select reserve_reception_assistance($1,$2,$3,3,'fixture-model','reception-v1') as reserved",
+        [tenant, aiRequest, receptionId],
+      ),
+    ),
+  )
+  if (aiRace.filter((r) => r.rows[0].reserved).length !== 1)
+    throw new Error('Assistance retry reserved more than once')
+  const aiLimitRace = await Promise.all(
+    sessions.map(({ c }) =>
+      c
+        .query(
+          "select reserve_reception_assistance($1,$2,$3,3,'fixture-model','reception-v1')",
+          [tenant, randomUUID(), receptionId],
+        )
+        .then(
+          () => false,
+          (e) => {
+            if (e.message === 'ASSISTANCE_LIMIT') return true
+            throw e
+          },
+        ),
+    ),
+  )
+  if (!aiLimitRace.every(Boolean))
+    throw new Error('Concurrent assistance bypassed cooldown')
+  console.log(
+    'PASS: assistance request replay reserves once; concurrent new attempts respect tenant cooldown.',
+  )
   const sellerUser = randomUUID(),
     accessRequest = randomUUID()
   await setup.query(

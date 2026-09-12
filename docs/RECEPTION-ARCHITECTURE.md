@@ -12,7 +12,8 @@ but do not represent wall reception, image provenance or seller consent.
 separates engine, database enforcement, extensions and agent access. Posting from
 agents is staged for approval, with separate workflow skills. Komisio has shared
 staff operations and database controls but no live MCP, extension runtime or
-vision integration. Demonstrate those boundaries through a vertical workflow.
+unattended vision hardware. An optional inference adapter now demonstrates these
+boundaries through the reception workflow; it requires explicit configuration.
 No source code is copied from Accounted.
 
 ## Decision
@@ -31,7 +32,8 @@ authorization; the durable slice must independently guarantee those properties.
 | Model-independent assistance port | lib/assistance/reception.ts |
 | Garment workflow guidance | skills/garment-reception/SKILL.md |
 | Private staff image capture/storage | lib/engine/reception-photos.ts and Storage RLS |
-| Provider calls, secrets, cost controls | Future optional extension |
+| Provider calls and configuration | lib/assistance/openai-reception.ts and reception-config.ts |
+| Attempt reservation and cost guard | lib/engine/reception-assistance.ts and database |
 | Authoritative sessions, snapshots and decisions | Engine and database |
 | Mobile review | Thin application surface |
 | Authenticated agent transport | Future optional MCP extension |
@@ -47,7 +49,9 @@ creation and immutable textual source snapshots. The pure previews above remain
 previews. The [immutable review](RECEPTION-REVIEWS.md) and
 [seller response](SELLER-REVIEW.md) now have independent database enforcement.
 [Private staff images](RECEPTION-PHOTOS.md) are now implemented. Seller image
-delivery and live model inference remain separate delivery steps.
+delivery remains separate. [Optional inference](RECEPTION-ASSISTANCE.md) now has
+bounded provider calls, source checks, attempt reservations and explicit staff
+review. Live model access/quality are unverified; the staging configuration is off.
 
 Reject a chat agent with direct SQL, a copied legacy item schema, and mandatory
 fake bag receipts for wall reception. Shared contracts require explicit adapters

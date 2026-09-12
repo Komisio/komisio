@@ -31,5 +31,8 @@ docs/RECEPTION-ARCHITECTURE.md.
 8. Never claim a review was sent, saved or accepted without a confirmed result
    from an authorized persistent operation. Contract previews are not consent.
 
-The first adapter port has no live provider. Fixture adapters are for tests only
-and must never be represented as a camera or model service.
+An optional OpenAI adapter now implements the shared port; see
+docs/RECEPTION-ASSISTANCE.md for configuration and tested boundaries. Missing
+configuration is unavailable. Fixture adapters are for tests only and must never
+be represented as live camera or model output. The skill is not loaded as runtime
+authorization; the adapter's versioned instructions cannot override engine rules.

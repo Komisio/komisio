@@ -71,7 +71,12 @@ export function receptionTools(client: SupabaseClient, config: MCPConfig) {
         actor = await identityContext('reception:read')
       return {
         actor,
-        ...(await readOperationReview(client, config.tenantId, c)),
+        ...(await readOperationReview(
+          client,
+          config.tenantId,
+          c,
+          'publishReceptionReview',
+        )),
       }
     },
     async history(input: unknown) {

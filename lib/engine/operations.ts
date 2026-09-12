@@ -1,10 +1,14 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { receptionSuggestions } from './reception'
+import { inspectionFields } from './inspection'
 
 // A staged operation is a proposal by a non-human actor. It publishes nothing
 // until a person decides; execution then reuses the ordinary engine function.
-export const operationKind = z.enum(['publishReceptionReview'])
+export const operationKind = z.enum([
+  'publishReceptionReview',
+  'saveInspectionDraft',
+])
 export const publishReceptionReviewPayload = z.strictObject({
   sessionId: z.uuid(),
   sourceRevision: z.number().int().min(1).max(2147483646),
@@ -19,14 +23,30 @@ export const publishReceptionReviewPayload = z.strictObject({
       Object.values(s.metadata).every((f) => f?.certainty === 'observed'),
   ),
 })
-export const proposeOperationCommand = z.strictObject({
+export const saveInspectionDraftPayload = z.strictObject({
+  bagId: z.uuid(),
+  draftId: z.uuid(),
+  expectedRevision: z.number().int().min(1).max(2147483646),
+  fields: inspectionFields.extend({
+    description: z.string().trim().min(1).max(1000),
+  }),
+})
+const proposeBase = z.strictObject({
   tenantId: z.uuid(),
   requestId: z.uuid(),
-  kind: z.literal('publishReceptionReview'),
-  payload: publishReceptionReviewPayload,
   actorLabel: z.string().trim().min(1).max(100),
   expiresAt: z.iso.datetime(),
 })
+export const proposeOperationCommand = z.discriminatedUnion('kind', [
+  proposeBase.extend({
+    kind: z.literal('publishReceptionReview'),
+    payload: publishReceptionReviewPayload,
+  }),
+  proposeBase.extend({
+    kind: z.literal('saveInspectionDraft'),
+    payload: saveInspectionDraftPayload,
+  }),
+])
 export const decideOperationCommand = z.strictObject({
   tenantId: z.uuid(),
   requestId: z.uuid(),
@@ -41,14 +61,12 @@ export const operationStatus = z.enum([
   'failed',
   'rejected',
 ])
-export const operationRow = z.object({
+const operationBaseRow = z.object({
   id: z.uuid(),
-  kind: operationKind,
   risk_level: z.enum(['low', 'medium', 'high']),
   actor_kind: z.literal('agent'),
   actor_label: z.string(),
   proposed_by: z.uuid(),
-  payload: publishReceptionReviewPayload,
   expires_at: z.iso.datetime({ offset: true }),
   created_at: z.iso.datetime({ offset: true }),
   status: operationStatus,
@@ -60,6 +78,16 @@ export const operationRow = z.object({
   decided_by: z.uuid().nullable(),
   decided_at: z.iso.datetime({ offset: true }).nullable(),
 })
+export const operationRow = z.discriminatedUnion('kind', [
+  operationBaseRow.extend({
+    kind: z.literal('publishReceptionReview'),
+    payload: publishReceptionReviewPayload,
+  }),
+  operationBaseRow.extend({
+    kind: z.literal('saveInspectionDraft'),
+    payload: saveInspectionDraftPayload,
+  }),
+])
 export type PendingOperation = z.infer<typeof operationRow>
 export const operationErrorCodes = [
   'FORBIDDEN',
@@ -76,6 +104,10 @@ export const operationErrorCodes = [
   'OPERATION_NOT_FOUND',
   'OPERATION_DECIDED',
   'OPERATION_EXPIRED',
+  'INSPECTION_NOT_FOUND',
+  'INSPECTION_DRAFT_CHANGED',
+  'INSPECTION_ARCHIVED',
+  'INSPECTION_UNCHANGED',
 ] as const
 export function operationErrorCode(message: string) {
   return (

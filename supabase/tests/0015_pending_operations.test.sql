@@ -113,8 +113,8 @@ select throws_ok($$insert into operation_decisions(id,tenant_id,operation_id,dec
 reset role;
 select throws_like($$update pending_operations set risk_level='high'$$,'%IMMUTABLE_OPERATION%','proposals immutable');
 select throws_like($$delete from operation_decisions$$,'%IMMUTABLE_OPERATION%','decisions immutable');
-select is((select count(*) from access_events where action='operation.proposed'),4::bigint,'proposals audited');
-select is((select count(*) from access_events where action='operation.decided'),5::bigint,'decisions audited');
+select is((select count(*) from access_events where tenant_id=current_setting('test.tenant')::uuid and action='operation.proposed'),4::bigint,'proposals audited');
+select is((select count(*) from access_events where tenant_id=current_setting('test.tenant')::uuid and action='operation.decided'),5::bigint,'decisions audited');
 -- MFA and anonymous access.
 insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values(gen_random_uuid(),'c0000000-0000-4000-8000-000000000001','totp','verified',now(),now());
 set local role authenticated;

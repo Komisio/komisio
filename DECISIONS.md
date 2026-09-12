@@ -87,3 +87,27 @@ when answered.
 [2026-09-12] Seller reads (review page, photo descriptor, Storage policy) are STABLE functions that take no tenant row lock; only the seller response keeps the locking variant, which serializes with staff replacement and revocation and rechecks every condition under the lock: a seller opening a review with photos was taking the store-wide write lock several times per page, which is harmless at pilot scale and not with a chain or camera station, and STABLE makes FOR UPDATE impossible by PostgreSQL rule rather than by convention.
 
 [2026-09-12] The MCP staged-review adapter uses the proposed review's fixed expiry as the operation expiry. Recalculating an expiry from the request clock changed the immutable envelope on retry and caused REQUEST_CONFLICT in the real MCP test. Fixed input plus request ID must preserve that envelope and must not extend its approval window. Existing SQL validation bounds both expiries; no migration is needed.
+
+## 2026-09-12: staged descriptive edits to existing inspection drafts
+
+Owner-authorized AI-first continuation extends the existing pending-operation
+mechanism with saveInspectionDraft. It is low-risk descriptive editing only:
+exact active base revision, complete bounded description/category/condition,
+no-op rejection, immutable proposal and explicit staff approval through the
+existing engine save. No new table or commercial/financial rule. SQL rechecks
+stale/archive/role/MFA and commits decision plus save atomically; retry semantics
+remain exact-envelope. Staff field confirmations are a UI review aid, not a new
+authorization boundary. See docs/STAGED-INSPECTION.md and the associated SQL tests.
+
+
+## 2026-09-12 — Lead architect, roadmap baseline and v1 exclusion
+
+The owner appointed Claude Fable 5.1 as lead architect and selected
+`docs/FUNCTIONAL-ROADMAP.md` as the evolving baseline for continued development.
+Agents read the latest roadmap before selecting work; Astra implements, verifies
+and integrates against it. Architectural disagreements are recorded for the lead
+architect and owner instead of silently superseding the baseline.
+All 100-hours functionality is outside version 1, including its hourly markdowns,
+dedicated lifecycle stage and associated screens/feed. Do not build v1 dependencies
+on it. This scope decision does not change access controls or resolve outstanding
+financial rules. No database migration is needed for this documentation decision.

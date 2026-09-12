@@ -74,3 +74,15 @@ journey separately exercises the web decision form and `/api/operations` route.
 
 Apply `20260912140000_pending_operations.sql` before deploying this version.
 An older application ignores the new tables and functions.
+
+
+## Descriptive inspection edits
+
+The existing pending-operation mechanism also supports `saveInspectionDraft`.
+It stages a complete descriptive edit to an existing active draft at an exact
+saved revision. Staff review the historical before/after and confirm changed
+fields before approval executes the existing save command. Rejection requires no
+field confirmation; stale or archived drafts cannot be overwritten. Inspection
+and reception MCP reads remain separately scoped and kind-checked. The unsaved
+preview tool remains read-only. See [contract](STAGED-INSPECTION.md) for the
+strict payload, retry behavior, actor attribution and release boundary.

@@ -12,11 +12,13 @@ function Decision({
   tenantId,
   operation,
   canApprove,
+  fieldsToConfirm = [],
   d,
 }: {
   tenantId: string
   operation: PendingOperation
   canApprove: boolean
+  fieldsToConfirm?: ('description' | 'category' | 'condition')[]
   d: D
 }) {
   const router = useRouter()
@@ -75,19 +77,28 @@ function Decision({
           new FormData(event.currentTarget).get('reason') ?? '',
         )
         const submitter = (event.nativeEvent as SubmitEvent).submitter
-        decide(
-          submitter?.getAttribute('value') === 'reject' ? 'reject' : 'approve',
-          reason,
-        )
+        const decision =
+          submitter?.getAttribute('value') === 'reject' ? 'reject' : 'approve'
+        if (decision === 'approve' && !event.currentTarget.reportValidity())
+          return
+        decide(decision, reason)
       }}
     >
       <div className="field">
         <label htmlFor={`reason-${operation.id}`}>{d.reason}</label>
         <input id={`reason-${operation.id}`} name="reason" maxLength={500} />
       </div>
+      {fieldsToConfirm.map((field) => (
+        <label className="intake-confirm" key={field}>
+          <input type="checkbox" name={`field-${field}`} required />
+          {d.confirmField}: {d.fields[field]}
+        </label>
+      ))}
       <label className="intake-confirm">
         <input type="checkbox" name="checked" required />
-        {d.confirm}
+        {operation.kind === 'saveInspectionDraft'
+          ? d.confirmInspection
+          : d.confirm}
       </label>
       {error && <p role="alert">{error}</p>}
       {reload ? (
@@ -97,11 +108,16 @@ function Decision({
       ) : (
         <div className="row">
           <Button type="submit" value="approve" disabled={busy || !canApprove}>
-            {busy ? d.busy : d.approve}
+            {busy
+              ? d.busy
+              : operation.kind === 'saveInspectionDraft'
+                ? d.saveDraft
+                : d.approve}
           </Button>
           <Button
             type="submit"
             value="reject"
+            formNoValidate
             variant="secondary"
             disabled={busy}
           >
@@ -144,52 +160,69 @@ export function OperationQueue({
             {d.riskLevel}: {d.risk[o.risk_level]} · {d.validUntil}:{' '}
             {format(o.expires_at)}
           </p>
-          <p>
-            <Link
-              className="text-link"
-              href={`/intake/reception/${o.payload.sessionId}`}
-            >
-              {d.openReception}
-            </Link>{' '}
-            · {d.sourceRevision} {o.payload.sourceRevision}
-          </p>
-          <dl className="operation-facts">
-            {Object.entries(o.payload.suggestions.metadata).map(
-              ([key, fact]) =>
-                fact ? (
-                  <div key={key}>
-                    <dt>{d.fields[key as keyof D['fields']]}</dt>
+          {o.kind === 'publishReceptionReview' ? (
+            <>
+              <p>
+                <Link
+                  className="text-link"
+                  href={`/intake/reception/${o.payload.sessionId}`}
+                >
+                  {d.openReception}
+                </Link>{' '}
+                · {d.sourceRevision} {o.payload.sourceRevision}
+              </p>
+              <dl className="operation-facts">
+                {Object.entries(o.payload.suggestions.metadata).map(
+                  ([key, fact]) =>
+                    fact ? (
+                      <div key={key}>
+                        <dt>{d.fields[key as keyof D['fields']]}</dt>
+                        <dd>
+                          {fact.value}
+                          {reviewContext && (
+                            <small> · {fact.sourceIds.join(', ')}</small>
+                          )}
+                        </dd>
+                      </div>
+                    ) : null,
+                )}
+                {o.payload.suggestions.price && (
+                  <div>
+                    <dt>{d.price}</dt>
                     <dd>
-                      {fact.value}
+                      {o.payload.suggestions.price.amount} SEK ·{' '}
+                      {o.payload.suggestions.price.rationale}
                       {reviewContext && (
-                        <small> · {fact.sourceIds.join(', ')}</small>
+                        <small>
+                          {' '}
+                          · {o.payload.suggestions.price.sourceIds.join(', ')}
+                        </small>
                       )}
                     </dd>
                   </div>
-                ) : null,
-            )}
-            {o.payload.suggestions.price && (
-              <div>
-                <dt>{d.price}</dt>
-                <dd>
-                  {o.payload.suggestions.price.amount} SEK ·{' '}
-                  {o.payload.suggestions.price.rationale}
-                  {reviewContext && (
-                    <small>
-                      {' '}
-                      · {o.payload.suggestions.price.sourceIds.join(', ')}
-                    </small>
-                  )}
-                </dd>
-              </div>
-            )}
-          </dl>
+                )}
+              </dl>
+            </>
+          ) : (
+            <>
+              <p>
+                <Link
+                  className="text-link"
+                  href={`/intake/bags/${o.payload.bagId}/inspect?draft=${o.payload.draftId}`}
+                >
+                  {d.openInspection}
+                </Link>{' '}
+                · {d.draftVersion} {o.payload.expectedRevision}
+              </p>
+              <p>{o.payload.fields.description}</p>
+            </>
+          )}
           {!reviewContext && (
             <Link className="text-link" href={`/intake/operations/${o.id}`}>
               {d.reviewProposal}
             </Link>
           )}
-          {reviewContext && (
+          {reviewContext?.kind === 'reception' && (
             <section aria-label={d.reviewContext}>
               <h3>{d.reviewContext}</h3>
               <p>{d.contextNotice}</p>
@@ -218,11 +251,35 @@ export function OperationQueue({
               )}
             </section>
           )}
+          {reviewContext?.kind === 'inspection' && (
+            <section aria-label={d.inspectionChanges}>
+              <h3>{d.inspectionChanges}</h3>
+              {reviewContext.changes.map((change) => (
+                <div className="intake-notice" key={change.field}>
+                  <strong>{d.fields[change.field]}</strong>
+                  <p>
+                    {d.before}: {change.before || d.emptyField}
+                  </p>
+                  <p>
+                    {d.after}: {change.after || d.emptyField}
+                  </p>
+                </div>
+              ))}
+              {!o.outcome && reviewContext.stale && (
+                <p role="alert">{d.staleInspection}</p>
+              )}
+            </section>
+          )}
           {reviewContext && !o.outcome && canDecide && (
             <Decision
               tenantId={tenantId}
               operation={o}
               canApprove={reviewContext.canApprove}
+              fieldsToConfirm={
+                reviewContext.kind === 'inspection'
+                  ? reviewContext.changes.map((c) => c.field)
+                  : []
+              }
               d={d}
             />
           )}

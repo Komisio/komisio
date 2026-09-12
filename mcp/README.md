@@ -4,18 +4,20 @@ This is a real stdio Model Context Protocol adapter using the official TypeScrip
 SDK. It is separate from the web app and optional model-provider integration.
 It exposes narrow tools through the same intake engine:
 
-| Tool                             | Scope              | Effect                                                                                         |
-| -------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------- |
-| komisio_preview_inspection       | inspection:preview | Return unsaved descriptive before/after at the exact saved base revision; no approval or write |
-| komisio_list_bags                | inspection:read    | Find a printed bag number or page through bag IDs; no seller data or notes                     |
-| komisio_read_inspection          | inspection:read    | Read bounded saved bag drafts and exact history; no notes, contacts or writes                  |
-| komisio_read_reception_operation | reception:read     | Read exact staged proposal sources and agreement terms; no decision                            |
-| komisio_list_receptions          | reception:read     | Read a bounded queue with shared next-step guidance, not commercial acceptance                 |
-| komisio_read_reception_history   | reception:read     | Read bounded version summaries, with separate source/review cursors; no images or links        |
-| komisio_read_reception           | reception:read     | Read one saved session and its source snapshot                                                 |
-| komisio_preview_reception        | reception:preview  | Validate a source-bound proposal against the current revision; return an unsaved preview       |
-| komisio_read_reception_photo     | reception:photos   | Read one attached photo at the exact current revision as native MCP image content              |
-| komisio_propose_reception_review | reception:propose  | Stage a complete review for staff approval; publishes nothing (see docs/STAGED-OPERATIONS.md)  |
+| Tool                              | Scope              | Effect                                                                                         |
+| --------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------- |
+| komisio_propose_inspection_edit   | inspection:propose | Stage a complete descriptive edit against an exact saved revision; staff approval required     |
+| komisio_read_inspection_operation | inspection:read    | Read exact staged inspection before/after and decision; no reception access                    |
+| komisio_preview_inspection        | inspection:preview | Return unsaved descriptive before/after at the exact saved base revision; no approval or write |
+| komisio_list_bags                 | inspection:read    | Find a printed bag number or page through bag IDs; no seller data or notes                     |
+| komisio_read_inspection           | inspection:read    | Read bounded saved bag drafts and exact history; no notes, contacts or writes                  |
+| komisio_read_reception_operation  | reception:read     | Read exact staged proposal sources and agreement terms; no decision                            |
+| komisio_list_receptions           | reception:read     | Read a bounded queue with shared next-step guidance, not commercial acceptance                 |
+| komisio_read_reception_history    | reception:read     | Read bounded version summaries, with separate source/review cursors; no images or links        |
+| komisio_read_reception            | reception:read     | Read one saved session and its source snapshot                                                 |
+| komisio_preview_reception         | reception:preview  | Validate a source-bound proposal against the current revision; return an unsaved preview       |
+| komisio_read_reception_photo      | reception:photos   | Read one attached photo at the exact current revision as native MCP image content              |
+| komisio_propose_reception_review  | reception:propose  | Stage a complete review for staff approval; publishes nothing (see docs/STAGED-OPERATIONS.md)  |
 
 Every data call verifies the configured user token with Supabase Auth and checks
 current store membership and required MFA in the database. The store is pinned in
@@ -35,7 +37,7 @@ environment variables to the child process:
   a service-role key, password or refresh token
 - `KOMISIO_MCP_TENANT_ID`: exactly one store UUID
 - `KOMISIO_MCP_SCOPES`: an explicit comma-separated subset of `reception:read`,
-  `reception:preview`, `reception:photos`, `reception:propose`, `inspection:read`, `inspection:preview`.
+  `reception:preview`, `reception:photos`, `reception:propose`, `inspection:read`, `inspection:preview`, `inspection:propose`.
   Bag inspection, photo access and staging are separately opt-in.
 
 Have the host launch `node --import tsx mcp/stdio.ts` with the repository as its
@@ -96,6 +98,15 @@ stages a complete, source-cited review as a pending operation. The response says
 cannot approve, cannot raise the risk level and cannot skip the preflight checks.
 See [staged operations](../docs/STAGED-OPERATIONS.md) for the contract.
 
+With `inspection:propose`, `komisio_propose_inspection_edit` stages description,
+category and condition for an existing active saved draft. Pass an explicit stable
+request ID, expiry and expected revision; identical retries return the original
+proposal. Staff compare the immutable before/after at the same operation queue,
+confirm changed fields and approve saving, or reject without confirmation.
+A stale or archived draft is never overwritten. There is no price, custody or
+seller acceptance in this operation, and no MCP approval tool.
+See [staged inspection contract](../docs/STAGED-INSPECTION.md).
+
 Future hosted MCP needs audience-bound OAuth, discovery and scoped delegation;
 ordinary Supabase user tokens must not become pass-through HTTP MCP credentials.
 
@@ -104,7 +115,7 @@ ordinary Supabase user tokens must not become pass-through HTTP MCP credentials.
 The tool contract is deliberately strict: closed input schemas, an explicit scope
 map, stable tool definitions and a clear envelope that states what was and was
 not persisted. Komisio's local preview is a first slice; hosted MCP, OAuth and
-pending operations follow separately.
+hosted delegation follows separately. Pending operations already exist.
 
 `npm run test:mcp` creates synthetic data in local Supabase and connects through
 real stdio with the official client. It tests protocol negotiation, strict catalog,

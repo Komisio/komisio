@@ -482,6 +482,14 @@ try {
       })
     ).isError,
   )
+  assert(
+    (
+      await inspection.client.callTool({
+        name: 'komisio_read_inspection_operation',
+        arguments: { operationId: proposalId },
+      })
+    ).isError,
+  )
   const replayed = await proposer.callTool({
     name: 'komisio_propose_reception_review',
     arguments: proposal,
@@ -554,6 +562,14 @@ try {
   await db.query(
     "insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values($1,$2,'totp','verified',now(),now())",
     [randomUUID(), uid],
+  )
+  assert(
+    (
+      await inspection.stager.callTool({
+        name: 'komisio_propose_inspection_edit',
+        arguments: inspection.stagedInput,
+      })
+    ).isError,
   )
   assert(
     (

@@ -415,7 +415,23 @@
     "photos": "Reception photos",
     "photoHelp": "JPEG or PNG, up to 3 MB and 20 megapixels. Originals are private to staff. New uploads get a reduced copy without camera metadata for the next published review. Check visible people and labels too. Older photos may lack a copy; published reviews never change.",
     "photoSave": "Save photo to reception",
-    "sharedPhotos": "Photos included in the published version"
+    "sharedPhotos": "Photos included in the published version",
+    "queueTitle": "Reception queue",
+    "queueHelp": "Status refers to the latest review. Seller approval does not make the garment available for sale.",
+    "queueFilter": "Filter by stage",
+    "queueAll": "All stages",
+    "queueEmpty": "No receptions at this stage.",
+    "queueNext": "Show older receptions",
+    "queueStages": {
+      "preparing": "Preparing",
+      "needs_review": "New review needed",
+      "approved": "Seller approved",
+      "declined": "Seller declined",
+      "expired": "Response deadline passed",
+      "ready_to_share": "Ready to share",
+      "link_revoked": "Link revoked",
+      "awaiting_seller": "Awaiting seller response"
+    }
   },
   "reviewPhotoAlt": "Photo included in this review",
   "reviewPhotos": "Photos in this review",

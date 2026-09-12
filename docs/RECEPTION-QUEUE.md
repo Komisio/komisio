@@ -1,6 +1,8 @@
 # Reception queue contract
 
-Status: specified, not implemented. Day-plan P2. No new persistence is required.
+Status: implemented locally; remote CI and deployment pending. Day-plan P2.
+No new persistence is required. `reception_queue` reads under existing RLS;
+`lib/engine/reception-queue.ts` validates the paged result for the thin list UI.
 The queue is a staff read model over reception sessions, source revisions,
 reviews, responses and access events. It does not execute a store decision.
 
@@ -55,6 +57,12 @@ Prefer a narrowly granted SECURITY INVOKER function with lateral latest-row
 queries and existing RLS, plus explicit identity/tenant checks consistent with
 other read RPCs. Inspect existing indexes and query plan before adding any index.
 No new core table, persisted status, financial column or materialized mirror.
+
+The implementation uses existing session/source/review/version indexes. No
+additional index is introduced for the small staging pilot; filtered queues can
+scan many sessions and require query-plan/load evaluation before a large rollout.
+Apply additive migration `20260912073000_reception_queue.sql` before the app.
+An older app can ignore the new RPC; keep the additive migration on rollback.
 
 ## Adapter and verification sequence
 

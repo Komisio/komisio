@@ -1778,6 +1778,13 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   ).toHaveCount(0)
   const saved = await page.request.get(`/api/reception/${sessionId}`)
   expect((await saved.json()).latestReview.response.decision).toBe('approve')
+  await page.goto('/intake/reception?stage=approved')
+  await expect(
+    page.getByRole('heading', { name: 'Mottagningskö' }),
+  ).toBeVisible()
+  await expect(
+    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+  ).toContainText('Godkänt av säljaren')
   expect((await access(reviewId, accessId, false)).status()).toBe(200)
   expect((await mobile.request.get(photoUrl)).status()).toBe(404)
   await mobile.reload()

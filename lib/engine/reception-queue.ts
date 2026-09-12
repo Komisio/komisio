@@ -1,0 +1,60 @@
+import { z } from 'zod'
+import type { SupabaseClient } from '@supabase/supabase-js'
+
+export const receptionStage = z.enum([
+  'preparing',
+  'needs_review',
+  'approved',
+  'declined',
+  'expired',
+  'ready_to_share',
+  'link_revoked',
+  'awaiting_seller',
+])
+export const receptionQueueInput = z
+  .object({
+    tenantId: z.uuid(),
+    stage: receptionStage.optional(),
+    before: z.iso.datetime({ offset: true }).optional(),
+    beforeId: z.uuid().optional(),
+  })
+  .refine(
+    (v) => Boolean(v.before) === Boolean(v.beforeId),
+    'Both cursor fields are required',
+  )
+const row = z.object({
+  session_id: z.uuid(),
+  seller_name: z.string(),
+  created_at: z.iso.datetime({ offset: true }),
+  source_revision: z.number().int().nonnegative(),
+  review_id: z.uuid().nullable(),
+  review_version: z.number().int().positive().nullable(),
+  decision: z.enum(['approve', 'decline']).nullable(),
+  responded_at: z.iso.datetime({ offset: true }).nullable(),
+  stage: receptionStage,
+  link_state: z.enum(['none', 'active', 'revoked', 'expired', 'stale']),
+})
+/** Staff-only read; database derives current-version state and enforces RLS/MFA. */
+export async function readReceptionQueue(
+  client: SupabaseClient,
+  input: z.input<typeof receptionQueueInput>,
+) {
+  const p = receptionQueueInput.parse(input)
+  const { data, error } = await client.rpc('reception_queue', {
+    p_tenant: p.tenantId,
+    p_stage: p.stage ?? null,
+    p_before: p.before ?? null,
+    p_before_id: p.beforeId ?? null,
+  })
+  if (error) throw new Error('Unable to read reception queue')
+  const rows = z.array(row).max(21).parse(data),
+    items = rows.slice(0, 20)
+  const last = items.at(-1)
+  return {
+    items,
+    next:
+      rows.length > 20 && last
+        ? { before: last.created_at, beforeId: last.session_id }
+        : null,
+  }
+}

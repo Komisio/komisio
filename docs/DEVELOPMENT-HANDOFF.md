@@ -6,10 +6,11 @@ Read CLAUDE.md first. All statuses below are evidence, not inferred completion.
 ## Current slice
 
 P2 — specify and implement the shared reception work queue.
-Branch: docs/reception-queue-contract. Contract in RECEPTION-QUEUE.md is specified,
-not implemented. No runtime code or migrations changed in this slice yet.
-Next: record decision, write SQL tests, implement one bounded RLS-backed read,
-then shared engine and thin UI. Avoid duplicating the state rules in adapters.
+Branch: docs/reception-queue-contract. Implemented SQL read, typed shared engine,
+translated stage filters and cursor paging. Migration20260912073000 applied
+LOCALLY ONLY; do not edit it. Lint/typecheck/build and94 unit tests passed.
+Queue SQL tests and seller browser journey are being finalized before PR.
+No remote migration or deployment yet. Next: PR, exact-head CI, migration then merge.
 
 P1 PR35 merged as d5f7348cc85a7fb1f178ee068b043e6e8e3dbac1 after exact-head
 CI34678106622 passed. Local lint/typecheck/build,94 unit tests and the existing
@@ -28,10 +29,10 @@ modified by the fix.315 SQL assertions and real HTTP/race checks passed locally.
 
 ## Next three actions
 
-1. Read RECEPTION-QUEUE.md and existing RLS/read RPC conventions; record decision.
-2. Add SQL regression coverage before the additive read-function migration.
-3. Replace the direct20-row query in app/(dashboard)/intake/reception/page.tsx
-   with the shared paged engine query, translated statuses and filtering.
+1. Finish P2 test evidence and open its PR; use the private log for newest results.
+2. Verify exact-head CI; dry-run expected staging migration, apply then merge and
+   verify deployment. Authenticated hosted queue walkthrough remains a pilot check.
+3. Continue P3 store follow-up specification; no guessed commercial/financial rules.
 
 ## Known limitations / do not accidentally enable
 

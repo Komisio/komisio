@@ -4,6 +4,11 @@ import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { StartReception } from '@/components/reception/operator'
+import {
+  readReceptionQueue,
+  receptionStage,
+  receptionQueueInput,
+} from '@/lib/engine/reception-queue'
 export default async function Receptions({
   searchParams,
 }: {
@@ -15,6 +20,13 @@ export default async function Receptions({
     d = dictionary(ctx.locale).reception,
     p = await searchParams
   const q = typeof p.q === 'string' ? p.q.trim().slice(0, 120) : ''
+  const parsed = receptionQueueInput.safeParse({
+    tenantId: tenant.id,
+    stage: p.stage || undefined,
+    before: p.before || undefined,
+    beforeId: p.beforeId || undefined,
+  })
+  const queueInput = parsed.success ? parsed.data : { tenantId: tenant.id }
   const [sellers, recent] = await Promise.all([
     ctx.client
       .from('sellers')
@@ -24,16 +36,9 @@ export default async function Receptions({
       .order('name')
       .order('id')
       .limit(50),
-    ctx.client
-      .from('reception_sessions')
-      .select('id,created_at,sellers(name)')
-      .eq('tenant_id', tenant.id)
-      .order('created_at', { ascending: false })
-      .order('id')
-      .limit(20),
+    readReceptionQueue(ctx.client, queueInput),
   ])
-  if (sellers.error || recent.error)
-    throw new Error('Unable to read reception workspace')
+  if (sellers.error) throw new Error('Unable to read reception workspace')
   const exact =
     typeof p.session === 'string' ? z.uuid().safeParse(p.session) : null
   return (
@@ -77,8 +82,26 @@ export default async function Receptions({
           </Link>
         </section>
         <section className="card intake-form">
-          <h2>{d.recent}</h2>
-          <p>{d.recentHelp}</p>
+          <h2>{d.queueTitle}</h2>
+          <p>{d.queueHelp}</p>
+          {!parsed.success && <p role="alert">{d.invalid}</p>}
+          <form action="/intake/reception">
+            <input type="hidden" name="q" value={q} />
+            <label htmlFor="queue-stage">{d.queueFilter}</label>
+            <select
+              id="queue-stage"
+              name="stage"
+              defaultValue={queueInput.stage ?? ''}
+            >
+              <option value="">{d.queueAll}</option>
+              {receptionStage.options.map((s) => (
+                <option key={s} value={s}>
+                  {d.queueStages[s]}
+                </option>
+              ))}
+            </select>
+            <button className="btn btn-secondary">{d.searchButton}</button>
+          </form>
           <form action="/intake/reception">
             <div className="field">
               <label htmlFor="reception-id">{d.sessionId}</label>
@@ -101,15 +124,15 @@ export default async function Receptions({
             <p role="alert">{d.invalid}</p>
           ) : null}
           <ul className="intake-list">
-            {recent.data.map((r) => {
-              const seller = Array.isArray(r.sellers) ? r.sellers[0] : r.sellers
+            {recent.items.map((r) => {
               return (
-                <li key={r.id}>
+                <li key={r.session_id}>
                   <Link
                     className="intake-seller"
-                    href={`/intake/reception/${r.id}`}
+                    href={`/intake/reception/${r.session_id}`}
                   >
-                    <strong>{seller?.name ?? d.seller}</strong>
+                    <strong>{r.seller_name}</strong>
+                    <span>{d.queueStages[r.stage]}</span>
                     <small>
                       {new Date(r.created_at).toLocaleString(
                         ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',
@@ -122,6 +145,15 @@ export default async function Receptions({
               )
             })}
           </ul>
+          {recent.items.length === 0 && <p>{d.queueEmpty}</p>}
+          {recent.next && (
+            <Link
+              className="text-link"
+              href={`/intake/reception?${new URLSearchParams({ q, stage: queueInput.stage ?? '', ...recent.next })}`}
+            >
+              {d.queueNext}
+            </Link>
+          )}
         </section>
       </div>
     </>

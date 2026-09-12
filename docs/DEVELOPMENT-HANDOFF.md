@@ -5,10 +5,11 @@ Read CLAUDE.md first. All statuses below are evidence, not inferred completion.
 
 ## Current slice
 
-P0 — publish today's roadmap and correct stale status pointers.
-Branch: docs/day-roadmap-2026-09-12. Base main:0ac4b0404295907b028db337004f5d5052d039fb.
-Documentation only; no application or database changes in this slice.
-PR34 is open. Next: verify its exact-head CI, merge; then start P1.
+P1 — separate staff response reporting from seller confirmation.
+Branch: fix/staff-seller-response-copy. PR34 merged as a0d2c74 after exact-head
+CI34677629830 passed. Changed reception detail page and Swedish/English messages;
+no database changes. Lint, typecheck,94 unit tests and production build pass.
+Existing seller browser journey is running; next commit/open PR and verify CI.
 
 ## Last verified delivery
 
@@ -22,11 +23,11 @@ modified by the fix.315 SQL assertions and real HTTP/race checks passed locally.
 
 ## Next three actions
 
-1. Complete P0 PR34 and checkpoint its evidence here or in the local handover.
-2. Find shared response copy in messages/ and components/reception/; separate
-   staff reporting from seller confirmation without changing stored decisions.
-3. Inspect current reception list queries and specify derived queue states before
-   adding P2. Respect current source/review version, tenant and pagination.
+1. Complete P1 browser check, signed-off commit and PR; verify exact-head CI.
+2. Merge and verify staging; record the result before beginning P2.
+3. P2 currently starts from a direct20-row session query in
+   app/(dashboard)/intake/reception/page.tsx. Move queue reads into the shared
+   engine with derived current-version states and bounded pagination.
 
 ## Known limitations / do not accidentally enable
 

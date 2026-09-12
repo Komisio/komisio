@@ -322,6 +322,8 @@
   "reviewResponseError": "Svaret kunde inte bekräftas. Kontrollera statusen och försök igen om inget svar är sparat. Butiken kan ha ändrat underlaget.",
   "reviewLogin": "Logga in eller skapa ett konto med den e-postadress som butiken registrerat för dig.",
   "reviewApproved": "Ditt godkännande är sparat för denna version. Butiken hanterar nästa steg.",
+  "staffReviewApproved": "Säljaren har godkänt detta underlag. Godkännandet gäller denna version och gör inte plagget tillgängligt för försäljning.",
+  "staffReviewDeclined": "Säljaren har avvisat detta underlag. Svaret gäller denna version. Ett ändrat förslag behöver publiceras som ett nytt underlag.",
   "reviewVersion": "Underlag version",
   "reviewTitle": "Ditt plagg, ditt beslut",
   "reviewBrand": "Varumärke",

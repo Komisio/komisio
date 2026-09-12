@@ -1,3 +1,4 @@
+import { testOperationDiscovery } from './test-operation-discovery.mjs'
 import { testInspectionMCP } from './test-inspection-mcp.mjs'
 import { Client as MCPClient } from '@modelcontextprotocol/client'
 import { StdioClientTransport } from '@modelcontextprotocol/client/stdio'
@@ -122,6 +123,7 @@ try {
   })
   const catalog = await both.listTools()
   assert.deepEqual(catalog.tools.map((t) => t.name).sort(), [
+    'komisio_list_reception_operations',
     'komisio_list_receptions',
     'komisio_preview_reception',
     'komisio_read_reception',
@@ -306,6 +308,7 @@ try {
   assert.deepEqual(
     (await readonly.listTools()).tools.map((t) => t.name),
     [
+      'komisio_list_reception_operations',
       'komisio_read_reception_history',
       'komisio_list_receptions',
       'komisio_read_reception',
@@ -559,10 +562,20 @@ try {
     staleDetail.structuredContent.context.terms.body,
     'Fictional terms',
   )
+  const discovery = await testOperationDiscovery({
+    connect,
+    rpc,
+    db,
+    uid,
+    token,
+  })
   await db.query(
     "insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values($1,$2,'totp','verified',now(),now())",
     [randomUUID(), uid],
   )
+  for (const { client, name } of discovery)
+    assert((await client.callTool({ name, arguments: {} })).isError)
+
   assert(
     (
       await inspection.previewer.callTool({

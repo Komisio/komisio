@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { operationRow, operationStatus } from './operations'
+import { operationRow, operationStatus, operationKind } from './operations'
 
 export const operationFilter = z.enum(['all', ...operationStatus.options])
 export const operationPageInput = z
@@ -16,14 +16,21 @@ export async function readOperationPage(
   client: SupabaseClient,
   tenantInput: string,
   input: unknown = {},
+  kind?: z.infer<typeof operationKind>,
 ) {
   const c = operationPageInput.parse(input)
-  const { data, error } = await client.rpc('operation_queue_page', {
-    p_tenant: z.uuid().parse(tenantInput),
-    p_status: c.status,
-    p_before_created: c.beforeCreated ?? null,
-    p_before_id: c.beforeId ?? null,
-  })
+  const selectedKind =
+    kind === undefined ? undefined : operationKind.parse(kind)
+  const { data, error } = await client.rpc(
+    selectedKind ? 'operation_queue_filtered_page' : 'operation_queue_page',
+    {
+      p_tenant: z.uuid().parse(tenantInput),
+      p_status: c.status,
+      p_before_created: c.beforeCreated ?? null,
+      p_before_id: c.beforeId ?? null,
+      ...(selectedKind ? { p_kind: selectedKind } : {}),
+    },
+  )
   if (error) throw new Error('Unable to read operation queue')
   const rows = z.array(operationRow).max(21).parse(data),
     items = rows.slice(0, 20)

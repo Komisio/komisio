@@ -94,13 +94,21 @@ proposals through20-row keyset pages; the legacy RPC stays compatible. SQL475,
 unit110 and three relevant browsers plus lint/types/build/format passed; full CI
 and hosted public guards passed. Authenticated hosted paging remains unverified.
 
-Current slice: `refactor/reception-evidence-port` narrows the shared assistance
-input to source evidence and marks every adapter's descriptive output tentative.
-No new provider, prompt, financial rule, authorization or migration. New tests
-failed before the fix and113 units pass, with types/build/lint/scoped formatting
-and the isolated real HTTP publication/retry browser fixture. Remaining: PR/exact
-CI, merge and deployment. No live model was used.
-See RECEPTION-EVIDENCE-PORT.md and private checkpoint for latest evidence.
+PR54 is delivered: merge1e7c79b6c6cd4f238b0f1db1b5aa375f23e6a4cd,
+exact-head CI34701320678 passed on0abcb8265c8de637788bb99b4b852a6522b0ff2c.
+Deployment6411131929 succeeded and hosted public guards passed. The shared
+assistance port minimizes evidence before adapters and marks all descriptive
+output tentative.113 units, isolated HTTP publication/retry browser fixture and
+lint/types/build/format passed. No migration, prompt or model activation.
+
+Current slice: `feat/mcp-operation-discovery` adds local scoped list tools for
+reception and inspection operation summaries, using the shared paged engine.
+Migration20260912173000 is applied locally and immutable; staging is pending.
+Kind filtering happens before limiting; the existing staff RPC delegates to the
+same read. SQL490, unit113, real stdio MCP with115 mixed-kind proposals and the
+staff paging browser pass, with lint/types/build/scoped formatting. PR/CI/release
+remain pending; see the private checkpoint for latest evidence. No new scope, table or write; no live model. Hosted
+in-session queue walkthrough remains unverified. See MCP-OPERATION-DISCOVERY.md.
 
 The prior PR40 work below is completed: merged6329b6ec95df1af3db8534921966f274f82f9e95,
 exact-head CI34687228721 passed, staging deployment6408441889 succeeded.

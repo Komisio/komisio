@@ -34,6 +34,23 @@ export const intakeCommand = z.discriminatedUnion('action', [
     expectedAgreementId: z.uuid().nullable().default(null),
   }),
   z.object({
+    action: z.literal('receiveGarment'),
+    tenantId: z.uuid(),
+    requestId: z.uuid(),
+    sessionId: z.uuid(),
+    note: z.string().trim().max(500),
+  }),
+  z.object({
+    action: z.literal('registerPurchase'),
+    tenantId: z.uuid(),
+    requestId: z.uuid(),
+    supplierNote: z.string().trim().max(500),
+    // Exact decimal text at the boundary; öre in the database, never float.
+    purchasePrice: z.string().regex(/^(?:0|[1-9]\d{0,8})\.\d{2}$/),
+    evidenceReference: z.string().trim().min(1).max(500),
+    marginEligible: z.boolean(),
+  }),
+  z.object({
     action: z.literal('publishAgreement'),
     tenantId: z.uuid(),
     requestId: z.uuid(),
@@ -74,6 +91,22 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_agreement: c.agreementId,
         p_suggestions: c.suggestions,
         p_expires: c.expiresAt,
+      })
+    case 'registerPurchase':
+      return client.rpc('register_purchase', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_note: c.supplierNote,
+        p_price_ore: oreFromDecimal(c.purchasePrice),
+        p_evidence: c.evidenceReference,
+        p_margin_eligible: c.marginEligible,
+      })
+    case 'receiveGarment':
+      return client.rpc('receive_garment', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_session: c.sessionId,
+        p_note: c.note,
       })
     case 'createReception':
       return client.rpc('create_reception_session', {
@@ -169,4 +202,11 @@ export type AgreementEvidence = {
   agreement_id: string
   reference: string
   recorded_at: string
+}
+
+/** "250.50" -> 25050 without floating-point arithmetic. */
+export function oreFromDecimal(input: string) {
+  const m = /^(\d+)\.(\d{2})$/.exec(input)
+  if (!m) throw new Error('INVALID_INPUT')
+  return Number(m[1]) * 100 + Number(m[2])
 }

@@ -1,0 +1,41 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('a1000000-0000-4000-8000-000000000001','staff@purchase.test',now()),
+ ('a1000000-0000-4000-8000-000000000002','reader@purchase.test',now()),
+ ('a1000000-0000-4000-8000-000000000003','outsider@purchase.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"a1000000-0000-4000-8000-000000000001","role":"authenticated"}';
+select set_config('test.a',create_tenant('Purchase A','purchase-a',gen_random_uuid())::text,true);
+select set_config('test.receipt',gen_random_uuid()::text,true);
+select lives_ok($$select register_purchase(current_setting('test.a')::uuid,current_setting('test.receipt')::uuid,'Loppis, Bromma','15000','Kvitto 2026-09-13-1',true)$$,'staff registers a purchase');
+select is((select purchase_price_ore from purchase_receipts),15000::bigint,'price stored in öre');
+select is((select margin_eligible from purchase_receipts),true,'margin eligibility attested at purchase');
+select is((select provider from purchase_receipts),'manual','manual provider');
+select ok((select reference from purchase_receipts)>=1,'printable reference');
+select lives_ok($$select register_purchase(current_setting('test.a')::uuid,current_setting('test.receipt')::uuid,'Loppis, Bromma','15000','Kvitto 2026-09-13-1',true)$$,'identical retry succeeds');
+select is((select count(*) from purchase_receipts),1::bigint,'retry persists once');
+select throws_like($$select register_purchase(current_setting('test.a')::uuid,current_setting('test.receipt')::uuid,'Loppis, Bromma','15100','Kvitto 2026-09-13-1',true)$$,'%REQUEST_CONFLICT%','retry binds exact price');
+select throws_like($$select register_purchase(current_setting('test.a')::uuid,current_setting('test.receipt')::uuid,'Loppis, Bromma','15000','Kvitto 2026-09-13-1',false)$$,'%REQUEST_CONFLICT%','retry binds eligibility');
+select throws_like($$select register_purchase(current_setting('test.a')::uuid,gen_random_uuid(),'','-1','Kvitto',true)$$,'%INVALID_INPUT%','negative price rejected');
+select throws_like($$select register_purchase(current_setting('test.a')::uuid,gen_random_uuid(),'','100','',true)$$,'%INVALID_INPUT%','evidence reference required');
+select throws_like($$select register_purchase(current_setting('test.a')::uuid,gen_random_uuid(),'','100','Kvitto',null)$$,'%INVALID_INPUT%','eligibility must be stated');
+select lives_ok($$select register_purchase(current_setting('test.a')::uuid,gen_random_uuid(),'','0','Gåva utan kvitto, noterad',false)$$,'zero-price purchase allowed with evidence');
+select is((select count(*) from access_events where action='purchase.registered'),2::bigint,'purchases audited');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.a')::uuid,'a1000000-0000-4000-8000-000000000002','readonly');
+select throws_like($$update purchase_receipts set purchase_price_ore=1$$,'%IMMUTABLE_RECEPTION%','purchase immutable');
+select throws_like($$delete from purchase_receipts$$,'%IMMUTABLE_RECEPTION%','purchase cannot be deleted');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"a1000000-0000-4000-8000-000000000002","role":"authenticated"}';
+select is((select count(*) from purchase_receipts),2::bigint,'readonly reads purchases');
+select throws_ok($$select register_purchase(current_setting('test.a')::uuid,gen_random_uuid(),'','100','Kvitto',true)$$,'42501',null,'readonly cannot register');
+select throws_ok($$insert into purchase_receipts(id,tenant_id,purchase_price_ore,evidence_reference,margin_eligible,created_by) values(gen_random_uuid(),current_setting('test.a')::uuid,1,'x',true,'a1000000-0000-4000-8000-000000000002')$$,'42501',null,'no direct insert');
+set local "request.jwt.claims"='{"sub":"a1000000-0000-4000-8000-000000000003","role":"authenticated"}';
+select is((select count(*) from purchase_receipts),0::bigint,'outsider sees nothing');
+select throws_ok($$select register_purchase(current_setting('test.a')::uuid,gen_random_uuid(),'','100','Kvitto',true)$$,'42501',null,'outsider cannot register');
+set local role anon;
+select throws_ok($$select * from purchase_receipts$$,'42501',null,'anonymous cannot read');
+select * from finish();
+rollback;

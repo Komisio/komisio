@@ -438,6 +438,15 @@
     "queueAll": "Alla lägen",
     "queueEmpty": "Inga mottagningar i detta läge.",
     "queueNext": "Visa äldre mottagningar",
+    "custody": "Fysiskt mottagande",
+    "custodyHelp": "Registrera att plagget finns fysiskt i butiken. En session, bilder eller ett säljargodkännande bevisar aldrig mottagande. Krävs innan varan kan accepteras.",
+    "custodyNote": "Anteckning (valfri, till exempel var plagget hänger)",
+    "custodyConfirm": "Jag bekräftar att butiken har tagit emot detta plagg.",
+    "custodyRecord": "Registrera mottagande",
+    "custodyRecorded": "Mottagande registrerat",
+    "custodyMissing": "Inget mottagande registrerat",
+    "custodyReference": "Plagg",
+    "custodyPrint": "Skriv ut plaggetikett",
     "queueStages": {
       "preparing": "Under förberedelse",
       "needs_review": "Behöver nytt underlag",
@@ -456,7 +465,8 @@
       "publish_fresh_review": "Nästa steg: granska uppgifterna och publicera ett nytt underlag om erbjudandet fortfarande gäller.",
       "issue_review_link": "Nästa steg: öppna mottagningen och skapa säljarens personliga länk. Inget mejl skickas automatiskt.",
       "replace_review_link": "Nästa steg: öppna mottagningen och skapa en ersättningslänk om underlaget ska delas igen.",
-      "await_seller_response": "Nästa steg: invänta säljarens svar. En skapad länk innebär inte att säljaren har läst underlaget."
+      "await_seller_response": "Nästa steg: invänta säljarens svar. En skapad länk innebär inte att säljaren har läst underlaget.",
+      "record_custody": "Nästa steg: registrera fysiskt mottagande av plagget. Säljaren har godkänt, men inget bevisar ännu att plagget finns i butiken."
     },
     "history": {
       "title": "Versionshistorik",
@@ -600,5 +610,29 @@
     "confirm": "Jag har granskat villkoren och vill publicera en ny version.",
     "noTerms": "Inget avtal knutet till detta underlag; butikspolicyn tillåter det.",
     "legacy": "Ett befintligt avtals krav vid påsmottagning gäller fortfarande."
+  },
+  "purchases": {
+    "title": "Inköp",
+    "intro": "Butiksägda varor kommer in här, aldrig via inlämningsflödena.",
+    "notice": "Ett inköp är ett faktum om vad butiken köpt och för hur mycket. Det är ännu ingen vara till salu; acceptans följer.",
+    "registerHeading": "Registrera ett inköp",
+    "registerHint": "En registrering per köpt vara. Spara kvittot eller anteckningen; dess referens krävs.",
+    "price": "Inköpspris",
+    "priceHint": "SEK, till exempel 150 eller 150,50.",
+    "priceInvalid": "Ange ett pris med högst två decimaler.",
+    "evidence": "Underlagsreferens",
+    "evidenceHint": "Kvittonummer, eller en anteckning om vem som sålde och när. Undvik personnummer.",
+    "note": "Leverantörsanteckning (valfri)",
+    "marginEligible": "Berättigar till vinstmarginalbeskattning: köpt från privatperson utan moms, med dokumentation per vara",
+    "marginHint": "Detta intygar du nu, vid inköpet. Butikens momsläge avgör hur det används vid försäljning.",
+    "confirm": "Jag bekräftar att butiken köpt denna vara och att underlagsreferensen stämmer.",
+    "register": "Registrera inköp",
+    "registered": "Inköpet är registrerat.",
+    "recent": "Senaste inköp",
+    "recentHint": "De 20 senaste inköpen. Äldre nås från sina varor när de accepterats.",
+    "reference": "Inköp",
+    "marginYes": "vinstmarginal",
+    "marginNo": "full moms",
+    "empty": "Inga inköp registrerade ännu."
   }
 }

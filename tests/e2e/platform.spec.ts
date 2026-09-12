@@ -1797,6 +1797,26 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   await expect(
     page.locator(`a[href="/intake/reception/${sessionId}"]`),
   ).toContainText('Godkänt av säljaren')
+  // Seller approval never proves the garment is in the store: custody comes first.
+  await expect(
+    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+  ).toContainText('registrera fysiskt mottagande av plagget')
+  await page.goto(`/intake/reception/${sessionId}`)
+  await expect(page.getByText('Inget mottagande registrerat')).toBeVisible()
+  await page
+    .getByLabel('Anteckning (valfri, till exempel var plagget hänger)')
+    .fill('Hänger på stång 3')
+  const custodyForm = page.locator('form', {
+    has: page.getByRole('button', { name: 'Registrera mottagande' }),
+  })
+  await custodyForm.getByRole('checkbox').check()
+  await page.getByRole('button', { name: 'Registrera mottagande' }).click()
+  await expect(page.getByText(/Plagg G-\d+/)).toBeVisible()
+  await expect(page.getByText('Hänger på stång 3')).toBeVisible()
+  await expect(
+    page.getByLabel('Anteckning (valfri, till exempel var plagget hänger)'),
+  ).toHaveCount(0)
+  await page.goto('/intake/reception?stage=approved')
   await expect(
     page.locator(`a[href="/intake/reception/${sessionId}"]`),
   ).toContainText('Kontrollera mottaget plagg och säljarvillkor')
@@ -1963,7 +1983,7 @@ test('operator reception guides saved evidence, exact review and link replacemen
   await expect(
     page.getByRole('button', { name: 'Publicera granskat underlag' }),
   ).toBeDisabled()
-  await page.getByRole('checkbox').check()
+  await page.locator('input[name="review-final"]').check()
   await page
     .getByRole('button', { name: 'Publicera granskat underlag' })
     .click()

@@ -1,0 +1,42 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000000001','staff@custody.test',now()),
+ ('f0000000-0000-4000-8000-000000000002','reader@custody.test',now()),
+ ('f0000000-0000-4000-8000-000000000003','outsider@custody.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000001","role":"authenticated"}';
+select set_config('test.a',create_tenant('Custody A','custody-a',gen_random_uuid())::text,true);
+select set_config('test.b',create_tenant('Custody B','custody-b',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.a')::uuid,gen_random_uuid(),'Seller','seller@custody.test','')::text,true);
+select set_config('test.session',create_reception_session(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid)::text,true);
+select set_config('test.receipt',gen_random_uuid()::text,true);
+select lives_ok($$select receive_garment(current_setting('test.a')::uuid,current_setting('test.receipt')::uuid,current_setting('test.session')::uuid,'Blue jacket, wall')$$,'staff records custody of a garment');
+select is((select count(*) from garment_receipts),1::bigint,'one receipt');
+select ok((select reference from garment_receipts)>=1,'receipt has a printable reference');
+select is((select custody_source from garment_receipts),'staff_receipt','custody source is staff receipt');
+select lives_ok($$select receive_garment(current_setting('test.a')::uuid,current_setting('test.receipt')::uuid,current_setting('test.session')::uuid,'Blue jacket, wall')$$,'identical retry succeeds');
+select is((select count(*) from garment_receipts),1::bigint,'retry persists once');
+select throws_like($$select receive_garment(current_setting('test.a')::uuid,current_setting('test.receipt')::uuid,current_setting('test.session')::uuid,'Different note')$$,'%REQUEST_CONFLICT%','retry binds exact payload');
+select throws_like($$select receive_garment(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,'')$$,'%GARMENT_ALREADY_RECEIVED%','one custody event per session');
+select throws_like($$select receive_garment(current_setting('test.a')::uuid,gen_random_uuid(),gen_random_uuid(),'')$$,'%RECEPTION_NOT_FOUND%','unknown session');
+select throws_like($$select receive_garment(current_setting('test.b')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,'')$$,'%RECEPTION_NOT_FOUND%','session cannot cross stores');
+select throws_like($$select receive_garment(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,repeat('x',501))$$,'%INVALID_INPUT%','note bounded');
+select is((select count(*) from access_events where action='garment.received'),1::bigint,'custody audited once');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.a')::uuid,'f0000000-0000-4000-8000-000000000002','readonly');
+select throws_like($$update garment_receipts set note='edited'$$,'%IMMUTABLE_RECEPTION%','receipt immutable');
+select throws_like($$delete from garment_receipts$$,'%IMMUTABLE_RECEPTION%','receipt cannot be deleted');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000002","role":"authenticated"}';
+select is((select count(*) from garment_receipts),1::bigint,'readonly reads custody');
+select throws_ok($$select receive_garment(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,'')$$,'42501',null,'readonly cannot record custody');
+select throws_ok($$insert into garment_receipts(id,tenant_id,session_id,created_by) values(gen_random_uuid(),current_setting('test.a')::uuid,current_setting('test.session')::uuid,'f0000000-0000-4000-8000-000000000002')$$,'42501',null,'no direct insert');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000003","role":"authenticated"}';
+select is((select count(*) from garment_receipts),0::bigint,'outsider sees nothing');
+select throws_ok($$select receive_garment(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,'')$$,'42501',null,'outsider cannot record custody');
+set local role anon;
+select throws_ok($$select * from garment_receipts$$,'42501',null,'anonymous cannot read');
+select * from finish();
+rollback;

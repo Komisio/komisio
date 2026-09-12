@@ -705,7 +705,8 @@
     },
     "eventKinds": {
       "accepted": "Accepterad",
-      "price_set": "Pris satt"
+      "price_set": "Pris satt",
+      "provenance": "Ursprung dokumenterat"
     }
   },
   "purchases": {

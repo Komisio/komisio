@@ -104,7 +104,7 @@ defaults, not legal requirements; nothing here decides VAT treatment.
 
 Amounts are SEK with two decimals in policy and öre in the database.
 
-## VAT cases (P2 S10 draft, every case [to verify])
+## VAT modes (tenant setting; legal sources [to verify] by the store's accountant)
 
 The engine-facing table is `docs/VAT-CASES.md`. This section is the reasoning
 and the sources to check. Nothing here is verified; do not compute VAT from it.
@@ -150,8 +150,9 @@ reduced rate applies to second-hand clothing or household goods **[to
 verify]**. Per-line rounding to öre, half up, totals as sums of lines
 **[design decision, not law]**.
 
-**What must happen before any case is marked verified.** The owner or the
-store's accountant confirms the source for each case, one worked example in
-öre per case is agreed and written into `docs/VAT-CASES.md`, and the case
-status there changes to `verified: <source>`. Until then the engine records
-the case and basis and leaves the VAT amount empty.
+**Who decides.** Owner decision 2026-09-13: the VAT treatment is a tenant
+setting. Each store selects its modes in the store policy, with its
+accountant, and Komisio computes the selected mode exactly as documented in
+`docs/VAT-CASES.md`. The `[to verify]` marks above are for the store's
+accountant, not a gate in the engine; Komisio never claims that a mode is
+the legally correct one for a given store, and the settings page says so.

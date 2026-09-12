@@ -43,10 +43,11 @@ proposal's owner clarification for scope and outstanding details.
 
 5. ~~Does the store only sell on commission, or does it also buy used goods
    and resell them?~~ **Answered 2026-09-12 (DECISIONS.md):** both; VAT
-   treatment is frozen per sale line together with its basis. **Still open:**
-   the exact VAT cases (commission sale, margin scheme eligibility and who
-   attests it) must be specified against Skatteverket's guidance in
-   `skills/consignment-sweden/SKILL.md` and verified before they become rules.
+   treatment is frozen per sale line together with its basis. **Answered
+   2026-09-13:** the VAT mode is a tenant setting chosen with the store's
+   accountant; Komisio computes the selected mode deterministically
+   (docs/VAT-CASES.md) and does not decide legality. Margin eligibility for
+   store-owned goods is attested per item at acceptance.
 6. ~~What does the accounting export need per day?~~ **Answered 2026-09-12
    (DECISIONS.md):** per VAT treatment and per payment method, seller
    balances reported as a liability to sellers; Fortnox first. Per-channel

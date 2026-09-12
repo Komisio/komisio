@@ -1,33 +1,54 @@
 # VAT cases: engine-facing table
 
-Status: draft, 2026-09-13, derived from `skills/consignment-sweden/SKILL.md`.
-No case is verified. The engine records the case id and the basis on every
-sale line from P2 S11 onward, but computes no VAT amount for a case until its
-row below says `verified` with a source. Commission and seller credit never
-depend on these cases. Amounts are öre in the database.
+Status: accepted design, 2026-09-13 (owner decision: VAT treatment is a
+tenant setting). Komisio does not decide which treatment is legally right for
+a store. Each tenant selects its VAT modes in the store policy, together with
+its accountant; Komisio guarantees that every mode is computed
+deterministically as documented here, records the mode and basis on every
+sale line, and never changes a line afterwards. Commission and seller credit
+never depend on the mode. Amounts are öre in the database. The reasoning and
+the legal sources to check per mode are in `skills/consignment-sweden/SKILL.md`.
 
-| Case | When it applies | Basis fields frozen on the line | Formula (öre, rounded half up per line) | Status |
-| --- | --- | --- | --- | --- |
-| `C1_consignment_margin` | Consignment item from a private (non-taxable) seller, store sells in its own name | ownership `consignment`, seller taxable `false`, sale price, seller credit | Margin = price − seller credit (= commission); VAT = margin × rate ÷ (100 + rate); the seller credit carries no VAT | to verify |
-| `C2_consignment_full_vat` | Same as C1 but the store applies ordinary VAT on the whole price (the earlier default mode) | as C1 | VAT = price × rate ÷ (100 + rate) | to verify; may be the wrong treatment for goods from private sellers |
-| `C3_consignment_business_seller` | Consignment item from a VAT-registered seller; commission is invoiced to the seller plus VAT | ownership `consignment`, seller taxable `true`, seller VAT id, sale price, commission ex VAT | Sale VAT on the whole price as in C2; commission invoice VAT = commission ex VAT × rate ÷ 100 | to verify |
-| `C4_store_owned_margin` | Store-owned item bought from a private person, sold under vinstmarginalbeskattning | ownership `store`, purchase price, purchase evidence, margin eligibility attested by (user) at acceptance | Margin = price − purchase price; VAT = max(margin, 0) × rate ÷ (100 + rate); negative margin gives zero and does not offset | to verify |
-| `C5_store_owned_full_vat` | Store-owned item without margin eligibility (bought with deductible VAT, or evidence missing) | ownership `store`, purchase price, purchase VAT deducted `true` | VAT = price × rate ÷ (100 + rate) | to verify |
+## Modes
 
-Rate: 25 % unless a verified exception is added. Rounding: per line, öre,
-half up; totals are sums of lines, never re-rounded.
+| Mode | When a tenant would select it | Basis fields frozen on the line | Formula (öre, rounded half up per line) |
+| --- | --- | --- | --- |
+| `consignment_margin` | Consignment goods from private sellers, VAT on the store's margin (commission) only | ownership `consignment`, seller taxable `false`, sale price, seller credit | Margin = price − seller credit; VAT = margin × rate ÷ (100 + rate); the seller credit carries no VAT |
+| `consignment_full` | Consignment goods, ordinary VAT on the whole sale price (the earlier store's default) | as above | VAT = price × rate ÷ (100 + rate) |
+| `consignment_business` | Consignment goods from a VAT-registered seller; commission invoiced to the seller plus VAT | ownership `consignment`, seller taxable `true`, seller VAT id, sale price, commission ex VAT | Sale VAT on the whole price as in `consignment_full`; commission invoice VAT = commission ex VAT × rate ÷ 100 |
+| `store_margin` | Store-owned goods bought from private persons, vinstmarginalbeskattning per item | ownership `store`, purchase price, purchase evidence, margin eligibility attested by (user, time) at acceptance | Margin = price − purchase price; VAT = max(margin, 0) × rate ÷ (100 + rate); negative margin gives zero and never offsets |
+| `store_full` | Store-owned goods without margin eligibility | ownership `store`, purchase price, purchase VAT deducted `true` | VAT = price × rate ÷ (100 + rate) |
 
-Rules the engine enforces regardless of verification:
+Rate: 25 % by default, a policy value. Rounding: per line, öre, half up;
+totals are sums of lines, never re-rounded.
 
-- A line has exactly one case id, chosen at sale time from the item's frozen
-  ownership and the tenant's verified cases; if the only applicable case is
-  unverified, the line stores the case id and basis and leaves `vat_amount`
-  null, and the day close reports that day as "VAT pending".
-- The basis fields for the case must all be present on the line or the sale
+## Tenant policy keys (P1 S1)
+
+| Key | Values | Default |
+| --- | --- | --- |
+| `vatModeConsignmentPrivate` | `consignment_margin` \| `consignment_full` | none: the tenant must choose before its first sale |
+| `vatModeConsignmentBusiness` | `consignment_business` | fixed |
+| `vatModeStoreOwned` | `store_margin` \| `store_full`, with `store_full` as the fallback when eligibility is not attested | none: must choose |
+| `vatRatePercent` | numeric | `25.00` |
+
+## Rules the engine enforces
+
+- A sale cannot be recorded for a tenant that has not chosen its modes;
+  `record_sale` fails with `VAT_MODE_NOT_SET`. Choosing a mode is an
+  owner-or-admin policy publication and is logged like any policy change.
+- A line has exactly one mode, chosen at sale time from the item's frozen
+  ownership, the seller's taxable flag and the tenant's policy at that
+  moment; mode, basis and computed amount are frozen on the line.
+- The basis fields for the mode must all be present on the line or the sale
   is rejected with `VAT_BASIS_MISSING`.
-- C4 requires an attestation at acceptance (who, when) that the purchase
-  evidence supports margin eligibility; without it the item sells under C5.
+- `store_margin` requires an attestation at acceptance (who, when) that the
+  purchase evidence supports margin eligibility; without it the item sells
+  under `store_full`.
+- A tenant that changes mode changes only future lines; the day close shows
+  totals per mode so a change is visible in the books.
+- Every mode has a pure, tested function and a worked example in öre in the
+  test suite; the tests are the specification of the arithmetic.
 
-Verification checklist per case: the legal source (mervärdesskattelagen
-chapter and section, or Skatteverket guidance page), one worked example in
-öre agreed with the store's accountant, and the owner's mark in the skill.
+Komisio's responsibility ends at deterministic, documented computation. The
+choice of mode, and its correctness for the store, is the tenant's, made with
+its accountant; the settings page says so in plain words and links the skill.

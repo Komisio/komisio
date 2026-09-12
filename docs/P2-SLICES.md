@@ -8,31 +8,31 @@ command, thin surface, tests. Money is `numeric` rounded to öre in the
 database; corrections are new rows; nothing with financial weight is edited
 or deleted.
 
-One rule above all others in this phase: **the engine records sale lines
-with their frozen basis, but computes no VAT amount until the VAT cases in
-`skills/consignment-sweden/SKILL.md` are marked verified against
-Skatteverket.** Until then the VAT columns hold the basis (ownership,
-commission basis, margin eligibility and its evidence) and the amount
-columns stay null. Commission and seller credit do not depend on VAT and
-are computed from day one.
+One rule above all others in this phase: **VAT treatment is a tenant
+setting, not a Komisio decision** (owner decision 2026-09-13). The tenant
+selects its VAT modes in the store policy with its accountant; the engine
+computes every mode deterministically as documented in `docs/VAT-CASES.md`,
+freezes mode, basis and amount on each sale line, and refuses to record a
+sale for a tenant that has not chosen. Commission and seller credit do not
+depend on the mode.
 
-## S10. VAT cases in the skill
+## S10. VAT modes
 
-Purpose: the domain knowledge that S12 will enforce, written and verified
-before any code.
+Purpose: the modes, their arithmetic and their policy keys, before S11.
 
-- Extend `skills/consignment-sweden/SKILL.md` with one section per case:
-  commission sale to a consumer (agency, commission incl. VAT), commission
-  sale where the seller is VAT-registered (commission plus VAT), store-owned
-  resale under the margin scheme (eligibility conditions, evidence, who
-  attests), store-owned resale with full VAT. Each case states the basis
-  fields the sale line must carry, the formula, a worked example in öre and
-  the Skatteverket source. Each case is marked `[to verify]` until the owner
-  or an accountant confirms it, then `[verified: source]`.
-- Add `docs/VAT-CASES.md` as the engine-facing table derived from the skill:
-  case id, required basis fields, formula, rounding rule.
-- No migration. Exit: every case has a source and a worked example; the
-  owner has marked which cases are verified.
+- `docs/VAT-CASES.md` (done in draft) defines the five modes, basis fields,
+  formulas, rounding and the policy keys; the skill holds the reasoning and
+  the legal sources a store's accountant would check.
+- Pure functions in `lib/engine/vat.ts`, one per mode, integer öre in and
+  out, with a worked example per mode in unit tests; a matching SQL function
+  `komisio_private.vat_for_line(mode, basis)` with the same examples in
+  pgTAP, so application preview and database record cannot disagree.
+- Store policy (P1 S1) gains `vatModeConsignmentPrivate`,
+  `vatModeStoreOwned` and `vatRatePercent`; the settings page shows the
+  modes with plain-language help and the sentence that the choice is the
+  store's, made with its accountant.
+- No table migration beyond the policy keys. Exit: every mode has a tested
+  function in both places and the settings page can select it.
 
 ## S11. Sales with lines
 
@@ -43,7 +43,7 @@ Purpose: the sale as a fact from a POS, idempotent, with frozen basis.
   `completed` | `reversed`, raw provider reference) and `sale_lines` (sale,
   item, price in öre, ownership, commission basis, commission rate,
   commission amount in öre, seller credit in öre, VAT case id, VAT basis
-  jsonb, VAT amount nullable until verified, agreement version, seller terms
+  jsonb, VAT mode, VAT amount, agreement version, seller terms
   version). Both immutable.
 - `record_sale(p_tenant, p_id, p_provider, p_external_id, p_occurred_at,
   p_currency, p_lines)`: staff or integration actor; every item must be
@@ -155,7 +155,7 @@ Purpose: bookkeeping data per day, exported.
   response payloads). Both immutable; a regenerated day close is a new
   version.
 - `generate_day_close(p_tenant, p_date)`: derived from sales, returns,
-  payouts of that day. VAT totals stay null for unverified cases.
+  payouts of that day, with VAT totals per mode.
 - `extensions/fortnox/`: OAuth per tenant, account mapping stored as a
   versioned tenant policy, voucher preview, export with idempotency key,
   reconciliation view, scheduled auto-export as an optional policy.
@@ -223,5 +223,5 @@ and seller credit, record a full return, see the seller balance change, take
 a payout from request through approval to paid with reservation in between,
 issue a numbered statement the seller can open, generate a day close and
 export it to Fortnox idempotently, print all four labels through the local
-agent, and have sellers receive the five e-mails. VAT amounts appear only for
-cases marked verified.
+agent, and have sellers receive the five e-mails, with VAT computed per line
+in the modes the store selected.

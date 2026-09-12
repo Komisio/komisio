@@ -321,6 +321,9 @@ export default async function Reception({
                 : all.staffReviewDeclined
               : d.awaiting}
           </p>
+          {policy.policy.sellerReviewMode === 'delegated' && (
+            <p>{d.delegatedNotice}</p>
+          )}
           {write && review.terms && (
             <ReviewAccess
               key={review.id}

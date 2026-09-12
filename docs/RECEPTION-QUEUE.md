@@ -21,21 +21,26 @@ and a capped client-side scan followed by status filtering.
 
 ## Derivation order
 
-| Condition, evaluated in this order | Work stage |
-| --- | --- |
-| No source revision or no published review | preparing |
-| Latest review targets a different current source revision | needs_review |
-| Exact latest review has an approve response | approved |
-| Exact latest review has a decline response | declined |
-| Unanswered review expiry is reached | expired |
-| No access event exists | ready_to_share |
-| Latest access event revokes the link | link_revoked |
-| Current unanswered review and active access event | awaiting_seller |
+| Condition, evaluated in this order                                                                | Work stage       |
+| ------------------------------------------------------------------------------------------------- | ---------------- |
+| No source revision or no published review                                                         | preparing        |
+| Latest review targets a different current source revision                                         | needs_review     |
+| An item was accepted from this session                                                            | accepted         |
+| Exact latest review has a decline response                                                        | declined         |
+| Policy is `delegated`, or the exact latest review has an approve response: no garment receipt yet | awaiting_custody |
+| Same, with a garment receipt                                                                      | ready_to_accept  |
+| Unanswered review expiry is reached (`per_item` only from here on)                                | expired          |
+| No access event exists                                                                            | ready_to_share   |
+| Latest access event revokes the link                                                              | link_revoked     |
+| Current unanswered review and active access event                                                 | awaiting_seller  |
 
 Responses remain historical facts after expiry or revocation. They do not become
 new consents when sources change. The list must distinguish `needs_review` from
 its previous response so a past approval is never presented as current approval.
-`approved` means only seller-approved review, not commercial acceptance or sale.
+Since P1 S6 (migration `20260913190000`) the stage reads the store policy:
+under delegated pricing (the default) a current review needs no seller answer,
+so the seller stages apply only under `per_item`. `ready_to_accept` means the
+custody and consent facts exist; acceptance itself is the S4 command.
 Link availability is a separate dimension: none, active, revoked, expired or
 stale. Issuing a link does not prove delivery or that the seller opened it.
 Use database transaction time for expiry and return an as-of time if useful;

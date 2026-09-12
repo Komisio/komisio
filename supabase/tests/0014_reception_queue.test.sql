@@ -8,6 +8,8 @@ set local role authenticated;
 set local "request.jwt.claims"='{"sub":"b0000000-0000-4000-8000-000000000001","role":"authenticated"}';
 select set_config('test.tenant',create_tenant('Queue','queue-test',gen_random_uuid())::text,true);
 select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Seller','seller@queue.test','')::text,true);
+-- The seller link and response stages apply under per_item; delegated pricing is covered in 0027.
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"sellerReviewMode":"per_item"}');
 select set_config('test.session',create_reception_session(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid)::text,true);
 select is((select stage from reception_queue(current_setting('test.tenant')::uuid)),'preparing','empty session prepares');
 select throws_ok($$select * from reception_queue(gen_random_uuid())$$,'42501',null,'another tenant denied');
@@ -32,9 +34,10 @@ set local "request.jwt.claims"='{"sub":"b0000000-0000-4000-8000-000000000002","r
 select throws_ok($$select * from reception_queue(current_setting('test.tenant')::uuid)$$,'42501',null,'seller is not staff');
 select respond_to_reception_review(repeat('b',64),gen_random_uuid(),current_setting('test.review')::uuid,'approve');
 set local "request.jwt.claims"='{"sub":"b0000000-0000-4000-8000-000000000001","role":"authenticated"}';
-select is((select stage from reception_queue(current_setting('test.tenant')::uuid)),'approved','exact saved response');
+select is((select stage from reception_queue(current_setting('test.tenant')::uuid)),'awaiting_custody','exact saved response moves on to custody');
+select is((select decision from reception_queue(current_setting('test.tenant')::uuid)),'approve','approval is reported with the row');
 select set_reception_access(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.review')::uuid,current_setting('test.access')::uuid,null);
-select is((select stage from reception_queue(current_setting('test.tenant')::uuid)),'approved','revocation preserves historical response');
+select is((select stage from reception_queue(current_setting('test.tenant')::uuid)),'awaiting_custody','revocation preserves historical response');
 select is((select link_state from reception_queue(current_setting('test.tenant')::uuid)),'revoked','link availability is separate');
 select save_reception_sources(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,1,current_setting('test.sources')::jsonb);
 select is((select stage from reception_queue(current_setting('test.tenant')::uuid)),'needs_review','new sources invalidate current approval');
@@ -76,8 +79,8 @@ select gen_random_uuid(),tenant_id,id,1,encode(sha256(convert_to(repeat('d',64),
 insert into public.reception_responses(id,tenant_id,review_id,access_id,decision,created_by,created_at)
 select gen_random_uuid(),a.tenant_id,a.review_id,a.id,'approve','b0000000-0000-4000-8000-000000000002',a.created_at+interval '1 hour' from public.reception_access_events a join public.reception_reviews r on r.id=a.review_id where r.session_id=current_setting('test.session')::uuid and r.version=3;
 set local role authenticated;
-select is((select stage from reception_queue(current_setting('test.tenant')::uuid,'approved')),'approved','expiry does not erase an earlier approval');
-select is((select link_state from reception_queue(current_setting('test.tenant')::uuid,'approved')),'expired','answered expired link remains unavailable');
+select is((select stage from reception_queue(current_setting('test.tenant')::uuid,'awaiting_custody')),'awaiting_custody','expiry does not erase an earlier approval');
+select is((select link_state from reception_queue(current_setting('test.tenant')::uuid,'awaiting_custody')),'expired','answered expired link remains unavailable');
 reset role;
 insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values(gen_random_uuid(),'b0000000-0000-4000-8000-000000000001','totp','verified',now(),now());
 set local role authenticated;

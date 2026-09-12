@@ -1790,6 +1790,8 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   ).toHaveCount(0)
   const saved = await page.request.get(`/api/reception/${sessionId}`)
   expect((await saved.json()).latestReview.response.decision).toBe('approve')
+  // Staff mobile (S8): custody and acceptance at phone width.
+  await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/intake/reception?stage=awaiting_custody')
   await expect(
     page.getByRole('heading', { name: 'Mottagningskö' }),

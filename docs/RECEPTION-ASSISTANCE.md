@@ -28,7 +28,11 @@ pilot. The 199 SEK product tier has no decided model allowance or billing mappin
 Komisio's provider-independent contract. Runtime instructions are versioned
 `reception-v1` code; `skills/garment-reception/SKILL.md` is workflow guidance for
 agents and people, not an automatically executed permissions file. Changing a
-skill cannot change RLS, price validation or seller authority.
+skill cannot change RLS, price validation or seller authority. A unit test pins
+the exact prompt text to its version: changing the wording requires a new
+version, an additive migration that accepts it in the attempt reservation, a
+skill review and a new pinned hash, so two prompts never share one version in
+the attempt history.
 
 The provider receives source IDs, descriptive observations and supplied price
 evidence, plus up to three reduced images. Seller/session/store identifiers,

@@ -462,6 +462,50 @@
       }
     }
   },
+  "operations": {
+    "title": "Proposed operations",
+    "intro": "Proposals from AI agents wait here. Nothing is published until a staff member approves it.",
+    "notice": "Approving runs the same operation you could perform yourself, recorded in your name. A proposal is never a fact. Approval of a review is not commercial acceptance.",
+    "empty": "No proposed operations.",
+    "proposedBy": "Proposed by",
+    "riskLevel": "Risk",
+    "validUntil": "Valid until",
+    "openReception": "Open reception",
+    "sourceRevision": "source version",
+    "price": "Proposed selling price",
+    "reason": "Reason (optional)",
+    "confirm": "I have checked the reception, the facts, the price evidence and the current terms.",
+    "approve": "Approve and publish",
+    "reject": "Reject",
+    "busy": "Deciding…",
+    "decided": "Decision",
+    "alreadyDecided": "This proposal was already decided. Reload to see the outcome.",
+    "expired": "This proposal has expired and cannot be approved. Ask for a new proposal.",
+    "denied": "You do not have permission. Reload the page to check your access.",
+    "failed": "The decision could not be completed. Reload and check the saved outcome before deciding again.",
+    "retry": "The response could not be confirmed. Reload and check the saved outcome before deciding again.",
+    "reload": "Reload",
+    "kinds": {
+      "publishReceptionReview": "Publish reviewed proposal to seller"
+    },
+    "risk": { "low": "Low", "medium": "Medium", "high": "High" },
+    "status": {
+      "open": "Awaiting decision",
+      "expired": "Expired",
+      "executed": "Approved and executed",
+      "failed": "Approved but failed",
+      "rejected": "Rejected"
+    },
+    "fields": {
+      "description": "Description",
+      "category": "Category",
+      "color": "Color",
+      "brand": "Brand",
+      "size": "Size",
+      "material": "Material",
+      "condition": "Condition"
+    }
+  },
   "reviewPhotoAlt": "Photo included in this review",
   "reviewPhotos": "Photos in this review",
   "reviewPhotoError": "The photos could not be loaded. Reload the page before approving."

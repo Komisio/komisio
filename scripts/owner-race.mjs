@@ -594,6 +594,137 @@ try {
   console.log(
     'PASS: concurrent seller approval/decline persists once; same-actor retries return original response.',
   )
+  // Two staff approve one agent proposal concurrently; exactly one execution.
+  for (const { c } of sessions)
+    await c.query("select set_config('request.jwt.claims',$1,false)", [
+      JSON.stringify({ sub: publishingActor, role: 'authenticated' }),
+    ])
+  const proposalId = randomUUID()
+  await sessions[0].c.query(
+    "select propose_operation($1,$2,'publishReceptionReview',$3::jsonb,'race-agent',now()+interval '1 day')",
+    [
+      tenant,
+      proposalId,
+      JSON.stringify({
+        sessionId: receptionId,
+        sourceRevision: 3,
+        previousReviewId: reviewRequest,
+        agreementId: reviewTerms,
+        expiresAt: expiry,
+        suggestions: JSON.parse(suggestions),
+      }),
+    ],
+  )
+  await setup.query('begin')
+  await setup.query('select id from tenants where id=$1 for update', [tenant])
+  const approvals = sessions.map(({ c }) =>
+    c
+      .query("select decide_operation($1,$2,$3,'approved','')", [
+        tenant,
+        randomUUID(),
+        proposalId,
+      ])
+      .then(
+        () => 'decided',
+        (e) => {
+          if (e.message.includes('OPERATION_DECIDED')) return 'already'
+          throw e
+        },
+      ),
+  )
+  let approvalWaiting = 0
+  for (let i = 0; i < 100; i++) {
+    const result = await setup.query(
+      "select count(*)::int as waiting from pg_stat_activity where application_name like 'owner_race_%' and wait_event_type='Lock'",
+    )
+    approvalWaiting = result.rows[0].waiting
+    if (approvalWaiting === 2) break
+    await pause(20)
+  }
+  await setup.query('commit')
+  const approvalResults = await Promise.all(approvals)
+  const decisionState = await setup.query(
+    'select (select count(*) from operation_decisions where operation_id=$1)::int decisions,(select outcome from operation_decisions where operation_id=$1) outcome,(select count(*) from reception_reviews where session_id=$2)::int reviews',
+    [proposalId, receptionId],
+  )
+  if (
+    approvalWaiting !== 2 ||
+    approvalResults.filter((r) => r === 'decided').length !== 1 ||
+    approvalResults.filter((r) => r === 'already').length !== 1 ||
+    decisionState.rows[0].decisions !== 1 ||
+    decisionState.rows[0].outcome !== 'executed' ||
+    decisionState.rows[0].reviews !== 3
+  )
+    throw new Error(
+      `Concurrent approvals executed a proposal more than once: ${JSON.stringify({ approvalWaiting, approvalResults, state: decisionState.rows[0] })}`,
+    )
+  const decisionId = (
+    await setup.query(
+      'select id from operation_decisions where operation_id=$1',
+      [proposalId],
+    )
+  ).rows[0].id
+  const decisionRetries = await Promise.all(
+    sessions.map(({ c }) =>
+      c.query("select decide_operation($1,$2,$3,'approved','') as id", [
+        tenant,
+        decisionId,
+        proposalId,
+      ]),
+    ),
+  )
+  if (decisionRetries.some((r) => r.rows[0].id !== decisionId))
+    throw new Error('Decision retry did not resolve the original decision')
+  console.log(
+    'PASS: concurrent approvals of one staged proposal execute once; identical decision retries resolve the original.',
+  )
+  // A seller read must not wait for the tenant lock; the seller response must.
+  await sessions[0].c.query(
+    "select set_reception_access($1,$2,$3,null,encode(sha256(convert_to(repeat('e',64),'UTF8')),'hex'))",
+    [tenant, randomUUID(), proposalId],
+  )
+  for (const { c } of sessions)
+    await c.query("select set_config('request.jwt.claims',$1,false)", [
+      JSON.stringify({ sub: sellerUser, role: 'authenticated' }),
+    ])
+  await setup.query('begin')
+  await setup.query('select id from tenants where id=$1 for update', [tenant])
+  const readWhileLocked = await Promise.race([
+    sessions[0].c
+      .query("select read_seller_review(repeat('e',64)) as review")
+      .then((r) =>
+        r.rows[0].review.reviewId === proposalId ? 'read' : 'wrong',
+      ),
+    pause(3000).then(() => 'blocked'),
+  ])
+  const respondWhileLocked = sessions[1].c
+    .query(
+      "select respond_to_reception_review(repeat('e',64),$1,$2,'approve')",
+      [randomUUID(), proposalId],
+    )
+    .then(() => 'responded')
+  let responseWaiting = 0
+  for (let i = 0; i < 100; i++) {
+    const result = await setup.query(
+      "select count(*)::int as waiting from pg_stat_activity where application_name='owner_race_1' and wait_event_type='Lock'",
+    )
+    responseWaiting = result.rows[0].waiting
+    if (responseWaiting === 1) break
+    await pause(20)
+  }
+  await setup.query('commit')
+  const responseOutcome = await respondWhileLocked
+  if (
+    readWhileLocked !== 'read' ||
+    responseWaiting !== 1 ||
+    responseOutcome !== 'responded'
+  )
+    throw new Error(
+      `Seller read locking regressed: ${JSON.stringify({ readWhileLocked, responseWaiting, responseOutcome })}`,
+    )
+  console.log(
+    'PASS: a seller read completes while staff hold the tenant lock; the seller response waits for it.',
+  )
 } finally {
   await Promise.allSettled(clients.map((c) => c.end()))
   await admin.query(`drop database if exists "${database}"`)

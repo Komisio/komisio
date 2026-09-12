@@ -49,7 +49,8 @@ try {
     p_phone: '',
   })
   const session = randomUUID(),
-    source = randomUUID()
+    source = randomUUID(),
+    price = randomUUID()
   await rpc('create_reception_session', {
     p_tenant: tenant,
     p_id: session,
@@ -79,6 +80,12 @@ try {
         kind: 'observation',
         reference: 'MCP fixture',
         observation: 'Synthetic blue jacket',
+      },
+      {
+        id: price,
+        kind: 'price-evidence',
+        reference: 'MCP fixture appraisal',
+        observation: 'Fictional 250 SEK',
       },
     ],
   })
@@ -336,6 +343,143 @@ try {
       })
     ).isError,
   )
+  // Staged proposal: the host stages a complete review; a person approves through the engine.
+  const agreement = await rpc('publish_seller_agreement', {
+    p_tenant: tenant,
+    p_id: randomUUID(),
+    p_expected_current: null,
+    p_title: 'TEST',
+    p_body: 'Fictional terms',
+    p_language: 'en',
+    p_required: false,
+  })
+  // History seeding replaced the source list; restore the cited evidence as a new revision.
+  const current = (
+    await db.query(
+      'select max(revision)::int as revision from reception_source_revisions where session_id=$1',
+      [session],
+    )
+  ).rows[0].revision
+  await rpc('save_reception_sources', {
+    p_tenant: tenant,
+    p_request: randomUUID(),
+    p_session: session,
+    p_expected: current,
+    p_sources: [
+      {
+        id: source,
+        kind: 'observation',
+        reference: 'MCP fixture',
+        observation: 'Synthetic blue jacket',
+      },
+      {
+        id: price,
+        kind: 'price-evidence',
+        reference: 'MCP fixture appraisal',
+        observation: 'Fictional 250 SEK',
+      },
+    ],
+  })
+  const proposedRevision = current + 1
+  const proposer = await connect('reception:propose')
+  assert.deepEqual(
+    (await proposer.listTools()).tools.map((t) => t.name),
+    ['komisio_propose_reception_review'],
+  )
+  const complete = {
+    metadata: {
+      description: {
+        value: 'Synthetic blue jacket',
+        sourceIds: [source],
+        certainty: 'observed',
+      },
+    },
+    price: {
+      currency: 'SEK',
+      amount: '250.00',
+      rationale: 'Fixture appraisal',
+      sourceIds: [price],
+    },
+    questions: [],
+  }
+  const proposalId = randomUUID()
+  const proposal = {
+    requestId: proposalId,
+    sessionId: session,
+    sourceRevision: proposedRevision,
+    previousReviewId: null,
+    agreementId: agreement,
+    expiresAt: new Date(Date.now() + 3600000).toISOString(),
+    suggestions: complete,
+  }
+  const staged = await proposer.callTool({
+    name: 'komisio_propose_reception_review',
+    arguments: proposal,
+  })
+  assert(!staged.isError, JSON.stringify(staged.content))
+  assert.equal(staged.structuredContent.staged, true)
+  assert.equal(staged.structuredContent.executed, false)
+  assert.equal(staged.structuredContent.requiresApproval, true)
+  assert.equal(staged.structuredContent.operationId, proposalId)
+  assert.equal(staged.structuredContent.actor, uid)
+  const replayed = await proposer.callTool({
+    name: 'komisio_propose_reception_review',
+    arguments: proposal,
+  })
+  assert(!replayed.isError, JSON.stringify(replayed.content))
+  const storedExpiry = await db.query(
+    'select expires_at from pending_operations where id=$1',
+    [proposalId],
+  )
+  assert.equal(
+    storedExpiry.rows[0].expires_at.toISOString(),
+    proposal.expiresAt,
+  )
+  for (const args of [
+    { ...proposal, requestId: randomUUID(), sourceRevision: current },
+    { ...proposal, requestId: randomUUID(), riskLevel: 'low' },
+    {
+      ...proposal,
+      requestId: randomUUID(),
+      suggestions: { ...complete, price: null },
+    },
+    { ...proposal, requestId: randomUUID(), agreementId: randomUUID() },
+  ])
+    assert(
+      (
+        await proposer.callTool({
+          name: 'komisio_propose_reception_review',
+          arguments: args,
+        })
+      ).isError,
+    )
+  await assert.rejects(
+    both.callTool({
+      name: 'komisio_propose_reception_review',
+      arguments: proposal,
+    }),
+    /not found/,
+  )
+  const stagedState = await db.query(
+    'select (select count(*) from pending_operations where id=$1)::int ops,(select count(*) from reception_reviews where session_id=$2)::int reviews',
+    [proposalId, session],
+  )
+  assert.deepEqual(stagedState.rows[0], { ops: 1, reviews: 0 })
+  const decided = await app.rpc('decide_operation', {
+    p_tenant: tenant,
+    p_id: randomUUID(),
+    p_operation: proposalId,
+    p_decision: 'approved',
+    p_reason: 'Fixture approval',
+  })
+  assert.ifError(decided.error)
+  const executed = await db.query(
+    'select outcome,result_id,(select created_by from reception_reviews where id=$1) as actor from operation_decisions where operation_id=$1',
+    [proposalId],
+  )
+  assert.equal(executed.rows[0].outcome, 'executed')
+  assert.equal(executed.rows[0].result_id, proposalId)
+  assert.equal(executed.rows[0].actor, uid)
   await db.query(
     "insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values($1,$2,'totp','verified',now(),now())",
     [randomUUID(), uid],
@@ -345,6 +489,14 @@ try {
       await both.callTool({
         name: 'komisio_read_reception_history',
         arguments: { sessionId: session },
+      })
+    ).isError,
+  )
+  assert(
+    (
+      await proposer.callTool({
+        name: 'komisio_propose_reception_review',
+        arguments: { ...proposal, requestId: randomUUID() },
       })
     ).isError,
   )
@@ -372,9 +524,11 @@ try {
     'select (select count(*) from reception_source_revisions where session_id=$1)::int sources,(select count(*) from reception_reviews where session_id=$1)::int reviews,(select count(*) from reception_assistance_attempts where session_id=$1)::int attempts',
     [session],
   )
-  assert.deepEqual(records.rows[0], { sources: 22, reviews: 0, attempts: 0 })
+  // 22 seeded history revisions plus the restored-evidence revision; the only
+  // review came from the staff-approved staged operation, not from a tool.
+  assert.deepEqual(records.rows[0], { sources: 23, reviews: 1, attempts: 0 })
   console.log(
-    'PASS: real stdio MCP negotiation, authenticated reads, opt-in minimized image/provenance, unsaved preview, scope/tenant/invalid-token/MFA/stale denial, no source/review/model writes.',
+    'PASS: real stdio MCP negotiation, authenticated reads, opt-in minimized image/provenance, unsaved preview, staged proposal with staff approval, scope/tenant/invalid-token/MFA/stale denial, no direct source/review/model writes.',
   )
 } finally {
   await Promise.allSettled(clients.map((client) => client.close()))

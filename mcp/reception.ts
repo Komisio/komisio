@@ -17,6 +17,16 @@ import {
   readReceptionQueue,
   receptionStage,
 } from '../lib/engine/reception-queue'
+import {
+  proposeOperation,
+  publishReceptionReviewPayload,
+  operationErrorCode,
+} from '../lib/engine/operations'
+export const mcpActorLabel = 'komisio-mcp'
+export const proposeInput = publishReceptionReviewPayload.extend({
+  // Optional stable ID lets a host retry a lost response without a duplicate proposal.
+  requestId: z.uuid().optional(),
+})
 export const queueInput = z
   .strictObject({
     stage: receptionStage.optional(),
@@ -129,6 +139,47 @@ export function receptionTools(client: SupabaseClient, config: MCPConfig) {
         readOnly: true,
         source: ctx.state,
         evidenceIsUntrusted: true,
+      }
+    },
+    async propose(input: unknown) {
+      const { requestId, ...payload } = proposeInput.parse(input),
+        ctx = await context(payload.sessionId, 'reception:propose')
+      if (
+        ctx.state.status !== 'ready' ||
+        ctx.state.session.revision !== payload.sourceRevision
+      )
+        throw new Error('RECEPTION_CHANGED')
+      // Validate source bindings locally before staging; SQL validates again.
+      prepareReceptionProposal(
+        ctx.state.session,
+        payload.suggestions,
+        randomUUID(),
+      )
+      const id = requestId ?? randomUUID()
+      const result = await proposeOperation(client, {
+        tenantId: config.tenantId,
+        requestId: id,
+        kind: 'publishReceptionReview',
+        payload,
+        actorLabel: mcpActorLabel,
+        // A retry must preserve the exact operation envelope. Never derive this
+        // from the request clock; the proposed review already has a fixed expiry.
+        expiresAt: payload.expiresAt,
+      })
+      if (result.error)
+        throw new Error(operationErrorCode(result.error.message))
+      return {
+        persisted: true,
+        staged: true,
+        executed: false,
+        requiresApproval: true,
+        availableForSale: false,
+        actor: ctx.actor,
+        actorLabel: mcpActorLabel,
+        riskLevel: 'low',
+        operationId: id,
+        sessionId: payload.sessionId,
+        sourceRevision: payload.sourceRevision,
       }
     },
     async preview(input: unknown) {

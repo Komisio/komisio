@@ -24,6 +24,10 @@ The route uses no-store, no-referrer and noindex and embeds no external evidence
 URLs. Operators must still treat links as sensitive and configure any future
 analytics, monitoring or request logging to redact capability paths.
 
+Reading the review, its photo descriptors and the Storage policy check use a
+STABLE database function that takes no store lock; PostgreSQL forbids row locks
+inside STABLE functions, so this is enforced rather than promised.
+
 POST /api/seller/review invokes the shared respondToReview operation without an
 active-store prerequisite. The database rechecks recipient, link, expiry, current
 review and source revision under the same lock used by staff changes. One

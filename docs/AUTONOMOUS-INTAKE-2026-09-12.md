@@ -21,7 +21,7 @@ create a fake bag receipt to represent a garment on the reception wall.
 
 1. Shared typed observation/proposal/review/decision contracts and replaceable
    assistance adapter, with a complete headless workflow test. Document the
-   Accounted comparison. Model output cannot choose tenant, seller or authority.
+   architecture boundaries. Model output cannot choose tenant, seller or authority.
 2. Durable reception sessions and immutable proposal/review/decision records,
    with database tests before migrations, membership/MFA checks, exact revision
    binding, expiry and idempotency. Use minimal persistence for this workflow,

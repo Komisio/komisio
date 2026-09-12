@@ -2,17 +2,18 @@
 
 Komisio is a multi-tenant consignment engine for second-hand stores. This
 document explains how the system is put together and why some parts are
-deliberately rigid. It distinguishes the implemented identity/access platform from the planned
-consignment engine. See `README.md` and `ROADMAP.md` for status.
+deliberately rigid. Identity, receiving and preparation/review are implemented;
+saleable inventory, financial operations and durable agent execution remain
+planned. See `README.md` and `ROADMAP.md` for status.
 
 ## Overview
 
 - **Framework**: Next.js (App Router), React, TypeScript strict mode.
 - **Database**: Supabase (PostgreSQL with Row Level Security), which also
   provides auth.
-- **Deployment**: hosted is the primary target; Docker self-hosting is a
-  target; local Docker-based Supabase is verified, an external deployment is not
-  (`docs/SELF-HOSTING.md`).
+- **Deployment**: Vercel/Supabase staging is available. Docker self-hosting remains
+  a target; local Docker-based Supabase is verified, a packaged external Docker
+  deployment is not (`docs/SELF-HOSTING.md`).
 - **UI language**: Swedish and English via message files.
 
 Five choices are fixed before any product model exists: one engine for all
@@ -26,7 +27,7 @@ testable and safe to operate by people and agents alike.
 `lib/supabase/` handles browser/server sessions. The request proxy refreshes
 cookies; server context independently validates the identity and MFA assurance.
 `lib/platform/` resolves current membership, active store, named permissions,
-input validation and safe error codes. It is separate from the future domain
+input validation and safe error codes. It is separate from the domain
 engine: identity and team administration are not consignment operations.
 
 Authenticated mutations enter `/api/platform`, validate same-origin requests and
@@ -70,7 +71,7 @@ The first gated domain slice now adds `sellers` and `bag_receipts` behind
 custody only. SQL functions validate role/MFA and serialize with membership
 changes; direct table mutations are denied. See
 `docs/SELLER-FLOW-IMPLEMENTATION.md` for activation and remaining workflow scope.
-There are still no item, financial or agreement-acceptance tables or agent writes.
+There is still no saleable-item lifecycle, financial ledger, payout or agent write executor.
 
 The staff agreement-evidence slice adds immutable `seller_agreement_versions`
 and `seller_agreement_evidence`. It records external evidence, not a seller's
@@ -96,17 +97,17 @@ publication and receiving serialize with membership changes. See
    a sale, a return, ledger entries, payouts, settlements — go through one
    engine. The UI and the MCP server are two callers of the same functions;
    neither has its own write path. The first [local MCP adapter](mcp/README.md)
-   exposes authenticated reads and unsaved reception previews only. It has no
+   exposes authenticated text/opt-in image reads and unsaved reception previews. It has no
    write executor, hosted OAuth or automatic model invocation.
 2. **Database as boundary.** Tenant isolation, role permissions and business
    rules are enforced by PostgreSQL (RLS, grants, triggers) and proven by
    pgTAP tests against a real database. Application code that hits a
    database rule is wrong; the rule is documented in `DECISIONS.md` and its
    test shows what it guarantees.
-3. **Surfaces.** The web UI for store staff and, later, a consignor portal.
-   The MCP server exposes the engine as tools with scoped keys and a staged
-   operations envelope: agents propose, people approve, low-risk operations
-   may auto-execute per scope.
+3. **Surfaces.** The web UI serves staff and exact mobile seller reviews; a full
+   consignor portal is planned. Local MCP currently uses a configured user JWT
+   and process-level scopes. Hosted delegated keys and durable staged execution
+   are future work, not guarantees supplied by the current preview envelope.
 4. **Extensions.** Everything beyond the core is an extension: Zettle (POS
    and certified cash register), web shop and marketplace sync, Swish/bank
    payouts, AI-assisted intake, accounting export to Accounted or Fortnox.
@@ -133,6 +134,16 @@ latest state. Persisted revisions protect concurrent staff edits and are separat
 from the pure contract's in-memory proposal counter. See
 [saved inspection](docs/SAVED-INSPECTION.md) for retries, roles and activation.
 
+## Single-garment reception
+
+Reception sessions bind a store and seller without inventing a bag receipt.
+Sources, staff reviews, access events and seller responses preserve exact versions.
+Private images live in Storage; the database pins references and enforces scope.
+Optional inference is bounded, tentative and separate from publication. Local MCP
+reads and previews use the same contracts. See [how AI fits](docs/HOW-AI-FITS.md)
+for the current file map and [reception architecture](docs/RECEPTION-ARCHITECTURE.md)
+for constraints. Nothing in this path creates saleable inventory or a payout.
+
 ## Invariants the core will enforce
 
 Written here as intent; each becomes a `DECISIONS.md` line and a test when the
@@ -156,8 +167,10 @@ slice that needs it is built.
 ## Tenancy
 
 The tenant is the single store: the unit of data isolation. Users belong to
-tenants through `tenant_members` with a role; membership is the only source of
-access, and a user may be a member of many tenants. A chain is an optional
+tenants through `tenant_members` with a role; membership is the source of staff
+access, and a user may be a member of many tenants. Exact seller reviews use a
+separate verified-email/MFA/capability boundary without granting membership.
+A chain is an optional
 grouping above tenants that will be added when the first chain customer needs it; it grants access, it does not
 merge data. What, if anything, is shared across a chain beyond access is an
 open follow-up (`docs/open-questions.md`).
@@ -167,10 +180,12 @@ open follow-up (`docs/open-questions.md`).
 ```
 app/            Next.js routes (UI)
 lib/engine/     the engine: one module per aggregate, all writes
+lib/assistance/ optional model configuration, prompts and inference adapters
+lib/media/      bounded image decoding and minimization
 lib/platform/   current request context, permissions and validation
 lib/supabase/   implemented browser/server clients
 extensions/     one folder per extension, each with manifest.json
-mcp/            MCP server: tools, scopes, staged operations
+mcp/            local read/image/preview tools; durable staging remains planned
 supabase/       migrations, tests (pgTAP), seed
 skills/         domain knowledge
 docs/           architecture notes, contracts

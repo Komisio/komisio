@@ -42,7 +42,7 @@ select throws_like($$select respond_to_reception_review(repeat('a',64),gen_rando
 select throws_like($$select respond_to_reception_review(repeat('a',64),gen_random_uuid(),gen_random_uuid(),'approve')$$,'%REVIEW_UNAVAILABLE%','exact displayed review required');
 select is(read_seller_review(repeat('a',64))->'response'->>'decision','approve','read saved response');
 reset role;
-select is((select count(*) from reception_responses),1::bigint,'one response persisted');
+select is((select count(*) from reception_responses where tenant_id=current_setting('test.a')::uuid),1::bigint,'one response persisted');
 select throws_like($$update reception_responses set decision='decline'$$,'%IMMUTABLE_RECEPTION%','response immutable');
 update auth.users set email_confirmed_at=null where id='90000000-0000-4000-8000-000000000003';
 set local role authenticated;

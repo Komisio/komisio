@@ -30,7 +30,7 @@ authorization; the durable slice must independently guarantee those properties.
 | Observation/proposal/review/decision contracts | lib/engine/reception.ts |
 | Model-independent assistance port | lib/assistance/reception.ts |
 | Garment workflow guidance | skills/garment-reception/SKILL.md |
-| Private image capture/storage | Future trusted capture adapter |
+| Private staff image capture/storage | lib/engine/reception-photos.ts and Storage RLS |
 | Provider calls, secrets, cost controls | Future optional extension |
 | Authoritative sessions, snapshots and decisions | Engine and database |
 | Mobile review | Thin application surface |
@@ -46,7 +46,8 @@ The [durable-source slice](DURABLE-RECEPTION.md) now adds authenticated session
 creation and immutable textual source snapshots. The pure previews above remain
 previews. The [immutable review](RECEPTION-REVIEWS.md) and
 [seller response](SELLER-REVIEW.md) now have independent database enforcement.
-Protected images and live model inference remain separate delivery steps.
+[Private staff images](RECEPTION-PHOTOS.md) are now implemented. Seller image
+delivery and live model inference remain separate delivery steps.
 
 Reject a chat agent with direct SQL, a copied legacy item schema, and mandatory
 fake bag receipts for wall reception. Shared contracts require explicit adapters

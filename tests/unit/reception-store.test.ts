@@ -7,7 +7,7 @@ const source = {
   reference: 'staff note',
   observation: 'Blue jacket',
 }
-it('accepts bounded staff source commands and rejects unsupported authority/photos', () => {
+it('accepts bounded staff sources and rejects authority or malformed photo paths', () => {
   const command = {
     action: 'saveReceptionSources',
     tenantId: id,
@@ -17,6 +17,14 @@ it('accepts bounded staff source commands and rejects unsupported authority/phot
     sources: [source],
   }
   expect(intakeCommand.safeParse(command).success).toBe(true)
+  expect(
+    intakeCommand.safeParse({
+      ...command,
+      sources: [
+        { ...source, kind: 'photo', reference: `${id}/${id}/${id}.png` },
+      ],
+    }).success,
+  ).toBe(true)
   for (const patch of [
     { expectedRevision: -1 },
     { sources: [] },

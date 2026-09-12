@@ -8,6 +8,7 @@ import {
   readReceptionReview,
 } from '@/lib/engine/reception-store'
 import { readManualReception } from '@/lib/engine/manual-reception'
+import { PhotoUpload } from '@/components/reception/photo-upload'
 import {
   ReceptionObservation,
   PublishReview,
@@ -71,6 +72,33 @@ export default async function Reception({
         </p>
       </div>
       <p className="intake-notice">{d.manual}</p>
+      <section className="card intake-form reception-result">
+        <h2>{d.photos}</h2>
+        {write && (
+          <PhotoUpload
+            key={state.revision}
+            tenantId={tenant.id}
+            sessionId={id.data}
+            revision={state.revision}
+            sources={sources}
+            d={d}
+          />
+        )}
+        <div className="reception-photos">
+          {sources
+            .filter((s) => s.kind === 'photo')
+            .map((s) => (
+              // Authenticated, uncached route; do not send private images through an optimizer cache.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={s.id}
+                src={`/api/reception/${id.data}/photo?photo=${s.id}`}
+                alt={d.photoAlt}
+                loading="lazy"
+              />
+            ))}
+        </div>
+      </section>
       <div className="intake-grid reception-workspace">
         <section className="card intake-form">
           <h2>{d.observe}</h2>

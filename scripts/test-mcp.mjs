@@ -1,3 +1,4 @@
+import { testInspectionMCP } from './test-inspection-mcp.mjs'
 import { Client as MCPClient } from '@modelcontextprotocol/client'
 import { StdioClientTransport } from '@modelcontextprotocol/client/stdio'
 import { createClient } from '@supabase/supabase-js'
@@ -110,6 +111,15 @@ try {
     return client
   }
   const both = await connect('reception:read,reception:preview')
+  const inspection = await testInspectionMCP({
+    connect,
+    rpc,
+    db,
+    tenant,
+    seller,
+    token,
+    receptionClient: both,
+  })
   const catalog = await both.listTools()
   assert.deepEqual(catalog.tools.map((t) => t.name).sort(), [
     'komisio_list_receptions',
@@ -544,6 +554,14 @@ try {
   await db.query(
     "insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values($1,$2,'totp','verified',now(),now())",
     [randomUUID(), uid],
+  )
+  assert(
+    (
+      await inspection.client.callTool({
+        name: 'komisio_read_inspection',
+        arguments: { bagId: inspection.bag },
+      })
+    ).isError,
   )
   assert(
     (

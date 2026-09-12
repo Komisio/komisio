@@ -1,11 +1,13 @@
-# Local reception MCP
+# Local intake MCP
 
 This is a real stdio Model Context Protocol adapter using the official TypeScript
 SDK. It is separate from the web app and optional model-provider integration.
-It exposes narrow tools through the same reception engine:
+It exposes narrow tools through the same intake engine:
 
 | Tool                             | Scope             | Effect                                                                                        |
 | -------------------------------- | ----------------- | --------------------------------------------------------------------------------------------- |
+| komisio_read_inspection | inspection:read | Read bounded saved bag drafts and exact history; no notes, contacts or writes |
+| komisio_read_reception_operation | reception:read | Read exact staged proposal sources and agreement terms; no decision |
 | komisio_list_receptions          | reception:read    | Read a bounded queue with shared next-step guidance, not commercial acceptance                |
 | komisio_read_reception_history   | reception:read    | Read bounded version summaries, with separate source/review cursors; no images or links       |
 | komisio_read_reception           | reception:read    | Read one saved session and its source snapshot                                                |
@@ -31,8 +33,8 @@ environment variables to the child process:
   a service-role key, password or refresh token
 - `KOMISIO_MCP_TENANT_ID`: exactly one store UUID
 - `KOMISIO_MCP_SCOPES`: an explicit comma-separated subset of `reception:read`,
-  `reception:preview`, `reception:photos`, `reception:propose`. Photo access and
-  staging are opt-in, not implied by read.
+  `reception:preview`, `reception:photos`, `reception:propose`, `inspection:read`.
+  Bag inspection, photo access and staging are separately opt-in.
 
 Have the host launch `node --import tsx mcp/stdio.ts` with the repository as its
 working directory. Use the direct command, not a shell that prints banners to
@@ -118,3 +120,14 @@ queue using the same engine as the operator UI. Optional `stage`, `before` and
 names (untrusted data), version references, response and link state, but no contact
 details, capability links or images. A seller-approved review is not a sellable
 item. Cursor paging is read-time, not a snapshot across subsequent calls.
+
+
+## Saved bag inspection
+
+`komisio_read_inspection` accepts a bag ID, optional selected draft/version,
+archive status and list/history cursors. Each list is bounded to20 rows. The
+response includes explicit continuation IDs, current selected draft and an exact
+historical version when requested. Historical data does not authorize a write;
+engine commands recheck revisions. No source or certainty is invented from draft
+text. Bag notes and contact lookup are excluded; descriptions and change reasons
+remain untrusted staff-entered text. See [shared inspection read](../docs/INSPECTION-READ.md).

@@ -34,9 +34,10 @@ Leave Fable's active worktree untouched.
 Fable owns its implementation branch. Astra owns integration review, coordinating
 local migration/MCP/concurrency verification, and the release PR/CI/staging path.
 Do not implement a competing pending-operation subsystem or repeat T5.
-Exact source/terms context is delivered in PR44. Astra's current slice reviews
-Fable's fixed4593bd0 functional inventory; it must not turn legacy prototypes into
-financial rules or a feature-parity mandate. See DEVELOPMENT-HANDOFF.md.
+Exact source/terms context is delivered in PR44; Fable's fixed4593bd0 roadmap was
+reviewed and integrated in PR45. Astra's current slice shares the existing bag
+inspection read between UI and opt-in MCP. It adds no pending-operation kind or
+commercial rule. See DEVELOPMENT-HANDOFF.md.
 
 Coordinate shared files such as DECISIONS.md, dictionaries, package manifests,
 migrations and handover notes. One release owner merges changes after exact-head

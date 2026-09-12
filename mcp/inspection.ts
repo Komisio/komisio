@@ -1,3 +1,4 @@
+import { readInspectionReceptionPreparation } from '../lib/engine/inspection-reception-preview'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { z } from 'zod'
 import type { MCPConfig } from './config'
@@ -122,4 +123,20 @@ export async function readInspectionTool(
   const actor = await requireMCPIdentity(client, config, 'inspection:read')
   const result = await readInspection(client, config.tenantId, input)
   return { ...result, actor, bag: { reference: result.bag.reference } }
+}
+
+export async function prepareInspectionReceptionTool(
+  client: SupabaseClient,
+  config: MCPConfig,
+  input: unknown,
+) {
+  const actor = await requireMCPIdentity(client, config, 'inspection:preview')
+  return {
+    actor,
+    ...(await readInspectionReceptionPreparation(
+      client,
+      config.tenantId,
+      input,
+    )),
+  }
 }

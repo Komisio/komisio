@@ -82,7 +82,7 @@ settlement exist, and every later slice (labels, POS, returns, payout) doubles.
 - The queue (docs/RECEPTION-QUEUE.md) and the bag queue stay separate work
   lists; a later "ready for acceptance" stage in each points at the same
   command.
-- Staged operations (docs/STAGED-OPERATIONS.md) get their second kind when
+- Staged operations (docs/STAGED-OPERATIONS.md) would gain an acceptance kind when
   acceptance exists: an agent may propose acceptance, at a risk level above
   `low`, which by the existing rule requires a different approver than the
   authenticated identity that proposed it, not merely another session.

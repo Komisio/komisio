@@ -1,3 +1,5 @@
+import { prepareInspectionReception } from '@/lib/engine/inspection-reception-preview'
+import { InspectionPreparation } from '@/components/intake/inspection-preparation'
 import { readInspection } from '@/lib/engine/inspection-read'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -135,6 +137,22 @@ export default async function InspectBag({
             {s.version} {selected.revision}
           </p>
         </section>
+      )}
+      {selected && !selected.archived && !version && (
+        <InspectionPreparation
+          d={d}
+          preview={prepareInspectionReception({
+            bagId: id,
+            draftId: selected.draft_id,
+            revision: selected.revision,
+            archived: selected.archived,
+            fields: {
+              description: selected.description,
+              category: selected.category,
+              condition: selected.condition,
+            },
+          })}
+        />
       )}
       {draft && (
         <section className="card intake-form inspection-history">

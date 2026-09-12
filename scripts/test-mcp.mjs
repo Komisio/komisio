@@ -565,6 +565,14 @@ try {
   )
   assert(
     (
+      await inspection.previewer.callTool({
+        name: 'komisio_prepare_inspection_reception',
+        arguments: inspection.preparationInput,
+      })
+    ).isError,
+  )
+  assert(
+    (
       await inspection.stager.callTool({
         name: 'komisio_propose_inspection_edit',
         arguments: inspection.stagedInput,

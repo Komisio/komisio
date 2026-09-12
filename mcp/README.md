@@ -4,20 +4,21 @@ This is a real stdio Model Context Protocol adapter using the official TypeScrip
 SDK. It is separate from the web app and optional model-provider integration.
 It exposes narrow tools through the same intake engine:
 
-| Tool                              | Scope              | Effect                                                                                         |
-| --------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------- |
-| komisio_propose_inspection_edit   | inspection:propose | Stage a complete descriptive edit against an exact saved revision; staff approval required     |
-| komisio_read_inspection_operation | inspection:read    | Read exact staged inspection before/after and decision; no reception access                    |
-| komisio_preview_inspection        | inspection:preview | Return unsaved descriptive before/after at the exact saved base revision; no approval or write |
-| komisio_list_bags                 | inspection:read    | Find a printed bag number or page through bag IDs; no seller data or notes                     |
-| komisio_read_inspection           | inspection:read    | Read bounded saved bag drafts and exact history; no notes, contacts or writes                  |
-| komisio_read_reception_operation  | reception:read     | Read exact staged proposal sources and agreement terms; no decision                            |
-| komisio_list_receptions           | reception:read     | Read a bounded queue with shared next-step guidance, not commercial acceptance                 |
-| komisio_read_reception_history    | reception:read     | Read bounded version summaries, with separate source/review cursors; no images or links        |
-| komisio_read_reception            | reception:read     | Read one saved session and its source snapshot                                                 |
-| komisio_preview_reception         | reception:preview  | Validate a source-bound proposal against the current revision; return an unsaved preview       |
-| komisio_read_reception_photo      | reception:photos   | Read one attached photo at the exact current revision as native MCP image content              |
-| komisio_propose_reception_review  | reception:propose  | Stage a complete review for staff approval; publishes nothing (see docs/STAGED-OPERATIONS.md)  |
+| Tool                                 | Scope              | Effect                                                                                                 |
+| ------------------------------------ | ------------------ | ------------------------------------------------------------------------------------------------------ |
+| komisio_propose_inspection_edit      | inspection:propose | Stage a complete descriptive edit against an exact saved revision; staff approval required             |
+| komisio_read_inspection_operation    | inspection:read    | Read exact staged inspection before/after and decision; no reception access                            |
+| komisio_prepare_inspection_reception | inspection:preview | Compare a saved draft with reception requirements; unsourced candidates and unassessed next steps only |
+| komisio_preview_inspection           | inspection:preview | Return unsaved descriptive before/after at the exact saved base revision; no approval or write         |
+| komisio_list_bags                    | inspection:read    | Find a printed bag number or page through bag IDs; no seller data or notes                             |
+| komisio_read_inspection              | inspection:read    | Read bounded saved bag drafts and exact history; no notes, contacts or writes                          |
+| komisio_read_reception_operation     | reception:read     | Read exact staged proposal sources and agreement terms; no decision                                    |
+| komisio_list_receptions              | reception:read     | Read a bounded queue with shared next-step guidance, not commercial acceptance                         |
+| komisio_read_reception_history       | reception:read     | Read bounded version summaries, with separate source/review cursors; no images or links                |
+| komisio_read_reception               | reception:read     | Read one saved session and its source snapshot                                                         |
+| komisio_preview_reception            | reception:preview  | Validate a source-bound proposal against the current revision; return an unsaved preview               |
+| komisio_read_reception_photo         | reception:photos   | Read one attached photo at the exact current revision as native MCP image content                      |
+| komisio_propose_reception_review     | reception:propose  | Stage a complete review for staff approval; publishes nothing (see docs/STAGED-OPERATIONS.md)          |
 
 Every data call verifies the configured user token with Supabase Auth and checks
 current store membership and required MFA in the database. The store is pinned in
@@ -161,3 +162,12 @@ Unchanged suggestions produce an empty change list. Clearing category/condition
 is explicit; description cannot become empty. The result uses the actual saved
 base revision, not a fabricated persisted next version. See
 [inspection preview](../docs/INSPECTION-PREVIEW.md). No model is called by this tool.
+
+## Preparing an inspection draft for reception
+
+`komisio_prepare_inspection_reception` accepts only bag ID, draft ID and the exact
+expected saved revision. It returns candidate description/category/condition,
+actual draft provenance and steps to check. It does not read other receptions,
+prices or agreements, does not assert they are missing, and does not create source
+IDs or a publishable review. The staff inspection page shows the same comparison
+under an expandable preparation section. See [contract](../docs/INSPECTION-RECEPTION-PREVIEW.md).

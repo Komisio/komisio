@@ -43,11 +43,13 @@ local migration/MCP/concurrency verification, and the release PR/CI/staging path
 Do not implement a competing pending-operation subsystem or repeat T5.
 Exact source/terms context is delivered in PR44; Fable's fixed4593bd0 roadmap was
 reviewed and integrated in PR45. PR46-PR48 subsequently delivered shared
-inspection reads, bag discovery and unsaved inspection previews. Astra's current
-unreleased branch, `feat/staged-inspection-edits`, extends the existing T3
+inspection reads, bag discovery and unsaved inspection previews. PR49's
+`feat/staged-inspection-edits` extends the existing T3
 mechanism with descriptive inspection edits; it does not create a competing
-write table or a commercial rule. See STAGED-INSPECTION.md and the private
-operational checkpoint for incomplete work and test evidence.
+write table or a commercial rule. That slice is delivered in PR49. Astra now
+implements the roadmap's unsaved inspection-to-reception comparison through a
+shared read/pure contract (INSPECTION-RECEPTION-PREVIEW.md), without sources or
+commercial writes. See DEVELOPMENT-HANDOFF.md and the private checkpoint.
 
 Coordinate shared files such as DECISIONS.md, dictionaries, package manifests,
 migrations and handover notes. One release owner merges changes after exact-head

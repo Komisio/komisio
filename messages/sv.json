@@ -304,7 +304,23 @@
     "filterActive": "Aktiva utkast",
     "filterArchived": "Arkiverade utkast",
     "filterAll": "Alla utkast",
-    "filterLabel": "Visa utkast"
+    "filterLabel": "Visa utkast",
+    "preparation": {
+      "title": "Förbered utkastet för mottagning",
+      "notice": "Jämför den sparade beskrivningen med vad ett säljarunderlag behöver. Inget kopieras, publiceras eller godkänns här.",
+      "savedOnly": "Endast denna sparade version visas. Osparade ändringar ingår inte; spara och uppdatera vyn innan du granskar nya ändringar.",
+      "candidates": "Beskrivande uppgifter att granska",
+      "unverified": "Uppgifterna har inte kontrollerats mot mottagningens källor. Bekräfta beskrivning, kategori och skick innan du använder dem.",
+      "next": "Steg att kontrollera före publicering av säljarunderlag",
+      "notChecked": "Andra mottagningar, priser och avtal har inte kontrollerats här. Ingen mottagning kopplas automatiskt.",
+      "steps": {
+        "select_reception": "Välj eller skapa en mottagning för samma säljare och plagg.",
+        "record_descriptive_sources": "Registrera källor som stöder uppgifterna. En utkastreferens är inte en mottagningskälla.",
+        "review_sourced_price": "Granska ett försäljningspris med prisunderlag.",
+        "select_published_terms": "Välj den publicerade avtalsversion som säljaren ska läsa.",
+        "review_facts": "Granska varje uppgift och besvara öppna frågor innan du publicerar."
+      }
+    }
   },
   "reviewDecline": "Avvisa underlaget",
   "reviewColor": "Färg",

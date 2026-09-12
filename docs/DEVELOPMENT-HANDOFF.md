@@ -6,6 +6,21 @@ precedence over narrative. This file supersedes older slice status notes.
 
 ## Current work
 
+Integration checkpoint: branch `integration/fable-staged-operations` combines
+main54765ec with fixed Fable commitf734f95c723e338da9c11f7d7158410c430ddd85.
+Fable's live worktree remains untouched. Local lint/typecheck/build,99 unit tests,
+72 new SQL assertions in a disposable database, and all owner/concurrency races
+passed. The disposable SQL harness uses minimal Auth/Storage contracts; it does
+not substitute for real HTTP MCP/Storage/browser tests, which run in isolated CI.
+Added an operator browser case for approve/reject through the web route. T5's
+historical-text scan was removed: the existing AI HTTP fixture exercises actual
+runtime prompt-version acceptance by the installed database function.
+
+No migration has been applied to shared local Supabase or staging by this
+integration. Required migrations are20260912140000 and20260912150000. Before
+release, require exact-head CI, inspect pending migrations and verify the staging
+project; apply only those reviewed migrations and verify deployment separately.
+
 Coordination update: the owner explicitly authorized Fable's T3 implementation.
 See PARALLEL-DEVELOPMENT.md for current responsibilities and observed commits.
 Do not start a competing pending-operation design. Fable's T3, seller-read lock

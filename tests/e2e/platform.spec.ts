@@ -2007,6 +2007,101 @@ test('operator reception guides saved evidence, exact review and link replacemen
   await expect(
     page.getByRole('link', { name: /Operator TEST Seller/ }),
   ).toBeVisible()
+  // Fixture proposals use the real SQL entry point under the operator identity.
+  // No direct insert bypasses the proposal's validation or authorization.
+  const { Client } = createRequire(import.meta.url)('pg')
+  const fixture = new Client({
+    connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+  })
+  await fixture.connect()
+  const operationId = crypto.randomUUID(),
+    rejectedId = crypto.randomUUID()
+  try {
+    const actor = await fixture.query(
+      'select id from auth.users where email=$1',
+      [`operator-${run}@example.test`],
+    )
+    const latest = await fixture.query(
+      'select session_id,source_revision,id,agreement_id,suggestions from reception_reviews where tenant_id=$1 order by version desc limit 1',
+      [tenantId],
+    )
+    const review = latest.rows[0]
+    await fixture.query('begin')
+    await fixture.query('set local role authenticated')
+    await fixture.query("select set_config('request.jwt.claims',$1,true)", [
+      JSON.stringify({ sub: actor.rows[0].id, role: 'authenticated' }),
+    ])
+    for (const [id, description] of [
+      [operationId, 'Agent proposal to approve'],
+      [rejectedId, 'Agent proposal to reject'],
+    ]) {
+      const suggestions = structuredClone(review.suggestions)
+      suggestions.metadata.description.value = description
+      await fixture.query(
+        "select propose_operation($1,$2,'publishReceptionReview',$3::jsonb,'browser-fixture',now()+interval '1 hour')",
+        [
+          tenantId,
+          id,
+          JSON.stringify({
+            sessionId: review.session_id,
+            sourceRevision: review.source_revision,
+            previousReviewId: review.id,
+            agreementId: review.agreement_id,
+            expiresAt: new Date(Date.now() + 3600000).toISOString(),
+            suggestions,
+          }),
+        ],
+      )
+    }
+    await fixture.query('commit')
+  } finally {
+    await fixture.end()
+  }
+  await page.goto('/intake/operations')
+  const rejected = page
+    .locator('li.card')
+    .filter({ hasText: 'Agent proposal to reject' })
+  await rejected.getByRole('checkbox').check()
+  await rejected.getByRole('button', { name: 'Avvisa', exact: true }).click()
+  await expect(
+    rejected.getByRole('button', { name: 'Avvisa', exact: true }),
+  ).toHaveCount(0)
+  const approved = page
+    .locator('li.card')
+    .filter({ hasText: 'Agent proposal to approve' })
+  await approved.getByRole('checkbox').check()
+  await approved
+    .getByRole('button', { name: 'Godkänn och publicera', exact: true })
+    .click()
+  await expect(
+    approved.getByRole('button', {
+      name: 'Godkänn och publicera',
+      exact: true,
+    }),
+  ).toHaveCount(0)
+  const verify = new Client({
+    connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+  })
+  await verify.connect()
+  try {
+    const outcomes = await verify.query(
+      'select operation_id,outcome from operation_decisions where operation_id=any($1::uuid[])',
+      [[operationId, rejectedId]],
+    )
+    expect(outcomes.rows).toEqual(
+      expect.arrayContaining([
+        { operation_id: operationId, outcome: 'executed' },
+        { operation_id: rejectedId, outcome: 'rejected' },
+      ]),
+    )
+    const reviews = await verify.query(
+      'select id from reception_reviews where id=any($1::uuid[])',
+      [[operationId, rejectedId]],
+    )
+    expect(reviews.rows).toEqual([{ id: operationId }])
+  } finally {
+    await verify.end()
+  }
 })
 test('AI HTTP fixture stages a sourced proposal before explicit staff publication', async ({
   page,

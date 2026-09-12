@@ -34,6 +34,12 @@ version, an additive migration that accepts it in the attempt reservation, a
 skill review and a new pinned hash, so two prompts never share one version in
 the attempt history.
 
+The shared port minimizes evidence before invoking any provider adapter and marks
+all returned descriptive facts tentative after strict validation. Internal tenant,
+session and seller identity, revision and photo Storage references stay with the
+orchestrator. See [port contract](RECEPTION-EVIDENCE-PORT.md). This is an application
+boundary, not a sandbox for untrusted in-process provider code.
+
 The provider receives source IDs, descriptive observations and supplied price
 evidence, plus up to three reduced images. Seller/session/store identifiers,
 account information and Storage paths are excluded. Free text and visible pixels

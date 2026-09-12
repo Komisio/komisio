@@ -50,13 +50,13 @@ export function openAIReception(
   transport: typeof fetch = fetch,
 ): ReceptionAssistance {
   return {
-    async suggest(session, signal) {
+    async suggest(evidence, signal) {
       signal.throwIfAborted()
-      const photos = session.sources.filter((s) => s.kind === 'photo')
+      const photos = evidence.sources.filter((s) => s.kind === 'photo')
       if (photos.length > 3 || photos.some((s) => !images.has(s.id)))
         throw new Error('ASSISTANCE_IMAGES_REQUIRED')
       // Exclude tenant/session/seller identity and Storage paths. Do not resolve URLs.
-      const sources = session.sources.map((s) => ({
+      const sources = evidence.sources.map((s) => ({
         id: s.id,
         kind: s.kind,
         observation: s.observation,

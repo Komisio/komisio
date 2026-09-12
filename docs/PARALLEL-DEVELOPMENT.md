@@ -50,11 +50,12 @@ write table or a commercial rule. That slice is delivered in PR49. PR50 delivers
 unsaved inspection-to-reception comparison without sources or commercial writes.
 PR51 delivers explicit per-fact and price review in built-in AI publication and
 staged reception decisions. PR52 delivers exact staff-decision retries after
-uncertain responses. Astra's current slice pages and filters the existing staff
-operation queue through an additive RLS-enforced read RPC, preserving the legacy
-RPC and all decision commands. Migration20260912170000 is already applied locally
-and must not be edited. See OPERATION-QUEUE-PAGING.md, DEVELOPMENT-HANDOFF.md and
-the private checkpoint for current CI/staging status.
+uncertain responses. PR53 delivers filtered operation queue pages;
+migration20260912170000 is applied locally and in staging and must not be edited.
+Astra's current slice narrows the existing assistance port to source evidence and
+normalizes all adapter facts to tentative before staff review. It changes no
+prompt, provider setting, database or authorization. See RECEPTION-EVIDENCE-PORT.md,
+DEVELOPMENT-HANDOFF.md and the private checkpoint for current test/release status.
 
 Coordinate shared files such as DECISIONS.md, dictionaries, package manifests,
 migrations and handover notes. One release owner merges changes after exact-head

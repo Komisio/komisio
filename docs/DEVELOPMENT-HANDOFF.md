@@ -86,16 +86,21 @@ and pre-server rejection responses, exact retry bodies and one decision each.
 107 units, lint/types/build and both operation browser journeys passed. No migration.
 Hosted public guards passed; authenticated hosted walkthrough remains pending.
 
-Current slice: `feat/operation-queue-pages` adds read-only status filtering and
-20-row keyset pages to the staff proposal queue. The legacy newest-50 RPC remains
-compatible. Migration20260912170000 is applied locally and is immutable; staging
-application and PR/CI/release are pending. Contract: OPERATION-QUEUE-PAGING.md.
-Local SQL475 and unit110 assertions pass, with lint/types/build/format and three
-relevant browser journeys (paging, inspection decisions and reception review).
-Paging checks all55 proposals, tied microseconds, retained filters, mobile
-wrapping and invalid-cursor denial. CI and release remain pending; see the private
-checkpoint and GitHub before claiming delivery.
-No new table, commercial rule, agent write or live provider activation.
+PR53 is delivered: merge2f04487fee037b946876c44e7a22f0466cd7c984,
+exact-head CI34700389247 passed on8e27b891a5e64d4cf4ce61d84467acd0c12ea4ed.
+Deployment6410954246 succeeded. Migration20260912170000 is applied BOTH locally
+and in staging, immutable. The staff queue filters status and reaches older
+proposals through20-row keyset pages; the legacy RPC stays compatible. SQL475,
+unit110 and three relevant browsers plus lint/types/build/format passed; full CI
+and hosted public guards passed. Authenticated hosted paging remains unverified.
+
+Current slice: `refactor/reception-evidence-port` narrows the shared assistance
+input to source evidence and marks every adapter's descriptive output tentative.
+No new provider, prompt, financial rule, authorization or migration. New tests
+failed before the fix and113 units pass, with types/build/lint/scoped formatting
+and the isolated real HTTP publication/retry browser fixture. Remaining: PR/exact
+CI, merge and deployment. No live model was used.
+See RECEPTION-EVIDENCE-PORT.md and private checkpoint for latest evidence.
 
 The prior PR40 work below is completed: merged6329b6ec95df1af3db8534921966f274f82f9e95,
 exact-head CI34687228721 passed, staging deployment6408441889 succeeded.

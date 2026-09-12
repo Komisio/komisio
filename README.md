@@ -5,7 +5,7 @@
 <p align="center">
   <strong>Give great things a second life. Give your store a better system.</strong><br>
   Open-source software for second-hand stores selling on consignment.<br>
-  Built in the open. Designed for people and, next, their AI agents.
+  Built in the open. Designed for people and their AI agents.
 </p>
 
 <p align="center">
@@ -42,8 +42,9 @@ roles, store switching and a web interface in Swedish and English.
 **AI should do the legwork. You keep control.** Our architectural direction is
 one shared engine for the interface, extensions and AI agents. Agents should
 prepare work for approval, with permissions and business rules enforced by the
-system. The first receiving engine is available as a gated pilot; the agent
-runtime and financial operations are still ahead of us.
+system. Photo-based reception, optional AI suggestions and local MCP reads are
+available as a pilot. Durable agent approvals and financial operations are still
+ahead of us. [See how AI fits](docs/HOW-AI-FITS.md).
 
 **Open means you can look under the hood.** Inspect the code, run the current
 platform locally and help shape what comes next. AGPL-3.0-or-later, with a
@@ -55,7 +56,7 @@ Accounting integrations are planned; Komisio is not a bookkeeping application.
 
 ## From handover to payout
 
-![Planned workflow: receive an item, sell it, settle the consignor's share. These operations are not implemented yet.](docs/images/komisio-flow.svg)
+![Target workflow: receive an item, sell it, settle the consignor's share. Receiving is available as a pilot; sales and settlement are planned.](docs/images/komisio-flow.svg)
 
 The first store operation is deliberately small: **register a seller, receive
 a bag and print its label**. Staff reviews the contents later. This gated pilot
@@ -66,6 +67,28 @@ and external approval evidence](docs/SELLER-AGREEMENTS.md) and save
 signatures, sales and payouts follow as separate workflows. See the
 [implementation sequence](docs/SELLER-FLOW-IMPLEMENTATION.md) and
 [open domain questions](docs/open-questions.md).
+
+### Start with a jacket. Keep the decision human.
+
+The new single-garment reception path starts with **photos and observations**.
+A configured AI adapter can propose a description and a selling price backed by
+supplied evidence. Staff reviews the result, then the seller sees the exact
+photos, price and terms on their phone and approves or declines.
+
+```mermaid
+flowchart LR
+  A[Photos and observations] --> B[Optional AI proposal]
+  A --> C[Staff review]
+  B --> C
+  C --> D[Exact mobile review]
+  D --> E[Saved seller decision]
+```
+
+The web interface and local AI tools use the same engine. Photo access is private,
+reviews are versioned, and a changed or revoked review cannot authorize a new
+decision. No camera hardware or market-price feed is connected yet. The hosted
+AI adapter stays off until explicitly configured; manual preparation works now.
+See the [pilot walkthrough](docs/RECEPTION-PILOT.md).
 
 ## What can I use today?
 
@@ -79,11 +102,13 @@ use test data rather than real consignor or financial records.
 | Store creation and switching between your stores | Sales, returns and commission |
 | Profiles and optional authenticator-app MFA | Settlements and payouts |
 | Membership administration and four access roles | Accounting and other integration extensions |
-| Email-bound invitation links and optional pilot email delivery | AI agent tools and approval workflows |
+| Email-bound invitation links and optional pilot email delivery | Hosted agent OAuth and durable agent approval workflows |
 | Access log and responsive Swedish/English interface | Billing and commercial hosted plans |
 | Seller registration, bag receiving and printable labels | Seller portal and digital signatures |
 | Versioned store agreements and staff-recorded approval evidence | Space booking and booking fees |
-| Resumable descriptive item drafts with protected revision history | AI suggestions, commercial acceptance and POS publication |
+| Resumable descriptive item drafts with protected revision history | Commercial acceptance and POS publication |
+| Private reception photos and exact mobile approve/decline | Wall-camera pairing and automated capture |
+| Optional sourced AI suggestions and local MCP reads/previews | Live model quality evaluation and market-price integrations |
 
 Hosted onboarding and invitation edge cases are still being validated during
 the pilot. See [platform status](docs/PLATFORM-STATUS.md) for details and
@@ -136,12 +161,13 @@ and [hosted staging setup](docs/HOSTED-STAGING.md) for configuration and limits.
 ## For the curious and the builders
 
 Next.js · React · TypeScript · Supabase (PostgreSQL, Auth and row-level security).
-The active schema is intentionally limited to identity and access. Domain
-workflows come before a financial data model.
+The active schema covers identity, receiving and versioned preparation/review
+evidence. Domain workflows come before a financial data model.
 
 | Start here | What you'll find |
 | --- | --- |
 | [Architecture](ARCHITECTURE.md) | Target boundaries for the core, UI, AI and extensions |
+| [How AI fits](docs/HOW-AI-FITS.md) | A jacket's journey, file responsibilities and current limits |
 | [Decisions](DECISIONS.md) | What we've chosen and why |
 | [Roadmap](ROADMAP.md) | Milestones and acceptance scenarios |
 | [Extensions](docs/EXTENSIONS.md) | The proposed integration contract |

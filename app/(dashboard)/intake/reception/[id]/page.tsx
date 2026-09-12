@@ -74,6 +74,14 @@ export default async function Reception({
         </p>
       </div>
       <p className="intake-notice">{d.manual}</p>
+      <p>
+        <Link
+          className="text-link"
+          href={`/intake/reception/${id.data}/history`}
+        >
+          {d.history.title}
+        </Link>
+      </p>
       <section className="card intake-form reception-result">
         <h2>{d.photos}</h2>
         {write && (

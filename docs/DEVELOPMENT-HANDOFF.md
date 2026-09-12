@@ -5,6 +5,21 @@ Read CLAUDE.md first. All statuses below are evidence, not inferred completion.
 
 ## Current slice
 
+Read-only reception history, branch `feat/reception-history`. The shared engine
+returns separately paginated source/review summaries. Staff UI and the local MCP
+history tool use this read; no new tables, writes, contact lookup or photo access.
+See RECEPTION-HISTORY.md for exact scope and limitations. Local MCP stdio tests
+(22 source versions, cursor/identity/MFA denial), lint/typecheck/build,94 unit
+tests and seller browser journey (1/1, old approval plus newer decline) passed.
+Next: commit/PR, exact-head CI, merge and verify staging deployment. Authenticated
+hosted walkthrough remains separate; do not change the owner's seller responses.
+
+PR39 guidance merged as `9cd6c5d810e45f680d2dd60ab2a615f767f5987d` after
+CI34686842356 passed on `dddb2098af52dda6d5fc6c5aafbb7575fe52f315`.
+No migration required. Deployment verification is in progress.
+
+## Previous guidance slice (completed)
+
 Shared reception next-step guidance, branch `feat/reception-next-step`, based on
 main `5f910f533819f53a2a34b27b5928626b86c8f01b` (PR38 merged, deployment6407662441
 succeeded). The engine derives guidance from the existing validated queue stage;

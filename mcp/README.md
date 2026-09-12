@@ -4,11 +4,13 @@ This is a real stdio Model Context Protocol adapter using the official TypeScrip
 SDK. It is separate from the web app and optional model-provider integration.
 It exposes narrow tools through the same reception engine:
 
-| Tool                         | Scope             | Effect                                                                                   |
-| ---------------------------- | ----------------- | ---------------------------------------------------------------------------------------- |
-| komisio_read_reception       | reception:read    | Read one saved session and its source snapshot                                           |
-| komisio_preview_reception    | reception:preview | Validate a source-bound proposal against the current revision; return an unsaved preview |
-| komisio_read_reception_photo | reception:photos  | Read one attached photo at the exact current revision as native MCP image content        |
+| Tool                           | Scope             | Effect                                                                                   |
+| ------------------------------ | ----------------- | ---------------------------------------------------------------------------------------- |
+| komisio_list_receptions        | reception:read    | Read a bounded queue with shared next-step guidance, not commercial acceptance           |
+| komisio_read_reception_history | reception:read    | Read bounded version summaries, with separate source/review cursors; no images or links  |
+| komisio_read_reception         | reception:read    | Read one saved session and its source snapshot                                           |
+| komisio_preview_reception      | reception:preview | Validate a source-bound proposal against the current revision; return an unsaved preview |
+| komisio_read_reception_photo   | reception:photos  | Read one attached photo at the exact current revision as native MCP image content        |
 
 Every data call verifies the configured user token with Supabase Auth and checks
 current store membership and required MFA in the database. The store is pinned in
@@ -67,6 +69,12 @@ must still cite the exact source IDs and independently pass current-revision
 checks. Price still requires price evidence; a photo does not create market data.
 
 ## Preview is not a staged write
+
+History accepts `sessionId` and optional exclusive integer `beforeSource` and
+`beforeReview` cursors. Each list returns at most20 records and its next cursor.
+These are separate reads, not a single current-state snapshot. Historical
+approvals are tied to their proposal version, never carried to new evidence.
+See [history contract](../docs/RECEPTION-HISTORY.md) for summary limitations.
 
 Preview output explicitly includes `persisted:false`, `staged:false`,
 `requiresStaffReview:true`, the verified actor and exact source revision. Facts

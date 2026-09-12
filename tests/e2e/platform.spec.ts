@@ -1820,6 +1820,24 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   await expect(
     mobile.getByText('Du har avvisat denna version.', { exact: false }),
   ).toBeVisible()
+  await page.goto(`/intake/reception/${sessionId}`)
+  await page
+    .getByRole('link', { name: 'Versionshistorik', exact: true })
+    .click()
+  await expect(
+    page.getByRole('heading', { name: 'Versionshistorik', exact: true }),
+  ).toBeVisible()
+  const firstHistory = page.locator('article').filter({
+    has: page.getByRole('heading', { name: 'version 1', exact: true }),
+  })
+  const secondHistory = page.locator('article').filter({
+    has: page.getByRole('heading', { name: 'version 2', exact: true }),
+  })
+  await expect(firstHistory).toContainText('Säljaren godkände denna version.')
+  await expect(secondHistory).toContainText('Säljaren avvisade denna version.')
+  await page.goto(`/intake/reception/${sessionId}/history?beforeReview=2`)
+  await expect(firstHistory).toBeVisible()
+  await expect(secondHistory).toHaveCount(0)
   // Neither response gave staff write capability.
   expect(
     (

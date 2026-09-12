@@ -441,6 +441,25 @@
       "issue_review_link": "Nästa steg: öppna mottagningen och skapa säljarens personliga länk. Inget mejl skickas automatiskt.",
       "replace_review_link": "Nästa steg: öppna mottagningen och skapa en ersättningslänk om underlaget ska delas igen.",
       "await_seller_response": "Nästa steg: invänta säljarens svar. En skapad länk innebär inte att säljaren har läst underlaget."
+    },
+    "history": {
+      "title": "Versionshistorik",
+      "notice": "Sammanfattning av sparade källor och publicerade underlag. Ett svar gäller bara sin underlagsversion. Detta är inte butikens mottagningsbeslut eller en fullständig avtals- och bildhistorik.",
+      "reviews": "Publicerade underlag",
+      "sources": "Sparade källor",
+      "sourceRevision": "Källversion",
+      "empty": "Inga versioner på denna sida.",
+      "approved": "Säljaren godkände denna version.",
+      "declined": "Säljaren avvisade denna version.",
+      "unanswered": "Inget svar registrerat för denna version vid läsningen.",
+      "olderReviews": "Äldre underlag",
+      "olderSources": "Äldre källversioner",
+      "latest": "Visa senaste versionerna",
+      "kinds": {
+        "photo": "Bild",
+        "observation": "Observation",
+        "price-evidence": "Prisunderlag"
+      }
     }
   },
   "reviewPhotoAlt": "Bild som ingår i detta underlag",

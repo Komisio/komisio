@@ -108,6 +108,7 @@ try {
     'komisio_list_receptions',
     'komisio_preview_reception',
     'komisio_read_reception',
+    'komisio_read_reception_history',
   ])
   assert(
     catalog.tools.every(
@@ -231,10 +232,66 @@ try {
     arguments: { sessionId: session, tenantId: randomUUID() },
   })
   assert(injection.isError)
+  // Seed enough immutable source versions to exercise real history pagination.
+  for (let revision = 1; revision <= 21; revision++) {
+    await rpc('save_reception_sources', {
+      p_tenant: tenant,
+      p_request: randomUUID(),
+      p_session: session,
+      p_expected: revision,
+      p_sources: [
+        {
+          id: randomUUID(),
+          kind: 'observation',
+          reference: 'MCP history fixture',
+          observation: `Revision ${revision + 1}`,
+        },
+      ],
+    })
+  }
+  const history = await both.callTool({
+    name: 'komisio_read_reception_history',
+    arguments: { sessionId: session },
+  })
+  assert(!history.isError)
+  assert.equal(history.structuredContent.sources.length, 20)
+  assert.equal(history.structuredContent.sources[0].revision, 22)
+  assert.equal(history.structuredContent.nextSource, 3)
+  assert.equal(history.structuredContent.summaryOnly, true)
+  const olderHistory = await both.callTool({
+    name: 'komisio_read_reception_history',
+    arguments: { sessionId: session, beforeSource: 3 },
+  })
+  assert(!olderHistory.isError)
+  assert.deepEqual(
+    olderHistory.structuredContent.sources.map((s) => s.revision),
+    [2, 1],
+  )
+  assert.equal(olderHistory.structuredContent.nextSource, null)
+  assert(!JSON.stringify(olderHistory).includes(photoPath))
+  assert(!JSON.stringify(history).includes('mcp-seller@example.test'))
+  for (const args of [
+    { sessionId: randomUUID() },
+    { sessionId: session, beforeSource: 0 },
+    { sessionId: session, beforeReview: 1.5 },
+    { sessionId: session, tenantId: randomUUID() },
+  ])
+    assert(
+      (
+        await both.callTool({
+          name: 'komisio_read_reception_history',
+          arguments: args,
+        })
+      ).isError,
+    )
   const readonly = await connect('reception:read')
   assert.deepEqual(
     (await readonly.listTools()).tools.map((t) => t.name),
-    ['komisio_list_receptions', 'komisio_read_reception'],
+    [
+      'komisio_read_reception_history',
+      'komisio_list_receptions',
+      'komisio_read_reception',
+    ],
   )
   await assert.rejects(
     readonly.callTool({
@@ -257,6 +314,14 @@ try {
     assert(
       (
         await denied.callTool({
+          name: 'komisio_read_reception_history',
+          arguments: { sessionId: session },
+        })
+      ).isError,
+    )
+    assert(
+      (
+        await denied.callTool({
           name: 'komisio_list_receptions',
           arguments: {},
         })
@@ -274,6 +339,14 @@ try {
   await db.query(
     "insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values($1,$2,'totp','verified',now(),now())",
     [randomUUID(), uid],
+  )
+  assert(
+    (
+      await both.callTool({
+        name: 'komisio_read_reception_history',
+        arguments: { sessionId: session },
+      })
+    ).isError,
   )
   assert(
     (await both.callTool({ name: 'komisio_list_receptions', arguments: {} }))
@@ -299,7 +372,7 @@ try {
     'select (select count(*) from reception_source_revisions where session_id=$1)::int sources,(select count(*) from reception_reviews where session_id=$1)::int reviews,(select count(*) from reception_assistance_attempts where session_id=$1)::int attempts',
     [session],
   )
-  assert.deepEqual(records.rows[0], { sources: 1, reviews: 0, attempts: 0 })
+  assert.deepEqual(records.rows[0], { sources: 22, reviews: 0, attempts: 0 })
   console.log(
     'PASS: real stdio MCP negotiation, authenticated reads, opt-in minimized image/provenance, unsaved preview, scope/tenant/invalid-token/MFA/stale denial, no source/review/model writes.',
   )

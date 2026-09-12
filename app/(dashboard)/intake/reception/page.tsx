@@ -100,7 +100,7 @@ export default async function Receptions({
                 </option>
               ))}
             </select>
-            <button className="btn btn-secondary">{d.searchButton}</button>
+            <button className="btn btn-secondary">{d.queueFilter}</button>
           </form>
           <form action="/intake/reception">
             <div className="field">

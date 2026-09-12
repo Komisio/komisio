@@ -151,6 +151,24 @@ try {
   })
   const allowed = client(seller.token, capability),
     path = `${tenant}/${session}/${photoId}.jpg`
+  // Hosted Storage authorizes an info request before serving the download.
+  // Local downloads alone do not exercise that CDN preflight.
+  const info = await allowed.storage.from('seller-reception-photos').info(path)
+  assert.ifError(info.error)
+  for (const denied of [client(seller.token), client(undefined, capability)]) {
+    assert.ok(
+      (await denied.storage.from('seller-reception-photos').info(path)).error,
+      'info requires both identity and capability',
+    )
+  }
+  assert.ok(
+    (
+      await allowed.storage
+        .from('seller-reception-photos')
+        .info(`${tenant}/${session}/${randomUUID()}.jpg`)
+    ).error,
+    'info cannot resolve another photo',
+  )
   const bytes = await readSellerPhoto(allowed, capability, photoId)
   assert.ok(bytes)
   const meta = await sharp(Buffer.from(bytes)).metadata()
@@ -196,6 +214,10 @@ try {
     "insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values($1,$2,'totp','verified',now(),now())",
     [randomUUID(), seller.uid],
   )
+  assert.ok(
+    (await allowed.storage.from('seller-reception-photos').info(path)).error,
+    'MFA blocks the hosted info preflight',
+  )
   assert.equal(
     await readSellerPhoto(allowed, capability, photoId),
     null,
@@ -216,6 +238,10 @@ try {
     p_hash: null,
   })
   assert.equal(await readSellerPhoto(allowed, capability, photoId), null)
+  assert.ok(
+    (await allowed.storage.from('seller-reception-photos').info(path)).error,
+    'revocation blocks the hosted info preflight',
+  )
   assert.ok(
     (await allowed.storage.from('seller-reception-photos').download(path))
       .error,

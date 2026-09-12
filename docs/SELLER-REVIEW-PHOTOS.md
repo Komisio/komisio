@@ -35,7 +35,11 @@ separate work. This slice does not invent a camera or wall-device identity.
    `x-komisio-review-token`. Storage RLS repeats the same capability checks.
    No service-role key, broad seller membership or signed URL is used.
 3. Seller access accepts only Storage's server-assigned
-   `storage.object.get_authenticated` operation. Listing and URL signing fail
+   `object.get_authenticated` and `object.get_authenticated_info` operations.
+   Supabase's operation helper normalizes the optional `storage.` prefix.
+   Hosted Storage uses the info operation before serving a private download;
+   it needs the same exact recipient/capability checks as the download itself.
+   Listing and URL signing fail
    even when the seller possesses the correct token. An arbitrary HTTP header
    cannot set that database operation. Missing/older operation support fails closed.
 4. The app responds with a JPEG, private/no-store, no-referrer and nosniff headers.
@@ -59,8 +63,15 @@ application may omit images while the immutable lists remain intact; prefer a
 forward fix or disable the intake pilot to rollback behavior. Never make a bucket
 public as a compatibility workaround.
 
+Hosted compatibility also requires `20260912060000_seller_photo_info.sql`.
+The initial rule allowed downloads but denied the hosted info preflight with
+`NoSuchKey`, even though the pinned file existed. The regression suite first
+reproduced this through the real local HTTP info endpoint. No stored review or
+object changes are required. If either the authorized image or denial checks fail
+after deployment, pause the pilot and use a forward fix; do not broaden policies.
+
 `npm run test:seller-photos` uses the actual local Storage HTTP service, ordinary
-user JWTs and synthetic images. It covers metadata removal, immutable retry,
+user JWTs and synthetic images. It covers info preflight, metadata removal, immutable retry,
 identity/header/MFA denial, no original access, no signing/listing and immediate
 revocation. The test refuses a non-local Supabase URL. pgTAP additionally covers
 pinned-list stability and direct SQL policy boundaries. The mobile browser

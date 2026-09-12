@@ -116,6 +116,7 @@ try {
     'komisio_preview_reception',
     'komisio_read_reception',
     'komisio_read_reception_history',
+    'komisio_read_reception_operation',
   ])
   assert(
     catalog.tools.every(
@@ -298,6 +299,7 @@ try {
       'komisio_read_reception_history',
       'komisio_list_receptions',
       'komisio_read_reception',
+      'komisio_read_reception_operation',
     ],
   )
   await assert.rejects(
@@ -422,6 +424,54 @@ try {
   assert.equal(staged.structuredContent.requiresApproval, true)
   assert.equal(staged.structuredContent.operationId, proposalId)
   assert.equal(staged.structuredContent.actor, uid)
+  const detail = await both.callTool({
+    name: 'komisio_read_reception_operation',
+    arguments: { operationId: proposalId },
+  })
+  assert(!detail.isError, JSON.stringify(detail.content))
+  assert.equal(detail.structuredContent.context.terms.id, agreement)
+  assert.equal(detail.structuredContent.context.canApprove, true)
+  assert.equal(
+    detail.structuredContent.operation.payload.suggestions.metadata.description
+      .value,
+    complete.metadata.description.value,
+  )
+  assert(
+    detail.structuredContent.context.sources.every(
+      (s) => s.kind !== 'photo' || s.reference === null,
+    ),
+  )
+  for (const args of [
+    { operationId: randomUUID() },
+    { operationId: proposalId, tenantId: tenant },
+  ])
+    assert(
+      (
+        await both.callTool({
+          name: 'komisio_read_reception_operation',
+          arguments: args,
+        })
+      ).isError,
+    )
+  assert.equal(detail.structuredContent.context.terms.body, 'Fictional terms')
+  for (const denied of [invalid, cross])
+    assert(
+      (
+        await denied.callTool({
+          name: 'komisio_read_reception_operation',
+          arguments: { operationId: proposalId },
+        })
+      ).isError,
+    )
+  const staleId = randomUUID()
+  assert(
+    !(
+      await proposer.callTool({
+        name: 'komisio_propose_reception_review',
+        arguments: { ...proposal, requestId: staleId },
+      })
+    ).isError,
+  )
   const replayed = await proposer.callTool({
     name: 'komisio_propose_reception_review',
     arguments: proposal,
@@ -480,6 +530,17 @@ try {
   assert.equal(executed.rows[0].outcome, 'executed')
   assert.equal(executed.rows[0].result_id, proposalId)
   assert.equal(executed.rows[0].actor, uid)
+  const staleDetail = await both.callTool({
+    name: 'komisio_read_reception_operation',
+    arguments: { operationId: staleId },
+  })
+  assert(!staleDetail.isError)
+  assert.equal(staleDetail.structuredContent.context.stale, true)
+  assert.equal(staleDetail.structuredContent.context.canApprove, false)
+  assert.equal(
+    staleDetail.structuredContent.context.terms.body,
+    'Fictional terms',
+  )
   await db.query(
     "insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values($1,$2,'totp','verified',now(),now())",
     [randomUUID(), uid],
@@ -489,6 +550,14 @@ try {
       await both.callTool({
         name: 'komisio_read_reception_history',
         arguments: { sessionId: session },
+      })
+    ).isError,
+  )
+  assert(
+    (
+      await both.callTool({
+        name: 'komisio_read_reception_operation',
+        arguments: { operationId: proposalId },
       })
     ).isError,
   )

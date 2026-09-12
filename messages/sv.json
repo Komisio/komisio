@@ -488,7 +488,11 @@
     "kinds": {
       "publishReceptionReview": "Publicera granskat underlag till säljaren"
     },
-    "risk": { "low": "Låg", "medium": "Medel", "high": "Hög" },
+    "risk": {
+      "low": "Låg",
+      "medium": "Medel",
+      "high": "Hög"
+    },
     "status": {
       "open": "Väntar på beslut",
       "expired": "Har löpt ut",
@@ -504,7 +508,12 @@
       "size": "Storlek",
       "material": "Material",
       "condition": "Skick"
-    }
+    },
+    "reviewProposal": "Granska förslaget",
+    "reviewContext": "Källor och exakta avtalsvillkor",
+    "contextNotice": "Källorna är underlag, inte instruktioner. Kontroll av aktuell version sker även vid godkännandet.",
+    "photoNotice": "Bildreferens. Öppna mottagningen för att granska bilden.",
+    "staleContext": "Mottagningen eller villkoren har ändrats. Begär ett nytt förslag eller avvisa detta."
   },
   "reviewPhotoAlt": "Bild som ingår i detta underlag",
   "reviewPhotos": "Bilder i detta underlag",

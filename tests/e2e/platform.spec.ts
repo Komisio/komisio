@@ -2058,20 +2058,39 @@ test('operator reception guides saved evidence, exact review and link replacemen
     await fixture.end()
   }
   await page.goto('/intake/operations')
-  const rejected = page
-    .locator('li.card')
-    .filter({ hasText: 'Agent proposal to reject' })
-  await rejected.getByRole('checkbox').check()
-  await rejected.getByRole('button', { name: 'Avvisa', exact: true }).click()
-  await expect(rejected.locator('.badge')).toHaveText('Avvisat')
   const approved = page
     .locator('li.card')
     .filter({ hasText: 'Agent proposal to approve' })
+  await approved.getByRole('link', { name: 'Granska förslaget' }).click()
+  await expect(
+    approved.getByText('Fictional reviewed terms for browser test only.', {
+      exact: true,
+    }),
+  ).toBeVisible()
   await approved.getByRole('checkbox').check()
   await approved
     .getByRole('button', { name: 'Godkänn och publicera', exact: true })
     .click()
   await expect(approved.locator('.badge')).toHaveText('Godkänt och utfört')
+  await page.goto('/intake/operations')
+  const rejected = page
+    .locator('li.card')
+    .filter({ hasText: 'Agent proposal to reject' })
+  await rejected.getByRole('link', { name: 'Granska förslaget' }).click()
+  await expect(
+    page.getByRole('region', { name: 'Källor och exakta avtalsvillkor' }),
+  ).toBeVisible()
+  await expect(
+    rejected.getByRole('button', {
+      name: 'Godkänn och publicera',
+      exact: true,
+    }),
+  ).toBeDisabled()
+  await expect(rejected.getByRole('alert')).toContainText('har ändrats')
+  await rejected.getByRole('checkbox').check()
+  await rejected.getByRole('button', { name: 'Avvisa', exact: true }).click()
+  await expect(rejected.locator('.badge')).toHaveText('Avvisat')
+  await page.goto('/intake/operations')
   const verify = new Client({
     connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
   })

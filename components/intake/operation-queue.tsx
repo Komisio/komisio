@@ -4,16 +4,19 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import type { PendingOperation } from '@/lib/engine/operations'
+import type { OperationReviewContext } from '@/lib/engine/operation-review'
 import { Button } from '@/components/ui/button'
 type D = Dictionary['operations']
 
 function Decision({
   tenantId,
   operation,
+  canApprove,
   d,
 }: {
   tenantId: string
   operation: PendingOperation
+  canApprove: boolean
   d: D
 }) {
   const router = useRouter()
@@ -24,7 +27,8 @@ function Decision({
   const requestId = useRef(crypto.randomUUID())
   const running = useRef(false)
   async function decide(decision: 'approve' | 'reject', reason: string) {
-    if (running.current || reload) return
+    if (running.current || reload || (decision === 'approve' && !canApprove))
+      return
     running.current = true
     setBusy(true)
     setError('')
@@ -92,7 +96,7 @@ function Decision({
         </Button>
       ) : (
         <div className="row">
-          <Button type="submit" value="approve" disabled={busy}>
+          <Button type="submit" value="approve" disabled={busy || !canApprove}>
             {busy ? d.busy : d.approve}
           </Button>
           <Button
@@ -114,12 +118,14 @@ export function OperationQueue({
   operations,
   canDecide,
   locale,
+  reviewContext,
   d,
 }: {
   tenantId: string
   operations: PendingOperation[]
   canDecide: boolean
   locale: string
+  reviewContext?: OperationReviewContext
   d: D
 }) {
   const format = (value: string) =>
@@ -153,7 +159,12 @@ export function OperationQueue({
                 fact ? (
                   <div key={key}>
                     <dt>{d.fields[key as keyof D['fields']]}</dt>
-                    <dd>{fact.value}</dd>
+                    <dd>
+                      {fact.value}
+                      {reviewContext && (
+                        <small> · {fact.sourceIds.join(', ')}</small>
+                      )}
+                    </dd>
                   </div>
                 ) : null,
             )}
@@ -163,12 +174,57 @@ export function OperationQueue({
                 <dd>
                   {o.payload.suggestions.price.amount} SEK ·{' '}
                   {o.payload.suggestions.price.rationale}
+                  {reviewContext && (
+                    <small>
+                      {' '}
+                      · {o.payload.suggestions.price.sourceIds.join(', ')}
+                    </small>
+                  )}
                 </dd>
               </div>
             )}
           </dl>
-          {o.status === 'open' && canDecide && (
-            <Decision tenantId={tenantId} operation={o} d={d} />
+          {!reviewContext && (
+            <Link className="text-link" href={`/intake/operations/${o.id}`}>
+              {d.reviewProposal}
+            </Link>
+          )}
+          {reviewContext && (
+            <section aria-label={d.reviewContext}>
+              <h3>{d.reviewContext}</h3>
+              <p>{d.contextNotice}</p>
+              {reviewContext.sources.map((s) => (
+                <div key={s.id} className="intake-notice">
+                  <strong>
+                    {s.id} · {s.kind}
+                  </strong>
+                  <p>{s.observation}</p>
+                  {s.reference ? <p>{s.reference}</p> : <p>{d.photoNotice}</p>}
+                </div>
+              ))}
+              <h3>
+                {reviewContext.terms.title} · {reviewContext.terms.version}
+              </h3>
+              <p>{reviewContext.terms.id}</p>
+              <div
+                className="reception-terms"
+                lang={reviewContext.terms.language}
+                style={{ whiteSpace: 'pre-wrap' }}
+              >
+                {reviewContext.terms.body}
+              </div>
+              {!o.outcome && reviewContext.stale && (
+                <p role="alert">{d.staleContext}</p>
+              )}
+            </section>
+          )}
+          {reviewContext && !o.outcome && canDecide && (
+            <Decision
+              tenantId={tenantId}
+              operation={o}
+              canApprove={reviewContext.canApprove}
+              d={d}
+            />
           )}
           {o.outcome && (
             <p>

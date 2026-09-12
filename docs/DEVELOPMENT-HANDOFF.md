@@ -6,32 +6,23 @@ precedence over narrative. This file supersedes older slice status notes.
 
 ## Current work
 
-Integration checkpoint: branch `integration/fable-staged-operations` combines
-main54765ec with fixed Fable commitf734f95c723e338da9c11f7d7158410c430ddd85.
-Fable's live worktree remains untouched. Local lint/typecheck/build,99 unit tests,
-72 new SQL assertions in a disposable database, and all owner/concurrency races
-passed. The real local MCP suite and operator browser journey (1/1, including
-approve/reject through the web route) now also passed. The disposable SQL harness
-uses minimal Auth/Storage contracts and is not a replacement for those checks. T5's
-historical-text scan was removed: the existing AI HTTP fixture exercises actual
-runtime prompt-version acceptance by the installed database function.
+PR43 is merged as43d26f0b75f69b3e932b67561ab6c613184285ff. Exact-head
+CI34689526103 passed on d4804033a90a41b5a10e62364104c15aa13d109c.
+Staging deployment6408849436 succeeded. Migrations20260912140000 and
+20260912150000 are applied BOTH locally and in staging; never edit them.
+T3 staged proposals, seller-read isolation and T5 prompt pin are delivered.
+Real local MCP and operator approve/reject browser journey passed, as did CI
+including database, concurrency, Storage and AI HTTP fixture checks. Hosted
+anonymous guards passed; an authenticated hosted decision remains unverified.
+Fable's fixed f734f95 snapshot was integrated; its active worktree is untouched.
 
-PR43 is the release PR. Initial CI caught an MCP retry bug: request-clock expiry
-changed the immutable envelope. The adapter now uses the fixed review expiry and
-the real retry test passes. The first new browser assertion also raced the busy
-button label; it now waits for the persisted outcome before querying records.
-
-Migrations20260912140000 and20260912150000 are applied to local Supabase, without
-resetting data. They are NOT yet applied to staging at this checkpoint. Before
-release, require exact-head CI, inspect pending migrations and verify the staging
-project; apply only those reviewed migrations and verify deployment separately.
-
-Coordination update: the owner explicitly authorized Fable's T3 implementation.
-See PARALLEL-DEVELOPMENT.md for current responsibilities and observed commits.
-Do not start a competing pending-operation design. Fable's T3, seller-read lock
-change and T5 prompt guard need integrated verification before release. They are
-not in main at this checkpoint. Do not mutate the active Fable worktree or apply
-its migrations to the shared database without coordinating a stable handover.
+Current slice: `feat/operation-review-context` adds a shared exact proposal-context
+read, a staff detail page and a read-only MCP tool. No new migration. Queue actions
+lead to the detail before deciding. Stale/expired proposals cannot be approved in
+this UI but can be rejected; SQL remains the transactional authority. Local lint,
+typecheck/build,99 units, real MCP and operator browser (1/1) pass. The browser
+asserts exact terms, approval, then stale approval denial and successful rejection.
+PR/CI and deployment remain pending. See OPERATION-REVIEW.md.
 
 The prior PR40 work below is completed: merged6329b6ec95df1af3db8534921966f274f82f9e95,
 exact-head CI34687228721 passed, staging deployment6408441889 succeeded.
@@ -70,12 +61,11 @@ Do not impersonate the owner or change their existing seller responses.
 
 ## Next three actions
 
-1. Obtain a stable committed Fable handover and review T3 plus its tests, keeping
-   the current main merge policy when integrating the branch.
-2. Coordinate migration verification and real MCP/concurrency/browser tests;
-   record which database was used. No shared database reset.
-3. Open the implementation PR, require exact-head green CI, apply reviewed staging
-   migrations and verify deployment. Document remaining hosted-only checks.
+1. Verify exact proposal context through real MCP and staff browser tests, including
+   stale proposals, tenant/identity/MFA denial and photo-path omission.
+2. Review, commit and open the scoped PR; require exact-head green CI before merge.
+3. Verify the matching staging deployment and save remaining pilot checks. Inspect
+   Fable's latest committed work before selecting another overlapping scope.
 
 ## Architecture and remaining gates
 
@@ -87,8 +77,8 @@ Do not impersonate the owner or change their existing seller responses.
   [open questions](open-questions.md). Continue independent work while unresolved.
 - Built-in AI provider remains optional and unverified live. No borrowed tokens,
   paid provider activation or live POS writes are authorized by this day plan.
-- Main's local MCP reads/images/previews only. T3 pending operations exist on
-  Fable's branch and await integration; hosted delegated login is still separate.
+- Local MCP supports reads/images/previews and opt-in staged proposals. Staff
+  approval executes through the engine. Hosted delegated login is still separate.
 - Bag receiving and single-garment reception are distinct workflows.
 - History is a summary, not complete historic agreement/image access or a legal
   audit. See RECEPTION-HISTORY.md before extending it.

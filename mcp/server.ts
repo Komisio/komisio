@@ -1,6 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/server'
 import { inspectionReadInput } from '../lib/engine/inspection-read'
-import { readInspectionTool } from './inspection'
+import { readInspectionTool, listBagsTool, bagListInput } from './inspection'
 import { operationReviewInput } from '../lib/engine/operation-review'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { MCPConfig } from './config'
@@ -61,6 +61,20 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       return { isError: true, content: [{ type: 'text' as const, text: code }] }
     }
   }
+  if (config.scopes.includes('inspection:read'))
+    server.registerTool(
+      'komisio_list_bags',
+      {
+        description:
+          'Find a received bag by its printed K-number or page through recent bag receipts in the configured store. Returns bag IDs for reading inspection drafts. No seller lookup, notes, images, writes or item acceptance.',
+        inputSchema: bagListInput,
+        annotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await listBagsTool(client, config, input),
+        })),
+    )
   if (config.scopes.includes('inspection:read'))
     server.registerTool(
       'komisio_read_inspection',

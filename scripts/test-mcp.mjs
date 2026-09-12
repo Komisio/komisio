@@ -558,6 +558,14 @@ try {
   assert(
     (
       await inspection.client.callTool({
+        name: 'komisio_list_bags',
+        arguments: {},
+      })
+    ).isError,
+  )
+  assert(
+    (
+      await inspection.client.callTool({
         name: 'komisio_read_inspection',
         arguments: { bagId: inspection.bag },
       })

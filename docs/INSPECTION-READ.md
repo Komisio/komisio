@@ -19,6 +19,13 @@ information entered by staff. No image, price, consent, custody transition or
 commercial acceptance is inferred. Local user credentials retain their underlying
 permissions; this tool scope is not a delegated credential boundary.
 
+`komisio_list_bags` uses the existing bag queue engine under the same explicit
+scope. It returns only bag ID, printed reference and received time, with at most20
+rows and older/newer cursor strings. Exact reference lookup accepts the printed
+`K-` prefix. No seller filter, names, contacts or bag notes are exposed. A returned
+bag ID can be passed to `komisio_read_inspection`; no new queue or lookup table is
+introduced. These reads do not prove an individual item's physical presence.
+
 This is a prerequisite for future AI assistance. It does not convert descriptive
 drafts into observed reception evidence, fabricate source IDs, call a model or
 persist any proposal. Existing pure inspection preview/selection contracts remain

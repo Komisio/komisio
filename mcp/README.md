@@ -6,8 +6,8 @@ It exposes narrow tools through the same intake engine:
 
 | Tool                             | Scope             | Effect                                                                                        |
 | -------------------------------- | ----------------- | --------------------------------------------------------------------------------------------- |
-| komisio_read_inspection | inspection:read | Read bounded saved bag drafts and exact history; no notes, contacts or writes |
-| komisio_read_reception_operation | reception:read | Read exact staged proposal sources and agreement terms; no decision |
+| komisio_read_inspection          | inspection:read   | Read bounded saved bag drafts and exact history; no notes, contacts or writes                 |
+| komisio_read_reception_operation | reception:read    | Read exact staged proposal sources and agreement terms; no decision                           |
 | komisio_list_receptions          | reception:read    | Read a bounded queue with shared next-step guidance, not commercial acceptance                |
 | komisio_read_reception_history   | reception:read    | Read bounded version summaries, with separate source/review cursors; no images or links       |
 | komisio_read_reception           | reception:read    | Read one saved session and its source snapshot                                                |
@@ -120,7 +120,6 @@ queue using the same engine as the operator UI. Optional `stage`, `before` and
 names (untrusted data), version references, response and link state, but no contact
 details, capability links or images. A seller-approved review is not a sellable
 item. Cursor paging is read-time, not a snapshot across subsequent calls.
-
 
 ## Saved bag inspection
 

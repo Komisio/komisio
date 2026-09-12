@@ -4,17 +4,18 @@ This is a real stdio Model Context Protocol adapter using the official TypeScrip
 SDK. It is separate from the web app and optional model-provider integration.
 It exposes narrow tools through the same intake engine:
 
-| Tool                             | Scope             | Effect                                                                                        |
-| -------------------------------- | ----------------- | --------------------------------------------------------------------------------------------- |
-| komisio_list_bags                | inspection:read   | Find a printed bag number or page through bag IDs; no seller data or notes                    |
-| komisio_read_inspection          | inspection:read   | Read bounded saved bag drafts and exact history; no notes, contacts or writes                 |
-| komisio_read_reception_operation | reception:read    | Read exact staged proposal sources and agreement terms; no decision                           |
-| komisio_list_receptions          | reception:read    | Read a bounded queue with shared next-step guidance, not commercial acceptance                |
-| komisio_read_reception_history   | reception:read    | Read bounded version summaries, with separate source/review cursors; no images or links       |
-| komisio_read_reception           | reception:read    | Read one saved session and its source snapshot                                                |
-| komisio_preview_reception        | reception:preview | Validate a source-bound proposal against the current revision; return an unsaved preview      |
-| komisio_read_reception_photo     | reception:photos  | Read one attached photo at the exact current revision as native MCP image content             |
-| komisio_propose_reception_review | reception:propose | Stage a complete review for staff approval; publishes nothing (see docs/STAGED-OPERATIONS.md) |
+| Tool                             | Scope              | Effect                                                                                         |
+| -------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------- |
+| komisio_preview_inspection       | inspection:preview | Return unsaved descriptive before/after at the exact saved base revision; no approval or write |
+| komisio_list_bags                | inspection:read    | Find a printed bag number or page through bag IDs; no seller data or notes                     |
+| komisio_read_inspection          | inspection:read    | Read bounded saved bag drafts and exact history; no notes, contacts or writes                  |
+| komisio_read_reception_operation | reception:read     | Read exact staged proposal sources and agreement terms; no decision                            |
+| komisio_list_receptions          | reception:read     | Read a bounded queue with shared next-step guidance, not commercial acceptance                 |
+| komisio_read_reception_history   | reception:read     | Read bounded version summaries, with separate source/review cursors; no images or links        |
+| komisio_read_reception           | reception:read     | Read one saved session and its source snapshot                                                 |
+| komisio_preview_reception        | reception:preview  | Validate a source-bound proposal against the current revision; return an unsaved preview       |
+| komisio_read_reception_photo     | reception:photos   | Read one attached photo at the exact current revision as native MCP image content              |
+| komisio_propose_reception_review | reception:propose  | Stage a complete review for staff approval; publishes nothing (see docs/STAGED-OPERATIONS.md)  |
 
 Every data call verifies the configured user token with Supabase Auth and checks
 current store membership and required MFA in the database. The store is pinned in
@@ -34,7 +35,7 @@ environment variables to the child process:
   a service-role key, password or refresh token
 - `KOMISIO_MCP_TENANT_ID`: exactly one store UUID
 - `KOMISIO_MCP_SCOPES`: an explicit comma-separated subset of `reception:read`,
-  `reception:preview`, `reception:photos`, `reception:propose`, `inspection:read`.
+  `reception:preview`, `reception:photos`, `reception:propose`, `inspection:read`, `inspection:preview`.
   Bag inspection, photo access and staging are separately opt-in.
 
 Have the host launch `node --import tsx mcp/stdio.ts` with the repository as its
@@ -138,3 +139,14 @@ receipts. Pass the returned `older` or `newer` string to page in one direction.
 Exact number lookup and paging reuse the staff bag queue engine. Results contain
 only bag ID, printed reference and received time; no seller names, contacts or
 bag notes. The tool does not record a new receipt or confirm an individual item.
+
+## Unsaved inspection changes
+
+With explicit `inspection:preview`, call `komisio_preview_inspection` with bag ID,
+draft ID, expected saved revision and proposed description/category/condition
+fields. The shared engine rejects stale or archived drafts and returns exact
+before/after values and a change list. It saves nothing and grants no approval.
+Unchanged suggestions produce an empty change list. Clearing category/condition
+is explicit; description cannot become empty. The result uses the actual saved
+base revision, not a fabricated persisted next version. See
+[inspection preview](../docs/INSPECTION-PREVIEW.md). No model is called by this tool.

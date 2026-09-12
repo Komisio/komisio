@@ -37,12 +37,19 @@ MCP. Real MCP pagination/history/denial checks and both local saved/archive brow
 journeys passed, with lint/types/build and99 units. Hosted public guards passed;
 an authenticated hosted inspection remains pending. No migration.
 
-Current slice: `feat/mcp-bag-discovery` exposes the existing bag queue through
-`komisio_list_bags` under `inspection:read`. Printed-number lookup and bounded
-paging return only bag ID, reference and received time, enabling draft discovery
-without seller lookup. No new queue, database change or UI behavior. Real MCP
-lookup/paging/denial checks, lint, scoped formatting, typecheck/build and99 units
-passed. PR/CI and release pending; see INSPECTION-READ.md and mcp/README.md.
+PR47 is delivered: mergeef0c5bb4a034d5d0f1b269804901112c0ecc4307 after
+CI34693455559 passed exact head67b76a0ecd97d9c7d758a95779ab36773c1b4499.
+Deployment6409603547 succeeded and public guards passed. The local opt-in MCP
+now finds bags by printed reference using the existing shared queue. Real MCP
+lookup/paging/denial checks passed, plus lint/types/build and99 units. No migration.
+
+Current slice: `feat/inspection-proposal-preview` adds an explicitly scoped,
+unsaved descriptive preview against a saved draft's exact current revision.
+It reuses existing pure edit/preview contracts and the shared inspection read;
+no saved version, staging, approval, source conversion or model call is produced.
+Real MCP preview/no-op/clearing, stale/archive/identity/MFA denial and unchanged
+persistence checks pass. Lint/scoped formatting/typecheck/build and99 units pass.
+PR/CI and release pending. See INSPECTION-PREVIEW.md.
 
 The prior PR40 work below is completed: merged6329b6ec95df1af3db8534921966f274f82f9e95,
 exact-head CI34687228721 passed, staging deployment6408441889 succeeded.
@@ -81,11 +88,11 @@ Do not impersonate the owner or change their existing seller responses.
 
 ## Next three actions
 
-1. Verify real MCP bag-number lookup, bidirectional paging and scope/identity/
-   tenant/MFA denial; confirm no seller fields or notes escape the adapter.
+1. Verify preview deltas/no-op/clearing, stale and archived denial, unknown fields,
+   tenant/identity/MFA and unchanged persistence through the real MCP harness.
 2. Run scoped checks and release a PR only after exact-head green CI. No migration.
-3. Continue the nonfinancial preview contract or independent pilot gates; never
-   convert bag text into verified reception evidence without a source contract.
+3. Keep any future saved agent draft change behind an explicit staged operation
+   and human field review. Do not convert it into observed reception evidence.
 
 ## Architecture and remaining gates
 

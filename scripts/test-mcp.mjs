@@ -557,6 +557,14 @@ try {
   )
   assert(
     (
+      await inspection.previewer.callTool({
+        name: 'komisio_preview_inspection',
+        arguments: inspection.previewInput,
+      })
+    ).isError,
+  )
+  assert(
+    (
       await inspection.client.callTool({
         name: 'komisio_list_bags',
         arguments: {},

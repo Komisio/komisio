@@ -1,6 +1,12 @@
 import { McpServer } from '@modelcontextprotocol/server'
 import { inspectionReadInput } from '../lib/engine/inspection-read'
-import { readInspectionTool, listBagsTool, bagListInput } from './inspection'
+import {
+  readInspectionTool,
+  listBagsTool,
+  bagListInput,
+  previewInspectionTool,
+} from './inspection'
+import { inspectionPreviewInput } from '../lib/engine/inspection-preview'
 import { operationReviewInput } from '../lib/engine/operation-review'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { MCPConfig } from './config'
@@ -51,6 +57,9 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           'SCOPE_REQUIRED',
           'RECEPTION_UNAVAILABLE',
           'INSPECTION_UNAVAILABLE',
+          'INSPECTION_ARCHIVED',
+          'INSPECTION_DRAFT_CHANGED',
+          'INSPECTION_DESCRIPTION_REQUIRED',
           'RECEPTION_CHANGED',
           'RECEPTION_UNKNOWN_SOURCE',
           'RECEPTION_PRICE_EVIDENCE_REQUIRED',
@@ -61,6 +70,20 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       return { isError: true, content: [{ type: 'text' as const, text: code }] }
     }
   }
+  if (config.scopes.includes('inspection:preview'))
+    server.registerTool(
+      'komisio_preview_inspection',
+      {
+        description:
+          'Preview descriptive changes to one active saved inspection draft at its exact current revision. Returns before/after and changes, without saving, staging or approval. Untrusted text, no source verification, price or acceptance.',
+        inputSchema: inspectionPreviewInput,
+        annotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await previewInspectionTool(client, config, input),
+        })),
+    )
   if (config.scopes.includes('inspection:read'))
     server.registerTool(
       'komisio_list_bags',

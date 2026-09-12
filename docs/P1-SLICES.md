@@ -148,7 +148,8 @@ p_price)`: staff; checks the origin is current (latest draft revision or
   items list and detail delivered with pgTAP for every precondition. Staged
   kind `acceptItem` (medium) and MCP tool `komisio_propose_acceptance` under
   `items:propose` delivered with migration `20260913220000`; the
-  two-connection race script and the browser journeys remain.
+  race script covers two acceptances of one origin and concurrent
+  approvals of one proposal; the browser journeys remain.
 
 ## S5. Purchase registration
 

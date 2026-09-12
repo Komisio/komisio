@@ -32,6 +32,8 @@ authorization; the durable slice must independently guarantee those properties.
 | Model-independent assistance port | lib/assistance/reception.ts |
 | Garment workflow guidance | skills/garment-reception/SKILL.md |
 | Private staff image capture/storage | lib/engine/reception-photos.ts and Storage RLS |
+| Shared image decoding/minimization | lib/media/; reused by capture, inference and seller delivery |
+| Pinned seller images | lib/engine/seller-review-photo.ts and capability-bound Storage RLS |
 | Provider calls and configuration | lib/assistance/openai-reception.ts and reception-config.ts |
 | Attempt reservation and cost guard | lib/engine/reception-assistance.ts and database |
 | Authoritative sessions, snapshots and decisions | Engine and database |
@@ -48,8 +50,9 @@ The [durable-source slice](DURABLE-RECEPTION.md) now adds authenticated session
 creation and immutable textual source snapshots. The pure previews above remain
 previews. The [immutable review](RECEPTION-REVIEWS.md) and
 [seller response](SELLER-REVIEW.md) now have independent database enforcement.
-[Private staff images](RECEPTION-PHOTOS.md) are now implemented. Seller image
-delivery remains separate. [Optional inference](RECEPTION-ASSISTANCE.md) now has
+[Private staff images](RECEPTION-PHOTOS.md) and
+[pinned seller derivatives](SELLER-REVIEW-PHOTOS.md) are implemented through
+separate access policies. [Optional inference](RECEPTION-ASSISTANCE.md) now has
 bounded provider calls, source checks, attempt reservations and explicit staff
 review. Live model access/quality are unverified; the staging configuration is off.
 

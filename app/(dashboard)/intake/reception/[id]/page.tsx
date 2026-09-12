@@ -190,6 +190,9 @@ export default async function Reception({
             {d.price}: {review.suggestions.price?.amount} SEK
           </p>
           <p>{review.terms.title}</p>
+          <p>
+            {d.sharedPhotos}: {review.photos.length}
+          </p>
           <details>
             <summary>{d.exactTerms}</summary>
             <div className="reception-terms" lang={review.terms.language}>

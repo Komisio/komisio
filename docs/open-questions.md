@@ -135,3 +135,8 @@ proposal's owner clarification for scope and outstanding details.
     inviting external pilot users; do not disable RLS for recovery.
 18. What are the account-deletion/anonymization, access-log retention and support
     procedures? Foreign keys currently preserve ownership/audit references.
+19. **Partly answered 2026-09-12:** mobile reception reviews may include pinned,
+    reduced photos from the exact source revision; originals stay internal.
+    Metadata stripping does not redact visible people or labels. Camera placement,
+    capture consent, retention periods and controlled orphan cleanup must be
+    decided before an external vision pilot. No facial recognition is planned.

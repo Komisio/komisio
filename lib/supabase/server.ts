@@ -1,10 +1,11 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { supabaseEnv } from './env'
-export async function serverClient() {
+export async function serverClient(headers: Record<string, string> = {}) {
   const store = await cookies()
   const { url, key } = supabaseEnv()
   return createServerClient(url, key, {
+    global: { headers },
     cookies: {
       getAll: () => store.getAll(),
       setAll: (values) => {

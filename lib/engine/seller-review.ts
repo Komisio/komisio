@@ -42,6 +42,7 @@ const sellerReview = z.object({
   version: z.number().int(),
   storeName: z.string(),
   metadata: z.record(z.string(), z.string()),
+  photos: z.array(z.uuid()).max(20),
   price: z.object({
     amount: z.string(),
     currency: z.literal('SEK'),

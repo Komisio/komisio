@@ -98,19 +98,14 @@ export default async function Review({
                   )}{' '}
                   (Europe/Stockholm)
                 </p>
-                {review.response ? (
-                  <p role="status">
-                    {review.response.decision === 'approve'
-                      ? d.reviewApproved
-                      : d.reviewDeclined}
-                  </p>
-                ) : (
-                  <SellerResponse
-                    token={token}
-                    reviewId={review.reviewId}
-                    d={d}
-                  />
-                )}
+                <SellerResponse
+                  key={review.reviewId}
+                  token={token}
+                  reviewId={review.reviewId}
+                  photos={review.photos}
+                  response={review.response}
+                  d={d}
+                />
               </>
             )}
             <p>{d.inviteSwitchAccount}</p>

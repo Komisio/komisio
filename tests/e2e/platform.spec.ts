@@ -2063,9 +2063,7 @@ test('operator reception guides saved evidence, exact review and link replacemen
     .filter({ hasText: 'Agent proposal to reject' })
   await rejected.getByRole('checkbox').check()
   await rejected.getByRole('button', { name: 'Avvisa', exact: true }).click()
-  await expect(
-    rejected.getByRole('button', { name: 'Avvisa', exact: true }),
-  ).toHaveCount(0)
+  await expect(rejected.locator('.badge')).toHaveText('Avvisat')
   const approved = page
     .locator('li.card')
     .filter({ hasText: 'Agent proposal to approve' })
@@ -2073,12 +2071,7 @@ test('operator reception guides saved evidence, exact review and link replacemen
   await approved
     .getByRole('button', { name: 'Godkänn och publicera', exact: true })
     .click()
-  await expect(
-    approved.getByRole('button', {
-      name: 'Godkänn och publicera',
-      exact: true,
-    }),
-  ).toHaveCount(0)
+  await expect(approved.locator('.badge')).toHaveText('Godkänt och utfört')
   const verify = new Client({
     connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
   })

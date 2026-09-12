@@ -13,7 +13,9 @@ implemented for verified email plus a personal capability link; see
 through those same operations. [Private staff photos](docs/RECEPTION-PHOTOS.md)
 are now supported. The [optional AI adapter](docs/RECEPTION-ASSISTANCE.md) provides
 bounded, source-linked suggestions and explicit staff review; staging remains
-unconfigured. Seller photo delivery and live model evaluation remain next. No seller response publishes
+unconfigured. A [local MCP adapter](mcp/README.md) now exposes authenticated reads
+and unsaved proposal previews. Hosted agent OAuth, durable agent staging, seller
+photo delivery and live model evaluation remain next. No seller response publishes
 inventory or authorizes payouts.
 
 The platform is deployed to staging, and registration plus invitation-email

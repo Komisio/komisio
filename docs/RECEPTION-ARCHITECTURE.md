@@ -11,7 +11,7 @@ but do not represent wall reception, image provenance or seller consent.
 [Accounted architecture, pinned reviewed revision](https://github.com/erp-mafia/accounted/blob/91ab339a863239650f77eae8ab9d415574a90632/ARCHITECTURE.md)
 separates engine, database enforcement, extensions and agent access. Posting from
 agents is staged for approval, with separate workflow skills. Komisio has shared
-staff operations and database controls but no live MCP, extension runtime or
+staff operations and database controls, a local read/preview MCP adapter, but no hosted MCP, extension runtime or
 unattended vision hardware. An optional inference adapter now demonstrates these
 boundaries through the reception workflow; it requires explicit configuration.
 No source code is copied from Accounted.
@@ -36,7 +36,7 @@ authorization; the durable slice must independently guarantee those properties.
 | Attempt reservation and cost guard | lib/engine/reception-assistance.ts and database |
 | Authoritative sessions, snapshots and decisions | Engine and database |
 | Mobile review | Thin application surface |
-| Authenticated agent transport | Future optional MCP extension |
+| Local authenticated agent reads/previews | mcp/; hosted OAuth and durable staging remain future work |
 
 Skills guide inference; validated configuration describes supported policies;
 engine/database enforce identity, isolation and permitted transitions. Photos

@@ -13,6 +13,29 @@ id and access events; tables are append-only with immutability triggers; RLS
 selects for members; every agent write is a pending operation with a risk
 level; no edit to an applied migration; no reset of the shared database.
 
+## S0. Per-kind dispatch for staged operations
+
+Purpose: stop rewriting `valid_operation_payload`, `propose_operation` and
+`decide_operation` in full for every new kind. Three migrations have already
+re-declared all three bodies to add one kind each; S2, S4 and S5 would add
+three more kinds.
+
+- Split each kind into two private functions with a fixed signature:
+  `komisio_private.op_preflight_<kind>(p_tenant uuid, p_payload jsonb)`
+  (structural validation plus the same preconditions the engine enforces,
+  raising the engine's error codes) and
+  `komisio_private.op_execute_<kind>(p_tenant uuid, p_operation uuid,
+  p_payload jsonb) returns uuid` (calls the engine function).
+- `propose_operation` and `decide_operation` keep their signatures and
+  become short dispatchers: a `case op.kind` with one line per kind, no
+  dynamic SQL. Risk level per kind lives in one small
+  `komisio_private.operation_risk(p_kind)` function.
+- Move the two existing kinds into this shape with behaviour unchanged;
+  existing pgTAP files 0015, 0017 to 0019 must pass without edits, plus a
+  new test asserting that an unknown kind is rejected in both functions.
+- Migration: yes (create-or-replace of the three functions, new private
+  functions). No table change.
+
 ## S1. Store policy
 
 Purpose: one versioned policy record per tenant that the intake commands read,
@@ -175,7 +198,7 @@ Purpose: finish the unified port.
 
 ## Order and exit
 
-S1 → S2 → S3 → S4 → S5 → S6 → S7, with S8 and S9 in parallel after S4. P1
+S0 → S1 → S2 → S3 → S4 → S5 → S6 → S7, with S8 and S9 in parallel after S4. P1
 is complete when one store can, locally and in staging with synthetic data:
 publish a policy, register a seller with a commission override, receive a bag
 and a wall garment, accept an item from each origin and from a purchase

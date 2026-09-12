@@ -44,7 +44,9 @@ belong in protected object storage with database references, not Git or skills.
 
 The [durable-source slice](DURABLE-RECEPTION.md) now adds authenticated session
 creation and immutable textual source snapshots. The pure previews above remain
-previews: proposal, review and seller-decision persistence are still separate.
+previews. The [immutable review](RECEPTION-REVIEWS.md) and
+[seller response](SELLER-REVIEW.md) now have independent database enforcement.
+Protected images and live model inference remain separate delivery steps.
 
 Reject a chat agent with direct SQL, a copied legacy item schema, and mandatory
 fake bag receipts for wall reception. Shared contracts require explicit adapters

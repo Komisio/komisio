@@ -40,6 +40,7 @@ export const commandSchema = z.discriminatedUnion('action', [
 export function safeNext(value: string | null | undefined) {
   if (value === '/account') return value
   if (value && /^\/invite\/[a-f0-9]{64}$/.test(value)) return value
+  if (value && /^\/review\/[a-f0-9]{64}$/.test(value)) return value
   return '/'
 }
 export function errorCode(message: string, code?: string) {

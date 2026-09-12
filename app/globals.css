@@ -981,3 +981,28 @@ small {
   border-bottom: 1px solid var(--line);
   overflow-wrap: anywhere;
 }
+.seller-review .card {
+  overflow-wrap: anywhere;
+}
+.seller-review dl > div {
+  margin: 16px 0;
+}
+.seller-review dt {
+  font-weight: 600;
+}
+.seller-review dd {
+  margin: 4px 0;
+}
+.seller-review h2 {
+  margin-top: 24px;
+}
+.seller-review label.row {
+  align-items: flex-start;
+  margin: 24px 0;
+}
+.seller-review input[type='checkbox'] {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  margin-top: 2px;
+}

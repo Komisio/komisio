@@ -35,5 +35,6 @@ that a source change invalidates it. No hosted seller walkthrough is claimed.
 
 Rollback retains snapshots and the additive schema; use a prior compatible app or
 disable intake while forward-fixing. No provider credentials are needed. Seller
-identity, mobile response, protected photos and live model inference remain the
-next delivery steps; no agent or seller writes are enabled by this slice.
+identity and mobile response are implemented separately in
+[seller review](SELLER-REVIEW.md). Protected photos, live model inference and
+agent writes remain future steps.

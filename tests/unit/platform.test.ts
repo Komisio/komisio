@@ -51,6 +51,13 @@ describe('untrusted input', () => {
     expect(safeNext('/invite/' + 'a'.repeat(64))).toBe(
       '/invite/' + 'a'.repeat(64),
     ))
+  it('preserves exact review destinations without query or path escape', () => {
+    const path = '/review/' + 'a'.repeat(64)
+    expect(safeNext(path)).toBe(path)
+    expect(safeNext(path + '?next=https://evil.test')).toBe('/')
+    expect(safeNext(path + '/extra')).toBe('/')
+    expect(safeNext('/review/invalid')).toBe('/')
+  })
   it('does not accept owner invitations', () =>
     expect(
       commandSchema.safeParse({

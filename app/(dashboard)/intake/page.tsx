@@ -118,6 +118,10 @@ export default async function Intake({
             {all.accounting.title}
           </Link>
           {' · '}
+          <Link className="text-link" href="/intake/economy">
+            {all.economy.title}
+          </Link>
+          {' · '}
           <Link className="text-link" href="/intake/lifecycle">
             {all.lifecycle.title}
           </Link>

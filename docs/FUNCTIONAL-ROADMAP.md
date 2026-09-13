@@ -330,7 +330,12 @@ the Fortnox API (needs a connected account), duplicate check (design note
 first), USB print transport (needs hardware). From P3, the settlement batch
 is delivered: `settle_payouts` requests and approves a payout for every
 listed seller in one transaction, `settlement_candidates` lists who is due,
-and the staged kind `settlePayouts` lets an agent propose the batch
+and the staged kind `settlePayouts` lets an agent propose the batch; and
+the economy overview: `economy_summary` computes any period with the day
+close's sums, shown on `/intake/economy` and readable by agents through
+`komisio_read_economy_summary` (migration `20260915110000`, see
+[ECONOMY-OVERVIEW.md](ECONOMY-OVERVIEW.md)); the weekly and monthly brief
+is a rendering of that read once an agent host writes it
 (migration `20260915100000`, see [SETTLEMENT.md](SETTLEMENT.md)).
 
 | Phase                                       | Theme                    | Slices                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Needs from owner                                                                                                                        |

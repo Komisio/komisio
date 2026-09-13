@@ -1426,6 +1426,14 @@
     "stockHint": "Skicka en vara i taget. Det första försöket lägger till ett lagerfört exemplar. Senare försök kontrollerar resultatet och uppdaterar priset utan att fylla på lagret. Högst 50 sparade försök visas, osäkra resultat först.",
     "exportItem": "Skicka varan till Zettle",
     "checkStock": "Kontrollera lager / uppdatera vara",
+    "stockSteps": {
+      "tracking": "Kontroll av lagerspårning",
+      "enable": "Aktivering av lagerspårning",
+      "before": "Läsning av startsaldo",
+      "movement": "Registrering av första lagerhändelsen",
+      "after": "Läsning av slutsaldo",
+      "observe": "Avläst lager"
+    },
     "stockStates": {
       "initialized": "Ett exemplar finns i Zettle",
       "depleted": "Såld eller borttagen i Zettle - lagret fylls inte på",

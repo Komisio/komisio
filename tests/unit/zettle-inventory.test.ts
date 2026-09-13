@@ -212,3 +212,28 @@ it('rejects malformed IDs before a network request', async () => {
   await expect(client.enable('../elsewhere')).rejects.toThrow()
   expect(http).not.toHaveBeenCalled()
 })
+
+it('exposes safe tracking response fields but never malformed values', async () => {
+  const { client } = setup([
+    json([{ productUuid: product, enabled: 'private-value' }]),
+  ])
+  try {
+    await client.tracked(product)
+    expect.unreachable()
+  } catch (e) {
+    expect(e).toMatchObject({ httpStatus: 200, fields: ['enabled'] })
+    expect(JSON.stringify(e)).not.toContain('private-value')
+  }
+})
+it('retains HTTP status without retaining a provider body', async () => {
+  const { client } = setup([
+    new Response('private-provider-body', { status: 422 }),
+  ])
+  try {
+    await client.tracked(product)
+    expect.unreachable()
+  } catch (e) {
+    expect(e).toMatchObject({ httpStatus: 422, fields: [] })
+    expect(JSON.stringify(e)).not.toContain('private-provider-body')
+  }
+})

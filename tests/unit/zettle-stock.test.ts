@@ -288,3 +288,14 @@ it('a held identity correction cannot reach stock', async () => {
   expect(s.inventory.initialize).not.toHaveBeenCalled()
   expect(s.events).not.toContain('claim_zettle_stock')
 })
+
+it('returns the failed read step without leaking the original exception', async () => {
+  const s = setup({ readLost: true })
+  const result = await s.run()
+  expect(result).toMatchObject({
+    stock: 'unknown',
+    diagnostic: { step: 'before' },
+  })
+  expect(JSON.stringify(result)).not.toContain('private')
+  expect(s.inventory.initialize).not.toHaveBeenCalled()
+})

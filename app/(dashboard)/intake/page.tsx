@@ -123,6 +123,19 @@ export default async function Intake({
           {a.manage}
         </Link>
       </div>
+      <form action="/intake/open" className="row wrap">
+        <label htmlFor="intake-open-ref">{all.openByReference.reference}</label>
+        <input
+          id="intake-open-ref"
+          name="ref"
+          placeholder="K-12"
+          maxLength={16}
+          inputMode="text"
+        />
+        <button className="btn btn-secondary">
+          {all.openByReference.open}
+        </button>
+      </form>
       <p className="intake-notice">{d.pilot}</p>
       <div className="intake-grid">
         <section className="card intake-form">

@@ -953,6 +953,14 @@
       "sold": "Såld"
     }
   },
+  "openByReference": {
+    "title": "Öppna via etikett",
+    "intro": "Skriv eller skanna referensen på en påsetikett (K-n) eller en plaggetikett (G-n).",
+    "reference": "Etikettreferens",
+    "hint": "Till exempel K-12 för en påse eller G-7 för ett plagg.",
+    "open": "Öppna",
+    "notFound": "Inget i butiken bär referensen {ref}."
+  },
   "purchases": {
     "title": "Inköp",
     "intro": "Butiksägda varor kommer in här, aldrig via inlämningsflödena.",

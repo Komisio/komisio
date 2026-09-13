@@ -953,6 +953,14 @@
       "sold": "Sold"
     }
   },
+  "openByReference": {
+    "title": "Open by label",
+    "intro": "Type or scan the reference printed on a bag label (K-n) or a garment label (G-n).",
+    "reference": "Label reference",
+    "hint": "For example K-12 for a bag or G-7 for a garment.",
+    "open": "Open",
+    "notFound": "Nothing in this store carries the reference {ref}."
+  },
   "purchases": {
     "title": "Purchases",
     "intro": "Store-owned goods enter here, never through the consignment paths.",

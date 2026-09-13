@@ -99,6 +99,12 @@ Purpose: reversal as a new fact.
 - Surface: return action on receipt detail; review flag on the payouts page.
   Agent tool `record return` (staged, `medium`).
 - Migration: yes.
+- Status 2026-09-13: `sale_returns` and `record_return` delivered (migration
+  `20260914030000`): full refund only, credit reversal in the ledger, item
+  freed for resale, `flagged_for_review` with reason `CREDIT_ALREADY_USED`
+  when the seller's available balance no longer covers the credit; return
+  form on the receipt, flagged list on the payouts page. The sale row stays
+  `completed`; the return is the reversal fact. Staged agent kind follows.
 
 ## S14. Seller ledger and balance
 
@@ -142,6 +148,13 @@ Purpose: request, approve, pay, with reservation at approval.
   request and history. Notification by e-mail on approval and payment
   through the communication log (S18).
 - Migration: yes.
+- Status 2026-09-13: tables `payouts` and `payout_events` with a status guard
+  that only engine transitions pass, `request_payout` (staff on the seller's
+  behalf, threshold and balance bounded), `approve_payout` (reserves),
+  `mark_payout_paid` (reference required, releases and pays),
+  `reject_payout` (releases an approved reservation), payouts page with
+  request form and decisions (migration `20260914020000`). Seller-app
+  requests, e-mail notification (S18) and the staged kinds follow.
 
 ## S16. Settlement statements
 
@@ -159,6 +172,11 @@ Purpose: the numbered document.
 - Surface: statements tab on the seller view; seller app statement list.
   Agent tool `get statement` (read), `propose statement issue` (`low`).
 - Migration: yes.
+- Status 2026-09-13: numbered statements and credit notes computed from the
+  ledger (migration `20260914040000`), per-tenant counter, overlap refusal,
+  frozen header totals and lines, printable page and issue form on the seller
+  page. PDF rendering, asset storage, e-mail and the seller link follow with
+  S18 and the seller app.
 
 ## S17. Day close and Fortnox export
 

@@ -1,0 +1,76 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000000181','stmt-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000182','stmt-reader@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000181","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Statement test','statement-test',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Synthetic seller','seller@stmt.test','')::text,true);
+select set_config('test.agreement',publish_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'Synthetic terms','Only a test','en',false)::text,true);
+select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,'Signed paper');
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}');
+select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
+select set_config('test.d1',gen_random_uuid()::text,true);
+select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d1')::uuid,0,'Synthetic jacket','Jackets','Good');
+select set_config('test.i1',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i1')::uuid,'inspection_draft',current_setting('test.d1')::uuid,1,50000);
+select set_config('test.d2',gen_random_uuid()::text,true);
+select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Synthetic scarf','Accessories','Good');
+select set_config('test.i2',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i2')::uuid,'inspection_draft',current_setting('test.d2')::uuid,1,10000);
+-- Two sales in the period, one payout, one adjustment; one sale before it.
+select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','S-0','2026-08-20T10:00:00Z','SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.i2'),'priceOre',10000)));
+select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','S-1','2026-09-02T10:00:00Z','SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.i1'),'priceOre',50000)));
+select set_config('test.payout',gen_random_uuid()::text,true);
+select request_payout(current_setting('test.tenant')::uuid,current_setting('test.payout')::uuid,current_setting('test.seller')::uuid,10000);
+select approve_payout(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.payout')::uuid);
+select mark_payout_paid(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.payout')::uuid,'BG 1');
+select adjust_seller_ledger(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,-500,'Label fee');
+select is((seller_balance(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid)->>'availableOre')::bigint,13500::bigint,'balance before statements: 4000+20000-10000-500');
+-- now() is the transaction start; the period end sits just after it so entries written in this transaction are inside.
+select set_config('test.to',(now()+interval '1 millisecond')::text,true);
+select set_config('test.s1',gen_random_uuid()::text,true);
+select throws_like($$select issue_statement(current_setting('test.tenant')::uuid,current_setting('test.s1')::uuid,current_setting('test.seller')::uuid,'2026-09-01','2026-09-01')$$,'%INVALID_INPUT%','empty period rejected');
+select throws_like($$select issue_statement(current_setting('test.tenant')::uuid,current_setting('test.s1')::uuid,current_setting('test.seller')::uuid,'2026-09-01','2099-01-01')$$,'%INVALID_INPUT%','period into the future rejected');
+select throws_like($$select issue_statement(current_setting('test.tenant')::uuid,current_setting('test.s1')::uuid,gen_random_uuid(),'2026-09-01',current_setting('test.to')::timestamptz)$$,'%SELLER_NOT_FOUND%','unknown seller');
+select is(issue_statement(current_setting('test.tenant')::uuid,current_setting('test.s1')::uuid,current_setting('test.seller')::uuid,'2026-09-01',current_setting('test.to')::timestamptz),current_setting('test.s1')::uuid,'statement issued');
+select is(issue_statement(current_setting('test.tenant')::uuid,current_setting('test.s1')::uuid,current_setting('test.seller')::uuid,'2026-09-01',current_setting('test.to')::timestamptz),current_setting('test.s1')::uuid,'replay');
+select throws_like($$select issue_statement(current_setting('test.tenant')::uuid,current_setting('test.s1')::uuid,current_setting('test.seller')::uuid,'2026-09-02',current_setting('test.to')::timestamptz)$$,'%REQUEST_CONFLICT%','changed replay rejected');
+select set_config('test.h',(select row_to_json(s)::text from settlement_statements s where id=current_setting('test.s1')::uuid),true);
+select is((current_setting('test.h')::jsonb->>'number')::int,1,'first number');
+select is(current_setting('test.h')::jsonb->>'kind','statement','kind statement');
+select is((current_setting('test.h')::jsonb->>'opening_ore')::bigint,4000::bigint,'opening balance is the credit before the period');
+select is((current_setting('test.h')::jsonb->>'sales_gross_ore')::bigint,50000::bigint,'gross sales in the period');
+select is((current_setting('test.h')::jsonb->>'commission_ore')::bigint,30000::bigint,'commission in the period');
+select is((current_setting('test.h')::jsonb->>'credited_ore')::bigint,20000::bigint,'credited in the period');
+select is((current_setting('test.h')::jsonb->>'paid_ore')::bigint,10000::bigint,'paid in the period');
+select is((current_setting('test.h')::jsonb->>'adjustments_ore')::bigint,-500::bigint,'adjustments in the period');
+select is((current_setting('test.h')::jsonb->>'closing_ore')::bigint,13500::bigint,'closing equals the ledger balance');
+select is((select count(*) from settlement_statement_lines where statement_id=current_setting('test.s1')::uuid),5::bigint,'credit, reserved, released, paid and adjustment lines: reserved and released net out but are listed');
+select is((select count(*) from settlement_statement_lines where statement_id=current_setting('test.s1')::uuid and kind in ('payout_reserved','payout_released')),2::bigint,'reservation lines listed');
+-- Overlap is refused; the next period continues the numbering.
+select throws_like($$select issue_statement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'2026-09-10',current_setting('test.to')::timestamptz)$$,'%STATEMENT_PERIOD_OVERLAP%','overlapping period refused');
+select set_config('test.s0',gen_random_uuid()::text,true);
+select issue_statement(current_setting('test.tenant')::uuid,current_setting('test.s0')::uuid,current_setting('test.seller')::uuid,'2026-08-01','2026-09-01');
+select is((select number from settlement_statements where id=current_setting('test.s0')::uuid),2,'numbers are per tenant in issue order, not by period');
+select is((select opening_ore||'|'||closing_ore from settlement_statements where id=current_setting('test.s0')::uuid),'0|4000','earlier period opens at zero');
+-- A credit note references the original and may cover the same period.
+select set_config('test.cn',gen_random_uuid()::text,true);
+select is(issue_statement(current_setting('test.tenant')::uuid,current_setting('test.cn')::uuid,current_setting('test.seller')::uuid,'2026-09-01',current_setting('test.to')::timestamptz,current_setting('test.s1')::uuid),current_setting('test.cn')::uuid,'credit note issued');
+select is((select kind||'|'||number from settlement_statements where id=current_setting('test.cn')::uuid),'credit_note|3','credit note takes the next number');
+select throws_like($$select issue_statement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'2026-09-01',current_setting('test.to')::timestamptz,current_setting('test.s1')::uuid)$$,'%STATEMENT_ALREADY_CORRECTED%','one correction per statement');
+select lives_ok($$select issue_statement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'2026-09-01',current_setting('test.to')::timestamptz)$$,'a corrected statement no longer blocks its period');
+select throws_ok($$update settlement_statements set closing_ore=0$$,'42501',null,'direct update denied');
+reset role;
+select throws_like($$update settlement_statements set closing_ore=0 where id=current_setting('test.s1')::uuid$$,'%IMMUTABLE_STATEMENT%','privileged update immutable');
+select throws_like($$delete from settlement_statement_lines where statement_id=current_setting('test.s1')::uuid$$,'%IMMUTABLE_STATEMENT%','lines immutable');
+insert into tenant_members(tenant_id,user_id,role) values (current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000000182','readonly');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000182","role":"authenticated"}';
+select is((select count(*) from settlement_statements),4::bigint,'readonly reads statements');
+select throws_ok($$select issue_statement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'2026-09-13','2026-09-13T00:00:01Z')$$,'42501',null,'readonly cannot issue');
+select throws_ok($$select * from statement_counters$$,'42501',null,'counter is private');
+select * from finish();
+rollback;

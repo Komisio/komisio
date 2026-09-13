@@ -6,6 +6,14 @@ import {
   adjustSellerLedgerCommand,
   signedOreFromDecimal,
 } from './seller-ledger'
+import {
+  requestPayoutCommand,
+  approvePayoutCommand,
+  markPayoutPaidCommand,
+  rejectPayoutCommand,
+} from './payouts'
+import { recordReturnCommand } from './returns'
+import { issueStatementCommand } from './statements'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { saveInspectionCommand, archiveInspectionCommand } from './inspection'
@@ -18,6 +26,12 @@ import {
 export const intakeCommand = z.discriminatedUnion('action', [
   publishStorePolicyCommand,
   publishSellerTermsCommand,
+  requestPayoutCommand,
+  approvePayoutCommand,
+  markPayoutPaidCommand,
+  rejectPayoutCommand,
+  recordReturnCommand,
+  issueStatementCommand,
   acceptItemCommand,
   recordSaleCommand,
   adjustSellerLedgerCommand,
@@ -130,6 +144,53 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_id: c.requestId,
         p_seller: c.sellerId,
         p_amount_ore: signedOreFromDecimal(c.amount),
+        p_reason: c.reason,
+      })
+    case 'requestPayout':
+      return client.rpc('request_payout', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_seller: c.sellerId,
+        p_amount_ore: oreFromDecimal(c.amount),
+      })
+    case 'approvePayout':
+      return client.rpc('approve_payout', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_payout: c.payoutId,
+        p_reason: c.reason,
+      })
+    case 'recordReturn':
+      return client.rpc('record_return', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_sale_line: c.saleLineId,
+        p_refund_ore: oreFromDecimal(c.refund),
+        p_reason: c.reason,
+        p_occurred_at: c.occurredAt ?? new Date().toISOString(),
+      })
+    case 'issueStatement':
+      return client.rpc('issue_statement', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_seller: c.sellerId,
+        p_from: c.periodFrom,
+        p_to: c.periodTo,
+        p_corrects: c.correctsId,
+      })
+    case 'markPayoutPaid':
+      return client.rpc('mark_payout_paid', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_payout: c.payoutId,
+        p_reference: c.reference,
+        p_reason: c.reason,
+      })
+    case 'rejectPayout':
+      return client.rpc('reject_payout', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_payout: c.payoutId,
         p_reason: c.reason,
       })
     case 'publishReceptionReview':

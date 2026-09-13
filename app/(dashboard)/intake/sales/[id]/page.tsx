@@ -4,6 +4,8 @@ import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { readSale, formatOre } from '@/lib/engine/sales'
+import { readReturnsForLines } from '@/lib/engine/returns'
+import { ReturnForm } from '@/components/intake/return-form'
 
 export default async function Sale({
   params,
@@ -20,6 +22,12 @@ export default async function Sale({
   const result = await readSale(ctx.client, active.id, id.data)
   if (!result) notFound()
   const { sale, lines } = result
+  const returns = await readReturnsForLines(
+    ctx.client,
+    active.id,
+    lines.map((l) => l.id),
+  )
+  const write = active.role !== 'readonly'
   const when = (iso: string) =>
     new Date(iso).toLocaleString(ctx.locale === 'sv' ? 'sv-SE' : 'en-GB', {
       timeZone: 'Europe/Stockholm',
@@ -68,6 +76,23 @@ export default async function Sale({
               {d.vat}: {formatOre(l.vat_ore)} SEK · {d.vatModes[l.vat_mode]} ·{' '}
               {l.vat_rate_bp / 100} %
             </p>
+            {returns.has(l.id) ? (
+              <p role="status">
+                {all.returns.returned} {when(returns.get(l.id)!.occurred_at)} ·{' '}
+                {returns.get(l.id)!.reason}
+                {returns.get(l.id)!.flagged_for_review
+                  ? ` · ${all.returns.flagged}`
+                  : ''}
+              </p>
+            ) : write && sale.status === 'completed' ? (
+              <ReturnForm
+                tenantId={active.id}
+                saleLineId={l.id}
+                refund={formatOre(l.price_ore)}
+                d={all.returns}
+                intake={all.intake}
+              />
+            ) : null}
           </div>
         ))}
       </section>

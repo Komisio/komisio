@@ -4,6 +4,8 @@ import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { PrintLabel } from '@/components/intake/print-label'
+import { PrintJobButton } from '@/components/intake/print-job-button'
+import { readPrinters } from '@/lib/engine/printing'
 
 export default async function BagLabel({
   params,
@@ -24,6 +26,7 @@ export default async function BagLabel({
   if (!bag) notFound()
   const d = dictionary(ctx.locale).intake
   const a = dictionary(ctx.locale).agreements
+  const printers = await readPrinters(ctx.client, ctx.active!.id)
   const [version, evidence] = await Promise.all([
     bag.agreement_version_id
       ? ctx.client
@@ -69,6 +72,15 @@ export default async function BagLabel({
           {dictionary(ctx.locale).inspection.title}
         </Link>
         <PrintLabel label={d.print} />
+        <PrintJobButton
+          tenantId={ctx.active!.id}
+          printers={printers}
+          kind="bag"
+          referenceKind="bag_receipt"
+          referenceId={id}
+          d={dictionary(ctx.locale).printing}
+          intake={d}
+        />
         <Link className="text-link" href="/intake">
           {d.back}
         </Link>

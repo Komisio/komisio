@@ -15,6 +15,8 @@ import { readSellerCommunications } from '@/lib/engine/communications'
 import { readPayouts } from '@/lib/engine/payouts'
 import { readItems } from '@/lib/engine/items'
 import { CommunicationForm } from '@/components/intake/communication-form'
+import { PrintJobButton } from '@/components/intake/print-job-button'
+import { readPrinters } from '@/lib/engine/printing'
 import {
   readSellerBalance,
   readSellerLedger,
@@ -61,6 +63,7 @@ export default async function Seller({
     readItems(ctx.client, tenant.id),
   ])
   const c = all.communications
+  const printers = await readPrinters(ctx.client, tenant.id)
   const sellerItems = items.filter((i) => i.seller_id === id.data)
   const soldLines = await ctx.client
     .from('sale_lines')
@@ -220,6 +223,21 @@ export default async function Seller({
           </>
         )}
       </section>
+      {write && (
+        <section className="card intake-form">
+          <h2>{all.printing.onboardingSlip}</h2>
+          <p>{all.printing.onboardingHint}</p>
+          <PrintJobButton
+            tenantId={tenant.id}
+            printers={printers}
+            kind="onboarding"
+            referenceKind="seller"
+            referenceId={id.data}
+            d={all.printing}
+            intake={all.intake}
+          />
+        </section>
+      )}
       <section className="card intake-form">
         <h2>{c.title}</h2>
         <p>{c.intro}</p>

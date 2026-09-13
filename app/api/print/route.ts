@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { platformContext } from '@/lib/platform/context'
 import { queuePrintJobInput } from '@/lib/engine/printing'
 import { renderLabel, LABEL_TEMPLATE_VERSION } from '@/lib/labels/templates'
+import { readStoreCurrency } from '@/lib/engine/money'
 import { formatOre } from '@/lib/engine/items'
 
 const ore = z.union([z.number().int(), z.string()]).transform(Number)
@@ -42,6 +43,7 @@ export async function POST(request: Request) {
     const facts: Record<string, unknown> = {
       storeName: ctx.active.name,
       reference: '',
+      currency: await readStoreCurrency(client, tenantId),
     }
     if (c.referenceKind === 'bag_receipt') {
       const bag = await client

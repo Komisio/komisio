@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import type { CurrencyCode } from './money'
 import {
   receptionSession,
   receptionSuggestions,
@@ -54,7 +55,10 @@ export function manualReceptionSources(
   ])
 }
 /** Decode only this manual adapter's format. Arbitrary observations are not inferred prices. */
-export function readManualReception(sources: ReceptionSession['sources']) {
+export function readManualReception(
+  sources: ReceptionSession['sources'],
+  currency: CurrencyCode = 'SEK',
+) {
   const descriptions = sources.filter(
     (s) => s.kind === 'observation' && s.reference === descriptionRef,
   )
@@ -79,7 +83,7 @@ export function readManualReception(sources: ReceptionSession['sources']) {
           },
         },
         price: {
-          currency: 'SEK',
+          currency,
           amount: a.amount,
           rationale: `${a.reference}: ${a.rationale}`,
           sourceIds: [appraisals[0].id],

@@ -199,6 +199,7 @@ export function OperationQueue({
   canDecide,
   locale,
   reviewContext,
+  currency,
   d,
 }: {
   tenantId: string
@@ -206,6 +207,7 @@ export function OperationQueue({
   canDecide: boolean
   locale: string
   reviewContext?: OperationReviewContext
+  currency: string
   d: D
 }) {
   const format = (value: string) =>
@@ -254,7 +256,7 @@ export function OperationQueue({
                   <div>
                     <dt>{d.price}</dt>
                     <dd>
-                      {o.payload.suggestions.price.amount} SEK ·{' '}
+                      {o.payload.suggestions.price.amount} ${currency} ·{' '}
                       {o.payload.suggestions.price.rationale}
                       {reviewContext && (
                         <small>
@@ -288,13 +290,15 @@ export function OperationQueue({
                   : ''}
               </p>
               <p>
-                {d.proposedPrice}: {(o.payload.priceOre / 100).toFixed(2)} SEK
+                {d.proposedPrice}: {(o.payload.priceOre / 100).toFixed(2)} $
+                {currency}
               </p>
             </>
           ) : o.kind === 'recordReturn' ? (
             <p>
               {d.saleLine}: {o.payload.saleLineId} · {d.refund}:{' '}
-              {(o.payload.refundOre / 100).toFixed(2)} SEK · {o.payload.reason}
+              {(o.payload.refundOre / 100).toFixed(2)} ${currency} ·{' '}
+              {o.payload.reason}
             </p>
           ) : o.kind === 'adjustLedger' ? (
             <p>
@@ -304,8 +308,8 @@ export function OperationQueue({
               >
                 {d.seller}
               </Link>{' '}
-              · {d.adjustment}: {(o.payload.amountOre / 100).toFixed(2)} SEK ·{' '}
-              {o.payload.reason}
+              · {d.adjustment}: {(o.payload.amountOre / 100).toFixed(2)} $
+              {currency} · {o.payload.reason}
             </p>
           ) : o.kind === 'applyMarkdownBatch' ? (
             <ul>
@@ -382,7 +386,7 @@ export function OperationQueue({
               {(
                 o.payload.sellers.reduce((sum, s) => sum + s.amountOre, 0) / 100
               ).toFixed(2)}{' '}
-              SEK · {o.payload.reason}
+              {currency} · {o.payload.reason}
             </p>
           ) : o.kind === 'updateStoreProfile' ? (
             <div>
@@ -562,11 +566,11 @@ export function OperationQueue({
                         <td>
                           {r.currentPriceOre === null
                             ? '–'
-                            : `${(r.currentPriceOre / 100).toFixed(2)} SEK`}
+                            : `${(r.currentPriceOre / 100).toFixed(2)} ${currency}`}
                         </td>
                         <td>
                           {r.newPriceOre !== null
-                            ? `${(r.newPriceOre / 100).toFixed(2)} SEK`
+                            ? `${(r.newPriceOre / 100).toFixed(2)} ${currency}`
                             : o.kind === 'bulkItemUpdate' &&
                                 o.payload.action === 'endPeriod'
                               ? d.endActions[o.payload.endAction]
@@ -611,15 +615,19 @@ export function OperationQueue({
                         <td>
                           {r.availableOre === null
                             ? '–'
-                            : `${(r.availableOre / 100).toFixed(2)} SEK`}
+                            : `${(r.availableOre / 100).toFixed(2)} ${currency}`}
                         </td>
-                        <td>{(r.amountOre / 100).toFixed(2)} SEK</td>
+                        <td>
+                          {(r.amountOre / 100).toFixed(2)} ${currency}
+                        </td>
                       </tr>
                     ))}
                     <tr>
                       <td>{d.total}</td>
                       <td></td>
-                      <td>{(reviewContext.totalOre / 100).toFixed(2)} SEK</td>
+                      <td>
+                        {(reviewContext.totalOre / 100).toFixed(2)} ${currency}
+                      </td>
                     </tr>
                   </tbody>
                 </table>

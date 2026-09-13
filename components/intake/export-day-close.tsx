@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 /** Voucher preview for one day close and the export action; the file link follows the export. */
 export function ExportDayClose({
   tenantId,
+  currency,
   preview,
   canExport,
   vatModes,
@@ -16,13 +17,14 @@ export function ExportDayClose({
   intake,
 }: {
   tenantId: string
+  currency: string
   preview: VoucherPreview
   canExport: boolean
   vatModes: Record<string, string>
   d: Dictionary['accounting']
   intake: Dictionary['intake']
 }) {
-  const money = (ore: number) => `${formatSignedOre(ore)} SEK`
+  const money = (ore: number) => `${formatSignedOre(ore)} ${currency}`
   const accountLabel = (key: string) => {
     if (key.startsWith('mode:')) {
       const [, mode, amount] = key.split(':')

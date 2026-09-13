@@ -349,7 +349,10 @@ at the counter as the ordinary bag receipt, behind the policy's
 schedule stays the only one, `automaticMarkdowns` applies due steps daily as
 the policy's publisher, staff can run the same step by hand, every run is
 recorded (migration `20260915150000`, see
-[MARKDOWN-AGENT.md](MARKDOWN-AGENT.md))
+[MARKDOWN-AGENT.md](MARKDOWN-AGENT.md)). One currency per store delivered
+after the owner's decision: the policy names it, money facts record it, it
+freezes after the first sale, purchase or payout (migration
+`20260915180000`, see [STORE-CURRENCY.md](STORE-CURRENCY.md))
 (migration `20260915100000`, see [SETTLEMENT.md](SETTLEMENT.md)).
 
 | Phase                                       | Theme                    | Slices                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Needs from owner                                                                                                                        |
@@ -361,6 +364,16 @@ recorded (migration `20260915150000`, see
 | P4                                          | Bookings and assistants  | Sections, layout, pricing rules, bookings and charges; web copilot over MCP; onboarding conversation; multilingual descriptions; semantic search; identify by image and AR; public browse; pricing coach                                                                                                                                                                                                                                                                                                                        | Booking fee questions                                                                                                                   |
 | P5                                          | Open up                  | Partner REST subset with OAuth clients, import wizard as staged op, kiosk integration contract, voice adapter, public buyer assistant, self-service export automation, quality and fraud proposals                                                                                                                                                                                                                                                                                                                              | –                                                                                                                                       |
 | P6                                          | Commercial               | Hosted tier subscription in Stripe, AI quota mapping, operator report                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Pricing decisions                                                                                                                       |
+
+### Explicit P5 slice: multi-tenant Zettle connections
+
+Replace the single pilot environment credential slot with partner-hosted
+authorization and tenant-bound encrypted credential storage, rotation and
+revocation. Preserve merchant verification, tenant isolation, server-only secrets
+and immutable connection provenance. This is planned work, not delivered by the
+pilot binding. Scheduled receipt retrieval remains a separate follow-up using
+the enabling owner/admin identity and a database-owner-only pg_cron entry point;
+do not introduce a service-role client or reuse a staff click as a worker actor.
 
 ## 8. Questions this document raised
 

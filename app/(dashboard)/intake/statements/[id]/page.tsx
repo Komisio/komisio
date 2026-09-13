@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
+import { readStoreCurrency } from '@/lib/engine/money'
 import { readStatement } from '@/lib/engine/statements'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { PrintLabel } from '@/components/intake/print-label'
@@ -17,6 +18,7 @@ export default async function Statement({
   if (!id.success) notFound()
   const ctx = await requirePlatform(),
     active = ctx.active!,
+    currency = await readStoreCurrency(ctx.client, active.id),
     all = dictionary(ctx.locale),
     d = all.statements
   const result = await readStatement(ctx.client, active.id, id.data)
@@ -34,7 +36,7 @@ export default async function Statement({
     new Date(iso).toLocaleDateString(locale, { timeZone: 'Europe/Stockholm' })
   const when = (iso: string) =>
     new Date(iso).toLocaleString(locale, { timeZone: 'Europe/Stockholm' })
-  const money = (ore: number) => `${formatSignedOre(ore)} SEK`
+  const money = (ore: number) => `${formatSignedOre(ore)} ${currency}`
   const lastDay = new Date(Date.parse(s.period_to) - 1).toISOString()
   return (
     <>
@@ -128,7 +130,7 @@ export default async function Statement({
           </tbody>
         </table>
         <p>
-          <small>{d.footer}</small>
+          <small>{d.footer.replace('{currency}', currency)}</small>
         </p>
       </article>
       <div className="row no-print">

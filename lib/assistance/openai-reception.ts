@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { currencyCode } from '../engine/money'
 import { batchSuggestions } from './reception-batch'
 import type { ReceptionAssistance } from './reception'
 import { receptionSuggestions } from '../engine/reception'
@@ -33,7 +34,7 @@ const wire = z.strictObject({
   }),
   price: z
     .strictObject({
-      currency: z.literal('SEK'),
+      currency: currencyCode,
       amount: z.string(),
       rationale: z.string(),
       sourceIds: z.array(z.string()),

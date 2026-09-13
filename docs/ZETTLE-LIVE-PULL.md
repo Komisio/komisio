@@ -26,8 +26,13 @@ from a different window. Window/page changes and financial reconciliation share
 the tenant transaction lock. A lost response replays the stored page under the
 same request ID and actor, without fetching a changed page from the provider.
 
-The SQL wrapper rejects out-of-window data before calling the existing whole
-receipt reconciliation. Identical receipt IDs across overlap windows remain
+The SQL wrapper accepts purchase timestamps from five minutes before the window
+start (inclusive) to five minutes after its end (exclusive), clipped at the
+immutable activation cutover. This tolerates bounded provider timestamp skew,
+but never imports pre-activation history. More distant timestamps still stop the
+page; there is no silent skip or operator close command. The requested provider
+interval and its durable watermark do not change. Identical receipt IDs across
+overlap windows remain
 idempotent; conflicting facts stop the page. Only already-supported, fully matched
 purchases record sales and seller credit. Refunds, discounts and unmatched lines
 retain the existing held behavior; this adds no tax or commission rule.
@@ -47,11 +52,13 @@ explicit tenant/merchant pins and exact-origin checks all precede transport acce
 
 ## Validation and deployment
 
-Migration `20260915123000_zettle_live_pull.sql` is additive. Apply it before the
+Migrations `20260915123000_zettle_live_pull.sql` and
+`20260915170000_zettle_pull_tolerance.sql` are additive. Apply them before the
 app deployment; do not reset or rewrite existing data. Roll back the app through
 a PR and remove the pilot binding if retrieval must stop; preserve recorded facts.
 
-Tests: pgTAP identity/window/replay boundaries; multi-connection window/page races
+Tests: `0061_zettle_live_pull.test.sql` covers identity, cutover, tolerance
+boundaries, completion and replay; multi-connection window/page races
 in `scripts/owner-race.mjs`; unit tests for pinned token transport and engine
 orchestration; the existing complete synthetic Zettle browser journey with denial
 of unconfigured live operations. Test data never uses actual pilot credentials.

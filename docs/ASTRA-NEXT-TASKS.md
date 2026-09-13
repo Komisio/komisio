@@ -23,6 +23,12 @@ surface, tests. Base every branch on `main`.
 - Do not add a staged operation kind: the dispatcher recipe re-declares five
   functions per kind and two authors doing it in parallel conflict every time.
   Ask Fable, or wait for the stack.
+- pgTAP file numbers: check `ls supabase/tests` on `origin/main` and every
+  worktree before numbering and take the next free one; at rebase time the
+  later branch renumbers. 0052, 0056 and 0059 collided on 2026-09-13.
+- Architecture review of the Zettle integration:
+  [ZETTLE-REVIEW-2026-09-13.md](ZETTLE-REVIEW-2026-09-13.md). Finding 1
+  (window escape) before the pilot; finding 2 when scheduling is built.
 - Blocked on the owner, not on code: Zettle credentials, a connected Fortnox
   account, Resend keys and the pilot mailbox allowlist, a printer for the
   pilot store. Do not invent any of them.

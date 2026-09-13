@@ -5,6 +5,7 @@ import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { readOperationReview } from '@/lib/engine/operation-review'
 import { OperationQueue } from '@/components/intake/operation-queue'
+import { readStoreCurrency } from '@/lib/engine/money'
 
 export default async function OperationDetail({
   params,
@@ -16,6 +17,7 @@ export default async function OperationDetail({
   if (!z.uuid().safeParse(id).success) notFound()
   const ctx = await requirePlatform(),
     active = ctx.active!,
+    currency = await readStoreCurrency(ctx.client, ctx.active!.id),
     d = dictionary(ctx.locale).operations
   const detail = await readOperationReview(ctx.client, active.id, {
     operationId: id,
@@ -44,6 +46,7 @@ export default async function OperationDetail({
         reviewContext={detail.context}
         canDecide={active.role !== 'readonly'}
         locale={ctx.locale}
+        currency={currency}
         d={d}
       />
     </>

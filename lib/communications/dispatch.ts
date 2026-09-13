@@ -5,6 +5,7 @@ import { renderSellerMessage, type CommunicationKind } from './templates'
 import { referenceKindFor } from '../engine/communications'
 import { sendSellerEmailWithId } from '../platform/seller-email'
 import { formatSignedOre } from '../engine/seller-ledger'
+import { readStoreCurrency } from '../engine/money'
 
 // One path for every seller message (P2 S18): render the versioned template
 // from authenticated reads of the referenced fact, queue the exact text in
@@ -73,6 +74,7 @@ export async function sendSellerCommunication(
     storeName: c.storeName,
     sellerName: seller.data.name,
     freeText: c.freeText,
+    currency: await readStoreCurrency(client, c.tenantId),
   }
   if (c.kind === 'item_accepted' && c.referenceId) {
     const price = await client

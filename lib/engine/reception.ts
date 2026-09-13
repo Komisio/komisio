@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { currencyCode } from './money'
 
 const revision = z.number().int().nonnegative().max(2147483646)
 const text = (max: number) => z.string().trim().min(1).max(max)
@@ -48,7 +49,7 @@ export const garmentSuggestions = z.strictObject({
 // Exact decimal text at the interchange boundary, no floating-point arithmetic.
 // A suggested price is not a booking, payout, tax calculation or sale approval.
 export const suggestedPrice = z.strictObject({
-  currency: z.literal('SEK'),
+  currency: currencyCode,
   amount: z
     .string()
     .regex(/^(?:0|[1-9]\d{0,5})\.\d{2}$/)

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { currencyCode } from './money'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 // Sales (P2 S11): a fact from a POS or the counter, idempotent by provider and
@@ -14,7 +15,7 @@ export const recordSaleCommand = z
     provider: saleProvider,
     externalId: z.string().trim().min(1).max(200),
     occurredAt: z.iso.datetime({ offset: true }),
-    currency: z.literal('SEK'),
+    currency: currencyCode,
     lines: z.array(saleLineInput).min(1).max(50),
   })
   .refine(
@@ -49,7 +50,7 @@ const saleRow = z.object({
   id: z.uuid(),
   provider: saleProvider,
   external_id: z.string(),
-  currency: z.literal('SEK'),
+  currency: currencyCode,
   occurred_at: z.iso.datetime({ offset: true }),
   total_ore: ore,
   status: z.enum(['completed', 'reversed']),

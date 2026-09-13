@@ -11,11 +11,13 @@ type D = Dictionary['payouts']
 /** Staff records a payout request on the seller's behalf; the seller app requests later. */
 export function PayoutRequestForm({
   tenantId,
+  currency,
   sellers,
   d,
   intake,
 }: {
   tenantId: string
+  currency: string
   sellers: { id: string; name: string; availableOre: number }[]
   d: D
   intake: Dictionary['intake']
@@ -63,7 +65,7 @@ export function PayoutRequestForm({
           <select id="payout-seller" name="seller" required>
             {sellers.map((s) => (
               <option key={s.id} value={s.id}>
-                {s.name} · {(s.availableOre / 100).toFixed(2)} SEK
+                {s.name} · {(s.availableOre / 100).toFixed(2)} {currency}
               </option>
             ))}
           </select>
@@ -101,11 +103,13 @@ export function PayoutRequestForm({
  */
 export function SettlementForm({
   tenantId,
+  currency,
   candidates,
   d,
   intake,
 }: {
   tenantId: string
+  currency: string
   candidates: { sellerId: string; name: string; availableOre: number }[]
   d: D
   intake: Dictionary['intake']
@@ -162,11 +166,11 @@ export function SettlementForm({
                 setSelected(next)
               }}
             />
-            {c.name} · {(c.availableOre / 100).toFixed(2)} SEK
+            {c.name} · {(c.availableOre / 100).toFixed(2)} {currency}
           </label>
         ))}
         <p>
-          {d.settleTotal}: {(totalOre / 100).toFixed(2)} SEK
+          {d.settleTotal}: {(totalOre / 100).toFixed(2)} {currency}
         </p>
         <div className="field">
           <label htmlFor="settle-reason">{d.settleReason}</label>

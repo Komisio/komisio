@@ -9,6 +9,7 @@ import {
 } from '@/lib/engine/operation-page'
 import { operationQueueHref } from '@/lib/intake/operation-navigation'
 import { OperationQueue } from '@/components/intake/operation-queue'
+import { readStoreCurrency } from '@/lib/engine/money'
 
 export default async function Operations({
   searchParams,
@@ -18,6 +19,7 @@ export default async function Operations({
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const ctx = await requirePlatform(),
     active = ctx.active!,
+    currency = await readStoreCurrency(ctx.client, ctx.active!.id),
     all = dictionary(ctx.locale),
     d = all.operations
   const parsed = operationPageInput.safeParse(await searchParams)
@@ -58,6 +60,7 @@ export default async function Operations({
           operations={operations}
           canDecide={active.role !== 'readonly'}
           locale={ctx.locale}
+          currency={currency}
           d={d}
         />
       ) : (

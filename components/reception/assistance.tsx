@@ -194,7 +194,9 @@ export function ReceptionAssistance({
           )}
           <h3>
             {d.price}:{' '}
-            {candidate.price ? `${candidate.price.amount} SEK` : d.aiUnknown}
+            {candidate.price
+              ? `${candidate.price.amount} ${candidate.price.currency}`
+              : d.aiUnknown}
           </h3>
           {candidate.price && (
             <>

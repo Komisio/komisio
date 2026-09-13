@@ -82,6 +82,11 @@ export async function POST(request: Request) {
           'CUSTODY_REQUIRED',
           'SELLER_APPROVAL_REQUIRED',
           'PRICE_NOT_APPROVED',
+          'ITEM_NOT_FOUND',
+          'ITEM_ALREADY_SOLD',
+          'VAT_MODE_NOT_SET',
+          'VAT_BASIS_MISSING',
+          'SALE_CONFLICT',
         ].find((v) => result.error!.message.includes(v)) ?? 'REQUEST_FAILED'
       return reply(
         { error: code },
@@ -106,6 +111,9 @@ export async function POST(request: Request) {
                 'CUSTODY_REQUIRED',
                 'SELLER_APPROVAL_REQUIRED',
                 'PRICE_NOT_APPROVED',
+                'ITEM_ALREADY_SOLD',
+                'VAT_MODE_NOT_SET',
+                'SALE_CONFLICT',
               ].includes(code)
             ? 409
             : 400,

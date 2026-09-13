@@ -723,6 +723,49 @@
       "provenance": "Ursprung dokumenterat"
     }
   },
+  "sales": {
+    "title": "Försäljning",
+    "intro": "En försäljning är ett faktum från kassan eller en kassaleverantör. Varje rad fryser pris, provision, säljarens tillgodohavande och moms som de var i det ögonblicket.",
+    "notice": "Att registrera en försäljning betalar ingen. Säljarsaldon, returer och utbetalningar kommer i senare steg.",
+    "recordHeading": "Registrera en kassaförsäljning",
+    "recordHint": "En accepterad, osåld vara per försäljning tills vidare. Kassaförsäljningar hämtas via sin egen integration.",
+    "noItems": "Inga accepterade varor finns till salu.",
+    "item": "Vara",
+    "price": "Försäljningspris",
+    "priceHint": "SEK, till exempel 250 eller 250,50.",
+    "priceInvalid": "Ange ett pris med högst två decimaler.",
+    "confirm": "Jag bekräftar att varan såldes till detta pris.",
+    "record": "Registrera försäljning",
+    "recorded": "Försäljningen är registrerad.",
+    "open": "Öppna kvittot",
+    "recent": "Senaste försäljningar",
+    "empty": "Inga försäljningar registrerade ännu.",
+    "backToList": "Tillbaka till försäljning",
+    "receipt": "Kvitto",
+    "lines": "Rader",
+    "linesHint": "Fryst vid försäljningen; senare policy eller säljarvillkor ändrar aldrig dessa belopp.",
+    "line": "Rad",
+    "commission": "Butikens provision",
+    "commissionVat": "Moms på provision",
+    "sellerCredit": "Säljarens tillgodohavande",
+    "vat": "Moms",
+    "providers": {
+      "manual": "kassa",
+      "zettle": "Zettle",
+      "shopify": "Shopify POS"
+    },
+    "statuses": {
+      "completed": "genomförd",
+      "reversed": "återtagen"
+    },
+    "vatModes": {
+      "consignment_margin": "inlämnad, moms på provisionen",
+      "consignment_full": "inlämnad, full moms",
+      "consignment_business": "företagssäljare",
+      "store_margin": "butiksägd, vinstmarginal",
+      "store_full": "butiksägd, full moms"
+    }
+  },
   "purchases": {
     "title": "Inköp",
     "intro": "Butiksägda varor kommer in här, aldrig via inlämningsflödena.",

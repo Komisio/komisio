@@ -288,7 +288,7 @@ Smaller slices that complete P2 and are independent of each other:
   [USAGE-METERING.md](USAGE-METERING.md).
 - Bulk staged operations: price change, status change, reprint for a set of
   items as one operation with a preview.
-  Status 2026-09-13: delivered (migration `20260914110000`): staged kind
+  Status 2026-09-13: delivered (migration `20260914120000`): staged kind
   `bulkItemUpdate` at `medium` (price change with reason, or end of period)
   for up to 50 items, refused whole if any item is sold or ended, applied all
   or nothing, preview table on the review page; `set_item_price` as the

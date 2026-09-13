@@ -124,7 +124,7 @@ already returned, seller gone). No MCP tool proposes these kinds yet.
 
 ## Bulk item updates
 
-Since migration `20260914110000` the kind `bulkItemUpdate` (`medium`) stages
+Since migration `20260914120000` the kind `bulkItemUpdate` (`medium`) stages
 one change for up to 50 items: `setPrice` with a shared reason and one price
 per item, or `endPeriod` with one end action (charity or return) and an
 optional note. Preflight runs the lifecycle facts for every item and refuses

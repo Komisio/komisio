@@ -1,3 +1,4 @@
+import { readZettlePull } from '@/lib/engine/zettle-live'
 import Link from 'next/link'
 import { pilotIssue, pilotEnvironment } from '@/extensions/zettle/auth'
 import { ZettleConnection } from '@/components/intake/zettle-connection'
@@ -34,7 +35,12 @@ export default async function Integrations({
       paging?.success ? paging.data : undefined,
     ),
     fixtures = zettleFixturesEnabled(),
-    catalog = await readZettleCatalog(ctx.client, a.id)
+    catalog = await readZettleCatalog(ctx.client, a.id),
+    pull = ['owner', 'admin'].includes(a.role)
+      ? await readZettlePull(ctx.client, a.id)
+      : null,
+    pilot = pilotEnvironment(process.env),
+    liveReady = pilotIssue(a.id, pilot) === null && !!pilot.ZETTLE_MERCHANT_ID
   return (
     <>
       <div className="page-heading">
@@ -53,8 +59,53 @@ export default async function Integrations({
           d={d}
         />
       )}
+      {liveReady && pull && (
+        <section className="card intake-form" aria-label={d.pullTitle}>
+          <h2>{d.pullTitle}</h2>
+          <p>{d.pullHint}</p>
+          {pull.connection ? (
+            <>
+              <p>
+                {d.pullSince}:{' '}
+                {new Date(pull.connection.cutover).toLocaleString(ctx.locale, {
+                  timeZone: 'Europe/Stockholm',
+                })}
+              </p>
+              {pull.window && (
+                <p>
+                  {pull.page?.purchase_count === 0
+                    ? d.pullComplete
+                    : d.pullPending}
+                  :{' '}
+                  {new Date(pull.window.end_at).toLocaleString(ctx.locale, {
+                    timeZone: 'Europe/Stockholm',
+                  })}
+                </p>
+              )}
+              <ZettleAction
+                key={pull.page?.id ?? pull.window?.id ?? 'pull'}
+                command={{ action: 'pull', tenantId: a.id }}
+                d={d}
+                label={d.pullNow}
+              />
+            </>
+          ) : (
+            <ZettleAction
+              command={{ action: 'enablePull', tenantId: a.id }}
+              d={d}
+              label={d.pullEnable}
+            />
+          )}
+        </section>
+      )}
       <section className="card intake-form">
-        <p className="intake-notice">{fixtures ? d.fixture : d.offline}</p>
+        <p className="intake-notice">
+          {fixtures
+            ? d.fixture
+            : pull?.connection
+              ? d.catalogOffline
+              : d.offline}
+        </p>
         <p>
           {d.lastSync}:{' '}
           {state.lastSync

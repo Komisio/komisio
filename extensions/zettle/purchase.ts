@@ -123,7 +123,7 @@ export function mapZettlePurchase(input: unknown): ImportedPurchase {
 export const cursor = z.string().min(1).max(1000).nullable()
 const page = z.object({
   purchases: z.array(z.unknown()).max(100),
-  lastPurchaseHash: z.string().min(1).max(1000).optional(),
+  lastPurchaseHash: z.string().max(1000).nullish(),
 })
 export function mapZettlePage(input: unknown, previous: string | null) {
   const p = page.parse(input),

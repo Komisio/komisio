@@ -1,3 +1,14 @@
+## Live receipt pull checkpoint, 2026-09-13
+
+Real pilot authentication and merchant pin are verified. Latest base includes
+Fable PR97 economy summary (`ef8b0b0`). Work in `astra/zettle-live-pull` adds
+explicit activation from server now, append-only provider windows/pages and a
+bounded manual pull through existing sale reconciliation. See ZETTLE-LIVE-PULL.md.
+Migration20260915123000 is applied locally and immutable. Credentials remain
+Vercel-only; no real merchant IDs are added to source. No product/inventory or
+worker activation. Complete CI, protected merge, additive staging migration and
+hosted verification; keep exact evidence in the PR and private release checkpoint.
+
 ## Zettle missing-button diagnosis, 2026-09-13
 
 PR94 is merged and deployed. The owner sees the generic unavailable message.

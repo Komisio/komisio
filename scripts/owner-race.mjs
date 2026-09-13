@@ -1,3 +1,4 @@
+import { raceZettlePull } from './zettle-pull-race.mjs'
 import { raceSellerPayout } from './seller-payout-race.mjs'
 import { raceStorePolicy } from './store-policy-race.mjs'
 import { raceInspectionApproval } from './inspection-operation-race.mjs'
@@ -48,6 +49,7 @@ try {
         'utf8',
       ),
     )
+  await raceZettlePull({ setup, connectionString: parsed.toString() })
   await raceSellerPayout({ setup, connectionString: parsed.toString() })
   const u1 = randomUUID(),
     u2 = randomUUID(),

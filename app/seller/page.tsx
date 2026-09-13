@@ -41,7 +41,7 @@ export default async function SellerPortal({
   const amount = (ore: number) => `${formatSignedOre(ore)} SEK`
   if (!account)
     return (
-      <main className="onboarding">
+      <main className="onboarding seller-review">
         <Brand />
         <SignOut d={all} next="/seller" />
         <section className="card">
@@ -67,7 +67,7 @@ export default async function SellerPortal({
     )
     if (!statement) notFound()
     return (
-      <main className="onboarding">
+      <main className="onboarding seller-review">
         <Brand />
         <SignOut d={all} next="/seller" />
         <section className="card">
@@ -121,7 +121,7 @@ export default async function SellerPortal({
     account.sellerId,
   )
   return (
-    <main className="onboarding">
+    <main className="onboarding seller-review">
       <Brand />
       <SignOut d={all} next="/seller" />
       <div className="page-heading">

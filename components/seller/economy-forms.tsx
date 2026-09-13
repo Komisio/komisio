@@ -1,5 +1,6 @@
 'use client'
 import { useRef, useState } from 'react'
+import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 export function SellerEconomyForms({
@@ -74,12 +75,12 @@ export function SellerEconomyForms({
           required
           disabled={busy}
         />
-        <button
+        <Button
           type="submit"
           disabled={busy || availableOre < thresholdOre || availableOre <= 0}
         >
           {d.request}
-        </button>
+        </Button>
       </form>
       <form
         className="card intake-form"
@@ -91,7 +92,7 @@ export function SellerEconomyForms({
           })
         }}
       >
-        <label>
+        <label className="row">
           <input
             type="checkbox"
             name="emails"
@@ -100,9 +101,9 @@ export function SellerEconomyForms({
           />
           {d.emails}
         </label>
-        <button type="submit" disabled={busy}>
+        <Button type="submit" disabled={busy}>
           {d.save}
-        </button>
+        </Button>
       </form>
       <p role="status">{notice}</p>
     </div>

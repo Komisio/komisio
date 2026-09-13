@@ -28,6 +28,7 @@ import {
   exportDayCloseCommand,
 } from './accounting'
 import { publishStoreProfileCommand } from './store-profile'
+import { receiveHandoverCommand } from './handovers'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { saveInspectionCommand, archiveInspectionCommand } from './inspection'
@@ -57,6 +58,7 @@ export const intakeCommand = z.discriminatedUnion('action', [
   publishAccountingMapCommand,
   exportDayCloseCommand,
   publishStoreProfileCommand,
+  receiveHandoverCommand,
   acceptItemCommand,
   recordSaleCommand,
   adjustSellerLedgerCommand,
@@ -218,6 +220,14 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_tenant: c.tenantId,
         p_id: c.requestId,
         p_date: c.date,
+      })
+    case 'receiveHandover':
+      return client.rpc('receive_handover', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_handover: c.handoverId,
+        p_source: c.source,
+        p_note: c.note,
       })
     case 'publishStoreProfile':
       return client.rpc('publish_store_profile', {

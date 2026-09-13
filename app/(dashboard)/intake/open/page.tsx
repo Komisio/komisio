@@ -3,7 +3,7 @@ import { notFound, redirect } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 
-/** Scan-to-open (P1 S8): a bag label K-n opens the bag, a garment label G-n opens the reception. */
+/** Scan-to-open (P1 S8): a bag label K-n opens the bag, a garment label G-n opens the reception, a handover H-n opens the handover queue. */
 export default async function OpenByReference({
   searchParams,
 }: {
@@ -15,10 +15,18 @@ export default async function OpenByReference({
     d = dictionary(ctx.locale).openByReference
   const raw = (await searchParams).ref
   const ref = typeof raw === 'string' ? raw.trim().toUpperCase() : ''
-  const match = /^([KG])-?(\d{1,12})$/.exec(ref)
+  const match = /^([KGH])-?(\d{1,12})$/.exec(ref)
   if (match) {
     const number = Number(match[2])
-    if (match[1] === 'K') {
+    if (match[1] === 'H') {
+      const handover = await ctx.client
+        .from('seller_handovers')
+        .select('id')
+        .eq('tenant_id', tenant.id)
+        .eq('reference', number)
+        .maybeSingle()
+      if (handover.data) redirect(`/intake/handovers?focus=${handover.data.id}`)
+    } else if (match[1] === 'K') {
       const bag = await ctx.client
         .from('bag_receipts')
         .select('id')

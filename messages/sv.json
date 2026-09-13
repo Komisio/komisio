@@ -980,6 +980,27 @@
     "issued": "Avräkningen är utfärdad.",
     "open": "Öppna avräkningen"
   },
+  "handovers": {
+    "title": "Inlämningar",
+    "intro": "Säljare anmäler en påse eller låda i sin portal och får en referens. När den tas emot här registreras det vanliga påskvittot enligt avtalsreglerna; säljaren ser påsnumret.",
+    "disabled": "Självinlämning är av: aktivera seller_dropoff bland förvaringskällorna i butikspolicyn.",
+    "empty": "Inga anmälda inlämningar.",
+    "announced": "Anmäld",
+    "items": "plagg",
+    "note": "Anteckning (valfri)",
+    "confirm": "Påsen eller lådan är i butiken nu.",
+    "receive": "Ta emot och registrera påsen",
+    "openBag": "Öppna påsen",
+    "kinds": {
+      "bag": "Påse",
+      "box": "Låda"
+    },
+    "statuses": {
+      "open": "öppen",
+      "received": "mottagen",
+      "cancelled": "avbruten"
+    }
+  },
   "economy": {
     "title": "Ekonomi",
     "intro": "Butikens siffror för en period, beräknade från samma fakta och med samma summor som dagsavslutet: försäljning med moms per momsläge, provision, säljartillgodohavande, returer och utbetalda utbetalningar.",
@@ -1230,6 +1251,21 @@
     "empty": "Inga inköp registrerade ännu."
   },
   "sellerPortal": {
+    "handovers": "Lämna in plagg",
+    "handoverIntro": "Anmäl en påse eller låda innan du kommer. Visa referensen i kassan; butiken registrerar den som din påse och du ser påsnumret här.",
+    "handoverDisabled": "Butiken tar inte emot anmälda inlämningar ännu. Lämna dina plagg i kassan.",
+    "handoverKind": "Vad du lämnar",
+    "handoverKinds": { "bag": "Påse", "box": "Låda" },
+    "estimatedItems": "Ungefär hur många plagg",
+    "handoverNote": "Anteckning till butiken (valfri)",
+    "announce": "Anmäl",
+    "showReference": "Visa referensen i kassan eller vid skåpet.",
+    "cancelHandover": "Avbryt",
+    "handoverStatuses": {
+      "open": "anmäld",
+      "received": "mottagen av butiken",
+      "cancelled": "avbruten"
+    },
     "title": "Min försäljning",
     "empty": "Ingen säljare är kopplad till din bekräftade e-postadress. Kontakta butiken om du saknar en koppling.",
     "available": "Tillgängligt",

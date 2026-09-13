@@ -21,7 +21,7 @@ The adapter alone is **not safe to expose as a retryable operation**. Zero stock
 after a lost response cannot establish that the original movement did not occur.
 `mayInitialize` is only a snapshot predicate, never authorization to retry.
 
-31 unit cases cover classification, depletion, changed stock, ambiguous inventory
+33 unit cases cover classification, depletion, changed stock, ambiguous inventory
 roles, identity mismatches, tracking, malformed evidence, uncertain writes and
 safe errors. The existing authentication and product adapter tests also pass.
 No real inventory API exchange is verified yet.

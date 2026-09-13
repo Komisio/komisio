@@ -15,10 +15,16 @@ export type Stock = {
 export function stockOutcome(
   stock: Stock,
 ): 'initialized' | 'depleted' | 'unknown' | 'conflict' {
-  if (stock.store === 1 && stock.sold === 0 && stock.bin === 0)
+  if (
+    stock.store === 1 &&
+    stock.sold === 0 &&
+    stock.bin === 0 &&
+    stock.supplier === -1
+  )
     return 'initialized'
   if (
     stock.store === 0 &&
+    stock.supplier === -1 &&
     ((stock.sold === 1 && stock.bin === 0) ||
       (stock.sold === 0 && stock.bin === 1))
   )

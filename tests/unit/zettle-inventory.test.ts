@@ -39,6 +39,8 @@ it.each<[Stock, string, boolean]>([
   [{ store: 0, sold: 1, bin: 0, supplier: -1 }, 'depleted', false],
   [{ store: 0, sold: 0, bin: 1, supplier: -1 }, 'depleted', false],
   [{ store: 0, sold: 0, bin: 0, supplier: -1 }, 'conflict', false],
+  [{ store: 1, sold: 0, bin: 0, supplier: 0 }, 'conflict', false],
+  [{ store: 0, sold: 1, bin: 0, supplier: -2 }, 'conflict', false],
   [{ store: 2, sold: 0, bin: 0, supplier: -2 }, 'conflict', false],
   [{ store: 1, sold: 1, bin: 0, supplier: -2 }, 'conflict', false],
   [{ store: -1, sold: 2, bin: 0, supplier: -1 }, 'conflict', false],

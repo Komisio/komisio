@@ -143,6 +143,22 @@ the previous price. Reprinting a set of labels is not staged; printing is a
 person's low-risk action through the existing print buttons.
 `supabase/tests/0042_bulk_item_operations.test.sql` covers both.
 
+## Payout transitions
+
+Since migration `20260914130000` the kinds `approvePayout` and
+`markPayoutPaid` (both `medium`) stage the two money-moving payout
+transitions. Preflight requires the payout to be in the status the transition
+starts from (`requested`, respectively `approved`), a payment needs a
+reference of at most 200 characters, and the reason key is always present but
+may be empty. A second person approves; execution runs `approve_payout` or
+`mark_payout_paid` as that person with the operation id as the payout event
+id, so the reservation and the paid entries carry the approver, never the
+proposer. The review page marks a proposal stale once the payout left its
+starting status. `supabase/tests/0043_staged_payout_kinds.test.sql` covers
+validation, preflight, self-approval denial, approval with reservation,
+payment with release, and the queue filter. MCP proposers for these kinds
+follow once a store asks for agent-driven payout handling.
+
 ## Uncertain decision responses
 
 The staff decision UI freezes the complete first submitted envelope: tenant,

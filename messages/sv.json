@@ -527,8 +527,12 @@
       "recordReturn": "Registrera hel retur",
       "adjustLedger": "Justera säljarens saldo",
       "applyMarkdownBatch": "Genomför förfallna prissänkningar",
-      "bulkItemUpdate": "Uppdatera en uppsättning varor"
+      "bulkItemUpdate": "Uppdatera en uppsättning varor",
+      "approvePayout": "Godkänn en utbetalning",
+      "markPayoutPaid": "Markera en utbetalning som betald"
     },
+    "payout": "Utbetalning",
+    "paymentReference": "Betalningsreferens",
     "bulkActions": {
       "setPrice": "Prisändring",
       "endPeriod": "Periodslut"

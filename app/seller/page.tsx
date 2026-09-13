@@ -9,6 +9,8 @@ import {
 } from '@/lib/engine/seller-portal'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { SellerEconomyForms } from '@/components/seller/economy-forms'
+import { SellerHandovers } from '@/components/seller/handover-forms'
+import { readMyHandovers } from '@/lib/engine/handovers'
 import { SignOut } from '@/components/platform/sign-out'
 import { Brand } from '@/components/platform/brand'
 export const metadata = {
@@ -115,11 +117,10 @@ export default async function SellerPortal({
       </main>
     )
   }
-  const economy = await readMySellerEconomy(
-    ctx.client,
-    account.tenantId,
-    account.sellerId,
-  )
+  const [economy, handovers] = await Promise.all([
+    readMySellerEconomy(ctx.client, account.tenantId, account.sellerId),
+    readMyHandovers(ctx.client, account.tenantId, account.sellerId),
+  ])
   return (
     <main className="onboarding seller-review">
       <Brand />
@@ -146,6 +147,13 @@ export default async function SellerPortal({
         availableOre={economy.balance.availableOre}
         thresholdOre={economy.thresholdOre}
         enabled={economy.automaticEmails}
+        d={d}
+      />
+      <SellerHandovers
+        key={`${account.sellerId}-${handovers.handovers.map((h) => `${h.id}:${h.status}`).join(',')}`}
+        tenantId={account.tenantId}
+        sellerId={account.sellerId}
+        handovers={handovers}
         d={d}
       />
       <p>{d.recent}</p>

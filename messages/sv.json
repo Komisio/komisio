@@ -40,6 +40,7 @@
     "evidenceNote": "Avtalsnoteringen godkänner inte innehållet för försäljning."
   },
   "intake": {
+    "exportSellerData": "Ladda ner alla uppgifter om säljaren (JSON)",
     "title": "Inlämningar",
     "intro": "Ta emot påsen nu. Gå igenom innehållet senare.",
     "pilot": "Pilot: mottagningen registrerar att butiken har påsen. Registrerat avtalsunderlag är inte en digital signatur. Varuutkast kan sparas vid genomgången; försäljning kommer senare. Ingen e-post skickas.",

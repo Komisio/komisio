@@ -24,6 +24,7 @@
     "db:start": "node scripts/prepare-local.mjs && node scripts/supabase.mjs start",
     "db:migrate": "node scripts/supabase.mjs migration up --local",
     "test:concurrency": "node scripts/owner-race.mjs",
+    "backup:exercise": "node scripts/backup-exercise.mjs",
     "test:seller-photos": "node --import tsx scripts/test-seller-photos.mjs"
   },
   "dependencies": {

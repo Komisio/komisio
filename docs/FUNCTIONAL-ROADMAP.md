@@ -339,7 +339,10 @@ is a rendering of that read once an agent host writes it; and the store
 profile: one versioned public document per store with an anonymous read by
 slug, the staged kind `updateStoreProfile` and MCP tools under `store:read`
 and `store:propose` (migration `20260915120000`, see
-[STORE-PROFILE.md](STORE-PROFILE.md))
+[STORE-PROFILE.md](STORE-PROFILE.md)). Pilot gates delivered as far as code can take them: the tenant
+isolation sweep, the seller data export and the restore exercise (migration
+`20260915130000`, see [PILOT-GATES.md](PILOT-GATES.md)); retention policy,
+hosted point-in-time recovery and storage backup remain owner actions
 (migration `20260915100000`, see [SETTLEMENT.md](SETTLEMENT.md)).
 
 | Phase                                       | Theme                    | Slices                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Needs from owner                                                                                                                        |

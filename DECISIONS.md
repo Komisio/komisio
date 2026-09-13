@@ -260,3 +260,5 @@ persistence, authorization, financial rule or migration.
 
 [2026-09-13] The P2 accounting browser journey reproduced a server/client serialization failure when a day-close preview existed. Display formatting now lives in the interactive component and only serializable labels cross the boundary; voucher arithmetic and export authorization remain in the engine.
 [2026-09-13] Local verification found that applying the previously missing usage migration after the notification migration replaced the policy validator with its older definition. An additive reconciliation restores the published notification-aware validator verbatim; no policy values or migration history are rewritten.
+
+[2026-09-13] The P2 settings journey exposed printer-field hydration mismatches because a random command id was also used for DOM labels. React useId now supplies stable field/label identifiers; the printer command id and its replay semantics are unchanged.

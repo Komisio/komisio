@@ -31,6 +31,9 @@ test('account map, balanced preview and downloadable SIE keep tenant boundaries'
     await expect(
       page.getByRole('heading', { name: 'Bokföring', exact: true }),
     ).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: 'Exportera som SIE 4' }),
+    ).toBeDisabled()
     const map = page.getByRole('region', { name: 'Kontoplan', exact: true })
     for (const [label, account, side] of [
       ['Bruttoförsäljning (mottagna betalningar)', '1930', 'debit'],
@@ -54,7 +57,11 @@ test('account map, balanced preview and downloadable SIE keep tenant boundaries'
     const path = await download.path()
     expect(path).not.toBeNull()
     const text = await readFile(path!, 'utf8')
-    expect(text).toContain('#SIETYP 4')
+    expect(text.split(/\r?\n/).slice(0, 3)).toEqual([
+      '#FLAGGA 0',
+      '#FORMAT PC8',
+      '#SIETYP 4',
+    ])
     expect(text).toContain('#VER "A" "" 20200102')
     expect(text).toContain('#TRANS 1930 {} 200.00')
     expect(text).toContain('#TRANS 3010 {} -120.00')
@@ -63,6 +70,21 @@ test('account map, balanced preview and downloadable SIE keep tenant boundaries'
     try {
       const response = await stranger.request.get(`http://127.0.0.1:3000${url}`)
       expect(response.status()).toBe(401)
+      const otherEmail = `p2-other-${randomUUID()}@example.test`
+      const otherPage = await stranger.newPage()
+      await register(
+        otherPage,
+        otherEmail,
+        `K!${randomBytes(16).toString('hex')}`,
+      )
+      const other = await p2Fixture(otherEmail)
+      try {
+        await other.commit()
+        const denied = await stranger.request.get(`http://127.0.0.1:3000${url}`)
+        expect(denied.status()).toBe(404)
+      } finally {
+        await other.close()
+      }
     } finally {
       await stranger.close()
     }

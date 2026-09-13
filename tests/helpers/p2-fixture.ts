@@ -84,7 +84,23 @@ export async function p2Fixture(email: string) {
     ])
     return id
   }
+  async function asActor<T>(uid: string, work: () => Promise<T>): Promise<T> {
+    await db.query('begin')
+    try {
+      await db.query('set local role authenticated')
+      await db.query("select set_config('request.jwt.claims',$1,true)", [
+        JSON.stringify({ sub: uid, role: 'authenticated' }),
+      ])
+      const result = await work()
+      await db.query('commit')
+      return result
+    } catch (error) {
+      await db.query('rollback')
+      throw error
+    }
+  }
   return {
+    asActor,
     db,
     actor,
     tenant,

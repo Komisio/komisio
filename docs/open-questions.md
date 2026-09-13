@@ -195,3 +195,6 @@ POS VAT-rate mapping is explicitly tenant-configured, not inferred from the engi
 mode. Live acceptance still needs verified merchant settings, inventory1 and
 safe movement replay, delisting, OAuth and windowed reconciliation. Current local
 HTTP fixtures test the product/purchase loop without a real merchant account.
+
+
+**Zettle pilot update2026-09-13:** owner supplied clientId/API key in Vercel and selected Preloved Teststore. Implement the assertion-grant read-only identity check with an explicit pilot tenant pin. Live inventory/windowed sync and per-tenant self-service credential lifecycle remain open; authentication success alone does not enable them.

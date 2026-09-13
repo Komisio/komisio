@@ -1,3 +1,14 @@
+## API-key connection checkpoint, 2026-09-13
+
+The owner saved a Zettle clientId/API key in Vercel and chose **Preloved Teststore**
+as the sole pilot tenant. Work in `astra/zettle-pilot-connection` adds an explicit
+environment tenant pin, official assertion-grant diagnostic and owner/admin UI.
+See [ZETTLE-CONNECTION.md](ZETTLE-CONNECTION.md). No migration or live sync activation.
+The real read-only check requires the tenant pin, a deployment and an authenticated
+pilot owner/admin. Credential contents must never be downloaded, printed or committed.
+Exact CI/deployment evidence belongs in this task PR and the private checkpoint.
+Fable's worktree now includes later migrations; do not change it or reset local DB.
+
 ## Zettle owner correction checkpoint, 2026-09-13
 
 PR91 merged at689cfcb. The owner then clarified automatic POS facts and outbound

@@ -2,6 +2,7 @@ import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { receptionSuggestions } from './reception'
 import { inspectionFields } from './inspection'
+import { storeProfileBody } from './store-profile'
 
 // A staged operation is a proposal by a non-human actor. It publishes nothing
 // until a person decides; execution then reuses the ordinary engine function.
@@ -19,6 +20,7 @@ export const operationKind = z.enum([
   'exportDayClose',
   'recordZettlePurchase',
   'settlePayouts',
+  'updateStoreProfile',
 ])
 export const publishReceptionReviewPayload = z.strictObject({
   sessionId: z.uuid(),
@@ -160,6 +162,12 @@ export const settlePayoutsPayload = z.strictObject({
     ),
   reason: z.string().trim().min(1).max(500),
 })
+// Store profile update (low, P3): the next version of the public-facing
+// profile, naming the current version; publishing stays owner or admin.
+export const updateStoreProfilePayload = z.strictObject({
+  expectedCurrentId: z.uuid().nullable(),
+  profile: storeProfileBody,
+})
 const proposeBase = z.strictObject({
   tenantId: z.uuid(),
   requestId: z.uuid(),
@@ -218,6 +226,10 @@ export const proposeOperationCommand = z.discriminatedUnion('kind', [
   proposeBase.extend({
     kind: z.literal('settlePayouts'),
     payload: settlePayoutsPayload,
+  }),
+  proposeBase.extend({
+    kind: z.literal('updateStoreProfile'),
+    payload: updateStoreProfilePayload,
   }),
 ])
 export const decideOperationCommand = z.strictObject({
@@ -304,6 +316,10 @@ export const operationRow = z.discriminatedUnion('kind', [
     kind: z.literal('settlePayouts'),
     payload: settlePayoutsPayload,
   }),
+  operationBaseRow.extend({
+    kind: z.literal('updateStoreProfile'),
+    payload: updateStoreProfilePayload,
+  }),
 ])
 export type PendingOperation = z.infer<typeof operationRow>
 export const operationErrorCodes = [
@@ -347,6 +363,7 @@ export const operationErrorCodes = [
   'PAYOUT_EXCEEDS_BALANCE',
   'PAYOUT_BELOW_THRESHOLD',
   'PAYOUT_PENDING',
+  'PROFILE_CHANGED',
   'PAYOUT_DECIDED',
   'SELLER_EMAIL_MISSING',
   'DAY_CLOSE_NOT_FOUND',

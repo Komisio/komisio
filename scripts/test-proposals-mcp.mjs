@@ -392,6 +392,86 @@ export async function testProposalsMCP({
       })
     ).isError,
   )
+  // Store profile: read the (empty) profile, stage a version naming null, then
+  // a stale one is refused; the owner approves and the profile is published.
+  const store = await connect('store:read,store:propose')
+  assert.deepEqual((await store.listTools()).tools.map((t) => t.name).sort(), [
+    'komisio_propose_store_profile',
+    'komisio_read_store_profile',
+  ])
+  const emptyProfile = await store.callTool({
+    name: 'komisio_read_store_profile',
+    arguments: {},
+  })
+  assert(!emptyProfile.isError, JSON.stringify(emptyProfile.content))
+  assert.equal(emptyProfile.structuredContent.version, 0)
+  assert.equal(emptyProfile.structuredContent.currentId, null)
+  const profile = {
+    address: { street: 'Storgatan 1', postalCode: '111 22', city: 'Stockholm' },
+    contact: { email: '', phone: '', website: 'https://example.test' },
+    openingHours: [{ day: 'sat', opens: '11:00', closes: '15:00' }],
+    accepts: 'MCP fixture: clean garments.',
+    concept: 'MCP fixture concept.',
+    language: 'sv',
+  }
+  const profileOp = randomUUID()
+  const profileStaged = await store.callTool({
+    name: 'komisio_propose_store_profile',
+    arguments: {
+      requestId: profileOp,
+      expiresAt,
+      expectedCurrentId: null,
+      profile,
+    },
+  })
+  assert(!profileStaged.isError, JSON.stringify(profileStaged.content))
+  assert.equal(profileStaged.structuredContent.riskLevel, 'low')
+  assert.equal(
+    profileStaged.structuredContent.executesOnlyForOwnerOrAdmin,
+    true,
+  )
+  assert(
+    (
+      await store.callTool({
+        name: 'komisio_propose_store_profile',
+        arguments: {
+          requestId: randomUUID(),
+          expiresAt,
+          expectedCurrentId: null,
+          profile: {
+            ...profile,
+            contact: { ...profile.contact, website: 'http://plain' },
+          },
+        },
+      })
+    ).isError,
+    'https only',
+  )
+  await rpc('decide_operation', {
+    p_tenant: tenant,
+    p_id: randomUUID(),
+    p_operation: profileOp,
+    p_decision: 'approved',
+    p_reason: 'Owner approves the profile',
+  })
+  const published = await store.callTool({
+    name: 'komisio_read_store_profile',
+    arguments: {},
+  })
+  assert.equal(published.structuredContent.version, 1)
+  assert.equal(published.structuredContent.currentId, profileOp)
+  assert.equal(published.structuredContent.profile.concept, profile.concept)
+  const staleProfile = await store.callTool({
+    name: 'komisio_propose_store_profile',
+    arguments: {
+      requestId: randomUUID(),
+      expiresAt,
+      expectedCurrentId: null,
+      profile,
+    },
+  })
+  assert(staleProfile.isError)
+  assert(JSON.stringify(staleProfile.content).includes('PROFILE_CHANGED'))
   // Scope isolation: the lifecycle scope cannot stage a ledger adjustment.
   await assert.rejects(
     lifecycle.callTool({

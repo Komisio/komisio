@@ -1,5 +1,7 @@
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import { StorePolicyForm } from '@/components/intake/store-policy-form'
+import { StoreProfileForm } from '@/components/intake/store-profile-form'
+import { readStoreProfile } from '@/lib/engine/store-profile'
 import { PrinterForm } from '@/components/intake/printer-form'
 import { readPrinters, readPrintJobs } from '@/lib/engine/printing'
 import { readUsageSummary } from '@/lib/engine/usage'
@@ -16,14 +18,15 @@ export default async function Settings() {
     process.env.KOMISIO_INTAKE_ENABLED === 'true'
       ? await readStorePolicy(ctx.client, active.id)
       : null
-  const [printers, jobs, usage] =
+  const [printers, jobs, usage, profile] =
     process.env.KOMISIO_INTAKE_ENABLED === 'true'
       ? await Promise.all([
           readPrinters(ctx.client, active.id),
           readPrintJobs(ctx.client, active.id),
           readUsageSummary(ctx.client, active.id),
+          readStoreProfile(ctx.client, active.id),
         ])
-      : [[], [], []]
+      : [[], [], [], null]
   const pr = d.printing,
     us = d.usage
   const events = can(active.role, 'audit.read')
@@ -53,6 +56,16 @@ export default async function Settings() {
           tenantId={active.id}
           current={policy}
           editable={['owner', 'admin'].includes(active.role)}
+          d={d}
+        />
+      )}
+      {profile && (
+        <StoreProfileForm
+          key={`${active.id}-${profile.id ?? 'none'}`}
+          tenantId={active.id}
+          current={profile}
+          editable={['owner', 'admin'].includes(active.role)}
+          locale={ctx.locale === 'sv' ? 'sv' : 'en'}
           d={d}
         />
       )}

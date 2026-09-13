@@ -10,7 +10,9 @@ import {
   recordReturnPayload,
   sendMessagePayload,
   settlePayoutsPayload,
+  updateStoreProfilePayload,
 } from '../../lib/engine/operations'
+import { emptyStoreProfile } from '../../lib/engine/store-profile'
 
 const a = '11111111-1111-4111-8111-111111111111'
 const b = '22222222-2222-4222-8222-222222222222'
@@ -156,6 +158,56 @@ it('settlement: each seller once, positive öre, a note, at most 100 rows', () =
     },
   ])
     expect(settlePayoutsPayload.safeParse(bad).success).toBe(false)
+})
+
+it('store profile: strict shape, https website, ordered hours, each day once', () => {
+  const profile = {
+    ...emptyStoreProfile('sv'),
+    contact: {
+      email: 'hej@example.test',
+      phone: '',
+      website: 'https://x.test',
+    },
+    openingHours: [{ day: 'mon', opens: '10:00', closes: '18:00' }],
+  }
+  expect(
+    updateStoreProfilePayload.safeParse({ expectedCurrentId: null, profile })
+      .success,
+  ).toBe(true)
+  for (const bad of [
+    { expectedCurrentId: a, profile: { ...profile, extra: 1 } },
+    { profile },
+    {
+      expectedCurrentId: null,
+      profile: {
+        ...profile,
+        contact: { ...profile.contact, website: 'http://x' },
+      },
+    },
+    {
+      expectedCurrentId: null,
+      profile: {
+        ...profile,
+        openingHours: [{ day: 'mon', opens: '18:00', closes: '10:00' }],
+      },
+    },
+    {
+      expectedCurrentId: null,
+      profile: {
+        ...profile,
+        openingHours: [
+          { day: 'mon', opens: '10:00', closes: '18:00' },
+          { day: 'mon', opens: '10:00', closes: '18:00' },
+        ],
+      },
+    },
+    { expectedCurrentId: null, profile: { ...profile, language: 'de' } },
+    {
+      expectedCurrentId: null,
+      profile: { ...profile, concept: 'x'.repeat(2001) },
+    },
+  ])
+    expect(updateStoreProfilePayload.safeParse(bad).success).toBe(false)
 })
 
 it('the propose command binds each kind to its own payload', () => {

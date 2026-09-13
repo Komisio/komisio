@@ -25,6 +25,8 @@ It exposes narrow tools through the same intake engine:
 | komisio_list_day_closes              | accounting:read        | Newest 60 day closes with totals in öre; no accounts, no export                                            |
 | komisio_preview_day_close_voucher    | accounting:read        | Voucher lines one day close would export under the tenant's own map, totals, balance, unmapped amounts     |
 | komisio_propose_day_close_export     | accounting:propose     | Stage the SIE 4 export of one day close; refused without a map or unbalanced; a different person approves  |
+| komisio_read_store_profile           | store:read             | The current public store profile with its version id; untrusted text, no writes                            |
+| komisio_propose_store_profile        | store:propose          | Stage the next profile version naming the current one; publishes only for an owner or admin approver       |
 | komisio_read_inspection_operation    | inspection:read        | Read exact staged inspection before/after and decision; no reception access                                |
 | komisio_prepare_inspection_reception | inspection:preview     | Compare a saved draft with reception requirements; unsourced candidates and unassessed next steps only     |
 | komisio_preview_inspection           | inspection:preview     | Return unsaved descriptive before/after at the exact saved base revision; no approval or write             |
@@ -56,7 +58,7 @@ environment variables to the child process:
   a service-role key, password or refresh token
 - `KOMISIO_MCP_TENANT_ID`: exactly one store UUID
 - `KOMISIO_MCP_SCOPES`: an explicit comma-separated subset of `reception:read`,
-  `reception:preview`, `reception:photos`, `reception:propose`, `inspection:read`, `inspection:preview`, `inspection:propose`, `items:propose`, `economy:read`, `sales:propose`, `ledger:propose`, `lifecycle:propose`, `communications:propose`, `payouts:propose`, `accounting:read`, `accounting:propose`.
+  `reception:preview`, `reception:photos`, `reception:propose`, `inspection:read`, `inspection:preview`, `inspection:propose`, `items:propose`, `economy:read`, `sales:propose`, `ledger:propose`, `lifecycle:propose`, `communications:propose`, `payouts:propose`, `accounting:read`, `accounting:propose`, `store:read`, `store:propose`.
   Bag inspection, photo access and staging are separately opt-in.
 
 Have the host launch `node --import tsx mcp/stdio.ts` with the repository as its
@@ -222,6 +224,17 @@ that person and reserves the amounts, refusing the whole batch if any seller
 is below the minimum, over its balance or already has an open payout. Neither
 tool pays anything; the store pays through its bank and marks each payout
 paid. See [docs/SETTLEMENT.md](../docs/SETTLEMENT.md).
+
+### Store profile (P3)
+
+`komisio_read_store_profile` (`store:read`) returns the current public profile
+and the version id; `komisio_propose_store_profile` (`store:propose`) stages
+the next version naming that id. The profile is public text by definition
+(address, contact, opening hours, what the store accepts, concept), so
+nothing private leaves the store, but the text an agent proposes is shown to
+sellers and customers once published: an owner or admin approves it in the
+operations queue, and a staff approval records a failed outcome. See
+[docs/STORE-PROFILE.md](../docs/STORE-PROFILE.md).
 
 ### Seller economy reads (P2 S14)
 

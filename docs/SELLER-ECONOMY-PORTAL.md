@@ -47,3 +47,7 @@ ahead of main, so the two reviewed new migrations and the missing, already-publi
 migration 20260914100000 were applied and
 recorded transactionally; no earlier migration entry was changed. Disposable
 SQL tests also verify the branch from its own migration files.
+
+Applying the older missing usage migration locally replaced the newer policy
+validator. Additive migration 20260915002000 reconciles it with the published
+notification-aware definition; existing versions/history remain untouched.

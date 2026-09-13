@@ -58,6 +58,10 @@ test('seller reads own economy, requests payout and opts out without becoming st
       page.getByRole('heading', { name: /Tillg.*200/ }),
     ).toBeVisible()
     await expect(page.getByText('PRIVATE staff reason')).toHaveCount(0)
+    await page.screenshot({
+      path: test.info().outputPath('seller-portal.png'),
+      fullPage: true,
+    })
     await page.getByLabel('Belopp i SEK').fill('100,00')
     await page
       .getByRole('button', { name: 'Begär utbetalning', exact: true })

@@ -9,6 +9,7 @@ import {
 } from '@/lib/engine/seller-portal'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { SellerEconomyForms } from '@/components/seller/economy-forms'
+import { SignOut } from '@/components/platform/sign-out'
 import { Brand } from '@/components/platform/brand'
 export const metadata = {
   robots: { index: false, follow: false },
@@ -42,6 +43,7 @@ export default async function SellerPortal({
     return (
       <main className="onboarding">
         <Brand />
+        <SignOut d={all} next="/seller" />
         <section className="card">
           <h1>{d.title}</h1>
           <p>{ctx.user.email}</p>
@@ -67,6 +69,7 @@ export default async function SellerPortal({
     return (
       <main className="onboarding">
         <Brand />
+        <SignOut d={all} next="/seller" />
         <section className="card">
           <Link href={base}>{account.storeName}</Link>
           <h1>
@@ -120,6 +123,7 @@ export default async function SellerPortal({
   return (
     <main className="onboarding">
       <Brand />
+      <SignOut d={all} next="/seller" />
       <div className="page-heading">
         <Link href="/seller">{d.back}</Link>
         <h1>

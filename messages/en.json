@@ -1376,6 +1376,8 @@
       "ZETTLE_INVENTORY_AMBIGUOUS": "Zettle stock could not be confirmed. Check the saved item status before taking further action.",
       "ZETTLE_STOCK_HELD": "Zettle stock could not be confirmed. Check the saved item status before taking further action.",
       "ZETTLE_EXPORT_FAILED": "The product step failed. No stock increment started. Check the product attempt before retrying.",
+      "ZETTLE_PRODUCT_UUID_REJECTED": "Zettle rejected the product identifier. The export is held for a safe identity correction.",
+      "ZETTLE_IDENTITY_HELD": "The product identity cannot be changed safely. Review the earlier export and stock history.",
       "ZETTLE_PRODUCT_ACCESS_DENIED": "Zettle denied access to the product library. Check the API key product permissions.",
       "ZETTLE_PRODUCT_REJECTED": "Zettle rejected the product request (HTTP 400/422). Stock initialization did not start.",
       "ZETTLE_PRODUCT_RESPONSE_INVALID": "Zettle returned an unsupported product response format. The product may exist; do not create a new product ID.",

@@ -69,40 +69,61 @@ export async function exportZettleItem(
     if (r.error) throw new Error(r.error.message)
     return z.uuid().parse(r.data)
   }
-  const exportId = await prepare()
+  let exportId = await prepare()
   const current = async () => {
     if ((await prepare()) !== exportId) throw new Error('ZETTLE_CONFIG_CHANGED')
   }
-  const stored = await client
-    .from('zettle_product_exports')
-    .select('payload,previous_payload')
-    .eq('tenant_id', tenantId)
-    .eq('id', exportId)
-    .single()
-  if (stored.error) throw new Error('ZETTLE_READ_FAILED')
-  const payload = catalogProduct.parse(stored.data.payload),
-    previous = stored.data.previous_payload
-      ? catalogProduct.parse(stored.data.previous_payload)
-      : null
   const remote = await factory(tenantId, env)
   // Read-only discovery before product creation, so ambiguous inventory roles fail early.
   const locations = await remote.inventory.inventories()
-  await current()
-  try {
-    await remote.putProduct(payload, previous)
-  } catch (error) {
-    const safe = zettleErrorCode(error instanceof Error ? error.message : '')
-    const code = safe.startsWith('ZETTLE_') ? safe : 'ZETTLE_EXPORT_FAILED'
-    const failed = await client.rpc('finish_zettle_product', {
-      p_tenant: tenantId,
-      p_export: exportId,
-      p_status: 'failed',
-      p_error: code,
-    })
-    if (failed.error) throw new Error('ZETTLE_OUTCOME_FAILED')
-    if (error instanceof ProductReadError || error instanceof ProductHttpError)
-      throw error
-    throw new Error(code)
+  const load = async () => {
+    const stored = await client
+      .from('zettle_product_exports')
+      .select('payload,previous_payload')
+      .eq('tenant_id', tenantId)
+      .eq('id', exportId)
+      .single()
+    if (stored.error) throw new Error('ZETTLE_READ_FAILED')
+    return {
+      payload: catalogProduct.parse(stored.data.payload),
+      previous: stored.data.previous_payload
+        ? catalogProduct.parse(stored.data.previous_payload)
+        : null,
+    }
+  }
+  let { payload, previous } = await load()
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await current()
+    try {
+      await remote.putProduct(payload, previous)
+      break
+    } catch (error) {
+      const safe = zettleErrorCode(error instanceof Error ? error.message : '')
+      const code = safe.startsWith('ZETTLE_') ? safe : 'ZETTLE_EXPORT_FAILED'
+      const failed = await client.rpc('finish_zettle_product', {
+        p_tenant: tenantId,
+        p_export: exportId,
+        p_status: 'failed',
+        p_error: code,
+      })
+      if (failed.error) throw new Error('ZETTLE_OUTCOME_FAILED')
+      if (code === 'ZETTLE_PRODUCT_UUID_REJECTED' && attempt === 0) {
+        const repaired = await client.rpc('repair_zettle_product_identity', {
+          p_tenant: tenantId,
+          p_export: exportId,
+        })
+        if (repaired.error) throw new Error(repaired.error.message)
+        exportId = z.uuid().parse(repaired.data)
+        ;({ payload, previous } = await load())
+        continue
+      }
+      if (
+        error instanceof ProductReadError ||
+        error instanceof ProductHttpError
+      )
+        throw error
+      throw new Error(code)
+    }
   }
   const reserved = await client.rpc('claim_zettle_stock', {
     p_tenant: tenantId,

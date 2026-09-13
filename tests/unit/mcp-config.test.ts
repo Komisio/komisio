@@ -55,3 +55,13 @@ it('allows HTTPS or loopback only and rejects URL-embedded credentials', () => {
     }).url,
   ).toBe('http://127.0.0.1:54321')
 })
+
+it('requires explicit seller-economy read scope without expanding reception access', () => {
+  expect(readMCPConfig(env).scopes).not.toContain('economy:read')
+  expect(
+    readMCPConfig({ ...env, KOMISIO_MCP_SCOPES: 'economy:read' }).scopes,
+  ).toEqual(['economy:read'])
+  expect(() =>
+    readMCPConfig({ ...env, KOMISIO_MCP_SCOPES: 'economy:write' }),
+  ).toThrow()
+})

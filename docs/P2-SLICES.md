@@ -126,7 +126,13 @@ Purpose: the append-only ledger every seller-facing number derives from.
   `adjust_seller_ledger` (owner or admin, reason required, replay-safe),
   sale credits written by `record_sale`, balance and entries on the seller
   page with the adjustment form (migration `20260914010000`). The staged
-  kind `adjustLedger` and the agent read tools follow with the P2 MCP work.
+  kind `adjustLedger` remains future work; bounded agent reads are described below.
+
+S14 follow-up (Astra, based on main `e965366`): opt-in `economy:read`
+tools read one seller balance and at most 50 recent ledger entries through the
+existing engine. Amounts are ore; private reasons/contact data are omitted and
+partial history is labelled. No adjustment/payout write or aggregate balance
+listing is added. Release evidence will be recorded in the PR.
 
 ## S15. Payouts
 

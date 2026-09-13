@@ -1,3 +1,4 @@
+import { sellerEconomyInput, readSellerEconomyTool } from './seller-economy'
 import { z } from 'zod'
 import { readStorePolicy } from '../lib/engine/store-policy'
 import { requireMCPIdentity } from './identity'
@@ -279,6 +280,27 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       },
       (input) => result(async () => ({ data: await ops.propose(input) })),
     )
+  if (config.scopes.includes('economy:read')) {
+    for (const [name, ledger] of [
+      ['komisio_read_seller_balance', false],
+      ['komisio_read_seller_ledger', true],
+    ] as const) {
+      server.registerTool(
+        name,
+        {
+          description: ledger
+            ? 'Read at most 50 recent seller ledger events in the configured store. Amounts are signed ore, not SEK. Partial history, not a statement or a balance calculation. Free-text reasons and contact data are omitted.'
+            : 'Read one seller balance computed by the engine in the configured store. Amounts are ore, not SEK. Not a payout approval or identity verification.',
+          inputSchema: sellerEconomyInput,
+          annotations,
+        },
+        (input) =>
+          result(async () => ({
+            data: await readSellerEconomyTool(client, config, input, ledger),
+          })),
+      )
+    }
+  }
   if (config.scopes.includes('items:propose'))
     server.registerTool(
       'komisio_propose_acceptance',

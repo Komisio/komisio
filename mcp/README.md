@@ -193,3 +193,17 @@ The host pins the tenant. It returns the effective policy with its version/id
 (version 0 and null id mean pilot defaults), plus read-only/untrusted/guidance
 markers. It cannot publish policy or enable AI. Role and MFA checks are enforced
 both at the tool boundary and in SQL. S1 does not add an agent policy-write tool.
+
+### Seller economy reads (P2 S14)
+
+Opt in with `economy:read` for `komisio_read_seller_balance` and
+`komisio_read_seller_ledger`. Both take only `{ sellerId }`; the host pins
+the tenant. Balances come from the shared SQL engine and amounts are signed
+integer **ore**, not SEK. Missing/foreign sellers fail instead of appearing
+as a zero balance. The ledger returns at most 50 recent entries and explicitly
+marks possible truncation; it is not a complete statement or an atomic snapshot.
+Do not sum this partial history to infer the seller balance. Free-text reasons,
+contact data and actor identities are omitted. Unsafe integer amounts fail
+closed. These tools cannot adjust a balance, approve a payout or send messages.
+Local MCP scopes remain tool restrictions on a user token, not separately
+scoped database credentials. All ordinary role and MFA checks still apply.

@@ -15,7 +15,8 @@ select is((select count(*) from pg_class c join pg_namespace n on n.oid=c.relnam
 -- A table the role may not read at all counts as zero visible rows.
 create function pg_temp.tenant_rows(p_table text,p_tenant uuid) returns bigint language plpgsql as $$
 declare n bigint; begin execute format('select count(*) from public.%I where tenant_id=$1',p_table) into n using p_tenant; return n;
-exception when insufficient_privilege then return 0; end $$;
+-- The planner may call this before the tenant_id filter; a table without the column counts as zero.
+exception when insufficient_privilege or undefined_column then return 0; end $$;
 create function pg_temp.all_rows(p_table text) returns bigint language plpgsql as $$
 declare n bigint; begin execute format('select count(*) from public.%I',p_table) into n; return n;
 exception when insufficient_privilege then return 0; end $$;

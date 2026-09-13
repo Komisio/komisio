@@ -164,8 +164,10 @@ Purpose: request, approve, pay, with reservation at approval.
   behalf, threshold and balance bounded), `approve_payout` (reserves),
   `mark_payout_paid` (reference required, releases and pays),
   `reject_payout` (releases an approved reservation), payouts page with
-  request form and decisions (migration `20260914020000`). Seller-app
-  requests, e-mail notification (S18) and the staged kinds follow.
+  request form and decisions (migration `20260914020000`). Staged kinds
+  `approvePayout` and `markPayoutPaid` at `medium` delivered with migration
+  `20260914130000`: a second person approves and the transition runs as
+  that person. Seller-app requests and e-mail notification (S18) follow.
 
 ## S16. Settlement statements
 

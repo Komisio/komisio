@@ -13,6 +13,8 @@ export const operationKind = z.enum([
   'adjustLedger',
   'applyMarkdownBatch',
   'bulkItemUpdate',
+  'approvePayout',
+  'markPayoutPaid',
 ])
 export const publishReceptionReviewPayload = z.strictObject({
   sessionId: z.uuid(),
@@ -111,6 +113,17 @@ export const bulkItemUpdatePayload = z.discriminatedUnion('action', [
       .refine(uniqueItems, 'Each item once'),
   }),
 ])
+// Payout transitions (medium): approve a requested payout, or mark an approved
+// payout paid with the payment reference. Execution runs the ordinary transition.
+export const approvePayoutPayload = z.strictObject({
+  payoutId: z.uuid(),
+  reason: z.string().max(500),
+})
+export const markPayoutPaidPayload = z.strictObject({
+  payoutId: z.uuid(),
+  reference: z.string().trim().min(1).max(200),
+  reason: z.string().max(500),
+})
 const proposeBase = z.strictObject({
   tenantId: z.uuid(),
   requestId: z.uuid(),
@@ -145,6 +158,14 @@ export const proposeOperationCommand = z.discriminatedUnion('kind', [
   proposeBase.extend({
     kind: z.literal('bulkItemUpdate'),
     payload: bulkItemUpdatePayload,
+  }),
+  proposeBase.extend({
+    kind: z.literal('approvePayout'),
+    payload: approvePayoutPayload,
+  }),
+  proposeBase.extend({
+    kind: z.literal('markPayoutPaid'),
+    payload: markPayoutPaidPayload,
   }),
 ])
 export const decideOperationCommand = z.strictObject({
@@ -207,6 +228,14 @@ export const operationRow = z.discriminatedUnion('kind', [
     kind: z.literal('bulkItemUpdate'),
     payload: bulkItemUpdatePayload,
   }),
+  operationBaseRow.extend({
+    kind: z.literal('approvePayout'),
+    payload: approvePayoutPayload,
+  }),
+  operationBaseRow.extend({
+    kind: z.literal('markPayoutPaid'),
+    payload: markPayoutPaidPayload,
+  }),
 ])
 export type PendingOperation = z.infer<typeof operationRow>
 export const operationErrorCodes = [
@@ -244,6 +273,11 @@ export const operationErrorCodes = [
   'ITEM_ENDED',
   'MARKDOWN_NOT_DUE',
   'MARKDOWN_ALREADY_APPLIED',
+  'PAYOUT_NOT_FOUND',
+  'PAYOUT_NOT_REQUESTED',
+  'PAYOUT_NOT_APPROVED',
+  'PAYOUT_EXCEEDS_BALANCE',
+  'PAYOUT_DECIDED',
 ] as const
 export function operationErrorCode(message: string) {
   return (

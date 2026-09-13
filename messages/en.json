@@ -527,8 +527,12 @@
       "recordReturn": "Record a full return",
       "adjustLedger": "Adjust a seller ledger",
       "applyMarkdownBatch": "Apply due markdowns",
-      "bulkItemUpdate": "Update a set of items"
+      "bulkItemUpdate": "Update a set of items",
+      "approvePayout": "Approve a payout",
+      "markPayoutPaid": "Mark a payout paid"
     },
+    "payout": "Payout",
+    "paymentReference": "Payment reference",
     "bulkActions": {
       "setPrice": "Price change",
       "endPeriod": "End of period"

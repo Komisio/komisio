@@ -329,6 +329,17 @@ export function OperationQueue({
                 ? ` · ${o.payload.reason}`
                 : ` · ${d.endActions[o.payload.endAction]}${o.payload.note ? ` · ${o.payload.note}` : ''}`}
             </p>
+          ) : o.kind === 'approvePayout' || o.kind === 'markPayoutPaid' ? (
+            <p>
+              <Link className="text-link" href="/intake/payouts">
+                {d.payout}
+              </Link>{' '}
+              · {o.payload.payoutId.slice(0, 8).toUpperCase()}
+              {o.kind === 'markPayoutPaid'
+                ? ` · ${d.paymentReference}: ${o.payload.reference}`
+                : ''}
+              {o.payload.reason ? ` · ${o.payload.reason}` : ''}
+            </p>
           ) : (
             <>
               <p>

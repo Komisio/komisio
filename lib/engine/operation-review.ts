@@ -10,6 +10,7 @@ import {
   recordReturnPayload,
   adjustLedgerPayload,
   bulkItemUpdatePayload,
+  approvePayoutPayload,
   type PendingOperation,
 } from './operations'
 import { inspectionFields } from './inspection'
@@ -195,7 +196,9 @@ export async function readOperationReview(
   if (
     pending.data.kind === 'recordReturn' ||
     pending.data.kind === 'adjustLedger' ||
-    pending.data.kind === 'applyMarkdownBatch'
+    pending.data.kind === 'applyMarkdownBatch' ||
+    pending.data.kind === 'approvePayout' ||
+    pending.data.kind === 'markPayoutPaid'
   ) {
     // P2 kinds carry their own facts; the only cheap hint is whether the
     // subject still exists or is already done. SQL rechecks on approval.
@@ -227,7 +230,20 @@ export async function readOperationReview(
                 adjustLedgerPayload.parse(pending.data.payload).sellerId,
               )
               .maybeSingle()
-          : Promise.resolve({ data: null, error: null }),
+          : kind === 'approvePayout' || kind === 'markPayoutPaid'
+            ? client
+                .from('payouts')
+                .select('id,status')
+                .eq('tenant_id', tenantId)
+                .eq(
+                  'id',
+                  approvePayoutPayload.pick({ payoutId: true }).parse({
+                    payoutId: (pending.data.payload as { payoutId: string })
+                      .payoutId,
+                  }).payoutId,
+                )
+                .maybeSingle()
+            : Promise.resolve({ data: null, error: null }),
     ])
     if (decision.error || subject.error) throw new Error('OPERATION_NOT_FOUND')
     const d = decision.data,
@@ -244,7 +260,15 @@ export async function readOperationReview(
       decided_at: d?.created_at ?? null,
     })
     const alreadyDone = kind === 'recordReturn' && !!subject.data && !d
-    const stale = alreadyDone || (kind === 'adjustLedger' && !subject.data)
+    const payoutStatus = (subject.data as { status?: string } | null)?.status
+    // A payout proposal is stale once the payout left the status it targets.
+    const payoutStale =
+      (kind === 'approvePayout' &&
+        (!subject.data || (!d && payoutStatus !== 'requested'))) ||
+      (kind === 'markPayoutPaid' &&
+        (!subject.data || (!d && payoutStatus !== 'approved')))
+    const stale =
+      alreadyDone || (kind === 'adjustLedger' && !subject.data) || payoutStale
     return {
       readOnly: true as const,
       evidenceIsUntrusted: true as const,

@@ -12,7 +12,7 @@ surface, tests. Base every branch on `main`.
   `supabase/migrations` in both checkouts and `origin/main`, and query
   `supabase_migrations.schema_migrations` on the local database; the
   20260914110000 collision on 2026-09-13 cost an afternoon.
-- Fable's open stack (PR83 → PR84 → PR85 → PR86) still touches
+- Fable's open stack (PR83 → PR84 → PR85, plus the MCP accounting PR that follows) still touches
   `lib/engine/operations.ts`, `lib/engine/operation-review.ts`,
   `components/intake/operation-queue.tsx`, `mcp/server.ts`, `mcp/config.ts`,
   `mcp/proposals.ts`, `mcp/README.md`, `scripts/test-proposals-mcp.mjs`,

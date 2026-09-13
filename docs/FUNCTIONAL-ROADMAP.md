@@ -345,7 +345,11 @@ isolation sweep, the seller data export and the restore exercise (migration
 hosted point-in-time recovery and storage backup remain owner actions. Self drop-off delivered: seller handovers with a reference, received
 at the counter as the ordinary bag receipt, behind the policy's
 `seller_dropoff` custody source (migration `20260915140000`, see
-[SELF-DROPOFF.md](SELF-DROPOFF.md)); locker hardware and QR rendering follow
+[SELF-DROPOFF.md](SELF-DROPOFF.md)); locker hardware and QR rendering follow. Markdown agent delivered after the owner answered question 4: the policy
+schedule stays the only one, `automaticMarkdowns` applies due steps daily as
+the policy's publisher, staff can run the same step by hand, every run is
+recorded (migration `20260915150000`, see
+[MARKDOWN-AGENT.md](MARKDOWN-AGENT.md))
 (migration `20260915100000`, see [SETTLEMENT.md](SETTLEMENT.md)).
 
 | Phase                                       | Theme                    | Slices                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Needs from owner                                                                                                                        |

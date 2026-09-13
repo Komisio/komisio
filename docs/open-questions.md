@@ -33,11 +33,12 @@ proposal's owner clarification for scope and outstanding details.
    agreement?~~ **Answered 2026-09-12 (DECISIONS.md):** commission rate,
    sale period, markdown steps and end-of-period action are all frozen per
    item at commercial acceptance; a later policy change never rewrites them.
-4. **How is price reduction over time decided and applied?** Fixed schedule
-   per agreement, per category, or per item; automatic or proposed for
-   approval.
-   *Sketch assumed:* a JSON schedule on the agreement, applied by an agent
-   that logs each change.
+4. ~~How is price reduction over time decided and applied?~~ **Answered
+   2026-09-13 (DECISIONS.md):** the store policy's markdown steps are the
+   only schedule, frozen per item at acceptance; a store may switch on
+   automatic application (off by default), run once a day as the policy's
+   publisher and logged per run and per item; exceptions use the manual
+   price change; no notice per step.
 
 ## Ownership and VAT
 

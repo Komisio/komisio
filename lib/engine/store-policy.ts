@@ -44,6 +44,8 @@ export const storePolicyBody = z.strictObject({
     .optional(),
   // Automatic seller notifications (P2 S18): absent means off; every message is logged.
   automaticSellerNotifications: z.boolean().optional(),
+  // Automatic markdowns (P3): absent means off; due steps are applied by the daily run as the policy's publisher.
+  automaticMarkdowns: z.boolean().optional(),
 })
 
 export type StorePolicyBody = z.infer<typeof storePolicyBody>

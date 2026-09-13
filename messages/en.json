@@ -695,6 +695,9 @@
     }
   },
   "storePolicy": {
+    "markdowns": "Markdowns",
+    "markdownsIntro": "The markdown steps above are the only schedule; they are frozen on every item at acceptance. When switched on, due steps are applied once a day by Komisio, recorded as a run and as events on each item, acting as the person who published this policy. Off, staff apply them from the sale periods page.",
+    "automaticMarkdowns": "Apply due markdown steps automatically",
     "title": "Store policy",
     "intro": "Versioned pilot terms. These settings do not start automatic markdowns, messages or payouts.",
     "defaults": "Pilot defaults (no published version)",
@@ -1125,6 +1128,12 @@
     }
   },
   "lifecycle": {
+    "agentHeading": "Markdown runs",
+    "agentOn": "Automatic markdowns are on: due steps are applied once a day as the policy's publisher. You can also apply them now.",
+    "agentOff": "Automatic markdowns are off (store policy). Apply due steps here, one run at a time.",
+    "applyAllDue": "Apply {count} due steps now",
+    "applied": "applied",
+    "modes": { "manual": "manual run", "automatic": "automatic run" },
     "title": "Sale periods",
     "intro": "Every accepted item carries its frozen sale period and markdown steps. This list says what is due; a person applies a markdown, extends the period or ends it.",
     "notice": "Nothing here happens by itself. Markdowns are shares of the accepted price, never compounded. Ending an item as charity or return records the fact; the physical handling is yours.",

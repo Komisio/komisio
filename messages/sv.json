@@ -695,6 +695,9 @@
     }
   },
   "storePolicy": {
+    "markdowns": "Prissänkningar",
+    "markdownsIntro": "Stegen ovan är det enda schemat; de fryses på varje vara vid acceptans. När det är på tillämpar Komisio förfallna steg en gång per dag, loggat som en körning och som händelser på varje vara, i namn av den som publicerade policyn. Av: personalen tillämpar dem från sidan Säljperioder.",
+    "automaticMarkdowns": "Tillämpa förfallna prissänkningar automatiskt",
     "title": "Butikspolicy",
     "intro": "Versionerade pilotvillkor. Inställningarna startar inte automatiska prissänkningar, utskick eller utbetalningar.",
     "defaults": "Pilotstandard (ingen publicerad version)",
@@ -1125,6 +1128,12 @@
     }
   },
   "lifecycle": {
+    "agentHeading": "Prissänkningskörningar",
+    "agentOn": "Automatiska prissänkningar är på: förfallna steg tillämpas en gång per dag i namn av den som publicerade policyn. Du kan också tillämpa dem nu.",
+    "agentOff": "Automatiska prissänkningar är av (butikspolicy). Tillämpa förfallna steg här, en körning i taget.",
+    "applyAllDue": "Tillämpa {count} förfallna steg nu",
+    "applied": "tillämpade",
+    "modes": { "manual": "manuell körning", "automatic": "automatisk körning" },
     "title": "Säljperioder",
     "intro": "Varje accepterad vara bär sin frysta säljperiod och sina prissänkningssteg. Listan säger vad som är dags; en person sänker priset, förlänger perioden eller avslutar den.",
     "notice": "Inget här sker av sig självt. Prissänkningar är andelar av det accepterade priset, aldrig på varandra. Att avsluta som välgörenhet eller retur registrerar faktumet; den fysiska hanteringen är er.",

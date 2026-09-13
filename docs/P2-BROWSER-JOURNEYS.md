@@ -26,6 +26,9 @@ passed from a server component to a client component. Formatting now lives
 on the client and only data/labels cross that boundary. SQL arithmetic is
 unchanged. The settings journey also exposed random printer field ids across
 server/client rendering; useId now preserves accessible label associations.
+The shared new-owner test helper waits for rendered onboarding after e-mail
+confirmation, before fixtures create a store; otherwise the streamed root
+redirect can interrupt the next page navigation in the full CI suite.
 
 Run: `KOMISIO_INTAKE_ENABLED=true npx playwright test tests/e2e/p2-accounting.spec.ts tests/e2e/p2-settings-lifecycle.spec.ts tests/e2e/p2-operations.spec.ts`
 

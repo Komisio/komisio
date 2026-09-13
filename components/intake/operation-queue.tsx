@@ -291,6 +291,36 @@ export function OperationQueue({
                 {d.proposedPrice}: {(o.payload.priceOre / 100).toFixed(2)} SEK
               </p>
             </>
+          ) : o.kind === 'recordReturn' ? (
+            <p>
+              {d.saleLine}: {o.payload.saleLineId} · {d.refund}:{' '}
+              {(o.payload.refundOre / 100).toFixed(2)} SEK · {o.payload.reason}
+            </p>
+          ) : o.kind === 'adjustLedger' ? (
+            <p>
+              <Link
+                className="text-link"
+                href={`/intake/sellers/${o.payload.sellerId}`}
+              >
+                {d.seller}
+              </Link>{' '}
+              · {d.adjustment}: {(o.payload.amountOre / 100).toFixed(2)} SEK ·{' '}
+              {o.payload.reason}
+            </p>
+          ) : o.kind === 'applyMarkdownBatch' ? (
+            <ul>
+              {o.payload.items.map((i) => (
+                <li key={i.itemId}>
+                  <Link
+                    className="text-link"
+                    href={`/intake/items/${i.itemId}`}
+                  >
+                    {i.itemId.slice(0, 8).toUpperCase()}
+                  </Link>{' '}
+                  · {d.step} {i.step}
+                </li>
+              ))}
+            </ul>
           ) : (
             <>
               <p>
@@ -374,6 +404,18 @@ export function OperationQueue({
               )}
               {!o.outcome && reviewContext.stale && (
                 <p role="alert">{d.staleAcceptance}</p>
+              )}
+            </section>
+          )}
+          {reviewContext?.kind === 'engine' && (
+            <section aria-label={d.engineContext}>
+              <h3>{d.engineContext}</h3>
+              <p>{d.engineNotice}</p>
+              {reviewContext.alreadyDone && !o.outcome && (
+                <p role="alert">{d.alreadyDone}</p>
+              )}
+              {!o.outcome && reviewContext.stale && (
+                <p role="alert">{d.staleEngine}</p>
               )}
             </section>
           )}

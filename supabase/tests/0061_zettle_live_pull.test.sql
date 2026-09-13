@@ -24,6 +24,7 @@ select set_config('test.window',open_zettle_pull_window(current_setting('test.te
 select is(open_zettle_pull_window(current_setting('test.tenant')::uuid,current_setting('test.merchant')::uuid),current_setting('test.window')::uuid,'concurrent/open retries use same incomplete window');
 create temp view pull_receipt as select jsonb_build_object('externalId','12345678-1234-4234-8234-123456789055','occurredAt',to_char(w.start_at at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),'currency','SEK','amountOre',10000,'blockedReason',null,'lines',jsonb_build_array(jsonb_build_object('lineNo',1,'reference',null,'labelConflict',false,'description','Unmatched synthetic item','priceOre',10000))) p from zettle_pull_windows w where id=current_setting('test.window')::uuid;
 select set_config('test.page',gen_random_uuid()::text,true);
+select throws_like($$select record_zettle_pull_page(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.window')::uuid,null,'before-cutover',jsonb_build_array((select p from pull_receipt)||jsonb_build_object('occurredAt',(select cutover-interval '1 millisecond' from zettle_pull_connections))))$$,'%ZETTLE_WINDOW_INVALID%','tolerance never imports before activation');
 select is(record_zettle_pull_page(current_setting('test.tenant')::uuid,current_setting('test.page')::uuid,current_setting('test.window')::uuid,null,'hash-1',jsonb_build_array((select p from pull_receipt))),current_setting('test.page')::uuid,'window page recorded');
 select is(record_zettle_pull_page(current_setting('test.tenant')::uuid,current_setting('test.page')::uuid,current_setting('test.window')::uuid,null,'hash-1',jsonb_build_array((select p from pull_receipt))),current_setting('test.page')::uuid,'lost response replays once');
 select is((select count(*) from zettle_imports),1::bigint,'one import');
@@ -35,7 +36,23 @@ select throws_like($$select record_zettle_pull_page(current_setting('test.tenant
 select set_config('test.next_window',open_zettle_pull_window(current_setting('test.tenant')::uuid,current_setting('test.merchant')::uuid)::text,true);
 select ok(current_setting('test.next_window')::uuid<>current_setting('test.window')::uuid,'completed window advances');
 select is((select start_at from zettle_pull_windows where id=current_setting('test.next_window')::uuid),(select end_at-interval '5 minutes' from zettle_pull_windows where id=current_setting('test.window')::uuid),'next window overlaps five minutes');
-select lives_ok($$select record_zettle_pull_page(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.next_window')::uuid,null,null,'[]')$$,'new window starts with its own empty cursor despite prior global marker');
+create temp view tolerant_receipts as
+select jsonb_agg((select p from pull_receipt) || jsonb_build_object(
+ 'externalId',boundary.external_id,
+ 'occurredAt',to_char(boundary.occurred_at at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'))) purchases
+from zettle_pull_windows window_row cross join lateral (values
+ ('12345678-1234-4234-8234-123456789061',window_row.start_at-interval '5 minutes'),
+ ('12345678-1234-4234-8234-123456789062',window_row.end_at+interval '1 second'),
+ ('12345678-1234-4234-8234-123456789063',window_row.end_at+interval '5 minutes'-interval '1 millisecond')
+) boundary(external_id,occurred_at) where window_row.id=current_setting('test.next_window')::uuid;
+select throws_like($$select record_zettle_pull_page(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.next_window')::uuid,null,'tolerance',jsonb_build_array((select p from pull_receipt)||jsonb_build_object('occurredAt',(select start_at-interval '5 minutes 1 millisecond' from zettle_pull_windows where id=current_setting('test.next_window')::uuid))))$$,'%ZETTLE_WINDOW_INVALID%','one millisecond before tolerance is rejected');
+select throws_like($$select record_zettle_pull_page(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.next_window')::uuid,null,'tolerance',jsonb_build_array((select p from pull_receipt)||jsonb_build_object('occurredAt',(select end_at+interval '5 minutes' from zettle_pull_windows where id=current_setting('test.next_window')::uuid))))$$,'%ZETTLE_WINDOW_INVALID%','upper tolerance boundary remains exclusive');
+select set_config('test.tolerance_page',gen_random_uuid()::text,true);
+select lives_ok($$select record_zettle_pull_page(current_setting('test.tenant')::uuid,current_setting('test.tolerance_page')::uuid,current_setting('test.next_window')::uuid,null,'tolerance',(select purchases from tolerant_receipts))$$,'provider skew within tolerance does not wedge the page');
+select lives_ok($$select record_zettle_pull_page(current_setting('test.tenant')::uuid,current_setting('test.tolerance_page')::uuid,current_setting('test.next_window')::uuid,null,'tolerance',(select purchases from tolerant_receipts))$$,'tolerated page replay is idempotent');
+select is((select count(*) from zettle_imports),4::bigint,'tolerated page imports exactly once');
+select lives_ok($$select record_zettle_pull_page(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.next_window')::uuid,'tolerance','tolerance','[]')$$,'tolerated page can complete normally');
+select ok(open_zettle_pull_window(current_setting('test.tenant')::uuid,current_setting('test.merchant')::uuid)<>current_setting('test.next_window')::uuid,'retrieval advances after tolerated timestamps');
 select throws_like($$update zettle_pull_windows set end_at=clock_timestamp()$$,'%permission denied%','immutable metadata has no direct writes');
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000552","role":"authenticated"}';
 select is((select count(*) from zettle_pull_connections),0::bigint,'other tenant connection hidden');

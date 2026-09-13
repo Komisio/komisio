@@ -921,6 +921,38 @@
       "failed": "delivery failed"
     }
   },
+  "lifecycle": {
+    "title": "Sale periods",
+    "intro": "Every accepted item carries its frozen sale period and markdown steps. This list says what is due; a person applies a markdown, extends the period or ends it.",
+    "notice": "Nothing here happens by itself. Markdowns are shares of the accepted price, never compounded. Ending an item as charity or return records the fact; the physical handling is yours.",
+    "filter": "Show stage",
+    "all": "All items",
+    "empty": "No items in this view.",
+    "accepted": "Accepted",
+    "periodEnd": "Period ends",
+    "due": "Markdown step {step} due: {percent} %",
+    "applyMarkdown": "Apply markdown step {step}",
+    "markdownDone": "Markdown applied.",
+    "days": "Extend by (days)",
+    "reason": "Reason",
+    "extend": "Extend period",
+    "extended": "Period extended.",
+    "endAction": "End of period",
+    "charity": "Charity",
+    "return": "Return to seller",
+    "note": "Note (optional)",
+    "endConfirm": "The item leaves sale and the physical handling is done or arranged.",
+    "end": "End period",
+    "ended": "Period ended.",
+    "stages": {
+      "on_sale": "On sale",
+      "markdown_due": "Markdown due",
+      "period_ending": "Period ending within a week",
+      "period_ended": "Period ended",
+      "ended": "Ended",
+      "sold": "Sold"
+    }
+  },
   "purchases": {
     "title": "Purchases",
     "intro": "Store-owned goods enter here, never through the consignment paths.",

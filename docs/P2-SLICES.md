@@ -250,6 +250,12 @@ Smaller slices that complete P2 and are independent of each other:
   stages `on_sale`, `markdown_due`, `period_ending`, `period_ended`;
   operations `extend`, `apply_markdown`, `end_of_period` (charity or return)
   with events. Agent proposals for markdown batches at `low`.
+  Status 2026-09-13: delivered (migration `20260914070000`): `lifecycle_queue`
+  with stages on_sale, markdown_due, period_ending, period_ended, ended and
+  sold; `apply_markdown` (share of the accepted price, once per step, only
+  when due), `extend_sale_period`, `end_sale_period` (charity or return); an
+  ended item can no longer be sold; sale periods page with actions. Agent
+  batch proposals follow.
 - Batch reception: one photo set for one seller; the model splits into
   garments and proposes each; staff confirm per row; the same reception
   contract per garment.

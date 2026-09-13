@@ -102,6 +102,10 @@ export async function POST(request: Request) {
           'STATEMENT_NOT_FOUND',
           'STATEMENT_ALREADY_CORRECTED',
           'STATEMENT_PERIOD_OVERLAP',
+          'MARKDOWN_NOT_DUE',
+          'MARKDOWN_ALREADY_APPLIED',
+          'ITEM_NOT_ON_SALE',
+          'ITEM_ENDED',
         ].find((v) => result.error!.message.includes(v)) ?? 'REQUEST_FAILED'
       return reply(
         { error: code },
@@ -137,6 +141,10 @@ export async function POST(request: Request) {
                 'LINE_ALREADY_RETURNED',
                 'STATEMENT_ALREADY_CORRECTED',
                 'STATEMENT_PERIOD_OVERLAP',
+                'MARKDOWN_NOT_DUE',
+                'MARKDOWN_ALREADY_APPLIED',
+                'ITEM_NOT_ON_SALE',
+                'ITEM_ENDED',
               ].includes(code)
             ? 409
             : 400,

@@ -921,6 +921,38 @@
       "failed": "leverans misslyckades"
     }
   },
+  "lifecycle": {
+    "title": "Säljperioder",
+    "intro": "Varje accepterad vara bär sin frysta säljperiod och sina prissänkningssteg. Listan säger vad som är dags; en person sänker priset, förlänger perioden eller avslutar den.",
+    "notice": "Inget här sker av sig självt. Prissänkningar är andelar av det accepterade priset, aldrig på varandra. Att avsluta som välgörenhet eller retur registrerar faktumet; den fysiska hanteringen är er.",
+    "filter": "Visa läge",
+    "all": "Alla varor",
+    "empty": "Inga varor i vyn.",
+    "accepted": "Accepterad",
+    "periodEnd": "Perioden slutar",
+    "due": "Prissänkningssteg {step} är dags: {percent} %",
+    "applyMarkdown": "Sänk priset, steg {step}",
+    "markdownDone": "Prissänkningen är registrerad.",
+    "days": "Förläng med (dagar)",
+    "reason": "Anledning",
+    "extend": "Förläng perioden",
+    "extended": "Perioden är förlängd.",
+    "endAction": "Vid periodens slut",
+    "charity": "Välgörenhet",
+    "return": "Retur till säljaren",
+    "note": "Anteckning (valfri)",
+    "endConfirm": "Varan lämnar försäljningen och den fysiska hanteringen är gjord eller ordnad.",
+    "end": "Avsluta perioden",
+    "ended": "Perioden är avslutad.",
+    "stages": {
+      "on_sale": "Till salu",
+      "markdown_due": "Prissänkning dags",
+      "period_ending": "Perioden slutar inom en vecka",
+      "period_ended": "Perioden har gått ut",
+      "ended": "Avslutad",
+      "sold": "Såld"
+    }
+  },
   "purchases": {
     "title": "Inköp",
     "intro": "Butiksägda varor kommer in här, aldrig via inlämningsflödena.",

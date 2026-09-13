@@ -15,6 +15,11 @@ import {
 import { recordReturnCommand } from './returns'
 import { issueStatementCommand } from './statements'
 import { generateDayCloseCommand } from './day-closes'
+import {
+  applyMarkdownCommand,
+  extendSalePeriodCommand,
+  endSalePeriodCommand,
+} from './lifecycle'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { saveInspectionCommand, archiveInspectionCommand } from './inspection'
@@ -34,6 +39,9 @@ export const intakeCommand = z.discriminatedUnion('action', [
   recordReturnCommand,
   issueStatementCommand,
   generateDayCloseCommand,
+  applyMarkdownCommand,
+  extendSalePeriodCommand,
+  endSalePeriodCommand,
   acceptItemCommand,
   recordSaleCommand,
   adjustSellerLedgerCommand,
@@ -185,6 +193,29 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_tenant: c.tenantId,
         p_id: c.requestId,
         p_date: c.date,
+      })
+    case 'applyMarkdown':
+      return client.rpc('apply_markdown', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_item: c.itemId,
+        p_step: c.step,
+      })
+    case 'extendSalePeriod':
+      return client.rpc('extend_sale_period', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_item: c.itemId,
+        p_days: c.days,
+        p_reason: c.reason,
+      })
+    case 'endSalePeriod':
+      return client.rpc('end_sale_period', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_item: c.itemId,
+        p_action: c.endAction,
+        p_note: c.note,
       })
     case 'markPayoutPaid':
       return client.rpc('mark_payout_paid', {

@@ -213,7 +213,7 @@ export async function exportZettleItem(
     } else {
       status = stockOutcome(before)
     }
-    if (status === 'initialized' || status === 'depleted') error = null
+    if (status === 'initialized') error = null
     else error ??= 'ZETTLE_STOCK_HELD'
   } catch (e) {
     error = 'ZETTLE_STOCK_HELD'

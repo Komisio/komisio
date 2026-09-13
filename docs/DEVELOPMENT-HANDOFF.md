@@ -1,3 +1,15 @@
+## Zettle new-product stock compatibility, 2026-09-13
+
+The live stock replay stops in tracking-status parsing (HTTP200, root-level
+shape/length issue), before stock read or movement. Accept zero or one correctly
+bound status record: an empty list has no enabled tracking. Old claims remain
+held rather than re-enabled or replenished. Read only physical STORE stock;
+virtual SUPPLIER is not a required negative balance. Zero stock does not prove a
+sale or grant a new movement. See ZETTLE-STOCK.md and the decision log.
+357 unit tests, the Zettle browser journey and build/typecheck/lint/format pass. No new SQL. Complete
+CI, protected merge and live read-only diagnosis. The owner has been asked to
+inspect tracking and stock in Zettle; no manual quantity change was requested.
+
 ## Zettle stock diagnosis checkpoint, 2026-09-13
 
 Real product export/read-back now succeeds, including the owner's price and VAT

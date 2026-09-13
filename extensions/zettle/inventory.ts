@@ -6,34 +6,16 @@ export type InventoryIds = {
   SOLD: string
   BIN: string
 }
-export type Stock = {
-  store: number
-  sold: number
-  bin: number
-  supplier: number
-}
+export type Stock = { store: number }
 export function stockOutcome(
   stock: Stock,
-): 'initialized' | 'depleted' | 'unknown' | 'conflict' {
-  if (
-    stock.store === 1 &&
-    stock.sold === 0 &&
-    stock.bin === 0 &&
-    stock.supplier === -1
-  )
-    return 'initialized'
-  if (
-    stock.store === 0 &&
-    stock.supplier === -1 &&
-    ((stock.sold === 1 && stock.bin === 0) ||
-      (stock.sold === 0 && stock.bin === 1))
-  )
-    return 'depleted'
-  if (Object.values(stock).every((n) => n === 0)) return 'unknown'
+): 'initialized' | 'unknown' | 'conflict' {
+  if (stock.store === 1) return 'initialized'
+  if (stock.store === 0) return 'unknown'
   return 'conflict'
 }
 export function mayInitialize(stock: Stock) {
-  return Object.values(stock).every((n) => n === 0)
+  return stock.store === 0
 }
 export interface ZettleInventory {
   inventories(): Promise<InventoryIds>
@@ -108,12 +90,12 @@ export function inventoryHttpClient(
       const rows = parseInventory(
         z
           .array(z.object({ productUuid: z.uuid(), enabled: z.boolean() }))
-          .length(1),
+          .max(1),
         await boundedJson(r, 8192),
       )
-      if (rows[0].productUuid !== product)
+      if (rows[0] && rows[0].productUuid !== product)
         throw new Error('ZETTLE_INVENTORY_CONFLICT')
-      return rows[0].enabled
+      return rows[0]?.enabled ?? false
     },
     async enable(product) {
       z.uuid().parse(product)
@@ -125,40 +107,31 @@ export function inventoryHttpClient(
     async stock(product, variant, ids) {
       z.uuid().parse(product)
       z.uuid().parse(variant)
-      const result = {} as Stock
-      for (const [type, key] of [
-        ['STORE', 'store'],
-        ['SOLD', 'sold'],
-        ['BIN', 'bin'],
-        ['SUPPLIER', 'supplier'],
-      ] as const) {
-        z.uuid().parse(ids[type])
-        const r = await call(`/stock/${ids[type]}/products/${product}`)
-        const schema = z
-          .array(
-            z.object({
-              organizationUuid: z.uuid(),
-              inventoryUuid: z.uuid(),
-              productUuid: z.uuid(),
-              variantUuid: z.uuid(),
-              balance: z.number().int().min(-1000000).max(1000000),
-            }),
-          )
-          .max(1)
-        const rows = parseInventory(schema, await boundedJson(r, 8192))
-        if (
-          rows.some(
-            (r) =>
-              r.organizationUuid !== org ||
-              r.inventoryUuid !== ids[type] ||
-              r.productUuid !== product ||
-              r.variantUuid !== variant,
-          )
+      z.uuid().parse(ids.STORE)
+      const r = await call(`/stock/${ids.STORE}/products/${product}`)
+      const schema = z
+        .array(
+          z.object({
+            organizationUuid: z.uuid(),
+            inventoryUuid: z.uuid(),
+            productUuid: z.uuid(),
+            variantUuid: z.uuid(),
+            balance: z.number().int().min(-1000000).max(1000000),
+          }),
         )
-          throw new Error('ZETTLE_INVENTORY_CONFLICT')
-        result[key] = rows[0]?.balance ?? 0
-      }
-      return result
+        .max(1)
+      const rows = parseInventory(schema, await boundedJson(r, 8192))
+      if (
+        rows.some(
+          (r) =>
+            r.organizationUuid !== org ||
+            r.inventoryUuid !== ids.STORE ||
+            r.productUuid !== product ||
+            r.variantUuid !== variant,
+        )
+      )
+        throw new Error('ZETTLE_INVENTORY_CONFLICT')
+      return { store: rows[0]?.balance ?? 0 }
     },
     async initialize(product, variant, ids, intentId) {
       for (const value of [product, variant, ids.SUPPLIER, ids.STORE, intentId])

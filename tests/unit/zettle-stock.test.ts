@@ -48,9 +48,6 @@ function setup(
     tracked = options.tracked ?? false,
     balance: Stock = options.stock ?? {
       store: 0,
-      sold: 0,
-      bin: 0,
-      supplier: 0,
     },
     prepares = 0,
     claimLost = options.claimLost,
@@ -125,7 +122,7 @@ function setup(
     }),
     initialize: vi.fn(async () => {
       events.push('initialize')
-      balance = { store: 1, sold: 0, bin: 0, supplier: -1 }
+      balance = { store: 1 }
       if (options.writeLost) throw new Error('private movement failure')
     }),
   }
@@ -187,18 +184,10 @@ it('externally disabled tracking is not re-enabled on replay', async () => {
   expect((await s.run()).stock).toBe('unknown')
   expect(s.inventory.enable).not.toHaveBeenCalled()
 })
-it.each([
-  { store: 0, sold: 1, bin: 0, supplier: -1 },
-  { store: 0, sold: 0, bin: 1, supplier: -1 },
-])('depleted stock stays depleted', async (stock) => {
-  const s = setup({ fresh: false, tracked: true, stock })
-  expect((await s.run()).stock).toBe('depleted')
-  expect(s.inventory.initialize).not.toHaveBeenCalled()
-})
 it('nonzero stock on the initial attempt is held rather than attributed to this claim', async () => {
   const s = setup({
     tracked: true,
-    stock: { store: 1, sold: 0, bin: 0, supplier: -1 },
+    stock: { store: 1 },
   })
   expect((await s.run()).stock).toBe('conflict')
   expect(s.inventory.initialize).not.toHaveBeenCalled()

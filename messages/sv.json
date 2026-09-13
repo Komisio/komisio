@@ -522,8 +522,21 @@
     "kinds": {
       "publishReceptionReview": "Publicera granskat underlag till säljaren",
       "saveInspectionDraft": "Spara beskrivningsutkast",
-      "acceptItem": "Acceptera ursprung som vara"
+      "acceptItem": "Acceptera ursprung som vara",
+      "recordReturn": "Registrera hel retur",
+      "adjustLedger": "Justera säljarens saldo",
+      "applyMarkdownBatch": "Genomför förfallna prissänkningar"
     },
+    "saleLine": "Kvittorad",
+    "refund": "Återbetalning",
+    "seller": "Säljare",
+    "adjustment": "Justering",
+    "batchItems": "Varor i satsen",
+    "step": "steg",
+    "engineContext": "Utförandekontroll",
+    "engineNotice": "Godkännandet kör det vanliga kommandot som du, vilket kontrollerar alla förutsättningar på nytt. En saldojustering utförs bara av ägare eller administratör.",
+    "alreadyDone": "Kvittoraden är redan returnerad.",
+    "staleEngine": "Underlaget för förslaget har ändrats. Avvisa det och begär ett nytt.",
     "risk": {
       "low": "Låg",
       "medium": "Medel",

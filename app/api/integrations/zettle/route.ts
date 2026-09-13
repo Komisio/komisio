@@ -1,3 +1,4 @@
+import { ProductHttpError } from '@/extensions/zettle/http'
 import { ProductReadError } from '@/extensions/zettle/catalog'
 import { exportZettleItem } from '@/lib/engine/zettle-stock'
 import { enableZettlePull, pullZettlePurchases } from '@/lib/engine/zettle-live'
@@ -109,6 +110,9 @@ export async function POST(request: Request) {
       {
         error: code,
         ...(e instanceof ProductReadError ? { fields: e.fields } : {}),
+        ...(e instanceof ProductHttpError
+          ? { httpStatus: e.httpStatus, fields: e.hints }
+          : {}),
       },
       code === 'REQUEST_FAILED' ? 500 : 409,
     )

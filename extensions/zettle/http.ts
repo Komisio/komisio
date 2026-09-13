@@ -81,10 +81,13 @@ export function zettleHttpClient(options: {
   }
   async function get(id: string) {
     const r = await call(
-      `https://products.izettle.com/organizations/self/products/${id}`,
+      `https://products.izettle.com/organizations/${org}/products/${id}`,
     )
     if (r.status === 404) return null
-    if (r.status !== 200) throw new Error('ZETTLE_READ_FAILED')
+    if (r.status !== 200) {
+      const detail = await boundedJson(r, 8192).catch(() => null)
+      throw new ProductHttpError(r.status, detail)
+    }
     const raw = await boundedJson(r, 65536)
     return { product: projectRemoteProduct(raw), etag: r.headers.get('etag') }
   }
@@ -98,7 +101,7 @@ export function zettleHttpClient(options: {
       if (!remote) {
         if (previous) throw new Error('ZETTLE_REMOTE_MISSING')
         const r = await call(
-          'https://products.izettle.com/organizations/self/products',
+          `https://products.izettle.com/organizations/${org}/products`,
           'POST',
           p,
         )
@@ -115,7 +118,7 @@ export function zettleHttpClient(options: {
       if (!previous || !sameProduct(remote.product, previous) || !remote.etag)
         throw new Error('ZETTLE_REMOTE_CHANGED')
       const r = await call(
-        `https://products.izettle.com/organizations/self/products/v2/${p.uuid}`,
+        `https://products.izettle.com/organizations/${org}/products/v2/${p.uuid}`,
         'PUT',
         p,
         remote.etag,
@@ -142,5 +145,26 @@ export function zettleHttpClient(options: {
       if (r.status !== 200) throw new Error('ZETTLE_READ_FAILED')
       return boundedJson(r, 1048576)
     },
+  }
+}
+
+/** Status and a finite keyword set only, never the provider body or its values. */
+export class ProductHttpError extends Error {
+  readonly httpStatus: number
+  readonly hints: string[]
+  constructor(status: number, detail: unknown) {
+    super('ZETTLE_READ_FAILED')
+    this.httpStatus =
+      Number.isInteger(status) && status >= 100 && status <= 599 ? status : 0
+    const text = JSON.stringify(detail).toLowerCase()
+    this.hints = [
+      'uuid',
+      'organization',
+      'etag',
+      'scope',
+      'permission',
+      'vat',
+      'tax',
+    ].filter((k) => text.includes(k))
   }
 }

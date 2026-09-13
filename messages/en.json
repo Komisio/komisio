@@ -890,6 +890,37 @@
     "net": "net",
     "gross": "gross"
   },
+  "communications": {
+    "title": "Messages to the seller",
+    "intro": "Every message is logged with the exact text as sent and its delivery outcome. Templates are fixed; you may add a plain-text note.",
+    "empty": "No messages yet.",
+    "sendHeading": "Send a message",
+    "sendHint": "Pick what the message is about. In the pilot, delivery goes only to allowlisted addresses; other outcomes are logged.",
+    "kind": "About",
+    "reference": "Which one",
+    "noReference": "Nothing to refer to yet.",
+    "freeText": "Note to the seller (optional)",
+    "freeTextHint": "Plain text, up to 1000 characters, inserted into the fixed template.",
+    "confirm": "I want to send this message to the seller's e-mail address.",
+    "send": "Send",
+    "noEmail": "This seller has no e-mail address.",
+    "kinds": {
+      "message": "General message",
+      "item_accepted": "Item accepted",
+      "item_sold": "Item sold",
+      "payout_approved": "Payout approved",
+      "payout_paid": "Payout paid",
+      "statement_issued": "Statement issued"
+    },
+    "outcomes": {
+      "queued": "queued",
+      "sent": "sent",
+      "restricted": "not sent: address not on the pilot allowlist",
+      "manual": "not sent: e-mail delivery is off, hand over manually",
+      "unconfirmed": "delivery not confirmed",
+      "failed": "delivery failed"
+    }
+  },
   "purchases": {
     "title": "Purchases",
     "intro": "Store-owned goods enter here, never through the consignment paths.",

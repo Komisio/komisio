@@ -220,6 +220,12 @@ Purpose: the e-mail-first seller communication decided in P1 answers.
 - Surface: communication tab on the seller view. Agent tool `send message`
   (staged, `low`, template-bound).
 - Migration: yes.
+- Status 2026-09-13: `seller_communications` with queue and single delivery
+  transition (migration `20260914060000`), versioned plain-text templates for
+  the five P2 triggers plus a general message, Resend transport with the
+  pilot allowlist rules, `/api/communications` route (render, queue, send,
+  record), seller page log and send form. Sending is staff-triggered; the
+  automatic triggers and the staged agent kind follow.
 
 ## S19. Labels and the local print agent
 

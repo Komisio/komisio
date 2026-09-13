@@ -13,6 +13,9 @@ const scope = z.enum([
   'ledger:propose',
   'lifecycle:propose',
   'communications:propose',
+  'payouts:propose',
+  'accounting:read',
+  'accounting:propose',
 ])
 export type MCPScope = z.infer<typeof scope>
 export const mcpConfig = z.strictObject({

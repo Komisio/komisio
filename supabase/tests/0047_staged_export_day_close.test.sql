@@ -1,0 +1,50 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+select is(komisio_private.operation_risk('exportDayClose'),'medium','exporting a day close is medium risk');
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000000301','export-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000302','export-staff@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000301","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Export kind test','export-kind-test',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Synthetic seller','seller@exportkind.test','')::text,true);
+select set_config('test.agreement',publish_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'Synthetic terms','Only a test','en',false)::text,true);
+select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,'Signed paper');
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}');
+select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
+select set_config('test.draft',gen_random_uuid()::text,true);
+select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Synthetic jacket','Jackets','Good');
+select set_config('test.item',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,20000);
+select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','K-1','2026-09-10T10:00:00Z','SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item'),'priceOre',20000)));
+select set_config('test.close',gen_random_uuid()::text,true);
+select generate_day_close(current_setting('test.tenant')::uuid,current_setting('test.close')::uuid,'2026-09-10');
+select throws_like($$select propose_operation(current_setting('test.tenant')::uuid,gen_random_uuid(),'exportDayClose',jsonb_build_object('dayCloseId',gen_random_uuid()),'agent',now()+interval '1 day')$$,'%DAY_CLOSE_NOT_FOUND%','unknown day close refused');
+select throws_like($$select propose_operation(current_setting('test.tenant')::uuid,gen_random_uuid(),'exportDayClose',jsonb_build_object('dayCloseId',current_setting('test.close')),'agent',now()+interval '1 day')$$,'%ACCOUNTING_MAP_REQUIRED%','no map, no proposal');
+select set_config('test.m1',gen_random_uuid()::text,true);
+select publish_accounting_map(current_setting('test.tenant')::uuid,current_setting('test.m1')::uuid,null,'{"grossOre":{"account":"1930","side":"debit"}}');
+select throws_like($$select propose_operation(current_setting('test.tenant')::uuid,gen_random_uuid(),'exportDayClose',jsonb_build_object('dayCloseId',current_setting('test.close')),'agent',now()+interval '1 day')$$,'%VOUCHER_UNBALANCED%','an unbalanced voucher cannot be proposed');
+select publish_accounting_map(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.m1')::uuid,
+ '{"grossOre":{"account":"1930","side":"debit"},"sellerCreditOre":{"account":"2890","side":"credit"},"commissionOre":{"account":"3010","side":"credit"}}');
+select set_config('test.op',gen_random_uuid()::text,true);
+select is(propose_operation(current_setting('test.tenant')::uuid,current_setting('test.op')::uuid,'exportDayClose',jsonb_build_object('dayCloseId',current_setting('test.close')),'accounting-agent',now()+interval '1 day'),current_setting('test.op')::uuid,'export proposed');
+select throws_ok($$select decide_operation(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.op')::uuid,'approved','')$$,'42501',null,'proposer cannot approve an export');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values (current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000000302','staff');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000302","role":"authenticated"}';
+select set_config('test.dec',gen_random_uuid()::text,true);
+select decide_operation(current_setting('test.tenant')::uuid,current_setting('test.dec')::uuid,current_setting('test.op')::uuid,'approved','Checked the voucher');
+select is((select outcome||'|'||result_id from operation_decisions where id=current_setting('test.dec')::uuid),'executed|'||current_setting('test.op'),'export executed with the operation id');
+select is((select created_by::text from accounting_exports where id=current_setting('test.op')::uuid),'f0000000-0000-4000-8000-000000000302','export recorded by the approver');
+-- A second proposal for the same close and map returns the existing export at execution.
+select set_config('test.op2',gen_random_uuid()::text,true);
+select propose_operation(current_setting('test.tenant')::uuid,current_setting('test.op2')::uuid,'exportDayClose',jsonb_build_object('dayCloseId',current_setting('test.close')),'accounting-agent',now()+interval '1 day');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000301","role":"authenticated"}';
+select decide_operation(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.op2')::uuid,'approved','');
+select is((select result_id::text from operation_decisions where operation_id=current_setting('test.op2')::uuid),current_setting('test.op'),'idempotent export: the first export is returned');
+select is((select count(*) from accounting_exports where tenant_id=current_setting('test.tenant')::uuid),1::bigint,'still one export');
+select is((select count(*) from operation_queue_filtered_page(current_setting('test.tenant')::uuid,'executed',null,null,'exportDayClose')),2::bigint,'queue filters the export kind');
+select * from finish();
+rollback;

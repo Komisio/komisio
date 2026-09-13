@@ -60,6 +60,13 @@ p_currency, p_lines)`: staff or integration actor; every item must be
 - Surface: receipts list and receipt detail (thin), agent read tools
   `find receipts`, `get receipt`, `simulate sale`.
 - Migration: yes.
+- Status 2026-09-13: tables, `record_sale`, `simulate_sale`, engine command,
+  counter sale form, receipts list and detail delivered (migration
+  `20260914000000`). Commission: inclusive basis takes the rate of the price
+  and the seller gets the rest; exclusive basis takes the rate as commission ex
+  VAT, adds VAT on the commission invoice and treats the seller as a business
+  seller (interim proxy until a seller VAT registration exists). Agent read
+  tools follow with the P2 MCP work.
 
 ## S12. Zettle sales pull
 

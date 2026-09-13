@@ -33,6 +33,10 @@ totals are sums of lines, never re-rounded.
 
 ## Rules the engine enforces
 
+- Interim (S11): a seller is treated as VAT-registered when the item's frozen
+  commission basis is `exclusive`; the seller VAT id and taxable flag arrive
+  with seller registration work and will replace this proxy.
+
 - A sale cannot be recorded for a tenant that has not chosen its modes;
   `record_sale` fails with `VAT_MODE_NOT_SET`. Choosing a mode is an
   owner-or-admin policy publication and is logged like any policy change.

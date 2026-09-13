@@ -1,0 +1,97 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000000131','sale-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000132','sale-reader@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000134','sale-outsider@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000131","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Sales test','sales-test',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Synthetic seller','seller@sales.test','')::text,true);
+select set_config('test.agreement',publish_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'Synthetic terms','Only a test','en',false)::text,true);
+select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,'Signed paper');
+-- Consignment item from the bag path, store item from a purchase.
+select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
+select set_config('test.draft',gen_random_uuid()::text,true);
+select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Synthetic jacket','Jackets','Good');
+select set_config('test.item1',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,25000);
+select set_config('test.purchase',register_purchase(current_setting('test.tenant')::uuid,gen_random_uuid(),'Flea market',15000,'Receipt 7',true)::text,true);
+select set_config('test.item2',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item2')::uuid,'purchase',current_setting('test.purchase')::uuid,null,25000);
+create temp view lines as select jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item1'),'priceOre',25000),jsonb_build_object('itemId',current_setting('test.item2'),'priceOre',25000)) as l;
+-- No VAT mode chosen: no sale, no simulation.
+select throws_like($$select simulate_sale(current_setting('test.tenant')::uuid,(select l from lines))$$,'%VAT_MODE_NOT_SET%','simulation refuses without a VAT mode');
+select throws_like($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','T-1',now(),'SEK',(select l from lines))$$,'%VAT_MODE_NOT_SET%','recording refuses without a VAT mode');
+select is((select count(*) from sales),0::bigint,'nothing recorded');
+select set_config('test.body',(current_store_policy(current_setting('test.tenant')::uuid)->'policy')::text,true);
+select set_config('test.policy',publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,current_setting('test.body')::jsonb || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_margin","vatRatePercent":25}')::text,true);
+select set_config('test.sim',simulate_sale(current_setting('test.tenant')::uuid,(select l from lines))::text,true);
+select is((current_setting('test.sim')::jsonb->>'totalOre')::bigint,50000::bigint,'simulation totals the lines');
+select is((current_setting('test.sim')::jsonb->'lines'->0->>'commissionOre')::bigint,15000::bigint,'60 percent inclusive commission');
+select is((current_setting('test.sim')::jsonb->'lines'->0->>'sellerCreditOre')::bigint,10000::bigint,'seller credit is the rest');
+select is(current_setting('test.sim')::jsonb->'lines'->0->>'vatMode','consignment_margin','private consignment mode from policy');
+select is((current_setting('test.sim')::jsonb->'lines'->0->>'vatOre')::bigint,3000::bigint,'VAT on the margin only: 15000 x 25/125');
+select is(current_setting('test.sim')::jsonb->'lines'->1->>'vatMode','store_margin','attested purchase sells on margin');
+select is((current_setting('test.sim')::jsonb->'lines'->1->>'vatOre')::bigint,2000::bigint,'VAT on the store margin: 10000 x 25/125');
+select is((current_setting('test.sim')::jsonb->'lines'->1->>'commissionOre')::bigint,0::bigint,'no commission on store goods');
+select is((select count(*) from sales),0::bigint,'simulation writes nothing');
+select set_config('test.sale',gen_random_uuid()::text,true);
+select is(record_sale(current_setting('test.tenant')::uuid,current_setting('test.sale')::uuid,'manual','T-1','2026-09-13T10:00:00Z','SEK',(select l from lines)),current_setting('test.sale')::uuid,'sale recorded');
+select is(record_sale(current_setting('test.tenant')::uuid,current_setting('test.sale')::uuid,'manual','T-1','2026-09-13T10:00:00Z','SEK',(select l from lines)),current_setting('test.sale')::uuid,'exact replay by id');
+select is(record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','T-1','2026-09-13T10:00:00Z','SEK',(select l from lines)),current_setting('test.sale')::uuid,'replay by external id returns the existing sale');
+select throws_like($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','T-1','2026-09-13T10:00:00Z','SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item1'),'priceOre',25000)))$$,'%SALE_CONFLICT%','different payload under the same external id fails');
+select is((select total_ore from sales where id=current_setting('test.sale')::uuid),50000::bigint,'total is the sum of lines');
+select is((select count(*) from sale_lines where sale_id=current_setting('test.sale')::uuid),2::bigint,'two lines');
+select is((select vat_ore from sale_lines where sale_id=current_setting('test.sale')::uuid and line_no=1),3000::bigint,'line VAT frozen');
+select is((select seller_credit_ore from sale_lines where sale_id=current_setting('test.sale')::uuid and line_no=1),10000::bigint,'seller credit frozen');
+select is((select agreement_version_id from sale_lines where sale_id=current_setting('test.sale')::uuid and line_no=1),current_setting('test.agreement')::uuid,'agreement version carried from the item');
+select is((select count(*) from item_events where item_id=current_setting('test.item1')::uuid and kind='sold'),1::bigint,'item marked sold');
+select throws_like($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','T-2',now(),'SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item1'),'priceOre',20000)))$$,'%ITEM_ALREADY_SOLD%','an item sells once');
+select throws_like($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','T-3',now(),'SEK',jsonb_build_array(jsonb_build_object('itemId',gen_random_uuid(),'priceOre',20000)))$$,'%ITEM_NOT_FOUND%','unknown item rejected');
+select throws_like($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','T-4',now(),'SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item2'),'priceOre',0)))$$,'%INVALID_INPUT%','zero price rejected');
+select throws_like($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','T-5',now(),'EUR',(select l from lines))$$,'%INVALID_INPUT%','only SEK');
+select throws_like($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'square','T-6',now(),'SEK',(select l from lines))$$,'%INVALID_INPUT%','unknown provider rejected');
+select is((select count(*) from sales),1::bigint,'failed attempts wrote nothing');
+-- A later policy change does not touch the recorded line; a new sale uses the new mode.
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.policy')::uuid,current_setting('test.body')::jsonb || '{"vatModeConsignmentPrivate":"consignment_full","vatModeStoreOwned":"store_full","vatRatePercent":25}');
+select is((select vat_mode from sale_lines where sale_id=current_setting('test.sale')::uuid and line_no=1),'consignment_margin','recorded mode frozen');
+-- Exclusive basis: commission invoiced plus VAT, business mode, full VAT on the sale.
+select publish_seller_terms(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,null,'exclusive',null,'VAT-registered seller');
+select set_config('test.draft2',gen_random_uuid()::text,true);
+select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft2')::uuid,0,'Synthetic bag','Bags','Good');
+select set_config('test.item3',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item3')::uuid,'inspection_draft',current_setting('test.draft2')::uuid,1,25000);
+select set_config('test.sim2',simulate_sale(current_setting('test.tenant')::uuid,jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item3'),'priceOre',25000)))::text,true);
+select is((current_setting('test.sim2')::jsonb->'lines'->0->>'commissionOre')::bigint,15000::bigint,'commission ex VAT');
+select is((current_setting('test.sim2')::jsonb->'lines'->0->>'commissionVatOre')::bigint,3750::bigint,'VAT on the commission invoice');
+select is((current_setting('test.sim2')::jsonb->'lines'->0->>'sellerCreditOre')::bigint,6250::bigint,'seller credit after commission and its VAT');
+select is(current_setting('test.sim2')::jsonb->'lines'->0->>'vatMode','consignment_business','business mode');
+select is((current_setting('test.sim2')::jsonb->'lines'->0->>'vatOre')::bigint,5000::bigint,'sale VAT on the whole price');
+-- Unattested purchase never sells on margin even when the policy says margin.
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),(current_store_policy(current_setting('test.tenant')::uuid)->>'id')::uuid,current_setting('test.body')::jsonb || '{"vatModeConsignmentPrivate":"consignment_full","vatModeStoreOwned":"store_margin","vatRatePercent":25}');
+select set_config('test.purchase2',register_purchase(current_setting('test.tenant')::uuid,gen_random_uuid(),'',10000,'Receipt 8',false)::text,true);
+select set_config('test.item4',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item4')::uuid,'purchase',current_setting('test.purchase2')::uuid,null,20000);
+select is(simulate_sale(current_setting('test.tenant')::uuid,jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item4'),'priceOre',20000)))->'lines'->0->>'vatMode','store_full','no attestation, full VAT');
+select throws_ok($$update sales set total_ore=1$$,'42501',null,'direct update denied');
+select throws_ok($$delete from sale_lines$$,'42501',null,'direct delete denied');
+reset role;
+select throws_like($$update sales set total_ore=1 where id=current_setting('test.sale')::uuid$$,'%IMMUTABLE_SALE%','privileged update immutable');
+insert into tenant_members(tenant_id,user_id,role) values (current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000000132','readonly');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000132","role":"authenticated"}';
+select is((select count(*) from sale_lines),2::bigint,'readonly reads lines');
+select lives_ok($$select simulate_sale(current_setting('test.tenant')::uuid,jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item3'),'priceOre',25000)))$$,'readonly may simulate');
+select throws_ok($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','T-7',now(),'SEK',(select l from lines))$$,'42501',null,'readonly cannot record');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000134","role":"authenticated"}';
+select is((select count(*) from sales),0::bigint,'RLS hides other tenants');
+select throws_ok($$select simulate_sale(current_setting('test.tenant')::uuid,(select l from lines))$$,'42501',null,'outsider cannot simulate');
+reset role;
+insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values(gen_random_uuid(),'f0000000-0000-4000-8000-000000000131','totp','verified',now(),now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000131","role":"authenticated","aal":"aal1"}';
+select throws_ok($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','T-8',now(),'SEK',(select l from lines))$$,'42501',null,'MFA enforced');
+select * from finish();
+rollback;

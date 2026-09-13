@@ -723,6 +723,49 @@
       "provenance": "Provenance recorded"
     }
   },
+  "sales": {
+    "title": "Sales",
+    "intro": "A sale is a fact from the till or a POS provider. Each line freezes price, commission, seller credit and VAT as they were at that moment.",
+    "notice": "Recording a sale does not pay anyone. Seller balances, returns and payouts follow in later slices.",
+    "recordHeading": "Record a counter sale",
+    "recordHint": "One accepted, unsold item per sale for now. POS sales arrive through their own integration.",
+    "noItems": "No accepted items are available for sale.",
+    "item": "Item",
+    "price": "Sale price",
+    "priceHint": "SEK, for example 250 or 250.50.",
+    "priceInvalid": "Enter a price with up to two decimals.",
+    "confirm": "I confirm the item was sold at this price.",
+    "record": "Record sale",
+    "recorded": "The sale is recorded.",
+    "open": "Open receipt",
+    "recent": "Recent sales",
+    "empty": "No sales recorded yet.",
+    "backToList": "Back to sales",
+    "receipt": "Receipt",
+    "lines": "Lines",
+    "linesHint": "Frozen at the sale; later policy or seller terms never change these numbers.",
+    "line": "Line",
+    "commission": "Store commission",
+    "commissionVat": "VAT on commission",
+    "sellerCredit": "Seller credit",
+    "vat": "VAT",
+    "providers": {
+      "manual": "counter",
+      "zettle": "Zettle",
+      "shopify": "Shopify POS"
+    },
+    "statuses": {
+      "completed": "completed",
+      "reversed": "reversed"
+    },
+    "vatModes": {
+      "consignment_margin": "consignment, VAT on commission",
+      "consignment_full": "consignment, full VAT",
+      "consignment_business": "business seller",
+      "store_margin": "store-owned, margin scheme",
+      "store_full": "store-owned, full VAT"
+    }
+  },
   "purchases": {
     "title": "Purchases",
     "intro": "Store-owned goods enter here, never through the consignment paths.",

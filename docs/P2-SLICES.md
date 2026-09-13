@@ -172,6 +172,11 @@ Purpose: the numbered document.
 - Surface: statements tab on the seller view; seller app statement list.
   Agent tool `get statement` (read), `propose statement issue` (`low`).
 - Migration: yes.
+- Status 2026-09-13: numbered statements and credit notes computed from the
+  ledger (migration `20260914040000`), per-tenant counter, overlap refusal,
+  frozen header totals and lines, printable page and issue form on the seller
+  page. PDF rendering, asset storage, e-mail and the seller link follow with
+  S18 and the seller app.
 
 ## S17. Day close and Fortnox export
 

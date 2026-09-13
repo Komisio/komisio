@@ -9,6 +9,8 @@ import {
 } from '@/lib/engine/seller-terms'
 import { SellerTermsForm } from '@/components/intake/seller-terms-form'
 import { LedgerAdjustForm } from '@/components/intake/ledger-adjust-form'
+import { StatementForm } from '@/components/intake/statement-form'
+import { readSellerStatements } from '@/lib/engine/statements'
 import {
   readSellerBalance,
   readSellerLedger,
@@ -35,13 +37,19 @@ export default async function Seller({
     .maybeSingle()
   if (seller.error) throw new Error('Unable to read seller')
   if (!seller.data) notFound()
-  const [terms, history, balance, ledger] = await Promise.all([
+  const [terms, history, balance, ledger, statements] = await Promise.all([
     readEffectiveSellerTerms(ctx.client, tenant.id, id.data),
     readSellerTermsHistory(ctx.client, tenant.id, id.data),
     readSellerBalance(ctx.client, tenant.id, id.data),
     readSellerLedger(ctx.client, tenant.id, id.data),
+    readSellerStatements(ctx.client, tenant.id, id.data),
   ])
-  const l = all.ledger
+  const l = all.ledger,
+    st = all.statements
+  const today = new Date(),
+    monthStart = new Date(today.getFullYear(), today.getMonth(), 1)
+  const isoDay = (x: Date) =>
+    `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, '0')}-${String(x.getDate()).padStart(2, '0')}`
   const write = tenant.role !== 'readonly'
   const when = (iso: string) =>
     new Date(iso).toLocaleString(ctx.locale === 'sv' ? 'sv-SE' : 'en-GB', {
@@ -125,6 +133,35 @@ export default async function Seller({
               tenantId={tenant.id}
               sellerId={id.data}
               d={l}
+              intake={all.intake}
+            />
+          </>
+        )}
+      </section>
+      <section className="card intake-form">
+        <h2>{st.title}</h2>
+        <p>{st.intro}</p>
+        {statements.length === 0 && <p>{st.empty}</p>}
+        {statements.map((s) => (
+          <p key={s.id}>
+            <Link className="text-link" href={`/intake/statements/${s.id}`}>
+              {s.kind === 'credit_note' ? st.creditNote : st.statement}{' '}
+              {s.number}
+            </Link>{' '}
+            · {when(s.period_from)} – {when(s.period_to)} · {st.closing}{' '}
+            {formatSignedOre(s.closing_ore)} SEK
+          </p>
+        ))}
+        {write && (
+          <>
+            <h3>{st.issueHeading}</h3>
+            <p>{st.issueHint}</p>
+            <StatementForm
+              tenantId={tenant.id}
+              sellerId={id.data}
+              defaultFrom={isoDay(monthStart)}
+              defaultTo={isoDay(today)}
+              d={st}
               intake={all.intake}
             />
           </>

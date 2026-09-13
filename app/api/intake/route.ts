@@ -99,6 +99,9 @@ export async function POST(request: Request) {
           'SALE_NOT_COMPLETED',
           'LINE_ALREADY_RETURNED',
           'PARTIAL_REFUND_UNSUPPORTED',
+          'STATEMENT_NOT_FOUND',
+          'STATEMENT_ALREADY_CORRECTED',
+          'STATEMENT_PERIOD_OVERLAP',
         ].find((v) => result.error!.message.includes(v)) ?? 'REQUEST_FAILED'
       return reply(
         { error: code },
@@ -132,6 +135,8 @@ export async function POST(request: Request) {
                 'PAYOUT_DECIDED',
                 'SALE_NOT_COMPLETED',
                 'LINE_ALREADY_RETURNED',
+                'STATEMENT_ALREADY_CORRECTED',
+                'STATEMENT_PERIOD_OVERLAP',
               ].includes(code)
             ? 409
             : 400,

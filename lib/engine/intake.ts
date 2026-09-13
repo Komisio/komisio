@@ -13,6 +13,7 @@ import {
   rejectPayoutCommand,
 } from './payouts'
 import { recordReturnCommand } from './returns'
+import { issueStatementCommand } from './statements'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { saveInspectionCommand, archiveInspectionCommand } from './inspection'
@@ -30,6 +31,7 @@ export const intakeCommand = z.discriminatedUnion('action', [
   markPayoutPaidCommand,
   rejectPayoutCommand,
   recordReturnCommand,
+  issueStatementCommand,
   acceptItemCommand,
   recordSaleCommand,
   adjustSellerLedgerCommand,
@@ -166,6 +168,15 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_refund_ore: oreFromDecimal(c.refund),
         p_reason: c.reason,
         p_occurred_at: c.occurredAt ?? new Date().toISOString(),
+      })
+    case 'issueStatement':
+      return client.rpc('issue_statement', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_seller: c.sellerId,
+        p_from: c.periodFrom,
+        p_to: c.periodTo,
+        p_corrects: c.correctsId,
       })
     case 'markPayoutPaid':
       return client.rpc('mark_payout_paid', {

@@ -16,6 +16,8 @@ const scope = z.enum([
   'payouts:propose',
   'accounting:read',
   'accounting:propose',
+  'store:read',
+  'store:propose',
 ])
 export type MCPScope = z.infer<typeof scope>
 export const mcpConfig = z.strictObject({

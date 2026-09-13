@@ -384,6 +384,22 @@ export function OperationQueue({
               ).toFixed(2)}{' '}
               SEK · {o.payload.reason}
             </p>
+          ) : o.kind === 'updateStoreProfile' ? (
+            <div>
+              <p>
+                <Link className="text-link" href="/settings">
+                  {d.kinds.updateStoreProfile}
+                </Link>{' '}
+                · {o.payload.profile.address.city || '–'} ·{' '}
+                {o.payload.profile.openingHours.length} {d.openDays}
+              </p>
+              <p style={{ whiteSpace: 'pre-wrap' }}>
+                {o.payload.profile.concept}
+              </p>
+              <p style={{ whiteSpace: 'pre-wrap' }}>
+                {o.payload.profile.accepts}
+              </p>
+            </div>
           ) : (
             <>
               <p>

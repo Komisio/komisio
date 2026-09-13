@@ -58,6 +58,7 @@ export async function POST(request: Request) {
         'adjustSellerLedger',
         'registerPrinter',
         'publishAccountingMap',
+        'publishStoreProfile',
       ].includes(parsed.data.action) &&
       !['owner', 'admin'].includes(ctx.active.role)
     )
@@ -106,6 +107,7 @@ export async function POST(request: Request) {
           'PAYOUT_NOT_APPROVED',
           'PAYOUT_DECIDED',
           'PAYOUT_PENDING',
+          'PROFILE_CHANGED',
           'SALE_LINE_NOT_FOUND',
           'SALE_NOT_COMPLETED',
           'LINE_ALREADY_RETURNED',
@@ -157,6 +159,7 @@ export async function POST(request: Request) {
                 'PAYOUT_NOT_APPROVED',
                 'PAYOUT_DECIDED',
                 'PAYOUT_PENDING',
+                'PROFILE_CHANGED',
                 'PAYOUT_BELOW_THRESHOLD',
                 'SALE_NOT_COMPLETED',
                 'LINE_ALREADY_RETURNED',

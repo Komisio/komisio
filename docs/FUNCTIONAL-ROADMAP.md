@@ -335,7 +335,11 @@ the economy overview: `economy_summary` computes any period with the day
 close's sums, shown on `/intake/economy` and readable by agents through
 `komisio_read_economy_summary` (migration `20260915110000`, see
 [ECONOMY-OVERVIEW.md](ECONOMY-OVERVIEW.md)); the weekly and monthly brief
-is a rendering of that read once an agent host writes it
+is a rendering of that read once an agent host writes it; and the store
+profile: one versioned public document per store with an anonymous read by
+slug, the staged kind `updateStoreProfile` and MCP tools under `store:read`
+and `store:propose` (migration `20260915120000`, see
+[STORE-PROFILE.md](STORE-PROFILE.md))
 (migration `20260915100000`, see [SETTLEMENT.md](SETTLEMENT.md)).
 
 | Phase                                       | Theme                    | Slices                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Needs from owner                                                                                                                        |

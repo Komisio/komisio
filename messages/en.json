@@ -364,6 +364,7 @@
     "aiReviewNotice": "Check every fact, the price and the terms. The confirmation below means you as staff have reviewed the suggestion. The seller responds separately.",
     "aiIncomplete": "This suggestion cannot be shared yet. Use the manual path to complete or correct the evidence; outstanding questions must be resolved first.",
     "aiLimit": "Store limit reached: ten attempts in 24 hours and at least 20 seconds between attempts.",
+    "aiQuota": "The store's monthly assistance quota is used up. An owner can raise it under settings.",
     "aiFailed": "No usable AI suggestion was received. Evidence may have changed. Reload to check the reception; a new run counts as a new attempt.",
     "aiTransient": "The suggestion is saved only when you explicitly publish a reviewed version. Reloading loses an unsaved suggestion. Failed or interrupted runs also count toward the limit.",
     "aiFields": {
@@ -646,6 +647,8 @@
     "assistance": "Built-in assistance",
     "assistanceIntro": "Lets staff ask the built-in assistant for source-bound proposals during reception. Proposals are never published, approved or priced without a person. The service provider and model are set by Komisio; if the service is switched off server-side, this setting has no effect.",
     "assistanceEnabled": "Enable built-in assistance for this store",
+    "assistanceMonthlyQuota": "Monthly assistance quota",
+    "assistanceQuotaHint": "Attempts per calendar month. Empty means no quota; 0 blocks assistance. The 24-hour limit still applies.",
     "vat": "VAT treatment",
     "vatIntro": "Which VAT treatment applies is the store's decision, made together with its accountant. Komisio computes the selected mode exactly per sale line and records mode, basis and amount; it does not judge whether the choice is correct for your store. No sale can be recorded until both modes are chosen.",
     "vatModeConsignmentPrivate": "Consignment goods from private sellers",
@@ -973,6 +976,18 @@
     "hint": "For example K-12 for a bag or G-7 for a garment.",
     "open": "Open",
     "notFound": "Nothing in this store carries the reference {ref}."
+  },
+  "usage": {
+    "title": "Usage this month",
+    "intro": "Units counted by the engine per calendar month in the store's time zone. Quotas are set in the store policy.",
+    "period": "Period",
+    "quota": "quota",
+    "noQuota": "no quota",
+    "features": {
+      "reception_assistance": "Assistance attempts",
+      "seller_email": "Seller e-mails",
+      "print_job": "Print jobs"
+    }
   },
   "printing": {
     "title": "Printers and labels",

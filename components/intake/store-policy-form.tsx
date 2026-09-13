@@ -75,6 +75,10 @@ export function StorePolicyForm({
             ),
             vatRatePercent: rate === '' ? undefined : Number(rate),
             assistanceEnabled: f.get('assistanceEnabled') === 'on',
+            assistanceMonthlyQuota:
+              String(f.get('assistanceMonthlyQuota') ?? '') === ''
+                ? undefined
+                : Number(f.get('assistanceMonthlyQuota')),
             ...Object.fromEntries(
               Object.keys(choices).map((key) => [key, f.get(key)]),
             ),
@@ -270,6 +274,22 @@ export function StorePolicyForm({
               />
               {t.assistanceEnabled}
             </label>
+            <div className="field">
+              <label htmlFor="assistanceMonthlyQuota">
+                {t.assistanceMonthlyQuota}
+              </label>
+              <input
+                id="assistanceMonthlyQuota"
+                name="assistanceMonthlyQuota"
+                type="number"
+                inputMode="numeric"
+                min={0}
+                max={1000000}
+                step={1}
+                defaultValue={base.policy.assistanceMonthlyQuota ?? ''}
+              />
+              <small>{t.assistanceQuotaHint}</small>
+            </div>
           </fieldset>
           {editable && (
             <label className="intake-confirm">

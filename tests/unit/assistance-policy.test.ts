@@ -31,6 +31,22 @@ it('accepts assistanceEnabled as an optional boolean policy key', () => {
       }).success,
     ).toBe(false)
 })
+it('accepts assistanceMonthlyQuota as an optional non-negative integer', () => {
+  expect(
+    storePolicyBody.parse({
+      ...defaultStorePolicy(),
+      assistanceMonthlyQuota: 0,
+    }).assistanceMonthlyQuota,
+  ).toBe(0)
+  expect('assistanceMonthlyQuota' in defaultStorePolicy()).toBe(false)
+  for (const value of [-1, 2.5, '10', null, 1_000_001])
+    expect(
+      storePolicyBody.safeParse({
+        ...defaultStorePolicy(),
+        assistanceMonthlyQuota: value,
+      }).success,
+    ).toBe(false)
+})
 it('enables assistance from the policy without an environment allowlist', () => {
   expect(receptionAIConfig(tenant, env, { assistanceEnabled: true })).toEqual({
     key: env.KOMISIO_RECEPTION_AI_KEY,

@@ -495,7 +495,22 @@
       }
     },
     "confirmFact": "Jag har granskat uppgiften och dess källor",
-    "confirmPrice": "Jag har granskat priset och prisunderlaget."
+    "confirmPrice": "Jag har granskat priset och prisunderlaget.",
+    "batch": {
+      "mode": "Bildserien innehåller",
+      "single": "Ett plagg",
+      "multiple": "Flera plagg",
+      "notice": "Flera plagg från samma säljare, högst tre bilder och åtta förslag. Granska bildkopplingen för varje plagg, även om samma bild visar flera. Ofullständiga förslag kräver mer underlag. Ej sparade förslag försvinner när sidan laddas om.",
+      "garment": "Plagg",
+      "dismissed": "Förslaget är bortvalt i denna granskning.",
+      "restore": "Visa förslaget igen",
+      "dismiss": "Välj bort",
+      "confirm": "Jag har granskat detta plaggs uppgifter, prisunderlag och kopplade bilder.",
+      "stage": "Lägg i godkännandekön",
+      "staged": "Separat mottagning och granskningsärende har sparats. Plagget är inte accepterat för försäljning.",
+      "openOperation": "Öppna granskningsärendet",
+      "failed": "Förberedelsen kunde inte bekräftas. Försök igen med samma rad; sparade steg återanvänds. Om underlaget ändrats, kontrollera mottagningskön innan du börjar om."
+    }
   },
   "operations": {
     "title": "Föreslagna åtgärder",

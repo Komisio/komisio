@@ -1,3 +1,17 @@
+## Astra task 3 checkpoint — 2026-09-13
+
+PR88 seller economy and PR89 P2 browser journeys are merged and deployed; PR89
+required CI34744170123 passed on6e483b8, merge19d74bf, Vercel6418759287 success.
+Batch work is in `astra/batch-reception`, worktree `komisio-batch`, from that main.
+Contract/status: [BATCH-RECEPTION.md](BATCH-RECEPTION.md). No new core table or
+SQL authority. Migration20260915003000 admits only the batch prompt and has been
+applied locally; do not edit it. Release evidence belongs in the task PR.
+Local validation:205 unit tests,1206 pgTAP assertions, production build, lint
+and typecheck passed. The dedicated HTTP fixture covers both single and batch
+reception, including two rows, partial/concurrent retries and explicit approval.
+Continue with exact-head CI, scoped PR and protected merge before staging.
+Tasks4-6 remain per ASTRA-NEXT-TASKS.md; no live POS or paid AI enabled.
+
 # Development handover
 
 ## Astra tasks checkpoint, 2026-09-13

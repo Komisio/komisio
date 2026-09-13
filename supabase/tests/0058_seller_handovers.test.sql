@@ -51,9 +51,9 @@ select throws_like($$select receive_handover(current_setting('test.tenant')::uui
 select set_config('test.r1',gen_random_uuid()::text,true);
 select is(receive_handover(current_setting('test.tenant')::uuid,current_setting('test.r1')::uuid,current_setting('test.h1')::uuid,'staff_receipt','Scanned at the counter'),current_setting('test.r1')::uuid,'received by staff');
 select is((select status||'|'||custody_source from seller_handovers where id=current_setting('test.h1')::uuid),'received|staff_receipt','status and custody source recorded');
-select is((select seller_id from bag_receipts where id=md5(current_setting('test.h1')||':received')::uuid),current_setting('test.seller')::uuid,'a bag receipt for the seller exists with the derived id');
-select is((select agreement_evidence_id is not null from bag_receipts where id=md5(current_setting('test.h1')||':received')::uuid),true,'the bag receipt carries the agreement evidence');
-select is((select note from bag_receipts where id=md5(current_setting('test.h1')||':received')::uuid),'Scanned at the counter','the note is the bag note');
+select is((select seller_id from bag_receipts where id=overlay(overlay(md5(current_setting('test.h1')||':received') placing '5' from 13) placing '8' from 17)::uuid),current_setting('test.seller')::uuid,'a bag receipt for the seller exists with the derived id');
+select is((select agreement_evidence_id is not null from bag_receipts where id=overlay(overlay(md5(current_setting('test.h1')||':received') placing '5' from 13) placing '8' from 17)::uuid),true,'the bag receipt carries the agreement evidence');
+select is((select note from bag_receipts where id=overlay(overlay(md5(current_setting('test.h1')||':received') placing '5' from 13) placing '8' from 17)::uuid),'Scanned at the counter','the note is the bag note');
 select is(receive_handover(current_setting('test.tenant')::uuid,current_setting('test.r1')::uuid,current_setting('test.h1')::uuid,'staff_receipt','Scanned at the counter'),current_setting('test.r1')::uuid,'receive replays');
 select throws_like($$select receive_handover(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.h1')::uuid,'staff_receipt','')$$,'%HANDOVER_DECIDED%','cannot receive twice');
 select is((select count(*) from bag_receipts where tenant_id=current_setting('test.tenant')::uuid),1::bigint,'exactly one bag receipt');

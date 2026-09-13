@@ -40,16 +40,18 @@ it('maps executed staged operations to their notifications', () => {
 })
 
 it('derives settlement payout ids exactly as the engine does', () => {
-  // md5('<batch>:<seller>') as Postgres casts it: 32 hex digits in 8-4-4-4-12.
+  // derived_id('<batch>:<seller>'): md5 hex in 8-4-4-4-12 with version 5 and variant 8.
   const batch = '22222222-2222-4222-8222-222222222222'
   const ids = settlementPayoutIds(batch, [{ sellerId: item }])
   expect(ids).toEqual([
     createHash('md5')
       .update(`${batch}:${item}`)
       .digest('hex')
-      .replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, '$1-$2-$3-$4-$5'),
+      .replace(/^(.{8})(.{4}).(.{3}).(.{3})(.{12})$/, '$1-$2-5$3-8$4-$5'),
   ])
-  expect(ids[0]).toMatch(/^[0-9a-f-]{36}$/)
+  expect(ids[0]).toMatch(
+    /^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-8[0-9a-f]{3}-[0-9a-f]{12}$/,
+  )
   expect(
     settlementPayoutIds(batch, [{ sellerId: item.toUpperCase() }]),
   ).toEqual(ids)

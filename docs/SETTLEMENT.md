@@ -15,8 +15,8 @@ the store to pay through its bank and record the reference.
 | `payout_events`  | A `requested` and an `approved` event per payout, the approval carrying the batch note          | Append-only |
 
 Payout and event ids derive from the batch id and the seller id
-(`md5(batch:seller)` cast to uuid, and `md5(batch:seller:approved)` for the
-approval event), so a batch that is replayed finds its own rows, and the
+(`komisio_private.derived_id('batch:seller')`, md5 bytes in RFC 4122 shape,
+and `derived_id('batch:seller:approved')` for the approval event), so a batch that is replayed finds its own rows, and the
 application can name the payouts a batch created without reading them back.
 
 ## Rules enforced in SQL

@@ -222,7 +222,7 @@ export async function notificationsForIntake(
 
 /**
  * Payout ids a settlement batch creates: the engine derives each as
- * md5(batch id ':' seller id) cast to uuid, so the same bytes here.
+ * derived_id(batch id ':' seller id): md5 bytes in RFC shape, so the same here.
  */
 export function settlementPayoutIds(batchId: string, sellers: unknown) {
   const list = z
@@ -231,10 +231,11 @@ export function settlementPayoutIds(batchId: string, sellers: unknown) {
     .safeParse(sellers)
   if (!list.success) return []
   return list.data.map((s) => {
+    // komisio_private.derived_id: md5 bytes with version nibble 5 and variant 8.
     const hex = createHash('md5')
       .update(`${batchId.toLowerCase()}:${s.sellerId.toLowerCase()}`)
       .digest('hex')
-    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-5${hex.slice(13, 16)}-8${hex.slice(17, 20)}-${hex.slice(20, 32)}`
   })
 }
 

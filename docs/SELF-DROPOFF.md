@@ -14,7 +14,8 @@ core table on 2026-09-13.
 | `seller_handovers` | One announcement: seller, kind, estimated items, note, reference; status open, received or cancelled      | Announcement immutable; status engine-only |
 | `handover_events`  | Created, received (with the note and custody source) or cancelled, with the actor                          | Append-only                         |
 
-The received bag's id derives from the handover id (`md5(handover:received)`),
+The received bag's id derives from the handover id
+(`komisio_private.derived_id('handover:received')`, md5 bytes in RFC shape),
 so a replayed receipt finds its bag and the seller's list can show `K-n`.
 
 ## Rules enforced in SQL

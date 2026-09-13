@@ -52,3 +52,14 @@ Local command: set `KOMISIO_INTAKE_ENABLED=true`, configure local Supabase and r
 No real API key is needed for automated tests. Never use the pilot credentials in
 CI or fixtures. No migration is required. If necessary, remove the pilot tenant
 variable and redeploy to disable diagnostics; no financial rollback is involved.
+
+## Missing check button
+
+The button is present only when the deployed server configuration is ready.
+Client IDs are opaque strings (not necessarily UUIDs); surrounding pasted
+whitespace is removed from the four environment values before both validation
+and transport. The tenant UUID must still match exactly. Owners/admins see
+fixed missing-client, missing-key or invalid-merchant messages only after that
+tenant match; other stores receive the generic unavailable message. No values
+are sent to the client. Save Production variables and redeploy: merely editing
+Vercel settings does not update an existing deployment.

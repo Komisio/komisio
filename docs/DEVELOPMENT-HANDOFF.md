@@ -1,3 +1,16 @@
+## Zettle missing-button diagnosis, 2026-09-13
+
+PR94 is merged and deployed. The owner sees the generic unavailable message.
+All three variable names exist in Vercel Production; their values were not read.
+The initial readiness predicate incorrectly required a UUID client ID and did
+not normalize pasted whitespace. Branch `astra/zettle-config-diagnostic` removes
+that unsupported format assumption, normalizes configuration consistently and
+adds safe owner/admin reason messages. The deployed cause remains unconfirmed
+until the authenticated pilot page is rechecked; do not claim that real credentials
+have worked. Tenant matching, SQL role/MFA and merchant pin remain enforced.
+No migration, data correction or synchronization activation. Exact CI/deployment
+evidence belongs in the PR and private release checkpoint.
+
 ## API-key connection checkpoint, 2026-09-13
 
 The owner saved a Zettle clientId/API key in Vercel and chose **Preloved Teststore**

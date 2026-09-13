@@ -17,8 +17,14 @@ test('Zettle product export, price update, checkout, automatic credit and concur
     await page.goto('/intake/integrations')
     await expect(page.getByText(d.zettle.fixture)).toBeVisible()
     await expect(
-      page.getByText(d.zettle.connectionUnavailable, { exact: true }),
+      page.getByText(d.zettle.connectionTenantMissing, { exact: true }),
     ).toBeVisible()
+    await expect(
+      page.getByText(d.zettle.connectionConfigHint, { exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: d.zettle.checkConnection, exact: true }),
+    ).toHaveCount(0)
     const connectionPath = '/api/integrations/zettle/connection'
     const connectionHeaders = { origin: 'http://127.0.0.1:3000' }
     const unavailable = await page.request.post(connectionPath, {

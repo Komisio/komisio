@@ -2,6 +2,7 @@ import { expect, it, vi } from 'vitest'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   pilotAvailable,
+  pilotIssue,
   verifyPilotConnection,
 } from '../../extensions/zettle/auth'
 import { checkZettleConnection } from '../../lib/engine/zettle-connection'
@@ -77,7 +78,10 @@ it('has no fallback for a different tenant', async () => {
 it.each([
   { ZETTLE_API_KEY: '' },
   { ZETTLE_PILOT_TENANT_ID: undefined },
-  { ZETTLE_CLIENT_ID: 'invalid' },
+  { ZETTLE_CLIENT_ID: ' ' },
+  { ZETTLE_CLIENT_ID: 'invalid\nclient' },
+  { ZETTLE_CLIENT_ID: 'x'.repeat(4097) },
+  { ZETTLE_MERCHANT_ID: 'invalid' },
 ])('fails closed on missing/invalid configuration %j', async (patch) => {
   const http = ready()
   await expect(
@@ -162,4 +166,39 @@ it('allows an identified owner through the engine', async () => {
       ready(),
     ),
   ).resolves.toMatchObject({ organizationId: merchant })
+})
+
+it('accepts an opaque client ID and trims pasted configuration consistently', async () => {
+  const http = ready()
+  const supplied = {
+    ZETTLE_PILOT_TENANT_ID: ` ${tenant}\n`,
+    ZETTLE_CLIENT_ID: ' opaque-client-id\n',
+    ZETTLE_API_KEY: ` ${env.ZETTLE_API_KEY}\n`,
+    ZETTLE_MERCHANT_ID: ` ${merchant}\n`,
+  }
+  expect(pilotAvailable(tenant, supplied)).toBe(true)
+  await expect(
+    verifyPilotConnection(tenant, supplied, http),
+  ).resolves.toMatchObject({ merchantPinned: true })
+  const form = new URLSearchParams(String(http.mock.calls[0][1]?.body))
+  expect(form.get('client_id')).toBe('opaque-client-id')
+  expect(form.get('assertion')).toBe(env.ZETTLE_API_KEY)
+})
+it('returns only safe reason codes and hides credential configuration for other stores', () => {
+  expect(pilotIssue(tenant, env)).toBeNull()
+  expect(pilotIssue(tenant, {})).toBe('connectionTenantMissing')
+  expect(pilotIssue(tenant, { ...env, ZETTLE_CLIENT_ID: '' })).toBe(
+    'connectionClientMissing',
+  )
+  expect(pilotIssue(tenant, { ...env, ZETTLE_API_KEY: '' })).toBe(
+    'connectionKeyMissing',
+  )
+  expect(pilotIssue(tenant, { ...env, ZETTLE_MERCHANT_ID: 'invalid' })).toBe(
+    'connectionMerchantInvalid',
+  )
+  for (const patch of [{}, { ZETTLE_CLIENT_ID: '' }, { ZETTLE_API_KEY: '' }]) {
+    expect(pilotIssue(merchant, { ...env, ...patch })).toBe(
+      'connectionUnavailable',
+    )
+  }
 })

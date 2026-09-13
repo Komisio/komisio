@@ -58,6 +58,7 @@ import {
   settlementCandidatesInput,
   listSettlementCandidatesTool,
 } from './settlement'
+import { economySummaryInput, readEconomySummaryTool } from './economy'
 import {
   dayCloseListInput,
   dayClosePreviewInput,
@@ -336,6 +337,19 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           })),
       )
     }
+    server.registerTool(
+      'komisio_read_economy_summary',
+      {
+        description:
+          "Read the store's totals for a period of at most one year (inclusive local dates, Europe/Stockholm): sales, gross, VAT, net, commission, seller credit, returns and refunds, paid payouts, per VAT mode and per day, plus the current liability to sellers and open payouts. Same sums as the day close; amounts are öre. Read only; no seller names, no writes.",
+        inputSchema: economySummaryInput,
+        annotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await readEconomySummaryTool(client, config, input),
+        })),
+    )
   }
   if (config.scopes.includes('items:propose'))
     server.registerTool(

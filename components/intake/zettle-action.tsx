@@ -44,6 +44,9 @@ export function ZettleAction({
       if (!r.ok) {
         setError(
           ((d.errors as Record<string, string>)[body.error] ?? d.failed) +
+            (Number.isInteger(body.httpStatus)
+              ? ` HTTP ${body.httpStatus}.`
+              : '') +
             (Array.isArray(body.fields) && body.fields.length
               ? ` (${d.responseFields}: ${body.fields.join(', ')})`
               : ''),

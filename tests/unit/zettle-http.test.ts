@@ -49,16 +49,16 @@ it('creates one product using current official paths and preserves identity on r
   expect(http.mock.calls.map((c) => [c[0], c[1]?.method])).toEqual([
     ['https://oauth.zettle.com/users/self', 'GET'],
     [
-      `https://products.izettle.com/organizations/self/products/${product.uuid}`,
+      `https://products.izettle.com/organizations/${org}/products/${product.uuid}`,
       'GET',
     ],
-    ['https://products.izettle.com/organizations/self/products', 'POST'],
+    [`https://products.izettle.com/organizations/${org}/products`, 'POST'],
     [
-      `https://products.izettle.com/organizations/self/products/${product.uuid}`,
+      `https://products.izettle.com/organizations/${org}/products/${product.uuid}`,
       'GET',
     ],
     [
-      `https://products.izettle.com/organizations/self/products/${product.uuid}`,
+      `https://products.izettle.com/organizations/${org}/products/${product.uuid}`,
       'GET',
     ],
   ])
@@ -83,7 +83,7 @@ it('updates only frozen previous state with quoted If-Match; retry observes desi
   await client.putProduct(next, product)
   await client.putProduct(next, product)
   expect(http.mock.calls[2][0]).toBe(
-    `https://products.izettle.com/organizations/self/products/v2/${product.uuid}`,
+    `https://products.izettle.com/organizations/${org}/products/v2/${product.uuid}`,
   )
   expect(http.mock.calls[2][1]).toMatchObject({
     method: 'PUT',
@@ -244,4 +244,29 @@ it('unsupported fields expose only known schema names, never values or unknown n
     expect(JSON.stringify(e)).not.toContain('sensitive')
     expect(JSON.stringify(e)).not.toContain('secret-shaped-name')
   }
+})
+
+it('reports rejected read status without exposing the provider message', async () => {
+  const { client, http } = setup([
+    json({ organizationUuid: org }),
+    json(
+      { message: 'Invalid organization UUID; sensitive-provider-detail' },
+      400,
+    ),
+  ])
+  try {
+    await client.putProduct(product, null)
+    expect.unreachable()
+  } catch (e) {
+    expect(e).toMatchObject({
+      message: 'ZETTLE_READ_FAILED',
+      httpStatus: 400,
+      hints: ['uuid', 'organization'],
+    })
+    expect(JSON.stringify(e)).not.toContain('sensitive-provider-detail')
+  }
+  expect(http).toHaveBeenCalledTimes(2)
+  expect(String(http.mock.calls[1][0])).toContain(
+    `/organizations/${org}/products/`,
+  )
 })

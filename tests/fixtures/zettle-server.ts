@@ -112,7 +112,7 @@ const server = createServer(async (req, res) => {
           : { purchases: [] },
       )
     }
-    const prefix = '/products.izettle.com/organizations/self/products'
+    const prefix = `/products.izettle.com/organizations/${org}/products`
     if (req.method === 'POST' && url.pathname === prefix) {
       const p = body as Product
       if (

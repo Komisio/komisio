@@ -11,6 +11,7 @@ It exposes narrow tools through the same intake engine:
 | komisio_propose_inspection_edit      | inspection:propose     | Stage a complete descriptive edit against an exact saved revision; staff approval required                 |
 | komisio_read_seller_balance          | economy:read           | Engine-computed balance for one seller, in ore; no writes                                                  |
 | komisio_read_seller_ledger           | economy:read           | At most 50 recent events, without private reasons or contacts                                              |
+| komisio_read_economy_summary         | economy:read           | Store totals for a period of at most one year, per VAT mode and day, liability and open payouts; no writes |
 | komisio_propose_acceptance           | items:propose          | Stage commercial acceptance of one origin at an öre price; a different person than the proposer approves   |
 | komisio_propose_return               | sales:propose          | Stage a full refund of one completed sale line with a reason; a different person approves                  |
 | komisio_propose_ledger_adjustment    | ledger:propose         | Stage a signed seller ledger adjustment with a reason; executes only for an owner or admin approver        |

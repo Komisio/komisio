@@ -14,10 +14,35 @@ export async function testSellerEconomyMCP({ connect, rpc, db, uid }) {
     p_phone: '',
   })
   const client = await connect('economy:read', undefined, tenant)
-  assert.deepEqual(
-    (await client.listTools()).tools.map((t) => t.name),
-    ['komisio_read_seller_balance', 'komisio_read_seller_ledger'],
-  )
+  assert.deepEqual((await client.listTools()).tools.map((t) => t.name).sort(), [
+    'komisio_read_economy_summary',
+    'komisio_read_seller_balance',
+    'komisio_read_seller_ledger',
+  ])
+  // Store summary: an empty store reports zeros for the period; the seller name never appears; bad periods are refused.
+  const summary = await client.callTool({
+    name: 'komisio_read_economy_summary',
+    arguments: { from: '2026-09-01', to: '2026-09-30' },
+  })
+  assert(!summary.isError, JSON.stringify(summary.content))
+  assert.equal(summary.structuredContent.totals.salesCount, 0)
+  assert.equal(summary.structuredContent.liability.owedOre, 0)
+  assert.equal(summary.structuredContent.amountUnit, 'ore')
+  assert(!JSON.stringify(summary.content).includes('PRIVATE SELLER'))
+  for (const args of [
+    { from: '2026-09-30', to: '2026-09-01' },
+    { from: '2025-01-01', to: '2026-09-01' },
+    { from: '2026-09-01', to: '2026-09-30', sellerId: seller },
+  ])
+    assert(
+      (
+        await client.callTool({
+          name: 'komisio_read_economy_summary',
+          arguments: args,
+        })
+      ).isError,
+      JSON.stringify(args),
+    )
   const balance = () =>
     client.callTool({
       name: 'komisio_read_seller_balance',

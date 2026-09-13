@@ -77,6 +77,7 @@ export function StorePolicyForm({
             assistanceEnabled: f.get('assistanceEnabled') === 'on',
             automaticSellerNotifications:
               f.get('automaticSellerNotifications') === 'on',
+            automaticMarkdowns: f.get('automaticMarkdowns') === 'on',
             assistanceMonthlyQuota:
               String(f.get('assistanceMonthlyQuota') ?? '') === ''
                 ? undefined
@@ -305,6 +306,18 @@ export function StorePolicyForm({
                 }
               />
               {t.automaticSellerNotifications}
+            </label>
+          </fieldset>
+          <fieldset>
+            <legend>{t.markdowns}</legend>
+            <p>{t.markdownsIntro}</p>
+            <label className="intake-confirm">
+              <input
+                type="checkbox"
+                name="automaticMarkdowns"
+                defaultChecked={base.policy.automaticMarkdowns === true}
+              />
+              {t.automaticMarkdowns}
             </label>
           </fieldset>
           {editable && (

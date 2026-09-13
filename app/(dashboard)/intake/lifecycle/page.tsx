@@ -2,7 +2,13 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
-import { readLifecycleQueue, lifecycleStage } from '@/lib/engine/lifecycle'
+import {
+  readLifecycleQueue,
+  readMarkdownRuns,
+  lifecycleStage,
+} from '@/lib/engine/lifecycle'
+import { readStorePolicy } from '@/lib/engine/store-policy'
+import { ApplyDueMarkdowns } from '@/components/intake/apply-due-markdowns'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { LifecycleActions } from '@/components/intake/lifecycle-actions'
 
@@ -18,11 +24,16 @@ export default async function Lifecycle({
     d = all.lifecycle
   const p = await searchParams
   const stage = lifecycleStage.safeParse(p.stage)
-  const rows = await readLifecycleQueue(
-    ctx.client,
-    active.id,
-    stage.success ? stage.data : undefined,
-  )
+  const [rows, runs, policy] = await Promise.all([
+    readLifecycleQueue(
+      ctx.client,
+      active.id,
+      stage.success ? stage.data : undefined,
+    ),
+    readMarkdownRuns(ctx.client, active.id),
+    readStorePolicy(ctx.client, active.id),
+  ])
+  const dueCount = rows.filter((r) => r.stage === 'markdown_due').length
   const write = active.role !== 'readonly'
   const when = (iso: string) =>
     new Date(iso).toLocaleDateString(ctx.locale === 'sv' ? 'sv-SE' : 'en-GB', {
@@ -39,6 +50,31 @@ export default async function Lifecycle({
         </Link>
       </div>
       <p className="intake-notice">{d.notice}</p>
+      <section className="card intake-form" aria-label={d.agentHeading}>
+        <h2>{d.agentHeading}</h2>
+        <p>
+          {policy.policy.automaticMarkdowns === true ? d.agentOn : d.agentOff}
+        </p>
+        {write && (
+          <ApplyDueMarkdowns
+            key={`${active.id}-${dueCount}`}
+            tenantId={active.id}
+            dueCount={dueCount}
+            d={d}
+            intake={all.intake}
+          />
+        )}
+        {runs.length > 0 && (
+          <ul>
+            {runs.map((run) => (
+              <li key={run.id}>
+                {when(run.created_at)} · {d.modes[run.mode]} ·{' '}
+                {run.applied_count} {d.applied}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
       <form action="/intake/lifecycle">
         <label htmlFor="lifecycle-stage">{d.filter}</label>
         <select

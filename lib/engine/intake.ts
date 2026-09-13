@@ -18,6 +18,7 @@ import { issueStatementCommand } from './statements'
 import { generateDayCloseCommand } from './day-closes'
 import {
   applyMarkdownCommand,
+  applyDueMarkdownsCommand,
   extendSalePeriodCommand,
   endSalePeriodCommand,
   setItemPriceCommand,
@@ -50,6 +51,7 @@ export const intakeCommand = z.discriminatedUnion('action', [
   issueStatementCommand,
   generateDayCloseCommand,
   applyMarkdownCommand,
+  applyDueMarkdownsCommand,
   extendSalePeriodCommand,
   endSalePeriodCommand,
   setItemPriceCommand,
@@ -256,6 +258,11 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_item: c.itemId,
         p_price_ore: c.priceOre,
         p_reason: c.reason,
+      })
+    case 'applyDueMarkdowns':
+      return client.rpc('apply_due_markdowns', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
       })
     case 'applyMarkdown':
       return client.rpc('apply_markdown', {

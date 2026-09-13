@@ -5,6 +5,42 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 // derived work list; three staff operations become events. Nothing runs by
 // itself. Boundary validation only.
 const ids = { tenantId: z.uuid(), requestId: z.uuid(), itemId: z.uuid() }
+// Every due step in the store in one run (P3 markdown agent), as the caller.
+export const applyDueMarkdownsCommand = z.strictObject({
+  action: z.literal('applyDueMarkdowns'),
+  tenantId: z.uuid(),
+  requestId: z.uuid(),
+})
+const runOre = z.union([z.number().int(), z.string()]).transform(Number)
+const markdownRun = z.object({
+  id: z.uuid(),
+  mode: z.enum(['manual', 'automatic']),
+  applied_count: z.number().int(),
+  applied: z.array(
+    z.object({
+      itemId: z.uuid(),
+      step: z.number().int(),
+      percent: z.union([z.number(), z.string()]).transform(Number),
+      priceOre: runOre,
+    }),
+  ),
+  created_at: z.iso.datetime({ offset: true }),
+})
+export type MarkdownRun = z.infer<typeof markdownRun>
+/** Newest 20 runs, manual and automatic. RLS scopes the read. */
+export async function readMarkdownRuns(
+  client: SupabaseClient,
+  tenantInput: string,
+) {
+  const { data, error } = await client
+    .from('markdown_runs')
+    .select('id,mode,applied_count,applied,created_at')
+    .eq('tenant_id', z.uuid().parse(tenantInput))
+    .order('created_at', { ascending: false })
+    .limit(20)
+  if (error) throw new Error('Unable to read markdown runs')
+  return z.array(markdownRun).parse(data)
+}
 export const applyMarkdownCommand = z.strictObject({
   action: z.literal('applyMarkdown'),
   ...ids,

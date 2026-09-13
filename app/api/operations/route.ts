@@ -6,6 +6,12 @@ import {
   decideOperation,
   operationErrorCode,
 } from '@/lib/engine/operations'
+import { readStorePolicy } from '@/lib/engine/store-policy'
+import {
+  notifyAfterFacts,
+  notificationForOperation,
+  type NotifyOutcome,
+} from '@/lib/communications/dispatch'
 export async function POST(request: Request) {
   const reply = (body: object, status = 200) =>
     NextResponse.json(body, {
@@ -44,7 +50,51 @@ export async function POST(request: Request) {
             : 409,
       )
     }
-    return reply({ id: result.data })
+    // Automatic seller notifications (S18) after an executed approval, when
+    // the store opted in. Never affects the recorded decision.
+    let notifications: NotifyOutcome[] = []
+    if (c.data.decision === 'approve') {
+      try {
+        const [operation, decision] = await Promise.all([
+          ctx.client
+            .from('pending_operations')
+            .select('kind,payload')
+            .eq('tenant_id', c.data.tenantId)
+            .eq('id', c.data.operationId)
+            .maybeSingle(),
+          ctx.client
+            .from('operation_decisions')
+            .select('outcome')
+            .eq('tenant_id', c.data.tenantId)
+            .eq('id', c.data.requestId)
+            .maybeSingle(),
+        ])
+        const fact =
+          decision.data?.outcome === 'executed' && operation.data
+            ? notificationForOperation(
+                String(operation.data.kind),
+                c.data.operationId,
+                operation.data.payload,
+              )
+            : null
+        if (fact) {
+          const policy = await readStorePolicy(ctx.client, c.data.tenantId)
+          notifications = await notifyAfterFacts(
+            ctx.client,
+            {
+              tenantId: c.data.tenantId,
+              storeName: ctx.active.name,
+              locale: ctx.locale,
+              policy: policy.policy,
+            },
+            [fact],
+          )
+        }
+      } catch {
+        console.error('Notification after decision failed')
+      }
+    }
+    return reply({ id: result.data, notifications })
   } catch {
     return reply({ error: 'REQUEST_FAILED' }, 500)
   }

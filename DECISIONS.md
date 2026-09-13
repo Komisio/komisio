@@ -252,3 +252,5 @@ persistence, authorization, financial rule or migration.
 [2026-09-13] Usage is metered by triggers on the fact tables, not by callers: a stored assistance attempt, a queued seller e-mail and a queued print job each write one immutable unit for the store month in Europe/Stockholm. The only quota is the monthly assistance quota in the store policy, checked before the attempt is stored; other features are counted only. Komisio reports usage, it does not bill from this table.
 
 [2026-09-13] A bulk operation is one proposal over many items, not many proposals: the set is refused whole if any item is sold or ended, applied all or nothing under one approval by a second person, and every item still gets its own event through the ordinary single-item command. Reprint is not staged because printing changes no fact.
+
+[2026-09-13] Seller notifications are automatic only when the store opts in, and an automatic message is nothing new: the same logged, template-bound communication a person could send, with an id derived from the fact so one fact notifies once, sent after the fact is committed so a failed e-mail never hides a sale, a payout or a statement.

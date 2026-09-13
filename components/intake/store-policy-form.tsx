@@ -75,6 +75,8 @@ export function StorePolicyForm({
             ),
             vatRatePercent: rate === '' ? undefined : Number(rate),
             assistanceEnabled: f.get('assistanceEnabled') === 'on',
+            automaticSellerNotifications:
+              f.get('automaticSellerNotifications') === 'on',
             assistanceMonthlyQuota:
               String(f.get('assistanceMonthlyQuota') ?? '') === ''
                 ? undefined
@@ -290,6 +292,20 @@ export function StorePolicyForm({
               />
               <small>{t.assistanceQuotaHint}</small>
             </div>
+          </fieldset>
+          <fieldset>
+            <legend>{t.notifications}</legend>
+            <p>{t.notificationsIntro}</p>
+            <label className="intake-confirm">
+              <input
+                type="checkbox"
+                name="automaticSellerNotifications"
+                defaultChecked={
+                  base.policy.automaticSellerNotifications === true
+                }
+              />
+              {t.automaticSellerNotifications}
+            </label>
           </fieldset>
           {editable && (
             <label className="intake-confirm">

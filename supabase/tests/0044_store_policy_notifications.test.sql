@@ -1,0 +1,16 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values ('f0000000-0000-4000-8000-000000000271','notify-owner@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000271","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Notify policy test','notify-policy-test',gen_random_uuid())::text,true);
+select set_config('test.body',(current_store_policy(current_setting('test.tenant')::uuid)->'policy')::text,true);
+select ok(not(current_setting('test.body')::jsonb ? 'automaticSellerNotifications'),'defaults do not switch notifications on');
+select set_config('test.id',gen_random_uuid()::text,true);
+select lives_ok($$select publish_store_policy(current_setting('test.tenant')::uuid,current_setting('test.id')::uuid,null,current_setting('test.body')::jsonb || '{"automaticSellerNotifications":true}')$$,'tenant opts in');
+select is(current_store_policy(current_setting('test.tenant')::uuid)->'policy'->>'automaticSellerNotifications','true','opt-in is read back');
+select throws_like($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id')::uuid,current_setting('test.body')::jsonb || '{"automaticSellerNotifications":"yes"}')$$,'%INVALID_INPUT%','text flag rejected');
+select lives_ok($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id')::uuid,current_setting('test.body')::jsonb || '{"automaticSellerNotifications":false,"assistanceEnabled":true,"assistanceMonthlyQuota":5,"vatRatePercent":25}')$$,'flag coexists with the other optional keys');
+select * from finish();
+rollback;

@@ -43,6 +43,7 @@ const payoutRow = z.object({
   amount_ore: ore,
   status: payoutStatus,
   rail: z.literal('manual'),
+  request_source: z.enum(['staff', 'seller']),
   requested_at: z.iso.datetime({ offset: true }),
   approved_at: z.iso.datetime({ offset: true }).nullable(),
   paid_at: z.iso.datetime({ offset: true }).nullable(),
@@ -58,7 +59,7 @@ const eventRow = z.object({
   occurred_at: z.iso.datetime({ offset: true }),
 })
 const columns =
-  'id,seller_id,amount_ore,status,rail,requested_at,approved_at,paid_at,payment_reference'
+  'id,seller_id,amount_ore,status,rail,request_source,requested_at,approved_at,paid_at,payment_reference'
 
 /** Newest 50 payouts, optionally for one seller. RLS scopes the read. */
 export async function readPayouts(

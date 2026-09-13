@@ -74,3 +74,44 @@ it('sends nothing unless the store opted in, and never throws', async () => {
   )
   expect(failed[0].status).toBe('skipped')
 })
+
+it('honours seller opt-out and fails closed on a preference read error', async () => {
+  for (const permission of [
+    { data: false, error: null },
+    { data: null, error: { message: 'unavailable' } },
+  ]) {
+    let reads = 0
+    const chain = {
+      select() {
+        return this
+      },
+      eq() {
+        return this
+      },
+      maybeSingle: async () => ({ data: { seller_id: item }, error: null }),
+    }
+    const client = {
+      from() {
+        reads++
+        if (reads > 1) throw new Error('transport path must not run')
+        return chain
+      },
+      rpc: async () => permission,
+    } as unknown as SupabaseClient
+    const result = await notifyAfterFacts(
+      client,
+      {
+        tenantId: item,
+        storeName: 'Store',
+        locale: 'sv',
+        policy: { automaticSellerNotifications: true },
+      },
+      [{ kind: 'item_accepted', referenceId: item }],
+    )
+    expect(result[0]).toMatchObject({
+      status: 'skipped',
+      why: permission.error ? 'REQUEST_FAILED' : 'seller_opt_out',
+    })
+    expect(reads).toBe(1)
+  }
+})

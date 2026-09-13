@@ -62,6 +62,9 @@ export default async function Review({
             <p>
               {d.signedInAs} <strong>{ctx.user.email}</strong>
             </p>
+            <p>
+              <Link href="/seller">{d.sellerPortal.title}</Link>
+            </p>
             {!review ? (
               <p role="status">{d.reviewUnavailable}</p>
             ) : (

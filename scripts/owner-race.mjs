@@ -1,3 +1,4 @@
+import { raceSellerPayout } from './seller-payout-race.mjs'
 import { raceStorePolicy } from './store-policy-race.mjs'
 import { raceInspectionApproval } from './inspection-operation-race.mjs'
 import { raceAcceptance, raceStagedAcceptance } from './acceptance-race.mjs'
@@ -47,6 +48,7 @@ try {
         'utf8',
       ),
     )
+  await raceSellerPayout({ setup, connectionString: parsed.toString() })
   const u1 = randomUUID(),
     u2 = randomUUID(),
     tenant = randomUUID()

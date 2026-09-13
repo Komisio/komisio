@@ -229,3 +229,20 @@ it('unreadable stock is held and persisted without raw errors', async () => {
   )
   expect(s.inventory.initialize).not.toHaveBeenCalled()
 })
+
+it.each([
+  'ZETTLE_PRODUCT_ACCESS_DENIED',
+  'ZETTLE_PRODUCT_REJECTED',
+  'ZETTLE_PRODUCT_RESPONSE_INVALID',
+  'ZETTLE_PRODUCT_FIELDS_UNSUPPORTED',
+])('retains allowlisted cause %s without claiming stock', async (code) => {
+  const s = setup(),
+    remote = await s.factory()
+  remote.putProduct.mockRejectedValue(new Error(code))
+  await expect(s.run()).rejects.toThrow(code)
+  expect(s.rpc).toHaveBeenLastCalledWith(
+    'finish_zettle_product',
+    expect.objectContaining({ p_status: 'failed', p_error: code }),
+  )
+  expect(s.inventory.initialize).not.toHaveBeenCalled()
+})

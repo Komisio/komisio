@@ -31,13 +31,21 @@ export function sameProduct(a: CatalogProduct, b: CatalogProduct) {
   )
 }
 export function projectRemoteProduct(input: unknown): CatalogProduct {
-  const remote = z
+  const parsed = z
     .object({
       ...catalogProduct.shape,
       variants: z.array(z.object(catalogVariant.shape)).length(1),
     })
     .passthrough()
-    .parse(input)
+    .safeParse(input)
+  if (!parsed.success)
+    throw new ProductReadError(
+      'ZETTLE_PRODUCT_RESPONSE_INVALID',
+      parsed.error.issues.flatMap((i) =>
+        i.path.filter((p): p is string => typeof p === 'string'),
+      ),
+    )
+  const remote = parsed.data
   // A full PUT must not erase externally added categories, images, descriptions or options.
   const empty = (v: unknown) =>
     v == null ||
@@ -55,15 +63,20 @@ export function projectRemoteProduct(input: unknown): CatalogProduct {
     'updated',
     'updatedBy',
   ])
-  if (Object.entries(remote).some(([k, v]) => !allowed.has(k) && !empty(v)))
-    throw new Error('ZETTLE_REMOTE_CHANGED')
+  const unsupported = Object.entries(remote)
+    .filter(([k, v]) => !allowed.has(k) && !empty(v))
+    .map(([k]) => k)
   const variant = (input as { variants: Record<string, unknown>[] }).variants[0]
-  if (
-    Object.entries(variant).some(
-      ([k, v]) => !['uuid', 'sku', 'barcode', 'price'].includes(k) && !empty(v),
-    )
+  unsupported.push(
+    ...Object.entries(variant)
+      .filter(
+        ([k, v]) =>
+          !['uuid', 'sku', 'barcode', 'price'].includes(k) && !empty(v),
+      )
+      .map(([k]) => k),
   )
-    throw new Error('ZETTLE_REMOTE_CHANGED')
+  if (unsupported.length)
+    throw new ProductReadError('ZETTLE_PRODUCT_FIELDS_UNSUPPORTED', unsupported)
   return catalogProduct.parse({
     uuid: remote.uuid,
     name: remote.name,
@@ -71,4 +84,45 @@ export function projectRemoteProduct(input: unknown): CatalogProduct {
     vatPercentage: remote.vatPercentage,
     variants: remote.variants,
   })
+}
+
+/** Fixed schema field names only: never provider values or arbitrary exception text. */
+export class ProductReadError extends Error {
+  readonly fields: string[]
+  constructor(
+    code:
+      'ZETTLE_PRODUCT_RESPONSE_INVALID' | 'ZETTLE_PRODUCT_FIELDS_UNSUPPORTED',
+    fields: string[],
+  ) {
+    super(code)
+    const known = new Set([
+      'uuid',
+      'name',
+      'externalReference',
+      'vatPercentage',
+      'variants',
+      'sku',
+      'barcode',
+      'price',
+      'amount',
+      'currencyId',
+      'description',
+      'presentation',
+      'categories',
+      'imageLookupKeys',
+      'unitName',
+      'online',
+      'variantOptionDefinitions',
+      'taxCode',
+      'category',
+      'metadata',
+      'taxRates',
+      'taxExempt',
+      'costPrice',
+      'options',
+    ])
+    this.fields = [
+      ...new Set(fields.map((f) => (known.has(f) ? f : 'other'))),
+    ].slice(0, 20)
+  }
 }

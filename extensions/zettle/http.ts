@@ -60,6 +60,8 @@ export function zettleHttpClient(options: {
       cache: 'no-store',
       signal: AbortSignal.timeout(10000),
     })
+    if (r.status === 403 && url.startsWith('https://products.izettle.com/'))
+      throw new Error('ZETTLE_PRODUCT_ACCESS_DENIED')
     if ([401, 403].includes(r.status)) throw new Error('ZETTLE_AUTH_REQUIRED')
     if (r.status === 429) throw new Error('ZETTLE_RATE_LIMITED')
     if (r.status >= 500) throw new Error('ZETTLE_RETRY_LATER')
@@ -100,6 +102,8 @@ export function zettleHttpClient(options: {
           'POST',
           p,
         )
+        if (r.status === 400 || r.status === 422)
+          throw new Error('ZETTLE_PRODUCT_REJECTED')
         if (![201, 409].includes(r.status))
           throw new Error('ZETTLE_CREATE_FAILED')
         // Also reconciles a lost successful POST on the next retry with the same UUID.

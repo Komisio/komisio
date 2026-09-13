@@ -136,7 +136,9 @@ it.each([
     json(remote, 200, { ETag: '"7"' }),
   ])
   await expect(client.putProduct(product, product)).rejects.toThrow(
-    'ZETTLE_REMOTE_CHANGED',
+    'description' in remote
+      ? 'ZETTLE_PRODUCT_FIELDS_UNSUPPORTED'
+      : 'ZETTLE_REMOTE_CHANGED',
   )
   expect(http).toHaveBeenCalledTimes(2)
 })
@@ -205,4 +207,41 @@ it('a catalog-only client refuses purchase retrieval without sending an unbounde
     client.fetchPage({ cursor: null, signal: AbortSignal.timeout(1000) }),
   ).rejects.toThrow('ZETTLE_WINDOW_INVALID')
   expect(http).not.toHaveBeenCalled()
+})
+
+it.each([
+  [403, 'ZETTLE_PRODUCT_ACCESS_DENIED'],
+  [400, 'ZETTLE_PRODUCT_REJECTED'],
+  [422, 'ZETTLE_PRODUCT_REJECTED'],
+] as const)(
+  'preserves safe product error for HTTP %s',
+  async (status, code) => {
+    const { client } = setup([
+      json({ organizationUuid: org }),
+      new Response(null, { status: 404 }),
+      new Response('Private provider body', { status }),
+    ])
+    await expect(client.putProduct(product, null)).rejects.toThrow(code)
+  },
+)
+it('unsupported fields expose only known schema names, never values or unknown names', async () => {
+  const { client } = setup([
+    json({ organizationUuid: org }),
+    json({
+      ...product,
+      taxExempt: false,
+      'secret-shaped-name': 'sensitive content',
+    }),
+  ])
+  try {
+    await client.putProduct(product, null)
+    expect.unreachable()
+  } catch (e) {
+    expect(e).toMatchObject({
+      message: 'ZETTLE_PRODUCT_FIELDS_UNSUPPORTED',
+      fields: ['taxExempt', 'other'],
+    })
+    expect(JSON.stringify(e)).not.toContain('sensitive')
+    expect(JSON.stringify(e)).not.toContain('secret-shaped-name')
+  }
 })

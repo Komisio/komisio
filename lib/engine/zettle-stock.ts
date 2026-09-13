@@ -12,7 +12,12 @@ import {
   catalogProduct,
   ProductReadError,
 } from '../../extensions/zettle/catalog'
-import { mayInitialize, stockOutcome } from '../../extensions/zettle/inventory'
+import {
+  InventoryReadError,
+  mayInitialize,
+  stockOutcome,
+  type Stock,
+} from '../../extensions/zettle/inventory'
 
 export async function readZettleStock(
   client: SupabaseClient,
@@ -147,11 +152,41 @@ export async function exportZettleItem(
     variant = payload.variants[0].uuid
   let status: ReturnType<typeof stockOutcome> = 'unknown',
     error: string | null = null
+  type StockStep =
+    'tracking' | 'enable' | 'before' | 'movement' | 'after' | 'observe'
+  let tracking: boolean | undefined
+  let step:
+    'tracking' | 'enable' | 'before' | 'movement' | 'after' | 'observe' =
+    'tracking'
+  let observed: Stock | undefined
+  let diagnostic:
+    | {
+        step: StockStep
+        tracking?: boolean
+        httpStatus?: number
+        fields?: string[]
+        stock?: Stock
+      }
+    | undefined
+  const detail = (e: unknown) => ({
+    step,
+    tracking,
+    ...(e instanceof InventoryReadError
+      ? { httpStatus: e.httpStatus, fields: e.fields }
+      : {}),
+  })
   try {
     const tracked = await remote.inventory.tracked(product)
+    tracking = tracked
     if (!tracked && !claim.fresh) throw new Error('ZETTLE_STOCK_HELD')
-    if (!tracked) await remote.inventory.enable(product)
+    if (!tracked) {
+      step = 'enable'
+      await remote.inventory.enable(product)
+      tracking = true
+    }
+    step = 'before'
     const before = await remote.inventory.stock(product, variant, locations)
+    observed = before
     if (claim.fresh) {
       if (!mayInitialize(before)) {
         // Existing remote stock is not evidence that this invocation initialized it.
@@ -160,26 +195,29 @@ export async function exportZettleItem(
         await current()
         // One submission only. A lost response is resolved by observation, never retransmission.
         try {
+          step = 'movement'
           await remote.inventory.initialize(
             product,
             variant,
             locations,
             claim.id,
           )
-        } catch {
+        } catch (e) {
           error = 'ZETTLE_INVENTORY_FAILED'
+          diagnostic = detail(e)
         }
-        status = stockOutcome(
-          await remote.inventory.stock(product, variant, locations),
-        )
+        step = 'after'
+        observed = await remote.inventory.stock(product, variant, locations)
+        status = stockOutcome(observed)
       }
     } else {
       status = stockOutcome(before)
     }
     if (status === 'initialized' || status === 'depleted') error = null
     else error ??= 'ZETTLE_STOCK_HELD'
-  } catch {
+  } catch (e) {
     error = 'ZETTLE_STOCK_HELD'
+    diagnostic = detail(e)
   }
   const outcome = await client.rpc('finish_zettle_stock', {
     p_tenant: tenantId,
@@ -188,5 +226,11 @@ export async function exportZettleItem(
     p_error: error,
   })
   if (outcome.error) throw new Error('ZETTLE_OUTCOME_FAILED')
-  return { id: requestId, stock: status }
+  return {
+    id: requestId,
+    stock: status,
+    ...(['unknown', 'conflict'].includes(status)
+      ? { diagnostic: diagnostic ?? { step: 'observe', stock: observed } }
+      : {}),
+  }
 }

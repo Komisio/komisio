@@ -72,9 +72,10 @@ export function inventoryHttpClient(
     }).catch(() => {
       throw new Error('ZETTLE_INVENTORY_FAILED')
     })
-    if ([401, 403].includes(r.status)) throw new Error('ZETTLE_AUTH_REQUIRED')
+    if ([401, 403].includes(r.status))
+      throw new InventoryReadError(r.status, [])
     if (r.status === 429) throw new Error('ZETTLE_RATE_LIMITED')
-    if (!r.ok) throw new Error('ZETTLE_INVENTORY_FAILED')
+    if (!r.ok) throw new InventoryReadError(r.status, [])
     // Do not follow an untrusted pagination URL or silently use a partial inventory list.
     if (r.headers.get('link')) throw new Error('ZETTLE_INVENTORY_AMBIGUOUS')
     return r
@@ -104,10 +105,12 @@ export function inventoryHttpClient(
     async tracked(product) {
       z.uuid().parse(product)
       const r = await call('/products/status', 'POST', [product])
-      const rows = z
-        .array(z.object({ productUuid: z.uuid(), enabled: z.boolean() }))
-        .length(1)
-        .parse(await boundedJson(r, 8192))
+      const rows = parseInventory(
+        z
+          .array(z.object({ productUuid: z.uuid(), enabled: z.boolean() }))
+          .length(1),
+        await boundedJson(r, 8192),
+      )
       if (rows[0].productUuid !== product)
         throw new Error('ZETTLE_INVENTORY_CONFLICT')
       return rows[0].enabled
@@ -131,7 +134,7 @@ export function inventoryHttpClient(
       ] as const) {
         z.uuid().parse(ids[type])
         const r = await call(`/stock/${ids[type]}/products/${product}`)
-        const rows = z
+        const schema = z
           .array(
             z.object({
               organizationUuid: z.uuid(),
@@ -142,7 +145,7 @@ export function inventoryHttpClient(
             }),
           )
           .max(1)
-          .parse(await boundedJson(r, 8192))
+        const rows = parseInventory(schema, await boundedJson(r, 8192))
         if (
           rows.some(
             (r) =>
@@ -175,4 +178,41 @@ export function inventoryHttpClient(
       if (r.status !== 204) throw new Error('ZETTLE_INVENTORY_FAILED')
     },
   }
+}
+
+/** Safe diagnostics contain HTTP status and known schema names, never provider values. */
+export class InventoryReadError extends Error {
+  readonly fields: string[]
+  constructor(
+    readonly httpStatus: number,
+    fields: string[],
+  ) {
+    super(
+      [401, 403].includes(httpStatus)
+        ? 'ZETTLE_AUTH_REQUIRED'
+        : 'ZETTLE_INVENTORY_FAILED',
+    )
+    const known = new Set([
+      'productUuid',
+      'variantUuid',
+      'inventoryUuid',
+      'organizationUuid',
+      'enabled',
+      'balance',
+    ])
+    this.fields = [
+      ...new Set(fields.map((f) => (known.has(f) ? f : 'other'))),
+    ].slice(0, 8)
+  }
+}
+function parseInventory<T>(schema: z.ZodType<T>, value: unknown): T {
+  const parsed = schema.safeParse(value)
+  if (!parsed.success)
+    throw new InventoryReadError(
+      200,
+      parsed.error.issues.flatMap((i) =>
+        i.path.filter((p): p is string => typeof p === 'string'),
+      ),
+    )
+  return parsed.data
 }

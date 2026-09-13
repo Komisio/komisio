@@ -1,3 +1,14 @@
+## Zettle stock diagnosis checkpoint, 2026-09-13
+
+Real product export/read-back now succeeds, including the owner's price and VAT
+mapping. The first stock attempt is unknown. Preserve its durable claim: do not
+re-grant movement, rotate product IDs or infer that an unknown response means no
+write. Current owner/admin responses now expose only the failed inventory step,
+HTTP status, known schema fields or observed numeric stock, never provider bodies.
+An existing-claim retry remains observation-only. The next live check must identify
+the stock failure; manual reconciliation may be needed if the earlier movement
+cannot be established. No migration or stock permission change in this patch.
+
 ## Zettle product read-back checkpoint, 2026-09-13
 
 The corrected v1 product identity now reaches a real product response; read-back

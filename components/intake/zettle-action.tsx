@@ -65,6 +65,29 @@ export function ZettleAction({
       }
       if (body.stock && body.stock in d.stockStates)
         setError(d.stockStates[body.stock as keyof typeof d.stockStates])
+      if (body.diagnostic && body.stock in d.stockStates) {
+        const detail = body.diagnostic
+        setError(
+          d.stockStates[body.stock as keyof typeof d.stockStates] +
+            ' — ' +
+            ((d.stockSteps as Record<string, string>)[detail.step] ??
+              d.failed) +
+            (Number.isInteger(detail.httpStatus)
+              ? ` HTTP ${detail.httpStatus}.`
+              : '') +
+            (Array.isArray(detail.fields) && detail.fields.length
+              ? ` (${d.responseFields}: ${detail.fields.join(', ')})`
+              : '') +
+            (typeof detail.tracking === 'boolean'
+              ? ` enabled=${detail.tracking}.`
+              : '') +
+            (detail.stock
+              ? ` STORE=${detail.stock.store}, SOLD=${detail.stock.sold}, BIN=${detail.stock.bin}, SUPPLIER=${detail.stock.supplier}`
+              : ''),
+        )
+        setState('failed')
+        return
+      }
       if (body.catalog?.some((r: { error?: string }) => r.error))
         setError(d.catalogIssues)
       setState('done')

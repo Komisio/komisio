@@ -1426,6 +1426,14 @@
     "stockHint": "Export one item at a time. The first attempt adds one tracked unit. Later attempts check the result and update the price without replenishing stock. Up to 50 recorded attempts are shown; unresolved attempts come first.",
     "exportItem": "Export item to Zettle",
     "checkStock": "Check stock / update product",
+    "stockSteps": {
+      "tracking": "Read tracking status",
+      "enable": "Enable tracking",
+      "before": "Read starting stock",
+      "movement": "Submit initial movement",
+      "after": "Read resulting stock",
+      "observe": "Observed stock"
+    },
     "stockStates": {
       "initialized": "One unit observed in Zettle",
       "depleted": "Sold or removed in Zettle - not restocked",

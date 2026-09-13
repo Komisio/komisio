@@ -2,6 +2,7 @@ import { testSellerEconomyMCP } from './test-seller-economy-mcp.mjs'
 import { testOperationDiscovery } from './test-operation-discovery.mjs'
 import { testInspectionMCP } from './test-inspection-mcp.mjs'
 import { testItemsMCP } from './test-items-mcp.mjs'
+import { testProposalsMCP } from './test-proposals-mcp.mjs'
 import { Client as MCPClient } from '@modelcontextprotocol/client'
 import { StdioClientTransport } from '@modelcontextprotocol/client/stdio'
 import { createClient } from '@supabase/supabase-js'
@@ -124,7 +125,16 @@ try {
     token,
     receptionClient: both,
   })
-  await testItemsMCP({ connect, rpc, db, tenant, token, uid })
+  const items = await testItemsMCP({ connect, rpc, db, tenant, token, uid })
+  await testProposalsMCP({
+    connect,
+    rpc,
+    db,
+    tenant,
+    token,
+    seller,
+    item: items.operation,
+  })
   const catalog = await both.listTools()
   assert.deepEqual(catalog.tools.map((t) => t.name).sort(), [
     'komisio_get_store_policy',

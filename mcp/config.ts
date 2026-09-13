@@ -9,7 +9,11 @@ const scope = z.enum([
   'inspection:propose',
   'items:propose',
   'economy:read',
+  'sales:propose',
+  'ledger:propose',
+  'lifecycle:propose',
 ])
+export type MCPScope = z.infer<typeof scope>
 export const mcpConfig = z.strictObject({
   url: z.url().refine((value) => {
     const url = new URL(value)

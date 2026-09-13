@@ -34,6 +34,22 @@ import {
 } from './reception'
 import { operationErrorCodes } from '../lib/engine/operations'
 import { proposeAcceptanceInput, proposeAcceptanceTool } from './items'
+import {
+  proposeReturnInput,
+  proposeReturnTool,
+  proposeLedgerAdjustmentInput,
+  proposeLedgerAdjustmentTool,
+  proposeMarkdownBatchInput,
+  proposeMarkdownBatchTool,
+  proposeBulkItemUpdateInput,
+  proposeBulkItemUpdateTool,
+} from './proposals'
+const stagingAnnotations = {
+  readOnlyHint: false,
+  destructiveHint: false,
+  idempotentHint: true,
+  openWorldHint: false,
+}
 const annotations = {
   readOnlyHint: true,
   destructiveHint: false,
@@ -320,6 +336,62 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           data: await proposeAcceptanceTool(client, config, input),
         })),
     )
+  if (config.scopes.includes('sales:propose'))
+    server.registerTool(
+      'komisio_propose_return',
+      {
+        description:
+          'Stage a full refund of one completed sale line (the refund must equal the line price) with a reason, for staff decision. Medium risk: a different person than the proposing identity must approve; approval runs the return command, which reverses the seller credit and frees the item. Nothing is refunded by this call.',
+        inputSchema: proposeReturnInput,
+        annotations: stagingAnnotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await proposeReturnTool(client, config, input),
+        })),
+    )
+  if (config.scopes.includes('ledger:propose'))
+    server.registerTool(
+      'komisio_propose_ledger_adjustment',
+      {
+        description:
+          'Stage a signed öre adjustment of one seller ledger with a reason, for decision. High risk: a different person must approve, and the adjustment executes only when that approver is an owner or admin; a staff approval records a failed outcome and moves nothing. Nothing is adjusted by this call.',
+        inputSchema: proposeLedgerAdjustmentInput,
+        annotations: stagingAnnotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await proposeLedgerAdjustmentTool(client, config, input),
+        })),
+    )
+  if (config.scopes.includes('lifecycle:propose')) {
+    server.registerTool(
+      'komisio_propose_markdown_batch',
+      {
+        description:
+          'Stage a batch of up to 50 markdown steps that are all due right now (the step per item must equal the due step), for staff decision. Low risk: the proposing person may approve; the whole batch is refused if any step is not due and applied all or nothing. Nothing is marked down by this call.',
+        inputSchema: proposeMarkdownBatchInput,
+        annotations: stagingAnnotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await proposeMarkdownBatchTool(client, config, input),
+        })),
+    )
+    server.registerTool(
+      'komisio_propose_bulk_item_update',
+      {
+        description:
+          'Stage one price change (shared reason, one price per item) or one end of period (charity or return) for up to 50 items, for staff decision with a per-item preview. Medium risk: a different person than the proposing identity must approve; the set is refused if any item is sold or ended and applied all or nothing. Nothing is repriced or ended by this call.',
+        inputSchema: proposeBulkItemUpdateInput,
+        annotations: stagingAnnotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await proposeBulkItemUpdateTool(client, config, input),
+        })),
+    )
+  }
   if (config.scopes.includes('reception:photos'))
     server.registerTool(
       'komisio_read_reception_photo',

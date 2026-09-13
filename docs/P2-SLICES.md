@@ -247,6 +247,14 @@ Purpose: the four templates and the printer path.
   or USB and reports completion. Bulk reprint is many jobs.
 - Surface: print buttons where the objects are; printers list in settings.
 - Migration: yes.
+- Status 2026-09-13: `printers`, `print_jobs`, register, queue, claim (with
+  stale-claim recovery), complete and cancel delivered (migration
+  `20260914080000`); ZPL templates `zpl-v1` for bag, garment, item,
+  markdown and onboarding with control characters stripped; `/api/print`
+  renders and queues; print buttons on the bag and garment labels, the item
+  page and the seller page; printers and jobs in settings;
+  `scripts/print-agent.mjs` works a TCP printer's queue as a store member.
+  USB transport and a signed executable follow.
 
 ## S20. Lifecycle queue, batch reception, duplicate check, metering, bulk staged ops
 
@@ -284,7 +292,6 @@ issue a numbered statement the seller can open, generate a day close and
 export it to Fortnox idempotently, print all four labels through the local
 agent, and have sellers receive the five e-mails, with VAT computed per line
 in the modes the store selected.
-
 
 S20 follow-up (Astra): CI exposed timestamp ties between price facts written
 in one transaction. Migration `20260914110000` orders new price rows strictly

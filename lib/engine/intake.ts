@@ -20,6 +20,7 @@ import {
   extendSalePeriodCommand,
   endSalePeriodCommand,
 } from './lifecycle'
+import { registerPrinterCommand, cancelPrintJobCommand } from './printing'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { saveInspectionCommand, archiveInspectionCommand } from './inspection'
@@ -42,6 +43,8 @@ export const intakeCommand = z.discriminatedUnion('action', [
   applyMarkdownCommand,
   extendSalePeriodCommand,
   endSalePeriodCommand,
+  registerPrinterCommand,
+  cancelPrintJobCommand,
   acceptItemCommand,
   recordSaleCommand,
   adjustSellerLedgerCommand,
@@ -216,6 +219,22 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_item: c.itemId,
         p_action: c.endAction,
         p_note: c.note,
+      })
+    case 'registerPrinter':
+      return client.rpc('register_printer', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_name: c.name,
+        p_transport: c.transport,
+        p_address: c.address,
+        p_model: c.model,
+        p_dpi: c.dpi,
+        p_active: c.active,
+      })
+    case 'cancelPrintJob':
+      return client.rpc('cancel_print_job', {
+        p_tenant: c.tenantId,
+        p_job: c.jobId,
       })
     case 'markPayoutPaid':
       return client.rpc('mark_payout_paid', {

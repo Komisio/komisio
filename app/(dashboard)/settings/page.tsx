@@ -1,5 +1,7 @@
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import { StorePolicyForm } from '@/components/intake/store-policy-form'
+import { PrinterForm } from '@/components/intake/printer-form'
+import { readPrinters, readPrintJobs } from '@/lib/engine/printing'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { can } from '@/lib/platform/permissions'
@@ -13,6 +15,14 @@ export default async function Settings() {
     process.env.KOMISIO_INTAKE_ENABLED === 'true'
       ? await readStorePolicy(ctx.client, active.id)
       : null
+  const [printers, jobs] =
+    process.env.KOMISIO_INTAKE_ENABLED === 'true'
+      ? await Promise.all([
+          readPrinters(ctx.client, active.id),
+          readPrintJobs(ctx.client, active.id),
+        ])
+      : [[], []]
+  const pr = d.printing
   const events = can(active.role, 'audit.read')
     ? await ctx.client
         .from('access_events')
@@ -42,6 +52,52 @@ export default async function Settings() {
           editable={['owner', 'admin'].includes(active.role)}
           d={d}
         />
+      )}
+      {process.env.KOMISIO_INTAKE_ENABLED === 'true' && (
+        <section className="card intake-form" aria-label={pr.title}>
+          <h2>{pr.title}</h2>
+          <p>{pr.intro}</p>
+          {printers.length === 0 && <p>{pr.none}</p>}
+          {printers.map((p) => (
+            <details key={p.id}>
+              <summary>
+                {p.name} · {p.transport === 'tcp' ? p.address : pr.usb} ·{' '}
+                {p.active ? pr.activeLabel : pr.inactiveLabel}
+              </summary>
+              {['owner', 'admin'].includes(active.role) && (
+                <PrinterForm
+                  tenantId={active.id}
+                  existing={p}
+                  d={pr}
+                  intake={d.intake}
+                />
+              )}
+            </details>
+          ))}
+          {['owner', 'admin'].includes(active.role) && (
+            <>
+              <h3>{pr.registerHeading}</h3>
+              <PrinterForm
+                key={`new-${printers.length}`}
+                tenantId={active.id}
+                d={pr}
+                intake={d.intake}
+              />
+            </>
+          )}
+          <h3>{pr.jobs}</h3>
+          {jobs.length === 0 && <p>{pr.noJobs}</p>}
+          {jobs.slice(0, 20).map((j) => (
+            <p key={j.id}>
+              {new Date(j.created_at).toLocaleString(ctx.locale)} ·{' '}
+              {pr.kinds[j.label_kind]} · {j.copies} · {pr.statuses[j.status]}
+              {j.error ? ` · ${j.error}` : ''}
+            </p>
+          ))}
+          <p>
+            <small>{pr.agentHint}</small>
+          </p>
+        </section>
       )}
       <div className="settings-grid">
         <section className="card">

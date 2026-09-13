@@ -4,6 +4,8 @@ import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { PrintLabel } from '@/components/intake/print-label'
+import { PrintJobButton } from '@/components/intake/print-job-button'
+import { readPrinters } from '@/lib/engine/printing'
 import {
   readGarmentReceipt,
   garmentReference,
@@ -22,6 +24,7 @@ export default async function GarmentLabel({
   if (!custody) notFound()
   const all = dictionary(ctx.locale),
     d = all.reception
+  const printers = await readPrinters(ctx.client, ctx.active!.id)
   return (
     <>
       <div className="page-heading no-print">
@@ -43,6 +46,15 @@ export default async function GarmentLabel({
       </article>
       <div className="row no-print">
         <PrintLabel label={all.intake.print} />
+        <PrintJobButton
+          tenantId={ctx.active!.id}
+          printers={printers}
+          kind="garment"
+          referenceKind="garment_receipt"
+          referenceId={custody.id}
+          d={all.printing}
+          intake={all.intake}
+        />
         <Link className="text-link" href={`/intake/reception/${id}`}>
           {d.back}
         </Link>

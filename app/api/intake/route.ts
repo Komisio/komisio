@@ -46,9 +46,12 @@ export async function POST(request: Request) {
     if (ctx.active.role === 'readonly')
       return reply({ error: 'FORBIDDEN' }, 403)
     if (
-      ['publishAgreement', 'publishStorePolicy', 'adjustSellerLedger'].includes(
-        parsed.data.action,
-      ) &&
+      [
+        'publishAgreement',
+        'publishStorePolicy',
+        'adjustSellerLedger',
+        'registerPrinter',
+      ].includes(parsed.data.action) &&
       !['owner', 'admin'].includes(ctx.active.role)
     )
       return reply({ error: 'FORBIDDEN' }, 403)
@@ -106,6 +109,10 @@ export async function POST(request: Request) {
           'MARKDOWN_ALREADY_APPLIED',
           'ITEM_NOT_ON_SALE',
           'ITEM_ENDED',
+          'PRINTER_NOT_FOUND',
+          'PRINTER_INACTIVE',
+          'PRINT_JOB_NOT_FOUND',
+          'PRINT_JOB_DECIDED',
         ].find((v) => result.error!.message.includes(v)) ?? 'REQUEST_FAILED'
       return reply(
         { error: code },
@@ -145,6 +152,8 @@ export async function POST(request: Request) {
                 'MARKDOWN_ALREADY_APPLIED',
                 'ITEM_NOT_ON_SALE',
                 'ITEM_ENDED',
+                'PRINTER_INACTIVE',
+                'PRINT_JOB_DECIDED',
               ].includes(code)
             ? 409
             : 400,

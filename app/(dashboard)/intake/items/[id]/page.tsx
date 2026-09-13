@@ -4,6 +4,8 @@ import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { readItem, formatOre } from '@/lib/engine/items'
+import { readPrinters } from '@/lib/engine/printing'
+import { PrintJobButton } from '@/components/intake/print-job-button'
 
 export default async function Item({
   params,
@@ -20,6 +22,7 @@ export default async function Item({
   const result = await readItem(ctx.client, active.id, id.data)
   if (!result) notFound()
   const { item, prices, events } = result
+  const printers = await readPrinters(ctx.client, active.id)
   const t = item.terms
   const when = (iso: string) =>
     new Date(iso).toLocaleString(ctx.locale === 'sv' ? 'sv-SE' : 'en-GB', {
@@ -111,6 +114,21 @@ export default async function Item({
           </div>
         </dl>
       </section>
+      {active.role !== 'readonly' && (
+        <section className="card intake-form">
+          <h2>{all.printing.itemLabel}</h2>
+          <p>{all.printing.itemLabelHint}</p>
+          <PrintJobButton
+            tenantId={active.id}
+            printers={printers}
+            kind={prices.length > 1 ? 'markdown' : 'item'}
+            referenceKind="item"
+            referenceId={item.id}
+            d={all.printing}
+            intake={all.intake}
+          />
+        </section>
+      )}
       <section className="card intake-form">
         <h2>{d.prices}</h2>
         {prices.map((p) => (

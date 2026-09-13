@@ -190,6 +190,19 @@ the proposed amount. See [SETTLEMENT.md](SETTLEMENT.md). MCP:
 `payouts:propose`. `supabase/tests/0053_settle_payouts.test.sql` covers the
 kind together with the command.
 
+## Store profile updates
+
+Since migration `20260915120000` the kind `updateStoreProfile` (`low`)
+stages the next version of the store's public profile, naming the current
+version id. Preflight refuses a stale id (`PROFILE_CHANGED`). The proposing
+person may approve, but execution runs `publish_store_profile`, which is
+owner or admin only, so a staff approval records `failed|FORBIDDEN` and
+publishes nothing. See [STORE-PROFILE.md](STORE-PROFILE.md). MCP:
+`komisio_read_store_profile` under `store:read`,
+`komisio_propose_store_profile` under `store:propose`.
+`supabase/tests/0055_store_profile.test.sql` covers the kind with the
+command.
+
 ## Template-bound seller messages
 
 Since migration `20260914150000` the kind `sendMessage` (`low`) stages the

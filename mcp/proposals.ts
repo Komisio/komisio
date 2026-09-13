@@ -12,6 +12,7 @@ import {
   markPayoutPaidPayload,
   exportDayClosePayload,
   settlePayoutsPayload,
+  updateStoreProfilePayload,
   proposeOperation,
   operationErrorCode,
   type PendingOperation,
@@ -34,6 +35,32 @@ export const proposePayoutApprovalInput = approvePayoutPayload.extend(envelope)
 export const proposePayoutPaymentInput = markPayoutPaidPayload.extend(envelope)
 export const proposeDayCloseExportInput = exportDayClosePayload.extend(envelope)
 export const proposeSettlementInput = settlePayoutsPayload.extend(envelope)
+export const proposeStoreProfileInput =
+  updateStoreProfilePayload.extend(envelope)
+
+/** The next store profile version, naming the current one; low, publishes only for an owner or admin approver. */
+export async function proposeStoreProfileTool(
+  client: SupabaseClient,
+  config: MCPConfig,
+  input: unknown,
+) {
+  const { requestId, expiresAt, ...payload } =
+    proposeStoreProfileInput.parse(input)
+  return {
+    ...(await stage(
+      client,
+      config,
+      'store:propose',
+      'updateStoreProfile',
+      'low',
+      requestId,
+      expiresAt,
+      payload,
+    )),
+    expectedCurrentId: payload.expectedCurrentId,
+    executesOnlyForOwnerOrAdmin: true,
+  }
+}
 
 async function stage(
   client: SupabaseClient,

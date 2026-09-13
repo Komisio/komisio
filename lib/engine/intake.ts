@@ -27,6 +27,7 @@ import {
   publishAccountingMapCommand,
   exportDayCloseCommand,
 } from './accounting'
+import { publishStoreProfileCommand } from './store-profile'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { saveInspectionCommand, archiveInspectionCommand } from './inspection'
@@ -55,6 +56,7 @@ export const intakeCommand = z.discriminatedUnion('action', [
   cancelPrintJobCommand,
   publishAccountingMapCommand,
   exportDayCloseCommand,
+  publishStoreProfileCommand,
   acceptItemCommand,
   recordSaleCommand,
   adjustSellerLedgerCommand,
@@ -216,6 +218,13 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_tenant: c.tenantId,
         p_id: c.requestId,
         p_date: c.date,
+      })
+    case 'publishStoreProfile':
+      return client.rpc('publish_store_profile', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_expected_current: c.expectedCurrentId,
+        p_profile: c.profile,
       })
     case 'publishAccountingMap':
       return client.rpc('publish_accounting_map', {

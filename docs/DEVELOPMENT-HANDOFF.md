@@ -1,5 +1,20 @@
 # Development handover
 
+## Astra tasks checkpoint, 2026-09-13
+
+Task 1 is delivered through [PR88](https://github.com/Komisio/komisio/pull/88),
+merge 2340a91, CI34742805205 and Vercel deployment6418520152 successful.
+The seller portal is live in staging; authenticated financial actions were
+verified locally, not performed against real hosted seller accounts.
+
+Task 2 is on `astra/p2-browser-journeys` in its own worktree. Four P2 browser
+journeys pass locally and cover every new operation kind, accounting export,
+settings and manual pricing. See [the test contract](P2-BROWSER-JOURNEYS.md).
+The tests exposed and fixed accounting preview serialization and printer label
+hydration. No SQL migration. Exact-head CI and release evidence go in its PR.
+Tasks 3-6 in ASTRA-NEXT-TASKS.md remain: batch reception, fixture Zettle pull,
+metering follow-ups and the duplicate-control design note.
+
 ## Astra task 1: seller portal, 2026-09-13
 
 Branch `astra/seller-portal` implements the first priority from PR86. See

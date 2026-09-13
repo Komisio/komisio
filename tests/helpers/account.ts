@@ -51,4 +51,13 @@ export async function register(
     page.getByText('Kontrollera din e-post och följ länken'),
   ).toBeVisible()
   await confirmEmail(page, email)
+  // The root can stream a client redirect after the callback document loads.
+  // New owners must reach onboarding before a fixture creates their store or
+  // the next navigation can race that redirect (ERR_ABORTED in the full suite).
+  if (!next || next === '/') {
+    await expect(page).toHaveURL(/\/onboarding$/)
+    await expect(
+      page.getByLabel('Butikens namn', { exact: true }),
+    ).toBeVisible()
+  }
 }

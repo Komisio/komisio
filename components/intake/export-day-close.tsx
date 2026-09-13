@@ -3,6 +3,7 @@ import { useState } from 'react'
 import type { Dictionary } from '@/lib/i18n'
 import type { VoucherPreview } from '@/lib/engine/accounting'
 import { useIntakeAction } from './use-intake-action'
+import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { Button } from '@/components/ui/button'
 
 /** Voucher preview for one day close and the export action; the file link follows the export. */
@@ -10,19 +11,25 @@ export function ExportDayClose({
   tenantId,
   preview,
   canExport,
-  money,
-  accountLabel,
+  vatModes,
   d,
   intake,
 }: {
   tenantId: string
   preview: VoucherPreview
   canExport: boolean
-  money: (ore: number) => string
-  accountLabel: (key: string) => string
+  vatModes: Record<string, string>
   d: Dictionary['accounting']
   intake: Dictionary['intake']
 }) {
+  const money = (ore: number) => `${formatSignedOre(ore)} SEK`
+  const accountLabel = (key: string) => {
+    if (key.startsWith('mode:')) {
+      const [, mode, amount] = key.split(':')
+      return `${vatModes[mode] ?? mode} · ${amount === 'netOre' ? d.netOf : d.vatOf}`
+    }
+    return d.amountKeys[key as keyof typeof d.amountKeys] ?? key
+  }
   const action = useIntakeAction(intake)
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
   const [exportId, setExportId] = useState(preview.exportId)

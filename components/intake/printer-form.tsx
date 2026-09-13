@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import { registerPrinterCommand } from '@/lib/engine/printing'
@@ -28,6 +28,7 @@ export function PrinterForm({
 }) {
   const action = useIntakeAction(intake)
   const router = useRouter()
+  const fieldId = useId()
   const [requestId] = useState(() => existing?.id ?? crypto.randomUUID())
   const [invalid, setInvalid] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -59,9 +60,9 @@ export function PrinterForm({
         disabled={action.busy || action.locked}
       >
         <div className="field">
-          <label htmlFor={`printer-name-${requestId}`}>{d.name}</label>
+          <label htmlFor={`printer-name-${fieldId}`}>{d.name}</label>
           <input
-            id={`printer-name-${requestId}`}
+            id={`printer-name-${fieldId}`}
             name="name"
             required
             maxLength={80}
@@ -69,11 +70,9 @@ export function PrinterForm({
           />
         </div>
         <div className="field">
-          <label htmlFor={`printer-transport-${requestId}`}>
-            {d.transport}
-          </label>
+          <label htmlFor={`printer-transport-${fieldId}`}>{d.transport}</label>
           <select
-            id={`printer-transport-${requestId}`}
+            id={`printer-transport-${fieldId}`}
             name="transport"
             defaultValue={existing?.transport ?? 'tcp'}
           >
@@ -82,9 +81,9 @@ export function PrinterForm({
           </select>
         </div>
         <div className="field">
-          <label htmlFor={`printer-address-${requestId}`}>{d.address}</label>
+          <label htmlFor={`printer-address-${fieldId}`}>{d.address}</label>
           <input
-            id={`printer-address-${requestId}`}
+            id={`printer-address-${fieldId}`}
             name="address"
             maxLength={200}
             placeholder="192.168.1.50:9100"
@@ -93,18 +92,18 @@ export function PrinterForm({
           <small>{d.addressHint}</small>
         </div>
         <div className="field">
-          <label htmlFor={`printer-model-${requestId}`}>{d.model}</label>
+          <label htmlFor={`printer-model-${fieldId}`}>{d.model}</label>
           <input
-            id={`printer-model-${requestId}`}
+            id={`printer-model-${fieldId}`}
             name="model"
             maxLength={80}
             defaultValue={existing?.model ?? ''}
           />
         </div>
         <div className="field">
-          <label htmlFor={`printer-dpi-${requestId}`}>{d.dpi}</label>
+          <label htmlFor={`printer-dpi-${fieldId}`}>{d.dpi}</label>
           <select
-            id={`printer-dpi-${requestId}`}
+            id={`printer-dpi-${fieldId}`}
             name="dpi"
             defaultValue={String(existing?.dpi ?? 203)}
           >

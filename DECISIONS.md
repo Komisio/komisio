@@ -258,4 +258,7 @@ persistence, authorization, financial rule or migration.
 
 [2026-09-13] The accounting export is a faithful formatter, not an accountant: the tenant publishes a versioned map from each day-close amount to an account and a side as its accountant set them, Komisio turns one day close and one map version into voucher lines, reports unmapped amounts instead of folding them into a balancing line, refuses a voucher that does not balance, records each export once per day close and map version, and renders the SIE 4 file from the recorded lines so a download never recomputes the books.
 
+[2026-09-13] The P2 accounting browser journey reproduced a server/client serialization failure when a day-close preview existed. Display formatting now lives in the interactive component and only serializable labels cross the boundary; voucher arithmetic and export authorization remain in the engine.
 [2026-09-13] Local verification found that applying the previously missing usage migration after the notification migration replaced the policy validator with its older definition. An additive reconciliation restores the published notification-aware validator verbatim; no policy values or migration history are rewritten.
+
+[2026-09-13] The P2 settings journey exposed printer-field hydration mismatches because a random command id was also used for DOM labels. React useId now supplies stable field/label identifiers; the printer command id and its replay semantics are unchanged.

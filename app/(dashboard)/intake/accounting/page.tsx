@@ -40,13 +40,6 @@ export default async function Accounting() {
   })
   const money = (ore: number) => `${formatSignedOre(ore)} SEK`
   const vatModes = all.sales.vatModes as Record<string, string>
-  const accountLabel = (key: string) => {
-    if (key.startsWith('mode:')) {
-      const [, mode, amount] = key.split(':')
-      return `${vatModes[mode] ?? mode} · ${amount === 'netOre' ? d.netOf : d.vatOf}`
-    }
-    return d.amountKeys[key as keyof typeof d.amountKeys] ?? key
-  }
   const canEditMap = ['owner', 'admin'].includes(active.role)
   return (
     <>
@@ -125,8 +118,7 @@ export default async function Accounting() {
                   tenantId={active.id}
                   preview={previews.get(c.id)!}
                   canExport={active.role !== 'readonly'}
-                  money={money}
-                  accountLabel={accountLabel}
+                  vatModes={vatModes}
                   d={d}
                   intake={all.intake}
                 />

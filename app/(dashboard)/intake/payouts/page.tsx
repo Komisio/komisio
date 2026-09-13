@@ -107,7 +107,8 @@ export default async function Payouts() {
                 · {d.statuses[p.status]}
               </strong>
               <p>
-                {d.requestedAt} {when(p.requested_at)}
+                {d.requestedAt} {when(p.requested_at)} ·{' '}
+                {all.sellerPortal.source}: {all.sellerPortal[p.request_source]}
                 {p.paid_at
                   ? ` · ${d.paidAt} ${when(p.paid_at)} · ${p.payment_reference}`
                   : ''}

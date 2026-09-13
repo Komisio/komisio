@@ -321,6 +321,19 @@ export async function notifyAfterFacts(
         outcomes.push({ ...n, status: 'skipped', why: 'no_seller' })
         continue
       }
+      const permission = await client.rpc('allow_automatic_seller_email', {
+        p_tenant: store.tenantId,
+        p_seller: sellerId,
+        p_fact: n.referenceId,
+      })
+      if (permission.error || permission.data !== true) {
+        outcomes.push({
+          ...n,
+          status: 'skipped',
+          why: permission.error ? 'REQUEST_FAILED' : 'seller_opt_out',
+        })
+        continue
+      }
       const sent = await sendSellerCommunication(client, {
         tenantId: store.tenantId,
         storeName: store.storeName,

@@ -8,6 +8,9 @@ import {
   applyMarkdownBatchPayload,
   bulkItemUpdatePayload,
   sendMessagePayload,
+  approvePayoutPayload,
+  markPayoutPaidPayload,
+  exportDayClosePayload,
   proposeOperation,
   operationErrorCode,
   type PendingOperation,
@@ -26,6 +29,9 @@ export const proposeBulkItemUpdateInput = z.strictObject({
   update: bulkItemUpdatePayload,
 })
 export const proposeMessageInput = sendMessagePayload.extend(envelope)
+export const proposePayoutApprovalInput = approvePayoutPayload.extend(envelope)
+export const proposePayoutPaymentInput = markPayoutPaidPayload.extend(envelope)
+export const proposeDayCloseExportInput = exportDayClosePayload.extend(envelope)
 
 async function stage(
   client: SupabaseClient,
@@ -178,5 +184,76 @@ export async function proposeMessageTool(
     locale: payload.locale,
     templateBound: true,
     sentOnApprovalBy: 'store',
+  }
+}
+
+/** Approve a requested payout; medium: a second person approves, the amount is reserved then. */
+export async function proposePayoutApprovalTool(
+  client: SupabaseClient,
+  config: MCPConfig,
+  input: unknown,
+) {
+  const { requestId, expiresAt, ...payload } =
+    proposePayoutApprovalInput.parse(input)
+  return {
+    ...(await stage(
+      client,
+      config,
+      'payouts:propose',
+      'approvePayout',
+      'medium',
+      requestId,
+      expiresAt,
+      payload,
+    )),
+    payoutId: payload.payoutId,
+  }
+}
+
+/** Mark an approved payout paid with the payment reference; medium: a second person approves. */
+export async function proposePayoutPaymentTool(
+  client: SupabaseClient,
+  config: MCPConfig,
+  input: unknown,
+) {
+  const { requestId, expiresAt, ...payload } =
+    proposePayoutPaymentInput.parse(input)
+  return {
+    ...(await stage(
+      client,
+      config,
+      'payouts:propose',
+      'markPayoutPaid',
+      'medium',
+      requestId,
+      expiresAt,
+      payload,
+    )),
+    payoutId: payload.payoutId,
+    reference: payload.reference,
+  }
+}
+
+/** Export one day close under the current account map; medium, idempotent per close and map. */
+export async function proposeDayCloseExportTool(
+  client: SupabaseClient,
+  config: MCPConfig,
+  input: unknown,
+) {
+  const { requestId, expiresAt, ...payload } =
+    proposeDayCloseExportInput.parse(input)
+  return {
+    ...(await stage(
+      client,
+      config,
+      'accounting:propose',
+      'exportDayClose',
+      'medium',
+      requestId,
+      expiresAt,
+      payload,
+    )),
+    dayCloseId: payload.dayCloseId,
+    format: 'sie4',
   }
 }

@@ -156,8 +156,23 @@ id, so the reservation and the paid entries carry the approver, never the
 proposer. The review page marks a proposal stale once the payout left its
 starting status. `supabase/tests/0043_staged_payout_kinds.test.sql` covers
 validation, preflight, self-approval denial, approval with reservation,
-payment with release, and the queue filter. MCP proposers for these kinds
-follow once a store asks for agent-driven payout handling.
+payment with release, and the queue filter. MCP proposers
+`komisio_propose_payout_approval` and `komisio_propose_payout_payment` need
+the scope `payouts:propose`.
+
+## Day close export
+
+Since migration `20260914170000` the kind `exportDayClose` (`medium`) stages
+the SIE 4 export of one day close under the current account map. Preflight
+requires the close, a map and a balanced voucher, so an agent cannot stage an
+export the store could not make by hand. A second person approves; execution
+runs `export_day_close`, which is idempotent per day close and map version,
+so an approval after a manual export returns that export. MCP: reads
+`komisio_list_day_closes` and `komisio_preview_day_close_voucher` under
+`accounting:read`, proposer `komisio_propose_day_close_export` under
+`accounting:propose`. `supabase/tests/0047_staged_export_day_close.test.sql`
+covers preflight without a map and with an unbalanced one, self-approval
+denial, export by the approver and idempotent re-approval.
 
 ## Template-bound seller messages
 

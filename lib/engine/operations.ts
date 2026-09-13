@@ -16,6 +16,7 @@ export const operationKind = z.enum([
   'approvePayout',
   'markPayoutPaid',
   'sendMessage',
+  'exportDayClose',
 ])
 export const publishReceptionReviewPayload = z.strictObject({
   sessionId: z.uuid(),
@@ -132,6 +133,8 @@ export const sendMessagePayload = z.strictObject({
   locale: z.enum(['sv', 'en']),
   freeText: z.string().trim().min(1).max(1000),
 })
+// Day close export (medium): the ordinary idempotent export under the current map.
+export const exportDayClosePayload = z.strictObject({ dayCloseId: z.uuid() })
 const proposeBase = z.strictObject({
   tenantId: z.uuid(),
   requestId: z.uuid(),
@@ -178,6 +181,10 @@ export const proposeOperationCommand = z.discriminatedUnion('kind', [
   proposeBase.extend({
     kind: z.literal('sendMessage'),
     payload: sendMessagePayload,
+  }),
+  proposeBase.extend({
+    kind: z.literal('exportDayClose'),
+    payload: exportDayClosePayload,
   }),
 ])
 export const decideOperationCommand = z.strictObject({
@@ -252,6 +259,10 @@ export const operationRow = z.discriminatedUnion('kind', [
     kind: z.literal('sendMessage'),
     payload: sendMessagePayload,
   }),
+  operationBaseRow.extend({
+    kind: z.literal('exportDayClose'),
+    payload: exportDayClosePayload,
+  }),
 ])
 export type PendingOperation = z.infer<typeof operationRow>
 export const operationErrorCodes = [
@@ -295,6 +306,9 @@ export const operationErrorCodes = [
   'PAYOUT_EXCEEDS_BALANCE',
   'PAYOUT_DECIDED',
   'SELLER_EMAIL_MISSING',
+  'DAY_CLOSE_NOT_FOUND',
+  'ACCOUNTING_MAP_REQUIRED',
+  'VOUCHER_UNBALANCED',
 ] as const
 export function operationErrorCode(message: string) {
   return (

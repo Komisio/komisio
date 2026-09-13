@@ -356,6 +356,13 @@ export function OperationQueue({
                 <small>{d.messageTemplateNote}</small>
               </p>
             </>
+          ) : o.kind === 'exportDayClose' ? (
+            <p>
+              <Link className="text-link" href="/intake/accounting">
+                {d.dayClose}
+              </Link>{' '}
+              · {o.payload.dayCloseId.slice(0, 8).toUpperCase()}
+            </p>
           ) : (
             <>
               <p>

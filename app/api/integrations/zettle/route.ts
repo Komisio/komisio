@@ -1,3 +1,4 @@
+import { exportZettleItem } from '@/lib/engine/zettle-stock'
 import { enableZettlePull, pullZettlePurchases } from '@/lib/engine/zettle-live'
 import { pilotEnvironment } from '@/extensions/zettle/auth'
 import { NextResponse } from 'next/server'
@@ -43,6 +44,19 @@ export async function POST(request: Request) {
       return reply({ error: 'TENANT_CHANGED' }, 409)
     if (!['owner', 'admin', 'staff'].includes(ctx.active.role))
       return reply({ error: 'FORBIDDEN' }, 403)
+    if (c.action === 'export') {
+      if (!['owner', 'admin'].includes(ctx.active.role))
+        return reply({ error: 'FORBIDDEN' }, 403)
+      return reply(
+        await exportZettleItem(
+          ctx.client,
+          c.tenantId,
+          c.requestId,
+          c.itemId,
+          pilotEnvironment(process.env),
+        ),
+      )
+    }
     if (c.action === 'enablePull' || c.action === 'pull') {
       if (!['owner', 'admin'].includes(ctx.active.role))
         return reply({ error: 'FORBIDDEN' }, 403)

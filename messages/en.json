@@ -1255,7 +1255,10 @@
     "handoverIntro": "Announce a bag or a box before you bring it. Show the reference at the counter; the store records it as your bag and you see the bag number here.",
     "handoverDisabled": "This store does not take announced drop-offs yet. Bring your items to the counter.",
     "handoverKind": "What you bring",
-    "handoverKinds": { "bag": "Bag", "box": "Box" },
+    "handoverKinds": {
+      "bag": "Bag",
+      "box": "Box"
+    },
     "estimatedItems": "About how many items",
     "handoverNote": "Note to the store (optional)",
     "announce": "Announce",
@@ -1355,14 +1358,19 @@
       "ZETTLE_WINDOW_INVALID": "Zettle returned data outside the selected interval. Retrieval stopped.",
       "ZETTLE_WINDOW_COMPLETE": "This interval is already complete. Reload the page.",
       "ZETTLE_AUTH_REQUIRED": "Zettle rejected authentication. Check the API key and its permissions.",
-      "ZETTLE_CONNECTION_FAILED": "Could not verify the connection. Check configuration or retry later."
+      "ZETTLE_CONNECTION_FAILED": "Could not verify the connection. Check configuration or retry later.",
+      "ZETTLE_INVENTORY_FAILED": "Zettle stock could not be confirmed. Check the saved item status before taking further action.",
+      "ZETTLE_INVENTORY_CONFLICT": "Zettle stock could not be confirmed. Check the saved item status before taking further action.",
+      "ZETTLE_INVENTORY_AMBIGUOUS": "Zettle stock could not be confirmed. Check the saved item status before taking further action.",
+      "ZETTLE_STOCK_HELD": "Zettle stock could not be confirmed. Check the saved item status before taking further action.",
+      "ZETTLE_EXPORT_FAILED": "Zettle stock could not be confirmed. Check the saved item status before taking further action."
     },
     "approvalHint": "Matched receipts are recorded automatically. Only exceptions need investigation; no second approver is required.",
     "held": "The receipt could not be recorded. Investigate before retrying.",
     "retryReceipt": "Retry recording receipt",
     "catalogIssues": "Receipts were read. Some products could not sync; check product status.",
     "catalogTitle": "Products to Zettle",
-    "catalogHint": "Up to five items per sync. Prices come from Komisio. External changes are checked before updating.",
+    "catalogHint": "Prices come from Komisio. External changes in Zettle are checked before updating.",
     "pendingProducts": "Waiting items (up to 20 shown)",
     "vatTitle": "VAT mapping to Zettle",
     "vatHint": "Set the POS VAT rate for each mode. Blank blocks export for that mode. This does not change Komisio VAT calculations. Verify against the merchant settings and accounting before live use.",
@@ -1370,7 +1378,7 @@
     "productStatus": "Recent product attempts",
     "synced": "Synced",
     "productFailed": "Could not sync",
-    "catalogOffline": "Product export and scheduled retrieval are not enabled. Use the button above to fetch receipts.",
+    "catalogOffline": "Exports and receipt retrieval are started manually. No scheduled synchronization is enabled.",
     "pullTitle": "Sales from Zettle",
     "pullHint": "Retrieval starts at activation time. Each click fetches at most 100 receipts. Matched purchases are recorded automatically; other receipts await resolution. This starts no scheduled retrieval or product export.",
     "pullSince": "Activated from",
@@ -1391,6 +1399,16 @@
     "connectionVerified": "Connection verified. Zettle merchant:",
     "connectionFailed": "Could not verify the connection. Check configuration or retry later.",
     "merchantPinned": "The merchant matches the pinned connection.",
-    "merchantUnpinned": "Pin this merchant ID in configuration before enabling synchronization."
+    "merchantUnpinned": "Pin this merchant ID in configuration before enabling synchronization.",
+    "stockTitle": "Item export and stock",
+    "stockHint": "Export one item at a time. The first attempt adds one tracked unit. Later attempts check the result and update the price without replenishing stock. Up to 50 recorded attempts are shown; unresolved attempts come first.",
+    "exportItem": "Export item to Zettle",
+    "checkStock": "Check stock / update product",
+    "stockStates": {
+      "initialized": "One unit observed in Zettle",
+      "depleted": "Sold or removed in Zettle - not restocked",
+      "unknown": "Uncertain result - no new unit will be added",
+      "conflict": "Stock needs investigation - no new unit will be added"
+    }
   }
 }

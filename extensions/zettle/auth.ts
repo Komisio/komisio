@@ -1,3 +1,4 @@
+import { inventoryHttpClient } from './inventory'
 import { z } from 'zod'
 import { zettleHttpClient } from './http'
 import { boundedJson } from '../../lib/http/bounded-json'
@@ -169,4 +170,30 @@ export async function connectedPilotClient(
       return lease.accessToken
     },
   })
+}
+
+/** Catalog and inventory share a private merchant-verified lease, without a purchase window. */
+export async function connectedPilotCatalog(
+  tenantId: string,
+  source: PilotEnvironment,
+  http: typeof fetch = globalThis.fetch,
+) {
+  const env = pilotEnvironment(source)
+  if (!pilotAvailable(tenantId, env) || !env.ZETTLE_MERCHANT_ID)
+    throw new Error('ZETTLE_NOT_CONNECTED')
+  let lease = await acquirePilotSession(tenantId, env, http)
+  const token = async () => {
+    if (lease.expiresAt <= Date.now() + 30000)
+      lease = await acquirePilotSession(tenantId, env, http)
+    return lease.accessToken
+  }
+  const catalog = zettleHttpClient({
+    organizationId: env.ZETTLE_MERCHANT_ID,
+    accessToken: token,
+    fetch: http,
+  })
+  return {
+    putProduct: catalog.putProduct,
+    inventory: inventoryHttpClient(env.ZETTLE_MERCHANT_ID, token, http),
+  }
 }

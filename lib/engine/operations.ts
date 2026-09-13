@@ -12,6 +12,7 @@ export const operationKind = z.enum([
   'recordReturn',
   'adjustLedger',
   'applyMarkdownBatch',
+  'bulkItemUpdate',
 ])
 export const publishReceptionReviewPayload = z.strictObject({
   sessionId: z.uuid(),
@@ -80,6 +81,36 @@ export const applyMarkdownBatchPayload = z.strictObject({
       'Each item once',
     ),
 })
+// Bulk item update (medium): one price change or one end of period for up to
+// 50 items; the whole set is refused if any item is sold or ended.
+const uniqueItems = <T extends { itemId: string }>(list: T[]) =>
+  new Set(list.map((i) => i.itemId)).size === list.length
+export const bulkItemUpdatePayload = z.discriminatedUnion('action', [
+  z.strictObject({
+    action: z.literal('setPrice'),
+    reason: z.string().trim().min(1).max(500),
+    items: z
+      .array(
+        z.strictObject({
+          itemId: z.uuid(),
+          priceOre: z.number().int().min(1).max(99_999_999_999),
+        }),
+      )
+      .min(1)
+      .max(50)
+      .refine(uniqueItems, 'Each item once'),
+  }),
+  z.strictObject({
+    action: z.literal('endPeriod'),
+    endAction: z.enum(['charity', 'return']),
+    note: z.string().max(500),
+    items: z
+      .array(z.strictObject({ itemId: z.uuid() }))
+      .min(1)
+      .max(50)
+      .refine(uniqueItems, 'Each item once'),
+  }),
+])
 const proposeBase = z.strictObject({
   tenantId: z.uuid(),
   requestId: z.uuid(),
@@ -110,6 +141,10 @@ export const proposeOperationCommand = z.discriminatedUnion('kind', [
   proposeBase.extend({
     kind: z.literal('applyMarkdownBatch'),
     payload: applyMarkdownBatchPayload,
+  }),
+  proposeBase.extend({
+    kind: z.literal('bulkItemUpdate'),
+    payload: bulkItemUpdatePayload,
   }),
 ])
 export const decideOperationCommand = z.strictObject({
@@ -167,6 +202,10 @@ export const operationRow = z.discriminatedUnion('kind', [
   operationBaseRow.extend({
     kind: z.literal('applyMarkdownBatch'),
     payload: applyMarkdownBatchPayload,
+  }),
+  operationBaseRow.extend({
+    kind: z.literal('bulkItemUpdate'),
+    payload: bulkItemUpdatePayload,
   }),
 ])
 export type PendingOperation = z.infer<typeof operationRow>

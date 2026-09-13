@@ -526,8 +526,23 @@
       "acceptItem": "Acceptera ursprung som vara",
       "recordReturn": "Registrera hel retur",
       "adjustLedger": "Justera säljarens saldo",
-      "applyMarkdownBatch": "Genomför förfallna prissänkningar"
+      "applyMarkdownBatch": "Genomför förfallna prissänkningar",
+      "bulkItemUpdate": "Uppdatera en uppsättning varor"
     },
+    "bulkActions": {
+      "setPrice": "Prisändring",
+      "endPeriod": "Periodslut"
+    },
+    "endActions": {
+      "charity": "Välgörenhet",
+      "return": "Retur till säljaren"
+    },
+    "bulkPreview": "Förhandsvisning per vara",
+    "item": "Vara",
+    "currentPrice": "Nuvarande pris",
+    "newPrice": "Nytt pris",
+    "endActionHeading": "Avslutas som",
+    "missingItem": "finns inte längre i butiken",
     "saleLine": "Kvittorad",
     "refund": "Återbetalning",
     "seller": "Säljare",
@@ -949,6 +964,10 @@
     "due": "Prissänkningssteg {step} är dags: {percent} %",
     "applyMarkdown": "Sänk priset, steg {step}",
     "markdownDone": "Prissänkningen är registrerad.",
+    "price": "Nytt pris (SEK)",
+    "priceReason": "Skäl till priset",
+    "setPrice": "Sätt pris",
+    "priceSet": "Priset är satt.",
     "days": "Förläng med (dagar)",
     "reason": "Anledning",
     "extend": "Förläng perioden",

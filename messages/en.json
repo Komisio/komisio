@@ -526,8 +526,23 @@
       "acceptItem": "Accept origin as item",
       "recordReturn": "Record a full return",
       "adjustLedger": "Adjust a seller ledger",
-      "applyMarkdownBatch": "Apply due markdowns"
+      "applyMarkdownBatch": "Apply due markdowns",
+      "bulkItemUpdate": "Update a set of items"
     },
+    "bulkActions": {
+      "setPrice": "Price change",
+      "endPeriod": "End of period"
+    },
+    "endActions": {
+      "charity": "Charity",
+      "return": "Return to seller"
+    },
+    "bulkPreview": "Preview per item",
+    "item": "Item",
+    "currentPrice": "Current price",
+    "newPrice": "New price",
+    "endActionHeading": "Ends as",
+    "missingItem": "no longer in this store",
     "saleLine": "Sale line",
     "refund": "Refund",
     "seller": "Seller",
@@ -949,6 +964,10 @@
     "due": "Markdown step {step} due: {percent} %",
     "applyMarkdown": "Apply markdown step {step}",
     "markdownDone": "Markdown applied.",
+    "price": "New price (SEK)",
+    "priceReason": "Reason for the price",
+    "setPrice": "Set price",
+    "priceSet": "Price set.",
     "days": "Extend by (days)",
     "reason": "Reason",
     "extend": "Extend period",

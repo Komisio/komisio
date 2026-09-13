@@ -321,6 +321,14 @@ export function OperationQueue({
                 </li>
               ))}
             </ul>
+          ) : o.kind === 'bulkItemUpdate' ? (
+            <p>
+              {d.bulkActions[o.payload.action]} · {d.batchItems}:{' '}
+              {o.payload.items.length}
+              {o.payload.action === 'setPrice'
+                ? ` · ${o.payload.reason}`
+                : ` · ${d.endActions[o.payload.endAction]}${o.payload.note ? ` · ${o.payload.note}` : ''}`}
+            </p>
           ) : (
             <>
               <p>
@@ -414,6 +422,58 @@ export function OperationQueue({
               {reviewContext.alreadyDone && !o.outcome && (
                 <p role="alert">{d.alreadyDone}</p>
               )}
+              {!o.outcome && reviewContext.stale && (
+                <p role="alert">{d.staleEngine}</p>
+              )}
+            </section>
+          )}
+          {reviewContext?.kind === 'bulk' && (
+            <section aria-label={d.bulkPreview}>
+              <h3>{d.bulkPreview}</h3>
+              <p>{d.engineNotice}</p>
+              <div style={{ overflowX: 'auto' }}>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>{d.item}</th>
+                      <th>{d.currentPrice}</th>
+                      <th>
+                        {reviewContext.action === 'setPrice'
+                          ? d.newPrice
+                          : d.endActionHeading}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {reviewContext.rows.map((r) => (
+                      <tr key={r.itemId}>
+                        <td>
+                          <Link
+                            className="text-link"
+                            href={`/intake/items/${r.itemId}`}
+                          >
+                            {r.itemId.slice(0, 8).toUpperCase()}
+                          </Link>
+                          {!r.exists ? ` · ${d.missingItem}` : ''}
+                        </td>
+                        <td>
+                          {r.currentPriceOre === null
+                            ? '–'
+                            : `${(r.currentPriceOre / 100).toFixed(2)} SEK`}
+                        </td>
+                        <td>
+                          {r.newPriceOre !== null
+                            ? `${(r.newPriceOre / 100).toFixed(2)} SEK`
+                            : o.kind === 'bulkItemUpdate' &&
+                                o.payload.action === 'endPeriod'
+                              ? d.endActions[o.payload.endAction]
+                              : ''}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
               {!o.outcome && reviewContext.stale && (
                 <p role="alert">{d.staleEngine}</p>
               )}

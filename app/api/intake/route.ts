@@ -89,6 +89,12 @@ export async function POST(request: Request) {
           'VAT_MODE_NOT_SET',
           'VAT_BASIS_MISSING',
           'SALE_CONFLICT',
+          'PAYOUT_NOT_FOUND',
+          'PAYOUT_BELOW_THRESHOLD',
+          'PAYOUT_EXCEEDS_BALANCE',
+          'PAYOUT_NOT_REQUESTED',
+          'PAYOUT_NOT_APPROVED',
+          'PAYOUT_DECIDED',
         ].find((v) => result.error!.message.includes(v)) ?? 'REQUEST_FAILED'
       return reply(
         { error: code },
@@ -116,6 +122,10 @@ export async function POST(request: Request) {
                 'ITEM_ALREADY_SOLD',
                 'VAT_MODE_NOT_SET',
                 'SALE_CONFLICT',
+                'PAYOUT_EXCEEDS_BALANCE',
+                'PAYOUT_NOT_REQUESTED',
+                'PAYOUT_NOT_APPROVED',
+                'PAYOUT_DECIDED',
               ].includes(code)
             ? 409
             : 400,

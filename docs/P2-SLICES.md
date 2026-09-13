@@ -142,6 +142,13 @@ Purpose: request, approve, pay, with reservation at approval.
   request and history. Notification by e-mail on approval and payment
   through the communication log (S18).
 - Migration: yes.
+- Status 2026-09-13: tables `payouts` and `payout_events` with a status guard
+  that only engine transitions pass, `request_payout` (staff on the seller's
+  behalf, threshold and balance bounded), `approve_payout` (reserves),
+  `mark_payout_paid` (reference required, releases and pays),
+  `reject_payout` (releases an approved reservation), payouts page with
+  request form and decisions (migration `20260914020000`). Seller-app
+  requests, e-mail notification (S18) and the staged kinds follow.
 
 ## S16. Settlement statements
 

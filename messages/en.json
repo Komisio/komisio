@@ -792,6 +792,35 @@
     "adjust": "Record adjustment",
     "adjusted": "The adjustment is recorded."
   },
+  "payouts": {
+    "title": "Payouts",
+    "intro": "A payout goes from requested to approved to paid, or is rejected. Approval reserves the amount in the seller's ledger; payment settles it.",
+    "notice": "Komisio records payouts; it does not move money. Pay through your bank and record the reference here.",
+    "requestHeading": "Request a payout",
+    "requestHint": "On the seller's behalf, up to the available balance and at least the policy minimum. The seller app will request directly later.",
+    "seller": "Seller",
+    "amount": "Amount",
+    "amountHint": "SEK, for example 150 or 150.50.",
+    "amountInvalid": "Enter an amount with up to two decimals.",
+    "requestConfirm": "The seller asked for this payout.",
+    "request": "Record request",
+    "requested": "The request is recorded.",
+    "list": "Payouts",
+    "empty": "No payouts yet.",
+    "requestedAt": "Requested",
+    "paidAt": "Paid",
+    "reference": "Payment reference",
+    "reason": "Note (optional)",
+    "approve": "Approve and reserve",
+    "markPaid": "Mark as paid",
+    "reject": "Reject",
+    "statuses": {
+      "requested": "requested",
+      "approved": "approved",
+      "paid": "paid",
+      "rejected": "rejected"
+    }
+  },
   "purchases": {
     "title": "Purchases",
     "intro": "Store-owned goods enter here, never through the consignment paths.",

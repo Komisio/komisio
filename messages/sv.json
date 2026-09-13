@@ -792,6 +792,35 @@
     "adjust": "Registrera justering",
     "adjusted": "Justeringen är registrerad."
   },
+  "payouts": {
+    "title": "Utbetalningar",
+    "intro": "En utbetalning går från begärd till godkänd till utbetald, eller avvisas. Godkännandet reserverar beloppet i säljarens reskontra; betalningen avräknar det.",
+    "notice": "Komisio registrerar utbetalningar; Komisio flyttar inga pengar. Betala via banken och registrera referensen här.",
+    "requestHeading": "Begär en utbetalning",
+    "requestHint": "För säljarens räkning, upp till tillgängligt saldo och minst policyns minimum. Säljarappen begär direkt senare.",
+    "seller": "Säljare",
+    "amount": "Belopp",
+    "amountHint": "SEK, till exempel 150 eller 150,50.",
+    "amountInvalid": "Ange ett belopp med högst två decimaler.",
+    "requestConfirm": "Säljaren har bett om denna utbetalning.",
+    "request": "Registrera begäran",
+    "requested": "Begäran är registrerad.",
+    "list": "Utbetalningar",
+    "empty": "Inga utbetalningar ännu.",
+    "requestedAt": "Begärd",
+    "paidAt": "Utbetald",
+    "reference": "Betalningsreferens",
+    "reason": "Anteckning (valfri)",
+    "approve": "Godkänn och reservera",
+    "markPaid": "Markera som utbetald",
+    "reject": "Avvisa",
+    "statuses": {
+      "requested": "begärd",
+      "approved": "godkänd",
+      "paid": "utbetald",
+      "rejected": "avvisad"
+    }
+  },
   "purchases": {
     "title": "Inköp",
     "intro": "Butiksägda varor kommer in här, aldrig via inlämningsflödena.",

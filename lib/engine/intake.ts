@@ -6,6 +6,12 @@ import {
   adjustSellerLedgerCommand,
   signedOreFromDecimal,
 } from './seller-ledger'
+import {
+  requestPayoutCommand,
+  approvePayoutCommand,
+  markPayoutPaidCommand,
+  rejectPayoutCommand,
+} from './payouts'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { saveInspectionCommand, archiveInspectionCommand } from './inspection'
@@ -18,6 +24,10 @@ import {
 export const intakeCommand = z.discriminatedUnion('action', [
   publishStorePolicyCommand,
   publishSellerTermsCommand,
+  requestPayoutCommand,
+  approvePayoutCommand,
+  markPayoutPaidCommand,
+  rejectPayoutCommand,
   acceptItemCommand,
   recordSaleCommand,
   adjustSellerLedgerCommand,
@@ -130,6 +140,35 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_id: c.requestId,
         p_seller: c.sellerId,
         p_amount_ore: signedOreFromDecimal(c.amount),
+        p_reason: c.reason,
+      })
+    case 'requestPayout':
+      return client.rpc('request_payout', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_seller: c.sellerId,
+        p_amount_ore: oreFromDecimal(c.amount),
+      })
+    case 'approvePayout':
+      return client.rpc('approve_payout', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_payout: c.payoutId,
+        p_reason: c.reason,
+      })
+    case 'markPayoutPaid':
+      return client.rpc('mark_payout_paid', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_payout: c.payoutId,
+        p_reference: c.reference,
+        p_reason: c.reason,
+      })
+    case 'rejectPayout':
+      return client.rpc('reject_payout', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_payout: c.payoutId,
         p_reason: c.reason,
       })
     case 'publishReceptionReview':

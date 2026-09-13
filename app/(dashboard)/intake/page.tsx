@@ -106,6 +106,10 @@ export default async function Intake({
           <Link className="text-link" href="/intake/sales">
             {all.sales.title}
           </Link>
+          {' · '}
+          <Link className="text-link" href="/intake/payouts">
+            {all.payouts.title}
+          </Link>
         </p>
         <Link className="text-link" href="/intake/agreements">
           {a.manage}

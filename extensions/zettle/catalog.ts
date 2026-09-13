@@ -30,10 +30,21 @@ export function sameProduct(a: CatalogProduct, b: CatalogProduct) {
     a.variants[0].price.currencyId === b.variants[0].price.currencyId
   )
 }
-export function projectRemoteProduct(input: unknown): CatalogProduct {
+export function projectRemoteProduct(
+  input: unknown,
+  purpose: 'read' | 'update' = 'update',
+): CatalogProduct {
   const parsed = z
     .object({
       ...catalogProduct.shape,
+      vatPercentage: z.union([
+        catalogProduct.shape.vatPercentage,
+        z
+          .string()
+          .regex(/^[0-9]{1,3}(\.[0-9]{1,4})?$/)
+          .transform(Number)
+          .pipe(catalogProduct.shape.vatPercentage),
+      ]),
       variants: z.array(z.object(catalogVariant.shape)).length(1),
     })
     .passthrough()
@@ -75,7 +86,7 @@ export function projectRemoteProduct(input: unknown): CatalogProduct {
       )
       .map(([k]) => k),
   )
-  if (unsupported.length)
+  if (purpose === 'update' && unsupported.length)
     throw new ProductReadError('ZETTLE_PRODUCT_FIELDS_UNSUPPORTED', unsupported)
   return catalogProduct.parse({
     uuid: remote.uuid,

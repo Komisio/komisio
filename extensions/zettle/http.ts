@@ -89,7 +89,11 @@ export function zettleHttpClient(options: {
       throw new ProductHttpError(r.status, detail)
     }
     const raw = await boundedJson(r, 65536)
-    return { product: projectRemoteProduct(raw), etag: r.headers.get('etag') }
+    return {
+      product: projectRemoteProduct(raw, 'read'),
+      etag: r.headers.get('etag'),
+      raw,
+    }
   }
   return {
     async putProduct(input, old) {
@@ -131,6 +135,8 @@ export function zettleHttpClient(options: {
       }
       if (!previous || !sameProduct(remote.product, previous) || !remote.etag)
         throw new Error('ZETTLE_REMOTE_CHANGED')
+      // Extra fields cannot be erased by a read/no-op, but must still hold a real update.
+      projectRemoteProduct(remote.raw, 'update')
       const r = await call(
         `https://products.izettle.com/organizations/${org}/products/v2/${p.uuid}`,
         'PUT',

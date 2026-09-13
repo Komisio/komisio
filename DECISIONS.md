@@ -315,3 +315,18 @@ snapshot; never edit old IDs or outcomes. The tenant lock serializes recovery,
 replays return the same successor, and later snapshots reuse its IDs. One bounded
 retry is allowed. Network failures, write/read-back errors, valid v1 identities,
 and any ambiguous existing product stay held; none authorize ID rotation.
+
+
+## 2026-09-13: Zettle read-back is distinct from update safety
+
+Normalize the provider's decimal-string VAT percentage to the existing bounded
+numeric contract on read only; outbound engine payloads remain numeric. A product
+GET now succeeds with v1 IDs but real read-back fails at vatPercentage; historical
+official Product Library examples also use decimal strings. Reject empty,
+non-decimal, non-finite and out-of-range values.
+
+Reading an exact managed-field match performs no product write, so provider
+metadata need not block create read-back or a lost-acknowledgement retry. Before
+an actual update, retain the existing conservative guard against unmanaged
+fields, verify the previous managed snapshot and require ETag. This does not
+copy or erase remote descriptions, categories, images or variant options.

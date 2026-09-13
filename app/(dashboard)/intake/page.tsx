@@ -111,6 +111,9 @@ export default async function Intake({
             {all.payouts.title}
           </Link>
           {' · '}
+          <Link className="text-link" href="/intake/integrations">
+            {all.zettle.title}
+          </Link>
           <Link className="text-link" href="/intake/accounting">
             {all.accounting.title}
           </Link>

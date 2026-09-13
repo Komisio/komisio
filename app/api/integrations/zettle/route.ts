@@ -1,0 +1,56 @@
+import { NextResponse } from 'next/server'
+import { platformContext } from '@/lib/platform/context'
+import { boundedJson } from '@/lib/http/bounded-json'
+import {
+  zettleCommand,
+  zettleErrorCode,
+  syncZettle,
+  resolveZettleLine,
+  stageZettlePurchase,
+} from '@/lib/engine/zettle'
+import {
+  demoTransport,
+  zettleFixturesEnabled,
+} from '@/extensions/zettle/fixtures'
+export async function POST(request: Request) {
+  const reply = (body: object, status = 200) =>
+    NextResponse.json(body, {
+      status,
+      headers: { 'Cache-Control': 'no-store' },
+    })
+  if (process.env.KOMISIO_INTAKE_ENABLED !== 'true')
+    return reply({ error: 'NOT_FOUND' }, 404)
+  const origin = process.env.NEXT_PUBLIC_APP_URL
+  if (!origin || request.headers.get('origin') !== new URL(origin).origin)
+    return reply({ error: 'FORBIDDEN' }, 403)
+  try {
+    const ctx = await platformContext()
+    if (!ctx || ctx.mfaRequired) return reply({ error: 'AUTH_REQUIRED' }, 401)
+    let input: unknown
+    try {
+      input = await boundedJson(request)
+    } catch {
+      return reply({ error: 'INVALID_INPUT' }, 400)
+    }
+    const parsed = zettleCommand.safeParse(input)
+    if (!parsed.success) return reply({ error: 'INVALID_INPUT' }, 400)
+    const c = parsed.data
+    if (ctx.active?.id !== c.tenantId)
+      return reply({ error: 'TENANT_CHANGED' }, 409)
+    if (!['owner', 'admin', 'staff'].includes(ctx.active.role))
+      return reply({ error: 'FORBIDDEN' }, 403)
+    if (c.action === 'sync' && !zettleFixturesEnabled())
+      return reply({ error: 'ZETTLE_NOT_CONNECTED' }, 409)
+    const result =
+      c.action === 'sync'
+        ? await syncZettle(ctx.client, c, demoTransport())
+        : c.action === 'resolve'
+          ? await resolveZettleLine(ctx.client, c)
+          : await stageZettlePurchase(ctx.client, c)
+    if (result.error)
+      return reply({ error: zettleErrorCode(result.error.message) }, 409)
+    return reply({ id: result.data })
+  } catch {
+    return reply({ error: 'REQUEST_FAILED' }, 500)
+  }
+}

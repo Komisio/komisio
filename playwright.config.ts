@@ -15,6 +15,7 @@ export default defineConfig({
   },
   webServer: {
     command: 'npm run dev',
+    env: { KOMISIO_ZETTLE_FIXTURES: 'true' },
     url: 'http://127.0.0.1:3000/login',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,

@@ -1,3 +1,15 @@
+## Astra task 4 checkpoint — 2026-09-13
+
+Tasks 1–3 are merged: PR88 (2340a91), PR89 (19d74bf), PR90 (8809a97).
+Zettle task 4 is in `astra/zettle-fixture-pull`, worktree `komisio-zettle`, based
+on PR90 main. See [ZETTLE-FIXTURE-PULL.md](ZETTLE-FIXTURE-PULL.md).
+Migrations 20260915004000/005000/006000 are applied locally and immutable.
+The fixture browser journey passes, including dropped-response recovery, two
+staff identities, concurrent replays and mobile layout. No live credentials or
+hosted test purchases. Exact-head CI and staging release evidence belong in
+this task's PR. Next priorities are usage history/quotas and the duplicate-check
+design note, per ASTRA-NEXT-TASKS.md. Earlier checkpoints below are historical.
+
 ## Astra task 3 checkpoint — 2026-09-13
 
 PR88 seller economy and PR89 P2 browser journeys are merged and deployed; PR89

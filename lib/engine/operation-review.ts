@@ -1,3 +1,4 @@
+import { readZettlePurchase } from './zettle'
 import { readStorePolicy } from './store-policy'
 import { compareReceptionReview } from './reception-review-comparison'
 import { z } from 'zod'
@@ -12,6 +13,7 @@ import {
   bulkItemUpdatePayload,
   approvePayoutPayload,
   exportDayClosePayload,
+  recordZettlePurchasePayload,
   type PendingOperation,
 } from './operations'
 import { inspectionFields } from './inspection'
@@ -45,6 +47,48 @@ export async function readOperationReview(
   if (pending.error || !pending.data) throw new Error('OPERATION_NOT_FOUND')
   if (allowedKind && pending.data.kind !== allowedKind)
     throw new Error('OPERATION_NOT_FOUND')
+  if (pending.data.kind === 'recordZettlePurchase') {
+    const p = recordZettlePurchasePayload.parse(pending.data.payload)
+    const [receipt, decision] = await Promise.all([
+      readZettlePurchase(client, tenantId, p.importId, p.mappingRevision),
+      client
+        .from('operation_decisions')
+        .select('id,outcome,result_id,error_code,reason,decided_by,created_at')
+        .eq('tenant_id', tenantId)
+        .eq('operation_id', operationId)
+        .maybeSingle(),
+    ])
+    if (decision.error) throw new Error('OPERATION_NOT_FOUND')
+    const d = decision.data,
+      expired = Date.parse(pending.data.expires_at) <= Date.now()
+    const operation = operationRow.parse({
+      ...pending.data,
+      status: d?.outcome ?? (expired ? 'expired' : 'open'),
+      decision_id: d?.id ?? null,
+      outcome: d?.outcome ?? null,
+      result_id: d?.result_id ?? null,
+      error_code: d?.error_code ?? null,
+      reason: d?.reason ?? null,
+      decided_by: d?.decided_by ?? null,
+      decided_at: d?.created_at ?? null,
+    })
+    const stale =
+      receipt.mappingRevision !== p.mappingRevision ||
+      !!receipt.blocked_reason ||
+      receipt.rows.some((r) => !r.itemId)
+    return {
+      readOnly: true as const,
+      evidenceIsUntrusted: true as const,
+      operation,
+      context: {
+        kind: 'zettle' as const,
+        receipt,
+        stale,
+        canApprove: !d && !expired && !stale,
+        guidanceOnly: true as const,
+      },
+    }
+  }
   if (pending.data.kind === 'saveInspectionDraft') {
     const p = saveInspectionDraftPayload.parse(pending.data.payload)
     const [base, current, decision] = await Promise.all([

@@ -46,7 +46,9 @@ export async function POST(request: Request) {
     if (ctx.active.role === 'readonly')
       return reply({ error: 'FORBIDDEN' }, 403)
     if (
-      ['publishAgreement', 'publishStorePolicy'].includes(parsed.data.action) &&
+      ['publishAgreement', 'publishStorePolicy', 'adjustSellerLedger'].includes(
+        parsed.data.action,
+      ) &&
       !['owner', 'admin'].includes(ctx.active.role)
     )
       return reply({ error: 'FORBIDDEN' }, 403)

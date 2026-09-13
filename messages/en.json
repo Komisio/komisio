@@ -766,6 +766,32 @@
       "store_full": "store-owned, full VAT"
     }
   },
+  "ledger": {
+    "title": "Balance and ledger",
+    "intro": "Every seller-facing amount derives from this append-only ledger. Sales credit the seller's share; payouts and returns come later.",
+    "available": "Available",
+    "reserved": "Reserved",
+    "credited": "Credited from sales",
+    "paid": "Paid out",
+    "empty": "No entries yet.",
+    "kinds": {
+      "credit_sale": "Sale credit",
+      "credit_reversal": "Credit reversed",
+      "payout_reserved": "Payout reserved",
+      "payout_paid": "Payout paid",
+      "payout_released": "Reservation released",
+      "booking_charge": "Booking charge",
+      "adjustment": "Adjustment"
+    },
+    "adjustHeading": "Adjust the ledger",
+    "adjustHint": "Owner or admin only. A correction is a new entry with a reason; nothing is edited.",
+    "amount": "Amount (SEK, negative to deduct)",
+    "amountHint": "For example -50 or 12.50.",
+    "reason": "Reason",
+    "confirm": "I have agreed this correction and want it recorded.",
+    "adjust": "Record adjustment",
+    "adjusted": "The adjustment is recorded."
+  },
   "purchases": {
     "title": "Purchases",
     "intro": "Store-owned goods enter here, never through the consignment paths.",

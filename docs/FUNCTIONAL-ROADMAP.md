@@ -311,10 +311,15 @@ policy-aware reception queue, staged agent acceptance with a second-person
 approval, mobile custody and acceptance journey, scan-to-open. P2 engine slices
 delivered as PRs: VAT arithmetic, sales with frozen lines, seller ledger,
 payouts, returns, settlement statements, day closes, seller communication log
-with e-mail transport, lifecycle work list with markdowns. Still open in P2:
-Zettle pull and Fortnox voucher export (need tenant credentials and an account
-map from the store's accountant), labels and the print agent, batch reception,
-duplicate check, usage metering, bulk staged operations.
+with e-mail transport, lifecycle work list with markdowns, four label
+templates with the local print agent, usage metering with a policy quota,
+staged agent kinds for returns, ledger adjustments, markdown batches, bulk
+item updates, payout transitions and template-bound messages with MCP
+proposers, automatic seller notifications behind a policy switch, and the
+SIE 4 export of day closes under a tenant-published account map. Still open
+in P2: Zettle pull (needs tenant credentials), sending vouchers through the
+Fortnox API (needs a connected account), batch reception, duplicate check,
+seller-app payout requests, USB print transport.
 
 | Phase                                       | Theme                    | Slices                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Needs from owner                                                                                                                        |
 | ------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |

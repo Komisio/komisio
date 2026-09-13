@@ -547,8 +547,16 @@
       "markPayoutPaid": "Mark a payout paid",
       "sendMessage": "Send a message to a seller",
       "exportDayClose": "Export a day close",
-      "recordZettlePurchase": "Zettle purchase"
+      "recordZettlePurchase": "Zettle purchase",
+      "settlePayouts": "Settle sellers"
     },
+    "settlementPreview": "Sellers in the settlement",
+    "settlementNotice": "Approval requests and approves one payout per seller as you, reserving each amount. A seller below the threshold, over its balance or with an open payout refuses the whole batch.",
+    "availableNow": "Available now",
+    "proposedAmount": "Proposed",
+    "missingSeller": "no longer in this store",
+    "openPayout": "open payout",
+    "total": "Total",
     "dayClose": "Day close",
     "messageTemplateNote": "Only the text above is proposed. It is sent inside the store's fixed message template with the usual greeting and footer, from the store's address, once.",
     "payout": "Payout",
@@ -881,7 +889,16 @@
       "approved": "approved",
       "paid": "paid",
       "rejected": "rejected"
-    }
+    },
+    "settleHeading": "Settle all sellers",
+    "settleHint": "Every seller at or above the minimum ({threshold} SEK) without an open payout. One batch requests and approves a payout of the full available balance per selected seller; you then pay through your bank and mark each one paid.",
+    "settleEmpty": "No seller reaches the minimum right now.",
+    "settleReason": "Batch note",
+    "settleReasonHint": "Recorded on every approval in the batch, for example \"September settlement\".",
+    "settleConfirm": "I will pay these amounts and record the references.",
+    "settle": "Settle {count} sellers",
+    "settled": "The batch is recorded: every selected seller now has an approved payout awaiting payment.",
+    "settleTotal": "Total"
   },
   "returns": {
     "reason": "Return reason",

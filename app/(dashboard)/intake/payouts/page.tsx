@@ -3,12 +3,17 @@ import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
-import { readPayouts, readPayoutEvents } from '@/lib/engine/payouts'
+import {
+  readPayouts,
+  readPayoutEvents,
+  readSettlementCandidates,
+} from '@/lib/engine/payouts'
 import { readFlaggedReturns } from '@/lib/engine/returns'
 import { readSellerBalance, formatSignedOre } from '@/lib/engine/seller-ledger'
 import {
   PayoutRequestForm,
   PayoutDecision,
+  SettlementForm,
 } from '@/components/intake/payout-forms'
 
 export default async function Payouts() {
@@ -27,7 +32,7 @@ export default async function Payouts() {
   const sellerRows = z
     .array(z.object({ id: z.uuid(), name: z.string() }))
     .parse(sellers.data)
-  const [payouts, balances, flagged] = await Promise.all([
+  const [payouts, balances, flagged, settlement] = await Promise.all([
     readPayouts(ctx.client, active.id),
     Promise.all(
       sellerRows.map(async (s) => ({
@@ -37,6 +42,7 @@ export default async function Payouts() {
       })),
     ),
     readFlaggedReturns(ctx.client, active.id),
+    readSettlementCandidates(ctx.client, active.id),
   ])
   const events = await readPayoutEvents(
     ctx.client,
@@ -69,6 +75,28 @@ export default async function Payouts() {
               key={active.id}
               tenantId={active.id}
               sellers={balances.filter((s) => s.availableOre > 0)}
+              d={d}
+              intake={all.intake}
+            />
+          ) : (
+            <p>{all.intake.readOnly}</p>
+          )}
+        </section>
+        <section className="card intake-form">
+          <h2>{d.settleHeading}</h2>
+          <p>
+            {d.settleHint.replace(
+              '{threshold}',
+              (settlement.thresholdOre / 100).toFixed(2),
+            )}
+          </p>
+          {settlement.sellers.length === 0 ? (
+            <p>{d.settleEmpty}</p>
+          ) : write ? (
+            <SettlementForm
+              key={`${active.id}-${settlement.sellers.map((s) => s.sellerId).join(',')}`}
+              tenantId={active.id}
+              candidates={settlement.sellers}
               d={d}
               intake={all.intake}
             />

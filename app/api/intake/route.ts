@@ -105,6 +105,7 @@ export async function POST(request: Request) {
           'PAYOUT_NOT_REQUESTED',
           'PAYOUT_NOT_APPROVED',
           'PAYOUT_DECIDED',
+          'PAYOUT_PENDING',
           'SALE_LINE_NOT_FOUND',
           'SALE_NOT_COMPLETED',
           'LINE_ALREADY_RETURNED',
@@ -155,6 +156,8 @@ export async function POST(request: Request) {
                 'PAYOUT_NOT_REQUESTED',
                 'PAYOUT_NOT_APPROVED',
                 'PAYOUT_DECIDED',
+                'PAYOUT_PENDING',
+                'PAYOUT_BELOW_THRESHOLD',
                 'SALE_NOT_COMPLETED',
                 'LINE_ALREADY_RETURNED',
                 'STATEMENT_ALREADY_CORRECTED',
@@ -182,6 +185,7 @@ export async function POST(request: Request) {
         'recordSale',
         'approvePayout',
         'markPayoutPaid',
+        'settlePayouts',
         'issueStatement',
       ].includes(parsed.data.action)
     ) {

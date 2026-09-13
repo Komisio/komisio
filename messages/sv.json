@@ -547,8 +547,16 @@
       "markPayoutPaid": "Markera en utbetalning som betald",
       "sendMessage": "Skicka ett meddelande till en säljare",
       "exportDayClose": "Exportera ett dagsavslut",
-      "recordZettlePurchase": "Zettle-försäljning"
+      "recordZettlePurchase": "Zettle-försäljning",
+      "settlePayouts": "Avräkna säljare"
     },
+    "settlementPreview": "Säljare i avräkningen",
+    "settlementNotice": "Godkännandet begär och godkänner en utbetalning per säljare som du och reserverar varje belopp. En säljare under tröskeln, över sitt saldo eller med en öppen utbetalning gör att hela satsen avvisas.",
+    "availableNow": "Tillgängligt nu",
+    "proposedAmount": "Föreslaget",
+    "missingSeller": "finns inte längre i butiken",
+    "openPayout": "öppen utbetalning",
+    "total": "Summa",
     "dayClose": "Dagsavslut",
     "messageTemplateNote": "Bara texten ovan föreslås. Den skickas inuti butikens fasta meddelandemall med vanlig hälsning och sidfot, från butikens adress, en gång.",
     "payout": "Utbetalning",
@@ -881,7 +889,16 @@
       "approved": "godkänd",
       "paid": "utbetald",
       "rejected": "avvisad"
-    }
+    },
+    "settleHeading": "Avräkna alla säljare",
+    "settleHint": "Alla säljare med minst minimibeloppet ({threshold} SEK) och utan öppen utbetalning. En sats begär och godkänner en utbetalning av hela det tillgängliga saldot per vald säljare; sedan betalar du via banken och markerar varje utbetalning som utbetald.",
+    "settleEmpty": "Ingen säljare når minimibeloppet just nu.",
+    "settleReason": "Anteckning för satsen",
+    "settleReasonHint": "Sparas på varje godkännande i satsen, till exempel \"Avräkning september\".",
+    "settleConfirm": "Jag betalar dessa belopp och registrerar referenserna.",
+    "settle": "Avräkna {count} säljare",
+    "settled": "Satsen är registrerad: varje vald säljare har nu en godkänd utbetalning som väntar på betalning.",
+    "settleTotal": "Summa"
   },
   "returns": {
     "reason": "Anledning till retur",

@@ -373,6 +373,17 @@ export function OperationQueue({
               </Link>{' '}
               · {o.payload.dayCloseId.slice(0, 8).toUpperCase()}
             </p>
+          ) : o.kind === 'settlePayouts' ? (
+            <p>
+              <Link className="text-link" href="/intake/payouts">
+                {d.kinds.settlePayouts}
+              </Link>{' '}
+              · {o.payload.sellers.length} ·{' '}
+              {(
+                o.payload.sellers.reduce((sum, s) => sum + s.amountOre, 0) / 100
+              ).toFixed(2)}{' '}
+              SEK · {o.payload.reason}
+            </p>
           ) : (
             <>
               <p>
@@ -547,6 +558,53 @@ export function OperationQueue({
                         </td>
                       </tr>
                     ))}
+                  </tbody>
+                </table>
+              </div>
+              {!o.outcome && reviewContext.stale && (
+                <p role="alert">{d.staleEngine}</p>
+              )}
+            </section>
+          )}
+          {reviewContext?.kind === 'settlement' && (
+            <section aria-label={d.settlementPreview}>
+              <h3>{d.settlementPreview}</h3>
+              <p>{d.settlementNotice}</p>
+              <div style={{ overflowX: 'auto' }}>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>{d.seller}</th>
+                      <th>{d.availableNow}</th>
+                      <th>{d.proposedAmount}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {reviewContext.rows.map((r) => (
+                      <tr key={r.sellerId}>
+                        <td>
+                          <Link
+                            className="text-link"
+                            href={`/intake/sellers/${r.sellerId}`}
+                          >
+                            {r.name ?? r.sellerId.slice(0, 8).toUpperCase()}
+                          </Link>
+                          {r.name === null ? ` · ${d.missingSeller}` : ''}
+                          {r.openPayout ? ` · ${d.openPayout}` : ''}
+                        </td>
+                        <td>
+                          {r.availableOre === null
+                            ? '–'
+                            : `${(r.availableOre / 100).toFixed(2)} SEK`}
+                        </td>
+                        <td>{(r.amountOre / 100).toFixed(2)} SEK</td>
+                      </tr>
+                    ))}
+                    <tr>
+                      <td>{d.total}</td>
+                      <td></td>
+                      <td>{(reviewContext.totalOre / 100).toFixed(2)} SEK</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>

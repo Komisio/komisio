@@ -14,8 +14,10 @@ import {
   approvePayoutPayload,
   exportDayClosePayload,
   recordZettlePurchasePayload,
+  settlePayoutsPayload,
   type PendingOperation,
 } from './operations'
+import { readSellerBalance } from './seller-ledger'
 import { inspectionFields } from './inspection'
 import { receptionSession } from './reception'
 
@@ -341,6 +343,93 @@ export async function readOperationReview(
       context: {
         kind: 'engine' as const,
         alreadyDone,
+        stale,
+        canApprove: !d && !expired && !stale,
+        guidanceOnly: true as const,
+      },
+    }
+  }
+  if (pending.data.kind === 'settlePayouts') {
+    // Preview: each seller's available balance now next to the proposed
+    // amount. SQL rechecks threshold, balance and open payouts on approval.
+    const p = settlePayoutsPayload.parse(pending.data.payload)
+    const ids = p.sellers.map((s) => s.sellerId)
+    const [decision, sellers, open, balances] = await Promise.all([
+      client
+        .from('operation_decisions')
+        .select('id,outcome,result_id,error_code,reason,decided_by,created_at')
+        .eq('tenant_id', tenantId)
+        .eq('operation_id', operationId)
+        .maybeSingle(),
+      client
+        .from('sellers')
+        .select('id,name')
+        .eq('tenant_id', tenantId)
+        .in('id', ids),
+      client
+        .from('payouts')
+        .select('seller_id')
+        .eq('tenant_id', tenantId)
+        .in('seller_id', ids)
+        .in('status', ['requested', 'approved']),
+      Promise.all(
+        ids.map((id) =>
+          readSellerBalance(client, tenantId, id).catch(() => null),
+        ),
+      ),
+    ])
+    if (decision.error || sellers.error || open.error)
+      throw new Error('OPERATION_NOT_FOUND')
+    const d = decision.data,
+      expired = Date.parse(pending.data.expires_at) <= Date.now()
+    const operation = operationRow.parse({
+      ...pending.data,
+      status: d?.outcome ?? (expired ? 'expired' : 'open'),
+      decision_id: d?.id ?? null,
+      outcome: d?.outcome ?? null,
+      result_id: d?.result_id ?? null,
+      error_code: d?.error_code ?? null,
+      reason: d?.reason ?? null,
+      decided_by: d?.decided_by ?? null,
+      decided_at: d?.created_at ?? null,
+    })
+    const names = new Map(
+      z
+        .array(z.object({ id: z.uuid(), name: z.string() }))
+        .parse(sellers.data)
+        .map((s) => [s.id, s.name]),
+    )
+    const pendingSellers = new Set(
+      z
+        .array(z.object({ seller_id: z.uuid() }))
+        .parse(open.data)
+        .map((r) => r.seller_id),
+    )
+    const rows = p.sellers.map((s, i) => ({
+      sellerId: s.sellerId,
+      name: names.get(s.sellerId) ?? null,
+      amountOre: s.amountOre,
+      availableOre: balances[i]?.availableOre ?? null,
+      // After execution the batch's own payouts are the open ones.
+      openPayout: !d && pendingSellers.has(s.sellerId),
+    }))
+    const stale =
+      !d &&
+      rows.some(
+        (r) =>
+          r.name === null ||
+          r.availableOre === null ||
+          r.amountOre > r.availableOre ||
+          r.openPayout,
+      )
+    return {
+      readOnly: true as const,
+      evidenceIsUntrusted: true as const,
+      operation,
+      context: {
+        kind: 'settlement' as const,
+        rows,
+        totalOre: p.sellers.reduce((sum, s) => sum + s.amountOre, 0),
         stale,
         canApprove: !d && !expired && !stale,
         guidanceOnly: true as const,

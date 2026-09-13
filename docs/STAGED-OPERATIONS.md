@@ -174,6 +174,22 @@ so an approval after a manual export returns that export. MCP: reads
 covers preflight without a map and with an unbalanced one, self-approval
 denial, export by the approver and idempotent re-approval.
 
+## Settlement batches
+
+Since migration `20260915100000` the kind `settlePayouts` (`medium`) stages
+one settlement batch: a payout per listed seller (at most 100, each once,
+integer öre) with a batch note. Preflight runs the same checks as the staff
+command `settle_payouts`: every seller must exist, have no open payout, and
+the amount must reach the policy threshold and stay within the available
+balance; one failing seller refuses the whole batch. A second person
+approves; execution runs the batch as that person with the operation id as
+the batch id, requesting and approving every payout and reserving each
+amount. The review page lists each seller's available balance now next to
+the proposed amount. See [SETTLEMENT.md](SETTLEMENT.md). MCP:
+`komisio_list_settlement_candidates` and `komisio_propose_settlement` under
+`payouts:propose`. `supabase/tests/0053_settle_payouts.test.sql` covers the
+kind together with the command.
+
 ## Template-bound seller messages
 
 Since migration `20260914150000` the kind `sendMessage` (`low`) stages the

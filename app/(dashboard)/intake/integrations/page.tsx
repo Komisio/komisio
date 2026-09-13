@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { pilotAvailable, pilotEnvironment } from '@/extensions/zettle/auth'
+import { pilotIssue, pilotEnvironment } from '@/extensions/zettle/auth'
 import { ZettleConnection } from '@/components/intake/zettle-connection'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
@@ -49,7 +49,7 @@ export default async function Integrations({
         <ZettleConnection
           key={a.id}
           tenantId={a.id}
-          available={pilotAvailable(a.id, pilotEnvironment(process.env))}
+          issue={pilotIssue(a.id, pilotEnvironment(process.env))}
           d={d}
         />
       )}

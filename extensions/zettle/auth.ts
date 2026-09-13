@@ -6,13 +6,43 @@ export type PilotEnvironment = {
   ZETTLE_PILOT_TENANT_ID?: string
   ZETTLE_MERCHANT_ID?: string
 }
-export function pilotAvailable(tenantId: string, env: PilotEnvironment) {
-  return (
-    z.uuid().safeParse(tenantId).success &&
-    env.ZETTLE_PILOT_TENANT_ID === tenantId &&
-    z.uuid().safeParse(env.ZETTLE_CLIENT_ID).success &&
-    !!env.ZETTLE_API_KEY?.trim()
+export type PilotIssue =
+  | 'connectionUnavailable'
+  | 'connectionTenantMissing'
+  | 'connectionClientMissing'
+  | 'connectionKeyMissing'
+  | 'connectionMerchantInvalid'
+/** Safe diagnostic codes only. Inspect credentials only after the explicit tenant match. */
+export function pilotIssue(
+  tenantId: string,
+  source: PilotEnvironment,
+): PilotIssue | null {
+  const env = pilotEnvironment(source)
+  if (!env.ZETTLE_PILOT_TENANT_ID) return 'connectionTenantMissing'
+  if (
+    !z.uuid().safeParse(tenantId).success ||
+    env.ZETTLE_PILOT_TENANT_ID !== tenantId
   )
+    return 'connectionUnavailable'
+  // OAuth specifies an opaque string, not a UUID. The provider validates the ID.
+  if (
+    !env.ZETTLE_CLIENT_ID ||
+    env.ZETTLE_CLIENT_ID.length > 4096 ||
+    Array.from(env.ZETTLE_CLIENT_ID).some(
+      (c) => c.charCodeAt(0) <= 32 || c.charCodeAt(0) === 127,
+    )
+  )
+    return 'connectionClientMissing'
+  if (!env.ZETTLE_API_KEY) return 'connectionKeyMissing'
+  if (
+    env.ZETTLE_MERCHANT_ID &&
+    !z.uuid().safeParse(env.ZETTLE_MERCHANT_ID).success
+  )
+    return 'connectionMerchantInvalid'
+  return null
+}
+export function pilotAvailable(tenantId: string, env: PilotEnvironment) {
+  return pilotIssue(tenantId, env) === null
 }
 const tokenResponse = z.object({
   access_token: z.string().min(1).max(32768),
@@ -26,15 +56,11 @@ const tokenResponse = z.object({
 /** Assertion grant, official /token endpoint. Errors never contain provider bodies or credentials. */
 export async function verifyPilotConnection(
   tenantId: string,
-  env: PilotEnvironment,
+  source: PilotEnvironment,
   http: typeof fetch = globalThis.fetch,
 ) {
+  const env = pilotEnvironment(source)
   if (!pilotAvailable(tenantId, env)) throw new Error('ZETTLE_NOT_CONNECTED')
-  if (
-    env.ZETTLE_MERCHANT_ID &&
-    !z.uuid().safeParse(env.ZETTLE_MERCHANT_ID).success
-  )
-    throw new Error('ZETTLE_NOT_CONNECTED')
   try {
     const response = await http('https://oauth.zettle.com/token', {
       method: 'POST',
@@ -102,9 +128,9 @@ export function pilotEnvironment(
   env: Record<string, string | undefined>,
 ): PilotEnvironment {
   return {
-    ZETTLE_CLIENT_ID: env.ZETTLE_CLIENT_ID,
-    ZETTLE_API_KEY: env.ZETTLE_API_KEY,
-    ZETTLE_PILOT_TENANT_ID: env.ZETTLE_PILOT_TENANT_ID,
-    ZETTLE_MERCHANT_ID: env.ZETTLE_MERCHANT_ID,
+    ZETTLE_CLIENT_ID: env.ZETTLE_CLIENT_ID?.trim(),
+    ZETTLE_API_KEY: env.ZETTLE_API_KEY?.trim(),
+    ZETTLE_PILOT_TENANT_ID: env.ZETTLE_PILOT_TENANT_ID?.trim(),
+    ZETTLE_MERCHANT_ID: env.ZETTLE_MERCHANT_ID?.trim(),
   }
 }

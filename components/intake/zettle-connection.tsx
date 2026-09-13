@@ -1,14 +1,15 @@
 'use client'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import type { PilotIssue } from '@/extensions/zettle/auth'
 import type { Dictionary } from '@/lib/i18n'
 export function ZettleConnection({
   tenantId,
-  available,
+  issue,
   d,
 }: {
   tenantId: string
-  available: boolean
+  issue: PilotIssue | null
   d: Dictionary['zettle']
 }) {
   const running = useRef(false)
@@ -55,12 +56,15 @@ export function ZettleConnection({
     <section className="card intake-form" aria-label={d.connectionTitle}>
       <h2>{d.connectionTitle}</h2>
       <p>{d.connectionHint}</p>
-      {available ? (
+      {issue === null ? (
         <Button type="button" onClick={() => void check()} disabled={busy}>
           {busy ? d.busy : d.checkConnection}
         </Button>
       ) : (
-        <p>{d.connectionUnavailable}</p>
+        <div>
+          <p role="status">{d[issue]}</p>
+          <p>{d.connectionConfigHint}</p>
+        </div>
       )}
       {message && <p role={ok ? 'status' : 'alert'}>{message}</p>}
     </section>

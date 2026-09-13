@@ -14,7 +14,7 @@ const markers = {
   readOnly: true,
   evidenceIsUntrusted: true,
   guidanceOnly: true,
-  amountUnit: 'minor',
+  amountUnit: 'ore',
 } as const
 
 export async function readSellerEconomyTool(

@@ -21,7 +21,7 @@ export async function readEconomySummaryTool(
     readOnly: true,
     evidenceIsUntrusted: true,
     guidanceOnly: true,
-    amountUnit: 'minor',
+    amountUnit: 'ore',
     ...summary,
   }
 }

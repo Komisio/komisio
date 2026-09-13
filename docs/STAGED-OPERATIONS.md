@@ -187,7 +187,7 @@ the batch id, requesting and approving every payout and reserving each
 amount. The review page lists each seller's available balance now next to
 the proposed amount. See [SETTLEMENT.md](SETTLEMENT.md). MCP:
 `komisio_list_settlement_candidates` and `komisio_propose_settlement` under
-`payouts:propose`. `supabase/tests/0052_settle_payouts.test.sql` covers the
+`payouts:propose`. `supabase/tests/0053_settle_payouts.test.sql` covers the
 kind together with the command.
 
 ## Template-bound seller messages

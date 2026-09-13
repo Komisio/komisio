@@ -71,7 +71,7 @@ No settlement across stores.
 
 ## Verification
 
-`supabase/tests/0052_settle_payouts.test.sql`: candidates, every refusal
+`supabase/tests/0053_settle_payouts.test.sql`: candidates, every refusal
 with nothing written, a direct batch with derived ids and reservation, replay
 and conflict, exclusion after an open payout, the staged kind with
 self-approval denial and execution by the approver, the queue filter and

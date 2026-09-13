@@ -57,6 +57,7 @@ export async function POST(request: Request) {
         'publishStorePolicy',
         'adjustSellerLedger',
         'registerPrinter',
+        'publishAccountingMap',
       ].includes(parsed.data.action) &&
       !['owner', 'admin'].includes(ctx.active.role)
     )
@@ -119,6 +120,10 @@ export async function POST(request: Request) {
           'PRINTER_INACTIVE',
           'PRINT_JOB_NOT_FOUND',
           'PRINT_JOB_DECIDED',
+          'MAP_CHANGED',
+          'ACCOUNTING_MAP_REQUIRED',
+          'DAY_CLOSE_NOT_FOUND',
+          'VOUCHER_UNBALANCED',
         ].find((v) => result.error!.message.includes(v)) ?? 'REQUEST_FAILED'
       return reply(
         { error: code },
@@ -160,6 +165,9 @@ export async function POST(request: Request) {
                 'ITEM_ENDED',
                 'PRINTER_INACTIVE',
                 'PRINT_JOB_DECIDED',
+                'MAP_CHANGED',
+                'VOUCHER_UNBALANCED',
+                'ACCOUNTING_MAP_REQUIRED',
               ].includes(code)
             ? 409
             : 400,

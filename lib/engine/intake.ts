@@ -22,6 +22,10 @@ import {
   setItemPriceCommand,
 } from './lifecycle'
 import { registerPrinterCommand, cancelPrintJobCommand } from './printing'
+import {
+  publishAccountingMapCommand,
+  exportDayCloseCommand,
+} from './accounting'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { saveInspectionCommand, archiveInspectionCommand } from './inspection'
@@ -47,6 +51,8 @@ export const intakeCommand = z.discriminatedUnion('action', [
   setItemPriceCommand,
   registerPrinterCommand,
   cancelPrintJobCommand,
+  publishAccountingMapCommand,
+  exportDayCloseCommand,
   acceptItemCommand,
   recordSaleCommand,
   adjustSellerLedgerCommand,
@@ -198,6 +204,19 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_tenant: c.tenantId,
         p_id: c.requestId,
         p_date: c.date,
+      })
+    case 'publishAccountingMap':
+      return client.rpc('publish_accounting_map', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_expected_current: c.expectedCurrentId,
+        p_map: c.map,
+      })
+    case 'exportDayClose':
+      return client.rpc('export_day_close', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_day_close: c.dayCloseId,
       })
     case 'setItemPrice':
       return client.rpc('set_item_price', {

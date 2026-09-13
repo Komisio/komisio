@@ -352,7 +352,7 @@ recorded (migration `20260915150000`, see
 [MARKDOWN-AGENT.md](MARKDOWN-AGENT.md)). One currency per store delivered
 after the owner's decision: the policy names it, money facts record it, it
 freezes after the first sale, purchase or payout (migration
-`20260915170000`, see [STORE-CURRENCY.md](STORE-CURRENCY.md))
+`20260915180000`, see [STORE-CURRENCY.md](STORE-CURRENCY.md))
 (migration `20260915100000`, see [SETTLEMENT.md](SETTLEMENT.md)).
 
 | Phase                                       | Theme                    | Slices                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Needs from owner                                                                                                                        |

@@ -1,3 +1,14 @@
+## Zettle product read-back checkpoint, 2026-09-13
+
+The corrected v1 product identity now reaches a real product response; read-back
+fails at the provider VAT representation. Normalize bounded decimal-string VAT
+on reads, and distinguish read/no-op from update safety. Exact managed-field
+matches need no product write even with provider metadata. Actual updates still
+require the previous snapshot, ETag and the unmanaged-field guard. Keep the
+persisted corrected identity; no further rotation or stock replay is authorized.
+360 unit tests, build/typecheck/lint/format and the Zettle browser journey pass.
+No migration in this patch. CI/deployment and real read-back/stock remain to verify.
+
 ## Zettle product identity compatibility, 2026-09-13
 
 The real pilot product GET returned HTTP 422 with a UUID-specific error before

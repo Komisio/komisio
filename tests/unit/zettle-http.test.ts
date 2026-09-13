@@ -135,7 +135,8 @@ it.each([
     json({ organizationUuid: org }),
     json(remote, 200, { ETag: '"7"' }),
   ])
-  await expect(client.putProduct(product, product)).rejects.toThrow(
+  const desired = { ...product, name: 'Updated description in Komisio' }
+  await expect(client.putProduct(desired, product)).rejects.toThrow(
     'description' in remote
       ? 'ZETTLE_PRODUCT_FIELDS_UNSUPPORTED'
       : 'ZETTLE_REMOTE_CHANGED',
@@ -227,14 +228,18 @@ it.each([
 it('unsupported fields expose only known schema names, never values or unknown names', async () => {
   const { client } = setup([
     json({ organizationUuid: org }),
-    json({
-      ...product,
-      taxExempt: false,
-      'secret-shaped-name': 'sensitive content',
-    }),
+    json(
+      {
+        ...product,
+        taxExempt: false,
+        'secret-shaped-name': 'sensitive content',
+      },
+      200,
+      { ETag: '"7"' },
+    ),
   ])
   try {
-    await client.putProduct(product, null)
+    await client.putProduct({ ...product, name: 'New name' }, product)
     expect.unreachable()
   } catch (e) {
     expect(e).toMatchObject({
@@ -311,3 +316,45 @@ it.each(['previous', 'v1', 'organization', 'readback'])(
     ).rejects.toThrow('ZETTLE_READ_FAILED')
   },
 )
+
+it('reads back decimal-string VAT and extra metadata without rewriting or duplicating a product', async () => {
+  const remote = {
+    ...product,
+    vatPercentage: '0.0',
+    metadata: { inPos: true },
+    taxExempt: false,
+    variants: [{ ...product.variants[0], vatPercentage: '0.0', options: [] }],
+  }
+  const { client, http } = setup([
+    json({ organizationUuid: org }),
+    new Response(null, { status: 404 }),
+    new Response(null, { status: 201 }),
+    json(remote),
+    json(remote),
+  ])
+  await client.putProduct(product, null)
+  await client.putProduct(product, null)
+  expect(http.mock.calls.filter((c) => c[1]?.method === 'POST')).toHaveLength(1)
+  expect(http.mock.calls.filter((c) => c[1]?.method === 'PUT')).toHaveLength(0)
+})
+it.each(['', 'NaN', 'Infinity', '-1', '101', '25%', ' 25 ', '2.5e1'])(
+  'rejects invalid remote VAT %s',
+  async (vatPercentage) => {
+    const { client, http } = setup([
+      json({ organizationUuid: org }),
+      json({ ...product, vatPercentage }),
+    ])
+    await expect(client.putProduct(product, null)).rejects.toThrow(
+      'ZETTLE_PRODUCT_RESPONSE_INVALID',
+    )
+    expect(http.mock.calls).toHaveLength(2)
+  },
+)
+it('normalizes a valid nonzero decimal VAT without changing the expected percentage', async () => {
+  const { client, http } = setup([
+    json({ organizationUuid: org }),
+    json({ ...product, vatPercentage: '25.00' }),
+  ])
+  await client.putProduct({ ...product, vatPercentage: 25 }, null)
+  expect(http.mock.calls).toHaveLength(2)
+})

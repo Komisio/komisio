@@ -330,3 +330,19 @@ metadata need not block create read-back or a lost-acknowledgement retry. Before
 an actual update, retain the existing conservative guard against unmanaged
 fields, verify the previous managed snapshot and require ETag. This does not
 copy or erase remote descriptions, categories, images or variant options.
+
+## 2026-09-13: Zettle review follow-up
+
+Receipt page validation accepts the half-open interval from five minutes before
+the requested window start to five minutes after its end, never before the
+connection's immutable activation cutover. This bounds provider timestamp skew
+without historical backfill. Pagination, whole-receipt reconciliation, actor
+checks and receipt idempotency remain unchanged; timestamps outside this
+tolerance still fail closed. No window is silently skipped or closed.
+
+Retain `recordZettlePurchase` as a compatibility-only staged kind for existing
+envelopes. Do not add new proposals or treat it as a force-record escape for held
+receipts; all existing validation and approval requirements remain in force.
+Scheduled retrieval is a separate slice: follow the markdown worker's private,
+database-owner-only execution pattern with the enabling connection owner/admin
+as actor, rechecking current authorization. No service-role client.

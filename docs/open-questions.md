@@ -182,6 +182,15 @@ remain separate. Fable's newer commits are held until PR58 is complete.
 
 ## Zettle live pilot prerequisites (2026-09-13)
 
+**Review follow-up 2026-09-13:** bounded five-minute timestamp tolerance is the
+selected window fix, clipped at activation; larger discrepancies still stop for
+investigation. Before the pilot, the owner and accountant must confirm each
+Zettle catalog VAT mapping against the engine facts and docs/VAT-CASES.md. No
+rate or financial rule is changed by this fix. Scheduled retrieval remains a
+separate slice with the enabling owner/admin as actor, database-owner-only
+execution via pg_cron, current authorization checks and no service-role client.
+Multi-tenant credential lifecycle is explicitly tracked under P5 in the roadmap.
+
 The fixture slice holds whole purchases until every line is matched; it never
 appends lines under an existing external receipt ID. See ZETTLE-FIXTURE-PULL.md.
 Still required: developer app/test merchant, verified label placement and real

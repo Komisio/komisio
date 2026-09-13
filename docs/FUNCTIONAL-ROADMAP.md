@@ -362,6 +362,16 @@ recorded (migration `20260915150000`, see
 | P5                                          | Open up                  | Partner REST subset with OAuth clients, import wizard as staged op, kiosk integration contract, voice adapter, public buyer assistant, self-service export automation, quality and fraud proposals                                                                                                                                                                                                                                                                                                                              | –                                                                                                                                       |
 | P6                                          | Commercial               | Hosted tier subscription in Stripe, AI quota mapping, operator report                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Pricing decisions                                                                                                                       |
 
+### Explicit P5 slice: multi-tenant Zettle connections
+
+Replace the single pilot environment credential slot with partner-hosted
+authorization and tenant-bound encrypted credential storage, rotation and
+revocation. Preserve merchant verification, tenant isolation, server-only secrets
+and immutable connection provenance. This is planned work, not delivered by the
+pilot binding. Scheduled receipt retrieval remains a separate follow-up using
+the enabling owner/admin identity and a database-owner-only pg_cron entry point;
+do not introduce a service-role client or reuse a staff click as a worker actor.
+
 ## 8. Questions this document raised
 
 Answered by the owner on 2026-09-12 and recorded in DECISIONS.md: the hourly

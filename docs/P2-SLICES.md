@@ -99,6 +99,12 @@ Purpose: reversal as a new fact.
 - Surface: return action on receipt detail; review flag on the payouts page.
   Agent tool `record return` (staged, `medium`).
 - Migration: yes.
+- Status 2026-09-13: `sale_returns` and `record_return` delivered (migration
+  `20260914030000`): full refund only, credit reversal in the ledger, item
+  freed for resale, `flagged_for_review` with reason `CREDIT_ALREADY_USED`
+  when the seller's available balance no longer covers the credit; return
+  form on the receipt, flagged list on the payouts page. The sale row stays
+  `completed`; the return is the reversal fact. Staged agent kind follows.
 
 ## S14. Seller ledger and balance
 

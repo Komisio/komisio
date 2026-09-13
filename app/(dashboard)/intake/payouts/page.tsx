@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { readPayouts, readPayoutEvents } from '@/lib/engine/payouts'
+import { readFlaggedReturns } from '@/lib/engine/returns'
 import { readSellerBalance, formatSignedOre } from '@/lib/engine/seller-ledger'
 import {
   PayoutRequestForm,
@@ -26,7 +27,7 @@ export default async function Payouts() {
   const sellerRows = z
     .array(z.object({ id: z.uuid(), name: z.string() }))
     .parse(sellers.data)
-  const [payouts, balances] = await Promise.all([
+  const [payouts, balances, flagged] = await Promise.all([
     readPayouts(ctx.client, active.id),
     Promise.all(
       sellerRows.map(async (s) => ({
@@ -35,6 +36,7 @@ export default async function Payouts() {
           .availableOre,
       })),
     ),
+    readFlaggedReturns(ctx.client, active.id),
   ])
   const events = await readPayoutEvents(
     ctx.client,
@@ -74,6 +76,21 @@ export default async function Payouts() {
             <p>{all.intake.readOnly}</p>
           )}
         </section>
+        {flagged.length > 0 && (
+          <section className="card intake-form">
+            <h2>{all.returns.flaggedHeading}</h2>
+            <p>{all.returns.flaggedHint}</p>
+            {flagged.map((r) => (
+              <p key={r.id} role="alert">
+                {when(r.occurred_at)} · {formatSignedOre(r.refund_ore)} SEK ·{' '}
+                {r.reason} ·{' '}
+                <Link className="text-link" href={`/intake/items/${r.item_id}`}>
+                  {all.items.open}
+                </Link>
+              </p>
+            ))}
+          </section>
+        )}
         <section className="card intake-form">
           <h2>{d.list}</h2>
           {payouts.length === 0 && <p>{d.empty}</p>}

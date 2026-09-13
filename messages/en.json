@@ -821,6 +821,16 @@
       "rejected": "rejected"
     }
   },
+  "returns": {
+    "reason": "Return reason",
+    "confirm": "The customer returned the item and {amount} SEK is refunded in full.",
+    "record": "Record return",
+    "recorded": "The return is recorded.",
+    "returned": "Returned",
+    "flagged": "flagged for review",
+    "flaggedHeading": "Returns to review",
+    "flaggedHint": "The seller's credit for these returns had already been reserved or paid out. Settle with the seller and record an adjustment if needed."
+  },
   "purchases": {
     "title": "Purchases",
     "intro": "Store-owned goods enter here, never through the consignment paths.",

@@ -821,6 +821,16 @@
       "rejected": "avvisad"
     }
   },
+  "returns": {
+    "reason": "Anledning till retur",
+    "confirm": "Kunden har lämnat tillbaka varan och {amount} SEK återbetalas i sin helhet.",
+    "record": "Registrera retur",
+    "recorded": "Returen är registrerad.",
+    "returned": "Returnerad",
+    "flagged": "flaggad för granskning",
+    "flaggedHeading": "Returer att granska",
+    "flaggedHint": "Säljarens tillgodohavande för dessa returer var redan reserverat eller utbetalt. Gör upp med säljaren och registrera en justering vid behov."
+  },
   "purchases": {
     "title": "Inköp",
     "intro": "Butiksägda varor kommer in här, aldrig via inlämningsflödena.",

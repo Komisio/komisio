@@ -95,6 +95,10 @@ export async function POST(request: Request) {
           'PAYOUT_NOT_REQUESTED',
           'PAYOUT_NOT_APPROVED',
           'PAYOUT_DECIDED',
+          'SALE_LINE_NOT_FOUND',
+          'SALE_NOT_COMPLETED',
+          'LINE_ALREADY_RETURNED',
+          'PARTIAL_REFUND_UNSUPPORTED',
         ].find((v) => result.error!.message.includes(v)) ?? 'REQUEST_FAILED'
       return reply(
         { error: code },
@@ -126,6 +130,8 @@ export async function POST(request: Request) {
                 'PAYOUT_NOT_REQUESTED',
                 'PAYOUT_NOT_APPROVED',
                 'PAYOUT_DECIDED',
+                'SALE_NOT_COMPLETED',
+                'LINE_ALREADY_RETURNED',
               ].includes(code)
             ? 409
             : 400,

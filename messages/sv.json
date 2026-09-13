@@ -1176,7 +1176,7 @@
   "zettle": {
     "title": "Zettle-integration",
     "intro": "Skicka accepterade varor till Zettle. Matchade kassakvitton registrerar automatiskt försäljningen och säljarens saldo.",
-    "offline": "Livekopplingen är inte konfigurerad. Inget Zettle-konto kontaktas.",
+    "offline": "Synkningen mot Zettle är inte aktiverad. En anslutningskontroll startar ingen synkning.",
     "fixture": "ENDAST LOKALT TEST: produkterna och kassaköpen simuleras. Inget riktigt Zettle-konto kontaktas.",
     "sync": "Synka testprodukter och kvitton",
     "lastSync": "Senaste lyckade hämtning",

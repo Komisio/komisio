@@ -1176,7 +1176,7 @@
   "zettle": {
     "title": "Zettle integration",
     "intro": "Send accepted items to Zettle. Matched checkout receipts automatically record the sale and seller credit.",
-    "offline": "Live connection is not configured. No Zettle account is contacted.",
+    "offline": "Live Zettle synchronization is not enabled. A connection check does not start synchronization.",
     "fixture": "LOCAL TEST ONLY: products and checkout purchases are simulated. No real Zettle account is contacted.",
     "sync": "Sync test products and receipts",
     "lastSync": "Last successful sync",

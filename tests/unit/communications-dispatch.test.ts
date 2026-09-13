@@ -1,8 +1,10 @@
+import { createHash } from 'node:crypto'
 import { expect, it } from 'vitest'
 import {
   factCommunicationId,
-  notificationForOperation,
+  notificationsForOperation,
   notifyAfterFacts,
+  settlementPayoutIds,
 } from '../../lib/communications/dispatch'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
@@ -23,19 +25,41 @@ it('derives one stable UUID-shaped id per fact and kind', () => {
   ).not.toBe(a)
 })
 
-it('maps executed staged operations to their notification', () => {
-  expect(notificationForOperation('acceptItem', item, {})).toEqual({
-    kind: 'item_accepted',
-    referenceId: item,
-  })
+it('maps executed staged operations to their notifications', () => {
+  expect(notificationsForOperation('acceptItem', item, {})).toEqual([
+    { kind: 'item_accepted', referenceId: item },
+  ])
   expect(
-    notificationForOperation('approvePayout', item, { payoutId: item }),
-  ).toEqual({ kind: 'payout_approved', referenceId: item })
+    notificationsForOperation('approvePayout', item, { payoutId: item }),
+  ).toEqual([{ kind: 'payout_approved', referenceId: item }])
   expect(
-    notificationForOperation('markPayoutPaid', item, { payoutId: item }),
-  ).toEqual({ kind: 'payout_paid', referenceId: item })
-  expect(notificationForOperation('recordReturn', item, {})).toBeNull()
-  expect(notificationForOperation('approvePayout', item, {})).toBeNull()
+    notificationsForOperation('markPayoutPaid', item, { payoutId: item }),
+  ).toEqual([{ kind: 'payout_paid', referenceId: item }])
+  expect(notificationsForOperation('recordReturn', item, {})).toEqual([])
+  expect(notificationsForOperation('approvePayout', item, {})).toEqual([])
+})
+
+it('derives settlement payout ids exactly as the engine does', () => {
+  // md5('<batch>:<seller>') as Postgres casts it: 32 hex digits in 8-4-4-4-12.
+  const batch = '22222222-2222-4222-8222-222222222222'
+  const ids = settlementPayoutIds(batch, [{ sellerId: item }])
+  expect(ids).toEqual([
+    createHash('md5')
+      .update(`${batch}:${item}`)
+      .digest('hex')
+      .replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, '$1-$2-$3-$4-$5'),
+  ])
+  expect(ids[0]).toMatch(/^[0-9a-f-]{36}$/)
+  expect(
+    settlementPayoutIds(batch, [{ sellerId: item.toUpperCase() }]),
+  ).toEqual(ids)
+  expect(settlementPayoutIds(batch, 'nonsense')).toEqual([])
+  expect(
+    notificationsForOperation('settlePayouts', batch, {
+      sellers: [{ sellerId: item, amountOre: 100 }],
+      reason: 'x',
+    }),
+  ).toEqual([{ kind: 'payout_approved', referenceId: ids[0] }])
 })
 
 it('sends nothing unless the store opted in, and never throws', async () => {

@@ -30,6 +30,22 @@ export const rejectPayoutCommand = z.strictObject({
   payoutId: z.uuid(),
   reason: z.string().trim().min(1).max(500),
 })
+// Settlement batch (P3): staff request and approve one payout per listed
+// seller in one replay-safe command; the engine refuses the whole batch if
+// any seller fails a precondition.
+export const settlePayoutsCommand = z.strictObject({
+  action: z.literal('settlePayouts'),
+  ...ids,
+  sellers: z
+    .array(z.strictObject({ sellerId: z.uuid(), amount: price }))
+    .min(1)
+    .max(100)
+    .refine(
+      (list) => new Set(list.map((s) => s.sellerId)).size === list.length,
+      'Each seller once',
+    ),
+  reason: z.string().trim().min(1).max(500),
+})
 export const payoutStatus = z.enum([
   'requested',
   'approved',
@@ -78,6 +94,33 @@ export async function readPayouts(
     .limit(50)
   if (error) throw new Error('Unable to read payouts')
   return z.array(payoutRow).parse(data)
+}
+
+const oreField = z.union([z.number().int(), z.string()]).transform(Number)
+export const settlementCandidates = z.strictObject({
+  thresholdOre: oreField,
+  sellers: z
+    .array(
+      z.strictObject({
+        sellerId: z.uuid(),
+        name: z.string(),
+        availableOre: oreField,
+      }),
+    )
+    .max(10000),
+})
+export type SettlementCandidates = z.infer<typeof settlementCandidates>
+
+/** Sellers a settlement would cover now: at or above the threshold, no open payout. */
+export async function readSettlementCandidates(
+  client: SupabaseClient,
+  tenantInput: string,
+) {
+  const result = await client.rpc('settlement_candidates', {
+    p_tenant: z.uuid().parse(tenantInput),
+  })
+  if (result.error) throw new Error('FORBIDDEN')
+  return settlementCandidates.parse(result.data)
 }
 
 /** Events for a set of payouts, newest last, keyed by payout id. */

@@ -51,7 +51,13 @@ import {
   proposePayoutPaymentTool,
   proposeDayCloseExportInput,
   proposeDayCloseExportTool,
+  proposeSettlementInput,
+  proposeSettlementTool,
 } from './proposals'
+import {
+  settlementCandidatesInput,
+  listSettlementCandidatesTool,
+} from './settlement'
 import {
   dayCloseListInput,
   dayClosePreviewInput,
@@ -445,6 +451,32 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       (input) =>
         result(async () => ({
           data: await proposePayoutPaymentTool(client, config, input),
+        })),
+    )
+    server.registerTool(
+      'komisio_list_settlement_candidates',
+      {
+        description:
+          'List the sellers a settlement batch would cover right now: available balance at or above the policy minimum and no open payout, as seller ids and öre. Read only; no names, contacts, requests or approvals.',
+        inputSchema: settlementCandidatesInput,
+        annotations,
+      },
+      () =>
+        result(async () => ({
+          data: await listSettlementCandidatesTool(client, config),
+        })),
+    )
+    server.registerTool(
+      'komisio_propose_settlement',
+      {
+        description:
+          'Stage one settlement batch: a payout per listed seller (at most 100, each once, integer öre) with a batch note, for decision. Medium risk: a different person must approve; approval requests and approves every payout as that person, reserving each amount, and the batch is refused whole if any seller is below the minimum, over its balance or already has an open payout. Nothing is requested, approved or paid by this call.',
+        inputSchema: proposeSettlementInput,
+        annotations: stagingAnnotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await proposeSettlementTool(client, config, input),
         })),
     )
   }

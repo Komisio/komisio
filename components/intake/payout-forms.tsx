@@ -94,6 +94,114 @@ export function PayoutRequestForm({
   )
 }
 
+/**
+ * One batch for every selected candidate: the full available balance per
+ * seller, requested and approved together. Refused whole by the engine if any
+ * seller changed since the page loaded.
+ */
+export function SettlementForm({
+  tenantId,
+  candidates,
+  d,
+  intake,
+}: {
+  tenantId: string
+  candidates: { sellerId: string; name: string; availableOre: number }[]
+  d: D
+  intake: Dictionary['intake']
+}) {
+  const action = useIntakeAction(intake)
+  const router = useRouter()
+  const [requestId, setRequestId] = useState(() => crypto.randomUUID())
+  const [selected, setSelected] = useState(
+    () => new Set(candidates.map((c) => c.sellerId)),
+  )
+  const [saved, setSaved] = useState(false)
+  const chosen = candidates.filter((c) => selected.has(c.sellerId))
+  const totalOre = chosen.reduce((sum, c) => sum + c.availableOre, 0)
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const form = event.currentTarget,
+      f = new FormData(form)
+    if (
+      chosen.length &&
+      (await action.run({
+        action: 'settlePayouts',
+        tenantId,
+        requestId,
+        reason: String(f.get('reason') ?? ''),
+        sellers: chosen.map((c) => ({
+          sellerId: c.sellerId,
+          amount: (c.availableOre / 100).toFixed(2),
+        })),
+      }))
+    ) {
+      setSaved(true)
+      setRequestId(crypto.randomUUID())
+      form.reset()
+      router.refresh()
+    }
+  }
+  return (
+    <form onSubmit={submit}>
+      <fieldset
+        className="intake-fields"
+        disabled={action.busy || action.locked || saved}
+      >
+        {candidates.map((c) => (
+          <label className="intake-confirm" key={c.sellerId}>
+            <input
+              type="checkbox"
+              name="seller"
+              value={c.sellerId}
+              checked={selected.has(c.sellerId)}
+              onChange={(e) => {
+                const next = new Set(selected)
+                if (e.target.checked) next.add(c.sellerId)
+                else next.delete(c.sellerId)
+                setSelected(next)
+              }}
+            />
+            {c.name} · {(c.availableOre / 100).toFixed(2)} SEK
+          </label>
+        ))}
+        <p>
+          {d.settleTotal}: {(totalOre / 100).toFixed(2)} SEK
+        </p>
+        <div className="field">
+          <label htmlFor="settle-reason">{d.settleReason}</label>
+          <input
+            id="settle-reason"
+            name="reason"
+            required
+            maxLength={500}
+            placeholder="September"
+          />
+          <small>{d.settleReasonHint}</small>
+        </div>
+        <label className="intake-confirm">
+          <input type="checkbox" required />
+          {d.settleConfirm}
+        </label>
+      </fieldset>
+      {action.error && <p role="alert">{action.error}</p>}
+      {!saved && (
+        <Button
+          type="submit"
+          disabled={action.busy || action.needsReload || chosen.length === 0}
+        >
+          {action.busy
+            ? intake.busy
+            : action.locked
+              ? intake.retry
+              : d.settle.replace('{count}', String(chosen.length))}
+        </Button>
+      )}
+      {saved && <p role="status">{d.settled}</p>}
+    </form>
+  )
+}
+
 /** Approve, mark paid or reject one payout. Each submit is one replay-safe command. */
 export function PayoutDecision({
   tenantId,

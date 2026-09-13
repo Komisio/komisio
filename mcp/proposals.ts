@@ -11,6 +11,7 @@ import {
   approvePayoutPayload,
   markPayoutPaidPayload,
   exportDayClosePayload,
+  settlePayoutsPayload,
   proposeOperation,
   operationErrorCode,
   type PendingOperation,
@@ -32,6 +33,7 @@ export const proposeMessageInput = sendMessagePayload.extend(envelope)
 export const proposePayoutApprovalInput = approvePayoutPayload.extend(envelope)
 export const proposePayoutPaymentInput = markPayoutPaidPayload.extend(envelope)
 export const proposeDayCloseExportInput = exportDayClosePayload.extend(envelope)
+export const proposeSettlementInput = settlePayoutsPayload.extend(envelope)
 
 async function stage(
   client: SupabaseClient,
@@ -231,6 +233,30 @@ export async function proposePayoutPaymentTool(
     )),
     payoutId: payload.payoutId,
     reference: payload.reference,
+  }
+}
+
+/** One payout per listed seller, requested and approved together; medium, all or nothing. */
+export async function proposeSettlementTool(
+  client: SupabaseClient,
+  config: MCPConfig,
+  input: unknown,
+) {
+  const { requestId, expiresAt, ...payload } =
+    proposeSettlementInput.parse(input)
+  return {
+    ...(await stage(
+      client,
+      config,
+      'payouts:propose',
+      'settlePayouts',
+      'medium',
+      requestId,
+      expiresAt,
+      payload,
+    )),
+    sellers: payload.sellers.length,
+    totalOre: payload.sellers.reduce((sum, s) => sum + s.amountOre, 0),
   }
 }
 

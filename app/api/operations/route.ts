@@ -9,7 +9,7 @@ import {
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import {
   notifyAfterFacts,
-  notificationForOperation,
+  notificationsForOperation,
   sendSellerCommunication,
   type NotifyOutcome,
 } from '@/lib/communications/dispatch'
@@ -71,14 +71,14 @@ export async function POST(request: Request) {
             .eq('id', c.data.requestId)
             .maybeSingle(),
         ])
-        const fact =
+        const facts =
           decision.data?.outcome === 'executed' && operation.data
-            ? notificationForOperation(
+            ? notificationsForOperation(
                 String(operation.data.kind),
                 c.data.operationId,
                 operation.data.payload,
               )
-            : null
+            : []
         // An approved template-bound message: the approval is the fact, the
         // send follows now with the operation id as the communication id.
         if (
@@ -112,7 +112,7 @@ export async function POST(request: Request) {
                 },
           ]
         }
-        if (fact) {
+        if (facts.length) {
           const policy = await readStorePolicy(ctx.client, c.data.tenantId)
           notifications = await notifyAfterFacts(
             ctx.client,
@@ -122,7 +122,7 @@ export async function POST(request: Request) {
               locale: ctx.locale,
               policy: policy.policy,
             },
-            [fact],
+            facts,
           )
         }
       } catch {

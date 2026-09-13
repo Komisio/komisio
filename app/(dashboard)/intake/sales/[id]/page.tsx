@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
+import { readStoreCurrency } from '@/lib/engine/money'
 import { readSale, formatOre } from '@/lib/engine/sales'
 import { readReturnsForLines } from '@/lib/engine/returns'
 import { ReturnForm } from '@/components/intake/return-form'
@@ -17,6 +18,7 @@ export default async function Sale({
   if (!id.success) notFound()
   const ctx = await requirePlatform(),
     active = ctx.active!,
+    currency = await readStoreCurrency(ctx.client, active.id),
     all = dictionary(ctx.locale),
     d = all.sales
   const result = await readSale(ctx.client, active.id, id.data)
@@ -40,7 +42,7 @@ export default async function Sale({
       <div className="page-heading">
         <div className="eyebrow">{active.name}</div>
         <h1>
-          {d.receipt} {formatOre(sale.total_ore)} SEK
+          {d.receipt} {formatOre(sale.total_ore)} {currency}
         </h1>
         <p>
           {when(sale.occurred_at)} · {d.providers[sale.provider]} ·{' '}
@@ -53,7 +55,7 @@ export default async function Sale({
         {lines.map((l) => (
           <div key={l.id} className="intake-notice">
             <strong>
-              {d.line} {l.line_no} · {formatOre(l.price_ore)} SEK ·{' '}
+              {d.line} {l.line_no} · {formatOre(l.price_ore)} {currency} ·{' '}
               {all.items.ownershipKinds[l.ownership]}
             </strong>
             <p>
@@ -63,13 +65,13 @@ export default async function Sale({
             </p>
             {l.ownership === 'consignment' && (
               <p>
-                {d.commission}: {formatOre(l.commission_ore)} SEK (
+                {d.commission}: {formatOre(l.commission_ore)} {currency} (
                 {l.commission_rate_percent} %,{' '}
                 {l.commission_basis ? all.sellerTerms[l.commission_basis] : ''})
                 {l.commission_vat_ore > 0
-                  ? ` + ${d.commissionVat} ${formatOre(l.commission_vat_ore)} SEK`
+                  ? ` + ${d.commissionVat} ${formatOre(l.commission_vat_ore)} ${currency}`
                   : ''}{' '}
-                · {d.sellerCredit}: {formatOre(l.seller_credit_ore)} SEK
+                · {d.sellerCredit}: {formatOre(l.seller_credit_ore)} {currency}
               </p>
             )}
             <p>

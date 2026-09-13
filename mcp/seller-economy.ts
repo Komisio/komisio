@@ -6,6 +6,7 @@ import {
   readSellerBalance,
   readSellerLedger,
 } from '../lib/engine/seller-ledger'
+import { readStoreCurrency } from '../lib/engine/money'
 
 export const sellerEconomyInput = z.strictObject({ sellerId: z.uuid() })
 const exactOre = z.number().int()
@@ -13,7 +14,6 @@ const markers = {
   readOnly: true,
   evidenceIsUntrusted: true,
   guidanceOnly: true,
-  currency: 'SEK',
   amountUnit: 'ore',
 } as const
 
@@ -26,7 +26,10 @@ export async function readSellerEconomyTool(
   const { sellerId } = sellerEconomyInput.parse(input)
   await requireMCPIdentity(client, config, 'economy:read')
   // This also distinguishes a missing/foreign seller from a seller with zero balance.
-  const balance = await readSellerBalance(client, config.tenantId, sellerId)
+  const [balance, currency] = await Promise.all([
+    readSellerBalance(client, config.tenantId, sellerId),
+    readStoreCurrency(client, config.tenantId),
+  ])
   for (const amount of [
     balance.availableOre,
     balance.reservedOre,
@@ -34,10 +37,11 @@ export async function readSellerEconomyTool(
     balance.paidOre,
   ])
     exactOre.parse(amount)
-  if (!includeLedger) return { ...markers, balance }
+  if (!includeLedger) return { ...markers, currency, balance }
   const entries = await readSellerLedger(client, config.tenantId, sellerId)
   return {
     ...markers,
+    currency,
     sellerId,
     recentOnly: true,
     limit: 50,

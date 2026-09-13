@@ -10,11 +10,13 @@ import { Button } from '@/components/ui/button'
 /** Records a counter sale of one accepted item. POS providers arrive through their own pull. */
 export function SaleForm({
   tenantId,
+  currency,
   items,
   d,
   intake,
 }: {
   tenantId: string
+  currency: string
   items: { id: string; label: string; priceOre: number | null }[]
   d: Dictionary['sales']
   intake: Dictionary['intake']
@@ -44,7 +46,7 @@ export function SaleForm({
       provider: 'manual',
       externalId,
       occurredAt: new Date().toISOString(),
-      currency: 'SEK',
+      currency,
       lines: [{ itemId: String(fields.get('item')), price }],
     })
     if (id) {

@@ -78,6 +78,7 @@ export function StorePolicyForm({
             automaticSellerNotifications:
               f.get('automaticSellerNotifications') === 'on',
             automaticMarkdowns: f.get('automaticMarkdowns') === 'on',
+            currency: f.get('currency') || undefined,
             assistanceMonthlyQuota:
               String(f.get('assistanceMonthlyQuota') ?? '') === ''
                 ? undefined
@@ -307,6 +308,24 @@ export function StorePolicyForm({
               />
               {t.automaticSellerNotifications}
             </label>
+          </fieldset>
+          <fieldset>
+            <legend>{t.currency}</legend>
+            <p>{t.currencyIntro}</p>
+            <div className="field">
+              <label htmlFor="policy-currency">{t.currency}</label>
+              <select
+                id="policy-currency"
+                name="currency"
+                defaultValue={base.policy.currency ?? 'SEK'}
+              >
+                {['SEK', 'NOK', 'DKK', 'EUR'].map((code) => (
+                  <option key={code} value={code}>
+                    {code}
+                  </option>
+                ))}
+              </select>
+            </div>
           </fieldset>
           <fieldset>
             <legend>{t.markdowns}</legend>

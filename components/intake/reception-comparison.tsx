@@ -48,14 +48,14 @@ export function ReceptionComparison({
           <p>
             {d.before}:{' '}
             {comparison.price.before
-              ? `${comparison.price.before.amount} SEK · ${comparison.price.before.rationale}`
+              ? `${comparison.price.before.amount} ${comparison.price.before.currency} · ${comparison.price.before.rationale}`
               : d.emptyField}
           </p>
           <small>{comparison.price.before?.sourceIds.join(', ')}</small>
           <p>
             {d.after}:{' '}
             {comparison.price.after
-              ? `${comparison.price.after.amount} SEK · ${comparison.price.after.rationale}`
+              ? `${comparison.price.after.amount} ${comparison.price.after.currency} · ${comparison.price.after.rationale}`
               : d.emptyField}
           </p>
           <small>{comparison.price.after?.sourceIds.join(', ')}</small>

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
+import { readStoreCurrency } from '@/lib/engine/money'
 import {
   readPayouts,
   readPayoutEvents,
@@ -20,6 +21,7 @@ export default async function Payouts() {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const ctx = await requirePlatform(),
     active = ctx.active!,
+    currency = await readStoreCurrency(ctx.client, active.id),
     all = dictionary(ctx.locale),
     d = all.payouts
   const sellers = await ctx.client
@@ -74,6 +76,7 @@ export default async function Payouts() {
             <PayoutRequestForm
               key={active.id}
               tenantId={active.id}
+              currency={currency}
               sellers={balances.filter((s) => s.availableOre > 0)}
               d={d}
               intake={all.intake}
@@ -87,7 +90,7 @@ export default async function Payouts() {
           <p>
             {d.settleHint.replace(
               '{threshold}',
-              (settlement.thresholdOre / 100).toFixed(2),
+              `${(settlement.thresholdOre / 100).toFixed(2)} ${currency}`,
             )}
           </p>
           {settlement.sellers.length === 0 ? (
@@ -96,6 +99,7 @@ export default async function Payouts() {
             <SettlementForm
               key={`${active.id}-${settlement.sellers.map((s) => s.sellerId).join(',')}`}
               tenantId={active.id}
+              currency={currency}
               candidates={settlement.sellers}
               d={d}
               intake={all.intake}
@@ -110,8 +114,8 @@ export default async function Payouts() {
             <p>{all.returns.flaggedHint}</p>
             {flagged.map((r) => (
               <p key={r.id} role="alert">
-                {when(r.occurred_at)} · {formatSignedOre(r.refund_ore)} SEK ·{' '}
-                {r.reason} ·{' '}
+                {when(r.occurred_at)} · {formatSignedOre(r.refund_ore)}{' '}
+                {currency} · {r.reason} ·{' '}
                 <Link className="text-link" href={`/intake/items/${r.item_id}`}>
                   {all.items.open}
                 </Link>
@@ -125,7 +129,7 @@ export default async function Payouts() {
           {payouts.map((p) => (
             <div key={p.id} className="intake-notice">
               <strong>
-                {formatSignedOre(p.amount_ore)} SEK ·{' '}
+                {formatSignedOre(p.amount_ore)} {currency} ·{' '}
                 <Link
                   className="text-link"
                   href={`/intake/sellers/${p.seller_id}`}

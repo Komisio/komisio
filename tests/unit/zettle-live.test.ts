@@ -23,9 +23,11 @@ function setup(
     data:
       name === 'tenant_role'
         ? role
-        : name === 'open_zettle_pull_window'
-          ? opened
-          : id,
+        : name === 'store_currency'
+          ? 'SEK'
+          : name === 'open_zettle_pull_window'
+            ? opened
+            : id,
     error: null,
   }))
   const from = vi.fn((table: string) => {

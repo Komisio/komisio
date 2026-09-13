@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { currencyCode } from './money'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 // Economy overview (P3): one read for any period, computed in SQL from the
@@ -15,6 +16,7 @@ export const economySummary = z.object({
   from: isoDate,
   to: isoDate,
   timeZone: z.literal('Europe/Stockholm'),
+  currency: currencyCode,
   totals: z.object({
     salesCount: z.number().int(),
     linesCount: z.number().int(),

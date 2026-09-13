@@ -51,7 +51,7 @@ select is((select count(*) from item_events where item_id=current_setting('test.
 select throws_like($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','T-2',now(),'SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item1'),'priceOre',20000)))$$,'%ITEM_ALREADY_SOLD%','an item sells once');
 select throws_like($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','T-3',now(),'SEK',jsonb_build_array(jsonb_build_object('itemId',gen_random_uuid(),'priceOre',20000)))$$,'%ITEM_NOT_FOUND%','unknown item rejected');
 select throws_like($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','T-4',now(),'SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item2'),'priceOre',0)))$$,'%INVALID_INPUT%','zero price rejected');
-select throws_like($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','T-5',now(),'EUR',(select l from lines))$$,'%INVALID_INPUT%','only SEK');
+select throws_like($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','T-5',now(),'EUR',(select l from lines))$$,'%CURRENCY_MISMATCH%','only the store currency');
 select throws_like($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'square','T-6',now(),'SEK',(select l from lines))$$,'%INVALID_INPUT%','unknown provider rejected');
 select is((select count(*) from sales),1::bigint,'failed attempts wrote nothing');
 -- A later policy change does not touch the recorded line; a new sale uses the new mode.

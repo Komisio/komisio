@@ -82,7 +82,7 @@ export default async function Review({
                   ))}
                 </dl>
                 <h2>
-                  {d.reviewPrice}: {review.price.amount} SEK
+                  {d.reviewPrice}: {review.price.amount} {review.price.currency}
                 </h2>
                 <p>{d.reviewPriceNotice}</p>
                 <p>{review.price.rationale}</p>

@@ -11,6 +11,7 @@ import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { SellerEconomyForms } from '@/components/seller/economy-forms'
 import { SellerHandovers } from '@/components/seller/handover-forms'
 import { readMyHandovers } from '@/lib/engine/handovers'
+import { readStoreCurrency } from '@/lib/engine/money'
 import { SignOut } from '@/components/platform/sign-out'
 import { Brand } from '@/components/platform/brand'
 export const metadata = {
@@ -40,7 +41,7 @@ export default async function SellerPortal({
     new Date(date).toLocaleString(ctx.locale === 'sv' ? 'sv-SE' : 'en-GB', {
       timeZone: 'Europe/Stockholm',
     })
-  const amount = (ore: number) => `${formatSignedOre(ore)} SEK`
+  const amount = (ore: number) => `${formatSignedOre(ore)} ${currency}`
   if (!account)
     return (
       <main className="onboarding seller-review">
@@ -59,6 +60,7 @@ export default async function SellerPortal({
       </main>
     )
   const base = `/seller?seller=${account.sellerId}`
+  const currency = await readStoreCurrency(ctx.client, account.tenantId)
   if (params.statement) {
     if (!/^[0-9a-f-]{36}$/i.test(params.statement)) notFound()
     const statement = await readMySellerStatement(
@@ -144,6 +146,7 @@ export default async function SellerPortal({
         key={`${account.sellerId}-${economy.automaticEmails}`}
         tenantId={account.tenantId}
         sellerId={account.sellerId}
+        currency={currency}
         availableOre={economy.balance.availableOre}
         thresholdOre={economy.thresholdOre}
         enabled={economy.automaticEmails}

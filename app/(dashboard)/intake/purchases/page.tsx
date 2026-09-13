@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
+import { readStoreCurrency } from '@/lib/engine/money'
 import { PurchaseForm } from '@/components/intake/purchase-form'
 import { AcceptItemForm } from '@/components/intake/accept-item-form'
 import { readItemsForOrigins } from '@/lib/engine/items'
@@ -27,6 +28,7 @@ export default async function Purchases() {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const ctx = await requirePlatform(),
     active = ctx.active!,
+    currency = await readStoreCurrency(ctx.client, active.id),
     all = dictionary(ctx.locale),
     d = all.purchases
   const { data, error } = await ctx.client
@@ -82,7 +84,7 @@ export default async function Purchases() {
                     {d.reference} P-{p.reference}
                   </strong>
                   <br />
-                  {formatOre(p.purchase_price_ore)} SEK ·{' '}
+                  {formatOre(p.purchase_price_ore)} {currency} ·{' '}
                   {p.margin_eligible ? d.marginYes : d.marginNo}
                   <br />
                   <small>

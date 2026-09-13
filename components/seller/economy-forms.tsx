@@ -6,6 +6,7 @@ import type { Dictionary } from '@/lib/i18n'
 export function SellerEconomyForms({
   tenantId,
   sellerId,
+  currency,
   availableOre,
   thresholdOre,
   enabled,
@@ -13,6 +14,7 @@ export function SellerEconomyForms({
 }: {
   tenantId: string
   sellerId: string
+  currency: string
   availableOre: number
   thresholdOre: number
   enabled: boolean
@@ -65,9 +67,11 @@ export function SellerEconomyForms({
         <h2>{d.request}</h2>
         <p>{d.notice}</p>
         <p>
-          {d.threshold}: {(thresholdOre / 100).toFixed(2)} SEK
+          {d.threshold}: {(thresholdOre / 100).toFixed(2)} {currency}
         </p>
-        <label htmlFor="payout-amount">{d.amount}</label>
+        <label htmlFor="payout-amount">
+          {d.amount.replace('{currency}', currency)}
+        </label>
         <input
           id="payout-amount"
           name="amount"

@@ -22,6 +22,7 @@ export const messageFacts = z.strictObject({
     .string()
     .regex(/^-?\d+\.\d{2}$/)
     .optional(),
+  currency: z.enum(['SEK', 'NOK', 'DKK', 'EUR']).optional(),
   number: z.number().int().positive().optional(),
   date: z.string().max(40).optional(),
   itemLabel: z.string().trim().max(120).optional(),
@@ -42,28 +43,28 @@ const sv = {
   item_accepted: {
     subject: (f: MessageFacts) => `${f.storeName}: din vara är mottagen`,
     body: (f: MessageFacts) =>
-      `Hej ${f.sellerName},\n\n${f.storeName} har tagit emot din vara${f.itemLabel ? ` (${f.itemLabel})` : ''} till försäljning${f.amount ? ` med priset ${f.amount} SEK` : ''}.`,
+      `Hej ${f.sellerName},\n\n${f.storeName} har tagit emot din vara${f.itemLabel ? ` (${f.itemLabel})` : ''} till försäljning${f.amount ? ` med priset ${f.amount} ${f.currency ?? 'SEK'}` : ''}.`,
   },
   item_sold: {
     subject: (f: MessageFacts) => `${f.storeName}: din vara är såld`,
     body: (f: MessageFacts) =>
-      `Hej ${f.sellerName},\n\nDin vara${f.itemLabel ? ` (${f.itemLabel})` : ''} har sålts hos ${f.storeName}${f.date ? ` ${f.date}` : ''}${f.amount ? `. Ditt tillgodohavande från försäljningen är ${f.amount} SEK` : ''}.`,
+      `Hej ${f.sellerName},\n\nDin vara${f.itemLabel ? ` (${f.itemLabel})` : ''} har sålts hos ${f.storeName}${f.date ? ` ${f.date}` : ''}${f.amount ? `. Ditt tillgodohavande från försäljningen är ${f.amount} ${f.currency ?? 'SEK'}` : ''}.`,
   },
   payout_approved: {
     subject: (f: MessageFacts) => `${f.storeName}: utbetalning godkänd`,
     body: (f: MessageFacts) =>
-      `Hej ${f.sellerName},\n\n${f.storeName} har godkänt en utbetalning${f.amount ? ` på ${f.amount} SEK` : ''}. Pengarna betalas ut manuellt av butiken.`,
+      `Hej ${f.sellerName},\n\n${f.storeName} har godkänt en utbetalning${f.amount ? ` på ${f.amount} ${f.currency ?? 'SEK'}` : ''}. Pengarna betalas ut manuellt av butiken.`,
   },
   payout_paid: {
     subject: (f: MessageFacts) => `${f.storeName}: utbetalning gjord`,
     body: (f: MessageFacts) =>
-      `Hej ${f.sellerName},\n\n${f.storeName} har betalat ut${f.amount ? ` ${f.amount} SEK` : ''}${f.date ? ` ${f.date}` : ''}.`,
+      `Hej ${f.sellerName},\n\n${f.storeName} har betalat ut${f.amount ? ` ${f.amount} ${f.currency ?? 'SEK'}` : ''}${f.date ? ` ${f.date}` : ''}.`,
   },
   statement_issued: {
     subject: (f: MessageFacts) =>
       `${f.storeName}: avräkning${f.number ? ` ${f.number}` : ''}`,
     body: (f: MessageFacts) =>
-      `Hej ${f.sellerName},\n\n${f.storeName} har utfärdat avräkning${f.number ? ` nummer ${f.number}` : ''}${f.amount ? `. Utgående saldo: ${f.amount} SEK` : ''}. Be butiken om en utskrift om du vill se raderna.`,
+      `Hej ${f.sellerName},\n\n${f.storeName} har utfärdat avräkning${f.number ? ` nummer ${f.number}` : ''}${f.amount ? `. Utgående saldo: ${f.amount} ${f.currency ?? 'SEK'}` : ''}. Be butiken om en utskrift om du vill se raderna.`,
   },
   message: {
     subject: (f: MessageFacts) => `Meddelande från ${f.storeName}`,
@@ -74,28 +75,28 @@ const en = {
   item_accepted: {
     subject: (f: MessageFacts) => `${f.storeName}: your item is received`,
     body: (f: MessageFacts) =>
-      `Hello ${f.sellerName},\n\n${f.storeName} has accepted your item${f.itemLabel ? ` (${f.itemLabel})` : ''} for sale${f.amount ? ` at ${f.amount} SEK` : ''}.`,
+      `Hello ${f.sellerName},\n\n${f.storeName} has accepted your item${f.itemLabel ? ` (${f.itemLabel})` : ''} for sale${f.amount ? ` at ${f.amount} ${f.currency ?? 'SEK'}` : ''}.`,
   },
   item_sold: {
     subject: (f: MessageFacts) => `${f.storeName}: your item is sold`,
     body: (f: MessageFacts) =>
-      `Hello ${f.sellerName},\n\nYour item${f.itemLabel ? ` (${f.itemLabel})` : ''} sold at ${f.storeName}${f.date ? ` on ${f.date}` : ''}${f.amount ? `. Your credit from the sale is ${f.amount} SEK` : ''}.`,
+      `Hello ${f.sellerName},\n\nYour item${f.itemLabel ? ` (${f.itemLabel})` : ''} sold at ${f.storeName}${f.date ? ` on ${f.date}` : ''}${f.amount ? `. Your credit from the sale is ${f.amount} ${f.currency ?? 'SEK'}` : ''}.`,
   },
   payout_approved: {
     subject: (f: MessageFacts) => `${f.storeName}: payout approved`,
     body: (f: MessageFacts) =>
-      `Hello ${f.sellerName},\n\n${f.storeName} has approved a payout${f.amount ? ` of ${f.amount} SEK` : ''}. The store pays it out manually.`,
+      `Hello ${f.sellerName},\n\n${f.storeName} has approved a payout${f.amount ? ` of ${f.amount} ${f.currency ?? 'SEK'}` : ''}. The store pays it out manually.`,
   },
   payout_paid: {
     subject: (f: MessageFacts) => `${f.storeName}: payout made`,
     body: (f: MessageFacts) =>
-      `Hello ${f.sellerName},\n\n${f.storeName} has paid out${f.amount ? ` ${f.amount} SEK` : ''}${f.date ? ` on ${f.date}` : ''}.`,
+      `Hello ${f.sellerName},\n\n${f.storeName} has paid out${f.amount ? ` ${f.amount} ${f.currency ?? 'SEK'}` : ''}${f.date ? ` on ${f.date}` : ''}.`,
   },
   statement_issued: {
     subject: (f: MessageFacts) =>
       `${f.storeName}: settlement statement${f.number ? ` ${f.number}` : ''}`,
     body: (f: MessageFacts) =>
-      `Hello ${f.sellerName},\n\n${f.storeName} has issued settlement statement${f.number ? ` number ${f.number}` : ''}${f.amount ? `. Closing balance: ${f.amount} SEK` : ''}. Ask the store for a printout to see the lines.`,
+      `Hello ${f.sellerName},\n\n${f.storeName} has issued settlement statement${f.number ? ` number ${f.number}` : ''}${f.amount ? `. Closing balance: ${f.amount} ${f.currency ?? 'SEK'}` : ''}. Ask the store for a printout to see the lines.`,
   },
   message: {
     subject: (f: MessageFacts) => `Message from ${f.storeName}`,

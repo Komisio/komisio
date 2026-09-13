@@ -40,6 +40,13 @@ proposal's owner clarification for scope and outstanding details.
    publisher and logged per run and per item; exceptions use the manual
    price change; no notice per step.
 
+## Currency
+
+- ~~Which currency does a store trade in, and can it change?~~ **Answered
+  2026-09-13 (DECISIONS.md):** one currency per store from the policy (SEK,
+  NOK, DKK, EUR), frozen after the first money fact; no conversion, no
+  second currency per store in version 1.
+
 ## Ownership and VAT
 
 5. ~~Does the store only sell on commission, or does it also buy used goods

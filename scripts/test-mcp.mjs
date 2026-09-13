@@ -1,3 +1,4 @@
+import { testSellerEconomyMCP } from './test-seller-economy-mcp.mjs'
 import { testOperationDiscovery } from './test-operation-discovery.mjs'
 import { testInspectionMCP } from './test-inspection-mcp.mjs'
 import { testItemsMCP } from './test-items-mcp.mjs'
@@ -112,6 +113,7 @@ try {
     await client.connect(transport)
     return client
   }
+  await testSellerEconomyMCP({ connect, rpc, db, uid })
   const both = await connect('reception:read,reception:preview')
   const inspection = await testInspectionMCP({
     connect,

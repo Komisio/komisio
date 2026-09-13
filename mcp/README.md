@@ -9,6 +9,8 @@ It exposes narrow tools through the same intake engine:
 | komisio_list_inspection_operations   | inspection:read    | Page through inspection operation status summaries; no payload, people or decisions                      |
 | komisio_list_reception_operations    | reception:read     | Page through reception operation status summaries; no inspection access                                  |
 | komisio_propose_inspection_edit      | inspection:propose | Stage a complete descriptive edit against an exact saved revision; staff approval required               |
+| komisio_read_seller_balance          | economy:read       | Engine-computed balance for one seller, in ore; no writes                                                |
+| komisio_read_seller_ledger           | economy:read       | At most 50 recent events, without private reasons or contacts                                            |
 | komisio_propose_acceptance           | items:propose      | Stage commercial acceptance of one origin at an öre price; a different person than the proposer approves |
 | komisio_read_inspection_operation    | inspection:read    | Read exact staged inspection before/after and decision; no reception access                              |
 | komisio_prepare_inspection_reception | inspection:preview | Compare a saved draft with reception requirements; unsourced candidates and unassessed next steps only   |
@@ -41,7 +43,7 @@ environment variables to the child process:
   a service-role key, password or refresh token
 - `KOMISIO_MCP_TENANT_ID`: exactly one store UUID
 - `KOMISIO_MCP_SCOPES`: an explicit comma-separated subset of `reception:read`,
-  `reception:preview`, `reception:photos`, `reception:propose`, `inspection:read`, `inspection:preview`, `inspection:propose`, `items:propose`.
+  `reception:preview`, `reception:photos`, `reception:propose`, `inspection:read`, `inspection:preview`, `inspection:propose`, `items:propose`, `economy:read`.
   Bag inspection, photo access and staging are separately opt-in.
 
 Have the host launch `node --import tsx mcp/stdio.ts` with the repository as its
@@ -193,3 +195,17 @@ The host pins the tenant. It returns the effective policy with its version/id
 (version 0 and null id mean pilot defaults), plus read-only/untrusted/guidance
 markers. It cannot publish policy or enable AI. Role and MFA checks are enforced
 both at the tool boundary and in SQL. S1 does not add an agent policy-write tool.
+
+### Seller economy reads (P2 S14)
+
+Opt in with `economy:read` for `komisio_read_seller_balance` and
+`komisio_read_seller_ledger`. Both take only `{ sellerId }`; the host pins
+the tenant. Balances come from the shared SQL engine and amounts are signed
+integer **ore**, not SEK. Missing/foreign sellers fail instead of appearing
+as a zero balance. The ledger returns at most 50 recent entries and explicitly
+marks possible truncation; it is not a complete statement or an atomic snapshot.
+Do not sum this partial history to infer the seller balance. Free-text reasons,
+contact data and actor identities are omitted. Unsafe integer amounts fail
+closed. These tools cannot adjust a balance, approve a payout or send messages.
+Local MCP scopes remain tool restrictions on a user token, not separately
+scoped database credentials. All ordinary role and MFA checks still apply.

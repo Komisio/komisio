@@ -56,6 +56,8 @@ select is((select stage from lifecycle_queue(current_setting('test.tenant')::uui
 select apply_markdown(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item')::uuid,2);
 select is((select price_ore from item_prices where item_id=current_setting('test.item')::uuid order by seq desc limit 1),15000::bigint,'25 percent off the accepted price, not compounded');
 select apply_markdown(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item')::uuid,3);
+select is((select count(distinct set_at) from item_prices where item_id=current_setting('test.item')::uuid),4::bigint,'four sequential prices in one transaction have distinct timestamps');
+select is((select price_ore from item_prices where item_id=current_setting('test.item')::uuid order by set_at limit 1),20000::bigint,'accepted price remains first after all markdowns');
 select is((select stage from lifecycle_queue(current_setting('test.tenant')::uuid) where item_id=current_setting('test.item')::uuid),'period_ended','all steps applied and the period has passed');
 select set_config('test.end',gen_random_uuid()::text,true);
 select throws_like($$select end_sale_period(current_setting('test.tenant')::uuid,current_setting('test.end')::uuid,current_setting('test.item')::uuid,'discard')$$,'%INVALID_INPUT%','unknown end action rejected');

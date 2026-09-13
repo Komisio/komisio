@@ -128,7 +128,13 @@ Purpose: the append-only ledger every seller-facing number derives from.
   sale credits written by `record_sale`, balance and entries on the seller
   page with the adjustment form (migration `20260914010000`). Staged kind
   `adjustLedger` at `high` delivered with migration `20260914090000`; it
-  executes only for an owner or admin approver. Agent read tools follow.
+  executes only for an owner or admin approver.
+
+S14 follow-up (Astra): opt-in `economy:read` tools read one seller balance
+and at most 50 recent ledger entries through the existing engine. Amounts
+are ore; private reasons/contact data are omitted and partial history is
+labelled. No adjustment/payout write or aggregate balance listing is added
+by these tools. See PR77 for release evidence.
 
 ## S15. Payouts
 
@@ -289,3 +295,10 @@ issue a numbered statement the seller can open, generate a day close and
 export it to Fortnox idempotently, print all four labels through the local
 agent, and have sellers receive the five e-mails, with VAT computed per line
 in the modes the store selected.
+
+S20 follow-up (Astra): CI exposed timestamp ties between price facts written
+in one transaction. Migration `20260914110000` orders new price rows strictly
+per item under the tenant lock; it does not change prices or historical rows.
+Regression tests cover all four prices in one transaction. The pre-release
+staging audit found no existing tied item/timestamp groups. See the seller
+economy read PR for exact-head CI and release evidence.

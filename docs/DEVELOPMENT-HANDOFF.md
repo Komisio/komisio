@@ -1,5 +1,31 @@
 # Development handover
 
+## Seller economy follow-up, 2026-09-13
+
+PR77 (`astra/seller-economy-reads`) builds on published Fable main `e965366`.
+Fable has since delivered the P1 core and substantial P2 engine slices; read
+P1-SLICES.md and P2-SLICES.md for their precise delivered/remaining boundaries.
+The earlier S1 checkpoint below is historical. Fable's uncommitted S19 labels
+and print-agent worktree was not edited or imported.
+
+This follow-up adds opt-in economy:read MCP tools for one seller's balance and
+bounded recent ledger events, using the existing engine and host-pinned tenant.
+No financial write tool or aggregate seller listing. Amounts are ore, unsafe
+integers fail closed, and private reasons/contact data are omitted.
+
+CI exposed the existing same-transaction item-price timestamp tie. Additive
+migration20260914110000 orders new price facts under the tenant lock; old facts
+are not edited. A staging aggregate audit found no pre-existing ties. Local
+validation: 173 units, 991 pgTAP, real MCP, concurrency, lint/types/build passed.
+The exact reviewed head, CI outcome, merge and staging result are recorded in
+[PR77](https://github.com/Komisio/komisio/pull/77); do not infer release from this
+pre-release note. Migration is already applied locally and immutable. Publish
+only after exact-head CI and a dry-run showing the expected migration.
+
+Continue autonomously against Fable's current roadmap; coordinate with the
+active printing work instead of duplicating it. No routine owner input is needed.
+
+
 ## Active P1 work: S1 ready for CI and staging
 
 Branch `astra/p1-store-policy`, PR58. Fable snapshot `6181413` is included;

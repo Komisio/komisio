@@ -96,9 +96,9 @@ export function SaleForm({
           </fieldset>
           {action.error && <p role="alert">{action.error}</p>}
           {action.needsReload && (
-            <a className="text-link" href="/intake/sales">
+            <Link className="text-link" href="/intake/sales">
               {intake.reload}
-            </a>
+            </Link>
           )}
           <Button type="submit" disabled={action.busy || action.needsReload}>
             {action.busy

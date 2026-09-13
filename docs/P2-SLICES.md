@@ -116,6 +116,11 @@ Purpose: the append-only ledger every seller-facing number derives from.
 - Surface: balance on the seller view and in the seller app; agent tools
   `get balances`, `get seller balance`.
 - Migration: yes.
+- Status 2026-09-13: table with per-kind sign checks, `seller_balance`,
+  `adjust_seller_ledger` (owner or admin, reason required, replay-safe),
+  sale credits written by `record_sale`, balance and entries on the seller
+  page with the adjustment form (migration `20260914010000`). The staged
+  kind `adjustLedger` and the agent read tools follow with the P2 MCP work.
 
 ## S15. Payouts
 

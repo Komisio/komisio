@@ -766,6 +766,32 @@
       "store_full": "butiksägd, full moms"
     }
   },
+  "ledger": {
+    "title": "Saldo och reskontra",
+    "intro": "Varje belopp mot säljaren härleds ur denna reskontra där inget ändras i efterhand. Försäljningar krediterar säljarens andel; utbetalningar och returer kommer senare.",
+    "available": "Tillgängligt",
+    "reserved": "Reserverat",
+    "credited": "Krediterat från försäljning",
+    "paid": "Utbetalt",
+    "empty": "Inga poster ännu.",
+    "kinds": {
+      "credit_sale": "Försäljningskredit",
+      "credit_reversal": "Kredit återförd",
+      "payout_reserved": "Utbetalning reserverad",
+      "payout_paid": "Utbetalning gjord",
+      "payout_released": "Reservation frisläppt",
+      "booking_charge": "Bokningsavgift",
+      "adjustment": "Justering"
+    },
+    "adjustHeading": "Justera reskontran",
+    "adjustHint": "Endast ägare eller administratör. En rättelse är en ny post med en anledning; inget redigeras.",
+    "amount": "Belopp (SEK, negativt för avdrag)",
+    "amountHint": "Till exempel -50 eller 12,50.",
+    "reason": "Anledning",
+    "confirm": "Jag har kommit överens om rättelsen och vill registrera den.",
+    "adjust": "Registrera justering",
+    "adjusted": "Justeringen är registrerad."
+  },
   "purchases": {
     "title": "Inköp",
     "intro": "Butiksägda varor kommer in här, aldrig via inlämningsflödena.",

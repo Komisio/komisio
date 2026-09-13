@@ -8,6 +8,12 @@ import {
   readSellerTermsHistory,
 } from '@/lib/engine/seller-terms'
 import { SellerTermsForm } from '@/components/intake/seller-terms-form'
+import { LedgerAdjustForm } from '@/components/intake/ledger-adjust-form'
+import {
+  readSellerBalance,
+  readSellerLedger,
+  formatSignedOre,
+} from '@/lib/engine/seller-ledger'
 
 export default async function Seller({
   params,
@@ -29,10 +35,13 @@ export default async function Seller({
     .maybeSingle()
   if (seller.error) throw new Error('Unable to read seller')
   if (!seller.data) notFound()
-  const [terms, history] = await Promise.all([
+  const [terms, history, balance, ledger] = await Promise.all([
     readEffectiveSellerTerms(ctx.client, tenant.id, id.data),
     readSellerTermsHistory(ctx.client, tenant.id, id.data),
+    readSellerBalance(ctx.client, tenant.id, id.data),
+    readSellerLedger(ctx.client, tenant.id, id.data),
   ])
+  const l = all.ledger
   const write = tenant.role !== 'readonly'
   const when = (iso: string) =>
     new Date(iso).toLocaleString(ctx.locale === 'sv' ? 'sv-SE' : 'en-GB', {
@@ -89,6 +98,38 @@ export default async function Seller({
           />
         </section>
       )}
+      <section className="card intake-form">
+        <h2>{l.title}</h2>
+        <p>{l.intro}</p>
+        <p role="status">
+          <strong>
+            {l.available}: {formatSignedOre(balance.availableOre)} SEK
+          </strong>{' '}
+          · {l.reserved}: {formatSignedOre(balance.reservedOre)} SEK ·{' '}
+          {l.credited}: {formatSignedOre(balance.creditedOre)} SEK · {l.paid}:{' '}
+          {formatSignedOre(balance.paidOre)} SEK
+        </p>
+        {ledger.length === 0 && <p>{l.empty}</p>}
+        {ledger.map((e) => (
+          <p key={e.id}>
+            {when(e.occurred_at)} · {l.kinds[e.kind]} ·{' '}
+            {formatSignedOre(e.amount_ore)} SEK
+            {e.reason ? ` · ${e.reason}` : ''}
+          </p>
+        ))}
+        {['owner', 'admin'].includes(tenant.role) && (
+          <>
+            <h3>{l.adjustHeading}</h3>
+            <p>{l.adjustHint}</p>
+            <LedgerAdjustForm
+              tenantId={tenant.id}
+              sellerId={id.data}
+              d={l}
+              intake={all.intake}
+            />
+          </>
+        )}
+      </section>
       <section className="card intake-form">
         <h2>{d.history}</h2>
         {history.length === 0 && <p>{d.noHistory}</p>}

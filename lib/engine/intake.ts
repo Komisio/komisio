@@ -2,6 +2,10 @@ import { publishStorePolicyCommand } from './store-policy'
 import { publishSellerTermsCommand } from './seller-terms'
 import { acceptItemCommand } from './items'
 import { recordSaleCommand } from './sales'
+import {
+  adjustSellerLedgerCommand,
+  signedOreFromDecimal,
+} from './seller-ledger'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { saveInspectionCommand, archiveInspectionCommand } from './inspection'
@@ -16,6 +20,7 @@ export const intakeCommand = z.discriminatedUnion('action', [
   publishSellerTermsCommand,
   acceptItemCommand,
   recordSaleCommand,
+  adjustSellerLedgerCommand,
   publishReceptionReviewCommand,
   createReceptionCommand,
   saveReceptionSourcesCommand,
@@ -118,6 +123,14 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
           itemId: l.itemId,
           priceOre: oreFromDecimal(l.price),
         })),
+      })
+    case 'adjustSellerLedger':
+      return client.rpc('adjust_seller_ledger', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_seller: c.sellerId,
+        p_amount_ore: signedOreFromDecimal(c.amount),
+        p_reason: c.reason,
       })
     case 'publishReceptionReview':
       return client.rpc('publish_reception_review', {

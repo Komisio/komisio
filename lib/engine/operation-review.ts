@@ -198,7 +198,8 @@ export async function readOperationReview(
     pending.data.kind === 'adjustLedger' ||
     pending.data.kind === 'applyMarkdownBatch' ||
     pending.data.kind === 'approvePayout' ||
-    pending.data.kind === 'markPayoutPaid'
+    pending.data.kind === 'markPayoutPaid' ||
+    pending.data.kind === 'sendMessage'
   ) {
     // P2 kinds carry their own facts; the only cheap hint is whether the
     // subject still exists or is already done. SQL rechecks on approval.
@@ -220,14 +221,17 @@ export async function readOperationReview(
               recordReturnPayload.parse(pending.data.payload).saleLineId,
             )
             .maybeSingle()
-        : kind === 'adjustLedger'
+        : kind === 'adjustLedger' || kind === 'sendMessage'
           ? client
               .from('sellers')
-              .select('id')
+              .select('id,email')
               .eq('tenant_id', tenantId)
               .eq(
                 'id',
-                adjustLedgerPayload.parse(pending.data.payload).sellerId,
+                adjustLedgerPayload.pick({ sellerId: true }).parse({
+                  sellerId: (pending.data.payload as { sellerId: string })
+                    .sellerId,
+                }).sellerId,
               )
               .maybeSingle()
           : kind === 'approvePayout' || kind === 'markPayoutPaid'
@@ -267,8 +271,12 @@ export async function readOperationReview(
         (!subject.data || (!d && payoutStatus !== 'requested'))) ||
       (kind === 'markPayoutPaid' &&
         (!subject.data || (!d && payoutStatus !== 'approved')))
+    const sellerEmail = (subject.data as { email?: string } | null)?.email
     const stale =
-      alreadyDone || (kind === 'adjustLedger' && !subject.data) || payoutStale
+      alreadyDone ||
+      (kind === 'adjustLedger' && !subject.data) ||
+      (kind === 'sendMessage' && (!subject.data || !sellerEmail)) ||
+      payoutStale
     return {
       readOnly: true as const,
       evidenceIsUntrusted: true as const,

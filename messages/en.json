@@ -529,8 +529,10 @@
       "applyMarkdownBatch": "Apply due markdowns",
       "bulkItemUpdate": "Update a set of items",
       "approvePayout": "Approve a payout",
-      "markPayoutPaid": "Mark a payout paid"
+      "markPayoutPaid": "Mark a payout paid",
+      "sendMessage": "Send a message to a seller"
     },
+    "messageTemplateNote": "Only the text above is proposed. It is sent inside the store's fixed message template with the usual greeting and footer, from the store's address, once.",
     "payout": "Payout",
     "paymentReference": "Payment reference",
     "bulkActions": {

@@ -43,6 +43,8 @@ import {
   proposeMarkdownBatchTool,
   proposeBulkItemUpdateInput,
   proposeBulkItemUpdateTool,
+  proposeMessageInput,
+  proposeMessageTool,
 } from './proposals'
 const stagingAnnotations = {
   readOnlyHint: false,
@@ -392,6 +394,20 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         })),
     )
   }
+  if (config.scopes.includes('communications:propose'))
+    server.registerTool(
+      'komisio_propose_message',
+      {
+        description:
+          "Stage the free-text block of the general seller message for one seller with an e-mail address, for staff decision. Low risk: the proposing person may approve. The text is sent inside the store's fixed message template with its greeting and footer, from the store, once, after approval. Nothing is sent by this call, and no subject, link or markup can be supplied.",
+        inputSchema: proposeMessageInput,
+        annotations: stagingAnnotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await proposeMessageTool(client, config, input),
+        })),
+    )
   if (config.scopes.includes('reception:photos'))
     server.registerTool(
       'komisio_read_reception_photo',

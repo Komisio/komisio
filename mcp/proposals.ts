@@ -7,6 +7,7 @@ import {
   adjustLedgerPayload,
   applyMarkdownBatchPayload,
   bulkItemUpdatePayload,
+  sendMessagePayload,
   proposeOperation,
   operationErrorCode,
   type PendingOperation,
@@ -24,6 +25,7 @@ export const proposeBulkItemUpdateInput = z.strictObject({
   ...envelope,
   update: bulkItemUpdatePayload,
 })
+export const proposeMessageInput = sendMessagePayload.extend(envelope)
 
 async function stage(
   client: SupabaseClient,
@@ -151,5 +153,30 @@ export async function proposeBulkItemUpdateTool(
     )),
     action: update.action,
     items: update.items.length,
+  }
+}
+
+/** The free-text block of the general seller message; low: the proposer may approve. */
+export async function proposeMessageTool(
+  client: SupabaseClient,
+  config: MCPConfig,
+  input: unknown,
+) {
+  const { requestId, expiresAt, ...payload } = proposeMessageInput.parse(input)
+  return {
+    ...(await stage(
+      client,
+      config,
+      'communications:propose',
+      'sendMessage',
+      'low',
+      requestId,
+      expiresAt,
+      payload,
+    )),
+    sellerId: payload.sellerId,
+    locale: payload.locale,
+    templateBound: true,
+    sentOnApprovalBy: 'store',
   }
 }

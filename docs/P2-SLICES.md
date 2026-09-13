@@ -243,8 +243,11 @@ Purpose: the e-mail-first seller communication decided in P1 answers.
   approved or paid payout and an issued statement queue and send the matching
   template through the same logged path, whether the fact came from a staff
   command or an approved staged operation; the message id derives from the
-  fact, so a fact notifies once, and a failure never hides the fact. The
-  staged agent kind `sendMessage` follows.
+  fact, so a fact notifies once, and a failure never hides the fact. Staged
+  agent kind `sendMessage` at `low` delivered with migration
+  `20260914150000`: only the free-text block is proposed, the store sends
+  once after approval; MCP tool `komisio_propose_message` under
+  `communications:propose`.
 
 ## S19. Labels and the local print agent
 

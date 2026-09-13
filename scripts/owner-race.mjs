@@ -688,7 +688,8 @@ try {
     setup,
     sessions,
     tenant,
-    proposer: u1,
+    // The owner race decides who stays owner; the other member proposes so the approver differs.
+    proposer: [u1, u2].find((u) => u !== publishingActor),
     approver: publishingActor,
   })
   // A seller read must not wait for the tenant lock; the seller response must.

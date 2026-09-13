@@ -530,8 +530,10 @@
       "bulkItemUpdate": "Uppdatera en uppsättning varor",
       "approvePayout": "Godkänn en utbetalning",
       "markPayoutPaid": "Markera en utbetalning som betald",
-      "sendMessage": "Skicka ett meddelande till en säljare"
+      "sendMessage": "Skicka ett meddelande till en säljare",
+      "exportDayClose": "Exportera ett dagsavslut"
     },
+    "dayClose": "Dagsavslut",
     "messageTemplateNote": "Bara texten ovan föreslås. Den skickas inuti butikens fasta meddelandemall med vanlig hälsning och sidfot, från butikens adress, en gång.",
     "payout": "Utbetalning",
     "paymentReference": "Betalningsreferens",

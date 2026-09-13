@@ -11,6 +11,7 @@ import {
   adjustLedgerPayload,
   bulkItemUpdatePayload,
   approvePayoutPayload,
+  exportDayClosePayload,
   type PendingOperation,
 } from './operations'
 import { inspectionFields } from './inspection'
@@ -199,7 +200,8 @@ export async function readOperationReview(
     pending.data.kind === 'applyMarkdownBatch' ||
     pending.data.kind === 'approvePayout' ||
     pending.data.kind === 'markPayoutPaid' ||
-    pending.data.kind === 'sendMessage'
+    pending.data.kind === 'sendMessage' ||
+    pending.data.kind === 'exportDayClose'
   ) {
     // P2 kinds carry their own facts; the only cheap hint is whether the
     // subject still exists or is already done. SQL rechecks on approval.
@@ -221,33 +223,43 @@ export async function readOperationReview(
               recordReturnPayload.parse(pending.data.payload).saleLineId,
             )
             .maybeSingle()
-        : kind === 'adjustLedger' || kind === 'sendMessage'
+        : kind === 'exportDayClose'
           ? client
-              .from('sellers')
-              .select('id,email')
+              .from('day_closes')
+              .select('id')
               .eq('tenant_id', tenantId)
               .eq(
                 'id',
-                adjustLedgerPayload.pick({ sellerId: true }).parse({
-                  sellerId: (pending.data.payload as { sellerId: string })
-                    .sellerId,
-                }).sellerId,
+                exportDayClosePayload.parse(pending.data.payload).dayCloseId,
               )
               .maybeSingle()
-          : kind === 'approvePayout' || kind === 'markPayoutPaid'
+          : kind === 'adjustLedger' || kind === 'sendMessage'
             ? client
-                .from('payouts')
-                .select('id,status')
+                .from('sellers')
+                .select('id,email')
                 .eq('tenant_id', tenantId)
                 .eq(
                   'id',
-                  approvePayoutPayload.pick({ payoutId: true }).parse({
-                    payoutId: (pending.data.payload as { payoutId: string })
-                      .payoutId,
-                  }).payoutId,
+                  adjustLedgerPayload.pick({ sellerId: true }).parse({
+                    sellerId: (pending.data.payload as { sellerId: string })
+                      .sellerId,
+                  }).sellerId,
                 )
                 .maybeSingle()
-            : Promise.resolve({ data: null, error: null }),
+            : kind === 'approvePayout' || kind === 'markPayoutPaid'
+              ? client
+                  .from('payouts')
+                  .select('id,status')
+                  .eq('tenant_id', tenantId)
+                  .eq(
+                    'id',
+                    approvePayoutPayload.pick({ payoutId: true }).parse({
+                      payoutId: (pending.data.payload as { payoutId: string })
+                        .payoutId,
+                    }).payoutId,
+                  )
+                  .maybeSingle()
+              : Promise.resolve({ data: null, error: null }),
     ])
     if (decision.error || subject.error) throw new Error('OPERATION_NOT_FOUND')
     const d = decision.data,
@@ -276,6 +288,7 @@ export async function readOperationReview(
       alreadyDone ||
       (kind === 'adjustLedger' && !subject.data) ||
       (kind === 'sendMessage' && (!subject.data || !sellerEmail)) ||
+      (kind === 'exportDayClose' && !subject.data) ||
       payoutStale
     return {
       readOnly: true as const,

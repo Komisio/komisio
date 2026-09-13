@@ -264,6 +264,88 @@ export async function testProposalsMCP({
     )
   ).rows[0]
   assert.deepEqual(messageState, { outcome: 'executed', queued: 0 })
+  // Payouts: proposers exist under their own scope; an unknown payout is refused at preflight.
+  const payouts = await connect('payouts:propose')
+  assert.deepEqual(
+    (await payouts.listTools()).tools.map((t) => t.name).sort(),
+    ['komisio_propose_payout_approval', 'komisio_propose_payout_payment'],
+  )
+  const unknownPayout = await payouts.callTool({
+    name: 'komisio_propose_payout_approval',
+    arguments: {
+      requestId: randomUUID(),
+      expiresAt,
+      payoutId: randomUUID(),
+      reason: '',
+    },
+  })
+  assert(unknownPayout.isError)
+  assert(JSON.stringify(unknownPayout.content).includes('PAYOUT_NOT_FOUND'))
+  assert(
+    (
+      await payouts.callTool({
+        name: 'komisio_propose_payout_payment',
+        arguments: {
+          requestId: randomUUID(),
+          expiresAt,
+          payoutId: randomUUID(),
+          reference: '',
+          reason: '',
+        },
+      })
+    ).isError,
+    'a payment needs a reference',
+  )
+  // Accounting: reads list closes and preview the voucher; the export proposal needs a map.
+  const closeId = randomUUID()
+  await rpc('generate_day_close', {
+    p_tenant: tenant,
+    p_id: closeId,
+    p_date: new Date().toLocaleDateString('sv-SE', {
+      timeZone: 'Europe/Stockholm',
+    }),
+  })
+  const accounting = await connect('accounting:read,accounting:propose')
+  assert.deepEqual(
+    (await accounting.listTools()).tools.map((t) => t.name).sort(),
+    [
+      'komisio_list_day_closes',
+      'komisio_preview_day_close_voucher',
+      'komisio_propose_day_close_export',
+    ],
+  )
+  const closes = await accounting.callTool({
+    name: 'komisio_list_day_closes',
+    arguments: {},
+  })
+  assert(!closes.isError, JSON.stringify(closes.content))
+  assert(closes.structuredContent.items.some((c) => c.dayCloseId === closeId))
+  const voucher = await accounting.callTool({
+    name: 'komisio_preview_day_close_voucher',
+    arguments: { dayCloseId: closeId },
+  })
+  assert(!voucher.isError, JSON.stringify(voucher.content))
+  assert.equal(voucher.structuredContent.mapVersion, 0)
+  assert.equal(voucher.structuredContent.balanced, false)
+  assert.equal(voucher.structuredContent.accountsAreTheTenants, true)
+  const exportWithoutMap = await accounting.callTool({
+    name: 'komisio_propose_day_close_export',
+    arguments: { requestId: randomUUID(), expiresAt, dayCloseId: closeId },
+  })
+  assert(exportWithoutMap.isError)
+  assert(
+    JSON.stringify(exportWithoutMap.content).includes(
+      'ACCOUNTING_MAP_REQUIRED',
+    ),
+  )
+  assert(
+    (
+      await accounting.callTool({
+        name: 'komisio_preview_day_close_voucher',
+        arguments: { dayCloseId: randomUUID() },
+      })
+    ).isError,
+  )
   // Scope isolation: the lifecycle scope cannot stage a ledger adjustment.
   await assert.rejects(
     lifecycle.callTool({

@@ -45,7 +45,19 @@ import {
   proposeBulkItemUpdateTool,
   proposeMessageInput,
   proposeMessageTool,
+  proposePayoutApprovalInput,
+  proposePayoutApprovalTool,
+  proposePayoutPaymentInput,
+  proposePayoutPaymentTool,
+  proposeDayCloseExportInput,
+  proposeDayCloseExportTool,
 } from './proposals'
+import {
+  dayCloseListInput,
+  dayClosePreviewInput,
+  listDayClosesTool,
+  previewDayCloseTool,
+} from './accounting'
 const stagingAnnotations = {
   readOnlyHint: false,
   destructiveHint: false,
@@ -406,6 +418,74 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       (input) =>
         result(async () => ({
           data: await proposeMessageTool(client, config, input),
+        })),
+    )
+  if (config.scopes.includes('payouts:propose')) {
+    server.registerTool(
+      'komisio_propose_payout_approval',
+      {
+        description:
+          'Stage the approval of one requested payout, for decision. Medium risk: a different person than the proposing identity must approve; approval runs the ordinary transition as that person and reserves the amount in the seller ledger. Nothing is approved or reserved by this call.',
+        inputSchema: proposePayoutApprovalInput,
+        annotations: stagingAnnotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await proposePayoutApprovalTool(client, config, input),
+        })),
+    )
+    server.registerTool(
+      'komisio_propose_payout_payment',
+      {
+        description:
+          'Stage marking one approved payout as paid with the bank or Swish reference, for decision. Medium risk: a different person must approve; approval runs the ordinary transition as that person, releasing the reservation and recording the payment. Nothing is paid or recorded by this call.',
+        inputSchema: proposePayoutPaymentInput,
+        annotations: stagingAnnotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await proposePayoutPaymentTool(client, config, input),
+        })),
+    )
+  }
+  if (config.scopes.includes('accounting:read')) {
+    server.registerTool(
+      'komisio_list_day_closes',
+      {
+        description:
+          'List the newest 60 day closes of the configured store with their totals in öre. Read only; no accounts, no export.',
+        inputSchema: dayCloseListInput,
+        annotations,
+      },
+      () =>
+        result(async () => ({ data: await listDayClosesTool(client, config) })),
+    )
+    server.registerTool(
+      'komisio_preview_day_close_voucher',
+      {
+        description:
+          "Preview the voucher lines one day close would export under the store's current account map: account, side and amount per line, debit and credit totals, whether it balances, and the amounts left unmapped. The accounts are the tenant's own; Komisio proposes none. Read only.",
+        inputSchema: dayClosePreviewInput,
+        annotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await previewDayCloseTool(client, config, input),
+        })),
+    )
+  }
+  if (config.scopes.includes('accounting:propose'))
+    server.registerTool(
+      'komisio_propose_day_close_export',
+      {
+        description:
+          'Stage the SIE 4 export of one day close under the current account map, for decision. Refused when the store has no map or the voucher does not balance. Medium risk: a different person must approve; the export is recorded once per day close and map version, so an approval after a manual export returns that export. Nothing is exported by this call.',
+        inputSchema: proposeDayCloseExportInput,
+        annotations: stagingAnnotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await proposeDayCloseExportTool(client, config, input),
         })),
     )
   if (config.scopes.includes('reception:photos'))

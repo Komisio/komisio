@@ -221,8 +221,12 @@ Purpose: bookkeeping data per day, exported.
   unbalanced), `accounting_exports` with the recorded lines, and
   `GET /api/accounting/<id>` rendering the SIE 4 file; map form, previews,
   export action and export list on the accounting page. See
-  [ACCOUNTING-EXPORT.md](ACCOUNTING-EXPORT.md). Sending through the Fortnox
-  API and the reconciliation view follow once a tenant connects an account.
+  [ACCOUNTING-EXPORT.md](ACCOUNTING-EXPORT.md). Agent tools delivered with
+  migration `20260914170000`: reads `komisio_list_day_closes` and
+  `komisio_preview_day_close_voucher` (`accounting:read`) and the staged kind
+  `exportDayClose` at `medium` with `komisio_propose_day_close_export`
+  (`accounting:propose`). Sending through the Fortnox API and the
+  reconciliation view follow once a tenant connects an account.
 
 ## S18. Notifications and communication log
 

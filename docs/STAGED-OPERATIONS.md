@@ -119,8 +119,12 @@ that is due right now; preflight refuses the whole batch if any step is not
 due, and execution applies one markdown event per item inside the approving
 transaction, all or nothing. The queue lists and filters the new kinds; the
 detail page shows the payload with an execution note and a stale hint (line
-already returned, seller gone). No MCP tool proposes these kinds yet.
-`supabase/tests/0040_staged_p2_kinds.test.sql` covers all three.
+already returned, seller gone). MCP proposers exist under their own scopes:
+`komisio_propose_return` (`sales:propose`), `komisio_propose_ledger_adjustment`
+(`ledger:propose`), `komisio_propose_markdown_batch` and
+`komisio_propose_bulk_item_update` (`lifecycle:propose`); `npm run test:mcp`
+stages each over real stdio and proves the risk rules through the database.
+`supabase/tests/0040_staged_p2_kinds.test.sql` covers all three kinds.
 
 ## Bulk item updates
 

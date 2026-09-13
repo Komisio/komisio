@@ -105,7 +105,8 @@ Purpose: reversal as a new fact.
   when the seller's available balance no longer covers the credit; return
   form on the receipt, flagged list on the payouts page. The sale row stays
   `completed`; the return is the reversal fact. Staged kind `recordReturn`
-  at `medium` delivered with migration `20260914090000`.
+  at `medium` delivered with migration `20260914090000`; MCP tool
+  `komisio_propose_return` under `sales:propose`.
 
 ## S14. Seller ledger and balance
 
@@ -128,7 +129,9 @@ Purpose: the append-only ledger every seller-facing number derives from.
   sale credits written by `record_sale`, balance and entries on the seller
   page with the adjustment form (migration `20260914010000`). Staged kind
   `adjustLedger` at `high` delivered with migration `20260914090000`; it
-  executes only for an owner or admin approver.
+  executes only for an owner or admin approver; MCP tool
+  `komisio_propose_ledger_adjustment` under `ledger:propose`. Agent read
+  tools: see the follow-up below.
 
 S14 follow-up (Astra): opt-in `economy:read` tools read one seller balance
 and at most 50 recent ledger entries through the existing engine. Amounts

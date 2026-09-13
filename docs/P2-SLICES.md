@@ -196,6 +196,13 @@ Purpose: bookkeeping data per day, exported.
 - Surface: accounting page (day list, preview, export, reconciliation).
   Agent tools `day close preview`, `export day close` (staged, `medium`).
 - Migration: yes.
+- Status 2026-09-13: `day_closes` and `generate_day_close` delivered
+  (migration `20260914050000`): local-day totals with VAT per mode, returns,
+  credit reversals and paid payouts; unchanged days keep their version,
+  changed days get a new one; accounting page with generate form and list.
+  The Fortnox export, the account map policy and the reconciliation view
+  follow once the tenant's accountant provides the mapping; Komisio will not
+  invent account numbers.
 
 ## S18. Notifications and communication log
 

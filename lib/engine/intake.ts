@@ -14,6 +14,7 @@ import {
 } from './payouts'
 import { recordReturnCommand } from './returns'
 import { issueStatementCommand } from './statements'
+import { generateDayCloseCommand } from './day-closes'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { saveInspectionCommand, archiveInspectionCommand } from './inspection'
@@ -32,6 +33,7 @@ export const intakeCommand = z.discriminatedUnion('action', [
   rejectPayoutCommand,
   recordReturnCommand,
   issueStatementCommand,
+  generateDayCloseCommand,
   acceptItemCommand,
   recordSaleCommand,
   adjustSellerLedgerCommand,
@@ -177,6 +179,12 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_from: c.periodFrom,
         p_to: c.periodTo,
         p_corrects: c.correctsId,
+      })
+    case 'generateDayClose':
+      return client.rpc('generate_day_close', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_date: c.date,
       })
     case 'markPayoutPaid':
       return client.rpc('mark_payout_paid', {

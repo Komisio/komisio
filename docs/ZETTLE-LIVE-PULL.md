@@ -47,7 +47,7 @@ explicit tenant/merchant pins and exact-origin checks all precede transport acce
 
 ## Validation and deployment
 
-Migration `20260915120000_zettle_live_pull.sql` is additive. Apply it before the
+Migration `20260915123000_zettle_live_pull.sql` is additive. Apply it before the
 app deployment; do not reset or rewrite existing data. Roll back the app through
 a PR and remove the pilot binding if retrieval must stop; preserve recorded facts.
 

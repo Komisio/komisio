@@ -81,9 +81,7 @@ export function ZettleAction({
             (typeof detail.tracking === 'boolean'
               ? ` enabled=${detail.tracking}.`
               : '') +
-            (detail.stock
-              ? ` STORE=${detail.stock.store}, SOLD=${detail.stock.sold}, BIN=${detail.stock.bin}, SUPPLIER=${detail.stock.supplier}`
-              : ''),
+            (detail.stock ? ` STORE=${detail.stock.store}` : ''),
         )
         setState('failed')
         return

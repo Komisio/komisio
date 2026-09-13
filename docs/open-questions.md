@@ -189,6 +189,16 @@ remain separate. Fable's newer commits are held until PR58 is complete.
 
 ## Zettle live pilot prerequisites (2026-09-13)
 
+**Stock diagnosis 2026-09-13:** PR110 remained unmerged when the owner observed
+the exported product without stock tracking. The strict one-row tracking parser
+rejects an empty successful response before tracking activation. The follow-up
+accepts no tracking record as disabled and reads only physical STORE stock,
+without inventing negative SUPPLIER balances. Engine-to-HTTP regression tests
+cover initialization and replay after a lost movement acknowledgement. Existing
+held claims are not automatically retried; live recovery of the previously
+exported item still requires reconciliation. Product image export is not yet
+implemented and is separate from this stock defect.
+
 **Review follow-up 2026-09-13:** bounded five-minute timestamp tolerance is the
 selected window fix, clipped at activation; larger discrepancies still stop for
 investigation. Before the pilot, the owner and accountant must confirm each

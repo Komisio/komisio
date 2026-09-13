@@ -1,7 +1,9 @@
 # Zettle stock: implementation checkpoint
 
-Status: manual one-item export implemented, 2026-09-13. Release verification is
-tracked in PR102. No real merchant product or inventory mutation has been verified.
+Status: real product export/read-back verified through PR108, 2026-09-13.
+The first stock attempt is held; PR109 exposes safe live diagnostics. The next
+compatibility patch accepts an empty tracking record list and reads physical
+STORE balance only. No successful live stock initialization is claimed yet.
 
 The owner wants an accepted Komisio item exported to Zettle, sold at the POS,
 and the completed sale imported automatically. A unique second-hand item needs
@@ -22,12 +24,14 @@ uses `exportZettleItem` in the engine, which obtains the durable SQL claim. Zero
 after a lost response cannot establish that the original movement did not occur.
 `mayInitialize` is only a snapshot predicate, never authorization to retry.
 
-33 unit cases cover classification, depletion, changed stock, ambiguous inventory
-roles, identity mismatches, tracking, malformed evidence, uncertain writes and
-safe errors. The existing authentication and product adapter tests also pass.
-17 engine cases also cover response loss, stopped invocations, snapshot changes,
+Unit cases cover physical stock classification, changed stock, ambiguous inventory
+roles, identity mismatches, empty/new tracking records, malformed evidence, uncertain
+writes and safe errors. Engine cases also cover response loss, stopped invocations, snapshot changes,
 role checks and replay. The catalog factory keeps its credential lease private and
-revalidates the merchant on refresh. No real inventory API exchange is verified yet.
+revalidates the merchant on refresh. Real inventory discovery and tracking reads
+have been exercised; a root-level tracking response failure held the pilot.
+An empty successful status list means no enabled record, not permission to retry
+an old initial movement. Virtual inventories are not invented stock counters.
 
 ## Implemented engine contract and release checks
 
@@ -46,8 +50,9 @@ revalidates the merchant on refresh. No real inventory API exchange is verified 
    tracking or moving stock. Revalidate the current export immediately before
    the first movement. Do not re-enable externally disabled tracking on replay.
 4. Reconcile uncertain results by reading tracking and stock. A known single
-   unit may be recorded as initialized; sold/bin evidence means depleted, never
-   restock. Zero or conflicting evidence is held for investigation. Do not make
+   unit in STORE may be recorded as available/initialized. Zero remains unknown,
+   never inferred as a sale or permission to restock. Other physical balances
+   conflict with the one-item pilot. Sales require matched Purchase API facts. Do not make
    an automatic second movement after an uncertain result or a process crash.
 5. Record safe outcomes and expose a bounded, one-item manual export action
    on the integrations page for the pinned pilot owner/admin.
@@ -78,12 +83,15 @@ The credential lease must remain private to the connected adapter factory, with
 merchant validation on token refresh, as in the receipt client. Do not expose a
 token to the route, UI, diagnostics, logs or test fixtures.
 
-## Local verification checkpoint
+## Verification checkpoint
 
-All 334 unit tests, TypeScript, ESLint, formatting and the production build pass.
-The stock/tenant SQL suites pass 154 assertions and the full concurrency script
-passes. The local restore exercise reproduced row counts for all 59 application
-tables; it reported 19 platform restore errors, so this is not proof of a complete
-Supabase platform restore. The existing Zettle browser journey passes, including refusal of live export
-without a pinned pilot. A successful live export UI/merchant round trip is still
-unverified. GitHub CI must pass on the latest PR head before merge.
+357 unit tests, TypeScript, ESLint, formatting and the production build pass for
+the physical-stock/new-tracking patch, as does the local Zettle browser journey.
+CI must also pass before merge. No SQL or claim permission changes in this patch.
+
+The initial stock release passed stock/tenant SQL and multi-connection tests.
+Its restore exercise reproduced row counts for all 59 application tables, with
+19 platform restore errors; that was not proof of a full platform restore.
+Real product UUID recovery and numeric VAT read-back are verified. The existing
+unknown stock intent remains immutable and may require explicit manual
+reconciliation; do not delete it or create a second product to bypass it.

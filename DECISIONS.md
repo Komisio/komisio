@@ -331,6 +331,26 @@ an actual update, retain the existing conservative guard against unmanaged
 fields, verify the previous managed snapshot and require ETag. This does not
 copy or erase remote descriptions, categories, images or variant options.
 
+## 2026-09-13: New-product tracking and physical stock evidence
+
+An empty successful tracking-status list provides no enabled tracking record.
+Treat it as not enabled; validate at most one correctly bound status row. Fresh
+initial attempts may explicitly enable tracking. Existing durable claims still
+cannot re-enable tracking or submit another movement automatically.
+
+Use the actual STORE balance to check stock availability. Zettle documents balance
+retrieval for STORE inventories; SUPPLIER is an infinite virtual source, not an
+expected negative stock counter. Do not invent balances for SOLD/BIN/SUPPLIER.
+One in STORE is available, zero remains unknown on replay (never replenished),
+and other values conflict with the single-item pilot. Sales continue to come
+from matched Purchase API facts, never inferred from zero stock. The durable
+single initial movement claim and current item/policy guards remain unchanged.
+
+References: [fetch balances](https://developer.zettle.com/docs/api/inventory/user-guides/manage-inventory-balances/fetch-inventory-balance)
+and [inventory concepts](https://developer.zettle.com/docs/api/inventory/concepts/how-inventories-work).
+Old unknown attempts require explicit reconciliation; this patch does not erase
+claims or authorize another initial movement for them.
+
 ## 2026-09-13: Zettle review follow-up
 
 Receipt page validation accepts the half-open interval from five minutes before

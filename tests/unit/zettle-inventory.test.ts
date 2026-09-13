@@ -34,18 +34,12 @@ function setup(responses: (Response | Error)[]) {
   }
 }
 it.each<[Stock, string, boolean]>([
-  [{ store: 0, sold: 0, bin: 0, supplier: 0 }, 'unknown', true],
-  [{ store: 1, sold: 0, bin: 0, supplier: -1 }, 'initialized', false],
-  [{ store: 0, sold: 1, bin: 0, supplier: -1 }, 'depleted', false],
-  [{ store: 0, sold: 0, bin: 1, supplier: -1 }, 'depleted', false],
-  [{ store: 0, sold: 0, bin: 0, supplier: -1 }, 'conflict', false],
-  [{ store: 1, sold: 0, bin: 0, supplier: 0 }, 'conflict', false],
-  [{ store: 0, sold: 1, bin: 0, supplier: -2 }, 'conflict', false],
-  [{ store: 2, sold: 0, bin: 0, supplier: -2 }, 'conflict', false],
-  [{ store: 1, sold: 1, bin: 0, supplier: -2 }, 'conflict', false],
-  [{ store: -1, sold: 2, bin: 0, supplier: -1 }, 'conflict', false],
+  [{ store: 0 }, 'unknown', true],
+  [{ store: 1 }, 'initialized', false],
+  [{ store: 2 }, 'conflict', false],
+  [{ store: -1 }, 'conflict', false],
 ])(
-  'classifies stock %j without suggesting restock',
+  'classifies physical stock %j without restock on replay',
   (stock, outcome, initial) => {
     expect(stockOutcome(stock)).toBe(outcome)
     expect(mayInitialize(stock)).toBe(initial)
@@ -108,26 +102,38 @@ it('rejects tracking evidence for another product', async () => {
     'ZETTLE_INVENTORY_CONFLICT',
   )
 })
-it('reads every inventory and verifies merchant, inventory, product and variant', async () => {
-  const { client } = setup(
-    (['STORE', 'SOLD', 'BIN', 'SUPPLIER'] as const).map((type) =>
-      json([
-        {
-          organizationUuid: org,
-          inventoryUuid: ids[type],
-          productUuid: product,
-          variantUuid: variant,
-          balance: type === 'STORE' ? 1 : type === 'SUPPLIER' ? -1 : 0,
-        },
-      ]),
-    ),
+it('reads only physical STORE stock and never invents virtual balances', async () => {
+  const { client, http } = setup([
+    json([
+      {
+        organizationUuid: org,
+        inventoryUuid: ids.STORE,
+        productUuid: product,
+        variantUuid: variant,
+        balance: 1,
+      },
+    ]),
+  ])
+  expect(await client.stock(product, variant, ids)).toEqual({ store: 1 })
+  expect(http).toHaveBeenCalledTimes(1)
+  expect(http.mock.calls[0][0]).toBe(
+    `https://inventory.izettle.com/v3/stock/${ids.STORE}/products/${product}`,
   )
-  expect(await client.stock(product, variant, ids)).toEqual({
-    store: 1,
-    sold: 0,
-    bin: 0,
-    supplier: -1,
-  })
+})
+it('an empty successful tracking result is not enabled tracking', async () => {
+  const { client } = setup([json([])])
+  expect(await client.tracked(product)).toBe(false)
+})
+it('duplicate tracking rows remain invalid', async () => {
+  const { client } = setup([
+    json([
+      { productUuid: product, enabled: false },
+      { productUuid: product, enabled: false },
+    ]),
+  ])
+  await expect(client.tracked(product)).rejects.toThrow(
+    'ZETTLE_INVENTORY_FAILED',
+  )
 })
 it.each(['organizationUuid', 'inventoryUuid', 'productUuid', 'variantUuid'])(
   'refuses mismatched %s in stock evidence',

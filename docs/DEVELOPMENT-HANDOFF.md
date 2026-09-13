@@ -1,3 +1,22 @@
+## Zettle product identity compatibility, 2026-09-13
+
+The real pilot product GET returned HTTP 422 with a UUID-specific error before
+stock initialization. New exports use UUID v1 with a random multicast node.
+Existing v4 IDs are corrected only after a pre-write UUID rejection, through an
+owner/admin engine command that appends a successor and rejects any previously
+acknowledged or stock-claimed item. Internal item IDs and prior evidence stay
+unchanged. Concurrent corrections resolve to the same persistent successor.
+Migrations20260915163000/163100 are additive. Apply both before deploying the
+engine retry. PostgreSQL uuid-ossp is explicit for self-hosted installations.
+
+If live verification still fails, hold the export and inspect the sanitized
+provider error; never regenerate the corrected identity on a generic error.
+Rollback the application if unrelated flows regress; retain additive schema and
+evidence, and hold pilot exports until a forward fix. Do not roll back IDs.
+Local unit, SQL identity/stock/catalog, concurrency, lint/build/typecheck and
+format checks pass. Browser/CI and the actual corrected product export must
+still be verified; exact release evidence is kept in the PR/private checkpoint.
+
 ## Live receipt pull checkpoint, 2026-09-13
 
 Real pilot authentication and merchant pin are verified. Latest base includes

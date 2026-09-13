@@ -40,6 +40,8 @@ function setup(
     readLost?: boolean
     catalogFailed?: boolean
     finishFailed?: boolean
+    rejectedIdentity?: boolean
+    repairDenied?: boolean
   } = {},
 ) {
   let fresh = options.fresh ?? true,
@@ -52,15 +54,27 @@ function setup(
     },
     prepares = 0,
     claimLost = options.claimLost,
-    finishFailed = options.finishFailed
+    finishFailed = options.finishFailed,
+    repaired = false
   const events: string[] = []
   const rpc = vi.fn(async (name: string) => {
     events.push(name)
     if (name === 'tenant_role')
       return { data: options.role ?? 'owner', error: null }
+    if (name === 'repair_zettle_product_identity') {
+      if (options.repairDenied)
+        return { data: null, error: { message: 'ZETTLE_IDENTITY_HELD' } }
+      repaired = true
+      return { data: merchant, error: null }
+    }
     if (name === 'prepare_zettle_product')
       return {
-        data: ++prepares === options.changedAt ? request : job,
+        data:
+          ++prepares === options.changedAt
+            ? request
+            : repaired
+              ? merchant
+              : job,
         error: null,
       }
     if (name === 'claim_zettle_stock') {
@@ -82,7 +96,12 @@ function setup(
     const data =
       table === 'zettle_pull_connections'
         ? { merchant_id: merchant }
-        : { payload, previous_payload: null }
+        : {
+            payload: repaired
+              ? { ...payload, uuid: '30000000-0000-1000-8000-000000000001' }
+              : payload,
+            previous_payload: null,
+          }
     const q = {
       select: () => q,
       eq: () => q,
@@ -112,6 +131,8 @@ function setup(
   }
   const putProduct = vi.fn(async () => {
     events.push('putProduct')
+    if (options.rejectedIdentity && !repaired)
+      throw new Error('ZETTLE_PRODUCT_UUID_REJECTED')
     if (options.catalogFailed) throw new Error('private catalog failure')
   })
   const factory = vi.fn(async () => ({ putProduct, inventory }))
@@ -245,4 +266,25 @@ it.each([
     expect.objectContaining({ p_status: 'failed', p_error: code }),
   )
   expect(s.inventory.initialize).not.toHaveBeenCalled()
+})
+
+it('records the UUID rejection, loads the durable successor and retries once before stock', async () => {
+  const s = setup({ rejectedIdentity: true })
+  expect((await s.run()).stock).toBe('initialized')
+  expect(s.events.filter((e) => e === 'putProduct')).toHaveLength(2)
+  expect(s.rpc).toHaveBeenCalledWith('repair_zettle_product_identity', {
+    p_tenant: tenant,
+    p_export: job,
+  })
+  expect(s.rpc).toHaveBeenCalledWith(
+    'claim_zettle_stock',
+    expect.objectContaining({ p_export: merchant }),
+  )
+  expect(s.inventory.initialize).toHaveBeenCalledTimes(1)
+})
+it('a held identity correction cannot reach stock', async () => {
+  const s = setup({ rejectedIdentity: true, repairDenied: true })
+  await expect(s.run()).rejects.toThrow('ZETTLE_IDENTITY_HELD')
+  expect(s.inventory.initialize).not.toHaveBeenCalled()
+  expect(s.events).not.toContain('claim_zettle_stock')
 })

@@ -1376,6 +1376,8 @@
       "ZETTLE_INVENTORY_AMBIGUOUS": "Zettles lager kunde inte bekräftas. Kontrollera varans sparade status innan du går vidare.",
       "ZETTLE_STOCK_HELD": "Zettles lager kunde inte bekräftas. Kontrollera varans sparade status innan du går vidare.",
       "ZETTLE_EXPORT_FAILED": "Produktsteget misslyckades. Ingen lagerökning startades. Kontrollera produktförsöket innan du försöker igen.",
+      "ZETTLE_PRODUCT_UUID_REJECTED": "Zettle avvisade produktens ID. Exporten inväntar en säker rättning.",
+      "ZETTLE_IDENTITY_HELD": "Produktens ID kan inte ändras säkert. Kontrollera tidigare export och lagerhistorik.",
       "ZETTLE_PRODUCT_ACCESS_DENIED": "Zettle nekade åtkomst till produktbiblioteket. Kontrollera API-nyckelns produktbehörigheter.",
       "ZETTLE_PRODUCT_REJECTED": "Zettle avvisade produktuppgifterna (HTTP 400/422). Lagerökningen startades inte.",
       "ZETTLE_PRODUCT_RESPONSE_INVALID": "Zettles produktsvar har ett format som Komisio inte kan läsa. Produkten kan finnas i Zettle; inget nytt produkt-ID ska skapas.",

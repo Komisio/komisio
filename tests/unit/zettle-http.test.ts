@@ -270,3 +270,44 @@ it('reports rejected read status without exposing the provider message', async (
     `/organizations/${org}/products/`,
   )
 })
+
+it('classifies a pre-write v4 UUID rejection without issuing a POST', async () => {
+  const { client, http } = setup([
+    json({ organizationUuid: org }),
+    json({ error: 'Invalid uuid' }, 422),
+  ])
+  await expect(client.putProduct(product, null)).rejects.toThrow(
+    'ZETTLE_PRODUCT_UUID_REJECTED',
+  )
+  expect(http.mock.calls).toHaveLength(2)
+})
+it.each(['previous', 'v1', 'organization', 'readback'])(
+  'does not authorize identity rotation for %s',
+  async (kind) => {
+    const p =
+      kind === 'v1'
+        ? { ...product, uuid: '20000000-0000-1000-8000-000000000001' }
+        : product
+    const responses = [json({ organizationUuid: org })]
+    if (kind === 'readback')
+      responses.push(
+        new Response(null, { status: 404 }),
+        new Response(null, { status: 201 }),
+      )
+    responses.push(
+      json(
+        {
+          error:
+            kind === 'organization'
+              ? 'Invalid organization uuid'
+              : 'Invalid uuid',
+        },
+        422,
+      ),
+    )
+    const { client } = setup(responses)
+    await expect(
+      client.putProduct(p, kind === 'previous' ? product : null),
+    ).rejects.toThrow('ZETTLE_READ_FAILED')
+  },
+)

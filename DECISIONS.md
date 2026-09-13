@@ -297,3 +297,21 @@ The first stock slice supplies only a disconnected HTTP adapter and stock eviden
 - 2026-09-13: Product export failures retain only allowlisted adapter codes in immutable outcomes and the UI. No raw provider response, token or arbitrary exception text crosses that boundary. Product errors are distinguished from stock initialization; stable product IDs and conservative remote-field checks remain unchanged.
 
 - 2026-09-13: Product Library requests use the verified merchant UUID explicitly, as specified by the current Product Library reference, rather than relying on the self alias. An unexpected product-read status is retained as a safe HTTP status and finite keyword hints, never raw provider details. No product/variant identity is rotated and no stock or financial rule changes.
+
+
+## 2026-09-13: Zettle provider identity compatibility and rejected-ID recovery
+
+Declare the existing Supabase uuid-ossp extension as an explicit database dependency.
+Generate Product Library product/variant IDs with PostgreSQL uuid_generate_v1mc
+(random multicast node), matching the provider examples. Internal item IDs stay
+unchanged. Live product GET rejected our v4 ID with HTTP 422 and a UUID error;
+the current OpenAPI only says UUID, so this is an observed compatibility fix,
+not a claim that every Zettle API rejects every other UUID version.
+
+An owner/admin export may replace a rejected v4 product identity only after a
+pre-write GET returns 422 with a UUID-specific error, with no prior acknowledged
+export, stock intent or sale. Append a successor export linked to the rejected
+snapshot; never edit old IDs or outcomes. The tenant lock serializes recovery,
+replays return the same successor, and later snapshots reuse its IDs. One bounded
+retry is allowed. Network failures, write/read-back errors, valid v1 identities,
+and any ambiguous existing product stay held; none authorize ID rotation.

@@ -211,6 +211,8 @@ export async function readZettleStatus(
 export type ZettlePurchase = Awaited<ReturnType<typeof readZettlePurchase>>
 
 export const zettleErrorCodes = [
+  'ZETTLE_PRODUCT_UUID_REJECTED',
+  'ZETTLE_IDENTITY_HELD',
   'ZETTLE_PRODUCT_ACCESS_DENIED',
   'ZETTLE_PRODUCT_REJECTED',
   'ZETTLE_PRODUCT_RESPONSE_INVALID',

@@ -96,7 +96,21 @@ export function zettleHttpClient(options: {
       await verify()
       const p = catalogProduct.parse(input),
         previous = old ? catalogProduct.parse(old) : null
-      let remote = await get(p.uuid)
+      let remote
+      try {
+        remote = await get(p.uuid)
+      } catch (error) {
+        if (
+          !previous &&
+          p.uuid[14] === '4' &&
+          error instanceof ProductHttpError &&
+          error.httpStatus === 422 &&
+          error.hints.includes('uuid') &&
+          !error.hints.includes('organization')
+        )
+          throw new Error('ZETTLE_PRODUCT_UUID_REJECTED')
+        throw error
+      }
       if (remote && sameProduct(remote.product, p)) return
       if (!remote) {
         if (previous) throw new Error('ZETTLE_REMOTE_MISSING')

@@ -52,9 +52,37 @@ export async function raceZettleStock({ setup, connectionString }) {
         item,
         purchase,
       ])
-      const job = (
+      let job = (
         await a.query('select prepare_zettle_product($1,$2) id', [tenant, item])
       ).rows[0].id
+      const legacy = randomUUID()
+      await setup.query(
+        `insert into zettle_product_exports(id,tenant_id,item_id,price_id,config_id,policy_version,product_id,variant_id,payload,created_by)
+        select $1,tenant_id,item_id,price_id,config_id,policy_version,$2,$3,
+        jsonb_set(jsonb_set(payload,'{uuid}',to_jsonb($2::uuid)),'{variants,0,uuid}',to_jsonb($3::uuid)),created_by
+        from zettle_product_exports where id=$4`,
+        [legacy, randomUUID(), randomUUID(), job],
+      )
+      await a.query(
+        "select finish_zettle_product($1,$2,'failed','ZETTLE_PRODUCT_UUID_REJECTED')",
+        [tenant, legacy],
+      )
+      const corrections = await Promise.all(
+        [a, b].map((c) =>
+          c.query('select repair_zettle_product_identity($1,$2) id', [
+            tenant,
+            legacy,
+          ]),
+        ),
+      )
+      job = corrections[0].rows[0].id
+      assert.equal(job, corrections[1].rows[0].id)
+      assert.notEqual(job, legacy)
+      const fixed = await a.query(
+        'select product_id from zettle_product_exports where id=$1',
+        [job],
+      )
+      assert.equal(fixed.rows[0].product_id[14], '1')
       const results = await Promise.all(
         [a, b].map((c, i) =>
           c.query('select claim_zettle_stock($1,$2,$3,$4,$5) claim', [
@@ -84,7 +112,7 @@ export async function raceZettleStock({ setup, connectionString }) {
       2,
     )
     console.log(
-      'PASS: one initial stock grant across concurrent identical and different request IDs; replays never grant stock.',
+      'PASS: concurrent identity corrections converge; one initial stock grant across concurrent identical and different request IDs; replays never grant stock.',
     )
   } finally {
     await a.end()

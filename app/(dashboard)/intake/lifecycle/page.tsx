@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
+import { readStoreCurrency } from '@/lib/engine/money'
 import {
   readLifecycleQueue,
   readMarkdownRuns,
@@ -20,6 +21,7 @@ export default async function Lifecycle({
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const ctx = await requirePlatform(),
     active = ctx.active!,
+    currency = await readStoreCurrency(ctx.client, active.id),
     all = dictionary(ctx.locale),
     d = all.lifecycle
   const p = await searchParams
@@ -102,7 +104,7 @@ export default async function Lifecycle({
               · {d.stages[r.stage]} ·{' '}
               {r.current_price_ore === null
                 ? '—'
-                : `${formatSignedOre(r.current_price_ore)} SEK`}
+                : `${formatSignedOre(r.current_price_ore)} ${currency}`}
             </strong>
             <p>
               {d.accepted} {when(r.accepted_at)} · {d.periodEnd}{' '}

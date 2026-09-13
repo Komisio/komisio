@@ -23,7 +23,7 @@ it('rejects duplicate items, float prices, foreign currency and unknown provider
     { lines: [{ ...base.lines[0], price: '250' }] },
     { lines: [{ ...base.lines[0], price: 250 }] },
     { lines: [] },
-    { currency: 'EUR' },
+    { currency: 'USD' },
     { provider: 'square' },
     { externalId: '' },
     { occurredAt: 'yesterday' },

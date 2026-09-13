@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { z } from 'zod'
 import { vatPolicyShape } from './vat'
+import { currencyCode } from './money'
 
 // Boundary validation only. SQL owns numeric persistence and calculations.
 const decimal = z
@@ -46,6 +47,8 @@ export const storePolicyBody = z.strictObject({
   automaticSellerNotifications: z.boolean().optional(),
   // Automatic markdowns (P3): absent means off; due steps are applied by the daily run as the policy's publisher.
   automaticMarkdowns: z.boolean().optional(),
+  // One currency per store (decided 2026-09-13); absent means SEK; frozen after the first money fact.
+  currency: currencyCode.optional(),
 })
 
 export type StorePolicyBody = z.infer<typeof storePolicyBody>

@@ -8,6 +8,7 @@ import {
 import type { ZettleTransport } from '../../extensions/zettle/transport'
 import { catalogProduct } from '../../extensions/zettle/catalog'
 import type { ZettleClient } from '../../extensions/zettle/http'
+import { readStoreCurrency } from './money'
 const base = z.strictObject({ tenantId: z.uuid(), requestId: z.uuid() })
 export const zettleCommand = z.discriminatedUnion('action', [
   base.extend({ action: z.literal('sync'), previous: cursor }),
@@ -70,6 +71,7 @@ export async function syncZettle(
           signal: AbortSignal.timeout(15000),
         }),
         c.previous,
+        await readStoreCurrency(client, c.tenantId),
       )
   return client.rpc('record_zettle_page', {
     p_tenant: c.tenantId,

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
+import { readStoreCurrency } from '@/lib/engine/money'
 import { readReceptionHistory } from '@/lib/engine/reception-history'
 
 const query = z.object({
@@ -21,6 +22,7 @@ export default async function History({
   if (!id.success) notFound()
   const ctx = await requirePlatform(),
     tenant = ctx.active!,
+    currency = await readStoreCurrency(ctx.client, tenant.id),
     all = dictionary(ctx.locale),
     d = all.reception,
     h = d.history,
@@ -65,7 +67,7 @@ export default async function History({
             </p>
             <p>{review.description}</p>
             <p>
-              {d.price}: {review.price} SEK
+              {d.price}: {review.price} {currency}
             </p>
             <p>
               {d.sharedPhotos}: {review.photoCount}

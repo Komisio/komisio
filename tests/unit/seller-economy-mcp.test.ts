@@ -12,7 +12,9 @@ vi.mock('../../lib/engine/seller-ledger', () => ({
   readSellerLedger: vi.fn(),
 }))
 const id = '96000000-0000-4000-8000-000000000001'
-const client = {} as SupabaseClient
+const client = {
+  rpc: async () => ({ data: 'SEK', error: null }),
+} as unknown as SupabaseClient
 const config = { tenantId: id } as MCPConfig
 const balance = {
   sellerId: id,

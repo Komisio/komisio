@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
+import { readStoreCurrency } from '@/lib/engine/money'
 import { readItems } from '@/lib/engine/items'
 import { readSales, readSoldItemIds, formatOre } from '@/lib/engine/sales'
 import { SaleForm } from '@/components/intake/sale-form'
@@ -10,6 +11,7 @@ export default async function Sales() {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const ctx = await requirePlatform(),
     active = ctx.active!,
+    currency = await readStoreCurrency(ctx.client, active.id),
     all = dictionary(ctx.locale),
     d = all.sales
   const [sales, items] = await Promise.all([
@@ -27,7 +29,7 @@ export default async function Sales() {
       id: i.id,
       priceOre: i.priceOre,
       label: `${all.items.originKinds[i.origin_kind]} · ${
-        i.priceOre === null ? '—' : `${formatOre(i.priceOre)} SEK`
+        i.priceOre === null ? '—' : `${formatOre(i.priceOre)} ${currency}`
       } · ${i.id.slice(0, 8)}`,
     }))
   const when = (iso: string) =>
@@ -50,6 +52,7 @@ export default async function Sales() {
           <SaleForm
             key={active.id}
             tenantId={active.id}
+            currency={currency}
             items={unsold}
             d={d}
             intake={all.intake}
@@ -64,7 +67,8 @@ export default async function Sales() {
               <li key={s.id} className="intake-bag">
                 <div>
                   <Link className="text-link" href={`/intake/sales/${s.id}`}>
-                    {formatOre(s.total_ore)} SEK · {d.providers[s.provider]}
+                    {formatOre(s.total_ore)} {currency} ·{' '}
+                    {d.providers[s.provider]}
                   </Link>
                   <br />
                   <small>

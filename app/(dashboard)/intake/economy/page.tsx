@@ -27,7 +27,7 @@ export default async function Economy({
   })
   const period = requested.success ? requested.data : currentMonthPeriod()
   const summary = await readEconomySummary(ctx.client, active.id, period)
-  const money = (ore: number) => `${formatSignedOre(ore)} SEK`
+  const money = (ore: number) => `${formatSignedOre(ore)} ${summary.currency}`
   const t = summary.totals
   const vatModes = all.sales.vatModes as Record<string, string>
   const rows: [string, string][] = [

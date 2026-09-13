@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
+import { readStoreCurrency } from '@/lib/engine/money'
 import { readDayCloses } from '@/lib/engine/day-closes'
 import {
   readAccountingMap,
@@ -17,6 +18,7 @@ export default async function Accounting() {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const ctx = await requirePlatform(),
     active = ctx.active!,
+    currency = await readStoreCurrency(ctx.client, active.id),
     all = dictionary(ctx.locale),
     d = all.accounting
   const [closes, map, exports] = await Promise.all([
@@ -38,7 +40,7 @@ export default async function Accounting() {
   const today = new Date().toLocaleDateString('sv-SE', {
     timeZone: 'Europe/Stockholm',
   })
-  const money = (ore: number) => `${formatSignedOre(ore)} SEK`
+  const money = (ore: number) => `${formatSignedOre(ore)} ${currency}`
   const vatModes = all.sales.vatModes as Record<string, string>
   const canEditMap = ['owner', 'admin'].includes(active.role)
   return (
@@ -116,6 +118,7 @@ export default async function Accounting() {
                 <ExportDayClose
                   key={`${c.id}-${map.id ?? 'none'}`}
                   tenantId={active.id}
+                  currency={currency}
                   preview={previews.get(c.id)!}
                   canExport={active.role !== 'readonly'}
                   vatModes={vatModes}

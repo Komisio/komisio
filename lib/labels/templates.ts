@@ -29,6 +29,7 @@ export const labelFacts = z.strictObject({
     .optional(),
   date: text(20).default(''),
   qr: text(200).default(''),
+  currency: z.enum(['SEK', 'NOK', 'DKK', 'EUR']).default('SEK'),
 })
 export type LabelFacts = z.infer<typeof labelFacts>
 
@@ -55,7 +56,7 @@ const qrcode = (x: number, y: number, value: string) =>
 export function renderLabel(kindInput: unknown, factsInput: unknown) {
   const kind = labelKind.parse(kindInput)
   const f = labelFacts.parse(factsInput)
-  const price = f.price ? `${f.price} SEK` : ''
+  const price = f.price ? `${f.price} ${f.currency}` : ''
   switch (kind) {
     case 'bag':
       return frame([
@@ -84,7 +85,7 @@ export function renderLabel(kindInput: unknown, factsInput: unknown) {
       return frame([
         fd(20, 20, 28, f.storeName),
         fd(20, 60, 24, f.line1),
-        fd(20, 100, 28, f.oldPrice ? `${f.oldPrice} SEK` : ''),
+        fd(20, 100, 28, f.oldPrice ? `${f.oldPrice} ${f.currency}` : ''),
         fd(20, 140, 56, price),
         fd(20, 210, 22, f.reference),
         barcode(20, 240, f.reference),

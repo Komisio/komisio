@@ -96,7 +96,7 @@ function BatchRow({
           <p>
             {d.price}:{' '}
             {candidate.suggestions.price
-              ? `${candidate.suggestions.price.amount} SEK`
+              ? `${candidate.suggestions.price.amount} ${candidate.suggestions.price.currency}`
               : d.aiUnknown}
           </p>
           <p>{candidate.suggestions.price?.rationale}</p>

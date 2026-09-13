@@ -8,6 +8,7 @@ import {
   type PilotEnvironment,
 } from '../../extensions/zettle/auth'
 import { mapZettlePage } from '../../extensions/zettle/purchase'
+import { readStoreCurrency } from './money'
 import type { ZettleTransport } from '../../extensions/zettle/transport'
 async function authorize(
   client: SupabaseClient,
@@ -140,12 +141,14 @@ export async function pullZettlePurchases(
     endDate: new Date(window.data.end_at).toISOString(),
   })
   const before = latest.data?.[0]?.cursor_after ?? null
+  const currency = await readStoreCurrency(client, tenantId)
   const page = mapZettlePage(
     await transport.fetchPage({
       cursor: before,
       signal: AbortSignal.timeout(15000),
     }),
     before,
+    currency,
   )
   const result = await client.rpc('record_zettle_pull_page', {
     p_tenant: tenantId,

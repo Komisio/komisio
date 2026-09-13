@@ -21,8 +21,7 @@ export async function readEconomySummaryTool(
     readOnly: true,
     evidenceIsUntrusted: true,
     guidanceOnly: true,
-    currency: 'SEK',
-    amountUnit: 'ore',
+    amountUnit: 'minor',
     ...summary,
   }
 }

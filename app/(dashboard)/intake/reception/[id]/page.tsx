@@ -66,7 +66,10 @@ export default async function Reception({
     'reception_review',
     id.data,
   )
-  const prepared = readManualReception(sources),
+  const prepared = readManualReception(
+      sources,
+      policy.policy.currency ?? 'SEK',
+    ),
     write = tenant.role !== 'readonly'
   const current = review?.sourceRevision === state.revision,
     expired = review?.expired ?? false
@@ -243,7 +246,8 @@ export default async function Reception({
             <>
               <p>{prepared.input.description}</p>
               <h3>
-                {d.price}: {prepared.input.amount} SEK
+                {d.price}: {prepared.input.amount}{' '}
+                {policy.policy.currency ?? 'SEK'}
               </h3>
               <p>{prepared.suggestions.price?.rationale}</p>
             </>
@@ -291,7 +295,8 @@ export default async function Reception({
           </h2>
           <p>{review.suggestions.metadata.description?.value}</p>
           <p>
-            {d.price}: {review.suggestions.price?.amount} SEK
+            {d.price}: {review.suggestions.price?.amount}{' '}
+            {review.suggestions.price?.currency}
           </p>
           <p>{review.terms?.title ?? all.storePolicy.noTerms}</p>
           <p>

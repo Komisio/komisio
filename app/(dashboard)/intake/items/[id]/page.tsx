@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
+import { readStoreCurrency } from '@/lib/engine/money'
 import { readItem, formatOre } from '@/lib/engine/items'
 import { readPrinters } from '@/lib/engine/printing'
 import { PrintJobButton } from '@/components/intake/print-job-button'
@@ -17,6 +18,7 @@ export default async function Item({
   if (!id.success) notFound()
   const ctx = await requirePlatform(),
     active = ctx.active!,
+    currency = await readStoreCurrency(ctx.client, active.id),
     all = dictionary(ctx.locale),
     d = all.items
   const result = await readItem(ctx.client, active.id, id.data)
@@ -82,7 +84,7 @@ export default async function Item({
               <dt>{d.purchasePrice}</dt>
               <dd>
                 {t.purchasePriceOre !== undefined
-                  ? `${formatOre(t.purchasePriceOre)} SEK`
+                  ? `${formatOre(t.purchasePriceOre)} ${currency}`
                   : '—'}{' '}
                 ·{' '}
                 {t.marginEligible
@@ -133,7 +135,7 @@ export default async function Item({
         <h2>{d.prices}</h2>
         {prices.map((p) => (
           <p key={p.id}>
-            {formatOre(p.price_ore)} SEK ·{' '}
+            {formatOre(p.price_ore)} {currency} ·{' '}
             {d.priceReasons[p.reason as keyof typeof d.priceReasons] ??
               p.reason}{' '}
             · {when(p.set_at)}

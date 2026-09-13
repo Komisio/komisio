@@ -5,7 +5,7 @@ const catalogVariant = z.strictObject({
   barcode: z.string().max(128),
   price: z.strictObject({
     amount: z.number().int().min(1).max(99999999999),
-    currencyId: z.literal('SEK'),
+    currencyId: z.enum(['SEK', 'NOK', 'DKK', 'EUR']),
   }),
 })
 export const catalogProduct = z.strictObject({

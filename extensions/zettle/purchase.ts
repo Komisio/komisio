@@ -59,7 +59,10 @@ export const importPurchase = z.strictObject({
 })
 export type ImportedPurchase = z.infer<typeof importPurchase>
 /** Only documented Purchase API fields; discard payment/customer/employee/location data. */
-export function mapZettlePurchase(input: unknown): ImportedPurchase {
+export function mapZettlePurchase(
+  input: unknown,
+  currency = 'SEK',
+): ImportedPurchase {
   const p = wire.parse(input)
   const stamp = z.iso
     .datetime({ offset: true })
@@ -92,7 +95,7 @@ export function mapZettlePurchase(input: unknown): ImportedPurchase {
       ? 'source'
       : p.refund || p.refunded || p.refundsPurchaseUUID1 || p.amount < 0
         ? 'refund'
-        : p.currency !== 'SEK'
+        : p.currency !== currency
           ? 'currency'
           : p.discounts?.length ||
               p.products.some((r) => r.discount != null || !!r.discountValue)
@@ -125,9 +128,13 @@ const page = z.object({
   purchases: z.array(z.unknown()).max(100),
   lastPurchaseHash: z.string().max(1000).nullish(),
 })
-export function mapZettlePage(input: unknown, previous: string | null) {
+export function mapZettlePage(
+  input: unknown,
+  previous: string | null,
+  currency = 'SEK',
+) {
   const p = page.parse(input),
-    purchases = p.purchases.map(mapZettlePurchase)
+    purchases = p.purchases.map((row) => mapZettlePurchase(row, currency))
   if (new Set(purchases.map((p) => p.externalId)).size !== purchases.length)
     throw new Error('ZETTLE_DUPLICATE_PURCHASE')
   if (

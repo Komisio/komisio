@@ -1,5 +1,6 @@
 import { createHash, randomBytes } from 'node:crypto'
 import { z } from 'zod'
+import { currencyCode } from './money'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export const reviewToken = z.string().regex(/^[a-f0-9]{64}$/)
@@ -45,7 +46,7 @@ const sellerReview = z.object({
   photos: z.array(z.uuid()).max(20),
   price: z.object({
     amount: z.string(),
-    currency: z.literal('SEK'),
+    currency: currencyCode,
     rationale: z.string(),
   }),
   expiresAt: z.string(),

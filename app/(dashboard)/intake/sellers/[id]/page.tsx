@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
+import { readStoreCurrency } from '@/lib/engine/money'
 import {
   readEffectiveSellerTerms,
   readSellerTermsHistory,
@@ -33,6 +34,7 @@ export default async function Seller({
   if (!id.success) notFound()
   const ctx = await requirePlatform(),
     tenant = ctx.active!,
+    currency = await readStoreCurrency(ctx.client, tenant.id),
     all = dictionary(ctx.locale),
     d = all.sellerTerms
   const seller = await ctx.client
@@ -81,19 +83,19 @@ export default async function Seller({
     })),
     item_sold: (soldLines.data ?? []).map((l) => ({
       id: String(l.id),
-      label: `${all.items.originKinds[sellerItems.find((i) => i.id === l.item_id)?.origin_kind ?? 'purchase']} · ${formatSignedOre(Number(l.seller_credit_ore))} SEK`,
+      label: `${all.items.originKinds[sellerItems.find((i) => i.id === l.item_id)?.origin_kind ?? 'purchase']} · ${formatSignedOre(Number(l.seller_credit_ore))} ${currency}`,
     })),
     payout_approved: payouts
       .filter((p) => p.status === 'approved')
       .map((p) => ({
         id: p.id,
-        label: `${formatSignedOre(p.amount_ore)} SEK`,
+        label: `${formatSignedOre(p.amount_ore)} ${currency}`,
       })),
     payout_paid: payouts
       .filter((p) => p.status === 'paid')
       .map((p) => ({
         id: p.id,
-        label: `${formatSignedOre(p.amount_ore)} SEK · ${p.payment_reference}`,
+        label: `${formatSignedOre(p.amount_ore)} ${currency} · ${p.payment_reference}`,
       })),
     statement_issued: statements.map((s) => ({
       id: s.id,
@@ -174,17 +176,17 @@ export default async function Seller({
         <p>{l.intro}</p>
         <p role="status">
           <strong>
-            {l.available}: {formatSignedOre(balance.availableOre)} SEK
+            {l.available}: {formatSignedOre(balance.availableOre)} ${currency}
           </strong>{' '}
-          · {l.reserved}: {formatSignedOre(balance.reservedOre)} SEK ·{' '}
-          {l.credited}: {formatSignedOre(balance.creditedOre)} SEK · {l.paid}:{' '}
-          {formatSignedOre(balance.paidOre)} SEK
+          · {l.reserved}: {formatSignedOre(balance.reservedOre)} ${currency} ·{' '}
+          {l.credited}: {formatSignedOre(balance.creditedOre)} ${currency} ·{' '}
+          {l.paid}: {formatSignedOre(balance.paidOre)} ${currency}
         </p>
         {ledger.length === 0 && <p>{l.empty}</p>}
         {ledger.map((e) => (
           <p key={e.id}>
             {when(e.occurred_at)} · {l.kinds[e.kind]} ·{' '}
-            {formatSignedOre(e.amount_ore)} SEK
+            {formatSignedOre(e.amount_ore)} ${currency}
             {e.reason ? ` · ${e.reason}` : ''}
           </p>
         ))}
@@ -212,7 +214,7 @@ export default async function Seller({
               {s.number}
             </Link>{' '}
             · {when(s.period_from)} – {when(s.period_to)} · {st.closing}{' '}
-            {formatSignedOre(s.closing_ore)} SEK
+            {formatSignedOre(s.closing_ore)} ${currency}
           </p>
         ))}
         {write && (

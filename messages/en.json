@@ -40,6 +40,7 @@
     "evidenceNote": "The agreement record does not approve the contents for sale."
   },
   "intake": {
+    "exportSellerData": "Download all data about this seller (JSON)",
     "title": "Intake",
     "intro": "Receive the bag now. Review its contents later.",
     "pilot": "Pilot: receiving records that the store has the bag. Recorded agreement evidence is not an electronic signature. Item drafts can be saved during inspection; sales come later. No email is sent.",

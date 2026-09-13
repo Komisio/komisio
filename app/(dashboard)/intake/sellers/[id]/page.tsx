@@ -116,6 +116,13 @@ export default async function Seller({
       <Link className="text-link" href="/intake">
         {all.intake.back}
       </Link>
+      {['owner', 'admin'].includes(tenant.role) && (
+        <p>
+          <a className="text-link" href={`/api/sellers/${id.data}/export`}>
+            {all.intake.exportSellerData}
+          </a>
+        </p>
+      )}
       <div className="page-heading">
         <div className="eyebrow">{tenant.name}</div>
         <h1>{seller.data.name}</h1>

@@ -119,7 +119,7 @@ export function SellerHandovers({
           )}
         </div>
       ))}
-      <p role="status">{notice}</p>
+      {notice && <p role="status">{notice}</p>}
     </section>
   )
 }

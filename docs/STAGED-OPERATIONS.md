@@ -106,6 +106,22 @@ the operation id. The MCP tool `komisio_propose_acceptance` needs the scope
 validation, preflight, self-approval denial, approval by a second person and
 a competing proposal failing at execution with `ITEM_EXISTS`.
 
+## P2 kinds: returns, ledger adjustments, markdown batches
+
+Since migration `20260914090000` three more kinds exist. `recordReturn`
+(`medium`) stages a full refund of one completed, unreturned sale line at
+exactly the line price; approval by a second person runs `record_return` with
+the operation id as the return id. `adjustLedger` (`high`) stages a signed
+öre adjustment with a reason; execution runs `adjust_seller_ledger`, which is
+owner or admin only, so a staff approval records `failed|FORBIDDEN` and moves
+nothing. `applyMarkdownBatch` (`low`) stages up to 50 items each with the step
+that is due right now; preflight refuses the whole batch if any step is not
+due, and execution applies one markdown event per item inside the approving
+transaction, all or nothing. The queue lists and filters the new kinds; the
+detail page shows the payload with an execution note and a stale hint (line
+already returned, seller gone). No MCP tool proposes these kinds yet.
+`supabase/tests/0040_staged_p2_kinds.test.sql` covers all three.
+
 ## Uncertain decision responses
 
 The staff decision UI freezes the complete first submitted envelope: tenant,

@@ -7,6 +7,8 @@ import {
   publishReceptionReviewPayload,
   saveInspectionDraftPayload,
   acceptItemPayload,
+  recordReturnPayload,
+  adjustLedgerPayload,
   type PendingOperation,
 } from './operations'
 import { inspectionFields } from './inspection'
@@ -183,6 +185,72 @@ export async function readOperationReview(
         originRevision: p.originRevision,
         priceOre: p.priceOre,
         alreadyAccepted: !!existing.data,
+        stale,
+        canApprove: !d && !expired && !stale,
+        guidanceOnly: true as const,
+      },
+    }
+  }
+  if (
+    pending.data.kind === 'recordReturn' ||
+    pending.data.kind === 'adjustLedger' ||
+    pending.data.kind === 'applyMarkdownBatch'
+  ) {
+    // P2 kinds carry their own facts; the only cheap hint is whether the
+    // subject still exists or is already done. SQL rechecks on approval.
+    const kind = pending.data.kind
+    const [decision, subject] = await Promise.all([
+      client
+        .from('operation_decisions')
+        .select('id,outcome,result_id,error_code,reason,decided_by,created_at')
+        .eq('tenant_id', tenantId)
+        .eq('operation_id', operationId)
+        .maybeSingle(),
+      kind === 'recordReturn'
+        ? client
+            .from('sale_returns')
+            .select('id')
+            .eq('tenant_id', tenantId)
+            .eq(
+              'sale_line_id',
+              recordReturnPayload.parse(pending.data.payload).saleLineId,
+            )
+            .maybeSingle()
+        : kind === 'adjustLedger'
+          ? client
+              .from('sellers')
+              .select('id')
+              .eq('tenant_id', tenantId)
+              .eq(
+                'id',
+                adjustLedgerPayload.parse(pending.data.payload).sellerId,
+              )
+              .maybeSingle()
+          : Promise.resolve({ data: null, error: null }),
+    ])
+    if (decision.error || subject.error) throw new Error('OPERATION_NOT_FOUND')
+    const d = decision.data,
+      expired = Date.parse(pending.data.expires_at) <= Date.now()
+    const operation = operationRow.parse({
+      ...pending.data,
+      status: d?.outcome ?? (expired ? 'expired' : 'open'),
+      decision_id: d?.id ?? null,
+      outcome: d?.outcome ?? null,
+      result_id: d?.result_id ?? null,
+      error_code: d?.error_code ?? null,
+      reason: d?.reason ?? null,
+      decided_by: d?.decided_by ?? null,
+      decided_at: d?.created_at ?? null,
+    })
+    const alreadyDone = kind === 'recordReturn' && !!subject.data && !d
+    const stale = alreadyDone || (kind === 'adjustLedger' && !subject.data)
+    return {
+      readOnly: true as const,
+      evidenceIsUntrusted: true as const,
+      operation,
+      context: {
+        kind: 'engine' as const,
+        alreadyDone,
         stale,
         canApprove: !d && !expired && !stale,
         guidanceOnly: true as const,

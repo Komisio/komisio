@@ -104,7 +104,8 @@ Purpose: reversal as a new fact.
   freed for resale, `flagged_for_review` with reason `CREDIT_ALREADY_USED`
   when the seller's available balance no longer covers the credit; return
   form on the receipt, flagged list on the payouts page. The sale row stays
-  `completed`; the return is the reversal fact. Staged agent kind follows.
+  `completed`; the return is the reversal fact. Staged kind `recordReturn`
+  at `medium` delivered with migration `20260914090000`.
 
 ## S14. Seller ledger and balance
 
@@ -125,14 +126,15 @@ Purpose: the append-only ledger every seller-facing number derives from.
 - Status 2026-09-13: table with per-kind sign checks, `seller_balance`,
   `adjust_seller_ledger` (owner or admin, reason required, replay-safe),
   sale credits written by `record_sale`, balance and entries on the seller
-  page with the adjustment form (migration `20260914010000`). The staged
-  kind `adjustLedger` remains future work; bounded agent reads are described below.
+  page with the adjustment form (migration `20260914010000`). Staged kind
+  `adjustLedger` at `high` delivered with migration `20260914090000`; it
+  executes only for an owner or admin approver.
 
-S14 follow-up (Astra, based on main `e965366`): opt-in `economy:read`
-tools read one seller balance and at most 50 recent ledger entries through the
-existing engine. Amounts are ore; private reasons/contact data are omitted and
-partial history is labelled. No adjustment/payout write or aggregate balance
-listing is added. Release evidence will be recorded in the PR.
+S14 follow-up (Astra): opt-in `economy:read` tools read one seller balance
+and at most 50 recent ledger entries through the existing engine. Amounts
+are ore; private reasons/contact data are omitted and partial history is
+labelled. No adjustment/payout write or aggregate balance listing is added
+by these tools. See PR77 for release evidence.
 
 ## S15. Payouts
 
@@ -268,8 +270,9 @@ Smaller slices that complete P2 and are independent of each other:
   with stages on_sale, markdown_due, period_ending, period_ended, ended and
   sold; `apply_markdown` (share of the accepted price, once per step, only
   when due), `extend_sale_period`, `end_sale_period` (charity or return); an
-  ended item can no longer be sold; sale periods page with actions. Agent
-  batch proposals follow.
+  ended item can no longer be sold; sale periods page with actions. Staged
+  kind `applyMarkdownBatch` at `low` delivered with migration
+  `20260914090000`: every step must be due, all or nothing.
 - Batch reception: one photo set for one seller; the model splits into
   garments and proposes each; staff confirm per row; the same reception
   contract per garment.

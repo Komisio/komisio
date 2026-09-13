@@ -9,6 +9,9 @@ export const operationKind = z.enum([
   'publishReceptionReview',
   'saveInspectionDraft',
   'acceptItem',
+  'recordReturn',
+  'adjustLedger',
+  'applyMarkdownBatch',
 ])
 export const publishReceptionReviewPayload = z.strictObject({
   sessionId: z.uuid(),
@@ -44,6 +47,39 @@ export const acceptItemPayload = z
     (v) => (v.originKind === 'purchase') === (v.originRevision === null),
     'Purchase origins carry no revision; the others require one',
   )
+// P2 staged kinds. Full refund of one completed sale line (medium); a signed
+// ledger adjustment (high, executed only when the approver may adjust); a batch
+// of markdown steps that are all due now (low, all or nothing).
+export const recordReturnPayload = z.strictObject({
+  saleLineId: z.uuid(),
+  refundOre: z.number().int().min(1).max(99_999_999_999),
+  reason: z.string().trim().min(1).max(500),
+})
+export const adjustLedgerPayload = z.strictObject({
+  sellerId: z.uuid(),
+  amountOre: z
+    .number()
+    .int()
+    .min(-99_999_999_999)
+    .max(99_999_999_999)
+    .refine((v) => v !== 0, 'An adjustment moves money'),
+  reason: z.string().trim().min(1).max(500),
+})
+export const applyMarkdownBatchPayload = z.strictObject({
+  items: z
+    .array(
+      z.strictObject({
+        itemId: z.uuid(),
+        step: z.number().int().min(1).max(99),
+      }),
+    )
+    .min(1)
+    .max(50)
+    .refine(
+      (list) => new Set(list.map((i) => i.itemId)).size === list.length,
+      'Each item once',
+    ),
+})
 const proposeBase = z.strictObject({
   tenantId: z.uuid(),
   requestId: z.uuid(),
@@ -62,6 +98,18 @@ export const proposeOperationCommand = z.discriminatedUnion('kind', [
   proposeBase.extend({
     kind: z.literal('acceptItem'),
     payload: acceptItemPayload,
+  }),
+  proposeBase.extend({
+    kind: z.literal('recordReturn'),
+    payload: recordReturnPayload,
+  }),
+  proposeBase.extend({
+    kind: z.literal('adjustLedger'),
+    payload: adjustLedgerPayload,
+  }),
+  proposeBase.extend({
+    kind: z.literal('applyMarkdownBatch'),
+    payload: applyMarkdownBatchPayload,
   }),
 ])
 export const decideOperationCommand = z.strictObject({
@@ -108,6 +156,18 @@ export const operationRow = z.discriminatedUnion('kind', [
     kind: z.literal('acceptItem'),
     payload: acceptItemPayload,
   }),
+  operationBaseRow.extend({
+    kind: z.literal('recordReturn'),
+    payload: recordReturnPayload,
+  }),
+  operationBaseRow.extend({
+    kind: z.literal('adjustLedger'),
+    payload: adjustLedgerPayload,
+  }),
+  operationBaseRow.extend({
+    kind: z.literal('applyMarkdownBatch'),
+    payload: applyMarkdownBatchPayload,
+  }),
 ])
 export type PendingOperation = z.infer<typeof operationRow>
 export const operationErrorCodes = [
@@ -135,6 +195,16 @@ export const operationErrorCodes = [
   'SELLER_APPROVAL_REQUIRED',
   'PRICE_NOT_APPROVED',
   'AGREEMENT_REQUIRED',
+  'SALE_LINE_NOT_FOUND',
+  'SALE_NOT_COMPLETED',
+  'LINE_ALREADY_RETURNED',
+  'PARTIAL_REFUND_UNSUPPORTED',
+  'SELLER_NOT_FOUND',
+  'ITEM_NOT_FOUND',
+  'ITEM_NOT_ON_SALE',
+  'ITEM_ENDED',
+  'MARKDOWN_NOT_DUE',
+  'MARKDOWN_ALREADY_APPLIED',
 ] as const
 export function operationErrorCode(message: string) {
   return (

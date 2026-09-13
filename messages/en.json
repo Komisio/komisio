@@ -522,8 +522,21 @@
     "kinds": {
       "publishReceptionReview": "Publish reviewed proposal to seller",
       "saveInspectionDraft": "Save descriptive inspection draft",
-      "acceptItem": "Accept origin as item"
+      "acceptItem": "Accept origin as item",
+      "recordReturn": "Record a full return",
+      "adjustLedger": "Adjust a seller ledger",
+      "applyMarkdownBatch": "Apply due markdowns"
     },
+    "saleLine": "Sale line",
+    "refund": "Refund",
+    "seller": "Seller",
+    "adjustment": "Adjustment",
+    "batchItems": "Items in the batch",
+    "step": "step",
+    "engineContext": "Execution check",
+    "engineNotice": "Approval runs the ordinary command as you, which re-checks every precondition. A ledger adjustment executes only for an owner or admin.",
+    "alreadyDone": "This line is already returned.",
+    "staleEngine": "The facts behind this proposal changed. Reject it and request a new one.",
     "risk": {
       "low": "Low",
       "medium": "Medium",

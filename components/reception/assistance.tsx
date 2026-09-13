@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import type { Dictionary } from '@/lib/i18n'
 import {
   receptionProposal,
@@ -8,6 +8,8 @@ import {
 } from '@/lib/engine/reception'
 import { Button } from '@/components/ui/button'
 import { PublishReview } from './operator'
+import { prepareReceptionBatch } from '@/lib/assistance/reception-batch'
+import { BatchReview } from './batch-review'
 
 export function ReceptionAssistance({
   tenantId,
@@ -42,6 +44,11 @@ export function ReceptionAssistance({
     [busy, setBusy] = useState(false),
     [error, setError] = useState(''),
     [attempted, setAttempted] = useState(false)
+  const [mode, setMode] = useState<'single' | 'batch'>('single')
+  const [batch, setBatch] = useState<ReturnType<
+    typeof prepareReceptionBatch
+  > | null>(null)
+  const modeId = useId()
   const running = useRef(false)
   const ready =
     candidate?.metadata.description &&
@@ -52,6 +59,17 @@ export function ReceptionAssistance({
     <section className="card intake-form reception-result">
       <h2>{d.aiTitle}</h2>
       <p>{available ? d.aiNotice : d.aiUnavailable}</p>
+      <label htmlFor={modeId}>{d.batch.mode}</label>
+      <select
+        id={modeId}
+        value={mode}
+        disabled={attempted || busy}
+        onChange={(e) => setMode(e.target.value as 'single' | 'batch')}
+      >
+        <option value="single">{d.batch.single}</option>
+        <option value="batch">{d.batch.multiple}</option>
+      </select>
+      {mode === 'batch' && <p>{d.batch.notice}</p>}
       {available && (
         <Button
           disabled={busy || attempted || revision < 1}
@@ -66,6 +84,7 @@ export function ReceptionAssistance({
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                  mode,
                   tenantId,
                   sessionId,
                   requestId: crypto.randomUUID(),
@@ -83,6 +102,33 @@ export function ReceptionAssistance({
                 )
               if (result.status === 'unavailable')
                 throw new Error(d.aiUnavailable)
+              if (mode === 'batch') {
+                if (
+                  result.batch?.tenantId !== tenantId ||
+                  result.batch?.sessionId !== sessionId ||
+                  result.batch?.sellerId !== sellerId ||
+                  result.batch?.baseRevision !== revision
+                )
+                  throw new Error(d.aiFailed)
+                setBatch(
+                  prepareReceptionBatch(
+                    {
+                      schemaVersion: 1,
+                      tenantId,
+                      sessionId,
+                      sellerId,
+                      revision,
+                      sources,
+                    },
+                    {
+                      candidates: result.batch.candidates,
+                      questions: result.batch.questions,
+                    },
+                    result.batch.batchId,
+                  ),
+                )
+                return
+              }
               const proposal = receptionProposal.parse(result.proposal)
               if (
                 proposal.tenantId !== tenantId ||
@@ -110,6 +156,15 @@ export function ReceptionAssistance({
       )}
       {error && <p role="alert">{error}</p>}
       {attempted && <p>{d.aiTransient}</p>}
+      {batch && (
+        <BatchReview
+          batch={batch}
+          sources={sources}
+          agreementId={terms?.id ?? null}
+          agreementReady={!!terms || !agreementRequired}
+          d={d}
+        />
+      )}
       {candidate && (
         <div className="intake-form">
           <h3>{d.aiCandidate}</h3>

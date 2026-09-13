@@ -50,13 +50,42 @@ globalThis.fetch = async (input, init) => {
         : null,
       questions: [],
     }
+    const output =
+      body.text.format.name === 'garment_batch'
+        ? {
+            candidates: sources
+              .filter((s) => s.kind === 'photo')
+              .map((photo, index) => ({
+                sourceIds: [photo.id, ...(pricing ? [pricing.id] : [])],
+                suggestions: {
+                  ...candidate,
+                  metadata: {
+                    ...candidate.metadata,
+                    description: {
+                      value: `BATCH HTTP FIXTURE garment ${index + 1}`,
+                      sourceIds: [photo.id],
+                      certainty: 'observed',
+                    },
+                  },
+                  price: pricing
+                    ? {
+                        ...candidate.price,
+                        amount: index === 0 ? '200.00' : '100.00',
+                      }
+                    : null,
+                  questions: pricing ? [] : ['Supply price evidence'],
+                },
+              })),
+            questions: [],
+          }
+        : candidate
     return new Response(
       JSON.stringify({
         status: 'completed',
         output: [
           {
             type: 'message',
-            content: [{ type: 'output_text', text: JSON.stringify(candidate) }],
+            content: [{ type: 'output_text', text: JSON.stringify(output) }],
           },
         ],
       }),

@@ -6,9 +6,14 @@ import {
 import { readReceptionSession } from '../engine/reception-store'
 import { readReceptionPhoto } from '../engine/reception-photos'
 import { suggestReception } from './reception'
+import { suggestReceptionBatch } from './reception-batch'
 import { resolveReceptionAssistance } from './reception-config'
 import { receptionImage } from './reception-image'
-import { openAIReception, receptionPromptVersion } from './openai-reception'
+import {
+  openAIReception,
+  receptionPromptVersion,
+  batchPromptVersion,
+} from './openai-reception'
 
 /** All caller identities/objects come from authenticated database reads, never model output. */
 export async function runReceptionAssistance(
@@ -26,6 +31,8 @@ export async function runReceptionAssistance(
   const config = await resolveReceptionAssistance(client, c.tenantId)
   if (!config) return { status: 'unavailable' as const, proposal: null }
   const photos = state.session.sources.filter((s) => s.kind === 'photo')
+  if (c.mode === 'batch' && !photos.length)
+    throw new Error('BATCH_PHOTOS_REQUIRED')
   if (photos.length > 3) throw new Error('ASSISTANCE_IMAGE_LIMIT')
   signal.throwIfAborted()
   if (
@@ -33,7 +40,7 @@ export async function runReceptionAssistance(
       client,
       c,
       config.model,
-      receptionPromptVersion,
+      c.mode === 'batch' ? batchPromptVersion : receptionPromptVersion,
     ))
   )
     throw new Error('ASSISTANCE_ALREADY_ATTEMPTED')
@@ -48,10 +55,11 @@ export async function runReceptionAssistance(
     if (!photo) throw new Error('ASSISTANCE_IMAGE_UNAVAILABLE')
     images.set(source.id, await receptionImage(photo.bytes))
   }
-  const result = await suggestReception(
+  const suggest = c.mode === 'batch' ? suggestReceptionBatch : suggestReception
+  const result = await suggest(
     state.session,
     c.requestId,
-    openAIReception(config, images),
+    openAIReception(config, images, fetch, c.mode ?? 'single'),
     signal,
   )
   const current = await readReceptionSession(client, c.tenantId, c.sessionId),

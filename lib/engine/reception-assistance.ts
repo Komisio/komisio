@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 export const assistanceCommand = z.strictObject({
+  mode: z.enum(['single', 'batch']).optional(),
   tenantId: z.uuid(),
   sessionId: z.uuid(),
   requestId: z.uuid(),

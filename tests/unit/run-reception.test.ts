@@ -22,6 +22,7 @@ vi.mock('../../lib/engine/reception-assistance', async (importOriginal) => ({
 vi.mock('../../lib/assistance/openai-reception', () => ({
   openAIReception: mocks.adapter,
   receptionPromptVersion: 'reception-v1',
+  batchPromptVersion: 'reception-batch-v1',
 }))
 vi.mock('../../lib/engine/reception-photos', () => ({
   readReceptionPhoto: mocks.photo,
@@ -110,6 +111,7 @@ it('rechecks staff authority after inference', async () => {
 it('returns only a current transient proposal, never a seller review write', async () => {
   const result = await run()
   expect(result.status).toBe('proposed')
+  if (!('proposal' in result)) throw new Error('Expected single proposal')
   expect(result.proposal?.baseRevision).toBe(1)
   expect(result.proposal?.sellerId).toBe(id(3))
   expect(mocks.reserve).toHaveBeenCalledOnce()

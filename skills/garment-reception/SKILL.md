@@ -36,3 +36,15 @@ docs/RECEPTION-ASSISTANCE.md for configuration and tested boundaries. Missing
 configuration is unavailable. Fixture adapters are for tests only and must never
 be represented as live camera or model output. The skill is not loaded as runtime
 authorization; the adapter's versioned instructions cannot override engine rules.
+
+## Batch mode
+
+A photo set for one seller may be split into at most eight garments from up to
+three photos. Group multiple views of the same garment; a shared overview may
+support several rows. Each row cites its own subset of authorized sources and
+uses the single-garment rules above, including tentative facts and price evidence.
+Report ambiguous grouping and unused photos as questions. Never invent a price
+to make a row complete. The authenticated assistance port supplies identity.
+Staff review each row and its images before it becomes an existing staged
+publishReceptionReview operation for a separate reception. Preparing photos or a
+proposal is not physical custody, consent, commercial acceptance or publication.

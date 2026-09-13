@@ -495,7 +495,22 @@
       }
     },
     "confirmFact": "I have reviewed this fact and its sources",
-    "confirmPrice": "I have reviewed the price and its evidence."
+    "confirmPrice": "I have reviewed the price and its evidence.",
+    "batch": {
+      "mode": "The photo set contains",
+      "single": "One garment",
+      "multiple": "Several garments",
+      "notice": "Several garments from one seller, up to three photos and eight proposals. Review the images assigned to each garment, including shared overview photos. Incomplete proposals need more evidence. Unsaved proposals are lost on reload.",
+      "garment": "Garment",
+      "dismissed": "Proposal dismissed in this review.",
+      "restore": "Show proposal again",
+      "dismiss": "Dismiss",
+      "confirm": "I reviewed this garment’s facts, price evidence and assigned photos.",
+      "stage": "Add to approval queue",
+      "staged": "A separate reception and review operation have been saved. The garment is not accepted for sale.",
+      "openOperation": "Open review operation",
+      "failed": "Preparation could not be confirmed. Retry the same row; saved steps are reused. If sources changed, check the reception queue before starting again."
+    }
   },
   "operations": {
     "title": "Proposed operations",

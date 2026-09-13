@@ -1,3 +1,4 @@
+import { zettleErrorCode } from './zettle'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
@@ -6,7 +7,10 @@ import {
   pilotEnvironment,
   type PilotEnvironment,
 } from '../../extensions/zettle/auth'
-import { catalogProduct } from '../../extensions/zettle/catalog'
+import {
+  catalogProduct,
+  ProductReadError,
+} from '../../extensions/zettle/catalog'
 import { mayInitialize, stockOutcome } from '../../extensions/zettle/inventory'
 
 export async function readZettleStock(
@@ -85,15 +89,18 @@ export async function exportZettleItem(
   await current()
   try {
     await remote.putProduct(payload, previous)
-  } catch {
+  } catch (error) {
+    const safe = zettleErrorCode(error instanceof Error ? error.message : '')
+    const code = safe === 'REQUEST_FAILED' ? 'ZETTLE_EXPORT_FAILED' : safe
     const failed = await client.rpc('finish_zettle_product', {
       p_tenant: tenantId,
       p_export: exportId,
       p_status: 'failed',
-      p_error: 'ZETTLE_EXPORT_FAILED',
+      p_error: code,
     })
     if (failed.error) throw new Error('ZETTLE_OUTCOME_FAILED')
-    throw new Error('ZETTLE_EXPORT_FAILED')
+    if (error instanceof ProductReadError) throw error
+    throw new Error(code)
   }
   const reserved = await client.rpc('claim_zettle_stock', {
     p_tenant: tenantId,

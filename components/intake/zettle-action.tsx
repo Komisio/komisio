@@ -42,7 +42,12 @@ export function ZettleAction({
       if (r.status >= 500) throw new Error('Unknown outcome')
       const body = await r.json()
       if (!r.ok) {
-        setError((d.errors as Record<string, string>)[body.error] ?? d.failed)
+        setError(
+          ((d.errors as Record<string, string>)[body.error] ?? d.failed) +
+            (Array.isArray(body.fields) && body.fields.length
+              ? ` (${d.responseFields}: ${body.fields.join(', ')})`
+              : ''),
+        )
         setState('failed')
         return
       }

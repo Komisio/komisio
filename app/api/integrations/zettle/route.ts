@@ -1,3 +1,4 @@
+import { ProductReadError } from '@/extensions/zettle/catalog'
 import { exportZettleItem } from '@/lib/engine/zettle-stock'
 import { enableZettlePull, pullZettlePurchases } from '@/lib/engine/zettle-live'
 import { pilotEnvironment } from '@/extensions/zettle/auth'
@@ -104,6 +105,12 @@ export async function POST(request: Request) {
     return reply({ id: result.data, catalog })
   } catch (e) {
     const code = zettleErrorCode(e instanceof Error ? e.message : '')
-    return reply({ error: code }, code === 'REQUEST_FAILED' ? 500 : 409)
+    return reply(
+      {
+        error: code,
+        ...(e instanceof ProductReadError ? { fields: e.fields } : {}),
+      },
+      code === 'REQUEST_FAILED' ? 500 : 409,
+    )
   }
 }

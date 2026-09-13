@@ -1133,7 +1133,10 @@
     "agentOff": "Automatic markdowns are off (store policy). Apply due steps here, one run at a time.",
     "applyAllDue": "Apply {count} due steps now",
     "applied": "applied",
-    "modes": { "manual": "manual run", "automatic": "automatic run" },
+    "modes": {
+      "manual": "manual run",
+      "automatic": "automatic run"
+    },
     "title": "Sale periods",
     "intro": "Every accepted item carries its frozen sale period and markdown steps. This list says what is due; a person applies a markdown, extends the period or ends it.",
     "notice": "Nothing here happens by itself. Markdowns are shares of the accepted price, never compounded. Ending an item as charity or return records the fact; the physical handling is yours.",
@@ -1372,7 +1375,15 @@
       "ZETTLE_INVENTORY_CONFLICT": "Zettle stock could not be confirmed. Check the saved item status before taking further action.",
       "ZETTLE_INVENTORY_AMBIGUOUS": "Zettle stock could not be confirmed. Check the saved item status before taking further action.",
       "ZETTLE_STOCK_HELD": "Zettle stock could not be confirmed. Check the saved item status before taking further action.",
-      "ZETTLE_EXPORT_FAILED": "Zettle stock could not be confirmed. Check the saved item status before taking further action."
+      "ZETTLE_EXPORT_FAILED": "The product step failed. No stock increment started. Check the product attempt before retrying.",
+      "ZETTLE_PRODUCT_ACCESS_DENIED": "Zettle denied access to the product library. Check the API key product permissions.",
+      "ZETTLE_PRODUCT_REJECTED": "Zettle rejected the product request (HTTP 400/422). Stock initialization did not start.",
+      "ZETTLE_PRODUCT_RESPONSE_INVALID": "Zettle returned an unsupported product response format. The product may exist; do not create a new product ID.",
+      "ZETTLE_PRODUCT_FIELDS_UNSUPPORTED": "The Zettle product contains additional fields Komisio must handle before export can continue.",
+      "ZETTLE_CREATE_FAILED": "Zettle did not confirm product creation. Reconcile using the same product ID.",
+      "ZETTLE_UPDATE_FAILED": "Zettle did not confirm the product update.",
+      "ZETTLE_READ_FAILED": "The product or integration records could not be read.",
+      "ZETTLE_RETRY_LATER": "Zettle returned a server error. Retry later using the same product ID."
     },
     "approvalHint": "Matched receipts are recorded automatically. Only exceptions need investigation; no second approver is required.",
     "held": "The receipt could not be recorded. Investigate before retrying.",
@@ -1418,6 +1429,7 @@
       "depleted": "Sold or removed in Zettle - not restocked",
       "unknown": "Uncertain result - no new unit will be added",
       "conflict": "Stock needs investigation - no new unit will be added"
-    }
+    },
+    "responseFields": "Response fields"
   }
 }

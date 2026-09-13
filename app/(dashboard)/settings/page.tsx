@@ -2,6 +2,7 @@ import { readStorePolicy } from '@/lib/engine/store-policy'
 import { StorePolicyForm } from '@/components/intake/store-policy-form'
 import { PrinterForm } from '@/components/intake/printer-form'
 import { readPrinters, readPrintJobs } from '@/lib/engine/printing'
+import { readUsageSummary } from '@/lib/engine/usage'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { can } from '@/lib/platform/permissions'
@@ -15,14 +16,16 @@ export default async function Settings() {
     process.env.KOMISIO_INTAKE_ENABLED === 'true'
       ? await readStorePolicy(ctx.client, active.id)
       : null
-  const [printers, jobs] =
+  const [printers, jobs, usage] =
     process.env.KOMISIO_INTAKE_ENABLED === 'true'
       ? await Promise.all([
           readPrinters(ctx.client, active.id),
           readPrintJobs(ctx.client, active.id),
+          readUsageSummary(ctx.client, active.id),
         ])
-      : [[], []]
-  const pr = d.printing
+      : [[], [], []]
+  const pr = d.printing,
+    us = d.usage
   const events = can(active.role, 'audit.read')
     ? await ctx.client
         .from('access_events')
@@ -52,6 +55,24 @@ export default async function Settings() {
           editable={['owner', 'admin'].includes(active.role)}
           d={d}
         />
+      )}
+      {usage.length > 0 && (
+        <section className="card intake-form" aria-label={us.title}>
+          <h2>{us.title}</h2>
+          <p>
+            {us.intro} {us.period}: {usage[0].period}
+          </p>
+          <ul>
+            {usage.map((u) => (
+              <li key={u.feature}>
+                {us.features[u.feature]}: {u.units}
+                {u.quota === null
+                  ? ` · ${us.noQuota}`
+                  : ` · ${us.quota} ${u.quota}`}
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
       {process.env.KOMISIO_INTAKE_ENABLED === 'true' && (
         <section className="card intake-form" aria-label={pr.title}>

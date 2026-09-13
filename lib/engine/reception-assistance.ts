@@ -25,6 +25,7 @@ export async function reserveReceptionAssistance(
     if (
       [
         'ASSISTANCE_LIMIT',
+        'USAGE_QUOTA_EXCEEDED',
         'RECEPTION_CHANGED',
         'REQUEST_CONFLICT',
         'FORBIDDEN',

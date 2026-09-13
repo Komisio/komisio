@@ -75,7 +75,11 @@ export function ReceptionAssistance({
               const result = await response.json()
               if (!response.ok)
                 throw new Error(
-                  result.error === 'ASSISTANCE_LIMIT' ? d.aiLimit : d.aiFailed,
+                  result.error === 'ASSISTANCE_LIMIT'
+                    ? d.aiLimit
+                    : result.error === 'USAGE_QUOTA_EXCEEDED'
+                      ? d.aiQuota
+                      : d.aiFailed,
                 )
               if (result.status === 'unavailable')
                 throw new Error(d.aiUnavailable)

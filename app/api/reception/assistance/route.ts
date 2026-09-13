@@ -40,7 +40,8 @@ export async function POST(request: Request) {
   } catch (error) {
     const code = error instanceof Error ? error.message : ''
     if (code === 'FORBIDDEN') return reply({ error: code }, 403)
-    if (code === 'ASSISTANCE_LIMIT') return reply({ error: code }, 429)
+    if (code === 'ASSISTANCE_LIMIT' || code === 'USAGE_QUOTA_EXCEEDED')
+      return reply({ error: code }, 429)
     if (
       [
         'ASSISTANCE_ALREADY_ATTEMPTED',

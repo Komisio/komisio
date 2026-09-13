@@ -364,6 +364,7 @@
     "aiReviewNotice": "Kontrollera varje uppgift, priset och villkoren. Bekräftelsen nedan innebär att du som personal har granskat förslaget. Säljaren lämnar sitt svar separat.",
     "aiIncomplete": "Förslaget kan inte delas ännu. Använd den manuella vägen för att komplettera eller korrigera underlaget; kvarstående frågor måste lösas först.",
     "aiLimit": "Butikens gräns är nådd: högst tio försök under 24 timmar och minst 20 sekunder mellan försöken.",
+    "aiQuota": "Butikens månadskvot för assistans är slut. En ägare kan höja den under inställningar.",
     "aiFailed": "Inget användbart AI-förslag kunde hämtas. Underlaget kan ha ändrats. Ladda om för att kontrollera mottagningen; en ny körning räknas som ett nytt försök.",
     "aiTransient": "Förslaget sparas först när du uttryckligen publicerar en granskad version. Omladdning tappar ett osparat förslag. Även misslyckade eller avbrutna körningar räknas mot gränsen.",
     "aiFields": {
@@ -646,6 +647,8 @@
     "assistance": "Inbyggd assistans",
     "assistanceIntro": "Låter personalen be den inbyggda assistenten om källbundna förslag under mottagning. Förslag publiceras, godkänns eller prissätts aldrig utan en person. Leverantör och modell bestäms av Komisio; är tjänsten avstängd på serversidan har inställningen ingen effekt.",
     "assistanceEnabled": "Aktivera inbyggd assistans för butiken",
+    "assistanceMonthlyQuota": "Månadskvot för assistans",
+    "assistanceQuotaHint": "Försök per kalendermånad. Tomt betyder ingen kvot; 0 stänger assistansen. Gränsen per dygn gäller fortfarande.",
     "vat": "Momshantering",
     "vatIntro": "Vilken momshantering som gäller är butikens beslut, taget tillsammans med er redovisningskonsult. Komisio räknar det valda läget exakt per försäljningsrad och sparar läge, underlag och belopp; Komisio bedömer inte om valet är rätt för er butik. Ingen försäljning kan registreras förrän båda lägena är valda.",
     "vatModeConsignmentPrivate": "Inlämnade varor från privatpersoner",
@@ -973,6 +976,18 @@
     "hint": "Till exempel K-12 för en påse eller G-7 för ett plagg.",
     "open": "Öppna",
     "notFound": "Inget i butiken bär referensen {ref}."
+  },
+  "usage": {
+    "title": "Användning denna månad",
+    "intro": "Enheter räknade av motorn per kalendermånad i butikens tidszon. Kvoter sätts i butikspolicyn.",
+    "period": "Period",
+    "quota": "kvot",
+    "noQuota": "ingen kvot",
+    "features": {
+      "reception_assistance": "Assistansförsök",
+      "seller_email": "E-post till säljare",
+      "print_job": "Utskriftsjobb"
+    }
   },
   "printing": {
     "title": "Skrivare och etiketter",

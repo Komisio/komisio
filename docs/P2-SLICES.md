@@ -280,6 +280,12 @@ Smaller slices that complete P2 and are independent of each other:
   store, candidates shown at reception, dismiss recorded.
 - Usage metering: units per feature and tenant on the existing attempt
   records, monthly reset, quota in the store policy.
+  Status 2026-09-13: delivered (migration `20260914100000`): `usage_events`
+  written by triggers on assistance attempts, seller communications and
+  print jobs; calendar month in the store's time zone; optional policy key
+  `assistanceMonthlyQuota` enforced before an attempt is stored;
+  `usage_summary` read and a section on the settings page. See
+  [USAGE-METERING.md](USAGE-METERING.md).
 - Bulk staged operations: price change, status change, reprint for a set of
   items as one operation with a preview.
 

@@ -35,6 +35,13 @@ export const storePolicyBody = z.strictObject({
   ...vatPolicyShape,
   // Built-in assistance (P1 S9): the tenant switches it on; the server holds the kill switch.
   assistanceEnabled: z.boolean().optional(),
+  // Monthly assistance quota (P2 S20): absent means unlimited, 0 blocks the feature.
+  assistanceMonthlyQuota: z
+    .number()
+    .int()
+    .nonnegative()
+    .max(1_000_000)
+    .optional(),
 })
 
 export type StorePolicyBody = z.infer<typeof storePolicyBody>

@@ -122,6 +122,23 @@ detail page shows the payload with an execution note and a stale hint (line
 already returned, seller gone). No MCP tool proposes these kinds yet.
 `supabase/tests/0040_staged_p2_kinds.test.sql` covers all three.
 
+## Bulk item updates
+
+Since migration `20260914110000` the kind `bulkItemUpdate` (`medium`) stages
+one change for up to 50 items: `setPrice` with a shared reason and one price
+per item, or `endPeriod` with one end action (charity or return) and an
+optional note. Preflight runs the lifecycle facts for every item and refuses
+the whole set if any item is sold or ended. Execution applies the ordinary
+command per item (`set_item_price`, new in the same migration, or
+`end_sale_period`) inside the approving transaction, all or nothing, each with
+its own event id. The review page shows a preview table with the current price
+next to the proposed change, and marks items that no longer exist as stale.
+`set_item_price` is also a staff command on the sale periods page: a reason is
+required, the item must be on sale, replay is by event id, and the event keeps
+the previous price. Reprinting a set of labels is not staged; printing is a
+person's low-risk action through the existing print buttons.
+`supabase/tests/0042_bulk_item_operations.test.sql` covers both.
+
 ## Uncertain decision responses
 
 The staff decision UI freezes the complete first submitted envelope: tenant,

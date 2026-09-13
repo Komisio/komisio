@@ -54,6 +54,46 @@ export function LifecycleActions({
           const f = new FormData(e.currentTarget)
           void run(
             {
+              action: 'setItemPrice',
+              priceOre: Math.round(Number(f.get('price')) * 100),
+              reason: String(f.get('priceReason') ?? ''),
+            },
+            d.priceSet,
+          )
+        }}
+      >
+        <div className="field">
+          <label htmlFor={`price-${itemId}`}>{d.price}</label>
+          <input
+            id={`price-${itemId}`}
+            name="price"
+            type="number"
+            inputMode="decimal"
+            min={0.01}
+            step={0.01}
+            required
+          />
+        </div>
+        <div className="field">
+          <label htmlFor={`price-reason-${itemId}`}>{d.priceReason}</label>
+          <input
+            id={`price-reason-${itemId}`}
+            name="priceReason"
+            required
+            maxLength={500}
+          />
+        </div>
+        <Button type="submit" variant="secondary" disabled={action.busy}>
+          {d.setPrice}
+        </Button>
+      </form>
+      <form
+        className="intake-fields"
+        onSubmit={(e) => {
+          e.preventDefault()
+          const f = new FormData(e.currentTarget)
+          void run(
+            {
               action: 'extendSalePeriod',
               days: Number(f.get('days')),
               reason: String(f.get('reason') ?? ''),

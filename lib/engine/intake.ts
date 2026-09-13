@@ -19,6 +19,7 @@ import {
   applyMarkdownCommand,
   extendSalePeriodCommand,
   endSalePeriodCommand,
+  setItemPriceCommand,
 } from './lifecycle'
 import { registerPrinterCommand, cancelPrintJobCommand } from './printing'
 import { z } from 'zod'
@@ -43,6 +44,7 @@ export const intakeCommand = z.discriminatedUnion('action', [
   applyMarkdownCommand,
   extendSalePeriodCommand,
   endSalePeriodCommand,
+  setItemPriceCommand,
   registerPrinterCommand,
   cancelPrintJobCommand,
   acceptItemCommand,
@@ -196,6 +198,14 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_tenant: c.tenantId,
         p_id: c.requestId,
         p_date: c.date,
+      })
+    case 'setItemPrice':
+      return client.rpc('set_item_price', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_item: c.itemId,
+        p_price_ore: c.priceOre,
+        p_reason: c.reason,
       })
     case 'applyMarkdown':
       return client.rpc('apply_markdown', {

@@ -9,6 +9,7 @@ import {
   acceptItemPayload,
   recordReturnPayload,
   adjustLedgerPayload,
+  bulkItemUpdatePayload,
   type PendingOperation,
 } from './operations'
 import { inspectionFields } from './inspection'
@@ -251,6 +252,75 @@ export async function readOperationReview(
       context: {
         kind: 'engine' as const,
         alreadyDone,
+        stale,
+        canApprove: !d && !expired && !stale,
+        guidanceOnly: true as const,
+      },
+    }
+  }
+  if (pending.data.kind === 'bulkItemUpdate') {
+    // Preview: each item's current price next to the proposed change. SQL
+    // rechecks sold and ended state on approval; a missing item is stale here.
+    const p = bulkItemUpdatePayload.parse(pending.data.payload)
+    const ids = p.items.map((i) => i.itemId)
+    const [decision, items, prices] = await Promise.all([
+      client
+        .from('operation_decisions')
+        .select('id,outcome,result_id,error_code,reason,decided_by,created_at')
+        .eq('tenant_id', tenantId)
+        .eq('operation_id', operationId)
+        .maybeSingle(),
+      client.from('items').select('id').eq('tenant_id', tenantId).in('id', ids),
+      client
+        .from('item_prices')
+        .select('item_id,price_ore')
+        .eq('tenant_id', tenantId)
+        .in('item_id', ids)
+        .order('set_at', { ascending: false })
+        .order('seq', { ascending: false }),
+    ])
+    if (decision.error || items.error || prices.error)
+      throw new Error('OPERATION_NOT_FOUND')
+    const d = decision.data,
+      expired = Date.parse(pending.data.expires_at) <= Date.now()
+    const operation = operationRow.parse({
+      ...pending.data,
+      status: d?.outcome ?? (expired ? 'expired' : 'open'),
+      decision_id: d?.id ?? null,
+      outcome: d?.outcome ?? null,
+      result_id: d?.result_id ?? null,
+      error_code: d?.error_code ?? null,
+      reason: d?.reason ?? null,
+      decided_by: d?.decided_by ?? null,
+      decided_at: d?.created_at ?? null,
+    })
+    const current = new Map<string, number>()
+    for (const row of z
+      .array(
+        z.object({
+          item_id: z.uuid(),
+          price_ore: z.union([z.number(), z.string()]).transform(Number),
+        }),
+      )
+      .parse(prices.data))
+      if (!current.has(row.item_id)) current.set(row.item_id, row.price_ore)
+    const known = new Set((items.data ?? []).map((i) => i.id as string))
+    const rows = p.items.map((i) => ({
+      itemId: i.itemId,
+      exists: known.has(i.itemId),
+      currentPriceOre: current.get(i.itemId) ?? null,
+      newPriceOre:
+        p.action === 'setPrice' ? (i as { priceOre: number }).priceOre : null,
+    }))
+    const stale = rows.some((r) => !r.exists)
+    return {
+      readOnly: true as const,
+      evidenceIsUntrusted: true as const,
+      operation,
+      context: {
+        kind: 'bulk' as const,
+        action: p.action,
+        rows,
         stale,
         canApprove: !d && !expired && !stale,
         guidanceOnly: true as const,

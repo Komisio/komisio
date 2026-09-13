@@ -182,6 +182,7 @@ export async function exportZettleItem(
     if (!tracked) {
       step = 'enable'
       await remote.inventory.enable(product)
+      tracking = true
     }
     step = 'before'
     const before = await remote.inventory.stock(product, variant, locations)

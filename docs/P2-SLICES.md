@@ -284,3 +284,11 @@ issue a numbered statement the seller can open, generate a day close and
 export it to Fortnox idempotently, print all four labels through the local
 agent, and have sellers receive the five e-mails, with VAT computed per line
 in the modes the store selected.
+
+
+S20 follow-up (Astra): CI exposed timestamp ties between price facts written
+in one transaction. Migration `20260914110000` orders new price rows strictly
+per item under the tenant lock; it does not change prices or historical rows.
+Regression tests cover all four prices in one transaction. The pre-release
+staging audit found no existing tied item/timestamp groups. See the seller
+economy read PR for exact-head CI and release evidence.

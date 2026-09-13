@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { zettleHttpClient } from './http'
 import { boundedJson } from '../../lib/http/bounded-json'
 export type PilotEnvironment = {
   ZETTLE_CLIENT_ID?: string
@@ -54,7 +55,7 @@ const tokenResponse = z.object({
   scope: z.string().max(4096).optional(),
 })
 /** Assertion grant, official /token endpoint. Errors never contain provider bodies or credentials. */
-export async function verifyPilotConnection(
+async function acquirePilotSession(
   tenantId: string,
   source: PilotEnvironment,
   http: typeof fetch = globalThis.fetch,
@@ -103,8 +104,10 @@ export async function verifyPilotConnection(
       user.organizationUuid !== env.ZETTLE_MERCHANT_ID
     )
       throw new Error('ZETTLE_WRONG_MERCHANT')
-    // Only this diagnostic projection leaves the adapter; tokens are intentionally not returned or cached.
+    // Private server lease. Only the public diagnostic projection or transport leaves this module.
     return {
+      accessToken: token.access_token,
+      expiresAt: Date.now() + token.expires_in * 1000,
       organizationId: user.organizationUuid,
       merchantPinned: !!env.ZETTLE_MERCHANT_ID,
       checkedAt: new Date().toISOString(),
@@ -133,4 +136,37 @@ export function pilotEnvironment(
     ZETTLE_PILOT_TENANT_ID: env.ZETTLE_PILOT_TENANT_ID?.trim(),
     ZETTLE_MERCHANT_ID: env.ZETTLE_MERCHANT_ID?.trim(),
   }
+}
+
+/** Never return an access token to the engine, route or browser. */
+export async function verifyPilotConnection(
+  tenantId: string,
+  source: PilotEnvironment,
+  http: typeof fetch = globalThis.fetch,
+) {
+  const { organizationId, merchantPinned, checkedAt } =
+    await acquirePilotSession(tenantId, source, http)
+  return { organizationId, merchantPinned, checkedAt }
+}
+/** A per-invocation client with a mandatory merchant pin, no global token cache. */
+export async function connectedPilotClient(
+  tenantId: string,
+  source: PilotEnvironment,
+  window: { startDate: string; endDate: string },
+  http: typeof fetch = globalThis.fetch,
+) {
+  const env = pilotEnvironment(source)
+  if (!pilotAvailable(tenantId, env) || !env.ZETTLE_MERCHANT_ID)
+    throw new Error('ZETTLE_NOT_CONNECTED')
+  let lease = await acquirePilotSession(tenantId, env, http)
+  return zettleHttpClient({
+    organizationId: env.ZETTLE_MERCHANT_ID,
+    ...window,
+    fetch: http,
+    accessToken: async () => {
+      if (lease.expiresAt <= Date.now() + 30000)
+        lease = await acquirePilotSession(tenantId, env, http)
+      return lease.accessToken
+    },
+  })
 }

@@ -2,6 +2,7 @@ import { expect, it, vi } from 'vitest'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   pilotAvailable,
+  connectedPilotClient,
   pilotIssue,
   verifyPilotConnection,
 } from '../../extensions/zettle/auth'
@@ -200,5 +201,77 @@ it('returns only safe reason codes and hides credential configuration for other 
     expect(pilotIssue(merchant, { ...env, ...patch })).toBe(
       'connectionUnavailable',
     )
+  }
+})
+
+it('keeps token inside a merchant-pinned transport and uses the fixed purchase interval', async () => {
+  const http = ready()
+    .mockResolvedValueOnce(json({ organizationUuid: merchant }))
+    .mockResolvedValueOnce(json({ purchases: [] }))
+  const client = await connectedPilotClient(
+    tenant,
+    { ...env, ZETTLE_MERCHANT_ID: merchant },
+    { startDate: '2026-01-01T00:00:00Z', endDate: '2026-01-02T00:00:00Z' },
+    http,
+  )
+  expect(Object.keys(client).sort()).toEqual(['fetchPage', 'putProduct'])
+  await client.fetchPage({ cursor: null, signal: AbortSignal.timeout(1000) })
+  const url = new URL(String(http.mock.calls[3][0]))
+  expect(url.origin).toBe('https://purchase.izettle.com')
+  expect(url.searchParams.get('startDate')).toBe('2026-01-01T00:00:00Z')
+  expect(url.searchParams.get('endDate')).toBe('2026-01-02T00:00:00Z')
+  expect(http.mock.calls.map((c) => c[1]?.method ?? 'GET')).toEqual([
+    'POST',
+    'GET',
+    'GET',
+    'GET',
+  ])
+})
+it('does not create a live transport without a merchant pin', async () => {
+  const http = ready()
+  await expect(
+    connectedPilotClient(
+      tenant,
+      env,
+      { startDate: '2026-01-01T00:00:00Z', endDate: '2026-01-02T00:00:00Z' },
+      http,
+    ),
+  ).rejects.toThrow('ZETTLE_NOT_CONNECTED')
+  expect(http).not.toHaveBeenCalled()
+})
+
+it('revalidates merchant identity when the private token lease expires', async () => {
+  vi.useFakeTimers()
+  let tokens = 0,
+    purchases = 0
+  const http = vi.fn<typeof fetch>().mockImplementation(async (url) => {
+    if (String(url).endsWith('/token')) {
+      tokens++
+      return json({ access_token: `synthetic-${tokens}`, expires_in: 7200 })
+    }
+    if (String(url).endsWith('/users/self'))
+      return json({ organizationUuid: tokens === 1 ? merchant : tenant })
+    purchases++
+    return json({ purchases: [] })
+  })
+  try {
+    const client = await connectedPilotClient(
+      tenant,
+      { ...env, ZETTLE_MERCHANT_ID: merchant },
+      { startDate: '2026-01-01T00:00:00Z', endDate: '2026-01-02T00:00:00Z' },
+      http,
+    )
+    await client.fetchPage({
+      cursor: null,
+      signal: new AbortController().signal,
+    })
+    vi.advanceTimersByTime(7200000)
+    await expect(
+      client.fetchPage({ cursor: null, signal: new AbortController().signal }),
+    ).rejects.toThrow('ZETTLE_WRONG_MERCHANT')
+    expect(tokens).toBe(2)
+    expect(purchases).toBe(1)
+  } finally {
+    vi.useRealTimers()
   }
 })

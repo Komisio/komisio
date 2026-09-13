@@ -32,6 +32,7 @@ export function ZettleAction({
     if (running.current || !pending.current) return
     running.current = true
     setState('busy')
+    setError('')
     try {
       const r = await fetch('/api/integrations/zettle', {
         method: 'POST',
@@ -47,6 +48,13 @@ export function ZettleAction({
       }
       if (body.id !== pending.current.requestId)
         throw new Error('Unknown outcome')
+      if (body.waiting) {
+        pending.current = null
+        setState('idle')
+        setError(d.pullWaiting)
+        router.refresh()
+        return
+      }
       if (body.catalog?.some((r: { error?: string }) => r.error))
         setError(d.catalogIssues)
       setState('done')
@@ -122,6 +130,7 @@ export function ZettleAction({
           />
         </div>
       )}
+      {state === 'idle' && error && <p role="status">{error}</p>}
       {state === 'failed' ? (
         <>
           <p role="alert">{error || d.failed}</p>

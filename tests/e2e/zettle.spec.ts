@@ -25,6 +25,17 @@ test('Zettle product export, price update, checkout, automatic credit and concur
     await expect(
       page.getByRole('button', { name: d.zettle.checkConnection, exact: true }),
     ).toHaveCount(0)
+    await expect(
+      page.getByRole('button', { name: d.zettle.pullEnable, exact: true }),
+    ).toHaveCount(0)
+    for (const action of ['enablePull', 'pull']) {
+      const denied = await page.request.post('/api/integrations/zettle', {
+        headers: { origin: 'http://127.0.0.1:3000' },
+        data: { action, tenantId: f.tenant, requestId: randomUUID() },
+      })
+      expect(denied.status()).toBe(409)
+      expect(await denied.json()).toEqual({ error: 'ZETTLE_NOT_CONNECTED' })
+    }
     const connectionPath = '/api/integrations/zettle/connection'
     const connectionHeaders = { origin: 'http://127.0.0.1:3000' }
     const unavailable = await page.request.post(connectionPath, {

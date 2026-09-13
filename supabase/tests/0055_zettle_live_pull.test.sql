@@ -1,0 +1,46 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000000551','pull-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000552','pull-outsider@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000551","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Pull test','pull-test',gen_random_uuid())::text,true);
+select set_config('test.merchant',gen_random_uuid()::text,true);
+select lives_ok($$select enable_zettle_pull(current_setting('test.tenant')::uuid,current_setting('test.merchant')::uuid)$$,'owner activates');
+select lives_ok($$select enable_zettle_pull(current_setting('test.tenant')::uuid,current_setting('test.merchant')::uuid)$$,'activation replay preserves cutover');
+select is((select count(*) from zettle_pull_connections),1::bigint,'one connection');
+select ok((select cutover >= transaction_timestamp() from zettle_pull_connections),'no historical cutover');
+select throws_like($$select enable_zettle_pull(current_setting('test.tenant')::uuid,gen_random_uuid())$$,'%ZETTLE_WRONG_MERCHANT%','merchant cannot silently change');
+select is(open_zettle_pull_window(current_setting('test.tenant')::uuid,current_setting('test.merchant')::uuid),null::uuid,'initial lag does not import history');
+reset role;
+-- Local synthetic aged activation only; application roles cannot choose/backdate cutover.
+alter table zettle_pull_connections disable trigger zettle_pull_immutable;
+update zettle_pull_connections set cutover=date_trunc('milliseconds',clock_timestamp())-interval '2 hours' where tenant_id=current_setting('test.tenant')::uuid;
+alter table zettle_pull_connections enable trigger zettle_pull_immutable;
+set local role authenticated;
+select set_config('test.window',open_zettle_pull_window(current_setting('test.tenant')::uuid,current_setting('test.merchant')::uuid)::text,true);
+select is(open_zettle_pull_window(current_setting('test.tenant')::uuid,current_setting('test.merchant')::uuid),current_setting('test.window')::uuid,'concurrent/open retries use same incomplete window');
+create temp view pull_receipt as select jsonb_build_object('externalId','12345678-1234-4234-8234-123456789055','occurredAt',to_char(w.start_at at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),'currency','SEK','amountOre',10000,'blockedReason',null,'lines',jsonb_build_array(jsonb_build_object('lineNo',1,'reference',null,'labelConflict',false,'description','Unmatched synthetic item','priceOre',10000))) p from zettle_pull_windows w where id=current_setting('test.window')::uuid;
+select set_config('test.page',gen_random_uuid()::text,true);
+select is(record_zettle_pull_page(current_setting('test.tenant')::uuid,current_setting('test.page')::uuid,current_setting('test.window')::uuid,null,'hash-1',jsonb_build_array((select p from pull_receipt))),current_setting('test.page')::uuid,'window page recorded');
+select is(record_zettle_pull_page(current_setting('test.tenant')::uuid,current_setting('test.page')::uuid,current_setting('test.window')::uuid,null,'hash-1',jsonb_build_array((select p from pull_receipt))),current_setting('test.page')::uuid,'lost response replays once');
+select is((select count(*) from zettle_imports),1::bigint,'one import');
+select is((select count(*) from sales),0::bigint,'unmatched receipt remains held');
+select throws_like($$select record_zettle_pull_page(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.window')::uuid,null,'hash-2','[]')$$,'%ZETTLE_CURSOR_CHANGED%','stale concurrent page rejected');
+select throws_like($$select record_zettle_pull_page(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.window')::uuid,'hash-1','hash-2',jsonb_build_array((select p from pull_receipt)||jsonb_build_object('occurredAt','2000-01-01T00:00:00Z')))$$,'%ZETTLE_WINDOW_INVALID%','provider cannot escape selected interval');
+select lives_ok($$select record_zettle_pull_page(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.window')::uuid,'hash-1','hash-1','[]')$$,'empty page completes interval');
+select throws_like($$select record_zettle_pull_page(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.window')::uuid,'hash-1','hash-1','[]')$$,'%ZETTLE_WINDOW_COMPLETE%','completed interval cannot append');
+select set_config('test.next_window',open_zettle_pull_window(current_setting('test.tenant')::uuid,current_setting('test.merchant')::uuid)::text,true);
+select ok(current_setting('test.next_window')::uuid<>current_setting('test.window')::uuid,'completed window advances');
+select is((select start_at from zettle_pull_windows where id=current_setting('test.next_window')::uuid),(select end_at-interval '5 minutes' from zettle_pull_windows where id=current_setting('test.window')::uuid),'next window overlaps five minutes');
+select lives_ok($$select record_zettle_pull_page(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.next_window')::uuid,null,null,'[]')$$,'new window starts with its own empty cursor despite prior global marker');
+select throws_like($$update zettle_pull_windows set end_at=clock_timestamp()$$,'%permission denied%','immutable metadata has no direct writes');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000552","role":"authenticated"}';
+select is((select count(*) from zettle_pull_connections),0::bigint,'other tenant connection hidden');
+select is((select count(*) from zettle_pull_windows),0::bigint,'other tenant windows hidden');
+select is((select count(*) from zettle_pull_pages),0::bigint,'other tenant pagination hidden');
+select throws_like($$select open_zettle_pull_window(current_setting('test.tenant')::uuid,current_setting('test.merchant')::uuid)$$,'%FORBIDDEN%','outsider denied');
+select * from finish();
+rollback;

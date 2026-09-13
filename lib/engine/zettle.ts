@@ -33,6 +33,8 @@ export const zettleCommand = z.discriminatedUnion('action', [
     ),
   }),
   base.extend({ action: z.literal('retry'), importId: z.uuid() }),
+  base.extend({ action: z.literal('enablePull') }),
+  base.extend({ action: z.literal('pull') }),
 ])
 const receiptRow = z.object({
   id: z.uuid(),
@@ -209,6 +211,10 @@ export type ZettlePurchase = Awaited<ReturnType<typeof readZettlePurchase>>
 
 export const zettleErrorCodes = [
   'ZETTLE_NOT_CONNECTED',
+  'ZETTLE_AUTH_REQUIRED',
+  'ZETTLE_CONNECTION_FAILED',
+  'ZETTLE_WINDOW_INVALID',
+  'ZETTLE_WINDOW_COMPLETE',
   'ZETTLE_VAT_MAPPING_REQUIRED',
   'ZETTLE_CONFIG_CHANGED',
   'ZETTLE_REMOTE_CHANGED',

@@ -63,3 +63,9 @@ fixed missing-client, missing-key or invalid-merchant messages only after that
 tenant match; other stores receive the generic unavailable message. No values
 are sent to the client. Save Production variables and redeploy: merely editing
 Vercel settings does not update an existing deployment.
+
+## Receipt retrieval after verification
+
+The verified merchant pin now enables a separate explicit activation and bounded
+manual receipt retrieval. See [ZETTLE-LIVE-PULL.md](ZETTLE-LIVE-PULL.md). The identity
+check itself still changes no products or sales.

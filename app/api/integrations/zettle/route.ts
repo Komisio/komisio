@@ -1,3 +1,5 @@
+import { enableZettlePull, pullZettlePurchases } from '@/lib/engine/zettle-live'
+import { pilotEnvironment } from '@/extensions/zettle/auth'
 import { NextResponse } from 'next/server'
 import { platformContext } from '@/lib/platform/context'
 import { boundedJson } from '@/lib/http/bounded-json'
@@ -41,6 +43,26 @@ export async function POST(request: Request) {
       return reply({ error: 'TENANT_CHANGED' }, 409)
     if (!['owner', 'admin', 'staff'].includes(ctx.active.role))
       return reply({ error: 'FORBIDDEN' }, 403)
+    if (c.action === 'enablePull' || c.action === 'pull') {
+      if (!['owner', 'admin'].includes(ctx.active.role))
+        return reply({ error: 'FORBIDDEN' }, 403)
+      if (c.action === 'enablePull') {
+        const cutover = await enableZettlePull(
+          ctx.client,
+          c.tenantId,
+          pilotEnvironment(process.env),
+        )
+        return reply({ id: c.requestId, cutover })
+      }
+      return reply(
+        await pullZettlePurchases(
+          ctx.client,
+          c.tenantId,
+          c.requestId,
+          pilotEnvironment(process.env),
+        ),
+      )
+    }
     if (c.action === 'sync' && !zettleFixturesEnabled())
       return reply({ error: 'ZETTLE_NOT_CONNECTED' }, 409)
     if (c.action === 'configure') {
@@ -66,7 +88,8 @@ export async function POST(request: Request) {
       ? await syncZettleCatalog(ctx.client, c.tenantId, transport)
       : []
     return reply({ id: result.data, catalog })
-  } catch {
-    return reply({ error: 'REQUEST_FAILED' }, 500)
+  } catch (e) {
+    const code = zettleErrorCode(e instanceof Error ? e.message : '')
+    return reply({ error: code }, code === 'REQUEST_FAILED' ? 500 : 409)
   }
 }

@@ -17,6 +17,7 @@ export const operationKind = z.enum([
   'markPayoutPaid',
   'sendMessage',
   'exportDayClose',
+  'recordZettlePurchase',
 ])
 export const publishReceptionReviewPayload = z.strictObject({
   sessionId: z.uuid(),
@@ -135,6 +136,10 @@ export const sendMessagePayload = z.strictObject({
 })
 // Day close export (medium): the ordinary idempotent export under the current map.
 export const exportDayClosePayload = z.strictObject({ dayCloseId: z.uuid() })
+export const recordZettlePurchasePayload = z.strictObject({
+  importId: z.uuid(),
+  mappingRevision: z.number().int().min(0).max(999999999),
+})
 const proposeBase = z.strictObject({
   tenantId: z.uuid(),
   requestId: z.uuid(),
@@ -185,6 +190,10 @@ export const proposeOperationCommand = z.discriminatedUnion('kind', [
   proposeBase.extend({
     kind: z.literal('exportDayClose'),
     payload: exportDayClosePayload,
+  }),
+  proposeBase.extend({
+    kind: z.literal('recordZettlePurchase'),
+    payload: recordZettlePurchasePayload,
   }),
 ])
 export const decideOperationCommand = z.strictObject({
@@ -263,6 +272,10 @@ export const operationRow = z.discriminatedUnion('kind', [
     kind: z.literal('exportDayClose'),
     payload: exportDayClosePayload,
   }),
+  operationBaseRow.extend({
+    kind: z.literal('recordZettlePurchase'),
+    payload: recordZettlePurchasePayload,
+  }),
 ])
 export type PendingOperation = z.infer<typeof operationRow>
 export const operationErrorCodes = [
@@ -309,6 +322,12 @@ export const operationErrorCodes = [
   'DAY_CLOSE_NOT_FOUND',
   'ACCOUNTING_MAP_REQUIRED',
   'VOUCHER_UNBALANCED',
+  'ZETTLE_IMPORT_NOT_FOUND',
+  'ZETTLE_MATCH_CHANGED',
+  'ZETTLE_UNMATCHED_LINES',
+  'ZETTLE_UNSUPPORTED_PURCHASE',
+  'SALE_CONFLICT',
+  'ITEM_ALREADY_SOLD',
 ] as const
 export function operationErrorCode(message: string) {
   return (

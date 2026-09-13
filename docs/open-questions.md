@@ -178,3 +178,11 @@ publication and acceptance, optional at bag receipt. These are pilot defaults,
 not law. The S1 validator includes `unsoldNotifyAfterDays`; assistance enablement
 remains S9. No missing-default blocker remains. P2 execution and VAT questions
 remain separate. Fable's newer commits are held until PR58 is complete.
+
+## Zettle live pilot prerequisites (2026-09-13)
+
+The fixture slice holds whole purchases until every line is matched; it never
+appends lines under an existing external receipt ID. See ZETTLE-FIXTURE-PULL.md.
+Still required: developer app/test merchant, verified label placement and real
+payload samples, bounded incremental retrieval/reconciliation, and separately
+agreed discount/refund handling. No guessed tax or commission rule is introduced.

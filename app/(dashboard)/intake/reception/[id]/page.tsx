@@ -206,7 +206,7 @@ export default async function Reception({
           sellerId={state.sellerId}
           revision={state.revision}
           sources={sources}
-          available={!!receptionAIConfig(tenant.id)}
+          available={!!receptionAIConfig(tenant.id, process.env, policy.policy)}
           terms={terms.data}
           agreementRequired={policy.policy.agreementRequiredFor.includes(
             'review_publication',

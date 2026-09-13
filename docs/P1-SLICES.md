@@ -206,6 +206,9 @@ pages.
   with camera capture, and add a scan-to-open for bag and garment references.
 - No migration; browser journeys at 390 px for reception with photo, garment
   custody and acceptance.
+- Status 2026-09-13: the garment journey runs custody and acceptance at 390 px
+  in CI and the photo input already asks for the camera. Scan-to-open for bag
+  and garment references remains.
 
 ## S9. Assistance port per feature
 
@@ -216,6 +219,11 @@ Purpose: finish the unified port.
   environment allowlist to the store policy (`assistanceEnabled`), still with
   the server-side kill switch.
 - No migration beyond a policy key; unit tests for configuration resolution.
+- Status 2026-09-13: `assistanceEnabled` policy key (migration `20260913230000`),
+  settings checkbox, enablement resolved from the policy with the environment
+  allowlist kept as a pilot fallback and the provider configuration as the
+  kill switch. Provider and model selection per feature stays in server
+  configuration; a second feature does not exist yet.
 
 ## Order and exit
 

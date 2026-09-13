@@ -52,7 +52,7 @@ it('accepts both review modes, bases and end actions without forcing consent', (
 it('rejects unknown fields, future flags and unsupported subset entries', () => {
   for (const patch of [
     { tenantId: 'model-selected' },
-    { assistanceEnabled: true },
+    { assistanceEnabled: 'yes' },
     { sellerReviewMode: 'automatic' },
     { commissionBasis: 'gross' },
     { endOfPeriodAction: 'discard' },

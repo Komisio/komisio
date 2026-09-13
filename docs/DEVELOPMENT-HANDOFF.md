@@ -1,5 +1,16 @@
 # Development handover
 
+## Astra task 1: seller portal, 2026-09-13
+
+Branch `astra/seller-portal` implements the first priority from PR86. See
+[the portal contract](SELLER-ECONOMY-PORTAL.md) for identity, limits and tests.
+Migration versions 20260915000000, 20260915001000 and 20260915002000 are
+already applied locally and immutable. Exact-head CI and staging evidence
+will be recorded in its PR; this checkpoint is not deployment confirmation.
+Remaining priorities: P2 browser journeys, batch reception, fixture Zettle
+pull, metering follow-ups, then duplicate-control design note. Keep the
+Fable stack and its coordination rules in ASTRA-NEXT-TASKS.md authoritative.
+
 ## Seller economy follow-up, 2026-09-13
 
 PR77 (`astra/seller-economy-reads`) builds on published Fable main `e965366`.
@@ -24,7 +35,6 @@ only after exact-head CI and a dry-run showing the expected migration.
 
 Continue autonomously against Fable's current roadmap; coordinate with the
 active printing work instead of duplicating it. No routine owner input is needed.
-
 
 ## Active P1 work: S1 ready for CI and staging
 
@@ -51,8 +61,7 @@ Windows line endings respected (`--end-of-line auto`); Linux CI uses the
 unchanged strict format command. Exact latest CI/staging
 status is in PR58, not implied by this pre-release checkpoint.
 
-Four additive migrations (20260913010000, 20260913011000, 20260913012000,
-20260913200000) are
+Four additive migrations (20260913010000, 20260913011000, 20260913012000, 20260913200000) are
 already applied locally and immutable. Apply only these reviewed versions in
 staging after exact-head CI. They preserve existing rows. No automatic markdown,
 notification, charity action, payout, VAT calculation or live model activation.
@@ -81,15 +90,15 @@ Claude Fable 5.1 is lead architect. The evolving FUNCTIONAL-ROADMAP.md governs n
 work; all 100-hours functionality is excluded from v1. Fable's last inspected
 snapshot was 4593bd0 and its worktree was not changed. Recheck before integrating.
 
-| Recent capability | Delivery | Contract |
-| --- | --- | --- |
-| Staged review and inspection edits | PR43,44,49 | STAGED-OPERATIONS.md |
-| Shared bag discovery, inspection reads/previews and preparation | PR46-50 | INSPECTION-READ.md, INSPECTION-RECEPTION-PREVIEW.md |
-| Per-fact review and exact decision retries | PR51,52 | RECEPTION-FACT-REVIEW.md |
-| Staff filters and older-operation pages | PR53 | OPERATION-QUEUE-PAGING.md |
-| Provider-independent evidence minimization | PR54 | RECEPTION-EVIDENCE-PORT.md |
-| Scoped local MCP operation discovery | PR55 | MCP-OPERATION-DISCOVERY.md |
-| Exact prior-publication comparison | PR56 | RECEPTION-REVIEW-COMPARISON.md |
+| Recent capability                                               | Delivery   | Contract                                            |
+| --------------------------------------------------------------- | ---------- | --------------------------------------------------- |
+| Staged review and inspection edits                              | PR43,44,49 | STAGED-OPERATIONS.md                                |
+| Shared bag discovery, inspection reads/previews and preparation | PR46-50    | INSPECTION-READ.md, INSPECTION-RECEPTION-PREVIEW.md |
+| Per-fact review and exact decision retries                      | PR51,52    | RECEPTION-FACT-REVIEW.md                            |
+| Staff filters and older-operation pages                         | PR53       | OPERATION-QUEUE-PAGING.md                           |
+| Provider-independent evidence minimization                      | PR54       | RECEPTION-EVIDENCE-PORT.md                          |
+| Scoped local MCP operation discovery                            | PR55       | MCP-OPERATION-DISCOVERY.md                          |
+| Exact prior-publication comparison                              | PR56       | RECEPTION-REVIEW-COMPARISON.md                      |
 
 PR56 validation: 117 local units, real MCP, two operation browser journeys,
 lint/types/build/scoped formatting, and full platform CI passed. The latest
@@ -240,12 +249,12 @@ PR40 is merged and deployed as recorded above; do not repeat its release.
 
 ## Verified recent deliveries
 
-| Delivery | Evidence |
-| --- | --- |
+| Delivery                              | Evidence                                                                                                                                                                                                                                    |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Shared queue next-step guidance, PR39 | Exact-head CI34686842356 passed on dddb2098af52dda6d5fc6c5aafbb7575fe52f315. Merged as9cd6c5d810e45f680d2dd60ab2a615f767f5987d; deployment6408356330 succeeded. Public login/register and anonymous-mutation denial verified. No migration. |
-| Queue pilot regressions, PR38 | Merged as5f910f533819f53a2a34b27b5928626b86c8f01b; deployment6407662441 succeeded. Expired-link historical approval and actual browser filters tested. |
-| Queue and MCP read, PR36/37 | Merged and deployed through1c12df7487cc00f778a60232b69adab43c0bddc2. Migration20260912073000 applied locally AND in staging; never edit it. |
-| Seller photo fix, PR33 | Migration20260912060000 applied locally AND in staging. Owner confirmed displayed image, seller approval button and saved response in staff view. |
+| Queue pilot regressions, PR38         | Merged as5f910f533819f53a2a34b27b5928626b86c8f01b; deployment6407662441 succeeded. Expired-link historical approval and actual browser filters tested.                                                                                      |
+| Queue and MCP read, PR36/37           | Merged and deployed through1c12df7487cc00f778a60232b69adab43c0bddc2. Migration20260912073000 applied locally AND in staging; never edit it.                                                                                                 |
+| Seller photo fix, PR33                | Migration20260912060000 applied locally AND in staging. Owner confirmed displayed image, seller approval button and saved response in staff view.                                                                                           |
 
 A fresh hosted staff navigation later redirected to login. Cached UI was not
 accepted as evidence of an active session. Authenticated hosted walkthrough is

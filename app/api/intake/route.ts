@@ -2,6 +2,12 @@ import { randomUUID } from 'node:crypto'
 import { NextResponse } from 'next/server'
 import { platformContext } from '@/lib/platform/context'
 import { executeIntake, intakeCommand } from '@/lib/engine/intake'
+import { readStorePolicy } from '@/lib/engine/store-policy'
+import {
+  notifyAfterFacts,
+  notificationsForIntake,
+  type NotifyOutcome,
+} from '@/lib/communications/dispatch'
 
 export async function POST(request: Request) {
   const requestId = randomUUID()
@@ -159,7 +165,35 @@ export async function POST(request: Request) {
             : 400,
       )
     }
-    return reply({ ok: true, id: result.data })
+    // Automatic seller notifications (S18): after the fact is committed, when
+    // the store opted in. Failures never undo or hide the recorded fact.
+    let notifications: NotifyOutcome[] = []
+    if (
+      [
+        'acceptItem',
+        'recordSale',
+        'approvePayout',
+        'markPayoutPaid',
+        'issueStatement',
+      ].includes(parsed.data.action)
+    ) {
+      try {
+        const policy = await readStorePolicy(ctx.client, parsed.data.tenantId)
+        notifications = await notifyAfterFacts(
+          ctx.client,
+          {
+            tenantId: parsed.data.tenantId,
+            storeName: ctx.active.name,
+            locale: ctx.locale,
+            policy: policy.policy,
+          },
+          await notificationsForIntake(ctx.client, parsed.data),
+        )
+      } catch {
+        console.error('Notification after intake failed', { requestId })
+      }
+    }
+    return reply({ ok: true, id: result.data, notifications })
   } catch {
     console.error('Intake request failed', { requestId })
     return reply({ error: 'REQUEST_FAILED' }, 500)

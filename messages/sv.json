@@ -1255,7 +1255,10 @@
     "handoverIntro": "Anmäl en påse eller låda innan du kommer. Visa referensen i kassan; butiken registrerar den som din påse och du ser påsnumret här.",
     "handoverDisabled": "Butiken tar inte emot anmälda inlämningar ännu. Lämna dina plagg i kassan.",
     "handoverKind": "Vad du lämnar",
-    "handoverKinds": { "bag": "Påse", "box": "Låda" },
+    "handoverKinds": {
+      "bag": "Påse",
+      "box": "Låda"
+    },
     "estimatedItems": "Ungefär hur många plagg",
     "handoverNote": "Anteckning till butiken (valfri)",
     "announce": "Anmäl",
@@ -1355,14 +1358,19 @@
       "ZETTLE_WINDOW_INVALID": "Zettle svarade med uppgifter utanför valt tidsintervall. Hämtningen stoppades.",
       "ZETTLE_WINDOW_COMPLETE": "Intervallet har redan hämtats klart. Ladda om sidan.",
       "ZETTLE_AUTH_REQUIRED": "Zettle nekade inloggningen. Kontrollera API-nyckeln och dess behörigheter.",
-      "ZETTLE_CONNECTION_FAILED": "Anslutningen kunde inte verifieras. Kontrollera konfigurationen eller försök senare."
+      "ZETTLE_CONNECTION_FAILED": "Anslutningen kunde inte verifieras. Kontrollera konfigurationen eller försök senare.",
+      "ZETTLE_INVENTORY_FAILED": "Zettles lager kunde inte bekräftas. Kontrollera varans sparade status innan du går vidare.",
+      "ZETTLE_INVENTORY_CONFLICT": "Zettles lager kunde inte bekräftas. Kontrollera varans sparade status innan du går vidare.",
+      "ZETTLE_INVENTORY_AMBIGUOUS": "Zettles lager kunde inte bekräftas. Kontrollera varans sparade status innan du går vidare.",
+      "ZETTLE_STOCK_HELD": "Zettles lager kunde inte bekräftas. Kontrollera varans sparade status innan du går vidare.",
+      "ZETTLE_EXPORT_FAILED": "Zettles lager kunde inte bekräftas. Kontrollera varans sparade status innan du går vidare."
     },
     "approvalHint": "Matchade kvitton registreras automatiskt. Endast avvikelser behöver utredas; ingen andra godkännare krävs.",
     "held": "Kvittot kunde inte bokas. Utred orsaken innan nytt försök.",
     "retryReceipt": "Försök registrera kvittot igen",
     "catalogIssues": "Kvittona har lästs. Vissa produkter kunde inte synkas; se produktstatus.",
     "catalogTitle": "Produkter till Zettle",
-    "catalogHint": "Högst fem varor skickas per synkning. Priser hämtas från Komisio. Ändringar i Zettle skrivs inte över utan kontroll.",
+    "catalogHint": "Priser hämtas från Komisio. Ändringar i Zettle skrivs inte över utan kontroll.",
     "pendingProducts": "Varor som väntar (högst 20 visas)",
     "vatTitle": "Momsmappning till Zettle",
     "vatHint": "Ange den momssats som ska användas i Zettle för varje läge. Tomt fält stoppar exporten för det läget. Detta ändrar inte Komisios momsberäkning. Mappningen måste verifieras mot butikens Zettle-inställningar och redovisning innan drift.",
@@ -1370,7 +1378,7 @@
     "productStatus": "Senaste produktförsök",
     "synced": "Synkad",
     "productFailed": "Kunde inte synkas",
-    "catalogOffline": "Produktexport och schemalagd hämtning är inte aktiverade. Kvitton hämtas med knappen ovan.",
+    "catalogOffline": "Varuexport och kvittohämtning startas manuellt. Ingen schemalagd synkning är aktiverad.",
     "pullTitle": "Försäljningar från Zettle",
     "pullHint": "Hämtning startar från aktiveringstidpunkten. Varje klick hämtar högst 100 kvitton. Matchade köp registreras automatiskt; övriga väntar på hantering. Ingen schemalagd hämtning eller produktexport startas.",
     "pullSince": "Aktiverad från",
@@ -1391,6 +1399,16 @@
     "connectionVerified": "Anslutningen fungerar. Zettle-butik:",
     "connectionFailed": "Anslutningen kunde inte verifieras. Kontrollera konfigurationen eller försök senare.",
     "merchantPinned": "Kontot matchar den låsta butikskopplingen.",
-    "merchantUnpinned": "Kontots ID behöver låsas i konfigurationen innan synkning aktiveras."
+    "merchantUnpinned": "Kontots ID behöver låsas i konfigurationen innan synkning aktiveras.",
+    "stockTitle": "Varuexport och lager",
+    "stockHint": "Skicka en vara i taget. Det första försöket lägger till ett lagerfört exemplar. Senare försök kontrollerar resultatet och uppdaterar priset utan att fylla på lagret. Högst 50 sparade försök visas, osäkra resultat först.",
+    "exportItem": "Skicka varan till Zettle",
+    "checkStock": "Kontrollera lager / uppdatera vara",
+    "stockStates": {
+      "initialized": "Ett exemplar finns i Zettle",
+      "depleted": "Såld eller borttagen i Zettle - lagret fylls inte på",
+      "unknown": "Osäkert resultat - inget nytt exemplar läggs till",
+      "conflict": "Lagret behöver kontrolleras - inget nytt exemplar läggs till"
+    }
   }
 }

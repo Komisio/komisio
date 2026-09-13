@@ -193,3 +193,16 @@ it('bounds provider data and rejects malformed products', async () => {
   ])
   await expect(large.client.putProduct(product, null)).rejects.toThrow()
 })
+
+it('a catalog-only client refuses purchase retrieval without sending an unbounded request', async () => {
+  const http = vi.fn<typeof fetch>()
+  const client = zettleHttpClient({
+    organizationId: org,
+    accessToken: async () => 'synthetic',
+    fetch: http,
+  })
+  await expect(
+    client.fetchPage({ cursor: null, signal: AbortSignal.timeout(1000) }),
+  ).rejects.toThrow('ZETTLE_WINDOW_INVALID')
+  expect(http).not.toHaveBeenCalled()
+})

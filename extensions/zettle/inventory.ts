@@ -1,0 +1,178 @@
+import { z } from 'zod'
+import { boundedJson } from '../../lib/http/bounded-json'
+export type InventoryIds = {
+  STORE: string
+  SUPPLIER: string
+  SOLD: string
+  BIN: string
+}
+export type Stock = {
+  store: number
+  sold: number
+  bin: number
+  supplier: number
+}
+export function stockOutcome(
+  stock: Stock,
+): 'initialized' | 'depleted' | 'unknown' | 'conflict' {
+  if (
+    stock.store === 1 &&
+    stock.sold === 0 &&
+    stock.bin === 0 &&
+    stock.supplier === -1
+  )
+    return 'initialized'
+  if (
+    stock.store === 0 &&
+    stock.supplier === -1 &&
+    ((stock.sold === 1 && stock.bin === 0) ||
+      (stock.sold === 0 && stock.bin === 1))
+  )
+    return 'depleted'
+  if (Object.values(stock).every((n) => n === 0)) return 'unknown'
+  return 'conflict'
+}
+export function mayInitialize(stock: Stock) {
+  return Object.values(stock).every((n) => n === 0)
+}
+export interface ZettleInventory {
+  inventories(): Promise<InventoryIds>
+  tracked(product: string): Promise<boolean>
+  enable(product: string): Promise<void>
+  stock(product: string, variant: string, ids: InventoryIds): Promise<Stock>
+  initialize(
+    product: string,
+    variant: string,
+    ids: InventoryIds,
+    intentId: string,
+  ): Promise<void>
+}
+/** Fixed official hosts only. The host supplies a merchant-verified private token lease. */
+export function inventoryHttpClient(
+  org: string,
+  token: () => Promise<string>,
+  http: typeof fetch = globalThis.fetch,
+): ZettleInventory {
+  z.uuid().parse(org)
+  async function call(path: string, method = 'GET', body?: unknown) {
+    const access = await token()
+    if (!access || /[\r\n]/.test(access))
+      throw new Error('ZETTLE_AUTH_REQUIRED')
+    const r = await http('https://inventory.izettle.com/v3' + path, {
+      method,
+      headers: {
+        Authorization: `Bearer ${access}`,
+        Accept: 'application/json',
+        ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
+      },
+      body: body === undefined ? undefined : JSON.stringify(body),
+      redirect: 'error',
+      cache: 'no-store',
+      signal: AbortSignal.timeout(10000),
+    }).catch(() => {
+      throw new Error('ZETTLE_INVENTORY_FAILED')
+    })
+    if ([401, 403].includes(r.status)) throw new Error('ZETTLE_AUTH_REQUIRED')
+    if (r.status === 429) throw new Error('ZETTLE_RATE_LIMITED')
+    if (!r.ok) throw new Error('ZETTLE_INVENTORY_FAILED')
+    // Do not follow an untrusted pagination URL or silently use a partial inventory list.
+    if (r.headers.get('link')) throw new Error('ZETTLE_INVENTORY_AMBIGUOUS')
+    return r
+  }
+  return {
+    async inventories() {
+      const r = await call('/inventories')
+      const rows = z
+        .array(
+          z.object({
+            inventoryUuid: z.uuid(),
+            inventoryType: z.enum(['STORE', 'SUPPLIER', 'SOLD', 'BIN']),
+          }),
+        )
+        .max(100)
+        .parse(await boundedJson(r, 65536))
+      const ids = {} as InventoryIds
+      for (const type of ['STORE', 'SUPPLIER', 'SOLD', 'BIN'] as const) {
+        const matches = rows.filter((r) => r.inventoryType === type)
+        if (matches.length !== 1) throw new Error('ZETTLE_INVENTORY_AMBIGUOUS')
+        ids[type] = matches[0].inventoryUuid
+      }
+      if (new Set(Object.values(ids)).size !== 4)
+        throw new Error('ZETTLE_INVENTORY_AMBIGUOUS')
+      return ids
+    },
+    async tracked(product) {
+      z.uuid().parse(product)
+      const r = await call('/products/status', 'POST', [product])
+      const rows = z
+        .array(z.object({ productUuid: z.uuid(), enabled: z.boolean() }))
+        .length(1)
+        .parse(await boundedJson(r, 8192))
+      if (rows[0].productUuid !== product)
+        throw new Error('ZETTLE_INVENTORY_CONFLICT')
+      return rows[0].enabled
+    },
+    async enable(product) {
+      z.uuid().parse(product)
+      const r = await call('/products', 'POST', [
+        { productUuid: product, tracking: 'enable' },
+      ])
+      if (r.status !== 204) throw new Error('ZETTLE_INVENTORY_FAILED')
+    },
+    async stock(product, variant, ids) {
+      z.uuid().parse(product)
+      z.uuid().parse(variant)
+      const result = {} as Stock
+      for (const [type, key] of [
+        ['STORE', 'store'],
+        ['SOLD', 'sold'],
+        ['BIN', 'bin'],
+        ['SUPPLIER', 'supplier'],
+      ] as const) {
+        z.uuid().parse(ids[type])
+        const r = await call(`/stock/${ids[type]}/products/${product}`)
+        const rows = z
+          .array(
+            z.object({
+              organizationUuid: z.uuid(),
+              inventoryUuid: z.uuid(),
+              productUuid: z.uuid(),
+              variantUuid: z.uuid(),
+              balance: z.number().int().min(-1000000).max(1000000),
+            }),
+          )
+          .max(1)
+          .parse(await boundedJson(r, 8192))
+        if (
+          rows.some(
+            (r) =>
+              r.organizationUuid !== org ||
+              r.inventoryUuid !== ids[type] ||
+              r.productUuid !== product ||
+              r.variantUuid !== variant,
+          )
+        )
+          throw new Error('ZETTLE_INVENTORY_CONFLICT')
+        result[key] = rows[0]?.balance ?? 0
+      }
+      return result
+    },
+    async initialize(product, variant, ids, intentId) {
+      for (const value of [product, variant, ids.SUPPLIER, ids.STORE, intentId])
+        z.uuid().parse(value)
+      const r = await call('/movements', 'POST', {
+        identifier: intentId,
+        movements: [
+          {
+            productUuid: product,
+            variantUuid: variant,
+            change: 1,
+            from: ids.SUPPLIER,
+            to: ids.STORE,
+          },
+        ],
+      })
+      if (r.status !== 204) throw new Error('ZETTLE_INVENTORY_FAILED')
+    },
+  }
+}

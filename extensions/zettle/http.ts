@@ -19,13 +19,23 @@ export function zettleHttpClient(options: {
   organizationId: string
   accessToken: () => Promise<string>
   fetch?: typeof fetch
-  startDate: string
-  endDate: string
+  startDate?: string
+  endDate?: string
 }): ZettleClient {
   const org = z.uuid().parse(options.organizationId),
-    start = z.iso.datetime().parse(options.startDate),
-    end = z.iso.datetime().parse(options.endDate)
-  if (start >= end) throw new Error('ZETTLE_WINDOW_INVALID')
+    start =
+      options.startDate === undefined
+        ? undefined
+        : z.iso.datetime().parse(options.startDate),
+    end =
+      options.endDate === undefined
+        ? undefined
+        : z.iso.datetime().parse(options.endDate)
+  if (
+    (start === undefined) !== (end === undefined) ||
+    (start && end && start >= end)
+  )
+    throw new Error('ZETTLE_WINDOW_INVALID')
   const http = options.fetch ?? globalThis.fetch
   let identity: Promise<void> | undefined
   async function call(
@@ -114,6 +124,7 @@ export function zettleHttpClient(options: {
     },
     async fetchPage(input) {
       input.signal.throwIfAborted()
+      if (!start || !end) throw new Error('ZETTLE_WINDOW_INVALID')
       await verify()
       const query = new URLSearchParams({
         startDate: start,

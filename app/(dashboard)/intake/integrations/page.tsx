@@ -1,3 +1,4 @@
+import { readZettleStock } from '@/lib/engine/zettle-stock'
 import { readZettlePull } from '@/lib/engine/zettle-live'
 import Link from 'next/link'
 import { pilotIssue, pilotEnvironment } from '@/extensions/zettle/auth'
@@ -41,6 +42,15 @@ export default async function Integrations({
       : null,
     pilot = pilotEnvironment(process.env),
     liveReady = pilotIssue(a.id, pilot) === null && !!pilot.ZETTLE_MERCHANT_ID
+  const stocks = ['owner', 'admin'].includes(a.role)
+    ? await readZettleStock(ctx.client, a.id)
+    : []
+  const exportItems = [
+    ...new Set([
+      ...catalog.candidates.map((c) => c.item_id),
+      ...stocks.map((s) => s.item_id),
+    ]),
+  ]
   return (
     <>
       <div className="page-heading">
@@ -127,6 +137,35 @@ export default async function Integrations({
         <p>
           {d.pendingProducts}: {catalog.candidates.length}
         </p>
+        {liveReady && pull?.connection && (
+          <section aria-label={d.stockTitle}>
+            <h2>{d.stockTitle}</h2>
+            <p>{d.stockHint}</p>
+            {exportItems.map((itemId) => {
+              const stock = stocks.find((s) => s.item_id === itemId)
+              return (
+                <div
+                  key={itemId}
+                  className="card"
+                  data-testid={`zettle-export-${itemId}`}
+                >
+                  <Link className="text-link" href={`/intake/items/${itemId}`}>
+                    I-{itemId.slice(0, 8).toUpperCase()}
+                  </Link>
+                  {stock && <p>{d.stockStates[stock.status]}</p>}
+                  {stock?.status !== 'depleted' && (
+                    <ZettleAction
+                      key={`${itemId}-${stock?.checked_at ?? 'new'}`}
+                      command={{ action: 'export', tenantId: a.id, itemId }}
+                      d={d}
+                      label={stock ? d.checkStock : d.exportItem}
+                    />
+                  )}
+                </div>
+              )
+            })}
+          </section>
+        )}
         <details>
           <summary>{d.vatTitle}</summary>
           <p>{d.vatHint}</p>

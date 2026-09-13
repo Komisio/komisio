@@ -55,6 +55,8 @@ export function ZettleAction({
         router.refresh()
         return
       }
+      if (body.stock && body.stock in d.stockStates)
+        setError(d.stockStates[body.stock as keyof typeof d.stockStates])
       if (body.catalog?.some((r: { error?: string }) => r.error))
         setError(d.catalogIssues)
       setState('done')

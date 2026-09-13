@@ -1,3 +1,4 @@
+import { connectedPilotCatalog } from '../../extensions/zettle/auth'
 import { expect, it, vi } from 'vitest'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
@@ -271,6 +272,35 @@ it('revalidates merchant identity when the private token lease expires', async (
     ).rejects.toThrow('ZETTLE_WRONG_MERCHANT')
     expect(tokens).toBe(2)
     expect(purchases).toBe(1)
+  } finally {
+    vi.useRealTimers()
+  }
+})
+
+it('catalog factory exposes no token and checks identity again before inventory on lease expiry', async () => {
+  vi.useFakeTimers()
+  let tokens = 0,
+    inventoryReads = 0
+  const http = vi.fn<typeof fetch>().mockImplementation(async (url) => {
+    if (String(url).endsWith('/token'))
+      return json({ access_token: `synthetic-${++tokens}`, expires_in: 7200 })
+    if (String(url).endsWith('/users/self'))
+      return json({ organizationUuid: tokens === 1 ? merchant : tenant })
+    inventoryReads++
+    return json([])
+  })
+  try {
+    const client = await connectedPilotCatalog(
+      tenant,
+      { ...env, ZETTLE_MERCHANT_ID: merchant },
+      http,
+    )
+    expect(Object.keys(client).sort()).toEqual(['inventory', 'putProduct'])
+    vi.advanceTimersByTime(7200000)
+    await expect(client.inventory.inventories()).rejects.toThrow(
+      'ZETTLE_WRONG_MERCHANT',
+    )
+    expect(inventoryReads).toBe(0)
   } finally {
     vi.useRealTimers()
   }

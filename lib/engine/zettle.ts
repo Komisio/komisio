@@ -35,6 +35,7 @@ export const zettleCommand = z.discriminatedUnion('action', [
   base.extend({ action: z.literal('retry'), importId: z.uuid() }),
   base.extend({ action: z.literal('enablePull') }),
   base.extend({ action: z.literal('pull') }),
+  base.extend({ action: z.literal('export'), itemId: z.uuid() }),
 ])
 const receiptRow = z.object({
   id: z.uuid(),
@@ -210,6 +211,11 @@ export async function readZettleStatus(
 export type ZettlePurchase = Awaited<ReturnType<typeof readZettlePurchase>>
 
 export const zettleErrorCodes = [
+  'ZETTLE_INVENTORY_FAILED',
+  'ZETTLE_INVENTORY_CONFLICT',
+  'ZETTLE_INVENTORY_AMBIGUOUS',
+  'ZETTLE_STOCK_HELD',
+  'ZETTLE_EXPORT_FAILED',
   'ZETTLE_NOT_CONNECTED',
   'ZETTLE_AUTH_REQUIRED',
   'ZETTLE_CONNECTION_FAILED',

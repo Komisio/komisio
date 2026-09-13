@@ -60,6 +60,7 @@ export default async function SellerPortal({
       </main>
     )
   const base = `/seller?seller=${account.sellerId}`
+  const currency = await readStoreCurrency(ctx.client, account.tenantId)
   if (params.statement) {
     if (!/^[0-9a-f-]{36}$/i.test(params.statement)) notFound()
     const statement = await readMySellerStatement(
@@ -118,10 +119,9 @@ export default async function SellerPortal({
       </main>
     )
   }
-  const [economy, handovers, currency] = await Promise.all([
+  const [economy, handovers] = await Promise.all([
     readMySellerEconomy(ctx.client, account.tenantId, account.sellerId),
     readMyHandovers(ctx.client, account.tenantId, account.sellerId),
-    readStoreCurrency(ctx.client, account.tenantId),
   ])
   return (
     <main className="onboarding seller-review">

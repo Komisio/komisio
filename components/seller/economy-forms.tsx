@@ -69,7 +69,9 @@ export function SellerEconomyForms({
         <p>
           {d.threshold}: {(thresholdOre / 100).toFixed(2)} {currency}
         </p>
-        <label htmlFor="payout-amount">{d.amount}</label>
+        <label htmlFor="payout-amount">
+          {d.amount.replace('{currency}', currency)}
+        </label>
         <input
           id="payout-amount"
           name="amount"

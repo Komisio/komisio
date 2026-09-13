@@ -1292,7 +1292,7 @@
     "messages": "Meddelanden",
     "payouts": "Utbetalningar",
     "request": "Begär utbetalning",
-    "amount": "Belopp",
+    "amount": "Belopp i {currency}",
     "threshold": "Minsta begäran",
     "notice": "En begäran flyttar inga pengar. Butiken granskar och hanterar utbetalningen.",
     "emails": "Automatiska e-postmeddelanden från butiken",

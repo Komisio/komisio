@@ -1292,7 +1292,7 @@
     "messages": "Messages",
     "payouts": "Payouts",
     "request": "Request payout",
-    "amount": "Amount",
+    "amount": "Amount in {currency}",
     "threshold": "Minimum request",
     "notice": "A request moves no money. The store reviews and handles payment.",
     "emails": "Automatic emails from the store",

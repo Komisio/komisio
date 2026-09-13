@@ -6,10 +6,12 @@ import {
   zettleErrorCode,
   syncZettle,
   resolveZettleLine,
-  stageZettlePurchase,
+  configureZettle,
+  retryZettleReceipt,
+  syncZettleCatalog,
 } from '@/lib/engine/zettle'
 import {
-  demoTransport,
+  localZettleClient,
   zettleFixturesEnabled,
 } from '@/extensions/zettle/fixtures'
 export async function POST(request: Request) {
@@ -41,15 +43,29 @@ export async function POST(request: Request) {
       return reply({ error: 'FORBIDDEN' }, 403)
     if (c.action === 'sync' && !zettleFixturesEnabled())
       return reply({ error: 'ZETTLE_NOT_CONNECTED' }, 409)
+    if (c.action === 'configure') {
+      const r = await configureZettle(ctx.client, c)
+      return r.error
+        ? reply({ error: zettleErrorCode(r.error.message) }, 409)
+        : reply({ id: r.data })
+    }
+    if (c.action === 'retry') {
+      const r = await retryZettleReceipt(ctx.client, c)
+      return r.error
+        ? reply({ error: zettleErrorCode(r.error.message) }, 409)
+        : reply({ id: c.requestId })
+    }
+    const transport = c.action === 'sync' ? localZettleClient(c.tenantId) : null
     const result =
       c.action === 'sync'
-        ? await syncZettle(ctx.client, c, demoTransport())
-        : c.action === 'resolve'
-          ? await resolveZettleLine(ctx.client, c)
-          : await stageZettlePurchase(ctx.client, c)
+        ? await syncZettle(ctx.client, c, transport!)
+        : await resolveZettleLine(ctx.client, c)
     if (result.error)
       return reply({ error: zettleErrorCode(result.error.message) }, 409)
-    return reply({ id: result.data })
+    const catalog = transport
+      ? await syncZettleCatalog(ctx.client, c.tenantId, transport)
+      : []
+    return reply({ id: result.data, catalog })
   } catch {
     return reply({ error: 'REQUEST_FAILED' }, 500)
   }

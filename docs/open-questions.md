@@ -186,3 +186,12 @@ appends lines under an existing external receipt ID. See ZETTLE-FIXTURE-PULL.md.
 Still required: developer app/test merchant, verified label placement and real
 payload samples, bounded incremental retrieval/reconciliation, and separately
 agreed discount/refund handling. No guessed tax or commission rule is introduced.
+
+
+**Owner clarification2026-09-13:** saleable Komisio items go to Zettle; completed
+matched sales return automatically without a second-person approval. Generic AI
+proposal rules must not turn checkout facts into a manual approval workflow.
+POS VAT-rate mapping is explicitly tenant-configured, not inferred from the engine
+mode. Live acceptance still needs verified merchant settings, inventory1 and
+safe movement replay, delisting, OAuth and windowed reconciliation. Current local
+HTTP fixtures test the product/purchase loop without a real merchant account.

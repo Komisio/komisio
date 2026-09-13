@@ -54,6 +54,11 @@ documented extension exception. No AI subscription is needed to run the preview.
 produce bookkeeping data for systems such as Accounted and Fortnox.
 Accounting integrations are planned; Komisio is not a bookkeeping application.
 
+**Sell through your POS. Keep the seller informed.** The local Zettle simulator
+now exercises accepted items going out and completed sales coming back with
+automatic seller credit. Live connection and inventory synchronization are still
+pending. [Test the integration](docs/ZETTLE-FIXTURE-PULL.md).
+
 ## From handover to payout
 
 ![Target workflow: receive an item, sell it, settle the consignor's share. Receiving is available as a pilot; sales and settlement are planned.](docs/images/komisio-flow.svg)

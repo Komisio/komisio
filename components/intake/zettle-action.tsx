@@ -12,11 +12,13 @@ export function ZettleAction({
   d,
   label,
   match = false,
+  vatModes,
 }: {
   command: Draft<Command>
   d: Dictionary['zettle']
   label: string
   match?: boolean
+  vatModes?: Record<string, string>
 }) {
   const router = useRouter(),
     id = useId(),
@@ -45,6 +47,8 @@ export function ZettleAction({
       }
       if (body.id !== pending.current.requestId)
         throw new Error('Unknown outcome')
+      if (body.catalog?.some((r: { error?: string }) => r.error))
+        setError(d.catalogIssues)
       setState('done')
       router.refresh()
     } catch {
@@ -65,6 +69,18 @@ export function ZettleAction({
         pending.current = {
           ...command,
           requestId: crypto.randomUUID(),
+          ...(command.action === 'configure'
+            ? {
+                vatMap: Object.fromEntries(
+                  Object.keys(vatModes ?? {}).flatMap((k) => {
+                    const v = String(
+                      new FormData(e.currentTarget).get(k) ?? '',
+                    ).trim()
+                    return v === '' ? [] : [[k, Number(v)]]
+                  }),
+                ),
+              }
+            : {}),
           ...(match
             ? {
                 itemId: String(
@@ -72,13 +88,28 @@ export function ZettleAction({
                 ).trim(),
               }
             : {}),
-          ...(command.action === 'stage'
-            ? { expiresAt: new Date(Date.now() + 86400000).toISOString() }
-            : {}),
         } as Command
         void send()
       }}
     >
+      {command.action === 'configure' &&
+        Object.entries(vatModes ?? {}).map(([mode, title]) => (
+          <div className="field" key={mode}>
+            <label htmlFor={`${id}-${mode}`}>{title} (%)</label>
+            <input
+              id={`${id}-${mode}`}
+              name={mode}
+              type="number"
+              min="0"
+              max="100"
+              step="0.01"
+              defaultValue={
+                command.vatMap[mode as keyof typeof command.vatMap] ?? ''
+              }
+              disabled={state !== 'idle'}
+            />
+          </div>
+        ))}
       {match && (
         <div className="field">
           <label htmlFor={id}>{d.item}</label>
@@ -99,7 +130,7 @@ export function ZettleAction({
           </Button>
         </>
       ) : state === 'done' ? (
-        <p role="status">{d.done}</p>
+        <p role="status">{error || d.done}</p>
       ) : (
         <Button type="submit" disabled={state === 'busy'}>
           {state === 'busy' ? d.busy : state === 'retry' ? d.retry : label}

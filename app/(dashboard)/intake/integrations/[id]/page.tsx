@@ -95,27 +95,19 @@ export default async function Receipt({
             )}
           </section>
         ))}
+        {r.errorCode && !r.saleId && (
+          <p role="status">
+            {(d.errors as Record<string, string>)[r.errorCode] ?? d.held}
+          </p>
+        )}
         {editable && r.rows.every((row) => row.itemId) && (
           <ZettleAction
-            key={`stage-${r.mappingRevision}`}
-            command={{
-              action: 'stage',
-              tenantId: a.id,
-              importId: id,
-              mappingRevision: r.mappingRevision,
-              expiresAt: '',
-            }}
+            command={{ action: 'retry', tenantId: a.id, importId: id }}
             d={d}
-            label={d.stage}
+            label={d.retryReceipt}
           />
         )}
         <p>{d.approvalHint}</p>
-        <Link
-          className="text-link"
-          href="/intake/operations?kind=recordZettlePurchase"
-        >
-          {d.review}
-        </Link>
       </section>
     </>
   )

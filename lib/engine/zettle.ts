@@ -6,7 +6,8 @@ import {
   mapZettlePage,
 } from '../../extensions/zettle/purchase'
 import type { ZettleTransport } from '../../extensions/zettle/transport'
-import { proposeOperation, recordZettlePurchasePayload } from './operations'
+import { catalogProduct } from '../../extensions/zettle/catalog'
+import type { ZettleClient } from '../../extensions/zettle/http'
 const base = z.strictObject({ tenantId: z.uuid(), requestId: z.uuid() })
 export const zettleCommand = z.discriminatedUnion('action', [
   base.extend({ action: z.literal('sync'), previous: cursor }),
@@ -18,10 +19,20 @@ export const zettleCommand = z.discriminatedUnion('action', [
     itemId: z.uuid(),
   }),
   base.extend({
-    action: z.literal('stage'),
-    ...recordZettlePurchasePayload.shape,
-    expiresAt: z.iso.datetime(),
+    action: z.literal('configure'),
+    previousId: z.uuid().nullable(),
+    vatMap: z.partialRecord(
+      z.enum([
+        'consignment_margin',
+        'consignment_full',
+        'consignment_business',
+        'store_margin',
+        'store_full',
+      ]),
+      z.number().min(0).max(100),
+    ),
   }),
+  base.extend({ action: z.literal('retry'), importId: z.uuid() }),
 ])
 const receiptRow = z.object({
   id: z.uuid(),
@@ -79,20 +90,6 @@ export async function resolveZettleLine(
     p_item: c.itemId,
   })
 }
-export async function stageZettlePurchase(
-  client: SupabaseClient,
-  input: unknown,
-) {
-  const c = zettleCommand.options[2].parse(input)
-  return proposeOperation(client, {
-    tenantId: c.tenantId,
-    requestId: c.requestId,
-    kind: 'recordZettlePurchase',
-    actorLabel: 'zettle-import',
-    expiresAt: c.expiresAt,
-    payload: { importId: c.importId, mappingRevision: c.mappingRevision },
-  })
-}
 export async function readZettlePurchase(
   client: SupabaseClient,
   tenantId: string,
@@ -111,7 +108,7 @@ export async function readZettlePurchase(
     .maybeSingle()
   if (receipt.error || !receipt.data) throw new Error('ZETTLE_IMPORT_NOT_FOUND')
   const row = receiptRow.parse(receipt.data)
-  const [matches, sale, latest] = await Promise.all([
+  const [matches, sale, latest, outcome] = await Promise.all([
     client.rpc('zettle_matches', {
       p_tenant: tenantId,
       p_import: id,
@@ -131,8 +128,15 @@ export async function readZettlePurchase(
       .eq('import_id', id)
       .order('revision', { ascending: false })
       .limit(1),
+    client
+      .from('zettle_receipt_outcomes')
+      .select('error_code')
+      .eq('tenant_id', tenantId)
+      .eq('import_id', id)
+      .order('created_at', { ascending: false })
+      .limit(1),
   ])
-  if (matches.error || sale.error || latest.error)
+  if (matches.error || sale.error || latest.error || outcome.error)
     throw new Error('ZETTLE_READ_FAILED')
   const resolutions = z
     .array(
@@ -149,6 +153,7 @@ export async function readZettlePurchase(
     ...row,
     mappingRevision: currentRevision,
     saleId: sale.data?.id ?? null,
+    errorCode: outcome.data?.[0]?.error_code ?? null,
     rows: row.lines.map((l) => ({
       ...l,
       itemId: resolutions.find((r) => r.line_no === l.lineNo)?.item_id ?? null,
@@ -204,6 +209,12 @@ export type ZettlePurchase = Awaited<ReturnType<typeof readZettlePurchase>>
 
 export const zettleErrorCodes = [
   'ZETTLE_NOT_CONNECTED',
+  'ZETTLE_VAT_MAPPING_REQUIRED',
+  'ZETTLE_CONFIG_CHANGED',
+  'ZETTLE_REMOTE_CHANGED',
+  'ZETTLE_REMOTE_MISSING',
+  'ZETTLE_WRONG_MERCHANT',
+  'ZETTLE_RATE_LIMITED',
   'ZETTLE_CURSOR_CHANGED',
   'ZETTLE_PURCHASE_CONFLICT',
   'ZETTLE_MATCH_CHANGED',
@@ -220,4 +231,114 @@ export const zettleErrorCodes = [
 ] as const
 export function zettleErrorCode(message: string) {
   return zettleErrorCodes.find((code) => message === code) ?? 'REQUEST_FAILED'
+}
+
+export async function configureZettle(client: SupabaseClient, input: unknown) {
+  const c = zettleCommand.options[2].parse(input)
+  return client.rpc('publish_zettle_catalog_config', {
+    p_tenant: c.tenantId,
+    p_id: c.requestId,
+    p_previous: c.previousId,
+    p_map: c.vatMap,
+  })
+}
+export async function readZettleCatalog(
+  client: SupabaseClient,
+  tenantId: string,
+) {
+  z.uuid().parse(tenantId)
+  const [config, candidates, outcomes] = await Promise.all([
+    client
+      .from('zettle_catalog_configs')
+      .select('id,vat_map')
+      .eq('tenant_id', tenantId)
+      .order('revision', { ascending: false })
+      .limit(1),
+    client.rpc('zettle_catalog_candidates', { p_tenant: tenantId }),
+    client
+      .from('zettle_product_outcomes')
+      .select('export_id,status,error_code,created_at')
+      .eq('tenant_id', tenantId)
+      .order('created_at', { ascending: false })
+      .limit(30),
+  ])
+  if (config.error || candidates.error || outcomes.error)
+    throw new Error('ZETTLE_READ_FAILED')
+  return {
+    config: config.data?.[0] ?? null,
+    candidates: z
+      .array(z.object({ item_id: z.uuid() }))
+      .max(20)
+      .parse(candidates.data),
+    outcomes: outcomes.data ?? [],
+  }
+}
+/** Engine snapshots accepted state; adapter sends only that snapshot. No AI proposal. */
+export async function syncZettleCatalog(
+  client: SupabaseClient,
+  tenantId: string,
+  transport: ZettleClient,
+) {
+  const state = await readZettleCatalog(client, tenantId)
+  if (!state.config) return [{ error: 'ZETTLE_VAT_MAPPING_REQUIRED' }]
+  const results: { itemId?: string; error?: string }[] = []
+  // Bounded synchronous pass; remaining candidates are retried by the next sync.
+  for (const { item_id: itemId } of state.candidates.slice(0, 5)) {
+    let exportId: string | undefined
+    try {
+      const prepared = await client.rpc('prepare_zettle_product', {
+        p_tenant: tenantId,
+        p_item: itemId,
+      })
+      if (prepared.error) throw new Error(prepared.error.message)
+      exportId = z.uuid().parse(prepared.data)
+      const stored = await client
+        .from('zettle_product_exports')
+        .select('payload,previous_payload')
+        .eq('tenant_id', tenantId)
+        .eq('id', exportId)
+        .single()
+      if (stored.error) throw new Error('ZETTLE_READ_FAILED')
+      const payload = catalogProduct.parse(stored.data.payload),
+        previous = stored.data.previous_payload
+          ? catalogProduct.parse(stored.data.previous_payload)
+          : null
+      await transport.putProduct(payload, previous)
+      const finished = await client.rpc('finish_zettle_product', {
+        p_tenant: tenantId,
+        p_export: exportId,
+        p_status: 'synced',
+        p_error: null,
+      })
+      if (finished.error) throw new Error(finished.error.message)
+      results.push({ itemId })
+    } catch (e) {
+      const code =
+        e instanceof Error && /^ZETTLE_[A-Z_]{1,80}$/.test(e.message)
+          ? e.message
+          : 'ZETTLE_EXPORT_FAILED'
+      if (exportId) {
+        const recorded = await client.rpc('finish_zettle_product', {
+          p_tenant: tenantId,
+          p_export: exportId,
+          p_status: 'failed',
+          p_error: code,
+        })
+        if (recorded.error) throw new Error('ZETTLE_OUTCOME_FAILED')
+      }
+      results.push({ itemId, error: code })
+    }
+  }
+  return results
+}
+
+export async function retryZettleReceipt(
+  client: SupabaseClient,
+  input: unknown,
+) {
+  const c = zettleCommand.options[3].parse(input)
+  return client.rpc('reconcile_zettle_receipt', {
+    p_tenant: c.tenantId,
+    p_import: c.importId,
+  })
 }

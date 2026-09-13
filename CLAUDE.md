@@ -41,9 +41,13 @@ version 1: do not implement it or make v1 depend on it.
 4. **Corrections are new rows.** Nothing with financial or legal weight
    (ledger entries, settlements, audit events, documents behind them) is
    edited or deleted in place.
-5. **Every non-human write carries an identified actor and is staged.**
-   Agent and extension writes go through pending operations with a risk
-   level; execution requires approval unless the scope allows auto-execution.
+5. **Distinguish proposals from verified integration facts; identify every actor.**
+   AI proposals go through pending operations with a risk level. Owner-authorized
+   deterministic POS synchronization does not require a second approval of an
+   already completed checkout: accepted items may be exported and matched Zettle
+   sales imported automatically through the engine. Tenant binding, role/MFA,
+   validation, immutable provenance and idempotency still apply. Ambiguous or
+   unsupported facts stop for resolution; this is not an auto-approval scope for AI.
 6. **Money is `numeric`, rounded to öre in the database.** Never float, never
    string arithmetic.
 7. **Swedish domain questions go through `skills/`, never training data.**

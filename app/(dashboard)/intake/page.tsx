@@ -110,11 +110,32 @@ export default async function Intake({
           <Link className="text-link" href="/intake/payouts">
             {all.payouts.title}
           </Link>
+          {' · '}
+          <Link className="text-link" href="/intake/accounting">
+            {all.accounting.title}
+          </Link>
+          {' · '}
+          <Link className="text-link" href="/intake/lifecycle">
+            {all.lifecycle.title}
+          </Link>
         </p>
         <Link className="text-link" href="/intake/agreements">
           {a.manage}
         </Link>
       </div>
+      <form action="/intake/open" className="row wrap">
+        <label htmlFor="intake-open-ref">{all.openByReference.reference}</label>
+        <input
+          id="intake-open-ref"
+          name="ref"
+          placeholder="K-12"
+          maxLength={16}
+          inputMode="text"
+        />
+        <button className="btn btn-secondary">
+          {all.openByReference.open}
+        </button>
+      </form>
       <p className="intake-notice">{d.pilot}</p>
       <div className="intake-grid">
         <section className="card intake-form">

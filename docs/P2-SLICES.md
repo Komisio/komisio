@@ -196,6 +196,13 @@ Purpose: bookkeeping data per day, exported.
 - Surface: accounting page (day list, preview, export, reconciliation).
   Agent tools `day close preview`, `export day close` (staged, `medium`).
 - Migration: yes.
+- Status 2026-09-13: `day_closes` and `generate_day_close` delivered
+  (migration `20260914050000`): local-day totals with VAT per mode, returns,
+  credit reversals and paid payouts; unchanged days keep their version,
+  changed days get a new one; accounting page with generate form and list.
+  The Fortnox export, the account map policy and the reconciliation view
+  follow once the tenant's accountant provides the mapping; Komisio will not
+  invent account numbers.
 
 ## S18. Notifications and communication log
 
@@ -213,6 +220,12 @@ Purpose: the e-mail-first seller communication decided in P1 answers.
 - Surface: communication tab on the seller view. Agent tool `send message`
   (staged, `low`, template-bound).
 - Migration: yes.
+- Status 2026-09-13: `seller_communications` with queue and single delivery
+  transition (migration `20260914060000`), versioned plain-text templates for
+  the five P2 triggers plus a general message, Resend transport with the
+  pilot allowlist rules, `/api/communications` route (render, queue, send,
+  record), seller page log and send form. Sending is staff-triggered; the
+  automatic triggers and the staged agent kind follow.
 
 ## S19. Labels and the local print agent
 
@@ -237,6 +250,12 @@ Smaller slices that complete P2 and are independent of each other:
   stages `on_sale`, `markdown_due`, `period_ending`, `period_ended`;
   operations `extend`, `apply_markdown`, `end_of_period` (charity or return)
   with events. Agent proposals for markdown batches at `low`.
+  Status 2026-09-13: delivered (migration `20260914070000`): `lifecycle_queue`
+  with stages on_sale, markdown_due, period_ending, period_ended, ended and
+  sold; `apply_markdown` (share of the accepted price, once per step, only
+  when due), `extend_sale_period`, `end_sale_period` (charity or return); an
+  ended item can no longer be sold; sale periods page with actions. Agent
+  batch proposals follow.
 - Batch reception: one photo set for one seller; the model splits into
   garments and proposes each; staff confirm per row; the same reception
   contract per garment.

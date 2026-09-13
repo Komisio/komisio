@@ -11,6 +11,10 @@ import { SellerTermsForm } from '@/components/intake/seller-terms-form'
 import { LedgerAdjustForm } from '@/components/intake/ledger-adjust-form'
 import { StatementForm } from '@/components/intake/statement-form'
 import { readSellerStatements } from '@/lib/engine/statements'
+import { readSellerCommunications } from '@/lib/engine/communications'
+import { readPayouts } from '@/lib/engine/payouts'
+import { readItems } from '@/lib/engine/items'
+import { CommunicationForm } from '@/components/intake/communication-form'
 import {
   readSellerBalance,
   readSellerLedger,
@@ -37,13 +41,62 @@ export default async function Seller({
     .maybeSingle()
   if (seller.error) throw new Error('Unable to read seller')
   if (!seller.data) notFound()
-  const [terms, history, balance, ledger, statements] = await Promise.all([
+  const [
+    terms,
+    history,
+    balance,
+    ledger,
+    statements,
+    communications,
+    payouts,
+    items,
+  ] = await Promise.all([
     readEffectiveSellerTerms(ctx.client, tenant.id, id.data),
     readSellerTermsHistory(ctx.client, tenant.id, id.data),
     readSellerBalance(ctx.client, tenant.id, id.data),
     readSellerLedger(ctx.client, tenant.id, id.data),
     readSellerStatements(ctx.client, tenant.id, id.data),
+    readSellerCommunications(ctx.client, tenant.id, id.data),
+    readPayouts(ctx.client, tenant.id, id.data),
+    readItems(ctx.client, tenant.id),
   ])
+  const c = all.communications
+  const sellerItems = items.filter((i) => i.seller_id === id.data)
+  const soldLines = await ctx.client
+    .from('sale_lines')
+    .select('id,item_id,seller_credit_ore')
+    .eq('tenant_id', tenant.id)
+    .in(
+      'item_id',
+      sellerItems.map((i) => i.id),
+    )
+    .limit(50)
+  const references = {
+    item_accepted: sellerItems.map((i) => ({
+      id: i.id,
+      label: `${all.items.originKinds[i.origin_kind]} · ${i.id.slice(0, 8)}`,
+    })),
+    item_sold: (soldLines.data ?? []).map((l) => ({
+      id: String(l.id),
+      label: `${all.items.originKinds[sellerItems.find((i) => i.id === l.item_id)?.origin_kind ?? 'purchase']} · ${formatSignedOre(Number(l.seller_credit_ore))} SEK`,
+    })),
+    payout_approved: payouts
+      .filter((p) => p.status === 'approved')
+      .map((p) => ({
+        id: p.id,
+        label: `${formatSignedOre(p.amount_ore)} SEK`,
+      })),
+    payout_paid: payouts
+      .filter((p) => p.status === 'paid')
+      .map((p) => ({
+        id: p.id,
+        label: `${formatSignedOre(p.amount_ore)} SEK · ${p.payment_reference}`,
+      })),
+    statement_issued: statements.map((s) => ({
+      id: s.id,
+      label: `${s.kind === 'credit_note' ? all.statements.creditNote : all.statements.statement} ${s.number}`,
+    })),
+  }
   const l = all.ledger,
     st = all.statements
   const today = new Date(),
@@ -162,6 +215,33 @@ export default async function Seller({
               defaultFrom={isoDay(monthStart)}
               defaultTo={isoDay(today)}
               d={st}
+              intake={all.intake}
+            />
+          </>
+        )}
+      </section>
+      <section className="card intake-form">
+        <h2>{c.title}</h2>
+        <p>{c.intro}</p>
+        {communications.length === 0 && <p>{c.empty}</p>}
+        {communications.map((m) => (
+          <details key={m.id}>
+            <summary>
+              {when(m.queued_at)} · {c.kinds[m.kind]} · {c.outcomes[m.status]} ·{' '}
+              {m.subject}
+            </summary>
+            <pre style={{ whiteSpace: 'pre-wrap' }}>{m.body}</pre>
+          </details>
+        ))}
+        {write && (
+          <>
+            <h3>{c.sendHeading}</h3>
+            <p>{c.sendHint}</p>
+            <CommunicationForm
+              tenantId={tenant.id}
+              sellerId={id.data}
+              references={references}
+              d={c}
               intake={all.intake}
             />
           </>

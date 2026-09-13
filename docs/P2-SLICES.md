@@ -213,9 +213,16 @@ Purpose: bookkeeping data per day, exported.
   (migration `20260914050000`): local-day totals with VAT per mode, returns,
   credit reversals and paid payouts; unchanged days keep their version,
   changed days get a new one; accounting page with generate form and list.
-  The Fortnox export, the account map policy and the reconciliation view
-  follow once the tenant's accountant provides the mapping; Komisio will not
-  invent account numbers.
+  Account map and SIE 4 export delivered with migration `20260914160000`:
+  `accounting_maps` (versioned, owner or admin, one account and side per
+  day-close amount as the accountant sets them, Komisio proposes none),
+  `preview_voucher` (lines, totals, balance, unmapped amounts),
+  `export_day_close` (once per day close and map version, refused when
+  unbalanced), `accounting_exports` with the recorded lines, and
+  `GET /api/accounting/<id>` rendering the SIE 4 file; map form, previews,
+  export action and export list on the accounting page. See
+  [ACCOUNTING-EXPORT.md](ACCOUNTING-EXPORT.md). Sending through the Fortnox
+  API and the reconciliation view follow once a tenant connects an account.
 
 ## S18. Notifications and communication log
 

@@ -197,6 +197,73 @@ export async function testProposalsMCP({
   })
   assert(missing.isError)
   assert(JSON.stringify(missing.content).includes('SALE_LINE_NOT_FOUND'))
+  // Message: only the free-text block; low risk; SQL queues nothing, the store sends after approval.
+  const messages = await connect('communications:propose')
+  assert.deepEqual(
+    (await messages.listTools()).tools.map((t) => t.name),
+    ['komisio_propose_message'],
+  )
+  const message = randomUUID()
+  const messageStaged = await messages.callTool({
+    name: 'komisio_propose_message',
+    arguments: {
+      requestId: message,
+      expiresAt,
+      sellerId: seller,
+      locale: 'sv',
+      freeText: 'MCP fixture: extra öppet på lördag.',
+    },
+  })
+  assert(!messageStaged.isError, JSON.stringify(messageStaged.content))
+  assert.equal(messageStaged.structuredContent.riskLevel, 'low')
+  assert.equal(messageStaged.structuredContent.templateBound, true)
+  for (const args of [
+    {
+      requestId: randomUUID(),
+      expiresAt,
+      sellerId: seller,
+      locale: 'sv',
+      freeText: '',
+    },
+    {
+      requestId: randomUUID(),
+      expiresAt,
+      sellerId: seller,
+      locale: 'de',
+      freeText: 'Hallo',
+    },
+    {
+      requestId: randomUUID(),
+      expiresAt,
+      sellerId: seller,
+      locale: 'sv',
+      freeText: 'x',
+      subject: 'Injected',
+    },
+  ])
+    assert(
+      (
+        await messages.callTool({
+          name: 'komisio_propose_message',
+          arguments: args,
+        })
+      ).isError,
+      JSON.stringify(args),
+    )
+  await rpc('decide_operation', {
+    p_tenant: tenant,
+    p_id: randomUUID(),
+    p_operation: message,
+    p_decision: 'approved',
+    p_reason: 'Low risk: proposer approves',
+  })
+  const messageState = (
+    await db.query(
+      'select (select outcome from operation_decisions where operation_id=$1) outcome,(select count(*)::int from seller_communications where id=$1) queued',
+      [message],
+    )
+  ).rows[0]
+  assert.deepEqual(messageState, { outcome: 'executed', queued: 0 })
   // Scope isolation: the lifecycle scope cannot stage a ledger adjustment.
   await assert.rejects(
     lifecycle.callTool({

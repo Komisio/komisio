@@ -529,8 +529,10 @@
       "applyMarkdownBatch": "Genomför förfallna prissänkningar",
       "bulkItemUpdate": "Uppdatera en uppsättning varor",
       "approvePayout": "Godkänn en utbetalning",
-      "markPayoutPaid": "Markera en utbetalning som betald"
+      "markPayoutPaid": "Markera en utbetalning som betald",
+      "sendMessage": "Skicka ett meddelande till en säljare"
     },
+    "messageTemplateNote": "Bara texten ovan föreslås. Den skickas inuti butikens fasta meddelandemall med vanlig hälsning och sidfot, från butikens adress, en gång.",
     "payout": "Utbetalning",
     "paymentReference": "Betalningsreferens",
     "bulkActions": {

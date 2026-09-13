@@ -340,6 +340,22 @@ export function OperationQueue({
                 : ''}
               {o.payload.reason ? ` · ${o.payload.reason}` : ''}
             </p>
+          ) : o.kind === 'sendMessage' ? (
+            <>
+              <p>
+                <Link
+                  className="text-link"
+                  href={`/intake/sellers/${o.payload.sellerId}`}
+                >
+                  {d.seller}
+                </Link>{' '}
+                · {o.payload.locale}
+              </p>
+              <p style={{ whiteSpace: 'pre-wrap' }}>{o.payload.freeText}</p>
+              <p>
+                <small>{d.messageTemplateNote}</small>
+              </p>
+            </>
           ) : (
             <>
               <p>

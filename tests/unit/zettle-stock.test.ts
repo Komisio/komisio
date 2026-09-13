@@ -1,7 +1,10 @@
 import { expect, it, vi } from 'vitest'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { exportZettleItem } from '../../lib/engine/zettle-stock'
-import type { Stock } from '../../extensions/zettle/inventory'
+import {
+  inventoryHttpClient,
+  type Stock,
+} from '../../extensions/zettle/inventory'
 const tenant = '10000000-0000-4000-8000-000000000001',
   merchant = '20000000-0000-4000-8000-000000000001',
   item = '30000000-0000-4000-8000-000000000001',
@@ -287,4 +290,124 @@ it('returns the failed read step without leaking the original exception', async 
   })
   expect(JSON.stringify(result)).not.toContain('private')
   expect(s.inventory.initialize).not.toHaveBeenCalled()
+})
+
+it.each([false, true])(
+  'initializes a new product through the HTTP adapter exactly once (lost response: %s)',
+  async (lostResponse) => {
+    const setupResult = setup()
+    let tracked = false
+    let balance = 0
+    let movements = 0
+    let enables = 0
+    const http = vi.fn<typeof fetch>(async (input, init) => {
+      const path = new URL(String(input)).pathname
+      if (path === '/v3/inventories')
+        return Response.json(
+          Object.entries(locations).map(([inventoryType, inventoryUuid]) => ({
+            inventoryType,
+            inventoryUuid,
+          })),
+        )
+      if (path === '/v3/products/status') {
+        expect(JSON.parse(String(init?.body))).toEqual([item])
+        return Response.json(
+          tracked ? [{ productUuid: item, enabled: true }] : [],
+        )
+      }
+      if (path === '/v3/products') {
+        expect(JSON.parse(String(init?.body))).toEqual([
+          { productUuid: item, tracking: 'enable' },
+        ])
+        tracked = true
+        enables++
+        return new Response(null, { status: 204 })
+      }
+      if (path === `/v3/stock/${locations.STORE}/products/${item}`)
+        return Response.json(
+          balance === 0
+            ? []
+            : [
+                {
+                  organizationUuid: merchant,
+                  inventoryUuid: locations.STORE,
+                  productUuid: item,
+                  variantUuid: job,
+                  balance,
+                },
+              ],
+        )
+      if (path === '/v3/movements') {
+        expect(tracked).toBe(true)
+        expect(JSON.parse(String(init?.body))).toEqual({
+          identifier: request,
+          movements: [
+            {
+              productUuid: item,
+              variantUuid: job,
+              change: 1,
+              from: locations.SUPPLIER,
+              to: locations.STORE,
+            },
+          ],
+        })
+        movements++
+        balance++
+        if (lostResponse) throw new Error('synthetic lost acknowledgement')
+        return new Response(null, { status: 204 })
+      }
+      throw new Error('Unexpected inventory request')
+    })
+    const factory = async () => ({
+      putProduct: async () => {},
+      inventory: inventoryHttpClient(merchant, async () => 'synthetic', http),
+    })
+    for (const requestId of [request, request, merchant]) {
+      expect(
+        await exportZettleItem(
+          setupResult.client,
+          tenant,
+          requestId,
+          item,
+          env,
+          factory,
+        ),
+      ).toEqual({ id: requestId, stock: 'initialized' })
+    }
+    expect(enables).toBe(1)
+    expect(movements).toBe(1)
+    expect(balance).toBe(1)
+  },
+)
+
+it('an empty HTTP tracking response cannot re-enable an old claim', async () => {
+  const setupResult = setup({ fresh: false })
+  const http = vi.fn<typeof fetch>(async (input) => {
+    if (new URL(String(input)).pathname === '/v3/inventories')
+      return Response.json(
+        Object.entries(locations).map(([inventoryType, inventoryUuid]) => ({
+          inventoryType,
+          inventoryUuid,
+        })),
+      )
+    return Response.json([])
+  })
+  const result = await exportZettleItem(
+    setupResult.client,
+    tenant,
+    request,
+    item,
+    env,
+    async () => ({
+      putProduct: async () => {},
+      inventory: inventoryHttpClient(merchant, async () => 'synthetic', http),
+    }),
+  )
+  expect(result).toMatchObject({
+    stock: 'unknown',
+    diagnostic: { tracking: false },
+  })
+  expect(
+    http.mock.calls.map(([input]) => new URL(String(input)).pathname),
+  ).toEqual(['/v3/inventories', '/v3/products/status'])
 })

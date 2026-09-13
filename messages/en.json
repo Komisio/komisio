@@ -1226,7 +1226,9 @@
       "ZETTLE_REMOTE_MISSING": "A previously synced product is missing in Zettle.",
       "ZETTLE_CONFIG_CHANGED": "The configuration changed. Reload.",
       "ZETTLE_WRONG_MERCHANT": "The connection belongs to another merchant.",
-      "ZETTLE_RATE_LIMITED": "Zettle is rate limiting requests. Retry later."
+      "ZETTLE_RATE_LIMITED": "Zettle is rate limiting requests. Retry later.",
+      "ZETTLE_AUTH_REQUIRED": "Zettle rejected authentication. Check the API key and its permissions.",
+      "ZETTLE_CONNECTION_FAILED": "Could not verify the connection. Check configuration or retry later."
     },
     "approvalHint": "Matched receipts are recorded automatically. Only exceptions need investigation; no second approver is required.",
     "held": "The receipt could not be recorded. Investigate before retrying.",
@@ -1240,6 +1242,14 @@
     "saveMapping": "Save VAT mapping",
     "productStatus": "Recent product attempts",
     "synced": "Synced",
-    "productFailed": "Could not sync"
+    "productFailed": "Could not sync",
+    "connectionTitle": "Pilot connection",
+    "connectionHint": "Verify the server-held credential and its Zettle merchant. This check creates no products and imports no sales.",
+    "checkConnection": "Check Zettle connection",
+    "connectionUnavailable": "No pilot credential is configured for this store.",
+    "connectionVerified": "Connection verified. Zettle merchant:",
+    "connectionFailed": "Could not verify the connection. Check configuration or retry later.",
+    "merchantPinned": "The merchant matches the pinned connection.",
+    "merchantUnpinned": "Pin this merchant ID in configuration before enabling synchronization."
   }
 }

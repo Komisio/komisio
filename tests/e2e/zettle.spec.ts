@@ -16,6 +16,42 @@ test('Zettle product export, price update, checkout, automatic credit and concur
     await f.commit()
     await page.goto('/intake/integrations')
     await expect(page.getByText(d.zettle.fixture)).toBeVisible()
+    await expect(
+      page.getByText(d.zettle.connectionUnavailable, { exact: true }),
+    ).toBeVisible()
+    const connectionPath = '/api/integrations/zettle/connection'
+    const connectionHeaders = { origin: 'http://127.0.0.1:3000' }
+    const unavailable = await page.request.post(connectionPath, {
+      headers: connectionHeaders,
+      data: { tenantId: f.tenant },
+    })
+    expect(unavailable.status()).toBe(409)
+    expect(await unavailable.json()).toEqual({ error: 'ZETTLE_NOT_CONNECTED' })
+    expect(
+      (
+        await page.request.post(connectionPath, {
+          headers: connectionHeaders,
+          data: { tenantId: randomUUID() },
+        })
+      ).status(),
+    ).toBe(409)
+    expect(
+      (
+        await page.request.post(connectionPath, {
+          headers: { origin: 'https://foreign.example' },
+          data: { tenantId: f.tenant },
+        })
+      ).status(),
+    ).toBe(403)
+    expect(
+      (
+        await page.request.post(connectionPath, {
+          headers: connectionHeaders,
+          data: { tenantId: f.tenant, apiKey: 'must-not-be-accepted' },
+        })
+      ).status(),
+    ).toBe(400)
+
     await page.getByText(d.zettle.vatTitle, { exact: true }).click()
     await page
       .getByLabel(`${d.sales.vatModes.consignment_margin} (%)`, { exact: true })

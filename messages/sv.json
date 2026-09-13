@@ -1226,7 +1226,9 @@
       "ZETTLE_REMOTE_MISSING": "En tidigare synkad produkt saknas i Zettle.",
       "ZETTLE_CONFIG_CHANGED": "Inställningen har ändrats. Ladda om.",
       "ZETTLE_WRONG_MERCHANT": "Anslutningen tillhör en annan butik.",
-      "ZETTLE_RATE_LIMITED": "Zettle begränsar anropen. Försök senare."
+      "ZETTLE_RATE_LIMITED": "Zettle begränsar anropen. Försök senare.",
+      "ZETTLE_AUTH_REQUIRED": "Zettle nekade inloggningen. Kontrollera API-nyckeln och dess behörigheter.",
+      "ZETTLE_CONNECTION_FAILED": "Anslutningen kunde inte verifieras. Kontrollera konfigurationen eller försök senare."
     },
     "approvalHint": "Matchade kvitton registreras automatiskt. Endast avvikelser behöver utredas; ingen andra godkännare krävs.",
     "held": "Kvittot kunde inte bokas. Utred orsaken innan nytt försök.",
@@ -1240,6 +1242,14 @@
     "saveMapping": "Spara momsmappning",
     "productStatus": "Senaste produktförsök",
     "synced": "Synkad",
-    "productFailed": "Kunde inte synkas"
+    "productFailed": "Kunde inte synkas",
+    "connectionTitle": "Pilotanslutning",
+    "connectionHint": "Kontrollera att butikens serverlagrade nyckel fungerar och vilket Zettle-konto den tillhör. Kontrollen skapar inga produkter och importerar inga försäljningar.",
+    "checkConnection": "Kontrollera Zettle-anslutning",
+    "connectionUnavailable": "Ingen pilotnyckel är konfigurerad för denna butik.",
+    "connectionVerified": "Anslutningen fungerar. Zettle-butik:",
+    "connectionFailed": "Anslutningen kunde inte verifieras. Kontrollera konfigurationen eller försök senare.",
+    "merchantPinned": "Kontot matchar den låsta butikskopplingen.",
+    "merchantUnpinned": "Kontots ID behöver låsas i konfigurationen innan synkning aktiveras."
   }
 }

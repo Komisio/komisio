@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { pilotAvailable, pilotEnvironment } from '@/extensions/zettle/auth'
+import { ZettleConnection } from '@/components/intake/zettle-connection'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
@@ -43,6 +45,14 @@ export default async function Integrations({
           {all.intake.back}
         </Link>
       </div>
+      {['owner', 'admin'].includes(a.role) && (
+        <ZettleConnection
+          key={a.id}
+          tenantId={a.id}
+          available={pilotAvailable(a.id, pilotEnvironment(process.env))}
+          d={d}
+        />
+      )}
       <section className="card intake-form">
         <p className="intake-notice">{fixtures ? d.fixture : d.offline}</p>
         <p>

@@ -77,6 +77,7 @@ export async function POST(request: Request) {
         .eq('tenant_id', tenantId)
         .eq('item_id', c.referenceId)
         .order('set_at', { ascending: false })
+        .order('seq', { ascending: false })
         .limit(2)
       const list = z
         .array(z.object({ price_ore: ore }))

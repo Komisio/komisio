@@ -138,6 +138,7 @@ export async function readItems(client: SupabaseClient, tenantInput: string) {
       items.map((i) => i.id),
     )
     .order('set_at', { ascending: false })
+    .order('seq', { ascending: false })
   if (prices.error) throw new Error('Unable to read item prices')
   const current = new Map<string, number>()
   for (const p of z
@@ -169,7 +170,8 @@ export async function readItem(
       .select('id,price_ore,reason,set_at')
       .eq('tenant_id', tenantId)
       .eq('item_id', itemId)
-      .order('set_at', { ascending: false }),
+      .order('set_at', { ascending: false })
+      .order('seq', { ascending: false }),
     client
       .from('item_events')
       .select('id,kind,detail,occurred_at')

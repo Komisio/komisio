@@ -2,6 +2,8 @@ import { defineConfig } from '@playwright/test'
 export default defineConfig({
   testDir: './tests/e2e',
   timeout: 120000,
+  // The dev server compiles a page on its first hit in CI; give expectations room.
+  expect: { timeout: 15000 },
   fullyParallel: false,
   workers: 1,
   use: {

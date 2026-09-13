@@ -43,7 +43,7 @@ export async function testItemsMCP({ connect, rpc, db, tenant, token, uid }) {
     { ...command, priceOre: 250 * 100 + 0.5 },
     { ...command, priceOre: '25000' },
     { ...command, originRevision: 1 },
-    { ...command, requestId: randomUUID(), priceOre: 26000 },
+    { ...command, priceOre: 26000 }, // same request, changed payload
     { ...command, tenantId: tenant },
     { ...command, requestId: randomUUID(), originId: randomUUID() },
   ]) {

@@ -6,9 +6,9 @@ records that person as the actor. Nothing an agent does is a fact until then.
 
 ## Shape
 
-| Record | Meaning | Mutability |
-| --- | --- | --- |
-| `pending_operations` | One proposal: tenant, kind, structural payload, derived risk level, actor kind and label, the user whose session proposed it, expiry | Append-only |
+| Record                | Meaning                                                                                                                                        | Mutability  |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `pending_operations`  | One proposal: tenant, kind, structural payload, derived risk level, actor kind and label, the user whose session proposed it, expiry           | Append-only |
 | `operation_decisions` | Exactly one decision per operation: approved or rejected, outcome executed, failed or rejected, result ID or error code, reason, deciding user | Append-only |
 
 Derived status for lists: `open`, `expired`, `executed`, `failed`, `rejected`.
@@ -75,7 +75,6 @@ journey separately exercises the web decision form and `/api/operations` route.
 Apply `20260912140000_pending_operations.sql` before deploying this version.
 An older application ignores the new tables and functions.
 
-
 ## Descriptive inspection edits
 
 The existing pending-operation mechanism also supports `saveInspectionDraft`.
@@ -87,13 +86,25 @@ and reception MCP reads remain separately scoped and kind-checked. The unsaved
 preview tool remains read-only. See [contract](STAGED-INSPECTION.md) for the
 strict payload, retry behavior, actor attribution and release boundary.
 
-
 Staff reception approval now requires each included descriptive field and price
 to be checked before final confirmation. This shares the pure field catalogue
 with built-in AI review; it is a review aid, not a new SQL permission or proof of
 attention. Rejection remains available without confirmations. See
 [per-fact review](RECEPTION-FACT-REVIEW.md).
 
+## Commercial acceptance
+
+Since migration `20260913220000` the mechanism also supports `acceptItem` at
+risk `medium`: an agent stages acceptance of one origin (inspection draft at
+an exact revision, reception review at an exact version, or purchase receipt)
+at an integer öre price. Preflight checks the origin is current, not already
+accepted and, for a reception review, in custody. Approval by a different
+identity than the proposer runs `accept_item`, which re-checks the agreement
+prerequisite and the seller review mode and freezes the terms; the item id is
+the operation id. The MCP tool `komisio_propose_acceptance` needs the scope
+`items:propose`. `supabase/tests/0029_staged_accept_item.test.sql` covers
+validation, preflight, self-approval denial, approval by a second person and
+a competing proposal failing at execution with `ITEM_EXISTS`.
 
 ## Uncertain decision responses
 
@@ -107,12 +118,10 @@ HTTP rejection requires reloading the saved state. Reloading the page intentiona
 reads authoritative state; it does not silently recreate an old decision request.
 No database change, storage of browser credentials or new authority is introduced.
 
-
 The staff queue now has a separate paged read contract in
 [OPERATION-QUEUE-PAGING.md](OPERATION-QUEUE-PAGING.md). Status filters and older-page
 links keep historical proposals reachable; decision authority stays in the same
 commands. The original newest-50 RPC remains available for existing callers.
-
 
 Staged reception detail compares the candidate with its exact pinned prior
 publication; see [comparison contract](RECEPTION-REVIEW-COMPARISON.md). This is
@@ -133,7 +142,7 @@ functions and the two public functions only dispatch. To add a kind:
    error codes; returns the audit detail. One `when` line in
    `propose_operation`.
 4. `komisio_private.op_execute_<kind>(tenant, operation, payload) returns
-   uuid`: calls the engine function. One `when` line in `decide_operation`.
+uuid`: calls the engine function. One `when` line in `decide_operation`.
 5. Extend the `pending_operations` kind check constraint, the zod
    discriminated unions in `lib/engine/operations.ts`, and the MCP scope if
    agents may propose it.

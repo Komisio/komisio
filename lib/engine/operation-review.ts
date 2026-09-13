@@ -6,6 +6,7 @@ import {
   operationRow,
   publishReceptionReviewPayload,
   saveInspectionDraftPayload,
+  acceptItemPayload,
   type PendingOperation,
 } from './operations'
 import { inspectionFields } from './inspection'
@@ -99,6 +100,89 @@ export async function readOperationReview(
             before: before[field],
             after: after[field],
           })),
+        stale,
+        canApprove: !d && !expired && !stale,
+        guidanceOnly: true as const,
+      },
+    }
+  }
+  if (pending.data.kind === 'acceptItem') {
+    const p = acceptItemPayload.parse(pending.data.payload)
+    const [existing, decision, currentDraft, currentReview] = await Promise.all(
+      [
+        client
+          .from('items')
+          .select('id')
+          .eq('tenant_id', tenantId)
+          .eq('origin_kind', p.originKind)
+          .eq('origin_id', p.originId)
+          .maybeSingle(),
+        client
+          .from('operation_decisions')
+          .select(
+            'id,outcome,result_id,error_code,reason,decided_by,created_at',
+          )
+          .eq('tenant_id', tenantId)
+          .eq('operation_id', operationId)
+          .maybeSingle(),
+        p.originKind === 'inspection_draft'
+          ? client
+              .from('inspection_current')
+              .select('revision,archived')
+              .eq('tenant_id', tenantId)
+              .eq('draft_id', p.originId)
+              .maybeSingle()
+          : Promise.resolve({ data: null, error: null }),
+        p.originKind === 'reception_review'
+          ? client
+              .from('reception_reviews_current')
+              .select('version')
+              .eq('tenant_id', tenantId)
+              .eq('session_id', p.originId)
+              .maybeSingle()
+          : Promise.resolve({ data: null, error: null }),
+      ],
+    )
+    if (
+      existing.error ||
+      decision.error ||
+      currentDraft.error ||
+      currentReview.error
+    )
+      throw new Error('OPERATION_NOT_FOUND')
+    const d = decision.data,
+      expired = Date.parse(pending.data.expires_at) <= Date.now()
+    const operation = operationRow.parse({
+      ...pending.data,
+      status: d?.outcome ?? (expired ? 'expired' : 'open'),
+      decision_id: d?.id ?? null,
+      outcome: d?.outcome ?? null,
+      result_id: d?.result_id ?? null,
+      error_code: d?.error_code ?? null,
+      reason: d?.reason ?? null,
+      decided_by: d?.decided_by ?? null,
+      decided_at: d?.created_at ?? null,
+    })
+    const originCurrent =
+      p.originKind === 'inspection_draft'
+        ? currentDraft.data?.revision === p.originRevision &&
+          !currentDraft.data?.archived
+        : p.originKind === 'reception_review'
+          ? currentReview.data?.version === p.originRevision
+          : true
+    // Already accepted by anyone else, or the origin moved on: the proposal is stale.
+    const stale = (!!existing.data && !d) || !originCurrent
+    return {
+      readOnly: true as const,
+      evidenceIsUntrusted: true as const,
+      operation,
+      context: {
+        kind: 'acceptance' as const,
+        originKind: p.originKind,
+        originId: p.originId,
+        originRevision: p.originRevision,
+        priceOre: p.priceOre,
+        alreadyAccepted: !!existing.data,
         stale,
         canApprove: !d && !expired && !stale,
         guidanceOnly: true as const,

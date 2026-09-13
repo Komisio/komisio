@@ -521,7 +521,8 @@
     "reload": "Ladda om",
     "kinds": {
       "publishReceptionReview": "Publicera granskat underlag till säljaren",
-      "saveInspectionDraft": "Spara beskrivningsutkast"
+      "saveInspectionDraft": "Spara beskrivningsutkast",
+      "acceptItem": "Acceptera ursprung som vara"
     },
     "risk": {
       "low": "Låg",
@@ -543,6 +544,19 @@
       "size": "Storlek",
       "material": "Material",
       "condition": "Skick"
+    },
+    "confirmAcceptance": "Jag har kontrollerat mottagande, ursprung och pris och godkänner att varan accepteras under gällande villkor.",
+    "acceptItem": "Godkänn och acceptera vara",
+    "openOrigin": "Öppna ursprunget",
+    "proposedPrice": "Föreslaget pris",
+    "acceptanceContext": "Acceptanskontroll",
+    "acceptanceNotice": "Ursprunget måste vara aktuellt och mottaget. Godkännandet kör acceptanskommandot, som kontrollerar avtalsbevis och säljarens granskningsläge på nytt. En annan person än förslagsställaren måste godkänna.",
+    "alreadyAccepted": "Ursprunget är redan accepterat som vara.",
+    "staleAcceptance": "Ursprunget har ändrats eller redan accepterats. Avvisa förslaget.",
+    "originKinds": {
+      "inspection_draft": "Utkast från påse",
+      "reception_review": "Mottagningsunderlag",
+      "purchase": "Butiksinköp"
     },
     "reviewProposal": "Granska förslaget",
     "reviewContext": "Källor och exakta avtalsvillkor",

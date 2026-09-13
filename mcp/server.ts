@@ -32,6 +32,7 @@ import {
   receptionTools,
 } from './reception'
 import { operationErrorCodes } from '../lib/engine/operations'
+import { proposeAcceptanceInput, proposeAcceptanceTool } from './items'
 const annotations = {
   readOnlyHint: true,
   destructiveHint: false,
@@ -277,6 +278,25 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         },
       },
       (input) => result(async () => ({ data: await ops.propose(input) })),
+    )
+  if (config.scopes.includes('items:propose'))
+    server.registerTool(
+      'komisio_propose_acceptance',
+      {
+        description:
+          'Stage commercial acceptance of one origin (inspection draft at an exact revision, reception review at an exact version, or purchase receipt) at an integer öre price for staff decision. Medium risk: a different person than the proposing identity must approve; approval runs the acceptance command, which re-checks custody, agreement evidence and the seller review mode. Nothing is accepted, priced or listed by this call.',
+        inputSchema: proposeAcceptanceInput,
+        annotations: {
+          readOnlyHint: false,
+          destructiveHint: false,
+          idempotentHint: true,
+          openWorldHint: false,
+        },
+      },
+      (input) =>
+        result(async () => ({
+          data: await proposeAcceptanceTool(client, config, input),
+        })),
     )
   if (config.scopes.includes('reception:photos'))
     server.registerTool(

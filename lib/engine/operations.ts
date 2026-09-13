@@ -8,6 +8,7 @@ import { inspectionFields } from './inspection'
 export const operationKind = z.enum([
   'publishReceptionReview',
   'saveInspectionDraft',
+  'acceptItem',
 ])
 export const publishReceptionReviewPayload = z.strictObject({
   sessionId: z.uuid(),
@@ -31,6 +32,18 @@ export const saveInspectionDraftPayload = z.strictObject({
     description: z.string().trim().min(1).max(1000),
   }),
 })
+// Commercial acceptance (P1 S4): medium risk, so a different person must approve.
+export const acceptItemPayload = z
+  .strictObject({
+    originKind: z.enum(['inspection_draft', 'reception_review', 'purchase']),
+    originId: z.uuid(),
+    originRevision: z.number().int().min(1).max(2147483646).nullable(),
+    priceOre: z.number().int().min(1).max(99_999_999_999),
+  })
+  .refine(
+    (v) => (v.originKind === 'purchase') === (v.originRevision === null),
+    'Purchase origins carry no revision; the others require one',
+  )
 const proposeBase = z.strictObject({
   tenantId: z.uuid(),
   requestId: z.uuid(),
@@ -45,6 +58,10 @@ export const proposeOperationCommand = z.discriminatedUnion('kind', [
   proposeBase.extend({
     kind: z.literal('saveInspectionDraft'),
     payload: saveInspectionDraftPayload,
+  }),
+  proposeBase.extend({
+    kind: z.literal('acceptItem'),
+    payload: acceptItemPayload,
   }),
 ])
 export const decideOperationCommand = z.strictObject({
@@ -87,6 +104,10 @@ export const operationRow = z.discriminatedUnion('kind', [
     kind: z.literal('saveInspectionDraft'),
     payload: saveInspectionDraftPayload,
   }),
+  operationBaseRow.extend({
+    kind: z.literal('acceptItem'),
+    payload: acceptItemPayload,
+  }),
 ])
 export type PendingOperation = z.infer<typeof operationRow>
 export const operationErrorCodes = [
@@ -108,6 +129,12 @@ export const operationErrorCodes = [
   'INSPECTION_DRAFT_CHANGED',
   'INSPECTION_ARCHIVED',
   'INSPECTION_UNCHANGED',
+  'ORIGIN_NOT_FOUND',
+  'ITEM_EXISTS',
+  'CUSTODY_REQUIRED',
+  'SELLER_APPROVAL_REQUIRED',
+  'PRICE_NOT_APPROVED',
+  'AGREEMENT_REQUIRED',
 ] as const
 export function operationErrorCode(message: string) {
   return (

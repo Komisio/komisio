@@ -10,8 +10,10 @@ import { readStorePolicy } from '@/lib/engine/store-policy'
 import {
   notifyAfterFacts,
   notificationForOperation,
+  sendSellerCommunication,
   type NotifyOutcome,
 } from '@/lib/communications/dispatch'
+import { sendMessagePayload } from '@/lib/engine/operations'
 export async function POST(request: Request) {
   const reply = (body: object, status = 200) =>
     NextResponse.json(body, {
@@ -77,6 +79,39 @@ export async function POST(request: Request) {
                 operation.data.payload,
               )
             : null
+        // An approved template-bound message: the approval is the fact, the
+        // send follows now with the operation id as the communication id.
+        if (
+          decision.data?.outcome === 'executed' &&
+          operation.data?.kind === 'sendMessage'
+        ) {
+          const p = sendMessagePayload.parse(operation.data.payload)
+          const sent = await sendSellerCommunication(ctx.client, {
+            tenantId: c.data.tenantId,
+            storeName: ctx.active.name,
+            locale: p.locale,
+            requestId: c.data.operationId,
+            sellerId: p.sellerId,
+            kind: 'message',
+            referenceId: null,
+            freeText: p.freeText,
+          })
+          notifications = [
+            sent.ok
+              ? {
+                  kind: 'message',
+                  referenceId: c.data.operationId,
+                  status: 'notified',
+                  delivery: sent.delivery,
+                }
+              : {
+                  kind: 'message',
+                  referenceId: c.data.operationId,
+                  status: 'skipped',
+                  why: sent.error,
+                },
+          ]
+        }
         if (fact) {
           const policy = await readStorePolicy(ctx.client, c.data.tenantId)
           notifications = await notifyAfterFacts(

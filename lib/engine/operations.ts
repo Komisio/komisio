@@ -15,6 +15,7 @@ export const operationKind = z.enum([
   'bulkItemUpdate',
   'approvePayout',
   'markPayoutPaid',
+  'sendMessage',
 ])
 export const publishReceptionReviewPayload = z.strictObject({
   sessionId: z.uuid(),
@@ -124,6 +125,13 @@ export const markPayoutPaidPayload = z.strictObject({
   reference: z.string().trim().min(1).max(200),
   reason: z.string().max(500),
 })
+// Template-bound seller message (low): only the free-text block is proposed;
+// the template around it is code. Approval is the fact; the app then sends.
+export const sendMessagePayload = z.strictObject({
+  sellerId: z.uuid(),
+  locale: z.enum(['sv', 'en']),
+  freeText: z.string().trim().min(1).max(1000),
+})
 const proposeBase = z.strictObject({
   tenantId: z.uuid(),
   requestId: z.uuid(),
@@ -166,6 +174,10 @@ export const proposeOperationCommand = z.discriminatedUnion('kind', [
   proposeBase.extend({
     kind: z.literal('markPayoutPaid'),
     payload: markPayoutPaidPayload,
+  }),
+  proposeBase.extend({
+    kind: z.literal('sendMessage'),
+    payload: sendMessagePayload,
   }),
 ])
 export const decideOperationCommand = z.strictObject({
@@ -236,6 +248,10 @@ export const operationRow = z.discriminatedUnion('kind', [
     kind: z.literal('markPayoutPaid'),
     payload: markPayoutPaidPayload,
   }),
+  operationBaseRow.extend({
+    kind: z.literal('sendMessage'),
+    payload: sendMessagePayload,
+  }),
 ])
 export type PendingOperation = z.infer<typeof operationRow>
 export const operationErrorCodes = [
@@ -278,6 +294,7 @@ export const operationErrorCodes = [
   'PAYOUT_NOT_APPROVED',
   'PAYOUT_EXCEEDS_BALANCE',
   'PAYOUT_DECIDED',
+  'SELLER_EMAIL_MISSING',
 ] as const
 export function operationErrorCode(message: string) {
   return (

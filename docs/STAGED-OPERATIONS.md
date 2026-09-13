@@ -159,6 +159,21 @@ validation, preflight, self-approval denial, approval with reservation,
 payment with release, and the queue filter. MCP proposers for these kinds
 follow once a store asks for agent-driven payout handling.
 
+## Template-bound seller messages
+
+Since migration `20260914150000` the kind `sendMessage` (`low`) stages the
+free-text block of the general seller message for one seller: the payload is
+the seller, the locale and the text, nothing else, so no subject, link or
+markup can be proposed; the template around the text is code. Preflight
+requires a seller with an e-mail address. Execution records the approval and
+queues nothing in SQL; the operations route then renders, queues and sends
+through the ordinary communication path with the operation id as the
+communication id, so an approved message is sent once and appears in the
+seller's log like any staff message. The MCP tool `komisio_propose_message`
+needs the scope `communications:propose`.
+`supabase/tests/0045_staged_send_message.test.sql` covers validation,
+preflight, self-approval at low risk and the absence of SQL-side queueing.
+
 ## Uncertain decision responses
 
 The staff decision UI freezes the complete first submitted envelope: tenant,

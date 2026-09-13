@@ -980,6 +980,27 @@
     "issued": "The statement is issued.",
     "open": "Open statement"
   },
+  "handovers": {
+    "title": "Handovers",
+    "intro": "Sellers announce a bag or a box from their portal and get a reference. Receiving it here records the ordinary bag receipt under the agreement rules; the seller sees the bag number.",
+    "disabled": "Self drop-off is off: enable seller_dropoff among the custody sources in the store policy.",
+    "empty": "No handovers announced.",
+    "announced": "Announced",
+    "items": "items",
+    "note": "Note (optional)",
+    "confirm": "The bag or box is in the store now.",
+    "receive": "Receive and record the bag",
+    "openBag": "Open the bag",
+    "kinds": {
+      "bag": "Bag",
+      "box": "Box"
+    },
+    "statuses": {
+      "open": "open",
+      "received": "received",
+      "cancelled": "cancelled"
+    }
+  },
   "economy": {
     "title": "Economy",
     "intro": "The store's numbers for a period, computed from the same facts and with the same sums as the day close: sales with VAT per mode, commission, seller credit, returns and paid payouts.",
@@ -1230,6 +1251,21 @@
     "empty": "No purchases registered yet."
   },
   "sellerPortal": {
+    "handovers": "Hand in items",
+    "handoverIntro": "Announce a bag or a box before you bring it. Show the reference at the counter; the store records it as your bag and you see the bag number here.",
+    "handoverDisabled": "This store does not take announced drop-offs yet. Bring your items to the counter.",
+    "handoverKind": "What you bring",
+    "handoverKinds": { "bag": "Bag", "box": "Box" },
+    "estimatedItems": "About how many items",
+    "handoverNote": "Note to the store (optional)",
+    "announce": "Announce",
+    "showReference": "Show this reference at the counter or at the locker.",
+    "cancelHandover": "Cancel",
+    "handoverStatuses": {
+      "open": "announced",
+      "received": "received by the store",
+      "cancelled": "cancelled"
+    },
     "title": "My sales",
     "empty": "No seller matches your verified email. Contact the store if an account is missing.",
     "available": "Available",

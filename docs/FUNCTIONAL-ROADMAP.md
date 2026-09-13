@@ -342,7 +342,10 @@ and `store:propose` (migration `20260915120000`, see
 [STORE-PROFILE.md](STORE-PROFILE.md)). Pilot gates delivered as far as code can take them: the tenant
 isolation sweep, the seller data export and the restore exercise (migration
 `20260915130000`, see [PILOT-GATES.md](PILOT-GATES.md)); retention policy,
-hosted point-in-time recovery and storage backup remain owner actions
+hosted point-in-time recovery and storage backup remain owner actions. Self drop-off delivered: seller handovers with a reference, received
+at the counter as the ordinary bag receipt, behind the policy's
+`seller_dropoff` custody source (migration `20260915140000`, see
+[SELF-DROPOFF.md](SELF-DROPOFF.md)); locker hardware and QR rendering follow
 (migration `20260915100000`, see [SETTLEMENT.md](SETTLEMENT.md)).
 
 | Phase                                       | Theme                    | Slices                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Needs from owner                                                                                                                        |

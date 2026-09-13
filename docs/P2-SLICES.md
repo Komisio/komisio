@@ -237,8 +237,14 @@ Purpose: the e-mail-first seller communication decided in P1 answers.
   transition (migration `20260914060000`), versioned plain-text templates for
   the five P2 triggers plus a general message, Resend transport with the
   pilot allowlist rules, `/api/communications` route (render, queue, send,
-  record), seller page log and send form. Sending is staff-triggered; the
-  automatic triggers and the staged agent kind follow.
+  record), seller page log and send form. Automatic triggers delivered with
+  migration `20260914140000`: when the store policy sets
+  `automaticSellerNotifications`, an accepted item, each sold line, an
+  approved or paid payout and an issued statement queue and send the matching
+  template through the same logged path, whether the fact came from a staff
+  command or an approved staged operation; the message id derives from the
+  fact, so a fact notifies once, and a failure never hides the fact. The
+  staged agent kind `sendMessage` follows.
 
 ## S19. Labels and the local print agent
 

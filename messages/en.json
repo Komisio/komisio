@@ -1175,10 +1175,10 @@
   },
   "zettle": {
     "title": "Zettle integration",
-    "intro": "Import whole receipts, match each item and ask another staff member to approve the sale.",
+    "intro": "Send accepted items to Zettle. Matched checkout receipts automatically record the sale and seller credit.",
     "offline": "Live connection is not configured. No Zettle account is contacted.",
-    "fixture": "LOCAL TEST DATA ONLY: approvals create synthetic sales in the local store.",
-    "sync": "Sync test receipts",
+    "fixture": "LOCAL TEST ONLY: products and checkout purchases are simulated. No real Zettle account is contacted.",
+    "sync": "Sync test products and receipts",
     "lastSync": "Last successful sync",
     "never": "No sync yet",
     "empty": "No imported receipts.",
@@ -1212,7 +1212,7 @@
       "ZETTLE_PURCHASE_CONFLICT": "This receipt has changed in Zettle. Investigate the original receipt; no existing sale was changed.",
       "ZETTLE_MATCH_CHANGED": "The matching changed. Reload and review the latest version.",
       "ZETTLE_ALREADY_RECORDED": "This receipt is already recorded. Its matching cannot change.",
-      "ZETTLE_UNMATCHED_LINES": "Match every row before proposing the whole sale.",
+      "ZETTLE_UNMATCHED_LINES": "Match every row. The receipt is recorded automatically after the final match.",
       "ZETTLE_UNSUPPORTED_PURCHASE": "This receipt needs investigation in Zettle. Unsupported amounts or discounts are never guessed.",
       "ITEM_NOT_FOUND": "The item was not found in this store. Check its full ID.",
       "ITEM_ALREADY_SOLD": "An item has already been sold. Check the receipt and matching.",
@@ -1220,8 +1220,26 @@
       "INVALID_INPUT": "Check that every row points to a different item with a valid ID.",
       "REQUEST_CONFLICT": "This request no longer matches the recorded attempt. Reload and check the result.",
       "FORBIDDEN": "Your current role or sign-in cannot perform this action.",
-      "AUTH_REQUIRED": "Sign in again to continue."
+      "AUTH_REQUIRED": "Sign in again to continue.",
+      "ZETTLE_VAT_MAPPING_REQUIRED": "VAT mapping is missing for this item mode.",
+      "ZETTLE_REMOTE_CHANGED": "The product changed in Zettle. Investigate the difference.",
+      "ZETTLE_REMOTE_MISSING": "A previously synced product is missing in Zettle.",
+      "ZETTLE_CONFIG_CHANGED": "The configuration changed. Reload.",
+      "ZETTLE_WRONG_MERCHANT": "The connection belongs to another merchant.",
+      "ZETTLE_RATE_LIMITED": "Zettle is rate limiting requests. Retry later."
     },
-    "approvalHint": "A different staff member must approve the proposal in the queue before the sale and seller credit are recorded."
+    "approvalHint": "Matched receipts are recorded automatically. Only exceptions need investigation; no second approver is required.",
+    "held": "The receipt could not be recorded. Investigate before retrying.",
+    "retryReceipt": "Retry recording receipt",
+    "catalogIssues": "Receipts were read. Some products could not sync; check product status.",
+    "catalogTitle": "Products to Zettle",
+    "catalogHint": "Up to five items per sync. Prices come from Komisio. External changes are checked before updating.",
+    "pendingProducts": "Waiting items (up to 20 shown)",
+    "vatTitle": "VAT mapping to Zettle",
+    "vatHint": "Set the POS VAT rate for each mode. Blank blocks export for that mode. This does not change Komisio VAT calculations. Verify against the merchant settings and accounting before live use.",
+    "saveMapping": "Save VAT mapping",
+    "productStatus": "Recent product attempts",
+    "synced": "Synced",
+    "productFailed": "Could not sync"
   }
 }

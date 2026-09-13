@@ -1,96 +1,95 @@
-# Zettle purchase import (Astra task 4)
+# Zettle product and purchase synchronization
 
-This slice tests the import and financial boundary with synthetic purchase
-payloads. It does not connect to a merchant, register an OAuth app, fetch live
-purchases, process Zettle payments, or send seller e-mails.
+Owner correction, 2026-09-13: Komisio supplies saleable items to the POS; the
+completed checkout returns as a fact, not an AI proposal requiring a second
+employee. PR91's staged import requirement is superseded. Historical operations
+remain readable; new normal imports use the automatic engine path.
 
-## Workflow
+## Implemented and testable without a merchant account
 
-1. In a local test store, open Intake → Zettle integration and sync test receipts.
-2. The engine stores a minimized immutable receipt and a cursor checkpoint in
-   one transaction. Importing or resolving a line creates no sale or seller credit.
-3. A complete exact `I-XXXXXXXX` label in the documented SKU, barcode or comment
-   matches only a unique item in that store. Conflicting labels, missing items and
-   short UUID collisions remain in `unmatched_sale_lines`. Initial unmatched facts
-   are retained; append-only resolutions determine the current result.
-4. Open the receipt. Resolve missing/incorrect matches with a full item UUID from
-   the item page URL. Each change checks the mapping revision; a foreign item is
-   refused even when the operator belongs to both stores.
-5. Propose the whole purchase. `recordZettlePurchase` is medium risk and requires
-   a different authenticated staff member to approve through the existing queue.
-   The review shows the immutable receipt and the mapping as of the proposed
-   revision. Subsequent changes make the old proposal stale. SQL rechecks at approval.
-6. Approval calls the existing `record_sale`, provider `zettle`, external ID
-   `purchaseUUID1`. Existing SQL computes tax, commission, item events and seller
-   credit atomically. Replaying a purchase cannot add sale lines or credits again.
+1. The owner/admin publishes an explicit POS VAT-rate mapping for the existing
+   engine VAT modes. There is no guessed mapping or change to engine tax rules.
+2. The engine snapshots accepted, unsold items: frozen description, current price
+   in minor units, policy revision and configuration. Each item retains a distinct
+   product UUID and variant UUID across retries and price changes.
+3. The adapter verifies merchant identity, creates the product through the Product
+   Library API, or updates a previously delivered version with its exact ETag.
+   Remote changes are held, not overwritten. The outcome is append-only.
+4. A purchase from Zettle is minimized and stored with its cursor checkpoint.
+   Exact product/variant pairs match within the tenant. Legacy receipts without
+   either identifier can use a unique full Komisio label. Unknown provided IDs
+   never fall back to a coincidentally matching label.
+5. Fully matched supported receipts call the existing `record_sale` automatically.
+   Sale status and seller credit are atomic and idempotent. There is no second
+   approver and no AI auto-approval scope. Whole receipts with missing matches or
+   unsupported facts stop; staff resolution of the final missing match retries
+   the whole receipt automatically. Imported amounts are never edited.
 
-The latest successful sync and a paginated receipt list are available at
-`/intake/integrations`; each receipt has a stable detail URL. Failed HTTP requests
-show an error without advancing the cursor. A lost response retains its request
-ID, and a retry reads the committed page instead of refetching a moving page.
-There is no background sync or durable failure history in this slice.
+The UI shows receipts, waiting products, product attempt history and configuration.
+A bounded pass reads one purchase page first, then sends up to five products.
+This order reduces stale exports of items already sold. It is not a scheduled
+worker. Lost HTTP responses retain the request envelope; replay does not double
+seller credit. Catalog jobs bind price, configuration and policy versions.
+Identity, membership and MFA remain enforced by SQL; no service-role client is
+introduced. Integration evidence is not a second financial ledger.
 
-## Deliberate scope decisions
+## Run the complete local journey
 
-Fable's dispatcher stack is merged. The new medium-risk kind follows that stack;
-no auto-execution scope was added. Identity, role and MFA remain database-enforced.
-Integration tables contain evidence and matching history, not a second financial
-ledger. There is no service-role client in the extension or application.
+Use existing local Supabase (never reset a shared database), apply additive
+migrations and run `node scripts/configure-local.mjs`. The command
+`node node_modules/@playwright/test/cli.js test tests/e2e/zettle.spec.ts` starts
+both the app and the local HTTP simulator. It creates two accepted items,
+configures a synthetic VAT mapping, exports products, updates one price, simulates
+checkout in the provider fixture, and imports the sale. It checks automatic seller
+credit with one owner, concurrent replay, a lost response, and mobile layout.
 
-Task 4's phrase "record_sale for that line" conflicts with the immutable complete
-payload of an existing external receipt. This implementation holds the _whole_
-purchase until every row is resolved, then calls the existing engine once. It
-never manufactures per-line external IDs or appends to a previously recorded sale.
+For manual local use, start `node --import tsx tests/fixtures/zettle-server.ts`
+with `NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321`, then run the app with
+`KOMISIO_INTAKE_ENABLED=true` and `KOMISIO_ZETTLE_FIXTURES=true`.
+Open `/intake/integrations`, configure the test VAT mapping, and sync accepted
+items. The test-only simulator accepts `POST /_test/sell` on port3456 with
+`Authorization: Bearer fixture:<local-tenant-uuid>` and body
+`{"ids":["exported-product-uuid"]}`. Sync again to see the automatic sale.
+This endpoint is local test infrastructure, not a Komisio checkout feature.
+The Playwright test demonstrates the exact request and assertions.
 
-Only positive SEK POS receipts, supported product types, unit quantities, unique
-items and matching gross totals are accepted. Discounts, refunds/already refunded
-receipts, service charges and other unsupported cases are held. Inspect their
-original receipts in Zettle; this adapter does not guess their financial treatment
-or allow staff to change the imported prices. Unknown payment/card/employee/GPS
-fields are discarded. The fixture data is original synthetic data shaped after
-the documented API, **not merchant recordings**. See [the transport contract](../extensions/zettle/README.md).
+Both app and database must be loopback for the fixture connector. Never enable
+fixtures in staging. The simulator binds only127.0.0.1 and uses original synthetic
+payloads; these are not merchant recordings or proof of live interoperability.
 
-## Local verification
+Relevant tests: `tests/unit/zettle*.test.ts` (mapping and HTTP contracts),
+`supabase/tests/0051_zettle.test.sql` and `0052_zettle_catalog.test.sql` (SQL
+identity/immutability/financial boundaries), and `tests/e2e/zettle.spec.ts`.
+Migrations through20260915008000 have been applied locally and are immutable.
+Release CI and staging evidence belongs in the PR and private checkpoint.
 
-Start the existing local Supabase, apply additive migrations and run
-`node scripts/configure-local.mjs`. Set `KOMISIO_INTAKE_ENABLED=true` and
-`KOMISIO_ZETTLE_FIXTURES=true` for the local dev process. Both app and Supabase URLs
-must use `localhost` or `127.0.0.1`; the test transport cannot be enabled against
-hosted data by setting the flag alone. Never configure this flag in staging.
-The Playwright-managed local server sets the fixture flag explicitly.
+## Before live use
 
-- `tests/unit/zettle.test.ts`: documented mapping, unsupported/malformed payloads,
-  minimization, cursor and transport behavior, hosted configuration refusal.
-- `supabase/tests/0051_zettle.test.sql`: import replay, exact receipts, cursor
-  conflicts, no partial sale, matching revision, label collisions, cross-store
-  items, RLS/roles/MFA, immutable facts, second-person approval and seller credit.
-- `tests/e2e/zettle.spec.ts`: local fixture sync with a dropped successful response,
-  manual matches, actual browser approval, mobile layout, parallel HTTP proposal
-  replay and conflicting decisions; one sale/two lines/one credit per seller line.
+Zettle documents no sandbox. A merchant/developer app is needed for a controlled
+live acceptance test, not for the simulator above. The app deliberately has no
+live credential activation yet. Remaining work:
 
-Migrations `20260915004000`, `20260915005000` and `20260915006000` have been applied
-locally and must not be edited. Release CI/staging evidence is recorded in the PR.
+- OAuth consent, encrypted refresh/revocation and durable merchant-to-tenant
+  binding. The HTTP adapter already checks `/users/self` but is not a credential
+  lifecycle or background service.
+- Stable purchase windows, overlap, reconciliation and durable retry scheduling.
+  `lastPurchaseHash` is a page cursor, not a verified incremental watermark.
+- Inventory tracking and initial stock1 for each unique item, delisting/ending
+  items and return handling. Product Library export alone is not inventory
+  synchronization. Inventory movement identifiers are not documented idempotency
+  keys; do not blindly replay stock increments.
+- Verify each POS VAT mapping, receipts, item label scanning and product response
+  fields against the actual merchant. Full PUT refuses external non-empty fields
+  it cannot preserve. Review rather than weaken that check blindly.
+- Explicit contracts for discounts, refunds, service charges, non-unit quantities
+  and changed receipts. Currently they are held without inventing accounting.
 
-## Live work remaining
-
-The owner must provide a Zettle developer app and test merchant. Implement OAuth,
-secret storage/refresh/revocation and verified merchant-to-tenant binding, then
-plug the authenticated transport into the same engine path. Bound request sizes,
-timeouts and pagination; add rate-limit/backoff handling and observable failures.
-`lastPurchaseHash` is a pagination cursor, **not a verified durable incremental
-watermark**. Define a stable retrieval window, overlap and reconciliation/recovery
-before scheduled sync. Validate real test-merchant payloads and label placement.
-Unsupported discounts, refunds and receipt changes require separate explicit
-financial contracts and fixtures before they can be enabled. No live readiness
-claim is made by a successful synthetic journey.
+No seller e-mail or actual payment is triggered by this connector. A successful
+synthetic test does not establish production readiness.
 
 ## Staging and rollback
 
-Apply only the reviewed additive migrations to the known staging project after
-required CI passes; publish the app through the protected merge. Existing roles
-and financial engine signatures remain unchanged. Staging exposes the offline
-status; no test purchase is injected there. Smoke-check authentication, foreign
-origin rejection and the new routes. If the new surface fails, revert the app
-change through a PR; retain immutable imported evidence and applied migrations.
-Never delete sales or matching history as a rollback. Do not enable live sync
-until the live prerequisites above are tested.
+Apply reviewed additive migrations after required CI, then merge through the
+protected PR. Staging shows the disconnected state; do not inject synthetic sales.
+Verify authentication and origin rejection. If needed, revert the app via PR;
+retain immutable evidence and applied migrations, never delete sales as rollback.

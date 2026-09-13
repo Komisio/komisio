@@ -1,22 +1,28 @@
-# Zettle fixture pull
+# Zettle API adapter
 
-Contract source: [Zettle Purchase API](https://developer.zettle.com/docs/api/purchase/api-reference-md)
-and its [official reference source](https://github.com/iZettle/api-documentation/blob/master/purchase.adoc),
-read 2026-09-13. Purchase identifiers use purchaseUUID1; deprecated purchaseUUID
-is not used. Amounts/unit prices are minor units; quantity is text. Cursor
-pagination uses lastPurchaseHash. References are read from documented sku,
-barcode or comment only when the entire value matches an existing Komisio label.
+Current official references, checked2026-09-13:
 
-Recordings are synthetic examples of the documented shape, not recordings from
-a merchant account. No card/employee/location data is retained. Fixture transport
-has no network. Unknown response fields are discarded. A conflicting label,
-ambiguous short item id or missing reference requires explicit staff resolution.
+- [Product Library OpenAPI](https://developer.zettle.com/docs/api/product-library/reference)
+- [Create products](https://developer.zettle.com/docs/api/product-library/user-guides/manage-products/create-products)
+- [Purchase API](https://developer.zettle.com/docs/api/purchase/api-reference-md)
+- [Inventory API](https://developer.zettle.com/docs/api/inventory/reference)
+- [FAQ: no sandbox](https://developer.zettle.com/docs/faq)
 
-The first slice accepts positive SEK POS purchases with one unique garment per
-row and matching gross totals. Refunds, already-refunded receipts, discounts,
-service charges, gift cards, multi-unit rows and inconsistent amounts are held
-for review, never silently converted. Tax/provision/ledger arithmetic stays SQL.
-A whole purchase waits for all lines; matched subsets must not be recorded and
-later extended under the same receipt UUID. API cursor paging is not yet a live
-incremental sync watermark: live work needs a stable retrieval window, overlap,
-rate-limit recovery and authenticated merchant binding.
+The older `iZettle/api-documentation` repository is deprecated; current developer
+site specifications govern this adapter. No third-party source code is copied.
+
+`http.ts` uses fixed official API hosts, an injected token provider, bounded JSON,
+timeouts, no redirects, merchant identity verification and conditional ETag PUT.
+A retry GET reconciles a lost create/update acknowledgement using stable UUIDs.
+401/403,429 and5xx are surfaced without blindly replaying mutations. The app only
+wires this adapter to the loopback HTTP simulator today; OAuth activation is pending.
+
+`catalog.ts` describes the managed one-variant product. `purchase.ts` minimizes
+receipts; purchaseUUID1 is the external receipt identity, monetary amounts are
+minor units, quantity is text, and lastPurchaseHash is pagination. Exact exported
+product/variant IDs are preserved for engine matching. Card/employee/location
+fields are discarded. Unsupported financial cases stop for resolution.
+
+The simulator is original synthetic data shaped after these specifications, not
+recorded merchant traffic. It deliberately does not claim inventory coverage.
+See [workflow, tests and live prerequisites](../../docs/ZETTLE-FIXTURE-PULL.md).

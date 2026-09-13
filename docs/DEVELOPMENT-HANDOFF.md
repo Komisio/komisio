@@ -1,3 +1,16 @@
+## Zettle owner correction checkpoint, 2026-09-13
+
+PR91 merged at689cfcb. The owner then clarified automatic POS facts and outbound
+product sync. Current branch `astra/zettle-product-sync`, worktree
+`komisio-zettle-sync`, supersedes the approval requirement below. See
+[Zettle workflow](ZETTLE-FIXTURE-PULL.md). Product snapshots and conditional HTTP
+export, automatic matched sales, explicit POS VAT mapping and a complete local
+HTTP simulator are implemented. New migrations07000/08000 are local and immutable;
+release evidence belongs in this correction PR. Do not enable hosted fixtures.
+Remaining live work: OAuth/merchant lifecycle, inventory and delisting, durable
+windowed sync and agreed exception handling. Resume other Astra priorities only
+after required CI and protected merge. Earlier checkpoints below are historical.
+
 ## Astra task 4 checkpoint — 2026-09-13
 
 Tasks 1–3 are merged: PR88 (2340a91), PR89 (19d74bf), PR90 (8809a97).

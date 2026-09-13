@@ -1175,10 +1175,10 @@
   },
   "zettle": {
     "title": "Zettle-integration",
-    "intro": "Importera hela kvitton, matcha varje plagg och låt en annan medarbetare godkänna försäljningen.",
+    "intro": "Skicka accepterade varor till Zettle. Matchade kassakvitton registrerar automatiskt försäljningen och säljarens saldo.",
     "offline": "Livekopplingen är inte konfigurerad. Inget Zettle-konto kontaktas.",
-    "fixture": "ENDAST LOKALA TESTDATA: godkännanden skapar testförsäljningar i den lokala butiken.",
-    "sync": "Hämta testkvitton",
+    "fixture": "ENDAST LOKALT TEST: produkterna och kassaköpen simuleras. Inget riktigt Zettle-konto kontaktas.",
+    "sync": "Synka testprodukter och kvitton",
     "lastSync": "Senaste lyckade hämtning",
     "never": "Ingen hämtning ännu",
     "empty": "Inga importerade kvitton.",
@@ -1212,7 +1212,7 @@
       "ZETTLE_PURCHASE_CONFLICT": "Kvittot har ändrats i Zettle. Kontrollera originalkvittot; ingen tidigare försäljning har ändrats.",
       "ZETTLE_MATCH_CHANGED": "Matchningen har ändrats. Ladda om och granska senaste versionen.",
       "ZETTLE_ALREADY_RECORDED": "Kvittot är redan registrerat. Matchningen kan inte ändras.",
-      "ZETTLE_UNMATCHED_LINES": "Matcha alla rader innan du föreslår hela försäljningen.",
+      "ZETTLE_UNMATCHED_LINES": "Matcha alla rader. När sista raden matchas registreras kvittot automatiskt.",
       "ZETTLE_UNSUPPORTED_PURCHASE": "Kvittot behöver utredas i Zettle. Belopp eller rabatter som saknar stöd gissas aldrig.",
       "ITEM_NOT_FOUND": "Varan hittades inte i denna butik. Kontrollera dess fullständiga ID.",
       "ITEM_ALREADY_SOLD": "En vara är redan såld. Kontrollera kvittot och matchningen.",
@@ -1220,8 +1220,26 @@
       "INVALID_INPUT": "Kontrollera att varje rad pekar på en egen vara med ett giltigt ID.",
       "REQUEST_CONFLICT": "Begäran stämmer inte med det sparade försöket. Ladda om och kontrollera resultatet.",
       "FORBIDDEN": "Din roll eller inloggning tillåter inte denna åtgärd.",
-      "AUTH_REQUIRED": "Logga in igen för att fortsätta."
+      "AUTH_REQUIRED": "Logga in igen för att fortsätta.",
+      "ZETTLE_VAT_MAPPING_REQUIRED": "Momsmappning saknas för varans läge.",
+      "ZETTLE_REMOTE_CHANGED": "Produkten har ändrats i Zettle. Utred skillnaden.",
+      "ZETTLE_REMOTE_MISSING": "En tidigare synkad produkt saknas i Zettle.",
+      "ZETTLE_CONFIG_CHANGED": "Inställningen har ändrats. Ladda om.",
+      "ZETTLE_WRONG_MERCHANT": "Anslutningen tillhör en annan butik.",
+      "ZETTLE_RATE_LIMITED": "Zettle begränsar anropen. Försök senare."
     },
-    "approvalHint": "En annan medarbetare behöver godkänna förslaget i kön innan försäljningen och säljarens saldo registreras."
+    "approvalHint": "Matchade kvitton registreras automatiskt. Endast avvikelser behöver utredas; ingen andra godkännare krävs.",
+    "held": "Kvittot kunde inte bokas. Utred orsaken innan nytt försök.",
+    "retryReceipt": "Försök registrera kvittot igen",
+    "catalogIssues": "Kvittona har lästs. Vissa produkter kunde inte synkas; se produktstatus.",
+    "catalogTitle": "Produkter till Zettle",
+    "catalogHint": "Högst fem varor skickas per synkning. Priser hämtas från Komisio. Ändringar i Zettle skrivs inte över utan kontroll.",
+    "pendingProducts": "Varor som väntar (högst 20 visas)",
+    "vatTitle": "Momsmappning till Zettle",
+    "vatHint": "Ange den momssats som ska användas i Zettle för varje läge. Tomt fält stoppar exporten för det läget. Detta ändrar inte Komisios momsberäkning. Mappningen måste verifieras mot butikens Zettle-inställningar och redovisning innan drift.",
+    "saveMapping": "Spara momsmappning",
+    "productStatus": "Senaste produktförsök",
+    "synced": "Synkad",
+    "productFailed": "Kunde inte synkas"
   }
 }

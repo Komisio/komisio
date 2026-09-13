@@ -13,11 +13,19 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     trace: 'retain-on-failure',
   },
-  webServer: {
-    command: 'npm run dev',
-    env: { KOMISIO_ZETTLE_FIXTURES: 'true' },
-    url: 'http://127.0.0.1:3000/login',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120000,
-  },
+  webServer: [
+    {
+      command: 'node --import tsx tests/fixtures/zettle-server.ts',
+      url: 'http://127.0.0.1:3456/health',
+      reuseExistingServer: !process.env.CI,
+      env: { NEXT_PUBLIC_SUPABASE_URL: 'http://127.0.0.1:54321' },
+    },
+    {
+      command: 'npm run dev',
+      env: { KOMISIO_ZETTLE_FIXTURES: 'true' },
+      url: 'http://127.0.0.1:3000/login',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120000,
+    },
+  ],
 })

@@ -2,7 +2,11 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
-import { readZettleStatus, zettlePageCursor } from '@/lib/engine/zettle'
+import {
+  readZettleStatus,
+  readZettleCatalog,
+  zettlePageCursor,
+} from '@/lib/engine/zettle'
 import { zettleFixturesEnabled } from '@/extensions/zettle/fixtures'
 import { ZettleAction } from '@/components/intake/zettle-action'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
@@ -27,7 +31,8 @@ export default async function Integrations({
       a.id,
       paging?.success ? paging.data : undefined,
     ),
-    fixtures = zettleFixturesEnabled()
+    fixtures = zettleFixturesEnabled(),
+    catalog = await readZettleCatalog(ctx.client, a.id)
   return (
     <>
       <div className="page-heading">
@@ -56,6 +61,40 @@ export default async function Integrations({
             label={d.sync}
           />
         )}
+        <h2>{d.catalogTitle}</h2>
+        <p>{d.catalogHint}</p>
+        <p>
+          {d.pendingProducts}: {catalog.candidates.length}
+        </p>
+        <details>
+          <summary>{d.vatTitle}</summary>
+          <p>{d.vatHint}</p>
+          {['owner', 'admin'].includes(a.role) && (
+            <ZettleAction
+              key={catalog.config?.id ?? 'new'}
+              command={{
+                action: 'configure',
+                tenantId: a.id,
+                previousId: catalog.config?.id ?? null,
+                vatMap: catalog.config?.vat_map ?? {},
+              }}
+              d={d}
+              label={d.saveMapping}
+              vatModes={all.sales.vatModes}
+            />
+          )}
+        </details>
+        <details>
+          <summary>{d.productStatus}</summary>
+          {catalog.outcomes.map((o, i) => (
+            <p key={`${o.export_id}-${i}`}>
+              {o.status === 'synced' ? d.synced : d.productFailed}
+              {o.error_code
+                ? `: ${(d.errors as Record<string, string>)[o.error_code] ?? d.failed}`
+                : ''}
+            </p>
+          ))}
+        </details>
         <h2>{d.recent}</h2>
         {!state.imports.length && <p>{d.empty}</p>}
         {state.imports.map((r) => (

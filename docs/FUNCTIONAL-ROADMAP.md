@@ -32,6 +32,11 @@ identity or payout integrations. Owner answers on 2026-09-12: store-owned
 (purchased) items are in scope for the first sale slice; Zettle is the first
 POS; four label templates ship on day one; sellers are notified by e-mail first.
 
+Owner correction 2026-09-13: Zettle integration must cover Komisio saleable items
+out to the POS and completed sales back automatically. Normal sale imports do
+not require a second employee approval; the generic AI proposal rule does not
+apply to verified checkout facts. Outbound product sync moves forward from P3.
+
 ## 1. Reading the earlier system
 
 The earlier product grew into three surfaces around one back end:

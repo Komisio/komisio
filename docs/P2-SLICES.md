@@ -70,7 +70,12 @@ p_currency, p_lines)`: staff or integration actor; every item must be
 
 ## S12. Zettle sales pull
 
-Purpose: the first POS integration, pull only.
+Owner correction, 2026-09-13: the first POS integration includes outbound
+saleable items and automatic inbound completed sales. No second-person approval
+for normal POS facts. Product creation is brought forward from P3. Only
+ambiguous mappings and unsupported receipts need staff resolution.
+
+The older sequencing below is historical where it conflicts with that decision.
 
 - `extensions/zettle/`: OAuth connection per tenant (client id and key
   stored encrypted, tokens refreshed), pull purchases since a cursor, map

@@ -1,6 +1,8 @@
 import { z } from 'zod'
 const money = z.number().int().min(-99_999_999_999).max(99_999_999_999)
 const product = z.object({
+  productUuid: z.uuid().nullable().optional(),
+  variantUuid: z.uuid().nullable().optional(),
   quantity: z.string().max(32),
   type: z.string().max(40),
   unitPrice: money,
@@ -25,6 +27,8 @@ const wire = z.object({
   serviceCharge: z.unknown().optional(),
 })
 export const importLine = z.strictObject({
+  productUuid: z.uuid().nullable().optional(),
+  variantUuid: z.uuid().nullable().optional(),
   lineNo: z.number().int().min(1).max(50),
   reference: z
     .string()
@@ -70,6 +74,12 @@ export function mapZettlePurchase(input: unknown): ImportedPurchase {
       ),
     ]
     return {
+      ...(row.productUuid
+        ? { productUuid: row.productUuid.toLowerCase() }
+        : {}),
+      ...(row.variantUuid
+        ? { variantUuid: row.variantUuid.toLowerCase() }
+        : {}),
       lineNo: i + 1,
       reference: refs.length === 1 ? refs[0] : null,
       labelConflict: refs.length > 1,

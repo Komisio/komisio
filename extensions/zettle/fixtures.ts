@@ -1,3 +1,4 @@
+import { zettleHttpClient } from './http'
 import { fixtureZettleTransport } from './transport'
 /** Synthetic, documented wire shape. No merchant/customer/card data. */
 export function demoTransport() {
@@ -49,4 +50,30 @@ export function zettleFixturesEnabled(
   } catch {
     return false
   }
+}
+
+/** Exercise the real HTTP adapter against an isolated loopback simulator. */
+export function localZettleClient(tenantId: string) {
+  if (!zettleFixturesEnabled()) throw new Error('ZETTLE_NOT_CONNECTED')
+  return zettleHttpClient({
+    organizationId: tenantId,
+    accessToken: async () => `fixture:${tenantId}`,
+    startDate: '2020-01-01T00:00:00.000Z',
+    endDate: '2100-01-01T00:00:00.000Z',
+    fetch: async (input, init) => {
+      const url = new URL(String(input))
+      if (
+        ![
+          'products.izettle.com',
+          'purchase.izettle.com',
+          'oauth.zettle.com',
+        ].includes(url.hostname)
+      )
+        throw new Error('ZETTLE_UNEXPECTED_HOST')
+      return fetch(
+        `http://127.0.0.1:3456/${url.hostname}${url.pathname}${url.search}`,
+        init,
+      )
+    },
+  })
 }

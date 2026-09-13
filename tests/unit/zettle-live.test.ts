@@ -1,3 +1,4 @@
+import { mapZettlePage } from '../../extensions/zettle/purchase'
 import { expect, it, vi } from 'vitest'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { pullZettlePurchases } from '../../lib/engine/zettle-live'
@@ -126,3 +127,12 @@ it('denies a changed pinned merchant before any provider request', async () => {
   ).rejects.toThrow('ZETTLE_NOT_CONNECTED')
   expect(s.factory).not.toHaveBeenCalled()
 })
+
+it.each([undefined, null, ''])(
+  'accepts an empty terminal page without a usable hash: %s',
+  (hash) => {
+    expect(
+      mapZettlePage({ purchases: [], lastPurchaseHash: hash }, 'previous'),
+    ).toEqual({ purchases: [], nextCursor: 'previous' })
+  },
+)

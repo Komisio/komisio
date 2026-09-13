@@ -72,4 +72,8 @@ migrations through `20260915130000`; every table matched.
 - Retention policy and erasure procedure for seller contact data.
 - Storage object backup on the hosted project.
 - Point-in-time recovery selection on the hosted plan.
+- pg_cron enabled on the hosted project, then
+  `select cron.schedule('komisio-automatic-markdowns','15 3 * * *','select komisio_private.run_automatic_markdowns()')`
+  (the markdown agent's daily run; the migration schedules it only where the
+  extension already exists).
 - A complete authenticated hosted journey exercised by the owner.

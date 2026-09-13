@@ -18,6 +18,7 @@ export const operationKind = z.enum([
   'sendMessage',
   'exportDayClose',
   'recordZettlePurchase',
+  'settlePayouts',
 ])
 export const publishReceptionReviewPayload = z.strictObject({
   sessionId: z.uuid(),
@@ -140,6 +141,25 @@ export const recordZettlePurchasePayload = z.strictObject({
   importId: z.uuid(),
   mappingRevision: z.number().int().min(0).max(999999999),
 })
+// Settlement batch (medium, P3): one payout per listed seller, requested and
+// approved together as the approver; refused whole if any seller is below the
+// threshold, over its balance or already has an open payout.
+export const settlePayoutsPayload = z.strictObject({
+  sellers: z
+    .array(
+      z.strictObject({
+        sellerId: z.uuid(),
+        amountOre: z.number().int().min(1).max(99_999_999_999),
+      }),
+    )
+    .min(1)
+    .max(100)
+    .refine(
+      (list) => new Set(list.map((s) => s.sellerId)).size === list.length,
+      'Each seller once',
+    ),
+  reason: z.string().trim().min(1).max(500),
+})
 const proposeBase = z.strictObject({
   tenantId: z.uuid(),
   requestId: z.uuid(),
@@ -194,6 +214,10 @@ export const proposeOperationCommand = z.discriminatedUnion('kind', [
   proposeBase.extend({
     kind: z.literal('recordZettlePurchase'),
     payload: recordZettlePurchasePayload,
+  }),
+  proposeBase.extend({
+    kind: z.literal('settlePayouts'),
+    payload: settlePayoutsPayload,
   }),
 ])
 export const decideOperationCommand = z.strictObject({
@@ -276,6 +300,10 @@ export const operationRow = z.discriminatedUnion('kind', [
     kind: z.literal('recordZettlePurchase'),
     payload: recordZettlePurchasePayload,
   }),
+  operationBaseRow.extend({
+    kind: z.literal('settlePayouts'),
+    payload: settlePayoutsPayload,
+  }),
 ])
 export type PendingOperation = z.infer<typeof operationRow>
 export const operationErrorCodes = [
@@ -317,6 +345,8 @@ export const operationErrorCodes = [
   'PAYOUT_NOT_REQUESTED',
   'PAYOUT_NOT_APPROVED',
   'PAYOUT_EXCEEDS_BALANCE',
+  'PAYOUT_BELOW_THRESHOLD',
+  'PAYOUT_PENDING',
   'PAYOUT_DECIDED',
   'SELLER_EMAIL_MISSING',
   'DAY_CLOSE_NOT_FOUND',

@@ -9,6 +9,7 @@ import {
   proposeOperationCommand,
   recordReturnPayload,
   sendMessagePayload,
+  settlePayoutsPayload,
 } from '../../lib/engine/operations'
 
 const a = '11111111-1111-4111-8111-111111111111'
@@ -121,6 +122,40 @@ it('message: seller, locale and free text only; export: one day close', () => {
   expect(exportDayClosePayload.safeParse({ dayCloseId: 'x' }).success).toBe(
     false,
   )
+})
+
+it('settlement: each seller once, positive öre, a note, at most 100 rows', () => {
+  expect(
+    settlePayoutsPayload.safeParse({
+      sellers: [
+        { sellerId: a, amountOre: 10000 },
+        { sellerId: b, amountOre: 25050 },
+      ],
+      reason: 'September settlement',
+    }).success,
+  ).toBe(true)
+  for (const bad of [
+    { sellers: [], reason: 'x' },
+    { sellers: [{ sellerId: a, amountOre: 10000 }], reason: ' ' },
+    { sellers: [{ sellerId: a, amountOre: 0 }], reason: 'x' },
+    { sellers: [{ sellerId: a, amountOre: 10.5 }], reason: 'x' },
+    {
+      sellers: [
+        { sellerId: a, amountOre: 1 },
+        { sellerId: a, amountOre: 2 },
+      ],
+      reason: 'x',
+    },
+    { sellers: [{ sellerId: a, amountOre: 1, note: 'no' }], reason: 'x' },
+    {
+      sellers: Array.from({ length: 101 }, (_, i) => ({
+        sellerId: `${String(i).padStart(8, '0')}-1111-4111-8111-111111111111`,
+        amountOre: 10000,
+      })),
+      reason: 'x',
+    },
+  ])
+    expect(settlePayoutsPayload.safeParse(bad).success).toBe(false)
 })
 
 it('the propose command binds each kind to its own payload', () => {

@@ -268,7 +268,53 @@ export async function testProposalsMCP({
   const payouts = await connect('payouts:propose')
   assert.deepEqual(
     (await payouts.listTools()).tools.map((t) => t.name).sort(),
-    ['komisio_propose_payout_approval', 'komisio_propose_payout_payment'],
+    [
+      'komisio_list_settlement_candidates',
+      'komisio_propose_payout_approval',
+      'komisio_propose_payout_payment',
+      'komisio_propose_settlement',
+    ],
+  )
+  // Settlement: the fixture seller has no balance, so it is no candidate and
+  // a batch naming it is refused at preflight; names never leave the store.
+  const candidates = await payouts.callTool({
+    name: 'komisio_list_settlement_candidates',
+    arguments: {},
+  })
+  assert(!candidates.isError, JSON.stringify(candidates.content))
+  assert.equal(candidates.structuredContent.thresholdOre, 10000)
+  assert.deepEqual(candidates.structuredContent.sellers, [])
+  assert(!JSON.stringify(candidates.content).includes('MCP test seller'))
+  const settlement = await payouts.callTool({
+    name: 'komisio_propose_settlement',
+    arguments: {
+      requestId: randomUUID(),
+      expiresAt,
+      sellers: [{ sellerId: seller, amountOre: 10000 }],
+      reason: 'MCP fixture settlement',
+    },
+  })
+  assert(settlement.isError)
+  assert(
+    JSON.stringify(settlement.content).includes('PAYOUT_EXCEEDS_BALANCE'),
+    JSON.stringify(settlement.content),
+  )
+  assert(
+    (
+      await payouts.callTool({
+        name: 'komisio_propose_settlement',
+        arguments: {
+          requestId: randomUUID(),
+          expiresAt,
+          sellers: [
+            { sellerId: seller, amountOre: 10000 },
+            { sellerId: seller, amountOre: 10000 },
+          ],
+          reason: 'Twice',
+        },
+      })
+    ).isError,
+    'each seller once',
   )
   const unknownPayout = await payouts.callTool({
     name: 'komisio_propose_payout_approval',

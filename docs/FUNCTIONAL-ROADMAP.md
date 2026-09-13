@@ -321,10 +321,17 @@ templates with the local print agent, usage metering with a policy quota,
 staged agent kinds for returns, ledger adjustments, markdown batches, bulk
 item updates, payout transitions and template-bound messages with MCP
 proposers, automatic seller notifications behind a policy switch, and the
-SIE 4 export of day closes under a tenant-published account map. Still open
-in P2: Zettle pull (needs tenant credentials), sending vouchers through the
-Fortnox API (needs a connected account), batch reception, duplicate check,
-seller-app payout requests, USB print transport.
+SIE 4 export of day closes under a tenant-published account map. Astra then
+delivered the seller economy portal with seller payout requests, browser
+journeys for the P2 surfaces, batch reception and the Zettle pull behind
+fixtures with the staged kind `recordZettlePurchase`. Still open in P2: the
+live Zettle connection (needs tenant credentials), sending vouchers through
+the Fortnox API (needs a connected account), duplicate check (design note
+first), USB print transport (needs hardware). From P3, the settlement batch
+is delivered: `settle_payouts` requests and approves a payout for every
+listed seller in one transaction, `settlement_candidates` lists who is due,
+and the staged kind `settlePayouts` lets an agent propose the batch
+(migration `20260915100000`, see [SETTLEMENT.md](SETTLEMENT.md)).
 
 | Phase                                       | Theme                    | Slices                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Needs from owner                                                                                                                        |
 | ------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |

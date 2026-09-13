@@ -198,6 +198,10 @@ export async function notificationsForIntake(
       ]
     case 'markPayoutPaid':
       return [{ kind: 'payout_paid', referenceId: String(command.payoutId) }]
+    case 'settlePayouts':
+      return settlementPayoutIds(command.requestId, command.sellers).map(
+        (id) => ({ kind: 'payout_approved' as const, referenceId: id }),
+      )
     case 'issueStatement':
       return [{ kind: 'statement_issued', referenceId: command.requestId }]
     case 'recordSale': {
@@ -216,20 +220,43 @@ export async function notificationsForIntake(
   }
 }
 
-/** The notification an executed staged operation implies. */
-export function notificationForOperation(
+/**
+ * Payout ids a settlement batch creates: the engine derives each as
+ * md5(batch id ':' seller id) cast to uuid, so the same bytes here.
+ */
+export function settlementPayoutIds(batchId: string, sellers: unknown) {
+  const list = z
+    .array(z.object({ sellerId: z.uuid() }))
+    .max(100)
+    .safeParse(sellers)
+  if (!list.success) return []
+  return list.data.map((s) => {
+    const hex = createHash('md5')
+      .update(`${batchId.toLowerCase()}:${s.sellerId.toLowerCase()}`)
+      .digest('hex')
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`
+  })
+}
+
+/** The notifications an executed staged operation implies. */
+export function notificationsForOperation(
   kind: string,
   operationId: string,
   payload: unknown,
-): FactNotification | null {
+): FactNotification[] {
   const payoutId = (payload as { payoutId?: string } | null)?.payoutId
   if (kind === 'acceptItem')
-    return { kind: 'item_accepted', referenceId: operationId }
+    return [{ kind: 'item_accepted', referenceId: operationId }]
   if (kind === 'approvePayout' && payoutId)
-    return { kind: 'payout_approved', referenceId: payoutId }
+    return [{ kind: 'payout_approved', referenceId: payoutId }]
   if (kind === 'markPayoutPaid' && payoutId)
-    return { kind: 'payout_paid', referenceId: payoutId }
-  return null
+    return [{ kind: 'payout_paid', referenceId: payoutId }]
+  if (kind === 'settlePayouts')
+    return settlementPayoutIds(
+      operationId,
+      (payload as { sellers?: unknown } | null)?.sellers,
+    ).map((id) => ({ kind: 'payout_approved' as const, referenceId: id }))
+  return []
 }
 
 /** Resolves the seller behind a fact; null when the fact has no seller (store-owned item). */

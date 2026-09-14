@@ -49,6 +49,7 @@ const lines = [
   },
 ]
 const opened = {
+  dispatchAllowed: true,
   sendId: requestId,
   exportId,
   status: 'pending',
@@ -77,10 +78,15 @@ const connection = {
   expiresAt: new Date(Date.now() + 3600000).toISOString(),
 }
 
-function client(beginState: Record<string, unknown> = opened) {
+function client(
+  beginState: Record<string, unknown> = opened,
+  completionFailure = false,
+) {
   const calls: { fn: string; args: Record<string, unknown> }[] = []
   const rpc = vi.fn(async (fn: string, args: Record<string, unknown>) => {
     calls.push({ fn, args })
+    if (fn === 'complete_fortnox_send' && completionFailure)
+      throw new Error('Database acknowledgement unavailable')
     if (fn === 'tenant_role') return { data: 'owner', error: null }
     if (fn === 'read_fortnox_connection')
       return { data: connection, error: null }
@@ -153,6 +159,66 @@ describe('voucher body', () => {
 })
 
 describe('sendExportToFortnox', () => {
+  it('does not repeat a pending send after a lost begin response', async () => {
+    const http = vi.fn<typeof fetch>()
+    const setup = client({ ...opened, dispatchAllowed: false })
+    await expect(
+      sendExportToFortnox(setup.client, tenant, exportId, requestId, env, http),
+    ).rejects.toThrow('FORTNOX_SEND_IN_PROGRESS')
+    expect(http).not.toHaveBeenCalled()
+    expect(
+      setup.calls.some((call) => call.fn === 'complete_fortnox_send'),
+    ).toBe(false)
+  })
+  it('fails closed while the old begin RPC has no dispatch permission', async () => {
+    const { dispatchAllowed: ignored, ...legacy } = opened
+    expect(ignored).toBe(true)
+    const http = vi.fn<typeof fetch>()
+    await expect(
+      sendExportToFortnox(
+        client(legacy).client,
+        tenant,
+        exportId,
+        requestId,
+        env,
+        http,
+      ),
+    ).rejects.toThrow('FORTNOX_SEND_IN_PROGRESS')
+    expect(http).not.toHaveBeenCalled()
+  })
+  it('holds a lost POST response rather than treating it as retryable', async () => {
+    const http = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(company('1751085'))
+      .mockRejectedValueOnce(
+        new Error('Connection lost after provider committed'),
+      )
+    const setup = client()
+    await expect(
+      sendExportToFortnox(setup.client, tenant, exportId, requestId, env, http),
+    ).rejects.toThrow('FORTNOX_OUTCOME_UNKNOWN')
+    const finished = setup.calls.find(
+      (call) => call.fn === 'complete_fortnox_send',
+    )!
+    expect(finished.args.p_error).toBe('FORTNOX_OUTCOME_UNKNOWN')
+    expect(finished.args.p_detail).toBe('')
+  })
+  it('holds a successful POST when local acknowledgement fails', async () => {
+    const http = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(company('1751085'))
+      .mockResolvedValueOnce(
+        json(
+          { Voucher: { VoucherSeries: 'A', VoucherNumber: 42, Year: 3 } },
+          201,
+        ),
+      )
+    const setup = client(opened, true)
+    await expect(
+      sendExportToFortnox(setup.client, tenant, exportId, requestId, env, http),
+    ).rejects.toThrow('FORTNOX_OUTCOME_UNKNOWN')
+    expect(http).toHaveBeenCalledTimes(2)
+  })
   it('sends the recorded lines and records series and number', async () => {
     const http = vi
       .fn<typeof fetch>()
@@ -193,9 +259,10 @@ describe('sendExportToFortnox', () => {
     expect(http).toHaveBeenCalledTimes(1)
     const done = calls.find((x) => x.fn === 'complete_fortnox_send')!
     expect(done.args.p_status).toBe('failed')
-    expect(done.args.p_error).toBe('FORTNOX_WRONG_COMPANY')
+    expect(done.args.p_error).toBe('FORTNOX_PREFLIGHT_FAILED')
+    expect(done.args.p_detail).toBe('')
   })
-  it('records a Fortnox rejection with its message', async () => {
+  it('holds any failed POST without persisting its provider body', async () => {
     const http = vi
       .fn<typeof fetch>()
       .mockResolvedValueOnce(company('1751085'))
@@ -205,10 +272,10 @@ describe('sendExportToFortnox', () => {
     const { client: c, calls } = client()
     await expect(
       sendExportToFortnox(c, tenant, exportId, requestId, env, http),
-    ).rejects.toThrow('FORTNOX_VOUCHER_REJECTED')
+    ).rejects.toThrow('FORTNOX_OUTCOME_UNKNOWN')
     const done = calls.find((x) => x.fn === 'complete_fortnox_send')!
-    expect(done.args.p_error).toBe('FORTNOX_VOUCHER_REJECTED')
-    expect(done.args.p_detail).toBe('Räkenskapsår saknas')
+    expect(done.args.p_error).toBe('FORTNOX_OUTCOME_UNKNOWN')
+    expect(done.args.p_detail).toBe('')
   })
   it('returns the recorded state on replay without contacting Fortnox', async () => {
     const http = vi.fn<typeof fetch>()

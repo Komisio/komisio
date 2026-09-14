@@ -1,5 +1,18 @@
 # Decision Log
 
+## 2026-09-14: Fortnox retries must not duplicate external vouchers
+
+Before automatic sending, enforce the existing at-most-one-voucher rule on the
+transport path: only the caller that creates a send row may POST it. A pending
+replay is observation, never permission to POST again; age alone cannot establish
+that Fortnox did not receive it. Failures before POST remain retryable. Once POST
+is attempted, a missing/invalid response or failed local acknowledgement is an
+unknown outcome and blocks another send for that export pending reconciliation.
+Conservatively retain old failed sends unless their code proves a preflight refusal.
+No automatic resend of an ambiguous voucher, provider-side cancellation, financial
+correction or new permission is introduced. This supersedes unconditional retry
+of failed/stale sends, not the immutable export or company's database pin.
+
 ## 2026-09-14: Scheduled Zettle pull through the automation identity
 
 The owner explicitly selected Fable's AUTOMATION-ACTOR model instead of the

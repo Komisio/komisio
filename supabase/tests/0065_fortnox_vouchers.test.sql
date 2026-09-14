@@ -38,8 +38,8 @@ select is(begin_fortnox_send(current_setting('test.tenant')::uuid,current_settin
 select throws_like($$select begin_fortnox_send(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.export')::uuid)$$,'%FORTNOX_SEND_IN_PROGRESS%','a second send while pending is refused');
 -- Complete as failed, then a new send may start; complete that one as sent.
 select throws_like($$select complete_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.s1')::uuid,'sent','A',null,2026,'','')$$,'%INVALID_INPUT%','sent needs a voucher number');
-select is(complete_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.s1')::uuid,'failed','',null,null,'FORTNOX_CONNECTION_FAILED','timeout')->>'status','failed','closed as failed');
-select is(complete_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.s1')::uuid,'failed','',null,null,'FORTNOX_CONNECTION_FAILED','')->>'status','failed','same outcome again is a no-op');
+select is(complete_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.s1')::uuid,'failed','',null,null,'FORTNOX_PREFLIGHT_FAILED','FORTNOX_CONNECTION_FAILED')->>'status','failed','closed as failed before POST');
+select is(complete_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.s1')::uuid,'failed','',null,null,'FORTNOX_PREFLIGHT_FAILED','')->>'status','failed','same outcome again is a no-op');
 select throws_like($$select complete_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.s1')::uuid,'sent','A',7,2026,'','')$$,'%SEND_NOT_PENDING%','a closed send cannot change outcome');
 select set_config('test.s2',gen_random_uuid()::text,true);
 select is(begin_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.s2')::uuid,current_setting('test.export')::uuid)->>'status','pending','a new send after a failure');

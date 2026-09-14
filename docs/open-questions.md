@@ -1,5 +1,16 @@
 # Open questions
 
+Fortnox automation prerequisite (2026-09-14): a pending replay or an ambiguous
+POST acknowledgement can otherwise create duplicate vouchers. The transport now
+holds these outcomes under the existing at-most-one rule; a reconciliation/unlock
+workflow still needs an explicit design before held exports can be retried.
+Daily sending also needs scoped token renewal: the four RPC permissions in the
+task list do not permit persisting a rotated token. The owner chose to await
+Fable's completed design for a narrow refresh-only capability bound to the
+existing company; do not open the general
+connect/replace function to automation. Fortnox access tokens last one hour and
+renewal invalidates the previous refresh token ([provider authorization](https://www.fortnox.se/developer/authorization)).
+
 Zettle VAT comparison (2026-09-14): the configuration form now shows the current
 engine policy rate beside every mapped percentage and flags differences. The
 accountant's confirmation against `docs/VAT-CASES.md` remains open: margin and

@@ -22,6 +22,7 @@ export async function readEconomyBriefTool(
   const request = economyBriefInput.parse(input)
   const actor = await requireMCPIdentity(client, config, 'economy:read')
   const brief = await readEconomyBrief(client, config.tenantId, request)
+  if (!brief) throw new Error('BRIEF_UNAVAILABLE')
   const rendered = renderBrief(brief, dictionary('en').brief)
   return {
     actor,

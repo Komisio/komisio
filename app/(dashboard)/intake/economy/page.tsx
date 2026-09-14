@@ -29,10 +29,10 @@ export default async function Economy({
   const period = requested.success ? requested.data : currentMonthPeriod()
   const summary = await readEconomySummary(ctx.client, active.id, period)
   const briefKind = params.brief === 'month' ? 'month' : 'week'
-  const brief = renderBrief(
-    await readEconomyBrief(ctx.client, active.id, { kind: briefKind }),
-    all.brief,
-  )
+  const briefRead = await readEconomyBrief(ctx.client, active.id, {
+    kind: briefKind,
+  })
+  const brief = briefRead ? renderBrief(briefRead, all.brief) : null
   const money = (ore: number) => `${formatSignedOre(ore)} ${summary.currency}`
   const t = summary.totals
   const vatModes = all.sales.vatModes as Record<string, string>
@@ -112,12 +112,16 @@ export default async function Economy({
               {all.brief.month}
             </Link>
           </p>
-          <h3>{brief.title}</h3>
-          <ul>
-            {brief.lines.map((line, i) => (
-              <li key={i}>{line}</li>
-            ))}
-          </ul>
+          {brief && (
+            <>
+              <h3>{brief.title}</h3>
+              <ul>
+                {brief.lines.map((line, i) => (
+                  <li key={i}>{line}</li>
+                ))}
+              </ul>
+            </>
+          )}
         </section>
         <section className="card intake-form" aria-label={d.totalsHeading}>
           <h2>{d.totalsHeading}</h2>

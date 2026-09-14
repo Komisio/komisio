@@ -62,6 +62,9 @@ export async function readFortnoxSends(
     .eq('tenant_id', z.uuid().parse(tenantInput))
     .order('created_at', { ascending: false })
     .limit(200)
+  // Table not migrated yet (deploy gap): no sends to show.
+  if (r.error?.code === 'PGRST205' || r.error?.code === '42P01')
+    return new Map<string, FortnoxSendRow>()
   if (r.error) throw new Error('Unable to read Fortnox sends')
   const latest = new Map<string, FortnoxSendRow>()
   for (const row of z.array(sendRow).parse(r.data))

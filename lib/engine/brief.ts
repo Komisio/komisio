@@ -75,6 +75,8 @@ export async function readEconomyBrief(
   if (result.error) {
     if (result.error.message.includes('INVALID_INPUT'))
       throw new Error('INVALID_INPUT')
+    // Deploy gap: the RPC is not migrated yet.
+    if (result.error.code === 'PGRST202') return null
     throw new Error('FORBIDDEN')
   }
   return economyBrief.parse(result.data)

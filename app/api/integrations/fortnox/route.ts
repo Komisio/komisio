@@ -7,8 +7,9 @@ import {
   disconnectFortnox,
   fortnoxErrorCode,
 } from '@/lib/engine/fortnox-connection'
+import { sendExportToFortnox } from '@/lib/engine/fortnox-vouchers'
 
-/** Read-only check of the connected company, or disconnect; owner or admin. */
+/** Check the connected company, send one export as a voucher, or disconnect; owner or admin. */
 export async function POST(request: Request) {
   const reply = (body: object, status = 200) =>
     NextResponse.json(body, {
@@ -32,14 +33,32 @@ export async function POST(request: Request) {
       return reply({ error: 'INVALID_INPUT' }, 400)
     }
     const parsed = z
-      .strictObject({
-        tenantId: z.uuid(),
-        action: z.enum(['check', 'disconnect']),
-      })
+      .discriminatedUnion('action', [
+        z.strictObject({
+          tenantId: z.uuid(),
+          action: z.enum(['check', 'disconnect']),
+        }),
+        z.strictObject({
+          tenantId: z.uuid(),
+          action: z.literal('sendVoucher'),
+          exportId: z.uuid(),
+          requestId: z.uuid(),
+        }),
+      ])
       .safeParse(input)
     if (!parsed.success) return reply({ error: 'INVALID_INPUT' }, 400)
     if (parsed.data.tenantId !== ctx.active.id)
       return reply({ error: 'TENANT_CHANGED' }, 409)
+    if (parsed.data.action === 'sendVoucher')
+      return reply(
+        await sendExportToFortnox(
+          ctx.client,
+          ctx.active.id,
+          parsed.data.exportId,
+          parsed.data.requestId,
+          process.env,
+        ),
+      )
     if (parsed.data.action === 'disconnect')
       return reply(await disconnectFortnox(ctx.client, ctx.active.id))
     return reply(
@@ -47,6 +66,9 @@ export async function POST(request: Request) {
     )
   } catch (e) {
     const code = fortnoxErrorCode(e instanceof Error ? e.message : '')
-    return reply({ error: code }, code === 'FORBIDDEN' ? 403 : 409)
+    return reply(
+      { error: code },
+      code === 'FORBIDDEN' ? 403 : code === 'INVALID_INPUT' ? 400 : 409,
+    )
   }
 }

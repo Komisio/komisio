@@ -1340,6 +1340,12 @@
     "configHint": "Check the store binding and Vercel settings (Production). Redeploy after changes. No credential values are shown here.",
     "ownerOnly": "Only the store owner or an admin can connect Fortnox.",
     "notice": "Tokens are stored encrypted with a server-side key. Only the connected company's name and database number are visible here.",
+    "sendVoucher": "Send to Fortnox",
+    "sendAgain": "Send to Fortnox again",
+    "sending": "Sending…",
+    "voucherSent": "Sent to Fortnox as voucher",
+    "voucherFailed": "Not sent:",
+    "sendNeedsConnection": "Connect Fortnox to send this voucher.",
     "events": {
       "connected": "Connected",
       "refreshed": "Token refreshed",
@@ -1360,7 +1366,16 @@
       "FORTNOX_STATE_INVALID": "The connection attempt expired or did not start here. Connect again.",
       "CREDENTIAL_KEY_MISSING": "The deployed configuration is missing the credential key (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "The stored token cannot be read with the current credential key. Disconnect and connect again.",
-      "REQUEST_FAILED": "The request failed. Retry later."
+      "REQUEST_FAILED": "The request failed. Retry later.",
+      "FORTNOX_ALREADY_SENT": "This export is already sent to Fortnox.",
+      "FORTNOX_SEND_IN_PROGRESS": "A send for this export is in progress. Wait a few minutes before retrying.",
+      "FORTNOX_CURRENCY_UNSUPPORTED": "Only stores in SEK can send vouchers to Fortnox in this version.",
+      "FORTNOX_VOUCHER_REJECTED": "Fortnox did not accept the voucher. Check the account numbers in the map and the financial year in Fortnox.",
+      "EXPORT_NOT_FOUND": "The export was not found.",
+      "SEND_NOT_FOUND": "The send was not found.",
+      "SEND_NOT_PENDING": "The send is already closed.",
+      "REQUEST_CONFLICT": "This request id was used for another send.",
+      "INVALID_INPUT": "The request was not valid."
     }
   },
   "zettle": {

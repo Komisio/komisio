@@ -1340,6 +1340,12 @@
     "configHint": "Kontrollera butiksbindningen och Vercel-inställningarna (Production). Driftsätt om efter ändringar. Inga nyckelvärden visas här.",
     "ownerOnly": "Bara butikens ägare eller en administratör kan koppla Fortnox.",
     "notice": "Token lagras krypterad med en nyckel på servern. Bara det kopplade företagets namn och databasnummer syns här.",
+    "sendVoucher": "Skicka till Fortnox",
+    "sendAgain": "Skicka till Fortnox igen",
+    "sending": "Skickar…",
+    "voucherSent": "Skickad till Fortnox som verifikation",
+    "voucherFailed": "Inte skickad:",
+    "sendNeedsConnection": "Koppla Fortnox för att skicka verifikationen.",
     "events": {
       "connected": "Kopplad",
       "refreshed": "Token förnyad",
@@ -1360,7 +1366,16 @@
       "FORTNOX_STATE_INVALID": "Kopplingsförsöket har gått ut eller startade inte här. Koppla igen.",
       "CREDENTIAL_KEY_MISSING": "Den driftsatta konfigurationen saknar krypteringsnyckeln (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Den sparade token kan inte läsas med nuvarande nyckel. Koppla bort och koppla igen.",
-      "REQUEST_FAILED": "Anropet misslyckades. Försök senare."
+      "REQUEST_FAILED": "Anropet misslyckades. Försök senare.",
+      "FORTNOX_ALREADY_SENT": "Den här exporten är redan skickad till Fortnox.",
+      "FORTNOX_SEND_IN_PROGRESS": "En sändning för den här exporten pågår. Vänta några minuter innan du försöker igen.",
+      "FORTNOX_CURRENCY_UNSUPPORTED": "Bara butiker i SEK kan skicka verifikationer till Fortnox i den här versionen.",
+      "FORTNOX_VOUCHER_REJECTED": "Fortnox godkände inte verifikationen. Kontrollera kontonumren i kontoplanen och räkenskapsåret i Fortnox.",
+      "EXPORT_NOT_FOUND": "Exporten hittades inte.",
+      "SEND_NOT_FOUND": "Sändningen hittades inte.",
+      "SEND_NOT_PENDING": "Sändningen är redan avslutad.",
+      "REQUEST_CONFLICT": "Det här förfrågnings-id:t har använts för en annan sändning.",
+      "INVALID_INPUT": "Förfrågan var inte giltig."
     }
   },
   "zettle": {

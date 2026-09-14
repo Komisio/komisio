@@ -8,9 +8,15 @@ import { boundedJson } from '../../lib/http/bounded-json'
 export type StripeEnvironment = Record<string, string | undefined>
 const API = 'https://api.stripe.com/v1'
 
+/** Configured, and a live key only where the deployment is production. */
 export function stripeConfigured(env: StripeEnvironment) {
+  const key = env.STRIPE_SECRET_KEY ?? ''
+  const allowed =
+    env.KOMISIO_ENVIRONMENT === 'production'
+      ? /^sk_(test|live)_[A-Za-z0-9]{8,}$/
+      : /^sk_test_[A-Za-z0-9]{8,}$/
   return (
-    /^sk_(test|live)_[A-Za-z0-9]{8,}$/.test(env.STRIPE_SECRET_KEY ?? '') &&
+    allowed.test(key) &&
     /^price_[A-Za-z0-9]{8,}$/.test(env.STRIPE_PRICE_ID ?? '')
   )
 }

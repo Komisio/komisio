@@ -22,6 +22,14 @@ describe('stripe adapter', () => {
   it('recognises configuration and encodes nested forms', () => {
     expect(stripeConfigured(env)).toBe(true)
     expect(stripeConfigured({ STRIPE_SECRET_KEY: 'sk_test_x' })).toBe(false)
+    const live = { ...env, STRIPE_SECRET_KEY: 'sk_live_synthetic00000000' }
+    expect(stripeConfigured(live)).toBe(false)
+    expect(stripeConfigured({ ...live, KOMISIO_ENVIRONMENT: 'staging' })).toBe(
+      false,
+    )
+    expect(
+      stripeConfigured({ ...live, KOMISIO_ENVIRONMENT: 'production' }),
+    ).toBe(true)
     const encoded = formEncode({
       mode: 'subscription',
       line_items: [{ price: 'price_1', quantity: 1 }],

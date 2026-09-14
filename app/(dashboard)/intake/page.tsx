@@ -86,53 +86,6 @@ export default async function Intake({
         <div className="eyebrow">{active.name}</div>
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
-        <p>
-          <Link className="text-link" href="/intake/reception">
-            {all.reception.title}
-          </Link>
-          {' · '}
-          <Link className="text-link" href="/intake/operations">
-            {all.operations.title}
-          </Link>
-          {' · '}
-          <Link className="text-link" href="/intake/purchases">
-            {all.purchases.title}
-          </Link>
-          {' · '}
-          <Link className="text-link" href="/intake/items">
-            {all.items.title}
-          </Link>
-          {' · '}
-          <Link className="text-link" href="/intake/sales">
-            {all.sales.title}
-          </Link>
-          {' · '}
-          <Link className="text-link" href="/intake/payouts">
-            {all.payouts.title}
-          </Link>
-          {' · '}
-          <Link className="text-link" href="/intake/integrations">
-            {all.zettle.title}
-          </Link>
-          <Link className="text-link" href="/intake/accounting">
-            {all.accounting.title}
-          </Link>
-          {' · '}
-          <Link className="text-link" href="/intake/economy">
-            {all.economy.title}
-          </Link>
-          {' · '}
-          <Link className="text-link" href="/intake/handovers">
-            {all.handovers.title}
-          </Link>
-          {' · '}
-          <Link className="text-link" href="/intake/lifecycle">
-            {all.lifecycle.title}
-          </Link>
-        </p>
-        <Link className="text-link" href="/intake/agreements">
-          {a.manage}
-        </Link>
       </div>
       <form action="/intake/open" className="row wrap">
         <label htmlFor="intake-open-ref">{all.openByReference.reference}</label>

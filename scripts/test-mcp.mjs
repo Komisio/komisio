@@ -141,6 +141,7 @@ try {
     'komisio_list_reception_operations',
     'komisio_list_receptions',
     'komisio_preview_reception',
+    'komisio_read_price_evidence',
     'komisio_read_reception',
     'komisio_read_reception_history',
     'komisio_read_reception_operation',
@@ -341,6 +342,7 @@ try {
     [
       'komisio_list_reception_operations',
       'komisio_get_store_policy',
+      'komisio_read_price_evidence',
       'komisio_read_reception_history',
       'komisio_list_receptions',
       'komisio_read_reception',

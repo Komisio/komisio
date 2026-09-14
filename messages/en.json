@@ -1455,5 +1455,22 @@
       "conflict": "Stock needs investigation - no new unit will be added"
     },
     "responseFields": "Response fields"
+  },
+  "priceEvidence": {
+    "title": "Comparable sales in this store",
+    "intro": "What this store accepted and later sold, from its own sales. Evidence for a price, never a price; the store decides.",
+    "category": "Category",
+    "query": "Text in the title",
+    "search": "Show",
+    "summary": "{count} sold in the last {days} days",
+    "median": "median",
+    "range": "range",
+    "averageDays": "{days} days to sale on average",
+    "item": "Item",
+    "accepted": "Accepted at",
+    "sold": "Sold for",
+    "daysToSale": "Days",
+    "markdowns": "Markdowns",
+    "notice": "Returned items are excluded. Prices are what this store recorded; nothing is fetched from outside."
   }
 }

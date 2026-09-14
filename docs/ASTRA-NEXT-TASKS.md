@@ -73,7 +73,8 @@ without touching financial history.
   row and every financial fact, records an access event and an append-only
   `seller_erasures` row (who, when, reason). pgTAP: refused while anything
   is open; the ledger, sales and statements stay; the seller export no
-  longer carries contact data.
+  longer carries contact data. Fit the placeholders and `seller_matches`
+  as described in FABLE_TO_ASTRA_ANSWERS.md (2026-09-15).
 - A read `sellers_past_retention(tenant)` listing sellers with no activity
   for 24 months and nothing open, shown on the seller pages for owners as a
   list to act on. Nothing is erased automatically.

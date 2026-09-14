@@ -39,6 +39,7 @@ It exposes narrow tools through the same intake engine:
 | komisio_read_reception_history         | reception:read         | Read bounded version summaries, with separate source/review cursors; no images or links                    |
 | komisio_read_price_evidence            | reception:read         | Comparable sales in the store by category and text: accepted and sold prices, days to sale; never a price  |
 | komisio_read_reception                 | reception:read         | Read one saved session and its source snapshot                                                             |
+| komisio_read_photo_duplicates          | reception:read         | Earlier receptions of the store holding the same photo bytes: session and photo ids and times; no names    |
 | komisio_preview_reception              | reception:preview      | Validate a source-bound proposal against the current revision; return an unsaved preview                   |
 | komisio_read_reception_photo           | reception:photos       | Read one attached photo at the exact current revision as native MCP image content                          |
 | komisio_propose_reception_review       | reception:propose      | Stage a complete review for staff approval; publishes nothing (see docs/STAGED-OPERATIONS.md)              |

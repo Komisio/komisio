@@ -59,7 +59,9 @@ with a score. Komisio keeps the same outcome with a two-step design:
    to five earlier receptions of the store with the same bytes, and the
    reception page shows them with a link and the seller. No provider, no
    cost; it catches the common case: the same file uploaded twice, or a
-   seller's photo set resubmitted. Photos uploaded before the migration
+   seller's photo set resubmitted. Agents read the same facts through
+   `komisio_read_photo_duplicates` under `reception:read`, without names.
+   Photos uploaded before the migration
    have no digest and are not compared.
 2. **Similar garment, with a model.** Perceptual similarity needs an
    embedding per photo from an image model, stored as a vector, and a

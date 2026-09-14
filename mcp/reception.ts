@@ -13,6 +13,7 @@ import {
 } from '../lib/engine/reception'
 import type { MCPConfig } from './config'
 import { readReceptionPhoto } from '../lib/engine/reception-photos'
+import { readPhotoDuplicates } from '../lib/engine/photo-duplicates'
 import { receptionDerivative } from '../lib/media/reception-image'
 import {
   readReceptionHistory,
@@ -43,6 +44,7 @@ export const queueInput = z
     'Both cursor fields are required',
   )
 export const readInput = z.strictObject({ sessionId: z.uuid() })
+export const duplicatesInput = readInput
 export const photoInput = z.strictObject({
   sessionId: z.uuid(),
   photoId: z.uuid(),
@@ -100,6 +102,32 @@ export function receptionTools(client: SupabaseClient, config: MCPConfig) {
         evidenceIsUntrusted: true,
         availableForSale: false,
         ...queue,
+      }
+    },
+    // Exact photo repeats (docs/DUPLICATE-CHECK.md): where the same bytes were
+    // uploaded before in this store. Session ids and times only; no names.
+    async duplicates(input: unknown) {
+      const c = duplicatesInput.parse(input),
+        ctx = await context(c.sessionId, 'reception:read')
+      const found = await readPhotoDuplicates(
+        client,
+        config.tenantId,
+        c.sessionId,
+      )
+      return {
+        actor: ctx.actor,
+        sessionId: c.sessionId,
+        readOnly: true,
+        evidenceIsUntrusted: true,
+        guidanceOnly: true,
+        photos: (found?.photos ?? []).map((p) => ({
+          photoId: p.photoId,
+          seen: p.seen.map((s) => ({
+            sessionId: s.sessionId,
+            photoId: s.photoId,
+            seenAt: s.seenAt,
+          })),
+        })),
       }
     },
     async photo(input: unknown) {

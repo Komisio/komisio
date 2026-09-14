@@ -141,6 +141,7 @@ try {
     'komisio_list_reception_operations',
     'komisio_list_receptions',
     'komisio_preview_reception',
+    'komisio_read_photo_duplicates',
     'komisio_read_price_evidence',
     'komisio_read_reception',
     'komisio_read_reception_history',
@@ -206,6 +207,42 @@ try {
       arguments: { sessionId: session, photoId, revision: 1 },
     }),
     /not found/,
+  )
+  // Photo duplicates: the same digest recorded for another reception is reported with ids only.
+  const earlier = randomUUID(),
+    digest = 'ab'.repeat(32)
+  await rpc('create_reception_session', {
+    p_tenant: tenant,
+    p_id: earlier,
+    p_seller: seller,
+  })
+  for (const [sid, pid] of [
+    [earlier, randomUUID()],
+    [session, photoId],
+  ])
+    await rpc('record_photo_digest', {
+      p_tenant: tenant,
+      p_session: sid,
+      p_photo: pid,
+      p_digest: digest,
+    })
+  const repeats = await both.callTool({
+    name: 'komisio_read_photo_duplicates',
+    arguments: { sessionId: session },
+  })
+  assert(!repeats.isError, JSON.stringify(repeats.content))
+  assert.equal(repeats.structuredContent.photos.length, 1)
+  assert.equal(repeats.structuredContent.photos[0].photoId, photoId)
+  assert.equal(repeats.structuredContent.photos[0].seen[0].sessionId, earlier)
+  assert.equal(repeats.structuredContent.guidanceOnly, true)
+  assert(!JSON.stringify(repeats).includes('MCP test seller'))
+  assert(
+    (
+      await both.callTool({
+        name: 'komisio_read_photo_duplicates',
+        arguments: { sessionId: randomUUID() },
+      })
+    ).isError,
   )
   const photos = await connect('reception:photos')
   assert.deepEqual(
@@ -346,6 +383,7 @@ try {
       'komisio_read_reception_history',
       'komisio_list_receptions',
       'komisio_read_reception',
+      'komisio_read_photo_duplicates',
       'komisio_read_reception_operation',
     ],
   )

@@ -152,7 +152,7 @@
   "existingTenants": "Dina butiker",
   "openTenant": "Öppna butik",
   "hello": "Välkommen",
-  "homeIntro": "Här samlar du människorna och inställningarna för din butik.",
+  "homeIntro": "Dagens läge, nästa steg och ditt team.",
   "setupTitle": "En bra början",
   "setupIntro": "Bygg grunden tillsammans med ditt team.",
   "stepAccount": "Ditt konto är klart",
@@ -1709,5 +1709,18 @@
       "text": "Hej,\n\nDen senaste betalningen för {store} misslyckades. Om den inte är löst senast {date} blir butiken läsläge. Uppdatera betalsättet under Inställningar:\n{link}"
     },
     "footer": "Komisio · tjänsten kostar 199 kr per butik och månad exklusive moms · det här meddelandet skickas en gång per steg och har inga bilagor."
+  },
+  "overview": {
+    "heading": "Idag",
+    "todaySales": "Försäljningar i dag",
+    "todayGross": "Brutto i dag",
+    "openProposals": "Förslag som väntar",
+    "attentionDays": "Dagar som behöver åtgärd",
+    "openPayouts": "Öppna utbetalningar",
+    "owed": "Skuld till säljare",
+    "openQueue": "Öppna kön",
+    "openReconciliation": "Öppna avstämningen",
+    "openPayoutsPage": "Öppna utbetalningar",
+    "openEconomy": "Öppna ekonomin"
   }
 }

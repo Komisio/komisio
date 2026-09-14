@@ -152,7 +152,7 @@
   "existingTenants": "Your stores",
   "openTenant": "Open store",
   "hello": "Welcome",
-  "homeIntro": "Bring together the people and settings that keep your store running.",
+  "homeIntro": "Today's numbers, your next steps and your team.",
   "setupTitle": "A good beginning",
   "setupIntro": "Build the foundation together with your team.",
   "stepAccount": "Your account is ready",
@@ -1709,5 +1709,18 @@
       "text": "Hello,\n\nThe last payment for {store} failed. If it is not settled by {date} the store becomes read-only. Update the payment method under Settings:\n{link}"
     },
     "footer": "Komisio · hosted plan, SEK 199 per store and month excluding VAT · this message is sent once per step and has no attachments."
+  },
+  "overview": {
+    "heading": "Today",
+    "todaySales": "Sales today",
+    "todayGross": "Gross today",
+    "openProposals": "Proposals waiting",
+    "attentionDays": "Days needing attention",
+    "openPayouts": "Open payouts",
+    "owed": "Owed to sellers",
+    "openQueue": "Open the queue",
+    "openReconciliation": "Open the reconciliation",
+    "openPayoutsPage": "Open payouts",
+    "openEconomy": "Open the economy"
   }
 }

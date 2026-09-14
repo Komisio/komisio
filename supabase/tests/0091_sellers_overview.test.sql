@@ -1,0 +1,46 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000000491','so-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000492','so-readonly@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000493','so-outsider@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000491","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Sellers overview test','sellers-overview-test',gen_random_uuid())::text,true);
+select set_config('test.s1',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Anna Andersson','anna@so.test','')::text,true);
+select set_config('test.s2',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Bo Berg','','0701234567')::text,true);
+select set_config('test.agreement',publish_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'Synthetic terms','Only a test','en',false)::text,true);
+select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.s1')::uuid,current_setting('test.agreement')::uuid,'Signed paper');
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}');
+select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.s1')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
+select set_config('test.d1',gen_random_uuid()::text,true);
+select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d1')::uuid,0,'Jacket','Jackets','Good');
+select set_config('test.i1',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i1')::uuid,'inspection_draft',current_setting('test.d1')::uuid,1,20000);
+select set_config('test.d2',gen_random_uuid()::text,true);
+select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Coat','Coats','Good');
+select set_config('test.i2',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i2')::uuid,'inspection_draft',current_setting('test.d2')::uuid,1,30000);
+select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','K-1','2026-09-10T10:00:00Z','SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.i1'),'priceOre',20000)));
+select set_config('test.o',sellers_overview(current_setting('test.tenant')::uuid,null,50)::text,true);
+select is((current_setting('test.o')::jsonb->>'total')::int,2,'two sellers');
+select is(current_setting('test.o')::jsonb->'sellers'->0->>'name','Anna Andersson','ordered by name');
+select is((current_setting('test.o')::jsonb->'sellers'->0->>'itemsTotal')::int,2,'items held for the seller');
+select is((current_setting('test.o')::jsonb->'sellers'->0->>'itemsSold')::int,1,'one sold');
+select ok((current_setting('test.o')::jsonb->'sellers'->0->>'availableOre')::bigint>0,'credit shows as available balance');
+select is(current_setting('test.o')::jsonb->'sellers'->1->>'contact','0701234567','phone as contact when no e-mail');
+select is((current_setting('test.o')::jsonb->'sellers'->1->>'itemsTotal')::int,0,'seller without items');
+select is((sellers_overview(current_setting('test.tenant')::uuid,'berg',50)->>'total')::int,1,'search by name, case-insensitive');
+select is((sellers_overview(current_setting('test.tenant')::uuid,'%',50)->>'total')::int,0,'wildcards are literal');
+select is((sellers_overview(current_setting('test.tenant')::uuid,null,1)->>'limit')::int,1,'limit honoured');
+select is(jsonb_array_length(sellers_overview(current_setting('test.tenant')::uuid,null,1)->'sellers'),1,'one row under the limit');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values (current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000000492','readonly');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000492","role":"authenticated"}';
+select lives_ok($$select sellers_overview(current_setting('test.tenant')::uuid,null,50)$$,'read-only members read the list');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000493","role":"authenticated"}';
+select throws_ok($$select sellers_overview(current_setting('test.tenant')::uuid,null,50)$$,'42501',null,'outsider refused');
+select * from finish();
+rollback;

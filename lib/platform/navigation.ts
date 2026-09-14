@@ -56,6 +56,7 @@ export function buildNavigation(
       {
         label: n.sellers,
         links: [
+          { path: '/intake/sellers', label: n.sellersList, icon: 'Users' },
           {
             path: '/intake/agreements',
             label: d.agreements.title,

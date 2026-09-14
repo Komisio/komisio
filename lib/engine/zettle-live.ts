@@ -67,6 +67,48 @@ export async function readZettlePull(client: SupabaseClient, tenantId: string) {
   if (page?.error) throw new Error('ZETTLE_READ_FAILED')
   return { connection: c.data, window, page: page?.data?.[0] ?? null }
 }
+export async function readZettleWindowClosure(
+  client: SupabaseClient,
+  tenantId: string,
+  windowId: string,
+) {
+  const result = await client.rpc('zettle_window_closure', {
+    p_tenant: z.uuid().parse(tenantId),
+    p_window: z.uuid().parse(windowId),
+  })
+  if (result.error?.code === 'PGRST202')
+    return { available: false, closure: null }
+  if (result.error) throw new Error('ZETTLE_READ_FAILED')
+  return {
+    available: true,
+    closure: z
+      .object({
+        id: z.uuid(),
+        reason: z.string().min(1).max(500),
+        createdAt: z.string(),
+      })
+      .nullable()
+      .parse(result.data),
+  }
+}
+
+export async function abandonZettleWindow(
+  client: SupabaseClient,
+  tenantId: string,
+  requestId: string,
+  windowId: string,
+  reason: string,
+) {
+  const result = await client.rpc('abandon_zettle_pull_window', {
+    p_tenant: z.uuid().parse(tenantId),
+    p_id: z.uuid().parse(requestId),
+    p_window: z.uuid().parse(windowId),
+    p_reason: z.string().trim().min(1).max(500).parse(reason),
+  })
+  if (result.error) throw new Error(result.error.message)
+  return { id: z.uuid().parse(result.data) }
+}
+
 type Factory = (
   tenantId: string,
   env: PilotEnvironment,

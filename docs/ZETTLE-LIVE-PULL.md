@@ -36,7 +36,7 @@ The SQL wrapper accepts purchase timestamps from five minutes before the window
 start (inclusive) to five minutes after its end (exclusive), clipped at the
 immutable activation cutover. This tolerates bounded provider timestamp skew,
 but never imports pre-activation history. More distant timestamps still stop the
-page; there is no silent skip or operator close command. The requested provider
+page; there is no silent skip. The owner escape below records an explicit gap. The requested provider
 interval and its durable watermark do not change. Identical receipt IDs across
 overlap windows remain
 idempotent; conflicting facts stop the page. Only already-supported, fully matched
@@ -68,3 +68,12 @@ boundaries, completion and replay; multi-connection window/page races
 in `scripts/owner-race.mjs`; unit tests for pinned token transport and engine
 orchestration; the existing complete synthetic Zettle browser journey with denial
 of unconfigured live operations. Test data never uses actual pilot credentials.
+# Owner window escape (2026-09-14)
+
+The owner can close the latest unfinished window from the integrations page with
+a mandatory reason. The immutable closure is not an empty provider page or a sale.
+New pages for that window fail with `ZETTLE_WINDOW_ABANDONED`; previously committed
+pages remain replayable. The next window starts at the closed window's exact end.
+This deliberately skips the remaining receipts in that interval. Reconcile the
+gap against Zettle manually; closing is not proof of a complete import.
+The control is hidden during the brief missing-RPC deployment gap.

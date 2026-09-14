@@ -1314,6 +1314,28 @@
     "salePrice": "Sale price",
     "commission": "Commission"
   },
+  "reconciliation": {
+    "heading": "Reconciliation",
+    "hint": "Every day with activity in the period and where its books stand: close, export under the current map, and Fortnox. Read only; the day close totals decide.",
+    "from": "From",
+    "to": "To",
+    "show": "Show",
+    "periodInvalid": "Pick a from date at or before the to date, at most one year apart.",
+    "allDone": "Every active day in the period is sent to Fortnox.",
+    "empty": "No activity in this period.",
+    "openDays": "Days needing attention",
+    "status": "Status",
+    "statuses": {
+      "no_close": "No day close",
+      "close_stale": "Facts changed after the close; generate it again",
+      "not_exported": "Closed, not exported",
+      "export_outdated": "Exported under an older map; export again",
+      "not_sent": "Exported, not sent to Fortnox",
+      "send_pending": "Sending to Fortnox",
+      "send_failed": "Fortnox refused the voucher",
+      "sent": "Sent to Fortnox"
+    }
+  },
   "brief": {
     "heading": "Brief",
     "hint": "A fixed rendering of the same numbers for the last week or month and the one before. No forecast; nothing is stored.",
@@ -1458,6 +1480,7 @@
       "ZETTLE_RATE_LIMITED": "Zettle is rate limiting requests. Retry later.",
       "ZETTLE_WINDOW_INVALID": "Zettle returned data outside the selected interval. Retrieval stopped.",
       "ZETTLE_WINDOW_COMPLETE": "This interval is already complete. Reload the page.",
+      "ZETTLE_WINDOW_ABANDONED": "The owner closed this interval. No more pages can be imported into it. Reload the page.",
       "ZETTLE_AUTH_REQUIRED": "Zettle rejected authentication. Check the API key and its permissions.",
       "ZETTLE_CONNECTION_FAILED": "Could not verify the connection. Check configuration or retry later.",
       "ZETTLE_INVENTORY_FAILED": "Zettle stock could not be confirmed. Check the saved item status before taking further action.",
@@ -1499,6 +1522,19 @@
     "pullSince": "Activated from",
     "pullComplete": "Last completed interval ends",
     "pullPending": "Current interval ends",
+    "engineVat": "Current engine rate",
+    "vatComparisonHint": "Comparison only: identical percentages do not guarantee the same taxable basis, especially for margin VAT. Confirm the mapping with your accountant. No values are corrected automatically.",
+    "vatComparison": {
+      "match": "Same percentage (not tax approval)",
+      "mismatch": "Warning: differs from the engine rate",
+      "unmapped": "No percentage mapped",
+      "invalid": "Enter a percentage from 0 to 100 with at most two decimals"
+    },
+
+    "abandonWindow": "Close blocked interval",
+    "abandonReason": "Reason for closing",
+    "abandonWarning": "Unfetched receipts may be missing. Closing skips the rest of this interval and requires manual reconciliation against Zettle. No sales are created or removed.",
+    "abandoned": "Owner-closed interval ends",
     "pullEnable": "Enable receipt retrieval from now",
     "pullNow": "Fetch next page from Zettle",
     "pullWaiting": "No new interval yet. Retrieval trails by two minutes to allow Zettle to process purchases.",

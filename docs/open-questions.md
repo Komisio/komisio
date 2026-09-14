@@ -1,5 +1,17 @@
 # Open questions
 
+Zettle VAT comparison (2026-09-14): the configuration form now shows the current
+engine policy rate beside every mapped percentage and flags differences. The
+accountant's confirmation against `docs/VAT-CASES.md` remains open: margin and
+full-price tax bases differ even when the percentages match. No automatic correction.
+
+Zettle follow-up (2026-09-14): explicit owner window abandonment now records the
+reason and skips to the closed window's end; it does not certify missing receipts.
+Scheduled retrieval still needs an approved authenticated bridge between pg_cron
+and the server-only provider adapter. The SQL-only markdown runner does not supply
+that transport. Do not mint owner sessions, move provider keys to SQL or introduce
+a service-role client to bypass that boundary.
+
 Product decisions that must be answered by real store workflows before they
 become schema, rules or tests. Each question lists what it affects and the
 candidate answer the schema sketch assumed (see `experiments/2026-09-schema-sketch`).

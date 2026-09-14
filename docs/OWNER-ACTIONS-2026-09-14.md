@@ -47,6 +47,12 @@ move to DECISIONS.md and the settings to PILOT-GATES.md.
 | C5  | Production domain and operating company        | `app.komisio.com`; the Stripe account in the company that operates the service                                                           |
 | C6  | Staging soak and production migration approval | One working day on staging; the owner approves the `production-database` job in GitHub                                                   |
 
+## D. Architecture decisions (see [AUTOMATION-ACTOR.md](AUTOMATION-ACTOR.md))
+
+| #   | Question                                                                              | Proposed default                                                                                                                                                                                                                            |
+| --- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D1  | How scheduled jobs that call a provider (Zettle retrieval, later Fortnox sending) act | One automation identity per deployment (a normal Auth user with a server-held password), a fifth tenant role `automation` granted per store by an owner for a named scope, Vercel Cron as the trigger; no service key, no borrowed sessions |
+
 ## Done since the last list
 
 - Fortnox: connection to the test company, one voucher sent (A8 on

@@ -29,6 +29,29 @@ For future slices: verify the staging target and green revision, apply reviewed
 additive migrations, activate/redeploy and exercise the changed hosted journey.
 Keep financial provider transactions and production activation separately scoped.
 
+## Automatic database deployment
+
+After a merge to main, Platform checks runs its isolated test suite and then the
+`staging-migrations` job. The job checks out that exact revision, checks remote
+history, dry-runs pending migrations, applies them and verifies the resulting
+history. Its GitHub step summary records the revision and applied versions.
+Failures stop deployment; retry failed jobs in GitHub after resolving the cause.
+Never repair migration history or reset staging to make a run pass.
+
+The `staging-database` GitHub environment must restrict deployment branches to
+main. It holds the `SUPABASE_PROJECT_ID` variable and `SUPABASE_ACCESS_TOKEN`
+secret for the verified staging account. The pinned Supabase CLI obtains a
+temporary database login through the management token; no database password or
+service-role key is placed in the application. Rotate the token through that
+environment when needed. PR workflows never use this environment.
+
+Vercel deployment remains independent and can finish before database checks.
+Keep application releases compatible with both schemas (the image action stays
+hidden until its RPCs exist). This automates database delivery, not atomic
+application/database releases or a real POS verification.
+
+Protocol: [Supabase GitHub Actions deployment](https://supabase.com/docs/guides/deployment/managing-environments).
+
 ## Selected services
 
 - Vercel Pro, Stockholm (`arn1`); Next.js preset, Node.js 24, repository root.

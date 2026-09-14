@@ -1,5 +1,15 @@
 # Decision Log
 
+## 2026-09-14: Retire the staged Zettle TypeScript surface
+
+Choose removal rather than a manual staged fallback. Normal verified POS imports
+still reconcile automatically; held receipts use the existing match/retry path.
+Remove the Zettle proposal schema, queue presentation and review context from
+TypeScript. Existing legacy rows are omitted from the UI queue and their review
+URLs return not found; no historical rows are changed. SQL dispatchers, grants and
+compatibility replay remain untouched. This supersedes the earlier TypeScript
+compatibility-only retention, not the SQL compatibility contract.
+
 ## 2026-09-14: GitHub-managed staging migrations
 
 The owner requires staging database changes to deploy through GitHub, without

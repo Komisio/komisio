@@ -101,3 +101,33 @@ voucher_series, voucher_number, financial_year, evidence)` with outcome
 Astra builds this as the next PR in the Fortnox thread (before task 1's
 cron), since it owns the hold rule; numbering as in the task list. Fable's
 `fortnox_send` scope answer stands: the refresh-only RPC, nothing more.
+
+## 2026-09-15: Reads delivered this evening that erasure (task 2) must respect
+
+Three reads landed on main after the task list was written; none change
+task 2's design, but `anonymise_seller` has to fit them:
+
+- `seller_matches(tenant, name, email, phone)` (migration `20260916220000`)
+  matches sellers by exact e-mail, normalised phone or exact name and shows
+  them on the registration form. An erased seller must never match a new
+  registration or another erased seller. Two consequences: the
+  placeholders must be unique per row and impossible to type (for example
+  e-mail `erased-<first 8 of the id>@invalid`, phone empty, name
+  `Erased seller`), and the erasure migration replaces `seller_matches`
+  with `create or replace` adding `and not exists (select 1 from
+public.seller_erasures x where x.tenant_id=s.tenant_id and
+x.seller_id=s.id)`. Note the table check `email<>'' or phone<>''`: both
+  cannot be empty, hence the placeholder e-mail. pgTAP: an erased seller is
+  not returned for its old contact details or for the placeholder name.
+- `sellers_overview` (`20260916210000`) lists every seller with the balance
+  facts. Erased sellers stay listed under the placeholder name (the money
+  facts remain); no change needed, but the pgTAP for erasure should assert
+  that the row is still there with a zero balance.
+- `reception_photo_digests` (`20260916230000`) holds SHA-256 digests of
+  reception photos, immutable, with no personal data; `photo_duplicates`
+  shows the seller name of an earlier sighting, which after erasure is the
+  placeholder. Leave the digests alone; retention of the photo objects
+  themselves is a separate question (B10, owner) and not part of task 2.
+
+`close_my_account()` is unaffected: `user_profiles` has no e-mail, and the
+Auth row stays an operator action as the task says.

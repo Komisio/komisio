@@ -83,6 +83,29 @@ disconnects and connects again.
 
 ## Voucher sending
 
+### Retry safety prerequisite for automation (2026-09-14)
+
+Only a newly created send grants its caller permission to POST. A pending replay
+or a lost begin response never grants another POST, even after ten minutes.
+Failure before POST is recorded as FORTNOX_PREFLIGHT_FAILED and may be retried.
+After POST is attempted, any error (including a failed local acknowledgement of
+a successful voucher) is conservatively FORTNOX_OUTCOME_UNKNOWN: another send for
+that export is refused. A committed sent row remains authoritative on replay.
+Old failed sends without proven preflight refusal are also held. No historical
+row is deleted or repaired by this migration.
+
+The earlier stale-row replacement and unconditional failed-send retry described
+below are superseded by this rule. This can hold a request that never reached
+Fortnox; availability is deliberately secondary to avoiding duplicate vouchers.
+No automated voucher reconciliation or retry-unlock command is provided. The owner
+and operator must compare the immutable export and Fortnox voucher series/number,
+date and lines, preserve the evidence, and escalate before any manual correction.
+Never reset send rows, delete exports, or bypass the hold to make a retry succeed.
+
+The rollout fails closed until the new begin RPC returns dispatchAllowed. Stop
+new sending while application instances roll over; an old application instance
+does not understand the new dispatch flag. No real voucher was sent as a test.
+
 One recorded export (see [ACCOUNTING-EXPORT.md](ACCOUNTING-EXPORT.md)) becomes
 at most one voucher in the connected company. Owner or admin presses "Send to
 Fortnox" on an export row; the request carries a request id.

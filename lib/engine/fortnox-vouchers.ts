@@ -1,16 +1,13 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { readCompanyInformation } from '../../extensions/fortnox/auth'
-import {
-  createVoucher,
-  FortnoxRejected,
-} from '../../extensions/fortnox/vouchers'
-import { fortnoxAccessToken, fortnoxErrorCode } from './fortnox-connection'
+import { createVoucher } from '../../extensions/fortnox/vouchers'
+import { fortnoxAccessToken } from './fortnox-connection'
 
 // Sending one recorded export to Fortnox as one voucher. The database opens
 // the send (one live send per export), the application talks to Fortnox,
 // the database closes the send as sent or failed. A sent export cannot be
-// sent again; a failed one can.
+// sent again; only a proven preflight failure can be retried.
 const voucherLine = z.object({
   key: z.string(),
   account: z.string(),
@@ -18,6 +15,7 @@ const voucherLine = z.object({
   amountOre: z.number().int().nonnegative(),
 })
 export const sendState = z.object({
+  dispatchAllowed: z.boolean().default(false),
   sendId: z.uuid(),
   exportId: z.uuid(),
   status: z.enum(['pending', 'sent', 'failed']),
@@ -116,6 +114,8 @@ export async function sendExportToFortnox(
   if (begin.error) throw new Error(begin.error.message)
   const opened = sendState.parse(begin.data)
   if (opened.status !== 'pending') return opened
+  if (!opened.dispatchAllowed) throw new Error('FORTNOX_SEND_IN_PROGRESS')
+  let attempted = false
   try {
     const { accessToken } = await fortnoxAccessToken(
       client,
@@ -126,6 +126,7 @@ export async function sendExportToFortnox(
     const company = await readCompanyInformation(accessToken, http)
     if (company.DatabaseNumber !== opened.databaseNumber)
       throw new Error('FORTNOX_WRONG_COMPANY')
+    attempted = true
     const voucher = await createVoucher(
       accessToken,
       {
@@ -142,13 +143,16 @@ export async function sendExportToFortnox(
       year: voucher.Year ?? null,
     })
   } catch (e) {
-    const code = fortnoxErrorCode(e instanceof Error ? e.message : '')
-    const detail = e instanceof FortnoxRejected ? e.detail : ''
-    await complete(client, tenantId, opened.sendId, {
-      status: 'failed',
-      error: code,
-      detail,
-    })
+    try {
+      await complete(client, tenantId, opened.sendId, {
+        status: 'failed',
+        error: attempted
+          ? 'FORTNOX_OUTCOME_UNKNOWN'
+          : 'FORTNOX_PREFLIGHT_FAILED',
+        detail: '',
+      })
+    } catch {}
+    if (attempted) throw new Error('FORTNOX_OUTCOME_UNKNOWN')
     throw e
   }
 }

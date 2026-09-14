@@ -1,5 +1,18 @@
 # Decision Log
 
+## 2026-09-14: GitHub-managed staging migrations
+
+The owner requires staging database changes to deploy through GitHub, without
+manual CLI steps after each merge. A main-push job depends on successful platform
+checks for the same revision. Only the main-restricted staging-database GitHub
+environment supplies the staging project reference and Supabase management token;
+PR jobs receive neither. Serialize migrations without cancelling an active push.
+Check remote history, dry-run, apply missing committed versions and verify history.
+Allow older missing versions only when all remote versions exist locally; never
+repair history, reset, seed or update Vault as part of deployment. No application
+service-role credential is introduced. Vercel still deploys independently, so
+additive migrations and backward-compatible application rollout remain required.
+
 ## 2026-09-14: Explicit Zettle product image export
 
 An owner/admin may export the first photo in the source revision of an accepted

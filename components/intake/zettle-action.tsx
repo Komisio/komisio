@@ -110,6 +110,13 @@ export function ZettleAction({
         pending.current = {
           ...command,
           requestId: crypto.randomUUID(),
+          ...(command.action === 'abandonWindow'
+            ? {
+                reason: String(
+                  new FormData(e.currentTarget).get('reason') ?? '',
+                ).trim(),
+              }
+            : {}),
           ...(command.action === 'configure'
             ? {
                 vatMap: Object.fromEntries(
@@ -151,6 +158,19 @@ export function ZettleAction({
             />
           </div>
         ))}
+      {command.action === 'abandonWindow' && (
+        <div className="field">
+          <p>{d.abandonWarning}</p>
+          <label htmlFor={`${id}-reason`}>{d.abandonReason}</label>
+          <textarea
+            id={`${id}-reason`}
+            name="reason"
+            required
+            maxLength={500}
+            disabled={state !== 'idle'}
+          />
+        </div>
+      )}
       {match && (
         <div className="field">
           <label htmlFor={id}>{d.item}</label>

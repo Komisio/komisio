@@ -37,6 +37,7 @@ export const zettleCommand = z.discriminatedUnion('action', [
   base.extend({ action: z.literal('enablePull') }),
   base.extend({ action: z.literal('pull') }),
   base.extend({ action: z.literal('export'), itemId: z.uuid() }),
+  base.extend({ action: z.literal('exportImage'), itemId: z.uuid() }),
 ])
 const receiptRow = z.object({
   id: z.uuid(),
@@ -227,6 +228,10 @@ export const zettleErrorCodes = [
   'ZETTLE_INVENTORY_CONFLICT',
   'ZETTLE_INVENTORY_AMBIGUOUS',
   'ZETTLE_STOCK_HELD',
+  'ZETTLE_IMAGE_INVALID',
+  'ZETTLE_IMAGE_FAILED',
+  'ZETTLE_IMAGE_HELD',
+  'ZETTLE_IMAGE_PRODUCT_REQUIRED',
   'ZETTLE_EXPORT_FAILED',
   'ZETTLE_NOT_CONNECTED',
   'ZETTLE_AUTH_REQUIRED',

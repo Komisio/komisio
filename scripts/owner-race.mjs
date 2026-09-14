@@ -1,4 +1,5 @@
 import { raceZettleStock } from './zettle-stock-race.mjs'
+import { raceZettleImage } from './zettle-image-race.mjs'
 import { raceZettlePull } from './zettle-pull-race.mjs'
 import { raceSellerPayout } from './seller-payout-race.mjs'
 import { raceStorePolicy } from './store-policy-race.mjs'
@@ -52,6 +53,7 @@ try {
       ),
     )
   await raceZettleStock({ setup, connectionString: parsed.toString() })
+  await raceZettleImage({ setup, connectionString: parsed.toString() })
   await raceZettlePull({ setup, connectionString: parsed.toString() })
   await raceSellerPayout({ setup, connectionString: parsed.toString() })
   const u1 = randomUUID(),

@@ -1377,6 +1377,10 @@
       "ZETTLE_INVENTORY_CONFLICT": "Zettles lager kunde inte bekräftas. Kontrollera varans sparade status innan du går vidare.",
       "ZETTLE_INVENTORY_AMBIGUOUS": "Zettles lager kunde inte bekräftas. Kontrollera varans sparade status innan du går vidare.",
       "ZETTLE_STOCK_HELD": "Zettles lager kunde inte bekräftas. Kontrollera varans sparade status innan du går vidare.",
+      "ZETTLE_IMAGE_INVALID": "Fotot kunde inte läsas eller är för litet eller ogiltigt. Bildexporten stoppades.",
+      "ZETTLE_IMAGE_FAILED": "Bilduppladdningen bekräftades inte. Inget lager ändrades. Kontrollera bildstatus innan du fortsätter.",
+      "ZETTLE_IMAGE_HELD": "Den tidigare bilduppladdningen är osäker. Manuell avstämning krävs; bilden laddas inte upp dubbelt.",
+      "ZETTLE_IMAGE_PRODUCT_REQUIRED": "Skicka varan innan du skickar produktbilden.",
       "ZETTLE_EXPORT_FAILED": "Produktsteget misslyckades. Ingen lagerökning startades. Kontrollera produktförsöket innan du försöker igen.",
       "ZETTLE_PRODUCT_UUID_REJECTED": "Zettle avvisade produktens ID. Exporten inväntar en säker rättning.",
       "ZETTLE_IDENTITY_HELD": "Produktens ID kan inte ändras säkert. Kontrollera tidigare export och lagerhistorik.",
@@ -1427,6 +1431,14 @@
     "stockTitle": "Varuexport och lager",
     "stockHint": "Skicka en vara i taget. Det första försöket lägger till ett lagerfört exemplar. Senare försök kontrollerar resultatet och uppdaterar priset utan att fylla på lagret. Högst 50 sparade försök visas, osäkra resultat först.",
     "exportItem": "Skicka varan till Zettle",
+    "exportImage": "Skicka produktbild",
+    "imageHint": "Efter varuexporten kan du skicka första fotot från artikelns godkända mottagningsunderlag till Zettle. En förminskad kopia blir produktbild där; synliga personer och etiketter maskeras inte. Originalet förblir privat. Knappen ändrar inte lagersaldot.",
+    "imageStates": {
+      "synced": "Produktbilden har skickats till Zettle.",
+      "no_photo": "Foto saknas i det godkända mottagningsunderlaget. Inköps- och granskningsursprung saknar exporterbart foto i denna version.",
+      "held": "Bilduppladdningen är obekräftad. Manuell avstämning krävs; ingen automatisk ny uppladdning.",
+      "uploaded": "Bilden är uppladdad men kopplingen till varan behöver kontrolleras. Försök skicka produktbilden igen."
+    },
     "checkStock": "Kontrollera lager / uppdatera vara",
     "stockSteps": {
       "tracking": "Kontroll av lagerspårning",

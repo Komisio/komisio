@@ -1377,6 +1377,10 @@
       "ZETTLE_INVENTORY_CONFLICT": "Zettle stock could not be confirmed. Check the saved item status before taking further action.",
       "ZETTLE_INVENTORY_AMBIGUOUS": "Zettle stock could not be confirmed. Check the saved item status before taking further action.",
       "ZETTLE_STOCK_HELD": "Zettle stock could not be confirmed. Check the saved item status before taking further action.",
+      "ZETTLE_IMAGE_INVALID": "The photo could not be read or is too small or invalid. Image export stopped.",
+      "ZETTLE_IMAGE_FAILED": "Image upload was not confirmed. No stock was changed. Check image status before continuing.",
+      "ZETTLE_IMAGE_HELD": "The previous image upload is uncertain. Manual reconciliation is required; it will not be uploaded twice.",
+      "ZETTLE_IMAGE_PRODUCT_REQUIRED": "Export the product before exporting its photo.",
       "ZETTLE_EXPORT_FAILED": "The product step failed. No stock increment started. Check the product attempt before retrying.",
       "ZETTLE_PRODUCT_UUID_REJECTED": "Zettle rejected the product identifier. The export is held for a safe identity correction.",
       "ZETTLE_IDENTITY_HELD": "The product identity cannot be changed safely. Review the earlier export and stock history.",
@@ -1427,6 +1431,14 @@
     "stockTitle": "Item export and stock",
     "stockHint": "Export one item at a time. The first attempt adds one tracked unit. Later attempts check the result and update the price without replenishing stock. Up to 50 recorded attempts are shown; unresolved attempts come first.",
     "exportItem": "Export item to Zettle",
+    "exportImage": "Export product photo",
+    "imageHint": "After exporting the item, send the first photo from its accepted reception review to Zettle. A reduced copy becomes product imagery there; visible people or labels are not redacted. Originals stay private. This action does not change stock.",
+    "imageStates": {
+      "synced": "Product photo exported to Zettle.",
+      "no_photo": "No photo in the accepted reception review. Purchase and inspection origins have no exportable photo in this version.",
+      "held": "Image upload unconfirmed. Manual reconciliation is required; no automatic re-upload.",
+      "uploaded": "Photo uploaded; product association needs checking. Retry image export."
+    },
     "checkStock": "Check stock / update product",
     "stockSteps": {
       "tracking": "Read tracking status",

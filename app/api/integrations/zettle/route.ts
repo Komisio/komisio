@@ -1,6 +1,7 @@
 import { ProductHttpError } from '@/extensions/zettle/http'
 import { ProductReadError } from '@/extensions/zettle/catalog'
 import { exportZettleItem } from '@/lib/engine/zettle-stock'
+import { exportZettleImage } from '@/lib/engine/zettle-images'
 import { enableZettlePull, pullZettlePurchases } from '@/lib/engine/zettle-live'
 import { pilotEnvironment } from '@/extensions/zettle/auth'
 import { NextResponse } from 'next/server'
@@ -46,11 +47,13 @@ export async function POST(request: Request) {
       return reply({ error: 'TENANT_CHANGED' }, 409)
     if (!['owner', 'admin', 'staff'].includes(ctx.active.role))
       return reply({ error: 'FORBIDDEN' }, 403)
-    if (c.action === 'export') {
+    if (c.action === 'export' || c.action === 'exportImage') {
       if (!['owner', 'admin'].includes(ctx.active.role))
         return reply({ error: 'FORBIDDEN' }, 403)
       return reply(
-        await exportZettleItem(
+        await (
+          c.action === 'exportImage' ? exportZettleImage : exportZettleItem
+        )(
           ctx.client,
           c.tenantId,
           c.requestId,

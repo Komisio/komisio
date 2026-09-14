@@ -197,3 +197,29 @@ export async function connectedPilotCatalog(
     inventory: inventoryHttpClient(env.ZETTLE_MERCHANT_ID, token, http),
   }
 }
+
+export async function connectedPilotImages(
+  tenantId: string,
+  source: PilotEnvironment,
+  http: typeof fetch = globalThis.fetch,
+) {
+  const env = pilotEnvironment(source)
+  if (!pilotAvailable(tenantId, env) || !env.ZETTLE_MERCHANT_ID)
+    throw new Error('ZETTLE_NOT_CONNECTED')
+  let lease = await acquirePilotSession(tenantId, env, http)
+  const token = async () => {
+    if (lease.expiresAt <= Date.now() + 30000)
+      lease = await acquirePilotSession(tenantId, env, http)
+    return lease.accessToken
+  }
+  const { imageHttpClient } = await import('./images')
+  const catalog = zettleHttpClient({
+    organizationId: env.ZETTLE_MERCHANT_ID,
+    accessToken: token,
+    fetch: http,
+  })
+  return {
+    uploadImage: imageHttpClient(env.ZETTLE_MERCHANT_ID, token, http),
+    putProduct: catalog.putProduct,
+  }
+}

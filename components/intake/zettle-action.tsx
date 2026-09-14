@@ -65,6 +65,8 @@ export function ZettleAction({
       }
       if (body.stock && body.stock in d.stockStates)
         setError(d.stockStates[body.stock as keyof typeof d.stockStates])
+      if (body.image && body.image in d.imageStates)
+        setError(d.imageStates[body.image as keyof typeof d.imageStates])
       if (body.diagnostic && body.stock in d.stockStates) {
         const detail = body.diagnostic
         setError(

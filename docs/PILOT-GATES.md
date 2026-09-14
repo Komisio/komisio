@@ -99,3 +99,10 @@ proposed defaults is [OWNER-ACTIONS-2026-09-14.md](OWNER-ACTIONS-2026-09-14.md).
   `select cron.schedule('komisio-expire-plans','45 3 * * *','select komisio_private.expire_plans()')`
   if the migration did not schedule it. New stores start a 30-day trial from
   then on.
+- Stripe (sandbox for staging): `STRIPE_SECRET_KEY`, `STRIPE_PRICE_ID` (the
+  199 SEK monthly price, excluding VAT) and `STRIPE_WEBHOOK_SECRET` for the
+  endpoint `<NEXT_PUBLIC_APP_URL>/api/billing/webhook` with the events
+  checkout.session.completed, customer.subscription.updated,
+  customer.subscription.deleted, invoice.paid, invoice.payment_failed; the
+  automation identity registered as billing actor with
+  `select komisio_private.register_billing_actor('<automation user id>')`.

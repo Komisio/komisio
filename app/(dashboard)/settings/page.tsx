@@ -11,8 +11,15 @@ import { can } from '@/lib/platform/permissions'
 import { TenantForm } from '@/components/platform/tenant-form'
 import { PlanPanel } from '@/components/platform/plan-panel'
 import { readPlanStatus } from '@/lib/engine/plans'
+import { BillingActions } from '@/components/platform/billing-actions'
+import { stripeConfigured } from '@/extensions/stripe/api'
 import Link from 'next/link'
-export default async function Settings() {
+export default async function Settings({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}) {
+  const query = await searchParams
   const ctx = await requirePlatform()
   const d = dictionary(ctx.locale)
   const active = ctx.active!
@@ -144,7 +151,26 @@ export default async function Settings() {
           ) : (
             <p>{active.name}</p>
           )}
-          <PlanPanel status={plan} locale={ctx.locale} d={d.plans} />
+          <PlanPanel
+            status={plan}
+            locale={ctx.locale}
+            d={d.plans}
+            actions={
+              plan && plan.billing && active.role === 'owner' ? (
+                <BillingActions
+                  tenantId={active.id}
+                  status={plan}
+                  configured={stripeConfigured(process.env)}
+                  outcome={
+                    query.billing === 'success' || query.billing === 'cancelled'
+                      ? query.billing
+                      : null
+                  }
+                  d={d.plans}
+                />
+              ) : null
+            }
+          />
           <hr className="divider" />
           <div className="read-details">
             <label>{d.slug}</label>

@@ -38,8 +38,9 @@ file with a single voucher in series A, dated on the close date and described
 as `Dagsavslut <date> v<version>`, debit positive and credit negative, text
 reduced to ASCII under `#FORMAT PC8`. The file can be downloaded again at any
 time; it is rendered from the recorded lines, never recomputed. Sending to
-Fortnox through its API follows once the tenant connects an account; the file
-imports into Fortnox and other Swedish bookkeeping software as it is.
+Fortnox through its API follows once the tenant has connected an account (see
+[FORTNOX-CONNECTION.md](FORTNOX-CONNECTION.md)); the file imports into
+Fortnox and other Swedish bookkeeping software as it is.
 
 ## Surface
 

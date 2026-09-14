@@ -77,3 +77,7 @@ migrations through `20260915130000`; every table matched.
   (the markdown agent's daily run; the migration schedules it only where the
   extension already exists).
 - A complete authenticated hosted journey exercised by the owner.
+- Fortnox pilot: `FORTNOX_PILOT_TENANT_ID`, `FORTNOX_EXPECTED_COMPANY_NAME` and
+  `KOMISIO_CREDENTIAL_KEY` set, the callback URL registered in the Fortnox
+  developer portal, one connection made and checked against the test company,
+  then `FORTNOX_EXPECTED_DATABASE_NUMBER` pinned (see FORTNOX-CONNECTION.md).

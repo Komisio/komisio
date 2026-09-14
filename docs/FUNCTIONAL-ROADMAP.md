@@ -360,6 +360,26 @@ on the inspection and reception pages and an agent tool (migration
 evidence waits for an opt-in design
 (migration `20260915100000`, see [SETTLEMENT.md](SETTLEMENT.md)).
 
+On 2026-09-14 the Fortnox chain closed: a per-store connection with sealed
+tokens and a company pin (migration `20260915210000`), voucher sending from
+recorded exports (`20260915220000`), the reconciliation view
+(`20260915240000`) and the accounting page in three views; the first real
+voucher reached the owner's Fortnox test company. The weekly and monthly
+brief is a deterministic read (`20260915230000`). The owner's decisions on
+the consolidated list ([OWNER-ACTIONS-2026-09-14.md](OWNER-ACTIONS-2026-09-14.md))
+pulled parts of P4 and P6 forward: the automation actor (`20260916020000`,
+[AUTOMATION-ACTOR.md](AUTOMATION-ACTOR.md); Astra's scheduled Zettle
+retrieval runs on it), plans and trial with a read-only gate
+(`20260916030000`), Stripe Checkout, portal and webhooks
+(`20260916040000`), trial notices from a daily cron (`20260916070000`) and
+the onboarding checklist, all in
+[ONBOARDING-AND-PLANS.md](ONBOARDING-AND-PLANS.md) and verified end to end
+on staging. The client got a grouped navigation, a start page with today's
+numbers, and a mark. What remains before production is the checklist in
+that document and the pilot gates; what remains of P3 needs the owner
+(payout rails, printer) or Astra's list (automatic Fortnox sending,
+retention and erasure).
+
 | Phase                                       | Theme                    | Slices                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Needs from owner                                                                                                                        |
 | ------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | P0 (implemented baseline; pilot gates open) | Foundation and reception | Tenancy, users, MFA, agreements, bag receipts, inspection drafts, single-garment reception with optional AI adapter, seller mobile review, staged operations, MCP reads and propose                                                                                                                                                                                                                                                                                                                                             | –                                                                                                                                       |

@@ -12,11 +12,14 @@ command, thin surface, tests. Base every branch on `main`.
 
 ## Coordination
 
-- Migration timestamps: Fable is at `20260916070000`. Take
-  `20260916080000` and later; list `supabase/migrations` in every worktree
-  and on `origin/main` before choosing.
-- pgTAP numbers: Fable is at 0076. Start at 0080; glob `supabase/tests`
-  across all worktrees first.
+- Migration timestamps: Astra owns `20260916080000` to `20260916199999`;
+  Fable continues from `20260916200000` (weekly brief took it). List
+  `supabase/migrations` in every worktree and on `origin/main` before
+  choosing.
+- pgTAP numbers: Astra owns 0080 to 0089; Fable continues from 0090. Glob
+  `supabase/tests` across all worktrees first.
+- Questions to Fable go in `docs/ASTRA_QUESTIONS_TO_FABLE.md`; answers come
+  in `docs/FABLE_TO_ASTRA_ANSWERS.md` (the token-refresh answer is there).
 - The automation actor is live on staging (identity, `CRON_SECRET`,
   billing actor registered). Scopes are `zettle_pull` and `fortnox_send`;
   task 1 uses the second. The billing actor (platform host of kind

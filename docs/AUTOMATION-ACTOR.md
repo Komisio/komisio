@@ -109,3 +109,15 @@ or that a real scheduled POS action has been observed.
   `enableAutomation`, `disableAutomation`, `readAutomation`,
   `acceptAutomationGrants`. The members page shows the automation member as
   a badge without role actions.
+
+## Scopes in use (2026-09-14)
+
+| Scope          | Opens                                                                      | Built by |
+| -------------- | -------------------------------------------------------------------------- | -------- |
+| `zettle_pull`  | open and record Zettle pull windows for the store (Astra, PR143)           | Astra    |
+| `fortnox_send` | send recorded exports as vouchers, refresh tokens of the pinned connection | Astra    |
+| `weekly_brief` | read the economy summary and brief; mail it to the owners on Mondays       | Fable    |
+
+Owner switches: `POST /api/automation-grants` (enable, disable) for any
+scope, or the integration's own route. The switch is a grant; the identity
+accepts it on its next cron run.

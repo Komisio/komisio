@@ -1,5 +1,16 @@
 # Decision Log
 
+## 2026-09-14: Owner escape for a blocked Zettle window
+
+Only a current owner may abandon an unfinished latest pull window, with a trimmed
+reason of 1–500 characters. An immutable closure records request, actor, time and
+ZETTLE_WINDOW_ABANDONED; no receipt, sale or artificial empty page is created.
+The next window starts exactly at the abandoned window's end, without replaying
+its overlap. This can leave missing receipts and requires manual reconciliation.
+Previously committed pages remain immutable and replayable; no new page may commit
+to an abandoned window. Closure, page ingestion and window opening serialize on
+the tenant lock. Scheduled transport remains separate from this owner escape.
+
 ## 2026-09-14: GitHub-managed staging migrations
 
 The owner requires staging database changes to deploy through GitHub, without

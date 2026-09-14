@@ -1,5 +1,15 @@
 # Decision Log
 
+## 2026-09-14: Document operator-mediated MFA recovery
+
+Implement owner decision B2 as docs/OPERATIONS-MFA-RECOVERY.md, not a new reset
+permission: the store owner verifies the person, an authorized operator performs
+the approved factor removal in the correct Supabase project and records restricted
+support evidence, and the person re-enrols and verifies a fresh MFA login. Uncertain
+identity, authority or a broader dashboard action stops the procedure. No service
+key, membership change, financial write or weakened MFA policy is introduced.
+The synthetic staging recovery exercise remains a pilot gate, not claimed evidence.
+
 ## 2026-09-14: Fortnox retries must not duplicate external vouchers
 
 Before automatic sending, enforce the existing at-most-one-voucher rule on the

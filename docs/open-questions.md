@@ -190,8 +190,9 @@ wording is decided per template when the notification policy is built.
 17. ~~How will an operator verify identity for a lost MFA device?~~ **Answered
     2026-09-14 (DECISIONS.md, B2):** no self-service; the store owner verifies
     the person, an operator removes the factor in the Supabase dashboard and
-    logs it; the person re-enrols. The written procedure and a test of it are
-    still to do before external pilot users.
+    logs it; the person re-enrols. The written procedure is now
+    [OPERATIONS-MFA-RECOVERY.md](OPERATIONS-MFA-RECOVERY.md); its synthetic
+    staging exercise is still required before external pilot users.
 18. ~~What are the account-deletion/anonymization, access-log retention and support
     procedures?~~ **Answered 2026-09-14 (DECISIONS.md, B1 and B3):** contact
     data anonymised on request or 24 months after last activity, financial rows

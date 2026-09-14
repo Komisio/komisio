@@ -50,6 +50,15 @@ decides on erasure of contact data per case until a retention policy is
 written. `supabase/tests/0057_seller_data_export.test.sql` proves the
 scope, the log entry and the refusals.
 
+## Lost MFA device
+
+Owner decision B2 is documented in
+[OPERATIONS-MFA-RECOVERY.md](OPERATIONS-MFA-RECOVERY.md): independent identity
+verification by the store owner, a scoped dashboard action by an operator,
+restricted support evidence, and re-enrolment followed by a fresh MFA login.
+No self-service reset or new application privilege is introduced. The synthetic
+staging recovery exercise remains an operator action before external users.
+
 ## Backup and restore
 
 Hosted: the Supabase project keeps daily backups on the current plan;
@@ -82,6 +91,7 @@ proposed defaults is [OWNER-ACTIONS-2026-09-14.md](OWNER-ACTIONS-2026-09-14.md).
   (the markdown agent's daily run; the migration schedules it only where the
   extension already exists).
 - A complete authenticated hosted journey exercised by the owner.
+- A recorded synthetic MFA recovery exercise using OPERATIONS-MFA-RECOVERY.md.
 - Fortnox pilot: `FORTNOX_PILOT_TENANT_ID`, `FORTNOX_EXPECTED_COMPANY_NAME` and
   `KOMISIO_CREDENTIAL_KEY` set, the callback URL registered in the Fortnox
   developer portal, one connection made and checked against the test company,

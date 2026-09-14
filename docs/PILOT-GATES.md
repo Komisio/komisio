@@ -92,3 +92,10 @@ proposed defaults is [OWNER-ACTIONS-2026-09-14.md](OWNER-ACTIONS-2026-09-14.md).
   missing RPC for the minutes in between.
 - The `staging-database` GitHub environment restricts deployment branches to
   main and holds the staging account's management token only.
+- Billing (hosted only): once the plan slice is on staging, the owner runs
+  `select komisio_private.enable_billing('<owner auth user id>')` as the
+  database owner, which turns billing on, makes the owner a platform host and
+  keeps existing stores active; then, where pg_cron exists,
+  `select cron.schedule('komisio-expire-plans','45 3 * * *','select komisio_private.expire_plans()')`
+  if the migration did not schedule it. New stores start a 30-day trial from
+  then on.

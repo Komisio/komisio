@@ -1,5 +1,22 @@
 # Live Zettle receipt retrieval
 
+## Real merchant verification log
+
+Append one row after each real provider action. Record the action date in
+Europe/Stockholm, the minimal payload description, observed provider/POS result,
+reconciliation and evidence source. If only the report date is known, say so;
+never turn a unit test, API acknowledgement or a database migration into POS
+acceptance evidence. Keep credentials, raw receipts, customer details and exact
+merchant/item identifiers out of this public log; retain correlation privately.
+
+| Date / evidence | Action and minimal data sent | Observed Zettle result | Reconciliation / limit |
+| --- | --- | --- | --- |
+| Report recorded 2026-09-14; owner report in this conversation; action date not supplied | Exported one test article from Komisio to the pilot POS; exact payload and correlation not retained here | Owner saw the article in Zettle POS, without inventory tracking and without a product image | Product appearance is owner-reported, not independently reproduced. Stock and image appearance after the fixes remain unverified. No manual stock adjustment is confirmed. |
+
+No real receipt pull, matched sale or image upload was performed during this
+follow-up implementation. Their verification rows must be added when those actions
+actually occur, with POS observation recorded separately from HTTP success.
+
 This slice connects the verified API-key pilot to the existing sale engine.
 It is a bounded, manually triggered purchase pull, not a scheduled worker or
 product/inventory export. The pilot requires the explicit tenant and merchant

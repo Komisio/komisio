@@ -1,5 +1,15 @@
 # Zettle product image export
 
+## Live evidence (2026-09-14)
+
+The owner's pre-fix product export report is recorded in
+[the real merchant log](ZETTLE-LIVE-PULL.md#real-merchant-verification-log).
+It confirms a missing image, not successful image export. No real image-upload
+or post-upload POS observation is confirmed by this implementation session.
+After the first upload, append its own dated log row with the selected accepted
+photo, minimized file sent, actual POS appearance and any manual reconciliation.
+Do not publish the private original or provider URL in the log.
+
 The owner/admin action **Export product photo** on the Zettle integration page
 sends one image for an already exported item. It is deliberately separate from
 stock initialization, including for items with a held stock attempt.

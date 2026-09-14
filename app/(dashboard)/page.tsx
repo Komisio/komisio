@@ -5,6 +5,8 @@ import { dictionary } from '@/lib/i18n'
 import { can } from '@/lib/platform/permissions'
 import { Button } from '@/components/ui/button'
 import { readOnboarding } from '@/lib/engine/onboarding'
+import { readOverview } from '@/lib/engine/overview'
+import { formatSignedOre } from '@/lib/engine/seller-ledger'
 export default async function Home() {
   const ctx = await requirePlatform()
   const d = dictionary(ctx.locale)
@@ -28,6 +30,12 @@ export default async function Home() {
     team: d.stepTeam,
   }
   const intakeEnabled = process.env.KOMISIO_INTAKE_ENABLED === 'true'
+  const overview = intakeEnabled
+    ? await readOverview(ctx.client, active.id)
+    : null
+  const o = d.overview
+  const money = (ore: number, currency: string) =>
+    `${formatSignedOre(ore)} ${currency}`
   const steps = (
     intakeEnabled
       ? await readOnboarding(ctx.client, active.id, {
@@ -55,6 +63,68 @@ export default async function Home() {
         </h1>
         <p>{d.homeIntro}</p>
       </div>
+      {overview && (
+        <section className="card" aria-label={o.heading}>
+          <h2>{o.heading}</h2>
+          <div
+            className="stats-strip"
+            style={{ marginTop: 8, borderTop: 0, padding: 0, flexWrap: 'wrap' }}
+          >
+            <div className="stat">
+              <small>{o.todaySales}</small>
+              <strong>
+                {overview.today ? overview.today.salesCount : '–'}
+              </strong>
+            </div>
+            <div className="stat">
+              <small>{o.todayGross}</small>
+              <strong>
+                {overview.today
+                  ? money(overview.today.grossOre, overview.today.currency)
+                  : '–'}
+              </strong>
+            </div>
+            <div className="stat">
+              <small>{o.openProposals}</small>
+              <strong>{overview.openProposals ?? '–'}</strong>
+            </div>
+            <div className="stat">
+              <small>{o.attentionDays}</small>
+              <strong>{overview.attentionDays ?? '–'}</strong>
+            </div>
+            <div className="stat">
+              <small>{o.openPayouts}</small>
+              <strong>
+                {overview.openPayouts
+                  ? `${overview.openPayouts.count} · ${money(overview.openPayouts.amountOre, overview.today?.currency ?? 'SEK')}`
+                  : '–'}
+              </strong>
+            </div>
+            <div className="stat">
+              <small>{o.owed}</small>
+              <strong>
+                {overview.owedOre !== null
+                  ? money(overview.owedOre, overview.today?.currency ?? 'SEK')
+                  : '–'}
+              </strong>
+            </div>
+          </div>
+          <p className="row wrap" style={{ marginTop: 14 }}>
+            <Link className="text-link" href="/intake/operations">
+              {o.openQueue}
+            </Link>
+            <Link className="text-link" href="/intake/accounting">
+              {o.openReconciliation}
+            </Link>
+            <Link className="text-link" href="/intake/payouts">
+              {o.openPayoutsPage}
+            </Link>
+            <Link className="text-link" href="/intake/economy">
+              {o.openEconomy}
+            </Link>
+          </p>
+        </section>
+      )}
       <div className="home-grid">
         <section className="card">
           <div className="between">

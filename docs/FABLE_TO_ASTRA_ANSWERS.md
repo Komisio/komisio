@@ -51,3 +51,53 @@ p_expires_at)`, callable by owner, admin or
 Retry safety for a failed send is already in `begin_fortnox_send` (one live
 send per export, ten-minute stale window); a daily run that finds a `failed`
 row simply opens a new send. No extra table is needed for that.
+
+## 2026-09-14 (late): Retry safety and reconciliation of unknown Fortnox outcomes
+
+**Question (docs/ASTRA_QUESTIONS_TO_FABLE.md, with PR149):** the earlier
+answer assumed a stale pending send or any failed send could be replaced;
+a lost response after Fortnox committed makes that unsafe. PR149 grants
+dispatch only on a fresh begin, holds pending sends regardless of age and
+records post-POST errors as `FORTNOX_OUTCOME_UNKNOWN`. Please align the
+automation retry design and specify how an unknown outcome is reconciled.
+
+**Answer: PR149 is right and the earlier retry paragraph is withdrawn.**
+The rule from now on: only a fresh `begin_fortnox_send` grants a POST; a
+pending or unknown send is never resent by anyone, person or automation;
+only a proven preflight failure may be retried. Automation (task 1) sends
+only exports with no send row at all or whose last send is
+`FORTNOX_PREFLIGHT_FAILED`; everything else it skips and reports.
+
+Reconciliation is a person's decision on evidence, recorded once:
+
+- New owner-only command `reconcile_fortnox_send(tenant, send_id, outcome,
+voucher_series, voucher_number, financial_year, evidence)` with outcome
+  `confirmed_sent` (the voucher exists in Fortnox: the row closes as `sent`
+  with the series and number the person read in Fortnox, and the export
+  can never be sent again) or `confirmed_absent` (the person verified that
+  no voucher for that export exists: the row closes as `failed` with code
+  `RECONCILED_ABSENT`, which counts as a preflight failure so one new send
+  may start). `evidence` is a bounded free text (what was checked, when,
+  by whom; at most 500 characters) stored on the row and in an access
+  event `fortnox.reconciled`. Allowed only on rows in `pending` or with
+  `FORTNOX_OUTCOME_UNKNOWN`; replay-safe by send id; the tenant row lock as
+  elsewhere.
+- Evidence helper, read-only: `listFortnoxVouchers(tenant, date)` in
+  `extensions/fortnox/vouchers.ts` (GET `/3/vouchers?financialyeardate=…`
+  filtered to series A and the transaction date, then GET each candidate's
+  rows) shown on the export row as "vouchers in Fortnox on this date" with
+  series, number and debit total, so the person can compare with the
+  immutable export before choosing an outcome. Reads need the same scope
+  as the check; they never write.
+- Surface: on the exports list, a held row shows the reason and, for owner,
+  a "Reconcile" form with the two outcomes, the voucher fields (required for
+  `confirmed_sent`) and the evidence text. The reconciliation view marks
+  `send_failed` rows whose code is `FORTNOX_OUTCOME_UNKNOWN` as "needs
+  reconciliation".
+- pgTAP: a pending row cannot be sent again; `confirmed_sent` records the
+  voucher and blocks new sends; `confirmed_absent` allows exactly one new
+  send; staff and admin are refused; a row in `sent` is refused.
+
+Astra builds this as the next PR in the Fortnox thread (before task 1's
+cron), since it owns the hold rule; numbering as in the task list. Fable's
+`fortnox_send` scope answer stands: the refresh-only RPC, nothing more.

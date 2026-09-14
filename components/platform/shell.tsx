@@ -1,15 +1,14 @@
 'use client'
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { Plus, LogOut } from 'lucide-react'
+import { NavIcon } from './nav-icon'
 import {
-  House,
-  Users,
-  Settings2,
-  UserRound,
-  Plus,
-  LogOut,
-  Building2,
-} from 'lucide-react'
+  buildNavigation,
+  currentLink,
+  isActivePath,
+  mobileNavigation,
+} from '@/lib/platform/navigation'
 import { Brand } from './brand'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
@@ -37,20 +36,12 @@ export function Shell({
   host?: boolean
 }) {
   const pathname = usePathname()
-  const isActive = (path: string) =>
-    pathname === path || (path !== '/' && pathname.startsWith(`${path}/`))
+  const isActive = (path: string) => isActivePath(pathname, path)
   const router = useRouter()
   const action = useCommand(d)
-  const links = [
-    { path: '/', label: d.home, icon: House },
-    ...(intakeEnabled
-      ? [{ path: '/intake', label: d.intake.title, icon: Plus }]
-      : []),
-    { path: '/members', label: d.members, icon: Users },
-    { path: '/settings', label: d.tenant, icon: Settings2 },
-    { path: '/account', label: d.account, icon: UserRound },
-    ...(host ? [{ path: '/host', label: d.hostLink, icon: Building2 }] : []),
-  ]
+  const groups = buildNavigation(d, { intakeEnabled, host })
+  const mobile = mobileNavigation(d, intakeEnabled)
+  const current = currentLink(groups, pathname)
   async function select(value: string) {
     const result = await action.run({ action: 'select', tenantId: value })
     if (result) {
@@ -94,21 +85,25 @@ export function Shell({
             {d.newTenant}
           </Link>
         </div>
-        <div className="nav-label eyebrow">{d.platform}</div>
-        <nav aria-label={d.platform}>
-          {links
-            .filter((link) => link.path !== '/account')
-            .map(({ path, label, icon: Icon }) => (
-              <Link
-                key={path}
-                href={path}
-                className={`nav-link ${isActive(path) ? 'active' : ''}`}
-                aria-current={isActive(path) ? 'page' : undefined}
-              >
-                <Icon size={17} strokeWidth={1.7} />
-                {label}
-              </Link>
-            ))}
+        <nav aria-label={d.platform} className="sidebar-nav">
+          {groups.map((group, i) => (
+            <div key={i} className="nav-group">
+              {group.label && (
+                <div className="nav-label eyebrow">{group.label}</div>
+              )}
+              {group.links.map(({ path, label, icon }) => (
+                <Link
+                  key={path}
+                  href={path}
+                  className={`nav-link ${isActive(path) ? 'active' : ''}`}
+                  aria-current={isActive(path) ? 'page' : undefined}
+                >
+                  <NavIcon name={icon} size={16} strokeWidth={1.7} />
+                  {label}
+                </Link>
+              ))}
+            </div>
+          ))}
         </nav>
         <div className="sidebar-footer">
           <p style={{ fontSize: 11, padding: '0 12px' }}>{d.help}</p>
@@ -136,9 +131,11 @@ export function Shell({
         <span className="breadcrumb">
           {active.name}
           <span style={{ padding: '0 12px' }}>/</span>
-          {pathname === '/intake/agreements'
-            ? d.agreements.title
-            : (links.find((l) => isActive(l.path))?.label ?? d.home)}
+          {pathname === '/menu'
+            ? d.nav.more
+            : pathname === '/account'
+              ? d.account
+              : (current?.label ?? d.home)}
         </span>
         <div className="desktop-only row">
           <span className="badge">{d.roles[active.role]}</span>
@@ -153,14 +150,14 @@ export function Shell({
         {children}
       </main>
       <nav className="mobile-nav" aria-label={d.platform}>
-        {links.map(({ path, label, icon: Icon }) => (
+        {mobile.map(({ path, label, icon }) => (
           <Link
             key={path}
             href={path}
             className={`nav-link ${isActive(path) ? 'active' : ''}`}
             aria-current={isActive(path) ? 'page' : undefined}
           >
-            <Icon size={19} />
+            <NavIcon name={icon} size={19} />
             {label}
           </Link>
         ))}

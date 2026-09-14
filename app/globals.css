@@ -534,18 +534,32 @@ small {
   display: flex;
   flex-direction: column;
   border-right: 1px solid var(--line);
-  padding: 29px 20px 16px;
+  padding: 24px 16px 12px;
   background: #f0f3eb;
+  overflow-y: auto;
+}
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.nav-group .nav-label {
+  margin-bottom: 4px;
+}
+.menu-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 4px;
 }
 .sidebar > .brand {
-  margin: 0 11px 32px;
+  margin: 0 11px 22px;
 }
 .tenant-picker {
   background: white;
   border: 1px solid var(--line);
   padding: 12px;
   border-radius: 12px;
-  margin-bottom: 28px;
+  margin-bottom: 18px;
 }
 .tenant-picker small {
   font-size: 10px;
@@ -567,11 +581,11 @@ small {
 .nav-link {
   display: flex;
   align-items: center;
-  gap: 11px;
-  padding: 11px 13px;
+  gap: 10px;
+  padding: 8px 12px;
   border-radius: 9px;
   font-size: 13px;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   color: #6c7a6b;
 }
 .nav-link.active {
@@ -584,7 +598,7 @@ small {
 }
 .sidebar-footer {
   margin-top: auto;
-  padding-top: 26px;
+  padding-top: 18px;
 }
 .account-link {
   border-top: 1px solid #dce3d7;

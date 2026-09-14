@@ -104,7 +104,11 @@ const stored = z.object({
 async function persist(
   client: SupabaseClient,
   tenantId: string,
-  company: { CompanyName: string; OrganizationNumber: string; DatabaseNumber: string },
+  company: {
+    CompanyName: string
+    OrganizationNumber: string
+    DatabaseNumber: string
+  },
   tokens: TokenSet,
   source: Record<string, string | undefined>,
 ) {

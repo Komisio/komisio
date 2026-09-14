@@ -71,14 +71,18 @@ export function FortnoxConnection({
       <p>{d.intro}</p>
       {outcome && (
         <p role={outcome === 'connected' ? 'status' : 'alert'}>
-          {outcome === 'connected' ? d.connected : (errors[outcome] ?? d.connectionFailed)}
+          {outcome === 'connected'
+            ? d.connected
+            : (errors[outcome] ?? d.connectionFailed)}
         </p>
       )}
       {status.connected ? (
         <p>
           {d.connectedTo} <strong>{status.companyName}</strong> ·{' '}
           {d.databaseNumber} {status.databaseNumber}
-          {status.connectedAt ? ` · ${d.since} ${when(status.connectedAt)}` : ''}
+          {status.connectedAt
+            ? ` · ${d.since} ${when(status.connectedAt)}`
+            : ''}
         </p>
       ) : (
         <p>{d.notConnected}</p>
@@ -100,7 +104,11 @@ export function FortnoxConnection({
           )}
           {status.connected && (
             <>
-              <Button type="button" onClick={() => void post('check')} disabled={busy}>
+              <Button
+                type="button"
+                onClick={() => void post('check')}
+                disabled={busy}
+              >
                 {busy ? d.busy : d.check}
               </Button>
               <Button

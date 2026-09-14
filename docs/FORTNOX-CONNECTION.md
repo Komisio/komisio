@@ -16,10 +16,10 @@ the production company it was created from.
 
 Two pins apply, read from the deployed configuration:
 
-| Pin                                | When                           | Source                                    |
-| ---------------------------------- | ------------------------------ | ----------------------------------------- |
-| `FORTNOX_EXPECTED_COMPANY_NAME`    | mandatory from the first day   | the company name shown in Fortnox         |
-| `FORTNOX_EXPECTED_DATABASE_NUMBER` | after the first check          | `DatabaseNumber` from the first check     |
+| Pin                                | When                         | Source                                |
+| ---------------------------------- | ---------------------------- | ------------------------------------- |
+| `FORTNOX_EXPECTED_COMPANY_NAME`    | mandatory from the first day | the company name shown in Fortnox     |
+| `FORTNOX_EXPECTED_DATABASE_NUMBER` | after the first check        | `DatabaseNumber` from the first check |
 
 A token whose company information does not match both pins (the second when
 set) is dropped; only the company name, database number and the reason are
@@ -30,14 +30,14 @@ so that a renamed company cannot pass on name alone.
 
 Server-only, in Vercel (Production) for the hosted pilot:
 
-| Variable                           | Meaning                                                   |
-| ---------------------------------- | --------------------------------------------------------- |
-| `FORTNOX_CLIENT_ID`                | integration client id from the developer portal           |
-| `FORTNOX_CLIENT_SECRET`            | integration client secret                                 |
-| `FORTNOX_PILOT_TENANT_ID`          | the one store allowed to connect (uuid)                   |
-| `FORTNOX_EXPECTED_COMPANY_NAME`    | the company name pin, compared case-insensitively         |
-| `FORTNOX_EXPECTED_DATABASE_NUMBER` | the database number pin, optional until first check       |
-| `KOMISIO_CREDENTIAL_KEY`           | 64 hex characters; seals stored tokens and signs state    |
+| Variable                           | Meaning                                                |
+| ---------------------------------- | ------------------------------------------------------ |
+| `FORTNOX_CLIENT_ID`                | integration client id from the developer portal        |
+| `FORTNOX_CLIENT_SECRET`            | integration client secret                              |
+| `FORTNOX_PILOT_TENANT_ID`          | the one store allowed to connect (uuid)                |
+| `FORTNOX_EXPECTED_COMPANY_NAME`    | the company name pin, compared case-insensitively      |
+| `FORTNOX_EXPECTED_DATABASE_NUMBER` | the database number pin, optional until first check    |
+| `KOMISIO_CREDENTIAL_KEY`           | 64 hex characters; seals stored tokens and signs state |
 
 The developer portal must list the redirect URI
 `<NEXT_PUBLIC_APP_URL>/api/integrations/fortnox/callback` and the scopes

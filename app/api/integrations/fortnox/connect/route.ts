@@ -13,14 +13,21 @@ export async function GET(request: Request) {
   if (!origin) return new Response(null, { status: 403 })
   const ctx = await platformContext()
   if (!ctx || ctx.mfaRequired || !ctx.active)
-    return NextResponse.redirect(new URL('/login?next=%2Fintake%2Faccounting', origin))
+    return NextResponse.redirect(
+      new URL('/login?next=%2Fintake%2Faccounting', origin),
+    )
   if (!['owner', 'admin'].includes(ctx.active.role))
     return new Response(null, { status: 403 })
-  const tenant = z.uuid().safeParse(new URL(request.url).searchParams.get('tenant'))
+  const tenant = z
+    .uuid()
+    .safeParse(new URL(request.url).searchParams.get('tenant'))
   if (!tenant.success || tenant.data !== ctx.active.id)
     return new Response(null, { status: 409 })
   try {
-    const redirectUri = new URL('/api/integrations/fortnox/callback', origin).toString()
+    const redirectUri = new URL(
+      '/api/integrations/fortnox/callback',
+      origin,
+    ).toString()
     const { url, state } = await startFortnoxConnection(
       ctx.client,
       ctx.active.id,

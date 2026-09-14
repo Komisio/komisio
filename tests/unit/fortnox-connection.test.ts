@@ -60,7 +60,9 @@ describe('credentials', () => {
     expect(verifyState('s', state, env)).toEqual({ tenantId: tenant })
     expect(verifyState('t', state, env)).toBeNull()
     expect(verifyState('s', `${state}x`, env)).toBeNull()
-    expect(verifyState('s', signState('s', { a: 'b' }, -1, env), env)).toBeNull()
+    expect(
+      verifyState('s', signState('s', { a: 'b' }, -1, env), env),
+    ).toBeNull()
   })
 })
 
@@ -70,10 +72,16 @@ describe('fortnox adapter', () => {
       'connectionTenantMissing',
     )
     expect(
-      fortnoxIssue('20000000-0000-4000-8000-000000000002', fortnoxEnvironment(env)),
+      fortnoxIssue(
+        '20000000-0000-4000-8000-000000000002',
+        fortnoxEnvironment(env),
+      ),
     ).toBe('connectionUnavailable')
     expect(
-      fortnoxIssue(tenant, fortnoxEnvironment({ ...env, FORTNOX_CLIENT_SECRET: '' })),
+      fortnoxIssue(
+        tenant,
+        fortnoxEnvironment({ ...env, FORTNOX_CLIENT_SECRET: '' }),
+      ),
     ).toBe('connectionSecretMissing')
     expect(
       fortnoxIssue(
@@ -84,8 +92,12 @@ describe('fortnox adapter', () => {
     expect(fortnoxIssue(tenant, fortnoxEnvironment(env))).toBeNull()
   })
   it('builds the authorisation url with offline access', () => {
-    const url = new URL(authorizeUrl(fortnoxEnvironment(env), 'https://x/cb', 'st'))
-    expect(url.origin + url.pathname).toBe('https://apps.fortnox.se/oauth-v1/auth')
+    const url = new URL(
+      authorizeUrl(fortnoxEnvironment(env), 'https://x/cb', 'st'),
+    )
+    expect(url.origin + url.pathname).toBe(
+      'https://apps.fortnox.se/oauth-v1/auth',
+    )
     expect(url.searchParams.get('access_type')).toBe('offline')
     expect(url.searchParams.get('scope')).toBe('companyinformation bookkeeping')
     expect(url.searchParams.get('state')).toBe('st')
@@ -95,22 +107,36 @@ describe('fortnox adapter', () => {
       .fn<typeof fetch>()
       .mockResolvedValueOnce(tokens())
       .mockResolvedValueOnce(company('Komisio Test'))
-    const set = await exchangeCode(fortnoxEnvironment(env), 'code', 'https://x/cb', http)
+    const set = await exchangeCode(
+      fortnoxEnvironment(env),
+      'code',
+      'https://x/cb',
+      http,
+    )
     expect(set.refresh_token).toBe('synthetic-refresh')
     const init = http.mock.calls[0][1] as RequestInit
-    expect((init.headers as Record<string, string>).Authorization).toMatch(/^Basic /)
+    expect((init.headers as Record<string, string>).Authorization).toMatch(
+      /^Basic /,
+    )
     expect(String(init.body)).toContain('grant_type=authorization_code')
     const info = await readCompanyInformation(set.access_token, http)
     expect(info.DatabaseNumber).toBe('123456')
   })
   it('pins the company name and, when set, the database number; never the org number', () => {
     const base = fortnoxEnvironment(env)
-    const test = { CompanyName: 'komisio test', OrganizationNumber: '1', DatabaseNumber: '123456' }
+    const test = {
+      CompanyName: 'komisio test',
+      OrganizationNumber: '1',
+      DatabaseNumber: '123456',
+    }
     expect(verifyCompany(base, test)).toEqual({ pinnedDatabase: false })
     expect(() =>
       verifyCompany(base, { ...test, CompanyName: 'Inority AB' }),
     ).toThrow('FORTNOX_WRONG_COMPANY')
-    const pinned = fortnoxEnvironment({ ...env, FORTNOX_EXPECTED_DATABASE_NUMBER: '999' })
+    const pinned = fortnoxEnvironment({
+      ...env,
+      FORTNOX_EXPECTED_DATABASE_NUMBER: '999',
+    })
     expect(() => verifyCompany(pinned, test)).toThrow('FORTNOX_WRONG_COMPANY')
     expect(verifyCompany(pinned, { ...test, DatabaseNumber: '999' })).toEqual({
       pinnedDatabase: true,
@@ -123,7 +149,8 @@ function client(role: string, rows: Record<string, unknown> = {}) {
   const rpc = vi.fn(async (fn: string, args: Record<string, unknown>) => {
     calls.push({ fn, args })
     if (fn === 'tenant_role') return { data: role, error: null }
-    if (fn === 'read_fortnox_connection') return { data: rows.connection ?? null, error: null }
+    if (fn === 'read_fortnox_connection')
+      return { data: rows.connection ?? null, error: null }
     return { data: true, error: null }
   })
   return { client: { rpc } as unknown as SupabaseClient, calls }
@@ -165,7 +192,11 @@ describe('fortnox connection engine', () => {
       env,
       http,
     )
-    expect(result).toEqual({ tenantId: tenant, companyName: 'Komisio Test', databaseNumber: '123456' })
+    expect(result).toEqual({
+      tenantId: tenant,
+      companyName: 'Komisio Test',
+      databaseNumber: '123456',
+    })
     const store = calls.find((x) => x.fn === 'store_fortnox_connection')!
     expect(store.args.p_database_number).toBe('123456')
     expect(JSON.stringify(store.args)).not.toContain('synthetic-access')
@@ -218,7 +249,9 @@ describe('fortnox connection engine', () => {
     expect(String((http.mock.calls[0][1] as RequestInit).body)).toContain(
       'refresh_token=old-refresh',
     )
-    expect(calls.filter((x) => x.fn === 'store_fortnox_connection')).toHaveLength(1)
+    expect(
+      calls.filter((x) => x.fn === 'store_fortnox_connection'),
+    ).toHaveLength(1)
     expect(calls.at(-1)?.args.p_kind).toBe('checked')
   })
   it('refuses a check whose company moved to another database', async () => {
@@ -226,11 +259,17 @@ describe('fortnox connection engine', () => {
       databaseNumber: '123456',
       companyName: 'Komisio Test',
       organisationNumber: '',
-      cipher: seal('fortnox-connection', { accessToken: 'a', refreshToken: 'r' }, env),
+      cipher: seal(
+        'fortnox-connection',
+        { accessToken: 'a', refreshToken: 'r' },
+        env,
+      ),
       scope: '',
       expiresAt: new Date(Date.now() + 3600000).toISOString(),
     }
-    const http = vi.fn<typeof fetch>().mockResolvedValueOnce(company('Komisio Test', 7))
+    const http = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(company('Komisio Test', 7))
     const { client: c, calls } = client('owner', { connection })
     await expect(checkFortnoxConnection(c, tenant, env, http)).rejects.toThrow(
       'FORTNOX_WRONG_COMPANY',

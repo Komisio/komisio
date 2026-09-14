@@ -21,12 +21,10 @@ it('does not accept new Zettle staged proposals', () => {
   ).toBe(false)
 })
 it('omits legacy queue rows without hiding malformed supported operations', async () => {
-  const rpc = vi
-    .fn()
-    .mockResolvedValue({
-      data: [{ kind: 'recordZettlePurchase', payload: {} }],
-      error: null,
-    })
+  const rpc = vi.fn().mockResolvedValue({
+    data: [{ kind: 'recordZettlePurchase', payload: {} }],
+    error: null,
+  })
   const client = { rpc } as unknown as SupabaseClient
   expect(await readOperationQueue(client, id)).toEqual([])
   rpc.mockResolvedValue({
@@ -39,12 +37,10 @@ it('returns not found for a retired review before loading receipt context', asyn
   const query = {
     select: vi.fn().mockReturnThis(),
     eq: vi.fn().mockReturnThis(),
-    maybeSingle: vi
-      .fn()
-      .mockResolvedValue({
-        data: { kind: 'recordZettlePurchase' },
-        error: null,
-      }),
+    maybeSingle: vi.fn().mockResolvedValue({
+      data: { kind: 'recordZettlePurchase' },
+      error: null,
+    }),
   }
   const client = {
     rpc: vi.fn().mockResolvedValue({ data: 'owner', error: null }),

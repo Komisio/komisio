@@ -8,6 +8,7 @@ import {
   readEconomySummary,
 } from '@/lib/engine/economy'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
+import { readEconomyBrief, renderBrief } from '@/lib/engine/brief'
 
 /** One page of the store's numbers for a period; the read model is SQL. */
 export default async function Economy({
@@ -27,6 +28,11 @@ export default async function Economy({
   })
   const period = requested.success ? requested.data : currentMonthPeriod()
   const summary = await readEconomySummary(ctx.client, active.id, period)
+  const briefKind = params.brief === 'month' ? 'month' : 'week'
+  const brief = renderBrief(
+    await readEconomyBrief(ctx.client, active.id, { kind: briefKind }),
+    all.brief,
+  )
   const money = (ore: number) => `${formatSignedOre(ore)} ${summary.currency}`
   const t = summary.totals
   const vatModes = all.sales.vatModes as Record<string, string>
@@ -85,6 +91,33 @@ export default async function Economy({
           <p>
             {d.showing} {summary.from} – {summary.to}
           </p>
+        </section>
+        <section className="card intake-form" aria-label={all.brief.heading}>
+          <h2>{all.brief.heading}</h2>
+          <p>{all.brief.hint}</p>
+          <p>
+            <Link
+              className="text-link"
+              href="/intake/economy?brief=week"
+              aria-current={briefKind === 'week' ? 'page' : undefined}
+            >
+              {all.brief.week}
+            </Link>{' '}
+            ·{' '}
+            <Link
+              className="text-link"
+              href="/intake/economy?brief=month"
+              aria-current={briefKind === 'month' ? 'page' : undefined}
+            >
+              {all.brief.month}
+            </Link>
+          </p>
+          <h3>{brief.title}</h3>
+          <ul>
+            {brief.lines.map((line, i) => (
+              <li key={i}>{line}</li>
+            ))}
+          </ul>
         </section>
         <section className="card intake-form" aria-label={d.totalsHeading}>
           <h2>{d.totalsHeading}</h2>

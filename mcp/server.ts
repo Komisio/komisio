@@ -62,6 +62,7 @@ import {
   listSettlementCandidatesTool,
 } from './settlement'
 import { economySummaryInput, readEconomySummaryTool } from './economy'
+import { economyBriefInput, readEconomyBriefTool } from './brief'
 import { priceEvidenceToolInput, readPriceEvidenceTool } from './price-evidence'
 import {
   dayCloseListInput,
@@ -366,6 +367,19 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       (input) =>
         result(async () => ({
           data: await readEconomySummaryTool(client, config, input),
+        })),
+    )
+    server.registerTool(
+      'komisio_read_economy_brief',
+      {
+        description:
+          "Read the store's weekly or monthly brief: fixed sentences over the economy summary for one calendar period (Europe/Stockholm; `anchor` is any date in it, default yesterday) and the one before, with the numbers behind them in öre. Deterministic and read only: no forecast, no seller names, no writes.",
+        inputSchema: economyBriefInput,
+        annotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await readEconomyBriefTool(client, config, input),
         })),
     )
   }

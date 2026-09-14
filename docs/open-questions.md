@@ -145,7 +145,7 @@ proposal's owner clarification for scope and outstanding details.
   rewrite prior receipts. Booking quote/version rules remain separate work.
 - How should mistaken agreement evidence be corrected/revoked, and when must
   external evidence be reverified? This must precede external seller pilot use.
-- **Raised 2026-09-12 ([intake convergence](INTAKE-CONVERGENCE.md)):** the two
+- ~~**Raised 2026-09-12 ([intake convergence](INTAKE-CONVERGENCE.md)):**~~ **Answered 2026-09-14 (DECISIONS.md, B4): all four assumptions confirmed.** Original text: the two
   intake paths apply different agreement prerequisites (a review needs a
   published version, a bag receipt does not) and only the bag path has a
   custody fact. Four assumptions (A1 to A4) are listed in that ADR for the owner
@@ -176,11 +176,16 @@ wording is decided per template when the notification policy is built.
     external email delivery and hosted Auth SMTP are not yet verified.
 16. When must store administrators use MFA or reauthenticate? Enrollment is
     optional; once enabled it is enforced at both application and database levels.
-17. How will an operator verify identity for a lost MFA device? There is no
-    self-service recovery-code or factor-removal flow. Decide and test this before
-    inviting external pilot users; do not disable RLS for recovery.
-18. What are the account-deletion/anonymization, access-log retention and support
-    procedures? Foreign keys currently preserve ownership/audit references.
+17. ~~How will an operator verify identity for a lost MFA device?~~ **Answered
+    2026-09-14 (DECISIONS.md, B2):** no self-service; the store owner verifies
+    the person, an operator removes the factor in the Supabase dashboard and
+    logs it; the person re-enrols. The written procedure and a test of it are
+    still to do before external pilot users.
+18. ~~What are the account-deletion/anonymization, access-log retention and support
+    procedures?~~ **Answered 2026-09-14 (DECISIONS.md, B1 and B3):** contact
+    data anonymised on request or 24 months after last activity, financial rows
+    kept seven years, memberships revoked on deletion, audit references stay.
+    The erasure command itself is a later slice.
 19. **Partly answered 2026-09-12:** mobile reception reviews may include pinned,
     reduced photos from the exact source revision; originals stay internal.
     Metadata stripping does not redact visible people or labels. Camera placement,
@@ -233,7 +238,6 @@ Still required: developer app/test merchant, verified label placement and real
 payload samples, bounded incremental retrieval/reconciliation, and separately
 agreed discount/refund handling. No guessed tax or commission rule is introduced.
 
-
 **Owner clarification2026-09-13:** saleable Komisio items go to Zettle; completed
 matched sales return automatically without a second-person approval. Generic AI
 proposal rules must not turn checkout facts into a manual approval workflow.
@@ -241,7 +245,6 @@ POS VAT-rate mapping is explicitly tenant-configured, not inferred from the engi
 mode. Live acceptance still needs verified merchant settings, inventory1 and
 safe movement replay, delisting, OAuth and windowed reconciliation. Current local
 HTTP fixtures test the product/purchase loop without a real merchant account.
-
 
 **Zettle pilot update2026-09-13:** owner supplied clientId/API key in Vercel and selected Preloved Teststore. Implement the assertion-grant read-only identity check with an explicit pilot tenant pin. Live inventory/windowed sync and per-tenant self-service credential lifecycle remain open; authentication success alone does not enable them.
 

@@ -1,5 +1,10 @@
 # Owner actions and decisions, 2026-09-14
 
+**Owner answers 2026-09-14:** D1 as proposed; C1 yes but excluding VAT; C2–C6
+as proposed; A1 and A5 will be done by the owner (Resend key to follow);
+B1–B4 as proposed. Recorded in DECISIONS.md. Remaining open: A2–A4, A6–A10,
+B5–B10.
+
 Compiled by Fable from [open-questions.md](open-questions.md),
 [PILOT-GATES.md](PILOT-GATES.md), the reviews and the roadmap. Everything
 that code cannot decide, in two groups: settings the owner performs, and

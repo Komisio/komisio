@@ -224,6 +224,7 @@
     "owner": "Owner",
     "admin": "Administrator",
     "staff": "Staff",
+    "automation": "Automation",
     "readonly": "Read only"
   },
   "events": {

@@ -5,7 +5,9 @@ questions a store owner asks before Komisio can be sold as a hosted service:
 where do I start, how does my account become active, and what do I pay. It
 proposes; the decisions are listed at the end and in
 [OWNER-ACTIONS-2026-09-14.md](OWNER-ACTIONS-2026-09-14.md), section C.
-Nothing here is implemented.
+Owner decisions C1 to C6 (2026-09-14): approved, price excluding VAT.
+Slice 1 (plan state, gate, trial, host activation) is delivered in
+migration `20260916030000`; see "Delivered" at the end.
 
 ## The shape of the offer
 
@@ -145,3 +147,32 @@ C2 trial length (30 days) and grace (14 days); C3 what read-only blocks
 invoice); C5 production domain and operating company on the Stripe account;
 C6 staging soak time before production (one working day) and who approves
 production migrations (the owner).
+
+## Delivered (slice 1, 2026-09-14)
+
+- `platform_settings.billing_enabled` (off by default; self-hosted never
+  turns it on), `platform_hosts`, `tenant_plans` (state, provider, trial,
+  grace, manual end date, who set the deadline; changes only through the
+  engine), append-only `tenant_plan_events`.
+- Store creation starts a 30-day trial while billing is on
+  (`komisio_private.start_trial`, actor: the creator). The one gate
+  `komisio_private.require_writable` is attached as a before-insert trigger
+  to the fact tables (sellers, bag and garment receipts, reception sessions,
+  purchases, items, item prices, sales, returns, payouts, pending
+  operations, markdown runs, handovers): a read-only or closed store raises
+  `PLAN_READ_ONLY`; reads, exports and updates such as marking a payout paid
+  stay open.
+- `komisio_private.expire_plans` daily through pg_cron (03:45 UTC where the
+  extension exists): trials, grace periods and dated manual activations
+  that passed become read-only, recorded with the person who set the
+  deadline as actor.
+- Host: `komisio_private.enable_billing(host user)` is the one-time switch
+  the operator runs; it also keeps every existing store active on a manual
+  plan. `activate_plan_manually(tenant, until, reason)` and
+  `host_plan_overview()` for hosts; `close_store(tenant, reason)` for the
+  owner; `plan_status(tenant)` for every member.
+- Surfaces: a banner on every page when the plan needs attention (trial
+  ending within a week, overdue, read-only, closed), the plan panel on the
+  settings page, and `/host` for platform hosts with manual activation.
+- Not yet: Stripe (slice 3), trial e-mails and the onboarding checklist
+  (slice 2), the production environment (slice 4).

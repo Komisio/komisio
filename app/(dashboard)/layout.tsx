@@ -4,6 +4,8 @@ import { Shell } from '@/components/platform/shell'
 import { Brand } from '@/components/platform/brand'
 import { SignOut } from '@/components/platform/sign-out'
 import Link from 'next/link'
+import { PlanBanner } from '@/components/platform/plan-banner'
+import { isPlatformHost, readPlanStatus } from '@/lib/engine/plans'
 export default async function DashboardLayout({
   children,
 }: {
@@ -25,15 +27,26 @@ export default async function DashboardLayout({
       </main>
     )
   }
+  const d = dictionary(ctx.locale)
+  const [plan, host] = await Promise.all([
+    readPlanStatus(ctx.client, ctx.active.id),
+    isPlatformHost(ctx.client),
+  ])
   return (
     <Shell
       intakeEnabled={process.env.KOMISIO_INTAKE_ENABLED === 'true'}
-      d={dictionary(ctx.locale)}
+      host={host}
+      d={d}
       tenants={ctx.tenants}
       active={ctx.active!}
       email={ctx.user.email ?? ''}
       name={ctx.profile?.display_name ?? ''}
     >
+      <PlanBanner
+        status={plan}
+        isOwner={ctx.active.role === 'owner'}
+        d={d.plans}
+      />
       {children}
     </Shell>
   )

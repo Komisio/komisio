@@ -9,6 +9,8 @@ import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { can } from '@/lib/platform/permissions'
 import { TenantForm } from '@/components/platform/tenant-form'
+import { PlanPanel } from '@/components/platform/plan-panel'
+import { readPlanStatus } from '@/lib/engine/plans'
 import Link from 'next/link'
 export default async function Settings() {
   const ctx = await requirePlatform()
@@ -29,6 +31,7 @@ export default async function Settings() {
       : [[], [], [], null]
   const pr = d.printing,
     us = d.usage
+  const plan = await readPlanStatus(ctx.client, active.id)
   const events = can(active.role, 'audit.read')
     ? await ctx.client
         .from('access_events')
@@ -141,6 +144,7 @@ export default async function Settings() {
           ) : (
             <p>{active.name}</p>
           )}
+          <PlanPanel status={plan} locale={ctx.locale} d={d.plans} />
           <hr className="divider" />
           <div className="read-details">
             <label>{d.slug}</label>

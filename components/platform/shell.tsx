@@ -1,7 +1,15 @@
 'use client'
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { House, Users, Settings2, UserRound, Plus, LogOut } from 'lucide-react'
+import {
+  House,
+  Users,
+  Settings2,
+  UserRound,
+  Plus,
+  LogOut,
+  Building2,
+} from 'lucide-react'
 import { Brand } from './brand'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
@@ -17,6 +25,7 @@ export function Shell({
   email,
   name,
   intakeEnabled = false,
+  host = false,
 }: {
   children: React.ReactNode
   d: Dictionary
@@ -25,6 +34,7 @@ export function Shell({
   email: string
   name: string
   intakeEnabled?: boolean
+  host?: boolean
 }) {
   const pathname = usePathname()
   const isActive = (path: string) =>
@@ -39,6 +49,7 @@ export function Shell({
     { path: '/members', label: d.members, icon: Users },
     { path: '/settings', label: d.tenant, icon: Settings2 },
     { path: '/account', label: d.account, icon: UserRound },
+    ...(host ? [{ path: '/host', label: d.hostLink, icon: Building2 }] : []),
   ]
   async function select(value: string) {
     const result = await action.run({ action: 'select', tenantId: value })

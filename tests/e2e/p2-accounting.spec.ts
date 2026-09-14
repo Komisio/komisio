@@ -45,7 +45,19 @@ test('account map, balanced preview and downloadable SIE keep tenant boundaries'
       await map.getByLabel(`${label} Sida`, { exact: true }).selectOption(side)
     }
     await map.getByRole('button', { name: 'Publicera kontoplan' }).click()
-    await expect(page.getByText('Kontoplanen är publicerad')).toBeVisible()
+    // The form remounts on refresh, so wait for the fact instead of the flash message.
+    await expect
+      .poll(
+        async () =>
+          (
+            await f.db.query(
+              'select count(*)::int n from accounting_maps where tenant_id=$1',
+              [f.tenant],
+            )
+          ).rows[0].n,
+        { timeout: 15000 },
+      )
+      .toBe(1)
     await page.goto('/intake/accounting')
     await expect(
       page.getByRole('button', { name: 'Exportera som SIE 4' }),

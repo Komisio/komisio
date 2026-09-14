@@ -80,6 +80,9 @@ included); every table matched both times.
 
 ## Still open
 
+Day-to-day operation of what is delivered (jobs, secrets, health checks,
+failures) is in [OPERATIONS-RUNBOOK.md](OPERATIONS-RUNBOOK.md).
+
 The consolidated list of owner actions and pending product decisions with
 proposed defaults is [OWNER-ACTIONS-2026-09-14.md](OWNER-ACTIONS-2026-09-14.md).
 

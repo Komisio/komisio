@@ -1,5 +1,11 @@
 # Live Zettle receipt retrieval
 
+Staged compatibility decision (2026-09-14): `recordZettlePurchase` is retired
+from TypeScript proposals and review UI. Legacy queue rows are omitted and old
+review links return not found; SQL history and dispatchers remain unchanged.
+Held receipts use the existing matching and retry controls, never a forced sale.
+The SQL queue still selects its newest 50 rows before retired entries are filtered.
+
 This slice connects the verified API-key pilot to the existing sale engine.
 It is a bounded, manually triggered purchase pull, not a scheduled worker or
 product/inventory export. The pilot requires the explicit tenant and merchant

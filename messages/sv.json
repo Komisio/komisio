@@ -548,7 +548,6 @@
       "markPayoutPaid": "Markera en utbetalning som betald",
       "sendMessage": "Skicka ett meddelande till en säljare",
       "exportDayClose": "Exportera ett dagsavslut",
-      "recordZettlePurchase": "Zettle-försäljning",
       "settlePayouts": "Avräkna säljare",
       "updateStoreProfile": "Uppdatera butiksprofilen"
     },

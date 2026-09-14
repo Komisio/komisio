@@ -548,7 +548,6 @@
       "markPayoutPaid": "Mark a payout paid",
       "sendMessage": "Send a message to a seller",
       "exportDayClose": "Export a day close",
-      "recordZettlePurchase": "Zettle purchase",
       "settlePayouts": "Settle sellers",
       "updateStoreProfile": "Update the store profile"
     },

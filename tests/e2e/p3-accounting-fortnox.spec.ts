@@ -103,11 +103,11 @@ test('accounting page shows the Fortnox connection state and records a refused s
       )
     ).rows
     expect(sends).toEqual([
-      { status: 'failed', error_code: 'FORTNOX_NOT_CONNECTED' },
+      { status: 'failed', error_code: 'FORTNOX_PREFLIGHT_FAILED' },
     ])
     await page.reload()
     await expect(exports.getByRole('alert')).toContainText(
-      d.fortnox.errors.FORTNOX_NOT_CONNECTED,
+      d.fortnox.errors.FORTNOX_PREFLIGHT_FAILED,
     )
     await expect(
       exports.getByRole('button', { name: d.fortnox.sendAgain, exact: true }),

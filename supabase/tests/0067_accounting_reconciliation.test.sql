@@ -48,9 +48,9 @@ select store_fortnox_connection(current_setting('test.tenant')::uuid,'1751085','
 select set_config('test.s1',gen_random_uuid()::text,true);
 select begin_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.s1')::uuid,current_setting('test.export2')::uuid);
 select is(accounting_reconciliation(current_setting('test.tenant')::uuid,'2026-09-01','2026-09-01')->'days'->0->>'status','send_pending','send in progress');
-select complete_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.s1')::uuid,'failed','',null,null,'FORTNOX_VOUCHER_REJECTED','Konto saknas');
+select complete_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.s1')::uuid,'failed','',null,null,'FORTNOX_PREFLIGHT_FAILED','');
 select is(accounting_reconciliation(current_setting('test.tenant')::uuid,'2026-09-01','2026-09-01')->'days'->0->>'status','send_failed','failed send reported');
-select is(accounting_reconciliation(current_setting('test.tenant')::uuid,'2026-09-01','2026-09-01')->'days'->0->'send'->>'errorCode','FORTNOX_VOUCHER_REJECTED','with its reason');
+select is(accounting_reconciliation(current_setting('test.tenant')::uuid,'2026-09-01','2026-09-01')->'days'->0->'send'->>'errorCode','FORTNOX_PREFLIGHT_FAILED','with its preflight reason');
 select set_config('test.s2',gen_random_uuid()::text,true);
 select begin_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.s2')::uuid,current_setting('test.export2')::uuid);
 select complete_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.s2')::uuid,'sent','A',8,2026,'','');

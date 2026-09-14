@@ -1392,7 +1392,12 @@
     "manageSubscription": "Hantera prenumeration och fakturor",
     "checkoutSuccess": "Tack. Prenumerationen registreras så snart Stripe bekräftat betalningen, oftast inom en minut.",
     "checkoutCancelled": "Betalningen avbröts. Inget har debiterats.",
-    "notConfigured": "Betalning online är inte konfigurerad i den här driftmiljön; kontakta Komisio för att aktivera prenumerationen."
+    "notConfigured": "Betalning online är inte konfigurerad i den här driftmiljön; kontakta Komisio för att aktivera prenumerationen.",
+    "members": "Medlemmar",
+    "sellers": "Säljare",
+    "items": "Varor",
+    "sales30": "Försäljningar, 30 dagar",
+    "lastActivity": "Senast aktiv"
   },
   "reconciliation": {
     "heading": "Avstämning",

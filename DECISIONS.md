@@ -10,6 +10,14 @@ identity, authority or a broader dashboard action stops the procedure. No servic
 key, membership change, financial write or weakened MFA policy is introduced.
 The synthetic staging recovery exercise remains a pilot gate, not claimed evidence.
 
+## 2026-09-15: Hosts see usage counts per store, never store content
+
+`host_activity_overview()` gives platform hosts, next to each store's
+plan state, the number of members, sellers and items, sales completed in
+the last thirty days and the time of the last access event. Counts and one
+timestamp only: no names, items or amounts leave a tenant through the host
+page. Migration `20260916240000`, pgTAP `0094`.
+
 ## 2026-09-14: Exact photo repeats are recorded by digest and shown
 
 The upload route records the SHA-256 of every reception photo

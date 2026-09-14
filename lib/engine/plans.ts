@@ -104,3 +104,27 @@ export const planErrorCodes = [
 export function planErrorCode(message: string) {
   return planErrorCodes.find((c) => c === message) ?? 'REQUEST_FAILED'
 }
+
+// Usage per store for the host page: counts only, no store content.
+export const activityRow = z.object({
+  tenant_id: z.uuid(),
+  members: z.number().int(),
+  sellers: z.number().int(),
+  items: z.number().int(),
+  sales_30d: z.number().int(),
+  last_activity: z.string().nullable(),
+})
+export type ActivityRow = z.infer<typeof activityRow>
+
+/** Activity per store keyed by tenant id; empty until the migration reaches the database. */
+export async function readHostActivity(client: SupabaseClient) {
+  const r = await client.rpc('host_activity_overview')
+  if (r.error?.code === 'PGRST202') return new Map<string, ActivityRow>()
+  if (r.error) throw new Error('FORBIDDEN')
+  return new Map(
+    z
+      .array(activityRow)
+      .parse(r.data)
+      .map((row) => [row.tenant_id, row]),
+  )
+}

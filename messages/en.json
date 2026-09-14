@@ -1392,7 +1392,12 @@
     "manageSubscription": "Manage subscription and invoices",
     "checkoutSuccess": "Thank you. The subscription is registered as soon as Stripe confirms the payment, usually within a minute.",
     "checkoutCancelled": "The checkout was cancelled. Nothing was charged.",
-    "notConfigured": "Online payment is not configured on this deployment; contact Komisio to activate the subscription."
+    "notConfigured": "Online payment is not configured on this deployment; contact Komisio to activate the subscription.",
+    "members": "Members",
+    "sellers": "Sellers",
+    "items": "Items",
+    "sales30": "Sales, 30 days",
+    "lastActivity": "Last activity"
   },
   "reconciliation": {
     "heading": "Reconciliation",

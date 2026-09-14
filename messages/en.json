@@ -1662,5 +1662,18 @@
     "daysToSale": "Days",
     "markdowns": "Markdowns",
     "notice": "Returned items are excluded. Prices are what this store recorded; nothing is fetched from outside."
+  },
+  "nav": {
+    "receiving": "Receiving",
+    "receiveBag": "Receive a bag",
+    "selfDropOff": "Self drop-off",
+    "goods": "Goods",
+    "sellers": "Sellers",
+    "money": "Money",
+    "work": "Work",
+    "workShort": "To do",
+    "integrations": "Integrations",
+    "store": "Store",
+    "more": "More"
   }
 }

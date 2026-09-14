@@ -18,6 +18,8 @@ import { readFortnoxStatus } from '@/lib/engine/fortnox-connection'
 import { fortnoxEnvironment, fortnoxIssue } from '@/extensions/fortnox/auth'
 import { FortnoxVoucherSend } from '@/components/intake/fortnox-voucher-send'
 import { readFortnoxSends } from '@/lib/engine/fortnox-vouchers'
+import { currentMonthPeriod, economyPeriod } from '@/lib/engine/economy'
+import { openDays, readReconciliation } from '@/lib/engine/reconciliation'
 
 export default async function Accounting({
   searchParams,
@@ -38,6 +40,15 @@ export default async function Accounting({
     readFortnoxStatus(ctx.client, active.id),
     readFortnoxSends(ctx.client, active.id),
   ])
+  const requestedPeriod = economyPeriod.safeParse({
+    from: query.from,
+    to: query.to,
+  })
+  const period = requestedPeriod.success
+    ? requestedPeriod.data
+    : currentMonthPeriod()
+  const recon = await readReconciliation(ctx.client, active.id, period)
+  const attention = recon ? openDays(recon) : []
   const fortnoxOutcome =
     typeof query.fortnox === 'string' && /^[A-Za-z_]{1,40}$/.test(query.fortnox)
       ? query.fortnox
@@ -155,6 +166,79 @@ export default async function Accounting({
           locale={ctx.locale}
           d={all.fortnox}
         />
+        <section
+          className="card intake-form"
+          aria-label={all.reconciliation.heading}
+        >
+          <h2>{all.reconciliation.heading}</h2>
+          <p>{all.reconciliation.hint}</p>
+          <form method="get" className="intake-fields">
+            {!requestedPeriod.success && (query.from || query.to) && (
+              <p role="alert">{all.reconciliation.periodInvalid}</p>
+            )}
+            <div className="field">
+              <label htmlFor="recon-from">{all.reconciliation.from}</label>
+              <input
+                id="recon-from"
+                name="from"
+                type="date"
+                defaultValue={period.from}
+                required
+              />
+            </div>
+            <div className="field">
+              <label htmlFor="recon-to">{all.reconciliation.to}</label>
+              <input
+                id="recon-to"
+                name="to"
+                type="date"
+                defaultValue={period.to}
+                required
+              />
+            </div>
+            <button className="btn">{all.reconciliation.show}</button>
+          </form>
+          {recon && recon.days.length === 0 && (
+            <p>{all.reconciliation.empty}</p>
+          )}
+          {recon && recon.days.length > 0 && attention.length === 0 && (
+            <p role="status">{all.reconciliation.allDone}</p>
+          )}
+          {attention.length > 0 && (
+            <>
+              <h3>
+                {all.reconciliation.openDays} ({attention.length})
+              </h3>
+              <div style={{ overflowX: 'auto' }}>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>{all.economy.date}</th>
+                      <th>{all.economy.sales}</th>
+                      <th>{all.economy.gross}</th>
+                      <th>{all.reconciliation.status}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {attention.map((day) => (
+                      <tr key={day.date}>
+                        <td>{day.date}</td>
+                        <td>{day.salesCount}</td>
+                        <td>{money(day.grossOre)}</td>
+                        <td>
+                          {all.reconciliation.statuses[day.status]}
+                          {day.send?.errorCode
+                            ? ` · ${(all.fortnox.errors as Record<string, string>)[day.send.errorCode] ?? day.send.errorCode}`
+                            : ''}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+        </section>
         <section className="card intake-form" aria-label={d.exportsHeading}>
           <h2>{d.exportsHeading}</h2>
           {exports.length === 0 && <p>{d.noExports}</p>}

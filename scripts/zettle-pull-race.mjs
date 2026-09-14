@@ -33,7 +33,7 @@ export async function raceZettlePull({ setup, connectionString }) {
       'alter table zettle_pull_connections disable trigger zettle_pull_immutable',
     )
     await setup.query(
-      "update zettle_pull_connections set cutover=clock_timestamp()-interval '1 hour' where tenant_id=$1",
+      "update zettle_pull_connections set cutover=clock_timestamp()-interval '3 days' where tenant_id=$1",
       [tenant],
     )
     await setup.query(
@@ -66,6 +66,48 @@ export async function raceZettlePull({ setup, connectionString }) {
         )
       ).rows[0].n,
       1,
+    )
+    const nextWindow = (
+      await a.query('select open_zettle_pull_window($1,$2) id', [
+        tenant,
+        merchant,
+      ])
+    ).rows[0].id
+    const closeId = randomUUID()
+    const competing = await Promise.allSettled([
+      a.query('select abandon_zettle_pull_window($1,$2,$3,$4)', [
+        tenant,
+        closeId,
+        nextWindow,
+        'Synthetic stuck page',
+      ]),
+      b.query("select record_zettle_pull_page($1,$2,$3,null,null,'[]')", [
+        tenant,
+        randomUUID(),
+        nextWindow,
+      ]),
+    ])
+    assert.equal(
+      competing.filter((entry) => entry.status === 'fulfilled').length,
+      1,
+    )
+    const rejected = competing.find((entry) => entry.status === 'rejected')
+    assert.match(rejected.reason.message, /ZETTLE_WINDOW_(ABANDONED|COMPLETE)/)
+    const closures = (
+      await setup.query(
+        'select count(*)::int n from zettle_pull_window_closures where window_id=$1',
+        [nextWindow],
+      )
+    ).rows[0].n
+    const pages = (
+      await setup.query(
+        'select count(*)::int n from zettle_pull_pages where window_id=$1',
+        [nextWindow],
+      )
+    ).rows[0].n
+    assert.equal(closures + pages, 1)
+    console.log(
+      'PASS: window abandonment and page completion serialize without partial writes.',
     )
     console.log(
       'PASS: concurrent live window opens and page retries commit once.',

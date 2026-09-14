@@ -9,6 +9,17 @@ Equal percentages do not establish equal taxable bases, particularly for margin
 modes. This is an advisory comparison for future sales, not a recalculation of
 frozen sale facts or accountant approval. No financial rule changes.
 
+## 2026-09-14: Owner escape for a blocked Zettle window
+
+Only a current owner may abandon an unfinished latest pull window, with a trimmed
+reason of 1–500 characters. An immutable closure records request, actor, time and
+ZETTLE_WINDOW_ABANDONED; no receipt, sale or artificial empty page is created.
+The next window starts exactly at the abandoned window's end, without replaying
+its overlap. This can leave missing receipts and requires manual reconciliation.
+Previously committed pages remain immutable and replayable; no new page may commit
+to an abandoned window. Closure, page ingestion and window opening serialize on
+the tenant lock. Scheduled transport remains separate from this owner escape.
+
 ## 2026-09-14: GitHub-managed staging migrations
 
 The owner requires staging database changes to deploy through GitHub, without
@@ -411,3 +422,4 @@ as actor, rechecking current authorization. No service-role client.
 - 2026-09-14: Fortnox connection (P3, Fable): one Fortnox company per store, connected by the owner or an admin through OAuth (authorization code, offline access, scopes `companyinformation bookkeeping`). Tokens are sealed on the server (AES-256-GCM under `KOMISIO_CREDENTIAL_KEY`, purpose-bound) and stored through `store_fortnox_connection`; the table has no grant, so the ciphertext is reachable only through `read_fortnox_connection` (owner or admin). The company is verified against the pinned name (`FORTNOX_EXPECTED_COMPANY_NAME`, mandatory) and database number (`FORTNOX_EXPECTED_DATABASE_NUMBER`, once known) before a token is stored, and again on every check; a mismatch is recorded as a refusal without the token. The organisation number is never a pin because a Fortnox test company can share it with the production company. Every connection change is an append-only event. Nothing is written to Fortnox by this slice; voucher sending is a later slice that requires the database pin.
 - 2026-09-14: Fortnox voucher sending (P3, Fable) and pin relaxation (owner decision): `FORTNOX_EXPECTED_DATABASE_NUMBER` is optional because the Fortnox consent screen makes the company choice explicit and the stored connection is bound to its database number; the name pin stays mandatory. One recorded export becomes at most one voucher: `begin_fortnox_send` opens a send bound to the connected database (one live send per export, ten-minute stale window), the server refuses when another database answers, `POST /3/vouchers` carries exactly the recorded lines (series A, close date, tenant accounts, kronor with two decimals), `complete_fortnox_send` records sent (series, number, year) or failed (reason, Fortnox message). Sent rows are immutable and never resent; failed ones may be retried as new rows. Only SEK stores send in version 1. Owner or admin sends; members read the log.
 - 2026-09-14: Economy brief (P3, Fable): the weekly and monthly brief is deterministic. `economy_brief(tenant, kind, anchor)` returns the economy summary for one calendar period (ISO week Monday to Sunday, or calendar month, Europe/Stockholm) and the period before, the best selling day and items accepted; `renderBrief` turns it into fixed sentences in the reader's language. No model writes it, no forecast is made, nothing is stored; every read recomputes from the facts. Any member reads it on the economy page; agents read it under `economy:read` as `komisio_read_economy_brief` with the numbers in öre next to the sentences.
+- 2026-09-14: Accounting reconciliation (P3, Fable): `accounting_reconciliation(tenant, from, to)` reports, per active local day, where the books stand between the facts, the day close, the export and Fortnox, using the day close's own totals to detect a stale close and the current map to detect an outdated export. It is a read for any member and for agents under `accounting:read`; it changes nothing and proposes nothing. The accounting page lists the days needing attention for a period.

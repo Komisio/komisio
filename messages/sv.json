@@ -1104,7 +1104,14 @@
     "exportsHeading": "Exporter",
     "noExports": "Inga exporter ännu.",
     "lines": "rader",
-    "readOnlyMap": "Bara en ägare eller administratör kan ändra kontoplanen."
+    "readOnlyMap": "Bara en ägare eller administratör kan ändra kontoplanen.",
+    "viewsLabel": "Bokföringsvyer",
+    "views": {
+      "days": "Dagsavslut",
+      "reconciliation": "Avstämning",
+      "settings": "Kontoplan och Fortnox"
+    },
+    "mapMissingLink": "Ingen kontoplan ännu: sätt den under Kontoplan och Fortnox innan du exporterar."
   },
   "communications": {
     "title": "Meddelanden till säljaren",

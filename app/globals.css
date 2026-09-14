@@ -86,7 +86,8 @@ summary {
   flex-shrink: 0;
 }
 .intake-notice,
-.intake-success {
+.intake-success,
+.intake-matches {
   padding: 16px;
   border: 1px solid var(--line);
   border-radius: 9px;

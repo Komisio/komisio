@@ -4,43 +4,44 @@ This is a real stdio Model Context Protocol adapter using the official TypeScrip
 SDK. It is separate from the web app and optional model-provider integration.
 It exposes narrow tools through the same intake engine:
 
-| Tool                                 | Scope                  | Effect                                                                                                     |
-| ------------------------------------ | ---------------------- | ---------------------------------------------------------------------------------------------------------- |
-| komisio_list_inspection_operations   | inspection:read        | Page through inspection operation status summaries; no payload, people or decisions                        |
-| komisio_list_reception_operations    | reception:read         | Page through reception operation status summaries; no inspection access                                    |
-| komisio_propose_inspection_edit      | inspection:propose     | Stage a complete descriptive edit against an exact saved revision; staff approval required                 |
-| komisio_read_seller_balance          | economy:read           | Engine-computed balance for one seller, in ore; no writes                                                  |
-| komisio_read_seller_ledger           | economy:read           | At most 50 recent events, without private reasons or contacts                                              |
-| komisio_read_economy_summary         | economy:read           | Store totals for a period of at most one year, per VAT mode and day, liability and open payouts; no writes |
-| komisio_read_economy_brief           | economy:read           | Weekly or monthly brief: fixed sentences over the summary for one period and the one before; no writes     |
-| komisio_propose_acceptance           | items:propose          | Stage commercial acceptance of one origin at an öre price; a different person than the proposer approves   |
-| komisio_propose_return               | sales:propose          | Stage a full refund of one completed sale line with a reason; a different person approves                  |
-| komisio_propose_ledger_adjustment    | ledger:propose         | Stage a signed seller ledger adjustment with a reason; executes only for an owner or admin approver        |
-| komisio_propose_markdown_batch       | lifecycle:propose      | Stage up to 50 due markdown steps as one low-risk batch; refused whole if any step is not due              |
-| komisio_propose_bulk_item_update     | lifecycle:propose      | Stage one price change or end of period for up to 50 items with a preview; a different person approves     |
-| komisio_propose_message              | communications:propose | Stage the free-text block of the fixed seller message template; sent by the store once approved            |
-| komisio_propose_payout_approval      | payouts:propose        | Stage approving one requested payout; a different person approves and the amount is reserved then          |
-| komisio_propose_payout_payment       | payouts:propose        | Stage marking one approved payout paid with a reference; a different person approves                       |
-| komisio_list_settlement_candidates   | payouts:propose        | Sellers at or above the payout minimum without an open payout, as ids and öre; no names, no writes         |
-| komisio_propose_settlement           | payouts:propose        | Stage one batch that requests and approves a payout per seller; refused whole; a different person approves |
-| komisio_list_day_closes              | accounting:read        | Newest 60 day closes with totals in öre; no accounts, no export                                            |
-| komisio_preview_day_close_voucher    | accounting:read        | Voucher lines one day close would export under the tenant's own map, totals, balance, unmapped amounts     |
-| komisio_propose_day_close_export     | accounting:propose     | Stage the SIE 4 export of one day close; refused without a map or unbalanced; a different person approves  |
-| komisio_read_store_profile           | store:read             | The current public store profile with its version id; untrusted text, no writes                            |
-| komisio_propose_store_profile        | store:propose          | Stage the next profile version naming the current one; publishes only for an owner or admin approver       |
-| komisio_read_inspection_operation    | inspection:read        | Read exact staged inspection before/after and decision; no reception access                                |
-| komisio_prepare_inspection_reception | inspection:preview     | Compare a saved draft with reception requirements; unsourced candidates and unassessed next steps only     |
-| komisio_preview_inspection           | inspection:preview     | Return unsaved descriptive before/after at the exact saved base revision; no approval or write             |
-| komisio_list_bags                    | inspection:read        | Find a printed bag number or page through bag IDs; no seller data or notes                                 |
-| komisio_read_inspection              | inspection:read        | Read bounded saved bag drafts and exact history; no notes, contacts or writes                              |
-| komisio_read_reception_operation     | reception:read         | Read exact staged proposal sources and agreement terms; no decision                                        |
-| komisio_list_receptions              | reception:read         | Read a bounded queue with shared next-step guidance, not commercial acceptance                             |
-| komisio_read_reception_history       | reception:read         | Read bounded version summaries, with separate source/review cursors; no images or links                    |
-| komisio_read_price_evidence          | reception:read         | Comparable sales in the store by category and text: accepted and sold prices, days to sale; never a price  |
-| komisio_read_reception               | reception:read         | Read one saved session and its source snapshot                                                             |
-| komisio_preview_reception            | reception:preview      | Validate a source-bound proposal against the current revision; return an unsaved preview                   |
-| komisio_read_reception_photo         | reception:photos       | Read one attached photo at the exact current revision as native MCP image content                          |
-| komisio_propose_reception_review     | reception:propose      | Stage a complete review for staff approval; publishes nothing (see docs/STAGED-OPERATIONS.md)              |
+| Tool                                   | Scope                  | Effect                                                                                                     |
+| -------------------------------------- | ---------------------- | ---------------------------------------------------------------------------------------------------------- |
+| komisio_list_inspection_operations     | inspection:read        | Page through inspection operation status summaries; no payload, people or decisions                        |
+| komisio_list_reception_operations      | reception:read         | Page through reception operation status summaries; no inspection access                                    |
+| komisio_propose_inspection_edit        | inspection:propose     | Stage a complete descriptive edit against an exact saved revision; staff approval required                 |
+| komisio_read_seller_balance            | economy:read           | Engine-computed balance for one seller, in ore; no writes                                                  |
+| komisio_read_seller_ledger             | economy:read           | At most 50 recent events, without private reasons or contacts                                              |
+| komisio_read_economy_summary           | economy:read           | Store totals for a period of at most one year, per VAT mode and day, liability and open payouts; no writes |
+| komisio_read_economy_brief             | economy:read           | Weekly or monthly brief: fixed sentences over the summary for one period and the one before; no writes     |
+| komisio_propose_acceptance             | items:propose          | Stage commercial acceptance of one origin at an öre price; a different person than the proposer approves   |
+| komisio_propose_return                 | sales:propose          | Stage a full refund of one completed sale line with a reason; a different person approves                  |
+| komisio_propose_ledger_adjustment      | ledger:propose         | Stage a signed seller ledger adjustment with a reason; executes only for an owner or admin approver        |
+| komisio_propose_markdown_batch         | lifecycle:propose      | Stage up to 50 due markdown steps as one low-risk batch; refused whole if any step is not due              |
+| komisio_propose_bulk_item_update       | lifecycle:propose      | Stage one price change or end of period for up to 50 items with a preview; a different person approves     |
+| komisio_propose_message                | communications:propose | Stage the free-text block of the fixed seller message template; sent by the store once approved            |
+| komisio_propose_payout_approval        | payouts:propose        | Stage approving one requested payout; a different person approves and the amount is reserved then          |
+| komisio_propose_payout_payment         | payouts:propose        | Stage marking one approved payout paid with a reference; a different person approves                       |
+| komisio_list_settlement_candidates     | payouts:propose        | Sellers at or above the payout minimum without an open payout, as ids and öre; no names, no writes         |
+| komisio_propose_settlement             | payouts:propose        | Stage one batch that requests and approves a payout per seller; refused whole; a different person approves |
+| komisio_list_day_closes                | accounting:read        | Newest 60 day closes with totals in öre; no accounts, no export                                            |
+| komisio_preview_day_close_voucher      | accounting:read        | Voucher lines one day close would export under the tenant's own map, totals, balance, unmapped amounts     |
+| komisio_read_accounting_reconciliation | accounting:read        | Per active day: close, export under the current map, Fortnox send status; read only                        |
+| komisio_propose_day_close_export       | accounting:propose     | Stage the SIE 4 export of one day close; refused without a map or unbalanced; a different person approves  |
+| komisio_read_store_profile             | store:read             | The current public store profile with its version id; untrusted text, no writes                            |
+| komisio_propose_store_profile          | store:propose          | Stage the next profile version naming the current one; publishes only for an owner or admin approver       |
+| komisio_read_inspection_operation      | inspection:read        | Read exact staged inspection before/after and decision; no reception access                                |
+| komisio_prepare_inspection_reception   | inspection:preview     | Compare a saved draft with reception requirements; unsourced candidates and unassessed next steps only     |
+| komisio_preview_inspection             | inspection:preview     | Return unsaved descriptive before/after at the exact saved base revision; no approval or write             |
+| komisio_list_bags                      | inspection:read        | Find a printed bag number or page through bag IDs; no seller data or notes                                 |
+| komisio_read_inspection                | inspection:read        | Read bounded saved bag drafts and exact history; no notes, contacts or writes                              |
+| komisio_read_reception_operation       | reception:read         | Read exact staged proposal sources and agreement terms; no decision                                        |
+| komisio_list_receptions                | reception:read         | Read a bounded queue with shared next-step guidance, not commercial acceptance                             |
+| komisio_read_reception_history         | reception:read         | Read bounded version summaries, with separate source/review cursors; no images or links                    |
+| komisio_read_price_evidence            | reception:read         | Comparable sales in the store by category and text: accepted and sold prices, days to sale; never a price  |
+| komisio_read_reception                 | reception:read         | Read one saved session and its source snapshot                                                             |
+| komisio_preview_reception              | reception:preview      | Validate a source-bound proposal against the current revision; return an unsaved preview                   |
+| komisio_read_reception_photo           | reception:photos       | Read one attached photo at the exact current revision as native MCP image content                          |
+| komisio_propose_reception_review       | reception:propose      | Stage a complete review for staff approval; publishes nothing (see docs/STAGED-OPERATIONS.md)              |
 
 Every data call verifies the configured user token with Supabase Auth and checks
 current store membership and required MFA in the database. The store is pinned in

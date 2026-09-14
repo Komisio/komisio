@@ -1,6 +1,11 @@
 import { readZettleStock } from '@/lib/engine/zettle-stock'
+import { readStorePolicy } from '@/lib/engine/store-policy'
+import { vatRateBasisPoints } from '@/lib/engine/vat'
 import { readZettleImages } from '@/lib/engine/zettle-images'
-import { readZettlePull } from '@/lib/engine/zettle-live'
+import {
+  readZettlePull,
+  readZettleWindowClosure,
+} from '@/lib/engine/zettle-live'
 import Link from 'next/link'
 import { pilotIssue, pilotEnvironment } from '@/extensions/zettle/auth'
 import { ZettleConnection } from '@/components/intake/zettle-connection'
@@ -46,6 +51,13 @@ export default async function Integrations({
   const stocks = ['owner', 'admin'].includes(a.role)
     ? await readZettleStock(ctx.client, a.id)
     : []
+  const engineVat = ['owner', 'admin'].includes(a.role)
+    ? vatRateBasisPoints((await readStorePolicy(ctx.client, a.id)).policy)
+    : undefined
+
+  const closure = pull?.window
+    ? await readZettleWindowClosure(ctx.client, a.id, pull.window.id)
+    : null
   const images =
     a.role === 'staff' || (liveReady && pull?.connection)
       ? await readZettleImages(ctx.client, a.id)
@@ -105,9 +117,11 @@ export default async function Integrations({
               </p>
               {pull.window && (
                 <p>
-                  {pull.page?.purchase_count === 0
-                    ? d.pullComplete
-                    : d.pullPending}
+                  {closure?.closure
+                    ? d.abandoned
+                    : pull.page?.purchase_count === 0
+                      ? d.pullComplete
+                      : d.pullPending}
                   :{' '}
                   {new Date(pull.window.end_at).toLocaleString(ctx.locale, {
                     timeZone: 'Europe/Stockholm',
@@ -115,11 +129,41 @@ export default async function Integrations({
                 </p>
               )}
               <ZettleAction
-                key={pull.page?.id ?? pull.window?.id ?? 'pull'}
+                key={
+                  closure?.closure?.id ??
+                  pull.page?.id ??
+                  pull.window?.id ??
+                  'pull'
+                }
                 command={{ action: 'pull', tenantId: a.id }}
                 d={d}
                 label={d.pullNow}
               />
+              {closure?.closure && (
+                <p>
+                  {d.abandonReason}: {closure.closure.reason}
+                </p>
+              )}
+              {a.role === 'owner' &&
+                pull.window &&
+                closure?.available &&
+                !closure.closure &&
+                pull.page?.purchase_count !== 0 && (
+                  <details>
+                    <summary>{d.abandonWindow}</summary>
+                    <ZettleAction
+                      key={pull.window.id}
+                      command={{
+                        action: 'abandonWindow',
+                        tenantId: a.id,
+                        windowId: pull.window.id,
+                        reason: '',
+                      }}
+                      d={d}
+                      label={d.abandonWindow}
+                    />
+                  </details>
+                )}
             </>
           ) : (
             <ZettleAction
@@ -208,6 +252,7 @@ export default async function Integrations({
         <details>
           <summary>{d.vatTitle}</summary>
           <p>{d.vatHint}</p>
+          <p>{d.vatComparisonHint}</p>
           {['owner', 'admin'].includes(a.role) && (
             <ZettleAction
               key={catalog.config?.id ?? 'new'}
@@ -220,6 +265,7 @@ export default async function Integrations({
               d={d}
               label={d.saveMapping}
               vatModes={all.sales.vatModes}
+              engineVatBasisPoints={engineVat}
             />
           )}
         </details>

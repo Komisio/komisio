@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
 import type { zettleCommand } from '@/lib/engine/zettle'
 import type { z } from 'zod'
+import { compareZettleVat } from '@/lib/engine/zettle-vat'
 type Command = z.infer<typeof zettleCommand>
 type Draft<T> = T extends unknown ? Omit<T, 'requestId'> : never
 export function ZettleAction({
@@ -13,12 +14,14 @@ export function ZettleAction({
   label,
   match = false,
   vatModes,
+  engineVatBasisPoints,
 }: {
   command: Draft<Command>
   d: Dictionary['zettle']
   label: string
   match?: boolean
   vatModes?: Record<string, string>
+  engineVatBasisPoints?: number
 }) {
   const router = useRouter(),
     id = useId(),
@@ -28,6 +31,16 @@ export function ZettleAction({
     'idle' | 'busy' | 'retry' | 'failed' | 'done'
   >('idle')
   const [error, setError] = useState('')
+  const [vatValues, setVatValues] = useState<Record<string, string>>(() =>
+    command.action === 'configure'
+      ? Object.fromEntries(
+          Object.entries(command.vatMap).map(([mode, value]) => [
+            mode,
+            String(value),
+          ]),
+        )
+      : {},
+  )
   async function send() {
     if (running.current || !pending.current) return
     running.current = true
@@ -110,6 +123,13 @@ export function ZettleAction({
         pending.current = {
           ...command,
           requestId: crypto.randomUUID(),
+          ...(command.action === 'abandonWindow'
+            ? {
+                reason: String(
+                  new FormData(e.currentTarget).get('reason') ?? '',
+                ).trim(),
+              }
+            : {}),
           ...(command.action === 'configure'
             ? {
                 vatMap: Object.fromEntries(
@@ -144,13 +164,40 @@ export function ZettleAction({
               min="0"
               max="100"
               step="0.01"
-              defaultValue={
-                command.vatMap[mode as keyof typeof command.vatMap] ?? ''
+              value={vatValues[mode] ?? ''}
+              onChange={(event) =>
+                setVatValues({ ...vatValues, [mode]: event.target.value })
               }
               disabled={state !== 'idle'}
             />
+            {engineVatBasisPoints !== undefined && (
+              <p role="status">
+                {d.engineVat}: {(engineVatBasisPoints / 100).toFixed(2)} % ·{' '}
+                {
+                  d.vatComparison[
+                    compareZettleVat(
+                      vatValues[mode] ?? '',
+                      engineVatBasisPoints,
+                    )
+                  ]
+                }
+              </p>
+            )}
           </div>
         ))}
+      {command.action === 'abandonWindow' && (
+        <div className="field">
+          <p>{d.abandonWarning}</p>
+          <label htmlFor={`${id}-reason`}>{d.abandonReason}</label>
+          <textarea
+            id={`${id}-reason`}
+            name="reason"
+            required
+            maxLength={500}
+            disabled={state !== 'idle'}
+          />
+        </div>
+      )}
       {match && (
         <div className="field">
           <label htmlFor={id}>{d.item}</label>

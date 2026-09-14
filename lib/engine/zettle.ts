@@ -38,6 +38,11 @@ export const zettleCommand = z.discriminatedUnion('action', [
   base.extend({ action: z.literal('pull') }),
   base.extend({ action: z.literal('export'), itemId: z.uuid() }),
   base.extend({ action: z.literal('exportImage'), itemId: z.uuid() }),
+  base.extend({
+    action: z.literal('abandonWindow'),
+    windowId: z.uuid(),
+    reason: z.string().trim().min(1).max(500),
+  }),
 ])
 const receiptRow = z.object({
   id: z.uuid(),
@@ -238,6 +243,7 @@ export const zettleErrorCodes = [
   'ZETTLE_CONNECTION_FAILED',
   'ZETTLE_WINDOW_INVALID',
   'ZETTLE_WINDOW_COMPLETE',
+  'ZETTLE_WINDOW_ABANDONED',
   'ZETTLE_VAT_MAPPING_REQUIRED',
   'ZETTLE_CONFIG_CHANGED',
   'ZETTLE_REMOTE_CHANGED',

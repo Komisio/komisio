@@ -18,7 +18,6 @@ export const operationKind = z.enum([
   'markPayoutPaid',
   'sendMessage',
   'exportDayClose',
-  'recordZettlePurchase',
   'settlePayouts',
   'updateStoreProfile',
 ])
@@ -139,10 +138,6 @@ export const sendMessagePayload = z.strictObject({
 })
 // Day close export (medium): the ordinary idempotent export under the current map.
 export const exportDayClosePayload = z.strictObject({ dayCloseId: z.uuid() })
-export const recordZettlePurchasePayload = z.strictObject({
-  importId: z.uuid(),
-  mappingRevision: z.number().int().min(0).max(999999999),
-})
 // Settlement batch (medium, P3): one payout per listed seller, requested and
 // approved together as the approver; refused whole if any seller is below the
 // threshold, over its balance or already has an open payout.
@@ -218,10 +213,6 @@ export const proposeOperationCommand = z.discriminatedUnion('kind', [
   proposeBase.extend({
     kind: z.literal('exportDayClose'),
     payload: exportDayClosePayload,
-  }),
-  proposeBase.extend({
-    kind: z.literal('recordZettlePurchase'),
-    payload: recordZettlePurchasePayload,
   }),
   proposeBase.extend({
     kind: z.literal('settlePayouts'),
@@ -307,10 +298,6 @@ export const operationRow = z.discriminatedUnion('kind', [
   operationBaseRow.extend({
     kind: z.literal('exportDayClose'),
     payload: exportDayClosePayload,
-  }),
-  operationBaseRow.extend({
-    kind: z.literal('recordZettlePurchase'),
-    payload: recordZettlePurchasePayload,
   }),
   operationBaseRow.extend({
     kind: z.literal('settlePayouts'),
@@ -416,5 +403,11 @@ export async function readOperationQueue(
     p_tenant: z.uuid().parse(tenantInput),
   })
   if (error) throw new Error('Unable to read operation queue')
-  return z.array(operationRow).max(50).parse(data)
+  const rows = z
+    .array(z.object({ kind: z.string() }).passthrough())
+    .max(50)
+    .parse(data)
+  return z
+    .array(operationRow)
+    .parse(rows.filter((row) => row.kind !== 'recordZettlePurchase'))
 }

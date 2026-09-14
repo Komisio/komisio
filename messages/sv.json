@@ -548,7 +548,6 @@
       "markPayoutPaid": "Markera en utbetalning som betald",
       "sendMessage": "Skicka ett meddelande till en säljare",
       "exportDayClose": "Exportera ett dagsavslut",
-      "recordZettlePurchase": "Zettle-försäljning",
       "settlePayouts": "Avräkna säljare",
       "updateStoreProfile": "Uppdatera butiksprofilen"
     },
@@ -1315,6 +1314,28 @@
     "salePrice": "Försäljningspris",
     "commission": "Provision"
   },
+  "reconciliation": {
+    "heading": "Avstämning",
+    "hint": "Varje dag med aktivitet i perioden och var dess bokföring står: dagsavslut, export under aktuell kontoplan och Fortnox. Bara läsning; dagsavslutets summor avgör.",
+    "from": "Från",
+    "to": "Till",
+    "show": "Visa",
+    "periodInvalid": "Välj ett från-datum senast lika med till-datumet, högst ett år emellan.",
+    "allDone": "Alla aktiva dagar i perioden är skickade till Fortnox.",
+    "empty": "Ingen aktivitet i perioden.",
+    "openDays": "Dagar som behöver åtgärd",
+    "status": "Status",
+    "statuses": {
+      "no_close": "Inget dagsavslut",
+      "close_stale": "Fakta ändrades efter avslutet; generera det igen",
+      "not_exported": "Avslutat, inte exporterat",
+      "export_outdated": "Exporterat under en äldre kontoplan; exportera igen",
+      "not_sent": "Exporterat, inte skickat till Fortnox",
+      "send_pending": "Skickas till Fortnox",
+      "send_failed": "Fortnox avvisade verifikationen",
+      "sent": "Skickat till Fortnox"
+    }
+  },
   "brief": {
     "heading": "Brev",
     "hint": "En fast sammanställning av samma siffror för senaste veckan eller månaden och perioden före. Ingen prognos; inget lagras.",
@@ -1459,6 +1480,7 @@
       "ZETTLE_RATE_LIMITED": "Zettle begränsar anropen. Försök senare.",
       "ZETTLE_WINDOW_INVALID": "Zettle svarade med uppgifter utanför valt tidsintervall. Hämtningen stoppades.",
       "ZETTLE_WINDOW_COMPLETE": "Intervallet har redan hämtats klart. Ladda om sidan.",
+      "ZETTLE_WINDOW_ABANDONED": "Ägaren har stängt intervallet. Inga fler sidor kan importeras till det. Ladda om sidan.",
       "ZETTLE_AUTH_REQUIRED": "Zettle nekade inloggningen. Kontrollera API-nyckeln och dess behörigheter.",
       "ZETTLE_CONNECTION_FAILED": "Anslutningen kunde inte verifieras. Kontrollera konfigurationen eller försök senare.",
       "ZETTLE_INVENTORY_FAILED": "Zettles lager kunde inte bekräftas. Kontrollera varans sparade status innan du går vidare.",
@@ -1501,6 +1523,20 @@
     "pullComplete": "Senast färdiga intervall slutar",
     "pullPending": "Pågående intervall slutar",
     "imageStatusTitle": "Status för exporterade produktbilder",
+
+    "engineVat": "Motorns aktuella sats",
+    "vatComparisonHint": "Endast jämförelse: samma procent garanterar inte samma momsunderlag, särskilt vid marginalmoms. Bekräfta kartan med redovisningskonsulten. Inga värden rättas automatiskt.",
+    "vatComparison": {
+      "match": "Samma procent (inte ett momsgodkännande)",
+      "mismatch": "Varning: avviker från motorns sats",
+      "unmapped": "Ingen procent mappad",
+      "invalid": "Ange en procent mellan 0 och 100 med högst två decimaler"
+    },
+
+    "abandonWindow": "Stäng blockerat intervall",
+    "abandonReason": "Orsak till stängning",
+    "abandonWarning": "Ej hämtade kvitton kan saknas. Stängning hoppar över resten av intervallet och kräver manuell avstämning mot Zettle. Inga försäljningar skapas eller tas bort.",
+    "abandoned": "Ägarstängt intervall slutar",
     "pullEnable": "Aktivera kvittohämtning från nu",
     "pullNow": "Hämta nästa sida från Zettle",
     "pullWaiting": "Inget nytt intervall ännu. Hämtningen ligger två minuter efter för att ge Zettle tid att behandla köpen.",

@@ -360,16 +360,6 @@ export function OperationQueue({
                 <small>{d.messageTemplateNote}</small>
               </p>
             </>
-          ) : o.kind === 'recordZettlePurchase' ? (
-            <p>
-              <Link
-                className="text-link"
-                href={`/intake/integrations/${o.payload.importId}`}
-              >
-                {d.zettleReceipt}
-              </Link>{' '}
-              · {d.draftVersion} {o.payload.mappingRevision}
-            </p>
           ) : o.kind === 'exportDayClose' ? (
             <p>
               <Link className="text-link" href="/intake/accounting">
@@ -422,38 +412,6 @@ export function OperationQueue({
             <Link className="text-link" href={`/intake/operations/${o.id}`}>
               {d.reviewProposal}
             </Link>
-          )}
-          {reviewContext?.kind === 'zettle' && (
-            <section aria-label={d.zettleReceipt}>
-              <h3>{d.zettleReceipt}</h3>
-              <p>
-                {reviewContext.receipt.external_id} ·{' '}
-                {reviewContext.receipt.occurred_at}
-              </p>
-              <ul>
-                {reviewContext.receipt.rows.map((r) => (
-                  <li key={r.lineNo}>
-                    {r.description} ·{' '}
-                    {r.itemId ? (
-                      <Link
-                        className="text-link"
-                        href={`/intake/items/${r.itemId}`}
-                      >
-                        {r.itemId}
-                      </Link>
-                    ) : (
-                      '—'
-                    )}{' '}
-                    · {(r.priceOre / 100).toFixed(2)}{' '}
-                    {reviewContext.receipt.currency}
-                  </li>
-                ))}
-              </ul>
-              <p>
-                {(reviewContext.receipt.amount_ore / 100).toFixed(2)}{' '}
-                {reviewContext.receipt.currency}
-              </p>
-            </section>
           )}
           {reviewContext?.kind === 'reception' && (
             <ReceptionComparison comparison={reviewContext.comparison} d={d} />

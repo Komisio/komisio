@@ -211,4 +211,6 @@ production migrations (the owner).
 - Migration `20260916040000`; pgTAP 0074; unit tests for the form encoding,
   signature, event mapping, checkout and the engine call. Without the three
   Stripe settings nothing changes: the webhook answers 404 and the panel
-  shows the contact note.
+  shows the contact note. A live key (`sk_live_`) counts as not configured
+  unless `KOMISIO_ENVIRONMENT=production`, so staging can never charge a
+  real card.

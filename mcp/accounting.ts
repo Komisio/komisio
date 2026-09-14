@@ -4,6 +4,8 @@ import type { MCPConfig } from './config'
 import { requireMCPIdentity } from './identity'
 import { readDayCloses } from '../lib/engine/day-closes'
 import { previewVoucher } from '../lib/engine/accounting'
+import { economyPeriod } from '../lib/engine/economy'
+import { readReconciliation } from '../lib/engine/reconciliation'
 
 // Accounting reads for agents (P2 S17): day closes and the voucher preview
 // under the tenant's own map. Amounts are öre; account numbers are the
@@ -51,5 +53,26 @@ export async function previewDayCloseTool(
     guidanceOnly: true,
     accountsAreTheTenants: true,
     ...preview,
+  }
+}
+
+export const reconciliationInput = economyPeriod
+
+/** Where each active day stands between the facts, the close, the export and Fortnox. */
+export async function readReconciliationTool(
+  client: SupabaseClient,
+  config: MCPConfig,
+  input: unknown,
+) {
+  const period = reconciliationInput.parse(input)
+  const actor = await requireMCPIdentity(client, config, 'accounting:read')
+  const recon = await readReconciliation(client, config.tenantId, period)
+  if (!recon) throw new Error('RECONCILIATION_UNAVAILABLE')
+  return {
+    actor,
+    readOnly: true,
+    guidanceOnly: true,
+    amountUnit: 'ore',
+    ...recon,
   }
 }

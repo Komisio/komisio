@@ -45,10 +45,15 @@ temporary database login through the management token; no database password or
 service-role key is placed in the application. Rotate the token through that
 environment when needed. PR workflows never use this environment.
 
-Vercel deployment remains independent and can finish before database checks.
-Keep application releases compatible with both schemas (the image action stays
-hidden until its RPCs exist). This automates database delivery, not atomic
-application/database releases or a real POS verification.
+Vercel deployment is independent by default and can finish before database
+checks; keep application releases compatible with both schemas (a page read
+that calls a new RPC tolerates PostgREST `PGRST202` until the migration lands).
+To make the order database first, the owner creates a Vercel deploy hook for
+main, stores its URL as the `VERCEL_DEPLOY_HOOK_URL` secret in the
+`staging-database` environment and turns off automatic Git deployments for
+main; the job's last step then fires the hook after the migrations are verified
+and does nothing when the secret is absent. This automates database delivery,
+not atomic application/database releases or a real POS verification.
 
 Protocol: [Supabase GitHub Actions deployment](https://supabase.com/docs/guides/deployment/managing-environments).
 

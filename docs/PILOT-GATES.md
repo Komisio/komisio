@@ -69,6 +69,9 @@ migrations through `20260915130000`; every table matched.
 
 ## Still open
 
+The consolidated list of owner actions and pending product decisions with
+proposed defaults is [OWNER-ACTIONS-2026-09-14.md](OWNER-ACTIONS-2026-09-14.md).
+
 - Retention policy and erasure procedure for seller contact data.
 - Storage object backup on the hosted project.
 - Point-in-time recovery selection on the hosted plan.

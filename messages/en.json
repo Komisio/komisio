@@ -1523,6 +1523,15 @@
     "pullSince": "Activated from",
     "pullComplete": "Last completed interval ends",
     "pullPending": "Current interval ends",
+    "engineVat": "Current engine rate",
+    "vatComparisonHint": "Comparison only: identical percentages do not guarantee the same taxable basis, especially for margin VAT. Confirm the mapping with your accountant. No values are corrected automatically.",
+    "vatComparison": {
+      "match": "Same percentage (not tax approval)",
+      "mismatch": "Warning: differs from the engine rate",
+      "unmapped": "No percentage mapped",
+      "invalid": "Enter a percentage from 0 to 100 with at most two decimals"
+    },
+
     "abandonWindow": "Close blocked interval",
     "abandonReason": "Reason for closing",
     "abandonWarning": "Unfetched receipts may be missing. Closing skips the rest of this interval and requires manual reconciliation against Zettle. No sales are created or removed.",

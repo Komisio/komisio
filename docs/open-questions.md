@@ -1,5 +1,10 @@
 # Open questions
 
+Zettle VAT comparison (2026-09-14): the configuration form now shows the current
+engine policy rate beside every mapped percentage and flags differences. The
+accountant's confirmation against `docs/VAT-CASES.md` remains open: margin and
+full-price tax bases differ even when the percentages match. No automatic correction.
+
 Zettle follow-up (2026-09-14): explicit owner window abandonment now records the
 reason and skips to the closed window's end; it does not certify missing receipts.
 Scheduled retrieval still needs an approved authenticated bridge between pg_cron

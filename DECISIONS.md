@@ -1,5 +1,14 @@
 # Decision Log
 
+## 2026-09-14: Compare Zettle mapping with the current engine VAT rate
+
+Show the current store-policy VAT rate (default 25 percent) beside every Zettle
+mode mapping, using the existing engine basis-point conversion. Mark missing,
+invalid or different values without changing or blocking the tenant's mapping.
+Equal percentages do not establish equal taxable bases, particularly for margin
+modes. This is an advisory comparison for future sales, not a recalculation of
+frozen sale facts or accountant approval. No financial rule changes.
+
 ## 2026-09-14: Owner escape for a blocked Zettle window
 
 Only a current owner may abandon an unfinished latest pull window, with a trimmed

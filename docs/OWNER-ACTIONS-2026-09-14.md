@@ -36,6 +36,17 @@ move to DECISIONS.md and the settings to PILOT-GATES.md.
 | B9  | Web shop and marketplaces as channels                                                 | Shopify after Zettle is stable; marketplaces not in version 1                                                                                                                        |
 | B10 | Camera placement, capture consent and photo retention for the vision pilot            | Photos taken by staff on store premises only, retained with the item, deleted with the item's contact data under B1                                                                  |
 
+## C. Onboarding and plans (see [ONBOARDING-AND-PLANS.md](ONBOARDING-AND-PLANS.md))
+
+| #   | Question                                       | Proposed default                                                                                                                         |
+| --- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| C1  | Price and VAT presentation                     | SEK 199 per store and month, shown including VAT to Swedish stores; one plan                                                             |
+| C2  | Trial and grace                                | 30 days from store creation; 14 days grace after a failed payment                                                                        |
+| C3  | What read-only blocks                          | No new facts (reception, sales, markdowns, payout requests, agent proposals); reads, exports and marking approved payouts paid stay open |
+| C4  | Payment provider and methods                   | Stripe Checkout and customer portal; card and invoice; prices and tax live in Stripe                                                     |
+| C5  | Production domain and operating company        | `app.komisio.com`; the Stripe account in the company that operates the service                                                           |
+| C6  | Staging soak and production migration approval | One working day on staging; the owner approves the `production-database` job in GitHub                                                   |
+
 ## Done since the last list
 
 - Fortnox: connection to the test company, one voucher sent (A8 on

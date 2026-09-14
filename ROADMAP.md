@@ -1,6 +1,16 @@
 # Development roadmap
 
-Updated: 2026-09-12. Current priority: **AI-first garment reception through shared engine operations, with thin operator and seller surfaces**.
+Updated: 2026-09-14. The living plan is the
+[functional roadmap](docs/FUNCTIONAL-ROADMAP.md): phases P1 (foundation and
+intake) to P3 (run the store: sales, day close, Fortnox, settlement, markdown
+agent, brief, self drop-off, store profile) are delivered on staging; P4 to
+P6 (booking, onboarding agent, partner API, billing) follow. What remains
+before an external pilot is in [pilot gates](docs/PILOT-GATES.md); the owner's
+pending decisions in [owner actions](docs/OWNER-ACTIONS-2026-09-14.md).
+The milestones below are the platform-foundation history from September
+2026 and are kept for reference.
+
+Priority when this file was last rewritten (2026-09-12): **AI-first garment reception through shared engine operations, with thin operator and seller surfaces**.
 
 Active execution plan: [12 September daytime roadmap](docs/DAY-PLAN-2026-09-12.md).
 Resume from [development handover](docs/DEVELOPMENT-HANDOFF.md), checking Git and
@@ -39,15 +49,15 @@ MFA, tenant creation/switching, profiles, invitation links, users/roles and an a
 log. Account recovery works before the user creates a store. Source and comments
 are English; the normal UI supports Swedish and English.
 
-| Milestone | Status | Remaining boundary |
-|---|---|---|
-| M0 | Implemented locally and deployed to staging | Maintain passing CI and reproducible setup |
-| M1 | Local journeys and hosted registration verified | Hosted recovery and broader error cases |
-| M2 | Implemented and tested | Review with the owner in the GUI |
-| M3 | Local journeys tested; hosted invitation email received | Resolve hosted acceptance issue and broaden multi-user pilot |
-| M4 | In progress | Hosted/self-host deployment validation, recovery operations, backup/restore exercise |
-| M5 | Bag receiving, agreement evidence, versioned inspection and archive/reopen verified in staging | Searchable paged bag queue implemented; scoped agent adapter and commercial acceptance remain separate |
-| M6 | Not started | Real workflow decisions before financial schema |
+| Milestone | Status                                                                                         | Remaining boundary                                                                                     |
+| --------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| M0        | Implemented locally and deployed to staging                                                    | Maintain passing CI and reproducible setup                                                             |
+| M1        | Local journeys and hosted registration verified                                                | Hosted recovery and broader error cases                                                                |
+| M2        | Implemented and tested                                                                         | Review with the owner in the GUI                                                                       |
+| M3        | Local journeys tested; hosted invitation email received                                        | Resolve hosted acceptance issue and broaden multi-user pilot                                           |
+| M4        | In progress                                                                                    | Hosted/self-host deployment validation, recovery operations, backup/restore exercise                   |
+| M5        | Bag receiving, agreement evidence, versioned inspection and archive/reopen verified in staging | Searchable paged bag queue implemented; scoped agent adapter and commercial acceptance remain separate |
+| M6        | Not started                                                                                    | Real workflow decisions before financial schema                                                        |
 
 The active database contains stores, memberships, profiles, invitations,
 access events, sellers, bag receipts and versioned staff agreement evidence.
@@ -71,15 +81,15 @@ is a later explicit decision.
 
 ## Milestones
 
-| Milestone | User-visible outcome | Dependency |
-|---|---|---|
-| M0: runnable application | Open a working web application with a coherent visual foundation | Existing files |
-| M1: identity | Register, verify email, log in, log out and recover access | M0 |
-| M2: tenant onboarding | Create a tenant, become its owner and switch between permitted tenants | M1 |
-| M3: users and roles | Invite colleagues, manage their membership and enforce role permissions | M2 |
-| M4: platform pilot | Operate the platform through a complete GUI in a reproducible test deployment | M3 |
-| M5: first store operation | Register a consignor and receive an item through the same domain service | M4 |
-| M6: incremental business logic | Add selling, returns, settlement and integrations one validated flow at a time | M5 |
+| Milestone                      | User-visible outcome                                                           | Dependency     |
+| ------------------------------ | ------------------------------------------------------------------------------ | -------------- |
+| M0: runnable application       | Open a working web application with a coherent visual foundation               | Existing files |
+| M1: identity                   | Register, verify email, log in, log out and recover access                     | M0             |
+| M2: tenant onboarding          | Create a tenant, become its owner and switch between permitted tenants         | M1             |
+| M3: users and roles            | Invite colleagues, manage their membership and enforce role permissions        | M2             |
+| M4: platform pilot             | Operate the platform through a complete GUI in a reproducible test deployment  | M3             |
+| M5: first store operation      | Register a consignor and receive an item through the same domain service       | M4             |
+| M6: incremental business logic | Add selling, returns, settlement and integrations one validated flow at a time | M5             |
 
 There are no calendar promises yet. Measure completed, accepted slices before estimating later business phases.
 
@@ -142,15 +152,15 @@ Deliver:
 
 The owner authorized this role model for the platform implementation. It is enforced in application checks and database operations; the earlier owner-only decision is superseded by the later platform decision in DECISIONS.md.
 
-| Capability | Owner | Admin | Staff | Readonly |
-|---|---|---|---|---|
-| Use permitted tenant pages | Yes | Yes | Yes | Read only |
-| Edit personal profile/security | Own account | Own account | Own account | Own account |
-| Edit tenant profile | Yes | Yes | No | No |
-| Invite/remove staff and readonly members | Yes | Yes | No | No |
-| Appoint/remove administrators | Yes | No | No | No |
-| Add/transfer ownership | Yes, with safeguards | No | No | No |
-| Later operational writes | Defined per operation | Defined per operation | Defined per operation | No |
+| Capability                               | Owner                 | Admin                 | Staff                 | Readonly    |
+| ---------------------------------------- | --------------------- | --------------------- | --------------------- | ----------- |
+| Use permitted tenant pages               | Yes                   | Yes                   | Yes                   | Read only   |
+| Edit personal profile/security           | Own account           | Own account           | Own account           | Own account |
+| Edit tenant profile                      | Yes                   | Yes                   | No                    | No          |
+| Invite/remove staff and readonly members | Yes                   | Yes                   | No                    | No          |
+| Appoint/remove administrators            | Yes                   | No                    | No                    | No          |
+| Add/transfer ownership                   | Yes, with safeguards  | No                    | No                    | No          |
+| Later operational writes                 | Defined per operation | Defined per operation | Defined per operation | No          |
 
 The role is per tenant: the same user can own A and have read access in B. Readonly does not imply access to every sensitive field. Scope the member directory and future payout/identity data deliberately. Avoid custom roles and a user-configurable permission designer in the first release.
 
@@ -208,18 +218,18 @@ Each slice needs a user scenario, recorded business decisions, only the necessar
 
 ## Implementation work breakdown
 
-| Work item | Scope | Exit evidence |
-|---|---|---|
-| P-01 | Git/application scaffold, dependency decisions, local setup, CI skeleton | Clean install, startup and production build |
-| P-02 | UI shell, auth layouts, shared components, Swedish/English messages | Usable desktop/mobile screens and UI checks |
-| P-03 | Auth helpers, registration, verification and login/logout | Browser journey plus API/session tests |
-| P-04 | Password recovery and post-login/invite routing | Recovery journey and invalid-link tests |
-| P-05 | Atomic tenant creation and identity integrity | Real DB tests including RETURNING and retry cases |
-| P-06 | Tenant selection, shared request context and cross-tab behavior | Two-tenant browser and isolation tests |
-| P-07 | Permission catalogue and agreed role model | Role matrix verified at API and DB boundaries |
-| P-08 | Invitation lifecycle and membership UI | Existing/new-account invite journeys |
-| P-09 | Role changes, revocation, ownership safeguards and audit | Negative tests and concurrent-owner test |
-| P-10 | MFA/security settings, deployment/self-host verification, platform demo | M4 completion gate |
+| Work item | Scope                                                                    | Exit evidence                                     |
+| --------- | ------------------------------------------------------------------------ | ------------------------------------------------- |
+| P-01      | Git/application scaffold, dependency decisions, local setup, CI skeleton | Clean install, startup and production build       |
+| P-02      | UI shell, auth layouts, shared components, Swedish/English messages      | Usable desktop/mobile screens and UI checks       |
+| P-03      | Auth helpers, registration, verification and login/logout                | Browser journey plus API/session tests            |
+| P-04      | Password recovery and post-login/invite routing                          | Recovery journey and invalid-link tests           |
+| P-05      | Atomic tenant creation and identity integrity                            | Real DB tests including RETURNING and retry cases |
+| P-06      | Tenant selection, shared request context and cross-tab behavior          | Two-tenant browser and isolation tests            |
+| P-07      | Permission catalogue and agreed role model                               | Role matrix verified at API and DB boundaries     |
+| P-08      | Invitation lifecycle and membership UI                                   | Existing/new-account invite journeys              |
+| P-09      | Role changes, revocation, ownership safeguards and audit                 | Negative tests and concurrent-owner test          |
+| P-10      | MFA/security settings, deployment/self-host verification, platform demo  | M4 completion gate                                |
 
 Migrations and their tests belong in the same change as the behavior that needs them. Do not create an entire future platform schema as P-01.
 

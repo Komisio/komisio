@@ -459,3 +459,14 @@ Use signed-off commits and green exact-head CI. The owner's daytime authorizatio
 covers staging releases; hosted user-only verification must be labeled separately.
 The day plan ends at18:00 Europe/Stockholm unless the owner changes it. Maximize
 useful progress within scope; do not pause development to conserve weekly quota.
+
+## Fortnox connection checkpoint, 2026-09-14
+
+The owner created a Fortnox integration in the developer portal and saved its
+client id and secret, the pilot tenant pin, the expected company name and
+`KOMISIO_CREDENTIAL_KEY` in Vercel (Production). PR116 delivered the
+connection slice (migration `20260915210000`, pushed to staging). See
+[FORTNOX-CONNECTION.md](FORTNOX-CONNECTION.md). Only the Fortnox test company
+may ever be connected; the organisation number is never a pin. The first
+hosted connection and check are the owner's; the database number read there
+becomes `FORTNOX_EXPECTED_DATABASE_NUMBER` before any voucher sending is built.

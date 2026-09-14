@@ -28,14 +28,16 @@ test('Zettle product export, price update, checkout, automatic credit and concur
     await expect(
       page.getByRole('button', { name: d.zettle.pullEnable, exact: true }),
     ).toHaveCount(0)
-    for (const action of ['enablePull', 'pull', 'export']) {
+    for (const action of ['enablePull', 'pull', 'export', 'exportImage']) {
       const denied = await page.request.post('/api/integrations/zettle', {
         headers: { origin: 'http://127.0.0.1:3000' },
         data: {
           action,
           tenantId: f.tenant,
           requestId: randomUUID(),
-          ...(action === 'export' ? { itemId: item1 } : {}),
+          ...(['export', 'exportImage'].includes(action)
+            ? { itemId: item1 }
+            : {}),
         },
       })
       expect(denied.status()).toBe(409)

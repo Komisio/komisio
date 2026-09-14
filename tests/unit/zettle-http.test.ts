@@ -2,6 +2,7 @@ import { expect, it, vi } from 'vitest'
 import { zettleHttpClient } from '../../extensions/zettle/http'
 import { type CatalogProduct } from '../../extensions/zettle/catalog'
 const org = '10000000-0000-4000-8000-000000000001'
+const imageUrl = 'https://image.izettle.com/product/synthetic.jpg'
 const product: CatalogProduct = {
   uuid: '20000000-0000-4000-8000-000000000001',
   name: 'Synthetic jacket',
@@ -36,6 +37,78 @@ function setup(responses: Response[]) {
   })
   return { client, http }
 }
+
+it('associates a registered photo conditionally and reconciles an exact retry without another PUT', async () => {
+  const pictured = { ...product, presentation: { imageUrl } }
+  const { client, http } = setup([
+    json({ organizationUuid: org }),
+    json(product, 200, { ETag: '"image-1"' }),
+    new Response(null, { status: 204 }),
+    json(pictured),
+    json(pictured),
+  ])
+  await client.putProduct(product, product, imageUrl)
+  await client.putProduct(product, product, imageUrl)
+  expect(
+    http.mock.calls.filter(([, options]) => options?.method === 'PUT'),
+  ).toHaveLength(1)
+  expect(JSON.parse(String(http.mock.calls[2][1]?.body))).toEqual(pictured)
+  expect(http.mock.calls[2][1]?.headers).toMatchObject({
+    'If-Match': '"image-1"',
+  })
+})
+
+it('preserves registered imagery and presentation colors during a price update', async () => {
+  const presentation = {
+    imageUrl,
+    backgroundColor: '#ffffff',
+    textColor: '#000000',
+  }
+  const previous = { ...product, presentation, imageLookupKeys: ['synthetic'] }
+  const next = structuredClone(product)
+  next.variants[0].price.amount = 26000
+  const expected = { ...next, presentation, imageLookupKeys: ['synthetic'] }
+  const { client, http } = setup([
+    json({ organizationUuid: org }),
+    json(previous, 200, { ETag: '"image-2"' }),
+    new Response(null, { status: 204 }),
+    json(expected),
+  ])
+  await client.putProduct(next, product, imageUrl)
+  expect(JSON.parse(String(http.mock.calls[2][1]?.body))).toEqual(expected)
+})
+
+it.each([
+  { presentation: { imageUrl: 'https://image.izettle.com/product/other.jpg' } },
+  { imageLookupKeys: ['unknown'] },
+  { presentation: { imageUrl, secret: 'unmanaged' } },
+  { description: 'Unmanaged description' },
+])(
+  'never overwrites conflicting image or unmanaged fields %j',
+  async (extra) => {
+    const { client, http } = setup([
+      json({ organizationUuid: org }),
+      json({ ...product, ...extra }, 200, { ETag: '"image-3"' }),
+    ])
+    await expect(
+      client.putProduct(product, product, imageUrl),
+    ).rejects.toThrow()
+    expect(
+      http.mock.calls.some(([, options]) => options?.method === 'PUT'),
+    ).toBe(false)
+  },
+)
+
+it('a stale image ETag cannot overwrite a concurrent product edit', async () => {
+  const { client } = setup([
+    json({ organizationUuid: org }),
+    json(product, 200, { ETag: '"stale"' }),
+    new Response(null, { status: 412 }),
+  ])
+  await expect(client.putProduct(product, product, imageUrl)).rejects.toThrow(
+    'ZETTLE_REMOTE_CHANGED',
+  )
+})
 it('creates one product using current official paths and preserves identity on replay', async () => {
   const { client, http } = setup([
     json({ organizationUuid: org }),

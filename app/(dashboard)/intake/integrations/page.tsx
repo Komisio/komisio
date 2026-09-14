@@ -1,4 +1,5 @@
 import { readZettleStock } from '@/lib/engine/zettle-stock'
+import { readZettleImages } from '@/lib/engine/zettle-images'
 import { readZettlePull } from '@/lib/engine/zettle-live'
 import Link from 'next/link'
 import { pilotIssue, pilotEnvironment } from '@/extensions/zettle/auth'
@@ -45,10 +46,15 @@ export default async function Integrations({
   const stocks = ['owner', 'admin'].includes(a.role)
     ? await readZettleStock(ctx.client, a.id)
     : []
+  const images =
+    liveReady && pull?.connection
+      ? await readZettleImages(ctx.client, a.id)
+      : []
   const exportItems = [
     ...new Set([
       ...catalog.candidates.map((c) => c.item_id),
       ...stocks.map((s) => s.item_id),
+      ...(images ?? []).map((image) => image.item_id),
     ]),
   ]
   return (
@@ -141,6 +147,7 @@ export default async function Integrations({
           <section aria-label={d.stockTitle}>
             <h2>{d.stockTitle}</h2>
             <p>{d.stockHint}</p>
+            {images !== null && <p>{d.imageHint}</p>}
             {exportItems.map((itemId) => {
               const stock = stocks.find((s) => s.item_id === itemId)
               return (
@@ -153,6 +160,22 @@ export default async function Integrations({
                     I-{itemId.slice(0, 8).toUpperCase()}
                   </Link>
                   {stock && <p>{d.stockStates[stock.status]}</p>}
+                  {(images ?? [])
+                    .filter((image) => image.item_id === itemId)
+                    .map((image) => (
+                      <p key={image.item_id}>{d.imageStates[image.status]}</p>
+                    ))}
+                  {stock && images !== null && (
+                    <ZettleAction
+                      command={{
+                        action: 'exportImage',
+                        tenantId: a.id,
+                        itemId,
+                      }}
+                      d={d}
+                      label={d.exportImage}
+                    />
+                  )}
                   {stock?.status !== 'depleted' && (
                     <ZettleAction
                       key={`${itemId}-${stock?.checked_at ?? 'new'}`}

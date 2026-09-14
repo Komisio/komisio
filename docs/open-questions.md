@@ -189,6 +189,13 @@ remain separate. Fable's newer commits are held until PR58 is complete.
 
 ## Zettle live pilot prerequisites (2026-09-13)
 
+**Image export 2026-09-14:** the owner requested product photo export. The first
+slice provides an explicit owner/admin action using the accepted reception
+review's first photo, with private originals, reduced metadata-free JPEGs and
+append-only integration provenance. See ZETTLE-IMAGES.md. Live merchant image
+acceptance, replacement/removal and imagery for other item origins remain open;
+this does not resolve existing held stock attempts.
+
 **Stock diagnosis 2026-09-13:** PR110 remained unmerged when the owner observed
 the exported product without stock tracking. The strict one-row tracking parser
 rejects an empty successful response before tracking activation. The follow-up

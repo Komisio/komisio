@@ -1,4 +1,5 @@
 import { ProductHttpError } from '../../extensions/zettle/http'
+import { readZettleImageUrl } from './zettle-images'
 import { zettleErrorCode } from './zettle'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
@@ -100,7 +101,8 @@ export async function exportZettleItem(
   for (let attempt = 0; attempt < 2; attempt++) {
     await current()
     try {
-      await remote.putProduct(payload, previous)
+      const imageUrl = await readZettleImageUrl(client, tenantId, itemId)
+      await remote.putProduct(payload, previous, imageUrl ?? undefined)
       break
     } catch (error) {
       const safe = zettleErrorCode(error instanceof Error ? error.message : '')

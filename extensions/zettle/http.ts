@@ -7,11 +7,13 @@ import {
   type CatalogProduct,
 } from './catalog'
 import { cursor } from './purchase'
+import { productImageFields, zettleImageUrl } from './images'
 import type { ZettleTransport } from './transport'
 export interface ZettleClient extends ZettleTransport {
   putProduct(
     product: CatalogProduct,
     previous: CatalogProduct | null,
+    imageUrl?: string,
   ): Promise<void>
 }
 /** Current official API hosts only; token lifecycle is supplied by the connected host. */
@@ -96,7 +98,8 @@ export function zettleHttpClient(options: {
     }
   }
   return {
-    async putProduct(input, old) {
+    async putProduct(input, old, imageUrl) {
+      if (imageUrl !== undefined) zettleImageUrl.parse(imageUrl)
       await verify()
       const p = catalogProduct.parse(input),
         previous = old ? catalogProduct.parse(old) : null
@@ -115,13 +118,16 @@ export function zettleHttpClient(options: {
           throw new Error('ZETTLE_PRODUCT_UUID_REJECTED')
         throw error
       }
-      if (remote && sameProduct(remote.product, p)) return
+      const image =
+        remote && imageUrl ? productImageFields(remote.raw, imageUrl) : null
+      if (remote && sameProduct(remote.product, p) && (!image || image.matches))
+        return
       if (!remote) {
         if (previous) throw new Error('ZETTLE_REMOTE_MISSING')
         const r = await call(
           `https://products.izettle.com/organizations/${org}/products`,
           'POST',
-          p,
+          imageUrl ? { ...p, presentation: { imageUrl } } : p,
         )
         if (r.status === 400 || r.status === 422)
           throw new Error('ZETTLE_PRODUCT_REJECTED')
@@ -129,24 +135,45 @@ export function zettleHttpClient(options: {
           throw new Error('ZETTLE_CREATE_FAILED')
         // Also reconciles a lost successful POST on the next retry with the same UUID.
         remote = await get(p.uuid)
-        if (!remote || !sameProduct(remote.product, p))
+        if (
+          !remote ||
+          !sameProduct(remote.product, p) ||
+          (imageUrl && !productImageFields(remote.raw, imageUrl).matches)
+        )
           throw new Error('ZETTLE_REMOTE_CHANGED')
         return
       }
-      if (!previous || !sameProduct(remote.product, previous) || !remote.etag)
+      if (
+        (!sameProduct(remote.product, p) &&
+          (!previous || !sameProduct(remote.product, previous))) ||
+        !remote.etag
+      )
         throw new Error('ZETTLE_REMOTE_CHANGED')
       // Extra fields cannot be erased by a read/no-op, but must still hold a real update.
-      projectRemoteProduct(remote.raw, 'update')
+      projectRemoteProduct(
+        image
+          ? {
+              ...(remote.raw as object),
+              presentation: null,
+              imageLookupKeys: null,
+            }
+          : remote.raw,
+        'update',
+      )
       const r = await call(
         `https://products.izettle.com/organizations/${org}/products/v2/${p.uuid}`,
         'PUT',
-        p,
+        image ? { ...p, ...image.fields } : p,
         remote.etag,
       )
       if (r.status === 412) throw new Error('ZETTLE_REMOTE_CHANGED')
       if (r.status !== 204) throw new Error('ZETTLE_UPDATE_FAILED')
       remote = await get(p.uuid)
-      if (!remote || !sameProduct(remote.product, p))
+      if (
+        !remote ||
+        !sameProduct(remote.product, p) ||
+        (imageUrl && !productImageFields(remote.raw, imageUrl).matches)
+      )
         throw new Error('ZETTLE_REMOTE_CHANGED')
     },
     async fetchPage(input) {

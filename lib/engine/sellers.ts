@@ -40,3 +40,36 @@ export async function readSellersOverview(
   if (r.error) throw new Error('FORBIDDEN')
   return sellersOverview.parse(r.data)
 }
+
+// Duplicate check at registration: sellers already recorded with the same
+// e-mail, phone number or name. Advisory; the person decides.
+export const sellerMatches = z.object({
+  matches: z
+    .array(
+      z.object({
+        id: z.uuid(),
+        name: z.string(),
+        contact: z.string().nullable(),
+        reasons: z.array(z.enum(['email', 'phone', 'name'])),
+      }),
+    )
+    .max(5),
+})
+export type SellerMatches = z.infer<typeof sellerMatches>
+
+export async function readSellerMatches(
+  client: SupabaseClient,
+  tenantInput: string,
+  input: { name: string; email: string; phone: string },
+): Promise<SellerMatches> {
+  const r = await client.rpc('seller_matches', {
+    p_tenant: z.uuid().parse(tenantInput),
+    p_name: input.name.trim().slice(0, 120),
+    p_email: input.email.trim().slice(0, 254),
+    p_phone: input.phone.trim().slice(0, 40),
+  })
+  // Until the migration reaches the database the check finds nothing.
+  if (r.error?.code === 'PGRST202') return { matches: [] }
+  if (r.error) throw new Error('FORBIDDEN')
+  return sellerMatches.parse(r.data)
+}

@@ -93,7 +93,12 @@
     "bagPages": "Bläddra bland påsar",
     "newerBags": "Nyare påsar",
     "olderBags": "Äldre påsar",
-    "firstBags": "Till senaste påsarna"
+    "firstBags": "Till senaste påsarna",
+    "possibleDuplicates": "En säljare med de här uppgifterna finns redan. Öppna den säljaren i stället, eller registrera ändå.",
+    "registerAnyway": "Registrera ändå",
+    "matchEmail": "samma e-post",
+    "matchPhone": "samma telefon",
+    "matchName": "samma namn"
   },
   "brand": "Komisio",
   "tagline": "Mer utrymme för det som får nytt liv.",

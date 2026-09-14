@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import type { Dictionary } from '@/lib/i18n'
 import type { Seller } from '@/lib/engine/intake'
+import type { SellerMatches } from '@/lib/engine/sellers'
 import { intakeCommand } from '@/lib/engine/intake'
 import { Button } from '@/components/ui/button'
 
@@ -27,6 +28,8 @@ export function ReceivingPanel({
   const [error, setError] = useState('')
   const [bagId, setBagId] = useState('')
   const [needsReload, setNeedsReload] = useState(false)
+  // Sellers already registered with the typed details; null until checked.
+  const [matches, setMatches] = useState<SellerMatches['matches'] | null>(null)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (busy || needsReload || (agreementBlocked && !pending.current)) return
@@ -58,6 +61,30 @@ export function ReceivingPanel({
     if (!intakeCommand.safeParse(command).success) {
       setError(d.invalid)
       return
+    }
+    if (command.action === 'registerSeller' && matches === null) {
+      // Advisory check first; a failed check does not stop the registration.
+      setBusy(true)
+      try {
+        const q = new URLSearchParams({
+          name: String(command.name),
+          email: String(command.email),
+          phone: String(command.phone),
+        })
+        const r = await fetch(`/api/sellers/matches?${q}`)
+        const found: SellerMatches['matches'] = r.ok
+          ? ((await r.json()).matches ?? [])
+          : []
+        setMatches(found)
+        if (found.length > 0) {
+          setError('')
+          return
+        }
+      } catch {
+        setMatches([])
+      } finally {
+        setBusy(false)
+      }
     }
     pending.current = command
     setLocked(true)
@@ -103,6 +130,7 @@ export function ReceivingPanel({
       }
       pending.current = null
       setLocked(false)
+      setMatches(null)
       form.reset()
       if (seller) setBagId(result.id)
       else router.push(`/intake?seller=${result.id}`)
@@ -124,7 +152,13 @@ export function ReceivingPanel({
         </p>
       )}
       <form onSubmit={submit}>
-        <fieldset disabled={busy || locked} className="intake-fields">
+        <fieldset
+          disabled={busy || locked}
+          className="intake-fields"
+          onChange={() => {
+            if (!seller && !pending.current) setMatches(null)
+          }}
+        >
           {seller ? (
             <>
               <div className="field">
@@ -173,6 +207,34 @@ export function ReceivingPanel({
           )}
         </fieldset>
         {error && <p role="alert">{error}</p>}
+        {!seller && matches && matches.length > 0 && (
+          <div role="alert" className="intake-matches">
+            <p>{d.possibleDuplicates}</p>
+            <ul>
+              {matches.map((m) => (
+                <li key={m.id}>
+                  <Link className="text-link" href={`/intake?seller=${m.id}`}>
+                    {m.name}
+                  </Link>{' '}
+                  {m.contact}{' '}
+                  <small>
+                    (
+                    {m.reasons
+                      .map((r) =>
+                        r === 'email'
+                          ? d.matchEmail
+                          : r === 'phone'
+                            ? d.matchPhone
+                            : d.matchName,
+                      )
+                      .join(', ')}
+                    )
+                  </small>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         {seller && agreementBlocked && <p>{d.agreementRequired}</p>}
         {needsReload && (
           <a className="text-link" href={`/intake?seller=${seller?.id ?? ''}`}>
@@ -183,7 +245,15 @@ export function ReceivingPanel({
           type="submit"
           disabled={busy || needsReload || (agreementBlocked && !locked)}
         >
-          {busy ? d.busy : locked ? d.retry : seller ? d.saveBag : d.saveSeller}
+          {busy
+            ? d.busy
+            : locked
+              ? d.retry
+              : seller
+                ? d.saveBag
+                : matches && matches.length > 0
+                  ? d.registerAnyway
+                  : d.saveSeller}
         </Button>
       </form>
       {bagId && (

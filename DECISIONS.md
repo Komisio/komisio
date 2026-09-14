@@ -10,6 +10,18 @@ identity, authority or a broader dashboard action stops the procedure. No servic
 key, membership change, financial write or weakened MFA policy is introduced.
 The synthetic staging recovery exercise remains a pilot gate, not claimed evidence.
 
+## 2026-09-14: Duplicate sellers are shown, never merged or blocked
+
+Registering a seller first reads `seller_matches`: sellers of the store
+with the same e-mail, the same phone number (compared without formatting,
+the `00`/`+46` prefix and the trunk zero) or the same name. Matches are
+shown with links and reasons; registering is an explicit second step.
+Nothing merges, nothing is refused: two people may share a contact, and a
+merge would move money and custody between people. Photo duplicates follow
+the two-step design in `docs/DUPLICATE-CHECK.md` (content digest first,
+model similarity behind the assistance port later). Migration
+`20260916220000`, pgTAP `0092`.
+
 ## 2026-09-14: Fortnox retries must not duplicate external vouchers
 
 Before automatic sending, enforce the existing at-most-one-voucher rule on the

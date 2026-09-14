@@ -93,7 +93,12 @@
     "bagPages": "Browse bags",
     "newerBags": "Newer bags",
     "olderBags": "Older bags",
-    "firstBags": "Latest bags"
+    "firstBags": "Latest bags",
+    "possibleDuplicates": "A seller with these details is already registered. Open that seller instead, or register anyway.",
+    "registerAnyway": "Register anyway",
+    "matchEmail": "same email",
+    "matchPhone": "same phone",
+    "matchName": "same name"
   },
   "brand": "Komisio",
   "tagline": "More room for things to live again.",

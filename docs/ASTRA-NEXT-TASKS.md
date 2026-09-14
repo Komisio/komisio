@@ -1,112 +1,105 @@
 # Next tasks for Astra
 
-Implementation checkpoint, 2026-09-14: owner window escape (PR126), VAT comparison
-(PR127), TypeScript staged-kind retirement (PR128), and staff image reads (PR129)
-are merged. The dated live-action log records the owner's product observation;
-new image, receipt-pull and matched-sale POS observations are not yet confirmed.
-The owner explicitly selected Fable's automation-identity/Vercel Cron model instead
-of the earlier pg_cron bridge. Scheduled retrieval implementation and verification
-are described in ZETTLE-AUTOMATION.md; live activation needs the owner's dedicated
-Auth identity, server secrets and per-store grant. No owner session or service-role
-client is used. The window escape itself does not deliver a scheduled worker.
-The task descriptions below remain the scope and audit trail.
-
-Rewritten 2026-09-14 by Fable (lead architect) after the reviews
-[ZETTLE-REVIEW-2026-09-13.md](ZETTLE-REVIEW-2026-09-13.md) and
-[REVIEW-2026-09-14.md](REVIEW-2026-09-14.md). The 2026-09-13 list is done:
-seller portal (PR88), P2 journeys (PR89), batch reception (PR90), Zettle
-pull, live connection, product sync, stock, images (PR91–PR114) and staging
-migrations from CI (PR117). Priority order; same conventions: one PR per
-task, decision line and pgTAP first, additive migrations, engine command,
-thin surface, tests. Base every branch on `main`.
+Rewritten 2026-09-14 (evening) by Fable (lead architect). The previous list
+is done: window escape (PR126), VAT comparison (PR127), retired staged kind
+(PR128), staff image reads (PR129), live evidence log (PR130) and scheduled
+Zettle retrieval on the automation identity (PR143). Since then Fable
+delivered plans and trial (PR138), Stripe (PR140), trial notices from a
+daily cron (PR145), the grouped navigation (PR142), the start page (PR146)
+and the accounting views (PR147). Priority order; same conventions: one PR
+per task, decision line and pgTAP first, additive migrations, engine
+command, thin surface, tests. Base every branch on `main`.
 
 ## Coordination
 
-- Migration timestamps: Fable is at `20260915230000`. Take
-  `20260916000000` and later, and still list `supabase/migrations` in every
-  worktree and on `origin/main` before choosing.
-- pgTAP numbers: Fable is at 0066. Start at 0070; glob `supabase/tests`
-  across all worktrees first. 0063 collided on 2026-09-14.
-- Fable's files today: `extensions/fortnox/*`, `lib/engine/fortnox-*.ts`,
-  `lib/engine/brief.ts`, `lib/platform/credentials.ts`,
-  `app/api/integrations/fortnox/*`, the accounting and economy pages, the
-  `fortnox` and `brief` blocks of `messages/*.json`. Everything else is free.
-- Staged operation kinds: still ask before adding one (the dispatcher recipe
-  re-declares five functions per kind).
-- Deploy ordering: until the owner switches Vercel to a deploy hook fired
-  after the `staging-migrations` job, a page read that calls a new RPC must
-  tolerate PostgREST `PGRST202` (missing function) the way
-  `readZettleImages` does, so the page survives the minutes between the
-  application deploy and the migration.
-- Blocked on the owner, not on code: payout rail provider (Swish or Stripe
-  agreement), Resend keys and the pilot mailbox allowlist, a printer, the
-  Vercel deploy hook. Do not invent any of them.
+- Migration timestamps: Fable is at `20260916070000`. Take
+  `20260916080000` and later; list `supabase/migrations` in every worktree
+  and on `origin/main` before choosing.
+- pgTAP numbers: Fable is at 0076. Start at 0080; glob `supabase/tests`
+  across all worktrees first.
+- The automation actor is live on staging (identity, `CRON_SECRET`,
+  billing actor registered). Scopes are `zettle_pull` and `fortnox_send`;
+  task 1 uses the second. The billing actor (platform host of kind
+  `billing`) is a different power from a tenant automation grant: do not
+  mix them.
+- Fable's files: `lib/engine/plans.ts`, `lib/engine/billing.ts`,
+  `lib/engine/plan-notices.ts`, `extensions/stripe/*`, `app/api/billing/*`,
+  `app/api/host/*`, `components/platform/*`, `lib/platform/navigation.ts`,
+  the `plans`, `planNotices`, `nav`, `overview` and `brief` blocks of
+  `messages/*.json`. For task 1 you may edit `lib/engine/fortnox-*.ts`,
+  the Fortnox migrations' successors and the settings view of the
+  accounting page; keep those PRs small and say so in the title.
+- Deploy ordering: until the owner's deploy hook is in place, every new
+  page read that calls a new RPC tolerates PostgREST `PGRST202`.
+- Blocked on the owner: payout rail provider, printer, the Vercel deploy
+  hook, the accountant's confirmation of the VAT map. Do not invent them.
 
-## 1. Window escape and scheduled retrieval (Zettle)
+## 1. Automatic Fortnox sending (scope `fortnox_send`)
 
-Fable, 2026-09-14: the owner approved D1 and the membership side is delivered
-(migration `20260916020000`, `lib/engine/automation.ts`, pgTAP 0072; see
-[AUTOMATION-ACTOR.md](AUTOMATION-ACTOR.md)). Astra builds the rest:
+Purpose: a store that has connected Fortnox and switched automatic sending
+on gets every recorded export sent as a voucher without pressing a button.
 
-- Re-declare `open_zettle_pull_window` and `record_zettle_pull_page` so the
-  role check reads `tenant_role in ('owner','admin') or
-komisio_private.automation_allowed(p_tenant,'zettle_pull')`; the automation
-  uses narrow prepare/status RPCs and private shared engine implementations for
-  nested reconciliation; public arbitrary sale/page commands stay denied.
-  pgTAP: automation with the scope may pull, without
-  it may not, and still cannot export products or abandon windows.
-- Route `app/api/automation/zettle-pull/route.ts`: `CRON_SECRET` header
-  check, sign in with `automationIdentity()` (password grant on a server
-  client, sign out in `finally`), `acceptAutomationGrants`, then for each
-  accepted `zettle_pull` tenant run the existing pull with the existing
-  engine functions and the pilot environment. `vercel.json` `crons` every
-  ten minutes. Without the identity secrets the route answers 404.
-- Integrations page: an owner switch "Fetch receipts automatically" calling
-  `enableAutomation` / `disableAutomation` (scope `zettle_pull`), the grant
-  state from `readAutomation`, and the last run outcome.
-- Secrets for the owner: `KOMISIO_AUTOMATION_EMAIL`,
-  `KOMISIO_AUTOMATION_PASSWORD` (a confirmed Auth user created by the owner
-  in the Supabase dashboard, no MFA), `CRON_SECRET` (Vercel).
+- Migration: re-declare `begin_fortnox_send`, `complete_fortnox_send`,
+  `read_fortnox_connection` and `record_fortnox_check` so the role check
+  reads `tenant_role in ('owner','admin') or
+komisio_private.automation_allowed(p_tenant,'fortnox_send')`. Nothing
+  else opens to the automation. pgTAP: automation with the scope may send,
+  without it may not, and cannot connect, disconnect or read the status.
+- Engine: a function that lists exports without a live send for stores
+  whose `fortnox_send` grant is accepted (owner/admin or automation), then
+  the existing `sendExportToFortnox` per export as the automation identity
+  (the cron route pattern from `lib/engine/zettle-automation.ts`; sign in,
+  `acceptAutomationGrants`, run, sign out). One failure stops that store's
+  run and is recorded by the existing send row; the next run retries.
+- Route `app/api/automation/fortnox-send/route.ts`, `CRON_SECRET`,
+  `vercel.json` cron daily at 07:00 UTC (after the day closes of the
+  previous day; day closes themselves stay manual in this slice).
+- Accounting page, settings view: an owner switch "Send vouchers
+  automatically" calling `enableAutomation` / `disableAutomation` with
+  scope `fortnox_send`, the grant state, and the last run outcome. Texts
+  en/sv in the `fortnox` block. Document in FORTNOX-CONNECTION.md.
 
-- An owner command that closes a `zettle_pull_windows` row with a recorded
-  reason (`ZETTLE_WINDOW_ABANDONED`, reason text bounded) so the next window
-  can open when a page fails on every retry. pgTAP: a closed window accepts
-  no further pages; the next window starts at the closed window's end.
-- Superseded: the earlier database-owner/pg_cron runner proposal is replaced by
-  the owner's explicit selection of Fable's model above. Page/sale actors are the
-  automation identity; the enabling owner remains in automation_grants.
+## 2. Seller retention and erasure (owner decisions B1 and B3)
 
-## 2. VAT map shown next to the engine rate (settings)
+Purpose: the store can honour a seller's request and its own retention rule
+without touching financial history.
 
-- On the Zettle catalog configuration form, show the engine's VAT rate for
-  each mode (from the store policy and `docs/VAT-CASES.md`) next to the
-  mapped percent, and mark a mismatch. No automatic correction: the map is
-  the tenant's. Unit test on the comparison; the open question in
-  `docs/open-questions.md` stays until the accountant confirms.
+- `anonymise_seller(tenant, seller, reason)`, owner only: allowed when the
+  seller has no item for sale, a zero balance and no open statement or
+  payout; replaces name, e-mail and phone with fixed placeholders, keeps the
+  row and every financial fact, records an access event and an append-only
+  `seller_erasures` row (who, when, reason). pgTAP: refused while anything
+  is open; the ledger, sales and statements stay; the seller export no
+  longer carries contact data.
+- A read `sellers_past_retention(tenant)` listing sellers with no activity
+  for 24 months and nothing open, shown on the seller pages for owners as a
+  list to act on. Nothing is erased automatically.
+- `close_my_account()`: the person's own profile anonymised and every
+  membership revoked except where they are the last owner (refused with the
+  stores named); the Auth row itself is removed by the operator
+  (documented procedure, no service key in the app).
 
-## 3. Decide the fate of `recordZettlePurchase`
+## 3. MFA recovery procedure (owner decision B2)
 
-- Either document it as the manual fallback for a held receipt (then give it
-  a button on the held receipt row, owner/admin, staged medium risk) or
-  remove the TypeScript branches and the review context. The SQL dispatcher
-  stays either way. One PR, one decision line.
+- `docs/OPERATIONS-MFA-RECOVERY.md`: how the store owner verifies the
+  person, what the operator does in the Supabase dashboard (remove the
+  factor, log it), what the person does next (re-enrol). Add the procedure
+  to PILOT-GATES.md and a line to DECISIONS.md. No code unless the account
+  page needs a hint text.
 
-## 4. Image read roles
+## 4. Browser journey for the integrations page
 
-- `zettle_item_image_url` and `zettle_image_status` are owner/admin only while
-  the stock export status on the same page is visible to staff. Align the
-  read roles (staff read, owner/admin write) with a pgTAP update.
+- With the fixtures: the automation switch for `zettle_pull` (grant created,
+  accepted state shown after a simulated acceptance through the fixture DB
+  helper), the last run outcome, and the staff view without the switch.
 
 ## 5. Live verification log
 
-- After each real merchant action on the pilot store (product export, image
-  upload, receipt pull, matched sale), append one dated line to
-  `docs/ZETTLE-LIVE-PULL.md` or `docs/ZETTLE-IMAGES.md`: what was sent, what
-  Zettle showed, any manual reconciliation. The pilot gate needs this trail.
+- Keep appending dated rows to ZETTLE-LIVE-PULL.md after each real merchant
+  action (first scheduled pull, first matched sale, first image).
 
 ## Not now
 
-Multi-tenant provider connections (P5 in the roadmap; reuse
-`lib/platform/credentials.ts`), Shopify (waits for Zettle live to settle),
-USB print transport (needs hardware), payout rails (need a provider
-agreement).
+Shopify (waits for Zettle live to settle), USB print transport (needs
+hardware), payout rails (need a provider agreement), Stripe Tax and
+production billing (need the operating company).

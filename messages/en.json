@@ -1370,8 +1370,16 @@
       "PLAN_CLOSED": "The store is closed by its owner and cannot be reactivated here.",
       "TENANT_NOT_FOUND": "The store was not found.",
       "INVALID_INPUT": "Check the date and the reason.",
-      "REQUEST_FAILED": "The request failed. Retry later."
-    }
+      "REQUEST_FAILED": "The request failed. Retry later.",
+      "STRIPE_NOT_CONFIGURED": "Online payment is not configured.",
+      "STRIPE_REQUEST_FAILED": "Stripe could not be reached. Retry later.",
+      "NO_CUSTOMER": "There is no subscription to manage yet."
+    },
+    "subscribe": "Activate the subscription",
+    "manageSubscription": "Manage subscription and invoices",
+    "checkoutSuccess": "Thank you. The subscription is registered as soon as Stripe confirms the payment, usually within a minute.",
+    "checkoutCancelled": "The checkout was cancelled. Nothing was charged.",
+    "notConfigured": "Online payment is not configured on this deployment; contact Komisio to activate the subscription."
   },
   "reconciliation": {
     "heading": "Reconciliation",
@@ -1582,7 +1590,6 @@
     "pullComplete": "Last completed interval ends",
     "pullPending": "Current interval ends",
     "imageStatusTitle": "Product photo export status",
-
     "engineVat": "Current engine rate",
     "vatComparisonHint": "Comparison only: identical percentages do not guarantee the same taxable basis, especially for margin VAT. Confirm the mapping with your accountant. No values are corrected automatically.",
     "vatComparison": {
@@ -1591,7 +1598,6 @@
       "unmapped": "No percentage mapped",
       "invalid": "Enter a percentage from 0 to 100 with at most two decimals"
     },
-
     "abandonWindow": "Close blocked interval",
     "abandonReason": "Reason for closing",
     "abandonWarning": "Unfetched receipts may be missing. Closing skips the rest of this interval and requires manual reconciliation against Zettle. No sales are created or removed.",

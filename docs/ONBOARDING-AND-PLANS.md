@@ -185,3 +185,30 @@ production migrations (the owner).
   colleague. Every row is computed from existing facts under the person's
   own session (`lib/engine/onboarding.ts`); nothing is stored. Trial e-mails
   wait for the Resend configuration (owner action A5).
+
+## Delivered (slice 3, 2026-09-14): Stripe
+
+- Owner presses "Activate the subscription" on the settings page: the
+  server creates a hosted Checkout session (subscription mode, the price
+  from `STRIPE_PRICE_ID`, tax id collection, the tenant id as reference and
+  subscription metadata) and redirects; "Manage subscription and invoices"
+  opens Stripe's customer portal for the stored customer. Owner only; both
+  need `STRIPE_SECRET_KEY` and `STRIPE_PRICE_ID`, otherwise the panel says
+  online payment is not configured.
+- `POST /api/billing/webhook`: the signature (`Stripe-Signature`, five-minute
+  tolerance) is checked against the raw body; the event is mapped
+  (`mapStripeEvent`) to one of active, past_due, read_only,
+  cancel_at_period_end or none and recorded by the billing actor through
+  `record_billing_event`, once per event id (`billing_events`). The tenant
+  comes from the event or is found by subscription or customer id. Grace on
+  a failed payment is 14 days from the first failure; cancel at period end
+  keeps the store active until the date, then the daily run closes it; a
+  store closed by its owner records events without changing state.
+- The billing actor is the automation identity: the operator runs
+  `select komisio_private.register_billing_actor('<automation user id>')`
+  (a platform host of kind `billing`; it cannot activate manually, and
+  person hosts cannot record billing events).
+- Migration `20260916040000`; pgTAP 0074; unit tests for the form encoding,
+  signature, event mapping, checkout and the engine call. Without the three
+  Stripe settings nothing changes: the webhook answers 404 and the panel
+  shows the contact note.

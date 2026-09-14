@@ -6,10 +6,12 @@ export function PlanPanel({
   status,
   locale,
   d,
+  actions,
 }: {
   status: PlanStatus | null
   locale: string
   d: Dictionary['plans']
+  actions?: React.ReactNode
 }) {
   if (!status || !status.billing) return null
   const date = (iso: string | null | undefined) =>
@@ -34,6 +36,7 @@ export function PlanPanel({
         {deadline?.[1] ? ` · ${deadline[0]} ${deadline[1]}` : ''}
       </p>
       <p>{d.explain[status.state]}</p>
+      {actions}
       <p>
         <small>{d.priceNote}</small>
       </p>

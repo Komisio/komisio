@@ -3,6 +3,10 @@
 </p>
 
 <p align="center">
+  <img src="docs/images/komisio-mark.svg" alt="" width="72" height="72">
+</p>
+
+<p align="center">
   <strong>Give great things a second life. Give your store a better system.</strong><br>
   Open-source software for second-hand stores selling on consignment.<br>
   Built in the open. Designed for people and their AI agents.
@@ -50,27 +54,41 @@ ahead of us. [See how AI fits](docs/HOW-AI-FITS.md).
 platform locally and help shape what comes next. AGPL-3.0-or-later, with a
 documented extension exception. No AI subscription is needed to run the preview.
 
-**Focused on second-hand. Connected to the rest.** Komisio is intended to
-produce bookkeeping data for systems such as Accounted and Fortnox.
-Accounting integrations are planned; Komisio is not a bookkeeping application.
+**Focused on second-hand. Connected to the rest.** A day close becomes a
+balanced voucher under the store's own account map, downloadable as SIE 4 or
+sent straight to Fortnox as one voucher per day; the same data can feed
+systems such as Accounted. Komisio invents no accounts and no postings and is
+not a bookkeeping application. [Accounting export](docs/ACCOUNTING-EXPORT.md)
+· [Fortnox connection](docs/FORTNOX-CONNECTION.md).
 
-**Sell through your POS. Keep the seller informed.** The local Zettle simulator
-now exercises accepted items going out and completed sales coming back with
-automatic seller credit. Live connection and inventory synchronization are still
-pending. [Test the integration](docs/ZETTLE-FIXTURE-PULL.md).
+**Sell through your POS. Keep the seller informed.** Accepted items go out to
+Zettle with stock and product photos, and completed receipts come back as
+sales with automatic seller credit; unmatched receipts are held for a person.
+The live pilot runs against a real merchant. [Zettle live retrieval](docs/ZETTLE-LIVE-PULL.md).
+
+**Pay the people who trust you.** Seller balances, payout requests, approval
+and a settlement batch that pays every seller who is due, with a numbered
+statement per seller. [Settlement](docs/SETTLEMENT.md) · [Economy overview](docs/ECONOMY-OVERVIEW.md).
+
+**Agents that prepare, people who decide.** Reception proposals, price
+evidence from the store's own sales, an automatic markdown agent under the
+store's policy, a weekly brief written from the same numbers, and a local MCP
+server with scoped tools for reads and staged proposals. [How AI fits](docs/HOW-AI-FITS.md)
+· [MCP tools](mcp/README.md).
 
 ## From handover to payout
 
-![Target workflow: receive an item, sell it, settle the consignor's share. Receiving is available as a pilot; sales and settlement are planned.](docs/images/komisio-flow.svg)
+![Workflow: receive an item, sell it, settle the consignor's share.](docs/images/komisio-flow.svg)
 
-The first store operation is deliberately small: **register a seller, receive
-a bag and print its label**. Staff reviews the contents later. This gated pilot
-is now enabled in the hosted staging preview and can also run locally after
-migration and activation. Staff can use [versioned seller agreements
-and external approval evidence](docs/SELLER-AGREEMENTS.md) and save
-[descriptive item drafts during inspection](docs/SAVED-INSPECTION.md). Space booking, seller
-signatures, sales and payouts follow as separate workflows. See the
-[implementation sequence](docs/SELLER-FLOW-IMPLEMENTATION.md) and
+The whole chain runs today: **register a seller, receive a bag or a single
+garment, inspect and accept it with frozen terms, sell it through the POS or
+by hand, close the day, export or send the voucher, and pay the seller**.
+Sellers can hand in on their own with a QR handover and follow their money in
+a seller portal. Every financial fact is append-only, every correction is a
+new row, and every agent action is staged for a person to approve. See
+[versioned seller agreements](docs/SELLER-AGREEMENTS.md),
+[self drop-off](docs/SELF-DROPOFF.md), the
+[functional roadmap](docs/FUNCTIONAL-ROADMAP.md) and the
 [open domain questions](docs/open-questions.md).
 
 ### Start with a jacket. Keep the decision human.
@@ -101,30 +119,31 @@ See the [pilot walkthrough](docs/RECEPTION-PILOT.md).
 The [hosted preview](https://komisio-staging.vercel.app) is a test environment;
 use test data rather than real consignor or financial records.
 
-| Available in the current platform | Still being built or planned |
-| --- | --- |
-| Registration, email confirmation, login and password recovery | Inspection completion and saleable inventory |
-| Store creation and switching between your stores | Sales, returns and commission |
-| Profiles and optional authenticator-app MFA | Settlements and payouts |
-| Membership administration and four access roles | Accounting and other integration extensions |
-| Email-bound invitation links and optional pilot email delivery | Hosted agent OAuth and durable agent approval workflows |
-| Access log and responsive Swedish/English interface | Billing and commercial hosted plans |
-| Seller registration, bag receiving and printable labels | Seller portal and digital signatures |
-| Versioned store agreements and staff-recorded approval evidence | Space booking and booking fees |
-| Resumable descriptive item drafts with protected revision history | Commercial acceptance and POS publication |
-| Private reception photos and exact mobile approve/decline | Wall-camera pairing and automated capture |
-| Optional sourced AI suggestions and local MCP reads/previews | Live model quality evaluation and market-price integrations |
+| Available in the current platform                                             | Still being built or planned                                                        |
+| ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Registration, e-mail confirmation, login, password recovery, optional MFA     | Billing, trial and commercial hosted plans ([design](docs/ONBOARDING-AND-PLANS.md)) |
+| Stores, four access roles, invitations, access log, Swedish and English       | Payout rails (Swish, Stripe) beyond manual "paid with reference"                    |
+| Seller registration, bag and single-garment reception, labels, self drop-off  | Space booking and booking fees                                                      |
+| Versioned agreements, inspection drafts, acceptance with frozen terms         | Shopify and web shop channels                                                       |
+| Sales, returns, store-owned purchases, one currency per store                 | Hosted agent OAuth and a hosted agent runtime                                       |
+| Zettle: product export with stock and photos, live receipt retrieval          | Wall-camera pairing and automated capture                                           |
+| Day close, account map, SIE 4 export, Fortnox voucher sending, reconciliation | Print transport for label printers                                                  |
+| Seller ledger, payouts, settlement batch, statements, seller portal           | Cross-store price comparison (opt-in)                                               |
+| Economy overview, weekly and monthly brief, markdown agent, price evidence    | Duplicate detection for photos                                                      |
+| Staged operations with risk levels, MCP server with scoped tools              | Multi-tenant provider connections with per-store credentials                        |
 
-Hosted onboarding and invitation edge cases are still being validated during
-the pilot. See [platform status](docs/PLATFORM-STATUS.md) for details and
-[the roadmap](ROADMAP.md) for acceptance gates.
+The hosted preview is a staging environment for the pilot store and the
+people building Komisio. See [pilot gates](docs/PILOT-GATES.md) for what
+stands between the preview and an external pilot, and the
+[functional roadmap](docs/FUNCTIONAL-ROADMAP.md) for the phases.
 
-### Free core. Optional convenience.
+### Free to run. Simple to rent.
 
-The intended model is a **free tier** and a **199 SEK/month hosted tier** focused
-on managed integrations and automation. This is the product direction, not an
-available subscription: billing, exact plan limits and launch terms are not
-implemented or finalized. The source is available now under the project license.
+Self-hosted Komisio is free under the project licence. The intended hosted
+offer is one plan: a full month free, then **199 SEK per store and month**.
+This is the direction, not an available subscription; see the
+[onboarding and plans design](docs/ONBOARDING-AND-PLANS.md) for how a store
+would start, activate and pay.
 
 ## Help build the system you wish existed
 
@@ -166,19 +185,22 @@ and [hosted staging setup](docs/HOSTED-STAGING.md) for configuration and limits.
 ## For the curious and the builders
 
 Next.js · React · TypeScript · Supabase (PostgreSQL, Auth and row-level security).
-The active schema covers identity, receiving and versioned preparation/review
-evidence. Domain workflows come before a financial data model.
+One SQL engine holds every rule: the web interface, the MCP tools and the
+extensions call the same functions, and pgTAP proves them. Money is integer
+minor units, facts are append-only, and every non-human write is staged.
 
-| Start here | What you'll find |
-| --- | --- |
-| [Architecture](ARCHITECTURE.md) | Target boundaries for the core, UI, AI and extensions |
-| [How AI fits](docs/HOW-AI-FITS.md) | A jacket's journey, file responsibilities and current limits |
-| [Decisions](DECISIONS.md) | What we've chosen and why |
-| [Roadmap](ROADMAP.md) | Milestones and acceptance scenarios |
-| [Extensions](docs/EXTENSIONS.md) | The proposed integration contract |
-| [Agent instructions](CLAUDE.md) | How AI-assisted contributions are governed |
-| [Domain knowledge](skills/) | Working notes for humans and agents |
-| [Security](SECURITY.md) | Reporting vulnerabilities and access principles |
+| Start here                                       | What you'll find                                             |
+| ------------------------------------------------ | ------------------------------------------------------------ |
+| [Architecture](ARCHITECTURE.md)                  | Target boundaries for the core, UI, AI and extensions        |
+| [Functional roadmap](docs/FUNCTIONAL-ROADMAP.md) | Phases P1 to P6, what is delivered and what is next          |
+| [Staged operations](docs/STAGED-OPERATIONS.md)   | How agent and extension writes wait for a person             |
+| [How AI fits](docs/HOW-AI-FITS.md)               | A jacket's journey, file responsibilities and current limits |
+| [Decisions](DECISIONS.md)                        | What we've chosen and why                                    |
+| [Roadmap](ROADMAP.md)                            | Milestones and acceptance scenarios                          |
+| [Extensions](docs/EXTENSIONS.md)                 | The proposed integration contract                            |
+| [Agent instructions](CLAUDE.md)                  | How AI-assisted contributions are governed                   |
+| [Domain knowledge](skills/)                      | Working notes for humans and agents                          |
+| [Security](SECURITY.md)                          | Reporting vulnerabilities and access principles              |
 
 Application routes live in `app/`, shared UI in `components/`, identity and
 permissions in `lib/platform/`, database migrations and tests in `supabase/`,

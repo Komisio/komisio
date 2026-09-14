@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="t d">
+<title id="t">Komisio mark</title>
+<desc id="d">A lime price tag with a circular-arrow loop on an evergreen square: second-hand goods given another life.</desc>
+<rect width="512" height="512" rx="96" fill="#143e34"/>
+<g transform="translate(146 84) rotate(12 110 172)">
+<path d="M0 76 68 0h84l68 76v268H0Z" fill="#dcf0a4"/>
+<circle cx="110" cy="52" r="15" fill="#143e34"/>
+<path d="M62 210a48 48 0 0 1 82-34" fill="none" stroke="#143e34" stroke-width="14" stroke-linecap="round"/>
+<path d="M147 143v40h-40" fill="none" stroke="#143e34" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M158 234a48 48 0 0 1-82 34" fill="none" stroke="#143e34" stroke-width="14" stroke-linecap="round"/>
+<path d="M73 301v-40h40" fill="none" stroke="#143e34" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg>

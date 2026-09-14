@@ -1,0 +1,147 @@
+# Onboarding, environments and plans
+
+Design note by Fable, 2026-09-14, at the owner's request. It answers three
+questions a store owner asks before Komisio can be sold as a hosted service:
+where do I start, how does my account become active, and what do I pay. It
+proposes; the decisions are listed at the end and in
+[OWNER-ACTIONS-2026-09-14.md](OWNER-ACTIONS-2026-09-14.md), section C.
+Nothing here is implemented.
+
+## The shape of the offer
+
+Hosted Komisio follows the common software-as-a-service pattern: a store
+registers itself, gets a full month free, and then pays a monthly fee per
+store. There is no sales call, no manual activation and no separate "test
+account": the store a person creates on day one is the store they keep.
+
+| Tier        | Who                                    | Price                       | Notes                                                                                                |
+| ----------- | -------------------------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Self-hosted | Anyone running the open-source code    | Free (AGPL-3.0-or-later)    | No billing code runs; every store is `active` for ever                                               |
+| Hosted      | Stores on the Komisio-operated service | SEK 199 per store and month | 30-day free trial from store creation; the price is the roadmap's direction, VAT treatment to decide |
+
+One price, one plan, per store. Feature tiers, AI plans and quotas stay in
+the roadmap (P6) and are not part of the first billing slice.
+
+## Environments: where a store starts
+
+- **Production** (`app.komisio.com`, proposed): the only environment
+  customers ever see. Registration, trial and payment all happen here. One
+  Supabase project, one Vercel project, `KOMISIO_ENVIRONMENT=production`.
+- **Staging** (`komisio-staging.vercel.app`): internal. Every merge to main
+  deploys here first; the owner and the agents exercise journeys with test
+  data. Customers are never invited to staging. A store that wants to try
+  Komisio uses its free month in production with its own test data, then
+  keeps or deletes that store.
+- **Local**: the developer's own stack.
+
+Promotion is by code, not by data: production runs the same main revision
+after it has been observed on staging for a period the owner sets (proposal:
+one working day). Migrations reach production through the same CI job as
+staging, from a separate GitHub environment (`production-database`) whose
+job is manually approved by the owner (GitHub environment protection rule
+"required reviewers"). No data is ever copied between environments.
+
+`scripts/check-hosted-env.mjs` today refuses anything but
+`KOMISIO_ENVIRONMENT=staging`; the production slice lifts that guard once the
+production checklist below is done.
+
+## Account lifecycle
+
+1. **Register**: e-mail and password, e-mail confirmation (exists). Optional
+   MFA (exists).
+2. **Create a store**: name and slug (exists). Creating the store starts the
+   trial: `trial` state, `trial_ends_at` = now + 30 days. The person is the
+   owner.
+3. **Guided onboarding** (new, thin): a checklist on the store's start page
+   that reads the store's state and links to the missing step. Order:
+   store policy (commission, sale period, markdowns, VAT modes with the
+   accountant), seller agreement text, first seller, first bag or garment,
+   first sale (POS or manual), first day close, integrations (Zettle,
+   Fortnox), colleagues invited. Each row is computed from facts that
+   already exist; nothing is stored for the checklist itself. The roadmap's
+   conversational onboarding agent (P4) later drives the same checklist.
+4. **Trial notices**: e-mails to the owner on day 23 ("one week left"), day
+   29 ("tomorrow") and day 30 ("your store is now read-only until you
+   subscribe"), through the existing communications dispatch with fixed
+   templates. Shown as a banner in the app from day 23.
+5. **Subscribe**: "Activate subscription" opens Stripe Checkout (card or
+   invoice, SEK, monthly, per store). The webhook records the subscription
+   and moves the store to `active`. Stripe hosts the customer portal
+   (payment method, invoices, cancel); Komisio stores only the customer id,
+   subscription id and state.
+6. **Payment fails**: `past_due` with a 14-day grace; banner and e-mail; the
+   store keeps working. After grace: `read_only`.
+7. **Read-only**: every read works, exports work (SIE, seller data export,
+   statements), payouts already approved may be marked paid, nothing new is
+   recorded: no reception, no sale import, no markdowns, no agent proposals.
+   Reactivating returns the store to `active` at once.
+8. **Cancel**: `read_only` from the end of the paid period; after 90 days
+   the owner is offered export and deletion; erasure follows the retention
+   decision (B1 in the owner list). Nothing is deleted automatically.
+
+States: `trial` → `active` → (`past_due` → `read_only`) → `active`;
+`trial` → `read_only` (trial ended) → `active`; any → `closed` (owner
+request after export). Self-hosted deployments have no states: the plan
+check returns `active` when billing is not configured.
+
+## Where the gate lives
+
+Read-only is a commercial state, not a security boundary: members keep
+their roles and RLS is untouched. It is enforced in one place in SQL, so the
+interface, the MCP tools and the extensions cannot differ:
+`komisio_private.require_writable(tenant)` raises `PLAN_READ_ONLY` and is
+called by the write commands with financial or inventory effect (receive
+bag, publish review, accept item, record sale, register purchase, record
+return, markdowns, payouts request and approve, staged operation execution).
+Reads, exports, settings that do not create facts, and marking an approved
+payout paid stay allowed. The check reads `tenant_plans` (one row per
+tenant: state, trial_ends_at, grace_ends_at, provider ids) and an
+append-only `tenant_plan_events` table written only by the billing engine
+(`start_trial` at store creation, `record_subscription` from the webhook,
+`expire_trials` and `expire_grace` daily through pg_cron like the markdown
+agent, `close_store` by the owner).
+
+The platform host (Komisio's own operator role, a new `host` flag on a
+user, not a tenant role) gets one page: stores, state, trial end, MRR, and
+a manual "mark active until <date>" for invoice customers, recorded as a
+plan event with a reason. No other host powers; support acts through the
+owner's own account or documented operator procedures.
+
+## Production checklist (before the first paying store)
+
+- Production Supabase project (Stockholm) with PITR and storage backup;
+  production Vercel project with its own domain and secrets; separate
+  Fortnox and Zettle integrations registered for production; separate
+  `KOMISIO_CREDENTIAL_KEY`.
+- `production-database` GitHub environment with required reviewer (owner),
+  main-only, its own management token; the deploy hook pattern from
+  staging.
+- Terms of service, privacy notice and data processing agreement published
+  (the store is the controller of its sellers' data; Komisio the processor).
+- Stripe account in the operating company's name, SEK, invoices with VAT;
+  Stripe Tax if selling outside Sweden later.
+- Support address and incident procedure; the pilot gate items in
+  [PILOT-GATES.md](PILOT-GATES.md) closed.
+
+## Slices, in order
+
+1. **Plan state and gate** (migration, pgTAP): `tenant_plans`,
+   `tenant_plan_events`, `require_writable`, trial start at store creation,
+   daily expiry runs, host page, manual activation. Self-hosted stays free.
+   No provider yet; the owner activates the pilot stores by hand.
+2. **Onboarding checklist** on the start page, computed from facts; trial
+   banner and the three trial e-mails.
+3. **Stripe**: Checkout session, webhook (signature verified, idempotent by
+   event id, staged as engine calls), customer portal link, `past_due`
+   handling. Prices and tax settings live in Stripe, never in code.
+4. **Production environment** per the checklist, then the guard in
+   `check-hosted-env.mjs` accepts `production`.
+
+## Decisions needed (section C in the owner list)
+
+C1 price and VAT presentation (SEK 199 incl. or excl. VAT; per store);
+C2 trial length (30 days) and grace (14 days); C3 what read-only blocks
+(the list above); C4 payment provider and methods (Stripe; card and
+invoice); C5 production domain and operating company on the Stripe account;
+C6 staging soak time before production (one working day) and who approves
+production migrations (the owner).

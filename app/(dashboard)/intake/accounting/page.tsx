@@ -13,19 +13,32 @@ import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { DayCloseForm } from '@/components/intake/day-close-form'
 import { AccountMapForm } from '@/components/intake/account-map-form'
 import { ExportDayClose } from '@/components/intake/export-day-close'
+import { FortnoxConnection } from '@/components/intake/fortnox-connection'
+import { readFortnoxStatus } from '@/lib/engine/fortnox-connection'
+import { fortnoxEnvironment, fortnoxIssue } from '@/extensions/fortnox/auth'
 
-export default async function Accounting() {
+export default async function Accounting({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}) {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
+  const query = await searchParams
   const ctx = await requirePlatform(),
     active = ctx.active!,
     currency = await readStoreCurrency(ctx.client, active.id),
     all = dictionary(ctx.locale),
     d = all.accounting
-  const [closes, map, exports] = await Promise.all([
+  const [closes, map, exports, fortnox] = await Promise.all([
     readDayCloses(ctx.client, active.id),
     readAccountingMap(ctx.client, active.id),
     readAccountingExports(ctx.client, active.id),
+    readFortnoxStatus(ctx.client, active.id),
   ])
+  const fortnoxOutcome =
+    typeof query.fortnox === 'string' && /^[A-Za-z_]{1,40}$/.test(query.fortnox)
+      ? query.fortnox
+      : null
   // Preview the newest closes only; older ones are reachable through their exports.
   const previews = new Map(
     (
@@ -129,6 +142,16 @@ export default async function Accounting() {
             </div>
           ))}
         </section>
+        <FortnoxConnection
+          key={`${active.id}-${fortnox.refreshedAt ?? 'none'}`}
+          tenantId={active.id}
+          status={fortnox}
+          issue={fortnoxIssue(active.id, fortnoxEnvironment(process.env))}
+          canConnect={canEditMap}
+          outcome={fortnoxOutcome}
+          locale={ctx.locale}
+          d={all.fortnox}
+        />
         <section className="card intake-form" aria-label={d.exportsHeading}>
           <h2>{d.exportsHeading}</h2>
           {exports.length === 0 && <p>{d.noExports}</p>}

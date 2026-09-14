@@ -1712,7 +1712,8 @@
     "workShort": "To do",
     "integrations": "Integrations",
     "store": "Store",
-    "more": "More"
+    "more": "More",
+    "sellersList": "Sellers"
   },
   "planNotices": {
     "trial_week": {
@@ -1745,5 +1746,21 @@
     "openReconciliation": "Open the reconciliation",
     "openPayoutsPage": "Open payouts",
     "openEconomy": "Open the economy"
+  },
+  "sellersList": {
+    "title": "Sellers",
+    "intro": "Everyone who has handed in to the store: what the store holds for them, what has sold and what they can request.",
+    "register": "Register a seller",
+    "search": "Search by name",
+    "searchButton": "Search",
+    "showingAll": "{total} sellers.",
+    "showingSome": "Showing the first {limit} of {total} sellers; search to narrow.",
+    "empty": "No sellers match.",
+    "name": "Seller",
+    "contact": "Contact",
+    "items": "Items",
+    "sold": "Sold",
+    "available": "Available",
+    "reserved": "Reserved"
   }
 }

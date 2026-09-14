@@ -1712,7 +1712,8 @@
     "workShort": "Att göra",
     "integrations": "Integrationer",
     "store": "Butik",
-    "more": "Mer"
+    "more": "Mer",
+    "sellersList": "Säljare"
   },
   "planNotices": {
     "trial_week": {
@@ -1745,5 +1746,21 @@
     "openReconciliation": "Öppna avstämningen",
     "openPayoutsPage": "Öppna utbetalningar",
     "openEconomy": "Öppna ekonomin"
+  },
+  "sellersList": {
+    "title": "Säljare",
+    "intro": "Alla som lämnat in till butiken: vad butiken har för dem, vad som sålts och vad de kan begära ut.",
+    "register": "Registrera säljare",
+    "search": "Sök på namn",
+    "searchButton": "Sök",
+    "showingAll": "{total} säljare.",
+    "showingSome": "Visar de första {limit} av {total} säljare; sök för att avgränsa.",
+    "empty": "Inga säljare matchar.",
+    "name": "Säljare",
+    "contact": "Kontakt",
+    "items": "Varor",
+    "sold": "Sålda",
+    "available": "Tillgängligt",
+    "reserved": "Reserverat"
   }
 }

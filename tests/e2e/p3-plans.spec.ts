@@ -59,6 +59,10 @@ test('trial banner, host activation and read-only state', async ({ page }) => {
     await expect(
       row.getByText(d.plans.states.trial, { exact: true }),
     ).toBeVisible()
+    // Activity next to the plan: one member, one seller, nothing sold.
+    await expect(row.getByRole('cell').nth(5)).toHaveText('1')
+    await expect(row.getByRole('cell').nth(6)).toHaveText('1')
+    await expect(row.getByRole('cell').nth(8)).toHaveText('0')
     await row
       .getByRole('button', { name: d.plans.activate, exact: true })
       .click()

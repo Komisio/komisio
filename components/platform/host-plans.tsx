@@ -3,15 +3,17 @@ import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
-import type { PlanOverviewRow } from '@/lib/engine/plans'
+import type { ActivityRow, PlanOverviewRow } from '@/lib/engine/plans'
 
 /** Every store and its plan state, with manual activation for the host. */
 export function HostPlans({
   rows,
+  activity,
   locale,
   d,
 }: {
   rows: PlanOverviewRow[]
+  activity: Record<string, ActivityRow>
   locale: string
   d: Dictionary['plans']
 }) {
@@ -81,6 +83,11 @@ export function HostPlans({
               <th>{d.provider}</th>
               <th>{d.until}</th>
               <th>{d.created}</th>
+              <th>{d.members}</th>
+              <th>{d.sellers}</th>
+              <th>{d.items}</th>
+              <th>{d.sales30}</th>
+              <th>{d.lastActivity}</th>
               <th></th>
             </tr>
           </thead>
@@ -102,6 +109,11 @@ export function HostPlans({
                   )}
                 </td>
                 <td>{date(row.created_at)}</td>
+                <td>{activity[row.tenant_id]?.members ?? ''}</td>
+                <td>{activity[row.tenant_id]?.sellers ?? ''}</td>
+                <td>{activity[row.tenant_id]?.items ?? ''}</td>
+                <td>{activity[row.tenant_id]?.sales_30d ?? ''}</td>
+                <td>{date(activity[row.tenant_id]?.last_activity ?? null)}</td>
                 <td>
                   {row.state !== 'closed' && (
                     <Button

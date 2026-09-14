@@ -169,8 +169,11 @@ production migrations (the owner).
 - Host: `komisio_private.enable_billing(host user)` is the one-time switch
   the operator runs; it also keeps every existing store active on a manual
   plan. `activate_plan_manually(tenant, until, reason)` and
-  `host_plan_overview()` for hosts; `close_store(tenant, reason)` for the
-  owner; `plan_status(tenant)` for every member.
+  `host_plan_overview()` for hosts, with `host_activity_overview()` next to
+  it (members, sellers, items, sales in the last thirty days and the last
+  access event per store: counts only, migration `20260916240000`);
+  `close_store(tenant, reason)` for the owner; `plan_status(tenant)` for
+  every member.
 - Surfaces: a banner on every page when the plan needs attention (trial
   ending within a week, overdue, read-only, closed), the plan panel on the
   settings page, and `/host` for platform hosts with manual activation.

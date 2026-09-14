@@ -9,6 +9,8 @@ import {
 } from '@/lib/engine/economy'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { readEconomyBrief, renderBrief } from '@/lib/engine/brief'
+import { automationIdentity, readAutomation } from '@/lib/engine/automation'
+import { AutomationSwitch } from '@/components/intake/automation-switch'
 
 /** One page of the store's numbers for a period; the read model is SQL. */
 export default async function Economy({
@@ -33,6 +35,8 @@ export default async function Economy({
     kind: briefKind,
   })
   const brief = briefRead ? renderBrief(briefRead, all.brief) : null
+  const grants =
+    active.role === 'owner' ? await readAutomation(ctx.client, active.id) : null
   const money = (ore: number) => `${formatSignedOre(ore)} ${summary.currency}`
   const t = summary.totals
   const vatModes = all.sales.vatModes as Record<string, string>
@@ -123,6 +127,17 @@ export default async function Economy({
             </>
           )}
         </section>
+        {active.role === 'owner' && (
+          <AutomationSwitch
+            key={`${active.id}-${grants?.find((g) => g.scope === 'weekly_brief')?.id ?? 'none'}`}
+            tenantId={active.id}
+            scope="weekly_brief"
+            grants={grants}
+            configured={automationIdentity() !== null}
+            canEdit
+            t={all.brief.email}
+          />
+        )}
         <section className="card intake-form" aria-label={d.totalsHeading}>
           <h2>{d.totalsHeading}</h2>
           <div style={{ overflowX: 'auto' }}>

@@ -6,7 +6,11 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 // its next run, which creates its `automation` membership; disabling removes
 // it. The identity's e-mail comes from server configuration, never from a
 // form.
-export const automationScopes = ['zettle_pull', 'fortnox_send'] as const
+export const automationScopes = [
+  'zettle_pull',
+  'fortnox_send',
+  'weekly_brief',
+] as const
 export type AutomationScope = (typeof automationScopes)[number]
 export const automationGrant = z.object({
   id: z.uuid(),

@@ -59,7 +59,7 @@ export default async function Integrations({
     ? await readZettleWindowClosure(ctx.client, a.id, pull.window.id)
     : null
   const images =
-    liveReady && pull?.connection
+    a.role === 'staff' || (liveReady && pull?.connection)
       ? await readZettleImages(ctx.client, a.id)
       : []
   const exportItems = [
@@ -86,6 +86,22 @@ export default async function Integrations({
           issue={pilotIssue(a.id, pilotEnvironment(process.env))}
           d={d}
         />
+      )}
+      {a.role === 'staff' && images !== null && images.length > 0 && (
+        <section className="card intake-form" aria-label={d.imageStatusTitle}>
+          <h2>{d.imageStatusTitle}</h2>
+          {images.map((image) => (
+            <p key={image.item_id}>
+              <Link
+                className="text-link"
+                href={`/intake/items/${image.item_id}`}
+              >
+                I-{image.item_id.slice(0, 8).toUpperCase()}
+              </Link>{' '}
+              · {d.imageStates[image.status]}
+            </p>
+          ))}
+        </section>
       )}
       {liveReady && pull && (
         <section className="card intake-form" aria-label={d.pullTitle}>

@@ -1522,6 +1522,8 @@
     "pullSince": "Aktiverad från",
     "pullComplete": "Senast färdiga intervall slutar",
     "pullPending": "Pågående intervall slutar",
+    "imageStatusTitle": "Status för exporterade produktbilder",
+
     "engineVat": "Motorns aktuella sats",
     "vatComparisonHint": "Endast jämförelse: samma procent garanterar inte samma momsunderlag, särskilt vid marginalmoms. Bekräfta kartan med redovisningskonsulten. Inga värden rättas automatiskt.",
     "vatComparison": {

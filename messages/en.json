@@ -1522,6 +1522,8 @@
     "pullSince": "Activated from",
     "pullComplete": "Last completed interval ends",
     "pullPending": "Current interval ends",
+    "imageStatusTitle": "Product photo export status",
+
     "engineVat": "Current engine rate",
     "vatComparisonHint": "Comparison only: identical percentages do not guarantee the same taxable basis, especially for margin VAT. Confirm the mapping with your accountant. No values are corrected automatically.",
     "vatComparison": {

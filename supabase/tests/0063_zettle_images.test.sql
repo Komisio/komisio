@@ -64,6 +64,9 @@ insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.
 set local role authenticated;
 select throws_ok($$select prepare_zettle_image(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item')::uuid,current_setting('test.merchant')::uuid)$$,'42501',null,'staff cannot export imagery');
 select throws_ok($$select finish_zettle_image(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid)$$,'42501',null,'staff cannot acknowledge association');
+select is(zettle_item_image_url(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid),'https://image.izettle.com/product/synthetic.jpg','staff may read the registered URL');
+select is((select status from zettle_image_status_v2(current_setting('test.tenant')::uuid) where item_id=current_setting('test.item')::uuid),'synced','staff may read the associated status');
+select is((select count(*) from zettle_image_intents),0::bigint,'staff cannot read private source references');
 reset role;
 insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values(gen_random_uuid(),'f0000000-0000-4000-8000-000000000631','totp','verified',now(),now());
 set local role authenticated;

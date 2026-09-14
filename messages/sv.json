@@ -1315,6 +1315,28 @@
     "salePrice": "Försäljningspris",
     "commission": "Provision"
   },
+  "reconciliation": {
+    "heading": "Avstämning",
+    "hint": "Varje dag med aktivitet i perioden och var dess bokföring står: dagsavslut, export under aktuell kontoplan och Fortnox. Bara läsning; dagsavslutets summor avgör.",
+    "from": "Från",
+    "to": "Till",
+    "show": "Visa",
+    "periodInvalid": "Välj ett från-datum senast lika med till-datumet, högst ett år emellan.",
+    "allDone": "Alla aktiva dagar i perioden är skickade till Fortnox.",
+    "empty": "Ingen aktivitet i perioden.",
+    "openDays": "Dagar som behöver åtgärd",
+    "status": "Status",
+    "statuses": {
+      "no_close": "Inget dagsavslut",
+      "close_stale": "Fakta ändrades efter avslutet; generera det igen",
+      "not_exported": "Avslutat, inte exporterat",
+      "export_outdated": "Exporterat under en äldre kontoplan; exportera igen",
+      "not_sent": "Exporterat, inte skickat till Fortnox",
+      "send_pending": "Skickas till Fortnox",
+      "send_failed": "Fortnox avvisade verifikationen",
+      "sent": "Skickat till Fortnox"
+    }
+  },
   "brief": {
     "heading": "Brev",
     "hint": "En fast sammanställning av samma siffror för senaste veckan eller månaden och perioden före. Ingen prognos; inget lagras.",

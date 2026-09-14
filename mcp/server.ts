@@ -69,6 +69,8 @@ import {
   dayClosePreviewInput,
   listDayClosesTool,
   previewDayCloseTool,
+  reconciliationInput,
+  readReconciliationTool,
 } from './accounting'
 const stagingAnnotations = {
   readOnlyHint: false,
@@ -549,6 +551,19 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       (input) =>
         result(async () => ({
           data: await previewDayCloseTool(client, config, input),
+        })),
+    )
+    server.registerTool(
+      'komisio_read_accounting_reconciliation',
+      {
+        description:
+          'Read, for every day with activity in a period of at most one year (inclusive local dates, Europe/Stockholm), where its books stand: no day close, close stale (facts changed after it), not exported, export outdated (older map), not sent, sending, Fortnox refused, or sent with the voucher number. Computed from the day close totals; read only, no writes.',
+        inputSchema: reconciliationInput,
+        annotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await readReconciliationTool(client, config, input),
         })),
     )
   }

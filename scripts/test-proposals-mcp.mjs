@@ -358,7 +358,23 @@ export async function testProposalsMCP({
       'komisio_list_day_closes',
       'komisio_preview_day_close_voucher',
       'komisio_propose_day_close_export',
+      'komisio_read_accounting_reconciliation',
     ],
+  )
+  const reconciliation = await accounting.callTool({
+    name: 'komisio_read_accounting_reconciliation',
+    arguments: { from: '2026-01-01', to: '2026-12-31' },
+  })
+  assert(!reconciliation.isError, JSON.stringify(reconciliation.content))
+  assert.equal(reconciliation.structuredContent.amountUnit, 'ore')
+  assert(Array.isArray(reconciliation.structuredContent.days))
+  assert(
+    (
+      await accounting.callTool({
+        name: 'komisio_read_accounting_reconciliation',
+        arguments: { from: '2026-12-31', to: '2026-01-01' },
+      })
+    ).isError,
   )
   const closes = await accounting.callTool({
     name: 'komisio_list_day_closes',

@@ -46,10 +46,28 @@ Fortnox and other Swedish bookkeeping software as it is.
 
 The accounting page shows the map form (owner or admin), a voucher preview
 under each recent day close with the balance status and any unmapped amounts,
-the export action, and the list of exports with download links.
+the export action, and the list of exports with download links and the
+Fortnox send state.
+
+## Reconciliation
+
+`accounting_reconciliation(tenant, from, to)` (any member, at most one year)
+walks every local day in the period up to today and, for each day with
+activity (sales, returns, reversals or paid payouts) or a close, reports one
+status: `no_close`, `close_stale` (the day close totals no longer equal the
+facts, computed by the same `day_close_totals`), `not_exported`,
+`export_outdated` (the export predates the current map), `not_sent`,
+`send_pending`, `send_failed` (with the recorded reason) or `sent` (with the
+voucher number). The accounting page shows the days needing attention for a
+period (current month by default); agents read the full list through
+`komisio_read_accounting_reconciliation` under `accounting:read`. Nothing is
+written; the person acts on the day close, export or send as usual.
 
 ## Verification
 
+`supabase/tests/0067_accounting_reconciliation.test.sql`: every status in
+order, quiet days left out, export under the current map preferred, a return
+after the close makes it stale, bounds and membership.
 `supabase/tests/0046_accounting_export.test.sql`: map validation, versioning
 and replay, preview without a map, an unbalanced map published but refused at
 export, a balancing map exported once per close and map, staff export, owner

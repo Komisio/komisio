@@ -1,4 +1,6 @@
 import { readZettleStock } from '@/lib/engine/zettle-stock'
+import { readStorePolicy } from '@/lib/engine/store-policy'
+import { vatRateBasisPoints } from '@/lib/engine/vat'
 import { readZettleImages } from '@/lib/engine/zettle-images'
 import { readZettlePull } from '@/lib/engine/zettle-live'
 import Link from 'next/link'
@@ -46,6 +48,9 @@ export default async function Integrations({
   const stocks = ['owner', 'admin'].includes(a.role)
     ? await readZettleStock(ctx.client, a.id)
     : []
+  const engineVat = ['owner', 'admin'].includes(a.role)
+    ? vatRateBasisPoints((await readStorePolicy(ctx.client, a.id)).policy)
+    : undefined
   const images =
     liveReady && pull?.connection
       ? await readZettleImages(ctx.client, a.id)
@@ -192,6 +197,7 @@ export default async function Integrations({
         <details>
           <summary>{d.vatTitle}</summary>
           <p>{d.vatHint}</p>
+          <p>{d.vatComparisonHint}</p>
           {['owner', 'admin'].includes(a.role) && (
             <ZettleAction
               key={catalog.config?.id ?? 'new'}
@@ -204,6 +210,7 @@ export default async function Integrations({
               d={d}
               label={d.saveMapping}
               vatModes={all.sales.vatModes}
+              engineVatBasisPoints={engineVat}
             />
           )}
         </details>

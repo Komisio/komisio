@@ -1,5 +1,10 @@
 # Open questions
 
+Zettle VAT comparison (2026-09-14): the configuration form now shows the current
+engine policy rate beside every mapped percentage and flags differences. The
+accountant's confirmation against `docs/VAT-CASES.md` remains open: margin and
+full-price tax bases differ even when the percentages match. No automatic correction.
+
 Product decisions that must be answered by real store workflows before they
 become schema, rules or tests. Each question lists what it affects and the
 candidate answer the schema sketch assumed (see `experiments/2026-09-schema-sketch`).

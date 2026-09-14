@@ -106,6 +106,48 @@ export async function raceZettlePull({ setup, connectionString }) {
       )
     ).rows[0].n
     assert.equal(closures + pages, 1)
+    const worker = randomUUID()
+    const workerEmail = `automation-${worker}@example.test`
+    await setup.query(
+      'insert into auth.users(id,email,email_confirmed_at) values($1,$2,now())',
+      [worker, workerEmail],
+    )
+    await a.query("select enable_automation($1,$2,'zettle_pull',$3)", [
+      tenant,
+      randomUUID(),
+      workerEmail,
+    ])
+    for (const session of [a, b]) {
+      await session.query("select set_config('request.jwt.claims',$1,false)", [
+        JSON.stringify({ sub: worker, role: 'authenticated' }),
+      ])
+    }
+    await a.query('select accept_automation_grants()')
+    const prepared = await Promise.all(
+      [a, b].map((session) =>
+        session.query('select prepare_zettle_automatic_pull($1,$2) job', [
+          tenant,
+          merchant,
+        ]),
+      ),
+    )
+    const jobs = prepared.map((result) => result.rows[0].job).filter(Boolean)
+    assert.equal(jobs.length, 1)
+    await b.query("select set_config('request.jwt.claims',$1,false)", [
+      JSON.stringify({ sub: actor, role: 'authenticated' }),
+    ])
+    await b.query("select disable_automation($1,'zettle_pull')", [tenant])
+    await assert.rejects(
+      a.query("select record_zettle_pull_page($1,$2,$3,null,null,'[]')", [
+        tenant,
+        jobs[0].id,
+        jobs[0].windowId,
+      ]),
+      /FORBIDDEN/,
+    )
+    console.log(
+      'PASS: duplicate cron reservations serialize; revocation blocks an in-flight page.',
+    )
     console.log(
       'PASS: window abandonment and page completion serialize without partial writes.',
     )

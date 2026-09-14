@@ -1492,6 +1492,21 @@
     }
   },
   "zettle": {
+    "automaticTitle": "Automatic receipt retrieval",
+    "automaticHint": "Checks every ten minutes, up to 100 receipts per run. Facts are recorded by the automation identity under the owner's grant.",
+    "automaticEnabled": "Enabled",
+    "automaticPending": "Waiting for the automation identity to accept",
+    "automaticDisabled": "Disabled",
+    "automaticEnable": "Fetch receipts automatically",
+    "automaticDisable": "Stop automatic retrieval",
+    "automaticUnconfigured": "The deployment automation identity is not configured.",
+    "automaticOutcomes": {
+      "started": "Started — completion not confirmed",
+      "complete": "Window complete",
+      "received": "Receipts received",
+      "waiting": "Waiting for the retrieval lag",
+      "failed": "Failed — cursor retained; inspect the window"
+    },
     "title": "Zettle integration",
     "intro": "Send accepted items to Zettle. Matched checkout receipts automatically record the sale and seller credit.",
     "offline": "Live Zettle synchronization is not enabled. A connection check does not start synchronization.",

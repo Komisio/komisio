@@ -1,4 +1,6 @@
 import { readZettleStock } from '@/lib/engine/zettle-stock'
+import { automationIdentity, readAutomation } from '@/lib/engine/automation'
+import { readAutomaticPullStatus } from '@/lib/engine/zettle-automation'
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import { vatRateBasisPoints } from '@/lib/engine/vat'
 import { readZettleImages } from '@/lib/engine/zettle-images'
@@ -58,6 +60,15 @@ export default async function Integrations({
   const closure = pull?.window
     ? await readZettleWindowClosure(ctx.client, a.id, pull.window.id)
     : null
+  const automation = ['owner', 'admin'].includes(a.role)
+    ? await readAutomation(ctx.client, a.id)
+    : null
+  const automaticStatus = ['owner', 'admin'].includes(a.role)
+    ? await readAutomaticPullStatus(ctx.client, a.id)
+    : null
+  const automaticGrant = automation?.find(
+    (grant) => grant.scope === 'zettle_pull',
+  )
   const images =
     a.role === 'staff' || (liveReady && pull?.connection)
       ? await readZettleImages(ctx.client, a.id)
@@ -115,6 +126,50 @@ export default async function Integrations({
                   timeZone: 'Europe/Stockholm',
                 })}
               </p>
+              {automation !== null && automaticStatus?.available && (
+                <div>
+                  <h3>{d.automaticTitle}</h3>
+                  <p>{d.automaticHint}</p>
+                  <p>
+                    {automaticGrant
+                      ? automaticGrant.accepted
+                        ? d.automaticEnabled
+                        : d.automaticPending
+                      : d.automaticDisabled}
+                  </p>
+                  {automaticStatus.run && (
+                    <p>
+                      {new Date(automaticStatus.run.at).toLocaleString(
+                        ctx.locale,
+                        { timeZone: 'Europe/Stockholm' },
+                      )}
+                      {' · '}
+                      {d.automaticOutcomes[automaticStatus.run.outcome]}
+                      {' · '}
+                      {automaticStatus.run.received}
+                    </p>
+                  )}
+                  {a.role === 'owner' &&
+                    (automaticGrant || automationIdentity()) && (
+                      <ZettleAction
+                        key={automaticGrant?.id ?? 'automatic-off'}
+                        command={{
+                          action: automaticGrant
+                            ? 'disableAutomaticPull'
+                            : 'enableAutomaticPull',
+                          tenantId: a.id,
+                        }}
+                        d={d}
+                        label={
+                          automaticGrant
+                            ? d.automaticDisable
+                            : d.automaticEnable
+                        }
+                      />
+                    )}
+                  {!automationIdentity() && <p>{d.automaticUnconfigured}</p>}
+                </div>
+              )}
               {pull.window && (
                 <p>
                   {closure?.closure

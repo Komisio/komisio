@@ -1,4 +1,5 @@
 import { ProductHttpError } from '@/extensions/zettle/http'
+import { enableAutomation, disableAutomation } from '@/lib/engine/automation'
 import { ProductReadError } from '@/extensions/zettle/catalog'
 import { exportZettleItem } from '@/lib/engine/zettle-stock'
 import { exportZettleImage } from '@/lib/engine/zettle-images'
@@ -51,6 +52,23 @@ export async function POST(request: Request) {
       return reply({ error: 'TENANT_CHANGED' }, 409)
     if (!['owner', 'admin', 'staff'].includes(ctx.active.role))
       return reply({ error: 'FORBIDDEN' }, 403)
+    if (
+      c.action === 'enableAutomaticPull' ||
+      c.action === 'disableAutomaticPull'
+    ) {
+      if (ctx.active.role !== 'owner') return reply({ error: 'FORBIDDEN' }, 403)
+      if (c.action === 'enableAutomaticPull') {
+        await enableAutomation(
+          ctx.client,
+          c.tenantId,
+          c.requestId,
+          'zettle_pull',
+        )
+      } else {
+        await disableAutomation(ctx.client, c.tenantId, 'zettle_pull')
+      }
+      return reply({ id: c.requestId })
+    }
     if (c.action === 'abandonWindow') {
       if (ctx.active.role !== 'owner') return reply({ error: 'FORBIDDEN' }, 403)
       return reply(

@@ -43,6 +43,8 @@ export const zettleCommand = z.discriminatedUnion('action', [
     windowId: z.uuid(),
     reason: z.string().trim().min(1).max(500),
   }),
+  base.extend({ action: z.literal('enableAutomaticPull') }),
+  base.extend({ action: z.literal('disableAutomaticPull') }),
 ])
 const receiptRow = z.object({
   id: z.uuid(),

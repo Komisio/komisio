@@ -1492,6 +1492,21 @@
     }
   },
   "zettle": {
+    "automaticTitle": "Automatisk kvittohämtning",
+    "automaticHint": "Kontrollerar var tionde minut, högst 100 kvitton per körning. Fakta registreras av automationens identitet med ägarens tillstånd.",
+    "automaticEnabled": "Aktiverad",
+    "automaticPending": "Väntar på att automationens identitet accepterar",
+    "automaticDisabled": "Avstängd",
+    "automaticEnable": "Hämta kvitton automatiskt",
+    "automaticDisable": "Stoppa automatisk hämtning",
+    "automaticUnconfigured": "Automationens identitet är inte konfigurerad för miljön.",
+    "automaticOutcomes": {
+      "started": "Startad – slutförande inte bekräftat",
+      "complete": "Fönstret slutfört",
+      "received": "Kvitton hämtade",
+      "waiting": "Väntar på hämtfördröjningen",
+      "failed": "Misslyckades – markören bevarad; kontrollera fönstret"
+    },
     "title": "Zettle-integration",
     "intro": "Skicka accepterade varor till Zettle. Matchade kassakvitton registrerar automatiskt försäljningen och säljarens saldo.",
     "offline": "Synkningen mot Zettle är inte aktiverad. En anslutningskontroll startar ingen synkning.",

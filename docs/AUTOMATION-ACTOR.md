@@ -85,6 +85,12 @@ store by an owner, never by default.
 
 ## Delivered (slice 1, 2026-09-14)
 
+The Zettle worker follow-up is documented in [ZETTLE-AUTOMATION.md](ZETTLE-AUTOMATION.md).
+It includes the owner switch, last-run status and Vercel cron route, with private
+shared reconciliation helpers rather than broadening arbitrary public sale writes.
+Deployment of code is not proof that the dedicated identity/secrets are configured
+or that a real scheduled POS action has been observed.
+
 - Role `automation` in the member check; a trigger refuses any automation
   membership change outside the engine, and `change_member` refuses the
   role as source or target.

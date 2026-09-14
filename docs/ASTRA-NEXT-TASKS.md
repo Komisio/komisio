@@ -4,9 +4,11 @@ Implementation checkpoint, 2026-09-14: owner window escape (PR126), VAT comparis
 (PR127), TypeScript staged-kind retirement (PR128), and staff image reads (PR129)
 are merged. The dated live-action log records the owner's product observation;
 new image, receipt-pull and matched-sale POS observations are not yet confirmed.
-Scheduled retrieval remains open pending approval of an authenticated pg_cron to
-server-adapter bridge; do not replace that missing transport with an owner session
-or a service-role client. No scheduled worker is delivered by the window escape.
+The owner explicitly selected Fable's automation-identity/Vercel Cron model instead
+of the earlier pg_cron bridge. Scheduled retrieval implementation and verification
+are described in ZETTLE-AUTOMATION.md; live activation needs the owner's dedicated
+Auth identity, server secrets and per-store grant. No owner session or service-role
+client is used. The window escape itself does not deliver a scheduled worker.
 The task descriptions below remain the scope and audit trail.
 
 Rewritten 2026-09-14 by Fable (lead architect) after the reviews
@@ -49,7 +51,9 @@ Fable, 2026-09-14: the owner approved D1 and the membership side is delivered
 - Re-declare `open_zettle_pull_window` and `record_zettle_pull_page` so the
   role check reads `tenant_role in ('owner','admin') or
 komisio_private.automation_allowed(p_tenant,'zettle_pull')`; the automation
-  needs no other function. pgTAP: automation with the scope may pull, without
+  uses narrow prepare/status RPCs and private shared engine implementations for
+  nested reconciliation; public arbitrary sale/page commands stay denied.
+  pgTAP: automation with the scope may pull, without
   it may not, and still cannot export products or abandon windows.
 - Route `app/api/automation/zettle-pull/route.ts`: `CRON_SECRET` header
   check, sign in with `automationIdentity()` (password grant on a server
@@ -68,11 +72,9 @@ komisio_private.automation_allowed(p_tenant,'zettle_pull')`; the automation
   reason (`ZETTLE_WINDOW_ABANDONED`, reason text bounded) so the next window
   can open when a page fails on every retry. pgTAP: a closed window accepts
   no further pages; the next window starts at the closed window's end.
-- Scheduled retrieval: private `komisio_private.run_zettle_pull(tenant)`
-  acting as `zettle_pull_connections.created_by`, executable by the database
-  owner only, scheduled through pg_cron guarded by extension presence, exactly
-  like `komisio_private.run_automatic_markdowns`. No service-role client.
-  Record the actor and the run in the existing page tables.
+- Superseded: the earlier database-owner/pg_cron runner proposal is replaced by
+  the owner's explicit selection of Fable's model above. Page/sale actors are the
+  automation identity; the enabling owner remains in automation_grants.
 
 ## 2. VAT map shown next to the engine rate (settings)
 

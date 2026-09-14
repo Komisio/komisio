@@ -1,5 +1,29 @@
 # Decision Log
 
+## 2026-09-14: Scheduled Zettle pull through the automation identity
+
+The owner explicitly selected Fable's AUTOMATION-ACTOR model instead of the
+earlier pg_cron bridge: Vercel Cron authenticates a knock every ten minutes;
+the server signs in as the dedicated identity and signs out locally in finally.
+Only an accepted, active zettle_pull grant may fetch for the pinned pilot store.
+Existing grants must run again, not only newly accepted grants. No user session,
+service-role client, signed owner JWT or provider key in SQL is introduced.
+
+Keep public record_sale and record_zettle_page unavailable to automation. Extract
+their unchanged engine implementations into private shared functions so validated
+window imports can reach reconciliation without granting arbitrary sale writes.
+The private sale path reads the same policy without widening its public reader.
+All facts retain the automation identity; automation_grants retains the enabling
+owner. Public window commands recheck the active scope under the tenant lock.
+
+A narrow prepare RPC reserves one page per store and ten-minute slot in existing
+access_events, returns only the pinned window/cursor/currency, and prevents duplicate
+cron deliveries from repeating HTTP work. Successful pages remain in existing page
+tables; bounded success/wait/failure events provide the last-run display. A crash
+leaves a started event, never a false success; the next slot resumes the cursor.
+One invocation fetches at most 100 receipts; catch-up is automatic but bounded.
+No new staged kind, core table, dependency or financial rule is added.
+
 ## 2026-09-14: Staff may read Zettle image status
 
 Extend the two narrow image reads to current staff as well as owner/admin, with

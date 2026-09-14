@@ -1,5 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "regions": ["arn1"],
+  "crons": [
+    { "path": "/api/automation/zettle-pull", "schedule": "*/10 * * * *" }
+  ],
   "buildCommand": "node scripts/check-hosted-env.mjs && npm run build"
 }

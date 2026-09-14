@@ -214,3 +214,20 @@ production migrations (the owner).
   shows the contact note. A live key (`sk_live_`) counts as not configured
   unless `KOMISIO_ENVIRONMENT=production`, so staging can never charge a
   real card.
+
+## Delivered (slice 2, part two, 2026-09-14): trial notices
+
+- `due_plan_notices()` (billing actor) lists stores that need a notice:
+  `trial_week` (seven days left), `trial_tomorrow`, `trial_ended` (read-only
+  after a trial, within three days) and `grace_week` (payment overdue,
+  grace ending within a week), with the owners' addresses and the first
+  owner's language. `record_plan_notice` records one row per store and
+  kind (`plan_notices`, immutable; owners and hosts read).
+- `GET /api/automation/plan-notices` runs daily from Vercel Cron (06:15 UTC)
+  with `Authorization: Bearer <CRON_SECRET>`, signs in as the billing actor,
+  renders the fixed template in the owner's language (`planNotices`) and
+  sends through the same allowlisted transport as seller e-mails
+  (`SELLER_EMAIL_*`, falling back to the invitation settings). A store with
+  no owner address is recorded as `none` and not retried.
+- Migration `20260916070000`; pgTAP 0076; unit tests for rendering and the
+  send-and-record loop.

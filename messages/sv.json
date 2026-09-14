@@ -1690,5 +1690,24 @@
     "integrations": "Integrationer",
     "store": "Butik",
     "more": "Mer"
+  },
+  "planNotices": {
+    "trial_week": {
+      "subject": "En vecka kvar av provperioden för {store}",
+      "text": "Hej,\n\nDen fria provperioden för {store} i Komisio slutar {date}. Därefter blir butiken läsläge: allt går fortfarande att läsa och exportera, men inga nya plagg, försäljningar eller utbetalningar registreras.\n\nFör att fortsätta, aktivera prenumerationen under Inställningar:\n{link}"
+    },
+    "trial_tomorrow": {
+      "subject": "Provperioden för {store} slutar i morgon",
+      "text": "Hej,\n\nDen fria provperioden för {store} slutar {date}. Aktivera prenumerationen under Inställningar för att fortsätta registrera plagg, försäljningar och utbetalningar:\n{link}"
+    },
+    "trial_ended": {
+      "subject": "{store} är nu i läsläge",
+      "text": "Hej,\n\nDen fria provperioden för {store} slutade {date}. Butiken är nu i läsläge: allt går att läsa och exportera, inget nytt registreras. Aktivera prenumerationen under Inställningar så fungerar butiken igen direkt:\n{link}"
+    },
+    "grace_week": {
+      "subject": "Betalning saknas för {store}",
+      "text": "Hej,\n\nDen senaste betalningen för {store} misslyckades. Om den inte är löst senast {date} blir butiken läsläge. Uppdatera betalsättet under Inställningar:\n{link}"
+    },
+    "footer": "Komisio · tjänsten kostar 199 kr per butik och månad exklusive moms · det här meddelandet skickas en gång per steg och har inga bilagor."
   }
 }

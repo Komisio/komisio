@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { readReceptionSession } from './reception-store'
@@ -41,6 +42,17 @@ export async function uploadReceptionPhoto(
     'image/jpeg',
     1024 * 1024,
   )
+  // The content digest lets a later reception see that these bytes were
+  // uploaded before (docs/DUPLICATE-CHECK.md). A repeat records nothing new.
+  const recorded = await client.rpc('record_photo_digest', {
+    p_tenant: c.tenantId,
+    p_session: c.sessionId,
+    p_photo: c.photoId,
+    p_digest: createHash('sha256').update(bytes).digest('hex'),
+  })
+  // Until the migration reaches the database the digest is not recorded.
+  if (recorded.error && recorded.error.code !== 'PGRST202')
+    throw new Error('PHOTO_UPLOAD_FAILED')
   return { id: c.photoId, kind: 'photo' as const, reference, observation: '' }
 }
 export async function readReceptionPhoto(

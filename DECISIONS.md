@@ -10,6 +10,14 @@ identity, authority or a broader dashboard action stops the procedure. No servic
 key, membership change, financial write or weakened MFA policy is introduced.
 The synthetic staging recovery exercise remains a pilot gate, not claimed evidence.
 
+## 2026-09-14: Exact photo repeats are recorded by digest and shown
+
+The upload route records the SHA-256 of every reception photo
+(`reception_photo_digests`, immutable). A reception whose photo bytes exist
+in another reception of the store shows where they were seen, with the
+seller; nothing is refused or removed. Similarity by model stays a design
+in `docs/DUPLICATE-CHECK.md`. Migration `20260916230000`, pgTAP `0093`.
+
 ## 2026-09-14: Duplicate sellers are shown, never merged or blocked
 
 Registering a seller first reads `seller_matches`: sellers of the store

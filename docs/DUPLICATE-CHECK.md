@@ -1,7 +1,8 @@
 # Duplicate check
 
-Status: sellers delivered 2026-09-14 (migration `20260916220000`); photos
-designed, not built.
+Status: sellers delivered 2026-09-14 (migration `20260916220000`); exact
+photo repeats delivered 2026-09-14 (migration `20260916230000`); photo
+similarity designed, not built.
 
 Two things get registered twice in a second-hand store: the same person, when
 the counter cannot find them and creates a new seller record, and the same
@@ -45,17 +46,21 @@ What the check does not do:
   new seller created after the warning has a later `created_at` than the
   match, and the audit event `seller.registered` names the actor.
 
-## Photos and items (design, not built)
+## Photos and items
 
 The earlier system indexed image embeddings and showed nearest neighbours
 with a score. Komisio keeps the same outcome with a two-step design:
 
-1. **Exact repeat, no model.** Every stored photo gets a content digest
-   (SHA-256 of the bytes) recorded next to its path at upload. A digest that
-   already exists in the same store is a certain duplicate of that photo.
-   The reception page shows the earlier session or item it belongs to. This
-   needs one column, one index and no provider, and catches the common
-   case: the same file uploaded twice, or a seller's photo set resubmitted.
+1. **Exact repeat, no model (delivered).** The upload route records a
+   content digest (SHA-256 of the stored bytes) per photo in
+   `reception_photo_digests` through `record_photo_digest`; rows are
+   immutable and a different digest for the same photo id is a conflict.
+   `photo_duplicates(tenant, session)` lists, per photo of a reception, up
+   to five earlier receptions of the store with the same bytes, and the
+   reception page shows them with a link and the seller. No provider, no
+   cost; it catches the common case: the same file uploaded twice, or a
+   seller's photo set resubmitted. Photos uploaded before the migration
+   have no digest and are not compared.
 2. **Similar garment, with a model.** Perceptual similarity needs an
    embedding per photo from an image model, stored as a vector, and a
    nearest-neighbour read scoped to the store's items received in the last
@@ -69,8 +74,7 @@ with a score. Komisio keeps the same outcome with a two-step design:
    candidate is not shown again for that item and the decision is
    auditable.
 
-Step 1 is owner-independent and can be built when reception photos get
-their next slice. Step 2 waits for the assistance provider decision that
+Step 2 waits for the assistance provider decision that
 also gates the AI-first inspection; it adds a dependency (`pgvector` is
 available on Supabase; a `DECISIONS.md` line is required before use) and
 a cost per photo. Cross-store similarity is out of scope: photos are

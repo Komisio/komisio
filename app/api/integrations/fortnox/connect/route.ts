@@ -46,7 +46,10 @@ export async function GET(request: Request) {
   } catch (e) {
     const code = e instanceof Error ? e.message : 'REQUEST_FAILED'
     return NextResponse.redirect(
-      new URL(`/intake/accounting?fortnox=${encodeURIComponent(code)}`, origin),
+      new URL(
+        `/intake/accounting?view=settings&fortnox=${encodeURIComponent(code)}`,
+        origin,
+      ),
     )
   }
 }

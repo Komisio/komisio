@@ -46,7 +46,7 @@ test('accounting page shows the Fortnox connection state and records a refused s
     ])
     await f.commit()
 
-    await page.goto('/intake/accounting')
+    await page.goto('/intake/accounting?view=settings')
     const fortnox = page.getByRole('region', {
       name: d.fortnox.title,
       exact: true,
@@ -57,6 +57,7 @@ test('accounting page shows the Fortnox connection state and records a refused s
     await expect(
       fortnox.getByText(d.fortnox.connectionTenantMissing, { exact: true }),
     ).toBeVisible()
+    await page.goto('/intake/accounting')
     const exports = page.getByRole('region', {
       name: d.accounting.exportsHeading,
       exact: true,
@@ -78,7 +79,7 @@ test('accounting page shows the Fortnox connection state and records a refused s
         ],
       ),
     )
-    await page.reload()
+    await page.goto('/intake/accounting?view=settings')
     await expect(fortnox.getByText('Komisio Test').first()).toBeVisible()
     await expect(
       fortnox.getByText(`${d.fortnox.databaseNumber} 1751085`),
@@ -86,6 +87,7 @@ test('accounting page shows the Fortnox connection state and records a refused s
     await expect(
       fortnox.getByText(d.fortnox.events.connected).first(),
     ).toBeVisible()
+    await page.goto('/intake/accounting')
 
     // The send opens in the engine, fails on the missing configuration, and is recorded.
     await exports

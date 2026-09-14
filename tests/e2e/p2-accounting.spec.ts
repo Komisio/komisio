@@ -34,6 +34,7 @@ test('account map, balanced preview and downloadable SIE keep tenant boundaries'
     await expect(
       page.getByRole('button', { name: 'Exportera som SIE 4' }),
     ).toBeDisabled()
+    await page.goto('/intake/accounting?view=settings')
     const map = page.getByRole('region', { name: 'Kontoplan', exact: true })
     for (const [label, account, side] of [
       ['Bruttoförsäljning (mottagna betalningar)', '1930', 'debit'],
@@ -44,6 +45,8 @@ test('account map, balanced preview and downloadable SIE keep tenant boundaries'
       await map.getByLabel(`${label} Sida`, { exact: true }).selectOption(side)
     }
     await map.getByRole('button', { name: 'Publicera kontoplan' }).click()
+    await expect(page.getByText('Kontoplanen är publicerad')).toBeVisible()
+    await page.goto('/intake/accounting')
     await expect(
       page.getByRole('button', { name: 'Exportera som SIE 4' }),
     ).toBeEnabled()

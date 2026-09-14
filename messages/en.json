@@ -1104,7 +1104,14 @@
     "exportsHeading": "Exports",
     "noExports": "No exports yet.",
     "lines": "lines",
-    "readOnlyMap": "Only an owner or admin can change the account map."
+    "readOnlyMap": "Only an owner or admin can change the account map.",
+    "viewsLabel": "Accounting views",
+    "views": {
+      "days": "Day closes",
+      "reconciliation": "Reconciliation",
+      "settings": "Account map and Fortnox"
+    },
+    "mapMissingLink": "No account map yet: set it under Account map and Fortnox before exporting."
   },
   "communications": {
     "title": "Messages to the seller",

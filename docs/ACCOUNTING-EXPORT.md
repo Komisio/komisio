@@ -44,10 +44,12 @@ Fortnox and other Swedish bookkeeping software as it is.
 
 ## Surface
 
-The accounting page shows the map form (owner or admin), a voucher preview
-under each recent day close with the balance status and any unmapped amounts,
-the export action, and the list of exports with download links and the
-Fortnox send state.
+The accounting page has three views. "Day closes" (default): generate a
+close, a voucher preview under each recent close with the balance status and
+any unmapped amounts, the export action, and the list of exports with
+download links and the Fortnox send state. "Reconciliation": the period
+view described below. "Account map and Fortnox": the map form (owner or
+admin) and the Fortnox connection.
 
 ## Reconciliation
 

@@ -1500,6 +1500,7 @@
     "pullSince": "Aktiverad från",
     "pullComplete": "Senast färdiga intervall slutar",
     "pullPending": "Pågående intervall slutar",
+    "imageStatusTitle": "Status för exporterade produktbilder",
     "pullEnable": "Aktivera kvittohämtning från nu",
     "pullNow": "Hämta nästa sida från Zettle",
     "pullWaiting": "Inget nytt intervall ännu. Hämtningen ligger två minuter efter för att ge Zettle tid att behandla köpen.",

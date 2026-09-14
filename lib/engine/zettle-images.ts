@@ -30,7 +30,7 @@ export async function readZettleImages(
   client: SupabaseClient,
   tenantId: string,
 ) {
-  const result = await client.rpc('zettle_image_status', {
+  const result = await client.rpc('zettle_image_status_v2', {
     p_tenant: z.uuid().parse(tenantId),
   })
   if (result.error?.code === 'PGRST202') return null

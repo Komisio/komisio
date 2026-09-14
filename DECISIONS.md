@@ -1,5 +1,13 @@
 # Decision Log
 
+## 2026-09-14: Staff may read Zettle image status
+
+Extend the two narrow image reads to current staff as well as owner/admin, with
+tenant and MFA checks unchanged. Image upload, association, source-reference tables
+and all writes remain owner/admin only. A versioned status RPC prevents staff
+pages calling the old owner-only implementation during deployment. Existing stock
+RPCs are actually owner/admin-only; do not silently expand their scope in this slice.
+
 ## 2026-09-14: GitHub-managed staging migrations
 
 The owner requires staging database changes to deploy through GitHub, without

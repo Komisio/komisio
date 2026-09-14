@@ -1,5 +1,11 @@
 # Zettle product image export
 
+Read-role update (2026-09-14): staff can read registered image URLs and image
+statuses for their tenant, including a read-only status list on the integrations
+page. Upload and association remain owner/admin only. Private source references
+remain protected. A versioned status RPC returns unavailable only on PGRST202
+during deployment; authorization failures are never treated as an empty list.
+
 The owner/admin action **Export product photo** on the Zettle integration page
 sends one image for an already exported item. It is deliberately separate from
 stock initialization, including for items with a held stock attempt.

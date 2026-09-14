@@ -1500,6 +1500,7 @@
     "pullSince": "Activated from",
     "pullComplete": "Last completed interval ends",
     "pullPending": "Current interval ends",
+    "imageStatusTitle": "Product photo export status",
     "pullEnable": "Enable receipt retrieval from now",
     "pullNow": "Fetch next page from Zettle",
     "pullWaiting": "No new interval yet. Retrieval trails by two minutes to allow Zettle to process purchases.",

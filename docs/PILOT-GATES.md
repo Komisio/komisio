@@ -81,3 +81,11 @@ migrations through `20260915130000`; every table matched.
   `KOMISIO_CREDENTIAL_KEY` set, the callback URL registered in the Fortnox
   developer portal, one connection made and checked against the test company,
   then `FORTNOX_EXPECTED_DATABASE_NUMBER` pinned (see FORTNOX-CONNECTION.md).
+  Done 2026-09-14 except the optional database pin (owner decision: not needed).
+- Deploy ordering: turn off Vercel's automatic deployment for main and let the
+  workflow fire a Vercel deploy hook after the `staging-migrations` job, so
+  the database always migrates before the application deploys (see
+  REVIEW-2026-09-14.md, finding 1). Until then new page reads tolerate a
+  missing RPC for the minutes in between.
+- The `staging-database` GitHub environment restricts deployment branches to
+  main and holds the staging account's management token only.

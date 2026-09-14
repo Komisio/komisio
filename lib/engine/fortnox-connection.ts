@@ -60,6 +60,19 @@ export async function readFortnoxStatus(
   const r = await client.rpc('fortnox_connection_status', {
     p_tenant: z.uuid().parse(tenantInput),
   })
+  // The application can deploy minutes before its migration; until the RPC
+  // exists the page reads as "not connected" instead of failing.
+  if (r.error?.code === 'PGRST202')
+    return connectionStatus.parse({
+      connected: false,
+      databaseNumber: null,
+      companyName: null,
+      organisationNumber: null,
+      scope: null,
+      connectedAt: null,
+      refreshedAt: null,
+      events: [],
+    })
   if (r.error) throw new Error('FORBIDDEN')
   return connectionStatus.parse(r.data)
 }

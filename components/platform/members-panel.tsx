@@ -179,7 +179,7 @@ export function MembersPanel({
                     <span
                       className={`badge ${member.role === 'readonly' ? 'badge-neutral' : ''}`}
                     >
-                      {d.roles[member.role]}
+                      {d.roles[member.role] ?? d.roles.automation}
                     </span>
                   </td>
                   <td className="joined">
@@ -190,44 +190,53 @@ export function MembersPanel({
                   {manage && (
                     <td>
                       <div className="table-actions">
-                        {canChangeMember(tenant.role, member.role, 'staff') && (
-                          <>
-                            <select
-                              aria-label={`${d.changeRole}: ${member.display_name}`}
-                              value={member.role}
-                              disabled={action.busy}
-                              onChange={(e) =>
-                                setChange({
-                                  userId: member.user_id,
-                                  role: e.target.value as Role,
-                                })
-                              }
-                            >
-                              {roles
-                                .filter((r) =>
-                                  canChangeMember(tenant.role, member.role, r),
-                                )
-                                .map((r) => (
-                                  <option key={r} value={r}>
-                                    {d.roles[r]}
-                                  </option>
-                                ))}
-                            </select>
-                            <Button
-                              variant="ghost"
-                              aria-label={`${d.remove}: ${member.display_name}`}
-                              disabled={action.busy}
-                              onClick={() =>
-                                setChange({
-                                  userId: member.user_id,
-                                  role: null,
-                                })
-                              }
-                            >
-                              <X size={14} />
-                            </Button>
-                          </>
-                        )}
+                        {(member.role as string) !== 'automation' &&
+                          canChangeMember(
+                            tenant.role,
+                            member.role,
+                            'staff',
+                          ) && (
+                            <>
+                              <select
+                                aria-label={`${d.changeRole}: ${member.display_name}`}
+                                value={member.role}
+                                disabled={action.busy}
+                                onChange={(e) =>
+                                  setChange({
+                                    userId: member.user_id,
+                                    role: e.target.value as Role,
+                                  })
+                                }
+                              >
+                                {roles
+                                  .filter((r) =>
+                                    canChangeMember(
+                                      tenant.role,
+                                      member.role,
+                                      r,
+                                    ),
+                                  )
+                                  .map((r) => (
+                                    <option key={r} value={r}>
+                                      {d.roles[r]}
+                                    </option>
+                                  ))}
+                              </select>
+                              <Button
+                                variant="ghost"
+                                aria-label={`${d.remove}: ${member.display_name}`}
+                                disabled={action.busy}
+                                onClick={() =>
+                                  setChange({
+                                    userId: member.user_id,
+                                    role: null,
+                                  })
+                                }
+                              >
+                                <X size={14} />
+                              </Button>
+                            </>
+                          )}
                       </div>
                     </td>
                   )}

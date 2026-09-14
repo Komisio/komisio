@@ -5,8 +5,9 @@ ASTRA-NEXT-TASKS.md: scheduled Zettle retrieval needs an actor that can both
 call the provider over HTTP and write through the engine, and no such actor
 exists. This note proposes one. It changes membership (a fifth role), so it
 waits for the owner's decision (D1 in
-[OWNER-ACTIONS-2026-09-14.md](OWNER-ACTIONS-2026-09-14.md)). Nothing is
-implemented.
+[OWNER-ACTIONS-2026-09-14.md](OWNER-ACTIONS-2026-09-14.md)). Owner decision D1
+(2026-09-14): approved as proposed. Slice 1 (membership side) is delivered
+in migration `20260916020000`; see "Delivered" below.
 
 ## The problem
 
@@ -81,3 +82,24 @@ store by an owner, never by default.
    auth client.
 3. Integrations page: a switch "Fetch receipts automatically" (owner), the
    last run and its outcome.
+
+## Delivered (slice 1, 2026-09-14)
+
+- Role `automation` in the member check; a trigger refuses any automation
+  membership change outside the engine, and `change_member` refuses the
+  role as source or target.
+- `automation_grants`: an owner's grant per store and scope, naming the
+  identity's e-mail (passed by the server from `KOMISIO_AUTOMATION_EMAIL`).
+  `enable_automation` (owner, replay by id, one active grant per scope),
+  `accept_automation_grants` (the signed-in identity accepts every open grant
+  addressed to its e-mail; this creates the membership; a person who is
+  already a member cannot accept), `disable_automation` (owner or admin;
+  removes the membership with the last grant), `automation_status` (owner or
+  admin). All three changes are access events.
+- `komisio_private.automation_allowed(tenant, scope)` for the functions an
+  automation may call. Every existing command that lists roles refuses the
+  automation role until it is added explicitly.
+- `lib/engine/automation.ts`: `automationIdentity()` from configuration,
+  `enableAutomation`, `disableAutomation`, `readAutomation`,
+  `acceptAutomationGrants`. The members page shows the automation member as
+  a badge without role actions.

@@ -42,10 +42,27 @@ thin surface, tests. Base every branch on `main`.
 
 ## 1. Window escape and scheduled retrieval (Zettle)
 
-Fable, 2026-09-14 (answer to the checkpoint above): the missing transport is
-designed in [AUTOMATION-ACTOR.md](AUTOMATION-ACTOR.md) and waits for the
-owner's decision D1. Do not build scheduled retrieval before that decision;
-the window escape is delivered (PR126).
+Fable, 2026-09-14: the owner approved D1 and the membership side is delivered
+(migration `20260916020000`, `lib/engine/automation.ts`, pgTAP 0072; see
+[AUTOMATION-ACTOR.md](AUTOMATION-ACTOR.md)). Astra builds the rest:
+
+- Re-declare `open_zettle_pull_window` and `record_zettle_pull_page` so the
+  role check reads `tenant_role in ('owner','admin') or
+komisio_private.automation_allowed(p_tenant,'zettle_pull')`; the automation
+  needs no other function. pgTAP: automation with the scope may pull, without
+  it may not, and still cannot export products or abandon windows.
+- Route `app/api/automation/zettle-pull/route.ts`: `CRON_SECRET` header
+  check, sign in with `automationIdentity()` (password grant on a server
+  client, sign out in `finally`), `acceptAutomationGrants`, then for each
+  accepted `zettle_pull` tenant run the existing pull with the existing
+  engine functions and the pilot environment. `vercel.json` `crons` every
+  ten minutes. Without the identity secrets the route answers 404.
+- Integrations page: an owner switch "Fetch receipts automatically" calling
+  `enableAutomation` / `disableAutomation` (scope `zettle_pull`), the grant
+  state from `readAutomation`, and the last run outcome.
+- Secrets for the owner: `KOMISIO_AUTOMATION_EMAIL`,
+  `KOMISIO_AUTOMATION_PASSWORD` (a confirmed Auth user created by the owner
+  in the Supabase dashboard, no MFA), `CRON_SECRET` (Vercel).
 
 - An owner command that closes a `zettle_pull_windows` row with a recorded
   reason (`ZETTLE_WINDOW_ABANDONED`, reason text bounded) so the next window

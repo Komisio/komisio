@@ -176,3 +176,12 @@ production migrations (the owner).
   settings page, and `/host` for platform hosts with manual activation.
 - Not yet: Stripe (slice 3), trial e-mails and the onboarding checklist
   (slice 2), the production environment (slice 4).
+
+## Delivered (slice 2, part one, 2026-09-14)
+
+- The start page checklist now covers the whole first journey when intake
+  is enabled: account, store, profile, store policy, seller agreement, first
+  seller, first item, first sale, first day close, Zettle or Fortnox, first
+  colleague. Every row is computed from existing facts under the person's
+  own session (`lib/engine/onboarding.ts`); nothing is stored. Trial e-mails
+  wait for the Resend configuration (owner action A5).

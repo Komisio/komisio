@@ -26,6 +26,7 @@ import type { MCPConfig } from './config'
 import { receptionHistoryInput } from '../lib/engine/reception-history'
 import {
   readInput,
+  duplicatesInput,
   previewInput,
   photoInput,
   queueInput,
@@ -298,6 +299,17 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         annotations,
       },
       (input) => result(async () => ({ data: await ops.read(input) })),
+    )
+  if (config.scopes.includes('reception:read'))
+    server.registerTool(
+      'komisio_read_photo_duplicates',
+      {
+        description:
+          'Read whether any photo of one reception in the configured store was uploaded before, byte for byte, in another reception: the earlier session and photo ids and when. Guidance for a person to compare; the same file is not proof of the same garment. No images, names, contacts or writes.',
+        inputSchema: duplicatesInput,
+        annotations,
+      },
+      (input) => result(async () => ({ data: await ops.duplicates(input) })),
     )
   if (config.scopes.includes('reception:read'))
     server.registerTool(

@@ -36,14 +36,32 @@ day close read the same way.
   a weekly or monthly brief reads this and renders it; the brief is text, not
   a fact.
 
+## Brief
+
+`economy_brief(tenant, kind, anchor)` with kind `week` (Monday to Sunday) or
+`month` (calendar month) returns the summary totals for the period containing
+`anchor` (any local date; null means yesterday) and for the period before,
+the best selling day, items accepted in both periods, and the current
+liability and open payouts. `renderBrief` in `lib/engine/brief.ts` turns
+that into fixed sentences (percent change of gross against the previous
+period, best day, selling days, returns and their rate, seller credit and
+commission, payouts paid, items accepted, liability, open payouts) in the
+reader's language. The same numbers always render the same text: no model
+writes the brief, and nothing is stored. Shown on `/intake/economy` (weekly
+by default, `?brief=month` for the month) and read by agents through
+`komisio_read_economy_brief` under `economy:read`, which returns the English
+sentences together with the numbers.
+
 ## What this does not do
 
-No comparison periods, no forecasts, no per-seller ranking (the seller page
+No forecasts, no per-seller ranking (the seller page
 and the seller economy tools cover one seller), no currency other than SEK,
 no cached snapshots: every call recomputes from the facts.
 
 ## Verification
 
+`supabase/tests/0066_economy_brief.test.sql`: week and month bounds in local
+time, previous periods across month and year ends, leap February, best day.
 `supabase/tests/0054_economy_summary.test.sql`: period boundaries in local
 time, agreement with the day close totals for one day, refunds and reversals,
 liability and open payouts, range and membership refusals.

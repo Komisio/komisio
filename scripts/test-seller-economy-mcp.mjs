@@ -15,10 +15,35 @@ export async function testSellerEconomyMCP({ connect, rpc, db, uid }) {
   })
   const client = await connect('economy:read', undefined, tenant)
   assert.deepEqual((await client.listTools()).tools.map((t) => t.name).sort(), [
+    'komisio_read_economy_brief',
     'komisio_read_economy_summary',
     'komisio_read_seller_balance',
     'komisio_read_seller_ledger',
   ])
+  // Brief: deterministic sentences over the summary; a quiet store reads as no sales; bad input is refused.
+  const brief = await client.callTool({
+    name: 'komisio_read_economy_brief',
+    arguments: { kind: 'week', anchor: '2026-09-12' },
+  })
+  assert(!brief.isError, JSON.stringify(brief.content))
+  assert.equal(brief.structuredContent.period.from, '2026-09-07')
+  assert.equal(brief.structuredContent.current.salesCount, 0)
+  assert(brief.structuredContent.lines[0].startsWith('No sales'))
+  assert.equal(brief.structuredContent.amountUnit, 'ore')
+  assert(!JSON.stringify(brief.content).includes('PRIVATE SELLER'))
+  for (const args of [
+    { kind: 'quarter' },
+    { kind: 'week', from: '2026-09-01' },
+  ])
+    assert(
+      (
+        await client.callTool({
+          name: 'komisio_read_economy_brief',
+          arguments: args,
+        })
+      ).isError,
+      JSON.stringify(args),
+    )
   // Store summary: an empty store reports zeros for the period; the seller name never appears; bad periods are refused.
   const summary = await client.callTool({
     name: 'komisio_read_economy_summary',

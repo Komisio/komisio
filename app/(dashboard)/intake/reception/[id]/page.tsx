@@ -10,6 +10,7 @@ import {
 } from '@/lib/engine/reception-store'
 import { readManualReception } from '@/lib/engine/manual-reception'
 import { readPriceEvidence } from '@/lib/engine/price-evidence'
+import { readPhotoDuplicates } from '@/lib/engine/photo-duplicates'
 import { PriceEvidencePanel } from '@/components/intake/price-evidence'
 import { PhotoUpload } from '@/components/reception/photo-upload'
 import { ReceptionAssistance } from '@/components/reception/assistance'
@@ -44,6 +45,7 @@ export default async function Reception({
   if (!reception) notFound()
   const state = reception.status === 'ready' ? reception.session : reception
   const sources = reception.status === 'ready' ? reception.session.sources : []
+  const duplicates = await readPhotoDuplicates(ctx.client, tenant.id, id.data)
   const query = await searchParams
   const evidence = await readPriceEvidence(ctx.client, tenant.id, {
     category: typeof query.category === 'string' ? query.category : '',
@@ -215,6 +217,26 @@ export default async function Reception({
               />
             ))}
         </div>
+        {duplicates && duplicates.photos.length > 0 && (
+          <div role="status" className="intake-matches">
+            <p>{d.photoSeenBefore}</p>
+            <ul>
+              {duplicates.photos.flatMap((p) =>
+                p.seen.map((s) => (
+                  <li key={`${p.photoId}-${s.sessionId}-${s.photoId}`}>
+                    <Link
+                      className="text-link"
+                      href={`/intake/reception/${s.sessionId}`}
+                    >
+                      {s.sellerName}
+                    </Link>{' '}
+                    {s.seenAt.slice(0, 10)}
+                  </li>
+                )),
+              )}
+            </ul>
+          </div>
+        )}
       </section>
       {write && (
         <ReceptionAssistance

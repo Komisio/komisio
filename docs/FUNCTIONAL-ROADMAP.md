@@ -377,8 +377,9 @@ the onboarding checklist, all in
 on staging. The client got a grouped navigation, a start page with today's
 numbers, a mark, and a sellers list. The seller duplicate check is
 delivered as a read shown at registration (`20260916220000`,
-[DUPLICATE-CHECK.md](DUPLICATE-CHECK.md)); photo duplicates are designed
-there and wait for the assistance provider. What remains before production is the checklist in
+[DUPLICATE-CHECK.md](DUPLICATE-CHECK.md)); exact photo repeats are
+detected by content digest (`20260916230000`); similarity by model waits
+for the assistance provider. What remains before production is the checklist in
 that document and the pilot gates; what remains of P3 needs the owner
 (payout rails, printer) or Astra's list (automatic Fortnox sending,
 retention and erasure).

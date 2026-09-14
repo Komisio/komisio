@@ -525,7 +525,8 @@
       "staged": "A separate reception and review operation have been saved. The garment is not accepted for sale.",
       "openOperation": "Open review operation",
       "failed": "Preparation could not be confirmed. Retry the same row; saved steps are reused. If sources changed, check the reception queue before starting again."
-    }
+    },
+    "photoSeenBefore": "A photo in this reception was uploaded before. Check whether the garment was received already:"
   },
   "operations": {
     "title": "Proposed operations",

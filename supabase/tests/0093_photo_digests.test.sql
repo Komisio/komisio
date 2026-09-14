@@ -1,0 +1,48 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000000497','pd-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000498','pd-readonly@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000499','pd-outsider@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000497","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Photo digests test','photo-digests-test',gen_random_uuid())::text,true);
+select set_config('test.s1',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Anna Andersson','anna@pd.test','')::text,true);
+select set_config('test.s2',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Bo Berg','bo@pd.test','')::text,true);
+select set_config('test.r1',create_reception_session(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.s1')::uuid)::text,true);
+select set_config('test.r2',create_reception_session(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.s2')::uuid)::text,true);
+select set_config('test.r3',create_reception_session(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.s2')::uuid)::text,true);
+select set_config('test.p1',gen_random_uuid()::text,true);
+select set_config('test.p2',gen_random_uuid()::text,true);
+select set_config('test.p3',gen_random_uuid()::text,true);
+select set_config('test.h',repeat('ab',32),true);
+select lives_ok($$select record_photo_digest(current_setting('test.tenant')::uuid,current_setting('test.r1')::uuid,current_setting('test.p1')::uuid,current_setting('test.h'))$$,'digest recorded');
+select lives_ok($$select record_photo_digest(current_setting('test.tenant')::uuid,current_setting('test.r1')::uuid,current_setting('test.p1')::uuid,current_setting('test.h'))$$,'the same again is a repeat');
+select throws_like($$select record_photo_digest(current_setting('test.tenant')::uuid,current_setting('test.r1')::uuid,current_setting('test.p1')::uuid,repeat('cd',32))$$,'%REQUEST_CONFLICT%','another digest for the same photo refused');
+select throws_like($$select record_photo_digest(current_setting('test.tenant')::uuid,current_setting('test.r1')::uuid,current_setting('test.p2')::uuid,'nothex')$$,'%INVALID_INPUT%','digest must be hex');
+select throws_like($$select record_photo_digest(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.p2')::uuid,current_setting('test.h'))$$,'%RECEPTION_NOT_FOUND%','unknown session refused');
+select is(photo_duplicates(current_setting('test.tenant')::uuid,current_setting('test.r1')::uuid)->'photos','[]'::jsonb,'the first sighting has no earlier one');
+select record_photo_digest(current_setting('test.tenant')::uuid,current_setting('test.r2')::uuid,current_setting('test.p2')::uuid,current_setting('test.h'));
+select record_photo_digest(current_setting('test.tenant')::uuid,current_setting('test.r2')::uuid,current_setting('test.p3')::uuid,repeat('ef',32));
+select set_config('test.d',photo_duplicates(current_setting('test.tenant')::uuid,current_setting('test.r2')::uuid)::text,true);
+select is(jsonb_array_length(current_setting('test.d')::jsonb->'photos'),1,'only the repeated photo is listed');
+select is(current_setting('test.d')::jsonb->'photos'->0->>'photoId',current_setting('test.p2'),'that photo');
+select is(current_setting('test.d')::jsonb->'photos'->0->'seen'->0->>'sessionId',current_setting('test.r1'),'seen in the first session');
+select is(current_setting('test.d')::jsonb->'photos'->0->'seen'->0->>'sellerName','Anna Andersson','with that session''s seller');
+select is(jsonb_array_length(photo_duplicates(current_setting('test.tenant')::uuid,current_setting('test.r1')::uuid)->'photos'->0->'seen'),1,'the first session now sees the second');
+select record_photo_digest(current_setting('test.tenant')::uuid,current_setting('test.r3')::uuid,current_setting('test.p1')::uuid,current_setting('test.h'));
+select is(jsonb_array_length(photo_duplicates(current_setting('test.tenant')::uuid,current_setting('test.r3')::uuid)->'photos'->0->'seen'),2,'two earlier sightings, other sessions only');
+reset role;
+select throws_ok($$update reception_photo_digests set digest=repeat('00',32)$$,'55000',null,'digests are immutable, even for the owner role');
+select throws_ok($$delete from reception_photo_digests$$,'55000',null,'digests are never deleted');
+insert into tenant_members(tenant_id,user_id,role) values (current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000000498','readonly');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000498","role":"authenticated"}';
+select lives_ok($$select photo_duplicates(current_setting('test.tenant')::uuid,current_setting('test.r2')::uuid)$$,'read-only members read');
+select throws_ok($$select record_photo_digest(current_setting('test.tenant')::uuid,current_setting('test.r2')::uuid,gen_random_uuid(),current_setting('test.h'))$$,'42501',null,'read-only members do not record');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000499","role":"authenticated"}';
+select throws_ok($$select photo_duplicates(current_setting('test.tenant')::uuid,current_setting('test.r2')::uuid)$$,'42501',null,'outsider refused');
+select is((select count(*)::int from reception_photo_digests),0,'outsider sees no rows');
+select * from finish();
+rollback;

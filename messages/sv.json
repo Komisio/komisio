@@ -525,7 +525,8 @@
       "staged": "Separat mottagning och granskningsärende har sparats. Plagget är inte accepterat för försäljning.",
       "openOperation": "Öppna granskningsärendet",
       "failed": "Förberedelsen kunde inte bekräftas. Försök igen med samma rad; sparade steg återanvänds. Om underlaget ändrats, kontrollera mottagningskön innan du börjar om."
-    }
+    },
+    "photoSeenBefore": "En bild i den här mottagningen har laddats upp tidigare. Kontrollera om plagget redan är mottaget:"
   },
   "operations": {
     "title": "Föreslagna åtgärder",

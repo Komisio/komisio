@@ -28,6 +28,7 @@ export function FortnoxVoucherSend({
     series: string
     number: number | null
     error: string
+    detail: string
   } | null>(
     send && send.status !== 'pending'
       ? {
@@ -35,6 +36,7 @@ export function FortnoxVoucherSend({
           series: send.voucher_series,
           number: send.voucher_number,
           error: send.error_code,
+          detail: send.detail,
         }
       : null,
   )
@@ -61,6 +63,7 @@ export function FortnoxVoucherSend({
           series: body.voucherSeries,
           number: body.voucherNumber,
           error: '',
+          detail: '',
         })
         return
       }
@@ -69,10 +72,17 @@ export function FortnoxVoucherSend({
         series: '',
         number: null,
         error: r.ok ? body.errorCode : body.error,
+        detail: typeof body.detail === 'string' ? body.detail : '',
       })
       setRequestId(crypto.randomUUID())
     } catch {
-      setState({ status: 'failed', series: '', number: null, error: '' })
+      setState({
+        status: 'failed',
+        series: '',
+        number: null,
+        error: '',
+        detail: '',
+      })
       setRequestId(crypto.randomUUID())
     } finally {
       running.current = false
@@ -90,7 +100,8 @@ export function FortnoxVoucherSend({
     <span>
       {state?.status === 'failed' && (
         <span role="alert">
-          {d.voucherFailed} {errors[state.error] ?? d.connectionFailed}{' '}
+          {d.voucherFailed} {errors[state.error] ?? d.connectionFailed}
+          {state.detail ? ` ${d.fortnoxSaid} "${state.detail}"` : ''}{' '}
         </span>
       )}
       {connected && canSend ? (

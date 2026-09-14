@@ -165,7 +165,8 @@ export default async function Accounting({
                 {c
                   ? `${c.close_date} · ${d.version} ${c.version}`
                   : e.day_close_id}{' '}
-                · {e.voucher.length} {d.lines} · {d.debitTotal}{' '}
+                · {d.mapVersion} {e.accounting_maps?.version ?? '?'} ·{' '}
+                {e.voucher.length} {d.lines} · {d.debitTotal}{' '}
                 {money(e.debit_ore)} ·{' '}
                 {new Date(e.created_at).toLocaleString(ctx.locale, {
                   timeZone: 'Europe/Stockholm',

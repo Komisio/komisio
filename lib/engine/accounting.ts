@@ -85,7 +85,10 @@ const exportRow = z.object({
   credit_ore: ore,
   created_at: z.iso.datetime({ offset: true }),
 })
-export type AccountingExport = z.infer<typeof exportRow>
+const exportListRow = exportRow.extend({
+  accounting_maps: z.object({ version: z.number().int() }).nullable(),
+})
+export type AccountingExport = z.infer<typeof exportListRow>
 
 export async function readAccountingMap(
   client: SupabaseClient,
@@ -120,13 +123,13 @@ export async function readAccountingExports(
   const { data, error } = await client
     .from('accounting_exports')
     .select(
-      'id,day_close_id,map_id,format,voucher,debit_ore,credit_ore,created_at',
+      'id,day_close_id,map_id,format,voucher,debit_ore,credit_ore,created_at,accounting_maps(version)',
     )
     .eq('tenant_id', z.uuid().parse(tenantInput))
     .order('created_at', { ascending: false })
     .limit(60)
   if (error) throw new Error('Unable to read exports')
-  return z.array(exportRow).parse(data)
+  return z.array(exportListRow).parse(data)
 }
 
 /** One export with its day close, for the file route. Null when unreadable. */

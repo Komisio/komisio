@@ -23,8 +23,11 @@ Two pins apply, read from the deployed configuration:
 
 A token whose company information does not match both pins (the second when
 set) is dropped; only the company name, database number and the reason are
-recorded as a `refused` event. Voucher sending will require the database pin
-so that a renamed company cannot pass on name alone.
+recorded as a `refused` event. The database number pin in configuration is
+optional (owner decision 2026-09-14: the Fortnox consent screen makes the
+company choice explicit); the stored connection is itself bound to the
+database number it was made with, and every check, refresh and send is
+refused when another database answers.
 
 ## Configuration
 
@@ -78,9 +81,33 @@ disconnects and connects again.
   admin; the only path to the ciphertext), `fortnox_connection_status` (any
   member; never the ciphertext), `record_fortnox_check`, `disconnect_fortnox`.
 
+## Voucher sending
+
+One recorded export (see [ACCOUNTING-EXPORT.md](ACCOUNTING-EXPORT.md)) becomes
+at most one voucher in the connected company. Owner or admin presses "Send to
+Fortnox" on an export row; the request carries a request id.
+
+1. `begin_fortnox_send` opens a send row bound to the connection's database
+   number. It refuses without a connection, for a store whose currency is not
+   SEK (`FORTNOX_CURRENCY_UNSUPPORTED`; Fortnox vouchers are in the company
+   currency), for an export already sent (`FORTNOX_ALREADY_SENT`) and while
+   another send is pending (`FORTNOX_SEND_IN_PROGRESS`, ten minutes, after
+   which the stale row is closed as failed). Replay by request id returns the
+   recorded state.
+2. The server reads the company with the stored token and refuses when the
+   database number differs from the one the send is bound to.
+3. `POST /3/vouchers` with series A, the close date as transaction date,
+   description `Dagsavslut <date> v<version>` and the recorded lines: the
+   tenant's four-digit accounts, amounts as kronor with two decimals. Komisio
+   invents no accounts and no postings; the lines are exactly the export.
+4. `complete_fortnox_send` closes the row as `sent` (series, number, year) or
+   `failed` (reason code and Fortnox's message). Sent rows are immutable; a
+   failed export may be sent again as a new row. Members see the send log;
+   sending is owner or admin.
+
 ## Not in this slice
 
-Voucher sending, account mapping changes, reading Fortnox vouchers, more than
-one store per deployment (the single pilot slot mirrors the Zettle pilot), a
-per-tenant client id. All of these wait for a connection that provably points
-at the test company and for the database pin.
+Account mapping changes, reading or correcting Fortnox vouchers, automatic
+sending at a set time, stores in other currencies, more than one store per
+deployment (the single pilot slot mirrors the Zettle pilot), a per-tenant
+client id.

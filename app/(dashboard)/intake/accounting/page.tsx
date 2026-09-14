@@ -16,6 +16,8 @@ import { ExportDayClose } from '@/components/intake/export-day-close'
 import { FortnoxConnection } from '@/components/intake/fortnox-connection'
 import { readFortnoxStatus } from '@/lib/engine/fortnox-connection'
 import { fortnoxEnvironment, fortnoxIssue } from '@/extensions/fortnox/auth'
+import { FortnoxVoucherSend } from '@/components/intake/fortnox-voucher-send'
+import { readFortnoxSends } from '@/lib/engine/fortnox-vouchers'
 
 export default async function Accounting({
   searchParams,
@@ -29,11 +31,12 @@ export default async function Accounting({
     currency = await readStoreCurrency(ctx.client, active.id),
     all = dictionary(ctx.locale),
     d = all.accounting
-  const [closes, map, exports, fortnox] = await Promise.all([
+  const [closes, map, exports, fortnox, sends] = await Promise.all([
     readDayCloses(ctx.client, active.id),
     readAccountingMap(ctx.client, active.id),
     readAccountingExports(ctx.client, active.id),
     readFortnoxStatus(ctx.client, active.id),
+    readFortnoxSends(ctx.client, active.id),
   ])
   const fortnoxOutcome =
     typeof query.fortnox === 'string' && /^[A-Za-z_]{1,40}$/.test(query.fortnox)
@@ -170,7 +173,17 @@ export default async function Accounting({
                 ·{' '}
                 <a className="text-link" href={`/api/accounting/${e.id}`}>
                   {d.download}
-                </a>
+                </a>{' '}
+                ·{' '}
+                <FortnoxVoucherSend
+                  key={`${e.id}-${sends.get(e.id)?.id ?? 'none'}`}
+                  tenantId={active.id}
+                  exportId={e.id}
+                  send={sends.get(e.id) ?? null}
+                  connected={fortnox.connected}
+                  canSend={canEditMap}
+                  d={all.fortnox}
+                />
               </p>
             )
           })}

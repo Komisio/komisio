@@ -279,6 +279,15 @@ export const fortnoxErrorCodes = [
   'FORTNOX_STATE_INVALID',
   'CREDENTIAL_KEY_MISSING',
   'CREDENTIAL_UNREADABLE',
+  'FORTNOX_ALREADY_SENT',
+  'FORTNOX_SEND_IN_PROGRESS',
+  'FORTNOX_CURRENCY_UNSUPPORTED',
+  'FORTNOX_VOUCHER_REJECTED',
+  'EXPORT_NOT_FOUND',
+  'SEND_NOT_FOUND',
+  'SEND_NOT_PENDING',
+  'REQUEST_CONFLICT',
+  'INVALID_INPUT',
 ] as const
 export function fortnoxErrorCode(message: string) {
   return fortnoxErrorCodes.find((c) => c === message) ?? 'REQUEST_FAILED'

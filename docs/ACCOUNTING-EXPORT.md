@@ -5,8 +5,8 @@ map. Komisio proposes no chart of accounts and no postings.
 
 ## Shape
 
-| Record               | Meaning                                                                                                    | Mutability  |
-| -------------------- | ---------------------------------------------------------------------------------------------------------- | ----------- |
+| Record               | Meaning                                                                                                     | Mutability  |
+| -------------------- | ----------------------------------------------------------------------------------------------------------- | ----------- |
 | `accounting_maps`    | One published version of the tenant's map: for each day-close amount, an account number and a side, or none | Append-only |
 | `accounting_exports` | One export per day close and map version: the recorded voucher lines, debit and credit totals, who exported | Append-only |
 
@@ -37,8 +37,8 @@ given day is the accountant's design, not Komisio's; the engine only checks.
 file with a single voucher in series A, dated on the close date and described
 as `Dagsavslut <date> v<version>`, debit positive and credit negative, text
 reduced to ASCII under `#FORMAT PC8`. The file can be downloaded again at any
-time; it is rendered from the recorded lines, never recomputed. Sending to
-Fortnox through its API follows once the tenant has connected an account (see
+time; it is rendered from the recorded lines, never recomputed. A connected
+store can also send the recorded lines to Fortnox as one voucher (see
 [FORTNOX-CONNECTION.md](FORTNOX-CONNECTION.md)); the file imports into
 Fortnox and other Swedish bookkeeping software as it is.
 

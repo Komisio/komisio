@@ -1315,6 +1315,28 @@
     "salePrice": "Sale price",
     "commission": "Commission"
   },
+  "reconciliation": {
+    "heading": "Reconciliation",
+    "hint": "Every day with activity in the period and where its books stand: close, export under the current map, and Fortnox. Read only; the day close totals decide.",
+    "from": "From",
+    "to": "To",
+    "show": "Show",
+    "periodInvalid": "Pick a from date at or before the to date, at most one year apart.",
+    "allDone": "Every active day in the period is sent to Fortnox.",
+    "empty": "No activity in this period.",
+    "openDays": "Days needing attention",
+    "status": "Status",
+    "statuses": {
+      "no_close": "No day close",
+      "close_stale": "Facts changed after the close; generate it again",
+      "not_exported": "Closed, not exported",
+      "export_outdated": "Exported under an older map; export again",
+      "not_sent": "Exported, not sent to Fortnox",
+      "send_pending": "Sending to Fortnox",
+      "send_failed": "Fortnox refused the voucher",
+      "sent": "Sent to Fortnox"
+    }
+  },
   "brief": {
     "heading": "Brief",
     "hint": "A fixed rendering of the same numbers for the last week or month and the one before. No forecast; nothing is stored.",

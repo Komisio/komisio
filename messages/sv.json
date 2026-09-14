@@ -1432,7 +1432,21 @@
     "noPayouts": "Inga utbetalningar gjordes.",
     "acceptedLine": "{accepted} plagg mottagna, {previousAccepted} under föregående period.",
     "liabilityLine": "Skuld till säljare just nu: {owed} fördelat på {sellers} säljare.",
-    "openPayoutsLine": "{count} utbetalningar är öppna på {amount}."
+    "openPayoutsLine": "{count} utbetalningar är öppna på {amount}.",
+    "emailFooter": "Komisio · veckobrevet skrivs ur butikens egna siffror, samma som på ekonomisidan: {link}",
+    "email": {
+      "heading": "Veckobrev via e-post",
+      "hint": "Varje måndagsmorgon får ägarna förra veckans brev via e-post. En ägare slår på det per butik och automationsidentiteten skickar.",
+      "enable": "Skicka veckobrevet",
+      "disable": "Sluta skicka veckobrevet",
+      "enabled": "På: brevet skickas varje måndag.",
+      "waiting": "Påslaget; första körningen bekräftar.",
+      "off": "Av.",
+      "notConfigured": "Automation är inte konfigurerad i den här driftmiljön.",
+      "ownerOnly": "Bara butikens ägare slår på det här.",
+      "busy": "Arbetar…",
+      "failed": "Ändringen misslyckades. Försök senare."
+    }
   },
   "fortnox": {
     "title": "Fortnox-koppling",

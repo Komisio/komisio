@@ -231,3 +231,16 @@ production migrations (the owner).
   no owner address is recorded as `none` and not retried.
 - Migration `20260916070000`; pgTAP 0076; unit tests for rendering and the
   send-and-record loop.
+
+## Delivered (2026-09-14, evening): weekly brief by e-mail
+
+- An owner switches "Send the weekly brief" on the economy page; that is an
+  automation grant with scope `weekly_brief` (AUTOMATION-ACTOR.md). Every
+  Monday 05:30 UTC the automation identity accepts open grants, reads last
+  week's brief for each such store (`economy_summary` and `economy_brief`
+  open to that scope and nothing else) and mails the fixed sentences to the
+  owners through the allowlisted transport, once per store and week
+  (`brief_sends`, immutable; owners and admins read). Migration
+  `20260916200000`; pgTAP 0090; unit tests for the week arithmetic and the
+  send loop. A generic owner route `POST /api/automation-grants` serves any
+  scope switch.

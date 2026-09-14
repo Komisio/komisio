@@ -1432,7 +1432,21 @@
     "noPayouts": "No payouts were paid.",
     "acceptedLine": "{accepted} items accepted, {previousAccepted} in the previous period.",
     "liabilityLine": "Owed to sellers now: {owed} across {sellers} sellers.",
-    "openPayoutsLine": "{count} payouts are open for {amount}."
+    "openPayoutsLine": "{count} payouts are open for {amount}.",
+    "emailFooter": "Komisio · the weekly brief is written from the store's own numbers, the same as on the economy page: {link}",
+    "email": {
+      "heading": "Weekly brief by e-mail",
+      "hint": "Every Monday morning the owners get last week's brief by e-mail. It is switched on per store by an owner and sent by the automation identity.",
+      "enable": "Send the weekly brief",
+      "disable": "Stop the weekly brief",
+      "enabled": "On: the brief is sent every Monday.",
+      "waiting": "Switched on; the first run confirms it.",
+      "off": "Off.",
+      "notConfigured": "Automation is not configured on this deployment.",
+      "ownerOnly": "Only the store owner switches this on.",
+      "busy": "Working…",
+      "failed": "The change failed. Retry later."
+    }
   },
   "fortnox": {
     "title": "Fortnox connection",

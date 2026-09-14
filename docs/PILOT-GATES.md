@@ -65,7 +65,9 @@ the pilot and after every migration batch; a mismatch or a failed restore is
 a stop.
 
 Restore exercise record: run on 2026-09-13 against the local stack with
-migrations through `20260915130000`; every table matched.
+migrations through `20260915130000`, and again on 2026-09-14 with migrations
+through `20260916070000` (plans, billing, automation and notices tables
+included); every table matched both times.
 
 ## Still open
 

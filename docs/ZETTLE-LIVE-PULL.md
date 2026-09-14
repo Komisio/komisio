@@ -1,5 +1,24 @@
 # Live Zettle receipt retrieval
 
+## Real merchant verification log
+
+Append one row after each real provider action. Record the action date in
+Europe/Stockholm, the minimal payload description, observed provider/POS result,
+reconciliation and evidence source. If only the report date is known, say so;
+never turn a unit test, API acknowledgement or a database migration into POS
+acceptance evidence. Keep credentials, raw receipts, customer details and exact
+merchant/item identifiers out of this public log; retain correlation privately.
+
+| Date / evidence | Action and minimal data sent | Observed Zettle result | Reconciliation / limit |
+| --- | --- | --- | --- |
+| Report recorded 2026-09-14; owner report in this conversation; action date not supplied | Exported one test article from Komisio to the pilot POS; exact payload and correlation not retained here | Owner saw the article in Zettle POS, without inventory tracking and without a product image | Product appearance is owner-reported, not independently reproduced. Stock and image appearance after the fixes remain unverified. No manual stock adjustment is confirmed. |
+
+No real receipt pull, matched sale or image upload was performed during this
+follow-up implementation. Their verification rows must be added when those actions
+actually occur, with POS observation recorded separately from HTTP success.
+
+## Current scope
+
 Staged compatibility decision (2026-09-14): `recordZettlePurchase` is retired
 from TypeScript proposals and review UI. Legacy queue rows are omitted and old
 review links return not found; SQL history and dispatchers remain unchanged.
@@ -68,9 +87,9 @@ boundaries, completion and replay; multi-connection window/page races
 in `scripts/owner-race.mjs`; unit tests for pinned token transport and engine
 orchestration; the existing complete synthetic Zettle browser journey with denial
 of unconfigured live operations. Test data never uses actual pilot credentials.
-# Owner window escape (2026-09-14)
+## Owner window escape (2026-09-14)
 
-The owner can close the latest unfinished window from the integrations page with
+Only an owner, not an admin, can close the latest unfinished window from the integrations page with
 a mandatory reason. The immutable closure is not an empty provider page or a sale.
 New pages for that window fail with `ZETTLE_WINDOW_ABANDONED`; previously committed
 pages remain replayable. The next window starts at the closed window's exact end.

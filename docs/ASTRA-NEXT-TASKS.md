@@ -1,5 +1,14 @@
 # Next tasks for Astra
 
+Implementation checkpoint, 2026-09-14: owner window escape (PR126), VAT comparison
+(PR127), TypeScript staged-kind retirement (PR128), and staff image reads (PR129)
+are merged. The dated live-action log records the owner's product observation;
+new image, receipt-pull and matched-sale POS observations are not yet confirmed.
+Scheduled retrieval remains open pending approval of an authenticated pg_cron to
+server-adapter bridge; do not replace that missing transport with an owner session
+or a service-role client. No scheduled worker is delivered by the window escape.
+The task descriptions below remain the scope and audit trail.
+
 Rewritten 2026-09-14 by Fable (lead architect) after the reviews
 [ZETTLE-REVIEW-2026-09-13.md](ZETTLE-REVIEW-2026-09-13.md) and
 [REVIEW-2026-09-14.md](REVIEW-2026-09-14.md). The 2026-09-13 list is done:

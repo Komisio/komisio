@@ -9,6 +9,8 @@ import {
   readReceptionReview,
 } from '@/lib/engine/reception-store'
 import { readManualReception } from '@/lib/engine/manual-reception'
+import { readPriceEvidence } from '@/lib/engine/price-evidence'
+import { PriceEvidencePanel } from '@/components/intake/price-evidence'
 import { PhotoUpload } from '@/components/reception/photo-upload'
 import { ReceptionAssistance } from '@/components/reception/assistance'
 import { receptionAIConfig } from '@/lib/assistance/reception-config'
@@ -26,8 +28,10 @@ import {
 } from '@/lib/engine/garment-receipts'
 export default async function Reception({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const id = z.uuid().safeParse((await params).id)
@@ -40,6 +44,11 @@ export default async function Reception({
   if (!reception) notFound()
   const state = reception.status === 'ready' ? reception.session : reception
   const sources = reception.status === 'ready' ? reception.session.sources : []
+  const query = await searchParams
+  const evidence = await readPriceEvidence(ctx.client, tenant.id, {
+    category: typeof query.category === 'string' ? query.category : '',
+    query: typeof query.q === 'string' ? query.q : '',
+  })
   const [seller, terms, review, policy, custody] = await Promise.all([
     ctx.client
       .from('sellers')
@@ -105,6 +114,12 @@ export default async function Reception({
         </p>
       </div>
       <p className="intake-notice">{d.manual}</p>
+      <PriceEvidencePanel
+        evidence={evidence}
+        formAction={`/intake/reception/${id.data}`}
+        locale={ctx.locale}
+        d={all.priceEvidence}
+      />
       <p>
         <Link
           className="text-link"

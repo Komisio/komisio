@@ -7,6 +7,8 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
+import { readPriceEvidence } from '@/lib/engine/price-evidence'
+import { PriceEvidencePanel } from '@/components/intake/price-evidence'
 import { dictionary } from '@/lib/i18n'
 import {
   InspectionForm,
@@ -147,6 +149,15 @@ export default async function InspectBag({
             {s.version} {selected.revision}
           </p>
         </section>
+      )}
+      {selected && (
+        <PriceEvidencePanel
+          evidence={await readPriceEvidence(ctx.client, tenantId, {
+            category: selected.category,
+          })}
+          locale={ctx.locale}
+          d={d.priceEvidence}
+        />
       )}
       {selected && !version && (
         <section className="card intake-form">

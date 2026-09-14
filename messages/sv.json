@@ -1455,5 +1455,22 @@
       "conflict": "Lagret behöver kontrolleras - inget nytt exemplar läggs till"
     },
     "responseFields": "Svarsfält"
+  },
+  "priceEvidence": {
+    "title": "Jämförbara försäljningar i butiken",
+    "intro": "Vad butiken tog emot till och sedan sålde för, ur dess egna försäljningar. Underlag för ett pris, aldrig ett pris; butiken bestämmer.",
+    "category": "Kategori",
+    "query": "Text i titeln",
+    "search": "Visa",
+    "summary": "{count} sålda de senaste {days} dagarna",
+    "median": "median",
+    "range": "spann",
+    "averageDays": "{days} dagar till försäljning i snitt",
+    "item": "Vara",
+    "accepted": "Mottagen till",
+    "sold": "Såld för",
+    "daysToSale": "Dagar",
+    "markdowns": "Nedsättningar",
+    "notice": "Returnerade varor räknas inte. Priserna är vad butiken registrerat; inget hämtas utifrån."
   }
 }

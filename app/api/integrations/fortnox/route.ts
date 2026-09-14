@@ -8,6 +8,7 @@ import {
   fortnoxErrorCode,
 } from '@/lib/engine/fortnox-connection'
 import { sendExportToFortnox } from '@/lib/engine/fortnox-vouchers'
+import { FortnoxRejected } from '@/extensions/fortnox/vouchers'
 
 /** Check the connected company, send one export as a voucher, or disconnect; owner or admin. */
 export async function POST(request: Request) {
@@ -67,7 +68,7 @@ export async function POST(request: Request) {
   } catch (e) {
     const code = fortnoxErrorCode(e instanceof Error ? e.message : '')
     return reply(
-      { error: code },
+      { error: code, detail: e instanceof FortnoxRejected ? e.detail : '' },
       code === 'FORBIDDEN' ? 403 : code === 'INVALID_INPUT' ? 400 : 409,
     )
   }

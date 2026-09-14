@@ -1346,6 +1346,7 @@
     "voucherSent": "Sent to Fortnox as voucher",
     "voucherFailed": "Not sent:",
     "sendNeedsConnection": "Connect Fortnox to send this voucher.",
+    "fortnoxSaid": "Fortnox said:",
     "events": {
       "connected": "Connected",
       "refreshed": "Token refreshed",

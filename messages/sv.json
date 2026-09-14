@@ -1346,6 +1346,7 @@
     "voucherSent": "Skickad till Fortnox som verifikation",
     "voucherFailed": "Inte skickad:",
     "sendNeedsConnection": "Koppla Fortnox för att skicka verifikationen.",
+    "fortnoxSaid": "Fortnox svarade:",
     "events": {
       "connected": "Kopplad",
       "refreshed": "Token förnyad",

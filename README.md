@@ -119,18 +119,19 @@ See the [pilot walkthrough](docs/RECEPTION-PILOT.md).
 The [hosted preview](https://komisio-staging.vercel.app) is a test environment;
 use test data rather than real consignor or financial records.
 
-| Available in the current platform                                             | Still being built or planned                                                        |
-| ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| Registration, e-mail confirmation, login, password recovery, optional MFA     | Billing, trial and commercial hosted plans ([design](docs/ONBOARDING-AND-PLANS.md)) |
-| Stores, four access roles, invitations, access log, Swedish and English       | Payout rails (Swish, Stripe) beyond manual "paid with reference"                    |
-| Seller registration, bag and single-garment reception, labels, self drop-off  | Space booking and booking fees                                                      |
-| Versioned agreements, inspection drafts, acceptance with frozen terms         | Shopify and web shop channels                                                       |
-| Sales, returns, store-owned purchases, one currency per store                 | Hosted agent OAuth and a hosted agent runtime                                       |
-| Zettle: product export with stock and photos, live receipt retrieval          | Wall-camera pairing and automated capture                                           |
-| Day close, account map, SIE 4 export, Fortnox voucher sending, reconciliation | Print transport for label printers                                                  |
-| Seller ledger, payouts, settlement batch, statements, seller portal           | Cross-store price comparison (opt-in)                                               |
-| Economy overview, weekly and monthly brief, markdown agent, price evidence    | Duplicate detection for photos                                                      |
-| Staged operations with risk levels, MCP server with scoped tools              | Multi-tenant provider connections with per-store credentials                        |
+| Available in the current platform                                             | Still being built or planned                                                           |
+| ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Registration, e-mail confirmation, login, password recovery, optional MFA     | Production environment and the pilot gates ([checklist](docs/ONBOARDING-AND-PLANS.md)) |
+| Stores, four access roles, invitations, access log, Swedish and English       | Payout rails (Swish, Stripe) beyond manual "paid with reference"                       |
+| Seller registration, bag and single-garment reception, labels, self drop-off  | Space booking and booking fees                                                         |
+| Versioned agreements, inspection drafts, acceptance with frozen terms         | Shopify and web shop channels                                                          |
+| Sales, returns, store-owned purchases, one currency per store                 | Hosted agent OAuth and a hosted agent runtime                                          |
+| Zettle: product export with stock and photos, live receipt retrieval          | Wall-camera pairing and automated capture                                              |
+| Day close, account map, SIE 4 export, Fortnox voucher sending, reconciliation | Print transport for label printers                                                     |
+| Seller ledger, payouts, settlement batch, statements, seller portal           | Cross-store price comparison (opt-in)                                                  |
+| Economy overview, weekly and monthly brief, markdown agent, price evidence    | Similar-photo detection with a model ([design](docs/DUPLICATE-CHECK.md))               |
+| Staged operations with risk levels, MCP server with scoped tools              | Multi-tenant provider connections with per-store credentials                           |
+| Trial and plans with Stripe, automation actor, sellers list, duplicate checks | Automatic Fortnox sending, retention and erasure                                       |
 
 The hosted preview is a staging environment for the pilot store and the
 people building Komisio. See [pilot gates](docs/PILOT-GATES.md) for what

@@ -4,6 +4,7 @@ import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { can } from '@/lib/platform/permissions'
 import { Button } from '@/components/ui/button'
+import { readOnboarding } from '@/lib/engine/onboarding'
 export default async function Home() {
   const ctx = await requirePlatform()
   const d = dictionary(ctx.locale)
@@ -13,16 +14,37 @@ export default async function Home() {
     .select('*', { count: 'exact', head: true })
     .eq('tenant_id', active.id)
   if (error) throw error
-  const steps = [
-    { label: d.stepAccount, done: true, path: '/account' },
-    { label: d.stepTenant, done: true, path: '/settings' },
-    {
-      label: d.stepProfile,
-      done: !!ctx.profile?.display_name,
-      path: '/account',
-    },
-    { label: d.stepTeam, done: (count ?? 0) > 1, path: '/members' },
-  ]
+  const labels = {
+    account: d.stepAccount,
+    store: d.stepTenant,
+    profile: d.stepProfile,
+    policy: d.stepPolicy,
+    agreement: d.stepAgreement,
+    seller: d.stepSeller,
+    item: d.stepItem,
+    sale: d.stepSale,
+    dayClose: d.stepDayClose,
+    integrations: d.stepIntegrations,
+    team: d.stepTeam,
+  }
+  const intakeEnabled = process.env.KOMISIO_INTAKE_ENABLED === 'true'
+  const steps = (
+    intakeEnabled
+      ? await readOnboarding(ctx.client, active.id, {
+          profileName: !!ctx.profile?.display_name,
+          members: count ?? 0,
+        })
+      : [
+          { key: 'account' as const, done: true, path: '/account' },
+          { key: 'store' as const, done: true, path: '/settings' },
+          {
+            key: 'profile' as const,
+            done: !!ctx.profile?.display_name,
+            path: '/account',
+          },
+          { key: 'team' as const, done: (count ?? 0) > 1, path: '/members' },
+        ]
+  ).map((step) => ({ ...step, label: labels[step.key] }))
   return (
     <>
       <div className="page-heading">
@@ -41,7 +63,7 @@ export default async function Home() {
               <p style={{ marginBottom: 0, fontSize: 13 }}>{d.setupIntro}</p>
             </div>
             <span className="badge">
-              {steps.filter((s) => s.done).length} / 4
+              {steps.filter((s) => s.done).length} / {steps.length}
             </span>
           </div>
           <div className="steps">

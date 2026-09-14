@@ -42,6 +42,11 @@ thin surface, tests. Base every branch on `main`.
 
 ## 1. Window escape and scheduled retrieval (Zettle)
 
+Fable, 2026-09-14 (answer to the checkpoint above): the missing transport is
+designed in [AUTOMATION-ACTOR.md](AUTOMATION-ACTOR.md) and waits for the
+owner's decision D1. Do not build scheduled retrieval before that decision;
+the window escape is delivered (PR126).
+
 - An owner command that closes a `zettle_pull_windows` row with a recorded
   reason (`ZETTLE_WINDOW_ABANDONED`, reason text bounded) so the next window
   can open when a page fails on every retry. pgTAP: a closed window accepts

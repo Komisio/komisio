@@ -106,3 +106,5 @@ proposed defaults is [OWNER-ACTIONS-2026-09-14.md](OWNER-ACTIONS-2026-09-14.md).
   customer.subscription.deleted, invoice.paid, invoice.payment_failed; the
   automation identity registered as billing actor with
   `select komisio_private.register_billing_actor('<automation user id>')`.
+- `CRON_SECRET` in Vercel (at least 16 characters); Vercel Cron then calls the
+  automation routes (plan notices daily, Zettle retrieval when delivered).

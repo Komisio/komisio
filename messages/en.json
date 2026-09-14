@@ -1690,5 +1690,24 @@
     "integrations": "Integrations",
     "store": "Store",
     "more": "More"
+  },
+  "planNotices": {
+    "trial_week": {
+      "subject": "One week left of the free trial for {store}",
+      "text": "Hello,\n\nThe free trial for {store} in Komisio ends on {date}. After that the store becomes read-only: everything can still be read and exported, but no new items, sales or payouts are recorded.\n\nTo keep going, activate the subscription under Settings:\n{link}"
+    },
+    "trial_tomorrow": {
+      "subject": "The free trial for {store} ends tomorrow",
+      "text": "Hello,\n\nThe free trial for {store} ends on {date}. Activate the subscription under Settings to keep recording items, sales and payouts:\n{link}"
+    },
+    "trial_ended": {
+      "subject": "{store} is now read-only",
+      "text": "Hello,\n\nThe free trial for {store} ended on {date}. The store is now read-only: everything can be read and exported, nothing new is recorded. Activate the subscription under Settings and the store works again at once:\n{link}"
+    },
+    "grace_week": {
+      "subject": "Payment overdue for {store}",
+      "text": "Hello,\n\nThe last payment for {store} failed. If it is not settled by {date} the store becomes read-only. Update the payment method under Settings:\n{link}"
+    },
+    "footer": "Komisio · hosted plan, SEK 199 per store and month excluding VAT · this message is sent once per step and has no attachments."
   }
 }

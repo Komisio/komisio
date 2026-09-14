@@ -643,6 +643,20 @@ small {
   padding: 0 43px;
   background: #ffffff9c;
 }
+.topbar-search {
+  flex: 1;
+  max-width: 320px;
+  margin: 0 24px;
+}
+.topbar-search input {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: white;
+  font-size: 12px;
+}
 .breadcrumb {
   font-size: 12px;
   color: #829082;

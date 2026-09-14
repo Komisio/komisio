@@ -137,6 +137,22 @@ export function Shell({
               ? d.account
               : (current?.label ?? d.home)}
         </span>
+        {intakeEnabled && (
+          <form
+            action="/intake/open"
+            className="topbar-search desktop-only"
+            role="search"
+            aria-label={d.openByReference.title}
+          >
+            <input
+              name="ref"
+              placeholder={d.openByReference.hint}
+              aria-label={d.openByReference.reference}
+              maxLength={16}
+              inputMode="text"
+            />
+          </form>
+        )}
         <div className="desktop-only row">
           <span className="badge">{d.roles[active.role]}</span>
           <span className="avatar">

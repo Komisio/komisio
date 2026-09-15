@@ -29,6 +29,8 @@ import {
 import { shopifyEnvironment, shopifyIssue } from '@/extensions/shopify/auth'
 import { ShopifyConnection } from '@/components/intake/shopify-connection'
 import { ShopifyProducts } from '@/components/intake/shopify-products'
+import { ShopifyOrders } from '@/components/intake/shopify-orders'
+import { readShopifyOrderStatus } from '@/lib/engine/shopify-orders'
 import {
   readShopifyCandidates,
   readShopifyProductStatus,
@@ -93,12 +95,14 @@ export default async function Integrations({
   ]
   const shopifyStatus = await readShopifyStatus(ctx.client, a.id)
   const shopifyExpired = shopifyTokenExpired(shopifyStatus)
-  const [shopifyCandidates, shopifyProducts] = shopifyStatus.connected
-    ? await Promise.all([
-        readShopifyCandidates(ctx.client, a.id),
-        readShopifyProductStatus(ctx.client, a.id),
-      ])
-    : [null, null]
+  const [shopifyCandidates, shopifyProducts, shopifyOrders] =
+    shopifyStatus.connected
+      ? await Promise.all([
+          readShopifyCandidates(ctx.client, a.id),
+          readShopifyProductStatus(ctx.client, a.id),
+          readShopifyOrderStatus(ctx.client, a.id),
+        ])
+      : [null, null, null]
   return (
     <>
       <div className="page-heading">
@@ -142,6 +146,15 @@ export default async function Integrations({
             d={all.shopify}
           />
         )}
+      {['owner', 'admin'].includes(a.role) && shopifyOrders && (
+        <ShopifyOrders
+          key={`shopify-orders-${a.id}`}
+          tenantId={a.id}
+          status={shopifyOrders}
+          locale={ctx.locale}
+          d={all.shopify}
+        />
+      )}
       {a.role === 'staff' && images !== null && images.length > 0 && (
         <section className="card intake-form" aria-label={d.imageStatusTitle}>
           <h2>{d.imageStatusTitle}</h2>

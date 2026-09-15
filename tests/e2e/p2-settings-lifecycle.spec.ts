@@ -31,6 +31,11 @@ test('notification policy and assistance quota persist and usage is visible', as
     await page
       .getByRole('button', { name: d.storePolicy.publish, exact: true })
       .click()
+    // The publish request must have completed before the reload, or the
+    // reload reads the previous policy version.
+    await expect(
+      page.getByText(d.storePolicy.saved, { exact: true }),
+    ).toBeVisible()
     await expect(
       page.getByLabel(d.storePolicy.assistanceMonthlyQuota, { exact: true }),
     ).toHaveValue('7')

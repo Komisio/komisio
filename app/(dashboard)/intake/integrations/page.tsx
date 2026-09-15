@@ -31,6 +31,8 @@ import { ShopifyConnection } from '@/components/intake/shopify-connection'
 import { ShopifyProducts } from '@/components/intake/shopify-products'
 import { ShopifyOrders } from '@/components/intake/shopify-orders'
 import { readShopifyOrderStatus } from '@/lib/engine/shopify-orders'
+import { readShopifyAutomaticStatus } from '@/lib/engine/shopify-automation'
+import { AutomationSwitch } from '@/components/intake/automation-switch'
 import {
   readShopifyCandidates,
   readShopifyProductStatus,
@@ -95,14 +97,17 @@ export default async function Integrations({
   ]
   const shopifyStatus = await readShopifyStatus(ctx.client, a.id)
   const shopifyExpired = shopifyTokenExpired(shopifyStatus)
-  const [shopifyCandidates, shopifyProducts, shopifyOrders] =
+  const [shopifyCandidates, shopifyProducts, shopifyOrders, shopifyAuto] =
     shopifyStatus.connected
       ? await Promise.all([
           readShopifyCandidates(ctx.client, a.id),
           readShopifyProductStatus(ctx.client, a.id),
           readShopifyOrderStatus(ctx.client, a.id),
+          ['owner', 'admin'].includes(a.role)
+            ? readShopifyAutomaticStatus(ctx.client, a.id)
+            : null,
         ])
-      : [null, null, null]
+      : [null, null, null, null]
   return (
     <>
       <div className="page-heading">
@@ -154,6 +159,30 @@ export default async function Integrations({
           locale={ctx.locale}
           d={all.shopify}
         />
+      )}
+      {['owner', 'admin'].includes(a.role) && shopifyOrders && (
+        <section className="card" aria-label={all.shopify.automation.heading}>
+          <AutomationSwitch
+            key={`shopify-auto-${a.id}`}
+            tenantId={a.id}
+            scope="shopify_pull"
+            grants={automation}
+            configured={
+              !!automationIdentity() &&
+              shopifyAuto?.available === true &&
+              automation !== null &&
+              a.id === process.env.SHOPIFY_PILOT_TENANT_ID
+            }
+            canEdit={a.role === 'owner'}
+            t={all.shopify.automation}
+          />
+          <p>
+            {all.shopify.automation.lastRun}:{' '}
+            {shopifyAuto?.run
+              ? `${new Date(shopifyAuto.run.at).toLocaleString(ctx.locale, { timeZone: 'Europe/Stockholm' })} · ${all.shopify.automation.outcomes[shopifyAuto.run.outcome]} · ${shopifyAuto.run.received}`
+              : all.shopify.automation.noRun}
+          </p>
+        </section>
       )}
       {a.role === 'staff' && images !== null && images.length > 0 && (
         <section className="card intake-form" aria-label={d.imageStatusTitle}>

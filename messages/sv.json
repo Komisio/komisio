@@ -268,6 +268,8 @@
     "MEMBER_NOT_FOUND": "Medlemmen finns inte längre i butiken.",
     "SLUG_TAKEN": "Identifieraren används redan. Välj en annan.",
     "LAST_OWNER": "Butiken måste ha minst en ägare. Utse en annan ägare först.",
+    "CHAIN_CONFLICT": "Butiken ingår redan i en kedja.",
+    "CHAIN_NOT_FOUND": "Kedjan finns inte längre.",
     "TENANT_CHANGED": "Den aktiva butiken har ändrats. Ladda om sidan innan du fortsätter.",
     "REQUEST_FAILED": "Det gick inte att spara. Försök igen."
   },
@@ -1027,7 +1029,29 @@
       "cancelled": "avbruten"
     }
   },
+  "chain": {
+    "title": "Kedja",
+    "intro": "Gruppera den här butiken med andra butiker du äger under ett bolagsnamn. Åtkomst, planer, inlämnare och integrationer förblir per butik; ägare och administratörer i alla butiker i kedjan ser siffrorna sida vid sida på ekonomisidan.",
+    "name": "Bolagsnamn",
+    "namePlaceholder": "Till exempel Second Life AB",
+    "includeStores": "Ta även med",
+    "create": "Skapa kedja",
+    "storesInChain": "{count} butiker",
+    "notMember": "inte medlem",
+    "addStore": "Lägg till butik",
+    "add": "Lägg till",
+    "leave": "Ta ut butiken ur kedjan",
+    "leaveHint": "Endast ägare. En kedja utan butiker tas bort. Inget annat ändras.",
+    "none": "Butiken ingår inte i någon kedja."
+  },
   "economy": {
+    "chain": {
+      "heading": "Kedja",
+      "store": "Butik",
+      "total": "Totalt",
+      "refused": "Kedjevyn kräver ägare eller administratör i alla butiker i kedjan.",
+      "mixed": "Butikerna använder olika valutor; bara raderna per butik visas."
+    },
     "title": "Ekonomi",
     "intro": "Butikens siffror för en period, beräknade från samma fakta och med samma summor som dagsavslutet: försäljning med moms per momsläge, provision, säljartillgodohavande, returer och utbetalda utbetalningar.",
     "notice": "Bara läsning. Siffrorna är butikens egna; momslägen är butikens val, gjorda med dess redovisningskonsult.",

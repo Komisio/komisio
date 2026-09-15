@@ -268,6 +268,8 @@
     "MEMBER_NOT_FOUND": "This person no longer belongs to the store.",
     "SLUG_TAKEN": "This identifier is already in use. Choose another.",
     "LAST_OWNER": "The store must have at least one owner. Appoint another owner first.",
+    "CHAIN_CONFLICT": "The store already belongs to a chain.",
+    "CHAIN_NOT_FOUND": "The chain no longer exists.",
     "TENANT_CHANGED": "The active store has changed. Reload the page before continuing.",
     "REQUEST_FAILED": "Your changes could not be saved. Please try again."
   },
@@ -1027,7 +1029,29 @@
       "cancelled": "cancelled"
     }
   },
+  "chain": {
+    "title": "Chain",
+    "intro": "Group this store with other stores you own under one company name. Access, plans, sellers and integrations stay per store; owners and admins of every store in the chain see the numbers side by side on the economy page.",
+    "name": "Company name",
+    "namePlaceholder": "For example Second Life AB",
+    "includeStores": "Also include",
+    "create": "Create chain",
+    "storesInChain": "{count} stores",
+    "notMember": "not a member",
+    "addStore": "Add a store",
+    "add": "Add",
+    "leave": "Take this store out of the chain",
+    "leaveHint": "Owners only. A chain without stores is removed. Nothing else changes.",
+    "none": "This store is not part of a chain."
+  },
   "economy": {
+    "chain": {
+      "heading": "Chain",
+      "store": "Store",
+      "total": "Total",
+      "refused": "The chain view needs owner or admin in every store of the chain.",
+      "mixed": "Stores use different currencies; only the per-store rows are shown."
+    },
     "title": "Economy",
     "intro": "The store's numbers for a period, computed from the same facts and with the same sums as the day close: sales with VAT per mode, commission, seller credit, returns and paid payouts.",
     "notice": "Read only. The figures are the store's own; VAT modes are the store's choice made with its accountant.",

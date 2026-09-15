@@ -36,6 +36,21 @@ export const commandSchema = z.discriminatedUnion('action', [
     action: z.literal('accept'),
     token: z.string().regex(/^[a-f0-9]{64}$/),
   }),
+  // Chains: owner-only; the database rechecks ownership of every store.
+  z.object({
+    action: z.literal('chainCreate'),
+    tenantId,
+    chainId: z.uuid(),
+    name: z.string().trim().min(1).max(100),
+    tenantIds: z.array(z.uuid()).min(1).max(50),
+  }),
+  z.object({
+    action: z.literal('chainJoin'),
+    tenantId,
+    chainId: z.uuid(),
+    storeId: z.uuid(),
+  }),
+  z.object({ action: z.literal('chainLeave'), tenantId }),
 ])
 export function safeNext(value: string | null | undefined) {
   if (value === '/account' || value === '/seller') return value
@@ -52,6 +67,8 @@ export function errorCode(message: string, code?: string) {
     'ALREADY_MEMBER',
     'INVALID_INPUT',
     'MEMBER_NOT_FOUND',
+    'CHAIN_CONFLICT',
+    'CHAIN_NOT_FOUND',
   ]) {
     if (message.includes(value)) return value
   }

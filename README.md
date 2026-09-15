@@ -132,7 +132,8 @@ use test data rather than real consignor or financial records.
 | Economy overview, weekly and monthly brief, markdown agent, price evidence    | Similar-photo detection with a model ([design](docs/DUPLICATE-CHECK.md))               |
 | Staged operations with risk levels, MCP server with scoped tools              | Multi-tenant provider connections with per-store credentials                           |
 | Trial and plans with Stripe, automation actor, sellers list, duplicate checks | Automatic Fortnox sending, retention and erasure                                       |
-| Item search by title, category and stage; agent reads of items and receipts   | Agent seller lookup and item price proposals                                           |
+| Item search by title, category and stage; agent reads and price proposals     | Agent seller lookup                                                                    |
+| Chains: stores grouped under one company with numbers per store and in total  | Moving items between stores in a chain                                                 |
 
 The hosted preview is a staging environment for the pilot store and the
 people building Komisio. See [pilot gates](docs/PILOT-GATES.md) for what

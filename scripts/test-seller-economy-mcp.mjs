@@ -19,7 +19,25 @@ export async function testSellerEconomyMCP({ connect, rpc, db, uid }) {
     'komisio_read_economy_summary',
     'komisio_read_seller_balance',
     'komisio_read_seller_ledger',
+    'komisio_read_stock_report',
   ])
+  // Stock report: the same period rules as the summary; a fresh store has nothing in stock.
+  const stock = await client.callTool({
+    name: 'komisio_read_stock_report',
+    arguments: { from: '2026-09-01', to: '2026-09-30' },
+  })
+  assert(!stock.isError, JSON.stringify(stock.content))
+  assert.equal(stock.structuredContent.readOnly, true)
+  assert.equal(stock.structuredContent.amountUnit, 'ore')
+  assert.equal(typeof stock.structuredContent.total.inStock, 'number')
+  assert(
+    (
+      await client.callTool({
+        name: 'komisio_read_stock_report',
+        arguments: { from: '2026-09-30', to: '2026-09-01' },
+      })
+    ).isError,
+  )
   // Brief: deterministic sentences over the summary; a quiet store reads as no sales; bad input is refused.
   const brief = await client.callTool({
     name: 'komisio_read_economy_brief',

@@ -14,8 +14,9 @@ workflow still needs an explicit design before held exports can be retried.
 Daily sending also needs scoped token renewal. Fable approved a dedicated
 revision-bound refresh capability; migration `20260916100000` now supplies
 the database command and scoped connection read. The TypeScript refresh path
-is not switched yet: bounded rereading, failed-save handling and reconnect
-guidance remain before automatic sending. Do not open the general
+now uses it with one conflict reread, failed-save refusal and reconnect guidance.
+The application remains owner/admin-only until scoped automation sending and
+check-event permissions are wired. Do not open the general
 connect/replace function to automation. Fortnox access tokens last one hour and
 renewal invalidates the previous refresh token ([provider authorization](https://www.fortnox.se/developer/authorization)).
 

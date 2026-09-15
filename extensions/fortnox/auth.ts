@@ -110,6 +110,11 @@ async function tokenRequest(
     throw new Error('FORTNOX_CONNECTION_FAILED')
   }
   if (response.status === 429) throw new Error('FORTNOX_RATE_LIMITED')
+  if (!response.ok && form.grant_type === 'refresh_token') {
+    const body = await boundedJson(response, 65536).catch(() => null)
+    if (z.object({ error: z.literal('invalid_grant') }).safeParse(body).success)
+      throw new Error('FORTNOX_REFRESH_INVALID_GRANT')
+  }
   if (!response.ok) throw new Error('FORTNOX_AUTH_REQUIRED')
   const tokens = tokenSet.parse(await boundedJson(response, 65536))
   if (/[\r\n]/.test(tokens.access_token) || /[\r\n]/.test(tokens.refresh_token))

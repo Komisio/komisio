@@ -1,5 +1,17 @@
 # Decision Log
 
+## 2026-09-15: Fortnox client uses revision-bound renewal
+
+The application renews only through `refresh_fortnox_tokens`; OAuth connection
+completion alone retains the general store command. On a committed stale-revision
+result the newly obtained tokens are discarded and the connection is reread once.
+A second conflict fails closed. Missing revision fails before external renewal;
+save errors never return rotated tokens or retry a write. Refusal logging uses
+only `save_failed` or verified `invalid_grant` and the read revision; when the
+database is unavailable logging is best effort, not a durability guarantee.
+Owner/admin application checks remain in place until the scoped automation sender
+and its audit permissions are wired. No automatic sending is activated here.
+
 ## 2026-09-15: Revision-bound Fortnox refresh prerequisite
 
 Per Fable's revision answer, every connection insert/update receives a fresh

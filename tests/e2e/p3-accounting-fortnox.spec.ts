@@ -87,6 +87,18 @@ test('accounting page shows the Fortnox connection state and records a refused s
     await expect(
       fortnox.getByText(d.fortnox.events.connected).first(),
     ).toBeVisible()
+    await f.asActor(f.actor, () =>
+      f.db.query("select record_fortnox_check($1,'refused',$2::jsonb)", [
+        f.tenant,
+        JSON.stringify({ reason: 'invalid_grant', revision: '1' }),
+      ]),
+    )
+    await page.reload()
+    await expect(
+      fortnox.getByText(d.fortnox.errors.FORTNOX_REFRESH_INVALID_GRANT, {
+        exact: false,
+      }),
+    ).toBeVisible()
     await page.goto('/intake/accounting')
 
     // The send opens in the engine, fails on the missing configuration, and is recorded.

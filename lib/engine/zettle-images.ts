@@ -19,7 +19,7 @@ export async function readZettleImageUrl(
 ) {
   const result = await client.rpc('zettle_item_image_url', {
     p_tenant: z.uuid().parse(tenantId),
-    p_item: z.uuid().parse(itemId),
+    p_item: z.guid().parse(itemId),
   })
   if (result.error?.code === 'PGRST202') return null
   if (result.error) throw new Error('ZETTLE_READ_FAILED')
@@ -38,7 +38,7 @@ export async function readZettleImages(
   return z
     .array(
       z.object({
-        item_id: z.uuid(),
+        item_id: z.guid(),
         status: z.enum(['synced', 'uploaded', 'held']),
       }),
     )

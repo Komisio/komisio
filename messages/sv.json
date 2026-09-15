@@ -1467,6 +1467,14 @@
     }
   },
   "fortnox": {
+    "reconcileTitle": "Bekräfta en befintlig verifikation",
+    "reconcileHint": "Jämför verifikationen i det angivna Fortnox-företaget med exportens datum, belopp och rader innan du bekräftar. Detta loggar din kontroll; det skickar ingen verifikation.",
+    "reconcileSeries": "Verifikationsserie",
+    "reconcileNumber": "Verifikationsnummer",
+    "reconcileYear": "Räkenskapsårets ID i Fortnox",
+    "reconcileEvidence": "Underlag: vad du kontrollerade, när och av vem",
+    "reconcileNoAbsent": "Hittar du inte verifikationen ska sändningen ligga kvar som hållen. Formuläret kan inte bekräfta frånvaro eller tillåta omsändning.",
+    "reconcileConfirm": "Bekräfta att verifikationen finns",
     "title": "Fortnox-koppling",
     "intro": "Koppla butiken till dess Fortnox-företag. Det här steget kopplar, kontrollerar och kopplar bort; ingen verifikation skickas ännu.",
     "notConnected": "Inget Fortnox-företag är kopplat.",

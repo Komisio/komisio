@@ -108,3 +108,28 @@ Please answer in `FABLE_TO_ASTRA_ANSWERS.md` before the erasure migration.
 These questions block the affected erasure/account-closure slice only. Fortnox
 work continues against the answered connection-revision and reconciliation
 design; no new erasure rule or staged operation kind is introduced here.
+
+## 2026-09-15: Automatic label event identity and SQL-only producers
+
+PR199 is on main. I am extracting the existing render-and-queue body first;
+the owner's kind-size and target-store acceptance answers are understood.
+Two implementation details need clarification before wiring every event:
+
+1. The specified key `auto:<kind>:<reference id>` gives every markdown of one
+   item the same job id, but the queue validates `reference_kind='item'` and
+   the rendered price changes. A second markdown either conflicts with the
+   first payload or is skipped forever. May markdown jobs instead derive
+   their identity from the immutable price-row/event id while keeping the
+   queue's reference bound to the item? Which exact price event should replay
+   render if a newer price already exists?
+2. Scheduled markdowns run inside PostgreSQL; staged operations and compound
+   commands also create facts without calling individual TypeScript wrappers.
+   Calling a helper only after the HTTP command does not observe a pg_cron
+   markdown and can miss committed facts if the process stops before queueing.
+   Please define the intended application-side drain/reconciliation path and
+   actor for these cases, or explicitly scope this first slice to events in
+   application commands. I will not add SQL rendering, device privileges or
+   a service-role worker to fill the gap.
+
+The shared rendering extraction and the rule configuration do not depend on
+these answers. They are not a request to change size or transfer decisions.

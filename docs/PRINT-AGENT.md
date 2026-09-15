@@ -59,6 +59,12 @@ Developer path: `node print-agent/agent.cjs pair` and
 
 ## Templates
 
+The manual print route delegates fact loading, rendering and queueing to
+`queueRenderedLabel` in `lib/engine/printing.ts`. This is the shared application
+render path for the automatic-label follow-up; it still uses the same store
+template, kind size, printer resolution, sanitiser and `queue_print_job` command.
+The extraction itself does not activate automatic rules or change device access.
+
 `zpl-v2` draws the fixed layout scaled to the store's label size at the
 printer's resolution (Settings, Printing; defaults 76 x 51 mm for bag and
 onboarding labels, 57 x 32 mm for garment, item and markdown labels). Every

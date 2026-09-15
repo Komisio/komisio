@@ -101,6 +101,11 @@ export default async function Intake({
         </button>
       </form>
       <p className="intake-notice">{d.pilot}</p>
+      <p>
+        <Link className="btn" href="/intake/quick">
+          {d.quickLink}
+        </Link>
+      </p>
       <div className="intake-grid">
         <section className="card intake-form">
           <h2>{d.find}</h2>

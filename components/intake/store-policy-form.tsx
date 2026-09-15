@@ -35,6 +35,7 @@ export function StorePolicyForm({
     commissionBasis: ['inclusive', 'exclusive'],
     sellerReviewMode: ['delegated', 'per_item'],
     endOfPeriodAction: ['charity', 'return'],
+    intakeProfile: ['quick', 'standard', 'full'],
   } as const
   const subsets = {
     agreementRequiredFor: ['bag_receipt', 'review_publication', 'acceptance'],
@@ -137,7 +138,10 @@ export function StorePolicyForm({
               <select
                 id={`policy-${key}`}
                 name={key}
-                defaultValue={base.policy[key as keyof typeof choices]}
+                defaultValue={
+                  base.policy[key as keyof typeof choices] ??
+                  (key === 'intakeProfile' ? 'quick' : undefined)
+                }
               >
                 {options.map((value) => (
                   <option key={value} value={value}>

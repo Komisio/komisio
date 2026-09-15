@@ -2,12 +2,17 @@ import { randomUUID } from 'node:crypto'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { platformContext } from '@/lib/platform/context'
-import { queuePrintJobInput, readLabelFormats } from '@/lib/engine/printing'
+import {
+  queuePrintJobInput,
+  readLabelFormats,
+  readLabelTemplates,
+} from '@/lib/engine/printing'
 import {
   LABEL_TEMPLATE_VERSION,
   referenceFormat,
   renderLabel,
 } from '@/lib/labels/templates'
+import { renderStoreTemplate } from '@/lib/labels/placeholders'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { formatOre } from '@/lib/engine/items'
 
@@ -120,19 +125,29 @@ export async function POST(request: Request) {
       .eq('id', c.printerId)
       .maybeSingle()
     if (!printer.data) return reply({ error: 'PRINTER_NOT_FOUND' }, 400)
-    const formats = await readLabelFormats(client, tenantId)
+    const [formats, templates] = await Promise.all([
+      readLabelFormats(client, tenantId),
+      readLabelTemplates(client, tenantId),
+    ])
     const size = formats?.[c.kind] ?? referenceFormat
-    const payload = renderLabel(c.kind, facts, {
+    const format = {
       widthMm: size.widthMm,
       heightMm: size.heightMm,
       dpi: printer.data.dpi,
-    })
+    }
+    const template = templates?.[c.kind] ?? null
+    const payload = template
+      ? renderStoreTemplate(template.zpl, facts, format)
+      : renderLabel(c.kind, facts, format)
+    const templateVersion = template
+      ? `store-v${template.version}`
+      : LABEL_TEMPLATE_VERSION
     const queued = await client.rpc('queue_print_job', {
       p_tenant: tenantId,
       p_id: c.requestId,
       p_printer: c.printerId,
       p_kind: c.kind,
-      p_template_version: LABEL_TEMPLATE_VERSION,
+      p_template_version: templateVersion,
       p_reference_kind: c.referenceKind,
       p_reference_id: c.referenceId,
       p_payload: payload,

@@ -28,6 +28,8 @@ import {
   registerPrinterCommand,
   cancelPrintJobCommand,
   setLabelFormatCommand,
+  setLabelTemplateCommand,
+  resetLabelTemplateCommand,
 } from './printing'
 import {
   publishAccountingMapCommand,
@@ -64,6 +66,8 @@ export const intakeCommand = z.discriminatedUnion('action', [
   registerPrinterCommand,
   cancelPrintJobCommand,
   setLabelFormatCommand,
+  setLabelTemplateCommand,
+  resetLabelTemplateCommand,
   publishAccountingMapCommand,
   exportDayCloseCommand,
   publishStoreProfileCommand,
@@ -319,6 +323,18 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_kind: c.kind,
         p_width_mm: c.widthMm,
         p_height_mm: c.heightMm,
+      })
+    case 'setLabelTemplate':
+      return client.rpc('set_label_template', {
+        p_tenant: c.tenantId,
+        p_kind: c.kind,
+        p_name: c.name,
+        p_zpl: c.zpl,
+      })
+    case 'resetLabelTemplate':
+      return client.rpc('reset_label_template', {
+        p_tenant: c.tenantId,
+        p_kind: c.kind,
       })
     case 'cancelPrintJob':
       return client.rpc('cancel_print_job', {

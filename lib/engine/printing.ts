@@ -58,6 +58,52 @@ export async function readLabelFormats(
   return labelFormats.parse(r.data)
 }
 
+export const setLabelTemplateCommand = z.strictObject({
+  action: z.literal('setLabelTemplate'),
+  tenantId: z.uuid(),
+  requestId: z.uuid(),
+  kind: labelFormatKind,
+  name: z.string().trim().min(1).max(80),
+  zpl: z.string().trim().min(4).max(20000),
+})
+export const resetLabelTemplateCommand = z.strictObject({
+  action: z.literal('resetLabelTemplate'),
+  tenantId: z.uuid(),
+  requestId: z.uuid(),
+  kind: labelFormatKind,
+})
+const template = z
+  .object({
+    id: z.guid(),
+    version: z.number().int(),
+    name: z.string(),
+    zpl: z.string(),
+    createdAt: z.string(),
+  })
+  .nullable()
+  .optional()
+export const labelTemplates = z.object({
+  bag: template,
+  garment: template,
+  item: template,
+  onboarding: template,
+  markdown: template,
+})
+export type LabelTemplates = z.infer<typeof labelTemplates>
+
+/** The store's current template per kind, null where the built-in layout applies; any member. */
+export async function readLabelTemplates(
+  client: SupabaseClient,
+  tenantInput: string,
+) {
+  const r = await client.rpc('label_templates', {
+    p_tenant: z.uuid().parse(tenantInput),
+  })
+  if (r.error?.code === 'PGRST202') return null
+  if (r.error) throw new Error('FORBIDDEN')
+  return labelTemplates.parse(r.data ?? {})
+}
+
 export const cancelPrintJobCommand = z.strictObject({
   action: z.literal('cancelPrintJob'),
   tenantId: z.uuid(),

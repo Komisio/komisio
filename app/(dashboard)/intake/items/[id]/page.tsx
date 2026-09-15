@@ -16,7 +16,7 @@ export default async function Item({
   params: Promise<{ id: string }>
 }) {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
-  const id = z.uuid().safeParse((await params).id)
+  const id = z.guid().safeParse((await params).id)
   if (!id.success) notFound()
   const ctx = await requirePlatform(),
     active = ctx.active!,

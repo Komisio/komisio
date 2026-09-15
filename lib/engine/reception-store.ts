@@ -6,7 +6,7 @@ export const publishReceptionReviewCommand = z.strictObject({
   action: z.literal('publishReceptionReview'),
   tenantId: z.uuid(),
   requestId: z.uuid(),
-  sessionId: z.uuid(),
+  sessionId: z.guid(),
   sourceRevision: z.number().int().min(1).max(2147483646),
   previousReviewId: z.uuid().nullable(),
   agreementId: z.uuid().nullable(),
@@ -34,7 +34,7 @@ export async function readReceptionReview(
   sessionInput: string,
 ) {
   const tenantId = z.uuid().parse(tenantInput),
-    sessionId = z.uuid().parse(sessionInput)
+    sessionId = z.guid().parse(sessionInput)
   const { data: review, error } = await client
     .from('reception_reviews')
     .select(

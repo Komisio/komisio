@@ -9,7 +9,7 @@ export const myItems = z.object({
   items: z
     .array(
       z.object({
-        id: z.uuid(),
+        id: z.guid(),
         reference: z.string(),
         acceptedAt: z.string(),
         title: z.string().nullable(),

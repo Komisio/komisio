@@ -4,7 +4,7 @@ import { receptionSession, receptionSuggestions } from './reception'
 
 const cursor = z.number().int().min(1).max(2147483647).optional()
 export const receptionHistoryInput = z.strictObject({
-  sessionId: z.uuid(),
+  sessionId: z.guid(),
   beforeSource: cursor,
   beforeReview: cursor,
 })

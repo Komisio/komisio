@@ -4,6 +4,7 @@ import {
   authorizeUrl,
   exchangeCode,
   readShop,
+  refreshTokens,
   shopDomain,
   shopifyEnvironment,
   shopifyIssue,
@@ -25,8 +26,9 @@ import {
 // shop, complete it by verifying the shop and sealing the token, check it
 // read-only, disconnect. All database writes go through engine functions;
 // the token exists in clear text only inside a request on the server.
-// Token renewal for expiring tokens is a later slice; an expired token reads
-// as "reconnect needed".
+// An expiring token is renewed with the refresh token before use and the
+// new pair stored against the connection revision it was read at; without a
+// refresh token an expired token reads as "reconnect needed".
 const PURPOSE = 'shopify-connection'
 const STATE_TTL = 600
 
@@ -142,11 +144,7 @@ async function persist(
     p_currency: shop.currencyCode,
     p_cipher: cipher,
     p_scope: tokens.scope ?? '',
-    p_expires_at: tokens.expires_in
-      ? new Date(
-          Date.now() + Math.max(60, tokens.expires_in - 60) * 1000,
-        ).toISOString()
-      : null,
+    p_expires_at: tokens.expires_in ? expiryFrom(tokens.expires_in) : null,
   })
   if (r.error) throw new Error(r.error.message)
 }
@@ -199,24 +197,67 @@ export async function completeShopifyConnection(
   return { tenantId, shopDomain: info.myshopifyDomain, shopName: info.name }
 }
 
-/** A valid access token for the store; an expired one asks for a reconnect. */
+/** Renew when less than this remains, so a token never expires mid-request. */
+const RENEW_MARGIN_MS = 120_000
+
+function expiryFrom(expiresIn: number | undefined) {
+  return new Date(
+    Date.now() + Math.max(60, (expiresIn ?? 3600) - 60) * 1000,
+  ).toISOString()
+}
+
+/**
+ * A valid access token for the store. An expiring token is renewed first and
+ * the new pair stored against the revision the connection was read at; a
+ * connection replaced in between refuses the store (Shopify keeps the old
+ * refresh token valid until the new one is used, so nothing is lost). Without
+ * a refresh token an expired token asks for a reconnect.
+ */
 export async function shopifyAccessToken(
   client: SupabaseClient,
   tenantId: string,
   source: Record<string, string | undefined>,
+  http?: typeof fetch,
 ) {
   await requireOwner(client, tenantId)
-  ready(tenantId, source)
+  const env = ready(tenantId, source)
   const r = await client.rpc('read_shopify_connection', { p_tenant: tenantId })
   if (r.error) throw new Error('FORBIDDEN')
   if (!r.data) throw new Error('SHOPIFY_NOT_CONNECTED')
   const row = stored.parse(r.data)
-  if (row.expiresAt && Date.parse(row.expiresAt) <= Date.now())
-    throw new Error('SHOPIFY_AUTH_REQUIRED')
   const secrets = z
     .object({ accessToken: z.string(), refreshToken: z.string().nullable() })
     .parse(open(PURPOSE, row.cipher, source))
-  return { accessToken: secrets.accessToken, row }
+  const expiring =
+    !!row.expiresAt && Date.parse(row.expiresAt) <= Date.now() + RENEW_MARGIN_MS
+  if (!expiring) return { accessToken: secrets.accessToken, row }
+  if (!secrets.refreshToken || !row.revision)
+    throw new Error('SHOPIFY_AUTH_REQUIRED')
+  const tokens = await refreshTokens(
+    env,
+    row.shopDomain,
+    secrets.refreshToken,
+    http,
+  )
+  const expiresAt = expiryFrom(tokens.expires_in)
+  const saved = await client.rpc('refresh_shopify_tokens', {
+    p_tenant: tenantId,
+    p_revision: row.revision,
+    p_cipher: seal(
+      PURPOSE,
+      {
+        accessToken: tokens.access_token,
+        refreshToken: tokens.refresh_token ?? secrets.refreshToken,
+      },
+      source,
+    ),
+    p_scope: tokens.scope ?? row.scope,
+    p_expires_at: expiresAt,
+  })
+  if (saved.error) throw new Error('SHOPIFY_REFRESH_FAILED')
+  if (typeof saved.data === 'object' && saved.data && 'error' in saved.data)
+    throw new Error('SHOPIFY_CONNECTION_CHANGED')
+  return { accessToken: tokens.access_token, row: { ...row, expiresAt } }
 }
 
 /** Read-only: the shop Shopify answers for the stored token, checked against the stored domain. */
@@ -230,6 +271,7 @@ export async function checkShopifyConnection(
     client,
     tenantId,
     source,
+    http,
   )
   const info = await readShop(row.shopDomain, accessToken, http)
   if (info.myshopifyDomain !== row.shopDomain) {
@@ -282,12 +324,26 @@ export const shopifyErrorCodes = [
   'SHOPIFY_READ_FAILED',
   'SHOPIFY_WRONG_SHOP',
   'SHOPIFY_STATE_INVALID',
+  'SHOPIFY_REFRESH_INVALID_GRANT',
+  'SHOPIFY_REFRESH_FAILED',
+  'SHOPIFY_CONNECTION_CHANGED',
+  'SHOPIFY_NO_LOCATION',
+  'SHOPIFY_SKU_AMBIGUOUS',
+  'SHOPIFY_PRODUCT_REJECTED',
+  'SHOPIFY_OUTCOME_UNKNOWN',
+  'SHOPIFY_OUTCOME_FAILED',
+  'SHOPIFY_EXPORT_FAILED',
+  'ITEM_NOT_FOUND',
+  'ITEM_NOT_ON_SALE',
+  'ITEM_ENDED',
   'CREDENTIAL_KEY_MISSING',
   'CREDENTIAL_UNREADABLE',
 ] as const
 export function shopifyErrorCode(message: string) {
   return (
-    shopifyErrorCodes.find((code) => message.includes(code)) ?? 'REQUEST_FAILED'
+    shopifyErrorCodes.find((code) => message === code) ??
+    shopifyErrorCodes.find((code) => message.includes(code)) ??
+    'REQUEST_FAILED'
   )
 }
 

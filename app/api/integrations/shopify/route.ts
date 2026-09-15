@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { platformContext } from '@/lib/platform/context'
@@ -7,8 +8,10 @@ import {
   disconnectShopify,
   shopifyErrorCode,
 } from '@/lib/engine/shopify-connection'
+import { exportShopifyItem } from '@/lib/engine/shopify-products'
+import { ShopifyUserError } from '@/extensions/shopify/products'
 
-/** Check the connected shop or disconnect; owner or admin. Nothing is exported or imported here. */
+/** Check the connected shop, disconnect, or export one item as a product; owner or admin. */
 export async function POST(request: Request) {
   const reply = (body: object, status = 200) =>
     NextResponse.json(body, {
@@ -34,21 +37,38 @@ export async function POST(request: Request) {
     const parsed = z
       .strictObject({
         tenantId: z.uuid(),
-        action: z.enum(['check', 'disconnect']),
+        action: z.enum(['check', 'disconnect', 'exportItem']),
+        itemId: z.uuid().optional(),
       })
       .safeParse(input)
     if (!parsed.success) return reply({ error: 'INVALID_INPUT' }, 400)
+    if (parsed.data.action === 'exportItem' && !parsed.data.itemId)
+      return reply({ error: 'INVALID_INPUT' }, 400)
     if (parsed.data.tenantId !== ctx.active.id)
       return reply({ error: 'TENANT_CHANGED' }, 409)
     if (parsed.data.action === 'disconnect')
       return reply(await disconnectShopify(ctx.client, ctx.active.id))
+    if (parsed.data.action === 'exportItem')
+      return reply(
+        await exportShopifyItem(
+          ctx.client,
+          {
+            tenantId: ctx.active.id,
+            requestId: randomUUID(),
+            itemId: parsed.data.itemId,
+          },
+          process.env,
+        ),
+      )
     return reply(
       await checkShopifyConnection(ctx.client, ctx.active.id, process.env),
     )
   } catch (e) {
     const code = shopifyErrorCode(e instanceof Error ? e.message : '')
     return reply(
-      { error: code },
+      e instanceof ShopifyUserError
+        ? { error: code, detail: e.detail }
+        : { error: code },
       code === 'FORBIDDEN' ? 403 : code === 'INVALID_INPUT' ? 400 : 409,
     )
   }

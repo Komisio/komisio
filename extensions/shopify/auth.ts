@@ -166,6 +166,42 @@ export const shopInformation = z.object({
 export type ShopInformation = z.infer<typeof shopInformation>
 
 /** One GraphQL query against the Admin API; the token exists only inside this call. */
+/** Expiring offline tokens: the same endpoint with grant_type refresh_token; the old refresh token is retired once the new one is used. */
+export async function refreshTokens(
+  env: ShopifyEnvironment,
+  shop: string,
+  refreshToken: string,
+  http: typeof fetch = globalThis.fetch,
+) {
+  const host = shopDomain.parse(shop)
+  if (!refreshToken || /[\s]/.test(refreshToken))
+    throw new Error('SHOPIFY_AUTH_REQUIRED')
+  let response: Response
+  try {
+    response = await http(`https://${host}/admin/oauth/access_token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      },
+      body: new URLSearchParams({
+        client_id: env.SHOPIFY_CLIENT_ID ?? '',
+        client_secret: env.SHOPIFY_CLIENT_SECRET ?? '',
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+      }).toString(),
+      cache: 'no-store',
+      redirect: 'error',
+      signal: AbortSignal.timeout(10000),
+    })
+  } catch {
+    throw new Error('SHOPIFY_CONNECTION_FAILED')
+  }
+  if (response.status === 429) throw new Error('SHOPIFY_RATE_LIMITED')
+  if (!response.ok) throw new Error('SHOPIFY_REFRESH_INVALID_GRANT')
+  return tokenSet.parse(await boundedJson(response, 65536))
+}
+
 export async function graphql(
   shop: string,
   accessToken: string,

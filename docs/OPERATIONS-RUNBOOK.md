@@ -7,14 +7,16 @@ shape with its own project, secrets and domain
 
 ## Scheduled jobs
 
-| Job                      | Where                                      | When (UTC)               | Acts as                                   | Needs                                                                             |
-| ------------------------ | ------------------------------------------ | ------------------------ | ----------------------------------------- | --------------------------------------------------------------------------------- |
-| Automatic markdowns      | pg_cron `komisio-automatic-markdowns`      | 03:15 daily              | the policy's publisher                    | pg_cron enabled and the schedule statement run                                    |
-| Plan expiry              | pg_cron `komisio-expire-plans`             | 03:45 daily              | the person who set the deadline           | billing enabled, pg_cron                                                          |
-| Zettle receipt retrieval | Vercel Cron `/api/automation/zettle-pull`  | every 10 min             | automation identity, scope `zettle_pull`  | `CRON_SECRET`, `KOMISIO_AUTOMATION_*`, per-store grant, Zettle pilot settings     |
-| Trial and grace notices  | Vercel Cron `/api/automation/plan-notices` | 06:15 daily              | billing actor                             | `CRON_SECRET`, `KOMISIO_AUTOMATION_*`, billing actor registered, Resend settings  |
-| Weekly brief             | Vercel Cron `/api/automation/weekly-brief` | 05:30 Mondays            | automation identity, scope `weekly_brief` | `CRON_SECRET`, `KOMISIO_AUTOMATION_*`, per-store grant, Resend settings           |
-| Staging migrations       | GitHub Actions `staging-migrations`        | after each merge to main | management token                          | `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_ID`, optional `VERCEL_DEPLOY_HOOK_URL` |
+| Job                      | Where                                      | When (UTC)                             | Acts as                                   | Needs                                                                                                                |
+| ------------------------ | ------------------------------------------ | -------------------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Automatic markdowns      | pg_cron `komisio-automatic-markdowns`      | 03:15 daily                            | the policy's publisher                    | pg_cron enabled and the schedule statement run                                                                       |
+| Plan expiry              | pg_cron `komisio-expire-plans`             | 03:45 daily                            | the person who set the deadline           | billing enabled, pg_cron                                                                                             |
+| Zettle receipt retrieval | Vercel Cron `/api/automation/zettle-pull`  | every 10 min                           | automation identity, scope `zettle_pull`  | `CRON_SECRET`, `KOMISIO_AUTOMATION_*`, per-store grant, Zettle pilot settings                                        |
+| Trial and grace notices  | Vercel Cron `/api/automation/plan-notices` | 06:15 daily                            | billing actor                             | `CRON_SECRET`, `KOMISIO_AUTOMATION_*`, billing actor registered, Resend settings                                     |
+| Weekly brief             | Vercel Cron `/api/automation/weekly-brief` | 05:30 Mondays                          | automation identity, scope `weekly_brief` | `CRON_SECRET`, `KOMISIO_AUTOMATION_*`, per-store grant, Resend settings                                              |
+| Staging migrations       | GitHub Actions `staging-migrations`        | after each merge to main               | management token                          | `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_ID`, optional `VERCEL_DEPLOY_HOOK_URL`                                    |
+| Shopify order retrieval  | Vercel Cron `/api/automation/shopify-pull` | every 15 min                           | automation identity, scope `shopify_pull` | `CRON_SECRET`, `KOMISIO_AUTOMATION_*`, per-store grant, Shopify pilot settings                                       |
+| Production migrations    | GitHub Actions `Production database`       | when the owner dispatches and approves | management token (production)             | `production-database` environment: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_ID`, optional `VERCEL_DEPLOY_HOOK_URL` |
 
 Every cron route answers 404 when its secrets are missing, 403 on a wrong
 `Authorization: Bearer <CRON_SECRET>`, 503 when the automation identity
@@ -74,6 +76,11 @@ order by received_at desc limit 20;` for Stripe.
   did not answer in time (it may still have sent).
 - **Migration job failed**: read the step log; never run `migration
 repair`; fix forward with a new migration.
+- **Production release**: merge to main, let it sit on staging for the
+  soak period (C6, one working day), then GitHub, Actions, Production
+  database, Run workflow on `main`, and approve the environment. The step
+  summary lists the applied versions; the deploy hook releases the
+  application afterwards. See PRODUCTION-CHECKLIST.md.
 - **Staging test data**: reversible state changes for a test go through
   the engine functions or, when none exists, through
   `komisio.plan_transition='engine'` in one transaction; restore afterwards

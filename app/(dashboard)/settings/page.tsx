@@ -184,8 +184,7 @@ export default async function Settings({
                       `KOMISIO_PRINT_PRINTER_ID=${p.id}`,
                       'KOMISIO_PRINT_EMAIL=<the printer account e-mail>',
                       'KOMISIO_PRINT_PASSWORD=<its password>',
-                    ].join('
-')}
+                    ].join('\n')}
                   </pre>
                 </div>
               )}

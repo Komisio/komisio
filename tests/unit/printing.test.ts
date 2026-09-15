@@ -1,5 +1,9 @@
 import { expect, it } from 'vitest'
-import { renderLabel, zplText } from '../../lib/labels/templates'
+import {
+  referenceFormat,
+  renderLabel,
+  zplText,
+} from '../../lib/labels/templates'
 import {
   queuePrintJobInput,
   registerPrinterCommand,
@@ -93,4 +97,31 @@ it('validates printer registration and job requests', () => {
       copies: 21,
     }).success,
   ).toBe(false)
+})
+
+it('scales the layout to the label size at the printer resolution', () => {
+  const facts = { storeName: 'Synthetic Store', reference: 'K-12' }
+  const small = renderLabel('bag', facts, referenceFormat)
+  expect(small).toContain('^PW464')
+  expect(small).toContain('^LL320')
+  const large = renderLabel('bag', facts, {
+    widthMm: 76,
+    heightMm: 51,
+    dpi: 203,
+  })
+  expect(large).toContain('^PW607')
+  expect(large).toContain('^LL408')
+  // Scale 1.275 (the height bounds it); the first text field moves and grows.
+  expect(large).toContain('^FO26,26^A0N,36,36^FD')
+  const fine = renderLabel(
+    'item',
+    { ...facts, price: '250.00' },
+    { widthMm: 57, heightMm: 32, dpi: 300 },
+  )
+  expect(fine).toContain('^PW673')
+  expect(fine).toContain('^LL378')
+  expect(fine).toContain('^FD250.00 SEK^FS')
+  expect(() =>
+    renderLabel('bag', facts, { widthMm: 10, heightMm: 32, dpi: 203 }),
+  ).toThrow()
 })

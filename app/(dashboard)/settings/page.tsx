@@ -3,7 +3,12 @@ import { StorePolicyForm } from '@/components/intake/store-policy-form'
 import { StoreProfileForm } from '@/components/intake/store-profile-form'
 import { readStoreProfile } from '@/lib/engine/store-profile'
 import { PrinterForm } from '@/components/intake/printer-form'
-import { readPrinters, readPrintJobs } from '@/lib/engine/printing'
+import {
+  readLabelFormats,
+  readPrinters,
+  readPrintJobs,
+} from '@/lib/engine/printing'
+import { LabelFormatsForm } from '@/components/intake/label-formats-form'
 import { readUsageSummary } from '@/lib/engine/usage'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
@@ -54,13 +59,15 @@ export default async function Settings({
     intake && tab === 'profile'
       ? await readStoreProfile(ctx.client, active.id)
       : null
-  const [printers, jobs] =
+  const [printers, jobs, formats] =
     intake && tab === 'printing'
       ? await Promise.all([
           readPrinters(ctx.client, active.id),
           readPrintJobs(ctx.client, active.id),
+          ,
+          readLabelFormats(ctx.client, active.id),
         ])
-      : [[], []]
+      : [[], [], null]
   const plan =
     tab === 'store' ? await readPlanStatus(ctx.client, active.id) : null
   const chain =
@@ -172,6 +179,16 @@ export default async function Settings({
                 intake={d.intake}
               />
             </>
+          )}
+          {formats && (
+            <LabelFormatsForm
+              key={`formats-${active.id}`}
+              tenantId={active.id}
+              formats={formats}
+              canEdit={manages}
+              d={pr}
+              intake={d.intake}
+            />
           )}
           <h3>{pr.jobs}</h3>
           {jobs.length === 0 && <p>{pr.noJobs}</p>}

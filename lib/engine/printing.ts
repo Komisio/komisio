@@ -15,6 +15,49 @@ export const registerPrinterCommand = z.strictObject({
   dpi: z.union([z.literal(203), z.literal(300), z.literal(600)]).default(203),
   active: z.boolean().default(true),
 })
+export const labelFormatKind = z.enum([
+  'bag',
+  'garment',
+  'item',
+  'onboarding',
+  'markdown',
+])
+const millimetres = z.number().multipleOf(0.1)
+export const setLabelFormatCommand = z.strictObject({
+  action: z.literal('setLabelFormat'),
+  tenantId: z.uuid(),
+  requestId: z.uuid(),
+  kind: labelFormatKind,
+  widthMm: millimetres.min(20).max(120),
+  heightMm: millimetres.min(15).max(200),
+})
+const size = z.object({
+  widthMm: z.union([z.number(), z.string()]).transform(Number),
+  heightMm: z.union([z.number(), z.string()]).transform(Number),
+  custom: z.boolean(),
+})
+export const labelFormats = z.object({
+  bag: size,
+  garment: size,
+  item: size,
+  onboarding: size,
+  markdown: size,
+})
+export type LabelFormats = z.infer<typeof labelFormats>
+
+/** Every kind's size, the store's own or the default; any member. Null until the migration lands. */
+export async function readLabelFormats(
+  client: SupabaseClient,
+  tenantInput: string,
+) {
+  const r = await client.rpc('label_formats', {
+    p_tenant: z.uuid().parse(tenantInput),
+  })
+  if (r.error?.code === 'PGRST202') return null
+  if (r.error) throw new Error('FORBIDDEN')
+  return labelFormats.parse(r.data)
+}
+
 export const cancelPrintJobCommand = z.strictObject({
   action: z.literal('cancelPrintJob'),
   tenantId: z.uuid(),

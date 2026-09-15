@@ -1382,6 +1382,15 @@
     }
   },
   "printing": {
+    "formatsHeading": "Label sizes",
+    "formatsIntro": "Width and height in millimetres per label kind. The layout scales to the size at the printer's resolution; a default applies until you set one. Load the matching stock in the printer.",
+    "formatKind": "Label",
+    "width": "Width (mm)",
+    "height": "Height (mm)",
+    "saveFormat": "Save size",
+    "formatSaved": "Saved.",
+    "formatInvalid": "Width 20 to 120 mm, height 15 to 200 mm, at most one decimal.",
+    "defaultSize": "default",
     "title": "Printers and labels",
     "intro": "Labels are ZPL programs queued for a store printer. A local agent next to the printer picks up jobs and reports the outcome.",
     "none": "No printers registered.",

@@ -7,7 +7,7 @@ import { receptionDerivative } from '../media/reception-image'
 export { photoLimit, photoType } from '../media/reception-photo'
 const context = z.strictObject({
   tenantId: z.uuid(),
-  sessionId: z.uuid(),
+  sessionId: z.guid(),
   photoId: z.uuid(),
 })
 export async function uploadReceptionPhoto(

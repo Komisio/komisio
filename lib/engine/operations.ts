@@ -23,7 +23,7 @@ export const operationKind = z.enum([
   'importSellers',
 ])
 export const publishReceptionReviewPayload = z.strictObject({
-  sessionId: z.uuid(),
+  sessionId: z.guid(),
   sourceRevision: z.number().int().min(1).max(2147483646),
   previousReviewId: z.uuid().nullable(),
   agreementId: z.uuid().nullable(),
@@ -48,7 +48,7 @@ export const saveInspectionDraftPayload = z.strictObject({
 export const acceptItemPayload = z
   .strictObject({
     originKind: z.enum(['inspection_draft', 'reception_review', 'purchase']),
-    originId: z.uuid(),
+    originId: z.guid(),
     originRevision: z.number().int().min(1).max(2147483646).nullable(),
     priceOre: z.number().int().min(1).max(99_999_999_999),
   })
@@ -60,7 +60,7 @@ export const acceptItemPayload = z
 // ledger adjustment (high, executed only when the approver may adjust); a batch
 // of markdown steps that are all due now (low, all or nothing).
 export const recordReturnPayload = z.strictObject({
-  saleLineId: z.uuid(),
+  saleLineId: z.guid(),
   refundOre: z.number().int().min(1).max(99_999_999_999),
   reason: z.string().trim().min(1).max(500),
 })
@@ -78,7 +78,7 @@ export const applyMarkdownBatchPayload = z.strictObject({
   items: z
     .array(
       z.strictObject({
-        itemId: z.uuid(),
+        itemId: z.guid(),
         step: z.number().int().min(1).max(99),
       }),
     )
@@ -100,7 +100,7 @@ export const bulkItemUpdatePayload = z.discriminatedUnion('action', [
     items: z
       .array(
         z.strictObject({
-          itemId: z.uuid(),
+          itemId: z.guid(),
           priceOre: z.number().int().min(1).max(99_999_999_999),
         }),
       )
@@ -113,7 +113,7 @@ export const bulkItemUpdatePayload = z.discriminatedUnion('action', [
     endAction: z.enum(['charity', 'return']),
     note: z.string().max(500),
     items: z
-      .array(z.strictObject({ itemId: z.uuid() }))
+      .array(z.strictObject({ itemId: z.guid() }))
       .min(1)
       .max(50)
       .refine(uniqueItems, 'Each item once'),

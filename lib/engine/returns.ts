@@ -8,7 +8,7 @@ export const recordReturnCommand = z.strictObject({
   action: z.literal('recordReturn'),
   tenantId: z.uuid(),
   requestId: z.uuid(),
-  saleLineId: z.uuid(),
+  saleLineId: z.guid(),
   // Exact decimal text; must equal the line price (full refund only in P2).
   refund: z.string().regex(/^(?:0|[1-9]\d{0,8})\.\d{2}$/),
   reason: z.string().trim().min(1).max(500),
@@ -17,8 +17,8 @@ export const recordReturnCommand = z.strictObject({
 const ore = z.union([z.number().int(), z.string()]).transform(Number)
 const returnRow = z.object({
   id: z.uuid(),
-  sale_line_id: z.uuid(),
-  item_id: z.uuid(),
+  sale_line_id: z.guid(),
+  item_id: z.guid(),
   refund_ore: ore,
   reason: z.string(),
   flagged_for_review: z.boolean(),

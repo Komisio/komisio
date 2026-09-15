@@ -43,15 +43,15 @@ export const queueInput = z
     (v) => Boolean(v.before) === Boolean(v.beforeId),
     'Both cursor fields are required',
   )
-export const readInput = z.strictObject({ sessionId: z.uuid() })
+export const readInput = z.strictObject({ sessionId: z.guid() })
 export const duplicatesInput = readInput
 export const photoInput = z.strictObject({
-  sessionId: z.uuid(),
+  sessionId: z.guid(),
   photoId: z.uuid(),
   revision: z.number().int().min(1).max(2147483646),
 })
 export const previewInput = z.strictObject({
-  sessionId: z.uuid(),
+  sessionId: z.guid(),
   revision: z.number().int().min(1).max(2147483646),
   suggestions: receptionSuggestions,
 })

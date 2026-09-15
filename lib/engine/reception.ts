@@ -11,7 +11,7 @@ const sourceIds = z
 export const receptionSession = z.strictObject({
   schemaVersion: z.literal(1),
   tenantId: z.uuid(),
-  sessionId: z.uuid(),
+  sessionId: z.guid(),
   sellerId: z.uuid(),
   revision,
   sources: z
@@ -71,7 +71,7 @@ export const receptionProposal = z.strictObject({
   schemaVersion: z.literal(1),
   proposalId: z.uuid(),
   tenantId: z.uuid(),
-  sessionId: z.uuid(),
+  sessionId: z.guid(),
   sellerId: z.uuid(),
   baseRevision: revision,
   suggestions: receptionSuggestions,

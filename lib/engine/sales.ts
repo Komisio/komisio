@@ -6,7 +6,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 // external id, with commission, seller credit and VAT frozen per line in SQL.
 export const saleProvider = z.enum(['manual', 'zettle', 'shopify'])
 const price = z.string().regex(/^(?:0|[1-9]\d{0,8})\.\d{2}$/)
-export const saleLineInput = z.strictObject({ itemId: z.uuid(), price })
+export const saleLineInput = z.strictObject({ itemId: z.guid(), price })
 export const recordSaleCommand = z
   .strictObject({
     action: z.literal('recordSale'),
@@ -27,7 +27,7 @@ const ore = z.union([z.number().int(), z.string()]).transform(Number)
 const lineRow = z.object({
   id: z.uuid(),
   sale_id: z.uuid(),
-  item_id: z.uuid(),
+  item_id: z.guid(),
   line_no: z.number().int(),
   price_ore: ore,
   ownership: z.enum(['consignment', 'store']),
@@ -138,7 +138,7 @@ export async function readSoldItemIds(
     .in('item_id', ids)
   if (lines.error) throw new Error('Unable to read sold items')
   const rows = z
-    .array(z.object({ item_id: z.uuid(), sale_id: z.uuid() }))
+    .array(z.object({ item_id: z.guid(), sale_id: z.uuid() }))
     .parse(lines.data)
   if (!rows.length) return new Set<string>()
   const sales = await client

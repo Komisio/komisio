@@ -453,7 +453,7 @@ export async function readOperationReview(
     for (const row of z
       .array(
         z.object({
-          item_id: z.uuid(),
+          item_id: z.guid(),
           price_ore: z.union([z.number(), z.string()]).transform(Number),
         }),
       )

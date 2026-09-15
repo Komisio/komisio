@@ -26,7 +26,7 @@ export const priceEvidence = z.object({
   matches: z
     .array(
       z.object({
-        itemId: z.uuid(),
+        itemId: z.guid(),
         title: z.string().nullable(),
         category: z.string().nullable(),
         acceptedPriceOre: ore.nullable(),

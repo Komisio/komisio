@@ -4,7 +4,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 // Lifecycle (P2 S20): the frozen sale period and markdown steps become a
 // derived work list; three staff operations become events. Nothing runs by
 // itself. Boundary validation only.
-const ids = { tenantId: z.uuid(), requestId: z.uuid(), itemId: z.uuid() }
+const ids = { tenantId: z.uuid(), requestId: z.uuid(), itemId: z.guid() }
 // Every due step in the store in one run (P3 markdown agent), as the caller.
 export const applyDueMarkdownsCommand = z.strictObject({
   action: z.literal('applyDueMarkdowns'),
@@ -18,7 +18,7 @@ const markdownRun = z.object({
   applied_count: z.number().int(),
   applied: z.array(
     z.object({
-      itemId: z.uuid(),
+      itemId: z.guid(),
       step: z.number().int(),
       percent: z.union([z.number(), z.string()]).transform(Number),
       priceOre: runOre,
@@ -83,8 +83,8 @@ export const lifecycleStage = z.enum([
 ])
 const ore = z.union([z.number().int(), z.string()]).transform(Number)
 const row = z.object({
-  item_id: z.uuid(),
-  seller_id: z.uuid().nullable(),
+  item_id: z.guid(),
+  seller_id: z.guid().nullable(),
   ownership: z.enum(['consignment', 'store']),
   stage: lifecycleStage,
   accepted_at: z.iso.datetime({ offset: true }),

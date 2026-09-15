@@ -37,6 +37,29 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
       )
     ).rows[0].n
     expect(items).toBe(1)
+    // The items list and the item page read the derived ids without complaint.
+    await page.goto('/intake/items')
+    await expect(page.getByText('Snabb jacka').first()).toBeVisible()
+    await page
+      .getByRole('link', { name: /Snabb jacka/ })
+      .first()
+      .click()
+    await expect(page.getByText(/I-[0-9A-F]{8}/).first()).toBeVisible()
+    await page.goto('/intake/quick')
+    await page
+      .getByLabel(d.quickIntake.searchSeller, { exact: true })
+      .fill('Synthetic')
+    await page.getByRole('button', { name: /Synthetic P2 seller/ }).click()
+    await page
+      .getByLabel(d.quickIntake.description, { exact: true })
+      .fill('Snabb kappa')
+    await page.getByLabel(d.quickIntake.price, { exact: true }).fill('400')
+    await page
+      .getByRole('button', { name: d.quickIntake.submit, exact: true })
+      .click()
+    await expect(
+      page.getByRole('region', { name: d.quickIntake.done, exact: true }),
+    ).toContainText(/I-[0-9A-F]{8}/)
     await page
       .getByRole('button', { name: d.quickIntake.next, exact: true })
       .click()

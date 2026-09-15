@@ -35,7 +35,7 @@ export default async function Reception({
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
-  const id = z.uuid().safeParse((await params).id)
+  const id = z.guid().safeParse((await params).id)
   if (!id.success) notFound()
   const ctx = await requirePlatform(),
     tenant = ctx.active!,

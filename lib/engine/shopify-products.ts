@@ -23,7 +23,7 @@ const ore = z.union([z.number().int(), z.string()]).transform(Number)
 export const shopifyCandidates = z
   .array(
     z.object({
-      itemId: z.uuid(),
+      itemId: z.guid(),
       reference: z.string(),
       title: z.string().nullable(),
       priceOre: ore,
@@ -34,7 +34,7 @@ export const shopifyCandidates = z
 export const shopifyProductStatus = z
   .array(
     z.object({
-      itemId: z.uuid(),
+      itemId: z.guid(),
       reference: z.string(),
       title: z.string(),
       price: z.string(),
@@ -79,7 +79,7 @@ export async function readShopifyProductStatus(
 export const exportShopifyItemInput = z.strictObject({
   tenantId: z.uuid(),
   requestId: z.uuid(),
-  itemId: z.uuid(),
+  itemId: z.guid(),
 })
 
 export async function exportShopifyItem(

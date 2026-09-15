@@ -23,6 +23,8 @@ select throws_like($$select quick_receive(current_setting('test.tenant')::uuid,c
 select throws_like($$select quick_receive(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.session')::uuid,current_setting('test.seller')::uuid,3,'{"description":"Blue jacket"}','25000')$$,'%RECEPTION_CHANGED%','the expected source revision must match');
 select set_config('test.result',quick_receive(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.session')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Blue jacket","category":"Jackets","brand":"","size":"M"}','25000')::text,true);
 select matches(current_setting('test.result')::jsonb->>'reference','^I-[0-9A-F]{8}$','an item with a reference');
+select matches(current_setting('test.result')::jsonb->>'itemId','^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-8[0-9a-f]{3}-[0-9a-f]{12}$','the derived item id is RFC 4122 shaped');
+select matches(current_setting('test.result')::jsonb->>'garmentId','^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-8[0-9a-f]{3}-[0-9a-f]{12}$','the derived garment id is RFC 4122 shaped');
 select is((current_setting('test.result')::jsonb->>'reviewVersion')::int,1,'one review published');
 select is((select count(*) from items where tenant_id=current_setting('test.tenant')::uuid),1::bigint,'one item');
 select is((select origin_kind from items where id=(current_setting('test.result')::jsonb->>'itemId')::uuid),'reception_review','the item comes from the reception review');

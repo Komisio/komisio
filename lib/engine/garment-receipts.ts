@@ -2,7 +2,7 @@ import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 const row = z.object({
-  id: z.uuid(),
+  id: z.guid(),
   session_id: z.uuid(),
   reference: z.union([z.number().int(), z.string()]),
   note: z.string(),

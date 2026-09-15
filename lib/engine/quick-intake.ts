@@ -80,9 +80,11 @@ export async function quickReceive(client: SupabaseClient, input: unknown) {
 
 /** A UUID derived from the request id, so a retried request names the same rows. */
 export function derivedId(requestId: string, part: string) {
-  // Same derivation as the database: md5 of "<request>:<part>" laid out as a UUID.
+  // Same derivation as the database (komisio_private.derived_uuid): md5 of
+  // "<request>:<part>" with the version and variant nibbles of a random UUID.
   const hex = md5(`${requestId}:${part}`)
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`
+  const shaped = `${hex.slice(0, 12)}4${hex.slice(13, 16)}8${hex.slice(17)}`
+  return `${shaped.slice(0, 8)}-${shaped.slice(8, 12)}-${shaped.slice(12, 16)}-${shaped.slice(16, 20)}-${shaped.slice(20)}`
 }
 
 import { createHash } from 'node:crypto'

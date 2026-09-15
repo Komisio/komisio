@@ -46,27 +46,28 @@ const frozenTerms = z
     origin: z.record(z.string(), z.unknown()),
   })
   .loose()
+// Ids from the database are uuids by type; the RFC shape is not required.
 const itemRow = z.object({
-  id: z.uuid(),
+  id: z.guid(),
   origin_kind: originKind,
-  origin_id: z.uuid(),
+  origin_id: z.guid(),
   origin_revision: z.number().int().nullable(),
   custody_kind: z.enum(['bag', 'garment']).nullable(),
-  custody_id: z.uuid().nullable(),
-  seller_id: z.uuid().nullable(),
+  custody_id: z.guid().nullable(),
+  seller_id: z.guid().nullable(),
   ownership: z.enum(['consignment', 'store']),
   terms: frozenTerms,
   accepted_at: z.iso.datetime({ offset: true }),
 })
 export type ItemRow = z.infer<typeof itemRow>
 const priceRow = z.object({
-  id: z.uuid(),
+  id: z.guid(),
   price_ore: z.union([z.number().int(), z.string()]),
   reason: z.string(),
   set_at: z.iso.datetime({ offset: true }),
 })
 const eventRow = z.object({
-  id: z.uuid(),
+  id: z.guid(),
   kind: z.string(),
   detail: z.record(z.string(), z.unknown()),
   occurred_at: z.iso.datetime({ offset: true }),
@@ -86,7 +87,7 @@ export async function readItemForOrigin(
     .select(columns)
     .eq('tenant_id', z.uuid().parse(tenantInput))
     .eq('origin_kind', originKind.parse(kind))
-    .eq('origin_id', z.uuid().parse(originInput))
+    .eq('origin_id', z.guid().parse(originInput))
     .maybeSingle()
   if (error) throw new Error('Unable to read item')
   return data ? itemRow.parse(data) : null
@@ -99,7 +100,7 @@ export async function readItemsForOrigins(
   kind: OriginKind,
   originIds: string[],
 ) {
-  const ids = z.array(z.uuid()).max(50).parse(originIds)
+  const ids = z.array(z.guid()).max(50).parse(originIds)
   if (!ids.length) return new Map<string, ItemRow>()
   const { data, error } = await client
     .from('items')
@@ -142,7 +143,7 @@ export async function readItems(client: SupabaseClient, tenantInput: string) {
   if (prices.error) throw new Error('Unable to read item prices')
   const current = new Map<string, number>()
   for (const p of z
-    .array(priceRow.extend({ item_id: z.uuid() }))
+    .array(priceRow.extend({ item_id: z.guid() }))
     .parse(prices.data))
     if (!current.has(p.item_id)) current.set(p.item_id, Number(p.price_ore))
   return items.map((i) => ({ ...i, priceOre: current.get(i.id) ?? null }))
@@ -155,7 +156,7 @@ export async function readItem(
   itemInput: string,
 ) {
   const tenantId = z.uuid().parse(tenantInput),
-    itemId = z.uuid().parse(itemInput)
+    itemId = z.guid().parse(itemInput)
   const item = await client
     .from('items')
     .select(columns)
@@ -208,10 +209,10 @@ export const itemsOverview = z.object({
   items: z
     .array(
       z.object({
-        id: z.uuid(),
+        id: z.guid(),
         originKind: originKind,
-        originId: z.uuid(),
-        sellerId: z.uuid().nullable(),
+        originId: z.guid(),
+        sellerId: z.guid().nullable(),
         ownership: z.enum(['consignment', 'store']),
         acceptedAt: z.string(),
         title: z.string().nullable(),

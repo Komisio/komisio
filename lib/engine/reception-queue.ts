@@ -40,11 +40,11 @@ export const receptionQueueInput = z
     'Both cursor fields are required',
   )
 const row = z.object({
-  session_id: z.uuid(),
+  session_id: z.guid(),
   seller_name: z.string(),
   created_at: z.iso.datetime({ offset: true }),
   source_revision: z.number().int().nonnegative(),
-  review_id: z.uuid().nullable(),
+  review_id: z.guid().nullable(),
   review_version: z.number().int().positive().nullable(),
   decision: z.enum(['approve', 'decline']).nullable(),
   responded_at: z.iso.datetime({ offset: true }).nullable(),

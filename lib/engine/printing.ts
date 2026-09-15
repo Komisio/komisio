@@ -77,7 +77,7 @@ export const queuePrintJobInput = z
     printerId: z.uuid(),
     kind: labelKind,
     referenceKind,
-    referenceId: z.uuid(),
+    referenceId: z.guid(),
     copies: z.number().int().min(1).max(20).default(1),
   })
   .refine(

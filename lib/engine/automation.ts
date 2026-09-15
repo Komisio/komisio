@@ -10,6 +10,7 @@ export const automationScopes = [
   'zettle_pull',
   'fortnox_send',
   'weekly_brief',
+  'shopify_pull',
 ] as const
 export type AutomationScope = (typeof automationScopes)[number]
 export const automationGrant = z.object({

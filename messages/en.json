@@ -1590,6 +1590,27 @@
     }
   },
   "shopify": {
+    "automation": {
+      "heading": "Pull orders automatically",
+      "hint": "Every quarter hour the automation identity pulls one page of paid orders for this store, exactly as the button does. Matched orders become sales; the rest are held here.",
+      "enable": "Enable automatic order pull",
+      "disable": "Disable automatic order pull",
+      "enabled": "Automatic order pull enabled",
+      "waiting": "Waiting for the automation identity to accept",
+      "off": "Automatic order pull disabled",
+      "notConfigured": "Automatic order pull is not available for this store yet.",
+      "ownerOnly": "Only the owner can change automatic order pull.",
+      "busy": "Saving…",
+      "failed": "The automatic run failed or the setting could not be saved.",
+      "lastRun": "Last automatic run (time, outcome, orders received)",
+      "noRun": "No run recorded",
+      "outcomes": {
+        "started": "started",
+        "received": "orders received",
+        "complete": "nothing new",
+        "failed": "failed"
+      }
+    },
     "ordersTitle": "Orders from Shopify",
     "ordersIntro": "Paid orders are read from the shop, newest updates since the last pull, up to 50 per pull. An order whose lines are all Komisio items, one unit each in the store's currency, is recorded as a sale. Anything else is held here for a person: foreign products, test orders, cancelled orders, other currencies.",
     "pullOrders": "Pull paid orders",

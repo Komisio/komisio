@@ -84,8 +84,10 @@ export async function readShopifyStatus(
 
 async function requireOwner(client: SupabaseClient, tenantId: string) {
   z.uuid().parse(tenantId)
+  // The automation identity passes here; the database functions decide
+  // what its scope opens (the order pull, nothing else).
   const role = await client.rpc('tenant_role', { p_tenant: tenantId })
-  if (role.error || !['owner', 'admin'].includes(role.data ?? ''))
+  if (role.error || !['owner', 'admin', 'automation'].includes(role.data ?? ''))
     throw new Error('FORBIDDEN')
 }
 

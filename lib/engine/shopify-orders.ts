@@ -47,9 +47,11 @@ export async function readShopifyOrderStatus(
   return shopifyOrderStatus.parse(r.data)
 }
 
+// The request id is a GUID, not always an RFC UUID: the scheduled run derives
+// it from the store and the quarter hour.
 export const pullShopifyOrdersInput = z.strictObject({
   tenantId: z.uuid(),
-  requestId: z.uuid(),
+  requestId: z.guid(),
 })
 
 export async function pullShopifyOrders(

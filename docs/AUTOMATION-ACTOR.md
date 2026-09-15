@@ -112,11 +112,12 @@ or that a real scheduled POS action has been observed.
 
 ## Scopes in use (2026-09-14)
 
-| Scope          | Opens                                                                      | Built by |
-| -------------- | -------------------------------------------------------------------------- | -------- |
-| `zettle_pull`  | open and record Zettle pull windows for the store (Astra, PR143)           | Astra    |
-| `fortnox_send` | send recorded exports as vouchers, refresh tokens of the pinned connection | Astra    |
-| `weekly_brief` | read the economy summary and brief; mail it to the owners on Mondays       | Fable    |
+| Scope          | Opens                                                                                                   | Built by |
+| -------------- | ------------------------------------------------------------------------------------------------------- | -------- |
+| `zettle_pull`  | open and record Zettle pull windows for the store (Astra, PR143)                                        | Astra    |
+| `fortnox_send` | send recorded exports as vouchers, refresh tokens of the pinned connection                              | Astra    |
+| `weekly_brief` | read the economy summary and brief; mail it to the owners on Mondays                                    | Fable    |
+| `shopify_pull` | read the sealed Shopify connection and renew its token, record one page of paid orders per quarter hour | Fable    |
 
 Owner switches: `POST /api/automation-grants` (enable, disable) for any
 scope, or the integration's own route. The switch is a grant; the identity

@@ -1590,6 +1590,27 @@
     }
   },
   "shopify": {
+    "automation": {
+      "heading": "Hämta ordrar automatiskt",
+      "hint": "Varje kvart hämtar automationsidentiteten en sida betalda ordrar för butiken, precis som knappen gör. Matchade ordrar blir försäljningar; resten hålls här.",
+      "enable": "Slå på automatisk orderhämtning",
+      "disable": "Stäng av automatisk orderhämtning",
+      "enabled": "Automatisk orderhämtning påslagen",
+      "waiting": "Väntar på att automationsidentiteten accepterar",
+      "off": "Automatisk orderhämtning avstängd",
+      "notConfigured": "Automatisk orderhämtning är inte tillgänglig för butiken ännu.",
+      "ownerOnly": "Bara ägaren kan ändra automatisk orderhämtning.",
+      "busy": "Sparar…",
+      "failed": "Den automatiska körningen misslyckades eller inställningen kunde inte sparas.",
+      "lastRun": "Senaste automatiska körning (tid, utfall, mottagna ordrar)",
+      "noRun": "Ingen körning registrerad",
+      "outcomes": {
+        "started": "startad",
+        "received": "ordrar mottagna",
+        "complete": "inget nytt",
+        "failed": "misslyckad"
+      }
+    },
     "ordersTitle": "Ordrar från Shopify",
     "ordersIntro": "Betalda ordrar läses från butiken, de senast uppdaterade sedan förra hämtningen, upp till 50 per hämtning. En order där alla rader är Komisio-varor, ett exemplar vardera i butikens valuta, bokförs som försäljning. Allt annat hålls här för en person: främmande produkter, testordrar, avbrutna ordrar, andra valutor.",
     "pullOrders": "Hämta betalda ordrar",

@@ -118,9 +118,17 @@ Migration `20260916330000`, pgTAP `0103`, `extensions/shopify/orders.ts`,
   deployment says whether they count: `SHOPIFY_ACCEPT_TEST_ORDERS=true`
   (staging only) records them as sales; the evidence still marks them as
   test orders. Production leaves the variable unset and holds them.
-- **No automation yet.** The pull is a button for owners and admins. A
-  scheduled pull on the automation identity follows once the manual pull is
-  verified against the dev store, as for Zettle.
+- **Scheduled pull (2026-09-15).** Migration `20260916340000`, pgTAP `0104`,
+  `lib/engine/shopify-automation.ts`, `/api/automation/shopify-pull` every
+  quarter hour (`vercel.json`). The owner switches it on per store as an
+  automation grant with scope `shopify_pull` (the switch sits under the
+  orders section). The scope opens exactly the sealed connection read,
+  token renewal, the watermark and page recording, plus the private sale
+  core; no export, check, disconnect or retry. One run per store and
+  quarter hour is reserved before any request, so a duplicate cron delivery
+  never calls Shopify twice, and the run ends as `received`, `complete` or
+  `failed`; the outcome must agree with the recorded page. The button
+  remains for a pull on demand.
 
 ## Verification
 
@@ -136,6 +144,14 @@ the product id, revision-bound renewal, staff read only) and
 update by known id, reconcile by sku, lost answer recorded as unknown,
 refusal recorded as failed, no location, renewal before export, reconnect
 without refresh token, connection changed under renewal).
+
+Scheduled pull: `supabase/tests/0104_shopify_automation.test.sql` (unknown
+scope refused, no run without a shop, reservation and duplicate delivery,
+another tenant denied, what the scope opens and what it does not, outcome
+must match the page, sale and page name the identity, revocation closes
+every door) and `tests/unit/shopify-automation.test.ts` (received, complete,
+duplicate skips Shopify, failure outcome without provider text, cron
+boundary: unconfigured, wrong secret, pilot only, sign-out on failure).
 
 Step 3: `supabase/tests/0103_shopify_orders.test.sql` (watermark from the
 connection, cursor conflict, replay, request conflict, matched order to

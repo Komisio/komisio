@@ -1523,6 +1523,53 @@
       "failed": "The change failed. Retry later."
     }
   },
+  "shopify": {
+    "title": "Shopify connection",
+    "intro": "Connect the store to its Shopify shop. This step only connects, verifies and disconnects; products and orders follow.",
+    "notConnected": "No Shopify shop is connected.",
+    "connectedTo": "Connected to",
+    "since": "since",
+    "expired": "token expired, connect again",
+    "shopDomain": "Shop domain",
+    "connect": "Connect Shopify",
+    "reconnect": "Renew the Shopify connection",
+    "check": "Check Shopify connection",
+    "disconnect": "Disconnect",
+    "busy": "Checking…",
+    "connected": "Shopify connected. The shop was verified against the domain you named before the token was stored.",
+    "disconnected": "Shopify disconnected. The stored token was removed.",
+    "connectionVerified": "Connection verified. Shop:",
+    "connectionFailed": "Could not verify the connection. Check configuration or retry later.",
+    "connectionUnavailable": "The pilot connection is not bound to this store.",
+    "connectionTenantMissing": "The deployed configuration is missing the store binding (SHOPIFY_PILOT_TENANT_ID).",
+    "connectionClientMissing": "The deployed configuration has a missing or malformed client ID (SHOPIFY_CLIENT_ID).",
+    "connectionSecretMissing": "The client secret is missing from the deployed configuration (SHOPIFY_CLIENT_SECRET).",
+    "configHint": "Register the Komisio app in Shopify's Dev Dashboard and set the variables in Vercel; redeploy after changes. No credential values are shown here.",
+    "notice": "Tokens are stored encrypted with a server-side key. Only the shop's name, domain and currency are visible here.",
+    "events": {
+      "connected": "Connected",
+      "refreshed": "Token renewed",
+      "checked": "Connection checked",
+      "refused": "Refused",
+      "disconnected": "Disconnected"
+    },
+    "errors": {
+      "FORBIDDEN": "You do not have permission for this store.",
+      "AUTH_REQUIRED": "Sign in again and retry.",
+      "TENANT_CHANGED": "The active store changed during the connection. Retry from the store you meant to connect.",
+      "INVALID_INPUT": "Enter the shop's myshopify domain, for example my-store.myshopify.com.",
+      "SHOPIFY_NOT_CONNECTED": "This store is not connected to Shopify, or the pilot configuration is incomplete.",
+      "SHOPIFY_AUTH_REQUIRED": "Shopify did not accept the authorisation, or the token has expired. Connect again.",
+      "SHOPIFY_CONNECTION_FAILED": "Shopify could not be reached. Retry later.",
+      "SHOPIFY_RATE_LIMITED": "Shopify is rate limiting requests. Retry in a minute.",
+      "SHOPIFY_READ_FAILED": "Shopify answered with an error while reading the shop.",
+      "SHOPIFY_WRONG_SHOP": "The shop that authorised is not the shop you named. Nothing was stored.",
+      "SHOPIFY_STATE_INVALID": "The connection attempt expired or did not start here. Connect again.",
+      "CREDENTIAL_KEY_MISSING": "The deployed configuration is missing the credential key (KOMISIO_CREDENTIAL_KEY).",
+      "CREDENTIAL_UNREADABLE": "The stored token cannot be read with the current credential key. Disconnect and connect again.",
+      "REQUEST_FAILED": "The request failed. Retry later."
+    }
+  },
   "fortnox": {
     "reconcileTitle": "Confirm an existing voucher",
     "reconcileHint": "Compare the voucher in the pinned Fortnox company with this export's date, amounts and lines before confirming. This records your verification; it does not send a voucher.",

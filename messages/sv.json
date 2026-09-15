@@ -1523,6 +1523,53 @@
       "failed": "Ändringen misslyckades. Försök senare."
     }
   },
+  "shopify": {
+    "title": "Shopify-anslutning",
+    "intro": "Anslut butiken till dess Shopify-butik. Det här steget ansluter, kontrollerar och kopplar bort; produkter och ordrar följer.",
+    "notConnected": "Ingen Shopify-butik är ansluten.",
+    "connectedTo": "Ansluten till",
+    "since": "sedan",
+    "expired": "token har gått ut, anslut igen",
+    "shopDomain": "Butiksdomän",
+    "connect": "Anslut Shopify",
+    "reconnect": "Förnya Shopify-anslutningen",
+    "check": "Kontrollera Shopify-anslutningen",
+    "disconnect": "Koppla bort",
+    "busy": "Kontrollerar…",
+    "connected": "Shopify ansluten. Butiken verifierades mot domänen du angav innan token sparades.",
+    "disconnected": "Shopify bortkopplad. Den sparade token togs bort.",
+    "connectionVerified": "Anslutningen verifierad. Butik:",
+    "connectionFailed": "Kunde inte verifiera anslutningen. Kontrollera konfigurationen eller försök senare.",
+    "connectionUnavailable": "Pilotanslutningen är inte bunden till den här butiken.",
+    "connectionTenantMissing": "Driftkonfigurationen saknar butiksbindningen (SHOPIFY_PILOT_TENANT_ID).",
+    "connectionClientMissing": "Driftkonfigurationen saknar eller har ett felaktigt klient-id (SHOPIFY_CLIENT_ID).",
+    "connectionSecretMissing": "Klienthemligheten saknas i driftkonfigurationen (SHOPIFY_CLIENT_SECRET).",
+    "configHint": "Registrera Komisio-appen i Shopifys Dev Dashboard och sätt variablerna i Vercel; deploya om efter ändringar. Inga hemligheter visas här.",
+    "notice": "Token lagras krypterad med en nyckel på servern. Bara butikens namn, domän och valuta syns här.",
+    "events": {
+      "connected": "Ansluten",
+      "refreshed": "Token förnyad",
+      "checked": "Anslutning kontrollerad",
+      "refused": "Avvisad",
+      "disconnected": "Bortkopplad"
+    },
+    "errors": {
+      "FORBIDDEN": "Du har inte behörighet för den här butiken.",
+      "AUTH_REQUIRED": "Logga in igen och försök på nytt.",
+      "TENANT_CHANGED": "Den aktiva butiken ändrades under anslutningen. Försök igen från butiken du menade.",
+      "INVALID_INPUT": "Ange butikens myshopify-domän, till exempel min-butik.myshopify.com.",
+      "SHOPIFY_NOT_CONNECTED": "Butiken är inte ansluten till Shopify, eller pilotkonfigurationen är ofullständig.",
+      "SHOPIFY_AUTH_REQUIRED": "Shopify godtog inte auktoriseringen, eller så har token gått ut. Anslut igen.",
+      "SHOPIFY_CONNECTION_FAILED": "Shopify gick inte att nå. Försök senare.",
+      "SHOPIFY_RATE_LIMITED": "Shopify begränsar anropen. Försök om en minut.",
+      "SHOPIFY_READ_FAILED": "Shopify svarade med ett fel vid läsning av butiken.",
+      "SHOPIFY_WRONG_SHOP": "Butiken som auktoriserade är inte den du angav. Inget sparades.",
+      "SHOPIFY_STATE_INVALID": "Anslutningsförsöket gick ut eller startade inte här. Anslut igen.",
+      "CREDENTIAL_KEY_MISSING": "Driftkonfigurationen saknar nyckeln för förseglade uppgifter (KOMISIO_CREDENTIAL_KEY).",
+      "CREDENTIAL_UNREADABLE": "Den sparade token kan inte läsas med nuvarande nyckel. Koppla bort och anslut igen.",
+      "REQUEST_FAILED": "Anropet misslyckades. Försök senare."
+    }
+  },
   "fortnox": {
     "reconcileTitle": "Bekräfta en befintlig verifikation",
     "reconcileHint": "Jämför verifikationen i det angivna Fortnox-företaget med exportens datum, belopp och rader innan du bekräftar. Detta loggar din kontroll; det skickar ingen verifikation.",

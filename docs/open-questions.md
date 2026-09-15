@@ -204,7 +204,13 @@ wording is decided per template when the notification policy is built.
     procedures?~~ **Answered 2026-09-14 (DECISIONS.md, B1 and B3):** contact
     data anonymised on request or 24 months after last activity, financial rows
     kept seven years, memberships revoked on deletion, audit references stay.
-    The erasure command itself is a later slice.
+    The erasure command itself is a later slice. Implementation clarifications
+    are pending with Fable: the predicate for an open immutable statement,
+    contact copies in retained reviews/communications and their read projections,
+    activity/custody gates, and an Auth operator procedure compatible with
+    restrictive attribution foreign keys. See the dated erasure questions in
+    [ASTRA_QUESTIONS_TO_FABLE.md](ASTRA_QUESTIONS_TO_FABLE.md); no retention
+    exception or destructive cleanup has been implemented.
 19. **Partly answered 2026-09-12:** mobile reception reviews may include pinned,
     reduced photos from the exact source revision; originals stay internal.
     Metadata stripping does not redact visible people or labels. Camera placement,

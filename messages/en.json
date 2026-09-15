@@ -566,8 +566,10 @@
       "sendMessage": "Send a message to a seller",
       "exportDayClose": "Export a day close",
       "settlePayouts": "Settle sellers",
-      "updateStoreProfile": "Update the store profile"
+      "updateStoreProfile": "Update the store profile",
+      "importSellers": "Import sellers"
     },
+    "importRows": "rows",
     "openDays": "open days",
     "settlementPreview": "Sellers in the settlement",
     "settlementNotice": "Approval requests and approves one payout per seller as you, reserving each amount. A seller below the threshold, over its balance or with an open payout refuses the whole batch.",
@@ -1213,6 +1215,38 @@
     "bucket29": "29–42:",
     "bucket43": "43+:",
     "definitions": "Sell-through is sold in the period divided by sold plus in stock now. Age buckets follow the default markdown schedule."
+  },
+  "importer": {
+    "title": "Import sellers",
+    "intro": "Bring the sellers from your previous system into this store. Choose a CSV file, check which column holds what, read the preview and stage the import; it is registered when it is approved in the operations queue.",
+    "notice": "Only names and contact details are imported here. Balances, items and history stay in the old system; agreements are recorded in Komisio when each seller next hands in.",
+    "file": "CSV file",
+    "fileHint": "First row with column names; comma or semicolon separated; at most 200 sellers per import.",
+    "columns": "Columns",
+    "column": {
+      "name": "Name",
+      "email": "E-mail",
+      "phone": "Phone"
+    },
+    "ignore": "Not in the file",
+    "skipHeader": "The first row is a header",
+    "preview": "Preview",
+    "previewHint": "Showing the first ten rows that will be imported.",
+    "accepted": "rows will be imported",
+    "rejected": "rows are left out",
+    "reasons": {
+      "name": "no name",
+      "contact": "neither e-mail nor phone",
+      "email": "e-mail is not valid"
+    },
+    "line": "line",
+    "stage": "Stage the import",
+    "staged": "The import is staged. Approve it in the operations queue to register the sellers.",
+    "openQueue": "Open the operations queue",
+    "tooMany": "The file has more than 200 usable rows. Split it and import in parts.",
+    "nothing": "No usable rows. Check the column mapping.",
+    "error": "The import could not be staged. Reload and try again.",
+    "ownerOnly": "Only the store owner or an admin can import sellers."
   },
   "lifecycle": {
     "agentHeading": "Markdown runs",

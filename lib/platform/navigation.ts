@@ -63,6 +63,7 @@ export function buildNavigation(
             icon: 'FileText',
           },
           { path: '/intake/payouts', label: d.payouts.title, icon: 'Wallet' },
+          { path: '/intake/import', label: d.importer.title, icon: 'Upload' },
         ],
       },
       {

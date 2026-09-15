@@ -20,6 +20,7 @@ export const operationKind = z.enum([
   'exportDayClose',
   'settlePayouts',
   'updateStoreProfile',
+  'importSellers',
 ])
 export const publishReceptionReviewPayload = z.strictObject({
   sessionId: z.uuid(),
@@ -163,6 +164,21 @@ export const updateStoreProfilePayload = z.strictObject({
   expectedCurrentId: z.uuid().nullable(),
   profile: storeProfileBody,
 })
+// Seller import (low, P5 import wizard): rows a person mapped and previewed;
+// approval registers them through register_seller, skipping known e-mails.
+export const importSellersPayload = z.strictObject({
+  source: z.string().trim().min(1).max(200),
+  rows: z
+    .array(
+      z.strictObject({
+        name: z.string().trim().min(1).max(120),
+        email: z.string().trim().max(254),
+        phone: z.string().trim().max(40),
+      }),
+    )
+    .min(1)
+    .max(200),
+})
 const proposeBase = z.strictObject({
   tenantId: z.uuid(),
   requestId: z.uuid(),
@@ -221,6 +237,10 @@ export const proposeOperationCommand = z.discriminatedUnion('kind', [
   proposeBase.extend({
     kind: z.literal('updateStoreProfile'),
     payload: updateStoreProfilePayload,
+  }),
+  proposeBase.extend({
+    kind: z.literal('importSellers'),
+    payload: importSellersPayload,
   }),
 ])
 export const decideOperationCommand = z.strictObject({
@@ -306,6 +326,10 @@ export const operationRow = z.discriminatedUnion('kind', [
   operationBaseRow.extend({
     kind: z.literal('updateStoreProfile'),
     payload: updateStoreProfilePayload,
+  }),
+  operationBaseRow.extend({
+    kind: z.literal('importSellers'),
+    payload: importSellersPayload,
   }),
 ])
 export type PendingOperation = z.infer<typeof operationRow>

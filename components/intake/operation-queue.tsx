@@ -378,6 +378,11 @@ export function OperationQueue({
               ).toFixed(2)}{' '}
               {currency} · {o.payload.reason}
             </p>
+          ) : o.kind === 'importSellers' ? (
+            <p>
+              {d.kinds.importSellers} · {o.payload.source} ·{' '}
+              {o.payload.rows.length} {d.importRows}
+            </p>
           ) : o.kind === 'updateStoreProfile' ? (
             <div>
               <p>

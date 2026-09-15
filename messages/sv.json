@@ -566,8 +566,10 @@
       "sendMessage": "Skicka ett meddelande till en säljare",
       "exportDayClose": "Exportera ett dagsavslut",
       "settlePayouts": "Avräkna säljare",
-      "updateStoreProfile": "Uppdatera butiksprofilen"
+      "updateStoreProfile": "Uppdatera butiksprofilen",
+      "importSellers": "Importera inlämnare"
     },
+    "importRows": "rader",
     "openDays": "öppetdagar",
     "settlementPreview": "Säljare i avräkningen",
     "settlementNotice": "Godkännandet begär och godkänner en utbetalning per säljare som du och reserverar varje belopp. En säljare under tröskeln, över sitt saldo eller med en öppen utbetalning gör att hela satsen avvisas.",
@@ -1213,6 +1215,38 @@
     "bucket29": "29–42:",
     "bucket43": "43+:",
     "definitions": "Omsättningsgrad är sålt under perioden delat med sålt plus i lager nu. Åldersintervallen följer standardschemat för nedsättningar."
+  },
+  "importer": {
+    "title": "Importera inlämnare",
+    "intro": "Ta in inlämnarna från ert tidigare system till den här butiken. Välj en CSV-fil, kontrollera vilken kolumn som innehåller vad, läs förhandsvisningen och stagea importen; den registreras när den godkänns i åtgärdskön.",
+    "notice": "Bara namn och kontaktuppgifter importeras här. Saldon, varor och historik stannar i det gamla systemet; avtal registreras i Komisio när varje inlämnare lämnar in nästa gång.",
+    "file": "CSV-fil",
+    "fileHint": "Första raden med kolumnnamn; komma- eller semikolonseparerad; högst 200 inlämnare per import.",
+    "columns": "Kolumner",
+    "column": {
+      "name": "Namn",
+      "email": "E-post",
+      "phone": "Telefon"
+    },
+    "ignore": "Finns inte i filen",
+    "skipHeader": "Första raden är en rubrik",
+    "preview": "Förhandsvisning",
+    "previewHint": "Visar de tio första raderna som importeras.",
+    "accepted": "rader importeras",
+    "rejected": "rader utelämnas",
+    "reasons": {
+      "name": "saknar namn",
+      "contact": "varken e-post eller telefon",
+      "email": "e-posten är inte giltig"
+    },
+    "line": "rad",
+    "stage": "Stagea importen",
+    "staged": "Importen är stagead. Godkänn den i åtgärdskön för att registrera inlämnarna.",
+    "openQueue": "Öppna åtgärdskön",
+    "tooMany": "Filen har fler än 200 användbara rader. Dela upp den och importera i omgångar.",
+    "nothing": "Inga användbara rader. Kontrollera kolumnvalen.",
+    "error": "Importen kunde inte stageas. Ladda om och försök igen.",
+    "ownerOnly": "Bara butikens ägare eller en administratör kan importera inlämnare."
   },
   "lifecycle": {
     "agentHeading": "Prissänkningskörningar",

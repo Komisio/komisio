@@ -2,7 +2,11 @@ import pg from 'pg'
 import assert from 'node:assert/strict'
 import { randomUUID } from 'node:crypto'
 
-export async function raceFortnoxSend({ setup, connectionString }) {
+export async function raceFortnoxSend({
+  setup,
+  connectionString,
+  automation = false,
+}) {
   const actor = randomUUID()
   await setup.query(
     'insert into auth.users(id,email,email_confirmed_at) values($1,$2,now())',
@@ -69,6 +73,24 @@ export async function raceFortnoxSend({ setup, connectionString }) {
       `select store_fortnox_connection($1,'synthetic','Synthetic','','{"iv":"a","tag":"b","data":"c"}','bookkeeping',now()+interval '1 hour')`,
       [tenant],
     )
+    if (automation) {
+      const worker = randomUUID()
+      const email = `worker-${worker}@example.test`
+      await setup.query(
+        'insert into auth.users(id,email,email_confirmed_at) values($1,$2,now())',
+        [worker, email],
+      )
+      await sessions[0].query(
+        "select enable_automation($1,$2,'fortnox_send',$3)",
+        [tenant, randomUUID(), email],
+      )
+      for (const session of sessions)
+        await session.query(
+          "select set_config('request.jwt.claims',$1,false)",
+          [JSON.stringify({ sub: worker, role: 'authenticated' })],
+        )
+      await sessions[0].query('select accept_automation_grants()')
+    }
     const request = randomUUID()
     const results = await Promise.all(
       sessions.map((session) =>
@@ -103,6 +125,23 @@ export async function raceFortnoxSend({ setup, connectionString }) {
       ]),
       /FORTNOX_OUTCOME_UNKNOWN/,
     )
+    if (automation) {
+      await assert.rejects(
+        sessions[0].query(
+          "select reconcile_fortnox_send($1,$2,'confirmed_sent','A',42,2026,'Synthetic')",
+          [tenant, request],
+        ),
+        /FORBIDDEN/,
+      )
+      for (const session of sessions)
+        await session.query(
+          "select set_config('request.jwt.claims',$1,false)",
+          [JSON.stringify({ sub: actor, role: 'authenticated' })],
+        )
+      console.log(
+        'PASS: concurrent automation sends grant one POST; unknown outcomes remain held and automation cannot reconcile.',
+      )
+    }
     const reconciled = await Promise.allSettled(
       sessions.map((session, index) =>
         session.query(

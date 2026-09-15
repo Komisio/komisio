@@ -3,6 +3,10 @@
   "regions": ["arn1"],
   "crons": [
     {
+      "path": "/api/automation/fortnox-send",
+      "schedule": "0 7 * * *"
+    },
+    {
       "path": "/api/automation/zettle-pull",
       "schedule": "*/10 * * * *"
     },

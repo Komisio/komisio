@@ -19,6 +19,7 @@
     "test:e2e": "playwright test",
     "test:assistance": "node scripts/test-assistance.mjs",
     "test:zettle-automation": "node --import tsx scripts/test-zettle-automation.mjs",
+    "test:fortnox-automation": "node --import tsx scripts/test-fortnox-automation.mjs",
     "test:mcp": "node scripts/test-mcp.mjs",
     "mcp": "node --import tsx mcp/stdio.ts",
     "test:db": "node scripts/supabase.mjs test db",

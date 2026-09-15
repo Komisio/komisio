@@ -45,6 +45,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
       - run: npm run test:assistance
+      - run: npm run test:zettle-automation
       - name: Stop local services
         if: always()
         run: supabase stop

@@ -121,3 +121,19 @@ or that a real scheduled POS action has been observed.
 Owner switches: `POST /api/automation-grants` (enable, disable) for any
 scope, or the integration's own route. The switch is a grant; the identity
 accepts it on its next cron run.
+
+## Browser verification
+
+After a production build, `npm run test:zettle-automation` starts an isolated
+loopback application with synthetic pilot configuration and synthetic test
+identities. It exercises the real Zettle owner switch, checks the persisted grant,
+accepts it as the synthetic worker through the fixture DB helper, records a
+waiting outcome and verifies the displayed state. Staff have no switch and both
+toggle commands return 403; owner revocation removes the worker membership.
+
+The harness refuses a non-loopback Supabase URL or an already running application.
+Provider fetches are blocked in the child server and external browser requests
+are aborted. No real cron invocation, receipt import or merchant verification is
+claimed. The database is not reset; synthetic fixture records remain for diagnosis,
+but the test grant is disabled during cleanup. GitHub runs this after the existing
+browser and assistance checks.

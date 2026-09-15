@@ -43,9 +43,11 @@ staging, from a separate GitHub environment (`production-database`) whose
 job is manually approved by the owner (GitHub environment protection rule
 "required reviewers"). No data is ever copied between environments.
 
-`scripts/check-hosted-env.mjs` today refuses anything but
-`KOMISIO_ENVIRONMENT=staging`; the production slice lifts that guard once the
-production checklist below is done.
+`scripts/check-hosted-env.mjs` accepts `KOMISIO_ENVIRONMENT=production`
+only with a production shape (own domain, real e-mail, own secrets, no
+staging-only switches); the production migrations run from the
+`Production database` workflow the owner dispatches and approves. The
+ordered owner steps are in [PRODUCTION-CHECKLIST.md](PRODUCTION-CHECKLIST.md).
 
 ## Account lifecycle
 
@@ -136,8 +138,10 @@ owner's own account or documented operator procedures.
 3. **Stripe**: Checkout session, webhook (signature verified, idempotent by
    event id, staged as engine calls), customer portal link, `past_due`
    handling. Prices and tax settings live in Stripe, never in code.
-4. **Production environment** per the checklist, then the guard in
-   `check-hosted-env.mjs` accepts `production`.
+4. **Production environment** per the checklist: the guard, the dispatched
+   and approved migration workflow and the ordered owner steps are delivered
+   (2026-09-15, [PRODUCTION-CHECKLIST.md](PRODUCTION-CHECKLIST.md)); the
+   accounts, secrets and drills are the owner's.
 
 ## Decisions needed (section C in the owner list)
 

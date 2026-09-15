@@ -1,0 +1,52 @@
+name: Production database
+
+# Promotion is by code, not by data: the owner dispatches this on main after
+# the revision has been observed on staging (one working day, decision C6),
+# and approves the protected `production-database` environment. The job
+# applies the committed migrations to the production project, verifies the
+# history and, when a deploy hook is configured, deploys the application
+# after the database.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  production-migrations:
+    if: github.ref == 'refs/heads/main' && github.repository == 'Komisio/komisio'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production-database
+    concurrency:
+      group: production-database-migrations
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.117.0
+      - name: Apply and verify committed production migrations
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ vars.SUPABASE_PROJECT_ID }}
+        run: node scripts/migrate-hosted.mjs production
+      - name: Trigger the application deployment after the database
+        env:
+          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$VERCEL_DEPLOY_HOOK_URL" ]; then
+            echo "No deploy hook configured; deploy the application by hand from this revision."
+            exit 0
+          fi
+          case "$VERCEL_DEPLOY_HOOK_URL" in
+            https://api.vercel.com/v1/integrations/deploy/*) ;;
+            *) echo "VERCEL_DEPLOY_HOOK_URL is not a Vercel deploy hook"; exit 1 ;;
+          esac
+          curl -fsS -X POST "$VERCEL_DEPLOY_HOOK_URL" -o /dev/null
+          echo "Deploy hook fired for $GITHUB_SHA"

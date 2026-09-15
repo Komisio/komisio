@@ -7,7 +7,11 @@ import {
   disconnectFortnox,
   fortnoxErrorCode,
 } from '@/lib/engine/fortnox-connection'
-import { sendExportToFortnox } from '@/lib/engine/fortnox-vouchers'
+import {
+  confirmedFortnoxVoucher,
+  confirmFortnoxVoucher,
+  sendExportToFortnox,
+} from '@/lib/engine/fortnox-vouchers'
 import { FortnoxRejected } from '@/extensions/fortnox/vouchers'
 
 /** Check the connected company, send one export as a voucher, or disconnect; owner or admin. */
@@ -29,12 +33,13 @@ export async function POST(request: Request) {
       return reply({ error: 'FORBIDDEN' }, 403)
     let input: unknown
     try {
-      input = await boundedJson(request, 1024)
+      input = await boundedJson(request, 4096)
     } catch {
       return reply({ error: 'INVALID_INPUT' }, 400)
     }
     const parsed = z
       .discriminatedUnion('action', [
+        confirmedFortnoxVoucher.extend({ action: z.literal('confirmVoucher') }),
         z.strictObject({
           tenantId: z.uuid(),
           action: z.enum(['check', 'disconnect']),
@@ -50,6 +55,19 @@ export async function POST(request: Request) {
     if (!parsed.success) return reply({ error: 'INVALID_INPUT' }, 400)
     if (parsed.data.tenantId !== ctx.active.id)
       return reply({ error: 'TENANT_CHANGED' }, 409)
+    if (parsed.data.action === 'confirmVoucher') {
+      if (ctx.active.role !== 'owner') return reply({ error: 'FORBIDDEN' }, 403)
+      return reply(
+        await confirmFortnoxVoucher(ctx.client, {
+          tenantId: parsed.data.tenantId,
+          sendId: parsed.data.sendId,
+          voucherSeries: parsed.data.voucherSeries,
+          voucherNumber: parsed.data.voucherNumber,
+          financialYear: parsed.data.financialYear,
+          evidence: parsed.data.evidence,
+        }),
+      )
+    }
     if (parsed.data.action === 'sendVoucher')
       return reply(
         await sendExportToFortnox(

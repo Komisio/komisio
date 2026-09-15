@@ -1467,6 +1467,14 @@
     }
   },
   "fortnox": {
+    "reconcileTitle": "Confirm an existing voucher",
+    "reconcileHint": "Compare the voucher in the pinned Fortnox company with this export's date, amounts and lines before confirming. This records your verification; it does not send a voucher.",
+    "reconcileSeries": "Voucher series",
+    "reconcileNumber": "Voucher number",
+    "reconcileYear": "Fortnox financial year ID",
+    "reconcileEvidence": "Evidence: what you checked, when and by whom",
+    "reconcileNoAbsent": "If you cannot find the voucher, leave the send held. This form cannot confirm absence or allow a resend.",
+    "reconcileConfirm": "Confirm that the voucher exists",
     "title": "Fortnox connection",
     "intro": "Connect the store to its Fortnox company. This slice only connects, verifies and disconnects; no voucher is sent yet.",
     "notConnected": "No Fortnox company is connected.",

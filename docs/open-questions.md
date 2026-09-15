@@ -2,7 +2,8 @@
 
 Fortnox reconciliation (2026-09-15): Fable approved the confirmed-sent-only first
 slice. Its owner-only engine command now records evidence without unlocking a
-POST. The browser form/evidence read remains to implement. Absence remains held;
+POST. The owner browser form is implemented; the provider evidence read remains
+to implement, so the person compares directly in Fortnox. Absence remains held;
 the separate lease/quiet-period and version-bound token-refresh designs are not
 activated by this command.
 

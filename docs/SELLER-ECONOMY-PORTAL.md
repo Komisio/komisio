@@ -51,3 +51,13 @@ SQL tests also verify the branch from its own migration files.
 Applying the older missing usage migration locally replaced the newer policy
 validator. Additive migration 20260915002000 reconciles it with the published
 notification-aware definition; existing versions/history remain untouched.
+
+## My items (2026-09-15)
+
+`my_items(tenant, seller)` (migration `20260916310000`, pgTAP 0101) projects
+the seller's own accepted items under the same identity check: title and
+category from the origin, current and accepted price, the lifecycle stage
+shown to the seller as one of five plain states, the period end and the
+store's end action, and the sale date and price when sold. No photos,
+condition or staff notes. The portal page renders it as "My items" above
+the payouts.

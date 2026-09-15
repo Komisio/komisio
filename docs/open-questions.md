@@ -1,5 +1,11 @@
 # Open questions
 
+Fortnox reconciliation (2026-09-15): Fable approved the confirmed-sent-only first
+slice. Its owner-only engine command now records evidence without unlocking a
+POST. The browser form/evidence read remains to implement. Absence remains held;
+the separate lease/quiet-period and version-bound token-refresh designs are not
+activated by this command.
+
 Fortnox automation prerequisite (2026-09-14): a pending replay or an ambiguous
 POST acknowledgement can otherwise create duplicate vouchers. The transport now
 holds these outcomes under the existing at-most-one rule; a reconciliation/unlock

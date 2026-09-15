@@ -386,7 +386,7 @@ export function OperationQueue({
           ) : o.kind === 'updateStoreProfile' ? (
             <div>
               <p>
-                <Link className="text-link" href="/settings">
+                <Link className="text-link" href="/settings?tab=profile">
                   {d.kinds.updateStoreProfile}
                 </Link>{' '}
                 · {o.payload.profile.address.city || '–'} ·{' '}

@@ -16,6 +16,14 @@ import { stripeConfigured } from '@/extensions/stripe/api'
 import { readChainOverview } from '@/lib/engine/chains'
 import { ChainPanel } from '@/components/platform/chain-panel'
 import Link from 'next/link'
+
+const tabs = ['policy', 'profile', 'store', 'printing'] as const
+type Tab = (typeof tabs)[number]
+
+/**
+ * Store settings in four tabs. Only the selected tab's data beyond the shared
+ * reads is fetched. A Stripe return (`billing=`) lands on the store tab.
+ */
 export default async function Settings({
   searchParams,
 }: {
@@ -25,64 +33,87 @@ export default async function Settings({
   const ctx = await requirePlatform()
   const d = dictionary(ctx.locale)
   const active = ctx.active!
+  const intake = process.env.KOMISIO_INTAKE_ENABLED === 'true'
+  const tab: Tab = !intake
+    ? 'store'
+    : tabs.includes(query.tab as Tab)
+      ? (query.tab as Tab)
+      : query.billing
+        ? 'store'
+        : 'policy'
+  const manages = ['owner', 'admin'].includes(active.role)
   const policy =
-    process.env.KOMISIO_INTAKE_ENABLED === 'true'
+    intake && tab === 'policy'
       ? await readStorePolicy(ctx.client, active.id)
       : null
-  const [printers, jobs, usage, profile] =
-    process.env.KOMISIO_INTAKE_ENABLED === 'true'
+  const usage =
+    intake && tab === 'policy'
+      ? await readUsageSummary(ctx.client, active.id)
+      : []
+  const profile =
+    intake && tab === 'profile'
+      ? await readStoreProfile(ctx.client, active.id)
+      : null
+  const [printers, jobs] =
+    intake && tab === 'printing'
       ? await Promise.all([
           readPrinters(ctx.client, active.id),
           readPrintJobs(ctx.client, active.id),
-          readUsageSummary(ctx.client, active.id),
-          readStoreProfile(ctx.client, active.id),
         ])
-      : [[], [], [], null]
+      : [[], []]
+  const plan =
+    tab === 'store' ? await readPlanStatus(ctx.client, active.id) : null
+  const chain =
+    tab === 'store' ? await readChainOverview(ctx.client, active.id) : null
+  const events =
+    tab === 'store' && can(active.role, 'audit.read')
+      ? await ctx.client
+          .from('access_events')
+          .select('id,action,occurred_at')
+          .eq('tenant_id', active.id)
+          .order('occurred_at', { ascending: false })
+          .limit(12)
+      : { data: [], error: null }
+  if (events.error) throw events.error
   const pr = d.printing,
     us = d.usage
-  const plan = await readPlanStatus(ctx.client, active.id)
-  const chain = await readChainOverview(ctx.client, active.id)
-  const events = can(active.role, 'audit.read')
-    ? await ctx.client
-        .from('access_events')
-        .select('id,action,occurred_at')
-        .eq('tenant_id', active.id)
-        .order('occurred_at', { ascending: false })
-        .limit(12)
-    : { data: [], error: null }
-  if (events.error) throw events.error
+  const visible = tabs.filter((t) => intake || t === 'store')
   return (
     <>
       <div className="page-heading">
         <div className="eyebrow">{active.name}</div>
         <h1>{d.tenant}</h1>
         <p>{d.tenantIntro}</p>
-        {process.env.KOMISIO_INTAKE_ENABLED === 'true' && (
+        {intake && (
           <Link className="text-link" href="/intake/agreements">
             {d.agreements.manage}
           </Link>
         )}
       </div>
-      {policy && (
+      {visible.length > 1 && (
+        <nav className="view-tabs" aria-label={d.settingsTabsLabel}>
+          {visible.map((t) => (
+            <Link
+              key={t}
+              href={t === 'policy' ? '/settings' : `/settings?tab=${t}`}
+              className={`view-tab ${tab === t ? 'active' : ''}`}
+              aria-current={tab === t ? 'page' : undefined}
+            >
+              {d.settingsTabs[t]}
+            </Link>
+          ))}
+        </nav>
+      )}
+      {tab === 'policy' && policy && (
         <StorePolicyForm
           key={`${active.id}-${policy.id ?? 'default'}`}
           tenantId={active.id}
           current={policy}
-          editable={['owner', 'admin'].includes(active.role)}
+          editable={manages}
           d={d}
         />
       )}
-      {profile && (
-        <StoreProfileForm
-          key={`${active.id}-${profile.id ?? 'none'}`}
-          tenantId={active.id}
-          current={profile}
-          editable={['owner', 'admin'].includes(active.role)}
-          locale={ctx.locale === 'sv' ? 'sv' : 'en'}
-          d={d}
-        />
-      )}
-      {usage.length > 0 && (
+      {tab === 'policy' && usage.length > 0 && (
         <section className="card intake-form" aria-label={us.title}>
           <h2>{us.title}</h2>
           <p>
@@ -100,7 +131,17 @@ export default async function Settings({
           </ul>
         </section>
       )}
-      {process.env.KOMISIO_INTAKE_ENABLED === 'true' && (
+      {tab === 'profile' && profile && (
+        <StoreProfileForm
+          key={`${active.id}-${profile.id ?? 'none'}`}
+          tenantId={active.id}
+          current={profile}
+          editable={manages}
+          locale={ctx.locale === 'sv' ? 'sv' : 'en'}
+          d={d}
+        />
+      )}
+      {tab === 'printing' && (
         <section className="card intake-form" aria-label={pr.title}>
           <h2>{pr.title}</h2>
           <p>{pr.intro}</p>
@@ -111,7 +152,7 @@ export default async function Settings({
                 {p.name} · {p.transport === 'tcp' ? p.address : pr.usb} ·{' '}
                 {p.active ? pr.activeLabel : pr.inactiveLabel}
               </summary>
-              {['owner', 'admin'].includes(active.role) && (
+              {manages && (
                 <PrinterForm
                   tenantId={active.id}
                   existing={p}
@@ -121,7 +162,7 @@ export default async function Settings({
               )}
             </details>
           ))}
-          {['owner', 'admin'].includes(active.role) && (
+          {manages && (
             <>
               <h3>{pr.registerHeading}</h3>
               <PrinterForm
@@ -146,75 +187,78 @@ export default async function Settings({
           </p>
         </section>
       )}
-      <div className="settings-grid">
-        <section className="card">
-          <h2>{d.tenantIdentity}</h2>
-          {can(active.role, 'tenant.edit') ? (
-            <TenantForm d={d} tenant={active} />
-          ) : (
-            <p>{active.name}</p>
-          )}
-          <h3>{d.chain.title}</h3>
-          {active.role === 'owner' ? (
-            <ChainPanel
-              d={d}
-              active={active}
-              tenants={ctx.tenants}
-              chain={chain}
-            />
-          ) : (
-            <p>
-              {chain
-                ? `${chain.name} · ${d.chain.storesInChain.replace('{count}', String(chain.stores.length))}`
-                : d.chain.none}
-            </p>
-          )}
-          <PlanPanel
-            status={plan}
-            locale={ctx.locale}
-            d={d.plans}
-            actions={
-              plan && plan.billing && active.role === 'owner' ? (
-                <BillingActions
-                  tenantId={active.id}
-                  status={plan}
-                  configured={stripeConfigured(process.env)}
-                  outcome={
-                    query.billing === 'success' || query.billing === 'cancelled'
-                      ? query.billing
-                      : null
-                  }
-                  d={d.plans}
-                />
-              ) : null
-            }
-          />
-          <hr className="divider" />
-          <div className="read-details">
-            <label>{d.slug}</label>
-            <p>{active.slug}</p>
-            <label>{d.tenantId}</label>
-            <p>{active.id}</p>
-            <small>{d.tenantImmutable}</small>
-          </div>
-        </section>
-        {can(active.role, 'audit.read') && (
+      {tab === 'store' && (
+        <div className="settings-grid">
           <section className="card">
-            <h2>{d.audit}</h2>
-            {events.data?.map((e) => (
-              <div key={e.id} className="audit-row">
-                <span>
-                  {d.events[e.action as keyof typeof d.events] ?? e.action}
-                </span>
-                <small>
-                  {new Date(e.occurred_at).toLocaleDateString(ctx.locale)}
-                </small>
-              </div>
-            ))}
-            {!events.data?.length && <p>{d.noAudit}</p>}
+            <h2>{d.tenantIdentity}</h2>
+            {can(active.role, 'tenant.edit') ? (
+              <TenantForm d={d} tenant={active} />
+            ) : (
+              <p>{active.name}</p>
+            )}
+            <h3>{d.chain.title}</h3>
+            {active.role === 'owner' ? (
+              <ChainPanel
+                d={d}
+                active={active}
+                tenants={ctx.tenants}
+                chain={chain}
+              />
+            ) : (
+              <p>
+                {chain
+                  ? `${chain.name} · ${d.chain.storesInChain.replace('{count}', String(chain.stores.length))}`
+                  : d.chain.none}
+              </p>
+            )}
+            <PlanPanel
+              status={plan}
+              locale={ctx.locale}
+              d={d.plans}
+              actions={
+                plan && plan.billing && active.role === 'owner' ? (
+                  <BillingActions
+                    tenantId={active.id}
+                    status={plan}
+                    configured={stripeConfigured(process.env)}
+                    outcome={
+                      query.billing === 'success' ||
+                      query.billing === 'cancelled'
+                        ? query.billing
+                        : null
+                    }
+                    d={d.plans}
+                  />
+                ) : null
+              }
+            />
+            <hr className="divider" />
+            <div className="read-details">
+              <label>{d.slug}</label>
+              <p>{active.slug}</p>
+              <label>{d.tenantId}</label>
+              <p>{active.id}</p>
+              <small>{d.tenantImmutable}</small>
+            </div>
           </section>
-        )}
-      </div>
+          {can(active.role, 'audit.read') && (
+            <section className="card">
+              <h2>{d.audit}</h2>
+              {events.data?.map((e) => (
+                <div key={e.id} className="audit-row">
+                  <span>
+                    {d.events[e.action as keyof typeof d.events] ?? e.action}
+                  </span>
+                  <small>
+                    {new Date(e.occurred_at).toLocaleDateString(ctx.locale)}
+                  </small>
+                </div>
+              ))}
+              {!events.data?.length && <p>{d.noAudit}</p>}
+            </section>
+          )}
+        </div>
+      )}
     </>
   )
 }

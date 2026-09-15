@@ -204,6 +204,13 @@
   "copied": "Copied",
   "readOnlyMembers": "You can see who works here. An owner or administrator manages permissions.",
   "tenantIntro": "The essentials that help your team find the right place.",
+  "settingsTabsLabel": "Settings sections",
+  "settingsTabs": {
+    "policy": "Store policy",
+    "profile": "Store profile",
+    "store": "Store and plan",
+    "printing": "Printers and labels"
+  },
   "tenantIdentity": "Store identity",
   "tenantId": "Store id",
   "tenantImmutable": "This identifier distinguishes your store from other stores.",

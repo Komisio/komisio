@@ -846,6 +846,12 @@
       "seller_response": "seller approval of the review",
       "none": "none"
     },
+    "transferHeading": "Move to another store in the chain",
+    "transferHint": "Ends the sale period here with the reason transfer, and receives a bag for the same seller in the other store with one draft carrying this description. The other store accepts it under its own terms; the seller's balance stays here.",
+    "transferTarget": "To store",
+    "transferNote": "Note (optional)",
+    "transfer": "Move item",
+    "transferDone": "Moved to {store}. The item is ended here and waits in that store's bag queue.",
     "custodyKinds": {
       "bag": "bag receipt",
       "garment": "garment receipt"

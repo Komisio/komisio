@@ -122,6 +122,8 @@ export async function POST(request: Request) {
           'MARKDOWN_ALREADY_APPLIED',
           'ITEM_NOT_ON_SALE',
           'ITEM_ENDED',
+          'NOT_SAME_CHAIN',
+          'TRANSFER_UNSUPPORTED',
           'PRINTER_NOT_FOUND',
           'PRINTER_INACTIVE',
           'PRINT_JOB_NOT_FOUND',

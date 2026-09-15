@@ -846,6 +846,12 @@
       "seller_response": "säljarens godkännande av underlaget",
       "none": "inget"
     },
+    "transferHeading": "Flytta till en annan butik i kedjan",
+    "transferHint": "Avslutar säljperioden här med skälet flytt, och tar emot en påse för samma inlämnare i den andra butiken med ett utkast som bär den här beskrivningen. Den andra butiken accepterar under sina egna villkor; inlämnarens saldo stannar här.",
+    "transferTarget": "Till butik",
+    "transferNote": "Anteckning (valfri)",
+    "transfer": "Flytta vara",
+    "transferDone": "Flyttad till {store}. Varan är avslutad här och väntar i den butikens påskö.",
     "custodyKinds": {
       "bag": "påskvitto",
       "garment": "plaggkvitto"

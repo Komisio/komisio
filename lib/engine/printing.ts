@@ -30,6 +30,47 @@ export const labelFormatKind = z.enum([
   'onboarding',
   'markdown',
 ])
+export const labelPrintRule = z.strictObject({
+  kind: labelFormatKind,
+  printerId: z.uuid(),
+  copies: z.number().int().min(1).max(20),
+  enabled: z.boolean(),
+})
+export const setLabelPrintRuleInput = labelPrintRule.extend({
+  tenantId: z.uuid(),
+})
+
+export async function readLabelPrintRules(
+  client: SupabaseClient,
+  tenantInput: string,
+) {
+  const result = await client.rpc('label_print_rules', {
+    p_tenant: z.uuid().parse(tenantInput),
+  })
+  if (result.error?.code === 'PGRST202') return null
+  if (result.error) throw new Error('FORBIDDEN')
+  return z.array(labelPrintRule).max(5).parse(result.data)
+}
+
+export async function setLabelPrintRule(
+  client: SupabaseClient,
+  input: z.input<typeof setLabelPrintRuleInput>,
+) {
+  const value = setLabelPrintRuleInput.parse(input)
+  const result = await client.rpc('set_label_print_rule', {
+    p_tenant: value.tenantId,
+    p_kind: value.kind,
+    p_printer: value.printerId,
+    p_copies: value.copies,
+    p_enabled: value.enabled,
+  })
+  if (result.error)
+    throw new Error(
+      printErrorCodes.find((code) => result.error!.message === code) ??
+        'REQUEST_FAILED',
+    )
+  return labelPrintRule.parse(result.data)
+}
 const millimetres = z.number().multipleOf(0.1)
 export const setLabelFormatCommand = z.strictObject({
   action: z.literal('setLabelFormat'),

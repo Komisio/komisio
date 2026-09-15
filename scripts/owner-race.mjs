@@ -4,6 +4,7 @@ import { raceZettleImage } from './zettle-image-race.mjs'
 import { raceZettlePull } from './zettle-pull-race.mjs'
 import { raceSellerPayout } from './seller-payout-race.mjs'
 import { raceStorePolicy } from './store-policy-race.mjs'
+import { raceLabelPrintRule } from './label-print-rule-race.mjs'
 import { raceInspectionApproval } from './inspection-operation-race.mjs'
 import { raceAcceptance, raceStagedAcceptance } from './acceptance-race.mjs'
 import pg from 'pg'
@@ -94,6 +95,7 @@ try {
     }),
   )
   await raceStorePolicy({ setup, sessions, tenant })
+  await raceLabelPrintRule({ setup, sessions, tenant })
   await setup.query('begin')
   await setup.query('select id from tenants where id=$1 for update', [tenant])
   const attempts = sessions.map(async ({ c, uid }) => {

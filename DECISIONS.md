@@ -1,5 +1,15 @@
 # Decision Log
 
+## 2026-09-15: Automatic label rule storage prerequisite
+
+Per PR199, each store may configure one rule per label kind with a tenant-bound
+printer and 1–20 copies. Owner/admin sets it through the engine; ordinary members
+read it. Device and automation roles receive no new access. Identical repeated
+settings are a no-op, changes are audited, and direct writes remain denied.
+This storage/read prerequisite alone neither exposes an enable switch nor queues
+labels. Event wiring follows the shared renderer and Fable's event-identity and
+SQL-producer clarifications; label sizes remain per kind.
+
 ## 2026-09-15: Scoped automatic Fortnox sending
 
 The accepted `fortnox_send` automation identity may begin/complete sends and

@@ -16,6 +16,28 @@ const orderNode = z.object({
   displayFinancialStatus: z.string().nullable(),
   test: z.boolean(),
   cancelledAt: z.string().nullable(),
+  refunds: z
+    .array(
+      z.object({
+        id: z.string().regex(/^gid:\/\/shopify\/Refund\/\d{1,30}$/),
+        createdAt: z.string(),
+        totalRefundedSet: money,
+        refundLineItems: z.object({
+          nodes: z
+            .array(
+              z.object({
+                lineItem: z.object({ sku: z.string().nullable() }),
+                quantity: z.number().int(),
+                subtotalSet: money,
+                totalTaxSet: money,
+              }),
+            )
+            .max(50),
+        }),
+      }),
+    )
+    .max(20)
+    .default([]),
   lineItems: z.object({
     nodes: z
       .array(
@@ -29,20 +51,23 @@ const orderNode = z.object({
       .max(50),
   }),
 })
-export type OrderNode = z.infer<typeof orderNode>
+/** What a caller hands in: refunds may be absent (older fixtures, orders without refunds). */
+export type OrderNode = z.input<typeof orderNode>
 
 const ORDERS = `query PaidOrders($q: String!, $first: Int!) {
   orders(first: $first, query: $q, sortKey: UPDATED_AT) {
     nodes {
       id name createdAt updatedAt displayFinancialStatus test cancelledAt
       lineItems(first: 50) { nodes { sku title quantity discountedTotalSet { shopMoney { amount currencyCode } } } }
+      refunds(first: 20) { id createdAt totalRefundedSet { shopMoney { amount currencyCode } }
+        refundLineItems(first: 50) { nodes { lineItem { sku } quantity subtotalSet { shopMoney { amount currencyCode } } totalTaxSet { shopMoney { amount currencyCode } } } } }
     }
   }
 }`
 
 export const PAGE_SIZE = 50
 
-/** Paid orders updated at or after the watermark (ISO instant), oldest update first. */
+/** Orders paid at some point (paid, partially refunded, refunded) updated at or after the watermark, oldest update first. */
 export async function listPaidOrders(
   shop: string,
   accessToken: string,
@@ -54,7 +79,10 @@ export async function listPaidOrders(
     shop,
     accessToken,
     ORDERS,
-    { q: `financial_status:paid updated_at:>='${since}'`, first: PAGE_SIZE },
+    {
+      q: `(financial_status:paid OR financial_status:partially_refunded OR financial_status:refunded) updated_at:>='${since}'`,
+      first: PAGE_SIZE,
+    },
     http,
   )
   return z
@@ -80,6 +108,23 @@ export const orderEvidence = z.object({
   financialStatus: z.string(),
   test: z.boolean(),
   cancelled: z.boolean(),
+  refunds: z
+    .array(
+      z.object({
+        refundGid: z.string(),
+        occurredAt: z.string(),
+        amountOre: z.number().int(),
+        lines: z.array(
+          z.object({
+            lineNo: z.number().int(),
+            sku: z.string().nullable(),
+            quantity: z.number().int(),
+            amountOre: z.number().int(),
+          }),
+        ),
+      }),
+    )
+    .max(20),
   lines: z.array(
     z.object({
       lineNo: z.number().int(),
@@ -118,6 +163,25 @@ export function orderToEvidence(order: OrderNode): OrderEvidence {
     financialStatus: order.displayFinancialStatus ?? 'UNKNOWN',
     test: order.test,
     cancelled: order.cancelledAt !== null,
+    // A refund line's amount is what the customer got back for it: the
+    // subtotal plus its tax, which equals the tax-inclusive line price when
+    // the whole line is refunded.
+    refunds: (order.refunds ?? []).map((r) => ({
+      refundGid: r.id,
+      occurredAt: new Date(r.createdAt).toISOString(),
+      amountOre: toOre(r.totalRefundedSet.shopMoney.amount),
+      lines: r.refundLineItems.nodes.map((l, i) => ({
+        lineNo: i + 1,
+        sku:
+          l.lineItem.sku && l.lineItem.sku.length <= 200
+            ? l.lineItem.sku
+            : null,
+        quantity: l.quantity,
+        amountOre:
+          toOre(l.subtotalSet.shopMoney.amount) +
+          toOre(l.totalTaxSet.shopMoney.amount),
+      })),
+    })),
     lines,
   })
 }

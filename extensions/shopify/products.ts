@@ -212,3 +212,136 @@ export async function findVariantBySku(
       }
     : null
 }
+
+const STAGED_UPLOAD = `mutation Stage($input: [StagedUploadInput!]!) {
+  stagedUploadsCreate(input: $input) {
+    stagedTargets { url resourceUrl parameters { name value } }
+    userErrors { field message }
+  }
+}`
+const CREATE_MEDIA = `mutation Media($productId: ID!, $media: [CreateMediaInput!]!) {
+  productCreateMedia(productId: $productId, media: $media) {
+    media { id status }
+    mediaUserErrors { field message code }
+  }
+}`
+
+/**
+ * Upload one JPEG through Shopify's staged upload: ask for a target, post the
+ * bytes with the target's parameters, hand back the resource URL that
+ * productCreateMedia accepts as originalSource.
+ */
+export async function stageImageUpload(
+  shop: string,
+  accessToken: string,
+  filename: string,
+  bytes: Uint8Array,
+  http: typeof fetch = globalThis.fetch,
+): Promise<string> {
+  const data = await graphql(
+    shop,
+    accessToken,
+    STAGED_UPLOAD,
+    {
+      input: [
+        {
+          filename,
+          mimeType: 'image/jpeg',
+          resource: 'IMAGE',
+          httpMethod: 'POST',
+        },
+      ],
+    },
+    http,
+  )
+  const parsed = z
+    .object({
+      stagedUploadsCreate: z.object({
+        stagedTargets: z
+          .array(
+            z.object({
+              url: z.string().url(),
+              resourceUrl: z.string().url(),
+              parameters: z
+                .array(z.object({ name: z.string(), value: z.string() }))
+                .max(30),
+            }),
+          )
+          .max(1),
+        userErrors: z.array(z.object({ message: z.string() })),
+      }),
+    })
+    .parse(data).stagedUploadsCreate
+  const target = parsed.stagedTargets[0]
+  if (parsed.userErrors.length || !target)
+    throw new Error('SHOPIFY_UPLOAD_REJECTED')
+  if (!target.url.startsWith('https://'))
+    throw new Error('SHOPIFY_UPLOAD_REJECTED')
+  const form = new FormData()
+  for (const { name, value } of target.parameters) form.append(name, value)
+  form.append(
+    'file',
+    new Blob([bytes as BlobPart], { type: 'image/jpeg' }),
+    filename,
+  )
+  let response: Response
+  try {
+    response = await http(target.url, {
+      method: 'POST',
+      body: form,
+      cache: 'no-store',
+      redirect: 'error',
+      signal: AbortSignal.timeout(20000),
+    })
+  } catch {
+    throw new Error('SHOPIFY_CONNECTION_FAILED')
+  }
+  if (!response.ok) throw new Error('SHOPIFY_UPLOAD_FAILED')
+  return target.resourceUrl
+}
+
+/** Attach one staged image to a product; returns the media id. */
+export async function createProductImage(
+  shop: string,
+  accessToken: string,
+  productGid: string,
+  resourceUrl: string,
+  alt: string,
+  http?: typeof fetch,
+): Promise<string> {
+  const data = await graphql(
+    shop,
+    accessToken,
+    CREATE_MEDIA,
+    {
+      productId: productGid,
+      media: [
+        {
+          originalSource: resourceUrl,
+          mediaContentType: 'IMAGE',
+          alt: alt.slice(0, 255),
+        },
+      ],
+    },
+    http,
+  )
+  const parsed = z
+    .object({
+      productCreateMedia: z.object({
+        media: z
+          .array(
+            z.object({
+              id: z.string().min(1).max(200),
+              status: z.string().nullable().optional(),
+            }),
+          )
+          .nullable(),
+        mediaUserErrors: z.array(z.object({ message: z.string() })),
+      }),
+    })
+    .parse(data).productCreateMedia
+  const media = parsed.media?.[0]
+  if (parsed.mediaUserErrors.length || !media)
+    throw new Error('SHOPIFY_IMAGE_REJECTED')
+  return media.id
+}

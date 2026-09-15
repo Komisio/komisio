@@ -29,6 +29,9 @@ export const shopifyOrderStatus = z.object({
         lines: z.number().int(),
         saleId: z.string().nullable(),
         errorCode: z.string().nullable(),
+        returned: count.optional(),
+        refundsHeld: count.optional(),
+        refundError: z.string().nullable().optional(),
       }),
     )
     .max(30),

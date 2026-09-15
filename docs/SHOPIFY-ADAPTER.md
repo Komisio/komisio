@@ -118,6 +118,26 @@ Migration `20260916330000`, pgTAP `0103`, `extensions/shopify/orders.ts`,
   deployment says whether they count: `SHOPIFY_ACCEPT_TEST_ORDERS=true`
   (staging only) records them as sales; the evidence still marks them as
   test orders. Production leaves the variable unset and holds them.
+- **Refunds as returns (2026-09-15).** Migration `20260916350000`, pgTAP
+  `0105`. The order query also covers partially refunded and refunded
+  orders (they were paid, so the sale stands) and carries each order's
+  refunds: id, time, amount and lines with sku and the refunded amount
+  (subtotal plus tax, the tax-inclusive line price when the whole line is
+  refunded). Each refund is stored once (`shopify_refunds`); each refund
+  line whose sku is a sold Komisio item on that order becomes a return of
+  the sale line through the existing return rule, recorded by the private
+  return core so the scheduled pull can do it too. What the rule refuses
+  (partial amount, line already returned) and what cannot be matched (no
+  sale, foreign line) is an outcome row with the code, shown on the order
+  and counted as held. A refund never counts as a changed order.
+- **Product photo (2026-09-15).** After a product is synced, the item's
+  first reception photo (same selection as the Zettle image) is uploaded
+  once: `stagedUploadsCreate` (resource IMAGE, POST), the bounded JPEG
+  derivative posted to the staged target, `productCreateMedia` on the
+  product. One intent row per item (`shopify_product_images`) holds the
+  media id or the last failure code; a media id is never replaced. Items
+  without a reception photo (purchases, imports) have no image. A photo
+  failure never fails the export; the next export retries it.
 - **Scheduled pull (2026-09-15).** Migration `20260916340000`, pgTAP `0104`,
   `lib/engine/shopify-automation.ts`, `/api/automation/shopify-pull` every
   quarter hour (`vercel.json`). The owner switches it on per store as an
@@ -144,6 +164,14 @@ the product id, revision-bound renewal, staff read only) and
 update by known id, reconcile by sku, lost answer recorded as unknown,
 refusal recorded as failed, no location, renewal before export, reconnect
 without refresh token, connection changed under renewal).
+
+Refunds and photos: `supabase/tests/0105_shopify_refunds_images.test.sql`
+(whole-line refund to return, replay stores nothing twice, partial and
+foreign refunds held with the code, refused sale leaves the refund held,
+public return command unchanged, image intent per item, product required,
+failure then media id, media id never replaced, staff read only) and
+`tests/unit/shopify-images.test.ts` (staged upload and media attach, no
+photo, already synced, failure codes, refund evidence amounts).
 
 Scheduled pull: `supabase/tests/0104_shopify_automation.test.sql` (unknown
 scope refused, no run without a shop, reservation and duplicate delivery,

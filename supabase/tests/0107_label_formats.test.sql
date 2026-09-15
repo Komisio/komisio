@@ -1,0 +1,32 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000000971','format-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000972','format-staff@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000971","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Label formats','label-formats-test',gen_random_uuid())::text,true);
+select is(label_formats(current_setting('test.tenant')::uuid)->'bag',jsonb_build_object('widthMm',76,'heightMm',51,'custom',false),'bag default is the larger label');
+select is(label_formats(current_setting('test.tenant')::uuid)->'item',jsonb_build_object('widthMm',57,'heightMm',32,'custom',false),'item default is the smaller label');
+select is((select count(*) from jsonb_object_keys(label_formats(current_setting('test.tenant')::uuid))),5::bigint,'every kind has a size');
+select throws_like($$select set_label_format(current_setting('test.tenant')::uuid,'poster',100,150)$$,'%INVALID_INPUT%','unknown kinds refused');
+select throws_like($$select set_label_format(current_setting('test.tenant')::uuid,'item',10,32)$$,'%INVALID_INPUT%','too narrow refused');
+select throws_like($$select set_label_format(current_setting('test.tenant')::uuid,'item',57,32.25)$$,'%INVALID_INPUT%','tenths of a millimetre at most');
+select is(set_label_format(current_setting('test.tenant')::uuid,'item',50,25),jsonb_build_object('kind','item','widthMm',50,'heightMm',25,'custom',true),'item size set');
+select is(label_formats(current_setting('test.tenant')::uuid)->'item'->>'custom','true','the store size replaces the default');
+select is((label_formats(current_setting('test.tenant')::uuid)->'item'->>'widthMm')::numeric,50::numeric,'width stored');
+select set_label_format(current_setting('test.tenant')::uuid,'item',57,32);
+select is((label_formats(current_setting('test.tenant')::uuid)->'item'->>'heightMm')::numeric,32::numeric,'setting again replaces');
+select is((select count(*) from label_formats where tenant_id=current_setting('test.tenant')::uuid),1::bigint,'one row per kind');
+select is((select count(*) from access_events where tenant_id=current_setting('test.tenant')::uuid and action='label_format.set'),2::bigint,'every change is an access event');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values (current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000000972','staff');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000972","role":"authenticated"}';
+select lives_ok($$select label_formats(current_setting('test.tenant')::uuid)$$,'staff read the sizes');
+select throws_ok($$select set_label_format(current_setting('test.tenant')::uuid,'bag',100,50)$$,'42501',null,'staff cannot change sizes');
+select throws_ok($$update label_formats set width_mm=1 where tenant_id=current_setting('test.tenant')::uuid$$,'42501',null,'no direct writes');
+select throws_ok($$select label_formats(gen_random_uuid())$$,'42501',null,'another store is refused');
+select * from finish();
+rollback;

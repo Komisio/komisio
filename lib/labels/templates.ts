@@ -1,9 +1,10 @@
 import { z } from 'zod'
 
-// Label templates (P2 S19): ZPL as versioned code with fixed layout and
-// plain-text placeholders. Every dynamic value is stripped of ZPL control
+// Label templates (P2 S19, sizes 2026-09-15): ZPL as versioned code with a
+// fixed layout that scales to the store's label size, and plain-text
+// placeholders. Every dynamic value is stripped of ZPL control
 // characters so a store name or a note can never change the label program.
-export const LABEL_TEMPLATE_VERSION = 'zpl-v1'
+export const LABEL_TEMPLATE_VERSION = 'zpl-v2'
 export const labelKind = z.enum([
   'bag',
   'garment',
@@ -41,21 +42,54 @@ export function zplText(input: string) {
     .trim()
 }
 
-/** A 58 mm label at 203 dpi is about 464 dots wide; layouts stay inside 440. */
-function frame(lines: string[]) {
-  return ['^XA', '^CI28', '^PW464', '^LL320', ...lines, '^XZ'].join('\n')
+export const labelFormat = z.strictObject({
+  widthMm: z.number().min(20).max(120),
+  heightMm: z.number().min(15).max(200),
+  dpi: z.union([z.literal(203), z.literal(300), z.literal(600)]),
+})
+export type LabelFormat = z.infer<typeof labelFormat>
+/** The layout was drawn for 58 x 40 mm at 203 dpi; other sizes scale it. */
+export const referenceFormat: LabelFormat = {
+  widthMm: 58,
+  heightMm: 40,
+  dpi: 203,
 }
-const fd = (x: number, y: number, size: number, value: string) =>
-  `^FO${x},${y}^A0N,${size},${size}^FD${zplText(value)}^FS`
-const barcode = (x: number, y: number, value: string) =>
-  `^FO${x},${y}^BY2,2,60^BCN,60,Y,N,N^FD${zplText(value)}^FS`
-const qrcode = (x: number, y: number, value: string) =>
-  `^FO${x},${y}^BQN,2,4^FDQA,${zplText(value)}^FS`
+const REFERENCE_WIDTH = 464
+const REFERENCE_HEIGHT = 320
 
-/** Renders one label program. The reference is always machine readable. */
-export function renderLabel(kindInput: unknown, factsInput: unknown) {
+function dots(mm: number, dpi: number) {
+  return Math.round((mm / 25.4) * dpi)
+}
+
+/** Scaled ZPL primitives for one label size. */
+function layout(format: LabelFormat) {
+  const width = dots(format.widthMm, format.dpi)
+  const height = dots(format.heightMm, format.dpi)
+  const s = Math.min(width / REFERENCE_WIDTH, height / REFERENCE_HEIGHT)
+  const n = (value: number) => Math.max(1, Math.round(value * s))
+  return {
+    frame: (lines: string[]) =>
+      ['^XA', '^CI28', `^PW${width}`, `^LL${height}`, ...lines, '^XZ'].join(
+        '\n',
+      ),
+    fd: (x: number, y: number, size: number, value: string) =>
+      `^FO${n(x)},${n(y)}^A0N,${n(size)},${n(size)}^FD${zplText(value)}^FS`,
+    barcode: (x: number, y: number, value: string) =>
+      `^FO${n(x)},${n(y)}^BY${Math.min(4, n(2))},2,${n(60)}^BCN,${n(60)},Y,N,N^FD${zplText(value)}^FS`,
+    qrcode: (x: number, y: number, value: string) =>
+      `^FO${n(x)},${n(y)}^BQN,2,${Math.min(10, Math.max(2, n(4)))}^FDQA,${zplText(value)}^FS`,
+  }
+}
+
+/** Renders one label program for the size; the reference is always machine readable. */
+export function renderLabel(
+  kindInput: unknown,
+  factsInput: unknown,
+  formatInput: unknown = referenceFormat,
+) {
   const kind = labelKind.parse(kindInput)
   const f = labelFacts.parse(factsInput)
+  const { frame, fd, barcode, qrcode } = layout(labelFormat.parse(formatInput))
   const price = f.price ? `${f.price} ${f.currency}` : ''
   switch (kind) {
     case 'bag':

@@ -1382,6 +1382,15 @@
     }
   },
   "printing": {
+    "formatsHeading": "Etikettstorlekar",
+    "formatsIntro": "Bredd och höjd i millimeter per etikettyp. Layouten skalas till storleken i skrivarens upplösning; en standardstorlek gäller tills du sätter en egen. Ladda motsvarande etikettrulle i skrivaren.",
+    "formatKind": "Etikett",
+    "width": "Bredd (mm)",
+    "height": "Höjd (mm)",
+    "saveFormat": "Spara storlek",
+    "formatSaved": "Sparad.",
+    "formatInvalid": "Bredd 20 till 120 mm, höjd 15 till 200 mm, högst en decimal.",
+    "defaultSize": "standard",
     "title": "Skrivare och etiketter",
     "intro": "Etiketter är ZPL-program som köas till en butiksskrivare. En lokal agent vid skrivaren hämtar jobben och rapporterar utfallet.",
     "none": "Inga skrivare registrerade.",

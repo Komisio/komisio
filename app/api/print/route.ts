@@ -2,8 +2,12 @@ import { randomUUID } from 'node:crypto'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { platformContext } from '@/lib/platform/context'
-import { queuePrintJobInput } from '@/lib/engine/printing'
-import { renderLabel, LABEL_TEMPLATE_VERSION } from '@/lib/labels/templates'
+import { queuePrintJobInput, readLabelFormats } from '@/lib/engine/printing'
+import {
+  LABEL_TEMPLATE_VERSION,
+  referenceFormat,
+  renderLabel,
+} from '@/lib/labels/templates'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { formatOre } from '@/lib/engine/items'
 
@@ -109,7 +113,20 @@ export async function POST(request: Request) {
       facts.line1 = seller.data.name
       facts.qr = `${origin}/intake/sellers/${seller.data.id}`
     }
-    const payload = renderLabel(c.kind, facts)
+    const printer = await client
+      .from('printers')
+      .select('dpi')
+      .eq('tenant_id', tenantId)
+      .eq('id', c.printerId)
+      .maybeSingle()
+    if (!printer.data) return reply({ error: 'PRINTER_NOT_FOUND' }, 400)
+    const formats = await readLabelFormats(client, tenantId)
+    const size = formats?.[c.kind] ?? referenceFormat
+    const payload = renderLabel(c.kind, facts, {
+      widthMm: size.widthMm,
+      heightMm: size.heightMm,
+      dpi: printer.data.dpi,
+    })
     const queued = await client.rpc('queue_print_job', {
       p_tenant: tenantId,
       p_id: c.requestId,

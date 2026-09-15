@@ -37,7 +37,7 @@ and a signed executable are later work.
 
 ## Templates
 
-`zpl-v1` targets a 58 mm label at 203 dpi. Every dynamic value passes through
+`zpl-v2` draws the same layout as `zpl-v1` scaled to the store's label size at the printer's resolution. The size per label kind is set under Settings, Printing (width and height in millimetres; defaults 76 x 51 mm for bag and onboarding labels, 57 x 32 mm for garment, item and markdown labels; migration `20260916370000`). The queued job keeps the rendered program, so a later size change never alters a printed label. The reference layout is 58 x 40 mm at 203 dpi. Every dynamic value passes through
 `zplText`, which removes `^`, `~`, backslashes and control characters, so a
 store name or a note can never alter the label program. The reference is
 always printed as a Code 128 barcode (bag, garment, item, markdown) or a QR

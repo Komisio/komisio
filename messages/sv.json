@@ -1382,6 +1382,11 @@
     }
   },
   "printing": {
+    "agentTitle": "Kör utskriftsagenten vid den här skrivaren",
+    "agentStep1": "Skapa ett medlemskonto för skrivaren (Användare): en personalmedlem med egen e-post, utan MFA. Kontot hämtar bara utskriftsjobb.",
+    "agentStep2": "På datorn vid skrivaren: installera Node.js (LTS) och hämta Komisio-repot (git clone eller ZIP från GitHub), kör npm install en gång.",
+    "agentStep3": "Spara raderna nedan som komisio-print.env i repots mapp och fyll i e-post och lösenord.",
+    "agentStep4": "Starta med: node scripts/print-agent.mjs komisio-print.env. Låt fönstret vara öppet; etiketter som köas till skrivaren skrivs ut inom några sekunder.",
     "formatsHeading": "Etikettstorlekar",
     "formatsIntro": "Bredd och höjd i millimeter per etikettyp. Layouten skalas till storleken i skrivarens upplösning; en standardstorlek gäller tills du sätter en egen. Ladda motsvarande etikettrulle i skrivaren.",
     "formatKind": "Etikett",

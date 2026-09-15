@@ -167,6 +167,27 @@ export default async function Settings({
                   intake={d.intake}
                 />
               )}
+              {manages && p.transport === 'tcp' && (
+                <div>
+                  <h4>{pr.agentTitle}</h4>
+                  <ol>
+                    <li>{pr.agentStep1}</li>
+                    <li>{pr.agentStep2}</li>
+                    <li>{pr.agentStep3}</li>
+                    <li>{pr.agentStep4}</li>
+                  </ol>
+                  <pre style={{ overflowX: 'auto' }}>
+                    {[
+                      `KOMISIO_PRINT_SUPABASE_URL=${process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''}`,
+                      `KOMISIO_PRINT_PUBLISHABLE_KEY=${process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? ''}`,
+                      `KOMISIO_PRINT_TENANT_ID=${active.id}`,
+                      `KOMISIO_PRINT_PRINTER_ID=${p.id}`,
+                      'KOMISIO_PRINT_EMAIL=<the printer account e-mail>',
+                      'KOMISIO_PRINT_PASSWORD=<its password>',
+                    ].join('\n')}
+                  </pre>
+                </div>
+              )}
             </details>
           ))}
           {manages && (

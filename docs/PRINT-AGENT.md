@@ -21,19 +21,32 @@ that queue. Nothing in the hosted application talks to a printer.
 
 ## Running the agent
 
+1. Create a member account for the printer under Users: a `staff` member
+   with its own e-mail and no MFA enrolled. It can only claim and complete
+   print jobs for the store; use one account per printer so the audit trail
+   names the device.
+2. On the computer next to the printer: install Node.js (LTS), fetch the
+   repository (git clone or the ZIP from GitHub) and run `npm install` once.
+3. Settings, Printing shows, per printer, the configuration lines. Save
+   them as `komisio-print.env` in the repository folder and fill in the
+   e-mail and password:
+
 ```
-KOMISIO_PRINT_SUPABASE_URL=https://<project>.supabase.co \
-KOMISIO_PRINT_PUBLISHABLE_KEY=<publishable key> \
-KOMISIO_PRINT_ACCESS_TOKEN=<access token of the printer's staff account> \
-KOMISIO_PRINT_TENANT_ID=<tenant id> \
-KOMISIO_PRINT_PRINTER_ID=<printer id> \
-node scripts/print-agent.mjs
+KOMISIO_PRINT_SUPABASE_URL=https://<project>.supabase.co
+KOMISIO_PRINT_PUBLISHABLE_KEY=<publishable key>
+KOMISIO_PRINT_TENANT_ID=<tenant id>
+KOMISIO_PRINT_PRINTER_ID=<printer id>
+KOMISIO_PRINT_EMAIL=<the printer account e-mail>
+KOMISIO_PRINT_PASSWORD=<its password>
 ```
 
-The account needs the `staff` role in that store and MFA enrolled like any
-member. Use a separate account per printer so the audit trail names the
-device. The agent supports the `tcp` transport (port 9100 by default); USB
-and a signed executable are later work.
+4. Start it: `node scripts/print-agent.mjs komisio-print.env`. The agent
+   signs in, renews its session itself, and prints what the store queues
+   to that printer. Stop it with Ctrl+C. A short test can use
+   `KOMISIO_PRINT_ACCESS_TOKEN` instead of e-mail and password.
+
+The agent supports the `tcp` transport (port 9100 by default); USB and an
+installable Windows service are later work.
 
 ## Templates
 

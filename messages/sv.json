@@ -1391,6 +1391,31 @@
     "empty": "Inga inköp registrerade ännu."
   },
   "sellerPortal": {
+    "items": "Mina varor",
+    "itemsIntro": "Det butiken har för dig: aktuellt pris, om varan är till salu eller såld, och när säljperioden tar slut. Priserna följer butikens nedsättningsschema.",
+    "noItems": "Inga varor ännu.",
+    "item": "Vara",
+    "price": "Pris",
+    "itemDate": "Såld / till salu till",
+    "wasPrice": "var",
+    "until": "till",
+    "then": "sedan",
+    "itemStates": {
+      "forSale": "till salu",
+      "periodEnding": "säljperioden slutar snart",
+      "periodEnded": "säljperioden är slut",
+      "ended": "inte längre till salu",
+      "sold": "såld"
+    },
+    "endActions": {
+      "charity": "skänks till välgörenhet",
+      "return": "lämnas tillbaka till dig"
+    },
+    "endedAs": {
+      "charity": "skänkt till välgörenhet",
+      "return": "återlämnad till dig",
+      "transfer": "flyttad till en annan butik i kedjan"
+    },
     "handovers": "Lämna in plagg",
     "handoverIntro": "Anmäl en påse eller låda innan du kommer. Visa referensen i kassan; butiken registrerar den som din påse och du ser påsnumret här.",
     "handoverDisabled": "Butiken tar inte emot anmälda inlämningar ännu. Lämna dina plagg i kassan.",

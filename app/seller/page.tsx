@@ -11,6 +11,7 @@ import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { SellerEconomyForms } from '@/components/seller/economy-forms'
 import { SellerHandovers } from '@/components/seller/handover-forms'
 import { readMyHandovers } from '@/lib/engine/handovers'
+import { readMyItems, sellerItemState } from '@/lib/engine/seller-items'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { SignOut } from '@/components/platform/sign-out'
 import { Brand } from '@/components/platform/brand'
@@ -119,9 +120,10 @@ export default async function SellerPortal({
       </main>
     )
   }
-  const [economy, handovers] = await Promise.all([
+  const [economy, handovers, mine] = await Promise.all([
     readMySellerEconomy(ctx.client, account.tenantId, account.sellerId),
     readMyHandovers(ctx.client, account.tenantId, account.sellerId),
+    readMyItems(ctx.client, account.tenantId, account.sellerId),
   ])
   return (
     <main className="onboarding seller-review">
@@ -159,6 +161,73 @@ export default async function SellerPortal({
         handovers={handovers}
         d={d}
       />
+      {mine && (
+        <section className="card" aria-label={d.items}>
+          <h2>{d.items}</h2>
+          <p>{d.itemsIntro}</p>
+          {mine.items.length === 0 && <p>{d.noItems}</p>}
+          {mine.items.length > 0 && (
+            <div style={{ overflowX: 'auto' }}>
+              <table>
+                <thead>
+                  <tr>
+                    <th>{d.item}</th>
+                    <th>{d.price}</th>
+                    <th>{d.status}</th>
+                    <th>{d.itemDate}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {mine.items.map((i) => {
+                    const state = sellerItemState(i)
+                    return (
+                      <tr key={i.id}>
+                        <td>
+                          {i.title ?? i.reference}
+                          {i.category ? ` · ${i.category}` : ''}
+                          <br />
+                          <small>{i.reference}</small>
+                        </td>
+                        <td>
+                          {state === 'sold' && i.soldPriceOre !== null
+                            ? amount(i.soldPriceOre)
+                            : i.currentPriceOre === null
+                              ? '—'
+                              : amount(i.currentPriceOre)}
+                          {state !== 'sold' &&
+                          i.acceptedPriceOre !== null &&
+                          i.currentPriceOre !== null &&
+                          i.currentPriceOre < i.acceptedPriceOre
+                            ? ` (${d.wasPrice} ${amount(i.acceptedPriceOre)})`
+                            : ''}
+                        </td>
+                        <td>
+                          {d.itemStates[state]}
+                          {state === 'ended' && i.endedAs
+                            ? ` · ${label(d.endedAs, i.endedAs)}`
+                            : ''}
+                          {(state === 'periodEnding' ||
+                            state === 'periodEnded') &&
+                          i.endOfPeriodAction
+                            ? ` · ${d.then} ${d.endActions[i.endOfPeriodAction]}`
+                            : ''}
+                        </td>
+                        <td>
+                          {state === 'sold' && i.soldAt
+                            ? when(i.soldAt)
+                            : state === 'ended'
+                              ? '—'
+                              : `${d.until} ${when(i.periodEnd)}`}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+      )}
       <p>{d.recent}</p>
       <section className="card">
         <h2>{d.payouts}</h2>

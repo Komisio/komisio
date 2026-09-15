@@ -1409,6 +1409,31 @@
       "received": "received by the store",
       "cancelled": "cancelled"
     },
+    "items": "My items",
+    "itemsIntro": "What the store holds for you: the current price, whether it is for sale or sold, and when its sale period ends. Prices follow the store's markdown schedule.",
+    "noItems": "No items yet.",
+    "item": "Item",
+    "price": "Price",
+    "itemDate": "Sold on / for sale until",
+    "wasPrice": "was",
+    "until": "until",
+    "then": "then",
+    "itemStates": {
+      "forSale": "for sale",
+      "periodEnding": "sale period ends soon",
+      "periodEnded": "sale period over",
+      "ended": "no longer for sale",
+      "sold": "sold"
+    },
+    "endActions": {
+      "charity": "donated to charity",
+      "return": "returned to you"
+    },
+    "endedAs": {
+      "charity": "donated to charity",
+      "return": "returned to you",
+      "transfer": "moved to another store in the chain"
+    },
     "title": "My sales",
     "empty": "No seller matches your verified email. Contact the store if an account is missing.",
     "available": "Available",

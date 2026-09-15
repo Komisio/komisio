@@ -28,6 +28,11 @@ import {
 } from '@/lib/engine/shopify-connection'
 import { shopifyEnvironment, shopifyIssue } from '@/extensions/shopify/auth'
 import { ShopifyConnection } from '@/components/intake/shopify-connection'
+import { ShopifyProducts } from '@/components/intake/shopify-products'
+import {
+  readShopifyCandidates,
+  readShopifyProductStatus,
+} from '@/lib/engine/shopify-products'
 export default async function Integrations({
   searchParams,
 }: {
@@ -88,6 +93,12 @@ export default async function Integrations({
   ]
   const shopifyStatus = await readShopifyStatus(ctx.client, a.id)
   const shopifyExpired = shopifyTokenExpired(shopifyStatus)
+  const [shopifyCandidates, shopifyProducts] = shopifyStatus.connected
+    ? await Promise.all([
+        readShopifyCandidates(ctx.client, a.id),
+        readShopifyProductStatus(ctx.client, a.id),
+      ])
+    : [null, null]
   return (
     <>
       <div className="page-heading">
@@ -118,6 +129,19 @@ export default async function Integrations({
           d={all.shopify}
         />
       )}
+      {['owner', 'admin'].includes(a.role) &&
+        shopifyCandidates &&
+        shopifyProducts && (
+          <ShopifyProducts
+            key={`shopify-products-${a.id}`}
+            tenantId={a.id}
+            candidates={shopifyCandidates}
+            products={shopifyProducts}
+            currency={shopifyStatus.currency ?? 'SEK'}
+            locale={ctx.locale}
+            d={all.shopify}
+          />
+        )}
       {a.role === 'staff' && images !== null && images.length > 0 && (
         <section className="card intake-form" aria-label={d.imageStatusTitle}>
           <h2>{d.imageStatusTitle}</h2>

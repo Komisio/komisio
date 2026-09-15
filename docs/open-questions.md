@@ -52,7 +52,12 @@ proposal's owner clarification for scope and outstanding details.
    grouping above tenants; a user may belong to one or many tenants within
    the same chain. Follow-up to decide when the first chain customer
    arrives: what is shared across a chain (consignor identity? reporting?
-   nothing but access?).
+   nothing but access?). **Raised again 2026-09-15:** komisio.com lists
+   "several stores under one company" as in development; the concrete
+   questions (chain label and reporting first, item transfer as end plus
+   acceptance, where the seller balance lives, who may move, one plan or
+   one per store) are in [CHAIN-GROUPING.md](CHAIN-GROUPING.md) and wait
+   for the owner.
 
 ## Consignment terms
 

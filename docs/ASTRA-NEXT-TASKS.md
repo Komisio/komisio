@@ -107,3 +107,9 @@ without touching financial history.
 Shopify (waits for Zettle live to settle), USB print transport (needs
 hardware), payout rails (need a provider agreement), Stripe Tax and
 production billing (need the operating company).
+
+## Label configuration, step 2 (2026-09-15)
+
+Owner-assigned: automatic printing per event, test print, templates per
+printer, a guided editor. The spec with scope, contracts and guardrails is
+[ASTRA-SPEC-LABELS.md](ASTRA-SPEC-LABELS.md); read PRINT-AGENT.md first.

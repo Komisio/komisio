@@ -1,57 +1,70 @@
-# Local print agent
+# Komisio Print (the local print agent)
 
-Status: delivered with P2 S19 (migration `20260914080000`). The core keeps a
-queue of label jobs per printer; a small Node script next to the printer works
-that queue. Nothing in the hosted application talks to a printer.
+Status: delivered with P2 S19 (queue and templates, migration
+`20260914080000`), label sizes (`20260916370000`) and the paired device
+(`20260916390000`, 2026-09-15). The core keeps a queue of label jobs per
+printer; Komisio Print, a small program on the computer next to the
+printer, works that queue. Nothing in the hosted application talks to a
+printer.
+
+## For the store
+
+1. Settings, Printing: register the printer (name, IP address with port
+   9100, model, resolution) and set the label sizes.
+2. Download Komisio Print for Windows (the link is next to the printer),
+   unzip, run `install.cmd` as administrator.
+3. Press "New pairing code" next to the printer and enter it when the
+   installer asks. The code is valid fifteen minutes and works once.
+4. Done. Komisio Print runs as a Windows service, starts with the computer
+   and prints what the store queues to that printer. Its status (last seen,
+   printer reachable, version) shows next to the printer; "Disconnect"
+   revokes it at once.
+
+No account, no password, nothing to type but the code. One device per
+printer; a second computer gets its own code.
 
 ## How it works
 
-1. An owner or admin registers the printer in Settings (name, TCP address or
-   USB, model, dpi). Printers are never deleted; inactive printers accept no
-   jobs.
-2. Staff press "Send to printer" on a bag label, a garment label, an item or a
-   seller page. The application renders the ZPL program from a versioned
-   template (`lib/labels/templates.ts`) and calls `queue_print_job`, which
-   binds the job to the printer and to the referenced fact.
-3. The agent, signed in as a dedicated staff member of the store, calls
-   `claim_print_job` for its printer, sends the program over TCP once per
-   copy, and calls `complete_print_job` with the outcome. A claim older than
-   ten minutes is handed out again so a crashed agent loses nothing.
-4. Settings show the recent jobs with their status and error text.
+- The device signs in as its own anonymous Supabase user and exchanges the
+  code (`pair_print_device`) for a membership with the role `device`, bound
+  to one printer. A device holds nothing else: it is outside the member
+  tenant list, so every row-level policy denies it; it reads its printer
+  through `print_device_context`, claims and completes that printer's jobs,
+  and reports a heartbeat (`report_print_device`). Codes are stored hashed
+  and are never readable. Revocation (`revoke_print_device`) removes the
+  membership; the anonymous user is then nothing.
+- Anonymous sign-ins must be enabled on the Supabase project (Auth,
+  Providers, Anonymous); the local config enables them.
+- The program (`print-agent/agent.cjs`) has no dependencies: Node's fetch
+  talks to Auth and PostgREST, a TCP socket sends ZPL to the printer. It
+  renews its session itself, retries on errors, and exits when revoked (the
+  service restarts it after thirty seconds, so a re-pair takes effect).
+- The Windows package is built by the `Print agent` workflow: the agent as a
+  Node single executable with the environment's Supabase URL and
+  publishable key baked in (`print-agent/build.mjs`), WinSW 2.12.0 as the
+  service wrapper, `install.cmd` and `uninstall.cmd`. A tag `print-v*`
+  publishes `KomisioPrint-win-x64.zip` (production) and
+  `KomisioPrint-staging-win-x64.zip` (staging) as release assets; Settings
+  links to the latest release for its environment. The workflow reads the
+  URL and key from the GitHub environments `staging-print` and
+  `production-print` (variables `PRINT_SUPABASE_URL`,
+  `PRINT_PUBLISHABLE_KEY`; both are public values).
+- Configuration lives in `%ProgramData%\KomisioPrint\device.json` (the
+  refresh token, the device and printer ids); logs next to the service
+  executable. `KomisioPrint status`, `KomisioPrint unpair`.
 
-## Running the agent
-
-1. Create a member account for the printer under Users: a `staff` member
-   with its own e-mail and no MFA enrolled. It can only claim and complete
-   print jobs for the store; use one account per printer so the audit trail
-   names the device.
-2. On the computer next to the printer: install Node.js (LTS), fetch the
-   repository (git clone or the ZIP from GitHub) and run `npm install` once.
-3. Settings, Printing shows, per printer, the configuration lines. Save
-   them as `komisio-print.env` in the repository folder and fill in the
-   e-mail and password:
-
-```
-KOMISIO_PRINT_SUPABASE_URL=https://<project>.supabase.co
-KOMISIO_PRINT_PUBLISHABLE_KEY=<publishable key>
-KOMISIO_PRINT_TENANT_ID=<tenant id>
-KOMISIO_PRINT_PRINTER_ID=<printer id>
-KOMISIO_PRINT_EMAIL=<the printer account e-mail>
-KOMISIO_PRINT_PASSWORD=<its password>
-```
-
-4. Start it: `node scripts/print-agent.mjs komisio-print.env`. The agent
-   signs in, renews its session itself, and prints what the store queues
-   to that printer. Stop it with Ctrl+C. A short test can use
-   `KOMISIO_PRINT_ACCESS_TOKEN` instead of e-mail and password.
-
-The agent supports the `tcp` transport (port 9100 by default); USB and an
-installable Windows service are later work.
+Developer path: `node print-agent/agent.cjs pair` and
+`node print-agent/agent.cjs run` with `KOMISIO_PRINT_SUPABASE_URL` and
+`KOMISIO_PRINT_PUBLISHABLE_KEY` set (a local stack works).
 
 ## Templates
 
-`zpl-v2` draws the same layout as `zpl-v1` scaled to the store's label size at the printer's resolution. The size per label kind is set under Settings, Printing (width and height in millimetres; defaults 76 x 51 mm for bag and onboarding labels, 57 x 32 mm for garment, item and markdown labels; migration `20260916370000`). The queued job keeps the rendered program, so a later size change never alters a printed label. The reference layout is 58 x 40 mm at 203 dpi. Every dynamic value passes through
-`zplText`, which removes `^`, `~`, backslashes and control characters, so a
-store name or a note can never alter the label program. The reference is
-always printed as a Code 128 barcode (bag, garment, item, markdown) or a QR
-code (onboarding slip) so scan-to-open works from the label.
+`zpl-v2` draws the fixed layout scaled to the store's label size at the
+printer's resolution (Settings, Printing; defaults 76 x 51 mm for bag and
+onboarding labels, 57 x 32 mm for garment, item and markdown labels). Every
+dynamic value passes through `zplText`, which removes `^`, `~`, backslashes
+and control characters, so a store name or a note can never alter the label
+program. The reference is always printed as a Code 128 barcode (bag,
+garment, item, markdown) or a QR code (onboarding slip) so scan-to-open
+works from the label. The queued job keeps the rendered program, so a later
+size change never alters a printed label.

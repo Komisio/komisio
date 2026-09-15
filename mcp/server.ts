@@ -78,6 +78,7 @@ import {
 } from './settlement'
 import { economySummaryInput, readEconomySummaryTool } from './economy'
 import { economyBriefInput, readEconomyBriefTool } from './brief'
+import { stockReportInput, readStockReportTool } from './stock-report'
 import { priceEvidenceToolInput, readPriceEvidenceTool } from './price-evidence'
 import {
   dayCloseListInput,
@@ -408,6 +409,19 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       (input) =>
         result(async () => ({
           data: await readEconomyBriefTool(client, config, input),
+        })),
+    )
+    server.registerTool(
+      'komisio_read_stock_report',
+      {
+        description:
+          "Read the store's stock report for a period of at most one year (inclusive local dates, Europe/Stockholm): per category and in total, items in stock now with their value and age in four buckets (0-14, 15-28, 29-42, 43+ days), items sold in the period with gross, the store's margin (commission for consignment; price minus VAT minus purchase price for store-owned), margin percent, sell-through percent and average days to sale. Amounts are öre. Read only; no seller names, no writes.",
+        inputSchema: stockReportInput,
+        annotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await readStockReportTool(client, config, input),
         })),
     )
   }

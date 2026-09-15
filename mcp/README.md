@@ -17,6 +17,7 @@ It exposes narrow tools through the same intake engine:
 | komisio_read_seller_ledger             | economy:read           | At most 50 recent events, without private reasons or contacts                                                  |
 | komisio_read_economy_summary           | economy:read           | Store totals for a period of at most one year, per VAT mode and day, liability and open payouts; no writes     |
 | komisio_read_economy_brief             | economy:read           | Weekly or monthly brief: fixed sentences over the summary for one period and the one before; no writes         |
+| komisio_read_stock_report              | economy:read           | Margin, sell-through and stock age per category for a period; amounts in öre; no names, no writes              |
 | komisio_propose_acceptance             | items:propose          | Stage commercial acceptance of one origin at an öre price; a different person than the proposer approves       |
 | komisio_propose_return                 | sales:propose          | Stage a full refund of one completed sale line with a reason; a different person approves                      |
 | komisio_propose_ledger_adjustment      | ledger:propose         | Stage a signed seller ledger adjustment with a reason; executes only for an owner or admin approver            |

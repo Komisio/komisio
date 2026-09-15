@@ -1,5 +1,6 @@
 import {
   BookOpen,
+  Boxes,
   Building2,
   Camera,
   ChartPie,
@@ -24,6 +25,7 @@ import {
 
 const icons = {
   BookOpen,
+  Boxes,
   Building2,
   Camera,
   ChartPie,

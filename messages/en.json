@@ -1187,6 +1187,33 @@
       "failed": "delivery failed"
     }
   },
+  "stock": {
+    "title": "Stock",
+    "intro": "Margin, sell-through and stock age per category for a period, from the store's own facts. Stock is as of now; sales are those in the period.",
+    "notice": "Read only. Margin is the store's share: the commission on consignment sales, and price minus VAT minus purchase price on store-owned sales.",
+    "notAvailable": "The stock report is not available yet on this deployment.",
+    "totalsHeading": "Totals",
+    "categoriesHeading": "Per category",
+    "empty": "No items yet.",
+    "category": "Category",
+    "uncategorised": "Uncategorised",
+    "inStock": "In stock",
+    "stockValue": "Stock value",
+    "averageAge": "Average age (days)",
+    "oldest": "Oldest (days)",
+    "sold": "Sold",
+    "soldGross": "Sold gross",
+    "margin": "Margin",
+    "marginPercent": "Margin %",
+    "sellThrough": "Sell-through",
+    "daysToSale": "Days to sale",
+    "age": "Stock age",
+    "bucket0": "0–14:",
+    "bucket15": "15–28:",
+    "bucket29": "29–42:",
+    "bucket43": "43+:",
+    "definitions": "Sell-through is sold in the period divided by sold plus in stock now. Age buckets follow the default markdown schedule."
+  },
   "lifecycle": {
     "agentHeading": "Markdown runs",
     "agentOn": "Automatic markdowns are on: due steps are applied once a day as the policy's publisher. You can also apply them now.",

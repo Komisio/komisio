@@ -17,7 +17,7 @@ export const zettleCommand = z.discriminatedUnion('action', [
     importId: z.uuid(),
     lineNo: z.number().int().min(1).max(50),
     mappingRevision: z.number().int().min(0).max(999999998),
-    itemId: z.uuid(),
+    itemId: z.guid(),
   }),
   base.extend({
     action: z.literal('configure'),
@@ -36,8 +36,8 @@ export const zettleCommand = z.discriminatedUnion('action', [
   base.extend({ action: z.literal('retry'), importId: z.uuid() }),
   base.extend({ action: z.literal('enablePull') }),
   base.extend({ action: z.literal('pull') }),
-  base.extend({ action: z.literal('export'), itemId: z.uuid() }),
-  base.extend({ action: z.literal('exportImage'), itemId: z.uuid() }),
+  base.extend({ action: z.literal('export'), itemId: z.guid() }),
+  base.extend({ action: z.literal('exportImage'), itemId: z.guid() }),
   base.extend({
     action: z.literal('abandonWindow'),
     windowId: z.uuid(),
@@ -155,7 +155,7 @@ export async function readZettlePurchase(
     .array(
       z.object({
         line_no: z.number().int(),
-        item_id: z.uuid(),
+        item_id: z.guid(),
         revision: z.number().int(),
       }),
     )
@@ -304,7 +304,7 @@ export async function readZettleCatalog(
   return {
     config: config.data?.[0] ?? null,
     candidates: z
-      .array(z.object({ item_id: z.uuid() }))
+      .array(z.object({ item_id: z.guid() }))
       .max(20)
       .parse(candidates.data),
     outcomes: outcomes.data ?? [],

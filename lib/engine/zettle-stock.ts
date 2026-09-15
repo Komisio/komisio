@@ -32,7 +32,7 @@ export async function readZettleStock(
     .array(
       z.object({
         intent_id: z.uuid(),
-        item_id: z.uuid(),
+        item_id: z.guid(),
         status: z.enum(['initialized', 'depleted', 'unknown', 'conflict']),
         error_code: z.string().nullable(),
         checked_at: z.string().nullable(),

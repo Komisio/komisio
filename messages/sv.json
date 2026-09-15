@@ -1606,7 +1606,12 @@
     "price": "Pris",
     "status": "Status",
     "when": "När",
-    "productStatuses": {"pending": "väntar", "synced": "i Shopify", "failed": "misslyckad", "unknown": "svar förlorat, kontrolleras vid nästa export"},
+    "productStatuses": {
+      "pending": "väntar",
+      "synced": "i Shopify",
+      "failed": "misslyckad",
+      "unknown": "svar förlorat, kontrolleras vid nästa export"
+    },
     "title": "Shopify-anslutning",
     "intro": "Anslut butiken till dess Shopify-butik. Det här steget ansluter, kontrollerar och kopplar bort; produkter och ordrar följer.",
     "notConnected": "Ingen Shopify-butik är ansluten.",

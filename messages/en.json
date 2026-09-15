@@ -1606,7 +1606,12 @@
     "price": "Price",
     "status": "Status",
     "when": "When",
-    "productStatuses": {"pending": "pending", "synced": "in Shopify", "failed": "failed", "unknown": "answer lost, retried on next export"},
+    "productStatuses": {
+      "pending": "pending",
+      "synced": "in Shopify",
+      "failed": "failed",
+      "unknown": "answer lost, retried on next export"
+    },
     "title": "Shopify connection",
     "intro": "Connect the store to its Shopify shop. This step only connects, verifies and disconnects; products and orders follow.",
     "notConnected": "No Shopify shop is connected.",

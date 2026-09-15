@@ -104,7 +104,12 @@ export function FortnoxVoucherSend({
           {state.detail ? ` ${d.fortnoxSaid} "${state.detail}"` : ''}{' '}
         </span>
       )}
-      {connected && canSend ? (
+      {send?.status === 'pending' ||
+      state?.error === 'FORTNOX_OUTCOME_UNKNOWN' ? (
+        send?.status === 'pending' && (
+          <small>{d.errors.FORTNOX_SEND_IN_PROGRESS}</small>
+        )
+      ) : connected && canSend ? (
         <Button
           type="button"
           variant="secondary"

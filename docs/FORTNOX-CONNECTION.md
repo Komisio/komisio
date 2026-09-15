@@ -97,8 +97,12 @@ one append-only `fortnox.reconciled` event identify the confirming owner, vouche
 evidence and prior state. An exact same-owner replay returns the outcome; changed
 coordinates or evidence are refused. A normal sent row cannot be reconciled.
 
-This is the engine prerequisite, not yet the browser evidence reader/form. Absence
-is still refused, and no reconciliation can authorize another POST. Automated
+The owner form on held export rows shows the send's pinned company database and
+requires the voucher coordinates and evidence. Admin and staff have no form and
+cannot submit the confirmation route. Compare against Fortnox directly: the
+read-only provider candidate list is not implemented yet. Pending/unknown rows
+no longer offer a resend button. Exact replay is safe after a lost form response.
+Absence is still refused, and no reconciliation can authorize another POST. Automated
 sending, dispatch leases, token renewal and confirmed-absent recovery are separate
 slices. Tests use synthetic vouchers; no real voucher was reconciled here.
 

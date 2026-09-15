@@ -37,8 +37,8 @@ export const confirmedFortnoxVoucher = z.strictObject({
   tenantId: z.uuid(),
   sendId: z.uuid(),
   voucherSeries: z.string().trim().min(1).max(10),
-  voucherNumber: z.number().int().positive(),
-  financialYear: z.number().int().positive(),
+  voucherNumber: z.number().int().positive().max(2147483647),
+  financialYear: z.number().int().positive().max(2147483647),
   evidence: z.string().trim().min(1).max(500),
 })
 
@@ -63,6 +63,7 @@ export async function confirmFortnoxVoucher(
 const sendRow = z.object({
   id: z.uuid(),
   export_id: z.uuid(),
+  database_number: z.string(),
   status: z.enum(['pending', 'sent', 'failed']),
   voucher_series: z.string(),
   voucher_number: z.number().int().nullable(),
@@ -82,7 +83,7 @@ export async function readFortnoxSends(
   const r = await client
     .from('fortnox_voucher_sends')
     .select(
-      'id,export_id,status,voucher_series,voucher_number,financial_year,error_code,detail,created_at,completed_at',
+      'id,export_id,database_number,status,voucher_series,voucher_number,financial_year,error_code,detail,created_at,completed_at',
     )
     .eq('tenant_id', z.uuid().parse(tenantInput))
     .order('created_at', { ascending: false })

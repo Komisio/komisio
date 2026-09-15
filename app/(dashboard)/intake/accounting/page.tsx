@@ -17,6 +17,7 @@ import { FortnoxConnection } from '@/components/intake/fortnox-connection'
 import { readFortnoxStatus } from '@/lib/engine/fortnox-connection'
 import { fortnoxEnvironment, fortnoxIssue } from '@/extensions/fortnox/auth'
 import { FortnoxVoucherSend } from '@/components/intake/fortnox-voucher-send'
+import { FortnoxReconcile } from '@/components/intake/fortnox-reconcile'
 import { readFortnoxSends } from '@/lib/engine/fortnox-vouchers'
 import { currentMonthPeriod, economyPeriod } from '@/lib/engine/economy'
 import { openDays, readReconciliation } from '@/lib/engine/reconciliation'
@@ -195,32 +196,46 @@ export default async function Accounting({
               {exports.length === 0 && <p>{d.noExports}</p>}
               {exports.map((e) => {
                 const c = closeById.get(e.day_close_id)
+                const send = sends.get(e.id)
                 return (
-                  <p key={e.id}>
-                    {c
-                      ? `${c.close_date} · ${d.version} ${c.version}`
-                      : e.day_close_id}{' '}
-                    · {d.mapVersion} {e.accounting_maps?.version ?? '?'} ·{' '}
-                    {e.voucher.length} {d.lines} · {d.debitTotal}{' '}
-                    {money(e.debit_ore)} ·{' '}
-                    {new Date(e.created_at).toLocaleString(ctx.locale, {
-                      timeZone: 'Europe/Stockholm',
-                    })}{' '}
-                    ·{' '}
-                    <a className="text-link" href={`/api/accounting/${e.id}`}>
-                      {d.download}
-                    </a>{' '}
-                    ·{' '}
-                    <FortnoxVoucherSend
-                      key={`${e.id}-${sends.get(e.id)?.id ?? 'none'}`}
-                      tenantId={active.id}
-                      exportId={e.id}
-                      send={sends.get(e.id) ?? null}
-                      connected={fortnox.connected}
-                      canSend={canEditMap}
-                      d={all.fortnox}
-                    />
-                  </p>
+                  <div key={e.id} className="stack">
+                    <p>
+                      {c
+                        ? `${c.close_date} · ${d.version} ${c.version}`
+                        : e.day_close_id}{' '}
+                      · {d.mapVersion} {e.accounting_maps?.version ?? '?'} ·{' '}
+                      {e.voucher.length} {d.lines} · {d.debitTotal}{' '}
+                      {money(e.debit_ore)} ·{' '}
+                      {new Date(e.created_at).toLocaleString(ctx.locale, {
+                        timeZone: 'Europe/Stockholm',
+                      })}{' '}
+                      ·{' '}
+                      <a className="text-link" href={`/api/accounting/${e.id}`}>
+                        {d.download}
+                      </a>{' '}
+                      ·{' '}
+                      <FortnoxVoucherSend
+                        key={`${e.id}-${send?.id ?? 'none'}-${send?.status ?? 'none'}`}
+                        tenantId={active.id}
+                        exportId={e.id}
+                        send={send ?? null}
+                        connected={fortnox.connected}
+                        canSend={canEditMap}
+                        d={all.fortnox}
+                      />
+                    </p>
+                    {active.role === 'owner' &&
+                      send &&
+                      (send.status === 'pending' ||
+                        (send.status === 'failed' &&
+                          send.error_code === 'FORTNOX_OUTCOME_UNKNOWN')) && (
+                        <FortnoxReconcile
+                          tenantId={active.id}
+                          send={send}
+                          d={all.fortnox}
+                        />
+                      )}
+                  </div>
                 )
               })}
             </section>

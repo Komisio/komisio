@@ -13,6 +13,8 @@ import { PlanPanel } from '@/components/platform/plan-panel'
 import { readPlanStatus } from '@/lib/engine/plans'
 import { BillingActions } from '@/components/platform/billing-actions'
 import { stripeConfigured } from '@/extensions/stripe/api'
+import { readChainOverview } from '@/lib/engine/chains'
+import { ChainPanel } from '@/components/platform/chain-panel'
 import Link from 'next/link'
 export default async function Settings({
   searchParams,
@@ -39,6 +41,7 @@ export default async function Settings({
   const pr = d.printing,
     us = d.usage
   const plan = await readPlanStatus(ctx.client, active.id)
+  const chain = await readChainOverview(ctx.client, active.id)
   const events = can(active.role, 'audit.read')
     ? await ctx.client
         .from('access_events')
@@ -150,6 +153,21 @@ export default async function Settings({
             <TenantForm d={d} tenant={active} />
           ) : (
             <p>{active.name}</p>
+          )}
+          <h3>{d.chain.title}</h3>
+          {active.role === 'owner' ? (
+            <ChainPanel
+              d={d}
+              active={active}
+              tenants={ctx.tenants}
+              chain={chain}
+            />
+          ) : (
+            <p>
+              {chain
+                ? `${chain.name} · ${d.chain.storesInChain.replace('{count}', String(chain.stores.length))}`
+                : d.chain.none}
+            </p>
           )}
           <PlanPanel
             status={plan}

@@ -11,6 +11,11 @@ import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { readEconomyBrief, renderBrief } from '@/lib/engine/brief'
 import { automationIdentity, readAutomation } from '@/lib/engine/automation'
 import { AutomationSwitch } from '@/components/intake/automation-switch'
+import {
+  readChainEconomySummary,
+  readChainOverview,
+  type ChainEconomySummary,
+} from '@/lib/engine/chains'
 
 /** One page of the store's numbers for a period; the read model is SQL. */
 export default async function Economy({
@@ -37,6 +42,19 @@ export default async function Economy({
   const brief = briefRead ? renderBrief(briefRead, all.brief) : null
   const grants =
     active.role === 'owner' ? await readAutomation(ctx.client, active.id) : null
+  // The chain view needs owner or admin in every store; a refusal is shown, not thrown.
+  const chain =
+    active.role === 'owner' || active.role === 'admin'
+      ? await readChainOverview(ctx.client, active.id)
+      : null
+  let chainSummary: ChainEconomySummary | null = null,
+    chainRefused = false
+  if (chain)
+    try {
+      chainSummary = await readChainEconomySummary(ctx.client, chain.id, period)
+    } catch {
+      chainRefused = true
+    }
   const money = (ore: number) => `${formatSignedOre(ore)} ${summary.currency}`
   const t = summary.totals
   const vatModes = all.sales.vatModes as Record<string, string>
@@ -242,6 +260,54 @@ export default async function Economy({
             </div>
           )}
         </section>
+        {chain && (
+          <section className="card intake-form" aria-label={d.chain.heading}>
+            <h2>{d.chain.heading}</h2>
+            <p>
+              {chain.name} · {period.from} – {period.to}
+            </p>
+            {chainRefused && <p>{d.chain.refused}</p>}
+            {chainSummary && (
+              <div style={{ overflowX: 'auto' }}>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>{d.chain.store}</th>
+                      <th>{d.sales}</th>
+                      <th>{d.gross}</th>
+                      <th>{d.sellerCredit}</th>
+                      <th>{d.payoutsPaid}</th>
+                      <th>{d.owed}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {chainSummary.stores.map((s) => (
+                      <tr key={s.id}>
+                        <td>{s.name}</td>
+                        <td>{s.totals.salesCount}</td>
+                        <td>{`${formatSignedOre(s.totals.grossOre)} ${s.currency}`}</td>
+                        <td>{`${formatSignedOre(s.totals.sellerCreditOre)} ${s.currency}`}</td>
+                        <td>{`${formatSignedOre(s.totals.payoutsPaidOre)} ${s.currency}`}</td>
+                        <td>{`${formatSignedOre(s.liability.owedOre)} ${s.currency}`}</td>
+                      </tr>
+                    ))}
+                    {chainSummary.total && chainSummary.currency && (
+                      <tr>
+                        <th scope="row">{d.chain.total}</th>
+                        <td>{chainSummary.total.salesCount}</td>
+                        <td>{`${formatSignedOre(chainSummary.total.grossOre)} ${chainSummary.currency}`}</td>
+                        <td>{`${formatSignedOre(chainSummary.total.sellerCreditOre)} ${chainSummary.currency}`}</td>
+                        <td>{`${formatSignedOre(chainSummary.total.payoutsPaidOre)} ${chainSummary.currency}`}</td>
+                        <td>{`${formatSignedOre(chainSummary.total.owedOre)} ${chainSummary.currency}`}</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+                {chainSummary.mixedCurrencies && <p>{d.chain.mixed}</p>}
+              </div>
+            )}
+          </section>
+        )}
       </div>
     </>
   )

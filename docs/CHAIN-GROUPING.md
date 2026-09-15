@@ -1,8 +1,9 @@
 # Several stores under one company: design proposal
 
-Status: proposal for the owner, 2026-09-15. Nothing is implemented. This
-touches tenancy, so it waits for an explicit decision (CLAUDE.md, "When
-uncertain"). The earlier decisions stand: the store is the tenant
+Status: the owner answered all five questions on 2026-09-15 (yes to step 1;
+balance stays where the sale happened; own terms in the target store; owner
+or admin in both stores; one plan per store). Step 1 is delivered (migration
+`20260916260000`, pgTAP 0096); step 2 is the next slice. The earlier decisions stand: the store is the tenant
 (2026-09-10), and a chain shares access only until a chain customer asks
 for more (B8, 2026-09-14). komisio.com now lists "several stores under one
 company: shared sign-in, moving items between stores with a recorded

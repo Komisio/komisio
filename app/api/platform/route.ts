@@ -25,10 +25,14 @@ export async function POST(request: Request) {
     const input = commandSchema.safeParse(await request.json())
     if (!input.success) return reply({ error: 'INVALID_INPUT' }, 400)
     const command = input.data
+    const chainAction = command.action.startsWith('chain')
     if ('tenantId' in command && command.action !== 'select') {
       if (command.tenantId !== context.active?.id)
         return reply({ error: 'TENANT_CHANGED' }, 409)
-      if (
+      if (chainAction) {
+        if (context.active.role !== 'owner')
+          return reply({ error: 'FORBIDDEN' }, 403)
+      } else if (
         !can(
           context.active.role,
           command.action === 'rename' ? 'tenant.edit' : 'members.manage',
@@ -92,6 +96,24 @@ export async function POST(request: Request) {
           p_token_hash: createHash('sha256')
             .update(command.token)
             .digest('hex'),
+        })
+        break
+      case 'chainCreate':
+        result = await context.client.rpc('create_chain', {
+          p_id: command.chainId,
+          p_name: command.name,
+          p_tenants: command.tenantIds,
+        })
+        break
+      case 'chainJoin':
+        result = await context.client.rpc('join_chain', {
+          p_chain: command.chainId,
+          p_tenant: command.storeId,
+        })
+        break
+      case 'chainLeave':
+        result = await context.client.rpc('leave_chain', {
+          p_tenant: command.tenantId,
         })
         break
     }

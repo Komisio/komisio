@@ -116,7 +116,8 @@ begin
 end $$;
 revoke all on function komisio_private.reconcile_shopify_order(uuid,uuid) from public,anon,authenticated;
 
-create function public.record_shopify_order_page(p_tenant uuid,p_id uuid,p_before text,p_after text,p_orders jsonb) returns uuid
+-- p_accept_test: a pilot store on a development shop only sees test orders; the deployment says whether they count.
+create function public.record_shopify_order_page(p_tenant uuid,p_id uuid,p_before text,p_after text,p_orders jsonb,p_accept_test boolean default false) returns uuid
 language plpgsql security definer set search_path='' as $$
 declare uid uuid:=komisio_private.require_identity(); prior public.shopify_order_pulls; latest text; p jsonb; stored public.shopify_orders; line jsonb; lines jsonb; matches uuid[]; hold text; n integer; cur text:=komisio_private.store_currency(p_tenant);
 begin
@@ -147,7 +148,7 @@ begin
    end if;
    continue;
   end if;
-  hold:=case when (p->>'test')::boolean then 'test' when (p->>'cancelled')::boolean then 'cancelled' when p->>'financialStatus'<>'PAID' then 'financial_status' when p->>'currency'<>cur then 'currency' end;
+  hold:=case when (p->>'test')::boolean and not coalesce(p_accept_test,false) then 'test' when (p->>'cancelled')::boolean then 'cancelled' when p->>'financialStatus'<>'PAID' then 'financial_status' when p->>'currency'<>cur then 'currency' end;
   lines:='[]'::jsonb;
   for line in select * from jsonb_array_elements(p->'lines') loop
    matches:=null;
@@ -196,5 +197,5 @@ begin
    from (select * from public.shopify_orders where tenant_id=p_tenant order by seq desc limit 30) o
    left join lateral (select * from public.shopify_order_outcomes x where x.tenant_id=p_tenant and x.order_id=o.id order by x.seq desc limit 1) x on true),'[]'::jsonb));
 end $$;
-revoke all on function public.record_shopify_order_page(uuid,uuid,text,text,jsonb),public.reconcile_shopify_order(uuid,uuid),public.shopify_order_cursor(uuid),public.shopify_order_status(uuid) from public,anon;
-grant execute on function public.record_shopify_order_page(uuid,uuid,text,text,jsonb),public.reconcile_shopify_order(uuid,uuid),public.shopify_order_cursor(uuid),public.shopify_order_status(uuid) to authenticated;
+revoke all on function public.record_shopify_order_page(uuid,uuid,text,text,jsonb,boolean),public.reconcile_shopify_order(uuid,uuid),public.shopify_order_cursor(uuid),public.shopify_order_status(uuid) from public,anon;
+grant execute on function public.record_shopify_order_page(uuid,uuid,text,text,jsonb,boolean),public.reconcile_shopify_order(uuid,uuid),public.shopify_order_cursor(uuid),public.shopify_order_status(uuid) to authenticated;

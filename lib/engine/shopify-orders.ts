@@ -98,6 +98,9 @@ export async function pullShopifyOrders(
     p_before: since,
     p_after: after,
     p_orders: orders,
+    // A pilot on a development shop only ever sees test orders; a deployment
+    // says so explicitly. The evidence still records that they are test orders.
+    p_accept_test: source.SHOPIFY_ACCEPT_TEST_ORDERS === 'true',
   })
   if (result.error) throw new Error(result.error.message)
   return { id: c.requestId, received: orders.length, cursor: after }

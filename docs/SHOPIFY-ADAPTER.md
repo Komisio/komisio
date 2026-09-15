@@ -114,6 +114,10 @@ Migration `20260916330000`, pgTAP `0103`, `extensions/shopify/orders.ts`,
   whose amount, lines or status changed in Shopify after it was stored is
   flagged once (`SHOPIFY_ORDER_CHANGED`) and left to a person; refunds are
   not turned into returns yet.
+- **Test orders.** A development shop only produces test orders, so a
+  deployment says whether they count: `SHOPIFY_ACCEPT_TEST_ORDERS=true`
+  (staging only) records them as sales; the evidence still marks them as
+  test orders. Production leaves the variable unset and holds them.
 - **No automation yet.** The pull is a button for owners and admins. A
   scheduled pull on the automation identity follows once the manual pull is
   verified against the dev store, as for Zettle.

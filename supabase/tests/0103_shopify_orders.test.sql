@@ -79,14 +79,19 @@ select record_shopify_order_page(current_setting('test.tenant')::uuid,current_se
 select is((select count(*) from shopify_order_outcomes o join shopify_orders s on s.id=o.order_id where s.tenant_id=current_setting('test.tenant')::uuid and s.name='#1001' and o.error_code='SHOPIFY_ORDER_CHANGED'),1::bigint,'a changed order is flagged once');
 select record_shopify_order_page(current_setting('test.tenant')::uuid,gen_random_uuid(),'2026-09-15T02:00:00Z','2026-09-15T03:00:00Z',jsonb_build_array(pg_temp.ord('1','#1001','K-'||current_setting('test.item1'),20000)));
 select is((select count(*) from shopify_order_outcomes o join shopify_orders s on s.id=o.order_id where s.tenant_id=current_setting('test.tenant')::uuid and s.name='#1001' and o.error_code='SHOPIFY_ORDER_CHANGED'),1::bigint,'not flagged again');
+-- A deployment that accepts test orders (the pilot on a development shop) records them.
+select record_shopify_order_page(current_setting('test.tenant')::uuid,gen_random_uuid(),'2026-09-15T03:00:00Z','2026-09-15T04:00:00Z',jsonb_build_array(pg_temp.ord('8','#1008','K-'||current_setting('test.item2'),25000,tst=>true)),true);
+select is((select hold_reason from shopify_orders where tenant_id=current_setting('test.tenant')::uuid and name='#1008'),null,'accepted test order is not held');
+select is((select is_test from shopify_orders where tenant_id=current_setting('test.tenant')::uuid and name='#1008'),true,'the evidence still says test');
+select is((select count(*) from sales where tenant_id=current_setting('test.tenant')::uuid and provider='shopify'),2::bigint,'accepted test order recorded as a sale');
 select throws_ok($$update shopify_orders set name='x' where tenant_id=current_setting('test.tenant')::uuid$$,'42501',null,'members cannot edit evidence');
 reset role;
 select throws_ok($$delete from shopify_order_pulls where tenant_id=current_setting('test.tenant')::uuid$$,'55000',null,'pages are immutable');
 insert into tenant_members(tenant_id,user_id,role) values (current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000000996','staff');
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000996","role":"authenticated"}';
-select is((shopify_order_status(current_setting('test.tenant')::uuid)->>'pulls')::int,5,'staff see the pull status');
-select throws_ok($$select record_shopify_order_page(current_setting('test.tenant')::uuid,gen_random_uuid(),'2026-09-15T03:00:00Z','2026-09-15T03:00:00Z','[]'::jsonb)$$,'42501',null,'staff cannot record pages');
+select is((shopify_order_status(current_setting('test.tenant')::uuid)->>'pulls')::int,6,'staff see the pull status');
+select throws_ok($$select record_shopify_order_page(current_setting('test.tenant')::uuid,gen_random_uuid(),'2026-09-15T04:00:00Z','2026-09-15T04:00:00Z','[]'::jsonb)$$,'42501',null,'staff cannot record pages');
 select throws_ok($$select shopify_order_cursor(current_setting('test.tenant')::uuid)$$,'42501',null,'staff do not read the watermark');
 select * from finish();
 rollback;

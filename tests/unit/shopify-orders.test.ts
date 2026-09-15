@@ -116,7 +116,9 @@ describe('order evidence', () => {
   })
 })
 
-function setup(options: { prior?: boolean; orders?: OrderNode[] } = {}) {
+function setup(
+  options: { prior?: boolean; orders?: OrderNode[]; acceptTest?: boolean } = {},
+) {
   const cipher = seal(
     'shopify-connection',
     { accessToken: 'shpat_synthetic', refreshToken: null },
@@ -174,7 +176,7 @@ function setup(options: { prior?: boolean; orders?: OrderNode[] } = {}) {
     pullShopifyOrders(
       client,
       { tenantId: tenant, requestId: request },
-      env,
+      options.acceptTest ? { ...env, SHOPIFY_ACCEPT_TEST_ORDERS: 'true' } : env,
       http as unknown as typeof fetch,
     )
   return { run, pages, requests }
@@ -199,6 +201,12 @@ describe('pullShopifyOrders', () => {
       p_after: '2026-09-15T11:05:00.000Z',
     })
     expect((s.pages[0].p_orders as unknown[]).length).toBe(1)
+    expect(s.pages[0].p_accept_test).toBe(false)
+  })
+  it('tells the engine when the deployment accepts test orders', async () => {
+    const s = setup({ acceptTest: true })
+    await s.run()
+    expect(s.pages[0].p_accept_test).toBe(true)
   })
   it('keeps the watermark on an empty page', async () => {
     const s = setup({ orders: [] })

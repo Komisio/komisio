@@ -65,6 +65,14 @@ render path for the automatic-label follow-up; it still uses the same store
 template, kind size, printer resolution, sanitiser and `queue_print_job` command.
 The extraction itself does not activate automatic rules or change device access.
 
+Migration `20260916410000` adds the rule storage and engine read/set commands:
+one tenant-bound printer and 1–20 copies per kind, configured by owner/admin and
+readable by members, never devices. Identical repeated settings do not add audit
+events; actual changes do. The reader tolerates a missing RPC during deployment.
+This is a storage prerequisite only: no settings switch or event queueing is
+enabled yet. The automatic-label identity/producer questions are tracked in
+`ASTRA_QUESTIONS_TO_FABLE.md`; physical automatic printing is not verified.
+
 `zpl-v2` draws the fixed layout scaled to the store's label size at the
 printer's resolution (Settings, Printing; defaults 76 x 51 mm for bag and
 onboarding labels, 57 x 32 mm for garment, item and markdown labels). Every
@@ -89,3 +97,13 @@ command; the program must be one label (`^XA` ... `^XZ`), must carry
 `{reference}`, and may not contain printer control commands (`~`). "Use the
 built-in layout" records an inactive version and the scaled layout applies
 again. The job's template version reads `store-v<n>`.
+
+## Automatic rule prerequisite deployment
+
+Migration `20260916410000` is additive and leaves existing printing unchanged.
+No rule is seeded or activated. The application tolerates only `PGRST202` for
+the new read during deployment. Verify the staging migration through GitHub and
+the existing manual queue journey; physical printing still needs pilot hardware.
+If a regression affects manual printing, revert the application PR through the
+normal green-CI path and retain the unused table. Correct database defects with
+a successor migration, never by editing an applied migration or deleting audit.

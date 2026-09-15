@@ -63,7 +63,8 @@ move to DECISIONS.md and the settings to PILOT-GATES.md.
 
 - Shopify: app registered (A11), development shop connected on staging,
   one item exported, test order `#1001` pulled and recorded as a sale
-  (A12, 2026-09-15). Steps 1 to 3 verified end to end.
+  (A12, 2026-09-15); refund to return and product photo verified the same
+  day. The Shopify adapter is complete for the pilot.
 - Fortnox: connection to the test company, one voucher sent (A8 on
   2026-09-14), database pin declared unnecessary by the owner.
 - Currency per store, markdown policy shape (question 4), self drop-off

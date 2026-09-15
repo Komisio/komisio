@@ -23,7 +23,7 @@ test('trial banner, host activation and read-only state', async ({ page }) => {
     await f.commit()
     // Billing on: the existing store stays active on a manual plan; the owner becomes a host.
     await f.db.query('select komisio_private.enable_billing($1)', [f.actor])
-    await page.goto('/settings')
+    await page.goto('/settings?tab=store')
     const panel = page.getByRole('region', {
       name: d.plans.heading,
       exact: true,

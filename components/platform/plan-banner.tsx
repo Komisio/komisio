@@ -35,7 +35,7 @@ export function PlanBanner({
       {isOwner && status.state !== 'closed'
         ? ` ${d.contactToActivate}`
         : ''}{' '}
-      <Link className="text-link" href="/settings">
+      <Link className="text-link" href="/settings?tab=store">
         {d.details}
       </Link>
     </p>

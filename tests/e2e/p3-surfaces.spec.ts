@@ -91,7 +91,7 @@ test('store profile publishes a version that anyone can read by slug', async ({
   const f = await p2Fixture(email)
   try {
     await f.commit()
-    await page.goto('/settings')
+    await page.goto('/settings?tab=profile')
     const profile = page.getByRole('region', {
       name: d.storeProfile.title,
       exact: true,

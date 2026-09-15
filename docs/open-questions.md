@@ -1,5 +1,13 @@
 # Open questions
 
+Automatic labels (2026-09-15, PR199): kind sizes and target-store transfer
+acceptance are owner-approved. Fable clarification is still needed for repeated
+markdown event identity and the application-side handling of SQL-only producers
+or a crash between fact commit and label queueing; see
+[ASTRA_QUESTIONS_TO_FABLE.md](ASTRA_QUESTIONS_TO_FABLE.md). The existing manual
+render-and-queue path is now shared in the engine; automatic rules are not yet
+activated by that extraction.
+
 Fortnox reconciliation (2026-09-15): Fable approved the confirmed-sent-only first
 slice. Its owner-only engine command now records evidence without unlocking a
 POST. The owner browser form is implemented; the provider evidence read remains

@@ -1,9 +1,17 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { labelKind } from '../labels/templates'
+import {
+  labelKind,
+  LABEL_TEMPLATE_VERSION,
+  referenceFormat,
+  renderLabel,
+} from '../labels/templates'
+import { renderStoreTemplate } from '../labels/placeholders'
+import { readStoreCurrency } from './money'
+import { formatOre } from './items'
 
 // Printing (P2 S19): printers per tenant and a job queue a local agent works
-// through. The route renders the label; SQL binds it to a printer and a fact.
+// through. The engine renders the label; SQL binds it to a printer and a fact.
 export const registerPrinterCommand = z.strictObject({
   action: z.literal('registerPrinter'),
   tenantId: z.uuid(),
@@ -158,6 +166,142 @@ const jobRow = z.object({
   completed_at: z.iso.datetime({ offset: true }).nullable(),
 })
 export type PrintJob = z.infer<typeof jobRow>
+
+export const printErrorCodes = [
+  'FORBIDDEN',
+  'AUTH_REQUIRED',
+  'REQUEST_CONFLICT',
+  'PRINTER_NOT_FOUND',
+  'PRINTER_INACTIVE',
+  'REFERENCE_NOT_FOUND',
+  'INVALID_INPUT',
+  'REQUEST_FAILED',
+] as const
+
+export async function queueRenderedLabel(
+  client: SupabaseClient,
+  input: z.input<typeof queuePrintJobInput>,
+  storeName: string,
+  appOrigin: string,
+) {
+  const command = queuePrintJobInput.parse(input)
+  const tenantId = command.tenantId
+  const ore = z.union([z.number().int(), z.string()]).transform(Number)
+  const day = (iso: string) =>
+    new Date(iso).toLocaleDateString('sv-SE', {
+      timeZone: 'Europe/Stockholm',
+    })
+  const facts: Record<string, unknown> = {
+    storeName: storeName,
+    reference: '',
+    currency: await readStoreCurrency(client, tenantId),
+  }
+  if (command.referenceKind === 'bag_receipt') {
+    const bag = await client
+      .from('bag_receipts')
+      .select('reference,received_at')
+      .eq('tenant_id', tenantId)
+      .eq('id', command.referenceId)
+      .maybeSingle()
+    if (!bag.data) throw new Error('REFERENCE_NOT_FOUND')
+    facts.reference = `K-${bag.data.reference}`
+    facts.date = day(bag.data.received_at)
+  } else if (command.referenceKind === 'garment_receipt') {
+    const garment = await client
+      .from('garment_receipts')
+      .select('reference,received_at')
+      .eq('tenant_id', tenantId)
+      .eq('id', command.referenceId)
+      .maybeSingle()
+    if (!garment.data) throw new Error('REFERENCE_NOT_FOUND')
+    facts.reference = `G-${garment.data.reference}`
+    facts.date = day(garment.data.received_at)
+  } else if (command.referenceKind === 'item') {
+    const item = await client
+      .from('items')
+      .select('id,origin_kind,terms')
+      .eq('tenant_id', tenantId)
+      .eq('id', command.referenceId)
+      .maybeSingle()
+    if (!item.data) throw new Error('REFERENCE_NOT_FOUND')
+    const prices = await client
+      .from('item_prices')
+      .select('price_ore,set_at')
+      .eq('tenant_id', tenantId)
+      .eq('item_id', command.referenceId)
+      .order('set_at', { ascending: false })
+      .order('seq', { ascending: false })
+      .limit(2)
+    const list = z.array(z.object({ price_ore: ore })).parse(prices.data ?? [])
+    facts.reference = `I-${item.data.id.slice(0, 8).toUpperCase()}`
+    facts.price = list[0] ? formatOre(list[0].price_ore) : undefined
+    if (command.kind === 'markdown' && list[1])
+      facts.oldPrice = formatOre(list[1].price_ore)
+    const origin = (item.data.terms as { origin?: Record<string, unknown> })
+      .origin
+    facts.line1 =
+      origin && typeof origin.garmentReference === 'number'
+        ? `G-${origin.garmentReference}`
+        : origin && typeof origin.bagReference === 'number'
+          ? `K-${origin.bagReference}`
+          : ''
+    facts.line2 = ''
+  } else {
+    const seller = await client
+      .from('sellers')
+      .select('id,name')
+      .eq('tenant_id', tenantId)
+      .eq('id', command.referenceId)
+      .maybeSingle()
+    if (!seller.data) throw new Error('REFERENCE_NOT_FOUND')
+    facts.reference = `S-${seller.data.id.slice(0, 8).toUpperCase()}`
+    facts.line1 = seller.data.name
+    facts.qr = `${appOrigin}/intake/sellers/${seller.data.id}`
+  }
+  const printer = await client
+    .from('printers')
+    .select('dpi')
+    .eq('tenant_id', tenantId)
+    .eq('id', command.printerId)
+    .maybeSingle()
+  if (!printer.data) throw new Error('PRINTER_NOT_FOUND')
+  const [formats, templates] = await Promise.all([
+    readLabelFormats(client, tenantId),
+    readLabelTemplates(client, tenantId),
+  ])
+  const size = formats?.[command.kind] ?? referenceFormat
+  const format = {
+    widthMm: size.widthMm,
+    heightMm: size.heightMm,
+    dpi: printer.data.dpi,
+  }
+  const template = templates?.[command.kind] ?? null
+  const payload = template
+    ? renderStoreTemplate(template.zpl, facts, format)
+    : renderLabel(command.kind, facts, format)
+  const templateVersion = template
+    ? `store-v${template.version}`
+    : LABEL_TEMPLATE_VERSION
+  const queued = await client.rpc('queue_print_job', {
+    p_tenant: tenantId,
+    p_id: command.requestId,
+    p_printer: command.printerId,
+    p_kind: command.kind,
+    p_template_version: templateVersion,
+    p_reference_kind: command.referenceKind,
+    p_reference_id: command.referenceId,
+    p_payload: payload,
+    p_copies: command.copies,
+  })
+
+  if (queued.error) {
+    const code =
+      printErrorCodes.find((value) => queued.error!.message.includes(value)) ??
+      'REQUEST_FAILED'
+    throw new Error(code)
+  }
+  return { ok: true, id: command.requestId }
+}
 
 export async function readPrinters(
   client: SupabaseClient,

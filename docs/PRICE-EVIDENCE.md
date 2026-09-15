@@ -25,6 +25,11 @@ insensitive; text matches anywhere in the title; either may be empty.
 - MCP `komisio_read_price_evidence` under `reception:read`, marked
   `isNotAPrice`; the agent cites matches in a reception proposal's price
   rationale, and staff still approve.
+- MCP `komisio_propose_price_change` under `lifecycle:propose`: a new price
+  for one accepted item that must cite this read (category, query, days,
+  count, median). The tool re-reads the evidence, refuses a stale citation
+  and stages a one-item `bulkItemUpdate` at medium risk with the citation in
+  the reason; a different person approves.
 
 ## What this does not do
 

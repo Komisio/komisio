@@ -71,6 +71,7 @@ import {
   proposeStoreProfileTool,
 } from './proposals'
 import { storeProfileInput, readStoreProfileTool } from './store-profile'
+import { proposePriceChangeInput, proposePriceChangeTool } from './price-change'
 import {
   settlementCandidatesInput,
   listSettlementCandidatesTool,
@@ -538,6 +539,19 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       (input) =>
         result(async () => ({
           data: await proposeBulkItemUpdateTool(client, config, input),
+        })),
+    )
+    server.registerTool(
+      'komisio_propose_price_change',
+      {
+        description:
+          'Stage a new price for one accepted item, citing the price evidence you read: pass the same category, query and days plus the count and median it returned. The tool re-reads that evidence and refuses a stale citation, then stages the change (kind bulkItemUpdate, one item) for staff decision with the current price in the preview. Medium risk: a different person than the proposing identity must approve. Nothing is repriced by this call; evidence is not a price.',
+        inputSchema: proposePriceChangeInput,
+        annotations: stagingAnnotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await proposePriceChangeTool(client, config, input),
         })),
     )
   }

@@ -1,5 +1,26 @@
 # Fortnox connection
 
+## Revision-bound refresh database prerequisite
+
+Migration `20260916100000` introduces `refresh_fortnox_tokens` for an already
+connected company. It accepts the revision read from `read_fortnox_connection`;
+revisions are decimal strings in JSON to avoid JavaScript bigint precision loss.
+Every connection update and reconnect receives a new private sequence value.
+Refresh serializes with connection changes and cannot change company metadata
+or create a row. Owner/admin or accepted `fortnox_send` automation may call it;
+other connection permissions remain unchanged.
+
+A stale revision returns `{ "error": "FORTNOX_CONNECTION_CHANGED" }` as data,
+not a failed database transaction: both the connection refusal and access event
+must remain committed. Callers must inspect this result before using new tokens.
+Success returns `{ "status": "refreshed", "revision": "..." }`. No tokens
+appear in either result or audit events.
+
+This is a database-only prerequisite. The current application still uses its
+existing refresh path; switching it to this RPC, bounded rereading after conflict,
+save-failure/reconnect handling and the automatic sender remain separate work.
+No scheduled send or real token refresh is enabled by this migration.
+
 Version 1 connects one Fortnox company to one store, verifies it and keeps
 the tokens sealed on the server. It sends nothing to Fortnox. Voucher sending
 is a later slice and requires the database pin described below.

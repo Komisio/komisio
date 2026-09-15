@@ -1,5 +1,17 @@
 # Decision Log
 
+## 2026-09-15: Revision-bound Fortnox refresh prerequisite
+
+Per Fable's revision answer, every connection insert/update receives a fresh
+private sequence revision. Refresh requires the previously read revision under
+the tenant lock and may only update ciphertext, scope and expiry, never company
+or connection provenance. Owner/admin and accepted `fortnox_send` automation
+may refresh and read that connection; connect, disconnect and status permissions
+do not expand. A stale revision returns a typed `FORTNOX_CONNECTION_CHANGED`
+result, not a SQL exception, so its refusal event commits with both revisions.
+No-row refresh raises `FORTNOX_NOT_CONNECTED`. This database prerequisite does
+not activate automatic sending or change the application's token refresh path.
+
 ## 2026-09-15: Owner confirmation of an existing Fortnox voucher
 
 Fable approved the confirmed-sent-only reconciliation slice. An owner may record

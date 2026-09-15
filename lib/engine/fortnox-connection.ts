@@ -198,7 +198,7 @@ export async function fortnoxAccessToken(
   source: Record<string, string | undefined>,
   http?: typeof fetch,
 ) {
-  await requireOwner(client, tenantId)
+  z.uuid().parse(tenantId)
   const env = ready(tenantId, source)
   for (let attempt = 0; attempt < 2; attempt++) {
     const response = await client.rpc('read_fortnox_connection', {
@@ -287,6 +287,7 @@ export async function checkFortnoxConnection(
   source: Record<string, string | undefined>,
   http?: typeof fetch,
 ) {
+  await requireOwner(client, tenantId)
   const { accessToken, row } = await fortnoxAccessToken(
     client,
     tenantId,

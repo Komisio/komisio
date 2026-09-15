@@ -57,6 +57,11 @@ try {
   await raceZettleImage({ setup, connectionString: parsed.toString() })
   await raceZettlePull({ setup, connectionString: parsed.toString() })
   await raceFortnoxSend({ setup, connectionString: parsed.toString() })
+  await raceFortnoxSend({
+    setup,
+    connectionString: parsed.toString(),
+    automation: true,
+  })
   await raceSellerPayout({ setup, connectionString: parsed.toString() })
   const u1 = randomUUID(),
     u2 = randomUUID(),

@@ -19,6 +19,9 @@ import { fortnoxEnvironment, fortnoxIssue } from '@/extensions/fortnox/auth'
 import { FortnoxVoucherSend } from '@/components/intake/fortnox-voucher-send'
 import { FortnoxReconcile } from '@/components/intake/fortnox-reconcile'
 import { readFortnoxSends } from '@/lib/engine/fortnox-vouchers'
+import { readAutomaticFortnoxStatus } from '@/lib/engine/fortnox-automation'
+import { automationIdentity, readAutomation } from '@/lib/engine/automation'
+import { AutomationSwitch } from '@/components/intake/automation-switch'
 import { currentMonthPeriod, economyPeriod } from '@/lib/engine/economy'
 import { openDays, readReconciliation } from '@/lib/engine/reconciliation'
 
@@ -56,6 +59,14 @@ export default async function Accounting({
     from: query.from,
     to: query.to,
   })
+  const automatic =
+    view === 'settings'
+      ? await readAutomaticFortnoxStatus(ctx.client, active.id)
+      : null
+  const grants =
+    view === 'settings' && ['owner', 'admin'].includes(active.role)
+      ? await readAutomation(ctx.client, active.id)
+      : null
   const period = requestedPeriod.success
     ? requestedPeriod.data
     : currentMonthPeriod()
@@ -322,6 +333,28 @@ export default async function Accounting({
       )}
       {view === 'settings' && (
         <div className="intake-grid">
+          {['owner', 'admin'].includes(active.role) && (
+            <AutomationSwitch
+              key={active.id}
+              tenantId={active.id}
+              scope="fortnox_send"
+              grants={grants}
+              configured={
+                !!automationIdentity() &&
+                automatic?.available === true &&
+                grants !== null &&
+                active.id === process.env.FORTNOX_PILOT_TENANT_ID
+              }
+              canEdit={active.role === 'owner'}
+              t={all.fortnox.automation}
+            />
+          )}
+          <p>
+            {all.fortnox.automation.lastRun}:{' '}
+            {automatic?.run
+              ? `${automatic.run.at} · ${all.fortnox.automation[automatic.run.outcome]} · ${automatic.run.sent}`
+              : all.fortnox.automation.noRun}
+          </p>
           <section className="card intake-form" aria-label={d.mapHeading}>
             <h2>{d.mapHeading}</h2>
             <p>{d.mapIntro}</p>

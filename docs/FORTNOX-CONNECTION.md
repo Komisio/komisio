@@ -29,9 +29,47 @@ The OAuth callback still verifies the company before storing a connection.
 The connection panel offers renewal through OAuth without disconnecting first,
 so the existing company database pin is retained. Saved refusal events display
 the same reconnect guidance on a later page load.
-Owner/admin application checks remain unchanged. Scoped automation wiring,
-its check-event permission and scheduled sends remain separate work. No real
-token was renewed as part of the synthetic validation of this change.
+Connect, check and disconnect still require owner/admin in the application.
+The token read/refresh used by sending now relies on the database's owner/admin
+or accepted `fortnox_send` scope check. No real token was renewed as part of
+the synthetic validation of this change.
+
+## Daily automatic sending
+
+Migration `20260916110000` opens begin/complete/check-event commands to the
+accepted `fortnox_send` scope only. The worker signs in as the ordinary configured
+automation identity with the publishable key, accepts grants, lists its accepted
+stores, runs only the configured Fortnox pilot tenant, and signs out locally in
+all cases. No service-role client or borrowed owner session is involved.
+
+An owner enables or disables the existing grant on accounting settings. The
+panel shows pending acceptance and the last recorded run. Staff can see the run
+summary but cannot toggle the grant. Cron calls `/api/automation/fortnox-send`
+daily at 07:00 UTC using `CRON_SECRET`. Deployment does not enable a grant.
+First connect the intended company, record the day close/export, and explicitly
+enable the switch. The next cron accepts it. Do not trigger the live route as a
+test: it can create real vouchers for eligible exports.
+
+The queue contains at most 100 exports with no send history or exclusively
+`FORTNOX_PREFLIGHT_FAILED` history. Pending/sent/unknown sends and legacy failures
+remain excluded. Each send obtains its own fresh engine dispatch claim; concurrent
+workers cannot bypass it. One failure stops that store. After 200 seconds no
+further send starts; remaining exports wait for another run. A full 100-entry
+batch is conservatively reported as partial. Day closes remain manual.
+
+Run summaries are replay-safe append-only access events carrying a bounded sent
+count and complete/partial/failed outcome, never provider bodies or credentials.
+Complete means the eligible batch was processed, not that held exports have been
+reconciled. If the process dies or the grant is revoked before completion, the
+summary may be absent; any pending send remains held. Revocation closes subsequent
+database commands but cannot retract an HTTP request already in flight.
+
+Verification: pgTAP covers scope denial, tenant isolation, candidate holds,
+revocation and run replay; concurrent ordinary sessions prove a single dispatch.
+Unit tests exercise cron authentication/sign-out, failure stopping and the time
+budget. `npm run test:fortnox-automation` uses synthetic local identities to test
+the owner switch, worker acceptance, last run and staff denial; external fetches
+are blocked. Real scheduled voucher delivery still requires pilot evidence.
 
 Version 1 connects one Fortnox company to one store, verifies it and keeps
 the tokens sealed on the server. It sends nothing to Fortnox. Voucher sending
@@ -180,13 +218,13 @@ Fortnox" on an export row; the request carries a request id.
    tenant's four-digit accounts, amounts as kronor with two decimals. Komisio
    invents no accounts and no postings; the lines are exactly the export.
 4. `complete_fortnox_send` closes the row as `sent` (series, number, year) or
-   `failed` (reason code and Fortnox's message). Sent rows are immutable; a
-   failed export may be sent again as a new row. Members see the send log;
-   sending is owner or admin.
+   `failed` (allowlisted reason code). Only proven preflight failures may be
+   retried as a new row; unknown outcomes remain held. Members see the send log;
+   sending is owner/admin or the accepted scoped automation identity.
 
 ## Not in this slice
 
-Account mapping changes, reading or correcting Fortnox vouchers, automatic
-sending at a set time, stores in other currencies, more than one store per
+Account mapping changes, reading or correcting Fortnox vouchers,
+stores in other currencies, more than one store per
 deployment (the single pilot slot mirrors the Zettle pilot), a per-tenant
 client id.

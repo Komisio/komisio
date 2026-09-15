@@ -1,5 +1,21 @@
 # Decision Log
 
+## 2026-09-15: Scoped automatic Fortnox sending
+
+The accepted `fortnox_send` automation identity may begin/complete sends and
+record connection checks, besides the existing revision-bound read/refresh.
+Connect, disconnect, connection status and owner reconciliation remain closed.
+The daily 07:00 UTC worker sends recorded exports only: no send history, or
+exclusively proven preflight failures. Pending, sent and ambiguous histories
+are never retried. One failure stops the store's run; other stores are isolated.
+Each invocation examines at most 100 eligible exports and stops starting work
+after 200 seconds; remaining exports wait for a later invocation. Existing fresh
+begin dispatch permission prevents concurrent workers from posting twice.
+Run summaries are append-only access events (replay-safe by run id), not a new
+financial table. They record sent counts and complete/partial/failed outcomes;
+complete means the eligible batch was processed, not that held exports are clear.
+The owner controls the existing grant; no pilot grant is enabled by deployment.
+
 ## 2026-09-15: Fortnox client uses revision-bound renewal
 
 The application renews only through `refresh_fortnox_tokens`; OAuth connection

@@ -46,6 +46,7 @@ jobs:
       - run: npm run test:e2e
       - run: npm run test:assistance
       - run: npm run test:zettle-automation
+      - run: npm run test:fortnox-automation
       - name: Stop local services
         if: always()
         run: supabase stop

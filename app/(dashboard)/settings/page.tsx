@@ -9,6 +9,11 @@ import {
   readPrintJobs,
 } from '@/lib/engine/printing'
 import { LabelFormatsForm } from '@/components/intake/label-formats-form'
+import { PrintDevices } from '@/components/intake/print-devices'
+import {
+  printAgentDownload,
+  readPrintDevices,
+} from '@/lib/engine/print-devices'
 import { readUsageSummary } from '@/lib/engine/usage'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
@@ -59,15 +64,15 @@ export default async function Settings({
     intake && tab === 'profile'
       ? await readStoreProfile(ctx.client, active.id)
       : null
-  const [printers, jobs, formats] =
+  const [printers, jobs, formats, devices] =
     intake && tab === 'printing'
       ? await Promise.all([
           readPrinters(ctx.client, active.id),
           readPrintJobs(ctx.client, active.id),
-          ,
           readLabelFormats(ctx.client, active.id),
+          readPrintDevices(ctx.client, active.id),
         ])
-      : [[], [], null]
+      : [[], [], null, null]
   const plan =
     tab === 'store' ? await readPlanStatus(ctx.client, active.id) : null
   const chain =
@@ -167,26 +172,17 @@ export default async function Settings({
                   intake={d.intake}
                 />
               )}
-              {manages && p.transport === 'tcp' && (
-                <div>
-                  <h4>{pr.agentTitle}</h4>
-                  <ol>
-                    <li>{pr.agentStep1}</li>
-                    <li>{pr.agentStep2}</li>
-                    <li>{pr.agentStep3}</li>
-                    <li>{pr.agentStep4}</li>
-                  </ol>
-                  <pre style={{ overflowX: 'auto' }}>
-                    {[
-                      `KOMISIO_PRINT_SUPABASE_URL=${process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''}`,
-                      `KOMISIO_PRINT_PUBLISHABLE_KEY=${process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? ''}`,
-                      `KOMISIO_PRINT_TENANT_ID=${active.id}`,
-                      `KOMISIO_PRINT_PRINTER_ID=${p.id}`,
-                      'KOMISIO_PRINT_EMAIL=<the printer account e-mail>',
-                      'KOMISIO_PRINT_PASSWORD=<its password>',
-                    ].join('\n')}
-                  </pre>
-                </div>
+              {p.transport === 'tcp' && devices && (
+                <PrintDevices
+                  key={`devices-${p.id}`}
+                  tenantId={active.id}
+                  printerId={p.id}
+                  devices={devices.filter((x) => x.printerId === p.id)}
+                  canManage={manages}
+                  downloadUrl={printAgentDownload()}
+                  locale={ctx.locale}
+                  d={pr}
+                />
               )}
             </details>
           ))}

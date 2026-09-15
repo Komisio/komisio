@@ -1,0 +1,73 @@
+name: Print agent
+
+# Builds Komisio Print for Windows: the agent as a single executable with the
+# environment's Supabase URL and publishable key baked in, WinSW as the
+# service wrapper, install and uninstall scripts. A tag `print-v*` publishes
+# the zip as a release asset; the Settings page links to the latest release.
+on:
+  push:
+    tags: ['print-v*']
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Build for which hosted environment
+        type: choice
+        options: [staging, production]
+        default: staging
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        environment: ${{ github.event_name == 'push' && fromJSON('["staging","production"]') || fromJSON(format('["{0}"]', inputs.environment)) }}
+    runs-on: windows-latest
+    timeout-minutes: 20
+    environment: ${{ matrix.environment }}-print
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build the executable
+        env:
+          KOMISIO_PRINT_SUPABASE_URL: ${{ vars.PRINT_SUPABASE_URL }}
+          KOMISIO_PRINT_PUBLISHABLE_KEY: ${{ vars.PRINT_PUBLISHABLE_KEY }}
+        run: node print-agent/build.mjs
+      - name: Fetch the service wrapper (WinSW 2.12.0)
+        shell: pwsh
+        run: |
+          $dst = 'print-agent/dist/KomisioPrintService.exe'
+          Invoke-WebRequest -Uri 'https://github.com/winsw/winsw/releases/download/v2.12.0/WinSW-x64.exe' -OutFile $dst
+          $hash = (Get-FileHash $dst -Algorithm SHA256).Hash.ToLower()
+          Write-Host "WinSW sha256 $hash"
+          if ((Get-Item $dst).Length -lt 100000) { throw 'WinSW download looks wrong' }
+      - name: Assemble the package
+        shell: pwsh
+        run: |
+          $pkg = 'print-agent/dist/package'
+          New-Item -ItemType Directory -Force $pkg | Out-Null
+          Copy-Item print-agent/dist/KomisioPrint.exe $pkg
+          Copy-Item print-agent/dist/KomisioPrintService.exe $pkg
+          Copy-Item print-agent/package/* $pkg
+          $name = if ('${{ matrix.environment }}' -eq 'production') { 'KomisioPrint-win-x64.zip' } else { 'KomisioPrint-staging-win-x64.zip' }
+          Compress-Archive -Path "$pkg/*" -DestinationPath "print-agent/dist/$name" -Force
+          Write-Host "Packaged $name"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: KomisioPrint-${{ matrix.environment }}
+          path: print-agent/dist/*.zip
+      - name: Publish the release asset
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          $zip = Get-ChildItem print-agent/dist/*.zip | Select-Object -First 1
+          gh release view "${{ github.ref_name }}" 2>$null
+          if ($LASTEXITCODE -ne 0) { gh release create "${{ github.ref_name }}" --title "Komisio Print ${{ github.ref_name }}" --notes "Komisio Print for Windows. Unzip, run install.cmd as administrator, enter the pairing code from Settings." }
+          gh release upload "${{ github.ref_name }}" $zip.FullName --clobber

@@ -199,6 +199,8 @@ Real rows against the development shop (owner, staging, 2026-09-15):
 | 2026-09-15              | Export one accepted item as a product                           | Synced                            |
 | 2026-09-15 16:14:10     | Test order `#1001`, one line, SEK 59.00, paid in the dev shop   | Order placed                      |
 | 2026-09-15 16:14:47     | Pull paid orders (`SHOPIFY_ACCEPT_TEST_ORDERS=true` on staging) | 1 received, `#1001` sale recorded |
+| 2026-09-15 18:17:49     | Refund `#1001` in full in Shopify admin, pull again             | Return recorded on the sale line  |
 
-Steps 1 to 3 are verified end to end on staging. Production keeps
-`SHOPIFY_ACCEPT_TEST_ORDERS` unset.
+Steps 1 to 3 and the refund path are verified end to end on staging; the
+photo upload awaits an export of an item received with a photo. Production
+keeps `SHOPIFY_ACCEPT_TEST_ORDERS` unset.

@@ -119,10 +119,11 @@ Custom ZPL per store is allowed (DECISIONS 2026-09-15, label templates).
 Defaults for sizes are 76 x 51 mm (bag, onboarding) and 57 x 32 mm
 (garment, item, markdown). One device per printer.
 
-## Open questions for the owner (ask before step 3)
+## Owner answers (2026-09-15)
 
-1. Should a printer-bound template be able to override the size too, or
-   does the size stay per kind? Proposal: size stays per kind.
-2. Should the automatic rule for `item` also fire on transfer between
-   chain stores (the target store's rule)? Proposal: yes, on acceptance in
-   the target store, like any acceptance.
+1. The size stays per kind; a printer-bound template does not override
+   it. The template may still set its own `^PW`/`^LL` from `{width}` and
+   `{height}`, which are the kind's size at that printer's resolution.
+2. The automatic rule for `item` fires on every acceptance, including the
+   acceptance in the target store of a chain transfer (the target store's
+   rule and printer).

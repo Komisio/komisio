@@ -17,7 +17,7 @@ import { proposeOperation, operationErrorCode } from '../lib/engine/operations'
 export const proposePriceChangeInput = z.strictObject({
   requestId: z.uuid(),
   expiresAt: z.iso.datetime(),
-  itemId: z.uuid(),
+  itemId: z.guid(),
   priceOre: z.number().int().min(1).max(99_999_999_999),
   reason: z.string().trim().min(1).max(300),
   evidence: priceEvidenceInput.extend({

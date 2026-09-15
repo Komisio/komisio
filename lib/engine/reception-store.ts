@@ -103,7 +103,7 @@ export const saveReceptionSourcesCommand = z.strictObject({
   action: z.literal('saveReceptionSources'),
   tenantId: z.uuid(),
   requestId: z.uuid(),
-  sessionId: z.uuid(),
+  sessionId: z.guid(),
   expectedRevision: z.number().int().min(0).max(2147483646),
   sources: receptionSession.shape.sources.refine((sources) =>
     sources.every(
@@ -122,7 +122,7 @@ export async function readReceptionSession(
   sessionInput: string,
 ) {
   const tenantId = z.uuid().parse(tenantInput),
-    sessionId = z.uuid().parse(sessionInput)
+    sessionId = z.guid().parse(sessionInput)
   const [session, snapshot] = await Promise.all([
     client
       .from('reception_sessions')

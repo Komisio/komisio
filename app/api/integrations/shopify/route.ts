@@ -48,7 +48,7 @@ export async function POST(request: Request) {
           'pullOrders',
           'retryOrder',
         ]),
-        itemId: z.uuid().optional(),
+        itemId: z.guid().optional(),
         orderId: z.uuid().optional(),
         requestId: z.uuid().optional(),
       })

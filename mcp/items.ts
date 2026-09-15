@@ -46,7 +46,7 @@ export async function findItemsTool(
   }
 }
 
-export const itemSummaryInput = z.strictObject({ itemId: z.uuid() })
+export const itemSummaryInput = z.strictObject({ itemId: z.guid() })
 /** One item with its frozen terms, price series and event kinds. Free-text reasons and event details stay with the store. */
 export async function readItemSummaryTool(
   client: SupabaseClient,

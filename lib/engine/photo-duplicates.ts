@@ -12,7 +12,7 @@ export const photoDuplicates = z.object({
         seen: z
           .array(
             z.object({
-              sessionId: z.uuid(),
+              sessionId: z.guid(),
               photoId: z.uuid(),
               seenAt: z.string(),
               sellerId: z.uuid(),
@@ -33,7 +33,7 @@ export async function readPhotoDuplicates(
 ) {
   const r = await client.rpc('photo_duplicates', {
     p_tenant: z.uuid().parse(tenantInput),
-    p_session: z.uuid().parse(sessionInput),
+    p_session: z.guid().parse(sessionInput),
   })
   // Until the migration reaches the database there is nothing to show.
   if (r.error?.code === 'PGRST202') return null

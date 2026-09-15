@@ -17,7 +17,7 @@ export const acceptItemCommand = z
     tenantId: z.uuid(),
     requestId: z.uuid(),
     originKind,
-    originId: z.uuid(),
+    originId: z.guid(),
     originRevision: z.number().int().min(1).max(2147483646).nullable(),
     // Exact decimal text at the boundary; öre in the database, never float.
     price: z.string().regex(/^(?:0|[1-9]\d{0,8})\.\d{2}$/),

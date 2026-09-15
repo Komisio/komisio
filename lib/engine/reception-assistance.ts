@@ -3,7 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 export const assistanceCommand = z.strictObject({
   mode: z.enum(['single', 'batch']).optional(),
   tenantId: z.uuid(),
-  sessionId: z.uuid(),
+  sessionId: z.guid(),
   requestId: z.uuid(),
   revision: z.number().int().min(1).max(2147483646),
 })

@@ -3,7 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 
 const row = z.object({
   id: z.guid(),
-  session_id: z.uuid(),
+  session_id: z.guid(),
   reference: z.union([z.number().int(), z.string()]),
   note: z.string(),
   custody_source: z.literal('staff_receipt'),
@@ -18,7 +18,7 @@ export async function readGarmentReceipt(
   sessionInput: string,
 ) {
   const tenantId = z.uuid().parse(tenantInput),
-    sessionId = z.uuid().parse(sessionInput)
+    sessionId = z.guid().parse(sessionInput)
   const { data, error } = await client
     .from('garment_receipts')
     .select('id,session_id,reference,note,custody_source,received_at')

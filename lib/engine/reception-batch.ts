@@ -16,7 +16,7 @@ import { proposeOperation } from './operations'
 
 export const stageBatchRowCommand = z.strictObject({
   tenantId: z.uuid(),
-  sessionId: z.uuid(),
+  sessionId: z.guid(),
   batchId: z.uuid(),
   revision: z.number().int().min(1).max(2147483646),
   row: z.number().int().min(0).max(7),

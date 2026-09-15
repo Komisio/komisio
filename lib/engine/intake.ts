@@ -98,7 +98,7 @@ export const intakeCommand = z.discriminatedUnion('action', [
     action: z.literal('receiveGarment'),
     tenantId: z.uuid(),
     requestId: z.uuid(),
-    sessionId: z.uuid(),
+    sessionId: z.guid(),
     note: z.string().trim().max(500),
   }),
   z.object({

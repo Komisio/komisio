@@ -1,0 +1,34 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000000951','template-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000952','template-staff@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000951","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Label templates','label-templates-test',gen_random_uuid())::text,true);
+select is(label_templates(current_setting('test.tenant')::uuid),'{}'::jsonb,'no templates: every kind is built in');
+select throws_like($$select set_label_template(current_setting('test.tenant')::uuid,'item','Mine','^FD{reference}^FS')$$,'%LABEL_TEMPLATE_FRAME%','a template is one label');
+select throws_like($$select set_label_template(current_setting('test.tenant')::uuid,'item','Mine','^XA~JR^FD{reference}^FS^XZ')$$,'%LABEL_TEMPLATE_CONTROL%','printer control commands are refused');
+select throws_like($$select set_label_template(current_setting('test.tenant')::uuid,'item','Mine','^XA^FD{store}^FS^XZ')$$,'%LABEL_TEMPLATE_REFERENCE%','the reference must be on the label');
+select throws_like($$select set_label_template(current_setting('test.tenant')::uuid,'poster','Mine','^XA^FD{reference}^FS^XZ')$$,'%INVALID_INPUT%','unknown kinds refused');
+select is(set_label_template(current_setting('test.tenant')::uuid,'item','Mine','^XA^FO10,10^A0N,30,30^FD{store}^FS^FO10,50^BCN,60,Y,N,N^FD{reference}^FS^XZ')->>'version','1','first version published');
+select is(label_templates(current_setting('test.tenant')::uuid)->'item'->>'name','Mine','the current template is listed');
+select is(set_label_template(current_setting('test.tenant')::uuid,'item','Mine 2','^XA^FO10,10^A0N,40,40^FD{price}^FS^FO10,60^BCN,60,Y,N,N^FD{reference}^FS^XZ')->>'version','2','a change is a new version');
+select is((select count(*) from label_templates where tenant_id=current_setting('test.tenant')::uuid),2::bigint,'versions are kept');
+select is(label_templates(current_setting('test.tenant')::uuid)->'item'->>'version','2','the newest version applies');
+select throws_ok($$update label_templates set zpl='x' where tenant_id=current_setting('test.tenant')::uuid$$,'42501',null,'members cannot edit versions');
+select is(reset_label_template(current_setting('test.tenant')::uuid,'item'),true,'back to built in');
+select is(label_templates(current_setting('test.tenant')::uuid)->'item','null'::jsonb,'built in again');
+select is(reset_label_template(current_setting('test.tenant')::uuid,'item'),false,'resetting twice changes nothing');
+select is(reset_label_template(current_setting('test.tenant')::uuid,'bag'),false,'nothing to reset for a kind without templates');
+select is((select count(*) from access_events where tenant_id=current_setting('test.tenant')::uuid and action like 'label_template.%'),3::bigint,'every publication and reset is an access event');
+reset role;
+select throws_ok($$delete from label_templates where tenant_id=current_setting('test.tenant')::uuid$$,'55000',null,'versions are immutable');
+insert into tenant_members(tenant_id,user_id,role) values (current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000000952','staff');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000952","role":"authenticated"}';
+select lives_ok($$select label_templates(current_setting('test.tenant')::uuid)$$,'staff read the templates');
+select throws_ok($$select set_label_template(current_setting('test.tenant')::uuid,'item','X','^XA^FD{reference}^FS^XZ')$$,'42501',null,'staff cannot publish templates');
+select * from finish();
+rollback;

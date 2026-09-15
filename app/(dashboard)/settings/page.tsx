@@ -5,10 +5,13 @@ import { readStoreProfile } from '@/lib/engine/store-profile'
 import { PrinterForm } from '@/components/intake/printer-form'
 import {
   readLabelFormats,
+  readLabelTemplates,
   readPrinters,
   readPrintJobs,
 } from '@/lib/engine/printing'
 import { LabelFormatsForm } from '@/components/intake/label-formats-form'
+import { LabelTemplatesForm } from '@/components/intake/label-templates-form'
+import { builtinTemplate } from '@/lib/labels/placeholders'
 import { PrintDevices } from '@/components/intake/print-devices'
 import {
   printAgentDownload,
@@ -64,15 +67,18 @@ export default async function Settings({
     intake && tab === 'profile'
       ? await readStoreProfile(ctx.client, active.id)
       : null
-  const [printers, jobs, formats, devices] =
+  const [printers, jobs, formats, devices, templates] =
     intake && tab === 'printing'
       ? await Promise.all([
           readPrinters(ctx.client, active.id),
           readPrintJobs(ctx.client, active.id),
           readLabelFormats(ctx.client, active.id),
           readPrintDevices(ctx.client, active.id),
+          readLabelTemplates(ctx.client, active.id),
         ])
-      : [[], [], null, null]
+      : [[], [], null, null, null]
+  const previewDpi = (printers.find((p) => p.active)?.dpi ?? 203) as
+    203 | 300 | 600
   const plan =
     tab === 'store' ? await readPlanStatus(ctx.client, active.id) : null
   const chain =
@@ -203,6 +209,39 @@ export default async function Settings({
               tenantId={active.id}
               formats={formats}
               canEdit={manages}
+              d={pr}
+              intake={d.intake}
+            />
+          )}
+          {formats && templates && (
+            <LabelTemplatesForm
+              key={`templates-${active.id}`}
+              tenantId={active.id}
+              templates={templates}
+              builtins={{
+                bag: builtinTemplate('bag', {
+                  ...formats.bag,
+                  dpi: previewDpi,
+                }),
+                garment: builtinTemplate('garment', {
+                  ...formats.garment,
+                  dpi: previewDpi,
+                }),
+                item: builtinTemplate('item', {
+                  ...formats.item,
+                  dpi: previewDpi,
+                }),
+                markdown: builtinTemplate('markdown', {
+                  ...formats.markdown,
+                  dpi: previewDpi,
+                }),
+                onboarding: builtinTemplate('onboarding', {
+                  ...formats.onboarding,
+                  dpi: previewDpi,
+                }),
+              }}
+              canEdit={manages}
+              dpi={previewDpi}
               d={pr}
               intake={d.intake}
             />

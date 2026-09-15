@@ -68,3 +68,18 @@ program. The reference is always printed as a Code 128 barcode (bag,
 garment, item, markdown) or a QR code (onboarding slip) so scan-to-open
 works from the label. The queued job keeps the rendered program, so a later
 size change never alters a printed label.
+
+## Store templates (the ZPL editor, 2026-09-15)
+
+Settings, Printing, "Label templates": an owner or admin writes the ZPL
+program for a kind with placeholders (`{store}`, `{reference}`, `{line1}`,
+`{line2}`, `{price}`, `{oldPrice}`, `{currency}`, `{date}`, `{qr}`,
+`{title}`, `{category}`, `{width}`, `{height}` in dots), previews it with
+sample data (rendered by Labelary, a public ZPL renderer; no store data is
+sent) and saves it as a new version (`label_templates`, migration
+`20260916400000`, append-only). The print route fills the current template
+with the label's facts through `zplText`, so a value can never carry a
+command; the program must be one label (`^XA` ... `^XZ`), must carry
+`{reference}`, and may not contain printer control commands (`~`). "Use the
+built-in layout" records an inactive version and the scaled layout applies
+again. The job's template version reads `store-v<n>`.

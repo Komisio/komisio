@@ -6,7 +6,10 @@ import {
   kronor,
   voucherBody,
 } from '../../extensions/fortnox/vouchers'
-import { sendExportToFortnox } from '../../lib/engine/fortnox-vouchers'
+import {
+  confirmFortnoxVoucher,
+  sendExportToFortnox,
+} from '../../lib/engine/fortnox-vouchers'
 
 const tenant = '10000000-0000-4000-8000-000000000001'
 const exportId = '30000000-0000-4000-8000-000000000003'
@@ -159,6 +162,40 @@ describe('voucher body', () => {
 })
 
 describe('sendExportToFortnox', () => {
+  it('records only confirmed-sent evidence through the owner RPC', async () => {
+    const rpc = vi
+      .fn()
+      .mockResolvedValue({ data: { ...opened, status: 'sent' }, error: null })
+    const input = {
+      tenantId: tenant,
+      sendId: requestId,
+      voucherSeries: ' A ',
+      voucherNumber: 42,
+      financialYear: 2026,
+      evidence: ' Compared date and lines ',
+    }
+    await confirmFortnoxVoucher({ rpc } as unknown as SupabaseClient, input)
+    expect(rpc).toHaveBeenCalledWith('reconcile_fortnox_send', {
+      p_tenant: tenant,
+      p_send_id: requestId,
+      p_outcome: 'confirmed_sent',
+      p_voucher_series: 'A',
+      p_voucher_number: 42,
+      p_financial_year: 2026,
+      p_evidence: 'Compared date and lines',
+    })
+    await expect(
+      confirmFortnoxVoucher({ rpc } as unknown as SupabaseClient, {
+        ...input,
+        evidence: ' ',
+      }),
+    ).rejects.toThrow()
+    expect(rpc).toHaveBeenCalledTimes(1)
+    rpc.mockResolvedValue({ data: null, error: { message: 'FORBIDDEN' } })
+    await expect(
+      confirmFortnoxVoucher({ rpc } as unknown as SupabaseClient, input),
+    ).rejects.toThrow('FORBIDDEN')
+  })
   it('does not repeat a pending send after a lost begin response', async () => {
     const http = vi.fn<typeof fetch>()
     const setup = client({ ...opened, dispatchAllowed: false })

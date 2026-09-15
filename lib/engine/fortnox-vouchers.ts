@@ -33,6 +33,33 @@ export const sendState = z.object({
 })
 export type FortnoxSendState = z.infer<typeof sendState>
 
+export const confirmedFortnoxVoucher = z.strictObject({
+  tenantId: z.uuid(),
+  sendId: z.uuid(),
+  voucherSeries: z.string().trim().min(1).max(10),
+  voucherNumber: z.number().int().positive(),
+  financialYear: z.number().int().positive(),
+  evidence: z.string().trim().min(1).max(500),
+})
+
+export async function confirmFortnoxVoucher(
+  client: SupabaseClient,
+  input: z.input<typeof confirmedFortnoxVoucher>,
+) {
+  const value = confirmedFortnoxVoucher.parse(input)
+  const result = await client.rpc('reconcile_fortnox_send', {
+    p_tenant: value.tenantId,
+    p_send_id: value.sendId,
+    p_outcome: 'confirmed_sent',
+    p_voucher_series: value.voucherSeries,
+    p_voucher_number: value.voucherNumber,
+    p_financial_year: value.financialYear,
+    p_evidence: value.evidence,
+  })
+  if (result.error) throw new Error(result.error.message)
+  return sendState.parse(result.data)
+}
+
 const sendRow = z.object({
   id: z.uuid(),
   export_id: z.uuid(),

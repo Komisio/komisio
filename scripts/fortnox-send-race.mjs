@@ -103,8 +103,39 @@ export async function raceFortnoxSend({ setup, connectionString }) {
       ]),
       /FORTNOX_OUTCOME_UNKNOWN/,
     )
+    const reconciled = await Promise.allSettled(
+      sessions.map((session, index) =>
+        session.query(
+          "select reconcile_fortnox_send($1,$2,'confirmed_sent','A',$3,2026,'Synthetic checked voucher') result",
+          [tenant, request, 42 + index],
+        ),
+      ),
+    )
+    assert.equal(
+      reconciled.filter((result) => result.status === 'fulfilled').length,
+      1,
+    )
+    const refused = reconciled.find((result) => result.status === 'rejected')
+    assert.match(refused.reason.message, /REQUEST_CONFLICT/)
+    assert.equal(
+      (
+        await setup.query(
+          "select count(*)::int count from access_events where tenant_id=$1 and action='fortnox.reconciled'",
+          [tenant],
+        )
+      ).rows[0].count,
+      1,
+    )
+    await assert.rejects(
+      sessions[0].query('select begin_fortnox_send($1,$2,$3)', [
+        tenant,
+        randomUUID(),
+        exportId,
+      ]),
+      /FORTNOX_ALREADY_SENT/,
+    )
     console.log(
-      'PASS: concurrent Fortnox retries grant one POST; ambiguous outcomes cannot open another send.',
+      'PASS: one dispatch, unknown outcomes held, one concurrent reconciliation, confirmed vouchers cannot resend.',
     )
   } finally {
     await Promise.allSettled(sessions.map((session) => session.end()))

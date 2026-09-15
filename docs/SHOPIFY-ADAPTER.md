@@ -94,7 +94,7 @@ Migration `20260916330000`, pgTAP `0103`, `extensions/shopify/orders.ts`,
 `retryOrder`, and an "Orders from Shopify" section on the integrations page.
 
 - **One page per pull.** `orders(first: 50, sortKey: UPDATED_AT, query:
-  "financial_status:paid updated_at:>='<watermark>'")`. The watermark starts
+"financial_status:paid updated_at:>='<watermark>'")`. The watermark starts
   at the connection time and moves to the newest `updatedAt` on the page;
   an order seen again is skipped by its id, so the overlap at the watermark
   costs nothing. Each pull is one request id; a replay records nothing new

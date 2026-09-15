@@ -190,6 +190,68 @@ export async function readItem(
   }
 }
 
+// Items overview: every accepted item with the title and category its origin
+// holds, the derived lifecycle stage, the current price and when it sold.
+// One read for the items page and the agent's "find items". Any member.
+export const itemStage = z.enum([
+  'on_sale',
+  'markdown_due',
+  'period_ending',
+  'period_ended',
+  'ended',
+  'sold',
+])
+export type ItemStage = z.infer<typeof itemStage>
+const ore = z.union([z.number().int(), z.string()]).transform(Number)
+export const itemsOverview = z.object({
+  currency: z.string(),
+  items: z
+    .array(
+      z.object({
+        id: z.uuid(),
+        originKind: originKind,
+        originId: z.uuid(),
+        sellerId: z.uuid().nullable(),
+        ownership: z.enum(['consignment', 'store']),
+        acceptedAt: z.string(),
+        title: z.string().nullable(),
+        category: z.string().nullable(),
+        stage: itemStage,
+        periodEnd: z.string(),
+        currentPriceOre: ore.nullable(),
+        soldAt: z.string().nullable(),
+      }),
+    )
+    .max(100),
+  total: z.number().int(),
+  limit: z.number().int(),
+  query: z.string().nullable(),
+  stage: itemStage.nullable(),
+})
+export type ItemsOverview = z.infer<typeof itemsOverview>
+
+/** Newest items first, filtered by text in title or category and by stage. Null until the migration reaches the database. */
+export async function readItemsOverview(
+  client: SupabaseClient,
+  tenantInput: string,
+  filter: { query?: string; stage?: string; limit?: number } = {},
+) {
+  const r = await client.rpc('items_overview', {
+    p_tenant: z.uuid().parse(tenantInput),
+    p_query: (filter.query ?? '').trim().slice(0, 120),
+    p_stage: filter.stage ? itemStage.parse(filter.stage) : null,
+    p_limit: z
+      .number()
+      .int()
+      .min(1)
+      .max(100)
+      .parse(filter.limit ?? 50),
+  })
+  if (r.error?.code === 'PGRST202') return null
+  if (r.error) throw new Error('FORBIDDEN')
+  return itemsOverview.parse(r.data)
+}
+
 export function formatOre(value: number | string) {
   const ore = BigInt(value)
   const kronor = ore / 100n,

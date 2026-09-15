@@ -63,15 +63,32 @@ const saleColumns =
 const lineColumns =
   'id,sale_id,item_id,line_no,price_ore,ownership,commission_basis,commission_rate_percent,commission_ore,commission_vat_ore,seller_credit_ore,vat_mode,vat_rate_bp,vat_ore'
 
-/** Newest 50 sales. RLS scopes the read. */
-export async function readSales(client: SupabaseClient, tenantInput: string) {
-  const { data, error } = await client
+export const salesFilter = z.strictObject({
+  provider: saleProvider.optional(),
+  externalId: z.string().trim().min(1).max(200).optional(),
+  status: z.enum(['completed', 'reversed']).optional(),
+  limit: z.number().int().min(1).max(50).default(50),
+})
+export type SalesFilter = z.input<typeof salesFilter>
+
+/** Newest sales, at most 50, optionally by provider, exact external id or status. RLS scopes the read. */
+export async function readSales(
+  client: SupabaseClient,
+  tenantInput: string,
+  filterInput: SalesFilter = {},
+) {
+  const filter = salesFilter.parse(filterInput)
+  let query = client
     .from('sales')
     .select(saleColumns)
     .eq('tenant_id', z.uuid().parse(tenantInput))
+  if (filter.provider) query = query.eq('provider', filter.provider)
+  if (filter.externalId) query = query.eq('external_id', filter.externalId)
+  if (filter.status) query = query.eq('status', filter.status)
+  const { data, error } = await query
     .order('occurred_at', { ascending: false })
     .order('id')
-    .limit(50)
+    .limit(filter.limit)
   if (error) throw new Error('Unable to read sales')
   return z.array(saleRow).parse(data)
 }

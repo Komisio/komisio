@@ -192,7 +192,7 @@ describe('pullShopifyOrders', () => {
       cursor: '2026-09-15T11:05:00.000Z',
     })
     expect(JSON.parse(s.requests[0]).variables.q).toBe(
-      `financial_status:paid updated_at:>='${since}'`,
+      `(financial_status:paid OR financial_status:partially_refunded OR financial_status:refunded) updated_at:>='${since}'`,
     )
     expect(s.pages[0]).toMatchObject({
       p_tenant: tenant,

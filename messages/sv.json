@@ -1590,6 +1590,15 @@
     }
   },
   "shopify": {
+    "photo": "Foto",
+    "imageStatuses": {
+      "synced": "Foto i Shopify.",
+      "pending": "Foto väntar.",
+      "failed": "Fotot kunde inte läggas till; nästa export försöker igen.",
+      "none": "Inget mottagningsfoto."
+    },
+    "returned": "returer bokförda:",
+    "refundHeld": "återbetalning hålls",
     "automation": {
       "heading": "Hämta ordrar automatiskt",
       "hint": "Varje kvart hämtar automationsidentiteten en sida betalda ordrar för butiken, precis som knappen gör. Matchade ordrar blir försäljningar; resten hålls här.",
@@ -1693,6 +1702,17 @@
       "disconnected": "Bortkopplad"
     },
     "errors": {
+      "SHOPIFY_UPLOAD_REJECTED": "Shopify avvisade bilduppladdningen.",
+      "SHOPIFY_UPLOAD_FAILED": "Bilden kunde inte laddas upp till Shopify.",
+      "SHOPIFY_IMAGE_REJECTED": "Shopify avvisade bilden för produkten.",
+      "SHOPIFY_IMAGE_INVALID": "Mottagningsfotot kunde inte läsas.",
+      "SHOPIFY_IMAGE_PRODUCT_REQUIRED": "Exportera produkten innan dess foto.",
+      "SHOPIFY_IMAGE_PRODUCT_CHANGED": "Produkten i Shopify ändrades sedan fotot kopplades.",
+      "SHOPIFY_SALE_MISSING": "Den återbetalade ordern har ingen försäljning i Komisio.",
+      "SHOPIFY_REFUND_LINE_UNKNOWN": "Den återbetalade raden är inte en såld Komisio-vara på ordern.",
+      "SHOPIFY_RETURN_FAILED": "Returen kunde inte bokföras.",
+      "PARTIAL_REFUND_UNSUPPORTED": "Delvis återbetalning av en rad stöds inte; bokför returen för hand.",
+      "LINE_ALREADY_RETURNED": "Raden är redan returnerad.",
       "SHOPIFY_CURSOR_CHANGED": "En annan hämtning flyttade läspunkten. Hämta igen.",
       "SHOPIFY_ORDER_NOT_FOUND": "Ordern hittades inte.",
       "SHOPIFY_ORDER_HELD": "Ordern hålls för granskning och kan inte bokföras som den är.",

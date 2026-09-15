@@ -58,7 +58,13 @@ export function ShopifyProducts({
         return
       }
       setOk(true)
-      setMessage(body.updated ? d.exportedUpdated : d.exported)
+      const images = d.imageStatuses as Record<string, string>
+      setMessage(
+        (body.updated ? d.exportedUpdated : d.exported) +
+          (typeof body.image === 'string' && images[body.image]
+            ? ` ${images[body.image]}`
+            : ''),
+      )
       window.location.reload()
     } catch {
       setMessage(d.exportFailed)
@@ -128,6 +134,7 @@ export function ShopifyProducts({
                 <th>{d.item}</th>
                 <th>{d.price}</th>
                 <th>{d.status}</th>
+                <th>{d.photo}</th>
                 <th>{d.when}</th>
               </tr>
             </thead>
@@ -147,6 +154,11 @@ export function ShopifyProducts({
                     {p.errorCode
                       ? ` · ${errors[p.errorCode] ?? p.errorCode}`
                       : ''}
+                  </td>
+                  <td>
+                    {(d.imageStatuses as Record<string, string>)[
+                      p.imageStatus ?? 'none'
+                    ] ?? ''}
                   </td>
                   <td>{when(p.decidedAt ?? p.createdAt)}</td>
                 </tr>

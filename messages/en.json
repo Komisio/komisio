@@ -1590,6 +1590,15 @@
     }
   },
   "shopify": {
+    "photo": "Photo",
+    "imageStatuses": {
+      "synced": "Photo in Shopify.",
+      "pending": "Photo pending.",
+      "failed": "Photo could not be added; the next export retries it.",
+      "none": "No reception photo."
+    },
+    "returned": "returns recorded:",
+    "refundHeld": "refund held",
     "automation": {
       "heading": "Pull orders automatically",
       "hint": "Every quarter hour the automation identity pulls one page of paid orders for this store, exactly as the button does. Matched orders become sales; the rest are held here.",
@@ -1693,6 +1702,17 @@
       "disconnected": "Disconnected"
     },
     "errors": {
+      "SHOPIFY_UPLOAD_REJECTED": "Shopify refused the image upload.",
+      "SHOPIFY_UPLOAD_FAILED": "The image could not be uploaded to Shopify.",
+      "SHOPIFY_IMAGE_REJECTED": "Shopify refused the image for the product.",
+      "SHOPIFY_IMAGE_INVALID": "The reception photo could not be read.",
+      "SHOPIFY_IMAGE_PRODUCT_REQUIRED": "Export the product before its photo.",
+      "SHOPIFY_IMAGE_PRODUCT_CHANGED": "The product in Shopify changed since the photo was attached.",
+      "SHOPIFY_SALE_MISSING": "The refunded order has no sale in Komisio.",
+      "SHOPIFY_REFUND_LINE_UNKNOWN": "The refunded line is not a sold Komisio item on this order.",
+      "SHOPIFY_RETURN_FAILED": "The return could not be recorded.",
+      "PARTIAL_REFUND_UNSUPPORTED": "A partial refund of a line is not supported; record the return by hand.",
+      "LINE_ALREADY_RETURNED": "The line was already returned.",
       "SHOPIFY_CURSOR_CHANGED": "Another pull moved the watermark. Pull again.",
       "SHOPIFY_ORDER_NOT_FOUND": "The order was not found.",
       "SHOPIFY_ORDER_HELD": "The order is held for review and cannot be recorded as it is.",

@@ -126,6 +126,12 @@ export function ShopifyOrders({
                         : o.errorCode
                           ? `${d.orderHeld}: ${errors[o.errorCode] ?? o.errorCode}`
                           : d.orderPending}
+                    {(o.returned ?? 0) > 0
+                      ? ` · ${d.returned} ${o.returned}`
+                      : ''}
+                    {(o.refundsHeld ?? 0) > 0
+                      ? ` · ${d.refundHeld}: ${errors[o.refundError ?? ''] ?? o.refundError ?? ''}`
+                      : ''}
                     {!o.saleId && !o.holdReason && o.errorCode && (
                       <>
                         {' '}

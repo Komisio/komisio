@@ -1,13 +1,18 @@
+import { randomUUID } from 'node:crypto'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   chooseLocation,
+  createProductImage,
   findVariantBySku,
   listLocations,
   productPayload,
   setProduct,
   ShopifyUserError,
+  stageImageUpload,
 } from '../../extensions/shopify/products'
+import { photoLimit } from '../media/reception-photo'
+import { receptionDerivative } from '../media/reception-image'
 import { shopifyAccessToken } from './shopify-connection'
 
 // Products out (step 2): prepare records the payload, the request is made
@@ -39,6 +44,10 @@ export const shopifyProductStatus = z
       errorCode: z.string().nullable(),
       productGid: z.string().nullable(),
       decidedAt: z.string().nullable(),
+      imageStatus: z
+        .enum(['synced', 'pending', 'failed'])
+        .nullable()
+        .optional(),
     }),
   )
   .max(50)
@@ -154,11 +163,21 @@ export async function exportShopifyItem(
       http,
     )
     await finish('synced', null, result)
+    const image = await attachImage(
+      client,
+      c.tenantId,
+      c.itemId,
+      row.shopDomain,
+      accessToken,
+      payload.title,
+      http,
+    )
     return {
       exportId,
       status: 'synced' as const,
       productGid: result.productGid,
       updated: existing !== null,
+      image,
     }
   } catch (e) {
     if (e instanceof ShopifyUserError) {
@@ -176,6 +195,90 @@ export async function exportShopifyItem(
     throw new Error(
       code === 'SHOPIFY_READ_FAILED' ? 'SHOPIFY_OUTCOME_UNKNOWN' : code,
     )
+  }
+}
+
+const imageClaim = z.object({
+  id: z.uuid(),
+  fresh: z.boolean(),
+  reference: z
+    .string()
+    .regex(/^[a-f0-9-]{36}\/[a-f0-9-]{36}\/[a-f0-9-]{36}\.(jpg|png)$/),
+  productGid: z.string(),
+  mediaGid: z.string().nullable(),
+})
+
+/**
+ * The item's first reception photo as the product's image, once. No photo
+ * (store-owned items, imports) means no image. A failure is recorded with its
+ * code and never fails the export itself; the next export retries it.
+ */
+async function attachImage(
+  client: SupabaseClient,
+  tenantId: string,
+  itemId: string,
+  shop: string,
+  accessToken: string,
+  title: string,
+  http?: typeof fetch,
+): Promise<'synced' | 'none' | 'failed'> {
+  const prepared = await client.rpc('prepare_shopify_image', {
+    p_tenant: tenantId,
+    p_id: randomUUID(),
+    p_item: itemId,
+  })
+  if (prepared.error) return 'failed'
+  if (prepared.data === null) return 'none'
+  const claim = imageClaim.safeParse(prepared.data)
+  if (!claim.success) return 'failed'
+  if (claim.data.mediaGid) return 'synced'
+  if (!claim.data.reference.startsWith(`${tenantId}/`)) return 'failed'
+  const record = async (mediaGid: string | null, error: string | null) => {
+    await client.rpc('record_shopify_image_result', {
+      p_tenant: tenantId,
+      p_intent: claim.data.id,
+      p_media_gid: mediaGid,
+      p_error: error,
+    })
+  }
+  try {
+    const downloaded = await client.storage
+      .from('reception-photos')
+      .download(claim.data.reference)
+    if (
+      downloaded.error ||
+      !downloaded.data ||
+      downloaded.data.size > photoLimit
+    )
+      throw new Error('SHOPIFY_IMAGE_INVALID')
+    let bytes: Buffer
+    try {
+      bytes = await receptionDerivative(
+        new Uint8Array(await downloaded.data.arrayBuffer()),
+      )
+    } catch {
+      throw new Error('SHOPIFY_IMAGE_INVALID')
+    }
+    const resourceUrl = await stageImageUpload(
+      shop,
+      accessToken,
+      `${itemId}.jpg`,
+      bytes,
+      http,
+    )
+    const mediaGid = await createProductImage(
+      shop,
+      accessToken,
+      claim.data.productGid,
+      resourceUrl,
+      title,
+      http,
+    )
+    await record(mediaGid, null)
+    return 'synced'
+  } catch (e) {
+    await record(null, safeCode(e))
+    return 'failed'
   }
 }
 

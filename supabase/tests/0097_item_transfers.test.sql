@@ -1,0 +1,67 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000000971','tr-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000972','tr-staff@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000971","role":"authenticated"}';
+select set_config('test.a',create_tenant('Transfer store A','transfer-store-a',gen_random_uuid())::text,true);
+select set_config('test.b',create_tenant('Transfer store B','transfer-store-b',gen_random_uuid())::text,true);
+select set_config('test.c',create_tenant('Transfer store C','transfer-store-c',gen_random_uuid())::text,true);
+select set_config('test.s1',register_seller(current_setting('test.a')::uuid,gen_random_uuid(),'Anna Andersson','anna@tr.test','')::text,true);
+select set_config('test.agreement',publish_seller_agreement(current_setting('test.a')::uuid,gen_random_uuid(),null,'Synthetic terms','Only a test','en',false)::text,true);
+select record_agreement_evidence(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.s1')::uuid,current_setting('test.agreement')::uuid,'Signed paper');
+select publish_store_policy(current_setting('test.a')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.a')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}'::jsonb);
+select set_config('test.bag',receive_bag_with_agreement(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.s1')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
+select set_config('test.d1',gen_random_uuid()::text,true);
+select save_inspection_draft(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d1')::uuid,0,'Blue wool jacket','Jackets','Good');
+select set_config('test.i1',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.a')::uuid,current_setting('test.i1')::uuid,'inspection_draft',current_setting('test.d1')::uuid,1,20000);
+select set_config('test.d2',gen_random_uuid()::text,true);
+select save_inspection_draft(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Red coat','Coats','Good');
+select set_config('test.i2',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.a')::uuid,current_setting('test.i2')::uuid,'inspection_draft',current_setting('test.d2')::uuid,1,30000);
+select record_sale(current_setting('test.a')::uuid,gen_random_uuid(),'manual','K-1','2026-09-10T10:00:00Z','SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.i2'),'priceOre',30000)));
+select set_config('test.p',gen_random_uuid()::text,true);
+select register_purchase(current_setting('test.a')::uuid,current_setting('test.p')::uuid,'Vintage lamp',15000,'Auction receipt 7',false);
+select set_config('test.i3',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.a')::uuid,current_setting('test.i3')::uuid,'purchase',current_setting('test.p')::uuid,null,25000);
+select set_config('test.t',gen_random_uuid()::text,true);
+
+select throws_ok($$select transfer_item(current_setting('test.a')::uuid,current_setting('test.i1')::uuid,current_setting('test.b')::uuid,current_setting('test.t')::uuid)$$,'NOT_SAME_CHAIN','no chain: refused');
+select set_config('test.chain',create_chain(gen_random_uuid(),'Second Life AB',array[current_setting('test.a')::uuid,current_setting('test.b')::uuid])::text,true);
+select throws_ok($$select transfer_item(current_setting('test.a')::uuid,current_setting('test.i1')::uuid,current_setting('test.c')::uuid,current_setting('test.t')::uuid)$$,'NOT_SAME_CHAIN','store outside the chain: refused');
+select throws_ok($$select transfer_item(current_setting('test.a')::uuid,current_setting('test.i1')::uuid,current_setting('test.a')::uuid,current_setting('test.t')::uuid)$$,'INVALID_INPUT','same store: refused');
+select throws_ok($$select transfer_item(current_setting('test.a')::uuid,current_setting('test.i2')::uuid,current_setting('test.b')::uuid,current_setting('test.t')::uuid)$$,'ITEM_NOT_ON_SALE','sold item: refused');
+select throws_ok($$select transfer_item(current_setting('test.a')::uuid,current_setting('test.i3')::uuid,current_setting('test.b')::uuid,current_setting('test.t')::uuid)$$,'TRANSFER_UNSUPPORTED','store-owned item: refused');
+select set_config('test.r',transfer_item(current_setting('test.a')::uuid,current_setting('test.i1')::uuid,current_setting('test.b')::uuid,current_setting('test.t')::uuid,'Moved for the autumn window')::text,true);
+select is((current_setting('test.r')::jsonb->>'transferred')::boolean,true,'transferred');
+select is((current_setting('test.r')::jsonb->>'replayed')::boolean,false,'first call is not a replay');
+select is(current_setting('test.r')::jsonb->>'toTenant',current_setting('test.b'),'target store recorded');
+select is((select detail->>'action' from item_events where id=current_setting('test.t')::uuid),'transfer','source item ended with action transfer');
+select is((select stage from lifecycle_queue(current_setting('test.a')::uuid,null) q where q.item_id=current_setting('test.i1')::uuid),'ended','source item stage ended');
+select is((select count(*) from sellers where tenant_id=current_setting('test.b')::uuid and email='anna@tr.test'),1::bigint,'seller copied to the target store');
+select is((select seller_id::text from bag_receipts where id=(current_setting('test.r')::jsonb->>'bagId')::uuid),current_setting('test.r')::jsonb->>'sellerId','bag belongs to the copied seller');
+select ok((select note from bag_receipts where id=(current_setting('test.r')::jsonb->>'bagId')::uuid) like 'Transfer from Transfer store A%Moved for the autumn window','bag note names the source and the note');
+select is((select description from inspection_draft_revisions where tenant_id=current_setting('test.b')::uuid and draft_id=(current_setting('test.r')::jsonb->>'draftId')::uuid and revision=1),'Blue wool jacket','draft carries the description');
+select is((select category from inspection_draft_revisions where tenant_id=current_setting('test.b')::uuid and draft_id=(current_setting('test.r')::jsonb->>'draftId')::uuid and revision=1),'Jackets','draft carries the category');
+select is(transfer_item(current_setting('test.a')::uuid,current_setting('test.i1')::uuid,current_setting('test.b')::uuid,current_setting('test.t')::uuid,'Moved for the autumn window')->>'bagId',current_setting('test.r')::jsonb->>'bagId','replay by id returns the same bag');
+select throws_ok($$select transfer_item(current_setting('test.a')::uuid,current_setting('test.i1')::uuid,current_setting('test.b')::uuid,gen_random_uuid())$$,'ITEM_ENDED','a second transfer of an ended item is refused');
+-- The seller's balance stays where the sale happened.
+select ok((seller_balance(current_setting('test.a')::uuid,current_setting('test.s1')::uuid)->>'availableOre')::bigint>0,'balance remains in the source store');
+select is((seller_balance(current_setting('test.b')::uuid,(current_setting('test.r')::jsonb->>'sellerId')::uuid)->>'creditedOre')::bigint,0::bigint,'no balance in the target store');
+-- The target store accepts under its own policy: agreement required, so evidence first.
+select publish_store_policy(current_setting('test.b')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.b')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}'::jsonb);
+select set_config('test.agreement_b',publish_seller_agreement(current_setting('test.b')::uuid,gen_random_uuid(),null,'Store B terms','Only a test','en',false)::text,true);
+select set_config('test.i4',gen_random_uuid()::text,true);
+select throws_ok($$select accept_item(current_setting('test.b')::uuid,current_setting('test.i4')::uuid,'inspection_draft',(current_setting('test.r')::jsonb->>'draftId')::uuid,1,18000)$$,'AGREEMENT_REQUIRED','target store needs its own agreement evidence');
+select record_agreement_evidence(current_setting('test.b')::uuid,gen_random_uuid(),(current_setting('test.r')::jsonb->>'sellerId')::uuid,current_setting('test.agreement_b')::uuid,'Signed at store B');
+select lives_ok($$select accept_item(current_setting('test.b')::uuid,current_setting('test.i4')::uuid,'inspection_draft',(current_setting('test.r')::jsonb->>'draftId')::uuid,1,18000)$$,'target store accepts the transferred item under its own terms');
+select is((select seller_id::text from items where id=current_setting('test.i4')::uuid),current_setting('test.r')::jsonb->>'sellerId','item in the target store belongs to the copied seller');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values (current_setting('test.a')::uuid,'f0000000-0000-4000-8000-000000000972','staff'),(current_setting('test.b')::uuid,'f0000000-0000-4000-8000-000000000972','staff');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000972","role":"authenticated"}';
+select throws_ok($$select transfer_item(current_setting('test.a')::uuid,current_setting('test.i3')::uuid,current_setting('test.b')::uuid,gen_random_uuid())$$,'42501',null,'staff cannot transfer');
+select * from finish();

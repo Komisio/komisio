@@ -22,6 +22,7 @@ import {
   extendSalePeriodCommand,
   endSalePeriodCommand,
   setItemPriceCommand,
+  transferItemCommand,
 } from './lifecycle'
 import { registerPrinterCommand, cancelPrintJobCommand } from './printing'
 import {
@@ -55,6 +56,7 @@ export const intakeCommand = z.discriminatedUnion('action', [
   extendSalePeriodCommand,
   endSalePeriodCommand,
   setItemPriceCommand,
+  transferItemCommand,
   registerPrinterCommand,
   cancelPrintJobCommand,
   publishAccountingMapCommand,
@@ -285,6 +287,14 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_id: c.requestId,
         p_item: c.itemId,
         p_action: c.endAction,
+        p_note: c.note,
+      })
+    case 'transferItem':
+      return client.rpc('transfer_item', {
+        p_from: c.tenantId,
+        p_item: c.itemId,
+        p_to: c.toTenantId,
+        p_id: c.requestId,
         p_note: c.note,
       })
     case 'registerPrinter':

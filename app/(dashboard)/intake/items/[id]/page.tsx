@@ -7,6 +7,8 @@ import { readStoreCurrency } from '@/lib/engine/money'
 import { readItem, formatOre } from '@/lib/engine/items'
 import { readPrinters } from '@/lib/engine/printing'
 import { PrintJobButton } from '@/components/intake/print-job-button'
+import { readChainOverview } from '@/lib/engine/chains'
+import { TransferItemForm } from '@/components/intake/transfer-item-form'
 
 export default async function Item({
   params,
@@ -25,6 +27,15 @@ export default async function Item({
   if (!result) notFound()
   const { item, prices, events } = result
   const printers = await readPrinters(ctx.client, active.id)
+  // Transfer targets: other stores in the chain where this person is owner or admin,
+  // for a consignment item whose period has not ended. SQL rechecks everything.
+  const manages = active.role === 'owner' || active.role === 'admin'
+  const chain = manages ? await readChainOverview(ctx.client, active.id) : null
+  const transferTargets =
+    chain?.stores.filter(
+      (s) => s.id !== active.id && (s.role === 'owner' || s.role === 'admin'),
+    ) ?? []
+  const ended = events.some((e) => e.kind === 'period_ended')
   const t = item.terms
   const when = (iso: string) =>
     new Date(iso).toLocaleString(ctx.locale === 'sv' ? 'sv-SE' : 'en-GB', {
@@ -116,6 +127,20 @@ export default async function Item({
           </div>
         </dl>
       </section>
+      {transferTargets.length > 0 &&
+        item.ownership === 'consignment' &&
+        !ended && (
+          <section className="card intake-form">
+            <h2>{d.transferHeading}</h2>
+            <TransferItemForm
+              tenantId={active.id}
+              itemId={item.id}
+              stores={transferTargets}
+              d={d}
+              intake={all.intake}
+            />
+          </section>
+        )}
       {active.role !== 'readonly' && (
         <section className="card intake-form">
           <h2>{all.printing.itemLabel}</h2>

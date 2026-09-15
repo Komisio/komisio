@@ -58,6 +58,14 @@ export const endSalePeriodCommand = z.strictObject({
   endAction: z.enum(['charity', 'return']),
   note: z.string().trim().max(500).default(''),
 })
+// Transfer to another store in the chain (CHAIN-GROUPING step 2): ends the
+// item here, receives a bag with one draft there. Owner or admin in both.
+export const transferItemCommand = z.strictObject({
+  action: z.literal('transferItem'),
+  ...ids,
+  toTenantId: z.uuid(),
+  note: z.string().trim().max(500).default(''),
+})
 // Manual price set (P2 S20): a person's decision with a reason; the item stays on sale.
 export const setItemPriceCommand = z.strictObject({
   action: z.literal('setItemPrice'),

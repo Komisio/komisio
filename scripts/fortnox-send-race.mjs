@@ -134,6 +134,50 @@ export async function raceFortnoxSend({ setup, connectionString }) {
       ]),
       /FORTNOX_ALREADY_SENT/,
     )
+    const revision = (
+      await sessions[0].query('select read_fortnox_connection($1) result', [
+        tenant,
+      ])
+    ).rows[0].result.revision
+    const refreshes = await Promise.all(
+      sessions.map((session, index) =>
+        session.query(
+          "select refresh_fortnox_tokens($1,$2,$3,'bookkeeping',now()+interval '1 hour') result",
+          [
+            tenant,
+            revision,
+            JSON.stringify({
+              iv: 'synthetic',
+              tag: 'synthetic',
+              data: `token-${index}`,
+            }),
+          ],
+        ),
+      ),
+    )
+    assert.equal(
+      refreshes.filter(({ rows }) => rows[0].result.status === 'refreshed')
+        .length,
+      1,
+    )
+    assert.equal(
+      refreshes.filter(
+        ({ rows }) => rows[0].result.error === 'FORTNOX_CONNECTION_CHANGED',
+      ).length,
+      1,
+    )
+    assert.equal(
+      (
+        await setup.query(
+          "select count(*)::int count from fortnox_connection_events where tenant_id=$1 and kind='refused' and detail->>'expected_revision'=$2",
+          [tenant, revision],
+        )
+      ).rows[0].count,
+      1,
+    )
+    console.log(
+      'PASS: concurrent token refresh has one winner and one durable stale-revision refusal.',
+    )
     console.log(
       'PASS: one dispatch, unknown outcomes held, one concurrent reconciliation, confirmed vouchers cannot resend.',
     )

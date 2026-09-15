@@ -380,7 +380,11 @@ delivered as a read shown at registration (`20260916220000`,
 [DUPLICATE-CHECK.md](DUPLICATE-CHECK.md)); exact photo repeats are
 detected by content digest (`20260916230000`); similarity by model waits
 for the assistance provider. The host page shows usage counts per store
-(`20260916240000`). What remains before production is the checklist in
+(`20260916240000`). The staff agent can find items by text and stage and
+read one item's summary, and find and read receipts, under the read scopes
+`items:read` and `sales:read` (`20260916250000`,
+[AGENT-ITEM-READS.md](AGENT-ITEM-READS.md)); the same read gives the items
+page its search. What remains before production is the checklist in
 that document and the pilot gates; what remains of P3 needs the owner
 (payout rails, printer) or Astra's list (automatic Fortnox sending,
 retention and erasure).

@@ -8,6 +8,10 @@ It exposes narrow tools through the same intake engine:
 | -------------------------------------- | ---------------------- | ---------------------------------------------------------------------------------------------------------- |
 | komisio_list_inspection_operations     | inspection:read        | Page through inspection operation status summaries; no payload, people or decisions                        |
 | komisio_list_reception_operations      | reception:read         | Page through reception operation status summaries; no inspection access                                    |
+| komisio_find_items                     | items:read             | Accepted items by text in title or category and by lifecycle stage, with current price in öre; no names    |
+| komisio_read_item_summary              | items:read             | One item: origin, frozen terms, price series and event kinds; free-text reasons and details omitted        |
+| komisio_find_receipts                  | sales:read             | Recorded sales, newest first, by provider, exact external id or status; totals in öre, no lines, no names  |
+| komisio_read_receipt                   | sales:read             | One sale with its frozen lines: price, commission, seller credit and VAT per line in öre; seller ids only  |
 | komisio_propose_inspection_edit        | inspection:propose     | Stage a complete descriptive edit against an exact saved revision; staff approval required                 |
 | komisio_read_seller_balance            | economy:read           | Engine-computed balance for one seller, in ore; no writes                                                  |
 | komisio_read_seller_ledger             | economy:read           | At most 50 recent events, without private reasons or contacts                                              |
@@ -62,7 +66,7 @@ environment variables to the child process:
   a service-role key, password or refresh token
 - `KOMISIO_MCP_TENANT_ID`: exactly one store UUID
 - `KOMISIO_MCP_SCOPES`: an explicit comma-separated subset of `reception:read`,
-  `reception:preview`, `reception:photos`, `reception:propose`, `inspection:read`, `inspection:preview`, `inspection:propose`, `items:propose`, `economy:read`, `sales:propose`, `ledger:propose`, `lifecycle:propose`, `communications:propose`, `payouts:propose`, `accounting:read`, `accounting:propose`, `store:read`, `store:propose`.
+  `reception:preview`, `reception:photos`, `reception:propose`, `inspection:read`, `inspection:preview`, `inspection:propose`, `items:read`, `items:propose`, `economy:read`, `sales:read`, `sales:propose`, `ledger:propose`, `lifecycle:propose`, `communications:propose`, `payouts:propose`, `accounting:read`, `accounting:propose`, `store:read`, `store:propose`.
   Bag inspection, photo access and staging are separately opt-in.
 
 Have the host launch `node --import tsx mcp/stdio.ts` with the repository as its

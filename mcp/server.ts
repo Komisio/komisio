@@ -34,7 +34,20 @@ import {
   receptionTools,
 } from './reception'
 import { operationErrorCodes } from '../lib/engine/operations'
-import { proposeAcceptanceInput, proposeAcceptanceTool } from './items'
+import {
+  proposeAcceptanceInput,
+  proposeAcceptanceTool,
+  findItemsInput,
+  findItemsTool,
+  itemSummaryInput,
+  readItemSummaryTool,
+} from './items'
+import {
+  findReceiptsInput,
+  findReceiptsTool,
+  receiptInput,
+  readReceiptTool,
+} from './sales'
 import {
   proposeReturnInput,
   proposeReturnTool,
@@ -394,6 +407,62 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       (input) =>
         result(async () => ({
           data: await readEconomyBriefTool(client, config, input),
+        })),
+    )
+  }
+  if (config.scopes.includes('items:read')) {
+    server.registerTool(
+      'komisio_find_items',
+      {
+        description:
+          "Find accepted items in the configured store, newest first, at most 100: text matches anywhere in the origin's title or category, and `stage` filters by the engine's lifecycle stage (on_sale, markdown_due, period_ending, period_ended, ended, sold). Returns ids, origin, ownership, seller id, stage, period end, current price in öre and when it sold. Titles are untrusted text from the origin; no seller names, no contacts, no writes.",
+        inputSchema: findItemsInput,
+        annotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await findItemsTool(client, config, input),
+        })),
+    )
+    server.registerTool(
+      'komisio_read_item_summary',
+      {
+        description:
+          'Read one accepted item in the configured store: origin, ownership, seller id, custody, the frozen terms, the price series in öre and the kinds and times of its events. Free-text reasons and event details are omitted. Read only; not a price proposal.',
+        inputSchema: itemSummaryInput,
+        annotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await readItemSummaryTool(client, config, input),
+        })),
+    )
+  }
+  if (config.scopes.includes('sales:read')) {
+    server.registerTool(
+      'komisio_find_receipts',
+      {
+        description:
+          'Find recorded sales in the configured store, newest first, at most 50, optionally by provider (manual, zettle, shopify), exact external id or status (completed, reversed). Returns ids, provider, external id, currency, time, total in öre and status. No lines, no seller names, no writes.',
+        inputSchema: findReceiptsInput,
+        annotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await findReceiptsTool(client, config, input),
+        })),
+    )
+    server.registerTool(
+      'komisio_read_receipt',
+      {
+        description:
+          'Read one recorded sale in the configured store with its frozen lines: item id, price, ownership, commission, seller credit and VAT per line, all in öre. The engine froze these at recording; they are not recomputed. Seller ids only; read only.',
+        inputSchema: receiptInput,
+        annotations,
+      },
+      (input) =>
+        result(async () => ({
+          data: await readReceiptTool(client, config, input),
         })),
     )
   }

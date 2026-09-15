@@ -7,6 +7,82 @@ import {
   proposeOperation,
   operationErrorCode,
 } from '../lib/engine/operations'
+import { itemStage, readItem, readItemsOverview } from '../lib/engine/items'
+
+const exactOre = z.number().int()
+const readMarkers = {
+  readOnly: true,
+  evidenceIsUntrusted: true,
+  guidanceOnly: true,
+  amountUnit: 'ore',
+} as const
+
+export const findItemsInput = z.strictObject({
+  query: z.string().trim().max(120).default(''),
+  stage: itemStage.optional(),
+  limit: z.number().int().min(1).max(100).default(50),
+})
+/** Newest accepted items first, by text in the origin's title or category and by lifecycle stage. Titles are the origin's untrusted text. */
+export async function findItemsTool(
+  client: SupabaseClient,
+  config: MCPConfig,
+  input: unknown,
+) {
+  const filter = findItemsInput.parse(input)
+  await requireMCPIdentity(client, config, 'items:read')
+  const overview = await readItemsOverview(client, config.tenantId, filter)
+  if (!overview) throw new Error('NOT_AVAILABLE')
+  for (const item of overview.items)
+    if (item.currentPriceOre !== null) exactOre.parse(item.currentPriceOre)
+  return {
+    ...readMarkers,
+    currency: overview.currency,
+    query: overview.query,
+    stage: overview.stage,
+    total: overview.total,
+    limit: overview.limit,
+    potentiallyTruncated: overview.total > overview.items.length,
+    items: overview.items,
+  }
+}
+
+export const itemSummaryInput = z.strictObject({ itemId: z.uuid() })
+/** One item with its frozen terms, price series and event kinds. Free-text reasons and event details stay with the store. */
+export async function readItemSummaryTool(
+  client: SupabaseClient,
+  config: MCPConfig,
+  input: unknown,
+) {
+  const { itemId } = itemSummaryInput.parse(input)
+  await requireMCPIdentity(client, config, 'items:read')
+  const result = await readItem(client, config.tenantId, itemId)
+  if (!result) throw new Error('NOT_FOUND')
+  const { item, prices, events } = result
+  return {
+    ...readMarkers,
+    item: {
+      id: item.id,
+      originKind: item.origin_kind,
+      originId: item.origin_id,
+      originRevision: item.origin_revision,
+      sellerId: item.seller_id,
+      ownership: item.ownership,
+      custodyKind: item.custody_kind,
+      acceptedAt: item.accepted_at,
+      terms: item.terms,
+    },
+    prices: prices.map((p) => ({
+      id: p.id,
+      priceOre: exactOre.parse(p.price_ore),
+      setAt: p.set_at,
+    })),
+    events: events.map((e) => ({
+      id: e.id,
+      kind: e.kind,
+      occurredAt: e.occurred_at,
+    })),
+  }
+}
 
 export const proposeAcceptanceInput = acceptItemPayload.extend({
   requestId: z.uuid(),

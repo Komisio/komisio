@@ -1382,6 +1382,11 @@
     }
   },
   "printing": {
+    "agentTitle": "Run the print agent at this printer",
+    "agentStep1": "Create a member account for the printer (Users): a staff member with its own e-mail, without MFA. It only claims print jobs.",
+    "agentStep2": "On the computer next to the printer, install Node.js (LTS) and fetch the Komisio repository (git clone or the ZIP from GitHub), then run npm install once.",
+    "agentStep3": "Save the lines below as komisio-print.env in the repository folder and fill in the e-mail and password.",
+    "agentStep4": "Start it with: node scripts/print-agent.mjs komisio-print.env. Leave the window open; labels queued to this printer print within a few seconds.",
     "formatsHeading": "Label sizes",
     "formatsIntro": "Width and height in millimetres per label kind. The layout scales to the size at the printer's resolution; a default applies until you set one. Load the matching stock in the printer.",
     "formatKind": "Label",

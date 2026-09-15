@@ -49,6 +49,8 @@ export const storePolicyBody = z.strictObject({
   automaticMarkdowns: z.boolean().optional(),
   // One currency per store (decided 2026-09-13); absent means SEK; frozen after the first money fact.
   currency: currencyCode.optional(),
+  // Intake profile (2026-09-15): quick is one screen per garment, standard adds the seller's price approval, full keeps the step-by-step reception. Absent means quick.
+  intakeProfile: z.enum(['quick', 'standard', 'full']).optional(),
 })
 
 export type StorePolicyBody = z.infer<typeof storePolicyBody>

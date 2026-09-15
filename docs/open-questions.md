@@ -190,6 +190,14 @@ price-decay concept is outside version 1; four label templates on day one
 sale slice; Zettle first; e-mail first, push later. Which messages need fixed
 wording is decided per template when the notification policy is built.
 
+## Partner API
+
+20. **Raised 2026-09-15:** the partner REST subset with OAuth client
+    credentials opens a new access boundary. The proposal and four questions
+    (first scope set, who creates clients, direct sale recording versus
+    staging, timing) are in [PARTNER-API.md](PARTNER-API.md) and wait for
+    the owner.
+
 ## Platform pilot
 
 14. **Answered:** use the Komisio GitHub organization and a public komisio

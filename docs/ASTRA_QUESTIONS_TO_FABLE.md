@@ -66,3 +66,45 @@ lock? This would not allow changing company metadata or creating a connection.
 Also define the outcome when Fortnox rotated a refresh token but the local save
 failed: no fallback to `store_fortnox_connection`, and no blind overwrite/retry of
 a newer envelope. No token-permission change has been made pending this answer.
+
+## 2026-09-15: Erasure needs definitions for existing retained evidence
+
+The B1/B3 direction is approved; these questions concern how to enforce it
+against the existing schema, not a request to change the retention policy.
+Please answer in `FABLE_TO_ASTRA_ANSWERS.md` before the erasure migration.
+
+1. **What is an open statement?** `settlement_statements` in migration
+   `20260914040000` is an immutable period snapshot with `closing_ore`, not
+   an open/closed lifecycle or a link allocating later payouts to statements.
+   A historical nonzero closing balance can coexist with a zero current ledger
+   balance after payment. Should the erasure gate use current zero balance and
+   no requested/approved payout, or is another explicit predicate required?
+   Treating every historical nonzero statement as open would block erasure
+   indefinitely; I will not invent a settlement state or edit a statement.
+2. **Which contact copies remain, and which reads redact them?** The existing
+   `seller_data_export` (`20260915130000`) includes whole `reception_reviews`
+   rows with `seller_email` and `seller_communications` rows with `recipient`,
+   `subject` and `body`. Replacing only `sellers.name/email/phone` therefore
+   does not make that export contact-free. Please specify retained evidence
+   versus redacted projections, including ordinary staff reads and any pending
+   communication delivery. Free-text bodies may contain contact data too;
+   string replacement cannot guarantee anonymisation. No immutable evidence
+   has been edited, deleted or hidden by this investigation.
+3. **What replaces physical Auth deletion when attribution is referenced?**
+   `access_events.actor_id` and `tenants.created_by` reference `auth.users`
+   with `ON DELETE RESTRICT` (`20260910200000`); other immutable financial
+   facts also reference the identity. Removing the Auth row in the dashboard
+   cannot preserve those foreign keys as currently defined. Should the operator
+   disable access and anonymise the retained identity instead, and how should
+   existing sessions and same-email registration be handled? Please define the
+   operator procedure without cascading deletion or weakening attribution.
+4. **What counts as last activity for the 24-month read?** Please enumerate
+   the source events and timestamp semantics, including a seller who only
+   registered, unreceived handovers/bags, reviews and communications. Confirm
+   which outstanding custody or review states prevent erasure in addition to
+   saleable items, balances and payouts. A latest-sale timestamp alone would
+   misclassify these sellers.
+
+These questions block the affected erasure/account-closure slice only. Fortnox
+work continues against the answered connection-revision and reconciliation
+design; no new erasure rule or staged operation kind is introduced here.

@@ -22,6 +22,12 @@ import {
 import { zettleFixturesEnabled } from '@/extensions/zettle/fixtures'
 import { ZettleAction } from '@/components/intake/zettle-action'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
+import {
+  readShopifyStatus,
+  shopifyTokenExpired,
+} from '@/lib/engine/shopify-connection'
+import { shopifyEnvironment, shopifyIssue } from '@/extensions/shopify/auth'
+import { ShopifyConnection } from '@/components/intake/shopify-connection'
 export default async function Integrations({
   searchParams,
 }: {
@@ -80,6 +86,8 @@ export default async function Integrations({
       ...(images ?? []).map((image) => image.item_id),
     ]),
   ]
+  const shopifyStatus = await readShopifyStatus(ctx.client, a.id)
+  const shopifyExpired = shopifyTokenExpired(shopifyStatus)
   return (
     <>
       <div className="page-heading">
@@ -96,6 +104,18 @@ export default async function Integrations({
           tenantId={a.id}
           issue={pilotIssue(a.id, pilotEnvironment(process.env))}
           d={d}
+        />
+      )}
+      {['owner', 'admin'].includes(a.role) && (
+        <ShopifyConnection
+          key={`shopify-${a.id}`}
+          tenantId={a.id}
+          status={shopifyStatus}
+          issue={shopifyIssue(a.id, shopifyEnvironment(process.env))}
+          outcome={typeof params.shopify === 'string' ? params.shopify : null}
+          expired={shopifyExpired}
+          locale={ctx.locale}
+          d={all.shopify}
         />
       )}
       {a.role === 'staff' && images !== null && images.length > 0 && (

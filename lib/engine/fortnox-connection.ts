@@ -112,6 +112,10 @@ const stored = z.object({
   cipher: sealedBox,
   scope: z.string(),
   expiresAt: z.string(),
+  revision: z
+    .string()
+    .regex(/^[1-9]\d*$/)
+    .optional(),
 })
 
 async function persist(
@@ -196,28 +200,84 @@ export async function fortnoxAccessToken(
 ) {
   await requireOwner(client, tenantId)
   const env = ready(tenantId, source)
-  const r = await client.rpc('read_fortnox_connection', { p_tenant: tenantId })
-  if (r.error) throw new Error('FORBIDDEN')
-  if (!r.data) throw new Error('FORTNOX_NOT_CONNECTED')
-  const row = stored.parse(r.data)
-  const secrets = z
-    .object({ accessToken: z.string(), refreshToken: z.string() })
-    .parse(open(PURPOSE, row.cipher, source))
-  if (Date.parse(row.expiresAt) > Date.now() + 30000)
-    return { accessToken: secrets.accessToken, row }
-  const tokens = await refreshTokens(env, secrets.refreshToken, http)
-  await persist(
-    client,
-    tenantId,
-    {
-      CompanyName: row.companyName,
-      OrganizationNumber: row.organisationNumber,
-      DatabaseNumber: row.databaseNumber,
-    },
-    tokens,
-    source,
-  )
-  return { accessToken: tokens.access_token, row }
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const response = await client.rpc('read_fortnox_connection', {
+      p_tenant: tenantId,
+    })
+    if (response.error) throw new Error('FORBIDDEN')
+    if (!response.data) throw new Error('FORTNOX_NOT_CONNECTED')
+    const row = stored.parse(response.data)
+    const secrets = z
+      .object({ accessToken: z.string(), refreshToken: z.string() })
+      .parse(open(PURPOSE, row.cipher, source))
+    if (Date.parse(row.expiresAt) > Date.now() + 30000)
+      return { accessToken: secrets.accessToken, row }
+    if (!row.revision) throw new Error('FORTNOX_REFRESH_UNAVAILABLE')
+    const recordRefusal = async (reason: 'save_failed' | 'invalid_grant') => {
+      await Promise.resolve()
+        .then(() =>
+          client.rpc('record_fortnox_check', {
+            p_tenant: tenantId,
+            p_kind: 'refused',
+            p_detail: { reason, revision: row.revision },
+          }),
+        )
+        .catch(() => undefined)
+    }
+    const tokens = await refreshTokens(env, secrets.refreshToken, http).catch(
+      async (error: unknown) => {
+        if (
+          error instanceof Error &&
+          error.message === 'FORTNOX_REFRESH_INVALID_GRANT'
+        )
+          await recordRefusal('invalid_grant')
+        throw error
+      },
+    )
+    try {
+      const cipher = seal(
+        PURPOSE,
+        {
+          accessToken: tokens.access_token,
+          refreshToken: tokens.refresh_token,
+        },
+        source,
+      )
+      const expiresAt = new Date(
+        Date.now() + Math.max(60, tokens.expires_in - 60) * 1000,
+      ).toISOString()
+      const saved = await client.rpc('refresh_fortnox_tokens', {
+        p_tenant: tenantId,
+        p_revision: row.revision,
+        p_cipher: cipher,
+        p_scope: tokens.scope ?? row.scope,
+        p_expires_at: expiresAt,
+      })
+      if (saved.error) throw new Error('FORTNOX_REFRESH_SAVE_FAILED')
+      if (saved.data?.error !== 'FORTNOX_CONNECTION_CHANGED') {
+        const result = z
+          .object({
+            status: z.literal('refreshed'),
+            revision: z.string().regex(/^[1-9]\d*$/),
+          })
+          .parse(saved.data)
+        return {
+          accessToken: tokens.access_token,
+          row: {
+            ...row,
+            cipher,
+            expiresAt,
+            scope: tokens.scope ?? row.scope,
+            revision: result.revision,
+          },
+        }
+      }
+    } catch {
+      await recordRefusal('save_failed')
+      throw new Error('FORTNOX_REFRESH_SAVE_FAILED')
+    }
+  }
+  throw new Error('FORTNOX_CONNECTION_CHANGED')
 }
 
 /** Read-only: the company Fortnox answers for the stored token, checked against the pins. */
@@ -281,6 +341,10 @@ export async function disconnectFortnox(
 }
 
 export const fortnoxErrorCodes = [
+  'FORTNOX_CONNECTION_CHANGED',
+  'FORTNOX_REFRESH_SAVE_FAILED',
+  'FORTNOX_REFRESH_UNAVAILABLE',
+  'FORTNOX_REFRESH_INVALID_GRANT',
   'FORBIDDEN',
   'AUTH_REQUIRED',
   'FORTNOX_NOT_CONNECTED',

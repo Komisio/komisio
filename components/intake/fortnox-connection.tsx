@@ -104,6 +104,12 @@ export function FortnoxConnection({
           )}
           {status.connected && (
             <>
+              <a
+                className="btn"
+                href={`/api/integrations/fortnox/connect?tenant=${tenantId}`}
+              >
+                {d.reconnect}
+              </a>
               <Button
                 type="button"
                 onClick={() => void post('check')}
@@ -135,7 +141,7 @@ export function FortnoxConnection({
                 ? ` · ${e.detail.company_name}`
                 : ''}
               {typeof e.detail.reason === 'string'
-                ? ` · ${errors[e.detail.reason] ?? e.detail.reason}`
+                ? ` · ${e.detail.reason === 'invalid_grant' ? errors.FORTNOX_REFRESH_INVALID_GRANT : e.detail.reason === 'save_failed' ? errors.FORTNOX_REFRESH_SAVE_FAILED : (errors[e.detail.reason] ?? e.detail.reason)}`
                 : ''}
             </li>
           ))}

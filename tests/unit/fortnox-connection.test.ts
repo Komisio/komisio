@@ -17,6 +17,7 @@ import {
 import {
   checkFortnoxConnection,
   completeFortnoxConnection,
+  fortnoxAccessToken,
 } from '../../lib/engine/fortnox-connection'
 
 const tenant = '10000000-0000-4000-8000-000000000001'
@@ -151,10 +152,193 @@ function client(role: string, rows: Record<string, unknown> = {}) {
     if (fn === 'tenant_role') return { data: role, error: null }
     if (fn === 'read_fortnox_connection')
       return { data: rows.connection ?? null, error: null }
+    if (fn === 'refresh_fortnox_tokens')
+      return { data: { status: 'refreshed', revision: '2' }, error: null }
     return { data: true, error: null }
   })
   return { client: { rpc } as unknown as SupabaseClient, calls }
 }
+
+describe('revision-bound refresh', () => {
+  const row = (revision: string | undefined, expired = true) => ({
+    revision,
+    databaseNumber: '123456',
+    companyName: 'Komisio Test',
+    organisationNumber: '',
+    scope: 'bookkeeping',
+    expiresAt: new Date(Date.now() + (expired ? -1000 : 3600000)).toISOString(),
+    cipher: seal(
+      'fortnox-connection',
+      {
+        accessToken: `access-${revision}`,
+        refreshToken: `refresh-${revision}`,
+      },
+      env,
+    ),
+  })
+  function fixture(connections: unknown[], outcomes: unknown[]) {
+    const rpc = vi.fn(async (name: string) => {
+      if (name === 'tenant_role') return { data: 'owner', error: null }
+      if (name === 'read_fortnox_connection')
+        return { data: connections.shift(), error: null }
+      if (name === 'refresh_fortnox_tokens') {
+        const outcome = outcomes.shift()
+        if (outcome instanceof Error) throw outcome
+        return outcome
+      }
+      if (name === 'store_fortnox_connection')
+        throw new Error('UNSAFE_FALLBACK')
+      return { data: null, error: null }
+    })
+    return { rpc, client: { rpc } as unknown as SupabaseClient }
+  }
+  it('rereads once after conflict and uses the new valid connection token', async () => {
+    const fixtureData = fixture(
+      [row('9007199254740993'), row('9007199254740994', false)],
+      [{ data: { error: 'FORTNOX_CONNECTION_CHANGED' }, error: null }],
+    )
+    const http = vi.fn<typeof fetch>().mockResolvedValueOnce(tokens())
+    const result = await fortnoxAccessToken(
+      fixtureData.client,
+      tenant,
+      env,
+      http,
+    )
+    expect(result.accessToken).toBe('access-9007199254740994')
+    expect(http).toHaveBeenCalledTimes(1)
+    expect(fixtureData.rpc).toHaveBeenCalledWith(
+      'refresh_fortnox_tokens',
+      expect.objectContaining({ p_revision: '9007199254740993' }),
+    )
+    expect(
+      fixtureData.rpc.mock.calls.filter(
+        ([name]) => name === 'read_fortnox_connection',
+      ),
+    ).toHaveLength(2)
+  })
+  it('refreshes the reread revision but never loops on another conflict', async () => {
+    const conflict = {
+      data: { error: 'FORTNOX_CONNECTION_CHANGED' },
+      error: null,
+    }
+    const fixtureData = fixture([row('1'), row('2')], [conflict, conflict])
+    const http = vi.fn<typeof fetch>().mockImplementation(async () => tokens())
+    await expect(
+      fortnoxAccessToken(fixtureData.client, tenant, env, http),
+    ).rejects.toThrow('FORTNOX_CONNECTION_CHANGED')
+    expect(http).toHaveBeenCalledTimes(2)
+    expect(fixtureData.rpc).toHaveBeenCalledWith(
+      'refresh_fortnox_tokens',
+      expect.objectContaining({ p_revision: '2' }),
+    )
+    expect(
+      fixtureData.rpc.mock.calls.filter(
+        ([name]) => name === 'read_fortnox_connection',
+      ),
+    ).toHaveLength(2)
+  })
+  it.each([
+    { error: { message: 'synthetic secret failure' }, data: null },
+    new Error('synthetic secret failure'),
+    { error: null, data: true },
+  ])(
+    'fails closed without returning or retrying rotated tokens when save fails: %j',
+    async (outcome) => {
+      const fixtureData = fixture([row('1')], [outcome])
+      const http = vi.fn<typeof fetch>().mockResolvedValueOnce(tokens())
+      await expect(
+        fortnoxAccessToken(fixtureData.client, tenant, env, http),
+      ).rejects.toThrow('FORTNOX_REFRESH_SAVE_FAILED')
+      expect(http).toHaveBeenCalledTimes(1)
+      expect(fixtureData.rpc).toHaveBeenCalledWith('record_fortnox_check', {
+        p_tenant: tenant,
+        p_kind: 'refused',
+        p_detail: { reason: 'save_failed', revision: '1' },
+      })
+      expect(
+        fixtureData.rpc.mock.calls.filter(
+          ([name]) => name === 'read_fortnox_connection',
+        ),
+      ).toHaveLength(1)
+      expect(
+        fixtureData.rpc.mock.calls.some(
+          ([name]) => name === 'store_fortnox_connection',
+        ),
+      ).toBe(false)
+    },
+  )
+  it('can refresh the new revision after one conflict', async () => {
+    const fixtureData = fixture(
+      [row('1'), row('2')],
+      [
+        { data: { error: 'FORTNOX_CONNECTION_CHANGED' }, error: null },
+        { data: { status: 'refreshed', revision: '3' }, error: null },
+      ],
+    )
+    const http = vi.fn<typeof fetch>().mockImplementation(async () => tokens())
+    const result = await fortnoxAccessToken(
+      fixtureData.client,
+      tenant,
+      env,
+      http,
+    )
+    expect(result.row.revision).toBe('3')
+    expect(result.accessToken).toBe('synthetic-access')
+    expect(http).toHaveBeenCalledTimes(2)
+    expect(
+      fixtureData.rpc.mock.calls.some(
+        ([name]) => name === 'store_fortnox_connection',
+      ),
+    ).toBe(false)
+  })
+  it('stops if the conflict reread finds a disconnected store', async () => {
+    const fixtureData = fixture(
+      [row('1'), null],
+      [{ data: { error: 'FORTNOX_CONNECTION_CHANGED' }, error: null }],
+    )
+    const http = vi.fn<typeof fetch>().mockResolvedValueOnce(tokens())
+    await expect(
+      fortnoxAccessToken(fixtureData.client, tenant, env, http),
+    ).rejects.toThrow('FORTNOX_NOT_CONNECTED')
+    expect(http).toHaveBeenCalledTimes(1)
+  })
+  it('does not rotate a token before the revision migration is present', async () => {
+    const fixtureData = fixture([row(undefined)], [])
+    const http = vi.fn<typeof fetch>()
+    await expect(
+      fortnoxAccessToken(fixtureData.client, tenant, env, http),
+    ).rejects.toThrow('FORTNOX_REFRESH_UNAVAILABLE')
+    expect(http).not.toHaveBeenCalled()
+  })
+  it('records only the allowlisted invalid_grant reason and does not save', async () => {
+    const fixtureData = fixture([row('1')], [])
+    const http = vi.fn<typeof fetch>().mockResolvedValueOnce(
+      json(
+        {
+          error: 'invalid_grant',
+          error_description: 'synthetic provider secret',
+        },
+        400,
+      ),
+    )
+    await expect(
+      fortnoxAccessToken(fixtureData.client, tenant, env, http),
+    ).rejects.toThrow('FORTNOX_REFRESH_INVALID_GRANT')
+    expect(fixtureData.rpc).toHaveBeenCalledWith('record_fortnox_check', {
+      p_tenant: tenant,
+      p_kind: 'refused',
+      p_detail: { reason: 'invalid_grant', revision: '1' },
+    })
+    expect(
+      fixtureData.rpc.mock.calls.some(
+        ([name]) => name === 'refresh_fortnox_tokens',
+      ),
+    ).toBe(false)
+    expect(JSON.stringify(fixtureData.rpc.mock.calls)).not.toContain(
+      'synthetic provider secret',
+    )
+  })
+})
 
 describe('fortnox connection engine', () => {
   it('refuses the production company and records the refusal without a token', async () => {
@@ -237,6 +421,7 @@ describe('fortnox connection engine', () => {
       cipher,
       scope: 'bookkeeping',
       expiresAt: new Date(Date.now() - 1000).toISOString(),
+      revision: '1',
     }
     const http = vi
       .fn<typeof fetch>()
@@ -249,9 +434,12 @@ describe('fortnox connection engine', () => {
     expect(String((http.mock.calls[0][1] as RequestInit).body)).toContain(
       'refresh_token=old-refresh',
     )
-    expect(
-      calls.filter((x) => x.fn === 'store_fortnox_connection'),
-    ).toHaveLength(1)
+    expect(calls.filter((x) => x.fn === 'refresh_fortnox_tokens')).toHaveLength(
+      1,
+    )
+    expect(calls.some((entry) => entry.fn === 'store_fortnox_connection')).toBe(
+      false,
+    )
     expect(calls.at(-1)?.args.p_kind).toBe('checked')
   })
   it('refuses a check whose company moved to another database', async () => {

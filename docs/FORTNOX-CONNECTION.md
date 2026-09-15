@@ -16,10 +16,22 @@ must remain committed. Callers must inspect this result before using new tokens.
 Success returns `{ "status": "refreshed", "revision": "..." }`. No tokens
 appear in either result or audit events.
 
-This is a database-only prerequisite. The current application still uses its
-existing refresh path; switching it to this RPC, bounded rereading after conflict,
-save-failure/reconnect handling and the automatic sender remain separate work.
-No scheduled send or real token refresh is enabled by this migration.
+The application now renews through this RPC, never through the general connection
+store command. A conflict drops the obtained tokens and rereads once, using the
+new valid access token or renewing that new revision. Another conflict stops.
+A missing revision stops before external renewal during a deployment gap. A save
+error drops the rotated tokens without retry and reports a reconnect/check hint;
+a verified provider `invalid_grant` reports that reconnection is needed. Only
+allowlisted reasons and the read revision enter refusal events. Logging during a
+database outage is best effort; no unavailable database can guarantee the event.
+
+The OAuth callback still verifies the company before storing a connection.
+The connection panel offers renewal through OAuth without disconnecting first,
+so the existing company database pin is retained. Saved refusal events display
+the same reconnect guidance on a later page load.
+Owner/admin application checks remain unchanged. Scoped automation wiring,
+its check-event permission and scheduled sends remain separate work. No real
+token was renewed as part of the synthetic validation of this change.
 
 Version 1 connects one Fortnox company to one store, verifies it and keeps
 the tokens sealed on the server. It sends nothing to Fortnox. Voucher sending

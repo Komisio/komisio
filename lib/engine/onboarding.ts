@@ -39,7 +39,7 @@ export type OnboardingStep = {
 
 const paths: Record<OnboardingStepKey, string> = {
   account: '/account',
-  store: '/settings',
+  store: '/settings?tab=store',
   profile: '/account',
   policy: '/settings',
   agreement: '/intake/agreements',

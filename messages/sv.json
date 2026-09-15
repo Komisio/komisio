@@ -204,6 +204,13 @@
   "copied": "Kopierad",
   "readOnlyMembers": "Du kan se vilka som arbetar här. En ägare eller administratör hanterar behörigheterna.",
   "tenantIntro": "Grunduppgifter som hjälper ditt team att hitta rätt.",
+  "settingsTabsLabel": "Inställningsdelar",
+  "settingsTabs": {
+    "policy": "Butikspolicy",
+    "profile": "Butiksprofil",
+    "store": "Butik och plan",
+    "printing": "Skrivare och etiketter"
+  },
   "tenantIdentity": "Butikens identitet",
   "tenantId": "Butiks-id",
   "tenantImmutable": "Identifieraren används för att skilja butiken från andra butiker.",

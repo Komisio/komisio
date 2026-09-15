@@ -44,7 +44,7 @@ export default async function Home() {
         })
       : [
           { key: 'account' as const, done: true, path: '/account' },
-          { key: 'store' as const, done: true, path: '/settings' },
+          { key: 'store' as const, done: true, path: '/settings?tab=store' },
           {
             key: 'profile' as const,
             done: !!ctx.profile?.display_name,

@@ -19,7 +19,66 @@ export async function testProposalsMCP({
   const lifecycle = await connect('lifecycle:propose')
   assert.deepEqual(
     (await lifecycle.listTools()).tools.map((t) => t.name).sort(),
-    ['komisio_propose_bulk_item_update', 'komisio_propose_markdown_batch'],
+    [
+      'komisio_propose_bulk_item_update',
+      'komisio_propose_markdown_batch',
+      'komisio_propose_price_change',
+    ],
+  )
+  // Price change: the citation must match a fresh evidence read; the fixture
+  // store has no sales yet, so count 0 and no median is the truthful citation.
+  const priceChange = randomUUID()
+  const cited = await lifecycle.callTool({
+    name: 'komisio_propose_price_change',
+    arguments: {
+      requestId: priceChange,
+      expiresAt,
+      itemId: item,
+      priceOre: 21000,
+      reason: 'MCP fixture price proposal',
+      evidence: {
+        category: '',
+        query: '',
+        days: 365,
+        count: 0,
+        medianSoldOre: null,
+      },
+    },
+  })
+  assert(!cited.isError, JSON.stringify(cited.content))
+  assert.equal(cited.structuredContent.riskLevel, 'medium')
+  assert.equal(cited.structuredContent.staged, true)
+  assert.equal(cited.structuredContent.executed, false)
+  assert.equal(cited.structuredContent.proposedPriceOre, 21000)
+  const stale = await lifecycle.callTool({
+    name: 'komisio_propose_price_change',
+    arguments: {
+      requestId: randomUUID(),
+      expiresAt,
+      itemId: item,
+      priceOre: 21000,
+      reason: 'Stale citation',
+      evidence: {
+        category: '',
+        query: '',
+        days: 365,
+        count: 3,
+        medianSoldOre: 20000,
+      },
+    },
+  })
+  assert(
+    stale.isError,
+    'a citation that does not match the evidence is refused',
+  )
+  assert.equal(
+    (
+      await db.query(
+        'select count(*)::int n from pending_operations where id=$1',
+        [priceChange],
+      )
+    ).rows[0].n,
+    1,
   )
   // Not due yet: the batch is refused whole.
   const notDue = await lifecycle.callTool({

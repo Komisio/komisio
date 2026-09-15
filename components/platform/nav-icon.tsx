@@ -21,6 +21,7 @@ import {
   UserRound,
   Users,
   Wallet,
+  Zap,
   type LucideProps,
 } from 'lucide-react'
 
@@ -47,6 +48,7 @@ const icons = {
   UserRound,
   Users,
   Wallet,
+  Zap,
 }
 
 /** Icon by name, so the navigation list stays plain data. */

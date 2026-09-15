@@ -2105,6 +2105,7 @@
     "notice": "Returned items are excluded. Prices are what this store recorded; nothing is fetched from outside."
   },
   "nav": {
+    "quickShort": "Receive",
     "receiving": "Receiving",
     "receiveBag": "Receive a bag",
     "selfDropOff": "Self drop-off",

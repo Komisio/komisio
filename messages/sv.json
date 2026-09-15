@@ -2105,6 +2105,7 @@
     "notice": "Returnerade varor räknas inte. Priserna är vad butiken registrerat; inget hämtas utifrån."
   },
   "nav": {
+    "quickShort": "Ta emot",
     "receiving": "Mottagning",
     "receiveBag": "Ta emot påse",
     "selfDropOff": "Egen inlämning",

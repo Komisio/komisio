@@ -19,6 +19,8 @@ export function buildNavigation(
       {
         label: n.receiving,
         links: [
+          // The one-screen reception first: it is the default intake profile.
+          { path: '/intake/quick', label: d.quickIntake.title, icon: 'Zap' },
           { path: '/intake', label: n.receiveBag, icon: 'Inbox' },
           {
             path: '/intake/reception',
@@ -113,7 +115,7 @@ export function mobileNavigation(
   return intakeEnabled
     ? [
         { path: '/', label: d.home, icon: 'House' },
-        { path: '/intake', label: n.receiveBag, icon: 'Inbox' },
+        { path: '/intake/quick', label: n.quickShort, icon: 'Zap' },
         { path: '/intake/items', label: d.items.title, icon: 'Package' },
         { path: '/intake/operations', label: n.workShort, icon: 'ListChecks' },
         { path: '/menu', label: n.more, icon: 'Menu' },

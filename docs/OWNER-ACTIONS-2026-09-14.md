@@ -45,7 +45,7 @@ move to DECISIONS.md and the settings to PILOT-GATES.md.
 
 | #   | Question                                       | Proposed default                                                                                                                         |
 | --- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| C1  | Price and VAT presentation                     | SEK 199 per store and month, shown including VAT to Swedish stores; one plan                                                             |
+| C1  | Price and VAT presentation                     | SEK 199 per store and month, excluding VAT (corrected by the owner 2026-09-15; the 2026-09-14 answer said including); one plan           |
 | C2  | Trial and grace                                | 30 days from store creation; 14 days grace after a failed payment                                                                        |
 | C3  | What read-only blocks                          | No new facts (reception, sales, markdowns, payout requests, agent proposals); reads, exports and marking approved payouts paid stay open |
 | C4  | Payment provider and methods                   | Stripe Checkout and customer portal; card and invoice; prices and tax live in Stripe                                                     |

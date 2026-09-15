@@ -208,7 +208,8 @@ export async function readOperationReview(
     pending.data.kind === 'markPayoutPaid' ||
     pending.data.kind === 'sendMessage' ||
     pending.data.kind === 'exportDayClose' ||
-    pending.data.kind === 'updateStoreProfile'
+    pending.data.kind === 'updateStoreProfile' ||
+    pending.data.kind === 'importSellers'
   ) {
     // P2 kinds carry their own facts; the only cheap hint is whether the
     // subject still exists or is already done. SQL rechecks on approval.

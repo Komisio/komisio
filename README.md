@@ -133,7 +133,7 @@ use test data rather than real consignor or financial records.
 | Staged operations with risk levels, MCP server with scoped tools              | Multi-tenant provider connections with per-store credentials                           |
 | Trial and plans with Stripe, automation actor, sellers list, duplicate checks | Automatic Fortnox sending, retention and erasure                                       |
 | Item search by title, category and stage; agent reads and price proposals     | Agent seller lookup                                                                    |
-| Chains with numbers in total and item moves; stock report per category        | Shopify products out and orders in, import wizard, partner API                         |
+| Chains with numbers in total and item moves; stock report per category        | Shopify products out and orders in, item import, partner API                           |
 
 The hosted preview is a staging environment for the pilot store and the
 people building Komisio. See [pilot gates](docs/PILOT-GATES.md) for what

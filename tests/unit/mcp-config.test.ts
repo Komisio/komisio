@@ -65,3 +65,14 @@ it('requires explicit seller-economy read scope without expanding reception acce
     readMCPConfig({ ...env, KOMISIO_MCP_SCOPES: 'economy:write' }),
   ).toThrow()
 })
+it('keeps item and receipt reads apart from their proposal scopes', () => {
+  expect(readMCPConfig(env).scopes).not.toContain('items:read')
+  expect(
+    readMCPConfig({ ...env, KOMISIO_MCP_SCOPES: 'items:read,sales:read' })
+      .scopes,
+  ).toEqual(['items:read', 'sales:read'])
+  for (const scopes of ['items:write', 'sales:read,sales:read'])
+    expect(() =>
+      readMCPConfig({ ...env, KOMISIO_MCP_SCOPES: scopes }),
+    ).toThrow()
+})

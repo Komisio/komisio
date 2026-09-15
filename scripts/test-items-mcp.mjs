@@ -146,5 +146,54 @@ export async function testItemsMCP({ connect, rpc, db, tenant, token, uid }) {
         })
       ).isError,
     )
+  // Read scopes: the accepted purchase is findable by its note, the summary
+  // carries its price, and neither scope exposes the proposal tool.
+  const reader = await connect('items:read,sales:read')
+  assert.deepEqual((await reader.listTools()).tools.map((t) => t.name).sort(), [
+    'komisio_find_items',
+    'komisio_find_receipts',
+    'komisio_read_item_summary',
+    'komisio_read_receipt',
+  ])
+  const found = await reader.callTool({
+    name: 'komisio_find_items',
+    arguments: { query: 'purchase note', stage: 'on_sale' },
+  })
+  assert(!found.isError, JSON.stringify(found.content))
+  const row = found.structuredContent.items.find((i) => i.id === op)
+  assert(row, 'accepted purchase is found by its note')
+  assert.equal(row.title, 'PRIVATE PURCHASE NOTE')
+  assert.equal(row.currentPriceOre, 25000)
+  assert.equal(row.stage, 'on_sale')
+  assert.equal(found.structuredContent.readOnly, true)
+  const summary = await reader.callTool({
+    name: 'komisio_read_item_summary',
+    arguments: { itemId: op },
+  })
+  assert(!summary.isError, JSON.stringify(summary.content))
+  assert.equal(summary.structuredContent.item.originKind, 'purchase')
+  assert.equal(summary.structuredContent.prices[0].priceOre, 25000)
+  assert(
+    (await reader.callTool({ name: 'komisio_find_receipts', arguments: {} }))
+      .structuredContent.receipts !== undefined,
+  )
+  assert(
+    (
+      await reader.callTool({
+        name: 'komisio_read_receipt',
+        arguments: { saleId: randomUUID() },
+      })
+    ).isError,
+  )
+  for (const args of [
+    { stage: 'listed' },
+    { limit: 101 },
+    { tenantId: tenant },
+  ])
+    assert(
+      (await reader.callTool({ name: 'komisio_find_items', arguments: args }))
+        .isError,
+      JSON.stringify(args),
+    )
   return { stager, purchase, operation: op }
 }

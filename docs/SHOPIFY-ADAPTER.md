@@ -145,5 +145,16 @@ changed order flagged once, immutability, staff read only) and
 currency, watermark, pull query and page recording, empty page, replay).
 
 The app is registered (A11, 2026-09-15) and the pilot store is bound on
-staging. No real connection or export has been recorded yet; the first real
-connection, export and order pull will be logged here as for Zettle.
+staging.
+
+Real rows against the development shop (owner, staging, 2026-09-15):
+
+| When (Europe/Stockholm) | What                                                            | Result                            |
+| ----------------------- | --------------------------------------------------------------- | --------------------------------- |
+| 2026-09-15              | Connect `komisio-test.myshopify.com` from the integrations page | Connected                         |
+| 2026-09-15              | Export one accepted item as a product                           | Synced                            |
+| 2026-09-15 16:14:10     | Test order `#1001`, one line, SEK 59.00, paid in the dev shop   | Order placed                      |
+| 2026-09-15 16:14:47     | Pull paid orders (`SHOPIFY_ACCEPT_TEST_ORDERS=true` on staging) | 1 received, `#1001` sale recorded |
+
+Steps 1 to 3 are verified end to end on staging. Production keeps
+`SHOPIFY_ACCEPT_TEST_ORDERS` unset.

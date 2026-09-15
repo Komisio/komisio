@@ -44,7 +44,7 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
       .getByRole('link', { name: /Snabb jacka/ })
       .first()
       .click()
-    await expect(page.getByText(/I-[0-9A-F]{8}/).first()).toBeVisible()
+    await expect(page.getByText('250.00 SEK').first()).toBeVisible()
     await page.goto('/intake/quick')
     await page
       .getByLabel(d.quickIntake.searchSeller, { exact: true })

@@ -83,6 +83,25 @@ disconnects and connects again.
 
 ## Voucher sending
 
+### Confirmed-sent engine command (2026-09-15)
+
+`confirmFortnoxVoucher` calls the owner-only `reconcile_fortnox_send` RPC with
+`confirmed_sent`, the held send ID, voucher series/number, financial year and
+1–500 characters of evidence. It performs no provider call. The owner must have
+compared the voucher in the send's pinned Fortnox company with the immutable
+export; this command records that person's assertion, not automatic verification.
+
+Only pending or FORTNOX_OUTCOME_UNKNOWN sends qualify. The row retains its original
+actor, company binding and transport error. Separate reconciliation metadata and
+one append-only `fortnox.reconciled` event identify the confirming owner, voucher,
+evidence and prior state. An exact same-owner replay returns the outcome; changed
+coordinates or evidence are refused. A normal sent row cannot be reconciled.
+
+This is the engine prerequisite, not yet the browser evidence reader/form. Absence
+is still refused, and no reconciliation can authorize another POST. Automated
+sending, dispatch leases, token renewal and confirmed-absent recovery are separate
+slices. Tests use synthetic vouchers; no real voucher was reconciled here.
+
 ### Retry safety prerequisite for automation (2026-09-14)
 
 Only a newly created send grants its caller permission to POST. A pending replay

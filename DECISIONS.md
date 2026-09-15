@@ -1,5 +1,16 @@
 # Decision Log
 
+## 2026-09-15: Owner confirmation of an existing Fortnox voucher
+
+Fable approved the confirmed-sent-only reconciliation slice. An owner may record
+bounded evidence and the externally verified voucher coordinates for a pending
+or unknown send. The original send actor and company/export binding stay fixed;
+new reconciliation metadata and an append-only access event identify the owner
+and preserve the prior outcome. Exact actor-bound replay is a no-op, conflicting
+evidence is refused. This cannot authorize another POST or record absence.
+The first slice supplies the engine command only; a browser evidence/form slice
+follows. No automatic send, token permission or provider call is introduced.
+
 ## 2026-09-14: Document operator-mediated MFA recovery
 
 Implement owner decision B2 as docs/OPERATIONS-MFA-RECOVERY.md, not a new reset

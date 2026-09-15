@@ -87,15 +87,36 @@ Shopify route, and a "Products in Shopify" section on the integrations page.
   (recorded as a `refused` event); Shopify keeps the old refresh token valid
   until the new one is used, so a refused store costs nothing.
 
-## Step 3: orders in
+## Step 3: orders in (delivered 2026-09-15)
 
-`orders` query with `financial_status:paid updated_at:>cursor` and cursor
-pagination, recorded per page as for Zettle. Each line whose sku is a
-Komisio item id becomes a sale line through `record_sale` with provider
-`shopify` and the order id as external id; a line with an unknown sku holds
-the order for a person. Refunds arrive as returns through the existing
-return rule. A daily automation run on the automation identity follows once
-the manual pull is verified against a real shop.
+Migration `20260916330000`, pgTAP `0103`, `extensions/shopify/orders.ts`,
+`lib/engine/shopify-orders.ts`, route actions `pullOrders` and
+`retryOrder`, and an "Orders from Shopify" section on the integrations page.
+
+- **One page per pull.** `orders(first: 50, sortKey: UPDATED_AT, query:
+  "financial_status:paid updated_at:>='<watermark>'")`. The watermark starts
+  at the connection time and moves to the newest `updatedAt` on the page;
+  an order seen again is skipped by its id, so the overlap at the watermark
+  costs nothing. Each pull is one request id; a replay records nothing new
+  and a request id reused with other content is refused.
+- **Evidence, then facts.** `record_shopify_order_page` validates the page
+  (`komisio_private.valid_shopify_order`), stores each new order once
+  (`shopify_orders`: id, name, time, currency, amount, status flags, lines
+  with sku, description, quantity, line total), matches each line's sku
+  `K-<item id>` to an item of the store, and records the sale for an order
+  whose lines all match, one unit each, in the store's currency, paid, not
+  cancelled, not a test order: `record_sale` with provider `shopify`, the
+  order id as external id and the order name in the reference. Anything
+  else is held with a reason (`test`, `cancelled`, `financial_status`,
+  `currency`, `quantity`, `unknown_sku`, `missing_item`, `ambiguous_item`).
+  A sale the engine refuses (for example `ITEM_ALREADY_SOLD`) is an outcome
+  row with the code; `reconcile_shopify_order` retries it later. An order
+  whose amount, lines or status changed in Shopify after it was stored is
+  flagged once (`SHOPIFY_ORDER_CHANGED`) and left to a person; refunds are
+  not turned into returns yet.
+- **No automation yet.** The pull is a button for owners and admins. A
+  scheduled pull on the automation identity follows once the manual pull is
+  verified against the dev store, as for Zettle.
 
 ## Verification
 
@@ -111,6 +132,13 @@ the product id, revision-bound renewal, staff read only) and
 update by known id, reconcile by sku, lost answer recorded as unknown,
 refusal recorded as failed, no location, renewal before export, reconnect
 without refresh token, connection changed under renewal).
+
+Step 3: `supabase/tests/0103_shopify_orders.test.sql` (watermark from the
+connection, cursor conflict, replay, request conflict, matched order to
+sale, five hold reasons, sold item again held with the engine's code, retry,
+changed order flagged once, immutability, staff read only) and
+`tests/unit/shopify-orders.test.ts` (öre parsing, evidence shape, mixed
+currency, watermark, pull query and page recording, empty page, replay).
 
 The app is registered (A11, 2026-09-15) and the pilot store is bound on
 staging. No real connection or export has been recorded yet; the first real

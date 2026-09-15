@@ -9,9 +9,13 @@ import {
   shopifyErrorCode,
 } from '@/lib/engine/shopify-connection'
 import { exportShopifyItem } from '@/lib/engine/shopify-products'
+import {
+  pullShopifyOrders,
+  retryShopifyOrder,
+} from '@/lib/engine/shopify-orders'
 import { ShopifyUserError } from '@/extensions/shopify/products'
 
-/** Check the connected shop, disconnect, or export one item as a product; owner or admin. */
+/** Check the connected shop, disconnect, export one item as a product, pull one page of paid orders or retry one order; owner or admin. */
 export async function POST(request: Request) {
   const reply = (body: object, status = 200) =>
     NextResponse.json(body, {
@@ -37,17 +41,46 @@ export async function POST(request: Request) {
     const parsed = z
       .strictObject({
         tenantId: z.uuid(),
-        action: z.enum(['check', 'disconnect', 'exportItem']),
+        action: z.enum([
+          'check',
+          'disconnect',
+          'exportItem',
+          'pullOrders',
+          'retryOrder',
+        ]),
         itemId: z.uuid().optional(),
+        orderId: z.uuid().optional(),
+        requestId: z.uuid().optional(),
       })
       .safeParse(input)
     if (!parsed.success) return reply({ error: 'INVALID_INPUT' }, 400)
     if (parsed.data.action === 'exportItem' && !parsed.data.itemId)
       return reply({ error: 'INVALID_INPUT' }, 400)
+    if (parsed.data.action === 'retryOrder' && !parsed.data.orderId)
+      return reply({ error: 'INVALID_INPUT' }, 400)
     if (parsed.data.tenantId !== ctx.active.id)
       return reply({ error: 'TENANT_CHANGED' }, 409)
     if (parsed.data.action === 'disconnect')
       return reply(await disconnectShopify(ctx.client, ctx.active.id))
+    if (parsed.data.action === 'pullOrders')
+      return reply(
+        await pullShopifyOrders(
+          ctx.client,
+          {
+            tenantId: ctx.active.id,
+            requestId: parsed.data.requestId ?? randomUUID(),
+          },
+          process.env,
+        ),
+      )
+    if (parsed.data.action === 'retryOrder')
+      return reply(
+        await retryShopifyOrder(
+          ctx.client,
+          ctx.active.id,
+          parsed.data.orderId ?? '',
+        ),
+      )
     if (parsed.data.action === 'exportItem')
       return reply(
         await exportShopifyItem(

@@ -190,7 +190,9 @@ export function MembersPanel({
                   {manage && (
                     <td>
                       <div className="table-actions">
-                        {(member.role as string) !== 'automation' &&
+                        {!['automation', 'device'].includes(
+                          member.role as string,
+                        ) &&
                           canChangeMember(
                             tenant.role,
                             member.role,

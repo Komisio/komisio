@@ -1,0 +1,14 @@
+<service>
+  <id>KomisioPrint</id>
+  <name>Komisio Print</name>
+  <description>Prints the labels the Komisio store queues to this printer.</description>
+  <executable>%BASE%\KomisioPrint.exe</executable>
+  <arguments>run</arguments>
+  <startmode>Automatic</startmode>
+  <onfailure action="restart" delay="30 sec" />
+  <resetfailure>1 hour</resetfailure>
+  <log mode="roll-by-size">
+    <sizeThreshold>1024</sizeThreshold>
+    <keepFiles>3</keepFiles>
+  </log>
+</service>

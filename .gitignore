@@ -11,3 +11,6 @@ private/
 *.tsbuildinfo
 playwright-report/
 test-results/
+
+# Komisio Print build output
+print-agent/dist/

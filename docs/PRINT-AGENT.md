@@ -49,6 +49,12 @@ printer; a second computer gets its own code.
   URL and key from the GitHub environments `staging-print` and
   `production-print` (variables `PRINT_SUPABASE_URL`,
   `PRINT_PUBLISHABLE_KEY`; both are public values).
+  Tag builds publish staging by default. Once the production project and
+  `production-print` variables exist, set the repository variable
+  `PRINT_PRODUCTION_ENABLED=true` to also publish the production package.
+  Matrix builds run sequentially to avoid racing to create the same release;
+  a failed environment does not cancel another. Each executable must pass a
+  startup smoke check before packaging.
 - Configuration lives in `%ProgramData%\KomisioPrint\device.json` (the
   refresh token, the device and printer ids); logs next to the service
   executable. `KomisioPrint status`, `KomisioPrint unpair`.

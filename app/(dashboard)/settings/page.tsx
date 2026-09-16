@@ -220,23 +220,28 @@ export default async function Settings({
               templates={templates}
               builtins={{
                 bag: builtinTemplate('bag', {
-                  ...formats.bag,
+                  widthMm: formats.bag.widthMm,
+                  heightMm: formats.bag.heightMm,
                   dpi: previewDpi,
                 }),
                 garment: builtinTemplate('garment', {
-                  ...formats.garment,
+                  widthMm: formats.garment.widthMm,
+                  heightMm: formats.garment.heightMm,
                   dpi: previewDpi,
                 }),
                 item: builtinTemplate('item', {
-                  ...formats.item,
+                  widthMm: formats.item.widthMm,
+                  heightMm: formats.item.heightMm,
                   dpi: previewDpi,
                 }),
                 markdown: builtinTemplate('markdown', {
-                  ...formats.markdown,
+                  widthMm: formats.markdown.widthMm,
+                  heightMm: formats.markdown.heightMm,
                   dpi: previewDpi,
                 }),
                 onboarding: builtinTemplate('onboarding', {
-                  ...formats.onboarding,
+                  widthMm: formats.onboarding.widthMm,
+                  heightMm: formats.onboarding.heightMm,
                   dpi: previewDpi,
                 }),
               }}

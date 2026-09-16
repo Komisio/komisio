@@ -21,8 +21,10 @@ permissions:
 jobs:
   build:
     strategy:
+      fail-fast: false
+      max-parallel: 1
       matrix:
-        environment: ${{ github.event_name == 'push' && fromJSON('["staging","production"]') || fromJSON(format('["{0}"]', inputs.environment)) }}
+        environment: ${{ github.event_name == 'push' && fromJSON(vars.PRINT_PRODUCTION_ENABLED == 'true' && '["staging","production"]' || '["staging"]') || fromJSON(format('["{0}"]', inputs.environment)) }}
     runs-on: windows-latest
     timeout-minutes: 20
     environment: ${{ matrix.environment }}-print
@@ -38,6 +40,12 @@ jobs:
           KOMISIO_PRINT_SUPABASE_URL: ${{ vars.PRINT_SUPABASE_URL }}
           KOMISIO_PRINT_PUBLISHABLE_KEY: ${{ vars.PRINT_PUBLISHABLE_KEY }}
         run: node print-agent/build.mjs
+      - name: Verify the executable starts
+        shell: pwsh
+        run: |
+          $help = & ./print-agent/dist/KomisioPrint.exe
+          if ($LASTEXITCODE -ne 0 -or ($help -join "`n") -notmatch 'Komisio Print') { throw 'Print agent startup check failed' }
+          Write-Host ($help -join "`n")
       - name: Fetch the service wrapper (WinSW 2.12.0)
         shell: pwsh
         run: |

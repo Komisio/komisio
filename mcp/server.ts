@@ -6,7 +6,7 @@ import { listScopedOperations } from './operation-discovery'
 import { operationPageInput } from '../lib/engine/operation-page'
 import { inspectionReceptionInput } from '../lib/engine/inspection-reception-preview'
 import { prepareInspectionReceptionTool } from './inspection'
-import { McpServer } from '@modelcontextprotocol/server'
+import { McpServer, type RegisteredTool } from '@modelcontextprotocol/server'
 import { inspectionReadInput } from '../lib/engine/inspection-read'
 import {
   readInspectionTool,
@@ -22,7 +22,7 @@ import {
 import { inspectionPreviewInput } from '../lib/engine/inspection-preview'
 import { operationReviewInput } from '../lib/engine/operation-review'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import type { MCPConfig } from './config'
+import { hostedToolAllowed, type MCPConfig } from './config'
 import { receptionHistoryInput } from '../lib/engine/reception-history'
 import {
   readInput,
@@ -102,6 +102,16 @@ const annotations = {
 export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
   const server = new McpServer({ name: 'komisio-reception', version: '0.1.0' }),
     ops = receptionTools(client, config)
+  // A hosted grant gets the catalogue minus the tools whose reads need table access.
+  const raw = server.registerTool.bind(server) as unknown as (
+    name: string,
+    spec: unknown,
+    callback: unknown,
+  ) => RegisteredTool
+  const registerTool = ((name: string, spec: unknown, callback: unknown) =>
+    config.hosted && !hostedToolAllowed(name)
+      ? undefined
+      : raw(name, spec, callback)) as unknown as McpServer['registerTool']
   async function result(
     operation: () => Promise<{ data: Record<string, unknown>; jpeg?: string }>,
   ) {
@@ -149,7 +159,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
     ['inspection:read', 'komisio_list_inspection_operations'],
   ] as const) {
     if (config.scopes.includes(scope))
-      server.registerTool(
+      registerTool(
         name,
         {
           description: `List up to20 staged operation summaries for ${scope === 'reception:read' ? 'reception reviews' : 'inspection edits'} in the configured store. Filter by status and continue with the exact returned cursor. No payload, people, decision reasons or writes. Read exact details with the corresponding read operation tool; status is guidance only.`,
@@ -163,7 +173,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       )
   }
   if (config.scopes.includes('reception:read'))
-    server.registerTool(
+    registerTool(
       'komisio_get_store_policy',
       {
         description:
@@ -185,7 +195,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         }),
     )
   if (config.scopes.includes('inspection:propose'))
-    server.registerTool(
+    registerTool(
       'komisio_propose_inspection_edit',
       {
         description:
@@ -199,7 +209,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         })),
     )
   if (config.scopes.includes('inspection:read'))
-    server.registerTool(
+    registerTool(
       'komisio_read_inspection_operation',
       {
         description:
@@ -213,7 +223,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         })),
     )
   if (config.scopes.includes('inspection:preview'))
-    server.registerTool(
+    registerTool(
       'komisio_prepare_inspection_reception',
       {
         description:
@@ -227,7 +237,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         })),
     )
   if (config.scopes.includes('inspection:preview'))
-    server.registerTool(
+    registerTool(
       'komisio_preview_inspection',
       {
         description:
@@ -241,7 +251,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         })),
     )
   if (config.scopes.includes('inspection:read'))
-    server.registerTool(
+    registerTool(
       'komisio_list_bags',
       {
         description:
@@ -255,7 +265,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         })),
     )
   if (config.scopes.includes('inspection:read'))
-    server.registerTool(
+    registerTool(
       'komisio_read_inspection',
       {
         description:
@@ -269,7 +279,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         })),
     )
   if (config.scopes.includes('reception:read'))
-    server.registerTool(
+    registerTool(
       'komisio_read_price_evidence',
       {
         description:
@@ -283,7 +293,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         })),
     )
   if (config.scopes.includes('reception:read'))
-    server.registerTool(
+    registerTool(
       'komisio_read_reception_history',
       {
         description:
@@ -294,7 +304,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       (input) => result(async () => ({ data: await ops.history(input) })),
     )
   if (config.scopes.includes('reception:read'))
-    server.registerTool(
+    registerTool(
       'komisio_list_receptions',
       {
         description:
@@ -305,7 +315,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       (input) => result(async () => ({ data: await ops.queue(input) })),
     )
   if (config.scopes.includes('reception:read'))
-    server.registerTool(
+    registerTool(
       'komisio_read_reception',
       {
         description:
@@ -316,7 +326,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       (input) => result(async () => ({ data: await ops.read(input) })),
     )
   if (config.scopes.includes('reception:read'))
-    server.registerTool(
+    registerTool(
       'komisio_read_photo_duplicates',
       {
         description:
@@ -327,7 +337,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       (input) => result(async () => ({ data: await ops.duplicates(input) })),
     )
   if (config.scopes.includes('reception:read'))
-    server.registerTool(
+    registerTool(
       'komisio_read_reception_operation',
       {
         description:
@@ -339,7 +349,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         result(async () => ({ data: await ops.operationReview(input) })),
     )
   if (config.scopes.includes('reception:preview'))
-    server.registerTool(
+    registerTool(
       'komisio_preview_reception',
       {
         description:
@@ -350,7 +360,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       (input) => result(async () => ({ data: await ops.preview(input) })),
     )
   if (config.scopes.includes('reception:propose'))
-    server.registerTool(
+    registerTool(
       'komisio_propose_reception_review',
       {
         description:
@@ -370,7 +380,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       ['komisio_read_seller_balance', false],
       ['komisio_read_seller_ledger', true],
     ] as const) {
-      server.registerTool(
+      registerTool(
         name,
         {
           description: ledger
@@ -385,7 +395,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           })),
       )
     }
-    server.registerTool(
+    registerTool(
       'komisio_read_economy_summary',
       {
         description:
@@ -398,7 +408,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           data: await readEconomySummaryTool(client, config, input),
         })),
     )
-    server.registerTool(
+    registerTool(
       'komisio_read_economy_brief',
       {
         description:
@@ -411,7 +421,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           data: await readEconomyBriefTool(client, config, input),
         })),
     )
-    server.registerTool(
+    registerTool(
       'komisio_read_stock_report',
       {
         description:
@@ -426,7 +436,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
     )
   }
   if (config.scopes.includes('items:read')) {
-    server.registerTool(
+    registerTool(
       'komisio_find_items',
       {
         description:
@@ -439,7 +449,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           data: await findItemsTool(client, config, input),
         })),
     )
-    server.registerTool(
+    registerTool(
       'komisio_read_item_summary',
       {
         description:
@@ -454,7 +464,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
     )
   }
   if (config.scopes.includes('sales:read')) {
-    server.registerTool(
+    registerTool(
       'komisio_find_receipts',
       {
         description:
@@ -467,7 +477,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           data: await findReceiptsTool(client, config, input),
         })),
     )
-    server.registerTool(
+    registerTool(
       'komisio_read_receipt',
       {
         description:
@@ -482,7 +492,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
     )
   }
   if (config.scopes.includes('items:propose'))
-    server.registerTool(
+    registerTool(
       'komisio_propose_acceptance',
       {
         description:
@@ -501,7 +511,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         })),
     )
   if (config.scopes.includes('sales:propose'))
-    server.registerTool(
+    registerTool(
       'komisio_propose_return',
       {
         description:
@@ -515,7 +525,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         })),
     )
   if (config.scopes.includes('ledger:propose'))
-    server.registerTool(
+    registerTool(
       'komisio_propose_ledger_adjustment',
       {
         description:
@@ -529,7 +539,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         })),
     )
   if (config.scopes.includes('lifecycle:propose')) {
-    server.registerTool(
+    registerTool(
       'komisio_propose_markdown_batch',
       {
         description:
@@ -542,7 +552,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           data: await proposeMarkdownBatchTool(client, config, input),
         })),
     )
-    server.registerTool(
+    registerTool(
       'komisio_propose_bulk_item_update',
       {
         description:
@@ -555,7 +565,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           data: await proposeBulkItemUpdateTool(client, config, input),
         })),
     )
-    server.registerTool(
+    registerTool(
       'komisio_propose_price_change',
       {
         description:
@@ -570,7 +580,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
     )
   }
   if (config.scopes.includes('communications:propose'))
-    server.registerTool(
+    registerTool(
       'komisio_propose_message',
       {
         description:
@@ -584,7 +594,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         })),
     )
   if (config.scopes.includes('payouts:propose')) {
-    server.registerTool(
+    registerTool(
       'komisio_propose_payout_approval',
       {
         description:
@@ -597,7 +607,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           data: await proposePayoutApprovalTool(client, config, input),
         })),
     )
-    server.registerTool(
+    registerTool(
       'komisio_propose_payout_payment',
       {
         description:
@@ -610,7 +620,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           data: await proposePayoutPaymentTool(client, config, input),
         })),
     )
-    server.registerTool(
+    registerTool(
       'komisio_list_settlement_candidates',
       {
         description:
@@ -623,7 +633,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           data: await listSettlementCandidatesTool(client, config),
         })),
     )
-    server.registerTool(
+    registerTool(
       'komisio_propose_settlement',
       {
         description:
@@ -638,7 +648,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
     )
   }
   if (config.scopes.includes('accounting:read')) {
-    server.registerTool(
+    registerTool(
       'komisio_list_day_closes',
       {
         description:
@@ -649,7 +659,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
       () =>
         result(async () => ({ data: await listDayClosesTool(client, config) })),
     )
-    server.registerTool(
+    registerTool(
       'komisio_preview_day_close_voucher',
       {
         description:
@@ -662,7 +672,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           data: await previewDayCloseTool(client, config, input),
         })),
     )
-    server.registerTool(
+    registerTool(
       'komisio_read_accounting_reconciliation',
       {
         description:
@@ -677,7 +687,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
     )
   }
   if (config.scopes.includes('accounting:propose'))
-    server.registerTool(
+    registerTool(
       'komisio_propose_day_close_export',
       {
         description:
@@ -691,7 +701,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         })),
     )
   if (config.scopes.includes('store:read'))
-    server.registerTool(
+    registerTool(
       'komisio_read_store_profile',
       {
         description:
@@ -705,7 +715,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         })),
     )
   if (config.scopes.includes('store:propose'))
-    server.registerTool(
+    registerTool(
       'komisio_propose_store_profile',
       {
         description:
@@ -719,7 +729,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
         })),
     )
   if (config.scopes.includes('reception:photos'))
-    server.registerTool(
+    registerTool(
       'komisio_read_reception_photo',
       {
         description:

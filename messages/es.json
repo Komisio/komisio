@@ -2338,7 +2338,8 @@
       "showcaseAdd": "Mostrar en la página del producto",
       "showcaseRemove": "Quitar",
       "emailDailyCap": "Mensajes por tienda y día",
-      "inviteDailyCap": "Invitaciones por tienda y día"
+      "inviteDailyCap": "Invitaciones por tienda y día",
+      "connectorDailyCap": "Llamadas por asistente conectado y día"
     }
   }
 }

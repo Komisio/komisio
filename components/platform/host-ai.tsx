@@ -28,6 +28,7 @@ export function HostAi({
     reserveBatchOre: String(settings.reserveBatchOre),
     inputOrePerMillion: String(settings.inputOrePerMillion),
     outputOrePerMillion: String(settings.outputOrePerMillion),
+    connectorDailyCap: String(settings.connectorDailyCap),
     emailDailyCap: String(settings.emailDailyCap),
     inviteDailyCap: String(settings.inviteDailyCap),
   })
@@ -88,6 +89,7 @@ export function HostAi({
           ['reserveBatchOre', d.reserveBatchOre],
           ['inputOrePerMillion', d.inputOrePerMillion],
           ['outputOrePerMillion', d.outputOrePerMillion],
+          ['connectorDailyCap', d.connectorDailyCap],
           ['emailDailyCap', d.emailDailyCap],
           ['inviteDailyCap', d.inviteDailyCap],
         ] as const
@@ -117,6 +119,7 @@ export function HostAi({
                 reserveBatchOre: Math.round(Number(form.reserveBatchOre)),
                 inputOrePerMillion: Number(form.inputOrePerMillion),
                 outputOrePerMillion: Number(form.outputOrePerMillion),
+                connectorDailyCap: Math.round(Number(form.connectorDailyCap)),
                 emailDailyCap: Math.round(Number(form.emailDailyCap)),
                 inviteDailyCap: Math.round(Number(form.inviteDailyCap)),
               },

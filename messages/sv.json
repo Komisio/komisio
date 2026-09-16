@@ -2338,7 +2338,8 @@
       "showcaseAdd": "Visa på produktsidan",
       "showcaseRemove": "Ta bort",
       "emailDailyCap": "Meddelanden per butik och dygn",
-      "inviteDailyCap": "Inbjudningar per butik och dygn"
+      "inviteDailyCap": "Inbjudningar per butik och dygn",
+      "connectorDailyCap": "Anrop per kopplad assistent och dygn"
     }
   }
 }

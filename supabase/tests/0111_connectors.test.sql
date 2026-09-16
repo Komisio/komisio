@@ -52,6 +52,20 @@ select throws_like($$select connector_call(pg_temp.h('access-9'),'tenant_role',j
 reset role;
 select is((select count(*) from connector_calls where grant_id='a0000000-0000-4000-8000-000000000002'),2::bigint,'successful calls are logged');
 set local role anon;
+-- A grant may not call for ever: the host's rolling-day cap stops a loop.
+reset role;
+update public.platform_settings set connector_daily_cap=2;
+set local role anon;
+select throws_like($$select connector_call(pg_temp.h('access-2'),'tenant_role',jsonb_build_object('p_tenant',current_setting('test.tenant')))$$,'%CONNECTOR_RATE_LIMIT%','the call after the cap is refused');
+reset role;
+select is((select count(*) from connector_calls where grant_id='a0000000-0000-4000-8000-000000000002'),2::bigint,'a refused call is not recorded');
+update public.connector_calls set called_at=called_at-interval '25 hours' where grant_id='a0000000-0000-4000-8000-000000000002';
+set local role anon;
+select lives_ok($$select connector_call(pg_temp.h('access-2'),'tenant_role',jsonb_build_object('p_tenant',current_setting('test.tenant')))$$,'yesterday no longer counts');
+reset role;
+update public.platform_settings set connector_daily_cap=2000;
+update public.connector_calls set called_at=called_at-interval '25 hours' where grant_id='a0000000-0000-4000-8000-000000000002';
+set local role anon;
 -- Refresh rotates; reuse revokes.
 select is(refresh_connector_token(pg_temp.h('refresh-2'),'c0000000-0000-4000-8000-000000000001',pg_temp.h('access-3'),pg_temp.h('refresh-3'))->>'tenantId',current_setting('test.tenant'),'a refresh token rotates');
 select is(connector_call(pg_temp.h('access-3'),'tenant_role',jsonb_build_object('p_tenant',current_setting('test.tenant'))),'"owner"'::jsonb,'the new access token works');

@@ -2338,7 +2338,8 @@
       "showcaseAdd": "Näytä tuotesivulla",
       "showcaseRemove": "Poista",
       "emailDailyCap": "Viestejä per kauppa ja vuorokausi",
-      "inviteDailyCap": "Kutsuja per kauppa ja vuorokausi"
+      "inviteDailyCap": "Kutsuja per kauppa ja vuorokausi",
+      "connectorDailyCap": "Kutsuja per liitetty avustaja ja vuorokausi"
     }
   }
 }

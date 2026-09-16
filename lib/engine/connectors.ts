@@ -393,6 +393,7 @@ export const connectorErrorCodes = [
   'CONNECTOR_TOKEN_REUSED',
   'CONNECTOR_REVOKED',
   'SCOPE_REQUIRED',
+  'CONNECTOR_RATE_LIMIT',
 ] as const
 export function connectorErrorCode(message: string) {
   return (

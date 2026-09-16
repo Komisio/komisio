@@ -87,6 +87,11 @@ Recorded as a decision in DECISIONS.md.
   a grant by hash needs no session.
 - Registration is open (any client may register) but capped at 200 new
   clients an hour and to https redirect URIs (http only on localhost).
+- A grant may make at most the host's number of calls per rolling day
+  (`connector_daily_cap`, 2000 by default, under Plattform), refused with
+  `CONNECTOR_RATE_LIMIT` and not itself recorded. The number is far above a
+  conversation and stops a runaway assistant from saturating the database the
+  other stores share.
 
 ## Scopes and tools
 

@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { Dictionary } from '@/lib/i18n'
+import { type Dictionary, type Locale, locales, localeNames } from '@/lib/i18n'
 import {
   storeProfileBody,
   emptyStoreProfile,
@@ -23,7 +23,7 @@ export function StoreProfileForm({
   tenantId: string
   current: CurrentStoreProfile
   editable: boolean
-  locale: 'sv' | 'en'
+  locale: Locale
   d: Dictionary
 }) {
   const t = d.storeProfile
@@ -192,8 +192,11 @@ export function StoreProfileForm({
               name="language"
               defaultValue={profile.language}
             >
-              <option value="sv">sv</option>
-              <option value="en">en</option>
+              {locales.map((code) => (
+                <option key={code} value={code}>
+                  {localeNames[code]}
+                </option>
+              ))}
             </select>
           </div>
         </fieldset>

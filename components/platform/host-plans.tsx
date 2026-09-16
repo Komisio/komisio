@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import type { Dictionary } from '@/lib/i18n'
+import { intlLocale, type Dictionary } from '@/lib/i18n'
 import type { ActivityRow, PlanOverviewRow } from '@/lib/engine/plans'
 
 /** Every store and its plan state, with manual activation for the host. */
@@ -28,7 +28,7 @@ export function HostPlans({
   const errors = d.errors as Record<string, string>
   const date = (iso: string | null) =>
     iso
-      ? new Date(iso).toLocaleDateString(locale === 'sv' ? 'sv-SE' : 'en-GB', {
+      ? new Date(iso).toLocaleDateString(intlLocale(locale), {
           timeZone: 'Europe/Stockholm',
         })
       : ''

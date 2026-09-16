@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { readItems } from '@/lib/engine/items'
 import { readSales, readSoldItemIds, formatOre } from '@/lib/engine/sales'
@@ -33,7 +33,7 @@ export default async function Sales() {
       } · ${i.id.slice(0, 8)}`,
     }))
   const when = (iso: string) =>
-    new Date(iso).toLocaleString(ctx.locale === 'sv' ? 'sv-SE' : 'en-GB', {
+    new Date(iso).toLocaleString(intlLocale(ctx.locale), {
       timeZone: 'Europe/Stockholm',
     })
   return (

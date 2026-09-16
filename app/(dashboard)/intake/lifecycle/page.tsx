@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import {
   readLifecycleQueue,
@@ -38,7 +38,7 @@ export default async function Lifecycle({
   const dueCount = rows.filter((r) => r.stage === 'markdown_due').length
   const write = active.role !== 'readonly'
   const when = (iso: string) =>
-    new Date(iso).toLocaleDateString(ctx.locale === 'sv' ? 'sv-SE' : 'en-GB', {
+    new Date(iso).toLocaleDateString(intlLocale(ctx.locale), {
       timeZone: 'Europe/Stockholm',
     })
   return (

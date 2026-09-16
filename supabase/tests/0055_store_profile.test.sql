@@ -16,7 +16,7 @@ select throws_like($$select publish_store_profile(current_setting('test.tenant')
 select throws_like($$select publish_store_profile(current_setting('test.tenant')::uuid,gen_random_uuid(),null,jsonb_set(current_setting('test.profile')::jsonb,'{contact,website}','"http://plain.test"'))$$,'%INVALID_INPUT%','website must be https');
 select throws_like($$select publish_store_profile(current_setting('test.tenant')::uuid,gen_random_uuid(),null,jsonb_set(current_setting('test.profile')::jsonb,'{openingHours}','[{"day":"mon","opens":"10:00","closes":"09:00"}]'))$$,'%INVALID_INPUT%','closing before opening refused');
 select throws_like($$select publish_store_profile(current_setting('test.tenant')::uuid,gen_random_uuid(),null,jsonb_set(current_setting('test.profile')::jsonb,'{openingHours}','[{"day":"mon","opens":"10:00","closes":"18:00"},{"day":"mon","opens":"10:00","closes":"18:00"}]'))$$,'%INVALID_INPUT%','each day once');
-select throws_like($$select publish_store_profile(current_setting('test.tenant')::uuid,gen_random_uuid(),null,jsonb_set(current_setting('test.profile')::jsonb,'{language}','"de"'))$$,'%INVALID_INPUT%','language sv or en');
+select throws_like($$select publish_store_profile(current_setting('test.tenant')::uuid,gen_random_uuid(),null,jsonb_set(current_setting('test.profile')::jsonb,'{language}','"pt"'))$$,'%INVALID_INPUT%','language among the product languages');
 -- Publish, replay, conflict, stale.
 select set_config('test.v1',gen_random_uuid()::text,true);
 select is(publish_store_profile(current_setting('test.tenant')::uuid,current_setting('test.v1')::uuid,null,current_setting('test.profile')::jsonb),current_setting('test.v1')::uuid,'first version published');

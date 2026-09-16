@@ -3,7 +3,7 @@ import { useRef, useState } from 'react'
 import Link from 'next/link'
 import { ReceptionComparison } from './reception-comparison'
 import { useRouter } from 'next/navigation'
-import type { Dictionary } from '@/lib/i18n'
+import { intlLocale, type Dictionary } from '@/lib/i18n'
 import type { PendingOperation } from '@/lib/engine/operations'
 import type { OperationReviewContext } from '@/lib/engine/operation-review'
 import {
@@ -211,7 +211,7 @@ export function OperationQueue({
   d: D
 }) {
   const format = (value: string) =>
-    new Date(value).toLocaleString(locale === 'sv' ? 'sv-SE' : 'en-GB', {
+    new Date(value).toLocaleString(intlLocale(locale), {
       timeZone: 'Europe/Stockholm',
     })
   return (

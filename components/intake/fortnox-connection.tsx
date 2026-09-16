@@ -3,7 +3,7 @@ import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import type { FortnoxIssue } from '@/extensions/fortnox/auth'
 import type { FortnoxConnectionStatus } from '@/lib/engine/fortnox-connection'
-import type { Dictionary } from '@/lib/i18n'
+import { intlLocale, type Dictionary } from '@/lib/i18n'
 
 /** Connect, check and disconnect the store's Fortnox company; nothing is sent to Fortnox here. */
 export function FortnoxConnection({
@@ -29,7 +29,7 @@ export function FortnoxConnection({
     [ok, setOk] = useState(false)
   const errors = d.errors as Record<string, string>
   const when = (iso: string) =>
-    new Date(iso).toLocaleString(locale === 'sv' ? 'sv-SE' : 'en-GB', {
+    new Date(iso).toLocaleString(intlLocale(locale), {
       timeZone: 'Europe/Stockholm',
     })
   async function post(action: 'check' | 'disconnect') {

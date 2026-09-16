@@ -1,7 +1,7 @@
 'use client'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import type { Dictionary } from '@/lib/i18n'
+import { intlLocale, type Dictionary } from '@/lib/i18n'
 import type { PrintDevice } from '@/lib/engine/print-devices'
 
 /** Pair the computer at a printer with a one-time code; see and disconnect devices. */
@@ -30,7 +30,7 @@ export function PrintDevices({
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
   const when = (iso: string) =>
-    new Date(iso).toLocaleString(locale === 'sv' ? 'sv-SE' : 'en-GB', {
+    new Date(iso).toLocaleString(intlLocale(locale), {
       timeZone: 'Europe/Stockholm',
     })
   async function post(body: object) {

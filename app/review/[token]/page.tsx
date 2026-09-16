@@ -3,7 +3,7 @@ import { cookies } from 'next/headers'
 import { notFound, redirect } from 'next/navigation'
 import { platformContext } from '@/lib/platform/context'
 import { readSellerReview } from '@/lib/engine/seller-review'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import { Brand } from '@/components/platform/brand'
 import { Button } from '@/components/ui/button'
 import { SignOut } from '@/components/platform/sign-out'
@@ -96,7 +96,7 @@ export default async function Review({
                 <p>
                   {d.reviewExpires}{' '}
                   {new Date(review.expiresAt).toLocaleString(
-                    ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',
+                    intlLocale(ctx.locale),
                     { timeZone: 'Europe/Stockholm' },
                   )}{' '}
                   (Europe/Stockholm)

@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { roles } from './permissions'
+import { locales } from '../i18n'
 const tenantId = z.uuid()
 export const commandSchema = z.discriminatedUnion('action', [
   z.object({
@@ -12,7 +13,7 @@ export const commandSchema = z.discriminatedUnion('action', [
   z.object({
     action: z.literal('profile'),
     name: z.string().trim().max(100),
-    locale: z.enum(['sv', 'en']),
+    locale: z.enum(locales),
   }),
   z.object({
     action: z.literal('rename'),

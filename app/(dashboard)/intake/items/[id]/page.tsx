@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { readItem, formatOre } from '@/lib/engine/items'
 import { readPrinters } from '@/lib/engine/printing'
@@ -38,7 +38,7 @@ export default async function Item({
   const ended = events.some((e) => e.kind === 'period_ended')
   const t = item.terms
   const when = (iso: string) =>
-    new Date(iso).toLocaleString(ctx.locale === 'sv' ? 'sv-SE' : 'en-GB', {
+    new Date(iso).toLocaleString(intlLocale(ctx.locale), {
       timeZone: 'Europe/Stockholm',
     })
   const originHref =

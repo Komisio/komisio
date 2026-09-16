@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers'
 import { AuthForm } from '@/components/auth/auth-form'
+import { resolveLocale } from '@/lib/i18n'
 export default async function Login({
   searchParams,
 }: {
@@ -11,9 +12,9 @@ export default async function Login({
       mode="login"
       next={params.next}
       callbackError={!!params.error}
-      initialLocale={
-        (await cookies()).get('komisio-locale')?.value === 'en' ? 'en' : 'sv'
-      }
+      initialLocale={resolveLocale(
+        (await cookies()).get('komisio-locale')?.value,
+      )}
     />
   )
 }

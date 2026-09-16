@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { dictionary } from '../i18n'
+import { dictionary, intlLocale, resolveLocale } from '../i18n'
 import { sendSellerEmailWithId } from '../platform/seller-email'
 
 // Trial and grace notices to store owners (ONBOARDING-AND-PLANS.md, slice
@@ -32,13 +32,12 @@ export async function readDueNotices(client: SupabaseClient) {
 
 /** Pure: subject and text for one notice, fixed wording, no HTML. */
 export function renderNotice(notice: DueNotice, origin: string) {
-  const locale = notice.locale === 'en' ? 'en' : 'sv'
+  const locale = resolveLocale(undefined, notice.locale)
   const t = dictionary(locale).planNotices
   const date = notice.deadline
-    ? new Date(notice.deadline).toLocaleDateString(
-        locale === 'sv' ? 'sv-SE' : 'en-GB',
-        { timeZone: 'Europe/Stockholm' },
-      )
+    ? new Date(notice.deadline).toLocaleDateString(intlLocale(locale), {
+        timeZone: 'Europe/Stockholm',
+      })
     : ''
   const fill = (s: string) =>
     s

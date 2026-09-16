@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { storeCountries } from '../platform/credit-prices'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { locales, type Locale } from '../i18n'
 
 // Store profile (P3): the store's public-facing text as a versioned document.
 // Boundary validation only; SQL validates again and keeps every version.
@@ -37,10 +38,10 @@ export const storeProfileBody = z.strictObject({
     ),
   accepts: z.string().max(2000),
   concept: z.string().max(2000),
-  language: z.enum(['sv', 'en']),
+  language: z.enum(locales),
 })
 export type StoreProfileBody = z.infer<typeof storeProfileBody>
-export function emptyStoreProfile(language: 'sv' | 'en'): StoreProfileBody {
+export function emptyStoreProfile(language: Locale): StoreProfileBody {
   return {
     address: { street: '', postalCode: '', city: '' },
     contact: { email: '', phone: '', website: '' },

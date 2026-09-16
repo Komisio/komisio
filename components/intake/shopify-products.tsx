@@ -1,7 +1,7 @@
 'use client'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import type { Dictionary } from '@/lib/i18n'
+import { intlLocale, type Dictionary } from '@/lib/i18n'
 import type { z } from 'zod'
 import type {
   shopifyCandidates,
@@ -30,7 +30,7 @@ export function ShopifyProducts({
     [ok, setOk] = useState(false)
   const errors = d.errors as Record<string, string>
   const statuses = d.productStatuses as Record<string, string>
-  const tag = locale === 'sv' ? 'sv-SE' : 'en-GB'
+  const tag = intlLocale(locale)
   const amount = (ore: number) =>
     new Intl.NumberFormat(tag, { style: 'currency', currency }).format(
       ore / 100,

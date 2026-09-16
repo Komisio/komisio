@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale, localeNames, resolveLocale } from '@/lib/i18n'
 import type {
   Seller,
   BagReceipt,
@@ -154,7 +154,7 @@ export default async function Intake({
                 </strong>
                 <br />
                 {a.language}:{' '}
-                {agreement.language === 'sv' ? 'Svenska' : 'English'}
+                {localeNames[resolveLocale(undefined, agreement.language)]}
               </p>
               <p>
                 {agreement.required_before_receipt ? a.required : a.optional}
@@ -168,7 +168,7 @@ export default async function Intake({
                 <p>
                   {a.staffRecorded}:{' '}
                   {new Date(evidence.recorded_at).toLocaleString(
-                    ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',
+                    intlLocale(ctx.locale),
                     { timeZone: 'Europe/Stockholm' },
                   )}
                   <br />
@@ -264,7 +264,7 @@ export default async function Intake({
                   <br />
                   <small>
                     {new Date(bag.received_at).toLocaleString(
-                      ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',
+                      intlLocale(ctx.locale),
                       { timeZone: 'Europe/Stockholm' },
                     )}{' '}
                     · {d.awaiting}

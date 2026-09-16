@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import {
   readReceptionSession,
   readReceptionReview,
@@ -141,7 +141,7 @@ export default async function Reception({
               </strong>{' '}
               · {d.custodyRecorded}{' '}
               {new Date(custody.received_at).toLocaleString(
-                ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',
+                intlLocale(ctx.locale),
                 { timeZone: 'Europe/Stockholm' },
               )}
               {custody.note ? ` · ${custody.note}` : ''}
@@ -349,10 +349,9 @@ export default async function Reception({
           )}
           <p>
             {all.reviewExpires}{' '}
-            {new Date(review.expiresAt).toLocaleString(
-              ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',
-              { timeZone: 'Europe/Stockholm' },
-            )}{' '}
+            {new Date(review.expiresAt).toLocaleString(intlLocale(ctx.locale), {
+              timeZone: 'Europe/Stockholm',
+            })}{' '}
             (Europe/Stockholm)
           </p>
           {(!current || expired) && <p role="status">{d.stale}</p>}

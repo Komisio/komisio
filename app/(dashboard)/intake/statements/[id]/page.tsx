@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { readStatement } from '@/lib/engine/statements'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
@@ -31,7 +31,7 @@ export default async function Statement({
     .eq('id', s.seller_id)
     .single()
   if (seller.error) throw new Error('Unable to read seller')
-  const locale = ctx.locale === 'sv' ? 'sv-SE' : 'en-GB'
+  const locale = intlLocale(ctx.locale)
   const day = (iso: string) =>
     new Date(iso).toLocaleDateString(locale, { timeZone: 'Europe/Stockholm' })
   const when = (iso: string) =>

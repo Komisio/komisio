@@ -1,7 +1,7 @@
 'use client'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import type { Dictionary } from '@/lib/i18n'
+import { intlLocale, type Dictionary } from '@/lib/i18n'
 import type { ConnectorGrant } from '@/lib/engine/connectors'
 
 /** The assistants connected to the store: who approved them, what they may do, and a way to disconnect. */
@@ -24,7 +24,7 @@ export function ConnectorsPanel({
   const [message, setMessage] = useState('')
   const when = (iso: string | null) =>
     iso
-      ? new Date(iso).toLocaleString(locale === 'sv' ? 'sv-SE' : 'en-GB', {
+      ? new Date(iso).toLocaleString(intlLocale(locale), {
           timeZone: 'Europe/Stockholm',
         })
       : d.never

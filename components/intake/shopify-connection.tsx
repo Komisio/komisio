@@ -3,7 +3,7 @@ import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import type { ShopifyIssue } from '@/extensions/shopify/auth'
 import type { ShopifyConnectionStatus } from '@/lib/engine/shopify-connection'
-import type { Dictionary } from '@/lib/i18n'
+import { intlLocale, type Dictionary } from '@/lib/i18n'
 
 /** Connect a named shop, check and disconnect; nothing is exported or imported here. */
 export function ShopifyConnection({
@@ -30,7 +30,7 @@ export function ShopifyConnection({
     [shop, setShop] = useState('')
   const errors = d.errors as Record<string, string>
   const when = (iso: string) =>
-    new Date(iso).toLocaleString(locale === 'sv' ? 'sv-SE' : 'en-GB', {
+    new Date(iso).toLocaleString(intlLocale(locale), {
       timeZone: 'Europe/Stockholm',
     })
   async function post(action: 'check' | 'disconnect') {

@@ -288,8 +288,8 @@ export async function testProposalsMCP({
       requestId: randomUUID(),
       expiresAt,
       sellerId: seller,
-      locale: 'de',
-      freeText: 'Hallo',
+      locale: 'pt',
+      freeText: 'Olá',
     },
     {
       requestId: randomUUID(),

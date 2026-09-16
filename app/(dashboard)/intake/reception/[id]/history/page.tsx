@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { readReceptionHistory } from '@/lib/engine/reception-history'
 
@@ -34,7 +34,7 @@ export default async function History({
   })
   const root = `/intake/reception/${id.data}`
   const time = (value: string) =>
-    new Date(value).toLocaleString(ctx.locale === 'sv' ? 'sv-SE' : 'en-GB', {
+    new Date(value).toLocaleString(intlLocale(ctx.locale), {
       timeZone: 'Europe/Stockholm',
     })
   const older = (key: 'beforeSource' | 'beforeReview', value: number) =>

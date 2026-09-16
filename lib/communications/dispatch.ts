@@ -6,6 +6,7 @@ import { referenceKindFor } from '../engine/communications'
 import { sendSellerEmailWithId } from '../platform/seller-email'
 import { formatSignedOre } from '../engine/seller-ledger'
 import { readStoreCurrency } from '../engine/money'
+import { intlLocale } from '../i18n'
 
 // One path for every seller message (P2 S18): render the versioned template
 // from authenticated reads of the referenced fact, queue the exact text in
@@ -13,7 +14,8 @@ import { readStoreCurrency } from '../engine/money'
 // automatic notifications share it; the automatic ones differ only in who
 // asked and in a request id derived from the fact, so a fact notifies once.
 const ore = z.union([z.number().int(), z.string()]).transform(Number)
-export type Locale = 'sv' | 'en'
+import type { Locale } from '../i18n'
+export type { Locale }
 export const communicationErrorCodes = [
   'FORBIDDEN',
   'AUTH_REQUIRED',
@@ -66,7 +68,7 @@ export async function sendSellerCommunication(
   if (seller.error || !seller.data)
     return { ok: false, error: 'SELLER_NOT_FOUND' }
   const when = (iso: string) =>
-    new Date(iso).toLocaleDateString(c.locale === 'sv' ? 'sv-SE' : 'en-GB', {
+    new Date(iso).toLocaleDateString(intlLocale(c.locale), {
       timeZone: 'Europe/Stockholm',
     })
   // Facts for the template come from authenticated reads of the referenced row.

@@ -7,6 +7,12 @@ import {
 } from '../../lib/platform/validation'
 import sv from '../../messages/sv.json'
 import en from '../../messages/en.json'
+import no from '../../messages/no.json'
+import dk from '../../messages/dk.json'
+import fi from '../../messages/fi.json'
+import de from '../../messages/de.json'
+import es from '../../messages/es.json'
+import italian from '../../messages/it.json'
 import { resolveLocale } from '../../lib/i18n'
 
 describe('language preference', () => {
@@ -82,6 +88,23 @@ describe('untrusted input', () => {
 })
 it('keeps both UI languages complete', () => {
   expect(Object.keys(sv).sort()).toEqual(Object.keys(en).sort())
+  // Every product language carries the full Swedish shape, leaves included.
+  const shape = (o: unknown, path = ''): string[] =>
+    o && typeof o === 'object' && !Array.isArray(o)
+      ? Object.entries(o as Record<string, unknown>).flatMap(([k, v]) =>
+          shape(v, path + '/' + k),
+        )
+      : [path]
+  for (const [code, dict] of Object.entries({
+    en,
+    no,
+    dk,
+    fi,
+    de,
+    es,
+    it: italian,
+  }))
+    expect([...shape(dict)].sort(), code).toEqual([...shape(sv)].sort())
   expect(Object.keys(sv.errors).sort()).toEqual(Object.keys(en.errors).sort())
   expect(Object.keys(sv.roles).sort()).toEqual(Object.keys(en.roles).sort())
 })

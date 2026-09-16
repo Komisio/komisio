@@ -7,7 +7,7 @@ export async function sendInvitationEmail(input: {
   invitationId: string
   email: string
   inviteUrl: string
-  locale: 'sv' | 'en'
+  locale: string
 }): Promise<InvitationDelivery> {
   if (process.env.INVITATION_EMAIL_DELIVERY !== 'resend') return 'manual'
   const allowed = (process.env.INVITATION_EMAIL_ALLOWLIST ?? '')

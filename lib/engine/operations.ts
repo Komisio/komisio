@@ -3,6 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { receptionSuggestions } from './reception'
 import { inspectionFields } from './inspection'
 import { storeProfileBody } from './store-profile'
+import { locales } from '../i18n'
 
 // A staged operation is a proposal by a non-human actor. It publishes nothing
 // until a person decides; execution then reuses the ordinary engine function.
@@ -134,7 +135,7 @@ export const markPayoutPaidPayload = z.strictObject({
 // the template around it is code. Approval is the fact; the app then sends.
 export const sendMessagePayload = z.strictObject({
   sellerId: z.uuid(),
-  locale: z.enum(['sv', 'en']),
+  locale: z.enum(locales),
   freeText: z.string().trim().min(1).max(1000),
 })
 // Day close export (medium): the ordinary idempotent export under the current map.

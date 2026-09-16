@@ -9,7 +9,7 @@ import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { readPriceEvidence } from '@/lib/engine/price-evidence'
 import { PriceEvidencePanel } from '@/components/intake/price-evidence'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import {
   InspectionForm,
   InspectionArchiveForm,
@@ -224,7 +224,7 @@ export default async function InspectBag({
                 </Link>{' '}
                 · {entry.archived ? s.archived : s.active} ·{' '}
                 {new Date(entry.saved_at).toLocaleString(
-                  ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',
+                  intlLocale(ctx.locale),
                   { timeZone: 'Europe/Stockholm' },
                 )}
               </li>
@@ -293,7 +293,7 @@ export default async function InspectBag({
                 {s.version} {item.revision} ·{' '}
                 {item.archived ? s.archived : s.active} ·{' '}
                 {new Date(item.saved_at).toLocaleString(
-                  ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',
+                  intlLocale(ctx.locale),
                   { timeZone: 'Europe/Stockholm' },
                 )}
               </small>

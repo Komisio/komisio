@@ -1,4 +1,4 @@
-import type { Dictionary } from '@/lib/i18n'
+import { intlLocale, type Dictionary } from '@/lib/i18n'
 import type { PlanStatus } from '@/lib/engine/plans'
 
 /** The store's plan on the settings page: state, dates and what they mean. */
@@ -16,7 +16,7 @@ export function PlanPanel({
   if (!status || !status.billing) return null
   const date = (iso: string | null | undefined) =>
     iso
-      ? new Date(iso).toLocaleDateString(locale === 'sv' ? 'sv-SE' : 'en-GB', {
+      ? new Date(iso).toLocaleDateString(intlLocale(locale), {
           timeZone: 'Europe/Stockholm',
         })
       : null

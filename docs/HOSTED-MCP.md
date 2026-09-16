@@ -104,16 +104,25 @@ SQL:
 `komisio_read_inspection_operation`, `komisio_read_reception_operation`,
 `komisio_preview_inspection`, `komisio_prepare_inspection_reception`,
 `komisio_list_bags`, `komisio_read_inspection`,
-`komisio_read_reception_history`,
-`komisio_read_reception`, `komisio_preview_reception`,
-`komisio_propose_reception_review`, `komisio_read_reception_photo`.
+`komisio_read_reception_history`, `komisio_read_reception_photo`.
 
-The reception and inspection reads are the store's own working surface rather
-than questions an assistant answers, and one of them reads photo bytes from
-storage, which a connector cannot do at all. They stay local until their reads
-become SQL functions.
+The inspection reads and the reception history are the store's own working
+surface rather than questions an assistant answers, and the photo read takes
+bytes from storage, which a connector cannot do at all and never will. The
+first seven stay local until their reads become SQL functions.
 
-Two tools left the list on 2026-09-16 without any read moving:
+Reading one reception became `reception_session_detail` on 2026-09-16, which
+returns the session, its seller, the current revision and that revision's
+sources in one call. Three tools left the list with it:
+`komisio_read_reception`, `komisio_preview_reception` and
+`komisio_propose_reception_review`. Each asks for its own scope, so the
+function is registered under `reception:read`, `reception:preview` and
+`reception:propose`. The staged review also needed `propose_operation` under
+`reception:propose` for the kind `publishReceptionReview`, which had never been
+registered: that scope reached no proposal kind at all, so the tool would have
+refused at its last step even with the read in place.
+
+Two more tools left the list on 2026-09-16 without any read moving:
 `komisio_list_receptions` and `komisio_propose_price_change` read through SQL
 functions already and were only missing a registration.
 `reception_queue` is now registered under `reception:read`, so an assistant

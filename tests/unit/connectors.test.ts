@@ -211,8 +211,12 @@ describe('hosted MCP connector', () => {
     // connector to be told which scope reaches them.
     expect(hostedToolAllowed('komisio_list_receptions')).toBe(true)
     expect(hostedToolAllowed('komisio_propose_price_change')).toBe(true)
+    // One reception became an engine function, so the three tools on it serve.
+    expect(hostedToolAllowed('komisio_read_reception')).toBe(true)
+    expect(hostedToolAllowed('komisio_preview_reception')).toBe(true)
+    expect(hostedToolAllowed('komisio_propose_reception_review')).toBe(true)
     // A photo lives in a storage bucket, which no connector token reaches.
     expect(hostedToolAllowed('komisio_read_reception_photo')).toBe(false)
-    expect(hostedExcludedTools.size).toBe(11)
+    expect(hostedExcludedTools.size).toBe(8)
   })
 })

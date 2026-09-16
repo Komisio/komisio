@@ -116,6 +116,14 @@ export const saveReceptionSourcesCommand = z.strictObject({
   ),
 })
 
+/** What `reception_session_detail` returns: no sources yet is a null, not an error. */
+const receptionSessionDetail = z.object({
+  session_id: z.guid(),
+  seller_id: z.guid(),
+  revision: z.number().int().nonnegative(),
+  sources: receptionSession.shape.sources.nullable(),
+})
+
 export async function readReceptionSession(
   client: SupabaseClient,
   tenantInput: string,
@@ -123,30 +131,20 @@ export async function readReceptionSession(
 ) {
   const tenantId = z.uuid().parse(tenantInput),
     sessionId = z.guid().parse(sessionInput)
-  const [session, snapshot] = await Promise.all([
-    client
-      .from('reception_sessions')
-      .select('id,seller_id')
-      .eq('tenant_id', tenantId)
-      .eq('id', sessionId)
-      .maybeSingle(),
-    client
-      .from('reception_sources_current')
-      .select('revision,sources')
-      .eq('tenant_id', tenantId)
-      .eq('session_id', sessionId)
-      .maybeSingle(),
-  ])
-  if (session.error || snapshot.error)
-    throw new Error('Unable to read reception')
-  if (!session.data) return null
-  if (!snapshot.data)
+  const { data, error } = await client.rpc('reception_session_detail', {
+    p_tenant: tenantId,
+    p_session: sessionId,
+  })
+  if (error) throw new Error('Unable to read reception')
+  if (!data) return null
+  const detail = receptionSessionDetail.parse(data)
+  if (detail.sources === null)
     return {
       status: 'empty' as const,
       persisted: true as const,
       sessionId,
       tenantId,
-      sellerId: session.data.seller_id,
+      sellerId: detail.seller_id,
       revision: 0,
     }
   return {
@@ -156,9 +154,9 @@ export async function readReceptionSession(
       schemaVersion: 1,
       tenantId,
       sessionId,
-      sellerId: session.data.seller_id,
-      revision: snapshot.data.revision,
-      sources: snapshot.data.sources,
+      sellerId: detail.seller_id,
+      revision: detail.revision,
+      sources: detail.sources,
     }),
   }
 }

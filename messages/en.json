@@ -2339,6 +2339,9 @@
       "showcaseRemove": "Remove",
       "emailDailyCap": "Messages per store and day",
       "inviteDailyCap": "Invitations per store and day",
+      "emailNewCap": "Messages per day, new store",
+      "inviteNewCap": "Invitations per day, new store",
+      "emailTrustDays": "Days before a store counts as established",
       "connectorDailyCap": "Calls per connected assistant and day"
     }
   }

@@ -31,6 +31,9 @@ export function HostAi({
     connectorDailyCap: String(settings.connectorDailyCap),
     emailDailyCap: String(settings.emailDailyCap),
     inviteDailyCap: String(settings.inviteDailyCap),
+    emailNewCap: String(settings.emailNewCap),
+    inviteNewCap: String(settings.inviteNewCap),
+    emailTrustDays: String(settings.emailTrustDays),
   })
   const [showcaseTenant, setShowcaseTenant] = useState(
     stores[0]?.tenant_id ?? '',
@@ -92,6 +95,9 @@ export function HostAi({
           ['connectorDailyCap', d.connectorDailyCap],
           ['emailDailyCap', d.emailDailyCap],
           ['inviteDailyCap', d.inviteDailyCap],
+          ['emailNewCap', d.emailNewCap],
+          ['inviteNewCap', d.inviteNewCap],
+          ['emailTrustDays', d.emailTrustDays],
         ] as const
       ).map(([name, label]) => (
         <div className="field" key={name}>
@@ -122,6 +128,9 @@ export function HostAi({
                 connectorDailyCap: Math.round(Number(form.connectorDailyCap)),
                 emailDailyCap: Math.round(Number(form.emailDailyCap)),
                 inviteDailyCap: Math.round(Number(form.inviteDailyCap)),
+                emailNewCap: Math.round(Number(form.emailNewCap)),
+                inviteNewCap: Math.round(Number(form.inviteNewCap)),
+                emailTrustDays: Math.round(Number(form.emailTrustDays)),
               },
             })
           }

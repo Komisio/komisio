@@ -2339,6 +2339,9 @@
       "showcaseRemove": "Fjern",
       "emailDailyCap": "Meldinger per butikk og døgn",
       "inviteDailyCap": "Invitasjoner per butikk og døgn",
+      "emailNewCap": "Meldinger per døgn, ny butikk",
+      "inviteNewCap": "Invitasjoner per døgn, ny butikk",
+      "emailTrustDays": "Døgn før en butikk regnes som etablert",
       "connectorDailyCap": "Kall per koblet assistent og døgn"
     }
   }

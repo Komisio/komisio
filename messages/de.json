@@ -2339,6 +2339,9 @@
       "showcaseRemove": "Entfernen",
       "emailDailyCap": "Nachrichten pro Store und Tag",
       "inviteDailyCap": "Einladungen pro Store und Tag",
+      "emailNewCap": "Nachrichten pro Tag, neuer Store",
+      "inviteNewCap": "Einladungen pro Tag, neuer Store",
+      "emailTrustDays": "Tage, bis ein Store als etabliert gilt",
       "connectorDailyCap": "Aufrufe pro verbundenem Assistenten und Tag"
     }
   }

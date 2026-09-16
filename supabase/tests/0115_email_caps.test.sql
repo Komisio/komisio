@@ -8,7 +8,10 @@ insert into public.platform_hosts(user_id) values('f0000000-0000-4000-8000-00000
 -- A small cap makes the boundary observable; the host owns both numbers.
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000991","role":"authenticated"}';
-select is((set_ai_platform_settings('{"emailDailyCap":2,"inviteDailyCap":1}')->>'emailDailyCap')::int,2,'the host sets the daily message cap');
+-- This file is about the established caps, and every store it creates is new,
+-- so the trust window is closed here. The new-store numbers have their own
+-- file (0120_new_store_caps).
+select is((set_ai_platform_settings('{"emailDailyCap":2,"inviteDailyCap":1,"emailTrustDays":0}')->>'emailDailyCap')::int,2,'the host sets the daily message cap');
 select is((ai_platform_settings()->>'inviteDailyCap')::int,1,'and the daily invitation cap');
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000992","role":"authenticated"}';
 select throws_ok($$select set_ai_platform_settings('{"emailDailyCap":5000}')$$,'42501',null,'a store owner cannot raise its own cap');

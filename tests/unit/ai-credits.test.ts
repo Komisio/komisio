@@ -174,6 +174,59 @@ describe('AI credits', () => {
       p_output_tokens: 0,
     })
   })
+  it('names an unusable provider answer without logging anything a person said', async () => {
+    const logged: unknown[][] = []
+    const error = vi
+      .spyOn(console, 'error')
+      .mockImplementation((...args: unknown[]) => {
+        logged.push(args)
+      })
+    const secret = 'a private observation about a customer'
+    const transport = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            status: 'incomplete',
+            output: [
+              {
+                type: 'message',
+                content: [{ type: 'output_text', text: secret }],
+              },
+            ],
+          }),
+          { status: 200 },
+        ),
+    )
+    const adapter = openAIReception(
+      { key: 'sk-not-a-real-key-0123456789', model: 'm' },
+      new Map(),
+      transport as unknown as typeof fetch,
+    )
+    await expect(
+      adapter.suggest(
+        {
+          sources: [
+            {
+              id: '0b6c4f1e-2c2e-4b5e-9a1f-1234567890ad',
+              kind: 'observation',
+              observation: secret,
+              reference: 'r',
+            },
+          ],
+        },
+        new AbortController().signal,
+      ),
+    ).rejects.toThrow('ASSISTANCE_INVALID_OUTPUT')
+    expect(logged).toHaveLength(1)
+    expect(logged[0][1]).toEqual({
+      providerStatus: 'incomplete',
+      reason: 'envelope',
+    })
+    expect(JSON.stringify(logged)).not.toContain(secret)
+    expect(JSON.stringify(logged)).not.toContain('sk-not-a-real-key')
+    expect(adapter.usage?.()).toBeNull()
+    error.mockRestore()
+  })
   it('reads token usage from the provider response', async () => {
     const transport = vi.fn(
       async () =>

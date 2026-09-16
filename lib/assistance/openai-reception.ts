@@ -130,29 +130,45 @@ export function openAIReception(
       })
       if (!response.ok) {
         await response.body?.cancel()
+        // The first live run of a deployment fails somewhere; name where,
+        // without the body, the key, the store or anything a person said.
+        console.error('Reception assistance: provider refused', {
+          httpStatus: response.status,
+        })
         throw new Error('ASSISTANCE_PROVIDER_FAILED')
       }
-      const envelope = z
-        .object({
-          status: z.literal('completed'),
-          usage: z
-            .object({
-              input_tokens: z.number().int().min(0),
-              output_tokens: z.number().int().min(0),
-            })
-            .optional(),
-          output: z.array(
-            z.object({
-              type: z.string(),
-              content: z
-                .array(
-                  z.object({ type: z.string(), text: z.string().optional() }),
-                )
-                .optional(),
-            }),
-          ),
+      const envelopeShape = z.object({
+        status: z.literal('completed'),
+        usage: z
+          .object({
+            input_tokens: z.number().int().min(0),
+            output_tokens: z.number().int().min(0),
+          })
+          .optional(),
+        output: z.array(
+          z.object({
+            type: z.string(),
+            content: z
+              .array(
+                z.object({ type: z.string(), text: z.string().optional() }),
+              )
+              .optional(),
+          }),
+        ),
+      })
+      const body = await boundedJson(response, 65536)
+      const read = envelopeShape.safeParse(body)
+      if (!read.success) {
+        // A model that stopped early answers `incomplete`; a changed contract
+        // answers a shape we do not know. Both look the same to a store.
+        const reported = z.object({ status: z.string() }).safeParse(body)
+        console.error('Reception assistance: unusable provider response', {
+          providerStatus: reported.success ? reported.data.status : 'unknown',
+          reason: 'envelope',
         })
-        .parse(await boundedJson(response, 65536))
+        throw new Error('ASSISTANCE_INVALID_OUTPUT')
+      }
+      const envelope = read.data
       lastUsage = envelope.usage
         ? {
             inputTokens: envelope.usage.input_tokens,
@@ -165,8 +181,13 @@ export function openAIReception(
         messages[0].content?.length !== 1 ||
         messages[0].content[0].type !== 'output_text' ||
         !messages[0].content[0].text
-      )
+      ) {
+        console.error('Reception assistance: unusable provider response', {
+          providerStatus: envelope.status,
+          reason: 'output',
+        })
         throw new Error('ASSISTANCE_INVALID_OUTPUT')
+      }
       const output = JSON.parse(messages[0].content[0].text)
       if (mode === 'batch') {
         const split = batchWire.parse(output)

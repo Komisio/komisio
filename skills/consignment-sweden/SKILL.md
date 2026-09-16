@@ -100,7 +100,7 @@ defaults, not legal requirements; nothing here decides VAT treatment.
 | `endOfPeriodAction` | `charity` | The earlier store donated unsold goods after the period; `return` is the alternative |
 | `unsoldNotifyAfterDays` | `60` | The seller is told an item is still unsold at day 60 |
 | `minPayoutThreshold` | `100.00` | SEK; the earlier store's seller-facing text stated a 100 kr minimum |
-| `assistanceEnabled` | `false` | AI assistance is off until the store turns it on (P1 S9) |
+| `assistanceEnabled` | `true` | AI assistance is available from the first day so a new store can try it with its included credits; a person still starts every analysis and the owner can turn it off (owner decision 2026-09-16, replacing the P1 S9 default of `false`) |
 
 Amounts are SEK with two decimals in policy and öre in the database.
 

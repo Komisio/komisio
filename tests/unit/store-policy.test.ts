@@ -122,6 +122,7 @@ it('uses the owner-confirmed pilot defaults exactly, including the store commiss
     endOfPeriodAction: 'charity',
     unsoldNotifyAfterDays: 60,
     minPayoutThreshold: 100,
+    assistanceEnabled: true,
   })
 })
 

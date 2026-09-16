@@ -58,7 +58,12 @@ export type StorePolicyBody = z.infer<typeof storePolicyBody>
 /** Owner-confirmed pilot policy, not law or automatic execution authority.
  * Mirrors the skill's Default store policy section at Fable snapshot 17e73c8.
  * A fresh parsed object prevents callers from changing another tenant's defaults.
- * Assistance enablement belongs to S9 and is deliberately absent from S1.
+ * Assistance is on by default (owner decision 2026-09-16): a new store should
+ * meet a working reception screen and has included credits to try it with. The
+ * default is not an authority to spend. A person still starts each analysis,
+ * the deployment must have a model at all, and the quota, the reservation and
+ * the platform cap are unchanged. A store that has already published a policy
+ * keeps what it published; nothing published is rewritten.
  */
 export function defaultStorePolicy(): StorePolicyBody {
   return storePolicyBody.parse({
@@ -76,6 +81,7 @@ export function defaultStorePolicy(): StorePolicyBody {
     endOfPeriodAction: 'charity',
     unsoldNotifyAfterDays: 60,
     minPayoutThreshold: 100,
+    assistanceEnabled: true,
   })
 }
 

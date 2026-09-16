@@ -201,7 +201,7 @@ it('store profile: strict shape, https website, ordered hours, each day once', (
         ],
       },
     },
-    { expectedCurrentId: null, profile: { ...profile, language: 'de' } },
+    { expectedCurrentId: null, profile: { ...profile, language: 'pt' } },
     {
       expectedCurrentId: null,
       profile: { ...profile, concept: 'x'.repeat(2001) },

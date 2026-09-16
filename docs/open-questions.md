@@ -298,3 +298,12 @@ HTTP fixtures test the product/purchase loop without a real merchant account.
 **Zettle pilot update2026-09-13:** owner supplied clientId/API key in Vercel and selected Preloved Teststore. Implement the assertion-grant read-only identity check with an explicit pilot tenant pin. Live inventory/windowed sync and per-tenant self-service credential lifecycle remain open; authentication success alone does not enable them.
 
 **Pilot verification2026-09-13:** real assertion-grant authentication and the explicit merchant pin have been verified in staging. The next slice adds durable bounded receipt windows from explicit activation time. Product inventory initialization/delisting, scheduled retrieval, longer-range delayed-event reconciliation and tax mapping remain open.
+# Print agent staging release, 2026-09-16
+
+A14 staging configuration is provisioned: anonymous sign-ins are enabled on
+the staging Supabase project and the `staging-print` GitHub environment has
+the two public build variables. Production remains deferred until its own
+project exists. Tag builds therefore default to staging; enable production
+with `PRINT_PRODUCTION_ENABLED=true` only after configuring `production-print`.
+The release build and physical printer pairing remain separate verification
+steps; enabling anonymous sign-ins does not grant store access by itself.

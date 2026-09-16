@@ -69,6 +69,7 @@ export function errorCode(message: string, code?: string) {
     'AUTH_REQUIRED',
     'INVITATION_INVALID',
     'ALREADY_MEMBER',
+    'INVITE_DAILY_CAP',
     'INVALID_INPUT',
     'MEMBER_NOT_FOUND',
     'CHAIN_CONFLICT',

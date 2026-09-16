@@ -59,15 +59,35 @@ After P13 the first external store can register.
 ## Status 2026-09-16 (Fable)
 
 Done by code and CLI: P1 (project `vpjpnqpkdejwzwpjjoon`, Stockholm, small
-compute, PITR 7 days), P2 (site URL, redirect list, anonymous sign-ins,
+compute, PITR 7 days, `pg_cron` enabled 2026-09-16 with the markdown and
+plan-expiry schedules active), P2 (site URL, redirect list, anonymous sign-ins,
 TOTP; SMTP still to set), P3 (environment, reviewer, branch policy, project
 id, access token), P4 (Vercel project, domain attached, CLI deploy in the
 workflow), P5 (every variable except `RESEND_API_KEY`, the Stripe live keys
 and the integration credentials), P9 dispatched (awaiting the owner's
-approval). Owner: `RESEND_API_KEY` in Vercel and Resend SMTP in Supabase
-Auth, the DNS switch of `app.komisio.com` (today it points at the legacy
-Azure back office), P7, P8, P10 to P14. Every later release
-follows the same path: merge to main, staging soak, dispatch, approve.
+approval). Owner: done since then (Resend, SMTP, DNS, the first migration run, host
+role). Still owner-only, in order of what a live store notices first:
+
+1. `INVITATION_EMAIL_ALLOWLIST=*` and `SELLER_EMAIL_ALLOWLIST=*` on the
+   production Vercel project. Until then a store that registers by itself
+   cannot invite a colleague or notify a seller: every send is `restricted`.
+   The engine caps the volume per store, so the wildcard is not a loose end
+   (see the 2026-09-16 decision on open e-mail delivery).
+2. `KOMISIO_RECEPTION_AI_PROVIDER=openai`, `KOMISIO_RECEPTION_AI_KEY` and
+   `KOMISIO_RECEPTION_AI_MODEL`. Without them the reception assistant is
+   unavailable in every store, and the AI credits the product page promises
+   are inert: no call is ever made, so no credit is ever spent. Neither
+   staging nor production has ever run the assistant against a real model.
+   Set the same three on staging first and run one reception call there, then
+   check the credit ledger (Settings, AI credits) shows a reservation settled
+   to the real token cost. While you are there, set the model's actual price
+   per million tokens under Plattform so a credit tracks what a call costs.
+3. P7 (Fortnox, Shopify and Zettle registered for production with the
+   production callback URLs), P8 (Stripe live keys and the credit price ids),
+   a `print-v*` tag with the `production-print` environment so a store can
+   install Komisio Print, P11 to P14, and dedicated GitHub tokens instead of
+   the personal ones. Every later release
+   follows the same path: merge to main, staging soak, dispatch, approve.
 
 ## What stays different between staging and production
 

@@ -341,7 +341,8 @@
     "CHAIN_CONFLICT": "La tienda ya pertenece a una cadena.",
     "CHAIN_NOT_FOUND": "La cadena ya no existe.",
     "TENANT_CHANGED": "La tienda activa ha cambiado. Recarga la página antes de continuar.",
-    "REQUEST_FAILED": "No se pudieron guardar tus cambios. Inténtalo de nuevo."
+    "REQUEST_FAILED": "No se pudieron guardar tus cambios. Inténtalo de nuevo.",
+    "INVITE_DAILY_CAP": "Se alcanzó el límite diario de invitaciones de la tienda. Inténtalo mañana."
   },
   "inspection": {
     "title": "Inspeccionar la bolsa",
@@ -1261,11 +1262,12 @@
     "outcomes": {
       "queued": "en cola",
       "sent": "enviado",
-      "restricted": "no enviado: la dirección no está en la lista permitida del piloto",
+      "restricted": "no enviado: este entorno no envía a esa dirección",
       "manual": "no enviado: la entrega por correo está desactivada, entrégalo manualmente",
       "unconfirmed": "entrega no confirmada",
       "failed": "entrega fallida"
-    }
+    },
+    "dailyCap": "Se alcanzó el límite diario de mensajes de la tienda. Inténtalo mañana."
   },
   "stock": {
     "title": "Existencias",
@@ -2334,7 +2336,9 @@
       "showcaseStore": "Tienda",
       "showcaseLabel": "Etiqueta (p. ej. tienda de segunda mano en Södertälje)",
       "showcaseAdd": "Mostrar en la página del producto",
-      "showcaseRemove": "Quitar"
+      "showcaseRemove": "Quitar",
+      "emailDailyCap": "Mensajes por tienda y día",
+      "inviteDailyCap": "Invitaciones por tienda y día"
     }
   }
 }

@@ -341,7 +341,8 @@
     "CHAIN_CONFLICT": "Kauppa kuuluu jo ketjuun.",
     "CHAIN_NOT_FOUND": "Ketjua ei enää ole.",
     "TENANT_CHANGED": "Aktiivinen kauppa on vaihtunut. Lataa sivu uudelleen ennen kuin jatkat.",
-    "REQUEST_FAILED": "Muutoksiasi ei voitu tallentaa. Yritä uudelleen."
+    "REQUEST_FAILED": "Muutoksiasi ei voitu tallentaa. Yritä uudelleen.",
+    "INVITE_DAILY_CAP": "Kaupan vuorokausiraja kutsuille on täynnä. Yritä huomenna uudelleen."
   },
   "inspection": {
     "title": "Tarkasta pussi",
@@ -1261,11 +1262,12 @@
     "outcomes": {
       "queued": "jonossa",
       "sent": "lähetetty",
-      "restricted": "ei lähetetty: osoite ei ole pilotin sallittujen luettelossa",
+      "restricted": "ei lähetetty: tämä ympäristö ei lähetä tähän osoitteeseen",
       "manual": "ei lähetetty: sähköpostitoimitus on pois päältä, toimita manuaalisesti",
       "unconfirmed": "toimitusta ei vahvistettu",
       "failed": "toimitus epäonnistui"
-    }
+    },
+    "dailyCap": "Kaupan vuorokausiraja viesteille on täynnä. Yritä huomenna uudelleen."
   },
   "stock": {
     "title": "Varasto",
@@ -2334,7 +2336,9 @@
       "showcaseStore": "Kauppa",
       "showcaseLabel": "Nimike (esim. second hand -kauppa Södertäljessä)",
       "showcaseAdd": "Näytä tuotesivulla",
-      "showcaseRemove": "Poista"
+      "showcaseRemove": "Poista",
+      "emailDailyCap": "Viestejä per kauppa ja vuorokausi",
+      "inviteDailyCap": "Kutsuja per kauppa ja vuorokausi"
     }
   }
 }

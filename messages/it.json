@@ -341,7 +341,8 @@
     "CHAIN_CONFLICT": "Il negozio appartiene già a una catena.",
     "CHAIN_NOT_FOUND": "La catena non esiste più.",
     "TENANT_CHANGED": "Il negozio attivo è cambiato. Ricarica la pagina prima di continuare.",
-    "REQUEST_FAILED": "Impossibile salvare le modifiche. Riprova."
+    "REQUEST_FAILED": "Impossibile salvare le modifiche. Riprova.",
+    "INVITE_DAILY_CAP": "Il limite giornaliero di inviti del negozio è stato raggiunto. Riprova domani."
   },
   "inspection": {
     "title": "Ispeziona il sacchetto",
@@ -1261,11 +1262,12 @@
     "outcomes": {
       "queued": "in coda",
       "sent": "inviato",
-      "restricted": "non inviato: indirizzo non nella lista autorizzata del pilota",
+      "restricted": "non inviato: questo ambiente non invia a questo indirizzo",
       "manual": "non inviato: la consegna e-mail è disattivata, consegnalo manualmente",
       "unconfirmed": "consegna non confermata",
       "failed": "consegna fallita"
-    }
+    },
+    "dailyCap": "Il limite giornaliero di messaggi del negozio è stato raggiunto. Riprova domani."
   },
   "stock": {
     "title": "Magazzino",
@@ -2334,7 +2336,9 @@
       "showcaseStore": "Negozio",
       "showcaseLabel": "Etichetta (es. negozio dell'usato a Södertälje)",
       "showcaseAdd": "Mostra sulla pagina del prodotto",
-      "showcaseRemove": "Rimuovi"
+      "showcaseRemove": "Rimuovi",
+      "emailDailyCap": "Messaggi per negozio al giorno",
+      "inviteDailyCap": "Inviti per negozio al giorno"
     }
   }
 }

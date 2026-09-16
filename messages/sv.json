@@ -341,7 +341,8 @@
     "CHAIN_CONFLICT": "Butiken ingår redan i en kedja.",
     "CHAIN_NOT_FOUND": "Kedjan finns inte längre.",
     "TENANT_CHANGED": "Den aktiva butiken har ändrats. Ladda om sidan innan du fortsätter.",
-    "REQUEST_FAILED": "Det gick inte att spara. Försök igen."
+    "REQUEST_FAILED": "Det gick inte att spara. Försök igen.",
+    "INVITE_DAILY_CAP": "Butikens gräns för inbjudningar per dygn är nådd. Försök igen i morgon."
   },
   "inspection": {
     "title": "Gå igenom påsen",
@@ -1261,11 +1262,12 @@
     "outcomes": {
       "queued": "köad",
       "sent": "skickat",
-      "restricted": "ej skickat: adressen finns inte på pilotens lista",
+      "restricted": "ej skickat: driftmiljön skickar inte till den här adressen",
       "manual": "ej skickat: e-post är avstängt, lämna över manuellt",
       "unconfirmed": "leverans ej bekräftad",
       "failed": "leverans misslyckades"
-    }
+    },
+    "dailyCap": "Butikens gräns för meddelanden per dygn är nådd. Försök igen i morgon."
   },
   "stock": {
     "title": "Lager",
@@ -2334,7 +2336,9 @@
       "showcaseStore": "Butik",
       "showcaseLabel": "Etikett (t.ex. second hand-butik i Södertälje)",
       "showcaseAdd": "Visa på produktsidan",
-      "showcaseRemove": "Ta bort"
+      "showcaseRemove": "Ta bort",
+      "emailDailyCap": "Meddelanden per butik och dygn",
+      "inviteDailyCap": "Inbjudningar per butik och dygn"
     }
   }
 }

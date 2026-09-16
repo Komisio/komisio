@@ -279,8 +279,9 @@ high kinds require a different authenticated approver identity, not merely a new
 auto-execution would require its own reviewed capability design (none exists today).
 Provider adapters must minimize outgoing fields and assess redaction, retention
 and destination policy. A text sanitizer cannot guarantee removal of personal
-data from images or free text. Local MCP's configured user token is not yet a
-separately delegated, scope-limited credential; see [MCP scope and limitations](../mcp/README.md).
+data from images or free text. The hosted connector (2026-09-16, [HOSTED-MCP.md](HOSTED-MCP.md))
+is the delegated, scope-limited credential: a member approves an assistant for one
+store on a consent page and every call runs as that person; see [MCP scope and limitations](../mcp/README.md).
 
 ## 6. Surfaces after the change
 

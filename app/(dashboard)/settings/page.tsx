@@ -29,8 +29,15 @@ import { stripeConfigured } from '@/extensions/stripe/api'
 import { readChainOverview } from '@/lib/engine/chains'
 import { ChainPanel } from '@/components/platform/chain-panel'
 import Link from 'next/link'
+import { ConnectorsPanel } from '@/components/platform/connectors-panel'
+import {
+  appOrigin,
+  connectorsEnabled,
+  mcpPath,
+  readConnectors,
+} from '@/lib/engine/connectors'
 
-const tabs = ['policy', 'profile', 'store', 'printing'] as const
+const tabs = ['policy', 'profile', 'store', 'printing', 'connectors'] as const
 type Tab = (typeof tabs)[number]
 
 /**
@@ -80,7 +87,11 @@ export default async function Settings({
   const previewDpi = (printers.find((p) => p.active)?.dpi ?? 203) as
     203 | 300 | 600
   const plan =
-    tab === 'store' ? await readPlanStatus(ctx.client, active.id) : null
+    tab === 'store' || tab === 'connectors'
+      ? await readPlanStatus(ctx.client, active.id)
+      : null
+  const connectors =
+    tab === 'connectors' ? await readConnectors(ctx.client, active.id) : null
   const chain =
     tab === 'store' ? await readChainOverview(ctx.client, active.id) : null
   const events =
@@ -95,7 +106,10 @@ export default async function Settings({
   if (events.error) throw events.error
   const pr = d.printing,
     us = d.usage
-  const visible = tabs.filter((t) => intake || t === 'store')
+  const visible = tabs.filter(
+    (t) =>
+      (intake || t === 'store') && (t !== 'connectors' || connectorsEnabled()),
+  )
   return (
     <>
       <div className="page-heading">
@@ -157,6 +171,16 @@ export default async function Settings({
           editable={manages}
           locale={ctx.locale === 'sv' ? 'sv' : 'en'}
           d={d}
+        />
+      )}
+      {tab === 'connectors' && connectorsEnabled() && (
+        <ConnectorsPanel
+          tenantId={active.id}
+          connectors={connectors ?? []}
+          endpoint={`${appOrigin()}${mcpPath}`}
+          plus={!plan || plan.tier !== 'free'}
+          locale={ctx.locale}
+          d={d.connectors}
         />
       )}
       {tab === 'printing' && (

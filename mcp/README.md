@@ -57,6 +57,15 @@ rejected. Sources are untrusted evidence. The server cannot list sellers, create
 sessions, upload photos, spend model tokens, publish reviews, issue links, approve
 for a seller or perform financial operations.
 
+## Hosted connector
+
+The same catalogue is served over HTTPS at `/api/mcp` of a hosted Komisio, for
+a store's own assistant (Claude, ChatGPT or another MCP client) without any
+local installation. The assistant registers itself, a member approves it for one
+store and a set of scopes on the consent page, and every tool call runs in SQL
+as that person through `connector_call`. The tools whose reads still use table
+access are not served there. See [docs/HOSTED-MCP.md](../docs/HOSTED-MCP.md).
+
 ## Configuration
 
 Use Node >=22.12 and `npm ci`. The trusted local MCP host supplies these dedicated

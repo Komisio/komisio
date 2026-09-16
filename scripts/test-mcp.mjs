@@ -8,6 +8,7 @@ import { StdioClientTransport } from '@modelcontextprotocol/client/stdio'
 import { createClient } from '@supabase/supabase-js'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { existsSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
 import assert from 'node:assert/strict'
 import pg from 'pg'
 import sharp from 'sharp'
@@ -785,6 +786,36 @@ try {
   // 22 seeded history revisions plus the restored-evidence revision; both
   // reviews came from staff-approved staged operations, not from a tool.
   assert.deepEqual(records.rows[0], { sources: 23, reviews: 2, attempts: 0 })
+  // The hosted connector, with its own confirmed person (this fixture user has MFA by now).
+  const connectorEmail = `connector-${randomUUID()}@example.test`,
+    connectorPassword = `M!${randomBytes(20).toString('hex')}`
+  const connectorUser = await app.auth.signUp({
+    email: connectorEmail,
+    password: connectorPassword,
+  })
+  if (connectorUser.error) throw new Error('Connector fixture signup failed')
+  await db.query('update auth.users set email_confirmed_at=now() where id=$1', [
+    connectorUser.data.user.id,
+  ])
+  const connectorLogin = await app.auth.signInWithPassword({
+    email: connectorEmail,
+    password: connectorPassword,
+  })
+  if (connectorLogin.error) throw new Error('Connector fixture login failed')
+  execFileSync(
+    process.execPath,
+    ['--import', 'tsx', 'scripts/test-connector-mcp.ts'],
+    {
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        KOMISIO_TEST_URL: url,
+        KOMISIO_TEST_KEY: key,
+        KOMISIO_TEST_TOKEN: connectorLogin.data.session.access_token,
+        KOMISIO_TEST_UID: connectorUser.data.user.id,
+      },
+    },
+  )
   console.log(
     'PASS: real stdio MCP negotiation, authenticated reads, opt-in minimized image/provenance, unsaved preview, staged proposal with staff approval, scope/tenant/invalid-token/MFA/stale denial, no direct source/review/model writes.',
   )

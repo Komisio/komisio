@@ -29,6 +29,7 @@ export type OnboardingFacts = {
   dayCloses: number | null
   fortnoxConnected: boolean | null
   zettleConnections: number | null
+  shopifyConnections: number | null
   members: number
 }
 export type OnboardingStep = {
@@ -64,7 +65,10 @@ export function onboardingSteps(f: OnboardingFacts): OnboardingStep[] {
     item: positive(f.items),
     sale: positive(f.sales),
     dayClose: positive(f.dayCloses),
-    integrations: f.fortnoxConnected === true || positive(f.zettleConnections),
+    integrations:
+      f.fortnoxConnected === true ||
+      positive(f.zettleConnections) ||
+      positive(f.shopifyConnections),
     team: f.members > 1,
   }
   return onboardingStepKeys.map((key) => ({
@@ -97,6 +101,7 @@ export async function readOnboarding(
     sales,
     dayCloses,
     zettleConnections,
+    shopifyConnections,
     fortnox,
   ] = await Promise.all([
     count(client, 'store_policy_versions', tenantId),
@@ -106,6 +111,7 @@ export async function readOnboarding(
     count(client, 'sales', tenantId),
     count(client, 'day_closes', tenantId),
     count(client, 'zettle_pull_connections', tenantId),
+    count(client, 'shopify_connections', tenantId),
     readFortnoxStatus(client, tenantId).catch(() => null),
   ])
   return onboardingSteps({
@@ -118,6 +124,7 @@ export async function readOnboarding(
     sales,
     dayCloses,
     zettleConnections,
+    shopifyConnections,
     fortnoxConnected: fortnox ? fortnox.connected : null,
   })
 }

@@ -63,6 +63,14 @@ Developer path: `node print-agent/agent.cjs pair` and
 `node print-agent/agent.cjs run` with `KOMISIO_PRINT_SUPABASE_URL` and
 `KOMISIO_PRINT_PUBLISHABLE_KEY` set (a local stack works).
 
+## Verification record
+
+| When       | What                                                                                                                                                                                                                              | Result                                    |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| 2026-09-15 | Local: anonymous sign-up, pairing code, heartbeat, one job against an unreachable address (`node print-agent/agent.cjs`)                                                                                                          | Paired, heartbeat, job failed as expected |
+| 2026-09-15 | Local Windows build of `KomisioPrint.exe` (Node single executable)                                                                                                                                                                | Runs                                      |
+| 2026-09-16 | Owner: anonymous sign-ins on staging, GitHub environment `staging-print`, tag `print-v1.0.0`, install.cmd on a computer next to a Zebra ZD420 (203 dpi, 192.168.1.49:9100), pairing code from Settings, label queued from the app | Printed                                   |
+
 ## Templates
 
 The manual print route delegates fact loading, rendering and queueing to

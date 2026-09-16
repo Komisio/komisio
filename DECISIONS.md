@@ -1,5 +1,20 @@
 # Decision Log
 
+One line per decision: `- YYYY-MM-DD: <decision>: <why>`, at most 300
+characters. The reasoning, the alternatives considered, the evidence and what
+was verified belong in the pull request body, where git keeps them next to the
+diff they explain. Read this file before re-litigating a past decision.
+
+Do not write a new document under `docs/` to hold the reasoning for a change.
+That habit produced 97 documents in a week, nineteen of which were working
+notes with no reader, and it is what this rule exists to stop. A file belongs
+in `docs/` when someone outside this work needs it later: a contract, an
+integration, how to run the thing yourself.
+
+Entries before the marker at the end of this file were written before the rule
+(2026-09-17) and are left as they stand. A record is not rewritten to match a
+later convention.
+
 ## 2026-09-15: Automatic label rule storage prerequisite
 
 Per PR199, each store may configure one rule per label kind with a tenant-bound
@@ -626,3 +641,7 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-16: Opening a new store can be closed to named countries (Opus, owner request): `KOMISIO_BLOCKED_SIGNUP_COUNTRIES` is a comma-separated list of ISO 3166-1 alpha-2 codes, and `proxy.ts` refuses `/register` and `/onboarding` from those countries with 403 and an address to write to. It is a filter on noise, not an access control: a VPN passes it in seconds, and the sign-up call itself goes from the browser to Supabase without touching this code. What it stops is the drive-by registration that never becomes a store, which is the traffic the owner reported. Deliberately narrow: signing in, running a store and every seller page stay open from everywhere, so an owner who travels is never locked out of their own shop. Unset or empty blocks nothing, and an unknown country is allowed, so self-hosting and local development are unaffected. Unit test `tests/unit/signup-countries.test.ts`.
 - 2026-09-16: A lower e-mail ceiling while a store is new (Opus, after the owner questioned 1000 a day): `email_new_cap` (default 50), `invite_new_cap` (default 5) and `email_trust_days` (default 7) in `platform_settings`; `queue_seller_communication` and `create_invitation` choose the new-store number while `tenants.created_at` is inside the window and the established number after it (migration `20260916540000`). Registration is open and a store may write to any address its staff type in, so the old flat caps let a throwaway store send a thousand messages from the deployment's verified sending domain on its first day. The money was never the risk; the sending reputation is, because a blocklisted domain stops every real store's seller notices at once. A real shop is unaffected: in its first week it has a handful of sellers. `email_trust_days` of 0 restores one number for every store. All five belong to the host under Plattform and no store can change its own. pgTAP `0120_new_store_caps`.
 - 2026-09-16: Built-in assistance is on by default for a new store (owner decision, replacing the P1 S9 default of off): the fallback store policy carries `assistanceEnabled: true` (migration `20260916550000`, `skills/consignment-sweden` default table, `defaultStorePolicy()`). A new store met the reception screen with the AI button inert and nothing explaining why; assistance is the part of Komisio that saves a shop time and every store has included credits to try it with. Only the fallback changed. A store that has published a policy keeps exactly what it published, and since the key was absent there assistance stays off for it until its owner publishes again with the box ticked; nothing published is rewritten. The default is not an authority to spend: a person starts every analysis, the deployment must have a model configured at all, the store's monthly quota applies, and the credit reservation and platform cap are unchanged. An owner can untick it and publish. The fallback is written out in both `public.current_store_policy` and `komisio_private.current_store_policy_core`, which must agree, so both are replaced. pgTAP `0121_assistance_default`.
+
+<!-- one-line rule from 2026-09-17: entries below are at most 300 characters -->
+
+- 2026-09-17: Reasoning belongs in the pull request and the decision is one line here (owner, from a sibling project's practice): entries below the marker are at most 300 characters and a unit test enforces it; writing reasoning into fresh docs/ files grew 97 documents in a week.

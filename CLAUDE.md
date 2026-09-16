@@ -60,16 +60,23 @@ edits to applied migrations (add a new one); no secrets in the repo; no
 copying source code from other projects (see `NOTICE`); keep diffs scoped to
 the task.
 
+**Reasoning goes in the pull request, not in a new document.** Explain the
+change where it can be read next to the diff it explains: why this approach,
+what was rejected, what was verified, what is still open. Then record the
+decision itself as one line of at most 300 characters in `DECISIONS.md`, which
+a unit test enforces. Writing the reasoning into a fresh document under `docs/`
+instead is how the repository grew 97 documents in a week, nineteen of which
+had no reader at all.
+
 **`docs/` is published documentation, not a workspace.** The repository is
 public, so anything committed there is readable by anyone and stays in the
 history whether or not it is later removed. A file belongs in `docs/` when
-someone outside this work would need it: a design decision, a contract, an
-integration, how to run the thing yourself. Coordination between agents, dated
-plans, task lists, status snapshots and progress notes do not. Those go in the
-ignored `private/` directory, or, once the owner opens the tracker, in GitHub
-Issues, which is where requirements and priority are decided. Nineteen such
-files were moved out on 2026-09-16 after a week of accumulation. Never put
-personal data, customer names or credentials in either place.
+someone outside this work needs it later: a contract, an integration, how to
+run the thing yourself. Coordination between agents, dated plans, task lists,
+status snapshots and progress notes do not. Those go in the ignored `private/`
+directory, or, once the owner opens the tracker, in GitHub Issues, which is
+where requirements and priority are decided. Never put personal data, customer
+names or credentials in either place.
 
 ## When uncertain
 

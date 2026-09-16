@@ -52,8 +52,14 @@ reviews and CODEOWNERS before granting additional write permissions.
 
 ## Decisions
 
-`DECISIONS.md` is append-only: `[YYYY-MM-DD] <decision>: <why>`. Read the log
-before re-opening a past decision.
+`DECISIONS.md` is append-only: one line, `- YYYY-MM-DD: <decision>: <why>`, at
+most 300 characters, which a unit test checks. Read the log before re-opening a
+past decision.
+
+Put the reasoning in the pull request body, not in a new file. Why this
+approach, what you rejected, what you verified: that belongs next to the diff
+it explains. `docs/` is for what a reader needs later, such as a contract, an
+integration, or how to run the thing yourself.
 
 ## Working with AI agents
 

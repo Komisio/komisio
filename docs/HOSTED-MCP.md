@@ -104,15 +104,24 @@ SQL:
 `komisio_read_inspection_operation`, `komisio_read_reception_operation`,
 `komisio_preview_inspection`, `komisio_prepare_inspection_reception`,
 `komisio_list_bags`, `komisio_read_inspection`,
-`komisio_read_reception_history`, `komisio_list_receptions`,
+`komisio_read_reception_history`,
 `komisio_read_reception`, `komisio_preview_reception`,
-`komisio_propose_reception_review`, `komisio_read_reception_photo`,
-`komisio_propose_price_change`.
+`komisio_propose_reception_review`, `komisio_read_reception_photo`.
 
 The reception and inspection reads are the store's own working surface rather
 than questions an assistant answers, and one of them reads photo bytes from
 storage, which a connector cannot do at all. They stay local until their reads
 become SQL functions.
+
+Two tools left the list on 2026-09-16 without any read moving:
+`komisio_list_receptions` and `komisio_propose_price_change` read through SQL
+functions already and were only missing a registration.
+`reception_queue` is now registered under `reception:read`, so an assistant
+that may read receptions can also find out which ones are waiting rather than
+only the one a person names. `item_detail` is now registered under
+`lifecycle:propose` as well as `items:read`, because a price proposal reads the
+item it prices; without it a store would have to grant a read scope for a
+proposal it had already allowed.
 
 Everything else is served: store policy and profile, item search and one
 item's summary, receipts and one receipt with its frozen lines, the seller

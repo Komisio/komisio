@@ -23,8 +23,16 @@ test('manual labels use the shared renderer and replay one immutable queue job',
         '^XA^PW{width}^LL{height}^FO10,10^FD{reference} {price}^FS^XZ',
       ],
     )
+    await fixture.db.query("select set_label_format($1,'bag',76,51)", [
+      fixture.tenant,
+    ])
     await fixture.commit()
-    await page.goto('/settings?view=printing')
+    // Exercise both stored (custom) and default format metadata in the real tab.
+    await page.goto('/settings?tab=printing')
+    await page.getByText('Synthetic printer ·', { exact: false }).click()
+    await expect(
+      page.locator('a[href$="/KomisioPrint-staging-win-x64.zip"]'),
+    ).toBeVisible()
     const origin = new URL(page.url()).origin
     const input = {
       tenantId: fixture.tenant,

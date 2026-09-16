@@ -59,9 +59,6 @@ export const hostedExcludedTools = new Set([
   'komisio_list_bags',
   'komisio_read_inspection',
   'komisio_read_reception_history',
-  'komisio_read_reception',
-  'komisio_preview_reception',
-  'komisio_propose_reception_review',
   'komisio_read_reception_photo',
 ])
 export function hostedToolAllowed(name: string) {

@@ -22,7 +22,7 @@ export function ConnectorConsent({
   redirectUri: string
   codeChallenge: string
   state?: string
-  stores: { id: string; name: string; plus: boolean }[]
+  stores: { id: string; name: string }[]
   defaultStore: string
   requested: ConnectorScope[]
   deniedUrl: string
@@ -57,9 +57,7 @@ export function ConnectorConsent({
       })
       const data = await r.json().catch(() => ({}))
       if (!r.ok || typeof data.redirect !== 'string') {
-        setMessage(
-          data.error === 'PLAN_PLUS_REQUIRED' ? d.plusRequired : d.failed,
-        )
+        setMessage(d.failed)
         return
       }
       window.location.assign(data.redirect)
@@ -70,7 +68,6 @@ export function ConnectorConsent({
       setBusy(false)
     }
   }
-  const selected = stores.find((s) => s.id === store)
   return (
     <section className="card intake-form" aria-label={d.consent.title}>
       <h1>{d.consent.title}</h1>
@@ -85,7 +82,6 @@ export function ConnectorConsent({
           ))}
         </select>
       </label>
-      {selected && !selected.plus && <p role="status">{d.plusRequired}</p>}
       <fieldset>
         <legend>{d.consent.scopesHeading}</legend>
         {requested.map((s) => (

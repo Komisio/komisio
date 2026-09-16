@@ -7,6 +7,13 @@ import {
   isPlatformHost,
   planErrorCode,
 } from '@/lib/engine/plans'
+import { z } from 'zod'
+import {
+  aiSettingsCommand,
+  setAiPlatformSettings,
+  setStoreShowcase,
+  showcaseCommand,
+} from '@/lib/engine/ai-credits'
 
 /** Platform host actions: manual plan activation. The database decides who is a host. */
 export async function POST(request: Request) {
@@ -29,6 +36,24 @@ export async function POST(request: Request) {
     } catch {
       return reply({ error: 'INVALID_INPUT' }, 400)
     }
+    const ai = z
+      .discriminatedUnion('action', [
+        z.strictObject({
+          action: z.literal('aiSettings'),
+          settings: aiSettingsCommand,
+        }),
+        showcaseCommand.extend({ action: z.literal('showcase') }),
+      ])
+      .safeParse(input)
+    if (ai.success)
+      return reply(
+        ai.data.action === 'aiSettings'
+          ? await setAiPlatformSettings(ctx.client, ai.data.settings)
+          : await setStoreShowcase(ctx.client, {
+              tenantId: ai.data.tenantId,
+              label: ai.data.label,
+            }),
+      )
     const parsed = activatePlanCommand.safeParse(input)
     if (!parsed.success) return reply({ error: 'INVALID_INPUT' }, 400)
     return reply(await activatePlanManually(ctx.client, parsed.data))

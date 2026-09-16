@@ -8,10 +8,10 @@ proposes; the decisions are listed at the end and in
 Owner decisions C1 to C6 (2026-09-14): approved, price excluding VAT.
 Slice 1 (plan state, gate, trial, host activation) is delivered in
 migration `20260916030000`; see "Delivered" at the end.
-Superseded in part on 2026-09-16: the read-only gate after a trial or a
-lapsed subscription is replaced by a free core with a monthly item cap and
-a paid package, Butik Plus. See [PLANS-FREE-CORE.md](PLANS-FREE-CORE.md);
-the read-only descriptions below are kept as history.
+Superseded on 2026-09-16: Komisio is free and open; the plan states remain
+for hosted subscriptions of the past but gate nothing except the read-only
+and closed states a host sets by hand. AI credits are the only metered
+resource. See [PRICING.md](PRICING.md); the descriptions below are history.
 
 ## The shape of the offer
 

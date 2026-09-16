@@ -98,7 +98,11 @@ export function ReceptionAssistance({
                     ? d.aiLimit
                     : result.error === 'USAGE_QUOTA_EXCEEDED'
                       ? d.aiQuota
-                      : d.aiFailed,
+                      : result.error === 'AI_CREDITS_EXHAUSTED'
+                        ? d.aiCredits
+                        : result.error === 'AI_CAP_REACHED'
+                          ? d.aiCap
+                          : d.aiFailed,
                 )
               if (result.status === 'unavailable')
                 throw new Error(d.aiUnavailable)

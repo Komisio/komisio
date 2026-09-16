@@ -3,13 +3,14 @@ import { z } from 'zod'
 import { platformContext } from '@/lib/platform/context'
 import { boundedJson } from '@/lib/http/bounded-json'
 import {
-  billingErrorCode,
-  openPortal,
-  startCheckout,
-} from '@/lib/engine/billing'
-import { startCreditsCheckout } from '@/lib/engine/ai-credits'
+  aiCreditsErrorCode,
+  readAiCredits,
+  removeOwnKey,
+  storeOwnKey,
+} from '@/lib/engine/ai-credits'
+import { credentialKeyConfigured } from '@/lib/platform/credentials'
 
-/** Owner actions: start Checkout or open the customer portal. Returns a Stripe URL. */
+/** Owner or admin: connect the store's own model key (sealed at once), or remove it. */
 export async function POST(request: Request) {
   const reply = (body: object, status = 200) =>
     NextResponse.json(body, {
@@ -26,44 +27,37 @@ export async function POST(request: Request) {
       return reply({ error: 'FORBIDDEN' }, 403)
     let input: unknown
     try {
-      input = await boundedJson(request, 1024)
+      input = await boundedJson(request, 2048)
     } catch {
       return reply({ error: 'INVALID_INPUT' }, 400)
     }
     const parsed = z
       .strictObject({
         tenantId: z.uuid(),
-        action: z.enum(['checkout', 'portal', 'credits']),
+        action: z.enum(['connect', 'remove']),
+        model: z.string().optional(),
+        key: z.string().optional(),
       })
       .safeParse(input)
     if (!parsed.success) return reply({ error: 'INVALID_INPUT' }, 400)
     if (parsed.data.tenantId !== ctx.active.id)
       return reply({ error: 'TENANT_CHANGED' }, 409)
-    const base = new URL(origin).origin
-    if (parsed.data.action === 'credits')
-      return reply(
-        await startCreditsCheckout(
-          ctx.client,
-          ctx.active.id,
-          ctx.user.email ?? '',
-          base,
-          process.env,
-        ),
-      )
-    if (ctx.active.role !== 'owner') return reply({ error: 'FORBIDDEN' }, 403)
-    return reply(
-      parsed.data.action === 'checkout'
-        ? await startCheckout(
-            ctx.client,
-            ctx.active.id,
-            ctx.user.email ?? '',
-            base,
-            process.env,
-          )
-        : await openPortal(ctx.client, ctx.active.id, base, process.env),
-    )
+    if (parsed.data.action === 'connect') {
+      if (!credentialKeyConfigured())
+        return reply({ error: 'CREDENTIAL_KEY_MISSING' }, 503)
+      await storeOwnKey(ctx.client, {
+        tenantId: ctx.active.id,
+        provider: 'openai',
+        model: parsed.data.model?.trim() ?? '',
+        key: parsed.data.key?.trim() ?? '',
+      })
+    } else await removeOwnKey(ctx.client, ctx.active.id)
+    return reply({ credits: await readAiCredits(ctx.client, ctx.active.id) })
   } catch (e) {
-    const code = billingErrorCode(e instanceof Error ? e.message : '')
-    return reply({ error: code }, code === 'FORBIDDEN' ? 403 : 409)
+    const code = aiCreditsErrorCode(e instanceof Error ? e.message : '')
+    return reply(
+      { error: code },
+      code === 'FORBIDDEN' ? 403 : code === 'INVALID_INPUT' ? 400 : 409,
+    )
   }
 }

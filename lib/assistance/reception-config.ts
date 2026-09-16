@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { readStorePolicy } from '../engine/store-policy'
+import { readOwnKeyConfig } from '../engine/ai-credits'
 export type ReceptionAIConfig = { key: string; model: string }
 
 /** Reads the tenant's policy through the caller's authenticated client, then resolves. */
@@ -9,8 +10,15 @@ export async function resolveReceptionAssistance(
   tenantId: string,
   env: Record<string, string | undefined> = process.env,
 ): Promise<ReceptionAIConfig | null> {
+  // The provider switch of the deployment stays the kill switch, also for a
+  // store's own key. A store with its own key runs on it (and is never
+  // metered); it still needs the assistant switched on in its policy.
   if (env.KOMISIO_RECEPTION_AI_PROVIDER !== 'openai') return null
   const policy = await readStorePolicy(client, tenantId)
+  if (policy.policy.assistanceEnabled === true) {
+    const own = await readOwnKeyConfig(client, tenantId, env).catch(() => null)
+    if (own) return own
+  }
   return receptionAIConfig(tenantId, env, policy.policy)
 }
 /** Tenant enablement comes from the store policy (P1 S9); the environment

@@ -30,6 +30,9 @@ import { readChainOverview } from '@/lib/engine/chains'
 import { ChainPanel } from '@/components/platform/chain-panel'
 import Link from 'next/link'
 import { ConnectorsPanel } from '@/components/platform/connectors-panel'
+import { AiCreditsPanel } from '@/components/platform/ai-credits-panel'
+import { readAiCredits } from '@/lib/engine/ai-credits'
+import { stripeCreditsConfigured } from '@/extensions/stripe/api'
 import {
   appOrigin,
   connectorsEnabled,
@@ -37,7 +40,14 @@ import {
   readConnectors,
 } from '@/lib/engine/connectors'
 
-const tabs = ['policy', 'profile', 'store', 'printing', 'connectors'] as const
+const tabs = [
+  'policy',
+  'profile',
+  'store',
+  'printing',
+  'credits',
+  'connectors',
+] as const
 type Tab = (typeof tabs)[number]
 
 /**
@@ -60,7 +70,9 @@ export default async function Settings({
       ? (query.tab as Tab)
       : query.billing
         ? 'store'
-        : 'policy'
+        : query.credits
+          ? 'credits'
+          : 'policy'
   const manages = ['owner', 'admin'].includes(active.role)
   const policy =
     intake && tab === 'policy'
@@ -92,6 +104,8 @@ export default async function Settings({
       : null
   const connectors =
     tab === 'connectors' ? await readConnectors(ctx.client, active.id) : null
+  const aiCredits =
+    tab === 'credits' ? await readAiCredits(ctx.client, active.id) : null
   const chain =
     tab === 'store' ? await readChainOverview(ctx.client, active.id) : null
   const events =
@@ -173,12 +187,20 @@ export default async function Settings({
           d={d}
         />
       )}
+      {tab === 'credits' && aiCredits && (
+        <AiCreditsPanel
+          tenantId={active.id}
+          state={aiCredits}
+          canManage={manages}
+          canBuy={manages && stripeCreditsConfigured(process.env)}
+          d={d.credits}
+        />
+      )}
       {tab === 'connectors' && connectorsEnabled() && (
         <ConnectorsPanel
           tenantId={active.id}
           connectors={connectors ?? []}
           endpoint={`${appOrigin()}${mcpPath}`}
-          plus={!plan || plan.tier !== 'free'}
           locale={ctx.locale}
           d={d.connectors}
         />

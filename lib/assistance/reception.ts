@@ -15,6 +15,8 @@ export type ReceptionAssistance = {
     evidence: ReceptionEvidence,
     signal: AbortSignal,
   ) => Promise<unknown>
+  /** Token usage of the last call, when the provider reports it; settles the credit reservation. */
+  usage?: () => { inputTokens: number; outputTokens: number } | null
 }
 
 /** Optional replaceable port; no provider call or credentials in the core. */

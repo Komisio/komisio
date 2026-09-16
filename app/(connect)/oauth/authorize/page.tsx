@@ -8,7 +8,6 @@ import {
   readClient,
   requestedScopes,
 } from '@/lib/engine/connectors'
-import { readPlanStatus } from '@/lib/engine/plans'
 import { ConnectorConsent } from '@/components/platform/connector-consent'
 
 /**
@@ -61,12 +60,7 @@ export default async function Authorize({
         <p role="alert">{d.connectors.consent.notMember}</p>
       </section>
     )
-  const stores = await Promise.all(
-    members.map(async (t) => {
-      const plan = await readPlanStatus(ctx.client, t.id)
-      return { id: t.id, name: t.name, plus: !plan || plan.tier !== 'free' }
-    }),
-  )
+  const stores = members.map((t) => ({ id: t.id, name: t.name }))
   return (
     <ConnectorConsent
       clientName={client.name}

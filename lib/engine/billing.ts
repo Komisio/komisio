@@ -3,6 +3,7 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import {
   createCheckoutSession,
   createPortalSession,
+  creditsPurchase,
   mapStripeEvent,
   stripeConfigured,
   type StripeEnvironment,
@@ -93,6 +94,17 @@ export async function applyStripeEvent(
   client: SupabaseClient,
   event: StripeEvent,
 ) {
+  const purchase = creditsPurchase(event)
+  if (purchase) {
+    const p = await client.rpc('record_ai_credit_purchase', {
+      p_event_id: purchase.eventId,
+      p_tenant: purchase.tenantId,
+      p_amount_ore: purchase.amountOre,
+      p_detail: { status: event.data.object.status ?? null },
+    })
+    if (p.error) throw new Error(p.error.message)
+    return outcome.parse(p.data)
+  }
   const mapped = mapStripeEvent(event)
   const r = await client.rpc('record_billing_event', {
     p_event_id: mapped.eventId,
@@ -105,14 +117,13 @@ export async function applyStripeEvent(
     p_detail: { status: event.data.object.status ?? null },
   })
   if (r.error) throw new Error(r.error.message)
-  return z
-    .object({
-      replayed: z.boolean(),
-      matched: z.boolean().optional(),
-      state: z.string().optional(),
-    })
-    .parse(r.data)
+  return outcome.parse(r.data)
 }
+const outcome = z.object({
+  replayed: z.boolean(),
+  matched: z.boolean().optional(),
+  state: z.string().optional(),
+})
 
 export const billingErrorCodes = [
   'FORBIDDEN',

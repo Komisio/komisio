@@ -1,5 +1,10 @@
 # Free core and Butik Plus
 
+**Superseded the same day (2026-09-16).** The owner replaced this model with
+an open core and AI credits: no cap, no Plus, only the assistant's model usage
+is metered. See [PRICING.md](PRICING.md). Kept as history; migration
+`20260916440000` removed every gate described below.
+
 Decision by the owner on 2026-09-16 ("alternativ 5"), designed and delivered
 by Fable in migration `20260916420000`. It replaces the single paid plan with
 a read-only gate described in [ONBOARDING-AND-PLANS.md](ONBOARDING-AND-PLANS.md)

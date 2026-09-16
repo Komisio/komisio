@@ -20,6 +20,12 @@ export function stripeConfigured(env: StripeEnvironment) {
     /^price_[A-Za-z0-9]{8,}$/.test(env.STRIPE_PRICE_ID ?? '')
   )
 }
+export function stripeCreditsConfigured(env: StripeEnvironment) {
+  return (
+    stripeConfigured(env) &&
+    /^price_[A-Za-z0-9]{8,}$/.test(env.STRIPE_CREDITS_PRICE_ID ?? '')
+  )
+}
 export function stripeWebhookConfigured(env: StripeEnvironment) {
   return /^whsec_[A-Za-z0-9]{8,}$/.test(env.STRIPE_WEBHOOK_SECRET ?? '')
 }
@@ -114,6 +120,63 @@ export async function createCheckoutSession(
   return session.parse(data)
 }
 
+/** One-time Checkout for a pack of AI credits; the amount travels in metadata for the webhook. */
+export async function createCreditsCheckoutSession(
+  env: StripeEnvironment,
+  input: {
+    tenantId: string
+    email: string
+    amountOre: number
+    successUrl: string
+    cancelUrl: string
+    idempotencyKey: string
+  },
+  http: typeof fetch = globalThis.fetch,
+) {
+  if (!stripeCreditsConfigured(env)) throw new Error('STRIPE_NOT_CONFIGURED')
+  const data = await stripePost(
+    env,
+    '/checkout/sessions',
+    {
+      mode: 'payment',
+      line_items: [{ price: env.STRIPE_CREDITS_PRICE_ID, quantity: 1 }],
+      client_reference_id: input.tenantId,
+      customer_email: input.email,
+      success_url: input.successUrl,
+      cancel_url: input.cancelUrl,
+      locale: 'sv',
+      billing_address_collection: 'required',
+      tax_id_collection: { enabled: true },
+      metadata: {
+        tenant_id: input.tenantId,
+        kind: 'ai_credits',
+        amount_ore: String(input.amountOre),
+      },
+    },
+    input.idempotencyKey,
+    http,
+  )
+  return session.parse(data)
+}
+/** Pure: a completed credits purchase in an event, or null. */
+export function creditsPurchase(event: StripeEvent) {
+  const o = event.data.object
+  if (
+    event.type !== 'checkout.session.completed' ||
+    o.mode !== 'payment' ||
+    o.metadata?.kind !== 'ai_credits'
+  )
+    return null
+  const tenantId = o.metadata.tenant_id ?? o.client_reference_id ?? ''
+  const amountOre = Number(o.metadata.amount_ore ?? '')
+  if (
+    !/^[0-9a-f-]{36}$/.test(tenantId) ||
+    !Number.isInteger(amountOre) ||
+    amountOre <= 0
+  )
+    return null
+  return { eventId: event.id, tenantId, amountOre }
+}
 export async function createPortalSession(
   env: StripeEnvironment,
   input: { customerId: string; returnUrl: string; idempotencyKey: string },

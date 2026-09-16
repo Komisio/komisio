@@ -2339,6 +2339,9 @@
       "showcaseRemove": "Ta bort",
       "emailDailyCap": "Meddelanden per butik och dygn",
       "inviteDailyCap": "Inbjudningar per butik och dygn",
+      "emailNewCap": "Meddelanden per dygn, ny butik",
+      "inviteNewCap": "Inbjudningar per dygn, ny butik",
+      "emailTrustDays": "Dygn innan en butik räknas som etablerad",
       "connectorDailyCap": "Anrop per kopplad assistent och dygn"
     }
   }

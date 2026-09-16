@@ -164,6 +164,9 @@ export const aiPlatformSettings = z.object({
   connectorDailyCap: z.number().int(),
   emailDailyCap: z.number().int(),
   inviteDailyCap: z.number().int(),
+  emailNewCap: z.number().int(),
+  inviteNewCap: z.number().int(),
+  emailTrustDays: z.number().int(),
   showcase: z.array(z.object({ tenantId: z.uuid(), label: z.string() })),
 })
 export type AiPlatformSettings = z.infer<typeof aiPlatformSettings>
@@ -184,6 +187,11 @@ export const aiSettingsCommand = z.strictObject({
   connectorDailyCap: z.number().int().min(0).max(10_000_000).optional(),
   emailDailyCap: z.number().int().min(0).max(1_000_000).optional(),
   inviteDailyCap: z.number().int().min(0).max(100_000).optional(),
+  emailNewCap: z.number().int().min(0).max(1_000_000).optional(),
+  inviteNewCap: z.number().int().min(0).max(100_000).optional(),
+  // A year is far beyond any useful trust window and keeps a typo from
+  // making every store new for ever.
+  emailTrustDays: z.number().int().min(0).max(365).optional(),
 })
 export async function setAiPlatformSettings(
   client: SupabaseClient,

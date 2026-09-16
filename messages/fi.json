@@ -2339,6 +2339,9 @@
       "showcaseRemove": "Poista",
       "emailDailyCap": "Viestejä per kauppa ja vuorokausi",
       "inviteDailyCap": "Kutsuja per kauppa ja vuorokausi",
+      "emailNewCap": "Viestejä vuorokaudessa, uusi kauppa",
+      "inviteNewCap": "Kutsuja vuorokaudessa, uusi kauppa",
+      "emailTrustDays": "Vuorokausia ennen kuin kauppa katsotaan vakiintuneeksi",
       "connectorDailyCap": "Kutsuja per liitetty avustaja ja vuorokausi"
     }
   }

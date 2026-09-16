@@ -204,7 +204,10 @@ describe('hosted MCP connector', () => {
     })
     expect(hosted.hosted).toBe(true)
     expect(hostedToolAllowed('komisio_find_items')).toBe(true)
-    expect(hostedToolAllowed('komisio_read_receipt')).toBe(false)
-    expect(hostedExcludedTools.size).toBe(18)
+    // The detail reads became engine functions; the reception surface has not.
+    expect(hostedToolAllowed('komisio_read_receipt')).toBe(true)
+    expect(hostedToolAllowed('komisio_read_seller_ledger')).toBe(true)
+    expect(hostedToolAllowed('komisio_read_reception_photo')).toBe(false)
+    expect(hostedExcludedTools.size).toBe(13)
   })
 })

@@ -66,16 +66,12 @@ export async function readSellerLedger(
   tenantInput: string,
   sellerInput: string,
 ) {
-  const { data, error } = await client
-    .from('seller_ledger_entries')
-    .select('id,kind,amount_ore,reference_kind,reference_id,reason,occurred_at')
-    .eq('tenant_id', z.uuid().parse(tenantInput))
-    .eq('seller_id', z.uuid().parse(sellerInput))
-    .order('occurred_at', { ascending: false })
-    .order('id')
-    .limit(50)
-  if (error) throw new Error('Unable to read seller ledger')
-  return z.array(entryRow).parse(data)
+  const r = await client.rpc('seller_ledger_page', {
+    p_tenant: z.uuid().parse(tenantInput),
+    p_seller: z.uuid().parse(sellerInput),
+  })
+  if (r.error) throw new Error('Unable to read seller ledger')
+  return z.array(entryRow).parse(r.data)
 }
 
 /** "-5.00" → -500; exact decimal text, never float. */

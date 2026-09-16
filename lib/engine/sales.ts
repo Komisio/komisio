@@ -78,48 +78,30 @@ export async function readSales(
   filterInput: SalesFilter = {},
 ) {
   const filter = salesFilter.parse(filterInput)
-  let query = client
-    .from('sales')
-    .select(saleColumns)
-    .eq('tenant_id', z.uuid().parse(tenantInput))
-  if (filter.provider) query = query.eq('provider', filter.provider)
-  if (filter.externalId) query = query.eq('external_id', filter.externalId)
-  if (filter.status) query = query.eq('status', filter.status)
-  const { data, error } = await query
-    .order('occurred_at', { ascending: false })
-    .order('id')
-    .limit(filter.limit)
-  if (error) throw new Error('Unable to read sales')
-  return z.array(saleRow).parse(data)
+  const r = await client.rpc('sales_page', {
+    p_tenant: z.uuid().parse(tenantInput),
+    p_provider: filter.provider ?? null,
+    p_external_id: filter.externalId ?? null,
+    p_status: filter.status ?? null,
+    p_limit: filter.limit,
+  })
+  if (r.error) throw new Error('Unable to read sales')
+  return z.array(saleRow).parse(r.data)
 }
 
-/** One sale with its frozen lines, or null. */
+/** One sale with the lines exactly as they were frozen. */
 export async function readSale(
   client: SupabaseClient,
   tenantInput: string,
   saleInput: string,
 ) {
-  const tenantId = z.uuid().parse(tenantInput),
-    saleId = z.uuid().parse(saleInput)
-  const sale = await client
-    .from('sales')
-    .select(saleColumns)
-    .eq('tenant_id', tenantId)
-    .eq('id', saleId)
-    .maybeSingle()
-  if (sale.error) throw new Error('Unable to read sale')
-  if (!sale.data) return null
-  const lines = await client
-    .from('sale_lines')
-    .select(lineColumns)
-    .eq('tenant_id', tenantId)
-    .eq('sale_id', saleId)
-    .order('line_no')
-  if (lines.error) throw new Error('Unable to read sale')
-  return {
-    sale: saleRow.parse(sale.data),
-    lines: z.array(lineRow).parse(lines.data),
-  }
+  const r = await client.rpc('sale_detail', {
+    p_tenant: z.uuid().parse(tenantInput),
+    p_sale: z.guid().parse(saleInput),
+  })
+  if (r.error) throw new Error('Unable to read sale')
+  if (r.data === null) return null
+  return z.object({ sale: saleRow, lines: z.array(lineRow) }).parse(r.data)
 }
 
 /** Item ids that already sit on a completed sale. */

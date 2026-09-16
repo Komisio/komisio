@@ -102,3 +102,38 @@ host switch and `STRIPE_CREDITS_PRICE_ID`, owner action A16).
 - BankID sign-in as a paid add-on (SEK 49 a month) once an eID broker is
   chosen; Swish payouts stay free.
 - A hosted copilot on the same credits.
+
+
+## Fixed credit purchase currencies (2026-09-16)
+
+Each one-time purchase adds exactly 100 credits (10,000 internal ore):
+
+| Store country | Payment | Vercel configuration |
+| --- | --- | --- |
+| Sweden / legacy profile without country | 100 SEK | `STRIPE_CREDITS_PRICE_ID` |
+| Norway | 100 NOK | `STRIPE_CREDITS_PRICE_ID_NOK` |
+| Denmark | 65 DKK | `STRIPE_CREDITS_PRICE_ID_DKK` |
+| Other supported European countries | 9 EUR | `STRIPE_CREDITS_PRICE_ID_EUR` |
+
+These are fixed owner-approved package prices, not exchange rates. Owners or
+admins select country under Store profile and publish a new version. Existing
+profile versions stay unchanged. The server reads the current profile itself;
+the browser cannot supply a currency, price ID or credit amount to checkout.
+Missing price configuration blocks that currency instead of falling back to SEK.
+The configured Stripe price must be active, one-time, and match the displayed
+currency and amount. Checkout locale follows the customer's browser. The
+100-credit pack requires platform `packOre=10000`; changing it disables checkout
+until matching pack pricing is implemented. Internal usage and purchased credit
+balances remain SEK-denominated. Store sales currency is unaffected.
+
+Create these prices in the same Stripe test account and product as the existing
+SEK price, save the environment variables on the staging project's Production
+target, and redeploy. The marketing site's SEK-only notice should only be removed
+for deployments where these prices and country selection have been verified.
+
+Recovery: if checkout charges an incorrect price or fails after deployment,
+disable purchases for that currency by removing its price setting and redeploying.
+Keep support for the optional country field: old strict parsers cannot read newly
+published profiles. Any code rollback must retain that compatibility and use the
+normal checked PR flow. Keep the additive validator and immutable profile versions;
+do not edit granted credit events.

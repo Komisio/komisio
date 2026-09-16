@@ -2,6 +2,10 @@
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
+import {
+  formatCreditPrice,
+  type CreditPrice,
+} from '@/lib/platform/credit-prices'
 import { credits, type AiCredits } from '@/lib/engine/ai-credits'
 
 /** AI credits under Settings: what is left this month, how to get more, and the store's own key. */
@@ -10,12 +14,16 @@ export function AiCreditsPanel({
   state,
   canManage,
   canBuy,
+  price,
+  locale,
   d,
 }: {
   tenantId: string
   state: AiCredits
   canManage: boolean
   canBuy: boolean
+  price: CreditPrice
+  locale: string
   d: Dictionary['credits']
 }) {
   const running = useRef(false)
@@ -26,13 +34,14 @@ export function AiCreditsPanel({
   const [key, setKey] = useState('')
   const fill = (text: string) =>
     text
-      .replace('{included}', String(credits(current.includedOre)))
-      .replace('{left}', String(credits(current.includedLeftOre)))
-      .replace('{purchased}', String(credits(current.purchasedLeftOre)))
-      .replace('{used}', String(credits(current.usedThisPeriodOre)))
-      .replace('{pack}', String(credits(current.packOre)))
-      .replace('{items}', String(current.estimatedItemsPerMonth))
-      .replace('{model}', current.ownModel ?? '')
+      .replaceAll('{included}', String(credits(current.includedOre)))
+      .replaceAll('{left}', String(credits(current.includedLeftOre)))
+      .replaceAll('{purchased}', String(credits(current.purchasedLeftOre)))
+      .replaceAll('{used}', String(credits(current.usedThisPeriodOre)))
+      .replaceAll('{pack}', '100')
+      .replaceAll('{price}', formatCreditPrice(price, locale))
+      .replaceAll('{items}', String(current.estimatedItemsPerMonth))
+      .replaceAll('{model}', current.ownModel ?? '')
   async function post(url: string, body: object, label: string) {
     if (running.current) return null
     running.current = true

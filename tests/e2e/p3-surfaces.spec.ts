@@ -99,16 +99,22 @@ test('store profile publishes a version that anyone can read by slug', async ({
     await expect(
       profile.getByText(d.storeProfile.defaults, { exact: true }),
     ).toBeVisible()
-    await profile.getByLabel(d.storeProfile.city, { exact: true }).fill('Umeå')
+    await profile.getByLabel(d.storeProfile.city, { exact: true }).fill('Oslo')
+    await profile
+      .getByLabel(d.storeProfile.country, { exact: true })
+      .selectOption('NO')
     await profile
       .getByLabel(d.storeProfile.concept, { exact: true })
       .fill('Synthetic concept text')
+    const published = page.waitForResponse(
+      (response) =>
+        response.url().endsWith('/api/intake') &&
+        response.request().method() === 'POST',
+    )
     await profile
       .getByRole('button', { name: d.storeProfile.publish, exact: true })
       .click()
-    await expect(
-      page.getByText(d.storeProfile.published, { exact: true }),
-    ).toBeVisible()
+    expect((await published).ok()).toBe(true)
     await page.reload()
     await expect(
       page
@@ -125,7 +131,11 @@ test('store profile publishes a version that anyone can read by slug', async ({
       .rows[0].p
     await f.db.query('commit')
     expect(pub.version).toBe(1)
-    expect(pub.profile.address.city).toBe('Umeå')
+    expect(pub.profile.address.city).toBe('Oslo')
+    expect(pub.profile.address.country).toBe('NO')
+    await expect(
+      profile.getByLabel(d.storeProfile.country, { exact: true }),
+    ).toHaveValue('NO')
     expect(pub.profile.concept).toBe('Synthetic concept text')
     expect(Object.keys(pub).sort()).toEqual([
       'name',

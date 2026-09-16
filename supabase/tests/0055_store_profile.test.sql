@@ -61,5 +61,10 @@ select is((select previous_id from store_profile_versions where id=current_setti
 select is((select count(*) from operation_queue_filtered_page(current_setting('test.tenant')::uuid,'all',null,null,'updateStoreProfile')),2::bigint,'queue filters the kind');
 reset role;
 select throws_ok($$update store_profile_versions set profile=profile||'{"concept":"x"}' where id=current_setting('test.v1')::uuid$$,'55000',null,'versions are immutable');
+-- Country is optional for immutable legacy profiles and validated on new versions.
+select ok(komisio_private.valid_store_profile(current_setting('test.profile')::jsonb),'legacy profile without country remains valid');
+select ok(komisio_private.valid_store_profile(jsonb_set(current_setting('test.profile')::jsonb,'{address,country}','"NO"')),'Norway is a supported store country');
+select ok(not komisio_private.valid_store_profile(jsonb_set(current_setting('test.profile')::jsonb,'{address,country}','"ZZ"')),'unknown country is rejected');
+select ok(not komisio_private.valid_store_profile(jsonb_set(current_setting('test.profile')::jsonb,'{address,country}','null')),'explicit null country is rejected');
 select * from finish();
 rollback;

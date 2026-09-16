@@ -32,6 +32,10 @@ import Link from 'next/link'
 import { ConnectorsPanel } from '@/components/platform/connectors-panel'
 import { AiCreditsPanel } from '@/components/platform/ai-credits-panel'
 import { readAiCredits } from '@/lib/engine/ai-credits'
+import {
+  creditPriceForCountry,
+  creditPackOre,
+} from '@/lib/platform/credit-prices'
 import { stripeCreditsConfigured } from '@/extensions/stripe/api'
 import {
   appOrigin,
@@ -83,7 +87,7 @@ export default async function Settings({
       ? await readUsageSummary(ctx.client, active.id)
       : []
   const profile =
-    intake && tab === 'profile'
+    (intake && tab === 'profile') || tab === 'credits'
       ? await readStoreProfile(ctx.client, active.id)
       : null
   const [printers, jobs, formats, devices, templates] =
@@ -106,6 +110,7 @@ export default async function Settings({
     tab === 'connectors' ? await readConnectors(ctx.client, active.id) : null
   const aiCredits =
     tab === 'credits' ? await readAiCredits(ctx.client, active.id) : null
+  const creditPrice = creditPriceForCountry(profile?.profile?.address.country)
   const chain =
     tab === 'store' ? await readChainOverview(ctx.client, active.id) : null
   const events =
@@ -192,7 +197,13 @@ export default async function Settings({
           tenantId={active.id}
           state={aiCredits}
           canManage={manages}
-          canBuy={manages && stripeCreditsConfigured(process.env)}
+          canBuy={
+            manages &&
+            aiCredits.packOre === creditPackOre &&
+            stripeCreditsConfigured(process.env, creditPrice.currency)
+          }
+          price={creditPrice}
+          locale={ctx.locale}
           d={d.credits}
         />
       )}

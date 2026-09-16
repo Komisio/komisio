@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { storeCountries } from '../platform/credit-prices'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 // Store profile (P3): the store's public-facing text as a versioned document.
@@ -10,6 +11,7 @@ export const storeProfileBody = z.strictObject({
     street: z.string().max(120),
     postalCode: z.string().max(20),
     city: z.string().max(120),
+    country: z.enum(storeCountries).optional(),
   }),
   contact: z.strictObject({
     email: z.union([z.literal(''), z.email().max(254)]),

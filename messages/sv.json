@@ -782,7 +782,9 @@
       "fri": "Fredag",
       "sat": "Lördag",
       "sun": "Söndag"
-    }
+    },
+    "country": "Land",
+    "countryHelp": "Butikens land bestämmer valutan för köp av AI-krediter."
   },
   "storePolicy": {
     "markdowns": "Prissänkningar",
@@ -2289,14 +2291,14 @@
   },
   "credits": {
     "title": "AI-krediter",
-    "intro": "Komisio är gratis och öppen källkod, även när Inority driftar det. Det enda som mäts är AI-assistentens modellanrop när de går på Komisios egen nyckel. En kredit är en krona.",
-    "offer": "{included} krediter ingår varje månad, vilket normalt räcker till cirka {items} mottagna varor. När de är slut köper du {pack} nya för {pack} kr eller kopplar butikens egen modellnyckel; då dras inga krediter.",
+    "intro": "Komisio är gratis och öppen källkod, även när Inority driftar det. Det enda som mäts är AI-assistentens modellanrop när de går på Komisios egen nyckel. En kredit motsvarar en svensk krona i modellkostnad.",
+    "offer": "{included} krediter ingår varje månad, vilket normalt räcker till cirka {items} mottagna varor. När de är slut köper du {pack} nya för {price} eller kopplar butikens egen modellnyckel; då dras inga krediter.",
     "selfHosted": "Den här installationen mäter inga krediter: assistenten går på installationens egen nyckel.",
     "includedLeft": "Kvar av månadens krediter",
     "purchasedLeft": "Köpta krediter",
     "usedThisMonth": "Använt den här månaden",
     "capReached": "Komisios gemensamma AI-pott för månaden är slut. Köpta krediter och egen nyckel fungerar fortfarande.",
-    "buy": "Köp {pack} krediter för {pack} kr",
+    "buy": "Köp {pack} krediter för {price}",
     "buyUnavailable": "Köp är inte tillgängligt i den här miljön ännu.",
     "working": "Arbetar…",
     "ownKeyHeading": "Egen modellnyckel",

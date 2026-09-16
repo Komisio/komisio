@@ -782,7 +782,9 @@
       "fri": "Friday",
       "sat": "Saturday",
       "sun": "Sunday"
-    }
+    },
+    "country": "Country",
+    "countryHelp": "The store country determines the currency for AI credit purchases."
   },
   "storePolicy": {
     "markdowns": "Markdowns",
@@ -2289,14 +2291,14 @@
   },
   "credits": {
     "title": "AI credits",
-    "intro": "Komisio is free and open source, also when Inority hosts it. The only thing metered is the AI assistant's model calls when they run on Komisio's own key. One credit is one krona.",
-    "offer": "{included} credits are included every month, normally enough for about {items} received items. When they run out you buy {pack} more for {pack} SEK or connect the store's own model key; then no credits are drawn.",
+    "intro": "Komisio is free and open source, also when Inority hosts it. The only thing metered is the AI assistant's model calls when they run on Komisio's own key. One credit covers SEK 1 of model cost.",
+    "offer": "{included} credits are included every month, normally enough for about {items} received items. When they run out you buy {pack} more for {price} or connect the store's own model key; then no credits are drawn.",
     "selfHosted": "This installation meters no credits: the assistant runs on the installation's own key.",
     "includedLeft": "Left of this month's credits",
     "purchasedLeft": "Purchased credits",
     "usedThisMonth": "Used this month",
     "capReached": "Komisio's shared AI budget for the month is used up. Purchased credits and an own key still work.",
-    "buy": "Buy {pack} credits for {pack} SEK",
+    "buy": "Buy {pack} credits for {price}",
     "buyUnavailable": "Purchases are not available in this environment yet.",
     "working": "Working…",
     "ownKeyHeading": "Own model key",

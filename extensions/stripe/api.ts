@@ -1,5 +1,10 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
 import { z } from 'zod'
+import {
+  creditPrices,
+  creditPackOre,
+  type CreditCurrency,
+} from '../../lib/platform/credit-prices'
 import { boundedJson } from '../../lib/http/bounded-json'
 
 // Stripe over plain fetch: hosted Checkout for the subscription, the
@@ -20,10 +25,21 @@ export function stripeConfigured(env: StripeEnvironment) {
     /^price_[A-Za-z0-9]{8,}$/.test(env.STRIPE_PRICE_ID ?? '')
   )
 }
-export function stripeCreditsConfigured(env: StripeEnvironment) {
+export function creditsPriceId(
+  env: StripeEnvironment,
+  currency: CreditCurrency,
+) {
+  return currency === 'SEK'
+    ? env.STRIPE_CREDITS_PRICE_ID
+    : env[`STRIPE_CREDITS_PRICE_ID_${currency}`]
+}
+export function stripeCreditsConfigured(
+  env: StripeEnvironment,
+  currency: CreditCurrency = 'SEK',
+) {
   return (
     stripeConfigured(env) &&
-    /^price_[A-Za-z0-9]{8,}$/.test(env.STRIPE_CREDITS_PRICE_ID ?? '')
+    /^price_[A-Za-z0-9]{8,}$/.test(creditsPriceId(env, currency) ?? '')
   )
 }
 export function stripeWebhookConfigured(env: StripeEnvironment) {
@@ -127,30 +143,69 @@ export async function createCreditsCheckoutSession(
     tenantId: string
     email: string
     amountOre: number
+    currency?: CreditCurrency
     successUrl: string
     cancelUrl: string
     idempotencyKey: string
   },
   http: typeof fetch = globalThis.fetch,
 ) {
-  if (!stripeCreditsConfigured(env)) throw new Error('STRIPE_NOT_CONFIGURED')
+  const currency = input.currency ?? 'SEK'
+  if (!stripeCreditsConfigured(env, currency))
+    throw new Error('STRIPE_NOT_CONFIGURED')
+  if (input.amountOre !== creditPackOre) throw new Error('INVALID_INPUT')
+  const priceId = creditsPriceId(env, currency)!
+  const expected = creditPrices[currency]
+  let priceResponse: Response
+  try {
+    priceResponse = await http(`${API}/prices/${priceId}`, {
+      headers: {
+        Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+        'Stripe-Version': '2024-06-20',
+      },
+      cache: 'no-store',
+      redirect: 'error',
+      signal: AbortSignal.timeout(15000),
+    })
+  } catch {
+    throw new Error('STRIPE_REQUEST_FAILED')
+  }
+  if (!priceResponse.ok) throw new Error('STRIPE_REQUEST_FAILED')
+  const price = z
+    .object({
+      active: z.boolean(),
+      type: z.string(),
+      currency: z.string(),
+      unit_amount: z.number().int().nullable(),
+    })
+    .parse(await boundedJson(priceResponse, 262144))
+  if (
+    !price.active ||
+    price.type !== 'one_time' ||
+    price.currency !== currency.toLowerCase() ||
+    price.unit_amount !== expected.amountMinor
+  )
+    throw new Error('STRIPE_NOT_CONFIGURED')
   const data = await stripePost(
     env,
     '/checkout/sessions',
     {
       mode: 'payment',
-      line_items: [{ price: env.STRIPE_CREDITS_PRICE_ID, quantity: 1 }],
+      line_items: [{ price: priceId, quantity: 1 }],
       client_reference_id: input.tenantId,
       customer_email: input.email,
       success_url: input.successUrl,
       cancel_url: input.cancelUrl,
-      locale: 'sv',
+      locale: 'auto',
+      currency: currency.toLowerCase(),
       billing_address_collection: 'required',
       tax_id_collection: { enabled: true },
       metadata: {
         tenant_id: input.tenantId,
         kind: 'ai_credits',
         amount_ore: String(input.amountOre),
+        payment_currency: currency,
+        payment_amount_minor: String(expected.amountMinor),
       },
     },
     input.idempotencyKey,

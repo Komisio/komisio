@@ -40,8 +40,12 @@ Cross-cutting, delivered today or this week: eight product languages
 
 Also open on the checklist: P7 (Fortnox, Shopify, Zettle registered with
 production callback URLs), P11 (the legal texts are on the site branch;
-publish them), a `print-v*` tag for the production Komisio Print package,
-and dedicated tokens instead of the owner's personal ones in GitHub.
+publish them), a `print-v*` tag for the production Komisio Print package
+(everything around the tag was configured on 2026-09-16: the
+`production-print` environment holds the production URL and publishable key,
+and `PRINT_PRODUCTION_ENABLED=true` makes the release workflow build a
+production package), and dedicated tokens instead of the owner's personal
+ones in GitHub.
 
 ## What the roadmap still holds after the launch
 

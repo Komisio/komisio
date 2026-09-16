@@ -61,7 +61,9 @@ select throws_ok($$select seller_ledger_page(current_setting('test.tenant')::uui
 select throws_ok($$select day_close_page(current_setting('test.tenant')::uuid)$$,'42501',null,'an outsider cannot read day closes');
 -- The connector reaches each one under the scope that covers it.
 reset role;
-select is((select count(*) from connector_functions where function_name in ('item_detail','sales_page','sale_detail','seller_ledger_page','day_close_page')),5::bigint,'each read is listed for the connector');
+-- Counted by name, not by row: a function may be listed under more than one
+-- scope when a tool that needs it asks for a different one.
+select is((select count(distinct function_name) from connector_functions where function_name in ('item_detail','sales_page','sale_detail','seller_ledger_page','day_close_page')),5::bigint,'each read is listed for the connector');
 select is((select scope from connector_functions where function_name='sale_detail'),'sales:read','a receipt needs the sales read scope');
 select * from finish();
 rollback;

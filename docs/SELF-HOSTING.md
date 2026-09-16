@@ -47,9 +47,8 @@ Do not describe this development installation as an external production service.
 
 ## External test deployment
 
-The hosted staging deployment is running on Vercel and Supabase. See
-[platform status](PLATFORM-STATUS.md) for verified journeys and remaining gates.
-The steps below describe setup requirements, not a completed validation of every
+The hosted staging deployment is running on Vercel and Supabase. The steps
+below describe setup requirements, not a completed validation of every
 self-hosted topology.
 
 Use the same app against hosted Supabase or a complete self-hosted Supabase stack

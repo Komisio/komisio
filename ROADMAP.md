@@ -12,12 +12,11 @@ The milestones below are the platform-foundation history from September
 
 Priority when this file was last rewritten (2026-09-12): **AI-first garment reception through shared engine operations, with thin operator and seller surfaces**.
 
-Active execution plan: [12 September daytime roadmap](docs/DAY-PLAN-2026-09-12.md).
-Resume from [development handover](docs/DEVELOPMENT-HANDOFF.md), checking Git and
+Resume by checking Git and
 open PRs before starting a new slice. The earlier overnight window has ended.
 
 The platform-first milestones below describe the foundation. The owner's latest
-direction is the [single-garment reception plan](docs/AUTONOMOUS-INTAKE-2026-09-12.md):
+direction is single-garment reception:
 durable observation snapshots and reviewed prices/terms, secure mobile seller
 response, protected image capture and an optional model adapter. The shared engine
 must support these workflows without a GUI dependency. Mobile response is now
@@ -36,8 +35,6 @@ inventory or authorizes payouts.
 
 The platform is deployed to staging, and registration plus invitation-email
 receipt have been confirmed. Hosted invitation acceptance remains unresolved.
-See [current platform evidence](docs/PLATFORM-STATUS.md) and the
-[11 September work plan](docs/DAY-PLAN-2026-09-11.md).
 
 The owner has requested registration, tenant creation, login, user administration and a coherent GUI before consignment logic. This roadmap supersedes the earlier instruction to build intake immediately after the database foundation. The status below distinguishes the implemented local preview from the remaining pilot and domain work.
 
@@ -240,8 +237,7 @@ Verified on 2026-09-10 against Docker Desktop / Supabase CLI 2.117.0 and Postgre
 race, lint, TypeScript checks and production compilation. Browser verification
 covers new accounts with local verification email, tenant switching, invitations,
 role denial, stale tenant forms, access removal, desktop/mobile views, language
-selection, password recovery and MFA. See docs/PLATFORM-STATUS.md for the final
-browser outcome and remaining limitations.
+selection, password recovery and MFA.
 
 All test data is synthetic. Source is published at https://github.com/Komisio/komisio.
 Staging now has SMTP and invitation email. No production store service, AI model

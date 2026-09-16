@@ -17,8 +17,7 @@ The owner wants workflows reconsidered and simplified, a shared deterministic
 engine, and thin UI/AI adapters. This document proposes how to preserve useful
 outcomes; it is not a feature-parity commitment or authorization of financial
 rules. Existing decisions and [open questions](open-questions.md) take precedence.
-No old source code or schema is imported. Current release evidence is in
-[development handover](DEVELOPMENT-HANDOFF.md); the live AI provider, camera wall,
+No old source code or schema is imported. The live AI provider, camera wall,
 POS, commercial acceptance and payouts are not verified or delivered by this plan.
 
 Owner-confirmed direction: bag-first receiving with later inspection; optional
@@ -307,8 +306,8 @@ saved draft with the sourced review contract without creating an item, recording
 custody, changing terms or publishing. Explicit per-fact review followed in PR51;
 PR54 narrowed the shared assistance evidence port and PR55 added scoped operation
 discovery. These are bounded parts of the phases below, not completed P1/P2 phases.
-Current evidence is in DEVELOPMENT-HANDOFF.md. Acceptance design still requires
-resolution of convergence and terms questions.
+Acceptance design still requires resolution of convergence and terms
+questions.
 
 Status 2026-09-13 (Fable, lead architect): P1 is on main and staging: store
 policy with VAT modes and assistance flag, seller terms, garment custody,

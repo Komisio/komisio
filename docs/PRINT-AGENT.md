@@ -84,8 +84,8 @@ one tenant-bound printer and 1–20 copies per kind, configured by owner/admin a
 readable by members, never devices. Identical repeated settings do not add audit
 events; actual changes do. The reader tolerates a missing RPC during deployment.
 This is a storage prerequisite only: no settings switch or event queueing is
-enabled yet. The automatic-label identity/producer questions are tracked in
-`ASTRA_QUESTIONS_TO_FABLE.md`; physical automatic printing is not verified.
+enabled yet. The automatic-label identity and producer questions are open
+(see open-questions.md); physical automatic printing is not verified.
 
 `zpl-v2` draws the fixed layout scaled to the store's label size at the
 printer's resolution (Settings, Printing; defaults 76 x 51 mm for bag and

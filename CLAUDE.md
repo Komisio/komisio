@@ -60,6 +60,17 @@ edits to applied migrations (add a new one); no secrets in the repo; no
 copying source code from other projects (see `NOTICE`); keep diffs scoped to
 the task.
 
+**`docs/` is published documentation, not a workspace.** The repository is
+public, so anything committed there is readable by anyone and stays in the
+history whether or not it is later removed. A file belongs in `docs/` when
+someone outside this work would need it: a design decision, a contract, an
+integration, how to run the thing yourself. Coordination between agents, dated
+plans, task lists, status snapshots and progress notes do not. Those go in the
+ignored `private/` directory, or, once the owner opens the tracker, in GitHub
+Issues, which is where requirements and priority are decided. Nineteen such
+files were moved out on 2026-09-16 after a week of accumulation. Never put
+personal data, customer names or credentials in either place.
+
 ## When uncertain
 
 Stop and ask. Specifically: any change to tenancy or membership; any new core

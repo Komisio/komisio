@@ -139,9 +139,9 @@ This scenario should determine the workflow, rather than the existing table fiel
    and what does it give the consignor as evidence at that point?
 2. **Minimum identity:** what contact information is necessary at the counter?
    When should possible duplicate consignors be reviewed?
-3. **Price timing:** must every item have a price at receipt? The existing
-   [first-slice draft](first-slice.md) assumes an initial price; this proposal
-   intentionally reopens that assumption for review, without changing the rule.
+3. **Price timing:** must every item have a price at receipt? The first
+   vertical slice assumed an initial price; this proposal intentionally reopens
+   that assumption for review, without changing the rule.
 4. **Batch outcome:** should final receipt be atomic, or can valid items save
    separately? Either choice needs an unambiguous retry and correction story.
 5. **Draft ownership and retention:** can another staff member resume a draft,

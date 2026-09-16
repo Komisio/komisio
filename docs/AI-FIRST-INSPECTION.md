@@ -71,8 +71,7 @@ model-supplied provider name is not trusted provenance.
 ## Next delivery sequence
 
 The owner's subsequent wall-reception scenario changes the next delivery order:
-follow [single-garment reception](RECEPTION-ARCHITECTURE.md) and the
-[autonomous work plan](AUTONOMOUS-INTAKE-2026-09-12.md). The existing descriptive
+follow [single-garment reception](RECEPTION-ARCHITECTURE.md). The existing descriptive
 bag contract remains narrow; sourced price proposals belong to the separate
 reception contract and do not make a bag draft saleable. The steps below describe
 the earlier bag-inspection plan, not a reason to continue adding isolated forms.

@@ -407,7 +407,7 @@ declare uid uuid:=komisio_private.require_identity(); code text; expires timesta
 begin
  perform 1 from public.tenants where id=p_tenant for update;
  if coalesce(public.tenant_role(p_tenant),'') not in ('owner','admin') then raise exception 'FORBIDDEN' using errcode='42501'; end if;
- if (select count(*) from public.print_devices d where d.tenant_id=p_tenant and d.revoked_at is null)>=case komisio_private.plan_tier(p_tenant) when 'plus' then komisio_private.plus_device_limit() else komisio_private.free_device_limit() end then raise exception 'PLAN_LIMIT_DEVICES' using errcode='55000'; end if;
+ if (select count(*) from public.print_devices d where d.tenant_id=p_tenant and d.revoked_at is null)>=(case komisio_private.plan_tier(p_tenant) when 'plus' then komisio_private.plus_device_limit() else komisio_private.free_device_limit() end) then raise exception 'PLAN_LIMIT_DEVICES' using errcode='55000'; end if;
  if not exists(select 1 from public.printers where tenant_id=p_tenant and id=p_printer and transport='tcp') then raise exception 'PRINTER_NOT_FOUND'; end if;
  code:=upper(left(replace(gen_random_uuid()::text,'-',''),10));
  insert into public.print_pairing_codes(tenant_id,printer_id,code_hash,created_by,expires_at) values(p_tenant,p_printer,encode(sha256(convert_to(code,'UTF8')),'hex'),uid,expires);

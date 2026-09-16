@@ -4,6 +4,7 @@ select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
  ('f0000000-0000-4000-8000-000000000941','free-host@example.test',now()),
  ('f0000000-0000-4000-8000-000000000942','free-owner@example.test',now());
+insert into auth.users(id,is_anonymous) values ('f0000000-0000-4000-8000-000000000943',true);
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000942","role":"authenticated"}';
 select set_config('test.old',create_tenant('Older store','free-older',gen_random_uuid())::text,true);
@@ -26,6 +27,15 @@ select is(plan_status(current_setting('test.tenant')::uuid)->>'state','free','th
 select is((plan_status(current_setting('test.tenant')::uuid)->>'writable')::boolean,true,'and still writable');
 select is((plan_status(current_setting('test.tenant')::uuid)->>'itemLimit')::int,100,'with the monthly item cap');
 select is((plan_status(current_setting('test.tenant')::uuid)->>'deviceLimit')::int,1,'and one print device');
+-- One print device on the free core: the second pairing code is refused.
+select set_config('test.printer',gen_random_uuid()::text,true);
+select register_printer(current_setting('test.tenant')::uuid,current_setting('test.printer')::uuid,'Counter','tcp','192.168.1.49:9100','ZD420',203);
+select set_config('test.pair',create_print_pairing_code(current_setting('test.tenant')::uuid,current_setting('test.printer')::uuid)::text,true);
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000943","role":"authenticated","is_anonymous":true}';
+select pair_print_device(current_setting('test.pair')::jsonb->>'code','Kassan','1.0.0');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000942","role":"authenticated"}';
+select is((plan_status(current_setting('test.tenant')::uuid)->>'devices')::int,1,'one device counted');
+select throws_like($$select create_print_pairing_code(current_setting('test.tenant')::uuid,current_setting('test.printer')::uuid)$$,'%PLAN_LIMIT_DEVICES%','a second device needs Plus');
 -- Plus features refuse.
 select throws_like($$select store_shopify_connection(current_setting('test.tenant')::uuid,'komisio-test.myshopify.com','Komisio Test','SEK','{"iv":"aWl2","tag":"dGFn","data":"ZGF0YQ=="}'::jsonb,'read_orders',null)$$,'%PLAN_PLUS_REQUIRED%','Shopify needs Plus');
 select throws_like($$select create_chain(gen_random_uuid(),'Kedjan',array[current_setting('test.tenant')::uuid])$$,'%PLAN_PLUS_REQUIRED%','chains need Plus');

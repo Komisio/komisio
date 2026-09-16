@@ -1,7 +1,7 @@
 # Free core and Butik Plus
 
 Decision by the owner on 2026-09-16 ("alternativ 5"), designed and delivered
-by Fable in migration `20260916410000`. It replaces the single paid plan with
+by Fable in migration `20260916420000`. It replaces the single paid plan with
 a read-only gate described in [ONBOARDING-AND-PLANS.md](ONBOARDING-AND-PLANS.md)
 (decisions C1 to C3). The store's own facts are never behind a paywall;
 what a store pays for is what saves it time and connects it to other systems.

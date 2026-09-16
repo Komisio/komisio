@@ -207,7 +207,12 @@ describe('hosted MCP connector', () => {
     // The detail reads became engine functions; the reception surface has not.
     expect(hostedToolAllowed('komisio_read_receipt')).toBe(true)
     expect(hostedToolAllowed('komisio_read_seller_ledger')).toBe(true)
+    // These two read through SQL functions already and only needed the
+    // connector to be told which scope reaches them.
+    expect(hostedToolAllowed('komisio_list_receptions')).toBe(true)
+    expect(hostedToolAllowed('komisio_propose_price_change')).toBe(true)
+    // A photo lives in a storage bucket, which no connector token reaches.
     expect(hostedToolAllowed('komisio_read_reception_photo')).toBe(false)
-    expect(hostedExcludedTools.size).toBe(13)
+    expect(hostedExcludedTools.size).toBe(11)
   })
 })

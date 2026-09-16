@@ -59,12 +59,10 @@ export const hostedExcludedTools = new Set([
   'komisio_list_bags',
   'komisio_read_inspection',
   'komisio_read_reception_history',
-  'komisio_list_receptions',
   'komisio_read_reception',
   'komisio_preview_reception',
   'komisio_propose_reception_review',
   'komisio_read_reception_photo',
-  'komisio_propose_price_change',
 ])
 export function hostedToolAllowed(name: string) {
   return !hostedExcludedTools.has(name)

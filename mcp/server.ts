@@ -139,6 +139,7 @@ export function createReceptionMCP(client: SupabaseClient, config: MCPConfig) {
           'AUTH_REQUIRED',
           'FORBIDDEN',
           'SCOPE_REQUIRED',
+          'CONNECTOR_RATE_LIMIT',
           'RECEPTION_UNAVAILABLE',
           'INSPECTION_UNAVAILABLE',
           'INSPECTION_ARCHIVED',

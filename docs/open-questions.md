@@ -314,3 +314,25 @@ Hosted verification exposed a printing-tab failure: the stored format's
 page now passes dimensions and DPI explicitly, preserving strict validation;
 the browser regression opens the actual `tab=printing` URL and checks the
 download link with both custom and default label sizes.
+
+## Swish payouts (2026-09-16, Opus)
+
+Both questions block the automatic payout rail; the manual rail is unaffected
+and stays correct until they are answered. Background and the consequences of
+each answer are in [SWISH-PAYOUTS.md](SWISH-PAYOUTS.md).
+
+- **Who holds the Swish signing certificate?** Either Inority registers once
+  with Swish as a technical supplier and uses its own certificate for every
+  store's Swish number, or each store creates its own certificate in its bank's
+  portal and uploads the private key to Komisio. The first is far less friction
+  per store and concentrates the key at Inority; the second spreads the key but
+  asks a second-hand shop to handle one. Fable's pricing decision (no service
+  fee, the store pays its own bank) holds either way. Recommendation: technical
+  supplier, with the key in a managed secret, an audit row per payout and a
+  documented rotation.
+- **May Komisio store a consignor's personal identity number?** Swish Payouts
+  verifies the recipient by mobile number and personal identity number, so
+  without it there is no automatic rail. It would be sealed with the credential
+  key, entered by the seller in the portal, and shown as the last four digits.
+  A yes requires the data processing agreement and the privacy notice to be
+  updated in the same slice, and the retention question (B1) answered for it.

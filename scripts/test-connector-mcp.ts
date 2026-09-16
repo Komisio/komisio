@@ -60,7 +60,13 @@ const tenant = store.data as string
       tenantId: tenant,
       clientId: registered.client_id,
       redirectUri,
-      scopes: ['items:read', 'items:propose', 'economy:read'],
+      scopes: [
+        'items:read',
+        'items:propose',
+        'economy:read',
+        'sales:read',
+        'accounting:read',
+      ],
       codeChallenge: pkceChallenge(verifier),
       state: 'harness-state',
     },
@@ -95,7 +101,13 @@ const tenant = store.data as string
       url,
       key,
       tenantId: tenant,
-      scopes: ['items:read', 'items:propose', 'economy:read'],
+      scopes: [
+        'items:read',
+        'items:propose',
+        'economy:read',
+        'sales:read',
+        'accounting:read',
+      ],
       userId: uid,
       hosted: true,
     })
@@ -110,7 +122,14 @@ const tenant = store.data as string
   assert(names.includes('komisio_find_items'))
   assert(names.includes('komisio_propose_acceptance'))
   assert(names.includes('komisio_read_seller_balance'))
+  // The detail reads that became engine functions are reachable too.
+  assert(names.includes('komisio_find_receipts'))
+  assert(names.includes('komisio_list_day_closes'))
   assert(!names.some((n) => hostedExcludedTools.has(n)))
+  for (const name of ['komisio_find_receipts', 'komisio_list_day_closes']) {
+    const answer = await assistant.callTool({ name, arguments: {} })
+    assert(!answer.isError, `${name}: ${JSON.stringify(answer.content)}`)
+  }
   const found = await assistant.callTool({
     name: 'komisio_find_items',
     arguments: {},

@@ -42,13 +42,9 @@ export async function readDayCloses(
   client: SupabaseClient,
   tenantInput: string,
 ) {
-  const { data, error } = await client
-    .from('day_closes')
-    .select(columns)
-    .eq('tenant_id', z.uuid().parse(tenantInput))
-    .order('close_date', { ascending: false })
-    .order('version', { ascending: false })
-    .limit(60)
-  if (error) throw new Error('Unable to read day closes')
-  return z.array(dayCloseRow).parse(data)
+  const r = await client.rpc('day_close_page', {
+    p_tenant: z.uuid().parse(tenantInput),
+  })
+  if (r.error) throw new Error('Unable to read day closes')
+  return z.array(dayCloseRow).parse(r.data)
 }

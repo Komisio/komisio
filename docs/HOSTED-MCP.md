@@ -102,18 +102,29 @@ SQL:
 `komisio_read_reception_history`, `komisio_list_receptions`,
 `komisio_read_reception`, `komisio_preview_reception`,
 `komisio_propose_reception_review`, `komisio_read_reception_photo`,
-`komisio_read_item_summary`, `komisio_find_receipts`, `komisio_read_receipt`,
-`komisio_read_seller_ledger`, `komisio_list_day_closes`,
 `komisio_propose_price_change`.
 
-Everything else is served: store policy and profile, item search, economy
-summary, brief and stock report, seller balance, price evidence and photo
-duplicates, operation listing, accounting preview and reconciliation,
-settlement candidates, and every proposal tool.
+The reception and inspection reads are the store's own working surface rather
+than questions an assistant answers, and one of them reads photo bytes from
+storage, which a connector cannot do at all. They stay local until their reads
+become SQL functions.
+
+Everything else is served: store policy and profile, item search and one
+item's summary, receipts and one receipt with its frozen lines, the seller
+balance and ledger, economy summary, brief and stock report, price evidence
+and photo duplicates, operation listing, day closes, accounting preview and
+reconciliation, settlement candidates, and every proposal tool.
+
+Five of those detail reads moved from table access into engine functions on
+2026-09-16 (`item_detail`, `sales_page`, `sale_detail`, `seller_ledger_page`,
+`day_close_page`, migration `20260916490000`) so the connector could reach
+them. The web calls the same functions, under the same store-role check the
+row-level policies applied.
 
 ## Verification
 
-- pgTAP `0111_connectors` (34 assertions): registration, consent, PKCE,
+- pgTAP `0116_detail_reads` (33 assertions) for the five engine reads and
+  their scopes; `0111_connectors` (34 assertions): registration, consent, PKCE,
   one-time code, replay voiding, scope and store binding, unknown arguments,
   refresh rotation, listing and revocation by role, and that
   every allowed function exists with a `p_tenant` parameter.

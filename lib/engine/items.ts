@@ -155,39 +155,25 @@ export async function readItem(
   tenantInput: string,
   itemInput: string,
 ) {
-  const tenantId = z.uuid().parse(tenantInput),
-    itemId = z.guid().parse(itemInput)
-  const item = await client
-    .from('items')
-    .select(columns)
-    .eq('tenant_id', tenantId)
-    .eq('id', itemId)
-    .maybeSingle()
-  if (item.error) throw new Error('Unable to read item')
-  if (!item.data) return null
-  const [prices, events] = await Promise.all([
-    client
-      .from('item_prices')
-      .select('id,price_ore,reason,set_at')
-      .eq('tenant_id', tenantId)
-      .eq('item_id', itemId)
-      .order('set_at', { ascending: false })
-      .order('seq', { ascending: false }),
-    client
-      .from('item_events')
-      .select('id,kind,detail,occurred_at')
-      .eq('tenant_id', tenantId)
-      .eq('item_id', itemId)
-      .order('occurred_at'),
-  ])
-  if (prices.error || events.error) throw new Error('Unable to read item')
+  const r = await client.rpc('item_detail', {
+    p_tenant: z.uuid().parse(tenantInput),
+    p_item: z.guid().parse(itemInput),
+  })
+  if (r.error) throw new Error('Unable to read item')
+  if (r.data === null) return null
+  const detail = z
+    .object({
+      item: itemRow,
+      prices: z.array(priceRow),
+      events: z.array(eventRow),
+    })
+    .parse(r.data)
   return {
-    item: itemRow.parse(item.data),
-    prices: z
-      .array(priceRow)
-      .parse(prices.data)
-      .map((p) => ({ ...p, price_ore: Number(p.price_ore) })),
-    events: z.array(eventRow).parse(events.data),
+    ...detail,
+    prices: detail.prices.map((p) => ({
+      ...p,
+      price_ore: Number(p.price_ore),
+    })),
   }
 }
 

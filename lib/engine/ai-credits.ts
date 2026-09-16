@@ -1,5 +1,7 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { readStoreProfile } from './store-profile'
+import { creditPriceForCountry, creditPackOre } from '../platform/credit-prices'
 import { open, seal } from '../platform/credentials'
 import {
   createCreditsCheckoutSession,
@@ -124,18 +126,23 @@ export async function startCreditsCheckout(
   const role = await client.rpc('tenant_role', { p_tenant: tenantId })
   if (role.error || !['owner', 'admin'].includes(role.data))
     throw new Error('FORBIDDEN')
-  if (!stripeCreditsConfigured(env)) throw new Error('STRIPE_NOT_CONFIGURED')
+  const profile = await readStoreProfile(client, tenantId)
+  const price = creditPriceForCountry(profile.profile?.address.country)
+  if (!stripeCreditsConfigured(env, price.currency))
+    throw new Error('STRIPE_NOT_CONFIGURED')
   const current = await readAiCredits(client, tenantId)
-  if (!current) throw new Error('NOT_AVAILABLE')
+  if (!current || !current.enabled || current.packOre !== creditPackOre)
+    throw new Error('NOT_AVAILABLE')
   const session = await createCreditsCheckoutSession(
     env,
     {
       tenantId,
       email,
-      amountOre: current.packOre,
+      amountOre: creditPackOre,
+      currency: price.currency,
       successUrl: `${origin}/settings?tab=credits&credits=success`,
       cancelUrl: `${origin}/settings?tab=credits&credits=cancelled`,
-      idempotencyKey: `credits:${tenantId}:${Math.floor(Date.now() / 60000)}`,
+      idempotencyKey: `credits:${tenantId}:${price.currency}:${Math.floor(Date.now() / 60000)}`,
     },
     http,
   )

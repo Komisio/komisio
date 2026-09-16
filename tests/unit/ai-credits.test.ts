@@ -34,6 +34,15 @@ describe('AI credits', () => {
       stripeCreditsConfigured({ ...env, STRIPE_CREDITS_PRICE_ID: '' }),
     ).toBe(false)
     const http = vi.fn(async (_url: unknown, init?: RequestInit) => {
+      if (!init?.method)
+        return new Response(
+          JSON.stringify({
+            active: true,
+            type: 'one_time',
+            currency: 'sek',
+            unit_amount: 10000,
+          }),
+        )
       const body = new URLSearchParams(String(init?.body))
       expect(body.get('mode')).toBe('payment')
       expect(body.get('line_items[0][price]')).toBe('price_credits12345678')

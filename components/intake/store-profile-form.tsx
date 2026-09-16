@@ -9,6 +9,7 @@ import {
   type CurrentStoreProfile,
 } from '@/lib/engine/store-profile'
 import { useIntakeAction } from './use-intake-action'
+import { storeCountries } from '@/lib/platform/credit-prices'
 import { Button } from '@/components/ui/button'
 
 /** Owner or admin publishes the next profile version naming the current one. */
@@ -50,6 +51,7 @@ export function StoreProfileForm({
               street: text('street'),
               postalCode: text('postalCode'),
               city: text('city'),
+              country: text('country'),
             },
             contact: {
               email: text('email'),
@@ -102,6 +104,23 @@ export function StoreProfileForm({
               />
             </div>
           ))}
+          <div className="field">
+            <label htmlFor="profile-country">{t.country}</label>
+            <select
+              id="profile-country"
+              name="country"
+              defaultValue={profile.address.country ?? 'SE'}
+            >
+              {storeCountries.map((country) => (
+                <option key={country} value={country}>
+                  {new Intl.DisplayNames([locale], { type: 'region' }).of(
+                    country,
+                  )}
+                </option>
+              ))}
+            </select>
+            <p>{t.countryHelp}</p>
+          </div>
           <h3>{t.contact}</h3>
           {(['email', 'phone', 'website'] as const).map((key) => (
             <div className="field" key={key}>

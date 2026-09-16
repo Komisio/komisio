@@ -11,6 +11,7 @@ const empty = {
   dayCloses: 0,
   fortnoxConnected: false,
   zettleConnections: 0,
+  shopifyConnections: 0,
   members: 1,
 }
 
@@ -41,6 +42,7 @@ describe('onboarding steps', () => {
       sellers: null,
       fortnoxConnected: null,
       zettleConnections: null,
+      shopifyConnections: null,
     })
     expect(unknown.find((s) => s.key === 'seller')?.done).toBe(false)
     expect(unknown.find((s) => s.key === 'integrations')?.done).toBe(false)
@@ -51,6 +53,12 @@ describe('onboarding steps', () => {
     ).toBe(true)
     expect(
       onboardingSteps({ ...empty, zettleConnections: 1 }).find(
+        (s) => s.key === 'integrations',
+      )?.done,
+    ).toBe(true)
+    // A store that sells only online connects Shopify and nothing else.
+    expect(
+      onboardingSteps({ ...empty, shopifyConnections: 1 }).find(
         (s) => s.key === 'integrations',
       )?.done,
     ).toBe(true)
@@ -66,6 +74,7 @@ describe('onboarding steps', () => {
       dayCloses: 3,
       fortnoxConnected: true,
       zettleConnections: 1,
+      shopifyConnections: 1,
       members: 3,
     })
     expect(all.every((s) => s.done)).toBe(true)

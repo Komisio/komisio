@@ -62,5 +62,4 @@ but let camera hardware, model and interface change independently.
 
 Do not label a simulation as live AI or claim saved consent from pure functions.
 No tax, commission or automatic sale rule is inferred. Source quality and seller
-identity remain external-pilot gates. The delivery order is documented in
-AUTONOMOUS-INTAKE-2026-09-12.md.
+identity remain external-pilot gates.

@@ -3,8 +3,7 @@
 Automatic labels (2026-09-15, PR199): kind sizes and target-store transfer
 acceptance are owner-approved. Fable clarification is still needed for repeated
 markdown event identity and the application-side handling of SQL-only producers
-or a crash between fact commit and label queueing; see
-[ASTRA_QUESTIONS_TO_FABLE.md](ASTRA_QUESTIONS_TO_FABLE.md). The existing manual
+or a crash between fact commit and label queueing. The existing manual
 render-and-queue path is now shared in the engine; automatic rules are not yet
 activated by that extraction.
 
@@ -232,9 +231,8 @@ wording is decided per template when the notification policy is built.
     are pending with Fable: the predicate for an open immutable statement,
     contact copies in retained reviews/communications and their read projections,
     activity/custody gates, and an Auth operator procedure compatible with
-    restrictive attribution foreign keys. See the dated erasure questions in
-    [ASTRA_QUESTIONS_TO_FABLE.md](ASTRA_QUESTIONS_TO_FABLE.md); no retention
-    exception or destructive cleanup has been implemented.
+    restrictive attribution foreign keys. No retention exception or
+    destructive cleanup has been implemented.
 19. **Partly answered 2026-09-12:** mobile reception reviews may include pinned,
     reduced photos from the exact source revision; originals stay internal.
     Metadata stripping does not redact visible people or labels. Camera placement,

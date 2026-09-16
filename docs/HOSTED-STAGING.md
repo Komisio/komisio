@@ -3,7 +3,7 @@
 Status (2026-09-11): deployed to https://komisio-staging.vercel.app with hosted
 Supabase and Resend. Registration and invitation-email receipt have been
 confirmed by the owner. Full invitation acceptance and operational recovery
-remain under validation; see [platform status](PLATFORM-STATUS.md).
+remain under validation.
 
 ## Bag-receiving activation, 11 September 2026
 

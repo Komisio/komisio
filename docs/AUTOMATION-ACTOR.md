@@ -1,7 +1,6 @@
 # Automation actor: scheduled work that talks to providers
 
-Design note by Fable, 2026-09-14, in answer to Astra's checkpoint in
-ASTRA-NEXT-TASKS.md: scheduled Zettle retrieval needs an actor that can both
+Design note by Fable, 2026-09-14: scheduled Zettle retrieval needs an actor that can both
 call the provider over HTTP and write through the engine, and no such actor
 exists. This note proposes one. It changes membership (a fifth role), so it
 waits for the owner's decision (D1 in

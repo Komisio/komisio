@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import {
   itemStage,
@@ -26,7 +26,7 @@ export default async function Items({
     stageParam = typeof params.stage === 'string' ? params.stage : '',
     stage = itemStage.safeParse(stageParam).success ? stageParam : ''
   const when = (value: string) =>
-    new Date(value).toLocaleString(ctx.locale === 'sv' ? 'sv-SE' : 'en-GB', {
+    new Date(value).toLocaleString(intlLocale(ctx.locale), {
       timeZone: 'Europe/Stockholm',
     })
   // The overview arrives with its migration; until then the plain list stands.

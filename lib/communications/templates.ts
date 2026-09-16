@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { messageLocale } from '../i18n'
 
 // Seller messages (P2 S18): versioned templates as code with fixed wording and
 // placeholders. Plain text only, so a store name, an item label or the free
@@ -113,7 +114,7 @@ const footer = {
 /** Renders one message. Every dynamic value is plain text inside fixed wording. */
 export function renderSellerMessage(
   kindInput: unknown,
-  locale: 'sv' | 'en',
+  localeInput: string,
   factsInput: unknown,
 ) {
   const kind = communicationKind.parse(kindInput)
@@ -127,6 +128,7 @@ export function renderSellerMessage(
       : undefined,
     freeText: plainText(raw.freeText),
   }
+  const locale = messageLocale(localeInput)
   const t = (locale === 'sv' ? sv : en)[kind]
   const body =
     t.body(f) +

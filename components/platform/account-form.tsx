@@ -4,7 +4,7 @@ import { useCommand } from './use-command'
 import { Feedback } from './feedback'
 import { Button } from '@/components/ui/button'
 import { browserClient } from '@/lib/supabase/client'
-import type { Dictionary, Locale } from '@/lib/i18n'
+import { localeNames, locales, type Dictionary, type Locale } from '@/lib/i18n'
 export function AccountForm({
   d,
   name,
@@ -50,8 +50,11 @@ export function AccountForm({
       <div className="field">
         <label htmlFor="profile-language">{d.language}</label>
         <select id="profile-language" name="locale" defaultValue={locale}>
-          <option value="sv">Svenska</option>
-          <option value="en">English</option>
+          {locales.map((code) => (
+            <option key={code} value={code}>
+              {localeNames[code]}
+            </option>
+          ))}
         </select>
       </div>
       <Button disabled={action.busy}>{d.save}</Button>

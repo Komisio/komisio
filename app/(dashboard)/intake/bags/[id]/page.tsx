@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import { PrintLabel } from '@/components/intake/print-label'
 import { PrintJobButton } from '@/components/intake/print-job-button'
 import { readPrinters } from '@/lib/engine/printing'
@@ -61,7 +61,7 @@ export default async function BagLabel({
         <p>
           {d.receivedAt}:{' '}
           {new Date(bag.received_at).toLocaleDateString(
-            ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',
+            intlLocale(ctx.locale),
             { timeZone: 'Europe/Stockholm' },
           )}
         </p>

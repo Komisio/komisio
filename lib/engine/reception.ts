@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { currencyCode } from './money'
+import { locales } from '../i18n'
 
 const revision = z.number().int().nonnegative().max(2147483646)
 const text = (max: number) => z.string().trim().min(1).max(max)
@@ -110,7 +111,7 @@ export function prepareReceptionProposal(
 const reviewTerms = z.strictObject({
   versionId: z.uuid(),
   body: text(20000),
-  language: z.enum(['sv', 'en']),
+  language: z.enum(locales),
 })
 const sellerReview = z.strictObject({
   schemaVersion: z.literal(1),

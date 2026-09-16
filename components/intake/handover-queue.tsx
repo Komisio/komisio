@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import type { Dictionary } from '@/lib/i18n'
+import { intlLocale, type Dictionary } from '@/lib/i18n'
 import type { HandoverQueueRow } from '@/lib/engine/handovers'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
@@ -29,7 +29,7 @@ export function HandoverQueue({
   const router = useRouter()
   const [requestIds] = useState(() => new Map<string, string>())
   const when = (iso: string) =>
-    new Date(iso).toLocaleString(locale === 'sv' ? 'sv-SE' : 'en-GB', {
+    new Date(iso).toLocaleString(intlLocale(locale), {
       timeZone: 'Europe/Stockholm',
     })
   async function receive(id: string, note: string) {

@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { PurchaseForm } from '@/components/intake/purchase-form'
 import { AcceptItemForm } from '@/components/intake/accept-item-form'
@@ -89,7 +89,7 @@ export default async function Purchases() {
                   <br />
                   <small>
                     {new Date(p.purchased_at).toLocaleString(
-                      ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',
+                      intlLocale(ctx.locale),
                       { timeZone: 'Europe/Stockholm' },
                     )}{' '}
                     · {p.evidence_reference}

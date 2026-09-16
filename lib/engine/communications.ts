@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { communicationKind } from '../communications/templates'
+import { locales } from '../i18n'
 
 // Communication log (P2 S18). The route renders a versioned template, queues
 // the exact text in SQL, sends through the transport and records the outcome.
@@ -28,7 +29,7 @@ export const communicationStatus = z.enum([
 const row = z.object({
   id: z.uuid(),
   kind: communicationKind,
-  locale: z.enum(['sv', 'en']),
+  locale: z.enum(locales),
   recipient: z.string(),
   subject: z.string(),
   body: z.string(),

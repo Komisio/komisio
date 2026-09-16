@@ -188,7 +188,7 @@ export default async function Settings({
           tenantId={active.id}
           current={profile}
           editable={manages}
-          locale={ctx.locale === 'sv' ? 'sv' : 'en'}
+          locale={ctx.locale}
           d={d}
         />
       )}

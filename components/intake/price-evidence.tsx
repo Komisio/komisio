@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import type { Dictionary } from '@/lib/i18n'
+import { intlLocale, type Dictionary } from '@/lib/i18n'
 import type { PriceEvidence } from '@/lib/engine/price-evidence'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
 
@@ -17,7 +17,7 @@ export function PriceEvidencePanel({
 }) {
   const money = (ore: number) => `${formatSignedOre(ore)} ${evidence.currency}`
   const when = (iso: string) =>
-    new Date(iso).toLocaleDateString(locale === 'sv' ? 'sv-SE' : 'en-GB', {
+    new Date(iso).toLocaleDateString(intlLocale(locale), {
       timeZone: 'Europe/Stockholm',
     })
   return (

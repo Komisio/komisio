@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { dictionary } from '../i18n'
+import { dictionary, resolveLocale } from '../i18n'
 import { readEconomyBrief, renderBrief } from './brief'
 import { sendSellerEmailWithId } from '../platform/seller-email'
 
@@ -50,7 +50,7 @@ export async function sendWeeklyBriefs(
     })
     let delivery = 'none'
     if (brief && store.emails.length > 0) {
-      const locale = store.locale === 'en' ? 'en' : 'sv'
+      const locale = resolveLocale(undefined, store.locale)
       const t = dictionary(locale)
       const rendered = renderBrief(brief, t.brief)
       const subject = `${rendered.title} · ${store.store_name}`

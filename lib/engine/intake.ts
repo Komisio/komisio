@@ -45,6 +45,7 @@ import {
   saveReceptionSourcesCommand,
   publishReceptionReviewCommand,
 } from './reception-store'
+import { locales, type Locale } from '../i18n'
 
 export const intakeCommand = z.discriminatedUnion('action', [
   publishStorePolicyCommand,
@@ -122,7 +123,7 @@ export const intakeCommand = z.discriminatedUnion('action', [
     expectedCurrentId: z.uuid().nullable(),
     title: z.string().trim().min(1).max(120),
     body: z.string().trim().min(1).max(12000),
-    language: z.enum(['sv', 'en']),
+    language: z.enum(locales),
     required: z.boolean(),
   }),
   z.object({
@@ -468,7 +469,7 @@ export type SellerAgreement = {
   version: number
   title: string
   body: string
-  language: 'sv' | 'en'
+  language: Locale
   required_before_receipt: boolean
   created_at: string
 }

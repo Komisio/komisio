@@ -41,7 +41,7 @@ the shops giving things another life.
 
 **Your store, your team.** Create a store, invite colleagues and give each person
 the right access. The foundation includes owner, admin, staff and read-only
-roles, store switching and a web interface in Swedish and English.
+roles, store switching and a web interface in eight languages (Swedish, English, Norwegian, Danish, Finnish, German, Spanish, Italian).
 
 **AI should do the legwork. You keep control.** Our architectural direction is
 one shared engine for the interface, extensions and AI agents. Agents should
@@ -122,7 +122,7 @@ use test data rather than real consignor or financial records.
 | Available in the current platform                                             | Still being built or planned                                                           |
 | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | Registration, e-mail confirmation, login, password recovery, optional MFA     | Production environment and the pilot gates ([checklist](docs/ONBOARDING-AND-PLANS.md)) |
-| Stores, four access roles, invitations, access log, Swedish and English       | Payout rails (Swish, Stripe) beyond manual "paid with reference"                       |
+| Stores, four access roles, invitations, access log, eight languages           | Payout rails (Swish, Stripe) beyond manual "paid with reference"                       |
 | Seller registration, bag and single-garment reception, labels, self drop-off  | Space booking and booking fees                                                         |
 | Versioned agreements, inspection drafts, acceptance with frozen terms         | Shopify and web shop channels                                                          |
 | Sales, returns, store-owned purchases, one currency per store                 | Hosted agent OAuth and a hosted agent runtime                                          |
@@ -219,7 +219,7 @@ Browser tests use synthetic accounts and must target only a local test environme
 [AGPL-3.0-or-later](LICENSE), with an [exception for extensions](NOTICE) using
 only the documented extension API. Contributions use the [DCO](DCO), with
 signed-off commits and no CLA. Code, comments and documentation are in English;
-the application speaks Swedish and English.
+the application speaks eight languages; fixed e-mail templates exist in Swedish and English.
 
 ---
 

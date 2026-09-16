@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, localeNames, resolveLocale } from '@/lib/i18n'
 import type { SellerAgreement } from '@/lib/engine/intake'
 import { AgreementPublisher } from '@/components/intake/agreement-forms'
 
@@ -67,7 +67,8 @@ export default async function Agreements({
               </span>
               <h2>{shown.title}</h2>
               <p>
-                {a.language}: {shown.language === 'sv' ? 'Svenska' : 'English'}
+                {a.language}:{' '}
+                {localeNames[resolveLocale(undefined, shown.language)]}
               </p>
               <p>{shown.required_before_receipt ? a.required : a.optional}</p>
               <div className="agreement-text">{shown.body}</div>

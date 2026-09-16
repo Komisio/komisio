@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import { StartReception } from '@/components/reception/operator'
 import {
   readReceptionQueue,
@@ -136,7 +136,7 @@ export default async function Receptions({
                     <small>{d.queueNextSteps[r.nextStep]}</small>
                     <small>
                       {new Date(r.created_at).toLocaleString(
-                        ctx.locale === 'sv' ? 'sv-SE' : 'en-GB',
+                        intlLocale(ctx.locale),
                         { timeZone: 'Europe/Stockholm' },
                       )}
                     </small>

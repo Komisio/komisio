@@ -1,7 +1,7 @@
 'use client'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import type { Dictionary } from '@/lib/i18n'
+import { intlLocale, type Dictionary } from '@/lib/i18n'
 import type { ShopifyOrderStatus } from '@/lib/engine/shopify-orders'
 
 /** Pull one page of paid orders; list the newest orders with their outcome; retry a failed one. */
@@ -22,7 +22,7 @@ export function ShopifyOrders({
     [ok, setOk] = useState(false)
   const errors = d.errors as Record<string, string>
   const reasons = d.holdReasons as Record<string, string>
-  const tag = locale === 'sv' ? 'sv-SE' : 'en-GB'
+  const tag = intlLocale(locale)
   const amount = (ore: number, currency: string) =>
     new Intl.NumberFormat(tag, { style: 'currency', currency }).format(
       ore / 100,

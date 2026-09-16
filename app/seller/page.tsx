@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { platformContext } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import {
   readMySellerAccounts,
   readMySellerEconomy,
@@ -39,7 +39,7 @@ export default async function SellerPortal({
     : null
   if (params.seller && !account) notFound()
   const when = (date: string) =>
-    new Date(date).toLocaleString(ctx.locale === 'sv' ? 'sv-SE' : 'en-GB', {
+    new Date(date).toLocaleString(intlLocale(ctx.locale), {
       timeZone: 'Europe/Stockholm',
     })
   const amount = (ore: number) => `${formatSignedOre(ore)} ${currency}`

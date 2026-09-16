@@ -1,8 +1,11 @@
+import { allowsRecipient } from './email-allowlist'
+
 export type InvitationDelivery =
   'accepted' | 'manual' | 'restricted' | 'unconfirmed'
 
 // Server-only caller: this module is imported by the authenticated route handler.
-// Pilot delivery is deliberately restricted to operator-approved mailboxes.
+// Delivery follows the deployment's allowlist (`*` for an open deployment); the
+// engine has already checked who may invite, and caps how many per day.
 export async function sendInvitationEmail(input: {
   invitationId: string
   email: string
@@ -10,11 +13,8 @@ export async function sendInvitationEmail(input: {
   locale: string
 }): Promise<InvitationDelivery> {
   if (process.env.INVITATION_EMAIL_DELIVERY !== 'resend') return 'manual'
-  const allowed = (process.env.INVITATION_EMAIL_ALLOWLIST ?? '')
-    .split(',')
-    .map((email) => email.trim().toLowerCase())
-    .filter(Boolean)
-  if (!allowed.includes(input.email.trim().toLowerCase())) return 'restricted'
+  if (!allowsRecipient(process.env.INVITATION_EMAIL_ALLOWLIST, input.email))
+    return 'restricted'
   const key = process.env.RESEND_API_KEY
   const from = process.env.INVITATION_EMAIL_FROM
   if (!key || !from) return 'unconfirmed'

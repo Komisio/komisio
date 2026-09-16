@@ -31,7 +31,7 @@ Cross-cutting, delivered today or this week: eight product languages
 | Retention policy and erasure for seller contact | Open (P14). Erasure function exists; the policy text and the procedure are the owner's.                                                      |
 | Storage object backup on the hosted project     | Owner to confirm in the Supabase dashboard for the production project.                                                                       |
 | Point-in-time recovery                          | Done (PITR 7 days on production).                                                                                                            |
-| pg_cron and the two schedules                   | Migrations schedule them where the extension exists; verify on production with `select * from cron.job`.                                     |
+| pg_cron and the two schedules                   | Done: enabled on production 2026-09-16, `komisio-automatic-markdowns` and `komisio-expire-plans` active.                                     |
 | Complete authenticated hosted journey           | The owner registered and is host; a full smoke journey (P13: bag, accept, print, sale, payout, day close) is not yet recorded on production. |
 | Synthetic MFA recovery exercise                 | Open (P12).                                                                                                                                  |
 | Deploy ordering                                 | Done for production (CLI deploy after migrations). Staging still deploys on push.                                                            |
@@ -47,27 +47,31 @@ and dedicated tokens instead of the owner's personal ones in GitHub.
 
 In the order Fable would take them, with the reason:
 
-1. **Open registration in practice.** The invitation and seller e-mail
-   allowlists accept exact addresses only; add an "any address" value so a
-   new store can invite colleagues and mail its sellers without an operator.
-2. **Payout rails (P3).** Swish through the store's own bank agreement,
+1. **Open registration in practice.** Delivered 2026-09-16: the allowlist
+   accepts `*` and the engine caps messages and invitations per store and
+   day. The owner sets the two variables on production (A18).
+2. **The AI assistant against a real model.** The credits model is built,
+   tested and advertised, but no hosted environment has an assistance
+   provider configured, so no call has ever been made (A19). This is the
+   largest gap between what the product page promises and what runs.
+3. **Payout rails (P3).** Swish through the store's own bank agreement,
    without a service fee; Stripe as the second rail. Today every payout is
    marked paid by hand, which is the most visible manual step for a store.
-3. **Hosted MCP: the remaining 18 tools.** Their engine reads use table
+4. **Hosted MCP: the remaining 18 tools.** Their engine reads use table
    access; move them to SQL functions so the store's own assistant sees
    receipts, seller ledgers and reception details too (HOSTED-MCP.md).
-4. **BankID sign-in (P0 gate "identity").** As a priced add-on once the eID
+5. **BankID sign-in (P0 gate "identity").** As a priced add-on once the eID
    broker is chosen; the decision and the cost picture are in PRICING.md.
-5. **Web copilot (P4)** on the same tools and credits as the connector, and
+6. **Web copilot (P4)** on the same tools and credits as the connector, and
    the onboarding conversation that replaces the checklist.
-6. **Search and descriptions (P4).** Semantic search, descriptions per
+7. **Search and descriptions (P4).** Semantic search, descriptions per
    language, identify by image; these need the assistance provider and the
    credits model, both now in place.
-7. **Partner REST subset with OAuth clients (P5).** The connector's OAuth
+8. **Partner REST subset with OAuth clients (P5).** The connector's OAuth
    server already exists; the REST layer is the remaining piece.
-8. **Sections, bookings and charges (P4)**, kiosk contract and public buyer
+9. **Sections, bookings and charges (P4)**, kiosk contract and public buyer
    assistant (P5): the parts of the legacy product with no counterpart yet.
-9. **Operator report (P6)** generated from the host data.
+10. **Operator report (P6)** generated from the host data.
 
 ## What is deliberately not on the list
 

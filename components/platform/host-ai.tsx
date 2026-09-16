@@ -28,6 +28,8 @@ export function HostAi({
     reserveBatchOre: String(settings.reserveBatchOre),
     inputOrePerMillion: String(settings.inputOrePerMillion),
     outputOrePerMillion: String(settings.outputOrePerMillion),
+    emailDailyCap: String(settings.emailDailyCap),
+    inviteDailyCap: String(settings.inviteDailyCap),
   })
   const [showcaseTenant, setShowcaseTenant] = useState(
     stores[0]?.tenant_id ?? '',
@@ -86,6 +88,8 @@ export function HostAi({
           ['reserveBatchOre', d.reserveBatchOre],
           ['inputOrePerMillion', d.inputOrePerMillion],
           ['outputOrePerMillion', d.outputOrePerMillion],
+          ['emailDailyCap', d.emailDailyCap],
+          ['inviteDailyCap', d.inviteDailyCap],
         ] as const
       ).map(([name, label]) => (
         <div className="field" key={name}>
@@ -113,6 +117,8 @@ export function HostAi({
                 reserveBatchOre: Math.round(Number(form.reserveBatchOre)),
                 inputOrePerMillion: Number(form.inputOrePerMillion),
                 outputOrePerMillion: Number(form.outputOrePerMillion),
+                emailDailyCap: Math.round(Number(form.emailDailyCap)),
+                inviteDailyCap: Math.round(Number(form.inviteDailyCap)),
               },
             })
           }

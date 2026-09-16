@@ -341,7 +341,8 @@
     "CHAIN_CONFLICT": "The store already belongs to a chain.",
     "CHAIN_NOT_FOUND": "The chain no longer exists.",
     "TENANT_CHANGED": "The active store has changed. Reload the page before continuing.",
-    "REQUEST_FAILED": "Your changes could not be saved. Please try again."
+    "REQUEST_FAILED": "Your changes could not be saved. Please try again.",
+    "INVITE_DAILY_CAP": "The store's daily limit for invitations is reached. Try again tomorrow."
   },
   "inspection": {
     "title": "Inspect the bag",
@@ -1261,11 +1262,12 @@
     "outcomes": {
       "queued": "queued",
       "sent": "sent",
-      "restricted": "not sent: address not on the pilot allowlist",
+      "restricted": "not sent: this deployment does not send to that address",
       "manual": "not sent: e-mail delivery is off, hand over manually",
       "unconfirmed": "delivery not confirmed",
       "failed": "delivery failed"
-    }
+    },
+    "dailyCap": "The store's daily limit for messages is reached. Try again tomorrow."
   },
   "stock": {
     "title": "Stock",
@@ -2334,7 +2336,9 @@
       "showcaseStore": "Store",
       "showcaseLabel": "Label (e.g. second-hand store in Södertälje)",
       "showcaseAdd": "Show on the product page",
-      "showcaseRemove": "Remove"
+      "showcaseRemove": "Remove",
+      "emailDailyCap": "Messages per store and day",
+      "inviteDailyCap": "Invitations per store and day"
     }
   }
 }

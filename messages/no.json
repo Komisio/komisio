@@ -341,7 +341,8 @@
     "CHAIN_CONFLICT": "Butikken tilhører allerede en kjede.",
     "CHAIN_NOT_FOUND": "Kjeden finnes ikke lenger.",
     "TENANT_CHANGED": "Den aktive butikken er endret. Last inn siden på nytt før du fortsetter.",
-    "REQUEST_FAILED": "Endringene dine kunne ikke lagres. Prøv igjen."
+    "REQUEST_FAILED": "Endringene dine kunne ikke lagres. Prøv igjen.",
+    "INVITE_DAILY_CAP": "Butikkens grense for invitasjoner per døgn er nådd. Prøv igjen i morgen."
   },
   "inspection": {
     "title": "Gå gjennom posen",
@@ -1261,11 +1262,12 @@
     "outcomes": {
       "queued": "i kø",
       "sent": "sendt",
-      "restricted": "ikke sendt: adressen er ikke på pilotens godkjenningsliste",
+      "restricted": "ikke sendt: driftsmiljøet sender ikke til denne adressen",
       "manual": "ikke sendt: e-postlevering er av, lever manuelt",
       "unconfirmed": "levering ikke bekreftet",
       "failed": "levering mislyktes"
-    }
+    },
+    "dailyCap": "Butikkens grense for meldinger per døgn er nådd. Prøv igjen i morgen."
   },
   "stock": {
     "title": "Lager",
@@ -2334,7 +2336,9 @@
       "showcaseStore": "Butikk",
       "showcaseLabel": "Etikett (f.eks. bruktbutikk i Södertälje)",
       "showcaseAdd": "Vis på produktsiden",
-      "showcaseRemove": "Fjern"
+      "showcaseRemove": "Fjern",
+      "emailDailyCap": "Meldinger per butikk og døgn",
+      "inviteDailyCap": "Invitasjoner per butikk og døgn"
     }
   }
 }

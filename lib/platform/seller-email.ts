@@ -1,9 +1,12 @@
+import { allowsRecipient } from './email-allowlist'
+
 export type SellerEmailDelivery =
   'sent' | 'manual' | 'restricted' | 'unconfirmed' | 'failed'
 
-// Server-only transport for seller messages (P2 S18). Same pilot rules as the
-// invitation e-mail: an explicit transport switch, exact allowlisted mailboxes
-// (never a wildcard or a domain), and no logging of addresses or bodies.
+// Server-only transport for seller messages (P2 S18). Same rules as the
+// invitation e-mail: an explicit transport switch, the deployment's allowlist
+// (`*` for an open deployment, exact mailboxes otherwise), the host's daily cap
+// enforced in SQL, and no logging of addresses or bodies.
 export async function sendSellerEmail(
   input: { communicationId: string; to: string; subject: string; text: string },
   env: Record<string, string | undefined> = process.env,
@@ -11,16 +14,14 @@ export async function sendSellerEmail(
   const delivery =
     env.SELLER_EMAIL_DELIVERY ?? env.INVITATION_EMAIL_DELIVERY ?? 'manual'
   if (delivery !== 'resend') return 'manual'
-  const allowed = (
-    env.SELLER_EMAIL_ALLOWLIST ??
-    env.INVITATION_EMAIL_ALLOWLIST ??
-    ''
-  )
-    .split(',')
-    .map((email) => email.trim().toLowerCase())
-    .filter(Boolean)
   const to = input.to.trim().toLowerCase()
-  if (!allowed.includes(to)) return 'restricted'
+  if (
+    !allowsRecipient(
+      env.SELLER_EMAIL_ALLOWLIST ?? env.INVITATION_EMAIL_ALLOWLIST,
+      to,
+    )
+  )
+    return 'restricted'
   const key = env.RESEND_API_KEY,
     from = env.SELLER_EMAIL_FROM ?? env.INVITATION_EMAIL_FROM
   if (!key || !from) return 'unconfirmed'
@@ -59,16 +60,13 @@ export async function sendSellerEmailWithId(
     env.SELLER_EMAIL_DELIVERY ?? env.INVITATION_EMAIL_DELIVERY ?? 'manual'
   if (delivery !== 'resend')
     return { status: await sendSellerEmail(input, env), providerMessageId: '' }
-  const allowed = (
-    env.SELLER_EMAIL_ALLOWLIST ??
-    env.INVITATION_EMAIL_ALLOWLIST ??
-    ''
-  )
-    .split(',')
-    .map((email) => email.trim().toLowerCase())
-    .filter(Boolean)
   const to = input.to.trim().toLowerCase()
-  if (!allowed.includes(to))
+  if (
+    !allowsRecipient(
+      env.SELLER_EMAIL_ALLOWLIST ?? env.INVITATION_EMAIL_ALLOWLIST,
+      to,
+    )
+  )
     return { status: 'restricted', providerMessageId: '' }
   const key = env.RESEND_API_KEY,
     from = env.SELLER_EMAIL_FROM ?? env.INVITATION_EMAIL_FROM

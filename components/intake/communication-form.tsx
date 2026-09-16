@@ -58,9 +58,11 @@ export function CommunicationForm({
         setError(
           result.error === 'SELLER_EMAIL_MISSING'
             ? d.noEmail
-            : ['FORBIDDEN', 'AUTH_REQUIRED'].includes(result.error)
-              ? intake.denied
-              : intake.failed,
+            : result.error === 'EMAIL_DAILY_CAP'
+              ? d.dailyCap
+              : ['FORBIDDEN', 'AUTH_REQUIRED'].includes(result.error)
+                ? intake.denied
+                : intake.failed,
         )
         return
       }

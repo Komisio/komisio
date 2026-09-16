@@ -23,6 +23,7 @@ export const communicationErrorCodes = [
   'SELLER_NOT_FOUND',
   'SELLER_EMAIL_MISSING',
   'REFERENCE_NOT_FOUND',
+  'EMAIL_DAILY_CAP',
   'INVALID_INPUT',
 ] as const
 export type CommunicationError =

@@ -161,6 +161,8 @@ export const aiPlatformSettings = z.object({
   outputOrePerMillion: z.number(),
   period: z.string(),
   capUsedOre: z.number().int(),
+  emailDailyCap: z.number().int(),
+  inviteDailyCap: z.number().int(),
   showcase: z.array(z.object({ tenantId: z.uuid(), label: z.string() })),
 })
 export type AiPlatformSettings = z.infer<typeof aiPlatformSettings>
@@ -178,6 +180,8 @@ export const aiSettingsCommand = z.strictObject({
   reserveBatchOre: z.number().int().min(1).max(100_000).optional(),
   inputOrePerMillion: z.number().min(0).max(1_000_000).optional(),
   outputOrePerMillion: z.number().min(0).max(1_000_000).optional(),
+  emailDailyCap: z.number().int().min(0).max(1_000_000).optional(),
+  inviteDailyCap: z.number().int().min(0).max(100_000).optional(),
 })
 export async function setAiPlatformSettings(
   client: SupabaseClient,

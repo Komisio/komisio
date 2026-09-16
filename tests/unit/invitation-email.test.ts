@@ -32,6 +32,18 @@ it('never sends outside the exact pilot allowlist, even on a matching domain', a
   ).toBe('restricted')
   expect(fetchMock).not.toHaveBeenCalled()
 })
+it('sends to any address when the deployment is open', async () => {
+  vi.stubEnv('INVITATION_EMAIL_ALLOWLIST', '*')
+  fetchMock.mockResolvedValue(
+    new Response(JSON.stringify({ id: 'provider-message-id' })),
+  )
+  expect(
+    await sendInvitationEmail({ ...input, email: 'colleague@astore.test' }),
+  ).toBe('accepted')
+  expect(JSON.parse(fetchMock.mock.calls[0][1].body).to).toEqual([
+    'colleague@astore.test',
+  ])
+})
 it('fails closed when the allowlist is empty', async () => {
   vi.stubEnv('INVITATION_EMAIL_ALLOWLIST', '')
   expect(await sendInvitationEmail(input)).toBe('restricted')

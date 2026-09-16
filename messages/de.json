@@ -341,7 +341,8 @@
     "CHAIN_CONFLICT": "Der Store gehört bereits zu einer Kette.",
     "CHAIN_NOT_FOUND": "Die Kette existiert nicht mehr.",
     "TENANT_CHANGED": "Der aktive Store hat sich geändert. Laden Sie die Seite neu, bevor Sie fortfahren.",
-    "REQUEST_FAILED": "Ihre Änderungen konnten nicht gespeichert werden. Bitte versuchen Sie es erneut."
+    "REQUEST_FAILED": "Ihre Änderungen konnten nicht gespeichert werden. Bitte versuchen Sie es erneut.",
+    "INVITE_DAILY_CAP": "Das Tageslimit des Stores für Einladungen ist erreicht. Versuchen Sie es morgen erneut."
   },
   "inspection": {
     "title": "Tüte prüfen",
@@ -1261,11 +1262,12 @@
     "outcomes": {
       "queued": "eingereiht",
       "sent": "gesendet",
-      "restricted": "nicht gesendet: Adresse nicht auf der Pilot-Freigabeliste",
+      "restricted": "nicht gesendet: diese Umgebung sendet nicht an diese Adresse",
       "manual": "nicht gesendet: E-Mail-Zustellung ist aus, manuell übergeben",
       "unconfirmed": "Zustellung nicht bestätigt",
       "failed": "Zustellung fehlgeschlagen"
-    }
+    },
+    "dailyCap": "Das Tageslimit des Stores für Nachrichten ist erreicht. Versuchen Sie es morgen erneut."
   },
   "stock": {
     "title": "Bestand",
@@ -2334,7 +2336,9 @@
       "showcaseStore": "Store",
       "showcaseLabel": "Bezeichnung (z. B. Second-Hand-Store in Södertälje)",
       "showcaseAdd": "Auf der Produktseite anzeigen",
-      "showcaseRemove": "Entfernen"
+      "showcaseRemove": "Entfernen",
+      "emailDailyCap": "Nachrichten pro Store und Tag",
+      "inviteDailyCap": "Einladungen pro Store und Tag"
     }
   }
 }

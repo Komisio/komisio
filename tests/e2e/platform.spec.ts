@@ -585,7 +585,7 @@ test('failed confirmation preserves a safe invitation destination', async ({
   await expect(
     page.getByText('Du har följt en butiksinbjudan.', { exact: false }),
   ).toBeVisible()
-  await page.getByRole('button', { name: 'English', exact: true }).click()
+  await page.locator('.locale-switch select').selectOption('en')
   await expect(
     page.getByText('You followed a store invitation.', { exact: false }),
   ).toBeVisible()
@@ -596,7 +596,7 @@ test('failed confirmation preserves a safe invitation destination', async ({
 
 test('anonymous invitation uses the selected language', async ({ page }) => {
   await page.goto('/login')
-  await page.getByRole('button', { name: 'English', exact: true }).click()
+  await page.locator('.locale-switch select').selectOption('en')
   await page.goto(`/invite/${'b'.repeat(64)}`)
   await expect(
     page.getByRole('heading', { name: "You're invited.", exact: true }),
@@ -612,7 +612,7 @@ test('selected English survives confirmation and store creation', async ({
 }) => {
   const run = Date.now().toString(36)
   await page.goto('/register')
-  await page.getByRole('button', { name: 'English', exact: true }).click()
+  await page.locator('.locale-switch select').selectOption('en')
   await page
     .getByLabel('Email address', { exact: true })
     .fill(`english-${run}@example.test`)

@@ -46,7 +46,9 @@ export function PrintDevices({
       })
       const data = await r.json().catch(() => ({}))
       if (!r.ok) {
-        setMessage(d.codeFailed)
+        setMessage(
+          data.error === 'PLAN_LIMIT_DEVICES' ? d.deviceLimit : d.codeFailed,
+        )
         return null
       }
       return data

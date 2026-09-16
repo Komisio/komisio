@@ -8,6 +8,10 @@ proposes; the decisions are listed at the end and in
 Owner decisions C1 to C6 (2026-09-14): approved, price excluding VAT.
 Slice 1 (plan state, gate, trial, host activation) is delivered in
 migration `20260916030000`; see "Delivered" at the end.
+Superseded in part on 2026-09-16: the read-only gate after a trial or a
+lapsed subscription is replaced by a free core with a monthly item cap and
+a paid package, Butik Plus. See [PLANS-FREE-CORE.md](PLANS-FREE-CORE.md);
+the read-only descriptions below are kept as history.
 
 ## The shape of the offer
 
@@ -225,8 +229,9 @@ production migrations (the owner).
 ## Delivered (slice 2, part two, 2026-09-14): trial notices
 
 - `due_plan_notices()` (billing actor) lists stores that need a notice:
-  `trial_week` (seven days left), `trial_tomorrow`, `trial_ended` (read-only
-  after a trial, within three days) and `grace_week` (payment overdue,
+  `trial_week` (seven days left), `trial_tomorrow`, `trial_ended` (the store
+  continued on the free core after a trial, within three days; read-only
+  before 2026-09-16) and `grace_week` (payment overdue,
   grace ending within a week), with the owners' addresses and the first
   owner's language. `record_plan_notice` records one row per store and
   kind (`plan_notices`, immutable; owners and hosts read).

@@ -26,8 +26,8 @@ wall/vision reception; tenant-configurable intake, self-drop-off, pickup and rec
 policies; staff registration and counter QR self-registration; seller mobile/web
 visibility and payout requests; space booking with both seller-run checkout and
 shared store checkout. Komisio initially integrates with POS. Free access and
-SEK 199/month are the pricing direction; entitlements, AI costs and billing remain
-separate decisions. BankID and Stripe are candidates to investigate, not delivered
+SEK 199/month are the pricing direction; on 2026-09-16 the owner decided the
+free core with a monthly item cap and the Butik Plus package (docs/PLANS-FREE-CORE.md). BankID and Stripe are candidates to investigate, not delivered
 identity or payout integrations. Owner answers on 2026-09-12: store-owned
 (purchased) items are in scope for the first sale slice; Zettle is the first
 POS; four label templates ship on day one; sellers are notified by e-mail first.

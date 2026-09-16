@@ -35,10 +35,10 @@ update tenant_plans set trial_ends_at=now()-interval '1 minute' where tenant_id=
 select set_config('komisio.plan_transition','',true);
 select is((komisio_private.expire_plans()->>'expired')::int,1,'one trial expired');
 set local role authenticated;
-select is(plan_status(current_setting('test.t2')::uuid)->>'state','read_only','store is read-only');
-select is((plan_status(current_setting('test.t2')::uuid)->>'writable')::boolean,false,'and says it is not writable');
-select throws_like($$select register_seller(current_setting('test.t2')::uuid,gen_random_uuid(),'Seller three','three@plan.test','')$$,'%PLAN_READ_ONLY%','a new seller is refused');
-select throws_like($$select receive_bag(current_setting('test.t2')::uuid,gen_random_uuid(),(select id from sellers where tenant_id=current_setting('test.t2')::uuid limit 1),'')$$,'%PLAN_READ_ONLY%','a new bag is refused');
+select is(plan_status(current_setting('test.t2')::uuid)->>'state','free','store continues on the free core');
+select is((plan_status(current_setting('test.t2')::uuid)->>'writable')::boolean,true,'and stays writable');
+select lives_ok($$select register_seller(current_setting('test.t2')::uuid,gen_random_uuid(),'Seller three','three@plan.test','')$$,'a new seller is registered on the free core');
+select lives_ok($$select receive_bag(current_setting('test.t2')::uuid,gen_random_uuid(),(select id from sellers where tenant_id=current_setting('test.t2')::uuid limit 1),'')$$,'a new bag is received on the free core');
 select lives_ok($$select economy_summary(current_setting('test.t2')::uuid,'2026-09-01','2026-09-30')$$,'reads still work');
 select lives_ok($$select list_members(current_setting('test.t2')::uuid)$$,'membership reads still work');
 select is((select actor from tenant_plan_events where tenant_id=current_setting('test.t2')::uuid and kind='trial_expired'),'f0000000-0000-4000-8000-000000000453'::uuid,'expiry carries the person who started the trial as actor');

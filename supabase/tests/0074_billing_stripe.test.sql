@@ -43,8 +43,8 @@ reset role;
 select is((komisio_private.expire_plans()->>'expired')::int,1,'period end passed: expiry run closes it');
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000461","role":"authenticated"}';
-select is(plan_status(current_setting('test.tenant')::uuid)->>'state','read_only','read-only after the paid period');
-select throws_like($$select register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'U','u@bill.test','')$$,'%PLAN_READ_ONLY%','no new facts');
+select is(plan_status(current_setting('test.tenant')::uuid)->>'state','free','free core after the paid period');
+select lives_ok($$select register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'U','u@bill.test','')$$,'the free core keeps writing');
 -- Subscription deleted on a closed store records the event but changes nothing; unknown ids are recorded as unmatched.
 select close_store(current_setting('test.tenant')::uuid,'moving on');
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000463","role":"authenticated"}';

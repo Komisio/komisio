@@ -79,6 +79,9 @@
     "openPolicy": "Ändra i butikspolicyn",
     "recordAgreement": "Registrera det påskrivna avtalet på säljaren.",
     "errors": {
+      "PLAN_PLUS_REQUIRED": "Det här kräver Butik Plus. Aktivera under Inställningar, Butik.",
+      "PLAN_LIMIT_ITEMS": "Den gratis kärnans månadstak för mottagna varor är nått. Butik Plus tar bort taket.",
+      "PLAN_LIMIT_DEVICES": "Planens antal utskriftsenheter är nått. Koppla bort en eller aktivera Butik Plus.",
       "FORBIDDEN": "Du saknar behörighet i butiken.",
       "INVALID_INPUT": "Kontrollera beskrivning och pris.",
       "INTAKE_PROFILE_FULL": "Butiken använder mottagning steg för steg.",
@@ -1383,6 +1386,7 @@
     }
   },
   "printing": {
+    "deviceLimit": "Planens antal utskriftsenheter är nått. Koppla bort en eller aktivera Butik Plus.",
     "templatesHeading": "Etikettmallar (ZPL)",
     "templatesIntro": "Varje etikettyp skrivs med den inbyggda layouten skalad till sin storlek. En butik kan i stället skriva ett eget ZPL-program: platshållare inom klammer fylls med etikettens uppgifter, varje värde rensas så att det aldrig kan ändra programmet, och skrivarkommandon (~) tas inte emot. Varje sparning är en ny version; den inbyggda layouten finns ett klick bort.",
     "templateCustom": "egen mall",
@@ -1588,26 +1592,29 @@
   },
   "plans": {
     "heading": "Plan",
-    "priceNote": "Komisio som tjänst: 30 dagar gratis från att butiken skapas, därefter 199 kr per butik och månad exklusive moms. Egen drift av Komisio är gratis.",
+    "priceNote": "Kärnan är gratis, även hos Komisio: mottagning, etiketter, en utskriftsenhet, säljarportal, Zettle, utbetalningar, kontoutdrag, dagsavslut och SIE-export, upp till 100 mottagna varor per månad. Butik Plus, 199 kr per butik och månad exklusive moms, tar bort taket och ger Shopify, Fortnox, AI-assistenten, kedjor och upp till fem utskriftsenheter. En ny butik har Plus i 30 dagar.",
     "trialEndsAt": "provperioden slutar",
     "graceEndsAt": "fristen slutar",
     "activeUntil": "aktiv till",
     "states": {
-      "trial": "Provperiod",
+      "free": "Gratis kärna",
+      "trial": "Plus, provperiod",
       "active": "Aktiv",
       "past_due": "Betalning saknas",
       "read_only": "Läsläge",
       "closed": "Stängd"
     },
     "explain": {
-      "trial": "Allt fungerar under provperioden. Aktivera prenumerationen innan den slutar för att fortsätta registrera plagg och försäljningar.",
+      "free": "Butiken kör den gratis kärnan. Uppgradera till Butik Plus för obegränsat antal varor, Shopify, Fortnox, AI-assistenten, kedjor och fler utskriftsenheter.",
+      "trial": "Allt i Butik Plus fungerar under provperioden. Därefter fortsätter butiken gratis med kärnan; aktivera Plus för att behålla allt.",
       "active": "Prenumerationen är aktiv.",
       "past_due": "Senaste betalningen misslyckades. Butiken fungerar under fristen; därefter blir den läsläge tills betalningen är löst.",
       "read_only": "Allt går att läsa och exportera, men inget nytt registreras: ingen mottagning, försäljning, prissänkning eller utbetalningsbegäran. Aktivera prenumerationen för att fortsätta.",
       "closed": "Butiken är stängd av sin ägare. Data går fortfarande att läsa och exportera."
     },
-    "trialEndingSoon": "Din gratis provperiod slutar om {days} dagar.",
-    "pastDue": "Betalning saknas: butiken blir läsläge om {days} dagar.",
+    "trialEndingSoon": "Butik Plus-provperioden slutar om {days} dagar; därefter fortsätter butiken gratis med kärnan.",
+    "freeLimitSoon": "{used} av {limit} varor mottagna den här månaden i den gratis kärnan. Butik Plus tar bort taket.",
+    "pastDue": "Betalning saknas: butiken går tillbaka till den gratis kärnan om {days} dagar.",
     "readOnly": "Den här butiken är i läsläge tills prenumerationen aktiveras.",
     "closed": "Den här butiken är stängd.",
     "contactToActivate": "Kontakta Komisio för att aktivera prenumerationen.",
@@ -1822,6 +1829,9 @@
       "disconnected": "Bortkopplad"
     },
     "errors": {
+      "PLAN_PLUS_REQUIRED": "Det här kräver Butik Plus. Aktivera under Inställningar, Butik.",
+      "PLAN_LIMIT_ITEMS": "Den gratis kärnans månadstak för mottagna varor är nått. Butik Plus tar bort taket.",
+      "PLAN_LIMIT_DEVICES": "Planens antal utskriftsenheter är nått. Koppla bort en eller aktivera Butik Plus.",
       "SHOPIFY_UPLOAD_REJECTED": "Shopify avvisade bilduppladdningen.",
       "SHOPIFY_UPLOAD_FAILED": "Bilden kunde inte laddas upp till Shopify.",
       "SHOPIFY_IMAGE_REJECTED": "Shopify avvisade bilden för produkten.",
@@ -2179,12 +2189,12 @@
       "text": "Hej,\n\nDen fria provperioden för {store} slutar {date}. Aktivera prenumerationen under Inställningar för att fortsätta registrera plagg, försäljningar och utbetalningar:\n{link}"
     },
     "trial_ended": {
-      "subject": "{store} är nu i läsläge",
-      "text": "Hej,\n\nDen fria provperioden för {store} slutade {date}. Butiken är nu i läsläge: allt går att läsa och exportera, inget nytt registreras. Aktivera prenumerationen under Inställningar så fungerar butiken igen direkt:\n{link}"
+      "subject": "Provperioden för {store} är slut – butiken fortsätter gratis",
+      "text": "Hej,\n\nProvperioden med Butik Plus för {store} slutade {date}. Butiken fortsätter gratis: mottagning, försäljning, redovisning och utbetalningar fungerar som vanligt, upp till 100 nya varor per månad och en etikettskrivare. Shopify, Fortnox, kedjor och AI-assistenten ingår i Butik Plus. Aktivera Butik Plus under Inställningar när du vill:\n{link}"
     },
     "grace_week": {
       "subject": "Betalning saknas för {store}",
-      "text": "Hej,\n\nDen senaste betalningen för {store} misslyckades. Om den inte är löst senast {date} blir butiken läsläge. Uppdatera betalsättet under Inställningar:\n{link}"
+      "text": "Hej,\n\nDen senaste betalningen för {store} misslyckades. Om den inte är löst senast {date} går butiken tillbaka till gratisnivån. Uppdatera betalsättet under Inställningar:\n{link}"
     },
     "footer": "Komisio · tjänsten kostar 199 kr per butik och månad exklusive moms · det här meddelandet skickas en gång per steg och har inga bilagor."
   },

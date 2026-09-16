@@ -215,8 +215,10 @@ describe('hosted MCP connector', () => {
     expect(hostedToolAllowed('komisio_read_reception')).toBe(true)
     expect(hostedToolAllowed('komisio_preview_reception')).toBe(true)
     expect(hostedToolAllowed('komisio_propose_reception_review')).toBe(true)
+    // The bag queue became an engine function too.
+    expect(hostedToolAllowed('komisio_list_bags')).toBe(true)
     // A photo lives in a storage bucket, which no connector token reaches.
     expect(hostedToolAllowed('komisio_read_reception_photo')).toBe(false)
-    expect(hostedExcludedTools.size).toBe(8)
+    expect(hostedExcludedTools.size).toBe(7)
   })
 })

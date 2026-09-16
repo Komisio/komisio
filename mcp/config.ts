@@ -56,7 +56,6 @@ export const hostedExcludedTools = new Set([
   'komisio_read_reception_operation',
   'komisio_preview_inspection',
   'komisio_prepare_inspection_reception',
-  'komisio_list_bags',
   'komisio_read_inspection',
   'komisio_read_reception_history',
   'komisio_read_reception_photo',

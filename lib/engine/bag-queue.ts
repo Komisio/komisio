@@ -57,7 +57,10 @@ export async function readBagQueue(
     p_newer: filters.newer ?? null,
   })
   if (result.error) throw new Error('Unable to load bag queue')
-  const rows = z.array(bagQueueRow).max(21).parse(result.data ?? [])
+  const rows = z
+    .array(bagQueueRow)
+    .max(21)
+    .parse(result.data ?? [])
   const items = rows.slice(0, 20)
   if (filters.newer) items.reverse()
   return {

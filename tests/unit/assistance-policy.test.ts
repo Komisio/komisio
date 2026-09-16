@@ -22,7 +22,13 @@ it('accepts assistanceEnabled as an optional boolean policy key', () => {
     storePolicyBody.parse({ ...defaultStorePolicy(), assistanceEnabled: true })
       .assistanceEnabled,
   ).toBe(true)
-  expect('assistanceEnabled' in defaultStorePolicy()).toBe(false)
+  // On by default (owner decision 2026-09-16) so a new store meets a working
+  // reception screen. A store may still publish it off.
+  expect(defaultStorePolicy().assistanceEnabled).toBe(true)
+  expect(
+    storePolicyBody.parse({ ...defaultStorePolicy(), assistanceEnabled: false })
+      .assistanceEnabled,
+  ).toBe(false)
   for (const value of ['yes', 1, null])
     expect(
       storePolicyBody.safeParse({

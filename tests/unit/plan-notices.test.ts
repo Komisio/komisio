@@ -23,7 +23,9 @@ describe('plan notices', () => {
       { ...notice, locale: 'en', kind: 'trial_ended' },
       'https://app.example.test',
     )
-    expect(en.subject).toBe('Preloved is now read-only')
+    expect(en.subject).toBe(
+      'The trial for Preloved has ended – the store continues for free',
+    )
     expect(en.text).not.toContain('{')
   })
   it('sends to every owner, records once per store and kind, and never retries a store without owners', async () => {

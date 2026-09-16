@@ -49,6 +49,8 @@ export const quickErrorCodes = [
   'CURRENCY_MISMATCH',
   'ITEM_EXISTS',
   'REQUEST_CONFLICT',
+  'PLAN_LIMIT_ITEMS',
+  'PLAN_PLUS_REQUIRED',
 ] as const
 
 export async function quickReceive(client: SupabaseClient, input: unknown) {

@@ -45,14 +45,15 @@ move to DECISIONS.md and the settings to PILOT-GATES.md.
 
 ## C. Onboarding and plans (see [ONBOARDING-AND-PLANS.md](ONBOARDING-AND-PLANS.md))
 
-| #   | Question                                       | Proposed default                                                                                                                         |
-| --- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| C1  | Price and VAT presentation                     | SEK 199 per store and month, excluding VAT (corrected by the owner 2026-09-15; the 2026-09-14 answer said including); one plan           |
-| C2  | Trial and grace                                | 30 days from store creation; 14 days grace after a failed payment                                                                        |
-| C3  | What read-only blocks                          | No new facts (reception, sales, markdowns, payout requests, agent proposals); reads, exports and marking approved payouts paid stay open |
-| C4  | Payment provider and methods                   | Stripe Checkout and customer portal; card and invoice; prices and tax live in Stripe                                                     |
-| C5  | Production domain and operating company        | `app.komisio.com`; the Stripe account in the company that operates the service                                                           |
-| C6  | Staging soak and production migration approval | One working day on staging; the owner approves the `production-database` job in GitHub                                                   |
+| #   | Question                                          | Proposed default                                                                                                                                                                                           |
+| --- | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| C1  | Price and VAT presentation                        | SEK 199 per store and month, excluding VAT (corrected by the owner 2026-09-15; the 2026-09-14 answer said including); one plan                                                                             |
+| C2  | Trial and grace                                   | 30 days from store creation; 14 days grace after a failed payment                                                                                                                                          |
+| C3  | What read-only blocks (replaced by C7, free core) | No new facts (reception, sales, markdowns, payout requests, agent proposals); reads, exports and marking approved payouts paid stay open                                                                   |
+| C4  | Payment provider and methods                      | Stripe Checkout and customer portal; card and invoice; prices and tax live in Stripe                                                                                                                       |
+| C5  | Production domain and operating company           | `app.komisio.com`; the Stripe account in the company that operates the service                                                                                                                             |
+| C6  | Staging soak and production migration approval    | One working day on staging; the owner approves the `production-database` job in GitHub                                                                                                                     |
+| C7  | Butik Plus in Stripe (decided 2026-09-16)         | Create the product "Butik Plus", SEK 199 per store and month excluding VAT, and put its price id in `STRIPE_PRICE_ID`; update the marketing site to the free core and Plus offer (docs/PLANS-FREE-CORE.md) |
 
 ## D. Architecture decisions (see [AUTOMATION-ACTOR.md](AUTOMATION-ACTOR.md))
 

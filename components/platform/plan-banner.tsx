@@ -16,7 +16,15 @@ export function PlanBanner({
   const fill = (t: string) => t.replace('{days}', String(status.daysLeft ?? 0))
   let text: string | null = null
   let alert = false
-  if (status.state === 'trial' && (status.daysLeft ?? 99) <= 7)
+  if (
+    status.state === 'free' &&
+    status.itemLimit &&
+    (status.itemsThisMonth ?? 0) >= Math.floor(status.itemLimit * 0.8)
+  )
+    text = d.freeLimitSoon
+      .replace('{used}', String(status.itemsThisMonth ?? 0))
+      .replace('{limit}', String(status.itemLimit))
+  else if (status.state === 'trial' && (status.daysLeft ?? 99) <= 7)
     text = fill(d.trialEndingSoon)
   else if (status.state === 'past_due') {
     text = fill(d.pastDue)

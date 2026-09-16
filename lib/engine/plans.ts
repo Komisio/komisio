@@ -21,12 +21,6 @@ export const planStatus = z.object({
   graceEndsAt: z.string().nullable().optional(),
   activeUntil: z.string().nullable().optional(),
   daysLeft: z.number().int().nullable().optional(),
-  // Free core and Butik Plus (2026-09-16): the tier and the free core's monthly intake usage.
-  tier: z.enum(['free', 'plus']).optional(),
-  itemsThisMonth: z.number().int().optional(),
-  itemLimit: z.number().int().nullable().optional(),
-  devices: z.number().int().optional(),
-  deviceLimit: z.number().int().nullable().optional(),
 })
 export type PlanStatus = z.infer<typeof planStatus>
 

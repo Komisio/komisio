@@ -79,9 +79,9 @@
     "openPolicy": "Change in the store policy",
     "recordAgreement": "Record the signed agreement on the seller.",
     "errors": {
-      "PLAN_PLUS_REQUIRED": "This needs Butik Plus. Activate it under Settings, Store.",
-      "PLAN_LIMIT_ITEMS": "The free core's monthly limit of accepted items is reached. Butik Plus lifts it.",
-      "PLAN_LIMIT_DEVICES": "The plan's number of print devices is reached. Disconnect one or activate Butik Plus.",
+      "PLAN_PLUS_REQUIRED": "This feature is not available in this environment.",
+      "PLAN_LIMIT_ITEMS": "The store cannot receive more items right now.",
+      "PLAN_LIMIT_DEVICES": "More print devices cannot be paired right now.",
       "FORBIDDEN": "You do not have permission for this store.",
       "INVALID_INPUT": "Check the description and the price.",
       "INTAKE_PROFILE_FULL": "This store uses the step-by-step reception.",
@@ -270,7 +270,8 @@
     "profile": "Store profile",
     "store": "Store and plan",
     "printing": "Printers and labels",
-    "connectors": "AI assistants"
+    "connectors": "AI assistants",
+    "credits": "AI credits"
   },
   "tenantIdentity": "Store identity",
   "tenantId": "Store id",
@@ -597,7 +598,9 @@
       "openOperation": "Open review operation",
       "failed": "Preparation could not be confirmed. Retry the same row; saved steps are reused. If sources changed, check the reception queue before starting again."
     },
-    "photoSeenBefore": "A photo in this reception was uploaded before. Check whether the garment was received already:"
+    "photoSeenBefore": "A photo in this reception was uploaded before. Check whether the garment was received already:",
+    "aiCredits": "The store's AI credits for the month are used up. Buy more under Settings, AI credits, or connect the store's own model key.",
+    "aiCap": "Komisio's shared AI budget for the month is used up. Purchased credits and an own model key still work."
   },
   "operations": {
     "title": "Proposed operations",
@@ -1387,7 +1390,7 @@
     }
   },
   "printing": {
-    "deviceLimit": "The plan's number of print devices is reached. Disconnect one or activate Butik Plus.",
+    "deviceLimit": "More print devices cannot be paired right now.",
     "templatesHeading": "Label templates (ZPL)",
     "templatesIntro": "Each label kind prints the built-in layout scaled to its size. A store can write its own ZPL program instead: placeholders in braces are filled with the label's facts, every value is cleaned so it can never alter the program, and printer control commands (~) are not accepted. Every save is a new version; the built-in layout is one click away.",
     "templateCustom": "own template",
@@ -1593,29 +1596,29 @@
   },
   "plans": {
     "heading": "Plan",
-    "priceNote": "The core is free, also hosted by Komisio: reception, labels, one print device, seller portal, Zettle, payouts, statements, day close and SIE export, up to 100 accepted items a month. Butik Plus, SEK 199 per store and month excluding VAT, lifts the cap and adds Shopify, Fortnox, the assistant, chains and up to five print devices. A new store has Plus for 30 days.",
+    "priceNote": "Komisio is free and open source: every feature is included, with no limits on items, printers or integrations. The only thing metered is the AI assistant's credits, see the AI credits tab.",
     "trialEndsAt": "trial ends",
     "graceEndsAt": "grace ends",
     "activeUntil": "active until",
     "states": {
       "free": "Free core",
-      "trial": "Plus, trial",
+      "trial": "Trial",
       "active": "Active",
       "past_due": "Payment overdue",
       "read_only": "Read only",
       "closed": "Closed"
     },
     "explain": {
-      "free": "The store runs the free core. Upgrade to Butik Plus for unlimited items, Shopify, Fortnox, the assistant, chains and more print devices.",
-      "trial": "Everything in Butik Plus works during the trial. Afterwards the store continues free with the core; activate Plus to keep everything.",
+      "free": "The store runs without a subscription. Every feature is open.",
+      "trial": "The trial does not change what the store can do; every feature is open.",
       "active": "The subscription is active.",
       "past_due": "The last payment failed. The store keeps working during the grace period; after that it becomes read-only until the payment is settled.",
       "read_only": "Everything can be read and exported, but nothing new is recorded: no reception, sales, markdowns or payout requests. Activate the subscription to continue.",
       "closed": "The store is closed by its owner. Data stays readable and exportable."
     },
-    "trialEndingSoon": "The Butik Plus trial ends in {days} days; the store then continues free with the core.",
-    "freeLimitSoon": "{used} of {limit} items accepted this month in the free core. Butik Plus lifts the cap.",
-    "pastDue": "Payment missing: the store returns to the free core in {days} days.",
+    "trialEndingSoon": "The trial ends in {days} days; the store continues as usual without a subscription.",
+    "freeLimitSoon": "",
+    "pastDue": "Payment missing; the store continues as usual without a subscription in {days} days.",
     "readOnly": "This store is read-only until its subscription is activated.",
     "closed": "This store is closed.",
     "contactToActivate": "Contact Komisio to activate the subscription.",
@@ -1830,9 +1833,9 @@
       "disconnected": "Disconnected"
     },
     "errors": {
-      "PLAN_PLUS_REQUIRED": "This needs Butik Plus. Activate it under Settings, Store.",
-      "PLAN_LIMIT_ITEMS": "The free core's monthly limit of accepted items is reached. Butik Plus lifts it.",
-      "PLAN_LIMIT_DEVICES": "The plan's number of print devices is reached. Disconnect one or activate Butik Plus.",
+      "PLAN_PLUS_REQUIRED": "This feature is not available in this environment.",
+      "PLAN_LIMIT_ITEMS": "The store cannot receive more items right now.",
+      "PLAN_LIMIT_DEVICES": "More print devices cannot be paired right now.",
       "SHOPIFY_UPLOAD_REJECTED": "Shopify refused the image upload.",
       "SHOPIFY_UPLOAD_FAILED": "The image could not be uploaded to Shopify.",
       "SHOPIFY_IMAGE_REJECTED": "Shopify refused the image for the product.",
@@ -2191,11 +2194,11 @@
     },
     "trial_ended": {
       "subject": "The trial for {store} has ended – the store continues for free",
-      "text": "Hello,\n\nThe Butik Plus trial for {store} ended on {date}. The store continues for free: reception, sales, accounting and payouts work as before, up to 100 new items a month and one label printer. Shopify, Fortnox, chains and the AI assistant are part of Butik Plus. Activate Butik Plus under Settings whenever you like:\n{link}"
+      "text": "Hello,\n\nThe trial for {store} ended on {date}. The store continues for free with every feature. The AI assistant runs on the month's included credits; more credits and an own model key are under Settings:\n{link}"
     },
     "grace_week": {
       "subject": "Payment overdue for {store}",
-      "text": "Hello,\n\nThe last payment for {store} failed. If it is not settled by {date} the store returns to the free tier. Update the payment method under Settings:\n{link}"
+      "text": "Hello,\n\nThe last payment for {store} failed. If it is not settled by {date} the store continues without a subscription; every feature stays open. Update the payment method under Settings:\n{link}"
     },
     "footer": "Komisio · hosted plan, SEK 199 per store and month excluding VAT · this message is sent once per step and has no attachments."
   },
@@ -2231,7 +2234,7 @@
   "connectors": {
     "title": "AI assistants",
     "intro": "Connect the store's own AI assistant (Claude or ChatGPT, for example) to Komisio. The assistant reads and proposes as the person who approved the connection; nothing is carried out until someone in the store approves it. The assistant's own tokens are paid by the store to its provider.",
-    "plusRequired": "AI assistants are part of Butik Plus.",
+    "plusRequired": "",
     "howToHeading": "How to connect",
     "howTo1": "Add Komisio as a custom connector in the assistant with the address",
     "howTo2": "Sign in when the assistant asks, choose the store and what it may do, and approve.",
@@ -2282,6 +2285,54 @@
       "working": "Approving…",
       "invalid": "The assistant's request is incomplete or unknown. Start again from the assistant.",
       "notMember": "You are not a member of a store that can be connected."
+    }
+  },
+  "credits": {
+    "title": "AI credits",
+    "intro": "Komisio is free and open source, also when Inority hosts it. The only thing metered is the AI assistant's model calls when they run on Komisio's own key. One credit is one krona.",
+    "offer": "{included} credits are included every month, normally enough for about {items} received items. When they run out you buy {pack} more for {pack} SEK or connect the store's own model key; then no credits are drawn.",
+    "selfHosted": "This installation meters no credits: the assistant runs on the installation's own key.",
+    "includedLeft": "Left of this month's credits",
+    "purchasedLeft": "Purchased credits",
+    "usedThisMonth": "Used this month",
+    "capReached": "Komisio's shared AI budget for the month is used up. Purchased credits and an own key still work.",
+    "buy": "Buy {pack} credits for {pack} SEK",
+    "buyUnavailable": "Purchases are not available in this environment yet.",
+    "working": "Working…",
+    "ownKeyHeading": "Own model key",
+    "ownKeyIntro": "Connect the store's own OpenAI account: the store pays its provider directly and no credits are drawn. The key is sealed before it is stored and never shown again.",
+    "ownKeyActive": "The store runs the assistant on its own key ({model}). No credits are drawn.",
+    "model": "Model",
+    "key": "API key",
+    "keyHint": "Create the key at OpenAI with access to the Responses API.",
+    "connect": "Connect the key",
+    "removeKey": "Remove the key",
+    "keyConnected": "The key is connected.",
+    "keyRemoved": "The key is removed; the assistant runs on Komisio's credits again.",
+    "keyInvalid": "The model name or the key has the wrong shape.",
+    "failed": "That did not work. Try again.",
+    "host": {
+      "title": "AI credits (platform)",
+      "intro": "The cap is Inority's own model cost per month and is never exceeded; purchased credits do not count against it. Amounts in kronor; reservation and prices in öre.",
+      "capUsed": "{used} of {cap} SEK of the budget used for {period}.",
+      "enabled": "Meter credits in this deployment",
+      "monthlyCap": "Monthly cap (SEK)",
+      "included": "Included per store and month (SEK)",
+      "pack": "Credit pack (SEK)",
+      "reserveOre": "Reservation per call (öre)",
+      "reserveBatchOre": "Reservation per batch call (öre)",
+      "inputOrePerMillion": "Price per million input tokens (öre)",
+      "outputOrePerMillion": "Price per million output tokens (öre)",
+      "save": "Save",
+      "saved": "Saved.",
+      "working": "Saving…",
+      "failed": "Saving failed.",
+      "showcaseHeading": "Stores on the product page",
+      "showcaseIntro": "Stores shown anonymously on the product page with real figures: items in the last 30 days and purchased credits. The label is all that is shown.",
+      "showcaseStore": "Store",
+      "showcaseLabel": "Label (e.g. second-hand store in Södertälje)",
+      "showcaseAdd": "Show on the product page",
+      "showcaseRemove": "Remove"
     }
   }
 }

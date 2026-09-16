@@ -24,7 +24,8 @@ yet SQL functions (listed at the end).
    tools. The connection is listed under Settings, "AI assistants", and can
    be disconnected there at any time.
 
-The connector is part of Butik Plus ([PLANS-FREE-CORE.md](PLANS-FREE-CORE.md)).
+The connector is free, like everything else in Komisio ([PRICING.md](PRICING.md)); the
+store's own assistant pays its own model tokens.
 The setting `KOMISIO_CONNECTORS_ENABLED=true` turns the endpoints on; they
 answer 404 otherwise. `NEXT_PUBLIC_APP_URL` is the issuer.
 
@@ -53,8 +54,7 @@ The MCP endpoint looks the token up (`connector_token_info`), builds the same
 every `rpc` becomes one call of `public.connector_call(token_hash, function,
 arguments)`. That function, in one transaction:
 
-1. finds the grant and refuses an expired token, a revoked grant or a store
-   that is not on Butik Plus;
+1. finds the grant and refuses an expired token or a revoked grant;
 2. requires the function to be listed in `connector_functions` under one of
    the grant's scopes (`propose_operation` is listed per operation kind);
 3. requires `p_tenant` to be the granted store;
@@ -115,7 +115,7 @@ settlement candidates, and every proposal tool.
 
 - pgTAP `0111_connectors` (34 assertions): registration, consent, PKCE,
   one-time code, replay voiding, scope and store binding, unknown arguments,
-  refresh rotation, listing and revocation by role, the Plus gate, and that
+  refresh rotation, listing and revocation by role, and that
   every allowed function exists with a `p_tenant` parameter.
 - `scripts/test-connector-mcp.ts`, run by `npm run test:mcp` in CI: the whole
   walk against the local database with the real MCP server in process, then
@@ -125,7 +125,7 @@ settlement candidates, and every proposal tool.
 
 Not yet verified: a real assistant (Claude, ChatGPT) against staging. That
 needs `KOMISIO_CONNECTORS_ENABLED=true` on the staging deployment (owner
-action A15) and a Plus store; the owner runs the first connection.
+action A15); the owner runs the first connection.
 
 ## Later
 

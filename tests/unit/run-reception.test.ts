@@ -103,10 +103,32 @@ it('does not return output when sources change during inference', async () => {
   await expect(run()).rejects.toThrow('RECEPTION_CHANGED')
 })
 it('rechecks staff authority after inference', async () => {
-  rpc
-    .mockResolvedValueOnce({ data: 'staff' })
-    .mockResolvedValueOnce({ data: 'readonly' })
+  // The credit settlement between the two role reads is its own rpc.
+  const roles = ['staff', 'readonly']
+  rpc.mockImplementation(async (fn: string) =>
+    fn === 'settle_reception_assistance'
+      ? { data: { metered: false }, error: null }
+      : { data: roles.shift(), error: null },
+  )
   await expect(run()).rejects.toThrow('FORBIDDEN')
+})
+it('settles the credit reservation after the call, also when it fails', async () => {
+  await run()
+  expect(rpc).toHaveBeenCalledWith(
+    'settle_reception_assistance',
+    expect.objectContaining({ p_request: command.requestId }),
+  )
+  rpc.mockClear()
+  mocks.adapter.mockReturnValue({
+    suggest: async () => {
+      throw new Error('ASSISTANCE_PROVIDER_FAILED')
+    },
+  })
+  await expect(run()).rejects.toThrow('ASSISTANCE_PROVIDER_FAILED')
+  expect(rpc).toHaveBeenCalledWith(
+    'settle_reception_assistance',
+    expect.objectContaining({ p_input_tokens: 0, p_output_tokens: 0 }),
+  )
 })
 it('returns only a current transient proposal, never a seller review write', async () => {
   const result = await run()

@@ -9,6 +9,7 @@ import { suggestReception } from './reception'
 import { suggestReceptionBatch } from './reception-batch'
 import { resolveReceptionAssistance } from './reception-config'
 import { receptionImage } from './reception-image'
+import { settleAssistance } from '../engine/ai-credits'
 import {
   openAIReception,
   receptionPromptVersion,
@@ -56,12 +57,19 @@ export async function runReceptionAssistance(
     images.set(source.id, await receptionImage(photo.bytes))
   }
   const suggest = c.mode === 'batch' ? suggestReceptionBatch : suggestReception
-  const result = await suggest(
-    state.session,
-    c.requestId,
-    openAIReception(config, images, fetch, c.mode ?? 'single'),
-    signal,
-  )
+  const adapter = openAIReception(config, images, fetch, c.mode ?? 'single')
+  let result
+  try {
+    result = await suggest(state.session, c.requestId, adapter, signal)
+  } finally {
+    // The reservation becomes the actual cost; a failed call releases it.
+    await settleAssistance(
+      client,
+      c.tenantId,
+      c.requestId,
+      adapter.usage?.() ?? null,
+    ).catch(() => undefined)
+  }
   const current = await readReceptionSession(client, c.tenantId, c.sessionId),
     currentRole = await client.rpc('tenant_role', { p_tenant: c.tenantId })
   if (

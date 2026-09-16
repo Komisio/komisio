@@ -72,7 +72,9 @@ export function openAIReception(
   transport: typeof fetch = fetch,
   mode: 'single' | 'batch' = 'single',
 ): ReceptionAssistance {
+  let lastUsage: { inputTokens: number; outputTokens: number } | null = null
   return {
+    usage: () => lastUsage,
     async suggest(evidence, signal) {
       signal.throwIfAborted()
       const photos = evidence.sources.filter((s) => s.kind === 'photo')
@@ -133,6 +135,12 @@ export function openAIReception(
       const envelope = z
         .object({
           status: z.literal('completed'),
+          usage: z
+            .object({
+              input_tokens: z.number().int().min(0),
+              output_tokens: z.number().int().min(0),
+            })
+            .optional(),
           output: z.array(
             z.object({
               type: z.string(),
@@ -145,6 +153,12 @@ export function openAIReception(
           ),
         })
         .parse(await boundedJson(response, 65536))
+      lastUsage = envelope.usage
+        ? {
+            inputTokens: envelope.usage.input_tokens,
+            outputTokens: envelope.usage.output_tokens,
+          }
+        : null
       const messages = envelope.output.filter((o) => o.type === 'message')
       if (
         messages.length !== 1 ||

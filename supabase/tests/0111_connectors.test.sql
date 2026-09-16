@@ -69,18 +69,6 @@ select is(jsonb_array_length(connectors(current_setting('test.tenant')::uuid)),1
 select is((revoke_connector(current_setting('test.tenant')::uuid,'a0000000-0000-4000-8000-000000000003')->>'revokedAt') is not null,true,'the owner disconnects it');
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000953","role":"authenticated"}';
 select throws_ok($$select connectors(current_setting('test.tenant')::uuid)$$,'42501',null,'an outsider sees nothing');
--- The connector is a Plus feature.
-reset role;
-select komisio_private.enable_billing('f0000000-0000-4000-8000-000000000953');
-set local role authenticated;
-set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000951","role":"authenticated"}';
-select set_config('test.free',create_tenant('Free store','connector-free',gen_random_uuid())::text,true);
-reset role;
-select set_config('komisio.plan_transition','engine',true);
-update tenant_plans set state='free',trial_ends_at=now()-interval '1 day' where tenant_id=current_setting('test.free')::uuid;
-select set_config('komisio.plan_transition','',true);
-set local role authenticated;
-select throws_like($$select authorize_connector('a0000000-0000-4000-8000-000000000004',current_setting('test.free')::uuid,'c0000000-0000-4000-8000-000000000001','https://claude.ai/api/mcp/auth_callback','{items:read}','E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',pg_temp.h('code-4'),'aal1')$$,'%PLAN_PLUS_REQUIRED%','a free store cannot connect an assistant');
 -- Every listed function exists and takes the store as p_tenant.
 reset role;
 select is((select count(*) from (select distinct f.function_name from connector_functions f) x where not exists(select 1 from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname=x.function_name and 'p_tenant'=any(p.proargnames))),0::bigint,'every allowed function exists with a p_tenant parameter');

@@ -9,14 +9,12 @@ export function ConnectorsPanel({
   tenantId,
   connectors,
   endpoint,
-  plus,
   locale,
   d,
 }: {
   tenantId: string
   connectors: ConnectorGrant[]
   endpoint: string
-  plus: boolean
   locale: string
   d: Dictionary['connectors']
 }) {
@@ -59,7 +57,6 @@ export function ConnectorsPanel({
     <section className="card intake-form" aria-label={d.title}>
       <h2>{d.title}</h2>
       <p>{d.intro}</p>
-      {!plus && <p role="status">{d.plusRequired}</p>}
       <h3>{d.howToHeading}</h3>
       <ol>
         <li>

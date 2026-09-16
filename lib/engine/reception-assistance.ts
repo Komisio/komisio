@@ -27,6 +27,8 @@ export async function reserveReceptionAssistance(
       [
         'ASSISTANCE_LIMIT',
         'USAGE_QUOTA_EXCEEDED',
+        'AI_CREDITS_EXHAUSTED',
+        'AI_CAP_REACHED',
         'RECEPTION_CHANGED',
         'REQUEST_CONFLICT',
         'FORBIDDEN',

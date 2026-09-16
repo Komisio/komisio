@@ -79,9 +79,9 @@
     "openPolicy": "Ändra i butikspolicyn",
     "recordAgreement": "Registrera det påskrivna avtalet på säljaren.",
     "errors": {
-      "PLAN_PLUS_REQUIRED": "Det här kräver Butik Plus. Aktivera under Inställningar, Butik.",
-      "PLAN_LIMIT_ITEMS": "Den gratis kärnans månadstak för mottagna varor är nått. Butik Plus tar bort taket.",
-      "PLAN_LIMIT_DEVICES": "Planens antal utskriftsenheter är nått. Koppla bort en eller aktivera Butik Plus.",
+      "PLAN_PLUS_REQUIRED": "Funktionen är inte tillgänglig i den här miljön.",
+      "PLAN_LIMIT_ITEMS": "Butiken kan inte ta emot fler varor just nu.",
+      "PLAN_LIMIT_DEVICES": "Fler utskriftsenheter kan inte kopplas just nu.",
       "FORBIDDEN": "Du saknar behörighet i butiken.",
       "INVALID_INPUT": "Kontrollera beskrivning och pris.",
       "INTAKE_PROFILE_FULL": "Butiken använder mottagning steg för steg.",
@@ -270,7 +270,8 @@
     "profile": "Butiksprofil",
     "store": "Butik och plan",
     "printing": "Skrivare och etiketter",
-    "connectors": "AI-assistenter"
+    "connectors": "AI-assistenter",
+    "credits": "AI-krediter"
   },
   "tenantIdentity": "Butikens identitet",
   "tenantId": "Butiks-id",
@@ -597,7 +598,9 @@
       "openOperation": "Öppna granskningsärendet",
       "failed": "Förberedelsen kunde inte bekräftas. Försök igen med samma rad; sparade steg återanvänds. Om underlaget ändrats, kontrollera mottagningskön innan du börjar om."
     },
-    "photoSeenBefore": "En bild i den här mottagningen har laddats upp tidigare. Kontrollera om plagget redan är mottaget:"
+    "photoSeenBefore": "En bild i den här mottagningen har laddats upp tidigare. Kontrollera om plagget redan är mottaget:",
+    "aiCredits": "Butikens AI-krediter för månaden är slut. Köp fler under Inställningar, AI-krediter, eller koppla butikens egen modellnyckel.",
+    "aiCap": "Komisios gemensamma AI-pott för månaden är slut. Köpta krediter och egen modellnyckel fungerar fortfarande."
   },
   "operations": {
     "title": "Föreslagna åtgärder",
@@ -1387,7 +1390,7 @@
     }
   },
   "printing": {
-    "deviceLimit": "Planens antal utskriftsenheter är nått. Koppla bort en eller aktivera Butik Plus.",
+    "deviceLimit": "Fler utskriftsenheter kan inte kopplas just nu.",
     "templatesHeading": "Etikettmallar (ZPL)",
     "templatesIntro": "Varje etikettyp skrivs med den inbyggda layouten skalad till sin storlek. En butik kan i stället skriva ett eget ZPL-program: platshållare inom klammer fylls med etikettens uppgifter, varje värde rensas så att det aldrig kan ändra programmet, och skrivarkommandon (~) tas inte emot. Varje sparning är en ny version; den inbyggda layouten finns ett klick bort.",
     "templateCustom": "egen mall",
@@ -1593,29 +1596,29 @@
   },
   "plans": {
     "heading": "Plan",
-    "priceNote": "Kärnan är gratis, även hos Komisio: mottagning, etiketter, en utskriftsenhet, säljarportal, Zettle, utbetalningar, kontoutdrag, dagsavslut och SIE-export, upp till 100 mottagna varor per månad. Butik Plus, 199 kr per butik och månad exklusive moms, tar bort taket och ger Shopify, Fortnox, AI-assistenten, kedjor och upp till fem utskriftsenheter. En ny butik har Plus i 30 dagar.",
+    "priceNote": "Komisio är gratis och öppen källkod: alla funktioner ingår, utan gränser för varor, skrivare eller integrationer. Det enda som mäts är AI-assistentens krediter, se fliken AI-krediter.",
     "trialEndsAt": "provperioden slutar",
     "graceEndsAt": "fristen slutar",
     "activeUntil": "aktiv till",
     "states": {
       "free": "Gratis kärna",
-      "trial": "Plus, provperiod",
+      "trial": "Provperiod",
       "active": "Aktiv",
       "past_due": "Betalning saknas",
       "read_only": "Läsläge",
       "closed": "Stängd"
     },
     "explain": {
-      "free": "Butiken kör den gratis kärnan. Uppgradera till Butik Plus för obegränsat antal varor, Shopify, Fortnox, AI-assistenten, kedjor och fler utskriftsenheter.",
-      "trial": "Allt i Butik Plus fungerar under provperioden. Därefter fortsätter butiken gratis med kärnan; aktivera Plus för att behålla allt.",
+      "free": "Butiken kör utan prenumeration. Alla funktioner är öppna.",
+      "trial": "Provperioden påverkar inte vad butiken kan göra; alla funktioner är öppna.",
       "active": "Prenumerationen är aktiv.",
       "past_due": "Senaste betalningen misslyckades. Butiken fungerar under fristen; därefter blir den läsläge tills betalningen är löst.",
       "read_only": "Allt går att läsa och exportera, men inget nytt registreras: ingen mottagning, försäljning, prissänkning eller utbetalningsbegäran. Aktivera prenumerationen för att fortsätta.",
       "closed": "Butiken är stängd av sin ägare. Data går fortfarande att läsa och exportera."
     },
-    "trialEndingSoon": "Butik Plus-provperioden slutar om {days} dagar; därefter fortsätter butiken gratis med kärnan.",
-    "freeLimitSoon": "{used} av {limit} varor mottagna den här månaden i den gratis kärnan. Butik Plus tar bort taket.",
-    "pastDue": "Betalning saknas: butiken går tillbaka till den gratis kärnan om {days} dagar.",
+    "trialEndingSoon": "Provperioden slutar om {days} dagar; butiken fortsätter som vanligt utan prenumeration.",
+    "freeLimitSoon": "",
+    "pastDue": "Betalning saknas; butiken fortsätter som vanligt utan prenumeration om {days} dagar.",
     "readOnly": "Den här butiken är i läsläge tills prenumerationen aktiveras.",
     "closed": "Den här butiken är stängd.",
     "contactToActivate": "Kontakta Komisio för att aktivera prenumerationen.",
@@ -1830,9 +1833,9 @@
       "disconnected": "Bortkopplad"
     },
     "errors": {
-      "PLAN_PLUS_REQUIRED": "Det här kräver Butik Plus. Aktivera under Inställningar, Butik.",
-      "PLAN_LIMIT_ITEMS": "Den gratis kärnans månadstak för mottagna varor är nått. Butik Plus tar bort taket.",
-      "PLAN_LIMIT_DEVICES": "Planens antal utskriftsenheter är nått. Koppla bort en eller aktivera Butik Plus.",
+      "PLAN_PLUS_REQUIRED": "Funktionen är inte tillgänglig i den här miljön.",
+      "PLAN_LIMIT_ITEMS": "Butiken kan inte ta emot fler varor just nu.",
+      "PLAN_LIMIT_DEVICES": "Fler utskriftsenheter kan inte kopplas just nu.",
       "SHOPIFY_UPLOAD_REJECTED": "Shopify avvisade bilduppladdningen.",
       "SHOPIFY_UPLOAD_FAILED": "Bilden kunde inte laddas upp till Shopify.",
       "SHOPIFY_IMAGE_REJECTED": "Shopify avvisade bilden för produkten.",
@@ -2191,11 +2194,11 @@
     },
     "trial_ended": {
       "subject": "Provperioden för {store} är slut – butiken fortsätter gratis",
-      "text": "Hej,\n\nProvperioden med Butik Plus för {store} slutade {date}. Butiken fortsätter gratis: mottagning, försäljning, redovisning och utbetalningar fungerar som vanligt, upp till 100 nya varor per månad och en etikettskrivare. Shopify, Fortnox, kedjor och AI-assistenten ingår i Butik Plus. Aktivera Butik Plus under Inställningar när du vill:\n{link}"
+      "text": "Hej,\n\nProvperioden för {store} slutade {date}. Butiken fortsätter gratis med alla funktioner. AI-assistenten går på månadens inkluderade krediter; fler krediter och egen modellnyckel finns under Inställningar:\n{link}"
     },
     "grace_week": {
       "subject": "Betalning saknas för {store}",
-      "text": "Hej,\n\nDen senaste betalningen för {store} misslyckades. Om den inte är löst senast {date} går butiken tillbaka till gratisnivån. Uppdatera betalsättet under Inställningar:\n{link}"
+      "text": "Hej,\n\nDen senaste betalningen för {store} misslyckades. Om den inte är löst senast {date} fortsätter butiken utan prenumeration; alla funktioner är öppna ändå. Uppdatera betalsättet under Inställningar:\n{link}"
     },
     "footer": "Komisio · tjänsten kostar 199 kr per butik och månad exklusive moms · det här meddelandet skickas en gång per steg och har inga bilagor."
   },
@@ -2231,7 +2234,7 @@
   "connectors": {
     "title": "AI-assistenter",
     "intro": "Koppla butikens egen AI-assistent (till exempel Claude eller ChatGPT) till Komisio. Assistenten läser och föreslår som den person som godkände kopplingen; inget genomförs utan att någon i butiken godkänner det. Assistentens egna tokens betalar butiken hos sin leverantör.",
-    "plusRequired": "AI-assistenter ingår i Butik Plus.",
+    "plusRequired": "",
     "howToHeading": "Så kopplar du",
     "howTo1": "Lägg till Komisio som anpassad koppling (connector) i assistenten med adressen",
     "howTo2": "Logga in när assistenten frågar, välj butik och vad den får göra, och godkänn.",
@@ -2282,6 +2285,54 @@
       "working": "Godkänner…",
       "invalid": "Begäran från assistenten är ofullständig eller okänd. Börja om från assistenten.",
       "notMember": "Du är inte medlem i någon butik som kan kopplas."
+    }
+  },
+  "credits": {
+    "title": "AI-krediter",
+    "intro": "Komisio är gratis och öppen källkod, även när Inority driftar det. Det enda som mäts är AI-assistentens modellanrop när de går på Komisios egen nyckel. En kredit är en krona.",
+    "offer": "{included} krediter ingår varje månad, vilket normalt räcker till cirka {items} mottagna varor. När de är slut köper du {pack} nya för {pack} kr eller kopplar butikens egen modellnyckel; då dras inga krediter.",
+    "selfHosted": "Den här installationen mäter inga krediter: assistenten går på installationens egen nyckel.",
+    "includedLeft": "Kvar av månadens krediter",
+    "purchasedLeft": "Köpta krediter",
+    "usedThisMonth": "Använt den här månaden",
+    "capReached": "Komisios gemensamma AI-pott för månaden är slut. Köpta krediter och egen nyckel fungerar fortfarande.",
+    "buy": "Köp {pack} krediter för {pack} kr",
+    "buyUnavailable": "Köp är inte tillgängligt i den här miljön ännu.",
+    "working": "Arbetar…",
+    "ownKeyHeading": "Egen modellnyckel",
+    "ownKeyIntro": "Koppla butikens eget OpenAI-konto så betalar butiken sin leverantör direkt och inga krediter dras. Nyckeln förseglas innan den sparas och visas aldrig igen.",
+    "ownKeyActive": "Butiken kör assistenten på egen nyckel ({model}). Inga krediter dras.",
+    "model": "Modell",
+    "key": "API-nyckel",
+    "keyHint": "Skapa nyckeln hos OpenAI med rätt att anropa Responses API.",
+    "connect": "Koppla nyckeln",
+    "removeKey": "Ta bort nyckeln",
+    "keyConnected": "Nyckeln är kopplad.",
+    "keyRemoved": "Nyckeln är borttagen; assistenten går på Komisios krediter igen.",
+    "keyInvalid": "Modellnamnet eller nyckeln har fel form.",
+    "failed": "Det gick inte. Försök igen.",
+    "host": {
+      "title": "AI-krediter (plattform)",
+      "intro": "Taket är Inoritys egna modellkostnad per månad och överskrids aldrig; köpta krediter räknas inte mot det. Belopp i kronor; reservation och priser i öre.",
+      "capUsed": "{used} av {cap} kr använt av potten för {period}.",
+      "enabled": "Mät krediter i den här driftmiljön",
+      "monthlyCap": "Månadstak (kr)",
+      "included": "Inkluderat per butik och månad (kr)",
+      "pack": "Kreditpaket (kr)",
+      "reserveOre": "Reservation per anrop (öre)",
+      "reserveBatchOre": "Reservation per gruppanrop (öre)",
+      "inputOrePerMillion": "Pris per miljon in-tokens (öre)",
+      "outputOrePerMillion": "Pris per miljon ut-tokens (öre)",
+      "save": "Spara",
+      "saved": "Sparat.",
+      "working": "Sparar…",
+      "failed": "Det gick inte att spara.",
+      "showcaseHeading": "Butiker på produktsidan",
+      "showcaseIntro": "Butiker som visas anonymt på produktsidan med verkliga siffror: varor senaste 30 dagarna och köpta krediter. Etiketten är allt som visas.",
+      "showcaseStore": "Butik",
+      "showcaseLabel": "Etikett (t.ex. second hand-butik i Södertälje)",
+      "showcaseAdd": "Visa på produktsidan",
+      "showcaseRemove": "Ta bort"
     }
   }
 }

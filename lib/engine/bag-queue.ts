@@ -30,8 +30,18 @@ export function bagQueueHref(
   return `/intake?${query.toString()}#bag-queue`
 }
 
-// Read with the caller's authenticated client; tenant filtering supplements RLS.
-// Fetch one extra row rather than issuing one count/query per bag.
+/** One bag as `bag_queue_page` returns it, seller name embedded. */
+const bagQueueRow = z.object({
+  id: z.guid(),
+  seller_id: z.guid(),
+  reference: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
+  note: z.string(),
+  received_at: z.iso.datetime({ offset: true }),
+  sellers: z.object({ name: z.string() }),
+})
+
+// Read with the caller's authenticated client; the function checks the store
+// role. Fetch one extra row rather than issuing one count/query per bag.
 export async function readBagQueue(
   client: SupabaseClient,
   tenantId: string,
@@ -39,30 +49,20 @@ export async function readBagQueue(
 ) {
   const tenant = z.uuid().parse(tenantId)
   const filters = bagQueueNavigation.parse(input)
-  let query = client
-    .from('bag_receipts')
-    .select('id,seller_id,reference,note,received_at,sellers(name)')
-    .eq('tenant_id', tenant)
-    .order('reference', { ascending: !!filters.newer })
-    .limit(21)
-  if (filters.seller) query = query.eq('seller_id', filters.seller)
-  if (filters.bag) query = query.eq('reference', filters.bag)
-  if (filters.older) query = query.lt('reference', filters.older)
-  if (filters.newer) query = query.gt('reference', filters.newer)
-  const result = await query
+  const result = await client.rpc('bag_queue_page', {
+    p_tenant: tenant,
+    p_seller: filters.seller ?? null,
+    p_reference: filters.bag || null,
+    p_older: filters.older ?? null,
+    p_newer: filters.newer ?? null,
+  })
   if (result.error) throw new Error('Unable to load bag queue')
-  const items = (result.data ?? []).slice(0, 20)
-  // Fail explicitly rather than round a database bigint into an incorrect cursor.
-  for (const item of items)
-    z.number()
-      .int()
-      .positive()
-      .max(Number.MAX_SAFE_INTEGER)
-      .parse(item.reference)
+  const rows = z.array(bagQueueRow).max(21).parse(result.data ?? [])
+  const items = rows.slice(0, 20)
   if (filters.newer) items.reverse()
   return {
     items,
-    hasNewer: filters.newer ? result.data.length > 20 : !!filters.older,
-    hasOlder: filters.newer ? true : result.data.length > 20,
+    hasNewer: filters.newer ? rows.length > 20 : !!filters.older,
+    hasOlder: filters.newer ? true : rows.length > 20,
   }
 }

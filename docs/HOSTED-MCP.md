@@ -103,13 +103,19 @@ SQL:
 
 `komisio_read_inspection_operation`, `komisio_read_reception_operation`,
 `komisio_preview_inspection`, `komisio_prepare_inspection_reception`,
-`komisio_list_bags`, `komisio_read_inspection`,
-`komisio_read_reception_history`, `komisio_read_reception_photo`.
+`komisio_read_inspection`, `komisio_read_reception_history`,
+`komisio_read_reception_photo`.
 
-The inspection reads and the reception history are the store's own working
-surface rather than questions an assistant answers, and the photo read takes
+The four inspection reads share one read of a bag's drafts and their history;
+the reception history reads three tables of its own. The photo read takes
 bytes from storage, which a connector cannot do at all and never will. The
-first seven stay local until their reads become SQL functions.
+first six stay local until their reads become SQL functions.
+
+Listing the bags a store has received became `bag_queue_page` on 2026-09-16,
+registered under `reception:read`, so `komisio_list_bags` left the list with
+it. It returns the same twenty-one rows in the same order with the seller name
+embedded; which page exists is still decided by the caller from the
+twenty-first row, which is cheaper than a count.
 
 Reading one reception became `reception_session_detail` on 2026-09-16, which
 returns the session, its seller, the current revision and that revision's

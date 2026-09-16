@@ -128,6 +128,13 @@ function is registered under `reception:read`, `reception:preview` and
 registered: that scope reached no proposal kind at all, so the tool would have
 refused at its last step even with the read in place.
 
+That read also repaired a tool nobody had noticed was broken.
+`komisio_read_photo_duplicates` was never on the exclusion list and its own
+function was registered, but it confirms the reception exists before answering,
+and that confirmation was a table read. Every hosted call therefore failed
+before it looked at a single photo. It works from the same change, with no
+registration of its own.
+
 Two more tools left the list on 2026-09-16 without any read moving:
 `komisio_list_receptions` and `komisio_propose_price_change` read through SQL
 functions already and were only missing a registration.

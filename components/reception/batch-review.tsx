@@ -163,7 +163,7 @@ function BatchRow({
                   />
                   {field === 'price'
                     ? d.confirmPrice
-                    : `${d.confirmFact}: ${d.aiFields[field]}`}
+                    : `${d.confirmFact}: ${(d.aiFields as Record<string, string | undefined>)[field] ?? field}`}
                 </label>
               ))}
               <label className="intake-confirm">

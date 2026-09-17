@@ -60,10 +60,31 @@ export const suggestedPrice = z.strictObject({
 })
 
 // Model output never supplies identity, revision, approval, terms or timestamps.
+/** One observation about an item, bound to the definition version it was
+ * recorded under so that editing a definition later cannot change what it
+ * meant. The slug is validated against a shape, never against a fixed list:
+ * that is the whole point of a vocabulary a store can extend. */
+export const itemAttribute = z.strictObject({
+  slug: z.string().regex(/^[a-z][a-z0-9_]{0,39}$/),
+  definitionVersion: z.number().int().positive(),
+  value: text(1000),
+  sourceIds,
+  certainty: z.enum(['observed', 'tentative']),
+})
+export type ItemAttribute = z.infer<typeof itemAttribute>
+
 export const receptionSuggestions = z.strictObject({
   metadata: garmentSuggestions,
   price: suggestedPrice.nullable(),
   questions: z.array(text(500)).max(10),
+  // The attribute list is what the database stores as the truth; metadata is
+  // derived from it there. Optional here because nothing in the application
+  // produces one yet, and because a stored review read back must parse.
+  attributes: z.array(itemAttribute).max(100).optional(),
+  itemType: z
+    .string()
+    .regex(/^[a-z][a-z0-9_]{0,39}$/)
+    .optional(),
 })
 export type ReceptionSession = z.infer<typeof receptionSession>
 export type ReceptionSuggestions = z.infer<typeof receptionSuggestions>

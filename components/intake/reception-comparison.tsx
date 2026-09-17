@@ -31,7 +31,14 @@ export function ReceptionComparison({
       )}
       {comparison.fields.map((change) => (
         <div className="intake-notice" key={change.field}>
-          <strong>{d.fields[change.field]}</strong>
+          {/* The dictionary knows the seven fixed fields. A store's own
+              attribute is labelled from the vocabulary, not from here, so
+              until this screen reads the vocabulary it shows the slug rather
+              than nothing. */}
+          <strong>
+            {(d.fields as Record<string, string | undefined>)[change.field] ??
+              change.field}
+          </strong>
           <p>
             {d.before}: {change.before?.value ?? d.emptyField}
           </p>

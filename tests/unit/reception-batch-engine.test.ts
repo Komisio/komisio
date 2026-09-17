@@ -83,6 +83,31 @@ it('copies under child storage boundaries and stages only the existing operation
     'saveReceptionSources',
   ])
 })
+it('accepts any batch prompt version and still refuses a single-item attempt', async () => {
+  // Versioning the batch prompt used to turn every batch into
+  // BATCH_ATTEMPT_REQUIRED, because the check named one version instead of
+  // asking whether the attempt was a batch at all.
+  query.maybeSingle.mockResolvedValue({
+    data: {
+      session_id: fixture.session.sessionId,
+      source_revision: 1,
+      prompt_version: 'reception-batch-v2',
+    },
+    error: null,
+  })
+  await expect(stageReceptionBatchRow(client, command())).resolves.toBeTruthy()
+  query.maybeSingle.mockResolvedValue({
+    data: {
+      session_id: fixture.session.sessionId,
+      source_revision: 1,
+      prompt_version: 'reception-v2',
+    },
+    error: null,
+  })
+  await expect(stageReceptionBatchRow(client, command())).rejects.toThrow(
+    'BATCH_ATTEMPT_REQUIRED',
+  )
+})
 it('retains request identity across partial failure and distinguishes rows', async () => {
   const c = command()
   m.photo.mockResolvedValueOnce(null)

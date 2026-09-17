@@ -6,6 +6,10 @@
 -- What changed in the prompt: the model is asked for an item type and for the
 -- attributes that type asks about, instead of seven fixed fields. A lamp can
 -- describe its socket; a garment answers exactly as before.
+--
+-- The batch prompt is derived from the single one, so it moved to version two
+-- at the same moment and has to be allowed here too. It was not, and every
+-- batch stopped at INVALID_INPUT.
 
 create or replace function public.reserve_reception_assistance(p_tenant uuid,p_request uuid,p_session uuid,p_revision integer,p_model text,p_prompt text) returns boolean
 language plpgsql security definer set search_path='' as $$
@@ -14,7 +18,7 @@ begin
  perform 1 from public.tenants where id=p_tenant for update;
  if coalesce(public.tenant_role(p_tenant),'') not in ('owner','admin','staff') then raise exception 'FORBIDDEN' using errcode='42501'; end if;
  if p_request is null or p_session is null or p_revision is null or p_revision<1
-  or p_model is null or p_model !~ '^[a-zA-Z0-9._:-]{1,100}$' or (p_prompt is null or p_prompt not in ('reception-v1','reception-v2','reception-batch-v1')) then raise exception 'INVALID_INPUT'; end if;
+  or p_model is null or p_model !~ '^[a-zA-Z0-9._:-]{1,100}$' or (p_prompt is null or p_prompt not in ('reception-v1','reception-v2','reception-batch-v1','reception-batch-v2')) then raise exception 'INVALID_INPUT'; end if;
  select * into prior from public.reception_assistance_attempts where id=p_request;
  if found then
   if prior.tenant_id is distinct from p_tenant or prior.session_id is distinct from p_session or prior.source_revision is distinct from p_revision
@@ -31,7 +35,11 @@ begin
  s:=komisio_private.ai_settings();
  if s.ai_credits_enabled and not exists(select 1 from public.ai_connections c where c.tenant_id=p_tenant) then
   p:=komisio_private.usage_period(moment);
-  est:=case when p_prompt='reception-batch-v1' then s.ai_reserve_batch_ore else s.ai_reserve_ore end;
+  -- A batch is priced by what the prompt is, not by which version of it ran.
+  -- Naming each version here meant that bumping the batch prompt silently
+  -- reserved the single-item amount for a batch of eight photos; the allowlist
+  -- above is what decides which versions may run at all.
+  est:=case when p_prompt like 'reception-batch-%' then s.ai_reserve_batch_ore else s.ai_reserve_ore end;
   perform komisio_private.ai_grant_included(p_tenant);
   select included_left,purchased_left into inc,pur from komisio_private.ai_balances(p_tenant,p);
   if inc>=est then fund:='included'; elsif pur>=est then fund:='purchased'; else raise exception 'AI_CREDITS_EXHAUSTED' using errcode='55000'; end if;

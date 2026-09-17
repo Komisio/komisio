@@ -5,6 +5,7 @@ import { dictionary } from '@/lib/i18n'
 import { readSellersOverview } from '@/lib/engine/sellers'
 import { readPrinters } from '@/lib/engine/printing'
 import { resolveReceptionAssistance } from '@/lib/assistance/reception-config'
+import { readAttributeVocabulary } from '@/lib/engine/attributes'
 import { QuickReception } from '@/components/intake/quick-reception'
 
 /** Quick reception: seller, photo, facts, price, label; one screen per garment. */
@@ -20,10 +21,11 @@ export default async function QuickIntake() {
   })
   const profile =
     (policy.data?.policy?.intakeProfile as string | undefined) ?? 'quick'
-  const [sellers, printers, assistance] = await Promise.all([
+  const [sellers, printers, assistance, vocabulary] = await Promise.all([
     readSellersOverview(ctx.client, a.id, '', 100),
     readPrinters(ctx.client, a.id),
     resolveReceptionAssistance(ctx.client, a.id),
+    readAttributeVocabulary(ctx.client, a.id),
   ])
   return (
     <main className="intake">
@@ -53,6 +55,8 @@ export default async function QuickIntake() {
           printers={printers
             .filter((p) => p.active)
             .map((p) => ({ id: p.id, name: p.name }))}
+          vocabulary={vocabulary}
+          lang={ctx.locale}
           assistance={assistance !== null}
           d={d}
         />

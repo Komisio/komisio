@@ -2043,7 +2043,12 @@ test('operator reception guides saved evidence, exact review and link replacemen
       [rejectedId, 'Agent proposal to reject'],
     ]) {
       const suggestions = structuredClone(review.suggestions)
+      // The attribute list is the truth and the seven fixed keys are derived
+      // from it, so a fixture that edits only the derived field would change
+      // nothing. Both move together, which is what the interface does.
       suggestions.metadata.description.value = description
+      for (const attribute of suggestions.attributes ?? [])
+        if (attribute.slug === 'description') attribute.value = description
       await fixture.query(
         "select propose_operation($1,$2,'publishReceptionReview',$3::jsonb,'browser-fixture',now()+interval '1 hour')",
         [

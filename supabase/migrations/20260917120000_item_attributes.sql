@@ -107,6 +107,10 @@ begin
  -- and leaves metadata for the derivation to fill.
  if value ? 'attributes' then
   if not exists(select 1 from jsonb_array_elements(value->'attributes') a where a->>'slug'='description') then return false; end if;
+  -- A caller that sends both must send them agreeing. Silently letting the
+  -- list win would turn an edit of the derived field into a no-op, which is
+  -- exactly the two-sources-of-truth failure the list exists to prevent.
+  if metadata<>'{}'::jsonb and metadata<>komisio_private.attributes_to_metadata(value->'attributes') then return false; end if;
  elsif not(metadata ? 'description') then
   return false;
  end if;

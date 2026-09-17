@@ -22,7 +22,7 @@ select is((ai_credits(current_setting('test.tenant')::uuid)->>'includedLeftOre')
 select is((ai_credits(current_setting('test.tenant')::uuid)->>'ownKey')::boolean,false,'no own key yet');
 -- First call: reserved from the included credits, settled to the actual token cost.
 select set_config('test.a1',gen_random_uuid()::text,true);
-select is(reserve_reception_assistance(current_setting('test.tenant')::uuid,current_setting('test.a1')::uuid,current_setting('test.session')::uuid,1,'model','reception-v1'),true,'the first call is reserved');
+select is(reserve_reception_assistance(current_setting('test.tenant')::uuid,current_setting('test.a1')::uuid,current_setting('test.session')::uuid,1,'model','reception-v4'),true,'the current single prompt reserves credits');
 select is((ai_credits(current_setting('test.tenant')::uuid)->>'includedLeftOre')::int,70,'the estimate is held');
 select is((settle_reception_assistance(current_setting('test.tenant')::uuid,current_setting('test.a1')::uuid,10000,1000)->>'costOre')::int,6,'settled to ceil(10000*420/1e6 + 1000*1700/1e6) = 6 öre');
 select is((ai_credits(current_setting('test.tenant')::uuid)->>'includedLeftOre')::int,114,'the reservation is corrected to the actual cost');

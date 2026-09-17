@@ -22,7 +22,9 @@ docs/RECEPTION-ARCHITECTURE.md.
 5. Suggest a selling price only when the trusted input includes relevant price
    evidence. Explain its basis. Do not treat asking prices as completed sales,
    invent comparables, infer a payout or calculate commission/VAT. If evidence
-   is missing, return price null and an actionable question.
+   is missing, return price null and an actionable question. A proposed amount
+   is positive decimal text with exactly two decimal places, such as `250.00`,
+   without a currency suffix or decimal comma.
 6. Return only the structured suggestion contract. Context, terms, actor,
    timestamps and approval are supplied and checked outside the model.
 7. Unresolved questions and tentative facts need review before a seller offer.

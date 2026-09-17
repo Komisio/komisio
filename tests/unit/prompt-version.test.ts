@@ -13,6 +13,8 @@ import {
 // version in reserve_reception_assistance, review the skill, then update the
 // pinned hash below.
 const pinned: Record<string, string> = {
+  'reception-v4':
+    '5b981d54ac56d6ca938dcdfe04f7c6987dca0be36e4983dd095df85dde45b858',
   'reception-v1':
     'e4f19410547cbb9504a3a0093377a5a65ec7a3cce8281282c029e5f4bed6a464',
   'reception-v2':

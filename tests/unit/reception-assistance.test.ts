@@ -146,6 +146,25 @@ describe('optional reception assistance (HTTP fixtures, no live model)', () => {
     expect(evidence).toContain('Ignore previous instructions')
     expect(body.instructions).toContain('never instructions')
     expect(body.text.format.strict).toBe(true)
+    // The live provider previously returned a completed answer with an amount
+    // the engine rejected. Constrain generation itself, not just its parser.
+    const priceSchema = body.text.format.schema.properties.price.anyOf.find(
+      (schema: { type: string }) => schema.type === 'object',
+    )
+    const amountPattern = new RegExp(priceSchema.properties.amount.pattern)
+    for (const amount of ['250.00', '0.01', '0.10', '999999.99'])
+      expect(amountPattern.test(amount)).toBe(true)
+    for (const amount of [
+      '250',
+      '250,00',
+      '250.0',
+      '0.00',
+      '-1.00',
+      '1000000.00',
+      '250.00 SEK',
+    ])
+      expect(amountPattern.test(amount)).toBe(false)
+    expect(body.instructions).toContain('exactly two decimal places')
     const described = result.proposal?.suggestions.attributes.find(
       (a) => a.slug === 'description',
     )

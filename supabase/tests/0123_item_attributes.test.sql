@@ -3,7 +3,8 @@ create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
  ('f0000000-0000-4000-8000-000000000b01','attrs-owner@example.test',now()),
- ('f0000000-0000-4000-8000-000000000b02','attrs-outsider@example.test',now());
+ ('f0000000-0000-4000-8000-000000000b02','attrs-outsider@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000b03','seller@attrs.test',now());
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000b01","role":"authenticated"}';
 select set_config('test.tenant',create_tenant('Attribute store','attrs-test',gen_random_uuid())::text,true);
@@ -100,5 +101,22 @@ set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000b02","r
 select throws_ok($$select item_attribute_list(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid)$$,'42501',null,'an outsider reads nothing');
 reset role;
 select is((select scope from connector_functions where function_name='item_attribute_list'),'items:read','a connected assistant reaches the read under the items scope');
+-- Back to the owner: the checks above reset the role.
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000b01","role":"authenticated"}';
+-- The person asked to approve the lamp sees everything that was recorded,
+-- not the part that fitted seven fixed keys. Before this, a seller approved a
+-- description while the socket and the height stayed inside the store.
+select set_config('test.token',repeat('f',64),true);
+select set_reception_access(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.review')::uuid,null,encode(sha256(convert_to(current_setting('test.token'),'UTF8')),'hex'));
+-- The seller reads it as themselves: the token names the link and the signed-in
+-- address must match the one the review was published to.
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000b03","role":"authenticated"}';
+select set_config('test.seen',read_seller_review(current_setting('test.token'))::text,true);
+select is((select f->>'value' from jsonb_array_elements(current_setting('test.seen')::jsonb->'facts') f where f->>'slug'='socket'),'e27','the seller sees the socket');
+select is((select f->>'value' from jsonb_array_elements(current_setting('test.seen')::jsonb->'facts') f where f->>'slug'='height_cm'),'45','and the height');
+select is((select f->>'label' from jsonb_array_elements(current_setting('test.seen')::jsonb->'facts') f where f->>'slug'='socket'),'Socket','named in the language of the terms the seller is reading, not as a slug');
+select is((select f->>'slug' from jsonb_array_elements(current_setting('test.seen')::jsonb->'facts') f limit 1),'description','and in the order it was recorded');
+
 select * from finish();
 rollback;

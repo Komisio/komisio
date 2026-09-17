@@ -74,10 +74,13 @@ export default async function Review({
                   {d.reviewVersion} {review.version}
                 </p>
                 <dl>
-                  {Object.entries(review.metadata).map(([key, value]) => (
-                    <div key={key}>
-                      <dt>{labels[key] ?? key}</dt>
-                      <dd>{value}</dd>
+                  {/* The ordered list carries the store's own label for an
+                      attribute it defined; the dictionary still names the ones
+                      it knows, and a slug is the last resort. */}
+                  {review.facts.map((fact) => (
+                    <div key={fact.slug}>
+                      <dt>{labels[fact.slug] ?? fact.label}</dt>
+                      <dd>{fact.value}</dd>
                     </div>
                   ))}
                 </dl>

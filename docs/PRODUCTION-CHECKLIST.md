@@ -41,7 +41,7 @@ production`: same dry run, apply and history verification as staging,
 | P1  | Supabase: create the production project in Stockholm on a plan with point-in-time recovery; enable PITR and storage object backup; enable `pg_cron`; note the project id                                                                                                                                                                                                                                                                                                                               | Project exists, PITR and backups show as enabled                                 |
 | P2  | Supabase Auth (anonymous sign-ins enabled for Komisio Print devices): site URL `https://app.komisio.com`, redirect URLs for the app, SMTP or the built-in sender for confirmation mail, MFA (TOTP) enabled as on staging                                                                                                                                                                                                                                                                               | A test registration confirms by e-mail                                           |
 | P3  | GitHub: create the `production-database` environment, restrict deployment branches to `main`, add the owner as required reviewer, store `SUPABASE_PROJECT_ID` (variable) and `SUPABASE_ACCESS_TOKEN` (secret) of a management token that can reach only the production project                                                                                                                                                                                                                         | Environment shows the reviewer rule and both values                              |
-| P3b | GitHub: the `production-print` environment with `PRINT_SUPABASE_URL` and `PRINT_PUBLISHABLE_KEY` of the production project (both set 2026-09-16) and the repository variable `PRINT_PRODUCTION_ENABLED=true` (set 2026-09-16), so the release workflow builds a production package; then push a `print-v*` tag above `print-v1.0.0`, which so far carries only the staging package                                                                                                                      | The download under Settings, Printing works on production                        |
+| P3b | GitHub: the `production-print` environment with `PRINT_SUPABASE_URL` and `PRINT_PUBLISHABLE_KEY` of the production project (both set 2026-09-16) and the repository variable `PRINT_PRODUCTION_ENABLED=true` (set 2026-09-16), so the release workflow builds a production package; then push a `print-v*` tag above `print-v1.0.0`, which so far carries only the staging package                                                                                                                     | The download under Settings, Printing works on production                        |
 | P4  | Vercel: the production project `komisio-production` in the Komisio team, without a Git connection; the `production-database` workflow deploys the approved revision with the Vercel CLI (`VERCEL_TOKEN` secret, `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` variables in the GitHub environment); `app.komisio.com` attached, DNS at the registrar (`CNAME cname.vercel-dns.com`)                                                                                                                          | Domain resolves to the Vercel project                                            |
 | P5  | Vercel production settings: `KOMISIO_ENVIRONMENT=production`, `NEXT_PUBLIC_APP_URL=https://app.komisio.com`, `KOMISIO_CONNECTORS_ENABLED=true` (hosted MCP connector, HOSTED-MCP.md), `STRIPE_CREDITS_PRICE_ID` (AI credit packs, PRICING.md), `NEXT_PUBLIC_SUPABASE_URL` and the production publishable key, a new `KOMISIO_CREDENTIAL_KEY` (64 hex, generated, never reused from staging), `CRON_SECRET`, `KOMISIO_AUTOMATION_EMAIL` and `_PASSWORD` for a fresh Auth user in the production project | The build passes `check-hosted-env`                                              |
 | P6  | Resend: verify the sending domain, then `RESEND_API_KEY`, `INVITATION_EMAIL_DELIVERY=resend`, `INVITATION_EMAIL_FROM`, `INVITATION_EMAIL_ALLOWLIST` (widen from the pilot addresses when opening up), `SELLER_EMAIL_FROM`                                                                                                                                                                                                                                                                              | A test invitation arrives from the domain                                        |
@@ -56,43 +56,45 @@ production`: same dry run, apply and history verification as staging,
 
 After P13 the first external store can register.
 
-## Status 2026-09-16 (Fable)
+## Status 2026-09-17
 
-Done by code and CLI: P1 (project `vpjpnqpkdejwzwpjjoon`, Stockholm, small
-compute, PITR 7 days, `pg_cron` enabled 2026-09-16 with the markdown and
-plan-expiry schedules active), P2 (site URL, redirect list, anonymous sign-ins,
-TOTP; SMTP still to set), P3 (environment, reviewer, branch policy, project
-id, access token), P4 (Vercel project, domain attached, CLI deploy in the
-workflow), P5 (every variable except `RESEND_API_KEY`, the Stripe live keys
-and the integration credentials), P9 dispatched (awaiting the owner's
-approval). Owner: done since then (Resend, SMTP, DNS, the first migration run, host
-role). Still owner-only, in order of what a live store notices first:
+Everything the code and the CLI can do is done, and so is every owner action
+that stood between a stranger registering and that store working:
 
-1. `INVITATION_EMAIL_ALLOWLIST=*` and `SELLER_EMAIL_ALLOWLIST=*` on the
-   production Vercel project. Until then a store that registers by itself
-   cannot invite a colleague or notify a seller: every send is `restricted`.
-   The engine caps the volume per store, so the wildcard is not a loose end
-   (see the 2026-09-16 decision on open e-mail delivery).
-2. `KOMISIO_RECEPTION_AI_PROVIDER=openai`, `KOMISIO_RECEPTION_AI_KEY` and
-   `KOMISIO_RECEPTION_AI_MODEL`. Without them the reception assistant is
-   unavailable in every store, and the AI credits the product page promises
-   are inert: no call is ever made, so no credit is ever spent. Neither
-   staging nor production has ever run the assistant against a real model.
-   Set the same three on staging first and run one reception call there, then
-   check the credit ledger (Settings, AI credits) shows a reservation settled
-   to the real token cost. While you are there, set the model's actual price
-   per million tokens under Plattform so a credit tracks what a call costs.
-3. A `print-v*` tag above `print-v1.0.0`. The `production-print` environment
-   and the `PRINT_PRODUCTION_ENABLED` switch were set on 2026-09-16, so the
-   release workflow now builds a production package as well as a staging one.
-   Publishing a release is outward facing, so the tag is the owner's to push,
-   and until it exists the printing download on production has nothing to
-   offer.
-4. P7 (Fortnox, Shopify and Zettle registered for production with the
-   production callback URLs), P8 (Stripe live keys and the credit price ids),
-   P11 to P14, and dedicated GitHub tokens instead of
-   the personal ones. Every later release
-   follows the same path: merge to main, staging soak, dispatch, approve.
+- **P1 to P5, P9**: production project `vpjpnqpkdejwzwpjjoon` (Stockholm, PITR
+  7 days, `pg_cron` with the markdown and plan-expiry schedules), Auth, the
+  protected GitHub environment, the Vercel project with the domain and the CLI
+  deploy, every variable the environment guard requires, and dispatched runs
+  applying the committed migrations. Resend, SMTP and DNS by the owner.
+- **P6, open e-mail (2026-09-17)**: `INVITATION_EMAIL_ALLOWLIST` and
+  `SELLER_EMAIL_ALLOWLIST` are `*` in production. A store that registers by
+  itself can invite a colleague and notify a seller. The engine caps the volume
+  per store, and a store younger than the trust window gets the lower numbers.
+- **The reception assistant (2026-09-17)**: OpenAI with `gpt-5.4-mini` is
+  configured in staging and production. The credit ledger and the model prices
+  are verified: an image test settled to 2 öre. This is the first time Komisio
+  has run the assistant against a real model, so the AI credits the product
+  page promises are now real.
+- **P3b, Komisio Print (2026-09-17)**: `print-v1.0.1` is published and carries
+  both `KomisioPrint-win-x64.zip` and `KomisioPrint-staging-win-x64.zip`. The
+  download under Settings, Printing works. Printing to physical hardware is
+  still unproven; it needs a printer.
+- **New stores are closed to named countries (2026-09-17)**:
+  `KOMISIO_BLOCKED_SIGNUP_COUNTRIES=IN,CN` in production, after the owner's
+  experience of registrations from those countries that never used the service.
+  It refuses the registration and store-creation pages only.
+
+Still owner-only, none of it blocking a store from working:
+
+1. P7: Fortnox, Shopify and Zettle registered for production with the
+   production callback URLs. Until then a store cannot connect those.
+2. P8: Stripe live keys and the credit price ids per currency, which is what a
+   store needs to buy credits beyond the included 100 a month.
+3. P11 to P14: the legal texts, the drills and the smoke journey.
+4. Dedicated GitHub tokens instead of the owner's personal ones.
+
+Every later release follows the same path: merge to main, staging soak,
+dispatch `Production database`, approve.
 
 ## What stays different between staging and production
 

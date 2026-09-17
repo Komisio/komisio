@@ -124,13 +124,15 @@ try {
     p_agreement: terms,
     p_expires: new Date(Date.now() + 3600000).toISOString(),
     p_suggestions: {
-      metadata: {
-        description: {
+      attributes: [
+        {
+          slug: 'description',
+          definitionVersion: 1,
           value: 'TEST blue image',
           sourceIds: [photoId],
           certainty: 'observed',
         },
-      },
+      ],
       price: {
         currency: 'SEK',
         amount: '250.00',

@@ -31,22 +31,20 @@ select set_config('test.suggestions',jsonb_build_object(
    jsonb_build_object('slug','category','definitionVersion',1,'value','Belysning','sourceIds',jsonb_build_array(current_setting('test.src')),'certainty','observed'),
    jsonb_build_object('slug','socket','definitionVersion',1,'value','e27','sourceIds',jsonb_build_array(current_setting('test.src')),'certainty','observed'),
    jsonb_build_object('slug','height_cm','definitionVersion',1,'value','45','sourceIds',jsonb_build_array(current_setting('test.src')),'certainty','observed')),
- 'metadata','{}'::jsonb,
  'price',jsonb_build_object('currency','SEK','amount','250.00','rationale','Comparable lamps','sourceIds',jsonb_build_array(current_setting('test.pe'))),
  'questions','[]'::jsonb)::text,true);
 select lives_ok($$select publish_reception_review(current_setting('test.tenant')::uuid,current_setting('test.review')::uuid,current_setting('test.session')::uuid,1,null,current_setting('test.agreement')::uuid,current_setting('test.suggestions')::jsonb,now()+interval '1 day')$$,'a lamp is published with attributes no garment has');
 
--- The list is the truth and the seven fixed keys are derived from it, so the
--- two can never disagree.
+-- The list is the only description a review carries.
 select set_config('test.stored',(select suggestions from reception_reviews where id=current_setting('test.review')::uuid)::text,true);
 select is(jsonb_array_length(current_setting('test.stored')::jsonb->'attributes'),4,'all four attributes are stored');
-select is(current_setting('test.stored')::jsonb->'metadata'->'description'->>'value','Brass table lamp','the derived metadata carries the description');
-select ok(not (current_setting('test.stored')::jsonb->'metadata' ? 'socket'),'and does not carry a slug it has no room for');
+select ok(not (current_setting('test.stored')::jsonb ? 'metadata'),'and nothing is stored under the retired fixed keys');
 select is(current_setting('test.stored')::jsonb->>'itemType','lamp','the item type is stored');
 -- The socket survives where the old shape would have dropped it.
 select is((select a->>'value' from jsonb_array_elements(current_setting('test.stored')::jsonb->'attributes') a where a->>'slug'='socket'),'e27','the socket is kept, which the seven fixed keys could not do');
 
--- A caller that still sends only metadata keeps working, and gets a list.
+-- A caller that sends the retired fixed keys and no list has described
+-- nothing, and is refused rather than quietly storing an empty review.
 select set_config('test.session2',gen_random_uuid()::text,true);
 select create_reception_session(current_setting('test.tenant')::uuid,current_setting('test.session2')::uuid,current_setting('test.seller')::uuid);
 select set_config('test.src2',gen_random_uuid()::text,true);
@@ -56,15 +54,12 @@ select save_reception_sources(current_setting('test.tenant')::uuid,gen_random_uu
   jsonb_build_object('id',current_setting('test.src2'),'kind','observation','reference','TEST staff note','observation','Blue wool sweater'),
   jsonb_build_object('id',current_setting('test.pe2'),'kind','price-evidence','reference','TEST comparable sales','observation','Similar sweaters sold at 200')));
 select set_config('test.review2',gen_random_uuid()::text,true);
-select publish_reception_review(current_setting('test.tenant')::uuid,current_setting('test.review2')::uuid,current_setting('test.session2')::uuid,1,null,current_setting('test.agreement')::uuid,
- jsonb_build_object(
+select set_config('test.legacy',jsonb_build_object(
   'metadata',jsonb_build_object(
-    'description',jsonb_build_object('value','Blue wool sweater','sourceIds',jsonb_build_array(current_setting('test.src2')),'certainty','observed'),
-    'size',jsonb_build_object('value','M','sourceIds',jsonb_build_array(current_setting('test.src2')),'certainty','observed')),
+    'description',jsonb_build_object('value','Blue wool sweater','sourceIds',jsonb_build_array(current_setting('test.src2')),'certainty','observed')),
   'price',jsonb_build_object('currency','SEK','amount','200.00','rationale','Comparable sweaters','sourceIds',jsonb_build_array(current_setting('test.pe2'))),
-  'questions','[]'::jsonb),now()+interval '1 day');
-select is(jsonb_array_length((select suggestions->'attributes' from reception_reviews where id=current_setting('test.review2')::uuid)),2,'a metadata-only caller gets a list derived for it');
-select is((select a->>'slug' from jsonb_array_elements((select suggestions->'attributes' from reception_reviews where id=current_setting('test.review2')::uuid)) a where a->>'value'='M'),'size','and the derived slugs are the right ones');
+  'questions','[]'::jsonb)::text,true);
+select throws_like($$select publish_reception_review(current_setting('test.tenant')::uuid,current_setting('test.review2')::uuid,current_setting('test.session2')::uuid,1,null,current_setting('test.agreement')::uuid,current_setting('test.legacy')::jsonb,now()+interval '1 day')$$,'%INVALID_INPUT%','a review without an attribute list is refused');
 
 -- A replay of the same call is still the same call, not a conflict, even
 -- though what is stored is not byte for byte what was sent.

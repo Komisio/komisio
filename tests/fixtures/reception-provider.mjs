@@ -24,22 +24,17 @@ globalThis.fetch = async (input, init) => {
     const { sources } = JSON.parse(body.input[0].content[0].text),
       observation = sources.find((s) => s.kind === 'observation'),
       pricing = sources.find((s) => s.kind === 'price-evidence')
+    const describe = (value, source) => ({
+      slug: 'description',
+      value,
+      sourceIds: [source.id],
+      certainty: 'observed',
+    })
     const candidate = {
-      metadata: {
-        description: observation
-          ? {
-              value: 'HTTP FIXTURE – blue jacket, not live AI',
-              sourceIds: [observation.id],
-              certainty: 'observed',
-            }
-          : null,
-        category: null,
-        color: null,
-        brand: null,
-        size: null,
-        material: null,
-        condition: null,
-      },
+      itemType: null,
+      attributes: observation
+        ? [describe('HTTP FIXTURE – blue jacket, not live AI', observation)]
+        : [],
       price: pricing
         ? {
             currency: 'SEK',
@@ -59,14 +54,9 @@ globalThis.fetch = async (input, init) => {
                 sourceIds: [photo.id, ...(pricing ? [pricing.id] : [])],
                 suggestions: {
                   ...candidate,
-                  metadata: {
-                    ...candidate.metadata,
-                    description: {
-                      value: `BATCH HTTP FIXTURE garment ${index + 1}`,
-                      sourceIds: [photo.id],
-                      certainty: 'observed',
-                    },
-                  },
+                  attributes: [
+                    describe(`BATCH HTTP FIXTURE garment ${index + 1}`, photo),
+                  ],
                   price: pricing
                     ? {
                         ...candidate.price,

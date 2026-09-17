@@ -42,7 +42,9 @@ it('preserves external evidence and gives corrections new source IDs', () => {
   expect(second[1].id).not.toBe(first[1].id)
   expect(readManualReception(first)?.suggestions.price?.amount).toBe('250.00')
   expect(
-    readManualReception(second)?.suggestions.metadata.description?.value,
+    readManualReception(second)?.suggestions.attributes.find(
+      (a) => a.slug === 'description',
+    )?.value,
   ).toBe('Red jacket')
 })
 it('does not invent a price from arbitrary appraisal prose', () => {

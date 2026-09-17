@@ -25,13 +25,15 @@ export async function testOperationDiscovery({ connect, rpc, db, uid, token }) {
     agreementId: randomUUID(),
     expiresAt: new Date(Date.now() + 86400000).toISOString(),
     suggestions: {
-      metadata: {
-        description: {
+      attributes: [
+        {
+          slug: 'description',
+          definitionVersion: 1,
           value: 'PRIVATE reception payload',
           sourceIds: [randomUUID()],
           certainty: 'observed',
         },
-      },
+      ],
       price: {
         currency: 'SEK',
         amount: '100.00',

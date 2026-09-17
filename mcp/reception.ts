@@ -230,8 +230,8 @@ export function receptionTools(client: SupabaseClient, config: MCPConfig) {
         c.suggestions,
         randomUUID(),
       )
-      for (const fact of Object.values(proposal.suggestions.metadata))
-        if (fact) fact.certainty = 'tentative'
+      for (const fact of proposal.suggestions.attributes)
+        fact.certainty = 'tentative'
       return {
         persisted: false,
         staged: false,

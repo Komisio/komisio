@@ -47,8 +47,8 @@ export function prepareReceptionBatch(
       row.suggestions,
       batchId,
     )
-    for (const fact of Object.values(proposal.suggestions.metadata))
-      if (fact) fact.certainty = 'tentative'
+    for (const fact of proposal.suggestions.attributes)
+      fact.certainty = 'tentative'
     row.suggestions = proposal.suggestions
     if (!row.suggestions.price && !row.suggestions.questions.length)
       throw new Error('BATCH_PRICE_QUESTION_REQUIRED')

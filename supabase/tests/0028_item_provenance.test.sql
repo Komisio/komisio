@@ -21,7 +21,7 @@ set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000081","role":"authenticated"}';
 select set_config('test.review',gen_random_uuid()::text,true);
 select publish_reception_review(current_setting('test.tenant')::uuid,current_setting('test.review')::uuid,current_setting('test.session')::uuid,1,null,current_setting('test.agreement')::uuid,
- '{"metadata":{"description":{"value":"Synthetic coat","sourceIds":["f0000000-0000-4000-8000-000000000091"],"certainty":"observed"},"material":{"value":"Wool","sourceIds":["f0000000-0000-4000-8000-000000000091"],"certainty":"observed"}},"price":{"currency":"SEK","amount":"300.00","rationale":"Staff estimate","sourceIds":["f0000000-0000-4000-8000-000000000092"]},"questions":[]}'::jsonb,now()+interval '1 day');
+ '{"attributes":[{"slug":"description","definitionVersion":1,"value":"Synthetic coat","sourceIds":["f0000000-0000-4000-8000-000000000091"],"certainty":"observed"},{"slug":"material","definitionVersion":1,"value":"Wool","sourceIds":["f0000000-0000-4000-8000-000000000091"],"certainty":"observed"}],"price":{"currency":"SEK","amount":"300.00","rationale":"Staff estimate","sourceIds":["f0000000-0000-4000-8000-000000000092"]},"questions":[]}'::jsonb,now()+interval '1 day');
 select receive_garment(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,'');
 select set_config('test.item',gen_random_uuid()::text,true);
 select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid,'reception_review',current_setting('test.session')::uuid,1,30000);

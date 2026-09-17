@@ -74,6 +74,18 @@ export async function readAttributeVocabulary(
   return attributeVocabulary.parse(data)
 }
 
+/** The seven the reception assistant has always filled, in the order the
+ * screen showed them before item types existed. */
+const LEGACY_ORDER = [
+  'description',
+  'category',
+  'brand',
+  'size',
+  'color',
+  'material',
+  'condition',
+]
+
 /**
  * What a screen should ask for a given type, in the profile's order, with each
  * attribute's definition attached. An attribute a profile names but nothing
@@ -87,9 +99,15 @@ export function questionsFor(
   const byslug = new Map(vocabulary.definitions.map((d) => [d.slug, d]))
   const type = vocabulary.types.find((t) => t.slug === typeSlug)
   if (!type) {
-    // No type chosen: ask for the description alone, which every item needs.
-    const description = byslug.get('description')
-    return description ? [{ definition: description, expected: true }] : []
+    // No type chosen is not a reason to ask less than before. A store that
+    // never touches types keeps exactly the seven fields it had, in the order
+    // it had them; choosing a type is an improvement, not a requirement.
+    return LEGACY_ORDER.flatMap((slug) => {
+      const definition = byslug.get(slug)
+      return definition && definition.active
+        ? [{ definition, expected: slug === 'description' }]
+        : []
+    })
   }
   return type.attributes.flatMap((entry) => {
     const definition = byslug.get(entry.slug)

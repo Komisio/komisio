@@ -81,11 +81,14 @@ describe('attribute vocabulary', () => {
     expect(slugs).not.toContain('retired')
     expect(slugs).not.toContain('nothing_defines_this')
   })
-  it('asks only for a description before a type is chosen', () => {
+  it('keeps the old seven fields when no type is chosen', () => {
+    // A store that never touches item types must not lose the fields it had.
     expect(
       questionsFor(vocabulary, null).map((q) => q.definition.slug),
-    ).toEqual(['description'])
-    expect(questionsFor(vocabulary, 'no_such_type')).toHaveLength(1)
+    ).toEqual(['description', 'size'])
+    expect(
+      questionsFor(vocabulary, 'no_such_type').map((q) => q.expected),
+    ).toEqual([true, false])
   })
   it('keeps the profile order and marks what is expected', () => {
     const lamp = questionsFor(vocabulary, 'lamp')

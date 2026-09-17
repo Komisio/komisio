@@ -5,15 +5,15 @@ the earlier .NET and mobile prototypes are behavioral references only.
 
 ## Findings and changes
 
-| Earlier behavior inspected | Keep | Simplify or investigate |
-| --- | --- | --- |
-| Active tenant agreement, translations and acceptance lookup | Versioned terms and evidence of who accepted what | Bind acceptance to the authenticated seller; define explicit language fallback and version changes |
-| Staff workspace and batch item intake | Resumable inspection and safe label reprints | Receive bags first; no compulsory item price or catalogue match at handover |
-| Section collision and concurrent seller booking checks | Prevent double booking and support tenant limits | Enforce collisions atomically in the database, not only a preflight check |
-| Date-dependent daily, weekly and monthly pricing with breakdowns | Explain the quoted fee to the seller | Start with one clear fee basis; snapshot the quote before adding overlapping rules and proration |
-| Booking service distinguishes confirmed bookings, pending/settled fees and fees reserved for payout | Keep booking occupancy separate from payment settlement | Do not mark payment complete on booking creation or inherit deduction rules without an agreed financial model |
-| Booking cancellation contains fixed fee percentages and date thresholds | Make cancellation consequences visible before confirmation | Treat cancellation policy as tenant-specific product work; do not copy the old constants |
-| Agreement administration exposes update/delete and translation editing | Let staff prepare and maintain terms | Separate editable drafts from immutable published versions and preserve acceptance evidence |
+| Earlier behavior inspected                                                                          | Keep                                                       | Simplify or investigate                                                                                       |
+| --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Active tenant agreement, translations and acceptance lookup                                         | Versioned terms and evidence of who accepted what          | Bind acceptance to the authenticated seller; define explicit language fallback and version changes            |
+| Staff workspace and batch item intake                                                               | Resumable inspection and safe label reprints               | Receive bags first; no compulsory item price or catalogue match at handover                                   |
+| Section collision and concurrent seller booking checks                                              | Prevent double booking and support tenant limits           | Enforce collisions atomically in the database, not only a preflight check                                     |
+| Date-dependent daily, weekly and monthly pricing with breakdowns                                    | Explain the quoted fee to the seller                       | Start with one clear fee basis; snapshot the quote before adding overlapping rules and proration              |
+| Booking service distinguishes confirmed bookings, pending/settled fees and fees reserved for payout | Keep booking occupancy separate from payment settlement    | Do not mark payment complete on booking creation or inherit deduction rules without an agreed financial model |
+| Booking cancellation contains fixed fee percentages and date thresholds                             | Make cancellation consequences visible before confirmation | Treat cancellation policy as tenant-specific product work; do not copy the old constants                      |
+| Agreement administration exposes update/delete and translation editing                              | Let staff prepare and maintain terms                       | Separate editable drafts from immutable published versions and preserve acceptance evidence                   |
 
 Inspected source: the earlier backoffice's TenantUserAgreementAppService,
 StoreSectionBookingValidationService and StoreSectionBookingPricingCalculator,
@@ -46,8 +46,9 @@ behavior have not been verified. No implementation or assets were copied.
    allowing a tenant to enable both and selecting a mode per booking. No fee or
    revenue sharing assumptions are inherited from the earlier system.
 6. **POS and payouts:** ingest deduplicated sales/returns from external POS,
-   establish ledger rules, then seller payout requests. Research BankID and
-   Stripe feasibility, onboarding, funding and failure reconciliation separately.
+   establish ledger rules, then seller payout requests. Research identity
+   verification and Stripe feasibility, onboarding, funding and failure
+   reconciliation separately.
 
 ## Configuration boundary
 
@@ -96,7 +97,7 @@ HOSTED-STAGING.md separately from this local evidence; CI is checked before merg
 The first staff slice is implemented as described in
 [Seller agreement evidence](SELLER-AGREEMENTS.md). It publishes immutable versions,
 records external evidence and checks receipt prerequisites. Seller-authenticated
-approval and BankID remain future work.
+approval and verified identity remain future work.
 
 Proposed bounded slice under the owner's autonomous-development authorization:
 
@@ -105,7 +106,7 @@ Proposed bounded slice under the owner's autonomous-development authorization:
 - Staff sees the exact current version while registering or receiving from a
   seller. Missing translations must be visible, not treated as acceptance.
 - Initially distinguish staff-recorded evidence of an external acceptance from
-  the later seller-authenticated web/BankID acceptance. Never present a staff
+  the later seller-authenticated acceptance. Never present a staff
   checkbox as the seller's digital signature.
 - Let the tenant choose whether recorded acceptance is required before receipt.
   Existing tenants start without a new blocking requirement. Changing that policy
@@ -118,5 +119,6 @@ Proposed bounded slice under the owner's autonomous-development authorization:
   version replacement and concurrent publication/receiving before activation.
 
 This is the contract for the implemented staff-evidence slice, not a digital
-signature feature. BankID, legal interpretation and payout authorization remain
+signature feature. Identity verification, legal interpretation and payout
+authorization remain
 separate from recording the store's agreement evidence.

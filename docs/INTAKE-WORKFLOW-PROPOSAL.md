@@ -18,7 +18,8 @@ describe product scope, not implemented behavior or an approved payment model.
   are tenant-configurable. Email receipt is a likely normal option, not a mandated
   default. Review the old agreement flows before specifying approval evidence.
 - Sellers should follow their submissions and sales in the web/app and request
-  payouts. BankID is a desired identity integration. Stripe is to be investigated
+  payouts. Verified electronic identity is desirable but unpromised: the scheme
+  differs by market. Stripe is to be investigated
   for seller payouts, not assumed to provide a suitable money flow already.
 - Komisio is initially not a POS. Sales should integrate with external systems
   such as Zettle POS or Shopify POS; no connector capability is verified here.
@@ -50,15 +51,15 @@ the backoffice intake workspace, batch-entry flow and smart-intake notes. These
 are observations from source and documentation, not evidence of use by real stores.
 No source code or data model has been ported into the new project.
 
-| Observed pattern | Useful need | Proposed improvement |
-| --- | --- | --- |
-| Capture photos, request AI suggestions, review, then submit | Help describe an unfamiliar item | Make photos and AI optional enrichment in one item editor |
-| Separate intake workspace with completion and seller-verification actions | Distinguish preparation from an agreed handover | Identify exactly what each confirmation proves before adding workflow states |
-| Batch entry with per-row results and label printing after creation | Process a bag of items quickly and handle partial failure | Keep a visible batch, stable row identities and explicit saved/unsaved results |
-| Browser-local batch drafts | Resume interrupted counter work | Decide authenticated draft persistence and ownership; do not rely on one browser for important handovers |
-| Mobile in-memory edits and a separate submit step | Let the seller review suggestions | Save progress deliberately and show which changes actually reached the server |
-| Suggested price and mandatory price in the smart review | Support pricing decisions | Question whether price must be known at physical receipt or only before sale |
-| Several item, flow and transaction concepts appear in intake | Support downstream operations | Show only the states the person at the counter needs; add later lifecycle rules when required |
+| Observed pattern                                                          | Useful need                                               | Proposed improvement                                                                                     |
+| ------------------------------------------------------------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Capture photos, request AI suggestions, review, then submit               | Help describe an unfamiliar item                          | Make photos and AI optional enrichment in one item editor                                                |
+| Separate intake workspace with completion and seller-verification actions | Distinguish preparation from an agreed handover           | Identify exactly what each confirmation proves before adding workflow states                             |
+| Batch entry with per-row results and label printing after creation        | Process a bag of items quickly and handle partial failure | Keep a visible batch, stable row identities and explicit saved/unsaved results                           |
+| Browser-local batch drafts                                                | Resume interrupted counter work                           | Decide authenticated draft persistence and ownership; do not rely on one browser for important handovers |
+| Mobile in-memory edits and a separate submit step                         | Let the seller review suggestions                         | Save progress deliberately and show which changes actually reached the server                            |
+| Suggested price and mandatory price in the smart review                   | Support pricing decisions                                 | Question whether price must be known at physical receipt or only before sale                             |
+| Several item, flow and transaction concepts appear in intake              | Support downstream operations                             | Show only the states the person at the counter needs; add later lifecycle rules when required            |
 
 One implementation detail deserves a workflow test: the mobile review holds more
 editable values than the inspected final submit path explicitly sends. That is
@@ -120,18 +121,18 @@ This scenario should determine the workflow, rather than the existing table fiel
 
 ## Reliability scenarios before implementation is called complete
 
-| Situation | Required user-visible outcome to agree and test |
-| --- | --- |
-| The user double-clicks Receive | The same intended handover is not duplicated |
-| The network fails after a successful save | Retrying resolves the original result rather than creating another item |
-| One item in a batch is invalid | The UI states whether nothing saved or lists exactly what saved; no ambiguous partial success |
-| The browser reloads during drafting | The agreed draft policy makes recovery or loss explicit |
-| Another tab changes the active store | The operation cannot silently move to a different store |
-| Another staff member edits the same draft | Conflicting edits are surfaced rather than silently overwritten |
-| The same photograph is uploaded again | A possible duplicate is suggested, not automatically deleted or merged |
-| A label cannot print | Saved items remain visible and printing can be retried safely |
-| AI fails or times out | Manual receiving still works and user-entered data remains |
-| A seller submits photos remotely | Nothing is marked physically received without authorized staff action |
+| Situation                                 | Required user-visible outcome to agree and test                                               |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------- |
+| The user double-clicks Receive            | The same intended handover is not duplicated                                                  |
+| The network fails after a successful save | Retrying resolves the original result rather than creating another item                       |
+| One item in a batch is invalid            | The UI states whether nothing saved or lists exactly what saved; no ambiguous partial success |
+| The browser reloads during drafting       | The agreed draft policy makes recovery or loss explicit                                       |
+| Another tab changes the active store      | The operation cannot silently move to a different store                                       |
+| Another staff member edits the same draft | Conflicting edits are surfaced rather than silently overwritten                               |
+| The same photograph is uploaded again     | A possible duplicate is suggested, not automatically deleted or merged                        |
+| A label cannot print                      | Saved items remain visible and printing can be retried safely                                 |
+| AI fails or times out                     | Manual receiving still works and user-entered data remains                                    |
+| A seller submits photos remotely          | Nothing is marked physically received without authorized staff action                         |
 
 ## Original review questions (see clarification above for partial answers)
 

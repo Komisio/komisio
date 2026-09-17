@@ -26,8 +26,11 @@ policies; staff registration and counter QR self-registration; seller mobile/web
 visibility and payout requests; space booking with both seller-run checkout and
 shared store checkout. Komisio initially integrates with POS. Free access and
 SEK 199/month were the pricing direction; on 2026-09-16 the owner decided that
-Komisio is free and open with AI credits as the only metered resource (docs/PRICING.md). BankID and Stripe are candidates to investigate, not delivered
-identity or payout integrations. Owner answers on 2026-09-12: store-owned
+the software is open source with no licence fee, hosting by Inority is priced
+and AI credits are metered (docs/PRICING.md). Stripe is a candidate to
+investigate, not a delivered payout integration. Verifying a consignor's legal
+identity is unsolved and deliberately unpromised: it differs by market, the
+providers charge per use, and nothing in Komisio should imply it exists. Owner answers on 2026-09-12: store-owned
 (purchased) items are in scope for the first sale slice; Zettle is the first
 POS; four label templates ship on day one; sellers are notified by e-mail first.
 
@@ -120,15 +123,15 @@ not every legacy capability in that row or readiness for an external pilot.
 
 ### 3.2 Sellers
 
-| Earlier capability                                                                                                     | New Komisio                                                                                                                                                                       | Form          | Phase                            |
-| ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | -------------------------------- |
-| Seller record: name, contact, address, SSN, commission rate and override, notes, active flag                           | Staff contact record implemented; review access verifies the email account, not legal identity; BankID remains a candidate; commission terms per seller as tenant policy override | Engine        | Implemented baseline (terms: P2) |
-| Payment method: bank account (encrypted, last 4), Swish number and personnummer (encrypted), PayPal, opt-in            | Payout instruction per seller, encrypted at rest, last-4 shown; provider-specific fields as typed policy                                                                          | Engine        | P3                               |
-| Invite seller to the app, onboarding QR and printable onboarding slip, invite status                                   | Personal link (done for review); seller registration by QR at the counter; printable slip via label engine                                                                        | Engine, UI    | P1                               |
-| Seller detail with tabs: overview, inventory, payouts, statement, performance, bookings, communication, privacy export | One seller view in web, one in the seller app; the same read model serves both; performance is an agent report                                                                    | UI, Report    | P2                               |
-| Seller communication log (notes, statements sent, payout confirmations, system events) with templates                  | Append-only communication log written by engine and agent; templates are prompts with fixed placeholders                                                                          | Engine        | P2                               |
-| Seller data export (GDPR)                                                                                              | Define scoped export, retention and support procedure before external pilot; self-service automation can follow                                                                   | Engine, Ops   | Pilot gate                       |
-| Lookup by SSN, duplicate SSN check                                                                                     | Duplicate detection on contact fields with explicit merge decision (never automatic)                                                                                              | Engine, Agent | P2                               |
+| Earlier capability                                                                                                     | New Komisio                                                                                                                                                                                 | Form          | Phase                            |
+| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | -------------------------------- |
+| Seller record: name, contact, address, SSN, commission rate and override, notes, active flag                           | Staff contact record implemented; review access verifies the email account, not legal identity; verified identity remains unpromised; commission terms per seller as tenant policy override | Engine        | Implemented baseline (terms: P2) |
+| Payment method: bank account (encrypted, last 4), Swish number and personnummer (encrypted), PayPal, opt-in            | Payout instruction per seller, encrypted at rest, last-4 shown; provider-specific fields as typed policy                                                                                    | Engine        | P3                               |
+| Invite seller to the app, onboarding QR and printable onboarding slip, invite status                                   | Personal link (done for review); seller registration by QR at the counter; printable slip via label engine                                                                                  | Engine, UI    | P1                               |
+| Seller detail with tabs: overview, inventory, payouts, statement, performance, bookings, communication, privacy export | One seller view in web, one in the seller app; the same read model serves both; performance is an agent report                                                                              | UI, Report    | P2                               |
+| Seller communication log (notes, statements sent, payout confirmations, system events) with templates                  | Append-only communication log written by engine and agent; templates are prompts with fixed placeholders                                                                                    | Engine        | P2                               |
+| Seller data export (GDPR)                                                                                              | Define scoped export, retention and support procedure before external pilot; self-service automation can follow                                                                             | Engine, Ops   | Pilot gate                       |
+| Lookup by SSN, duplicate SSN check                                                                                     | Duplicate detection on contact fields with explicit merge decision (never automatic)                                                                                                        | Engine, Agent | P2                               |
 
 ### 3.3 Intake
 

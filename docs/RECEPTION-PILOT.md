@@ -38,7 +38,8 @@ Return to the staff session and reload to see the saved response. A new source
 version requires a new published review and response. Revoking a link blocks
 subsequent review/image requests, but cannot recall already downloaded pixels.
 
-Do not confuse this response with BankID signing, commercial acceptance,
+Do not confuse this response with a verified electronic identity, a legal
+signature, commercial acceptance,
 inventory publication, a general seller-portal account or a payout request.
 
 ## If something does not work

@@ -62,8 +62,9 @@ In the order Fable would take them, with the reason:
 4. **Hosted MCP: the remaining 18 tools.** Their engine reads use table
    access; move them to SQL functions so the store's own assistant sees
    receipts, seller ledgers and reception details too (HOSTED-MCP.md).
-5. **BankID sign-in (P0 gate "identity").** As a priced add-on once the eID
-   broker is chosen; the decision and the cost picture are in PRICING.md.
+5. **Verified identity (P0 gate "identity").** Unsolved and unpromised. Each
+   market has its own scheme and the providers charge per use, so nothing is
+   committed until a market needs it and the cost is known.
 6. **Web copilot (P4)** on the same tools and credits as the connector, and
    the onboarding conversation that replaces the checklist.
 7. **Search and descriptions (P4).** Semantic search, descriptions per

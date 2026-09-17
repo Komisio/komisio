@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { receptionSession, receptionSuggestions } from './reception'
+import { receptionSession } from './reception'
+import { storedReceptionSuggestions } from './stored-reception-suggestions'
 
 const cursor = z.number().int().min(1).max(2147483647).optional()
 export const receptionHistoryInput = z.strictObject({
@@ -22,7 +23,7 @@ const reviewRow = z.object({
   version: z.number().int().positive(),
   source_revision: z.number().int().positive(),
   created_at: timestamp,
-  suggestions: receptionSuggestions,
+  suggestions: storedReceptionSuggestions,
   photo_sources: z.array(z.uuid()).max(20),
   reception_responses: z.union([response.nullable(), z.array(response).max(1)]),
 })

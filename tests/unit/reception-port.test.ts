@@ -27,13 +27,15 @@ const session = {
   ],
 }
 const candidate = () => ({
-  metadata: {
-    description: {
+  attributes: [
+    {
+      slug: 'description',
+      definitionVersion: 1,
       value: 'Blue jacket',
       sourceIds: [id(4)],
       certainty: 'observed',
     },
-  },
+  ],
   price: {
     currency: 'SEK',
     amount: '100.00',
@@ -81,10 +83,8 @@ it('a replacement adapter cannot claim staff review by returning observed facts'
     { suggest: async () => original },
     signal(),
   )
-  expect(proposal!.suggestions.metadata.description!.certainty).toBe(
-    'tentative',
-  )
-  expect(original.metadata.description.certainty).toBe('observed')
+  expect(proposal!.suggestions.attributes[0].certainty).toBe('tentative')
+  expect(original.attributes[0].certainty).toBe('observed')
   const terms = { versionId: id(7), body: 'TEST terms', language: 'en' }
   const prepare = (p: unknown) =>
     prepareSellerReview(

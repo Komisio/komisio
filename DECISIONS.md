@@ -645,3 +645,4 @@ configuration blocks checkout rather than silently charging another currency.
 <!-- one-line rule from 2026-09-17: entries below are at most 300 characters -->
 
 - 2026-09-17: Reasoning belongs in the pull request and the decision is one line here (owner, from a sibling project's practice): entries below the marker are at most 300 characters and a unit test enforces it; writing reasoning into fresh docs/ files grew 97 documents in a week.
+- 2026-09-17: The hosted platform is open for real stores (owner): e-mail delivery opened, the OpenAI reception assistant live in both environments with credit metering verified at 2 öre per image, new stores closed to IN and CN, and Komisio Print published as print-v1.0.1.

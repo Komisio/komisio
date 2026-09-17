@@ -330,7 +330,13 @@ export default async function Reception({
           <h2>
             {d.sellerStep} — {d.version} {review.version}
           </h2>
-          <p>{review.suggestions.metadata.description?.value}</p>
+          <p>
+            {
+              review.suggestions.attributes.find(
+                (a) => a.slug === 'description',
+              )?.value
+            }
+          </p>
           <p>
             {d.price}: {review.suggestions.price?.amount}{' '}
             {review.suggestions.price?.currency}

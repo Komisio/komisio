@@ -43,8 +43,8 @@ export async function suggestReception(
   signal.throwIfAborted()
   const proposal = prepareReceptionProposal(session, candidate, proposalId)
   // This applies to every adapter; model certainty cannot attest staff review.
-  for (const fact of Object.values(proposal.suggestions.metadata))
-    if (fact) fact.certainty = 'tentative'
+  for (const fact of proposal.suggestions.attributes)
+    fact.certainty = 'tentative'
   return {
     status: 'proposed' as const,
     proposal,

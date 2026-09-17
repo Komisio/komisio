@@ -13,10 +13,10 @@ export const publishReceptionReviewCommand = z.strictObject({
   expiresAt: z.iso.datetime(),
   suggestions: receptionSuggestions.refine(
     (s) =>
-      !!s.metadata.description &&
+      s.attributes.some((a) => a.slug === 'description') &&
       !!s.price &&
       s.questions.length === 0 &&
-      Object.values(s.metadata).every((f) => f?.certainty === 'observed'),
+      s.attributes.every((a) => a.certainty === 'observed'),
   ),
 })
 

@@ -1,7 +1,5 @@
 import { z } from 'zod'
-import { garmentSuggestions, receptionSuggestions } from './reception'
-
-const factNames = garmentSuggestions.keyof().options
+import { receptionSuggestions } from './reception'
 /** A field a member of staff confirms: an attribute slug, or the price. The
  * seven fixed names are slugs like any other, so a screen written for them
  * keeps working while a lamp's socket becomes reviewable too. */
@@ -14,18 +12,10 @@ const selection = z
   .max(100)
   .refine((v) => new Set(v).size === v.length)
 
-/** The attribute list where a candidate has one, the seven fixed keys where it
- * does not. One shape means the review cannot silently skip what the fixed
- * keys have no room for. */
-function observations(c: z.infer<typeof receptionSuggestions>) {
-  if (c.attributes) return c.attributes.map((a) => a.slug)
-  return factNames.filter((field) => !!c.metadata[field])
-}
-
 /** Included facts only; optional absent fields never acquire a confirmation. */
 export function receptionReviewFields(input: unknown): ReceptionReviewField[] {
   const c = receptionSuggestions.parse(input)
-  return [...observations(c), ...(c.price ? ['price' as const] : [])]
+  return [...c.attributes.map((a) => a.slug), ...(c.price ? ['price'] : [])]
 }
 
 /** UI review aid, not authorization. Unchecked model facts always stay tentative. */
@@ -39,26 +29,14 @@ export function reviewReceptionFacts(input: unknown, selectedInput: unknown) {
     selected.includes(slug) ? ('observed' as const) : ('tentative' as const)
   const suggestions = receptionSuggestions.parse({
     ...candidate,
-    metadata: Object.fromEntries(
-      factNames
-        .filter((field) => !!candidate.metadata[field])
-        .map((field) => [
-          field,
-          { ...candidate.metadata[field], certainty: certainty(field) },
-        ]),
-    ),
-    ...(candidate.attributes
-      ? {
-          attributes: candidate.attributes.map((a) => ({
-            ...a,
-            certainty: certainty(a.slug),
-          })),
-        }
-      : {}),
+    attributes: candidate.attributes.map((a) => ({
+      ...a,
+      certainty: certainty(a.slug),
+    })),
   })
-  const hasDescription = candidate.attributes
-    ? candidate.attributes.some((a) => a.slug === 'description')
-    : !!candidate.metadata.description
+  const hasDescription = candidate.attributes.some(
+    (a) => a.slug === 'description',
+  )
   return {
     suggestions,
     complete:

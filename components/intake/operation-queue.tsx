@@ -238,11 +238,14 @@ export function OperationQueue({
                 · {d.sourceRevision} {o.payload.sourceRevision}
               </p>
               <dl className="operation-facts">
-                {Object.entries(o.payload.suggestions.metadata).map(
-                  ([key, fact]) =>
-                    fact ? (
-                      <div key={key}>
-                        <dt>{d.fields[key as keyof D['fields']]}</dt>
+                {o.payload.suggestions.attributes.map((fact) =>
+                  fact ? (
+                      <div key={fact.slug}>
+                        <dt>
+                          {(d.fields as Record<string, string | undefined>)[
+                            fact.slug
+                          ] ?? fact.slug}
+                        </dt>
                         <dd>
                           {fact.value}
                           {reviewContext && (

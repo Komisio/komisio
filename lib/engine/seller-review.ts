@@ -43,6 +43,12 @@ const sellerReview = z.object({
   version: z.number().int(),
   storeName: z.string(),
   metadata: z.record(z.string(), z.string()),
+  /** What was recorded, in the order it was recorded, each with the label the
+   * store gave it in the language of the terms. The flat map above cannot keep
+   * an order and cannot name an attribute the store defined itself. */
+  facts: z.array(
+    z.object({ slug: z.string(), value: z.string(), label: z.string() }),
+  ),
   photos: z.array(z.uuid()).max(20),
   price: z.object({
     amount: z.string(),

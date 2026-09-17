@@ -113,8 +113,8 @@ host switch and `STRIPE_CREDITS_PRICE_ID`, owner action A16).
 ## Later
 
 - A second provider (Anthropic) for the store's own key.
-- BankID sign-in as a paid add-on (SEK 49 a month) once an eID broker is
-  chosen; Swish payouts stay free.
+- Swish payouts through the store's own bank agreement, with no service fee
+  from Komisio.
 - A hosted copilot on the same credits.
 
 ## Fixed credit purchase currencies (2026-09-16)

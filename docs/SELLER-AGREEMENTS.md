@@ -1,7 +1,8 @@
 # Seller agreement evidence
 
 This staff pilot adds versioned store terms and references to approval evidence.
-It does not provide seller login, electronic signatures, BankID, legal review or
+It does not provide seller login, electronic signatures, verified identity,
+legal review or
 financial authorization. Use synthetic terms and evidence while evaluating it.
 
 ## Staff journey

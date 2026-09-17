@@ -5,7 +5,8 @@ and database authorization. It is outside the staff dashboard: sellers do not
 need to create a store or join tenant_members. The link alone is insufficient;
 the account must have a confirmed email matching the review's immutable recipient
 snapshot and satisfy any enrolled MFA requirement. This is email-based access,
-not BankID or an assertion of a person's legal identity.
+not a verified electronic identity and not an assertion of a person's legal
+identity.
 
 Staff explicitly issues or revokes access through POST /api/reception/access.
 The engine generates 32 random bytes and persists only their SHA-256 hash.
@@ -43,7 +44,8 @@ The mobile page supports registration/confirmation, sign-in, account switching,
 exact terms and approve/decline. It requires reading acknowledgement before the
 approve button is enabled. Password recovery currently leads to account settings;
 the seller can reopen their review link afterwards. Phone-only identification,
-BankID and external review-mail delivery are future steps. The
+verified electronic identity and external review-mail delivery are future
+steps. The
 [operator workspace](RECEPTION-WORKSPACE.md) now exposes preparation and link
 management through the same engine. There is still no live AI, photo capture or
 image storage in this slice.

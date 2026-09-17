@@ -46,6 +46,9 @@ select is((select seller_id::text from bag_receipts where id=(current_setting('t
 select ok((select note from bag_receipts where id=(current_setting('test.r')::jsonb->>'bagId')::uuid) like 'Transfer from Transfer store A%Moved for the autumn window','bag note names the source and the note');
 select is((select description from inspection_draft_revisions where tenant_id=current_setting('test.b')::uuid and draft_id=(current_setting('test.r')::jsonb->>'draftId')::uuid and revision=1),'Blue wool jacket','draft carries the description');
 select is((select category from inspection_draft_revisions where tenant_id=current_setting('test.b')::uuid and draft_id=(current_setting('test.r')::jsonb->>'draftId')::uuid and revision=1),'Jackets','draft carries the category');
+-- The condition travels with the garment: the receiving staff must see "small
+-- tear at the cuff" without re-inspecting a garment somebody already inspected.
+select is((select condition from inspection_draft_revisions where tenant_id=current_setting('test.b')::uuid and draft_id=(current_setting('test.r')::jsonb->>'draftId')::uuid and revision=1),'Good','draft carries the condition');
 select is(transfer_item(current_setting('test.a')::uuid,current_setting('test.i1')::uuid,current_setting('test.b')::uuid,current_setting('test.t')::uuid,'Moved for the autumn window')->>'bagId',current_setting('test.r')::jsonb->>'bagId','replay by id returns the same bag');
 select throws_ok($$select transfer_item(current_setting('test.a')::uuid,current_setting('test.i1')::uuid,current_setting('test.b')::uuid,gen_random_uuid())$$,'ITEM_ENDED','a second transfer of an ended item is refused');
 -- The seller's balance stays where the sale happened.

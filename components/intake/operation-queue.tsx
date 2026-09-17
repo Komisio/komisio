@@ -124,7 +124,7 @@ function Decision({
           />
           {field === 'price'
             ? d.confirmPrice
-            : `${d.confirmField}: ${d.fields[field]}`}
+            : `${d.confirmField}: ${(d.fields as Record<string, string | undefined>)[field] ?? field}`}
         </label>
       ))}
       <label className="intake-confirm">

@@ -22,6 +22,60 @@ const candidate = {
   questions: [],
 }
 describe('explicit reception fact review', () => {
+  it('lets staff confirm an attribute the seven fixed keys have no room for', () => {
+    // A lamp. Before the attribute list, a socket could not be reviewed
+    // because it could not be carried, and staff confirmed a description
+    // while the socket travelled unseen.
+    const lamp = {
+      metadata: {},
+      attributes: [
+        {
+          slug: 'description',
+          definitionVersion: 1,
+          value: 'Brass table lamp',
+          sourceIds: [source],
+          certainty: 'tentative' as const,
+        },
+        {
+          slug: 'socket',
+          definitionVersion: 1,
+          value: 'e27',
+          sourceIds: [source],
+          certainty: 'tentative' as const,
+        },
+      ],
+      price: {
+        currency: 'SEK',
+        amount: '250.00',
+        rationale: 'Comparable lamps',
+        sourceIds: [source],
+      },
+      questions: [],
+    }
+    expect(receptionReviewFields(lamp)).toEqual([
+      'description',
+      'socket',
+      'price',
+    ])
+    const partly = reviewReceptionFacts(lamp, ['description', 'price'])
+    expect(partly.complete).toBe(false)
+    expect(
+      partly.suggestions.attributes?.find((a) => a.slug === 'socket')
+        ?.certainty,
+    ).toBe('tentative')
+    const all = reviewReceptionFacts(lamp, ['description', 'socket', 'price'])
+    expect(all.complete).toBe(true)
+    expect(
+      all.suggestions.attributes?.every((a) => a.certainty === 'observed'),
+    ).toBe(true)
+  })
+
+  it('refuses a confirmation for something the candidate never proposed', () => {
+    expect(() => reviewReceptionFacts(candidate, ['socket'])).toThrow(
+      'RECEPTION_REVIEW_SELECTION_INVALID',
+    )
+  })
+
   it('does not treat model observed certainty as staff confirmation', () => {
     const result = reviewReceptionFacts(candidate, [])
     expect(result.complete).toBe(false)

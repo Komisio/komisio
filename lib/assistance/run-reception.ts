@@ -74,6 +74,24 @@ export async function runReceptionAssistance(
   let result
   try {
     result = await suggest(state.session, c.requestId, adapter, signal)
+  } catch (error) {
+    const code = error instanceof Error ? error.message : ''
+    const known = [
+      'RECEPTION_UNKNOWN_SOURCE',
+      'RECEPTION_PRICE_EVIDENCE_REQUIRED',
+      'ASSISTANCE_INVALID_OUTPUT',
+      'ASSISTANCE_PROVIDER_FAILED',
+      'ASSISTANCE_IMAGES_REQUIRED',
+      'INVALID_IMAGE',
+    ]
+    console.error('Reception assistance: proposal failed', {
+      reason: signal.aborted
+        ? 'aborted'
+        : known.includes(code)
+          ? code
+          : 'validation',
+    })
+    throw error
   } finally {
     // The reservation becomes the actual cost; a failed call releases it.
     await settleAssistance(

@@ -113,5 +113,29 @@ select is((select f->>'value' from jsonb_array_elements(current_setting('test.se
 select is((select f->>'label' from jsonb_array_elements(current_setting('test.seen')::jsonb->'facts') f where f->>'slug'='socket'),'Socket','named in the language of the terms the seller is reading, not as a slug');
 select is((select f->>'slug' from jsonb_array_elements(current_setting('test.seen')::jsonb->'facts') f limit 1),'description','and in the order it was recorded');
 
+-- Recreate a pre-attribute immutable row inside this rolled-back fixture only.
+-- Production migration never changes reviews or their write constraints.
+reset role;
+alter table public.reception_reviews drop constraint reception_reviews_suggestions_check;
+alter table public.reception_reviews disable trigger reception_reviews_immutable;
+update public.reception_reviews set suggestions=(suggestions-'attributes'-'itemType') ||
+ jsonb_build_object('metadata',jsonb_build_object('description',jsonb_build_object(
+ 'value','Historical lamp','sourceIds',jsonb_build_array(current_setting('test.src')),'certainty','observed')))
+ where id=current_setting('test.review')::uuid;
+alter table public.reception_reviews enable trigger reception_reviews_immutable;
+alter table public.reception_reviews add constraint reception_reviews_suggestions_check
+ check(komisio_private.valid_reception_review(suggestions)) not valid;
+select set_config('test.historical',(select suggestions from public.reception_reviews where id=current_setting('test.review')::uuid)::text,true);
+select ok(not komisio_private.valid_reception_review(current_setting('test.historical')::jsonb),'historical shape still rejected for new writes');
+select is(komisio_private.stored_review_attributes('{"attributes":[],"metadata":{"description":{"value":"stale"}}}'), '[]'::jsonb,'explicit empty list never revives metadata');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000b03","role":"authenticated"}';
+select is(read_seller_review(current_setting('test.token'))->'metadata'->>'description','Historical lamp','seller still sees historical description');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000b01","role":"authenticated"}';
+select is((select a->>'value' from jsonb_array_elements(item_attribute_list(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid)) a where a->>'slug'='description'),'Historical lamp','accepted historical item keeps its description');
+select is((select suggestions from public.reception_reviews where id=current_setting('test.review')::uuid),current_setting('test.historical')::jsonb,'reading never rewrites accepted evidence');
+reset role;
+select throws_like($$update public.reception_reviews set suggestions=suggestions where id=current_setting('test.review')::uuid$$,'%IMMUTABLE%','historical reviews remain immutable');
+
 select * from finish();
 rollback;

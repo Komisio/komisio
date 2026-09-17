@@ -216,18 +216,58 @@ export function openAIReception(
         })
         throw new Error('ASSISTANCE_INVALID_OUTPUT')
       }
-      const output = JSON.parse(messages[0].content[0].text)
-      if (mode === 'batch') {
-        const split = batchWire.parse(output)
-        return batchSuggestions.parse({
-          ...split,
-          candidates: split.candidates.map((row) => ({
-            ...row,
-            suggestions: fromWire(row.suggestions, catalogue),
-          })),
+      try {
+        const output = JSON.parse(messages[0].content[0].text)
+        if (mode === 'batch') {
+          const split = batchWire.parse(output)
+          return batchSuggestions.parse({
+            ...split,
+            candidates: split.candidates.map((row) => ({
+              ...row,
+              suggestions: fromWire(row.suggestions, catalogue),
+            })),
+          })
+        }
+        return fromWire(output, catalogue)
+      } catch (error) {
+        // Schema field names are fixed by our contract. Never log Zod messages,
+        // unrecognised keys, values, source identifiers or the provider body.
+        const fields = new Set([
+          'itemType',
+          'attributes',
+          'slug',
+          'value',
+          'sourceIds',
+          'certainty',
+          'price',
+          'currency',
+          'amount',
+          'rationale',
+          'questions',
+          'candidates',
+          'suggestions',
+        ])
+        console.error('Reception assistance: unusable provider response', {
+          providerStatus: envelope.status,
+          reason: error instanceof z.ZodError ? 'schema' : 'json',
+          issues:
+            error instanceof z.ZodError
+              ? error.issues.slice(0, 10).map((issue) => ({
+                  code: issue.code,
+                  path: issue.path
+                    .map((part) =>
+                      typeof part === 'number'
+                        ? 'entry'
+                        : fields.has(String(part))
+                          ? part
+                          : 'field',
+                    )
+                    .join('.'),
+                }))
+              : [],
         })
+        throw new Error('ASSISTANCE_INVALID_OUTPUT')
       }
-      return fromWire(output, catalogue)
     },
   }
 }

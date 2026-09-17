@@ -661,3 +661,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-17: A batch is recognised by its prompt, not one version of it (Opus): the reserve allowlist, the attempt gate and the batch credit reserve all key on the reception-batch- prefix. Naming v1 in three places refused every batch once the prompt was versioned.
 - 2026-09-17: The seven fixed reception fields are retired (Opus, prompt reception-v3): a review carries an attribute list and nothing else, so the model, the store, the seller and every report describe an item the same way. Old rows keep their metadata; nothing reads it.
 - 2026-09-17: The owner appoints Astra (Codex) lead architect and developer, taking over the Fable/Opus work. The accepted roadmap and safety rules remain the baseline; finish the in-flight attribute delivery before expanding scope.
+
+- 2026-09-17: Historical metadata-only reviews remain readable through a read-only attribute adapter; new writes still require the list. Never rewrite accepted evidence. AI response diagnostics record contract fields and error codes only, never values or identifiers.

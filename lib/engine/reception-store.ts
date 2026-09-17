@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { receptionSession, receptionSuggestions } from './reception'
+import { storedReceptionSuggestions } from './stored-reception-suggestions'
 
 export const publishReceptionReviewCommand = z.strictObject({
   action: z.literal('publishReceptionReview'),
@@ -77,7 +78,7 @@ export async function readReceptionReview(
     version: review.version,
     sourceRevision: review.source_revision,
     photos: z.array(z.uuid()).max(20).parse(review.photo_sources),
-    suggestions: receptionSuggestions.parse(review.suggestions),
+    suggestions: storedReceptionSuggestions.parse(review.suggestions),
     expiresAt: review.expires_at,
     expired: Date.parse(review.expires_at) <= Date.now(),
     sellerEmail: review.seller_email,

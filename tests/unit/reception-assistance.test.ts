@@ -81,6 +81,31 @@ const response = (value: unknown) =>
   )
 const signal = () => new AbortController().signal
 describe('optional reception assistance (HTTP fixtures, no live model)', () => {
+  it('diagnoses a completed but invalid answer without recording values or arbitrary keys', async () => {
+    const logged = vi.spyOn(console, 'error').mockImplementation(() => {})
+    try {
+      const value = candidate()
+      value.price.amount = 'private invalid value'
+      const transport = vi.fn<typeof fetch>().mockResolvedValue(response(value))
+      await expect(
+        suggestReception(session, id(8), reception(transport), signal()),
+      ).rejects.toThrow('ASSISTANCE_INVALID_OUTPUT')
+      expect(logged).toHaveBeenCalledWith(
+        'Reception assistance: unusable provider response',
+        {
+          providerStatus: 'completed',
+          reason: 'schema',
+          issues: [{ code: 'invalid_format', path: 'price.amount' }],
+        },
+      )
+      expect(JSON.stringify(logged.mock.calls)).not.toContain(
+        value.price.amount,
+      )
+      expect(JSON.stringify(logged.mock.calls)).not.toContain(id(4))
+    } finally {
+      logged.mockRestore()
+    }
+  })
   it('requires explicit provider, dedicated key, model and exact allowlisted UUID', () => {
     expect(receptionAIConfig(id(1), { OPENAI_API_KEY: 'unrelated' })).toBeNull()
     const env = {

@@ -1,7 +1,8 @@
 # Functional roadmap: capabilities and proposed delivery order
 
 Status: owner-selected evolving development baseline, 2026-09-12.
-Claude Fable 5.1 is the owner-appointed lead architect. Consult the latest version
+Astra (Codex) is the owner-appointed lead architect and developer as of
+2026-09-17. Consult the latest version
 before selecting work. All 100-hours functionality is excluded from version 1,
 including hourly price decay, dedicated lifecycle stages and associated digital
 price screens/feeds. Historical mentions below are inventory only, not v1 scope.

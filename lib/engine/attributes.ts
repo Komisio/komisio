@@ -125,3 +125,41 @@ export function labelOf(
 ): string {
   return item.labels[locale] ?? item.labels.en ?? item.slug
 }
+
+/** What the store can be asked about. A slug outside it is dropped rather than
+ * carried: a published review only holds attributes bound to a definition, and
+ * a proposal for something undefined is a proposal, not an attribute. */
+export type AttributeCatalogue = {
+  definitions: {
+    slug: string
+    version: number
+    dataType: string
+    unit: string
+    choices: string[]
+  }[]
+  types: { slug: string; attributes: string[] }[]
+}
+
+/** Compact on purpose. The model writes values, not labels, so labels are left
+ * out; sending eight languages of them would cost credits for nothing. */
+export function catalogueFor(
+  vocabulary: AttributeVocabulary,
+): AttributeCatalogue {
+  return {
+    definitions: vocabulary.definitions
+      .filter((d) => d.active)
+      .map((d) => ({
+        slug: d.slug,
+        version: d.version,
+        dataType: d.data_type,
+        unit: d.unit,
+        choices: d.choices.map((c) => c.id),
+      })),
+    types: vocabulary.types
+      .filter((t) => t.active)
+      .map((t) => ({
+        slug: t.slug,
+        attributes: t.attributes.map((a) => a.slug),
+      })),
+  }
+}

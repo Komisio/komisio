@@ -149,9 +149,9 @@ it('minimizes provider context and honors cancellation', async () => {
   expect(suggest).toHaveBeenCalledTimes(1)
 })
 it('pins the batch prompt independently of the single-garment prompt', () => {
-  expect(batchPromptVersion).toBe('reception-batch-v1')
+  expect(batchPromptVersion).toBe('reception-batch-v2')
   expect(createHash('sha256').update(batchInstructions).digest('hex')).toBe(
-    'e93bde1dc208fcf054aa8bb4d862be17aa3adbfcbfbbdcd545396c43c444b6c3',
+    '6d8239ce51642d0a8e42a263c01621ac2696443ba39d3733d2fbc317e2633968',
   )
 })
 it('uses the existing provider transport with a bounded batch schema', async () => {

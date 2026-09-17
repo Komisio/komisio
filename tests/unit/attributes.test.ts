@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   attributeVocabulary,
+  catalogueFor,
   labelOf,
   questionsFor,
   type AttributeVocabulary,
@@ -68,6 +69,22 @@ const vocabulary: AttributeVocabulary = attributeVocabulary.parse({
 })
 
 describe('attribute vocabulary', () => {
+  it('offers the model a compact catalogue without labels', () => {
+    // The model writes values, not labels. Eight languages of labels would be
+    // paid for in credits and read by nobody.
+    const catalogue = catalogueFor(vocabulary)
+    expect(catalogue.definitions.map((d) => d.slug)).not.toContain('retired')
+    expect(JSON.stringify(catalogue)).not.toContain('Sockel')
+    const socket = catalogue.definitions.find((d) => d.slug === 'socket')
+    expect(socket?.choices).toEqual(['e27'])
+    expect(socket?.version).toBe(1)
+    const height = catalogue.definitions.find((d) => d.slug === 'height_cm')
+    expect(height?.unit).toBe('cm')
+    expect(
+      catalogue.types.find((t) => t.slug === 'lamp')?.attributes,
+    ).toContain('socket')
+  })
+
   it('asks a lamp about its socket and a sweater about its size', () => {
     expect(
       questionsFor(vocabulary, 'lamp').map((q) => q.definition.slug),

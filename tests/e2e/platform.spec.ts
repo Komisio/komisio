@@ -1439,13 +1439,15 @@ test('reception sources persist through authenticated API without a bag or GUI',
     agreementId: (await agreement.json()).id,
     expiresAt: new Date(Date.now() + 3600000).toISOString(),
     suggestions: {
-      metadata: {
-        description: {
+      attributes: [
+        {
+          slug: 'description',
+          definitionVersion: 1,
           value: 'Blue jacket, visible tear',
           sourceIds: [command.sources[0].id],
           certainty: 'observed',
         },
-      },
+      ],
       price: {
         currency: 'SEK',
         amount: '250.00',
@@ -1607,13 +1609,15 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
     agreementId: (await terms.json()).id,
     expiresAt: new Date(Date.now() + 3600000).toISOString(),
     suggestions: {
-      metadata: {
-        description: {
+      attributes: [
+        {
+          slug: 'description',
+          definitionVersion: 1,
           value: 'Blue TEST jacket',
           sourceIds: [sourceId],
           certainty: 'observed',
         },
-      },
+      ],
       price: {
         currency: 'SEK',
         amount: '250.00',

@@ -75,5 +75,18 @@ select is((select a->'accepted' from jsonb_array_elements(item_attribute_list(cu
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000c02","role":"authenticated"}';
 select ok(jsonb_array_length(item_attribute_list(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid))>0,'a readonly member reads the corrected list');
 select throws_ok($$select correct_item_attribute(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item')::uuid,'size','S','Guess')$$,'42501',null,'and cannot correct');
+-- Back to staff: the checks above left a readonly member in.
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000c01","role":"authenticated"}';
+-- A correction is not only visible on the item. Every descriptive read goes
+-- through item_title, so a corrected category groups the stock report under
+-- the corrected value and a corrected description is the title the item list
+-- shows. Before this, a correction was invisible to every report.
+select set_config('test.c5',gen_random_uuid()::text,true);
+select correct_item_attribute(current_setting('test.tenant')::uuid,current_setting('test.c5')::uuid,current_setting('test.item')::uuid,'category','Stickat','Moved to the knitwear rail');
+select is((select t->>'category' from jsonb_array_elements(items_overview(current_setting('test.tenant')::uuid,'',null,20)->'items') t where t->>'id'=current_setting('test.item')),'Stickat','the item list shows the corrected category');
+select set_config('test.c6',gen_random_uuid()::text,true);
+select correct_item_attribute(current_setting('test.tenant')::uuid,current_setting('test.c6')::uuid,current_setting('test.item')::uuid,'description','Blue lambswool sweater','Fibre identified');
+select is((select t->>'title' from jsonb_array_elements(items_overview(current_setting('test.tenant')::uuid,'',null,20)->'items') t where t->>'id'=current_setting('test.item')),'Blue lambswool sweater','and the corrected description as its title');
+
 select * from finish();
 rollback;

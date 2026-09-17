@@ -79,7 +79,11 @@ export async function stageReceptionBatchRow(
     attempt.error ||
     attempt.data?.session_id !== c.sessionId ||
     attempt.data.source_revision !== c.revision ||
-    attempt.data.prompt_version !== 'reception-batch-v1'
+    // What this has to establish is that the candidate came from a batch
+    // attempt rather than a single-item one. Naming one version did that and
+    // one thing more: it refused every batch the moment the batch prompt was
+    // versioned, which is a rejection no store could act on.
+    !attempt.data.prompt_version?.startsWith('reception-batch-')
   )
     throw new Error('BATCH_ATTEMPT_REQUIRED')
   // Validate this row against its selected sources, including price provenance.

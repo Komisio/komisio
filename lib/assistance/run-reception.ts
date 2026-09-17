@@ -4,6 +4,7 @@ import {
   reserveReceptionAssistance,
 } from '../engine/reception-assistance'
 import { readReceptionSession } from '../engine/reception-store'
+import { catalogueFor, readAttributeVocabulary } from '../engine/attributes'
 import { readReceptionPhoto } from '../engine/reception-photos'
 import { suggestReception } from './reception'
 import { suggestReceptionBatch } from './reception-batch'
@@ -57,7 +58,19 @@ export async function runReceptionAssistance(
     images.set(source.id, await receptionImage(photo.bytes))
   }
   const suggest = c.mode === 'batch' ? suggestReceptionBatch : suggestReception
-  const adapter = openAIReception(config, images, fetch, c.mode ?? 'single')
+  // The vocabulary tells the model which attributes this store can be asked
+  // about. A failure to read it is not a reason to refuse the whole call: the
+  // assistant falls back to the seven it has always known.
+  const catalogue = await readAttributeVocabulary(client, c.tenantId)
+    .then(catalogueFor)
+    .catch(() => null)
+  const adapter = openAIReception(
+    config,
+    images,
+    fetch,
+    c.mode ?? 'single',
+    catalogue,
+  )
   let result
   try {
     result = await suggest(state.session, c.requestId, adapter, signal)

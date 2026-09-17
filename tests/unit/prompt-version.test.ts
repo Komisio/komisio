@@ -15,6 +15,8 @@ import {
 const pinned: Record<string, string> = {
   'reception-v1':
     'e4f19410547cbb9504a3a0093377a5a65ec7a3cce8281282c029e5f4bed6a464',
+  'reception-v2':
+    '992cb8bd19692db0d9ba849a9a21502ceaa552557b82a890779c28829d341f35',
 }
 
 it('pins the exact prompt text to its version', () => {

@@ -240,20 +240,20 @@ export function OperationQueue({
               <dl className="operation-facts">
                 {o.payload.suggestions.attributes.map((fact) =>
                   fact ? (
-                      <div key={fact.slug}>
-                        <dt>
-                          {(d.fields as Record<string, string | undefined>)[
-                            fact.slug
-                          ] ?? fact.slug}
-                        </dt>
-                        <dd>
-                          {fact.value}
-                          {reviewContext && (
-                            <small> · {fact.sourceIds.join(', ')}</small>
-                          )}
-                        </dd>
-                      </div>
-                    ) : null,
+                    <div key={fact.slug}>
+                      <dt>
+                        {(d.fields as Record<string, string | undefined>)[
+                          fact.slug
+                        ] ?? fact.slug}
+                      </dt>
+                      <dd>
+                        {fact.value}
+                        {reviewContext && (
+                          <small> · {fact.sourceIds.join(', ')}</small>
+                        )}
+                      </dd>
+                    </div>
+                  ) : null,
                 )}
                 {o.payload.suggestions.price && (
                   <div>

@@ -89,7 +89,9 @@ export async function readReceptionHistory(
       version: row.version,
       sourceRevision: row.source_revision,
       createdAt: row.created_at,
-      description: row.suggestions.attributes.find((a) => a.slug === 'description')?.value ?? '',
+      description:
+        row.suggestions.attributes.find((a) => a.slug === 'description')
+          ?.value ?? '',
       price: row.suggestions.price?.amount ?? null,
       photoCount: row.photo_sources.length,
       response: Array.isArray(row.reception_responses)

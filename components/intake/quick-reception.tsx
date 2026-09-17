@@ -3,27 +3,18 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
+import {
+  labelOf,
+  questionsFor,
+  type AttributeVocabulary,
+} from '@/lib/engine/attributes'
 
 type Seller = { id: string; name: string; contact: string | null }
 type Printer = { id: string; name: string }
-type Facts = {
-  description: string
-  category: string
-  brand: string
-  size: string
-  color: string
-  material: string
-  condition: string
-}
-const emptyFacts: Facts = {
-  description: '',
-  category: '',
-  brand: '',
-  size: '',
-  color: '',
-  material: '',
-  condition: '',
-}
+/** Slug to value. Which slugs appear is decided by the item type, so a lamp
+ * shows a socket where a sweater shows a size. */
+type Facts = Record<string, string>
+const emptyFacts: Facts = { description: '' }
 const PRINTER_KEY = 'komisio-quick-printer'
 
 /**
@@ -36,18 +27,23 @@ export function QuickReception({
   sellers,
   printers,
   assistance,
+  vocabulary,
+  lang,
   d,
 }: {
   tenantId: string
   sellers: Seller[]
   printers: Printer[]
   assistance: boolean
+  vocabulary: AttributeVocabulary
+  lang: string
   d: Dictionary['quickIntake']
 }) {
   const [query, setQuery] = useState(''),
     [sellerId, setSellerId] = useState<string | null>(null),
     [printerId, setPrinterId] = useState(''),
     [facts, setFacts] = useState<Facts>(emptyFacts),
+    [itemType, setItemType] = useState<string | null>(null),
     [price, setPrice] = useState(''),
     [photoUrl, setPhotoUrl] = useState<string | null>(null),
     [session, setSession] = useState<{ id: string; revision: number } | null>(
@@ -61,6 +57,10 @@ export function QuickReception({
     [done, setDone] = useState<{ reference: string; itemId: string } | null>(
       null,
     )
+  // What this item type asks for, in the profile's order. Changing the type
+  // changes the questions; answers to questions the new type does not ask are
+  // dropped rather than sent for an item they do not describe.
+  const questions = questionsFor(vocabulary, itemType)
   const running = useRef(false)
   const fileInput = useRef<HTMLInputElement>(null)
   const errors = d.errors as Record<string, string>
@@ -150,17 +150,14 @@ export function QuickReception({
           })
           const s = result?.proposal?.suggestions
           if (result?.status === 'proposed' && s) {
-            const value = (key: keyof Facts) =>
-              (s.metadata?.[key]?.value as string | undefined) ?? ''
-            setFacts({
-              description: value('description'),
-              category: value('category'),
-              brand: value('brand'),
-              size: value('size'),
-              color: value('color'),
-              material: value('material'),
-              condition: value('condition'),
-            })
+            // The assistant still answers in the seven fixed keys. They are
+            // slugs like any other, so they land in the same map.
+            const filled: Facts = { ...emptyFacts }
+            for (const [slug, fact] of Object.entries(
+              (s.metadata ?? {}) as Record<string, { value?: string }>,
+            ))
+              if (fact?.value) filled[slug] = fact.value
+            setFacts(filled)
             if (s.price?.amount) setPrice(String(s.price.amount))
             setMessage(d.aiDone)
           } else setMessage(d.aiUnavailable)
@@ -179,7 +176,11 @@ export function QuickReception({
   async function submit() {
     if (running.current || !sellerId) return
     const ore = Math.round(Number(price.replace(',', '.')) * 100)
-    if (!facts.description.trim() || !Number.isInteger(ore) || ore <= 0) {
+    if (
+      !(facts.description ?? '').trim() ||
+      !Number.isInteger(ore) ||
+      ore <= 0
+    ) {
       setError(d.fillIn)
       return
     }
@@ -187,10 +188,14 @@ export function QuickReception({
     setError('')
     setStage('saving')
     try {
+      const asked = new Set(questions.map((q) => q.definition.slug))
       const cleaned = Object.fromEntries(
         Object.entries(facts)
-          .map(([k, v]) => [k, v.trim()])
-          .filter(([k, v]) => k === 'description' || v),
+          .map(([k, v]) => [k, v.trim()] as const)
+          .filter(
+            ([k, v]) =>
+              k === 'description' || (v !== '' && (asked.has(k) || !itemType)),
+          ),
       )
       const result = await post('/api/intake/quick', {
         tenantId,
@@ -199,6 +204,7 @@ export function QuickReception({
         sessionId: session?.id ?? null,
         expectedRevision: session?.revision ?? 0,
         facts: cleaned,
+        itemType,
         priceOre: ore,
       })
       if (printerId) {
@@ -239,19 +245,62 @@ export function QuickReception({
   }
 
   const busy = stage !== 'idle'
-  const field = (key: keyof Facts, label: string, required = false) => (
-    <div className="field" key={key}>
-      <label htmlFor={`quick-${key}`}>{label}</label>
-      <input
-        id={`quick-${key}`}
-        value={facts[key]}
-        maxLength={1000}
-        required={required}
-        disabled={busy || !!done}
-        onChange={(e) => setFacts({ ...facts, [key]: e.target.value })}
-      />
-    </div>
-  )
+  // One input per question the item type asks, shaped by the definition: a
+  // number carries its unit, a choice offers its values by their stable ids,
+  // and free text stays free text.
+  const question = (
+    definition: AttributeVocabulary['definitions'][number],
+    expected: boolean,
+  ) => {
+    const key = definition.slug,
+      id = `quick-${key}`,
+      label = labelOf(definition, lang),
+      help = definition.help[lang] ?? definition.help.en,
+      set = (value: string) => setFacts({ ...facts, [key]: value })
+    return (
+      <div className="field" key={key}>
+        <label htmlFor={id}>
+          {label}
+          {definition.unit ? ` (${definition.unit})` : ''}
+        </label>
+        {definition.data_type === 'choice' ? (
+          <select
+            id={id}
+            value={facts[key] ?? ''}
+            required={expected}
+            disabled={busy || !!done}
+            onChange={(e) => set(e.target.value)}
+          >
+            <option value="">{d.chooseValue}</option>
+            {definition.choices.map((choice) => (
+              <option key={choice.id} value={choice.id}>
+                {labelOf({ slug: choice.id, labels: choice.labels }, lang)}
+              </option>
+            ))}
+          </select>
+        ) : definition.data_type === 'boolean' ? (
+          <input
+            id={id}
+            type="checkbox"
+            checked={facts[key] === 'true'}
+            disabled={busy || !!done}
+            onChange={(e) => set(e.target.checked ? 'true' : '')}
+          />
+        ) : (
+          <input
+            id={id}
+            value={facts[key] ?? ''}
+            inputMode={definition.data_type === 'number' ? 'decimal' : 'text'}
+            maxLength={1000}
+            required={expected}
+            disabled={busy || !!done}
+            onChange={(e) => set(e.target.value)}
+          />
+        )}
+        {help && <small>{help}</small>}
+      </div>
+    )
+  }
   return (
     <div className="intake-grid">
       <section className="card intake-form" aria-label={d.seller}>
@@ -331,17 +380,26 @@ export function QuickReception({
             <small>{assistance ? d.photoHintAi : d.photoHint}</small>
           </div>
           {message && <p role="status">{message}</p>}
-          {field('description', d.description, true)}
-          <div className="row">
-            {field('category', d.category)}
-            {field('brand', d.brand)}
-            {field('size', d.size)}
+          <div className="field">
+            <label htmlFor="quick-item-type">{d.itemType}</label>
+            <select
+              id="quick-item-type"
+              value={itemType ?? ''}
+              disabled={busy || !!done}
+              onChange={(e) => setItemType(e.target.value || null)}
+            >
+              <option value="">{d.itemTypeNone}</option>
+              {vocabulary.types
+                .filter((t) => t.active)
+                .map((t) => (
+                  <option key={t.slug} value={t.slug}>
+                    {labelOf(t, lang)}
+                  </option>
+                ))}
+            </select>
+            <small>{d.itemTypeHint}</small>
           </div>
-          <div className="row">
-            {field('color', d.color)}
-            {field('material', d.material)}
-            {field('condition', d.condition)}
-          </div>
+          {questions.map((q) => question(q.definition, q.expected))}
           <div className="row">
             <div className="field">
               <label htmlFor="quick-price">{d.price}</label>

@@ -18,7 +18,7 @@ select set_config('test.request',gen_random_uuid()::text,true);
 select throws_like($$select quick_receive(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.session')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Blue jacket"}','25000')$$,'%AGREEMENT_REQUIRED%','the agreement rule still applies');
 select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,'Signed paper');
 select throws_like($$select quick_receive(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.session')::uuid,current_setting('test.other')::uuid,0,'{"description":"Blue jacket"}','25000')$$,'%RECEPTION_SESSION_SELLER%','the session must belong to the named seller');
-select throws_like($$select quick_receive(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.session')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Blue jacket","weight":"1"}','25000')$$,'%INVALID_INPUT%','only the review facts are accepted');
+select throws_like($$select quick_receive(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.session')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Blue jacket","weight":"1"}','25000')$$,'%ATTRIBUTE_UNDEFINED%','an attribute nobody defined is refused, and says so');
 select throws_like($$select quick_receive(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.session')::uuid,current_setting('test.seller')::uuid,0,'{"description":"   "}','25000')$$,'%INVALID_INPUT%','a description is required');
 select throws_like($$select quick_receive(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.session')::uuid,current_setting('test.seller')::uuid,3,'{"description":"Blue jacket"}','25000')$$,'%RECEPTION_CHANGED%','the expected source revision must match');
 select set_config('test.result',quick_receive(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.session')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Blue jacket","category":"Jackets","brand":"","size":"M"}','25000')::text,true);
@@ -52,6 +52,18 @@ select set_config('test.result2',quick_receive(current_setting('test.tenant')::u
 select is((select suggestions->'metadata'->'description'->'sourceIds'->>0 from reception_reviews where session_id=current_setting('test.session2')::uuid),current_setting('test.photo'),'facts cite the photo when there is one');
 select is((select count(*) from items where tenant_id=current_setting('test.tenant')::uuid),2::bigint,'two items');
 -- The full profile keeps the step-by-step reception.
+-- Quick reception is no longer limited to seven fields. A lamp records its
+-- socket and its height through the same call, because the store's vocabulary
+-- defines them, and the stored review keeps them where the seven fixed keys
+-- have no room.
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000981","role":"authenticated"}';
+select set_config('test.lampsession',gen_random_uuid()::text,true);
+select create_reception_session(current_setting('test.tenant')::uuid,current_setting('test.lampsession')::uuid,current_setting('test.seller')::uuid);
+select lives_ok($$select quick_receive(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.lampsession')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Brass table lamp","socket":"e27","height_cm":"45"}','25000','lamp')$$,'a lamp is received with attributes no garment has');
+select is((select suggestions->>'itemType' from reception_reviews where tenant_id=current_setting('test.tenant')::uuid and session_id=current_setting('test.lampsession')::uuid),'lamp','the item type is recorded');
+select is((select a->>'value' from reception_reviews r, jsonb_array_elements(r.suggestions->'attributes') a where r.session_id=current_setting('test.lampsession')::uuid and a->>'slug'='socket'),'e27','the socket is kept');
+select ok((select not (suggestions->'metadata' ? 'socket') from reception_reviews where session_id=current_setting('test.lampsession')::uuid),'and the seven fixed keys are left to what they can hold');
+
 select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy')||'{"intakeProfile":"full"}');
 select set_config('test.session3',create_reception_session(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid)::text,true);
 select throws_like($$select quick_receive(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session3')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Hat"}','5000')$$,'%INTAKE_PROFILE_FULL%','the full profile refuses quick reception');
@@ -63,5 +75,6 @@ insert into tenant_members(tenant_id,user_id,role) values (current_setting('test
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000982","role":"authenticated"}';
 select throws_ok($$select quick_receive(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session3')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Hat"}','5000')$$,'42501',null,'readonly members cannot receive');
+
 select * from finish();
 rollback;

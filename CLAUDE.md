@@ -16,12 +16,14 @@ must not duplicate it.
 
 ## Architecture ownership and delivery baseline
 
-The owner appointed Claude Fable 5.1 as lead architect on 2026-09-12.
+The owner appointed Astra (Codex) as lead architect and developer on 2026-09-17,
+taking over from the previous Fable/Opus work.
 Read `docs/FUNCTIONAL-ROADMAP.md` before selecting or implementing a slice;
 it is the evolving baseline for product direction and architecture. Re-read its
 current contents when resuming work rather than relying on an earlier snapshot.
-Astra implements, tests and integrates against that baseline. Record architectural
-conflicts for Fable and the owner instead of silently replacing the direction.
+Astra owns architectural decisions, implementation, testing and integration
+against that baseline. Record architectural decisions and raise unresolved
+product or financial questions with the owner instead of assuming an answer.
 Explicit owner decisions govern scope; deterministic rules, access controls and
 unresolved financial questions still apply. All 100-hours functionality is outside
 version 1: do not implement it or make v1 depend on it.

@@ -67,4 +67,20 @@ insert into tenant_members(tenant_id,user_id,role) values (current_setting('test
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000972","role":"authenticated"}';
 select throws_ok($$select transfer_item(current_setting('test.a')::uuid,current_setting('test.i3')::uuid,current_setting('test.b')::uuid,gen_random_uuid())$$,'42501',null,'staff cannot transfer');
+-- Back to the owner of both stores: the checks above left another person in.
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000971","role":"authenticated"}';
+-- A lamp received with a socket and a height moves to the sister store with
+-- both. Before this, the target got a description, a category and nothing
+-- else, and the receiving staff re-inspected a lamp somebody had measured.
+select set_config('test.lampsession',gen_random_uuid()::text,true);
+select create_reception_session(current_setting('test.a')::uuid,current_setting('test.lampsession')::uuid,current_setting('test.s1')::uuid);
+select quick_receive(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.lampsession')::uuid,current_setting('test.s1')::uuid,0,'{"description":"Brass table lamp","category":"Belysning","socket":"e27","height_cm":"45"}','25000','lamp');
+select set_config('test.lampitem',(select id from items where tenant_id=current_setting('test.a')::uuid and origin_kind='reception_review' and origin_id=current_setting('test.lampsession')::uuid)::text,true);
+select set_config('test.lampmove',gen_random_uuid()::text,true);
+select set_config('test.lampresult',transfer_item(current_setting('test.a')::uuid,current_setting('test.lampitem')::uuid,current_setting('test.b')::uuid,current_setting('test.lampmove')::uuid,'Moved to the sister store')::text,true);
+select set_config('test.lampdraft',(select attributes from inspection_draft_revisions where tenant_id=current_setting('test.b')::uuid and draft_id=(current_setting('test.lampresult')::jsonb->>'draftId')::uuid and revision=1)::text,true);
+select is((select a->>'value' from jsonb_array_elements(current_setting('test.lampdraft')::jsonb) a where a->>'slug'='socket'),'e27','the socket travels with the lamp');
+select is((select a->>'value' from jsonb_array_elements(current_setting('test.lampdraft')::jsonb) a where a->>'slug'='height_cm'),'45','and so does the height');
+select is((select a->>'value' from jsonb_array_elements(current_setting('test.lampdraft')::jsonb) a where a->>'slug'='description'),'Brass table lamp','and the description');
+
 select * from finish();

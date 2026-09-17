@@ -13,7 +13,7 @@ create temp view stage_of as select stage from reception_queue(current_setting('
 select is((select stage from stage_of),'preparing','no review yet');
 select save_reception_sources(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,0,
  '[{"id":"f0000000-0000-4000-8000-000000000071","kind":"observation","reference":"Staff","observation":"Synthetic coat"},{"id":"f0000000-0000-4000-8000-000000000072","kind":"price-evidence","reference":"Staff estimate","observation":"300 SEK"}]'::jsonb);
-select set_config('test.suggestions','{"metadata":{"description":{"value":"Synthetic coat","sourceIds":["f0000000-0000-4000-8000-000000000071"],"certainty":"observed"}},"price":{"currency":"SEK","amount":"300.00","rationale":"Staff estimate","sourceIds":["f0000000-0000-4000-8000-000000000072"]},"questions":[]}',true);
+select set_config('test.suggestions','{"attributes":[{"slug":"description","definitionVersion":1,"value":"Synthetic coat","sourceIds":["f0000000-0000-4000-8000-000000000071"],"certainty":"observed"}],"price":{"currency":"SEK","amount":"300.00","rationale":"Staff estimate","sourceIds":["f0000000-0000-4000-8000-000000000072"]},"questions":[]}',true);
 select publish_reception_review(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,1,null,current_setting('test.agreement')::uuid,current_setting('test.suggestions')::jsonb,now()+interval '1 day');
 select is((select stage from stage_of),'awaiting_custody','delegated default: a current review needs custody, not a seller answer');
 -- Per-item mode brings back the seller link flow before custody.

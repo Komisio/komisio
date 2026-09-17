@@ -15,10 +15,10 @@ it('splits fixture garments with isolated citations and tentative facts', () => 
   const f = fresh(),
     result = prepareReceptionBatch(f.session, f.split, f.batchId)
   expect(result.candidates).toHaveLength(2)
-  expect(result.candidates[0].suggestions.metadata.description?.certainty).toBe(
+  expect(result.candidates[0].suggestions.attributes[0].certainty).toBe(
     'tentative',
   )
-  expect(f.split.candidates[0].suggestions.metadata.description.certainty).toBe(
+  expect(f.split.candidates[0].suggestions.attributes[0].certainty).toBe(
     'observed',
   )
   expect(result.sellerId).toBe(f.session.sellerId)
@@ -35,7 +35,7 @@ it('rejects identities and unknown fields from the model', () => {
 })
 it('rejects cross-row and unknown source citations', () => {
   const f = fresh()
-  f.split.candidates[0].suggestions.metadata.description.sourceIds = [
+  f.split.candidates[0].suggestions.attributes[0].sourceIds = [
     f.session.sources[1].id,
   ]
   expect(() => prepareReceptionBatch(f.session, f.split, f.batchId)).toThrow(
@@ -149,7 +149,7 @@ it('minimizes provider context and honors cancellation', async () => {
   expect(suggest).toHaveBeenCalledTimes(1)
 })
 it('pins the batch prompt independently of the single-garment prompt', () => {
-  expect(batchPromptVersion).toBe('reception-batch-v2')
+  expect(batchPromptVersion).toBe('reception-batch-v3')
   expect(createHash('sha256').update(batchInstructions).digest('hex')).toBe(
     '6d8239ce51642d0a8e42a263c01621ac2696443ba39d3733d2fbc317e2633968',
   )
@@ -162,15 +162,12 @@ it('uses the existing provider transport with a bounded batch schema', async () 
         ...row,
         suggestions: {
           ...row.suggestions,
-          metadata: {
-            category: null,
-            color: null,
-            brand: null,
-            size: null,
-            material: null,
-            condition: null,
-            ...row.suggestions.metadata,
-          },
+          itemType: null,
+          // The wire carries no definition version; the adapter resolves it
+          // from the store's vocabulary.
+          attributes: row.suggestions.attributes.map(
+            ({ definitionVersion: _v, ...a }) => a,
+          ),
         },
       })),
     }
@@ -197,6 +194,18 @@ it('uses the existing provider transport with a bounded batch schema', async () 
     ),
     transport,
     'batch',
+    {
+      definitions: [
+        {
+          slug: 'description',
+          version: 1,
+          dataType: 'text',
+          unit: '',
+          choices: [],
+        },
+      ],
+      types: [],
+    },
   )
   const result = await suggestReceptionBatch(
     f.session,

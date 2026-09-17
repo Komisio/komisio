@@ -2043,11 +2043,8 @@ test('operator reception guides saved evidence, exact review and link replacemen
       [rejectedId, 'Agent proposal to reject'],
     ]) {
       const suggestions = structuredClone(review.suggestions)
-      // The attribute list is the truth and the seven fixed keys are derived
-      // from it, so a fixture that edits only the derived field would change
-      // nothing. Both move together, which is what the interface does.
-      suggestions.metadata.description.value = description
-      for (const attribute of suggestions.attributes ?? [])
+      // The attribute list is the only description a review carries.
+      for (const attribute of suggestions.attributes)
         if (attribute.slug === 'description') attribute.value = description
       await fixture.query(
         "select propose_operation($1,$2,'publishReceptionReview',$3::jsonb,'browser-fixture',now()+interval '1 hour')",
@@ -2293,12 +2290,11 @@ test('AI HTTP fixture stages a sourced proposal before explicit staff publicatio
   const after = await (
     await page.request.get(`/api/reception/${sessionId}`)
   ).json()
-  expect(after.latestReview.suggestions.metadata.description.certainty).toBe(
-    'observed',
+  const published = after.latestReview.suggestions.attributes.find(
+    (a: { slug: string }) => a.slug === 'description',
   )
-  expect(after.latestReview.suggestions.metadata.description.value).toContain(
-    'HTTP FIXTURE',
-  )
+  expect(published.certainty).toBe('observed')
+  expect(published.value).toContain('HTTP FIXTURE')
   expect(after.latestReview.id).toBe(publishedRequest!.requestId)
   expect(after.latestReview.version).toBe(1)
   expect(after.latestReview.response).toBeNull()

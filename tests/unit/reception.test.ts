@@ -32,14 +32,16 @@ const session = {
     },
   ],
 }
+const attribute = (
+  slug: string,
+  value: string,
+  source: string,
+  certainty = 'observed',
+) => ({ slug, definitionVersion: 1, value, sourceIds: [source], certainty })
 const candidate = {
-  metadata: {
-    description: {
-      value: 'Blue jacket with visible tear',
-      sourceIds: [id(4)],
-      certainty: 'observed',
-    },
-  },
+  attributes: [
+    attribute('description', 'Blue jacket with visible tear', id(4)),
+  ],
   price: {
     currency: 'SEK',
     amount: '250.00',
@@ -147,14 +149,10 @@ describe('headless garment reception contract', () => {
       session,
       {
         ...candidate,
-        metadata: {
-          ...candidate.metadata,
-          material: {
-            value: 'Wool?',
-            sourceIds: [id(4)],
-            certainty: 'tentative',
-          },
-        },
+        attributes: [
+          ...candidate.attributes,
+          attribute('material', 'Wool?', id(4), 'tentative'),
+        ],
       },
       id(7),
     )
@@ -175,12 +173,9 @@ describe('headless garment reception contract', () => {
         session,
         {
           ...candidate,
-          metadata: {
-            description: {
-              ...candidate.metadata.description,
-              sourceIds: [id(99)],
-            },
-          },
+          attributes: [
+            attribute('description', 'Blue jacket with visible tear', id(99)),
+          ],
         },
         id(7),
       ),

@@ -53,7 +53,7 @@ select throws_like($$select receive_bag_with_agreement(current_setting('test.ten
 select set_config('test.session',create_reception_session(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid)::text,true);
 select save_reception_sources(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,0,
  '[{"id":"f0000000-0000-4000-8000-000000000011","kind":"observation","reference":"Staff","observation":"Synthetic jacket"},{"id":"f0000000-0000-4000-8000-000000000012","kind":"price-evidence","reference":"Staff estimate","observation":"100 SEK"}]'::jsonb);
-select set_config('test.suggestions','{"metadata":{"description":{"value":"Synthetic jacket","sourceIds":["f0000000-0000-4000-8000-000000000011"],"certainty":"observed"}},"price":{"currency":"SEK","amount":"100.00","rationale":"Staff estimate","sourceIds":["f0000000-0000-4000-8000-000000000012"]},"questions":[]}',true);
+select set_config('test.suggestions','{"attributes":[{"slug":"description","definitionVersion":1,"value":"Synthetic jacket","sourceIds":["f0000000-0000-4000-8000-000000000011"],"certainty":"observed"}],"price":{"currency":"SEK","amount":"100.00","rationale":"Staff estimate","sourceIds":["f0000000-0000-4000-8000-000000000012"]},"questions":[]}',true);
 select set_config('test.review',gen_random_uuid()::text,true);
 select lives_ok($$select publish_reception_review(current_setting('test.tenant')::uuid,current_setting('test.review')::uuid,current_setting('test.session')::uuid,1,null,null,current_setting('test.suggestions')::jsonb,now()+interval '1 day')$$,'optional agreement permits publication without invented terms');
 select set_config('test.operation',gen_random_uuid()::text,true);

@@ -28,7 +28,7 @@ from generate_series(2,4) g;
 insert into pending_operations(id,tenant_id,kind,risk_level,payload,actor_kind,actor_label,proposed_by,expires_at,created_at)
 select gen_random_uuid(),current_setting('test.tenant')::uuid,'publishReceptionReview','low',
  jsonb_build_object('sessionId',gen_random_uuid(),'sourceRevision',1,'previousReviewId',null,'agreementId',gen_random_uuid(),'expiresAt',(now()+interval '1 day')::text,
- 'suggestions','{"metadata":{"description":{"value":"Fixture","sourceIds":["e0000000-0000-4000-8000-000000000010"],"certainty":"observed"}},"price":{"currency":"SEK","amount":"100.00","rationale":"Fixture","sourceIds":["e0000000-0000-4000-8000-000000000011"]},"questions":[]}'::jsonb),
+ 'suggestions','{"attributes":[{"slug":"description","definitionVersion":1,"value":"Fixture","sourceIds":["e0000000-0000-4000-8000-000000000010"],"certainty":"observed"}],"price":{"currency":"SEK","amount":"100.00","rationale":"Fixture","sourceIds":["e0000000-0000-4000-8000-000000000011"]},"questions":[]}'::jsonb),
  'agent','private fixture label','e0000000-0000-4000-8000-000000000001',now()+interval '1 day',now()
 from generate_series(1,60);
 set local role authenticated;

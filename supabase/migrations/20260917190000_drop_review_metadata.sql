@@ -140,15 +140,29 @@ begin
  return merged;
 end $$;
 
+-- The seller keeps the labelled, ordered list; only where it comes from
+-- changes. The flat map beside it is what the page has always rendered.
 create or replace function public.read_seller_review(p_token text) returns jsonb
 language plpgsql stable security definer set search_path='' as $$
-declare review public.reception_reviews:=komisio_private.seller_review_read(p_token); terms public.seller_agreement_versions; response public.reception_responses; metadata jsonb;
+declare review public.reception_reviews:=komisio_private.seller_review_read(p_token); terms public.seller_agreement_versions; response public.reception_responses; metadata jsonb; facts jsonb; lang text;
 begin
  select * into terms from public.seller_agreement_versions where id=review.agreement_id;
  select * into response from public.reception_responses where review_id=review.id;
- select jsonb_object_agg(k,v->>'value') into metadata from jsonb_each(review.suggestions->'metadata') as facts(k,v);
+ lang:=coalesce(terms.language,'en');
+ facts:=coalesce(review.suggestions->'attributes','[]'::jsonb);
+ select jsonb_object_agg(a->>'slug',a->>'value') into metadata from jsonb_array_elements(facts) a;
  return jsonb_build_object('reviewId',review.id,'version',review.version,'storeName',(select name from public.tenants where id=review.tenant_id),
-  'metadata',metadata,'price',(review.suggestions->'price') - 'sourceIds','expiresAt',review.expires_at,'photos',to_jsonb(review.photo_sources),
+  'metadata',coalesce(metadata,'{}'::jsonb),
+  'facts',(select coalesce(jsonb_agg(jsonb_build_object(
+     'slug',a->>'slug','value',a->>'value',
+     'label',coalesce((select d.labels->>lang from public.attribute_definitions d
+       where d.slug=a->>'slug' and (d.tenant_id is null or d.tenant_id=review.tenant_id)
+       order by (d.tenant_id is not null) desc, d.version desc limit 1),
+      (select d.labels->>'en' from public.attribute_definitions d
+       where d.slug=a->>'slug' and (d.tenant_id is null or d.tenant_id=review.tenant_id)
+       order by (d.tenant_id is not null) desc, d.version desc limit 1),
+      a->>'slug'))),'[]'::jsonb) from jsonb_array_elements(facts) a),
+  'price',(review.suggestions->'price') - 'sourceIds','expiresAt',review.expires_at,'photos',to_jsonb(review.photo_sources),
   'terms',jsonb_build_object('versionId',terms.id,'title',terms.title,'body',terms.body,'language',terms.language),
   'response',case when response.id is null then null else jsonb_build_object('decision',response.decision,'createdAt',response.created_at) end);
 end $$;
@@ -220,3 +234,109 @@ drop function if exists komisio_private.normalise_review(jsonb);
 drop function if exists komisio_private.attributes_to_metadata(jsonb);
 drop function if exists komisio_private.metadata_to_attributes(jsonb);
 drop function if exists komisio_private.legacy_metadata_slugs();
+
+-- The response shape lost the seven fixed keys, so the prompt is a different
+-- contract and moves to version three. Version two stays valid: attempts
+-- recorded under it are history and are not rewritten.
+create or replace function public.reserve_reception_assistance(p_tenant uuid,p_request uuid,p_session uuid,p_revision integer,p_model text,p_prompt text) returns boolean
+language plpgsql security definer set search_path='' as $body$
+declare uid uuid:=komisio_private.require_identity(); prior public.reception_assistance_attempts; latest integer; moment timestamptz; s public.platform_settings; est bigint; p text; inc bigint; pur bigint; fund text;
+begin
+ perform 1 from public.tenants where id=p_tenant for update;
+ if coalesce(public.tenant_role(p_tenant),'') not in ('owner','admin','staff') then raise exception 'FORBIDDEN' using errcode='42501'; end if;
+ if p_request is null or p_session is null or p_revision is null or p_revision<1
+  or p_model is null or p_model !~ '^[a-zA-Z0-9._:-]{1,100}$'
+  or (p_prompt is null or p_prompt not in ('reception-v1','reception-v2','reception-v3','reception-batch-v1','reception-batch-v2','reception-batch-v3')) then raise exception 'INVALID_INPUT'; end if;
+ select * into prior from public.reception_assistance_attempts where id=p_request;
+ if found then
+  if prior.tenant_id is distinct from p_tenant or prior.session_id is distinct from p_session or prior.source_revision is distinct from p_revision
+   or prior.created_by is distinct from uid or prior.model is distinct from p_model or prior.prompt_version is distinct from p_prompt then raise exception 'REQUEST_CONFLICT'; end if;
+  return false;
+ end if;
+ select revision into latest from public.reception_source_revisions where tenant_id=p_tenant and session_id=p_session order by revision desc limit 1;
+ if latest is distinct from p_revision then raise exception 'RECEPTION_CHANGED'; end if;
+ moment:=clock_timestamp();
+ if exists(select 1 from public.reception_assistance_attempts where tenant_id=p_tenant and created_at>moment-interval '20 seconds')
+  or (select count(*) from public.reception_assistance_attempts where tenant_id=p_tenant and created_at>moment-interval '24 hours')>=10 then raise exception 'ASSISTANCE_LIMIT'; end if;
+ insert into public.reception_assistance_attempts(id,tenant_id,session_id,source_revision,created_by,model,prompt_version,created_at)
+ values(p_request,p_tenant,p_session,p_revision,uid,p_model,p_prompt,moment);
+ s:=komisio_private.ai_settings();
+ if s.ai_credits_enabled and not exists(select 1 from public.ai_connections c where c.tenant_id=p_tenant) then
+  p:=komisio_private.usage_period(moment);
+  est:=case when p_prompt like 'reception-batch-%' then s.ai_reserve_batch_ore else s.ai_reserve_ore end;
+  perform komisio_private.ai_grant_included(p_tenant);
+  select included_left,purchased_left into inc,pur from komisio_private.ai_balances(p_tenant,p);
+  if inc>=est then fund:='included'; elsif pur>=est then fund:='purchased'; else raise exception 'AI_CREDITS_EXHAUSTED' using errcode='55000'; end if;
+  if fund='included' and komisio_private.ai_cap_used(p)+est>s.ai_monthly_cap_ore then
+   if pur>=est then fund:='purchased'; else raise exception 'AI_CAP_REACHED' using errcode='55000'; end if;
+  end if;
+  insert into public.ai_credit_events(tenant_id,kind,amount_ore,funded_by,period,reference,model,recorded_by) values(p_tenant,'reserved',-est,fund,p,'attempt:'||p_request,p_model,uid);
+ end if;
+ perform komisio_private.record_access(p_tenant,'reception.assistance_reserved',p_session,jsonb_build_object('request',p_request,'source_revision',p_revision));
+ return true;
+end $body$;
+
+-- The provenance event records which facts were observed and which were a
+-- guess. It read the seven fixed keys, so with those gone it would have frozen
+-- an empty record beside every item accepted from now on. It reads the
+-- attribute list instead, which is the same question asked of the shape that
+-- still exists.
+create or replace function komisio_private.item_provenance(p_tenant uuid,p_origin_kind text,p_origin_id uuid) returns jsonb
+language plpgsql stable security definer set search_path='' as $$
+declare draft public.inspection_draft_revisions; review public.reception_reviews; op public.pending_operations; dec public.operation_decisions; staged jsonb; facts jsonb; attempts jsonb;
+begin
+ case p_origin_kind
+ when 'inspection_draft' then
+  select * into draft from public.inspection_draft_revisions where tenant_id=p_tenant and draft_id=p_origin_id order by revision desc limit 1;
+  select * into op from public.pending_operations where tenant_id=p_tenant and id=draft.id;
+  if found then
+   select * into dec from public.operation_decisions where tenant_id=p_tenant and operation_id=op.id;
+   staged:=jsonb_build_object('operationId',op.id,'kind',op.kind,'actorLabel',op.actor_label,'proposedBy',op.proposed_by,'decidedBy',dec.decided_by);
+  end if;
+  return jsonb_build_object('originKind',p_origin_kind,'savedBy',draft.created_by,'savedAt',draft.saved_at,'revision',draft.revision,'changeReason',draft.change_reason,'stagedOperation',staged);
+ when 'reception_review' then
+  select * into review from public.reception_reviews where tenant_id=p_tenant and session_id=p_origin_id order by version desc limit 1;
+  select * into op from public.pending_operations where tenant_id=p_tenant and id=review.id;
+  if found then
+   select * into dec from public.operation_decisions where tenant_id=p_tenant and operation_id=op.id;
+   staged:=jsonb_build_object('operationId',op.id,'kind',op.kind,'actorLabel',op.actor_label,'proposedBy',op.proposed_by,'decidedBy',dec.decided_by);
+  end if;
+  select coalesce(jsonb_object_agg(a->>'slug',to_jsonb(a->>'certainty')),'{}'::jsonb) into facts from jsonb_array_elements(coalesce(review.suggestions->'attributes','[]'::jsonb)) a;
+  select coalesce(jsonb_agg(jsonb_build_object('id',a.id,'model',a.model,'promptVersion',a.prompt_version,'createdAt',a.created_at) order by a.created_at),'[]'::jsonb) into attempts
+   from public.reception_assistance_attempts a where a.tenant_id=p_tenant and a.session_id=p_origin_id and a.source_revision=review.source_revision;
+  return jsonb_build_object('originKind',p_origin_kind,'reviewedBy',review.created_by,'reviewedAt',review.created_at,'reviewId',review.id,'version',review.version,'sourceRevision',review.source_revision,
+   'facts',facts,'priceSourceIds',review.suggestions->'price'->'sourceIds','modelAttempts',attempts,'stagedOperation',staged);
+ else
+  return jsonb_build_object('originKind',p_origin_kind);
+ end case;
+end $$;
+
+-- An agent's proposal is checked before it is queued, and that check walked
+-- the seven fixed keys. With those gone it would have walked nothing, so a
+-- proposal citing evidence that does not exist would have reached the queue
+-- unchallenged. It walks the attribute list instead.
+create or replace function komisio_private.op_preflight_publish_reception_review(p_tenant uuid,p_payload jsonb) returns jsonb
+language plpgsql security definer set search_path='' as $$
+declare sid uuid; rev integer; prev uuid; agr uuid; review_expiry timestamptz; src public.reception_source_revisions; latest public.reception_reviews; current_agreement uuid; fact jsonb; ref text;
+begin
+ sid:=(p_payload->>'sessionId')::uuid; rev:=(p_payload->>'sourceRevision')::integer; prev:=(p_payload->>'previousReviewId')::uuid; agr:=(p_payload->>'agreementId')::uuid;
+ begin review_expiry:=(p_payload->>'expiresAt')::timestamptz; exception when others then raise exception 'INVALID_INPUT'; end;
+ if not exists(select 1 from public.reception_sessions where id=sid and tenant_id=p_tenant) then raise exception 'RECEPTION_NOT_FOUND'; end if;
+ select * into src from public.reception_source_revisions where session_id=sid order by revision desc limit 1;
+ if not found or src.revision<>rev then raise exception 'RECEPTION_CHANGED'; end if;
+ select * into latest from public.reception_reviews where session_id=sid order by version desc limit 1;
+ if latest.id is distinct from prev then raise exception 'RECEPTION_REVIEW_CHANGED'; end if;
+ select id into current_agreement from public.seller_agreement_versions where tenant_id=p_tenant order by version desc limit 1;
+ if current_agreement is distinct from agr then raise exception 'AGREEMENT_CHANGED'; end if;
+ if agr is null and ((public.current_store_policy(p_tenant)->'policy'->'agreementRequiredFor') ? 'review_publication') then raise exception 'AGREEMENT_REQUIRED'; end if;
+ if not isfinite(review_expiry) or review_expiry<=now() or review_expiry>now()+interval '7 days' then raise exception 'RECEPTION_REVIEW_EXPIRED'; end if;
+ for fact in select * from jsonb_array_elements(coalesce(p_payload->'suggestions'->'attributes','[]'::jsonb)) loop
+  for ref in select * from jsonb_array_elements_text(fact->'sourceIds') loop
+   if not exists(select 1 from jsonb_array_elements(src.sources) source where source->>'id'=ref) then raise exception 'RECEPTION_UNKNOWN_SOURCE'; end if;
+  end loop;
+ end loop;
+ for ref in select * from jsonb_array_elements_text(p_payload->'suggestions'->'price'->'sourceIds') loop
+  if not exists(select 1 from jsonb_array_elements(src.sources) source where source->>'id'=ref and source->>'kind'='price-evidence') then raise exception 'RECEPTION_PRICE_EVIDENCE_REQUIRED'; end if;
+ end loop;
+ return jsonb_build_object('session_id',sid);
+end $$;

@@ -241,19 +241,15 @@ describe('AI credits', () => {
                   {
                     type: 'output_text',
                     text: JSON.stringify({
-                      metadata: {
-                        description: {
+                      itemType: null,
+                      attributes: [
+                        {
+                          slug: 'description',
                           value: 'Blue jacket',
                           sourceIds: ['0b6c4f1e-2c2e-4b5e-9a1f-1234567890ad'],
                           certainty: 'observed',
                         },
-                        category: null,
-                        color: null,
-                        brand: null,
-                        size: null,
-                        material: null,
-                        condition: null,
-                      },
+                      ],
                       price: null,
                       questions: [],
                     }),

@@ -18,7 +18,7 @@ select throws_like($$select * from reception_queue(current_setting('test.tenant'
 select set_config('test.terms',publish_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'TEST','Fictional terms','en',false)::text,true);
 select set_config('test.sources','[{"id":"b0000000-0000-4000-8000-000000000010","kind":"price-evidence","reference":"TEST","observation":"Fictional shirt 80SEK"}]',true);
 select save_reception_sources(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,0,current_setting('test.sources')::jsonb);
-select set_config('test.suggestions','{"metadata":{"description":{"value":"TEST shirt","sourceIds":["b0000000-0000-4000-8000-000000000010"],"certainty":"observed"}},"price":{"currency":"SEK","amount":"80.00","rationale":"TEST","sourceIds":["b0000000-0000-4000-8000-000000000010"]},"questions":[]}',true);
+select set_config('test.suggestions','{"attributes":[{"slug":"description","definitionVersion":1,"value":"TEST shirt","sourceIds":["b0000000-0000-4000-8000-000000000010"],"certainty":"observed"}],"price":{"currency":"SEK","amount":"80.00","rationale":"TEST","sourceIds":["b0000000-0000-4000-8000-000000000010"]},"questions":[]}',true);
 select set_config('test.review',gen_random_uuid()::text,true);
 select publish_reception_review(current_setting('test.tenant')::uuid,current_setting('test.review')::uuid,current_setting('test.session')::uuid,1,null,current_setting('test.terms')::uuid,current_setting('test.suggestions')::jsonb,now()+interval '1 day');
 select is((select stage from reception_queue(current_setting('test.tenant')::uuid)),'ready_to_share','published but not issued');

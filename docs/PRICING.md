@@ -1,10 +1,16 @@
-# Pricing: free and open, AI credits metered
+# Pricing: open software, priced hosting, AI credits metered
 
-Owner decision 2026-09-16, delivered by Fable in migration `20260916440000`.
-It replaces the plan models of the two previous days: there is no plan, no
-cap and no paid package. Komisio is free and open source, also when Inority
-hosts it. The only thing that is metered is the AI assistant's model usage
-when it runs on the host's own key.
+Owner decisions 2026-09-16 (open core, migration `20260916440000`) and
+2026-09-17 (the hosting price). There is no plan, no cap and no paid feature
+tier: the software is open source under AGPL-3.0 and carries no licence fee
+whoever runs it. What is priced is the hosting Inority performs, and the AI
+assistant's model usage when it runs on the host's own key.
+
+A store has three ways to run Komisio and nothing in the product favours one
+of them. Run it yourself, hire any hosting partner, or let Inority host it.
+The last of those costs three months nothing, then SEK 299 a month per store
+excluding VAT, with no lock-in period. Leaving is a real option rather than a
+slogan: the data and the images export, and the same software runs anywhere.
 
 ## The offer, as the store sees it
 
@@ -14,6 +20,10 @@ when it runs on the host's own key.
   to the store's own assistant. No limits on items, printers or integrations.
   Swish payouts run through the store's own bank agreement without a service
   fee from Komisio.
+- Hosting by Inority: three months at no cost from registration, then SEK 299
+  a month per store excluding VAT, no lock-in period. It covers updates,
+  backups, monitoring, the integrations kept working and a defined level of
+  support. Self-hosting and any other hosting partner cost Komisio nothing.
 - AI credits: one credit is one krona. A store on Inority's hosting gets 100
   credits a month included. The assistant's calls are paid from them at the
   model's actual token cost (a few öre per garment). When they are used up,
@@ -26,10 +36,14 @@ when it runs on the host's own key.
 
 Proposed wording (Swedish first, the owner edits before publishing):
 
-> Komisio är gratis och öppen källkod. Inority driftar lösningen åt butiken
-> helt gratis. Det ingår AI-funktionalitet för cirka {items} varor per
-> månad. Slår du i taket köper du 100 nya AI-krediter för 100 kr, eller
-> kopplar enkelt Komisio till ditt eget abonnemang hos Claude eller ChatGPT.
+> Komisio är öppen källkod och kostar aldrig någon licensavgift. Kör det
+> själv, anlita vilken driftpartner du vill, eller låt Inority sköta driften:
+> tre månader kostnadsfritt, därefter 299 kr i månaden per butik exklusive
+> moms. Ingen bindningstid, och du kan flytta när du vill.
+>
+> Det ingår AI-funktionalitet för cirka {items} varor per månad. Slår du i
+> taket köper du 100 nya AI-krediter för 100 kr, eller kopplar enkelt Komisio
+> till ditt eget abonnemang hos Claude eller ChatGPT.
 >
 > Så här mycket betalar butiker som kör Komisio skarpt idag:
 > {for each listed store: "{label}, tar emot cirka {itemsPerMonth} varor per
@@ -103,17 +117,16 @@ host switch and `STRIPE_CREDITS_PRICE_ID`, owner action A16).
   chosen; Swish payouts stay free.
 - A hosted copilot on the same credits.
 
-
 ## Fixed credit purchase currencies (2026-09-16)
 
 Each one-time purchase adds exactly 100 credits (10,000 internal ore):
 
-| Store country | Payment | Vercel configuration |
-| --- | --- | --- |
-| Sweden / legacy profile without country | 100 SEK | `STRIPE_CREDITS_PRICE_ID` |
-| Norway | 100 NOK | `STRIPE_CREDITS_PRICE_ID_NOK` |
-| Denmark | 65 DKK | `STRIPE_CREDITS_PRICE_ID_DKK` |
-| Other supported European countries | 9 EUR | `STRIPE_CREDITS_PRICE_ID_EUR` |
+| Store country                           | Payment | Vercel configuration          |
+| --------------------------------------- | ------- | ----------------------------- |
+| Sweden / legacy profile without country | 100 SEK | `STRIPE_CREDITS_PRICE_ID`     |
+| Norway                                  | 100 NOK | `STRIPE_CREDITS_PRICE_ID_NOK` |
+| Denmark                                 | 65 DKK  | `STRIPE_CREDITS_PRICE_ID_DKK` |
+| Other supported European countries      | 9 EUR   | `STRIPE_CREDITS_PRICE_ID_EUR` |
 
 These are fixed owner-approved package prices, not exchange rates. Owners or
 admins select country under Store profile and publish a new version. Existing

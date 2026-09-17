@@ -1600,7 +1600,7 @@
   },
   "plans": {
     "heading": "Tilaus",
-    "priceNote": "Komisio on ilmainen ja avoimen lähdekoodin ohjelmisto: kaikki ominaisuudet sisältyvät, eikä tuotteita, tulostimia tai integraatioita ole rajoitettu. Ainoa mitattava asia on AI-avustajan krediitit, katso AI-krediitit-välilehti.",
+    "priceNote": "Komisio on avointa lähdekoodia ja kaikki toiminnot sisältyvät, ilman rajoja tuotteille, tulostimille tai integraatioille. Ohjelmistosta ei peritä lisenssimaksua: aja se itse tai millä tahansa hostauskumppanilla. Inorityn hostaus on ilmaista kolme kuukautta, sitten 299 SEK per kauppa ja kuukausi ilman alv:tä, ilman sitoutumisaikaa. AI-avustajan krediitit mitataan erikseen, katso AI-krediitit-välilehti.",
     "trialEndsAt": "kokeilu päättyy",
     "graceEndsAt": "lisäaika päättyy",
     "activeUntil": "aktiivinen asti",
@@ -2293,7 +2293,7 @@
   },
   "credits": {
     "title": "AI-krediitit",
-    "intro": "Komisio on ilmainen ja avoimen lähdekoodin ohjelmisto, myös silloin kun Inority hostaa sitä. Ainoa mitattava asia on AI-avustajan mallikutsut, kun ne ajetaan Komision omalla avaimella. Yksi krediitti kattaa SEK 1 mallikustannuksia.",
+    "intro": "Komisio on avointa lähdekoodia, ja Inorityn hostaus on ilmaista kolme kuukautta ja sitten 299 SEK per kauppa ja kuukausi ilman alv:tä. Ainoa muu mitattava asia on AI-avustajan mallikutsut, kun ne käyttävät Komision omaa avainta. Yksi krediitti vastaa yhtä Ruotsin kruunua mallikustannusta.",
     "offer": "{included} krediittiä sisältyy joka kuukausi, mikä riittää yleensä noin {items} vastaanotettuun tuotteeseen. Kun ne loppuvat, ostat {pack} lisää hintaan {price} tai yhdistät kaupan oman malliavaimen; silloin krediittejä ei kuluteta.",
     "selfHosted": "Tämä asennus ei mittaa krediittejä: avustaja toimii asennuksen omalla avaimella.",
     "includedLeft": "Jäljellä tämän kuun krediiteistä",

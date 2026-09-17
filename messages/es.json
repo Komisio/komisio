@@ -1600,7 +1600,7 @@
   },
   "plans": {
     "heading": "Plan",
-    "priceNote": "Komisio es gratuito y de código abierto: todas las funciones están incluidas, sin límites de artículos, impresoras ni integraciones. Lo único que se mide son los créditos del asistente de IA; consulta la pestaña Créditos de IA.",
+    "priceNote": "Komisio es de código abierto y todas las funciones están incluidas, sin límites de artículos, impresoras o integraciones. El software no tiene licencia que pagar: ejecútalo tú o con cualquier proveedor de alojamiento. El alojamiento de Inority es gratis tres meses, después 299 SEK por tienda y mes sin IVA, sin permanencia. Los créditos del asistente de IA se miden aparte, mira la pestaña de créditos de IA.",
     "trialEndsAt": "la prueba termina",
     "graceEndsAt": "el periodo de gracia termina",
     "activeUntil": "activo hasta",
@@ -2293,7 +2293,7 @@
   },
   "credits": {
     "title": "Créditos de IA",
-    "intro": "Komisio es gratuito y de código abierto, también cuando lo aloja Inority. Lo único que se mide son las llamadas al modelo del asistente de IA cuando se ejecutan con la clave propia de Komisio. Un crédito cubre SEK 1 de coste del modelo.",
+    "intro": "Komisio es de código abierto, y el alojamiento de Inority es gratis tres meses y después 299 SEK por tienda y mes sin IVA. Lo único que se mide además de eso son las llamadas al modelo del asistente de IA cuando usan la clave propia de Komisio. Un crédito equivale a una corona sueca de coste de modelo.",
     "offer": "Cada mes se incluyen {included} créditos, normalmente suficientes para unos {items} artículos recibidos. Cuando se agotan, compras {pack} más por {price} o conectas la clave de modelo propia de la tienda; entonces no se consumen créditos.",
     "selfHosted": "Esta instalación no mide créditos: el asistente funciona con la clave propia de la instalación.",
     "includedLeft": "Restantes de los créditos de este mes",

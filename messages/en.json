@@ -1600,7 +1600,7 @@
   },
   "plans": {
     "heading": "Plan",
-    "priceNote": "Komisio is free and open source: every feature is included, with no limits on items, printers or integrations. The only thing metered is the AI assistant's credits, see the AI credits tab.",
+    "priceNote": "Komisio is open source and every feature is included, with no limits on items, printers or integrations. The software carries no licence fee: run it yourself or at any hosting partner. Hosting by Inority is free for three months, then SEK 299 per store and month excluding VAT, with no lock-in period. The AI assistant's credits are metered separately, see the AI credits tab.",
     "trialEndsAt": "trial ends",
     "graceEndsAt": "grace ends",
     "activeUntil": "active until",
@@ -2293,7 +2293,7 @@
   },
   "credits": {
     "title": "AI credits",
-    "intro": "Komisio is free and open source, also when Inority hosts it. The only thing metered is the AI assistant's model calls when they run on Komisio's own key. One credit covers SEK 1 of model cost.",
+    "intro": "Komisio is open source, and hosting by Inority is free for three months and then SEK 299 per store and month excluding VAT. The only thing metered beyond that is the AI assistant's model calls when they run on Komisio's own key. One credit is one Swedish krona of model cost.",
     "offer": "{included} credits are included every month, normally enough for about {items} received items. When they run out you buy {pack} more for {price} or connect the store's own model key; then no credits are drawn.",
     "selfHosted": "This installation meters no credits: the assistant runs on the installation's own key.",
     "includedLeft": "Left of this month's credits",

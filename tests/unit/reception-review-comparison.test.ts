@@ -2,7 +2,9 @@ import { expect, it } from 'vitest'
 import { compareReceptionReview } from '../../lib/engine/reception-review-comparison'
 const id = (n: number) =>
   `92000000-0000-4000-8000-${String(n).padStart(12, '0')}`
-const fact = (value: string, sourceIds = [id(1)]) => ({
+const fact = (slug: string, value: string, sourceIds = [id(1)]) => ({
+  slug,
+  definitionVersion: 1,
   value,
   sourceIds,
   certainty: 'observed',
@@ -13,7 +15,7 @@ const prior = () => ({
   source_revision: 2,
   agreement_id: id(3),
   suggestions: {
-    metadata: { description: fact('Jacket'), color: fact('Blue') },
+    attributes: [fact('description', 'Jacket'), fact('color', 'Blue')],
     price: {
       currency: 'SEK',
       amount: '100.00',
@@ -50,15 +52,17 @@ it('unchanged values and reordered citations do not invent changes or mutate evi
 })
 it('reports added, removed and citation-only facts', () => {
   const after = next()
-  after.suggestions.metadata = {
-    description: fact('Jacket', [id(7)]),
-    brand: fact('TEST'),
-  } as unknown as typeof after.suggestions.metadata
+  after.suggestions.attributes = [
+    fact('description', 'Jacket', [id(7)]),
+    fact('brand', 'TEST'),
+  ]
   const diff = compareReceptionReview(prior(), after)!
+  // slugOrder puts the declared seven first in their own order, so brand
+  // precedes colour however the two reviews happened to list them.
   expect(diff.fields.map((f) => f.field)).toEqual([
     'description',
-    'color',
     'brand',
+    'color',
   ])
   expect(diff.fields.find((f) => f.field === 'color')).toMatchObject({
     before: { value: 'Blue' },

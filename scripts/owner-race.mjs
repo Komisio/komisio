@@ -455,13 +455,15 @@ try {
     )
   ).rows[0].id
   const suggestions = JSON.stringify({
-    metadata: {
-      description: {
+    attributes: [
+      {
+        slug: 'description',
+        definitionVersion: 1,
         value: 'TEST garment',
         sourceIds: [reviewSources[0].id],
         certainty: 'observed',
       },
-    },
+    ],
     price: {
       currency: 'SEK',
       amount: '250.00',

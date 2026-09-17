@@ -74,18 +74,31 @@ export const itemAttribute = z.strictObject({
 export type ItemAttribute = z.infer<typeof itemAttribute>
 
 export const receptionSuggestions = z.strictObject({
-  metadata: garmentSuggestions,
+  /** What the item is. The only descriptive shape there is. */
+  attributes: z.array(itemAttribute).max(100),
   price: suggestedPrice.nullable(),
   questions: z.array(text(500)).max(10),
-  // The attribute list is what the database stores as the truth; metadata is
-  // derived from it there. Optional here because nothing in the application
-  // produces one yet, and because a stored review read back must parse.
-  attributes: z.array(itemAttribute).max(100).optional(),
   itemType: z
     .string()
     .regex(/^[a-z][a-z0-9_]{0,39}$/)
     .optional(),
+  /** Reviews published before the seven fixed keys were retired still carry
+   * them. Nothing reads this; it is here so an old row parses. */
+  metadata: garmentSuggestions.optional(),
 })
+
+/** The order the seven were shown in before item types existed. A display
+ * preference for screens that list attributes, not a schema: an attribute
+ * outside it sorts after, alphabetically. */
+export const legacySlugOrder = [
+  'description',
+  'category',
+  'brand',
+  'size',
+  'color',
+  'material',
+  'condition',
+] as const
 export type ReceptionSession = z.infer<typeof receptionSession>
 export type ReceptionSuggestions = z.infer<typeof receptionSuggestions>
 
@@ -113,8 +126,8 @@ export function prepareReceptionProposal(
       .filter((source) => source.kind === 'price-evidence')
       .map((source) => source.id),
   )
-  for (const fact of Object.values(suggestions.metadata))
-    if (fact && fact.sourceIds.some((id) => !known.has(id)))
+  for (const fact of suggestions.attributes)
+    if (fact.sourceIds.some((id) => !known.has(id)))
       throw new Error('RECEPTION_UNKNOWN_SOURCE')
   if (suggestions.price?.sourceIds.some((id) => !pricing.has(id)))
     throw new Error('RECEPTION_PRICE_EVIDENCE_REQUIRED')
@@ -172,14 +185,14 @@ export function prepareSellerReview(
   // Recheck source bindings rather than trusting a caller-created proposal.
   prepareReceptionProposal(session, proposal.suggestions, proposal.proposalId)
   if (
-    !proposal.suggestions.metadata.description ||
+    !proposal.suggestions.attributes.some((a) => a.slug === 'description') ||
     !proposal.suggestions.price ||
     proposal.suggestions.questions.length
   )
     throw new Error('RECEPTION_REVIEW_INCOMPLETE')
   if (
-    Object.values(proposal.suggestions.metadata).some(
-      (fact) => fact?.certainty === 'tentative',
+    proposal.suggestions.attributes.some(
+      (fact) => fact.certainty === 'tentative',
     )
   )
     throw new Error('RECEPTION_UNCERTAINTY_REQUIRES_REVIEW')

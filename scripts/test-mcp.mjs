@@ -284,13 +284,15 @@ try {
       ).isError,
     )
   const suggestions = {
-    metadata: {
-      description: {
+    attributes: [
+      {
+        slug: 'description',
+        definitionVersion: 1,
         value: 'Synthetic blue jacket',
         sourceIds: [source],
         certainty: 'observed',
       },
-    },
+    ],
     price: null,
     questions: ['Price evidence required'],
   }
@@ -303,8 +305,7 @@ try {
   assert.equal(preview.structuredContent.staged, false)
   assert.equal(preview.structuredContent.actor, uid)
   assert.equal(
-    preview.structuredContent.proposal.suggestions.metadata.description
-      .certainty,
+    preview.structuredContent.proposal.suggestions.attributes[0].certainty,
     'tentative',
   )
   const stale = await both.callTool({
@@ -475,13 +476,15 @@ try {
     ['komisio_propose_reception_review'],
   )
   const complete = {
-    metadata: {
-      description: {
+    attributes: [
+      {
+        slug: 'description',
+        definitionVersion: 1,
         value: 'Synthetic blue jacket',
         sourceIds: [source],
         certainty: 'observed',
       },
-    },
+    ],
     price: {
       currency: 'SEK',
       amount: '250.00',
@@ -518,9 +521,8 @@ try {
   assert.equal(detail.structuredContent.context.terms.id, agreement)
   assert.equal(detail.structuredContent.context.canApprove, true)
   assert.equal(
-    detail.structuredContent.operation.payload.suggestions.metadata.description
-      .value,
-    complete.metadata.description.value,
+    detail.structuredContent.operation.payload.suggestions.attributes[0].value,
+    complete.attributes[0].value,
   )
   assert(
     detail.structuredContent.context.sources.every(
@@ -637,7 +639,7 @@ try {
   )
   const revisionOperation = randomUUID()
   const revisedSuggestions = structuredClone(complete)
-  revisedSuggestions.metadata.description.value = 'Revised fixture jacket'
+  revisedSuggestions.attributes[0].value = 'Revised fixture jacket'
   revisedSuggestions.price.rationale = 'Revised fixture rationale'
   const revisionStaged = await proposer.callTool({
     name: 'komisio_propose_reception_review',
@@ -657,10 +659,7 @@ try {
   const comparison = revisionDetail.structuredContent.context.comparison
   assert.equal(comparison.previousReviewId, proposalId)
   assert.equal(comparison.previousVersion, 1)
-  assert.equal(
-    comparison.fields[0].before.value,
-    complete.metadata.description.value,
-  )
+  assert.equal(comparison.fields[0].before.value, complete.attributes[0].value)
   assert.equal(comparison.fields[0].after.value, 'Revised fixture jacket')
   assert.equal(comparison.price.before.amount, comparison.price.after.amount)
   assert.equal(comparison.price.after.rationale, 'Revised fixture rationale')

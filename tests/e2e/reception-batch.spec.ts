@@ -161,8 +161,7 @@ test('AI HTTP fixture splits photos and stages each reviewed garment without dup
       expect(replay.status(), await replay.text()).toBe(200)
     expect(await replays[0].json()).toEqual(await replays[1].json())
     const changed = JSON.parse(JSON.stringify(first))
-    changed.candidate.suggestions.metadata.description.value =
-      'Changed after staging'
+    changed.candidate.suggestions.attributes[0].value = 'Changed after staging'
     expect(
       (
         await page.request.post('/api/reception/batch', {
@@ -229,8 +228,7 @@ test('AI HTTP fixture splits photos and stages each reviewed garment without dup
       `/api/reception/${ops[0].payload.sessionId}`,
     )
     expect(
-      (await child.json()).latestReview.suggestions.metadata.description
-        .certainty,
+      (await child.json()).latestReview.suggestions.attributes[0].certainty,
     ).toBe('observed')
     expect(
       (

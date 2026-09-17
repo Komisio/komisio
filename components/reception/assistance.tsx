@@ -51,7 +51,7 @@ export function ReceptionAssistance({
   const modeId = useId()
   const running = useRef(false)
   const ready =
-    candidate?.metadata.description &&
+    candidate?.attributes.some((a) => a.slug === 'description') &&
     candidate.price &&
     candidate.questions.length === 0 &&
     terms
@@ -172,11 +172,15 @@ export function ReceptionAssistance({
       {candidate && (
         <div className="intake-form">
           <h3>{d.aiCandidate}</h3>
-          {Object.entries(candidate.metadata).map(
-            ([key, fact]) =>
+          {candidate.attributes.map(
+            (fact) =>
               fact && (
-                <div key={key}>
-                  <strong>{d.aiFields[key as keyof typeof d.aiFields]}</strong>
+                <div key={fact.slug}>
+                  <strong>
+                    {(d.aiFields as Record<string, string | undefined>)[
+                      fact.slug
+                    ] ?? fact.slug}
+                  </strong>
                   <p>{fact.value}</p>
                   <small>{d.aiUnverified}</small>
                   <details>

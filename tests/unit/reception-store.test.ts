@@ -48,13 +48,15 @@ it('requires a complete explicit review command rather than inferred approval', 
     agreementId: id,
     expiresAt: '2026-09-13T00:00:00Z',
     suggestions: {
-      metadata: {
-        description: {
+      attributes: [
+        {
+          slug: 'description',
+          definitionVersion: 1,
           value: 'Jacket',
           sourceIds: [id],
           certainty: 'observed',
         },
-      },
+      ],
       price: {
         currency: 'SEK',
         amount: '250.00',

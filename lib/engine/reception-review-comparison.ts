@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { garmentSuggestions, receptionSuggestions } from './reception'
+import { legacySlugOrder, receptionSuggestions } from './reception'
 import { publishReceptionReviewPayload } from './operations'
 
 const baseline = z.object({
@@ -22,24 +22,19 @@ function observations(
   suggestions: z.infer<typeof receptionSuggestions>,
 ): Map<string, Observation> {
   const out = new Map<string, Observation>()
-  if (suggestions.attributes) {
-    for (const a of suggestions.attributes)
-      out.set(a.slug, {
-        value: a.value,
-        sourceIds: a.sourceIds,
-        certainty: a.certainty,
-      })
-    return out
-  }
-  for (const [slug, fact] of Object.entries(suggestions.metadata))
-    if (fact) out.set(slug, fact)
+  for (const a of suggestions.attributes)
+    out.set(a.slug, {
+      value: a.value,
+      sourceIds: a.sourceIds,
+      certainty: a.certainty,
+    })
   return out
 }
 
 /** The seven first, in their declared order, then anything else alphabetically,
  * so the list a reviewer reads is stable between two runs. */
 function slugOrder(all: Set<string>): string[] {
-  const known = garmentSuggestions.keyof().options as string[]
+  const known = legacySlugOrder as readonly string[]
   const rest = [...all].filter((s) => !known.includes(s)).sort()
   return [...known.filter((s) => all.has(s)), ...rest]
 }

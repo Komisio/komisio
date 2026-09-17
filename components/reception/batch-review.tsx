@@ -75,11 +75,15 @@ function BatchRow({
         </>
       ) : (
         <>
-          {Object.entries(candidate.suggestions.metadata).map(
-            ([name, fact]) =>
+          {candidate.suggestions.attributes.map(
+            (fact) =>
               fact && (
-                <div key={name}>
-                  <strong>{d.aiFields[name as keyof typeof d.aiFields]}</strong>
+                <div key={fact.slug}>
+                  <strong>
+                    {(d.aiFields as Record<string, string | undefined>)[
+                      fact.slug
+                    ] ?? fact.slug}
+                  </strong>
                   <p>{fact.value}</p>
                   <small>{d.aiUnverified}</small>
                   <ul>

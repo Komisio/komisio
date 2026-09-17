@@ -23,17 +23,6 @@ export const operationKind = z.enum([
   'updateStoreProfile',
   'importSellers',
 ])
-/** The seven fixed keys are derived from the attribute list. A payload that
- * carries both must carry them saying the same thing. */
-function metadataAgrees(s: z.infer<typeof receptionSuggestions>) {
-  if (!s.attributes) return true
-  const bySlug = new Map(s.attributes.map((a) => [a.slug, a]))
-  return Object.entries(s.metadata).every(([slug, fact]) => {
-    const a = bySlug.get(slug)
-    return !fact || (a?.value === fact.value && a.certainty === fact.certainty)
-  })
-}
-
 export const publishReceptionReviewPayload = z.strictObject({
   sessionId: z.guid(),
   sourceRevision: z.number().int().min(1).max(2147483646),
@@ -42,13 +31,10 @@ export const publishReceptionReviewPayload = z.strictObject({
   expiresAt: z.iso.datetime(),
   suggestions: receptionSuggestions.refine(
     (s) =>
-      !!s.metadata.description &&
+      s.attributes.some((a) => a.slug === 'description') &&
       !!s.price &&
       s.questions.length === 0 &&
-      Object.values(s.metadata).every((f) => f?.certainty === 'observed') &&
-      // Both may be sent, but only in agreement. The list is the truth, so
-      // editing the derived field alone would silently do nothing.
-      metadataAgrees(s),
+      s.attributes.every((a) => a.certainty === 'observed'),
   ),
 })
 export const saveInspectionDraftPayload = z.strictObject({

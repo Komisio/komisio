@@ -75,7 +75,9 @@ it('copies under child storage boundaries and stages only the existing operation
     payload: {
       sourceRevision: 1,
       sessionId: result.sessionId,
-      suggestions: { metadata: { description: { certainty: 'observed' } } },
+      suggestions: {
+        attributes: [{ slug: 'description', certainty: 'observed' }],
+      },
     },
   })
   expect(m.write.mock.calls.map((call) => call[1].action)).toEqual([

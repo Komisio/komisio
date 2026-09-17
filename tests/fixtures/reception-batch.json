@@ -35,13 +35,15 @@
           "8a000000-0000-4000-8000-000000000006"
         ],
         "suggestions": {
-          "metadata": {
-            "description": {
+          "attributes": [
+            {
+              "slug": "description",
+              "definitionVersion": 1,
               "value": "Red jacket",
               "sourceIds": ["8a000000-0000-4000-8000-000000000004"],
               "certainty": "observed"
             }
-          },
+          ],
           "price": {
             "currency": "SEK",
             "amount": "200.00",
@@ -57,13 +59,15 @@
           "8a000000-0000-4000-8000-000000000006"
         ],
         "suggestions": {
-          "metadata": {
-            "description": {
+          "attributes": [
+            {
+              "slug": "description",
+              "definitionVersion": 1,
               "value": "Blue shirt",
               "sourceIds": ["8a000000-0000-4000-8000-000000000005"],
               "certainty": "observed"
             }
-          },
+          ],
           "price": {
             "currency": "SEK",
             "amount": "100.00",

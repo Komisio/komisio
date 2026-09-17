@@ -75,13 +75,17 @@ export function readManualReception(
     return {
       input,
       suggestions: receptionSuggestions.parse({
-        metadata: {
-          description: {
+        // description is a platform definition at version one, seeded with the
+        // vocabulary, so a manual reception can name it without a lookup.
+        attributes: [
+          {
+            slug: 'description',
+            definitionVersion: 1,
             value: input.description,
             sourceIds: [descriptions[0].id],
             certainty: 'observed',
           },
-        },
+        ],
         price: {
           currency,
           amount: a.amount,

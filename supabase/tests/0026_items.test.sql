@@ -52,7 +52,7 @@ select is((select terms->>'sellerTermsVersion' from items where id=current_setti
 select set_config('test.session',create_reception_session(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid)::text,true);
 select save_reception_sources(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,0,
  '[{"id":"f0000000-0000-4000-8000-000000000051","kind":"observation","reference":"Staff","observation":"Synthetic coat"},{"id":"f0000000-0000-4000-8000-000000000052","kind":"price-evidence","reference":"Staff estimate","observation":"300 SEK"}]'::jsonb);
-select set_config('test.suggestions','{"metadata":{"description":{"value":"Synthetic coat","sourceIds":["f0000000-0000-4000-8000-000000000051"],"certainty":"observed"}},"price":{"currency":"SEK","amount":"300.00","rationale":"Staff estimate","sourceIds":["f0000000-0000-4000-8000-000000000052"]},"questions":[]}',true);
+select set_config('test.suggestions','{"attributes":[{"slug":"description","definitionVersion":1,"value":"Synthetic coat","sourceIds":["f0000000-0000-4000-8000-000000000051"],"certainty":"observed"}],"price":{"currency":"SEK","amount":"300.00","rationale":"Staff estimate","sourceIds":["f0000000-0000-4000-8000-000000000052"]},"questions":[]}',true);
 select set_config('test.review',gen_random_uuid()::text,true);
 select publish_reception_review(current_setting('test.tenant')::uuid,current_setting('test.review')::uuid,current_setting('test.session')::uuid,1,null,current_setting('test.agreement')::uuid,current_setting('test.suggestions')::jsonb,now()+interval '1 day');
 select set_config('test.item3',gen_random_uuid()::text,true);
@@ -69,7 +69,7 @@ select set_config('test.session2',create_reception_session(current_setting('test
 select save_reception_sources(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session2')::uuid,0,
  '[{"id":"f0000000-0000-4000-8000-000000000053","kind":"observation","reference":"Staff","observation":"Synthetic hat"},{"id":"f0000000-0000-4000-8000-000000000054","kind":"price-evidence","reference":"Staff estimate","observation":"100 SEK"}]'::jsonb);
 select publish_reception_review(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session2')::uuid,1,null,current_setting('test.agreement')::uuid,
- '{"metadata":{"description":{"value":"Synthetic hat","sourceIds":["f0000000-0000-4000-8000-000000000053"],"certainty":"observed"}},"price":{"currency":"SEK","amount":"100.00","rationale":"Staff estimate","sourceIds":["f0000000-0000-4000-8000-000000000054"]},"questions":[]}'::jsonb,now()+interval '1 day');
+ '{"attributes":[{"slug":"description","definitionVersion":1,"value":"Synthetic hat","sourceIds":["f0000000-0000-4000-8000-000000000053"],"certainty":"observed"}],"price":{"currency":"SEK","amount":"100.00","rationale":"Staff estimate","sourceIds":["f0000000-0000-4000-8000-000000000054"]},"questions":[]}'::jsonb,now()+interval '1 day');
 select receive_garment(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session2')::uuid,'');
 select throws_like($$select accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'reception_review',current_setting('test.session2')::uuid,1,10000)$$,'%SELLER_APPROVAL_REQUIRED%','per-item mode needs the seller response');
 -- Purchase path: store-owned, no seller, no agreement.

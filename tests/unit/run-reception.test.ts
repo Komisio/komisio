@@ -55,13 +55,15 @@ const session = {
   ],
 }
 const proposed = {
-  metadata: {
-    description: {
+  attributes: [
+    {
+      slug: 'description',
+      definitionVersion: 1,
       value: 'Jacket',
       sourceIds: [id(4)],
       certainty: 'tentative',
     },
-  },
+  ],
   price: null,
   questions: ['Price evidence?'],
 }

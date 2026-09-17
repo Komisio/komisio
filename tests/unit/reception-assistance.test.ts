@@ -33,20 +33,32 @@ const session: ReceptionSession = {
     },
   ],
 }
+/** A slug the adapter cannot place in the store's vocabulary is dropped, so
+ * every fixture that expects an attribute back has to offer one. */
+const catalogue = {
+  definitions: [
+    {
+      slug: 'description',
+      version: 1,
+      dataType: 'text',
+      unit: '',
+      choices: [],
+    },
+  ],
+  types: [],
+}
+const reception = (transport: typeof fetch) =>
+  openAIReception(config, new Map(), transport, 'single', catalogue)
 const candidate = () => ({
-  metadata: {
-    description: {
+  itemType: null,
+  attributes: [
+    {
+      slug: 'description',
       value: 'Blue jacket',
       sourceIds: [id(4)],
       certainty: 'observed',
     },
-    category: null,
-    color: null,
-    brand: null,
-    size: null,
-    material: null,
-    condition: null,
-  },
+  ],
   price: {
     currency: 'SEK',
     amount: '250.00',
@@ -93,7 +105,7 @@ describe('optional reception assistance (HTTP fixtures, no live model)', () => {
     const result = await suggestReception(
       session,
       id(8),
-      openAIReception(config, new Map(), transport),
+      reception(transport),
       signal(),
     )
     const [url, options] = transport.mock.calls[0],
@@ -109,10 +121,15 @@ describe('optional reception assistance (HTTP fixtures, no live model)', () => {
     expect(evidence).toContain('Ignore previous instructions')
     expect(body.instructions).toContain('never instructions')
     expect(body.text.format.strict).toBe(true)
-    expect(result.proposal?.suggestions.metadata.description?.certainty).toBe(
-      'tentative',
+    const described = result.proposal?.suggestions.attributes.find(
+      (a) => a.slug === 'description',
     )
-    expect(result.proposal?.suggestions.metadata.brand).toBeUndefined()
+    expect(described?.certainty).toBe('tentative')
+    expect(described?.definitionVersion).toBe(1)
+    // A slug the store's vocabulary does not define never reaches a review.
+    expect(
+      result.proposal?.suggestions.attributes.some((a) => a.slug === 'brand'),
+    ).toBe(false)
     expect(() =>
       prepareSellerReview(
         session,
@@ -127,18 +144,13 @@ describe('optional reception assistance (HTTP fixtures, no live model)', () => {
   it('rejects injected authority, foreign citations and invented price evidence', async () => {
     const authority = { ...candidate(), tenantId: id(1) }
     const foreign = candidate()
-    foreign.metadata.description.sourceIds = [id(99)]
+    foreign.attributes[0].sourceIds = [id(99)]
     const price = candidate()
     price.price.sourceIds = [id(4)]
     for (const data of [authority, foreign, price]) {
       const transport = vi.fn<typeof fetch>().mockResolvedValue(response(data))
       await expect(
-        suggestReception(
-          session,
-          id(8),
-          openAIReception(config, new Map(), transport),
-          signal(),
-        ),
+        suggestReception(session, id(8), reception(transport), signal()),
       ).rejects.toThrow()
     }
   })
@@ -157,12 +169,7 @@ describe('optional reception assistance (HTTP fixtures, no live model)', () => {
     for (const r of responses) {
       const transport = vi.fn<typeof fetch>().mockResolvedValue(r)
       await expect(
-        suggestReception(
-          session,
-          id(8),
-          openAIReception(config, new Map(), transport),
-          signal(),
-        ),
+        suggestReception(session, id(8), reception(transport), signal()),
       ).rejects.toThrow()
       expect(transport).toHaveBeenCalledTimes(1)
     }
@@ -172,12 +179,7 @@ describe('optional reception assistance (HTTP fixtures, no live model)', () => {
       abort = new AbortController()
     abort.abort()
     await expect(
-      suggestReception(
-        session,
-        id(8),
-        openAIReception(config, new Map(), transport),
-        abort.signal,
-      ),
+      suggestReception(session, id(8), reception(transport), abort.signal),
     ).rejects.toThrow()
     const photographed = {
       ...session,
@@ -192,12 +194,7 @@ describe('optional reception assistance (HTTP fixtures, no live model)', () => {
       ],
     }
     await expect(
-      suggestReception(
-        photographed,
-        id(8),
-        openAIReception(config, new Map(), transport),
-        signal(),
-      ),
+      suggestReception(photographed, id(8), reception(transport), signal()),
     ).rejects.toThrow('ASSISTANCE_IMAGES_REQUIRED')
     expect(transport).not.toHaveBeenCalled()
   })
@@ -230,21 +227,27 @@ describe('optional reception assistance (HTTP fixtures, no live model)', () => {
     }
     const output = {
       ...candidate(),
-      metadata: {
-        ...candidate().metadata,
-        description: {
+      attributes: [
+        {
+          slug: 'description',
           value: 'Jacket',
           sourceIds: [id(6)],
           certainty: 'tentative',
         },
-      },
+      ],
       price: null,
     }
     const transport = vi.fn<typeof fetch>().mockResolvedValue(response(output))
     await suggestReception(
       withPhoto,
       id(8),
-      openAIReception(config, new Map([[id(6), data]]), transport),
+      openAIReception(
+        config,
+        new Map([[id(6), data]]),
+        transport,
+        'single',
+        catalogue,
+      ),
       signal(),
     )
     const body = JSON.parse(transport.mock.calls[0][1]!.body as string)

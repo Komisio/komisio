@@ -12,9 +12,15 @@ const payload = {
   agreementId: id,
   expiresAt: '2026-09-13T00:00:00Z',
   suggestions: {
-    metadata: {
-      description: { value: 'Jacket', sourceIds: [id], certainty: 'observed' },
-    },
+    attributes: [
+      {
+        slug: 'description',
+        definitionVersion: 1,
+        value: 'Jacket',
+        sourceIds: [id],
+        certainty: 'observed',
+      },
+    ],
     price: {
       currency: 'SEK',
       amount: '250.00',
@@ -51,13 +57,15 @@ it('accepts a complete proposal and rejects authority, risk or unknown kinds', (
         ...payload,
         suggestions: {
           ...payload.suggestions,
-          metadata: {
-            description: {
+          attributes: [
+            {
+              slug: 'description',
+              definitionVersion: 1,
               value: 'Jacket',
               sourceIds: [id],
               certainty: 'tentative',
             },
-          },
+          ],
         },
       },
     },

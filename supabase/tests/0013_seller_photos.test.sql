@@ -23,7 +23,7 @@ select set_config('test.sources',jsonb_build_array(
  jsonb_build_object('id',current_setting('test.late'),'kind','photo','reference',current_setting('test.prefix')||current_setting('test.late')||'.png','observation',''),
  jsonb_build_object('id','a0000000-0000-4000-8000-000000000012','kind','price-evidence','reference','TEST appraisal','observation','Fictional 250 SEK'))::text,true);
 select save_reception_sources(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,0,current_setting('test.sources')::jsonb);
-select set_config('test.suggestions','{"metadata":{"description":{"value":"TEST jacket","sourceIds":["a0000000-0000-4000-8000-000000000010"],"certainty":"observed"}},"price":{"currency":"SEK","amount":"250.00","rationale":"TEST appraisal","sourceIds":["a0000000-0000-4000-8000-000000000012"]},"questions":[]}',true);
+select set_config('test.suggestions','{"attributes":[{"slug":"description","definitionVersion":1,"value":"TEST jacket","sourceIds":["a0000000-0000-4000-8000-000000000010"],"certainty":"observed"}],"price":{"currency":"SEK","amount":"250.00","rationale":"TEST appraisal","sourceIds":["a0000000-0000-4000-8000-000000000012"]},"questions":[]}',true);
 select set_config('test.review',gen_random_uuid()::text,true);
 select publish_reception_review(current_setting('test.a')::uuid,current_setting('test.review')::uuid,current_setting('test.session')::uuid,1,null,current_setting('test.agreement')::uuid,current_setting('test.suggestions')::jsonb,now()+interval '1 day');
 select is((select photo_sources from reception_reviews where id=current_setting('test.review')::uuid),array[current_setting('test.photo')::uuid],'publication pins only available derivatives');

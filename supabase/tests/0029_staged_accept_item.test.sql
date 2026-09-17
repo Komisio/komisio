@@ -15,7 +15,7 @@ select set_config('test.session',create_reception_session(current_setting('test.
 select save_reception_sources(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,0,
  '[{"id":"f0000000-0000-4000-8000-000000000111","kind":"observation","reference":"Staff","observation":"Synthetic coat"},{"id":"f0000000-0000-4000-8000-000000000112","kind":"price-evidence","reference":"Staff estimate","observation":"300 SEK"}]'::jsonb);
 select publish_reception_review(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,1,null,current_setting('test.agreement')::uuid,
- '{"metadata":{"description":{"value":"Synthetic coat","sourceIds":["f0000000-0000-4000-8000-000000000111"],"certainty":"observed"}},"price":{"currency":"SEK","amount":"300.00","rationale":"Staff estimate","sourceIds":["f0000000-0000-4000-8000-000000000112"]},"questions":[]}'::jsonb,now()+interval '1 day');
+ '{"attributes":[{"slug":"description","definitionVersion":1,"value":"Synthetic coat","sourceIds":["f0000000-0000-4000-8000-000000000111"],"certainty":"observed"}],"price":{"currency":"SEK","amount":"300.00","rationale":"Staff estimate","sourceIds":["f0000000-0000-4000-8000-000000000112"]},"questions":[]}'::jsonb,now()+interval '1 day');
 create temp view payload as select jsonb_build_object('originKind','reception_review','originId',current_setting('test.session'),'originRevision',1,'priceOre',32000) as p;
 -- Structural validation.
 select throws_like($$select propose_operation(current_setting('test.tenant')::uuid,gen_random_uuid(),'acceptItem',(select p from payload) || '{"priceOre":0}','agent',now()+interval '1 day')$$,'%INVALID_INPUT%','zero price rejected');

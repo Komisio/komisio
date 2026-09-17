@@ -92,13 +92,15 @@ export async function raceZettleImage({ setup, connectionString }) {
           session,
           agreement,
           JSON.stringify({
-            metadata: {
-              description: {
+            attributes: [
+              {
+                slug: 'description',
+                definitionVersion: 1,
                 value: 'Test jacket',
                 sourceIds: [photo],
                 certainty: 'observed',
               },
-            },
+            ],
             price: {
               currency: 'SEK',
               amount: '100.00',

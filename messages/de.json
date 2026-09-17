@@ -1600,7 +1600,7 @@
   },
   "plans": {
     "heading": "Plan",
-    "priceNote": "Komisio ist kostenlos und Open Source: Jede Funktion ist enthalten, ohne Grenzen bei Artikeln, Druckern oder Integrationen. Das Einzige, was gezählt wird, sind die Credits des KI-Assistenten, siehe Reiter KI-Credits.",
+    "priceNote": "Komisio ist Open Source und jede Funktion ist enthalten, ohne Limits für Artikel, Drucker oder Integrationen. Die Software kostet keine Lizenzgebühr: Betreiben Sie sie selbst oder bei einem beliebigen Hosting-Partner. Hosting durch Inority ist drei Monate kostenlos, danach 299 SEK pro Store und Monat zzgl. MwSt., ohne Vertragsbindung. Das KI-Guthaben wird separat gemessen, siehe den Tab KI-Guthaben.",
     "trialEndsAt": "Testphase endet",
     "graceEndsAt": "Nachfrist endet",
     "activeUntil": "aktiv bis",
@@ -2293,7 +2293,7 @@
   },
   "credits": {
     "title": "KI-Credits",
-    "intro": "Komisio ist kostenlos und Open Source, auch wenn Inority es hostet. Das Einzige, was gezählt wird, sind die Modellaufrufe des KI-Assistenten, wenn sie über den eigenen Schlüssel von Komisio laufen. Ein Credit deckt SEK 1 an Modellkosten.",
+    "intro": "Komisio ist Open Source, und das Hosting durch Inority ist drei Monate kostenlos und danach 299 SEK pro Store und Monat zzgl. MwSt. Darüber hinaus wird nur die Modellnutzung des KI-Assistenten gemessen, wenn sie über den eigenen Schlüssel von Komisio läuft. Ein Guthaben entspricht einer schwedischen Krone Modellkosten.",
     "offer": "{included} Credits sind jeden Monat enthalten, normalerweise genug für etwa {items} angenommene Artikel. Wenn sie aufgebraucht sind, kaufen Sie {pack} weitere für {price} oder verbinden den eigenen Modellschlüssel des Stores; dann werden keine Credits abgezogen.",
     "selfHosted": "Diese Installation zählt keine Credits: Der Assistent läuft über den eigenen Schlüssel der Installation.",
     "includedLeft": "Verbleibend von den Credits dieses Monats",

@@ -20,13 +20,14 @@ registers itself, gets a full month free, and then pays a monthly fee per
 store. There is no sales call, no manual activation and no separate "test
 account": the store a person creates on day one is the store they keep.
 
-| Tier        | Who                                    | Price                       | Notes                                                                                                |
-| ----------- | -------------------------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Self-hosted | Anyone running the open-source code    | Free (AGPL-3.0-or-later)    | No billing code runs; every store is `active` for ever                                               |
-| Hosted      | Stores on the Komisio-operated service | SEK 199 per store and month | 30-day free trial from store creation; the price is the roadmap's direction, VAT treatment to decide |
+| Tier        | Who                                    | Price                                      | Notes                                                                                                                                                           |
+| ----------- | -------------------------------------- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Self-hosted | Anyone running the open-source code    | Free (AGPL-3.0-or-later)                   | No billing code runs; every store is `active` for ever                                                                                                          |
+| Hosted      | Stores on the Inority-operated service | SEK 299 per store and month, excluding VAT | Three months at no cost from store creation, then the monthly price; no lock-in period. Any other hosting partner is equally possible and costs Komisio nothing |
 
-One price, one plan, per store. Feature tiers, AI plans and quotas stay in
-the roadmap (P6) and are not part of the first billing slice.
+One price, one plan, per store. There are no feature tiers: every function is
+open to every store however it is hosted. The only metered resource is the AI
+assistant's model usage, described in [pricing](PRICING.md).
 
 ## Environments: where a store starts
 
@@ -149,8 +150,10 @@ owner's own account or documented operator procedures.
 
 ## Decisions needed (section C in the owner list)
 
-C1 price and VAT presentation (SEK 199 incl. or excl. VAT; per store);
-C2 trial length (30 days) and grace (14 days); C3 what read-only blocks
+C1 price and VAT presentation: answered 2026-09-17, SEK 299 per store and
+month excluding VAT, after three months at no cost.
+C2 trial length: answered by the same decision, three months and no grace
+needed because nothing becomes read-only; C3 what read-only blocks
 (the list above); C4 payment provider and methods (Stripe; card and
 invoice); C5 production domain and operating company on the Stripe account;
 C6 staging soak time before production (one working day) and who approves

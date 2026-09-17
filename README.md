@@ -142,11 +142,15 @@ stands between the preview and an external pilot, and the
 
 ### Free to run. Simple to rent.
 
-Self-hosted Komisio is free under the project licence. The intended hosted
-offer is one plan: a full month free, then **199 SEK per store and month**.
-This is the direction, not an available subscription; see the
-[onboarding and plans design](docs/ONBOARDING-AND-PLANS.md) for how a store
-would start, activate and pay.
+The software carries no licence fee, whoever runs it. A store has three ways
+to use Komisio and nothing in the product favours one of them: run it
+yourself, hire any hosting partner, or let Inority host it. The last of those
+is three months at no cost, then **299 SEK per store and month excluding
+VAT**, with no lock-in period. Leaving is meant to stay possible: the data and
+the images export, and the same software runs anywhere. See
+[pricing](docs/PRICING.md) for what hosting covers and how the AI credits are
+metered, and the [onboarding and plans design](docs/ONBOARDING-AND-PLANS.md)
+for how a store starts.
 
 ## Help build the system you wish existed
 

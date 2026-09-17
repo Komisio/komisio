@@ -1600,7 +1600,7 @@
   },
   "plans": {
     "heading": "Piano",
-    "priceNote": "Komisio è gratuito e open source: ogni funzione è inclusa, senza limiti su articoli, stampanti o integrazioni. L'unica cosa conteggiata sono i crediti dell'assistente AI, vedi la scheda Crediti AI.",
+    "priceNote": "Komisio è open source e ogni funzione è inclusa, senza limiti di articoli, stampanti o integrazioni. Il software non ha canone di licenza: eseguilo tu o presso qualsiasi partner di hosting. L'hosting di Inority è gratuito per tre mesi, poi 299 SEK per negozio al mese IVA esclusa, senza vincoli di durata. I crediti dell'assistente IA sono misurati a parte, vedi la scheda crediti IA.",
     "trialEndsAt": "la prova termina",
     "graceEndsAt": "il periodo di tolleranza termina",
     "activeUntil": "attivo fino al",
@@ -2293,7 +2293,7 @@
   },
   "credits": {
     "title": "Crediti AI",
-    "intro": "Komisio è gratuito e open source, anche quando è Inority a ospitarlo. L'unica cosa conteggiata sono le chiamate al modello dell'assistente AI quando usano la chiave di Komisio. Un credito copre SEK 1 di costo del modello.",
+    "intro": "Komisio è open source, e l'hosting di Inority è gratuito per tre mesi e poi 299 SEK per negozio al mese IVA esclusa. L'unica altra cosa misurata sono le chiamate al modello dell'assistente IA quando usano la chiave di Komisio. Un credito equivale a una corona svedese di costo del modello.",
     "offer": "{included} crediti sono inclusi ogni mese, normalmente sufficienti per circa {items} articoli ricevuti. Quando finiscono, ne acquisti altri {pack} per {price} oppure colleghi la chiave del modello del negozio; in quel caso nessun credito viene consumato.",
     "selfHosted": "Questa installazione non conteggia crediti: l'assistente usa la chiave dell'installazione stessa.",
     "includedLeft": "Rimanenti dei crediti di questo mese",

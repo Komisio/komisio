@@ -1600,7 +1600,7 @@
   },
   "plans": {
     "heading": "Abonnement",
-    "priceNote": "Komisio er gratis og åpen kildekode: alle funksjoner er inkludert, uten grenser for varer, skrivere eller integrasjoner. Det eneste som måles er AI-assistentens kreditter, se fanen AI-kreditter.",
+    "priceNote": "Komisio er åpen kildekode og alle funksjoner er inkludert, uten grenser for varer, skrivere eller integrasjoner. Programvaren koster ingen lisensavgift: kjør den selv eller hos hvilken driftspartner du vil. Drift hos Inority er gratis i tre måneder, deretter 299 SEK per butikk og måned eks. mva., uten bindingstid. AI-assistentens kreditter måles separat, se fanen AI-kreditter.",
     "trialEndsAt": "prøveperioden slutter",
     "graceEndsAt": "henstandsperioden slutter",
     "activeUntil": "aktiv til",
@@ -2293,7 +2293,7 @@
   },
   "credits": {
     "title": "AI-kreditter",
-    "intro": "Komisio er gratis og åpen kildekode, også når Inority hoster det. Det eneste som måles er AI-assistentens modellkall når de kjører på Komisios egen nøkkel. Én kreditt dekker SEK 1 i modellkostnad.",
+    "intro": "Komisio er åpen kildekode, og drift hos Inority er gratis i tre måneder og deretter 299 SEK per butikk og måned eks. mva. Det eneste som måles utover det, er AI-assistentens modellkall når de går på Komisios egen nøkkel. Én kreditt tilsvarer én svensk krone i modellkostnad.",
     "offer": "{included} kreditter er inkludert hver måned, normalt nok til omtrent {items} mottatte varer. Når de er brukt opp, kjøper du {pack} til for {price} eller kobler til butikkens egen modellnøkkel; da trekkes ingen kreditter.",
     "selfHosted": "Denne installasjonen måler ingen kreditter: assistenten kjører på installasjonens egen nøkkel.",
     "includedLeft": "Igjen av månedens kreditter",

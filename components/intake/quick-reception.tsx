@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { Camera, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
 import { quickAiProposal } from '@/lib/intake/quick-ai-proposal'
@@ -251,10 +252,12 @@ export function QuickReception({
     const key = definition.slug,
       id = `quick-${key}`,
       label = labelOf(definition, lang),
-      help = definition.help[lang] ?? definition.help.en,
       set = (value: string) => setFacts({ ...facts, [key]: value })
     return (
-      <div className="field" key={key}>
+      <div
+        className={`field${key === 'description' ? ' quick-description' : ''}`}
+        key={key}
+      >
         <label htmlFor={id}>
           {label}
           {definition.unit ? ` (${definition.unit})` : ''}
@@ -282,6 +285,16 @@ export function QuickReception({
             disabled={busy || !!done}
             onChange={(e) => set(e.target.checked ? 'true' : '')}
           />
+        ) : key === 'description' ? (
+          <textarea
+            id={id}
+            value={facts[key] ?? ''}
+            rows={3}
+            maxLength={1000}
+            required={expected}
+            disabled={busy || !!done}
+            onChange={(e) => set(e.target.value)}
+          />
         ) : (
           <input
             id={id}
@@ -293,18 +306,27 @@ export function QuickReception({
             onChange={(e) => set(e.target.value)}
           />
         )}
-        {help && <small>{help}</small>}
       </div>
     )
   }
   return (
-    <div className="intake-grid">
-      <section className="card intake-form" aria-label={d.seller}>
-        <h2>{d.seller}</h2>
+    <div className="quick-reception">
+      <section
+        className={`card intake-form quick-seller${seller ? ' is-selected' : ''}`}
+        aria-label={d.seller}
+      >
+        <h2>
+          <span className="quick-step" aria-hidden="true">
+            {seller ? <Check size={16} /> : '1'}
+          </span>
+          {d.seller}
+        </h2>
         {seller ? (
-          <p>
-            <strong>{seller.name}</strong>
-            {seller.contact ? ` · ${seller.contact}` : ''}{' '}
+          <div className="quick-seller-selected">
+            <div>
+              <strong>{seller.name}</strong>
+              {seller.contact && <small>{seller.contact}</small>}
+            </div>
             <button
               type="button"
               className="text-link"
@@ -316,7 +338,7 @@ export function QuickReception({
             >
               {d.changeSeller}
             </button>
-          </p>
+          </div>
         ) : (
           <>
             <div className="field">
@@ -353,50 +375,81 @@ export function QuickReception({
         )}
       </section>
       {seller && !done && (
-        <section className="card intake-form" aria-label={d.garment}>
-          <h2>{d.garment}</h2>
-          <div className="field">
-            <label htmlFor="quick-photo">{d.photo}</label>
-            <input
-              id="quick-photo"
-              ref={fileInput}
-              type="file"
-              accept="image/jpeg,image/png"
-              capture="environment"
-              disabled={busy || !!session}
-              onChange={(e) => {
-                const file = e.target.files?.[0]
-                if (file) void onPhoto(file)
-              }}
-            />
-            {photoUrl && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={photoUrl} alt="" style={{ maxWidth: 240 }} />
-            )}
-            <small>{assistance ? d.photoHintAi : d.photoHint}</small>
+        <section
+          className="card intake-form quick-item"
+          aria-label={d.garment}
+          aria-busy={busy}
+        >
+          <h2>
+            <span className="quick-step" aria-hidden="true">
+              2
+            </span>
+            {d.garment}
+          </h2>
+          <div className="quick-workspace">
+            <div className="quick-photo-panel">
+              <div className="field quick-photo-field">
+                <label
+                  htmlFor="quick-photo"
+                  className={`quick-photo-picker${busy || session ? ' is-disabled' : ''}`}
+                >
+                  {photoUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={photoUrl} alt={d.photo} />
+                  ) : (
+                    <>
+                      <Camera size={32} strokeWidth={1.5} aria-hidden="true" />
+                      <span>{d.addPhoto}</span>
+                    </>
+                  )}
+                </label>
+                <input
+                  id="quick-photo"
+                  aria-label={d.photo}
+                  className="quick-photo-input"
+                  ref={fileInput}
+                  type="file"
+                  accept="image/jpeg,image/png"
+                  capture="environment"
+                  disabled={busy || !!session}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) void onPhoto(file)
+                  }}
+                />
+                <small>{assistance ? d.photoHintAi : d.photoHint}</small>
+              </div>
+              {(message || stage === 'uploading') && (
+                <p className="quick-status" role="status">
+                  {stage === 'uploading' ? d.busy : message}
+                </p>
+              )}
+            </div>
+            <div className="quick-facts">
+              <div className="field">
+                <label htmlFor="quick-item-type">{d.itemType}</label>
+                <select
+                  id="quick-item-type"
+                  value={itemType ?? ''}
+                  disabled={busy || !!done}
+                  onChange={(e) => setItemType(e.target.value || null)}
+                >
+                  <option value="">{d.itemTypeNone}</option>
+                  {vocabulary.types
+                    .filter((t) => t.active)
+                    .map((t) => (
+                      <option key={t.slug} value={t.slug}>
+                        {labelOf(t, lang)}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div className="quick-fields">
+                {questions.map((q) => question(q.definition, q.expected))}
+              </div>
+            </div>
           </div>
-          {message && <p role="status">{message}</p>}
-          <div className="field">
-            <label htmlFor="quick-item-type">{d.itemType}</label>
-            <select
-              id="quick-item-type"
-              value={itemType ?? ''}
-              disabled={busy || !!done}
-              onChange={(e) => setItemType(e.target.value || null)}
-            >
-              <option value="">{d.itemTypeNone}</option>
-              {vocabulary.types
-                .filter((t) => t.active)
-                .map((t) => (
-                  <option key={t.slug} value={t.slug}>
-                    {labelOf(t, lang)}
-                  </option>
-                ))}
-            </select>
-            <small>{d.itemTypeHint}</small>
-          </div>
-          {questions.map((q) => question(q.definition, q.expected))}
-          <div className="row">
+          <div className="quick-finish">
             <div className="field">
               <label htmlFor="quick-price">{d.price}</label>
               <input
@@ -407,29 +460,42 @@ export function QuickReception({
                 onChange={(e) => setPrice(e.target.value)}
               />
             </div>
-            <div className="field">
-              <label htmlFor="quick-printer">{d.printer}</label>
-              <select
-                id="quick-printer"
-                value={printerId}
-                disabled={busy}
-                onChange={(e) => {
-                  setPrinterId(e.target.value)
-                  try {
-                    localStorage.setItem(PRINTER_KEY, e.target.value)
-                  } catch {
-                    /* Not remembered. */
-                  }
-                }}
-              >
-                <option value="">{d.noPrinter}</option>
-                {printers.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {printers.length > 0 && (
+              <div className="field">
+                <label htmlFor="quick-printer">{d.printer}</label>
+                <select
+                  id="quick-printer"
+                  value={printerId}
+                  disabled={busy}
+                  onChange={(e) => {
+                    setPrinterId(e.target.value)
+                    try {
+                      localStorage.setItem(PRINTER_KEY, e.target.value)
+                    } catch {
+                      /* Not remembered. */
+                    }
+                  }}
+                >
+                  <option value="">{d.noPrinter}</option>
+                  {printers.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+            <Button
+              disabled={busy}
+              onClick={() => void submit()}
+              className="quick-submit"
+            >
+              {stage === 'saving'
+                ? d.busy
+                : stage === 'printing'
+                  ? d.printing
+                  : d.submit}
+            </Button>
           </div>
           {error && (
             <p role="alert" className="error">
@@ -447,18 +513,14 @@ export function QuickReception({
               )}
             </p>
           )}
-          <Button disabled={busy} onClick={() => void submit()}>
-            {stage === 'saving'
-              ? d.busy
-              : stage === 'printing'
-                ? d.printing
-                : d.submit}
-          </Button>
         </section>
       )}
       {done && (
-        <section className="card intake-form" aria-label={d.done}>
-          <h2>{d.done}</h2>
+        <section className="card intake-form quick-done" aria-label={d.done}>
+          <h2>
+            <Check aria-hidden="true" />
+            {d.done}
+          </h2>
           <p>
             <strong>{done.reference}</strong> · {facts.description}
           </p>

@@ -17,6 +17,27 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
       .getByLabel(d.quickIntake.searchSeller, { exact: true })
       .fill('Synthetic')
     await page.getByRole('button', { name: /Synthetic P2 seller/ }).click()
+    await expect(
+      page.getByText(d.quickIntake.addPhoto, { exact: true }),
+    ).toBeVisible()
+    await page.screenshot({
+      path: 'private/quick-design-desktop.png',
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 390, height: 844 })
+    await expect(
+      page.getByRole('button', { name: d.quickIntake.submit, exact: true }),
+    ).toBeVisible()
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+    await page.screenshot({
+      path: 'private/quick-design-mobile.png',
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 1280, height: 900 })
     await page
       .getByLabel(d.quickIntake.description, { exact: true })
       .fill('Snabb jacka')

@@ -108,7 +108,6 @@
     "exportSellerData": "Scarica tutti i dati di questo conferente (JSON)",
     "title": "Accettazione",
     "intro": "Ricevi il sacchetto adesso. Esamina il contenuto più tardi.",
-    "pilot": "Pilota: la ricezione registra che il negozio ha il sacchetto. La prova dell'accordo registrata non è una firma elettronica. Le bozze degli articoli possono essere salvate durante l'ispezione; le vendite vengono dopo. Nessuna e-mail viene inviata.",
     "find": "Trova un conferente",
     "search": "Cerca per nome",
     "searchButton": "Cerca",
@@ -127,7 +126,7 @@
     "saveBag": "Conferma ricezione",
     "saved": "Il sacchetto è registrato. Ora puoi stamparne l'etichetta.",
     "queue": "Sacchetti ricevuti",
-    "queueHint": "20 sacchetti per pagina, numero di sacchetto più alto per primo. Apri un sacchetto per continuare l'ispezione. Nuovi sacchetti possono arrivare mentre navighi.",
+    "queueHint": "Scegli una borsa per esaminarne il contenuto.",
     "empty": "Nessun sacchetto ricevuto finora.",
     "bag": "Sacchetto",
     "awaiting": "In attesa di ispezione",
@@ -163,7 +162,9 @@
     "registerAnyway": "Registra comunque",
     "matchEmail": "stessa e-mail",
     "matchPhone": "stesso telefono",
-    "matchName": "stesso nome"
+    "matchName": "stesso nome",
+    "overviewIntro": "Ricevi subito un articolo o registra una borsa da esaminare più tardi.",
+    "quickHint": "Bastano descrizione e prezzo. La foto è facoltativa."
   },
   "brand": "Komisio",
   "tagline": "Più spazio perché le cose vivano di nuovo.",

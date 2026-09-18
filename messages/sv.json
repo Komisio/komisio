@@ -108,7 +108,6 @@
     "exportSellerData": "Ladda ner alla uppgifter om säljaren (JSON)",
     "title": "Inlämningar",
     "intro": "Ta emot påsen nu. Gå igenom innehållet senare.",
-    "pilot": "Pilot: mottagningen registrerar att butiken har påsen. Registrerat avtalsunderlag är inte en digital signatur. Varuutkast kan sparas vid genomgången; försäljning kommer senare. Ingen e-post skickas.",
     "find": "Hitta säljare",
     "search": "Sök på namn",
     "searchButton": "Sök",
@@ -127,7 +126,7 @@
     "saveBag": "Bekräfta mottagandet",
     "saved": "Påsen är registrerad. Du kan nu skriva ut etiketten.",
     "queue": "Mottagna påsar",
-    "queueHint": "20 påsar per sida, med högst påsnummer först. Öppna en påse för att fortsätta genomgången. Nya påsar kan tillkomma medan du bläddrar.",
+    "queueHint": "Välj en påse för att gå igenom innehållet.",
     "empty": "Inga påsar har tagits emot ännu.",
     "bag": "Påse",
     "awaiting": "Inväntar genomgång",
@@ -163,7 +162,9 @@
     "registerAnyway": "Registrera ändå",
     "matchEmail": "samma e-post",
     "matchPhone": "samma telefon",
-    "matchName": "samma namn"
+    "matchName": "samma namn",
+    "overviewIntro": "Ta emot en vara direkt eller registrera en påse att gå igenom senare.",
+    "quickHint": "Beskrivning och pris räcker. Bild är valfritt."
   },
   "brand": "Komisio",
   "tagline": "Mer utrymme för det som får nytt liv.",

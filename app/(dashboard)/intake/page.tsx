@@ -81,32 +81,30 @@ export default async function Intake({
   if (evidenceResult.error) throw new Error('Unable to load agreement evidence')
   const evidence = evidenceResult.data as AgreementEvidence | null
   return (
-    <>
+    <div className="intake-overview">
       <div className="page-heading">
         <div className="eyebrow">{active.name}</div>
         <h1>{d.title}</h1>
-        <p>{d.intro}</p>
+        <p>{d.overviewIntro}</p>
       </div>
-      <form action="/intake/open" className="row wrap">
-        <label htmlFor="intake-open-ref">{all.openByReference.reference}</label>
-        <input
-          id="intake-open-ref"
-          name="ref"
-          placeholder="K-12"
-          maxLength={16}
-          inputMode="text"
-        />
-        <button className="btn btn-secondary">
-          {all.openByReference.open}
-        </button>
-      </form>
-      <p className="intake-notice">{d.pilot}</p>
-      <p>
-        <Link className="btn" href="/intake/quick">
-          {d.quickLink}
+      <nav className="intake-paths" aria-label={d.title}>
+        <Link
+          className="card intake-path intake-path-primary"
+          href="/intake/quick"
+        >
+          <strong>
+            {all.quickIntake.title} <span aria-hidden="true">→</span>
+          </strong>
+          <span>{d.quickHint}</span>
         </Link>
-      </p>
-      <div className="intake-grid">
+        <a className="card intake-path" href="#bag-receiving">
+          <strong>
+            {d.receive} <span aria-hidden="true">↓</span>
+          </strong>
+          <span>{d.intro}</span>
+        </a>
+      </nav>
+      <div className="intake-grid" id="bag-receiving">
         <section className="card intake-form">
           <h2>{d.find}</h2>
           <form action="/intake" className="field">
@@ -122,11 +120,11 @@ export default async function Intake({
             </div>
           </form>
           <p>
-            <Link className="text-link" href="/intake">
+            <Link className="text-link" href="/intake#new-seller">
               {d.newSeller}
             </Link>
           </p>
-          <ul className="intake-list">
+          <ul className="intake-list intake-seller-results">
             {(sellers.data as Seller[]).map((s) => (
               <li key={s.id}>
                 <Link
@@ -142,12 +140,19 @@ export default async function Intake({
             ))}
           </ul>
           {!sellers.data?.length && <p>{d.noSellers}</p>}
-          <small>{d.limit}</small>
+          {sellers.data.length >= 50 && <small>{d.limit}</small>}
         </section>
-        <div>
+        <div id="new-seller">
           {selected.data && agreement && (
-            <section className="card intake-form agreement-at-intake">
-              <h2>{a.evidenceHeading}</h2>
+            <details
+              className="card intake-form agreement-at-intake"
+              open={Boolean(
+                !evidence &&
+                (agreement.required_before_receipt ||
+                  policy.policy.agreementRequiredFor.includes('bag_receipt')),
+              )}
+            >
+              <summary>{a.evidenceHeading}</summary>
               <p>
                 <strong>
                   {agreement.title} · {a.version} {agreement.version}
@@ -185,7 +190,7 @@ export default async function Intake({
                   />
                 )
               )}
-            </section>
+            </details>
           )}
           {active.role !== 'readonly' ? (
             <ReceivingPanel
@@ -209,6 +214,24 @@ export default async function Intake({
       <section className="card intake-form" id="bag-queue">
         <h2>{d.queue}</h2>
         <p>{d.queueHint}</p>
+        <details className="intake-reference">
+          <summary>{all.openByReference.title}</summary>
+          <form action="/intake/open" className="row wrap">
+            <label htmlFor="intake-open-ref">
+              {all.openByReference.reference}
+            </label>
+            <input
+              id="intake-open-ref"
+              name="ref"
+              placeholder="K-12"
+              maxLength={16}
+              inputMode="text"
+            />
+            <button className="btn btn-secondary">
+              {all.openByReference.open}
+            </button>
+          </form>
+        </details>
         <p>
           {selected.data ? d.bagsFor + ': ' + selected.data.name : d.allSellers}
         </p>
@@ -230,12 +253,14 @@ export default async function Intake({
           </div>
         </form>
         <div className="row">
-          <Link
-            className="text-link"
-            href={bagQueueHref({ seller: filters.seller })}
-          >
-            {d.clearBagSearch}
-          </Link>
+          {filters.bag && (
+            <Link
+              className="text-link"
+              href={bagQueueHref({ seller: filters.seller })}
+            >
+              {d.clearBagSearch}
+            </Link>
+          )}
           {filters.seller && (
             <Link className="text-link" href={bagQueueHref({})}>
               {d.showAllBags}
@@ -316,6 +341,6 @@ export default async function Intake({
           )}
         </nav>
       </section>
-    </>
+    </div>
   )
 }

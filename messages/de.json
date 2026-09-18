@@ -108,7 +108,6 @@
     "exportSellerData": "Alle Daten zu diesem Einlieferer herunterladen (JSON)",
     "title": "Annahme",
     "intro": "Nehmen Sie die Tüte jetzt an. Prüfen Sie den Inhalt später.",
-    "pilot": "Pilot: Die Annahme dokumentiert, dass der Store die Tüte hat. Ein erfasster Vereinbarungsnachweis ist keine elektronische Unterschrift. Artikelentwürfe können während der Prüfung gespeichert werden; Verkäufe folgen später. Es wird keine E-Mail gesendet.",
     "find": "Einlieferer suchen",
     "search": "Nach Namen suchen",
     "searchButton": "Suchen",
@@ -127,7 +126,7 @@
     "saveBag": "Empfang bestätigen",
     "saved": "Die Tüte ist registriert. Sie können jetzt ihr Etikett drucken.",
     "queue": "Angenommene Tüten",
-    "queueHint": "20 Tüten pro Seite, höchste Tütennummer zuerst. Öffnen Sie eine Tüte, um die Prüfung fortzusetzen. Während Sie blättern, können neue Tüten eintreffen.",
+    "queueHint": "Wählen Sie eine Tasche, um den Inhalt zu prüfen.",
     "empty": "Noch keine Tüten angenommen.",
     "bag": "Tüte",
     "awaiting": "Wartet auf Prüfung",
@@ -163,7 +162,9 @@
     "registerAnyway": "Trotzdem registrieren",
     "matchEmail": "gleiche E-Mail",
     "matchPhone": "gleiche Telefonnummer",
-    "matchName": "gleicher Name"
+    "matchName": "gleicher Name",
+    "overviewIntro": "Nehmen Sie einen Artikel direkt an oder erfassen Sie eine Tasche zur späteren Durchsicht.",
+    "quickHint": "Beschreibung und Preis genügen. Ein Foto ist optional."
   },
   "brand": "Komisio",
   "tagline": "Mehr Raum für Dinge, die weiterleben.",

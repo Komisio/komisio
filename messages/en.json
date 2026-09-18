@@ -108,7 +108,6 @@
     "exportSellerData": "Download all data about this seller (JSON)",
     "title": "Intake",
     "intro": "Receive the bag now. Review its contents later.",
-    "pilot": "Pilot: receiving records that the store has the bag. Recorded agreement evidence is not an electronic signature. Item drafts can be saved during inspection; sales come later. No email is sent.",
     "find": "Find a seller",
     "search": "Search by name",
     "searchButton": "Search",
@@ -127,7 +126,7 @@
     "saveBag": "Confirm receipt",
     "saved": "The bag is registered. You can now print its label.",
     "queue": "Received bags",
-    "queueHint": "20 bags per page, highest bag number first. Open a bag to continue inspection. New bags may arrive while you browse.",
+    "queueHint": "Choose a bag to review its contents.",
     "empty": "No bags received yet.",
     "bag": "Bag",
     "awaiting": "Awaiting inspection",
@@ -163,7 +162,9 @@
     "registerAnyway": "Register anyway",
     "matchEmail": "same email",
     "matchPhone": "same phone",
-    "matchName": "same name"
+    "matchName": "same name",
+    "overviewIntro": "Receive an item now or register a bag to sort later.",
+    "quickHint": "A description and price are enough. A photo is optional."
   },
   "brand": "Komisio",
   "tagline": "More room for things to live again.",

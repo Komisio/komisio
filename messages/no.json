@@ -108,7 +108,6 @@
     "exportSellerData": "Last ned alle data om denne innlevereren (JSON)",
     "title": "Mottak",
     "intro": "Ta imot posen nå. Gå gjennom innholdet senere.",
-    "pilot": "Pilot: mottak registrerer at butikken har posen. Registrert avtalebevis er ikke en elektronisk signatur. Vareutkast kan lagres under gjennomgangen; salg kommer senere. Ingen e-post sendes.",
     "find": "Finn en innleverer",
     "search": "Søk etter navn",
     "searchButton": "Søk",
@@ -127,7 +126,7 @@
     "saveBag": "Bekreft mottak",
     "saved": "Posen er registrert. Du kan nå skrive ut etiketten.",
     "queue": "Mottatte poser",
-    "queueHint": "20 poser per side, høyeste posenummer først. Åpne en pose for å fortsette gjennomgangen. Nye poser kan komme til mens du blar.",
+    "queueHint": "Velg en pose for å gå gjennom innholdet.",
     "empty": "Ingen poser mottatt ennå.",
     "bag": "Pose",
     "awaiting": "Venter på gjennomgang",
@@ -163,7 +162,9 @@
     "registerAnyway": "Registrer likevel",
     "matchEmail": "samme e-post",
     "matchPhone": "samme telefon",
-    "matchName": "samme navn"
+    "matchName": "samme navn",
+    "overviewIntro": "Ta imot en vare nå, eller registrer en pose for gjennomgang senere.",
+    "quickHint": "Beskrivelse og pris er nok. Bilde er valgfritt."
   },
   "brand": "Komisio",
   "tagline": "Mer plass til ting som kan leve videre.",

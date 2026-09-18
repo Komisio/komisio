@@ -1347,3 +1347,56 @@ small {
     grid-template-columns: 1fr;
   }
 }
+
+/* Intake paths and the bag workflow remain visible without pilot guidance. */
+.intake-overview {
+  max-width: 1200px;
+}
+.intake-paths {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.intake-path {
+  display: grid;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+.intake-path strong {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 1.25rem;
+}
+.intake-path > span {
+  color: var(--muted);
+}
+.intake-path-primary {
+  background: var(--paper);
+  border-color: var(--ink);
+}
+.intake-path:hover,
+.intake-path:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.intake-seller-results {
+  max-height: 360px;
+  overflow-y: auto;
+}
+.intake-reference {
+  margin-bottom: 1rem;
+}
+.intake-reference form {
+  margin: 1rem 0;
+}
+#bag-receiving,
+#new-seller {
+  scroll-margin-top: 1rem;
+}
+@media (max-width: 760px) {
+  .intake-paths {
+    grid-template-columns: 1fr;
+  }
+}

@@ -108,7 +108,6 @@
     "exportSellerData": "Descargar todos los datos de este depositante (JSON)",
     "title": "Recepción",
     "intro": "Recibe la bolsa ahora. Revisa su contenido más tarde.",
-    "pilot": "Piloto: la recepción registra que la tienda tiene la bolsa. La evidencia de acuerdo registrada no es una firma electrónica. Los borradores de artículo se pueden guardar durante la inspección; las ventas vienen después. No se envía ningún correo.",
     "find": "Buscar un depositante",
     "search": "Buscar por nombre",
     "searchButton": "Buscar",
@@ -127,7 +126,7 @@
     "saveBag": "Confirmar recepción",
     "saved": "La bolsa está registrada. Ahora puedes imprimir su etiqueta.",
     "queue": "Bolsas recibidas",
-    "queueHint": "20 bolsas por página, el número de bolsa más alto primero. Abre una bolsa para continuar la inspección. Pueden llegar bolsas nuevas mientras navegas.",
+    "queueHint": "Elige una bolsa para revisar su contenido.",
     "empty": "Aún no se han recibido bolsas.",
     "bag": "Bolsa",
     "awaiting": "Pendiente de inspección",
@@ -163,7 +162,9 @@
     "registerAnyway": "Registrar de todos modos",
     "matchEmail": "mismo correo electrónico",
     "matchPhone": "mismo teléfono",
-    "matchName": "mismo nombre"
+    "matchName": "mismo nombre",
+    "overviewIntro": "Recibe un artículo ahora o registra una bolsa para revisarla más tarde.",
+    "quickHint": "Basta con una descripción y un precio. La foto es opcional."
   },
   "brand": "Komisio",
   "tagline": "Más espacio para que las cosas vuelvan a vivir.",

@@ -642,7 +642,9 @@ test('selected English survives confirmation and store creation', async ({
   await page.reload()
   await expect(page.getByLabel('Active store').first()).toBeVisible()
   await page.goto('/account')
-  await page.getByLabel('Language', { exact: true }).selectOption('sv')
+  await page
+    .getByRole('combobox', { name: 'Language', exact: true })
+    .selectOption('sv')
   await page.getByRole('button', { name: 'Save changes', exact: true }).click()
   await expect(
     page.getByRole('heading', { name: 'Mitt konto', exact: true }),
@@ -826,7 +828,9 @@ test('register, verify, create stores, invite, isolate and administer access', a
   })
   await page.setViewportSize({ width: 1280, height: 900 })
   await page.goto('/account')
-  await page.getByLabel('Språk', { exact: true }).selectOption('en')
+  await page
+    .getByRole('combobox', { name: 'Språk', exact: true })
+    .selectOption('en')
   await page
     .getByRole('button', { name: 'Spara ändringar', exact: true })
     .click()
@@ -1762,7 +1766,7 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   // Seller approval never proves the garment is in the store: custody comes first.
   await expect(
     page.locator(`a[href="/intake/reception/${sessionId}"]`),
-  ).toContainText('registrera fysiskt mottagande av plagget')
+  ).toContainText('Registrera mottagandet')
   await page.goto(`/intake/reception/${sessionId}`)
   await expect(page.getByText('Inget mottagande registrerat')).toBeVisible()
   await page
@@ -1781,7 +1785,7 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   await page.goto('/intake/reception?stage=ready_to_accept')
   await expect(
     page.locator(`a[href="/intake/reception/${sessionId}"]`),
-  ).toContainText('acceptera varan under gällande villkor')
+  ).toContainText('Acceptera varan')
   await page.getByLabel('Visa läge').selectOption('declined')
   await page.getByRole('button', { name: 'Visa läge', exact: true }).click()
   await expect(

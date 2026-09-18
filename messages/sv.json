@@ -2355,5 +2355,23 @@
     "balance": "Saldo",
     "editTerms": "Ändra villkor",
     "transactions": "Kontohändelser"
+  },
+  "sellerDetails": {
+    "edit": "Ändra säljaruppgifter",
+    "address": "Adress (valfritt)",
+    "street": "Gatuadress",
+    "addressExtra": "Adressrad 2",
+    "postalCode": "Postnummer",
+    "city": "Ort",
+    "country": "Land",
+    "preferences": "Språk och anteckningar",
+    "language": "Språk",
+    "followStore": "Följ butikens språk",
+    "notes": "Intern anteckning",
+    "notesHint": "Syns bara för butikens personal. Skriv inte personnummer eller kontouppgifter här.",
+    "save": "Spara uppgifter",
+    "saved": "Uppgifterna är sparade.",
+    "history": "Ändringshistorik",
+    "emailHint": "Kontrollera e-postadressen noga. Den används för utskick och säljarens åtkomst."
   }
 }

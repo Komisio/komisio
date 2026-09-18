@@ -2355,5 +2355,23 @@
     "balance": "Saldo",
     "editTerms": "Endre vilkår",
     "transactions": "Kontobevegelser"
+  },
+  "sellerDetails": {
+    "edit": "Endre selgeropplysninger",
+    "address": "Adresse (valgfritt)",
+    "street": "Gateadresse",
+    "addressExtra": "Adresselinje 2",
+    "postalCode": "Postnummer",
+    "city": "Sted",
+    "country": "Land",
+    "preferences": "Språk og notater",
+    "language": "Språk",
+    "followStore": "Bruk butikkens språk",
+    "notes": "Internt notat",
+    "notesHint": "Kun synlig for butikkens ansatte. Ikke skriv fødselsnummer eller kontonummer her.",
+    "save": "Lagre opplysninger",
+    "saved": "Opplysningene er lagret.",
+    "history": "Endringshistorikk",
+    "emailHint": "Kontroller e-postadressen nøye. Den brukes til meldinger og selgerens tilgang."
   }
 }

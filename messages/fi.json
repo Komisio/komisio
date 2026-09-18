@@ -2355,5 +2355,23 @@
     "balance": "Saldo",
     "editTerms": "Muuta ehtoja",
     "transactions": "Tilitapahtumat"
+  },
+  "sellerDetails": {
+    "edit": "Muokkaa myyjän tietoja",
+    "address": "Osoite (valinnainen)",
+    "street": "Katuosoite",
+    "addressExtra": "Osoiterivi 2",
+    "postalCode": "Postinumero",
+    "city": "Paikkakunta",
+    "country": "Maa",
+    "preferences": "Kieli ja muistiinpanot",
+    "language": "Kieli",
+    "followStore": "Käytä kaupan kieltä",
+    "notes": "Sisäinen muistiinpano",
+    "notesHint": "Näkyy vain kaupan henkilökunnalle. Älä kirjoita tähän henkilötunnusta tai tilinumeroa.",
+    "save": "Tallenna tiedot",
+    "saved": "Tiedot tallennettu.",
+    "history": "Muutoshistoria",
+    "emailHint": "Tarkista sähköpostiosoite. Sitä käytetään viesteihin ja myyjän käyttöoikeuteen."
   }
 }

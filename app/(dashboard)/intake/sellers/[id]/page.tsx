@@ -1,8 +1,14 @@
+import { SellerProfileForm } from '@/components/intake/seller-profile-form'
+import {
+  initialSellerProfile,
+  sellerProfileBody,
+} from '@/lib/engine/seller-profile'
+import { readStoreProfile } from '@/lib/engine/store-profile'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary, intlLocale } from '@/lib/i18n'
+import { dictionary, intlLocale, localeNames, isLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import {
   readEffectiveSellerTerms,
@@ -39,7 +45,7 @@ export default async function Seller({
     d = all.sellerTerms
   const seller = await ctx.client
     .from('sellers')
-    .select('id,name,email,phone,created_at')
+    .select('id,name,email,phone,created_at,profile,profile_revision')
     .eq('tenant_id', tenant.id)
     .eq('id', id.data)
     .maybeSingle()
@@ -108,6 +114,20 @@ export default async function Seller({
     monthStart = new Date(today.getFullYear(), today.getMonth(), 1)
   const isoDay = (x: Date) =>
     `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, '0')}-${String(x.getDate()).padStart(2, '0')}`
+  const profile = seller.data.profile
+    ? sellerProfileBody.parse(seller.data.profile)
+    : initialSellerProfile(seller.data)
+  const storeProfile = await readStoreProfile(ctx.client, tenant.id)
+  const storeLanguage = storeProfile.profile?.language ?? ctx.locale
+  const profileHistory = await ctx.client
+    .from('seller_profile_versions')
+    .select('id,revision,profile,created_at')
+    .eq('tenant_id', tenant.id)
+    .eq('seller_id', id.data)
+    .order('revision', { ascending: false })
+    .limit(20)
+  if (profileHistory.error)
+    throw new Error('Unable to read seller profile history')
   const write = tenant.role !== 'readonly'
   const when = (iso: string) =>
     new Date(iso).toLocaleString(intlLocale(ctx.locale), {
@@ -130,6 +150,54 @@ export default async function Seller({
           )}
         </div>
       </div>
+      <section className="card intake-form">
+        {(profile.addressLine1 ||
+          profile.addressLine2 ||
+          profile.postalCode ||
+          profile.city ||
+          profile.country) && (
+          <p>
+            {[
+              profile.addressLine1,
+              profile.addressLine2,
+              [profile.postalCode, profile.city].filter(Boolean).join(' '),
+              profile.country,
+            ]
+              .filter(Boolean)
+              .join(', ')}
+          </p>
+        )}
+        <p>
+          {all.sellerDetails.language}:{' '}
+          {isLocale(profile.language)
+            ? localeNames[profile.language]
+            : `${all.sellerDetails.followStore} (${localeNames[storeLanguage]})`}
+        </p>
+        {profile.notes && (
+          <p className="seller-internal-note">
+            <strong>{all.sellerDetails.notes}</strong>
+            <br />
+            {profile.notes}
+          </p>
+        )}
+        {write && (
+          <details className="seller-disclosure">
+            <summary>{all.sellerDetails.edit}</summary>
+            <div className="seller-disclosure-body">
+              <SellerProfileForm
+                key={seller.data.profile_revision}
+                tenantId={tenant.id}
+                sellerId={id.data}
+                revision={seller.data.profile_revision}
+                profile={profile}
+                d={all.sellerDetails}
+                intake={all.intake}
+                storeLanguage={localeNames[storeLanguage]}
+              />
+            </div>
+          </details>
+        )}
+      </section>
       <div className="seller-overview">
         <section className="card intake-form seller-economy">
           <h2>{all.sellerProfile.balance}</h2>
@@ -293,6 +361,51 @@ export default async function Seller({
           )}
         </div>
       </details>
+      {profileHistory.data.length > 0 && (
+        <details className="card seller-section">
+          <summary>{all.sellerDetails.history}</summary>
+          <div className="seller-disclosure-body">
+            {profileHistory.data.map((row) => {
+              const previous = sellerProfileBody.parse(row.profile)
+              return (
+                <details key={row.id}>
+                  <summary>
+                    {when(row.created_at)} · {previous.name}
+                  </summary>
+                  <p>
+                    {[previous.email, previous.phone]
+                      .filter(Boolean)
+                      .join(' · ')}
+                  </p>
+                  <p>
+                    {[
+                      previous.addressLine1,
+                      previous.addressLine2,
+                      previous.postalCode,
+                      previous.city,
+                      previous.country,
+                    ]
+                      .filter(Boolean)
+                      .join(', ')}
+                  </p>
+                  <p>
+                    {all.sellerDetails.language}:{' '}
+                    {isLocale(previous.language)
+                      ? localeNames[previous.language]
+                      : all.sellerDetails.followStore}
+                  </p>
+                  {previous.notes && (
+                    <p>
+                      <strong>{all.sellerDetails.notes}</strong>:{' '}
+                      {previous.notes}
+                    </p>
+                  )}
+                </details>
+              )
+            })}
+          </div>
+        </details>
+      )}
       <details className="card seller-section">
         <summary>{d.history}</summary>
         <div className="seller-disclosure-body">

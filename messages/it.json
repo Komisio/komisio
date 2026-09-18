@@ -2355,5 +2355,23 @@
     "balance": "Saldo",
     "editTerms": "Modifica condizioni",
     "transactions": "Movimenti del conto"
+  },
+  "sellerDetails": {
+    "edit": "Modifica dati del venditore",
+    "address": "Indirizzo (facoltativo)",
+    "street": "Indirizzo",
+    "addressExtra": "Seconda riga indirizzo",
+    "postalCode": "Codice postale",
+    "city": "Città",
+    "country": "Paese",
+    "preferences": "Lingua e note",
+    "language": "Lingua",
+    "followStore": "Usa la lingua del negozio",
+    "notes": "Nota interna",
+    "notesHint": "Visibile solo al personale. Non inserire numeri di documenti o conti bancari.",
+    "save": "Salva dati",
+    "saved": "Dati salvati.",
+    "history": "Cronologia modifiche",
+    "emailHint": "Controlla l’indirizzo e-mail. Viene usato per i messaggi e l’accesso del venditore."
   }
 }

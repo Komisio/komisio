@@ -2355,5 +2355,23 @@
     "balance": "Guthaben",
     "editTerms": "Konditionen ändern",
     "transactions": "Kontobewegungen"
+  },
+  "sellerDetails": {
+    "edit": "Verkäuferdaten bearbeiten",
+    "address": "Adresse (optional)",
+    "street": "Straße und Hausnummer",
+    "addressExtra": "Adresszusatz",
+    "postalCode": "Postleitzahl",
+    "city": "Ort",
+    "country": "Land",
+    "preferences": "Sprache und Notizen",
+    "language": "Sprache",
+    "followStore": "Sprache des Geschäfts verwenden",
+    "notes": "Interne Notiz",
+    "notesHint": "Nur für das Personal sichtbar. Hier keine Ausweis- oder Kontonummern eingeben.",
+    "save": "Daten speichern",
+    "saved": "Daten gespeichert.",
+    "history": "Änderungsverlauf",
+    "emailHint": "Prüfen Sie die E-Mail-Adresse. Sie wird für Nachrichten und den Verkäuferzugang verwendet."
   }
 }

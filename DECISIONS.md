@@ -667,3 +667,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-18: Quick reception defaults to description and category only (owner). Extra fields come from the selected item type, replacing the seven-field fallback; vocabulary definitions and saved item observations are unchanged.
 
 - 2026-09-18: Agreements are optional by default (owner): agreementRequiredFor=[] in new-store fallbacks. Existing published policies and evidence remain unchanged; owners may opt into requirements or publish a new policy to remove them.
+- 2026-09-18: Seller profiles (owner): editable contact, optional address, language and internal notes use immutable revisions with optimistic concurrency. Current contact is a projection; issued statements keep contact snapshots. Quick registration stays minimal; payout details are deferred.

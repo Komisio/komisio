@@ -1,8 +1,9 @@
+import { readStatementSellerContact } from '@/lib/engine/seller-profile'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary, intlLocale } from '@/lib/i18n'
+import { dictionary, intlLocale, isLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { readStatement } from '@/lib/engine/statements'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
@@ -18,20 +19,19 @@ export default async function Statement({
   if (!id.success) notFound()
   const ctx = await requirePlatform(),
     active = ctx.active!,
-    currency = await readStoreCurrency(ctx.client, active.id),
-    all = dictionary(ctx.locale),
-    d = all.statements
+    currency = await readStoreCurrency(ctx.client, active.id)
   const result = await readStatement(ctx.client, active.id, id.data)
   if (!result) notFound()
   const { statement: s, lines } = result
-  const seller = await ctx.client
-    .from('sellers')
-    .select('name,email,phone')
-    .eq('tenant_id', active.id)
-    .eq('id', s.seller_id)
-    .single()
-  if (seller.error) throw new Error('Unable to read seller')
-  const locale = intlLocale(ctx.locale)
+  const seller =
+    s.seller_contact ??
+    (await readStatementSellerContact(ctx.client, active.id, s.seller_id))
+  const documentLanguage = isLocale(s.seller_contact?.language)
+    ? s.seller_contact.language
+    : ctx.locale
+  const all = dictionary(documentLanguage),
+    d = all.statements
+  const locale = intlLocale(documentLanguage)
   const day = (iso: string) =>
     new Date(iso).toLocaleDateString(locale, { timeZone: 'Europe/Stockholm' })
   const when = (iso: string) =>
@@ -53,10 +53,23 @@ export default async function Statement({
           {s.kind === 'credit_note' ? d.creditNote : d.statement} {s.number}
         </h2>
         <p>
-          {seller.data.name}
-          {seller.data.email ? ` · ${seller.data.email}` : ''}
-          {seller.data.phone ? ` · ${seller.data.phone}` : ''}
+          {seller.name}
+          {seller.email ? ` · ${seller.email}` : ''}
+          {seller.phone ? ` · ${seller.phone}` : ''}
         </p>
+        {s.seller_contact && (
+          <p>
+            {[
+              s.seller_contact.addressLine1,
+              s.seller_contact.addressLine2,
+              s.seller_contact.postalCode,
+              s.seller_contact.city,
+              s.seller_contact.country,
+            ]
+              .filter(Boolean)
+              .join(', ')}
+          </p>
+        )}
         <p>
           {d.period}: {day(s.period_from)} – {day(lastDay)} · {d.issuedAt}{' '}
           {when(s.issued_at)}

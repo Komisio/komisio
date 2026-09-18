@@ -1400,3 +1400,22 @@ small {
     grid-template-columns: 1fr;
   }
 }
+.seller-profile-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.seller-profile form > button {
+  margin-top: 1rem;
+}
+.seller-internal-note {
+  white-space: pre-wrap;
+  padding: 1rem;
+  background: var(--paper);
+  border-radius: 8px;
+}
+@media (max-width: 600px) {
+  .seller-profile-fields {
+    grid-template-columns: 1fr;
+  }
+}

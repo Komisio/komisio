@@ -2355,5 +2355,23 @@
     "balance": "Balance",
     "editTerms": "Change terms",
     "transactions": "Account activity"
+  },
+  "sellerDetails": {
+    "edit": "Edit seller details",
+    "address": "Address (optional)",
+    "street": "Street address",
+    "addressExtra": "Address line 2",
+    "postalCode": "Postal code",
+    "city": "City",
+    "country": "Country",
+    "preferences": "Language and notes",
+    "language": "Language",
+    "followStore": "Use store language",
+    "notes": "Internal note",
+    "notesHint": "Visible only to store staff. Do not enter identity or bank account numbers here.",
+    "save": "Save details",
+    "saved": "Details saved.",
+    "history": "Change history",
+    "emailHint": "Check the email address carefully. It is used for messages and seller access."
   }
 }

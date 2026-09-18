@@ -668,3 +668,5 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-09-18: Agreements are optional by default (owner): agreementRequiredFor=[] in new-store fallbacks. Existing published policies and evidence remain unchanged; owners may opt into requirements or publish a new policy to remove them.
 - 2026-09-18: Seller profiles (owner): editable contact, optional address, language and internal notes use immutable revisions with optimistic concurrency. Current contact is a projection; issued statements keep contact snapshots. Quick registration stays minimal; payout details are deferred.
+- 2026-09-18: Owner sets the AI-credit offer copy to approximately 4,000 received items in all languages. This is an owner-approved estimate, replacing the usage-derived count in this copy only; balances, metering and budget limits remain unchanged.
+- 2026-09-18: Owner simplifies quick reception further: description and price suffice; category is omitted from this form and submission. Item type and its additional fields remain optional.

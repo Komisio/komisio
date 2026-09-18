@@ -25,7 +25,7 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
     ).toHaveAttribute('required', '')
     await expect(
       page.getByLabel(d.quickIntake.category, { exact: true }),
-    ).not.toHaveAttribute('required')
+    ).toHaveCount(0)
     await expect(
       page.getByLabel(d.quickIntake.itemType, { exact: true }),
     ).not.toHaveAttribute('required')
@@ -53,9 +53,21 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
     await page
       .getByLabel(d.quickIntake.description, { exact: true })
       .fill('Snabb jacka')
-    await page
-      .getByLabel(d.quickIntake.category, { exact: true })
-      .fill('Jackor')
+    const typeInput = page.getByLabel(d.quickIntake.itemType, { exact: true })
+    const typeLabel = await page
+      .locator('#quick-item-types option')
+      .first()
+      .getAttribute('value')
+    expect(typeLabel).toBeTruthy()
+    await typeInput.fill(typeLabel!)
+    await typeInput.press('Tab')
+    await expect(typeInput).toHaveValue(typeLabel!)
+    await expect(
+      page.getByLabel(d.quickIntake.category, { exact: true }),
+    ).toHaveCount(0)
+    await typeInput.fill('')
+    await typeInput.press('Tab')
+    await expect(typeInput).toHaveValue('')
     await page.getByLabel(d.quickIntake.price, { exact: true }).fill('250')
     await page
       .getByRole('button', { name: d.quickIntake.submit, exact: true })

@@ -46,6 +46,7 @@ export function QuickReception({
     [printerId, setPrinterId] = useState(''),
     [facts, setFacts] = useState<Facts>(emptyFacts),
     [itemType, setItemType] = useState<string | null>(null),
+    [typeQuery, setTypeQuery] = useState(''),
     [price, setPrice] = useState(''),
     [photoUrl, setPhotoUrl] = useState<string | null>(null),
     [session, setSession] = useState<{ id: string; revision: number } | null>(
@@ -62,7 +63,10 @@ export function QuickReception({
   // What this item type asks for, in the profile's order. Changing the type
   // changes the questions; answers to questions the new type does not ask are
   // dropped rather than sent for an item they do not describe.
-  const questions = questionsFor(vocabulary, itemType)
+  const questions = questionsFor(vocabulary, itemType).filter(
+    (q) => q.definition.slug !== 'category',
+  )
+  const activeTypes = vocabulary.types.filter((t) => t.active)
   const running = useRef(false)
   const fileInput = useRef<HTMLInputElement>(null)
   const errors = d.errors as Record<string, string>
@@ -155,6 +159,10 @@ export function QuickReception({
             const filled = quickAiProposal(s)
             setFacts(filled.facts)
             setItemType(filled.itemType)
+            const suggestedType = activeTypes.find(
+              (t) => t.slug === filled.itemType,
+            )
+            setTypeQuery(suggestedType ? labelOf(suggestedType, lang) : '')
             setPrice(filled.price)
             setMessage(d.aiDone)
           } else setMessage(d.aiUnavailable)
@@ -191,7 +199,9 @@ export function QuickReception({
           .map(([k, v]) => [k, v.trim()] as const)
           .filter(
             ([k, v]) =>
-              k === 'description' || (v !== '' && (asked.has(k) || !itemType)),
+              k !== 'category' &&
+              (k === 'description' ||
+                (v !== '' && (asked.has(k) || !itemType))),
           ),
       )
       const result = await post('/api/intake/quick', {
@@ -425,21 +435,35 @@ export function QuickReception({
             <div className="quick-facts">
               <div className="field">
                 <label htmlFor="quick-item-type">{d.itemType}</label>
-                <select
+                <input
                   id="quick-item-type"
-                  value={itemType ?? ''}
+                  list="quick-item-types"
+                  autoComplete="off"
+                  placeholder={d.itemTypeNone}
+                  value={typeQuery}
                   disabled={busy || !!done}
-                  onChange={(e) => setItemType(e.target.value || null)}
-                >
-                  <option value="">{d.itemTypeNone}</option>
-                  {vocabulary.types
-                    .filter((t) => t.active)
-                    .map((t) => (
-                      <option key={t.slug} value={t.slug}>
-                        {labelOf(t, lang)}
-                      </option>
-                    ))}
-                </select>
+                  onChange={(e) => {
+                    const value = e.target.value
+                    setTypeQuery(value)
+                    const match = activeTypes.find(
+                      (t) =>
+                        labelOf(t, lang).toLocaleLowerCase(lang) ===
+                        value.trim().toLocaleLowerCase(lang),
+                    )
+                    setItemType(match?.slug ?? null)
+                  }}
+                  onBlur={() => {
+                    const selected = activeTypes.find(
+                      (t) => t.slug === itemType,
+                    )
+                    setTypeQuery(selected ? labelOf(selected, lang) : '')
+                  }}
+                />
+                <datalist id="quick-item-types">
+                  {activeTypes.map((t) => (
+                    <option key={t.slug} value={labelOf(t, lang)} />
+                  ))}
+                </datalist>
               </div>
               <div className="quick-fields">
                 {questions.map((q) => question(q.definition))}

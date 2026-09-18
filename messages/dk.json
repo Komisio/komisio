@@ -447,7 +447,7 @@
     "manual": "Beskriv tøjet manuelt, eller brug AI-forslag, hvis det er aktiveret for denne butik. Personalet gennemgår dokumentationen, før indlevereren svarer.",
     "aiTitle": "AI-forslag",
     "aiNotice": "Når du kører analysen, sendes modtagelsens fotos, noter og prisdokumentation til OpenAI. Brug dokumentation for tøjet uden personoplysninger. Indlejrede billedmetadata fjernes, men synlig tekst og personer sløres ikke. Højst tre fotos pr. kørsel.",
-    "aiUnavailable": "AI er ikke aktiveret for denne butik. Du kan fortsætte med manuel beskrivelse og prisdokumentation.",
+    "aiUnavailable": "AI er ikke tilgængelig her lige nu. Du kan fortsætte med manuel beskrivelse og prisgrundlag.",
     "aiGenerate": "Analysér dokumentation med AI",
     "aiWorking": "Analyserer…",
     "aiCandidate": "Forslag til gennemgang – ikke udgivet",
@@ -607,7 +607,27 @@
     },
     "photoSeenBefore": "Et foto i denne modtagelse er uploadet før. Tjek, om tøjet allerede er modtaget:",
     "aiCredits": "Butikkens AI-kreditter for måneden er brugt op. Køb flere under Indstillinger, AI-kreditter, eller forbind butikkens egen modelnøgle.",
-    "aiCap": "Komisios fælles AI-budget for måneden er brugt op. Købte kreditter og en egen modelnøgle virker stadig."
+    "aiCap": "Komisios fælles AI-budget for måneden er brugt op. Købte kreditter og en egen modelnøgle virker stadig.",
+    "overviewIntro": "Fortsæt en modtagelse eller start en ny.",
+    "queueNewest": "Vis seneste modtagelser",
+    "queueActions": {
+      "prepare_evidence": "Tilføj billeder og oplysninger",
+      "review_changed_evidence": "Gennemgå ændringerne",
+      "record_custody": "Registrer fysisk modtagelse",
+      "accept_item": "Accepter varen",
+      "item_accepted": "Færdig – se varen i varelisten",
+      "review_seller_decline": "Se sælgerens afslag",
+      "publish_fresh_review": "Gennemgå og forny grundlaget",
+      "issue_review_link": "Opret link til sælgeren",
+      "replace_review_link": "Opret et nyt link",
+      "await_seller_response": "Afvent sælgerens svar"
+    },
+    "queueOpen": "Åbn",
+    "photoRequirements": "JPEG eller PNG · højst 3 MB og 20 megapixel.",
+    "photoPrivacyReminder": "Undgå personer og synlige personoplysninger på billedet.",
+    "photoPrivacyTitle": "Om billeder og privatliv",
+    "photoRemove": "Fjern billede",
+    "photoRemoveFailed": "Fjernelsen af billedet kunne ikke bekræftes. Prøv igen."
   },
   "operations": {
     "title": "Foreslåede operationer",

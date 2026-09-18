@@ -108,6 +108,9 @@ it('resolves enablement from the policy read through the caller client', async (
 it('keeps the pilot allowlist as a fallback and rejects a malformed one', () => {
   const withList = { ...env, KOMISIO_RECEPTION_AI_TENANTS: other }
   expect(receptionAIConfig(other, withList, null)).not.toBe(null)
+  expect(receptionAIConfig(other, withList, { assistanceEnabled: false })).toBe(
+    null,
+  )
   expect(receptionAIConfig(tenant, withList, null)).toBe(null)
   expect(
     receptionAIConfig(

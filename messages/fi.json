@@ -447,7 +447,7 @@
     "manual": "Kuvaa vaate manuaalisesti tai käytä AI-ehdotuksia, jos ne on otettu käyttöön tässä kaupassa. Henkilökunta tarkistaa todisteet ennen kuin tuoja vastaa.",
     "aiTitle": "AI-ehdotukset",
     "aiNotice": "Analyysin suorittaminen lähettää tämän vastaanoton kuvat, muistiinpanot ja hintatodisteet OpenAI:lle. Käytä vaatetodisteita ilman henkilötietoja. Kuvien upotetut metatiedot poistetaan, mutta näkyvää tekstiä ja ihmisiä ei peitetä. Enintään kolme kuvaa per ajo.",
-    "aiUnavailable": "AI ei ole käytössä tässä kaupassa. Voit jatkaa manuaalisella kuvauksella ja hintatodisteilla.",
+    "aiUnavailable": "Tekoäly ei ole täällä käytettävissä juuri nyt. Voit jatkaa kuvauksen ja hintaperusteen syöttämistä käsin.",
     "aiGenerate": "Analysoi todisteet AI:lla",
     "aiWorking": "Analysoidaan…",
     "aiCandidate": "Ehdotus tarkistettavaksi – ei julkaistu",
@@ -607,7 +607,27 @@
     },
     "photoSeenBefore": "Jokin tämän vastaanoton kuva on ladattu aiemmin. Tarkista, onko vaate jo vastaanotettu:",
     "aiCredits": "Kaupan kuukauden AI-krediitit on käytetty. Osta lisää kohdasta Asetukset, AI-krediitit, tai yhdistä kaupan oma malliavain.",
-    "aiCap": "Komision jaettu AI-budjetti tälle kuukaudelle on käytetty. Ostetut krediitit ja oma malliavain toimivat edelleen."
+    "aiCap": "Komision jaettu AI-budjetti tälle kuukaudelle on käytetty. Ostetut krediitit ja oma malliavain toimivat edelleen.",
+    "overviewIntro": "Jatka vastaanottoa tai aloita uusi.",
+    "queueNewest": "Näytä uusimmat vastaanotot",
+    "queueActions": {
+      "prepare_evidence": "Lisää kuvat ja tiedot",
+      "review_changed_evidence": "Tarkista muutokset",
+      "record_custody": "Kirjaa fyysinen vastaanotto",
+      "accept_item": "Hyväksy tuote",
+      "item_accepted": "Valmis – katso tuotelista",
+      "review_seller_decline": "Tarkista myyjän hylkäys",
+      "publish_fresh_review": "Tarkista ja uusi ehdotus",
+      "issue_review_link": "Luo linkki myyjälle",
+      "replace_review_link": "Luo uusi linkki",
+      "await_seller_response": "Odota myyjän vastausta"
+    },
+    "queueOpen": "Avaa",
+    "photoRequirements": "JPEG tai PNG · enintään 3 Mt ja 20 megapikseliä.",
+    "photoPrivacyReminder": "Vältä ihmisiä ja näkyviä henkilötietoja kuvassa.",
+    "photoPrivacyTitle": "Kuvat ja tietosuoja",
+    "photoRemove": "Poista kuva",
+    "photoRemoveFailed": "Kuvan poistamista ei voitu vahvistaa. Yritä uudelleen."
   },
   "operations": {
     "title": "Ehdotetut operaatiot",

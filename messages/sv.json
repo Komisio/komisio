@@ -447,7 +447,7 @@
     "manual": "Beskriv plagget manuellt eller använd AI-förslag om butiken har aktiverat det. Personalen granskar underlaget innan säljaren får ta ställning.",
     "aiTitle": "AI-förslag",
     "aiNotice": "Vid en körning skickas mottagningens bilder, anteckningar och prisunderlag till OpenAI. Använd endast plaggunderlag utan personuppgifter. Inbäddade bildmetadata tas bort, men text och personer som syns på bilden gör det inte. Högst tre bilder per körning.",
-    "aiUnavailable": "AI är inte aktiverat för denna butik. Du kan fortsätta med den manuella beskrivningen och prisunderlaget.",
+    "aiUnavailable": "AI är inte tillgängligt här just nu. Du kan fortsätta med den manuella beskrivningen och prisunderlaget.",
     "aiGenerate": "Analysera underlaget med AI",
     "aiWorking": "Analyserar…",
     "aiCandidate": "Förslag att granska – inte publicerat",
@@ -607,7 +607,27 @@
     },
     "photoSeenBefore": "En bild i den här mottagningen har laddats upp tidigare. Kontrollera om plagget redan är mottaget:",
     "aiCredits": "Butikens AI-krediter för månaden är slut. Köp fler under Inställningar, AI-krediter, eller koppla butikens egen modellnyckel.",
-    "aiCap": "Komisios gemensamma AI-pott för månaden är slut. Köpta krediter och egen modellnyckel fungerar fortfarande."
+    "aiCap": "Komisios gemensamma AI-pott för månaden är slut. Köpta krediter och egen modellnyckel fungerar fortfarande.",
+    "overviewIntro": "Fortsätt med en mottagning eller starta en ny.",
+    "queueNewest": "Visa senaste mottagningarna",
+    "queueActions": {
+      "prepare_evidence": "Komplettera bilder och uppgifter",
+      "review_changed_evidence": "Granska ändringarna",
+      "record_custody": "Registrera mottagandet",
+      "accept_item": "Acceptera varan",
+      "item_accepted": "Klar – se varan i varulistan",
+      "review_seller_decline": "Se säljarens avslag",
+      "publish_fresh_review": "Granska och förnya underlaget",
+      "issue_review_link": "Skapa länk till säljaren",
+      "replace_review_link": "Skapa en ny länk",
+      "await_seller_response": "Invänta säljarens svar"
+    },
+    "queueOpen": "Öppna",
+    "photoRequirements": "JPEG eller PNG · högst 3 MB och 20 megapixlar.",
+    "photoPrivacyReminder": "Undvik personer och synliga personuppgifter i bilden.",
+    "photoPrivacyTitle": "Om bilder och integritet",
+    "photoRemove": "Ta bort bild",
+    "photoRemoveFailed": "Bilden kunde inte bekräftas borttagen. Försök igen."
   },
   "operations": {
     "title": "Föreslagna åtgärder",

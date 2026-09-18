@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { receptionSession } from './reception'
+import { receptionDraftSources } from './reception'
 import { storedReceptionSuggestions } from './stored-reception-suggestions'
 
 const cursor = z.number().int().min(1).max(2147483647).optional()
@@ -17,7 +17,7 @@ const response = z.object({
 const sourceRow = z.object({
   revision: z.number().int().positive(),
   saved_at: timestamp,
-  sources: receptionSession.shape.sources,
+  sources: receptionDraftSources,
 })
 const reviewRow = z.object({
   version: z.number().int().positive(),

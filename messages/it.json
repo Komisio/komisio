@@ -447,7 +447,7 @@
     "manual": "Descrivi il capo manualmente o usa i suggerimenti AI se attivi per questo negozio. Il personale esamina le prove prima che il conferente risponda.",
     "aiTitle": "Suggerimenti AI",
     "aiNotice": "L'analisi invia a OpenAI le foto, le note e le prove di prezzo di questa ricezione. Usa prove relative al capo senza informazioni personali. I metadati incorporati nelle immagini vengono rimossi, ma testi visibili e persone non vengono oscurati. Massimo tre foto per esecuzione.",
-    "aiUnavailable": "L'AI non è attiva per questo negozio. Puoi continuare con la descrizione manuale e le prove di prezzo.",
+    "aiUnavailable": "L’IA non è disponibile qui al momento. Puoi continuare inserendo manualmente la descrizione e la base del prezzo.",
     "aiGenerate": "Analizza le prove con l'AI",
     "aiWorking": "Analisi in corso…",
     "aiCandidate": "Suggerimento da esaminare – non pubblicato",
@@ -607,7 +607,27 @@
     },
     "photoSeenBefore": "Una foto in questa ricezione è già stata caricata in precedenza. Controlla se il capo è già stato ricevuto:",
     "aiCredits": "I crediti AI del negozio per il mese sono esauriti. Acquistane altri in Impostazioni, Crediti AI, oppure collega la chiave del modello del negozio.",
-    "aiCap": "Il budget AI condiviso di Komisio per il mese è esaurito. I crediti acquistati e una chiave del modello propria funzionano ancora."
+    "aiCap": "Il budget AI condiviso di Komisio per il mese è esaurito. I crediti acquistati e una chiave del modello propria funzionano ancora.",
+    "overviewIntro": "Continua una ricezione o avviane una nuova.",
+    "queueNewest": "Mostra le ricezioni recenti",
+    "queueActions": {
+      "prepare_evidence": "Aggiungi foto e dettagli",
+      "review_changed_evidence": "Verifica le modifiche",
+      "record_custody": "Registra la ricezione fisica",
+      "accept_item": "Accetta articolo",
+      "item_accepted": "Completato – vedi elenco articoli",
+      "review_seller_decline": "Verifica il rifiuto del venditore",
+      "publish_fresh_review": "Verifica e rinnova la proposta",
+      "issue_review_link": "Crea un link per il venditore",
+      "replace_review_link": "Crea un nuovo link",
+      "await_seller_response": "Attendi la risposta del venditore"
+    },
+    "queueOpen": "Apri",
+    "photoRequirements": "JPEG o PNG · massimo 3 MB e 20 megapixel.",
+    "photoPrivacyReminder": "Evita persone e dati personali visibili nella foto.",
+    "photoPrivacyTitle": "Informazioni su foto e privacy",
+    "photoRemove": "Rimuovi foto",
+    "photoRemoveFailed": "Non è stato possibile confermare la rimozione della foto. Riprova."
   },
   "operations": {
     "title": "Operazioni proposte",

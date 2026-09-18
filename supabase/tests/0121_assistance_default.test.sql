@@ -16,18 +16,22 @@ select is((current_store_policy(current_setting('test.fresh')::uuid)->>'version'
 select is(current_store_policy(current_setting('test.fresh')::uuid)->'policy'->>'commissionRatePercent','60','the commission default is untouched');
 select is(current_store_policy(current_setting('test.fresh')::uuid)->'policy'->>'sellerReviewMode','delegated','and so is the review mode');
 
--- A store that published a policy without the key keeps what it published:
--- assistance stays off until its owner publishes again with the box ticked.
+-- Missing preferences default on in effective reads; stored policy stays immutable.
 select set_config('test.body',(current_store_policy(current_setting('test.published')::uuid)->'policy')::text,true);
 select publish_store_policy(current_setting('test.published')::uuid,gen_random_uuid(),null,(current_setting('test.body')::jsonb - 'assistanceEnabled'));
-select ok(not (current_store_policy(current_setting('test.published')::uuid)->'policy' ? 'assistanceEnabled'),'a published policy without the key keeps it absent');
-select is(current_store_policy(current_setting('test.published')::uuid)->'policy'->'assistanceEnabled',null,'so assistance is not switched on behind the store''s back');
+select ok(not (select policy ? 'assistanceEnabled' from public.store_policy_versions where tenant_id=current_setting('test.published')::uuid order by version desc limit 1),'stored policy keeps the key absent');
+select is(current_store_policy(current_setting('test.published')::uuid)->'policy'->'assistanceEnabled','true'::jsonb,'a missing preference defaults on in effective reads');
 
+reset role;
+select is(komisio_private.current_store_policy_core(current_setting('test.published')::uuid),public.current_store_policy(current_setting('test.published')::uuid),'core and public reads agree on legacy default');
+set local role authenticated;
 -- And an owner may publish it off, which is the whole point of a default.
 -- Each publication names the policy it replaces.
 select publish_store_policy(current_setting('test.published')::uuid,gen_random_uuid(),(current_store_policy(current_setting('test.published')::uuid)->>'id')::uuid,current_setting('test.body')::jsonb || '{"assistanceEnabled":false}');
 select is(current_store_policy(current_setting('test.published')::uuid)->'policy'->'assistanceEnabled','false'::jsonb,'an owner can turn it off');
 select publish_store_policy(current_setting('test.published')::uuid,gen_random_uuid(),(current_store_policy(current_setting('test.published')::uuid)->>'id')::uuid,current_setting('test.body')::jsonb || '{"assistanceEnabled":true}');
 select is(current_store_policy(current_setting('test.published')::uuid)->'policy'->'assistanceEnabled','true'::jsonb,'and on again');
+reset role;
+select is(komisio_private.current_store_policy_core(current_setting('test.published')::uuid),public.current_store_policy(current_setting('test.published')::uuid),'core and public reads agree after explicit choices');
 select * from finish();
 rollback;

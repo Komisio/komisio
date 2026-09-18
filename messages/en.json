@@ -447,7 +447,7 @@
     "manual": "Describe the garment manually or use AI suggestions if enabled for this store. Staff reviews the evidence before the seller responds.",
     "aiTitle": "AI suggestions",
     "aiNotice": "Running analysis sends this reception's photos, notes and price evidence to OpenAI. Use garment evidence without personal information. Embedded image metadata is removed, but visible text and people are not redacted. Maximum three photos per run.",
-    "aiUnavailable": "AI is not enabled for this store. You can continue with the manual description and price evidence.",
+    "aiUnavailable": "AI is not available here right now. You can continue with the manual description and price evidence.",
     "aiGenerate": "Analyze evidence with AI",
     "aiWorking": "Analyzing…",
     "aiCandidate": "Suggestion for review – not published",
@@ -607,7 +607,27 @@
     },
     "photoSeenBefore": "A photo in this reception was uploaded before. Check whether the garment was received already:",
     "aiCredits": "The store's AI credits for the month are used up. Buy more under Settings, AI credits, or connect the store's own model key.",
-    "aiCap": "Komisio's shared AI budget for the month is used up. Purchased credits and an own model key still work."
+    "aiCap": "Komisio's shared AI budget for the month is used up. Purchased credits and an own model key still work.",
+    "overviewIntro": "Continue a reception or start a new one.",
+    "queueNewest": "Show latest receptions",
+    "queueActions": {
+      "prepare_evidence": "Add photos and details",
+      "review_changed_evidence": "Review changes",
+      "record_custody": "Record physical receipt",
+      "accept_item": "Accept item",
+      "item_accepted": "Done – see item in the item list",
+      "review_seller_decline": "Review seller decline",
+      "publish_fresh_review": "Review and renew the proposal",
+      "issue_review_link": "Create seller link",
+      "replace_review_link": "Create a new link",
+      "await_seller_response": "Await seller response"
+    },
+    "queueOpen": "Open",
+    "photoRequirements": "JPEG or PNG · up to 3 MB and 20 megapixels.",
+    "photoPrivacyReminder": "Avoid people and visible personal information in the photo.",
+    "photoPrivacyTitle": "About photos and privacy",
+    "photoRemove": "Remove photo",
+    "photoRemoveFailed": "The photo removal could not be confirmed. Please try again."
   },
   "operations": {
     "title": "Proposed operations",

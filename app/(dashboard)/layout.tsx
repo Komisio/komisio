@@ -2,6 +2,7 @@ import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { Shell } from '@/components/platform/shell'
 import { Brand } from '@/components/platform/brand'
+import { LanguagePicker } from '@/components/platform/language-picker'
 import { SignOut } from '@/components/platform/sign-out'
 import Link from 'next/link'
 import { PlanBanner } from '@/components/platform/plan-banner'
@@ -17,6 +18,7 @@ export default async function DashboardLayout({
     return (
       <main className="onboarding">
         <Brand />
+        <LanguagePicker locale={ctx.locale} label={d.language} />
         {children}
         <div className="row">
           <Link href="/onboarding" className="text-link">
@@ -37,6 +39,7 @@ export default async function DashboardLayout({
       intakeEnabled={process.env.KOMISIO_INTAKE_ENABLED === 'true'}
       host={host}
       d={d}
+      locale={ctx.locale}
       tenants={ctx.tenants}
       active={ctx.active!}
       email={ctx.user.email ?? ''}

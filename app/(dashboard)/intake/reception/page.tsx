@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ArrowRight, Plus } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
@@ -46,46 +47,62 @@ export default async function Receptions({
       <div className="page-heading">
         <div className="eyebrow">{tenant.name}</div>
         <h1>{d.title}</h1>
-        <p>{d.intro}</p>
+        <p>{d.overviewIntro}</p>
       </div>
-      <p className="intake-notice">{d.manual}</p>
-      <div className="intake-grid">
-        <section className="card intake-form">
-          <h2>{d.start}</h2>
-          <form action="/intake/reception">
-            <div className="field">
-              <label htmlFor="reception-search">{d.search}</label>
-              <div className="row wrap">
-                <input
-                  id="reception-search"
-                  name="q"
-                  defaultValue={q}
-                  maxLength={120}
-                />
-                <button className="btn btn-secondary">{d.searchButton}</button>
+
+      <div className="reception-overview">
+        <details
+          className="card reception-start"
+          open={Boolean(q) || (!queueInput.stage && recent.items.length === 0)}
+        >
+          <summary>
+            <Plus size={18} aria-hidden="true" />
+            {d.start}
+          </summary>
+          <div className="reception-start-content">
+            <form action="/intake/reception">
+              <input
+                type="hidden"
+                name="stage"
+                value={queueInput.stage ?? ''}
+              />
+              <div className="field">
+                <label htmlFor="reception-search">{d.search}</label>
+                <div className="row wrap">
+                  <input
+                    id="reception-search"
+                    name="q"
+                    defaultValue={q}
+                    maxLength={120}
+                  />
+                  <button className="btn btn-secondary">
+                    {d.searchButton}
+                  </button>
+                </div>
               </div>
-            </div>
-          </form>
-          <p>{d.searchLimit}</p>
-          {tenant.role !== 'readonly' && sellers.data.length > 0 ? (
-            <StartReception
-              key={q}
-              tenantId={tenant.id}
-              sellers={sellers.data}
-              d={d}
-            />
-          ) : (
-            <p>{sellers.data.length === 0 ? d.noSellers : d.readonly}</p>
-          )}
-          <Link href="/intake" className="text-link">
-            {d.registerSeller}
-          </Link>
-        </section>
-        <section className="card intake-form">
-          <h2>{d.queueTitle}</h2>
-          <p>{d.queueHelp}</p>
+            </form>
+            {sellers.data.length >= 50 && <small>{d.searchLimit}</small>}
+            {tenant.role !== 'readonly' && sellers.data.length > 0 ? (
+              <StartReception
+                key={q}
+                tenantId={tenant.id}
+                sellers={sellers.data}
+                d={d}
+              />
+            ) : (
+              <p>{sellers.data.length === 0 ? d.noSellers : d.readonly}</p>
+            )}
+            <Link href="/intake" className="text-link">
+              {d.registerSeller}
+            </Link>
+          </div>
+        </details>
+        <section className="card reception-queue">
+          <div className="reception-queue-heading">
+            <h2>{d.queueTitle}</h2>
+          </div>
           {!parsed.success && <p role="alert">{d.invalid}</p>}
-          <form action="/intake/reception">
+          <form action="/intake/reception" className="reception-queue-filter">
             <input type="hidden" name="q" value={q} />
             <label htmlFor="queue-stage">{d.queueFilter}</label>
             <select
@@ -102,6 +119,65 @@ export default async function Receptions({
             </select>
             <button className="btn btn-secondary">{d.queueFilter}</button>
           </form>
+          <ul className="reception-queue-list">
+            {recent.items.map((r) => {
+              return (
+                <li key={r.session_id}>
+                  <Link
+                    className={`reception-queue-row reception-state-${r.stage}`}
+                    href={`/intake/reception/${r.session_id}`}
+                  >
+                    <span className="reception-queue-person">
+                      <strong>{r.seller_name}</strong>
+                      <span>{d.queueActions[r.nextStep]}</span>
+                    </span>
+                    <span className="reception-queue-status">
+                      {d.queueStages[r.stage]}
+                    </span>
+                    <time dateTime={r.created_at}>
+                      {new Date(r.created_at).toLocaleString(
+                        intlLocale(ctx.locale),
+                        {
+                          timeZone: 'Europe/Stockholm',
+                          day: 'numeric',
+                          month: 'short',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          year: 'numeric',
+                        },
+                      )}
+                    </time>
+                    <span className="reception-queue-open">
+                      {d.queueOpen}
+                      <ArrowRight size={16} aria-hidden="true" />
+                    </span>
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+          {recent.items.length === 0 && <p>{d.queueEmpty}</p>}
+          <div className="reception-queue-pagination">
+            {queueInput.before && (
+              <Link
+                className="text-link"
+                href={`/intake/reception?${new URLSearchParams({ q, stage: queueInput.stage ?? '' })}`}
+              >
+                {d.queueNewest}
+              </Link>
+            )}
+            {recent.next && (
+              <Link
+                className="text-link"
+                href={`/intake/reception?${new URLSearchParams({ q, stage: queueInput.stage ?? '', ...recent.next })}`}
+              >
+                {d.queueNext}
+              </Link>
+            )}
+          </div>
+        </section>
+        <details className="reception-lookup" open={Boolean(p.session)}>
+          <summary>{d.findSession}</summary>{' '}
           <form action="/intake/reception">
             <div className="field">
               <label htmlFor="reception-id">{d.sessionId}</label>
@@ -123,39 +199,7 @@ export default async function Receptions({
           ) : p.session ? (
             <p role="alert">{d.invalid}</p>
           ) : null}
-          <ul className="intake-list">
-            {recent.items.map((r) => {
-              return (
-                <li key={r.session_id}>
-                  <Link
-                    className="intake-seller"
-                    href={`/intake/reception/${r.session_id}`}
-                  >
-                    <strong>{r.seller_name}</strong>
-                    <span>{d.queueStages[r.stage]}</span>
-                    <small>{d.queueNextSteps[r.nextStep]}</small>
-                    <small>
-                      {new Date(r.created_at).toLocaleString(
-                        intlLocale(ctx.locale),
-                        { timeZone: 'Europe/Stockholm' },
-                      )}
-                    </small>
-                    <span>{d.open}</span>
-                  </Link>
-                </li>
-              )
-            })}
-          </ul>
-          {recent.items.length === 0 && <p>{d.queueEmpty}</p>}
-          {recent.next && (
-            <Link
-              className="text-link"
-              href={`/intake/reception?${new URLSearchParams({ q, stage: queueInput.stage ?? '', ...recent.next })}`}
-            >
-              {d.queueNext}
-            </Link>
-          )}
-        </section>
+        </details>
       </div>
     </>
   )

@@ -31,6 +31,7 @@ export function receptionAIConfig(
   policy: { assistanceEnabled?: boolean } | null = null,
 ): ReceptionAIConfig | null {
   if (env.KOMISIO_RECEPTION_AI_PROVIDER !== 'openai') return null
+  if (policy?.assistanceEnabled === false) return null
   const model = env.KOMISIO_RECEPTION_AI_MODEL?.trim(),
     key = env.KOMISIO_RECEPTION_AI_KEY?.trim()
   if (!key || !model || !/^[a-zA-Z0-9._:-]{1,100}$/.test(model)) return null

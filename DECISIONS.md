@@ -670,3 +670,8 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-18: Seller profiles (owner): editable contact, optional address, language and internal notes use immutable revisions with optimistic concurrency. Current contact is a projection; issued statements keep contact snapshots. Quick registration stays minimal; payout details are deferred.
 - 2026-09-18: Owner sets the AI-credit offer copy to approximately 4,000 received items in all languages. This is an owner-approved estimate, replacing the usage-derived count in this copy only; balances, metering and budget limits remain unchanged.
 - 2026-09-18: Owner simplifies quick reception further: description and price suffice; category is omitted from this form and submission. Item type and its additional fields remain optional.
+- 2026-09-18: The app header exposes all eight UI languages with native names and vector flags (UK for English, owner choice). Selection persists in the existing browser-locale cookie and refreshes the current route; account and store language settings remain separate.
+
+- 2026-09-18: AI defaults on for every store with no explicit choice, including legacy published policies. Effective policy reads add the missing flag without rewriting history; explicit false wins. Photo and AI controls lead reception when enabled; quotas and spend caps stay unchanged.
+
+- 2026-09-18: Staff may detach reception photos by appending a source revision, including an empty draft after the last photo. Historical sources, stored files and published reviews stay immutable. Empty drafts cannot be analyzed or published.

@@ -102,7 +102,7 @@ export default async function Reception({
       <h2>{d.observe}</h2>
       {write ? (
         <ReceptionObservation
-          key={state.revision}
+          key={`${id.data}-${JSON.stringify(prepared?.input ?? null)}`}
           tenantId={tenant.id}
           sessionId={id.data}
           revision={state.revision}
@@ -128,20 +128,22 @@ export default async function Reception({
           d={d}
         />
       )}
-      <div className="reception-photos">
-        {sources
-          .filter((s) => s.kind === 'photo')
-          .map((s) => (
-            // Authenticated, uncached route; do not send private images through an optimizer cache.
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={s.id}
-              src={`/api/reception/${id.data}/photo?photo=${s.id}`}
-              alt={d.photoAlt}
-              loading="lazy"
-            />
-          ))}
-      </div>
+      {!write && (
+        <div className="reception-photos">
+          {sources
+            .filter((s) => s.kind === 'photo')
+            .map((s) => (
+              // Authenticated, uncached route; do not send private images through an optimizer cache.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={s.id}
+                src={`/api/reception/${id.data}/photo?photo=${s.id}`}
+                alt={d.photoAlt}
+                loading="lazy"
+              />
+            ))}
+        </div>
+      )}
       {duplicates && duplicates.photos.length > 0 && (
         <div role="status" className="intake-matches">
           <p>{d.photoSeenBefore}</p>

@@ -72,7 +72,7 @@ export function ReceptionAssistance({
       {mode === 'batch' && <p>{d.batch.notice}</p>}
       {available && (
         <Button
-          disabled={busy || attempted || revision < 1}
+          disabled={busy || attempted || revision < 1 || sources.length === 0}
           onClick={async () => {
             if (running.current || attempted) return
             running.current = true

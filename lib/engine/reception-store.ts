@@ -1,6 +1,10 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { receptionSession, receptionSuggestions } from './reception'
+import {
+  receptionSession,
+  receptionSuggestions,
+  receptionDraftSources,
+} from './reception'
 import { storedReceptionSuggestions } from './stored-reception-suggestions'
 
 export const publishReceptionReviewCommand = z.strictObject({
@@ -100,29 +104,33 @@ export async function readReceptionReview(
       : null,
   }
 }
-export const saveReceptionSourcesCommand = z.strictObject({
-  action: z.literal('saveReceptionSources'),
-  tenantId: z.uuid(),
-  requestId: z.uuid(),
-  sessionId: z.guid(),
-  expectedRevision: z.number().int().min(0).max(2147483646),
-  sources: receptionSession.shape.sources.refine((sources) =>
-    sources.every(
-      (source) =>
-        source.kind !== 'photo' ||
-        /^[a-f0-9-]{36}\/[a-f0-9-]{36}\/[a-f0-9-]{36}\.(png|jpg)$/.test(
-          source.reference,
-        ),
+export const saveReceptionSourcesCommand = z
+  .strictObject({
+    action: z.literal('saveReceptionSources'),
+    tenantId: z.uuid(),
+    requestId: z.uuid(),
+    sessionId: z.guid(),
+    expectedRevision: z.number().int().min(0).max(2147483646),
+    sources: receptionDraftSources.refine((sources) =>
+      sources.every(
+        (source) =>
+          source.kind !== 'photo' ||
+          /^[a-f0-9-]{36}\/[a-f0-9-]{36}\/[a-f0-9-]{36}\.(png|jpg)$/.test(
+            source.reference,
+          ),
+      ),
     ),
-  ),
-})
+  })
+  .refine(
+    (command) => command.sources.length > 0 || command.expectedRevision > 0,
+  )
 
-/** What `reception_session_detail` returns: no sources yet is a null, not an error. */
+/** No sources yet is null; a photo-only draft can be explicitly emptied. */
 const receptionSessionDetail = z.object({
   session_id: z.guid(),
   seller_id: z.guid(),
   revision: z.number().int().nonnegative(),
-  sources: receptionSession.shape.sources.nullable(),
+  sources: receptionDraftSources.nullable(),
 })
 
 export async function readReceptionSession(
@@ -139,14 +147,14 @@ export async function readReceptionSession(
   if (error) throw new Error('Unable to read reception')
   if (!data) return null
   const detail = receptionSessionDetail.parse(data)
-  if (detail.sources === null)
+  if (detail.sources === null || detail.sources.length === 0)
     return {
       status: 'empty' as const,
       persisted: true as const,
       sessionId,
       tenantId,
       sellerId: detail.seller_id,
-      revision: 0,
+      revision: detail.revision,
     }
   return {
     status: 'ready' as const,

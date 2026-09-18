@@ -1,5 +1,6 @@
 import { expect, it } from 'vitest'
 import { intakeCommand } from '../../lib/engine/intake'
+import { receptionSession } from '../../lib/engine/reception'
 const id = '10000000-0000-4000-8000-000000000001'
 const source = {
   id,
@@ -17,6 +18,11 @@ it('accepts bounded staff sources and rejects authority or malformed photo paths
     sources: [source],
   }
   expect(intakeCommand.safeParse(command).success).toBe(true)
+  expect(
+    intakeCommand.safeParse({ ...command, expectedRevision: 1, sources: [] })
+      .success,
+  ).toBe(true)
+  expect(receptionSession.shape.sources.safeParse([]).success).toBe(false)
   expect(
     intakeCommand.safeParse({
       ...command,

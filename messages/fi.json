@@ -622,7 +622,12 @@
       "replace_review_link": "Luo uusi linkki",
       "await_seller_response": "Odota myyjän vastausta"
     },
-    "queueOpen": "Avaa"
+    "queueOpen": "Avaa",
+    "photoRequirements": "JPEG tai PNG · enintään 3 Mt ja 20 megapikseliä.",
+    "photoPrivacyReminder": "Vältä ihmisiä ja näkyviä henkilötietoja kuvassa.",
+    "photoPrivacyTitle": "Kuvat ja tietosuoja",
+    "photoRemove": "Poista kuva",
+    "photoRemoveFailed": "Kuvan poistamista ei voitu vahvistaa. Yritä uudelleen."
   },
   "operations": {
     "title": "Ehdotetut operaatiot",

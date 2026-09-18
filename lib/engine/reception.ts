@@ -32,6 +32,12 @@ export const receptionSession = z.strictObject({
     ),
 })
 
+/** A saved draft may be empty after removing its last photo. AI input may not. */
+export const receptionDraftSources = z.union([
+  receptionSession.shape.sources,
+  z.tuple([]),
+])
+
 const fact = z.strictObject({
   value: text(1000),
   sourceIds,

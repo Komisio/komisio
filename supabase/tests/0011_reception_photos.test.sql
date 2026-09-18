@@ -26,6 +26,16 @@ select set_config('test.sources',jsonb_build_array(jsonb_build_object('id',curre
 select throws_like($$select save_reception_sources(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,0,current_setting('test.sources')::jsonb)$$,'%INVALID_INPUT%','missing object cannot become evidence');
 insert into storage.objects(bucket_id,name,owner_id,metadata) values('reception-photos',current_setting('test.path'),auth.uid()::text,'{"mimetype":"image/png","size":68}');
 select lives_ok($$select save_reception_sources(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,0,current_setting('test.sources')::jsonb)$$,'existing private image attaches to exact session');
+-- Detaching the last photo appends an empty draft; historical evidence stays intact.
+select set_config('test.remove',gen_random_uuid()::text,true);
+select lives_ok($$select save_reception_sources(current_setting('test.a')::uuid,current_setting('test.remove')::uuid,current_setting('test.session')::uuid,1,'[]')$$,'last photo can be detached');
+select lives_ok($$select save_reception_sources(current_setting('test.a')::uuid,current_setting('test.remove')::uuid,current_setting('test.session')::uuid,1,'[]')$$,'removal retry is idempotent');
+select is((reception_session_detail(current_setting('test.a')::uuid,current_setting('test.session')::uuid)->>'revision')::integer,2,'empty draft retains current revision');
+select is((reception_session_detail(current_setting('test.a')::uuid,current_setting('test.session')::uuid)->'sources'),'[]'::jsonb,'empty draft is readable');
+select is((select sources from reception_source_revisions where session_id=current_setting('test.session')::uuid and revision=1),current_setting('test.sources')::jsonb,'original evidence unchanged');
+select is((select count(*) from storage.objects where name=current_setting('test.path')),1::bigint,'detachment preserves stored image');
+select throws_like($$select save_reception_sources(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,1,'[]')$$,'%RECEPTION_CHANGED%','stale removal cannot overwrite another change');
+select lives_ok($$select save_reception_sources(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,2,current_setting('test.sources')::jsonb)$$,'a photo can be attached again after empty draft');
 select throws_like($$select save_reception_sources(current_setting('test.b')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,0,current_setting('test.sources')::jsonb)$$,'%RECEPTION_NOT_FOUND%','cannot attach to another store');
 with changed as(update storage.objects set name=name||'x' where bucket_id='reception-photos' returning id) select is((select count(*) from changed),0::bigint,'photo cannot be overwritten or moved');
 reset role;

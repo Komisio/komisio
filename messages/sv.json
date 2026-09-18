@@ -622,7 +622,12 @@
       "replace_review_link": "Skapa en ny länk",
       "await_seller_response": "Invänta säljarens svar"
     },
-    "queueOpen": "Öppna"
+    "queueOpen": "Öppna",
+    "photoRequirements": "JPEG eller PNG · högst 3 MB och 20 megapixlar.",
+    "photoPrivacyReminder": "Undvik personer och synliga personuppgifter i bilden.",
+    "photoPrivacyTitle": "Om bilder och integritet",
+    "photoRemove": "Ta bort bild",
+    "photoRemoveFailed": "Bilden kunde inte bekräftas borttagen. Försök igen."
   },
   "operations": {
     "title": "Föreslagna åtgärder",

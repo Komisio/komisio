@@ -673,3 +673,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-18: The app header exposes all eight UI languages with native names and vector flags (UK for English, owner choice). Selection persists in the existing browser-locale cookie and refreshes the current route; account and store language settings remain separate.
 
 - 2026-09-18: AI defaults on for every store with no explicit choice, including legacy published policies. Effective policy reads add the missing flag without rewriting history; explicit false wins. Photo and AI controls lead reception when enabled; quotas and spend caps stay unchanged.
+
+- 2026-09-18: Staff may detach reception photos by appending a source revision, including an empty draft after the last photo. Historical sources, stored files and published reviews stay immutable. Empty drafts cannot be analyzed or published.

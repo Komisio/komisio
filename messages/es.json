@@ -622,7 +622,12 @@
       "replace_review_link": "Crear un nuevo enlace",
       "await_seller_response": "Esperar la respuesta del vendedor"
     },
-    "queueOpen": "Abrir"
+    "queueOpen": "Abrir",
+    "photoRequirements": "JPEG o PNG · hasta 3 MB y 20 megapíxeles.",
+    "photoPrivacyReminder": "Evita personas y datos personales visibles en la foto.",
+    "photoPrivacyTitle": "Sobre las fotos y la privacidad",
+    "photoRemove": "Quitar foto",
+    "photoRemoveFailed": "No se pudo confirmar que la foto se haya quitado. Inténtalo de nuevo."
   },
   "operations": {
     "title": "Operaciones propuestas",

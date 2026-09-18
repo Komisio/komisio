@@ -622,7 +622,12 @@
       "replace_review_link": "Opret et nyt link",
       "await_seller_response": "Afvent sælgerens svar"
     },
-    "queueOpen": "Åbn"
+    "queueOpen": "Åbn",
+    "photoRequirements": "JPEG eller PNG · højst 3 MB og 20 megapixel.",
+    "photoPrivacyReminder": "Undgå personer og synlige personoplysninger på billedet.",
+    "photoPrivacyTitle": "Om billeder og privatliv",
+    "photoRemove": "Fjern billede",
+    "photoRemoveFailed": "Fjernelsen af billedet kunne ikke bekræftes. Prøv igen."
   },
   "operations": {
     "title": "Foreslåede operationer",

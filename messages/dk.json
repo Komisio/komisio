@@ -447,7 +447,7 @@
     "manual": "Beskriv tøjet manuelt, eller brug AI-forslag, hvis det er aktiveret for denne butik. Personalet gennemgår dokumentationen, før indlevereren svarer.",
     "aiTitle": "AI-forslag",
     "aiNotice": "Når du kører analysen, sendes modtagelsens fotos, noter og prisdokumentation til OpenAI. Brug dokumentation for tøjet uden personoplysninger. Indlejrede billedmetadata fjernes, men synlig tekst og personer sløres ikke. Højst tre fotos pr. kørsel.",
-    "aiUnavailable": "AI er ikke aktiveret for denne butik. Du kan fortsætte med manuel beskrivelse og prisdokumentation.",
+    "aiUnavailable": "AI er ikke tilgængelig her lige nu. Du kan fortsætte med manuel beskrivelse og prisgrundlag.",
     "aiGenerate": "Analysér dokumentation med AI",
     "aiWorking": "Analyserer…",
     "aiCandidate": "Forslag til gennemgang – ikke udgivet",

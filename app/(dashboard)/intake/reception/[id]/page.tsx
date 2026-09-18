@@ -14,7 +14,7 @@ import { readPhotoDuplicates } from '@/lib/engine/photo-duplicates'
 import { PriceEvidencePanel } from '@/components/intake/price-evidence'
 import { PhotoUpload } from '@/components/reception/photo-upload'
 import { ReceptionAssistance } from '@/components/reception/assistance'
-import { receptionAIConfig } from '@/lib/assistance/reception-config'
+import { resolveReceptionAssistance } from '@/lib/assistance/reception-config'
 import {
   ReceptionObservation,
   PublishReview,
@@ -92,6 +92,95 @@ export default async function Reception({
       !current ||
       expired ||
       (review.terms?.versionId ?? null) !== (terms.data?.id ?? null))
+  const aiEnabled = policy.policy.assistanceEnabled === true
+  const aiAvailable =
+    write &&
+    aiEnabled &&
+    !!(await resolveReceptionAssistance(ctx.client, tenant.id))
+  const observationPanel = (
+    <section className="card intake-form">
+      <h2>{d.observe}</h2>
+      {write ? (
+        <ReceptionObservation
+          key={state.revision}
+          tenantId={tenant.id}
+          sessionId={id.data}
+          revision={state.revision}
+          sources={sources}
+          initial={prepared?.input ?? null}
+          d={d}
+        />
+      ) : (
+        <p>{d.readonly}</p>
+      )}
+    </section>
+  )
+  const photoPanel = (
+    <section className="card intake-form reception-result">
+      <h2>{d.photos}</h2>
+      {write && (
+        <PhotoUpload
+          key={state.revision}
+          tenantId={tenant.id}
+          sessionId={id.data}
+          revision={state.revision}
+          sources={sources}
+          d={d}
+        />
+      )}
+      <div className="reception-photos">
+        {sources
+          .filter((s) => s.kind === 'photo')
+          .map((s) => (
+            // Authenticated, uncached route; do not send private images through an optimizer cache.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={s.id}
+              src={`/api/reception/${id.data}/photo?photo=${s.id}`}
+              alt={d.photoAlt}
+              loading="lazy"
+            />
+          ))}
+      </div>
+      {duplicates && duplicates.photos.length > 0 && (
+        <div role="status" className="intake-matches">
+          <p>{d.photoSeenBefore}</p>
+          <ul>
+            {duplicates.photos.flatMap((p) =>
+              p.seen.map((s) => (
+                <li key={`${p.photoId}-${s.sessionId}-${s.photoId}`}>
+                  <Link
+                    className="text-link"
+                    href={`/intake/reception/${s.sessionId}`}
+                  >
+                    {s.sellerName}
+                  </Link>{' '}
+                  {s.seenAt.slice(0, 10)}
+                </li>
+              )),
+            )}
+          </ul>
+        </div>
+      )}
+    </section>
+  )
+  const assistancePanel = write && (
+    <ReceptionAssistance
+      key={`ai-${state.revision}-${review?.id ?? 'none'}-${terms.data?.id ?? 'none'}`}
+      tenantId={tenant.id}
+      sessionId={id.data}
+      sellerId={state.sellerId}
+      revision={state.revision}
+      sources={sources}
+      available={aiAvailable}
+      terms={terms.data}
+      agreementRequired={policy.policy.agreementRequiredFor.includes(
+        'review_publication',
+      )}
+      previousId={review?.id ?? null}
+      d={d}
+    />
+  )
   return (
     <>
       <Link className="text-link" href="/intake/reception">
@@ -112,87 +201,19 @@ export default async function Reception({
           </Link>
         </p>
       </div>
-      <div className="reception-entry">
-        <section className="card intake-form">
-          <h2>{d.observe}</h2>
-          {write ? (
-            <ReceptionObservation
-              key={state.revision}
-              tenantId={tenant.id}
-              sessionId={id.data}
-              revision={state.revision}
-              sources={sources}
-              initial={prepared?.input ?? null}
-              d={d}
-            />
-          ) : (
-            <p>{d.readonly}</p>
-          )}
-        </section>
-        <section className="card intake-form reception-result">
-          <h2>{d.photos}</h2>
-          {write && (
-            <PhotoUpload
-              key={state.revision}
-              tenantId={tenant.id}
-              sessionId={id.data}
-              revision={state.revision}
-              sources={sources}
-              d={d}
-            />
-          )}
-          <div className="reception-photos">
-            {sources
-              .filter((s) => s.kind === 'photo')
-              .map((s) => (
-                // Authenticated, uncached route; do not send private images through an optimizer cache.
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={s.id}
-                  src={`/api/reception/${id.data}/photo?photo=${s.id}`}
-                  alt={d.photoAlt}
-                  loading="lazy"
-                />
-              ))}
+      {aiEnabled ? (
+        <>
+          <div className="reception-entry reception-ai-first">
+            {photoPanel}
+            {assistancePanel}
           </div>
-          {duplicates && duplicates.photos.length > 0 && (
-            <div role="status" className="intake-matches">
-              <p>{d.photoSeenBefore}</p>
-              <ul>
-                {duplicates.photos.flatMap((p) =>
-                  p.seen.map((s) => (
-                    <li key={`${p.photoId}-${s.sessionId}-${s.photoId}`}>
-                      <Link
-                        className="text-link"
-                        href={`/intake/reception/${s.sessionId}`}
-                      >
-                        {s.sellerName}
-                      </Link>{' '}
-                      {s.seenAt.slice(0, 10)}
-                    </li>
-                  )),
-                )}
-              </ul>
-            </div>
-          )}
-        </section>
-      </div>
-      {write && (
-        <ReceptionAssistance
-          key={`ai-${state.revision}-${review?.id ?? 'none'}-${terms.data?.id ?? 'none'}`}
-          tenantId={tenant.id}
-          sessionId={id.data}
-          sellerId={state.sellerId}
-          revision={state.revision}
-          sources={sources}
-          available={!!receptionAIConfig(tenant.id, process.env, policy.policy)}
-          terms={terms.data}
-          agreementRequired={policy.policy.agreementRequiredFor.includes(
-            'review_publication',
-          )}
-          previousId={review?.id ?? null}
-          d={d}
-        />
+          {observationPanel}
+        </>
+      ) : (
+        <div className="reception-entry">
+          {observationPanel}
+          {photoPanel}
+        </div>
       )}
       <details
         className="reception-reference-sales"

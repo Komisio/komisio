@@ -447,7 +447,7 @@
     "manual": "Beschreiben Sie das Kleidungsstück manuell oder nutzen Sie KI-Vorschläge, falls für diesen Store aktiviert. Mitarbeiter prüfen die Nachweise, bevor der Einlieferer antwortet.",
     "aiTitle": "KI-Vorschläge",
     "aiNotice": "Beim Ausführen der Analyse werden die Fotos, Notizen und Preisnachweise dieser Annahme an OpenAI gesendet. Verwenden Sie Nachweise zum Kleidungsstück ohne personenbezogene Daten. Eingebettete Bildmetadaten werden entfernt, sichtbarer Text und Personen werden jedoch nicht unkenntlich gemacht. Maximal drei Fotos pro Durchlauf.",
-    "aiUnavailable": "KI ist für diesen Store nicht aktiviert. Sie können mit der manuellen Beschreibung und den Preisnachweisen fortfahren.",
+    "aiUnavailable": "KI ist hier derzeit nicht verfügbar. Sie können die Beschreibung und Preisgrundlage weiterhin manuell eingeben.",
     "aiGenerate": "Nachweise mit KI analysieren",
     "aiWorking": "Wird analysiert…",
     "aiCandidate": "Vorschlag zur Prüfung – nicht veröffentlicht",

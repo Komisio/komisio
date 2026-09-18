@@ -447,7 +447,7 @@
     "manual": "Kuvaa vaate manuaalisesti tai käytä AI-ehdotuksia, jos ne on otettu käyttöön tässä kaupassa. Henkilökunta tarkistaa todisteet ennen kuin tuoja vastaa.",
     "aiTitle": "AI-ehdotukset",
     "aiNotice": "Analyysin suorittaminen lähettää tämän vastaanoton kuvat, muistiinpanot ja hintatodisteet OpenAI:lle. Käytä vaatetodisteita ilman henkilötietoja. Kuvien upotetut metatiedot poistetaan, mutta näkyvää tekstiä ja ihmisiä ei peitetä. Enintään kolme kuvaa per ajo.",
-    "aiUnavailable": "AI ei ole käytössä tässä kaupassa. Voit jatkaa manuaalisella kuvauksella ja hintatodisteilla.",
+    "aiUnavailable": "Tekoäly ei ole täällä käytettävissä juuri nyt. Voit jatkaa kuvauksen ja hintaperusteen syöttämistä käsin.",
     "aiGenerate": "Analysoi todisteet AI:lla",
     "aiWorking": "Analysoidaan…",
     "aiCandidate": "Ehdotus tarkistettavaksi – ei julkaistu",

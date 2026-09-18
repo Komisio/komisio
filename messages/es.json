@@ -447,7 +447,7 @@
     "manual": "Describe la prenda manualmente o usa sugerencias de IA si están activadas para esta tienda. El personal revisa la evidencia antes de que responda el depositante.",
     "aiTitle": "Sugerencias de IA",
     "aiNotice": "Ejecutar el análisis envía las fotos, notas y evidencia de precio de esta recepción a OpenAI. Usa evidencia de la prenda sin información personal. Los metadatos incrustados de la imagen se eliminan, pero el texto visible y las personas no se ocultan. Máximo tres fotos por ejecución.",
-    "aiUnavailable": "La IA no está activada para esta tienda. Puedes continuar con la descripción manual y la evidencia de precio.",
+    "aiUnavailable": "La IA no está disponible aquí en este momento. Puedes continuar con la descripción y la justificación del precio manuales.",
     "aiGenerate": "Analizar la evidencia con IA",
     "aiWorking": "Analizando…",
     "aiCandidate": "Sugerencia por revisar – no publicada",

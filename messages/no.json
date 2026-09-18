@@ -447,7 +447,7 @@
     "manual": "Beskriv plagget manuelt eller bruk AI-forslag hvis det er aktivert for denne butikken. Personalet går gjennom bevisene før innlevereren svarer.",
     "aiTitle": "AI-forslag",
     "aiNotice": "Å kjøre analysen sender dette mottakets bilder, notater og prisbevis til OpenAI. Bruk plaggbevis uten personopplysninger. Innebygde bildemetadata fjernes, men synlig tekst og personer maskeres ikke. Maks tre bilder per kjøring.",
-    "aiUnavailable": "AI er ikke aktivert for denne butikken. Du kan fortsette med manuell beskrivelse og prisbevis.",
+    "aiUnavailable": "AI er ikke tilgjengelig her akkurat nå. Du kan fortsette med manuell beskrivelse og prisgrunnlag.",
     "aiGenerate": "Analyser bevis med AI",
     "aiWorking": "Analyserer …",
     "aiCandidate": "Forslag til gjennomgang – ikke publisert",

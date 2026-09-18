@@ -447,7 +447,7 @@
     "manual": "Descrivi il capo manualmente o usa i suggerimenti AI se attivi per questo negozio. Il personale esamina le prove prima che il conferente risponda.",
     "aiTitle": "Suggerimenti AI",
     "aiNotice": "L'analisi invia a OpenAI le foto, le note e le prove di prezzo di questa ricezione. Usa prove relative al capo senza informazioni personali. I metadati incorporati nelle immagini vengono rimossi, ma testi visibili e persone non vengono oscurati. Massimo tre foto per esecuzione.",
-    "aiUnavailable": "L'AI non è attiva per questo negozio. Puoi continuare con la descrizione manuale e le prove di prezzo.",
+    "aiUnavailable": "L’IA non è disponibile qui al momento. Puoi continuare inserendo manualmente la descrizione e la base del prezzo.",
     "aiGenerate": "Analizza le prove con l'AI",
     "aiWorking": "Analisi in corso…",
     "aiCandidate": "Suggerimento da esaminare – non pubblicato",

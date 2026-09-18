@@ -447,7 +447,7 @@
     "manual": "Describe the garment manually or use AI suggestions if enabled for this store. Staff reviews the evidence before the seller responds.",
     "aiTitle": "AI suggestions",
     "aiNotice": "Running analysis sends this reception's photos, notes and price evidence to OpenAI. Use garment evidence without personal information. Embedded image metadata is removed, but visible text and people are not redacted. Maximum three photos per run.",
-    "aiUnavailable": "AI is not enabled for this store. You can continue with the manual description and price evidence.",
+    "aiUnavailable": "AI is not available here right now. You can continue with the manual description and price evidence.",
     "aiGenerate": "Analyze evidence with AI",
     "aiWorking": "Analyzing…",
     "aiCandidate": "Suggestion for review – not published",

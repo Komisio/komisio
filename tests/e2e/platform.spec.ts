@@ -2394,7 +2394,7 @@ test('private reception photo uploads attach immutably and require staff access'
     proposal: null,
   })
   await expect(
-    page.getByText('AI är inte aktiverat för denna butik.', { exact: false }),
+    page.getByText('AI är inte tillgängligt här just nu.', { exact: false }),
   ).toBeVisible()
   expect(
     (

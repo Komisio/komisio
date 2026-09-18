@@ -323,6 +323,10 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
     .getByRole('button', { name: 'Registrera underlag', exact: true })
     .click()
   await expect(
+    page.getByRole('button', { name: 'Bekräfta mottagandet' }),
+  ).toBeEnabled()
+  await page.locator('.agreement-at-intake > summary').click()
+  await expect(
     page.getByText('Underlag finns för aktuell version', { exact: true }),
   ).toBeVisible()
   await page.getByLabel('Jag bekräftar att påsen', { exact: false }).check()

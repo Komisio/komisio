@@ -334,3 +334,10 @@ each answer are in [SWISH-PAYOUTS.md](SWISH-PAYOUTS.md).
   key, entered by the seller in the portal, and shown as the last four digits.
   A yes requires the data processing agreement and the privacy notice to be
   updated in the same slice, and the retention question (B1) answered for it.
+
+## Agreement default updated 2026-09-18
+
+Owner confirms that seller signatures are optional by default. This supersedes the earlier default requiring agreements at review publication and acceptance. Existing published policies remain unchanged; no missing agreement is represented as signed.
+
+### Seller profile scope (resolved 2026-09-18)
+Owner approved editable contact details, optional address, preferred language and internal staff notes. Quick registration still requires only a name and one contact method. Profile changes retain immutable history; statement contacts are frozen. Payment details, personal identifiers and active/inactive lifecycle semantics remain deferred.

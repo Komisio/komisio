@@ -41,23 +41,23 @@
   },
   "quickIntake": {
     "title": "Ricezione rapida",
-    "intro": "Una schermata per capo: scegli il conferente, scatta una foto, controlla i dati e il prezzo, pronto per lo scaffale. L'articolo viene accettato alle condizioni del negozio e l'etichetta va alla stampante.",
+    "intro": "Bastano descrizione e prezzo. Foto e altri dettagli sono facoltativi.",
     "seller": "Conferente",
     "searchSeller": "Trova conferente",
     "noSeller": "Nessun conferente corrisponde.",
     "newSeller": "Registra un nuovo conferente",
-    "changeSeller": "cambia",
-    "garment": "Capo",
+    "changeSeller": "Cambia venditore",
+    "garment": "Articolo",
     "photo": "Foto",
-    "photoHint": "Facoltativa. La foto viene salvata con la ricezione e mostrata al conferente.",
-    "photoHintAi": "Facoltativa. Con una foto l'assistente compila i dati e suggerisce un prezzo; controllali prima di continuare.",
+    "photoHint": "Facoltativo · JPEG o PNG, massimo 3 MB.",
+    "photoHintAi": "L’IA suggerisce i dati dalla foto. Controllali.",
     "aiWorking": "Lettura della foto…",
-    "aiDone": "Suggerimenti compilati dalla foto. Controllali.",
+    "aiDone": "Controlla e completa la proposta.",
     "aiUnavailable": "L'assistente non è disponibile per questo negozio; compila i dati.",
     "aiFailed": "L'assistente non è riuscito a leggere la foto; compila i dati.",
     "description": "Descrizione",
     "itemType": "Tipo di articolo",
-    "itemTypeNone": "Nessuno",
+    "itemTypeNone": "Facoltativo – scegli il tipo di articolo",
     "itemTypeHint": "Il tipo decide quali domande vengono poste. Una lampada ne riceve di diverse da un maglione.",
     "chooseValue": "Scegli un valore",
     "category": "Categoria",
@@ -73,11 +73,11 @@
     "busy": "Salvataggio…",
     "printing": "Stampa in corso…",
     "fillIn": "Servono una descrizione e un prezzo superiore a zero.",
-    "failed": "Impossibile ricevere il capo. Riprova.",
+    "failed": "Impossibile ricevere l’articolo. Riprova.",
     "printed": "L'etichetta è in coda per la stampante.",
     "printFailed": "L'articolo è accettato ma l'etichetta non è stata messa in coda. Stampala dalla pagina dell'articolo.",
     "done": "Accettato",
-    "next": "Capo successivo",
+    "next": "Articolo successivo",
     "openItem": "Apri l'articolo",
     "profileFull": "Questo negozio usa la ricezione passo per passo (profilo di ricezione: completo).",
     "openPolicy": "Modifica nella politica del negozio",
@@ -100,14 +100,14 @@
       "PHOTO_UPLOAD_FAILED": "Impossibile caricare la foto. Prova un'altra foto.",
       "IMAGE_TOO_LARGE": "La foto è troppo grande (massimo 3 MB).",
       "REQUEST_FAILED": "La richiesta non è riuscita. Riprova."
-    }
+    },
+    "addPhoto": "Scatta o scegli una foto"
   },
   "intake": {
     "quickLink": "Ricezione rapida: una schermata per capo",
     "exportSellerData": "Scarica tutti i dati di questo conferente (JSON)",
     "title": "Accettazione",
     "intro": "Ricevi il sacchetto adesso. Esamina il contenuto più tardi.",
-    "pilot": "Pilota: la ricezione registra che il negozio ha il sacchetto. La prova dell'accordo registrata non è una firma elettronica. Le bozze degli articoli possono essere salvate durante l'ispezione; le vendite vengono dopo. Nessuna e-mail viene inviata.",
     "find": "Trova un conferente",
     "search": "Cerca per nome",
     "searchButton": "Cerca",
@@ -126,7 +126,7 @@
     "saveBag": "Conferma ricezione",
     "saved": "Il sacchetto è registrato. Ora puoi stamparne l'etichetta.",
     "queue": "Sacchetti ricevuti",
-    "queueHint": "20 sacchetti per pagina, numero di sacchetto più alto per primo. Apri un sacchetto per continuare l'ispezione. Nuovi sacchetti possono arrivare mentre navighi.",
+    "queueHint": "Scegli una borsa per esaminarne il contenuto.",
     "empty": "Nessun sacchetto ricevuto finora.",
     "bag": "Sacchetto",
     "awaiting": "In attesa di ispezione",
@@ -162,7 +162,9 @@
     "registerAnyway": "Registra comunque",
     "matchEmail": "stessa e-mail",
     "matchPhone": "stesso telefono",
-    "matchName": "stesso nome"
+    "matchName": "stesso nome",
+    "overviewIntro": "Ricevi subito un articolo o registra una borsa da esaminare più tardi.",
+    "quickHint": "Bastano descrizione e prezzo. La foto è facoltativa."
   },
   "brand": "Komisio",
   "tagline": "Più spazio perché le cose vivano di nuovo.",
@@ -1375,7 +1377,10 @@
       "period_ended": "Periodo terminato",
       "ended": "Terminato",
       "sold": "Venduto"
-    }
+    },
+    "listIntro": "Consulta prezzi e periodi di vendita. Apri un articolo per modificarlo.",
+    "previous": "Precedente",
+    "next": "Successivo"
   },
   "openByReference": {
     "title": "Apri da etichetta",
@@ -2348,5 +2353,28 @@
       "emailTrustDays": "Giorni prima che un negozio sia considerato consolidato",
       "connectorDailyCap": "Chiamate per assistente collegato al giorno"
     }
+  },
+  "sellerProfile": {
+    "balance": "Saldo",
+    "editTerms": "Modifica condizioni",
+    "transactions": "Movimenti del conto"
+  },
+  "sellerDetails": {
+    "edit": "Modifica dati del venditore",
+    "address": "Indirizzo (facoltativo)",
+    "street": "Indirizzo",
+    "addressExtra": "Seconda riga indirizzo",
+    "postalCode": "Codice postale",
+    "city": "Città",
+    "country": "Paese",
+    "preferences": "Lingua e note",
+    "language": "Lingua",
+    "followStore": "Usa la lingua del negozio",
+    "notes": "Nota interna",
+    "notesHint": "Visibile solo al personale. Non inserire numeri di documenti o conti bancari.",
+    "save": "Salva dati",
+    "saved": "Dati salvati.",
+    "history": "Cronologia modifiche",
+    "emailHint": "Controlla l’indirizzo e-mail. Viene usato per i messaggi e l’accesso del venditore."
   }
 }

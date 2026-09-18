@@ -41,23 +41,23 @@
   },
   "quickIntake": {
     "title": "Snabb mottagning",
-    "intro": "En skärm per plagg: välj säljare, ta en bild, kontrollera fakta och pris, klar för hyllan. Varan godkänns enligt butikens villkor och etiketten går till skrivaren.",
+    "intro": "Beskrivning och pris räcker. Lägg till bild eller fler uppgifter om du vill.",
     "seller": "Säljare",
     "searchSeller": "Sök säljare",
     "noSeller": "Ingen säljare matchar.",
     "newSeller": "Registrera ny säljare",
-    "changeSeller": "byt",
-    "garment": "Plagg",
+    "changeSeller": "Byt säljare",
+    "garment": "Vara",
     "photo": "Foto",
-    "photoHint": "Valfritt. Fotot sparas med mottagningen och visas för säljaren.",
-    "photoHintAi": "Valfritt. Med foto fyller assistenten i fakta och föreslår pris; kontrollera innan du går vidare.",
+    "photoHint": "Valfritt · JPEG eller PNG, högst 3 MB.",
+    "photoHintAi": "AI fyller i ett förslag från bilden. Kontrollera uppgifterna.",
     "aiWorking": "Läser fotot…",
-    "aiDone": "Förslag ifyllda från fotot. Kontrollera dem.",
+    "aiDone": "Granska och komplettera förslaget.",
     "aiUnavailable": "Assistenten är inte tillgänglig för butiken; fyll i fakta.",
     "aiFailed": "Assistenten kunde inte läsa fotot; fyll i fakta.",
     "description": "Beskrivning",
     "itemType": "Varutyp",
-    "itemTypeNone": "Ingen vald",
+    "itemTypeNone": "Valfritt – välj varutyp",
     "itemTypeHint": "Typen avgör vilka frågor som ställs. En lampa får andra än en tröja.",
     "chooseValue": "Välj värde",
     "category": "Kategori",
@@ -73,11 +73,11 @@
     "busy": "Sparar…",
     "printing": "Skriver ut…",
     "fillIn": "Beskrivning och ett pris över noll behövs.",
-    "failed": "Plagget kunde inte tas emot. Försök igen.",
+    "failed": "Varan kunde inte tas emot. Försök igen.",
     "printed": "Etiketten är köad till skrivaren.",
     "printFailed": "Varan är godkänd men etiketten kunde inte köas. Skriv ut från varans sida.",
     "done": "Godkänd",
-    "next": "Nästa plagg",
+    "next": "Nästa vara",
     "openItem": "Öppna varan",
     "profileFull": "Butiken använder mottagning steg för steg (mottagningsprofil: full).",
     "openPolicy": "Ändra i butikspolicyn",
@@ -100,14 +100,14 @@
       "PHOTO_UPLOAD_FAILED": "Fotot kunde inte laddas upp. Prova ett annat foto.",
       "IMAGE_TOO_LARGE": "Fotot är för stort (högst 3 MB).",
       "REQUEST_FAILED": "Förfrågan misslyckades. Försök igen."
-    }
+    },
+    "addPhoto": "Ta eller välj en bild"
   },
   "intake": {
     "quickLink": "Snabb mottagning: en skärm per plagg",
     "exportSellerData": "Ladda ner alla uppgifter om säljaren (JSON)",
     "title": "Inlämningar",
     "intro": "Ta emot påsen nu. Gå igenom innehållet senare.",
-    "pilot": "Pilot: mottagningen registrerar att butiken har påsen. Registrerat avtalsunderlag är inte en digital signatur. Varuutkast kan sparas vid genomgången; försäljning kommer senare. Ingen e-post skickas.",
     "find": "Hitta säljare",
     "search": "Sök på namn",
     "searchButton": "Sök",
@@ -126,7 +126,7 @@
     "saveBag": "Bekräfta mottagandet",
     "saved": "Påsen är registrerad. Du kan nu skriva ut etiketten.",
     "queue": "Mottagna påsar",
-    "queueHint": "20 påsar per sida, med högst påsnummer först. Öppna en påse för att fortsätta genomgången. Nya påsar kan tillkomma medan du bläddrar.",
+    "queueHint": "Välj en påse för att gå igenom innehållet.",
     "empty": "Inga påsar har tagits emot ännu.",
     "bag": "Påse",
     "awaiting": "Inväntar genomgång",
@@ -162,7 +162,9 @@
     "registerAnyway": "Registrera ändå",
     "matchEmail": "samma e-post",
     "matchPhone": "samma telefon",
-    "matchName": "samma namn"
+    "matchName": "samma namn",
+    "overviewIntro": "Ta emot en vara direkt eller registrera en påse att gå igenom senare.",
+    "quickHint": "Beskrivning och pris räcker. Bild är valfritt."
   },
   "brand": "Komisio",
   "tagline": "Mer utrymme för det som får nytt liv.",
@@ -1375,7 +1377,10 @@
       "period_ended": "Perioden har gått ut",
       "ended": "Avslutad",
       "sold": "Såld"
-    }
+    },
+    "listIntro": "Se pris och säljperiod. Öppna en vara för att göra ändringar.",
+    "previous": "Föregående",
+    "next": "Nästa"
   },
   "openByReference": {
     "title": "Öppna via etikett",
@@ -2348,5 +2353,28 @@
       "emailTrustDays": "Dygn innan en butik räknas som etablerad",
       "connectorDailyCap": "Anrop per kopplad assistent och dygn"
     }
+  },
+  "sellerProfile": {
+    "balance": "Saldo",
+    "editTerms": "Ändra villkor",
+    "transactions": "Kontohändelser"
+  },
+  "sellerDetails": {
+    "edit": "Ändra säljaruppgifter",
+    "address": "Adress (valfritt)",
+    "street": "Gatuadress",
+    "addressExtra": "Adressrad 2",
+    "postalCode": "Postnummer",
+    "city": "Ort",
+    "country": "Land",
+    "preferences": "Språk och anteckningar",
+    "language": "Språk",
+    "followStore": "Följ butikens språk",
+    "notes": "Intern anteckning",
+    "notesHint": "Syns bara för butikens personal. Skriv inte personnummer eller kontouppgifter här.",
+    "save": "Spara uppgifter",
+    "saved": "Uppgifterna är sparade.",
+    "history": "Ändringshistorik",
+    "emailHint": "Kontrollera e-postadressen noga. Den används för utskick och säljarens åtkomst."
   }
 }

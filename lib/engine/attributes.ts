@@ -74,17 +74,8 @@ export async function readAttributeVocabulary(
   return attributeVocabulary.parse(data)
 }
 
-/** The seven the reception assistant has always filled, in the order the
- * screen showed them before item types existed. */
-const LEGACY_ORDER = [
-  'description',
-  'category',
-  'brand',
-  'size',
-  'color',
-  'material',
-  'condition',
-]
+/** Start with the essentials; a selected item type supplies extra questions. */
+const BASIC_FIELDS = ['description', 'category']
 
 /**
  * What a screen should ask for a given type, in the profile's order, with each
@@ -99,10 +90,7 @@ export function questionsFor(
   const byslug = new Map(vocabulary.definitions.map((d) => [d.slug, d]))
   const type = vocabulary.types.find((t) => t.slug === typeSlug)
   if (!type) {
-    // No type chosen is not a reason to ask less than before. A store that
-    // never touches types keeps exactly the seven fields it had, in the order
-    // it had them; choosing a type is an improvement, not a requirement.
-    return LEGACY_ORDER.flatMap((slug) => {
+    return BASIC_FIELDS.flatMap((slug) => {
       const definition = byslug.get(slug)
       return definition && definition.active
         ? [{ definition, expected: slug === 'description' }]

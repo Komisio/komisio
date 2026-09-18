@@ -11,7 +11,8 @@ set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000001","role":"authenticated"}';
 select set_config('test.tenant',create_tenant('Policy test','policy-test',gen_random_uuid())::text,true);
 select set_config('test.other',create_tenant('Other policy','policy-other',gen_random_uuid())::text,true);
-select set_config('test.body',(current_store_policy(current_setting('test.tenant')::uuid)->'policy')::text,true);
+-- This fixture explicitly opts into agreement enforcement.
+select set_config('test.body',((current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"agreementRequiredFor":["review_publication","acceptance"]}'::jsonb)::text,true);
 select is((current_setting('test.body')::jsonb->>'commissionRatePercent')::numeric,60::numeric,'store keeps60 percent');
 select is(current_setting('test.body')::jsonb->>'sellerReviewMode','delegated','delegated default');
 select is(current_setting('test.body')::jsonb->'markdownSteps','[{"afterDays":14,"percent":10},{"afterDays":28,"percent":25},{"afterDays":42,"percent":50}]'::jsonb,'exact pilot markdowns');
@@ -60,7 +61,7 @@ select set_config('test.operation',gen_random_uuid()::text,true);
 select lives_ok($$select propose_operation(current_setting('test.tenant')::uuid,current_setting('test.operation')::uuid,'publishReceptionReview',jsonb_build_object('sessionId',current_setting('test.session'),'sourceRevision',1,'previousReviewId',current_setting('test.review'),'agreementId',null,'expiresAt',(now()+interval '1 day')::text,'suggestions',current_setting('test.suggestions')::jsonb),'policy-test-agent',now()+interval '1 day')$$,'agent may stage optional-agreement publication');
 select set_config('test.policy3',publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.policy2')::uuid,current_setting('test.body')::jsonb)::text,true);
 select lives_ok($$select publish_reception_review(current_setting('test.tenant')::uuid,current_setting('test.review')::uuid,current_setting('test.session')::uuid,1,null,null,current_setting('test.suggestions')::jsonb,now()+interval '1 day')$$,'publication retry survives policy change');
-select throws_like($$select publish_reception_review(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,1,current_setting('test.review')::uuid,null,current_setting('test.suggestions')::jsonb,now()+interval '1 day')$$,'%AGREEMENT_REQUIRED%','default publication requires agreement');
+select throws_like($$select publish_reception_review(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,1,current_setting('test.review')::uuid,null,current_setting('test.suggestions')::jsonb,now()+interval '1 day')$$,'%AGREEMENT_REQUIRED%','opt-in policy requires agreement for publication');
 select lives_ok($$select decide_operation(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.operation')::uuid,'approved','')$$,'staged approval records a policy-change failure');
 select is((select error_code from operation_decisions where operation_id=current_setting('test.operation')::uuid),'AGREEMENT_REQUIRED','execution reevaluates current policy');
 select is((select count(*) from reception_reviews where session_id=current_setting('test.session')::uuid),1::bigint,'failed execution publishes no review');

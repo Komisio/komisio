@@ -110,7 +110,7 @@ it('uses the owner-confirmed pilot defaults exactly, including the store commiss
   expect(defaultStorePolicy()).toEqual({
     commissionBasis: 'inclusive',
     commissionRatePercent: 60,
-    agreementRequiredFor: ['review_publication', 'acceptance'],
+    agreementRequiredFor: [],
     custodySources: ['staff_receipt'],
     sellerReviewMode: 'delegated',
     salePeriodDays: 42,
@@ -129,15 +129,12 @@ it('uses the owner-confirmed pilot defaults exactly, including the store commiss
 it('keeps one callers edits out of other tenants default policies', () => {
   const first = defaultStorePolicy()
   first.markdownSteps[0].percent = 99
-  first.agreementRequiredFor.length = 0
+  first.agreementRequiredFor.push('acceptance')
   first.custodySources.push('locker')
   first.commissionRatePercent = 1
   const second = defaultStorePolicy()
   expect(second.markdownSteps[0].percent).toBe(10)
-  expect(second.agreementRequiredFor).toEqual([
-    'review_publication',
-    'acceptance',
-  ])
+  expect(second.agreementRequiredFor).toEqual([])
   expect(second.custodySources).toEqual(['staff_receipt'])
   expect(second.commissionRatePercent).toBe(60)
 })

@@ -26,6 +26,7 @@ const definition = (
 const vocabulary: AttributeVocabulary = attributeVocabulary.parse({
   definitions: [
     definition('description'),
+    definition('category'),
     definition('size'),
     definition('socket', {
       data_type: 'choice',
@@ -98,11 +99,10 @@ describe('attribute vocabulary', () => {
     expect(slugs).not.toContain('retired')
     expect(slugs).not.toContain('nothing_defines_this')
   })
-  it('keeps the old seven fields when no type is chosen', () => {
-    // A store that never touches item types must not lose the fields it had.
+  it('asks only for description and category when no known type is chosen', () => {
     expect(
       questionsFor(vocabulary, null).map((q) => q.definition.slug),
-    ).toEqual(['description', 'size'])
+    ).toEqual(['description', 'category'])
     expect(
       questionsFor(vocabulary, 'no_such_type').map((q) => q.expected),
     ).toEqual([true, false])

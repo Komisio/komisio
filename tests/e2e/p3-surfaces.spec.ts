@@ -251,10 +251,8 @@ test('markdown runs apply every due step by hand and the policy switch turns the
     const items = [await f.item('P3 due one'), await f.item('P3 due two')]
     await f.commit()
     await page.goto('/intake/lifecycle')
-    const runs = page.getByRole('region', {
-      name: d.lifecycle.agentHeading,
-      exact: true,
-    })
+    const runs = page.locator('details.lifecycle-automation')
+    await runs.getByText(d.lifecycle.agentHeading, { exact: true }).click()
     await expect(
       runs.getByText(d.lifecycle.agentOff, { exact: true }),
     ).toBeVisible()
@@ -293,10 +291,9 @@ test('markdown runs apply every due step by hand and the policy switch turns the
       page.getByLabel(d.storePolicy.automaticMarkdowns, { exact: true }),
     ).toBeChecked()
     await page.goto('/intake/lifecycle')
+    await runs.getByText(d.lifecycle.agentHeading, { exact: true }).click()
     await expect(
-      page
-        .getByRole('region', { name: d.lifecycle.agentHeading, exact: true })
-        .getByText(d.lifecycle.agentOn, { exact: true }),
+      runs.getByText(d.lifecycle.agentOn, { exact: true }),
     ).toBeVisible()
   } finally {
     await f.close()

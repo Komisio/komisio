@@ -41,23 +41,23 @@
   },
   "quickIntake": {
     "title": "Hurtigmottak",
-    "intro": "Én skjerm per plagg: velg innleverer, ta et bilde, kontroller fakta og pris, klar for hyllen. Varen tas imot under butikkens vilkår og etiketten sendes til skriveren.",
+    "intro": "Beskrivelse og pris er nok. Legg til et bilde eller flere opplysninger om du vil.",
     "seller": "Innleverer",
     "searchSeller": "Finn innleverer",
     "noSeller": "Ingen innleverer samsvarer.",
     "newSeller": "Registrer en ny innleverer",
-    "changeSeller": "endre",
-    "garment": "Plagg",
+    "changeSeller": "Bytt selger",
+    "garment": "Vare",
     "photo": "Bilde",
-    "photoHint": "Valgfritt. Bildet lagres med mottaket og vises til innlevereren.",
-    "photoHintAi": "Valgfritt. Med et bilde fyller assistenten inn fakta og foreslår en pris; kontroller dem før du fortsetter.",
+    "photoHint": "Valgfritt · JPEG eller PNG, maks 3 MB.",
+    "photoHintAi": "AI foreslår opplysninger fra bildet. Kontroller dem.",
     "aiWorking": "Leser bildet …",
-    "aiDone": "Forslag fylt inn fra bildet. Kontroller dem.",
+    "aiDone": "Se over og utfyll forslaget.",
     "aiUnavailable": "Assistenten er ikke tilgjengelig for denne butikken; fyll inn fakta.",
     "aiFailed": "Assistenten kunne ikke lese bildet; fyll inn fakta.",
     "description": "Beskrivelse",
     "itemType": "Varetype",
-    "itemTypeNone": "Ingen valgt",
+    "itemTypeNone": "Valgfritt – velg varetype",
     "itemTypeHint": "Typen avgjør hvilke spørsmål som stilles. En lampe får andre enn en genser.",
     "chooseValue": "Velg verdi",
     "category": "Kategori",
@@ -73,11 +73,11 @@
     "busy": "Lagrer …",
     "printing": "Skriver ut …",
     "fillIn": "En beskrivelse og en pris over null er nødvendig.",
-    "failed": "Kunne ikke ta imot plagget. Prøv igjen.",
+    "failed": "Varen kunne ikke mottas. Prøv igjen.",
     "printed": "Etiketten er lagt i kø til skriveren.",
     "printFailed": "Varen er tatt imot, men etiketten kunne ikke legges i kø. Skriv den ut fra varesiden.",
     "done": "Tatt imot",
-    "next": "Neste plagg",
+    "next": "Neste vare",
     "openItem": "Åpne varen",
     "profileFull": "Denne butikken bruker trinnvis mottak (mottaksprofil: full).",
     "openPolicy": "Endre i butikkpolicyen",
@@ -100,14 +100,14 @@
       "PHOTO_UPLOAD_FAILED": "Bildet kunne ikke lastes opp. Prøv et annet bilde.",
       "IMAGE_TOO_LARGE": "Bildet er for stort (maks 3 MB).",
       "REQUEST_FAILED": "Forespørselen mislyktes. Prøv igjen."
-    }
+    },
+    "addPhoto": "Ta eller velg et bilde"
   },
   "intake": {
     "quickLink": "Hurtigmottak: én skjerm per plagg",
     "exportSellerData": "Last ned alle data om denne innlevereren (JSON)",
     "title": "Mottak",
     "intro": "Ta imot posen nå. Gå gjennom innholdet senere.",
-    "pilot": "Pilot: mottak registrerer at butikken har posen. Registrert avtalebevis er ikke en elektronisk signatur. Vareutkast kan lagres under gjennomgangen; salg kommer senere. Ingen e-post sendes.",
     "find": "Finn en innleverer",
     "search": "Søk etter navn",
     "searchButton": "Søk",
@@ -126,7 +126,7 @@
     "saveBag": "Bekreft mottak",
     "saved": "Posen er registrert. Du kan nå skrive ut etiketten.",
     "queue": "Mottatte poser",
-    "queueHint": "20 poser per side, høyeste posenummer først. Åpne en pose for å fortsette gjennomgangen. Nye poser kan komme til mens du blar.",
+    "queueHint": "Velg en pose for å gå gjennom innholdet.",
     "empty": "Ingen poser mottatt ennå.",
     "bag": "Pose",
     "awaiting": "Venter på gjennomgang",
@@ -162,7 +162,9 @@
     "registerAnyway": "Registrer likevel",
     "matchEmail": "samme e-post",
     "matchPhone": "samme telefon",
-    "matchName": "samme navn"
+    "matchName": "samme navn",
+    "overviewIntro": "Ta imot en vare nå, eller registrer en pose for gjennomgang senere.",
+    "quickHint": "Beskrivelse og pris er nok. Bilde er valgfritt."
   },
   "brand": "Komisio",
   "tagline": "Mer plass til ting som kan leve videre.",
@@ -1375,7 +1377,10 @@
       "period_ended": "Perioden er slutt",
       "ended": "Avsluttet",
       "sold": "Solgt"
-    }
+    },
+    "listIntro": "Se pris og salgsperiode. Åpne en vare for å gjøre endringer.",
+    "previous": "Forrige",
+    "next": "Neste"
   },
   "openByReference": {
     "title": "Åpne via etikett",
@@ -2348,5 +2353,28 @@
       "emailTrustDays": "Døgn før en butikk regnes som etablert",
       "connectorDailyCap": "Kall per koblet assistent og døgn"
     }
+  },
+  "sellerProfile": {
+    "balance": "Saldo",
+    "editTerms": "Endre vilkår",
+    "transactions": "Kontobevegelser"
+  },
+  "sellerDetails": {
+    "edit": "Endre selgeropplysninger",
+    "address": "Adresse (valgfritt)",
+    "street": "Gateadresse",
+    "addressExtra": "Adresselinje 2",
+    "postalCode": "Postnummer",
+    "city": "Sted",
+    "country": "Land",
+    "preferences": "Språk og notater",
+    "language": "Språk",
+    "followStore": "Bruk butikkens språk",
+    "notes": "Internt notat",
+    "notesHint": "Kun synlig for butikkens ansatte. Ikke skriv fødselsnummer eller kontonummer her.",
+    "save": "Lagre opplysninger",
+    "saved": "Opplysningene er lagret.",
+    "history": "Endringshistorikk",
+    "emailHint": "Kontroller e-postadressen nøye. Den brukes til meldinger og selgerens tilgang."
   }
 }

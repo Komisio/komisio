@@ -1,3 +1,4 @@
+import { readStoreProfile } from '../engine/store-profile'
 import { createHash } from 'node:crypto'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
@@ -6,7 +7,7 @@ import { referenceKindFor } from '../engine/communications'
 import { sendSellerEmailWithId } from '../platform/seller-email'
 import { formatSignedOre } from '../engine/seller-ledger'
 import { readStoreCurrency } from '../engine/money'
-import { intlLocale } from '../i18n'
+import { intlLocale, isLocale } from '../i18n'
 
 // One path for every seller message (P2 S18): render the versioned template
 // from authenticated reads of the referenced fact, queue the exact text in
@@ -62,14 +63,19 @@ export async function sendSellerCommunication(
 > {
   const seller = await client
     .from('sellers')
-    .select('name,email')
+    .select('name,email,profile')
     .eq('tenant_id', c.tenantId)
     .eq('id', c.sellerId)
     .maybeSingle()
   if (seller.error || !seller.data)
     return { ok: false, error: 'SELLER_NOT_FOUND' }
+  const preferred = seller.data.profile?.language
+  const locale = isLocale(preferred)
+    ? preferred
+    : ((await readStoreProfile(client, c.tenantId)).profile?.language ??
+      c.locale)
   const when = (iso: string) =>
-    new Date(iso).toLocaleDateString(intlLocale(c.locale), {
+    new Date(iso).toLocaleDateString(intlLocale(locale), {
       timeZone: 'Europe/Stockholm',
     })
   // Facts for the template come from authenticated reads of the referenced row.
@@ -133,7 +139,7 @@ export async function sendSellerCommunication(
       facts.amount = formatSignedOre(ore.parse(statement.data.closing_ore))
     }
   }
-  const rendered = renderSellerMessage(c.kind, c.locale, facts)
+  const rendered = renderSellerMessage(c.kind, locale, facts)
   const queued = await client.rpc('queue_seller_communication', {
     p_tenant: c.tenantId,
     p_id: c.requestId,
@@ -141,7 +147,7 @@ export async function sendSellerCommunication(
     p_kind: c.kind,
     p_template_key: rendered.templateKey,
     p_template_version: rendered.templateVersion,
-    p_locale: c.locale,
+    p_locale: locale,
     p_subject: rendered.subject,
     p_body: rendered.body,
     p_reference_kind: referenceKindFor[c.kind],

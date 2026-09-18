@@ -35,7 +35,7 @@ export function LifecycleActions({
     }
   }
   return (
-    <div>
+    <div className="lifecycle-actions">
       {dueStep !== null && (
         <Button
           type="button"

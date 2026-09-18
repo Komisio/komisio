@@ -41,23 +41,23 @@
   },
   "quickIntake": {
     "title": "Pikavastaanotto",
-    "intro": "Yksi näyttö per vaate: valitse tuoja, ota kuva, tarkista tiedot ja hinta, valmis hyllyyn. Tuote hyväksytään kaupan ehdoilla ja etiketti lähtee tulostimelle.",
+    "intro": "Kuvaus ja hinta riittävät. Lisää halutessasi kuva tai muita tietoja.",
     "seller": "Tuoja",
     "searchSeller": "Etsi tuoja",
     "noSeller": "Yksikään tuoja ei täsmää.",
     "newSeller": "Rekisteröi uusi tuoja",
-    "changeSeller": "vaihda",
-    "garment": "Vaate",
+    "changeSeller": "Vaihda myyjää",
+    "garment": "Tuote",
     "photo": "Kuva",
-    "photoHint": "Valinnainen. Kuva tallennetaan vastaanoton yhteyteen ja näytetään tuojalle.",
-    "photoHintAi": "Valinnainen. Kuvan avulla avustaja täyttää tiedot ja ehdottaa hintaa; tarkista ne ennen kuin jatkat.",
+    "photoHint": "Valinnainen · JPEG tai PNG, enintään 3 Mt.",
+    "photoHintAi": "Tekoäly ehdottaa tietoja kuvasta. Tarkista tiedot.",
     "aiWorking": "Luetaan kuvaa…",
-    "aiDone": "Ehdotukset täytetty kuvan perusteella. Tarkista ne.",
+    "aiDone": "Tarkista ja täydennä ehdotus.",
     "aiUnavailable": "Avustaja ei ole käytettävissä tässä kaupassa; täytä tiedot.",
     "aiFailed": "Avustaja ei pystynyt lukemaan kuvaa; täytä tiedot.",
     "description": "Kuvaus",
     "itemType": "Tuotetyyppi",
-    "itemTypeNone": "Ei valittu",
+    "itemTypeNone": "Valinnainen – valitse tuotetyyppi",
     "itemTypeHint": "Tyyppi ratkaisee mitä kysytään. Lampulta kysytään eri asioita kuin neuleelta.",
     "chooseValue": "Valitse arvo",
     "category": "Luokka",
@@ -73,11 +73,11 @@
     "busy": "Tallennetaan…",
     "printing": "Tulostetaan…",
     "fillIn": "Tarvitaan kuvaus ja nollaa suurempi hinta.",
-    "failed": "Vaatetta ei voitu vastaanottaa. Yritä uudelleen.",
+    "failed": "Tuotteen vastaanotto epäonnistui. Yritä uudelleen.",
     "printed": "Etiketti on tulostusjonossa.",
     "printFailed": "Tuote on hyväksytty, mutta etikettiä ei voitu lisätä jonoon. Tulosta se tuotesivulta.",
     "done": "Hyväksytty",
-    "next": "Seuraava vaate",
+    "next": "Seuraava tuote",
     "openItem": "Avaa tuote",
     "profileFull": "Tämä kauppa käyttää vaiheittaista vastaanottoa (vastaanottoprofiili: täysi).",
     "openPolicy": "Muuta kaupan käytännössä",
@@ -100,14 +100,14 @@
       "PHOTO_UPLOAD_FAILED": "Kuvaa ei voitu ladata. Kokeile toista kuvaa.",
       "IMAGE_TOO_LARGE": "Kuva on liian suuri (enintään 3 Mt).",
       "REQUEST_FAILED": "Pyyntö epäonnistui. Yritä uudelleen."
-    }
+    },
+    "addPhoto": "Ota tai valitse kuva"
   },
   "intake": {
     "quickLink": "Pikavastaanotto: yksi näyttö per vaate",
     "exportSellerData": "Lataa kaikki tiedot tästä tuojasta (JSON)",
     "title": "Vastaanotto",
     "intro": "Ota pussi vastaan nyt. Käy sisältö läpi myöhemmin.",
-    "pilot": "Pilotti: vastaanotto kirjaa, että pussi on kaupalla. Kirjattu sopimustodiste ei ole sähköinen allekirjoitus. Tuoteluonnoksia voi tallentaa tarkastuksen aikana; myynti tulee myöhemmin. Sähköpostia ei lähetetä.",
     "find": "Etsi tuoja",
     "search": "Hae nimellä",
     "searchButton": "Hae",
@@ -126,7 +126,7 @@
     "saveBag": "Vahvista vastaanotto",
     "saved": "Pussi on rekisteröity. Voit nyt tulostaa sen etiketin.",
     "queue": "Vastaanotetut pussit",
-    "queueHint": "20 pussia per sivu, suurin pussinumero ensin. Avaa pussi jatkaaksesi tarkastusta. Uusia pusseja voi saapua selauksen aikana.",
+    "queueHint": "Valitse kassi, jonka sisällön haluat käydä läpi.",
     "empty": "Pusseja ei ole vielä vastaanotettu.",
     "bag": "Pussi",
     "awaiting": "Odottaa tarkastusta",
@@ -162,7 +162,9 @@
     "registerAnyway": "Rekisteröi silti",
     "matchEmail": "sama sähköposti",
     "matchPhone": "sama puhelin",
-    "matchName": "sama nimi"
+    "matchName": "sama nimi",
+    "overviewIntro": "Vastaanota tuote heti tai kirjaa kassi myöhempää läpikäyntiä varten.",
+    "quickHint": "Kuvaus ja hinta riittävät. Kuva on valinnainen."
   },
   "brand": "Komisio",
   "tagline": "Enemmän tilaa tavaroille elää uudelleen.",
@@ -1375,7 +1377,10 @@
       "period_ended": "Jakso päättynyt",
       "ended": "Päätetty",
       "sold": "Myyty"
-    }
+    },
+    "listIntro": "Katso hinnat ja myyntiajat. Avaa tuote tehdäksesi muutoksia.",
+    "previous": "Edellinen",
+    "next": "Seuraava"
   },
   "openByReference": {
     "title": "Avaa etiketillä",
@@ -2348,5 +2353,28 @@
       "emailTrustDays": "Vuorokausia ennen kuin kauppa katsotaan vakiintuneeksi",
       "connectorDailyCap": "Kutsuja per liitetty avustaja ja vuorokausi"
     }
+  },
+  "sellerProfile": {
+    "balance": "Saldo",
+    "editTerms": "Muuta ehtoja",
+    "transactions": "Tilitapahtumat"
+  },
+  "sellerDetails": {
+    "edit": "Muokkaa myyjän tietoja",
+    "address": "Osoite (valinnainen)",
+    "street": "Katuosoite",
+    "addressExtra": "Osoiterivi 2",
+    "postalCode": "Postinumero",
+    "city": "Paikkakunta",
+    "country": "Maa",
+    "preferences": "Kieli ja muistiinpanot",
+    "language": "Kieli",
+    "followStore": "Käytä kaupan kieltä",
+    "notes": "Sisäinen muistiinpano",
+    "notesHint": "Näkyy vain kaupan henkilökunnalle. Älä kirjoita tähän henkilötunnusta tai tilinumeroa.",
+    "save": "Tallenna tiedot",
+    "saved": "Tiedot tallennettu.",
+    "history": "Muutoshistoria",
+    "emailHint": "Tarkista sähköpostiosoite. Sitä käytetään viesteihin ja myyjän käyttöoikeuteen."
   }
 }

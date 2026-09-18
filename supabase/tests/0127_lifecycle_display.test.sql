@@ -1,0 +1,17 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values ('f0000000-0000-4000-8000-000000000929','lifecycle-display@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000929","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Display','lifecycle-display-test',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Synthetic seller','display@example.test','')::text,true);
+select set_config('test.session',create_reception_session(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid)::text,true);
+select quick_receive(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Blue lamp"}',25000);
+select is(lifecycle_queue_display(current_setting('test.tenant')::uuid,null)->0->>'title','Blue lamp','description identifies the item');
+select is(jsonb_array_length(lifecycle_queue_display(current_setting('test.tenant')::uuid,'sold')),0,'stage filter preserved');
+select is((lifecycle_queue_display(current_setting('test.tenant')::uuid,null)->0->>'current_price_ore')::bigint,25000::bigint,'current price preserved');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000928","role":"authenticated"}';
+select throws_ok($$select lifecycle_queue_display(current_setting('test.tenant')::uuid,null)$$,'42501',null,'non-members cannot read titles or queue');
+select * from finish();
+rollback;

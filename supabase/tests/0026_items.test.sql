@@ -8,13 +8,15 @@ insert into auth.users(id,email,email_confirmed_at) values
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000041","role":"authenticated"}';
 select set_config('test.tenant',create_tenant('Items test','items-test',gen_random_uuid())::text,true);
+-- Explicit opt-in: this fixture exercises agreement enforcement.
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"agreementRequiredFor":["review_publication","acceptance"]}'::jsonb);
 select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Synthetic seller','seller@items.test','')::text,true);
 -- Bag path: receipt, then a draft.
 select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',null)::text,true);
 select set_config('test.draft',gen_random_uuid()::text,true);
 select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Synthetic jacket','Jackets','Good');
 select set_config('test.item1',gen_random_uuid()::text,true);
-select throws_like($$select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,25000)$$,'%AGREEMENT_REQUIRED%','default policy requires agreement evidence at acceptance');
+select throws_like($$select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,25000)$$,'%AGREEMENT_REQUIRED%','opt-in policy requires agreement evidence at acceptance');
 select set_config('test.agreement',publish_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'Synthetic terms','Only a test','en',false)::text,true);
 select throws_like($$select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,25000)$$,'%AGREEMENT_REQUIRED%','a published agreement without evidence is not consent');
 select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,'Signed paper 1');
@@ -38,7 +40,7 @@ select is((select price_ore from item_prices where item_id=current_setting('test
 select is((select count(*) from item_events where item_id=current_setting('test.item1')::uuid),3::bigint,'accepted, price_set and provenance events');
 -- Later policy or seller terms never touch the frozen item.
 select set_config('test.body',(current_store_policy(current_setting('test.tenant')::uuid)->'policy')::text,true);
-select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,current_setting('test.body')::jsonb || '{"commissionRatePercent":40}');
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),(current_store_policy(current_setting('test.tenant')::uuid)->>'id')::uuid,current_setting('test.body')::jsonb || '{"commissionRatePercent":40}');
 select publish_seller_terms(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,null,null,30,'');
 select is((select (terms->>'commissionRatePercent')::numeric from items where id=current_setting('test.item1')::uuid),60::numeric,'frozen commission survives policy and seller changes');
 -- A second draft on the same bag freezes the new effective terms.

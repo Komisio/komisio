@@ -40,7 +40,7 @@ export function AiCreditsPanel({
       .replaceAll('{used}', String(credits(current.usedThisPeriodOre)))
       .replaceAll('{pack}', '100')
       .replaceAll('{price}', formatCreditPrice(price, locale))
-      .replaceAll('{items}', String(current.estimatedItemsPerMonth))
+      .replaceAll('{items}', new Intl.NumberFormat(locale).format(4000))
       .replaceAll('{model}', current.ownModel ?? '')
   async function post(url: string, body: object, label: string) {
     if (running.current) return null

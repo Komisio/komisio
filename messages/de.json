@@ -41,23 +41,23 @@
   },
   "quickIntake": {
     "title": "Schnellannahme",
-    "intro": "Ein Bildschirm pro Kleidungsstück: Einlieferer wählen, Foto aufnehmen, Fakten und Preis prüfen, fertig für das Regal. Der Artikel wird zu den Bedingungen des Stores angenommen und das Etikett geht an den Drucker.",
+    "intro": "Beschreibung und Preis genügen. Foto und weitere Angaben sind optional.",
     "seller": "Einlieferer",
     "searchSeller": "Einlieferer suchen",
     "noSeller": "Kein passender Einlieferer.",
     "newSeller": "Neuen Einlieferer registrieren",
-    "changeSeller": "ändern",
-    "garment": "Kleidungsstück",
+    "changeSeller": "Verkäufer wechseln",
+    "garment": "Artikel",
     "photo": "Foto",
-    "photoHint": "Optional. Das Foto wird mit der Annahme gespeichert und dem Einlieferer angezeigt.",
-    "photoHintAi": "Optional. Mit einem Foto füllt der Assistent die Fakten aus und schlägt einen Preis vor; prüfen Sie diese, bevor Sie fortfahren.",
+    "photoHint": "Optional · JPEG oder PNG, bis 3 MB.",
+    "photoHintAi": "KI schlägt Angaben anhand des Fotos vor. Bitte prüfen.",
     "aiWorking": "Foto wird ausgewertet…",
-    "aiDone": "Vorschläge aus dem Foto ausgefüllt. Prüfen Sie diese.",
+    "aiDone": "Vorschlag prüfen und ergänzen.",
     "aiUnavailable": "Der Assistent ist für diesen Store nicht verfügbar; füllen Sie die Fakten aus.",
     "aiFailed": "Der Assistent konnte das Foto nicht auswerten; füllen Sie die Fakten aus.",
     "description": "Beschreibung",
     "itemType": "Artikeltyp",
-    "itemTypeNone": "Keiner gewählt",
+    "itemTypeNone": "Optional – Artikeltyp wählen",
     "itemTypeHint": "Der Typ entscheidet, welche Fragen gestellt werden. Eine Lampe bekommt andere als ein Pullover.",
     "chooseValue": "Wert wählen",
     "category": "Kategorie",
@@ -73,11 +73,11 @@
     "busy": "Wird gespeichert…",
     "printing": "Wird gedruckt…",
     "fillIn": "Eine Beschreibung und ein Preis über null sind erforderlich.",
-    "failed": "Das Kleidungsstück konnte nicht angenommen werden. Versuchen Sie es erneut.",
+    "failed": "Der Artikel konnte nicht angenommen werden. Bitte erneut versuchen.",
     "printed": "Das Etikett ist für den Drucker eingereiht.",
     "printFailed": "Der Artikel ist angenommen, aber das Etikett konnte nicht eingereiht werden. Drucken Sie es von der Artikelseite aus.",
     "done": "Angenommen",
-    "next": "Nächstes Kleidungsstück",
+    "next": "Nächster Artikel",
     "openItem": "Artikel öffnen",
     "profileFull": "Dieser Store verwendet die schrittweise Annahme (Annahmeprofil: vollständig).",
     "openPolicy": "In den Store-Richtlinien ändern",
@@ -100,14 +100,14 @@
       "PHOTO_UPLOAD_FAILED": "Das Foto konnte nicht hochgeladen werden. Versuchen Sie ein anderes Foto.",
       "IMAGE_TOO_LARGE": "Das Foto ist zu groß (höchstens 3 MB).",
       "REQUEST_FAILED": "Die Anfrage ist fehlgeschlagen. Versuchen Sie es erneut."
-    }
+    },
+    "addPhoto": "Foto aufnehmen oder auswählen"
   },
   "intake": {
     "quickLink": "Schnellannahme: ein Bildschirm pro Kleidungsstück",
     "exportSellerData": "Alle Daten zu diesem Einlieferer herunterladen (JSON)",
     "title": "Annahme",
     "intro": "Nehmen Sie die Tüte jetzt an. Prüfen Sie den Inhalt später.",
-    "pilot": "Pilot: Die Annahme dokumentiert, dass der Store die Tüte hat. Ein erfasster Vereinbarungsnachweis ist keine elektronische Unterschrift. Artikelentwürfe können während der Prüfung gespeichert werden; Verkäufe folgen später. Es wird keine E-Mail gesendet.",
     "find": "Einlieferer suchen",
     "search": "Nach Namen suchen",
     "searchButton": "Suchen",
@@ -126,7 +126,7 @@
     "saveBag": "Empfang bestätigen",
     "saved": "Die Tüte ist registriert. Sie können jetzt ihr Etikett drucken.",
     "queue": "Angenommene Tüten",
-    "queueHint": "20 Tüten pro Seite, höchste Tütennummer zuerst. Öffnen Sie eine Tüte, um die Prüfung fortzusetzen. Während Sie blättern, können neue Tüten eintreffen.",
+    "queueHint": "Wählen Sie eine Tasche, um den Inhalt zu prüfen.",
     "empty": "Noch keine Tüten angenommen.",
     "bag": "Tüte",
     "awaiting": "Wartet auf Prüfung",
@@ -162,7 +162,9 @@
     "registerAnyway": "Trotzdem registrieren",
     "matchEmail": "gleiche E-Mail",
     "matchPhone": "gleiche Telefonnummer",
-    "matchName": "gleicher Name"
+    "matchName": "gleicher Name",
+    "overviewIntro": "Nehmen Sie einen Artikel direkt an oder erfassen Sie eine Tasche zur späteren Durchsicht.",
+    "quickHint": "Beschreibung und Preis genügen. Ein Foto ist optional."
   },
   "brand": "Komisio",
   "tagline": "Mehr Raum für Dinge, die weiterleben.",
@@ -1375,7 +1377,10 @@
       "period_ended": "Periode beendet",
       "ended": "Beendet",
       "sold": "Verkauft"
-    }
+    },
+    "listIntro": "Preise und Verkaufszeiträume im Überblick. Öffnen Sie einen Artikel, um Änderungen vorzunehmen.",
+    "previous": "Zurück",
+    "next": "Weiter"
   },
   "openByReference": {
     "title": "Über Etikett öffnen",
@@ -2348,5 +2353,28 @@
       "emailTrustDays": "Tage, bis ein Store als etabliert gilt",
       "connectorDailyCap": "Aufrufe pro verbundenem Assistenten und Tag"
     }
+  },
+  "sellerProfile": {
+    "balance": "Guthaben",
+    "editTerms": "Konditionen ändern",
+    "transactions": "Kontobewegungen"
+  },
+  "sellerDetails": {
+    "edit": "Verkäuferdaten bearbeiten",
+    "address": "Adresse (optional)",
+    "street": "Straße und Hausnummer",
+    "addressExtra": "Adresszusatz",
+    "postalCode": "Postleitzahl",
+    "city": "Ort",
+    "country": "Land",
+    "preferences": "Sprache und Notizen",
+    "language": "Sprache",
+    "followStore": "Sprache des Geschäfts verwenden",
+    "notes": "Interne Notiz",
+    "notesHint": "Nur für das Personal sichtbar. Hier keine Ausweis- oder Kontonummern eingeben.",
+    "save": "Daten speichern",
+    "saved": "Daten gespeichert.",
+    "history": "Änderungsverlauf",
+    "emailHint": "Prüfen Sie die E-Mail-Adresse. Sie wird für Nachrichten und den Verkäuferzugang verwendet."
   }
 }

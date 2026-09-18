@@ -1,3 +1,4 @@
+import { raceSellerProfile } from './seller-profile-race.mjs'
 import { raceZettleStock } from './zettle-stock-race.mjs'
 import { raceFortnoxSend } from './fortnox-send-race.mjs'
 import { raceZettleImage } from './zettle-image-race.mjs'
@@ -95,6 +96,7 @@ try {
     }),
   )
   await raceStorePolicy({ setup, sessions, tenant })
+  await raceSellerProfile({ setup, sessions, tenant })
   await raceLabelPrintRule({ setup, sessions, tenant })
   await setup.query('begin')
   await setup.query('select id from tenants where id=$1 for update', [tenant])

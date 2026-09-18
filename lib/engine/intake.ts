@@ -1,3 +1,4 @@
+import { saveSellerProfileCommand } from './seller-profile'
 import { publishStorePolicyCommand } from './store-policy'
 import { publishSellerTermsCommand } from './seller-terms'
 import { acceptItemCommand } from './items'
@@ -48,6 +49,7 @@ import {
 import { locales, type Locale } from '../i18n'
 
 export const intakeCommand = z.discriminatedUnion('action', [
+  saveSellerProfileCommand,
   publishStorePolicyCommand,
   publishSellerTermsCommand,
   requestPayoutCommand,
@@ -418,6 +420,14 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_description: c.fields.description,
         p_category: c.fields.category,
         p_condition: c.fields.condition,
+      })
+    case 'saveSellerProfile':
+      return client.rpc('save_seller_profile', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_seller: c.sellerId,
+        p_expected: c.expectedRevision,
+        p_profile: c.profile,
       })
     case 'registerSeller':
       return client.rpc('register_seller', {

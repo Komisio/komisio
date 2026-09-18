@@ -41,23 +41,23 @@
   },
   "quickIntake": {
     "title": "Hurtig modtagelse",
-    "intro": "Én skærm pr. stykke tøj: vælg indlevereren, tag et foto, tjek fakta og pris, klar til hylden. Varen accepteres under butikkens vilkår, og mærkaten sendes til printeren.",
+    "intro": "Beskrivelse og pris er nok. Tilføj et billede eller flere oplysninger, hvis du vil.",
     "seller": "Indleverer",
     "searchSeller": "Find indleverer",
     "noSeller": "Ingen indleverer matcher.",
     "newSeller": "Registrer en ny indleverer",
-    "changeSeller": "skift",
-    "garment": "Beklædningsgenstand",
+    "changeSeller": "Skift sælger",
+    "garment": "Vare",
     "photo": "Foto",
-    "photoHint": "Valgfrit. Fotoet gemmes med modtagelsen og vises til indlevereren.",
-    "photoHintAi": "Valgfrit. Med et foto udfylder assistenten fakta og foreslår en pris; tjek dem, før du fortsætter.",
+    "photoHint": "Valgfrit · JPEG eller PNG, højst 3 MB.",
+    "photoHintAi": "AI foreslår oplysninger fra billedet. Kontrollér dem.",
     "aiWorking": "Læser fotoet…",
-    "aiDone": "Forslag udfyldt fra fotoet. Tjek dem.",
+    "aiDone": "Gennemgå og supplér forslaget.",
     "aiUnavailable": "Assistenten er ikke tilgængelig for denne butik; udfyld fakta.",
     "aiFailed": "Assistenten kunne ikke læse fotoet; udfyld fakta.",
     "description": "Beskrivelse",
     "itemType": "Varetype",
-    "itemTypeNone": "Ingen valgt",
+    "itemTypeNone": "Valgfrit – vælg varetype",
     "itemTypeHint": "Typen afgør hvilke spørgsmål der stilles. En lampe får andre end en trøje.",
     "chooseValue": "Vælg værdi",
     "category": "Kategori",
@@ -73,11 +73,11 @@
     "busy": "Gemmer…",
     "printing": "Udskriver…",
     "fillIn": "Der kræves en beskrivelse og en pris over nul.",
-    "failed": "Kunne ikke modtage tøjet. Prøv igen.",
+    "failed": "Varen kunne ikke modtages. Prøv igen.",
     "printed": "Mærkaten er sat i kø til printeren.",
     "printFailed": "Varen er accepteret, men mærkaten kunne ikke sættes i kø. Udskriv den fra varesiden.",
     "done": "Accepteret",
-    "next": "Næste stykke tøj",
+    "next": "Næste vare",
     "openItem": "Åbn varen",
     "profileFull": "Denne butik bruger den trinvise modtagelse (modtagelsesprofil: fuld).",
     "openPolicy": "Skift i butikspolitikken",
@@ -100,14 +100,14 @@
       "PHOTO_UPLOAD_FAILED": "Fotoet kunne ikke uploades. Prøv et andet foto.",
       "IMAGE_TOO_LARGE": "Fotoet er for stort (højst 3 MB).",
       "REQUEST_FAILED": "Forespørgslen mislykkedes. Prøv igen."
-    }
+    },
+    "addPhoto": "Tag eller vælg et billede"
   },
   "intake": {
     "quickLink": "Hurtig modtagelse: én skærm pr. stykke tøj",
     "exportSellerData": "Download alle data om denne indleverer (JSON)",
     "title": "Indlevering",
     "intro": "Modtag posen nu. Gennemgå indholdet senere.",
-    "pilot": "Pilot: modtagelse registrerer, at butikken har posen. Registreret aftaledokumentation er ikke en elektronisk underskrift. Vareudkast kan gemmes under gennemgangen; salg kommer senere. Der sendes ingen e-mail.",
     "find": "Find en indleverer",
     "search": "Søg på navn",
     "searchButton": "Søg",
@@ -126,7 +126,7 @@
     "saveBag": "Bekræft modtagelse",
     "saved": "Posen er registreret. Du kan nu udskrive dens mærkat.",
     "queue": "Modtagne poser",
-    "queueHint": "20 poser pr. side, højeste posenummer først. Åbn en pose for at fortsætte gennemgangen. Nye poser kan komme til, mens du bladrer.",
+    "queueHint": "Vælg en pose for at gennemgå indholdet.",
     "empty": "Ingen poser modtaget endnu.",
     "bag": "Pose",
     "awaiting": "Afventer gennemgang",
@@ -162,7 +162,9 @@
     "registerAnyway": "Registrer alligevel",
     "matchEmail": "samme e-mail",
     "matchPhone": "samme telefon",
-    "matchName": "samme navn"
+    "matchName": "samme navn",
+    "overviewIntro": "Modtag en vare nu, eller registrer en pose til gennemgang senere.",
+    "quickHint": "Beskrivelse og pris er nok. Billede er valgfrit."
   },
   "brand": "Komisio",
   "tagline": "Mere plads til ting, der får nyt liv.",
@@ -1375,7 +1377,10 @@
       "period_ended": "Perioden er slut",
       "ended": "Afsluttet",
       "sold": "Solgt"
-    }
+    },
+    "listIntro": "Se pris og salgsperiode. Åbn en vare for at foretage ændringer.",
+    "previous": "Forrige",
+    "next": "Næste"
   },
   "openByReference": {
     "title": "Åbn via mærkat",
@@ -2348,5 +2353,28 @@
       "emailTrustDays": "Døgn før en butik regnes som etableret",
       "connectorDailyCap": "Kald pr. forbundet assistent og døgn"
     }
+  },
+  "sellerProfile": {
+    "balance": "Saldo",
+    "editTerms": "Ændr vilkår",
+    "transactions": "Kontobevægelser"
+  },
+  "sellerDetails": {
+    "edit": "Rediger sælgeroplysninger",
+    "address": "Adresse (valgfrit)",
+    "street": "Gadeadresse",
+    "addressExtra": "Adresselinje 2",
+    "postalCode": "Postnummer",
+    "city": "By",
+    "country": "Land",
+    "preferences": "Sprog og noter",
+    "language": "Sprog",
+    "followStore": "Brug butikkens sprog",
+    "notes": "Intern note",
+    "notesHint": "Kun synlig for butikkens personale. Skriv ikke CPR-nummer eller kontonummer her.",
+    "save": "Gem oplysninger",
+    "saved": "Oplysningerne er gemt.",
+    "history": "Ændringshistorik",
+    "emailHint": "Kontrollér e-mailadressen. Den bruges til beskeder og sælgerens adgang."
   }
 }

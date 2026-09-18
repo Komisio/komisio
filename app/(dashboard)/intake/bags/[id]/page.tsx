@@ -51,7 +51,6 @@ export default async function BagLabel({
     <>
       <div className="page-heading no-print">
         <h1>{d.label}</h1>
-        <p>{d.pilot}</p>
       </div>
       <article className="bag-label">
         <strong>{ctx.active!.name}</strong>

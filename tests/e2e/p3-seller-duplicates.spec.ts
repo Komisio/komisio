@@ -18,6 +18,30 @@ test('the counter is warned about an existing seller before a second record', as
       await f.db.query('select email from sellers where id=$1', [f.seller])
     ).rows[0].email as string
     await page.goto('/intake')
+    await expect(
+      page.getByRole('heading', { name: d.intake.title, exact: true }),
+    ).toBeVisible()
+    await expect(page.locator('.intake-notice')).toHaveCount(0)
+    await expect(
+      page
+        .locator('.intake-paths')
+        .getByRole('link', { name: new RegExp(d.quickIntake.title) }),
+    ).toBeVisible()
+    await page.screenshot({
+      path: 'private/intake-overview-desktop.png',
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 390, height: 844 })
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+    await page.screenshot({
+      path: 'private/intake-overview-mobile.png',
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 1280, height: 900 })
     const form = page
       .getByRole('heading', { name: d.intake.newSeller })
       .locator('..')

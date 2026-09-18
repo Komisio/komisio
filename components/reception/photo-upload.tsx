@@ -59,7 +59,19 @@ export function PhotoUpload({
               `/api/reception/${sessionId}/photo?tenant=${tenantId}&photo=${task.id}`,
               { method: 'POST', body: task.file },
             )
-            if (!uploaded.ok) throw new Error('upload')
+            if (!uploaded.ok) {
+              const failure = await uploaded.json().catch(() => null)
+              if (
+                failure?.error === 'INVALID_IMAGE' ||
+                failure?.error === 'IMAGE_TOO_LARGE'
+              ) {
+                pending.current = null
+                setLocked(false)
+                setError(d.photoInvalid)
+                return
+              }
+              throw new Error('upload')
+            }
             task.source = (await uploaded.json()).source
           }
           const saved = await fetch('/api/intake', {

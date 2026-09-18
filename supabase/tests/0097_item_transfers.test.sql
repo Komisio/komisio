@@ -55,7 +55,7 @@ select throws_ok($$select transfer_item(current_setting('test.a')::uuid,current_
 select ok((seller_balance(current_setting('test.a')::uuid,current_setting('test.s1')::uuid)->>'availableOre')::bigint>0,'balance remains in the source store');
 select is((seller_balance(current_setting('test.b')::uuid,(current_setting('test.r')::jsonb->>'sellerId')::uuid)->>'creditedOre')::bigint,0::bigint,'no balance in the target store');
 -- The target store accepts under its own policy: agreement required, so evidence first.
-select publish_store_policy(current_setting('test.b')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.b')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}'::jsonb);
+select publish_store_policy(current_setting('test.b')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.b')::uuid)->'policy') || '{"agreementRequiredFor":["review_publication","acceptance"],"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}'::jsonb);
 select set_config('test.agreement_b',publish_seller_agreement(current_setting('test.b')::uuid,gen_random_uuid(),null,'Store B terms','Only a test','en',false)::text,true);
 select set_config('test.i4',gen_random_uuid()::text,true);
 select throws_ok($$select accept_item(current_setting('test.b')::uuid,current_setting('test.i4')::uuid,'inspection_draft',(current_setting('test.r')::jsonb->>'draftId')::uuid,1,18000)$$,'AGREEMENT_REQUIRED','target store needs its own agreement evidence');

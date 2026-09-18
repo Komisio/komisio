@@ -41,23 +41,23 @@
   },
   "quickIntake": {
     "title": "Quick reception",
-    "intro": "One screen per garment: pick the seller, take a photo, check the facts and the price, ready for the shelf. The item is accepted under the store's terms and the label goes to the printer.",
+    "intro": "A description and price are all you need. Add a photo or more details if you like.",
     "seller": "Seller",
     "searchSeller": "Find seller",
     "noSeller": "No seller matches.",
     "newSeller": "Register a new seller",
-    "changeSeller": "change",
-    "garment": "Garment",
+    "changeSeller": "Change seller",
+    "garment": "Item",
     "photo": "Photo",
-    "photoHint": "Optional. The photo is stored with the reception and shown to the seller.",
-    "photoHintAi": "Optional. With a photo the assistant fills in the facts and suggests a price; check them before you continue.",
+    "photoHint": "Optional · JPEG or PNG, up to 3 MB.",
+    "photoHintAi": "AI suggests details from your photo. Check them before saving.",
     "aiWorking": "Reading the photo…",
-    "aiDone": "Suggestions filled in from the photo. Check them.",
+    "aiDone": "Review and complete the suggestions.",
     "aiUnavailable": "The assistant is not available for this store; fill in the facts.",
     "aiFailed": "The assistant could not read the photo; fill in the facts.",
     "description": "Description",
     "itemType": "Item type",
-    "itemTypeNone": "None chosen",
+    "itemTypeNone": "Optional – choose item type",
     "itemTypeHint": "The type decides which questions are asked. A lamp gets different ones from a sweater.",
     "chooseValue": "Choose a value",
     "category": "Category",
@@ -73,11 +73,11 @@
     "busy": "Saving…",
     "printing": "Printing…",
     "fillIn": "A description and a price above zero are needed.",
-    "failed": "Could not receive the garment. Retry.",
+    "failed": "The item could not be received. Try again.",
     "printed": "The label is queued for the printer.",
     "printFailed": "The item is accepted but the label could not be queued. Print it from the item page.",
     "done": "Accepted",
-    "next": "Next garment",
+    "next": "Next item",
     "openItem": "Open the item",
     "profileFull": "This store uses the step-by-step reception (intake profile: full).",
     "openPolicy": "Change in the store policy",
@@ -100,14 +100,14 @@
       "PHOTO_UPLOAD_FAILED": "The photo could not be uploaded. Try another photo.",
       "IMAGE_TOO_LARGE": "The photo is too large (3 MB at most).",
       "REQUEST_FAILED": "The request failed. Retry."
-    }
+    },
+    "addPhoto": "Take or choose a photo"
   },
   "intake": {
     "quickLink": "Quick reception: one screen per garment",
     "exportSellerData": "Download all data about this seller (JSON)",
     "title": "Intake",
     "intro": "Receive the bag now. Review its contents later.",
-    "pilot": "Pilot: receiving records that the store has the bag. Recorded agreement evidence is not an electronic signature. Item drafts can be saved during inspection; sales come later. No email is sent.",
     "find": "Find a seller",
     "search": "Search by name",
     "searchButton": "Search",
@@ -126,7 +126,7 @@
     "saveBag": "Confirm receipt",
     "saved": "The bag is registered. You can now print its label.",
     "queue": "Received bags",
-    "queueHint": "20 bags per page, highest bag number first. Open a bag to continue inspection. New bags may arrive while you browse.",
+    "queueHint": "Choose a bag to review its contents.",
     "empty": "No bags received yet.",
     "bag": "Bag",
     "awaiting": "Awaiting inspection",
@@ -162,7 +162,9 @@
     "registerAnyway": "Register anyway",
     "matchEmail": "same email",
     "matchPhone": "same phone",
-    "matchName": "same name"
+    "matchName": "same name",
+    "overviewIntro": "Receive an item now or register a bag to sort later.",
+    "quickHint": "A description and price are enough. A photo is optional."
   },
   "brand": "Komisio",
   "tagline": "More room for things to live again.",
@@ -1375,7 +1377,10 @@
       "period_ended": "Period ended",
       "ended": "Ended",
       "sold": "Sold"
-    }
+    },
+    "listIntro": "See prices and sale periods. Expand an item to make changes.",
+    "previous": "Previous",
+    "next": "Next"
   },
   "openByReference": {
     "title": "Open by label",
@@ -2348,5 +2353,28 @@
       "emailTrustDays": "Days before a store counts as established",
       "connectorDailyCap": "Calls per connected assistant and day"
     }
+  },
+  "sellerProfile": {
+    "balance": "Balance",
+    "editTerms": "Change terms",
+    "transactions": "Account activity"
+  },
+  "sellerDetails": {
+    "edit": "Edit seller details",
+    "address": "Address (optional)",
+    "street": "Street address",
+    "addressExtra": "Address line 2",
+    "postalCode": "Postal code",
+    "city": "City",
+    "country": "Country",
+    "preferences": "Language and notes",
+    "language": "Language",
+    "followStore": "Use store language",
+    "notes": "Internal note",
+    "notesHint": "Visible only to store staff. Do not enter identity or bank account numbers here.",
+    "save": "Save details",
+    "saved": "Details saved.",
+    "history": "Change history",
+    "emailHint": "Check the email address carefully. It is used for messages and seller access."
   }
 }

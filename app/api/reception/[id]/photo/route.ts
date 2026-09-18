@@ -50,7 +50,9 @@ export async function POST(request: Request, { params }: RouteContext) {
       Buffer.concat(chunks),
     )
     return reply({ source }, 200)
-  } catch {
+  } catch (error) {
+    if (error instanceof Error && error.message === 'INVALID_IMAGE')
+      return reply({ error: 'INVALID_IMAGE' }, 400)
     return reply({ error: 'PHOTO_UPLOAD_FAILED' }, 400)
   }
 }

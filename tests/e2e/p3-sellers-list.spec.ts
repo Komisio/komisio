@@ -46,6 +46,34 @@ test('the sellers list shows holdings and balance and opens the seller', async (
       .getByRole('link', { name: 'Synthetic P2 seller', exact: true })
       .click()
     await expect(page).toHaveURL(new RegExp(`/intake/sellers/${f.seller}`))
+    await expect(
+      page.getByRole('heading', { name: d.sellerProfile.balance, exact: true }),
+    ).toBeVisible()
+    await expect(page.locator('#terms-rate')).not.toBeVisible()
+    await page.getByText(d.sellerProfile.editTerms, { exact: true }).click()
+    await expect(page.locator('#terms-rate')).toBeVisible()
+    await page.getByText(d.sellerProfile.editTerms, { exact: true }).click()
+    await page.screenshot({
+      path: 'private/seller-overview-desktop.png',
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 390, height: 844 })
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+    await page.screenshot({
+      path: 'private/seller-overview-mobile.png',
+      fullPage: true,
+    })
+    await page
+      .locator('summary')
+      .filter({ hasText: d.communications.title })
+      .click()
+    await expect(
+      page.getByRole('button', { name: d.communications.send, exact: true }),
+    ).toBeVisible()
   } finally {
     await f.close()
   }

@@ -2349,5 +2349,10 @@
       "emailTrustDays": "Tage, bis ein Store als etabliert gilt",
       "connectorDailyCap": "Aufrufe pro verbundenem Assistenten und Tag"
     }
+  },
+  "sellerProfile": {
+    "balance": "Guthaben",
+    "editTerms": "Konditionen ändern",
+    "transactions": "Kontobewegungen"
   }
 }

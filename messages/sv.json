@@ -2349,5 +2349,10 @@
       "emailTrustDays": "Dygn innan en butik räknas som etablerad",
       "connectorDailyCap": "Anrop per kopplad assistent och dygn"
     }
+  },
+  "sellerProfile": {
+    "balance": "Saldo",
+    "editTerms": "Ändra villkor",
+    "transactions": "Kontohändelser"
   }
 }

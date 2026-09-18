@@ -114,10 +114,201 @@ export default async function Seller({
       timeZone: 'Europe/Stockholm',
     })
   return (
-    <>
-      <Link className="text-link" href="/intake">
-        {all.intake.back}
+    <div className="seller-profile">
+      <Link className="text-link" href="/intake/sellers">
+        ← {all.sellersList.title}
       </Link>
+      <div className="page-heading">
+        <div className="eyebrow">{tenant.name}</div>
+        <h1>{seller.data.name}</h1>
+        <div className="seller-contact">
+          {seller.data.email && (
+            <a href={`mailto:${seller.data.email}`}>{seller.data.email}</a>
+          )}
+          {seller.data.phone && (
+            <a href={`tel:${seller.data.phone}`}>{seller.data.phone}</a>
+          )}
+        </div>
+      </div>
+      <div className="seller-overview">
+        <section className="card intake-form seller-economy">
+          <h2>{all.sellerProfile.balance}</h2>
+
+          <dl className="seller-balances">
+            {[
+              [l.available, balance.availableOre],
+              [l.reserved, balance.reservedOre],
+              [l.credited, balance.creditedOre],
+              [l.paid, balance.paidOre],
+            ].map(([label, amount], index) => (
+              <div
+                key={String(label)}
+                className={index === 0 ? 'seller-balance-primary' : ''}
+              >
+                <dt>{label}</dt>
+                <dd>
+                  {formatSignedOre(Number(amount))} {currency}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <details className="seller-disclosure">
+            <summary>
+              {all.sellerProfile.transactions} <span>{ledger.length}</span>
+            </summary>
+            <div className="seller-disclosure-body">
+              {ledger.length === 0 && <p>{l.empty}</p>}
+              {ledger.map((e) => (
+                <p key={e.id}>
+                  {when(e.occurred_at)} · {l.kinds[e.kind]} ·{' '}
+                  {formatSignedOre(e.amount_ore)} {currency}
+                  {e.reason ? ` · ${e.reason}` : ''}
+                </p>
+              ))}
+            </div>
+          </details>
+          {['owner', 'admin'].includes(tenant.role) && (
+            <details className="seller-disclosure">
+              <summary>{l.adjustHeading}</summary>
+              <div className="seller-disclosure-body">
+                <LedgerAdjustForm
+                  tenantId={tenant.id}
+                  sellerId={id.data}
+                  d={l}
+                  intake={all.intake}
+                />
+              </div>
+            </details>
+          )}
+        </section>
+        <section className="card intake-form">
+          <h2>{d.effective}</h2>
+
+          <p role="status">
+            <strong>
+              {d.commissionRatePercent}: {terms.commissionRatePercent} %
+            </strong>{' '}
+            ·{' '}
+            {terms.overrides.commissionRatePercent ? d.override : d.fromPolicy}
+          </p>
+          <p role="status">
+            <strong>
+              {d.commissionBasis}: {d[terms.commissionBasis]}
+            </strong>{' '}
+            · {terms.overrides.commissionBasis ? d.override : d.fromPolicy}
+          </p>
+          {terms.notes && <p>{terms.notes}</p>}
+
+          {write && (
+            <details className="seller-disclosure">
+              <summary>{all.sellerProfile.editTerms}</summary>
+              <div className="seller-disclosure-body">
+                <p>{d.intro}</p>
+                <p>{d.publishHint}</p>
+                <SellerTermsForm
+                  key={terms.sellerTermsId ?? 'none'}
+                  tenantId={tenant.id}
+                  sellerId={id.data}
+                  current={terms}
+                  d={d}
+                  intake={all.intake}
+                />
+              </div>
+            </details>
+          )}
+        </section>
+      </div>
+      <details className="card seller-section">
+        <summary>{st.title}</summary>
+        <div className="seller-disclosure-body">
+          {statements.length === 0 && <p>{st.empty}</p>}
+          {statements.map((s) => (
+            <p key={s.id}>
+              <Link className="text-link" href={`/intake/statements/${s.id}`}>
+                {s.kind === 'credit_note' ? st.creditNote : st.statement}{' '}
+                {s.number}
+              </Link>{' '}
+              · {when(s.period_from)} – {when(s.period_to)} · {st.closing}{' '}
+              {formatSignedOre(s.closing_ore)} {currency}
+            </p>
+          ))}
+          {write && (
+            <>
+              <h3>{st.issueHeading}</h3>
+              <p>{st.issueHint}</p>
+              <StatementForm
+                tenantId={tenant.id}
+                sellerId={id.data}
+                defaultFrom={isoDay(monthStart)}
+                defaultTo={isoDay(today)}
+                d={st}
+                intake={all.intake}
+              />
+            </>
+          )}
+        </div>
+      </details>
+      {write && (
+        <details className="card seller-section">
+          <summary>{all.printing.onboardingSlip}</summary>
+          <div className="seller-disclosure-body">
+            <p>{all.printing.onboardingHint}</p>
+            <PrintJobButton
+              tenantId={tenant.id}
+              printers={printers}
+              kind="onboarding"
+              referenceKind="seller"
+              referenceId={id.data}
+              d={all.printing}
+              intake={all.intake}
+            />
+          </div>
+        </details>
+      )}
+      <details className="card seller-section">
+        <summary>{c.title}</summary>
+        <div className="seller-disclosure-body">
+          {communications.length === 0 && <p>{c.empty}</p>}
+          {communications.map((m) => (
+            <details key={m.id}>
+              <summary>
+                {when(m.queued_at)} · {c.kinds[m.kind]} · {c.outcomes[m.status]}{' '}
+                · {m.subject}
+              </summary>
+              <pre style={{ whiteSpace: 'pre-wrap' }}>{m.body}</pre>
+            </details>
+          ))}
+          {write && (
+            <>
+              <h3>{c.sendHeading}</h3>
+
+              <CommunicationForm
+                tenantId={tenant.id}
+                sellerId={id.data}
+                references={references}
+                d={c}
+                intake={all.intake}
+              />
+            </>
+          )}
+        </div>
+      </details>
+      <details className="card seller-section">
+        <summary>{d.history}</summary>
+        <div className="seller-disclosure-body">
+          {history.length === 0 && <p>{d.noHistory}</p>}
+          {history.map((v) => (
+            <p key={v.id}>
+              {d.version} {v.version} · {when(v.created_at)} ·{' '}
+              {v.commission_rate_percent === null
+                ? d.usePolicy
+                : `${v.commission_rate_percent} %`}{' '}
+              · {v.commission_basis ? d[v.commission_basis] : d.usePolicy}
+              {v.notes ? ` · ${v.notes}` : ''}
+            </p>
+          ))}
+        </div>
+      </details>
       {['owner', 'admin'].includes(tenant.role) && (
         <p>
           <a className="text-link" href={`/api/sellers/${id.data}/export`}>
@@ -125,169 +316,6 @@ export default async function Seller({
           </a>
         </p>
       )}
-      <div className="page-heading">
-        <div className="eyebrow">{tenant.name}</div>
-        <h1>{seller.data.name}</h1>
-        <p>
-          {d.contact}: {seller.data.email || seller.data.phone}
-        </p>
-      </div>
-      <section className="card intake-form">
-        <h2>{d.effective}</h2>
-        <p>{d.intro}</p>
-        <p role="status">
-          <strong>
-            {d.commissionRatePercent}: {terms.commissionRatePercent} %
-          </strong>{' '}
-          · {terms.overrides.commissionRatePercent ? d.override : d.fromPolicy}
-        </p>
-        <p role="status">
-          <strong>
-            {d.commissionBasis}: {d[terms.commissionBasis]}
-          </strong>{' '}
-          · {terms.overrides.commissionBasis ? d.override : d.fromPolicy}
-        </p>
-        <p>
-          {terms.sellerTermsId ? `${d.version} ${terms.version}` : d.noVersion}
-          {terms.notes ? ` · ${terms.notes}` : ''}
-        </p>
-        <p>
-          <Link className="text-link" href="/settings">
-            {d.policyLink} {terms.storePolicyVersion}
-          </Link>
-        </p>
-      </section>
-      {write && (
-        <section className="card intake-form">
-          <h2>{d.publishHeading}</h2>
-          <p>{d.publishHint}</p>
-          <SellerTermsForm
-            key={terms.sellerTermsId ?? 'none'}
-            tenantId={tenant.id}
-            sellerId={id.data}
-            current={terms}
-            d={d}
-            intake={all.intake}
-          />
-        </section>
-      )}
-      <section className="card intake-form">
-        <h2>{l.title}</h2>
-        <p>{l.intro}</p>
-        <p role="status">
-          <strong>
-            {l.available}: {formatSignedOre(balance.availableOre)} ${currency}
-          </strong>{' '}
-          · {l.reserved}: {formatSignedOre(balance.reservedOre)} ${currency} ·{' '}
-          {l.credited}: {formatSignedOre(balance.creditedOre)} ${currency} ·{' '}
-          {l.paid}: {formatSignedOre(balance.paidOre)} ${currency}
-        </p>
-        {ledger.length === 0 && <p>{l.empty}</p>}
-        {ledger.map((e) => (
-          <p key={e.id}>
-            {when(e.occurred_at)} · {l.kinds[e.kind]} ·{' '}
-            {formatSignedOre(e.amount_ore)} ${currency}
-            {e.reason ? ` · ${e.reason}` : ''}
-          </p>
-        ))}
-        {['owner', 'admin'].includes(tenant.role) && (
-          <>
-            <h3>{l.adjustHeading}</h3>
-            <p>{l.adjustHint}</p>
-            <LedgerAdjustForm
-              tenantId={tenant.id}
-              sellerId={id.data}
-              d={l}
-              intake={all.intake}
-            />
-          </>
-        )}
-      </section>
-      <section className="card intake-form">
-        <h2>{st.title}</h2>
-        <p>{st.intro}</p>
-        {statements.length === 0 && <p>{st.empty}</p>}
-        {statements.map((s) => (
-          <p key={s.id}>
-            <Link className="text-link" href={`/intake/statements/${s.id}`}>
-              {s.kind === 'credit_note' ? st.creditNote : st.statement}{' '}
-              {s.number}
-            </Link>{' '}
-            · {when(s.period_from)} – {when(s.period_to)} · {st.closing}{' '}
-            {formatSignedOre(s.closing_ore)} ${currency}
-          </p>
-        ))}
-        {write && (
-          <>
-            <h3>{st.issueHeading}</h3>
-            <p>{st.issueHint}</p>
-            <StatementForm
-              tenantId={tenant.id}
-              sellerId={id.data}
-              defaultFrom={isoDay(monthStart)}
-              defaultTo={isoDay(today)}
-              d={st}
-              intake={all.intake}
-            />
-          </>
-        )}
-      </section>
-      {write && (
-        <section className="card intake-form">
-          <h2>{all.printing.onboardingSlip}</h2>
-          <p>{all.printing.onboardingHint}</p>
-          <PrintJobButton
-            tenantId={tenant.id}
-            printers={printers}
-            kind="onboarding"
-            referenceKind="seller"
-            referenceId={id.data}
-            d={all.printing}
-            intake={all.intake}
-          />
-        </section>
-      )}
-      <section className="card intake-form">
-        <h2>{c.title}</h2>
-        <p>{c.intro}</p>
-        {communications.length === 0 && <p>{c.empty}</p>}
-        {communications.map((m) => (
-          <details key={m.id}>
-            <summary>
-              {when(m.queued_at)} · {c.kinds[m.kind]} · {c.outcomes[m.status]} ·{' '}
-              {m.subject}
-            </summary>
-            <pre style={{ whiteSpace: 'pre-wrap' }}>{m.body}</pre>
-          </details>
-        ))}
-        {write && (
-          <>
-            <h3>{c.sendHeading}</h3>
-            <p>{c.sendHint}</p>
-            <CommunicationForm
-              tenantId={tenant.id}
-              sellerId={id.data}
-              references={references}
-              d={c}
-              intake={all.intake}
-            />
-          </>
-        )}
-      </section>
-      <section className="card intake-form">
-        <h2>{d.history}</h2>
-        {history.length === 0 && <p>{d.noHistory}</p>}
-        {history.map((v) => (
-          <p key={v.id}>
-            {d.version} {v.version} · {when(v.created_at)} ·{' '}
-            {v.commission_rate_percent === null
-              ? d.usePolicy
-              : `${v.commission_rate_percent} %`}{' '}
-            · {v.commission_basis ? d[v.commission_basis] : d.usePolicy}
-            {v.notes ? ` · ${v.notes}` : ''}
-          </p>
-        ))}
-      </section>
-    </>
+    </div>
   )
 }

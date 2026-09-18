@@ -1264,3 +1264,86 @@ small {
     flex-basis: 100%;
   }
 }
+
+/* Seller overview: everyday information first, secondary tasks on demand. */
+.seller-profile {
+  max-width: 1120px;
+  display: grid;
+  gap: 1rem;
+}
+.seller-profile .page-heading {
+  margin-bottom: 0.5rem;
+}
+.seller-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  color: var(--muted);
+}
+.seller-contact a {
+  overflow-wrap: anywhere;
+}
+.seller-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+.seller-profile .intake-form {
+  margin: 0;
+  max-width: none;
+}
+.seller-balances {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+.seller-balances dt {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+.seller-balances dd {
+  margin: 0.3rem 0 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.seller-balance-primary {
+  grid-column: 1 / -1;
+}
+.seller-balance-primary dd {
+  font-size: 2rem;
+}
+.seller-disclosure {
+  border-top: 1px solid var(--line);
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+.seller-disclosure summary,
+.seller-section > summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0.35rem 0;
+}
+.seller-disclosure summary span {
+  font-weight: 400;
+  margin-left: 0.5rem;
+}
+.seller-disclosure-body {
+  padding-top: 1rem;
+}
+.seller-section > summary {
+  font-size: 1.1rem;
+}
+.seller-profile details summary:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+.seller-profile .seller-disclosure-body {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 760px) {
+  .seller-overview {
+    grid-template-columns: 1fr;
+  }
+}

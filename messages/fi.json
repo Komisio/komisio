@@ -2349,5 +2349,10 @@
       "emailTrustDays": "Vuorokausia ennen kuin kauppa katsotaan vakiintuneeksi",
       "connectorDailyCap": "Kutsuja per liitetty avustaja ja vuorokausi"
     }
+  },
+  "sellerProfile": {
+    "balance": "Saldo",
+    "editTerms": "Muuta ehtoja",
+    "transactions": "Tilitapahtumat"
   }
 }

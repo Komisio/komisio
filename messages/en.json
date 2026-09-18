@@ -2349,5 +2349,10 @@
       "emailTrustDays": "Days before a store counts as established",
       "connectorDailyCap": "Calls per connected assistant and day"
     }
+  },
+  "sellerProfile": {
+    "balance": "Balance",
+    "editTerms": "Change terms",
+    "transactions": "Account activity"
   }
 }

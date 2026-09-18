@@ -2349,5 +2349,10 @@
       "emailTrustDays": "Días hasta que una tienda se considera establecida",
       "connectorDailyCap": "Llamadas por asistente conectado y día"
     }
+  },
+  "sellerProfile": {
+    "balance": "Saldo",
+    "editTerms": "Cambiar condiciones",
+    "transactions": "Movimientos de cuenta"
   }
 }

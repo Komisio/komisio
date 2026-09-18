@@ -2349,5 +2349,10 @@
       "emailTrustDays": "Giorni prima che un negozio sia considerato consolidato",
       "connectorDailyCap": "Chiamate per assistente collegato al giorno"
     }
+  },
+  "sellerProfile": {
+    "balance": "Saldo",
+    "editTerms": "Modifica condizioni",
+    "transactions": "Movimenti del conto"
   }
 }

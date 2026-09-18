@@ -2349,5 +2349,10 @@
       "emailTrustDays": "Døgn før en butikk regnes som etablert",
       "connectorDailyCap": "Kall per koblet assistent og døgn"
     }
+  },
+  "sellerProfile": {
+    "balance": "Saldo",
+    "editTerms": "Endre vilkår",
+    "transactions": "Kontobevegelser"
   }
 }

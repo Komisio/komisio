@@ -2349,5 +2349,10 @@
       "emailTrustDays": "Døgn før en butik regnes som etableret",
       "connectorDailyCap": "Kald pr. forbundet assistent og døgn"
     }
+  },
+  "sellerProfile": {
+    "balance": "Saldo",
+    "editTerms": "Ændr vilkår",
+    "transactions": "Kontobevægelser"
   }
 }

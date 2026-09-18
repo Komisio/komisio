@@ -1599,3 +1599,219 @@ small {
     grid-row: 1;
   }
 }
+
+/* Reception overview: a compact, scannable queue. */
+.reception-overview {
+  display: grid;
+  gap: 20px;
+}
+.reception-start {
+  padding: 0;
+}
+.reception-start > summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 22px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.reception-start-content {
+  padding: 0 22px 22px;
+  max-width: 600px;
+}
+.reception-start-content > form {
+  margin-bottom: 16px;
+}
+.reception-queue {
+  padding: 24px;
+}
+.reception-queue-heading h2 {
+  margin: 0 0 18px;
+}
+.reception-queue-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.reception-queue-filter label {
+  font-size: 13px;
+}
+.reception-queue-filter select {
+  width: auto;
+  max-width: 100%;
+}
+.reception-queue-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.reception-queue-list li + li {
+  border-top: 1px solid var(--line);
+}
+.reception-queue-row {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) minmax(125px, 180px) 130px auto;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 8px;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 8px;
+}
+.reception-queue-row:hover {
+  background: #f3f7f0;
+}
+.reception-queue-row:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.reception-queue-person {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+.reception-queue-person strong {
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+.reception-queue-person > span,
+.reception-queue-row time {
+  font-size: 12px;
+  color: #65736a;
+}
+.reception-queue-status {
+  justify-self: start;
+  font-size: 11px;
+  line-height: 1.5;
+  padding: 4px 9px;
+  background: #eef1eb;
+  border-radius: 8px;
+}
+.reception-state-ready_to_accept .reception-queue-status,
+.reception-state-accepted .reception-queue-status {
+  background: #e4f1e5;
+  color: #245c36;
+}
+.reception-state-needs_review .reception-queue-status,
+.reception-state-expired .reception-queue-status,
+.reception-state-declined .reception-queue-status {
+  background: #fff0da;
+  color: #795111;
+}
+.reception-queue-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.reception-queue-pagination {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 18px;
+}
+.reception-queue-pagination:empty {
+  display: none;
+}
+.reception-lookup {
+  font-size: 13px;
+}
+.reception-lookup > summary {
+  cursor: pointer;
+  color: #65736a;
+}
+.reception-lookup > form {
+  max-width: 420px;
+  padding-top: 16px;
+}
+@media (max-width: 1050px) {
+  .reception-queue {
+    padding: 18px;
+  }
+  .reception-queue-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 12px;
+    padding: 16px 0;
+  }
+  .reception-queue-person {
+    grid-column: 1 / -1;
+  }
+  .reception-queue-row time {
+    grid-column: 1;
+  }
+  .reception-queue-open {
+    grid-column: 2;
+    grid-row: 2 / 4;
+  }
+  .reception-queue-status {
+    grid-column: 1;
+  }
+  .reception-queue-filter {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .reception-queue-filter label {
+    grid-column: 1 / -1;
+  }
+  .reception-queue-filter select {
+    width: 100%;
+  }
+}
+
+.reception-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+  margin-bottom: 24px;
+}
+.reception-entry > .reception-result {
+  margin: 0;
+}
+.reception-reference-sales {
+  margin: 22px 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+}
+.reception-reference-sales > summary {
+  cursor: pointer;
+  padding: 16px 20px;
+  font-weight: 600;
+  font-size: 14px;
+}
+.reception-reference-sales > section {
+  border: 0;
+  box-shadow: none;
+  margin: 0;
+}
+.reception-completion {
+  margin-top: 24px;
+}
+.reception-completion > .reception-result {
+  margin: 0;
+}
+.reception-audit {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  font-size: 12px;
+  color: #65736a;
+}
+.reception-audit summary {
+  cursor: pointer;
+}
+.reception-audit p {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 1050px) {
+  .reception-entry {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -607,7 +607,22 @@
     },
     "photoSeenBefore": "Et foto i denne modtagelse er uploadet før. Tjek, om tøjet allerede er modtaget:",
     "aiCredits": "Butikkens AI-kreditter for måneden er brugt op. Køb flere under Indstillinger, AI-kreditter, eller forbind butikkens egen modelnøgle.",
-    "aiCap": "Komisios fælles AI-budget for måneden er brugt op. Købte kreditter og en egen modelnøgle virker stadig."
+    "aiCap": "Komisios fælles AI-budget for måneden er brugt op. Købte kreditter og en egen modelnøgle virker stadig.",
+    "overviewIntro": "Fortsæt en modtagelse eller start en ny.",
+    "queueNewest": "Vis seneste modtagelser",
+    "queueActions": {
+      "prepare_evidence": "Tilføj billeder og oplysninger",
+      "review_changed_evidence": "Gennemgå ændringerne",
+      "record_custody": "Registrer fysisk modtagelse",
+      "accept_item": "Accepter varen",
+      "item_accepted": "Færdig – se varen i varelisten",
+      "review_seller_decline": "Se sælgerens afslag",
+      "publish_fresh_review": "Gennemgå og forny grundlaget",
+      "issue_review_link": "Opret link til sælgeren",
+      "replace_review_link": "Opret et nyt link",
+      "await_seller_response": "Afvent sælgerens svar"
+    },
+    "queueOpen": "Åbn"
   },
   "operations": {
     "title": "Foreslåede operationer",

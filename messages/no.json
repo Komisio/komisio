@@ -607,7 +607,22 @@
     },
     "photoSeenBefore": "Et bilde i dette mottaket er lastet opp tidligere. Kontroller om plagget allerede er mottatt:",
     "aiCredits": "Butikkens AI-kreditter for måneden er brukt opp. Kjøp flere under Innstillinger, AI-kreditter, eller koble til butikkens egen modellnøkkel.",
-    "aiCap": "Komisios delte AI-budsjett for måneden er brukt opp. Kjøpte kreditter og en egen modellnøkkel fungerer fortsatt."
+    "aiCap": "Komisios delte AI-budsjett for måneden er brukt opp. Kjøpte kreditter og en egen modellnøkkel fungerer fortsatt.",
+    "overviewIntro": "Fortsett et mottak eller start et nytt.",
+    "queueNewest": "Vis nyeste mottak",
+    "queueActions": {
+      "prepare_evidence": "Legg til bilder og opplysninger",
+      "review_changed_evidence": "Gjennomgå endringene",
+      "record_custody": "Registrer fysisk mottak",
+      "accept_item": "Godta varen",
+      "item_accepted": "Ferdig – se varen i varelisten",
+      "review_seller_decline": "Se selgerens avslag",
+      "publish_fresh_review": "Gjennomgå og forny grunnlaget",
+      "issue_review_link": "Opprett lenke til selgeren",
+      "replace_review_link": "Opprett en ny lenke",
+      "await_seller_response": "Vent på selgerens svar"
+    },
+    "queueOpen": "Åpne"
   },
   "operations": {
     "title": "Foreslåtte operasjoner",

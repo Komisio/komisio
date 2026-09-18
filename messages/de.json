@@ -607,7 +607,22 @@
     },
     "photoSeenBefore": "Ein Foto in dieser Annahme wurde bereits zuvor hochgeladen. Prüfen Sie, ob das Kleidungsstück bereits angenommen wurde:",
     "aiCredits": "Die KI-Credits des Stores für diesen Monat sind aufgebraucht. Kaufen Sie weitere unter Einstellungen, KI-Credits, oder verbinden Sie den eigenen Modellschlüssel des Stores.",
-    "aiCap": "Das gemeinsame KI-Budget von Komisio für diesen Monat ist aufgebraucht. Gekaufte Credits und ein eigener Modellschlüssel funktionieren weiterhin."
+    "aiCap": "Das gemeinsame KI-Budget von Komisio für diesen Monat ist aufgebraucht. Gekaufte Credits und ein eigener Modellschlüssel funktionieren weiterhin.",
+    "overviewIntro": "Setzen Sie eine Annahme fort oder starten Sie eine neue.",
+    "queueNewest": "Neueste Annahmen anzeigen",
+    "queueActions": {
+      "prepare_evidence": "Fotos und Angaben ergänzen",
+      "review_changed_evidence": "Änderungen prüfen",
+      "record_custody": "Physischen Empfang erfassen",
+      "accept_item": "Artikel annehmen",
+      "item_accepted": "Fertig – siehe Artikelliste",
+      "review_seller_decline": "Ablehnung des Verkäufers prüfen",
+      "publish_fresh_review": "Vorschlag prüfen und erneuern",
+      "issue_review_link": "Link für Verkäufer erstellen",
+      "replace_review_link": "Neuen Link erstellen",
+      "await_seller_response": "Auf Antwort des Verkäufers warten"
+    },
+    "queueOpen": "Öffnen"
   },
   "operations": {
     "title": "Vorgeschlagene Vorgänge",

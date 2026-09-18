@@ -607,7 +607,22 @@
     },
     "photoSeenBefore": "En bild i den här mottagningen har laddats upp tidigare. Kontrollera om plagget redan är mottaget:",
     "aiCredits": "Butikens AI-krediter för månaden är slut. Köp fler under Inställningar, AI-krediter, eller koppla butikens egen modellnyckel.",
-    "aiCap": "Komisios gemensamma AI-pott för månaden är slut. Köpta krediter och egen modellnyckel fungerar fortfarande."
+    "aiCap": "Komisios gemensamma AI-pott för månaden är slut. Köpta krediter och egen modellnyckel fungerar fortfarande.",
+    "overviewIntro": "Fortsätt med en mottagning eller starta en ny.",
+    "queueNewest": "Visa senaste mottagningarna",
+    "queueActions": {
+      "prepare_evidence": "Komplettera bilder och uppgifter",
+      "review_changed_evidence": "Granska ändringarna",
+      "record_custody": "Registrera mottagandet",
+      "accept_item": "Acceptera varan",
+      "item_accepted": "Klar – se varan i varulistan",
+      "review_seller_decline": "Se säljarens avslag",
+      "publish_fresh_review": "Granska och förnya underlaget",
+      "issue_review_link": "Skapa länk till säljaren",
+      "replace_review_link": "Skapa en ny länk",
+      "await_seller_response": "Invänta säljarens svar"
+    },
+    "queueOpen": "Öppna"
   },
   "operations": {
     "title": "Föreslagna åtgärder",

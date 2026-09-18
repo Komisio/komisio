@@ -607,7 +607,22 @@
     },
     "photoSeenBefore": "Una foto de esta recepción ya se subió antes. Comprueba si la prenda ya se recibió:",
     "aiCredits": "Los créditos de IA de la tienda para este mes se han agotado. Compra más en Ajustes, Créditos de IA, o conecta la clave de modelo propia de la tienda.",
-    "aiCap": "El presupuesto de IA compartido de Komisio para este mes se ha agotado. Los créditos comprados y una clave de modelo propia siguen funcionando."
+    "aiCap": "El presupuesto de IA compartido de Komisio para este mes se ha agotado. Los créditos comprados y una clave de modelo propia siguen funcionando.",
+    "overviewIntro": "Continúa una recepción o inicia una nueva.",
+    "queueNewest": "Mostrar recepciones recientes",
+    "queueActions": {
+      "prepare_evidence": "Añadir fotos y datos",
+      "review_changed_evidence": "Revisar los cambios",
+      "record_custody": "Registrar la recepción física",
+      "accept_item": "Aceptar el artículo",
+      "item_accepted": "Listo – ver la lista de artículos",
+      "review_seller_decline": "Revisar el rechazo del vendedor",
+      "publish_fresh_review": "Revisar y renovar la propuesta",
+      "issue_review_link": "Crear enlace para el vendedor",
+      "replace_review_link": "Crear un nuevo enlace",
+      "await_seller_response": "Esperar la respuesta del vendedor"
+    },
+    "queueOpen": "Abrir"
   },
   "operations": {
     "title": "Operaciones propuestas",

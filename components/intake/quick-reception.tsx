@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
+import { quickAiProposal } from '@/lib/intake/quick-ai-proposal'
 import {
   labelOf,
   questionsFor,
@@ -150,15 +151,10 @@ export function QuickReception({
           })
           const s = result?.proposal?.suggestions
           if (result?.status === 'proposed' && s) {
-            // The assistant still answers in the seven fixed keys. They are
-            // slugs like any other, so they land in the same map.
-            const filled: Facts = { ...emptyFacts }
-            for (const [slug, fact] of Object.entries(
-              (s.metadata ?? {}) as Record<string, { value?: string }>,
-            ))
-              if (fact?.value) filled[slug] = fact.value
-            setFacts(filled)
-            if (s.price?.amount) setPrice(String(s.price.amount))
+            const filled = quickAiProposal(s)
+            setFacts(filled.facts)
+            setItemType(filled.itemType)
+            setPrice(filled.price)
             setMessage(d.aiDone)
           } else setMessage(d.aiUnavailable)
         } catch {

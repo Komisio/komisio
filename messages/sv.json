@@ -41,7 +41,7 @@
   },
   "quickIntake": {
     "title": "Snabb mottagning",
-    "intro": "Välj säljare, kontrollera varan och ange pris.",
+    "intro": "Beskrivning och pris räcker. Lägg till bild eller fler uppgifter om du vill.",
     "seller": "Säljare",
     "searchSeller": "Sök säljare",
     "noSeller": "Ingen säljare matchar.",
@@ -57,7 +57,7 @@
     "aiFailed": "Assistenten kunde inte läsa fotot; fyll i fakta.",
     "description": "Beskrivning",
     "itemType": "Varutyp",
-    "itemTypeNone": "Ingen vald",
+    "itemTypeNone": "Valfritt – välj varutyp",
     "itemTypeHint": "Typen avgör vilka frågor som ställs. En lampa får andra än en tröja.",
     "chooseValue": "Välj värde",
     "category": "Kategori",

@@ -41,7 +41,7 @@
   },
   "quickIntake": {
     "title": "Pikavastaanotto",
-    "intro": "Valitse myyjä, tarkista tuote ja aseta hinta.",
+    "intro": "Kuvaus ja hinta riittävät. Lisää halutessasi kuva tai muita tietoja.",
     "seller": "Tuoja",
     "searchSeller": "Etsi tuoja",
     "noSeller": "Yksikään tuoja ei täsmää.",
@@ -57,7 +57,7 @@
     "aiFailed": "Avustaja ei pystynyt lukemaan kuvaa; täytä tiedot.",
     "description": "Kuvaus",
     "itemType": "Tuotetyyppi",
-    "itemTypeNone": "Ei valittu",
+    "itemTypeNone": "Valinnainen – valitse tuotetyyppi",
     "itemTypeHint": "Tyyppi ratkaisee mitä kysytään. Lampulta kysytään eri asioita kuin neuleelta.",
     "chooseValue": "Valitse arvo",
     "category": "Luokka",

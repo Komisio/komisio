@@ -41,7 +41,7 @@
   },
   "quickIntake": {
     "title": "Schnellannahme",
-    "intro": "Verkäufer wählen, Artikel prüfen und Preis festlegen.",
+    "intro": "Beschreibung und Preis genügen. Foto und weitere Angaben sind optional.",
     "seller": "Einlieferer",
     "searchSeller": "Einlieferer suchen",
     "noSeller": "Kein passender Einlieferer.",
@@ -57,7 +57,7 @@
     "aiFailed": "Der Assistent konnte das Foto nicht auswerten; füllen Sie die Fakten aus.",
     "description": "Beschreibung",
     "itemType": "Artikeltyp",
-    "itemTypeNone": "Keiner gewählt",
+    "itemTypeNone": "Optional – Artikeltyp wählen",
     "itemTypeHint": "Der Typ entscheidet, welche Fragen gestellt werden. Eine Lampe bekommt andere als ein Pullover.",
     "chooseValue": "Wert wählen",
     "category": "Kategorie",

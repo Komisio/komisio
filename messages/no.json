@@ -41,7 +41,7 @@
   },
   "quickIntake": {
     "title": "Hurtigmottak",
-    "intro": "Velg selger, kontroller varen og angi pris.",
+    "intro": "Beskrivelse og pris er nok. Legg til et bilde eller flere opplysninger om du vil.",
     "seller": "Innleverer",
     "searchSeller": "Finn innleverer",
     "noSeller": "Ingen innleverer samsvarer.",
@@ -57,7 +57,7 @@
     "aiFailed": "Assistenten kunne ikke lese bildet; fyll inn fakta.",
     "description": "Beskrivelse",
     "itemType": "Varetype",
-    "itemTypeNone": "Ingen valgt",
+    "itemTypeNone": "Valgfritt – velg varetype",
     "itemTypeHint": "Typen avgjør hvilke spørsmål som stilles. En lampe får andre enn en genser.",
     "chooseValue": "Velg verdi",
     "category": "Kategori",

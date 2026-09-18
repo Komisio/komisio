@@ -41,7 +41,7 @@
   },
   "quickIntake": {
     "title": "Quick reception",
-    "intro": "Choose a seller, check the item and set a price.",
+    "intro": "A description and price are all you need. Add a photo or more details if you like.",
     "seller": "Seller",
     "searchSeller": "Find seller",
     "noSeller": "No seller matches.",
@@ -57,7 +57,7 @@
     "aiFailed": "The assistant could not read the photo; fill in the facts.",
     "description": "Description",
     "itemType": "Item type",
-    "itemTypeNone": "None chosen",
+    "itemTypeNone": "Optional – choose item type",
     "itemTypeHint": "The type decides which questions are asked. A lamp gets different ones from a sweater.",
     "chooseValue": "Choose a value",
     "category": "Category",

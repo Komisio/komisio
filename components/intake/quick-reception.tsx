@@ -245,10 +245,7 @@ export function QuickReception({
   // One input per question the item type asks, shaped by the definition: a
   // number carries its unit, a choice offers its values by their stable ids,
   // and free text stays free text.
-  const question = (
-    definition: AttributeVocabulary['definitions'][number],
-    expected: boolean,
-  ) => {
+  const question = (definition: AttributeVocabulary['definitions'][number]) => {
     const key = definition.slug,
       id = `quick-${key}`,
       label = labelOf(definition, lang),
@@ -266,7 +263,7 @@ export function QuickReception({
           <select
             id={id}
             value={facts[key] ?? ''}
-            required={expected}
+            required={key === 'description'}
             disabled={busy || !!done}
             onChange={(e) => set(e.target.value)}
           >
@@ -291,7 +288,7 @@ export function QuickReception({
             value={facts[key] ?? ''}
             rows={3}
             maxLength={1000}
-            required={expected}
+            required
             disabled={busy || !!done}
             onChange={(e) => set(e.target.value)}
           />
@@ -301,7 +298,7 @@ export function QuickReception({
             value={facts[key] ?? ''}
             inputMode={definition.data_type === 'number' ? 'decimal' : 'text'}
             maxLength={1000}
-            required={expected}
+            required={key === 'description'}
             disabled={busy || !!done}
             onChange={(e) => set(e.target.value)}
           />
@@ -445,7 +442,7 @@ export function QuickReception({
                 </select>
               </div>
               <div className="quick-fields">
-                {questions.map((q) => question(q.definition, q.expected))}
+                {questions.map((q) => question(q.definition))}
               </div>
             </div>
           </div>
@@ -454,6 +451,7 @@ export function QuickReception({
               <label htmlFor="quick-price">{d.price}</label>
               <input
                 id="quick-price"
+                required
                 inputMode="decimal"
                 value={price}
                 disabled={busy}

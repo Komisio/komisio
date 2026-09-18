@@ -41,7 +41,7 @@
   },
   "quickIntake": {
     "title": "Hurtig modtagelse",
-    "intro": "Vælg sælger, kontrollér varen og angiv pris.",
+    "intro": "Beskrivelse og pris er nok. Tilføj et billede eller flere oplysninger, hvis du vil.",
     "seller": "Indleverer",
     "searchSeller": "Find indleverer",
     "noSeller": "Ingen indleverer matcher.",
@@ -57,7 +57,7 @@
     "aiFailed": "Assistenten kunne ikke læse fotoet; udfyld fakta.",
     "description": "Beskrivelse",
     "itemType": "Varetype",
-    "itemTypeNone": "Ingen valgt",
+    "itemTypeNone": "Valgfrit – vælg varetype",
     "itemTypeHint": "Typen afgør hvilke spørgsmål der stilles. En lampe får andre end en trøje.",
     "chooseValue": "Vælg værdi",
     "category": "Kategori",

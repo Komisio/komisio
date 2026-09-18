@@ -41,7 +41,7 @@
   },
   "quickIntake": {
     "title": "Ricezione rapida",
-    "intro": "Scegli il venditore, controlla l’articolo e indica il prezzo.",
+    "intro": "Bastano descrizione e prezzo. Foto e altri dettagli sono facoltativi.",
     "seller": "Conferente",
     "searchSeller": "Trova conferente",
     "noSeller": "Nessun conferente corrisponde.",
@@ -57,7 +57,7 @@
     "aiFailed": "L'assistente non è riuscito a leggere la foto; compila i dati.",
     "description": "Descrizione",
     "itemType": "Tipo di articolo",
-    "itemTypeNone": "Nessuno",
+    "itemTypeNone": "Facoltativo – scegli il tipo di articolo",
     "itemTypeHint": "Il tipo decide quali domande vengono poste. Una lampada ne riceve di diverse da un maglione.",
     "chooseValue": "Scegli un valore",
     "category": "Categoria",

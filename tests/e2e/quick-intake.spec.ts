@@ -18,6 +18,18 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
       .fill('Synthetic')
     await page.getByRole('button', { name: /Synthetic P2 seller/ }).click()
     await expect(
+      page.getByLabel(d.quickIntake.description, { exact: true }),
+    ).toHaveAttribute('required', '')
+    await expect(
+      page.getByLabel(d.quickIntake.price, { exact: true }),
+    ).toHaveAttribute('required', '')
+    await expect(
+      page.getByLabel(d.quickIntake.category, { exact: true }),
+    ).not.toHaveAttribute('required')
+    await expect(
+      page.getByLabel(d.quickIntake.itemType, { exact: true }),
+    ).not.toHaveAttribute('required')
+    await expect(
       page.getByText(d.quickIntake.addPhoto, { exact: true }),
     ).toBeVisible()
     await page.screenshot({

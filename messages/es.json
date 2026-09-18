@@ -41,7 +41,7 @@
   },
   "quickIntake": {
     "title": "Recepción rápida",
-    "intro": "Elige al vendedor, revisa el artículo e indica el precio.",
+    "intro": "Basta con una descripción y un precio. La foto y los demás datos son opcionales.",
     "seller": "Depositante",
     "searchSeller": "Buscar depositante",
     "noSeller": "Ningún depositante coincide.",
@@ -57,7 +57,7 @@
     "aiFailed": "El asistente no pudo leer la foto; rellena los datos.",
     "description": "Descripción",
     "itemType": "Tipo de artículo",
-    "itemTypeNone": "Ninguno",
+    "itemTypeNone": "Opcional – elige el tipo de artículo",
     "itemTypeHint": "El tipo decide qué preguntas se hacen. Una lámpara recibe otras que un jersey.",
     "chooseValue": "Elige un valor",
     "category": "Categoría",

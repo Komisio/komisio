@@ -11,7 +11,8 @@ import {
 } from '@/lib/platform/navigation'
 import { Brand } from './brand'
 import { Button } from '@/components/ui/button'
-import type { Dictionary } from '@/lib/i18n'
+import type { Dictionary, Locale } from '@/lib/i18n'
+import { LanguagePicker } from './language-picker'
 import type { Tenant } from '@/lib/platform/types'
 import { browserClient } from '@/lib/supabase/client'
 import { useCommand } from './use-command'
@@ -19,6 +20,7 @@ import { Feedback } from './feedback'
 export function Shell({
   children,
   d,
+  locale,
   tenants,
   active,
   email,
@@ -28,6 +30,7 @@ export function Shell({
 }: {
   children: React.ReactNode
   d: Dictionary
+  locale: Locale
   tenants: Tenant[]
   active: Tenant
   email: string
@@ -153,11 +156,14 @@ export function Shell({
             />
           </form>
         )}
-        <div className="desktop-only row">
-          <span className="badge">{d.roles[active.role]}</span>
-          <span className="avatar">
-            {(name || email).slice(0, 2).toUpperCase()}
-          </span>
+        <div className="topbar-tools">
+          <LanguagePicker locale={locale} label={d.language} />
+          <div className="desktop-only row">
+            <span className="badge">{d.roles[active.role]}</span>
+            <span className="avatar">
+              {(name || email).slice(0, 2).toUpperCase()}
+            </span>
+          </div>
         </div>
         <div className="mobile-only">{picker(true)}</div>
       </header>

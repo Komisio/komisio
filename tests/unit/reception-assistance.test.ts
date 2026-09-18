@@ -81,6 +81,30 @@ const response = (value: unknown) =>
   )
 const signal = () => new AbortController().signal
 describe('optional reception assistance (HTTP fixtures, no live model)', () => {
+  it('capitalizes generated text, questions and rationale without changing source evidence', async () => {
+    const value = { ...candidate(), questions: ['är lampan dimbar?'] }
+    value.attributes[0].value = 'svart bordslampa med LED'
+    value.price.rationale = 'enligt angivet pris'
+    const transport = vi.fn<typeof fetch>().mockResolvedValue(response(value))
+    const result = await suggestReception(
+      session,
+      id(8),
+      reception(transport),
+      signal(),
+    )
+    expect(result.proposal?.suggestions.attributes[0].value).toBe(
+      'Svart bordslampa med LED',
+    )
+    expect(result.proposal?.suggestions.attributes[0].sourceIds).toEqual([
+      id(4),
+    ])
+    expect(result.proposal?.suggestions.questions).toEqual([
+      'Är lampan dimbar?',
+    ])
+    expect(result.proposal?.suggestions.price?.rationale).toBe(
+      'Enligt angivet pris',
+    )
+  })
   it('diagnoses a completed but invalid answer without recording values or arbitrary keys', async () => {
     const logged = vi.spyOn(console, 'error').mockImplementation(() => {})
     try {

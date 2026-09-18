@@ -4,6 +4,7 @@ import { batchSuggestions } from './reception-batch'
 import type { ReceptionAssistance } from './reception'
 import { receptionSuggestions } from '../engine/reception'
 import type { AttributeCatalogue } from '../engine/attributes'
+import { initialCapital } from './proposal-text'
 import type { ReceptionAIConfig } from './reception-config'
 import { boundedJson } from '../http/bounded-json'
 
@@ -58,6 +59,11 @@ function fromWire(input: unknown, catalogue: AttributeCatalogue | null) {
     (catalogue?.definitions ?? []).map((d) => [d.slug, d.version]),
   )
   const typeSlugs = new Set((catalogue?.types ?? []).map((t) => t.slug))
+  const textSlugs = new Set(
+    (catalogue?.definitions ?? [])
+      .filter((d) => d.dataType === 'text' && d.slug !== 'brand')
+      .map((d) => d.slug),
+  )
   const candidate = wire.parse(input)
   // Everything a model returns is a guess until a person confirms it, which is
   // why certainty is overwritten here rather than trusted from the response.
@@ -69,7 +75,7 @@ function fromWire(input: unknown, catalogue: AttributeCatalogue | null) {
           {
             slug: a.slug,
             definitionVersion: version,
-            value: a.value,
+            value: textSlugs.has(a.slug) ? initialCapital(a.value) : a.value,
             sourceIds: a.sourceIds,
             certainty: 'tentative' as const,
           },
@@ -82,6 +88,13 @@ function fromWire(input: unknown, catalogue: AttributeCatalogue | null) {
   return receptionSuggestions.parse({
     ...candidate,
     attributes,
+    questions: candidate.questions.map(initialCapital),
+    price: candidate.price
+      ? {
+          ...candidate.price,
+          rationale: initialCapital(candidate.price.rationale),
+        }
+      : null,
     ...(itemType ? { itemType } : { itemType: undefined }),
   })
 }
@@ -222,6 +235,7 @@ export function openAIReception(
           const split = batchWire.parse(output)
           return batchSuggestions.parse({
             ...split,
+            questions: split.questions.map(initialCapital),
             candidates: split.candidates.map((row) => ({
               ...row,
               suggestions: fromWire(row.suggestions, catalogue),

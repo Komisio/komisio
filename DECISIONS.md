@@ -664,3 +664,4 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-09-17: Historical metadata-only reviews remain readable through a read-only attribute adapter; new writes still require the list. Never rewrite accepted evidence. AI response diagnostics record contract fields and error codes only, never values or identifiers.
 - 2026-09-17: Reception prompt v4 requires positive two-decimal price text in the provider schema and instructions. A live v3 answer failed price.amount validation after billable inference; engine money validation stays strict and token ceilings remain unchanged.
+- 2026-09-18: Owner sets the AI-credit offer copy to approximately 4,000 received items in all languages. This is an owner-approved estimate, replacing the usage-derived count in this copy only; balances, metering and budget limits remain unchanged.

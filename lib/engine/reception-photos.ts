@@ -15,45 +15,58 @@ export async function uploadReceptionPhoto(
   input: unknown,
   bytes: Uint8Array,
 ) {
-  const c = context.parse(input),
-    type = photoType(bytes)
-  const session = await readReceptionSession(client, c.tenantId, c.sessionId)
-  if (!session) throw new Error('NOT_FOUND')
-  const { data: role, error: roleError } = await client.rpc('tenant_role', {
-    p_tenant: c.tenantId,
-  })
-  if (roleError || !['owner', 'admin', 'staff'].includes(role))
-    throw new Error('FORBIDDEN')
-  const derivative = await receptionDerivative(bytes)
-  const reference = `${c.tenantId}/${c.sessionId}/${c.photoId}.${type.ext}`
-  await immutableUpload(
-    client,
-    'reception-photos',
-    reference,
-    bytes,
-    type.mime,
-    photoLimit,
-  )
-  await immutableUpload(
-    client,
-    'seller-reception-photos',
-    `${c.tenantId}/${c.sessionId}/${c.photoId}.jpg`,
-    derivative,
-    'image/jpeg',
-    1024 * 1024,
-  )
-  // The content digest lets a later reception see that these bytes were
-  // uploaded before (docs/DUPLICATE-CHECK.md). A repeat records nothing new.
-  const recorded = await client.rpc('record_photo_digest', {
-    p_tenant: c.tenantId,
-    p_session: c.sessionId,
-    p_photo: c.photoId,
-    p_digest: createHash('sha256').update(bytes).digest('hex'),
-  })
-  // Until the migration reaches the database the digest is not recorded.
-  if (recorded.error && recorded.error.code !== 'PGRST202')
-    throw new Error('PHOTO_UPLOAD_FAILED')
-  return { id: c.photoId, kind: 'photo' as const, reference, observation: '' }
+  let stage = 'input'
+  try {
+    const c = context.parse(input),
+      type = photoType(bytes)
+    stage = 'session'
+    const session = await readReceptionSession(client, c.tenantId, c.sessionId)
+    if (!session) throw new Error('NOT_FOUND')
+    stage = 'role'
+    const { data: role, error: roleError } = await client.rpc('tenant_role', {
+      p_tenant: c.tenantId,
+    })
+    if (roleError || !['owner', 'admin', 'staff'].includes(role))
+      throw new Error('FORBIDDEN')
+    stage = 'image_processing'
+    const derivative = await receptionDerivative(bytes)
+    const reference = `${c.tenantId}/${c.sessionId}/${c.photoId}.${type.ext}`
+    stage = 'original_storage'
+    await immutableUpload(
+      client,
+      'reception-photos',
+      reference,
+      bytes,
+      type.mime,
+      photoLimit,
+    )
+    stage = 'derivative_storage'
+    await immutableUpload(
+      client,
+      'seller-reception-photos',
+      `${c.tenantId}/${c.sessionId}/${c.photoId}.jpg`,
+      derivative,
+      'image/jpeg',
+      1024 * 1024,
+    )
+    // The content digest lets a later reception see that these bytes were
+    // uploaded before (docs/DUPLICATE-CHECK.md). A repeat records nothing new.
+    stage = 'digest'
+    const recorded = await client.rpc('record_photo_digest', {
+      p_tenant: c.tenantId,
+      p_session: c.sessionId,
+      p_photo: c.photoId,
+      p_digest: createHash('sha256').update(bytes).digest('hex'),
+    })
+    // Until the migration reaches the database the digest is not recorded.
+    if (recorded.error && recorded.error.code !== 'PGRST202')
+      throw new Error('PHOTO_UPLOAD_FAILED')
+    return { id: c.photoId, kind: 'photo' as const, reference, observation: '' }
+  } catch (error) {
+    // Do not log image bytes, filenames, paths, actor IDs or provider messages.
+    console.error('Reception photo: upload failed', { stage })
+    throw error
+  }
 }
 export async function readReceptionPhoto(
   client: SupabaseClient,

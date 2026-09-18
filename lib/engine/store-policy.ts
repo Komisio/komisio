@@ -69,7 +69,7 @@ export function defaultStorePolicy(): StorePolicyBody {
   return storePolicyBody.parse({
     commissionBasis: 'inclusive',
     commissionRatePercent: 60,
-    agreementRequiredFor: ['review_publication', 'acceptance'],
+    agreementRequiredFor: [],
     custodySources: ['staff_receipt'],
     sellerReviewMode: 'delegated',
     salePeriodDays: 42,

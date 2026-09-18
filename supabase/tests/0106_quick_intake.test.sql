@@ -12,6 +12,8 @@ select set_config('test.other',register_seller(current_setting('test.tenant')::u
 select set_config('test.agreement',publish_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'Synthetic terms','Only a test','en',false)::text,true);
 -- Policy: the profile key is validated; absent means quick.
 select throws_like($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy')||'{"intakeProfile":"instant"}')$$,'%INVALID_INPUT%','unknown profiles are refused');
+-- Explicit opt-in: this fixture exercises agreement enforcement.
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"agreementRequiredFor":["review_publication","acceptance"]}'::jsonb);
 select set_config('test.session',create_reception_session(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid)::text,true);
 select set_config('test.request',gen_random_uuid()::text,true);
 -- No agreement evidence yet: the policy requires it for publication and acceptance.
@@ -64,7 +66,7 @@ select is((select suggestions->>'itemType' from reception_reviews where tenant_i
 select is((select a->>'value' from reception_reviews r, jsonb_array_elements(r.suggestions->'attributes') a where r.session_id=current_setting('test.lampsession')::uuid and a->>'slug'='socket'),'e27','the socket is kept');
 select ok((select not (suggestions ? 'metadata') from reception_reviews where session_id=current_setting('test.lampsession')::uuid),'and nothing is written under the retired fixed keys');
 
-select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy')||'{"intakeProfile":"full"}');
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),(current_store_policy(current_setting('test.tenant')::uuid)->>'id')::uuid,(current_store_policy(current_setting('test.tenant')::uuid)->'policy')||'{"intakeProfile":"full"}');
 select set_config('test.session3',create_reception_session(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid)::text,true);
 select throws_like($$select quick_receive(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session3')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Hat"}','5000')$$,'%INTAKE_PROFILE_FULL%','the full profile refuses quick reception');
 -- Per-item seller approval still binds.

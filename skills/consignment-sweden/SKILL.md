@@ -92,7 +92,7 @@ defaults, not legal requirements; nothing here decides VAT treatment.
 | --- | --- | --- |
 | `commissionBasis` | `inclusive` | Private sellers are quoted a share of the sale price including VAT **[verified: practice, see Commission and VAT above]** |
 | `commissionRatePercent` | `60.00` | The store keeps 60 %, the seller receives 40 % of the sale price; the earlier store's published terms **[default, not verified as market norm]** |
-| `agreementRequiredFor` | `["review_publication","acceptance"]` | A published agreement is needed before an offer or an acceptance; optional at bag receipt (owner decision 2026-09-12) |
+| `agreementRequiredFor` | `[]` | Agreement evidence is optional by default; a store may explicitly require it (owner decision 2026-09-18). Existing published policies keep their requirements. |
 | `custodySources` | `["staff_receipt"]` | Staff attest custody (owner decision 2026-09-12) |
 | `sellerReviewMode` | `delegated` | The seller delegates pricing to the store (owner decision 2026-09-12) |
 | `salePeriodDays` | `42` | Six weeks; the earlier store's markdown ladder ended at day 42 |

@@ -1377,7 +1377,10 @@
       "period_ended": "Perioden er slutt",
       "ended": "Avsluttet",
       "sold": "Solgt"
-    }
+    },
+    "listIntro": "Se pris og salgsperiode. Åpne en vare for å gjøre endringer.",
+    "previous": "Forrige",
+    "next": "Neste"
   },
   "openByReference": {
     "title": "Åpne via etikett",

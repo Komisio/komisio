@@ -1377,7 +1377,10 @@
       "period_ended": "Periodo terminado",
       "ended": "Terminado",
       "sold": "Vendido"
-    }
+    },
+    "listIntro": "Consulta precios y periodos de venta. Abre un artículo para hacer cambios.",
+    "previous": "Anterior",
+    "next": "Siguiente"
   },
   "openByReference": {
     "title": "Abrir por etiqueta",

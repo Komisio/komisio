@@ -1377,7 +1377,10 @@
       "period_ended": "Periode beendet",
       "ended": "Beendet",
       "sold": "Verkauft"
-    }
+    },
+    "listIntro": "Preise und Verkaufszeiträume im Überblick. Öffnen Sie einen Artikel, um Änderungen vorzunehmen.",
+    "previous": "Zurück",
+    "next": "Weiter"
   },
   "openByReference": {
     "title": "Über Etikett öffnen",

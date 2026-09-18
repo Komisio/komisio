@@ -80,6 +80,18 @@ test('manual lifecycle price form appends the reviewed price and reason', async 
     const item = await f.item('Synthetic price jacket')
     await f.commit()
     await page.goto('/intake/lifecycle')
+    await expect(page.locator('.lifecycle-row')).toHaveCount(1)
+    await expect(page.locator('.lifecycle-row > summary')).toContainText(
+      'Synthetic price jacket',
+    )
+    await expect(
+      page.getByLabel(d.lifecycle.price, { exact: true }),
+    ).not.toBeVisible()
+    await page.screenshot({
+      path: 'private/lifecycle-compact.png',
+      fullPage: true,
+    })
+    await page.locator('.lifecycle-row > summary').click()
     await expect(
       page.getByRole('button', {
         name: d.lifecycle.applyMarkdown.replace('{step}', '1'),
@@ -111,6 +123,46 @@ test('manual lifecycle price form appends the reviewed price and reason', async 
         )
       ).rows[0].detail.reason,
     ).toBe('Synthetic reviewed price')
+  } finally {
+    await f.close()
+  }
+})
+
+test('lifecycle compact list pages without exposing every action form', async ({
+  page,
+}) => {
+  const email = `lifecycle-pages-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomBytes(16).toString('hex')}`)
+  const f = await p2Fixture(email)
+  try {
+    for (let i = 0; i < 21; i++) await f.item(`Synthetic page item ${i}`)
+    await f.commit()
+    await page.goto('/intake/lifecycle?stage=markdown_due')
+    await expect(page.locator('.lifecycle-row')).toHaveCount(20)
+    await expect(page.locator('.lifecycle-row[open]')).toHaveCount(0)
+    await page.screenshot({
+      path: 'private/lifecycle-compact.png',
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 390, height: 844 })
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+    await page.screenshot({
+      path: 'private/lifecycle-mobile.png',
+      fullPage: true,
+    })
+    await page
+      .getByRole('link', { name: d.lifecycle.next, exact: true })
+      .click()
+    await expect(page).toHaveURL(/stage=markdown_due&page=2/)
+    await expect(page.locator('.lifecycle-row')).toHaveCount(1)
+    await page
+      .getByRole('link', { name: d.lifecycle.previous, exact: true })
+      .click()
+    await expect(page.locator('.lifecycle-row')).toHaveCount(20)
   } finally {
     await f.close()
   }

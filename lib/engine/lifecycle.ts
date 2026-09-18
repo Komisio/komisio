@@ -84,6 +84,7 @@ export const lifecycleStage = z.enum([
 const ore = z.union([z.number().int(), z.string()]).transform(Number)
 const row = z.object({
   item_id: z.guid(),
+  title: z.string().nullable().optional(),
   seller_id: z.guid().nullable(),
   ownership: z.enum(['consignment', 'store']),
   stage: lifecycleStage,
@@ -102,7 +103,7 @@ export async function readLifecycleQueue(
   tenantInput: string,
   stage?: string,
 ) {
-  const { data, error } = await client.rpc('lifecycle_queue', {
+  const { data, error } = await client.rpc('lifecycle_queue_display', {
     p_tenant: z.uuid().parse(tenantInput),
     p_stage: stage ? lifecycleStage.parse(stage) : null,
   })

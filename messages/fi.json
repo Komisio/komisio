@@ -1377,7 +1377,10 @@
       "period_ended": "Jakso päättynyt",
       "ended": "Päätetty",
       "sold": "Myyty"
-    }
+    },
+    "listIntro": "Katso hinnat ja myyntiajat. Avaa tuote tehdäksesi muutoksia.",
+    "previous": "Edellinen",
+    "next": "Seuraava"
   },
   "openByReference": {
     "title": "Avaa etiketillä",

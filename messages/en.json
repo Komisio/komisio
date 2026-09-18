@@ -1377,7 +1377,10 @@
       "period_ended": "Period ended",
       "ended": "Ended",
       "sold": "Sold"
-    }
+    },
+    "listIntro": "See prices and sale periods. Expand an item to make changes.",
+    "previous": "Previous",
+    "next": "Next"
   },
   "openByReference": {
     "title": "Open by label",

@@ -2258,7 +2258,7 @@
     "title": "Tuojat",
     "intro": "Kaikki, jotka ovat tuoneet tavaraa kauppaan: mitä kauppa pitää hallussaan heidän puolestaan, mitä on myyty ja mitä he voivat pyytää.",
     "register": "Rekisteröi tuoja",
-    "search": "Hae nimellä",
+    "search": "Etsi myyjää",
     "searchButton": "Hae",
     "showingAll": "{total} tuojaa.",
     "showingSome": "Näytetään ensimmäiset {limit} / {total} tuojaa; rajaa hakemalla.",
@@ -2268,7 +2268,9 @@
     "items": "Tuotteet",
     "sold": "Myyty",
     "available": "Käytettävissä",
-    "reserved": "Varattu"
+    "reserved": "Varattu",
+    "searchHint": "Nimi, sähköposti, puhelin, osoite tai kaupunki",
+    "clear": "Tyhjennä haku"
   },
   "connectors": {
     "title": "AI-avustajat",

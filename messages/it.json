@@ -2258,7 +2258,7 @@
     "title": "Conferenti",
     "intro": "Tutti coloro che hanno consegnato al negozio: cosa il negozio tiene per loro, cosa è stato venduto e cosa possono richiedere.",
     "register": "Registra un conferente",
-    "search": "Cerca per nome",
+    "search": "Cerca venditore",
     "searchButton": "Cerca",
     "showingAll": "{total} conferenti.",
     "showingSome": "Mostrati i primi {limit} di {total} conferenti; cerca per restringere.",
@@ -2268,7 +2268,9 @@
     "items": "Articoli",
     "sold": "Venduti",
     "available": "Disponibile",
-    "reserved": "Riservato"
+    "reserved": "Riservato",
+    "searchHint": "Nome, email, telefono, indirizzo o città",
+    "clear": "Cancella ricerca"
   },
   "connectors": {
     "title": "Assistenti AI",

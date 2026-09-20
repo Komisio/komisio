@@ -2258,7 +2258,7 @@
     "title": "Säljare",
     "intro": "Alla som lämnat in till butiken: vad butiken har för dem, vad som sålts och vad de kan begära ut.",
     "register": "Registrera säljare",
-    "search": "Sök på namn",
+    "search": "Sök säljare",
     "searchButton": "Sök",
     "showingAll": "{total} säljare.",
     "showingSome": "Visar de första {limit} av {total} säljare; sök för att avgränsa.",
@@ -2268,7 +2268,9 @@
     "items": "Varor",
     "sold": "Sålda",
     "available": "Tillgängligt",
-    "reserved": "Reserverat"
+    "reserved": "Reserverat",
+    "searchHint": "Namn, e-post, telefon, adress eller ort",
+    "clear": "Rensa sökning"
   },
   "connectors": {
     "title": "AI-assistenter",

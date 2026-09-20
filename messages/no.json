@@ -2258,7 +2258,7 @@
     "title": "Innleverere",
     "intro": "Alle som har levert inn til butikken: hva butikken har for dem, hva som er solgt og hva de kan be om.",
     "register": "Registrer en innleverer",
-    "search": "Søk etter navn",
+    "search": "Søk etter selger",
     "searchButton": "Søk",
     "showingAll": "{total} innleverere.",
     "showingSome": "Viser de første {limit} av {total} innleverere; søk for å avgrense.",
@@ -2268,7 +2268,9 @@
     "items": "Varer",
     "sold": "Solgt",
     "available": "Tilgjengelig",
-    "reserved": "Reservert"
+    "reserved": "Reservert",
+    "searchHint": "Navn, e-post, telefon, adresse eller sted",
+    "clear": "Tøm søk"
   },
   "connectors": {
     "title": "AI-assistenter",

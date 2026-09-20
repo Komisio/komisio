@@ -2258,7 +2258,7 @@
     "title": "Einlieferer",
     "intro": "Alle, die im Store eingeliefert haben: was der Store für sie verwahrt, was verkauft wurde und was sie beantragen können.",
     "register": "Einlieferer registrieren",
-    "search": "Nach Namen suchen",
+    "search": "Verkäufer suchen",
     "searchButton": "Suchen",
     "showingAll": "{total} Einlieferer.",
     "showingSome": "Die ersten {limit} von {total} Einlieferern werden angezeigt; suchen Sie, um einzugrenzen.",
@@ -2268,7 +2268,9 @@
     "items": "Artikel",
     "sold": "Verkauft",
     "available": "Verfügbar",
-    "reserved": "Reserviert"
+    "reserved": "Reserviert",
+    "searchHint": "Name, E-Mail, Telefon, Adresse oder Ort",
+    "clear": "Suche zurücksetzen"
   },
   "connectors": {
     "title": "KI-Assistenten",

@@ -2258,7 +2258,7 @@
     "title": "Sellers",
     "intro": "Everyone who has handed in to the store: what the store holds for them, what has sold and what they can request.",
     "register": "Register a seller",
-    "search": "Search by name",
+    "search": "Find a seller",
     "searchButton": "Search",
     "showingAll": "{total} sellers.",
     "showingSome": "Showing the first {limit} of {total} sellers; search to narrow.",
@@ -2268,7 +2268,9 @@
     "items": "Items",
     "sold": "Sold",
     "available": "Available",
-    "reserved": "Reserved"
+    "reserved": "Reserved",
+    "searchHint": "Name, email, phone, address or city",
+    "clear": "Clear search"
   },
   "connectors": {
     "title": "AI assistants",

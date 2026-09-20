@@ -2258,7 +2258,7 @@
     "title": "Depositantes",
     "intro": "Todos los que han entregado en la tienda: lo que la tienda guarda para ellos, lo que se ha vendido y lo que pueden solicitar.",
     "register": "Registrar un depositante",
-    "search": "Buscar por nombre",
+    "search": "Buscar vendedor",
     "searchButton": "Buscar",
     "showingAll": "{total} depositantes.",
     "showingSome": "Mostrando los primeros {limit} de {total} depositantes; busca para acotar.",
@@ -2268,7 +2268,9 @@
     "items": "Artículos",
     "sold": "Vendidos",
     "available": "Disponible",
-    "reserved": "Reservado"
+    "reserved": "Reservado",
+    "searchHint": "Nombre, correo, teléfono, dirección o ciudad",
+    "clear": "Borrar búsqueda"
   },
   "connectors": {
     "title": "Asistentes de IA",

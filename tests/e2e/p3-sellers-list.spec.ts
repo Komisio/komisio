@@ -32,6 +32,27 @@ test('the sellers list shows holdings and balance and opens the seller', async (
     await expect(row.getByRole('cell').nth(2)).toHaveText('2')
     await expect(row.getByRole('cell').nth(3)).toHaveText('1')
     await expect(row.getByRole('cell').nth(4)).toContainText('SEK')
+    await page.screenshot({
+      path: 'private/seller-directory-desktop.png',
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 390, height: 844 })
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true)
+    await page.screenshot({
+      path: 'private/seller-directory-mobile.png',
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 1280, height: 900 })
+    const email = await row.locator('a[href^="mailto:"]').textContent()
+    await list.getByLabel(d.sellersList.search, { exact: true }).fill(email!)
+    await list
+      .getByRole('button', { name: d.sellersList.searchButton, exact: true })
+      .click()
+    await expect(row).toBeVisible()
     await list
       .getByLabel(d.sellersList.search, { exact: true })
       .fill('nobody here')

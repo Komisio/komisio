@@ -677,3 +677,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-18: Staff may detach reception photos by appending a source revision, including an empty draft after the last photo. Historical sources, stored files and published reviews stay immutable. Empty drafts cannot be analyzed or published.
 
 - 2026-09-20: Bag inspection may receive one item at a time through the existing quick reception pipeline, with optional photo/AI and immutable bag/session/seller provenance. Existing agreement, acceptance, quota and cost rules still apply; old inspection drafts remain accessible.
+
+- 2026-09-20: Seller directory searches current name, email, phone and postal address within the active tenant. Phone searches ignore separators; wildcard characters remain literal. Existing balance calculations and member access are unchanged.

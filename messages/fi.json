@@ -447,7 +447,8 @@
   "audit.reception.access_revoked": "Tarkistuslinkki peruutettu",
   "audit.reception.seller_responded": "Tuoja vastasi tarkistukseen",
   "reception": {
-    "title": "Vaatteen vastaanotto",
+    "title": "Vastaanotot",
+    "ongoing": "Keskeneräiset vastaanotot",
     "intro": "Yksi vaate, yksi tarkistettu ehdotus ja tuojan päätös.",
     "manual": "Kuvaa vaate manuaalisesti tai käytä AI-ehdotuksia, jos ne on otettu käyttöön tässä kaupassa. Henkilökunta tarkistaa todisteet ennen kuin tuoja vastaa.",
     "aiTitle": "AI-ehdotukset",

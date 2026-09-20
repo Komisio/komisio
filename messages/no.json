@@ -447,7 +447,8 @@
   "audit.reception.access_revoked": "Gjennomgangslenke trukket tilbake",
   "audit.reception.seller_responded": "Innleverer svarte på gjennomgang",
   "reception": {
-    "title": "Plaggmottak",
+    "title": "Mottak",
+    "ongoing": "Pågående mottak",
     "intro": "Ett plagg, ett gjennomgått forslag og innlevererens avgjørelse.",
     "manual": "Beskriv plagget manuelt eller bruk AI-forslag hvis det er aktivert for denne butikken. Personalet går gjennom bevisene før innlevereren svarer.",
     "aiTitle": "AI-forslag",

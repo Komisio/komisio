@@ -447,7 +447,8 @@
   "audit.reception.access_revoked": "Link di revisione revocato",
   "audit.reception.seller_responded": "Il conferente ha risposto alla revisione",
   "reception": {
-    "title": "Ricezione del capo",
+    "title": "Ricezioni",
+    "ongoing": "Ricezioni in corso",
     "intro": "Un capo, una proposta esaminata e la decisione del conferente.",
     "manual": "Descrivi il capo manualmente o usa i suggerimenti AI se attivi per questo negozio. Il personale esamina le prove prima che il conferente risponda.",
     "aiTitle": "Suggerimenti AI",

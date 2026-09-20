@@ -447,7 +447,8 @@
   "audit.reception.access_revoked": "Gennemgangslink tilbagekaldt",
   "audit.reception.seller_responded": "Indleverer svarede på gennemgang",
   "reception": {
-    "title": "Modtagelse af tøj",
+    "title": "Modtagelser",
+    "ongoing": "Igangværende modtagelser",
     "intro": "Ét stykke tøj, ét gennemgået forslag og indlevererens beslutning.",
     "manual": "Beskriv tøjet manuelt, eller brug AI-forslag, hvis det er aktiveret for denne butik. Personalet gennemgår dokumentationen, før indlevereren svarer.",
     "aiTitle": "AI-forslag",

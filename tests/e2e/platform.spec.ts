@@ -1922,7 +1922,11 @@ test('operator reception guides saved evidence, exact review and link replacemen
   ).toBe(200)
   await page.goto('/intake')
   await page
-    .getByRole('link', { name: 'Mottagning av plagg', exact: true })
+    .getByRole('link', { name: 'Att göra', exact: true })
+    .first()
+    .click()
+  await page
+    .getByRole('link', { name: 'Pågående mottagningar', exact: true })
     .click()
   await page.getByLabel('Sök säljare på namn').fill('Operator TEST')
   await page.getByRole('button', { name: 'Sök', exact: true }).click()

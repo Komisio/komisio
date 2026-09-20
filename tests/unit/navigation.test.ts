@@ -45,5 +45,11 @@ describe('navigation', () => {
     expect(isActivePath('/', '/')).toBe(true)
     expect(isActivePath('/intake/items/1', '/intake')).toBe(false)
     expect(isActivePath('/intake/items/1', '/intake/items')).toBe(true)
+    expect(currentLink(groups, '/intake/reception/abc')?.path).toBe(
+      '/intake/operations',
+    )
+    expect(isActivePath('/intake/reception-extra', '/intake/operations')).toBe(
+      false,
+    )
   })
 })

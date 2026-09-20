@@ -447,7 +447,8 @@
   "audit.reception.access_revoked": "Granskningslänk återkallad",
   "audit.reception.seller_responded": "Säljaren svarade på underlaget",
   "reception": {
-    "title": "Mottagning av plagg",
+    "title": "Mottagningar",
+    "ongoing": "Pågående mottagningar",
     "intro": "Ett plagg, ett granskat underlag och säljarens beslut.",
     "manual": "Beskriv plagget manuellt eller använd AI-förslag om butiken har aktiverat det. Personalen granskar underlaget innan säljaren får ta ställning.",
     "aiTitle": "AI-förslag",

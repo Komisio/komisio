@@ -447,7 +447,8 @@
   "audit.reception.access_revoked": "Enlace de revisión revocado",
   "audit.reception.seller_responded": "El depositante respondió a la revisión",
   "reception": {
-    "title": "Recepción de prendas",
+    "title": "Recepciones",
+    "ongoing": "Recepciones en curso",
     "intro": "Una prenda, una propuesta revisada y la decisión del depositante.",
     "manual": "Describe la prenda manualmente o usa sugerencias de IA si están activadas para esta tienda. El personal revisa la evidencia antes de que responda el depositante.",
     "aiTitle": "Sugerencias de IA",

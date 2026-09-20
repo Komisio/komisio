@@ -36,7 +36,7 @@ export default async function Operations({
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
         <Link className="text-link" href="/intake/reception">
-          {all.reception.title}
+          {all.reception.ongoing}
         </Link>
       </div>
       <p className="intake-notice">{d.notice}</p>

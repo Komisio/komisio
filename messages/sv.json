@@ -1022,8 +1022,8 @@
     }
   },
   "ledger": {
-    "title": "Saldo och reskontra",
-    "intro": "Varje belopp mot säljaren härleds ur denna reskontra där inget ändras i efterhand. Försäljningar krediterar säljarens andel; utbetalningar och returer kommer senare.",
+    "title": "Saldo",
+    "intro": "Här ser du säljarens saldo och hur det har förändrats genom försäljningar, returer och utbetalningar.",
     "available": "Tillgängligt",
     "reserved": "Reserverat",
     "credited": "Krediterat från försäljning",
@@ -1038,7 +1038,7 @@
       "booking_charge": "Bokningsavgift",
       "adjustment": "Justering"
     },
-    "adjustHeading": "Justera reskontran",
+    "adjustHeading": "Justera saldo",
     "adjustHint": "Endast ägare eller administratör. En rättelse är en ny post med en anledning; inget redigeras.",
     "amount": "Belopp (negativt för avdrag)",
     "amountHint": "Till exempel -50 eller 12,50.",

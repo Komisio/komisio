@@ -150,6 +150,9 @@ test('Zettle product export, price update, checkout, automatic credit and concur
       ]),
     )
     await page.reload()
+    await page
+      .getByText(`Zettle · ${d.integrationPage.manage}`, { exact: true })
+      .click()
     await page.getByRole('button', { name: d.zettle.sync, exact: true }).click()
     await expect
       .poll(
@@ -185,6 +188,9 @@ test('Zettle product export, price update, checkout, automatic credit and concur
     )
     for (const r of responses) expect(r.status(), await r.text()).toBe(200)
     await page.reload()
+    await page
+      .getByText(`Zettle · ${d.integrationPage.manage}`, { exact: true })
+      .click()
     await page.getByRole('link', { name: new RegExp(d.zettle.open) }).click()
     await expect(
       page.getByText(d.zettle.recorded, { exact: true }),

@@ -3,8 +3,7 @@ import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary, intlLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
-import { readItems } from '@/lib/engine/items'
-import { readSales, readSoldItemIds, formatOre } from '@/lib/engine/sales'
+import { readSales, formatOre } from '@/lib/engine/sales'
 import { SaleForm } from '@/components/intake/sale-form'
 
 export default async function Sales() {
@@ -14,24 +13,7 @@ export default async function Sales() {
     currency = await readStoreCurrency(ctx.client, active.id),
     all = dictionary(ctx.locale),
     d = all.sales
-  const [sales, items] = await Promise.all([
-    readSales(ctx.client, active.id),
-    readItems(ctx.client, active.id),
-  ])
-  const sold = await readSoldItemIds(
-    ctx.client,
-    active.id,
-    items.map((i) => i.id),
-  )
-  const unsold = items
-    .filter((i) => !sold.has(i.id))
-    .map((i) => ({
-      id: i.id,
-      priceOre: i.priceOre,
-      label: `${all.items.originKinds[i.origin_kind]} · ${
-        i.priceOre === null ? '—' : `${formatOre(i.priceOre)} ${currency}`
-      } · ${i.id.slice(0, 8)}`,
-    }))
+  const sales = await readSales(ctx.client, active.id)
   const when = (iso: string) =>
     new Date(iso).toLocaleString(intlLocale(ctx.locale), {
       timeZone: 'Europe/Stockholm',
@@ -47,16 +29,18 @@ export default async function Sales() {
         </Link>
       </div>
       <p className="intake-notice">{d.notice}</p>
-      <div className="intake-grid">
+      <div className="sales-page">
         {active.role !== 'readonly' ? (
-          <SaleForm
-            key={active.id}
-            tenantId={active.id}
-            currency={currency}
-            items={unsold}
-            d={d}
-            intake={all.intake}
-          />
+          <details className="sale-manual">
+            <summary>{d.recordHeading}</summary>
+            <SaleForm
+              key={active.id}
+              tenantId={active.id}
+              currency={currency}
+              d={d}
+              intake={all.intake}
+            />
+          </details>
         ) : (
           <p>{all.intake.readOnly}</p>
         )}

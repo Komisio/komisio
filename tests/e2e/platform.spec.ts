@@ -43,7 +43,7 @@ test('saved inspection drafts resume safely and preserve conflicting edits', asy
   expect(received.status()).toBe(200)
   const bagId = (await received.json()).id
   const path = `/intake/bags/${bagId}/inspect`
-  await page.goto(path)
+  await page.goto(`${path}?view=drafts`)
   await page
     .getByLabel('Beskrivning av varan')
     .fill('TEST blå jacka <script>literal</script>')
@@ -209,7 +209,7 @@ test('saved inspection drafts resume safely and preserve conflicting edits', asy
         ).status(),
       ).toBe(200)
     }
-    await page.goto(path)
+    await page.goto(`${path}?view=drafts`)
     await expect(page.locator('.inspection-item')).toHaveCount(20)
     const firstPage = await page.locator('.inspection-item a').allTextContents()
     await page.getByRole('link', { name: 'Nästa varor' }).click()
@@ -396,6 +396,7 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
     expect(replay.status()).toBe(200)
     expect((await replay.json()).id).toBe(receiptId)
     await page.goto(`/intake/bags/${receiptId}`)
+    await page.getByText('Avtal vid mottagningen', { exact: true }).click()
     await expect(
       page.getByRole('link', { name: 'TEST Villkor 1 · Version 1' }),
     ).toBeVisible()
@@ -1921,7 +1922,11 @@ test('operator reception guides saved evidence, exact review and link replacemen
   ).toBe(200)
   await page.goto('/intake')
   await page
-    .getByRole('link', { name: 'Mottagning av plagg', exact: true })
+    .getByRole('link', { name: 'Att göra', exact: true })
+    .first()
+    .click()
+  await page
+    .getByRole('link', { name: 'Pågående mottagningar', exact: true })
     .click()
   await page.getByLabel('Sök säljare på namn').fill('Operator TEST')
   await page.getByRole('button', { name: 'Sök', exact: true }).click()

@@ -22,21 +22,6 @@ export function buildNavigation(
           // The one-screen reception first: it is the default intake profile.
           { path: '/intake/quick', label: d.quickIntake.title, icon: 'Zap' },
           { path: '/intake', label: n.receiveBag, icon: 'Inbox' },
-          {
-            path: '/intake/reception',
-            label: d.reception.title,
-            icon: 'Camera',
-          },
-          {
-            path: '/intake/handovers',
-            label: n.selfDropOff,
-            icon: 'Handshake',
-          },
-          {
-            path: '/intake/purchases',
-            label: d.purchases.title,
-            icon: 'ShoppingBag',
-          },
         ],
       },
       {
@@ -86,7 +71,7 @@ export function buildNavigation(
         links: [
           {
             path: '/intake/operations',
-            label: d.operations.title,
+            label: n.workShort,
             icon: 'ListChecks',
           },
           { path: '/intake/integrations', label: n.integrations, icon: 'Plug' },
@@ -130,6 +115,12 @@ export function mobileNavigation(
 
 export function isActivePath(pathname: string, path: string) {
   if (path === '/') return pathname === '/'
+  if (
+    path === '/intake/operations' &&
+    (pathname === '/intake/reception' ||
+      pathname.startsWith('/intake/reception/'))
+  )
+    return true
   if (path === '/intake')
     return pathname === '/intake' || pathname.startsWith('/intake/bags')
   return pathname === path || pathname.startsWith(`${path}/`)

@@ -37,7 +37,9 @@
     "receiptAgreement": "Avtale ved mottak",
     "noReceiptAgreement": "Ingen avtaleinformasjon ble registrert med denne kvitteringen.",
     "noEvidence": "Ingen bevis ble knyttet til denne kvitteringen.",
-    "evidenceNote": "Avtaleregistreringen godkjenner ikke innholdet for salg."
+    "evidenceNote": "Avtaleregistreringen godkjenner ikke innholdet for salg.",
+    "optionalReceiptAgreement": "Ingen avtale registrert – valgfritt for denne butikken.",
+    "evidenceHelp": "Hva innebærer en registrert avtale?"
   },
   "quickIntake": {
     "title": "Hurtigmottak",
@@ -164,7 +166,10 @@
     "matchPhone": "samme telefon",
     "matchName": "samme navn",
     "overviewIntro": "Ta imot en vare nå, eller registrer en pose for gjennomgang senere.",
-    "quickHint": "Beskrivelse og pris er nok. Bilde er valgfritt."
+    "quickHint": "Beskrivelse og pris er nok. Bilde er valgfritt.",
+    "labelPreview": "Forhåndsvisning",
+    "otherPrint": "Annen skriver eller PDF",
+    "browserPrint": "Åpne utskriftsdialog"
   },
   "brand": "Komisio",
   "tagline": "Mer plass til ting som kan leve videre.",
@@ -442,7 +447,8 @@
   "audit.reception.access_revoked": "Gjennomgangslenke trukket tilbake",
   "audit.reception.seller_responded": "Innleverer svarte på gjennomgang",
   "reception": {
-    "title": "Plaggmottak",
+    "title": "Mottak",
+    "ongoing": "Pågående mottak",
     "intro": "Ett plagg, ett gjennomgått forslag og innlevererens avgjørelse.",
     "manual": "Beskriv plagget manuelt eller bruk AI-forslag hvis det er aktivert for denne butikken. Personalet går gjennom bevisene før innlevereren svarer.",
     "aiTitle": "AI-forslag",
@@ -974,16 +980,16 @@
   },
   "sales": {
     "title": "Salg",
-    "intro": "Et salg er et faktum fra kassen eller en POS-leverandør. Hver linje fryser pris, kommisjon, innlevererens tilgodehavende og mva slik de var i det øyeblikket.",
-    "notice": "Å registrere et salg betaler ingen. Innlevereres saldo, returer og utbetalinger følger i senere deler.",
-    "recordHeading": "Registrer et kassesalg",
-    "recordHint": "Én mottatt, usolgt vare per salg foreløpig. POS-salg kommer via sin egen integrasjon.",
+    "intro": "Se butikkens salg og registrer et salg manuelt ved behov.",
+    "notice": "Salg fra kassakoblingen vises her. Ikke registrer samme salg på nytt manuelt.",
+    "recordHeading": "Registrer manuelt",
+    "recordHint": "Søk eller skann varer, kontroller prisene og registrer salget.",
     "noItems": "Ingen mottatte varer er tilgjengelige for salg.",
     "item": "Vare",
     "price": "Salgspris",
     "priceHint": "for eksempel 250 eller 250,50.",
     "priceInvalid": "Oppgi en pris med opptil to desimaler.",
-    "confirm": "Jeg bekrefter at varen ble solgt til denne prisen.",
+    "confirm": "Jeg bekrefter at varene ble solgt til disse prisene.",
     "record": "Registrer salg",
     "recorded": "Salget er registrert.",
     "open": "Åpne kvittering",
@@ -1013,7 +1019,19 @@
       "consignment_business": "næringsdrivende innleverer",
       "store_margin": "butikkeid, avansemetode",
       "store_full": "butikkeid, full mva"
-    }
+    },
+    "search": "Søk eller skann etikett",
+    "searchHint": "Varenummer (I-…) eller beskrivelse",
+    "searchButton": "Søk",
+    "searchFailed": "Søket mislyktes. Prøv igjen.",
+    "noMatches": "Ingen salgbare varer matcher.",
+    "narrowSearch": "Viser 20 treff. Avgrens søket hvis varen mangler.",
+    "add": "Legg til",
+    "added": "Lagt til",
+    "cart": "Handlekurv",
+    "cartEmpty": "Søk etter varene du vil registrere.",
+    "remove": "Fjern",
+    "total": "Totalt"
   },
   "ledger": {
     "title": "Saldo og reskontro",
@@ -1320,7 +1338,11 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "Omløp er solgt i perioden delt på solgt pluss på lager nå. Aldersgruppene følger standardplanen for prisnedsettelser."
+    "definitions": "Omløp er solgt i perioden delt på solgt pluss på lager nå. Aldersgruppene følger standardplanen for prisnedsettelser.",
+    "current": "Lageret akkurat nå",
+    "salesPeriod": "Salg i perioden",
+    "more": "Vis flere nøkkeltall",
+    "valueHint": "Varens samlede salgspris."
   },
   "importer": {
     "title": "Importer innleverere",
@@ -1916,7 +1938,8 @@
       "CREDENTIAL_KEY_MISSING": "Den distribuerte konfigurasjonen mangler legitimasjonsnøkkelen (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Det lagrede tokenet kan ikke leses med gjeldende legitimasjonsnøkkel. Koble fra og koble til igjen.",
       "REQUEST_FAILED": "Forespørselen mislyktes. Prøv igjen senere."
-    }
+    },
+    "details": "Tilkoblingsdetaljer"
   },
   "fortnox": {
     "reconcileTitle": "Bekreft et eksisterende bilag",
@@ -2143,7 +2166,7 @@
     "pullEnable": "Aktiver henting av kvitteringer fra nå",
     "pullNow": "Hent neste side fra Zettle",
     "pullWaiting": "Ingen nytt intervall ennå. Hentingen ligger to minutter etter for å la Zettle behandle kjøpene.",
-    "connectionTitle": "Pilottilkobling",
+    "connectionTitle": "Zettle",
     "connectionHint": "Verifiser legitimasjonen som holdes på serveren og dens Zettle-forhandler. Denne kontrollen oppretter ingen produkter og importerer ingen salg.",
     "checkConnection": "Kontroller Zettle-tilkoblingen",
     "connectionUnavailable": "Pilottilkoblingen er ikke knyttet til denne butikken.",
@@ -2252,7 +2275,7 @@
     "title": "Innleverere",
     "intro": "Alle som har levert inn til butikken: hva butikken har for dem, hva som er solgt og hva de kan be om.",
     "register": "Registrer en innleverer",
-    "search": "Søk etter navn",
+    "search": "Søk etter selger",
     "searchButton": "Søk",
     "showingAll": "{total} innleverere.",
     "showingSome": "Viser de første {limit} av {total} innleverere; søk for å avgrense.",
@@ -2262,7 +2285,9 @@
     "items": "Varer",
     "sold": "Solgt",
     "available": "Tilgjengelig",
-    "reserved": "Reservert"
+    "reserved": "Reservert",
+    "searchHint": "Navn, e-post, telefon, adresse eller sted",
+    "clear": "Tøm søk"
   },
   "connectors": {
     "title": "AI-assistenter",
@@ -2396,5 +2421,21 @@
     "saved": "Opplysningene er lagret.",
     "history": "Endringshistorikk",
     "emailHint": "Kontroller e-postadressen nøye. Den brukes til meldinger og selgerens tilgang."
+  },
+  "bagIntake": {
+    "intro": "Ta én vare om gangen. Legg til et bilde for hjelp med opplysningene, kontroller beskrivelse og pris og lagre.",
+    "item": "Vare fra posen",
+    "save": "Lagre vare",
+    "next": "Neste vare fra posen",
+    "registered": "Registrerte varer",
+    "empty": "Ingen varer registrert ennå.",
+    "drafts": "Tidligere utkast og historikk",
+    "back": "Til gjennomgang av posen",
+    "limit": "Viser de 50 sist registrerte varene."
+  },
+  "integrationPage": {
+    "intro": "Koble butikken til kassen eller nettbutikken. Administrer tilkoblinger her og åpne detaljer ved behov.",
+    "manage": "Synkronisering og historikk",
+    "adminOnly": "En eier eller administrator kan administrere tilkoblingene."
   }
 }

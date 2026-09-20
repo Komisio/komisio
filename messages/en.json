@@ -37,7 +37,9 @@
     "receiptAgreement": "Agreement at receiving",
     "noReceiptAgreement": "No agreement information was recorded with this receipt.",
     "noEvidence": "No evidence was linked to this receipt.",
-    "evidenceNote": "The agreement record does not approve the contents for sale."
+    "evidenceNote": "The agreement record does not approve the contents for sale.",
+    "optionalReceiptAgreement": "No agreement recorded – optional for this store.",
+    "evidenceHelp": "What does a recorded agreement mean?"
   },
   "quickIntake": {
     "title": "Quick reception",
@@ -164,7 +166,10 @@
     "matchPhone": "same phone",
     "matchName": "same name",
     "overviewIntro": "Receive an item now or register a bag to sort later.",
-    "quickHint": "A description and price are enough. A photo is optional."
+    "quickHint": "A description and price are enough. A photo is optional.",
+    "labelPreview": "Preview",
+    "otherPrint": "Other printer or PDF",
+    "browserPrint": "Open print dialog"
   },
   "brand": "Komisio",
   "tagline": "More room for things to live again.",
@@ -442,7 +447,8 @@
   "audit.reception.access_revoked": "Review link revoked",
   "audit.reception.seller_responded": "Seller responded to review",
   "reception": {
-    "title": "Garment reception",
+    "title": "Receptions",
+    "ongoing": "Ongoing receptions",
     "intro": "One garment, one reviewed proposal and the seller decision.",
     "manual": "Describe the garment manually or use AI suggestions if enabled for this store. Staff reviews the evidence before the seller responds.",
     "aiTitle": "AI suggestions",
@@ -974,16 +980,16 @@
   },
   "sales": {
     "title": "Sales",
-    "intro": "A sale is a fact from the till or a POS provider. Each line freezes price, commission, seller credit and VAT as they were at that moment.",
-    "notice": "Recording a sale does not pay anyone. Seller balances, returns and payouts follow in later slices.",
-    "recordHeading": "Record a counter sale",
-    "recordHint": "One accepted, unsold item per sale for now. POS sales arrive through their own integration.",
+    "intro": "View store sales and record a sale manually when needed.",
+    "notice": "Sales from the POS connection appear here. Do not record the same sale again manually.",
+    "recordHeading": "Record manually",
+    "recordHint": "Find or scan items, check prices and record the completed sale.",
     "noItems": "No accepted items are available for sale.",
     "item": "Item",
     "price": "Sale price",
     "priceHint": "for example 250 or 250.50.",
     "priceInvalid": "Enter a price with up to two decimals.",
-    "confirm": "I confirm the item was sold at this price.",
+    "confirm": "I confirm the items were sold at these prices.",
     "record": "Record sale",
     "recorded": "The sale is recorded.",
     "open": "Open receipt",
@@ -1013,7 +1019,19 @@
       "consignment_business": "business seller",
       "store_margin": "store-owned, margin scheme",
       "store_full": "store-owned, full VAT"
-    }
+    },
+    "search": "Search or scan a label",
+    "searchHint": "Item number (I-…) or description",
+    "searchButton": "Search",
+    "searchFailed": "Search failed. Try again.",
+    "noMatches": "No sellable items match.",
+    "narrowSearch": "Showing 20 matches. Refine your search if the item is missing.",
+    "add": "Add",
+    "added": "Added",
+    "cart": "Cart",
+    "cartEmpty": "Search for the items to record.",
+    "remove": "Remove",
+    "total": "Total"
   },
   "ledger": {
     "title": "Balance and ledger",
@@ -1320,7 +1338,11 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "Sell-through is sold in the period divided by sold plus in stock now. Age buckets follow the default markdown schedule."
+    "definitions": "Sell-through is sold in the period divided by sold plus in stock now. Age buckets follow the default markdown schedule.",
+    "current": "Stock right now",
+    "salesPeriod": "Sales during the period",
+    "more": "Show more figures",
+    "valueHint": "Combined selling price of the items."
   },
   "importer": {
     "title": "Import sellers",
@@ -1916,7 +1938,8 @@
       "CREDENTIAL_KEY_MISSING": "The deployed configuration is missing the credential key (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "The stored token cannot be read with the current credential key. Disconnect and connect again.",
       "REQUEST_FAILED": "The request failed. Retry later."
-    }
+    },
+    "details": "Connection details"
   },
   "fortnox": {
     "reconcileTitle": "Confirm an existing voucher",
@@ -2143,7 +2166,7 @@
     "pullEnable": "Enable receipt retrieval from now",
     "pullNow": "Fetch next page from Zettle",
     "pullWaiting": "No new interval yet. Retrieval trails by two minutes to allow Zettle to process purchases.",
-    "connectionTitle": "Pilot connection",
+    "connectionTitle": "Zettle",
     "connectionHint": "Verify the server-held credential and its Zettle merchant. This check creates no products and imports no sales.",
     "checkConnection": "Check Zettle connection",
     "connectionUnavailable": "The pilot connection is not bound to this store.",
@@ -2252,7 +2275,7 @@
     "title": "Sellers",
     "intro": "Everyone who has handed in to the store: what the store holds for them, what has sold and what they can request.",
     "register": "Register a seller",
-    "search": "Search by name",
+    "search": "Find a seller",
     "searchButton": "Search",
     "showingAll": "{total} sellers.",
     "showingSome": "Showing the first {limit} of {total} sellers; search to narrow.",
@@ -2262,7 +2285,9 @@
     "items": "Items",
     "sold": "Sold",
     "available": "Available",
-    "reserved": "Reserved"
+    "reserved": "Reserved",
+    "searchHint": "Name, email, phone, address or city",
+    "clear": "Clear search"
   },
   "connectors": {
     "title": "AI assistants",
@@ -2396,5 +2421,21 @@
     "saved": "Details saved.",
     "history": "Change history",
     "emailHint": "Check the email address carefully. It is used for messages and seller access."
+  },
+  "bagIntake": {
+    "intro": "Handle one item at a time. Add a photo for help with the details, check the description and price, then save.",
+    "item": "Item from the bag",
+    "save": "Save item",
+    "next": "Next item from the bag",
+    "registered": "Registered items",
+    "empty": "No items registered yet.",
+    "drafts": "Earlier drafts and history",
+    "back": "Back to bag inspection",
+    "limit": "Showing the 50 most recently registered items."
+  },
+  "integrationPage": {
+    "intro": "Connect your store to your POS or online shop. Manage connections here and open details when needed.",
+    "manage": "Sync and history",
+    "adminOnly": "An owner or administrator can manage store connections."
   }
 }

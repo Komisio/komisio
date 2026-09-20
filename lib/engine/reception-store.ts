@@ -27,6 +27,7 @@ export const publishReceptionReviewCommand = z.strictObject({
 
 export const createReceptionCommand = z.strictObject({
   action: z.literal('createReception'),
+  bagId: z.uuid().optional(),
   tenantId: z.uuid(),
   requestId: z.uuid(),
   sellerId: z.uuid(),

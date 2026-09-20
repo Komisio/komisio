@@ -150,24 +150,27 @@ export function ShopifyConnection({
         </div>
       )}
       {message && <p role={ok ? 'status' : 'alert'}>{message}</p>}
-      <p>
-        <small>{d.notice}</small>
-      </p>
-      {status.events.length > 0 && (
-        <ul>
-          {status.events.map((e, i) => (
-            <li key={i}>
-              {when(e.occurredAt)} · {d.events[e.kind]}
-              {typeof e.detail.shop_domain === 'string'
-                ? ` · ${e.detail.shop_domain}`
-                : ''}
-              {typeof e.detail.reason === 'string'
-                ? ` · ${errors[e.detail.reason] ?? e.detail.reason}`
-                : ''}
-            </li>
-          ))}
-        </ul>
-      )}
+      <details>
+        <summary>{d.details}</summary>
+        <p>
+          <small>{d.notice}</small>
+        </p>
+        {status.events.length > 0 && (
+          <ul>
+            {status.events.map((e, i) => (
+              <li key={i}>
+                {when(e.occurredAt)} · {d.events[e.kind]}
+                {typeof e.detail.shop_domain === 'string'
+                  ? ` · ${e.detail.shop_domain}`
+                  : ''}
+                {typeof e.detail.reason === 'string'
+                  ? ` · ${errors[e.detail.reason] ?? e.detail.reason}`
+                  : ''}
+              </li>
+            ))}
+          </ul>
+        )}
+      </details>
     </section>
   )
 }

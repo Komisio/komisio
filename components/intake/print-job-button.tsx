@@ -14,6 +14,7 @@ export function PrintJobButton({
   referenceId,
   d,
   intake,
+  compact = false,
 }: {
   tenantId: string
   printers: Printer[]
@@ -22,6 +23,7 @@ export function PrintJobButton({
   referenceId: string
   d: Dictionary['printing']
   intake: Dictionary['intake']
+  compact?: boolean
 }) {
   const router = useRouter()
   const active = printers.filter((p) => p.active)
@@ -68,7 +70,10 @@ export function PrintJobButton({
     }
   }
   return (
-    <form onSubmit={submit} className="row wrap no-print">
+    <form
+      onSubmit={submit}
+      className={compact ? 'label-print-form no-print' : 'row wrap no-print'}
+    >
       <label htmlFor={`printer-${referenceId}`}>{d.printer}</label>
       <select id={`printer-${referenceId}`} name="printer" disabled={busy}>
         {active.map((p) => (
@@ -87,7 +92,11 @@ export function PrintJobButton({
         defaultValue={1}
         disabled={busy}
       />
-      <Button type="submit" variant="secondary" disabled={busy}>
+      <Button
+        type="submit"
+        variant={compact ? 'primary' : 'secondary'}
+        disabled={busy}
+      >
         {busy ? intake.busy : d.queue}
       </Button>
       {error && <p role="alert">{error}</p>}

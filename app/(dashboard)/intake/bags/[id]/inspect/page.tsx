@@ -1,4 +1,6 @@
 import { prepareInspectionReception } from '@/lib/engine/inspection-reception-preview'
+import { BagReception } from '@/components/intake/bag-reception'
+import { readStorePolicy } from '@/lib/engine/store-policy'
 import { InspectionPreparation } from '@/components/intake/inspection-preparation'
 import { readInspection } from '@/lib/engine/inspection-read'
 import { readItemForOrigin } from '@/lib/engine/items'
@@ -29,13 +31,14 @@ export default async function InspectBag({
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const ctx = await requirePlatform()
   const { id } = await params
-  const navigation = inspectionNavigation.safeParse(await searchParams)
+  const query = await searchParams
+  const navigation = inspectionNavigation.safeParse(query)
   if (!z.uuid().safeParse(id).success || !navigation.success) notFound()
   const { draft, version, historyBefore, after, before, status } =
     navigation.data
   const inspectionHref = (
     params: Record<string, string | number | undefined>,
-  ) => navigationHref({ status, ...params })
+  ) => navigationHref({ view: 'drafts', status, ...params })
   const tenantId = ctx.active!.id
   const {
     bag,
@@ -59,6 +62,28 @@ export default async function InspectBag({
   })
   const d = dictionary(ctx.locale),
     s = d.inspection
+  const policy = await readStorePolicy(ctx.client, tenantId)
+  if (
+    query.view !== 'drafts' &&
+    !draft &&
+    !version &&
+    !after &&
+    !before &&
+    !query.status &&
+    policy.policy.intakeProfile !== 'full'
+  )
+    return (
+      <BagReception
+        client={ctx.client}
+        tenantId={tenantId}
+        bagId={id}
+        reference={bag.reference}
+        note={bag.note}
+        locale={ctx.locale}
+        currency={policy.policy.currency ?? 'SEK'}
+        readonly={ctx.active!.role === 'readonly'}
+      />
+    )
   const acceptedItem = selected
     ? await readItemForOrigin(
         ctx.client,
@@ -77,6 +102,9 @@ export default async function InspectBag({
         <p>{s.pilot}</p>
       </div>
       <div className="row">
+        <Link className="text-link" href={`/intake/bags/${id}/inspect`}>
+          {d.bagIntake.back}
+        </Link>
         <Link className="text-link" href={`/intake/bags/${id}`}>
           {s.bag}
         </Link>

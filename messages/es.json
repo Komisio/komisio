@@ -37,7 +37,9 @@
     "receiptAgreement": "Acuerdo en la recepción",
     "noReceiptAgreement": "No se registró información del acuerdo con este recibo.",
     "noEvidence": "No se vinculó ninguna evidencia a este recibo.",
-    "evidenceNote": "El registro del acuerdo no aprueba el contenido para la venta."
+    "evidenceNote": "El registro del acuerdo no aprueba el contenido para la venta.",
+    "optionalReceiptAgreement": "No hay ningún acuerdo registrado; es opcional para esta tienda.",
+    "evidenceHelp": "¿Qué implica un acuerdo registrado?"
   },
   "quickIntake": {
     "title": "Recepción rápida",
@@ -164,7 +166,10 @@
     "matchPhone": "mismo teléfono",
     "matchName": "mismo nombre",
     "overviewIntro": "Recibe un artículo ahora o registra una bolsa para revisarla más tarde.",
-    "quickHint": "Basta con una descripción y un precio. La foto es opcional."
+    "quickHint": "Basta con una descripción y un precio. La foto es opcional.",
+    "labelPreview": "Vista previa",
+    "otherPrint": "Otra impresora o PDF",
+    "browserPrint": "Abrir diálogo de impresión"
   },
   "brand": "Komisio",
   "tagline": "Más espacio para que las cosas vuelvan a vivir.",
@@ -442,7 +447,8 @@
   "audit.reception.access_revoked": "Enlace de revisión revocado",
   "audit.reception.seller_responded": "El depositante respondió a la revisión",
   "reception": {
-    "title": "Recepción de prendas",
+    "title": "Recepciones",
+    "ongoing": "Recepciones en curso",
     "intro": "Una prenda, una propuesta revisada y la decisión del depositante.",
     "manual": "Describe la prenda manualmente o usa sugerencias de IA si están activadas para esta tienda. El personal revisa la evidencia antes de que responda el depositante.",
     "aiTitle": "Sugerencias de IA",
@@ -974,16 +980,16 @@
   },
   "sales": {
     "title": "Ventas",
-    "intro": "Una venta es un hecho de la caja o de un proveedor de TPV. Cada línea congela el precio, la comisión, el crédito del depositante y el IVA tal como estaban en ese momento.",
-    "notice": "Registrar una venta no paga a nadie. Los saldos de los depositantes, las devoluciones y los pagos vienen en fases posteriores.",
-    "recordHeading": "Registrar una venta en mostrador",
-    "recordHint": "Por ahora, un artículo aceptado y no vendido por venta. Las ventas de TPV llegan a través de su propia integración.",
+    "intro": "Consulta las ventas de la tienda y registra una venta manualmente cuando sea necesario.",
+    "notice": "Las ventas de la conexión con la caja aparecen aquí. No registres la misma venta otra vez manualmente.",
+    "recordHeading": "Registrar manualmente",
+    "recordHint": "Busca o escanea artículos, revisa los precios y registra la venta realizada.",
     "noItems": "No hay artículos aceptados disponibles para la venta.",
     "item": "Artículo",
     "price": "Precio de venta",
     "priceHint": "por ejemplo 250 o 250.50.",
     "priceInvalid": "Introduce un precio con hasta dos decimales.",
-    "confirm": "Confirmo que el artículo se vendió a este precio.",
+    "confirm": "Confirmo que los artículos se vendieron a estos precios.",
     "record": "Registrar venta",
     "recorded": "La venta está registrada.",
     "open": "Abrir recibo",
@@ -1013,7 +1019,19 @@
       "consignment_business": "depositante empresa",
       "store_margin": "propiedad de la tienda, régimen del margen",
       "store_full": "propiedad de la tienda, IVA completo"
-    }
+    },
+    "search": "Buscar o escanear etiqueta",
+    "searchHint": "Número de artículo (I-…) o descripción",
+    "searchButton": "Buscar",
+    "searchFailed": "La búsqueda falló. Inténtalo de nuevo.",
+    "noMatches": "No hay artículos disponibles que coincidan.",
+    "narrowSearch": "Se muestran 20 resultados. Afina la búsqueda si falta el artículo.",
+    "add": "Añadir",
+    "added": "Añadido",
+    "cart": "Carrito",
+    "cartEmpty": "Busca los artículos que quieres registrar.",
+    "remove": "Eliminar",
+    "total": "Total"
   },
   "ledger": {
     "title": "Saldo y libro",
@@ -1320,7 +1338,11 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "La ratio de venta es lo vendido en el periodo dividido entre lo vendido más lo que hay en existencias ahora. Los tramos de antigüedad siguen el calendario de rebajas por defecto."
+    "definitions": "La ratio de venta es lo vendido en el periodo dividido entre lo vendido más lo que hay en existencias ahora. Los tramos de antigüedad siguen el calendario de rebajas por defecto.",
+    "current": "Existencias actuales",
+    "salesPeriod": "Ventas del periodo",
+    "more": "Mostrar más cifras",
+    "valueHint": "Suma de los precios de venta de los artículos."
   },
   "importer": {
     "title": "Importar depositantes",
@@ -1916,7 +1938,8 @@
       "CREDENTIAL_KEY_MISSING": "A la configuración desplegada le falta la clave de credenciales (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "El token guardado no se puede leer con la clave de credenciales actual. Desconecta y conecta de nuevo.",
       "REQUEST_FAILED": "La solicitud falló. Vuelve a intentarlo más tarde."
-    }
+    },
+    "details": "Detalles de la conexión"
   },
   "fortnox": {
     "reconcileTitle": "Confirmar un asiento existente",
@@ -2143,7 +2166,7 @@
     "pullEnable": "Activar la obtención de recibos desde ahora",
     "pullNow": "Obtener la siguiente página de Zettle",
     "pullWaiting": "Aún no hay un intervalo nuevo. La obtención va con dos minutos de retraso para que Zettle procese las compras.",
-    "connectionTitle": "Conexión piloto",
+    "connectionTitle": "Zettle",
     "connectionHint": "Verifica la credencial guardada en el servidor y su comerciante de Zettle. Esta comprobación no crea productos ni importa ventas.",
     "checkConnection": "Comprobar la conexión con Zettle",
     "connectionUnavailable": "La conexión piloto no está vinculada a esta tienda.",
@@ -2252,7 +2275,7 @@
     "title": "Depositantes",
     "intro": "Todos los que han entregado en la tienda: lo que la tienda guarda para ellos, lo que se ha vendido y lo que pueden solicitar.",
     "register": "Registrar un depositante",
-    "search": "Buscar por nombre",
+    "search": "Buscar vendedor",
     "searchButton": "Buscar",
     "showingAll": "{total} depositantes.",
     "showingSome": "Mostrando los primeros {limit} de {total} depositantes; busca para acotar.",
@@ -2262,7 +2285,9 @@
     "items": "Artículos",
     "sold": "Vendidos",
     "available": "Disponible",
-    "reserved": "Reservado"
+    "reserved": "Reservado",
+    "searchHint": "Nombre, correo, teléfono, dirección o ciudad",
+    "clear": "Borrar búsqueda"
   },
   "connectors": {
     "title": "Asistentes de IA",
@@ -2396,5 +2421,21 @@
     "saved": "Datos guardados.",
     "history": "Historial de cambios",
     "emailHint": "Comprueba el correo electrónico. Se utiliza para los mensajes y el acceso del vendedor."
+  },
+  "bagIntake": {
+    "intro": "Revisa un artículo a la vez. Añade una foto si quieres ayuda con los datos, comprueba la descripción y el precio y guarda.",
+    "item": "Artículo de la bolsa",
+    "save": "Guardar artículo",
+    "next": "Siguiente artículo de la bolsa",
+    "registered": "Artículos registrados",
+    "empty": "Todavía no hay artículos registrados.",
+    "drafts": "Borradores anteriores e historial",
+    "back": "Volver a la revisión de la bolsa",
+    "limit": "Se muestran los últimos 50 artículos registrados."
+  },
+  "integrationPage": {
+    "intro": "Conecta tu tienda con la caja o tienda online. Gestiona las conexiones y abre los detalles cuando los necesites.",
+    "manage": "Sincronización e historial",
+    "adminOnly": "Un propietario o administrador puede gestionar las conexiones."
   }
 }

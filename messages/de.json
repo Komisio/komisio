@@ -37,7 +37,9 @@
     "receiptAgreement": "Vereinbarung bei der Annahme",
     "noReceiptAgreement": "Mit diesem Beleg wurden keine Vereinbarungsinformationen erfasst.",
     "noEvidence": "Mit diesem Beleg wurde kein Nachweis verknüpft.",
-    "evidenceNote": "Der Vereinbarungsvermerk gibt den Inhalt nicht zum Verkauf frei."
+    "evidenceNote": "Der Vereinbarungsvermerk gibt den Inhalt nicht zum Verkauf frei.",
+    "optionalReceiptAgreement": "Keine Vereinbarung erfasst – für dieses Geschäft optional.",
+    "evidenceHelp": "Was bedeutet eine erfasste Vereinbarung?"
   },
   "quickIntake": {
     "title": "Schnellannahme",
@@ -164,7 +166,10 @@
     "matchPhone": "gleiche Telefonnummer",
     "matchName": "gleicher Name",
     "overviewIntro": "Nehmen Sie einen Artikel direkt an oder erfassen Sie eine Tasche zur späteren Durchsicht.",
-    "quickHint": "Beschreibung und Preis genügen. Ein Foto ist optional."
+    "quickHint": "Beschreibung und Preis genügen. Ein Foto ist optional.",
+    "labelPreview": "Vorschau",
+    "otherPrint": "Anderer Drucker oder PDF",
+    "browserPrint": "Druckdialog öffnen"
   },
   "brand": "Komisio",
   "tagline": "Mehr Raum für Dinge, die weiterleben.",
@@ -442,7 +447,8 @@
   "audit.reception.access_revoked": "Prüfungslink widerrufen",
   "audit.reception.seller_responded": "Einlieferer hat auf Prüfung geantwortet",
   "reception": {
-    "title": "Kleidungsstück-Annahme",
+    "title": "Warenannahmen",
+    "ongoing": "Laufende Warenannahmen",
     "intro": "Ein Kleidungsstück, ein geprüfter Vorschlag und die Entscheidung des Einlieferers.",
     "manual": "Beschreiben Sie das Kleidungsstück manuell oder nutzen Sie KI-Vorschläge, falls für diesen Store aktiviert. Mitarbeiter prüfen die Nachweise, bevor der Einlieferer antwortet.",
     "aiTitle": "KI-Vorschläge",
@@ -974,16 +980,16 @@
   },
   "sales": {
     "title": "Verkäufe",
-    "intro": "Ein Verkauf ist ein Fakt von der Kasse oder einem POS-Anbieter. Jede Zeile friert Preis, Kommission, Einlieferer-Gutschrift und MwSt. so ein, wie sie zu diesem Zeitpunkt waren.",
-    "notice": "Das Erfassen eines Verkaufs zahlt niemanden aus. Einlieferer-Guthaben, Rückgaben und Auszahlungen folgen in späteren Schritten.",
-    "recordHeading": "Ladenverkauf erfassen",
-    "recordHint": "Vorerst ein angenommener, unverkaufter Artikel pro Verkauf. POS-Verkäufe kommen über ihre eigene Integration.",
+    "intro": "Verkäufe ansehen und bei Bedarf einen Verkauf manuell erfassen.",
+    "notice": "Verkäufe aus der Kassenanbindung erscheinen hier. Erfassen Sie denselben Verkauf nicht erneut manuell.",
+    "recordHeading": "Manuell erfassen",
+    "recordHint": "Artikel suchen oder scannen, Preise prüfen und den erfolgten Verkauf erfassen.",
     "noItems": "Keine angenommenen Artikel zum Verkauf verfügbar.",
     "item": "Artikel",
     "price": "Verkaufspreis",
     "priceHint": "zum Beispiel 250 oder 250.50.",
     "priceInvalid": "Geben Sie einen Preis mit bis zu zwei Dezimalstellen ein.",
-    "confirm": "Ich bestätige, dass der Artikel zu diesem Preis verkauft wurde.",
+    "confirm": "Ich bestätige, dass die Artikel zu diesen Preisen verkauft wurden.",
     "record": "Verkauf erfassen",
     "recorded": "Der Verkauf ist erfasst.",
     "open": "Beleg öffnen",
@@ -1013,7 +1019,19 @@
       "consignment_business": "gewerblicher Einlieferer",
       "store_margin": "Store-eigen, Differenzbesteuerung",
       "store_full": "Store-eigen, volle MwSt."
-    }
+    },
+    "search": "Suchen oder Etikett scannen",
+    "searchHint": "Artikelnummer (I-…) oder Beschreibung",
+    "searchButton": "Suchen",
+    "searchFailed": "Suche fehlgeschlagen. Bitte erneut versuchen.",
+    "noMatches": "Keine verkäuflichen Artikel gefunden.",
+    "narrowSearch": "20 Treffer angezeigt. Verfeinern Sie bei Bedarf die Suche.",
+    "add": "Hinzufügen",
+    "added": "Hinzugefügt",
+    "cart": "Warenkorb",
+    "cartEmpty": "Suchen Sie die zu erfassenden Artikel.",
+    "remove": "Entfernen",
+    "total": "Gesamt"
   },
   "ledger": {
     "title": "Guthaben und Konto",
@@ -1320,7 +1338,11 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "Die Abverkaufsquote ist die Anzahl der im Zeitraum verkauften Artikel geteilt durch verkaufte plus aktuell im Bestand befindliche Artikel. Die Altersgruppen folgen dem Standard-Preissenkungsplan."
+    "definitions": "Die Abverkaufsquote ist die Anzahl der im Zeitraum verkauften Artikel geteilt durch verkaufte plus aktuell im Bestand befindliche Artikel. Die Altersgruppen folgen dem Standard-Preissenkungsplan.",
+    "current": "Aktueller Bestand",
+    "salesPeriod": "Verkäufe im Zeitraum",
+    "more": "Weitere Kennzahlen anzeigen",
+    "valueHint": "Summe der Verkaufspreise der Artikel."
   },
   "importer": {
     "title": "Einlieferer importieren",
@@ -1916,7 +1938,8 @@
       "CREDENTIAL_KEY_MISSING": "In der bereitgestellten Konfiguration fehlt der Zugangsdaten-Schlüssel (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Das gespeicherte Token kann mit dem aktuellen Zugangsdaten-Schlüssel nicht gelesen werden. Trennen und erneut verbinden.",
       "REQUEST_FAILED": "Die Anfrage ist fehlgeschlagen. Versuchen Sie es später erneut."
-    }
+    },
+    "details": "Verbindungsdetails"
   },
   "fortnox": {
     "reconcileTitle": "Vorhandenen Buchungsbeleg bestätigen",
@@ -2143,7 +2166,7 @@
     "pullEnable": "Belegabruf ab jetzt aktivieren",
     "pullNow": "Nächste Seite von Zettle abrufen",
     "pullWaiting": "Noch kein neues Intervall. Der Abruf hinkt zwei Minuten hinterher, damit Zettle Käufe verarbeiten kann.",
-    "connectionTitle": "Pilotverbindung",
+    "connectionTitle": "Zettle",
     "connectionHint": "Prüfen Sie die serverseitig gespeicherten Zugangsdaten und ihren Zettle-Händler. Diese Prüfung erstellt keine Produkte und importiert keine Verkäufe.",
     "checkConnection": "Zettle-Verbindung prüfen",
     "connectionUnavailable": "Die Pilotverbindung ist nicht an diesen Store gebunden.",
@@ -2252,7 +2275,7 @@
     "title": "Einlieferer",
     "intro": "Alle, die im Store eingeliefert haben: was der Store für sie verwahrt, was verkauft wurde und was sie beantragen können.",
     "register": "Einlieferer registrieren",
-    "search": "Nach Namen suchen",
+    "search": "Verkäufer suchen",
     "searchButton": "Suchen",
     "showingAll": "{total} Einlieferer.",
     "showingSome": "Die ersten {limit} von {total} Einlieferern werden angezeigt; suchen Sie, um einzugrenzen.",
@@ -2262,7 +2285,9 @@
     "items": "Artikel",
     "sold": "Verkauft",
     "available": "Verfügbar",
-    "reserved": "Reserviert"
+    "reserved": "Reserviert",
+    "searchHint": "Name, E-Mail, Telefon, Adresse oder Ort",
+    "clear": "Suche zurücksetzen"
   },
   "connectors": {
     "title": "KI-Assistenten",
@@ -2396,5 +2421,21 @@
     "saved": "Daten gespeichert.",
     "history": "Änderungsverlauf",
     "emailHint": "Prüfen Sie die E-Mail-Adresse. Sie wird für Nachrichten und den Verkäuferzugang verwendet."
+  },
+  "bagIntake": {
+    "intro": "Bearbeiten Sie einen Artikel nach dem anderen. Fügen Sie bei Bedarf ein Foto hinzu, prüfen Sie Beschreibung und Preis und speichern Sie.",
+    "item": "Artikel aus der Tasche",
+    "save": "Artikel speichern",
+    "next": "Nächster Artikel aus der Tasche",
+    "registered": "Erfasste Artikel",
+    "empty": "Noch keine Artikel erfasst.",
+    "drafts": "Frühere Entwürfe und Verlauf",
+    "back": "Zur Taschenprüfung",
+    "limit": "Die 50 zuletzt erfassten Artikel werden angezeigt."
+  },
+  "integrationPage": {
+    "intro": "Verbinden Sie Ihr Geschäft mit der Kasse oder dem Onlineshop. Verwalten Sie Verbindungen und öffnen Sie bei Bedarf die Details.",
+    "manage": "Synchronisierung und Verlauf",
+    "adminOnly": "Inhaber oder Administratoren können Verbindungen verwalten."
   }
 }

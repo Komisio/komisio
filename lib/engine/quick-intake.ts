@@ -19,6 +19,7 @@ export const quickFacts = z
   )
   .refine((f) => (f.description ?? '').trim().length > 0)
 export const quickReceiveInput = z.strictObject({
+  bagId: z.uuid().optional(),
   tenantId: z.uuid(),
   requestId: z.uuid(),
   sellerId: z.uuid(),
@@ -68,24 +69,32 @@ export async function quickReceive(client: SupabaseClient, input: unknown) {
   if (!sessionId) {
     // No photo was taken: the session is created here so the request id
     // still names the whole reception.
-    const created = await client.rpc('create_reception_session', {
-      p_tenant: c.tenantId,
-      p_id: derivedId(c.requestId, 'session'),
-      p_seller: c.sellerId,
-    })
+    const created = await client.rpc(
+      c.bagId ? 'create_bag_reception' : 'create_reception_session',
+      {
+        ...(c.bagId ? { p_bag: c.bagId } : {}),
+        p_tenant: c.tenantId,
+        p_id: derivedId(c.requestId, 'session'),
+        p_seller: c.sellerId,
+      },
+    )
     if (created.error) throw new Error(errorCode(created.error.message))
     sessionId = z.guid().parse(created.data)
   }
-  const r = await client.rpc('quick_receive', {
-    p_tenant: c.tenantId,
-    p_request: c.requestId,
-    p_session: sessionId,
-    p_seller: c.sellerId,
-    p_expected: c.expectedRevision,
-    p_facts: c.facts,
-    p_item_type: c.itemType,
-    p_price_ore: c.priceOre,
-  })
+  const r = await client.rpc(
+    c.bagId ? 'quick_receive_from_bag' : 'quick_receive',
+    {
+      ...(c.bagId ? { p_bag: c.bagId } : {}),
+      p_tenant: c.tenantId,
+      p_request: c.requestId,
+      p_session: sessionId,
+      p_seller: c.sellerId,
+      p_expected: c.expectedRevision,
+      p_facts: c.facts,
+      p_item_type: c.itemType,
+      p_price_ore: c.priceOre,
+    },
+  )
   if (r.error) throw new Error(errorCode(r.error.message))
   return quickReceiveResult.parse(r.data)
 }

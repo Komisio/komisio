@@ -6,6 +6,7 @@ import { dictionary, intlLocale } from '@/lib/i18n'
 import { PrintLabel } from '@/components/intake/print-label'
 import { PrintJobButton } from '@/components/intake/print-job-button'
 import { readPrinters } from '@/lib/engine/printing'
+import { readStorePolicy } from '@/lib/engine/store-policy'
 
 export default async function BagLabel({
   params,
@@ -26,7 +27,10 @@ export default async function BagLabel({
   if (!bag) notFound()
   const d = dictionary(ctx.locale).intake
   const a = dictionary(ctx.locale).agreements
+  const printing = dictionary(ctx.locale).printing
   const printers = await readPrinters(ctx.client, ctx.active!.id)
+  const hasPrinter = printers.some((printer) => printer.active)
+  const policy = await readStorePolicy(ctx.client, ctx.active!.id)
   const [version, evidence] = await Promise.all([
     bag.agreement_version_id
       ? ctx.client
@@ -48,63 +52,90 @@ export default async function BagLabel({
   if (version.error || evidence.error)
     throw new Error('Unable to load receipt agreement')
   return (
-    <>
+    <div className="bag-label-page">
+      <Link className="text-link no-print" href="/intake">
+        {d.back}
+      </Link>
       <div className="page-heading no-print">
         <h1>{d.label}</h1>
       </div>
-      <article className="bag-label">
-        <strong>{ctx.active!.name}</strong>
-        <h2>
-          {d.bag} K-{bag.reference}
-        </h2>
-        <p>
-          {d.receivedAt}:{' '}
-          {new Date(bag.received_at).toLocaleDateString(
-            intlLocale(ctx.locale),
-            { timeZone: 'Europe/Stockholm' },
+      <div className="bag-label-workspace">
+        <section className="bag-label-preview">
+          <h2 className="no-print">{d.labelPreview}</h2>
+          <article className="bag-label">
+            <strong>{ctx.active!.name}</strong>
+            <h2>
+              {d.bag} K-{bag.reference}
+            </h2>
+            <p>
+              {d.receivedAt}:{' '}
+              {new Date(bag.received_at).toLocaleDateString(
+                intlLocale(ctx.locale),
+                { timeZone: 'Europe/Stockholm' },
+              )}
+            </p>
+            <p>{d.awaiting}</p>
+          </article>
+        </section>
+        <section className="card bag-label-print no-print">
+          <h2>{d.print}</h2>
+          {hasPrinter ? (
+            <>
+              <PrintJobButton
+                tenantId={ctx.active!.id}
+                printers={printers}
+                kind="bag"
+                referenceKind="bag_receipt"
+                referenceId={id}
+                d={{ ...printing, queue: d.print }}
+                intake={d}
+                compact
+              />
+              <details className="bag-label-alternative">
+                <summary>{d.otherPrint}</summary>
+                <PrintLabel label={d.browserPrint} />
+              </details>
+            </>
+          ) : (
+            <PrintLabel label={d.print} />
           )}
-        </p>
-        <p>{d.awaiting}</p>
-      </article>
-      <div className="row no-print">
+        </section>
+      </div>
+      <div className="bag-label-next no-print">
         <Link className="text-link" href={`/intake/bags/${id}/inspect`}>
-          {dictionary(ctx.locale).inspection.title}
-        </Link>
-        <PrintLabel label={d.print} />
-        <PrintJobButton
-          tenantId={ctx.active!.id}
-          printers={printers}
-          kind="bag"
-          referenceKind="bag_receipt"
-          referenceId={id}
-          d={dictionary(ctx.locale).printing}
-          intake={d}
-        />
-        <Link className="text-link" href="/intake">
-          {d.back}
+          {dictionary(ctx.locale).inspection.title} →
         </Link>
       </div>
-      <section className="card intake-form no-print">
-        <h2>{a.receiptAgreement}</h2>
-        {version.data ? (
-          <>
-            <Link
-              className="text-link"
-              href={`/intake/agreements?version=${version.data.id}`}
-            >
-              {version.data.title} · {a.version} {version.data.version}
-            </Link>
+      <details className="card bag-label-agreement no-print">
+        <summary>{a.receiptAgreement}</summary>
+        <div className="intake-form">
+          {version.data ? (
+            <>
+              <Link
+                className="text-link"
+                href={`/intake/agreements?version=${version.data.id}`}
+              >
+                {version.data.title} · {a.version} {version.data.version}
+              </Link>
+              <p>
+                {evidence.data
+                  ? `${a.staffRecorded}: ${evidence.data.reference}`
+                  : a.noEvidence}
+              </p>
+            </>
+          ) : (
             <p>
-              {evidence.data
-                ? `${a.staffRecorded}: ${evidence.data.reference}`
-                : a.noEvidence}
+              {policy.policy.agreementRequiredFor.length === 0
+                ? a.optionalReceiptAgreement
+                : a.noReceiptAgreement}
             </p>
-          </>
-        ) : (
-          <p>{a.noReceiptAgreement}</p>
-        )}
-        <p>{a.evidenceNote}</p>
-      </section>
-    </>
+          )}
+          <details>
+            <summary>{a.evidenceHelp}</summary>
+            <p>{a.evidenceNote}</p>
+          </details>
+        </div>
+      </details>
+    </div>
   )
 }

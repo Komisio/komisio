@@ -37,7 +37,9 @@
     "receiptAgreement": "Accordo alla ricezione",
     "noReceiptAgreement": "Nessuna informazione sull'accordo è stata registrata con questa ricevuta.",
     "noEvidence": "Nessuna prova è stata collegata a questa ricevuta.",
-    "evidenceNote": "La registrazione dell'accordo non approva il contenuto per la vendita."
+    "evidenceNote": "La registrazione dell'accordo non approva il contenuto per la vendita.",
+    "optionalReceiptAgreement": "Nessun accordo registrato: è facoltativo per questo negozio.",
+    "evidenceHelp": "Che cosa implica un accordo registrato?"
   },
   "quickIntake": {
     "title": "Ricezione rapida",
@@ -164,7 +166,10 @@
     "matchPhone": "stesso telefono",
     "matchName": "stesso nome",
     "overviewIntro": "Ricevi subito un articolo o registra una borsa da esaminare più tardi.",
-    "quickHint": "Bastano descrizione e prezzo. La foto è facoltativa."
+    "quickHint": "Bastano descrizione e prezzo. La foto è facoltativa.",
+    "labelPreview": "Anteprima",
+    "otherPrint": "Altra stampante o PDF",
+    "browserPrint": "Apri finestra di stampa"
   },
   "brand": "Komisio",
   "tagline": "Più spazio perché le cose vivano di nuovo.",
@@ -442,7 +447,8 @@
   "audit.reception.access_revoked": "Link di revisione revocato",
   "audit.reception.seller_responded": "Il conferente ha risposto alla revisione",
   "reception": {
-    "title": "Ricezione del capo",
+    "title": "Ricezioni",
+    "ongoing": "Ricezioni in corso",
     "intro": "Un capo, una proposta esaminata e la decisione del conferente.",
     "manual": "Descrivi il capo manualmente o usa i suggerimenti AI se attivi per questo negozio. Il personale esamina le prove prima che il conferente risponda.",
     "aiTitle": "Suggerimenti AI",
@@ -974,16 +980,16 @@
   },
   "sales": {
     "title": "Vendite",
-    "intro": "Una vendita è un fatto dalla cassa o da un fornitore POS. Ogni riga congela prezzo, commissione, accredito al conferente e IVA come erano in quel momento.",
-    "notice": "Registrare una vendita non paga nessuno. Saldi dei conferenti, resi e pagamenti seguono in fasi successive.",
-    "recordHeading": "Registra una vendita al banco",
-    "recordHint": "Per ora un articolo accettato e invenduto per vendita. Le vendite POS arrivano tramite la loro integrazione.",
+    "intro": "Consulta le vendite del negozio e registra una vendita manualmente quando necessario.",
+    "notice": "Le vendite dalla cassa collegata appaiono qui. Non registrare di nuovo manualmente la stessa vendita.",
+    "recordHeading": "Registra manualmente",
+    "recordHint": "Cerca o scansiona gli articoli, verifica i prezzi e registra la vendita effettuata.",
     "noItems": "Nessun articolo accettato è disponibile per la vendita.",
     "item": "Articolo",
     "price": "Prezzo di vendita",
     "priceHint": "ad esempio 250 o 250.50.",
     "priceInvalid": "Inserisci un prezzo con al massimo due decimali.",
-    "confirm": "Confermo che l'articolo è stato venduto a questo prezzo.",
+    "confirm": "Confermo che gli articoli sono stati venduti a questi prezzi.",
     "record": "Registra vendita",
     "recorded": "La vendita è registrata.",
     "open": "Apri scontrino",
@@ -1013,7 +1019,19 @@
       "consignment_business": "conferente professionale",
       "store_margin": "di proprietà del negozio, regime del margine",
       "store_full": "di proprietà del negozio, IVA piena"
-    }
+    },
+    "search": "Cerca o scansiona etichetta",
+    "searchHint": "Numero articolo (I-…) o descrizione",
+    "searchButton": "Cerca",
+    "searchFailed": "Ricerca non riuscita. Riprova.",
+    "noMatches": "Nessun articolo vendibile corrisponde.",
+    "narrowSearch": "Sono mostrati 20 risultati. Affina la ricerca se manca l’articolo.",
+    "add": "Aggiungi",
+    "added": "Aggiunto",
+    "cart": "Carrello",
+    "cartEmpty": "Cerca gli articoli da registrare.",
+    "remove": "Rimuovi",
+    "total": "Totale"
   },
   "ledger": {
     "title": "Saldo e registro",
@@ -1320,7 +1338,11 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "Il tasso di vendita è il venduto nel periodo diviso per venduto più in magazzino ora. Le fasce di anzianità seguono il calendario di ribasso predefinito."
+    "definitions": "Il tasso di vendita è il venduto nel periodo diviso per venduto più in magazzino ora. Le fasce di anzianità seguono il calendario di ribasso predefinito.",
+    "current": "Magazzino attuale",
+    "salesPeriod": "Vendite nel periodo",
+    "more": "Mostra altri indicatori",
+    "valueHint": "Somma dei prezzi di vendita degli articoli."
   },
   "importer": {
     "title": "Importa conferenti",
@@ -1916,7 +1938,8 @@
       "CREDENTIAL_KEY_MISSING": "Nella configurazione distribuita manca la chiave delle credenziali (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Il token salvato non può essere letto con la chiave delle credenziali attuale. Scollega e collega di nuovo.",
       "REQUEST_FAILED": "La richiesta non è riuscita. Riprova più tardi."
-    }
+    },
+    "details": "Dettagli della connessione"
   },
   "fortnox": {
     "reconcileTitle": "Conferma una registrazione esistente",
@@ -2143,7 +2166,7 @@
     "pullEnable": "Attiva il recupero degli scontrini da adesso",
     "pullNow": "Recupera la pagina successiva da Zettle",
     "pullWaiting": "Nessun nuovo intervallo per ora. Il recupero è in ritardo di due minuti per consentire a Zettle di elaborare gli acquisti.",
-    "connectionTitle": "Connessione pilota",
+    "connectionTitle": "Zettle",
     "connectionHint": "Verifica la credenziale conservata sul server e il suo commerciante Zettle. Questa verifica non crea prodotti e non importa vendite.",
     "checkConnection": "Verifica la connessione Zettle",
     "connectionUnavailable": "La connessione pilota non è associata a questo negozio.",
@@ -2252,7 +2275,7 @@
     "title": "Conferenti",
     "intro": "Tutti coloro che hanno consegnato al negozio: cosa il negozio tiene per loro, cosa è stato venduto e cosa possono richiedere.",
     "register": "Registra un conferente",
-    "search": "Cerca per nome",
+    "search": "Cerca venditore",
     "searchButton": "Cerca",
     "showingAll": "{total} conferenti.",
     "showingSome": "Mostrati i primi {limit} di {total} conferenti; cerca per restringere.",
@@ -2262,7 +2285,9 @@
     "items": "Articoli",
     "sold": "Venduti",
     "available": "Disponibile",
-    "reserved": "Riservato"
+    "reserved": "Riservato",
+    "searchHint": "Nome, email, telefono, indirizzo o città",
+    "clear": "Cancella ricerca"
   },
   "connectors": {
     "title": "Assistenti AI",
@@ -2396,5 +2421,21 @@
     "saved": "Dati salvati.",
     "history": "Cronologia modifiche",
     "emailHint": "Controlla l’indirizzo e-mail. Viene usato per i messaggi e l’accesso del venditore."
+  },
+  "bagIntake": {
+    "intro": "Gestisci un articolo alla volta. Aggiungi una foto per ricevere aiuto con i dati, controlla descrizione e prezzo e salva.",
+    "item": "Articolo dalla borsa",
+    "save": "Salva articolo",
+    "next": "Articolo successivo dalla borsa",
+    "registered": "Articoli registrati",
+    "empty": "Nessun articolo ancora registrato.",
+    "drafts": "Bozze precedenti e cronologia",
+    "back": "Torna alla revisione della borsa",
+    "limit": "Sono mostrati gli ultimi 50 articoli registrati."
+  },
+  "integrationPage": {
+    "intro": "Collega il negozio alla cassa o al negozio online. Gestisci le connessioni e apri i dettagli quando necessario.",
+    "manage": "Sincronizzazione e cronologia",
+    "adminOnly": "Un proprietario o amministratore può gestire le connessioni."
   }
 }

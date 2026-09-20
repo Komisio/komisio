@@ -387,11 +387,15 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_note: c.note,
       })
     case 'createReception':
-      return client.rpc('create_reception_session', {
-        p_tenant: c.tenantId,
-        p_id: c.requestId,
-        p_seller: c.sellerId,
-      })
+      return client.rpc(
+        c.bagId ? 'create_bag_reception' : 'create_reception_session',
+        {
+          ...(c.bagId ? { p_bag: c.bagId } : {}),
+          p_tenant: c.tenantId,
+          p_id: c.requestId,
+          p_seller: c.sellerId,
+        },
+      )
     case 'saveReceptionSources':
       return client.rpc('save_reception_sources', {
         p_tenant: c.tenantId,

@@ -37,7 +37,9 @@
     "receiptAgreement": "Sopimus vastaanotettaessa",
     "noReceiptAgreement": "Tähän kuittiin ei kirjattu sopimustietoja.",
     "noEvidence": "Tähän kuittiin ei liitetty todistetta.",
-    "evidenceNote": "Sopimusmerkintä ei hyväksy sisältöä myyntiin."
+    "evidenceNote": "Sopimusmerkintä ei hyväksy sisältöä myyntiin.",
+    "optionalReceiptAgreement": "Sopimusta ei ole kirjattu – se on tälle myymälälle valinnainen.",
+    "evidenceHelp": "Mitä kirjattu sopimus tarkoittaa?"
   },
   "quickIntake": {
     "title": "Pikavastaanotto",
@@ -164,7 +166,10 @@
     "matchPhone": "sama puhelin",
     "matchName": "sama nimi",
     "overviewIntro": "Vastaanota tuote heti tai kirjaa kassi myöhempää läpikäyntiä varten.",
-    "quickHint": "Kuvaus ja hinta riittävät. Kuva on valinnainen."
+    "quickHint": "Kuvaus ja hinta riittävät. Kuva on valinnainen.",
+    "labelPreview": "Esikatselu",
+    "otherPrint": "Muu tulostin tai PDF",
+    "browserPrint": "Avaa tulostusikkuna"
   },
   "brand": "Komisio",
   "tagline": "Enemmän tilaa tavaroille elää uudelleen.",
@@ -442,7 +447,8 @@
   "audit.reception.access_revoked": "Tarkistuslinkki peruutettu",
   "audit.reception.seller_responded": "Tuoja vastasi tarkistukseen",
   "reception": {
-    "title": "Vaatteen vastaanotto",
+    "title": "Vastaanotot",
+    "ongoing": "Keskeneräiset vastaanotot",
     "intro": "Yksi vaate, yksi tarkistettu ehdotus ja tuojan päätös.",
     "manual": "Kuvaa vaate manuaalisesti tai käytä AI-ehdotuksia, jos ne on otettu käyttöön tässä kaupassa. Henkilökunta tarkistaa todisteet ennen kuin tuoja vastaa.",
     "aiTitle": "AI-ehdotukset",
@@ -974,16 +980,16 @@
   },
   "sales": {
     "title": "Myynti",
-    "intro": "Myynti on tosiasia kassalta tai kassajärjestelmän toimittajalta. Jokainen rivi jäädyttää hinnan, komission, tuojan hyvityksen ja alv:n sellaisina kuin ne olivat sillä hetkellä.",
-    "notice": "Myynnin kirjaaminen ei maksa kenellekään. Tuojien saldot, palautukset ja tilitykset seuraavat myöhemmissä vaiheissa.",
-    "recordHeading": "Kirjaa tiskimyynti",
-    "recordHint": "Toistaiseksi yksi hyväksytty, myymätön tuote per myynti. Kassajärjestelmän myynnit saapuvat oman integraationsa kautta.",
+    "intro": "Tarkastele myymälän myyntejä ja kirjaa myynti tarvittaessa manuaalisesti.",
+    "notice": "Kassaintegraation myynnit näkyvät täällä. Älä kirjaa samaa myyntiä uudelleen manuaalisesti.",
+    "recordHeading": "Kirjaa manuaalisesti",
+    "recordHint": "Etsi tai skannaa tuotteet, tarkista hinnat ja kirjaa toteutunut myynti.",
     "noItems": "Myyntiin ei ole saatavilla hyväksyttyjä tuotteita.",
     "item": "Tuote",
     "price": "Myyntihinta",
     "priceHint": "esimerkiksi 250 tai 250.50.",
     "priceInvalid": "Anna hinta enintään kahdella desimaalilla.",
-    "confirm": "Vahvistan, että tuote myytiin tähän hintaan.",
+    "confirm": "Vahvistan, että tuotteet myytiin näillä hinnoilla.",
     "record": "Kirjaa myynti",
     "recorded": "Myynti on kirjattu.",
     "open": "Avaa kuitti",
@@ -1013,7 +1019,19 @@
       "consignment_business": "yritystuoja",
       "store_margin": "kaupan oma, marginaaliverotus",
       "store_full": "kaupan oma, täysi alv"
-    }
+    },
+    "search": "Etsi tai skannaa etiketti",
+    "searchHint": "Tuotenumero (I-…) tai kuvaus",
+    "searchButton": "Hae",
+    "searchFailed": "Haku epäonnistui. Yritä uudelleen.",
+    "noMatches": "Myytäviä tuotteita ei löytynyt.",
+    "narrowSearch": "Näytetään 20 tulosta. Tarkenna hakua tarvittaessa.",
+    "add": "Lisää",
+    "added": "Lisätty",
+    "cart": "Ostoskori",
+    "cartEmpty": "Etsi kirjattavat tuotteet.",
+    "remove": "Poista",
+    "total": "Yhteensä"
   },
   "ledger": {
     "title": "Saldo ja tilikirja",
@@ -1320,7 +1338,11 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "Myyntiaste on jaksolla myydyt jaettuna myydyillä plus nyt varastossa olevilla. Ikäluokat noudattavat oletusalennusaikataulua."
+    "definitions": "Myyntiaste on jaksolla myydyt jaettuna myydyillä plus nyt varastossa olevilla. Ikäluokat noudattavat oletusalennusaikataulua.",
+    "current": "Varasto nyt",
+    "salesPeriod": "Jakson myynti",
+    "more": "Näytä lisää tunnuslukuja",
+    "valueHint": "Tuotteiden yhteenlaskettu myyntihinta."
   },
   "importer": {
     "title": "Tuo tuojat",
@@ -1916,7 +1938,8 @@
       "CREDENTIAL_KEY_MISSING": "Asennuksen määrityksistä puuttuu tunnistetietojen avain (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Tallennettua tunnusta ei voi lukea nykyisellä tunnistetietojen avaimella. Irrota ja yhdistä uudelleen.",
       "REQUEST_FAILED": "Pyyntö epäonnistui. Yritä myöhemmin uudelleen."
-    }
+    },
+    "details": "Yhteyden tiedot"
   },
   "fortnox": {
     "reconcileTitle": "Vahvista olemassa oleva tosite",
@@ -2143,7 +2166,7 @@
     "pullEnable": "Ota kuittien nouto käyttöön tästä hetkestä",
     "pullNow": "Nouda seuraava sivu Zettlestä",
     "pullWaiting": "Ei vielä uutta aikaväliä. Nouto seuraa kahden minuutin viiveellä, jotta Zettle ehtii käsitellä ostot.",
-    "connectionTitle": "Pilottiyhteys",
+    "connectionTitle": "Zettle",
     "connectionHint": "Tarkista palvelimella säilytettävä tunnistetieto ja sen Zettle-kauppias. Tämä tarkistus ei luo tuotteita eikä tuo myyntejä.",
     "checkConnection": "Tarkista Zettle-yhteys",
     "connectionUnavailable": "Pilottiyhteyttä ei ole sidottu tähän kauppaan.",
@@ -2252,7 +2275,7 @@
     "title": "Tuojat",
     "intro": "Kaikki, jotka ovat tuoneet tavaraa kauppaan: mitä kauppa pitää hallussaan heidän puolestaan, mitä on myyty ja mitä he voivat pyytää.",
     "register": "Rekisteröi tuoja",
-    "search": "Hae nimellä",
+    "search": "Etsi myyjää",
     "searchButton": "Hae",
     "showingAll": "{total} tuojaa.",
     "showingSome": "Näytetään ensimmäiset {limit} / {total} tuojaa; rajaa hakemalla.",
@@ -2262,7 +2285,9 @@
     "items": "Tuotteet",
     "sold": "Myyty",
     "available": "Käytettävissä",
-    "reserved": "Varattu"
+    "reserved": "Varattu",
+    "searchHint": "Nimi, sähköposti, puhelin, osoite tai kaupunki",
+    "clear": "Tyhjennä haku"
   },
   "connectors": {
     "title": "AI-avustajat",
@@ -2396,5 +2421,21 @@
     "saved": "Tiedot tallennettu.",
     "history": "Muutoshistoria",
     "emailHint": "Tarkista sähköpostiosoite. Sitä käytetään viesteihin ja myyjän käyttöoikeuteen."
+  },
+  "bagIntake": {
+    "intro": "Käsittele yksi tuote kerrallaan. Lisää halutessasi kuva tietojen avuksi, tarkista kuvaus ja hinta ja tallenna.",
+    "item": "Tuote kassista",
+    "save": "Tallenna tuote",
+    "next": "Seuraava tuote kassista",
+    "registered": "Rekisteröidyt tuotteet",
+    "empty": "Tuotteita ei ole vielä rekisteröity.",
+    "drafts": "Aiemmat luonnokset ja historia",
+    "back": "Takaisin kassin läpikäyntiin",
+    "limit": "Näytetään 50 viimeksi rekisteröityä tuotetta."
+  },
+  "integrationPage": {
+    "intro": "Yhdistä myymälä kassaan tai verkkokauppaan. Hallitse yhteyksiä ja avaa lisätiedot tarvittaessa.",
+    "manage": "Synkronointi ja historia",
+    "adminOnly": "Omistaja tai ylläpitäjä voi hallita yhteyksiä."
   }
 }

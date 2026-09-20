@@ -113,6 +113,11 @@ try {
     await page.getByRole('button', { name: 'Logga in', exact: true }).click()
     await expect(page).not.toHaveURL(/\/login/)
     await page.goto(`${origin}/intake/integrations`)
+    await page
+      .getByText(`Zettle · ${dictionary.integrationPage.manage}`, {
+        exact: true,
+      })
+      .click()
     return page
   }
   const ownerPage = await login(ownerEmail)
@@ -153,6 +158,9 @@ try {
     fixture.db.query('select accept_automation_grants()'),
   )
   await ownerPage.reload()
+  await ownerPage
+    .getByText(`Zettle · ${dictionary.integrationPage.manage}`, { exact: true })
+    .click()
   await expect(
     panel.getByText(text.automaticEnabled, { exact: true }),
   ).toBeVisible()
@@ -170,6 +178,9 @@ try {
     )
   })
   await ownerPage.reload()
+  await ownerPage
+    .getByText(`Zettle · ${dictionary.integrationPage.manage}`, { exact: true })
+    .click()
   await expect(
     panel.getByText(new RegExp(text.automaticOutcomes.waiting)),
   ).toBeVisible()

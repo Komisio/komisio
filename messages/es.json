@@ -37,7 +37,9 @@
     "receiptAgreement": "Acuerdo en la recepción",
     "noReceiptAgreement": "No se registró información del acuerdo con este recibo.",
     "noEvidence": "No se vinculó ninguna evidencia a este recibo.",
-    "evidenceNote": "El registro del acuerdo no aprueba el contenido para la venta."
+    "evidenceNote": "El registro del acuerdo no aprueba el contenido para la venta.",
+    "optionalReceiptAgreement": "No hay ningún acuerdo registrado; es opcional para esta tienda.",
+    "evidenceHelp": "¿Qué implica un acuerdo registrado?"
   },
   "quickIntake": {
     "title": "Recepción rápida",

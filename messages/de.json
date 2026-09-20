@@ -37,7 +37,9 @@
     "receiptAgreement": "Vereinbarung bei der Annahme",
     "noReceiptAgreement": "Mit diesem Beleg wurden keine Vereinbarungsinformationen erfasst.",
     "noEvidence": "Mit diesem Beleg wurde kein Nachweis verknüpft.",
-    "evidenceNote": "Der Vereinbarungsvermerk gibt den Inhalt nicht zum Verkauf frei."
+    "evidenceNote": "Der Vereinbarungsvermerk gibt den Inhalt nicht zum Verkauf frei.",
+    "optionalReceiptAgreement": "Keine Vereinbarung erfasst – für dieses Geschäft optional.",
+    "evidenceHelp": "Was bedeutet eine erfasste Vereinbarung?"
   },
   "quickIntake": {
     "title": "Schnellannahme",

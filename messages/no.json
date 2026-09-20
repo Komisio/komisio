@@ -37,7 +37,9 @@
     "receiptAgreement": "Avtale ved mottak",
     "noReceiptAgreement": "Ingen avtaleinformasjon ble registrert med denne kvitteringen.",
     "noEvidence": "Ingen bevis ble knyttet til denne kvitteringen.",
-    "evidenceNote": "Avtaleregistreringen godkjenner ikke innholdet for salg."
+    "evidenceNote": "Avtaleregistreringen godkjenner ikke innholdet for salg.",
+    "optionalReceiptAgreement": "Ingen avtale registrert – valgfritt for denne butikken.",
+    "evidenceHelp": "Hva innebærer en registrert avtale?"
   },
   "quickIntake": {
     "title": "Hurtigmottak",

@@ -6,6 +6,7 @@ import { dictionary, intlLocale } from '@/lib/i18n'
 import { PrintLabel } from '@/components/intake/print-label'
 import { PrintJobButton } from '@/components/intake/print-job-button'
 import { readPrinters } from '@/lib/engine/printing'
+import { readStorePolicy } from '@/lib/engine/store-policy'
 
 export default async function BagLabel({
   params,
@@ -29,6 +30,7 @@ export default async function BagLabel({
   const printing = dictionary(ctx.locale).printing
   const printers = await readPrinters(ctx.client, ctx.active!.id)
   const hasPrinter = printers.some((printer) => printer.active)
+  const policy = await readStorePolicy(ctx.client, ctx.active!.id)
   const [version, evidence] = await Promise.all([
     bag.agreement_version_id
       ? ctx.client
@@ -122,9 +124,16 @@ export default async function BagLabel({
               </p>
             </>
           ) : (
-            <p>{a.noReceiptAgreement}</p>
+            <p>
+              {policy.policy.agreementRequiredFor.length === 0
+                ? a.optionalReceiptAgreement
+                : a.noReceiptAgreement}
+            </p>
           )}
-          <p>{a.evidenceNote}</p>
+          <details>
+            <summary>{a.evidenceHelp}</summary>
+            <p>{a.evidenceNote}</p>
+          </details>
         </div>
       </details>
     </div>

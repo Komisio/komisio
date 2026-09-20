@@ -37,7 +37,9 @@
     "receiptAgreement": "Agreement at receiving",
     "noReceiptAgreement": "No agreement information was recorded with this receipt.",
     "noEvidence": "No evidence was linked to this receipt.",
-    "evidenceNote": "The agreement record does not approve the contents for sale."
+    "evidenceNote": "The agreement record does not approve the contents for sale.",
+    "optionalReceiptAgreement": "No agreement recorded – optional for this store.",
+    "evidenceHelp": "What does a recorded agreement mean?"
   },
   "quickIntake": {
     "title": "Quick reception",

@@ -37,7 +37,9 @@
     "receiptAgreement": "Avtal vid mottagningen",
     "noReceiptAgreement": "Inget avtalsunderlag registrerades vid denna mottagning.",
     "noEvidence": "Inget underlag kopplades till mottagningen.",
-    "evidenceNote": "Avtalsnoteringen godkänner inte innehållet för försäljning."
+    "evidenceNote": "Avtalsnoteringen godkänner inte innehållet för försäljning.",
+    "optionalReceiptAgreement": "Inget avtal registrerat – valfritt för denna butik.",
+    "evidenceHelp": "Vad innebär ett registrerat avtal?"
   },
   "quickIntake": {
     "title": "Snabb mottagning",

@@ -37,7 +37,9 @@
     "receiptAgreement": "Aftale ved modtagelse",
     "noReceiptAgreement": "Der blev ikke registreret aftaleoplysninger med denne kvittering.",
     "noEvidence": "Der blev ikke knyttet dokumentation til denne kvittering.",
-    "evidenceNote": "Aftaleregistreringen godkender ikke indholdet til salg."
+    "evidenceNote": "Aftaleregistreringen godkender ikke indholdet til salg.",
+    "optionalReceiptAgreement": "Ingen aftale registreret – valgfrit for denne butik.",
+    "evidenceHelp": "Hvad betyder en registreret aftale?"
   },
   "quickIntake": {
     "title": "Hurtig modtagelse",

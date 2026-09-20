@@ -37,7 +37,9 @@
     "receiptAgreement": "Sopimus vastaanotettaessa",
     "noReceiptAgreement": "Tähän kuittiin ei kirjattu sopimustietoja.",
     "noEvidence": "Tähän kuittiin ei liitetty todistetta.",
-    "evidenceNote": "Sopimusmerkintä ei hyväksy sisältöä myyntiin."
+    "evidenceNote": "Sopimusmerkintä ei hyväksy sisältöä myyntiin.",
+    "optionalReceiptAgreement": "Sopimusta ei ole kirjattu – se on tälle myymälälle valinnainen.",
+    "evidenceHelp": "Mitä kirjattu sopimus tarkoittaa?"
   },
   "quickIntake": {
     "title": "Pikavastaanotto",

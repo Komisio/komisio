@@ -2401,5 +2401,16 @@
     "saved": "Datos guardados.",
     "history": "Historial de cambios",
     "emailHint": "Comprueba el correo electrónico. Se utiliza para los mensajes y el acceso del vendedor."
+  },
+  "bagIntake": {
+    "intro": "Revisa un artículo a la vez. Añade una foto si quieres ayuda con los datos, comprueba la descripción y el precio y guarda.",
+    "item": "Artículo de la bolsa",
+    "save": "Guardar artículo",
+    "next": "Siguiente artículo de la bolsa",
+    "registered": "Artículos registrados",
+    "empty": "Todavía no hay artículos registrados.",
+    "drafts": "Borradores anteriores e historial",
+    "back": "Volver a la revisión de la bolsa",
+    "limit": "Se muestran los últimos 50 artículos registrados."
   }
 }

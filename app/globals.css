@@ -1916,3 +1916,62 @@ small {
     max-width: 100%;
   }
 }
+
+.bag-reception-page {
+  max-width: 1100px;
+}
+.bag-quick-reception {
+  grid-template-columns: 1fr;
+}
+.bag-quick-reception .quick-item,
+.bag-quick-reception .quick-done {
+  grid-column: 1 / -1;
+}
+.bag-note {
+  color: var(--muted);
+}
+.bag-received-items {
+  margin-top: 24px;
+  padding: 24px;
+}
+.bag-received-items h2 {
+  font-size: 20px;
+  margin: 0 0 16px;
+}
+.bag-received-items ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.bag-received-items li + li {
+  border-top: 1px solid var(--line);
+}
+.bag-received-items li a {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 0;
+}
+.bag-received-items li img {
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.bag-received-items li span {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.bag-received-items li small {
+  display: block;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.bag-received-items li strong {
+  white-space: nowrap;
+}
+.bag-inspection-links {
+  margin-top: 24px;
+  flex-wrap: wrap;
+}

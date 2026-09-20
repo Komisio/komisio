@@ -2401,5 +2401,16 @@
     "saved": "Oplysningerne er gemt.",
     "history": "Ændringshistorik",
     "emailHint": "Kontrollér e-mailadressen. Den bruges til beskeder og sælgerens adgang."
+  },
+  "bagIntake": {
+    "intro": "Tag én vare ad gangen. Tilføj et billede for hjælp til oplysningerne, kontrollér beskrivelse og pris, og gem.",
+    "item": "Vare fra posen",
+    "save": "Gem vare",
+    "next": "Næste vare fra posen",
+    "registered": "Registrerede varer",
+    "empty": "Ingen varer registreret endnu.",
+    "drafts": "Tidligere kladder og historik",
+    "back": "Til gennemgang af posen",
+    "limit": "Viser de 50 senest registrerede varer."
   }
 }

@@ -2401,5 +2401,16 @@
     "saved": "Dati salvati.",
     "history": "Cronologia modifiche",
     "emailHint": "Controlla l’indirizzo e-mail. Viene usato per i messaggi e l’accesso del venditore."
+  },
+  "bagIntake": {
+    "intro": "Gestisci un articolo alla volta. Aggiungi una foto per ricevere aiuto con i dati, controlla descrizione e prezzo e salva.",
+    "item": "Articolo dalla borsa",
+    "save": "Salva articolo",
+    "next": "Articolo successivo dalla borsa",
+    "registered": "Articoli registrati",
+    "empty": "Nessun articolo ancora registrato.",
+    "drafts": "Bozze precedenti e cronologia",
+    "back": "Torna alla revisione della borsa",
+    "limit": "Sono mostrati gli ultimi 50 articoli registrati."
   }
 }

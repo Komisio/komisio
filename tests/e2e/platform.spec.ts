@@ -43,7 +43,7 @@ test('saved inspection drafts resume safely and preserve conflicting edits', asy
   expect(received.status()).toBe(200)
   const bagId = (await received.json()).id
   const path = `/intake/bags/${bagId}/inspect`
-  await page.goto(path)
+  await page.goto(`${path}?view=drafts`)
   await page
     .getByLabel('Beskrivning av varan')
     .fill('TEST blå jacka <script>literal</script>')
@@ -209,7 +209,7 @@ test('saved inspection drafts resume safely and preserve conflicting edits', asy
         ).status(),
       ).toBe(200)
     }
-    await page.goto(path)
+    await page.goto(`${path}?view=drafts`)
     await expect(page.locator('.inspection-item')).toHaveCount(20)
     const firstPage = await page.locator('.inspection-item a').allTextContents()
     await page.getByRole('link', { name: 'Nästa varor' }).click()

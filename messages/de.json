@@ -2401,5 +2401,16 @@
     "saved": "Daten gespeichert.",
     "history": "Änderungsverlauf",
     "emailHint": "Prüfen Sie die E-Mail-Adresse. Sie wird für Nachrichten und den Verkäuferzugang verwendet."
+  },
+  "bagIntake": {
+    "intro": "Bearbeiten Sie einen Artikel nach dem anderen. Fügen Sie bei Bedarf ein Foto hinzu, prüfen Sie Beschreibung und Preis und speichern Sie.",
+    "item": "Artikel aus der Tasche",
+    "save": "Artikel speichern",
+    "next": "Nächster Artikel aus der Tasche",
+    "registered": "Erfasste Artikel",
+    "empty": "Noch keine Artikel erfasst.",
+    "drafts": "Frühere Entwürfe und Verlauf",
+    "back": "Zur Taschenprüfung",
+    "limit": "Die 50 zuletzt erfassten Artikel werden angezeigt."
   }
 }

@@ -2401,5 +2401,16 @@
     "saved": "Details saved.",
     "history": "Change history",
     "emailHint": "Check the email address carefully. It is used for messages and seller access."
+  },
+  "bagIntake": {
+    "intro": "Handle one item at a time. Add a photo for help with the details, check the description and price, then save.",
+    "item": "Item from the bag",
+    "save": "Save item",
+    "next": "Next item from the bag",
+    "registered": "Registered items",
+    "empty": "No items registered yet.",
+    "drafts": "Earlier drafts and history",
+    "back": "Back to bag inspection",
+    "limit": "Showing the 50 most recently registered items."
   }
 }

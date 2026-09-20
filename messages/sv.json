@@ -2401,5 +2401,16 @@
     "saved": "Uppgifterna är sparade.",
     "history": "Ändringshistorik",
     "emailHint": "Kontrollera e-postadressen noga. Den används för utskick och säljarens åtkomst."
+  },
+  "bagIntake": {
+    "intro": "Ta en vara i taget. Lägg till en bild om du vill ha hjälp med uppgifterna, kontrollera beskrivning och pris och spara.",
+    "item": "Vara ur påsen",
+    "save": "Spara vara",
+    "next": "Nästa vara ur påsen",
+    "registered": "Registrerade varor",
+    "empty": "Inga varor registrerade ännu.",
+    "drafts": "Äldre utkast och historik",
+    "back": "Till påsgenomgången",
+    "limit": "Visar de 50 senast registrerade varorna."
   }
 }

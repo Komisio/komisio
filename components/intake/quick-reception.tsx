@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Camera, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
@@ -32,6 +33,7 @@ export function QuickReception({
   vocabulary,
   lang,
   d,
+  bagId,
 }: {
   tenantId: string
   sellers: Seller[]
@@ -40,9 +42,13 @@ export function QuickReception({
   vocabulary: AttributeVocabulary
   lang: string
   d: Dictionary['quickIntake']
+  bagId?: string
 }) {
+  const router = useRouter()
   const [query, setQuery] = useState(''),
-    [sellerId, setSellerId] = useState<string | null>(null),
+    [sellerId, setSellerId] = useState<string | null>(
+      bagId ? (sellers[0]?.id ?? null) : null,
+    ),
     [printerId, setPrinterId] = useState(''),
     [facts, setFacts] = useState<Facts>(emptyFacts),
     [itemType, setItemType] = useState<string | null>(null),
@@ -121,6 +127,7 @@ export function QuickReception({
       if (!current) {
         const created = await post('/api/intake', {
           action: 'createReception',
+          ...(bagId ? { bagId } : {}),
           tenantId,
           requestId: crypto.randomUUID(),
           sellerId,
@@ -205,6 +212,7 @@ export function QuickReception({
           ),
       )
       const result = await post('/api/intake/quick', {
+        ...(bagId ? { bagId } : {}),
         tenantId,
         requestId: crypto.randomUUID(),
         sellerId,
@@ -232,6 +240,7 @@ export function QuickReception({
         }
       } else setMessage('')
       setDone({ reference: result.reference, itemId: result.itemId })
+      if (bagId) router.refresh()
     } catch (e) {
       fail(e)
     } finally {
@@ -317,70 +326,72 @@ export function QuickReception({
     )
   }
   return (
-    <div className="quick-reception">
-      <section
-        className={`card intake-form quick-seller${seller ? ' is-selected' : ''}`}
-        aria-label={d.seller}
-      >
-        <h2>
-          <span className="quick-step" aria-hidden="true">
-            {seller ? <Check size={16} /> : '1'}
-          </span>
-          {d.seller}
-        </h2>
-        {seller ? (
-          <div className="quick-seller-selected">
-            <div>
-              <strong>{seller.name}</strong>
-              {seller.contact && <small>{seller.contact}</small>}
+    <div className={`quick-reception${bagId ? ' bag-quick-reception' : ''}`}>
+      {!bagId && (
+        <section
+          className={`card intake-form quick-seller${seller ? ' is-selected' : ''}`}
+          aria-label={d.seller}
+        >
+          <h2>
+            <span className="quick-step" aria-hidden="true">
+              {seller ? <Check size={16} /> : '1'}
+            </span>
+            {d.seller}
+          </h2>
+          {seller ? (
+            <div className="quick-seller-selected">
+              <div>
+                <strong>{seller.name}</strong>
+                {seller.contact && <small>{seller.contact}</small>}
+              </div>
+              <button
+                type="button"
+                className="text-link"
+                disabled={busy}
+                onClick={() => {
+                  setSellerId(null)
+                  next()
+                }}
+              >
+                {d.changeSeller}
+              </button>
             </div>
-            <button
-              type="button"
-              className="text-link"
-              disabled={busy}
-              onClick={() => {
-                setSellerId(null)
-                next()
-              }}
-            >
-              {d.changeSeller}
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="field">
-              <label htmlFor="quick-seller-search">{d.searchSeller}</label>
-              <input
-                id="quick-seller-search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                maxLength={120}
-                autoFocus
-              />
-            </div>
-            <ul className="intake-list">
-              {shown.map((s) => (
-                <li key={s.id}>
-                  <button
-                    type="button"
-                    className="intake-seller"
-                    onClick={() => setSellerId(s.id)}
-                  >
-                    <strong>{s.name}</strong>
-                    <small>{s.contact ?? ''}</small>
-                  </button>
-                </li>
-              ))}
-              {shown.length === 0 && <li>{d.noSeller}</li>}
-            </ul>
-            <p>
-              <Link className="text-link" href="/intake">
-                {d.newSeller}
-              </Link>
-            </p>
-          </>
-        )}
-      </section>
+          ) : (
+            <>
+              <div className="field">
+                <label htmlFor="quick-seller-search">{d.searchSeller}</label>
+                <input
+                  id="quick-seller-search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  maxLength={120}
+                  autoFocus
+                />
+              </div>
+              <ul className="intake-list">
+                {shown.map((s) => (
+                  <li key={s.id}>
+                    <button
+                      type="button"
+                      className="intake-seller"
+                      onClick={() => setSellerId(s.id)}
+                    >
+                      <strong>{s.name}</strong>
+                      <small>{s.contact ?? ''}</small>
+                    </button>
+                  </li>
+                ))}
+                {shown.length === 0 && <li>{d.noSeller}</li>}
+              </ul>
+              <p>
+                <Link className="text-link" href="/intake">
+                  {d.newSeller}
+                </Link>
+              </p>
+            </>
+          )}
+        </section>
+      )}
       {seller && !done && (
         <section
           className="card intake-form quick-item"
@@ -388,9 +399,11 @@ export function QuickReception({
           aria-busy={busy}
         >
           <h2>
-            <span className="quick-step" aria-hidden="true">
-              2
-            </span>
+            {!bagId && (
+              <span className="quick-step" aria-hidden="true">
+                2
+              </span>
+            )}
             {d.garment}
           </h2>
           <div className="quick-workspace">

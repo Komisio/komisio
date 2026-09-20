@@ -2401,5 +2401,16 @@
     "saved": "Tiedot tallennettu.",
     "history": "Muutoshistoria",
     "emailHint": "Tarkista sähköpostiosoite. Sitä käytetään viesteihin ja myyjän käyttöoikeuteen."
+  },
+  "bagIntake": {
+    "intro": "Käsittele yksi tuote kerrallaan. Lisää halutessasi kuva tietojen avuksi, tarkista kuvaus ja hinta ja tallenna.",
+    "item": "Tuote kassista",
+    "save": "Tallenna tuote",
+    "next": "Seuraava tuote kassista",
+    "registered": "Rekisteröidyt tuotteet",
+    "empty": "Tuotteita ei ole vielä rekisteröity.",
+    "drafts": "Aiemmat luonnokset ja historia",
+    "back": "Takaisin kassin läpikäyntiin",
+    "limit": "Näytetään 50 viimeksi rekisteröityä tuotetta."
   }
 }

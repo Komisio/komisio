@@ -164,7 +164,10 @@
     "matchPhone": "stesso telefono",
     "matchName": "stesso nome",
     "overviewIntro": "Ricevi subito un articolo o registra una borsa da esaminare più tardi.",
-    "quickHint": "Bastano descrizione e prezzo. La foto è facoltativa."
+    "quickHint": "Bastano descrizione e prezzo. La foto è facoltativa.",
+    "labelPreview": "Anteprima",
+    "otherPrint": "Altra stampante o PDF",
+    "browserPrint": "Apri finestra di stampa"
   },
   "brand": "Komisio",
   "tagline": "Più spazio perché le cose vivano di nuovo.",

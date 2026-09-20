@@ -164,7 +164,10 @@
     "matchPhone": "samme telefon",
     "matchName": "samme navn",
     "overviewIntro": "Modtag en vare nu, eller registrer en pose til gennemgang senere.",
-    "quickHint": "Beskrivelse og pris er nok. Billede er valgfrit."
+    "quickHint": "Beskrivelse og pris er nok. Billede er valgfrit.",
+    "labelPreview": "Forhåndsvisning",
+    "otherPrint": "Anden printer eller PDF",
+    "browserPrint": "Åbn udskriftsdialog"
   },
   "brand": "Komisio",
   "tagline": "Mere plads til ting, der får nyt liv.",

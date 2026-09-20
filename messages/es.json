@@ -164,7 +164,10 @@
     "matchPhone": "mismo teléfono",
     "matchName": "mismo nombre",
     "overviewIntro": "Recibe un artículo ahora o registra una bolsa para revisarla más tarde.",
-    "quickHint": "Basta con una descripción y un precio. La foto es opcional."
+    "quickHint": "Basta con una descripción y un precio. La foto es opcional.",
+    "labelPreview": "Vista previa",
+    "otherPrint": "Otra impresora o PDF",
+    "browserPrint": "Abrir diálogo de impresión"
   },
   "brand": "Komisio",
   "tagline": "Más espacio para que las cosas vuelvan a vivir.",

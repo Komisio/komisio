@@ -1844,3 +1844,75 @@ small {
 .reception-photo img {
   max-width: 100%;
 }
+
+.bag-label-page {
+  max-width: 1040px;
+}
+.bag-label-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  gap: 32px;
+  align-items: start;
+}
+.bag-label-preview > h2,
+.bag-label-print > h2 {
+  font-size: 18px;
+  margin: 0 0 20px;
+}
+.bag-label-preview .bag-label {
+  margin: 0;
+  max-width: 100%;
+}
+.bag-label-print {
+  padding: 24px;
+}
+.label-print-form {
+  display: grid;
+  gap: 8px;
+}
+.label-print-form input {
+  max-width: 110px;
+}
+.label-print-form label:not(:first-child) {
+  margin-top: 8px;
+}
+.label-print-form button {
+  margin-top: 12px;
+  width: 100%;
+}
+.bag-label-alternative {
+  border-top: 1px solid var(--line);
+  margin-top: 20px;
+  padding-top: 16px;
+}
+.bag-label-alternative summary,
+.bag-label-agreement summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.bag-label-alternative button {
+  margin-top: 12px;
+}
+.bag-label-next {
+  margin: 24px 0;
+}
+.bag-label-agreement {
+  padding: 20px 24px;
+}
+.bag-label-agreement > div {
+  margin-top: 16px;
+}
+@media (max-width: 850px) {
+  .bag-label-workspace {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+@media print {
+  .bag-label-workspace {
+    display: block;
+  }
+  .bag-label-preview .bag-label {
+    max-width: 100%;
+  }
+}

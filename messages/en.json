@@ -164,7 +164,10 @@
     "matchPhone": "same phone",
     "matchName": "same name",
     "overviewIntro": "Receive an item now or register a bag to sort later.",
-    "quickHint": "A description and price are enough. A photo is optional."
+    "quickHint": "A description and price are enough. A photo is optional.",
+    "labelPreview": "Preview",
+    "otherPrint": "Other printer or PDF",
+    "browserPrint": "Open print dialog"
   },
   "brand": "Komisio",
   "tagline": "More room for things to live again.",

@@ -164,7 +164,10 @@
     "matchPhone": "gleiche Telefonnummer",
     "matchName": "gleicher Name",
     "overviewIntro": "Nehmen Sie einen Artikel direkt an oder erfassen Sie eine Tasche zur späteren Durchsicht.",
-    "quickHint": "Beschreibung und Preis genügen. Ein Foto ist optional."
+    "quickHint": "Beschreibung und Preis genügen. Ein Foto ist optional.",
+    "labelPreview": "Vorschau",
+    "otherPrint": "Anderer Drucker oder PDF",
+    "browserPrint": "Druckdialog öffnen"
   },
   "brand": "Komisio",
   "tagline": "Mehr Raum für Dinge, die weiterleben.",

@@ -164,7 +164,10 @@
     "matchPhone": "samma telefon",
     "matchName": "samma namn",
     "overviewIntro": "Ta emot en vara direkt eller registrera en påse att gå igenom senare.",
-    "quickHint": "Beskrivning och pris räcker. Bild är valfritt."
+    "quickHint": "Beskrivning och pris räcker. Bild är valfritt.",
+    "labelPreview": "Förhandsvisning",
+    "otherPrint": "Annan skrivare eller PDF",
+    "browserPrint": "Öppna utskriftsdialog"
   },
   "brand": "Komisio",
   "tagline": "Mer utrymme för det som får nytt liv.",

@@ -164,7 +164,10 @@
     "matchPhone": "sama puhelin",
     "matchName": "sama nimi",
     "overviewIntro": "Vastaanota tuote heti tai kirjaa kassi myöhempää läpikäyntiä varten.",
-    "quickHint": "Kuvaus ja hinta riittävät. Kuva on valinnainen."
+    "quickHint": "Kuvaus ja hinta riittävät. Kuva on valinnainen.",
+    "labelPreview": "Esikatselu",
+    "otherPrint": "Muu tulostin tai PDF",
+    "browserPrint": "Avaa tulostusikkuna"
   },
   "brand": "Komisio",
   "tagline": "Enemmän tilaa tavaroille elää uudelleen.",

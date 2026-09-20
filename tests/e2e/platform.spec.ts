@@ -396,6 +396,7 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
     expect(replay.status()).toBe(200)
     expect((await replay.json()).id).toBe(receiptId)
     await page.goto(`/intake/bags/${receiptId}`)
+    await page.getByText('Avtal vid mottagningen', { exact: true }).click()
     await expect(
       page.getByRole('link', { name: 'TEST Villkor 1 · Version 1' }),
     ).toBeVisible()

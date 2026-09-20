@@ -1338,7 +1338,11 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "Omløp er solgt i perioden delt på solgt pluss på lager nå. Aldersgruppene følger standardplanen for prisnedsettelser."
+    "definitions": "Omløp er solgt i perioden delt på solgt pluss på lager nå. Aldersgruppene følger standardplanen for prisnedsettelser.",
+    "current": "Lageret akkurat nå",
+    "salesPeriod": "Salg i perioden",
+    "more": "Vis flere nøkkeltall",
+    "valueHint": "Varens samlede salgspris."
   },
   "importer": {
     "title": "Importer innleverere",

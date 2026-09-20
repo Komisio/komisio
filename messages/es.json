@@ -1338,7 +1338,11 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "La ratio de venta es lo vendido en el periodo dividido entre lo vendido más lo que hay en existencias ahora. Los tramos de antigüedad siguen el calendario de rebajas por defecto."
+    "definitions": "La ratio de venta es lo vendido en el periodo dividido entre lo vendido más lo que hay en existencias ahora. Los tramos de antigüedad siguen el calendario de rebajas por defecto.",
+    "current": "Existencias actuales",
+    "salesPeriod": "Ventas del periodo",
+    "more": "Mostrar más cifras",
+    "valueHint": "Suma de los precios de venta de los artículos."
   },
   "importer": {
     "title": "Importar depositantes",

@@ -1338,7 +1338,11 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "Salgsandel er solgt i perioden divideret med solgt plus på lager nu. Aldersintervaller følger standardplanen for prisnedsættelser."
+    "definitions": "Salgsandel er solgt i perioden divideret med solgt plus på lager nu. Aldersintervaller følger standardplanen for prisnedsættelser.",
+    "current": "Lager lige nu",
+    "salesPeriod": "Salg i perioden",
+    "more": "Vis flere nøgletal",
+    "valueHint": "Varernes samlede salgspris."
   },
   "importer": {
     "title": "Importér indleverere",

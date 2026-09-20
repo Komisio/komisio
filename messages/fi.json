@@ -1338,7 +1338,11 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "Myyntiaste on jaksolla myydyt jaettuna myydyillä plus nyt varastossa olevilla. Ikäluokat noudattavat oletusalennusaikataulua."
+    "definitions": "Myyntiaste on jaksolla myydyt jaettuna myydyillä plus nyt varastossa olevilla. Ikäluokat noudattavat oletusalennusaikataulua.",
+    "current": "Varasto nyt",
+    "salesPeriod": "Jakson myynti",
+    "more": "Näytä lisää tunnuslukuja",
+    "valueHint": "Tuotteiden yhteenlaskettu myyntihinta."
   },
   "importer": {
     "title": "Tuo tuojat",

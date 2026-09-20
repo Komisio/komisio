@@ -1338,7 +1338,11 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "Die Abverkaufsquote ist die Anzahl der im Zeitraum verkauften Artikel geteilt durch verkaufte plus aktuell im Bestand befindliche Artikel. Die Altersgruppen folgen dem Standard-Preissenkungsplan."
+    "definitions": "Die Abverkaufsquote ist die Anzahl der im Zeitraum verkauften Artikel geteilt durch verkaufte plus aktuell im Bestand befindliche Artikel. Die Altersgruppen folgen dem Standard-Preissenkungsplan.",
+    "current": "Aktueller Bestand",
+    "salesPeriod": "Verkäufe im Zeitraum",
+    "more": "Weitere Kennzahlen anzeigen",
+    "valueHint": "Summe der Verkaufspreise der Artikel."
   },
   "importer": {
     "title": "Einlieferer importieren",

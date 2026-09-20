@@ -2168,3 +2168,132 @@ small {
     flex-basis: 100%;
   }
 }
+
+.stock-overview {
+  display: grid;
+  gap: 1.5rem;
+}
+.stock-overview .page-heading {
+  margin-bottom: 0;
+}
+.stock-panel {
+  padding: 1.5rem;
+  min-width: 0;
+}
+.stock-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.stock-metrics > div {
+  padding: 1.25rem;
+}
+.stock-metrics dt,
+.stock-age dt {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.stock-metrics dd {
+  margin: 0.35rem 0;
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.stock-age {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1rem 0 1.5rem;
+}
+.stock-age dd {
+  margin: 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.stock-period {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: end;
+  margin: 1rem 0;
+}
+.stock-period .field {
+  flex: 1 1 180px;
+}
+.stock-sales-metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.stock-sales-metrics > div {
+  padding: 0.75rem 0;
+}
+.stock-table-wrap {
+  overflow-x: auto;
+}
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.stock-table th,
+.stock-table td {
+  padding: 0.8rem;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.stock-table th:first-child {
+  text-align: left;
+}
+.stock-table thead th {
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.stock-details summary {
+  cursor: pointer;
+  padding: 1rem 0;
+  font-weight: 600;
+}
+@media (max-width: 600px) {
+  .stock-panel {
+    padding: 1rem;
+  }
+  .stock-age {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .stock-metrics,
+  .stock-sales-metrics {
+    grid-template-columns: 1fr;
+  }
+  .stock-table-wrap {
+    overflow: visible;
+  }
+  .stock-table,
+  .stock-table tbody {
+    display: block;
+  }
+  .stock-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .stock-table tr {
+    display: block;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .stock-table td,
+  .stock-table th {
+    display: block;
+    border: 0;
+    padding: 0.3rem 0;
+  }
+  .stock-table td::before {
+    content: attr(data-label);
+    float: left;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+}

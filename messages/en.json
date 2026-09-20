@@ -1338,7 +1338,11 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "Sell-through is sold in the period divided by sold plus in stock now. Age buckets follow the default markdown schedule."
+    "definitions": "Sell-through is sold in the period divided by sold plus in stock now. Age buckets follow the default markdown schedule.",
+    "current": "Stock right now",
+    "salesPeriod": "Sales during the period",
+    "more": "Show more figures",
+    "valueHint": "Combined selling price of the items."
   },
   "importer": {
     "title": "Import sellers",

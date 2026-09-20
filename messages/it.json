@@ -1338,7 +1338,11 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "Il tasso di vendita è il venduto nel periodo diviso per venduto più in magazzino ora. Le fasce di anzianità seguono il calendario di ribasso predefinito."
+    "definitions": "Il tasso di vendita è il venduto nel periodo diviso per venduto più in magazzino ora. Le fasce di anzianità seguono il calendario di ribasso predefinito.",
+    "current": "Magazzino attuale",
+    "salesPeriod": "Vendite nel periodo",
+    "more": "Mostra altri indicatori",
+    "valueHint": "Somma dei prezzi di vendita degli articoli."
   },
   "importer": {
     "title": "Importa conferenti",

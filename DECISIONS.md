@@ -679,3 +679,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-20: Bag inspection may receive one item at a time through the existing quick reception pipeline, with optional photo/AI and immutable bag/session/seller provenance. Existing agreement, acceptance, quota and cost rules still apply; old inspection drafts remain accessible.
 
 - 2026-09-20: Seller directory searches current name, email, phone and postal address within the active tenant. Phone searches ignore separators; wildcard characters remain literal. Existing balance calculations and member access are unchanged.
+
+- 2026-09-20: Manual sales use tenant-scoped search across accepted items and a cart of at most 50 unique items. Search excludes sold and ended items; existing sale validation, exact money and replay-safe recording remain authoritative.

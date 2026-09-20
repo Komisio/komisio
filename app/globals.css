@@ -2098,3 +2098,73 @@ small {
     font-weight: 400;
   }
 }
+
+.sales-page {
+  display: grid;
+  gap: 1.5rem;
+}
+.sale-manual > summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 1rem 0;
+}
+.sale-workspace {
+  max-width: none;
+}
+.sale-search label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.sale-search .row {
+  display: flex;
+  gap: 0.75rem;
+}
+.sale-search input {
+  flex: 1;
+  min-width: 0;
+}
+.sale-search-results,
+.sale-cart {
+  list-style: none;
+  margin: 1rem 0;
+  padding: 0;
+}
+.sale-search-results li,
+.sale-cart li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.sale-search-results li > span,
+.sale-cart li > span {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.sale-search-results small,
+.sale-cart small {
+  display: block;
+  color: var(--muted);
+}
+.sale-cart input {
+  width: 140px;
+}
+.sale-cart label {
+  display: block;
+  font-size: 0.8rem;
+}
+.sale-total {
+  font-size: 1.2rem;
+  text-align: right;
+}
+@media (max-width: 600px) {
+  .sale-cart li {
+    flex-wrap: wrap;
+  }
+  .sale-cart li > span {
+    flex-basis: 100%;
+  }
+}

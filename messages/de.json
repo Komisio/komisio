@@ -1938,7 +1938,8 @@
       "CREDENTIAL_KEY_MISSING": "In der bereitgestellten Konfiguration fehlt der Zugangsdaten-Schlüssel (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Das gespeicherte Token kann mit dem aktuellen Zugangsdaten-Schlüssel nicht gelesen werden. Trennen und erneut verbinden.",
       "REQUEST_FAILED": "Die Anfrage ist fehlgeschlagen. Versuchen Sie es später erneut."
-    }
+    },
+    "details": "Verbindungsdetails"
   },
   "fortnox": {
     "reconcileTitle": "Vorhandenen Buchungsbeleg bestätigen",
@@ -2165,7 +2166,7 @@
     "pullEnable": "Belegabruf ab jetzt aktivieren",
     "pullNow": "Nächste Seite von Zettle abrufen",
     "pullWaiting": "Noch kein neues Intervall. Der Abruf hinkt zwei Minuten hinterher, damit Zettle Käufe verarbeiten kann.",
-    "connectionTitle": "Pilotverbindung",
+    "connectionTitle": "Zettle",
     "connectionHint": "Prüfen Sie die serverseitig gespeicherten Zugangsdaten und ihren Zettle-Händler. Diese Prüfung erstellt keine Produkte und importiert keine Verkäufe.",
     "checkConnection": "Zettle-Verbindung prüfen",
     "connectionUnavailable": "Die Pilotverbindung ist nicht an diesen Store gebunden.",
@@ -2431,5 +2432,10 @@
     "drafts": "Frühere Entwürfe und Verlauf",
     "back": "Zur Taschenprüfung",
     "limit": "Die 50 zuletzt erfassten Artikel werden angezeigt."
+  },
+  "integrationPage": {
+    "intro": "Verbinden Sie Ihr Geschäft mit der Kasse oder dem Onlineshop. Verwalten Sie Verbindungen und öffnen Sie bei Bedarf die Details.",
+    "manage": "Synchronisierung und Verlauf",
+    "adminOnly": "Inhaber oder Administratoren können Verbindungen verwalten."
   }
 }

@@ -1938,7 +1938,8 @@
       "CREDENTIAL_KEY_MISSING": "The deployed configuration is missing the credential key (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "The stored token cannot be read with the current credential key. Disconnect and connect again.",
       "REQUEST_FAILED": "The request failed. Retry later."
-    }
+    },
+    "details": "Connection details"
   },
   "fortnox": {
     "reconcileTitle": "Confirm an existing voucher",
@@ -2165,7 +2166,7 @@
     "pullEnable": "Enable receipt retrieval from now",
     "pullNow": "Fetch next page from Zettle",
     "pullWaiting": "No new interval yet. Retrieval trails by two minutes to allow Zettle to process purchases.",
-    "connectionTitle": "Pilot connection",
+    "connectionTitle": "Zettle",
     "connectionHint": "Verify the server-held credential and its Zettle merchant. This check creates no products and imports no sales.",
     "checkConnection": "Check Zettle connection",
     "connectionUnavailable": "The pilot connection is not bound to this store.",
@@ -2431,5 +2432,10 @@
     "drafts": "Earlier drafts and history",
     "back": "Back to bag inspection",
     "limit": "Showing the 50 most recently registered items."
+  },
+  "integrationPage": {
+    "intro": "Connect your store to your POS or online shop. Manage connections here and open details when needed.",
+    "manage": "Sync and history",
+    "adminOnly": "An owner or administrator can manage store connections."
   }
 }

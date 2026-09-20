@@ -2297,3 +2297,41 @@ small {
     font-size: 0.85rem;
   }
 }
+
+.integration-connections {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  align-items: start;
+  margin: 1.5rem 0;
+}
+.integration-connections .card {
+  min-width: 0;
+  width: 100%;
+  max-width: none;
+}
+.integration-connections details {
+  margin-top: 1rem;
+}
+.integration-connections summary,
+.integration-details > summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.integration-details {
+  padding: 1.25rem;
+  margin: 1rem 0;
+  min-width: 0;
+}
+.integration-details > summary {
+  padding: 0.25rem 0;
+}
+.integration-details > .card {
+  max-width: none;
+  margin-top: 1rem;
+}
+@media (max-width: 760px) {
+  .integration-connections {
+    grid-template-columns: 1fr;
+  }
+}

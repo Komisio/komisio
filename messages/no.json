@@ -1938,7 +1938,8 @@
       "CREDENTIAL_KEY_MISSING": "Den distribuerte konfigurasjonen mangler legitimasjonsnøkkelen (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Det lagrede tokenet kan ikke leses med gjeldende legitimasjonsnøkkel. Koble fra og koble til igjen.",
       "REQUEST_FAILED": "Forespørselen mislyktes. Prøv igjen senere."
-    }
+    },
+    "details": "Tilkoblingsdetaljer"
   },
   "fortnox": {
     "reconcileTitle": "Bekreft et eksisterende bilag",
@@ -2165,7 +2166,7 @@
     "pullEnable": "Aktiver henting av kvitteringer fra nå",
     "pullNow": "Hent neste side fra Zettle",
     "pullWaiting": "Ingen nytt intervall ennå. Hentingen ligger to minutter etter for å la Zettle behandle kjøpene.",
-    "connectionTitle": "Pilottilkobling",
+    "connectionTitle": "Zettle",
     "connectionHint": "Verifiser legitimasjonen som holdes på serveren og dens Zettle-forhandler. Denne kontrollen oppretter ingen produkter og importerer ingen salg.",
     "checkConnection": "Kontroller Zettle-tilkoblingen",
     "connectionUnavailable": "Pilottilkoblingen er ikke knyttet til denne butikken.",
@@ -2431,5 +2432,10 @@
     "drafts": "Tidligere utkast og historikk",
     "back": "Til gjennomgang av posen",
     "limit": "Viser de 50 sist registrerte varene."
+  },
+  "integrationPage": {
+    "intro": "Koble butikken til kassen eller nettbutikken. Administrer tilkoblinger her og åpne detaljer ved behov.",
+    "manage": "Synkronisering og historikk",
+    "adminOnly": "En eier eller administrator kan administrere tilkoblingene."
   }
 }

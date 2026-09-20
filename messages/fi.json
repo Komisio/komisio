@@ -1938,7 +1938,8 @@
       "CREDENTIAL_KEY_MISSING": "Asennuksen määrityksistä puuttuu tunnistetietojen avain (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Tallennettua tunnusta ei voi lukea nykyisellä tunnistetietojen avaimella. Irrota ja yhdistä uudelleen.",
       "REQUEST_FAILED": "Pyyntö epäonnistui. Yritä myöhemmin uudelleen."
-    }
+    },
+    "details": "Yhteyden tiedot"
   },
   "fortnox": {
     "reconcileTitle": "Vahvista olemassa oleva tosite",
@@ -2165,7 +2166,7 @@
     "pullEnable": "Ota kuittien nouto käyttöön tästä hetkestä",
     "pullNow": "Nouda seuraava sivu Zettlestä",
     "pullWaiting": "Ei vielä uutta aikaväliä. Nouto seuraa kahden minuutin viiveellä, jotta Zettle ehtii käsitellä ostot.",
-    "connectionTitle": "Pilottiyhteys",
+    "connectionTitle": "Zettle",
     "connectionHint": "Tarkista palvelimella säilytettävä tunnistetieto ja sen Zettle-kauppias. Tämä tarkistus ei luo tuotteita eikä tuo myyntejä.",
     "checkConnection": "Tarkista Zettle-yhteys",
     "connectionUnavailable": "Pilottiyhteyttä ei ole sidottu tähän kauppaan.",
@@ -2431,5 +2432,10 @@
     "drafts": "Aiemmat luonnokset ja historia",
     "back": "Takaisin kassin läpikäyntiin",
     "limit": "Näytetään 50 viimeksi rekisteröityä tuotetta."
+  },
+  "integrationPage": {
+    "intro": "Yhdistä myymälä kassaan tai verkkokauppaan. Hallitse yhteyksiä ja avaa lisätiedot tarvittaessa.",
+    "manage": "Synkronointi ja historia",
+    "adminOnly": "Omistaja tai ylläpitäjä voi hallita yhteyksiä."
   }
 }

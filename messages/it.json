@@ -1938,7 +1938,8 @@
       "CREDENTIAL_KEY_MISSING": "Nella configurazione distribuita manca la chiave delle credenziali (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Il token salvato non può essere letto con la chiave delle credenziali attuale. Scollega e collega di nuovo.",
       "REQUEST_FAILED": "La richiesta non è riuscita. Riprova più tardi."
-    }
+    },
+    "details": "Dettagli della connessione"
   },
   "fortnox": {
     "reconcileTitle": "Conferma una registrazione esistente",
@@ -2165,7 +2166,7 @@
     "pullEnable": "Attiva il recupero degli scontrini da adesso",
     "pullNow": "Recupera la pagina successiva da Zettle",
     "pullWaiting": "Nessun nuovo intervallo per ora. Il recupero è in ritardo di due minuti per consentire a Zettle di elaborare gli acquisti.",
-    "connectionTitle": "Connessione pilota",
+    "connectionTitle": "Zettle",
     "connectionHint": "Verifica la credenziale conservata sul server e il suo commerciante Zettle. Questa verifica non crea prodotti e non importa vendite.",
     "checkConnection": "Verifica la connessione Zettle",
     "connectionUnavailable": "La connessione pilota non è associata a questo negozio.",
@@ -2431,5 +2432,10 @@
     "drafts": "Bozze precedenti e cronologia",
     "back": "Torna alla revisione della borsa",
     "limit": "Sono mostrati gli ultimi 50 articoli registrati."
+  },
+  "integrationPage": {
+    "intro": "Collega il negozio alla cassa o al negozio online. Gestisci le connessioni e apri i dettagli quando necessario.",
+    "manage": "Sincronizzazione e cronologia",
+    "adminOnly": "Un proprietario o amministratore può gestire le connessioni."
   }
 }

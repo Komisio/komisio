@@ -16,6 +16,10 @@ import {
 } from '@/lib/engine/seller-terms'
 import { SellerTermsForm } from '@/components/intake/seller-terms-form'
 import { LedgerAdjustForm } from '@/components/intake/ledger-adjust-form'
+import {
+  PayoutRequestForm,
+  PayoutDecision,
+} from '@/components/intake/payout-forms'
 import { StatementForm } from '@/components/intake/statement-form'
 import { readSellerStatements } from '@/lib/engine/statements'
 import { readSellerCommunications } from '@/lib/engine/communications'
@@ -220,6 +224,56 @@ export default async function Seller({
               </div>
             ))}
           </dl>
+          <details className="seller-disclosure seller-payouts">
+            <summary>{all.payouts.title}</summary>
+            <div className="seller-disclosure-body">
+              {write && balance.availableOre > 0 && (
+                <>
+                  <h3>{all.payouts.requestHeading}</h3>
+                  <p>{all.payouts.requestHint}</p>
+                  <PayoutRequestForm
+                    key={`${tenant.id}-${id.data}-${balance.availableOre}`}
+                    tenantId={tenant.id}
+                    currency={currency}
+                    sellers={[
+                      {
+                        id: id.data,
+                        name: seller.data.name,
+                        availableOre: balance.availableOre,
+                      },
+                    ]}
+                    d={all.payouts}
+                    intake={all.intake}
+                  />
+                </>
+              )}
+              <p>{all.payouts.notice}</p>
+              {payouts.length === 0 && <p>{all.payouts.empty}</p>}
+              {payouts.map((p) => (
+                <section key={p.id} className="intake-notice">
+                  <strong>
+                    {formatSignedOre(p.amount_ore)} {currency} ·{' '}
+                    {all.payouts.statuses[p.status]}
+                  </strong>
+                  <p>
+                    {when(p.requested_at)}
+                    {p.payment_reference ? ` · ${p.payment_reference}` : ''}
+                  </p>
+                  {write &&
+                    (p.status === 'requested' || p.status === 'approved') && (
+                      <PayoutDecision
+                        key={`${p.id}-${p.status}`}
+                        tenantId={tenant.id}
+                        payoutId={p.id}
+                        status={p.status}
+                        d={all.payouts}
+                        intake={all.intake}
+                      />
+                    )}
+                </section>
+              ))}
+            </div>
+          </details>
           <details className="seller-disclosure">
             <summary>
               {all.sellerProfile.transactions} <span>{ledger.length}</span>

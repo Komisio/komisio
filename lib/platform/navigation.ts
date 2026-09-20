@@ -22,16 +22,6 @@ export function buildNavigation(
           // The one-screen reception first: it is the default intake profile.
           { path: '/intake/quick', label: d.quickIntake.title, icon: 'Zap' },
           { path: '/intake', label: n.receiveBag, icon: 'Inbox' },
-          {
-            path: '/intake/handovers',
-            label: n.selfDropOff,
-            icon: 'Handshake',
-          },
-          {
-            path: '/intake/purchases',
-            label: d.purchases.title,
-            icon: 'ShoppingBag',
-          },
         ],
       },
       {

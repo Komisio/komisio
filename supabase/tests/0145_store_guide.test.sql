@@ -37,5 +37,17 @@ set local role anon;
 select throws_ok($$select current_store_guide(current_setting('test.tenant')::uuid)$$,'42501',null,'anonymous denied');
 reset role;
 select throws_ok($$delete from store_guide_versions where id=current_setting('test.id')::uuid$$,'55000',null,'immutable history');
+update tenant_members set role='readonly' where user_id='f0000000-0000-4000-8000-000000000902';
+set local role authenticated;
+select is((current_store_guide(current_setting('test.tenant')::uuid)->>'version')::int,2,'readonly reads');
+select throws_ok($$select save_store_guide(current_setting('test.tenant')::uuid,gen_random_uuid(),null,current_setting('test.answers')::jsonb)$$,'42501',null,'readonly cannot save');
+reset role;
+insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at)
+ values(gen_random_uuid(),'f0000000-0000-4000-8000-000000000901','totp','verified',now(),now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000901","role":"authenticated","aal":"aal1"}';
+select is((select count(*) from store_guide_versions),0::bigint,'MFA challenge hides guide history');
+select throws_like($$select save_store_guide(current_setting('test.tenant')::uuid,gen_random_uuid(),null,current_setting('test.answers')::jsonb)$$,'%AUTH_REQUIRED%','MFA challenge blocks saves');
+reset role;
 select * from finish();
 rollback;

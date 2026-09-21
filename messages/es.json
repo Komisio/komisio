@@ -633,7 +633,23 @@
     "photoPrivacyReminder": "Evita personas y datos personales visibles en la foto.",
     "photoPrivacyTitle": "Sobre las fotos y la privacidad",
     "photoRemove": "Quitar foto",
-    "photoRemoveFailed": "No se pudo confirmar que la foto se haya quitado. Inténtalo de nuevo."
+    "photoRemoveFailed": "No se pudo confirmar que la foto se haya quitado. Inténtalo de nuevo.",
+    "workspace": {
+      "title": "Revisar el artículo",
+      "intro": "Empieza por el artículo y el precio. Revisa los datos y prepáralo para la venta.",
+      "item": "Artículo y precio",
+      "itemHint": "Añade una foto o describe el artículo.",
+      "review": "Revisar y compartir",
+      "reviewHint": "Comprueba el precio y las condiciones antes de publicar.",
+      "finish": "Listo para vender",
+      "finishHint": "Confirma la recepción y registra el artículo.",
+      "custodyHint": "Confirma que el artículo está en la tienda.",
+      "acceptHelp": "¿Qué implica el registro?",
+      "aiHint": "Recibe ayuda para describir tus fotos. Tú revisas la propuesta.",
+      "aiHelp": "Sobre la IA y tus fotos",
+      "unsaved": "La propuesta de IA aún no se ha guardado.",
+      "completeManually": "Completa la descripción y el precio en el formulario siguiente para continuar."
+    }
   },
   "operations": {
     "title": "Operaciones propuestas",

@@ -633,7 +633,23 @@
     "photoPrivacyReminder": "Unngå personer og synlige personopplysninger i bildet.",
     "photoPrivacyTitle": "Om bilder og personvern",
     "photoRemove": "Fjern bilde",
-    "photoRemoveFailed": "Fjerningen av bildet kunne ikke bekreftes. Prøv igjen."
+    "photoRemoveFailed": "Fjerningen av bildet kunne ikke bekreftes. Prøv igjen.",
+    "workspace": {
+      "title": "Gå gjennom varen",
+      "intro": "Start med varen og prisen. Kontroller deretter opplysningene og gjør varen klar for salg.",
+      "item": "Vare og pris",
+      "itemHint": "Legg til et bilde eller beskriv varen selv.",
+      "review": "Kontroller og del",
+      "reviewHint": "Kontroller pris og vilkår før publisering.",
+      "finish": "Klar for salg",
+      "finishHint": "Bekreft mottak og registrer varen.",
+      "custodyHint": "Bekreft at varen er i butikken.",
+      "acceptHelp": "Hva innebærer registreringen?",
+      "aiHint": "Få hjelp til beskrivelsen fra bildene dine. Du kontrollerer forslaget.",
+      "aiHelp": "Om KI og bildene dine",
+      "unsaved": "KI-forslaget er ikke lagret ennå.",
+      "completeManually": "Fyll ut beskrivelse og pris i skjemaet nedenfor for å fortsette."
+    }
   },
   "operations": {
     "title": "Foreslåtte operasjoner",

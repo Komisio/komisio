@@ -633,7 +633,23 @@
     "photoPrivacyReminder": "Vältä ihmisiä ja näkyviä henkilötietoja kuvassa.",
     "photoPrivacyTitle": "Kuvat ja tietosuoja",
     "photoRemove": "Poista kuva",
-    "photoRemoveFailed": "Kuvan poistamista ei voitu vahvistaa. Yritä uudelleen."
+    "photoRemoveFailed": "Kuvan poistamista ei voitu vahvistaa. Yritä uudelleen.",
+    "workspace": {
+      "title": "Tarkista tuote",
+      "intro": "Aloita tuotteesta ja hinnasta. Tarkista sitten tiedot ja valmistele tuote myyntiin.",
+      "item": "Tuote ja hinta",
+      "itemHint": "Lisää kuva tai kuvaile tuote itse.",
+      "review": "Tarkista ja jaa",
+      "reviewHint": "Tarkista hinta ja ehdot ennen julkaisua.",
+      "finish": "Valmis myyntiin",
+      "finishHint": "Vahvista vastaanotto ja rekisteröi tuote.",
+      "custodyHint": "Vahvista, että tuote on myymälässä.",
+      "acceptHelp": "Mitä rekisteröinti tarkoittaa?",
+      "aiHint": "Saat kuvista apua kuvaukseen. Tarkistat ehdotuksen itse.",
+      "aiHelp": "Tietoa tekoälystä ja kuvistasi",
+      "unsaved": "Tekoälyehdotusta ei ole vielä tallennettu.",
+      "completeManually": "Täydennä kuvaus ja hinta alla olevaan lomakkeeseen jatkaaksesi."
+    }
   },
   "operations": {
     "title": "Ehdotetut operaatiot",

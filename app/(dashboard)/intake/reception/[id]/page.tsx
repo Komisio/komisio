@@ -184,13 +184,14 @@ export default async function Reception({
     />
   )
   return (
-    <>
+    <div className="reception-workspace">
       <Link className="text-link" href="/intake/reception">
         {d.back}
       </Link>
       <div className="page-heading">
         <div className="eyebrow">{tenant.name}</div>
-        <h1>{seller.data.name}</h1>
+        <h1>{d.workspace.title}</h1>
+        <p className="reception-seller-name">{seller.data.name}</p>
         <p>
           {d.recipient}: {seller.data.email || seller.data.phone}
         </p>
@@ -203,201 +204,249 @@ export default async function Reception({
           </Link>
         </p>
       </div>
-      {aiEnabled ? (
-        <>
-          <div className="reception-entry reception-ai-first">
-            {photoPanel}
-            {assistancePanel}
-          </div>
-          {observationPanel}
-        </>
-      ) : (
-        <div className="reception-entry">
-          {observationPanel}
-          {photoPanel}
-        </div>
-      )}
-      <details
-        className="reception-reference-sales"
-        open={Boolean(query.q || query.category)}
-      >
-        <summary>{all.priceEvidence.title}</summary>
-        <PriceEvidencePanel
-          evidence={evidence}
-          formAction={`/intake/reception/${id.data}`}
-          locale={ctx.locale}
-          d={all.priceEvidence}
-        />
-      </details>
-      <section className="card intake-form">
-        <h2>{d.preview}</h2>
-        {!prepared ? (
-          <p>{d.needSources}</p>
-        ) : (
-          <>
-            <p>{prepared.input.description}</p>
-            <h3>
-              {d.price}: {prepared.input.amount}{' '}
-              {policy.policy.currency ?? 'SEK'}
-            </h3>
-            <p>{prepared.suggestions.price?.rationale}</p>
-          </>
-        )}
-        {!terms.data ? (
-          <p>
-            <Link href="/intake/agreements" className="text-link">
-              {policy.policy.agreementRequiredFor.includes('review_publication')
-                ? d.needTerms
-                : all.storePolicy.noTerms}
-            </Link>
-          </p>
-        ) : (
-          <>
-            <h3>
-              {terms.data.title} ({d.version} {terms.data.version})
-            </h3>
-            <div lang={terms.data.language} className="reception-terms">
-              {terms.data.body}
+      <p className="reception-workspace-intro">{d.workspace.intro}</p>
+      <details className="reception-step" open={!current || expired}>
+        <summary>
+          <span className="reception-step-number">1</span>
+          <span>
+            {d.workspace.item}
+            <small>{d.workspace.itemHint}</small>
+          </span>
+        </summary>
+        <div className="reception-step-body">
+          <div className="reception-editor">
+            <div className="reception-media">
+              {photoPanel}
+              {aiAvailable ? (
+                assistancePanel
+              ) : aiEnabled ? (
+                <p className="reception-help">{d.aiUnavailable}</p>
+              ) : null}
             </div>
-          </>
-        )}
-        {write && canPublish && prepared ? (
-          <PublishReview
-            key={`${state.revision}-${review?.id ?? 'none'}-${terms.data?.id ?? 'none'}`}
-            tenantId={tenant.id}
-            sessionId={id.data}
-            revision={state.revision}
-            previousId={review?.id ?? null}
-            agreementId={terms.data?.id ?? null}
-            suggestions={prepared.suggestions}
-            d={d}
-          />
-        ) : current && !expired ? (
-          <p>{d.published}</p>
-        ) : null}
-      </section>
-      {review && (
-        <section className="card intake-form reception-result">
-          <h2>
-            {d.sellerStep} — {d.version} {review.version}
-          </h2>
-          <p>
-            {
-              review.suggestions.attributes.find(
-                (a) => a.slug === 'description',
-              )?.value
-            }
-          </p>
-          <p>
-            {d.price}: {review.suggestions.price?.amount}{' '}
-            {review.suggestions.price?.currency}
-          </p>
-          <p>{review.terms?.title ?? all.storePolicy.noTerms}</p>
-          <p>
-            {d.sharedPhotos}: {review.photos.length}
-          </p>
-          {review.terms && (
-            <details>
-              <summary>{d.exactTerms}</summary>
-              <div className="reception-terms" lang={review.terms.language}>
-                {review.terms.body}
-              </div>
-            </details>
-          )}
-          <p>
-            {all.reviewExpires}{' '}
-            {new Date(review.expiresAt).toLocaleString(intlLocale(ctx.locale), {
-              timeZone: 'Europe/Stockholm',
-            })}{' '}
-            (Europe/Stockholm)
-          </p>
-          {(!current || expired) && <p role="status">{d.stale}</p>}
-          <p role="status">
-            {review.response
-              ? review.response.decision === 'approve'
-                ? all.staffReviewApproved
-                : all.staffReviewDeclined
-              : d.awaiting}
-          </p>
-          {policy.policy.sellerReviewMode === 'delegated' && (
-            <p>{d.delegatedNotice}</p>
-          )}
-          {write && review.terms && (
-            <ReviewAccess
-              key={review.id}
-              tenantId={tenant.id}
-              reviewId={review.id}
-              access={review.access}
-              available={current && !expired}
-              email={review.sellerEmail}
-              d={d}
+            {observationPanel}
+          </div>
+          <details
+            className="reception-reference-sales"
+            open={Boolean(query.q || query.category)}
+          >
+            <summary>{all.priceEvidence.title}</summary>
+            <PriceEvidencePanel
+              evidence={evidence}
+              formAction={`/intake/reception/${id.data}`}
+              locale={ctx.locale}
+              d={all.priceEvidence}
             />
-          )}
-        </section>
-      )}
-      <div className="intake-grid reception-completion">
-        <section className="card intake-form reception-result">
-          <h2>{d.custody}</h2>
-          <p>{d.custodyHelp}</p>
-          {custody ? (
-            <>
-              <p role="status">
-                <strong>
-                  {d.custodyReference} {garmentReference(custody.reference)}
-                </strong>{' '}
-                · {d.custodyRecorded}{' '}
-                {new Date(custody.received_at).toLocaleString(
-                  intlLocale(ctx.locale),
-                  { timeZone: 'Europe/Stockholm' },
-                )}
-                {custody.note ? ` · ${custody.note}` : ''}
+          </details>
+        </div>
+      </details>
+      <details className="reception-step" open={Boolean(prepared || review)}>
+        <summary>
+          <span className="reception-step-number">2</span>
+          <span>
+            {d.workspace.review}
+            <small>
+              {current && !expired ? d.published : d.workspace.reviewHint}
+            </small>
+          </span>
+        </summary>
+        <div className="reception-step-body">
+          <section className="intake-form">
+            <h2>{d.preview}</h2>
+            {!prepared ? (
+              <p>{d.needSources}</p>
+            ) : (
+              <>
+                <p>{prepared.input.description}</p>
+                <h3>
+                  {d.price}: {prepared.input.amount}{' '}
+                  {policy.policy.currency ?? 'SEK'}
+                </h3>
+                <p>{prepared.suggestions.price?.rationale}</p>
+              </>
+            )}
+            {!terms.data ? (
+              <p>
+                <Link href="/intake/agreements" className="text-link">
+                  {policy.policy.agreementRequiredFor.includes(
+                    'review_publication',
+                  )
+                    ? d.needTerms
+                    : all.storePolicy.noTerms}
+                </Link>
               </p>
-              <Link
-                className="text-link"
-                href={`/intake/reception/${id.data}/label`}
-              >
-                {d.custodyPrint}
-              </Link>
-            </>
-          ) : (
-            <>
-              <p role="status">{d.custodyMissing}</p>
-              {write && (
-                <RecordCustody
+            ) : (
+              <>
+                <details className="reception-help">
+                  <summary>
+                    {terms.data.title} · {d.version} {terms.data.version}
+                  </summary>
+                  <div lang={terms.data.language} className="reception-terms">
+                    {terms.data.body}
+                  </div>
+                </details>
+              </>
+            )}
+            {write && canPublish && prepared ? (
+              <PublishReview
+                key={`${state.revision}-${review?.id ?? 'none'}-${terms.data?.id ?? 'none'}`}
+                tenantId={tenant.id}
+                sessionId={id.data}
+                revision={state.revision}
+                previousId={review?.id ?? null}
+                agreementId={terms.data?.id ?? null}
+                suggestions={prepared.suggestions}
+                d={d}
+              />
+            ) : current && !expired ? (
+              <p>{d.published}</p>
+            ) : null}
+          </section>
+          {review && (
+            <section className="card intake-form reception-result">
+              <h2>
+                {d.sellerStep} — {d.version} {review.version}
+              </h2>
+              <p>
+                {
+                  review.suggestions.attributes.find(
+                    (a) => a.slug === 'description',
+                  )?.value
+                }
+              </p>
+              <p>
+                {d.price}: {review.suggestions.price?.amount}{' '}
+                {review.suggestions.price?.currency}
+              </p>
+              <p>{review.terms?.title ?? all.storePolicy.noTerms}</p>
+              <p>
+                {d.sharedPhotos}: {review.photos.length}
+              </p>
+              {review.terms && (
+                <details>
+                  <summary>{d.exactTerms}</summary>
+                  <div className="reception-terms" lang={review.terms.language}>
+                    {review.terms.body}
+                  </div>
+                </details>
+              )}
+              <p>
+                {all.reviewExpires}{' '}
+                {new Date(review.expiresAt).toLocaleString(
+                  intlLocale(ctx.locale),
+                  {
+                    timeZone: 'Europe/Stockholm',
+                  },
+                )}{' '}
+                (Europe/Stockholm)
+              </p>
+              {(!current || expired) && <p role="status">{d.stale}</p>}
+              <p role="status">
+                {review.response
+                  ? review.response.decision === 'approve'
+                    ? all.staffReviewApproved
+                    : all.staffReviewDeclined
+                  : d.awaiting}
+              </p>
+              {policy.policy.sellerReviewMode === 'delegated' && (
+                <p>{d.delegatedNotice}</p>
+              )}
+              {write && review.terms && (
+                <ReviewAccess
+                  key={review.id}
                   tenantId={tenant.id}
-                  sessionId={id.data}
+                  reviewId={review.id}
+                  access={review.access}
+                  available={current && !expired}
+                  email={review.sellerEmail}
                   d={d}
-                  intake={all.intake}
                 />
               )}
-            </>
+            </section>
           )}
-        </section>
-        <section className="card intake-form reception-result">
-          <h2>{all.items.acceptHeading}</h2>
-          <p>{all.items.acceptHint}</p>
-          {accepted ? (
-            <p role="status">
-              {all.items.alreadyAccepted}{' '}
-              <Link className="text-link" href={`/intake/items/${accepted.id}`}>
-                {all.items.open}
-              </Link>
-            </p>
-          ) : !custody || !review ? (
-            <p role="status">{all.items.acceptBlocked}</p>
-          ) : write ? (
-            <AcceptItemForm
-              tenantId={tenant.id}
-              originKind="reception_review"
-              originId={id.data}
-              originRevision={review.version}
-              defaultPrice={review.suggestions.price?.amount}
-              d={all.items}
-              intake={all.intake}
-            />
-          ) : null}
-        </section>
-      </div>
+        </div>
+      </details>
+      <details className="reception-step" open={Boolean(current && !expired)}>
+        <summary>
+          <span className="reception-step-number">3</span>
+          <span>
+            {d.workspace.finish}
+            <small>
+              {accepted ? all.items.alreadyAccepted : d.workspace.finishHint}
+            </small>
+          </span>
+        </summary>
+        <div className="reception-step-body">
+          <div className="intake-grid reception-completion">
+            <section className="card intake-form reception-result">
+              <h2>{d.custody}</h2>
+              <p>{d.workspace.custodyHint}</p>
+              {custody ? (
+                <>
+                  <p role="status">
+                    <strong>
+                      {d.custodyReference} {garmentReference(custody.reference)}
+                    </strong>{' '}
+                    · {d.custodyRecorded}{' '}
+                    {new Date(custody.received_at).toLocaleString(
+                      intlLocale(ctx.locale),
+                      { timeZone: 'Europe/Stockholm' },
+                    )}
+                    {custody.note ? ` · ${custody.note}` : ''}
+                  </p>
+                  <Link
+                    className="text-link"
+                    href={`/intake/reception/${id.data}/label`}
+                  >
+                    {d.custodyPrint}
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <p role="status">{d.custodyMissing}</p>
+                  {write && (
+                    <RecordCustody
+                      tenantId={tenant.id}
+                      sessionId={id.data}
+                      d={d}
+                      intake={all.intake}
+                    />
+                  )}
+                </>
+              )}
+            </section>
+            <section className="card intake-form reception-result">
+              <h2>{all.items.acceptHeading}</h2>
+              <details className="reception-help">
+                <summary>{d.workspace.acceptHelp}</summary>
+                <p>{all.items.acceptHint}</p>
+              </details>
+              {accepted ? (
+                <p role="status">
+                  {all.items.alreadyAccepted}{' '}
+                  <Link
+                    className="text-link"
+                    href={`/intake/items/${accepted.id}`}
+                  >
+                    {all.items.open}
+                  </Link>
+                </p>
+              ) : !custody || !review ? (
+                <p role="status">{all.items.acceptBlocked}</p>
+              ) : write ? (
+                <AcceptItemForm
+                  tenantId={tenant.id}
+                  originKind="reception_review"
+                  originId={id.data}
+                  originRevision={review.version}
+                  defaultPrice={review.suggestions.price?.amount}
+                  d={all.items}
+                  intake={all.intake}
+                />
+              ) : null}
+            </section>
+          </div>
+        </div>
+      </details>
       <footer className="reception-audit">
         <Link
           className="text-link"
@@ -413,6 +462,6 @@ export default async function Reception({
           {d.sourceVersion} {state.revision}
         </span>
       </footer>
-    </>
+    </div>
   )
 }

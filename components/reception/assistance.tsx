@@ -58,7 +58,18 @@ export function ReceptionAssistance({
   return (
     <section className="card intake-form reception-result">
       <h2>{d.aiTitle}</h2>
-      <p>{available ? d.aiNotice : d.aiUnavailable}</p>
+      {available ? (
+        <>
+          <p>{d.workspace.aiHint}</p>
+          <details className="reception-help">
+            <summary>{d.workspace.aiHelp}</summary>
+            <p>{d.aiNotice}</p>
+            <p>{d.aiTransient}</p>
+          </details>
+        </>
+      ) : (
+        <p>{d.aiUnavailable}</p>
+      )}
       <label htmlFor={modeId}>{d.batch.mode}</label>
       <select
         id={modeId}
@@ -159,7 +170,7 @@ export function ReceptionAssistance({
         </Button>
       )}
       {error && <p role="alert">{error}</p>}
-      {attempted && <p>{d.aiTransient}</p>}
+      {attempted && <p className="reception-unsaved">{d.workspace.unsaved}</p>}
       {batch && (
         <BatchReview
           batch={batch}
@@ -172,34 +183,36 @@ export function ReceptionAssistance({
       {candidate && (
         <div className="intake-form">
           <h3>{d.aiCandidate}</h3>
-          {candidate.attributes.map(
-            (fact) =>
-              fact && (
-                <div key={fact.slug}>
-                  <strong>
-                    {(d.aiFields as Record<string, string | undefined>)[
-                      fact.slug
-                    ] ?? fact.slug}
-                  </strong>
-                  <p>{fact.value}</p>
-                  <small>{d.aiUnverified}</small>
-                  <details>
-                    <summary>{d.aiSources}</summary>
-                    {fact.sourceIds.map((id) => {
-                      const source = sources.find((s) => s.id === id)
-                      return (
-                        <p key={id}>
-                          {source?.kind === 'photo'
-                            ? d.photoAlt
-                            : source?.reference}{' '}
-                          — {source?.observation || id}
-                        </p>
-                      )
-                    })}
-                  </details>
-                </div>
-              ),
-          )}
+          <p>{d.aiUnverified}</p>
+          <div className="reception-facts">
+            {candidate.attributes.map(
+              (fact) =>
+                fact && (
+                  <div className="reception-fact" key={fact.slug}>
+                    <strong>
+                      {(d.aiFields as Record<string, string | undefined>)[
+                        fact.slug
+                      ] ?? fact.slug}
+                    </strong>
+                    <p>{fact.value}</p>
+                    <details>
+                      <summary>{d.aiSources}</summary>
+                      {fact.sourceIds.map((id) => {
+                        const source = sources.find((s) => s.id === id)
+                        return (
+                          <p key={id}>
+                            {source?.kind === 'photo'
+                              ? d.photoAlt
+                              : source?.reference}{' '}
+                            — {source?.observation || id}
+                          </p>
+                        )
+                      })}
+                    </details>
+                  </div>
+                ),
+            )}
+          </div>
           <h3>
             {d.price}:{' '}
             {candidate.price
@@ -230,12 +243,14 @@ export function ReceptionAssistance({
           <p>{d.aiReviewNotice}</p>
           {terms && (
             <>
-              <h3>
-                {terms.title} ({d.version} {terms.version})
-              </h3>
-              <div className="reception-terms" lang={terms.language}>
-                {terms.body}
-              </div>
+              <details className="reception-help">
+                <summary>
+                  {terms.title} · {d.version} {terms.version}
+                </summary>
+                <div className="reception-terms" lang={terms.language}>
+                  {terms.body}
+                </div>
+              </details>
             </>
           )}
           {ready && candidate && (terms || !agreementRequired) ? (
@@ -250,7 +265,7 @@ export function ReceptionAssistance({
               d={d}
             />
           ) : (
-            <p>{d.aiIncomplete}</p>
+            <p>{d.workspace.completeManually}</p>
           )}
         </div>
       )}

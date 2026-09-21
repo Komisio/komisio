@@ -2256,6 +2256,10 @@ test('AI HTTP fixture stages a sourced proposal before explicit staff publicatio
   await expect(
     panel.getByText('AI-förslag, behöver kontrolleras', { exact: true }),
   ).toBeVisible()
+  await panel
+    .locator('summary')
+    .filter({ hasText: 'HTTP fixture terms' })
+    .click()
   await expect(
     panel.getByText('TEST ONLY – no real agreement.', { exact: true }),
   ).toBeVisible()

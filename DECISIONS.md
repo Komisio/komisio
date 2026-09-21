@@ -681,3 +681,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-20: Seller directory searches current name, email, phone and postal address within the active tenant. Phone searches ignore separators; wildcard characters remain literal. Existing balance calculations and member access are unchanged.
 
 - 2026-09-20: Manual sales use tenant-scoped search across accepted items and a cart of at most 50 unique items. Search excludes sold and ended items; existing sale validation, exact money and replay-safe recording remain authoritative.
+- 2026-09-21: Owner approved private store_guide_versions per tenant: owner/admin saves, member reads, immutable versions, stale-edit protection and actor-bound retries. Store language-independent answers for eight UI languages; answers never activate financial rules.
+

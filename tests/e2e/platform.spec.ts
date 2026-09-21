@@ -2931,6 +2931,10 @@ test('store policy publishes safely and supports agreement-free staff review', a
   ).toHaveCount(0)
   await page.reload()
   await expect(
-    page.getByText('Synthetic policy jacket', { exact: true }).first(),
+    page
+      .locator('.reception-step')
+      .nth(1)
+      .getByText('Synthetic policy jacket', { exact: true })
+      .first(),
   ).toBeVisible()
 })

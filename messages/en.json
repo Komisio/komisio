@@ -633,7 +633,23 @@
     "photoPrivacyReminder": "Avoid people and visible personal information in the photo.",
     "photoPrivacyTitle": "About photos and privacy",
     "photoRemove": "Remove photo",
-    "photoRemoveFailed": "The photo removal could not be confirmed. Please try again."
+    "photoRemoveFailed": "The photo removal could not be confirmed. Please try again.",
+    "workspace": {
+      "title": "Review the item",
+      "intro": "Start with the item and price. Then review the details and prepare it for sale.",
+      "item": "Item and price",
+      "itemHint": "Add a photo or describe the item yourself.",
+      "review": "Review and share",
+      "reviewHint": "Check the price and terms before publishing.",
+      "finish": "Ready for sale",
+      "finishHint": "Confirm receipt and register the item.",
+      "custodyHint": "Confirm that the item is in the store.",
+      "acceptHelp": "What does registration mean?",
+      "aiHint": "Get help describing your photos. You check the suggestion.",
+      "aiHelp": "About AI and your photos",
+      "unsaved": "The AI suggestion has not been saved yet.",
+      "completeManually": "Complete the description and price in the form below to continue."
+    }
   },
   "operations": {
     "title": "Proposed operations",

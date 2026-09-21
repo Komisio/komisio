@@ -1941,7 +1941,9 @@ test('operator reception guides saved evidence, exact review and link replacemen
     sessionId = receptionPath.split('/').pop()
   const stale = await page.context().newPage()
   await stale.goto(receptionPath)
-  await page.getByLabel('Beskriv plagget').fill('Blue operator TEST jacket')
+  await page
+    .getByLabel('Beskrivning', { exact: true })
+    .fill('Blue operator TEST jacket')
   await page
     .getByLabel('Föreslaget försäljningspris', { exact: true })
     .fill('250,50')
@@ -1996,7 +1998,7 @@ test('operator reception guides saved evidence, exact review and link replacemen
   await page.getByRole('button', { name: 'Återkalla länken' }).click()
   await expect(page.getByLabel('Länk till säljarens granskning')).toHaveCount(0)
   await page.reload()
-  await expect(page.getByLabel('Beskriv plagget')).toHaveValue(
+  await expect(page.getByLabel('Beskrivning', { exact: true })).toHaveValue(
     'Blue operator TEST jacket',
   )
   const current = await (
@@ -2004,7 +2006,7 @@ test('operator reception guides saved evidence, exact review and link replacemen
   ).json()
   expect(current.session.revision).toBe(1)
   expect(current.latestReview.access.enabled).toBe(false)
-  await stale.getByLabel('Beskriv plagget').fill('Stale edit')
+  await stale.getByLabel('Beskrivning', { exact: true }).fill('Stale edit')
   await stale
     .getByLabel('Föreslaget försäljningspris', { exact: true })
     .fill('300')
@@ -2225,7 +2227,9 @@ test('AI HTTP fixture stages a sourced proposal before explicit staff publicatio
     ).status(),
   ).toBe(200)
   await page.goto(`/intake/reception/${sessionId}`)
-  await page.getByLabel('Beskriv plagget').fill('Synthetic blue jacket')
+  await page
+    .getByLabel('Beskrivning', { exact: true })
+    .fill('Synthetic blue jacket')
   await page
     .getByLabel('Föreslaget försäljningspris', { exact: true })
     .fill('250')
@@ -2901,7 +2905,9 @@ test('store policy publishes safely and supports agreement-free staff review', a
     sellerId,
   })
   await page.goto(`/intake/reception/${sessionId}`)
-  await page.getByLabel('Beskriv plagget').fill('Synthetic policy jacket')
+  await page
+    .getByLabel('Beskrivning', { exact: true })
+    .fill('Synthetic policy jacket')
   await page
     .getByLabel('Föreslaget försäljningspris', { exact: true })
     .fill('100')

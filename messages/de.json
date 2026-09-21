@@ -633,7 +633,23 @@
     "photoPrivacyReminder": "Vermeiden Sie Personen und sichtbare personenbezogene Daten im Bild.",
     "photoPrivacyTitle": "Über Fotos und Datenschutz",
     "photoRemove": "Bild entfernen",
-    "photoRemoveFailed": "Das Entfernen des Bildes konnte nicht bestätigt werden. Bitte erneut versuchen."
+    "photoRemoveFailed": "Das Entfernen des Bildes konnte nicht bestätigt werden. Bitte erneut versuchen.",
+    "workspace": {
+      "title": "Artikel prüfen",
+      "intro": "Beginnen Sie mit Artikel und Preis. Prüfen Sie dann die Angaben und bereiten Sie den Verkauf vor.",
+      "item": "Artikel und Preis",
+      "itemHint": "Foto hinzufügen oder Artikel selbst beschreiben.",
+      "review": "Prüfen und teilen",
+      "reviewHint": "Preis und Bedingungen vor der Veröffentlichung prüfen.",
+      "finish": "Bereit zum Verkauf",
+      "finishHint": "Empfang bestätigen und Artikel registrieren.",
+      "custodyHint": "Bestätigen Sie, dass der Artikel im Laden ist.",
+      "acceptHelp": "Was bedeutet die Registrierung?",
+      "aiHint": "Lassen Sie sich bei der Beschreibung Ihrer Fotos helfen. Sie prüfen den Vorschlag.",
+      "aiHelp": "Über KI und Ihre Fotos",
+      "unsaved": "Der KI-Vorschlag ist noch nicht gespeichert.",
+      "completeManually": "Ergänzen Sie Beschreibung und Preis im Formular unten, um fortzufahren."
+    }
   },
   "operations": {
     "title": "Vorgeschlagene Vorgänge",

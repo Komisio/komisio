@@ -45,6 +45,29 @@ const order = (over: Partial<OrderNode> = {}): OrderNode => ({
 })
 
 describe('order evidence', () => {
+  it('retains POS channel and location on discounted checkout evidence', () => {
+    const e = orderToEvidence(
+      order({
+        sourceName: 'pos',
+        retailLocation: { id: 'gid://shopify/Location/1' },
+        lineItems: {
+          nodes: [
+            {
+              sku: 'K-' + item,
+              title: 'Discounted',
+              quantity: 1,
+              discountedTotalSet: money('199.00'),
+            },
+          ],
+        },
+      }),
+    )
+    expect(e).toMatchObject({
+      sourceName: 'pos',
+      retailLocationGid: 'gid://shopify/Location/1',
+      amountOre: 19900,
+    })
+  })
   it('parses decimal amounts as öre', () => {
     expect(toOre('250.00')).toBe(25000)
     expect(toOre('0.5')).toBe(50)

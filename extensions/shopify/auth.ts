@@ -14,6 +14,8 @@ export const SHOPIFY_SCOPES = [
   'write_products',
   'write_inventory',
   'read_locations',
+  'read_publications',
+  'write_publications',
 ] as const
 export type ShopifyEnvironment = {
   SHOPIFY_CLIENT_ID?: string

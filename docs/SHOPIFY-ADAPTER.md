@@ -1,5 +1,43 @@
 # Shopify adapter
 
+## Online store and Shopify POS
+
+One tenant connection supports the online store, Shopify POS or both. Before
+starting sync, the owner/admin chooses an active Shopify inventory location and
+the publication for each selected channel. Choices are verified against the
+connected shop and saved through the engine with an expected revision. Two
+simultaneous saves cannot silently overwrite each other. The setup UI is
+translated into all eight application languages.
+
+The first export or order pull locks these choices. Changing channels later
+requires a reviewed migration of inventory and order history; there is no
+self-service move. Settings survive disconnect, and reconnect cannot bind them
+to a different Shopify shop. Previously synchronized connections retain their
+legacy behavior until deliberately migrated.
+
+New products receive the printed item reference as barcode, one tracked unit at
+the selected location, and publication to the chosen channels. Updates and
+recovered products do **not** reset inventory quantities: a price change cannot
+replenish a unit already sold in POS. Publication failure records an uncertain
+export; retry reconciles the SKU before updating and publishing again. Komisio
+does not remove publications managed directly in Shopify.
+
+Orders retain sourceName and retailLocation. With configured settings, new
+orders outside the selected web/POS channel are held as channel; POS orders
+with another or missing location are held as location. Both remain evidence
+and advance the pull cursor. Matching orders use the existing sale and return
+rules. Unknown items in mixed carts remain held; POS support does not change
+financial rules. Existing recorded orders still receive their refunds.
+
+The UI and synthetic adapter/database tests cover these changes. Real Shopify
+POS checkout, scanner behavior and publication permissions require a development
+shop acceptance test before claiming live POS support. Shopify inventory policy
+alone is not a verified guarantee against overselling across disconnected tills.
+
+References: [Order source and retail location](https://shopify.dev/docs/api/admin-graphql/latest/objects/Order),
+[product publishing](https://shopify.dev/docs/apps/build/sales-channels/product-publishing),
+[POS inventory](https://help.shopify.com/en/manual/sell-in-person/shopify-pos/inventory-management/track-and-adjust-inventory).
+
 ## Store-owned accounts
 
 Each tenant can connect its own myshopify.com shop from /intake/integrations.
@@ -30,10 +68,9 @@ Dev Dashboard, registered by Inority AB, with:
 - redirect URL `https://app.komisio.com/api/integrations/shopify/callback`
   (and the staging origin during the pilot);
 - scopes `read_orders`, `write_products`, `write_inventory`,
-  `read_locations`;
+  `read_locations`, `read_publications`, `write_publications`;
 - the client id and secret as `SHOPIFY_CLIENT_ID` and
-  `SHOPIFY_CLIENT_SECRET` in Vercel, plus `SHOPIFY_PILOT_TENANT_ID` for the
-  one store allowed to connect during the pilot, as for Fortnox.
+  `SHOPIFY_CLIENT_SECRET` in Vercel, plus `KOMISIO_CREDENTIAL_KEY` for tenant token encryption. Existing installations must reconnect to grant publication scopes.
 
 New apps get expiring access tokens with a refresh token valid for 90 days.
 Step 1 stores both and reads an expired token as "reconnect needed"; token
@@ -73,8 +110,7 @@ Shopify route, and a "Products in Shopify" section on the integrations page.
   (draft or purchase; the reference `I-XXXXXXXX` when blank), the category
   as product type, status ACTIVE, price from the current price in major
   units, sku `K-<item id>`, `inventoryPolicy: DENY`, a tracked inventory
-  item and one unit at the shop's location: the first active location that
-  fulfils online orders, else the first active one. No photo yet: reception
+  item and one unit at the selected location. Legacy connections without explicit settings use the first active location that fulfils online orders, else the first active one. No photo yet: reception
   photos live in private storage and Shopify needs a public URL or a staged
   upload; that is a follow-up.
 - **Intent before request, outcome after.** `prepare_shopify_product` records
@@ -164,6 +200,9 @@ Migration `20260916330000`, pgTAP `0103`, `extensions/shopify/orders.ts`,
   remains for a pull on demand.
 
 ## Verification
+
+Channel/location setup: pgTAP `0147`, unit `shopify-settings`, `shopify-products` and `shopify-orders`, browser `shopify-setup`, and the concurrent settings-save test in `test:concurrency`. Provider calls in these tests use synthetic responses.
+
 
 Step 1: `supabase/tests/0099_shopify_connection.test.sql` and
 `tests/unit/shopify-connection.test.ts` (domain rule, issues, hmac, code

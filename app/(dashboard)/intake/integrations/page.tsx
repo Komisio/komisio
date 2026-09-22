@@ -32,6 +32,8 @@ import {
   shopifyTokenExpired,
 } from '@/lib/engine/shopify-connection'
 import { shopifyEnvironment, shopifyIssue } from '@/extensions/shopify/auth'
+import { ShopifySetup } from '@/components/intake/shopify-setup'
+import { readShopifySettings } from '@/lib/engine/shopify-settings'
 import { ShopifyConnection } from '@/components/intake/shopify-connection'
 import { ShopifyProducts } from '@/components/intake/shopify-products'
 import { ShopifyOrders } from '@/components/intake/shopify-orders'
@@ -104,6 +106,9 @@ export default async function Integrations({
   ]
   const fortnoxStatus = await readFortnoxStatus(ctx.client, a.id)
   const shopifyStatus = await readShopifyStatus(ctx.client, a.id)
+  const shopifySettings = shopifyStatus.connected
+    ? await readShopifySettings(ctx.client, a.id)
+    : null
   const shopifyExpired = shopifyTokenExpired(shopifyStatus)
   const [shopifyCandidates, shopifyProducts, shopifyOrders, shopifyAuto] =
     shopifyStatus.connected
@@ -447,59 +452,68 @@ export default async function Integrations({
             d={all.shopify}
           />
         )}
-        {shopifyStatus.connected && (
-          <details className="card integration-details">
-            <summary>Shopify · {all.integrationPage.manage}</summary>
-            {['owner', 'admin'].includes(a.role) &&
-              shopifyCandidates &&
-              shopifyProducts && (
-                <ShopifyProducts
-                  key={`shopify-products-${a.id}`}
+        {shopifySettings && ['owner', 'admin'].includes(a.role) && (
+          <ShopifySetup
+            key={a.id + shopifySettings.revision}
+            tenantId={a.id}
+            status={shopifySettings}
+            d={all.shopify}
+          />
+        )}
+        {shopifyStatus.connected &&
+          (shopifySettings?.settings || shopifySettings?.locked) && (
+            <details className="card integration-details">
+              <summary>Shopify · {all.integrationPage.manage}</summary>
+              {['owner', 'admin'].includes(a.role) &&
+                shopifyCandidates &&
+                shopifyProducts && (
+                  <ShopifyProducts
+                    key={`shopify-products-${a.id}`}
+                    tenantId={a.id}
+                    candidates={shopifyCandidates}
+                    products={shopifyProducts}
+                    currency={shopifyStatus.currency ?? 'SEK'}
+                    locale={ctx.locale}
+                    d={all.shopify}
+                  />
+                )}
+              {['owner', 'admin'].includes(a.role) && shopifyOrders && (
+                <ShopifyOrders
+                  key={`shopify-orders-${a.id}`}
                   tenantId={a.id}
-                  candidates={shopifyCandidates}
-                  products={shopifyProducts}
-                  currency={shopifyStatus.currency ?? 'SEK'}
+                  status={shopifyOrders}
                   locale={ctx.locale}
                   d={all.shopify}
                 />
               )}
-            {['owner', 'admin'].includes(a.role) && shopifyOrders && (
-              <ShopifyOrders
-                key={`shopify-orders-${a.id}`}
-                tenantId={a.id}
-                status={shopifyOrders}
-                locale={ctx.locale}
-                d={all.shopify}
-              />
-            )}
-            {['owner', 'admin'].includes(a.role) && shopifyOrders && (
-              <section
-                className="card"
-                aria-label={all.shopify.automation.heading}
-              >
-                <AutomationSwitch
-                  key={`shopify-auto-${a.id}`}
-                  tenantId={a.id}
-                  scope="shopify_pull"
-                  grants={automation}
-                  configured={
-                    !!automationIdentity() &&
-                    shopifyAuto?.available === true &&
-                    automation !== null
-                  }
-                  canEdit={a.role === 'owner'}
-                  t={all.shopify.automation}
-                />
-                <p>
-                  {all.shopify.automation.lastRun}:{' '}
-                  {shopifyAuto?.run
-                    ? `${new Date(shopifyAuto.run.at).toLocaleString(ctx.locale, { timeZone: 'Europe/Stockholm' })} · ${all.shopify.automation.outcomes[shopifyAuto.run.outcome]} · ${shopifyAuto.run.received}`
-                    : all.shopify.automation.noRun}
-                </p>
-              </section>
-            )}
-          </details>
-        )}
+              {['owner', 'admin'].includes(a.role) && shopifyOrders && (
+                <section
+                  className="card"
+                  aria-label={all.shopify.automation.heading}
+                >
+                  <AutomationSwitch
+                    key={`shopify-auto-${a.id}`}
+                    tenantId={a.id}
+                    scope="shopify_pull"
+                    grants={automation}
+                    configured={
+                      !!automationIdentity() &&
+                      shopifyAuto?.available === true &&
+                      automation !== null
+                    }
+                    canEdit={a.role === 'owner'}
+                    t={all.shopify.automation}
+                  />
+                  <p>
+                    {all.shopify.automation.lastRun}:{' '}
+                    {shopifyAuto?.run
+                      ? `${new Date(shopifyAuto.run.at).toLocaleString(ctx.locale, { timeZone: 'Europe/Stockholm' })} · ${all.shopify.automation.outcomes[shopifyAuto.run.outcome]} · ${shopifyAuto.run.received}`
+                      : all.shopify.automation.noRun}
+                  </p>
+                </section>
+              )}
+            </details>
+          )}
       </section>
       <section
         className="integration-group"

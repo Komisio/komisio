@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-09-22: Shopify shares one connection for web, POS or both, with owner/admin-selected location and publications. Settings lock after sync starts; account changes cannot move them. Import records channel/location and holds out-of-scope orders. Updating products never replenishes existing inventory.
+
 - 2026-09-22: Owners approved own PayPal POS, Shopify and Fortnox accounts per tenant. Owner/admin connects; verified account identities stay pinned. PayPal credentials are encrypted per tenant; OAuth state binds tenant and selected account. Automation still requires its accepted scoped grant.
 
 One line per decision: `- YYYY-MM-DD: <decision>: <why>`, at most 300

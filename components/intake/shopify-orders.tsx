@@ -101,6 +101,7 @@ export function ShopifyOrders({
             <thead>
               <tr>
                 <th>{d.order}</th>
+                <th>{d.setup.channel}</th>
                 <th>{d.when}</th>
                 <th>{d.amount}</th>
                 <th>{d.status}</th>
@@ -115,6 +116,16 @@ export function ShopifyOrders({
                     <small>
                       {o.lines} {d.linesLabel}
                     </small>
+                  </td>
+                  <td>
+                    {o.sourceName === 'pos'
+                      ? d.setup.modes.pos
+                      : o.sourceName === 'web'
+                        ? d.setup.modes.web
+                        : (o.sourceName ?? '—')}
+                    {o.retailLocationGid && (
+                      <small> · {o.retailLocationGid.split('/').at(-1)}</small>
+                    )}
                   </td>
                   <td>{when(o.occurredAt)}</td>
                   <td>{amount(o.amountOre, o.currency)}</td>

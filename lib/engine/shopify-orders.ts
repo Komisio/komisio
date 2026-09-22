@@ -25,6 +25,8 @@ export const shopifyOrderStatus = z.object({
         occurredAt: z.string(),
         currency: z.string(),
         amountOre: count,
+        sourceName: z.string().nullable().optional(),
+        retailLocationGid: z.string().nullable().optional(),
         holdReason: z.string().nullable(),
         lines: z.number().int(),
         saleId: z.string().nullable(),

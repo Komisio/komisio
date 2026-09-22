@@ -1850,7 +1850,9 @@
       "quantity": "mere end én enhed på en linje",
       "unknown_sku": "et produkt, der ikke er en Komisio-vare",
       "missing_item": "varen er ikke i denne butik",
-      "ambiguous_item": "sku'en matcher mere end én vare"
+      "ambiguous_item": "sku'en matcher mere end én vare",
+      "channel": "Uden for valgte salgskanaler",
+      "location": "Anden eller ukendt kasselokation"
     },
     "productsTitle": "Produkter i Shopify",
     "productsIntro": "Accepterede varer til salg bliver produkter i shoppen: ét produkt med én variant, varens id som sku, én enhed på shoppens lokation. En prisnedsættelse opdaterer produktets pris. Solgte og afsluttede varer udbydes ikke; ordrer læses i et senere trin.",
@@ -1875,7 +1877,7 @@
       "unknown": "svar tabt, prøves igen ved næste eksport"
     },
     "title": "Shopify",
-    "intro": "Forbind butikken til dens Shopify-shop. Dette trin forbinder, verificerer og frakobler kun; produkter og ordrer følger.",
+    "intro": "Brug samme Shopify-forbindelse til webshop, kasse eller begge.",
     "notConnected": "Ingen Shopify-shop er forbundet.",
     "connectedTo": "Forbundet til",
     "since": "siden",
@@ -1953,9 +1955,35 @@
       "SHOPIFY_STATE_INVALID": "Forbindelsesforsøget udløb eller startede ikke her. Forbind igen.",
       "CREDENTIAL_KEY_MISSING": "Den installerede konfiguration mangler legitimationsnøglen (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Det gemte token kan ikke læses med den aktuelle legitimationsnøgle. Frakobl, og forbind igen.",
-      "REQUEST_FAILED": "Forespørgslen mislykkedes. Prøv igen senere."
+      "REQUEST_FAILED": "Forespørgslen mislykkedes. Prøv igen senere.",
+      "SHOPIFY_SETTINGS_CHANGED": "Indstillingerne er ændret. Genindlæs siden.",
+      "SHOPIFY_SETTINGS_LOCKED": "Indstillingerne er låst, fordi synkroniseringen er startet.",
+      "SHOPIFY_SETTINGS_UNAVAILABLE": "Kunne ikke læse indstillingerne. Prøv igen.",
+      "SHOPIFY_PUBLICATION_INVALID": "Vælg en publiceringskanal fra den tilsluttede Shopify-butik.",
+      "SHOPIFY_PUBLICATION_FAILED": "Varen blev oprettet eller opdateret, men kunne ikke publiceres. Forbind igen, og prøv igen."
     },
-    "details": "Forbindelsesdetaljer"
+    "details": "Forbindelsesdetaljer",
+    "setup": {
+      "title": "Hvor vil I sælge?",
+      "intro": "Brug samme Shopify-forbindelse til webshop, kasse eller begge.",
+      "modes": {
+        "web": "Webshop",
+        "pos": "Shopify POS",
+        "both": "Webshop og Shopify POS"
+      },
+      "mode": "Salgskanaler",
+      "location": "Lagerlokation i Shopify",
+      "choose": "Vælg…",
+      "webPublication": "Webshoppens publiceringskanal",
+      "posPublication": "Kassens publiceringskanal",
+      "configure": "Vælg kanaler og lagerlokation",
+      "save": "Gem indstillinger",
+      "lockHint": "Valgene låses, når den første synkronisering starter, så varer ikke flyttes mellem lagre ved en fejl.",
+      "locked": "Synkroniseringen er startet. Kontakt support for at ændre kanaler eller lagerlokation.",
+      "legacy": "Denne forbindelse bruger tidligere indstillinger. Kontakt support for at vælge kanaler og lagerlokation.",
+      "permissions": "Forbind igen, hvis Shopify beder om tilladelse til at læse og publicere salgskanaler.",
+      "channel": "Kanal / lagerlokation"
+    }
   },
   "fortnox": {
     "reconcileTitle": "Bekræft et eksisterende bilag",
@@ -2460,7 +2488,7 @@
     "manage": "Synkronisering og historik",
     "adminOnly": "En ejer eller administrator kan administrere forbindelserne.",
     "pos": "Kassesystem (POS)",
-    "ecommerce": "E-handel",
+    "ecommerce": "Webshop og kasse",
     "accounting": "Bogføring",
     "accountingSettings": "Åbn bogføringsindstillinger"
   }

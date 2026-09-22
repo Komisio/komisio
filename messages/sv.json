@@ -1850,7 +1850,9 @@
       "quantity": "fler än ett exemplar på en rad",
       "unknown_sku": "en produkt som inte är en Komisio-vara",
       "missing_item": "varan finns inte i den här butiken",
-      "ambiguous_item": "sku matchar fler än en vara"
+      "ambiguous_item": "sku matchar fler än en vara",
+      "channel": "Utanför valda försäljningskanaler",
+      "location": "Annan eller okänd kassaplats"
     },
     "productsTitle": "Produkter i Shopify",
     "productsIntro": "Mottagna varor till salu blir produkter i butiken: en produkt med en variant, varans id som sku, ett exemplar på butikens lagerplats. En nedsättning uppdaterar produktens pris. Sålda och avslutade varor erbjuds inte; ordrar läses in i ett senare steg.",
@@ -1875,7 +1877,7 @@
       "unknown": "svar förlorat, kontrolleras vid nästa export"
     },
     "title": "Shopify",
-    "intro": "Koppla din Shopify-butik för att skicka varor och hämta beställningar.",
+    "intro": "Använd samma Shopify-anslutning för webbshop, kassa eller båda.",
     "notConnected": "Ingen Shopify-butik är ansluten.",
     "connectedTo": "Ansluten till",
     "since": "sedan",
@@ -1953,9 +1955,35 @@
       "SHOPIFY_STATE_INVALID": "Anslutningsförsöket gick ut eller startade inte här. Anslut igen.",
       "CREDENTIAL_KEY_MISSING": "Driftkonfigurationen saknar nyckeln för förseglade uppgifter (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Den sparade token kan inte läsas med nuvarande nyckel. Koppla bort och anslut igen.",
-      "REQUEST_FAILED": "Anropet misslyckades. Försök senare."
+      "REQUEST_FAILED": "Anropet misslyckades. Försök senare.",
+      "SHOPIFY_SETTINGS_CHANGED": "Inställningarna har ändrats. Ladda om sidan.",
+      "SHOPIFY_SETTINGS_LOCKED": "Inställningarna är låsta eftersom synkroniseringen har startat.",
+      "SHOPIFY_SETTINGS_UNAVAILABLE": "Kunde inte läsa inställningarna. Försök igen.",
+      "SHOPIFY_PUBLICATION_INVALID": "Välj en publiceringskanal från den anslutna Shopify-butiken.",
+      "SHOPIFY_PUBLICATION_FAILED": "Varan skapades eller uppdaterades men kunde inte publiceras. Förnya anslutningen och försök igen."
     },
-    "details": "Anslutningsdetaljer"
+    "details": "Anslutningsdetaljer",
+    "setup": {
+      "title": "Var vill ni sälja?",
+      "intro": "Använd samma Shopify-anslutning för webbshop, kassa eller båda.",
+      "modes": {
+        "web": "Webbshop",
+        "pos": "Shopify POS",
+        "both": "Webbshop och Shopify POS"
+      },
+      "mode": "Försäljningskanaler",
+      "location": "Lagerplats i Shopify",
+      "choose": "Välj…",
+      "webPublication": "Webbshopens publiceringskanal",
+      "posPublication": "Kassans publiceringskanal",
+      "configure": "Välj kanaler och lagerplats",
+      "save": "Spara inställningar",
+      "lockHint": "Valen låses när den första synkroniseringen startar, så att varor inte flyttas mellan lager av misstag.",
+      "locked": "Synkroniseringen har startat. Kontakta support om ni behöver ändra kanaler eller lagerplats.",
+      "legacy": "Den här anslutningen använder tidigare inställningar. Kontakta support för att välja kanaler och lagerplats.",
+      "permissions": "Förnya anslutningen om Shopify ber om behörighet att läsa och publicera försäljningskanaler.",
+      "channel": "Kanal / lagerplats"
+    }
   },
   "fortnox": {
     "reconcileTitle": "Bekräfta en befintlig verifikation",
@@ -2460,7 +2488,7 @@
     "manage": "Synkning och historik",
     "adminOnly": "En ägare eller administratör kan hantera butikens anslutningar.",
     "pos": "Kassasystem (POS)",
-    "ecommerce": "E-handel",
+    "ecommerce": "Webbshop och kassa",
     "accounting": "Bokföring",
     "accountingSettings": "Öppna bokföringsinställningar"
   }

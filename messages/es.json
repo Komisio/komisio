@@ -1850,7 +1850,9 @@
       "quantity": "más de una unidad en una línea",
       "unknown_sku": "un producto que no es un artículo de Komisio",
       "missing_item": "el artículo no está en esta tienda",
-      "ambiguous_item": "el sku coincide con más de un artículo"
+      "ambiguous_item": "el sku coincide con más de un artículo",
+      "channel": "Fuera de los canales seleccionados",
+      "location": "Ubicación de caja diferente o desconocida"
     },
     "productsTitle": "Productos en Shopify",
     "productsIntro": "Los artículos aceptados en venta se convierten en productos de la tienda en línea: un producto con una variante, el id del artículo como sku, una unidad en la ubicación de la tienda en línea. Una rebaja actualiza el precio del producto. Los artículos vendidos y terminados no se ofrecen; los pedidos se leen en un paso posterior.",
@@ -1875,7 +1877,7 @@
       "unknown": "respuesta perdida, se reintenta en la próxima exportación"
     },
     "title": "Shopify",
-    "intro": "Conecta la tienda con su tienda en línea de Shopify. Este paso solo conecta, verifica y desconecta; los productos y pedidos vienen después.",
+    "intro": "Usad una misma conexión de Shopify para la tienda online, la caja o ambas.",
     "notConnected": "No hay ninguna tienda de Shopify conectada.",
     "connectedTo": "Conectado a",
     "since": "desde",
@@ -1953,9 +1955,35 @@
       "SHOPIFY_STATE_INVALID": "El intento de conexión caducó o no se inició aquí. Conecta de nuevo.",
       "CREDENTIAL_KEY_MISSING": "A la configuración desplegada le falta la clave de credenciales (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "El token guardado no se puede leer con la clave de credenciales actual. Desconecta y conecta de nuevo.",
-      "REQUEST_FAILED": "La solicitud falló. Vuelve a intentarlo más tarde."
+      "REQUEST_FAILED": "La solicitud falló. Vuelve a intentarlo más tarde.",
+      "SHOPIFY_SETTINGS_CHANGED": "Los ajustes han cambiado. Recargad la página.",
+      "SHOPIFY_SETTINGS_LOCKED": "Los ajustes están bloqueados porque la sincronización ha comenzado.",
+      "SHOPIFY_SETTINGS_UNAVAILABLE": "No se pudieron leer los ajustes. Intentadlo de nuevo.",
+      "SHOPIFY_PUBLICATION_INVALID": "Elegid un canal de publicación de la tienda Shopify conectada.",
+      "SHOPIFY_PUBLICATION_FAILED": "El producto se creó o actualizó, pero no se pudo publicar. Volved a conectar Shopify e intentadlo de nuevo."
     },
-    "details": "Detalles de la conexión"
+    "details": "Detalles de la conexión",
+    "setup": {
+      "title": "¿Dónde queréis vender?",
+      "intro": "Usad una misma conexión de Shopify para la tienda online, la caja o ambas.",
+      "modes": {
+        "web": "Tienda online",
+        "pos": "Shopify POS",
+        "both": "Tienda online y Shopify POS"
+      },
+      "mode": "Canales de venta",
+      "location": "Ubicación de inventario en Shopify",
+      "choose": "Seleccionar…",
+      "webPublication": "Canal de publicación de la tienda online",
+      "posPublication": "Canal de publicación de la caja",
+      "configure": "Elegir canales y ubicación",
+      "save": "Guardar ajustes",
+      "lockHint": "La selección se bloquea al iniciar la primera sincronización para evitar mover productos entre ubicaciones por error.",
+      "locked": "La sincronización ha comenzado. Contactad con soporte para cambiar los canales o la ubicación.",
+      "legacy": "Esta conexión utiliza ajustes anteriores. Contactad con soporte para elegir canales y ubicación.",
+      "permissions": "Volved a conectar Shopify si solicita permisos para leer y publicar canales de venta.",
+      "channel": "Canal / ubicación"
+    }
   },
   "fortnox": {
     "reconcileTitle": "Confirmar un asiento existente",
@@ -2460,7 +2488,7 @@
     "manage": "Sincronización e historial",
     "adminOnly": "Un propietario o administrador puede gestionar las conexiones.",
     "pos": "Punto de venta (POS)",
-    "ecommerce": "Comercio electrónico",
+    "ecommerce": "Tienda online y caja",
     "accounting": "Contabilidad",
     "accountingSettings": "Abrir ajustes de contabilidad"
   }

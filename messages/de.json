@@ -1850,7 +1850,9 @@
       "quantity": "mehr als eine Einheit in einer Zeile",
       "unknown_sku": "ein Produkt, das kein Komisio-Artikel ist",
       "missing_item": "der Artikel ist nicht in diesem Store",
-      "ambiguous_item": "die SKU entspricht mehr als einem Artikel"
+      "ambiguous_item": "die SKU entspricht mehr als einem Artikel",
+      "channel": "Außerhalb der gewählten Vertriebskanäle",
+      "location": "Anderer oder unbekannter Kassenstandort"
     },
     "productsTitle": "Produkte in Shopify",
     "productsIntro": "Angenommene Artikel im Verkauf werden zu Produkten im Shop: ein Produkt mit einer Variante, die ID des Artikels als SKU, eine Einheit am Standort des Shops. Eine Preissenkung aktualisiert den Preis des Produkts. Verkaufte und beendete Artikel werden nicht angeboten; Bestellungen werden in einem späteren Schritt gelesen.",
@@ -1875,7 +1877,7 @@
       "unknown": "Antwort verloren, wird beim nächsten Export erneut versucht"
     },
     "title": "Shopify",
-    "intro": "Verbinden Sie den Store mit seinem Shopify-Shop. Dieser Schritt verbindet, prüft und trennt nur; Produkte und Bestellungen folgen.",
+    "intro": "Nutzen Sie eine Shopify-Verbindung für Onlineshop, Kasse oder beides.",
     "notConnected": "Kein Shopify-Shop ist verbunden.",
     "connectedTo": "Verbunden mit",
     "since": "seit",
@@ -1953,9 +1955,35 @@
       "SHOPIFY_STATE_INVALID": "Der Verbindungsversuch ist abgelaufen oder wurde nicht hier gestartet. Verbinden Sie erneut.",
       "CREDENTIAL_KEY_MISSING": "In der bereitgestellten Konfiguration fehlt der Zugangsdaten-Schlüssel (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Das gespeicherte Token kann mit dem aktuellen Zugangsdaten-Schlüssel nicht gelesen werden. Trennen und erneut verbinden.",
-      "REQUEST_FAILED": "Die Anfrage ist fehlgeschlagen. Versuchen Sie es später erneut."
+      "REQUEST_FAILED": "Die Anfrage ist fehlgeschlagen. Versuchen Sie es später erneut.",
+      "SHOPIFY_SETTINGS_CHANGED": "Die Einstellungen wurden geändert. Laden Sie die Seite neu.",
+      "SHOPIFY_SETTINGS_LOCKED": "Die Einstellungen sind gesperrt, da der Abgleich begonnen hat.",
+      "SHOPIFY_SETTINGS_UNAVAILABLE": "Die Einstellungen konnten nicht gelesen werden. Versuchen Sie es erneut.",
+      "SHOPIFY_PUBLICATION_INVALID": "Wählen Sie einen Veröffentlichungskanal des verbundenen Shopify-Shops.",
+      "SHOPIFY_PUBLICATION_FAILED": "Das Produkt wurde erstellt oder aktualisiert, konnte aber nicht veröffentlicht werden. Verbinden Sie Shopify erneut und versuchen Sie es noch einmal."
     },
-    "details": "Verbindungsdetails"
+    "details": "Verbindungsdetails",
+    "setup": {
+      "title": "Wo möchten Sie verkaufen?",
+      "intro": "Nutzen Sie eine Shopify-Verbindung für Onlineshop, Kasse oder beides.",
+      "modes": {
+        "web": "Onlineshop",
+        "pos": "Shopify POS",
+        "both": "Onlineshop und Shopify POS"
+      },
+      "mode": "Vertriebskanäle",
+      "location": "Shopify-Lagerstandort",
+      "choose": "Auswählen…",
+      "webPublication": "Veröffentlichungskanal des Onlineshops",
+      "posPublication": "Veröffentlichungskanal der Kasse",
+      "configure": "Kanäle und Lagerstandort wählen",
+      "save": "Einstellungen speichern",
+      "lockHint": "Die Auswahl wird beim ersten Abgleich gesperrt, damit Waren nicht versehentlich zwischen Standorten verschoben werden.",
+      "locked": "Der Abgleich hat begonnen. Wenden Sie sich an den Support, um Kanäle oder Lagerstandort zu ändern.",
+      "legacy": "Diese Verbindung nutzt frühere Einstellungen. Wenden Sie sich an den Support, um Kanäle und Lagerstandort zu wählen.",
+      "permissions": "Verbinden Sie Shopify erneut, falls Berechtigungen zum Lesen und Veröffentlichen von Vertriebskanälen fehlen.",
+      "channel": "Kanal / Lagerstandort"
+    }
   },
   "fortnox": {
     "reconcileTitle": "Vorhandenen Buchungsbeleg bestätigen",
@@ -2460,7 +2488,7 @@
     "manage": "Synchronisierung und Verlauf",
     "adminOnly": "Inhaber oder Administratoren können Verbindungen verwalten.",
     "pos": "Kassensystem (POS)",
-    "ecommerce": "Onlinehandel",
+    "ecommerce": "Onlineshop und Kasse",
     "accounting": "Buchhaltung",
     "accountingSettings": "Buchhaltungseinstellungen öffnen"
   }

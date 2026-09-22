@@ -1,5 +1,7 @@
 # Open questions
 
+Shopify POS (2026-09-22): owner approved a shared connection for web, POS or both, with per-tenant location selection. Real POS scanning, channel publication permissions, checkout discounts, mixed carts and cross-channel stock behavior still require development-shop acceptance. Moving an already synchronized connection to another location or channel needs an explicit inventory/history migration.
+
 Integration self-service (2026-09-22): the owner requested PayPal POS,
 Shopify and Fortnox setup from the integrations page. The page now groups
 existing adapters. The owner confirmed own accounts per store, authorizing

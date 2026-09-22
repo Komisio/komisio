@@ -1850,7 +1850,9 @@
       "quantity": "more than one unit on a line",
       "unknown_sku": "a product that is not a Komisio item",
       "missing_item": "the item is not in this store",
-      "ambiguous_item": "the sku matches more than one item"
+      "ambiguous_item": "the sku matches more than one item",
+      "channel": "Outside selected sales channels",
+      "location": "Different or unknown POS location"
     },
     "productsTitle": "Products in Shopify",
     "productsIntro": "Accepted items for sale become products in the shop: one product with one variant, the item's id as sku, one unit at the shop's location. A markdown updates the product's price. Sold and ended items are not offered; orders are read in a later step.",
@@ -1875,7 +1877,7 @@
       "unknown": "answer lost, retried on next export"
     },
     "title": "Shopify",
-    "intro": "Connect the store to its Shopify shop. This step only connects, verifies and disconnects; products and orders follow.",
+    "intro": "Use one Shopify connection for your online store, POS or both.",
     "notConnected": "No Shopify shop is connected.",
     "connectedTo": "Connected to",
     "since": "since",
@@ -1953,9 +1955,35 @@
       "SHOPIFY_STATE_INVALID": "The connection attempt expired or did not start here. Connect again.",
       "CREDENTIAL_KEY_MISSING": "The deployed configuration is missing the credential key (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "The stored token cannot be read with the current credential key. Disconnect and connect again.",
-      "REQUEST_FAILED": "The request failed. Retry later."
+      "REQUEST_FAILED": "The request failed. Retry later.",
+      "SHOPIFY_SETTINGS_CHANGED": "Settings changed. Reload this page.",
+      "SHOPIFY_SETTINGS_LOCKED": "Settings are locked because sync has started.",
+      "SHOPIFY_SETTINGS_UNAVAILABLE": "Could not read settings. Try again.",
+      "SHOPIFY_PUBLICATION_INVALID": "Choose a publication from the connected Shopify store.",
+      "SHOPIFY_PUBLICATION_FAILED": "The product was created or updated but could not be published. Reconnect and try again."
     },
-    "details": "Connection details"
+    "details": "Connection details",
+    "setup": {
+      "title": "Where do you want to sell?",
+      "intro": "Use one Shopify connection for your online store, POS or both.",
+      "modes": {
+        "web": "Online store",
+        "pos": "Shopify POS",
+        "both": "Online store and Shopify POS"
+      },
+      "mode": "Sales channels",
+      "location": "Shopify inventory location",
+      "choose": "Choose…",
+      "webPublication": "Online store publication",
+      "posPublication": "POS publication",
+      "configure": "Choose channels and location",
+      "save": "Save settings",
+      "lockHint": "Your choices lock when the first sync starts, to prevent accidentally moving items between locations.",
+      "locked": "Sync has started. Contact support to change channels or location.",
+      "legacy": "This connection uses earlier settings. Contact support to choose channels and location.",
+      "permissions": "Reconnect if Shopify requests permission to read and publish sales channels.",
+      "channel": "Channel / location"
+    }
   },
   "fortnox": {
     "reconcileTitle": "Confirm an existing voucher",
@@ -2460,7 +2488,7 @@
     "manage": "Sync and history",
     "adminOnly": "An owner or administrator can manage store connections.",
     "pos": "Point of sale (POS)",
-    "ecommerce": "E-commerce",
+    "ecommerce": "Online store and POS",
     "accounting": "Accounting",
     "accountingSettings": "Open accounting settings"
   }

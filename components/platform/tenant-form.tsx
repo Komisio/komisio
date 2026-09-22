@@ -1,12 +1,16 @@
 'use client'
-import { useRef } from 'react'
+import { useRef, useSyncExternalStore } from 'react'
 import type { Dictionary } from '@/lib/i18n'
 import type { Tenant } from '@/lib/platform/types'
 import { Button } from '@/components/ui/button'
 import { useCommand } from './use-command'
 import { Feedback } from './feedback'
+const subscribe = () => () => {}
+const clientReady = () => true
+const serverReady = () => false
 export function TenantForm({ d, tenant }: { d: Dictionary; tenant?: Tenant }) {
   const action = useCommand(d)
+  const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const requestId = useRef<string | null>(null)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -40,7 +44,7 @@ export function TenantForm({ d, tenant }: { d: Dictionary; tenant?: Tenant }) {
           placeholder={d.tenantPlaceholder}
         />
       </div>
-      <Button disabled={action.busy}>
+      <Button disabled={!ready || action.busy}>
         {action.busy ? d.loading : tenant ? d.save : d.createButton}
       </Button>
       <Feedback error={action.error} success={action.success} />

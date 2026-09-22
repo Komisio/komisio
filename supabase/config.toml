@@ -253,6 +253,10 @@ otp_expiry = 3600
 # subject = "Your password has been changed"
 # content_path = "./supabase/templates/password_changed_notification.html"
 
+[auth.email.template.confirmation]
+subject = '''{{ $locale := printf "%v" .Data.locale }}{{ if eq $locale "sv" }}Komisio – Verifiera din e-postadress{{ else if eq $locale "no" }}Komisio – Bekreft e-postadressen din{{ else if eq $locale "dk" }}Komisio – Bekræft din e-mailadresse{{ else if eq $locale "fi" }}Komisio – Vahvista sähköpostiosoitteesi{{ else if eq $locale "de" }}Komisio – Bestätige deine E-Mail-Adresse{{ else if eq $locale "es" }}Komisio – Confirma tu dirección de correo electrónico{{ else if eq $locale "it" }}Komisio – Conferma il tuo indirizzo email{{ else }}Komisio – Confirm your email address{{ end }}'''
+content_path = "./supabase/templates/confirmation.html"
+
 [auth.sms]
 # Allow/disallow new user signups via SMS to your project.
 enable_signup = false

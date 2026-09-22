@@ -682,3 +682,4 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-09-20: Manual sales use tenant-scoped search across accepted items and a cart of at most 50 unique items. Search excludes sold and ended items; existing sale validation, exact money and replay-safe recording remain authoritative.
 - 2026-09-21: Owner approved private store_guide_versions per tenant: owner/admin saves, member reads, immutable versions, stale-edit protection and actor-bound retries. Store language-independent answers for eight UI languages; answers never activate financial rules.
+- 2026-09-22: Signup stores the selected locale as presentation-only Auth metadata. Confirmation subject and body use that locale in all eight languages, with English fallback. Local and protected hosted deployments share one template; verification and authorization stay unchanged.

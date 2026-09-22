@@ -508,7 +508,7 @@
     "expiry": "La versión publicada es válida durante 24 horas. No se envía ningún enlace ni correo automáticamente.",
     "publish": "Publicar propuesta revisada",
     "published": "Esta versión de fuentes está publicada. Gestiona el enlace abajo.",
-    "sellerStep": "3. Decisión del depositante",
+    "sellerStep": "Decisión del depositante",
     "exactTerms": "Mostrar las condiciones exactas que leerá el depositante",
     "stale": "Esta revisión está obsoleta o caducada. Publica una revisión nueva antes de compartir un enlace.",
     "awaiting": "No se ha guardado ninguna respuesta para esta versión.",
@@ -649,6 +649,19 @@
       "aiHelp": "Sobre la IA y tus fotos",
       "unsaved": "La propuesta de IA aún no se ha guardado.",
       "completeManually": "Completa la descripción y el precio en el formulario siguiente para continuar."
+    },
+    "storeReview": {
+      "step": "Revisar los datos",
+      "stepHint": "Comprueba la descripción y el precio.",
+      "title": "Datos revisados",
+      "saved": "Los datos se han revisado.",
+      "publish": "Guardar datos revisados",
+      "confirmNoTerms": "He revisado la descripción, las fotos y la justificación del precio.",
+      "aiNotice": "Comprueba cada dato y el precio. Como personal de la tienda, eres responsable de la revisión.",
+      "stale": "Renueva los datos antes de registrar el artículo.",
+      "noApproval": "La tienda decide el precio. No se necesita la aprobación del vendedor.",
+      "optionalShare": "Compartir con el vendedor es opcional",
+      "registered": "Artículo registrado"
     }
   },
   "operations": {

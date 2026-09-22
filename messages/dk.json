@@ -508,7 +508,7 @@
     "expiry": "Den udgivne version gælder i 24 timer. Der sendes ikke automatisk link eller e-mail.",
     "publish": "Udgiv gennemgået forslag",
     "published": "Denne kildeversion er udgivet. Administrer linket nedenfor.",
-    "sellerStep": "3. Indlevererens beslutning",
+    "sellerStep": "Indlevererens beslutning",
     "exactTerms": "Vis de nøjagtige vilkår, indlevereren vil læse",
     "stale": "Denne gennemgang er forældet eller udløbet. Udgiv en ny gennemgang, før du deler et link.",
     "awaiting": "Der er ikke gemt noget svar for denne version.",
@@ -649,6 +649,19 @@
       "aiHelp": "Om AI og dine billeder",
       "unsaved": "AI-forslaget er endnu ikke gemt.",
       "completeManually": "Udfyld beskrivelse og pris i formularen nedenfor for at fortsætte."
+    },
+    "storeReview": {
+      "step": "Gennemgå oplysningerne",
+      "stepHint": "Kontrollér beskrivelsen og prisen.",
+      "title": "Gennemgåede oplysninger",
+      "saved": "Oplysningerne er gennemgået.",
+      "publish": "Gem gennemgåede oplysninger",
+      "confirmNoTerms": "Jeg har gennemgået beskrivelsen, billederne og prisgrundlaget.",
+      "aiNotice": "Kontrollér hver oplysning og prisen. Du som medarbejder er ansvarlig for gennemgangen.",
+      "stale": "Forny oplysningerne, før varen kan registreres.",
+      "noApproval": "Butikken bestemmer prisen. Sælgerens godkendelse er ikke nødvendig.",
+      "optionalShare": "Valgfri deling med sælgeren",
+      "registered": "Varen er registreret"
     }
   },
   "operations": {

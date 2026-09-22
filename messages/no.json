@@ -508,7 +508,7 @@
     "expiry": "Den publiserte versjonen er gyldig i 24 timer. Ingen lenke eller e-post sendes automatisk.",
     "publish": "Publiser gjennomgått forslag",
     "published": "Denne kildeversjonen er publisert. Administrer lenken nedenfor.",
-    "sellerStep": "3. Innlevererens avgjørelse",
+    "sellerStep": "Innlevererens avgjørelse",
     "exactTerms": "Vis de nøyaktige vilkårene innlevereren vil lese",
     "stale": "Denne gjennomgangen er foreldet eller utløpt. Publiser en ny gjennomgang før du deler en lenke.",
     "awaiting": "Ingen svar er lagret for denne versjonen.",
@@ -649,6 +649,19 @@
       "aiHelp": "Om KI og bildene dine",
       "unsaved": "KI-forslaget er ikke lagret ennå.",
       "completeManually": "Fyll ut beskrivelse og pris i skjemaet nedenfor for å fortsette."
+    },
+    "storeReview": {
+      "step": "Gå gjennom opplysningene",
+      "stepHint": "Kontroller beskrivelsen og prisen.",
+      "title": "Gjennomgåtte opplysninger",
+      "saved": "Opplysningene er gjennomgått.",
+      "publish": "Lagre gjennomgåtte opplysninger",
+      "confirmNoTerms": "Jeg har kontrollert beskrivelsen, bildene og prisgrunnlaget.",
+      "aiNotice": "Kontroller hver opplysning og prisen. Du som ansatt har ansvar for gjennomgangen.",
+      "stale": "Forny opplysningene før varen kan registreres.",
+      "noApproval": "Butikken bestemmer prisen. Selgerens godkjenning er ikke nødvendig.",
+      "optionalShare": "Valgfri deling med selgeren",
+      "registered": "Varen er registrert"
     }
   },
   "operations": {

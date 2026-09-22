@@ -1957,15 +1957,14 @@ test('operator reception guides saved evidence, exact review and link replacemen
   ).toBeVisible()
   await page.unroute('**/api/intake')
   await expect(
-    page.getByRole('button', { name: 'Publicera granskat underlag' }),
+    page.getByRole('button', { name: 'Spara granskat underlag' }),
   ).toBeDisabled()
   await page.locator('input[name="review-final"]').check()
-  await page
-    .getByRole('button', { name: 'Publicera granskat underlag' })
-    .click()
+  await page.getByRole('button', { name: 'Spara granskat underlag' }).click()
   await expect(
-    page.getByRole('heading', { name: '3. Säljarens beslut — version 1' }),
+    page.getByRole('heading', { name: 'Granskat underlag — version 1' }),
   ).toBeVisible()
+  await page.getByText('Valfri delning med säljaren', { exact: true }).click()
   await page.getByRole('button', { name: 'Skapa personlig länk' }).click()
   await expect(page.getByLabel('Länk till säljarens granskning')).toHaveValue(
     /\/review\/[a-f0-9]{64}$/,
@@ -2246,7 +2245,7 @@ test('AI HTTP fixture stages a sourced proposal before explicit staff publicatio
     panel.getByText('TEST ONLY – no real agreement.', { exact: true }),
   ).toBeVisible()
   await expect(
-    panel.getByRole('button', { name: 'Publicera granskat underlag' }),
+    panel.getByRole('button', { name: 'Spara granskat underlag' }),
   ).toBeDisabled()
   const before = await (
     await page.request.get(`/api/reception/${sessionId}`)
@@ -2256,13 +2255,13 @@ test('AI HTTP fixture stages a sourced proposal before explicit staff publicatio
   const final = panel.locator('input[name="review-final"]')
   await final.check()
   await expect(
-    panel.getByRole('button', { name: 'Publicera granskat underlag' }),
+    panel.getByRole('button', { name: 'Spara granskat underlag' }),
   ).toBeDisabled()
   await panel.locator('input[name="review-description"]').check()
   await expect(final).not.toBeChecked()
   await final.check()
   await expect(
-    panel.getByRole('button', { name: 'Publicera granskat underlag' }),
+    panel.getByRole('button', { name: 'Spara granskat underlag' }),
   ).toBeDisabled()
   await panel.locator('input[name="review-price"]').check()
   await expect(final).not.toBeChecked()
@@ -2284,15 +2283,13 @@ test('AI HTTP fixture stages a sourced proposal before explicit staff publicatio
       await route.continue()
     }
   })
-  await panel
-    .getByRole('button', { name: 'Publicera granskat underlag' })
-    .click()
+  await panel.getByRole('button', { name: 'Spara granskat underlag' }).click()
   await expect(panel.getByRole('alert')).toBeVisible()
   for (const checkbox of await panel.getByRole('checkbox').all())
     await expect(checkbox).toBeDisabled()
   await panel.getByRole('button', { name: 'Försök igen', exact: true }).click()
   await expect(
-    page.getByRole('heading', { name: /Säljarens beslut/ }),
+    page.getByRole('heading', { name: 'Granskat underlag — version 1' }),
   ).toBeVisible()
   const after = await (
     await page.request.get(`/api/reception/${sessionId}`)
@@ -2900,11 +2897,9 @@ test('store policy publishes safely and supports agreement-free staff review', a
     page.getByText('Sparad källversion 1', { exact: true }),
   ).toBeVisible()
   await page.locator('input[name="review-final"]').check()
-  await page
-    .getByRole('button', { name: 'Publicera granskat underlag' })
-    .click()
+  await page.getByRole('button', { name: 'Spara granskat underlag' }).click()
   await expect(
-    page.getByRole('heading', { name: '3. Säljarens beslut — version 1' }),
+    page.getByRole('heading', { name: 'Granskat underlag — version 1' }),
   ).toBeVisible()
   await expect(
     page.getByRole('button', { name: 'Skapa personlig länk' }),

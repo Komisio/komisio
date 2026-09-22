@@ -508,7 +508,7 @@
     "expiry": "Die veröffentlichte Version ist 24 Stunden gültig. Es wird kein Link und keine E-Mail automatisch gesendet.",
     "publish": "Geprüften Vorschlag veröffentlichen",
     "published": "Diese Quellenversion ist veröffentlicht. Verwalten Sie den Link unten.",
-    "sellerStep": "3. Entscheidung des Einlieferers",
+    "sellerStep": "Entscheidung des Einlieferers",
     "exactTerms": "Die genauen Bedingungen anzeigen, die der Einlieferer lesen wird",
     "stale": "Diese Prüfung ist veraltet oder abgelaufen. Veröffentlichen Sie eine neue Prüfung, bevor Sie einen Link teilen.",
     "awaiting": "Für diese Version wurde keine Antwort gespeichert.",
@@ -649,6 +649,19 @@
       "aiHelp": "Über KI und Ihre Fotos",
       "unsaved": "Der KI-Vorschlag ist noch nicht gespeichert.",
       "completeManually": "Ergänzen Sie Beschreibung und Preis im Formular unten, um fortzufahren."
+    },
+    "storeReview": {
+      "step": "Angaben prüfen",
+      "stepHint": "Prüfen Sie Beschreibung und Preis.",
+      "title": "Geprüfte Angaben",
+      "saved": "Die Angaben wurden geprüft.",
+      "publish": "Geprüfte Angaben speichern",
+      "confirmNoTerms": "Ich habe Beschreibung, Fotos und Preisgrundlage geprüft.",
+      "aiNotice": "Prüfen Sie jede Angabe und den Preis. Als Mitarbeiter sind Sie für die Prüfung verantwortlich.",
+      "stale": "Erneuern Sie die Angaben, bevor der Artikel registriert werden kann.",
+      "noApproval": "Der Laden legt den Preis fest. Eine Zustimmung des Verkäufers ist nicht erforderlich.",
+      "optionalShare": "Optional mit dem Verkäufer teilen",
+      "registered": "Artikel registriert"
     }
   },
   "operations": {

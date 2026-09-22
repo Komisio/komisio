@@ -39,8 +39,7 @@ export default async function Reception({
   if (!id.success) notFound()
   const ctx = await requirePlatform(),
     tenant = ctx.active!,
-    all = dictionary(ctx.locale),
-    d = all.reception
+    all = dictionary(ctx.locale)
   const reception = await readReceptionSession(ctx.client, tenant.id, id.data)
   if (!reception) notFound()
   const state = reception.status === 'ready' ? reception.session : reception
@@ -77,6 +76,23 @@ export default async function Reception({
     'reception_review',
     id.data,
   )
+  const sellerApprovalRequired = policy.policy.sellerReviewMode === 'per_item'
+  const agreementRequired = policy.policy.agreementRequiredFor.some(
+    (step) => step === 'review_publication' || step === 'acceptance',
+  )
+  const base = all.reception
+  const d = {
+    ...base,
+    ...(!sellerApprovalRequired
+      ? {
+          published: base.storeReview.saved,
+          publish: base.storeReview.publish,
+          aiReviewNotice: base.storeReview.aiNotice,
+          stale: base.storeReview.stale,
+        }
+      : {}),
+    confirm: terms.data ? base.confirm : base.storeReview.confirmNoTerms,
+  }
   const prepared = readManualReception(
       sources,
       policy.policy.currency ?? 'SEK',
@@ -92,6 +108,35 @@ export default async function Reception({
       !current ||
       expired ||
       (review.terms?.versionId ?? null) !== (terms.data?.id ?? null))
+  const sellerPanel = review && (
+    <>
+      <p>
+        {all.reviewExpires}{' '}
+        {new Date(review.expiresAt).toLocaleString(intlLocale(ctx.locale), {
+          timeZone: 'Europe/Stockholm',
+        })}{' '}
+        (Europe/Stockholm)
+      </p>
+      <p role="status">
+        {review.response
+          ? review.response.decision === 'approve'
+            ? all.staffReviewApproved
+            : all.staffReviewDeclined
+          : d.awaiting}
+      </p>
+      {write && review.terms && (
+        <ReviewAccess
+          key={review.id}
+          tenantId={tenant.id}
+          reviewId={review.id}
+          access={review.access}
+          available={current && !expired}
+          email={review.sellerEmail}
+          d={d}
+        />
+      )}
+    </>
+  )
   const aiEnabled = policy.policy.assistanceEnabled === true
   const aiAvailable =
     write &&
@@ -190,7 +235,7 @@ export default async function Reception({
       </Link>
       <div className="page-heading">
         <div className="eyebrow">{tenant.name}</div>
-        <h1>{d.workspace.title}</h1>
+        <h1>{accepted ? d.storeReview.registered : d.workspace.title}</h1>
         <p className="reception-seller-name">{seller.data.name}</p>
         <p>
           {d.recipient}: {seller.data.email || seller.data.phone}
@@ -200,17 +245,34 @@ export default async function Reception({
             className="text-link"
             href={`/intake/sellers/${state.sellerId}`}
           >
-            {all.sellerTerms.title}
+            {all.nav.sellers}
           </Link>
         </p>
       </div>
-      <p className="reception-workspace-intro">{d.workspace.intro}</p>
-      <details className="reception-step" open={!current || expired}>
+      {accepted ? (
+        <p role="status">
+          <Link className="text-link" href={'/intake/items/' + accepted.id}>
+            {all.items.open}
+          </Link>
+        </p>
+      ) : (
+        <p className="reception-workspace-intro">{d.workspace.intro}</p>
+      )}
+      <details
+        className="reception-step"
+        open={!accepted && (!current || expired)}
+      >
         <summary>
           <span className="reception-step-number">1</span>
           <span>
             {d.workspace.item}
-            <small>{d.workspace.itemHint}</small>
+            <small>
+              {accepted
+                ? (review?.suggestions.attributes.find(
+                    (a) => a.slug === 'description',
+                  )?.value ?? d.storeReview.saved)
+                : d.workspace.itemHint}
+            </small>
           </span>
         </summary>
         <div className="reception-step-body">
@@ -239,72 +301,83 @@ export default async function Reception({
           </details>
         </div>
       </details>
-      <details className="reception-step" open={Boolean(prepared || review)}>
+      <details
+        className="reception-step"
+        open={!accepted && Boolean(prepared || review)}
+      >
         <summary>
           <span className="reception-step-number">2</span>
           <span>
-            {d.workspace.review}
+            {sellerApprovalRequired ? d.workspace.review : d.storeReview.step}
             <small>
-              {current && !expired ? d.published : d.workspace.reviewHint}
+              {current && !expired
+                ? d.published
+                : sellerApprovalRequired
+                  ? d.workspace.reviewHint
+                  : d.storeReview.stepHint}
             </small>
           </span>
         </summary>
         <div className="reception-step-body">
-          <section className="intake-form">
-            <h2>{d.preview}</h2>
-            {!prepared ? (
-              <p>{d.needSources}</p>
-            ) : (
-              <>
-                <p>{prepared.input.description}</p>
-                <h3>
-                  {d.price}: {prepared.input.amount}{' '}
-                  {policy.policy.currency ?? 'SEK'}
-                </h3>
-                <p>{prepared.suggestions.price?.rationale}</p>
-              </>
-            )}
-            {!terms.data ? (
-              <p>
-                <Link href="/intake/agreements" className="text-link">
-                  {policy.policy.agreementRequiredFor.includes(
-                    'review_publication',
-                  )
-                    ? d.needTerms
-                    : all.storePolicy.noTerms}
-                </Link>
-              </p>
-            ) : (
-              <>
-                <details className="reception-help">
-                  <summary>
-                    {terms.data.title} · {d.version} {terms.data.version}
-                  </summary>
-                  <div lang={terms.data.language} className="reception-terms">
-                    {terms.data.body}
-                  </div>
-                </details>
-              </>
-            )}
-            {write && canPublish && prepared ? (
-              <PublishReview
-                key={`${state.revision}-${review?.id ?? 'none'}-${terms.data?.id ?? 'none'}`}
-                tenantId={tenant.id}
-                sessionId={id.data}
-                revision={state.revision}
-                previousId={review?.id ?? null}
-                agreementId={terms.data?.id ?? null}
-                suggestions={prepared.suggestions}
-                d={d}
-              />
-            ) : current && !expired ? (
-              <p>{d.published}</p>
-            ) : null}
-          </section>
+          {(!current ||
+            !review ||
+            (!accepted &&
+              (expired ||
+                (review.terms?.versionId ?? null) !==
+                  (terms.data?.id ?? null)))) && (
+            <section className="intake-form">
+              <h2>{d.preview}</h2>
+              {!prepared ? (
+                <p>{d.needSources}</p>
+              ) : (
+                <>
+                  <p>{prepared.input.description}</p>
+                  <h3>
+                    {d.price}: {prepared.input.amount}{' '}
+                    {policy.policy.currency ?? 'SEK'}
+                  </h3>
+                  <p>{prepared.suggestions.price?.rationale}</p>
+                </>
+              )}
+              {!terms.data && agreementRequired ? (
+                <p>
+                  <Link href="/intake/agreements" className="text-link">
+                    {d.needTerms}
+                  </Link>
+                </p>
+              ) : terms.data ? (
+                <>
+                  <details className="reception-help">
+                    <summary>
+                      {terms.data.title} · {d.version} {terms.data.version}
+                    </summary>
+                    <div lang={terms.data.language} className="reception-terms">
+                      {terms.data.body}
+                    </div>
+                  </details>
+                </>
+              ) : null}
+              {write && canPublish && prepared ? (
+                <PublishReview
+                  key={`${state.revision}-${review?.id ?? 'none'}-${terms.data?.id ?? 'none'}`}
+                  tenantId={tenant.id}
+                  sessionId={id.data}
+                  revision={state.revision}
+                  previousId={review?.id ?? null}
+                  agreementId={terms.data?.id ?? null}
+                  suggestions={prepared.suggestions}
+                  d={d}
+                />
+              ) : current && !expired ? (
+                <p>{d.published}</p>
+              ) : null}
+            </section>
+          )}
           {review && (
             <section className="card intake-form reception-result">
               <h2>
-                {d.sellerStep} — {d.version} {review.version}
+                {sellerApprovalRequired ? d.sellerStep : d.storeReview.title} —{' '}
+                {d.version} {review.version}
               </h2>
               <p>
                 {
@@ -317,7 +390,7 @@ export default async function Reception({
                 {d.price}: {review.suggestions.price?.amount}{' '}
                 {review.suggestions.price?.currency}
               </p>
-              <p>{review.terms?.title ?? all.storePolicy.noTerms}</p>
+              {review.terms && <p>{review.terms.title}</p>}
               <p>
                 {d.sharedPhotos}: {review.photos.length}
               </p>
@@ -329,43 +402,30 @@ export default async function Reception({
                   </div>
                 </details>
               )}
-              <p>
-                {all.reviewExpires}{' '}
-                {new Date(review.expiresAt).toLocaleString(
-                  intlLocale(ctx.locale),
-                  {
-                    timeZone: 'Europe/Stockholm',
-                  },
-                )}{' '}
-                (Europe/Stockholm)
-              </p>
-              {(!current || expired) && <p role="status">{d.stale}</p>}
-              <p role="status">
-                {review.response
-                  ? review.response.decision === 'approve'
-                    ? all.staffReviewApproved
-                    : all.staffReviewDeclined
-                  : d.awaiting}
-              </p>
-              {policy.policy.sellerReviewMode === 'delegated' && (
-                <p>{d.delegatedNotice}</p>
+              {!accepted && (!current || expired) && (
+                <p role="status">{d.stale}</p>
               )}
-              {write && review.terms && (
-                <ReviewAccess
-                  key={review.id}
-                  tenantId={tenant.id}
-                  reviewId={review.id}
-                  access={review.access}
-                  available={current && !expired}
-                  email={review.sellerEmail}
-                  d={d}
-                />
+              {sellerApprovalRequired ? (
+                sellerPanel
+              ) : (
+                <>
+                  <p>{d.storeReview.noApproval}</p>
+                  {(review.terms || review.access || review.response) && (
+                    <details className="reception-help">
+                      <summary>{d.storeReview.optionalShare}</summary>
+                      {sellerPanel}
+                    </details>
+                  )}
+                </>
               )}
             </section>
           )}
         </div>
       </details>
-      <details className="reception-step" open={Boolean(current && !expired)}>
+      <details
+        className="reception-step"
+        open={Boolean(accepted || (current && !expired))}
+      >
         <summary>
           <span className="reception-step-number">3</span>
           <span>
@@ -378,8 +438,8 @@ export default async function Reception({
         <div className="reception-step-body">
           <div className="intake-grid reception-completion">
             <section className="card intake-form reception-result">
-              <h2>{d.custody}</h2>
-              <p>{d.workspace.custodyHint}</p>
+              <h2>{custody ? d.custodyRecorded : d.custody}</h2>
+              {!custody && <p>{d.workspace.custodyHint}</p>}
               {custody ? (
                 <>
                   <p role="status">
@@ -415,11 +475,13 @@ export default async function Reception({
               )}
             </section>
             <section className="card intake-form reception-result">
-              <h2>{all.items.acceptHeading}</h2>
-              <details className="reception-help">
-                <summary>{d.workspace.acceptHelp}</summary>
-                <p>{all.items.acceptHint}</p>
-              </details>
+              <h2>{accepted ? d.workspace.finish : all.items.acceptHeading}</h2>
+              {!accepted && (
+                <details className="reception-help">
+                  <summary>{d.workspace.acceptHelp}</summary>
+                  <p>{all.items.acceptHint}</p>
+                </details>
+              )}
               {accepted ? (
                 <p role="status">
                   {all.items.alreadyAccepted}{' '}

@@ -508,7 +508,7 @@
     "expiry": "Julkaistu versio on voimassa 24 tuntia. Linkkiä tai sähköpostia ei lähetetä automaattisesti.",
     "publish": "Julkaise tarkistettu ehdotus",
     "published": "Tämä lähdeversio on julkaistu. Hallitse linkkiä alla.",
-    "sellerStep": "3. Tuojan päätös",
+    "sellerStep": "Tuojan päätös",
     "exactTerms": "Näytä täsmälleen ne ehdot, jotka tuoja lukee",
     "stale": "Tämä tarkistus on vanhentunut. Julkaise uusi tarkistus ennen linkin jakamista.",
     "awaiting": "Tälle versiolle ei ole tallennettu vastausta.",
@@ -649,6 +649,19 @@
       "aiHelp": "Tietoa tekoälystä ja kuvistasi",
       "unsaved": "Tekoälyehdotusta ei ole vielä tallennettu.",
       "completeManually": "Täydennä kuvaus ja hinta alla olevaan lomakkeeseen jatkaaksesi."
+    },
+    "storeReview": {
+      "step": "Tarkista tiedot",
+      "stepHint": "Tarkista kuvaus ja hinta.",
+      "title": "Tarkistetut tiedot",
+      "saved": "Tiedot on tarkistettu.",
+      "publish": "Tallenna tarkistetut tiedot",
+      "confirmNoTerms": "Olen tarkistanut kuvauksen, kuvat ja hinnoitteluperusteet.",
+      "aiNotice": "Tarkista jokainen tieto ja hinta. Vastaat tarkistuksesta henkilökunnan edustajana.",
+      "stale": "Uudista tiedot ennen tuotteen rekisteröintiä.",
+      "noApproval": "Myymälä päättää hinnan. Myyjän hyväksyntää ei tarvita.",
+      "optionalShare": "Valinnainen jakaminen myyjälle",
+      "registered": "Tuote on rekisteröity"
     }
   },
   "operations": {

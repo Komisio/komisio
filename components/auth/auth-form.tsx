@@ -106,6 +106,7 @@ export function AuthForm({
       setBusy(false)
     }
   }
+  const registrationSent = mode === 'register' && Boolean(success)
   const title =
     mode === 'login'
       ? d.login
@@ -165,65 +166,71 @@ export function AuthForm({
                   : d.invitedLoginIntro}
               </p>
             )}
-          <form onSubmit={submit}>
-            {mode !== 'password' && (
-              <div className="field">
-                <label htmlFor="email">{d.email}</label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  maxLength={254}
-                />
-              </div>
-            )}
-            {mode !== 'reset' && (
-              <div className="field">
-                <label htmlFor="password">
-                  {mode === 'password' ? d.newPassword : d.password}
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete={
-                    mode === 'login' ? 'current-password' : 'new-password'
-                  }
-                  minLength={mode === 'login' ? 1 : 10}
-                  required
-                />
-                {mode !== 'login' && <small>{d.passwordHint}</small>}
-              </div>
-            )}
-            {mode === 'login' && (
-              <p
-                style={{ textAlign: 'right', marginTop: -8, marginBottom: 24 }}
-              >
-                <Link href="/reset-password" className="text-link">
-                  {d.forgot}
-                </Link>
-              </p>
-            )}
-            <Button disabled={busy} className="full">
-              {busy
-                ? d.loading
-                : mode === 'reset'
-                  ? d.sendReset
-                  : mode === 'password'
-                    ? d.savePassword
-                    : title}
-              <ArrowRight size={16} />
-            </Button>
-            <Feedback
-              error={error || (callbackError ? d.callbackError : '')}
-              success={success}
-            />
-          </form>
-          {success && mode === 'register' && (
+          {!registrationSent && (
+            <form onSubmit={submit}>
+              {mode !== 'password' && (
+                <div className="field">
+                  <label htmlFor="email">{d.email}</label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    maxLength={254}
+                  />
+                </div>
+              )}
+              {mode !== 'reset' && (
+                <div className="field">
+                  <label htmlFor="password">
+                    {mode === 'password' ? d.newPassword : d.password}
+                  </label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete={
+                      mode === 'login' ? 'current-password' : 'new-password'
+                    }
+                    minLength={mode === 'login' ? 1 : 10}
+                    required
+                  />
+                  {mode !== 'login' && <small>{d.passwordHint}</small>}
+                </div>
+              )}
+              {mode === 'login' && (
+                <p
+                  style={{
+                    textAlign: 'right',
+                    marginTop: -8,
+                    marginBottom: 24,
+                  }}
+                >
+                  <Link href="/reset-password" className="text-link">
+                    {d.forgot}
+                  </Link>
+                </p>
+              )}
+              <Button disabled={busy} className="full">
+                {busy
+                  ? d.loading
+                  : mode === 'reset'
+                    ? d.sendReset
+                    : mode === 'password'
+                      ? d.savePassword
+                      : title}
+                <ArrowRight size={16} />
+              </Button>
+            </form>
+          )}
+          <Feedback
+            error={error || (callbackError ? d.callbackError : '')}
+            success={registrationSent ? d.verifySent : success}
+          />
+          {registrationSent && (
             <Button variant="ghost" onClick={resend} disabled={busy}>
               {d.resend}
             </Button>

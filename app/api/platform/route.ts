@@ -1,5 +1,6 @@
 import { createHash, randomBytes, randomUUID } from 'node:crypto'
 import { NextResponse } from 'next/server'
+import { createStore } from '@/lib/engine/store-creation'
 import { platformContext } from '@/lib/platform/context'
 import { commandSchema, errorCode } from '@/lib/platform/validation'
 import { can } from '@/lib/platform/permissions'
@@ -44,10 +45,9 @@ export async function POST(request: Request) {
     let inviteUrl: string | undefined
     switch (command.action) {
       case 'create':
-        result = await context.client.rpc('create_tenant', {
-          p_name: command.name,
-          p_slug: command.slug,
-          p_request_id: command.requestId,
+        result = await createStore(context.client, {
+          ...command,
+          locale: context.locale,
         })
         break
       case 'select':

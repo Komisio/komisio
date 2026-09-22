@@ -2851,7 +2851,7 @@ test('store policy publishes safely and supports agreement-free staff review', a
     .getByRole('button', { name: 'Försök igen', exact: true })
     .click()
   await expect(
-    section.getByText('Publicerad version 1', { exact: true }),
+    section.getByText('Publicerad version 2', { exact: true }),
   ).toBeVisible()
   await expect(section.getByLabel('Butikens provision (%)')).toHaveValue(
     '55.25',

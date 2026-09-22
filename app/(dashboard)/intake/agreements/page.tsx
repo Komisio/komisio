@@ -96,6 +96,7 @@ export default async function Agreements({
             key={active.id}
             tenantId={active.id}
             current={current}
+            locale={ctx.locale}
             d={d}
           />
         ) : (

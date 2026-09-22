@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { Dictionary } from '@/lib/i18n'
+import { locales, localeNames, type Dictionary, type Locale } from '@/lib/i18n'
 import type { SellerAgreement } from '@/lib/engine/intake'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
@@ -9,10 +9,12 @@ import { Button } from '@/components/ui/button'
 export function AgreementPublisher({
   tenantId,
   current,
+  locale,
   d,
 }: {
   tenantId: string
   current: SellerAgreement | null
+  locale: Locale
   d: Dictionary
 }) {
   const action = useIntakeAction(d.intake)
@@ -33,7 +35,7 @@ export function AgreementPublisher({
       expectedCurrentId: base?.id ?? null,
       title: fields.get('title') ?? '',
       body: fields.get('body') ?? '',
-      language: fields.get('language') ?? 'sv',
+      language: fields.get('language') ?? locale,
       required: fields.get('required') === 'on',
     })
     if (id) {
@@ -78,10 +80,13 @@ export function AgreementPublisher({
               <select
                 id="agreement-language"
                 name="language"
-                defaultValue={base?.language ?? 'sv'}
+                defaultValue={base?.language ?? locale}
               >
-                <option value="sv">Svenska</option>
-                <option value="en">English</option>
+                {locales.map((language) => (
+                  <option key={language} value={language}>
+                    {localeNames[language]}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="field">

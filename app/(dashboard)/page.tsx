@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Check, ArrowRight, Users, Sprout, CircleHelp } from 'lucide-react'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
+import { guideCopy } from '@/lib/guide-copy'
 import { can } from '@/lib/platform/permissions'
 import { Button } from '@/components/ui/button'
 import { readOnboarding } from '@/lib/engine/onboarding'
@@ -63,6 +64,13 @@ export default async function Home() {
         </h1>
         <p>{d.homeIntro}</p>
       </div>
+      <section className="card">
+        <h2>{guideCopy(ctx.locale).title}</h2>
+        <p>{guideCopy(ctx.locale).intro}</p>
+        <Link href="/guide" className="text-link">
+          {guideCopy(ctx.locale).start} →
+        </Link>
+      </section>
       {overview && (
         <section className="card" aria-label={o.heading}>
           <h2>{o.heading}</h2>

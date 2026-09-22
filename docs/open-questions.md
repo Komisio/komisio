@@ -1,5 +1,11 @@
 # Open questions
 
+Store guide (2026-09-21): the owner approved private tenant-bound answer
+versions, owner/admin saves and member reads. The short guide is translated
+into all eight UI languages; stored answer codes are language-independent.
+Answers describe intended workflows, not executable financial policy. Booking,
+pickup, new-goods and marketplace choices do not resolve their open rules.
+
 Automatic labels (2026-09-15, PR199): kind sizes and target-store transfer
 acceptance are owner-approved. Fable clarification is still needed for repeated
 markdown event identity and the application-side handling of SQL-only producers

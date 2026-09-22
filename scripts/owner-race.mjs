@@ -5,6 +5,7 @@ import { raceZettleImage } from './zettle-image-race.mjs'
 import { raceZettlePull } from './zettle-pull-race.mjs'
 import { raceSellerPayout } from './seller-payout-race.mjs'
 import { raceStorePolicy } from './store-policy-race.mjs'
+import { raceStoreGuide } from './store-guide-race.mjs'
 import { raceLabelPrintRule } from './label-print-rule-race.mjs'
 import { raceInspectionApproval } from './inspection-operation-race.mjs'
 import { raceAcceptance, raceStagedAcceptance } from './acceptance-race.mjs'
@@ -96,6 +97,7 @@ try {
     }),
   )
   await raceStorePolicy({ setup, sessions, tenant })
+  await raceStoreGuide({ setup, sessions, tenant })
   await raceSellerProfile({ setup, sessions, tenant })
   await raceLabelPrintRule({ setup, sessions, tenant })
   await setup.query('begin')

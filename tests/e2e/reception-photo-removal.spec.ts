@@ -8,7 +8,6 @@ test('reception photos can be cleared or detached without losing unsaved text', 
   const run = crypto.randomUUID()
   await register(page, `remove-${run}@example.test`, `Test!${run}`)
   await page.getByLabel('Butikens namn').fill('TEST Photo removal')
-  await page.getByLabel('Butikens identifierare').fill(`remove-${run}`)
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()

@@ -8,7 +8,6 @@ test('store guide saves tenant answers and restores them in another language', a
   const run = randomUUID().slice(0, 8)
   await register(page, `guide-${run}@example.test`, `K!${randomUUID()}`)
   await page.getByLabel('Butikens namn').fill('Guide TEST')
-  await page.getByLabel('Butikens identifierare').fill(`guide-${run}`)
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await page.getByRole('link', { name: 'Butiksguiden' }).click()
   await expect(page).toHaveURL(/\/guide$/)

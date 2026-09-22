@@ -2007,7 +2007,7 @@
     "connectionCompanyNameMissing": "Das Fortnox-Unternehmen dieses Ladens muss geprüft werden.",
     "configHint": "Prüfen Sie die Store-Bindung und die Vercel-Einstellungen (Production). Nach Änderungen erneut bereitstellen. Hier werden keine Zugangsdaten angezeigt.",
     "ownerOnly": "Nur der Store-Inhaber oder ein Administrator kann Fortnox verbinden.",
-    "notice": "Tokens werden mit einem serverseitigen Schlüssel verschlüsselt gespeichert. Nur Name und Datenbanknummer des verbundenen Unternehmens sind hier sichtbar.",
+    "notice": "Die Verbindung gehört zu diesem Laden. Beim Verbinden werden keine Buchungen gesendet.",
     "sendVoucher": "An Fortnox senden",
     "sendAgain": "Erneut an Fortnox senden",
     "sending": "Wird gesendet…",
@@ -2051,7 +2051,8 @@
       "SEND_NOT_PENDING": "Der Versand ist bereits abgeschlossen.",
       "REQUEST_CONFLICT": "Diese Anfrage-ID wurde für einen anderen Versand verwendet.",
       "INVALID_INPUT": "Die Anfrage war ungültig."
-    }
+    },
+    "companyName": "Firmenname in Fortnox"
   },
   "zettle": {
     "automaticTitle": "Automatischer Belegabruf",
@@ -2221,7 +2222,12 @@
       "unknown": "Unsicheres Ergebnis - es wird keine neue Einheit hinzugefügt",
       "conflict": "Bestand muss untersucht werden - es wird keine neue Einheit hinzugefügt"
     },
-    "responseFields": "Antwortfelder"
+    "responseFields": "Antwortfelder",
+    "setup": "Konto verbinden",
+    "setupHint": "Gib die Client ID und den API-Schlüssel deines PayPal POS-Kontos ein. Die Angaben werden geprüft und für diesen Laden verschlüsselt gespeichert.",
+    "clientId": "Client ID",
+    "apiKey": "API-Schlüssel",
+    "connect": "PayPal POS verbinden"
   },
   "priceEvidence": {
     "title": "Vergleichbare Verkäufe in diesem Store",

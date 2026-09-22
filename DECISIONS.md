@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-09-22: Owners approved own PayPal POS, Shopify and Fortnox accounts per tenant. Owner/admin connects; verified account identities stay pinned. PayPal credentials are encrypted per tenant; OAuth state binds tenant and selected account. Automation still requires its accepted scoped grant.
+
 One line per decision: `- YYYY-MM-DD: <decision>: <why>`, at most 300
 characters. The reasoning, the alternatives considered, the evidence and what
 was verified belong in the pull request body, where git keeps them next to the

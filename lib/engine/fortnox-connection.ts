@@ -98,10 +98,27 @@ export async function startFortnoxConnection(
   tenantId: string,
   redirectUri: string,
   source: Record<string, string | undefined>,
+  companyInput?: string,
 ) {
   await requireOwner(client, tenantId)
   const env = ready(tenantId, source)
-  const state = signState(PURPOSE, { tenantId }, STATE_TTL, source)
+  const connection = await readFortnoxStatus(client, tenantId)
+  const companyName = z
+    .string()
+    .trim()
+    .min(1)
+    .max(200)
+    .parse(connection.companyName ?? companyInput)
+  const state = signState(
+    PURPOSE,
+    {
+      tenantId,
+      companyName,
+      databaseNumber: connection.databaseNumber ?? '',
+    },
+    STATE_TTL,
+    source,
+  )
   return { url: authorizeUrl(env, redirectUri, state), state }
 }
 
@@ -169,7 +186,30 @@ export async function completeFortnoxConnection(
   const tokens = await exchangeCode(env, input.code, redirectUri, http)
   const company = await readCompanyInformation(tokens.access_token, http)
   try {
-    verifyCompany(env, company)
+    const companyName = z
+      .string()
+      .trim()
+      .min(1)
+      .max(200)
+      .parse(
+        state.companyName ??
+          (source.FORTNOX_PILOT_TENANT_ID === tenantId
+            ? source.FORTNOX_EXPECTED_COMPANY_NAME
+            : undefined),
+      )
+    verifyCompany(
+      {
+        ...env,
+        FORTNOX_EXPECTED_COMPANY_NAME: companyName,
+        FORTNOX_EXPECTED_DATABASE_NUMBER:
+          typeof state.databaseNumber === 'string'
+            ? state.databaseNumber
+            : source.FORTNOX_PILOT_TENANT_ID === tenantId
+              ? source.FORTNOX_EXPECTED_DATABASE_NUMBER
+              : undefined,
+      },
+      company,
+    )
   } catch {
     // The token is dropped here; only the company identity is recorded.
     await client.rpc('record_fortnox_check', {
@@ -295,7 +335,11 @@ export async function checkFortnoxConnection(
     http,
   )
   const company = await readCompanyInformation(accessToken, http)
-  const env = fortnoxEnvironment(source)
+  const env = {
+    ...fortnoxEnvironment(source),
+    FORTNOX_EXPECTED_COMPANY_NAME: row.companyName,
+    FORTNOX_EXPECTED_DATABASE_NUMBER: row.databaseNumber,
+  }
   let pinnedDatabase = false
   try {
     pinnedDatabase = verifyCompany(env, company).pinnedDatabase

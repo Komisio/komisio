@@ -2007,7 +2007,7 @@
     "connectionCompanyNameMissing": "Myymälän Fortnox-yritys on tarkistettava.",
     "configHint": "Tarkista kaupan sidonta ja Vercel-asetukset (Production). Ota käyttöön uudelleen muutosten jälkeen. Tunnistetietojen arvoja ei näytetä täällä.",
     "ownerOnly": "Vain kaupan omistaja tai ylläpitäjä voi yhdistää Fortnoxin.",
-    "notice": "Tunnukset tallennetaan salattuina palvelinpuolen avaimella. Vain yhdistetyn yrityksen nimi ja tietokantanumero näkyvät täällä.",
+    "notice": "Yhteys koskee tätä myymälää. Yhdistäminen ei lähetä kirjanpitovientejä.",
     "sendVoucher": "Lähetä Fortnoxiin",
     "sendAgain": "Lähetä Fortnoxiin uudelleen",
     "sending": "Lähetetään…",
@@ -2051,7 +2051,8 @@
       "SEND_NOT_PENDING": "Lähetys on jo suljettu.",
       "REQUEST_CONFLICT": "Tämä pyyntötunnus on käytetty toiseen lähetykseen.",
       "INVALID_INPUT": "Pyyntö ei ollut kelvollinen."
-    }
+    },
+    "companyName": "Yrityksen nimi Fortnoxissa"
   },
   "zettle": {
     "automaticTitle": "Automaattinen kuittien nouto",
@@ -2221,7 +2222,12 @@
       "unknown": "Epävarma tulos - uutta kappaletta ei lisätä",
       "conflict": "Varasto vaatii tutkintaa - uutta kappaletta ei lisätä"
     },
-    "responseFields": "Vastauksen kentät"
+    "responseFields": "Vastauksen kentät",
+    "setup": "Yhdistä tilisi",
+    "setupHint": "Anna PayPal POS -tilisi Client ID ja API-avain. Tiedot tarkistetaan ja tallennetaan salattuina tälle myymälälle.",
+    "clientId": "Client ID",
+    "apiKey": "API-avain",
+    "connect": "Yhdistä PayPal POS"
   },
   "priceEvidence": {
     "title": "Vertailukelpoiset myynnit tässä kaupassa",

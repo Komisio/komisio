@@ -33,6 +33,7 @@ export async function GET(request: Request) {
       ctx.active.id,
       redirectUri,
       process.env,
+      new URL(request.url).searchParams.get('company') ?? undefined,
     )
     const response = NextResponse.redirect(url)
     response.cookies.set(STATE_COOKIE, state, {

@@ -1,3 +1,4 @@
+import { verifyState } from '@/lib/platform/credentials'
 import { NextResponse } from 'next/server'
 import { platformContext } from '@/lib/platform/context'
 import {
@@ -35,6 +36,12 @@ export async function GET(request: Request) {
       .find((c) => c.startsWith(`${STATE_COOKIE}=`))
       ?.slice(STATE_COOKIE.length + 1) ?? null
   try {
+    const bound = verifyState(
+      'shopify-connection',
+      params.get('state'),
+      process.env,
+    )
+    if (bound && bound.tenantId !== ctx.active.id) return back('TENANT_CHANGED')
     const result = await completeShopifyConnection(
       ctx.client,
       { params, cookieState },

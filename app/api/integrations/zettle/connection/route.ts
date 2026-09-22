@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server'
-import { pilotEnvironment } from '@/extensions/zettle/auth'
+import {
+  paypalEnvironment,
+  paypalCredentials,
+  connectPayPal,
+} from '@/lib/engine/paypal-credentials'
 import { z } from 'zod'
 import { platformContext } from '@/lib/platform/context'
 import { boundedJson } from '@/lib/http/bounded-json'
@@ -22,19 +26,33 @@ export async function POST(request: Request) {
       return reply({ error: 'FORBIDDEN' }, 403)
     let input: unknown
     try {
-      input = await boundedJson(request, 1024)
+      input = await boundedJson(request, 49152)
     } catch {
       return reply({ error: 'INVALID_INPUT' }, 400)
     }
-    const parsed = z.strictObject({ tenantId: z.uuid() }).safeParse(input)
+    const parsed = z
+      .strictObject({
+        tenantId: z.uuid(),
+        credentials: paypalCredentials.optional(),
+      })
+      .safeParse(input)
     if (!parsed.success) return reply({ error: 'INVALID_INPUT' }, 400)
     if (parsed.data.tenantId !== ctx.active.id)
       return reply({ error: 'TENANT_CHANGED' }, 409)
+    if (parsed.data.credentials)
+      return reply(
+        await connectPayPal(
+          ctx.client,
+          ctx.active.id,
+          parsed.data.credentials,
+          process.env,
+        ),
+      )
     return reply(
       await checkZettleConnection(
         ctx.client,
         ctx.active.id,
-        pilotEnvironment(process.env),
+        await paypalEnvironment(ctx.client, ctx.active.id, process.env),
       ),
     )
   } catch (e) {

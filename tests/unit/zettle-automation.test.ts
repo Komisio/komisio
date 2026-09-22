@@ -28,7 +28,12 @@ function fixture() {
   const signOut = vi.fn().mockResolvedValue({ error: null })
   const rpc = vi.fn(async (name: string) => ({
     error: null,
-    data: name === 'accept_automation_grants' ? [] : [{ tenantId }],
+    data:
+      name === 'read_paypal_credentials'
+        ? null
+        : name === 'accept_automation_grants'
+          ? []
+          : [{ tenantId }],
   }))
   const client = {
     auth: { signInWithPassword, signOut },
@@ -162,10 +167,13 @@ describe('Zettle cron boundary', () => {
   })
   it('never calls the provider for another tenant', async () => {
     const setup = fixture()
-    setup.rpc.mockResolvedValue({
+    setup.rpc.mockImplementation(async (name: string) => ({
       error: null,
-      data: [{ tenantId: env.ZETTLE_MERCHANT_ID }],
-    })
+      data:
+        name === 'read_paypal_credentials'
+          ? null
+          : [{ tenantId: env.ZETTLE_MERCHANT_ID }],
+    }))
     setup.rpc.mockResolvedValueOnce({ error: null, data: [] })
     expect(
       (

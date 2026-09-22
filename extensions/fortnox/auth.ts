@@ -34,22 +34,16 @@ export function fortnoxEnvironment(
   }
 }
 
-/** Fixed reason codes only; credentials are inspected only after the tenant match. */
+/** Host OAuth application readiness; membership and account binding are enforced by the engine. */
 export function fortnoxIssue(
   tenantId: string,
   source: FortnoxEnvironment,
 ): FortnoxIssue | null {
   const env = fortnoxEnvironment(source)
-  if (!env.FORTNOX_PILOT_TENANT_ID) return 'connectionTenantMissing'
-  if (
-    !z.uuid().safeParse(tenantId).success ||
-    env.FORTNOX_PILOT_TENANT_ID !== tenantId
-  )
-    return 'connectionUnavailable'
+  if (!z.uuid().safeParse(tenantId).success) return 'connectionUnavailable'
   if (!env.FORTNOX_CLIENT_ID || /[\s]/.test(env.FORTNOX_CLIENT_ID))
     return 'connectionClientMissing'
   if (!env.FORTNOX_CLIENT_SECRET) return 'connectionSecretMissing'
-  if (!env.FORTNOX_EXPECTED_COMPANY_NAME) return 'connectionCompanyNameMissing'
   return null
 }
 

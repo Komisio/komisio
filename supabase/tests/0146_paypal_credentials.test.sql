@@ -1,0 +1,42 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f1460000-0000-4000-8000-000000000001','paypal-owner@example.test',now()),
+ ('f1460000-0000-4000-8000-000000000002','paypal-staff@example.test',now()),
+ ('f1460000-0000-4000-8000-000000000003','paypal-worker@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f1460000-0000-4000-8000-000000000001","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('PayPal test','paypal-credentials-test',gen_random_uuid())::text,true);
+select set_config('test.cipher','{"iv":"aWl2","tag":"dGFn","data":"ZGF0YQ=="}',true);
+select is(read_paypal_credentials(current_setting('test.tenant')::uuid),null,'new store has no credentials');
+select lives_ok($$select store_paypal_credentials(current_setting('test.tenant')::uuid,'f1460000-0000-4000-8000-000000000010',current_setting('test.cipher')::jsonb)$$,'owner connects');
+select is(read_paypal_credentials(current_setting('test.tenant')::uuid)->>'merchantId','f1460000-0000-4000-8000-000000000010','account pinned');
+select throws_like($$select store_paypal_credentials(current_setting('test.tenant')::uuid,'f1460000-0000-4000-8000-000000000011',current_setting('test.cipher')::jsonb)$$,'%ZETTLE_WRONG_MERCHANT%','cannot replace merchant');
+select lives_ok($$select store_paypal_credentials(current_setting('test.tenant')::uuid,'f1460000-0000-4000-8000-000000000010',current_setting('test.cipher')::jsonb)$$,'owner can rotate credentials');
+select throws_ok($$select * from paypal_credentials$$,'42501',null,'no direct secret reads');
+select throws_ok($$select read_paypal_credentials(gen_random_uuid())$$,'42501',null,'cross tenant denied');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.tenant')::uuid,'f1460000-0000-4000-8000-000000000002','staff');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f1460000-0000-4000-8000-000000000002","role":"authenticated"}';
+select throws_ok($$select read_paypal_credentials(current_setting('test.tenant')::uuid)$$,'42501',null,'staff cannot read credentials');
+select throws_ok($$select store_paypal_credentials(current_setting('test.tenant')::uuid,'f1460000-0000-4000-8000-000000000010',current_setting('test.cipher')::jsonb)$$,'42501',null,'staff cannot connect');
+set local "request.jwt.claims"='{"sub":"f1460000-0000-4000-8000-000000000001","role":"authenticated"}';
+select enable_automation(current_setting('test.tenant')::uuid,gen_random_uuid(),'fortnox_send','paypal-worker@example.test');
+set local "request.jwt.claims"='{"sub":"f1460000-0000-4000-8000-000000000003","role":"authenticated"}';
+select accept_automation_grants();
+select throws_ok($$select read_paypal_credentials(current_setting('test.tenant')::uuid)$$,'42501',null,'other automation scope cannot read credentials');
+set local "request.jwt.claims"='{"sub":"f1460000-0000-4000-8000-000000000001","role":"authenticated"}';
+select enable_automation(current_setting('test.tenant')::uuid,gen_random_uuid(),'zettle_pull','paypal-worker@example.test');
+set local "request.jwt.claims"='{"sub":"f1460000-0000-4000-8000-000000000003","role":"authenticated"}';
+select throws_ok($$select read_paypal_credentials(current_setting('test.tenant')::uuid)$$,'42501',null,'unaccepted grant cannot read credentials');
+select accept_automation_grants();
+select lives_ok($$select read_paypal_credentials(current_setting('test.tenant')::uuid)$$,'accepted pull grant reads credentials');
+select throws_ok($$select store_paypal_credentials(current_setting('test.tenant')::uuid,'f1460000-0000-4000-8000-000000000010',current_setting('test.cipher')::jsonb)$$,'42501',null,'automation cannot change credentials');
+set local "request.jwt.claims"='{"sub":"f1460000-0000-4000-8000-000000000001","role":"authenticated"}';
+select disable_automation(current_setting('test.tenant')::uuid,'zettle_pull');
+set local "request.jwt.claims"='{"sub":"f1460000-0000-4000-8000-000000000003","role":"authenticated"}';
+select throws_ok($$select read_paypal_credentials(current_setting('test.tenant')::uuid)$$,'42501',null,'revoked grant immediately loses read access');
+select * from finish();
+rollback;

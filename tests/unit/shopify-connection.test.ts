@@ -86,11 +86,9 @@ describe('shopify auth', () => {
       'read_orders,write_products,write_inventory,read_locations',
     )
   })
-  it('reports configuration issues in order and only for the pinned tenant', () => {
-    expect(shopifyIssue(tenant, {})).toBe('connectionTenantMissing')
-    expect(shopifyIssue('20000000-0000-4000-8000-000000000002', env)).toBe(
-      'connectionUnavailable',
-    )
+  it('reports host configuration issues and permits other valid tenants', () => {
+    expect(shopifyIssue(tenant, {})).toBe('connectionClientMissing')
+    expect(shopifyIssue('20000000-0000-4000-8000-000000000002', env)).toBeNull()
     expect(shopifyIssue(tenant, { ...env, SHOPIFY_CLIENT_ID: '' })).toBe(
       'connectionClientMissing',
     )

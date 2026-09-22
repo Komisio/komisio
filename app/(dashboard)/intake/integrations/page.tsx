@@ -1,4 +1,6 @@
 import { FortnoxConnection } from '@/components/intake/fortnox-connection'
+import { paypalEnvironment } from '@/lib/engine/paypal-credentials'
+import { credentialKeyConfigured } from '@/lib/platform/credentials'
 import { readFortnoxStatus } from '@/lib/engine/fortnox-connection'
 import { fortnoxEnvironment, fortnoxIssue } from '@/extensions/fortnox/auth'
 import { readZettleStock } from '@/lib/engine/zettle-stock'
@@ -66,7 +68,9 @@ export default async function Integrations({
     pull = ['owner', 'admin'].includes(a.role)
       ? await readZettlePull(ctx.client, a.id)
       : null,
-    pilot = pilotEnvironment(process.env),
+    pilot = ['owner', 'admin'].includes(a.role)
+      ? await paypalEnvironment(ctx.client, a.id, process.env)
+      : pilotEnvironment({}),
     liveReady = pilotIssue(a.id, pilot) === null && !!pilot.ZETTLE_MERCHANT_ID
   const stocks = ['owner', 'admin'].includes(a.role)
     ? await readZettleStock(ctx.client, a.id)
@@ -131,7 +135,8 @@ export default async function Integrations({
           <ZettleConnection
             key={a.id}
             tenantId={a.id}
-            issue={pilotIssue(a.id, pilotEnvironment(process.env))}
+            issue={pilotIssue(a.id, pilot)}
+            setupAvailable={credentialKeyConfigured(process.env)}
             d={d}
           />
         )}
@@ -480,8 +485,7 @@ export default async function Integrations({
                   configured={
                     !!automationIdentity() &&
                     shopifyAuto?.available === true &&
-                    automation !== null &&
-                    a.id === process.env.SHOPIFY_PILOT_TENANT_ID
+                    automation !== null
                   }
                   canEdit={a.role === 'owner'}
                   t={all.shopify.automation}

@@ -2007,7 +2007,7 @@
     "connectionCompanyNameMissing": "Es necesario comprobar la empresa de Fortnox de esta tienda.",
     "configHint": "Comprueba la vinculación de la tienda y los ajustes de Vercel (Production). Vuelve a desplegar tras los cambios. Aquí no se muestra ningún valor de credenciales.",
     "ownerOnly": "Solo el propietario de la tienda o un administrador puede conectar Fortnox.",
-    "notice": "Los tokens se guardan cifrados con una clave del servidor. Aquí solo se ven el nombre y el número de base de datos de la empresa conectada.",
+    "notice": "La conexión pertenece a esta tienda. Al conectar no se envían asientos contables.",
     "sendVoucher": "Enviar a Fortnox",
     "sendAgain": "Enviar a Fortnox de nuevo",
     "sending": "Enviando…",
@@ -2051,7 +2051,8 @@
       "SEND_NOT_PENDING": "El envío ya está cerrado.",
       "REQUEST_CONFLICT": "Este id de solicitud se usó para otro envío.",
       "INVALID_INPUT": "La solicitud no era válida."
-    }
+    },
+    "companyName": "Nombre de la empresa en Fortnox"
   },
   "zettle": {
     "automaticTitle": "Obtención automática de recibos",
@@ -2221,7 +2222,12 @@
       "unknown": "Resultado incierto - no se añadirá ninguna unidad nueva",
       "conflict": "Las existencias necesitan investigación - no se añadirá ninguna unidad nueva"
     },
-    "responseFields": "Campos de la respuesta"
+    "responseFields": "Campos de la respuesta",
+    "setup": "Conecta tu cuenta",
+    "setupHint": "Introduce el Client ID y la clave API de tu cuenta de PayPal POS. Se verifican y se guardan cifrados para esta tienda.",
+    "clientId": "Client ID",
+    "apiKey": "Clave API",
+    "connect": "Conectar PayPal POS"
   },
   "priceEvidence": {
     "title": "Ventas comparables en esta tienda",

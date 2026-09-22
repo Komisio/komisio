@@ -2007,7 +2007,7 @@
     "connectionCompanyNameMissing": "Butikkens Fortnox-selskap må kontrolleres.",
     "configHint": "Kontroller butikkbindingen og Vercel-innstillingene (Production). Distribuer på nytt etter endringer. Ingen legitimasjonsverdier vises her.",
     "ownerOnly": "Bare butikkeieren eller en administrator kan koble til Fortnox.",
-    "notice": "Tokener lagres kryptert med en nøkkel på serversiden. Bare det tilkoblede selskapets navn og databasenummer er synlige her.",
+    "notice": "Tilkoblingen gjelder denne butikken. Ingen bokføring sendes når du kobler til.",
     "sendVoucher": "Send til Fortnox",
     "sendAgain": "Send til Fortnox på nytt",
     "sending": "Sender …",
@@ -2051,7 +2051,8 @@
       "SEND_NOT_PENDING": "Sendingen er allerede avsluttet.",
       "REQUEST_CONFLICT": "Denne forespørsels-ID-en ble brukt til en annen sending.",
       "INVALID_INPUT": "Forespørselen var ikke gyldig."
-    }
+    },
+    "companyName": "Firmanavn i Fortnox"
   },
   "zettle": {
     "automaticTitle": "Automatisk henting av kvitteringer",
@@ -2221,7 +2222,12 @@
       "unknown": "Usikkert resultat - ingen ny enhet legges til",
       "conflict": "Lageret må undersøkes - ingen ny enhet legges til"
     },
-    "responseFields": "Svarfelt"
+    "responseFields": "Svarfelt",
+    "setup": "Koble til kontoen din",
+    "setupHint": "Oppgi Client ID og API-nøkkelen fra PayPal POS-kontoen din. Opplysningene kontrolleres og lagres kryptert for denne butikken.",
+    "clientId": "Client ID",
+    "apiKey": "API-nøkkel",
+    "connect": "Koble til PayPal POS"
   },
   "priceEvidence": {
     "title": "Sammenlignbare salg i denne butikken",

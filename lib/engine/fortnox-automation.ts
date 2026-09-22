@@ -30,8 +30,6 @@ export async function runAutomaticFortnoxSend(
   now = Date.now,
 ) {
   z.uuid().parse(tenantId)
-  if (tenantId !== env.FORTNOX_PILOT_TENANT_ID)
-    throw new Error('FORTNOX_NOT_CONNECTED')
   const runId = randomUUID()
   const deadline = now() + 200000
   let sent = 0
@@ -117,7 +115,6 @@ export async function handleFortnoxCron(
     if (tenants.error) throw new Error('GRANTS_FAILED')
     const active = z.array(z.object({ tenantId: z.uuid() })).parse(tenants.data)
     for (const { tenantId } of active) {
-      if (tenantId !== env.FORTNOX_PILOT_TENANT_ID) continue
       try {
         await run(client, tenantId, env)
       } catch {

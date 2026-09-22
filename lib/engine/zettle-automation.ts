@@ -1,3 +1,4 @@
+import { paypalEnvironment } from './paypal-credentials'
 import { timingSafeEqual } from 'node:crypto'
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { z } from 'zod'
@@ -141,9 +142,10 @@ export async function handleZettleCron(
     if (tenants.error) throw new Error('GRANTS_FAILED')
     const active = z.array(z.object({ tenantId: z.uuid() })).parse(tenants.data)
     for (const { tenantId } of active) {
-      if (tenantId !== env.ZETTLE_PILOT_TENANT_ID) continue
       try {
-        await run(client, tenantId, env)
+        const connection = await paypalEnvironment(client, tenantId, env)
+        if (connection.ZETTLE_PILOT_TENANT_ID !== tenantId) continue
+        await run(client, tenantId, { ...env, ...connection })
       } catch {
         failed = true
       }

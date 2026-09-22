@@ -2007,7 +2007,7 @@
     "connectionCompanyNameMissing": "This store’s Fortnox company needs to be checked.",
     "configHint": "Check the store binding and Vercel settings (Production). Redeploy after changes. No credential values are shown here.",
     "ownerOnly": "Only the store owner or an admin can connect Fortnox.",
-    "notice": "Tokens are stored encrypted with a server-side key. Only the connected company's name and database number are visible here.",
+    "notice": "This connection belongs to this store. Connecting does not send any bookkeeping entries.",
     "sendVoucher": "Send to Fortnox",
     "sendAgain": "Send to Fortnox again",
     "sending": "Sending…",
@@ -2051,7 +2051,8 @@
       "SEND_NOT_PENDING": "The send is already closed.",
       "REQUEST_CONFLICT": "This request id was used for another send.",
       "INVALID_INPUT": "The request was not valid."
-    }
+    },
+    "companyName": "Company name in Fortnox"
   },
   "zettle": {
     "automaticTitle": "Automatic receipt retrieval",
@@ -2221,7 +2222,12 @@
       "unknown": "Uncertain result - no new unit will be added",
       "conflict": "Stock needs investigation - no new unit will be added"
     },
-    "responseFields": "Response fields"
+    "responseFields": "Response fields",
+    "setup": "Connect your account",
+    "setupHint": "Enter the client ID and API key from your PayPal POS account. They are verified and stored encrypted for this store.",
+    "clientId": "Client ID",
+    "apiKey": "API key",
+    "connect": "Connect PayPal POS"
   },
   "priceEvidence": {
     "title": "Comparable sales in this store",

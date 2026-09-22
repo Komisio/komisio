@@ -2,9 +2,8 @@
 
 Integration self-service (2026-09-22): the owner requested PayPal POS,
 Shopify and Fortnox setup from the integrations page. The page now groups
-existing adapters; arbitrary stores still cannot connect their own accounts.
-Confirm self-service scope before replacing fixed deployment tenant bindings
-with tenant-specific credentials and verified external-account ownership.
+existing adapters. The owner confirmed own accounts per store, authorizing
+tenant-specific encrypted credentials and verified external-account ownership.
 PayPal POS currently reads credentials from the deployment, while Shopify
 and Fortnox already persist encrypted OAuth tokens per tenant.
 

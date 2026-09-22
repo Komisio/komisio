@@ -23,7 +23,9 @@ test('Zettle product export, price update, checkout, automatic credit and concur
       page.getByText(d.zettle.connectionTenantMissing, { exact: true }),
     ).toBeVisible()
     await expect(
-      page.getByText(d.zettle.connectionConfigHint, { exact: true }),
+      page
+        .getByRole('region', { name: 'PayPal POS', exact: true })
+        .getByText(d.zettle.connectionConfigHint, { exact: true }),
     ).toBeVisible()
     await expect(
       page.getByRole('button', { name: d.zettle.checkConnection, exact: true }),

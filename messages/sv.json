@@ -2007,7 +2007,7 @@
     "connectionCompanyNameMissing": "Butikens Fortnox-företag behöver kontrolleras.",
     "configHint": "Kontakta Komisio för hjälp att komma igång.",
     "ownerOnly": "Bara butikens ägare eller en administratör kan koppla Fortnox.",
-    "notice": "Token lagras krypterad med en nyckel på servern. Bara det kopplade företagets namn och databasnummer syns här.",
+    "notice": "Anslutningen gäller den här butiken. Ingen bokföring skickas när du ansluter.",
     "sendVoucher": "Skicka till Fortnox",
     "sendAgain": "Skicka till Fortnox igen",
     "sending": "Skickar…",
@@ -2051,7 +2051,8 @@
       "SEND_NOT_PENDING": "Sändningen är redan avslutad.",
       "REQUEST_CONFLICT": "Det här förfrågnings-id:t har använts för en annan sändning.",
       "INVALID_INPUT": "Förfrågan var inte giltig."
-    }
+    },
+    "companyName": "Företagsnamn i Fortnox"
   },
   "zettle": {
     "automaticTitle": "Automatisk kvittohämtning",
@@ -2221,7 +2222,12 @@
       "unknown": "Osäkert resultat - inget nytt exemplar läggs till",
       "conflict": "Lagret behöver kontrolleras - inget nytt exemplar läggs till"
     },
-    "responseFields": "Svarsfält"
+    "responseFields": "Svarsfält",
+    "setup": "Anslut ditt konto",
+    "setupHint": "Ange Client ID och API-nyckeln från ditt PayPal POS-konto. Uppgifterna kontrolleras och sparas krypterat för den här butiken.",
+    "clientId": "Client ID",
+    "apiKey": "API-nyckel",
+    "connect": "Anslut PayPal POS"
   },
   "priceEvidence": {
     "title": "Jämförbara försäljningar i butiken",

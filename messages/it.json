@@ -2007,7 +2007,7 @@
     "connectionCompanyNameMissing": "È necessario verificare l’azienda Fortnox di questo negozio.",
     "configHint": "Controlla l'associazione al negozio e le impostazioni Vercel (Production). Ridistribuisci dopo le modifiche. Nessun valore delle credenziali viene mostrato qui.",
     "ownerOnly": "Solo il proprietario del negozio o un amministratore può collegare Fortnox.",
-    "notice": "I token sono salvati cifrati con una chiave lato server. Qui sono visibili solo il nome e il numero di database dell'azienda collegata.",
+    "notice": "Il collegamento riguarda questo negozio. Collegandoti non invii registrazioni contabili.",
     "sendVoucher": "Invia a Fortnox",
     "sendAgain": "Invia di nuovo a Fortnox",
     "sending": "Invio in corso…",
@@ -2051,7 +2051,8 @@
       "SEND_NOT_PENDING": "L'invio è già chiuso.",
       "REQUEST_CONFLICT": "Questo id di richiesta è stato usato per un altro invio.",
       "INVALID_INPUT": "La richiesta non era valida."
-    }
+    },
+    "companyName": "Nome azienda in Fortnox"
   },
   "zettle": {
     "automaticTitle": "Recupero automatico degli scontrini",
@@ -2221,7 +2222,12 @@
       "unknown": "Risultato incerto - nessuna nuova unità verrà aggiunta",
       "conflict": "Lo stock richiede una verifica - nessuna nuova unità verrà aggiunta"
     },
-    "responseFields": "Campi della risposta"
+    "responseFields": "Campi della risposta",
+    "setup": "Collega il tuo account",
+    "setupHint": "Inserisci il Client ID e la chiave API del tuo account PayPal POS. Vengono verificati e salvati in forma crittografata per questo negozio.",
+    "clientId": "Client ID",
+    "apiKey": "Chiave API",
+    "connect": "Collega PayPal POS"
   },
   "priceEvidence": {
     "title": "Vendite comparabili in questo negozio",

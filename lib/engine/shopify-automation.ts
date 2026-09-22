@@ -111,7 +111,6 @@ export async function handleShopifyCron(
     if (tenants.error) throw new Error('GRANTS_FAILED')
     const active = z.array(z.object({ tenantId: z.uuid() })).parse(tenants.data)
     for (const { tenantId } of active) {
-      if (tenantId !== env.SHOPIFY_PILOT_TENANT_ID) continue
       try {
         await run(client, tenantId, env)
       } catch {

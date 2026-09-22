@@ -76,7 +76,7 @@ describe('Fortnox automatic sending', () => {
       expect.anything(),
     )
   })
-  it('does not run for another pilot tenant', async () => {
+  it('runs accepted grants for stores beyond the former pilot', async () => {
     const setup = fixture()
     setup.rpc
       .mockResolvedValueOnce({ data: [], error: null })
@@ -91,7 +91,7 @@ describe('Fortnox automatic sending', () => {
         )
       ).status,
     ).toBe(200)
-    expect(setup.run).not.toHaveBeenCalled()
+    expect(setup.run).toHaveBeenCalledTimes(1)
   })
   it('always signs out and exposes only a fixed error after failure', async () => {
     const setup = fixture()

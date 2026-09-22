@@ -342,8 +342,7 @@ export default async function Accounting({
               configured={
                 !!automationIdentity() &&
                 automatic?.available === true &&
-                grants !== null &&
-                active.id === process.env.FORTNOX_PILOT_TENANT_ID
+                grants !== null
               }
               canEdit={active.role === 'owner'}
               t={all.fortnox.automation}

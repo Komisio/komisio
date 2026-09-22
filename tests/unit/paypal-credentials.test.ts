@@ -62,15 +62,13 @@ describe('tenant PayPal credentials', () => {
     expect(rpc).toHaveBeenCalledTimes(1)
   })
   it('uses this tenant’s credentials ahead of deployment values and rejects copied ciphertext', async () => {
-    const rpc = vi
-      .fn()
-      .mockResolvedValue({
-        data: {
-          merchantId: merchant,
-          cipher: seal(`paypal-credentials:${tenant}`, input, env),
-        },
-        error: null,
-      })
+    const rpc = vi.fn().mockResolvedValue({
+      data: {
+        merchantId: merchant,
+        cipher: seal(`paypal-credentials:${tenant}`, input, env),
+      },
+      error: null,
+    })
     const resolved = await paypalEnvironment(client(rpc), tenant, {
       ...env,
       ZETTLE_PILOT_TENANT_ID: other,

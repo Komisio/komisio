@@ -21,6 +21,12 @@ for (const locale of Object.keys(
     await page.getByRole('button', { name: d.register, exact: true }).click()
     expect((await signup).postDataJSON().data.locale).toBe(locale)
     await expect(page.getByText(d.verifySent)).toBeVisible()
+    await expect(page.getByLabel(d.email, { exact: true })).toHaveCount(0)
+    await expect(page.getByLabel(d.password, { exact: true })).toHaveCount(0)
+    await expect(
+      page.getByRole('button', { name: d.register, exact: true }),
+    ).toHaveCount(0)
+    await expect(page.getByRole('button', { name: d.resend })).toBeVisible()
     await expect
       .poll(async () => {
         const inbox = await (

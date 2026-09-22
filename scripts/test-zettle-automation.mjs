@@ -114,7 +114,7 @@ try {
     await expect(page).not.toHaveURL(/\/login/)
     await page.goto(`${origin}/intake/integrations`)
     await page
-      .getByText(`Zettle · ${dictionary.integrationPage.manage}`, {
+      .getByText(`PayPal POS · ${dictionary.integrationPage.manage}`, {
         exact: true,
       })
       .click()
@@ -159,7 +159,9 @@ try {
   )
   await ownerPage.reload()
   await ownerPage
-    .getByText(`Zettle · ${dictionary.integrationPage.manage}`, { exact: true })
+    .getByText(`PayPal POS · ${dictionary.integrationPage.manage}`, {
+      exact: true,
+    })
     .click()
   await expect(
     panel.getByText(text.automaticEnabled, { exact: true }),
@@ -179,7 +181,9 @@ try {
   })
   await ownerPage.reload()
   await ownerPage
-    .getByText(`Zettle · ${dictionary.integrationPage.manage}`, { exact: true })
+    .getByText(`PayPal POS · ${dictionary.integrationPage.manage}`, {
+      exact: true,
+    })
     .click()
   await expect(
     panel.getByText(new RegExp(text.automaticOutcomes.waiting)),

@@ -1,3 +1,4 @@
+import { verifyState } from '@/lib/platform/credentials'
 import { NextResponse } from 'next/server'
 import { platformContext } from '@/lib/platform/context'
 import {
@@ -14,7 +15,7 @@ export async function GET(request: Request) {
   if (!origin) return new Response(null, { status: 403 })
   const back = (query: string) => {
     const response = NextResponse.redirect(
-      new URL(`/intake/accounting?view=settings&fortnox=${query}`, origin),
+      new URL(`/intake/integrations?fortnox=${query}`, origin),
     )
     response.cookies.set(STATE_COOKIE, '', {
       path: '/api/integrations/fortnox',
@@ -35,6 +36,12 @@ export async function GET(request: Request) {
       .find((c) => c.startsWith(`${STATE_COOKIE}=`))
       ?.slice(STATE_COOKIE.length + 1) ?? null
   try {
+    const bound = verifyState(
+      'fortnox-connection',
+      params.get('state'),
+      process.env,
+    )
+    if (bound && bound.tenantId !== ctx.active.id) return back('TENANT_CHANGED')
     const result = await completeFortnoxConnection(
       ctx.client,
       { code, state: params.get('state'), cookieState },

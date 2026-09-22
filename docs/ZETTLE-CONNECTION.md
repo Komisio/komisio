@@ -1,4 +1,20 @@
-# Zettle API-key pilot connection
+# PayPal POS connection
+
+## Store-owned accounts
+
+The integrations page uses the PayPal POS name; provider codes and API routes
+remain `zettle`. Owner/admin can enter a client ID and API key for their own
+account. The server exchanges the key, verifies the merchant through users/self,
+and stores tenant-bound AES-GCM ciphertext using KOMISIO_CREDENTIAL_KEY.
+Migration 20260922140000 must be applied before this application version.
+Credentials are never returned to the browser or written to audit events.
+Replacing credentials retains the merchant pin, including an existing live-pull
+connection. Connecting does not enable synchronization or an automation grant.
+An accepted zettle_pull automation grant can read only its tenant's credentials.
+
+The deployment credential configuration below remains a legacy fallback for its
+explicitly bound tenant only. A stored tenant connection takes precedence.
+
 
 The owner supplied clientId and an API key in Vercel, not a client secret.
 The official [assertion grant](https://developer.zettle.com/docs/api/oauth/user-guides/set-up-app-authorisation/set-up-authorisation-assertion-grant)
@@ -7,7 +23,7 @@ exchanges that key for a short-lived access token. The server then calls
 whether it matches a configured pin reach the browser. Neither credential,
 access token, provider error body nor user profile is logged or returned.
 
-## Configuration and verification
+## Legacy deployment configuration and verification
 
 In the staging project's Production environment, configure server-only variables:
 
@@ -21,7 +37,7 @@ In the staging project's Production environment, configure server-only variables
 Publish after the configuration is saved. As owner/admin of the selected store,
 open Intake → Zettle integration → Check Zettle connection. Existing MFA and
 SQL tenant-role checks apply before the adapter receives credentials. The request
-body accepts a tenant ID only; this is not a credential upload endpoint. Requests
+body accepts a tenant ID for diagnostics or tenant-scoped credentials for setup. Requests
 with a foreign origin, switched tenant, anonymous identity or insufficient role
 are denied. There is no default pilot credential for all stores.
 
@@ -35,9 +51,9 @@ The existing synthetic synchronization remains loopback-only.
 
 Current pilot secrets remain in Vercel; no new SQL credential table or service-role
 client. The server-side environment is a single explicit pilot slot, not the final
-self-service model. Future per-tenant connection work needs an appropriate Zettle
-partner-hosted authorization flow, encrypted credential lifecycle, grant/revoke,
-merchant binding, rotation and audit. The app's normal membership model remains
+self-service model. A partner-hosted OAuth authorization flow remains future
+work; the current setup uses merchant-supplied API keys. Key revocation takes
+place in PayPal POS. The app's normal membership model remains
 unchanged. Do not extend the pilot by falling back across tenants.
 
 ## Verification and release
@@ -50,7 +66,7 @@ route alongside the full existing synthetic product/sale loop.
 Local command: set `KOMISIO_INTAKE_ENABLED=true`, configure local Supabase and run
 `node node_modules/@playwright/test/cli.js test tests/e2e/zettle.spec.ts`.
 No real API key is needed for automated tests. Never use the pilot credentials in
-CI or fixtures. No migration is required. If necessary, remove the pilot tenant
+CI or fixtures. The legacy environment-only diagnostic needs no additional migration. If necessary, remove the pilot tenant
 variable and redeploy to disable diagnostics; no financial rollback is involved.
 
 ## Missing check button

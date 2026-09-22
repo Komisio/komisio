@@ -258,7 +258,7 @@ describe('Shopify cron boundary', () => {
       password: env.KOMISIO_AUTOMATION_PASSWORD,
     })
   })
-  it('never runs another store than the pilot', async () => {
+  it('runs accepted grants for stores beyond the former pilot', async () => {
     const f = cronFixture()
     f.rpc.mockResolvedValue({ error: null, data: [{ tenantId: other }] })
     f.rpc.mockResolvedValueOnce({ error: null, data: [] })
@@ -272,7 +272,7 @@ describe('Shopify cron boundary', () => {
         )
       ).status,
     ).toBe(200)
-    expect(f.run).not.toHaveBeenCalled()
+    expect(f.run).toHaveBeenCalledTimes(1)
   })
   it('signs out after a failed run without leaking its error', async () => {
     const f = cronFixture()

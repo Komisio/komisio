@@ -1,5 +1,18 @@
 # Shopify adapter
 
+## Store-owned accounts
+
+Each tenant can connect its own myshopify.com shop from /intake/integrations.
+The host configures SHOPIFY_CLIENT_ID, SHOPIFY_CLIENT_SECRET and
+KOMISIO_CREDENTIAL_KEY, and registers /api/integrations/shopify/callback
+with Shopify. A deployment pilot tenant is no longer required. The registered
+app must allow installation by the intended merchants. Owner/admin chooses
+the shop; signed state and Shopify's callback HMAC bind authorization to it
+and to the tenant. Tokens remain encrypted per tenant. Scheduled order pulls
+enumerate accepted tenant grants; connecting does not enable automation.
+Provider app approval/distribution is not proven by synthetic tests.
+
+
 Shopify is the second sales channel after Zettle (owner decision B9, after
 Zettle is stable). The adapter follows the same contract: accepted items go
 out as products with stock and photos, completed orders come back as sales

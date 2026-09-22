@@ -1,5 +1,18 @@
 # Fortnox connection
 
+## Store-owned accounts
+
+Each tenant can connect its own Fortnox company from /intake/integrations.
+The host configures FORTNOX_CLIENT_ID, FORTNOX_CLIENT_SECRET and
+KOMISIO_CREDENTIAL_KEY, and registers the /api/integrations/fortnox/callback
+URL with Fortnox. A deployment pilot tenant is no longer required.
+Owner/admin supplies the company name before OAuth; signed state binds it
+to the tenant. The callback verifies the company before storing encrypted
+tokens. Reconnecting retains the saved company database pin.
+Scheduled sending enumerates accepted tenant grants; connecting never enables
+automation or sends a voucher. Live authorization requires the host's registered
+OAuth integration; synthetic tests do not verify its registration or approval.
+
 ## Revision-bound refresh database prerequisite
 
 Migration `20260916100000` introduces `refresh_fortnox_tokens` for an already
@@ -39,7 +52,7 @@ the synthetic validation of this change.
 Migration `20260916110000` opens begin/complete/check-event commands to the
 accepted `fortnox_send` scope only. The worker signs in as the ordinary configured
 automation identity with the publishable key, accepts grants, lists its accepted
-stores, runs only the configured Fortnox pilot tenant, and signs out locally in
+stores, processes their explicitly authorized connections, and signs out locally in
 all cases. No service-role client or borrowed owner session is involved.
 
 An owner enables or disables the existing grant on accounting settings. The

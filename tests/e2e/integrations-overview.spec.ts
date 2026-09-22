@@ -16,11 +16,42 @@ test('connections overview shows simple setup guidance before detailed controls'
       page.getByRole('heading', { name: d.nav.integrations, exact: true }),
     ).toBeVisible()
     await expect(
-      page.getByRole('heading', { name: 'Zettle', exact: true }),
+      page.getByRole('heading', { name: 'PayPal POS', exact: true }),
     ).toBeVisible()
     await expect(
-      page.getByText(d.zettle.connectionConfigHint, { exact: true }),
+      page
+        .getByRole('region', { name: 'PayPal POS', exact: true })
+        .getByText(d.zettle.connectionConfigHint, { exact: true }),
     ).toBeVisible()
+    for (const category of [
+      d.integrationPage.pos,
+      d.integrationPage.ecommerce,
+      d.integrationPage.accounting,
+    ]) {
+      await expect(
+        page.getByRole('heading', { name: category, exact: true }),
+      ).toBeVisible()
+    }
+    await expect(
+      page
+        .getByRole('region', {
+          name: d.integrationPage.accounting,
+          exact: true,
+        })
+        .getByRole('heading', { name: d.fortnox.title, exact: true }),
+    ).toBeVisible()
+    await expect(
+      page
+        .getByRole('region', { name: d.integrationPage.ecommerce, exact: true })
+        .getByRole('heading', { name: d.shopify.title, exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole('link', { name: d.integrationPage.accountingSettings }),
+    ).toHaveAttribute('href', '/intake/accounting?view=settings')
+    expect(await page.locator('main').first().innerText()).not.toContain(
+      'Zettle',
+    )
+
     await expect(
       page.locator('.integration-details').first(),
     ).not.toHaveAttribute('open', '')
@@ -40,9 +71,18 @@ test('connections overview shows simple setup guidance before detailed controls'
       fullPage: true,
     })
     await page
-      .getByText(`Zettle · ${d.integrationPage.manage}`, { exact: true })
+      .getByText(`PayPal POS · ${d.integrationPage.manage}`, { exact: true })
       .click()
     await expect(page.getByText(d.zettle.recent, { exact: true })).toBeVisible()
+    await page.goto('/api/integrations/fortnox/callback?error=access_denied')
+    await expect(page).toHaveURL(
+      /\/intake\/integrations\?fortnox=FORTNOX_AUTH_REQUIRED$/,
+    )
+    await expect(
+      page
+        .getByRole('region', { name: d.fortnox.title, exact: true })
+        .getByRole('alert'),
+    ).toBeVisible()
   } finally {
     await f.close()
   }

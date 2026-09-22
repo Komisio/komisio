@@ -26,7 +26,8 @@ export function FortnoxConnection({
   const running = useRef(false)
   const [busy, setBusy] = useState(false),
     [message, setMessage] = useState(''),
-    [ok, setOk] = useState(false)
+    [ok, setOk] = useState(false),
+    [company, setCompany] = useState('')
   const errors = d.errors as Record<string, string>
   const when = (iso: string) =>
     new Date(iso).toLocaleString(intlLocale(locale), {
@@ -95,12 +96,22 @@ export function FortnoxConnection({
       ) : canConnect ? (
         <div className="row wrap">
           {!status.connected && (
-            <a
-              className="btn"
-              href={`/api/integrations/fortnox/connect?tenant=${tenantId}`}
-            >
-              {d.connect}
-            </a>
+            <form action="/api/integrations/fortnox/connect" method="get">
+              <input type="hidden" name="tenant" value={tenantId} />
+              <label>
+                {d.companyName}
+                <input
+                  name="company"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  required
+                  maxLength={200}
+                />
+              </label>
+              <Button type="submit" disabled={!company.trim()}>
+                {d.connect}
+              </Button>
+            </form>
           )}
           {status.connected && (
             <>

@@ -70,14 +70,14 @@ describe('credentials', () => {
 describe('fortnox adapter', () => {
   it('reports configuration issues in order', () => {
     expect(fortnoxIssue(tenant, fortnoxEnvironment({}))).toBe(
-      'connectionTenantMissing',
+      'connectionClientMissing',
     )
     expect(
       fortnoxIssue(
         '20000000-0000-4000-8000-000000000002',
         fortnoxEnvironment(env),
       ),
-    ).toBe('connectionUnavailable')
+    ).toBeNull()
     expect(
       fortnoxIssue(
         tenant,
@@ -89,7 +89,7 @@ describe('fortnox adapter', () => {
         tenant,
         fortnoxEnvironment({ ...env, FORTNOX_EXPECTED_COMPANY_NAME: '' }),
       ),
-    ).toBe('connectionCompanyNameMissing')
+    ).toBeNull()
     expect(fortnoxIssue(tenant, fortnoxEnvironment(env))).toBeNull()
   })
   it('builds the authorisation url with offline access', () => {
@@ -430,7 +430,7 @@ describe('fortnox connection engine', () => {
     const { client: c, calls } = client('owner', { connection })
     const result = await checkFortnoxConnection(c, tenant, env, http)
     expect(result.companyName).toBe('Komisio Test')
-    expect(result.pinnedDatabase).toBe(false)
+    expect(result.pinnedDatabase).toBe(true)
     expect(String((http.mock.calls[0][1] as RequestInit).body)).toContain(
       'refresh_token=old-refresh',
     )

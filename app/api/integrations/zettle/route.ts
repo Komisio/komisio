@@ -8,7 +8,7 @@ import {
   pullZettlePurchases,
   abandonZettleWindow,
 } from '@/lib/engine/zettle-live'
-import { pilotEnvironment } from '@/extensions/zettle/auth'
+import { paypalEnvironment } from '@/lib/engine/paypal-credentials'
 import { NextResponse } from 'next/server'
 import { platformContext } from '@/lib/platform/context'
 import { boundedJson } from '@/lib/http/bounded-json'
@@ -92,7 +92,7 @@ export async function POST(request: Request) {
           c.tenantId,
           c.requestId,
           c.itemId,
-          pilotEnvironment(process.env),
+          await paypalEnvironment(ctx.client, c.tenantId, process.env),
         ),
       )
     }
@@ -103,7 +103,7 @@ export async function POST(request: Request) {
         const cutover = await enableZettlePull(
           ctx.client,
           c.tenantId,
-          pilotEnvironment(process.env),
+          await paypalEnvironment(ctx.client, c.tenantId, process.env),
         )
         return reply({ id: c.requestId, cutover })
       }
@@ -112,7 +112,7 @@ export async function POST(request: Request) {
           ctx.client,
           c.tenantId,
           c.requestId,
-          pilotEnvironment(process.env),
+          await paypalEnvironment(ctx.client, c.tenantId, process.env),
         ),
       )
     }

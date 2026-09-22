@@ -55,7 +55,7 @@ test('accounting page shows the Fortnox connection state and records a refused s
       fortnox.getByText(d.fortnox.notConnected, { exact: true }),
     ).toBeVisible()
     await expect(
-      fortnox.getByText(d.fortnox.connectionTenantMissing, { exact: true }),
+      fortnox.getByText(d.fortnox.connectionClientMissing, { exact: true }),
     ).toBeVisible()
     await page.goto('/intake/accounting')
     const exports = page.getByRole('region', {

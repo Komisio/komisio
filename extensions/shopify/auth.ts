@@ -36,18 +36,13 @@ export function shopifyEnvironment(
   }
 }
 
-/** Fixed reason codes only; credentials are inspected only after the tenant match. */
+/** Host OAuth application readiness; membership and account binding are enforced by the engine. */
 export function shopifyIssue(
   tenantId: string,
   source: ShopifyEnvironment,
 ): ShopifyIssue | null {
   const env = shopifyEnvironment(source)
-  if (!env.SHOPIFY_PILOT_TENANT_ID) return 'connectionTenantMissing'
-  if (
-    !z.uuid().safeParse(tenantId).success ||
-    env.SHOPIFY_PILOT_TENANT_ID !== tenantId
-  )
-    return 'connectionUnavailable'
+  if (!z.uuid().safeParse(tenantId).success) return 'connectionUnavailable'
   if (!env.SHOPIFY_CLIENT_ID || /[\s]/.test(env.SHOPIFY_CLIENT_ID))
     return 'connectionClientMissing'
   if (!env.SHOPIFY_CLIENT_SECRET) return 'connectionSecretMissing'

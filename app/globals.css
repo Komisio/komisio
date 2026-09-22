@@ -2498,3 +2498,11 @@ small {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+.integration-group {
+  margin: 2rem 0;
+}
+.integration-group > .card {
+  width: 100%;
+  max-width: none;
+}

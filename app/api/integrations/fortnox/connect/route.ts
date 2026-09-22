@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   const ctx = await platformContext()
   if (!ctx || ctx.mfaRequired || !ctx.active)
     return NextResponse.redirect(
-      new URL('/login?next=%2Fintake%2Faccounting', origin),
+      new URL('/login?next=%2Fintake%2Fintegrations', origin),
     )
   if (!['owner', 'admin'].includes(ctx.active.role))
     return new Response(null, { status: 403 })
@@ -47,7 +47,7 @@ export async function GET(request: Request) {
     const code = e instanceof Error ? e.message : 'REQUEST_FAILED'
     return NextResponse.redirect(
       new URL(
-        `/intake/accounting?view=settings&fortnox=${encodeURIComponent(code)}`,
+        `/intake/integrations?fortnox=${encodeURIComponent(code)}`,
         origin,
       ),
     )

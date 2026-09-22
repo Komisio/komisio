@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   if (!origin) return new Response(null, { status: 403 })
   const back = (query: string) => {
     const response = NextResponse.redirect(
-      new URL(`/intake/accounting?view=settings&fortnox=${query}`, origin),
+      new URL(`/intake/integrations?fortnox=${query}`, origin),
     )
     response.cookies.set(STATE_COOKIE, '', {
       path: '/api/integrations/fortnox',

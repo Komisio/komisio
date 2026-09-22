@@ -1,5 +1,13 @@
 # Open questions
 
+Integration self-service (2026-09-22): the owner requested PayPal POS,
+Shopify and Fortnox setup from the integrations page. The page now groups
+existing adapters; arbitrary stores still cannot connect their own accounts.
+Confirm self-service scope before replacing fixed deployment tenant bindings
+with tenant-specific credentials and verified external-account ownership.
+PayPal POS currently reads credentials from the deployment, while Shopify
+and Fortnox already persist encrypted OAuth tokens per tenant.
+
 Store guide (2026-09-21): the owner approved private tenant-bound answer
 versions, owner/admin saves and member reads. The short guide is translated
 into all eight UI languages; stored answer codes are language-independent.

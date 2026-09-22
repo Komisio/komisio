@@ -16,7 +16,7 @@ test('Zettle product export, price update, checkout, automatic credit and concur
     await f.commit()
     await page.goto('/intake/integrations')
     await page
-      .getByText(`Zettle · ${d.integrationPage.manage}`, { exact: true })
+      .getByText(`PayPal POS · ${d.integrationPage.manage}`, { exact: true })
       .click()
     await expect(page.getByText(d.zettle.fixture)).toBeVisible()
     await expect(
@@ -151,7 +151,7 @@ test('Zettle product export, price update, checkout, automatic credit and concur
     )
     await page.reload()
     await page
-      .getByText(`Zettle · ${d.integrationPage.manage}`, { exact: true })
+      .getByText(`PayPal POS · ${d.integrationPage.manage}`, { exact: true })
       .click()
     await page.getByRole('button', { name: d.zettle.sync, exact: true }).click()
     await expect
@@ -189,7 +189,7 @@ test('Zettle product export, price update, checkout, automatic credit and concur
     for (const r of responses) expect(r.status(), await r.text()).toBe(200)
     await page.reload()
     await page
-      .getByText(`Zettle · ${d.integrationPage.manage}`, { exact: true })
+      .getByText(`PayPal POS · ${d.integrationPage.manage}`, { exact: true })
       .click()
     await page.getByRole('link', { name: new RegExp(d.zettle.open) }).click()
     await expect(
@@ -245,7 +245,7 @@ test('Zettle product export, price update, checkout, automatic credit and concur
     )
     await page.goto('/intake/integrations')
     await page
-      .getByText(`Zettle · ${d.integrationPage.manage}`, { exact: true })
+      .getByText(`PayPal POS · ${d.integrationPage.manage}`, { exact: true })
       .click()
     await expect(
       page.getByRole('link', { name: new RegExp(d.zettle.open) }),

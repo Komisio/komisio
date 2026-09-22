@@ -508,7 +508,7 @@
     "expiry": "Den publicerade versionen gäller i 24 timmar. Ingen länk eller e-post skickas automatiskt.",
     "publish": "Publicera granskat underlag",
     "published": "Denna källversion är publicerad. Hantera länken nedan.",
-    "sellerStep": "3. Säljarens beslut",
+    "sellerStep": "Säljarens beslut",
     "exactTerms": "Visa exakt de villkor säljaren får läsa",
     "stale": "Detta underlag är inaktuellt eller har löpt ut. Publicera ett nytt underlag innan du delar en länk.",
     "awaiting": "Inget svar är sparat för denna version.",
@@ -649,6 +649,19 @@
       "aiHelp": "Om AI och dina bilder",
       "unsaved": "AI-förslaget är inte sparat ännu.",
       "completeManually": "Komplettera beskrivning och pris i formuläret nedan för att gå vidare."
+    },
+    "storeReview": {
+      "step": "Granska underlaget",
+      "stepHint": "Kontrollera beskrivningen och priset.",
+      "title": "Granskat underlag",
+      "saved": "Underlaget är granskat.",
+      "publish": "Spara granskat underlag",
+      "confirmNoTerms": "Jag har granskat beskrivningen, bilderna och prisunderlaget.",
+      "aiNotice": "Kontrollera varje uppgift och priset. Du som personal ansvarar för granskningen.",
+      "stale": "Underlaget behöver förnyas innan varan kan registreras.",
+      "noApproval": "Butiken bestämmer priset. Säljarens godkännande behövs inte.",
+      "optionalShare": "Valfri delning med säljaren",
+      "registered": "Varan är registrerad"
     }
   },
   "operations": {

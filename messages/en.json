@@ -508,7 +508,7 @@
     "expiry": "The published version is valid for 24 hours. No link or email is sent automatically.",
     "publish": "Publish reviewed proposal",
     "published": "This source version is published. Manage the link below.",
-    "sellerStep": "3. Seller decision",
+    "sellerStep": "Seller decision",
     "exactTerms": "Show the exact terms the seller will read",
     "stale": "This review is stale or expired. Publish a new review before sharing a link.",
     "awaiting": "No response has been saved for this version.",
@@ -649,6 +649,19 @@
       "aiHelp": "About AI and your photos",
       "unsaved": "The AI suggestion has not been saved yet.",
       "completeManually": "Complete the description and price in the form below to continue."
+    },
+    "storeReview": {
+      "step": "Review the details",
+      "stepHint": "Check the description and price.",
+      "title": "Reviewed details",
+      "saved": "The details have been reviewed.",
+      "publish": "Save reviewed details",
+      "confirmNoTerms": "I have reviewed the description, photos and price evidence.",
+      "aiNotice": "Check each detail and the price. You are responsible for the staff review.",
+      "stale": "Renew the details before registering the item.",
+      "noApproval": "The store sets the price. Seller approval is not required.",
+      "optionalShare": "Optional sharing with the seller",
+      "registered": "Item registered"
     }
   },
   "operations": {

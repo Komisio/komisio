@@ -83,7 +83,7 @@ describe('shopify auth', () => {
     expect(url.host).toBe(shop)
     expect(url.searchParams.get('client_id')).toBe('synthetic-client')
     expect(url.searchParams.get('scope')).toBe(
-      'read_orders,write_products,write_inventory,read_locations',
+      'read_orders,write_products,write_inventory,read_locations,read_publications,write_publications',
     )
   })
   it('reports host configuration issues and permits other valid tenants', () => {

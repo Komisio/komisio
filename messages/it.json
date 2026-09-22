@@ -1850,7 +1850,9 @@
       "quantity": "più di un'unità su una riga",
       "unknown_sku": "un prodotto che non è un articolo Komisio",
       "missing_item": "l'articolo non è in questo negozio",
-      "ambiguous_item": "lo sku corrisponde a più di un articolo"
+      "ambiguous_item": "lo sku corrisponde a più di un articolo",
+      "channel": "Fuori dai canali di vendita selezionati",
+      "location": "Sede della cassa diversa o sconosciuta"
     },
     "productsTitle": "Prodotti in Shopify",
     "productsIntro": "Gli articoli accettati in vendita diventano prodotti nel negozio online: un prodotto con una variante, l'id dell'articolo come sku, un'unità nella sede del negozio online. Un ribasso aggiorna il prezzo del prodotto. Gli articoli venduti e terminati non vengono offerti; gli ordini vengono letti in un passo successivo.",
@@ -1875,7 +1877,7 @@
       "unknown": "risposta persa, nuovo tentativo alla prossima esportazione"
     },
     "title": "Shopify",
-    "intro": "Collega il negozio al suo negozio online Shopify. Questo passo si limita a collegare, verificare e scollegare; prodotti e ordini seguono.",
+    "intro": "Usate un unico collegamento Shopify per il negozio online, la cassa o entrambi.",
     "notConnected": "Nessun negozio Shopify è collegato.",
     "connectedTo": "Collegato a",
     "since": "dal",
@@ -1953,9 +1955,35 @@
       "SHOPIFY_STATE_INVALID": "Il tentativo di connessione è scaduto o non è iniziato qui. Collega di nuovo.",
       "CREDENTIAL_KEY_MISSING": "Nella configurazione distribuita manca la chiave delle credenziali (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Il token salvato non può essere letto con la chiave delle credenziali attuale. Scollega e collega di nuovo.",
-      "REQUEST_FAILED": "La richiesta non è riuscita. Riprova più tardi."
+      "REQUEST_FAILED": "La richiesta non è riuscita. Riprova più tardi.",
+      "SHOPIFY_SETTINGS_CHANGED": "Le impostazioni sono cambiate. Ricaricate la pagina.",
+      "SHOPIFY_SETTINGS_LOCKED": "Le impostazioni sono bloccate perché la sincronizzazione è iniziata.",
+      "SHOPIFY_SETTINGS_UNAVAILABLE": "Impossibile leggere le impostazioni. Riprovate.",
+      "SHOPIFY_PUBLICATION_INVALID": "Scegliete un canale di pubblicazione del negozio Shopify collegato.",
+      "SHOPIFY_PUBLICATION_FAILED": "Il prodotto è stato creato o aggiornato, ma non è stato possibile pubblicarlo. Ricollegate Shopify e riprovate."
     },
-    "details": "Dettagli della connessione"
+    "details": "Dettagli della connessione",
+    "setup": {
+      "title": "Dove volete vendere?",
+      "intro": "Usate un unico collegamento Shopify per il negozio online, la cassa o entrambi.",
+      "modes": {
+        "web": "Negozio online",
+        "pos": "Shopify POS",
+        "both": "Negozio online e Shopify POS"
+      },
+      "mode": "Canali di vendita",
+      "location": "Sede di inventario in Shopify",
+      "choose": "Seleziona…",
+      "webPublication": "Canale di pubblicazione del negozio online",
+      "posPublication": "Canale di pubblicazione della cassa",
+      "configure": "Scegli canali e sede",
+      "save": "Salva impostazioni",
+      "lockHint": "Le scelte vengono bloccate alla prima sincronizzazione per evitare spostamenti involontari di prodotti tra sedi.",
+      "locked": "La sincronizzazione è iniziata. Contattate il supporto per cambiare canali o sede.",
+      "legacy": "Questo collegamento usa impostazioni precedenti. Contattate il supporto per scegliere canali e sede.",
+      "permissions": "Ricollegate Shopify se richiede i permessi per leggere e pubblicare i canali di vendita.",
+      "channel": "Canale / sede"
+    }
   },
   "fortnox": {
     "reconcileTitle": "Conferma una registrazione esistente",
@@ -2460,7 +2488,7 @@
     "manage": "Sincronizzazione e cronologia",
     "adminOnly": "Un proprietario o amministratore può gestire le connessioni.",
     "pos": "Punto vendita (POS)",
-    "ecommerce": "E-commerce",
+    "ecommerce": "Negozio online e cassa",
     "accounting": "Contabilità",
     "accountingSettings": "Apri le impostazioni contabili"
   }

@@ -32,6 +32,9 @@ const json = (body: unknown, status = 200) =>
 
 function setup(
   options: {
+    syncSettings?: unknown
+    publicationError?: boolean
+    extraVariant?: boolean
     expired?: boolean
     refreshToken?: string | null
     knownProduct?: string | null
@@ -91,7 +94,10 @@ function setup(
       eq: () => ({
         eq: () => ({
           single: async () => ({
-            data: { payload, product_gid: options.knownProduct ?? null },
+            data: {
+              payload: { ...payload, syncSettings: options.syncSettings },
+              product_gid: options.knownProduct ?? null,
+            },
             error: null,
           }),
         }),
@@ -139,15 +145,36 @@ function setup(
         return json({
           data: {
             productVariants: {
-              nodes: options.existingSku
-                ? [
-                    {
-                      id: 'gid://shopify/ProductVariant/9',
-                      sku: payload.sku,
-                      product: { id: 'gid://shopify/Product/9' },
-                      inventoryItem: { id: 'gid://shopify/InventoryItem/9' },
-                    },
-                  ]
+              nodes:
+                options.existingSku || options.knownProduct
+                  ? [
+                      {
+                        id: 'gid://shopify/ProductVariant/9',
+                        sku: payload.sku,
+                        product: {
+                          id: options.knownProduct ?? 'gid://shopify/Product/9',
+                          variants: {
+                            nodes: [
+                              { id: 'gid://shopify/ProductVariant/9' },
+                              ...(options.extraVariant
+                                ? [{ id: 'gid://shopify/ProductVariant/10' }]
+                                : []),
+                            ],
+                          },
+                        },
+                        inventoryItem: { id: 'gid://shopify/InventoryItem/9' },
+                      },
+                    ]
+                  : [],
+            },
+          },
+        })
+      if (body.includes('publishablePublish'))
+        return json({
+          data: {
+            publishablePublish: {
+              userErrors: options.publicationError
+                ? [{ message: 'Denied' }]
                 : [],
             },
           },
@@ -228,7 +255,12 @@ describe('productSet input', () => {
       ],
     })
     expect(
-      productSetInput(payload, 'x', 'gid://shopify/Product/1').identifier,
+      productSetInput(
+        payload,
+        'x',
+        'gid://shopify/Product/1',
+        'gid://shopify/ProductVariant/9',
+      ).identifier,
     ).toEqual({ id: 'gid://shopify/Product/1' })
   })
   it('prefers the active location that fulfils online orders', () => {
@@ -244,6 +276,61 @@ describe('productSet input', () => {
 })
 
 describe('exportShopifyItem', () => {
+  const config = {
+    mode: 'pos',
+    locationId: 'gid://shopify/Location/1',
+    locationName: 'Warehouse',
+    webPublicationId: null,
+    posPublicationId: 'gid://shopify/Publication/2',
+  }
+  it('uses the recorded location and publishes to the selected POS channel', async () => {
+    const s = setup({ syncSettings: config })
+    await s.run()
+    const product = JSON.parse(
+      s.requests.find((r) => r.body.includes('productSet('))!.body,
+    ).variables.input.variants[0]
+    expect(product.barcode).toBe(payload.reference)
+    expect(product.inventoryQuantities[0].locationId).toBe(config.locationId)
+    expect(
+      JSON.parse(
+        s.requests.find((r) => r.body.includes('publishablePublish'))!.body,
+      ).variables.input,
+    ).toEqual([{ publicationId: config.posPublicationId }])
+  })
+  it.each([{ knownProduct: 'gid://shopify/Product/1' }, { existingSku: true }])(
+    'never replenishes an existing or recovered product',
+    async (options) => {
+      const s = setup({ ...options, syncSettings: config })
+      await s.run()
+      const product = JSON.parse(
+        s.requests.find((r) => r.body.includes('productSet('))!.body,
+      ).variables.input.variants[0]
+      expect(product).not.toHaveProperty('inventoryQuantities')
+      expect(product.id).toBe('gid://shopify/ProductVariant/9')
+    },
+  )
+  it('refuses products with extra variants instead of removing their stock', async () => {
+    const s = setup({ existingSku: true, extraVariant: true })
+    await expect(s.run()).rejects.toThrow('SHOPIFY_SKU_AMBIGUOUS')
+    expect(s.requests.some((r) => r.body.includes('productSet('))).toBe(false)
+  })
+  it('records uncertain export if publication fails after product creation', async () => {
+    const s = setup({ syncSettings: config, publicationError: true })
+    await expect(s.run()).rejects.toThrow('SHOPIFY_PUBLICATION_FAILED')
+    expect(s.outcomes).toEqual([
+      expect.objectContaining({
+        p_status: 'unknown',
+        p_error: 'SHOPIFY_PUBLICATION_FAILED',
+      }),
+    ])
+  })
+  it('does not fall back to a different active warehouse', async () => {
+    const s = setup({
+      syncSettings: { ...config, locationId: 'gid://shopify/Location/999' },
+    })
+    await expect(s.run()).rejects.toThrow('SHOPIFY_NO_LOCATION')
+    expect(s.requests.some((r) => r.body.includes('productSet('))).toBe(false)
+  })
   it('creates the product and records the synced outcome with the ids', async () => {
     const s = setup()
     const r = await s.run()
@@ -277,7 +364,7 @@ describe('exportShopifyItem', () => {
     expect(r.updated).toBe(true)
     expect(
       s.requests.some((q) => q.body.includes('productVariants(first')),
-    ).toBe(false)
+    ).toBe(true)
     const set = s.requests.find((q) => q.body.includes('productSet('))!
     expect(JSON.parse(set.body).variables.identifier).toEqual({
       id: 'gid://shopify/Product/1',

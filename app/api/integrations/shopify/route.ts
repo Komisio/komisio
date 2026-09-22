@@ -13,6 +13,11 @@ import {
   pullShopifyOrders,
   retryShopifyOrder,
 } from '@/lib/engine/shopify-orders'
+import {
+  shopifySettings,
+  shopifySetupOptions,
+  saveShopifySettings,
+} from '@/lib/engine/shopify-settings'
 import { ShopifyUserError } from '@/extensions/shopify/products'
 
 /** Check the connected shop, disconnect, export one item as a product, pull one page of paid orders or retry one order; owner or admin. */
@@ -42,12 +47,16 @@ export async function POST(request: Request) {
       .strictObject({
         tenantId: z.uuid(),
         action: z.enum([
+          'setupOptions',
+          'saveSettings',
           'check',
           'disconnect',
           'exportItem',
           'pullOrders',
           'retryOrder',
         ]),
+        settings: shopifySettings.optional(),
+        revision: z.string().regex(/^\d+$/).optional(),
         itemId: z.guid().optional(),
         orderId: z.uuid().optional(),
         requestId: z.uuid().optional(),
@@ -60,6 +69,23 @@ export async function POST(request: Request) {
       return reply({ error: 'INVALID_INPUT' }, 400)
     if (parsed.data.tenantId !== ctx.active.id)
       return reply({ error: 'TENANT_CHANGED' }, 409)
+    if (parsed.data.action === 'setupOptions')
+      return reply(
+        await shopifySetupOptions(ctx.client, ctx.active.id, process.env),
+      )
+    if (parsed.data.action === 'saveSettings') {
+      if (!parsed.data.settings || parsed.data.revision === undefined)
+        return reply({ error: 'INVALID_INPUT' }, 400)
+      return reply(
+        await saveShopifySettings(
+          ctx.client,
+          ctx.active.id,
+          parsed.data.settings,
+          parsed.data.revision,
+          process.env,
+        ),
+      )
+    }
     if (parsed.data.action === 'disconnect')
       return reply(await disconnectShopify(ctx.client, ctx.active.id))
     if (parsed.data.action === 'pullOrders')

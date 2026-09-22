@@ -1850,7 +1850,9 @@
       "quantity": "yli yksi kappale rivillä",
       "unknown_sku": "tuote, joka ei ole Komisio-tuote",
       "missing_item": "tuote ei ole tässä kaupassa",
-      "ambiguous_item": "sku täsmää useampaan kuin yhteen tuotteeseen"
+      "ambiguous_item": "sku täsmää useampaan kuin yhteen tuotteeseen",
+      "channel": "Valittujen myyntikanavien ulkopuolella",
+      "location": "Eri tai tuntematon kassasijainti"
     },
     "productsTitle": "Tuotteet Shopifyssa",
     "productsIntro": "Hyväksytyt myynnissä olevat tuotteet muuttuvat verkkokaupan tuotteiksi: yksi tuote yhdellä variantilla, tuotteen tunnus sku:na, yksi kappale verkkokaupan sijainnissa. Alennus päivittää tuotteen hinnan. Myytyjä ja päätettyjä tuotteita ei tarjota; tilaukset luetaan myöhemmässä vaiheessa.",
@@ -1875,7 +1877,7 @@
       "unknown": "vastaus katosi, yritetään uudelleen seuraavassa viennissä"
     },
     "title": "Shopify",
-    "intro": "Yhdistä kauppa sen Shopify-verkkokauppaan. Tämä vaihe vain yhdistää, tarkistaa ja irrottaa; tuotteet ja tilaukset seuraavat.",
+    "intro": "Käytä samaa Shopify-yhteyttä verkkokauppaan, kassaan tai molempiin.",
     "notConnected": "Shopify-verkkokauppaa ei ole yhdistetty.",
     "connectedTo": "Yhdistetty",
     "since": "alkaen",
@@ -1953,9 +1955,35 @@
       "SHOPIFY_STATE_INVALID": "Yhdistämisyritys vanhentui tai se ei alkanut täältä. Yhdistä uudelleen.",
       "CREDENTIAL_KEY_MISSING": "Asennuksen määrityksistä puuttuu tunnistetietojen avain (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Tallennettua tunnusta ei voi lukea nykyisellä tunnistetietojen avaimella. Irrota ja yhdistä uudelleen.",
-      "REQUEST_FAILED": "Pyyntö epäonnistui. Yritä myöhemmin uudelleen."
+      "REQUEST_FAILED": "Pyyntö epäonnistui. Yritä myöhemmin uudelleen.",
+      "SHOPIFY_SETTINGS_CHANGED": "Asetukset ovat muuttuneet. Lataa sivu uudelleen.",
+      "SHOPIFY_SETTINGS_LOCKED": "Asetukset on lukittu, koska synkronointi on alkanut.",
+      "SHOPIFY_SETTINGS_UNAVAILABLE": "Asetuksia ei voitu lukea. Yritä uudelleen.",
+      "SHOPIFY_PUBLICATION_INVALID": "Valitse julkaisukanava yhdistetystä Shopify-kaupasta.",
+      "SHOPIFY_PUBLICATION_FAILED": "Tuote luotiin tai päivitettiin, mutta sitä ei voitu julkaista. Yhdistä uudelleen ja yritä vielä kerran."
     },
-    "details": "Yhteyden tiedot"
+    "details": "Yhteyden tiedot",
+    "setup": {
+      "title": "Missä haluatte myydä?",
+      "intro": "Käytä samaa Shopify-yhteyttä verkkokauppaan, kassaan tai molempiin.",
+      "modes": {
+        "web": "Verkkokauppa",
+        "pos": "Shopify POS",
+        "both": "Verkkokauppa ja Shopify POS"
+      },
+      "mode": "Myyntikanavat",
+      "location": "Shopify-varastosijainti",
+      "choose": "Valitse…",
+      "webPublication": "Verkkokaupan julkaisukanava",
+      "posPublication": "Kassan julkaisukanava",
+      "configure": "Valitse kanavat ja varastosijainti",
+      "save": "Tallenna asetukset",
+      "lockHint": "Valinnat lukitaan ensimmäisen synkronoinnin alkaessa, jotta tuotteet eivät siirry vahingossa varastosta toiseen.",
+      "locked": "Synkronointi on alkanut. Ota yhteyttä tukeen muuttaaksesi kanavia tai varastosijaintia.",
+      "legacy": "Tämä yhteys käyttää aiempia asetuksia. Ota yhteyttä tukeen valitaksesi kanavat ja varastosijainnin.",
+      "permissions": "Yhdistä uudelleen, jos Shopify pyytää lupaa myyntikanavien lukemiseen ja julkaisemiseen.",
+      "channel": "Kanava / varastosijainti"
+    }
   },
   "fortnox": {
     "reconcileTitle": "Vahvista olemassa oleva tosite",
@@ -2460,7 +2488,7 @@
     "manage": "Synkronointi ja historia",
     "adminOnly": "Omistaja tai ylläpitäjä voi hallita yhteyksiä.",
     "pos": "Kassajärjestelmä (POS)",
-    "ecommerce": "Verkkokauppa",
+    "ecommerce": "Verkkokauppa ja kassa",
     "accounting": "Kirjanpito",
     "accountingSettings": "Avaa kirjanpidon asetukset"
   }

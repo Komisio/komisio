@@ -13,6 +13,11 @@ const orderNode = z.object({
   name: z.string().min(1).max(40),
   createdAt: z.string(),
   updatedAt: z.string(),
+  sourceName: z.string().min(1).max(100).nullable().optional(),
+  retailLocation: z
+    .object({ id: z.string().regex(/^gid:\/\/shopify\/Location\/\d{1,30}$/) })
+    .nullable()
+    .optional(),
   displayFinancialStatus: z.string().nullable(),
   test: z.boolean(),
   cancelledAt: z.string().nullable(),
@@ -57,7 +62,7 @@ export type OrderNode = z.input<typeof orderNode>
 const ORDERS = `query PaidOrders($q: String!, $first: Int!) {
   orders(first: $first, query: $q, sortKey: UPDATED_AT) {
     nodes {
-      id name createdAt updatedAt displayFinancialStatus test cancelledAt
+      id name createdAt updatedAt displayFinancialStatus test cancelledAt sourceName retailLocation { id }
       lineItems(first: 50) { nodes { sku title quantity discountedTotalSet { shopMoney { amount currencyCode } } } }
       refunds(first: 20) { id createdAt totalRefundedSet { shopMoney { amount currencyCode } }
         refundLineItems(first: 50) { nodes { lineItem { sku } quantity subtotalSet { shopMoney { amount currencyCode } } totalTaxSet { shopMoney { amount currencyCode } } } } }
@@ -99,6 +104,8 @@ export function toOre(amount: string) {
 }
 
 export const orderEvidence = z.object({
+  sourceName: z.string().nullable().optional(),
+  retailLocationGid: z.string().nullable().optional(),
   orderGid: z.string(),
   name: z.string(),
   occurredAt: z.string(),
@@ -154,6 +161,10 @@ export function orderToEvidence(order: OrderNode): OrderEvidence {
   }))
   if (lines.length === 0) throw new Error('SHOPIFY_ORDER_EMPTY')
   return orderEvidence.parse({
+    sourceName: order.sourceName,
+    retailLocationGid:
+      order.retailLocation?.id ??
+      (order.retailLocation === null ? null : undefined),
     orderGid: order.id,
     name: order.name,
     occurredAt: new Date(order.createdAt).toISOString(),

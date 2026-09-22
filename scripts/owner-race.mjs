@@ -1,3 +1,4 @@
+import { raceShopifySettings } from './shopify-settings-race.mjs'
 import { raceStoreCreation } from './store-creation-race.mjs'
 import { raceSellerProfile } from './seller-profile-race.mjs'
 import { raceZettleStock } from './zettle-stock-race.mjs'
@@ -102,6 +103,7 @@ try {
   await raceStorePolicy({ setup, sessions, tenant })
   await raceStoreGuide({ setup, sessions, tenant })
   await racePayPalCredentials({ setup, sessions, tenant })
+  await raceShopifySettings({ setup, sessions, tenant })
   await raceSellerProfile({ setup, sessions, tenant })
   await raceLabelPrintRule({ setup, sessions, tenant })
   await setup.query('begin')

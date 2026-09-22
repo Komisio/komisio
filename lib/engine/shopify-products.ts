@@ -1,3 +1,4 @@
+import { publishProduct } from '../../extensions/shopify/publications'
 import { randomUUID } from 'node:crypto'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
@@ -132,21 +133,28 @@ export async function exportShopifyItem(
   // Preflight: a location to hold the unit, and whether the sku already exists
   // (an earlier unknown outcome, or a product created by hand in the shop).
   let existing: string | null = stored.data.product_gid ?? null
+  let variantId: string | null = null
   let locationId: string
   try {
-    const place = chooseLocation(
-      await listLocations(row.shopDomain, accessToken, http),
-    )
+    const places = await listLocations(row.shopDomain, accessToken, http)
+    const place = payload.syncSettings
+      ? places.find(
+          (l) => l.id === payload.syncSettings!.locationId && l.isActive,
+        )
+      : chooseLocation(places)
     if (!place) throw new Error('SHOPIFY_NO_LOCATION')
     locationId = place.id
-    if (!existing) {
-      const found = await findVariantBySku(
-        row.shopDomain,
-        accessToken,
-        payload.sku,
-        http,
-      )
-      if (found) existing = found.productGid
+    const found = await findVariantBySku(
+      row.shopDomain,
+      accessToken,
+      payload.sku,
+      http,
+    )
+    if (existing && (!found || found.productGid !== existing))
+      throw new Error('SHOPIFY_SKU_AMBIGUOUS')
+    if (found) {
+      existing = found.productGid
+      variantId = found.variantGid
     }
   } catch (e) {
     const code = safeCode(e)
@@ -161,7 +169,21 @@ export async function exportShopifyItem(
       locationId,
       existing,
       http,
+      variantId,
     )
+    if (payload.syncSettings) {
+      const publications = [
+        payload.syncSettings.webPublicationId,
+        payload.syncSettings.posPublicationId,
+      ].filter((id): id is string => id !== null)
+      await publishProduct(
+        row.shopDomain,
+        accessToken,
+        result.productGid,
+        publications,
+        http,
+      )
+    }
     await finish('synced', null, result)
     const image = await attachImage(
       client,

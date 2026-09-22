@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { graphql } from './auth'
+import { shopifySettings } from './settings'
 
 // Admin API 2026-07 calls for products out: the shop's locations, one
 // productSet per item (create, or update by product id) and a variant
@@ -43,6 +44,7 @@ export function chooseLocation(locations: Location[]) {
 }
 
 export const productPayload = z.object({
+  syncSettings: shopifySettings.nullable().optional(),
   title: z.string().min(1).max(255),
   category: z.string().nullable(),
   sku: z.string().regex(/^K-[0-9a-f-]{36}$/),
@@ -67,26 +69,35 @@ const PRODUCT_SET = `mutation SetProduct($input: ProductSetInput!, $identifier: 
   }
 }`
 
-/** One product with one variant; an update names the product by id and keeps sku, price and quantity in step. */
+/** One product with one variant; an update names the product by id and updates price without replenishing inventory. */
 export function productSetInput(
   payload: ProductPayload,
   locationId: string,
   existingProductGid: string | null,
+  existingVariantGid: string | null = null,
 ) {
+  if (existingProductGid && !existingVariantGid)
+    throw new Error('SHOPIFY_SKU_AMBIGUOUS')
   const input: Record<string, unknown> = {
     title: payload.title,
     status: 'ACTIVE',
     productOptions: [{ name: 'Title', values: [{ name: 'Default Title' }] }],
     variants: [
       {
+        ...(existingVariantGid ? { id: existingVariantGid } : {}),
         optionValues: [{ optionName: 'Title', name: 'Default Title' }],
         sku: payload.sku,
+        barcode: payload.reference,
         price: payload.price,
         inventoryPolicy: 'DENY',
         inventoryItem: { tracked: true },
-        inventoryQuantities: [
-          { locationId, name: 'available', quantity: payload.quantity },
-        ],
+        ...(existingProductGid
+          ? {}
+          : {
+              inventoryQuantities: [
+                { locationId, name: 'available', quantity: payload.quantity },
+              ],
+            }),
       },
     ],
   }
@@ -110,8 +121,14 @@ export async function setProduct(
   locationId: string,
   existingProductGid: string | null,
   http?: typeof fetch,
+  existingVariantGid: string | null = null,
 ): Promise<ProductResult> {
-  const variables = productSetInput(payload, locationId, existingProductGid)
+  const variables = productSetInput(
+    payload,
+    locationId,
+    existingProductGid,
+    existingVariantGid,
+  )
   const data = await graphql(shop, accessToken, PRODUCT_SET, variables, http)
   const parsed = z
     .object({
@@ -176,6 +193,11 @@ export async function findVariantBySku(
             sku
             product {
               id
+              variants(first: 2) {
+                nodes {
+                  id
+                }
+              }
             }
             inventoryItem {
               id
@@ -194,7 +216,12 @@ export async function findVariantBySku(
           z.object({
             id: z.string(),
             sku: z.string().nullable(),
-            product: z.object({ id: z.string() }),
+            product: z.object({
+              id: z.string(),
+              variants: z.object({
+                nodes: z.array(z.object({ id: z.string() })).max(2),
+              }),
+            }),
             inventoryItem: z.object({ id: z.string() }).nullable(),
           }),
         ),
@@ -204,6 +231,12 @@ export async function findVariantBySku(
     .productVariants.nodes.filter((n) => n.sku === sku)
   if (nodes.length > 1) throw new Error('SHOPIFY_SKU_AMBIGUOUS')
   const node = nodes[0]
+  if (
+    node &&
+    (node.product.variants.nodes.length !== 1 ||
+      node.product.variants.nodes[0].id !== node.id)
+  )
+    throw new Error('SHOPIFY_SKU_AMBIGUOUS')
   return node
     ? {
         productGid: node.product.id,

@@ -96,7 +96,9 @@ proposal's owner clarification for scope and outstanding details.
 - ~~Which currency does a store trade in, and can it change?~~ **Answered
   2026-09-13 (DECISIONS.md):** one currency per store from the policy (SEK,
   NOK, DKK, EUR), frozen after the first money fact; no conversion, no
-  second currency per store in version 1.
+  second currency per store in version 1. New web stores initialize currency
+  from the creation language (2026-09-22): sv=SEK, no=NOK, dk=DKK,
+  en/fi/de/es/it=EUR. Later language changes do not change store currency.
 
 ## Ownership and VAT
 

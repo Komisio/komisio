@@ -685,3 +685,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-22: Signup stores the selected locale as presentation-only Auth metadata. Confirmation subject and body use that locale in all eight languages, with English fallback. Local and protected hosted deployments share one template; verification and authorization stay unchanged.
 
 - 2026-09-22: Store creation asks only for the display name (owner). The form derives an opaque slug from its random request UUID, retaining it on retries. Existing slugs, database uniqueness, membership and authorization are unchanged.
+
+- 2026-09-22: New web stores initialize an immutable policy version atomically with creation: sv=SEK, no=NOK, dk=DKK, en/fi/de/es/it=EUR. Only currency overrides existing defaults. Retries and later language changes never reset it; legacy creation and existing stores stay unchanged.

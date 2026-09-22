@@ -1,3 +1,4 @@
+import { raceStoreCreation } from './store-creation-race.mjs'
 import { raceSellerProfile } from './seller-profile-race.mjs'
 import { raceZettleStock } from './zettle-stock-race.mjs'
 import { raceFortnoxSend } from './fortnox-send-race.mjs'
@@ -96,6 +97,7 @@ try {
       return { c, uid }
     }),
   )
+  await raceStoreCreation({ setup, sessions })
   await raceStorePolicy({ setup, sessions, tenant })
   await raceStoreGuide({ setup, sessions, tenant })
   await raceSellerProfile({ setup, sessions, tenant })

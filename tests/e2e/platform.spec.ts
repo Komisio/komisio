@@ -14,7 +14,6 @@ test('saved inspection drafts resume safely and preserve conflicting edits', asy
     `K!${randomBytes(16).toString('hex')}`,
   )
   await page.getByLabel('Butikens namn').fill('E2E Inspection')
-  await page.getByLabel('Butikens identifierare').fill(`inspection-${run}`)
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
@@ -262,7 +261,6 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
     `K!${randomBytes(16).toString('hex')}`,
   )
   await page.getByLabel('Butikens namn').fill('E2E Avtalsbutiken')
-  await page.getByLabel('Butikens identifierare').fill(`agreements-${run}`)
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
@@ -439,7 +437,6 @@ test('staff receives a bag, retries safely and prints a private label', async ({
     `K!${randomBytes(16).toString('hex')}`,
   )
   await page.getByLabel('Butikens namn').fill('E2E Påsmottagning')
-  await page.getByLabel('Butikens identifierare').fill(`intake-${run}`)
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
@@ -634,9 +631,6 @@ test('selected English survives confirmation and store creation', async ({
   await expect(page.getByLabel('Store name', { exact: true })).toBeVisible()
   await page.getByLabel('Store name', { exact: true }).fill('E2E English Store')
   await page
-    .getByLabel('Store identifier', { exact: true })
-    .fill(`english-${run}`)
-  await page
     .getByRole('button', { name: 'Create my store', exact: true })
     .click()
   await expect(page.getByLabel('Active store').first()).toBeVisible()
@@ -670,13 +664,10 @@ test('register, verify, create stores, invite, isolate and administer access', a
   await expect(page).toHaveURL(/\/onboarding/)
   await page.getByLabel('Butikens namn').fill('E2E Gröna Garderoben')
   await page.getByLabel('Butikens namn').press('Tab')
-  const storeIdentifier = page.getByLabel('Butikens identifierare')
-  await expect(storeIdentifier).toBeFocused()
-  await expect(storeIdentifier).toHaveAccessibleDescription(
-    'Små bokstäver, siffror och bindestreck. Till exempel min-secondhand.',
-  )
-  await storeIdentifier.fill(`garden-${run}`)
-  await storeIdentifier.press('Enter')
+  await expect(page.getByLabel('Butikens identifierare')).toHaveCount(0)
+  const createButton = page.getByRole('button', { name: 'Skapa min butik' })
+  await expect(createButton).toBeFocused()
+  await createButton.press('Enter')
   await expect(page.getByRole('heading', { name: 'Välkommen.' })).toBeVisible()
   const tenantA = await page.getByLabel('Aktiv butik').first().inputValue()
   await page.goto('/account')
@@ -784,7 +775,6 @@ test('register, verify, create stores, invite, isolate and administer access', a
   ).toBeVisible()
   await page.goto('/onboarding')
   await page.getByLabel('Butikens namn').fill('E2E Andra Butiken')
-  await page.getByLabel('Butikens identifierare').fill(`second-${run}`)
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(
     page.getByRole('heading', { name: 'Välkommen, Alex' }),
@@ -862,7 +852,6 @@ test('admin and readonly permissions stay scoped to each store', async ({
   try {
     await register(page, `roles-owner-${run}@example.test`, password)
     await page.getByLabel('Butikens namn').fill('E2E Role Store')
-    await page.getByLabel('Butikens identifierare').fill(`roles-${run}`)
     await page.getByRole('button', { name: 'Skapa min butik' }).click()
     await expect(
       page.getByRole('heading', { name: 'Välkommen.' }),
@@ -950,7 +939,6 @@ test('admin and readonly permissions stay scoped to each store', async ({
     ).toBe(403)
     await reader.goto('/onboarding')
     await reader.getByLabel('Butikens namn').fill('E2E Reader Own Store')
-    await reader.getByLabel('Butikens identifierare').fill(`reader-own-${run}`)
     await reader.getByRole('button', { name: 'Skapa min butik' }).click()
     await expect(
       reader.getByRole('heading', { name: 'Välkommen.' }),
@@ -1034,7 +1022,6 @@ test('password recovery and MFA protect the authenticated platform', async ({
   await expect(page.getByText('Ändringarna har sparats.')).toBeVisible()
   await page.goto('/onboarding')
   await page.getByLabel('Butikens namn').fill('E2E Security')
-  await page.getByLabel('Butikens identifierare').fill(`security-${run}`)
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(page.getByRole('heading', { name: 'Välkommen.' })).toBeVisible()
   await page.goto('/account')
@@ -1076,7 +1063,6 @@ test('archived inspection drafts preserve history and require explicit reopening
     `K!${randomBytes(16).toString('hex')}`,
   )
   await page.getByLabel('Butikens namn').fill('E2E Archive')
-  await page.getByLabel('Butikens identifierare').fill(`archive-${run}`)
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
@@ -1200,7 +1186,6 @@ test('bag queue finds older receipts and keeps seller filters while paging', asy
     `K!${randomBytes(16).toString('hex')}`,
   )
   await page.getByLabel('Butikens namn').fill('E2E Bag queue')
-  await page.getByLabel('Butikens identifierare').fill(`queue-${run}`)
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
@@ -1316,7 +1301,6 @@ test('reception sources persist through authenticated API without a bag or GUI',
     `K!${randomBytes(16).toString('hex')}`,
   )
   await page.getByLabel('Butikens namn').fill('E2E Reception')
-  await page.getByLabel('Butikens identifierare').fill(`reception-${run}`)
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
@@ -1537,7 +1521,6 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
     `K!${randomBytes(16).toString('hex')}`,
   )
   await page.getByLabel('Butikens namn').fill('E2E Review Store')
-  await page.getByLabel('Butikens identifierare').fill(`review-${run}`)
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
@@ -1885,7 +1868,6 @@ test('operator reception guides saved evidence, exact review and link replacemen
     `K!${randomBytes(16).toString('hex')}`,
   )
   await page.getByLabel('Butikens namn').fill('E2E Operator')
-  await page.getByLabel('Butikens identifierare').fill(`operator-${run}`)
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
@@ -2346,7 +2328,6 @@ test('private reception photo uploads attach immutably and require staff access'
     `K!${randomBytes(16).toString('hex')}`,
   )
   await page.getByLabel('Butikens namn').fill('E2E Photos')
-  await page.getByLabel('Butikens identifierare').fill(`photo-${run}`)
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
@@ -2490,9 +2471,6 @@ test('staged inspection edits require field review and preserve stale drafts', a
     email = `staged-inspection-${run}@example.test`
   await register(page, email, `K!${randomBytes(16).toString('hex')}`)
   await page.getByLabel('Butikens namn').fill('E2E Staged Inspection')
-  await page
-    .getByLabel('Butikens identifierare')
-    .fill(`staged-inspection-${run}`)
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
@@ -2724,7 +2702,6 @@ test('operation queue pages reach older proposals and retain status filters', as
     email = `queue-pages-${run}@example.test`
   await register(page, email, `K!${randomBytes(16).toString('hex')}`)
   await page.getByLabel('Butikens namn').fill('E2E Queue pages')
-  await page.getByLabel('Butikens identifierare').fill(`queue-pages-${run}`)
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
@@ -2834,7 +2811,6 @@ test('store policy publishes safely and supports agreement-free staff review', a
     `K!${randomBytes(16).toString('hex')}`,
   )
   await page.getByLabel('Butikens namn').fill('E2E Policy')
-  await page.getByLabel('Butikens identifierare').fill(`policy-${run}`)
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()

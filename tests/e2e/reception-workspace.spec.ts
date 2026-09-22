@@ -9,9 +9,6 @@ test('reception guides the operator through three steps and preserves manual inp
   const email = `workspace-${randomUUID()}@example.test`
   await register(page, email, `Test!${randomUUID()}`)
   await page.getByLabel('Butikens namn').fill('TEST Reception workspace')
-  await page
-    .getByLabel('Butikens identifierare')
-    .fill(`workspace-${randomUUID()}`)
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenant = await page.getByLabel('Aktiv butik').first().inputValue()

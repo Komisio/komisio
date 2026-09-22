@@ -61,6 +61,7 @@ export function AuthForm({
           email,
           password,
           options: {
+            data: { locale },
             emailRedirectTo: `${base}/auth/callback?next=${encodeURIComponent(destination)}`,
           },
         })

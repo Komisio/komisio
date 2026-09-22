@@ -18,7 +18,7 @@ export function TenantForm({ d, tenant }: { d: Dictionary; tenant?: Tenant }) {
         : {
             action: 'create',
             name: form.get('name'),
-            slug: form.get('slug'),
+            slug: `store-${requestId.current}`,
             requestId: requestId.current,
           },
     )
@@ -40,23 +40,6 @@ export function TenantForm({ d, tenant }: { d: Dictionary; tenant?: Tenant }) {
           placeholder={d.tenantPlaceholder}
         />
       </div>
-      {!tenant && (
-        <div className="field">
-          <label htmlFor="slug">{d.slug}</label>
-          <input
-            id="slug"
-            name="slug"
-            required
-            pattern="[a-z0-9][a-z0-9\-]{1,62}"
-            minLength={2}
-            maxLength={63}
-            autoCapitalize="none"
-            spellCheck={false}
-            aria-describedby="slug-hint"
-          />
-          <small id="slug-hint">{d.slugHint}</small>
-        </div>
-      )}
       <Button disabled={action.busy}>
         {action.busy ? d.loading : tenant ? d.save : d.createButton}
       </Button>

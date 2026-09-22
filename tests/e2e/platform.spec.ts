@@ -2289,7 +2289,7 @@ test('AI HTTP fixture stages a sourced proposal before explicit staff publicatio
     await expect(checkbox).toBeDisabled()
   await panel.getByRole('button', { name: 'Försök igen', exact: true }).click()
   await expect(
-    page.getByRole('heading', { name: /Säljarens beslut/ }),
+    page.getByRole('heading', { name: 'Granskat underlag — version 1' }),
   ).toBeVisible()
   const after = await (
     await page.request.get(`/api/reception/${sessionId}`)

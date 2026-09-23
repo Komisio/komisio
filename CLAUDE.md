@@ -103,6 +103,24 @@ The ruleset has no bypass actors. A second approving reviewer is not required
 globally while the owner is the only maintainer; this is not an independent review
 of owner-authored PRs. See CONTRIBUTING.md for the public policy.
 
+## Build-conscious delivery
+
+Owner instruction, 2026-09-23: develop and test locally, push a coherent ready
+slice, review its preview when useful, then merge to staging. Small local commits
+are welcome; batch them into a push after the relevant local checks pass. Do not
+push every intermediate correction just to obtain another hosted build.
+
+Use previews at deliberate review or integration checkpoints. After a CI failure,
+diagnose it and verify the relevant fixes locally before pushing again. Keep
+required CI and merge protections intact; cost savings do not justify skipping
+checks or publishing unverified changes.
+
+Documentation-only work should normally accompany the next suitable delivery
+instead of triggering a standalone deployment. Report when changes are saved
+only locally and CI has not run. Explicit requests for immediate delivery take
+precedence. Changing Vercel triggers or adding build-ignore rules is a separate
+configuration task: preserve useful previews and production release controls.
+
 ## Definition of done
 
 1. The decision (if any) is in `DECISIONS.md`.

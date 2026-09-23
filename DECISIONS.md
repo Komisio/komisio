@@ -691,3 +691,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-22: Store creation asks only for the display name (owner). The form derives an opaque slug from its random request UUID, retaining it on retries. Existing slugs, database uniqueness, membership and authorization are unchanged.
 
 - 2026-09-22: New web stores initialize an immutable policy version atomically with creation: sv=SEK, no=NOK, dk=DKK, en/fi/de/es/it=EUR. Only currency overrides existing defaults. Retries and later language changes never reset it; legacy creation and existing stores stay unchanged.
+
+- 2026-09-23: Owner adopts local-first delivery: batch tested changes before pushing, use previews at review checkpoints and bundle documentation-only work with suitable deliveries. Required CI and merge protections remain; Vercel trigger changes are a separate task.

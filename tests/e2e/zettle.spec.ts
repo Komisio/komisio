@@ -20,13 +20,16 @@ test('Zettle product export, price update, checkout, automatic credit and concur
       .click()
     await expect(page.getByText(d.zettle.fixture)).toBeVisible()
     await expect(
-      page.getByText(d.zettle.connectionTenantMissing, { exact: true }),
+      page.getByLabel(d.zettle.clientId, { exact: true }),
     ).toBeVisible()
     await expect(
       page
         .getByRole('region', { name: 'PayPal POS', exact: true })
-        .getByText(d.zettle.connectionConfigHint, { exact: true }),
+        .getByLabel(d.zettle.apiKey, { exact: true }),
     ).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: d.zettle.connect, exact: true }),
+    ).toBeDisabled()
     await expect(
       page.getByRole('button', { name: d.zettle.checkConnection, exact: true }),
     ).toHaveCount(0)

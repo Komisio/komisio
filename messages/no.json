@@ -2504,5 +2504,33 @@
     "ecommerce": "Nettbutikk og kasse",
     "accounting": "Regnskap",
     "accountingSettings": "Åpne regnskapsinnstillinger"
+  },
+  "shopifyPrivacy": {
+    "title": "Shopify · Personvernforespørsler",
+    "intro": "Behandle forespørsler fra Shopify. Mottak betyr ikke at sletting er utført. Ingen regnskapsdata slettes automatisk.",
+    "back": "Til integrasjonene",
+    "empty": "Ingen forespørsler.",
+    "received": "Mottatt",
+    "due": "Behandles innen",
+    "details": "Detaljer",
+    "history": "Historikk",
+    "outcome": "Ny status",
+    "note": "Behandlingsnotat",
+    "noteHint": "Beskriv utført handling eller hvorfor data må beholdes. Unngå personopplysninger i notatet.",
+    "save": "Lagre hendelse",
+    "conflict": "Forespørselen er endret. Last siden på nytt.",
+    "failed": "Kunne ikke lagre. Prøv igjen.",
+    "statuses": {
+      "pending": "Venter",
+      "processing": "Under behandling",
+      "completed": "Handling utført",
+      "retained": "Beholdes med begrunnelse"
+    },
+    "topics": {
+      "customers/data_request": "Innsyn i kundeopplysninger",
+      "customers/redact": "Sletting av kundeopplysninger",
+      "shop/redact": "Sletting av butikkopplysninger"
+    },
+    "unmatched": "Shopify · Umatchede personvernforespørsler"
   }
 }

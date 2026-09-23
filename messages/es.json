@@ -2504,5 +2504,33 @@
     "ecommerce": "Tienda online y caja",
     "accounting": "Contabilidad",
     "accountingSettings": "Abrir ajustes de contabilidad"
+  },
+  "shopifyPrivacy": {
+    "title": "Shopify · Solicitudes de privacidad",
+    "intro": "Gestiona las solicitudes de Shopify. La recepción no confirma el borrado. No se eliminan registros contables automáticamente.",
+    "back": "Volver a integraciones",
+    "empty": "No hay solicitudes.",
+    "received": "Recibida",
+    "due": "Gestionar antes de",
+    "details": "Detalles de la solicitud",
+    "history": "Historial",
+    "outcome": "Nuevo estado",
+    "note": "Nota de gestión",
+    "noteHint": "Describe la acción realizada o el motivo para conservar los datos. Evita datos personales en esta nota.",
+    "save": "Guardar evento",
+    "conflict": "La solicitud ha cambiado. Recarga la página.",
+    "failed": "No se pudo guardar. Inténtalo de nuevo.",
+    "statuses": {
+      "pending": "Pendiente",
+      "processing": "En curso",
+      "completed": "Acción completada",
+      "retained": "Conservada con justificación"
+    },
+    "topics": {
+      "customers/data_request": "Solicitud de datos del cliente",
+      "customers/redact": "Solicitud de borrado de datos del cliente",
+      "shop/redact": "Solicitud de borrado de datos de la tienda"
+    },
+    "unmatched": "Shopify · Solicitudes de privacidad sin tienda"
   }
 }

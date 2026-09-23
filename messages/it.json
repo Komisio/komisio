@@ -2504,5 +2504,33 @@
     "ecommerce": "Negozio online e cassa",
     "accounting": "Contabilità",
     "accountingSettings": "Apri le impostazioni contabili"
+  },
+  "shopifyPrivacy": {
+    "title": "Shopify · Richieste sulla privacy",
+    "intro": "Gestisci le richieste di Shopify. La ricezione non conferma la cancellazione. I dati contabili non vengono eliminati automaticamente.",
+    "back": "Torna alle integrazioni",
+    "empty": "Nessuna richiesta.",
+    "received": "Ricevuta",
+    "due": "Gestire entro",
+    "details": "Dettagli della richiesta",
+    "history": "Cronologia",
+    "outcome": "Nuovo stato",
+    "note": "Nota di gestione",
+    "noteHint": "Descrivi la procedura eseguita o il motivo della conservazione. Evita dati personali nella nota.",
+    "save": "Salva evento",
+    "conflict": "La richiesta è cambiata. Ricarica la pagina.",
+    "failed": "Salvataggio non riuscito. Riprova.",
+    "statuses": {
+      "pending": "In attesa",
+      "processing": "In corso",
+      "completed": "Procedura completata",
+      "retained": "Conservata con motivazione"
+    },
+    "topics": {
+      "customers/data_request": "Richiesta di accesso ai dati del cliente",
+      "customers/redact": "Richiesta di cancellazione dei dati del cliente",
+      "shop/redact": "Richiesta di cancellazione dei dati del negozio"
+    },
+    "unmatched": "Shopify · Richieste sulla privacy senza negozio"
   }
 }

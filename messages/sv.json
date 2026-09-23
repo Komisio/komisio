@@ -2504,5 +2504,33 @@
     "ecommerce": "Webbshop och kassa",
     "accounting": "Bokföring",
     "accountingSettings": "Öppna bokföringsinställningar"
+  },
+  "shopifyPrivacy": {
+    "title": "Shopify · Dataskyddsärenden",
+    "intro": "Granska och hantera begäranden från Shopify. Mottagning betyder inte att en radering är utförd. Ingen bokföring raderas automatiskt.",
+    "back": "Till integrationerna",
+    "empty": "Inga ärenden.",
+    "received": "Mottaget",
+    "due": "Hantera senast",
+    "details": "Begärans uppgifter",
+    "history": "Historik",
+    "outcome": "Ny status",
+    "note": "Handläggningsanteckning",
+    "noteHint": "Beskriv utförd åtgärd eller varför uppgifter måste behållas. Undvik personuppgifter i anteckningen.",
+    "save": "Spara händelse",
+    "conflict": "Ärendet har ändrats. Ladda om sidan.",
+    "failed": "Det gick inte att spara. Försök igen.",
+    "statuses": {
+      "pending": "Väntar",
+      "processing": "Handläggs",
+      "completed": "Åtgärd utförd",
+      "retained": "Behålls med motivering"
+    },
+    "topics": {
+      "customers/data_request": "Begäran om registerutdrag",
+      "customers/redact": "Begäran om radering av kunduppgifter",
+      "shop/redact": "Begäran om radering av butiksuppgifter"
+    },
+    "unmatched": "Shopify · Omatchade dataskyddsärenden"
   }
 }

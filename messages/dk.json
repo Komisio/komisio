@@ -2504,5 +2504,33 @@
     "ecommerce": "Webshop og kasse",
     "accounting": "Bogføring",
     "accountingSettings": "Åbn bogføringsindstillinger"
+  },
+  "shopifyPrivacy": {
+    "title": "Shopify · Databeskyttelsesanmodninger",
+    "intro": "Behandl anmodninger fra Shopify. Modtagelse betyder ikke, at sletning er udført. Ingen bogføringsdata slettes automatisk.",
+    "back": "Til integrationerne",
+    "empty": "Ingen anmodninger.",
+    "received": "Modtaget",
+    "due": "Behandles senest",
+    "details": "Oplysninger",
+    "history": "Historik",
+    "outcome": "Ny status",
+    "note": "Behandlingsnotat",
+    "noteHint": "Beskriv den udførte handling eller hvorfor data skal bevares. Undgå personoplysninger i notatet.",
+    "save": "Gem hændelse",
+    "conflict": "Anmodningen er ændret. Genindlæs siden.",
+    "failed": "Kunne ikke gemme. Prøv igen.",
+    "statuses": {
+      "pending": "Afventer",
+      "processing": "Under behandling",
+      "completed": "Handling udført",
+      "retained": "Bevares med begrundelse"
+    },
+    "topics": {
+      "customers/data_request": "Indsigt i kundeoplysninger",
+      "customers/redact": "Sletning af kundeoplysninger",
+      "shop/redact": "Sletning af butiksoplysninger"
+    },
+    "unmatched": "Shopify · Anmodninger uden butik"
   }
 }

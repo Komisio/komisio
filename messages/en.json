@@ -2504,5 +2504,33 @@
     "ecommerce": "Online store and POS",
     "accounting": "Accounting",
     "accountingSettings": "Open accounting settings"
+  },
+  "shopifyPrivacy": {
+    "title": "Shopify · Privacy requests",
+    "intro": "Review and handle requests from Shopify. Receipt does not mean erasure is complete. No accounting records are deleted automatically.",
+    "back": "Back to integrations",
+    "empty": "No requests.",
+    "received": "Received",
+    "due": "Handle by",
+    "details": "Request details",
+    "history": "History",
+    "outcome": "New status",
+    "note": "Handling note",
+    "noteHint": "Describe the action taken or why data must be retained. Avoid personal data in this note.",
+    "save": "Save event",
+    "conflict": "The request changed. Reload the page.",
+    "failed": "Could not save. Try again.",
+    "statuses": {
+      "pending": "Pending",
+      "processing": "In progress",
+      "completed": "Action completed",
+      "retained": "Retained with explanation"
+    },
+    "topics": {
+      "customers/data_request": "Customer data request",
+      "customers/redact": "Customer erasure request",
+      "shop/redact": "Shop erasure request"
+    },
+    "unmatched": "Shopify · Unmatched privacy requests"
   }
 }

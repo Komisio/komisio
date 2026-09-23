@@ -22,7 +22,11 @@ export default defineConfig({
     },
     {
       command: 'npm run dev',
-      env: { KOMISIO_ZETTLE_FIXTURES: 'true' },
+      env: {
+        KOMISIO_ZETTLE_FIXTURES: 'true',
+        KOMISIO_CREDENTIAL_KEY: 'ab'.repeat(32),
+        SHOPIFY_CLIENT_SECRET: 'synthetic-shopify-privacy-secret',
+      },
       url: 'http://127.0.0.1:3000/login',
       reuseExistingServer: !process.env.CI,
       timeout: 120000,

@@ -2504,5 +2504,33 @@
     "ecommerce": "Onlineshop und Kasse",
     "accounting": "Buchhaltung",
     "accountingSettings": "Buchhaltungseinstellungen öffnen"
+  },
+  "shopifyPrivacy": {
+    "title": "Shopify · Datenschutzanfragen",
+    "intro": "Bearbeiten Sie Anfragen von Shopify. Der Empfang bestätigt keine Löschung. Buchhaltungsdaten werden nicht automatisch gelöscht.",
+    "back": "Zurück zu Integrationen",
+    "empty": "Keine Anfragen.",
+    "received": "Eingegangen",
+    "due": "Bearbeiten bis",
+    "details": "Anfragedetails",
+    "history": "Verlauf",
+    "outcome": "Neuer Status",
+    "note": "Bearbeitungsnotiz",
+    "noteHint": "Beschreiben Sie die durchgeführte Maßnahme oder den Grund für die Aufbewahrung. Keine personenbezogenen Daten in dieser Notiz.",
+    "save": "Ereignis speichern",
+    "conflict": "Die Anfrage wurde geändert. Laden Sie die Seite neu.",
+    "failed": "Speichern fehlgeschlagen. Versuchen Sie es erneut.",
+    "statuses": {
+      "pending": "Ausstehend",
+      "processing": "In Bearbeitung",
+      "completed": "Maßnahme abgeschlossen",
+      "retained": "Mit Begründung aufbewahrt"
+    },
+    "topics": {
+      "customers/data_request": "Auskunft über Kundendaten",
+      "customers/redact": "Löschung von Kundendaten",
+      "shop/redact": "Löschung von Shopdaten"
+    },
+    "unmatched": "Shopify · Nicht zugeordnete Datenschutzanfragen"
   }
 }

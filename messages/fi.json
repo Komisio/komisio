@@ -2504,5 +2504,33 @@
     "ecommerce": "Verkkokauppa ja kassa",
     "accounting": "Kirjanpito",
     "accountingSettings": "Avaa kirjanpidon asetukset"
+  },
+  "shopifyPrivacy": {
+    "title": "Shopify · Tietosuojapyynnöt",
+    "intro": "Käsittele Shopifyn pyyntöjä. Vastaanotto ei tarkoita, että tiedot on poistettu. Kirjanpitotietoja ei poisteta automaattisesti.",
+    "back": "Takaisin integraatioihin",
+    "empty": "Ei pyyntöjä.",
+    "received": "Vastaanotettu",
+    "due": "Käsiteltävä viimeistään",
+    "details": "Pyynnön tiedot",
+    "history": "Historia",
+    "outcome": "Uusi tila",
+    "note": "Käsittelymerkintä",
+    "noteHint": "Kuvaa tehty toimi tai tietojen säilyttämisen syy. Älä lisää henkilötietoja merkintään.",
+    "save": "Tallenna tapahtuma",
+    "conflict": "Pyyntö on muuttunut. Lataa sivu uudelleen.",
+    "failed": "Tallennus epäonnistui. Yritä uudelleen.",
+    "statuses": {
+      "pending": "Odottaa",
+      "processing": "Käsittelyssä",
+      "completed": "Toimi tehty",
+      "retained": "Säilytetään perustellusti"
+    },
+    "topics": {
+      "customers/data_request": "Asiakastietojen tarkastuspyyntö",
+      "customers/redact": "Asiakastietojen poistopyyntö",
+      "shop/redact": "Kaupan tietojen poistopyyntö"
+    },
+    "unmatched": "Shopify · Kohdistamattomat tietosuojapyynnöt"
   }
 }

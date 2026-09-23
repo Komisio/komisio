@@ -1,0 +1,58 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000001481','privacy-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000001482','privacy-actor@example.test',now()),
+ ('f0000000-0000-4000-8000-000000001483','privacy-other@example.test',now());
+select komisio_private.register_shopify_privacy_actor('f0000000-0000-4000-8000-000000001482');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000001481","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Privacy test','privacy-test',gen_random_uuid())::text,true);
+select store_shopify_connection(current_setting('test.tenant')::uuid,'privacy-test.myshopify.com','Privacy test','SEK','{"iv":"a","tag":"b","data":"c"}','read_orders',null);
+select disconnect_shopify(current_setting('test.tenant')::uuid);
+select throws_ok($$select receive_shopify_privacy('customers/redact','privacy-test.myshopify.com',repeat('a',64),'{"iv":"a","tag":"b","data":"c"}')$$,'42501',null,'owner cannot forge provider receipts');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000001482","role":"authenticated"}';
+select is(receive_shopify_privacy('customers/redact','privacy-test.myshopify.com',repeat('a',64),'{"iv":"a","tag":"b","data":"c"}')->>'matched','1','disconnected shop maps through immutable history');
+select is(receive_shopify_privacy('customers/redact','privacy-test.myshopify.com',repeat('a',64),'{"iv":"new","tag":"new","data":"new"}')->>'replayed','true','receipt retry is idempotent despite new encryption nonce');
+select is(receive_shopify_privacy('shop/redact','unknown.myshopify.com',repeat('b',64),'{"iv":"a","tag":"b","data":"c"}')->>'matched','0','unmatched request is durably retained for host triage');
+select throws_ok($$select count(*) from shopify_privacy_requests$$,'42501',null,'actor has no direct table reads');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000001481","role":"authenticated"}';
+select is(jsonb_array_length(shopify_privacy_queue(current_setting('test.tenant')::uuid)),1,'owner sees only own queue');
+select set_config('test.request',(shopify_privacy_queue(current_setting('test.tenant')::uuid)->0->>'id'),true);
+select is(shopify_privacy_queue(current_setting('test.tenant')::uuid)->0->>'status','pending','receipt never means completion');
+select is(record_shopify_privacy_outcome(current_setting('test.request')::uuid,null,gen_random_uuid(),'processing','Review started')->>'status','processing','owner starts manual review');
+select throws_like($$select record_shopify_privacy_outcome(current_setting('test.request')::uuid,null,gen_random_uuid(),'completed','Done')$$,'%REQUEST_CONFLICT%','stale update rejected');
+select throws_ok($$update shopify_privacy_requests set received_at=now()$$,'42501',null,'direct writes denied');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000001483","role":"authenticated"}';
+select throws_ok($$select shopify_privacy_queue(current_setting('test.tenant')::uuid)$$,'42501',null,'other user cannot read queue');
+select throws_ok($$select record_shopify_privacy_outcome(current_setting('test.request')::uuid,null,gen_random_uuid(),'completed','Done')$$,'42501',null,'other user cannot resolve request');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000001483','staff');
+set local role authenticated;
+select throws_ok($$select shopify_privacy_queue(current_setting('test.tenant')::uuid)$$,'42501',null,'staff cannot read personal request data');
+select throws_ok($$select shopify_privacy_queue(null)$$,'42501',null,'staff cannot inspect unmatched requests');
+reset role;
+insert into public.platform_hosts(user_id,kind) values('f0000000-0000-4000-8000-000000001483','person');
+set local role authenticated;
+select is(jsonb_array_length(shopify_privacy_queue(null)),1,'verified platform host sees unmatched queue');
+reset role;
+insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at)
+ values(gen_random_uuid(),'f0000000-0000-4000-8000-000000001481','totp','verified',now(),now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000001481","role":"authenticated","aal":"aal1"}';
+select throws_ok($$select shopify_privacy_queue(current_setting('test.tenant')::uuid)$$,'42501',null,'owner MFA is enforced in SQL');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000001481","role":"authenticated","aal":"aal2"}';
+select set_config('test.previous',shopify_privacy_queue(current_setting('test.tenant')::uuid)->0->>'revision',true);
+select set_config('test.outcome',gen_random_uuid()::text,true);
+select is(record_shopify_privacy_outcome(current_setting('test.request')::uuid,current_setting('test.previous')::uuid,current_setting('test.outcome')::uuid,'retained','Documented manual retention decision')->>'replayed','false','MFA owner records retained outcome');
+select is(record_shopify_privacy_outcome(current_setting('test.request')::uuid,current_setting('test.previous')::uuid,current_setting('test.outcome')::uuid,'retained','Documented manual retention decision')->>'replayed','true','identical outcome retry succeeds once');
+select is(jsonb_array_length(shopify_privacy_queue(current_setting('test.tenant')::uuid)->0->'history'),2,'full append-only handling history preserved');
+set local role anon;
+select throws_ok($$select receive_shopify_privacy('shop/redact','privacy-test.myshopify.com',repeat('c',64),'{"iv":"a","tag":"b","data":"c"}')$$,'42501',null,'anonymous callers cannot insert');
+reset role;
+select is((select count(*) from shopify_privacy_requests where fingerprint in (repeat('a',64),repeat('b',64))),2::bigint,'exactly two durable test requests');
+select throws_like($$delete from shopify_privacy_requests$$,'%IMMUTABLE%','receipt immutable even with table privileges');
+select throws_like($$delete from shopify_privacy_events$$,'%IMMUTABLE%','outcome history immutable');
+select * from finish();
+rollback;

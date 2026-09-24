@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-09-24: Store flow explains existing work with linked steps and internal per-step instructions. Owner/admin edits use revision checks; members can read. Instructions never change policy or execute work. Live queue metrics and free graph editing are deferred.
+
 - 2026-09-24: Store currencies are SEK, NOK, DKK, EUR and USD only, all with two minor digits. Onboarding offers an explicit choice; existing defaults and frozen money facts are preserved. No currency conversion.
 
 - 2026-09-24: Store profiles accept ISO 3166-1 countries independently of trading currency. Deployment signup blocks still apply only to registration/onboarding; profile edits never lock existing customers out.

@@ -2533,5 +2533,99 @@
       "shop/redact": "Kaupan tietojen poistopyyntö"
     },
     "unmatched": "Shopify · Kohdistamattomat tietosuojapyynnöt"
+  },
+  "storeFlow": {
+    "title": "Myymälän työnkulku",
+    "eyebrow": "Näin toimimme",
+    "intro": "Seuraa kassia vastaanotosta myyntiin ja tilitykseen. Avaa työvaihe valitsemalla se.",
+    "guide": "Kaavio selittää työnkulun. Se ei näytä reaaliaikaista tilannetta eikä käynnistä toimintoja.",
+    "groups": [
+      "Vastaanota",
+      "Rekisteröi",
+      "Myy",
+      "Käsittele myymättömät",
+      "Tilitä"
+    ],
+    "details": "Työvaiheen tiedot",
+    "happens": "Mitä tapahtuu",
+    "inKomisio": "Komisiossa",
+    "localRoutine": "Oma toimintatapamme",
+    "noteHelp": "Henkilökunnan sisäiset ohjeet. Ne eivät muuta asetuksia eivätkä kirjaa työtä tehdyksi.",
+    "placeholder": "Esimerkiksi: aseta kassi hyllylle B.",
+    "empty": "Ei vielä omia ohjeita.",
+    "save": "Tallenna ohjeet",
+    "saving": "Tallennetaan…",
+    "saved": "Ohjeet tallennettu.",
+    "failed": "Tallennus epäonnistui. Teksti säilyy. Tarkista valittu myymälä ja yritä uudelleen.",
+    "conflict": "Joku muutti ohjeita. Kopioi tekstisi ja päivitä sivu ennen uutta tallennusta.",
+    "unsaved": "Tallentamattomia muutoksia",
+    "branch": "Myyty → tilitys. Myymättä → käsittely sopimuksen mukaan.",
+    "reviewRequired": "Myymälä edellyttää myyjän hyväksyntää jokaiselle tuotteelle. Avaa työjono.",
+    "reviewDelegated": "Myymälä käyttää valtuutettua hyväksyntää. Kassin vastaanotto ei vielä tee tuotteista myyntivalmiita.",
+    "steps": {
+      "arrive": {
+        "title": "Myyjä saapuu kassin kanssa",
+        "actor": "Myyjä",
+        "description": "Etsi tai rekisteröi myyjä ja tarkista sopimus.",
+        "system": "Avaa työnäkymä tarkastellaksesi tai suorittaaksesi tämän vaiheen.",
+        "action": "Avaa myyjät"
+      },
+      "receive": {
+        "title": "Vastaanota ja merkitse kassi",
+        "actor": "Henkilökunta",
+        "description": "Liitä kassi myyjään rekisteröimättä jokaista tuotetta. Vastaanotto ei tarkoita tuotteiden hyväksymistä.",
+        "system": "Avaa työnäkymä tarkastellaksesi tai suorittaaksesi tämän vaiheen.",
+        "action": "Vastaanota kassi"
+      },
+      "wait": {
+        "title": "Kassi odottaa tarkastusta",
+        "actor": "Henkilökunta",
+        "description": "Säilytä kassi tarkastukseen asti. Löydät sen kassijonosta.",
+        "system": "Avaa työnäkymä tarkastellaksesi tai suorittaaksesi tämän vaiheen.",
+        "action": "Avaa kassijono"
+      },
+      "register": {
+        "title": "Tarkasta ja rekisteröi tuotteet",
+        "actor": "Henkilökunta",
+        "description": "Avaa kassi tuotteiden kuvaamista, arviointia ja hinnoittelua varten. Käsittele hylätyt tuotteet sopimuksen mukaan.",
+        "system": "Avaa työnäkymä tarkastellaksesi tai suorittaaksesi tämän vaiheen.",
+        "action": "Valitse kassi"
+      },
+      "review": {
+        "title": "Vahvista hinta ja ehdot",
+        "actor": "Henkilökunta ja myyjä",
+        "description": "Tarkista että tuotteen hyväksymisen ehdot täyttyvät.",
+        "system": "Avaa työnäkymä tarkastellaksesi tai suorittaaksesi tämän vaiheen.",
+        "action": "Avaa työjono"
+      },
+      "label": {
+        "title": "Merkitse ja valmistele tuotteet",
+        "actor": "Henkilökunta",
+        "description": "Kiinnitä oikea etiketti ja aseta tuote myyntiin. Etiketit löytyvät tuotelistan kautta.",
+        "system": "Avaa työnäkymä tarkastellaksesi tai suorittaaksesi tämän vaiheen.",
+        "action": "Avaa tuotteet"
+      },
+      "sell": {
+        "title": "Tuote myydään",
+        "actor": "Henkilökunta ja Komisio",
+        "description": "Kirjatut myynnit näkyvät täällä. Tuonti riippuu yhdistetyistä integraatioista ja niiden tilasta.",
+        "system": "Avaa työnäkymä tarkastellaksesi tai suorittaaksesi tämän vaiheen.",
+        "action": "Avaa myynnit"
+      },
+      "unsold": {
+        "title": "Käsittele myymättömät tuotteet",
+        "actor": "Henkilökunta",
+        "description": "Noudata myymättömien tuotteiden sopimusta. Avaa elinkaarinäkymä.",
+        "system": "Avaa työnäkymä tarkastellaksesi tai suorittaaksesi tämän vaiheen.",
+        "action": "Avaa elinkaari"
+      },
+      "payout": {
+        "title": "Käsittele tilitys",
+        "actor": "Henkilökunta",
+        "description": "Tarkista saldo ja noudata pyynnön, hyväksynnän ja maksun kirjaamisen vaiheita. Kaavio ei siirrä rahaa.",
+        "system": "Avaa työnäkymä tarkastellaksesi tai suorittaaksesi tämän vaiheen.",
+        "action": "Avaa tilitykset"
+      }
+    }
   }
 }

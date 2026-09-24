@@ -1,5 +1,10 @@
 # Open questions
 
+Store flow (2026-09-24): owner approved an explanatory map with work-area links
+and internal editable instructions. Instructions do not configure or execute
+operations. Live queue metrics, item progress and free diagram editing remain
+follow-ups; the first version describes the bag-first route.
+
 Shopify public distribution (2026-09-23): App Store readiness requires
 mandatory signed compliance webhooks, a Shopify-initiated installation flow,
 and protected customer data approval for order/refund access, even without

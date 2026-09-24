@@ -1,0 +1,231 @@
+.store-flow {
+  max-width: 1240px;
+  margin: auto;
+  color: var(--ink);
+}
+.flow-route {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 20px 0 28px;
+}
+.flow-route-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.flow-route-step button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 600;
+}
+.flow-route p {
+  flex-basis: 100%;
+  font-size: 0.85rem;
+  margin-top: 6px;
+}
+.flow-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 0;
+}
+.flow-heading h1 {
+  font-size: 2rem;
+  margin: 5px 0 10px;
+}
+.flow-heading p {
+  max-width: 65ch;
+}
+.flow-eyebrow {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-weight: 600;
+}
+.flow-explanation {
+  padding: 16px;
+  border-left: 3px solid #547765;
+  background: var(--paper);
+  margin-bottom: 24px;
+}
+.flow-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  gap: 28px;
+  align-items: start;
+}
+.flow-map {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.flow-group {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+}
+.flow-group h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  margin: 0 0 18px;
+}
+.flow-group h2 > span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #315747;
+  color: white;
+  font-size: 0.85rem;
+}
+.flow-node {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+  text-align: left;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: white;
+  color: var(--ink);
+  cursor: pointer;
+}
+.flow-node[aria-pressed='true'] {
+  border: 2px solid #315747;
+  padding: 15px;
+  background: #edf5ed;
+}
+.flow-node:focus-visible,
+.flow-open:focus-visible,
+.flow-save button:focus-visible {
+  outline: 3px solid #ad7032;
+  outline-offset: 3px;
+}
+.flow-node small {
+  font-size: 0.8rem;
+}
+.flow-node strong {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.flow-arrow {
+  display: block;
+  margin: 7px auto;
+  color: #547765;
+}
+.flow-branch {
+  font-size: 0.85rem;
+  margin-top: 14px;
+}
+.flow-note-mark {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+}
+.flow-detail {
+  position: sticky;
+  top: 24px;
+  border: 1px solid var(--line);
+  border-top: 4px solid #315747;
+  padding: 24px;
+  border-radius: 12px;
+  background: white;
+}
+.flow-detail h2 {
+  font-size: 1.4rem;
+  margin: 8px 0 24px;
+}
+.flow-detail h3 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 20px 0 6px;
+}
+.flow-detail p {
+  line-height: 1.6;
+}
+.flow-open {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 24px 0;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.flow-routine {
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+}
+.flow-routine label {
+  font-weight: 700;
+}
+.flow-routine > p {
+  font-size: 0.85rem;
+  margin: 8px 0;
+}
+.flow-save {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  font-size: 0.8rem;
+}
+.flow-save button {
+  background: #315747;
+  color: white;
+  border: 0;
+  border-radius: 7px;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+.flow-save button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.flow-note-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.flow-back {
+  display: none;
+}
+@media (max-width: 900px) {
+  .flow-layout {
+    grid-template-columns: 1fr;
+  }
+  .flow-detail {
+    position: static;
+    scroll-margin-top: 20px;
+  }
+  .flow-back {
+    display: block;
+    margin-bottom: 20px;
+  }
+  .flow-map {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 520px) {
+  .flow-map {
+    grid-template-columns: 1fr;
+  }
+  .flow-heading h1 {
+    font-size: 1.7rem;
+  }
+  .flow-detail {
+    padding: 18px;
+  }
+}

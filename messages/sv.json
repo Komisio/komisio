@@ -2533,5 +2533,93 @@
       "shop/redact": "Begäran om radering av butiksuppgifter"
     },
     "unmatched": "Shopify · Omatchade dataskyddsärenden"
+  },
+  "storeFlow": {
+    "title": "Butikens flöde",
+    "eyebrow": "Så arbetar vi",
+    "intro": "Följ en påse från inlämning till försäljning och utbetalning. Välj ett steg för att förstå vad som händer och öppna arbetsvyn.",
+    "guide": "Kartan förklarar arbetssättet. Den visar inte aktuell status och startar inga aktiviteter.",
+    "groups": ["Ta emot", "Registrera", "Sälj", "Hantera osålt", "Betala ut"],
+    "details": "Om aktiviteten",
+    "happens": "Vad som händer",
+    "inKomisio": "I Komisio",
+    "localRoutine": "Vår egen rutin",
+    "noteHelp": "Interna instruktioner för personalen. Anteckningarna ändrar inga inställningar och registrerar inget utfört arbete.",
+    "placeholder": "Till exempel: ställ påsen på hylla B efter genomgång.",
+    "empty": "Inga egna instruktioner ännu.",
+    "save": "Spara instruktioner",
+    "saving": "Sparar…",
+    "saved": "Instruktionerna har sparats.",
+    "failed": "Det gick inte att spara. Texten finns kvar. Kontrollera vald butik och försök igen.",
+    "conflict": "Någon har ändrat instruktionerna. Kopiera din text och ladda om sidan innan du sparar igen.",
+    "unsaved": "Osparade ändringar",
+    "branch": "Sålt → utbetalning. Osålt → hantering enligt överenskommelse.",
+    "reviewRequired": "Butiken kräver säljarens godkännande för varje vara. Öppna arbetskön för att se vad som väntar.",
+    "reviewDelegated": "Butiken använder delegerat godkännande. Följ avtalade villkor; ett påskvitto gör inte i sig varorna säljklara.",
+    "steps": {
+      "arrive": {
+        "title": "Säljaren kommer med en påse",
+        "actor": "Säljaren",
+        "description": "Säljaren lämnar in varor och berättar vem som äger dem.",
+        "system": "Hitta eller registrera säljaren och kontrollera aktuellt avtal.",
+        "action": "Öppna säljare"
+      },
+      "receive": {
+        "title": "Ta emot och märk påsen",
+        "actor": "Personalen",
+        "description": "Ta emot påsen utan att registrera varje vara.",
+        "system": "Koppla påsen till säljaren. Mottagningen registreras separat från varornas godkännande.",
+        "action": "Ta emot en påse"
+      },
+      "wait": {
+        "title": "Påsen väntar på genomgång",
+        "actor": "Personalen",
+        "description": "Förvara påsen tills personalen kan gå igenom innehållet.",
+        "system": "Hitta påsen i påskön och öppna dess mottagning.",
+        "action": "Öppna påskön"
+      },
+      "register": {
+        "title": "Granska och registrera varorna",
+        "actor": "Personalen",
+        "description": "Gå igenom påsen och beskriv, bedöm och prissätt varorna.",
+        "system": "Öppna påsen för att registrera varorna. Varor som inte tas emot hanteras enligt överenskommelsen.",
+        "action": "Välj påse"
+      },
+      "review": {
+        "title": "Fastställ pris och villkor",
+        "actor": "Personalen och säljaren",
+        "description": "Säkerställ att villkoren för att ta emot varan är uppfyllda.",
+        "system": "Följ butikens aktuella inställning för säljarens godkännande.",
+        "action": "Öppna arbetskön"
+      },
+      "label": {
+        "title": "Märk och förbered varorna",
+        "actor": "Personalen",
+        "description": "Fäst rätt etikett och placera varan där den ska säljas.",
+        "system": "Öppna varan i varulistan för etiketter och detaljer.",
+        "action": "Öppna varor"
+      },
+      "sell": {
+        "title": "Varan säljs",
+        "actor": "Personalen och Komisio",
+        "description": "Kunden köper varan i butiken eller i en ansluten försäljningskanal.",
+        "system": "Registrerade försäljningar visas här. Import beror på anslutna integrationer och deras status.",
+        "action": "Öppna försäljningar"
+      },
+      "unsold": {
+        "title": "Hantera osålda varor",
+        "actor": "Personalen",
+        "description": "Följ den överenskommelse som gäller för varor som inte har sålts.",
+        "system": "Öppna livscykelvyn för varor som behöver hanteras. En instruktion här ändrar inte avtalet.",
+        "action": "Öppna livscykel"
+      },
+      "payout": {
+        "title": "Hantera utbetalning",
+        "actor": "Personalen",
+        "description": "Kontrollera säljarens saldo och hantera utbetalningen.",
+        "system": "Följ stegen för begäran, godkännande och registrering av betalning. Kartan överför inga pengar.",
+        "action": "Öppna utbetalningar"
+      }
+    }
   }
 }

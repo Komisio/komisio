@@ -291,7 +291,7 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
   await page.getByLabel('Telefon', { exact: true }).fill('0000000000')
   await page.getByRole('button', { name: 'Spara säljare' }).click()
   await expect(
-    page.getByRole('heading', { name: 'Ta emot en påse' }),
+    page.getByRole('heading', { name: 'Ta emot en inlämning' }),
   ).toBeVisible()
   const sellerUrl = page.url()
   const sellerId = new URL(sellerUrl).searchParams.get('seller')!
@@ -327,7 +327,9 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
   await expect(
     page.getByText('Underlag finns för aktuell version', { exact: true }),
   ).toBeVisible()
-  await page.getByLabel('Jag bekräftar att påsen', { exact: false }).check()
+  await page
+    .getByLabel('Jag bekräftar att inlämningen', { exact: false })
+    .check()
   const receiptResponse = page.waitForResponse(
     (r) => r.url().endsWith('/api/intake') && r.request().method() === 'POST',
   )
@@ -349,9 +351,11 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
       .check()
     await stale.goto(sellerUrl)
     await stale
-      .getByLabel('Kännetecken på påsen (valfritt)')
+      .getByLabel('Kännetecken på inlämningen (valfritt)')
       .fill('Stale form bag')
-    await stale.getByLabel('Jag bekräftar att påsen', { exact: false }).check()
+    await stale
+      .getByLabel('Jag bekräftar att inlämningen', { exact: false })
+      .check()
     await page.goto('/intake/agreements')
     await page.getByLabel('Avtalets rubrik').fill('TEST Villkor 2')
     await page
@@ -436,7 +440,7 @@ test('staff receives a bag, retries safely and prints a private label', async ({
     `intake-${run}@example.test`,
     `K!${randomBytes(16).toString('hex')}`,
   )
-  await page.getByLabel('Butikens namn').fill('E2E Påsmottagning')
+  await page.getByLabel('Butikens namn').fill('E2E Mottagning av inlämning')
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
@@ -445,9 +449,11 @@ test('staff receives a bag, retries safely and prints a private label', async ({
   await page.getByLabel('E-post', { exact: true }).fill('seller@example.test')
   await page.getByRole('button', { name: 'Spara säljare' }).click()
   await expect(
-    page.getByRole('heading', { name: 'Ta emot en påse' }),
+    page.getByRole('heading', { name: 'Ta emot en inlämning' }),
   ).toBeVisible()
-  await page.getByLabel('Kännetecken på påsen (valfritt)').fill('Blå tygpåse')
+  await page
+    .getByLabel('Kännetecken på inlämningen (valfritt)')
+    .fill('Blå tygpåse')
   await page.getByRole('checkbox').check()
   const saved = page.waitForResponse(
     (r) => r.url().endsWith('/api/intake') && r.request().method() === 'POST',
@@ -473,13 +479,17 @@ test('staff receives a bag, retries safely and prints a private label', async ({
   })
   expect(stale.status()).toBe(409)
   expect(original.tenantId).toBe(tenantId)
-  await expect(page.getByRole('status')).toContainText('Påsen är registrerad')
+  await expect(page.getByRole('status')).toContainText(
+    'Inlämningen är registrerad',
+  )
   await expect(page.locator('.intake-bag')).toHaveCount(1)
   await page
     .getByRole('status')
     .getByRole('link', { name: 'Visa etikett' })
     .click()
-  await expect(page.locator('.bag-label')).toContainText('E2E Påsmottagning')
+  await expect(page.locator('.bag-label')).toContainText(
+    'E2E Mottagning av inlämning',
+  )
   await expect(page.locator('.bag-label')).not.toContainText(
     'seller@example.test',
   )
@@ -501,10 +511,10 @@ test('staff receives a bag, retries safely and prints a private label', async ({
   await expect(page.locator('.intake-bag')).toHaveCount(1)
   await page.getByRole('link').filter({ hasText: 'Test Säljare' }).click()
   await expect(
-    page.getByRole('heading', { name: 'Ta emot en påse' }),
+    page.getByRole('heading', { name: 'Ta emot en inlämning' }),
   ).toBeVisible()
   await page
-    .getByLabel('Kännetecken på påsen (valfritt)')
+    .getByLabel('Kännetecken på inlämningen (valfritt)')
     .fill('Lost response bag')
   await page.getByRole('checkbox').check()
   let loseResponse = true
@@ -523,10 +533,12 @@ test('staff receives a bag, retries safely and prints a private label', async ({
       .filter({ hasText: 'Det gick inte att bekräfta resultatet' }),
   ).toBeVisible()
   await expect(
-    page.getByLabel('Kännetecken på påsen (valfritt)'),
+    page.getByLabel('Kännetecken på inlämningen (valfritt)'),
   ).toBeDisabled()
   await page.getByRole('button', { name: 'Försök igen' }).click()
-  await expect(page.getByRole('status')).toContainText('Påsen är registrerad')
+  await expect(page.getByRole('status')).toContainText(
+    'Inlämningen är registrerad',
+  )
   await expect(page.locator('.intake-bag')).toHaveCount(2)
   await page.setViewportSize({ width: 390, height: 844 })
   await page.screenshot({
@@ -1248,14 +1260,18 @@ test('bag queue finds older receipts and keeps seller filters while paging', asy
         links.map((a) => a.getAttribute('href')!.split('/')[3]),
       )
   const first = await ids()
-  await queue.getByRole('link', { name: 'Äldre påsar', exact: true }).click()
+  await queue
+    .getByRole('link', { name: 'Äldre inlämningar', exact: true })
+    .click()
   await expect(queue.locator('.intake-bag')).toHaveCount(20)
   await expect(page).toHaveURL(new RegExp(`seller=${sellerId}`))
   await expect(
     queue.locator('.intake-bag a.text-link').first(),
   ).toHaveAttribute('href', '/intake/bags/' + expected[30] + '/inspect')
   const second = await ids()
-  await queue.getByRole('link', { name: 'Äldre påsar', exact: true }).click()
+  await queue
+    .getByRole('link', { name: 'Äldre inlämningar', exact: true })
+    .click()
   await expect(queue.locator('.intake-bag')).toHaveCount(11)
   const third = await ids()
   expect([...first, ...second, ...third]).toEqual([...expected].reverse())
@@ -1264,21 +1280,25 @@ test('bag queue finds older receipts and keeps seller filters while paging', asy
     .last()
     .innerText()
   const oldestNumber = oldestLabel.match(/K-(\d+)/)![1]
-  await queue.getByRole('link', { name: 'Nyare påsar', exact: true }).click()
+  await queue
+    .getByRole('link', { name: 'Nyare inlämningar', exact: true })
+    .click()
   await expect(queue.locator('.intake-bag')).toHaveCount(20)
   await expect(
     queue.locator('.intake-bag a.text-link').first(),
   ).toHaveAttribute('href', '/intake/bags/' + expected[30] + '/inspect')
   expect(await ids()).toEqual(second)
-  await queue.getByLabel('Sök på påsnummer').fill(`K-${oldestNumber}`)
-  await queue.getByRole('button', { name: 'Hitta påse' }).click()
+  await queue.getByLabel('Sök på inlämningsnummer').fill(`K-${oldestNumber}`)
+  await queue.getByRole('button', { name: 'Hitta inlämning' }).click()
   await expect(queue.locator('.intake-bag')).toHaveCount(1)
   expect(await ids()).toEqual([expected[0]])
   await expect(page).not.toHaveURL(/older=/)
   await page.goto(`/intake?seller=${otherId}&bag=${oldestNumber}#bag-queue`)
   await expect(queue.locator('.intake-bag')).toHaveCount(0)
-  await expect(queue).toContainText('Inga påsar matchar detta urval.')
-  await queue.getByRole('link', { name: 'Visa alla säljares påsar' }).click()
+  await expect(queue).toContainText('Inga inlämningar matchar detta urval.')
+  await queue
+    .getByRole('link', { name: 'Visa alla säljares inlämningar' })
+    .click()
   await expect(queue.locator('.intake-bag')).toHaveCount(20)
   await expect(queue).toContainText('Queue Beta')
   await page.setViewportSize({ width: 390, height: 844 })

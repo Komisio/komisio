@@ -12,7 +12,9 @@ test('store guide saves tenant answers and restores them in another language', a
   await page.getByRole('link', { name: 'Butiksguiden' }).click()
   await expect(page).toHaveURL(/\/guide$/)
   const tenant = await page.getByLabel('Aktiv butik').first().inputValue()
-  await page.getByLabel('Säljare lämnar påsar eller kartonger').check()
+  await page
+    .getByLabel('Säljare lämnar flera varor vid samma tillfälle')
+    .check()
   await page.getByRole('button', { name: 'Nästa' }).click()
   await page.getByLabel('Kläder & accessoarer').check()
   await page.getByRole('button', { name: 'Nästa' }).click()
@@ -41,14 +43,14 @@ test('store guide saves tenant answers and restores them in another language', a
   await expect(
     page
       .locator('dd')
-      .filter({ hasText: 'Sælgere afleverer poser eller kasser' }),
+      .filter({ hasText: 'Sælgere afleverer flere varer samtidig' }),
   ).toBeVisible()
   await expect(
     page.locator('dd').filter({ hasText: 'PayPal POS' }),
   ).toBeVisible()
   await page.getByRole('button', { name: 'Rediger svar' }).click()
   await expect(
-    page.getByLabel('Sælgere afleverer poser eller kasser'),
+    page.getByLabel('Sælgere afleverer flere varer samtidig'),
   ).toBeChecked()
   // Switching the active store in another tab must reject the stale form.
   const created = await page.request.post('/api/platform', {
@@ -83,6 +85,6 @@ test('store guide saves tenant answers and restores them in another language', a
     page.getByRole('heading', { name: 'Hvordan får I varer ind i butikken?' }),
   ).toBeVisible()
   await expect(
-    page.getByLabel('Sælgere afleverer poser eller kasser'),
+    page.getByLabel('Sælgere afleverer flere varer samtidig'),
   ).not.toBeChecked()
 })

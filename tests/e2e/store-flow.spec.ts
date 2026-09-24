@@ -6,7 +6,7 @@ import d from '../../messages/sv.json' with { type: 'json' }
 
 test('store instructions persist, retain edits across steps and reject a stale editor', async ({
   page,
-}) => {
+}, testInfo) => {
   const email = `flow-${randomUUID()}@example.test`
   await register(page, email, `K!${randomBytes(16).toString('hex')}`)
   const f = await p2Fixture(email)
@@ -46,7 +46,10 @@ test('store instructions persist, retain edits across steps and reject a stale e
       second.getByLabel(d.storeFlow.localRoutine, { exact: true }),
     ).toHaveValue('Stale text')
     await second.close()
-    await page.screenshot({ path: 'private/flow-desktop.png', fullPage: true })
+    await page.screenshot({
+      path: testInfo.outputPath('flow-desktop.png'),
+      fullPage: true,
+    })
     await page.setViewportSize({ width: 390, height: 844 })
     await page
       .getByRole('button', { name: new RegExp(d.storeFlow.steps.wait.title) })
@@ -72,7 +75,98 @@ test('store instructions persist, retain edits across steps and reject a stale e
         () => document.documentElement.scrollWidth <= window.innerWidth,
       ),
     ).toBe(true)
-    await page.screenshot({ path: 'private/flow-mobile.png', fullPage: true })
+    await page.screenshot({
+      path: testInfo.outputPath('flow-mobile.png'),
+      fullPage: true,
+    })
+  } finally {
+    await f.close()
+  }
+})
+
+test('current flow counts actual work, refreshes without losing notes and opens matching queues', async ({
+  page,
+}, testInfo) => {
+  const email = 'flow-now-' + randomUUID() + '@example.test'
+  await register(page, email, 'K!' + randomBytes(16).toString('hex'))
+  const f = await p2Fixture(email)
+  try {
+    const receive = async (note: string) =>
+      (
+        await f.db.query(
+          'select receive_bag_with_agreement($1,$2,$3,$4,$5) id',
+          [f.tenant, randomUUID(), f.seller, note, f.agreement],
+        )
+      ).rows[0].id
+    const untouched = await receive('Synthetic unstarted delivery')
+    const started = await receive('Synthetic started delivery')
+    await f.db.query('select create_bag_reception($1,$2,$3,$4)', [
+      f.tenant,
+      randomUUID(),
+      f.seller,
+      started,
+    ])
+    await f.item('Synthetic accepted item')
+    await f.commit()
+    await page.goto('/intake/flow')
+    const note = page.getByLabel(d.storeFlow.localRoutine, { exact: true })
+    await note.fill('Keep this unsaved routine')
+    await page
+      .getByRole('button', { name: d.storeFlow.live.now, exact: true })
+      .click()
+    const dropoffs = page.locator('[data-flow-metric="dropoffs"]')
+    await expect(dropoffs.locator('.flow-count strong')).toHaveText('1')
+    await expect(
+      page.locator('[data-flow-metric="preparing"] .flow-count strong'),
+    ).toHaveText('1')
+    await expect(
+      page.locator('[data-flow-metric="markdown_due"] .flow-count strong'),
+    ).toHaveText('1')
+    await expect(dropoffs.locator('time')).toHaveText(d.storeFlow.live.today)
+    await expect(
+      page.locator('[data-flow-metric="awaiting_seller"]'),
+    ).toHaveCount(0)
+    await page.getByLabel(d.storeFlow.live.showEmpty).check()
+    await expect(
+      page.locator('[data-flow-metric="awaiting_seller"] .flow-count strong'),
+    ).toHaveText('0')
+    await page.getByLabel(d.storeFlow.live.showEmpty).uncheck()
+    await f.asActor(f.actor, () => receive('Synthetic new delivery'))
+    await page
+      .getByRole('button', { name: d.storeFlow.live.refresh, exact: true })
+      .click()
+    await expect(dropoffs.locator('.flow-count strong')).toHaveText('2')
+    await page
+      .getByRole('button', { name: d.storeFlow.live.work, exact: true })
+      .click()
+    await expect(note).toHaveValue('Keep this unsaved routine')
+    await page
+      .getByRole('button', { name: d.storeFlow.live.now, exact: true })
+      .click()
+    await page.screenshot({
+      path: testInfo.outputPath('flow-now-desktop.png'),
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 390, height: 844 })
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+    await page.screenshot({
+      path: testInfo.outputPath('flow-now-mobile.png'),
+      fullPage: true,
+    })
+    await dropoffs.getByRole('link').click()
+    await expect(page).toHaveURL(/state=unstarted/)
+    await expect(
+      page.locator(
+        '#bag-queue a[href="/intake/bags/' + untouched + '/inspect"]',
+      ),
+    ).toBeVisible()
+    await expect(
+      page.locator('#bag-queue a[href="/intake/bags/' + started + '/inspect"]'),
+    ).toHaveCount(0)
   } finally {
     await f.close()
   }

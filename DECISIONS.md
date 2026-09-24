@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-09-24: All eight languages use packaging-neutral terms for goods a seller hands over on one occasion (Swedish "inlämning", English "drop-off"). Bag remains a physical packaging type or example. Receipt identifiers, storage and acceptance rules stay unchanged.
+
 - 2026-09-24: Store flow explains existing work with linked steps and internal per-step instructions. Owner/admin edits use revision checks; members can read. Instructions never change policy or execute work. Live queue metrics and free graph editing are deferred.
 
 - 2026-09-24: Store currencies are SEK, NOK, DKK, EUR and USD only, all with two minor digits. Onboarding offers an explicit choice; existing defaults and frozen money facts are preserved. No currency conversion.
@@ -704,3 +706,5 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-09-23: Owner adopts local-first delivery: batch tested changes before pushing, use previews at review checkpoints and bundle documentation-only work with suitable deliveries. Required CI and merge protections remain; Vercel trigger changes are a separate task.
 - 2026-09-23: Owner approved a tenant-bound Shopify privacy queue. Verify signatures before durable receipt; minimize and encrypt data. Bind shops through connection history. Owner/admin records append-only outcomes; receipt never means erasure and no accounting data is auto-deleted.
+
+- 2026-09-24: Store flow snapshots count unstarted drop-offs, unaccepted drafts, reception stages and inventory stages across all rows. Counts reuse queue facts; ages mean time since receipt or registration, not time in a stage. Starting work never implies a whole drop-off is complete.

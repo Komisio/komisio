@@ -6,7 +6,7 @@ import d from '../../messages/sv.json' with { type: 'json' }
 
 test('store instructions persist, retain edits across steps and reject a stale editor', async ({
   page,
-}) => {
+}, testInfo) => {
   const email = `flow-${randomUUID()}@example.test`
   await register(page, email, `K!${randomBytes(16).toString('hex')}`)
   const f = await p2Fixture(email)
@@ -46,7 +46,10 @@ test('store instructions persist, retain edits across steps and reject a stale e
       second.getByLabel(d.storeFlow.localRoutine, { exact: true }),
     ).toHaveValue('Stale text')
     await second.close()
-    await page.screenshot({ path: 'private/flow-desktop.png', fullPage: true })
+    await page.screenshot({
+      path: testInfo.outputPath('flow-desktop.png'),
+      fullPage: true,
+    })
     await page.setViewportSize({ width: 390, height: 844 })
     await page
       .getByRole('button', { name: new RegExp(d.storeFlow.steps.wait.title) })
@@ -72,7 +75,10 @@ test('store instructions persist, retain edits across steps and reject a stale e
         () => document.documentElement.scrollWidth <= window.innerWidth,
       ),
     ).toBe(true)
-    await page.screenshot({ path: 'private/flow-mobile.png', fullPage: true })
+    await page.screenshot({
+      path: testInfo.outputPath('flow-mobile.png'),
+      fullPage: true,
+    })
   } finally {
     await f.close()
   }

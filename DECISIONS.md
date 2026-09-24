@@ -1,6 +1,6 @@
 # Decision Log
 
-- 2026-09-24: Use Swedish "inlämning" for goods a seller hands over on one occasion, regardless of packaging or size. Keep "påse" only for physical packaging and examples. This changes presentation, not receipt identifiers, storage or acceptance rules.
+- 2026-09-24: All eight languages use packaging-neutral terms for goods a seller hands over on one occasion (Swedish "inlämning", English "drop-off"). Bag remains a physical packaging type or example. Receipt identifiers, storage and acceptance rules stay unchanged.
 
 - 2026-09-24: Store flow explains existing work with linked steps and internal per-step instructions. Owner/admin edits use revision checks; members can read. Instructions never change policy or execute work. Live queue metrics and free graph editing are deferred.
 

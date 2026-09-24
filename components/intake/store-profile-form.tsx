@@ -9,17 +9,18 @@ import {
   type CurrentStoreProfile,
 } from '@/lib/engine/store-profile'
 import { useIntakeAction } from './use-intake-action'
-import { storeCountries } from '@/lib/platform/countries'
 import { Button } from '@/components/ui/button'
 
 /** Owner or admin publishes the next profile version naming the current one. */
 export function StoreProfileForm({
   tenantId,
+  countryOptions,
   current,
   editable,
   locale,
   d,
 }: {
+  countryOptions: { code: string; label: string }[]
   tenantId: string
   current: CurrentStoreProfile
   editable: boolean
@@ -111,11 +112,9 @@ export function StoreProfileForm({
               name="country"
               defaultValue={profile.address.country ?? 'SE'}
             >
-              {storeCountries.map((country) => (
-                <option key={country} value={country}>
-                  {new Intl.DisplayNames([locale], { type: 'region' }).of(
-                    country,
-                  )}
+              {countryOptions.map(({ code, label }) => (
+                <option key={code} value={code}>
+                  {label}
                 </option>
               ))}
             </select>

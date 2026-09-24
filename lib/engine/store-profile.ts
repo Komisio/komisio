@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { storeCountries } from '../platform/credit-prices'
+import { storeCountries } from '../platform/countries'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { locales, type Locale } from '../i18n'
 

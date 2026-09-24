@@ -52,3 +52,33 @@ for (const [locale, currency] of Object.entries({
     ).toBeVisible()
   })
 }
+
+test('explicit USD overrides the language suggestion and remains after language changes', async ({
+  page,
+}) => {
+  const d = JSON.parse(readFileSync('messages/sv.json', 'utf8'))
+  await register(
+    page,
+    'usd-' + randomUUID() + '@example.test',
+    'K!' + randomUUID(),
+  )
+  await page.getByLabel(d.tenantName, { exact: true }).fill('TEST USD store')
+  await page
+    .getByLabel(d.storePolicy.currency, { exact: true })
+    .selectOption('USD')
+  await page.getByRole('button', { name: d.createButton, exact: true }).click()
+  await expect(page.getByLabel(d.activeTenant).first()).toBeVisible()
+  await page.goto('/')
+  await expect(
+    page.getByText('0.00 USD', { exact: true }).first(),
+  ).toBeVisible()
+  await page
+    .context()
+    .addCookies([
+      { name: 'komisio-locale', value: 'en', url: 'http://127.0.0.1:3000' },
+    ])
+  await page.reload()
+  await expect(
+    page.getByText('0.00 USD', { exact: true }).first(),
+  ).toBeVisible()
+})

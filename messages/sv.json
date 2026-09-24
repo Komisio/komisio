@@ -1965,6 +1965,7 @@
       "SHOPIFY_RATE_LIMITED": "Shopify begränsar anropen. Försök om en minut.",
       "SHOPIFY_READ_FAILED": "Shopify svarade med ett fel vid läsning av butiken.",
       "SHOPIFY_WRONG_SHOP": "Butiken som auktoriserade är inte den du angav. Inget sparades.",
+      "CURRENCY_MISMATCH": "Shopifys valuta måste vara samma som butikens valuta i Komisio. Kontrollera valutainställningarna och anslut igen.",
       "SHOPIFY_STATE_INVALID": "Anslutningsförsöket gick ut eller startade inte här. Anslut igen.",
       "CREDENTIAL_KEY_MISSING": "Driftkonfigurationen saknar nyckeln för förseglade uppgifter (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Den sparade token kan inte läsas med nuvarande nyckel. Koppla bort och anslut igen.",

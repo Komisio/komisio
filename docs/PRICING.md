@@ -126,9 +126,11 @@ Each one-time purchase adds exactly 100 credits (10,000 internal ore):
 | Sweden / legacy profile without country | 100 SEK | `STRIPE_CREDITS_PRICE_ID`     |
 | Norway                                  | 100 NOK | `STRIPE_CREDITS_PRICE_ID_NOK` |
 | Denmark                                 | 65 DKK  | `STRIPE_CREDITS_PRICE_ID_DKK` |
-| Other supported European countries      | 9 EUR   | `STRIPE_CREDITS_PRICE_ID_EUR` |
+| United States                           | 10 USD  | `STRIPE_CREDITS_PRICE_ID_USD` |
+| Other ISO countries      | 9 EUR   | `STRIPE_CREDITS_PRICE_ID_EUR` |
 
-These are fixed owner-approved package prices, not exchange rates. Owners or
+These are fixed owner-approved package prices, not exchange rates. USD 10 was
+selected under owner delegation on 2026-09-24 as a rounded equivalent of EUR 9. Owners or
 admins select country under Store profile and publish a new version. Existing
 profile versions stay unchanged. The server reads the current profile itself;
 the browser cannot supply a currency, price ID or credit amount to checkout.

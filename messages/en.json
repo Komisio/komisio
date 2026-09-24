@@ -1965,6 +1965,7 @@
       "SHOPIFY_RATE_LIMITED": "Shopify is rate limiting requests. Retry in a minute.",
       "SHOPIFY_READ_FAILED": "Shopify answered with an error while reading the shop.",
       "SHOPIFY_WRONG_SHOP": "The shop that authorised is not the shop you named. Nothing was stored.",
+      "CURRENCY_MISMATCH": "Shopify and your Komisio store must use the same currency. Check their currency settings and connect again.",
       "SHOPIFY_STATE_INVALID": "The connection attempt expired or did not start here. Connect again.",
       "CREDENTIAL_KEY_MISSING": "The deployed configuration is missing the credential key (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "The stored token cannot be read with the current credential key. Disconnect and connect again.",

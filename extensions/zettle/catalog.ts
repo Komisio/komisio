@@ -1,3 +1,4 @@
+import { storeCurrencies } from '../../lib/platform/currencies'
 import { z } from 'zod'
 const catalogVariant = z.strictObject({
   uuid: z.uuid(),
@@ -5,7 +6,7 @@ const catalogVariant = z.strictObject({
   barcode: z.string().max(128),
   price: z.strictObject({
     amount: z.number().int().min(1).max(99999999999),
-    currencyId: z.enum(['SEK', 'NOK', 'DKK', 'EUR']),
+    currencyId: z.enum(storeCurrencies),
   }),
 })
 export const catalogProduct = z.strictObject({

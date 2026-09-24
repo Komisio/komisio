@@ -134,7 +134,11 @@ it.each([undefined, null, ''])(
   'accepts an empty terminal page without a usable hash: %s',
   (hash) => {
     expect(
-      mapZettlePage({ purchases: [], lastPurchaseHash: hash }, 'previous'),
+      mapZettlePage(
+        { purchases: [], lastPurchaseHash: hash },
+        'previous',
+        'SEK',
+      ),
     ).toEqual({ purchases: [], nextCursor: 'previous' })
   },
 )

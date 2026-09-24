@@ -7,7 +7,7 @@ slice.
 ## Rule
 
 - The store policy names the currency (`currency`: `SEK`, `NOK`, `DKK`,
-  `EUR`); absent means SEK, so every existing store stays in SEK.
+  `EUR`, `USD`); absent means SEK, so every existing store stays in SEK.
 - `publish_store_policy` refuses a different currency once the store has a
   sale, a purchase receipt or a payout (`CURRENCY_FROZEN`); every other
   policy change still publishes. Choose the currency at onboarding.
@@ -34,3 +34,9 @@ money fact, sale, purchase, payout and review in the chosen currency, refusal
 of another, the freeze after the first sale, other policy changes still
 publishing, Zettle structural validity, the seller read and the anonymous
 refusal. `0031_sales` asserts the store-currency rule instead of "only SEK".
+
+Since 2026-09-24, onboarding offers an explicit currency choice independent of
+UI language and profile country. Legacy callers retain locale-based defaults.
+Shopify connection/reconnection refuses a different shop currency with a durable
+`CURRENCY_MISMATCH` event and preserves an existing connection. Sales still
+validate their currency through the shared engine.

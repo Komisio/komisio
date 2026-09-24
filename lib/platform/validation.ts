@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { storeCurrencies } from './currencies'
 import { roles } from './permissions'
 import { locales } from '../i18n'
 const tenantId = z.uuid()
@@ -8,6 +9,7 @@ export const commandSchema = z.discriminatedUnion('action', [
     name: z.string().trim().min(1).max(100),
     slug: z.string().regex(/^[a-z0-9][a-z0-9-]{1,62}$/),
     requestId: z.uuid(),
+    currency: z.enum(storeCurrencies).optional(),
   }),
   z.object({ action: z.literal('select'), tenantId }),
   z.object({

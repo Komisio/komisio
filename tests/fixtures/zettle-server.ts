@@ -1,3 +1,4 @@
+import { storeCurrencies } from '../../lib/platform/currencies'
 // Local API simulator. It is test infrastructure, not a checkout feature in Komisio.
 import { createServer } from 'node:http'
 import { randomUUID } from 'node:crypto'
@@ -20,6 +21,7 @@ const stores = new Map<
   {
     products: Map<string, { body: Product; etag: number }>
     purchases: unknown[]
+    currency: string
   }
 >()
 const server = createServer(async (req, res) => {
@@ -40,7 +42,7 @@ const server = createServer(async (req, res) => {
     if (!org) return reply(401)
     let store = stores.get(org)
     if (!store) {
-      store = { products: new Map(), purchases: [] }
+      store = { products: new Map(), purchases: [], currency: 'SEK' }
       stores.set(org, store)
     }
     let body: unknown
@@ -53,6 +55,13 @@ const server = createServer(async (req, res) => {
         parts.push(chunk)
       }
       body = JSON.parse(Buffer.concat(parts).toString() || '{}')
+    }
+    if (url.pathname === '/_test/currency' && req.method === 'POST') {
+      const currency = (body as { currency?: string }).currency
+      if (!storeCurrencies.some((c) => c === currency)) return reply(400)
+      if (store.products.size || store.purchases.length) return reply(409)
+      store.currency = currency!
+      return reply(200, { currency })
     }
     if (url.pathname === '/oauth.zettle.com/users/self')
       return reply(200, { uuid: org, organizationUuid: org })
@@ -70,7 +79,7 @@ const server = createServer(async (req, res) => {
       const purchase = {
         purchaseUUID1: randomUUID(),
         timestamp: '2026-09-13T10:00:00.000+0000',
-        currency: 'SEK',
+        currency: store.currency,
         source: 'POS',
         amount: products.reduce((n, p) => n + p!.variants[0].price.amount, 0),
         products: products.map((p) => ({
@@ -124,7 +133,7 @@ const server = createServer(async (req, res) => {
         p.variants.length !== 1 ||
         p.uuid === p.variants[0].uuid ||
         !Number.isSafeInteger(p.variants[0].price.amount) ||
-        p.variants[0].price.currencyId !== 'SEK'
+        p.variants[0].price.currencyId !== store.currency
       )
         return reply(400)
       if (store.products.has(p.uuid)) return reply(409)

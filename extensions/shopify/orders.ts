@@ -169,7 +169,7 @@ export function orderToEvidence(order: OrderNode): OrderEvidence {
     name: order.name,
     occurredAt: new Date(order.createdAt).toISOString(),
     updatedAt: new Date(order.updatedAt).toISOString(),
-    currency: [...currencies][0] ?? 'SEK',
+    currency: [...currencies][0],
     amountOre: lines.reduce((s, l) => s + l.priceOre, 0),
     financialStatus: order.displayFinancialStatus ?? 'UNKNOWN',
     test: order.test,

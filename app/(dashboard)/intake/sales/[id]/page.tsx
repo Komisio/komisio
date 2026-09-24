@@ -75,8 +75,8 @@ export default async function Sale({
               </p>
             )}
             <p>
-              {d.vat}: {formatOre(l.vat_ore)} SEK · {d.vatModes[l.vat_mode]} ·{' '}
-              {l.vat_rate_bp / 100} %
+              {d.vat}: {formatOre(l.vat_ore)} {currency} ·{' '}
+              {d.vatModes[l.vat_mode]} · {l.vat_rate_bp / 100} %
             </p>
             {returns.has(l.id) ? (
               <p role="status">

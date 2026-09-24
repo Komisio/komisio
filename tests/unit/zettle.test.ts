@@ -21,12 +21,15 @@ const base = {
   ],
 }
 it('maps documented UUID, integer gross and exact labels, stripping unrelated data', () => {
-  const mapped = mapZettlePurchase({
-    ...base,
-    purchaseUUID: 'deprecated',
-    payments: [{ card: 'secret' }],
-    gpsCoordinates: 'private',
-  })
+  const mapped = mapZettlePurchase(
+    {
+      ...base,
+      purchaseUUID: 'deprecated',
+      payments: [{ card: 'secret' }],
+      gpsCoordinates: 'private',
+    },
+    'SEK',
+  )
   expect(mapped).toEqual({
     externalId: base.purchaseUUID1,
     occurredAt: '2026-09-10T10:00:00.000Z',
@@ -57,20 +60,28 @@ it.each([
   { products: [{ ...base.products[0], type: 'GIFTCARD' }] },
   { products: [{ ...base.products[0], discountValue: 1 }] },
 ])('holds unsupported purchase %j', (patch) => {
-  expect(mapZettlePurchase({ ...base, ...patch }).blockedReason).not.toBeNull()
+  expect(
+    mapZettlePurchase({ ...base, ...patch }, 'SEK').blockedReason,
+  ).not.toBeNull()
 })
 it('conflicting labels cannot choose an item; partial string matches are not labels', () => {
   expect(
-    mapZettlePurchase({
-      ...base,
-      products: [{ ...base.products[0], barcode: 'I-99999999' }],
-    }).lines[0],
+    mapZettlePurchase(
+      {
+        ...base,
+        products: [{ ...base.products[0], barcode: 'I-99999999' }],
+      },
+      'SEK',
+    ).lines[0],
   ).toMatchObject({ reference: null, labelConflict: true })
   expect(
-    mapZettlePurchase({
-      ...base,
-      products: [{ ...base.products[0], sku: 'other I-1234ABCD' }],
-    }).lines[0].reference,
+    mapZettlePurchase(
+      {
+        ...base,
+        products: [{ ...base.products[0], sku: 'other I-1234ABCD' }],
+      },
+      'SEK',
+    ).lines[0].reference,
   ).toBeNull()
 })
 it.each([
@@ -80,22 +91,30 @@ it.each([
   { products: [] },
   { products: [{ ...base.products[0], unitPrice: 1.5 }] },
 ])('rejects malformed %j', (patch) => {
-  expect(() => mapZettlePurchase({ ...base, ...patch })).toThrow()
+  expect(() => mapZettlePurchase({ ...base, ...patch }, 'SEK')).toThrow()
 })
 it('cursor only advances after a complete valid page', () => {
   expect(
-    mapZettlePage({ purchases: [base], lastPurchaseHash: 'next' }, null)
+    mapZettlePage({ purchases: [base], lastPurchaseHash: 'next' }, null, 'SEK')
       .nextCursor,
   ).toBe('next')
   expect(
-    mapZettlePage({ purchases: [], lastPurchaseHash: 'ignored' }, 'next')
+    mapZettlePage({ purchases: [], lastPurchaseHash: 'ignored' }, 'next', 'SEK')
       .nextCursor,
   ).toBe('next')
   expect(() =>
-    mapZettlePage({ purchases: [base], lastPurchaseHash: 'next' }, 'next'),
+    mapZettlePage(
+      { purchases: [base], lastPurchaseHash: 'next' },
+      'next',
+      'SEK',
+    ),
   ).toThrow('ZETTLE_CURSOR_STALLED')
   expect(() =>
-    mapZettlePage({ purchases: [base, base], lastPurchaseHash: 'next' }, null),
+    mapZettlePage(
+      { purchases: [base, base], lastPurchaseHash: 'next' },
+      null,
+      'SEK',
+    ),
   ).toThrow('ZETTLE_DUPLICATE_PURCHASE')
 })
 it('fixture transport clones data, refuses unknown cursor and honors abort without network', async () => {
@@ -139,3 +158,17 @@ it('test transport cannot be enabled against hosted data', async () => {
     zettleFixturesEnabled({ ...env, KOMISIO_ZETTLE_FIXTURES: 'false' }),
   ).toBe(false)
 })
+
+it.each(['EUR', 'USD'])(
+  'accepts a matching %s PayPal POS receipt and holds a mismatch',
+  (currency) => {
+    expect(mapZettlePurchase({ ...base, currency }, currency)).toMatchObject({
+      currency,
+      amountOre: 20000,
+      blockedReason: null,
+    })
+    expect(mapZettlePurchase({ ...base, currency }, 'SEK').blockedReason).toBe(
+      'currency',
+    )
+  },
+)

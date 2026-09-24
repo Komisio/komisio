@@ -219,6 +219,24 @@ describe('shopify connection engine', () => {
       completeShopifyConnection(c, { params, cookieState: 'x' }, env, http),
     ).rejects.toThrow('SHOPIFY_STATE_INVALID')
   })
+  it('surfaces a durable currency refusal from the database instead of reporting a connection', async () => {
+    const c = client((name) =>
+      name === 'tenant_role' ? 'owner' : { error: 'CURRENCY_MISMATCH' },
+    )
+    const state = signState(
+      'shopify-connection',
+      { tenantId: tenant, shop },
+      60,
+      env,
+    )
+    const params = signed({ code: 'abc', shop, state, timestamp: '1' })
+    const http = vi.fn(async (url: RequestInfo | URL) =>
+      String(url).endsWith('/admin/oauth/access_token') ? tokens() : shopBody(),
+    )
+    await expect(
+      completeShopifyConnection(c, { params, cookieState: state }, env, http),
+    ).rejects.toThrow('CURRENCY_MISMATCH')
+  })
   it('opens the token for a check and refuses an expired one', async () => {
     const cipher = seal(
       'shopify-connection',

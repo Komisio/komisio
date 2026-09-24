@@ -9,7 +9,7 @@ import {
   type CurrentStoreProfile,
 } from '@/lib/engine/store-profile'
 import { useIntakeAction } from './use-intake-action'
-import { storeCountries } from '@/lib/platform/credit-prices'
+import { storeCountries } from '@/lib/platform/countries'
 import { Button } from '@/components/ui/button'
 
 /** Owner or admin publishes the next profile version naming the current one. */

@@ -1,5 +1,13 @@
 # Decision Log
 
+- 2026-09-24: Store currencies are SEK, NOK, DKK, EUR and USD only, all with two minor digits. Onboarding offers an explicit choice; existing defaults and frozen money facts are preserved. No currency conversion.
+
+- 2026-09-24: Store profiles accept ISO 3166-1 countries independently of trading currency. Deployment signup blocks still apply only to registration/onboarding; profile edits never lock existing customers out.
+
+- 2026-09-24: The 100-credit pack costs USD 10 for US profiles; SEK 100, NOK 100, DKK 65 and EUR 9 remain unchanged. Other countries use EUR; missing legacy country remains SEK. USD 10 is a fixed rounded price, chosen under owner delegation.
+
+- 2026-09-24: Shopify connection and reconnection refuse a shop currency different from the store currency and retain a refusal event. The existing connection is preserved. Imported sales still require the store currency.
+
 - 2026-09-22: Shopify shares one connection for web, POS or both, with owner/admin-selected location and publications. Settings lock after sync starts; account changes cannot move them. Import records channel/location and holds out-of-scope orders. Updating products never replenishes existing inventory.
 
 - 2026-09-22: Owners approved own PayPal POS, Shopify and Fortnox accounts per tenant. Owner/admin connects; verified account identities stay pinned. PayPal credentials are encrypted per tenant; OAuth state binds tenant and selected account. Automation still requires its accepted scoped grant.

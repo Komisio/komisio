@@ -149,6 +149,7 @@ async function persist(
     p_expires_at: tokens.expires_in ? expiryFrom(tokens.expires_in) : null,
   })
   if (r.error) throw new Error(r.error.message)
+  if (r.data?.error) throw new Error(r.data.error)
 }
 
 /**
@@ -325,6 +326,7 @@ export const shopifyErrorCodes = [
   'SHOPIFY_RATE_LIMITED',
   'SHOPIFY_READ_FAILED',
   'SHOPIFY_WRONG_SHOP',
+  'CURRENCY_MISMATCH',
   'SHOPIFY_STATE_INVALID',
   'SHOPIFY_REFRESH_INVALID_GRANT',
   'SHOPIFY_REFRESH_FAILED',

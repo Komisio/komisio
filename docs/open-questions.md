@@ -1,5 +1,15 @@
 # Open questions
 
+Shopify public distribution (2026-09-23): App Store readiness requires
+mandatory signed compliance webhooks, a Shopify-initiated installation flow,
+and protected customer data approval for order/refund access, even without
+customer contact fields. The owner approved a tenant-bound compliance request
+queue on 2026-09-23. Request acknowledgement must
+not imply completed erasure; retention and handling must preserve required
+accounting evidence. Provider registration alone does not establish readiness.
+The queue does not implement erasure or disclosure execution, payload retention
+cleanup, Shopify-initiated installation or an approved App Store submission.
+
 Shopify POS (2026-09-22): owner approved a shared connection for web, POS or both, with per-tenant location selection. Real POS scanning, channel publication permissions, checkout discounts, mixed carts and cross-channel stock behavior still require development-shop acceptance. Moving an already synchronized connection to another location or channel needs an explicit inventory/history migration.
 
 Integration self-service (2026-09-22): the owner requested PayPal POS,

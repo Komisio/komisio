@@ -21,7 +21,7 @@ test('connections overview shows simple setup guidance before detailed controls'
     await expect(
       page
         .getByRole('region', { name: 'PayPal POS', exact: true })
-        .getByText(d.zettle.connectionConfigHint, { exact: true }),
+        .getByText(d.zettle.setupHint, { exact: true }),
     ).toBeVisible()
     for (const category of [
       d.integrationPage.pos,

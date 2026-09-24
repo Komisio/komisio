@@ -1905,11 +1905,11 @@
     "disconnected": "Shopify scollegato. Il token salvato è stato rimosso.",
     "connectionVerified": "Connessione verificata. Negozio online:",
     "connectionFailed": "Impossibile verificare la connessione. Controlla la configurazione o riprova più tardi.",
-    "connectionUnavailable": "La connessione pilota non è associata a questo negozio.",
-    "connectionTenantMissing": "Nella configurazione distribuita manca l'associazione al negozio (SHOPIFY_PILOT_TENANT_ID).",
-    "connectionClientMissing": "Nella configurazione distribuita l'ID client è mancante o malformato (SHOPIFY_CLIENT_ID).",
-    "connectionSecretMissing": "Nella configurazione distribuita manca il client secret (SHOPIFY_CLIENT_SECRET).",
-    "configHint": "Registra l'app Komisio nel Dev Dashboard di Shopify e imposta le variabili in Vercel; ridistribuisci dopo le modifiche. Nessun valore delle credenziali viene mostrato qui.",
+    "connectionUnavailable": "La connessione di Komisio a Shopify non è ancora attiva.",
+    "connectionTenantMissing": "La connessione di Komisio a Shopify non è ancora attiva.",
+    "connectionClientMissing": "La connessione di Komisio a Shopify non è ancora attiva.",
+    "connectionSecretMissing": "La connessione di Komisio a Shopify non è ancora attiva.",
+    "configHint": "Komisio deve completare la configurazione centrale della connessione. Potrai poi collegare qui l’account del tuo negozio. Contatta Komisio per assistenza.",
     "notice": "I token sono salvati cifrati con una chiave lato server. Qui sono visibili solo nome, dominio e valuta del negozio online.",
     "events": {
       "connected": "Collegato",
@@ -2041,12 +2041,12 @@
     "connectionFailed": "Impossibile verificare la connessione. Controlla la configurazione o riprova più tardi.",
     "databasePinned": "Il database aziendale corrisponde al numero associato.",
     "databaseUnpinned": "Associa questo numero di database nella configurazione (FORTNOX_EXPECTED_DATABASE_NUMBER) prima di attivare qualsiasi esportazione.",
-    "connectionUnavailable": "Fortnox non è attivato per questo negozio.",
-    "connectionTenantMissing": "La connessione Fortnox di questo negozio non è ancora pronta.",
-    "connectionClientMissing": "È necessario configurare la connessione Fortnox.",
-    "connectionSecretMissing": "È necessario configurare la connessione Fortnox.",
+    "connectionUnavailable": "La connessione di Komisio a Fortnox non è ancora attiva.",
+    "connectionTenantMissing": "La connessione di Komisio a Fortnox non è ancora attiva.",
+    "connectionClientMissing": "La connessione di Komisio a Fortnox non è ancora attiva.",
+    "connectionSecretMissing": "La connessione di Komisio a Fortnox non è ancora attiva.",
     "connectionCompanyNameMissing": "È necessario verificare l’azienda Fortnox di questo negozio.",
-    "configHint": "Controlla l'associazione al negozio e le impostazioni Vercel (Production). Ridistribuisci dopo le modifiche. Nessun valore delle credenziali viene mostrato qui.",
+    "configHint": "Komisio deve completare la configurazione centrale della connessione. Potrai poi collegare qui l’account del tuo negozio. Contatta Komisio per assistenza.",
     "ownerOnly": "Solo il proprietario del negozio o un amministratore può collegare Fortnox.",
     "notice": "Il collegamento riguarda questo negozio. Collegandoti non invii registrazioni contabili.",
     "sendVoucher": "Invia a Fortnox",
@@ -2504,5 +2504,33 @@
     "ecommerce": "Negozio online e cassa",
     "accounting": "Contabilità",
     "accountingSettings": "Apri le impostazioni contabili"
+  },
+  "shopifyPrivacy": {
+    "title": "Shopify · Richieste sulla privacy",
+    "intro": "Gestisci le richieste di Shopify. La ricezione non conferma la cancellazione. I dati contabili non vengono eliminati automaticamente.",
+    "back": "Torna alle integrazioni",
+    "empty": "Nessuna richiesta.",
+    "received": "Ricevuta",
+    "due": "Gestire entro",
+    "details": "Dettagli della richiesta",
+    "history": "Cronologia",
+    "outcome": "Nuovo stato",
+    "note": "Nota di gestione",
+    "noteHint": "Descrivi la procedura eseguita o il motivo della conservazione. Evita dati personali nella nota.",
+    "save": "Salva evento",
+    "conflict": "La richiesta è cambiata. Ricarica la pagina.",
+    "failed": "Salvataggio non riuscito. Riprova.",
+    "statuses": {
+      "pending": "In attesa",
+      "processing": "In corso",
+      "completed": "Procedura completata",
+      "retained": "Conservata con motivazione"
+    },
+    "topics": {
+      "customers/data_request": "Richiesta di accesso ai dati del cliente",
+      "customers/redact": "Richiesta di cancellazione dei dati del cliente",
+      "shop/redact": "Richiesta di cancellazione dei dati del negozio"
+    },
+    "unmatched": "Shopify · Richieste sulla privacy senza negozio"
   }
 }

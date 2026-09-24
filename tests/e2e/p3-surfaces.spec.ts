@@ -284,9 +284,25 @@ test('markdown runs apply every due step by hand and the policy switch turns the
       .getByLabel(d.storePolicy.automaticMarkdowns, { exact: true })
       .check()
     await page.getByLabel(d.storePolicy.confirm, { exact: true }).check()
+    // Exercise a slow publish: navigation must wait for the saved response.
+    await page.route('**/api/intake', async (route) => {
+      if (route.request().postDataJSON()?.action === 'publishStorePolicy')
+        await new Promise((resolve) => setTimeout(resolve, 500))
+      await route.continue()
+    })
+    const published = page.waitForResponse(
+      (response) =>
+        response.url().endsWith('/api/intake') &&
+        response.request().method() === 'POST' &&
+        response.request().postDataJSON()?.action === 'publishStorePolicy',
+    )
     await page
       .getByRole('button', { name: d.storePolicy.publish, exact: true })
       .click()
+    // The saved message is transient: refresh remounts the form by policy ID.
+    const response = await published
+    expect(response.status()).toBe(200)
+    expect(await response.json()).toMatchObject({ ok: true })
     await expect(
       page.getByLabel(d.storePolicy.automaticMarkdowns, { exact: true }),
     ).toBeChecked()

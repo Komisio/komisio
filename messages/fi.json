@@ -1905,11 +1905,11 @@
     "disconnected": "Shopify irrotettu. Tallennettu tunnus poistettiin.",
     "connectionVerified": "Yhteys tarkistettu. Verkkokauppa:",
     "connectionFailed": "Yhteyttä ei voitu tarkistaa. Tarkista määritykset tai yritä myöhemmin uudelleen.",
-    "connectionUnavailable": "Pilottiyhteyttä ei ole sidottu tähän kauppaan.",
-    "connectionTenantMissing": "Asennuksen määrityksistä puuttuu kaupan sidonta (SHOPIFY_PILOT_TENANT_ID).",
-    "connectionClientMissing": "Asennuksen määrityksissä on puuttuva tai virheellinen asiakastunnus (SHOPIFY_CLIENT_ID).",
-    "connectionSecretMissing": "Asiakassalaisuus puuttuu asennuksen määrityksistä (SHOPIFY_CLIENT_SECRET).",
-    "configHint": "Rekisteröi Komisio-sovellus Shopifyn Dev Dashboardissa ja aseta muuttujat Vercelissä; ota käyttöön uudelleen muutosten jälkeen. Tunnistetietojen arvoja ei näytetä täällä.",
+    "connectionUnavailable": "Komision yhteyttä palveluun Shopify ei ole vielä otettu käyttöön.",
+    "connectionTenantMissing": "Komision yhteyttä palveluun Shopify ei ole vielä otettu käyttöön.",
+    "connectionClientMissing": "Komision yhteyttä palveluun Shopify ei ole vielä otettu käyttöön.",
+    "connectionSecretMissing": "Komision yhteyttä palveluun Shopify ei ole vielä otettu käyttöön.",
+    "configHint": "Komision on viimeisteltävä yhteiset yhteysasetukset. Sen jälkeen voit yhdistää myymäläsi oman tilin täällä. Ota yhteyttä Komisioon saadaksesi apua.",
     "notice": "Tunnukset tallennetaan salattuina palvelinpuolen avaimella. Vain verkkokaupan nimi, verkkotunnus ja valuutta näkyvät täällä.",
     "events": {
       "connected": "Yhdistetty",
@@ -2041,12 +2041,12 @@
     "connectionFailed": "Yhteyttä ei voitu tarkistaa. Tarkista määritykset tai yritä myöhemmin uudelleen.",
     "databasePinned": "Yrityksen tietokanta vastaa kiinnitettyä numeroa.",
     "databaseUnpinned": "Kiinnitä tämä tietokantanumero määrityksiin (FORTNOX_EXPECTED_DATABASE_NUMBER) ennen kuin vienti otetaan käyttöön.",
-    "connectionUnavailable": "Fortnoxia ei ole otettu käyttöön tässä myymälässä.",
-    "connectionTenantMissing": "Myymälän Fortnox-yhteys ei ole valmis.",
-    "connectionClientMissing": "Fortnox-yhteyden asetukset on täydennettävä.",
-    "connectionSecretMissing": "Fortnox-yhteyden asetukset on täydennettävä.",
+    "connectionUnavailable": "Komision yhteyttä palveluun Fortnox ei ole vielä otettu käyttöön.",
+    "connectionTenantMissing": "Komision yhteyttä palveluun Fortnox ei ole vielä otettu käyttöön.",
+    "connectionClientMissing": "Komision yhteyttä palveluun Fortnox ei ole vielä otettu käyttöön.",
+    "connectionSecretMissing": "Komision yhteyttä palveluun Fortnox ei ole vielä otettu käyttöön.",
     "connectionCompanyNameMissing": "Myymälän Fortnox-yritys on tarkistettava.",
-    "configHint": "Tarkista kaupan sidonta ja Vercel-asetukset (Production). Ota käyttöön uudelleen muutosten jälkeen. Tunnistetietojen arvoja ei näytetä täällä.",
+    "configHint": "Komision on viimeisteltävä yhteiset yhteysasetukset. Sen jälkeen voit yhdistää myymäläsi oman tilin täällä. Ota yhteyttä Komisioon saadaksesi apua.",
     "ownerOnly": "Vain kaupan omistaja tai ylläpitäjä voi yhdistää Fortnoxin.",
     "notice": "Yhteys koskee tätä myymälää. Yhdistäminen ei lähetä kirjanpitovientejä.",
     "sendVoucher": "Lähetä Fortnoxiin",
@@ -2504,5 +2504,33 @@
     "ecommerce": "Verkkokauppa ja kassa",
     "accounting": "Kirjanpito",
     "accountingSettings": "Avaa kirjanpidon asetukset"
+  },
+  "shopifyPrivacy": {
+    "title": "Shopify · Tietosuojapyynnöt",
+    "intro": "Käsittele Shopifyn pyyntöjä. Vastaanotto ei tarkoita, että tiedot on poistettu. Kirjanpitotietoja ei poisteta automaattisesti.",
+    "back": "Takaisin integraatioihin",
+    "empty": "Ei pyyntöjä.",
+    "received": "Vastaanotettu",
+    "due": "Käsiteltävä viimeistään",
+    "details": "Pyynnön tiedot",
+    "history": "Historia",
+    "outcome": "Uusi tila",
+    "note": "Käsittelymerkintä",
+    "noteHint": "Kuvaa tehty toimi tai tietojen säilyttämisen syy. Älä lisää henkilötietoja merkintään.",
+    "save": "Tallenna tapahtuma",
+    "conflict": "Pyyntö on muuttunut. Lataa sivu uudelleen.",
+    "failed": "Tallennus epäonnistui. Yritä uudelleen.",
+    "statuses": {
+      "pending": "Odottaa",
+      "processing": "Käsittelyssä",
+      "completed": "Toimi tehty",
+      "retained": "Säilytetään perustellusti"
+    },
+    "topics": {
+      "customers/data_request": "Asiakastietojen tarkastuspyyntö",
+      "customers/redact": "Asiakastietojen poistopyyntö",
+      "shop/redact": "Kaupan tietojen poistopyyntö"
+    },
+    "unmatched": "Shopify · Kohdistamattomat tietosuojapyynnöt"
   }
 }

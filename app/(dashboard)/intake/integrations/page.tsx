@@ -131,6 +131,11 @@ export default async function Integrations({
           {all.intake.back}
         </Link>
       </div>
+      {['owner', 'admin'].includes(a.role) && (
+        <Link className="text-link" href="/intake/integrations/privacy">
+          {all.shopifyPrivacy.title}
+        </Link>
+      )}
       {!['owner', 'admin'].includes(a.role) && (
         <p>{all.integrationPage.adminOnly}</p>
       )}

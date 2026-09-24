@@ -1905,11 +1905,11 @@
     "disconnected": "Shopify är bortkopplat.",
     "connectionVerified": "Anslutningen verifierad. Butik:",
     "connectionFailed": "Kunde inte verifiera anslutningen. Kontrollera konfigurationen eller försök senare.",
-    "connectionUnavailable": "Shopify är inte aktiverat för den här butiken.",
-    "connectionTenantMissing": "Butikens Shopify-koppling är inte färdig.",
-    "connectionClientMissing": "Shopify-kopplingen behöver kompletteras.",
-    "connectionSecretMissing": "Shopify-kopplingen behöver kompletteras.",
-    "configHint": "Kontakta Komisio för hjälp att komma igång.",
+    "connectionUnavailable": "Komisios anslutning till Shopify är inte aktiverad ännu.",
+    "connectionTenantMissing": "Komisios anslutning till Shopify är inte aktiverad ännu.",
+    "connectionClientMissing": "Komisios anslutning till Shopify är inte aktiverad ännu.",
+    "connectionSecretMissing": "Komisios anslutning till Shopify är inte aktiverad ännu.",
+    "configHint": "Komisio behöver slutföra den gemensamma anslutningen. Därefter kan du ansluta butikens eget konto här. Kontakta Komisio för hjälp.",
     "notice": "Anslutningsuppgifterna sparas krypterade.",
     "events": {
       "connected": "Ansluten",
@@ -2041,12 +2041,12 @@
     "connectionFailed": "Kopplingen kunde inte verifieras. Kontrollera konfigurationen eller försök senare.",
     "databasePinned": "Företagsdatabasen matchar det låsta numret.",
     "databaseUnpinned": "Lås det här databasnumret i konfigurationen (FORTNOX_EXPECTED_DATABASE_NUMBER) innan någon export aktiveras.",
-    "connectionUnavailable": "Fortnox är inte aktiverat för den här butiken.",
-    "connectionTenantMissing": "Butikens Fortnox-koppling är inte färdig.",
-    "connectionClientMissing": "Fortnox-kopplingen behöver kompletteras.",
-    "connectionSecretMissing": "Fortnox-kopplingen behöver kompletteras.",
+    "connectionUnavailable": "Komisios anslutning till Fortnox är inte aktiverad ännu.",
+    "connectionTenantMissing": "Komisios anslutning till Fortnox är inte aktiverad ännu.",
+    "connectionClientMissing": "Komisios anslutning till Fortnox är inte aktiverad ännu.",
+    "connectionSecretMissing": "Komisios anslutning till Fortnox är inte aktiverad ännu.",
     "connectionCompanyNameMissing": "Butikens Fortnox-företag behöver kontrolleras.",
-    "configHint": "Kontakta Komisio för hjälp att komma igång.",
+    "configHint": "Komisio behöver slutföra den gemensamma anslutningen. Därefter kan du ansluta butikens eget konto här. Kontakta Komisio för hjälp.",
     "ownerOnly": "Bara butikens ägare eller en administratör kan koppla Fortnox.",
     "notice": "Anslutningen gäller den här butiken. Ingen bokföring skickas när du ansluter.",
     "sendVoucher": "Skicka till Fortnox",
@@ -2504,5 +2504,33 @@
     "ecommerce": "Webbshop och kassa",
     "accounting": "Bokföring",
     "accountingSettings": "Öppna bokföringsinställningar"
+  },
+  "shopifyPrivacy": {
+    "title": "Shopify · Dataskyddsärenden",
+    "intro": "Granska och hantera begäranden från Shopify. Mottagning betyder inte att en radering är utförd. Ingen bokföring raderas automatiskt.",
+    "back": "Till integrationerna",
+    "empty": "Inga ärenden.",
+    "received": "Mottaget",
+    "due": "Hantera senast",
+    "details": "Begärans uppgifter",
+    "history": "Historik",
+    "outcome": "Ny status",
+    "note": "Handläggningsanteckning",
+    "noteHint": "Beskriv utförd åtgärd eller varför uppgifter måste behållas. Undvik personuppgifter i anteckningen.",
+    "save": "Spara händelse",
+    "conflict": "Ärendet har ändrats. Ladda om sidan.",
+    "failed": "Det gick inte att spara. Försök igen.",
+    "statuses": {
+      "pending": "Väntar",
+      "processing": "Handläggs",
+      "completed": "Åtgärd utförd",
+      "retained": "Behålls med motivering"
+    },
+    "topics": {
+      "customers/data_request": "Begäran om registerutdrag",
+      "customers/redact": "Begäran om radering av kunduppgifter",
+      "shop/redact": "Begäran om radering av butiksuppgifter"
+    },
+    "unmatched": "Shopify · Omatchade dataskyddsärenden"
   }
 }

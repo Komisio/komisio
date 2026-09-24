@@ -1905,11 +1905,11 @@
     "disconnected": "Shopify frakoblet. Det lagrede tokenet ble fjernet.",
     "connectionVerified": "Tilkobling verifisert. Nettbutikk:",
     "connectionFailed": "Kunne ikke verifisere tilkoblingen. Kontroller konfigurasjonen eller prøv igjen senere.",
-    "connectionUnavailable": "Pilottilkoblingen er ikke knyttet til denne butikken.",
-    "connectionTenantMissing": "Den distribuerte konfigurasjonen mangler butikkbindingen (SHOPIFY_PILOT_TENANT_ID).",
-    "connectionClientMissing": "Den distribuerte konfigurasjonen har en manglende eller feilformet klient-ID (SHOPIFY_CLIENT_ID).",
-    "connectionSecretMissing": "Klienthemmeligheten mangler i den distribuerte konfigurasjonen (SHOPIFY_CLIENT_SECRET).",
-    "configHint": "Registrer Komisio-appen i Shopifys Dev Dashboard og sett variablene i Vercel; distribuer på nytt etter endringer. Ingen legitimasjonsverdier vises her.",
+    "connectionUnavailable": "Komisios tilkobling til Shopify er ikke aktivert ennå.",
+    "connectionTenantMissing": "Komisios tilkobling til Shopify er ikke aktivert ennå.",
+    "connectionClientMissing": "Komisios tilkobling til Shopify er ikke aktivert ennå.",
+    "connectionSecretMissing": "Komisios tilkobling til Shopify er ikke aktivert ennå.",
+    "configHint": "Komisio må fullføre det felles tilkoblingsoppsettet. Deretter kan du koble til butikkens egen konto her. Kontakt Komisio for hjelp.",
     "notice": "Tokener lagres kryptert med en nøkkel på serversiden. Bare nettbutikkens navn, domene og valuta er synlige her.",
     "events": {
       "connected": "Tilkoblet",
@@ -2041,12 +2041,12 @@
     "connectionFailed": "Kunne ikke verifisere tilkoblingen. Kontroller konfigurasjonen eller prøv igjen senere.",
     "databasePinned": "Selskapsdatabasen samsvarer med det låste nummeret.",
     "databaseUnpinned": "Lås dette databasenummeret i konfigurasjonen (FORTNOX_EXPECTED_DATABASE_NUMBER) før noen eksport aktiveres.",
-    "connectionUnavailable": "Fortnox er ikke aktivert for denne butikken.",
-    "connectionTenantMissing": "Butikkens Fortnox-tilkobling er ikke klar.",
-    "connectionClientMissing": "Fortnox-tilkoblingen må settes opp.",
-    "connectionSecretMissing": "Fortnox-tilkoblingen må settes opp.",
+    "connectionUnavailable": "Komisios tilkobling til Fortnox er ikke aktivert ennå.",
+    "connectionTenantMissing": "Komisios tilkobling til Fortnox er ikke aktivert ennå.",
+    "connectionClientMissing": "Komisios tilkobling til Fortnox er ikke aktivert ennå.",
+    "connectionSecretMissing": "Komisios tilkobling til Fortnox er ikke aktivert ennå.",
     "connectionCompanyNameMissing": "Butikkens Fortnox-selskap må kontrolleres.",
-    "configHint": "Kontroller butikkbindingen og Vercel-innstillingene (Production). Distribuer på nytt etter endringer. Ingen legitimasjonsverdier vises her.",
+    "configHint": "Komisio må fullføre det felles tilkoblingsoppsettet. Deretter kan du koble til butikkens egen konto her. Kontakt Komisio for hjelp.",
     "ownerOnly": "Bare butikkeieren eller en administrator kan koble til Fortnox.",
     "notice": "Tilkoblingen gjelder denne butikken. Ingen bokføring sendes når du kobler til.",
     "sendVoucher": "Send til Fortnox",
@@ -2504,5 +2504,33 @@
     "ecommerce": "Nettbutikk og kasse",
     "accounting": "Regnskap",
     "accountingSettings": "Åpne regnskapsinnstillinger"
+  },
+  "shopifyPrivacy": {
+    "title": "Shopify · Personvernforespørsler",
+    "intro": "Behandle forespørsler fra Shopify. Mottak betyr ikke at sletting er utført. Ingen regnskapsdata slettes automatisk.",
+    "back": "Til integrasjonene",
+    "empty": "Ingen forespørsler.",
+    "received": "Mottatt",
+    "due": "Behandles innen",
+    "details": "Detaljer",
+    "history": "Historikk",
+    "outcome": "Ny status",
+    "note": "Behandlingsnotat",
+    "noteHint": "Beskriv utført handling eller hvorfor data må beholdes. Unngå personopplysninger i notatet.",
+    "save": "Lagre hendelse",
+    "conflict": "Forespørselen er endret. Last siden på nytt.",
+    "failed": "Kunne ikke lagre. Prøv igjen.",
+    "statuses": {
+      "pending": "Venter",
+      "processing": "Under behandling",
+      "completed": "Handling utført",
+      "retained": "Beholdes med begrunnelse"
+    },
+    "topics": {
+      "customers/data_request": "Innsyn i kundeopplysninger",
+      "customers/redact": "Sletting av kundeopplysninger",
+      "shop/redact": "Sletting av butikkopplysninger"
+    },
+    "unmatched": "Shopify · Umatchede personvernforespørsler"
   }
 }

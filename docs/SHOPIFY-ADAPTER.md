@@ -1,5 +1,44 @@
 # Shopify adapter
 
+## Privacy request queue
+
+The three mandatory compliance topics have separate POST endpoints under
+`/api/integrations/shopify/privacy/`: `data-request`, `customer-redact` and
+`shop-redact`. Each verifies the raw-body HMAC with `SHOPIFY_CLIENT_SECRET`
+before parsing or signing in. Invalid signatures return 401; storage failures
+return 503 so Shopify can retry. A 200 means durable receipt only.
+
+The host provisions a dedicated confirmed Auth identity, registers its UUID
+using `komisio_private.register_shopify_privacy_actor(uuid)` as the database
+operator, and sets `SHOPIFY_WEBHOOK_EMAIL` and `SHOPIFY_WEBHOOK_PASSWORD`.
+This identity has no automatic tenant membership, token-read permission or
+service-role access. Do not reuse a staff login. `KOMISIO_CREDENTIAL_KEY`
+encrypts minimized customer/order references; request payloads are never logged.
+
+Shop domains bind through immutable successful connection history, including
+disconnected shops. The receiver cannot supply a tenant ID. If several stores
+previously connected the same shop, each gets a request. Unmatched receipts are
+visible only to a verified platform host through the host-page queue link.
+Repeated webhook delivery IDs are recorded once, including simultaneous retries.
+An identical payload from a later delivery remains a separate request.
+
+Owners/admins use `/intake/integrations/privacy` to review requests, their due
+dates and append-only handling history. A note is required for each outcome;
+stale decisions are rejected. Completed means a person recorded an action, not
+that Komisio automatically erased or disclosed data. Accounting data is never
+deleted by this queue. The host must arrange manual triage and track deadlines;
+this slice does not send alerts or implement a payload-retention cleanup policy.
+
+Before public submission: provision and test the receiver, register the three
+subscriptions in the Shopify app version, verify a real delivery, complete the
+disclosure/erasure and retention procedures, support installation initiated in
+Shopify, and obtain protected customer data approval for order/refund access.
+Do not mark the app as collecting no customer data merely because customer
+contact fields are not queried. The queue alone is not App Store readiness.
+
+References: [mandatory privacy webhooks](https://shopify.dev/docs/apps/build/compliance/privacy-law-compliance),
+[protected customer data](https://shopify.dev/docs/apps/launch/protected-customer-data).
+
 ## Online store and Shopify POS
 
 One tenant connection supports the online store, Shopify POS or both. Before

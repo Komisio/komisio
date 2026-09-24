@@ -12,7 +12,9 @@ test('store guide saves tenant answers and restores them in another language', a
   await page.getByRole('link', { name: 'Butiksguiden' }).click()
   await expect(page).toHaveURL(/\/guide$/)
   const tenant = await page.getByLabel('Aktiv butik').first().inputValue()
-  await page.getByLabel('Säljare lämnar påsar eller kartonger').check()
+  await page
+    .getByLabel('Säljare lämnar flera varor vid samma tillfälle')
+    .check()
   await page.getByRole('button', { name: 'Nästa' }).click()
   await page.getByLabel('Kläder & accessoarer').check()
   await page.getByRole('button', { name: 'Nästa' }).click()

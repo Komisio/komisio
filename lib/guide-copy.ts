@@ -91,7 +91,7 @@ const rows: Record<Locale, string[]> = {
     'Aktiv butik har ändrats. Ladda om sidan för rätt butik.',
     'Logga in igen för att spara.',
     'Säljare lämnar enskilda varor',
-    'Säljare lämnar påsar eller kartonger',
+    'Säljare lämnar flera varor vid samma tillfälle',
     'Vi köper in secondhandvaror',
     'Vi köper in nya varor',
     'Vi hämtar varor hemma hos säljaren',

@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-09-24: Use Swedish "inlämning" for goods a seller hands over on one occasion, regardless of packaging or size. Keep "påse" only for physical packaging and examples. This changes presentation, not receipt identifiers, storage or acceptance rules.
+
 - 2026-09-24: Store flow explains existing work with linked steps and internal per-step instructions. Owner/admin edits use revision checks; members can read. Instructions never change policy or execute work. Live queue metrics and free graph editing are deferred.
 
 - 2026-09-24: Store currencies are SEK, NOK, DKK, EUR and USD only, all with two minor digits. Onboarding offers an explicit choice; existing defaults and frozen money facts are preserved. No currency conversion.

@@ -21,7 +21,7 @@ test('staff records a payout entirely on the selected seller page', async ({
       ],
     )
     await f.commit()
-    await page.goto(`/intake/sellers/${f.seller}`)
+    await page.goto(`/intake/sellers/${f.seller}#seller-economy`)
     const section = page.locator('.seller-payouts')
     await section.locator('summary').click()
     await expect(

@@ -708,3 +708,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-23: Owner approved a tenant-bound Shopify privacy queue. Verify signatures before durable receipt; minimize and encrypt data. Bind shops through connection history. Owner/admin records append-only outcomes; receipt never means erasure and no accounting data is auto-deleted.
 
 - 2026-09-24: Store flow snapshots count unstarted drop-offs, unaccepted drafts, reception stages and inventory stages across all rows. Counts reuse queue facts; ages mean time since receipt or registration, not time in a stage. Starting work never implies a whole drop-off is complete.
+
+- 2026-09-24: Seller work is grouped under overview, drop-offs, items, finances, terms, communication and details tabs. Seller item reads filter by tenant and seller before pagination and reuse current lifecycle facts. Existing financial operations and permissions remain unchanged.

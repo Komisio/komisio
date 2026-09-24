@@ -2650,5 +2650,21 @@
       "deliveryOne": "consegna",
       "itemOne": "articolo"
     }
+  },
+  "sellerWorkspace": {
+    "overview": "Riepilogo",
+    "dropoffs": "Consegne",
+    "items": "Articoli",
+    "economy": "Finanze",
+    "terms": "Accordi e condizioni",
+    "communication": "Comunicazioni",
+    "details": "Dati",
+    "intro": "Tutto sul venditore, in un unico posto.",
+    "recent": "Movimenti recenti",
+    "showing": "Visualizzati {shown} di {total}",
+    "previous": "Precedente",
+    "next": "Successivo",
+    "noDropoffs": "Nessuna consegna registrata per questo venditore.",
+    "noItems": "Nessun articolo registrato per questo venditore."
   }
 }

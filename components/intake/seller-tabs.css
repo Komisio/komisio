@@ -1,0 +1,92 @@
+.seller-profile {
+  min-width: 0;
+  max-width: 1200px;
+}
+.seller-workspace {
+  min-width: 0;
+}
+.seller-tablist {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+  margin-bottom: 24px;
+}
+.seller-tablist button {
+  flex: 0 0 auto;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 600;
+}
+.seller-tablist button[aria-selected='true'] {
+  background: #174f46;
+  color: white;
+}
+.seller-tablist button:focus-visible {
+  outline: 2px solid #174f46;
+  outline-offset: 2px;
+}
+.seller-tabpanel:not([hidden]) {
+  display: grid;
+  gap: 20px;
+}
+.seller-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.seller-summary-grid .card {
+  padding: 22px;
+  display: grid;
+  gap: 8px;
+}
+.seller-summary-grid strong {
+  font-size: 1.8rem;
+  color: #174f46;
+}
+.seller-summary-grid a {
+  text-decoration: underline;
+}
+.seller-workspace-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.seller-workspace-list li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+.seller-workspace-list li > div {
+  display: grid;
+  gap: 4px;
+}
+.seller-workspace-list small {
+  color: var(--muted);
+}
+.seller-workspace-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+.seller-profile h1 {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 640px) {
+  .seller-summary-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .seller-summary-grid .card {
+    padding: 16px;
+  }
+  .seller-tablist button {
+    padding: 10px 12px;
+  }
+}

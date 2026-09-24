@@ -5,7 +5,7 @@ import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 test('staff edits optional seller details without rewriting an issued statement', async ({
   page,
-}) => {
+}, testInfo) => {
   const browserErrors: string[] = []
   page.on('pageerror', (error) => browserErrors.push(error.message))
   const email = `profile-${randomUUID()}@example.test`
@@ -19,10 +19,19 @@ test('staff edits optional seller details without rewriting an issued statement'
       )
     ).rows[0].id
     await f.commit()
-    await page.goto(`/intake/sellers/${f.seller}`)
+    await page.goto(`/intake/sellers/${f.seller}#seller-details`)
     await page.getByText(d.sellerDetails.edit, { exact: true }).click()
     await page.locator('#seller-profile-name').fill('Updated synthetic seller')
     await page.locator('#seller-profile-phone').fill('0700000000')
+    await page
+      .getByRole('tab', { name: d.sellerWorkspace.overview, exact: true })
+      .click()
+    await page
+      .getByRole('tab', { name: d.sellerWorkspace.details, exact: true })
+      .click()
+    await expect(page.locator('#seller-profile-phone')).toHaveValue(
+      '0700000000',
+    )
     await page.getByText(d.sellerDetails.address, { exact: true }).click()
     await page
       .locator('#seller-profile-addressLine1')
@@ -52,7 +61,7 @@ test('staff edits optional seller details without rewriting an issued statement'
       'Call before pickup',
     )
     await page.screenshot({
-      path: 'private/seller-profile-desktop.png',
+      path: testInfo.outputPath('seller-profile-desktop.png'),
       fullPage: true,
     })
     await page.setViewportSize({ width: 390, height: 844 })
@@ -66,7 +75,7 @@ test('staff edits optional seller details without rewriting an issued statement'
       '0700000000',
     )
     await page.screenshot({
-      path: 'private/seller-profile-mobile.png',
+      path: testInfo.outputPath('seller-profile-mobile.png'),
       fullPage: true,
     })
     await page.goto(`/intake/statements/${statement}`)

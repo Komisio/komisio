@@ -1,5 +1,10 @@
 # Open questions
 
+Seller workspace (2026-09-24): owner requested one seller page with tabs, using
+the earlier back office as inspiration. Existing receiving, items, finances,
+agreements, communication and profile operations are grouped around the seller;
+this does not change financial rules or agreement evidence requirements.
+
 Store flow (2026-09-24): owner approved an explanatory map with work-area links
 and internal editable instructions. Instructions do not configure or execute
 operations. The owner approved a live intake snapshot: unstarted drop-offs, unaccepted

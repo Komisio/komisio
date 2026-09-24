@@ -2650,5 +2650,21 @@
       "deliveryOne": "drop-off",
       "itemOne": "item"
     }
+  },
+  "sellerWorkspace": {
+    "overview": "Overview",
+    "dropoffs": "Drop-offs",
+    "items": "Items",
+    "economy": "Finances",
+    "terms": "Agreements & terms",
+    "communication": "Communication",
+    "details": "Details",
+    "intro": "Everything about the seller, in one place.",
+    "recent": "Recent transactions",
+    "showing": "Showing {shown} of {total}",
+    "previous": "Previous",
+    "next": "Next",
+    "noDropoffs": "No drop-offs recorded for this seller.",
+    "noItems": "No items recorded for this seller."
   }
 }

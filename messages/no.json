@@ -2650,5 +2650,21 @@
       "deliveryOne": "innlevering",
       "itemOne": "vare"
     }
+  },
+  "sellerWorkspace": {
+    "overview": "Oversikt",
+    "dropoffs": "Innleveringer",
+    "items": "Varer",
+    "economy": "Økonomi",
+    "terms": "Avtaler og vilkår",
+    "communication": "Kommunikasjon",
+    "details": "Opplysninger",
+    "intro": "Alt om selgeren, samlet på ett sted.",
+    "recent": "Siste kontohendelser",
+    "showing": "Viser {shown} av {total}",
+    "previous": "Forrige",
+    "next": "Neste",
+    "noDropoffs": "Ingen innleveringer registrert for selgeren.",
+    "noItems": "Ingen varer registrert for selgeren."
   }
 }

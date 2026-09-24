@@ -118,12 +118,15 @@ export async function readItemsForOrigins(
 }
 
 /** Newest 50 items with their current price. */
-export async function readItems(client: SupabaseClient, tenantInput: string) {
+export async function readItems(
+  client: SupabaseClient,
+  tenantInput: string,
+  sellerInput?: string,
+) {
   const tenantId = z.uuid().parse(tenantInput)
-  const { data, error } = await client
-    .from('items')
-    .select(columns)
-    .eq('tenant_id', tenantId)
+  let query = client.from('items').select(columns).eq('tenant_id', tenantId)
+  if (sellerInput) query = query.eq('seller_id', z.uuid().parse(sellerInput))
+  const { data, error } = await query
     .order('accepted_at', { ascending: false })
     .order('id')
     .limit(50)

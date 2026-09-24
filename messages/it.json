@@ -2620,6 +2620,35 @@
         "system": "Apri l’area di lavoro per consultare o eseguire questo passaggio.",
         "action": "Apri pagamenti"
       }
+    },
+    "live": {
+      "work": "Come lavoriamo",
+      "now": "Situazione attuale",
+      "intro": "Un’istantanea del lavoro registrato nel negozio. Apri una coda per continuare.",
+      "refresh": "Aggiorna",
+      "refreshing": "Aggiornamento…",
+      "updated": "Rilevato",
+      "unavailable": "Impossibile caricare la situazione attuale. Prova ad aggiornare di nuovo.",
+      "dropoffs": "Consegne non iniziate",
+      "dropoffHelp": "Consegne senza bozze di articoli o registrazioni iniziate.",
+      "drafts": "Bozze da completare",
+      "draftHelp": "Bozze di articoli non ancora accettati per la vendita. Il collegamento mostra le consegne interessate.",
+      "registration": "Registrazione",
+      "seller": "Approvazione del venditore",
+      "inventory": "Articoli in negozio",
+      "deliveries": "consegne",
+      "items": "articoli",
+      "received": "Ricezione più vecchia",
+      "started": "Inizio registrazione più vecchio",
+      "accepted": "Accettazione per la vendita più vecchia",
+      "days": "{n} giorni fa",
+      "today": "meno di un giorno fa",
+      "empty": "Nessuna attività in attesa qui.",
+      "open": "Apri coda",
+      "scope": "Il tempo si misura dalla ricezione o dalla registrazione, non dall’ingresso nella fase attuale. Una consegna iniziata può contenere altri articoli non registrati. Etichettatura e pagamenti non rientrano in questa panoramica.",
+      "showEmpty": "Mostra anche le fasi vuote",
+      "deliveryOne": "consegna",
+      "itemOne": "articolo"
     }
   }
 }

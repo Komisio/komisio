@@ -2620,6 +2620,35 @@
         "system": "Follow the request, approval and payment recording steps. This map does not transfer money.",
         "action": "Open payouts"
       }
+    },
+    "live": {
+      "work": "How we work",
+      "now": "Right now",
+      "intro": "A snapshot of the store’s recorded work. Open a queue to continue.",
+      "refresh": "Refresh",
+      "refreshing": "Refreshing…",
+      "updated": "Retrieved",
+      "unavailable": "The snapshot could not be loaded. Try refreshing again.",
+      "dropoffs": "Unstarted drop-offs",
+      "dropoffHelp": "Drop-offs without item drafts or a started registration.",
+      "drafts": "Drafts to complete",
+      "draftHelp": "Item drafts not yet accepted for sale. The link shows the affected drop-offs.",
+      "registration": "Registration",
+      "seller": "Seller approval",
+      "inventory": "Items in store",
+      "deliveries": "drop-offs",
+      "items": "items",
+      "received": "Oldest received",
+      "started": "Oldest registration started",
+      "accepted": "Oldest accepted for sale",
+      "days": "{n} days ago",
+      "today": "less than a day ago",
+      "empty": "Nothing waiting here.",
+      "open": "Open queue",
+      "scope": "Age is measured from receipt or registration, not entry into the current stage. A started drop-off may contain more unregistered items. Labelling and payouts are outside this overview.",
+      "showEmpty": "Show empty stages too",
+      "deliveryOne": "drop-off",
+      "itemOne": "item"
     }
   }
 }

@@ -9,6 +9,7 @@ const reference = z
 export const bagQueueNavigation = z
   .object({
     seller: z.uuid().optional(),
+    state: z.enum(['unstarted', 'drafts']).optional(),
     bag: z
       .string()
       .trim()
@@ -49,13 +50,17 @@ export async function readBagQueue(
 ) {
   const tenant = z.uuid().parse(tenantId)
   const filters = bagQueueNavigation.parse(input)
-  const result = await client.rpc('bag_queue_page', {
-    p_tenant: tenant,
-    p_seller: filters.seller ?? null,
-    p_reference: filters.bag || null,
-    p_older: filters.older ?? null,
-    p_newer: filters.newer ?? null,
-  })
+  const result = await client.rpc(
+    filters.state ? 'flow_dropoff_page' : 'bag_queue_page',
+    {
+      ...(filters.state ? { p_state: filters.state } : {}),
+      p_tenant: tenant,
+      p_seller: filters.seller ?? null,
+      p_reference: filters.bag || null,
+      p_older: filters.older ?? null,
+      p_newer: filters.newer ?? null,
+    },
+  )
   if (result.error) throw new Error('Unable to load bag queue')
   const rows = z
     .array(bagQueueRow)

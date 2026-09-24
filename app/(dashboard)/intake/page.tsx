@@ -213,7 +213,23 @@ export default async function Intake({
       </div>
       <section className="card intake-form" id="bag-queue">
         <h2>{d.queue}</h2>
-        <p>{d.queueHint}</p>
+        <p>
+          {filters.state === 'unstarted'
+            ? all.storeFlow.live.dropoffHelp
+            : filters.state === 'drafts'
+              ? all.storeFlow.live.draftHelp
+              : d.queueHint}
+        </p>
+        {filters.state && (
+          <p>
+            <strong>
+              {filters.state === 'unstarted'
+                ? all.storeFlow.live.dropoffs
+                : all.storeFlow.live.drafts}
+            </strong>{' '}
+            · <Link href={bagQueueHref({})}>{d.showAllBags}</Link>
+          </p>
+        )}
         <details className="intake-reference">
           <summary>{all.openByReference.title}</summary>
           <form action="/intake/open" className="row wrap">
@@ -236,6 +252,9 @@ export default async function Intake({
           {selected.data ? d.bagsFor + ': ' + selected.data.name : d.allSellers}
         </p>
         <form action="/intake#bag-queue" className="field">
+          {filters.state && (
+            <input type="hidden" name="state" value={filters.state} />
+          )}
           {filters.seller && (
             <input type="hidden" name="seller" value={filters.seller} />
           )}
@@ -256,7 +275,10 @@ export default async function Intake({
           {filters.bag && (
             <Link
               className="text-link"
-              href={bagQueueHref({ seller: filters.seller })}
+              href={bagQueueHref({
+                seller: filters.seller,
+                state: filters.state,
+              })}
             >
               {d.clearBagSearch}
             </Link>
@@ -311,6 +333,7 @@ export default async function Intake({
             <Link
               className="text-link"
               href={bagQueueHref({
+                state: filters.state,
                 seller: filters.seller,
                 bag: filters.bag,
                 newer: bags.items[0].reference,
@@ -323,6 +346,7 @@ export default async function Intake({
             <Link
               className="text-link"
               href={bagQueueHref({
+                state: filters.state,
                 seller: filters.seller,
                 bag: filters.bag,
                 older: bags.items.at(-1)!.reference,
@@ -334,7 +358,11 @@ export default async function Intake({
           {(filters.older || filters.newer) && (
             <Link
               className="text-link"
-              href={bagQueueHref({ seller: filters.seller, bag: filters.bag })}
+              href={bagQueueHref({
+                state: filters.state,
+                seller: filters.seller,
+                bag: filters.bag,
+              })}
             >
               {d.firstBags}
             </Link>

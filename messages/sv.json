@@ -2539,13 +2539,7 @@
     "eyebrow": "Så arbetar vi",
     "intro": "Följ en inlämning från mottagning till försäljning och utbetalning. Välj ett steg för att förstå vad som händer och öppna arbetsvyn.",
     "guide": "Kartan förklarar arbetssättet. Den visar inte aktuell status och startar inga aktiviteter.",
-    "groups": [
-      "Ta emot",
-      "Registrera",
-      "Sälj",
-      "Hantera osålt",
-      "Betala ut"
-    ],
+    "groups": ["Ta emot", "Registrera", "Sälj", "Hantera osålt", "Betala ut"],
     "details": "Om aktiviteten",
     "happens": "Vad som händer",
     "inKomisio": "I Komisio",
@@ -2626,6 +2620,35 @@
         "system": "Följ stegen för begäran, godkännande och registrering av betalning. Kartan överför inga pengar.",
         "action": "Öppna utbetalningar"
       }
+    },
+    "live": {
+      "work": "Så arbetar vi",
+      "now": "Läget nu",
+      "intro": "En ögonblicksbild av butikens registrerade arbete. Öppna en kö för att arbeta vidare.",
+      "refresh": "Uppdatera",
+      "refreshing": "Uppdaterar…",
+      "updated": "Hämtat",
+      "unavailable": "Läget kunde inte hämtas. Försök uppdatera igen.",
+      "dropoffs": "Ej påbörjade inlämningar",
+      "dropoffHelp": "Inlämningar utan registrerade varor eller påbörjad registrering.",
+      "drafts": "Utkast att färdigställa",
+      "draftHelp": "Varuutkast som ännu inte har godkänts för försäljning. Länken visar berörda inlämningar.",
+      "registration": "Registrering",
+      "seller": "Säljarens godkännande",
+      "inventory": "Varor i butiken",
+      "deliveries": "inlämningar",
+      "items": "varor",
+      "received": "Äldsta mottagen",
+      "started": "Äldsta registrering påbörjad",
+      "accepted": "Äldsta godkänd för försäljning",
+      "days": "{n} dagar sedan",
+      "today": "mindre än ett dygn sedan",
+      "empty": "Inget väntar här.",
+      "open": "Öppna kön",
+      "scope": "Tiden räknas från mottagning eller registrering, inte från inträdet i nuvarande steg. En påbörjad inlämning kan innehålla fler oregistrerade varor. Märkning och utbetalning ingår inte i denna överblick.",
+      "showEmpty": "Visa även tomma steg",
+      "deliveryOne": "inlämning",
+      "itemOne": "vara"
     }
   }
 }

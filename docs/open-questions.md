@@ -2,8 +2,10 @@
 
 Store flow (2026-09-24): owner approved an explanatory map with work-area links
 and internal editable instructions. Instructions do not configure or execute
-operations. Live queue metrics, item progress and free diagram editing remain
-follow-ups; the first version describes the bag-first route.
+operations. The owner approved a live intake snapshot: unstarted drop-offs, unaccepted
+drafts, reception queues and inventory stages. Whole-drop-off completion is not
+recorded; starting registration does not establish completion. Individual item
+progress and free diagram editing remain follow-ups.
 
 Shopify public distribution (2026-09-23): App Store readiness requires
 mandatory signed compliance webhooks, a Shopify-initiated installation flow,

@@ -2626,6 +2626,35 @@
         "system": "Öffnen Sie den Arbeitsbereich, um diesen Schritt anzusehen oder auszuführen.",
         "action": "Auszahlungen öffnen"
       }
+    },
+    "live": {
+      "work": "So arbeiten wir",
+      "now": "Aktueller Stand",
+      "intro": "Eine Momentaufnahme der erfassten Arbeit im Geschäft. Öffnen Sie eine Warteschlange, um fortzufahren.",
+      "refresh": "Aktualisieren",
+      "refreshing": "Wird aktualisiert…",
+      "updated": "Abgerufen",
+      "unavailable": "Der aktuelle Stand konnte nicht geladen werden. Bitte erneut aktualisieren.",
+      "dropoffs": "Noch nicht begonnene Einlieferungen",
+      "dropoffHelp": "Einlieferungen ohne Artikelentwürfe oder begonnene Erfassung.",
+      "drafts": "Entwürfe fertigstellen",
+      "draftHelp": "Noch nicht zum Verkauf freigegebene Artikelentwürfe. Der Link zeigt die betroffenen Einlieferungen.",
+      "registration": "Erfassung",
+      "seller": "Freigabe durch den Verkäufer",
+      "inventory": "Artikel im Geschäft",
+      "deliveries": "Einlieferungen",
+      "items": "Artikel",
+      "received": "Älteste Annahme",
+      "started": "Ältester Erfassungsbeginn",
+      "accepted": "Älteste Verkaufsfreigabe",
+      "days": "vor {n} Tagen",
+      "today": "vor weniger als einem Tag",
+      "empty": "Hier wartet nichts.",
+      "open": "Warteschlange öffnen",
+      "scope": "Das Alter wird ab Annahme oder Erfassung gemessen, nicht ab Eintritt in den aktuellen Schritt. Eine begonnene Einlieferung kann weitere nicht erfasste Artikel enthalten. Etikettierung und Auszahlungen sind nicht Teil dieser Übersicht.",
+      "showEmpty": "Auch leere Schritte anzeigen",
+      "deliveryOne": "Einlieferung",
+      "itemOne": "Artikel"
     }
   }
 }

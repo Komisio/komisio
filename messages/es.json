@@ -2626,6 +2626,35 @@
         "system": "Abre el área de trabajo para consultar o realizar este paso.",
         "action": "Abrir pagos"
       }
+    },
+    "live": {
+      "work": "Cómo trabajamos",
+      "now": "Situación actual",
+      "intro": "Una instantánea del trabajo registrado en la tienda. Abre una cola para continuar.",
+      "refresh": "Actualizar",
+      "refreshing": "Actualizando…",
+      "updated": "Consultado",
+      "unavailable": "No se pudo cargar la situación actual. Intenta actualizar de nuevo.",
+      "dropoffs": "Entregas sin iniciar",
+      "dropoffHelp": "Entregas sin borradores de artículos ni registro iniciado.",
+      "drafts": "Borradores por completar",
+      "draftHelp": "Borradores de artículos aún no aceptados para la venta. El enlace muestra las entregas correspondientes.",
+      "registration": "Registro",
+      "seller": "Aprobación del vendedor",
+      "inventory": "Artículos en la tienda",
+      "deliveries": "entregas",
+      "items": "artículos",
+      "received": "Recepción más antigua",
+      "started": "Inicio de registro más antiguo",
+      "accepted": "Aceptación para la venta más antigua",
+      "days": "hace {n} días",
+      "today": "hace menos de un día",
+      "empty": "No hay nada pendiente aquí.",
+      "open": "Abrir cola",
+      "scope": "El tiempo se mide desde la recepción o el registro, no desde la entrada en el paso actual. Una entrega iniciada puede contener más artículos sin registrar. El etiquetado y los pagos quedan fuera de esta vista.",
+      "showEmpty": "Mostrar también los pasos vacíos",
+      "deliveryOne": "entrega",
+      "itemOne": "artículo"
     }
   }
 }

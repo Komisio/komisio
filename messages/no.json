@@ -2620,6 +2620,35 @@
         "system": "Åpne arbeidsvisningen for å se eller utføre dette trinnet.",
         "action": "Åpne utbetalinger"
       }
+    },
+    "live": {
+      "work": "Slik arbeider vi",
+      "now": "Status nå",
+      "intro": "Et øyeblikksbilde av butikkens registrerte arbeid. Åpne en kø for å fortsette.",
+      "refresh": "Oppdater",
+      "refreshing": "Oppdaterer…",
+      "updated": "Hentet",
+      "unavailable": "Statusen kunne ikke hentes. Prøv å oppdatere igjen.",
+      "dropoffs": "Ikke påbegynte innleveringer",
+      "dropoffHelp": "Innleveringer uten vareutkast eller påbegynt registrering.",
+      "drafts": "Utkast å fullføre",
+      "draftHelp": "Vareutkast som ennå ikke er godkjent for salg. Lenken viser de aktuelle innleveringene.",
+      "registration": "Registrering",
+      "seller": "Selgerens godkjenning",
+      "inventory": "Varer i butikken",
+      "deliveries": "innleveringer",
+      "items": "varer",
+      "received": "Eldste mottatt",
+      "started": "Eldste registrering påbegynt",
+      "accepted": "Eldste godkjent for salg",
+      "days": "{n} dager siden",
+      "today": "for mindre enn ett døgn siden",
+      "empty": "Ingenting venter her.",
+      "open": "Åpne køen",
+      "scope": "Tiden regnes fra mottak eller registrering, ikke fra starten på nåværende trinn. En påbegynt innlevering kan inneholde flere uregistrerte varer. Merking og utbetalinger inngår ikke i oversikten.",
+      "showEmpty": "Vis også tomme trinn",
+      "deliveryOne": "innlevering",
+      "itemOne": "vare"
     }
   }
 }

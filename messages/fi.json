@@ -2626,6 +2626,35 @@
         "system": "Avaa työnäkymä tarkastellaksesi tai suorittaaksesi tämän vaiheen.",
         "action": "Avaa tilitykset"
       }
+    },
+    "live": {
+      "work": "Näin työskentelemme",
+      "now": "Tilanne nyt",
+      "intro": "Tilannekuva myymälän kirjatusta työstä. Avaa jono jatkaaksesi.",
+      "refresh": "Päivitä",
+      "refreshing": "Päivitetään…",
+      "updated": "Haettu",
+      "unavailable": "Tilannekuvaa ei voitu hakea. Yritä päivittää uudelleen.",
+      "dropoffs": "Aloittamattomat tuontierät",
+      "dropoffHelp": "Tuontierät, joissa ei ole tuoteluonnoksia eikä aloitettua rekisteröintiä.",
+      "drafts": "Viimeisteltävät luonnokset",
+      "draftHelp": "Tuoteluonnokset, joita ei ole vielä hyväksytty myyntiin. Linkki näyttää kyseiset tuontierät.",
+      "registration": "Rekisteröinti",
+      "seller": "Myyjän hyväksyntä",
+      "inventory": "Myymälän tuotteet",
+      "deliveries": "tuontierää",
+      "items": "tuotetta",
+      "received": "Vanhin vastaanotettu",
+      "started": "Vanhin rekisteröinti aloitettu",
+      "accepted": "Vanhin myyntiin hyväksytty",
+      "days": "{n} päivää sitten",
+      "today": "alle vuorokausi sitten",
+      "empty": "Tässä ei ole odottavia töitä.",
+      "open": "Avaa jono",
+      "scope": "Aika lasketaan vastaanotosta tai rekisteröinnistä, ei nykyisen vaiheen alkamisesta. Aloitettu tuontierä voi sisältää lisää rekisteröimättömiä tuotteita. Merkintä ja tilitykset eivät sisälly tähän näkymään.",
+      "showEmpty": "Näytä myös tyhjät vaiheet",
+      "deliveryOne": "tuontierä",
+      "itemOne": "tuote"
     }
   }
 }

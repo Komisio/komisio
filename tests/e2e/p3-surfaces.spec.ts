@@ -290,12 +290,19 @@ test('markdown runs apply every due step by hand and the policy switch turns the
         await new Promise((resolve) => setTimeout(resolve, 500))
       await route.continue()
     })
+    const published = page.waitForResponse(
+      (response) =>
+        response.url().endsWith('/api/intake') &&
+        response.request().method() === 'POST' &&
+        response.request().postDataJSON()?.action === 'publishStorePolicy',
+    )
     await page
       .getByRole('button', { name: d.storePolicy.publish, exact: true })
       .click()
-    await expect(
-      page.getByText(d.storePolicy.saved, { exact: true }),
-    ).toBeVisible()
+    // The saved message is transient: refresh remounts the form by policy ID.
+    const response = await published
+    expect(response.status()).toBe(200)
+    expect(await response.json()).toMatchObject({ ok: true })
     await expect(
       page.getByLabel(d.storePolicy.automaticMarkdowns, { exact: true }),
     ).toBeChecked()

@@ -2533,5 +2533,93 @@
       "shop/redact": "Shop erasure request"
     },
     "unmatched": "Shopify · Unmatched privacy requests"
+  },
+  "storeFlow": {
+    "title": "Store flow",
+    "eyebrow": "How we work",
+    "intro": "Follow a bag from handover to sale and payout. Select a step to see what happens and open the work area.",
+    "guide": "This map explains the work. It does not show live progress or start any operations.",
+    "groups": ["Receive", "Register", "Sell", "Handle unsold items", "Pay out"],
+    "details": "Step details",
+    "happens": "What happens",
+    "inKomisio": "In Komisio",
+    "localRoutine": "Our own routine",
+    "noteHelp": "Internal instructions for the team. These notes do not change settings or record completed work.",
+    "placeholder": "For example: put the bag on shelf B after inspection.",
+    "empty": "No local instructions yet.",
+    "save": "Save instructions",
+    "saving": "Saving…",
+    "saved": "Instructions saved.",
+    "failed": "Could not save. Your text is retained. Check the active store and try again.",
+    "conflict": "Someone has changed the instructions. Copy your text and reload before saving again.",
+    "unsaved": "Unsaved changes",
+    "branch": "Sold → payout. Unsold → handle according to the agreement.",
+    "reviewRequired": "This store requires the seller’s approval of each item. Open the work queue to review the current state.",
+    "reviewDelegated": "This store uses delegated review. Follow the agreed terms; a bag receipt alone does not make its items ready for sale.",
+    "steps": {
+      "arrive": {
+        "title": "Seller arrives with a bag",
+        "actor": "Seller",
+        "description": "The seller hands over goods and identifies their owner.",
+        "system": "Find or register the seller and check the current agreement.",
+        "action": "Open sellers"
+      },
+      "receive": {
+        "title": "Receive and label the bag",
+        "actor": "Staff",
+        "description": "Receive the bag without registering each item.",
+        "system": "Link the bag to its seller. Receipt is recorded separately from item acceptance.",
+        "action": "Receive a bag"
+      },
+      "wait": {
+        "title": "Bag awaits inspection",
+        "actor": "Staff",
+        "description": "Keep the bag until the team can inspect its contents.",
+        "system": "Find the bag in the queue and open its reception.",
+        "action": "Open bag queue"
+      },
+      "register": {
+        "title": "Inspect and register items",
+        "actor": "Staff",
+        "description": "Describe, assess and price the contents of the bag.",
+        "system": "Open the bag to register items. Handle rejected goods according to the agreement.",
+        "action": "Choose a bag"
+      },
+      "review": {
+        "title": "Confirm prices and terms",
+        "actor": "Staff and seller",
+        "description": "Check that the conditions for accepting the item are met.",
+        "system": "Follow the store’s current seller approval setting.",
+        "action": "Open work queue"
+      },
+      "label": {
+        "title": "Label and prepare items",
+        "actor": "Staff",
+        "description": "Attach the correct label and place the item for sale.",
+        "system": "Open the item list for labels and item details.",
+        "action": "Open items"
+      },
+      "sell": {
+        "title": "Item sells",
+        "actor": "Staff and Komisio",
+        "description": "A customer buys the item in the store or a connected channel.",
+        "system": "Recorded sales appear here. Imports depend on connected integrations and their status.",
+        "action": "Open sales"
+      },
+      "unsold": {
+        "title": "Handle unsold items",
+        "actor": "Staff",
+        "description": "Follow the agreement for items that have not sold.",
+        "system": "Open the lifecycle view for items needing attention. Notes here do not change the agreement.",
+        "action": "Open lifecycle"
+      },
+      "payout": {
+        "title": "Handle payout",
+        "actor": "Staff",
+        "description": "Check the seller balance and handle payment.",
+        "system": "Follow the request, approval and payment recording steps. This map does not transfer money.",
+        "action": "Open payouts"
+      }
+    }
   }
 }

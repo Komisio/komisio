@@ -21,6 +21,7 @@ import {
   UserRound,
   Users,
   Wallet,
+  Workflow,
   Zap,
   type LucideProps,
 } from 'lucide-react'
@@ -48,6 +49,7 @@ const icons = {
   UserRound,
   Users,
   Wallet,
+  Workflow,
   Zap,
 }
 

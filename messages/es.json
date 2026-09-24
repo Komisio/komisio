@@ -2533,5 +2533,99 @@
       "shop/redact": "Solicitud de borrado de datos de la tienda"
     },
     "unmatched": "Shopify · Solicitudes de privacidad sin tienda"
+  },
+  "storeFlow": {
+    "title": "Flujo de la tienda",
+    "eyebrow": "Así trabajamos",
+    "intro": "Sigue una bolsa desde la entrega hasta la venta y el pago. Selecciona un paso para abrir el área de trabajo.",
+    "guide": "El mapa explica el trabajo. No muestra el estado en tiempo real ni inicia operaciones.",
+    "groups": [
+      "Recibir",
+      "Registrar",
+      "Vender",
+      "Gestionar no vendidos",
+      "Pagar"
+    ],
+    "details": "Detalles del paso",
+    "happens": "Qué ocurre",
+    "inKomisio": "En Komisio",
+    "localRoutine": "Nuestra rutina",
+    "noteHelp": "Instrucciones internas para el equipo. No cambian ajustes ni registran trabajo realizado.",
+    "placeholder": "Por ejemplo: coloca la bolsa en el estante B.",
+    "empty": "Todavía no hay instrucciones propias.",
+    "save": "Guardar instrucciones",
+    "saving": "Guardando…",
+    "saved": "Instrucciones guardadas.",
+    "failed": "No se pudo guardar. El texto se conserva. Comprueba la tienda seleccionada e inténtalo de nuevo.",
+    "conflict": "Alguien ha cambiado las instrucciones. Copia tu texto y recarga la página antes de guardar.",
+    "unsaved": "Cambios sin guardar",
+    "branch": "Vendido → pago. Sin vender → gestión según el acuerdo.",
+    "reviewRequired": "La tienda exige la aprobación del vendedor para cada artículo. Abre la cola de trabajo.",
+    "reviewDelegated": "La tienda utiliza aprobación delegada. Recibir una bolsa no hace que sus artículos estén listos para vender.",
+    "steps": {
+      "arrive": {
+        "title": "El vendedor llega con una bolsa",
+        "actor": "Vendedor",
+        "description": "Busca o registra al vendedor y comprueba el acuerdo.",
+        "system": "Abre el área de trabajo para consultar o realizar este paso.",
+        "action": "Abrir vendedores"
+      },
+      "receive": {
+        "title": "Recibir y etiquetar la bolsa",
+        "actor": "Personal",
+        "description": "Vincula la bolsa al vendedor sin registrar cada artículo. La recepción no es la aceptación de los artículos.",
+        "system": "Abre el área de trabajo para consultar o realizar este paso.",
+        "action": "Recibir bolsa"
+      },
+      "wait": {
+        "title": "La bolsa espera revisión",
+        "actor": "Personal",
+        "description": "Guarda la bolsa hasta su revisión. Encuéntrala en la cola de bolsas.",
+        "system": "Abre el área de trabajo para consultar o realizar este paso.",
+        "action": "Abrir cola de bolsas"
+      },
+      "register": {
+        "title": "Revisar y registrar artículos",
+        "actor": "Personal",
+        "description": "Abre la bolsa para describir, revisar y poner precio a los artículos. Gestiona los rechazados según el acuerdo.",
+        "system": "Abre el área de trabajo para consultar o realizar este paso.",
+        "action": "Elegir bolsa"
+      },
+      "review": {
+        "title": "Confirmar precio y condiciones",
+        "actor": "Personal y vendedor",
+        "description": "Comprueba que se cumplen las condiciones para aceptar el artículo.",
+        "system": "Abre el área de trabajo para consultar o realizar este paso.",
+        "action": "Abrir cola de trabajo"
+      },
+      "label": {
+        "title": "Etiquetar y preparar artículos",
+        "actor": "Personal",
+        "description": "Coloca la etiqueta correcta y prepara el artículo para la venta. Accede a las etiquetas desde la lista de artículos.",
+        "system": "Abre el área de trabajo para consultar o realizar este paso.",
+        "action": "Abrir artículos"
+      },
+      "sell": {
+        "title": "Se vende el artículo",
+        "actor": "Personal y Komisio",
+        "description": "Aquí aparecen las ventas registradas. Las importaciones dependen de las integraciones conectadas y su estado.",
+        "system": "Abre el área de trabajo para consultar o realizar este paso.",
+        "action": "Abrir ventas"
+      },
+      "unsold": {
+        "title": "Gestionar artículos no vendidos",
+        "actor": "Personal",
+        "description": "Sigue el acuerdo para los artículos no vendidos. Abre la vista de ciclo de vida.",
+        "system": "Abre el área de trabajo para consultar o realizar este paso.",
+        "action": "Abrir ciclo de vida"
+      },
+      "payout": {
+        "title": "Gestionar el pago",
+        "actor": "Personal",
+        "description": "Comprueba el saldo y sigue los pasos de solicitud, aprobación y registro del pago. El mapa no transfiere dinero.",
+        "system": "Abre el área de trabajo para consultar o realizar este paso.",
+        "action": "Abrir pagos"
+      }
+    }
   }
 }

@@ -81,6 +81,9 @@ export function buildNavigation(
   groups.push({
     label: n.store,
     links: [
+      ...(options.intakeEnabled
+        ? [{ path: '/intake/flow', label: d.storeFlow.title, icon: 'Workflow' }]
+        : []),
       { path: '/settings', label: d.tenant, icon: 'Settings2' },
       { path: '/members', label: d.members, icon: 'Users' },
       ...(options.host

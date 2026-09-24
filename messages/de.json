@@ -2533,5 +2533,99 @@
       "shop/redact": "Löschung von Shopdaten"
     },
     "unmatched": "Shopify · Nicht zugeordnete Datenschutzanfragen"
+  },
+  "storeFlow": {
+    "title": "Ablauf im Laden",
+    "eyebrow": "So arbeiten wir",
+    "intro": "Verfolgen Sie eine Tasche von der Abgabe bis zum Verkauf und zur Auszahlung. Wählen Sie einen Schritt, um den Arbeitsbereich zu öffnen.",
+    "guide": "Die Karte erklärt den Ablauf. Sie zeigt keinen Live-Status und startet keine Vorgänge.",
+    "groups": [
+      "Annehmen",
+      "Erfassen",
+      "Verkaufen",
+      "Unverkauftes bearbeiten",
+      "Auszahlen"
+    ],
+    "details": "Details zum Schritt",
+    "happens": "Was passiert",
+    "inKomisio": "In Komisio",
+    "localRoutine": "Unsere eigene Routine",
+    "noteHelp": "Interne Anweisungen für das Team. Sie ändern keine Einstellungen und bestätigen keine erledigten Arbeiten.",
+    "placeholder": "Zum Beispiel: die Tasche nach der Prüfung in Regal B stellen.",
+    "empty": "Noch keine eigenen Anweisungen.",
+    "save": "Anweisungen speichern",
+    "saving": "Speichern…",
+    "saved": "Anweisungen gespeichert.",
+    "failed": "Speichern fehlgeschlagen. Der Text bleibt erhalten. Prüfen Sie den gewählten Laden und versuchen Sie es erneut.",
+    "conflict": "Die Anweisungen wurden geändert. Kopieren Sie Ihren Text und laden Sie die Seite vor dem Speichern neu.",
+    "unsaved": "Ungespeicherte Änderungen",
+    "branch": "Verkauft → Auszahlung. Unverkauft → Bearbeitung gemäß Vereinbarung.",
+    "reviewRequired": "Der Laden verlangt die Zustimmung des Verkäufers zu jedem Artikel. Öffnen Sie die Aufgabenliste.",
+    "reviewDelegated": "Der Laden verwendet eine delegierte Freigabe. Die Annahme einer Tasche macht Artikel noch nicht verkaufsbereit.",
+    "steps": {
+      "arrive": {
+        "title": "Verkäufer bringt eine Tasche",
+        "actor": "Verkäufer",
+        "description": "Verkäufer suchen oder erfassen und Vereinbarung prüfen.",
+        "system": "Öffnen Sie den Arbeitsbereich, um diesen Schritt anzusehen oder auszuführen.",
+        "action": "Verkäufer öffnen"
+      },
+      "receive": {
+        "title": "Tasche annehmen und kennzeichnen",
+        "actor": "Personal",
+        "description": "Tasche dem Verkäufer zuordnen, ohne jeden Artikel zu erfassen. Annahme und Artikelfreigabe sind getrennt.",
+        "system": "Öffnen Sie den Arbeitsbereich, um diesen Schritt anzusehen oder auszuführen.",
+        "action": "Tasche annehmen"
+      },
+      "wait": {
+        "title": "Tasche wartet auf Prüfung",
+        "actor": "Personal",
+        "description": "Tasche bis zur Prüfung aufbewahren. Sie finden sie in der Warteschlange.",
+        "system": "Öffnen Sie den Arbeitsbereich, um diesen Schritt anzusehen oder auszuführen.",
+        "action": "Taschenwarteschlange öffnen"
+      },
+      "register": {
+        "title": "Artikel prüfen und erfassen",
+        "actor": "Personal",
+        "description": "Tasche öffnen, um Artikel zu beschreiben, zu prüfen und zu bepreisen. Abgelehnte Ware gemäß Vereinbarung behandeln.",
+        "system": "Öffnen Sie den Arbeitsbereich, um diesen Schritt anzusehen oder auszuführen.",
+        "action": "Tasche auswählen"
+      },
+      "review": {
+        "title": "Preis und Bedingungen bestätigen",
+        "actor": "Personal und Verkäufer",
+        "description": "Prüfen, ob die Bedingungen für die Artikelannahme erfüllt sind.",
+        "system": "Öffnen Sie den Arbeitsbereich, um diesen Schritt anzusehen oder auszuführen.",
+        "action": "Aufgaben öffnen"
+      },
+      "label": {
+        "title": "Artikel kennzeichnen und vorbereiten",
+        "actor": "Personal",
+        "description": "Richtiges Etikett anbringen und Artikel zum Verkauf bereitstellen. Etiketten über die Artikelliste öffnen.",
+        "system": "Öffnen Sie den Arbeitsbereich, um diesen Schritt anzusehen oder auszuführen.",
+        "action": "Artikel öffnen"
+      },
+      "sell": {
+        "title": "Artikel wird verkauft",
+        "actor": "Personal und Komisio",
+        "description": "Erfasste Verkäufe werden hier angezeigt. Importe hängen von verbundenen Integrationen und deren Status ab.",
+        "system": "Öffnen Sie den Arbeitsbereich, um diesen Schritt anzusehen oder auszuführen.",
+        "action": "Verkäufe öffnen"
+      },
+      "unsold": {
+        "title": "Unverkaufte Artikel bearbeiten",
+        "actor": "Personal",
+        "description": "Vereinbarung für unverkaufte Artikel beachten. Lebenszyklusansicht öffnen.",
+        "system": "Öffnen Sie den Arbeitsbereich, um diesen Schritt anzusehen oder auszuführen.",
+        "action": "Lebenszyklus öffnen"
+      },
+      "payout": {
+        "title": "Auszahlung bearbeiten",
+        "actor": "Personal",
+        "description": "Saldo prüfen und die Schritte für Antrag, Freigabe und Zahlungserfassung befolgen. Die Karte überweist kein Geld.",
+        "system": "Öffnen Sie den Arbeitsbereich, um diesen Schritt anzusehen oder auszuführen.",
+        "action": "Auszahlungen öffnen"
+      }
+    }
   }
 }

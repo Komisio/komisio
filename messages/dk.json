@@ -2533,5 +2533,93 @@
       "shop/redact": "Sletning af butiksoplysninger"
     },
     "unmatched": "Shopify · Anmodninger uden butik"
+  },
+  "storeFlow": {
+    "title": "Butikkens flow",
+    "eyebrow": "Sådan arbejder vi",
+    "intro": "Følg en pose fra indlevering til salg og udbetaling. Vælg et trin for at åbne arbejdsvisningen.",
+    "guide": "Kortet forklarer arbejdet. Det viser ikke aktuel status og starter ingen aktiviteter.",
+    "groups": ["Modtag", "Registrer", "Sælg", "Håndter usolgt", "Udbetal"],
+    "details": "Om aktiviteten",
+    "happens": "Hvad der sker",
+    "inKomisio": "I Komisio",
+    "localRoutine": "Vores egen rutine",
+    "noteHelp": "Interne instruktioner til personalet. De ændrer ikke indstillinger eller registrerer udført arbejde.",
+    "placeholder": "For eksempel: stil posen på hylde B.",
+    "empty": "Ingen egne instruktioner endnu.",
+    "save": "Gem instruktioner",
+    "saving": "Gemmer…",
+    "saved": "Instruktionerne er gemt.",
+    "failed": "Kunne ikke gemme. Teksten er bevaret. Kontrollér valgt butik og prøv igen.",
+    "conflict": "En anden har ændret instruktionerne. Kopiér teksten og genindlæs siden før du gemmer.",
+    "unsaved": "Ikke gemte ændringer",
+    "branch": "Solgt → udbetaling. Usolgt → håndtering efter aftalen.",
+    "reviewRequired": "Butikken kræver sælgerens godkendelse af hver vare. Se arbejdskøen.",
+    "reviewDelegated": "Butikken bruger delegeret godkendelse. En posekvittering gør ikke varerne salgsklare.",
+    "steps": {
+      "arrive": {
+        "title": "Sælgeren kommer med en pose",
+        "actor": "Sælgeren",
+        "description": "Find eller registrer sælgeren og kontrollér aftalen.",
+        "system": "Åbn arbejdsvisningen for at se eller udføre dette trin.",
+        "action": "Åbn sælgere"
+      },
+      "receive": {
+        "title": "Modtag og mærk posen",
+        "actor": "Personalet",
+        "description": "Knyt posen til sælgeren uden at registrere hver vare. Modtagelse er ikke godkendelse af varerne.",
+        "system": "Åbn arbejdsvisningen for at se eller udføre dette trin.",
+        "action": "Modtag pose"
+      },
+      "wait": {
+        "title": "Posen venter på gennemgang",
+        "actor": "Personalet",
+        "description": "Opbevar posen indtil gennemgang. Find den i posekøen.",
+        "system": "Åbn arbejdsvisningen for at se eller udføre dette trin.",
+        "action": "Åbn posekø"
+      },
+      "register": {
+        "title": "Undersøg og registrer varerne",
+        "actor": "Personalet",
+        "description": "Åbn posen for at beskrive, vurdere og prissætte varerne. Afviste varer håndteres efter aftalen.",
+        "system": "Åbn arbejdsvisningen for at se eller udføre dette trin.",
+        "action": "Vælg pose"
+      },
+      "review": {
+        "title": "Fastlæg pris og vilkår",
+        "actor": "Personalet og sælgeren",
+        "description": "Kontrollér at betingelserne for at modtage varen er opfyldt.",
+        "system": "Åbn arbejdsvisningen for at se eller udføre dette trin.",
+        "action": "Åbn arbejdskø"
+      },
+      "label": {
+        "title": "Mærk og klargør varerne",
+        "actor": "Personalet",
+        "description": "Sæt den rigtige etiket på, og placér varen til salg. Etiketter findes via varelisten.",
+        "system": "Åbn arbejdsvisningen for at se eller udføre dette trin.",
+        "action": "Åbn varer"
+      },
+      "sell": {
+        "title": "Varen sælges",
+        "actor": "Personalet og Komisio",
+        "description": "Registrerede salg vises her. Import afhænger af tilsluttede integrationer og deres status.",
+        "system": "Åbn arbejdsvisningen for at se eller udføre dette trin.",
+        "action": "Åbn salg"
+      },
+      "unsold": {
+        "title": "Håndter usolgte varer",
+        "actor": "Personalet",
+        "description": "Følg aftalen for varer der ikke er solgt. Åbn livscyklusvisningen.",
+        "system": "Åbn arbejdsvisningen for at se eller udføre dette trin.",
+        "action": "Åbn livscyklus"
+      },
+      "payout": {
+        "title": "Håndter udbetaling",
+        "actor": "Personalet",
+        "description": "Kontrollér saldoen og følg trinene for anmodning, godkendelse og registreret betaling. Kortet overfører ikke penge.",
+        "system": "Åbn arbejdsvisningen for at se eller udføre dette trin.",
+        "action": "Åbn udbetalinger"
+      }
+    }
   }
 }

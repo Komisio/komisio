@@ -1965,6 +1965,7 @@
       "SHOPIFY_RATE_LIMITED": "Shopify está limitando las solicitudes. Vuelve a intentarlo en un minuto.",
       "SHOPIFY_READ_FAILED": "Shopify respondió con un error al leer la tienda en línea.",
       "SHOPIFY_WRONG_SHOP": "La tienda en línea que autorizó no es la que indicaste. No se guardó nada.",
+      "CURRENCY_MISMATCH": "Shopify y tu tienda de Komisio deben usar la misma moneda. Revisa la configuración de moneda y vuelve a conectar.",
       "SHOPIFY_STATE_INVALID": "El intento de conexión caducó o no se inició aquí. Conecta de nuevo.",
       "CREDENTIAL_KEY_MISSING": "A la configuración desplegada le falta la clave de credenciales (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "El token guardado no se puede leer con la clave de credenciales actual. Desconecta y conecta de nuevo.",

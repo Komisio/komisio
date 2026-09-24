@@ -19,7 +19,8 @@ import {
 } from '@/lib/engine/print-devices'
 import { readUsageSummary } from '@/lib/engine/usage'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
+import { storeCountries } from '@/lib/platform/countries'
 import { can } from '@/lib/platform/permissions'
 import { TenantForm } from '@/components/platform/tenant-form'
 import { PlanPanel } from '@/components/platform/plan-panel'
@@ -66,6 +67,14 @@ export default async function Settings({
   const query = await searchParams
   const ctx = await requirePlatform()
   const d = dictionary(ctx.locale)
+  const countryNames = new Intl.DisplayNames([intlLocale(ctx.locale)], {
+    type: 'region',
+  })
+  // Serialize translated labels once; browser/server ICU versions may differ.
+  const countryOptions = storeCountries.map((code) => ({
+    code,
+    label: countryNames.of(code) ?? code,
+  }))
   const active = ctx.active!
   const intake = process.env.KOMISIO_INTAKE_ENABLED === 'true'
   const tab: Tab = !intake
@@ -184,6 +193,7 @@ export default async function Settings({
       )}
       {tab === 'profile' && profile && (
         <StoreProfileForm
+          countryOptions={countryOptions}
           key={`${active.id}-${profile.id ?? 'none'}`}
           tenantId={active.id}
           current={profile}

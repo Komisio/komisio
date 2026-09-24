@@ -1965,6 +1965,7 @@
       "SHOPIFY_RATE_LIMITED": "Shopify begrenzt die Anfragen. Versuchen Sie es in einer Minute erneut.",
       "SHOPIFY_READ_FAILED": "Shopify hat beim Lesen des Shops mit einem Fehler geantwortet.",
       "SHOPIFY_WRONG_SHOP": "Der Shop, der autorisiert hat, ist nicht der von Ihnen angegebene Shop. Es wurde nichts gespeichert.",
+      "CURRENCY_MISMATCH": "Shopify und Ihr Komisio-Geschäft müssen dieselbe Währung verwenden. Prüfen Sie die Währungseinstellungen und verbinden Sie sich erneut.",
       "SHOPIFY_STATE_INVALID": "Der Verbindungsversuch ist abgelaufen oder wurde nicht hier gestartet. Verbinden Sie erneut.",
       "CREDENTIAL_KEY_MISSING": "In der bereitgestellten Konfiguration fehlt der Zugangsdaten-Schlüssel (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Das gespeicherte Token kann mit dem aktuellen Zugangsdaten-Schlüssel nicht gelesen werden. Trennen und erneut verbinden.",

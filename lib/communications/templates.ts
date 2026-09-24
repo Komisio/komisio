@@ -1,3 +1,4 @@
+import { storeCurrencies } from '../platform/currencies'
 import { z } from 'zod'
 import { messageLocale } from '../i18n'
 
@@ -23,7 +24,7 @@ export const messageFacts = z.strictObject({
     .string()
     .regex(/^-?\d+\.\d{2}$/)
     .optional(),
-  currency: z.enum(['SEK', 'NOK', 'DKK', 'EUR']).optional(),
+  currency: z.enum(storeCurrencies).optional(),
   number: z.number().int().positive().optional(),
   date: z.string().max(40).optional(),
   itemLabel: z.string().trim().max(120).optional(),

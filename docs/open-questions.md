@@ -112,6 +112,9 @@ proposal's owner clarification for scope and outstanding details.
 
 ## Currency
 
+- **Updated 2026-09-24:** supported store currencies are SEK, NOK, DKK, EUR and USD; onboarding offers an explicit choice. The 100-credit pack costs USD 10 for US profiles, with the existing four prices unchanged and EUR elsewhere. Shopify refuses a mismatched connection. Other currencies remain out of scope.
+- **International follow-up:** country selection does not establish local VAT or legal compliance. Seller agreement defaults and domain skills need country-specific review before they can be represented as local legal guidance.
+
 - ~~Which currency does a store trade in, and can it change?~~ **Answered
   2026-09-13 (DECISIONS.md):** one currency per store from the policy (SEK,
   NOK, DKK, EUR), frozen after the first money fact; no conversion, no

@@ -23,6 +23,7 @@ const env = {
   STRIPE_CREDITS_PRICE_ID_NOK: 'price_nok12345678',
   STRIPE_CREDITS_PRICE_ID_DKK: 'price_dkk12345678',
   STRIPE_CREDITS_PRICE_ID_EUR: 'price_eur12345678',
+  STRIPE_CREDITS_PRICE_ID_USD: 'price_usd12345678',
 }
 const tenant = '0b6c4f1e-2c2e-4b5e-9a1f-1234567890ab'
 const input = {
@@ -43,6 +44,10 @@ describe('fixed credit currencies', () => {
     ['ES', 'EUR'],
     ['IT', 'EUR'],
     ['GB', 'EUR'],
+    ['US', 'USD'],
+    ['CA', 'EUR'],
+    ['AU', 'EUR'],
+    ['BR', 'EUR'],
   ] as const)(
     'selects %s from the store profile',
     async (country, currency) => {

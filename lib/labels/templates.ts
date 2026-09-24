@@ -1,3 +1,4 @@
+import { storeCurrencies } from '../platform/currencies'
 import { z } from 'zod'
 
 // Label templates (P2 S19, sizes 2026-09-15): ZPL as versioned code with a
@@ -30,7 +31,7 @@ export const labelFacts = z.strictObject({
     .optional(),
   date: text(20).default(''),
   qr: text(200).default(''),
-  currency: z.enum(['SEK', 'NOK', 'DKK', 'EUR']).default('SEK'),
+  currency: z.enum(storeCurrencies).default('SEK'),
 })
 export type LabelFacts = z.infer<typeof labelFacts>
 

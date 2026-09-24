@@ -8,7 +8,7 @@ set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000381","role":"authenticated"}';
 select set_config('test.tenant',create_tenant('Currency test','currency-test',gen_random_uuid())::text,true);
 select is(store_currency(current_setting('test.tenant')::uuid),'SEK','a new store is in SEK');
-select throws_like($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"currency":"USD"}')$$,'%INVALID_INPUT%','only SEK, NOK, DKK and EUR');
+select throws_like($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"currency":"JPY"}')$$,'%INVALID_INPUT%','only SEK, NOK, DKK, EUR and USD');
 select throws_like($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"currency":1}')$$,'%INVALID_INPUT%','currency is a string');
 -- Before any money fact the store may choose NOK.
 select set_config('test.p1',publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"currency":"NOK","vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}')::text,true);
@@ -46,7 +46,7 @@ select is(store_currency(current_setting('test.tenant')::uuid),'NOK','still NOK'
 -- Zettle: a receipt in another currency is structurally valid but never recorded.
 reset role;
 select is(komisio_private.valid_zettle_purchase('{"externalId":"0f0f0f0f-0f0f-4f0f-8f0f-0f0f0f0f0f0f","occurredAt":"2026-09-10T10:00:00Z","currency":"NOK","amountOre":50000,"blockedReason":null,"lines":[{"lineNo":1,"reference":null,"labelConflict":false,"description":"x","priceOre":50000}]}'::jsonb),true,'a NOK receipt is structurally valid');
-select is(komisio_private.valid_zettle_purchase('{"externalId":"0f0f0f0f-0f0f-4f0f-8f0f-0f0f0f0f0f0f","occurredAt":"2026-09-10T10:00:00Z","currency":"USD","amountOre":50000,"blockedReason":null,"lines":[{"lineNo":1,"reference":null,"labelConflict":false,"description":"x","priceOre":50000}]}'::jsonb),false,'an unsupported currency is invalid unless held');
+select is(komisio_private.valid_zettle_purchase('{"externalId":"0f0f0f0f-0f0f-4f0f-8f0f-0f0f0f0f0f0f","occurredAt":"2026-09-10T10:00:00Z","currency":"JPY","amountOre":50000,"blockedReason":null,"lines":[{"lineNo":1,"reference":null,"labelConflict":false,"description":"x","priceOre":50000}]}'::jsonb),false,'an unsupported currency is invalid unless held');
 -- The seller reads the store currency without membership; anon cannot.
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000382","role":"authenticated"}';

@@ -17,13 +17,13 @@ it('records a sale with exact decimal prices per line', () => {
   expect(intakeCommand.parse(base).action).toBe('recordSale')
   expect(recordSaleCommand.parse(base).lines[0].price).toBe('250.00')
 })
-it('rejects duplicate items, float prices, foreign currency and unknown providers', () => {
+it('rejects duplicate items, float prices, unsupported currency and unknown providers', () => {
   for (const patch of [
     { lines: [...base.lines, ...base.lines] },
     { lines: [{ ...base.lines[0], price: '250' }] },
     { lines: [{ ...base.lines[0], price: 250 }] },
     { lines: [] },
-    { currency: 'USD' },
+    { currency: 'JPY' },
     { provider: 'square' },
     { externalId: '' },
     { occurredAt: 'yesterday' },

@@ -1965,6 +1965,7 @@
       "SHOPIFY_RATE_LIMITED": "Shopify begrenser antall forespørsler. Prøv igjen om et minutt.",
       "SHOPIFY_READ_FAILED": "Shopify svarte med en feil under lesing av nettbutikken.",
       "SHOPIFY_WRONG_SHOP": "Nettbutikken som autoriserte er ikke den du oppga. Ingenting ble lagret.",
+      "CURRENCY_MISMATCH": "Shopify og Komisio-butikken må bruke samme valuta. Kontroller valutainnstillingene og koble til igjen.",
       "SHOPIFY_STATE_INVALID": "Tilkoblingsforsøket utløp eller startet ikke her. Koble til igjen.",
       "CREDENTIAL_KEY_MISSING": "Den distribuerte konfigurasjonen mangler legitimasjonsnøkkelen (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Det lagrede tokenet kan ikke leses med gjeldende legitimasjonsnøkkel. Koble fra og koble til igjen.",

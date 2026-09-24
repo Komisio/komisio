@@ -315,3 +315,50 @@ test('markdown runs apply every due step by hand and the policy switch turns the
     await f.close()
   }
 })
+
+test('global country labels remain stable across server and browser language data', async ({
+  page,
+}) => {
+  const email = 'country-' + randomUUID() + '@example.test'
+  await register(page, email, 'K!' + randomBytes(16).toString('hex'))
+  const f = await p2Fixture(email)
+  try {
+    await f.commit()
+    await page.addInitScript(() => {
+      const original = Intl.DisplayNames.prototype.of
+      Intl.DisplayNames.prototype.of = function (code: string) {
+        return original.call(this, code) + ' browser fixture'
+      }
+    })
+    const errors: string[] = []
+    page.on('pageerror', (error) => errors.push(error.message))
+    await page.goto('/settings?tab=profile')
+    const profile = page.getByRole('region', {
+      name: d.storeProfile.title,
+      exact: true,
+    })
+    const country = profile.getByLabel(d.storeProfile.country, { exact: true })
+    await expect(country.getByRole('option')).toHaveCount(249)
+    await expect(
+      country.getByRole('option', { name: 'Sverige', exact: true }),
+    ).toHaveCount(1)
+    await country.selectOption('US')
+    const published = page.waitForResponse(
+      (response) =>
+        response.url().endsWith('/api/intake') &&
+        response.request().method() === 'POST',
+    )
+    await profile
+      .getByRole('button', { name: d.storeProfile.publish, exact: true })
+      .click()
+    expect((await published).ok()).toBe(true)
+    await page.reload()
+    await expect(
+      profile.getByText(d.storeProfile.version + ' 1', { exact: true }),
+    ).toBeVisible()
+    await expect(country).toHaveValue('US')
+    expect(errors.filter((message) => /hydration/i.test(message))).toEqual([])
+  } finally {
+    await f.close()
+  }
+})

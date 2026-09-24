@@ -431,3 +431,25 @@ it('normalizes a valid nonzero decimal VAT without changing the expected percent
   await client.putProduct({ ...product, vatPercentage: 25 }, null)
   expect(http.mock.calls).toHaveLength(2)
 })
+
+it.each(['EUR', 'USD'] as const)(
+  'exports exact %s prices over HTTP',
+  async (currency) => {
+    const foreign = structuredClone(product)
+    foreign.variants[0].price.currencyId = currency
+    const { client, http } = setup([
+      json({ organizationUuid: org }),
+      new Response(null, { status: 404 }),
+      new Response(null, { status: 201 }),
+      json(foreign),
+    ])
+    await client.putProduct(foreign, null)
+    const sent = http.mock.calls.find(
+      ([, options]) => options?.method === 'POST',
+    )
+    expect(JSON.parse(String(sent?.[1]?.body)).variants[0].price).toEqual({
+      amount: 25000,
+      currencyId: currency,
+    })
+  },
+)

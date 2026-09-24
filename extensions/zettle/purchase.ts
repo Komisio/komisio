@@ -61,7 +61,7 @@ export type ImportedPurchase = z.infer<typeof importPurchase>
 /** Only documented Purchase API fields; discard payment/customer/employee/location data. */
 export function mapZettlePurchase(
   input: unknown,
-  currency = 'SEK',
+  currency: string,
 ): ImportedPurchase {
   const p = wire.parse(input)
   const stamp = z.iso
@@ -131,7 +131,7 @@ const page = z.object({
 export function mapZettlePage(
   input: unknown,
   previous: string | null,
-  currency = 'SEK',
+  currency: string,
 ) {
   const p = page.parse(input),
     purchases = p.purchases.map((row) => mapZettlePurchase(row, currency))

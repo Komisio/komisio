@@ -1,5 +1,9 @@
 'use client'
 import { useRef, useSyncExternalStore } from 'react'
+import {
+  storeCurrencies,
+  suggestedStoreCurrency,
+} from '@/lib/platform/currencies'
 import type { Dictionary } from '@/lib/i18n'
 import type { Tenant } from '@/lib/platform/types'
 import { Button } from '@/components/ui/button'
@@ -8,7 +12,15 @@ import { Feedback } from './feedback'
 const subscribe = () => () => {}
 const clientReady = () => true
 const serverReady = () => false
-export function TenantForm({ d, tenant }: { d: Dictionary; tenant?: Tenant }) {
+export function TenantForm({
+  d,
+  tenant,
+  locale = 'sv',
+}: {
+  d: Dictionary
+  tenant?: Tenant
+  locale?: string
+}) {
   const action = useCommand(d)
   const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const requestId = useRef<string | null>(null)
@@ -24,6 +36,7 @@ export function TenantForm({ d, tenant }: { d: Dictionary; tenant?: Tenant }) {
             name: form.get('name'),
             slug: `store-${requestId.current}`,
             requestId: requestId.current,
+            currency: form.get('currency'),
           },
     )
     if (result && !tenant) {
@@ -44,6 +57,24 @@ export function TenantForm({ d, tenant }: { d: Dictionary; tenant?: Tenant }) {
           placeholder={d.tenantPlaceholder}
         />
       </div>
+      {!tenant && (
+        <div className="field">
+          <label htmlFor="tenant-currency">{d.storePolicy.currency}</label>
+          <select
+            id="tenant-currency"
+            name="currency"
+            defaultValue={suggestedStoreCurrency(locale)}
+            required
+          >
+            {storeCurrencies.map((code) => (
+              <option key={code} value={code}>
+                {code}
+              </option>
+            ))}
+          </select>
+          <p>{d.storePolicy.currencyIntro}</p>
+        </div>
+      )}
       <Button disabled={!ready || action.busy}>
         {action.busy ? d.loading : tenant ? d.save : d.createButton}
       </Button>

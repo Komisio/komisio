@@ -16,7 +16,7 @@ export default async function Onboarding() {
         <p>{d.onboardingIntro}</p>
       </div>
       <section className="card">
-        <TenantForm d={d} />
+        <TenantForm d={d} locale={ctx.locale} />
       </section>
       {ctx.tenants.length > 0 && (
         <section className="card">

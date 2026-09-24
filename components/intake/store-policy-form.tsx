@@ -1,4 +1,5 @@
 'use client'
+import { storeCurrencies } from '@/lib/platform/currencies'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
@@ -323,7 +324,7 @@ export function StorePolicyForm({
                 name="currency"
                 defaultValue={base.policy.currency ?? 'SEK'}
               >
-                {['SEK', 'NOK', 'DKK', 'EUR'].map((code) => (
+                {storeCurrencies.map((code) => (
                   <option key={code} value={code}>
                     {code}
                   </option>

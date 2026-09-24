@@ -1965,6 +1965,7 @@
       "SHOPIFY_RATE_LIMITED": "Shopify rajoittaa pyyntöjä. Yritä uudelleen minuutin kuluttua.",
       "SHOPIFY_READ_FAILED": "Shopify vastasi virheellä verkkokauppaa luettaessa.",
       "SHOPIFY_WRONG_SHOP": "Valtuutuksen antanut verkkokauppa ei ole nimeämäsi verkkokauppa. Mitään ei tallennettu.",
+      "CURRENCY_MISMATCH": "Shopifyn ja Komisio-kaupan valuutan on oltava sama. Tarkista valuutta-asetukset ja yhdistä uudelleen.",
       "SHOPIFY_STATE_INVALID": "Yhdistämisyritys vanhentui tai se ei alkanut täältä. Yhdistä uudelleen.",
       "CREDENTIAL_KEY_MISSING": "Asennuksen määrityksistä puuttuu tunnistetietojen avain (KOMISIO_CREDENTIAL_KEY).",
       "CREDENTIAL_UNREADABLE": "Tallennettua tunnusta ei voi lukea nykyisellä tunnistetietojen avaimella. Irrota ja yhdistä uudelleen.",

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { z } from 'zod'
+import { redirect } from 'next/navigation'
+import { readBagReceivedItems } from '@/lib/engine/bag-received-items'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { dictionary, intlLocale, type Locale } from '@/lib/i18n'
 import { QuickReception } from './quick-reception'
@@ -8,13 +9,6 @@ import { readPrinters } from '@/lib/engine/printing'
 import { readAttributeVocabulary } from '@/lib/engine/attributes'
 import { resolveReceptionAssistance } from '@/lib/assistance/reception-config'
 
-const row = z.object({
-  id: z.guid(),
-  session_id: z.guid(),
-  title: z.string().nullable(),
-  price_ore: z.string().nullable(),
-  photo_id: z.uuid().nullable(),
-})
 export async function BagReception({
   client,
   tenantId,
@@ -24,6 +18,7 @@ export async function BagReception({
   locale,
   currency,
   readonly,
+  itemPage = 1,
 }: {
   client: SupabaseClient
   tenantId: string
@@ -33,6 +28,7 @@ export async function BagReception({
   locale: Locale
   currency: string
   readonly: boolean
+  itemPage?: number
 }) {
   const d = dictionary(locale),
     b = d.bagIntake
@@ -56,11 +52,14 @@ export async function BagReception({
       readonly
         ? Promise.resolve(null)
         : resolveReceptionAssistance(client, tenantId),
-      client.rpc('bag_received_items', { p_tenant: tenantId, p_bag: bagId }),
+      readBagReceivedItems(client, tenantId, bagId, (itemPage - 1) * 25),
     ])
-  if (seller.error || received.error)
-    throw new Error('Unable to read bag reception')
-  const items = z.array(row).max(50).parse(received.data)
+  if (seller.error) throw new Error('Unable to read bag reception')
+  const { items, total, offset, legacy } = received
+  const pages = legacy ? 1 : Math.max(1, Math.ceil(total / 25))
+  const href = (page: number) =>
+    `/intake/bags/${bagId}/inspect?itemPage=${page}#bag-registered`
+  if (itemPage > pages) redirect(href(pages))
   return (
     <main className="bag-reception-page">
       <Link className="text-link" href="/intake">
@@ -73,6 +72,12 @@ export async function BagReception({
         <h1>{d.inspection.title}</h1>
         <p>{b.intro}</p>
         {note && <p className="bag-note">{note}</p>}
+        {total > 0 && (
+          <Link className="text-link" href="#bag-registered">
+            {b.registered} ({total}
+            {legacy && total === 50 ? ' +' : ''})
+          </Link>
+        )}
       </header>
       {!readonly && (
         <QuickReception
@@ -100,8 +105,22 @@ export async function BagReception({
           }}
         />
       )}
-      <section className="card bag-received-items">
+      <section
+        id="bag-registered"
+        className="card bag-received-items"
+        style={{ scrollMarginTop: '1rem' }}
+      >
         <h2>{b.registered}</h2>
+        {!legacy && total > 0 && (
+          <p>
+            <small>
+              {d.items.showingRange
+                .replace('{from}', String(offset + 1))
+                .replace('{to}', String(offset + items.length))
+                .replace('{total}', String(total))}
+            </small>
+          </p>
+        )}
         {!items.length ? (
           <p>{b.empty}</p>
         ) : (
@@ -136,7 +155,26 @@ export async function BagReception({
             ))}
           </ul>
         )}
-        {items.length === 50 && <p>{b.limit}</p>}
+        {legacy && items.length === 50 && <p>{b.limit}</p>}
+        {pages > 1 && (
+          <nav className="row wrap" aria-label={b.registered}>
+            {itemPage > 1 && (
+              <Link className="btn btn-secondary" href={href(itemPage - 1)}>
+                {d.items.previousPage}
+              </Link>
+            )}
+            <span>
+              {d.items.pageOf
+                .replace('{page}', String(itemPage))
+                .replace('{pages}', String(pages))}
+            </span>
+            {itemPage < pages && (
+              <Link className="btn btn-secondary" href={href(itemPage + 1)}>
+                {d.items.nextPage}
+              </Link>
+            )}
+          </nav>
+        )}
       </section>
       <nav className="row bag-inspection-links">
         <Link className="text-link" href={`/intake/bags/${bagId}`}>

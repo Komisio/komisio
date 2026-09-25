@@ -81,6 +81,12 @@ export default async function InspectBag({
         note={bag.note}
         locale={ctx.locale}
         currency={policy.policy.currency ?? 'SEK'}
+        itemPage={
+          typeof query.itemPage === 'string' &&
+          /^[1-9]\d{0,6}$/.test(query.itemPage)
+            ? Number(query.itemPage)
+            : 1
+        }
         readonly={ctx.active!.role === 'readonly'}
       />
     )

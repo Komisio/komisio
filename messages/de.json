@@ -1477,11 +1477,13 @@
   },
   "openByReference": {
     "title": "Über Etikett öffnen",
-    "intro": "Geben Sie die auf einem Einlieferungsetikett (K-n) oder einem Kleidungsstück-Etikett (G-n) gedruckte Referenz ein oder scannen Sie sie.",
+    "intro": "Gib die Referenz einer Abgabe (K-n), eines Kleidungsstücks (G-n) oder eines Artikels (I-XXXXXXXX) ein oder scanne sie.",
     "reference": "Etikettreferenz",
-    "hint": "Zum Beispiel K-12 für eine Einlieferung oder G-7 für ein Kleidungsstück.",
+    "hint": "Zum Beispiel K-12, G-7 oder I-A1B2C3D4.",
     "open": "Öffnen",
-    "notFound": "Nichts in diesem Store trägt die Referenz {ref}."
+    "notFound": "Nichts in diesem Store trägt die Referenz {ref}.",
+    "ambiguous": "Mehrere Artikel in diesem Geschäft haben die Referenz {ref}. Wähle den richtigen Artikel aus der Liste.",
+    "chooseMatch": "Passende Artikel anzeigen"
   },
   "usage": {
     "title": "Nutzung diesen Monat",

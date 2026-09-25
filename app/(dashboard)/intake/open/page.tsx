@@ -2,8 +2,9 @@ import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
+import { readItemReference } from '@/lib/engine/item-reference'
 
-/** Scan-to-open (P1 S8): a bag label K-n opens the bag, a garment label G-n opens the reception, a handover H-n opens the handover queue. */
+/** Resolve existing custody labels and accepted-item labels within the active store. */
 export default async function OpenByReference({
   searchParams,
 }: {
@@ -15,6 +16,13 @@ export default async function OpenByReference({
     d = dictionary(ctx.locale).openByReference
   const raw = (await searchParams).ref
   const ref = typeof raw === 'string' ? raw.trim().toUpperCase() : ''
+  const itemReference = /^I-?([0-9A-F]{8})$/.exec(ref)
+  let ambiguous = false
+  if (itemReference) {
+    const ids = await readItemReference(ctx.client, tenant.id, ref)
+    if (ids.length === 1) redirect('/intake/items/' + ids[0])
+    ambiguous = ids.length > 1
+  }
   const match = /^([KGH])-?(\d{1,12})$/.exec(ref)
   if (match) {
     const number = Number(match[2])
@@ -51,11 +59,29 @@ export default async function OpenByReference({
         <p>{d.intro}</p>
       </div>
       <section className="card intake-form">
-        {ref && <p role="alert">{d.notFound.replace('{ref}', ref)}</p>}
+        {ref && (
+          <p role="alert">
+            {(ambiguous ? d.ambiguous : d.notFound).replace('{ref}', ref)}
+          </p>
+        )}
+        {ambiguous && itemReference && (
+          <p>
+            <Link
+              className="btn btn-secondary"
+              href={
+                '/intake/lifecycle?' +
+                new URLSearchParams({ q: 'I-' + itemReference[1] })
+              }
+            >
+              {d.chooseMatch}
+            </Link>
+          </p>
+        )}
         <form action="/intake/open">
           <div className="field">
             <label htmlFor="open-ref">{d.reference}</label>
             <input
+              key={ref}
               id="open-ref"
               name="ref"
               autoFocus

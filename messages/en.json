@@ -1477,11 +1477,13 @@
   },
   "openByReference": {
     "title": "Open by label",
-    "intro": "Type or scan the reference printed on a drop-off label (K-n) or a garment label (G-n).",
+    "intro": "Type or scan the reference on a drop-off (K-n), garment (G-n) or item (I-XXXXXXXX).",
     "reference": "Label reference",
-    "hint": "For example K-12 for a drop-off or G-7 for a garment.",
+    "hint": "For example K-12, G-7 or I-A1B2C3D4.",
     "open": "Open",
-    "notFound": "Nothing in this store carries the reference {ref}."
+    "notFound": "Nothing in this store carries the reference {ref}.",
+    "ambiguous": "More than one item in this store has the reference {ref}. Choose the correct item from the list.",
+    "chooseMatch": "Show matching items"
   },
   "usage": {
     "title": "Usage this month",

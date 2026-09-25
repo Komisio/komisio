@@ -1477,11 +1477,13 @@
   },
   "openByReference": {
     "title": "Abrir por etiqueta",
-    "intro": "Escribe o escanea la referencia impresa en una etiqueta de entrega (K-n) o de prenda (G-n).",
+    "intro": "Escribe o escanea la referencia de una entrega (K-n), prenda (G-n) o artículo (I-XXXXXXXX).",
     "reference": "Referencia de la etiqueta",
-    "hint": "Por ejemplo K-12 para una entrega o G-7 para una prenda.",
+    "hint": "Por ejemplo K-12, G-7 o I-A1B2C3D4.",
     "open": "Abrir",
-    "notFound": "Nada en esta tienda lleva la referencia {ref}."
+    "notFound": "Nada en esta tienda lleva la referencia {ref}.",
+    "ambiguous": "Varios artículos de esta tienda tienen la referencia {ref}. Elige el artículo correcto de la lista.",
+    "chooseMatch": "Mostrar artículos coincidentes"
   },
   "usage": {
     "title": "Uso este mes",

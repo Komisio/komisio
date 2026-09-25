@@ -1477,11 +1477,13 @@
   },
   "openByReference": {
     "title": "Åbn via mærkat",
-    "intro": "Indtast eller scan referencen, der er trykt på en indleveringsmærkat (K-n) eller en tøjmærkat (G-n).",
+    "intro": "Skriv eller scan referencen på en indlevering (K-n), et stykke tøj (G-n) eller en vare (I-XXXXXXXX).",
     "reference": "Mærkatreference",
-    "hint": "For eksempel K-12 for en indlevering eller G-7 for et stykke tøj.",
+    "hint": "For eksempel K-12, G-7 eller I-A1B2C3D4.",
     "open": "Åbn",
-    "notFound": "Intet i denne butik har referencen {ref}."
+    "notFound": "Intet i denne butik har referencen {ref}.",
+    "ambiguous": "Flere varer i butikken har referencen {ref}. Vælg den rigtige vare på listen.",
+    "chooseMatch": "Vis matchende varer"
   },
   "usage": {
     "title": "Forbrug denne måned",

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import './seller-portal.css'
 import { notFound, redirect } from 'next/navigation'
 import { platformContext } from '@/lib/platform/context'
 import { dictionary, intlLocale } from '@/lib/i18n'
@@ -85,7 +86,9 @@ export default async function SellerPortal({
         <Brand />
         <SignOut d={all} next="/seller" />
         <section className="card">
-          <Link href={base}>{account.storeName}</Link>
+          <Link className="text-link" href={base + '#portal-statements'}>
+            {account.storeName}
+          </Link>
           <h1>
             {d.statements} #{statement.header.number}
           </h1>
@@ -99,12 +102,12 @@ export default async function SellerPortal({
           <p>
             {d.closing}: {amount(statement.header.closing_ore)}
           </p>
-          <table>
+          <table className="seller-statement-lines">
             <thead>
               <tr>
                 <th>{d.date}</th>
                 <th>{d.kind}</th>
-                <th>{d.amount}</th>
+                <th>{d.amount.replace('{currency}', currency)}</th>
                 <th>{d.salePrice}</th>
                 <th>{d.commission}</th>
               </tr>
@@ -112,13 +115,15 @@ export default async function SellerPortal({
             <tbody>
               {statement.lines.map((l) => (
                 <tr key={l.id}>
-                  <td>{when(l.occurred_at)}</td>
-                  <td>{label(all.ledger.kinds, l.kind)}</td>
-                  <td>{amount(l.amount_ore)}</td>
-                  <td>
+                  <td data-label={d.date}>{when(l.occurred_at)}</td>
+                  <td data-label={d.kind}>{label(all.ledger.kinds, l.kind)}</td>
+                  <td data-label={d.amount.replace('{currency}', currency)}>
+                    {amount(l.amount_ore)}
+                  </td>
+                  <td data-label={d.salePrice}>
                     {l.sale_price_ore === null ? '—' : amount(l.sale_price_ore)}
                   </td>
-                  <td>
+                  <td data-label={d.commission}>
                     {l.commission_ore === null ? '—' : amount(l.commission_ore)}
                   </td>
                 </tr>
@@ -153,6 +158,22 @@ export default async function SellerPortal({
           {d.reserved}: {amount(economy.balance.reservedOre)}
         </p>
       </section>
+      <nav className="seller-portal-shortcuts" aria-label={d.title}>
+        {mine && (
+          <a className="btn btn-secondary" href="#portal-items">
+            {d.items}
+          </a>
+        )}
+        <a className="btn btn-secondary" href="#portal-handovers">
+          {d.handovers}
+        </a>
+        <a className="btn btn-secondary" href="#portal-payout-request">
+          {d.request}
+        </a>
+        <a className="btn btn-secondary" href="#portal-statements">
+          {d.statements}
+        </a>
+      </nav>
       <SellerEconomyForms
         key={`${account.sellerId}-${economy.automaticEmails}`}
         tenantId={account.tenantId}
@@ -171,7 +192,12 @@ export default async function SellerPortal({
         d={d}
       />
       {mine && (
-        <section className="card" aria-label={d.items}>
+        <section
+          id="portal-items"
+          className="card"
+          aria-label={d.items}
+          tabIndex={-1}
+        >
           <h2>{d.items}</h2>
           <p>{d.itemsIntro}</p>
           {mine.items.length === 0 && <p>{d.noItems}</p>}
@@ -296,7 +322,7 @@ export default async function SellerPortal({
           </p>
         ))}
       </section>
-      <section className="card">
+      <section id="portal-statements" className="card" tabIndex={-1}>
         <h2>{d.statements}</h2>
         {economy.statements.length === 0 && <p>{d.none}</p>}
         {economy.statements.map((s) => (

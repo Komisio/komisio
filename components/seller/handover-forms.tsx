@@ -45,7 +45,12 @@ export function SellerHandovers({
     }
   }
   return (
-    <section className="card intake-form" aria-label={d.handovers}>
+    <section
+      id="portal-handovers"
+      className="card intake-form"
+      aria-label={d.handovers}
+      tabIndex={-1}
+    >
       <h2>{d.handovers}</h2>
       <p>{d.handoverIntro}</p>
       {handovers.enabled ? (

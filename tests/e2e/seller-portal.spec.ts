@@ -101,6 +101,41 @@ test('seller reads own economy, requests payout and opts out without becoming st
       page.getByRole('heading', { name: 'Avräkningar #1' }),
     ).toBeVisible()
     await expect(page.getByRole('table')).toBeVisible()
+    await expect(
+      page.getByRole('columnheader', { name: 'Belopp i SEK', exact: true }),
+    ).toHaveCount(1)
+    await page.setViewportSize({ width: 320, height: 800 })
+    const statementCells = page.locator('.seller-statement-lines td')
+    await expect(statementCells).toHaveCount(5)
+    for (const cell of await statementCells.all())
+      expect((await cell.boundingBox())!.width).toBeGreaterThan(200)
+    expect(
+      await statementCells.evaluateAll((cells) =>
+        cells.map((cell) =>
+          getComputedStyle(cell, '::before').content.replaceAll('"', ''),
+        ),
+      ),
+    ).toEqual([
+      'Datum',
+      'Händelse',
+      'Belopp i SEK',
+      'Försäljningspris',
+      'Provision',
+    ])
+    await page.screenshot({
+      path: test.info().outputPath('seller-statement-mobile.png'),
+      caret: 'initial',
+    })
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true)
+    await page
+      .getByRole('link', { name: 'Portal journey', exact: true })
+      .click()
+    await expect(page).toHaveURL(/#portal-statements$/)
+    await expect(page.locator('#portal-statements h2')).toBeInViewport()
     expect(
       (
         await db.query(

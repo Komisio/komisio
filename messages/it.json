@@ -1636,6 +1636,10 @@
     "wasPrice": "era",
     "until": "fino al",
     "then": "poi",
+    "nextPriceMay": "Il negozio può abbassare il prezzo a {price} dal {date}.",
+    "nextPriceScheduled": "Prezzo previsto {price} dal {date}.",
+    "lastPrice": "Non sono previsti altri ribassi.",
+    "daysLeft": "{days} giorni rimasti",
     "itemStates": {
       "forSale": "in vendita",
       "periodEnding": "il periodo di vendita termina a breve",

@@ -1618,6 +1618,10 @@
     "wasPrice": "var",
     "until": "till",
     "then": "sedan",
+    "nextPriceMay": "Butiken kan sänka priset till {price} från {date}.",
+    "nextPriceScheduled": "Planerat pris {price} från {date}.",
+    "lastPrice": "Inga fler prissteg är planerade.",
+    "daysLeft": "{days} dagar kvar",
     "itemStates": {
       "forSale": "till salu",
       "periodEnding": "säljperioden slutar snart",

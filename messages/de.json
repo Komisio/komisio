@@ -1636,6 +1636,10 @@
     "wasPrice": "vorher",
     "until": "bis",
     "then": "danach",
+    "nextPriceMay": "Der Laden kann den Preis ab {date} auf {price} senken.",
+    "nextPriceScheduled": "Geplanter Preis {price} ab {date}.",
+    "lastPrice": "Keine weiteren Preisstufen sind geplant.",
+    "daysLeft": "Noch {days} Tage",
     "itemStates": {
       "forSale": "im Verkauf",
       "periodEnding": "Verkaufsperiode endet bald",

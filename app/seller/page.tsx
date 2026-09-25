@@ -11,7 +11,12 @@ import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { SellerEconomyForms } from '@/components/seller/economy-forms'
 import { SellerHandovers } from '@/components/seller/handover-forms'
 import { readMyHandovers } from '@/lib/engine/handovers'
-import { readMyItems, sellerItemState } from '@/lib/engine/seller-items'
+import {
+  readMyItems,
+  sellerItemDaysLeft,
+  sellerItemNextStep,
+  sellerItemState,
+} from '@/lib/engine/seller-items'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { SignOut } from '@/components/platform/sign-out'
 import { Brand } from '@/components/platform/brand'
@@ -40,6 +45,10 @@ export default async function SellerPortal({
   if (params.seller && !account) notFound()
   const when = (date: string) =>
     new Date(date).toLocaleString(intlLocale(ctx.locale), {
+      timeZone: 'Europe/Stockholm',
+    })
+  const day = (date: string) =>
+    new Date(date).toLocaleDateString(intlLocale(ctx.locale), {
       timeZone: 'Europe/Stockholm',
     })
   const amount = (ore: number) => `${formatSignedOre(ore)} ${currency}`
@@ -211,6 +220,36 @@ export default async function SellerPortal({
                           i.endOfPeriodAction
                             ? ` · ${d.then} ${d.endActions[i.endOfPeriodAction]}`
                             : ''}
+                          {(state === 'forSale' || state === 'periodEnding') &&
+                            (() => {
+                              const next = sellerItemNextStep(i)
+                              const days = sellerItemDaysLeft(i)
+                              const text = next
+                                ? (mine.automaticMarkdowns
+                                    ? d.nextPriceScheduled
+                                    : d.nextPriceMay
+                                  )
+                                    .replace('{price}', amount(next.priceOre))
+                                    .replace('{date}', day(next.at))
+                                : d.lastPrice
+                              const left = d.daysLeft.replace(
+                                '{days}',
+                                String(days),
+                              )
+                              const then =
+                                state === 'forSale' && i.endOfPeriodAction
+                                  ? `, ${d.then} ${d.endActions[i.endOfPeriodAction]}`
+                                  : ''
+                              return (
+                                <>
+                                  <br />
+                                  <small>
+                                    {text} {left}
+                                    {then}
+                                  </small>
+                                </>
+                              )
+                            })()}
                         </td>
                         <td>
                           {state === 'sold' && i.soldAt

@@ -1636,6 +1636,10 @@
     "wasPrice": "var",
     "until": "indtil",
     "then": "derefter",
+    "nextPriceMay": "Butikken kan sætte prisen ned til {price} fra {date}.",
+    "nextPriceScheduled": "Planlagt pris {price} fra {date}.",
+    "lastPrice": "Der er ikke planlagt flere pristrin.",
+    "daysLeft": "{days} dage tilbage",
     "itemStates": {
       "forSale": "til salg",
       "periodEnding": "salgsperioden slutter snart",

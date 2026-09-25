@@ -54,12 +54,12 @@ test('the counter is warned about an existing seller before a second record', as
     await expect(warning).toContainText(d.intake.possibleDuplicates)
     await expect(
       warning.getByRole('link', { name: 'Synthetic P2 seller', exact: true }),
-    ).toHaveAttribute('href', `/intake?seller=${f.seller}`)
+    ).toHaveAttribute('href', `/intake?seller=${f.seller}#new-seller`)
     await expect(warning).toContainText(d.intake.matchEmail)
     await form
       .getByRole('button', { name: d.intake.registerAnyway, exact: true })
       .click()
-    await expect(page).toHaveURL(/\/intake\?seller=[0-9a-f-]{36}$/)
+    await expect(page).toHaveURL(/\/intake\?seller=[0-9a-f-]{36}#new-seller$/)
     expect(page.url()).not.toContain(f.seller)
     await expect(page.getByText('Another Name').first()).toBeVisible()
   } finally {

@@ -12,12 +12,14 @@ export function ReceivingPanel({
   tenantId,
   seller,
   d,
+  changeSellerLabel,
   expectedAgreementId = null,
   agreementBlocked = false,
 }: {
   tenantId: string
   seller: Seller | null
   d: Dictionary['intake']
+  changeSellerLabel: string
   expectedAgreementId?: string | null
   agreementBlocked?: boolean
 }) {
@@ -133,7 +135,7 @@ export function ReceivingPanel({
       setMatches(null)
       form.reset()
       if (seller) setBagId(result.id)
-      else router.push(`/intake?seller=${result.id}`)
+      else router.push(`/intake?seller=${result.id}#new-seller`)
       router.refresh()
     } catch {
       setError(d.failed)
@@ -149,6 +151,10 @@ export function ReceivingPanel({
           <strong>{seller.name}</strong>
           <br />
           {seller.email || seller.phone}
+          <br />
+          <Link className="text-link" href="/intake#seller-search">
+            {changeSellerLabel}
+          </Link>
         </p>
       )}
       <form onSubmit={submit}>
@@ -213,7 +219,10 @@ export function ReceivingPanel({
             <ul>
               {matches.map((m) => (
                 <li key={m.id}>
-                  <Link className="text-link" href={`/intake?seller=${m.id}`}>
+                  <Link
+                    className="text-link"
+                    href={`/intake?seller=${m.id}#new-seller`}
+                  >
                     {m.name}
                   </Link>{' '}
                   {m.contact}{' '}
@@ -237,7 +246,10 @@ export function ReceivingPanel({
         )}
         {seller && agreementBlocked && <p>{d.agreementRequired}</p>}
         {needsReload && (
-          <a className="text-link" href={`/intake?seller=${seller?.id ?? ''}`}>
+          <a
+            className="text-link"
+            href={`/intake?seller=${seller?.id ?? ''}#new-seller`}
+          >
             {d.reload}
           </a>
         )}

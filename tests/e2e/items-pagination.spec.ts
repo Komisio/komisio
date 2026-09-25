@@ -19,10 +19,13 @@ test('staff can reach all matching items and retain filters on a phone', async (
     await page.goto('/intake/items?q=Paging&stage=markdown_due')
     const rows = page.locator('.intake-list li')
     await expect(rows).toHaveCount(25)
-    expect(
-      (await page.getByLabel(d.items.search, { exact: true }).boundingBox())!
-        .width,
-    ).toBeGreaterThan(180)
+    await expect
+      .poll(
+        async () =>
+          (await page.getByLabel(d.items.search, { exact: true }).boundingBox())
+            ?.width ?? 0,
+      )
+      .toBeGreaterThan(180)
     const seen = new Set(
       await rows
         .locator('a')

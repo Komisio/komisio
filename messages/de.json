@@ -1711,7 +1711,9 @@
     "signout": "Abmelden",
     "salePrice": "Verkaufspreis",
     "commission": "Kommission",
-    "handoverError": "Die Änderung konnte nicht bestätigt werden. Versuchen Sie es erneut mit denselben Angaben."
+    "handoverError": "Die Änderung konnte nicht bestätigt werden. Versuchen Sie es erneut mit denselben Angaben.",
+    "itemsSearchHint": "Beschreibung, Kategorie oder Artikelreferenz",
+    "itemsLimited": "Derzeit werden höchstens Ihre 200 neuesten Artikel angezeigt. Suche und weitere Seiten sind nach Abschluss der Aktualisierung verfügbar."
   },
   "plans": {
     "heading": "Plan",

@@ -1711,7 +1711,9 @@
     "signout": "Logga ut",
     "salePrice": "Försäljningspris",
     "commission": "Provision",
-    "handoverError": "Kunde inte bekräfta ändringen. Försök igen med samma uppgifter."
+    "handoverError": "Kunde inte bekräfta ändringen. Försök igen med samma uppgifter.",
+    "itemsSearchHint": "Beskrivning, kategori eller varureferens",
+    "itemsLimited": "Just nu visas högst 200 av dina senaste varor. Sökning och fler sidor blir tillgängliga när uppdateringen är klar."
   },
   "plans": {
     "heading": "Plan",

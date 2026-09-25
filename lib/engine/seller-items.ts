@@ -90,3 +90,37 @@ export function sellerItemDaysLeft(
   const end = new Date(item.periodEnd).getTime()
   return Math.max(0, Math.ceil((end - now) / 86_400_000))
 }
+
+const myItemsPage = myItems
+  .extend({
+    total: z.number().int().nonnegative(),
+    offset: z.number().int().nonnegative(),
+  })
+  .refine((value) => value.items.length <= 25)
+
+/** Complete seller-owned read; only a missing RPC permits the legacy fallback. */
+export async function readMyItemsPage(
+  client: SupabaseClient,
+  tenant: string,
+  seller: string,
+  options: { query?: string; offset?: number } = {},
+) {
+  const r = await client.rpc('my_items_page', {
+    p_tenant: z.uuid().parse(tenant),
+    p_seller: z.uuid().parse(seller),
+    p_query: z
+      .string()
+      .trim()
+      .max(120)
+      .parse(options.query ?? ''),
+    p_offset: z
+      .number()
+      .int()
+      .min(0)
+      .max(2147483647)
+      .parse(options.offset ?? 0),
+  })
+  if (r.error?.code === 'PGRST202') return null
+  if (r.error) throw new Error('Unable to read seller items')
+  return myItemsPage.parse(r.data)
+}

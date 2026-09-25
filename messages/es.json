@@ -1711,7 +1711,9 @@
     "signout": "Cerrar sesión",
     "salePrice": "Precio de venta",
     "commission": "Comisión",
-    "handoverError": "No se pudo confirmar el cambio. Inténtalo de nuevo con los mismos datos."
+    "handoverError": "No se pudo confirmar el cambio. Inténtalo de nuevo con los mismos datos.",
+    "itemsSearchHint": "Descripción, categoría o referencia del artículo",
+    "itemsLimited": "Ahora se muestran como máximo tus 200 artículos más recientes. La búsqueda y más páginas estarán disponibles cuando finalice la actualización."
   },
   "plans": {
     "heading": "Plan",

@@ -1711,7 +1711,9 @@
     "signout": "Esci",
     "salePrice": "Prezzo di vendita",
     "commission": "Commissione",
-    "handoverError": "Non è stato possibile confermare la modifica. Riprova con gli stessi dati."
+    "handoverError": "Non è stato possibile confermare la modifica. Riprova con gli stessi dati.",
+    "itemsSearchHint": "Descrizione, categoria o riferimento articolo",
+    "itemsLimited": "Al momento vengono mostrati al massimo i tuoi 200 articoli più recenti. Ricerca e altre pagine saranno disponibili al termine dell’aggiornamento."
   },
   "plans": {
     "heading": "Piano",

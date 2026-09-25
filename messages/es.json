@@ -1005,7 +1005,13 @@
       "accepted": "Aceptado",
       "price_set": "Precio fijado",
       "provenance": "Procedencia registrada"
-    }
+    },
+    "clearFilters": "Borrar filtros",
+    "showingRange": "Mostrando {from}–{to} de {total} artículos",
+    "pagination": "Páginas de artículos",
+    "previousPage": "Anterior",
+    "nextPage": "Siguiente",
+    "pageOf": "Página {page} de {pages}"
   },
   "sales": {
     "title": "Ventas",

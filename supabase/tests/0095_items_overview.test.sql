@@ -57,11 +57,25 @@ select is((items_overview(current_setting('test.tenant')::uuid,null,null,1)->>'t
 select throws_ok($$select items_overview(current_setting('test.tenant')::uuid,null,'listed',50)$$,'INVALID_INPUT','unknown stage refused');
 select throws_ok($$select items_overview(current_setting('test.tenant')::uuid,repeat('x',121),null,50)$$,'INVALID_INPUT','overlong query refused');
 select ok(items_overview(current_setting('test.tenant')::uuid,null,null,50)::text not like '%Anna%','no seller names');
+
+-- Paging shares ordering and authorization with the original read.
+select set_config('test.page',items_overview_page(current_setting('test.tenant')::uuid,null,null,1,1)::text,true);
+select is(current_setting('test.page')::jsonb->'items'->0,current_setting('test.o')::jsonb->'items'->1,'second page reaches the second item even when acceptance times tie');
+select is((current_setting('test.page')::jsonb->>'total')::int,3,'paged total includes every match');
+select is((current_setting('test.page')::jsonb->>'offset')::int,1,'offset is returned');
+select is(items_overview_page(current_setting('test.tenant')::uuid,null,null,50,0)-'offset',current_setting('test.o')::jsonb,'legacy contract is unchanged');
+select is(jsonb_array_length(items_overview_page(current_setting('test.tenant')::uuid,null,null,1,3)->'items'),0,'past the last page is empty');
+select is(jsonb_array_length(items_overview_page(current_setting('test.tenant')::uuid,'WOOL',null,1,1)->'items'),0,'query is applied before paging');
+select is((items_overview_page(current_setting('test.tenant')::uuid,null,'sold',1,1)->>'total')::int,1,'stage is applied before paging');
+select throws_ok($$select items_overview_page(current_setting('test.tenant')::uuid,null,null,25,-1)$$,'INVALID_INPUT','negative offsets are rejected');
+
 reset role;
 insert into tenant_members(tenant_id,user_id,role) values (current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000000952','readonly');
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000952","role":"authenticated"}';
 select lives_ok($$select items_overview(current_setting('test.tenant')::uuid,null,null,50)$$,'read-only members read the list');
+select lives_ok($$select items_overview_page(current_setting('test.tenant')::uuid,null,null,1,1)$$,'read-only members can page the list');
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000953","role":"authenticated"}';
 select throws_ok($$select items_overview(current_setting('test.tenant')::uuid,null,null,50)$$,'42501',null,'outsider refused');
+select throws_ok($$select items_overview_page(current_setting('test.tenant')::uuid,null,null,25,1)$$,'42501',null,'outsider cannot page through another store');
 select * from finish();

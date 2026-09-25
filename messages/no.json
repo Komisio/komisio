@@ -1005,7 +1005,13 @@
       "accepted": "Tatt imot",
       "price_set": "Pris satt",
       "provenance": "Opphav registrert"
-    }
+    },
+    "clearFilters": "Nullstill filtre",
+    "showingRange": "Viser {from}–{to} av {total} varer",
+    "pagination": "Bla gjennom varer",
+    "previousPage": "Forrige",
+    "nextPage": "Neste",
+    "pageOf": "Side {page} av {pages}"
   },
   "sales": {
     "title": "Salg",

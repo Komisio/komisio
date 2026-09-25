@@ -1005,7 +1005,13 @@
       "accepted": "Accettato",
       "price_set": "Prezzo impostato",
       "provenance": "Provenienza registrata"
-    }
+    },
+    "clearFilters": "Cancella filtri",
+    "showingRange": "Articoli {from}–{to} di {total}",
+    "pagination": "Pagine degli articoli",
+    "previousPage": "Precedente",
+    "nextPage": "Successiva",
+    "pageOf": "Pagina {page} di {pages}"
   },
   "sales": {
     "title": "Vendite",

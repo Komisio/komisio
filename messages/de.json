@@ -1005,7 +1005,13 @@
       "accepted": "Angenommen",
       "price_set": "Preis festgelegt",
       "provenance": "Herkunft erfasst"
-    }
+    },
+    "clearFilters": "Filter zurücksetzen",
+    "showingRange": "Artikel {from}–{to} von {total}",
+    "pagination": "Artikelseiten",
+    "previousPage": "Zurück",
+    "nextPage": "Weiter",
+    "pageOf": "Seite {page} von {pages}"
   },
   "sales": {
     "title": "Verkäufe",

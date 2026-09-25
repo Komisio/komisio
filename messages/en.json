@@ -1005,7 +1005,13 @@
       "accepted": "Accepted",
       "price_set": "Price set",
       "provenance": "Provenance recorded"
-    }
+    },
+    "clearFilters": "Clear filters",
+    "showingRange": "Showing {from}–{to} of {total} items",
+    "pagination": "Item pages",
+    "previousPage": "Previous",
+    "nextPage": "Next",
+    "pageOf": "Page {page} of {pages}"
   },
   "sales": {
     "title": "Sales",

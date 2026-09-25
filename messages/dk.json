@@ -1005,7 +1005,13 @@
       "accepted": "Accepteret",
       "price_set": "Pris sat",
       "provenance": "Oprindelse registreret"
-    }
+    },
+    "clearFilters": "Ryd filtre",
+    "showingRange": "Viser {from}–{to} af {total} varer",
+    "pagination": "Bladr gennem varer",
+    "previousPage": "Forrige",
+    "nextPage": "Næste",
+    "pageOf": "Side {page} af {pages}"
   },
   "sales": {
     "title": "Salg",

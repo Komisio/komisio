@@ -718,3 +718,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-25: Remove repeated store-name labels above dashboard page titles. The shared store selector and breadcrumb identify the active store; document identities and item/drop-off references remain visible.
 
 - 2026-09-25: Text links use persistent underlines across locales. Standalone actions and seller choices have visible control boundaries and touch targets; navigation retains its distinct styling. Inline links and compact tables keep their density.
+
+- 2026-09-25: Staff item browsing paginates tenant-filtered results in accepted-at descending and ID order, retaining text and stage filters. The original items_overview read remains compatible; paging adds no item writes or permissions.

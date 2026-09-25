@@ -2684,3 +2684,35 @@ button.text-link:hover:not(:disabled) {
   flex: 0 0 20px;
   accent-color: var(--ink);
 }
+
+/* Item filters remain usable at the counter on narrow screens. */
+.items-directory-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+  gap: 12px;
+}
+.items-directory-filters .field {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+.items-directory-filters input,
+.items-directory-filters select {
+  width: 100%;
+  min-width: 0;
+}
+.items-directory-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+@media (min-width: 700px) {
+  .items-directory-filters {
+    grid-template-columns: minmax(140px, 1fr) minmax(140px, 1fr) auto auto;
+  }
+  .items-directory-filters .field {
+    grid-column: auto;
+  }
+}

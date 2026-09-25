@@ -1005,7 +1005,13 @@
       "accepted": "Hyväksytty",
       "price_set": "Hinta asetettu",
       "provenance": "Alkuperä kirjattu"
-    }
+    },
+    "clearFilters": "Tyhjennä suodattimet",
+    "showingRange": "Näytetään {from}–{to} / {total} tuotetta",
+    "pagination": "Tuotesivut",
+    "previousPage": "Edellinen",
+    "nextPage": "Seuraava",
+    "pageOf": "Sivu {page}/{pages}"
   },
   "sales": {
     "title": "Myynti",

@@ -208,6 +208,8 @@ test('a seller announces a handover and staff receive it as a bag', async ({
     const reference = await portal.getByText(/^H-\d+$/).textContent()
     await page.goto(`/intake/open?ref=${reference}`)
     await expect(page).toHaveURL(/\/intake\/handovers\?focus=/)
+    // Wait for the intentional receipt focus before clicking its confirmation.
+    await expect(page.locator('[id^="handover-"]')).toBeFocused()
     await page.getByLabel(d.handovers.confirm, { exact: true }).check()
     await page
       .getByRole('button', { name: d.handovers.receive, exact: true })

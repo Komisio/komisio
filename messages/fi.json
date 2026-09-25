@@ -1185,8 +1185,8 @@
     "open": "Avaa tiliote"
   },
   "handovers": {
-    "title": "Luovutukset",
-    "intro": "Myyjät ilmoittavat tuontierän portaalissa ja saavat viitteen. Kun tavarat vastaanotetaan täällä, vastaanotto kirjataan sopimusehtojen mukaisesti ja myyjä näkee tuontierän numeron.",
+    "title": "Ennakkoilmoitukset",
+    "intro": "Myyjien suunnittelemat tuonnit. Vahvista vastaanotto, kun tavarat ovat myymälässä.",
     "disabled": "Omatoiminen jättö on pois päältä: ota seller_dropoff käyttöön hallussapidon lähteissä kaupan käytännössä.",
     "empty": "Luovutuksia ei ole ilmoitettu.",
     "announced": "Ilmoitettu",
@@ -1204,7 +1204,15 @@
       "received": "vastaanotettu",
       "cancelled": "peruutettu"
     },
-    "backToQueue": "Takaisin ennakkoilmoituksiin"
+    "backToQueue": "Takaisin ennakkoilmoituksiin",
+    "search": "Hae ennakkoilmoitusta",
+    "searchHint": "Myyjän nimi tai H-viite",
+    "statusFilter": "Tila",
+    "allStatuses": "Kaikki tilat",
+    "showingRange": "Näytetään {from}–{to} / {total} ennakkoilmoitusta",
+    "pagination": "Ennakkoilmoitusten sivut",
+    "noMatches": "Yksikään ennakkoilmoitus ei vastaa suodattimia.",
+    "limited": "Tilapäisesti näytetään vain 100 uusinta ennakkoilmoitusta. Avaa vanhempi sen H-viitteellä."
   },
   "chain": {
     "title": "Ketju",

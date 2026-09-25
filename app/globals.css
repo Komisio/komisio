@@ -2899,3 +2899,21 @@ button.text-link:hover:not(:disabled) {
 .item-detail-section[open] {
   padding-bottom: 20px;
 }
+
+/* Keep handover filters readable and touch-sized before the queue on phones. */
+.handover-queue-search .row {
+  align-items: flex-end;
+}
+.handover-queue-search input {
+  flex: 1 1 100%;
+  width: 100%;
+}
+.handover-queue-search .field {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+.handover-queue-search select {
+  min-height: 44px;
+  width: 100%;
+}

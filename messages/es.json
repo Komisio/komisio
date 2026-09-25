@@ -1185,8 +1185,8 @@
     "open": "Abrir liquidación"
   },
   "handovers": {
-    "title": "Entregas",
-    "intro": "Los vendedores anuncian una entrega desde su portal y reciben una referencia. Al recibir los artículos aquí, se registra la recepción según las reglas del acuerdo; el vendedor ve el número de entrega.",
+    "title": "Entregas anunciadas",
+    "intro": "Entregas previstas de los vendedores. Confirme la recepción cuando los artículos estén en la tienda.",
     "disabled": "La entrega por el depositante está desactivada: activa seller_dropoff entre las fuentes de custodia en la política de la tienda.",
     "empty": "No hay entregas anunciadas.",
     "announced": "Anunciada",
@@ -1204,7 +1204,15 @@
       "received": "recibida",
       "cancelled": "cancelada"
     },
-    "backToQueue": "Volver a entregas anunciadas"
+    "backToQueue": "Volver a entregas anunciadas",
+    "search": "Buscar entrega",
+    "searchHint": "Nombre del vendedor o referencia H",
+    "statusFilter": "Estado",
+    "allStatuses": "Todos los estados",
+    "showingRange": "Mostrando {from}–{to} de {total} entregas",
+    "pagination": "Páginas de entregas",
+    "noMatches": "Ninguna entrega coincide con los filtros.",
+    "limited": "Temporalmente solo se muestran las 100 entregas más recientes. Abra una anterior mediante su referencia H."
   },
   "chain": {
     "title": "Cadena",

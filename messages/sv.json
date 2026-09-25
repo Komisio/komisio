@@ -1185,8 +1185,8 @@
     "open": "Öppna avräkningen"
   },
   "handovers": {
-    "title": "Inlämningar",
-    "intro": "Säljaren anmäler en inlämning i sin portal och får en referens. När varorna tas emot här registreras ett inlämningskvitto enligt avtalsreglerna; säljaren ser inlämningsnumret.",
+    "title": "Föranmälningar",
+    "intro": "Säljarnas planerade inlämningar. Bekräfta mottagandet när varorna finns i butiken.",
     "disabled": "Självinlämning är av: aktivera seller_dropoff bland förvaringskällorna i butikspolicyn.",
     "empty": "Inga anmälda inlämningar.",
     "announced": "Anmäld",
@@ -1204,7 +1204,15 @@
       "received": "mottagen",
       "cancelled": "avbruten"
     },
-    "backToQueue": "Till föranmälningar"
+    "backToQueue": "Till föranmälningar",
+    "search": "Sök föranmälning",
+    "searchHint": "Säljarens namn eller H-referens",
+    "statusFilter": "Status",
+    "allStatuses": "Alla statusar",
+    "showingRange": "Visar {from}–{to} av {total} föranmälningar",
+    "pagination": "Sidor med föranmälningar",
+    "noMatches": "Inga föranmälningar matchar filtren.",
+    "limited": "Tillfälligt visas endast de 100 senaste föranmälningarna. Öppna en äldre föranmälning via dess H-referens."
   },
   "chain": {
     "title": "Kedja",

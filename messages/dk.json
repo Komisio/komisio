@@ -1185,8 +1185,8 @@
     "open": "Åbn afregning"
   },
   "handovers": {
-    "title": "Afleveringer",
-    "intro": "Sælgere anmelder en indlevering fra deres portal og får en reference. Når varerne modtages her, registreres modtagelsen efter aftalereglerne; sælgeren ser indleveringsnummeret.",
+    "title": "Forhåndsanmeldelser",
+    "intro": "Sælgernes planlagte indleveringer. Bekræft modtagelsen, når varerne er i butikken.",
     "disabled": "Selvaflevering er slået fra: aktivér seller_dropoff blandt besiddelseskilderne i butikspolitikken.",
     "empty": "Ingen afleveringer anmeldt.",
     "announced": "Anmeldt",
@@ -1204,7 +1204,15 @@
       "received": "modtaget",
       "cancelled": "annulleret"
     },
-    "backToQueue": "Til anmeldte indleveringer"
+    "backToQueue": "Til anmeldte indleveringer",
+    "search": "Søg forhåndsanmeldelse",
+    "searchHint": "Sælgerens navn eller H-reference",
+    "statusFilter": "Status",
+    "allStatuses": "Alle statusser",
+    "showingRange": "Viser {from}–{to} af {total} forhåndsanmeldelser",
+    "pagination": "Sider med forhåndsanmeldelser",
+    "noMatches": "Ingen forhåndsanmeldelser matcher filtrene.",
+    "limited": "Midlertidigt vises kun de 100 seneste forhåndsanmeldelser. Åbn en ældre via dens H-reference."
   },
   "chain": {
     "title": "Kæde",

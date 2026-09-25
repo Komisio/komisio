@@ -1185,8 +1185,8 @@
     "open": "Åpne avregning"
   },
   "handovers": {
-    "title": "Overleveringer",
-    "intro": "Selgere melder inn en innlevering fra portalen sin og får en referanse. Når varene tas imot her, registreres mottaket etter avtalereglene; selgeren ser innleveringsnummeret.",
+    "title": "Forhåndsmeldinger",
+    "intro": "Selgernes planlagte innleveringer. Bekreft mottak når varene er i butikken.",
     "disabled": "Egen innlevering er av: aktiver seller_dropoff blant besittelseskildene i butikkpolicyen.",
     "empty": "Ingen overleveringer meldt inn.",
     "announced": "Meldt inn",
@@ -1204,7 +1204,15 @@
       "received": "mottatt",
       "cancelled": "avbrutt"
     },
-    "backToQueue": "Til forhåndsmeldte innleveringer"
+    "backToQueue": "Til forhåndsmeldte innleveringer",
+    "search": "Søk forhåndsmelding",
+    "searchHint": "Selgerens navn eller H-referanse",
+    "statusFilter": "Status",
+    "allStatuses": "Alle statuser",
+    "showingRange": "Viser {from}–{to} av {total} forhåndsmeldinger",
+    "pagination": "Sider med forhåndsmeldinger",
+    "noMatches": "Ingen forhåndsmeldinger samsvarer med filtrene.",
+    "limited": "Midlertidig vises bare de 100 nyeste forhåndsmeldingene. Åpne en eldre med H-referansen."
   },
   "chain": {
     "title": "Kjede",

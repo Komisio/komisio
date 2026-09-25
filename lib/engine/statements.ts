@@ -61,7 +61,8 @@ const lineRow = z.object({
   amount_ore: ore,
   occurred_at: z.iso.datetime({ offset: true }),
   reference_kind: z.string(),
-  reference_id: z.uuid(),
+  // Persisted PostgreSQL UUIDs may predate RFC-shaped derived identifiers.
+  reference_id: z.guid(),
   sale_price_ore: ore.nullable(),
   commission_ore: ore.nullable(),
 })

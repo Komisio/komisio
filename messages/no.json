@@ -1203,7 +1203,8 @@
       "open": "åpen",
       "received": "mottatt",
       "cancelled": "avbrutt"
-    }
+    },
+    "backToQueue": "Til forhåndsmeldte innleveringer"
   },
   "chain": {
     "title": "Kjede",
@@ -1632,9 +1633,9 @@
     "empty": "Ingen innkjøp registrert ennå."
   },
   "sellerPortal": {
-    "handovers": "Lever inn varer",
+    "handovers": "Meld inn en innlevering",
     "handoverIntro": "Meld inn en innlevering før du kommer. Vis referansen i kassen; butikken registrerer mottaket, og du ser innleveringsnummeret her.",
-    "handoverDisabled": "Denne butikken tar ikke imot forhåndsmeldte innleveringer ennå. Ta med varene dine til kassen.",
+    "handoverDisabled": "Butikken tar ikke imot forhåndsmeldinger ennå. Lever varene dine i kassen.",
     "handoverKind": "Hva du tar med",
     "handoverKinds": {
       "bag": "Pose",
@@ -1709,7 +1710,8 @@
     "kind": "Hendelse",
     "signout": "Logg ut",
     "salePrice": "Salgspris",
-    "commission": "Kommisjon"
+    "commission": "Kommisjon",
+    "handoverError": "Kunne ikke bekrefte endringen. Prøv igjen med de samme opplysningene."
   },
   "plans": {
     "heading": "Abonnement",

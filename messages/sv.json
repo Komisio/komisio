@@ -1190,7 +1190,7 @@
     "disabled": "Självinlämning är av: aktivera seller_dropoff bland förvaringskällorna i butikspolicyn.",
     "empty": "Inga anmälda inlämningar.",
     "announced": "Anmäld",
-    "items": "plagg",
+    "items": "varor",
     "note": "Anteckning (valfri)",
     "confirm": "Varorna i inlämningen är i butiken nu.",
     "receive": "Ta emot och registrera inlämningen",
@@ -1203,7 +1203,8 @@
       "open": "öppen",
       "received": "mottagen",
       "cancelled": "avbruten"
-    }
+    },
+    "backToQueue": "Till föranmälningar"
   },
   "chain": {
     "title": "Kedja",
@@ -1661,15 +1662,15 @@
       "return": "återlämnad till dig",
       "transfer": "flyttad till en annan butik i kedjan"
     },
-    "handovers": "Lämna in plagg",
+    "handovers": "Anmäl inlämning",
     "handoverIntro": "Anmäl en inlämning innan du kommer. Visa referensen i kassan; butiken registrerar mottagandet och du ser inlämningsnumret här.",
-    "handoverDisabled": "Butiken tar inte emot anmälda inlämningar ännu. Lämna dina plagg i kassan.",
+    "handoverDisabled": "Butiken tar inte emot föranmälningar ännu. Lämna dina varor i kassan.",
     "handoverKind": "Vad du lämnar",
     "handoverKinds": {
       "bag": "Påse",
       "box": "Låda"
     },
-    "estimatedItems": "Ungefär hur många plagg",
+    "estimatedItems": "Ungefär hur många varor",
     "handoverNote": "Anteckning till butiken (valfri)",
     "announce": "Anmäl",
     "showReference": "Visa referensen i kassan eller vid skåpet.",
@@ -1709,7 +1710,8 @@
     "kind": "Händelse",
     "signout": "Logga ut",
     "salePrice": "Försäljningspris",
-    "commission": "Provision"
+    "commission": "Provision",
+    "handoverError": "Kunde inte bekräfta ändringen. Försök igen med samma uppgifter."
   },
   "plans": {
     "heading": "Plan",

@@ -185,7 +185,7 @@ export default async function SellerPortal({
         d={d}
       />
       <SellerHandovers
-        key={`${account.sellerId}-${handovers.handovers.map((h) => `${h.id}:${h.status}`).join(',')}`}
+        key={`${account.tenantId}:${account.sellerId}`}
         tenantId={account.tenantId}
         sellerId={account.sellerId}
         handovers={handovers}

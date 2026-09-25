@@ -1203,7 +1203,8 @@
       "open": "avoin",
       "received": "vastaanotettu",
       "cancelled": "peruutettu"
-    }
+    },
+    "backToQueue": "Takaisin ennakkoilmoituksiin"
   },
   "chain": {
     "title": "Ketju",
@@ -1632,15 +1633,15 @@
     "empty": "Ostoja ei ole vielä rekisteröity."
   },
   "sellerPortal": {
-    "handovers": "Tuo tuotteita",
+    "handovers": "Ilmoita tavaroiden tuonnista",
     "handoverIntro": "Ilmoita tuontierä ennen saapumista. Näytä viite tiskillä; myymälä kirjaa vastaanoton ja näet tuontierän numeron täällä.",
-    "handoverDisabled": "Tämä kauppa ei vielä ota vastaan ilmoitettuja jättöjä. Tuo tuotteesi tiskille.",
+    "handoverDisabled": "Myymälä ei vielä ota vastaan ennakkoilmoituksia. Tuo tavarasi kassalle.",
     "handoverKind": "Mitä tuot",
     "handoverKinds": {
       "bag": "Pussi",
       "box": "Laatikko"
     },
-    "estimatedItems": "Noin kuinka monta tuotetta",
+    "estimatedItems": "Tavaroiden arvioitu määrä",
     "handoverNote": "Huomautus kaupalle (valinnainen)",
     "announce": "Ilmoita",
     "showReference": "Näytä tämä viite tiskillä tai lokerolla.",
@@ -1709,7 +1710,8 @@
     "kind": "Tapahtuma",
     "signout": "Kirjaudu ulos",
     "salePrice": "Myyntihinta",
-    "commission": "Komissio"
+    "commission": "Komissio",
+    "handoverError": "Muutosta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla."
   },
   "plans": {
     "heading": "Tilaus",

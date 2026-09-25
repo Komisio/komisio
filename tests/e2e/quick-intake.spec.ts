@@ -13,6 +13,39 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
   try {
     await f.commit()
     await page.goto('/intake/quick')
+    const back = page.locator('.intake-header').getByRole('link')
+    await expect(back).toHaveCSS('text-decoration-line', 'underline')
+    const newSeller = page.getByRole('link', {
+      name: d.quickIntake.newSeller,
+      exact: true,
+    })
+    for (const width of [320, 390, 768, 1280]) {
+      await page.setViewportSize({ width, height: 900 })
+      expect((await newSeller.boundingBox())!.height).toBeGreaterThanOrEqual(44)
+      const choice = page.getByRole('button', { name: /Synthetic P2 seller/ })
+      expect((await choice.boundingBox())!.height).toBeGreaterThanOrEqual(44)
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+      ).toBe(true)
+    }
+    await newSeller.focus()
+    await expect(newSeller).toHaveCSS('outline-style', 'solid')
+    await page.keyboard.press('Enter')
+    await expect(page).toHaveURL(/\/intake#new-seller$/)
+    await expect(page.locator('#new-seller')).toBeInViewport()
+    await page.goto('/intake/quick')
+    await page.screenshot({
+      path: 'private/link-clarity-desktop.png',
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.screenshot({
+      path: 'private/link-clarity-mobile.png',
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 1280, height: 900 })
     await page
       .getByLabel(d.quickIntake.searchSeller, { exact: true })
       .fill('Synthetic')

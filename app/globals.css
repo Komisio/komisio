@@ -54,8 +54,22 @@ summary {
 .intake-seller {
   display: block;
   padding: 12px;
-  border-bottom: 1px solid var(--line);
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid #9aada2;
+  border-radius: 9px;
+  background: white;
+  text-align: left;
+  margin-bottom: 8px;
   overflow-wrap: anywhere;
+}
+.intake-seller strong {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.intake-seller:hover {
+  background: var(--mint);
+  border-color: var(--green);
 }
 .intake-seller small {
   display: block;
@@ -156,9 +170,35 @@ body {
   font-size: 14px;
   line-height: 1.6;
 }
+/* Text links are identifiable without hover or colour perception. */
 a {
+  color: var(--green);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-skip-ink: auto;
+}
+a:hover {
+  text-decoration-thickness: 2px;
+}
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
+/* Navigation and controls already have a distinct shape and active state. */
+a:where(
+  .btn,
+  .brand,
+  .nav-link,
+  .account-link,
+  .view-tab,
+  .intake-path,
+  .reception-queue-row,
+  .intake-seller
+) {
   text-decoration: none;
-  color: inherit;
 }
 button,
 input,
@@ -241,13 +281,14 @@ small {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 42px;
+  min-height: 44px;
   border-radius: 9px;
   padding: 10px 17px;
   font-size: 13px;
   font-weight: 600;
   border: 1px solid transparent;
-  white-space: nowrap;
+  white-space: normal;
+  text-align: center;
   transition: background 0.15s;
 }
 .btn-primary {
@@ -259,7 +300,7 @@ small {
 }
 .btn-secondary {
   background: white;
-  border-color: var(--line);
+  border-color: #9aada2;
 }
 .btn-secondary:hover {
   background: var(--paper);
@@ -405,9 +446,40 @@ small {
   font-size: 18px;
 }
 .text-link {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
   color: var(--green);
   font-weight: 600;
   font-size: 13px;
+}
+/* Standalone navigation gets a touch target; prose links stay inline. */
+:where(.page-heading, .intake-header, .row, main, .guide-actions)
+  > a.text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  max-width: 100%;
+}
+button.text-link {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid #9aada2;
+  border-radius: 9px;
+  background: white;
+  text-decoration: none;
+}
+button.text-link:hover:not(:disabled) {
+  background: var(--mint);
+}
+.intake-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 16px;
+}
+.intake-header h1 {
+  margin: 0;
 }
 .divider {
   border: 0;

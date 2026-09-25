@@ -103,7 +103,14 @@
       "IMAGE_TOO_LARGE": "The photo is too large (3 MB at most).",
       "REQUEST_FAILED": "The request failed. Retry."
     },
-    "addPhoto": "Take or choose a photo"
+    "addPhoto": "Take or choose a photo",
+    "sellerSearchHint": "Name, email or phone",
+    "sellerSearching": "Searching sellers…",
+    "sellerSearchFailed": "Could not search sellers. Please try again.",
+    "sellerSearchRetry": "Try again",
+    "sellerSearchRange": "Showing {from}–{to} of {total} sellers",
+    "sellerSearchPrevious": "Previous",
+    "sellerSearchNext": "Next"
   },
   "intake": {
     "quickLink": "Quick reception: one screen per garment",

@@ -103,7 +103,14 @@
       "IMAGE_TOO_LARGE": "Das Foto ist zu groß (höchstens 3 MB).",
       "REQUEST_FAILED": "Die Anfrage ist fehlgeschlagen. Versuchen Sie es erneut."
     },
-    "addPhoto": "Foto aufnehmen oder auswählen"
+    "addPhoto": "Foto aufnehmen oder auswählen",
+    "sellerSearchHint": "Name, E-Mail oder Telefon",
+    "sellerSearching": "Verkäufer werden gesucht…",
+    "sellerSearchFailed": "Verkäufer konnten nicht gesucht werden. Bitte erneut versuchen.",
+    "sellerSearchRetry": "Erneut versuchen",
+    "sellerSearchRange": "{from}–{to} von {total} Verkäufern",
+    "sellerSearchPrevious": "Zurück",
+    "sellerSearchNext": "Weiter"
   },
   "intake": {
     "quickLink": "Schnellannahme: ein Bildschirm pro Kleidungsstück",

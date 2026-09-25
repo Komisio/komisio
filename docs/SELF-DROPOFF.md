@@ -40,16 +40,21 @@ so a replayed receipt finds its bag and the seller's list can show `K-n`.
 
 ## Surfaces
 
-- Seller portal: "Hand in items" with kind, estimated count and note; the
+- Seller portal: "Announce a drop-off" with kind, estimated count and note; the
   list shows the reference large enough to show at the counter, the status,
   and the bag number once received; open ones can be cancelled.
 - Staff: `/intake/handovers` lists announcements with a receive form
   (note plus one confirmation); scan-to-open accepts `H-n` and focuses the
-  row. Linked from the intake page.
+  exact record, even outside the recent queue. Linked from the intake page.
 - A locker integration calls `receive_handover` with source `locker` after
-  the seller's reference opened a compartment; that integration and a
-  printed or on-screen QR for the reference are later slices. Today the
-  reference is typed or read from the seller's screen.
+  the seller's reference opened a compartment; the integration and hardware
+  remain later slices.
+- The seller can show an on-demand QR code for an open announcement. It contains
+  only a same-application `/scan?ref=H-n` link. Staff login and MFA return to the
+  reference, then active-store lookup and explicit custody confirmation still
+  apply. The human-readable reference remains available if the camera or code
+  cannot be used. Automated tests decode the generated code independently;
+  real phone-camera scanning remains unverified.
 
 ## What this does not do
 

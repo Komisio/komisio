@@ -1064,8 +1064,27 @@ test('password recovery and MFA protect the authenticated platform', async ({
     data: { action: 'profile', name: 'Should fail', locale: 'sv' },
   })
   expect(blocked.status()).toBe(403)
+  await page.goto('/scan?ref=H-999999999999')
+  await expect(page).toHaveURL(/\/mfa\?next=/)
+  expect(new URL(page.url()).searchParams.get('next')).toBe(
+    '/intake/open?ref=H-999999999999',
+  )
+  const codeQuery = new URLSearchParams({
+    tenant: crypto.randomUUID(),
+    seller: crypto.randomUUID(),
+    reference: 'H-1',
+  })
+  expect(
+    (
+      await page.request.get('/api/seller/handovers/code?' + codeQuery)
+    ).status(),
+  ).toBe(401)
   await page.getByLabel('Sexsiffrig kod').fill(totp(factor.totp.secret))
   await page.getByRole('button', { name: 'Verifiera kod' }).click()
+  await expect(page).toHaveURL(
+    'http://127.0.0.1:3000/intake/open?ref=H-999999999999',
+  )
+  await page.goto('/')
   await expect(page.getByRole('heading', { name: 'Välkommen.' })).toBeVisible()
 })
 

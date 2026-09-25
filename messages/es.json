@@ -1713,7 +1713,12 @@
     "commission": "Comisión",
     "handoverError": "No se pudo confirmar el cambio. Inténtalo de nuevo con los mismos datos.",
     "itemsSearchHint": "Descripción, categoría o referencia del artículo",
-    "itemsLimited": "Ahora se muestran como máximo tus 200 artículos más recientes. La búsqueda y más páginas estarán disponibles cuando finalice la actualización."
+    "itemsLimited": "Ahora se muestran como máximo tus 200 artículos más recientes. La búsqueda y más páginas estarán disponibles cuando finalice la actualización.",
+    "showHandoverCode": "Mostrar código QR",
+    "hideHandoverCode": "Ocultar código QR",
+    "handoverCodeAlt": "Código QR de {ref}",
+    "handoverCodeHint": "Pide al personal que lo escanee con la cámara del móvil. También puede escribir la referencia.",
+    "handoverCodeError": "No se pudo mostrar el código. Usa la referencia de arriba."
   },
   "plans": {
     "heading": "Plan",

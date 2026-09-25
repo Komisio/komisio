@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { HandoverCode } from './handover-code'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import type { MyHandovers } from '@/lib/engine/handovers'
@@ -161,6 +162,12 @@ export function SellerHandovers({
           {h.status === 'open' && (
             <>
               <p>{d.showReference}</p>
+              <HandoverCode
+                tenantId={tenantId}
+                sellerId={sellerId}
+                reference={h.reference}
+                d={d}
+              />
               <Button
                 type="button"
                 variant="secondary"

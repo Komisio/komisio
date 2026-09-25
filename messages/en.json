@@ -1713,7 +1713,12 @@
     "commission": "Commission",
     "handoverError": "Unable to confirm the change. Try again with the same details.",
     "itemsSearchHint": "Description, category or item reference",
-    "itemsLimited": "Only your latest 200 items are available right now. Search and more pages will be available when the update is complete."
+    "itemsLimited": "Only your latest 200 items are available right now. Search and more pages will be available when the update is complete.",
+    "showHandoverCode": "Show QR code",
+    "hideHandoverCode": "Hide QR code",
+    "handoverCodeAlt": "QR code for {ref}",
+    "handoverCodeHint": "Ask store staff to scan with their phone camera. The reference can also be typed in.",
+    "handoverCodeError": "The code could not be displayed. Use the reference above."
   },
   "plans": {
     "heading": "Plan",

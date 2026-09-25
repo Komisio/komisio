@@ -56,7 +56,14 @@ export const commandSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('chainLeave'), tenantId }),
 ])
 export function safeNext(value: string | null | undefined) {
-  if (value === '/account' || value === '/seller') return value
+  if (value === '/account' || value === '/seller' || value === '/intake/open')
+    return value
+  // Exact same-application label destinations only; no arbitrary query or redirect.
+  if (
+    value &&
+    /^\/intake\/open\?ref=(?:[KGH]-[1-9]\d{0,11}|I-[0-9A-F]{8})$/.test(value)
+  )
+    return value
   if (value && /^\/invite\/[a-f0-9]{64}$/.test(value)) return value
   if (value && /^\/review\/[a-f0-9]{64}$/.test(value)) return value
   // The connector consent page keeps its OAuth query through login and MFA.

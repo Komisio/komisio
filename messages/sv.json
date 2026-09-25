@@ -1713,7 +1713,12 @@
     "commission": "Provision",
     "handoverError": "Kunde inte bekräfta ändringen. Försök igen med samma uppgifter.",
     "itemsSearchHint": "Beskrivning, kategori eller varureferens",
-    "itemsLimited": "Just nu visas högst 200 av dina senaste varor. Sökning och fler sidor blir tillgängliga när uppdateringen är klar."
+    "itemsLimited": "Just nu visas högst 200 av dina senaste varor. Sökning och fler sidor blir tillgängliga när uppdateringen är klar.",
+    "showHandoverCode": "Visa QR-kod",
+    "hideHandoverCode": "Dölj QR-kod",
+    "handoverCodeAlt": "QR-kod för {ref}",
+    "handoverCodeHint": "Låt butikens personal skanna med mobilkameran. Referensen går också att skriva in.",
+    "handoverCodeError": "Koden kunde inte visas. Använd referensen ovan."
   },
   "plans": {
     "heading": "Plan",

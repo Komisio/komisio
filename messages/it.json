@@ -1713,7 +1713,12 @@
     "commission": "Commissione",
     "handoverError": "Non è stato possibile confermare la modifica. Riprova con gli stessi dati.",
     "itemsSearchHint": "Descrizione, categoria o riferimento articolo",
-    "itemsLimited": "Al momento vengono mostrati al massimo i tuoi 200 articoli più recenti. Ricerca e altre pagine saranno disponibili al termine dell’aggiornamento."
+    "itemsLimited": "Al momento vengono mostrati al massimo i tuoi 200 articoli più recenti. Ricerca e altre pagine saranno disponibili al termine dell’aggiornamento.",
+    "showHandoverCode": "Mostra codice QR",
+    "hideHandoverCode": "Nascondi codice QR",
+    "handoverCodeAlt": "Codice QR per {ref}",
+    "handoverCodeHint": "Chiedi al personale di scansionare con la fotocamera del telefono. Il riferimento può anche essere digitato.",
+    "handoverCodeError": "Impossibile mostrare il codice. Usa il riferimento qui sopra."
   },
   "plans": {
     "heading": "Piano",

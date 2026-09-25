@@ -40,10 +40,15 @@ describe('seller next step', () => {
       priceOre: 27000,
     })
   })
-  it('accepts a response from before the migration without the fields', () => {
+  it('treats a response from before the migration as unavailable, not as "no step"', () => {
     const parsed = myItems.parse({ currency: 'SEK', items: [base] })
     expect(parsed.automaticMarkdowns).toBeUndefined()
-    expect(sellerItemNextStep(parsed.items[0])).toBeNull()
+    expect(sellerItemNextStep(parsed.items[0])).toBeUndefined()
+  })
+  it('distinguishes a known "no step remains" from an unavailable read', () => {
+    expect(
+      sellerItemNextStep({ ...base, nextMarkdownAt: null, nextPriceOre: null }),
+    ).toBeNull()
   })
   it('shows no step for sold or ended items even when a value arrives', () => {
     for (const stage of ['sold', 'ended', 'period_ended'] as const)

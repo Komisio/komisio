@@ -3,28 +3,38 @@
 -- percent, what price) and whether the store applies steps automatically.
 -- The price is the expression apply_markdown records (a share of the accepted
 -- price, never compounded), read from the same lifecycle facts, so the portal
--- shows what the engine would write. Nothing is written; the wording in the
--- portal promises a price only when the store's policy applies steps itself.
+-- shows what the engine would write. Nothing is written and nothing is
+-- promised: the portal calls the step a plan whether the store applies steps
+-- by hand or by the daily run, since either can happen later or not at all.
 
--- The first frozen step not yet applied to an unsold item, from its lifecycle facts; null when nothing remains inside the period.
+-- The next frozen step for an unsold item, from its lifecycle facts: the
+-- engine's due step when one is due, otherwise the chronologically earliest
+-- step not yet applied that falls inside the period (steps need not be
+-- sorted). Null when nothing remains or the period has run out.
 create function komisio_private.next_markdown(f jsonb) returns jsonb
 language plpgsql stable set search_path='' as $$
-declare step jsonb; idx integer:=0; due_at timestamptz; accepted bigint; percent numeric;
+declare step jsonb; idx integer:=0; due_at timestamptz; period_end timestamptz; accepted bigint; percent numeric;
+ best_idx integer; best_at timestamptz; best_percent numeric;
 begin
  if f is null or f->>'stage' not in ('on_sale','markdown_due','period_ending') then return null; end if;
+ period_end:=(f->>'periodEnd')::timestamptz;
+ -- The stage puts a due step before an expired period; a plan is only shown while the period runs.
+ if period_end<=now() then return null; end if;
  accepted:=(f->>'acceptedPriceOre')::bigint;
  if accepted is null then return null; end if;
  for step in select * from jsonb_array_elements(coalesce(f->'steps','[]'::jsonb)) loop
   idx:=idx+1;
-  if not (to_jsonb(idx) <@ coalesce(f->'appliedSteps','[]'::jsonb)) then
-   due_at:=(f->>'acceptedAt')::timestamptz+make_interval(days=>(step->>'afterDays')::integer);
-   if due_at>(f->>'periodEnd')::timestamptz then return null; end if;
-   percent:=(step->>'percent')::numeric;
-   return jsonb_build_object('step',idx,'at',due_at,'percent',percent,
-    'priceOre',greatest(accepted-komisio_private.share_ore(accepted,round(percent*100)::integer),1));
+  if to_jsonb(idx) <@ coalesce(f->'appliedSteps','[]'::jsonb) then continue; end if;
+  due_at:=(f->>'acceptedAt')::timestamptz+make_interval(days=>(step->>'afterDays')::integer);
+  if due_at>period_end then continue; end if;
+  if idx=(f->>'dueStep')::integer or best_at is null or due_at<best_at then
+   best_idx:=idx; best_at:=due_at; best_percent:=(step->>'percent')::numeric;
+   if idx=(f->>'dueStep')::integer then exit; end if;
   end if;
  end loop;
- return null;
+ if best_idx is null then return null; end if;
+ return jsonb_build_object('step',best_idx,'at',best_at,'percent',best_percent,
+  'priceOre',greatest(accepted-komisio_private.share_ore(accepted,round(best_percent*100)::integer),1));
 end $$;
 revoke all on function komisio_private.next_markdown(jsonb) from public,anon,authenticated;
 

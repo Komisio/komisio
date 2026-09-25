@@ -67,11 +67,18 @@ export function sellerItemState(item: MyItems['items'][number]) {
   return 'forSale' as const
 }
 
-/** The next planned price step the engine reports for an unsold item, or null. Nothing is computed here. */
+/**
+ * The next planned price step the engine reports for an unsold item.
+ * Undefined when the read did not carry the fields (a deployment still on
+ * the older read), so the portal says nothing rather than "no step";
+ * null when the engine knows no step remains. Nothing is computed here.
+ */
 export function sellerItemNextStep(item: MyItems['items'][number]) {
   const state = sellerItemState(item)
   if (state !== 'forSale' && state !== 'periodEnding') return null
-  if (!item.nextMarkdownAt || item.nextPriceOre == null) return null
+  if (item.nextMarkdownAt === undefined || item.nextPriceOre === undefined)
+    return undefined
+  if (item.nextMarkdownAt === null || item.nextPriceOre === null) return null
   return { at: item.nextMarkdownAt, priceOre: item.nextPriceOre }
 }
 

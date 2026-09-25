@@ -1636,7 +1636,7 @@
     "wasPrice": "var",
     "until": "indtil",
     "then": "derefter",
-    "nextPriceMay": "Butikken kan sætte prisen ned til {price} fra {date}.",
+    "nextPriceManual": "Planlagt pris {price} fra {date}; butikken ændrer priser manuelt.",
     "nextPriceScheduled": "Planlagt pris {price} fra {date}.",
     "lastPrice": "Der er ikke planlagt flere pristrin.",
     "daysLeft": "{days} dage tilbage",

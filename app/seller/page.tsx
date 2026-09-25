@@ -177,7 +177,7 @@ export default async function SellerPortal({
           {mine.items.length === 0 && <p>{d.noItems}</p>}
           {mine.items.length > 0 && (
             <div style={{ overflowX: 'auto' }}>
-              <table>
+              <table className="seller-items">
                 <thead>
                   <tr>
                     <th>{d.item}</th>
@@ -191,13 +191,13 @@ export default async function SellerPortal({
                     const state = sellerItemState(i)
                     return (
                       <tr key={i.id}>
-                        <td>
+                        <td data-label={d.item}>
                           {i.title ?? i.reference}
                           {i.category ? ` · ${i.category}` : ''}
                           <br />
                           <small>{i.reference}</small>
                         </td>
-                        <td>
+                        <td data-label={d.price}>
                           {state === 'sold' && i.soldPriceOre !== null
                             ? amount(i.soldPriceOre)
                             : i.currentPriceOre === null
@@ -210,7 +210,7 @@ export default async function SellerPortal({
                             ? ` (${d.wasPrice} ${amount(i.acceptedPriceOre)})`
                             : ''}
                         </td>
-                        <td>
+                        <td data-label={d.status}>
                           {d.itemStates[state]}
                           {state === 'ended' && i.endedAs
                             ? ` · ${label(d.endedAs, i.endedAs)}`
@@ -224,14 +224,21 @@ export default async function SellerPortal({
                             (() => {
                               const next = sellerItemNextStep(i)
                               const days = sellerItemDaysLeft(i)
-                              const text = next
-                                ? (mine.automaticMarkdowns
-                                    ? d.nextPriceScheduled
-                                    : d.nextPriceMay
-                                  )
-                                    .replace('{price}', amount(next.priceOre))
-                                    .replace('{date}', day(next.at))
-                                : d.lastPrice
+                              // Undefined: the read predates the next-step fields; say nothing about steps.
+                              const text =
+                                next === undefined
+                                  ? ''
+                                  : next
+                                    ? (mine.automaticMarkdowns
+                                        ? d.nextPriceScheduled
+                                        : d.nextPriceManual
+                                      )
+                                        .replace(
+                                          '{price}',
+                                          amount(next.priceOre),
+                                        )
+                                        .replace('{date}', day(next.at))
+                                    : d.lastPrice
                               const left = d.daysLeft.replace(
                                 '{days}',
                                 String(days),
@@ -251,7 +258,7 @@ export default async function SellerPortal({
                               )
                             })()}
                         </td>
-                        <td>
+                        <td data-label={d.itemDate}>
                           {state === 'sold' && i.soldAt
                             ? when(i.soldAt)
                             : state === 'ended'

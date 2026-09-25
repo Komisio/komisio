@@ -1636,7 +1636,7 @@
     "wasPrice": "era",
     "until": "fino al",
     "then": "poi",
-    "nextPriceMay": "Il negozio può abbassare il prezzo a {price} dal {date}.",
+    "nextPriceManual": "Prezzo previsto {price} dal {date}; il negozio modifica i prezzi a mano.",
     "nextPriceScheduled": "Prezzo previsto {price} dal {date}.",
     "lastPrice": "Non sono previsti altri ribassi.",
     "daysLeft": "{days} giorni rimasti",

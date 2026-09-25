@@ -1011,7 +1011,9 @@
     "pagination": "Bläddra bland varor",
     "previousPage": "Föregående",
     "nextPage": "Nästa",
-    "pageOf": "Sida {page} av {pages}"
+    "pageOf": "Sida {page} av {pages}",
+    "currentPrice": "Nuvarande pris",
+    "labelPrinter": "Etikettskrivare"
   },
   "sales": {
     "title": "Försäljning",
@@ -1582,7 +1584,12 @@
       "printed": "utskriven",
       "failed": "misslyckad",
       "cancelled": "avbruten"
-    }
+    },
+    "browserOpen": "Skriv ut via webbläsaren",
+    "browserBack": "Tillbaka till varan",
+    "browserHint": "Etiketten är 80 mm bred och kan skrivas ut på vanligt papper. Välj 100 % skala och stäng av sidhuvud och sidfot i utskriftsdialogen.",
+    "browserPrint": "Skriv ut etikett",
+    "browserUnavailable": "Etiketten kan inte visas just nu. Gå tillbaka till varan och försök igen."
   },
   "purchases": {
     "title": "Inköp",

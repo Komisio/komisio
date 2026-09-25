@@ -1011,7 +1011,9 @@
     "pagination": "Pagine degli articoli",
     "previousPage": "Precedente",
     "nextPage": "Successiva",
-    "pageOf": "Pagina {page} di {pages}"
+    "pageOf": "Pagina {page} di {pages}",
+    "currentPrice": "Prezzo attuale",
+    "labelPrinter": "Stampante per etichette"
   },
   "sales": {
     "title": "Vendite",
@@ -1582,7 +1584,12 @@
       "printed": "stampato",
       "failed": "fallito",
       "cancelled": "annullato"
-    }
+    },
+    "browserOpen": "Stampa dal browser",
+    "browserBack": "Torna all’articolo",
+    "browserHint": "L’etichetta è larga 80 mm e può essere stampata su carta comune. Scegli una scala del 100% e disattiva intestazioni e piè di pagina nella finestra di stampa.",
+    "browserPrint": "Stampa etichetta",
+    "browserUnavailable": "L’etichetta non è disponibile al momento. Torna all’articolo e riprova."
   },
   "purchases": {
     "title": "Acquisti",

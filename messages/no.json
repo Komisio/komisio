@@ -1011,7 +1011,9 @@
     "pagination": "Bla gjennom varer",
     "previousPage": "Forrige",
     "nextPage": "Neste",
-    "pageOf": "Side {page} av {pages}"
+    "pageOf": "Side {page} av {pages}",
+    "currentPrice": "Nåværende pris",
+    "labelPrinter": "Etikettskriver"
   },
   "sales": {
     "title": "Salg",
@@ -1582,7 +1584,12 @@
       "printed": "skrevet ut",
       "failed": "mislyktes",
       "cancelled": "avbrutt"
-    }
+    },
+    "browserOpen": "Skriv ut fra nettleseren",
+    "browserBack": "Tilbake til varen",
+    "browserHint": "Etiketten er 80 mm bred og kan skrives ut på vanlig papir. Velg 100 % skalering og slå av topptekst og bunntekst i utskriftsdialogen.",
+    "browserPrint": "Skriv ut etikett",
+    "browserUnavailable": "Etiketten kan ikke vises akkurat nå. Gå tilbake til varen og prøv igjen."
   },
   "purchases": {
     "title": "Innkjøp",

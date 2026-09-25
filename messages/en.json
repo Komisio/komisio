@@ -1011,7 +1011,9 @@
     "pagination": "Item pages",
     "previousPage": "Previous",
     "nextPage": "Next",
-    "pageOf": "Page {page} of {pages}"
+    "pageOf": "Page {page} of {pages}",
+    "currentPrice": "Current price",
+    "labelPrinter": "Label printer"
   },
   "sales": {
     "title": "Sales",
@@ -1582,7 +1584,12 @@
       "printed": "printed",
       "failed": "failed",
       "cancelled": "cancelled"
-    }
+    },
+    "browserOpen": "Print from browser",
+    "browserBack": "Back to item",
+    "browserHint": "The label is 80 mm wide and can be printed on plain paper. Choose 100% scale and turn off headers and footers in the print dialog.",
+    "browserPrint": "Print label",
+    "browserUnavailable": "The label is unavailable right now. Return to the item and try again."
   },
   "purchases": {
     "title": "Purchases",

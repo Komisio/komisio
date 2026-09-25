@@ -1011,7 +1011,9 @@
     "pagination": "Páginas de artículos",
     "previousPage": "Anterior",
     "nextPage": "Siguiente",
-    "pageOf": "Página {page} de {pages}"
+    "pageOf": "Página {page} de {pages}",
+    "currentPrice": "Precio actual",
+    "labelPrinter": "Impresora de etiquetas"
   },
   "sales": {
     "title": "Ventas",
@@ -1582,7 +1584,12 @@
       "printed": "impreso",
       "failed": "fallido",
       "cancelled": "cancelado"
-    }
+    },
+    "browserOpen": "Imprimir desde el navegador",
+    "browserBack": "Volver al artículo",
+    "browserHint": "La etiqueta mide 80 mm de ancho y se puede imprimir en papel normal. Selecciona una escala del 100 % y desactiva los encabezados y pies de página en el diálogo de impresión.",
+    "browserPrint": "Imprimir etiqueta",
+    "browserUnavailable": "La etiqueta no está disponible ahora. Vuelve al artículo e inténtalo de nuevo."
   },
   "purchases": {
     "title": "Compras",

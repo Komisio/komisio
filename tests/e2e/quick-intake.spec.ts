@@ -35,6 +35,28 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
     await page.keyboard.press('Enter')
     await expect(page).toHaveURL(/\/intake#new-seller$/)
     await expect(page.locator('#new-seller')).toBeInViewport()
+    // Compact search rows must leave enough width for the action label.
+    const searchButton = page
+      .locator('form')
+      .filter({ has: page.locator('#seller-search') })
+      .getByRole('button')
+    expect((await searchButton.boundingBox())!.height).toBeLessThanOrEqual(52)
+    await page.screenshot({
+      path: 'private/intake-button-desktop.png',
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 320, height: 900 })
+    expect((await searchButton.boundingBox())!.height).toBeLessThanOrEqual(52)
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true)
+    await page.screenshot({
+      path: 'private/intake-button-mobile.png',
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 1280, height: 900 })
     await page.goto('/intake/quick')
     await page.screenshot({
       path: 'private/link-clarity-desktop.png',

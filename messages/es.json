@@ -1013,7 +1013,8 @@
     "nextPage": "Siguiente",
     "pageOf": "Página {page} de {pages}",
     "currentPrice": "Precio actual",
-    "labelPrinter": "Impresora de etiquetas"
+    "labelPrinter": "Impresora de etiquetas",
+    "manageSalePeriod": "Precio y período de venta"
   },
   "sales": {
     "title": "Ventas",
@@ -1459,7 +1460,13 @@
     },
     "listIntro": "Consulta precios y periodos de venta. Abre un artículo para hacer cambios.",
     "previous": "Anterior",
-    "next": "Siguiente"
+    "next": "Siguiente",
+    "search": "Buscar artículo",
+    "searchHint": "Descripción o referencia de etiqueta",
+    "clearSearch": "Borrar búsqueda",
+    "matches": "Resultados: {count}",
+    "noMatches": "Ningún artículo coincide con la búsqueda y el estado seleccionado.",
+    "searchScopeHint": "La búsqueda solo filtra la lista. La aplicación de rebajas abarca toda la tienda."
   },
   "openByReference": {
     "title": "Abrir por etiqueta",

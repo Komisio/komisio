@@ -1013,7 +1013,8 @@
     "nextPage": "Neste",
     "pageOf": "Side {page} av {pages}",
     "currentPrice": "Nåværende pris",
-    "labelPrinter": "Etikettskriver"
+    "labelPrinter": "Etikettskriver",
+    "manageSalePeriod": "Pris og salgsperiode"
   },
   "sales": {
     "title": "Salg",
@@ -1459,7 +1460,13 @@
     },
     "listIntro": "Se pris og salgsperiode. Åpne en vare for å gjøre endringer.",
     "previous": "Forrige",
-    "next": "Neste"
+    "next": "Neste",
+    "search": "Søk etter vare",
+    "searchHint": "Beskrivelse eller etikettreferanse",
+    "clearSearch": "Tøm søk",
+    "matches": "Treff: {count}",
+    "noMatches": "Ingen varer samsvarer med søket i valgt status.",
+    "searchScopeHint": "Søket filtrerer bare listen. Prissettingskjøringen gjelder hele butikken."
   },
   "openByReference": {
     "title": "Åpne via etikett",

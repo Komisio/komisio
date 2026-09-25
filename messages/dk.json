@@ -1013,7 +1013,8 @@
     "nextPage": "Næste",
     "pageOf": "Side {page} af {pages}",
     "currentPrice": "Nuværende pris",
-    "labelPrinter": "Etiketprinter"
+    "labelPrinter": "Etiketprinter",
+    "manageSalePeriod": "Pris og salgsperiode"
   },
   "sales": {
     "title": "Salg",
@@ -1459,7 +1460,13 @@
     },
     "listIntro": "Se pris og salgsperiode. Åbn en vare for at foretage ændringer.",
     "previous": "Forrige",
-    "next": "Næste"
+    "next": "Næste",
+    "search": "Søg efter vare",
+    "searchHint": "Beskrivelse eller etiketreference",
+    "clearSearch": "Ryd søgning",
+    "matches": "Resultater: {count}",
+    "noMatches": "Ingen varer matcher søgningen med den valgte status.",
+    "searchScopeHint": "Søgningen filtrerer kun listen. Prisnedsættelsen gælder hele butikken."
   },
   "openByReference": {
     "title": "Åbn via mærkat",

@@ -61,6 +61,13 @@ select set_config('test.r',my_items(current_setting('test.tenant')::uuid,current
 select is((pg_temp.mine('test.i2')->>'currentPriceOre')::bigint,28000::bigint,'the manual price is the current price');
 select is((pg_temp.mine('test.i2')->>'nextPriceOre')::bigint,22500::bigint,'the planned step is unchanged by the manual price');
 select ok(current_setting('test.r')::text not like '%Customer interest%','the staff reason is not exposed');
+-- A manual price below the planned step: the plan is still the engine's expression, so the portal never claims a decrease.
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000001541","role":"authenticated"}';
+select set_item_price(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.i2')::uuid,20000,'Quick sale');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000001542","role":"authenticated"}';
+select set_config('test.r',my_items(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid)::text,true);
+select is((pg_temp.mine('test.i2')->>'currentPriceOre')::bigint,20000::bigint,'a manual price below the plan is the current price');
+select is((pg_temp.mine('test.i2')->>'nextPriceOre')::bigint,22500::bigint,'the planned step is above it and still reported as the plan');
 
 -- Automatic markdowns switched on: the flag follows the current policy; frozen steps stay.
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000001541","role":"authenticated"}';
@@ -70,4 +77,21 @@ select set_config('test.r',my_items(current_setting('test.tenant')::uuid,current
 select is((current_setting('test.r')::jsonb->>'automaticMarkdowns')::boolean,true,'automatic flag follows the policy');
 select is((pg_temp.mine('test.i2')->>'nextPriceOre')::bigint,22500::bigint,'frozen steps unchanged by the policy change');
 select ok(current_setting('test.r')::text not like '%Good%','condition and staff notes are still not exposed');
+
+-- The lifecycle stage ranks a due step above an expired period; the plan must still stop at the period end.
+-- Items cannot be moved back in time (items are immutable), so the helper is checked on the facts it reads.
+reset role;
+select ok(komisio_private.next_markdown('{"stage":"markdown_due","acceptedAt":"2026-01-01T00:00:00Z","periodEnd":"2026-02-12T00:00:00Z","acceptedPriceOre":30000,"steps":[{"afterDays":14,"percent":10}],"appliedSteps":[]}'::jsonb) is null,
+ 'an expired period hides a due step even when the stage still says markdown_due');
+select is((komisio_private.next_markdown('{"stage":"markdown_due","acceptedAt":"2026-01-01T00:00:00Z","periodEnd":"2099-02-12T00:00:00Z","acceptedPriceOre":30000,"steps":[{"afterDays":14,"percent":10}],"appliedSteps":[]}'::jsonb)->>'priceOre')::bigint,27000::bigint,
+ 'the same facts inside a running period give the plan');
+select ok(komisio_private.next_markdown('{"stage":"on_sale","acceptedAt":"2026-01-01T00:00:00Z","periodEnd":"2099-02-12T00:00:00Z","acceptedPriceOre":30000,"steps":[{"afterDays":14,"percent":10}],"appliedSteps":[1]}'::jsonb) is null,
+ 'every step applied means no plan');
+-- Steps are not required to be sorted: the engine's due step wins, otherwise the earliest date inside the period.
+select is(komisio_private.next_markdown('{"stage":"markdown_due","dueStep":1,"acceptedAt":"2026-01-01T00:00:00Z","periodEnd":"2099-02-12T00:00:00Z","acceptedPriceOre":30000,"steps":[{"afterDays":28,"percent":25},{"afterDays":14,"percent":10}],"appliedSteps":[]}'::jsonb)->>'step','1',
+ 'the due step the engine would apply is the plan, whatever its date');
+select is(komisio_private.next_markdown('{"stage":"on_sale","acceptedAt":"2099-01-01T00:00:00Z","periodEnd":"2099-12-01T00:00:00Z","acceptedPriceOre":30000,"steps":[{"afterDays":60,"percent":50},{"afterDays":14,"percent":10}],"appliedSteps":[]}'::jsonb)->>'step','2',
+ 'with only future steps the earliest date is next, not the first array entry');
+select is((komisio_private.next_markdown('{"stage":"on_sale","acceptedAt":"2099-01-01T00:00:00Z","periodEnd":"2099-02-12T00:00:00Z","acceptedPriceOre":30000,"steps":[{"afterDays":50,"percent":10},{"afterDays":7,"percent":25}],"appliedSteps":[]}'::jsonb)->>'priceOre')::bigint,22500::bigint,
+ 'a step after the period end does not hide a valid earlier one');
 select * from finish();

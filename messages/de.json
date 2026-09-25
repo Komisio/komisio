@@ -1630,7 +1630,7 @@
     "wasPrice": "vorher",
     "until": "bis",
     "then": "danach",
-    "nextPriceMay": "Der Laden kann den Preis ab {date} auf {price} senken.",
+    "nextPriceManual": "Geplanter Preis {price} ab {date}; der Laden ändert Preise von Hand.",
     "nextPriceScheduled": "Geplanter Preis {price} ab {date}.",
     "lastPrice": "Keine weiteren Preisstufen sind geplant.",
     "daysLeft": "Noch {days} Tage",

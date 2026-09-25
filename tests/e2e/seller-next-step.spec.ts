@@ -78,16 +78,35 @@ test('seller sees the next price step, days left and what happens at period end'
     await page.goto(`/seller?seller=${sellerId}`)
     const items = page.getByRole('region', { name: 'Mina varor', exact: true })
     await expect(items.getByText('Blå ullkappa · Kappor')).toBeVisible()
-    await expect(
-      items.getByText(/Butiken kan sänka priset till 270\.00 SEK från/),
-    ).toBeVisible()
+    const plan =
+      /Planerat pris 270\.00 SEK från .*; butiken ändrar priser för hand\./
+    await expect(items.getByText(plan)).toBeVisible()
     await expect(items.getByText(/42 dagar kvar/)).toBeVisible()
     await expect(items.getByText(/sedan skänks till välgörenhet/)).toBeVisible()
     await expect(items.getByText('Bra')).toHaveCount(0)
     await page.setViewportSize({ width: 320, height: 800 })
-    await expect(
-      items.getByText(/Butiken kan sänka priset till 270\.00 SEK från/),
-    ).toBeVisible()
+    await expect(items.getByText(plan)).toBeVisible()
+    // Mobile: no horizontal scroll, and every cell is a readable card row with its own label.
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+    const cells = items.locator('table.seller-items td')
+    await expect(cells).toHaveCount(4)
+    for (const cell of await cells.all()) {
+      const box = await cell.boundingBox()
+      // The card's own padding leaves about 230 px of the 320 px viewport for a row.
+      expect(box?.width ?? 0).toBeGreaterThan(200)
+      expect(box?.height ?? 0).toBeLessThan(200)
+    }
+    expect(
+      await cells.evaluateAll((list) =>
+        list.map((cell) =>
+          getComputedStyle(cell, '::before').content.replaceAll('"', ''),
+        ),
+      ),
+    ).toEqual(['Vara', 'Pris', 'Status', 'Såld / till salu till'])
     await page.screenshot({
       path: test.info().outputPath('seller-next-step-mobile.png'),
       fullPage: true,

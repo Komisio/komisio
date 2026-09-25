@@ -1630,7 +1630,7 @@
     "wasPrice": "oli",
     "until": "asti",
     "then": "sitten",
-    "nextPriceMay": "Kauppa voi laskea hinnan hintaan {price} alkaen {date}.",
+    "nextPriceManual": "Suunniteltu hinta {price} alkaen {date}; kauppa muuttaa hinnat käsin.",
     "nextPriceScheduled": "Suunniteltu hinta {price} alkaen {date}.",
     "lastPrice": "Lisää hintaportaita ei ole suunniteltu.",
     "daysLeft": "{days} päivää jäljellä",

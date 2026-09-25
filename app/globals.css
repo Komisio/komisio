@@ -2684,3 +2684,48 @@ button.text-link:hover:not(:disabled) {
   flex: 0 0 20px;
   accent-color: var(--ink);
 }
+/* Seller portal items (S1, 2026-09-25): a table on wide screens, one card per item below 480px. */
+.seller-items {
+  width: 100%;
+  border-collapse: collapse;
+}
+@media (max-width: 480px) {
+  .seller-items thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .seller-items,
+  .seller-items tbody {
+    display: block;
+  }
+  .seller-items tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px 0;
+    padding: 10px 0 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .seller-items td {
+    display: block;
+    border: 0;
+    padding: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .seller-items td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .seller-items td:first-child {
+    font-weight: 600;
+  }
+  .seller-items td small {
+    font-weight: 400;
+  }
+}

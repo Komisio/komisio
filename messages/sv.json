@@ -1612,7 +1612,7 @@
     "wasPrice": "var",
     "until": "till",
     "then": "sedan",
-    "nextPriceMay": "Butiken kan sänka priset till {price} från {date}.",
+    "nextPriceManual": "Planerat pris {price} från {date}; butiken ändrar priser för hand.",
     "nextPriceScheduled": "Planerat pris {price} från {date}.",
     "lastPrice": "Inga fler prissteg är planerade.",
     "daysLeft": "{days} dagar kvar",

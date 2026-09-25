@@ -115,14 +115,14 @@ export function ShopifyConnection({
           )}
           {status.connected ? (
             <a
-              className="btn"
+              className="btn btn-secondary"
               href={`/api/integrations/shopify/connect?tenant=${tenantId}&shop=${encodeURIComponent(status.shopDomain ?? '')}`}
             >
               {d.reconnect}
             </a>
           ) : (
             <a
-              className={`btn${valid ? '' : ' disabled'}`}
+              className={`btn btn-primary${valid ? '' : ' disabled'}`}
               aria-disabled={!valid}
               href={valid ? connectHref : undefined}
             >

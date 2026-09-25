@@ -285,7 +285,9 @@ export default async function Accounting({
                   required
                 />
               </div>
-              <button className="btn">{all.reconciliation.show}</button>
+              <button className="btn btn-primary">
+                {all.reconciliation.show}
+              </button>
             </form>
             {recon && recon.days.length === 0 && (
               <p>{all.reconciliation.empty}</p>

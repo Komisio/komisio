@@ -138,7 +138,7 @@ export default async function Stock({
               required
             />
           </div>
-          <button className="btn">{e.show}</button>
+          <button className="btn btn-primary">{e.show}</button>
         </form>
         {report && (
           <>

@@ -1,9 +1,18 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import type { MyHandovers } from '@/lib/engine/handovers'
+
+type HandoverChange =
+  | {
+      action: 'createHandover'
+      kind: string
+      estimatedItems: number
+      note: string
+    }
+  | { action: 'cancelHandover'; handoverId: string }
 
 /** Announce a bag or box and follow it until the store has received it. */
 export function SellerHandovers({
@@ -20,9 +29,31 @@ export function SellerHandovers({
   const router = useRouter()
   const [busy, setBusy] = useState(false)
   const [notice, setNotice] = useState('')
+  const [failed, setFailed] = useState(false)
+  const form = useRef<HTMLFormElement>(null)
+  const feedback = useRef<HTMLParagraphElement>(null)
+  const focusReceipt = useRef<string | null>(null)
+  const running = useRef(false)
+  useEffect(() => {
+    if (!focusReceipt.current) return
+    const receipt = document.getElementById(
+      'seller-handover-' + focusReceipt.current,
+    )
+    if (!receipt) return
+    focusReceipt.current = null
+    receipt.focus({ preventScroll: true })
+    receipt.scrollIntoView({ block: 'start', behavior: 'instant' })
+  }, [handovers])
+  useEffect(() => {
+    if (!failed) return
+    feedback.current?.focus()
+  }, [failed])
   const retry = useRef<{ key: string; id: string } | null>(null)
-  async function submit(payload: object) {
+  async function submit(payload: HandoverChange) {
+    if (running.current) return
+    running.current = true
     setBusy(true)
+    setFailed(false)
     setNotice('')
     const key = JSON.stringify(payload)
     const id =
@@ -35,12 +66,20 @@ export function SellerHandovers({
         body: JSON.stringify({ tenantId, sellerId, requestId: id, ...payload }),
       })
       if (!r.ok) throw new Error()
+      const result: { id?: unknown } = await r.json()
+      if (payload.action === 'createHandover') {
+        if (typeof result.id !== 'string') throw new Error()
+        focusReceipt.current = result.id
+        form.current?.reset()
+      } else focusReceipt.current = payload.handoverId
       retry.current = null
       setNotice(d.saved)
       router.refresh()
     } catch {
-      setNotice(d.error)
+      setFailed(true)
+      setNotice(d.handoverError)
     } finally {
+      running.current = false
       setBusy(false)
     }
   }
@@ -53,8 +92,14 @@ export function SellerHandovers({
     >
       <h2>{d.handovers}</h2>
       <p>{d.handoverIntro}</p>
+      {notice && (
+        <p ref={feedback} role={failed ? 'alert' : 'status'} tabIndex={-1}>
+          {notice}
+        </p>
+      )}
       {handovers.enabled ? (
         <form
+          ref={form}
           onSubmit={(e) => {
             e.preventDefault()
             const f = new FormData(e.currentTarget)
@@ -99,7 +144,13 @@ export function SellerHandovers({
       )}
       {handovers.handovers.length === 0 && <p>{d.none}</p>}
       {handovers.handovers.map((h) => (
-        <div key={h.id} className="intake-notice">
+        <div
+          key={h.id}
+          id={'seller-handover-' + h.id}
+          tabIndex={-1}
+          style={{ scrollMarginTop: '1rem' }}
+          className="intake-notice"
+        >
           <strong style={{ fontSize: '1.4em' }}>{h.reference}</strong>
           <p>
             {d.handoverKinds[h.kind]} · {h.estimatedItems} ·{' '}
@@ -124,7 +175,6 @@ export function SellerHandovers({
           )}
         </div>
       ))}
-      {notice && <p role="status">{notice}</p>}
     </section>
   )
 }

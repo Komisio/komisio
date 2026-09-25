@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
@@ -27,6 +27,12 @@ export function HandoverQueue({
 }) {
   const action = useIntakeAction(intake)
   const router = useRouter()
+  useEffect(() => {
+    if (!focus) return
+    const receipt = document.getElementById('handover-' + focus)
+    receipt?.focus({ preventScroll: true })
+    receipt?.scrollIntoView({ block: 'start', behavior: 'instant' })
+  }, [focus])
   const [requestIds] = useState(() => new Map<string, string>())
   const when = (iso: string) =>
     new Date(iso).toLocaleString(intlLocale(locale), {
@@ -53,8 +59,13 @@ export function HandoverQueue({
       {rows.map((h) => (
         <div
           key={h.id}
+          id={'handover-' + h.id}
+          tabIndex={-1}
           className="intake-notice"
-          style={focus === h.id ? { outline: '2px solid currentColor' } : {}}
+          style={{
+            scrollMarginTop: '1rem',
+            ...(focus === h.id ? { outline: '2px solid currentColor' } : {}),
+          }}
         >
           <strong>
             {h.reference} ·{' '}

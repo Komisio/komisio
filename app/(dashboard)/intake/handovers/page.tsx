@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
-import { readHandoverQueue } from '@/lib/engine/handovers'
+import { readHandover, readHandoverQueue } from '@/lib/engine/handovers'
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import { HandoverQueue } from '@/components/intake/handover-queue'
 
@@ -18,17 +18,31 @@ export default async function Handovers({
     active = ctx.active!,
     all = dictionary(ctx.locale),
     d = all.handovers
-  const focus = z.uuid().safeParse((await searchParams).focus)
+  const rawFocus = (await searchParams).focus
+  const focus = z.uuid().safeParse(rawFocus)
+  if (rawFocus !== undefined && !focus.success) notFound()
   const [rows, policy] = await Promise.all([
-    readHandoverQueue(ctx.client, active.id),
+    focus.success
+      ? readHandover(ctx.client, active.id, focus.data).then((row) =>
+          row ? [row] : [],
+        )
+      : readHandoverQueue(ctx.client, active.id),
     readStorePolicy(ctx.client, active.id),
   ])
+  if (focus.success && rows.length === 0) notFound()
   const enabled = policy.policy.custodySources.includes('seller_dropoff')
   return (
     <>
       <div className="page-heading">
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
+        {focus.success && (
+          <p>
+            <Link className="btn btn-secondary" href="/intake/handovers">
+              {d.title}
+            </Link>
+          </p>
+        )}
         <Link className="text-link" href="/intake">
           {all.intake.back}
         </Link>

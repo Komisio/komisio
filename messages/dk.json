@@ -1632,9 +1632,9 @@
     "empty": "Ingen indkøb registreret endnu."
   },
   "sellerPortal": {
-    "handovers": "Indlever varer",
+    "handovers": "Anmeld en indlevering",
     "handoverIntro": "Anmeld en indlevering før du kommer. Vis referencen ved disken; butikken registrerer modtagelsen, og du ser indleveringsnummeret her.",
-    "handoverDisabled": "Denne butik tager endnu ikke imod anmeldte afleveringer. Kom med dine varer til disken.",
+    "handoverDisabled": "Butikken modtager endnu ikke forhåndsanmeldelser. Aflever dine varer ved kassen.",
     "handoverKind": "Det, du kommer med",
     "handoverKinds": {
       "bag": "Pose",
@@ -1709,7 +1709,8 @@
     "kind": "Hændelse",
     "signout": "Log ud",
     "salePrice": "Salgspris",
-    "commission": "Kommission"
+    "commission": "Kommission",
+    "handoverError": "Ændringen kunne ikke bekræftes. Prøv igen med de samme oplysninger."
   },
   "plans": {
     "heading": "Abonnement",

@@ -113,3 +113,44 @@ export async function executeSellerHandover(
         p_handover: c.handoverId,
       })
 }
+
+/** Resolve one explicitly requested handover, independent of the recent queue cap. */
+export async function readHandover(
+  client: SupabaseClient,
+  tenant: string,
+  id: string,
+): Promise<HandoverQueueRow | null> {
+  const tenantId = z.uuid().parse(tenant)
+  const result = await client
+    .from('seller_handovers')
+    .select(
+      'id,reference,seller_id,kind,estimated_items,note,status,created_at,received_at,received_bag_id',
+    )
+    .eq('tenant_id', tenantId)
+    .eq('id', z.uuid().parse(id))
+    .maybeSingle()
+  if (result.error) throw new Error('Unable to read handover')
+  if (!result.data) return null
+  const row = result.data
+  const seller = await client
+    .from('sellers')
+    .select('name')
+    .eq('tenant_id', tenantId)
+    .eq('id', row.seller_id)
+    .single()
+  if (seller.error || !seller.data)
+    throw new Error('Unable to read handover seller')
+  return handoverQueueRow.parse({
+    id: row.id,
+    reference: 'H-' + row.reference,
+    sellerId: row.seller_id,
+    sellerName: seller.data.name,
+    kind: row.kind,
+    estimatedItems: row.estimated_items,
+    note: row.note,
+    status: row.status,
+    createdAt: row.created_at,
+    receivedAt: row.received_at,
+    bagId: row.received_bag_id,
+  })
+}

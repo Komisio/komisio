@@ -1632,15 +1632,15 @@
     "empty": "Noch keine Einkäufe registriert."
   },
   "sellerPortal": {
-    "handovers": "Artikel einliefern",
+    "handovers": "Abgabe ankündigen",
     "handoverIntro": "Kündigen Sie eine Einlieferung vor Ihrem Besuch an. Zeigen Sie die Referenz an der Theke; der Laden erfasst die Annahme und Sie sehen hier die Einlieferungsnummer.",
-    "handoverDisabled": "Dieser Store nimmt noch keine angekündigten Abgaben an. Bringen Sie Ihre Artikel zur Theke.",
+    "handoverDisabled": "Das Geschäft nimmt noch keine Voranmeldungen an. Bringen Sie Ihre Artikel zur Kasse.",
     "handoverKind": "Was Sie bringen",
     "handoverKinds": {
       "bag": "Tüte",
       "box": "Karton"
     },
-    "estimatedItems": "Ungefähr wie viele Artikel",
+    "estimatedItems": "Ungefähre Anzahl der Artikel",
     "handoverNote": "Notiz an den Store (optional)",
     "announce": "Ankündigen",
     "showReference": "Zeigen Sie diese Referenz an der Theke oder am Schließfach.",
@@ -1709,7 +1709,8 @@
     "kind": "Ereignis",
     "signout": "Abmelden",
     "salePrice": "Verkaufspreis",
-    "commission": "Kommission"
+    "commission": "Kommission",
+    "handoverError": "Die Änderung konnte nicht bestätigt werden. Versuchen Sie es erneut mit denselben Angaben."
   },
   "plans": {
     "heading": "Plan",

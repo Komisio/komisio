@@ -1632,15 +1632,15 @@
     "empty": "No purchases registered yet."
   },
   "sellerPortal": {
-    "handovers": "Hand in items",
+    "handovers": "Announce a drop-off",
     "handoverIntro": "Announce a drop-off before you arrive. Show the reference at the counter; the store records receipt and you see the drop-off number here.",
-    "handoverDisabled": "This store does not take announced drop-offs yet. Bring your items to the counter.",
+    "handoverDisabled": "The store does not accept advance notices yet. Bring your items to the counter.",
     "handoverKind": "What you bring",
     "handoverKinds": {
       "bag": "Bag",
       "box": "Box"
     },
-    "estimatedItems": "About how many items",
+    "estimatedItems": "Approximate number of items",
     "handoverNote": "Note to the store (optional)",
     "announce": "Announce",
     "showReference": "Show this reference at the counter or at the locker.",
@@ -1709,7 +1709,8 @@
     "kind": "Event",
     "signout": "Sign out",
     "salePrice": "Sale price",
-    "commission": "Commission"
+    "commission": "Commission",
+    "handoverError": "Unable to confirm the change. Try again with the same details."
   },
   "plans": {
     "heading": "Plan",

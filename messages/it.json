@@ -1632,15 +1632,15 @@
     "empty": "Nessun acquisto registrato finora."
   },
   "sellerPortal": {
-    "handovers": "Consegna articoli",
+    "handovers": "Annuncia una consegna",
     "handoverIntro": "Annuncia una consegna prima di arrivare. Mostra il riferimento al banco; il negozio registra la ricezione e qui vedi il numero della consegna.",
-    "handoverDisabled": "Questo negozio non accetta ancora consegne annunciate. Porta i tuoi articoli al banco.",
+    "handoverDisabled": "Il negozio non accetta ancora preavvisi. Porta i tuoi articoli al banco.",
     "handoverKind": "Cosa porti",
     "handoverKinds": {
       "bag": "Sacchetto",
       "box": "Scatola"
     },
-    "estimatedItems": "Circa quanti articoli",
+    "estimatedItems": "Numero approssimativo di articoli",
     "handoverNote": "Nota per il negozio (facoltativa)",
     "announce": "Annuncia",
     "showReference": "Mostra questo riferimento al banco o all'armadietto.",
@@ -1709,7 +1709,8 @@
     "kind": "Evento",
     "signout": "Esci",
     "salePrice": "Prezzo di vendita",
-    "commission": "Commissione"
+    "commission": "Commissione",
+    "handoverError": "Non è stato possibile confermare la modifica. Riprova con gli stessi dati."
   },
   "plans": {
     "heading": "Piano",

@@ -1632,15 +1632,15 @@
     "empty": "Aún no hay compras registradas."
   },
   "sellerPortal": {
-    "handovers": "Entregar artículos",
+    "handovers": "Anunciar una entrega",
     "handoverIntro": "Anuncia una entrega antes de venir. Muestra la referencia en el mostrador; la tienda registra la recepción y aquí ves el número de entrega.",
-    "handoverDisabled": "Esta tienda aún no acepta entregas anunciadas. Trae tus artículos al mostrador.",
+    "handoverDisabled": "La tienda aún no acepta avisos previos. Lleva tus artículos al mostrador.",
     "handoverKind": "Qué traes",
     "handoverKinds": {
       "bag": "Bolsa",
       "box": "Caja"
     },
-    "estimatedItems": "Cuántos artículos aproximadamente",
+    "estimatedItems": "Número aproximado de artículos",
     "handoverNote": "Nota para la tienda (opcional)",
     "announce": "Anunciar",
     "showReference": "Muestra esta referencia en el mostrador o en la taquilla.",
@@ -1709,7 +1709,8 @@
     "kind": "Evento",
     "signout": "Cerrar sesión",
     "salePrice": "Precio de venta",
-    "commission": "Comisión"
+    "commission": "Comisión",
+    "handoverError": "No se pudo confirmar el cambio. Inténtalo de nuevo con los mismos datos."
   },
   "plans": {
     "heading": "Plan",

@@ -727,3 +727,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-25: I-label lookup is read-only and limited to the active store. One matching UUID prefix opens the item; multiple matches require an explicit choice and never select the first. Database errors are not reported as missing items.
 
 - 2026-09-25: Seller item search covers only the verified seller account, with literal title/category/reference matching and 25-row pages. It preserves engine price, sale and next-markdown facts; the legacy capped read remains available during rollout.
+- 2026-09-25: Seller handover QR codes encode only a same-application H-reference lookup for staff cameras. Codes load on demand under seller identity; opening still requires staff login/MFA, active-store lookup and explicit custody confirmation.

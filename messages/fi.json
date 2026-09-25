@@ -1713,7 +1713,12 @@
     "commission": "Komissio",
     "handoverError": "Muutosta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla.",
     "itemsSearchHint": "Kuvaus, luokka tai tuotteen viite",
-    "itemsLimited": "Tällä hetkellä näytetään enintään 200 uusinta tuotettasi. Haku ja lisäsivut ovat käytettävissä päivityksen valmistuttua."
+    "itemsLimited": "Tällä hetkellä näytetään enintään 200 uusinta tuotettasi. Haku ja lisäsivut ovat käytettävissä päivityksen valmistuttua.",
+    "showHandoverCode": "Näytä QR-koodi",
+    "hideHandoverCode": "Piilota QR-koodi",
+    "handoverCodeAlt": "Viitteen {ref} QR-koodi",
+    "handoverCodeHint": "Pyydä myymälän henkilökuntaa skannaamaan puhelimen kameralla. Viitteen voi myös kirjoittaa.",
+    "handoverCodeError": "Koodia ei voitu näyttää. Käytä yllä olevaa viitettä."
   },
   "plans": {
     "heading": "Tilaus",

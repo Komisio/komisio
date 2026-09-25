@@ -33,6 +33,7 @@ export default async function OpenByReference({
         .eq('tenant_id', tenant.id)
         .eq('reference', number)
         .maybeSingle()
+      if (handover.error) throw new Error('Unable to read reference')
       if (handover.data) redirect(`/intake/handovers?focus=${handover.data.id}`)
     } else if (match[1] === 'K') {
       const bag = await ctx.client
@@ -41,6 +42,7 @@ export default async function OpenByReference({
         .eq('tenant_id', tenant.id)
         .eq('reference', number)
         .maybeSingle()
+      if (bag.error) throw new Error('Unable to read reference')
       if (bag.data) redirect(`/intake/bags/${bag.data.id}/inspect`)
     } else {
       const garment = await ctx.client
@@ -49,6 +51,7 @@ export default async function OpenByReference({
         .eq('tenant_id', tenant.id)
         .eq('reference', number)
         .maybeSingle()
+      if (garment.error) throw new Error('Unable to read reference')
       if (garment.data) redirect(`/intake/reception/${garment.data.session_id}`)
     }
   }

@@ -1713,7 +1713,12 @@
     "commission": "Kommission",
     "handoverError": "Die Änderung konnte nicht bestätigt werden. Versuchen Sie es erneut mit denselben Angaben.",
     "itemsSearchHint": "Beschreibung, Kategorie oder Artikelreferenz",
-    "itemsLimited": "Derzeit werden höchstens Ihre 200 neuesten Artikel angezeigt. Suche und weitere Seiten sind nach Abschluss der Aktualisierung verfügbar."
+    "itemsLimited": "Derzeit werden höchstens Ihre 200 neuesten Artikel angezeigt. Suche und weitere Seiten sind nach Abschluss der Aktualisierung verfügbar.",
+    "showHandoverCode": "QR-Code anzeigen",
+    "hideHandoverCode": "QR-Code ausblenden",
+    "handoverCodeAlt": "QR-Code für {ref}",
+    "handoverCodeHint": "Das Ladenpersonal kann den Code mit der Handykamera scannen oder die Referenz eingeben.",
+    "handoverCodeError": "Der Code konnte nicht angezeigt werden. Verwenden Sie die Referenz oben."
   },
   "plans": {
     "heading": "Plan",

@@ -1713,7 +1713,12 @@
     "commission": "Kommission",
     "handoverError": "Ændringen kunne ikke bekræftes. Prøv igen med de samme oplysninger.",
     "itemsSearchHint": "Beskrivelse, kategori eller varereference",
-    "itemsLimited": "Lige nu vises højst 200 af dine seneste varer. Søgning og flere sider bliver tilgængelige, når opdateringen er færdig."
+    "itemsLimited": "Lige nu vises højst 200 af dine seneste varer. Søgning og flere sider bliver tilgængelige, når opdateringen er færdig.",
+    "showHandoverCode": "Vis QR-kode",
+    "hideHandoverCode": "Skjul QR-kode",
+    "handoverCodeAlt": "QR-kode for {ref}",
+    "handoverCodeHint": "Lad butikkens personale scanne med mobilkameraet. Referencen kan også indtastes.",
+    "handoverCodeError": "Koden kunne ikke vises. Brug referencen ovenfor."
   },
   "plans": {
     "heading": "Abonnement",

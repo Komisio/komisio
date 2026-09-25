@@ -2818,6 +2818,9 @@ button.text-link:hover:not(:disabled) {
   body:has(.item-browser-label) .app-shell > :not(main) {
     display: none;
   }
+  body:has(.item-browser-label) main > :not(.item-label-page) {
+    display: none;
+  }
   body:has(.item-browser-label) main {
     padding: 0;
     margin: 0;

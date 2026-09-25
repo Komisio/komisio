@@ -60,7 +60,17 @@ test('staff print an item label with the current price without configuring a pri
       'data-print-requested',
       'true',
     )
+    // Dashboard banners are optional siblings of the page, not label content.
+    await page.locator('main').evaluate((main) => {
+      const banner = document.createElement('p')
+      banner.className = 'intake-notice'
+      banner.dataset.testPrintBanner = 'true'
+      banner.textContent = 'Synthetic subscription reminder'
+      main.prepend(banner)
+    })
+    await expect(page.locator('[data-test-print-banner]')).toBeVisible()
     await page.emulateMedia({ media: 'print' })
+    await expect(page.locator('[data-test-print-banner]')).toBeHidden()
     await expect(page.locator('.sidebar')).toBeHidden()
     await expect(page.locator('.topbar')).toBeHidden()
     await expect(

@@ -1190,7 +1190,7 @@
     "disabled": "Självinlämning är av: aktivera seller_dropoff bland förvaringskällorna i butikspolicyn.",
     "empty": "Inga anmälda inlämningar.",
     "announced": "Anmäld",
-    "items": "plagg",
+    "items": "varor",
     "note": "Anteckning (valfri)",
     "confirm": "Varorna i inlämningen är i butiken nu.",
     "receive": "Ta emot och registrera inlämningen",
@@ -1203,7 +1203,8 @@
       "open": "öppen",
       "received": "mottagen",
       "cancelled": "avbruten"
-    }
+    },
+    "backToQueue": "Till föranmälningar"
   },
   "chain": {
     "title": "Kedja",

@@ -39,7 +39,7 @@ export default async function Handovers({
         {focus.success && (
           <p>
             <Link className="btn btn-secondary" href="/intake/handovers">
-              {d.title}
+              {d.backToQueue}
             </Link>
           </p>
         )}

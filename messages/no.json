@@ -1203,7 +1203,8 @@
       "open": "åpen",
       "received": "mottatt",
       "cancelled": "avbrutt"
-    }
+    },
+    "backToQueue": "Til forhåndsmeldte innleveringer"
   },
   "chain": {
     "title": "Kjede",

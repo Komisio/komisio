@@ -1203,7 +1203,8 @@
       "open": "åben",
       "received": "modtaget",
       "cancelled": "annulleret"
-    }
+    },
+    "backToQueue": "Til anmeldte indleveringer"
   },
   "chain": {
     "title": "Kæde",

@@ -1203,7 +1203,8 @@
       "open": "offen",
       "received": "angenommen",
       "cancelled": "storniert"
-    }
+    },
+    "backToQueue": "Zurück zu angekündigten Einlieferungen"
   },
   "chain": {
     "title": "Kette",

@@ -1203,7 +1203,8 @@
       "open": "open",
       "received": "received",
       "cancelled": "cancelled"
-    }
+    },
+    "backToQueue": "Back to announced drop-offs"
   },
   "chain": {
     "title": "Chain",

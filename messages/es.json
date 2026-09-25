@@ -1203,7 +1203,8 @@
       "open": "abierta",
       "received": "recibida",
       "cancelled": "cancelada"
-    }
+    },
+    "backToQueue": "Volver a entregas anunciadas"
   },
   "chain": {
     "title": "Cadena",

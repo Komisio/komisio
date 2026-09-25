@@ -97,7 +97,7 @@ test('an old handover label opens only its exact active-store receipt', async ({
       ).rows[0],
     ).toEqual({ seller_id: seller, status: 'received' })
     await page
-      .getByRole('link', { name: d.handovers.title, exact: true })
+      .getByRole('link', { name: d.handovers.backToQueue, exact: true })
       .click()
     await expect(page).toHaveURL(/\/intake\/handovers$/)
     await expect(page.locator('[id^="handover-"]')).toHaveCount(100)

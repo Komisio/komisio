@@ -1203,7 +1203,8 @@
       "open": "avoin",
       "received": "vastaanotettu",
       "cancelled": "peruutettu"
-    }
+    },
+    "backToQueue": "Takaisin ennakkoilmoituksiin"
   },
   "chain": {
     "title": "Ketju",

@@ -2361,7 +2361,12 @@
     "available": "Tilgjengelig",
     "reserved": "Reservert",
     "searchHint": "Navn, e-post, telefon, adresse eller sted",
-    "clear": "Tøm søk"
+    "clear": "Tøm søk",
+    "showingRange": "Viser {from}–{to} av {total} selgere",
+    "pagination": "Bla gjennom selgere",
+    "previousPage": "Forrige",
+    "nextPage": "Neste",
+    "pageOf": "Side {page} av {pages}"
   },
   "connectors": {
     "title": "AI-assistenter",

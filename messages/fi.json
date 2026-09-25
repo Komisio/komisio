@@ -2361,7 +2361,12 @@
     "available": "Käytettävissä",
     "reserved": "Varattu",
     "searchHint": "Nimi, sähköposti, puhelin, osoite tai kaupunki",
-    "clear": "Tyhjennä haku"
+    "clear": "Tyhjennä haku",
+    "showingRange": "Näytetään {from}–{to} / {total} myyjää",
+    "pagination": "Myyjäsivut",
+    "previousPage": "Edellinen",
+    "nextPage": "Seuraava",
+    "pageOf": "Sivu {page}/{pages}"
   },
   "connectors": {
     "title": "AI-avustajat",

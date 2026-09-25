@@ -721,3 +721,5 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-09-25: Staff item browsing paginates tenant-filtered results in accepted-at descending and ID order, retaining text and stage filters. The original items_overview read remains compatible; paging adds no item writes or permissions.
 - 2026-09-25: The seller portal shows each unsold item's next frozen markdown step (date, price by the engine's own expression) and whether the store applies steps automatically. Read only through my_items; a scheduled step is a plan, never a promise; no item is called ready to collect.
+
+- 2026-09-25: Seller browsing pages tenant-filtered contact search in name/ID order. Existing seller balance facts and the original overview RPC remain unchanged; search resets paging and stale page links return to the last available page.

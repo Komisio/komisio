@@ -2361,7 +2361,12 @@
     "available": "Disponible",
     "reserved": "Reservado",
     "searchHint": "Nombre, correo, teléfono, dirección o ciudad",
-    "clear": "Borrar búsqueda"
+    "clear": "Borrar búsqueda",
+    "showingRange": "Mostrando {from}–{to} de {total} vendedores",
+    "pagination": "Páginas de vendedores",
+    "previousPage": "Anterior",
+    "nextPage": "Siguiente",
+    "pageOf": "Página {page} de {pages}"
   },
   "connectors": {
     "title": "Asistentes de IA",

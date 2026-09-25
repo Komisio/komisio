@@ -2361,7 +2361,12 @@
     "available": "Verfügbar",
     "reserved": "Reserviert",
     "searchHint": "Name, E-Mail, Telefon, Adresse oder Ort",
-    "clear": "Suche zurücksetzen"
+    "clear": "Suche zurücksetzen",
+    "showingRange": "Verkäufer {from}–{to} von {total}",
+    "pagination": "Verkäuferseiten",
+    "previousPage": "Zurück",
+    "nextPage": "Weiter",
+    "pageOf": "Seite {page} von {pages}"
   },
   "connectors": {
     "title": "KI-Assistenten",

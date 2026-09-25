@@ -76,3 +76,24 @@ export async function readSellerMatches(
   if (r.error) throw new Error('FORBIDDEN')
   return sellerMatches.parse(r.data)
 }
+
+/** Staff directory paging with the same contact search and balance facts. */
+export async function readSellersOverviewPage(
+  client: SupabaseClient,
+  tenantInput: string,
+  query: string,
+  offset = 0,
+  limit = 25,
+) {
+  const r = await client.rpc('sellers_overview_page', {
+    p_tenant: z.uuid().parse(tenantInput),
+    p_query: query.trim().slice(0, 120),
+    p_limit: z.number().int().min(1).max(100).parse(limit),
+    p_offset: z.number().int().min(0).max(2147483647).parse(offset),
+  })
+  if (r.error?.code === 'PGRST202') return null
+  if (r.error) throw new Error('FORBIDDEN')
+  return sellersOverview
+    .extend({ offset: z.number().int().nonnegative() })
+    .parse(r.data)
+}

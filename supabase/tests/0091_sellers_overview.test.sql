@@ -35,6 +35,15 @@ select is((sellers_overview(current_setting('test.tenant')::uuid,'berg',50)->>'t
 select is((sellers_overview(current_setting('test.tenant')::uuid,'%',50)->>'total')::int,0,'wildcards are literal');
 select is((sellers_overview(current_setting('test.tenant')::uuid,null,1)->>'limit')::int,1,'limit honoured');
 select is(jsonb_array_length(sellers_overview(current_setting('test.tenant')::uuid,null,1)->'sellers'),1,'one row under the limit');
+-- Pagination is applied after contact search and preserves the original facts.
+select is(sellers_overview_page(current_setting('test.tenant')::uuid,null,50,0)-'offset',current_setting('test.o')::jsonb,'first page preserves counts and balances');
+select is(sellers_overview_page(current_setting('test.tenant')::uuid,null,1,1)->'sellers'->0,current_setting('test.o')::jsonb->'sellers'->1,'second page reaches the second seller');
+select is(jsonb_array_length(sellers_overview_page(current_setting('test.tenant')::uuid,'070123',1,1)->'sellers'),0,'contact matching happens before paging');
+select is((sellers_overview_page(current_setting('test.tenant')::uuid,'070123',1,1)->>'total')::int,1,'matching total is independent of page');
+select throws_ok($$select sellers_overview_page(current_setting('test.tenant')::uuid,null,25,-1)$$,'INVALID_INPUT','negative offset rejected');
+select register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Anna Andersson','anna2@so.test','');
+select set_config('test.all',sellers_overview(current_setting('test.tenant')::uuid,null,50)::text,true);
+select is(sellers_overview_page(current_setting('test.tenant')::uuid,null,1,1)->'sellers'->0,current_setting('test.all')::jsonb->'sellers'->1,'ID breaks equal-name ties consistently');
 reset role;
 insert into tenant_members(tenant_id,user_id,role) values (current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000000492','readonly');
 set local role authenticated;
@@ -42,5 +51,6 @@ set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000492","r
 select lives_ok($$select sellers_overview(current_setting('test.tenant')::uuid,null,50)$$,'read-only members read the list');
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000493","role":"authenticated"}';
 select throws_ok($$select sellers_overview(current_setting('test.tenant')::uuid,null,50)$$,'42501',null,'outsider refused');
+select throws_ok($$select sellers_overview_page(current_setting('test.tenant')::uuid,null,25,1)$$,'42501',null,'outsider cannot read later pages');
 select * from finish();
 rollback;

@@ -2763,3 +2763,11 @@ button.text-link:hover:not(:disabled) {
     font-weight: 400;
   }
 }
+
+.seller-directory-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}

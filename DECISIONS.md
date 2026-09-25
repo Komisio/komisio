@@ -725,3 +725,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-25: Seller browsing pages tenant-filtered contact search in name/ID order. Existing seller balance facts and the original overview RPC remain unchanged; search resets paging and stale page links return to the last available page.
 - 2026-09-25: Browser item labels use @bwip-js/generic (MIT) for server-rendered Code 128 SVG; @zxing/library (Apache-2.0) verifies decoding in tests only. Label reads reuse tenant-scoped item title, current price and currency; printing sends no facts to an external renderer.
 - 2026-09-25: I-label lookup is read-only and limited to the active store. One matching UUID prefix opens the item; multiple matches require an explicit choice and never select the first. Database errors are not reported as missing items.
+
+- 2026-09-25: Seller item search covers only the verified seller account, with literal title/category/reference matching and 25-row pages. It preserves engine price, sale and next-markdown facts; the legacy capped read remains available during rollout.

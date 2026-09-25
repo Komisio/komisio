@@ -63,3 +63,21 @@
     font-weight: 600;
   }
 }
+
+.seller-items-search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.6rem;
+  margin: 1rem 0;
+}
+.seller-items-search .field {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+.seller-items-search input {
+  width: 100%;
+}
+.seller-items-search .btn {
+  min-height: 44px;
+}

@@ -1711,7 +1711,9 @@
     "signout": "Kirjaudu ulos",
     "salePrice": "Myyntihinta",
     "commission": "Komissio",
-    "handoverError": "Muutosta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla."
+    "handoverError": "Muutosta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla.",
+    "itemsSearchHint": "Kuvaus, luokka tai tuotteen viite",
+    "itemsLimited": "Tällä hetkellä näytetään enintään 200 uusinta tuotettasi. Haku ja lisäsivut ovat käytettävissä päivityksen valmistuttua."
   },
   "plans": {
     "heading": "Tilaus",

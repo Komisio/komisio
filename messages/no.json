@@ -1711,7 +1711,9 @@
     "signout": "Logg ut",
     "salePrice": "Salgspris",
     "commission": "Kommisjon",
-    "handoverError": "Kunne ikke bekrefte endringen. Prøv igjen med de samme opplysningene."
+    "handoverError": "Kunne ikke bekrefte endringen. Prøv igjen med de samme opplysningene.",
+    "itemsSearchHint": "Beskrivelse, kategori eller varereferanse",
+    "itemsLimited": "Akkurat nå vises opptil 200 av de nyeste varene dine. Søk og flere sider blir tilgjengelige når oppdateringen er ferdig."
   },
   "plans": {
     "heading": "Abonnement",

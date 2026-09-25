@@ -14,6 +14,7 @@ import { SellerHandovers } from '@/components/seller/handover-forms'
 import { readMyHandovers } from '@/lib/engine/handovers'
 import {
   readMyItems,
+  readMyItemsPage,
   sellerItemDaysLeft,
   sellerItemNextStep,
   sellerItemState,
@@ -28,7 +29,12 @@ export const metadata = {
 export default async function SellerPortal({
   searchParams,
 }: {
-  searchParams: Promise<{ seller?: string; statement?: string }>
+  searchParams: Promise<{
+    seller?: string
+    statement?: string
+    q?: string
+    page?: string
+  }>
 }) {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const ctx = await platformContext()
@@ -134,11 +140,52 @@ export default async function SellerPortal({
       </main>
     )
   }
-  const [economy, handovers, mine] = await Promise.all([
+  const query =
+    typeof params.q === 'string' ? params.q.trim().slice(0, 120) : ''
+  const requestedPage =
+    typeof params.page === 'string' && /^[1-9]\d{0,6}$/.test(params.page)
+      ? Number(params.page)
+      : 1
+  const pageHref = (page: number) => {
+    const search = new URLSearchParams({ seller: account.sellerId })
+    if (query) search.set('q', query)
+    if (page > 1) search.set('page', String(page))
+    return '/seller?' + search.toString() + '#portal-items'
+  }
+  const [economy, handovers, paged] = await Promise.all([
     readMySellerEconomy(ctx.client, account.tenantId, account.sellerId),
     readMyHandovers(ctx.client, account.tenantId, account.sellerId),
-    readMyItems(ctx.client, account.tenantId, account.sellerId),
+    readMyItemsPage(ctx.client, account.tenantId, account.sellerId, {
+      query,
+      offset: (requestedPage - 1) * 25,
+    }),
   ])
+  const pageCount = paged ? Math.max(1, Math.ceil(paged.total / 25)) : 1
+  if (paged && requestedPage > pageCount) redirect(pageHref(pageCount))
+  const mine =
+    paged ?? (await readMyItems(ctx.client, account.tenantId, account.sellerId))
+  const itemPagination = paged && pageCount > 1 && (
+    <nav
+      className="items-directory-pagination"
+      aria-label={all.items.pagination}
+    >
+      {requestedPage > 1 && (
+        <Link className="btn btn-secondary" href={pageHref(requestedPage - 1)}>
+          {all.items.previousPage}
+        </Link>
+      )}
+      <span>
+        {all.items.pageOf
+          .replace('{page}', String(requestedPage))
+          .replace('{pages}', String(pageCount))}
+      </span>
+      {requestedPage < pageCount && (
+        <Link className="btn btn-secondary" href={pageHref(requestedPage + 1)}>
+          {all.items.nextPage}
+        </Link>
+      )}
+    </nav>
+  )
   return (
     <main className="onboarding seller-review">
       <Brand />
@@ -200,7 +247,60 @@ export default async function SellerPortal({
         >
           <h2>{d.items}</h2>
           <p>{d.itemsIntro}</p>
-          {mine.items.length === 0 && <p>{d.noItems}</p>}
+          {paged ? (
+            <>
+              <form
+                key={query}
+                action="/seller#portal-items"
+                role="search"
+                className="seller-items-search"
+              >
+                <input type="hidden" name="seller" value={account.sellerId} />
+                <div className="field">
+                  <label htmlFor="seller-items-q">{all.items.search}</label>
+                  <input
+                    id="seller-items-q"
+                    name="q"
+                    defaultValue={query}
+                    maxLength={120}
+                    placeholder={d.itemsSearchHint}
+                  />
+                </div>
+                <button className="btn btn-primary">
+                  {all.items.searchButton}
+                </button>
+                {query && (
+                  <Link
+                    className="btn btn-secondary"
+                    href={base + '#portal-items'}
+                  >
+                    {all.items.clearFilters}
+                  </Link>
+                )}
+              </form>
+              <p>
+                <small>
+                  {paged.total > 0
+                    ? all.items.showingRange
+                        .replace('{from}', String(paged.offset + 1))
+                        .replace(
+                          '{to}',
+                          String(paged.offset + paged.items.length),
+                        )
+                        .replace('{total}', String(paged.total))
+                    : all.items.showing
+                        .replace('{shown}', '0')
+                        .replace('{total}', '0')}
+                </small>
+              </p>
+            </>
+          ) : (
+            <p role="status">{d.itemsLimited}</p>
+          )}
+          {mine.items.length === 0 && (
+            <p>{query && paged ? all.items.noMatches : d.noItems}</p>
+          )}
+          {itemPagination}
           {mine.items.length > 0 && (
             <div style={{ overflowX: 'auto' }}>
               <table className="seller-items">
@@ -298,6 +398,7 @@ export default async function SellerPortal({
               </table>
             </div>
           )}
+          {itemPagination}
         </section>
       )}
       <p>{d.recent}</p>

@@ -1711,7 +1711,9 @@
     "signout": "Sign out",
     "salePrice": "Sale price",
     "commission": "Commission",
-    "handoverError": "Unable to confirm the change. Try again with the same details."
+    "handoverError": "Unable to confirm the change. Try again with the same details.",
+    "itemsSearchHint": "Description, category or item reference",
+    "itemsLimited": "Only your latest 200 items are available right now. Search and more pages will be available when the update is complete."
   },
   "plans": {
     "heading": "Plan",

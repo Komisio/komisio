@@ -212,7 +212,10 @@ export default async function Seller({
       </div>
       {write && (
         <div className="seller-workspace-actions">
-          <Link className="btn btn-primary" href={'/intake?seller=' + id.data}>
+          <Link
+            className="btn btn-primary"
+            href={'/intake?seller=' + id.data + '#new-seller'}
+          >
             {all.intake.receive}
           </Link>
         </div>
@@ -283,7 +286,7 @@ export default async function Seller({
               {write && (
                 <Link
                   className="btn btn-primary"
-                  href={'/intake?seller=' + id.data}
+                  href={'/intake?seller=' + id.data + '#new-seller'}
                 >
                   {all.intake.receive}
                 </Link>

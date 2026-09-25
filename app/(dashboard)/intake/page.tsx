@@ -1,6 +1,7 @@
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
+import { readSellersOverviewPage } from '@/lib/engine/sellers'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary, intlLocale, localeNames, resolveLocale } from '@/lib/i18n'
@@ -32,19 +33,32 @@ export default async function Intake({
   const a = all.agreements
   const params = await searchParams
   const q = typeof params.q === 'string' ? params.q.trim().slice(0, 120) : ''
+  const sellerPage =
+    typeof params.sellerPage === 'string' &&
+    /^[1-9]\d{0,6}$/.test(params.sellerPage)
+      ? Number(params.sellerPage)
+      : 1
+  const sellerPageHref = (page: number) => {
+    const search = new URLSearchParams()
+    for (const [key, value] of Object.entries(params))
+      if (typeof value === 'string' && key !== 'sellerPage' && key !== 'q')
+        search.set(key, value)
+    if (q) search.set('q', q)
+    if (page > 1) search.set('sellerPage', String(page))
+    return '/intake' + (search.size ? '?' + search : '') + '#seller-search'
+  }
   const navigation = bagQueueNavigation.safeParse(params)
   if (!navigation.success) notFound()
   const filters = navigation.data
   const selectedId = z.uuid().safeParse(filters.seller)
   const [sellers, bags, selected, agreementResult] = await Promise.all([
-    ctx.client
-      .from('sellers')
-      .select('id,name,email,phone')
-      .eq('tenant_id', active.id)
-      .ilike('name', `%${q.replace(/[\\%_]/g, '\\$&')}%`)
-      .order('name')
-      .order('id')
-      .limit(50),
+    readSellersOverviewPage(
+      ctx.client,
+      active.id,
+      q,
+      (sellerPage - 1) * 12,
+      12,
+    ),
     readBagQueue(ctx.client, active.id, params),
     selectedId.success
       ? ctx.client
@@ -62,8 +76,10 @@ export default async function Intake({
       .limit(1)
       .maybeSingle(),
   ])
-  if (sellers.error || selected.error || agreementResult.error)
+  if (!sellers || selected.error || agreementResult.error)
     throw new Error('Unable to load intake')
+  const sellerPages = Math.max(1, Math.ceil(sellers.total / 12))
+  if (sellerPage > sellerPages) redirect(sellerPageHref(sellerPages))
   const agreement = agreementResult.data as SellerAgreement | null
   const evidenceResult =
     agreement && selected.data
@@ -106,11 +122,14 @@ export default async function Intake({
       <div className="intake-grid" id="bag-receiving">
         <section className="card intake-form">
           <h2>{d.find}</h2>
-          <form action="/intake" className="field">
-            <label htmlFor="seller-search">{d.search}</label>
+          <form action="/intake#seller-search" className="field">
+            <label htmlFor="seller-search">{all.sellersList.search}</label>
             <div className="row">
               <input
+                key={q}
                 id="seller-search"
+                type="search"
+                placeholder={all.sellersList.searchHint}
                 name="q"
                 defaultValue={q}
                 maxLength={120}
@@ -123,11 +142,31 @@ export default async function Intake({
               {d.newSeller}
             </Link>
           </p>
+          {q && (
+            <p>
+              <Link className="text-link" href="/intake#seller-search">
+                {all.sellersList.clear}
+              </Link>
+            </p>
+          )}
+          {sellers.total > 0 && (
+            <p>
+              <small>
+                {all.sellersList.showingRange
+                  .replace('{from}', String(sellers.offset + 1))
+                  .replace(
+                    '{to}',
+                    String(sellers.offset + sellers.sellers.length),
+                  )
+                  .replace('{total}', String(sellers.total))}
+              </small>
+            </p>
+          )}
           <ul className="intake-list intake-seller-results">
-            {(sellers.data as Seller[]).map((s) => (
+            {sellers.sellers.map((s) => (
               <li key={s.id}>
                 <Link
-                  href={`/intake?seller=${s.id}`}
+                  href={`/intake?seller=${s.id}#new-seller`}
                   className="intake-seller"
                   aria-current={selected.data?.id === s.id ? 'true' : undefined}
                 >
@@ -138,8 +177,27 @@ export default async function Intake({
               </li>
             ))}
           </ul>
-          {!sellers.data?.length && <p>{d.noSellers}</p>}
-          {sellers.data.length >= 50 && <small>{d.limit}</small>}
+          {sellers.sellers.length === 0 && <p>{d.noSellers}</p>}
+          {sellerPages > 1 && (
+            <nav className="row wrap" aria-label={all.sellersList.title}>
+              {sellerPage > 1 && (
+                <Link
+                  className="btn btn-secondary"
+                  href={sellerPageHref(sellerPage - 1)}
+                >
+                  {all.sellersList.previousPage}
+                </Link>
+              )}
+              {sellerPage < sellerPages && (
+                <Link
+                  className="btn btn-secondary"
+                  href={sellerPageHref(sellerPage + 1)}
+                >
+                  {all.sellersList.nextPage}
+                </Link>
+              )}
+            </nav>
+          )}
         </section>
         <div id="new-seller">
           {selected.data && agreement && (
@@ -197,6 +255,7 @@ export default async function Intake({
               tenantId={active.id}
               seller={selected.data as Seller | null}
               d={d}
+              changeSellerLabel={all.quickIntake.changeSeller}
               expectedAgreementId={agreement?.id ?? null}
               agreementBlocked={Boolean(
                 selected.data &&

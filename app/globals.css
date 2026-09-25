@@ -278,6 +278,9 @@ small {
 }
 .btn {
   display: inline-flex;
+  flex-shrink: 0;
+  max-width: 100%;
+  overflow-wrap: normal;
   align-items: center;
   justify-content: center;
   gap: 8px;

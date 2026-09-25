@@ -2771,3 +2771,61 @@ button.text-link:hover:not(:disabled) {
   gap: 12px;
   margin-top: 16px;
 }
+
+/* An ordinary-paper item label; thermal printer layouts remain independent. */
+.item-browser-label {
+  box-sizing: border-box;
+  width: 80mm;
+  max-width: 100%;
+  margin: 1.5rem 0;
+  padding: 4mm;
+  border: 1px solid #777;
+  background: #fff;
+  color: #000;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.item-browser-label p {
+  margin: 0;
+  color: #000;
+}
+.item-browser-label h2 {
+  margin: 2mm 0;
+  font-size: 16pt;
+  color: #000;
+}
+.item-browser-label .item-browser-label-price {
+  font-size: 22pt;
+  font-weight: 700;
+  margin: 2mm 0;
+}
+.item-browser-label img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.item-browser-label-reference {
+  font-family: monospace;
+  font-size: 11pt;
+}
+.item-browser-label-store {
+  font-size: 10pt;
+}
+@media print {
+  body:has(.item-browser-label) .app-shell {
+    display: block;
+  }
+  body:has(.item-browser-label) .app-shell > :not(main) {
+    display: none;
+  }
+  body:has(.item-browser-label) main {
+    padding: 0;
+    margin: 0;
+    max-width: none;
+  }
+  .item-browser-label {
+    margin: 0;
+    max-width: none;
+    break-inside: avoid;
+  }
+}

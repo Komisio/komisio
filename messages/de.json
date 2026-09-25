@@ -1582,7 +1582,12 @@
       "printed": "gedruckt",
       "failed": "fehlgeschlagen",
       "cancelled": "abgebrochen"
-    }
+    },
+    "browserOpen": "Im Browser drucken",
+    "browserBack": "Zurück zum Artikel",
+    "browserHint": "Das Etikett ist 80 mm breit und kann auf normalem Papier gedruckt werden. Wählen Sie im Druckdialog 100 % Skalierung und deaktivieren Sie Kopf- und Fußzeilen.",
+    "browserPrint": "Etikett drucken",
+    "browserUnavailable": "Das Etikett ist gerade nicht verfügbar. Kehren Sie zum Artikel zurück und versuchen Sie es erneut."
   },
   "purchases": {
     "title": "Einkäufe",

@@ -144,6 +144,14 @@ export default async function Item({
         <section className="card intake-form">
           <h2>{all.printing.itemLabel}</h2>
           <p>{all.printing.itemLabelHint}</p>
+          <p>
+            <Link
+              className="btn btn-secondary"
+              href={`/intake/items/${item.id}/label`}
+            >
+              {all.printing.browserOpen}
+            </Link>
+          </p>
           <PrintJobButton
             tenantId={active.id}
             printers={printers}

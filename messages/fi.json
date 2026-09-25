@@ -1582,7 +1582,12 @@
       "printed": "tulostettu",
       "failed": "epäonnistui",
       "cancelled": "peruutettu"
-    }
+    },
+    "browserOpen": "Tulosta selaimesta",
+    "browserBack": "Takaisin tuotteeseen",
+    "browserHint": "Etiketti on 80 mm leveä ja sen voi tulostaa tavalliselle paperille. Valitse tulostusikkunassa mittakaavaksi 100 % ja poista ylä- ja alatunnisteet käytöstä.",
+    "browserPrint": "Tulosta etiketti",
+    "browserUnavailable": "Etikettiä ei voi näyttää juuri nyt. Palaa tuotteeseen ja yritä uudelleen."
   },
   "purchases": {
     "title": "Ostot",

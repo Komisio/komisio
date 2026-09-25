@@ -1582,7 +1582,12 @@
       "printed": "skrevet ut",
       "failed": "mislyktes",
       "cancelled": "avbrutt"
-    }
+    },
+    "browserOpen": "Skriv ut fra nettleseren",
+    "browserBack": "Tilbake til varen",
+    "browserHint": "Etiketten er 80 mm bred og kan skrives ut på vanlig papir. Velg 100 % skalering og slå av topptekst og bunntekst i utskriftsdialogen.",
+    "browserPrint": "Skriv ut etikett",
+    "browserUnavailable": "Etiketten kan ikke vises akkurat nå. Gå tilbake til varen og prøv igjen."
   },
   "purchases": {
     "title": "Innkjøp",

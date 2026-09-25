@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import './seller-navigation.css'
+import './seller-portal.css'
 import { notFound, redirect } from 'next/navigation'
 import { platformContext } from '@/lib/platform/context'
 import { dictionary, intlLocale } from '@/lib/i18n'
@@ -102,12 +102,12 @@ export default async function SellerPortal({
           <p>
             {d.closing}: {amount(statement.header.closing_ore)}
           </p>
-          <table>
+          <table className="seller-statement-lines">
             <thead>
               <tr>
                 <th>{d.date}</th>
                 <th>{d.kind}</th>
-                <th>{d.amount}</th>
+                <th>{d.amount.replace('{currency}', currency)}</th>
                 <th>{d.salePrice}</th>
                 <th>{d.commission}</th>
               </tr>
@@ -115,13 +115,15 @@ export default async function SellerPortal({
             <tbody>
               {statement.lines.map((l) => (
                 <tr key={l.id}>
-                  <td>{when(l.occurred_at)}</td>
-                  <td>{label(all.ledger.kinds, l.kind)}</td>
-                  <td>{amount(l.amount_ore)}</td>
-                  <td>
+                  <td data-label={d.date}>{when(l.occurred_at)}</td>
+                  <td data-label={d.kind}>{label(all.ledger.kinds, l.kind)}</td>
+                  <td data-label={d.amount.replace('{currency}', currency)}>
+                    {amount(l.amount_ore)}
+                  </td>
+                  <td data-label={d.salePrice}>
                     {l.sale_price_ore === null ? '—' : amount(l.sale_price_ore)}
                   </td>
-                  <td>
+                  <td data-label={d.commission}>
                     {l.commission_ore === null ? '—' : amount(l.commission_ore)}
                   </td>
                 </tr>

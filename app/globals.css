@@ -2695,6 +2695,7 @@ button.text-link:hover:not(:disabled) {
 .items-directory-filters .field {
   grid-column: 1 / -1;
   min-width: 0;
+  margin-bottom: 0;
 }
 .items-directory-filters input,
 .items-directory-filters select {

@@ -25,11 +25,9 @@ export default async function Sellers({
   ])
   const money = (ore: number) => `${formatSignedOre(ore)} ${currency}`
   return (
-    <>
+    <div className="seller-directory-page">
       <div className="page-heading seller-directory-heading">
-        <div className="eyebrow">{active.name}</div>
         <h1>{d.title}</h1>
-        <p>{d.intro}</p>
         <Link className="btn btn-primary" href="/intake">
           {d.register}
         </Link>
@@ -55,7 +53,7 @@ export default async function Sellers({
           </div>
         </form>
         {overview && (
-          <p>
+          <p className="seller-directory-count">
             <small>
               {overview.total <= overview.limit
                 ? d.showingAll.replace('{total}', String(overview.total))
@@ -72,7 +70,8 @@ export default async function Sellers({
               <thead>
                 <tr>
                   <th>{d.name}</th>
-                  <th>{d.contact}</th>
+                  <th>{all.intake.email}</th>
+                  <th>{all.intake.phone}</th>
                   <th>{d.items}</th>
                   <th>{d.sold}</th>
                   <th>{d.available}</th>
@@ -89,6 +88,11 @@ export default async function Sellers({
                       >
                         {s.name}
                       </Link>
+                      {!s.email && !s.phone && s.contact && (
+                        <small className="seller-directory-city">
+                          {s.contact}
+                        </small>
+                      )}
                       {s.city && (
                         <small className="seller-directory-city">
                           {s.city}
@@ -96,16 +100,31 @@ export default async function Sellers({
                       )}
                     </td>
                     <td
-                      data-label={d.contact}
+                      data-label={all.intake.email}
                       className="seller-directory-contact"
                     >
-                      {s.email && <a href={`mailto:${s.email}`}>{s.email}</a>}
-                      {s.phone && (
-                        <a href={`tel:${s.phone.replace(/[^+0-9]/g, '')}`}>
+                      {s.email ? (
+                        <a href={`mailto:${s.email}`} title={s.email}>
+                          {s.email}
+                        </a>
+                      ) : (
+                        '—'
+                      )}
+                    </td>
+                    <td
+                      data-label={all.intake.phone}
+                      className="seller-directory-contact"
+                    >
+                      {s.phone ? (
+                        <a
+                          href={`tel:${s.phone.replace(/[^+0-9]/g, '')}`}
+                          title={s.phone}
+                        >
                           {s.phone}
                         </a>
+                      ) : (
+                        '—'
                       )}
-                      {!s.email && !s.phone && (s.contact || '—')}
                     </td>
                     <td data-label={d.items}>{s.itemsTotal}</td>
                     <td data-label={d.sold}>{s.itemsSold}</td>
@@ -123,6 +142,6 @@ export default async function Sellers({
           </div>
         )}
       </section>
-    </>
+    </div>
   )
 }

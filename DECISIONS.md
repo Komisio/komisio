@@ -712,3 +712,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-24: Seller work is grouped under overview, drop-offs, items, finances, terms, communication and details tabs. Seller item reads filter by tenant and seller before pagination and reuse current lifecycle facts. Existing financial operations and permissions remain unchanged.
 
 - 2026-09-25: Seller ledger, statement and communication reads accept persisted PostgreSQL UUID references without requiring RFC version bits. Historical references remain unchanged; command validation, tenant checks and financial rules are unchanged.
+
+- 2026-09-25: Owner prioritizes mobile-first store workflows with fewer taps and less scrolling. The seller directory uses a compact heading, direct contact links and responsive rows; desktop separates email and phone. All locales share the layout.

@@ -1975,127 +1975,202 @@ small {
   margin-top: 24px;
   flex-wrap: wrap;
 }
-.seller-directory {
-  padding: 1.5rem;
+.main:has(> .seller-directory-page) {
+  max-width: 1440px;
+  padding: 16px 16px 96px;
+}
+.seller-directory-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-bottom: 16px;
+}
+.seller-directory-heading h1 {
+  margin: 0;
+  font-size: 1.75rem;
 }
 .seller-directory-heading .btn {
-  margin-top: 0.5rem;
+  min-height: 44px;
+  padding: 10px 14px;
+}
+.seller-directory {
+  padding: 12px;
 }
 .seller-directory-search label {
   display: block;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  margin-bottom: 4px;
 }
 .seller-directory-search .row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 8px;
   align-items: center;
 }
 .seller-directory-search input {
-  flex: 1 1 280px;
+  flex: 1 1 0;
+  width: 0;
   min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
 }
-.seller-directory-results {
-  overflow-x: auto;
+.seller-directory-search .btn {
+  min-height: 44px;
+  padding: 10px 14px;
+}
+.seller-directory-search .text-link {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.seller-directory-count {
+  margin: 6px 0 0;
+  color: var(--muted);
 }
 .seller-directory-table {
   width: 100%;
   border-collapse: collapse;
 }
-.seller-directory-table th:first-child {
-  width: 24%;
+.seller-directory-table thead {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
 }
-.seller-directory-table th:nth-child(2) {
-  width: 30%;
+.seller-directory-table,
+.seller-directory-table tbody {
+  display: block;
 }
-.seller-directory-table th {
-  text-align: left;
-  font-size: 0.8rem;
-  color: var(--muted);
-  font-weight: 500;
-  background: #f5f7f3;
+.seller-directory-table tr {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0 12px;
+  padding: 8px 0 12px;
+  border-bottom: 1px solid var(--line);
 }
-.seller-directory-table th,
 .seller-directory-table td {
-  padding: 1rem;
-  border-bottom: 1px solid #e2e7df;
+  display: block;
+  border: 0;
+  padding: 0;
+  min-width: 0;
 }
-.seller-directory-table tbody tr:hover {
-  background: #f7f9f5;
+.seller-directory-table td:nth-child(-n + 3) {
+  grid-column: 1 / -1;
+}
+.seller-directory-table td:nth-child(n + 4) {
+  padding-top: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.seller-directory-table td:nth-child(n + 4)::before {
+  content: attr(data-label);
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+.seller-directory-table td a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  overflow-wrap: anywhere;
 }
 .seller-directory-table td:first-child a {
   font-weight: 600;
 }
-.seller-directory-city,
-.seller-directory-contact a {
-  display: block;
-  overflow-wrap: anywhere;
+.seller-directory-contact {
+  font-size: 0.875rem;
+}
+.seller-directory-contact:not(:has(a)) {
+  display: none;
 }
 .seller-directory-city {
-  margin-top: 0.25rem;
+  display: block;
   color: var(--muted);
-}
-.seller-directory-contact {
-  font-size: 0.9rem;
-}
-.seller-directory-contact a + a {
-  margin-top: 0.3rem;
-}
-.seller-directory-table td:nth-child(n + 3),
-.seller-directory-table th:nth-child(n + 3) {
-  text-align: right;
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 }
 .seller-directory-balance {
   font-weight: 600;
 }
-@media (max-width: 700px) {
-  .seller-directory {
-    padding: 1rem;
+@media (min-width: 1200px) {
+  .main:has(> .seller-directory-page) {
+    padding: 20px 24px 40px;
   }
-  .seller-directory-results {
-    overflow: visible;
+  .seller-directory {
+    padding: 16px;
+  }
+  .seller-directory-table {
+    table-layout: fixed;
+    display: table;
+  }
+  .seller-directory-table tbody {
+    display: table-row-group;
   }
   .seller-directory-table thead {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-  }
-  .seller-directory-table,
-  .seller-directory-table tbody {
-    display: block;
+    display: table-header-group;
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
   }
   .seller-directory-table tr {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem 1rem;
-    padding: 1.25rem 0;
-    border-bottom: 1px solid #e2e7df;
+    display: table-row;
   }
+  .seller-directory-table th,
   .seller-directory-table td {
-    display: block;
-    border: 0;
-    padding: 0;
-    min-width: 0;
+    display: table-cell;
+    padding: 0 10px;
+    height: 48px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: middle;
   }
-  .seller-directory-table td:first-child,
-  .seller-directory-table td:nth-child(2) {
-    grid-column: 1 / -1;
-  }
-  .seller-directory-table td:nth-child(n + 3) {
+  .seller-directory-table th {
     text-align: left;
-    white-space: normal;
-  }
-  .seller-directory-table td:nth-child(n + 3)::before {
-    content: attr(data-label);
-    display: block;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--muted);
-    font-weight: 400;
+    font-weight: 500;
+    background: #f5f7f3;
+  }
+  .seller-directory-table th:first-child {
+    width: 22%;
+  }
+  .seller-directory-table th:nth-child(2) {
+    width: 25%;
+  }
+  .seller-directory-table th:nth-child(3) {
+    width: 15%;
+  }
+  .seller-directory-table th:nth-child(4),
+  .seller-directory-table th:nth-child(5) {
+    width: 8%;
+  }
+  .seller-directory-table th:nth-child(6),
+  .seller-directory-table th:nth-child(7) {
+    width: 11%;
+  }
+  .seller-directory-table .seller-directory-contact a {
+    display: block;
+    line-height: 44px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .seller-directory-table td:nth-child(n + 4),
+  .seller-directory-table th:nth-child(n + 4) {
+    padding-top: 0;
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .seller-directory-table td:nth-child(n + 4)::before {
+    content: none;
+  }
+  .seller-directory-table tbody tr:hover {
+    background: #f7f9f5;
   }
 }
 

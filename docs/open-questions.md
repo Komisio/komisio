@@ -1,5 +1,10 @@
 # Open questions
 
+Store usability (2026-09-25): owner prioritizes mobile-first workflows for staff
+inside the store, with fewer taps and less scrolling. Compact layouts must retain
+readable information and usable touch targets. The seller directory is the first
+application of this direction; wider navigation changes remain separate work.
+
 Seller workspace (2026-09-24): owner requested one seller page with tabs, using
 the earlier back office as inspiration. Existing receiving, items, finances,
 agreements, communication and profile operations are grouped around the seller;

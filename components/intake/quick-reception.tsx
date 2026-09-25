@@ -77,6 +77,17 @@ export function QuickReception({
   const activeTypes = vocabulary.types.filter((t) => t.active)
   const running = useRef(false)
   const fileInput = useRef<HTMLInputElement>(null)
+  const itemHeading = useRef<HTMLHeadingElement>(null)
+  const focusNextItem = useRef(false)
+  useEffect(() => {
+    // Only an explicit seller selection or Next item moves the user's place.
+    // Focus the heading so mobile users can choose photo or typing themselves.
+    if (!focusNextItem.current || !seller || done || !itemHeading.current)
+      return
+    focusNextItem.current = false
+    itemHeading.current.focus({ preventScroll: true })
+    itemHeading.current.scrollIntoView({ block: 'start', behavior: 'instant' })
+  }, [seller, done])
   const errors = d.errors as Record<string, string>
   useEffect(() => {
     // The remembered printer is a per-browser convenience; it is applied
@@ -242,6 +253,7 @@ export function QuickReception({
   }
 
   function next() {
+    focusNextItem.current = true
     setDone(null)
     setFacts(emptyFacts)
     setPrice('')
@@ -354,7 +366,10 @@ export function QuickReception({
                 tenantId={tenantId}
                 sellers={sellers}
                 total={sellersTotal}
-                onSelect={setSeller}
+                onSelect={(selected) => {
+                  focusNextItem.current = true
+                  setSeller(selected)
+                }}
                 d={d}
               />
               <p>
@@ -372,7 +387,11 @@ export function QuickReception({
           aria-label={d.garment}
           aria-busy={busy}
         >
-          <h2>
+          <h2
+            ref={itemHeading}
+            tabIndex={-1}
+            style={{ scrollMarginTop: '1rem' }}
+          >
             {!bagId && (
               <span className="quick-step" aria-hidden="true">
                 2

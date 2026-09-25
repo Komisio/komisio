@@ -1,0 +1,60 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('b0000000-0000-4000-8000-000000009901','bag-owner@example.test',now()),
+ ('b0000000-0000-4000-8000-000000009902','bag-reader@example.test',now()),
+ ('b0000000-0000-4000-8000-000000009903','bag-outsider@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"b0000000-0000-4000-8000-000000009901","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Bag reception','bag-reception-test',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Seller','','123')::text,true);
+select set_config('test.other',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Other','','456')::text,true);
+select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'Test',null)::text,true);
+select set_config('test.bag2',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'Test 2',null)::text,true);
+select set_config('test.session',gen_random_uuid()::text,true);
+select set_config('test.request',gen_random_uuid()::text,true);
+select lives_ok($$select create_bag_reception(current_setting('test.tenant')::uuid,current_setting('test.session')::uuid,current_setting('test.seller')::uuid,current_setting('test.bag')::uuid)$$,'bag session created');
+select lives_ok($$select create_bag_reception(current_setting('test.tenant')::uuid,current_setting('test.session')::uuid,current_setting('test.seller')::uuid,current_setting('test.bag')::uuid)$$,'session retry stable');
+select throws_like($$select create_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.other')::uuid,current_setting('test.bag')::uuid)$$,'%INVALID_INPUT%','cannot change bag seller');
+select throws_like($$select create_bag_reception(current_setting('test.tenant')::uuid,current_setting('test.session')::uuid,current_setting('test.seller')::uuid,current_setting('test.bag2')::uuid)$$,'%REQUEST_CONFLICT%','cannot move session to another bag');
+select throws_like($$select quick_receive_from_bag(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.session')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Lamp"}',15000,current_setting('test.bag2')::uuid)$$,'%INVALID_INPUT%','receipt requires exact bag');
+select set_config('test.result',quick_receive_from_bag(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.session')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Lamp"}',15000,current_setting('test.bag')::uuid)::text,true);
+select is(quick_receive_from_bag(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.session')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Lamp"}',15000,current_setting('test.bag')::uuid),current_setting('test.result')::jsonb,'receipt retry does not duplicate item');
+select is(jsonb_array_length(bag_received_items(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)),1,'bag lists one accepted item');
+select is(bag_received_items(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->0->>'title','Lamp','list uses actual item description');
+select is(bag_received_items(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->0->>'price_ore','15000','list uses actual price');
+select is(jsonb_array_length(bag_received_items(current_setting('test.tenant')::uuid,current_setting('test.bag2')::uuid)),0,'other bag excludes this item');
+
+do $$ declare sid uuid; begin for n in 1..52 loop
+ sid:=gen_random_uuid();
+ perform create_bag_reception(current_setting('test.tenant')::uuid,sid,current_setting('test.seller')::uuid,current_setting('test.bag')::uuid);
+ perform quick_receive_from_bag(current_setting('test.tenant')::uuid,gen_random_uuid(),sid,current_setting('test.seller')::uuid,0,jsonb_build_object('description','Synthetic item '||n),10000+n,current_setting('test.bag')::uuid);
+end loop; end $$;
+select set_config('test.page1',bag_received_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0)::text,true);
+select set_config('test.page2',bag_received_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,25)::text,true);
+select set_config('test.page3',bag_received_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,50)::text,true);
+select is(current_setting('test.page1')::jsonb->>'total','53','total includes rows beyond old cap');
+select is(jsonb_array_length(current_setting('test.page1')::jsonb->'items'),25,'bounded first page');
+select is(jsonb_array_length(current_setting('test.page2')::jsonb->'items'),25,'bounded second page');
+select is(jsonb_array_length(current_setting('test.page3')::jsonb->'items'),3,'last page reaches older items');
+select is((select count(distinct x->>'id')::int from jsonb_array_elements((current_setting('test.page1')::jsonb->'items')||(current_setting('test.page2')::jsonb->'items')||(current_setting('test.page3')::jsonb->'items')) x),53,'stable same-timestamp ordering has no duplicates or missing rows');
+select is(bag_received_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0),current_setting('test.page1')::jsonb,'read order repeatable');
+select is(jsonb_array_length(bag_received_items(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)),50,'old RPC retains its contract');
+select is(bag_received_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag2')::uuid,0)->>'total','0','another bag excludes rows');
+select is(jsonb_array_length(bag_received_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,500)->'items'),0,'out of range is empty');
+select throws_like($$select bag_received_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,-1)$$,'%INVALID_INPUT%','negative offset rejected');
+select set_item_price(current_setting('test.tenant')::uuid,gen_random_uuid(),(current_setting('test.page1')::jsonb->'items'->0->>'id')::uuid,12345,'Synthetic corrected price');
+select is(bag_received_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0)->'items'->0->>'price_ore','12345','current price stays exact');
+select set_config('test.otherTenant',create_tenant('Other paged bag store','other-paged-bag-store',gen_random_uuid())::text,true);
+select is(bag_received_items_page(current_setting('test.otherTenant')::uuid,current_setting('test.bag')::uuid,0)->>'total','0','owner of both stores cannot mix tenant and bag');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.tenant')::uuid,'b0000000-0000-4000-8000-000000009902','readonly');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"b0000000-0000-4000-8000-000000009902","role":"authenticated"}';
+select is(bag_received_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0)->>'total','53','readonly may browse');
+set local "request.jwt.claims"='{"sub":"b0000000-0000-4000-8000-000000009903","role":"authenticated"}';
+select throws_ok($$select bag_received_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0)$$,'42501',null,'outsider denied');
+reset role;
+select ok(not has_function_privilege('anon','public.bag_received_items_page(uuid,uuid,integer)','execute'),'anonymous denied');
+select * from finish(); rollback;

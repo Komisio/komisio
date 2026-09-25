@@ -1011,7 +1011,9 @@
     "pagination": "Pagine degli articoli",
     "previousPage": "Precedente",
     "nextPage": "Successiva",
-    "pageOf": "Pagina {page} di {pages}"
+    "pageOf": "Pagina {page} di {pages}",
+    "currentPrice": "Prezzo attuale",
+    "labelPrinter": "Stampante per etichette"
   },
   "sales": {
     "title": "Vendite",

@@ -1011,7 +1011,9 @@
     "pagination": "Bladr gennem varer",
     "previousPage": "Forrige",
     "nextPage": "Næste",
-    "pageOf": "Side {page} af {pages}"
+    "pageOf": "Side {page} af {pages}",
+    "currentPrice": "Nuværende pris",
+    "labelPrinter": "Etiketprinter"
   },
   "sales": {
     "title": "Salg",

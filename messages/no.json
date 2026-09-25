@@ -1011,7 +1011,9 @@
     "pagination": "Bla gjennom varer",
     "previousPage": "Forrige",
     "nextPage": "Neste",
-    "pageOf": "Side {page} av {pages}"
+    "pageOf": "Side {page} av {pages}",
+    "currentPrice": "Nåværende pris",
+    "labelPrinter": "Etikettskriver"
   },
   "sales": {
     "title": "Salg",

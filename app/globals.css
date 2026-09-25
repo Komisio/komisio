@@ -2832,3 +2832,42 @@ button.text-link:hover:not(:disabled) {
     break-inside: avoid;
   }
 }
+
+.item-detail-heading h1 {
+  overflow-wrap: anywhere;
+}
+.item-detail-heading .item-detail-reference {
+  font-family: monospace;
+  margin: 4px 0;
+}
+.item-detail-heading .item-detail-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 12px;
+  margin: 12px 0;
+}
+.item-detail-price strong {
+  font-size: 1.5rem;
+  color: var(--ink);
+}
+.item-detail-section {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.item-detail-section > summary {
+  min-height: 44px;
+  padding: 10px 0;
+  cursor: pointer;
+  font-weight: 600;
+}
+.item-detail-section > summary span {
+  font-weight: 400;
+}
+.item-detail-section > summary:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+.item-detail-section[open] {
+  padding-bottom: 20px;
+}

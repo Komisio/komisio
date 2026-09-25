@@ -1011,7 +1011,9 @@
     "pagination": "Item pages",
     "previousPage": "Previous",
     "nextPage": "Next",
-    "pageOf": "Page {page} of {pages}"
+    "pageOf": "Page {page} of {pages}",
+    "currentPrice": "Current price",
+    "labelPrinter": "Label printer"
   },
   "sales": {
     "title": "Sales",

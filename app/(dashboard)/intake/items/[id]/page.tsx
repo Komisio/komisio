@@ -5,6 +5,7 @@ import { requirePlatform } from '@/lib/platform/context'
 import { dictionary, intlLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { readItem, formatOre } from '@/lib/engine/items'
+import { readItemLabel } from '@/lib/engine/item-label'
 import { readPrinters } from '@/lib/engine/printing'
 import { PrintJobButton } from '@/components/intake/print-job-button'
 import { readChainOverview } from '@/lib/engine/chains'
@@ -26,7 +27,12 @@ export default async function Item({
   const result = await readItem(ctx.client, active.id, id.data)
   if (!result) notFound()
   const { item, prices, events } = result
-  const printers = await readPrinters(ctx.client, active.id)
+  const [printers, label] = await Promise.all([
+    readPrinters(ctx.client, active.id),
+    readItemLabel(ctx.client, active.id, item.id),
+  ])
+  const currentPrice = label?.priceOre ?? prices[0]?.price_ore ?? null
+  const reference = label?.reference ?? `I-${item.id.slice(0, 8).toUpperCase()}`
   // Transfer targets: other stores in the chain where this person is owner or admin,
   // for a consignment item whose period has not ended. SQL rechecks everything.
   const manages = active.role === 'owner' || active.role === 'admin'
@@ -52,10 +58,19 @@ export default async function Item({
       <Link className="text-link" href="/intake/items">
         {d.backToList}
       </Link>
-      <div className="page-heading">
+      <div className="page-heading item-detail-heading">
         <h1>
-          {d.item} {d.originKinds[item.origin_kind]}
+          {label?.title || `${d.item} ${d.originKinds[item.origin_kind]}`}
         </h1>
+        <p className="item-detail-reference">{reference}</p>
+        {currentPrice !== null && (
+          <p className="item-detail-price">
+            <span>{d.currentPrice}</span>
+            <strong>
+              {formatOre(currentPrice)} {label?.currency ?? currency}
+            </strong>
+          </p>
+        )}
         <p>
           {d.acceptedAt}: {when(item.accepted_at)} ·{' '}
           {d.ownershipKinds[item.ownership]}
@@ -71,7 +86,7 @@ export default async function Item({
                 className="text-link"
                 href={`/intake/sellers/${item.seller_id}`}
               >
-                {all.sellerTerms.title}
+                {all.sellersList.title}
               </Link>
             </>
           )}
@@ -87,8 +102,8 @@ export default async function Item({
           </p>
         )}
       </div>
-      <section className="card intake-form">
-        <h2>{d.terms}</h2>
+      <details className="card intake-form item-detail-section">
+        <summary>{d.terms}</summary>
         <p>{d.termsHint}</p>
         <dl>
           {item.ownership === 'consignment' ? (
@@ -135,7 +150,7 @@ export default async function Item({
             <dd>{t.storePolicyVersion}</dd>
           </div>
         </dl>
-      </section>
+      </details>
       {transferTargets.length > 0 &&
         item.ownership === 'consignment' &&
         !ended && (
@@ -151,8 +166,8 @@ export default async function Item({
           </section>
         )}
       {active.role !== 'readonly' && (
-        <section className="card intake-form">
-          <h2>{all.printing.itemLabel}</h2>
+        <details className="card intake-form item-detail-section">
+          <summary>{d.labelPrinter}</summary>
           <p>{all.printing.itemLabelHint}</p>
           <PrintJobButton
             tenantId={active.id}
@@ -163,10 +178,12 @@ export default async function Item({
             d={all.printing}
             intake={all.intake}
           />
-        </section>
+        </details>
       )}
-      <section className="card intake-form">
-        <h2>{d.prices}</h2>
+      <details className="card intake-form item-detail-section">
+        <summary>
+          {d.prices} <span>({prices.length})</span>
+        </summary>
         {prices.map((p) => (
           <p key={p.id}>
             {formatOre(p.price_ore)} {currency} ·{' '}
@@ -175,16 +192,18 @@ export default async function Item({
             · {when(p.set_at)}
           </p>
         ))}
-      </section>
-      <section className="card intake-form">
-        <h2>{d.events}</h2>
+      </details>
+      <details className="card intake-form item-detail-section">
+        <summary>
+          {d.events} <span>({events.length})</span>
+        </summary>
         {events.map((e) => (
           <p key={e.id}>
             {d.eventKinds[e.kind as keyof typeof d.eventKinds] ?? e.kind} ·{' '}
             {when(e.occurred_at)}
           </p>
         ))}
-      </section>
+      </details>
     </>
   )
 }

@@ -1817,9 +1817,10 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   ).toBeVisible()
   await page.getByRole('link', { name: 'Öppna varan' }).first().click()
   await expect(
-    page.getByRole('heading', { name: 'Vara Inlämnat plagg' }),
+    page.getByRole('heading', { name: 'Blue TEST jacket', exact: true }),
   ).toBeVisible()
   await expect(page.getByText('Frysta villkor')).toBeVisible()
+  await page.locator('summary').filter({ hasText: 'Händelser' }).click()
   await expect(page.getByText('Ursprung dokumenterat')).toBeVisible()
   await page.goto('/intake/reception?stage=accepted')
   await expect(

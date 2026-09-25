@@ -1011,7 +1011,9 @@
     "pagination": "Artikelseiten",
     "previousPage": "Zurück",
     "nextPage": "Weiter",
-    "pageOf": "Seite {page} von {pages}"
+    "pageOf": "Seite {page} von {pages}",
+    "currentPrice": "Aktueller Preis",
+    "labelPrinter": "Etikettendrucker"
   },
   "sales": {
     "title": "Verkäufe",

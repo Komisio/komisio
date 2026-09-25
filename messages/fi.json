@@ -1011,7 +1011,9 @@
     "pagination": "Tuotesivut",
     "previousPage": "Edellinen",
     "nextPage": "Seuraava",
-    "pageOf": "Sivu {page}/{pages}"
+    "pageOf": "Sivu {page}/{pages}",
+    "currentPrice": "Nykyinen hinta",
+    "labelPrinter": "Etikettitulostin"
   },
   "sales": {
     "title": "Myynti",

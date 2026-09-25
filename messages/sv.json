@@ -1011,7 +1011,9 @@
     "pagination": "Bläddra bland varor",
     "previousPage": "Föregående",
     "nextPage": "Nästa",
-    "pageOf": "Sida {page} av {pages}"
+    "pageOf": "Sida {page} av {pages}",
+    "currentPrice": "Nuvarande pris",
+    "labelPrinter": "Etikettskrivare"
   },
   "sales": {
     "title": "Försäljning",

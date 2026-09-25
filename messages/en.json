@@ -1630,6 +1630,10 @@
     "wasPrice": "was",
     "until": "until",
     "then": "then",
+    "nextPriceMay": "The store may lower the price to {price} from {date}.",
+    "nextPriceScheduled": "Scheduled price {price} from {date}.",
+    "lastPrice": "No further price steps are planned.",
+    "daysLeft": "{days} days left",
     "itemStates": {
       "forSale": "for sale",
       "periodEnding": "sale period ends soon",

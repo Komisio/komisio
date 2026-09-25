@@ -78,6 +78,20 @@ test('seller finds old owned items and pages without losing the account on mobil
     const rows = section.locator('tbody tr')
     await expect(rows).toHaveCount(25)
     await expect(section.getByText('Visar 1–25 av 203 varor')).toBeVisible()
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true)
+    const nextBounds = await section
+      .getByRole('link', { name: d.items.nextPage, exact: true })
+      .first()
+      .boundingBox()
+    expect(nextBounds?.height).toBeGreaterThanOrEqual(44)
+    await page.screenshot({
+      path: test.info().outputPath('seller-item-pages-mobile.png'),
+      caret: 'initial',
+    })
     const first = await rows.locator('td:first-child small').allTextContents()
     await section
       .getByRole('link', { name: d.items.nextPage, exact: true })

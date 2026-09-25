@@ -101,6 +101,11 @@ test('seller reads own economy, requests payout and opts out without becoming st
       page.getByRole('heading', { name: 'Avräkningar #1' }),
     ).toBeVisible()
     await expect(page.getByRole('table')).toBeVisible()
+    await page
+      .getByRole('link', { name: 'Portal journey', exact: true })
+      .click()
+    await expect(page).toHaveURL(/#portal-statements$/)
+    await expect(page.locator('#portal-statements h2')).toBeInViewport()
     expect(
       (
         await db.query(

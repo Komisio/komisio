@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import './seller-navigation.css'
 import { notFound, redirect } from 'next/navigation'
 import { platformContext } from '@/lib/platform/context'
 import { dictionary, intlLocale } from '@/lib/i18n'
@@ -85,7 +86,9 @@ export default async function SellerPortal({
         <Brand />
         <SignOut d={all} next="/seller" />
         <section className="card">
-          <Link href={base}>{account.storeName}</Link>
+          <Link className="text-link" href={base + '#portal-statements'}>
+            {account.storeName}
+          </Link>
           <h1>
             {d.statements} #{statement.header.number}
           </h1>
@@ -153,6 +156,22 @@ export default async function SellerPortal({
           {d.reserved}: {amount(economy.balance.reservedOre)}
         </p>
       </section>
+      <nav className="seller-portal-shortcuts" aria-label={d.title}>
+        {mine && (
+          <a className="btn btn-secondary" href="#portal-items">
+            {d.items}
+          </a>
+        )}
+        <a className="btn btn-secondary" href="#portal-handovers">
+          {d.handovers}
+        </a>
+        <a className="btn btn-secondary" href="#portal-payout-request">
+          {d.request}
+        </a>
+        <a className="btn btn-secondary" href="#portal-statements">
+          {d.statements}
+        </a>
+      </nav>
       <SellerEconomyForms
         key={`${account.sellerId}-${economy.automaticEmails}`}
         tenantId={account.tenantId}
@@ -171,7 +190,12 @@ export default async function SellerPortal({
         d={d}
       />
       {mine && (
-        <section className="card" aria-label={d.items}>
+        <section
+          id="portal-items"
+          className="card"
+          aria-label={d.items}
+          tabIndex={-1}
+        >
           <h2>{d.items}</h2>
           <p>{d.itemsIntro}</p>
           {mine.items.length === 0 && <p>{d.noItems}</p>}
@@ -296,7 +320,7 @@ export default async function SellerPortal({
           </p>
         ))}
       </section>
-      <section className="card">
+      <section id="portal-statements" className="card" tabIndex={-1}>
         <h2>{d.statements}</h2>
         {economy.statements.length === 0 && <p>{d.none}</p>}
         {economy.statements.map((s) => (

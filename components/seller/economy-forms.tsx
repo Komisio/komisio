@@ -50,6 +50,8 @@ export function SellerEconomyForms({
   return (
     <div className="intake-grid">
       <form
+        id="portal-payout-request"
+        tabIndex={-1}
         className="card intake-form"
         onSubmit={(e) => {
           e.preventDefault()

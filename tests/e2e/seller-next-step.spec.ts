@@ -84,7 +84,38 @@ test('seller sees the next price step, days left and what happens at period end'
     await expect(items.getByText(/42 dagar kvar/)).toBeVisible()
     await expect(items.getByText(/sedan skänks till välgörenhet/)).toBeVisible()
     await expect(items.getByText('Bra')).toHaveCount(0)
+
     await page.setViewportSize({ width: 320, height: 800 })
+    const writes: string[] = []
+    page.on('request', (request) => {
+      if (request.method() === 'POST' && request.url().includes('/api/seller/'))
+        writes.push(request.url())
+    })
+    const shortcuts = page.locator('.seller-portal-shortcuts')
+    for (const target of [
+      'portal-items',
+      'portal-handovers',
+      'portal-payout-request',
+      'portal-statements',
+    ]) {
+      const link = shortcuts.locator('a[href="#' + target + '"]')
+      expect((await link.boundingBox())!.height).toBeGreaterThanOrEqual(44)
+      await link.click()
+      await expect(page.locator('#' + target + ' h2').first()).toBeInViewport()
+      await expect(page).toHaveURL(
+        new RegExp('seller=' + sellerId + '#' + target + '$'),
+      )
+    }
+    expect(writes).toEqual([])
+    await page.goBack()
+    await expect(page).toHaveURL(/#portal-payout-request$/)
+    await page.goto('/seller?seller=' + sellerId)
+    await page.screenshot({
+      path: test.info().outputPath('seller-shortcuts-mobile.png'),
+      caret: 'initial',
+    })
+    await shortcuts.locator('a[href="#portal-items"]').click()
+    await expect(items.locator('h2')).toBeInViewport()
     await expect(items.getByText(plan)).toBeVisible()
     // Mobile: no horizontal scroll, and every cell is a readable card row with its own label.
     expect(

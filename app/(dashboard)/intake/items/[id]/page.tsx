@@ -76,6 +76,16 @@ export default async function Item({
             </>
           )}
         </p>
+        {active.role !== 'readonly' && (
+          <p>
+            <Link
+              className="btn btn-secondary"
+              href={`/intake/items/${item.id}/label`}
+            >
+              {all.printing.browserOpen}
+            </Link>
+          </p>
+        )}
       </div>
       <section className="card intake-form">
         <h2>{d.terms}</h2>
@@ -144,14 +154,6 @@ export default async function Item({
         <section className="card intake-form">
           <h2>{all.printing.itemLabel}</h2>
           <p>{all.printing.itemLabelHint}</p>
-          <p>
-            <Link
-              className="btn btn-secondary"
-              href={`/intake/items/${item.id}/label`}
-            >
-              {all.printing.browserOpen}
-            </Link>
-          </p>
           <PrintJobButton
             tenantId={active.id}
             printers={printers}

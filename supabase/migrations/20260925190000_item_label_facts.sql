@@ -12,4 +12,3 @@ begin
 end $$;
 revoke all on function public.item_label_facts(uuid,uuid) from public,anon;
 grant execute on function public.item_label_facts(uuid,uuid) to authenticated;
-

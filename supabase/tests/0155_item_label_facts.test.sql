@@ -49,4 +49,3 @@ reset role;
 select ok(not has_function_privilege('anon','public.item_label_facts(uuid,uuid)','execute'),'anonymous calls are denied');
 select * from finish();
 rollback;
-

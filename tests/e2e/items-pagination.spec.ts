@@ -84,6 +84,12 @@ test('staff can reach all matching items and retain filters on a phone', async (
       .getByRole('link', { name: d.items.clearFilters, exact: true })
       .click()
     await expect(rows).toHaveCount(25)
+    await expect(page.getByLabel(d.items.search, { exact: true })).toHaveValue(
+      '',
+    )
+    await expect(page.getByLabel(d.items.stage, { exact: true })).toHaveValue(
+      '',
+    )
     await page.goto('/intake/items?q=Paging&stage=markdown_due&page=999')
     await expect(rows).toHaveCount(3)
     expect(new URL(page.url()).searchParams.get('page')).toBe('3')

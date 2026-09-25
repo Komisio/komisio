@@ -73,6 +73,7 @@ test('staff can browse every matching seller on a phone and search from later pa
     expect(new URL(page.url()).searchParams.has('page')).toBe(false)
     await page.getByRole('link', { name: d.clear, exact: true }).click()
     await expect(rows).toHaveCount(25)
+    await expect(page.getByLabel(d.search, { exact: true })).toHaveValue('')
     await page.goto('/intake/sellers?q=Paging&page=999')
     await expect(page).toHaveURL(/page=3/)
     await expect(rows).toHaveCount(3)

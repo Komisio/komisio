@@ -71,6 +71,7 @@ export default async function Items({
         <h2>{d.list}</h2>
         {overview && (
           <form
+            key={query + ':' + stage}
             action="/intake/items"
             className="items-directory-filters"
             role="search"

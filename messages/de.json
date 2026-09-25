@@ -1013,7 +1013,8 @@
     "nextPage": "Weiter",
     "pageOf": "Seite {page} von {pages}",
     "currentPrice": "Aktueller Preis",
-    "labelPrinter": "Etikettendrucker"
+    "labelPrinter": "Etikettendrucker",
+    "manageSalePeriod": "Preis und Verkaufszeitraum"
   },
   "sales": {
     "title": "Verkäufe",
@@ -1459,7 +1460,13 @@
     },
     "listIntro": "Preise und Verkaufszeiträume im Überblick. Öffnen Sie einen Artikel, um Änderungen vorzunehmen.",
     "previous": "Zurück",
-    "next": "Weiter"
+    "next": "Weiter",
+    "search": "Artikel suchen",
+    "searchHint": "Beschreibung oder Etikettenreferenz",
+    "clearSearch": "Suche löschen",
+    "matches": "Treffer: {count}",
+    "noMatches": "Keine Artikel entsprechen der Suche im gewählten Status.",
+    "searchScopeHint": "Die Suche filtert nur die Liste. Der Preissenkungslauf gilt für das gesamte Geschäft."
   },
   "openByReference": {
     "title": "Über Etikett öffnen",

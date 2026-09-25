@@ -1013,7 +1013,8 @@
     "nextPage": "Next",
     "pageOf": "Page {page} of {pages}",
     "currentPrice": "Current price",
-    "labelPrinter": "Label printer"
+    "labelPrinter": "Label printer",
+    "manageSalePeriod": "Price and sale period"
   },
   "sales": {
     "title": "Sales",
@@ -1459,7 +1460,13 @@
     },
     "listIntro": "See prices and sale periods. Expand an item to make changes.",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "search": "Find item",
+    "searchHint": "Description or label reference",
+    "clearSearch": "Clear search",
+    "matches": "Matches: {count}",
+    "noMatches": "No items match the search in the selected status.",
+    "searchScopeHint": "Search only filters the list. The markdown run applies to the whole store."
   },
   "openByReference": {
     "title": "Open by label",

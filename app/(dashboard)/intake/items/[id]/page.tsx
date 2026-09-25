@@ -92,7 +92,18 @@ export default async function Item({
           )}
         </p>
         {active.role !== 'readonly' && (
-          <p>
+          <p className="item-detail-shortcuts">
+            <Link
+              className="btn btn-secondary"
+              href={
+                '/intake/lifecycle?' +
+                new URLSearchParams({ q: reference }) +
+                '#lifecycle-' +
+                item.id
+              }
+            >
+              {d.manageSalePeriod}
+            </Link>
             <Link
               className="btn btn-secondary"
               href={`/intake/items/${item.id}/label`}

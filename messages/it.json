@@ -1013,7 +1013,8 @@
     "nextPage": "Successiva",
     "pageOf": "Pagina {page} di {pages}",
     "currentPrice": "Prezzo attuale",
-    "labelPrinter": "Stampante per etichette"
+    "labelPrinter": "Stampante per etichette",
+    "manageSalePeriod": "Prezzo e periodo di vendita"
   },
   "sales": {
     "title": "Vendite",
@@ -1459,7 +1460,13 @@
     },
     "listIntro": "Consulta prezzi e periodi di vendita. Apri un articolo per modificarlo.",
     "previous": "Precedente",
-    "next": "Successivo"
+    "next": "Successivo",
+    "search": "Cerca articolo",
+    "searchHint": "Descrizione o riferimento etichetta",
+    "clearSearch": "Cancella ricerca",
+    "matches": "Risultati: {count}",
+    "noMatches": "Nessun articolo corrisponde alla ricerca nello stato selezionato.",
+    "searchScopeHint": "La ricerca filtra solo l’elenco. L’applicazione delle riduzioni riguarda tutto il negozio."
   },
   "openByReference": {
     "title": "Apri da etichetta",

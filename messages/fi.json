@@ -1013,7 +1013,8 @@
     "nextPage": "Seuraava",
     "pageOf": "Sivu {page}/{pages}",
     "currentPrice": "Nykyinen hinta",
-    "labelPrinter": "Etikettitulostin"
+    "labelPrinter": "Etikettitulostin",
+    "manageSalePeriod": "Hinta ja myyntijakso"
   },
   "sales": {
     "title": "Myynti",
@@ -1459,7 +1460,13 @@
     },
     "listIntro": "Katso hinnat ja myyntiajat. Avaa tuote tehdäksesi muutoksia.",
     "previous": "Edellinen",
-    "next": "Seuraava"
+    "next": "Seuraava",
+    "search": "Etsi tuote",
+    "searchHint": "Kuvaus tai etiketin tunniste",
+    "clearSearch": "Tyhjennä haku",
+    "matches": "Tuloksia: {count}",
+    "noMatches": "Valitussa tilassa ei ole hakua vastaavia tuotteita.",
+    "searchScopeHint": "Haku suodattaa vain listaa. Hinnanalennusajo koskee koko myymälää."
   },
   "openByReference": {
     "title": "Avaa etiketillä",

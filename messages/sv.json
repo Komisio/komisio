@@ -1013,7 +1013,8 @@
     "nextPage": "Nästa",
     "pageOf": "Sida {page} av {pages}",
     "currentPrice": "Nuvarande pris",
-    "labelPrinter": "Etikettskrivare"
+    "labelPrinter": "Etikettskrivare",
+    "manageSalePeriod": "Pris och säljperiod"
   },
   "sales": {
     "title": "Försäljning",
@@ -1459,7 +1460,13 @@
     },
     "listIntro": "Se pris och säljperiod. Öppna en vara för att göra ändringar.",
     "previous": "Föregående",
-    "next": "Nästa"
+    "next": "Nästa",
+    "search": "Sök vara",
+    "searchHint": "Beskrivning eller etikettreferens",
+    "clearSearch": "Rensa sökning",
+    "matches": "Träffar: {count}",
+    "noMatches": "Inga varor matchar sökningen i valt läge.",
+    "searchScopeHint": "Sökningen påverkar bara listan. Prissänkningskörningen gäller hela butiken."
   },
   "openByReference": {
     "title": "Öppna via etikett",

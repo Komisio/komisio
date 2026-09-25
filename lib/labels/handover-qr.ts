@@ -13,7 +13,6 @@ export function handoverQr(reference: string, appUrl: string) {
   return toSVG({
     bcid: 'qrcode',
     text: handoverCodeUrl(reference, appUrl),
-    eclevel: 'M',
     scale: 4,
     // BWIP uses two base pixels per module: eight padding units give four modules.
     padding: 8,

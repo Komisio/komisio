@@ -107,7 +107,7 @@ export default async function Economy({
                 required
               />
             </div>
-            <button className="btn">{d.show}</button>
+            <button className="btn btn-primary">{d.show}</button>
           </form>
           <p>
             {d.showing} {summary.from} – {summary.to}

@@ -66,7 +66,7 @@ export default async function OpenByReference({
             />
             <small>{d.hint}</small>
           </div>
-          <button className="btn">{d.open}</button>
+          <button className="btn btn-primary">{d.open}</button>
         </form>
         <Link className="text-link" href="/intake">
           {dictionary(ctx.locale).intake.back}

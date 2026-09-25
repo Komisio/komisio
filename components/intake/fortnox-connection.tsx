@@ -116,7 +116,7 @@ export function FortnoxConnection({
           {status.connected && (
             <>
               <a
-                className="btn"
+                className="btn btn-secondary"
                 href={`/api/integrations/fortnox/connect?tenant=${tenantId}`}
               >
                 {d.reconnect}

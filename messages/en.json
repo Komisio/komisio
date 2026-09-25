@@ -2361,7 +2361,12 @@
     "available": "Available",
     "reserved": "Reserved",
     "searchHint": "Name, email, phone, address or city",
-    "clear": "Clear search"
+    "clear": "Clear search",
+    "showingRange": "Showing {from}–{to} of {total} sellers",
+    "pagination": "Seller pages",
+    "previousPage": "Previous",
+    "nextPage": "Next",
+    "pageOf": "Page {page} of {pages}"
   },
   "connectors": {
     "title": "AI assistants",

@@ -1,9 +1,12 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
-import { readSellersOverview } from '@/lib/engine/sellers'
+import {
+  readSellersOverview,
+  readSellersOverviewPage,
+} from '@/lib/engine/sellers'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
 
 /** The store's sellers: search, what the store holds for each, balance, and the way to each seller's page. */
@@ -15,14 +18,35 @@ export default async function Sellers({
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const params = await searchParams
   const q = typeof params.q === 'string' ? params.q.trim().slice(0, 120) : ''
+  const pageSize = 25
+  const requestedPage =
+    typeof params.page === 'string' && /^[1-9]\d{0,6}$/.test(params.page)
+      ? Number(params.page)
+      : 1
+  const pageHref = (page: number) => {
+    const search = new URLSearchParams()
+    if (q) search.set('q', q)
+    if (page > 1) search.set('page', String(page))
+    return '/intake/sellers' + (search.size ? '?' + search.toString() : '')
+  }
   const ctx = await requirePlatform(),
     active = ctx.active!,
     all = dictionary(ctx.locale),
     d = all.sellersList
-  const [currency, overview] = await Promise.all([
+  const [currency, paged] = await Promise.all([
     readStoreCurrency(ctx.client, active.id),
-    readSellersOverview(ctx.client, active.id, q),
+    readSellersOverviewPage(
+      ctx.client,
+      active.id,
+      q,
+      (requestedPage - 1) * pageSize,
+      pageSize,
+    ),
   ])
+  const pages = paged ? Math.max(1, Math.ceil(paged.total / pageSize)) : 1
+  if (paged && requestedPage > pages) redirect(pageHref(pages))
+  const overview =
+    paged ?? (await readSellersOverview(ctx.client, active.id, q))
   const money = (ore: number) => `${formatSignedOre(ore)} ${currency}`
   return (
     <div className="seller-directory-page">
@@ -55,11 +79,19 @@ export default async function Sellers({
         {overview && (
           <p className="seller-directory-count">
             <small>
-              {overview.total <= overview.limit
-                ? d.showingAll.replace('{total}', String(overview.total))
-                : d.showingSome
-                    .replace('{limit}', String(overview.limit))
-                    .replace('{total}', String(overview.total))}
+              {paged && paged.total > 0
+                ? d.showingRange
+                    .replace('{from}', String(paged.offset + 1))
+                    .replace(
+                      '{to}',
+                      String(paged.offset + paged.sellers.length),
+                    )
+                    .replace('{total}', String(paged.total))
+                : overview.total <= overview.limit
+                  ? d.showingAll.replace('{total}', String(overview.total))
+                  : d.showingSome
+                      .replace('{limit}', String(overview.limit))
+                      .replace('{total}', String(overview.total))}
             </small>
           </p>
         )}
@@ -140,6 +172,34 @@ export default async function Sellers({
               </tbody>
             </table>
           </div>
+        )}
+        {paged && pages > 1 && (
+          <nav
+            className="seller-directory-pagination"
+            aria-label={d.pagination}
+          >
+            {requestedPage > 1 && (
+              <Link
+                className="btn btn-secondary"
+                href={pageHref(requestedPage - 1)}
+              >
+                {d.previousPage}
+              </Link>
+            )}
+            <span>
+              {d.pageOf
+                .replace('{page}', String(requestedPage))
+                .replace('{pages}', String(pages))}
+            </span>
+            {requestedPage < pages && (
+              <Link
+                className="btn btn-secondary"
+                href={pageHref(requestedPage + 1)}
+              >
+                {d.nextPage}
+              </Link>
+            )}
+          </nav>
         )}
       </section>
     </div>

@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { QuickSellerPicker } from './quick-seller-picker'
 import { Camera, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
@@ -28,6 +29,7 @@ const PRINTER_KEY = 'komisio-quick-printer'
 export function QuickReception({
   tenantId,
   sellers,
+  sellersTotal = sellers.length,
   printers,
   assistance,
   vocabulary,
@@ -37,6 +39,7 @@ export function QuickReception({
 }: {
   tenantId: string
   sellers: Seller[]
+  sellersTotal?: number
   printers: Printer[]
   assistance: boolean
   vocabulary: AttributeVocabulary
@@ -45,9 +48,8 @@ export function QuickReception({
   bagId?: string
 }) {
   const router = useRouter()
-  const [query, setQuery] = useState(''),
-    [sellerId, setSellerId] = useState<string | null>(
-      bagId ? (sellers[0]?.id ?? null) : null,
+  const [seller, setSeller] = useState<Seller | null>(
+      bagId ? (sellers[0] ?? null) : null,
     ),
     [printerId, setPrinterId] = useState(''),
     [facts, setFacts] = useState<Facts>(emptyFacts),
@@ -90,17 +92,7 @@ export function QuickReception({
     const timer = setTimeout(() => setPrinterId(remembered), 0)
     return () => clearTimeout(timer)
   }, [printers])
-  const seller = sellers.find((s) => s.id === sellerId) ?? null
-  const shown = sellers
-    .filter((s) => {
-      const q = query.trim().toLowerCase()
-      return (
-        !q ||
-        s.name.toLowerCase().includes(q) ||
-        (s.contact ?? '').toLowerCase().includes(q)
-      )
-    })
-    .slice(0, 12)
+  const sellerId = seller?.id ?? null
   const post = async (path: string, body: object) => {
     const r = await fetch(path, {
       method: 'POST',
@@ -349,7 +341,7 @@ export function QuickReception({
                 className="text-link"
                 disabled={busy}
                 onClick={() => {
-                  setSellerId(null)
+                  setSeller(null)
                   next()
                 }}
               >
@@ -358,31 +350,13 @@ export function QuickReception({
             </div>
           ) : (
             <>
-              <div className="field">
-                <label htmlFor="quick-seller-search">{d.searchSeller}</label>
-                <input
-                  id="quick-seller-search"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  maxLength={120}
-                  autoFocus
-                />
-              </div>
-              <ul className="intake-list">
-                {shown.map((s) => (
-                  <li key={s.id}>
-                    <button
-                      type="button"
-                      className="intake-seller"
-                      onClick={() => setSellerId(s.id)}
-                    >
-                      <strong>{s.name}</strong>
-                      <small>{s.contact ?? ''}</small>
-                    </button>
-                  </li>
-                ))}
-                {shown.length === 0 && <li>{d.noSeller}</li>}
-              </ul>
+              <QuickSellerPicker
+                tenantId={tenantId}
+                sellers={sellers}
+                total={sellersTotal}
+                onSelect={setSeller}
+                d={d}
+              />
               <p>
                 <Link className="btn btn-secondary" href="/intake#new-seller">
                   {d.newSeller}

@@ -103,7 +103,14 @@
       "IMAGE_TOO_LARGE": "Kuva on liian suuri (enintään 3 Mt).",
       "REQUEST_FAILED": "Pyyntö epäonnistui. Yritä uudelleen."
     },
-    "addPhoto": "Ota tai valitse kuva"
+    "addPhoto": "Ota tai valitse kuva",
+    "sellerSearchHint": "Nimi, sähköposti tai puhelin",
+    "sellerSearching": "Haetaan myyjiä…",
+    "sellerSearchFailed": "Myyjien haku epäonnistui. Yritä uudelleen.",
+    "sellerSearchRetry": "Yritä uudelleen",
+    "sellerSearchRange": "Näytetään {from}–{to} / {total} myyjää",
+    "sellerSearchPrevious": "Edellinen",
+    "sellerSearchNext": "Seuraava"
   },
   "intake": {
     "quickLink": "Pikavastaanotto: yksi näyttö per vaate",

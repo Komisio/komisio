@@ -103,7 +103,14 @@
       "IMAGE_TOO_LARGE": "Bildet er for stort (maks 3 MB).",
       "REQUEST_FAILED": "Forespørselen mislyktes. Prøv igjen."
     },
-    "addPhoto": "Ta eller velg et bilde"
+    "addPhoto": "Ta eller velg et bilde",
+    "sellerSearchHint": "Navn, e-post eller telefon",
+    "sellerSearching": "Søker etter selgere…",
+    "sellerSearchFailed": "Kunne ikke søke etter selgere. Prøv igjen.",
+    "sellerSearchRetry": "Prøv igjen",
+    "sellerSearchRange": "Viser {from}–{to} av {total} selgere",
+    "sellerSearchPrevious": "Forrige",
+    "sellerSearchNext": "Neste"
   },
   "intake": {
     "quickLink": "Hurtigmottak: én skjerm per plagg",

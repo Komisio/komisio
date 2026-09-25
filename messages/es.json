@@ -103,7 +103,14 @@
       "IMAGE_TOO_LARGE": "La foto es demasiado grande (máximo 3 MB).",
       "REQUEST_FAILED": "La solicitud falló. Vuelve a intentarlo."
     },
-    "addPhoto": "Hacer o elegir una foto"
+    "addPhoto": "Hacer o elegir una foto",
+    "sellerSearchHint": "Nombre, correo o teléfono",
+    "sellerSearching": "Buscando vendedores…",
+    "sellerSearchFailed": "No se pudieron buscar vendedores. Inténtalo de nuevo.",
+    "sellerSearchRetry": "Reintentar",
+    "sellerSearchRange": "Mostrando {from}–{to} de {total} vendedores",
+    "sellerSearchPrevious": "Anterior",
+    "sellerSearchNext": "Siguiente"
   },
   "intake": {
     "quickLink": "Recepción rápida: una pantalla por prenda",

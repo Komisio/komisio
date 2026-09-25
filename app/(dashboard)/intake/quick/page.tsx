@@ -22,7 +22,7 @@ export default async function QuickIntake() {
   const profile =
     (policy.data?.policy?.intakeProfile as string | undefined) ?? 'quick'
   const [sellers, printers, assistance, vocabulary] = await Promise.all([
-    readSellersOverview(ctx.client, a.id, '', 100),
+    readSellersOverview(ctx.client, a.id, '', 12),
     readPrinters(ctx.client, a.id),
     resolveReceptionAssistance(ctx.client, a.id),
     readAttributeVocabulary(ctx.client, a.id),
@@ -47,6 +47,7 @@ export default async function QuickIntake() {
         <QuickReception
           key={a.id}
           tenantId={a.id}
+          sellersTotal={sellers?.total ?? 0}
           sellers={(sellers?.sellers ?? []).map((s) => ({
             id: s.id,
             name: s.name,

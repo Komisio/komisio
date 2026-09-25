@@ -103,7 +103,14 @@
       "IMAGE_TOO_LARGE": "Fotoet er for stort (højst 3 MB).",
       "REQUEST_FAILED": "Forespørgslen mislykkedes. Prøv igen."
     },
-    "addPhoto": "Tag eller vælg et billede"
+    "addPhoto": "Tag eller vælg et billede",
+    "sellerSearchHint": "Navn, e-mail eller telefon",
+    "sellerSearching": "Søger efter sælgere…",
+    "sellerSearchFailed": "Kunne ikke søge efter sælgere. Prøv igen.",
+    "sellerSearchRetry": "Prøv igen",
+    "sellerSearchRange": "Viser {from}–{to} af {total} sælgere",
+    "sellerSearchPrevious": "Forrige",
+    "sellerSearchNext": "Næste"
   },
   "intake": {
     "quickLink": "Hurtig modtagelse: én skærm pr. stykke tøj",

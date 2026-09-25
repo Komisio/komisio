@@ -103,7 +103,14 @@
       "IMAGE_TOO_LARGE": "Fotot är för stort (högst 3 MB).",
       "REQUEST_FAILED": "Förfrågan misslyckades. Försök igen."
     },
-    "addPhoto": "Ta eller välj en bild"
+    "addPhoto": "Ta eller välj en bild",
+    "sellerSearchHint": "Namn, e-post eller telefon",
+    "sellerSearching": "Söker säljare…",
+    "sellerSearchFailed": "Det gick inte att söka säljare. Försök igen.",
+    "sellerSearchRetry": "Försök igen",
+    "sellerSearchRange": "Visar {from}–{to} av {total} säljare",
+    "sellerSearchPrevious": "Föregående",
+    "sellerSearchNext": "Nästa"
   },
   "intake": {
     "quickLink": "Snabb mottagning: en skärm per plagg",

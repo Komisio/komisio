@@ -23,7 +23,9 @@ test('bag reception saves one item at a time with optional photo and inherited s
       ])
     ).rows[0].id
     await f.commit()
+    await page.setViewportSize({ width: 320, height: 720 })
     await page.goto(`/intake/bags/${bag}/inspect`)
+    await expect(page.locator('.quick-item h2')).not.toBeFocused()
     await expect(
       page.getByText('Synthetic P2 seller', { exact: false }).first(),
     ).toBeVisible()
@@ -44,6 +46,12 @@ test('bag reception saves one item at a time with optional photo and inherited s
     await expect(
       page.getByLabel(d.quickIntake.description, { exact: true }),
     ).toHaveValue('')
+    await expect(page.locator('.quick-item h2')).toBeFocused()
+    await expect(page.locator('.quick-item h2')).toBeInViewport()
+    await page.screenshot({
+      path: test.info().outputPath('next-item-mobile.png'),
+      caret: 'initial',
+    })
     const photo = await sharp({
       create: { width: 80, height: 80, channels: 3, background: '#346789' },
     })

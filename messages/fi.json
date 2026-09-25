@@ -1477,11 +1477,13 @@
   },
   "openByReference": {
     "title": "Avaa etiketillä",
-    "intro": "Kirjoita tai skannaa tuontierän etikettiin (K-n) tai vaatteen etikettiin (G-n) painettu viite.",
+    "intro": "Kirjoita tai skannaa tuontierän (K-n), vaatteen (G-n) tai tuotteen (I-XXXXXXXX) tunnus.",
     "reference": "Etiketin viite",
-    "hint": "Esimerkiksi K-12 tuontierälle tai G-7 vaatteelle.",
+    "hint": "Esimerkiksi K-12, G-7 tai I-A1B2C3D4.",
     "open": "Avaa",
-    "notFound": "Mikään tässä kaupassa ei kanna viitettä {ref}."
+    "notFound": "Mikään tässä kaupassa ei kanna viitettä {ref}.",
+    "ambiguous": "Usealla myymälän tuotteella on tunnus {ref}. Valitse oikea tuote luettelosta.",
+    "chooseMatch": "Näytä vastaavat tuotteet"
   },
   "usage": {
     "title": "Käyttö tässä kuussa",

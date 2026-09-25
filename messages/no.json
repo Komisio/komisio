@@ -1477,11 +1477,13 @@
   },
   "openByReference": {
     "title": "Åpne via etikett",
-    "intro": "Skriv inn eller skann referansen som er trykt på en innleveringsetikett (K-n) eller en plaggetikett (G-n).",
+    "intro": "Skriv eller skann referansen på en innlevering (K-n), et plagg (G-n) eller en vare (I-XXXXXXXX).",
     "reference": "Etikettreferanse",
-    "hint": "For eksempel K-12 for en innlevering eller G-7 for et plagg.",
+    "hint": "For eksempel K-12, G-7 eller I-A1B2C3D4.",
     "open": "Åpne",
-    "notFound": "Ingenting i denne butikken har referansen {ref}."
+    "notFound": "Ingenting i denne butikken har referansen {ref}.",
+    "ambiguous": "Flere varer i butikken har referansen {ref}. Velg riktig vare i listen.",
+    "chooseMatch": "Vis matchende varer"
   },
   "usage": {
     "title": "Bruk denne måneden",

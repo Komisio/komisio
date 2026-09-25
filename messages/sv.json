@@ -1477,11 +1477,13 @@
   },
   "openByReference": {
     "title": "Öppna via etikett",
-    "intro": "Skriv eller skanna referensen på en inlämningsetikett (K-n) eller en plaggetikett (G-n).",
+    "intro": "Skriv eller skanna referensen på en inlämning (K-n), ett plagg (G-n) eller en vara (I-XXXXXXXX).",
     "reference": "Etikettreferens",
-    "hint": "Till exempel K-12 för en inlämning eller G-7 för ett plagg.",
+    "hint": "Till exempel K-12, G-7 eller I-A1B2C3D4.",
     "open": "Öppna",
-    "notFound": "Inget i butiken bär referensen {ref}."
+    "notFound": "Inget i butiken bär referensen {ref}.",
+    "ambiguous": "Flera varor i butiken har referensen {ref}. Välj rätt vara i listan.",
+    "chooseMatch": "Visa matchande varor"
   },
   "usage": {
     "title": "Användning denna månad",

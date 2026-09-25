@@ -1477,11 +1477,13 @@
   },
   "openByReference": {
     "title": "Apri da etichetta",
-    "intro": "Digita o scansiona il riferimento stampato su un'etichetta di consegna (K-n) o di capo (G-n).",
+    "intro": "Digita o scansiona il riferimento di una consegna (K-n), un capo (G-n) o un articolo (I-XXXXXXXX).",
     "reference": "Riferimento dell'etichetta",
-    "hint": "Ad esempio K-12 per una consegna o G-7 per un capo.",
+    "hint": "Ad esempio K-12, G-7 o I-A1B2C3D4.",
     "open": "Apri",
-    "notFound": "Nulla in questo negozio porta il riferimento {ref}."
+    "notFound": "Nulla in questo negozio porta il riferimento {ref}.",
+    "ambiguous": "Più articoli di questo negozio hanno il riferimento {ref}. Scegli quello corretto dall’elenco.",
+    "chooseMatch": "Mostra articoli corrispondenti"
   },
   "usage": {
     "title": "Utilizzo questo mese",

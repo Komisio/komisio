@@ -23,6 +23,20 @@ printer.
 No account, no password, nothing to type but the code. One device per
 printer; a second computer gets its own code.
 
+## Browser item labels
+
+From an accepted item, choose "Print in browser" for an 80 mm label on ordinary
+paper. Select 100% scale and disable browser headers and footers. The preview
+uses the current item description, price and store currency when opened; reload
+it after a price change. This path does not require a paired print agent or queue
+a printer job. Physical printer output still needs checking with your hardware.
+
+The I-XXXXXXXX reference works in "Open by label" and the desktop search bar.
+It opens an item only in the active store. If two items share the short reference,
+Komisio asks you to choose from matching items rather than opening one arbitrarily.
+K-n, G-n and H-n references retain their existing drop-off, reception and handover
+navigation.
+
 ## How it works
 
 - The device signs in as its own anonymous Supabase user and exchanges the

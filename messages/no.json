@@ -940,13 +940,13 @@
   "items": {
     "title": "Varer",
     "item": "Vare",
-    "intro": "En vare finnes bare etter at butikken har tatt imot et opphav under kjente vilkår. Opphavet forblir beviset; varen fryser vilkårene.",
-    "list": "Mottatte varer",
+    "intro": "Søk blant butikkens varer og se pris og status.",
+    "list": "Vareliste",
     "empty": "Ingen varer tatt imot ennå.",
     "search": "Søk",
     "searchHint": "tekst i tittel eller kategori",
     "searchButton": "Vis",
-    "stage": "Stadium",
+    "stage": "Status",
     "allStages": "Alle stadier",
     "showing": "Viser {shown} av {total} varer, nyeste først.",
     "noMatches": "Ingen varer samsvarer.",
@@ -1005,7 +1005,13 @@
       "accepted": "Tatt imot",
       "price_set": "Pris satt",
       "provenance": "Opphav registrert"
-    }
+    },
+    "clearFilters": "Nullstill filtre",
+    "showingRange": "Viser {from}–{to} av {total} varer",
+    "pagination": "Bla gjennom varer",
+    "previousPage": "Forrige",
+    "nextPage": "Neste",
+    "pageOf": "Side {page} av {pages}"
   },
   "sales": {
     "title": "Salg",
@@ -1630,6 +1636,10 @@
     "wasPrice": "var",
     "until": "til",
     "then": "deretter",
+    "nextPriceManual": "Planlagt pris {price} fra {date}; butikken endrer priser manuelt.",
+    "nextPriceScheduled": "Planlagt pris {price} fra {date}.",
+    "lastPrice": "Ingen flere pristrinn er planlagt.",
+    "daysLeft": "{days} dager igjen",
     "itemStates": {
       "forSale": "til salgs",
       "periodEnding": "salgsperioden slutter snart",

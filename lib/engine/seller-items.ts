@@ -4,8 +4,11 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 // Seller portal: the seller's own items with stage, price and sale facts,
 // projected in SQL under the portal's identity check. Read only.
 const ore = z.union([z.number().int(), z.string()]).transform(Number)
+const percent = z.union([z.number(), z.string()]).transform(Number)
 export const myItems = z.object({
   currency: z.string(),
+  // Whether the store's current policy applies markdown steps itself (absent before the next-step migration).
+  automaticMarkdowns: z.boolean().optional(),
   items: z
     .array(
       z.object({
@@ -29,6 +32,11 @@ export const myItems = z.object({
         endedAs: z.string().nullable(),
         soldAt: z.string().nullable(),
         soldPriceOre: ore.nullable(),
+        // The next frozen markdown step not yet applied, from the engine's
+        // lifecycle facts; null when nothing remains inside the sale period.
+        nextMarkdownAt: z.string().nullable().optional(),
+        nextMarkdownPercent: percent.nullable().optional(),
+        nextPriceOre: ore.nullable().optional(),
       }),
     )
     .max(200),
@@ -57,4 +65,28 @@ export function sellerItemState(item: MyItems['items'][number]) {
   if (item.stage === 'period_ended') return 'periodEnded' as const
   if (item.stage === 'period_ending') return 'periodEnding' as const
   return 'forSale' as const
+}
+
+/**
+ * The next planned price step the engine reports for an unsold item.
+ * Undefined when the read did not carry the fields (a deployment still on
+ * the older read), so the portal says nothing rather than "no step";
+ * null when the engine knows no step remains. Nothing is computed here.
+ */
+export function sellerItemNextStep(item: MyItems['items'][number]) {
+  const state = sellerItemState(item)
+  if (state !== 'forSale' && state !== 'periodEnding') return null
+  if (item.nextMarkdownAt === undefined || item.nextPriceOre === undefined)
+    return undefined
+  if (item.nextMarkdownAt === null || item.nextPriceOre === null) return null
+  return { at: item.nextMarkdownAt, priceOre: item.nextPriceOre }
+}
+
+/** Whole days from now until the period ends, never negative. */
+export function sellerItemDaysLeft(
+  item: MyItems['items'][number],
+  now = Date.now(),
+) {
+  const end = new Date(item.periodEnd).getTime()
+  return Math.max(0, Math.ceil((end - now) / 86_400_000))
 }

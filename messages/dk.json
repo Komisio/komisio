@@ -940,13 +940,13 @@
   "items": {
     "title": "Varer",
     "item": "Vare",
-    "intro": "En vare findes først, når butikken accepterer en oprindelse under kendte vilkår. Oprindelsen forbliver dokumentationen; varen fastfryser vilkårene.",
-    "list": "Accepterede varer",
+    "intro": "Søg blandt butikkens varer og se pris og status.",
+    "list": "Vareliste",
     "empty": "Ingen varer accepteret endnu.",
     "search": "Søg",
     "searchHint": "tekst i titlen eller kategorien",
     "searchButton": "Vis",
-    "stage": "Trin",
+    "stage": "Status",
     "allStages": "Alle trin",
     "showing": "Viser {shown} af {total} varer, nyeste først.",
     "noMatches": "Ingen varer matcher.",
@@ -1005,7 +1005,13 @@
       "accepted": "Accepteret",
       "price_set": "Pris sat",
       "provenance": "Oprindelse registreret"
-    }
+    },
+    "clearFilters": "Ryd filtre",
+    "showingRange": "Viser {from}–{to} af {total} varer",
+    "pagination": "Bladr gennem varer",
+    "previousPage": "Forrige",
+    "nextPage": "Næste",
+    "pageOf": "Side {page} af {pages}"
   },
   "sales": {
     "title": "Salg",
@@ -1630,6 +1636,10 @@
     "wasPrice": "var",
     "until": "indtil",
     "then": "derefter",
+    "nextPriceManual": "Planlagt pris {price} fra {date}; butikken ændrer priser manuelt.",
+    "nextPriceScheduled": "Planlagt pris {price} fra {date}.",
+    "lastPrice": "Der er ikke planlagt flere pristrin.",
+    "daysLeft": "{days} dage tilbage",
     "itemStates": {
       "forSale": "til salg",
       "periodEnding": "salgsperioden slutter snart",

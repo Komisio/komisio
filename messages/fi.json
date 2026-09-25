@@ -940,13 +940,13 @@
   "items": {
     "title": "Tuotteet",
     "item": "Tuote",
-    "intro": "Tuote on olemassa vasta, kun kauppa hyväksyy alkuperän tunnetuilla ehdoilla. Alkuperä säilyy todisteena; tuote jäädyttää ehdot.",
-    "list": "Hyväksytyt tuotteet",
+    "intro": "Hae myymälän tuotteita ja katso niiden hinnat ja tilat.",
+    "list": "Tuotelista",
     "empty": "Tuotteita ei ole vielä hyväksytty.",
     "search": "Hae",
     "searchHint": "teksti otsikossa tai luokassa",
     "searchButton": "Näytä",
-    "stage": "Vaihe",
+    "stage": "Tila",
     "allStages": "Kaikki vaiheet",
     "showing": "Näytetään {shown} / {total} tuotetta, uusimmat ensin.",
     "noMatches": "Yksikään tuote ei täsmää.",
@@ -1005,7 +1005,13 @@
       "accepted": "Hyväksytty",
       "price_set": "Hinta asetettu",
       "provenance": "Alkuperä kirjattu"
-    }
+    },
+    "clearFilters": "Tyhjennä suodattimet",
+    "showingRange": "Näytetään {from}–{to} / {total} tuotetta",
+    "pagination": "Tuotesivut",
+    "previousPage": "Edellinen",
+    "nextPage": "Seuraava",
+    "pageOf": "Sivu {page}/{pages}"
   },
   "sales": {
     "title": "Myynti",
@@ -1630,6 +1636,10 @@
     "wasPrice": "oli",
     "until": "asti",
     "then": "sitten",
+    "nextPriceManual": "Suunniteltu hinta {price} alkaen {date}; kauppa muuttaa hinnat käsin.",
+    "nextPriceScheduled": "Suunniteltu hinta {price} alkaen {date}.",
+    "lastPrice": "Lisää hintaportaita ei ole suunniteltu.",
+    "daysLeft": "{days} päivää jäljellä",
     "itemStates": {
       "forSale": "myynnissä",
       "periodEnding": "myyntijakso päättyy pian",

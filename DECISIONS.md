@@ -718,3 +718,6 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-25: Remove repeated store-name labels above dashboard page titles. The shared store selector and breadcrumb identify the active store; document identities and item/drop-off references remain visible.
 
 - 2026-09-25: Text links use persistent underlines across locales. Standalone actions and seller choices have visible control boundaries and touch targets; navigation retains its distinct styling. Inline links and compact tables keep their density.
+
+- 2026-09-25: Staff item browsing paginates tenant-filtered results in accepted-at descending and ID order, retaining text and stage filters. The original items_overview read remains compatible; paging adds no item writes or permissions.
+- 2026-09-25: The seller portal shows each unsold item's next frozen markdown step (date, price by the engine's own expression) and whether the store applies steps automatically. Read only through my_items; a scheduled step is a plan, never a promise; no item is called ready to collect.

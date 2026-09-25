@@ -940,13 +940,13 @@
   "items": {
     "title": "Artículos",
     "item": "Artículo",
-    "intro": "Un artículo solo existe después de que la tienda acepte un origen según condiciones conocidas. El origen sigue siendo la evidencia; el artículo congela las condiciones.",
-    "list": "Artículos aceptados",
+    "intro": "Busca artículos de la tienda y consulta su precio y estado.",
+    "list": "Lista de artículos",
     "empty": "Aún no hay artículos aceptados.",
     "search": "Buscar",
     "searchHint": "texto en el título o la categoría",
     "searchButton": "Mostrar",
-    "stage": "Etapa",
+    "stage": "Estado",
     "allStages": "Todas las etapas",
     "showing": "Mostrando {shown} de {total} artículos, los más recientes primero.",
     "noMatches": "Ningún artículo coincide.",
@@ -1005,7 +1005,13 @@
       "accepted": "Aceptado",
       "price_set": "Precio fijado",
       "provenance": "Procedencia registrada"
-    }
+    },
+    "clearFilters": "Borrar filtros",
+    "showingRange": "Mostrando {from}–{to} de {total} artículos",
+    "pagination": "Páginas de artículos",
+    "previousPage": "Anterior",
+    "nextPage": "Siguiente",
+    "pageOf": "Página {page} de {pages}"
   },
   "sales": {
     "title": "Ventas",
@@ -1630,6 +1636,10 @@
     "wasPrice": "antes",
     "until": "hasta",
     "then": "después",
+    "nextPriceManual": "Precio previsto {price} a partir del {date}; la tienda cambia los precios a mano.",
+    "nextPriceScheduled": "Precio previsto {price} a partir del {date}.",
+    "lastPrice": "No hay más rebajas previstas.",
+    "daysLeft": "Quedan {days} días",
     "itemStates": {
       "forSale": "en venta",
       "periodEnding": "el periodo de venta termina pronto",

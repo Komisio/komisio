@@ -248,3 +248,38 @@ export function formatOre(value: number | string) {
     rest = ore % 100n
   return `${kronor}.${rest.toString().padStart(2, '0')}`
 }
+
+/** Paged staff directory; null during an application-before-migration rollout. */
+export async function readItemsOverviewPage(
+  client: SupabaseClient,
+  tenantInput: string,
+  filter: {
+    query?: string
+    stage?: string
+    limit?: number
+    offset?: number
+  } = {},
+) {
+  const r = await client.rpc('items_overview_page', {
+    p_tenant: z.uuid().parse(tenantInput),
+    p_query: (filter.query ?? '').trim().slice(0, 120),
+    p_stage: filter.stage ? itemStage.parse(filter.stage) : null,
+    p_limit: z
+      .number()
+      .int()
+      .min(1)
+      .max(100)
+      .parse(filter.limit ?? 25),
+    p_offset: z
+      .number()
+      .int()
+      .min(0)
+      .max(2147483647)
+      .parse(filter.offset ?? 0),
+  })
+  if (r.error?.code === 'PGRST202') return null
+  if (r.error) throw new Error('FORBIDDEN')
+  return itemsOverview
+    .extend({ offset: z.number().int().nonnegative() })
+    .parse(r.data)
+}

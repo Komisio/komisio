@@ -940,13 +940,13 @@
   "items": {
     "title": "Varor",
     "item": "Vara",
-    "intro": "En vara finns först när butiken accepterat ett ursprung under kända villkor. Ursprunget förblir beviset; varan fryser villkoren.",
-    "list": "Accepterade varor",
+    "intro": "Sök bland butikens varor och se pris och status.",
+    "list": "Varulista",
     "empty": "Inga varor accepterade ännu.",
     "search": "Sök",
     "searchHint": "text i titel eller kategori",
     "searchButton": "Visa",
-    "stage": "Stadium",
+    "stage": "Status",
     "allStages": "Alla stadier",
     "showing": "Visar {shown} av {total} varor, nyaste först.",
     "noMatches": "Inga varor matchar.",
@@ -1005,7 +1005,13 @@
       "accepted": "Accepterad",
       "price_set": "Pris satt",
       "provenance": "Ursprung dokumenterat"
-    }
+    },
+    "clearFilters": "Rensa filter",
+    "showingRange": "Visar {from}–{to} av {total} varor",
+    "pagination": "Bläddra bland varor",
+    "previousPage": "Föregående",
+    "nextPage": "Nästa",
+    "pageOf": "Sida {page} av {pages}"
   },
   "sales": {
     "title": "Försäljning",
@@ -1612,6 +1618,10 @@
     "wasPrice": "var",
     "until": "till",
     "then": "sedan",
+    "nextPriceManual": "Planerat pris {price} från {date}; butiken ändrar priser för hand.",
+    "nextPriceScheduled": "Planerat pris {price} från {date}.",
+    "lastPrice": "Inga fler prissteg är planerade.",
+    "daysLeft": "{days} dagar kvar",
     "itemStates": {
       "forSale": "till salu",
       "periodEnding": "säljperioden slutar snart",

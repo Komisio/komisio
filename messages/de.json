@@ -940,13 +940,13 @@
   "items": {
     "title": "Artikel",
     "item": "Artikel",
-    "intro": "Ein Artikel existiert erst, nachdem der Store einen Ursprung zu bekannten Bedingungen angenommen hat. Der Ursprung bleibt der Nachweis; der Artikel friert die Bedingungen ein.",
-    "list": "Angenommene Artikel",
+    "intro": "Finden Sie Artikel im Geschäft und sehen Sie Preis und Status.",
+    "list": "Artikelliste",
     "empty": "Noch keine Artikel angenommen.",
     "search": "Suchen",
     "searchHint": "Text im Titel oder in der Kategorie",
     "searchButton": "Anzeigen",
-    "stage": "Phase",
+    "stage": "Status",
     "allStages": "Alle Phasen",
     "showing": "{shown} von {total} Artikeln, neueste zuerst.",
     "noMatches": "Keine passenden Artikel.",
@@ -1005,7 +1005,13 @@
       "accepted": "Angenommen",
       "price_set": "Preis festgelegt",
       "provenance": "Herkunft erfasst"
-    }
+    },
+    "clearFilters": "Filter zurücksetzen",
+    "showingRange": "Artikel {from}–{to} von {total}",
+    "pagination": "Artikelseiten",
+    "previousPage": "Zurück",
+    "nextPage": "Weiter",
+    "pageOf": "Seite {page} von {pages}"
   },
   "sales": {
     "title": "Verkäufe",
@@ -1630,6 +1636,10 @@
     "wasPrice": "vorher",
     "until": "bis",
     "then": "danach",
+    "nextPriceManual": "Geplanter Preis {price} ab {date}; der Laden ändert Preise von Hand.",
+    "nextPriceScheduled": "Geplanter Preis {price} ab {date}.",
+    "lastPrice": "Keine weiteren Preisstufen sind geplant.",
+    "daysLeft": "Noch {days} Tage",
     "itemStates": {
       "forSale": "im Verkauf",
       "periodEnding": "Verkaufsperiode endet bald",

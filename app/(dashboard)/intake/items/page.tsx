@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary, intlLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
@@ -7,6 +7,7 @@ import {
   itemStage,
   readItems,
   readItemsOverview,
+  readItemsOverviewPage,
   formatOre,
 } from '@/lib/engine/items'
 
@@ -24,16 +25,38 @@ export default async function Items({
     params = await searchParams,
     query = typeof params.q === 'string' ? params.q.trim().slice(0, 120) : '',
     stageParam = typeof params.stage === 'string' ? params.stage : '',
-    stage = itemStage.safeParse(stageParam).success ? stageParam : ''
+    stage = itemStage.safeParse(stageParam).success ? stageParam : '',
+    pageSize = 25,
+    requestedPage =
+      typeof params.page === 'string' && /^[1-9]\d{0,6}$/.test(params.page)
+        ? Number(params.page)
+        : 1
+  const pageHref = (page: number) => {
+    const search = new URLSearchParams()
+    if (query) search.set('q', query)
+    if (stage) search.set('stage', stage)
+    if (page > 1) search.set('page', String(page))
+    return '/intake/items' + (search.size ? '?' + search.toString() : '')
+  }
   const when = (value: string) =>
     new Date(value).toLocaleString(intlLocale(ctx.locale), {
       timeZone: 'Europe/Stockholm',
     })
   // The overview arrives with its migration; until then the plain list stands.
-  const overview = await readItemsOverview(ctx.client, active.id, {
+  const paged = await readItemsOverviewPage(ctx.client, active.id, {
     query,
     stage: stage || undefined,
+    limit: pageSize,
+    offset: (requestedPage - 1) * pageSize,
   })
+  const pageCount = paged ? Math.max(1, Math.ceil(paged.total / pageSize)) : 1
+  if (paged && requestedPage > pageCount) redirect(pageHref(pageCount))
+  const overview =
+    paged ??
+    (await readItemsOverview(ctx.client, active.id, {
+      query,
+      stage: stage || undefined,
+    }))
   const items = overview ? [] : await readItems(ctx.client, active.id)
   return (
     <>
@@ -47,7 +70,11 @@ export default async function Items({
       <section className="card intake-form">
         <h2>{d.list}</h2>
         {overview && (
-          <form action="/intake/items" className="row" role="search">
+          <form
+            action="/intake/items"
+            className="items-directory-filters"
+            role="search"
+          >
             <div className="field">
               <label htmlFor="items-q">{d.search}</label>
               <input
@@ -69,15 +96,25 @@ export default async function Items({
                 ))}
               </select>
             </div>
-            <button className="btn">{d.searchButton}</button>
+            <button className="btn btn-primary">{d.searchButton}</button>
+            {(query || stage) && (
+              <Link className="btn btn-secondary" href="/intake/items">
+                {d.clearFilters}
+              </Link>
+            )}
           </form>
         )}
         {overview && (
           <p>
             <small>
-              {d.showing
-                .replace('{shown}', String(overview.items.length))
-                .replace('{total}', String(overview.total))}
+              {paged && paged.total > 0
+                ? d.showingRange
+                    .replace('{from}', String(paged.offset + 1))
+                    .replace('{to}', String(paged.offset + paged.items.length))
+                    .replace('{total}', String(paged.total))
+                : d.showing
+                    .replace('{shown}', String(overview.items.length))
+                    .replace('{total}', String(overview.total))}
             </small>
           </p>
         )}
@@ -118,6 +155,31 @@ export default async function Items({
             </li>
           ))}
         </ul>
+        {paged && pageCount > 1 && (
+          <nav className="items-directory-pagination" aria-label={d.pagination}>
+            {requestedPage > 1 && (
+              <Link
+                className="btn btn-secondary"
+                href={pageHref(requestedPage - 1)}
+              >
+                {d.previousPage}
+              </Link>
+            )}
+            <span>
+              {d.pageOf
+                .replace('{page}', String(requestedPage))
+                .replace('{pages}', String(pageCount))}
+            </span>
+            {requestedPage < pageCount && (
+              <Link
+                className="btn btn-secondary"
+                href={pageHref(requestedPage + 1)}
+              >
+                {d.nextPage}
+              </Link>
+            )}
+          </nav>
+        )}
         {!items.length && !overview?.items.length && (
           <p>{query || stage ? d.noMatches : d.empty}</p>
         )}

@@ -11,7 +11,12 @@ import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { SellerEconomyForms } from '@/components/seller/economy-forms'
 import { SellerHandovers } from '@/components/seller/handover-forms'
 import { readMyHandovers } from '@/lib/engine/handovers'
-import { readMyItems, sellerItemState } from '@/lib/engine/seller-items'
+import {
+  readMyItems,
+  sellerItemDaysLeft,
+  sellerItemNextStep,
+  sellerItemState,
+} from '@/lib/engine/seller-items'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { SignOut } from '@/components/platform/sign-out'
 import { Brand } from '@/components/platform/brand'
@@ -40,6 +45,10 @@ export default async function SellerPortal({
   if (params.seller && !account) notFound()
   const when = (date: string) =>
     new Date(date).toLocaleString(intlLocale(ctx.locale), {
+      timeZone: 'Europe/Stockholm',
+    })
+  const day = (date: string) =>
+    new Date(date).toLocaleDateString(intlLocale(ctx.locale), {
       timeZone: 'Europe/Stockholm',
     })
   const amount = (ore: number) => `${formatSignedOre(ore)} ${currency}`
@@ -168,7 +177,7 @@ export default async function SellerPortal({
           {mine.items.length === 0 && <p>{d.noItems}</p>}
           {mine.items.length > 0 && (
             <div style={{ overflowX: 'auto' }}>
-              <table>
+              <table className="seller-items">
                 <thead>
                   <tr>
                     <th>{d.item}</th>
@@ -182,13 +191,13 @@ export default async function SellerPortal({
                     const state = sellerItemState(i)
                     return (
                       <tr key={i.id}>
-                        <td>
+                        <td data-label={d.item}>
                           {i.title ?? i.reference}
                           {i.category ? ` · ${i.category}` : ''}
                           <br />
                           <small>{i.reference}</small>
                         </td>
-                        <td>
+                        <td data-label={d.price}>
                           {state === 'sold' && i.soldPriceOre !== null
                             ? amount(i.soldPriceOre)
                             : i.currentPriceOre === null
@@ -201,7 +210,7 @@ export default async function SellerPortal({
                             ? ` (${d.wasPrice} ${amount(i.acceptedPriceOre)})`
                             : ''}
                         </td>
-                        <td>
+                        <td data-label={d.status}>
                           {d.itemStates[state]}
                           {state === 'ended' && i.endedAs
                             ? ` · ${label(d.endedAs, i.endedAs)}`
@@ -211,8 +220,45 @@ export default async function SellerPortal({
                           i.endOfPeriodAction
                             ? ` · ${d.then} ${d.endActions[i.endOfPeriodAction]}`
                             : ''}
+                          {(state === 'forSale' || state === 'periodEnding') &&
+                            (() => {
+                              const next = sellerItemNextStep(i)
+                              const days = sellerItemDaysLeft(i)
+                              // Undefined: the read predates the next-step fields; say nothing about steps.
+                              const text =
+                                next === undefined
+                                  ? ''
+                                  : next
+                                    ? (mine.automaticMarkdowns
+                                        ? d.nextPriceScheduled
+                                        : d.nextPriceManual
+                                      )
+                                        .replace(
+                                          '{price}',
+                                          amount(next.priceOre),
+                                        )
+                                        .replace('{date}', day(next.at))
+                                    : d.lastPrice
+                              const left = d.daysLeft.replace(
+                                '{days}',
+                                String(days),
+                              )
+                              const then =
+                                state === 'forSale' && i.endOfPeriodAction
+                                  ? `, ${d.then} ${d.endActions[i.endOfPeriodAction]}`
+                                  : ''
+                              return (
+                                <>
+                                  <br />
+                                  <small>
+                                    {text} {left}
+                                    {then}
+                                  </small>
+                                </>
+                              )
+                            })()}
                         </td>
-                        <td>
+                        <td data-label={d.itemDate}>
                           {state === 'sold' && i.soldAt
                             ? when(i.soldAt)
                             : state === 'ended'

@@ -36,7 +36,8 @@ const entryRow = z.object({
   kind: ledgerKind,
   amount_ore: ore,
   reference_kind: z.string(),
-  reference_id: z.uuid(),
+  // Persisted PostgreSQL UUIDs may predate RFC-shaped derived identifiers.
+  reference_id: z.guid(),
   reason: z.string(),
   occurred_at: z.iso.datetime({ offset: true }),
 })

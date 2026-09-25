@@ -710,3 +710,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-24: Store flow snapshots count unstarted drop-offs, unaccepted drafts, reception stages and inventory stages across all rows. Counts reuse queue facts; ages mean time since receipt or registration, not time in a stage. Starting work never implies a whole drop-off is complete.
 
 - 2026-09-24: Seller work is grouped under overview, drop-offs, items, finances, terms, communication and details tabs. Seller item reads filter by tenant and seller before pagination and reuse current lifecycle facts. Existing financial operations and permissions remain unchanged.
+
+- 2026-09-25: Seller ledger, statement and communication reads accept persisted PostgreSQL UUID references without requiring RFC version bits. Historical references remain unchanged; command validation, tenant checks and financial rules are unchanged.

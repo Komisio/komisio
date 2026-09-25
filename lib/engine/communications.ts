@@ -34,7 +34,8 @@ const row = z.object({
   subject: z.string(),
   body: z.string(),
   reference_kind: z.string(),
-  reference_id: z.uuid().nullable(),
+  // Persisted PostgreSQL UUIDs may predate RFC-shaped derived identifiers.
+  reference_id: z.guid().nullable(),
   status: communicationStatus,
   queued_at: z.iso.datetime({ offset: true }),
   delivered_at: z.iso.datetime({ offset: true }).nullable(),

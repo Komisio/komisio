@@ -2656,5 +2656,21 @@
       "deliveryOne": "entrega",
       "itemOne": "artículo"
     }
+  },
+  "sellerWorkspace": {
+    "overview": "Resumen",
+    "dropoffs": "Entregas",
+    "items": "Artículos",
+    "economy": "Finanzas",
+    "terms": "Acuerdos y condiciones",
+    "communication": "Comunicación",
+    "details": "Datos",
+    "intro": "Todo sobre el vendedor, en un solo lugar.",
+    "recent": "Movimientos recientes",
+    "showing": "Mostrando {shown} de {total}",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "noDropoffs": "No hay entregas registradas para este vendedor.",
+    "noItems": "No hay artículos registrados para este vendedor."
   }
 }

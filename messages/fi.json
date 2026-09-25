@@ -2656,5 +2656,21 @@
       "deliveryOne": "tuontierä",
       "itemOne": "tuote"
     }
+  },
+  "sellerWorkspace": {
+    "overview": "Yleiskatsaus",
+    "dropoffs": "Tuontierät",
+    "items": "Tuotteet",
+    "economy": "Talous",
+    "terms": "Sopimukset ja ehdot",
+    "communication": "Viestintä",
+    "details": "Tiedot",
+    "intro": "Kaikki myyjän tiedot yhdessä paikassa.",
+    "recent": "Viimeisimmät tilitapahtumat",
+    "showing": "Näytetään {shown}/{total}",
+    "previous": "Edellinen",
+    "next": "Seuraava",
+    "noDropoffs": "Myyjälle ei ole kirjattu tuontieriä.",
+    "noItems": "Myyjälle ei ole kirjattu tuotteita."
   }
 }

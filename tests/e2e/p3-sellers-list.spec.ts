@@ -70,6 +70,9 @@ test('the sellers list shows holdings and balance and opens the seller', async (
     await expect(
       page.getByRole('heading', { name: d.sellerProfile.balance, exact: true }),
     ).toBeVisible()
+    await page
+      .getByRole('tab', { name: d.sellerWorkspace.terms, exact: true })
+      .click()
     await expect(page.locator('#terms-rate')).not.toBeVisible()
     await page.getByText(d.sellerProfile.editTerms, { exact: true }).click()
     await expect(page.locator('#terms-rate')).toBeVisible()
@@ -89,8 +92,7 @@ test('the sellers list shows holdings and balance and opens the seller', async (
       fullPage: true,
     })
     await page
-      .locator('summary')
-      .filter({ hasText: d.communications.title })
+      .getByRole('tab', { name: d.sellerWorkspace.communication, exact: true })
       .click()
     await expect(
       page.getByRole('button', { name: d.communications.send, exact: true }),

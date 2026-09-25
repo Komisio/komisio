@@ -2650,5 +2650,21 @@
       "deliveryOne": "inlämning",
       "itemOne": "vara"
     }
+  },
+  "sellerWorkspace": {
+    "overview": "Översikt",
+    "dropoffs": "Inlämningar",
+    "items": "Varor",
+    "economy": "Ekonomi",
+    "terms": "Avtal & villkor",
+    "communication": "Kommunikation",
+    "details": "Uppgifter",
+    "intro": "Allt om säljaren, samlat på ett ställe.",
+    "recent": "Senaste kontohändelser",
+    "showing": "Visar {shown} av {total}",
+    "previous": "Föregående",
+    "next": "Nästa",
+    "noDropoffs": "Inga inlämningar registrerade för säljaren.",
+    "noItems": "Inga varor registrerade för säljaren."
   }
 }

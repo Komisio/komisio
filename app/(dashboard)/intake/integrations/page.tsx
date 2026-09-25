@@ -124,7 +124,6 @@ export default async function Integrations({
   return (
     <>
       <div className="page-heading">
-        <div className="eyebrow">{a.name}</div>
         <h1>{all.nav.integrations}</h1>
         <p>{all.integrationPage.intro}</p>
         <Link className="text-link" href="/intake">

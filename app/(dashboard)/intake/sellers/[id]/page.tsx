@@ -199,7 +199,6 @@ export default async function Seller({
         ← {all.sellersList.title}
       </Link>
       <div className="page-heading">
-        <div className="eyebrow">{tenant.name}</div>
         <h1>{seller.data.name}</h1>
         <p>{w.intro}</p>
         <div className="seller-contact">

@@ -27,7 +27,6 @@ export default async function Handovers({
   return (
     <>
       <div className="page-heading">
-        <div className="eyebrow">{active.name}</div>
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
         <Link className="text-link" href="/intake">

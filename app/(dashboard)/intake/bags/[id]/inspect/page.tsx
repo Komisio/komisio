@@ -96,7 +96,7 @@ export default async function InspectBag({
     <>
       <div className="page-heading">
         <p className="eyebrow">
-          {ctx.active!.name} · {d.intake.bag} K-{bag.reference}
+          {d.intake.bag} K-{bag.reference}
         </p>
         <h1>{s.title}</h1>
         <p>{s.pilot}</p>

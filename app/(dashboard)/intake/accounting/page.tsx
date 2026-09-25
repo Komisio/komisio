@@ -102,7 +102,6 @@ export default async function Accounting({
   return (
     <>
       <div className="page-heading">
-        <div className="eyebrow">{active.name}</div>
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
       </div>

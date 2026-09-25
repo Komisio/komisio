@@ -808,7 +808,7 @@ test('register, verify, create stores, invite, isolate and administer access', a
   })
   expect(stale.status()).toBe(409)
   await page.getByLabel('Aktiv butik').first().selectOption(tenantA)
-  await expect(page.locator('.page-heading .eyebrow')).toHaveText(
+  await expect(page.locator('.topbar .breadcrumb')).toContainText(
     'E2E Gröna Garderoben',
   )
   await page.screenshot({
@@ -974,7 +974,7 @@ test('admin and readonly permissions stay scoped to each store', async ({
       (await command(admin, { action: 'select', tenantId: tenantB })).ok(),
     ).toBe(false)
     await reader.getByLabel('Aktiv butik').first().selectOption(tenantA)
-    await expect(reader.locator('.page-heading .eyebrow')).toHaveText(
+    await expect(reader.locator('.topbar .breadcrumb')).toContainText(
       'E2E Admin Renamed',
     )
     expect(

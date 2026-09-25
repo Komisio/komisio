@@ -83,7 +83,16 @@ test('seller reads own economy, requests payout and opts out without becoming st
     expect(row.status).toBe('requested')
     expect(row.requested_by).not.toBe(owner)
     await page.getByRole('checkbox').uncheck()
+    // Wait for persistence before reloading; the checkbox changes immediately.
+    const savedPreference = page.waitForResponse(
+      (response) =>
+        response.url().endsWith('/api/seller/economy') &&
+        response.request().method() === 'POST' &&
+        response.request().postDataJSON()?.action === 'notifications',
+    )
     await page.getByRole('button', { name: 'Spara mejlval' }).click()
+    expect((await savedPreference).ok()).toBe(true)
+    await expect(page.getByRole('status')).toHaveText('Sparat.')
     await expect(page.getByRole('checkbox')).not.toBeChecked()
     await page.reload()
     await expect(page.getByRole('checkbox')).not.toBeChecked()

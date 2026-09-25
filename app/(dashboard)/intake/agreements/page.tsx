@@ -50,7 +50,6 @@ export default async function Agreements({
   return (
     <>
       <div className="page-heading">
-        <div className="eyebrow">{active.name}</div>
         <h1>{a.title}</h1>
         <p>{a.intro}</p>
         <Link className="text-link" href="/intake">

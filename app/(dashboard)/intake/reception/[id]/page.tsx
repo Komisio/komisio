@@ -234,7 +234,6 @@ export default async function Reception({
         {d.back}
       </Link>
       <div className="page-heading">
-        <div className="eyebrow">{tenant.name}</div>
         <h1>{accepted ? d.storeReview.registered : d.workspace.title}</h1>
         <p className="reception-seller-name">{seller.data.name}</p>
         <p>

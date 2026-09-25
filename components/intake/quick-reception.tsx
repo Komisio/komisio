@@ -384,7 +384,7 @@ export function QuickReception({
                 {shown.length === 0 && <li>{d.noSeller}</li>}
               </ul>
               <p>
-                <Link className="text-link" href="/intake">
+                <Link className="btn btn-secondary" href="/intake#new-seller">
                   {d.newSeller}
                 </Link>
               </p>

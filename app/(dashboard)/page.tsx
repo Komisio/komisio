@@ -57,7 +57,6 @@ export default async function Home() {
   return (
     <>
       <div className="page-heading">
-        <div className="eyebrow">{active.name}</div>
         <h1>
           {d.hello}
           {ctx.profile?.display_name ? `, ${ctx.profile.display_name}` : '.'}

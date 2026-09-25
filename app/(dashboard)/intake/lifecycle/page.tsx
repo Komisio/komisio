@@ -54,7 +54,6 @@ export default async function Lifecycle({
   return (
     <>
       <div className="page-heading">
-        <div className="eyebrow">{active.name}</div>
         <h1>{d.title}</h1>
         <p>{d.listIntro}</p>
         <Link className="text-link" href="/intake">

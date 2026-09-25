@@ -16,7 +16,6 @@ export default async function MenuPage() {
   return (
     <>
       <div className="page-heading">
-        <div className="eyebrow">{ctx.active!.name}</div>
         <h1>{d.nav.more}</h1>
       </div>
       {groups.map((group, i) => (

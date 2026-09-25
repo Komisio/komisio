@@ -714,3 +714,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-25: Seller ledger, statement and communication reads accept persisted PostgreSQL UUID references without requiring RFC version bits. Historical references remain unchanged; command validation, tenant checks and financial rules are unchanged.
 
 - 2026-09-25: Owner prioritizes mobile-first store workflows with fewer taps and less scrolling. The seller directory uses a compact heading, direct contact links and responsive rows; desktop separates email and phone. All locales share the layout.
+
+- 2026-09-25: Remove repeated store-name labels above dashboard page titles. The shared store selector and breadcrumb identify the active store; document identities and item/drop-off references remain visible.

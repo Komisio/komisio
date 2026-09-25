@@ -32,7 +32,6 @@ export default async function OperationDetail({
   return (
     <>
       <div className="page-heading">
-        <div className="eyebrow">{active.name}</div>
         <h1>{d.reviewProposal}</h1>
         <Link className="text-link" href="/intake/operations">
           {d.title}

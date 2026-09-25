@@ -83,7 +83,6 @@ export default async function Intake({
   return (
     <div className="intake-overview">
       <div className="page-heading">
-        <div className="eyebrow">{active.name}</div>
         <h1>{d.title}</h1>
         <p>{d.overviewIntro}</p>
       </div>

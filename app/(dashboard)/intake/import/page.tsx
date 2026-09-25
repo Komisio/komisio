@@ -14,7 +14,6 @@ export default async function Import() {
   return (
     <>
       <div className="page-heading">
-        <div className="eyebrow">{active.name}</div>
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
         <Link className="text-link" href="/intake/sellers">

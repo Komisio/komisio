@@ -48,7 +48,6 @@ export default async function Receptions({
         <Link className="text-link" href="/intake/operations">
           {dictionary(ctx.locale).nav.workShort}
         </Link>
-        <div className="eyebrow">{tenant.name}</div>
         <h1>{d.title}</h1>
         <p>{d.overviewIntro}</p>
       </div>

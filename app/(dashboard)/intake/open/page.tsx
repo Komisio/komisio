@@ -47,7 +47,6 @@ export default async function OpenByReference({
   return (
     <>
       <div className="page-heading">
-        <div className="eyebrow">{tenant.name}</div>
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
       </div>

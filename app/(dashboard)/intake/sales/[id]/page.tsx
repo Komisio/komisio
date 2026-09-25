@@ -40,7 +40,6 @@ export default async function Sale({
         {d.backToList}
       </Link>
       <div className="page-heading">
-        <div className="eyebrow">{active.name}</div>
         <h1>
           {d.receipt} {formatOre(sale.total_ore)} {currency}
         </h1>

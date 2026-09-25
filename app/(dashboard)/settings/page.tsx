@@ -141,7 +141,6 @@ export default async function Settings({
   return (
     <>
       <div className="page-heading">
-        <div className="eyebrow">{active.name}</div>
         <h1>{d.tenant}</h1>
         <p>{d.tenantIntro}</p>
         {intake && (

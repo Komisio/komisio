@@ -53,7 +53,6 @@ export default async function Item({
         {d.backToList}
       </Link>
       <div className="page-heading">
-        <div className="eyebrow">{active.name}</div>
         <h1>
           {d.item} {d.originKinds[item.origin_kind]}
         </h1>

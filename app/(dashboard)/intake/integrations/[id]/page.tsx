@@ -25,7 +25,6 @@ export default async function Receipt({
   return (
     <>
       <div className="page-heading">
-        <div className="eyebrow">{a.name}</div>
         <h1>{d.receipt}</h1>
         <p>{r.external_id}</p>
         <Link className="text-link" href="/intake/integrations">

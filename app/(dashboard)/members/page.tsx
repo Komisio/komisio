@@ -23,7 +23,6 @@ export default async function Members() {
   return (
     <>
       <div className="page-heading">
-        <div className="eyebrow">{active.name}</div>
         <h1>{d.members}</h1>
         <p>{d.membersIntro}</p>
       </div>

@@ -160,7 +160,6 @@ export function StoreGuide({
   }
   return (
     <section className="store-guide" aria-label={c.start}>
-      <div className="eyebrow">{tenantName}</div>
       <p>
         {summary ? c.summary : `${c.step} ${step + 1} ${c.of} ${steps.length}`}
       </p>

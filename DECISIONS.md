@@ -730,3 +730,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-25: Seller handover QR codes encode only a same-application H-reference lookup for staff cameras. Codes load on demand under seller identity; opening still requires staff login/MFA, active-store lookup and explicit custody confirmation.
 
 - 2026-09-25: Staff handover browsing searches the full active-store queue by seller name or H-reference, filters status and pages25 with stable ordering, open first. Existing role/RLS and custody confirmation apply; the legacy100 read remains only for rolling deployment.
+
+- 2026-09-26: A complete H-number in staff handover search matches only that reference in the active store. Other text keeps literal partial matching. Status, role, RLS and custody rules are unchanged.

@@ -172,7 +172,9 @@ export default async function Handovers({
           write={active.role !== 'readonly'}
           focus={focus.success ? focus.data : null}
           locale={ctx.locale}
-          d={q || status !== 'all' ? { ...d, empty: d.noMatches } : d}
+          d={
+            result && (q || status !== 'all') ? { ...d, empty: d.noMatches } : d
+          }
           intake={all.intake}
         />
         {pager}

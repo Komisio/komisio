@@ -2707,7 +2707,11 @@
       "scope": "Age is measured from receipt or registration, not entry into the current stage. A started drop-off may contain more unregistered items. Labelling and payouts are outside this overview.",
       "showEmpty": "Show empty stages too",
       "deliveryOne": "drop-off",
-      "itemOne": "item"
+      "itemOne": "item",
+      "announcements": "Pre-announcements",
+      "announcementsHelp": "Planned drop-offs that have not yet been received.",
+      "announcementsUnavailable": "Pre-announcements could not be loaded.",
+      "receiving": "Receiving"
     }
   },
   "sellerWorkspace": {

@@ -10,12 +10,14 @@ import { itemStage } from '@/lib/engine/items'
 
 export function StoreFlowNow({
   snapshot,
+  announcedCount,
   d,
   stages,
   inventoryStages,
   locale,
 }: {
   snapshot: FlowSnapshot | null
+  announcedCount: number | null
   d: Dictionary['storeFlow']['live']
   stages: Dictionary['reception']['queueStages']
   inventoryStages: Dictionary['lifecycle']['stages']
@@ -130,7 +132,20 @@ export function StoreFlowNow({
           </label>
           <div className="flow-live-grid">
             <section className="flow-live-column">
-              <h2>1 · {d.dropoffs}</h2>
+              <h2>1 · {d.receiving}</h2>
+              {announcedCount === null ? (
+                <p role="status">{d.announcementsUnavailable}</p>
+              ) : (
+                card(
+                  'announcements',
+                  d.announcements,
+                  { count: announcedCount, oldest: null },
+                  '/intake/handovers?status=open',
+                  d.received,
+                  d.deliveries,
+                  d.announcementsHelp,
+                )
+              )}
               {card(
                 'dropoffs',
                 d.dropoffs,

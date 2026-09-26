@@ -2707,7 +2707,11 @@
       "scope": "Il tempo si misura dalla ricezione o dalla registrazione, non dall’ingresso nella fase attuale. Una consegna iniziata può contenere altri articoli non registrati. Etichettatura e pagamenti non rientrano in questa panoramica.",
       "showEmpty": "Mostra anche le fasi vuote",
       "deliveryOne": "consegna",
-      "itemOne": "articolo"
+      "itemOne": "articolo",
+      "announcements": "Preavvisi di consegna",
+      "announcementsHelp": "Consegne previste non ancora ricevute.",
+      "announcementsUnavailable": "Impossibile caricare i preavvisi di consegna.",
+      "receiving": "Ricezione"
     }
   },
   "sellerWorkspace": {

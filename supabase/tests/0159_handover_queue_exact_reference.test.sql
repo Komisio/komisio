@@ -1,0 +1,24 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values ('f0000000-0000-4000-8000-000000001591','exact-handover@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000001591","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Exact handover test','exact-handover-test',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Synthetic reference seller','exact-handover@example.test','')::text,true);
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"custodySources":["staff_receipt","seller_dropoff"]}'::jsonb);
+do $$ begin for n in 1..11 loop
+ perform public.create_my_handover(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'box',1,'Synthetic reference test');
+end loop; end $$;
+select set_config('test.ref',(select max(reference)::text from seller_handovers where tenant_id=current_setting('test.tenant')::uuid),true);
+select set_config('test.prefix',left(current_setting('test.ref'),length(current_setting('test.ref'))-1),true);
+select is((handover_queue_page(current_setting('test.tenant')::uuid,'H-'||current_setting('test.ref'))->>'total')::int,1,'full reference returns one record');
+select is(handover_queue_page(current_setting('test.tenant')::uuid,' h-'||current_setting('test.ref')||' ')->'handovers'->0->>'reference','H-'||current_setting('test.ref'),'case and surrounding spaces normalized');
+select is((handover_queue_page(current_setting('test.tenant')::uuid,'H-'||current_setting('test.prefix'))->>'total')::int,(select count(*)::int from seller_handovers where tenant_id=current_setting('test.tenant')::uuid and reference::text=current_setting('test.prefix')),'full shorter reference does not match longer references');
+select is((handover_queue_page(current_setting('test.tenant')::uuid,'H-')->>'total')::int,11,'incomplete reference retains partial search');
+select is((handover_queue_page(current_setting('test.tenant')::uuid,'reference SELLER')->>'total')::int,11,'seller name search unchanged');
+select is((handover_queue_page(current_setting('test.tenant')::uuid,'H-'||current_setting('test.ref'),'received')->>'total')::int,0,'exact lookup still respects status');
+select is((handover_queue_page(current_setting('test.tenant')::uuid,'H-999999999999999999999999999999999')->>'total')::int,0,'oversized numeric reference is safely compared without casting');
+select is((handover_queue_page(current_setting('test.tenant')::uuid,'%')->>'total')::int,0,'wildcard remains literal');
+select * from finish();
+rollback;

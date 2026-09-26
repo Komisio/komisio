@@ -1186,8 +1186,8 @@
   },
   "handovers": {
     "title": "Forhåndsmeldinger",
-    "intro": "Selgernes planlagte innleveringer. Bekreft mottak når varene er i butikken.",
-    "disabled": "Egen innlevering er av: aktiver seller_dropoff blant besittelseskildene i butikkpolicyen.",
+    "intro": "Bekreft mottak når varene er i butikken.",
+    "disabled": "Forhåndsmeldinger er slått av.",
     "empty": "Ingen overleveringer meldt inn.",
     "announced": "Meldt inn",
     "items": "varer",
@@ -1212,7 +1212,9 @@
     "showingRange": "Viser {from}–{to} av {total} forhåndsmeldinger",
     "pagination": "Sider med forhåndsmeldinger",
     "noMatches": "Ingen forhåndsmeldinger samsvarer med filtrene.",
-    "limited": "Midlertidig vises bare de 100 nyeste forhåndsmeldingene. Åpne en eldre med H-referansen."
+    "limited": "Midlertidig vises bare de 100 nyeste forhåndsmeldingene. Åpne en eldre med H-referansen.",
+    "settings": "Åpne innstillinger",
+    "askOwner": "Be en eier eller administrator om å aktivere funksjonen."
   },
   "chain": {
     "title": "Kjede",

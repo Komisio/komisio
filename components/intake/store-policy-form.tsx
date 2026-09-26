@@ -153,7 +153,11 @@ export function StorePolicyForm({
             </div>
           ))}
           {Object.entries(subsets).map(([key, options]) => (
-            <fieldset key={key}>
+            <fieldset
+              key={key}
+              id={`policy-${key}`}
+              style={{ scrollMarginTop: '1rem' }}
+            >
               <legend>{t[key as keyof typeof subsets]}</legend>
               {options.map((value) => (
                 <label className="intake-confirm" key={value}>

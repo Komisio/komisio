@@ -1186,8 +1186,8 @@
   },
   "handovers": {
     "title": "Forhåndsanmeldelser",
-    "intro": "Sælgernes planlagte indleveringer. Bekræft modtagelsen, når varerne er i butikken.",
-    "disabled": "Selvaflevering er slået fra: aktivér seller_dropoff blandt besiddelseskilderne i butikspolitikken.",
+    "intro": "Bekræft modtagelsen, når varerne er i butikken.",
+    "disabled": "Forhåndstilmeldinger er slået fra.",
     "empty": "Ingen afleveringer anmeldt.",
     "announced": "Anmeldt",
     "items": "varer",
@@ -1212,7 +1212,9 @@
     "showingRange": "Viser {from}–{to} af {total} forhåndsanmeldelser",
     "pagination": "Sider med forhåndsanmeldelser",
     "noMatches": "Ingen forhåndsanmeldelser matcher filtrene.",
-    "limited": "Midlertidigt vises kun de 100 seneste forhåndsanmeldelser. Åbn en ældre via dens H-reference."
+    "limited": "Midlertidigt vises kun de 100 seneste forhåndsanmeldelser. Åbn en ældre via dens H-reference.",
+    "settings": "Åbn indstillinger",
+    "askOwner": "Bed en ejer eller administrator om at aktivere funktionen."
   },
   "chain": {
     "title": "Kæde",

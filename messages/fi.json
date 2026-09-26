@@ -1186,8 +1186,8 @@
   },
   "handovers": {
     "title": "Ennakkoilmoitukset",
-    "intro": "Myyjien suunnittelemat tuonnit. Vahvista vastaanotto, kun tavarat ovat myymälässä.",
-    "disabled": "Omatoiminen jättö on pois päältä: ota seller_dropoff käyttöön hallussapidon lähteissä kaupan käytännössä.",
+    "intro": "Vahvista vastaanotto, kun tavarat ovat myymälässä.",
+    "disabled": "Ennakkoilmoitukset on poistettu käytöstä.",
     "empty": "Luovutuksia ei ole ilmoitettu.",
     "announced": "Ilmoitettu",
     "items": "tuotetta",
@@ -1212,7 +1212,9 @@
     "showingRange": "Näytetään {from}–{to} / {total} ennakkoilmoitusta",
     "pagination": "Ennakkoilmoitusten sivut",
     "noMatches": "Yksikään ennakkoilmoitus ei vastaa suodattimia.",
-    "limited": "Tilapäisesti näytetään vain 100 uusinta ennakkoilmoitusta. Avaa vanhempi sen H-viitteellä."
+    "limited": "Tilapäisesti näytetään vain 100 uusinta ennakkoilmoitusta. Avaa vanhempi sen H-viitteellä.",
+    "settings": "Avaa asetukset",
+    "askOwner": "Pyydä omistajaa tai ylläpitäjää ottamaan toiminto käyttöön."
   },
   "chain": {
     "title": "Ketju",

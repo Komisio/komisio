@@ -1186,8 +1186,8 @@
   },
   "handovers": {
     "title": "Föranmälningar",
-    "intro": "Säljarnas planerade inlämningar. Bekräfta mottagandet när varorna finns i butiken.",
-    "disabled": "Självinlämning är av: aktivera seller_dropoff bland förvaringskällorna i butikspolicyn.",
+    "intro": "Bekräfta mottagandet när varorna är i butiken.",
+    "disabled": "Föranmälningar är avstängda.",
     "empty": "Inga anmälda inlämningar.",
     "announced": "Anmäld",
     "items": "varor",
@@ -1212,7 +1212,9 @@
     "showingRange": "Visar {from}–{to} av {total} föranmälningar",
     "pagination": "Sidor med föranmälningar",
     "noMatches": "Inga föranmälningar matchar filtren.",
-    "limited": "Tillfälligt visas endast de 100 senaste föranmälningarna. Öppna en äldre föranmälning via dess H-referens."
+    "limited": "Tillfälligt visas endast de 100 senaste föranmälningarna. Öppna en äldre föranmälning via dess H-referens.",
+    "settings": "Öppna inställningar",
+    "askOwner": "Be en ägare eller administratör att aktivera funktionen."
   },
   "chain": {
     "title": "Kedja",

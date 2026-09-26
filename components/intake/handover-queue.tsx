@@ -101,10 +101,15 @@ export function HandoverQueue({
                 className="intake-fields"
                 disabled={action.busy || action.locked}
               >
-                <div className="field">
-                  <label htmlFor={`note-${h.id}`}>{d.note}</label>
-                  <input id={`note-${h.id}`} name="note" maxLength={500} />
-                </div>
+                <details className="handover-note">
+                  <summary>{d.note}</summary>
+                  <div className="field">
+                    <label htmlFor={`note-${h.id}`} className="sr-only">
+                      {d.note}
+                    </label>
+                    <input id={`note-${h.id}`} name="note" maxLength={500} />
+                  </div>
+                </details>
                 <label className="intake-confirm">
                   <input type="checkbox" required />
                   {d.confirm}

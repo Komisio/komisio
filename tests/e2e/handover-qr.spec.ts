@@ -126,6 +126,74 @@ test('seller code loads on demand and staff login returns to the exact handover'
     codeUrl.searchParams.set('seller', seller)
     codeUrl.searchParams.set('tenant', randomUUID())
     expect((await page.request.get(codeUrl.toString())).status()).toBe(404)
+    // The caller's own valid account pair is not enough: the handover itself
+    // must be this seller's and still open. Prepare one cancelled and one
+    // received handover of this seller, and an open one of another seller in
+    // the same store, all through the engine.
+    const cancelled = randomUUID(),
+      received = randomUUID(),
+      other = randomUUID()
+    const otherEmail = `handover-qr-other-${randomUUID()}@example.test`
+    const otherUid = randomUUID()
+    await f.db.query(
+      'insert into auth.users(id,email,email_confirmed_at) values($1,$2,now())',
+      [otherUid, otherEmail],
+    )
+    const otherSeller = await f.asActor(f.actor, async () => {
+      await f.db.query(
+        "select create_my_handover($1,$2,$3,'bag',1,'Synthetic cancelled')",
+        [f.tenant, cancelled, seller],
+      )
+      await f.db.query('select cancel_my_handover($1,$2,$3)', [
+        f.tenant,
+        randomUUID(),
+        cancelled,
+      ])
+      await f.db.query(
+        "select create_my_handover($1,$2,$3,'bag',1,'Synthetic received')",
+        [f.tenant, received, seller],
+      )
+      await f.db.query("select receive_handover($1,$2,$3,'staff_receipt','')", [
+        f.tenant,
+        randomUUID(),
+        received,
+      ])
+      return (
+        await f.db.query('select register_seller($1,$2,$3,$4,$5) id', [
+          f.tenant,
+          randomUUID(),
+          'Synthetic other seller',
+          otherEmail,
+          '',
+        ])
+      ).rows[0].id as string
+    })
+    await f.asActor(otherUid, async () => {
+      await f.db.query(
+        "select create_my_handover($1,$2,$3,'box',3,'Synthetic other open')",
+        [f.tenant, other, otherSeller],
+      )
+    })
+    const referenceOf = async (handoverId: string) =>
+      'H-' +
+      (
+        await f.db.query('select reference from seller_handovers where id=$1', [
+          handoverId,
+        ])
+      ).rows[0].reference
+    codeUrl.searchParams.set('tenant', f.tenant)
+    for (const [handoverId, why] of [
+      [cancelled, 'cancelled handover of this seller'],
+      [received, 'received handover of this seller'],
+      [other, "another seller's open handover in the same store"],
+    ] as const) {
+      codeUrl.searchParams.set('reference', await referenceOf(handoverId))
+      expect((await page.request.get(codeUrl.toString())).status(), why).toBe(
+        404,
+      )
+    }
+    codeUrl.searchParams.set('reference', reference)
+    expect((await page.request.get(codeUrl.toString())).status()).toBe(200)
     expect(writes).toEqual([])
     expect(
       (

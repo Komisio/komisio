@@ -1,7 +1,7 @@
 'use client'
 import { useRef, useState, useEffect } from 'react'
 import { UserPlus, X, Copy } from 'lucide-react'
-import type { Dictionary, Locale } from '@/lib/i18n'
+import { intlLocale, type Dictionary, type Locale } from '@/lib/i18n'
 import {
   can,
   canChangeMember,
@@ -184,7 +184,10 @@ export function MembersPanel({
                   </td>
                   <td className="joined">
                     <small>
-                      {new Date(member.created_at).toLocaleDateString(locale)}
+                      {new Date(member.created_at).toLocaleDateString(
+                        intlLocale(locale),
+                        { timeZone: 'Europe/Stockholm' },
+                      )}
                     </small>
                   </td>
                   {manage && (
@@ -276,7 +279,8 @@ export function MembersPanel({
                       <td>
                         <small>
                           {new Date(invite.expires_at).toLocaleDateString(
-                            locale,
+                            intlLocale(locale),
+                            { timeZone: 'Europe/Stockholm' },
                           )}
                         </small>
                       </td>

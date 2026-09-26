@@ -2924,3 +2924,7 @@ button.text-link:hover:not(:disabled) {
 .members-panel > .card {
   min-width: 0;
 }
+
+.members-panel .table-wrap {
+  position: relative;
+}

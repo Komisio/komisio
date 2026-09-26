@@ -132,11 +132,26 @@ test('an old handover label opens only its exact active-store receipt', async ({
       path: test.info().outputPath('old-handover-mobile.png'),
       caret: 'initial',
     })
+    const note = receipt.getByLabel(d.handovers.note, { exact: true })
+    await expect(note).not.toBeVisible()
+    const noteToggle = receipt.locator('summary', { hasText: d.handovers.note })
+    await noteToggle.click()
+    await note.fill('Synthetic counter note')
+    await noteToggle.click()
+    await expect(note).not.toBeVisible()
     await receipt.getByLabel(d.handovers.confirm, { exact: true }).check()
     await receipt
       .getByRole('button', { name: d.handovers.receive, exact: true })
       .click()
     await expect(receipt).toContainText(d.handovers.statuses.received)
+    expect(
+      (
+        await f.db.query(
+          "select note from handover_events where handover_id=$1 and kind='received'",
+          [id],
+        )
+      ).rows[0].note,
+    ).toBe('Synthetic counter note')
     expect(
       (
         await f.db.query(

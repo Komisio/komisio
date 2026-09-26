@@ -18,3 +18,10 @@
 .handover-disabled .btn {
   min-height: 44px;
 }
+
+.handover-note summary {
+  min-height: 44px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

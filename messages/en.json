@@ -1186,8 +1186,8 @@
   },
   "handovers": {
     "title": "Announced drop-offs",
-    "intro": "Sellers’ planned drop-offs. Confirm receipt when the items are in the store.",
-    "disabled": "Self drop-off is off: enable seller_dropoff among the custody sources in the store policy.",
+    "intro": "Confirm receipt when the items are in the store.",
+    "disabled": "Pre-announcements are turned off.",
     "empty": "No handovers announced.",
     "announced": "Announced",
     "items": "items",
@@ -1212,7 +1212,9 @@
     "showingRange": "Showing {from}–{to} of {total} handovers",
     "pagination": "Handover pages",
     "noMatches": "No handovers match the filters.",
-    "limited": "Only the 100 most recent handovers are temporarily shown. Open an older handover using its H-reference."
+    "limited": "Only the 100 most recent handovers are temporarily shown. Open an older handover using its H-reference.",
+    "settings": "Open settings",
+    "askOwner": "Ask an owner or administrator to enable this feature."
   },
   "chain": {
     "title": "Chain",

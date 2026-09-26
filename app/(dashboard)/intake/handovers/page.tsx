@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import './handovers.css'
 import { notFound, redirect } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
@@ -83,11 +84,13 @@ export default async function Handovers({
       </nav>
     ) : null
   const enabled = policy.policy.custodySources.includes('seller_dropoff')
+  const manages = active.role === 'owner' || active.role === 'admin'
+  const showQueue = rows.length > 0 || !!q || status !== 'all'
   return (
-    <>
+    <div className="handover-page">
       <div className="page-heading">
         <h1>{d.title}</h1>
-        <p>{d.intro}</p>
+        {enabled && <p>{d.intro}</p>}
         {focus.success && (
           <p>
             <Link className="btn btn-secondary" href="/intake/handovers">
@@ -99,86 +102,105 @@ export default async function Handovers({
           {all.intake.back}
         </Link>
       </div>
-      {!enabled && <p className="intake-notice">{d.disabled}</p>}
-      <section className="card intake-form">
-        {!focus.success && (
-          <>
-            {result ? (
-              <form
-                key={q + ':' + status}
-                action="/intake/handovers"
-                className="seller-directory-search handover-queue-search"
-              >
-                <label htmlFor="handovers-q">{d.search}</label>
-                <div className="row">
-                  <input
-                    id="handovers-q"
-                    name="q"
-                    type="search"
-                    defaultValue={q}
-                    maxLength={120}
-                    placeholder={d.searchHint}
-                  />
-                  <div className="field">
-                    <label htmlFor="handovers-status">{d.statusFilter}</label>
-                    <select
-                      id="handovers-status"
-                      name="status"
-                      defaultValue={status}
-                    >
-                      <option value="all">{d.allStatuses}</option>
-                      {(['open', 'received', 'cancelled'] as const).map(
-                        (value) => (
-                          <option key={value} value={value}>
-                            {d.statuses[value]}
-                          </option>
-                        ),
-                      )}
-                    </select>
+      {!enabled && (
+        <section className="card handover-disabled" aria-label={d.disabled}>
+          <p>{d.disabled}</p>
+          {manages ? (
+            <Link
+              className="btn btn-secondary"
+              href="/settings#policy-custodySources"
+            >
+              {d.settings}
+            </Link>
+          ) : (
+            <p>{d.askOwner}</p>
+          )}
+        </section>
+      )}
+      {!showQueue && enabled && <p className="intake-notice">{d.empty}</p>}
+      {showQueue && (
+        <section className="card intake-form">
+          {!focus.success && (
+            <>
+              {result ? (
+                <form
+                  key={q + ':' + status}
+                  action="/intake/handovers"
+                  className="seller-directory-search handover-queue-search"
+                >
+                  <label htmlFor="handovers-q">{d.search}</label>
+                  <div className="row">
+                    <input
+                      id="handovers-q"
+                      name="q"
+                      type="search"
+                      defaultValue={q}
+                      maxLength={120}
+                      placeholder={d.searchHint}
+                    />
+                    <div className="field">
+                      <label htmlFor="handovers-status">{d.statusFilter}</label>
+                      <select
+                        id="handovers-status"
+                        name="status"
+                        defaultValue={status}
+                      >
+                        <option value="all">{d.allStatuses}</option>
+                        {(['open', 'received', 'cancelled'] as const).map(
+                          (value) => (
+                            <option key={value} value={value}>
+                              {d.statuses[value]}
+                            </option>
+                          ),
+                        )}
+                      </select>
+                    </div>
+                    <button className="btn btn-secondary">
+                      {common.searchButton}
+                    </button>
+                    {(q || status !== 'all') && (
+                      <Link className="text-link" href="/intake/handovers">
+                        {all.items.clearFilters}
+                      </Link>
+                    )}
                   </div>
-                  <button className="btn btn-secondary">
-                    {common.searchButton}
-                  </button>
-                  {(q || status !== 'all') && (
-                    <Link className="text-link" href="/intake/handovers">
-                      {all.items.clearFilters}
-                    </Link>
-                  )}
-                </div>
-              </form>
-            ) : (
-              <p role="status">{d.limited}</p>
-            )}
-            {result && (
-              <p>
-                <small>
-                  {d.showingRange
-                    .replace(
-                      '{from}',
-                      String(result.total ? result.offset + 1 : 0),
-                    )
-                    .replace('{to}', String(result.offset + rows.length))
-                    .replace('{total}', String(result.total))}
-                </small>
-              </p>
-            )}
-            {pager}
-          </>
-        )}
-        <HandoverQueue
-          key={`${active.id}-${rows.map((r) => `${r.id}:${r.status}`).join(',')}`}
-          tenantId={active.id}
-          rows={rows}
-          write={active.role !== 'readonly'}
-          focus={focus.success ? focus.data : null}
-          locale={ctx.locale}
-          d={
-            result && (q || status !== 'all') ? { ...d, empty: d.noMatches } : d
-          }
-          intake={all.intake}
-        />
-        {pager}
-      </section>
-    </>
+                </form>
+              ) : (
+                <p role="status">{d.limited}</p>
+              )}
+              {result && (
+                <p>
+                  <small>
+                    {d.showingRange
+                      .replace(
+                        '{from}',
+                        String(result.total ? result.offset + 1 : 0),
+                      )
+                      .replace('{to}', String(result.offset + rows.length))
+                      .replace('{total}', String(result.total))}
+                  </small>
+                </p>
+              )}
+              {pager}
+            </>
+          )}
+          <HandoverQueue
+            key={`${active.id}-${rows.map((r) => `${r.id}:${r.status}`).join(',')}`}
+            tenantId={active.id}
+            rows={rows}
+            write={active.role !== 'readonly'}
+            focus={focus.success ? focus.data : null}
+            locale={ctx.locale}
+            d={
+              result && (q || status !== 'all')
+                ? { ...d, empty: d.noMatches }
+                : d
+            }
+            intake={all.intake}
+          />
+          {pager}
+        </section>
+      )}
+    </div>
   )
 }

@@ -1186,8 +1186,8 @@
   },
   "handovers": {
     "title": "Consegne annunciate",
-    "intro": "Consegne previste dai venditori. Conferma la ricezione quando gli articoli sono in negozio.",
-    "disabled": "La consegna autonoma è disattivata: attiva seller_dropoff tra le fonti di custodia nella politica del negozio.",
+    "intro": "Conferma la ricezione quando gli articoli sono in negozio.",
+    "disabled": "I preavvisi di consegna sono disattivati.",
     "empty": "Nessuna consegna annunciata.",
     "announced": "Annunciata",
     "items": "articoli",
@@ -1212,7 +1212,9 @@
     "showingRange": "Visualizzazione {from}–{to} di {total} consegne",
     "pagination": "Pagine delle consegne",
     "noMatches": "Nessuna consegna corrisponde ai filtri.",
-    "limited": "Temporaneamente sono mostrate solo le 100 consegne più recenti. Aprine una precedente tramite il suo riferimento H."
+    "limited": "Temporaneamente sono mostrate solo le 100 consegne più recenti. Aprine una precedente tramite il suo riferimento H.",
+    "settings": "Apri impostazioni",
+    "askOwner": "Chiedi a un proprietario o amministratore di attivare la funzione."
   },
   "chain": {
     "title": "Catena",

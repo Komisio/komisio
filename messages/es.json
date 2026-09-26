@@ -1186,8 +1186,8 @@
   },
   "handovers": {
     "title": "Entregas anunciadas",
-    "intro": "Entregas previstas de los vendedores. Confirme la recepción cuando los artículos estén en la tienda.",
-    "disabled": "La entrega por el depositante está desactivada: activa seller_dropoff entre las fuentes de custodia en la política de la tienda.",
+    "intro": "Confirma la recepción cuando los artículos estén en la tienda.",
+    "disabled": "Los avisos de entrega están desactivados.",
     "empty": "No hay entregas anunciadas.",
     "announced": "Anunciada",
     "items": "artículos",
@@ -1212,7 +1212,9 @@
     "showingRange": "Mostrando {from}–{to} de {total} entregas",
     "pagination": "Páginas de entregas",
     "noMatches": "Ninguna entrega coincide con los filtros.",
-    "limited": "Temporalmente solo se muestran las 100 entregas más recientes. Abra una anterior mediante su referencia H."
+    "limited": "Temporalmente solo se muestran las 100 entregas más recientes. Abra una anterior mediante su referencia H.",
+    "settings": "Abrir ajustes",
+    "askOwner": "Pide a un propietario o administrador que active esta función."
   },
   "chain": {
     "title": "Cadena",

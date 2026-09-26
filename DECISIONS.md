@@ -728,3 +728,5 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-09-25: Seller item search covers only the verified seller account, with literal title/category/reference matching and 25-row pages. It preserves engine price, sale and next-markdown facts; the legacy capped read remains available during rollout.
 - 2026-09-25: Seller handover QR codes encode only a same-application H-reference lookup for staff cameras. Codes load on demand under seller identity; opening still requires staff login/MFA, active-store lookup and explicit custody confirmation.
+
+- 2026-09-25: Staff handover browsing searches the full active-store queue by seller name or H-reference, filters status and pages25 with stable ordering, open first. Existing role/RLS and custody confirmation apply; the legacy100 read remains only for rolling deployment.

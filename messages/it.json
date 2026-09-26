@@ -1185,8 +1185,8 @@
     "open": "Apri rendiconto"
   },
   "handovers": {
-    "title": "Consegne",
-    "intro": "I venditori annunciano una consegna dal portale e ricevono un riferimento. Al ricevimento degli articoli, viene registrata la ricezione secondo le regole dell’accordo; il venditore vede il numero della consegna.",
+    "title": "Consegne annunciate",
+    "intro": "Consegne previste dai venditori. Conferma la ricezione quando gli articoli sono in negozio.",
     "disabled": "La consegna autonoma è disattivata: attiva seller_dropoff tra le fonti di custodia nella politica del negozio.",
     "empty": "Nessuna consegna annunciata.",
     "announced": "Annunciata",
@@ -1204,7 +1204,15 @@
       "received": "ricevuta",
       "cancelled": "annullata"
     },
-    "backToQueue": "Torna alle consegne annunciate"
+    "backToQueue": "Torna alle consegne annunciate",
+    "search": "Cerca consegna",
+    "searchHint": "Nome del venditore o riferimento H",
+    "statusFilter": "Stato",
+    "allStatuses": "Tutti gli stati",
+    "showingRange": "Visualizzazione {from}–{to} di {total} consegne",
+    "pagination": "Pagine delle consegne",
+    "noMatches": "Nessuna consegna corrisponde ai filtri.",
+    "limited": "Temporaneamente sono mostrate solo le 100 consegne più recenti. Aprine una precedente tramite il suo riferimento H."
   },
   "chain": {
     "title": "Catena",

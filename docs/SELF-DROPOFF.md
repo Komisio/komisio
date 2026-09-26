@@ -9,10 +9,10 @@ core table on 2026-09-13.
 
 ## Shape
 
-| Record             | Meaning                                                                                                   | Mutability                          |
-| ------------------ | --------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| `seller_handovers` | One announcement: seller, kind, estimated items, note, reference; status open, received or cancelled      | Announcement immutable; status engine-only |
-| `handover_events`  | Created, received (with the note and custody source) or cancelled, with the actor                          | Append-only                         |
+| Record             | Meaning                                                                                              | Mutability                                 |
+| ------------------ | ---------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `seller_handovers` | One announcement: seller, kind, estimated items, note, reference; status open, received or cancelled | Announcement immutable; status engine-only |
+| `handover_events`  | Created, received (with the note and custody source) or cancelled, with the actor                    | Append-only                                |
 
 The received bag's id derives from the handover id
 (`komisio_private.derived_id('handover:received')`, md5 bytes in RFC shape),
@@ -34,8 +34,7 @@ so a replayed receipt finds its bag and the seller's list can show `K-n`.
   current agreement version, so `AGREEMENT_REQUIRED` applies exactly as at
   the counter; the note becomes the bag note (or `H-n` when empty). Replay by
   event id.
-- `handover_queue(tenant)`: members, newest 100, open first, with the
-  seller's name.
+- `handover_queue_page(tenant, query, status, offset)`: members, literal seller-name or H-reference search over all announcements, status filter and stable 25-row pages with open records first. The legacy `handover_queue` remains for rolling deployment; its newest-100 limit is explicitly shown if the new read is unavailable.
 - Both tables have RLS for members; the isolation sweep covers them.
 
 ## Surfaces
@@ -68,4 +67,4 @@ notifications are the existing ones), no locker hardware.
 identity boundary, replay and conflict, cancel, staff queue, agreement rule
 on receipt, locker refusal without policy, receipt with derived bag id and
 evidence, double receipt refused, seller view after receipt, immutability.
-Unit tests cover the boundary shapes. No browser journey yet.
+The additive queue read is covered by `0158_handover_queue_page.test.sql` for complete paging, literal search, ordering and access boundaries. Browser journeys cover old references, mobile search and paging, actual receipt, and QR login/MFA; unit tests cover boundary shapes and missing-read fallback.

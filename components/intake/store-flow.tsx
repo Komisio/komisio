@@ -1,6 +1,7 @@
 'use client'
 import { useState, type ReactNode } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { ArrowDown, ArrowRight, Check, ShoppingBag } from 'lucide-react'
 import type { Dictionary } from '@/lib/i18n'
 import {
@@ -26,7 +27,14 @@ export function StoreFlow({
   perItem: boolean
   d: Dictionary['storeFlow']
 }) {
-  const [mode, setMode] = useState<'work' | 'now'>('work')
+  const searchParams = useSearchParams()
+  const mode = searchParams.get('view') === 'now' ? 'now' : 'work'
+  function setMode(next: 'work' | 'now') {
+    const url = new URL(window.location.href)
+    if (next === 'now') url.searchParams.set('view', 'now')
+    else url.searchParams.delete('view')
+    window.history.replaceState(null, '', url.pathname + url.search + url.hash)
+  }
   const [selected, setSelected] = useState<FlowStepId>('receive')
   const [saved, setSaved] = useState(current)
   const [notes, setNotes] = useState(current.notes)

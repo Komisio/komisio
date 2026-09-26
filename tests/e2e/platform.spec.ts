@@ -693,11 +693,21 @@ test('register, verify, create stores, invite, isolate and administer access', a
     .click()
   await expect(page.getByText('Ändringarna har sparats.')).toBeVisible()
   await page.goto('/members')
+  await page.setViewportSize({ width: 320, height: 800 })
+  await expect(page.getByLabel('E-postadress', { exact: true })).toBeVisible()
+  expect(
+    await page.evaluate(() => document.documentElement.scrollWidth),
+  ).toBeLessThanOrEqual(320)
   await page.getByLabel('E-postadress', { exact: true }).fill(staffEmail)
   await page.getByRole('button', { name: 'Bjud in', exact: true }).click()
   await expect(
     page.getByText('Inbjudningslänken är klar', { exact: true }),
   ).toBeVisible()
+  await page.screenshot({
+    path: 'test-results/members-mobile.png',
+    fullPage: true,
+  })
+  await page.setViewportSize({ width: 1280, height: 900 })
   const supersededInvite = await page
     .getByRole('textbox', { name: 'Inbjudningslänken är klar' })
     .inputValue()

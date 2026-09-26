@@ -141,12 +141,26 @@ test('current flow counts actual work, refreshes without losing notes and opens 
     ])
     await f.item('Synthetic accepted item')
     await f.commit()
-    await page.goto('/intake/flow')
+    await page.goto('/intake/flow?view=now')
+    const nowButton = page.getByRole('button', {
+      name: d.storeFlow.live.now,
+      exact: true,
+    })
+    const workButton = page.getByRole('button', {
+      name: d.storeFlow.live.work,
+      exact: true,
+    })
+    await expect(nowButton).toHaveAttribute('aria-pressed', 'true')
+    await page.reload()
+    await expect(nowButton).toHaveAttribute('aria-pressed', 'true')
+    await workButton.click()
+    await expect(page).toHaveURL(/\/intake\/flow$/)
     const note = page.getByLabel(d.storeFlow.localRoutine, { exact: true })
     await note.fill('Keep this unsaved routine')
     await page
       .getByRole('button', { name: d.storeFlow.live.now, exact: true })
       .click()
+    await expect(page).toHaveURL(/view=now/)
     const dropoffs = page.locator('[data-flow-metric="dropoffs"]')
     await expect(dropoffs.locator('.flow-count strong')).toHaveText('1')
     const announcements = page.locator('[data-flow-metric="announcements"]')

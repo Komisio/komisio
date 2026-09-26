@@ -58,7 +58,7 @@ export function MembersPanel({
     }
   }
   return (
-    <div className="stack">
+    <div className="stack members-panel">
       {manage ? (
         <section className="card">
           <div className="row" style={{ marginBottom: 16 }}>

@@ -69,6 +69,55 @@ test('an old handover label opens only its exact active-store receipt', async ({
       expect(recent.some((row) => row.id === id)).toBe(false)
     })
     await page.setViewportSize({ width: 320, height: 800 })
+    await page.goto('/intake/handovers')
+    await expect(page.locator('[id^="handover-"]')).toHaveCount(25)
+    await page.getByLabel(d.handovers.search, { exact: true }).fill(reference)
+    await page
+      .getByRole('button', { name: d.sellersList.searchButton, exact: true })
+      .click()
+    await expect(page.locator('#handover-' + id)).toBeVisible()
+    await page
+      .getByLabel(d.handovers.statusFilter, { exact: true })
+      .selectOption('cancelled')
+    await page
+      .getByRole('button', { name: d.sellersList.searchButton, exact: true })
+      .click()
+    await expect(
+      page.getByText(d.handovers.noMatches, { exact: true }),
+    ).toBeVisible()
+    await page
+      .getByRole('link', { name: d.items.clearFilters, exact: true })
+      .click()
+    await page
+      .getByRole('link', { name: d.sellersList.nextPage, exact: true })
+      .first()
+      .click()
+    await expect(page).toHaveURL(/page=2/)
+    await expect(
+      page.getByLabel(d.handovers.statusFilter, { exact: true }),
+    ).toHaveValue('all')
+    await expect(
+      page.getByLabel(d.handovers.search, { exact: true }),
+    ).toHaveValue('')
+    const searchBox = await page
+      .getByLabel(d.handovers.search, { exact: true })
+      .boundingBox()
+    expect(searchBox!.width).toBeGreaterThan(220)
+    expect(searchBox!.height).toBeGreaterThanOrEqual(44)
+
+    await expect(page.locator('[id^="handover-"]')).toHaveCount(25)
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+    await page.screenshot({
+      path: test.info().outputPath('handover-queue-mobile.png'),
+      caret: 'initial',
+    })
+    await page.goto('/intake/handovers?page=999')
+    await expect(page).toHaveURL(/page=5/)
+    await expect(page.locator('[id^="handover-"]')).toHaveCount(3)
     await page.goto(`/intake/open?ref=${reference}`)
     await expect(page).toHaveURL(new RegExp('focus=' + id + '$'))
     const receipt = page.locator('#handover-' + id)
@@ -100,7 +149,7 @@ test('an old handover label opens only its exact active-store receipt', async ({
       .getByRole('link', { name: d.handovers.backToQueue, exact: true })
       .click()
     await expect(page).toHaveURL(/\/intake\/handovers$/)
-    await expect(page.locator('[id^="handover-"]')).toHaveCount(100)
+    await expect(page.locator('[id^="handover-"]')).toHaveCount(25)
     for (const focus of [randomUUID(), 'invalid']) {
       await page.goto('/intake/handovers?focus=' + focus)
       await expect(

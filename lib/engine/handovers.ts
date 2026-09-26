@@ -154,3 +154,43 @@ export async function readHandover(
     bagId: row.received_bag_id,
   })
 }
+
+/** Complete staff queue; only a missing RPC allows the explicit legacy fallback. */
+export async function readHandoverQueuePage(
+  client: SupabaseClient,
+  tenant: string,
+  options: {
+    query?: string
+    status?: 'all' | 'open' | 'received' | 'cancelled'
+    offset?: number
+  } = {},
+) {
+  const input = z
+    .object({
+      tenant: z.uuid(),
+      query: z.string().trim().max(120),
+      status: z.enum(['all', 'open', 'received', 'cancelled']),
+      offset: z.number().int().min(0).max(2147483647),
+    })
+    .parse({
+      tenant,
+      query: options.query ?? '',
+      status: options.status ?? 'all',
+      offset: options.offset ?? 0,
+    })
+  const r = await client.rpc('handover_queue_page', {
+    p_tenant: input.tenant,
+    p_query: input.query,
+    p_status: input.status,
+    p_offset: input.offset,
+  })
+  if (r.error?.code === 'PGRST202') return null
+  if (r.error) throw new Error('Unable to read the handover queue')
+  return z
+    .object({
+      handovers: z.array(handoverQueueRow).max(25),
+      total: z.number().int().nonnegative(),
+      offset: z.number().int().nonnegative(),
+    })
+    .parse(r.data)
+}

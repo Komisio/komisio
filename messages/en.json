@@ -1185,8 +1185,8 @@
     "open": "Open statement"
   },
   "handovers": {
-    "title": "Handovers",
-    "intro": "Sellers announce a drop-off from their portal and receive a reference. Receiving the items here records the receipt under the agreement rules; the seller sees the drop-off number.",
+    "title": "Announced drop-offs",
+    "intro": "Sellers’ planned drop-offs. Confirm receipt when the items are in the store.",
     "disabled": "Self drop-off is off: enable seller_dropoff among the custody sources in the store policy.",
     "empty": "No handovers announced.",
     "announced": "Announced",
@@ -1204,7 +1204,15 @@
       "received": "received",
       "cancelled": "cancelled"
     },
-    "backToQueue": "Back to announced drop-offs"
+    "backToQueue": "Back to announced drop-offs",
+    "search": "Find a handover",
+    "searchHint": "Seller name or H-reference",
+    "statusFilter": "Status",
+    "allStatuses": "All statuses",
+    "showingRange": "Showing {from}–{to} of {total} handovers",
+    "pagination": "Handover pages",
+    "noMatches": "No handovers match the filters.",
+    "limited": "Only the 100 most recent handovers are temporarily shown. Open an older handover using its H-reference."
   },
   "chain": {
     "title": "Chain",

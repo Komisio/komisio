@@ -1185,8 +1185,8 @@
     "open": "Abrechnung öffnen"
   },
   "handovers": {
-    "title": "Übergaben",
-    "intro": "Verkäufer kündigen eine Einlieferung im Portal an und erhalten eine Referenz. Die Annahme der Artikel wird gemäß der Vereinbarung erfasst; der Verkäufer sieht die Einlieferungsnummer.",
+    "title": "Angekündigte Übergaben",
+    "intro": "Geplante Übergaben der Verkäufer. Bestätigen Sie den Empfang, sobald die Artikel im Laden sind.",
     "disabled": "Selbstabgabe ist aus: Aktivieren Sie seller_dropoff unter den Gewahrsamsquellen in der Store-Richtlinie.",
     "empty": "Keine Übergaben angekündigt.",
     "announced": "Angekündigt",
@@ -1204,7 +1204,15 @@
       "received": "angenommen",
       "cancelled": "storniert"
     },
-    "backToQueue": "Zurück zu angekündigten Einlieferungen"
+    "backToQueue": "Zurück zu angekündigten Einlieferungen",
+    "search": "Übergabe suchen",
+    "searchHint": "Verkäufername oder H-Referenz",
+    "statusFilter": "Status",
+    "allStatuses": "Alle Status",
+    "showingRange": "{from}–{to} von {total} Übergaben",
+    "pagination": "Übergabeseiten",
+    "noMatches": "Keine Übergaben entsprechen den Filtern.",
+    "limited": "Vorübergehend werden nur die 100 neuesten Übergaben angezeigt. Öffnen Sie eine ältere über ihre H-Referenz."
   },
   "chain": {
     "title": "Kette",

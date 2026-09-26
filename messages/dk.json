@@ -2707,7 +2707,11 @@
       "scope": "Tiden regnes fra modtagelse eller registrering, ikke fra starten på det aktuelle trin. En påbegyndt indlevering kan indeholde flere uregistrerede varer. Mærkning og udbetalinger indgår ikke i oversigten.",
       "showEmpty": "Vis også tomme trin",
       "deliveryOne": "indlevering",
-      "itemOne": "vare"
+      "itemOne": "vare",
+      "announcements": "Forhåndstilmeldinger",
+      "announcementsHelp": "Planlagte indleveringer, som endnu ikke er modtaget.",
+      "announcementsUnavailable": "Forhåndstilmeldingerne kunne ikke hentes.",
+      "receiving": "Modtagelse"
     }
   },
   "sellerWorkspace": {

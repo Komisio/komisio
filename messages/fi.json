@@ -2713,7 +2713,11 @@
       "scope": "Aika lasketaan vastaanotosta tai rekisteröinnistä, ei nykyisen vaiheen alkamisesta. Aloitettu tuontierä voi sisältää lisää rekisteröimättömiä tuotteita. Merkintä ja tilitykset eivät sisälly tähän näkymään.",
       "showEmpty": "Näytä myös tyhjät vaiheet",
       "deliveryOne": "tuontierä",
-      "itemOne": "tuote"
+      "itemOne": "tuote",
+      "announcements": "Ennakkoilmoitukset",
+      "announcementsHelp": "Suunnitellut toimitukset, joita ei ole vielä vastaanotettu.",
+      "announcementsUnavailable": "Ennakkoilmoituksia ei voitu ladata.",
+      "receiving": "Vastaanotto"
     }
   },
   "sellerWorkspace": {

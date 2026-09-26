@@ -2713,7 +2713,11 @@
       "scope": "El tiempo se mide desde la recepción o el registro, no desde la entrada en el paso actual. Una entrega iniciada puede contener más artículos sin registrar. El etiquetado y los pagos quedan fuera de esta vista.",
       "showEmpty": "Mostrar también los pasos vacíos",
       "deliveryOne": "entrega",
-      "itemOne": "artículo"
+      "itemOne": "artículo",
+      "announcements": "Avisos de entrega",
+      "announcementsHelp": "Entregas previstas que aún no se han recibido.",
+      "announcementsUnavailable": "No se pudieron cargar los avisos de entrega.",
+      "receiving": "Recepción"
     }
   },
   "sellerWorkspace": {

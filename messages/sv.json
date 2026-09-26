@@ -2707,7 +2707,11 @@
       "scope": "Tiden räknas från mottagning eller registrering, inte från inträdet i nuvarande steg. En påbörjad inlämning kan innehålla fler oregistrerade varor. Märkning och utbetalning ingår inte i denna överblick.",
       "showEmpty": "Visa även tomma steg",
       "deliveryOne": "inlämning",
-      "itemOne": "vara"
+      "itemOne": "vara",
+      "announcements": "Föranmälningar",
+      "announcementsHelp": "Planerade inlämningar som ännu inte har tagits emot.",
+      "announcementsUnavailable": "Föranmälningarna kunde inte hämtas.",
+      "receiving": "Mottagning"
     }
   },
   "sellerWorkspace": {

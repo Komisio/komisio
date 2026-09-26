@@ -2713,7 +2713,11 @@
       "scope": "Das Alter wird ab Annahme oder Erfassung gemessen, nicht ab Eintritt in den aktuellen Schritt. Eine begonnene Einlieferung kann weitere nicht erfasste Artikel enthalten. Etikettierung und Auszahlungen sind nicht Teil dieser Übersicht.",
       "showEmpty": "Auch leere Schritte anzeigen",
       "deliveryOne": "Einlieferung",
-      "itemOne": "Artikel"
+      "itemOne": "Artikel",
+      "announcements": "Voranmeldungen",
+      "announcementsHelp": "Geplante Abgaben, die noch nicht angenommen wurden.",
+      "announcementsUnavailable": "Voranmeldungen konnten nicht geladen werden.",
+      "receiving": "Annahme"
     }
   },
   "sellerWorkspace": {

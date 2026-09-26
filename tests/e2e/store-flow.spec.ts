@@ -98,6 +98,39 @@ test('current flow counts actual work, refreshes without losing notes and opens 
           [f.tenant, randomUUID(), f.seller, note, f.agreement],
         )
       ).rows[0].id
+    const ownSeller = (
+      await f.db.query('select register_seller($1,$2,$3,$4,$5) id', [
+        f.tenant,
+        randomUUID(),
+        'Synthetic announcement seller',
+        email,
+        '',
+      ])
+    ).rows[0].id
+    const policy = (
+      await f.db.query('select current_store_policy($1) p', [f.tenant])
+    ).rows[0].p
+    await f.db.query('select publish_store_policy($1,$2,$3,$4::jsonb)', [
+      f.tenant,
+      randomUUID(),
+      policy.id,
+      JSON.stringify({
+        ...policy.policy,
+        custodySources: ['staff_receipt', 'seller_dropoff'],
+      }),
+    ])
+    const announcement = randomUUID(),
+      cancelled = randomUUID()
+    for (const id of [announcement, cancelled])
+      await f.db.query(
+        "select create_my_handover($1,$2,$3,'box',2,'Synthetic announcement')",
+        [f.tenant, id, ownSeller],
+      )
+    await f.db.query('select cancel_my_handover($1,$2,$3)', [
+      f.tenant,
+      randomUUID(),
+      cancelled,
+    ])
     const untouched = await receive('Synthetic unstarted delivery')
     const started = await receive('Synthetic started delivery')
     await f.db.query('select create_bag_reception($1,$2,$3,$4)', [
@@ -116,6 +149,16 @@ test('current flow counts actual work, refreshes without losing notes and opens 
       .click()
     const dropoffs = page.locator('[data-flow-metric="dropoffs"]')
     await expect(dropoffs.locator('.flow-count strong')).toHaveText('1')
+    const announcements = page.locator('[data-flow-metric="announcements"]')
+    await expect(announcements.locator('.flow-count strong')).toHaveText('1')
+    await expect(announcements).toContainText(
+      d.storeFlow.live.announcementsHelp,
+    )
+    await expect(announcements.getByRole('link')).toHaveAttribute(
+      'href',
+      '/intake/handovers?status=open',
+    )
+    await expect(announcements.locator('time')).toHaveCount(0)
     await expect(
       page.locator('[data-flow-metric="preparing"] .flow-count strong'),
     ).toHaveText('1')

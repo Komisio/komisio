@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { HandoverCode } from './handover-code'
 import { useRouter } from 'next/navigation'
-import type { Dictionary } from '@/lib/i18n'
+import { intlLocale, type Dictionary } from '@/lib/i18n'
 import type { MyHandovers } from '@/lib/engine/handovers'
 
 type HandoverChange =
@@ -20,11 +20,13 @@ export function SellerHandovers({
   tenantId,
   sellerId,
   handovers,
+  locale,
   d,
 }: {
   tenantId: string
   sellerId: string
   handovers: MyHandovers
+  locale: string
   d: Dictionary['sellerPortal']
 }) {
   const router = useRouter()
@@ -152,11 +154,24 @@ export function SellerHandovers({
           style={{ scrollMarginTop: '1rem' }}
           className="intake-notice"
         >
-          <strong style={{ fontSize: '1.4em' }}>{h.reference}</strong>
+          <div className="seller-handover-heading">
+            <strong style={{ fontSize: '1.4em' }}>{h.reference}</strong>
+            <time dateTime={h.createdAt}>
+              {new Date(h.createdAt).toLocaleDateString(intlLocale(locale), {
+                timeZone: 'Europe/Stockholm',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              })}
+            </time>
+          </div>
           <p>
-            {d.handoverKinds[h.kind]} · {h.estimatedItems} ·{' '}
+            {d.handoverKinds[h.kind]} ·{' '}
+            {d.handoverItemCount.replace('{count}', String(h.estimatedItems))} ·{' '}
             {d.handoverStatuses[h.status]}
-            {h.bagReference ? ` · ${h.bagReference}` : ''}
+            {h.bagReference
+              ? ` · ${d.handoverReceipt.replace('{reference}', h.bagReference)}`
+              : ''}
             {h.note ? ` · ${h.note}` : ''}
           </p>
           {h.status === 'open' && (

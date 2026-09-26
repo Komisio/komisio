@@ -1657,7 +1657,7 @@
     "showReference": "Näytä tämä viite tiskillä tai lokerolla.",
     "cancelHandover": "Peruuta",
     "handoverStatuses": {
-      "open": "ilmoitettu",
+      "open": "odottaa vastaanottoa",
       "received": "kaupan vastaanottama",
       "cancelled": "peruutettu"
     },
@@ -1728,7 +1728,9 @@
     "hideHandoverCode": "Piilota QR-koodi",
     "handoverCodeAlt": "Viitteen {ref} QR-koodi",
     "handoverCodeHint": "Pyydä myymälän henkilökuntaa skannaamaan puhelimen kameralla. Viitteen voi myös kirjoittaa.",
-    "handoverCodeError": "Koodia ei voitu näyttää. Käytä yllä olevaa viitettä."
+    "handoverCodeError": "Koodia ei voitu näyttää. Käytä yllä olevaa viitettä.",
+    "handoverItemCount": "Noin {count} tuotetta",
+    "handoverReceipt": "Vastaanottokuitti {reference}"
   },
   "plans": {
     "heading": "Tilaus",

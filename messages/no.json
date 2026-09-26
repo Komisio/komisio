@@ -1657,7 +1657,7 @@
     "showReference": "Vis denne referansen i kassen eller ved skapet.",
     "cancelHandover": "Avbryt",
     "handoverStatuses": {
-      "open": "meldt inn",
+      "open": "venter på mottak",
       "received": "mottatt av butikken",
       "cancelled": "avbrutt"
     },
@@ -1728,7 +1728,9 @@
     "hideHandoverCode": "Skjul QR-kode",
     "handoverCodeAlt": "QR-kode for {ref}",
     "handoverCodeHint": "La butikkpersonalet skanne med mobilkameraet. Referansen kan også skrives inn.",
-    "handoverCodeError": "Koden kunne ikke vises. Bruk referansen ovenfor."
+    "handoverCodeError": "Koden kunne ikke vises. Bruk referansen ovenfor.",
+    "handoverItemCount": "Ca. {count} varer",
+    "handoverReceipt": "Innlevering {reference}"
   },
   "plans": {
     "heading": "Abonnement",

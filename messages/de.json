@@ -1657,7 +1657,7 @@
     "showReference": "Zeigen Sie diese Referenz an der Theke oder am Schließfach.",
     "cancelHandover": "Abbrechen",
     "handoverStatuses": {
-      "open": "angekündigt",
+      "open": "wartet auf Annahme",
       "received": "vom Store angenommen",
       "cancelled": "storniert"
     },
@@ -1728,7 +1728,9 @@
     "hideHandoverCode": "QR-Code ausblenden",
     "handoverCodeAlt": "QR-Code für {ref}",
     "handoverCodeHint": "Das Ladenpersonal kann den Code mit der Handykamera scannen oder die Referenz eingeben.",
-    "handoverCodeError": "Der Code konnte nicht angezeigt werden. Verwenden Sie die Referenz oben."
+    "handoverCodeError": "Der Code konnte nicht angezeigt werden. Verwenden Sie die Referenz oben.",
+    "handoverItemCount": "Ca. {count} Artikel",
+    "handoverReceipt": "Beleg {reference}"
   },
   "plans": {
     "heading": "Plan",

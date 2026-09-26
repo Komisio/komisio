@@ -1657,7 +1657,7 @@
     "showReference": "Mostra questo riferimento al banco o all'armadietto.",
     "cancelHandover": "Annulla",
     "handoverStatuses": {
-      "open": "annunciato",
+      "open": "in attesa di ricezione",
       "received": "ricevuto dal negozio",
       "cancelled": "annullato"
     },
@@ -1728,7 +1728,9 @@
     "hideHandoverCode": "Nascondi codice QR",
     "handoverCodeAlt": "Codice QR per {ref}",
     "handoverCodeHint": "Chiedi al personale di scansionare con la fotocamera del telefono. Il riferimento può anche essere digitato.",
-    "handoverCodeError": "Impossibile mostrare il codice. Usa il riferimento qui sopra."
+    "handoverCodeError": "Impossibile mostrare il codice. Usa il riferimento qui sopra.",
+    "handoverItemCount": "Circa {count} articoli",
+    "handoverReceipt": "Ricevuta {reference}"
   },
   "plans": {
     "heading": "Piano",

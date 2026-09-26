@@ -236,6 +236,7 @@ export default async function SellerPortal({
         tenantId={account.tenantId}
         sellerId={account.sellerId}
         handovers={handovers}
+        locale={ctx.locale}
         d={d}
       />
       {mine && (

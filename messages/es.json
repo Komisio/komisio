@@ -1657,7 +1657,7 @@
     "showReference": "Muestra esta referencia en el mostrador o en la taquilla.",
     "cancelHandover": "Cancelar",
     "handoverStatuses": {
-      "open": "anunciada",
+      "open": "pendiente de recepción",
       "received": "recibida por la tienda",
       "cancelled": "cancelada"
     },
@@ -1728,7 +1728,9 @@
     "hideHandoverCode": "Ocultar código QR",
     "handoverCodeAlt": "Código QR de {ref}",
     "handoverCodeHint": "Pide al personal que lo escanee con la cámara del móvil. También puede escribir la referencia.",
-    "handoverCodeError": "No se pudo mostrar el código. Usa la referencia de arriba."
+    "handoverCodeError": "No se pudo mostrar el código. Usa la referencia de arriba.",
+    "handoverItemCount": "Aprox. {count} artículos",
+    "handoverReceipt": "Entrega {reference}"
   },
   "plans": {
     "heading": "Plan",

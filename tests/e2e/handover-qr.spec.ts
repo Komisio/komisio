@@ -67,6 +67,19 @@ test('seller code loads on demand and staff login returns to the exact handover'
     await page.goto('/seller?seller=' + seller + '#portal-handovers')
     const receipt = page.locator('#seller-handover-' + id)
     await expect(receipt).toBeVisible()
+    await expect(receipt).toContainText(
+      d.sellerPortal.handoverItemCount.replace('{count}', '2'),
+    )
+    await expect(receipt).toContainText(d.sellerPortal.handoverStatuses.open)
+    await expect(receipt.locator('time')).toHaveAttribute(
+      'datetime',
+      /\d{4}-\d{2}-\d{2}T/,
+    )
+    await receipt.scrollIntoViewIfNeeded()
+    await page.screenshot({
+      path: test.info().outputPath('seller-handover-summary-mobile.png'),
+      caret: 'initial',
+    })
     expect(codeRequests).toBe(0)
     await receipt
       .getByText(d.sellerPortal.showHandoverCode, { exact: true })

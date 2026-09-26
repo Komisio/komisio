@@ -1686,7 +1686,7 @@
     "showReference": "Visa referensen i kassan eller vid skåpet.",
     "cancelHandover": "Avbryt",
     "handoverStatuses": {
-      "open": "anmäld",
+      "open": "väntar på mottagning",
       "received": "mottagen av butiken",
       "cancelled": "avbruten"
     },
@@ -1728,7 +1728,9 @@
     "hideHandoverCode": "Dölj QR-kod",
     "handoverCodeAlt": "QR-kod för {ref}",
     "handoverCodeHint": "Låt butikens personal skanna med mobilkameran. Referensen går också att skriva in.",
-    "handoverCodeError": "Koden kunde inte visas. Använd referensen ovan."
+    "handoverCodeError": "Koden kunde inte visas. Använd referensen ovan.",
+    "handoverItemCount": "Ca {count} varor",
+    "handoverReceipt": "Inlämning {reference}"
   },
   "plans": {
     "heading": "Plan",

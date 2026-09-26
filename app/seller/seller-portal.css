@@ -81,3 +81,15 @@
 .seller-items-search .btn {
   min-height: 44px;
 }
+
+.seller-handover-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+}
+.seller-handover-heading time {
+  font-size: 0.85rem;
+  color: var(--muted);
+}

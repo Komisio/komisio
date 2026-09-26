@@ -1657,7 +1657,7 @@
     "showReference": "Show this reference at the counter or at the locker.",
     "cancelHandover": "Cancel",
     "handoverStatuses": {
-      "open": "announced",
+      "open": "awaiting receipt",
       "received": "received by the store",
       "cancelled": "cancelled"
     },
@@ -1728,7 +1728,9 @@
     "hideHandoverCode": "Hide QR code",
     "handoverCodeAlt": "QR code for {ref}",
     "handoverCodeHint": "Ask store staff to scan with their phone camera. The reference can also be typed in.",
-    "handoverCodeError": "The code could not be displayed. Use the reference above."
+    "handoverCodeError": "The code could not be displayed. Use the reference above.",
+    "handoverItemCount": "Approx. {count} items",
+    "handoverReceipt": "Receipt {reference}"
   },
   "plans": {
     "heading": "Plan",

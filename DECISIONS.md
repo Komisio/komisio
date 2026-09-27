@@ -734,3 +734,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-26: A complete H-number in staff handover search matches only that reference in the active store. Other text keeps literal partial matching. Status, role, RLS and custody rules are unchanged.
 
 - 2026-09-27: Handover progress reads accepted items from both intake paths and active unfinished drafts/receptions. Counts never imply whole-handover completion or a physical remaining quantity; direct next-work links preserve existing role, tenant and MFA boundaries.
+
+- 2026-09-27: reception_queue_facts takes an optional trailing bag filter applied inside its own query; the handover summary reads one bag. A missing or transient summary read shows unavailable, never a zero; authorization and validation failures still fail.

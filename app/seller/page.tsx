@@ -222,7 +222,7 @@ export default async function SellerPortal({
         </a>
       </nav>
       <SellerEconomyForms
-        key={`${account.sellerId}-${economy.automaticEmails}`}
+        key={`${account.tenantId}:${account.sellerId}`}
         tenantId={account.tenantId}
         sellerId={account.sellerId}
         currency={currency}

@@ -189,6 +189,25 @@ test('seller payout guidance explains unavailable balances, validates amounts an
     await submit.click()
     await expect(request.getByRole('alert')).toHaveText(sv.sellerPortal.error)
     await expect(input).toHaveValue('100,00')
+    // Saving a different action must not forget the uncertain payout request.
+    const emails = page.getByRole('checkbox', { name: sv.sellerPortal.emails })
+    const nextPreference = !(await emails.isChecked())
+    await emails.setChecked(nextPreference)
+    const preferenceSaved = page.waitForResponse(
+      (response) =>
+        response.url().endsWith('/api/seller/economy') &&
+        response.request().method() === 'POST' &&
+        response.request().postDataJSON()?.action === 'notifications',
+    )
+    await page
+      .getByRole('button', { name: sv.sellerPortal.save, exact: true })
+      .click()
+    expect((await preferenceSaved).ok()).toBe(true)
+    await expect(page.getByRole('status')).toHaveText(sv.sellerPortal.saved)
+    await expect(emails).toBeChecked({ checked: nextPreference })
+    // Wait for refreshed server props, not only the immediate checkbox change.
+    await expect(emails).toHaveJSProperty('defaultChecked', nextPreference)
+    await expect(input).toHaveValue('100,00')
     await submit.click()
     await expect(request.getByRole('status')).toHaveText(
       sv.sellerPortal.payoutRequested,

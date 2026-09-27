@@ -33,7 +33,9 @@ export function SellerEconomyForms({
   const router = useRouter()
   const [busy, setBusy] = useState(false)
   const [feedback, setFeedback] = useState<Feedback | null>(null)
-  const retry = useRef<{ key: string; id: string } | null>(null)
+  const retries = useRef<
+    Partial<Record<EconomyAction['action'], { key: string; id: string }>>
+  >({})
   const payoutForm = useRef<HTMLFormElement>(null)
   const canRequest = availableOre > 0 && availableOre >= thresholdOre
   const amount = (ore: number) => `${(ore / 100).toFixed(2)} ${currency}`
@@ -58,8 +60,10 @@ export function SellerEconomyForms({
     setFeedback(null)
     const key = JSON.stringify(payload)
     const id =
-      retry.current?.key === key ? retry.current.id : crypto.randomUUID()
-    retry.current = { key, id }
+      retries.current[payload.action]?.key === key
+        ? retries.current[payload.action]!.id
+        : crypto.randomUUID()
+    retries.current[payload.action] = { key, id }
     try {
       const r = await fetch('/api/seller/economy', {
         method: 'POST',
@@ -72,7 +76,7 @@ export function SellerEconomyForms({
           typeof body?.error === 'string' ? body.error : 'REQUEST_FAILED',
         )
       }
-      retry.current = null
+      delete retries.current[payload.action]
       if (payload.action === 'requestPayout') payoutForm.current?.reset()
       setFeedback({
         action: payload.action,
@@ -187,6 +191,7 @@ export function SellerEconomyForms({
           <input
             type="checkbox"
             name="emails"
+            key={String(enabled)}
             defaultChecked={enabled}
             disabled={busy}
           />

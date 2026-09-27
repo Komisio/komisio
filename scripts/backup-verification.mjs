@@ -196,7 +196,7 @@ export async function cleanupCopy({ restored, admin, copy, created }) {
       )
     }
   }
-  if (!created) return errors
+  if (!created || !admin) return errors
   if (!COPY_NAME.test(copy)) {
     errors.push('copy name is not the generated shape; nothing dropped')
     return errors
@@ -261,7 +261,8 @@ export const COUNTS_SQL = `select n.nspname as schema, c.relname as "table",
 // Definitions by stable identity, owner included; no OID enters an identity or a digest.
 export const INVENTORY_SQL = `
   select 'function' as kind, n.nspname||'.'||p.proname||'('||pg_get_function_identity_arguments(p.oid)||')' as identity,
-    md5(p.prosrc||'|'||coalesce(p.proconfig::text,'')||'|'||p.prosecdef::text||'|'||p.provolatile||'|'||pg_get_function_result(p.oid)||'|'||p.proowner::regrole::text) as digest
+    md5(case when p.prokind='a' then 'aggregate|'||p.proargtypes::text||'|'||p.prorettype::regtype::text
+             else pg_get_functiondef(p.oid) end||'|'||p.proowner::regrole::text) as digest
   from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname in (${schemaList})
   union all
   select 'trigger', n.nspname||'.'||c.relname||'.'||t.tgname, md5(pg_get_triggerdef(t.oid)||'|'||t.tgenabled)
@@ -270,7 +271,7 @@ export const INVENTORY_SQL = `
   union all
   select 'policy', n.nspname||'.'||c.relname||'.'||p.polname,
     md5(p.polcmd::text||'|'||p.polpermissive::text||'|'||coalesce(pg_get_expr(p.polqual,p.polrelid),'')||'|'||coalesce(pg_get_expr(p.polwithcheck,p.polrelid),'')||'|'||
-      coalesce((select string_agg(r.rolname, ',' order by r.rolname) from pg_roles r where r.oid = any(p.polroles)),'PUBLIC'))
+      coalesce((select string_agg(case when r=0 then 'PUBLIC' else r::regrole::text end, ',' order by 1) from unnest(p.polroles) r),'PUBLIC'))
   from pg_policy p join pg_class c on c.oid=p.polrelid join pg_namespace n on n.oid=c.relnamespace where n.nspname in (${schemaList})
   union all
   select 'constraint', n.nspname||'.'||coalesce(c.relname,'')||'.'||x.conname, md5(pg_get_constraintdef(x.oid))
@@ -289,7 +290,7 @@ export const GRANTS_SQL = `
     case when a.grantee=0 then null else a.grantee::regrole::text end as grantee,
     a.privilege_type as privilege, a.is_grantable as grantable, a.grantor::regrole::text as grantor
   from pg_class c join pg_namespace n on n.oid=c.relnamespace
-  cross join lateral aclexplode(coalesce(c.relacl, acldefault('r', c.relowner))) a
+  cross join lateral aclexplode(coalesce(c.relacl, acldefault(case when c.relkind='S' then 'S' else 'r' end, c.relowner))) a
   where c.relkind in ('r','v','m','S') and n.nspname in (${schemaList})
   union all
   select 'routine_grants', n.nspname, p.proname||'('||pg_get_function_identity_arguments(p.oid)||')',
@@ -317,7 +318,7 @@ export async function runRestoreExercise({
   now = Date.now,
 }) {
   const started = now()
-  const admin = newClient('postgres')
+  let admin = null
   let restored = null
   let created = false
   let dumped = false
@@ -328,9 +329,14 @@ export async function runRestoreExercise({
   try {
     if (!COPY_NAME.test(copy)) throw new Error('copy name')
     if (!ROLE_NAME.test(restoreUser ?? '')) throw new Error('restore user')
+    if (dump !== `/tmp/${copy}.dump`) throw new Error('dump path')
+    admin = newClient('postgres')
     phase = 'connect'
     await admin.connect()
     phase = 'dump'
+    // Marked before the spawn so a throw after partial output still removes
+    // this run's own dump file.
+    dumped = true
     const dumpRun = spawn([
       'pg_dump',
       '-U',
@@ -340,7 +346,6 @@ export async function runRestoreExercise({
       dump,
       'postgres',
     ])
-    dumped = true
     if (dumpRun.status !== 0) throw new Error('dump')
     phase = 'create copy'
     await admin.query(`create database "${copy}"`)
@@ -399,19 +404,32 @@ export async function runRestoreExercise({
       } catch {
         removed = { status: null }
       }
-      if (removed.status !== 0) cleanup.push('removing the dump file failed')
+      if (removed?.status !== 0) cleanup.push('removing the dump file failed')
     }
-    try {
-      await admin.end()
-    } catch {
-      cleanup.push('closing the admin session failed')
+    if (admin) {
+      try {
+        await admin.end()
+      } catch {
+        cleanup.push('closing the admin session failed')
+      }
     }
-    if (result) for (const line of result.lines) log(line)
+    // The final line is the verdict of the whole run: a passed comparison
+    // with a failed cleanup is still a failed run.
+    const passed = Boolean(result?.passed) && !failure && cleanup.length === 0
+    if (result) {
+      const details = result.lines.slice(0, -1)
+      for (const line of details) log(line)
+      if (passed) log(result.lines.at(-1))
+    }
     if (failure)
       log(
         `APPLICATION RESTORE CHECK FAILED: error during ${failure.phase}${failure.code ? ` (${failure.code})` : ''}`,
       )
     for (const line of cleanup) log(`CLEANUP: ${line}`)
+    if (!passed && !failure)
+      log(
+        `APPLICATION RESTORE CHECK FAILED in ${Math.round((now() - started) / 1000)} s${cleanup.length && result?.passed ? ': cleanup failed' : ''}`,
+      )
   }
-  return result?.passed && !failure && cleanup.length === 0 ? 0 : 1
+  return Boolean(result?.passed) && !failure && cleanup.length === 0 ? 0 : 1
 }

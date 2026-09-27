@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
+  GRANTS_SQL,
+  INVENTORY_SQL,
   classifyRestore,
   cleanupCopy,
   compareInventory,
@@ -425,6 +427,9 @@ describe('runRestoreExercise', () => {
     options: {
       restore?: { status: number | null; stderr: string }
       fail?: { phase: string; error: unknown }
+      constructorThrows?: boolean
+      dumpSpawnThrows?: boolean
+      cleanupFail?: 'drop' | 'rm' | 'end'
     } = {},
   ) {
     const log: string[] = []
@@ -432,6 +437,7 @@ describe('runRestoreExercise', () => {
     const spawned: string[][] = []
     const dbs: Record<string, ReturnType<typeof makeClient>> = {}
     const makeClient = (database: string) => {
+      if (options.constructorThrows) throw new Error(MARKER)
       const client = {
         database,
         ended: false,
@@ -447,7 +453,11 @@ describe('runRestoreExercise', () => {
             if (options.fail?.phase === 'create copy') throw options.fail.error
             return { rowCount: 0, rows: [] }
           }
-          if (sql.startsWith('drop database')) return { rowCount: 0, rows: [] }
+          if (sql.startsWith('drop database')) {
+            if (options.cleanupFail === 'drop')
+              throw Object.assign(new Error(MARKER), { code: '55006' })
+            return { rowCount: 0, rows: [] }
+          }
           if (sql.startsWith('select 1 from pg_database'))
             return { rowCount: 0, rows: [] }
           if (sql.includes('query_to_xml')) {
@@ -459,6 +469,8 @@ describe('runRestoreExercise', () => {
           throw new Error('unexpected sql')
         }),
         end: vi.fn(async () => {
+          if (options.cleanupFail === 'end' && database === 'postgres')
+            throw new Error(MARKER)
           client.ended = true
         }),
       }
@@ -468,12 +480,16 @@ describe('runRestoreExercise', () => {
     const spawn = vi.fn((args: string[]) => {
       spawned.push(args)
       calls.push(`spawn:${args[0]}`)
-      if (args[0] === 'pg_dump')
+      if (args[0] === 'pg_dump') {
+        if (options.dumpSpawnThrows) throw new Error(MARKER)
         return options.fail?.phase === 'dump'
           ? { status: 1, stderr: MARKER }
           : { status: 0, stderr: '' }
+      }
       if (args[0] === 'pg_restore')
         return options.restore ?? { status: 0, stderr: '' }
+      if (args[0] === 'rm' && options.cleanupFail === 'rm')
+        return { status: 1, stderr: MARKER }
       return { status: 0, stderr: '' }
     })
     return {
@@ -481,18 +497,68 @@ describe('runRestoreExercise', () => {
       calls,
       spawned,
       dbs,
-      run: (copy = copyName, restoreUser = 'supabase_admin') =>
+      run: (
+        copy = copyName,
+        restoreUser = 'supabase_admin',
+        dump = `/tmp/${copy}.dump`,
+      ) =>
         runRestoreExercise({
           spawn,
           newClient: makeClient,
           log: (line: string) => log.push(line),
           copy,
-          dump: `/tmp/${copy}.dump`,
+          dump,
           restoreUser,
           now: () => 0,
         }),
     }
   }
+  it('fails in configuration when the client cannot be constructed, printing no message', async () => {
+    const h = harness({ constructorThrows: true })
+    expect(await h.run()).toBe(1)
+    expect(h.log).toEqual([
+      'APPLICATION RESTORE CHECK FAILED: error during configuration',
+    ])
+    expect(h.spawned).toEqual([])
+  })
+  it('refuses a dump path that is not this run’s own generated artifact', async () => {
+    const h = harness()
+    expect(await h.run(copyName, 'supabase_admin', '/tmp/other.dump')).toBe(1)
+    expect(h.log).toEqual([
+      'APPLICATION RESTORE CHECK FAILED: error during configuration',
+    ])
+    expect(h.spawned).toEqual([])
+    expect(h.calls).toEqual([])
+  })
+  it('still removes its own dump when the dump spawn throws, and drops nothing', async () => {
+    const h = harness({ dumpSpawnThrows: true })
+    expect(await h.run()).toBe(1)
+    expect(h.log).toEqual([
+      'APPLICATION RESTORE CHECK FAILED: error during dump',
+    ])
+    expect(h.spawned.map((a) => a[0])).toEqual(['pg_dump', 'rm'])
+    expect(h.spawned[1]).toEqual(['rm', '-f', `/tmp/${copyName}.dump`])
+    expect(h.calls.filter((c) => c.includes('drop database'))).toEqual([])
+    expect(h.dbs.postgres.ended).toBe(true)
+  })
+  it.each([
+    ['drop', 'CLEANUP: dropping the copy failed (55006)'],
+    ['rm', 'CLEANUP: removing the dump file failed'],
+    ['end', 'CLEANUP: closing the admin session failed'],
+  ] as const)(
+    'reports FAILED, never PASSED, when cleanup fails after a passing comparison (%s)',
+    async (cleanupFail, line) => {
+      const h = harness({ cleanupFail })
+      expect(await h.run()).toBe(1)
+      expect(h.log.join('\n')).not.toContain('PASSED')
+      expect(h.log).toContain(line)
+      expect(h.log.at(-1)).toBe(
+        'APPLICATION RESTORE CHECK FAILED in 0 s: cleanup failed',
+      )
+      expect(h.log.join('\n')).not.toContain(MARKER)
+      expect(h.log.join('\n')).toContain('application tables: 2')
+    },
+  )
   it('passes a clean run, restores as the configured role with ownership kept, prints only verdict lines and cleans up', async () => {
     const h = harness()
     expect(await h.run()).toBe(0)
@@ -599,6 +665,36 @@ describe('runRestoreExercise', () => {
     expect(h.log.join('\n')).not.toContain(MARKER)
     expect(h.calls.filter((c) => c.includes('drop database'))).toEqual([])
     expect(h.spawned.some((a) => a[0] === 'rm')).toBe(true)
+  })
+})
+
+describe('catalog queries', () => {
+  it('digest functions by their full definition and owner, with aggregates handled', () => {
+    expect(INVENTORY_SQL).toContain('pg_get_functiondef(p.oid)')
+    expect(INVENTORY_SQL).toMatch(/case when p\.prokind='a' then/)
+    expect(INVENTORY_SQL).toContain('p.proowner::regrole::text) as digest')
+    expect(INVENTORY_SQL).not.toContain('p.prosrc')
+  })
+  it('keeps PUBLIC in a policy role list next to named roles', () => {
+    expect(INVENTORY_SQL).toContain('from unnest(p.polroles) r')
+    expect(INVENTORY_SQL).toContain(
+      "case when r=0 then 'PUBLIC' else r::regrole::text end",
+    )
+    expect(INVENTORY_SQL).not.toMatch(
+      /pg_roles r where r\.oid = any\(p\.polroles\)/,
+    )
+  })
+  it('expands sequence defaults with the sequence kind and keeps identities free of OIDs', () => {
+    expect(GRANTS_SQL).toContain(
+      "acldefault(case when c.relkind='S' then 'S' else 'r' end, c.relowner)",
+    )
+    expect(GRANTS_SQL).toContain("acldefault('f', p.proowner)")
+    expect(GRANTS_SQL).toContain(
+      "p.proname||'('||pg_get_function_identity_arguments(p.oid)||')'",
+    )
+    expect(GRANTS_SQL).not.toContain('specific_name')
+    expect(GRANTS_SQL).not.toContain('information_schema')
+    expect(INVENTORY_SQL).not.toContain('information_schema')
   })
 })
 

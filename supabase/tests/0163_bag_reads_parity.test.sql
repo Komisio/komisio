@@ -50,6 +50,11 @@ begin
  ) order by p.accepted_at desc,p.id) from page p),'[]'::jsonb) into total,rows from scan;
  return jsonb_build_object('items',rows,'total',total,'offset',skip);
 end $$;
+-- The later stage read adds two independently tested fields (0164); compare every original field and row order here.
+create function pgtap_old.without_stage(v jsonb) returns jsonb language sql immutable as $$
+ select jsonb_set(v,'{items}',coalesce((select jsonb_agg(x-'stage'-'sold_price_ore' order by o) from jsonb_array_elements(v->'items') with ordinality t(x,o)),'[]'::jsonb))
+$$;
+grant execute on function pgtap_old.without_stage(jsonb) to authenticated;
 grant usage on schema pgtap_old to authenticated;
 grant execute on function pgtap_old.bag_work_summary(uuid,uuid),pgtap_old.bag_registered_items_page(uuid,uuid,integer) to authenticated;
 
@@ -66,7 +71,7 @@ select set_config('test.otherbag',receive_bag_with_agreement(current_setting('te
 select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}'::jsonb);
 -- Empty bags agree before any work exists.
 select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid),pgtap_old.bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid),'empty summary parity');
-select is(bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0),pgtap_old.bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0),'empty list parity');
+select is(pgtap_old.without_stage(bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0)),pgtap_old.bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0),'empty list parity');
 
 -- The bag: two quick items; one accepted draft; one accepted draft archived afterwards;
 -- one unaccepted draft with three revisions; one archived unaccepted draft; one pending reception.
@@ -118,9 +123,9 @@ select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting(
 -- Parity with the captured previous definitions, both bags, both pages.
 select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid),pgtap_old.bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid),'summary parity for the bag');
 select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.otherbag')::uuid),pgtap_old.bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.otherbag')::uuid),'summary parity for the other bag');
-select is(bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0),pgtap_old.bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0),'list parity page 1');
-select is(bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,25),pgtap_old.bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,25),'list parity past the end');
-select is(bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.otherbag')::uuid,0),pgtap_old.bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.otherbag')::uuid,0),'list parity for the other bag');
+select is(pgtap_old.without_stage(bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0)),pgtap_old.bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0),'list parity page 1');
+select is(pgtap_old.without_stage(bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,25)),pgtap_old.bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,25),'list parity past the end');
+select is(pgtap_old.without_stage(bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.otherbag')::uuid,0)),pgtap_old.bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.otherbag')::uuid,0),'list parity for the other bag');
 -- The rewrite is what it claims: neither body reads the view any more, and the index they rely on exists.
 select ok(pg_get_functiondef('public.bag_work_summary(uuid,uuid)'::regprocedure) not like '%inspection_current%','summary no longer reads inspection_current');
 select ok(pg_get_functiondef('public.bag_registered_items_page(uuid,uuid,integer)'::regprocedure) not like '%inspection_current%','list no longer reads inspection_current');

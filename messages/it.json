@@ -1182,7 +1182,8 @@
     "confirm": "Voglio emettere il prossimo rendiconto numerato per questo periodo.",
     "issue": "Emetti rendiconto",
     "issued": "Il rendiconto è emesso.",
-    "open": "Apri rendiconto"
+    "open": "Apri rendiconto",
+    "closedPeriodHint": "La data finale deve essere ieri o precedente."
   },
   "handovers": {
     "title": "Consegne annunciate",

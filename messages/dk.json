@@ -1182,7 +1182,8 @@
     "confirm": "Jeg vil udstede den næste nummererede afregning for denne periode.",
     "issue": "Udsted afregning",
     "issued": "Afregningen er udstedt.",
-    "open": "Åbn afregning"
+    "open": "Åbn afregning",
+    "closedPeriodHint": "Slutdatoen skal være i går eller tidligere."
   },
   "handovers": {
     "title": "Forhåndsanmeldelser",

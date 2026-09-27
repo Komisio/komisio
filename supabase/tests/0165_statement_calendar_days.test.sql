@@ -1,0 +1,43 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('d1650000-0000-4000-8000-000000009901','calendar-owner@example.test',now()),
+ ('d1650000-0000-4000-8000-000000009902','calendar-reader@example.test',now()),
+ ('d1650000-0000-4000-8000-000000009903','calendar-other@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"d1650000-0000-4000-8000-000000009901","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Calendar statement','calendar-statement',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Synthetic seller','','123')::text,true);
+select set_config('test.statement',gen_random_uuid()::text,true);
+select is(issue_statement_for_days(current_setting('test.tenant')::uuid,current_setting('test.statement')::uuid,current_setting('test.seller')::uuid,'2026-01-15','2026-01-15',null),current_setting('test.statement')::uuid,'one inclusive closed day issues through the existing engine');
+select is((select period_from from settlement_statements where id=current_setting('test.statement')::uuid),'2026-01-14T23:00:00Z'::timestamptz,'winter start is Stockholm midnight');
+select is((select period_to from settlement_statements where id=current_setting('test.statement')::uuid),'2026-01-15T23:00:00Z'::timestamptz,'end is next Stockholm midnight');
+select is(issue_statement_for_days(current_setting('test.tenant')::uuid,current_setting('test.statement')::uuid,current_setting('test.seller')::uuid,'2026-01-15','2026-01-15',null),current_setting('test.statement')::uuid,'same request is idempotent');
+select throws_like($$select issue_statement_for_days(current_setting('test.tenant')::uuid,current_setting('test.statement')::uuid,current_setting('test.seller')::uuid,'2026-01-14','2026-01-15',null)$$,'%REQUEST_CONFLICT%','changed request still refused');
+select throws_like($$select issue_statement_for_days(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'2026-01-15','2026-01-16',null)$$,'%STATEMENT_PERIOD_OVERLAP%','original overlap guard retained');
+select set_config('test.spring',issue_statement_for_days(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'2026-03-29','2026-03-29',null)::text,true);
+select is((select extract(epoch from period_to-period_from)::int from settlement_statements where id=current_setting('test.spring')::uuid),23*3600,'spring clock change is a 23-hour calendar day');
+select set_config('test.autumn',issue_statement_for_days(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'2025-10-26','2025-10-26',null)::text,true);
+select is((select extract(epoch from period_to-period_from)::int from settlement_statements where id=current_setting('test.autumn')::uuid),25*3600,'autumn clock change is a 25-hour calendar day');
+select throws_like($$select issue_statement_for_days(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,(now() at time zone 'Europe/Stockholm')::date,(now() at time zone 'Europe/Stockholm')::date,null)$$,'%INVALID_INPUT%','today is not a closed day');
+select throws_like($$select issue_statement_for_days(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'2026-01-20','2026-01-19',null)$$,'%INVALID_INPUT%','inverted days refused');
+select throws_like($$select issue_statement_for_days(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,null,'2026-01-19',null)$$,'%INVALID_INPUT%','null dates refused');
+select throws_like($$select issue_statement_for_days(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'2026-01-20','infinity',null)$$,'%INVALID_INPUT%','infinite dates refused');
+select set_config('test.legacy',issue_statement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'2026-01-17T01:00:00Z','2026-01-17T02:00:00Z',null)::text,true);
+select is((select period_from from settlement_statements where id=current_setting('test.legacy')::uuid),'2026-01-17T01:00:00Z'::timestamptz,'legacy timestamp contract is unchanged');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.tenant')::uuid,'d1650000-0000-4000-8000-000000009902','readonly');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"d1650000-0000-4000-8000-000000009902","role":"authenticated"}';
+select throws_ok($$select issue_statement_for_days(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'2026-01-20','2026-01-20',null)$$,'42501',null,'readonly cannot issue');
+set local "request.jwt.claims"='{"sub":"d1650000-0000-4000-8000-000000009903","role":"authenticated"}';
+select throws_ok($$select issue_statement_for_days(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'2026-01-20','2026-01-20',null)$$,'42501',null,'nonmember cannot issue');
+reset role;
+select ok(not has_function_privilege('anon','public.issue_statement_for_days(uuid,uuid,uuid,date,date,uuid)','execute'),'anonymous denied');
+insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values(gen_random_uuid(),'d1650000-0000-4000-8000-000000009901','totp','verified',now(),now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"d1650000-0000-4000-8000-000000009901","role":"authenticated","aal":"aal1"}';
+select throws_ok($$select issue_statement_for_days(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'2026-01-20','2026-01-20',null)$$,'42501',null,'MFA still required');
+reset role;
+select * from finish(); rollback;

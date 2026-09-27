@@ -11,14 +11,21 @@ export const issueStatementCommand = z
     tenantId: z.uuid(),
     requestId: z.uuid(),
     sellerId: z.uuid(),
-    periodFrom: z.iso.datetime({ offset: true }),
-    periodTo: z.iso.datetime({ offset: true }),
+    calendar: z.literal('stockholm-days').optional(),
+    periodFrom: z.union([z.iso.datetime({ offset: true }), z.iso.date()]),
+    periodTo: z.union([z.iso.datetime({ offset: true }), z.iso.date()]),
     correctsId: z.uuid().nullable().default(null),
   })
-  .refine(
-    (v) => Date.parse(v.periodTo) > Date.parse(v.periodFrom),
-    'Empty period',
-  )
+  .refine((v) => {
+    const format = v.calendar ? z.iso.date() : z.iso.datetime({ offset: true })
+    return (
+      format.safeParse(v.periodFrom).success &&
+      format.safeParse(v.periodTo).success &&
+      (v.calendar
+        ? v.periodTo >= v.periodFrom
+        : Date.parse(v.periodTo) > Date.parse(v.periodFrom))
+    )
+  }, 'Invalid period or calendar')
 
 const ore = z.union([z.number().int(), z.string()]).transform(Number)
 const statementRow = z.object({

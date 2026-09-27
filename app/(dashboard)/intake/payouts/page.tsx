@@ -10,7 +10,8 @@ import {
   readSettlementCandidates,
 } from '@/lib/engine/payouts'
 import { readFlaggedReturns } from '@/lib/engine/returns'
-import { readSellerBalance, formatSignedOre } from '@/lib/engine/seller-ledger'
+import { formatSignedOre } from '@/lib/engine/seller-ledger'
+import { readPayoutRequestSellers } from '@/lib/engine/payout-request-sellers'
 import {
   PayoutRequestForm,
   PayoutDecision,
@@ -24,25 +25,9 @@ export default async function Payouts() {
     currency = await readStoreCurrency(ctx.client, active.id),
     all = dictionary(ctx.locale),
     d = all.payouts
-  const sellers = await ctx.client
-    .from('sellers')
-    .select('id,name')
-    .eq('tenant_id', active.id)
-    .order('name')
-    .limit(50)
-  if (sellers.error) throw new Error('Unable to read sellers')
-  const sellerRows = z
-    .array(z.object({ id: z.uuid(), name: z.string() }))
-    .parse(sellers.data)
   const [payouts, balances, flagged, settlement] = await Promise.all([
     readPayouts(ctx.client, active.id),
-    Promise.all(
-      sellerRows.map(async (s) => ({
-        ...s,
-        availableOre: (await readSellerBalance(ctx.client, active.id, s.id))
-          .availableOre,
-      })),
-    ),
+    readPayoutRequestSellers(ctx.client, active.id),
     readFlaggedReturns(ctx.client, active.id),
     readSettlementCandidates(ctx.client, active.id),
   ])
@@ -51,7 +36,7 @@ export default async function Payouts() {
     active.id,
     payouts.map((p) => p.id),
   )
-  const names = new Map(sellerRows.map((s) => [s.id, s.name]))
+  const names = new Map(balances.map((s) => [s.id, s.name]))
   // The payout list is the newest 50 for any seller, while the name map above
   // covers the first 50 sellers by name; look up the names the list still
   // lacks so a payout never shows a raw id. A failed read is an error, not a

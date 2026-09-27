@@ -1,5 +1,14 @@
 import { spawnSync } from 'node:child_process'
-import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import {
+  lstatSync,
+  mkdtempSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -129,6 +138,63 @@ describe('redactArtifacts', () => {
     expect(
       redactArtifacts(join(tmpdir(), 'komisio-missing-' + Date.now())),
     ).toBe(0)
+  })
+  it('fails closed when the root is not a directory', () => {
+    const root = mkdtempSync(join(tmpdir(), 'komisio-redact-file-'))
+    const file = join(root, 'not-a-directory')
+    writeFileSync(file, 'plain file\n')
+    expect(() => redactArtifacts(file)).toThrow(/ENOTDIR|ENOENT/)
+  })
+  it('fails closed on a filesystem error other than a missing root and writes nothing', () => {
+    const root = mkdtempSync(join(tmpdir(), 'komisio-redact-unreadable-'))
+    const first = join(root, 'a', 'error-context.md')
+    const second = join(root, 'b', 'error-context.md')
+    for (const f of [first, second])
+      mkdirSync(join(f, '..'), { recursive: true })
+    writeFileSync(first, '- cookie: synthetic-first\n')
+    writeFileSync(second, '- cookie: synthetic-second\n')
+    const denied = Object.assign(new Error('EACCES: permission denied'), {
+      code: 'EACCES',
+    })
+    // Injected filesystem: the second directory cannot be listed. The first
+    // file must not be rewritten either, so the upload gate sees a failure
+    // and the original context never leaves the runner.
+    const io = {
+      lstatSync,
+      readdirSync: (path: string, options: { withFileTypes: true }) => {
+        if (path === join(root, 'b')) throw denied
+        return readdirSync(path, options)
+      },
+      readFileSync,
+      writeFileSync,
+    }
+    expect(() => redactArtifacts(root, io as never)).toThrow(/EACCES/)
+    expect(readFileSync(first, 'utf8')).toBe('- cookie: synthetic-first\n')
+    expect(readFileSync(second, 'utf8')).toBe('- cookie: synthetic-second\n')
+  })
+  it('does not traverse a symbolic link at the root or below it', () => {
+    const outside = mkdtempSync(join(tmpdir(), 'komisio-redact-outside-'))
+    const target = join(outside, 'spec', 'error-context.md')
+    mkdirSync(join(target, '..'), { recursive: true })
+    writeFileSync(target, '- cookie: synthetic-outside\n')
+    const root = mkdtempSync(join(tmpdir(), 'komisio-redact-links-'))
+    let linked = false
+    try {
+      symlinkSync(outside, join(root, 'link-to-outside'), 'junction')
+      linked = true
+    } catch {
+      // Without link privileges the platform cannot exercise this boundary.
+    }
+    if (linked) {
+      const rootLink = join(tmpdir(), 'komisio-redact-rootlink-' + Date.now())
+      symlinkSync(outside, rootLink, 'junction')
+      expect(redactArtifacts(rootLink)).toBe(0)
+      expect(redactArtifacts(root)).toBe(0)
+      expect(readFileSync(target, 'utf8')).toBe('- cookie: synthetic-outside\n')
+      rmSync(rootLink, { recursive: false, force: true })
+    } else {
+      expect(redactArtifacts(root)).toBe(0)
+    }
   })
   it('runs as a command against a given root without printing values', () => {
     const root = mkdtempSync(join(tmpdir(), 'komisio-redact-cli-'))

@@ -22,38 +22,47 @@ export function redactText(text) {
   return text.split('\n').map(redactLine).join('\n')
 }
 
-/** Every error-context.md under root, following no symbolic links. */
-export function findContexts(root) {
+/**
+ * Every error-context.md under root, following no symbolic links, the root
+ * included. A missing root is an empty result; any other filesystem error
+ * propagates so the caller fails closed instead of uploading unredacted files.
+ */
+const fs = { lstatSync, readdirSync, readFileSync, writeFileSync }
+
+export function findContexts(root, io = fs) {
   const found = []
   let entries
   try {
-    entries = readdirSync(root, { withFileTypes: true })
-  } catch {
-    return found
+    if (io.lstatSync(root).isSymbolicLink()) return found
+    entries = io.readdirSync(root, { withFileTypes: true })
+  } catch (error) {
+    if (error?.code === 'ENOENT') return found
+    throw error
   }
   for (const entry of entries) {
     const path = join(root, entry.name)
     if (entry.isSymbolicLink()) continue
-    if (entry.isDirectory()) found.push(...findContexts(path))
+    if (entry.isDirectory()) found.push(...findContexts(path, io))
     else if (entry.isFile() && entry.name === 'error-context.md')
       found.push(path)
   }
   return found
 }
 
-/** Rewrites each file in place; returns how many changed. */
-export function redactArtifacts(root = 'test-results') {
-  let changed = 0
-  for (const path of findContexts(root)) {
-    if (lstatSync(path).isSymbolicLink()) continue
-    const before = readFileSync(path, 'utf8')
+/**
+ * Rewrites each file in place; returns how many changed. Every file is read
+ * before any is written, so a read error leaves nothing half-redacted.
+ */
+export function redactArtifacts(root = 'test-results', io = fs) {
+  const pending = []
+  for (const path of findContexts(root, io)) {
+    if (io.lstatSync(path).isSymbolicLink()) continue
+    const before = io.readFileSync(path, 'utf8')
     const after = redactText(before)
-    if (after !== before) {
-      writeFileSync(path, after)
-      changed++
-    }
+    if (after !== before) pending.push([path, after])
   }
-  return changed
+  for (const [path, after] of pending) io.writeFileSync(path, after)
+  return pending.length
 }
 
 if (

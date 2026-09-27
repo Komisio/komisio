@@ -394,6 +394,7 @@ small {
   flex-wrap: wrap;
 }
 .page-heading {
+  overflow-wrap: anywhere;
   margin-bottom: 32px;
 }
 .page-heading p {

@@ -52,7 +52,9 @@ function PrivacyCard({
     [error, setError] = useState('')
   const retry = useRef<{ signature: string; id: string } | null>(null)
   const when = (value: string) =>
-    new Date(value).toLocaleString(intlLocale(locale))
+    new Date(value).toLocaleString(intlLocale(locale), {
+      timeZone: 'Europe/Stockholm',
+    })
   async function save(event: React.FormEvent) {
     event.preventDefault()
     if (running.current) return

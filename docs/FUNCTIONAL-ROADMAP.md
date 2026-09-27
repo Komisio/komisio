@@ -8,6 +8,33 @@ including hourly price decay, dedicated lifecycle stages and associated digital
 price screens/feeds. Historical mentions below are inventory only, not v1 scope.
 This exclusion does not remove ordinary agreed return/donation workflows.
 
+## Current delivery baseline (2026-09-27)
+
+PRs 270–290 are deployed to staging and production. Staff item and seller
+lists, seller-owned items and announced handovers support bounded search and
+pagination. Receiving supports contact-based seller lookup, direct item-label
+resolution and paging through registered items. Seller handovers have an
+on-demand QR code, clearer receipt/status summaries and exact staff reference
+lookup. Disabled handover settings have a direct owner/admin activation link.
+
+The store flow combines editable internal instructions with a live work view,
+including pending announcements separately from goods received. The selected
+live view can be bookmarked. These instructions still do not execute policy.
+Registered items and existing drafts are observable facts; there is no recorded
+whole-handover completion or reliable count of physically unregistered goods.
+Do not infer either from an estimated seller count or the first registered item.
+
+Next: finish international mobile presentation checks, expose clearer progress
+and next actions within an handover workflow using existing facts, and record
+a complete controlled intake-to-settlement acceptance journey. Physical label
+printing and real POS/accounting acceptance remain separate verification needs.
+Space booking requires the unresolved fee/cancellation decisions below. Stripe
+activation remains deferred; hourly price decay remains outside version 1.
+
+Older dated inventories below describe their own checkpoint, not the current
+implementation backlog. A listed capability is not proof of live integration
+acceptance or authorization to implement an unresolved business rule.
+
 Inventory provenance: Fable's inventory at `4593bd0` describes
 functionality found in the earlier back office, mobile app and print service.
 Those systems had no store users and included prototypes; finding an implementation

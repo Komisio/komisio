@@ -2917,3 +2917,14 @@ button.text-link:hover:not(:disabled) {
   min-height: 44px;
   width: 100%;
 }
+
+.members-panel {
+  grid-template-columns: minmax(0, 1fr);
+}
+.members-panel > .card {
+  min-width: 0;
+}
+
+.members-panel .table-wrap {
+  position: relative;
+}

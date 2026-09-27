@@ -17,7 +17,19 @@ test('lifecycle search preserves paging and batch scope, and item shortcuts open
     await f.item('Literal% item')
     await f.commit()
     await page.setViewportSize({ width: 320, height: 800 })
-    await page.goto('/intake/lifecycle?stage=markdown_due&page=2')
+    await page.goto('/intake/lifecycle?stage=sold')
+    await expect(page.locator('.lifecycle-row')).toHaveCount(0)
+    const automation = page.locator('.lifecycle-automation')
+    await automation.locator('summary').click()
+    await expect(
+      automation.getByRole('button', {
+        name: d.lifecycle.applyAllDue.replace('{count}', '23'),
+        exact: true,
+      }),
+    ).toBeVisible()
+    await expect(automation).toContainText(d.lifecycle.searchScopeHint)
+    await page.goto('/intake/lifecycle?stage=markdown_due&page=99')
+    await expect(page).toHaveURL(/stage=markdown_due&page=2$/)
     const rows = page.locator('.lifecycle-row')
     const search = page.getByLabel(d.lifecycle.search, { exact: true })
     const submit = page.getByRole('button', {

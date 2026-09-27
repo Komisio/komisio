@@ -1488,7 +1488,7 @@
     "clearSearch": "Tyhjennä haku",
     "matches": "Tuloksia: {count}",
     "noMatches": "Valitussa tilassa ei ole hakua vastaavia tuotteita.",
-    "searchScopeHint": "Haku suodattaa vain listaa. Hinnanalennusajo koskee koko myymälää."
+    "searchScopeHint": "Suodattimet vaikuttavat vain luetteloon. Hinnanalennukset koskevat koko myymälää."
   },
   "openByReference": {
     "title": "Avaa etiketillä",

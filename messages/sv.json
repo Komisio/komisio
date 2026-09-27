@@ -1488,7 +1488,7 @@
     "clearSearch": "Rensa sökning",
     "matches": "Träffar: {count}",
     "noMatches": "Inga varor matchar sökningen i valt läge.",
-    "searchScopeHint": "Sökningen påverkar bara listan. Prissänkningskörningen gäller hela butiken."
+    "searchScopeHint": "Filtren påverkar bara listan. Prissänkningarna gäller hela butiken."
   },
   "openByReference": {
     "title": "Öppna via etikett",

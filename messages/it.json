@@ -1141,8 +1141,8 @@
     "settle": "Liquida {count} conferenti",
     "settled": "Il lotto è registrato: ogni conferente selezionato ha ora un pagamento approvato in attesa di essere pagato.",
     "settleTotal": "Totale",
-    "requestNone": "Nessuno dei primi 50 conferenti in ordine di nome ha credito al momento. Apri un conferente dall'elenco conferenti per richiedere per suo conto.",
-    "directory": "Elenco conferenti",
+    "requestNone": "Nessun saldo disponibile in questo elenco. Apri un conferente per vederne il saldo.",
+    "directory": "Cerca tra tutti i conferenti",
     "latestFifty": "Sono mostrati gli ultimi 50 pagamenti. La pagina di ogni conferente mostra i suoi pagamenti recenti."
   },
   "returns": {

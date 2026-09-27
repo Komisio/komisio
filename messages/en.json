@@ -1141,8 +1141,8 @@
     "settle": "Settle {count} sellers",
     "settled": "The batch is recorded: every selected seller now has an approved payout awaiting payment.",
     "settleTotal": "Total",
-    "requestNone": "None of the first 50 sellers by name has credit right now. Open any seller from the seller directory to request on their behalf.",
-    "directory": "Seller directory",
+    "requestNone": "No available balance in this list. Open a seller to see their balance.",
+    "directory": "Search all sellers",
     "latestFifty": "Showing the latest 50 payouts. Each seller's page shows that seller's recent payouts."
   },
   "returns": {

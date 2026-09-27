@@ -1141,8 +1141,8 @@
     "settle": "Afregn {count} indleverere",
     "settled": "Batchen er registreret: hver valgt indleverer har nu en godkendt udbetaling, der afventer betaling.",
     "settleTotal": "I alt",
-    "requestNone": "Ingen af de første 50 indleverere i navneorden har tilgodehavende lige nu. Åbn en indleverer i indlevererregistret for at anmode på dennes vegne.",
-    "directory": "Indlevererregister",
+    "requestNone": "Ingen tilgængelig saldo på denne liste. Åbn en indleverer for at se saldoen.",
+    "directory": "Søg blandt alle indleverere",
     "latestFifty": "Viser de 50 seneste udbetalinger. Hver indleverers side viser indlevererens seneste udbetalinger."
   },
   "returns": {

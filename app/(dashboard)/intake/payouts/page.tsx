@@ -72,9 +72,10 @@ export default async function Payouts() {
       </div>
       <p className="intake-notice">{d.notice}</p>
       <div className="intake-grid">
-        {/* Order on a phone: what needs a decision first (flagged returns,
-            the settlement, open payouts), the on-behalf request form last and
-            folded, since it is empty for the seller just settled. */}
+        {/* Order on a phone: flagged returns first, then the on-behalf request
+            folded to one line so it stays reachable above many payout cards
+            without its empty form in the way, then the settlement and the
+            open payouts that need a decision. */}
         {flagged.length > 0 && (
           <section className="card intake-form">
             <h2>{all.returns.flaggedHeading}</h2>
@@ -90,6 +91,33 @@ export default async function Payouts() {
             ))}
           </section>
         )}
+        <details className="card intake-form" data-testid="payout-request">
+          <summary style={{ cursor: 'pointer', padding: '10px 0' }}>
+            <strong>{d.requestHeading}</strong>
+          </summary>
+          {!write ? (
+            <p>{all.intake.readOnly}</p>
+          ) : eligible.length > 0 ? (
+            <>
+              <p>{d.requestHint}</p>
+              <PayoutRequestForm
+                key={active.id}
+                tenantId={active.id}
+                currency={currency}
+                sellers={eligible}
+                d={d}
+                intake={all.intake}
+              />
+            </>
+          ) : (
+            <p role="status">{d.requestNone}</p>
+          )}
+          <p>
+            <Link className="text-link" href="/intake/sellers">
+              {d.directory}
+            </Link>
+          </p>
+        </details>
         <section className="card intake-form">
           <h2>{d.settleHeading}</h2>
           <p>
@@ -162,31 +190,6 @@ export default async function Payouts() {
             </div>
           ))}
         </section>
-        <details className="card intake-form" data-testid="payout-request">
-          <summary style={{ cursor: 'pointer', padding: '10px 0' }}>
-            <strong>{d.requestHeading}</strong>
-          </summary>
-          <p>{d.requestHint}</p>
-          {!write ? (
-            <p>{all.intake.readOnly}</p>
-          ) : eligible.length > 0 ? (
-            <PayoutRequestForm
-              key={active.id}
-              tenantId={active.id}
-              currency={currency}
-              sellers={eligible}
-              d={d}
-              intake={all.intake}
-            />
-          ) : (
-            <p role="status">{d.requestNone}</p>
-          )}
-          <p>
-            <Link className="text-link" href="/intake/sellers">
-              {d.directory}
-            </Link>
-          </p>
-        </details>
       </div>
     </>
   )

@@ -1141,8 +1141,8 @@
     "settle": "Tilitä {count} tuojalle",
     "settled": "Erä on kirjattu: jokaisella valitulla tuojalla on nyt hyväksytty tilitys, joka odottaa maksua.",
     "settleTotal": "Yhteensä",
-    "requestNone": "Kenelläkään 50 ensimmäisestä tuojasta nimijärjestyksessä ei ole saatavaa juuri nyt. Avaa tuoja tuojaluettelosta pyytääksesi hänen puolestaan.",
-    "directory": "Tuojaluettelo",
+    "requestNone": "Tässä luettelossa ei ole käytettävissä olevaa saldoa. Avaa tuoja nähdäksesi saldon.",
+    "directory": "Hae kaikista tuojista",
     "latestFifty": "Näytetään 50 viimeisintä tilitystä. Kunkin tuojan sivu näyttää tuojan viimeisimmät tilitykset."
   },
   "returns": {

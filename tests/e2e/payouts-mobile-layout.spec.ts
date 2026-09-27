@@ -12,7 +12,7 @@ const p = d.payouts
 test('payouts page keeps decisions first and folds the request form on mobile', async ({
   page,
   browser,
-}) => {
+}, testInfo) => {
   const email = `payouts-mobile-${randomUUID()}@example.test`
   await register(page, email, `K!${randomBytes(16).toString('hex')}`)
   const f = await p2Fixture(email)
@@ -38,15 +38,19 @@ test('payouts page keeps decisions first and folds the request form on mobile', 
     })
     const list = page.getByTestId('payout-list')
     const request = page.getByTestId('payout-request')
+    // Document position, not viewport position, so an already scrolled page cannot pass by accident.
     const top = async (locator: typeof settle) =>
-      (await locator.boundingBox())!.y
-    // Order: settlement, then the payout list, then the folded request form.
+      (await locator.boundingBox())!.y +
+      (await page.evaluate(() => window.scrollY))
+    // Order: the folded request one line from the top, then the settlement, then the payout list.
+    expect(await top(request)).toBeLessThan(await top(settle))
     expect(await top(settle)).toBeLessThan(await top(list))
-    expect(await top(list)).toBeLessThan(await top(request))
     expect(
       await request.evaluate((el) => (el as HTMLDetailsElement).open),
     ).toBe(false)
     await expect(request.locator('summary')).toContainText(p.requestHeading)
+    // Folded, the request takes one line: the settlement starts within the first screen.
+    expect(await top(settle)).toBeLessThan(720)
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
@@ -54,6 +58,9 @@ test('payouts page keeps decisions first and folds the request form on mobile', 
     ).toBe(true)
     // With credit available the manual request is still there, one tap away.
     await request.locator('summary').click()
+    await expect(
+      request.getByText(p.requestHint, { exact: true }),
+    ).toBeVisible()
     const select = request.getByLabel(p.seller, { exact: true })
     await expect(select).toBeVisible()
     await expect(select.locator('option')).toHaveCount(1)
@@ -79,23 +86,31 @@ test('payouts page keeps decisions first and folds the request form on mobile', 
       })
       .click()
     await expect(page.getByText(p.settled, { exact: true })).toBeVisible()
-    await page.reload()
+    // The page refreshes itself after the batch; wait for the refreshed facts, no reload.
     await expect(page.getByText(p.settleEmpty, { exact: true })).toBeVisible()
     const approved = list.locator('.intake-notice', {
       hasText: p.statuses.approved,
     })
     await expect(approved).toHaveCount(1)
     await expect(approved).toContainText('160.00 SEK')
-    // The approved payout sits above the folded request form and near the top of the page.
-    expect(await top(approved)).toBeLessThan(await top(request))
+    // The approved payout is within the first two phone screens of the document, the request still folded above it.
     expect(await top(approved)).toBeLessThan(720 * 2)
+    expect(await top(request)).toBeLessThan(await top(approved))
     expect(
       await request.evaluate((el) => (el as HTMLDetailsElement).open),
     ).toBe(false)
+    await page.screenshot({
+      path: testInfo.outputPath('payouts-after-settlement-mobile.png'),
+      fullPage: true,
+      caret: 'initial',
+    })
     // The bounded request list is now empty: say so about this list, keep the way to any seller.
     await request.locator('summary').click()
     await expect(request.getByRole('status')).toHaveText(p.requestNone)
     await expect(request.getByLabel(p.seller, { exact: true })).toHaveCount(0)
+    await expect(request.getByText(p.requestHint, { exact: true })).toHaveCount(
+      0,
+    )
     await expect(
       request.getByRole('link', { name: p.directory, exact: true }),
     ).toHaveAttribute('href', '/intake/sellers')
@@ -142,6 +157,9 @@ test('payouts page keeps decisions first and folds the request form on mobile', 
       const readerRequest = readerPage.getByTestId('payout-request')
       await readerRequest.locator('summary').click()
       await expect(readerRequest.getByText(d.intake.readOnly)).toBeVisible()
+      await expect(
+        readerRequest.getByText(p.requestHint, { exact: true }),
+      ).toHaveCount(0)
       await expect(readerPage.getByRole('button')).toHaveCount(0)
       await expect(
         readerPage

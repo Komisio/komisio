@@ -21,12 +21,24 @@ test('controlled journey: receive, register, label, sell and approve a settlemen
   try {
     await f.commit()
     await page.setViewportSize({ width: 320, height: 800 })
+    // Layout is checked softly so one overflowing page still lets the chain of
+    // facts run to the end; on failure the elements that stick out are named.
     const noOverflow = async () =>
-      expect(
-        await page.evaluate(
-          () => document.documentElement.scrollWidth <= innerWidth,
-        ),
-      ).toBe(true)
+      expect
+        .soft(
+          await page.evaluate(() => {
+            if (document.documentElement.scrollWidth <= innerWidth) return []
+            return [...document.querySelectorAll('body *')]
+              .filter((el) => el.getBoundingClientRect().right > innerWidth + 1)
+              .slice(0, 8)
+              .map(
+                (el) =>
+                  `${el.tagName.toLowerCase()}${el.className ? '.' + String(el.className).split(' ').join('.') : ''} right=${Math.round(el.getBoundingClientRect().right)}`,
+              )
+          }),
+          `page ${page.url()} overflows ${await page.evaluate(() => document.documentElement.scrollWidth)}px at ${await page.evaluate(() => innerWidth)}px`,
+        )
+        .toEqual([])
 
     // 1. Receive the handover as a bag for the fixture seller.
     await page.goto(`/intake?seller=${f.seller}#new-seller`)

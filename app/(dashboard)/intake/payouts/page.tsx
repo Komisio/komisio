@@ -52,6 +52,10 @@ export default async function Payouts() {
     payouts.map((p) => p.id),
   )
   const names = new Map(sellerRows.map((s) => [s.id, s.name]))
+  // The on-behalf form offers the first 50 sellers by name that hold credit;
+  // the page says so when that bounded list is empty instead of claiming
+  // nobody in the store is eligible.
+  const eligible = balances.filter((s) => s.availableOre > 0)
   const write = active.role !== 'readonly'
   const when = (iso: string) =>
     new Date(iso).toLocaleString(intlLocale(ctx.locale), {
@@ -68,22 +72,24 @@ export default async function Payouts() {
       </div>
       <p className="intake-notice">{d.notice}</p>
       <div className="intake-grid">
-        <section className="card intake-form">
-          <h2>{d.requestHeading}</h2>
-          <p>{d.requestHint}</p>
-          {write ? (
-            <PayoutRequestForm
-              key={active.id}
-              tenantId={active.id}
-              currency={currency}
-              sellers={balances.filter((s) => s.availableOre > 0)}
-              d={d}
-              intake={all.intake}
-            />
-          ) : (
-            <p>{all.intake.readOnly}</p>
-          )}
-        </section>
+        {/* Order on a phone: what needs a decision first (flagged returns,
+            the settlement, open payouts), the on-behalf request form last and
+            folded, since it is empty for the seller just settled. */}
+        {flagged.length > 0 && (
+          <section className="card intake-form">
+            <h2>{all.returns.flaggedHeading}</h2>
+            <p>{all.returns.flaggedHint}</p>
+            {flagged.map((r) => (
+              <p key={r.id} role="alert">
+                {when(r.occurred_at)} · {formatSignedOre(r.refund_ore)}{' '}
+                {currency} · {r.reason} ·{' '}
+                <Link className="text-link" href={`/intake/items/${r.item_id}`}>
+                  {all.items.open}
+                </Link>
+              </p>
+            ))}
+          </section>
+        )}
         <section className="card intake-form">
           <h2>{d.settleHeading}</h2>
           <p>
@@ -107,24 +113,14 @@ export default async function Payouts() {
             <p>{all.intake.readOnly}</p>
           )}
         </section>
-        {flagged.length > 0 && (
-          <section className="card intake-form">
-            <h2>{all.returns.flaggedHeading}</h2>
-            <p>{all.returns.flaggedHint}</p>
-            {flagged.map((r) => (
-              <p key={r.id} role="alert">
-                {when(r.occurred_at)} · {formatSignedOre(r.refund_ore)}{' '}
-                {currency} · {r.reason} ·{' '}
-                <Link className="text-link" href={`/intake/items/${r.item_id}`}>
-                  {all.items.open}
-                </Link>
-              </p>
-            ))}
-          </section>
-        )}
-        <section className="card intake-form">
+        <section className="card intake-form" data-testid="payout-list">
           <h2>{d.list}</h2>
           {payouts.length === 0 && <p>{d.empty}</p>}
+          {payouts.length >= 50 && (
+            <p>
+              <small>{d.latestFifty}</small>
+            </p>
+          )}
           {payouts.map((p) => (
             <div key={p.id} className="intake-notice">
               <strong>
@@ -166,6 +162,31 @@ export default async function Payouts() {
             </div>
           ))}
         </section>
+        <details className="card intake-form" data-testid="payout-request">
+          <summary style={{ cursor: 'pointer', padding: '10px 0' }}>
+            <strong>{d.requestHeading}</strong>
+          </summary>
+          <p>{d.requestHint}</p>
+          {!write ? (
+            <p>{all.intake.readOnly}</p>
+          ) : eligible.length > 0 ? (
+            <PayoutRequestForm
+              key={active.id}
+              tenantId={active.id}
+              currency={currency}
+              sellers={eligible}
+              d={d}
+              intake={all.intake}
+            />
+          ) : (
+            <p role="status">{d.requestNone}</p>
+          )}
+          <p>
+            <Link className="text-link" href="/intake/sellers">
+              {d.directory}
+            </Link>
+          </p>
+        </details>
       </div>
     </>
   )

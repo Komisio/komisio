@@ -1140,7 +1140,10 @@
     "settleConfirm": "Maksan nämä summat ja kirjaan viitteet.",
     "settle": "Tilitä {count} tuojalle",
     "settled": "Erä on kirjattu: jokaisella valitulla tuojalla on nyt hyväksytty tilitys, joka odottaa maksua.",
-    "settleTotal": "Yhteensä"
+    "settleTotal": "Yhteensä",
+    "requestNone": "Kenelläkään 50 ensimmäisestä tuojasta nimijärjestyksessä ei ole saatavaa juuri nyt. Avaa tuoja tuojaluettelosta pyytääksesi hänen puolestaan.",
+    "directory": "Tuojaluettelo",
+    "latestFifty": "Näytetään 50 viimeisintä tilitystä. Kunkin tuojan sivu näyttää tuojan viimeisimmät tilitykset."
   },
   "returns": {
     "reason": "Palautuksen syy",

@@ -1109,7 +1109,7 @@
     "intro": "A payout goes from requested to approved to paid, or is rejected. Approval reserves the amount in the seller's ledger; payment settles it.",
     "notice": "Komisio records payouts; it does not move money. Pay through your bank and record the reference here.",
     "requestHeading": "Request a payout",
-    "requestHint": "On the seller's behalf, up to the available balance and at least the policy minimum. The seller app will request directly later.",
+    "requestHint": "On the seller’s behalf, at least the store’s minimum and no more than the available balance.",
     "seller": "Seller",
     "amount": "Amount",
     "amountHint": "For example 150 or 150.50.",
@@ -1734,7 +1734,16 @@
     "handoverCodeHint": "Ask store staff to scan with their phone camera. The reference can also be typed in.",
     "handoverCodeError": "The code could not be displayed. Use the reference above.",
     "handoverItemCount": "Approx. {count} items",
-    "handoverReceipt": "Receipt {reference}"
+    "handoverReceipt": "Receipt {reference}",
+    "noPayoutBalance": "You have no available balance to request a payout from.",
+    "payoutBelowThreshold": "You can request a payout when your available balance is at least {minimum}.",
+    "payoutRequested": "Your request is recorded. The store will review and handle the payout.",
+    "preferenceError": "Your email preference could not be saved. Please try again.",
+    "payoutErrors": {
+      "INVALID_INPUT": "Enter an amount greater than zero with no more than two decimal places.",
+      "PAYOUT_BELOW_THRESHOLD": "The amount is below the store’s minimum.",
+      "PAYOUT_EXCEEDS_BALANCE": "The amount exceeds your available balance. Check the balance above."
+    }
   },
   "plans": {
     "heading": "Plan",

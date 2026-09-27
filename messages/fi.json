@@ -1109,7 +1109,7 @@
     "intro": "Maksupyyntö etenee pyydetystä hyväksyttyyn ja maksettuun tai hylätään. Hyväksyntä varaa summan tuojan tilikirjassa; maksu selvittää sen.",
     "notice": "Komisio kirjaa tilitykset; se ei siirrä rahaa. Maksa pankkisi kautta ja kirjaa viite tähän.",
     "requestHeading": "Pyydä tilitystä",
-    "requestHint": "Tuojan puolesta, enintään käytettävissä oleva saldo ja vähintään käytännön vähimmäismäärä. Tuojasovellus pyytää myöhemmin suoraan.",
+    "requestHint": "Myyjän puolesta, vähintään kaupan vähimmäissumma ja enintään käytettävissä oleva saldo.",
     "seller": "Tuoja",
     "amount": "Summa",
     "amountHint": "Esimerkiksi 150 tai 150.50.",
@@ -1734,7 +1734,16 @@
     "handoverCodeHint": "Pyydä myymälän henkilökuntaa skannaamaan puhelimen kameralla. Viitteen voi myös kirjoittaa.",
     "handoverCodeError": "Koodia ei voitu näyttää. Käytä yllä olevaa viitettä.",
     "handoverItemCount": "Noin {count} tuotetta",
-    "handoverReceipt": "Vastaanottokuitti {reference}"
+    "handoverReceipt": "Vastaanottokuitti {reference}",
+    "noPayoutBalance": "Sinulla ei ole käytettävissä olevaa saldoa tilityspyyntöä varten.",
+    "payoutBelowThreshold": "Voit pyytää tilitystä, kun käytettävissä oleva saldo on vähintään {minimum}.",
+    "payoutRequested": "Tilityspyyntösi on kirjattu. Kauppa tarkistaa ja käsittelee sen.",
+    "preferenceError": "Sähköpostiasetusta ei voitu tallentaa. Yritä uudelleen.",
+    "payoutErrors": {
+      "INVALID_INPUT": "Anna nollaa suurempi summa enintään kahdella desimaalilla.",
+      "PAYOUT_BELOW_THRESHOLD": "Summa alittaa kaupan vähimmäissumman.",
+      "PAYOUT_EXCEEDS_BALANCE": "Summa ylittää käytettävissä olevan saldosi. Tarkista yllä oleva saldo."
+    }
   },
   "plans": {
     "heading": "Tilaus",

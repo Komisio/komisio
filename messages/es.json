@@ -1109,7 +1109,7 @@
     "intro": "Un pago pasa de solicitado a aprobado y a pagado, o se rechaza. La aprobación reserva el importe en el libro del depositante; el pago lo liquida.",
     "notice": "Komisio registra los pagos; no mueve dinero. Paga a través de tu banco y registra aquí la referencia.",
     "requestHeading": "Solicitar un pago",
-    "requestHint": "En nombre del depositante, hasta el saldo disponible y al menos el mínimo de la política. Más adelante, la app del depositante lo solicitará directamente.",
+    "requestHint": "En nombre del vendedor, al menos el mínimo de la tienda y como máximo el saldo disponible.",
     "seller": "Depositante",
     "amount": "Importe",
     "amountHint": "Por ejemplo 150 o 150.50.",
@@ -1734,7 +1734,16 @@
     "handoverCodeHint": "Pide al personal que lo escanee con la cámara del móvil. También puede escribir la referencia.",
     "handoverCodeError": "No se pudo mostrar el código. Usa la referencia de arriba.",
     "handoverItemCount": "Aprox. {count} artículos",
-    "handoverReceipt": "Entrega {reference}"
+    "handoverReceipt": "Entrega {reference}",
+    "noPayoutBalance": "No tienes saldo disponible para solicitar un pago.",
+    "payoutBelowThreshold": "Puedes solicitar un pago cuando tu saldo disponible sea de al menos {minimum}.",
+    "payoutRequested": "Tu solicitud está registrada. La tienda revisará y gestionará el pago.",
+    "preferenceError": "No se pudo guardar tu preferencia de correo. Inténtalo de nuevo.",
+    "payoutErrors": {
+      "INVALID_INPUT": "Introduce un importe mayor que cero con un máximo de dos decimales.",
+      "PAYOUT_BELOW_THRESHOLD": "El importe es inferior al mínimo de la tienda.",
+      "PAYOUT_EXCEEDS_BALANCE": "El importe supera tu saldo disponible. Comprueba el saldo de arriba."
+    }
   },
   "plans": {
     "heading": "Plan",

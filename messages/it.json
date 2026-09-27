@@ -1109,7 +1109,7 @@
     "intro": "Un pagamento passa da richiesto ad approvato a pagato, oppure viene rifiutato. L'approvazione riserva l'importo nel registro del conferente; il pagamento lo salda.",
     "notice": "Komisio registra i pagamenti; non sposta denaro. Paga tramite la tua banca e registra qui il riferimento.",
     "requestHeading": "Richiedi un pagamento",
-    "requestHint": "Per conto del conferente, fino al saldo disponibile e almeno il minimo della politica. L'app per i conferenti permetterà di richiederlo direttamente in seguito.",
+    "requestHint": "Per conto del venditore, almeno il minimo del negozio e non oltre il saldo disponibile.",
     "seller": "Conferente",
     "amount": "Importo",
     "amountHint": "Ad esempio 150 o 150.50.",
@@ -1734,7 +1734,16 @@
     "handoverCodeHint": "Chiedi al personale di scansionare con la fotocamera del telefono. Il riferimento può anche essere digitato.",
     "handoverCodeError": "Impossibile mostrare il codice. Usa il riferimento qui sopra.",
     "handoverItemCount": "Circa {count} articoli",
-    "handoverReceipt": "Ricevuta {reference}"
+    "handoverReceipt": "Ricevuta {reference}",
+    "noPayoutBalance": "Non hai un saldo disponibile per richiedere un pagamento.",
+    "payoutBelowThreshold": "Puoi richiedere un pagamento quando il saldo disponibile è almeno {minimum}.",
+    "payoutRequested": "La richiesta è registrata. Il negozio la esaminerà e gestirà il pagamento.",
+    "preferenceError": "Non è stato possibile salvare la preferenza email. Riprova.",
+    "payoutErrors": {
+      "INVALID_INPUT": "Inserisci un importo maggiore di zero con al massimo due decimali.",
+      "PAYOUT_BELOW_THRESHOLD": "L’importo è inferiore al minimo del negozio.",
+      "PAYOUT_EXCEEDS_BALANCE": "L’importo supera il saldo disponibile. Controlla il saldo indicato sopra."
+    }
   },
   "plans": {
     "heading": "Piano",

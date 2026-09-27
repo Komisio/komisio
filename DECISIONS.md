@@ -742,3 +742,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-27: The handover summary and registered-item list read a bag's drafts through inspection_draft_revisions with the tenant and bag predicate inside, not through the store-wide inspection_current view. Same values, roles, tenant and MFA checks; a parity test captures the previous bodies.
 
 - 2026-09-27: Statement day inputs convert to Stockholm boundaries in SQL through a wrapper of the unchanged issuer. Defaults end yesterday in that calendar; open days are refused. Legacy timestamp calls, overlap, identity and immutable financial rules remain unchanged.
+- 2026-09-27: Standard attribute and item-type labels/help cover all eight UI languages. Translated choice labels use new platform definition versions with unchanged ids, order, types and units; historical choices and tenant-owned vocabulary remain untouched.

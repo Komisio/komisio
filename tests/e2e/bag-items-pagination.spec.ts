@@ -119,6 +119,11 @@ test('both intake origins remain reachable in both handover views on mobile', as
       )
       await expect(page).toHaveURL(new RegExp(`itemPage=3#bag-registered$`))
       await expect(rows).toHaveCount(3)
+      if (view) {
+        await page.locator('a[href*="draft="]').first().click()
+        await expect(page).toHaveURL(/itemPage=3/)
+        await expect(rows).toHaveCount(3)
+      }
       await links.first().click()
       await expect(page).toHaveURL(/\/intake\/items\//)
     }

@@ -39,9 +39,19 @@ export default async function InspectBag({
   if (!z.uuid().safeParse(id).success || !navigation.success) notFound()
   const { draft, version, historyBefore, after, before, status } =
     navigation.data
+  const itemPage =
+    typeof query.itemPage === 'string' && /^[1-9]\d{0,6}$/.test(query.itemPage)
+      ? Number(query.itemPage)
+      : 1
   const inspectionHref = (
     params: Record<string, string | number | undefined>,
-  ) => navigationHref({ view: 'drafts', status, ...params })
+  ) =>
+    navigationHref({
+      view: 'drafts',
+      status,
+      itemPage: itemPage > 1 ? itemPage : undefined,
+      ...params,
+    })
   const tenantId = ctx.active!.id
   const {
     bag,
@@ -93,10 +103,6 @@ export default async function InspectBag({
         readonly={ctx.active!.role === 'readonly'}
       />
     )
-  const itemPage =
-    typeof query.itemPage === 'string' && /^[1-9]\d{0,6}$/.test(query.itemPage)
-      ? Number(query.itemPage)
-      : 1
   const registered = await readBagRegisteredItems(
     ctx.client,
     tenantId,

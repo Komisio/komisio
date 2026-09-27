@@ -25,10 +25,16 @@ do $$ declare origin uuid; item uuid; begin for n in 1..30 loop
  end if;
 end loop; end $$;
 select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,gen_random_uuid(),0,'Unaccepted','','Good');
+-- Populated unrelated origins must not leak into this handover.
+select set_config('test.purchase',register_purchase(current_setting('test.tenant')::uuid,gen_random_uuid(),'',15000,'Synthetic receipt',false)::text,true);
+select accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'purchase',current_setting('test.purchase')::uuid,null,20000);
+select set_config('test.otherdraft',gen_random_uuid()::text,true);
+select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.otherbag')::uuid,current_setting('test.otherdraft')::uuid,0,'Other bag item','','Good');
+select accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'inspection_draft',current_setting('test.otherdraft')::uuid,1,17000);
 select set_config('test.page1',bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0)::text,true);
 select set_config('test.page2',bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,25)::text,true);
 select is(current_setting('test.page1')::jsonb->>'total',bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'accepted','list and summary count the same accepted facts');
-select is(current_setting('test.page1')::jsonb->>'total','30','both accepted origins count; unaccepted drafts do not');
+select is(current_setting('test.page1')::jsonb->>'total','30','both accepted origins count; unaccepted drafts, purchases and other bags do not');
 select is(jsonb_array_length(current_setting('test.page1')::jsonb->'items'),25,'first page bounded');
 select is(jsonb_array_length(current_setting('test.page2')::jsonb->'items'),5,'second page reaches remaining items');
 select is((select count(distinct x->>'id')::int from jsonb_array_elements((current_setting('test.page1')::jsonb->'items')||(current_setting('test.page2')::jsonb->'items')) x),30,'same timestamp pagination has no duplicate or missing items');
@@ -36,7 +42,7 @@ select is((select count(*)::int from jsonb_array_elements((current_setting('test
 select is((select count(*)::int from jsonb_array_elements((current_setting('test.page1')::jsonb->'items')||(current_setting('test.page2')::jsonb->'items')) x where x->>'session_id' is not null and x->>'title' like 'Quick item %'),15,'quick item session and title retained');
 select is(bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0),current_setting('test.page1')::jsonb,'stable read order');
 select is(bag_received_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0)->>'total','15','old quick-only RPC contract retained');
-select is(bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.otherbag')::uuid,0)->>'total','0','another handover excludes all rows');
+select is(bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.otherbag')::uuid,0)->>'total','1','another handover contains only its own accepted item');
 select is(jsonb_array_length(bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,100)->'items'),0,'out-of-range page empty');
 select throws_like($$select bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,-1)$$,'%INVALID_INPUT%','negative offset rejected');
 select set_item_price(current_setting('test.tenant')::uuid,gen_random_uuid(),(current_setting('test.page1')::jsonb->'items'->0->>'id')::uuid,12345,'Synthetic current price');

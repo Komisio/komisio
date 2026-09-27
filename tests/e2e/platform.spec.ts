@@ -1181,8 +1181,19 @@ test('archived inspection drafts preserve history and require explicit reopening
     .getByRole('link', { name: 'Arkiverade utkast', exact: true })
     .click()
   await expect(page.locator('.inspection-item')).toHaveCount(1)
+  const staleResponse = stale.waitForResponse(
+    (r) => r.url().endsWith('/api/intake') && r.request().method() === 'POST',
+  )
   await stale.getByRole('button', { name: 'Spara utkast', exact: true }).click()
-  await expect(stale.getByRole('alert')).toBeVisible()
+  const staleResult = await staleResponse
+  expect(staleResult.status()).toBe(409)
+  expect((await staleResult.json()).error).toBe('INSPECTION_DRAFT_CHANGED')
+  await expect(
+    stale
+      .locator('form')
+      .filter({ has: stale.getByLabel('Beskrivning av varan') })
+      .getByRole('alert'),
+  ).toBeVisible()
   await expect(stale.getByLabel('Beskrivning av varan')).toHaveValue(
     'Unsaved stale description',
   )
@@ -1197,6 +1208,9 @@ test('archived inspection drafts preserve history and require explicit reopening
   await page.getByLabel('Jag bekräftar ändringen av utkastets status.').check()
   await page.getByRole('button', { name: 'Bekräfta ändringen' }).click()
   await expect(page.getByText('Statusändringen är registrerad.')).toBeVisible()
+  await expect(page.getByLabel('Beskrivning av varan')).toHaveValue(
+    'TEST archive jacket',
+  )
   expect(archiveCommand).toBeDefined()
   expect((await post(archiveCommand!)).status()).toBe(200)
   expect((await post(original)).status()).toBe(200)

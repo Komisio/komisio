@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
+import { statementPeriodDates } from '@/lib/intake/statement-period'
 import { issueStatementCommand } from '@/lib/engine/statements'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
@@ -30,17 +31,22 @@ export function StatementForm({
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const f = new FormData(event.currentTarget)
-    // Dates are whole days in Europe/Stockholm terms as entered; the period end is exclusive.
-    const from = new Date(`${f.get('from')}T00:00:00`),
-      to = new Date(`${f.get('to')}T00:00:00`)
-    to.setDate(to.getDate() + 1)
+    let bounds
+    try {
+      bounds = statementPeriodDates(
+        String(f.get('from') ?? ''),
+        String(f.get('to') ?? ''),
+      )
+    } catch {
+      setInvalid(true)
+      return
+    }
     const candidate = issueStatementCommand.safeParse({
       action: 'issueStatement',
       tenantId,
       requestId,
       sellerId,
-      periodFrom: from.toISOString(),
-      periodTo: to.toISOString(),
+      ...bounds,
       correctsId: null,
     })
     setInvalid(!candidate.success)
@@ -65,6 +71,7 @@ export function StatementForm({
             name="from"
             type="date"
             required
+            max={defaultTo}
             defaultValue={defaultFrom}
           />
         </div>
@@ -75,6 +82,7 @@ export function StatementForm({
             name="to"
             type="date"
             required
+            max={defaultTo}
             defaultValue={defaultTo}
           />
         </div>

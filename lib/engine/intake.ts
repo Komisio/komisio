@@ -223,14 +223,19 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_occurred_at: c.occurredAt ?? new Date().toISOString(),
       })
     case 'issueStatement':
-      return client.rpc('issue_statement', {
-        p_tenant: c.tenantId,
-        p_id: c.requestId,
-        p_seller: c.sellerId,
-        p_from: c.periodFrom,
-        p_to: c.periodTo,
-        p_corrects: c.correctsId,
-      })
+      return client.rpc(
+        c.calendar === 'stockholm-days'
+          ? 'issue_statement_for_days'
+          : 'issue_statement',
+        {
+          p_tenant: c.tenantId,
+          p_id: c.requestId,
+          p_seller: c.sellerId,
+          p_from: c.periodFrom,
+          p_to: c.periodTo,
+          p_corrects: c.correctsId,
+        },
+      )
     case 'generateDayClose':
       return client.rpc('generate_day_close', {
         p_tenant: c.tenantId,

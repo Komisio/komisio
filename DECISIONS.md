@@ -740,3 +740,5 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-09-27: Registered handover rows show the existing engine lifecycle stage. Sold rows show the active completed sale-line price, excluding returns; unsold rows show current price. Missing rollout fields never imply a stage or sale amount. Counts and lifecycle rules are unchanged.
 - 2026-09-27: The handover summary and registered-item list read a bag's drafts through inspection_draft_revisions with the tenant and bag predicate inside, not through the store-wide inspection_current view. Same values, roles, tenant and MFA checks; a parity test captures the previous bodies.
+
+- 2026-09-27: Statement day inputs convert to Stockholm boundaries in SQL through a wrapper of the unchanged issuer. Defaults end yesterday in that calendar; open days are refused. Legacy timestamp calls, overlap, identity and immutable financial rules remain unchanged.

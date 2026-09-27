@@ -1,3 +1,4 @@
+import { statementPeriodDefaults } from '@/lib/intake/statement-period'
 import { SellerTabs } from '@/components/intake/seller-tabs'
 import { readBagQueue } from '@/lib/engine/bag-queue'
 import { readSellerWorkspaceItems } from '@/lib/engine/seller-workspace'
@@ -170,10 +171,7 @@ export default async function Seller({
   }
   const l = all.ledger,
     st = all.statements
-  const today = new Date(),
-    monthStart = new Date(today.getFullYear(), today.getMonth(), 1)
-  const isoDay = (x: Date) =>
-    `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, '0')}-${String(x.getDate()).padStart(2, '0')}`
+  const statementPeriod = statementPeriodDefaults()
   const profile = seller.data.profile
     ? sellerProfileBody.parse(seller.data.profile)
     : initialSellerProfile(seller.data)
@@ -547,8 +545,8 @@ export default async function Seller({
                       <StatementForm
                         tenantId={tenant.id}
                         sellerId={id.data}
-                        defaultFrom={isoDay(monthStart)}
-                        defaultTo={isoDay(today)}
+                        defaultFrom={statementPeriod.from}
+                        defaultTo={statementPeriod.to}
                         d={st}
                         intake={all.intake}
                       />

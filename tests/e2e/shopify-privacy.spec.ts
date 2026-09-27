@@ -5,6 +5,8 @@ import { p2Fixture } from '../helpers/p2-fixture'
 import { seal } from '../../lib/platform/credentials'
 import d from '../../messages/sv.json' with { type: 'json' }
 
+test.use({ timezoneId: 'America/Los_Angeles' })
+
 test('privacy requests remain pending until an authorized, recorded manual outcome', async ({
   page,
 }) => {
@@ -42,7 +44,30 @@ test('privacy requests remain pending until an authorized, recorded manual outco
         ],
       ),
     )
+    const pageErrors: string[] = []
+    page.on('pageerror', (error) => pageErrors.push(error.message))
+    await page.setViewportSize({ width: 320, height: 800 })
+    await page
+      .context()
+      .addCookies([
+        { name: 'komisio-locale', value: 'dk', url: 'http://127.0.0.1:3000' },
+      ])
     await page.goto('/intake/integrations/privacy')
+    await page.waitForLoadState('networkidle')
+    expect
+      .soft(await page.evaluate(() => document.documentElement.scrollWidth))
+      .toBeLessThanOrEqual(320)
+    expect.soft(pageErrors).toEqual([])
+    await page.screenshot({
+      path: 'test-results/privacy-danish-mobile.png',
+      fullPage: true,
+    })
+    await page
+      .context()
+      .addCookies([
+        { name: 'komisio-locale', value: 'sv', url: 'http://127.0.0.1:3000' },
+      ])
+    await page.reload()
     await expect(
       page.getByRole('heading', { name: d.shopifyPrivacy.title, exact: true }),
     ).toBeVisible()

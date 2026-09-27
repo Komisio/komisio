@@ -1,3 +1,4 @@
+import { BagWorkSummary } from '@/components/intake/bag-work-summary'
 import { prepareInspectionReception } from '@/lib/engine/inspection-reception-preview'
 import { BagReception } from '@/components/intake/bag-reception'
 import { readStorePolicy } from '@/lib/engine/store-policy'
@@ -119,6 +120,12 @@ export default async function InspectBag({
         </Link>
       </div>
       {bag.note && <p>{bag.note}</p>}
+      <BagWorkSummary
+        client={ctx.client}
+        tenantId={tenantId}
+        bagId={id}
+        locale={ctx.locale}
+      />
       {ctx.active!.role !== 'readonly' && !version && !selected?.archived && (
         <InspectionForm
           key={`${tenantId}:${id}:${draft ?? 'new'}`}

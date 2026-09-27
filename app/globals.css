@@ -2929,3 +2929,41 @@ button.text-link:hover:not(:disabled) {
 .members-panel .table-wrap {
   position: relative;
 }
+.bag-progress {
+  margin-bottom: 20px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow-wrap: anywhere;
+}
+.bag-progress h2 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.bag-progress dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+.bag-progress dt {
+  font-size: 12px;
+  color: var(--muted);
+}
+.bag-progress dd {
+  font-size: 20px;
+  margin: 0;
+  font-weight: 600;
+}
+.bag-progress p {
+  font-size: 12px;
+  margin: 8px 0 0;
+}
+
+.bag-progress nav {
+  gap: 4px 16px;
+  margin-top: 4px;
+}
+.bag-progress nav a {
+  margin: 0;
+}

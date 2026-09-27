@@ -2550,7 +2550,7 @@
     "item": "Artikel aus der Einlieferung",
     "save": "Artikel speichern",
     "next": "Nächster Artikel aus der Einlieferung",
-    "registered": "Erfasste Artikel",
+    "registered": "Artikel aus der Schnellannahme",
     "empty": "Noch keine Artikel erfasst.",
     "drafts": "Frühere Entwürfe und Verlauf",
     "back": "Zur Prüfung der Einlieferung",
@@ -2735,5 +2735,15 @@
     "next": "Weiter",
     "noDropoffs": "Für diesen Verkäufer sind keine Einlieferungen erfasst.",
     "noItems": "Für diesen Verkäufer sind keine Artikel erfasst."
+  },
+  "bagProgress": {
+    "title": "Stand der Abgabe",
+    "accepted": "Erfasst",
+    "drafts": "Entwürfe",
+    "receptions": "In Bearbeitung",
+    "resumeDraft": "Entwurf fortsetzen",
+    "resumeReception": "Offene Annahme öffnen",
+    "hint": "Die Zahlen beziehen sich auf gespeicherte Daten. Prüfen Sie auch noch nicht erfasste Waren.",
+    "unavailable": "Der Stand der Abgabe ist derzeit nicht verfügbar."
   }
 }

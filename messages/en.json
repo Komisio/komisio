@@ -2550,7 +2550,7 @@
     "item": "Item from the drop-off",
     "save": "Save item",
     "next": "Next item from the drop-off",
-    "registered": "Registered items",
+    "registered": "Items from quick intake",
     "empty": "No items registered yet.",
     "drafts": "Earlier drafts and history",
     "back": "Back to drop-off inspection",
@@ -2729,5 +2729,15 @@
     "next": "Next",
     "noDropoffs": "No drop-offs recorded for this seller.",
     "noItems": "No items recorded for this seller."
+  },
+  "bagProgress": {
+    "title": "Handover progress",
+    "accepted": "Registered",
+    "drafts": "Drafts",
+    "receptions": "In progress",
+    "resumeDraft": "Continue a draft",
+    "resumeReception": "Open pending reception",
+    "hint": "Counts describe saved records. Also check goods that have not yet been registered.",
+    "unavailable": "Handover progress is currently unavailable."
   }
 }

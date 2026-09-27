@@ -732,3 +732,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-25: Staff handover browsing searches the full active-store queue by seller name or H-reference, filters status and pages25 with stable ordering, open first. Existing role/RLS and custody confirmation apply; the legacy100 read remains only for rolling deployment.
 
 - 2026-09-26: A complete H-number in staff handover search matches only that reference in the active store. Other text keeps literal partial matching. Status, role, RLS and custody rules are unchanged.
+
+- 2026-09-27: Handover progress reads accepted items from both intake paths and active unfinished drafts/receptions. Counts never imply whole-handover completion or a physical remaining quantity; direct next-work links preserve existing role, tenant and MFA boundaries.

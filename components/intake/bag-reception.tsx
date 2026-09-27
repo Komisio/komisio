@@ -1,3 +1,4 @@
+import { BagWorkSummary } from './bag-work-summary'
 import Link from 'next/link'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
@@ -79,6 +80,12 @@ export async function BagReception({
           </Link>
         )}
       </header>
+      <BagWorkSummary
+        client={client}
+        tenantId={tenantId}
+        bagId={bagId}
+        locale={locale}
+      />
       {!readonly && (
         <QuickReception
           key={bagId}

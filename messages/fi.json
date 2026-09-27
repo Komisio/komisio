@@ -2550,7 +2550,7 @@
     "item": "Tuote tuontierästä",
     "save": "Tallenna tuote",
     "next": "Seuraava tuote tuontierästä",
-    "registered": "Rekisteröidyt tuotteet",
+    "registered": "Pikavastaanoton tuotteet",
     "empty": "Tuotteita ei ole vielä rekisteröity.",
     "drafts": "Aiemmat luonnokset ja historia",
     "back": "Takaisin tuontierän läpikäyntiin",
@@ -2735,5 +2735,15 @@
     "next": "Seuraava",
     "noDropoffs": "Myyjälle ei ole kirjattu tuontieriä.",
     "noItems": "Myyjälle ei ole kirjattu tuotteita."
+  },
+  "bagProgress": {
+    "title": "Toimituksen tilanne",
+    "accepted": "Rekisteröity",
+    "drafts": "Luonnokset",
+    "receptions": "Käsittelyssä",
+    "resumeDraft": "Jatka luonnosta",
+    "resumeReception": "Avaa odottava vastaanotto",
+    "hint": "Luvut koskevat tallennettuja tietoja. Tarkista myös vielä rekisteröimättömät tavarat.",
+    "unavailable": "Toimituksen tilannetta ei voi näyttää juuri nyt."
   }
 }

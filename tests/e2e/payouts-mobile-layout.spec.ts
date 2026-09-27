@@ -43,6 +43,9 @@ test('payouts page keeps decisions first and folds the request form on mobile', 
       (await locator.boundingBox())!.y +
       (await page.evaluate(() => window.scrollY))
     // Order: the folded request one line from the top, then the settlement, then the payout list.
+    await expect(request).toBeVisible()
+    await expect(settle).toBeVisible()
+    await expect(list).toBeVisible()
     expect(await top(request)).toBeLessThan(await top(settle))
     expect(await top(settle)).toBeLessThan(await top(list))
     expect(
@@ -169,6 +172,65 @@ test('payouts page keeps decisions first and folds the request form on mobile', 
     } finally {
       await reader.close()
     }
+  } finally {
+    await f.close()
+  }
+})
+
+// The payout list is the newest 50 payouts for any seller; its names must not
+// depend on the request form's first 50 sellers by name.
+test('a payout for a seller beyond the first fifty names shows the name, not an id', async ({
+  page,
+}) => {
+  const email = `payouts-names-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomBytes(16).toString('hex')}`)
+  const f = await p2Fixture(email)
+  try {
+    // 55 sellers whose names sort before "Synthetic P2 seller" push the fixture seller out of the first 50.
+    for (let n = 0; n < 55; n++)
+      await f.db.query('select register_seller($1,$2,$3,$4,$5)', [
+        f.tenant,
+        randomUUID(),
+        'AAA Early seller ' + String(n).padStart(2, '0'),
+        '',
+        '07000000' + String(n).padStart(2, '0'),
+      ])
+    const items = [
+      await f.item('Names sold one'),
+      await f.item('Names sold two'),
+    ]
+    await f.db.query(
+      "select record_sale($1,$2,'manual','NAMES-1',now(),'SEK',$3::jsonb)",
+      [
+        f.tenant,
+        randomUUID(),
+        JSON.stringify(items.map((itemId) => ({ itemId, priceOre: 20000 }))),
+      ],
+    )
+    await f.db.query('select request_payout($1,$2,$3,16000)', [
+      f.tenant,
+      randomUUID(),
+      f.seller,
+    ])
+    await f.commit()
+    await page.setViewportSize({ width: 320, height: 720 })
+    await page.goto('/intake/payouts')
+    const list = page.getByTestId('payout-list')
+    const card = list.locator('.intake-notice', {
+      hasText: p.statuses.requested,
+    })
+    await expect(card).toHaveCount(1)
+    await expect(
+      card.getByRole('link', { name: 'Synthetic P2 seller', exact: true }),
+    ).toHaveAttribute('href', `/intake/sellers/${f.seller}`)
+    await expect(card).not.toContainText(f.seller)
+    // The request form's bounded list is the first 50 by name, none of them with credit.
+    const request = page.getByTestId('payout-request')
+    await request.locator('summary').click()
+    await expect(request.getByRole('status')).toHaveText(p.requestNone)
+    await expect(
+      request.getByRole('link', { name: p.directory, exact: true }),
+    ).toHaveAttribute('href', '/intake/sellers')
   } finally {
     await f.close()
   }

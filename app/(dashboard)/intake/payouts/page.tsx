@@ -52,6 +52,25 @@ export default async function Payouts() {
     payouts.map((p) => p.id),
   )
   const names = new Map(sellerRows.map((s) => [s.id, s.name]))
+  // The payout list is the newest 50 for any seller, while the name map above
+  // covers the first 50 sellers by name; look up the names the list still
+  // lacks so a payout never shows a raw id. A failed read is an error, not a
+  // missing name.
+  const missing = [
+    ...new Set(payouts.map((p) => p.seller_id).filter((id) => !names.has(id))),
+  ]
+  if (missing.length > 0) {
+    const more = await ctx.client
+      .from('sellers')
+      .select('id,name')
+      .eq('tenant_id', active.id)
+      .in('id', missing)
+    if (more.error) throw new Error('Unable to read sellers')
+    for (const s of z
+      .array(z.object({ id: z.uuid(), name: z.string() }))
+      .parse(more.data))
+      names.set(s.id, s.name)
+  }
   // The on-behalf form offers the first 50 sellers by name that hold credit;
   // the page says so when that bounded list is empty instead of claiming
   // nobody in the store is eligible.

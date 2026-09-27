@@ -47,6 +47,9 @@ jobs:
       - run: npm run test:assistance
       - run: npm run test:zettle-automation
       - run: npm run test:fortnox-automation
+      - name: Redact credential headers from failure evidence
+        if: failure()
+        run: node scripts/redact-test-artifacts.mjs test-results
       - name: Preserve browser failure evidence
         if: failure()
         uses: actions/upload-artifact@v4

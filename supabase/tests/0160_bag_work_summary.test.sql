@@ -26,6 +26,8 @@ select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting(
 select quick_receive_from_bag(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Chair"}',10000,current_setting('test.bag')::uuid);
 select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'accepted','1','quick accepted item counts');
 select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'receptions','0','accepted reception not counted twice');
+select save_reception_sources(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,(select max(revision) from reception_source_revisions where session_id=current_setting('test.session')::uuid),(select sources from reception_source_revisions where session_id=current_setting('test.session')::uuid order by revision desc limit 1));
+select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'receptions','0','accepted item remains finished after a source revision');
 select ok(not (bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid) ? 'complete'),'no invented completion');
 select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}'::jsonb);
 select set_inspection_archived(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,3,false,'Synthetic reopen');

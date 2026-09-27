@@ -743,3 +743,4 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-09-27: Statement day inputs convert to Stockholm boundaries in SQL through a wrapper of the unchanged issuer. Defaults end yesterday in that calendar; open days are refused. Legacy timestamp calls, overlap, identity and immutable financial rules remain unchanged.
 - 2026-09-27: Standard attribute and item-type labels/help cover all eight UI languages. Translated choice labels use new platform definition versions with unchanged ids, order, types and units; historical choices and tenant-owned vocabulary remain untouched.
+- 2026-09-28: The lifecycle work list is read through lifecycle_queue_page: twenty rows per call ordered by acceptance then id, the matched total, and a store-wide due count that ignores stage and text filters. Facts come from the unchanged lifecycle_queue; the legacy display read stays.

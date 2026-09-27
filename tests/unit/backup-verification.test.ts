@@ -274,8 +274,9 @@ describe('cleanupCopy', () => {
     const order: string[] = []
     const restored = { end: vi.fn(async () => void order.push('end')) }
     const admin = {
-      query: vi.fn(async (sql: string) => {
+      query: vi.fn(async (sql: string, params?: unknown[]) => {
         order.push(sql.split(' ').slice(0, 2).join(' '))
+        void params
         return { rowCount: 0, rows: [] }
       }),
     }

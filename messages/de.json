@@ -1109,7 +1109,7 @@
     "intro": "Eine Auszahlung geht von beantragt über genehmigt zu bezahlt oder wird abgelehnt. Die Genehmigung reserviert den Betrag im Konto des Einlieferers; die Zahlung gleicht ihn aus.",
     "notice": "Komisio erfasst Auszahlungen; es bewegt kein Geld. Zahlen Sie über Ihre Bank und erfassen Sie die Referenz hier.",
     "requestHeading": "Auszahlung beantragen",
-    "requestHint": "Im Namen des Einlieferers, bis zum verfügbaren Guthaben und mindestens das Richtlinienminimum. Die Einlieferer-App wird später direkt beantragen.",
+    "requestHint": "Im Auftrag des Einlieferers, mindestens der Mindestbetrag des Ladens und höchstens das verfügbare Guthaben.",
     "seller": "Einlieferer",
     "amount": "Betrag",
     "amountHint": "Zum Beispiel 150 oder 150.50.",
@@ -1734,7 +1734,16 @@
     "handoverCodeHint": "Das Ladenpersonal kann den Code mit der Handykamera scannen oder die Referenz eingeben.",
     "handoverCodeError": "Der Code konnte nicht angezeigt werden. Verwenden Sie die Referenz oben.",
     "handoverItemCount": "Ca. {count} Artikel",
-    "handoverReceipt": "Beleg {reference}"
+    "handoverReceipt": "Beleg {reference}",
+    "noPayoutBalance": "Du hast kein verfügbares Guthaben für eine Auszahlung.",
+    "payoutBelowThreshold": "Du kannst eine Auszahlung beantragen, sobald dein verfügbares Guthaben mindestens {minimum} beträgt.",
+    "payoutRequested": "Dein Antrag wurde erfasst. Der Laden prüft und bearbeitet die Auszahlung.",
+    "preferenceError": "Deine E-Mail-Einstellung konnte nicht gespeichert werden. Bitte erneut versuchen.",
+    "payoutErrors": {
+      "INVALID_INPUT": "Gib einen Betrag größer als null mit höchstens zwei Nachkommastellen ein.",
+      "PAYOUT_BELOW_THRESHOLD": "Der Betrag liegt unter dem Mindestbetrag des Ladens.",
+      "PAYOUT_EXCEEDS_BALANCE": "Der Betrag übersteigt dein verfügbares Guthaben. Prüfe den oben angezeigten Betrag."
+    }
   },
   "plans": {
     "heading": "Plan",

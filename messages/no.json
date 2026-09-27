@@ -1109,7 +1109,7 @@
     "intro": "En utbetaling går fra forespurt til godkjent til betalt, eller avvises. Godkjenning reserverer beløpet i innlevererens reskontro; betalingen gjør opp.",
     "notice": "Komisio registrerer utbetalinger; det flytter ikke penger. Betal via banken din og registrer referansen her.",
     "requestHeading": "Be om en utbetaling",
-    "requestHint": "På vegne av innlevereren, opptil tilgjengelig saldo og minst policyens minimum. Innlevererappen vil senere be om dette direkte.",
+    "requestHint": "På vegne av selgeren, minst butikkens minstebeløp og høyst tilgjengelig saldo.",
     "seller": "Innleverer",
     "amount": "Beløp",
     "amountHint": "For eksempel 150 eller 150,50.",
@@ -1734,7 +1734,16 @@
     "handoverCodeHint": "La butikkpersonalet skanne med mobilkameraet. Referansen kan også skrives inn.",
     "handoverCodeError": "Koden kunne ikke vises. Bruk referansen ovenfor.",
     "handoverItemCount": "Ca. {count} varer",
-    "handoverReceipt": "Innlevering {reference}"
+    "handoverReceipt": "Innlevering {reference}",
+    "noPayoutBalance": "Du har ingen tilgjengelig saldo å be om utbetaling fra.",
+    "payoutBelowThreshold": "Du kan be om utbetaling når tilgjengelig saldo er minst {minimum}.",
+    "payoutRequested": "Forespørselen er registrert. Butikken vurderer og håndterer utbetalingen.",
+    "preferenceError": "E-postvalget kunne ikke lagres. Prøv igjen.",
+    "payoutErrors": {
+      "INVALID_INPUT": "Angi et beløp større enn null med høyst to desimaler.",
+      "PAYOUT_BELOW_THRESHOLD": "Beløpet er lavere enn butikkens minstebeløp.",
+      "PAYOUT_EXCEEDS_BALANCE": "Beløpet overstiger tilgjengelig saldo. Kontroller saldoen ovenfor."
+    }
   },
   "plans": {
     "heading": "Abonnement",

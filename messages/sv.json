@@ -1109,7 +1109,7 @@
     "intro": "En utbetalning går från begärd till godkänd till utbetald, eller avvisas. Godkännandet reserverar beloppet i säljarens reskontra; betalningen avräknar det.",
     "notice": "Komisio registrerar utbetalningar; Komisio flyttar inga pengar. Betala via banken och registrera referensen här.",
     "requestHeading": "Begär en utbetalning",
-    "requestHint": "För säljarens räkning, upp till tillgängligt saldo och minst policyns minimum. Säljarappen begär direkt senare.",
+    "requestHint": "För säljarens räkning, minst butikens minimibelopp och högst tillgängligt saldo.",
     "seller": "Säljare",
     "amount": "Belopp",
     "amountHint": "Till exempel 150 eller 150,50.",
@@ -1734,7 +1734,16 @@
     "handoverCodeHint": "Låt butikens personal skanna med mobilkameran. Referensen går också att skriva in.",
     "handoverCodeError": "Koden kunde inte visas. Använd referensen ovan.",
     "handoverItemCount": "Ca {count} varor",
-    "handoverReceipt": "Inlämning {reference}"
+    "handoverReceipt": "Inlämning {reference}",
+    "noPayoutBalance": "Du har inget tillgängligt saldo att begära utbetalning av.",
+    "payoutBelowThreshold": "Du kan begära utbetalning när ditt tillgängliga saldo är minst {minimum}.",
+    "payoutRequested": "Din begäran är registrerad. Butiken granskar och hanterar utbetalningen.",
+    "preferenceError": "Mejlvalet kunde inte sparas. Försök igen.",
+    "payoutErrors": {
+      "INVALID_INPUT": "Ange ett belopp större än noll med högst två decimaler.",
+      "PAYOUT_BELOW_THRESHOLD": "Beloppet är lägre än butikens minimibelopp.",
+      "PAYOUT_EXCEEDS_BALANCE": "Beloppet överstiger ditt tillgängliga saldo. Kontrollera saldot ovan."
+    }
   },
   "plans": {
     "heading": "Plan",

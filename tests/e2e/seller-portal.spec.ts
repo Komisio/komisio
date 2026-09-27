@@ -71,7 +71,9 @@ test('seller reads own economy, requests payout and opts out without becoming st
     await page
       .getByRole('button', { name: 'Begär utbetalning', exact: true })
       .click()
-    await expect(page.getByRole('status')).toHaveText('Sparat.')
+    await expect(page.getByRole('status')).toHaveText(
+      'Din begäran är registrerad. Butiken granskar och hanterar utbetalningen.',
+    )
     await expect(page.getByText(/Begärd av:/)).toBeVisible()
     const row = (
       await db.query(

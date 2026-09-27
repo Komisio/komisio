@@ -19,12 +19,12 @@ export async function decodeRenderedCode128(png: Buffer) {
     .greyscale()
     .raw()
     .toBuffer({ resolveWithObject: true })
+  // decode(image, hints) replaces any state set earlier with setHints, so the
+  // hints must travel with the call to take effect.
   const hints = new Map()
   hints.set(DecodeHintType.POSSIBLE_FORMATS, [BarcodeFormat.CODE_128])
   hints.set(DecodeHintType.TRY_HARDER, true)
-  const reader = new MultiFormatReader()
-  reader.setHints(hints)
-  const text = reader
+  const text = new MultiFormatReader()
     .decode(
       new BinaryBitmap(
         new HybridBinarizer(
@@ -35,6 +35,7 @@ export async function decodeRenderedCode128(png: Buffer) {
           ),
         ),
       ),
+      hints,
     )
     .getText()
   return { text, width: info.width, height: info.height }

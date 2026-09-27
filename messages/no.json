@@ -1488,7 +1488,7 @@
     "clearSearch": "Tøm søk",
     "matches": "Treff: {count}",
     "noMatches": "Ingen varer samsvarer med søket i valgt status.",
-    "searchScopeHint": "Søket filtrerer bare listen. Prissettingskjøringen gjelder hele butikken."
+    "searchScopeHint": "Filtrene påvirker bare listen. Prisreduksjonene gjelder hele butikken."
   },
   "openByReference": {
     "title": "Åpne via etikett",

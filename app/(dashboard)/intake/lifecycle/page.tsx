@@ -1,10 +1,11 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary, intlLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import {
   readLifecycleQueue,
+  readLifecycleQueuePage,
   readMarkdownRuns,
   lifecycleStage,
 } from '@/lib/engine/lifecycle'
@@ -26,40 +27,53 @@ export default async function Lifecycle({
     d = all.lifecycle
   const p = await searchParams
   const stage = lifecycleStage.safeParse(p.stage)
-  const [rows, runs, policy] = await Promise.all([
-    readLifecycleQueue(
-      ctx.client,
-      active.id,
-      stage.success ? stage.data : undefined,
-    ),
+  const query = typeof p.q === 'string' ? p.q.trim().slice(0, 120) : ''
+  const candidatePage =
+    typeof p.page === 'string' && /^\d+$/.test(p.page) ? Number(p.page) : 1
+  // The RPC offset is a PostgreSQL integer. Malformed or oversized URLs start at page one.
+  const requestedPage =
+    Number.isSafeInteger(candidatePage) &&
+    candidatePage > 0 &&
+    (candidatePage - 1) * 20 <= 2_147_483_647
+      ? candidatePage
+      : 1
+  const [paged, runs, policy] = await Promise.all([
+    readLifecycleQueuePage(ctx.client, active.id, {
+      query,
+      stage: stage.success ? stage.data : undefined,
+      offset: (requestedPage - 1) * 20,
+    }),
     readMarkdownRuns(ctx.client, active.id),
     readStorePolicy(ctx.client, active.id),
   ])
-  const query = typeof p.q === 'string' ? p.q.trim().slice(0, 120) : ''
+  // During additive rollout, the old RPC still supplies complete facts. Read all
+  // stages so the batch count remains store-wide even when the list is filtered.
+  const legacyRows = paged
+    ? []
+    : await readLifecycleQueue(ctx.client, active.id)
   const needle = query.toLowerCase()
-  const filtered = query
-    ? rows.filter(
-        (row) =>
-          (row.title ?? '').toLowerCase().includes(needle) ||
-          ('I-' + row.item_id.slice(0, 8)).toLowerCase().includes(needle) ||
-          row.item_id.toLowerCase().includes(needle),
-      )
-    : rows
+  const filtered = legacyRows.filter(
+    (row) =>
+      (!stage.success || row.stage === stage.data) &&
+      (!query ||
+        (row.title ?? '').toLowerCase().includes(needle) ||
+        ('I-' + row.item_id.slice(0, 8)).toLowerCase().includes(needle) ||
+        row.item_id.toLowerCase().includes(needle)),
+  )
+  const total = paged?.total ?? filtered.length
+  const pages = Math.max(1, Math.ceil(total / 20))
+  const page = Math.min(pages, requestedPage)
+  const pageHref = (number: number) =>
+    `/intake/lifecycle?${new URLSearchParams({ q: query, stage: stage.success ? stage.data : '', page: String(number) })}`
+  if (requestedPage > pages) redirect(pageHref(pages))
+  const visible = paged?.rows ?? filtered.slice((page - 1) * 20, page * 20)
   const clearHref =
     '/intake/lifecycle?' +
     new URLSearchParams({ stage: stage.success ? stage.data : '' })
-  const requestedPage =
-    typeof p.page === 'string' && /^\d+$/.test(p.page) ? Number(p.page) : 1
-  const pages = Math.max(1, Math.ceil(filtered.length / 20))
-  const page = Math.min(
-    pages,
-    Math.max(1, Number.isSafeInteger(requestedPage) ? requestedPage : 1),
-  )
-  const visible = filtered.slice((page - 1) * 20, page * 20)
-  const pageHref = (number: number) =>
-    `/intake/lifecycle?${new URLSearchParams({ q: query, stage: stage.success ? stage.data : '', page: String(number) })}`
-  // Search changes the list only; the batch command keeps its store-wide scope.
-  const dueCount = rows.filter((r) => r.stage === 'markdown_due').length
+  // Both search and stage filters affect the list, never the batch command.
+  const dueCount =
+    paged?.dueCount ??
+    legacyRows.filter((row) => row.stage === 'markdown_due').length
   const write = active.role !== 'readonly'
   const when = (iso: string) =>
     new Date(iso).toLocaleDateString(intlLocale(ctx.locale), {
@@ -80,7 +94,7 @@ export default async function Lifecycle({
         <p>
           {policy.policy.automaticMarkdowns === true ? d.agentOn : d.agentOff}
         </p>
-        {query && <p>{d.searchScopeHint}</p>}
+        {(query || stage.success) && <p>{d.searchScopeHint}</p>}
         {write && (
           <ApplyDueMarkdowns
             key={`${active.id}-${dueCount}`}
@@ -136,15 +150,15 @@ export default async function Lifecycle({
           </Link>
         )}
       </form>
-      <p>{d.matches.replace('{count}', String(filtered.length))}</p>
+      <p>{d.matches.replace('{count}', String(total))}</p>
       <section className="card lifecycle-list">
-        {filtered.length === 0 && <p>{query ? d.noMatches : d.empty}</p>}
+        {total === 0 && <p>{query ? d.noMatches : d.empty}</p>}
         {visible.map((r) => (
           <details
             id={'lifecycle-' + r.item_id}
             key={r.item_id}
             className="lifecycle-row"
-            open={query !== '' && filtered.length === 1}
+            open={query !== '' && total === 1}
           >
             <summary>
               <span className="lifecycle-item">

@@ -110,3 +110,41 @@ export async function readLifecycleQueue(
   if (error) throw new Error('Unable to read lifecycle queue')
   return z.array(row).parse(data)
 }
+
+// One page of the work list plus the matched total and the store-wide due
+// count, which ignores the stage and text filters because the batch command
+// is store-wide. Rows carry the same facts as the queue above.
+const lifecyclePage = z.object({
+  rows: z.array(row),
+  total: z.number().int().nonnegative(),
+  dueCount: z.number().int().nonnegative(),
+  offset: z.number().int().nonnegative(),
+  limit: z.literal(20),
+})
+export type LifecyclePage = z.infer<typeof lifecyclePage>
+
+/** Null only while the paged function is not deployed; other errors throw. */
+export async function readLifecycleQueuePage(
+  client: SupabaseClient,
+  tenantInput: string,
+  options: { query?: string; stage?: string; offset?: number } = {},
+): Promise<LifecyclePage | null> {
+  const r = await client.rpc('lifecycle_queue_page', {
+    p_tenant: z.uuid().parse(tenantInput),
+    p_query: z
+      .string()
+      .trim()
+      .max(120)
+      .parse(options.query ?? ''),
+    p_stage: options.stage ? lifecycleStage.parse(options.stage) : null,
+    p_offset: z
+      .number()
+      .int()
+      .min(0)
+      .max(2147483647)
+      .parse(options.offset ?? 0),
+  })
+  if (r.error?.code === 'PGRST202') return null
+  if (r.error) throw new Error('Unable to read lifecycle queue')
+  return lifecyclePage.parse(r.data)
+}

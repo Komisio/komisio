@@ -8,28 +8,44 @@ including hourly price decay, dedicated lifecycle stages and associated digital
 price screens/feeds. Historical mentions below are inventory only, not v1 scope.
 This exclusion does not remove ordinary agreed return/donation workflows.
 
-## Current delivery baseline (2026-09-27)
+## Current delivery baseline (2026-09-28)
 
-PRs 270–290 are deployed to staging and production. Staff item and seller
-lists, seller-owned items and announced handovers support bounded search and
-pagination. Receiving supports contact-based seller lookup, direct item-label
-resolution and paging through registered items. Seller handovers have an
+PRs 270–290 are deployed to production. Staging additionally includes PRs
+291–301; those changes retain the production staging-observation gate.
+Staff item and seller lists, seller-owned items and announced handovers
+support bounded search and pagination. Receiving supports contact-based
+seller lookup and direct item-label resolution. Seller handovers have an
 on-demand QR code, clearer receipt/status summaries and exact staff reference
 lookup. Disabled handover settings have a direct owner/admin activation link.
 
 The store flow combines editable internal instructions with a live work view,
 including pending announcements separately from goods received. The selected
-live view can be bookmarked. These instructions still do not execute policy.
-Registered items and existing drafts are observable facts; there is no recorded
-whole-handover completion or reliable count of physically unregistered goods.
-Do not infer either from an estimated seller count or the first registered item.
+live view can be bookmarked. Receiving now pages through registered items
+from both quick reception and inspected drafts, with current lifecycle state
+and actual sold price where recorded. Saved draft summaries are compact;
+editing and history remain available. Registered items and existing drafts
+are observable facts: there is no recorded whole-handover completion or
+reliable count of physically unregistered goods. Do not infer either from an
+estimated seller count or the first registered item. Instructions do not
+execute store policy.
 
-Next: finish international mobile presentation checks, expose clearer progress
-and next actions within an handover workflow using existing facts, and record
-a complete controlled intake-to-settlement acceptance journey. Physical label
-printing and real POS/accounting acceptance remain separate verification needs.
-Space booking requires the unresolved fee/cancellation decisions below. Stripe
-activation remains deferred; hourly price decay remains outside version 1.
+Staging also has complete platform vocabulary labels in all eight supported
+languages, clearer payout-list and request placement, and economy totals
+before secondary reports on mobile. Statement dates use completed Stockholm
+calendar days; custom date selection remains available. Vocabulary and
+mobile layouts have automated coverage, not native-language proofreading.
+
+A controlled local browser journey covers receiving, registration, a browser
+label, sale, and an approved seller payout. Approval is not payment: the
+journey sends no customer message and makes no external checkout or transfer.
+It does not replace the authenticated hosted pilot journey or physical label,
+POS and accounting acceptance described in [PILOT-GATES.md](PILOT-GATES.md).
+
+Next: make seller payout guidance and the seller portal more compact and
+clear on mobile, then complete the remaining hosted and hardware acceptance
+with the required operator access. Space booking still requires the unresolved
+fee/cancellation decisions below. Stripe activation remains deferred; hourly
+price decay remains outside version 1.
 
 Older dated inventories below describe their own checkpoint, not the current
 implementation backlog. A listed capability is not proof of live integration

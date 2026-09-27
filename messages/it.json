@@ -1244,7 +1244,7 @@
       "mixed": "I negozi usano valute diverse; vengono mostrate solo le righe per negozio."
     },
     "title": "Economia",
-    "intro": "I numeri del negozio per un periodo, calcolati dagli stessi fatti e con le stesse somme della chiusura giornaliera: vendite con IVA per modalità, commissione, accredito ai conferenti, resi e pagamenti effettuati.",
+    "intro": "Vendite, commissioni e pagamenti per il periodo selezionato.",
     "notice": "Sola lettura. Le cifre sono quelle del negozio; le modalità IVA sono una scelta del negozio fatta con il suo commercialista.",
     "periodHeading": "Periodo",
     "periodInvalid": "Scegli una data iniziale uguale o precedente alla data finale, distanti al massimo un anno.",

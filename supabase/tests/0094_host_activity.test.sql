@@ -26,9 +26,13 @@ select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manua
 select throws_ok($$select * from host_activity_overview()$$,'42501',null,'a store owner is not a host');
 reset role;
 select komisio_private.enable_billing('f0000000-0000-4000-8000-000000000502');
+-- The overview lists at most 500 stores, newest first; read the store count
+-- with privileges so the expectation is bounded the same way.
+select set_config('test.stores',least(500,(select count(*) from tenants))::text,true);
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000502","role":"authenticated"}';
-select is((select count(*) from host_activity_overview()),2::bigint,'every store listed');
+select is((select count(*) from host_activity_overview()),current_setting('test.stores')::bigint,'every store listed up to the cap');
+select is((select count(*) from host_activity_overview() where tenant_id in (current_setting('test.tenant')::uuid,current_setting('test.quiet')::uuid)),2::bigint,'both test stores are listed');
 select is((select members from host_activity_overview() where tenant_id=current_setting('test.tenant')::uuid),1,'one member');
 select is((select sellers from host_activity_overview() where tenant_id=current_setting('test.tenant')::uuid),1,'one seller');
 select is((select items from host_activity_overview() where tenant_id=current_setting('test.tenant')::uuid),2,'two items');

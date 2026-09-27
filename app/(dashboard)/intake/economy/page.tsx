@@ -36,6 +36,8 @@ export default async function Economy({
   const period = requested.success ? requested.data : currentMonthPeriod()
   const summary = await readEconomySummary(ctx.client, active.id, period)
   const briefKind = params.brief === 'month' ? 'month' : 'week'
+  const briefHref = (kind: 'week' | 'month') =>
+    `/intake/economy?${new URLSearchParams({ ...period, brief: kind })}#economy-brief`
   const briefRead = await readEconomyBrief(ctx.client, active.id, {
     kind: briefKind,
   })
@@ -84,6 +86,9 @@ export default async function Economy({
         <section className="card intake-form" aria-label={d.periodHeading}>
           <h2>{d.periodHeading}</h2>
           <form method="get" className="intake-fields">
+            {params.brief === 'week' || params.brief === 'month' ? (
+              <input type="hidden" name="brief" value={briefKind} />
+            ) : null}
             {!requested.success && (params.from || params.to) && (
               <p role="alert">{d.periodInvalid}</p>
             )}
@@ -113,52 +118,10 @@ export default async function Economy({
             {d.showing} {summary.from} – {summary.to}
           </p>
         </section>
-        <section className="card intake-form" aria-label={all.brief.heading}>
-          <h2>{all.brief.heading}</h2>
-          <p>{all.brief.hint}</p>
-          <p>
-            <Link
-              className="text-link"
-              href="/intake/economy?brief=week"
-              aria-current={briefKind === 'week' ? 'page' : undefined}
-            >
-              {all.brief.week}
-            </Link>{' '}
-            ·{' '}
-            <Link
-              className="text-link"
-              href="/intake/economy?brief=month"
-              aria-current={briefKind === 'month' ? 'page' : undefined}
-            >
-              {all.brief.month}
-            </Link>
-          </p>
-          {brief && (
-            <>
-              <h3>{brief.title}</h3>
-              <ul>
-                {brief.lines.map((line, i) => (
-                  <li key={i}>{line}</li>
-                ))}
-              </ul>
-            </>
-          )}
-        </section>
-        {active.role === 'owner' && (
-          <AutomationSwitch
-            key={`${active.id}-${grants?.find((g) => g.scope === 'weekly_brief')?.id ?? 'none'}`}
-            tenantId={active.id}
-            scope="weekly_brief"
-            grants={grants}
-            configured={automationIdentity() !== null}
-            canEdit
-            t={all.brief.email}
-          />
-        )}
         <section className="card intake-form" aria-label={d.totalsHeading}>
           <h2>{d.totalsHeading}</h2>
           <div style={{ overflowX: 'auto' }}>
-            <table>
+            <table className="economy-table economy-values">
               <tbody>
                 {rows.map(([label, value]) => (
                   <tr key={label}>
@@ -172,8 +135,13 @@ export default async function Economy({
           {Object.keys(t.perMode).length > 0 && (
             <>
               <h3>{d.perMode}</h3>
-              <div style={{ overflowX: 'auto' }}>
-                <table>
+              <div
+                className="economy-scroll"
+                role="group"
+                tabIndex={0}
+                aria-label={d.perMode}
+              >
+                <table className="economy-table">
                   <thead>
                     <tr>
                       <th>{d.mode}</th>
@@ -203,7 +171,7 @@ export default async function Economy({
           <h2>{d.liabilityHeading}</h2>
           <p>{d.liabilityHint}</p>
           <div style={{ overflowX: 'auto' }}>
-            <table>
+            <table className="economy-table economy-values">
               <tbody>
                 <tr>
                   <th scope="row">{d.owed}</th>
@@ -235,8 +203,13 @@ export default async function Economy({
           <h2>{d.daysHeading}</h2>
           {summary.days.length === 0 && <p>{d.noSales}</p>}
           {summary.days.length > 0 && (
-            <div style={{ overflowX: 'auto' }}>
-              <table>
+            <div
+              className="economy-scroll"
+              role="group"
+              tabIndex={0}
+              aria-label={d.daysHeading}
+            >
+              <table className="economy-table">
                 <thead>
                   <tr>
                     <th>{d.date}</th>
@@ -267,8 +240,13 @@ export default async function Economy({
             </p>
             {chainRefused && <p>{d.chain.refused}</p>}
             {chainSummary && (
-              <div style={{ overflowX: 'auto' }}>
-                <table>
+              <div
+                className="economy-scroll"
+                role="group"
+                tabIndex={0}
+                aria-label={d.chain.heading}
+              >
+                <table className="economy-table">
                   <thead>
                     <tr>
                       <th>{d.chain.store}</th>
@@ -306,6 +284,55 @@ export default async function Economy({
               </div>
             )}
           </section>
+        )}
+        <details
+          className="card intake-form"
+          open={params.brief === 'week' || params.brief === 'month'}
+          id="economy-brief"
+          data-testid="economy-brief"
+        >
+          <summary>
+            <strong>{all.brief.heading}</strong>
+          </summary>
+          <p>{all.brief.hint}</p>
+          <p>
+            <Link
+              className="text-link"
+              href={briefHref('week')}
+              aria-current={briefKind === 'week' ? 'page' : undefined}
+            >
+              {all.brief.week}
+            </Link>{' '}
+            ·{' '}
+            <Link
+              className="text-link"
+              href={briefHref('month')}
+              aria-current={briefKind === 'month' ? 'page' : undefined}
+            >
+              {all.brief.month}
+            </Link>
+          </p>
+          {brief && (
+            <>
+              <h3>{brief.title}</h3>
+              <ul>
+                {brief.lines.map((line, i) => (
+                  <li key={i}>{line}</li>
+                ))}
+              </ul>
+            </>
+          )}
+        </details>
+        {active.role === 'owner' && (
+          <AutomationSwitch
+            key={`${active.id}-${grants?.find((g) => g.scope === 'weekly_brief')?.id ?? 'none'}`}
+            tenantId={active.id}
+            scope="weekly_brief"
+            grants={grants}
+            configured={automationIdentity() !== null}
+            canEdit
+            t={all.brief.email}
+          />
         )}
       </div>
     </>

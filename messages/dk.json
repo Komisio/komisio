@@ -1244,7 +1244,7 @@
       "mixed": "Butikkerne bruger forskellige valutaer; kun rækkerne pr. butik vises."
     },
     "title": "Økonomi",
-    "intro": "Butikkens tal for en periode, beregnet ud fra de samme fakta og med de samme summer som dagsafslutningen: salg med moms pr. tilstand, kommission, indlevereres tilgodehavende, returer og betalte udbetalinger.",
+    "intro": "Salg, provision og udbetalinger for den valgte periode.",
     "notice": "Skrivebeskyttet. Tallene er butikkens egne; momstilstande er butikkens valg, truffet sammen med dens revisor.",
     "periodHeading": "Periode",
     "periodInvalid": "Vælg en fra-dato på eller før til-datoen, højst et år imellem.",

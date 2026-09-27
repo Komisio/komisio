@@ -24,13 +24,36 @@ select set_config('test.d2',gen_random_uuid()::text,true);
 select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Fresh coat','Coats','Good');
 select set_config('test.fresh',gen_random_uuid()::text,true);
 select accept_item(current_setting('test.tenant')::uuid,current_setting('test.fresh')::uuid,'inspection_draft',current_setting('test.d2')::uuid,1,30000);
+-- Another store has the switch on with one aged item: the agent runs for it,
+-- which must not change what is asserted about the store under test. The
+-- assertions below therefore read the run entry of one store, never the
+-- global array length or its first element.
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000372","role":"authenticated"}';
+select set_config('test.other',create_tenant('Markdown agent other','markdown-agent-other',gen_random_uuid())::text,true);
+select set_config('test.other_seller',register_seller(current_setting('test.other')::uuid,gen_random_uuid(),'Other seller','o@markdown.test','')::text,true);
+select set_config('test.other_agreement',publish_seller_agreement(current_setting('test.other')::uuid,gen_random_uuid(),null,'Synthetic terms','Only a test','en',false)::text,true);
+select record_agreement_evidence(current_setting('test.other')::uuid,gen_random_uuid(),current_setting('test.other_seller')::uuid,current_setting('test.other_agreement')::uuid,'Signed paper');
+select publish_store_policy(current_setting('test.other')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.other')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full","automaticMarkdowns":true}');
+select set_config('test.other_bag',receive_bag_with_agreement(current_setting('test.other')::uuid,gen_random_uuid(),current_setting('test.other_seller')::uuid,'',current_setting('test.other_agreement')::uuid)::text,true);
+select set_config('test.other_d',gen_random_uuid()::text,true);
+select save_inspection_draft(current_setting('test.other')::uuid,gen_random_uuid(),current_setting('test.other_bag')::uuid,current_setting('test.other_d')::uuid,0,'Other jacket','Jackets','Good');
+select set_config('test.other_item',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.other')::uuid,current_setting('test.other_item')::uuid,'inspection_draft',current_setting('test.other_d')::uuid,1,10000);
 reset role;
 alter table public.items disable trigger items_immutable;
-update public.items set accepted_at=accepted_at-interval '15 days' where id=current_setting('test.old')::uuid;
+update public.items set accepted_at=accepted_at-interval '15 days' where id in (current_setting('test.old')::uuid,current_setting('test.other_item')::uuid);
 alter table public.items enable trigger items_immutable;
--- The automatic run does nothing while the switch is off.
-select is(jsonb_array_length(komisio_private.run_automatic_markdowns()->'runs'),0,'no store runs automatically while switched off');
-select is((select count(*) from markdown_runs),0::bigint,'no run recorded');
+-- One store's entry in the agent's result, by tenant id.
+create function pg_temp.run_for(p_result jsonb,p_tenant text) returns jsonb language sql as $$
+ select r from jsonb_array_elements(p_result->'runs') r where r->>'tenantId'=p_tenant $$;
+-- The automatic run does nothing for this store while its switch is off,
+-- even though the other store runs in the same call.
+select set_config('test.off',komisio_private.run_automatic_markdowns()::text,true);
+select is(pg_temp.run_for(current_setting('test.off')::jsonb,current_setting('test.tenant')),null,'this store does not run automatically while switched off');
+select is((pg_temp.run_for(current_setting('test.off')::jsonb,current_setting('test.other'))->>'appliedCount')::int,1,'the other store with the switch on ran in the same call');
+select is((select count(*) from markdown_runs where tenant_id=current_setting('test.tenant')::uuid),0::bigint,'no run recorded for this store');
+select is((select count(*) from markdown_runs where tenant_id=current_setting('test.other')::uuid),1::bigint,'one automatic run recorded for the other store');
+select is((select price_ore from item_prices where item_id=current_setting('test.old')::uuid order by seq desc limit 1),40000::bigint,'the aged item of this store keeps its accepted price');
 -- A staff member applies everything due by hand: one item, one step.
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000371","role":"authenticated"}';
@@ -56,14 +79,16 @@ update public.items set accepted_at=accepted_at-interval '15 days' where id=curr
 update public.items set accepted_at=accepted_at-interval '15 days' where id=current_setting('test.fresh')::uuid;
 alter table public.items enable trigger items_immutable;
 select set_config('test.auto',komisio_private.run_automatic_markdowns()::text,true);
-select is(jsonb_array_length(current_setting('test.auto')::jsonb->'runs'),1,'one store ran');
-select is((current_setting('test.auto')::jsonb->'runs'->0->>'appliedCount')::int,2,'step two on the old item, step one on the fresh one');
+select is((select count(*) from jsonb_array_elements(current_setting('test.auto')::jsonb->'runs') r where r->>'tenantId'=current_setting('test.tenant')),1::bigint,'this store ran once');
+select is((pg_temp.run_for(current_setting('test.auto')::jsonb,current_setting('test.tenant'))->>'replayed')::boolean,false,'a first run for this store, not a replay');
+select is((pg_temp.run_for(current_setting('test.auto')::jsonb,current_setting('test.tenant'))->>'appliedCount')::int,2,'step two on the old item, step one on the fresh one');
+select is((pg_temp.run_for(current_setting('test.auto')::jsonb,current_setting('test.other'))->>'replayed')::boolean,true,'the other store replays its earlier run of the day');
 select is((select price_ore from item_prices where item_id=current_setting('test.old')::uuid order by seq desc limit 1),30000::bigint,'twenty-five percent of the accepted price, not compounded');
 select is((select price_ore from item_prices where item_id=current_setting('test.fresh')::uuid order by seq desc limit 1),27000::bigint,'ten percent on the fresh item');
 select is((select actor from item_events where item_id=current_setting('test.fresh')::uuid and kind='markdown_applied'),'f0000000-0000-4000-8000-000000000371'::uuid,'automatic markdowns act as the owner who enabled them');
 select is((select actor from markdown_runs where tenant_id=current_setting('test.tenant')::uuid and mode='automatic'),'f0000000-0000-4000-8000-000000000371'::uuid,'the automatic run is attributed to the owner who enabled it');
-select is((komisio_private.run_automatic_markdowns()->'runs'->0->>'replayed')::boolean,true,'a second run the same day replays');
+select is((pg_temp.run_for(komisio_private.run_automatic_markdowns(),current_setting('test.tenant'))->>'replayed')::boolean,true,'a second run the same day replays');
 select is((select count(*) from markdown_runs where tenant_id=current_setting('test.tenant')::uuid and mode='automatic'),1::bigint,'one automatic run per store and day');
-select throws_ok($$update markdown_runs set applied_count=9$$,'55000',null,'runs are immutable');
+select throws_ok($$update markdown_runs set applied_count=9 where tenant_id=current_setting('test.tenant')::uuid$$,'55000',null,'runs are immutable');
 select * from finish();
 rollback;

@@ -1244,7 +1244,7 @@
       "mixed": "Die Stores verwenden unterschiedliche Währungen; es werden nur die Zeilen pro Store angezeigt."
     },
     "title": "Wirtschaft",
-    "intro": "Die Zahlen des Stores für einen Zeitraum, berechnet aus denselben Fakten und mit denselben Summen wie der Tagesabschluss: Verkäufe mit MwSt. pro Modus, Kommission, Einlieferer-Gutschrift, Rückgaben und bezahlte Auszahlungen.",
+    "intro": "Verkäufe, Provision und Auszahlungen für den gewählten Zeitraum.",
     "notice": "Nur Lesen. Die Zahlen sind die des Stores; MwSt.-Modi sind die Wahl des Stores, getroffen mit seinem Steuerberater.",
     "periodHeading": "Zeitraum",
     "periodInvalid": "Wählen Sie ein Von-Datum, das am oder vor dem Bis-Datum liegt, höchstens ein Jahr auseinander.",

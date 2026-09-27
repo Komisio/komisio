@@ -15,7 +15,13 @@ select lives_ok($$select register_seller(current_setting('test.t1')::uuid,gen_ra
 select throws_like($$select close_store(current_setting('test.t1')::uuid,'done')$$,'%BILLING_DISABLED%','closing needs billing');
 -- The host turns billing on: existing stores become active on a manual plan.
 reset role;
-select is((komisio_private.enable_billing('f0000000-0000-4000-8000-000000000452')->>'existingStoresActivated')::int,1,'existing store activated at billing start');
+-- Every store without a plan row is activated, the test store among them;
+-- the exact count is read before the call so other stores in the database
+-- do not change the expectation.
+select set_config('test.missing',(select count(*) from tenants t where not exists(select 1 from tenant_plans p where p.tenant_id=t.id))::text,true);
+select ok(current_setting('test.missing')::int>=1,'the test store is among the stores without a plan');
+select is((komisio_private.enable_billing('f0000000-0000-4000-8000-000000000452')->>'existingStoresActivated')::int,current_setting('test.missing')::int,'every store without a plan activated at billing start');
+select is((select count(*) from tenants t where not exists(select 1 from tenant_plans p where p.tenant_id=t.id)),0::bigint,'no store lacks a plan afterwards');
 set local role authenticated;
 select is(plan_status(current_setting('test.t1')::uuid)->>'state','active','existing store is active');
 select is(plan_status(current_setting('test.t1')::uuid)->>'provider','manual','on a manual plan');
@@ -34,6 +40,9 @@ select set_config('komisio.plan_transition','engine',true);
 update tenant_plans set trial_ends_at=now()-interval '1 minute' where tenant_id=current_setting('test.t2')::uuid;
 select set_config('komisio.plan_transition','',true);
 select is((komisio_private.expire_plans()->>'expired')::int,1,'one trial expired');
+-- The host overview lists at most 500 stores, newest first; read the store
+-- count with privileges so the expectation is bounded the same way.
+select set_config('test.stores',least(500,(select count(*) from tenants))::text,true);
 set local role authenticated;
 select is(plan_status(current_setting('test.t2')::uuid)->>'state','free','store continues on the free core');
 select is((plan_status(current_setting('test.t2')::uuid)->>'writable')::boolean,true,'and stays writable');
@@ -45,7 +54,9 @@ select is((select actor from tenant_plan_events where tenant_id=current_setting(
 -- The host activates by hand; the store writes again; a dated activation expires like a trial.
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000452","role":"authenticated"}';
 select is(is_platform_host(),true,'host recognised');
-select is((select count(*) from host_plan_overview()),2::bigint,'host sees every store');
+select is((select count(*) from host_plan_overview()),current_setting('test.stores')::bigint,'host sees every store up to the cap');
+select is((select count(*) from host_plan_overview() where tenant_id in (current_setting('test.t1')::uuid,current_setting('test.t2')::uuid)),2::bigint,'both test stores are listed');
+select is((select state||'|'||provider from host_plan_overview() where tenant_id=current_setting('test.t1')::uuid),'active|manual','the activated store shows its manual plan');
 select throws_like($$select activate_plan_manually(current_setting('test.t2')::uuid,now()-interval '1 day','past')$$,'%INVALID_INPUT%','activation end must be in the future');
 select is(activate_plan_manually(current_setting('test.t2')::uuid,now()+interval '1 day','invoice customer')->>'state','active','host activated');
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000453","role":"authenticated"}';

@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { readBagReceivedItems } from './bag-received-items'
+import { itemStage } from './items'
 const page = z.object({
   items: z
     .array(
@@ -10,6 +11,8 @@ const page = z.object({
         title: z.string().nullable(),
         price_ore: z.string().regex(/^\d+$/).nullable(),
         photo_id: z.guid().nullable(),
+        stage: itemStage.nullable().default(null),
+        sold_price_ore: z.string().regex(/^\d+$/).nullable().default(null),
       }),
     )
     .max(25),
@@ -27,11 +30,18 @@ export async function readBagRegisteredItems(
     p_bag: z.uuid().parse(bag),
     p_offset: z.number().int().nonnegative().parse(offset),
   })
-  if (result.error?.code === 'PGRST202')
+  if (result.error?.code === 'PGRST202') {
+    const fallback = await readBagReceivedItems(client, tenant, bag, offset)
     return {
-      ...(await readBagReceivedItems(client, tenant, bag, offset)),
+      ...fallback,
+      items: fallback.items.map((item) => ({
+        ...item,
+        stage: null,
+        sold_price_ore: null,
+      })),
       scope: 'quick' as const,
     }
+  }
   if (result.error) throw new Error('Unable to read registered handover items')
   return { ...page.parse(result.data), legacy: false, scope: 'all' as const }
 }

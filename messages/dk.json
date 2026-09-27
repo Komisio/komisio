@@ -1140,7 +1140,10 @@
     "settleConfirm": "Jeg betaler disse beløb og registrerer referencerne.",
     "settle": "Afregn {count} indleverere",
     "settled": "Batchen er registreret: hver valgt indleverer har nu en godkendt udbetaling, der afventer betaling.",
-    "settleTotal": "I alt"
+    "settleTotal": "I alt",
+    "requestNone": "Ingen tilgængelig saldo på denne liste. Åbn en indleverer for at se saldoen.",
+    "directory": "Søg blandt alle indleverere",
+    "latestFifty": "Viser de 50 seneste udbetalinger. Hver indleverers side viser indlevererens seneste udbetalinger."
   },
   "returns": {
     "reason": "Returårsag",

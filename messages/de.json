@@ -1140,7 +1140,10 @@
     "settleConfirm": "Ich werde diese Beträge zahlen und die Referenzen erfassen.",
     "settle": "{count} Einlieferer abrechnen",
     "settled": "Der Stapel ist erfasst: Jeder ausgewählte Einlieferer hat jetzt eine genehmigte Auszahlung, die auf Zahlung wartet.",
-    "settleTotal": "Gesamt"
+    "settleTotal": "Gesamt",
+    "requestNone": "Kein verfügbares Guthaben in dieser Liste. Öffnen Sie einen Einlieferer, um dessen Guthaben zu sehen.",
+    "directory": "Alle Einlieferer durchsuchen",
+    "latestFifty": "Die 50 neuesten Auszahlungen werden angezeigt. Die Seite jedes Einlieferers zeigt dessen letzte Auszahlungen."
   },
   "returns": {
     "reason": "Rückgabegrund",

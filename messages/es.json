@@ -1140,7 +1140,10 @@
     "settleConfirm": "Pagaré estos importes y registraré las referencias.",
     "settle": "Liquidar {count} depositantes",
     "settled": "El lote está registrado: cada depositante seleccionado tiene ahora un pago aprobado pendiente de pagar.",
-    "settleTotal": "Total"
+    "settleTotal": "Total",
+    "requestNone": "No hay saldo disponible en esta lista. Abra un depositante para ver su saldo.",
+    "directory": "Buscar entre todos los depositantes",
+    "latestFifty": "Se muestran los 50 pagos más recientes. La página de cada depositante muestra sus pagos recientes."
   },
   "returns": {
     "reason": "Motivo de la devolución",

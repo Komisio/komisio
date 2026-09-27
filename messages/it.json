@@ -1140,7 +1140,10 @@
     "settleConfirm": "Pagherò questi importi e registrerò i riferimenti.",
     "settle": "Liquida {count} conferenti",
     "settled": "Il lotto è registrato: ogni conferente selezionato ha ora un pagamento approvato in attesa di essere pagato.",
-    "settleTotal": "Totale"
+    "settleTotal": "Totale",
+    "requestNone": "Nessun saldo disponibile in questo elenco. Apri un conferente per vederne il saldo.",
+    "directory": "Cerca tra tutti i conferenti",
+    "latestFifty": "Sono mostrati gli ultimi 50 pagamenti. La pagina di ogni conferente mostra i suoi pagamenti recenti."
   },
   "returns": {
     "reason": "Motivo del reso",

@@ -10,7 +10,8 @@ import {
   readSettlementCandidates,
 } from '@/lib/engine/payouts'
 import { readFlaggedReturns } from '@/lib/engine/returns'
-import { readSellerBalance, formatSignedOre } from '@/lib/engine/seller-ledger'
+import { formatSignedOre } from '@/lib/engine/seller-ledger'
+import { readPayoutRequestSellers } from '@/lib/engine/payout-request-sellers'
 import {
   PayoutRequestForm,
   PayoutDecision,
@@ -24,25 +25,9 @@ export default async function Payouts() {
     currency = await readStoreCurrency(ctx.client, active.id),
     all = dictionary(ctx.locale),
     d = all.payouts
-  const sellers = await ctx.client
-    .from('sellers')
-    .select('id,name')
-    .eq('tenant_id', active.id)
-    .order('name')
-    .limit(50)
-  if (sellers.error) throw new Error('Unable to read sellers')
-  const sellerRows = z
-    .array(z.object({ id: z.uuid(), name: z.string() }))
-    .parse(sellers.data)
   const [payouts, balances, flagged, settlement] = await Promise.all([
     readPayouts(ctx.client, active.id),
-    Promise.all(
-      sellerRows.map(async (s) => ({
-        ...s,
-        availableOre: (await readSellerBalance(ctx.client, active.id, s.id))
-          .availableOre,
-      })),
-    ),
+    readPayoutRequestSellers(ctx.client, active.id),
     readFlaggedReturns(ctx.client, active.id),
     readSettlementCandidates(ctx.client, active.id),
   ])
@@ -51,7 +36,30 @@ export default async function Payouts() {
     active.id,
     payouts.map((p) => p.id),
   )
-  const names = new Map(sellerRows.map((s) => [s.id, s.name]))
+  const names = new Map(balances.map((s) => [s.id, s.name]))
+  // The payout list is the newest 50 for any seller, while the name map above
+  // covers the first 50 sellers by name; look up the names the list still
+  // lacks so a payout never shows a raw id. A failed read is an error, not a
+  // missing name.
+  const missing = [
+    ...new Set(payouts.map((p) => p.seller_id).filter((id) => !names.has(id))),
+  ]
+  if (missing.length > 0) {
+    const more = await ctx.client
+      .from('sellers')
+      .select('id,name')
+      .eq('tenant_id', active.id)
+      .in('id', missing)
+    if (more.error) throw new Error('Unable to read sellers')
+    for (const s of z
+      .array(z.object({ id: z.uuid(), name: z.string() }))
+      .parse(more.data))
+      names.set(s.id, s.name)
+  }
+  // The on-behalf form offers the first 50 sellers by name that hold credit;
+  // the page says so when that bounded list is empty instead of claiming
+  // nobody in the store is eligible.
+  const eligible = balances.filter((s) => s.availableOre > 0)
   const write = active.role !== 'readonly'
   const when = (iso: string) =>
     new Date(iso).toLocaleString(intlLocale(ctx.locale), {
@@ -68,22 +76,52 @@ export default async function Payouts() {
       </div>
       <p className="intake-notice">{d.notice}</p>
       <div className="intake-grid">
-        <section className="card intake-form">
-          <h2>{d.requestHeading}</h2>
-          <p>{d.requestHint}</p>
-          {write ? (
-            <PayoutRequestForm
-              key={active.id}
-              tenantId={active.id}
-              currency={currency}
-              sellers={balances.filter((s) => s.availableOre > 0)}
-              d={d}
-              intake={all.intake}
-            />
-          ) : (
+        {/* Order on a phone: flagged returns first, then the on-behalf request
+            folded to one line so it stays reachable above many payout cards
+            without its empty form in the way, then the settlement and the
+            open payouts that need a decision. */}
+        {flagged.length > 0 && (
+          <section className="card intake-form">
+            <h2>{all.returns.flaggedHeading}</h2>
+            <p>{all.returns.flaggedHint}</p>
+            {flagged.map((r) => (
+              <p key={r.id} role="alert">
+                {when(r.occurred_at)} · {formatSignedOre(r.refund_ore)}{' '}
+                {currency} · {r.reason} ·{' '}
+                <Link className="text-link" href={`/intake/items/${r.item_id}`}>
+                  {all.items.open}
+                </Link>
+              </p>
+            ))}
+          </section>
+        )}
+        <details className="card intake-form" data-testid="payout-request">
+          <summary style={{ cursor: 'pointer', padding: '10px 0' }}>
+            <strong>{d.requestHeading}</strong>
+          </summary>
+          {!write ? (
             <p>{all.intake.readOnly}</p>
+          ) : eligible.length > 0 ? (
+            <>
+              <p>{d.requestHint}</p>
+              <PayoutRequestForm
+                key={active.id}
+                tenantId={active.id}
+                currency={currency}
+                sellers={eligible}
+                d={d}
+                intake={all.intake}
+              />
+            </>
+          ) : (
+            <p role="status">{d.requestNone}</p>
           )}
-        </section>
+          <p>
+            <Link className="text-link" href="/intake/sellers">
+              {d.directory}
+            </Link>
+          </p>
+        </details>
         <section className="card intake-form">
           <h2>{d.settleHeading}</h2>
           <p>
@@ -107,24 +145,14 @@ export default async function Payouts() {
             <p>{all.intake.readOnly}</p>
           )}
         </section>
-        {flagged.length > 0 && (
-          <section className="card intake-form">
-            <h2>{all.returns.flaggedHeading}</h2>
-            <p>{all.returns.flaggedHint}</p>
-            {flagged.map((r) => (
-              <p key={r.id} role="alert">
-                {when(r.occurred_at)} · {formatSignedOre(r.refund_ore)}{' '}
-                {currency} · {r.reason} ·{' '}
-                <Link className="text-link" href={`/intake/items/${r.item_id}`}>
-                  {all.items.open}
-                </Link>
-              </p>
-            ))}
-          </section>
-        )}
-        <section className="card intake-form">
+        <section className="card intake-form" data-testid="payout-list">
           <h2>{d.list}</h2>
           {payouts.length === 0 && <p>{d.empty}</p>}
+          {payouts.length >= 50 && (
+            <p>
+              <small>{d.latestFifty}</small>
+            </p>
+          )}
           {payouts.map((p) => (
             <div key={p.id} className="intake-notice">
               <strong>

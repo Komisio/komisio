@@ -1140,7 +1140,10 @@
     "settleConfirm": "Jag betalar dessa belopp och registrerar referenserna.",
     "settle": "Avräkna {count} säljare",
     "settled": "Satsen är registrerad: varje vald säljare har nu en godkänd utbetalning som väntar på betalning.",
-    "settleTotal": "Summa"
+    "settleTotal": "Summa",
+    "requestNone": "Inget tillgängligt saldo i den här listan. Öppna en säljare för att se säljarens saldo.",
+    "directory": "Sök bland alla säljare",
+    "latestFifty": "Visar de 50 senaste utbetalningarna. Varje säljares sida visar säljarens senaste utbetalningar."
   },
   "returns": {
     "reason": "Anledning till retur",

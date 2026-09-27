@@ -215,23 +215,51 @@ export default async function InspectBag({
           </Link>
         </section>
       )}
-      {selected && (
-        <section className="card intake-form">
-          <h2>{s.savedDetails}</h2>
-          <p>{selected.archived ? s.archived : s.active}</p>
-          {selected.change_reason && (
+      {selected &&
+        // While the editable form shows the same values, the saved record folds
+        // away so the path from save to accept is shorter; it stays open where
+        // it is the only saved content: readonly members, a historical version
+        // and an archived draft. Everything stays reachable with one tap.
+        (ctx.active!.role !== 'readonly' && !version && !selected.archived ? (
+          <details
+            className="card intake-form"
+            data-testid="saved-details"
+            open={false}
+          >
+            <summary style={{ cursor: 'pointer', padding: '10px 0' }}>
+              <strong>{s.savedDetails}</strong> · {s.version}{' '}
+              {selected.revision}
+            </summary>
+            <p>{selected.archived ? s.archived : s.active}</p>
+            {selected.change_reason && (
+              <p>
+                {s.reason}: {selected.change_reason}
+              </p>
+            )}
+            <p>{selected.description}</p>
+            <p>{selected.category}</p>
+            <p>{selected.condition}</p>
             <p>
-              {s.reason}: {selected.change_reason}
+              {s.version} {selected.revision}
             </p>
-          )}
-          <p>{selected.description}</p>
-          <p>{selected.category}</p>
-          <p>{selected.condition}</p>
-          <p>
-            {s.version} {selected.revision}
-          </p>
-        </section>
-      )}
+          </details>
+        ) : (
+          <section className="card intake-form" data-testid="saved-details">
+            <h2>{s.savedDetails}</h2>
+            <p>{selected.archived ? s.archived : s.active}</p>
+            {selected.change_reason && (
+              <p>
+                {s.reason}: {selected.change_reason}
+              </p>
+            )}
+            <p>{selected.description}</p>
+            <p>{selected.category}</p>
+            <p>{selected.condition}</p>
+            <p>
+              {s.version} {selected.revision}
+            </p>
+          </section>
+        ))}
       {selected && (
         <PriceEvidencePanel
           evidence={await readPriceEvidence(ctx.client, tenantId, {

@@ -173,7 +173,52 @@ test('compact seller portal keeps money facts visible and folds only secondary h
       .click()
     await expect(page).toHaveURL(/#portal-statements$/)
     await expect(page.locator('#portal-statements h2')).toBeInViewport()
+    // A pending or failed synthetic message remains visible without opening a fold.
+    // Use only the local engine log; no delivery transport is invoked.
+    const messageId = randomUUID()
+    async function asOwner(work: () => Promise<unknown>) {
+      await db.query('begin')
+      try {
+        await db.query('set local role authenticated')
+        await db.query("select set_config('request.jwt.claims',$1,true)", [
+          JSON.stringify({ sub: owner, role: 'authenticated' }),
+        ])
+        await work()
+        await db.query('commit')
+      } catch (error) {
+        await db.query('rollback')
+        throw error
+      }
+    }
+    await asOwner(() =>
+      db.query(
+        "select queue_seller_communication($1,$2,$3,'message','message','v1','sv',$4,$5,'none',null)",
+        [
+          tenant,
+          messageId,
+          seller,
+          'Synthetic portal notice',
+          'Synthetic notice body',
+        ],
+      ),
+    )
+    await page.reload()
+    await expect(messages).toHaveAttribute('open', '')
+    await expect(
+      messages.getByText('Synthetic notice body', { exact: true }),
+    ).toBeVisible()
+    await expect(messages).toContainText(sv.communications.outcomes.queued)
+    await asOwner(() =>
+      db.query("select record_communication_delivery($1,$2,'failed')", [
+        tenant,
+        messageId,
+      ]),
+    )
+    await page.reload()
+    await expect(messages).toHaveAttribute('open', '')
+    await expect(messages).toContainText(sv.communications.outcomes.failed)
   } finally {
+    await db.query('rollback')
     await db.end()
   }
 })

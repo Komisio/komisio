@@ -90,6 +90,7 @@ test('manual lifecycle price form appends the reviewed price and reason', async 
     await page.screenshot({
       path: 'private/lifecycle-compact.png',
       fullPage: true,
+      caret: 'initial',
     })
     await page.locator('.lifecycle-row > summary').click()
     await expect(
@@ -143,6 +144,7 @@ test('lifecycle compact list pages without exposing every action form', async ({
     await page.screenshot({
       path: 'private/lifecycle-compact.png',
       fullPage: true,
+      caret: 'initial',
     })
     await page.setViewportSize({ width: 390, height: 844 })
     expect(
@@ -153,6 +155,7 @@ test('lifecycle compact list pages without exposing every action form', async ({
     await page.screenshot({
       path: 'private/lifecycle-mobile.png',
       fullPage: true,
+      caret: 'initial',
     })
     await page
       .getByRole('link', { name: d.lifecycle.next, exact: true })

@@ -41,34 +41,41 @@ export function BagRegisteredItems({
         <p>{b.empty}</p>
       ) : (
         <ul>
-          {items.map((item) => (
-            <li key={item.id}>
-              <Link href={`/intake/items/${item.id}`}>
-                {item.photo_id && item.session_id && (
-                  <Image
-                    alt=""
-                    width={52}
-                    height={52}
-                    unoptimized
-                    loading="lazy"
-                    src={`/api/reception/${item.session_id}/photo?photo=${item.photo_id}`}
-                  />
-                )}
-                <span>
-                  {item.title || d.quickIntake.garment}
-                  <small>{'I-' + item.id.slice(0, 8).toUpperCase()}</small>
-                </span>
-                <strong>
-                  {item.price_ore
-                    ? new Intl.NumberFormat(intlLocale(locale), {
-                        style: 'currency',
-                        currency,
-                      }).format(Number(item.price_ore) / 100)
-                    : '—'}
-                </strong>
-              </Link>
-            </li>
-          ))}
+          {items.map((item) => {
+            const price =
+              item.stage === 'sold' ? item.sold_price_ore : item.price_ore
+            return (
+              <li key={item.id}>
+                <Link href={`/intake/items/${item.id}`}>
+                  {item.photo_id && item.session_id && (
+                    <Image
+                      alt=""
+                      width={52}
+                      height={52}
+                      unoptimized
+                      loading="lazy"
+                      src={`/api/reception/${item.session_id}/photo?photo=${item.photo_id}`}
+                    />
+                  )}
+                  <span>
+                    {item.title || d.quickIntake.garment}
+                    <small>{'I-' + item.id.slice(0, 8).toUpperCase()}</small>
+                    {item.stage && (
+                      <small>{d.lifecycle.stages[item.stage]}</small>
+                    )}
+                  </span>
+                  <strong>
+                    {price
+                      ? new Intl.NumberFormat(intlLocale(locale), {
+                          style: 'currency',
+                          currency,
+                        }).format(Number(price) / 100)
+                      : '—'}
+                  </strong>
+                </Link>
+              </li>
+            )
+          })}
         </ul>
       )}
       {legacy && items.length === 50 && <p>{b.limit}</p>}

@@ -1182,7 +1182,8 @@
     "confirm": "I want to issue the next numbered statement for this period.",
     "issue": "Issue statement",
     "issued": "The statement is issued.",
-    "open": "Open statement"
+    "open": "Open statement",
+    "closedPeriodHint": "The end date must be yesterday or earlier."
   },
   "handovers": {
     "title": "Announced drop-offs",

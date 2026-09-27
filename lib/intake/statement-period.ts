@@ -32,7 +32,7 @@ export function statementPeriodDates(
 ) {
   parseDay(from)
   parseDay(to)
-  if (from > to || to >= dayFormatter.format(now))
-    throw new Error('Period must contain only closed days')
+  if (from > to) throw new Error('Invalid period')
+  if (to >= dayFormatter.format(now)) throw new Error('OPEN_STATEMENT_PERIOD')
   return { periodFrom: from, periodTo: to, calendar: 'stockholm-days' as const }
 }

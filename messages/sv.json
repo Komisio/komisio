@@ -1182,7 +1182,8 @@
     "confirm": "Jag vill utfärda nästa numrerade avräkning för perioden.",
     "issue": "Utfärda avräkning",
     "issued": "Avräkningen är utfärdad.",
-    "open": "Öppna avräkningen"
+    "open": "Öppna avräkningen",
+    "closedPeriodHint": "Slutdatum kan vara senast i går."
   },
   "handovers": {
     "title": "Föranmälningar",

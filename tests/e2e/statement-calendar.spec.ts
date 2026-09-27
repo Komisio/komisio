@@ -33,6 +33,9 @@ test('statement defaults are closed and selected days use Stockholm despite the 
     const yesterday = new Date(`${today}T00:00:00Z`)
     yesterday.setUTCDate(yesterday.getUTCDate() - 1)
     const closedDay = yesterday.toISOString().slice(0, 10)
+    await expect(
+      page.getByText(d.statements.closedPeriodHint, { exact: true }),
+    ).toBeVisible()
     await expect(to).toHaveValue(closedDay)
     await expect(to).toHaveAttribute('max', closedDay)
     await expect(from).toHaveValue(closedDay.slice(0, 7) + '-01')

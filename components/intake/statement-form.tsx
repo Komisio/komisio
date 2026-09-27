@@ -26,7 +26,7 @@ export function StatementForm({
   const action = useIntakeAction(intake)
   const router = useRouter()
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
-  const [invalid, setInvalid] = useState(false)
+  const [invalid, setInvalid] = useState('')
   const [issued, setIssued] = useState<string | null>(null)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -37,8 +37,12 @@ export function StatementForm({
         String(f.get('from') ?? ''),
         String(f.get('to') ?? ''),
       )
-    } catch {
-      setInvalid(true)
+    } catch (error) {
+      setInvalid(
+        error instanceof Error && error.message === 'OPEN_STATEMENT_PERIOD'
+          ? d.closedPeriodHint
+          : intake.invalid,
+      )
       return
     }
     const candidate = issueStatementCommand.safeParse({
@@ -49,7 +53,7 @@ export function StatementForm({
       ...bounds,
       correctsId: null,
     })
-    setInvalid(!candidate.success)
+    setInvalid(candidate.success ? '' : intake.invalid)
     if (!candidate.success) return
     const id = await action.run(candidate.data)
     if (id) {
@@ -60,6 +64,7 @@ export function StatementForm({
   }
   return (
     <form onSubmit={submit}>
+      <p id="statement-period-hint">{d.closedPeriodHint}</p>
       <fieldset
         className="intake-fields"
         disabled={action.busy || action.locked}
@@ -70,6 +75,7 @@ export function StatementForm({
             id="statement-from"
             name="from"
             type="date"
+            aria-describedby="statement-period-hint"
             required
             max={defaultTo}
             defaultValue={defaultFrom}
@@ -92,7 +98,7 @@ export function StatementForm({
         </label>
       </fieldset>
       {(invalid || action.error) && (
-        <p role="alert">{invalid ? intake.invalid : action.error}</p>
+        <p role="alert">{invalid || action.error}</p>
       )}
       <Button type="submit" disabled={action.busy || action.needsReload}>
         {action.busy ? intake.busy : action.locked ? intake.retry : d.issue}

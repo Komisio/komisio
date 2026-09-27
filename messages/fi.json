@@ -1182,7 +1182,8 @@
     "confirm": "Haluan antaa seuraavan numeroidun tiliotteen tälle jaksolle.",
     "issue": "Anna tiliote",
     "issued": "Tiliote on annettu.",
-    "open": "Avaa tiliote"
+    "open": "Avaa tiliote",
+    "closedPeriodHint": "Päättymispäivän on oltava viimeistään eilinen."
   },
   "handovers": {
     "title": "Ennakkoilmoitukset",

@@ -1182,7 +1182,8 @@
     "confirm": "Ich möchte die nächste nummerierte Abrechnung für diesen Zeitraum ausstellen.",
     "issue": "Abrechnung ausstellen",
     "issued": "Die Abrechnung ist ausgestellt.",
-    "open": "Abrechnung öffnen"
+    "open": "Abrechnung öffnen",
+    "closedPeriodHint": "Das Enddatum muss spätestens gestern sein."
   },
   "handovers": {
     "title": "Angekündigte Übergaben",

@@ -1182,7 +1182,8 @@
     "confirm": "Quiero emitir la siguiente liquidación numerada para este periodo.",
     "issue": "Emitir liquidación",
     "issued": "La liquidación está emitida.",
-    "open": "Abrir liquidación"
+    "open": "Abrir liquidación",
+    "closedPeriodHint": "La fecha final debe ser ayer o anterior."
   },
   "handovers": {
     "title": "Entregas anunciadas",

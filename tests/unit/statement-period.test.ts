@@ -13,9 +13,20 @@ describe('closed statement calendar periods', () => {
     ['2024-03-01T12:00:00Z', '2024-02-01', '2024-02-29'],
   ])('defaults to a closed Stockholm period at %s', (now, from, to) => {
     expect(statementPeriodDefaults(new Date(now))).toEqual({ from, to })
-    expect(statementPeriodDates(from, to, new Date(now)).periodTo <= now).toBe(
-      true,
-    )
+    expect(statementPeriodDates(from, to, new Date(now))).toEqual({
+      periodFrom: from,
+      periodTo: to,
+      calendar: 'stockholm-days',
+    })
+  })
+  it('identifies an open day for a specific translated explanation', () => {
+    expect(() =>
+      statementPeriodDates(
+        '2026-09-01',
+        '2026-09-27',
+        new Date('2026-09-27T12:00:00Z'),
+      ),
+    ).toThrow('OPEN_STATEMENT_PERIOD')
   })
   it('keeps selected days unchanged for database timezone conversion', () => {
     expect(

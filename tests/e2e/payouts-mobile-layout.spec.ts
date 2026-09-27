@@ -6,7 +6,7 @@ import d from '../../messages/sv.json' with { type: 'json' }
 const p = d.payouts
 
 // The payouts page on a phone: decisions first (settlement, open payouts),
-// the on-behalf request form last and folded, and a truthful message about
+// the on-behalf request folded near the top, and a truthful message about
 // its bounded seller list instead of an empty form. No money moves: the
 // journey ends at an approved payout, nothing is marked paid.
 test('payouts page keeps decisions first and folds the request form on mobile', async ({

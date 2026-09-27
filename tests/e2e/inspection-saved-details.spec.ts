@@ -117,7 +117,12 @@ test('saved details fold away on the editable draft and stay open where they are
     })
     try {
       const readerPage = await reader.newPage()
-      await register(readerPage, readerEmail, readerPassword, '/intake')
+      // A new account without a store lands on onboarding. The helper waits
+      // for that page before anything else happens, so the streamed
+      // post-confirmation redirect cannot abort the next navigation (the
+      // `/intake` target skipped that wait and raced it in CI).
+      await register(readerPage, readerEmail, readerPassword)
+      await expect(readerPage).toHaveURL(/\/onboarding$/)
       const uid = (
         await f.db.query('select id from auth.users where email=$1', [
           readerEmail,

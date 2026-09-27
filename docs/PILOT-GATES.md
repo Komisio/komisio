@@ -68,20 +68,21 @@ objects (reception photos) are backed up separately (see HOSTED-STAGING.md).
 
 Local and self-hosted: `npm run backup:exercise` dumps the running database
 with `pg_dump` inside the container, restores it into a fresh disposable
-database, verifies the application schemas (`public` and `komisio_private`)
-in the copy, and drops the copy. It never touches the source database. Run
-it before the pilot and after every migration batch.
+database as an existing privileged role that recreates the original
+ownership (`KOMISIO_RESTORE_DB_USER`, `supabase_admin` in the bundled
+Supabase image; a self-hosted stack names its own role), verifies the
+application schemas (`public` and `komisio_private`) in the copy, and drops
+only that copy. It never writes to the source database and never creates,
+alters or grants roles. Run it before the pilot and after every migration
+batch.
 
 The verdict `APPLICATION RESTORE CHECK PASSED` means all of the following
-held: the same table names in both directions with the same row counts;
-the same functions with identical definitions, the same triggers, policies
-with identical expressions, constraints, indexes, row-level security flags
-and grants; and every `pg_restore` error classified as a known platform
-limitation. The only limitations accepted are default-privilege entries for
-Supabase platform roles in platform schemas, and the `vault.secrets` data
-entry when the table is verified empty in both source and copy. Any other
-error, an unparsed error, or a restore process that fails without a
-classified error is a stop. The exercise does not prove storage objects or
+held: `pg_restore` exited normally with no error; the same table names in
+both directions with the same row counts; the same functions, triggers,
+policies, constraints, indexes, row-level security flags, owners and grants
+by definition. It compares counts and definitions, not row contents. Any
+restore error, any other exit status, a failed process, or a difference in
+those objects is a stop. The exercise does not prove storage objects or
 hosted point-in-time recovery, and a source that is written during the dump
 can produce a false mismatch; rerun in a quiet moment before treating that
 as a failure.

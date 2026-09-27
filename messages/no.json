@@ -1244,7 +1244,7 @@
       "mixed": "Butikkene bruker ulike valutaer; bare radene per butikk vises."
     },
     "title": "Økonomi",
-    "intro": "Butikkens tall for en periode, beregnet fra samme fakta og med samme summer som dagsoppgjøret: salg med mva per modus, kommisjon, innlevererens tilgodehavende, returer og betalte utbetalinger.",
+    "intro": "Salg, provisjon og utbetalinger for valgt periode.",
     "notice": "Kun lesing. Tallene er butikkens egne; mva-modus er butikkens valg tatt sammen med regnskapsføreren.",
     "periodHeading": "Periode",
     "periodInvalid": "Velg en fra-dato på eller før til-datoen, høyst ett år fra hverandre.",

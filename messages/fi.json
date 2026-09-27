@@ -1244,7 +1244,7 @@
       "mixed": "Kaupat käyttävät eri valuuttoja; vain kauppakohtaiset rivit näytetään."
     },
     "title": "Talous",
-    "intro": "Kaupan luvut jaksolta, laskettu samoista tosiasioista ja samoilla summilla kuin päivän päätös: myynti alv:n kanssa tiloittain, komissio, tuojan hyvitys, palautukset ja maksetut tilitykset.",
+    "intro": "Myynti, provisiot ja tilitykset valitulta ajanjaksolta.",
     "notice": "Vain luku. Luvut ovat kaupan omia; alv-tilat ovat kaupan valinta, joka on tehty kirjanpitäjän kanssa.",
     "periodHeading": "Jakso",
     "periodInvalid": "Valitse alkupäivä, joka on viimeistään loppupäivä, enintään vuoden päässä.",

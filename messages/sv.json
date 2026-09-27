@@ -1244,7 +1244,7 @@
       "mixed": "Butikerna använder olika valutor; bara raderna per butik visas."
     },
     "title": "Ekonomi",
-    "intro": "Butikens siffror för en period, beräknade från samma fakta och med samma summor som dagsavslutet: försäljning med moms per momsläge, provision, säljartillgodohavande, returer och utbetalda utbetalningar.",
+    "intro": "Försäljning, provision och utbetalningar för vald period.",
     "notice": "Bara läsning. Siffrorna är butikens egna; momslägen är butikens val, gjorda med dess redovisningskonsult.",
     "periodHeading": "Period",
     "periodInvalid": "Välj ett från-datum som ligger på eller före till-datumet, högst ett år emellan.",

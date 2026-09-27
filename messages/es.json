@@ -1244,7 +1244,7 @@
       "mixed": "Las tiendas usan monedas distintas; solo se muestran las filas por tienda."
     },
     "title": "Economía",
-    "intro": "Las cifras de la tienda para un periodo, calculadas a partir de los mismos hechos y con las mismas sumas que el cierre del día: ventas con IVA por modo, comisión, crédito del depositante, devoluciones y pagos pagados.",
+    "intro": "Ventas, comisiones y pagos del período seleccionado.",
     "notice": "Solo lectura. Las cifras son propias de la tienda; los modos de IVA son la elección de la tienda tomada con su contable.",
     "periodHeading": "Periodo",
     "periodInvalid": "Elige una fecha de inicio igual o anterior a la fecha de fin, con un máximo de un año de diferencia.",

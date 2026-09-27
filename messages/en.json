@@ -1244,7 +1244,7 @@
       "mixed": "Stores use different currencies; only the per-store rows are shown."
     },
     "title": "Economy",
-    "intro": "The store's numbers for a period, computed from the same facts and with the same sums as the day close: sales with VAT per mode, commission, seller credit, returns and paid payouts.",
+    "intro": "Sales, commission and payouts for the selected period.",
     "notice": "Read only. The figures are the store's own; VAT modes are the store's choice made with its accountant.",
     "periodHeading": "Period",
     "periodInvalid": "Pick a from date at or before the to date, at most one year apart.",

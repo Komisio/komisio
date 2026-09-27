@@ -51,7 +51,9 @@ export function SellerHandovers({
     if (!failed) return
     feedback.current?.focus()
   }, [failed])
-  const retry = useRef<{ key: string; id: string } | null>(null)
+  const retries = useRef<
+    Partial<Record<HandoverChange['action'], { key: string; id: string }>>
+  >({})
   async function submit(payload: HandoverChange) {
     if (running.current) return
     running.current = true
@@ -59,9 +61,9 @@ export function SellerHandovers({
     setFailed(false)
     setNotice('')
     const key = JSON.stringify(payload)
-    const id =
-      retry.current?.key === key ? retry.current.id : crypto.randomUUID()
-    retry.current = { key, id }
+    const previous = retries.current[payload.action]
+    const id = previous?.key === key ? previous.id : crypto.randomUUID()
+    retries.current[payload.action] = { key, id }
     try {
       const r = await fetch('/api/seller/handovers', {
         method: 'POST',
@@ -75,7 +77,7 @@ export function SellerHandovers({
         focusReceipt.current = result.id
         form.current?.reset()
       } else focusReceipt.current = payload.handoverId
-      retry.current = null
+      delete retries.current[payload.action]
       setNotice(d.saved)
       router.refresh()
     } catch {

@@ -83,6 +83,16 @@ test('handover feedback preserves a lost-response retry and focuses its receipt'
     await expect(portal.getByRole('alert')).toBeInViewport()
     await expect(note).toHaveValue('Synthetic furniture and lamps')
     await expect(number).toHaveValue('7')
+    // A separate cancellation must not forget the uncertain creation request.
+    const older = portal.locator('.intake-notice').filter({
+      hasText: 'Older synthetic notice 0',
+    })
+    await older
+      .getByRole('button', { name: d.sellerPortal.cancelHandover, exact: true })
+      .click()
+    await expect(older).toContainText(d.sellerPortal.handoverStatuses.cancelled)
+    await expect(note).toHaveValue('Synthetic furniture and lamps')
+    await expect(number).toHaveValue('7')
     await portal
       .getByRole('button', { name: d.sellerPortal.announce, exact: true })
       .click()

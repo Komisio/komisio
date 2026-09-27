@@ -89,6 +89,6 @@ select is((select actor from item_events where item_id=current_setting('test.fre
 select is((select actor from markdown_runs where tenant_id=current_setting('test.tenant')::uuid and mode='automatic'),'f0000000-0000-4000-8000-000000000371'::uuid,'the automatic run is attributed to the owner who enabled it');
 select is((pg_temp.run_for(komisio_private.run_automatic_markdowns(),current_setting('test.tenant'))->>'replayed')::boolean,true,'a second run the same day replays');
 select is((select count(*) from markdown_runs where tenant_id=current_setting('test.tenant')::uuid and mode='automatic'),1::bigint,'one automatic run per store and day');
-select throws_ok($$update markdown_runs set applied_count=9$$,'55000',null,'runs are immutable');
+select throws_ok($$update markdown_runs set applied_count=9 where tenant_id=current_setting('test.tenant')::uuid$$,'55000',null,'runs are immutable');
 select * from finish();
 rollback;

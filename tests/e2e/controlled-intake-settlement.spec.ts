@@ -24,22 +24,29 @@ test('controlled journey: receive, register, label, sell and approve a settlemen
     await page.setViewportSize({ width: 320, height: 800 })
     // Layout is checked softly so one overflowing page still lets the chain of
     // facts run to the end; on failure the elements that stick out are named.
-    const noOverflow = async () =>
+    const noOverflow = async () => {
+      const layout = await page.evaluate(() => ({
+        width: document.documentElement.scrollWidth,
+        viewport: innerWidth,
+        elements: [...document.querySelectorAll('body *')]
+          .filter((el) => el.getBoundingClientRect().right > innerWidth)
+          .slice(0, 8)
+          .map(
+            (el) =>
+              el.tagName.toLowerCase() +
+              ' class=' +
+              (el.getAttribute('class') ?? '') +
+              ' right=' +
+              Math.round(el.getBoundingClientRect().right),
+          ),
+      }))
       expect
         .soft(
-          await page.evaluate(() => {
-            if (document.documentElement.scrollWidth <= innerWidth) return []
-            return [...document.querySelectorAll('body *')]
-              .filter((el) => el.getBoundingClientRect().right > innerWidth + 1)
-              .slice(0, 8)
-              .map(
-                (el) =>
-                  `${el.tagName.toLowerCase()}${el.className ? '.' + String(el.className).split(' ').join('.') : ''} right=${Math.round(el.getBoundingClientRect().right)}`,
-              )
-          }),
-          `page ${page.url()} overflows ${await page.evaluate(() => document.documentElement.scrollWidth)}px at ${await page.evaluate(() => innerWidth)}px`,
+          layout.width,
+          'page ' + page.url() + ': ' + layout.elements.join('; '),
         )
-        .toEqual([])
+        .toBeLessThanOrEqual(layout.viewport)
+    }
 
     // 1. Receive the handover as a bag for the fixture seller.
     await page.goto(`/intake?seller=${f.seller}#new-seller`)

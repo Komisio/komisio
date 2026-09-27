@@ -47,6 +47,16 @@ jobs:
       - run: npm run test:assistance
       - run: npm run test:zettle-automation
       - run: npm run test:fortnox-automation
+      - name: Preserve browser failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-failure-evidence
+          path: |
+            test-results/**/error-context.md
+            test-results/**/test-failed-*.png
+          if-no-files-found: ignore
+          retention-days: 3
       - name: Stop local services
         if: always()
         run: supabase stop

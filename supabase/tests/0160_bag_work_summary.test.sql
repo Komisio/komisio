@@ -1,0 +1,54 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+('c0000000-0000-4000-8000-000000009901','progress-owner@example.test',now()),
+('c0000000-0000-4000-8000-000000009902','progress-reader@example.test',now()),
+('c0000000-0000-4000-8000-000000009903','progress-outsider@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"c0000000-0000-4000-8000-000000009901","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Progress store','progress-store',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Synthetic seller','','123')::text,true);
+select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'Progress',null)::text,true);
+select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'accepted','0','empty bag has no accepted items');
+select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'drafts','0','empty bag has no drafts');
+select set_config('test.draft',gen_random_uuid()::text,true);
+select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Lamp','','Good');
+select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,1,'Lamp edited','','Good');
+select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'drafts','1','draft revisions count once');
+select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'nextDraft',current_setting('test.draft'),'direct draft target');
+select set_inspection_archived(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,2,true,'Synthetic archive');
+select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'drafts','0','archived draft is not active work');
+select set_config('test.session',gen_random_uuid()::text,true);
+select create_bag_reception(current_setting('test.tenant')::uuid,current_setting('test.session')::uuid,current_setting('test.seller')::uuid,current_setting('test.bag')::uuid);
+select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'receptions','1','pending reception counts');
+select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'nextReception',current_setting('test.session'),'direct reception target');
+select quick_receive_from_bag(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Chair"}',10000,current_setting('test.bag')::uuid);
+select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'accepted','1','quick accepted item counts');
+select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'receptions','0','accepted reception not counted twice');
+select save_reception_sources(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,(select max(revision) from reception_source_revisions where session_id=current_setting('test.session')::uuid),(select sources from reception_source_revisions where session_id=current_setting('test.session')::uuid order by revision desc limit 1));
+select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'receptions','0','accepted item remains finished after a source revision');
+select ok(not (bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid) ? 'complete'),'no invented completion');
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}'::jsonb);
+select set_inspection_archived(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,3,false,'Synthetic reopen');
+select accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'inspection_draft',current_setting('test.draft')::uuid,4,20000);
+select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'accepted','2','accepted items include both intake origins');
+select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'drafts','0','accepted draft no longer active work');
+select set_config('test.other',create_tenant('Other progress store','other-progress-store',gen_random_uuid())::text,true);
+select throws_like($$select bag_work_summary(current_setting('test.other')::uuid,current_setting('test.bag')::uuid)$$,'%BAG_NOT_FOUND%','bag must belong to selected tenant');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.tenant')::uuid,'c0000000-0000-4000-8000-000000009902','readonly');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"c0000000-0000-4000-8000-000000009902","role":"authenticated"}';
+select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'accepted','2','readonly may see progress');
+set local "request.jwt.claims"='{"sub":"c0000000-0000-4000-8000-000000009903","role":"authenticated"}';
+select throws_ok($$select bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)$$,'42501',null,'outsider denied');
+reset role;
+select ok(not has_function_privilege('anon','public.bag_work_summary(uuid,uuid)','execute'),'anonymous denied');
+insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at)
+values(gen_random_uuid(),'c0000000-0000-4000-8000-000000009901','totp','verified',now(),now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"c0000000-0000-4000-8000-000000009901","role":"authenticated","aal":"aal1"}';
+select throws_ok($$select bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)$$,'42501',null,'MFA remains enforced');
+reset role;
+select * from finish(); rollback;

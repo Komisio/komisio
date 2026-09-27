@@ -2550,7 +2550,7 @@
     "item": "Articolo dalla consegna",
     "save": "Salva articolo",
     "next": "Articolo successivo dalla consegna",
-    "registered": "Articoli registrati",
+    "registered": "Articoli da ricezione rapida",
     "empty": "Nessun articolo ancora registrato.",
     "drafts": "Bozze precedenti e cronologia",
     "back": "Torna alla revisione della consegna",
@@ -2729,5 +2729,15 @@
     "next": "Successivo",
     "noDropoffs": "Nessuna consegna registrata per questo venditore.",
     "noItems": "Nessun articolo registrato per questo venditore."
+  },
+  "bagProgress": {
+    "title": "Stato della consegna",
+    "accepted": "Registrati",
+    "drafts": "Bozze",
+    "receptions": "In lavorazione",
+    "resumeDraft": "Continua una bozza",
+    "resumeReception": "Apri ricezione in sospeso",
+    "hint": "I conteggi riguardano i dati salvati. Controlla anche gli articoli non ancora registrati.",
+    "unavailable": "Lo stato della consegna non è disponibile al momento."
   }
 }

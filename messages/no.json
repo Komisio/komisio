@@ -2550,7 +2550,7 @@
     "item": "Vare fra innleveringen",
     "save": "Lagre vare",
     "next": "Neste vare fra innleveringen",
-    "registered": "Registrerte varer",
+    "registered": "Varer fra hurtigmottak",
     "empty": "Ingen varer registrert ennå.",
     "drafts": "Tidligere utkast og historikk",
     "back": "Til gjennomgang av innleveringen",
@@ -2729,5 +2729,15 @@
     "next": "Neste",
     "noDropoffs": "Ingen innleveringer registrert for selgeren.",
     "noItems": "Ingen varer registrert for selgeren."
+  },
+  "bagProgress": {
+    "title": "Status for innleveringen",
+    "accepted": "Registrerte",
+    "drafts": "Utkast",
+    "receptions": "Under behandling",
+    "resumeDraft": "Fortsett med utkast",
+    "resumeReception": "Åpne ventende mottak",
+    "hint": "Antallene gjelder lagrede opplysninger. Sjekk også varer som ennå ikke er registrert.",
+    "unavailable": "Status for innleveringen er ikke tilgjengelig nå."
   }
 }

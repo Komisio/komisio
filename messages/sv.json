@@ -2550,7 +2550,7 @@
     "item": "Vara ur inlämningen",
     "save": "Spara vara",
     "next": "Nästa vara ur inlämningen",
-    "registered": "Registrerade varor",
+    "registered": "Varor från snabb mottagning",
     "empty": "Inga varor registrerade ännu.",
     "drafts": "Äldre utkast och historik",
     "back": "Till påsgenomgången",
@@ -2729,5 +2729,15 @@
     "next": "Nästa",
     "noDropoffs": "Inga inlämningar registrerade för säljaren.",
     "noItems": "Inga varor registrerade för säljaren."
+  },
+  "bagProgress": {
+    "title": "Inlämningens läge",
+    "accepted": "Registrerade",
+    "drafts": "Utkast",
+    "receptions": "Under behandling",
+    "resumeDraft": "Fortsätt med utkast",
+    "resumeReception": "Öppna väntande mottagning",
+    "hint": "Antalen gäller sparade uppgifter. Kontrollera även varor som ännu inte registrerats.",
+    "unavailable": "Inlämningens läge kan inte visas just nu."
   }
 }

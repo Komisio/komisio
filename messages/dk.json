@@ -2550,7 +2550,7 @@
     "item": "Vare fra indleveringen",
     "save": "Gem vare",
     "next": "Næste vare fra indleveringen",
-    "registered": "Registrerede varer",
+    "registered": "Varer fra hurtig modtagelse",
     "empty": "Ingen varer registreret endnu.",
     "drafts": "Tidligere kladder og historik",
     "back": "Til gennemgang af indleveringen",
@@ -2729,5 +2729,15 @@
     "next": "Næste",
     "noDropoffs": "Ingen indleveringer registreret for sælgeren.",
     "noItems": "Ingen varer registreret for sælgeren."
+  },
+  "bagProgress": {
+    "title": "Indleveringens status",
+    "accepted": "Registrerede",
+    "drafts": "Kladder",
+    "receptions": "Under behandling",
+    "resumeDraft": "Fortsæt en kladde",
+    "resumeReception": "Åbn afventende modtagelse",
+    "hint": "Antallene gælder gemte oplysninger. Kontrollér også varer, der endnu ikke er registreret.",
+    "unavailable": "Indleveringens status kan ikke vises lige nu."
   }
 }

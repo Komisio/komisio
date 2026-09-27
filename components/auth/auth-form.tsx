@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ArrowRight } from 'lucide-react'
@@ -9,6 +9,9 @@ import { safeNext } from '@/lib/platform/validation'
 import { Button } from '@/components/ui/button'
 import { Feedback } from '@/components/platform/feedback'
 import { Brand } from '@/components/platform/brand'
+const subscribe = () => () => {}
+const clientReady = () => true
+const serverReady = () => false
 export function AuthForm({
   mode,
   next = '/',
@@ -20,6 +23,7 @@ export function AuthForm({
   callbackError?: boolean
   initialLocale?: Locale
 }) {
+  const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const [locale, setLocale] = useState<Locale>(initialLocale)
   const d = dictionary(locale)
   const [busy, setBusy] = useState(false)
@@ -135,6 +139,7 @@ export function AuthForm({
         <div className="locale-switch">
           <select
             aria-label={d.language}
+            disabled={!ready}
             value={locale}
             lang={locale}
             onChange={(e) => changeLocale(e.target.value as Locale)}
@@ -167,13 +172,14 @@ export function AuthForm({
               </p>
             )}
           {!registrationSent && (
-            <form onSubmit={submit}>
+            <form method="post" onSubmit={submit}>
               {mode !== 'password' && (
                 <div className="field">
                   <label htmlFor="email">{d.email}</label>
                   <input
                     id="email"
                     name="email"
+                    disabled={!ready}
                     type="email"
                     autoComplete="email"
                     value={email}
@@ -191,6 +197,7 @@ export function AuthForm({
                   <input
                     id="password"
                     name="password"
+                    disabled={!ready}
                     type="password"
                     autoComplete={
                       mode === 'login' ? 'current-password' : 'new-password'
@@ -214,7 +221,7 @@ export function AuthForm({
                   </Link>
                 </p>
               )}
-              <Button disabled={busy} className="full">
+              <Button disabled={busy || !ready} className="full">
                 {busy
                   ? d.loading
                   : mode === 'reset'

@@ -10,7 +10,15 @@ const examples: [Locale, string, string, string, string, string, string][] = [
   ['en', 'Lamp', 'Socket', 'Integrated LED', 'Sweater', 'Fit', "Children's"],
   ['no', 'Lampe', 'Sokkel', 'Integrert LED', 'Genser', 'Passform', 'Barn'],
   ['dk', 'Lampe', 'Fatning', 'Indbygget LED', 'Trøje', 'Pasform', 'Børn'],
-  ['fi', 'Valaisin', 'Lampun kanta', 'Kiinteä LED', 'Neule', 'Malli', 'Lasten'],
+  [
+    'fi',
+    'Valaisin',
+    'Lampun kanta',
+    'Kiinteä LED',
+    'Neule',
+    'Istuvuus',
+    'Lasten',
+  ],
   [
     'de',
     'Lampe',

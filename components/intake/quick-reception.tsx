@@ -565,7 +565,8 @@ export function QuickReception({
             <strong>{done.reference}</strong> · {facts.description}
           </p>
           {message && <p role="status">{message}</p>}
-          <div className="row">
+          {/* Two actions must fit a 320px phone: wrap instead of pushing the page sideways. */}
+          <div className="row wrap">
             <Button onClick={next}>{d.next}</Button>
             <Link
               className="btn btn-secondary"

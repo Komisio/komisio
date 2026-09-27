@@ -3,6 +3,7 @@ import { randomUUID, randomBytes } from 'node:crypto'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
+import de from '../../messages/de.json' with { type: 'json' }
 
 // One consignment through the actual staff UI on a phone: receive the bag,
 // register one item, open its browser label, record its sale, settle the
@@ -275,6 +276,41 @@ test('controlled journey: receive, register, label, sell and approve a settlemen
         )
       ).rows,
     ).toEqual([{ payout_count: 1, reason: 'Synthetic controlled settlement' }])
+    // The saved-item confirmation must also fit a phone with the longest action text (German).
+    await page
+      .context()
+      .addCookies([
+        { name: 'komisio-locale', value: 'de', url: 'http://127.0.0.1:3000' },
+      ])
+    await page.goto(`/intake/bags/${bagId}/inspect`)
+    // The description label comes from the store's attribute vocabulary, not from the UI
+    // dictionary, so the first text field of the item form is used here.
+    await page
+      .locator('.quick-item')
+      .getByRole('textbox')
+      .first()
+      .fill('Synthetic second coat')
+    await page.getByLabel(de.quickIntake.price, { exact: true }).fill('50')
+    await page
+      .getByRole('button', { name: de.bagIntake.save, exact: true })
+      .click()
+    const doneCard = page.getByRole('region', { name: de.quickIntake.done })
+    await expect(
+      doneCard.getByRole('button', { name: de.bagIntake.next, exact: true }),
+    ).toBeVisible()
+    await expect(
+      doneCard.getByRole('link', {
+        name: de.quickIntake.openItem,
+        exact: true,
+      }),
+    ).toBeVisible()
+    await noOverflow()
+    await page
+      .context()
+      .addCookies([
+        { name: 'komisio-locale', value: 'sv', url: 'http://127.0.0.1:3000' },
+      ])
+
     // Boundary of this journey: nothing paid, no statement, no communication, no print job.
     for (const table of [
       'settlement_statements',

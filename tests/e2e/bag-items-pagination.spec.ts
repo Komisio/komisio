@@ -127,6 +127,21 @@ test('both intake origins remain reachable in both handover views on mobile', as
       await links.first().click()
       await expect(page).toHaveURL(/\/intake\/items\//)
     }
+    await page.goto(`/intake/bags/${bag}/inspect?itemPage=2`)
+    await page
+      .getByLabel(d.quickIntake.description, { exact: true })
+      .fill('Synthetic newest item')
+    await page.getByLabel(d.quickIntake.price, { exact: true }).fill('95')
+    await page
+      .getByRole('button', { name: d.bagIntake.save, exact: true })
+      .click()
+    await expect(page.locator('.bag-received-items li').first()).toContainText(
+      'Synthetic newest item',
+    )
+    await expect(page).not.toHaveURL(/itemPage=2/)
+    await expect(
+      page.getByRole('button', { name: d.bagIntake.next, exact: true }),
+    ).toBeVisible()
   } finally {
     await f.close()
   }

@@ -44,7 +44,10 @@ test('mobile economy puts period totals before the brief and keeps the selected 
       path: testInfo.outputPath('economy-mobile.png'),
       fullPage: true,
     })
-    const breakdown = page.locator('.economy-scroll').first()
+    const breakdown = page.getByRole('group', {
+      name: sv.economy.perMode,
+      exact: true,
+    })
     await breakdown.focus()
     await page.keyboard.press('ArrowRight')
     await expect

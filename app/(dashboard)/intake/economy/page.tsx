@@ -137,6 +137,7 @@ export default async function Economy({
               <h3>{d.perMode}</h3>
               <div
                 className="economy-scroll"
+                role="group"
                 tabIndex={0}
                 aria-label={d.perMode}
               >
@@ -204,6 +205,7 @@ export default async function Economy({
           {summary.days.length > 0 && (
             <div
               className="economy-scroll"
+              role="group"
               tabIndex={0}
               aria-label={d.daysHeading}
             >
@@ -240,6 +242,7 @@ export default async function Economy({
             {chainSummary && (
               <div
                 className="economy-scroll"
+                role="group"
                 tabIndex={0}
                 aria-label={d.chain.heading}
               >

@@ -186,8 +186,13 @@ export default async function SellerPortal({
       )}
     </nav>
   )
+  // Ledger and message history fold behind their headings; both stay a count
+  // away and a message that is still queued or has failed keeps its list open.
+  const messagesOpen = economy.messages.some((m) =>
+    ['queued', 'failed'].includes(m.status),
+  )
   return (
-    <main className="onboarding seller-review">
+    <main className="onboarding seller-review seller-portal">
       <Brand />
       <SignOut d={all} next="/seller" />
       <div className="page-heading">
@@ -414,8 +419,12 @@ export default async function SellerPortal({
           </p>
         ))}
       </section>
-      <section className="card">
-        <h2>{d.ledger}</h2>
+      <details className="card seller-portal-fold" data-testid="portal-ledger">
+        <summary>
+          <h2>
+            {d.ledger} · {economy.ledger.length}
+          </h2>
+        </summary>
         {economy.ledger.length === 0 && <p>{d.none}</p>}
         {economy.ledger.map((l) => (
           <p key={l.id}>
@@ -423,7 +432,7 @@ export default async function SellerPortal({
             {amount(l.amount_ore)}
           </p>
         ))}
-      </section>
+      </details>
       <section id="portal-statements" className="card" tabIndex={-1}>
         <h2>{d.statements}</h2>
         {economy.statements.length === 0 && <p>{d.none}</p>}
@@ -436,8 +445,16 @@ export default async function SellerPortal({
           </p>
         ))}
       </section>
-      <section className="card">
-        <h2>{d.messages}</h2>
+      <details
+        className="card seller-portal-fold"
+        data-testid="portal-messages"
+        open={messagesOpen}
+      >
+        <summary>
+          <h2>
+            {d.messages} · {economy.messages.length}
+          </h2>
+        </summary>
         {economy.messages.length === 0 && <p>{d.none}</p>}
         {economy.messages.map((m) => (
           <article key={m.id}>
@@ -449,7 +466,7 @@ export default async function SellerPortal({
             <p className="whitespace-pre-wrap">{m.body}</p>
           </article>
         ))}
-      </section>
+      </details>
     </main>
   )
 }

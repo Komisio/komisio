@@ -16,6 +16,56 @@
   scroll-margin-top: 1rem;
 }
 
+/* The account page only: shorter chrome between cards so balance, shortcuts,
+   payout request and payouts fit a phone; the picker and statement pages keep
+   the shared onboarding spacing. Controls keep their 44 px minimum. */
+.seller-portal > .brand {
+  margin-bottom: 24px;
+}
+.seller-portal .page-heading {
+  margin-bottom: 16px;
+}
+.seller-portal .card > h2:first-child,
+.seller-portal .card > summary:first-child > h2 {
+  margin-top: 0;
+}
+.seller-portal .intake-grid {
+  gap: 14px;
+  margin-bottom: 0;
+}
+.seller-portal .seller-portal-shortcuts {
+  margin: 14px auto;
+}
+.seller-portal-fold > summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.seller-portal-fold > summary::before {
+  content: '▸';
+  flex: none;
+}
+.seller-portal-fold[open] > summary::before {
+  content: '▾';
+}
+.seller-portal-fold > summary > h2 {
+  margin: 0;
+}
+.seller-portal-fold[open] > summary {
+  margin-bottom: 8px;
+}
+@media (max-width: 480px) {
+  .seller-portal {
+    padding-top: 20px;
+  }
+  .seller-portal .card {
+    margin: 14px auto;
+    padding: 18px;
+  }
+}
+
 .seller-statement-lines {
   width: 100%;
   border-collapse: collapse;

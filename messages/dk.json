@@ -2553,8 +2553,9 @@
     "registered": "Varer fra hurtig modtagelse",
     "empty": "Ingen varer registreret endnu.",
     "drafts": "Tidligere kladder og historik",
-    "back": "Til gennemgang af indleveringen",
-    "limit": "Viser de 50 senest registrerede varer."
+    "back": "Til indleveringen",
+    "limit": "Viser de 50 senest registrerede varer.",
+    "allRegistered": "Registrerede varer"
   },
   "integrationPage": {
     "intro": "Forbind butikken med kassesystem, webshop og bogføring.",

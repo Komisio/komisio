@@ -1,3 +1,5 @@
+import { BagRegisteredItems } from '@/components/intake/bag-registered-items'
+import { readBagRegisteredItems } from '@/lib/engine/bag-registered-items'
 import { BagWorkSummary } from '@/components/intake/bag-work-summary'
 import { prepareInspectionReception } from '@/lib/engine/inspection-reception-preview'
 import { BagReception } from '@/components/intake/bag-reception'
@@ -7,7 +9,7 @@ import { readInspection } from '@/lib/engine/inspection-read'
 import { readItemForOrigin } from '@/lib/engine/items'
 import { AcceptItemForm } from '@/components/intake/accept-item-form'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { readPriceEvidence } from '@/lib/engine/price-evidence'
@@ -37,9 +39,19 @@ export default async function InspectBag({
   if (!z.uuid().safeParse(id).success || !navigation.success) notFound()
   const { draft, version, historyBefore, after, before, status } =
     navigation.data
+  const itemPage =
+    typeof query.itemPage === 'string' && /^[1-9]\d{0,6}$/.test(query.itemPage)
+      ? Number(query.itemPage)
+      : 1
   const inspectionHref = (
     params: Record<string, string | number | undefined>,
-  ) => navigationHref({ view: 'drafts', status, ...params })
+  ) =>
+    navigationHref({
+      view: 'drafts',
+      status,
+      itemPage: itemPage > 1 ? itemPage : undefined,
+      ...params,
+    })
   const tenantId = ctx.active!.id
   const {
     bag,
@@ -91,6 +103,29 @@ export default async function InspectBag({
         readonly={ctx.active!.role === 'readonly'}
       />
     )
+  const registered = await readBagRegisteredItems(
+    ctx.client,
+    tenantId,
+    id,
+    (itemPage - 1) * 25,
+  )
+  const registeredPages = registered.legacy
+    ? 1
+    : Math.max(1, Math.ceil(registered.total / 25))
+  const registeredHref = (page: number) =>
+    inspectionHref({
+      draft,
+      version,
+      historyBefore,
+      after,
+      before,
+      itemPage: page,
+    }) + '#bag-registered'
+  if (itemPage > registeredPages) redirect(registeredHref(registeredPages))
+  const registeredTitle =
+    registered.scope === 'all'
+      ? d.bagIntake.allRegistered
+      : d.bagIntake.registered
   const acceptedItem = selected
     ? await readItemForOrigin(
         ctx.client,
@@ -120,6 +155,12 @@ export default async function InspectBag({
         </Link>
       </div>
       {bag.note && <p>{bag.note}</p>}
+      {registered.total > 0 && (
+        <Link className="text-link" href="#bag-registered">
+          {registeredTitle} ({registered.total}
+          {registered.legacy && registered.total === 50 ? ' +' : ''})
+        </Link>
+      )}
       <BagWorkSummary
         client={ctx.client}
         tenantId={tenantId}
@@ -378,6 +419,13 @@ export default async function InspectBag({
           )}
         </nav>
       </section>
+      <BagRegisteredItems
+        data={registered}
+        locale={ctx.locale}
+        currency={policy.policy.currency ?? 'SEK'}
+        itemPage={itemPage}
+        href={registeredHref}
+      />
     </>
   )
 }

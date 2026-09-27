@@ -2553,8 +2553,9 @@
     "registered": "Items from quick intake",
     "empty": "No items registered yet.",
     "drafts": "Earlier drafts and history",
-    "back": "Back to drop-off inspection",
-    "limit": "Showing the 50 most recently registered items."
+    "back": "Back to handover",
+    "limit": "Showing the 50 most recently registered items.",
+    "allRegistered": "Registered items"
   },
   "integrationPage": {
     "intro": "Connect your store to your point of sale, online shop and accounting.",

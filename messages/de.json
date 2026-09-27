@@ -2553,8 +2553,9 @@
     "registered": "Artikel aus der Schnellannahme",
     "empty": "Noch keine Artikel erfasst.",
     "drafts": "Frühere Entwürfe und Verlauf",
-    "back": "Zur Prüfung der Einlieferung",
-    "limit": "Die 50 zuletzt erfassten Artikel werden angezeigt."
+    "back": "Zurück zur Einlieferung",
+    "limit": "Die 50 zuletzt erfassten Artikel werden angezeigt.",
+    "allRegistered": "Erfasste Artikel"
   },
   "integrationPage": {
     "intro": "Verbinde deinen Laden mit Kassensystem, Onlineshop und Buchhaltung.",

@@ -243,7 +243,19 @@ export function QuickReception({
         }
       } else setMessage('')
       setDone({ reference: result.reference, itemId: result.itemId })
-      if (bagId) router.refresh()
+      if (bagId) {
+        // A saved item sorts first; keep the confirmation visible while refreshing that page.
+        const url = new URL(window.location.href)
+        if (url.searchParams.has('itemPage')) {
+          url.searchParams.delete('itemPage')
+          window.history.replaceState(
+            null,
+            '',
+            url.pathname + url.search + url.hash,
+          )
+        }
+        router.refresh()
+      }
     } catch (e) {
       fail(e)
     } finally {

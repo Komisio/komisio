@@ -2553,8 +2553,9 @@
     "registered": "Pikavastaanoton tuotteet",
     "empty": "Tuotteita ei ole vielä rekisteröity.",
     "drafts": "Aiemmat luonnokset ja historia",
-    "back": "Takaisin tuontierän läpikäyntiin",
-    "limit": "Näytetään 50 viimeksi rekisteröityä tuotetta."
+    "back": "Takaisin tavaraerään",
+    "limit": "Näytetään 50 viimeksi rekisteröityä tuotetta.",
+    "allRegistered": "Rekisteröidyt tuotteet"
   },
   "integrationPage": {
     "intro": "Yhdistä myymäläsi kassajärjestelmään, verkkokauppaan ja kirjanpitoon.",

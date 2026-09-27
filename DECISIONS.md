@@ -736,3 +736,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-27: Handover progress reads accepted items from both intake paths and active unfinished drafts/receptions. Counts never imply whole-handover completion or a physical remaining quantity; direct next-work links preserve existing role, tenant and MFA boundaries.
 
 - 2026-09-27: reception_queue_facts takes an optional trailing bag filter applied inside its own query; the handover summary reads one bag. A missing or transient summary read shows unavailable, never a zero; authorization and validation failures still fail.
+- 2026-09-27: A handover's registered-item list includes accepted inspection drafts and bag-linked receptions. Both views use the same bounded list and current item facts; rollout fallback is explicitly limited to quick intake. Counts do not establish physical completion.

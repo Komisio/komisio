@@ -2553,8 +2553,9 @@
     "registered": "Articoli da ricezione rapida",
     "empty": "Nessun articolo ancora registrato.",
     "drafts": "Bozze precedenti e cronologia",
-    "back": "Torna alla revisione della consegna",
-    "limit": "Sono mostrati gli ultimi 50 articoli registrati."
+    "back": "Torna alla consegna",
+    "limit": "Sono mostrati gli ultimi 50 articoli registrati.",
+    "allRegistered": "Articoli registrati"
   },
   "integrationPage": {
     "intro": "Collega il negozio al punto vendita, al negozio online e alla contabilità.",

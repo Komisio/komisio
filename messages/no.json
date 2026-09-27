@@ -2553,8 +2553,9 @@
     "registered": "Varer fra hurtigmottak",
     "empty": "Ingen varer registrert ennå.",
     "drafts": "Tidligere utkast og historikk",
-    "back": "Til gjennomgang av innleveringen",
-    "limit": "Viser de 50 sist registrerte varene."
+    "back": "Til innleveringen",
+    "limit": "Viser de 50 sist registrerte varene.",
+    "allRegistered": "Registrerte varer"
   },
   "integrationPage": {
     "intro": "Koble butikken til kassasystem, nettbutikk og regnskap.",

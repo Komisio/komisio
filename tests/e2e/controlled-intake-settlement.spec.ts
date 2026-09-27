@@ -240,6 +240,20 @@ test('controlled journey: receive, register, label, sell and approve a settlemen
     await expect(
       page.getByText(d.payouts.settled, { exact: true }),
     ).toBeVisible()
+    // Wait for the refreshed server view: the approved payout must be visible
+    // and the reserved credit must no longer be offered for another batch.
+    const payoutList = page.locator('section', {
+      has: page.getByRole('heading', { name: d.payouts.list, exact: true }),
+    })
+    await expect(payoutList.locator('strong')).toContainText(
+      d.payouts.statuses.approved,
+    )
+    await expect(
+      payoutList.getByRole('button', { name: d.payouts.markPaid, exact: true }),
+    ).toBeVisible()
+    await expect(
+      settle.getByText(d.payouts.settleEmpty, { exact: true }),
+    ).toBeVisible()
     await noOverflow()
     await page.screenshot({
       path: testInfo.outputPath('controlled-settlement-mobile.png'),

@@ -87,6 +87,7 @@ export function StatementForm({
             id="statement-to"
             name="to"
             type="date"
+            aria-describedby="statement-period-hint"
             required
             max={defaultTo}
             defaultValue={defaultTo}

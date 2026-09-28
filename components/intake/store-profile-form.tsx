@@ -201,7 +201,15 @@ export function StoreProfileForm({
         </fieldset>
         {invalid && <p role="alert">{t.invalid}</p>}
         {action.error && <p role="alert">{action.error}</p>}
-        {action.needsReload && <p role="alert">{t.changed}</p>}
+        {action.needsReload && (
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => window.location.reload()}
+          >
+            {d.intake.reload}
+          </Button>
+        )}
         {!editable && <p>{t.readOnly}</p>}
         {editable && !saved && (
           <Button type="submit" disabled={action.busy || action.needsReload}>

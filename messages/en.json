@@ -1541,7 +1541,7 @@
     "useBuiltin": "Use the built-in layout",
     "templateSaved": "Template saved. New labels of this kind use it.",
     "templateReset": "The built-in layout applies again.",
-    "templateUncertain": "Could not confirm whether the template was saved. Reload the page and check the version before saving again.",
+    "templateUncertain": "Could not confirm the change to the template. Reload the page and check which template applies before continuing.",
     "templateInvalid": "A name and a ZPL program of at most 20000 characters.",
     "templateErrors": {
       "LABEL_TEMPLATE_FRAME": "The program must start with ^XA and end with ^XZ.",

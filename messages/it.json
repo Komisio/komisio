@@ -1541,7 +1541,7 @@
     "useBuiltin": "Usa il layout integrato",
     "templateSaved": "Modello salvato. Le nuove etichette di questo tipo lo usano.",
     "templateReset": "Il layout integrato si applica di nuovo.",
-    "templateUncertain": "Impossibile confermare se il modello è stato salvato. Ricarica la pagina e controlla la versione prima di salvare di nuovo.",
+    "templateUncertain": "Impossibile confermare la modifica al modello. Ricarica la pagina e controlla quale modello è in uso prima di continuare.",
     "templateInvalid": "Un nome e un programma ZPL di al massimo 20000 caratteri.",
     "templateErrors": {
       "LABEL_TEMPLATE_FRAME": "Il programma deve iniziare con ^XA e terminare con ^XZ.",

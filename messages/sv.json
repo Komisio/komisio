@@ -1541,7 +1541,7 @@
     "useBuiltin": "Använd inbyggd layout",
     "templateSaved": "Mallen är sparad. Nya etiketter av typen använder den.",
     "templateReset": "Den inbyggda layouten gäller igen.",
-    "templateUncertain": "Det gick inte att bekräfta om mallen sparades. Ladda om sidan och kontrollera versionen innan du sparar igen.",
+    "templateUncertain": "Det gick inte att bekräfta ändringen av mallen. Ladda om sidan och kontrollera vilken mall som gäller innan du fortsätter.",
     "templateInvalid": "Ett namn och ett ZPL-program på högst 20000 tecken.",
     "templateErrors": {
       "LABEL_TEMPLATE_FRAME": "Programmet måste börja med ^XA och sluta med ^XZ.",

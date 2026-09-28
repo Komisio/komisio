@@ -159,12 +159,24 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
     await page
       .getByRole('button', { name: d.quickIntake.submit, exact: true })
       .click()
-    await expect(
-      page.getByRole('region', { name: d.quickIntake.done, exact: true }),
-    ).toContainText(/I-[0-9A-F]{8}/)
-    await page
-      .getByRole('button', { name: d.quickIntake.next, exact: true })
-      .click()
+    const doneRegion = page.getByRole('region', {
+      name: d.quickIntake.done,
+      exact: true,
+    })
+    await expect(doneRegion).toContainText(/I-[0-9A-F]{8}/)
+    // The submit button is gone; focus must land on the confirmation heading
+    // and the very next Tab must reach "Next item" (a keyboard user does not
+    // start over from the page top).
+    const doneHeading = doneRegion.getByRole('heading', { level: 2 })
+    await expect(doneHeading).toBeFocused()
+    await expect(doneHeading).toBeInViewport()
+    const nextItem = page.getByRole('button', {
+      name: d.quickIntake.next,
+      exact: true,
+    })
+    await page.keyboard.press('Tab')
+    await expect(nextItem).toBeFocused()
+    await page.keyboard.press('Enter')
     await expect(page.locator('.quick-item h2')).toBeFocused()
     await expect(page.locator('.quick-item h2')).toBeInViewport()
     await expect(

@@ -988,7 +988,7 @@
     "acceptedAt": "Aceptado",
     "openOrigin": "Abrir origen",
     "terms": "Condiciones congeladas",
-    "termsHint": "Registradas en la aceptación y nunca modificadas. Las políticas o condiciones del depositante posteriores se aplican solo a artículos posteriores.",
+    "termsHint": "Las condiciones guardadas al aceptar este artículo se mantienen sin cambios para él.",
     "commission": "Comisión de la tienda",
     "purchasePrice": "Precio de compra",
     "salePeriod": "Periodo de venta",

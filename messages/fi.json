@@ -988,7 +988,7 @@
     "acceptedAt": "Hyväksytty",
     "openOrigin": "Avaa alkuperä",
     "terms": "Jäädytetyt ehdot",
-    "termsHint": "Kirjattu hyväksynnän yhteydessä, eikä niitä koskaan muuteta. Myöhempi käytäntö tai tuojan ehdot koskevat vain myöhempiä tuotteita.",
+    "termsHint": "Ehdot tallennettiin tuotteen hyväksymishetkellä, ja ne pysyvät tämän tuotteen osalta ennallaan.",
     "commission": "Kaupan komissio",
     "purchasePrice": "Ostohinta",
     "salePeriod": "Myyntijakso",

@@ -2962,6 +2962,7 @@ button.text-link:hover:not(:disabled) {
   color: var(--ink);
 }
 .item-detail-section {
+  margin-bottom: 12px;
   padding-top: 8px;
   padding-bottom: 8px;
 }
@@ -2980,6 +2981,44 @@ button.text-link:hover:not(:disabled) {
 }
 .item-detail-section[open] {
   padding-bottom: 20px;
+}
+.item-detail-section > p {
+  margin: 4px 0 16px;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.item-detail-facts {
+  margin: 0;
+}
+.item-detail-facts > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+.item-detail-facts dt {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+.item-detail-facts dd {
+  margin: 0;
+  font-weight: 600;
+}
+.item-detail-history {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.item-detail-history li {
+  display: grid;
+  gap: 3px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+.item-detail-history time {
+  color: var(--muted);
+  font-size: 0.875rem;
 }
 
 /* Keep handover filters readable and touch-sized before the queue on phones. */

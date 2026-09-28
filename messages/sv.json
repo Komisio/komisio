@@ -988,7 +988,7 @@
     "acceptedAt": "Accepterad",
     "openOrigin": "Öppna ursprunget",
     "terms": "Frysta villkor",
-    "termsHint": "Sparade vid acceptansen och ändras aldrig. Senare policy eller säljarvillkor gäller bara senare varor.",
+    "termsHint": "Villkoren sparades när varan accepterades och gäller oförändrat för denna vara.",
     "commission": "Butikens provision",
     "purchasePrice": "Inköpspris",
     "salePeriod": "Säljperiod",

@@ -988,7 +988,7 @@
     "acceptedAt": "Accepteret",
     "openOrigin": "Åbn oprindelse",
     "terms": "Fastfrosne vilkår",
-    "termsHint": "Registreret ved accept og aldrig ændret. Senere politik eller indleverervilkår gælder kun senere varer.",
+    "termsHint": "Vilkårene blev gemt, da varen blev accepteret, og gælder uændret for denne vare.",
     "commission": "Butikkens kommission",
     "purchasePrice": "Indkøbspris",
     "salePeriod": "Salgsperiode",

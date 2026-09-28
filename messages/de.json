@@ -988,7 +988,7 @@
     "acceptedAt": "Angenommen",
     "openOrigin": "Ursprung öffnen",
     "terms": "Eingefrorene Bedingungen",
-    "termsHint": "Bei der Annahme erfasst und nie geändert. Spätere Richtlinien oder Einlieferer-Bedingungen gelten nur für spätere Artikel.",
+    "termsHint": "Die bei Annahme gespeicherten Bedingungen gelten unverändert für diesen Artikel.",
     "commission": "Store-Kommission",
     "purchasePrice": "Einkaufspreis",
     "salePeriod": "Verkaufsperiode",

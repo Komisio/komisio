@@ -988,7 +988,7 @@
     "acceptedAt": "Accepted",
     "openOrigin": "Open origin",
     "terms": "Frozen terms",
-    "termsHint": "Recorded at acceptance and never changed. Later policy or seller terms apply to later items only.",
+    "termsHint": "Terms saved when this item was accepted; they remain unchanged for this item.",
     "commission": "Store commission",
     "purchasePrice": "Purchase price",
     "salePeriod": "Sale period",

@@ -988,7 +988,7 @@
     "acceptedAt": "Tatt imot",
     "openOrigin": "Åpne opphav",
     "terms": "Fryste vilkår",
-    "termsHint": "Registrert ved mottak og aldri endret. Senere policy eller innleverervilkår gjelder bare senere varer.",
+    "termsHint": "Vilkårene ble lagret da varen ble akseptert og gjelder uendret for denne varen.",
     "commission": "Butikkens kommisjon",
     "purchasePrice": "Innkjøpspris",
     "salePeriod": "Salgsperiode",

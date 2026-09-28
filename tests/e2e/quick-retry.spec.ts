@@ -54,7 +54,7 @@ test('retrying a lost quick-reception response does not register another item', 
     await price.fill('250')
     const lost = await loseFirstReply(page)
     const submit = page.locator('.quick-finish').getByRole('button')
-    await submit.click()
+    await price.press('Enter')
     const alert = page.locator('.quick-item').getByRole('alert')
     await expect(alert).toHaveText(d.quickIntake.uncertain)
     expect(lost.firstStatus()).toBe(200)
@@ -83,7 +83,8 @@ test('retrying a lost quick-reception response does not register another item', 
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true)
-    await submit.click()
+    await submit.focus()
+    await submit.press('Enter')
     const done = page.getByRole('region', {
       name: d.quickIntake.done,
       exact: true,

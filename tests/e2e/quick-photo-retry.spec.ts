@@ -71,6 +71,15 @@ async function expectUnresolved(
   await expect(p.preview).toBeVisible()
   await expect(p.input).toBeDisabled()
   await expect(p.submit).toBeDisabled()
+  // The new native form must not turn unresolved photos into photoless items.
+  const price = page.getByLabel(d.quickIntake.price, { exact: true })
+  await price.fill('120')
+  await price.press('Enter')
+  await page
+    .locator('.quick-item form')
+    .evaluate((form) => (form as HTMLFormElement).requestSubmit())
+  await expect(p.alert).toContainText(text)
+  await expect(page.locator('.quick-done')).toHaveCount(0)
   await expect(p.retry).toBeEnabled()
   await expect(p.reload).toBeVisible()
   await expect(

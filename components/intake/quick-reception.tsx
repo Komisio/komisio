@@ -632,6 +632,9 @@ export function QuickReception({
   }
   return (
     <div className={`quick-reception${bagId ? ' bag-quick-reception' : ''}`}>
+      <span className="sr-only" role="status" aria-live="polite">
+        {stage === 'uploading' ? d.busy : message}
+      </span>
       {!bagId && (
         <section
           className={`card intake-form quick-seller${seller ? ' is-selected' : ''}`}
@@ -703,192 +706,220 @@ export function QuickReception({
             )}
             {d.garment}
           </h2>
-          <div className="quick-workspace">
-            <div className="quick-photo-panel">
-              <div className="field quick-photo-field">
-                <label
-                  htmlFor="quick-photo"
-                  className={`quick-photo-picker${!ready || busy || session || uncertain || photoUnresolved ? ' is-disabled' : ''}${photoUnresolved ? ' is-uncertain' : ''}`}
-                >
-                  {photoUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={photoUrl} alt={d.photo} />
-                  ) : (
-                    <>
-                      <Camera size={32} strokeWidth={1.5} aria-hidden="true" />
-                      <span>{d.addPhoto}</span>
-                    </>
-                  )}
-                </label>
-                <input
-                  id="quick-photo"
-                  aria-label={d.photo}
-                  className="quick-photo-input"
-                  ref={fileInput}
-                  type="file"
-                  accept="image/jpeg,image/png"
-                  capture="environment"
-                  disabled={
-                    !ready || busy || !!session || uncertain || photoUnresolved
-                  }
-                  onChange={(e) => {
-                    const file = e.target.files?.[0]
-                    if (file) void onPhoto(file)
-                  }}
-                />
-                <small>{assistance ? d.photoHintAi : d.photoHint}</small>
+          <form
+            className="quick-item-form"
+            noValidate
+            onSubmit={(event) => {
+              event.preventDefault()
+              void submit()
+            }}
+          >
+            <div className="quick-workspace">
+              <div className="quick-photo-panel">
+                <div className="field quick-photo-field">
+                  <label
+                    htmlFor="quick-photo"
+                    className={`quick-photo-picker${!ready || busy || session || uncertain || photoUnresolved ? ' is-disabled' : ''}${photoUnresolved ? ' is-uncertain' : ''}`}
+                  >
+                    {photoUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={photoUrl} alt={d.photo} />
+                    ) : (
+                      <>
+                        <Camera
+                          size={32}
+                          strokeWidth={1.5}
+                          aria-hidden="true"
+                        />
+                        <span>{d.addPhoto}</span>
+                      </>
+                    )}
+                  </label>
+                  <input
+                    id="quick-photo"
+                    className="quick-photo-input"
+                    ref={fileInput}
+                    type="file"
+                    accept="image/jpeg,image/png"
+                    capture="environment"
+                    disabled={
+                      !ready ||
+                      busy ||
+                      !!session ||
+                      uncertain ||
+                      photoUnresolved
+                    }
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) void onPhoto(file)
+                    }}
+                  />
+                  <small>{assistance ? d.photoHintAi : d.photoHint}</small>
+                </div>
+                {(message || stage === 'uploading') && (
+                  <p className="quick-status">
+                    {stage === 'uploading' ? d.busy : message}
+                  </p>
+                )}
+                {photoError && (
+                  <p role="alert" className="error quick-photo-alert">
+                    {photoError}
+                  </p>
+                )}
+                {photoUnresolved && (
+                  // Recovery sits next to the photo it concerns; two actions wrap on a 320px phone.
+                  <div className="row wrap">
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      disabled={busy}
+                      onClick={() => void runPhoto()}
+                    >
+                      {d.retry}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      disabled={busy}
+                      onClick={() => window.location.reload()}
+                    >
+                      {d.reload}
+                    </Button>
+                  </div>
+                )}
               </div>
-              {(message || stage === 'uploading') && (
-                <p className="quick-status" role="status">
-                  {stage === 'uploading' ? d.busy : message}
-                </p>
-              )}
-              {photoError && (
-                <p role="alert" className="error quick-photo-alert">
-                  {photoError}
-                </p>
-              )}
-              {photoUnresolved && (
-                // Recovery sits next to the photo it concerns; two actions wrap on a 320px phone.
-                <div className="row wrap">
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    disabled={busy}
-                    onClick={() => void runPhoto()}
+              <div className="quick-facts">
+                <div className="field">
+                  <label htmlFor="quick-item-type">{d.itemType}</label>
+                  <input
+                    id="quick-item-type"
+                    list="quick-item-types"
+                    autoComplete="off"
+                    placeholder={d.itemTypeNone}
+                    value={typeQuery}
+                    disabled={busy || !!done || uncertain}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      setTypeQuery(value)
+                      const match = activeTypes.find(
+                        (t) =>
+                          labelOf(t, lang).toLocaleLowerCase(lang) ===
+                          value.trim().toLocaleLowerCase(lang),
+                      )
+                      setItemType(match?.slug ?? null)
+                    }}
+                    onBlur={() => {
+                      const selected = activeTypes.find(
+                        (t) => t.slug === itemType,
+                      )
+                      setTypeQuery(selected ? labelOf(selected, lang) : '')
+                    }}
+                  />
+                  <datalist id="quick-item-types">
+                    {activeTypes.map((t) => (
+                      <option key={t.slug} value={labelOf(t, lang)} />
+                    ))}
+                  </datalist>
+                </div>
+                <div className="quick-fields">
+                  {questions.map((q) => question(q.definition))}
+                </div>
+              </div>
+            </div>
+            <div className="quick-finish">
+              <div className="field">
+                <label htmlFor="quick-price">{d.price}</label>
+                <input
+                  id="quick-price"
+                  required
+                  inputMode="decimal"
+                  value={price}
+                  disabled={busy || uncertain}
+                  onChange={(e) => setPrice(e.target.value)}
+                />
+              </div>
+              {printers.length > 0 && (
+                <div className="field">
+                  <label htmlFor="quick-printer">{d.printer}</label>
+                  <select
+                    id="quick-printer"
+                    value={printerId}
+                    disabled={busy || uncertain}
+                    onChange={(e) => {
+                      setPrinterId(e.target.value)
+                      try {
+                        localStorage.setItem(PRINTER_KEY, e.target.value)
+                      } catch {
+                        /* Not remembered. */
+                      }
+                    }}
                   >
-                    {d.retry}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    disabled={busy}
-                    onClick={() => window.location.reload()}
-                  >
-                    {d.reload}
-                  </Button>
+                    <option value="">{d.noPrinter}</option>
+                    {printers.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               )}
-            </div>
-            <div className="quick-facts">
-              <div className="field">
-                <label htmlFor="quick-item-type">{d.itemType}</label>
-                <input
-                  id="quick-item-type"
-                  list="quick-item-types"
-                  autoComplete="off"
-                  placeholder={d.itemTypeNone}
-                  value={typeQuery}
-                  disabled={busy || !!done || uncertain}
-                  onChange={(e) => {
-                    const value = e.target.value
-                    setTypeQuery(value)
-                    const match = activeTypes.find(
-                      (t) =>
-                        labelOf(t, lang).toLocaleLowerCase(lang) ===
-                        value.trim().toLocaleLowerCase(lang),
-                    )
-                    setItemType(match?.slug ?? null)
-                  }}
-                  onBlur={() => {
-                    const selected = activeTypes.find(
-                      (t) => t.slug === itemType,
-                    )
-                    setTypeQuery(selected ? labelOf(selected, lang) : '')
-                  }}
-                />
-                <datalist id="quick-item-types">
-                  {activeTypes.map((t) => (
-                    <option key={t.slug} value={labelOf(t, lang)} />
-                  ))}
-                </datalist>
-              </div>
-              <div className="quick-fields">
-                {questions.map((q) => question(q.definition))}
-              </div>
-            </div>
-          </div>
-          <div className="quick-finish">
-            <div className="field">
-              <label htmlFor="quick-price">{d.price}</label>
-              <input
-                id="quick-price"
-                required
-                inputMode="decimal"
-                value={price}
-                disabled={busy || uncertain}
-                onChange={(e) => setPrice(e.target.value)}
-              />
-            </div>
-            {printers.length > 0 && (
-              <div className="field">
-                <label htmlFor="quick-printer">{d.printer}</label>
-                <select
-                  id="quick-printer"
-                  value={printerId}
-                  disabled={busy || uncertain}
-                  onChange={(e) => {
-                    setPrinterId(e.target.value)
-                    try {
-                      localStorage.setItem(PRINTER_KEY, e.target.value)
-                    } catch {
-                      /* Not remembered. */
-                    }
-                  }}
-                >
-                  <option value="">{d.noPrinter}</option>
-                  {printers.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-            <Button
-              // A visible photo whose save is unresolved must not become a
-              // photoless item.
-              disabled={busy || photoUnresolved}
-              onClick={() => void submit()}
-              className="quick-submit"
-            >
-              {stage === 'saving'
-                ? d.busy
-                : stage === 'printing'
-                  ? d.printing
-                  : uncertain
-                    ? d.retry
-                    : d.submit}
-            </Button>
-          </div>
-          {error && (
-            <p role="alert" className="error">
-              {error}
-              {error === errors.AGREEMENT_REQUIRED && (
-                <>
-                  {' '}
-                  <Link
-                    className="text-link"
-                    href={`/intake/sellers/${seller.id}`}
-                  >
-                    {d.recordAgreement}
-                  </Link>
-                </>
-              )}
-            </p>
-          )}
-          {(uncertain || stale) && (
-            <div className="row wrap">
               <Button
-                type="button"
-                variant="secondary"
-                disabled={busy}
-                onClick={() => window.location.reload()}
+                // A visible photo whose save is unresolved must not become a
+                // photoless item.
+                disabled={busy || photoUnresolved}
+                type="submit"
+                onClick={(event) => {
+                  // Native implicit submission clicks the default button with
+                  // detail=0. Keep Enter for the item-type list without blocking
+                  // a pointer click on browsers that leave the input focused.
+                  if (
+                    event.detail === 0 &&
+                    event.currentTarget.ownerDocument.activeElement?.getAttribute(
+                      'list',
+                    ) === 'quick-item-types'
+                  )
+                    event.preventDefault()
+                }}
+                className="quick-submit"
               >
-                {d.reload}
+                {stage === 'saving'
+                  ? d.busy
+                  : stage === 'printing'
+                    ? d.printing
+                    : uncertain
+                      ? d.retry
+                      : d.submit}
               </Button>
             </div>
-          )}
+            {error && (
+              <p role="alert" className="error">
+                {error}
+                {error === errors.AGREEMENT_REQUIRED && (
+                  <>
+                    {' '}
+                    <Link
+                      className="text-link"
+                      href={`/intake/sellers/${seller.id}`}
+                    >
+                      {d.recordAgreement}
+                    </Link>
+                  </>
+                )}
+              </p>
+            )}
+            {(uncertain || stale) && (
+              <div className="row wrap">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  disabled={busy}
+                  onClick={() => window.location.reload()}
+                >
+                  {d.reload}
+                </Button>
+              </div>
+            )}
+          </form>
         </section>
       )}
       {done && (
@@ -904,7 +935,7 @@ export function QuickReception({
           <p>
             <strong>{done.reference}</strong> · {facts.description}
           </p>
-          {message && <p role="status">{message}</p>}
+          {message && <p>{message}</p>}
           {/* Two actions must fit a 320px phone: wrap instead of pushing the page sideways. */}
           <div className="row wrap">
             <Button onClick={next}>{d.next}</Button>

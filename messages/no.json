@@ -1541,6 +1541,7 @@
     "useBuiltin": "Bruk det innebygde oppsettet",
     "templateSaved": "Mal lagret. Nye etiketter av denne typen bruker den.",
     "templateReset": "Det innebygde oppsettet gjelder igjen.",
+    "templateUncertain": "Kunne ikke bekrefte endringen av malen. Last inn siden på nytt og sjekk hvilken mal som gjelder før du fortsetter.",
     "templateInvalid": "Et navn og et ZPL-program på maks 20000 tegn.",
     "templateErrors": {
       "LABEL_TEMPLATE_FRAME": "Programmet må starte med ^XA og slutte med ^XZ.",

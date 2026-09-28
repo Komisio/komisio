@@ -1,6 +1,7 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
 import {
@@ -9,10 +10,43 @@ import {
   type LabelTemplates,
 } from '@/lib/engine/printing'
 import { placeholders } from '@/lib/labels/placeholders'
-import { useIntakeAction } from './use-intake-action'
 
 const kinds = ['bag', 'garment', 'item', 'markdown', 'onboarding'] as const
 type Kind = (typeof kinds)[number]
+
+/**
+ * What the route answers for a confirmed publish and a confirmed reset.
+ * Anything else on a 2xx is not a confirmation: the version may exist while
+ * only the reply was damaged.
+ */
+const savedTemplate = z.object({
+  ok: z.literal(true),
+  id: z.object({
+    id: z.guid(),
+    kind: z.string(),
+    version: z.number().int().positive(),
+    name: z.string(),
+  }),
+})
+const resetTemplate = z.object({ ok: z.literal(true), id: z.boolean() })
+/** Answered before any version is written: the fields may be corrected. */
+const DEFINITIVE = new Set([
+  'INVALID_INPUT',
+  'LABEL_TEMPLATE_FRAME',
+  'LABEL_TEMPLATE_CONTROL',
+  'LABEL_TEMPLATE_REFERENCE',
+])
+/** The page's context is stale: no further write without a reload. */
+const STALE = new Set([
+  'FORBIDDEN',
+  'AUTH_REQUIRED',
+  'TENANT_CHANGED',
+  'NOT_FOUND',
+])
+type Pending = {
+  phase: 'idle' | 'busy' | 'uncertain' | 'stale'
+  of: 'save' | 'reset' | null
+}
 
 /** The ZPL editor: one template per label kind, placeholders, preview with sample data, versions. */
 export function LabelTemplatesForm({
@@ -33,6 +67,9 @@ export function LabelTemplatesForm({
   intake: Dictionary['intake']
 }) {
   const [kind, setKind] = useState<Kind>('item')
+  // Switching kind remounts the editor; while its outcome is unresolved that
+  // would discard the identity and the unsaved text, so the switch waits.
+  const [frozen, setFrozen] = useState(false)
   // Expert territory: collapsed until asked for, so the printing tab on a phone
   // is mostly the everyday controls. The editor stays mounted while closed, so
   // typed but unsaved work survives closing and reopening.
@@ -47,7 +84,10 @@ export function LabelTemplatesForm({
         <select
           id="template-kind"
           value={kind}
-          onChange={(e) => setKind(e.target.value as Kind)}
+          disabled={frozen}
+          onChange={(e) => {
+            if (!frozen) setKind(e.target.value as Kind)
+          }}
         >
           {kinds.map((k) => (
             <option key={k} value={k}>
@@ -69,6 +109,7 @@ export function LabelTemplatesForm({
         dpi={dpi}
         d={d}
         intake={intake}
+        onFrozen={setFrozen}
       />
     </details>
   )
@@ -83,6 +124,7 @@ function TemplateEditor({
   dpi,
   d,
   intake,
+  onFrozen,
 }: {
   tenantId: string
   kind: Kind
@@ -92,8 +134,8 @@ function TemplateEditor({
   dpi: 203 | 300 | 600
   d: Dictionary['printing']
   intake: Dictionary['intake']
+  onFrozen: (frozen: boolean) => void
 }) {
-  const action = useIntakeAction(intake)
   const router = useRouter()
   const running = useRef(false)
   const [name, setName] = useState(current?.name ?? d.templateDefaultName)
@@ -102,7 +144,72 @@ function TemplateEditor({
   const [previewing, setPreviewing] = useState(false)
   const [message, setMessage] = useState('')
   const [invalid, setInvalid] = useState('')
+  // Publishing is not replay-safe (every call writes a new version), so an
+  // unanswered save or reset is never resent: the editor freezes and offers a
+  // reload to inspect what the store actually holds.
+  const [pending, setPending] = useState<Pending>({ phase: 'idle', of: null })
+  const busy = pending.phase === 'busy'
+  const frozen = pending.phase === 'uncertain' || pending.phase === 'stale'
+  // The parent's kind switch remounts this editor; while a command is in
+  // flight or unresolved that would discard its outcome, so it waits too.
+  const locked = busy || frozen
+  useEffect(() => {
+    onFrozen(locked)
+    return () => onFrozen(false)
+  }, [locked, onFrozen])
   const errors = d.templateErrors as Record<string, string>
+  /** One command, one classified outcome; guarded against a second click. */
+  async function send<T>(
+    of: 'save' | 'reset',
+    command: object,
+    shape: z.ZodType<{ ok: true; id: T }>,
+  ): Promise<T | null> {
+    if (running.current || frozen) return null
+    running.current = true
+    setPending({ phase: 'busy', of })
+    setMessage('')
+    setInvalid('')
+    try {
+      const r = await fetch('/api/intake', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(command),
+      })
+      const body: unknown = await r.json().catch(() => null)
+      if (r.ok) {
+        const parsed = shape.safeParse(body)
+        if (!parsed.success) {
+          setPending({ phase: 'uncertain', of })
+          setInvalid(d.templateUncertain)
+          return null
+        }
+        setPending({ phase: 'idle', of: null })
+        return parsed.data.id
+      }
+      const code =
+        body && typeof body === 'object' && 'error' in body
+          ? String((body as { error: unknown }).error)
+          : ''
+      const answered = r.status >= 400 && r.status < 500
+      if (answered && DEFINITIVE.has(code)) {
+        setPending({ phase: 'idle', of: null })
+        setInvalid(errors[code] ?? d.templateInvalid)
+      } else if (answered && STALE.has(code)) {
+        setPending({ phase: 'stale', of })
+        setInvalid(code === 'TENANT_CHANGED' ? intake.changed : intake.denied)
+      } else {
+        setPending({ phase: 'uncertain', of })
+        setInvalid(d.templateUncertain)
+      }
+      return null
+    } catch {
+      setPending({ phase: 'uncertain', of })
+      setInvalid(d.templateUncertain)
+      return null
+    } finally {
+      running.current = false
+    }
+  }
   async function previewNow() {
     if (running.current) return
     running.current = true
@@ -146,10 +253,14 @@ function TemplateEditor({
       setInvalid(d.templateInvalid)
       return
     }
-    setInvalid('')
-    if (await action.run(candidate.data)) {
+    const saved = await send('save', candidate.data, savedTemplate)
+    if (saved && saved.kind === kind) {
       setMessage(d.templateSaved)
       router.refresh()
+    } else if (saved) {
+      // A version of another kind is not this editor's confirmation.
+      setPending({ phase: 'uncertain', of: 'save' })
+      setInvalid(d.templateUncertain)
     }
   }
   async function reset() {
@@ -159,9 +270,17 @@ function TemplateEditor({
       requestId: crypto.randomUUID(),
       kind,
     })
-    if (candidate.success && (await action.run(candidate.data))) {
+    if (!candidate.success) return
+    const done = await send('reset', candidate.data, resetTemplate)
+    if (done === true) {
       setZpl('')
       setMessage(d.templateReset)
+      router.refresh()
+    } else if (done === false) {
+      // Confirmed: nothing was active any more, someone else already restored
+      // the built-in layout. Show the store's state, not this page's memory.
+      setZpl('')
+      setMessage(d.templateBuiltinHint)
       router.refresh()
     }
   }
@@ -179,7 +298,7 @@ function TemplateEditor({
             id={`template-name-${kind}`}
             value={name}
             maxLength={80}
-            disabled={!canEdit}
+            disabled={!canEdit || busy || frozen}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
@@ -190,7 +309,7 @@ function TemplateEditor({
             value={zpl}
             rows={14}
             spellCheck={false}
-            disabled={!canEdit}
+            disabled={!canEdit || busy || frozen}
             style={{ fontFamily: 'monospace', width: '100%' }}
             onChange={(e) => setZpl(e.target.value)}
             placeholder={d.templatePlaceholder}
@@ -211,7 +330,7 @@ function TemplateEditor({
         <div className="row wrap">
           <Button
             variant="secondary"
-            disabled={previewing}
+            disabled={previewing || busy || frozen}
             onClick={() => void previewNow()}
           >
             {previewing ? d.previewing : d.preview}
@@ -220,34 +339,41 @@ function TemplateEditor({
             <>
               <Button
                 variant="secondary"
-                disabled={action.busy}
-                onClick={() => setZpl(builtin)}
+                disabled={busy || frozen}
+                onClick={() => {
+                  if (!busy && !frozen) setZpl(builtin)
+                }}
               >
                 {d.copyBuiltin}
               </Button>
               <Button
-                disabled={action.busy || !zpl.trim()}
+                disabled={busy || frozen || !zpl.trim()}
                 onClick={() => void save()}
               >
-                {action.busy ? intake.busy : d.saveTemplate}
+                {busy && pending.of === 'save' ? intake.busy : d.saveTemplate}
               </Button>
               {current && (
                 <Button
                   variant="secondary"
-                  disabled={action.busy}
+                  disabled={busy || frozen}
                   onClick={() => void reset()}
                 >
-                  {d.useBuiltin}
+                  {busy && pending.of === 'reset' ? intake.busy : d.useBuiltin}
+                </Button>
+              )}
+              {frozen && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => window.location.reload()}
+                >
+                  {intake.reload}
                 </Button>
               )}
             </>
           )}
         </div>
-        {(invalid || action.error) && (
-          <p role="alert">
-            {invalid || errors[action.error ?? ''] || action.error}
-          </p>
-        )}
+        {invalid && <p role="alert">{invalid}</p>}
         {message && <p role="status">{message}</p>}
       </div>
       <div>

@@ -11,7 +11,7 @@ This exclusion does not remove ordinary agreed return/donation workflows.
 ## Current delivery baseline (2026-09-28)
 
 PRs 270–290 are deployed to production. Staging additionally includes PRs
-291–308; those changes retain the production staging-observation gate.
+291–312; those changes retain the production staging-observation gate.
 Staff item and seller lists, seller-owned items and announced handovers
 support bounded search and pagination. Receiving supports contact-based
 seller lookup and direct item-label resolution. Seller handovers have an
@@ -50,6 +50,14 @@ exports include handovers, their history and review responses. Stale seller,
 store, accounting-map and payout-decision forms offer recovery by reloading
 the current state; an ordinary lost response still retains its retry identity.
 Seller review wording covers goods beyond clothing in all eight languages.
+
+Localized not-found recovery, keyboard focus after quick reception and
+transfer retry controls have browser coverage. Quick reception keeps its
+request identity after an unanswered item save; receiving validates the
+returned command identity before confirming a seller or handover. Photo
+recovery retains the same session, upload and source identifiers and keeps
+an unresolved photo from becoming a silently photo-free item. These are
+recovery guarantees within the mounted form, not persistence across reloads.
 
 Next: complete the remaining hosted and hardware acceptance
 with the required operator access. Space booking still requires the unresolved

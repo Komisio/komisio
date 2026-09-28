@@ -749,5 +749,6 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-28: Seller data exports include the seller's own review responses: id, review id, approve or decline, responder and time, ordered by time then id and scoped through reviews and sessions. Review access events, token hashes, assistance attempts and photo digests stay out of the export.
 
 - 2026-09-28: An uncertain printer configuration save requires reloading the current settings before another write; its printer ID is not a replay token. Printer and store-profile confirmations must match the submitted row ID. Other intake result shapes remain unchanged.
+- 2026-09-28: Manual label retries retain the exact printer, copies and job identity after an uncertain reply. Only a matching successful job confirmation unlocks another print; answered stale-context refusals require reload. A first validation refusal remains correctable.
 
 - 2026-09-28: An uncertain label-size save requires reloading the current dimensions before another write; set_label_format has no replay identity. A successful response must match the submitted kind and dimensions.

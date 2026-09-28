@@ -25,8 +25,10 @@ export function LabelFormatsForm({
     <div>
       <h3>{d.formatsHeading}</h3>
       <p>{d.formatsIntro}</p>
-      <div style={{ overflowX: 'auto' }}>
-        <table>
+      {/* Positioned so the visually hidden labels scroll with the table instead of
+          escaping the wrapper and widening the page. */}
+      <div style={{ overflowX: 'auto', position: 'relative' }}>
+        <table className="label-formats-table">
           <thead>
             <tr>
               <th>{d.formatKind}</th>

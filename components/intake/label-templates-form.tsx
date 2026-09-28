@@ -194,12 +194,16 @@ function TemplateEditor({
         <p>
           <small>
             {d.placeholdersHint}{' '}
+            {/* A space between placeholders lets the list wrap on a phone. */}
             {placeholders.map((p) => (
-              <code key={p} style={{ marginRight: 6 }}>{`{${p}}`}</code>
+              <span key={p}>
+                <code>{`{${p}}`}</code>{' '}
+              </span>
             ))}
           </small>
         </p>
-        <div className="row">
+        {/* Four actions must fit a 320px phone: wrap instead of pushing the page sideways. */}
+        <div className="row wrap">
           <Button
             variant="secondary"
             disabled={previewing}

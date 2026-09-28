@@ -448,7 +448,7 @@
   "staffReviewApproved": "Tuoja hyväksyi tämän tarkistuksen. Hyväksyntä koskee tätä versiota eikä aseta vaatetta myyntiin.",
   "staffReviewDeclined": "Tuoja hylkäsi tämän tarkistuksen. Vastaus koskee tätä versiota. Muutettu ehdotus on julkaistava uutena tarkistuksena.",
   "reviewVersion": "Tarkistuksen versio",
-  "reviewTitle": "Sinun vaatteesi, sinun päätöksesi",
+  "reviewTitle": "Sinun tuotteesi, sinun päätöksesi",
   "reviewBrand": "Merkki",
   "reviewConfirm": "Olen tarkistanut yllä olevan kuvauksen, mahdolliset kuvat, ehdotetun hinnan ja ehdot.",
   "audit.reception.access_issued": "Tarkistuslinkki luotu",

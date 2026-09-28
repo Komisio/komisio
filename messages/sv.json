@@ -448,7 +448,7 @@
   "staffReviewApproved": "Säljaren har godkänt detta underlag. Godkännandet gäller denna version och gör inte plagget tillgängligt för försäljning.",
   "staffReviewDeclined": "Säljaren har avvisat detta underlag. Svaret gäller denna version. Ett ändrat förslag behöver publiceras som ett nytt underlag.",
   "reviewVersion": "Underlag version",
-  "reviewTitle": "Ditt plagg, ditt beslut",
+  "reviewTitle": "Din vara, ditt beslut",
   "reviewBrand": "Varumärke",
   "reviewConfirm": "Jag har granskat beskrivningen, eventuella bilder, prisförslaget och villkoren ovan.",
   "audit.reception.access_issued": "Granskningslänk skapad",

@@ -448,7 +448,7 @@
   "staffReviewApproved": "Der Einlieferer hat diese Prüfung genehmigt. Die Genehmigung gilt für diese Version und gibt das Kleidungsstück nicht zum Verkauf frei.",
   "staffReviewDeclined": "Der Einlieferer hat diese Prüfung abgelehnt. Die Antwort gilt für diese Version. Ein geänderter Vorschlag muss als neue Prüfung veröffentlicht werden.",
   "reviewVersion": "Prüfungsversion",
-  "reviewTitle": "Ihr Kleidungsstück, Ihre Entscheidung",
+  "reviewTitle": "Ihr Artikel, Ihre Entscheidung",
   "reviewBrand": "Marke",
   "reviewConfirm": "Ich habe die Beschreibung, eventuell enthaltene Fotos, den vorgeschlagenen Preis und die Bedingungen oben geprüft.",
   "audit.reception.access_issued": "Prüfungslink erstellt",

@@ -448,7 +448,7 @@
   "staffReviewApproved": "Indlevereren godkendte denne gennemgang. Godkendelsen gælder denne version og gør ikke tøjet tilgængeligt til salg.",
   "staffReviewDeclined": "Indlevereren afviste denne gennemgang. Svaret gælder denne version. Et ændret forslag skal udgives som en ny gennemgang.",
   "reviewVersion": "Gennemgangsversion",
-  "reviewTitle": "Dit tøj, din beslutning",
+  "reviewTitle": "Din vare, din beslutning",
   "reviewBrand": "Mærke",
   "reviewConfirm": "Jeg har gennemgået beskrivelsen, eventuelle vedlagte fotos, den foreslåede pris og vilkårene ovenfor.",
   "audit.reception.access_issued": "Gennemgangslink udstedt",

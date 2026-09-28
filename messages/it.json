@@ -448,7 +448,7 @@
   "staffReviewApproved": "Il conferente ha approvato questa revisione. L'approvazione vale per questa versione e non rende il capo disponibile per la vendita.",
   "staffReviewDeclined": "Il conferente ha rifiutato questa revisione. La risposta vale per questa versione. Una proposta modificata deve essere pubblicata come nuova revisione.",
   "reviewVersion": "Versione della revisione",
-  "reviewTitle": "Il tuo capo, la tua decisione",
+  "reviewTitle": "Il tuo articolo, la tua decisione",
   "reviewBrand": "Marca",
   "reviewConfirm": "Ho esaminato la descrizione, le eventuali foto incluse, il prezzo proposto e le condizioni sopra riportate.",
   "audit.reception.access_issued": "Link di revisione emesso",

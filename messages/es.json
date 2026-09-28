@@ -448,7 +448,7 @@
   "staffReviewApproved": "El depositante aprobó esta revisión. La aprobación se aplica a esta versión y no pone la prenda a la venta.",
   "staffReviewDeclined": "El depositante rechazó esta revisión. La respuesta se aplica a esta versión. Una propuesta modificada debe publicarse como una revisión nueva.",
   "reviewVersion": "Versión de la revisión",
-  "reviewTitle": "Tu prenda, tu decisión",
+  "reviewTitle": "Tu artículo, tu decisión",
   "reviewBrand": "Marca",
   "reviewConfirm": "He revisado la descripción, las fotos incluidas, el precio propuesto y las condiciones de arriba.",
   "audit.reception.access_issued": "Enlace de revisión emitido",

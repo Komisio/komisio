@@ -448,7 +448,7 @@
   "staffReviewApproved": "Innlevereren godkjente denne gjennomgangen. Godkjenningen gjelder denne versjonen og gjør ikke plagget tilgjengelig for salg.",
   "staffReviewDeclined": "Innlevereren avslo denne gjennomgangen. Svaret gjelder denne versjonen. Et endret forslag må publiseres som en ny gjennomgang.",
   "reviewVersion": "Gjennomgangsversjon",
-  "reviewTitle": "Ditt plagg, din avgjørelse",
+  "reviewTitle": "Din vare, din avgjørelse",
   "reviewBrand": "Merke",
   "reviewConfirm": "Jeg har gått gjennom beskrivelsen, eventuelle vedlagte bilder, foreslått pris og vilkårene ovenfor.",
   "audit.reception.access_issued": "Gjennomgangslenke utstedt",

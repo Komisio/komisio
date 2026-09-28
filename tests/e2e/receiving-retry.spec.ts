@@ -79,7 +79,12 @@ for (const action of ['registerSeller', 'receiveBag'] as const) {
         await expect(panel.getByRole('alert')).toHaveText(d.intake.failed)
         expect(firstStatus).toBe(200)
         expect(savedId).toMatch(/^[0-9a-f-]{36}$/)
-        await expect(panel.locator('fieldset')).toBeDisabled()
+        await expect(
+          panel.getByLabel(
+            action === 'receiveBag' ? d.intake.note : d.intake.name,
+            { exact: true },
+          ),
+        ).toBeDisabled()
         const retry = panel.getByRole('button', {
           name: d.intake.retry,
           exact: true,
@@ -97,7 +102,12 @@ for (const action of ['registerSeller', 'receiveBag'] as const) {
         if (failure === 'lost-then-refused') {
           await refused
           await expect(panel.getByRole('alert')).toHaveText(d.intake.failed)
-          await expect(panel.locator('fieldset')).toBeDisabled()
+          await expect(
+            panel.getByLabel(
+              action === 'receiveBag' ? d.intake.note : d.intake.name,
+              { exact: true },
+            ),
+          ).toBeDisabled()
           await expect(retry).toBeEnabled()
           await retry.click()
         }

@@ -32,6 +32,26 @@ export function useIntakeAction(d: Dictionary['intake']) {
       })
       const result = await response.json()
       if (!response.ok) {
+        // These answered transfer refusals mean the displayed item or chain
+        // can no longer support this command. Keep its identity frozen and
+        // inspect current facts instead of offering an endless retry. A 5xx
+        // with the same text is still uncertain and follows the usual retry.
+        if (
+          command.data.action === 'transferItem' &&
+          response.status >= 400 &&
+          response.status < 500 &&
+          [
+            'ITEM_ENDED',
+            'ITEM_NOT_ON_SALE',
+            'ITEM_NOT_FOUND',
+            'NOT_SAME_CHAIN',
+            'TRANSFER_UNSUPPORTED',
+          ].includes(result.error)
+        ) {
+          setNeedsReload(true)
+          setError(d.recordChanged)
+          return null
+        }
         const definitive = [
           'INVALID_INPUT',
           'AGREEMENT_CHANGED',

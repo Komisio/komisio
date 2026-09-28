@@ -66,7 +66,11 @@ export function TransferItemForm({
         </div>
       </fieldset>
       <Button variant="secondary" disabled={action.busy || action.needsReload}>
-        {action.busy ? intake.busy : action.locked ? intake.retry : d.transfer}
+        {action.busy
+          ? intake.busy
+          : action.locked && !action.needsReload
+            ? intake.retry
+            : d.transfer}
       </Button>
       {action.error && <p role="alert">{action.error}</p>}
       {action.needsReload && (

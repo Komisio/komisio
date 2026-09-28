@@ -153,6 +153,7 @@
     "busy": "Gemmer…",
     "failed": "Kunne ikke bekræfte resultatet. Prøv igen med de samme oplysninger. Tjek listen, før du starter forfra.",
     "changed": "Den aktive butik er ændret. Genindlæs denne side, før du fortsætter.",
+    "recordChanged": "Oplysningerne er ændret, siden du åbnede siden. Genindlæs, og kontrollér den aktuelle version, før du fortsætter.",
     "denied": "Du har ikke adgang. Genindlæs siden for at tjekke din adgang.",
     "inspectionChanged": "Udkastet blev ændret, efter du åbnede det. Dine redigeringer bliver her. Kopiér alt, du vil beholde, før du åbner den aktuelle revision.",
     "inspectionUnavailable": "Udkastets status er ændret, eller det kan ikke længere redigeres. Dine indtastninger bliver her. Åbn den aktuelle version, før du fortsætter.",

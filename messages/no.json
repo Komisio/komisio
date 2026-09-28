@@ -153,6 +153,7 @@
     "busy": "Lagrer …",
     "failed": "Kunne ikke bekrefte resultatet. Prøv igjen med samme opplysninger. Sjekk listen før du starter på nytt.",
     "changed": "Den aktive butikken er endret. Last inn denne siden på nytt før du fortsetter.",
+    "recordChanged": "Opplysningene er endret siden du åpnet siden. Last inn på nytt og kontroller den gjeldende versjonen før du fortsetter.",
     "denied": "Du har ikke tilgang. Last inn siden på nytt for å kontrollere tilgangen din.",
     "inspectionChanged": "Utkastet ble endret etter at du åpnet det. Endringene dine ligger fortsatt her. Kopier det du vil beholde før du åpner gjeldende revisjon.",
     "inspectionUnavailable": "Utkastets status er endret, eller det kan ikke lenger redigeres. Det du har skrevet ligger fortsatt her. Åpne gjeldende versjon før du fortsetter.",

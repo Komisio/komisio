@@ -153,6 +153,7 @@
     "busy": "Sparar…",
     "failed": "Det gick inte att bekräfta resultatet. Försök igen med samma uppgifter. Kontrollera listan innan du börjar om.",
     "changed": "Aktiv butik har ändrats. Ladda om sidan innan du fortsätter.",
+    "recordChanged": "Uppgifterna har ändrats sedan du öppnade sidan. Ladda om och kontrollera den aktuella versionen innan du fortsätter.",
     "denied": "Du saknar behörighet. Ladda om sidan för att kontrollera din åtkomst.",
     "inspectionChanged": "Utkastet har ändrats sedan du öppnade det. Dina uppgifter finns kvar här. Kopiera det du vill behålla innan du öppnar aktuell version.",
     "inspectionUnavailable": "Utkastets status har ändrats eller utkastet kan inte längre redigeras. Dina uppgifter finns kvar här. Öppna aktuell version innan du fortsätter.",

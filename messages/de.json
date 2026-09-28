@@ -153,6 +153,7 @@
     "busy": "Wird gespeichert…",
     "failed": "Das Ergebnis konnte nicht bestätigt werden. Versuchen Sie es mit denselben Angaben erneut. Prüfen Sie die Liste, bevor Sie von vorn beginnen.",
     "changed": "Der aktive Store hat sich geändert. Laden Sie diese Seite neu, bevor Sie fortfahren.",
+    "recordChanged": "Die Angaben haben sich geändert, seit du diese Seite geöffnet hast. Lade sie neu und prüfe die aktuelle Version, bevor du fortfährst.",
     "denied": "Sie haben keine Berechtigung. Laden Sie die Seite neu, um Ihren Zugriff zu prüfen.",
     "inspectionChanged": "Der Entwurf wurde geändert, nachdem Sie ihn geöffnet haben. Ihre Änderungen bleiben hier erhalten. Kopieren Sie alles, was Sie behalten möchten, bevor Sie die aktuelle Revision öffnen.",
     "inspectionUnavailable": "Der Entwurfsstatus hat sich geändert oder der Entwurf kann nicht mehr bearbeitet werden. Ihre Eingaben bleiben hier erhalten. Öffnen Sie die aktuelle Version, bevor Sie fortfahren.",

@@ -144,9 +144,13 @@ export function SellerProfileForm({
         <p role="alert">{invalid ? intake.invalid : action.error}</p>
       )}
       {action.needsReload && (
-        <a className="text-link" href={`/intake/sellers/${sellerId}`}>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => window.location.reload()}
+        >
           {intake.reload}
-        </a>
+        </Button>
       )}
       {saved ? (
         <p role="status">{d.saved}</p>

@@ -82,7 +82,9 @@ both directions with the same row counts; the same functions, triggers,
 policies, constraints, indexes, row-level security flags, owners and grants
 by definition. It compares counts and definitions, not row contents. Any
 restore error, any other exit status, a failed process, or a difference in
-those objects is a stop. The exercise does not prove storage objects or
+those objects is a stop. An aggregate function in the application schemas
+is reported as unsupported and stops the check, because its definition is
+not digested. The exercise does not prove storage objects or
 hosted point-in-time recovery, and a source that is written during the dump
 can produce a false mismatch; rerun in a quiet moment before treating that
 as a failure.

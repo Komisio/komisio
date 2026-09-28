@@ -149,13 +149,20 @@ export function grantInventory(rows) {
   }))
 }
 
-/** Object inventory by stable identity and definition digest. */
+/**
+ * Object inventory by stable identity and definition digest. An object of
+ * kind 'unsupported' (an aggregate, whose definition this check does not
+ * digest) fails the comparison on either side instead of passing unseen.
+ */
 export function compareInventory(source, copy) {
   const target = new Map(copy.map((o) => [`${o.kind}:${o.identity}`, o.digest]))
   const seen = new Set()
   const missing = []
   const changed = []
   const byKind = {}
+  const unsupported = new Set()
+  for (const o of [...source, ...copy])
+    if (o.kind === 'unsupported') unsupported.add(o.identity)
   for (const o of source) {
     const k = `${o.kind}:${o.identity}`
     seen.add(k)
@@ -165,11 +172,16 @@ export function compareInventory(source, copy) {
   }
   const extra = [...target.keys()].filter((k) => !seen.has(k))
   return {
-    ok: missing.length === 0 && extra.length === 0 && changed.length === 0,
+    ok:
+      missing.length === 0 &&
+      extra.length === 0 &&
+      changed.length === 0 &&
+      unsupported.size === 0,
     byKind,
     missing: missing.sort(),
     extra: extra.sort(),
     changed: changed.sort(),
+    unsupported: [...unsupported].sort(),
   }
 }
 
@@ -243,6 +255,8 @@ export function verdictLines({ restore, tables, inventory, seconds }) {
     ...inventory.changed,
   ].slice(0, 50))
     lines.push(`OBJECT DIFFERENCE ${o}`)
+  for (const o of inventory.unsupported ?? [])
+    lines.push(`UNSUPPORTED OBJECT ${o}: this check does not verify aggregates`)
   const passed = restore.ok && tables.ok && inventory.ok
   lines.push(
     passed
@@ -260,9 +274,9 @@ export const COUNTS_SQL = `select n.nspname as schema, c.relname as "table",
   where n.nspname in (${schemaList}) and c.relkind='r' order by 1,2`
 // Definitions by stable identity, owner included; no OID enters an identity or a digest.
 export const INVENTORY_SQL = `
-  select 'function' as kind, n.nspname||'.'||p.proname||'('||pg_get_function_identity_arguments(p.oid)||')' as identity,
-    md5(case when p.prokind='a' then 'aggregate|'||p.proargtypes::text||'|'||p.prorettype::regtype::text
-             else pg_get_functiondef(p.oid) end||'|'||p.proowner::regrole::text) as digest
+  select case when p.prokind='a' then 'unsupported' else 'function' end as kind,
+    case when p.prokind='a' then 'aggregate ' else '' end||n.nspname||'.'||p.proname||'('||pg_get_function_identity_arguments(p.oid)||')' as identity,
+    case when p.prokind='a' then '' else md5(pg_get_functiondef(p.oid)||'|'||p.proowner::regrole::text) end as digest
   from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname in (${schemaList})
   union all
   select 'trigger', n.nspname||'.'||c.relname||'.'||t.tgname, md5(pg_get_triggerdef(t.oid)||'|'||t.tgenabled::text)

@@ -318,8 +318,36 @@ describe('compareInventory', () => {
       missing: ['policy:public.items.read'],
       extra: ['trigger:public.items.extra'],
       changed: ['function:public.f(uuid)'],
+      unsupported: [],
     })
     expect(compareInventory(source, [...source].reverse()).ok).toBe(true)
+  })
+  it('fails on an aggregate on either side instead of passing it unseen', () => {
+    const plain = [o('function', 'public.f(uuid)', 'aaa')]
+    const withAggregate = [
+      ...plain,
+      o('unsupported', 'aggregate public.total(bigint)', ''),
+    ]
+    const both = compareInventory(withAggregate, withAggregate)
+    expect(both.ok).toBe(false)
+    expect(both.unsupported).toEqual(['aggregate public.total(bigint)'])
+    expect(both.missing).toEqual([])
+    expect(both.changed).toEqual([])
+    expect(compareInventory(plain, withAggregate).unsupported).toEqual([
+      'aggregate public.total(bigint)',
+    ])
+    expect(compareInventory(plain, plain).unsupported).toEqual([])
+    const lines = verdictLines({
+      restore: classifyRestore({ status: 0, stderr: '' }),
+      tables: compareTableCounts([], []),
+      inventory: both,
+      seconds: 1,
+    })
+    expect(lines.passed).toBe(false)
+    expect(lines.lines).toContain(
+      'UNSUPPORTED OBJECT aggregate public.total(bigint): this check does not verify aggregates',
+    )
+    expect(lines.lines.at(-1)).toBe('APPLICATION RESTORE CHECK FAILED in 1 s')
   })
 })
 
@@ -464,7 +492,7 @@ describe('runRestoreExercise', () => {
             if (options.fail?.phase === 'counts') throw options.fail.error
             return { rows: counts }
           }
-          if (sql.includes("'function' as kind")) return { rows: inventory }
+          if (sql.includes('pg_get_functiondef')) return { rows: inventory }
           if (sql.includes('aclexplode')) return { rows: grants }
           throw new Error('unexpected sql')
         }),
@@ -669,11 +697,17 @@ describe('runRestoreExercise', () => {
 })
 
 describe('catalog queries', () => {
-  it('digest functions by their full definition and owner, with aggregates handled', () => {
+  it('digests functions by their full definition and owner, and marks aggregates unsupported', () => {
     expect(INVENTORY_SQL).toContain('pg_get_functiondef(p.oid)')
-    expect(INVENTORY_SQL).toMatch(/case when p\.prokind='a' then/)
-    expect(INVENTORY_SQL).toContain('p.proowner::regrole::text) as digest')
+    expect(INVENTORY_SQL).toContain(
+      "case when p.prokind='a' then 'unsupported' else 'function' end as kind",
+    )
+    expect(INVENTORY_SQL).toContain(
+      "case when p.prokind='a' then 'aggregate ' else '' end",
+    )
+    expect(INVENTORY_SQL).toContain('p.proowner::regrole::text) end as digest')
     expect(INVENTORY_SQL).not.toContain('p.prosrc')
+    expect(INVENTORY_SQL).not.toContain('proargtypes')
   })
   it('keeps PUBLIC in a policy role list next to named roles', () => {
     expect(INVENTORY_SQL).toContain('from unnest(p.polroles) r')

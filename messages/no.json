@@ -115,7 +115,17 @@
     "sellerSearchRetry": "Prøv igjen",
     "sellerSearchRange": "Viser {from}–{to} av {total} selgere",
     "sellerSearchPrevious": "Forrige",
-    "sellerSearchNext": "Neste"
+    "sellerSearchNext": "Neste",
+    "createType": "Ny varetype",
+    "typeName": "Navn på varetypen",
+    "typeFields": "Bruk samme felt som",
+    "typeBasic": "Kun beskrivelse",
+    "typeCreateSelect": "Opprett og velg",
+    "typeCancel": "Avbryt",
+    "typeRetry": "Prøv igjen",
+    "typeInvalid": "Angi et navn og velg gyldige felt.",
+    "typeUncertain": "Lagringen kunne ikke bekreftes. Prøv igjen med de samme opplysningene. Varen er beholdt.",
+    "typeRefused": "Varetypen kunne ikke lagres nå. Avbryt og kontroller butikk og tilgang. Opplysningene om varen er beholdt."
   },
   "intake": {
     "quickLink": "Hurtigmottak: én skjerm per plagg",

@@ -19,6 +19,7 @@ export async function BagReception({
   locale,
   currency,
   readonly,
+  canManageTypes = false,
   itemPage = 1,
 }: {
   client: SupabaseClient
@@ -29,6 +30,7 @@ export async function BagReception({
   locale: Locale
   currency: string
   readonly: boolean
+  canManageTypes?: boolean
   itemPage?: number
 }) {
   const d = dictionary(locale),
@@ -104,6 +106,7 @@ export async function BagReception({
             .filter((p) => p.active)
             .map((p) => ({ id: p.id, name: p.name }))}
           vocabulary={vocabulary}
+          canManageTypes={canManageTypes}
           lang={locale}
           assistance={assistance !== null}
           d={{

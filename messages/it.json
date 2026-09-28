@@ -115,7 +115,17 @@
     "sellerSearchRetry": "Riprova",
     "sellerSearchRange": "Visualizzati {from}–{to} di {total} venditori",
     "sellerSearchPrevious": "Precedente",
-    "sellerSearchNext": "Successivo"
+    "sellerSearchNext": "Successivo",
+    "createType": "Nuovo tipo di articolo",
+    "typeName": "Nome del tipo di articolo",
+    "typeFields": "Usa gli stessi campi di",
+    "typeBasic": "Solo descrizione",
+    "typeCreateSelect": "Crea e seleziona",
+    "typeCancel": "Annulla",
+    "typeRetry": "Riprova",
+    "typeInvalid": "Inserisci un nome e scegli campi validi.",
+    "typeUncertain": "Il salvataggio non è stato confermato. Riprova con gli stessi dati. L’articolo è conservato.",
+    "typeRefused": "Non è stato possibile salvare il tipo di articolo nel contesto attuale. Annulla e verifica negozio e permessi. I dati dell’articolo sono conservati."
   },
   "intake": {
     "quickLink": "Ricezione rapida: una schermata per capo",

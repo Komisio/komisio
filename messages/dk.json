@@ -115,7 +115,17 @@
     "sellerSearchRetry": "Prøv igen",
     "sellerSearchRange": "Viser {from}–{to} af {total} sælgere",
     "sellerSearchPrevious": "Forrige",
-    "sellerSearchNext": "Næste"
+    "sellerSearchNext": "Næste",
+    "createType": "Ny varetype",
+    "typeName": "Varetypens navn",
+    "typeFields": "Brug de samme felter som",
+    "typeBasic": "Kun beskrivelse",
+    "typeCreateSelect": "Opret og vælg",
+    "typeCancel": "Annuller",
+    "typeRetry": "Prøv igen",
+    "typeInvalid": "Angiv et navn, og vælg gyldige felter.",
+    "typeUncertain": "Lagringen kunne ikke bekræftes. Prøv igen med de samme oplysninger. Varen er bevaret.",
+    "typeRefused": "Varetypen kunne ikke gemmes nu. Annuller, og kontrollér butik og adgang. Varens oplysninger er bevaret."
   },
   "intake": {
     "quickLink": "Hurtig modtagelse: én skærm pr. stykke tøj",

@@ -115,7 +115,17 @@
     "sellerSearchRetry": "Erneut versuchen",
     "sellerSearchRange": "{from}–{to} von {total} Verkäufern",
     "sellerSearchPrevious": "Zurück",
-    "sellerSearchNext": "Weiter"
+    "sellerSearchNext": "Weiter",
+    "createType": "Neue Warenart",
+    "typeName": "Name der Warenart",
+    "typeFields": "Dieselben Felder verwenden wie",
+    "typeBasic": "Nur Beschreibung",
+    "typeCreateSelect": "Erstellen und auswählen",
+    "typeCancel": "Abbrechen",
+    "typeRetry": "Erneut versuchen",
+    "typeInvalid": "Geben Sie einen Namen ein und wählen Sie gültige Felder.",
+    "typeUncertain": "Das Speichern konnte nicht bestätigt werden. Versuchen Sie es mit denselben Angaben erneut. Ihre Ware bleibt erhalten.",
+    "typeRefused": "Die Warenart konnte derzeit nicht gespeichert werden. Brechen Sie ab und prüfen Sie Geschäft und Berechtigungen. Die Angaben zur Ware bleiben erhalten."
   },
   "intake": {
     "quickLink": "Schnellannahme: ein Bildschirm pro Kleidungsstück",

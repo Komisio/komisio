@@ -115,7 +115,17 @@
     "sellerSearchRetry": "Yritä uudelleen",
     "sellerSearchRange": "Näytetään {from}–{to} / {total} myyjää",
     "sellerSearchPrevious": "Edellinen",
-    "sellerSearchNext": "Seuraava"
+    "sellerSearchNext": "Seuraava",
+    "createType": "Uusi tuotetyyppi",
+    "typeName": "Tuotetyypin nimi",
+    "typeFields": "Käytä samoja kenttiä kuin",
+    "typeBasic": "Vain kuvaus",
+    "typeCreateSelect": "Luo ja valitse",
+    "typeCancel": "Peruuta",
+    "typeRetry": "Yritä uudelleen",
+    "typeInvalid": "Anna nimi ja valitse kelvolliset kentät.",
+    "typeUncertain": "Tallennusta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla. Tuotteen tiedot ovat tallella.",
+    "typeRefused": "Tuotetyyppiä ei voitu tallentaa tässä tilanteessa. Peruuta ja tarkista myymälä ja käyttöoikeudet. Tuotteen tiedot säilyvät."
   },
   "intake": {
     "quickLink": "Pikavastaanotto: yksi näyttö per vaate",

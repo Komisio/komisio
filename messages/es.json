@@ -115,7 +115,17 @@
     "sellerSearchRetry": "Reintentar",
     "sellerSearchRange": "Mostrando {from}–{to} de {total} vendedores",
     "sellerSearchPrevious": "Anterior",
-    "sellerSearchNext": "Siguiente"
+    "sellerSearchNext": "Siguiente",
+    "createType": "Nuevo tipo de artículo",
+    "typeName": "Nombre del tipo de artículo",
+    "typeFields": "Usar los mismos campos que",
+    "typeBasic": "Solo descripción",
+    "typeCreateSelect": "Crear y seleccionar",
+    "typeCancel": "Cancelar",
+    "typeRetry": "Reintentar",
+    "typeInvalid": "Introduce un nombre y elige campos válidos.",
+    "typeUncertain": "No se pudo confirmar el guardado. Reintenta con los mismos datos. El artículo se conserva.",
+    "typeRefused": "No se pudo guardar el tipo de artículo en este contexto. Cancela y comprueba la tienda y los permisos. Los datos del artículo se conservan."
   },
   "intake": {
     "quickLink": "Recepción rápida: una pantalla por prenda",

@@ -115,7 +115,17 @@
     "sellerSearchRetry": "Försök igen",
     "sellerSearchRange": "Visar {from}–{to} av {total} säljare",
     "sellerSearchPrevious": "Föregående",
-    "sellerSearchNext": "Nästa"
+    "sellerSearchNext": "Nästa",
+    "createType": "Ny varutyp",
+    "typeName": "Varutypens namn",
+    "typeFields": "Använd samma fält som",
+    "typeBasic": "Endast beskrivning",
+    "typeCreateSelect": "Skapa och välj",
+    "typeCancel": "Avbryt",
+    "typeRetry": "Försök igen",
+    "typeInvalid": "Ange ett namn och välj giltiga fält.",
+    "typeUncertain": "Sparandet kunde inte bekräftas. Försök igen med samma uppgifter. Varan ligger kvar.",
+    "typeRefused": "Varutypen kunde inte sparas i det aktuella läget. Avbryt och kontrollera butik och behörighet. Varans uppgifter ligger kvar."
   },
   "intake": {
     "quickLink": "Snabb mottagning: en skärm per plagg",

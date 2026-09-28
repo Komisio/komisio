@@ -115,7 +115,17 @@
     "sellerSearchRetry": "Try again",
     "sellerSearchRange": "Showing {from}–{to} of {total} sellers",
     "sellerSearchPrevious": "Previous",
-    "sellerSearchNext": "Next"
+    "sellerSearchNext": "Next",
+    "createType": "New item type",
+    "typeName": "Item type name",
+    "typeFields": "Use the same fields as",
+    "typeBasic": "Description only",
+    "typeCreateSelect": "Create and select",
+    "typeCancel": "Cancel",
+    "typeRetry": "Try again",
+    "typeInvalid": "Enter a name and choose valid fields.",
+    "typeUncertain": "The save could not be confirmed. Retry with the same details. Your item is still here.",
+    "typeRefused": "The item type could not be saved in the current context. Cancel and check your store and permissions. Your item details are retained."
   },
   "intake": {
     "quickLink": "Quick reception: one screen per garment",

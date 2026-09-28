@@ -57,6 +57,7 @@ export default async function QuickIntake() {
             .filter((p) => p.active)
             .map((p) => ({ id: p.id, name: p.name }))}
           vocabulary={vocabulary}
+          canManageTypes={['owner', 'admin'].includes(a.role)}
           lang={ctx.locale}
           assistance={assistance !== null}
           d={d}

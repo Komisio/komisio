@@ -65,6 +65,8 @@ test('an already approved payout is not re-reserved and the row recovers on the 
     expect(reply.status()).toBe(409)
     expect((await reply.json()).error).toBe('PAYOUT_NOT_REQUESTED')
     await expect(row.getByRole('alert')).toHaveText(d.intake.recordChanged)
+    // The stale reason is no longer editable: only the reload is valid now.
+    await expect(row.locator(`#reason-${payout}`)).toBeDisabled()
     for (const name of [d.payouts.approve, d.payouts.reject])
       await expect(
         row.getByRole('button', { name, exact: true }),

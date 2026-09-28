@@ -253,7 +253,7 @@ export function PayoutDecision({
     <form onSubmit={submit}>
       <fieldset
         className="intake-fields"
-        disabled={action.busy || action.locked || done}
+        disabled={action.busy || action.locked || action.needsReload || done}
       >
         {status === 'approved' && (
           <div className="field">

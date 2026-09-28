@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import type { Dictionary } from '@/lib/i18n'
@@ -24,6 +24,16 @@ export function ReceivingPanel({
   agreementBlocked?: boolean
 }) {
   const router = useRouter()
+  const nameInput = useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    const focusName = () => {
+      if (!seller && window.location.hash === '#new-seller')
+        nameInput.current?.focus()
+    }
+    focusName()
+    window.addEventListener('hashchange', focusName)
+    return () => window.removeEventListener('hashchange', focusName)
+  }, [seller])
   const pending = useRef<Record<string, unknown> | null>(null)
   // A later refusal cannot settle an earlier request whose reply was lost.
   const uncertain = useRef(false)
@@ -205,7 +215,13 @@ export function ReceivingPanel({
               <p id="seller-contact-hint">{d.contactHint}</p>
               <div className="field">
                 <label htmlFor="seller-name">{d.name}</label>
-                <input id="seller-name" name="name" required maxLength={120} />
+                <input
+                  ref={nameInput}
+                  id="seller-name"
+                  name="name"
+                  required
+                  maxLength={120}
+                />
               </div>
               <div className="field">
                 <label htmlFor="seller-email">{d.email}</label>

@@ -12,6 +12,7 @@ import type {
   AgreementEvidence,
 } from '@/lib/engine/intake'
 import { ReceivingPanel } from '@/components/intake/receiving-panel'
+import { NewSellerLink } from '@/components/intake/new-seller-link'
 import {
   bagQueueNavigation,
   bagQueueHref,
@@ -138,9 +139,7 @@ export default async function Intake({
             </div>
           </form>
           <p>
-            <Link className="text-link" href="/intake#new-seller">
-              {d.newSeller}
-            </Link>
+            <NewSellerLink className="text-link">{d.newSeller}</NewSellerLink>
           </p>
           {q && (
             <p>

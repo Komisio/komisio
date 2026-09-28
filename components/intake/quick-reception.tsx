@@ -1,4 +1,5 @@
 'use client'
+import { NewSellerLink } from '@/components/intake/new-seller-link'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -681,9 +682,9 @@ export function QuickReception({
                 d={d}
               />
               <p>
-                <Link className="btn btn-secondary" href="/intake#new-seller">
+                <NewSellerLink className="btn btn-secondary">
                   {d.newSeller}
-                </Link>
+                </NewSellerLink>
               </p>
             </>
           )}

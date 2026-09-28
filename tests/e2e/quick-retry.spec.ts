@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
+import sharp from 'sharp'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
@@ -401,62 +402,104 @@ test('a known refusal leaves the fields correctable under the same request id', 
   }
 })
 
-test('a lost reply inside a bag reception replays the same item', async ({
-  page,
-}) => {
-  const email = `quick-bag-retry-${randomUUID()}@example.test`
-  await register(page, email, `K!${randomBytes(16).toString('hex')}`)
-  const f = await p2Fixture(email)
-  try {
-    const bag = (
-      await f.db.query('select receive_bag_with_agreement($1,$2,$3,$4,$5) id', [
-        f.tenant,
-        randomUUID(),
-        f.seller,
-        '',
-        f.agreement,
-      ])
-    ).rows[0].id
-    await f.commit()
-    await page.setViewportSize({ width: 320, height: 720 })
-    await page.goto(`/intake/bags/${bag}/inspect`)
-    await page
-      .getByLabel(d.quickIntake.description, { exact: true })
-      .fill('Synthetic bag retry scarf')
-    await page.getByLabel(d.quickIntake.price, { exact: true }).fill('60')
-    const lost = await loseFirstReply(page)
-    const submit = page.locator('.quick-finish').getByRole('button')
-    await submit.click()
-    await expect(page.locator('.quick-item').getByRole('alert')).toHaveText(
-      d.quickIntake.uncertain,
-    )
-    expect(lost.firstStatus()).toBe(200)
-    await expect(submit).toHaveText(d.quickIntake.retry)
-    await submit.click()
-    const done = page.getByRole('region', {
-      name: d.quickIntake.done,
-      exact: true,
-    })
-    await expect(done).toContainText(lost.saved().reference)
-    expect(lost.requests).toHaveLength(2)
-    expect(lost.requests[1]).toEqual(lost.requests[0])
-    expect(lost.requests[0].bagId).toBe(bag)
-    expect(
-      (
-        await f.db.query('select id, origin_id from items where tenant_id=$1', [
-          f.tenant,
-        ])
-      ).rows,
-    ).toEqual([{ id: lost.saved().itemId, origin_id: lost.saved().sessionId }])
-    expect(
-      (
+for (const withPhoto of [false, true])
+  test(`a lost reply inside a bag reception replays the same item (photo: ${withPhoto})`, async ({
+    page,
+  }) => {
+    const email = `quick-bag-retry-${randomUUID()}@example.test`
+    await register(page, email, `K!${randomBytes(16).toString('hex')}`)
+    const f = await p2Fixture(email)
+    try {
+      const bag = (
         await f.db.query(
-          'select bag_id from reception_sessions where tenant_id=$1',
-          [f.tenant],
+          'select receive_bag_with_agreement($1,$2,$3,$4,$5) id',
+          [f.tenant, randomUUID(), f.seller, '', f.agreement],
         )
-      ).rows,
-    ).toEqual([{ bag_id: bag }])
-  } finally {
-    await f.close()
-  }
-})
+      ).rows[0].id
+      await f.commit()
+      await page.setViewportSize({ width: 320, height: 720 })
+      await page.goto(`/intake/bags/${bag}/inspect`)
+      let assistanceCalls = 0
+      await page.route('**/api/reception/assistance', (route) => {
+        assistanceCalls++
+        return route.abort()
+      })
+      if (withPhoto) {
+        const bytes = await sharp({
+          create: { width: 8, height: 8, channels: 3, background: '#346789' },
+        })
+          .png()
+          .toBuffer()
+        const sourceSaved = page.waitForResponse(
+          (r) =>
+            r.url().endsWith('/api/intake') &&
+            r.request().postDataJSON()?.action === 'saveReceptionSources',
+        )
+        await page.locator('#quick-photo').setInputFiles({
+          name: 'synthetic-retry.png',
+          mimeType: 'image/png',
+          buffer: bytes,
+        })
+        expect((await sourceSaved).status()).toBe(200)
+        await expect(
+          page.locator('.quick-finish').getByRole('button'),
+        ).toBeEnabled()
+      }
+      await page
+        .getByLabel(d.quickIntake.description, { exact: true })
+        .fill('Synthetic bag retry scarf')
+      await page.getByLabel(d.quickIntake.price, { exact: true }).fill('60')
+      const lost = await loseFirstReply(page)
+      const submit = page.locator('.quick-finish').getByRole('button')
+      await submit.click()
+      await expect(page.locator('.quick-item').getByRole('alert')).toHaveText(
+        d.quickIntake.uncertain,
+      )
+      expect(lost.firstStatus()).toBe(200)
+      await expect(submit).toHaveText(d.quickIntake.retry)
+      await submit.click()
+      const done = page.getByRole('region', {
+        name: d.quickIntake.done,
+        exact: true,
+      })
+      await expect(done).toContainText(lost.saved().reference)
+      expect(lost.requests).toHaveLength(2)
+      expect(lost.requests[1]).toEqual(lost.requests[0])
+      expect(lost.requests[0].bagId).toBe(bag)
+      expect(assistanceCalls).toBe(0)
+      if (withPhoto) {
+        expect(lost.requests[0].sessionId).toBe(lost.saved().sessionId)
+        expect(lost.requests[0].expectedRevision).toBe(1)
+        const sources = (
+          await f.db.query(
+            'select sources from reception_source_revisions where tenant_id=$1 and session_id=$2 order by revision desc limit 1',
+            [f.tenant, lost.saved().sessionId],
+          )
+        ).rows[0].sources as { kind: string }[]
+        expect(
+          sources.filter((source) => source.kind === 'photo'),
+        ).toHaveLength(1)
+        await expect(page.locator('.bag-received-items img')).toHaveCount(1)
+      } else expect(lost.requests[0].sessionId).toBeNull()
+      expect(
+        (
+          await f.db.query(
+            'select id, origin_id from items where tenant_id=$1',
+            [f.tenant],
+          )
+        ).rows,
+      ).toEqual([
+        { id: lost.saved().itemId, origin_id: lost.saved().sessionId },
+      ])
+      expect(
+        (
+          await f.db.query(
+            'select bag_id from reception_sessions where tenant_id=$1',
+            [f.tenant],
+          )
+        ).rows,
+      ).toEqual([{ bag_id: bag }])
+    } finally {
+      await f.close()
+    }
+  })

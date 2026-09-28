@@ -10,7 +10,7 @@ This exclusion does not remove ordinary agreed return/donation workflows.
 
 ## Current delivery baseline (2026-09-28)
 
-PRs 270–290 are deployed to production. Subsequent improvements are delivered
+PRs 270–322 are deployed to production. Subsequent improvements are delivered
 through staging and retain the production staging-observation gate.
 Staff item and seller lists, seller-owned items and announced handovers
 support bounded search and pagination. Receiving supports contact-based
@@ -29,7 +29,7 @@ reliable count of physically unregistered goods. Do not infer either from an
 estimated seller count or the first registered item. Instructions do not
 execute store policy.
 
-Staging also has complete platform vocabulary labels in all eight supported
+Production also has complete platform vocabulary labels in all eight supported
 languages, clearer payout-list and request placement, and economy totals
 before secondary reports on mobile. Statement dates use completed Stockholm
 calendar days; custom date selection remains available. Vocabulary and

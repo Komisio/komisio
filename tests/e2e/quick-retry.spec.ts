@@ -435,6 +435,9 @@ for (const withPhoto of [false, true])
             r.url().endsWith('/api/intake') &&
             r.request().postDataJSON()?.action === 'saveReceptionSources',
         )
+        // Enabled only once React handles the input; a file chosen before
+        // hydration would be lost.
+        await expect(page.locator('#quick-photo')).toBeEnabled()
         await page.locator('#quick-photo').setInputFiles({
           name: 'synthetic-retry.png',
           mimeType: 'image/png',

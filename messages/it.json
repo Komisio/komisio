@@ -77,6 +77,7 @@
     "fillIn": "Servono una descrizione e un prezzo superiore a zero.",
     "failed": "Impossibile ricevere l’articolo. Riprova.",
     "uncertain": "Impossibile confermare se l’articolo è stato ricevuto. Riprova con gli stessi dati oppure ricarica la pagina e controlla l’elenco degli articoli.",
+    "photoUncertain": "Impossibile confermare che la foto sia stata salvata. Riprova con la stessa foto oppure ricarica la pagina.",
     "retry": "Riprova",
     "reload": "Ricarica pagina",
     "printed": "L'etichetta è in coda per la stampante.",
@@ -104,6 +105,7 @@
       "REQUEST_CONFLICT": "Questa richiesta è già stata usata per un altro contenuto.",
       "PHOTO_UPLOAD_FAILED": "Impossibile caricare la foto. Prova un'altra foto.",
       "IMAGE_TOO_LARGE": "La foto è troppo grande (massimo 3 MB).",
+      "INVALID_IMAGE": "Il file non è un’immagine JPEG o PNG valida.",
       "REQUEST_FAILED": "La richiesta non è riuscita. Riprova."
     },
     "addPhoto": "Scatta o scegli una foto",

@@ -77,6 +77,7 @@
     "fillIn": "Se necesita una descripción y un precio mayor que cero.",
     "failed": "No se pudo recibir el artículo. Inténtalo de nuevo.",
     "uncertain": "No se pudo confirmar si el artículo fue recibido. Inténtalo de nuevo con los mismos datos o recarga la página y comprueba la lista de artículos.",
+    "photoUncertain": "No se pudo confirmar que la foto se haya guardado. Inténtalo de nuevo con la misma foto o recarga la página.",
     "retry": "Intentar de nuevo",
     "reload": "Recargar página",
     "printed": "La etiqueta está en cola para la impresora.",
@@ -104,6 +105,7 @@
       "REQUEST_CONFLICT": "Esta solicitud ya se usó para otro contenido.",
       "PHOTO_UPLOAD_FAILED": "No se pudo subir la foto. Prueba con otra foto.",
       "IMAGE_TOO_LARGE": "La foto es demasiado grande (máximo 3 MB).",
+      "INVALID_IMAGE": "El archivo no es una imagen JPEG o PNG válida.",
       "REQUEST_FAILED": "La solicitud falló. Vuelve a intentarlo."
     },
     "addPhoto": "Hacer o elegir una foto",

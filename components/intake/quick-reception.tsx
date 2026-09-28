@@ -9,6 +9,13 @@ import type { Dictionary } from '@/lib/i18n'
 import { quickAiProposal } from '@/lib/intake/quick-ai-proposal'
 import { quickReceiveResult } from '@/lib/intake/quick-receive-result'
 import {
+  createdReception,
+  photoReferences,
+  savedSources,
+  uploadedPhoto,
+  type PhotoSource,
+} from '@/lib/intake/quick-photo-results'
+import {
   labelOf,
   questionsFor,
   type AttributeVocabulary,
@@ -72,6 +79,49 @@ const STALE = new Set([
   'CURRENCY_MISMATCH',
   'INTAKE_PROFILE_FULL',
 ])
+/**
+ * Photo phases. An invalid file is refused by the upload route before any
+ * object is written, so the file itself may be replaced. Stale or context
+ * refusals leave the visible photo unresolved: the same bytes may be retried
+ * or the page reloaded. PHOTO_UPLOAD_FAILED is deliberately absent: it can
+ * follow a partially stored object, so it stays uncertain.
+ */
+const PHOTO_INVALID = new Set([
+  'INVALID_IMAGE',
+  'IMAGE_TOO_LARGE',
+  'INVALID_INPUT',
+])
+const PHOTO_STALE = new Set([
+  'INVALID_INPUT',
+  'SELLER_NOT_FOUND',
+  'RECEPTION_NOT_FOUND',
+  'RECEPTION_CHANGED',
+  'RECEPTION_SOURCE_CHANGED',
+  'FORBIDDEN',
+  'AUTH_REQUIRED',
+  'TENANT_CHANGED',
+  'NOT_FOUND',
+])
+/** The reception the engine will hold for this garment attempt, with the
+ * store, seller and bag it was started for frozen in: a retry after an await
+ * must not read those anew. */
+type Reception = {
+  createId: string
+  tenantId: string
+  sellerId: string
+  bagId?: string
+  sessionId?: string
+}
+/** One chosen file with the identities its phases reuse until confirmed. */
+type PhotoAttempt = {
+  file: File
+  previewUrl: string
+  photoId: string
+  saveId: string
+  source?: PhotoSource
+  saved?: boolean
+  assisted?: boolean
+}
 
 /**
  * One screen: seller, photo, facts (filled by the assistant when the store
@@ -141,6 +191,25 @@ export function QuickReception({
   } | null>(null)
   const [uncertain, setUncertain] = useState(false)
   const [stale, setStale] = useState(false)
+  // Photo phases keep their identities here so a retry repeats exactly the
+  // phases that were not confirmed; nothing is re-derived from the fields.
+  const reception = useRef<Reception | null>(null)
+  const photo = useRef<PhotoAttempt | null>(null)
+  const photoWasUncertain = useRef(false)
+  const [photoIssue, setPhotoIssue] = useState<
+    'invalid' | 'stale' | 'uncertain' | null
+  >(null)
+  const [photoError, setPhotoError] = useState('')
+  const photoUnresolved = photoIssue === 'stale' || photoIssue === 'uncertain'
+  // A file chosen before React has taken over the server-rendered input
+  // fires a change event nothing handles and is silently lost. The picker
+  // opens only once the handler is attached; the first frame still matches
+  // the server's.
+  const [ready, setReady] = useState(false)
+  useEffect(() => {
+    const timer = setTimeout(() => setReady(true), 0)
+    return () => clearTimeout(timer)
+  }, [])
   const fileInput = useRef<HTMLInputElement>(null)
   const itemHeading = useRef<HTMLHeadingElement>(null)
   const doneHeading = useRef<HTMLHeadingElement>(null)
@@ -197,42 +266,114 @@ export function QuickReception({
     setError(errors[code] ?? d.failed)
   }
 
+  function dropPhoto() {
+    if (photo.current) URL.revokeObjectURL(photo.current.previewUrl)
+    photo.current = null
+    setPhotoUrl(null)
+    if (fileInput.current) fileInput.current.value = ''
+  }
+
+  /** A newly chosen file: fresh photo identities on this attempt's reception. */
   async function onPhoto(file: File) {
-    if (running.current || !sellerId) return
+    // An unresolved photo is never replaced by choosing another file; the
+    // input is disabled then, and this guard covers a queued change event.
+    if (running.current || !sellerId || session || photoUnresolved) return
+    if (photo.current) URL.revokeObjectURL(photo.current.previewUrl)
+    photo.current = {
+      file,
+      previewUrl: URL.createObjectURL(file),
+      photoId: crypto.randomUUID(),
+      saveId: crypto.randomUUID(),
+    }
+    reception.current ??= {
+      createId: crypto.randomUUID(),
+      tenantId,
+      sellerId,
+      ...(bagId ? { bagId } : {}),
+    }
+    setPhotoUrl(photo.current.previewUrl)
+    await runPhoto()
+  }
+
+  /**
+   * Create the reception, upload the photo, save it as a source, then ask the
+   * assistant once. Each phase is skipped when already confirmed and repeated
+   * with the same identity otherwise, so a lost reply is retried exactly: the
+   * engine replays the create and the save by id, storage accepts the same
+   * bytes for the same object.
+   */
+  async function runPhoto() {
+    const p = photo.current,
+      r = reception.current
+    if (running.current || !sellerId || !p || !r) return
     running.current = true
-    setError('')
+    setPhotoError('')
+    setPhotoIssue(null)
     setStage('uploading')
+    let phase: 'create' | 'upload' | 'save' = 'create'
     try {
-      setPhotoUrl(URL.createObjectURL(file))
-      let current = session
-      if (!current) {
-        const created = await post('/api/intake', {
-          action: 'createReception',
-          ...(bagId ? { bagId } : {}),
-          tenantId,
-          requestId: crypto.randomUUID(),
-          sellerId,
-        })
-        current = { id: created.id, revision: 0 }
+      if (!r.sessionId) {
+        const created = createdReception.parse(
+          await post('/api/intake', {
+            action: 'createReception',
+            ...(r.bagId ? { bagId: r.bagId } : {}),
+            tenantId: r.tenantId,
+            requestId: r.createId,
+            sellerId: r.sellerId,
+          }),
+        )
+        // The engine names the reception by the request id it was given.
+        if (created.id !== r.createId) throw new Error('CREATE_MISMATCH')
+        r.sessionId = created.id
+        // A phase confirmed with its exact identity settles whatever was
+        // uncertain about it; the next phase starts with a clean slate.
+        photoWasUncertain.current = false
       }
-      const photoId = crypto.randomUUID()
-      const uploaded = await fetch(
-        `/api/reception/${current.id}/photo?photo=${photoId}&tenant=${tenantId}`,
-        { method: 'POST', body: file },
-      )
-      const upload = await uploaded.json().catch(() => ({}))
-      if (!uploaded.ok) throw new Error(upload.error ?? 'PHOTO_UPLOAD_FAILED')
-      await post('/api/intake', {
-        action: 'saveReceptionSources',
-        tenantId,
-        requestId: crypto.randomUUID(),
-        sessionId: current.id,
-        expectedRevision: current.revision,
-        sources: [upload.source],
-      })
-      current = { id: current.id, revision: current.revision + 1 }
+      phase = 'upload'
+      if (!p.source) {
+        const uploaded = await fetch(
+          `/api/reception/${r.sessionId}/photo?photo=${p.photoId}&tenant=${r.tenantId}`,
+          { method: 'POST', body: p.file },
+        )
+        const body = await uploaded.json().catch(() => ({}))
+        if (!uploaded.ok)
+          throw new RequestFailure(
+            typeof body.error === 'string' ? body.error : 'PHOTO_UPLOAD_FAILED',
+            uploaded.status,
+          )
+        const upload = uploadedPhoto.parse(body)
+        // Only this photo of this reception may travel into the source save.
+        if (
+          upload.source.id !== p.photoId ||
+          !photoReferences(r.tenantId, r.sessionId, p.photoId).includes(
+            upload.source.reference,
+          )
+        )
+          throw new Error('PHOTO_MISMATCH')
+        p.source = upload.source
+        photoWasUncertain.current = false
+      }
+      phase = 'save'
+      if (!p.saved) {
+        const saved = savedSources.parse(
+          await post('/api/intake', {
+            action: 'saveReceptionSources',
+            tenantId: r.tenantId,
+            requestId: p.saveId,
+            sessionId: r.sessionId,
+            expectedRevision: 0,
+            sources: [p.source],
+          }),
+        )
+        if (saved.id !== p.saveId) throw new Error('SAVE_MISMATCH')
+        p.saved = true
+        photoWasUncertain.current = false
+      }
+      const current = { id: r.sessionId, revision: 1 }
       setSession(current)
-      if (assistance) {
+      // The assistant is asked once per saved photo, never again on a rerun.
+      if (assistance && !p.assisted) {
+        p.assisted = true
         setStage('assisting')
         setMessage(d.aiWorking)
         try {
@@ -259,7 +400,30 @@ export function QuickReception({
         }
       } else setMessage('')
     } catch (e) {
-      fail(e)
+      const code = e instanceof RequestFailure ? e.message : ''
+      const refused =
+        e instanceof RequestFailure && e.status >= 400 && e.status < 500
+      const known =
+        refused && (PHOTO_INVALID.has(code) || PHOTO_STALE.has(code))
+      if (known && photoWasUncertain.current) {
+        // A refusal now is no proof about the earlier unanswered phase; the
+        // same identities stay and the refusal is shown as detail only.
+        setPhotoIssue('uncertain')
+        setPhotoError(`${d.photoUncertain} ${errors[code] ?? ''}`.trim())
+      } else if (phase === 'upload' && refused && PHOTO_INVALID.has(code)) {
+        // A first, answered refusal of the bytes: nothing was written for
+        // this photo id, so the file is replaced on the same reception.
+        dropPhoto()
+        setPhotoIssue('invalid')
+        setPhotoError(errors[code] ?? errors.REQUEST_FAILED)
+      } else if (known) {
+        setPhotoIssue('stale')
+        setPhotoError(errors[code] ?? errors.REQUEST_FAILED)
+      } else {
+        photoWasUncertain.current = true
+        setPhotoIssue('uncertain')
+        setPhotoError(d.photoUncertain)
+      }
     } finally {
       running.current = false
       setStage('idle')
@@ -286,7 +450,9 @@ export function QuickReception({
       tenantId,
       requestId: requestId.current,
       sellerId,
-      sessionId: session?.id ?? null,
+      // A reception created for a photo that was then replaced is reused
+      // rather than left empty beside a derived one.
+      sessionId: session?.id ?? reception.current?.sessionId ?? null,
       expectedRevision: session?.revision ?? 0,
       facts: cleaned,
       itemType,
@@ -295,7 +461,7 @@ export function QuickReception({
   }
 
   async function submit() {
-    if (running.current || !sellerId) return
+    if (running.current || !sellerId || photoUnresolved) return
     // A lost reply is retried with the very command that was sent, never with
     // whatever the fields hold now.
     let current = attempt.current
@@ -384,11 +550,14 @@ export function QuickReception({
     setDone(null)
     setFacts(emptyFacts)
     setPrice('')
-    setPhotoUrl(null)
+    dropPhoto()
+    reception.current = null
+    photoWasUncertain.current = false
+    setPhotoIssue(null)
+    setPhotoError('')
     setSession(null)
     setMessage('')
     setError('')
-    if (fileInput.current) fileInput.current.value = ''
   }
 
   const busy = stage !== 'idle'
@@ -478,8 +647,11 @@ export function QuickReception({
               <button
                 type="button"
                 className="text-link"
-                disabled={busy || uncertain}
+                disabled={busy || uncertain || photoUnresolved}
                 onClick={() => {
+                  // Switching sellers discards the attempt; not while a
+                  // photo or a submit is unresolved.
+                  if (busy || uncertain || photoUnresolved) return
                   setSeller(null)
                   next()
                 }}
@@ -531,7 +703,7 @@ export function QuickReception({
               <div className="field quick-photo-field">
                 <label
                   htmlFor="quick-photo"
-                  className={`quick-photo-picker${busy || session || uncertain ? ' is-disabled' : ''}`}
+                  className={`quick-photo-picker${!ready || busy || session || uncertain || photoUnresolved ? ' is-disabled' : ''}${photoUnresolved ? ' is-uncertain' : ''}`}
                 >
                   {photoUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -551,7 +723,9 @@ export function QuickReception({
                   type="file"
                   accept="image/jpeg,image/png"
                   capture="environment"
-                  disabled={busy || !!session || uncertain}
+                  disabled={
+                    !ready || busy || !!session || uncertain || photoUnresolved
+                  }
                   onChange={(e) => {
                     const file = e.target.files?.[0]
                     if (file) void onPhoto(file)
@@ -563,6 +737,32 @@ export function QuickReception({
                 <p className="quick-status" role="status">
                   {stage === 'uploading' ? d.busy : message}
                 </p>
+              )}
+              {photoError && (
+                <p role="alert" className="error quick-photo-alert">
+                  {photoError}
+                </p>
+              )}
+              {photoUnresolved && (
+                // Recovery sits next to the photo it concerns; two actions wrap on a 320px phone.
+                <div className="row wrap">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    disabled={busy}
+                    onClick={() => void runPhoto()}
+                  >
+                    {d.retry}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    disabled={busy}
+                    onClick={() => window.location.reload()}
+                  >
+                    {d.reload}
+                  </Button>
+                </div>
               )}
             </div>
             <div className="quick-facts">
@@ -641,7 +841,9 @@ export function QuickReception({
               </div>
             )}
             <Button
-              disabled={busy}
+              // A visible photo whose save is unresolved must not become a
+              // photoless item.
+              disabled={busy || photoUnresolved}
               onClick={() => void submit()}
               className="quick-submit"
             >

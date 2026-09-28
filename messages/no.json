@@ -77,6 +77,7 @@
     "fillIn": "En beskrivelse og en pris over null er nødvendig.",
     "failed": "Varen kunne ikke mottas. Prøv igjen.",
     "uncertain": "Kunne ikke bekrefte om varen ble mottatt. Prøv igjen med samme opplysninger, eller last inn siden på nytt og sjekk varelisten.",
+    "photoUncertain": "Kunne ikke bekrefte at bildet ble lagret. Prøv igjen med samme bilde, eller last inn siden på nytt.",
     "retry": "Prøv igjen",
     "reload": "Last inn siden på nytt",
     "printed": "Etiketten er lagt i kø til skriveren.",
@@ -104,6 +105,7 @@
       "REQUEST_CONFLICT": "Denne forespørselen er allerede brukt til annet innhold.",
       "PHOTO_UPLOAD_FAILED": "Bildet kunne ikke lastes opp. Prøv et annet bilde.",
       "IMAGE_TOO_LARGE": "Bildet er for stort (maks 3 MB).",
+      "INVALID_IMAGE": "Filen er ikke et gyldig JPEG- eller PNG-bilde.",
       "REQUEST_FAILED": "Forespørselen mislyktes. Prøv igjen."
     },
     "addPhoto": "Ta eller velg et bilde",

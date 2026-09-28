@@ -77,6 +77,7 @@
     "fillIn": "Tarvitaan kuvaus ja nollaa suurempi hinta.",
     "failed": "Tuotteen vastaanotto epäonnistui. Yritä uudelleen.",
     "uncertain": "Ei voitu vahvistaa, otettiinko tuote vastaan. Yritä uudelleen samoilla tiedoilla tai lataa sivu uudelleen ja tarkista tuoteluettelo.",
+    "photoUncertain": "Ei voitu vahvistaa, että kuva tallennettiin. Yritä uudelleen samalla kuvalla tai lataa sivu uudelleen.",
     "retry": "Yritä uudelleen",
     "reload": "Lataa sivu uudelleen",
     "printed": "Etiketti on tulostusjonossa.",
@@ -104,6 +105,7 @@
       "REQUEST_CONFLICT": "Tämä pyyntö on jo käytetty toiseen sisältöön.",
       "PHOTO_UPLOAD_FAILED": "Kuvaa ei voitu ladata. Kokeile toista kuvaa.",
       "IMAGE_TOO_LARGE": "Kuva on liian suuri (enintään 3 Mt).",
+      "INVALID_IMAGE": "Tiedosto ei ole kelvollinen JPEG- tai PNG-kuva.",
       "REQUEST_FAILED": "Pyyntö epäonnistui. Yritä uudelleen."
     },
     "addPhoto": "Ota tai valitse kuva",

@@ -77,6 +77,7 @@
     "fillIn": "Beskrivning och ett pris över noll behövs.",
     "failed": "Varan kunde inte tas emot. Försök igen.",
     "uncertain": "Det gick inte att bekräfta om varan togs emot. Försök igen med samma uppgifter, eller ladda om sidan och kontrollera varulistan.",
+    "photoUncertain": "Det gick inte att bekräfta att fotot sparades. Försök igen med samma foto, eller ladda om sidan.",
     "retry": "Försök igen",
     "reload": "Ladda om sidan",
     "printed": "Etiketten är köad till skrivaren.",
@@ -104,6 +105,7 @@
       "REQUEST_CONFLICT": "Förfrågan har redan använts för annat innehåll.",
       "PHOTO_UPLOAD_FAILED": "Fotot kunde inte laddas upp. Prova ett annat foto.",
       "IMAGE_TOO_LARGE": "Fotot är för stort (högst 3 MB).",
+      "INVALID_IMAGE": "Filen är inte en giltig JPEG- eller PNG-bild.",
       "REQUEST_FAILED": "Förfrågan misslyckades. Försök igen."
     },
     "addPhoto": "Ta eller välj en bild",

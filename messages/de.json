@@ -77,6 +77,7 @@
     "fillIn": "Eine Beschreibung und ein Preis über null sind erforderlich.",
     "failed": "Der Artikel konnte nicht angenommen werden. Bitte erneut versuchen.",
     "uncertain": "Es konnte nicht bestätigt werden, ob der Artikel angenommen wurde. Versuchen Sie es mit denselben Angaben erneut oder laden Sie die Seite neu und prüfen Sie die Artikelliste.",
+    "photoUncertain": "Es konnte nicht bestätigt werden, dass das Foto gespeichert wurde. Versuchen Sie es mit demselben Foto erneut oder laden Sie die Seite neu.",
     "retry": "Erneut versuchen",
     "reload": "Seite neu laden",
     "printed": "Das Etikett ist für den Drucker eingereiht.",
@@ -104,6 +105,7 @@
       "REQUEST_CONFLICT": "Diese Anfrage wurde bereits für einen anderen Inhalt verwendet.",
       "PHOTO_UPLOAD_FAILED": "Das Foto konnte nicht hochgeladen werden. Versuchen Sie ein anderes Foto.",
       "IMAGE_TOO_LARGE": "Das Foto ist zu groß (höchstens 3 MB).",
+      "INVALID_IMAGE": "Die Datei ist kein gültiges JPEG- oder PNG-Bild.",
       "REQUEST_FAILED": "Die Anfrage ist fehlgeschlagen. Versuchen Sie es erneut."
     },
     "addPhoto": "Foto aufnehmen oder auswählen",

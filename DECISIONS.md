@@ -746,3 +746,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-28: The lifecycle work list is read through lifecycle_queue_page: twenty rows per call ordered by acceptance then id, the matched total, and a store-wide due count that ignores stage and text filters. Facts come from the unchanged lifecycle_queue; the legacy display read stays.
 
 - 2026-09-28: Seller data exports include the seller's announced handovers and their event history, including cancelled and received entries. Rows stay tenant- and seller-scoped, ordered by timestamp then id, with unchanged owner/admin access and one access event per export.
+- 2026-09-28: Seller data exports include the seller's own review responses: id, review id, approve or decline, responder and time, ordered by time then id and scoped through reviews and sessions. Review access events, token hashes, assistance attempts and photo digests stay out of the export.

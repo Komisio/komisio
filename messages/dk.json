@@ -1541,6 +1541,7 @@
     "useBuiltin": "Brug det indbyggede layout",
     "templateSaved": "Skabelon gemt. Nye mærkater af denne type bruger den.",
     "templateReset": "Det indbyggede layout gælder igen.",
+    "templateUncertain": "Kunne ikke bekræfte, om skabelonen blev gemt. Genindlæs siden og tjek versionen, før du gemmer igen.",
     "templateInvalid": "Et navn og et ZPL-program på højst 20000 tegn.",
     "templateErrors": {
       "LABEL_TEMPLATE_FRAME": "Programmet skal starte med ^XA og slutte med ^XZ.",

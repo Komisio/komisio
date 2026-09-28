@@ -1541,6 +1541,7 @@
     "useBuiltin": "Usar el diseño integrado",
     "templateSaved": "Plantilla guardada. Las etiquetas nuevas de este tipo la usan.",
     "templateReset": "El diseño integrado vuelve a aplicarse.",
+    "templateUncertain": "No se pudo confirmar si la plantilla se guardó. Recarga la página y comprueba la versión antes de volver a guardar.",
     "templateInvalid": "Un nombre y un programa ZPL de como máximo 20000 caracteres.",
     "templateErrors": {
       "LABEL_TEMPLATE_FRAME": "El programa debe empezar con ^XA y terminar con ^XZ.",

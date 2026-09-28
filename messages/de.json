@@ -1541,6 +1541,7 @@
     "useBuiltin": "Integriertes Layout verwenden",
     "templateSaved": "Vorlage gespeichert. Neue Etiketten dieser Art verwenden sie.",
     "templateReset": "Das integrierte Layout gilt wieder.",
+    "templateUncertain": "Es konnte nicht bestätigt werden, ob die Vorlage gespeichert wurde. Laden Sie die Seite neu und prüfen Sie die Version, bevor Sie erneut speichern.",
     "templateInvalid": "Ein Name und ein ZPL-Programm mit höchstens 20000 Zeichen.",
     "templateErrors": {
       "LABEL_TEMPLATE_FRAME": "Das Programm muss mit ^XA beginnen und mit ^XZ enden.",

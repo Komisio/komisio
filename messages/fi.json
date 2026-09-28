@@ -1541,6 +1541,7 @@
     "useBuiltin": "Käytä sisäänrakennettua asettelua",
     "templateSaved": "Pohja tallennettu. Tämän tyypin uudet etiketit käyttävät sitä.",
     "templateReset": "Sisäänrakennettu asettelu on taas käytössä.",
+    "templateUncertain": "Ei voitu vahvistaa, tallennettiinko malli. Lataa sivu uudelleen ja tarkista versio ennen kuin tallennat uudelleen.",
     "templateInvalid": "Nimi ja enintään 20000 merkin ZPL-ohjelma.",
     "templateErrors": {
       "LABEL_TEMPLATE_FRAME": "Ohjelman on alettava ^XA ja päätyttävä ^XZ.",

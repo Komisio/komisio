@@ -137,6 +137,15 @@ export function AccountMapForm({
       {(invalid || action.error) && (
         <p role="alert">{action.error || intake.invalid}</p>
       )}
+      {action.needsReload && (
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => window.location.reload()}
+        >
+          {intake.reload}
+        </Button>
+      )}
     </form>
   )
 }

@@ -59,11 +59,11 @@ test('the selected seller tab stays visible inside the tab strip on a phone', as
         })
         await expect(details).toHaveAttribute('aria-selected', 'true')
         await expect(page.locator('#seller-details')).toBeVisible()
-        const deep = await selectedWithinStrip(page)
-        expect(
-          deep.inside,
-          `${locale} deep link: tab ${JSON.stringify(deep.tab)} strip ${JSON.stringify(deep.strip)}`,
-        ).toBe(true)
+        await expect
+          .poll(async () => (await selectedWithinStrip(page)).inside, {
+            message: `${locale} deep selected tab inside strip`,
+          })
+          .toBe(true)
         // The strip itself never widens the page.
         expect(
           await page.evaluate(
@@ -84,11 +84,11 @@ test('the selected seller tab stays visible inside the tab strip on a phone', as
           }),
         ).toHaveAttribute('aria-selected', 'true')
         await expect(page).toHaveURL(/#seller-economy$/)
-        const shortcut = await selectedWithinStrip(page)
-        expect(
-          shortcut.inside,
-          `${locale} shortcut: tab ${JSON.stringify(shortcut.tab)} strip ${JSON.stringify(shortcut.strip)}`,
-        ).toBe(true)
+        await expect
+          .poll(async () => (await selectedWithinStrip(page)).inside, {
+            message: `${locale} shortcut selected tab inside strip`,
+          })
+          .toBe(true)
         if (locale === 'sv')
           await page.screenshot({
             path: testInfo.outputPath('seller-tab-visibility-320.png'),
@@ -112,7 +112,9 @@ test('the selected seller tab stays visible inside the tab strip on a phone', as
       'aria-selected',
       'true',
     )
-    expect((await selectedWithinStrip(page)).inside).toBe(true)
+    await expect
+      .poll(async () => (await selectedWithinStrip(page)).inside)
+      .toBe(true)
     expect(await page.evaluate(() => window.scrollY)).toBe(before)
     // Keyboard and hash behaviour are unchanged.
     await page.getByRole('tab').last().focus()
@@ -124,7 +126,9 @@ test('the selected seller tab stays visible inside the tab strip on a phone', as
     await expect(page).toHaveURL(/#seller-overview$/)
     await page.keyboard.press('End')
     await expect(page).toHaveURL(/#seller-details$/)
-    expect((await selectedWithinStrip(page)).inside).toBe(true)
+    await expect
+      .poll(async () => (await selectedWithinStrip(page)).inside)
+      .toBe(true)
     await page.goBack()
     await expect(page).toHaveURL(/#seller-overview$/)
     await expect(page.getByRole('tab').first()).toHaveAttribute(

@@ -13,11 +13,30 @@ async function openRow(page: Page, email: string) {
   await f.commit()
   await page.setViewportSize({ width: 320, height: 720 })
   await page.goto('/settings?tab=printing')
-  const row = page.getByRole('row', { name: new RegExp(d.printing.kinds.item) })
+  const row = page.getByRole('group', {
+    name: new RegExp(d.printing.kinds.item),
+  })
   const width = row.getByLabel(d.printing.width, { exact: true })
   const height = row.getByLabel(d.printing.height, { exact: true })
   await expect(width).toBeEnabled()
   return { f, row, width, height }
+}
+
+/**
+ * Real geometry, no auto-scroll: boundingBox() reads the current layout, so
+ * every named control must lie inside the 320px viewport as the page stands.
+ */
+async function expectInsideViewport(
+  page: Page,
+  controls: Record<string, ReturnType<Page['locator']>>,
+) {
+  expect(await page.evaluate(() => window.scrollX)).toBe(0)
+  for (const [label, control] of Object.entries(controls)) {
+    const box = (await control.boundingBox())!
+    expect(box, label).not.toBeNull()
+    expect(box.x, `${label} left`).toBeGreaterThanOrEqual(0)
+    expect(box.x + box.width, `${label} right`).toBeLessThanOrEqual(320)
+  }
 }
 
 test('a lost reply keeps the label size frozen and the retry sends the same command', async ({
@@ -28,6 +47,14 @@ test('a lost reply keeps the label size frozen and the retry sends the same comm
     `label-format-retry-${randomUUID()}@example.test`,
   )
   try {
+    await expectInsideViewport(page, {
+      width,
+      height,
+      save: row.getByRole('button', {
+        name: d.printing.saveFormat,
+        exact: true,
+      }),
+    })
     await width.fill('60')
     await height.fill('40')
     const commands: Record<string, unknown>[] = []
@@ -51,6 +78,18 @@ test('a lost reply keeps the label size frozen and the retry sends the same comm
       .click()
     await expect(row.getByRole('alert')).toHaveText(d.intake.failed)
     expect(firstStatus).toBe(200)
+    // The message and the way forward are inside the phone's viewport as the
+    // page stands, not somewhere a sideways scroll would reveal.
+    await expectInsideViewport(page, {
+      width,
+      height,
+      alert: row.getByRole('alert'),
+      retry: row.getByRole('button', { name: d.intake.retry, exact: true }),
+    })
+    await page.screenshot({
+      path: 'private/label-size-320-lost.png',
+      caret: 'initial',
+    })
     // Frozen: the retry will resend the command as it was, so the fields
     // must not invite edits, and the button says so.
     await expect(width).toBeDisabled()
@@ -86,7 +125,7 @@ test('a lost reply keeps the label size frozen and the retry sends the same comm
     await page.reload()
     await expect(
       page
-        .getByRole('row', { name: new RegExp(d.printing.kinds.item) })
+        .getByRole('group', { name: new RegExp(d.printing.kinds.item) })
         .getByLabel(d.printing.width, { exact: true }),
     ).toHaveValue('60')
     // The engine has no request identity for this setting: a replay re-applies
@@ -138,6 +177,20 @@ test('a changed active store offers a reload instead of a permanently disabled r
     expect(reply.status()).toBe(409)
     expect((await reply.json()).error).toBe('TENANT_CHANGED')
     await expect(row.getByRole('alert')).toHaveText(d.intake.changed)
+    await expectInsideViewport(page, {
+      width,
+      height,
+      alert: row.getByRole('alert'),
+      save: row.getByRole('button', {
+        name: d.printing.saveFormat,
+        exact: true,
+      }),
+      reload: row.getByRole('button', { name: d.intake.reload, exact: true }),
+    })
+    await page.screenshot({
+      path: 'private/label-size-320-stale.png',
+      caret: 'initial',
+    })
     await expect(width).toBeDisabled()
     await expect(height).toBeDisabled()
     await expect(

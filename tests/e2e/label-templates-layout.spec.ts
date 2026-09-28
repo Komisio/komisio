@@ -44,9 +44,7 @@ test('the label template editor fits a 320px phone in every language and keeps t
         // Collapsed until asked for; the label sizes stay directly available.
         await expect(fold).not.toHaveAttribute('open', '')
         await expect(zpl).toBeHidden()
-        await expect(
-          page.locator('.label-formats-table td:first-child').first(),
-        ).toBeVisible()
+        await expect(page.locator('.label-format-kind').first()).toBeVisible()
         await expect(summary).toHaveText(d.printing.templatesHeading)
         expect(
           (await summary.boundingBox())!.height,
@@ -102,13 +100,27 @@ test('the label template editor fits a 320px phone in every language and keeps t
           await expect(
             editor.getByRole('button', { name, exact: true }),
           ).toBeVisible()
-        // The label size table keeps each kind on one line and scrolls in
-        // its own wrapper instead of breaking names letter by letter.
-        for (const cell of await page
-          .locator('.label-formats-table td:first-child')
-          .all()) {
-          const box = (await cell.boundingBox())!
-          expect(box.height, `${locale} kind cell height`).toBeLessThan(80)
+        // Every label size group (kind, both sizes with their labels, the
+        // action) lies inside the viewport without any horizontal scrolling.
+        const groups = await page.locator('.label-format').all()
+        expect(groups.length, `${locale} groups`).toBe(5)
+        for (const group of groups) {
+          for (const control of [
+            group.locator('.label-format-kind'),
+            group.getByLabel(d.printing.width, { exact: true }),
+            group.getByLabel(d.printing.height, { exact: true }),
+            group.getByRole('button', {
+              name: d.printing.saveFormat,
+              exact: true,
+            }),
+          ]) {
+            const box = (await control.boundingBox())!
+            expect(box.x, `${locale} size left`).toBeGreaterThanOrEqual(0)
+            expect(
+              box.x + box.width,
+              `${locale} size right`,
+            ).toBeLessThanOrEqual(320)
+          }
         }
         // Typing reaches the editor; nothing is saved or previewed here.
         await zpl.fill('^XA^FDsynthetic^FS^XZ')

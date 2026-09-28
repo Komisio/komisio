@@ -21,36 +21,25 @@ export function LabelFormatsForm({
   intake: Dictionary['intake']
 }) {
   const kinds = ['bag', 'garment', 'item', 'markdown', 'onboarding'] as const
+  // One group per label kind rather than a table: on a phone the kind, both
+  // sizes, the action and any message stack within the viewport instead of
+  // scrolling sideways; on a desktop the same groups lay out as rows.
   return (
     <div>
       <h3>{d.formatsHeading}</h3>
       <p>{d.formatsIntro}</p>
-      {/* Positioned so the visually hidden labels scroll with the table instead of
-          escaping the wrapper and widening the page. */}
-      <div style={{ overflowX: 'auto', position: 'relative' }}>
-        <table className="label-formats-table">
-          <thead>
-            <tr>
-              <th>{d.formatKind}</th>
-              <th>{d.width}</th>
-              <th>{d.height}</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {kinds.map((kind) => (
-              <FormatRow
-                key={kind}
-                tenantId={tenantId}
-                kind={kind}
-                format={formats[kind]}
-                canEdit={canEdit}
-                d={d}
-                intake={intake}
-              />
-            ))}
-          </tbody>
-        </table>
+      <div className="label-formats">
+        {kinds.map((kind) => (
+          <FormatRow
+            key={kind}
+            tenantId={tenantId}
+            kind={kind}
+            format={formats[kind]}
+            canEdit={canEdit}
+            d={d}
+            intake={intake}
+          />
+        ))}
       </div>
     </div>
   )
@@ -99,39 +88,33 @@ function FormatRow({
     }
   }
   return (
-    <tr>
-      <td>
+    <div className="label-format" role="group" aria-labelledby={`k-${id}`}>
+      <div className="label-format-kind" id={`k-${id}`}>
         {d.kinds[kind]}
         {!format.custom && <small> · {d.defaultSize}</small>}
-      </td>
-      <td>
-        <label className="sr-only" htmlFor={`w-${id}`}>
-          {d.width}
-        </label>
+      </div>
+      <div className="label-format-size">
+        <label htmlFor={`w-${id}`}>{d.width}</label>
         <input
           id={`w-${id}`}
           inputMode="decimal"
           value={width}
           disabled={!canEdit || frozen}
           onChange={(e) => setWidth(e.target.value)}
-          style={{ width: '5em' }}
         />
-      </td>
-      <td>
-        <label className="sr-only" htmlFor={`h-${id}`}>
-          {d.height}
-        </label>
+      </div>
+      <div className="label-format-size">
+        <label htmlFor={`h-${id}`}>{d.height}</label>
         <input
           id={`h-${id}`}
           inputMode="decimal"
           value={height}
           disabled={!canEdit || frozen}
           onChange={(e) => setHeight(e.target.value)}
-          style={{ width: '5em' }}
         />
-      </td>
-      <td>
-        {canEdit && (
+      </div>
+      {canEdit && (
+        <div className="label-format-actions row wrap">
           <Button
             variant="secondary"
             disabled={action.busy || action.needsReload}
@@ -143,21 +126,27 @@ function FormatRow({
                 ? intake.retry
                 : d.saveFormat}
           </Button>
-        )}
-        {canEdit && action.needsReload && (
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => window.location.reload()}
-          >
-            {intake.reload}
-          </Button>
-        )}
-        {(invalid || action.error) && (
-          <span role="alert"> {invalid ? d.formatInvalid : action.error}</span>
-        )}
-        {saved && <span role="status"> {d.formatSaved}</span>}
-      </td>
-    </tr>
+          {action.needsReload && (
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => window.location.reload()}
+            >
+              {intake.reload}
+            </Button>
+          )}
+        </div>
+      )}
+      {(invalid || action.error) && (
+        <p role="alert" className="label-format-message error">
+          {invalid ? d.formatInvalid : action.error}
+        </p>
+      )}
+      {saved && (
+        <p role="status" className="label-format-message">
+          {d.formatSaved}
+        </p>
+      )}
+    </div>
   )
 }

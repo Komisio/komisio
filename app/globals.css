@@ -41,11 +41,51 @@ summary {
 .label-template-editor > * {
   min-width: 0;
 }
-/* Label sizes: the kind stays on one line; on a phone the table scrolls
-   inside its own wrapper rather than breaking names letter by letter. */
-.label-formats-table th,
-.label-formats-table td:first-child {
-  white-space: nowrap;
+/* Label sizes: one group per kind. A phone stacks kind, the two sizes side by
+   side, then action and message, all inside the viewport; a desktop lays the
+   same group out as one row. */
+.label-formats {
+  display: grid;
+  gap: 4px;
+}
+.label-format {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 12px;
+  align-items: end;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+.label-format-kind {
+  grid-column: 1 / -1;
+  font-weight: 600;
+}
+.label-format-kind small {
+  font-weight: 400;
+}
+.label-format-size label {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+.label-format-actions,
+.label-format-message {
+  grid-column: 1 / -1;
+}
+.label-format-message {
+  margin: 0;
+}
+@media (min-width: 700px) {
+  .label-format {
+    grid-template-columns: minmax(0, 1fr) 7em 7em auto;
+  }
+  .label-format-kind,
+  .label-format-actions {
+    grid-column: auto;
+  }
+  .label-format-kind {
+    align-self: center;
+  }
 }
 /* The ZPL editor folds away behind its heading: a visible disclosure mark,
    a 44px row, keyboard focus ring. */

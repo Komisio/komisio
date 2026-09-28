@@ -253,7 +253,7 @@ export function PayoutDecision({
     <form onSubmit={submit}>
       <fieldset
         className="intake-fields"
-        disabled={action.busy || action.locked || done}
+        disabled={action.busy || action.locked || action.needsReload || done}
       >
         {status === 'approved' && (
           <div className="field">
@@ -272,6 +272,15 @@ export function PayoutDecision({
         </div>
       </fieldset>
       {action.error && <p role="alert">{action.error}</p>}
+      {action.needsReload && (
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => window.location.reload()}
+        >
+          {intake.reload}
+        </Button>
+      )}
       {!done && (
         <div className="row">
           {status === 'requested' ? (

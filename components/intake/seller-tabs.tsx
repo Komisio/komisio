@@ -46,14 +46,26 @@ export function SellerTabs({
     const list = strip.current
     const tab = document.getElementById('seller-tab-' + selected)
     if (!list || !tab) return
-    // The strip is positioned, so the tab's offsetLeft is relative to it.
-    const pad = 12
-    const left = tab.offsetLeft
-    const right = left + tab.offsetWidth
-    if (left - pad < list.scrollLeft)
-      list.scrollTo({ left: Math.max(0, left - pad) })
-    else if (right + pad > list.scrollLeft + list.clientWidth)
-      list.scrollTo({ left: right + pad - list.clientWidth })
+    const reveal = () => {
+      // The strip is positioned, so the tab's offsetLeft is relative to it.
+      const pad = 12
+      const left = tab.offsetLeft
+      const right = left + tab.offsetWidth
+      if (left - pad < list.scrollLeft)
+        list.scrollTo({ left: Math.max(0, left - pad) })
+      else if (right + pad > list.scrollLeft + list.clientWidth)
+        list.scrollTo({ left: right + pad - list.clientWidth })
+    }
+    reveal()
+    // A narrower window or a turned phone changes the strip's width without
+    // changing the selection; reveal again when the strip itself resizes.
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', reveal)
+      return () => window.removeEventListener('resize', reveal)
+    }
+    const observer = new ResizeObserver(reveal)
+    observer.observe(list)
+    return () => observer.disconnect()
   }, [selected])
   function select(tab: SellerTab) {
     window.history.pushState(null, '', '#seller-' + tab)

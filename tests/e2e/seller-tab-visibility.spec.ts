@@ -131,6 +131,32 @@ test('the selected seller tab stays visible inside the tab strip on a phone', as
       'aria-selected',
       'true',
     )
+    // Selecting the last tab on a wide screen and then turning the phone or
+    // narrowing the window keeps the selected tab in the strip: the selection
+    // and the hash do not change, only the width does.
+    await page.setViewportSize({ width: 1000, height: 720 })
+    await page.getByRole('tab').last().click()
+    await expect(page).toHaveURL(/#seller-details$/)
+    await expect
+      .poll(async () => (await selectedWithinStrip(page)).inside)
+      .toBe(true)
+    await page.setViewportSize({ width: 320, height: 720 })
+    await expect(page).toHaveURL(/#seller-details$/)
+    await expect(page.getByRole('tab').last()).toHaveAttribute(
+      'aria-selected',
+      'true',
+    )
+    await expect
+      .poll(async () => {
+        const r = await selectedWithinStrip(page)
+        return `${r.inside} tab ${Math.round(r.tab.x)}..${Math.round(r.tab.x + r.tab.width)} strip ${Math.round(r.strip.x)}..${Math.round(r.strip.x + r.strip.width)}`
+      })
+      .toMatch(/^true /)
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
   } finally {
     await f.close()
   }

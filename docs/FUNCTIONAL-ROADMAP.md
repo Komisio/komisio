@@ -10,8 +10,8 @@ This exclusion does not remove ordinary agreed return/donation workflows.
 
 ## Current delivery baseline (2026-09-28)
 
-PRs 270–290 are deployed to production. Staging additionally includes PRs
-291–312; those changes retain the production staging-observation gate.
+PRs 270–290 are deployed to production. Subsequent improvements are delivered
+through staging and retain the production staging-observation gate.
 Staff item and seller lists, seller-owned items and announced handovers
 support bounded search and pagination. Receiving supports contact-based
 seller lookup and direct item-label resolution. Seller handovers have an
@@ -58,6 +58,13 @@ returned command identity before confirming a seller or handover. Photo
 recovery retains the same session, upload and source identifiers and keeps
 an unresolved photo from becoming a silently photo-free item. These are
 recovery guarantees within the mounted form, not persistence across reloads.
+
+Store-owned purchase history is paged, including older receipts that have not
+yet been accepted. Printing settings fit narrow screens, and the custom label
+editor starts collapsed while retaining unsaved edits. An unconfirmed custom
+template publication requires reloading and checking the current template.
+Route error recovery follows the document language and re-fetches server
+content when retried.
 
 Next: complete the remaining hosted and hardware acceptance
 with the required operator access. Space booking still requires the unresolved

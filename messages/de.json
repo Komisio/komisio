@@ -1627,7 +1627,8 @@
     "browserBack": "Zurück zum Artikel",
     "browserHint": "Das Etikett ist 80 mm breit und kann auf normalem Papier gedruckt werden. Wählen Sie im Druckdialog 100 % Skalierung und deaktivieren Sie Kopf- und Fußzeilen.",
     "browserPrint": "Etikett drucken",
-    "browserUnavailable": "Das Etikett ist gerade nicht verfügbar. Kehren Sie zum Artikel zurück und versuchen Sie es erneut."
+    "browserUnavailable": "Das Etikett ist gerade nicht verfügbar. Kehren Sie zum Artikel zurück und versuchen Sie es erneut.",
+    "printerUncertain": "Die Druckeränderung konnte nicht bestätigt werden. Lade die Seite neu und prüfe die gespeicherten Einstellungen, bevor du fortfährst."
   },
   "purchases": {
     "title": "Einkäufe",

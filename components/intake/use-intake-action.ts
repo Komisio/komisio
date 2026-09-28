@@ -19,6 +19,11 @@ export function useIntakeAction(d: Dictionary['intake']) {
       setError(d.invalid)
       return null
     }
+    const settingsCommand =
+      command.data.action === 'registerPrinter' ||
+      command.data.action === 'publishStoreProfile'
+        ? command.data
+        : null
     pending.current = command.data
     running.current = true
     setLocked(true)
@@ -32,6 +37,15 @@ export function useIntakeAction(d: Dictionary['intake']) {
       })
       const result = await response.json()
       if (!response.ok) {
+        // A failed server/proxy response cannot confirm that a settings write
+        // was rejected, even if it carries a familiar validation code.
+        if (
+          settingsCommand &&
+          (response.status < 400 || response.status >= 500)
+        ) {
+          setError(d.failed)
+          return null
+        }
         // These answered transfer refusals mean the displayed item or chain
         // can no longer support this command. Keep its identity frozen and
         // inspect current facts instead of offering an endless retry. A 5xx
@@ -127,6 +141,15 @@ export function useIntakeAction(d: Dictionary['intake']) {
                             : d.failed,
         )
         if (result.error === 'AGREEMENT_REQUIRED') router.refresh()
+        return null
+      }
+      // These two RPCs return exactly the submitted row ID. Other intake
+      // commands have different result shapes (for example a transfer object).
+      if (
+        settingsCommand &&
+        (result?.ok !== true || result?.id !== settingsCommand.requestId)
+      ) {
+        setError(d.failed)
         return null
       }
       pending.current = null

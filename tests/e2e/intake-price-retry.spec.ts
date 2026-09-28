@@ -137,3 +137,140 @@ for (const action of ['registerPurchase', 'acceptItem'] as const)
       await f.close()
     }
   })
+
+for (const action of ['registerPurchase', 'acceptItem'] as const)
+  test(`${action} validates freshly edited fields after an answered refusal`, async ({
+    page,
+  }) => {
+    const email = `intake-price-correction-${randomUUID()}@example.test`
+    await register(page, email, `K!${randomBytes(16).toString('hex')}`)
+    const f = await p2Fixture(email)
+    try {
+      const origin = randomUUID()
+      if (action === 'acceptItem')
+        await f.db.query('select register_purchase($1,$2,$3,$4,$5,false)', [
+          f.tenant,
+          origin,
+          'Synthetic corrected acceptance',
+          10000,
+          'Synthetic evidence',
+        ])
+      await f.commit()
+      await page.goto('/intake/purchases')
+      const form = page.locator('form').filter({
+        has: page.locator(
+          action === 'registerPurchase'
+            ? '#purchase-price'
+            : `#accept-price-${origin}`,
+        ),
+      })
+      const price = form.getByLabel(
+        action === 'registerPurchase' ? d.purchases.price : d.items.price,
+        { exact: true },
+      )
+      await price.fill('100')
+      if (action === 'registerPurchase') {
+        await form
+          .getByLabel(d.purchases.evidence, { exact: true })
+          .fill('Synthetic initial evidence')
+        await form.locator('input[type="checkbox"][required]').check()
+      } else await form.getByRole('checkbox').check()
+      const requests: Record<string, unknown>[] = []
+      await page.route('**/api/intake', async (route) => {
+        const command = route.request().postDataJSON()
+        if (command?.action !== action) return route.continue()
+        requests.push(command)
+        // A known, answered rejection before any engine write is correctable.
+        if (requests.length === 1)
+          await route.fulfill({
+            status: 400,
+            contentType: 'application/json',
+            body: JSON.stringify({ error: 'INVALID_INPUT' }),
+          })
+        else await route.continue()
+      })
+      const save = form.getByRole('button', {
+        name:
+          action === 'registerPurchase' ? d.purchases.register : d.items.accept,
+        exact: true,
+      })
+      await save.click()
+      await expect(form.getByRole('alert')).toHaveText(d.intake.invalid)
+      await expect(price).toBeEnabled()
+      expect(
+        (
+          await f.db.query(
+            action === 'registerPurchase'
+              ? 'select count(*)::integer n from purchase_receipts where tenant_id=$1'
+              : 'select count(*)::integer n from items where tenant_id=$1',
+            [f.tenant],
+          )
+        ).rows[0].n,
+      ).toBe(0)
+      await price.fill('225,75')
+      if (action === 'registerPurchase')
+        await form
+          .getByLabel(d.purchases.evidence, { exact: true })
+          .fill('Synthetic corrected evidence')
+      await save.click()
+      await expect.poll(() => requests.length).toBe(2)
+      expect(requests[1].requestId).toBe(requests[0].requestId)
+      expect(
+        requests[1][action === 'registerPurchase' ? 'purchasePrice' : 'price'],
+      ).toBe('225.75')
+      if (action === 'registerPurchase') {
+        await expect(form.getByRole('status')).toHaveText(
+          d.purchases.registered,
+        )
+        expect(
+          (
+            await f.db.query(
+              'select purchase_price_ore::text,evidence_reference from purchase_receipts where tenant_id=$1',
+              [f.tenant],
+            )
+          ).rows,
+        ).toEqual([
+          {
+            purchase_price_ore: '22575',
+            evidence_reference: 'Synthetic corrected evidence',
+          },
+        ])
+        // A later purchase is a new command and must not reuse the old fields.
+        await price.fill('50')
+        await form
+          .getByLabel(d.purchases.evidence, { exact: true })
+          .fill('Synthetic next evidence')
+        await form.locator('input[type="checkbox"][required]').check()
+        await save.click()
+        await expect.poll(() => requests.length).toBe(3)
+        expect(requests[2].requestId).not.toBe(requests[1].requestId)
+        expect(requests[2].purchasePrice).toBe('50.00')
+        await expect
+          .poll(async () =>
+            Number(
+              (
+                await f.db.query(
+                  'select count(*)::integer n from purchase_receipts where tenant_id=$1',
+                  [f.tenant],
+                )
+              ).rows[0].n,
+            ),
+          )
+          .toBe(2)
+      } else {
+        await expect(
+          page.getByRole('link', { name: new RegExp(d.items.open) }),
+        ).toHaveAttribute('href', `/intake/items/${requests[1].requestId}`)
+        expect(
+          (
+            await f.db.query(
+              'select price_ore::text from item_prices where tenant_id=$1',
+              [f.tenant],
+            )
+          ).rows,
+        ).toEqual([{ price_ore: '22575' }])
+      }
+    } finally {
+      await f.close()
+    }
+  })

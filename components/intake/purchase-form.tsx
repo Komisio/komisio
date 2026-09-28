@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import { exactPrice } from '@/lib/engine/manual-reception'
@@ -20,10 +20,16 @@ export function PurchaseForm({
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
   const [saved, setSaved] = useState<string | null>(null)
   const [priceError, setPriceError] = useState('')
+  const submittedFields = useRef<FormData | null>(null)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const form = event.currentTarget,
-      fields = new FormData(form)
+      // Disabled fields are absent from new FormData. Validate the original
+      // values on a locked retry, then let the action replay its frozen command.
+      fields =
+        action.locked && submittedFields.current
+          ? submittedFields.current
+          : new FormData(form)
     setPriceError('')
     let purchasePrice: string
     try {
@@ -32,6 +38,7 @@ export function PurchaseForm({
       setPriceError(d.priceInvalid)
       return
     }
+    submittedFields.current = fields
     const id = await action.run({
       action: 'registerPurchase',
       tenantId,
@@ -42,6 +49,7 @@ export function PurchaseForm({
       marginEligible: fields.get('margin') === 'on',
     })
     if (id) {
+      submittedFields.current = null
       setSaved(id)
       setRequestId(crypto.randomUUID())
       form.reset()

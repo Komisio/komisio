@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import { statementPeriodDates } from '@/lib/intake/statement-period'
@@ -28,9 +28,15 @@ export function StatementForm({
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
   const [invalid, setInvalid] = useState('')
   const [issued, setIssued] = useState<string | null>(null)
+  const submittedFields = useRef<FormData | null>(null)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const f = new FormData(event.currentTarget)
+    // Keep closed-period validation on the submitted dates during a locked
+    // retry: disabled date inputs are not included by a new FormData.
+    const f =
+      action.locked && submittedFields.current
+        ? submittedFields.current
+        : new FormData(event.currentTarget)
     let bounds
     try {
       bounds = statementPeriodDates(
@@ -55,8 +61,10 @@ export function StatementForm({
     })
     setInvalid(candidate.success ? '' : intake.invalid)
     if (!candidate.success) return
+    submittedFields.current = f
     const id = await action.run(candidate.data)
     if (id) {
+      submittedFields.current = null
       setIssued(id)
       setRequestId(crypto.randomUUID())
       router.refresh()

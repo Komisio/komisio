@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import type { OriginKind } from '@/lib/engine/items'
@@ -29,17 +29,25 @@ export function AcceptItemForm({
   const router = useRouter()
   const [requestId] = useState(() => crypto.randomUUID())
   const [priceError, setPriceError] = useState('')
+  const submittedFields = useRef<FormData | null>(null)
   const [saved, setSaved] = useState<string | null>(null)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setPriceError('')
+    // A disabled fieldset is omitted by FormData. Keep the submitted values
+    // available for local validation while the action owns a frozen retry.
+    const fields =
+      action.locked && submittedFields.current
+        ? submittedFields.current
+        : new FormData(event.currentTarget)
     let price: string
     try {
-      price = exactPrice(String(new FormData(event.currentTarget).get('price')))
+      price = exactPrice(String(fields.get('price')))
     } catch {
       setPriceError(d.priceInvalid)
       return
     }
+    submittedFields.current = fields
     const id = await action.run({
       action: 'acceptItem',
       tenantId,
@@ -50,6 +58,7 @@ export function AcceptItemForm({
       price,
     })
     if (id) {
+      submittedFields.current = null
       setSaved(id)
       router.refresh()
     }

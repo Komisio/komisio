@@ -153,6 +153,7 @@
     "busy": "Tallennetaan…",
     "failed": "Tulosta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla. Tarkista luettelo ennen kuin aloitat alusta.",
     "changed": "Aktiivinen kauppa vaihtui. Lataa tämä sivu uudelleen ennen kuin jatkat.",
+    "recordChanged": "Tiedot ovat muuttuneet sivun avaamisen jälkeen. Lataa sivu uudelleen ja tarkista uusin versio ennen kuin jatkat.",
     "denied": "Sinulla ei ole oikeutta. Lataa sivu uudelleen tarkistaaksesi käyttöoikeutesi.",
     "inspectionChanged": "Luonnos muuttui sen jälkeen, kun avasit sen. Muokkauksesi säilyvät täällä. Kopioi talteen haluamasi ennen kuin avaat nykyisen version.",
     "inspectionUnavailable": "Luonnoksen tila muuttui tai sitä ei voi enää muokata. Syötteesi säilyy täällä. Avaa nykyinen versio ennen kuin jatkat.",

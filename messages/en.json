@@ -153,6 +153,7 @@
     "busy": "Saving…",
     "failed": "Could not confirm the result. Retry with the same details. Check the list before starting again.",
     "changed": "The active store changed. Reload this page before continuing.",
+    "recordChanged": "The information has changed since you opened this page. Reload and review the current version before continuing.",
     "denied": "You do not have permission. Reload the page to check your access.",
     "inspectionChanged": "The draft changed after you opened it. Your edits remain here. Copy anything you want to keep before opening the current revision.",
     "inspectionUnavailable": "The draft status changed or it can no longer be edited. Your input remains here. Open the current version before continuing.",

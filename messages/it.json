@@ -153,6 +153,7 @@
     "busy": "Salvataggio…",
     "failed": "Impossibile confermare il risultato. Riprova con gli stessi dati. Controlla l'elenco prima di ricominciare.",
     "changed": "Il negozio attivo è cambiato. Ricarica questa pagina prima di continuare.",
+    "recordChanged": "Le informazioni sono cambiate da quando hai aperto questa pagina. Ricaricala e controlla la versione attuale prima di continuare.",
     "denied": "Non hai i permessi. Ricarica la pagina per verificare il tuo accesso.",
     "inspectionChanged": "La bozza è cambiata dopo che l'hai aperta. Le tue modifiche restano qui. Copia ciò che vuoi conservare prima di aprire la revisione attuale.",
     "inspectionUnavailable": "Lo stato della bozza è cambiato o non è più modificabile. I tuoi dati restano qui. Apri la versione attuale prima di continuare.",

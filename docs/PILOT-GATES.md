@@ -31,16 +31,21 @@ sweep fails in CI.
 
 ## Seller data export
 
-`seller_data_export(tenant, seller)` returns every row Komisio holds about
+`seller_data_export(tenant, seller)` returns recorded information about
 one seller in one JSON document: the seller record, terms versions,
 agreement evidence, notification preferences, announced handovers and their
 event history, bags and their inspection
-drafts, receptions with their source revisions, reviews and garments, items
+drafts, receptions with their source revisions, reviews, seller responses and garments, items
 with events and prices, sale lines with their sale headers, returns, ledger
 entries, payouts with events, statements with lines, and communications.
 Tenant ids are stripped; nothing about other sellers is reachable. Owner or
 admin only; every call is an access event `seller.exported`. The seller page
 offers it as a download (`/api/sellers/<id>/export`) to owners and admins.
+
+Review responses include their id, review id, decision, responder and time.
+Review access events and token hashes, assistance metering, photo fingerprints
+and stored image files are not included. This documents the export contents;
+it does not replace review of a specific data request.
 
 Procedure for a data request: verify the requester is the seller (the store
 knows its sellers; the e-mail on file is the verified channel), download the

@@ -153,6 +153,7 @@
     "busy": "Guardando…",
     "failed": "No se pudo confirmar el resultado. Vuelve a intentarlo con los mismos datos. Comprueba la lista antes de empezar de nuevo.",
     "changed": "La tienda activa cambió. Recarga esta página antes de continuar.",
+    "recordChanged": "La información ha cambiado desde que abriste esta página. Recárgala y revisa la versión actual antes de continuar.",
     "denied": "No tienes permiso. Recarga la página para comprobar tu acceso.",
     "inspectionChanged": "El borrador cambió después de abrirlo. Tus cambios siguen aquí. Copia lo que quieras conservar antes de abrir la revisión actual.",
     "inspectionUnavailable": "El estado del borrador cambió o ya no se puede editar. Lo que has escrito sigue aquí. Abre la versión actual antes de continuar.",

@@ -37,6 +37,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
           'AGREEMENT_CHANGED',
           'POLICY_CHANGED',
           'PROFILE_CHANGED',
+          'SELLER_TERMS_CHANGED',
           'AGREEMENT_REQUIRED',
           'INSPECTION_DRAFT_CHANGED',
           'INSPECTION_ARCHIVED',
@@ -48,9 +49,12 @@ export function useIntakeAction(d: Dictionary['intake']) {
         }
         if (
           result.error === 'AGREEMENT_CHANGED' ||
-          ['TENANT_CHANGED', 'POLICY_CHANGED', 'PROFILE_CHANGED'].includes(
-            result.error,
-          ) ||
+          [
+            'TENANT_CHANGED',
+            'POLICY_CHANGED',
+            'PROFILE_CHANGED',
+            'SELLER_TERMS_CHANGED',
+          ].includes(result.error) ||
           result.error === 'INSPECTION_DRAFT_CHANGED' ||
           result.error === 'INSPECTION_CONTEXT_CHANGED' ||
           result.error === 'INSPECTION_ARCHIVED' ||
@@ -69,21 +73,25 @@ export function useIntakeAction(d: Dictionary['intake']) {
               ? d.inspectionChanged
               : result.error === 'INSPECTION_CONTEXT_CHANGED'
                 ? d.changed
-                : result.error === 'AGREEMENT_CHANGED'
-                  ? d.agreementChanged
-                  : result.error === 'AGREEMENT_REQUIRED'
-                    ? d.agreementRequired
-                    : result.error === 'INVALID_INPUT'
-                      ? d.invalid
-                      : [
-                            'TENANT_CHANGED',
-                            'POLICY_CHANGED',
-                            'PROFILE_CHANGED',
-                          ].includes(result.error)
-                        ? d.changed
-                        : ['FORBIDDEN', 'AUTH_REQUIRED'].includes(result.error)
-                          ? d.denied
-                          : d.failed,
+                : ['PROFILE_CHANGED', 'SELLER_TERMS_CHANGED'].includes(
+                      result.error,
+                    )
+                  ? d.recordChanged
+                  : result.error === 'AGREEMENT_CHANGED'
+                    ? d.agreementChanged
+                    : result.error === 'AGREEMENT_REQUIRED'
+                      ? d.agreementRequired
+                      : result.error === 'INVALID_INPUT'
+                        ? d.invalid
+                        : ['TENANT_CHANGED', 'POLICY_CHANGED'].includes(
+                              result.error,
+                            )
+                          ? d.changed
+                          : ['FORBIDDEN', 'AUTH_REQUIRED'].includes(
+                                result.error,
+                              )
+                            ? d.denied
+                            : d.failed,
         )
         if (result.error === 'AGREEMENT_REQUIRED') router.refresh()
         return null

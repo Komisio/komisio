@@ -4,7 +4,7 @@ import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 
-// Two admins edit the store profile. The second one, still holding the page
+// Two sessions edit the store profile. The second one, still holding the page
 // read before the first published, must not overwrite that version and must
 // be able to reload the current one from where they are.
 test('a stale store profile reloads the current version on the profile tab without writing', async ({
@@ -24,7 +24,7 @@ test('a stale store profile reloads the current version on the profile tab witho
     const city = form.locator('#profile-city')
     await expect(city).toBeEnabled()
     await city.fill('Unsubmitted synthetic city')
-    // Another admin publishes the first version after this page was read.
+    // A separate session publishes the first version after this page was read.
     const latest = 'Latest concurrent synthetic city'
     await f.asActor(f.actor, async () => {
       await f.db.query('select publish_store_profile($1,$2,null,$3::jsonb)', [

@@ -31,9 +31,15 @@ async function openEditor(
 async function openFold(page: Page) {
   await page.goto('/settings?tab=printing')
   await page.locator('details.label-templates-fold summary').click()
+  const e = openFoldLocators(page)
+  await expect(e.zpl).toBeVisible()
+  return e
+}
+
+/** Locators for the (already open) editor, valid across a refresh remount. */
+function openFoldLocators(page: Page) {
   const editor = page.locator('.label-template-editor')
   const zpl = editor.locator('textarea[id^="template-zpl-"]')
-  await expect(zpl).toBeVisible()
   return {
     editor,
     zpl,
@@ -174,7 +180,7 @@ test('a lost reset reply freezes the editor and a reload shows the built-in layo
   }
 })
 
-test('a confirmed reset that finds nothing active is reported, not hidden', async ({
+test('a reset that finds the built-in layout already restored shows the store, not the page memory', async ({
   page,
 }) => {
   const { f, ...e } = await openEditor(
@@ -183,20 +189,82 @@ test('a confirmed reset that finds nothing active is reported, not hidden', asyn
     { custom: true },
   )
   try {
-    // Synthetic: the route's exact shape for "nothing active to reset".
-    const seen = await replaceReply(
-      page,
-      'resetLabelTemplate',
-      { status: 200, body: { ok: true, id: false, notifications: [] } },
-      false,
+    await expect(e.editor).toContainText(`${d.printing.templateVersion} 1`)
+    // The same owner restores the built-in layout in another session while
+    // this page still shows version 1.
+    await f.asActor(f.actor, async () => {
+      const r = await f.db.query(
+        "select reset_label_template($1,'item') done",
+        [f.tenant],
+      )
+      expect(r.rows[0].done).toBe(true)
+    })
+    const answered = page.waitForResponse(
+      (r) =>
+        r.url().endsWith('/api/intake') &&
+        r.request().postDataJSON()?.action === 'resetLabelTemplate',
     )
     await e.reset.click()
-    await expect(e.status).toHaveText(d.printing.templateBuiltinHint)
-    await expect(e.alert).toHaveCount(0)
-    await expect(e.zpl).toBeEnabled()
+    const reply = await answered
+    expect(reply.status()).toBe(200)
+    expect((await reply.json()).id).toBe(false)
+    // Confirmed: the refreshed editor shows the built-in layout, no reset.
+    const after = openFoldLocators(page)
+    await expect(after.editor).toContainText(d.printing.templateBuiltinHint)
+    await expect(after.reset).toHaveCount(0)
+    await expect(after.zpl).toHaveValue('')
+    await expect(after.zpl).toBeEnabled()
+    await expect(after.alert).toHaveCount(0)
+    expect((await versions(f)).map((v) => [v.version, v.active])).toEqual([
+      [1, true],
+      [2, false],
+    ])
+  } finally {
+    await f.close()
+  }
+})
+
+test('while a save is in flight the editor and the kind switch wait for the outcome', async ({
+  page,
+}) => {
+  const { f, ...e } = await openEditor(
+    page,
+    `template-held-${randomUUID()}@example.test`,
+  )
+  try {
+    await e.zpl.fill(VALID)
+    // Hold the actual reply until the frozen state has been observed.
+    let release!: () => void
+    const held = new Promise<void>((resolve) => (release = resolve))
+    await page.route('**/api/intake', async (route) => {
+      if (route.request().postDataJSON()?.action !== 'setLabelTemplate')
+        return route.continue()
+      const response = await route.fetch()
+      await held
+      await route.fulfill({ response })
+    })
+    await e.save.click()
+    // The save button now reads "Saving…", so find it by its primary style.
+    const saving = e.editor.locator('.row.wrap button.btn-primary')
+    await expect(saving).toHaveText(d.intake.busy)
+    for (const control of [
+      e.zpl,
+      e.name,
+      e.copy,
+      saving,
+      e.kindSelect,
+      e.editor.getByRole('button', { name: d.printing.preview, exact: true }),
+    ])
+      await expect(control).toBeDisabled()
     await expect(e.reload).toHaveCount(0)
-    expect(seen.seen).toHaveLength(1)
-    expect(await versions(f)).toHaveLength(1)
+    release()
+    await expect(e.status).toHaveText(d.printing.templateSaved)
+    const after = openFoldLocators(page)
+    await expect(after.kindSelect).toBeEnabled()
+    await expect(after.editor).toContainText(`${d.printing.templateVersion} 1`)
+    expect(await versions(f)).toEqual([
+      { version: 1, active: true, zpl: VALID },
+    ])
   } finally {
     await f.close()
   }

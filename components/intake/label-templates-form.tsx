@@ -150,10 +150,13 @@ function TemplateEditor({
   const [pending, setPending] = useState<Pending>({ phase: 'idle', of: null })
   const busy = pending.phase === 'busy'
   const frozen = pending.phase === 'uncertain' || pending.phase === 'stale'
+  // The parent's kind switch remounts this editor; while a command is in
+  // flight or unresolved that would discard its outcome, so it waits too.
+  const locked = busy || frozen
   useEffect(() => {
-    onFrozen(frozen)
+    onFrozen(locked)
     return () => onFrozen(false)
-  }, [frozen, onFrozen])
+  }, [locked, onFrozen])
   const errors = d.templateErrors as Record<string, string>
   /** One command, one classified outcome; guarded against a second click. */
   async function send<T>(
@@ -274,8 +277,11 @@ function TemplateEditor({
       setMessage(d.templateReset)
       router.refresh()
     } else if (done === false) {
-      // Confirmed: nothing was active, the built-in layout already applies.
+      // Confirmed: nothing was active any more, someone else already restored
+      // the built-in layout. Show the store's state, not this page's memory.
+      setZpl('')
       setMessage(d.templateBuiltinHint)
+      router.refresh()
     }
   }
   return (
@@ -324,7 +330,7 @@ function TemplateEditor({
         <div className="row wrap">
           <Button
             variant="secondary"
-            disabled={previewing}
+            disabled={previewing || busy || frozen}
             onClick={() => void previewNow()}
           >
             {previewing ? d.previewing : d.preview}

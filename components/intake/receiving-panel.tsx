@@ -25,6 +25,8 @@ export function ReceivingPanel({
 }) {
   const router = useRouter()
   const pending = useRef<Record<string, unknown> | null>(null)
+  // A later refusal cannot settle an earlier request whose reply was lost.
+  const uncertain = useRef(false)
   const [locked, setLocked] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -101,6 +103,15 @@ export function ReceivingPanel({
       })
       const result = await response.json()
       if (!response.ok) {
+        if (
+          uncertain.current ||
+          response.status < 400 ||
+          response.status >= 500
+        ) {
+          uncertain.current = true
+          setError(d.failed)
+          return
+        }
         if (result.error === 'AGREEMENT_CHANGED') {
           pending.current = null
           setLocked(false)
@@ -121,6 +132,7 @@ export function ReceivingPanel({
           setError(d.invalid)
           return
         }
+        uncertain.current = true
         setError(
           result.error === 'TENANT_CHANGED'
             ? d.changed
@@ -130,7 +142,12 @@ export function ReceivingPanel({
         )
         return
       }
+      // Both commands return their request id. Missing or unrelated success
+      // data is not confirmation: retain the exact command for a safe replay.
+      if (result?.ok !== true || result.id !== command.requestId)
+        throw new Error('UNCONFIRMED_RECEIPT')
       pending.current = null
+      uncertain.current = false
       setLocked(false)
       setMatches(null)
       form.reset()
@@ -138,6 +155,7 @@ export function ReceivingPanel({
       else router.push(`/intake?seller=${result.id}#new-seller`)
       router.refresh()
     } catch {
+      uncertain.current = true
       setError(d.failed)
     } finally {
       setBusy(false)

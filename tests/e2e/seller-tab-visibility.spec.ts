@@ -97,7 +97,7 @@ test('the selected seller tab stays visible inside the tab strip on a phone', as
           })
       })
     }
-    // Clicking a tab button scrolls only the strip, never the page.
+    // Clicking preserves the existing hash navigation and panel visibility.
     await page
       .context()
       .addCookies([

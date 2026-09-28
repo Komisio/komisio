@@ -35,10 +35,41 @@ test('the label template editor fits a 320px phone in every language and keeps t
           },
         ])
         await page.goto('/settings?tab=printing')
+        const fold = page.locator('details.label-templates-fold')
+        const summary = fold.locator('summary')
         const editor = page.locator('.intake-grid').filter({
           has: page.locator('textarea[id^="template-zpl-"]'),
         })
         const zpl = editor.locator('textarea[id^="template-zpl-"]')
+        // Collapsed until asked for; the label sizes stay directly available.
+        await expect(fold).not.toHaveAttribute('open', '')
+        await expect(zpl).toBeHidden()
+        await expect(
+          page.locator('.label-formats-table td:first-child').first(),
+        ).toBeVisible()
+        await expect(summary).toHaveText(d.printing.templatesHeading)
+        expect(
+          (await summary.boundingBox())!.height,
+          `${locale} summary height`,
+        ).toBeGreaterThanOrEqual(44)
+        await page.screenshot({
+          path: testInfo.outputPath(`printing-320-${locale}-closed.png`),
+          fullPage: true,
+          caret: 'initial',
+        })
+        if (locale === 'sv')
+          await page.screenshot({
+            path: 'private/printing-320-closed.png',
+            fullPage: true,
+            caret: 'initial',
+          })
+        // Keyboard opens it: Enter for half the languages, Space for the rest.
+        await summary.focus()
+        await expect(summary).toBeFocused()
+        await page.keyboard.press(
+          locales.indexOf(locale) % 2 === 0 ? 'Enter' : 'Space',
+        )
+        await expect(fold).toHaveAttribute('open', '')
         await expect(zpl).toBeVisible()
         expect(
           await page.evaluate(
@@ -83,16 +114,23 @@ test('the label template editor fits a 320px phone in every language and keeps t
         await zpl.fill('^XA^FDsynthetic^FS^XZ')
         await expect(zpl).toHaveValue('^XA^FDsynthetic^FS^XZ')
         await page.screenshot({
-          path: testInfo.outputPath(`printing-320-${locale}.png`),
+          path: testInfo.outputPath(`printing-320-${locale}-open.png`),
           fullPage: true,
           caret: 'initial',
         })
         if (locale === 'sv')
           await page.screenshot({
-            path: 'private/printing-320-after.png',
+            path: 'private/printing-320-open.png',
             fullPage: true,
             caret: 'initial',
           })
+        // Closing and reopening keeps the unsaved text: the editor stays mounted.
+        await summary.click()
+        await expect(fold).not.toHaveAttribute('open', '')
+        await expect(zpl).toBeHidden()
+        await summary.click()
+        await expect(zpl).toBeVisible()
+        await expect(zpl).toHaveValue('^XA^FDsynthetic^FS^XZ')
       })
     }
     // Desktop keeps the editor and the preview side by side.
@@ -101,6 +139,7 @@ test('the label template editor fits a 320px phone in every language and keeps t
     const editor = page.locator('.intake-grid').filter({
       has: page.locator('textarea[id^="template-zpl-"]'),
     })
+    await page.locator('details.label-templates-fold summary').click()
     await expect(editor.locator('textarea[id^="template-zpl-"]')).toBeVisible()
     expect(
       await editor.evaluate(

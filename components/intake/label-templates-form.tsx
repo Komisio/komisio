@@ -33,9 +33,14 @@ export function LabelTemplatesForm({
   intake: Dictionary['intake']
 }) {
   const [kind, setKind] = useState<Kind>('item')
+  // Expert territory: collapsed until asked for, so the printing tab on a phone
+  // is mostly the everyday controls. The editor stays mounted while closed, so
+  // typed but unsaved work survives closing and reopening.
   return (
-    <div>
-      <h3>{d.templatesHeading}</h3>
+    <details className="label-templates-fold">
+      <summary>
+        <h3>{d.templatesHeading}</h3>
+      </summary>
       <p>{d.templatesIntro}</p>
       <div className="field">
         <label htmlFor="template-kind">{d.formatKind}</label>
@@ -65,7 +70,7 @@ export function LabelTemplatesForm({
         d={d}
         intake={intake}
       />
-    </div>
+    </details>
   )
 }
 

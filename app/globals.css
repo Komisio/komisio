@@ -35,10 +35,10 @@ summary {
   gap: 24px;
   margin-bottom: 24px;
 }
-/* A column may shrink below its content's intrinsic width (a textarea's
-   default cols, a long button row), so a phone gets one narrow column
-   instead of a page that scrolls sideways. */
-.intake-grid > * {
+/* The label template editor's columns may shrink below their content's
+   intrinsic width (a textarea's default cols, a long button row), so a phone
+   gets one narrow column instead of a page that scrolls sideways. */
+.label-template-editor > * {
   min-width: 0;
 }
 /* Label sizes: the kind stays on one line; on a phone the table scrolls

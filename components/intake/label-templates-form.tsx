@@ -161,7 +161,7 @@ function TemplateEditor({
     }
   }
   return (
-    <div className="intake-grid">
+    <div className="intake-grid label-template-editor">
       <div>
         <p>
           {current

@@ -9,6 +9,10 @@ import {
 import { Button } from '@/components/ui/button'
 import { PublishReview } from './operator'
 import { prepareReceptionBatch } from '@/lib/assistance/reception-batch'
+import {
+  assistanceErrorMessage,
+  assistanceShownMessage,
+} from '@/lib/assistance/messages'
 import { BatchReview } from './batch-review'
 
 export function ReceptionAssistance({
@@ -104,17 +108,7 @@ export function ReceptionAssistance({
               })
               const result = await response.json()
               if (!response.ok)
-                throw new Error(
-                  result.error === 'ASSISTANCE_LIMIT'
-                    ? d.aiLimit
-                    : result.error === 'USAGE_QUOTA_EXCEEDED'
-                      ? d.aiQuota
-                      : result.error === 'AI_CREDITS_EXHAUSTED'
-                        ? d.aiCredits
-                        : result.error === 'AI_CAP_REACHED'
-                          ? d.aiCap
-                          : d.aiFailed,
-                )
+                throw new Error(assistanceErrorMessage(result.error, d))
               if (result.status === 'unavailable')
                 throw new Error(d.aiUnavailable)
               if (mode === 'batch') {
@@ -154,12 +148,9 @@ export function ReceptionAssistance({
                 throw new Error(d.aiFailed)
               setCandidate(proposal.suggestions)
             } catch (e) {
-              setError(
-                e instanceof Error &&
-                  [d.aiLimit, d.aiUnavailable].includes(e.message)
-                  ? e.message
-                  : d.aiFailed,
-              )
+              // Only the translated limit and availability texts are shown
+              // as they are; any other message becomes the generic one.
+              setError(assistanceShownMessage(e, d))
             } finally {
               running.current = false
               setBusy(false)

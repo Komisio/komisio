@@ -40,13 +40,14 @@ test('a lost transfer response can be retried with its original destination and 
     await note.fill('Synthetic destination note')
     const requests: Record<string, unknown>[] = []
     let bagId = ''
+    let firstStatus = 0
     await page.route('**/api/intake', async (route) => {
       const command = route.request().postDataJSON()
       if (command?.action !== 'transferItem') return route.continue()
       requests.push(command)
       if (requests.length === 1) {
         const response = await route.fetch()
-        expect(response.ok()).toBe(true)
+        firstStatus = response.status()
         bagId = (await response.json()).id.bagId
         await route.fulfill({
           status: 503,
@@ -59,6 +60,12 @@ test('a lost transfer response can be retried with its original destination and 
       .getByRole('button', { name: d.items.transfer, exact: true })
       .click()
     await expect(form.getByRole('alert')).toHaveText(d.intake.failed)
+    expect(firstStatus).toBe(200)
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true)
     const retry = form.getByRole('button', {
       name: d.intake.retry,
       exact: true,
@@ -66,7 +73,18 @@ test('a lost transfer response can be retried with its original destination and 
     await expect(retry).toBeEnabled()
     await expect(destination).toBeDisabled()
     await expect(note).toBeDisabled()
+    const replay = page.waitForResponse(
+      (r) =>
+        r.url().endsWith('/api/intake') &&
+        r.request().postDataJSON()?.action === 'transferItem',
+    )
     await retry.click()
+    const replayResponse = await replay
+    expect(replayResponse.status()).toBe(200)
+    expect((await replayResponse.json()).id).toMatchObject({
+      replayed: true,
+      bagId,
+    })
     await expect(
       page.getByRole('status').filter({
         hasText: d.items.transferDone.replace('{store}', targetName),

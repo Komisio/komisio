@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import { adjustSellerLedgerCommand } from '@/lib/engine/seller-ledger'
@@ -23,10 +23,16 @@ export function LedgerAdjustForm({
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
   const [invalid, setInvalid] = useState(false)
   const [saved, setSaved] = useState(false)
+  const submittedFields = useRef<FormData | null>(null)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const form = event.currentTarget,
-      f = new FormData(form)
+      // Locked controls are absent from FormData; validate the original
+      // fields while the action replays its frozen command.
+      f =
+        action.locked && submittedFields.current
+          ? submittedFields.current
+          : new FormData(form)
     const raw = String(f.get('amount') ?? '')
       .trim()
       .replace(',', '.')
@@ -41,7 +47,9 @@ export function LedgerAdjustForm({
     })
     setInvalid(!candidate.success)
     if (!candidate.success) return
+    submittedFields.current = f
     if (await action.run(candidate.data)) {
+      submittedFields.current = null
       setSaved(true)
       setRequestId(crypto.randomUUID())
       form.reset()

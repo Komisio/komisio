@@ -115,7 +115,17 @@
     "sellerSearchRetry": "Prøv igen",
     "sellerSearchRange": "Viser {from}–{to} af {total} sælgere",
     "sellerSearchPrevious": "Forrige",
-    "sellerSearchNext": "Næste"
+    "sellerSearchNext": "Næste",
+    "createType": "Ny varetype",
+    "typeName": "Varetypens navn",
+    "typeFields": "Brug de samme felter som",
+    "typeBasic": "Kun beskrivelse",
+    "typeCreateSelect": "Opret og vælg",
+    "typeCancel": "Annuller",
+    "typeRetry": "Prøv igen",
+    "typeInvalid": "Angiv et navn, og vælg gyldige felter.",
+    "typeUncertain": "Lagringen kunne ikke bekræftes. Prøv igen med de samme oplysninger. Varen er bevaret.",
+    "typeRefused": "Varetypen kunne ikke gemmes nu. Annuller, og kontrollér butik og adgang. Varens oplysninger er bevaret."
   },
   "intake": {
     "quickLink": "Hurtig modtagelse: én skærm pr. stykke tøj",
@@ -978,7 +988,7 @@
     "acceptedAt": "Accepteret",
     "openOrigin": "Åbn oprindelse",
     "terms": "Fastfrosne vilkår",
-    "termsHint": "Registreret ved accept og aldrig ændret. Senere politik eller indleverervilkår gælder kun senere varer.",
+    "termsHint": "Vilkårene blev gemt, da varen blev accepteret, og gælder uændret for denne vare.",
     "commission": "Butikkens kommission",
     "purchasePrice": "Indkøbspris",
     "salePeriod": "Salgsperiode",
@@ -1185,14 +1195,15 @@
     "print": "Udskriv afregning",
     "empty": "Ingen afregninger udstedt endnu.",
     "issueHeading": "Udsted en afregning",
-    "issueHint": "Hele dage i lokal tid; perioden må ikke overlappe en tidligere afregning. Det næste nummer tildeles ved udstedelse.",
+    "issueHint": "Perioden må ikke overlappe en tidligere afregning. Nummeret tildeles, når afregningen udstedes.",
     "from": "Fra",
     "to": "Til (inklusive)",
     "confirm": "Jeg vil udstede den næste nummererede afregning for denne periode.",
     "issue": "Udsted afregning",
     "issued": "Afregningen er udstedt.",
     "open": "Åbn afregning",
-    "closedPeriodHint": "Slutdatoen skal være i går eller tidligere."
+    "closedPeriodHint": "Slutdatoen skal være i går eller tidligere.",
+    "issueInfo": "Om afregningen"
   },
   "handovers": {
     "title": "Forhåndsanmeldelser",
@@ -2565,7 +2576,9 @@
     "save": "Gem oplysninger",
     "saved": "Oplysningerne er gemt.",
     "history": "Ændringshistorik",
-    "emailHint": "Kontrollér e-mailadressen. Den bruges til beskeder og sælgerens adgang."
+    "emailHint": "Kontrollér e-mailadressen. Den bruges til beskeder og sælgerens adgang.",
+    "moreFields": "Flere felter",
+    "nationalId": "CPR-nummer (valgfrit)"
   },
   "bagIntake": {
     "intro": "Tag én vare ad gangen. Tilføj et billede for hjælp til oplysningerne, kontrollér beskrivelse og pris, og gem.",

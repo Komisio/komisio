@@ -115,7 +115,17 @@
     "sellerSearchRetry": "Reintentar",
     "sellerSearchRange": "Mostrando {from}–{to} de {total} vendedores",
     "sellerSearchPrevious": "Anterior",
-    "sellerSearchNext": "Siguiente"
+    "sellerSearchNext": "Siguiente",
+    "createType": "Nuevo tipo de artículo",
+    "typeName": "Nombre del tipo de artículo",
+    "typeFields": "Usar los mismos campos que",
+    "typeBasic": "Solo descripción",
+    "typeCreateSelect": "Crear y seleccionar",
+    "typeCancel": "Cancelar",
+    "typeRetry": "Reintentar",
+    "typeInvalid": "Introduce un nombre y elige campos válidos.",
+    "typeUncertain": "No se pudo confirmar el guardado. Reintenta con los mismos datos. El artículo se conserva.",
+    "typeRefused": "No se pudo guardar el tipo de artículo en este contexto. Cancela y comprueba la tienda y los permisos. Los datos del artículo se conservan."
   },
   "intake": {
     "quickLink": "Recepción rápida: una pantalla por prenda",
@@ -978,7 +988,7 @@
     "acceptedAt": "Aceptado",
     "openOrigin": "Abrir origen",
     "terms": "Condiciones congeladas",
-    "termsHint": "Registradas en la aceptación y nunca modificadas. Las políticas o condiciones del depositante posteriores se aplican solo a artículos posteriores.",
+    "termsHint": "Las condiciones guardadas al aceptar este artículo se mantienen sin cambios para él.",
     "commission": "Comisión de la tienda",
     "purchasePrice": "Precio de compra",
     "salePeriod": "Periodo de venta",
@@ -1185,14 +1195,15 @@
     "print": "Imprimir liquidación",
     "empty": "Aún no se han emitido liquidaciones.",
     "issueHeading": "Emitir una liquidación",
-    "issueHint": "Días completos en hora local; el periodo no puede solaparse con una liquidación anterior. El siguiente número se asigna al emitir.",
+    "issueHint": "El período no puede solaparse con una liquidación anterior. El número se asigna al emitirla.",
     "from": "Desde",
     "to": "Hasta (inclusive)",
     "confirm": "Quiero emitir la siguiente liquidación numerada para este periodo.",
     "issue": "Emitir liquidación",
     "issued": "La liquidación está emitida.",
     "open": "Abrir liquidación",
-    "closedPeriodHint": "La fecha final debe ser ayer o anterior."
+    "closedPeriodHint": "La fecha final debe ser ayer o anterior.",
+    "issueInfo": "Sobre la liquidación"
   },
   "handovers": {
     "title": "Entregas anunciadas",
@@ -2565,7 +2576,9 @@
     "save": "Guardar datos",
     "saved": "Datos guardados.",
     "history": "Historial de cambios",
-    "emailHint": "Comprueba el correo electrónico. Se utiliza para los mensajes y el acceso del vendedor."
+    "emailHint": "Comprueba el correo electrónico. Se utiliza para los mensajes y el acceso del vendedor.",
+    "moreFields": "Más campos",
+    "nationalId": "Número de identificación personal (opcional)"
   },
   "bagIntake": {
     "intro": "Revisa un artículo a la vez. Añade una foto si quieres ayuda con los datos, comprueba la descripción y el precio y guarda.",

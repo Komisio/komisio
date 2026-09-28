@@ -96,8 +96,9 @@ export function SellerProfileForm({
           <small>{d.emailHint}</small>
         </p>
         <details className="seller-disclosure">
-          <summary>{d.address}</summary>
+          <summary>{d.moreFields}</summary>
           <div className="seller-disclosure-body">
+            {field('nationalId', d.nationalId, 40)}
             {field('addressLine1', d.street, 160)}
             {field('addressLine2', d.addressExtra, 160)}
             <div className="seller-profile-fields">

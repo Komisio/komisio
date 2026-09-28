@@ -59,6 +59,10 @@ for (const currency of ['SEK', 'USD']) {
       await expect(
         terms.getByText(d.items.termsHint, { exact: true }),
       ).toBeVisible()
+      await page.screenshot({
+        path: testInfo.outputPath('item-terms-mobile.png'),
+        fullPage: true,
+      })
       await summary.click()
       const history = page.locator('details').filter({
         has: page.locator('summary').filter({ hasText: d.items.prices }),

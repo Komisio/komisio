@@ -752,3 +752,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-28: Manual label retries retain the exact printer, copies and job identity after an uncertain reply. Only a matching successful job confirmation unlocks another print; answered stale-context refusals require reload. A first validation refusal remains correctable.
 
 - 2026-09-28: An uncertain label-size save requires reloading the current dimensions before another write; set_label_format has no replay identity. A successful response must match the submitted kind and dimensions.
+- 2026-09-28: Owners/admins may create a store item type during reception and select it without leaving the item. Creation uses an actor-bound request ID, replays only matching content and never overwrites a later edit. Staff vocabulary permissions remain unchanged.
+- 2026-09-28: Seller registration supports optional address and national ID in the existing profile, saved atomically with actor-bound replay. National ID is unverified text, never a login or match key. Existing profile permissions, history and export apply; statements retain contact-only snapshots.

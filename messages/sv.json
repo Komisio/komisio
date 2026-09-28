@@ -115,7 +115,17 @@
     "sellerSearchRetry": "Försök igen",
     "sellerSearchRange": "Visar {from}–{to} av {total} säljare",
     "sellerSearchPrevious": "Föregående",
-    "sellerSearchNext": "Nästa"
+    "sellerSearchNext": "Nästa",
+    "createType": "Ny varutyp",
+    "typeName": "Varutypens namn",
+    "typeFields": "Använd samma fält som",
+    "typeBasic": "Endast beskrivning",
+    "typeCreateSelect": "Skapa och välj",
+    "typeCancel": "Avbryt",
+    "typeRetry": "Försök igen",
+    "typeInvalid": "Ange ett namn och välj giltiga fält.",
+    "typeUncertain": "Sparandet kunde inte bekräftas. Försök igen med samma uppgifter. Varan ligger kvar.",
+    "typeRefused": "Varutypen kunde inte sparas i det aktuella läget. Avbryt och kontrollera butik och behörighet. Varans uppgifter ligger kvar."
   },
   "intake": {
     "quickLink": "Snabb mottagning: en skärm per plagg",
@@ -978,7 +988,7 @@
     "acceptedAt": "Accepterad",
     "openOrigin": "Öppna ursprunget",
     "terms": "Frysta villkor",
-    "termsHint": "Sparade vid acceptansen och ändras aldrig. Senare policy eller säljarvillkor gäller bara senare varor.",
+    "termsHint": "Villkoren sparades när varan accepterades och gäller oförändrat för denna vara.",
     "commission": "Butikens provision",
     "purchasePrice": "Inköpspris",
     "salePeriod": "Säljperiod",
@@ -1185,14 +1195,15 @@
     "print": "Skriv ut avräkning",
     "empty": "Inga avräkningar utfärdade ännu.",
     "issueHeading": "Utfärda en avräkning",
-    "issueHint": "Hela dagar i lokal tid; perioden får inte överlappa en tidigare avräkning. Nästa nummer sätts vid utfärdandet.",
+    "issueHint": "Perioden får inte överlappa en tidigare avräkning. Numret tilldelas när avräkningen utfärdas.",
     "from": "Från",
     "to": "Till (inklusive)",
     "confirm": "Jag vill utfärda nästa numrerade avräkning för perioden.",
     "issue": "Utfärda avräkning",
     "issued": "Avräkningen är utfärdad.",
     "open": "Öppna avräkningen",
-    "closedPeriodHint": "Slutdatum kan vara senast i går."
+    "closedPeriodHint": "Slutdatum kan vara senast i går.",
+    "issueInfo": "Om avräkningen"
   },
   "handovers": {
     "title": "Föranmälningar",
@@ -2565,7 +2576,9 @@
     "save": "Spara uppgifter",
     "saved": "Uppgifterna är sparade.",
     "history": "Ändringshistorik",
-    "emailHint": "Kontrollera e-postadressen noga. Den används för utskick och säljarens åtkomst."
+    "emailHint": "Kontrollera e-postadressen noga. Den används för utskick och säljarens åtkomst.",
+    "moreFields": "Fler fält",
+    "nationalId": "Personnummer (valfritt)"
   },
   "bagIntake": {
     "intro": "Ta en vara i taget. Lägg till en bild om du vill ha hjälp med uppgifterna, kontrollera beskrivning och pris och spara.",

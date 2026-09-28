@@ -115,7 +115,17 @@
     "sellerSearchRetry": "Yritä uudelleen",
     "sellerSearchRange": "Näytetään {from}–{to} / {total} myyjää",
     "sellerSearchPrevious": "Edellinen",
-    "sellerSearchNext": "Seuraava"
+    "sellerSearchNext": "Seuraava",
+    "createType": "Uusi tuotetyyppi",
+    "typeName": "Tuotetyypin nimi",
+    "typeFields": "Käytä samoja kenttiä kuin",
+    "typeBasic": "Vain kuvaus",
+    "typeCreateSelect": "Luo ja valitse",
+    "typeCancel": "Peruuta",
+    "typeRetry": "Yritä uudelleen",
+    "typeInvalid": "Anna nimi ja valitse kelvolliset kentät.",
+    "typeUncertain": "Tallennusta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla. Tuotteen tiedot ovat tallella.",
+    "typeRefused": "Tuotetyyppiä ei voitu tallentaa tässä tilanteessa. Peruuta ja tarkista myymälä ja käyttöoikeudet. Tuotteen tiedot säilyvät."
   },
   "intake": {
     "quickLink": "Pikavastaanotto: yksi näyttö per vaate",
@@ -978,7 +988,7 @@
     "acceptedAt": "Hyväksytty",
     "openOrigin": "Avaa alkuperä",
     "terms": "Jäädytetyt ehdot",
-    "termsHint": "Kirjattu hyväksynnän yhteydessä, eikä niitä koskaan muuteta. Myöhempi käytäntö tai tuojan ehdot koskevat vain myöhempiä tuotteita.",
+    "termsHint": "Ehdot tallennettiin tuotteen hyväksymishetkellä, ja ne pysyvät tämän tuotteen osalta ennallaan.",
     "commission": "Kaupan komissio",
     "purchasePrice": "Ostohinta",
     "salePeriod": "Myyntijakso",
@@ -1185,14 +1195,15 @@
     "print": "Tulosta tiliote",
     "empty": "Tiliotteita ei ole vielä annettu.",
     "issueHeading": "Anna tiliote",
-    "issueHint": "Kokonaisia päiviä paikallista aikaa; jakso ei saa olla päällekkäinen aiemman tiliotteen kanssa. Seuraava numero annetaan tiliotetta annettaessa.",
+    "issueHint": "Jakso ei saa olla päällekkäinen aiemman tilityksen kanssa. Numero annetaan tilityksen laatimisen yhteydessä.",
     "from": "Alkaen",
     "to": "Asti (mukaan lukien)",
     "confirm": "Haluan antaa seuraavan numeroidun tiliotteen tälle jaksolle.",
     "issue": "Anna tiliote",
     "issued": "Tiliote on annettu.",
     "open": "Avaa tiliote",
-    "closedPeriodHint": "Päättymispäivän on oltava viimeistään eilinen."
+    "closedPeriodHint": "Päättymispäivän on oltava viimeistään eilinen.",
+    "issueInfo": "Tietoa tilityksestä"
   },
   "handovers": {
     "title": "Ennakkoilmoitukset",
@@ -2565,7 +2576,9 @@
     "save": "Tallenna tiedot",
     "saved": "Tiedot tallennettu.",
     "history": "Muutoshistoria",
-    "emailHint": "Tarkista sähköpostiosoite. Sitä käytetään viesteihin ja myyjän käyttöoikeuteen."
+    "emailHint": "Tarkista sähköpostiosoite. Sitä käytetään viesteihin ja myyjän käyttöoikeuteen.",
+    "moreFields": "Lisää kenttiä",
+    "nationalId": "Henkilötunnus (valinnainen)"
   },
   "bagIntake": {
     "intro": "Käsittele yksi tuote kerrallaan. Lisää halutessasi kuva tietojen avuksi, tarkista kuvaus ja hinta ja tallenna.",

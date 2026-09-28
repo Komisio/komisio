@@ -116,7 +116,7 @@ export default async function Item({
       <details className="card intake-form item-detail-section">
         <summary>{d.terms}</summary>
         <p>{d.termsHint}</p>
-        <dl>
+        <dl className="item-detail-facts">
           {item.ownership === 'consignment' ? (
             <div>
               <dt>{d.commission}</dt>
@@ -176,7 +176,7 @@ export default async function Item({
             />
           </section>
         )}
-      {active.role !== 'readonly' && (
+      {active.role !== 'readonly' && printers.some((p) => p.active) && (
         <details className="card intake-form item-detail-section">
           <summary>{d.labelPrinter}</summary>
           <p>{all.printing.itemLabelHint}</p>
@@ -188,6 +188,7 @@ export default async function Item({
             referenceId={item.id}
             d={all.printing}
             intake={all.intake}
+            compact
           />
         </details>
       )}
@@ -195,25 +196,35 @@ export default async function Item({
         <summary>
           {d.prices} <span>({prices.length})</span>
         </summary>
-        {prices.map((p) => (
-          <p key={p.id}>
-            {formatOre(p.price_ore)} {currency} ·{' '}
-            {d.priceReasons[p.reason as keyof typeof d.priceReasons] ??
-              p.reason}{' '}
-            · {when(p.set_at)}
-          </p>
-        ))}
+        <ul className="item-detail-history">
+          {prices.map((p) => (
+            <li key={p.id}>
+              <strong>
+                {formatOre(p.price_ore)} {currency}
+              </strong>
+              <span>
+                {d.priceReasons[p.reason as keyof typeof d.priceReasons] ??
+                  p.reason}
+              </span>
+              <time dateTime={p.set_at}>{when(p.set_at)}</time>
+            </li>
+          ))}
+        </ul>
       </details>
       <details className="card intake-form item-detail-section">
         <summary>
           {d.events} <span>({events.length})</span>
         </summary>
-        {events.map((e) => (
-          <p key={e.id}>
-            {d.eventKinds[e.kind as keyof typeof d.eventKinds] ?? e.kind} ·{' '}
-            {when(e.occurred_at)}
-          </p>
-        ))}
+        <ul className="item-detail-history">
+          {events.map((e) => (
+            <li key={e.id}>
+              <strong>
+                {d.eventKinds[e.kind as keyof typeof d.eventKinds] ?? e.kind}
+              </strong>
+              <time dateTime={e.occurred_at}>{when(e.occurred_at)}</time>
+            </li>
+          ))}
+        </ul>
       </details>
     </>
   )

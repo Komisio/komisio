@@ -1,0 +1,33 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000000973','seller-details-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000974','seller-details-reader@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000973","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Details','seller-details-test',gen_random_uuid())::text,true);
+select set_config('test.seller',gen_random_uuid()::text,true);
+select set_config('test.profile','{"name":"Synthetic seller","email":"details@example.test","phone":"","nationalId":"SYNTHETIC-ID","addressLine1":"Test Street 1","addressLine2":"","postalCode":"12345","city":"Test City","country":"Sweden","language":"","notes":""}',true);
+select is(register_seller_with_profile(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.profile')::jsonb),current_setting('test.seller')::uuid,'register with optional details');
+select is((select profile->>'nationalId' from sellers where id=current_setting('test.seller')::uuid),'SYNTHETIC-ID','national ID stored as unverified text');
+select is(register_seller_with_profile(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.profile')::jsonb),current_setting('test.seller')::uuid,'exact replay succeeds');
+select is((select count(*)::int from seller_profile_versions where seller_id=current_setting('test.seller')::uuid),2,'replay adds no history');
+select throws_like($$select register_seller_with_profile(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.profile')::jsonb||'{"nationalId":"changed"}')$$,'%REQUEST_CONFLICT%','changed detail replay refused');
+select save_seller_profile(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,1,current_setting('test.profile')::jsonb||'{"city":"Later city"}');
+select is(register_seller_with_profile(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.profile')::jsonb),current_setting('test.seller')::uuid,'registration retry survives later edit');
+select is((select profile->>'city' from sellers where id=current_setting('test.seller')::uuid),'Later city','retry does not overwrite correction');
+select throws_like($$select register_seller_with_profile(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.profile')::jsonb||jsonb_build_object('nationalId',repeat('x',41)))$$,'%INVALID_INPUT%','oversize ID refused');
+select throws_like($$select register_seller_with_profile(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.profile')::jsonb||'{"nationalId":null}')$$,'%INVALID_INPUT%','null ID refused');
+select is((select count(*)::int from sellers where tenant_id=current_setting('test.tenant')::uuid),1,'invalid details leave no partial seller');
+select set_config('test.statement',issue_statement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'2020-01-01','2020-02-01',null)::text,true);
+select ok(not (select seller_contact ? 'nationalId' from settlement_statements where id=current_setting('test.statement')::uuid),'ID not copied to statement');
+select is(seller_data_export(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid)->'profileHistory'->1->'profile'->>'nationalId','SYNTHETIC-ID','profile export retains details history');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000000974','readonly');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000974","role":"authenticated"}';
+select throws_ok($$select register_seller_with_profile(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.profile')::jsonb)$$,'42501',null,'readonly cannot register');
+select ok(not has_function_privilege('anon','public.register_seller_with_profile(uuid,uuid,jsonb)','execute'),'anonymous cannot register');
+select * from finish();
+rollback;

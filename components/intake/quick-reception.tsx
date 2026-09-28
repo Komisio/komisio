@@ -1,4 +1,6 @@
 'use client'
+import { NewSellerLink } from '@/components/intake/new-seller-link'
+import { CreateItemType } from './create-item-type'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -134,7 +136,8 @@ export function QuickReception({
   sellersTotal = sellers.length,
   printers,
   assistance,
-  vocabulary,
+  vocabulary: initialVocabulary,
+  canManageTypes = false,
   lang,
   d,
   bagId,
@@ -145,11 +148,25 @@ export function QuickReception({
   printers: Printer[]
   assistance: boolean
   vocabulary: AttributeVocabulary
+  canManageTypes?: boolean
   lang: string
   d: Dictionary['quickIntake']
   bagId?: string
 }) {
   const router = useRouter()
+  const [createdTypes, setCreatedTypes] = useState<
+    AttributeVocabulary['types']
+  >([])
+  const vocabulary = {
+    ...initialVocabulary,
+    types: [
+      ...initialVocabulary.types.filter(
+        (t) => !createdTypes.some((c) => c.slug === t.slug),
+      ),
+      ...createdTypes,
+    ],
+  }
+  const [typeEditorOpen, setTypeEditorOpen] = useState(false)
   const [seller, setSeller] = useState<Seller | null>(
       bagId ? (sellers[0] ?? null) : null,
     ),
@@ -467,7 +484,8 @@ export function QuickReception({
   }
 
   async function submit() {
-    if (running.current || !sellerId || photoUnresolved) return
+    if (running.current || !sellerId || photoUnresolved || typeEditorOpen)
+      return
     // A lost reply is retried with the very command that was sent, never with
     // whatever the fields hold now.
     let current = attempt.current
@@ -681,9 +699,9 @@ export function QuickReception({
                 d={d}
               />
               <p>
-                <Link className="btn btn-secondary" href="/intake#new-seller">
+                <NewSellerLink className="btn btn-secondary">
                   {d.newSeller}
-                </Link>
+                </NewSellerLink>
               </p>
             </>
           )}
@@ -828,6 +846,28 @@ export function QuickReception({
                       <option key={t.slug} value={labelOf(t, lang)} />
                     ))}
                   </datalist>
+                  {canManageTypes && (
+                    <CreateItemType
+                      tenantId={tenantId}
+                      vocabulary={vocabulary}
+                      selected={itemType}
+                      lang={lang}
+                      d={d}
+                      disabled={busy || uncertain || photoUnresolved}
+                      onOpenChange={setTypeEditorOpen}
+                      onSelect={(profile) => {
+                        setCreatedTypes((types) => [
+                          ...types.filter((t) => t.slug !== profile.slug),
+                          profile,
+                        ])
+                        setItemType(profile.slug)
+                        setTypeQuery(labelOf(profile, lang))
+                        requestAnimationFrame(() =>
+                          document.getElementById('quick-item-type')?.focus(),
+                        )
+                      }}
+                    />
+                  )}
                 </div>
                 <div className="quick-fields">
                   {questions.map((q) => question(q.definition))}
@@ -874,7 +914,7 @@ export function QuickReception({
               <Button
                 // A visible photo whose save is unresolved must not become a
                 // photoless item.
-                disabled={busy || photoUnresolved}
+                disabled={busy || photoUnresolved || typeEditorOpen}
                 type="submit"
                 onClick={(event) => {
                   // Suppress only the implicit click from Enter in the type

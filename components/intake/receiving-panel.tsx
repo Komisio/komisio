@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import type { Dictionary } from '@/lib/i18n'
@@ -12,6 +12,7 @@ export function ReceivingPanel({
   tenantId,
   seller,
   d,
+  details,
   changeSellerLabel,
   expectedAgreementId = null,
   agreementBlocked = false,
@@ -19,11 +20,22 @@ export function ReceivingPanel({
   tenantId: string
   seller: Seller | null
   d: Dictionary['intake']
+  details: Dictionary['sellerDetails']
   changeSellerLabel: string
   expectedAgreementId?: string | null
   agreementBlocked?: boolean
 }) {
   const router = useRouter()
+  const nameInput = useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    const focusName = () => {
+      if (!seller && window.location.hash === '#new-seller')
+        nameInput.current?.focus()
+    }
+    focusName()
+    window.addEventListener('hashchange', focusName)
+    return () => window.removeEventListener('hashchange', focusName)
+  }, [seller])
   const pending = useRef<Record<string, unknown> | null>(null)
   // A later refusal cannot settle an earlier request whose reply was lost.
   const uncertain = useRef(false)
@@ -57,6 +69,16 @@ export function ReceivingPanel({
             name: String(fields.get('name') ?? '').trim(),
             email: String(fields.get('email') ?? '').trim(),
             phone: String(fields.get('phone') ?? '').trim(),
+            details: Object.fromEntries(
+              [
+                'nationalId',
+                'addressLine1',
+                'addressLine2',
+                'postalCode',
+                'city',
+                'country',
+              ].map((key) => [key, String(fields.get(key) ?? '').trim()]),
+            ),
           })
     if (!seller && !command.email && !command.phone) {
       setError(d.contactHint)
@@ -205,7 +227,13 @@ export function ReceivingPanel({
               <p id="seller-contact-hint">{d.contactHint}</p>
               <div className="field">
                 <label htmlFor="seller-name">{d.name}</label>
-                <input id="seller-name" name="name" required maxLength={120} />
+                <input
+                  ref={nameInput}
+                  id="seller-name"
+                  name="name"
+                  required
+                  maxLength={120}
+                />
               </div>
               <div className="field">
                 <label htmlFor="seller-email">{d.email}</label>
@@ -227,6 +255,31 @@ export function ReceivingPanel({
                   aria-describedby="seller-contact-hint"
                 />
               </div>
+              <details className="seller-disclosure">
+                <summary>{details.moreFields}</summary>
+                <div className="seller-disclosure-body">
+                  {(
+                    [
+                      ['nationalId', details.nationalId, 40],
+                      ['addressLine1', details.street, 160],
+                      ['addressLine2', details.addressExtra, 160],
+                      ['postalCode', details.postalCode, 24],
+                      ['city', details.city, 120],
+                      ['country', details.country, 80],
+                    ] as const
+                  ).map(([key, label, maxLength]) => (
+                    <div className="field" key={key}>
+                      <label htmlFor={`new-seller-${key}`}>{label}</label>
+                      <input
+                        id={`new-seller-${key}`}
+                        name={key}
+                        maxLength={maxLength}
+                        autoComplete="off"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </details>
             </>
           )}
         </fieldset>

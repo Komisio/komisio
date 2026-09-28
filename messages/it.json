@@ -115,7 +115,17 @@
     "sellerSearchRetry": "Riprova",
     "sellerSearchRange": "Visualizzati {from}–{to} di {total} venditori",
     "sellerSearchPrevious": "Precedente",
-    "sellerSearchNext": "Successivo"
+    "sellerSearchNext": "Successivo",
+    "createType": "Nuovo tipo di articolo",
+    "typeName": "Nome del tipo di articolo",
+    "typeFields": "Usa gli stessi campi di",
+    "typeBasic": "Solo descrizione",
+    "typeCreateSelect": "Crea e seleziona",
+    "typeCancel": "Annulla",
+    "typeRetry": "Riprova",
+    "typeInvalid": "Inserisci un nome e scegli campi validi.",
+    "typeUncertain": "Il salvataggio non è stato confermato. Riprova con gli stessi dati. L’articolo è conservato.",
+    "typeRefused": "Non è stato possibile salvare il tipo di articolo nel contesto attuale. Annulla e verifica negozio e permessi. I dati dell’articolo sono conservati."
   },
   "intake": {
     "quickLink": "Ricezione rapida: una schermata per capo",
@@ -978,7 +988,7 @@
     "acceptedAt": "Accettato",
     "openOrigin": "Apri origine",
     "terms": "Condizioni congelate",
-    "termsHint": "Registrate all'accettazione e mai modificate. Politiche o condizioni del conferente successive valgono solo per gli articoli successivi.",
+    "termsHint": "Le condizioni salvate all’accettazione restano invariate per questo articolo.",
     "commission": "Commissione del negozio",
     "purchasePrice": "Prezzo di acquisto",
     "salePeriod": "Periodo di vendita",
@@ -1185,14 +1195,15 @@
     "print": "Stampa rendiconto",
     "empty": "Nessun rendiconto emesso finora.",
     "issueHeading": "Emetti un rendiconto",
-    "issueHint": "Giorni interi in ora locale; il periodo non può sovrapporsi a un rendiconto precedente. Il numero successivo viene assegnato all'emissione.",
+    "issueHint": "Il periodo non può sovrapporsi a un rendiconto precedente. Il numero viene assegnato all’emissione.",
     "from": "Dal",
     "to": "Al (incluso)",
     "confirm": "Voglio emettere il prossimo rendiconto numerato per questo periodo.",
     "issue": "Emetti rendiconto",
     "issued": "Il rendiconto è emesso.",
     "open": "Apri rendiconto",
-    "closedPeriodHint": "La data finale deve essere ieri o precedente."
+    "closedPeriodHint": "La data finale deve essere ieri o precedente.",
+    "issueInfo": "Informazioni sul rendiconto"
   },
   "handovers": {
     "title": "Consegne annunciate",
@@ -2565,7 +2576,9 @@
     "save": "Salva dati",
     "saved": "Dati salvati.",
     "history": "Cronologia modifiche",
-    "emailHint": "Controlla l’indirizzo e-mail. Viene usato per i messaggi e l’accesso del venditore."
+    "emailHint": "Controlla l’indirizzo e-mail. Viene usato per i messaggi e l’accesso del venditore.",
+    "moreFields": "Altri campi",
+    "nationalId": "Codice identificativo personale (facoltativo)"
   },
   "bagIntake": {
     "intro": "Gestisci un articolo alla volta. Aggiungi una foto per ricevere aiuto con i dati, controlla descrizione e prezzo e salva.",

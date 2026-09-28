@@ -208,7 +208,12 @@ export function QuickReception({
   const [ready, setReady] = useState(false)
   useEffect(() => {
     const timer = setTimeout(() => setReady(true), 0)
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
+      // Leaving the screen with a preview still shown: release its object URL
+      // (a StrictMode cleanup before any photo exists has nothing to do).
+      if (photo.current) URL.revokeObjectURL(photo.current.previewUrl)
+    }
   }, [])
   const fileInput = useRef<HTMLInputElement>(null)
   const itemHeading = useRef<HTMLHeadingElement>(null)

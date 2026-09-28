@@ -76,6 +76,10 @@ function FormatRow({
   const [height, setHeight] = useState(String(format.heightMm))
   const [invalid, setInvalid] = useState(false)
   const [saved, setSaved] = useState(false)
+  // While a reply is outstanding or lost, the hook replays the command it
+  // already sent: the dimensions must not look editable, since edits would
+  // not travel with the retry. A stale store also freezes them until reload.
+  const frozen = action.busy || action.locked || action.needsReload
   async function save() {
     const candidate = setLabelFormatCommand.safeParse({
       action: 'setLabelFormat',
@@ -106,7 +110,7 @@ function FormatRow({
           id={`w-${id}`}
           inputMode="decimal"
           value={width}
-          disabled={!canEdit || action.busy}
+          disabled={!canEdit || frozen}
           onChange={(e) => setWidth(e.target.value)}
           style={{ width: '5em' }}
         />
@@ -119,7 +123,7 @@ function FormatRow({
           id={`h-${id}`}
           inputMode="decimal"
           value={height}
-          disabled={!canEdit || action.busy}
+          disabled={!canEdit || frozen}
           onChange={(e) => setHeight(e.target.value)}
           style={{ width: '5em' }}
         />
@@ -131,7 +135,20 @@ function FormatRow({
             disabled={action.busy || action.needsReload}
             onClick={() => void save()}
           >
-            {action.busy ? intake.busy : d.saveFormat}
+            {action.busy
+              ? intake.busy
+              : action.locked && !action.needsReload
+                ? intake.retry
+                : d.saveFormat}
+          </Button>
+        )}
+        {canEdit && action.needsReload && (
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => window.location.reload()}
+          >
+            {intake.reload}
           </Button>
         )}
         {(invalid || action.error) && (

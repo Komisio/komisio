@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { type Dictionary, type Locale, locales, localeNames } from '@/lib/i18n'
 import {
@@ -33,6 +33,7 @@ export function StoreProfileForm({
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
   const [invalid, setInvalid] = useState(false)
   const [saved, setSaved] = useState(false)
+  const submittedFields = useRef<FormData | null>(null)
   const action = useIntakeAction(d.intake),
     router = useRouter()
   const hours = new Map(profile.openingHours.map((h) => [h.day, h]))
@@ -44,8 +45,14 @@ export function StoreProfileForm({
       <form
         onSubmit={async (e) => {
           e.preventDefault()
+          if (action.busy || action.needsReload) return
           setInvalid(false)
-          const f = new FormData(e.currentTarget)
+          // Locked fields are omitted by FormData. Validate the submitted
+          // values while the action retains the original publication identity.
+          const f =
+            action.locked && submittedFields.current
+              ? submittedFields.current
+              : new FormData(e.currentTarget)
           const text = (key: string) => String(f.get(key) ?? '').trim()
           const candidate = storeProfileBody.safeParse({
             address: {
@@ -74,6 +81,7 @@ export function StoreProfileForm({
             setInvalid(true)
             return
           }
+          submittedFields.current = f
           if (
             await action.run({
               action: 'publishStoreProfile',
@@ -83,6 +91,7 @@ export function StoreProfileForm({
               profile: candidate.data,
             })
           ) {
+            submittedFields.current = null
             setSaved(true)
             setRequestId(crypto.randomUUID())
             router.refresh()
@@ -91,7 +100,13 @@ export function StoreProfileForm({
       >
         <fieldset
           className="intake-fields"
-          disabled={!editable || action.busy || action.locked || saved}
+          disabled={
+            !editable ||
+            action.busy ||
+            action.locked ||
+            action.needsReload ||
+            saved
+          }
         >
           <h3>{t.address}</h3>
           {(['street', 'postalCode', 'city'] as const).map((key) => (

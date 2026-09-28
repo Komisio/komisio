@@ -34,6 +34,10 @@ export function PrinterForm({
   const [saved, setSaved] = useState(false)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    // The command ID is the printer ID, not a replay token: an uncertain
+    // upsert must be inspected before another write can replace newer edits.
+    if (action.busy || action.locked || action.needsReload) return
+    setSaved(false)
     const f = new FormData(event.currentTarget)
     const candidate = registerPrinterCommand.safeParse({
       action: 'registerPrinter',
@@ -57,7 +61,7 @@ export function PrinterForm({
     <form onSubmit={submit}>
       <fieldset
         className="intake-fields"
-        disabled={action.busy || action.locked}
+        disabled={action.busy || action.locked || action.needsReload}
       >
         <div className="field">
           <label htmlFor={`printer-name-${fieldId}`}>{d.name}</label>
@@ -122,9 +126,27 @@ export function PrinterForm({
         </label>
       </fieldset>
       {(invalid || action.error) && (
-        <p role="alert">{invalid ? intake.invalid : action.error}</p>
+        <p role="alert">
+          {invalid
+            ? intake.invalid
+            : action.locked && action.error === intake.failed
+              ? d.printerUncertain
+              : action.error}
+        </p>
       )}
-      <Button type="submit" disabled={action.busy || action.needsReload}>
+      {!action.busy && (action.locked || action.needsReload) && (
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => location.reload()}
+        >
+          {intake.reload}
+        </Button>
+      )}
+      <Button
+        type="submit"
+        disabled={action.busy || action.locked || action.needsReload}
+      >
         {action.busy ? intake.busy : existing ? d.update : d.register}
       </Button>
       {saved && <p role="status">{d.saved}</p>}

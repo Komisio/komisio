@@ -65,6 +65,12 @@ test('a stale store profile reloads the current version on the profile tab witho
     await expect(
       form.getByRole('button', { name: d.storeProfile.publish, exact: true }),
     ).toBeDisabled()
+    // Check the field after the busy label is gone, not only during the request.
+    await expect(city).toBeDisabled()
+    await form
+      .locator('form')
+      .evaluate((node) => (node as HTMLFormElement).requestSubmit())
+    await expect(form.getByRole('alert')).toHaveText(d.intake.recordChanged)
     // A way forward from the same place: reload, keeping the profile tab.
     const reload = form.getByRole('button', {
       name: d.intake.reload,

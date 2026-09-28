@@ -747,3 +747,5 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-09-28: Seller data exports include the seller's announced handovers and their event history, including cancelled and received entries. Rows stay tenant- and seller-scoped, ordered by timestamp then id, with unchanged owner/admin access and one access event per export.
 - 2026-09-28: Seller data exports include the seller's own review responses: id, review id, approve or decline, responder and time, ordered by time then id and scoped through reviews and sessions. Review access events, token hashes, assistance attempts and photo digests stay out of the export.
+
+- 2026-09-28: An uncertain printer configuration save requires reloading the current settings before another write; its printer ID is not a replay token. Printer and store-profile confirmations must match the submitted row ID. Other intake result shapes remain unchanged.

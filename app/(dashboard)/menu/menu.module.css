@@ -1,0 +1,63 @@
+.menu :global(.page-heading) {
+  margin-bottom: 16px;
+}
+.groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  align-items: start;
+  gap: 12px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  padding: 10px;
+}
+.menu .group {
+  padding: 0;
+  min-width: 0;
+}
+.group h2 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 2px 10px 4px;
+}
+.links {
+  display: grid;
+}
+.link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 10px;
+  border-radius: 8px;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.4;
+}
+.link span {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.link svg {
+  flex-shrink: 0;
+}
+.link:hover {
+  background: #e5ecde;
+}
+.account {
+  margin: 10px 0 0;
+}
+@media (min-width: 760px) {
+  .menu .group {
+    padding: 14px;
+  }
+}
+
+.heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}

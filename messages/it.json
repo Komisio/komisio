@@ -1195,14 +1195,15 @@
     "print": "Stampa rendiconto",
     "empty": "Nessun rendiconto emesso finora.",
     "issueHeading": "Emetti un rendiconto",
-    "issueHint": "Giorni interi in ora locale; il periodo non può sovrapporsi a un rendiconto precedente. Il numero successivo viene assegnato all'emissione.",
+    "issueHint": "Il periodo non può sovrapporsi a un rendiconto precedente. Il numero viene assegnato all’emissione.",
     "from": "Dal",
     "to": "Al (incluso)",
     "confirm": "Voglio emettere il prossimo rendiconto numerato per questo periodo.",
     "issue": "Emetti rendiconto",
     "issued": "Il rendiconto è emesso.",
     "open": "Apri rendiconto",
-    "closedPeriodHint": "La data finale deve essere ieri o precedente."
+    "closedPeriodHint": "La data finale deve essere ieri o precedente.",
+    "issueInfo": "Informazioni sul rendiconto"
   },
   "handovers": {
     "title": "Consegne annunciate",

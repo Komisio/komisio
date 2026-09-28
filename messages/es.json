@@ -1195,14 +1195,15 @@
     "print": "Imprimir liquidación",
     "empty": "Aún no se han emitido liquidaciones.",
     "issueHeading": "Emitir una liquidación",
-    "issueHint": "Días completos en hora local; el periodo no puede solaparse con una liquidación anterior. El siguiente número se asigna al emitir.",
+    "issueHint": "El período no puede solaparse con una liquidación anterior. El número se asigna al emitirla.",
     "from": "Desde",
     "to": "Hasta (inclusive)",
     "confirm": "Quiero emitir la siguiente liquidación numerada para este periodo.",
     "issue": "Emitir liquidación",
     "issued": "La liquidación está emitida.",
     "open": "Abrir liquidación",
-    "closedPeriodHint": "La fecha final debe ser ayer o anterior."
+    "closedPeriodHint": "La fecha final debe ser ayer o anterior.",
+    "issueInfo": "Sobre la liquidación"
   },
   "handovers": {
     "title": "Entregas anunciadas",

@@ -1195,14 +1195,15 @@
     "print": "Skriv ut avräkning",
     "empty": "Inga avräkningar utfärdade ännu.",
     "issueHeading": "Utfärda en avräkning",
-    "issueHint": "Hela dagar i lokal tid; perioden får inte överlappa en tidigare avräkning. Nästa nummer sätts vid utfärdandet.",
+    "issueHint": "Perioden får inte överlappa en tidigare avräkning. Numret tilldelas när avräkningen utfärdas.",
     "from": "Från",
     "to": "Till (inklusive)",
     "confirm": "Jag vill utfärda nästa numrerade avräkning för perioden.",
     "issue": "Utfärda avräkning",
     "issued": "Avräkningen är utfärdad.",
     "open": "Öppna avräkningen",
-    "closedPeriodHint": "Slutdatum kan vara senast i går."
+    "closedPeriodHint": "Slutdatum kan vara senast i går.",
+    "issueInfo": "Om avräkningen"
   },
   "handovers": {
     "title": "Föranmälningar",

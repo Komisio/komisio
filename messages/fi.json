@@ -1195,14 +1195,15 @@
     "print": "Tulosta tiliote",
     "empty": "Tiliotteita ei ole vielä annettu.",
     "issueHeading": "Anna tiliote",
-    "issueHint": "Kokonaisia päiviä paikallista aikaa; jakso ei saa olla päällekkäinen aiemman tiliotteen kanssa. Seuraava numero annetaan tiliotetta annettaessa.",
+    "issueHint": "Jakso ei saa olla päällekkäinen aiemman tilityksen kanssa. Numero annetaan tilityksen laatimisen yhteydessä.",
     "from": "Alkaen",
     "to": "Asti (mukaan lukien)",
     "confirm": "Haluan antaa seuraavan numeroidun tiliotteen tälle jaksolle.",
     "issue": "Anna tiliote",
     "issued": "Tiliote on annettu.",
     "open": "Avaa tiliote",
-    "closedPeriodHint": "Päättymispäivän on oltava viimeistään eilinen."
+    "closedPeriodHint": "Päättymispäivän on oltava viimeistään eilinen.",
+    "issueInfo": "Tietoa tilityksestä"
   },
   "handovers": {
     "title": "Ennakkoilmoitukset",

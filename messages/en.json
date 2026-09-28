@@ -1195,14 +1195,15 @@
     "print": "Print statement",
     "empty": "No statements issued yet.",
     "issueHeading": "Issue a statement",
-    "issueHint": "Whole days in local time; the period may not overlap an earlier statement. The next number is assigned on issue.",
+    "issueHint": "The period must not overlap an earlier statement. A number is assigned when the statement is issued.",
     "from": "From",
     "to": "To (inclusive)",
     "confirm": "I want to issue the next numbered statement for this period.",
     "issue": "Issue statement",
     "issued": "The statement is issued.",
     "open": "Open statement",
-    "closedPeriodHint": "The end date must be yesterday or earlier."
+    "closedPeriodHint": "The end date must be yesterday or earlier.",
+    "issueInfo": "About the statement"
   },
   "handovers": {
     "title": "Announced drop-offs",

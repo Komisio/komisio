@@ -1195,14 +1195,15 @@
     "print": "Abrechnung drucken",
     "empty": "Noch keine Abrechnungen ausgestellt.",
     "issueHeading": "Abrechnung ausstellen",
-    "issueHint": "Ganze Tage in Ortszeit; der Zeitraum darf sich nicht mit einer früheren Abrechnung überschneiden. Die nächste Nummer wird bei der Ausstellung vergeben.",
+    "issueHint": "Der Zeitraum darf sich nicht mit einer früheren Abrechnung überschneiden. Die Nummer wird bei der Ausstellung vergeben.",
     "from": "Von",
     "to": "Bis (einschließlich)",
     "confirm": "Ich möchte die nächste nummerierte Abrechnung für diesen Zeitraum ausstellen.",
     "issue": "Abrechnung ausstellen",
     "issued": "Die Abrechnung ist ausgestellt.",
     "open": "Abrechnung öffnen",
-    "closedPeriodHint": "Das Enddatum muss spätestens gestern sein."
+    "closedPeriodHint": "Das Enddatum muss spätestens gestern sein.",
+    "issueInfo": "Zur Abrechnung"
   },
   "handovers": {
     "title": "Angekündigte Übergaben",

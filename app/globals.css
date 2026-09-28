@@ -2946,6 +2946,37 @@ button.text-link:hover:not(:disabled) {
 .item-detail-heading h1 {
   overflow-wrap: anywhere;
 }
+.statement-help {
+  margin-bottom: 12px;
+}
+.statement-help > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  width: fit-content;
+  cursor: pointer;
+  font-size: 0.875rem;
+  text-decoration: underline;
+  list-style: none;
+}
+.statement-help > summary::-webkit-details-marker {
+  display: none;
+}
+.statement-help > summary:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+.statement-help > p {
+  padding: 12px;
+  border-left: 2px solid var(--line);
+  font-size: 0.875rem;
+}
+.statement-date-hint {
+  margin-top: 6px;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
 .item-detail-heading .item-detail-reference {
   font-family: monospace;
   margin: 4px 0;

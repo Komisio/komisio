@@ -10,6 +10,7 @@ import {
 } from '@/lib/engine/seller-profile'
 import { readStoreProfile } from '@/lib/engine/store-profile'
 import Link from 'next/link'
+import { Info } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
@@ -541,7 +542,13 @@ export default async function Seller({
                   {write && (
                     <>
                       <h3>{st.issueHeading}</h3>
-                      <p>{st.issueHint}</p>
+                      <details className="statement-help">
+                        <summary>
+                          <Info size={18} aria-hidden="true" />
+                          {st.issueInfo}
+                        </summary>
+                        <p>{st.issueHint}</p>
+                      </details>
                       <StatementForm
                         tenantId={tenant.id}
                         sellerId={id.data}

@@ -1195,14 +1195,15 @@
     "print": "Skriv ut avregning",
     "empty": "Ingen avregninger utstedt ennå.",
     "issueHeading": "Utsted en avregning",
-    "issueHint": "Hele dager i lokal tid; perioden kan ikke overlappe en tidligere avregning. Neste nummer tildeles ved utstedelse.",
+    "issueHint": "Perioden kan ikke overlappe en tidligere avregning. Nummeret tildeles når avregningen utstedes.",
     "from": "Fra",
     "to": "Til (inkludert)",
     "confirm": "Jeg vil utstede neste nummererte avregning for denne perioden.",
     "issue": "Utsted avregning",
     "issued": "Avregningen er utstedt.",
     "open": "Åpne avregning",
-    "closedPeriodHint": "Sluttdatoen må være i går eller tidligere."
+    "closedPeriodHint": "Sluttdatoen må være i går eller tidligere.",
+    "issueInfo": "Om avregningen"
   },
   "handovers": {
     "title": "Forhåndsmeldinger",

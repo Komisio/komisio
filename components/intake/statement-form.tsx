@@ -72,7 +72,6 @@ export function StatementForm({
   }
   return (
     <form onSubmit={submit}>
-      <p id="statement-period-hint">{d.closedPeriodHint}</p>
       <fieldset
         className="intake-fields"
         disabled={action.busy || action.locked}
@@ -100,6 +99,9 @@ export function StatementForm({
             max={defaultTo}
             defaultValue={defaultTo}
           />
+          <p id="statement-period-hint" className="statement-date-hint">
+            {d.closedPeriodHint}
+          </p>
         </div>
         <label className="intake-confirm">
           <input type="checkbox" required />

@@ -1628,7 +1628,8 @@
     "browserHint": "Etiketten är 80 mm bred och kan skrivas ut på vanligt papper. Välj 100 % skala och stäng av sidhuvud och sidfot i utskriftsdialogen.",
     "browserPrint": "Skriv ut etikett",
     "browserUnavailable": "Etiketten kan inte visas just nu. Gå tillbaka till varan och försök igen.",
-    "printerUncertain": "Det gick inte att bekräfta skrivarändringen. Ladda om sidan och kontrollera de sparade inställningarna innan du fortsätter."
+    "printerUncertain": "Det gick inte att bekräfta skrivarändringen. Ladda om sidan och kontrollera de sparade inställningarna innan du fortsätter.",
+    "formatUncertain": "Det gick inte att bekräfta etikettstorleken. Ladda om sidan och kontrollera den sparade storleken innan du fortsätter."
   },
   "purchases": {
     "title": "Inköp",

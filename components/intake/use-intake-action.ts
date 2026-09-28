@@ -24,6 +24,8 @@ export function useIntakeAction(d: Dictionary['intake']) {
       command.data.action === 'publishStoreProfile'
         ? command.data
         : null
+    const labelFormatCommand =
+      command.data.action === 'setLabelFormat' ? command.data : null
     pending.current = command.data
     running.current = true
     setLocked(true)
@@ -40,7 +42,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
         // A failed server/proxy response cannot confirm that a settings write
         // was rejected, even if it carries a familiar validation code.
         if (
-          settingsCommand &&
+          (settingsCommand || labelFormatCommand) &&
           (response.status < 400 || response.status >= 500)
         ) {
           setError(d.failed)
@@ -148,6 +150,18 @@ export function useIntakeAction(d: Dictionary['intake']) {
       if (
         settingsCommand &&
         (result?.ok !== true || result?.id !== settingsCommand.requestId)
+      ) {
+        setError(d.failed)
+        return null
+      }
+      // Label dimensions return the saved value, not the unused request ID.
+      if (
+        labelFormatCommand &&
+        (result?.ok !== true ||
+          result?.id?.kind !== labelFormatCommand.kind ||
+          result?.id?.widthMm !== labelFormatCommand.widthMm ||
+          result?.id?.heightMm !== labelFormatCommand.heightMm ||
+          result?.id?.custom !== true)
       ) {
         setError(d.failed)
         return null

@@ -1628,7 +1628,8 @@
     "browserHint": "L’etichetta è larga 80 mm e può essere stampata su carta comune. Scegli una scala del 100% e disattiva intestazioni e piè di pagina nella finestra di stampa.",
     "browserPrint": "Stampa etichetta",
     "browserUnavailable": "L’etichetta non è disponibile al momento. Torna all’articolo e riprova.",
-    "printerUncertain": "Non è stato possibile confermare la modifica della stampante. Ricarica la pagina e controlla le impostazioni salvate prima di continuare."
+    "printerUncertain": "Non è stato possibile confermare la modifica della stampante. Ricarica la pagina e controlla le impostazioni salvate prima di continuare.",
+    "formatUncertain": "Non è stato possibile confermare la dimensione dell’etichetta. Ricarica la pagina e verifica la dimensione salvata prima di continuare."
   },
   "purchases": {
     "title": "Acquisti",

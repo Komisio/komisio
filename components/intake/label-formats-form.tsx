@@ -67,11 +67,12 @@ function FormatRow({
   const [height, setHeight] = useState(String(format.heightMm))
   const [invalid, setInvalid] = useState(false)
   const [saved, setSaved] = useState(false)
-  // While a reply is outstanding or lost, the hook replays the command it
-  // already sent: the dimensions must not look editable, since edits would
-  // not travel with the retry. A stale store also freezes them until reload.
+  // This mutable setting has no replay identity. Inspect current dimensions
+  // after an uncertain save before another write can replace a later edit.
   const frozen = action.busy || action.locked || action.needsReload
   async function save() {
+    if (!canEdit || frozen) return
+    setSaved(false)
     const candidate = setLabelFormatCommand.safeParse({
       action: 'setLabelFormat',
       tenantId,
@@ -117,16 +118,12 @@ function FormatRow({
         <div className="label-format-actions row wrap">
           <Button
             variant="secondary"
-            disabled={action.busy || action.needsReload}
+            disabled={frozen}
             onClick={() => void save()}
           >
-            {action.busy
-              ? intake.busy
-              : action.locked && !action.needsReload
-                ? intake.retry
-                : d.saveFormat}
+            {action.busy ? intake.busy : d.saveFormat}
           </Button>
-          {action.needsReload && (
+          {!action.busy && (action.locked || action.needsReload) && (
             <Button
               type="button"
               variant="secondary"
@@ -139,7 +136,11 @@ function FormatRow({
       )}
       {(invalid || action.error) && (
         <p role="alert" className="label-format-message error">
-          {invalid ? d.formatInvalid : action.error}
+          {invalid
+            ? d.formatInvalid
+            : action.locked && action.error === intake.failed
+              ? d.formatUncertain
+              : action.error}
         </p>
       )}
       {saved && (

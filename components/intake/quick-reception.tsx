@@ -91,7 +91,7 @@ export function QuickReception({
   }, [seller, done])
   useEffect(() => {
     // "Ready for the shelf" unmounts the button that had focus. Move focus to
-    // the confirmation heading so the reference is read out and the next Tab
+    // the confirmation heading so completion is announced and the next Tab
     // reaches "Next item" instead of starting over from the page top.
     if (!done || !doneHeading.current) return
     doneHeading.current.focus({ preventScroll: true })

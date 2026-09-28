@@ -44,6 +44,7 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
     await page.screenshot({
       path: 'private/intake-button-desktop.png',
       fullPage: true,
+      caret: 'initial',
     })
     await page.setViewportSize({ width: 320, height: 900 })
     expect((await searchButton.boundingBox())!.height).toBeLessThanOrEqual(52)
@@ -55,17 +56,20 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
     await page.screenshot({
       path: 'private/intake-button-mobile.png',
       fullPage: true,
+      caret: 'initial',
     })
     await page.setViewportSize({ width: 1280, height: 900 })
     await page.goto('/intake/quick')
     await page.screenshot({
       path: 'private/link-clarity-desktop.png',
       fullPage: true,
+      caret: 'initial',
     })
     await page.setViewportSize({ width: 390, height: 844 })
     await page.screenshot({
       path: 'private/link-clarity-mobile.png',
       fullPage: true,
+      caret: 'initial',
     })
     await page.setViewportSize({ width: 1280, height: 900 })
     await page
@@ -92,6 +96,7 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
     await page.screenshot({
       path: 'private/quick-design-desktop.png',
       fullPage: true,
+      caret: 'initial',
     })
     await page.setViewportSize({ width: 390, height: 844 })
     await expect(
@@ -105,6 +110,7 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
     await page.screenshot({
       path: 'private/quick-design-mobile.png',
       fullPage: true,
+      caret: 'initial',
     })
     await page.setViewportSize({ width: 1280, height: 900 })
     await page

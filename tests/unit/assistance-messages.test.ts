@@ -28,6 +28,10 @@ describe('assistanceErrorMessage', () => {
     undefined,
     null,
     42,
+    'constructor',
+    'toString',
+    '__proto__',
+    'hasOwnProperty',
   ])('turns %j into the generic text', (code) => {
     const d = dictionary('sv').reception
     expect(assistanceErrorMessage(code, d)).toBe(d.aiFailed)

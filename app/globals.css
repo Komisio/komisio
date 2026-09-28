@@ -1338,6 +1338,7 @@ button.text-link:hover:not(:disabled) {
   margin: 0;
 }
 .quick-item,
+.quick-item-form,
 .quick-done {
   display: grid;
   gap: 1.25rem;

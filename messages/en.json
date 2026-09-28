@@ -1628,7 +1628,8 @@
     "browserHint": "The label is 80 mm wide and can be printed on plain paper. Choose 100% scale and turn off headers and footers in the print dialog.",
     "browserPrint": "Print label",
     "browserUnavailable": "The label is unavailable right now. Return to the item and try again.",
-    "printerUncertain": "The printer change could not be confirmed. Reload the page and check the saved settings before continuing."
+    "printerUncertain": "The printer change could not be confirmed. Reload the page and check the saved settings before continuing.",
+    "formatUncertain": "The label size could not be confirmed. Reload the page and check the saved size before continuing."
   },
   "purchases": {
     "title": "Purchases",

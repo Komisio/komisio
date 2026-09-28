@@ -39,109 +39,114 @@ async function expectInsideViewport(
   }
 }
 
-test('a lost reply keeps the label size frozen and the retry sends the same command', async ({
-  page,
-}) => {
-  const { f, row, width, height } = await openRow(
+for (const reply of [
+  'lost',
+  'server-invalid',
+  'wrong-size',
+  'missing-ok',
+] as const) {
+  test(`an uncertain label size requires reload and preserves a later edit (${reply})`, async ({
     page,
-    `label-format-retry-${randomUUID()}@example.test`,
-  )
-  try {
-    await expectInsideViewport(page, {
-      width,
-      height,
-      save: row.getByRole('button', {
-        name: d.printing.saveFormat,
-        exact: true,
-      }),
-    })
-    await width.fill('60')
-    await height.fill('40')
-    const commands: Record<string, unknown>[] = []
-    let firstStatus = 0
-    await page.route('**/api/intake', async (route) => {
-      const command = route.request().postDataJSON()
-      if (command?.action !== 'setLabelFormat') return route.continue()
-      commands.push(command)
-      if (commands.length !== 1) return route.continue()
-      // The store's size is written; the browser only sees a 503.
-      const response = await route.fetch()
-      firstStatus = response.status()
-      await route.fulfill({
-        status: 503,
-        contentType: 'application/json',
-        body: JSON.stringify({ error: 'REQUEST_FAILED' }),
+  }) => {
+    const { f, row, width, height } = await openRow(
+      page,
+      `label-format-recovery-${randomUUID()}@example.test`,
+    )
+    try {
+      await width.fill('60')
+      await height.fill('40')
+      const commands: Record<string, unknown>[] = []
+      let firstStatus = 0
+      await page.route('**/api/intake', async (route) => {
+        const command = route.request().postDataJSON()
+        if (command?.action !== 'setLabelFormat') return route.continue()
+        commands.push(command)
+        const response = await route.fetch()
+        firstStatus = response.status()
+        const saved = await response.json()
+        await route.fulfill({
+          status: reply === 'lost' || reply === 'server-invalid' ? 503 : 200,
+          contentType: 'application/json',
+          body: JSON.stringify(
+            reply === 'lost'
+              ? { error: 'REQUEST_FAILED' }
+              : reply === 'server-invalid'
+                ? { error: 'INVALID_INPUT' }
+                : reply === 'wrong-size'
+                  ? { ...saved, id: { ...saved.id, widthMm: 99 } }
+                  : { id: saved.id },
+          ),
+        })
       })
-    })
-    await row
-      .getByRole('button', { name: d.printing.saveFormat, exact: true })
-      .click()
-    await expect(row.getByRole('alert')).toHaveText(d.intake.failed)
-    expect(firstStatus).toBe(200)
-    // The message and the way forward are inside the phone's viewport as the
-    // page stands, not somewhere a sideways scroll would reveal.
-    await expectInsideViewport(page, {
-      width,
-      height,
-      alert: row.getByRole('alert'),
-      retry: row.getByRole('button', { name: d.intake.retry, exact: true }),
-    })
-    await page.screenshot({
-      path: 'private/label-size-320-lost.png',
-      caret: 'initial',
-    })
-    // Frozen: the retry will resend the command as it was, so the fields
-    // must not invite edits, and the button says so.
-    await expect(width).toBeDisabled()
-    await expect(height).toBeDisabled()
-    const retry = row.getByRole('button', {
-      name: d.intake.retry,
-      exact: true,
-    })
-    await expect(retry).toBeEnabled()
-    await expect(
-      row.getByRole('button', { name: d.intake.reload, exact: true }),
-    ).toHaveCount(0)
-    await retry.click()
-    await expect(row.getByRole('status')).toHaveText(d.printing.formatSaved)
-    await expect(row.getByRole('alert')).toHaveCount(0)
-    await expect(width).toBeEnabled()
-    expect(commands).toHaveLength(2)
-    expect(commands[1]).toEqual(commands[0])
-    expect(commands[0]).toMatchObject({
-      kind: 'item',
-      widthMm: 60,
-      heightMm: 40,
-    })
-    // Persisted and displayed: the original dimensions, once.
-    expect(
-      (
-        await f.db.query(
-          'select kind, width_mm, height_mm from label_formats where tenant_id=$1',
-          [f.tenant],
-        )
-      ).rows,
-    ).toEqual([{ kind: 'item', width_mm: '60.0', height_mm: '40.0' }])
-    await page.reload()
-    await expect(
-      page
-        .getByRole('group', { name: new RegExp(d.printing.kinds.item) })
-        .getByLabel(d.printing.width, { exact: true }),
-    ).toHaveValue('60')
-    // The engine has no request identity for this setting: a replay re-applies
-    // the same values and records a second access event. Reported, not hidden.
-    expect(
-      (
-        await f.db.query(
-          "select count(*)::int n from access_events where tenant_id=$1 and action='label_format.set'",
-          [f.tenant],
-        )
-      ).rows[0].n,
-    ).toBe(2)
-  } finally {
-    await f.close()
-  }
-})
+      await row
+        .getByRole('button', { name: d.printing.saveFormat, exact: true })
+        .click()
+      await expect(row.getByRole('alert')).toHaveText(
+        d.printing.formatUncertain,
+      )
+      expect(firstStatus).toBe(200)
+      // A later edit is a real separate engine transaction, not a mock response.
+      await f.asActor(f.actor, async () => {
+        await f.db.query('select set_label_format($1,$2,$3,$4)', [
+          f.tenant,
+          'item',
+          72,
+          45,
+        ])
+      })
+      await expect(width).toBeDisabled()
+      await expect(height).toBeDisabled()
+      const reload = row.getByRole('button', {
+        name: d.intake.reload,
+        exact: true,
+      })
+      await expect(reload).toBeVisible()
+      await expect(
+        row.getByRole('button', { name: d.intake.retry, exact: true }),
+      ).toHaveCount(0)
+      await expect(
+        row.getByRole('button', { name: d.printing.saveFormat, exact: true }),
+      ).toBeDisabled()
+      await expectInsideViewport(page, {
+        width,
+        height,
+        reload,
+        alert: row.getByRole('alert'),
+      })
+      await reload.click()
+      await expect(width).toHaveValue('72')
+      await expect(height).toHaveValue('45')
+      await expect(width).toBeEnabled()
+      expect(commands).toHaveLength(1)
+      expect(
+        (
+          await f.db.query(
+            'select kind,width_mm,height_mm from label_formats where tenant_id=$1',
+            [f.tenant],
+          )
+        ).rows,
+      ).toEqual([{ kind: 'item', width_mm: '72.0', height_mm: '45.0' }])
+      expect(
+        (
+          await f.db.query(
+            "select count(*)::int n from access_events where tenant_id=$1 and action='label_format.set'",
+            [f.tenant],
+          )
+        ).rows[0].n,
+      ).toBe(2)
+      expect(
+        (
+          await f.db.query(
+            'select count(*)::int n from print_jobs where tenant_id=$1',
+            [f.tenant],
+          )
+        ).rows[0].n,
+      ).toBe(0)
+    } finally {
+      await f.close()
+    }
+  })
+}
 
 test('a changed active store offers a reload instead of a permanently disabled row', async ({
   page,
@@ -212,6 +217,82 @@ test('a changed active store offers a reload instead of a permanently disabled r
         )
       ).rows[0].n,
     ).toBe(0)
+  } finally {
+    await f.close()
+  }
+})
+
+test('known validation is correctable and a later uncertain save clears old confirmation', async ({
+  page,
+}) => {
+  const { f, row, width, height } = await openRow(
+    page,
+    `label-format-correction-${randomUUID()}@example.test`,
+  )
+  try {
+    let calls = 0
+    await page.route('**/api/intake', async (route) => {
+      if (route.request().postDataJSON()?.action !== 'setLabelFormat')
+        return route.continue()
+      calls++
+      if (calls === 1)
+        return route.fulfill({
+          status: 400,
+          contentType: 'application/json',
+          body: JSON.stringify({ error: 'INVALID_INPUT' }),
+        })
+      const response = await route.fetch()
+      expect(response.status()).toBe(200)
+      if (calls === 2) return route.fulfill({ response })
+      return route.fulfill({
+        status: 503,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: 'REQUEST_FAILED' }),
+      })
+    })
+    const save = row.getByRole('button', {
+      name: d.printing.saveFormat,
+      exact: true,
+    })
+    await width.fill('60')
+    await height.fill('40')
+    await save.click()
+    await expect(row.getByRole('alert')).toHaveText(d.intake.invalid)
+    await expect(width).toBeEnabled()
+    await expect(save).toBeEnabled()
+    expect(
+      (
+        await f.db.query(
+          'select count(*)::int n from label_formats where tenant_id=$1',
+          [f.tenant],
+        )
+      ).rows[0].n,
+    ).toBe(0)
+    await width.fill('62')
+    await save.click()
+    await expect(row.getByRole('status')).toHaveText(d.printing.formatSaved)
+    await expect(width).toBeEnabled()
+    await width.fill('64')
+    await save.click()
+    await expect(row.getByRole('alert')).toHaveText(d.printing.formatUncertain)
+    await expect(row.getByRole('status')).toHaveCount(0)
+    await expect(save).toBeDisabled()
+    const reload = row.getByRole('button', {
+      name: d.intake.reload,
+      exact: true,
+    })
+    await expect(reload).toBeVisible()
+    await reload.click()
+    await expect(width).toHaveValue('64')
+    expect(calls).toBe(3)
+    expect(
+      (
+        await f.db.query(
+          "select count(*)::int n from access_events where tenant_id=$1 and action='label_format.set'",
+          [f.tenant],
+        )
+      ).rows[0].n,
+    ).toBe(2)
   } finally {
     await f.close()
   }

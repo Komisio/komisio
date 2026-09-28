@@ -32,7 +32,8 @@ test('staff edits optional seller details without rewriting an issued statement'
     await expect(page.locator('#seller-profile-phone')).toHaveValue(
       '0700000000',
     )
-    await page.getByText(d.sellerDetails.address, { exact: true }).click()
+    await page.getByText(d.sellerDetails.moreFields, { exact: true }).click()
+    await page.locator('#seller-profile-nationalId').fill('SYNTHETIC-EDITED-ID')
     await page
       .locator('#seller-profile-addressLine1')
       .fill('Synthetic Street 1')
@@ -52,6 +53,9 @@ test('staff edits optional seller details without rewriting an issued statement'
       }),
     ).toBeVisible()
     await page.reload()
+    await expect(
+      page.getByText('SYNTHETIC-EDITED-ID', { exact: false }).first(),
+    ).toBeVisible()
     await expect(
       page.getByText('Synthetic Street 1, 12345 Test City, Sweden', {
         exact: true,

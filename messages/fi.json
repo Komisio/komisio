@@ -2576,7 +2576,9 @@
     "save": "Tallenna tiedot",
     "saved": "Tiedot tallennettu.",
     "history": "Muutoshistoria",
-    "emailHint": "Tarkista sähköpostiosoite. Sitä käytetään viesteihin ja myyjän käyttöoikeuteen."
+    "emailHint": "Tarkista sähköpostiosoite. Sitä käytetään viesteihin ja myyjän käyttöoikeuteen.",
+    "moreFields": "Lisää kenttiä",
+    "nationalId": "Henkilötunnus (valinnainen)"
   },
   "bagIntake": {
     "intro": "Käsittele yksi tuote kerrallaan. Lisää halutessasi kuva tietojen avuksi, tarkista kuvaus ja hinta ja tallenna.",

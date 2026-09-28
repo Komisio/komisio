@@ -254,6 +254,7 @@ export default async function Intake({
               tenantId={active.id}
               seller={selected.data as Seller | null}
               d={d}
+              details={all.sellerDetails}
               changeSellerLabel={all.quickIntake.changeSeller}
               expectedAgreementId={agreement?.id ?? null}
               agreementBlocked={Boolean(

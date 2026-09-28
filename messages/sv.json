@@ -2576,7 +2576,9 @@
     "save": "Spara uppgifter",
     "saved": "Uppgifterna är sparade.",
     "history": "Ändringshistorik",
-    "emailHint": "Kontrollera e-postadressen noga. Den används för utskick och säljarens åtkomst."
+    "emailHint": "Kontrollera e-postadressen noga. Den används för utskick och säljarens åtkomst.",
+    "moreFields": "Fler fält",
+    "nationalId": "Personnummer (valfritt)"
   },
   "bagIntake": {
     "intro": "Ta en vara i taget. Lägg till en bild om du vill ha hjälp med uppgifterna, kontrollera beskrivning och pris och spara.",

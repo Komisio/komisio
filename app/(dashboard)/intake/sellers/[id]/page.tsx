@@ -743,6 +743,12 @@ export default async function Seller({
                     ? localeNames[profile.language]
                     : `${all.sellerDetails.followStore} (${localeNames[storeLanguage]})`}
                 </p>
+                {profile.nationalId && (
+                  <p>
+                    <strong>{all.sellerDetails.nationalId}</strong>:{' '}
+                    {profile.nationalId}
+                  </p>
+                )}
                 {profile.notes && (
                   <p className="seller-internal-note">
                     <strong>{all.sellerDetails.notes}</strong>
@@ -805,6 +811,12 @@ export default async function Seller({
                             <p>
                               <strong>{all.sellerDetails.notes}</strong>:{' '}
                               {previous.notes}
+                            </p>
+                          )}
+                          {previous.nationalId && (
+                            <p>
+                              <strong>{all.sellerDetails.nationalId}</strong>:{' '}
+                              {previous.nationalId}
                             </p>
                           )}
                         </details>

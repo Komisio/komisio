@@ -2576,7 +2576,9 @@
     "save": "Daten speichern",
     "saved": "Daten gespeichert.",
     "history": "Änderungsverlauf",
-    "emailHint": "Prüfen Sie die E-Mail-Adresse. Sie wird für Nachrichten und den Verkäuferzugang verwendet."
+    "emailHint": "Prüfen Sie die E-Mail-Adresse. Sie wird für Nachrichten und den Verkäuferzugang verwendet.",
+    "moreFields": "Weitere Felder",
+    "nationalId": "Personenkennnummer (optional)"
   },
   "bagIntake": {
     "intro": "Bearbeiten Sie einen Artikel nach dem anderen. Fügen Sie bei Bedarf ein Foto hinzu, prüfen Sie Beschreibung und Preis und speichern Sie.",

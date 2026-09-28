@@ -2576,7 +2576,9 @@
     "save": "Save details",
     "saved": "Details saved.",
     "history": "Change history",
-    "emailHint": "Check the email address carefully. It is used for messages and seller access."
+    "emailHint": "Check the email address carefully. It is used for messages and seller access.",
+    "moreFields": "More fields",
+    "nationalId": "National ID / SSN (optional)"
   },
   "bagIntake": {
     "intro": "Handle one item at a time. Add a photo for help with the details, check the description and price, then save.",

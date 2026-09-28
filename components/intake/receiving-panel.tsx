@@ -12,6 +12,7 @@ export function ReceivingPanel({
   tenantId,
   seller,
   d,
+  details,
   changeSellerLabel,
   expectedAgreementId = null,
   agreementBlocked = false,
@@ -19,6 +20,7 @@ export function ReceivingPanel({
   tenantId: string
   seller: Seller | null
   d: Dictionary['intake']
+  details: Dictionary['sellerDetails']
   changeSellerLabel: string
   expectedAgreementId?: string | null
   agreementBlocked?: boolean
@@ -67,6 +69,16 @@ export function ReceivingPanel({
             name: String(fields.get('name') ?? '').trim(),
             email: String(fields.get('email') ?? '').trim(),
             phone: String(fields.get('phone') ?? '').trim(),
+            details: Object.fromEntries(
+              [
+                'nationalId',
+                'addressLine1',
+                'addressLine2',
+                'postalCode',
+                'city',
+                'country',
+              ].map((key) => [key, String(fields.get(key) ?? '').trim()]),
+            ),
           })
     if (!seller && !command.email && !command.phone) {
       setError(d.contactHint)
@@ -243,6 +255,31 @@ export function ReceivingPanel({
                   aria-describedby="seller-contact-hint"
                 />
               </div>
+              <details className="seller-disclosure">
+                <summary>{details.moreFields}</summary>
+                <div className="seller-disclosure-body">
+                  {(
+                    [
+                      ['nationalId', details.nationalId, 40],
+                      ['addressLine1', details.street, 160],
+                      ['addressLine2', details.addressExtra, 160],
+                      ['postalCode', details.postalCode, 24],
+                      ['city', details.city, 120],
+                      ['country', details.country, 80],
+                    ] as const
+                  ).map(([key, label, maxLength]) => (
+                    <div className="field" key={key}>
+                      <label htmlFor={`new-seller-${key}`}>{label}</label>
+                      <input
+                        id={`new-seller-${key}`}
+                        name={key}
+                        maxLength={maxLength}
+                        autoComplete="off"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </details>
             </>
           )}
         </fieldset>

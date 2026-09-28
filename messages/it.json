@@ -2576,7 +2576,9 @@
     "save": "Salva dati",
     "saved": "Dati salvati.",
     "history": "Cronologia modifiche",
-    "emailHint": "Controlla l’indirizzo e-mail. Viene usato per i messaggi e l’accesso del venditore."
+    "emailHint": "Controlla l’indirizzo e-mail. Viene usato per i messaggi e l’accesso del venditore.",
+    "moreFields": "Altri campi",
+    "nationalId": "Codice identificativo personale (facoltativo)"
   },
   "bagIntake": {
     "intro": "Gestisci un articolo alla volta. Aggiungi una foto per ricevere aiuto con i dati, controlla descrizione e prezzo e salva.",

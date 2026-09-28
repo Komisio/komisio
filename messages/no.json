@@ -2576,7 +2576,9 @@
     "save": "Lagre opplysninger",
     "saved": "Opplysningene er lagret.",
     "history": "Endringshistorikk",
-    "emailHint": "Kontroller e-postadressen nøye. Den brukes til meldinger og selgerens tilgang."
+    "emailHint": "Kontroller e-postadressen nøye. Den brukes til meldinger og selgerens tilgang.",
+    "moreFields": "Flere felt",
+    "nationalId": "Fødselsnummer (valgfritt)"
   },
   "bagIntake": {
     "intro": "Ta én vare om gangen. Legg til et bilde for hjelp med opplysningene, kontroller beskrivelse og pris og lagre.",

@@ -1,4 +1,7 @@
-import { saveSellerProfileCommand } from './seller-profile'
+import {
+  saveSellerProfileCommand,
+  initialSellerProfile,
+} from './seller-profile'
 import { publishStorePolicyCommand } from './store-policy'
 import { publishSellerTermsCommand } from './seller-terms'
 import { acceptItemCommand } from './items'
@@ -91,6 +94,16 @@ export const intakeCommand = z.discriminatedUnion('action', [
       name: z.string().trim().min(1).max(120),
       email: z.union([z.literal(''), z.email().max(254)]),
       phone: z.string().trim().max(40),
+      details: z
+        .strictObject({
+          nationalId: z.string().trim().max(40),
+          addressLine1: z.string().trim().max(160),
+          addressLine2: z.string().trim().max(160),
+          postalCode: z.string().trim().max(24),
+          city: z.string().trim().max(120),
+          country: z.string().trim().max(80),
+        })
+        .optional(),
     })
     .refine((v) => v.email !== '' || v.phone !== ''),
   z.object({
@@ -439,6 +452,12 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_profile: c.profile,
       })
     case 'registerSeller':
+      if (c.details)
+        return client.rpc('register_seller_with_profile', {
+          p_tenant: c.tenantId,
+          p_id: c.requestId,
+          p_profile: { ...initialSellerProfile(c), ...c.details },
+        })
       return client.rpc('register_seller', {
         p_tenant: c.tenantId,
         p_id: c.requestId,

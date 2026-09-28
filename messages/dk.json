@@ -2576,7 +2576,9 @@
     "save": "Gem oplysninger",
     "saved": "Oplysningerne er gemt.",
     "history": "Ændringshistorik",
-    "emailHint": "Kontrollér e-mailadressen. Den bruges til beskeder og sælgerens adgang."
+    "emailHint": "Kontrollér e-mailadressen. Den bruges til beskeder og sælgerens adgang.",
+    "moreFields": "Flere felter",
+    "nationalId": "CPR-nummer (valgfrit)"
   },
   "bagIntake": {
     "intro": "Tag én vare ad gangen. Tilføj et billede for hjælp til oplysningerne, kontrollér beskrivelse og pris, og gem.",

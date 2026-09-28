@@ -272,6 +272,15 @@ export function PayoutDecision({
         </div>
       </fieldset>
       {action.error && <p role="alert">{action.error}</p>}
+      {action.needsReload && (
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => window.location.reload()}
+        >
+          {intake.reload}
+        </Button>
+      )}
       {!done && (
         <div className="row">
           {status === 'requested' ? (

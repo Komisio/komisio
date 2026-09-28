@@ -39,6 +39,9 @@ export function useIntakeAction(d: Dictionary['intake']) {
           'PROFILE_CHANGED',
           'SELLER_TERMS_CHANGED',
           'MAP_CHANGED',
+          'PAYOUT_NOT_REQUESTED',
+          'PAYOUT_NOT_APPROVED',
+          'PAYOUT_DECIDED',
           'AGREEMENT_REQUIRED',
           'INSPECTION_DRAFT_CHANGED',
           'INSPECTION_ARCHIVED',
@@ -56,6 +59,9 @@ export function useIntakeAction(d: Dictionary['intake']) {
             'PROFILE_CHANGED',
             'SELLER_TERMS_CHANGED',
             'MAP_CHANGED',
+            'PAYOUT_NOT_REQUESTED',
+            'PAYOUT_NOT_APPROVED',
+            'PAYOUT_DECIDED',
           ].includes(result.error) ||
           result.error === 'INSPECTION_DRAFT_CHANGED' ||
           result.error === 'INSPECTION_CONTEXT_CHANGED' ||
@@ -79,6 +85,9 @@ export function useIntakeAction(d: Dictionary['intake']) {
                       'PROFILE_CHANGED',
                       'SELLER_TERMS_CHANGED',
                       'MAP_CHANGED',
+                      'PAYOUT_NOT_REQUESTED',
+                      'PAYOUT_NOT_APPROVED',
+                      'PAYOUT_DECIDED',
                     ].includes(result.error)
                   ? d.recordChanged
                   : result.error === 'AGREEMENT_CHANGED'

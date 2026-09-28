@@ -11,7 +11,7 @@ This exclusion does not remove ordinary agreed return/donation workflows.
 ## Current delivery baseline (2026-09-28)
 
 PRs 270–290 are deployed to production. Staging additionally includes PRs
-291–304; those changes retain the production staging-observation gate.
+291–308; those changes retain the production staging-observation gate.
 Staff item and seller lists, seller-owned items and announced handovers
 support bounded search and pagination. Receiving supports contact-based
 seller lookup and direct item-label resolution. Seller handovers have an
@@ -45,6 +45,11 @@ Seller payout guidance and the seller portal are now more compact and
 clear on mobile. Payout and handover forms retain the same request identity
 when retrying a lost response within the current form. Local backup verification
 now checks restored schema, privileges and row counts and fails on restore errors.
+Mobile navigation is compact, and selected seller tabs stay visible. Seller
+exports include handovers, their history and review responses. Stale seller,
+store, accounting-map and payout-decision forms offer recovery by reloading
+the current state; an ordinary lost response still retains its retry identity.
+Seller review wording covers goods beyond clothing in all eight languages.
 
 Next: complete the remaining hosted and hardware acceptance
 with the required operator access. Space booking still requires the unresolved

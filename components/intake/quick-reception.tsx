@@ -7,6 +7,7 @@ import { Camera, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
 import { quickAiProposal } from '@/lib/intake/quick-ai-proposal'
+import { quickReceiveResult } from '@/lib/intake/quick-receive-result'
 import {
   labelOf,
   questionsFor,
@@ -20,6 +21,57 @@ type Printer = { id: string; name: string }
 type Facts = Record<string, string>
 const emptyFacts: Facts = { description: '' }
 const PRINTER_KEY = 'komisio-quick-printer'
+/** A reply the server actually gave: its code and HTTP status. */
+class RequestFailure extends Error {
+  constructor(
+    code: string,
+    readonly status: number,
+  ) {
+    super(code)
+  }
+}
+/**
+ * Refusals the quick route answers with 4xx before anything is accepted for
+ * this request: the engine raised inside its transaction, so the item does
+ * not exist and the staff member may correct and resend. Everything else
+ * (5xx, REQUEST_FAILED, unknown codes, non-JSON, network) is uncertain: the
+ * item may have been accepted and only the reply was lost.
+ */
+const DEFINITIVE = new Set([
+  'INVALID_INPUT',
+  'INTAKE_PROFILE_FULL',
+  'RECEPTION_NOT_FOUND',
+  'RECEPTION_CHANGED',
+  'RECEPTION_SESSION_SELLER',
+  'AGREEMENT_REQUIRED',
+  'SELLER_APPROVAL_REQUIRED',
+  'CURRENCY_MISMATCH',
+  'PLAN_LIMIT_ITEMS',
+  'PLAN_PLUS_REQUIRED',
+  'FORBIDDEN',
+  'AUTH_REQUIRED',
+  'TENANT_CHANGED',
+  'NOT_FOUND',
+])
+const definitive = (e: unknown) =>
+  e instanceof RequestFailure &&
+  e.status >= 400 &&
+  e.status < 500 &&
+  DEFINITIVE.has(e.message)
+/**
+ * Definitive refusals that say the page's picture is stale (another window,
+ * another store, a changed policy or currency). Sending the same fields again
+ * repeats the refusal, so the way forward is a reload; the fields stay
+ * editable because nothing was accepted.
+ */
+const STALE = new Set([
+  'RECEPTION_CHANGED',
+  'RECEPTION_NOT_FOUND',
+  'RECEPTION_SESSION_SELLER',
+  'TENANT_CHANGED',
+  'CURRENCY_MISMATCH',
+  'INTAKE_PROFILE_FULL',
+])
 
 /**
  * One screen: seller, photo, facts (filled by the assistant when the store
@@ -76,6 +128,19 @@ export function QuickReception({
   )
   const activeTypes = vocabulary.types.filter((t) => t.active)
   const running = useRef(false)
+  // One request id per garment attempt. It names the reception the engine
+  // derives, so a corrected resend after a validation refusal reuses the same
+  // (possibly already created) session instead of leaving an empty one behind.
+  const requestId = useRef<string | null>(null)
+  // The exact command whose reply was lost, with the printer chosen for it.
+  // While it exists the next click resends it verbatim and the engine replays
+  // the same item; nothing on screen may suggest that edits would apply.
+  const attempt = useRef<{
+    command: Record<string, unknown>
+    printerId: string
+  } | null>(null)
+  const [uncertain, setUncertain] = useState(false)
+  const [stale, setStale] = useState(false)
   const fileInput = useRef<HTMLInputElement>(null)
   const itemHeading = useRef<HTMLHeadingElement>(null)
   const doneHeading = useRef<HTMLHeadingElement>(null)
@@ -120,7 +185,11 @@ export function QuickReception({
       body: JSON.stringify(body),
     })
     const data = await r.json().catch(() => ({}))
-    if (!r.ok) throw new Error(data.error ?? 'REQUEST_FAILED')
+    if (!r.ok)
+      throw new RequestFailure(
+        typeof data.error === 'string' ? data.error : 'REQUEST_FAILED',
+        r.status,
+      )
     return data
   }
   const fail = (e: unknown) => {
@@ -197,50 +266,67 @@ export function QuickReception({
     }
   }
 
+  function buildCommand() {
+    const ore = Math.round(Number(price.replace(',', '.')) * 100)
+    if (!(facts.description ?? '').trim() || !Number.isInteger(ore) || ore <= 0)
+      return null
+    const asked = new Set(questions.map((q) => q.definition.slug))
+    const cleaned = Object.fromEntries(
+      Object.entries(facts)
+        .map(([k, v]) => [k, v.trim()] as const)
+        .filter(
+          ([k, v]) =>
+            k !== 'category' &&
+            (k === 'description' || (v !== '' && (asked.has(k) || !itemType))),
+        ),
+    )
+    requestId.current ??= crypto.randomUUID()
+    return {
+      ...(bagId ? { bagId } : {}),
+      tenantId,
+      requestId: requestId.current,
+      sellerId,
+      sessionId: session?.id ?? null,
+      expectedRevision: session?.revision ?? 0,
+      facts: cleaned,
+      itemType,
+      priceOre: ore,
+    }
+  }
+
   async function submit() {
     if (running.current || !sellerId) return
-    const ore = Math.round(Number(price.replace(',', '.')) * 100)
-    if (
-      !(facts.description ?? '').trim() ||
-      !Number.isInteger(ore) ||
-      ore <= 0
-    ) {
-      setError(d.fillIn)
-      return
+    // A lost reply is retried with the very command that was sent, never with
+    // whatever the fields hold now.
+    let current = attempt.current
+    if (!current) {
+      const command = buildCommand()
+      if (!command) {
+        setError(d.fillIn)
+        return
+      }
+      current = { command, printerId }
+      attempt.current = current
     }
     running.current = true
     setError('')
     setStage('saving')
     try {
-      const asked = new Set(questions.map((q) => q.definition.slug))
-      const cleaned = Object.fromEntries(
-        Object.entries(facts)
-          .map(([k, v]) => [k, v.trim()] as const)
-          .filter(
-            ([k, v]) =>
-              k !== 'category' &&
-              (k === 'description' ||
-                (v !== '' && (asked.has(k) || !itemType))),
-          ),
+      // A 200 is only a confirmation when it carries the item: a truncated or
+      // malformed body leaves the outcome as unknown as a lost reply.
+      const result = quickReceiveResult.parse(
+        await post('/api/intake/quick', current.command),
       )
-      const result = await post('/api/intake/quick', {
-        ...(bagId ? { bagId } : {}),
-        tenantId,
-        requestId: crypto.randomUUID(),
-        sellerId,
-        sessionId: session?.id ?? null,
-        expectedRevision: session?.revision ?? 0,
-        facts: cleaned,
-        itemType,
-        priceOre: ore,
-      })
-      if (printerId) {
+      attempt.current = null
+      setUncertain(false)
+      setStale(false)
+      if (current.printerId) {
         setStage('printing')
         try {
           await post('/api/print', {
             tenantId,
             requestId: crypto.randomUUID(),
-            printerId,
+            printerId: current.printerId,
             kind: 'item',
             referenceKind: 'item',
             referenceId: result.itemId,
@@ -266,7 +352,23 @@ export function QuickReception({
         router.refresh()
       }
     } catch (e) {
-      fail(e)
+      if (definitive(e) && !uncertain) {
+        // Nothing was accepted for this request: the fields may be corrected
+        // and sent again under the same request id. A stale picture also gets
+        // the reload the message asks for.
+        attempt.current = null
+        setStale(STALE.has((e as RequestFailure).message))
+        fail(e)
+      } else if (definitive(e)) {
+        // A refusal now does not prove the earlier, unanswered attempt did not
+        // go through. Keep the attempt frozen with the uncertainty stated
+        // first; the refusal is detail. Retry and reload stay available.
+        const detail = errors[(e as RequestFailure).message]
+        setError(detail ? `${d.uncertain} ${detail}` : d.uncertain)
+      } else {
+        setUncertain(true)
+        setError(d.uncertain)
+      }
     } finally {
       running.current = false
       setStage('idle')
@@ -275,6 +377,10 @@ export function QuickReception({
 
   function next() {
     focusNextItem.current = true
+    attempt.current = null
+    requestId.current = null
+    setUncertain(false)
+    setStale(false)
     setDone(null)
     setFacts(emptyFacts)
     setPrice('')
@@ -308,7 +414,7 @@ export function QuickReception({
             id={id}
             value={facts[key] ?? ''}
             required={key === 'description'}
-            disabled={busy || !!done}
+            disabled={busy || !!done || uncertain}
             onChange={(e) => set(e.target.value)}
           >
             <option value="">{d.chooseValue}</option>
@@ -323,7 +429,7 @@ export function QuickReception({
             id={id}
             type="checkbox"
             checked={facts[key] === 'true'}
-            disabled={busy || !!done}
+            disabled={busy || !!done || uncertain}
             onChange={(e) => set(e.target.checked ? 'true' : '')}
           />
         ) : key === 'description' ? (
@@ -333,7 +439,7 @@ export function QuickReception({
             rows={3}
             maxLength={1000}
             required
-            disabled={busy || !!done}
+            disabled={busy || !!done || uncertain}
             onChange={(e) => set(e.target.value)}
           />
         ) : (
@@ -343,7 +449,7 @@ export function QuickReception({
             inputMode={definition.data_type === 'number' ? 'decimal' : 'text'}
             maxLength={1000}
             required={key === 'description'}
-            disabled={busy || !!done}
+            disabled={busy || !!done || uncertain}
             onChange={(e) => set(e.target.value)}
           />
         )}
@@ -372,7 +478,7 @@ export function QuickReception({
               <button
                 type="button"
                 className="text-link"
-                disabled={busy}
+                disabled={busy || uncertain}
                 onClick={() => {
                   setSeller(null)
                   next()
@@ -425,7 +531,7 @@ export function QuickReception({
               <div className="field quick-photo-field">
                 <label
                   htmlFor="quick-photo"
-                  className={`quick-photo-picker${busy || session ? ' is-disabled' : ''}`}
+                  className={`quick-photo-picker${busy || session || uncertain ? ' is-disabled' : ''}`}
                 >
                   {photoUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -445,7 +551,7 @@ export function QuickReception({
                   type="file"
                   accept="image/jpeg,image/png"
                   capture="environment"
-                  disabled={busy || !!session}
+                  disabled={busy || !!session || uncertain}
                   onChange={(e) => {
                     const file = e.target.files?.[0]
                     if (file) void onPhoto(file)
@@ -468,7 +574,7 @@ export function QuickReception({
                   autoComplete="off"
                   placeholder={d.itemTypeNone}
                   value={typeQuery}
-                  disabled={busy || !!done}
+                  disabled={busy || !!done || uncertain}
                   onChange={(e) => {
                     const value = e.target.value
                     setTypeQuery(value)
@@ -505,7 +611,7 @@ export function QuickReception({
                 required
                 inputMode="decimal"
                 value={price}
-                disabled={busy}
+                disabled={busy || uncertain}
                 onChange={(e) => setPrice(e.target.value)}
               />
             </div>
@@ -515,7 +621,7 @@ export function QuickReception({
                 <select
                   id="quick-printer"
                   value={printerId}
-                  disabled={busy}
+                  disabled={busy || uncertain}
                   onChange={(e) => {
                     setPrinterId(e.target.value)
                     try {
@@ -543,7 +649,9 @@ export function QuickReception({
                 ? d.busy
                 : stage === 'printing'
                   ? d.printing
-                  : d.submit}
+                  : uncertain
+                    ? d.retry
+                    : d.submit}
             </Button>
           </div>
           {error && (
@@ -561,6 +669,18 @@ export function QuickReception({
                 </>
               )}
             </p>
+          )}
+          {(uncertain || stale) && (
+            <div className="row wrap">
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={busy}
+                onClick={() => window.location.reload()}
+              >
+                {d.reload}
+              </Button>
+            </div>
           )}
         </section>
       )}

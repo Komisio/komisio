@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { quickReceiveResult } from '../intake/quick-receive-result'
 
 // Quick reception (intake profile "quick"): one call turns a seller's garment
 // into an accepted item. The database composes the existing steps in one
@@ -39,13 +40,10 @@ export const quickReceiveInput = z.strictObject({
 })
 export type QuickReceiveInput = z.infer<typeof quickReceiveInput>
 
-export const quickReceiveResult = z.object({
-  itemId: z.guid(),
-  reference: z.string(),
-  sessionId: z.guid(),
-  garmentId: z.guid(),
-  reviewVersion: z.number().int(),
-})
+// The result shape lives in a browser-safe module so the quick screen can
+// verify a reply with the same strictness as the route; re-exported here so
+// existing imports keep working.
+export { quickReceiveResult }
 
 export const quickErrorCodes = [
   'FORBIDDEN',

@@ -192,3 +192,36 @@ test('an in-flight keyboard save ignores another form submission', async ({
     await f.close()
   }
 })
+
+test('an explicit non-pointer button activation works while the type input stays focused', async ({
+  page,
+}) => {
+  const email = `quick-explicit-activation-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomBytes(16).toString('hex')}`)
+  const f = await p2Fixture(email)
+  try {
+    await f.commit()
+    await page.goto('/intake/quick')
+    await page.getByRole('button', { name: /Synthetic P2 seller/ }).click()
+    await page
+      .getByLabel(d.quickIntake.description, { exact: true })
+      .fill('Synthetic explicit activation')
+    await page.getByLabel(d.quickIntake.price, { exact: true }).fill('120')
+    await page.getByLabel(d.quickIntake.itemType, { exact: true }).focus()
+    // A DOM activation has detail=0 without being an implicit Enter submit.
+    await page
+      .getByRole('button', { name: d.quickIntake.submit, exact: true })
+      .evaluate((button) => (button as HTMLButtonElement).click())
+    await expect(page.locator('.quick-done h2')).toBeFocused()
+    expect(
+      (
+        await f.db.query(
+          'select count(*)::int n from items where tenant_id=$1',
+          [f.tenant],
+        )
+      ).rows[0].n,
+    ).toBe(1)
+  } finally {
+    await f.close()
+  }
+})

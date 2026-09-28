@@ -178,6 +178,7 @@ export function QuickReception({
   )
   const activeTypes = vocabulary.types.filter((t) => t.active)
   const running = useRef(false)
+  const itemTypeEnter = useRef(false)
   // One request id per garment attempt. It names the reception the engine
   // derives, so a corrected resend after a validation refusal reuses the same
   // (possibly already created) session instead of leaving an empty one behind.
@@ -808,7 +809,14 @@ export function QuickReception({
                       )
                       setItemType(match?.slug ?? null)
                     }}
+                    onKeyDown={(event) => {
+                      itemTypeEnter.current = event.key === 'Enter'
+                    }}
+                    onKeyUp={() => {
+                      itemTypeEnter.current = false
+                    }}
                     onBlur={() => {
+                      itemTypeEnter.current = false
                       const selected = activeTypes.find(
                         (t) => t.slug === itemType,
                       )
@@ -869,16 +877,11 @@ export function QuickReception({
                 disabled={busy || photoUnresolved}
                 type="submit"
                 onClick={(event) => {
-                  // Native implicit submission clicks the default button with
-                  // detail=0. Keep Enter for the item-type list without blocking
-                  // a pointer click on browsers that leave the input focused.
-                  if (
-                    event.detail === 0 &&
-                    event.currentTarget.ownerDocument.activeElement?.getAttribute(
-                      'list',
-                    ) === 'quick-item-types'
-                  )
+                  // Suppress only the implicit click from Enter in the type
+                  // list. Explicit pointer or assistive activations still work.
+                  if (itemTypeEnter.current && event.detail === 0)
                     event.preventDefault()
+                  itemTypeEnter.current = false
                 }}
                 className="quick-submit"
               >

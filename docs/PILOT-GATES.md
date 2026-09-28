@@ -68,10 +68,26 @@ objects (reception photos) are backed up separately (see HOSTED-STAGING.md).
 
 Local and self-hosted: `npm run backup:exercise` dumps the running database
 with `pg_dump` inside the container, restores it into a fresh disposable
-database, compares the row count of every public table, prints the counts,
-and drops the copy. It never touches the source database. Run it before
-the pilot and after every migration batch; a mismatch or a failed restore is
-a stop.
+database as an existing privileged role that recreates the original
+ownership (`KOMISIO_RESTORE_DB_USER`, `supabase_admin` in the bundled
+Supabase image; a self-hosted stack names its own role), verifies the
+application schemas (`public` and `komisio_private`) in the copy, and drops
+only that copy. It never writes to the source database and never creates,
+alters or grants roles. Run it before the pilot and after every migration
+batch.
+
+The verdict `APPLICATION RESTORE CHECK PASSED` means all of the following
+held: `pg_restore` exited normally with no error; the same table names in
+both directions with the same row counts; the same functions, triggers,
+policies, constraints, indexes, row-level security flags, owners and grants
+by definition. It compares counts and definitions, not row contents. Any
+restore error, any other exit status, a failed process, or a difference in
+those objects is a stop. An aggregate function in the application schemas
+is reported as unsupported and stops the check, because its definition is
+not digested. The exercise does not prove storage objects or
+hosted point-in-time recovery, and a source that is written during the dump
+can produce a false mismatch; rerun in a quiet moment before treating that
+as a failure.
 
 Restore exercise record: run on 2026-09-13 against the local stack with
 migrations through `20260915130000`, and again on 2026-09-14 with migrations

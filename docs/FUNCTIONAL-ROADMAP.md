@@ -11,7 +11,7 @@ This exclusion does not remove ordinary agreed return/donation workflows.
 ## Current delivery baseline (2026-09-28)
 
 PRs 270–290 are deployed to production. Staging additionally includes PRs
-291–301; those changes retain the production staging-observation gate.
+291–304; those changes retain the production staging-observation gate.
 Staff item and seller lists, seller-owned items and announced handovers
 support bounded search and pagination. Receiving supports contact-based
 seller lookup and direct item-label resolution. Seller handovers have an
@@ -41,8 +41,12 @@ journey sends no customer message and makes no external checkout or transfer.
 It does not replace the authenticated hosted pilot journey or physical label,
 POS and accounting acceptance described in [PILOT-GATES.md](PILOT-GATES.md).
 
-Next: make seller payout guidance and the seller portal more compact and
-clear on mobile, then complete the remaining hosted and hardware acceptance
+Seller payout guidance and the seller portal are now more compact and
+clear on mobile. Payout and handover forms retain the same request identity
+when retrying a lost response within the current form. Local backup verification
+now checks restored schema, privileges and row counts and fails on restore errors.
+
+Next: complete the remaining hosted and hardware acceptance
 with the required operator access. Space booking still requires the unresolved
 fee/cancellation decisions below. Stripe activation remains deferred; hourly
 price decay remains outside version 1.

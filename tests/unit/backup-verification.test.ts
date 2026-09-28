@@ -686,7 +686,7 @@ describe('catalog queries', () => {
   })
   it('expands sequence defaults with the sequence kind and keeps identities free of OIDs', () => {
     expect(GRANTS_SQL).toContain(
-      "acldefault(case when c.relkind='S' then 'S' else 'r' end, c.relowner)",
+      `acldefault((case when c.relkind='S' then 's' else 'r' end)::"char", c.relowner)`,
     )
     expect(GRANTS_SQL).toContain("acldefault('f', p.proowner)")
     expect(GRANTS_SQL).toContain(

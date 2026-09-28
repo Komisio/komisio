@@ -265,16 +265,16 @@ export const INVENTORY_SQL = `
              else pg_get_functiondef(p.oid) end||'|'||p.proowner::regrole::text) as digest
   from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname in (${schemaList})
   union all
-  select 'trigger', n.nspname||'.'||c.relname||'.'||t.tgname, md5(pg_get_triggerdef(t.oid)||'|'||t.tgenabled)
+  select 'trigger', n.nspname||'.'||c.relname||'.'||t.tgname, md5(pg_get_triggerdef(t.oid)||'|'||t.tgenabled::text)
   from pg_trigger t join pg_class c on c.oid=t.tgrelid join pg_namespace n on n.oid=c.relnamespace
   where not t.tgisinternal and n.nspname in (${schemaList})
   union all
   select 'policy', n.nspname||'.'||c.relname||'.'||p.polname,
     md5(p.polcmd::text||'|'||p.polpermissive::text||'|'||coalesce(pg_get_expr(p.polqual,p.polrelid),'')||'|'||coalesce(pg_get_expr(p.polwithcheck,p.polrelid),'')||'|'||
-      coalesce((select string_agg(case when r=0 then 'PUBLIC' else r::regrole::text end, ',' order by 1) from unnest(p.polroles) r),'PUBLIC'))
+      coalesce((select string_agg(case when r=0 then 'PUBLIC' else r::regrole::text end, ',' order by case when r=0 then 'PUBLIC' else r::regrole::text end) from unnest(p.polroles) r),'PUBLIC'))
   from pg_policy p join pg_class c on c.oid=p.polrelid join pg_namespace n on n.oid=c.relnamespace where n.nspname in (${schemaList})
   union all
-  select 'constraint', n.nspname||'.'||coalesce(c.relname,'')||'.'||x.conname, md5(pg_get_constraintdef(x.oid))
+  select 'constraint', n.nspname||'.'||coalesce(c.relname,'')||'.'||x.conname, md5(pg_get_constraintdef(x.oid, true))
   from pg_constraint x join pg_namespace n on n.oid=x.connamespace left join pg_class c on c.oid=x.conrelid where n.nspname in (${schemaList})
   union all
   select 'index', n.nspname||'.'||c.relname, md5(pg_get_indexdef(c.oid))
@@ -290,7 +290,7 @@ export const GRANTS_SQL = `
     case when a.grantee=0 then null else a.grantee::regrole::text end as grantee,
     a.privilege_type as privilege, a.is_grantable as grantable, a.grantor::regrole::text as grantor
   from pg_class c join pg_namespace n on n.oid=c.relnamespace
-  cross join lateral aclexplode(coalesce(c.relacl, acldefault(case when c.relkind='S' then 'S' else 'r' end, c.relowner))) a
+  cross join lateral aclexplode(coalesce(c.relacl, acldefault((case when c.relkind='S' then 's' else 'r' end)::"char", c.relowner))) a
   where c.relkind in ('r','v','m','S') and n.nspname in (${schemaList})
   union all
   select 'routine_grants', n.nspname, p.proname||'('||pg_get_function_identity_arguments(p.oid)||')',

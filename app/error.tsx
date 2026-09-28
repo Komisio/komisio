@@ -1,12 +1,17 @@
 'use client'
-import { dictionary } from '@/lib/i18n'
-import { Button } from '@/components/ui/button'
-export default function ErrorPage({ reset }: { reset: () => void }) {
-  const d = dictionary()
+
+import { dictionary } from '../lib/i18n'
+import { Button } from '../components/ui/button'
+import { useDocumentLocale } from '../components/platform/locale-provider'
+
+export default function ErrorPage({ retry }: { retry: () => void }) {
+  const d = dictionary(useDocumentLocale())
   return (
-    <div className="card">
-      <h1>{d.unexpected}</h1>
-      <Button onClick={reset}>{d.retry}</Button>
-    </div>
+    <main className="onboarding">
+      <div className="card">
+        <h1>{d.unexpected}</h1>
+        <Button onClick={retry}>{d.retry}</Button>
+      </div>
+    </main>
   )
 }

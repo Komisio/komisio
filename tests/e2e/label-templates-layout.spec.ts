@@ -122,6 +122,21 @@ test('the label template editor fits a 320px phone in every language and keeps t
             ).toBeLessThanOrEqual(320)
           }
         }
+        // A keyboard follows the visible width, height, save order without
+        // visiting a duplicate hidden mobile or desktop form.
+        const firstGroup = page.locator('.label-format').first()
+        await firstGroup.getByLabel(d.printing.width, { exact: true }).focus()
+        await page.keyboard.press('Tab')
+        await expect(
+          firstGroup.getByLabel(d.printing.height, { exact: true }),
+        ).toBeFocused()
+        await page.keyboard.press('Tab')
+        await expect(
+          firstGroup.getByRole('button', {
+            name: d.printing.saveFormat,
+            exact: true,
+          }),
+        ).toBeFocused()
         // Typing reaches the editor; nothing is saved or previewed here.
         await zpl.fill('^XA^FDsynthetic^FS^XZ')
         await expect(zpl).toHaveValue('^XA^FDsynthetic^FS^XZ')
@@ -163,6 +178,17 @@ test('the label template editor fits a 320px phone in every language and keeps t
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true)
+    const sizeGroup = page.locator('.label-format').first()
+    expect(
+      await sizeGroup.evaluate(
+        (el) => getComputedStyle(el).gridTemplateColumns.split(' ').length,
+      ),
+    ).toBe(4)
+    const sizes = sizeGroup.locator('input')
+    const widthBox = (await sizes.nth(0).boundingBox())!
+    const heightBox = (await sizes.nth(1).boundingBox())!
+    expect(Math.abs(widthBox.y - heightBox.y)).toBeLessThanOrEqual(1)
+    expect(heightBox.x).toBeGreaterThan(widthBox.x + widthBox.width)
     // No label was queued by any of the above.
     expect(
       (

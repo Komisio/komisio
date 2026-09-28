@@ -1,0 +1,165 @@
+import { test, expect, type Page } from '@playwright/test'
+import { randomUUID, randomBytes } from 'node:crypto'
+import { register } from '../helpers/account'
+import { p2Fixture } from '../helpers/p2-fixture'
+import d from '../../messages/sv.json' with { type: 'json' }
+
+// The label size row on the printing settings tab. Only the local synthetic
+// store; no printer job, template, provider or physical print is involved.
+
+async function openRow(page: Page, email: string) {
+  await register(page, email, `K!${randomBytes(16).toString('hex')}`)
+  const f = await p2Fixture(email)
+  await f.commit()
+  await page.setViewportSize({ width: 320, height: 720 })
+  await page.goto('/settings?tab=printing')
+  const row = page.getByRole('row', { name: new RegExp(d.printing.kinds.item) })
+  const width = row.getByLabel(d.printing.width, { exact: true })
+  const height = row.getByLabel(d.printing.height, { exact: true })
+  await expect(width).toBeEnabled()
+  return { f, row, width, height }
+}
+
+test('a lost reply keeps the label size frozen and the retry sends the same command', async ({
+  page,
+}) => {
+  const { f, row, width, height } = await openRow(
+    page,
+    `label-format-retry-${randomUUID()}@example.test`,
+  )
+  try {
+    await width.fill('60')
+    await height.fill('40')
+    const commands: Record<string, unknown>[] = []
+    let firstStatus = 0
+    await page.route('**/api/intake', async (route) => {
+      const command = route.request().postDataJSON()
+      if (command?.action !== 'setLabelFormat') return route.continue()
+      commands.push(command)
+      if (commands.length !== 1) return route.continue()
+      // The store's size is written; the browser only sees a 503.
+      const response = await route.fetch()
+      firstStatus = response.status()
+      await route.fulfill({
+        status: 503,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: 'REQUEST_FAILED' }),
+      })
+    })
+    await row
+      .getByRole('button', { name: d.printing.saveFormat, exact: true })
+      .click()
+    await expect(row.getByRole('alert')).toHaveText(d.intake.failed)
+    expect(firstStatus).toBe(200)
+    // Frozen: the retry will resend the command as it was, so the fields
+    // must not invite edits, and the button says so.
+    await expect(width).toBeDisabled()
+    await expect(height).toBeDisabled()
+    const retry = row.getByRole('button', {
+      name: d.intake.retry,
+      exact: true,
+    })
+    await expect(retry).toBeEnabled()
+    await expect(
+      row.getByRole('button', { name: d.intake.reload, exact: true }),
+    ).toHaveCount(0)
+    await retry.click()
+    await expect(row.getByRole('status')).toHaveText(d.printing.formatSaved)
+    await expect(row.getByRole('alert')).toHaveCount(0)
+    await expect(width).toBeEnabled()
+    expect(commands).toHaveLength(2)
+    expect(commands[1]).toEqual(commands[0])
+    expect(commands[0]).toMatchObject({
+      kind: 'item',
+      widthMm: 60,
+      heightMm: 40,
+    })
+    // Persisted and displayed: the original dimensions, once.
+    expect(
+      (
+        await f.db.query(
+          'select kind, width_mm, height_mm from label_formats where tenant_id=$1',
+          [f.tenant],
+        )
+      ).rows,
+    ).toEqual([{ kind: 'item', width_mm: '60.0', height_mm: '40.0' }])
+    await page.reload()
+    await expect(
+      page
+        .getByRole('row', { name: new RegExp(d.printing.kinds.item) })
+        .getByLabel(d.printing.width, { exact: true }),
+    ).toHaveValue('60')
+    // The engine has no request identity for this setting: a replay re-applies
+    // the same values and records a second access event. Reported, not hidden.
+    expect(
+      (
+        await f.db.query(
+          "select count(*)::int n from access_events where tenant_id=$1 and action='label_format.set'",
+          [f.tenant],
+        )
+      ).rows[0].n,
+    ).toBe(2)
+  } finally {
+    await f.close()
+  }
+})
+
+test('a changed active store offers a reload instead of a permanently disabled row', async ({
+  page,
+}) => {
+  const { f, row, width, height } = await openRow(
+    page,
+    `label-format-stale-${randomUUID()}@example.test`,
+  )
+  try {
+    await width.fill('70')
+    // The same owner switches store in another session before saving; the
+    // route then answers 409 TENANT_CHANGED for this page's store (actual,
+    // not synthetic).
+    await f.asActor(f.actor, async () => {
+      const other = (
+        await f.db.query('select create_tenant($1,$2,$3) id', [
+          'Other synthetic store',
+          `other-${randomUUID()}`,
+          randomUUID(),
+        ])
+      ).rows[0].id
+      await f.db.query('select set_active_tenant($1)', [other])
+    })
+    const refused = page.waitForResponse(
+      (r) =>
+        r.url().endsWith('/api/intake') &&
+        r.request().postDataJSON()?.action === 'setLabelFormat',
+    )
+    await row
+      .getByRole('button', { name: d.printing.saveFormat, exact: true })
+      .click()
+    const reply = await refused
+    expect(reply.status()).toBe(409)
+    expect((await reply.json()).error).toBe('TENANT_CHANGED')
+    await expect(row.getByRole('alert')).toHaveText(d.intake.changed)
+    await expect(width).toBeDisabled()
+    await expect(height).toBeDisabled()
+    await expect(
+      row.getByRole('button', { name: d.printing.saveFormat, exact: true }),
+    ).toBeDisabled()
+    const reload = row.getByRole('button', {
+      name: d.intake.reload,
+      exact: true,
+    })
+    await expect(reload).toBeVisible()
+    await reload.click()
+    await expect(page).toHaveURL(/\/settings\?tab=printing$/)
+    // Nothing was written for the original store.
+    expect(
+      (
+        await f.db.query(
+          'select count(*)::int n from label_formats where tenant_id=$1',
+          [f.tenant],
+        )
+      ).rows[0].n,
+    ).toBe(0)
+  } finally {
+    await f.close()
+  }
+})

@@ -35,6 +35,46 @@ summary {
   gap: 24px;
   margin-bottom: 24px;
 }
+/* The label template editor's columns may shrink below their content's
+   intrinsic width (a textarea's default cols, a long button row), so a phone
+   gets one narrow column instead of a page that scrolls sideways. */
+.label-template-editor > * {
+  min-width: 0;
+}
+/* Label sizes: the kind stays on one line; on a phone the table scrolls
+   inside its own wrapper rather than breaking names letter by letter. */
+.label-formats-table th,
+.label-formats-table td:first-child {
+  white-space: nowrap;
+}
+/* The ZPL editor folds away behind its heading: a visible disclosure mark,
+   a 44px row, keyboard focus ring. */
+.label-templates-fold > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 0;
+  cursor: pointer;
+  list-style: none;
+}
+.label-templates-fold > summary::-webkit-details-marker {
+  display: none;
+}
+.label-templates-fold > summary::before {
+  content: '▸';
+  flex-shrink: 0;
+}
+.label-templates-fold[open] > summary::before {
+  content: '▾';
+}
+.label-templates-fold > summary h3 {
+  margin: 0;
+}
+.label-templates-fold > summary:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
 .intake-form {
   padding: 24px;
   min-width: 0;

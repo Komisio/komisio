@@ -1,5 +1,5 @@
 'use client'
-import { useSyncExternalStore, type ReactNode } from 'react'
+import { useEffect, useRef, useSyncExternalStore, type ReactNode } from 'react'
 import type { Dictionary } from '@/lib/i18n'
 import './seller-tabs.css'
 export const sellerTabs = [
@@ -38,13 +38,35 @@ export function SellerTabs({
     currentTab,
     () => 'overview' as SellerTab,
   )
+  const strip = useRef<HTMLDivElement>(null)
+  // On a phone the strip scrolls sideways; a deep link, a shortcut or a
+  // click may select a tab beyond its visible width. Scroll the strip alone,
+  // never the page, so the selected tab is in view.
+  useEffect(() => {
+    const list = strip.current
+    const tab = document.getElementById('seller-tab-' + selected)
+    if (!list || !tab) return
+    // The strip is positioned, so the tab's offsetLeft is relative to it.
+    const pad = 12
+    const left = tab.offsetLeft
+    const right = left + tab.offsetWidth
+    if (left - pad < list.scrollLeft)
+      list.scrollTo({ left: Math.max(0, left - pad) })
+    else if (right + pad > list.scrollLeft + list.clientWidth)
+      list.scrollTo({ left: right + pad - list.clientWidth })
+  }, [selected])
   function select(tab: SellerTab) {
     window.history.pushState(null, '', '#seller-' + tab)
     window.dispatchEvent(new HashChangeEvent('hashchange'))
   }
   return (
     <div className="seller-workspace">
-      <div className="seller-tablist" role="tablist" aria-label={d.intro}>
+      <div
+        className="seller-tablist"
+        role="tablist"
+        aria-label={d.intro}
+        ref={strip}
+      >
         {sellerTabs.map((tab, index) => (
           <button
             key={tab}

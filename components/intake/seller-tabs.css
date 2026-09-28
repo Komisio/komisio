@@ -9,6 +9,8 @@
   display: flex;
   gap: 6px;
   overflow-x: auto;
+  position: relative;
+  scroll-padding-inline: 12px;
   border-bottom: 1px solid var(--line);
   padding-bottom: 8px;
   margin-bottom: 24px;

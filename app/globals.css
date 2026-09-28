@@ -3000,3 +3000,12 @@ button.text-link:hover:not(:disabled) {
 #economy-brief > summary {
   min-height: 44px;
 }
+
+/* Quick reception: a photo whose save is not yet confirmed. */
+.quick-photo-picker.is-uncertain {
+  border-style: dashed;
+  border-color: #b7791f;
+}
+.quick-photo-alert {
+  margin: 0;
+}

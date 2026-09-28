@@ -77,6 +77,7 @@
     "fillIn": "A description and a price above zero are needed.",
     "failed": "The item could not be received. Try again.",
     "uncertain": "Could not confirm whether the item was received. Try again with the same details, or reload the page and check the item list.",
+    "photoUncertain": "Could not confirm that the photo was saved. Try again with the same photo, or reload the page.",
     "retry": "Try again",
     "reload": "Reload page",
     "printed": "The label is queued for the printer.",
@@ -104,6 +105,7 @@
       "REQUEST_CONFLICT": "This request was already used for other content.",
       "PHOTO_UPLOAD_FAILED": "The photo could not be uploaded. Try another photo.",
       "IMAGE_TOO_LARGE": "The photo is too large (3 MB at most).",
+      "INVALID_IMAGE": "The file is not a valid JPEG or PNG image.",
       "REQUEST_FAILED": "The request failed. Retry."
     },
     "addPhoto": "Take or choose a photo",

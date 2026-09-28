@@ -33,7 +33,8 @@ sweep fails in CI.
 
 `seller_data_export(tenant, seller)` returns every row Komisio holds about
 one seller in one JSON document: the seller record, terms versions,
-agreement evidence, notification preferences, bags and their inspection
+agreement evidence, notification preferences, announced handovers and their
+event history, bags and their inspection
 drafts, receptions with their source revisions, reviews and garments, items
 with events and prices, sale lines with their sale headers, returns, ledger
 entries, payouts with events, statements with lines, and communications.

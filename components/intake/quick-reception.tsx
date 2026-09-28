@@ -78,6 +78,7 @@ export function QuickReception({
   const running = useRef(false)
   const fileInput = useRef<HTMLInputElement>(null)
   const itemHeading = useRef<HTMLHeadingElement>(null)
+  const doneHeading = useRef<HTMLHeadingElement>(null)
   const focusNextItem = useRef(false)
   useEffect(() => {
     // Only an explicit seller selection or Next item moves the user's place.
@@ -88,6 +89,14 @@ export function QuickReception({
     itemHeading.current.focus({ preventScroll: true })
     itemHeading.current.scrollIntoView({ block: 'start', behavior: 'instant' })
   }, [seller, done])
+  useEffect(() => {
+    // "Ready for the shelf" unmounts the button that had focus. Move focus to
+    // the confirmation heading so completion is announced and the next Tab
+    // reaches "Next item" instead of starting over from the page top.
+    if (!done || !doneHeading.current) return
+    doneHeading.current.focus({ preventScroll: true })
+    doneHeading.current.scrollIntoView({ block: 'start', behavior: 'instant' })
+  }, [done])
   const errors = d.errors as Record<string, string>
   useEffect(() => {
     // The remembered printer is a per-browser convenience; it is applied
@@ -557,7 +566,11 @@ export function QuickReception({
       )}
       {done && (
         <section className="card intake-form quick-done" aria-label={d.done}>
-          <h2>
+          <h2
+            ref={doneHeading}
+            tabIndex={-1}
+            style={{ scrollMarginTop: '1rem' }}
+          >
             <Check aria-hidden="true" />
             {d.done}
           </h2>

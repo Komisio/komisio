@@ -48,7 +48,7 @@ export default async function Review({
         {!ctx ? (
           <>
             <p>{d.reviewLogin}</p>
-            <div className="row">
+            <div className="row wrap">
               <Button asChild>
                 <Link href={`/login?next=${next}`}>{d.login}</Link>
               </Button>

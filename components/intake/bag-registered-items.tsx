@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import Image from 'next/image'
 import { dictionary, intlLocale, type Locale } from '@/lib/i18n'
 import type { BagRegisteredPage } from '@/lib/engine/bag-registered-items'

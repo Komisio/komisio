@@ -2,7 +2,10 @@
 import { NewSellerLink } from '@/components/intake/new-seller-link'
 import { CreateItemType } from './create-item-type'
 import { useEffect, useRef, useState } from 'react'
-import Link from 'next/link'
+import {
+  NavigationLink as Link,
+  useNavigationWarning,
+} from '@/components/platform/navigation-warning'
 import { useRouter } from 'next/navigation'
 import { QuickSellerPicker } from './quick-seller-picker'
 import { Camera, Check } from 'lucide-react'
@@ -228,6 +231,7 @@ export function QuickReception({
       photoUrl !== null ||
       uncertain ||
       photoUnresolved)
+  useNavigationWarning(hasUnsavedItem ? d.leaveItem : null)
   useEffect(() => {
     if (!hasUnsavedItem) return
     const warnBeforeLeaving = (event: BeforeUnloadEvent) => {

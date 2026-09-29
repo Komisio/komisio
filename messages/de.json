@@ -50,6 +50,7 @@
     "newSeller": "Neuen Einlieferer registrieren",
     "changeSeller": "Verkäufer wechseln",
     "discardForSellerChange": "Verkäufer wechseln? Nicht gespeicherte Angaben zu diesem Artikel gehen verloren.",
+    "leaveItem": "Annahme verlassen? Nicht gespeicherte Formularangaben gehen verloren. Wenn das Speichern nicht bestätigt wurde, prüfen Sie vor einem erneuten Versuch die Artikelliste.",
     "garment": "Artikel",
     "photo": "Foto",
     "photoHint": "Optional · JPEG oder PNG, bis 3 MB.",

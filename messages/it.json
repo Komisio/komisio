@@ -50,6 +50,7 @@
     "newSeller": "Registra un nuovo conferente",
     "changeSeller": "Cambia venditore",
     "discardForSellerChange": "Cambiare venditore? I dati non salvati di questo articolo andranno persi.",
+    "leaveItem": "Uscire dalla ricezione? I dati non salvati del modulo andranno persi. Se il salvataggio non è stato confermato, controlla la lista degli articoli prima di riprovare.",
     "garment": "Articolo",
     "photo": "Foto",
     "photoHint": "Facoltativo · JPEG o PNG, massimo 3 MB.",

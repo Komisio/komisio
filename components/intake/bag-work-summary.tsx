@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { dictionary, intlLocale, type Locale } from '@/lib/i18n'
 import { readBagWorkSummary } from '@/lib/engine/bag-work-summary'

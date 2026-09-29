@@ -1,6 +1,9 @@
 'use client'
 import { usePathname, useRouter } from 'next/navigation'
-import Link from 'next/link'
+import {
+  NavigationLink as Link,
+  useConfirmNavigation,
+} from './navigation-warning'
 import { Plus, LogOut } from 'lucide-react'
 import { NavIcon } from './nav-icon'
 import {
@@ -42,10 +45,12 @@ export function Shell({
   const isActive = (path: string) => isActivePath(pathname, path)
   const router = useRouter()
   const action = useCommand(d)
+  const confirmNavigation = useConfirmNavigation()
   const groups = buildNavigation(d, { intakeEnabled, host })
   const mobile = mobileNavigation(d, intakeEnabled)
   const current = currentLink(groups, pathname)
   async function select(value: string) {
+    if (value === active.id || !confirmNavigation()) return
     const result = await action.run({ action: 'select', tenantId: value })
     if (result) {
       router.push('/')
@@ -53,6 +58,7 @@ export function Shell({
     }
   }
   async function signOut() {
+    if (!confirmNavigation()) return
     await browserClient().auth.signOut()
     router.push('/login')
     router.refresh()

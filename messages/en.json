@@ -50,6 +50,7 @@
     "newSeller": "Register a new seller",
     "changeSeller": "Change seller",
     "discardForSellerChange": "Change seller? Unsaved details for this item will be discarded.",
+    "leaveItem": "Leave reception? Unsaved form details will be discarded. If a save was not confirmed, check the item list before trying again.",
     "garment": "Item",
     "photo": "Photo",
     "photoHint": "Optional · JPEG or PNG, up to 3 MB.",

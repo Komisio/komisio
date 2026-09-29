@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { NavigationLink as Link } from './navigation-warning'
 export function Brand({ light = false }: { light?: boolean }) {
   return (
     <Link

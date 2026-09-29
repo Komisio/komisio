@@ -50,6 +50,7 @@
     "newSeller": "Rekisteröi uusi tuoja",
     "changeSeller": "Vaihda myyjää",
     "discardForSellerChange": "Vaihda myyjää? Tuotteen tallentamattomat tiedot menetetään.",
+    "leaveItem": "Poistutaanko vastaanotosta? Lomakkeen tallentamattomat tiedot menetetään. Jos tallennusta ei vahvistettu, tarkista tuoteluettelo ennen kuin yrität uudelleen.",
     "garment": "Tuote",
     "photo": "Kuva",
     "photoHint": "Valinnainen · JPEG tai PNG, enintään 3 Mt.",

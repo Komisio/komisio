@@ -1,4 +1,5 @@
 import { LoadingMessageProvider } from '@/components/platform/loading-message'
+import { NavigationWarningProvider } from '@/components/platform/navigation-warning'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { Shell } from '@/components/platform/shell'
@@ -39,23 +40,25 @@ export default async function DashboardLayout({
   ])
   return (
     <LoadingMessageProvider message={d.loading}>
-      <Shell
-        intakeEnabled={process.env.KOMISIO_INTAKE_ENABLED === 'true'}
-        host={host}
-        d={d}
-        locale={ctx.locale}
-        tenants={ctx.tenants}
-        active={ctx.active!}
-        email={ctx.user.email ?? ''}
-        name={ctx.profile?.display_name ?? ''}
-      >
-        <PlanBanner
-          status={plan}
-          isOwner={ctx.active.role === 'owner'}
-          d={d.plans}
-        />
-        {children}
-      </Shell>
+      <NavigationWarningProvider>
+        <Shell
+          intakeEnabled={process.env.KOMISIO_INTAKE_ENABLED === 'true'}
+          host={host}
+          d={d}
+          locale={ctx.locale}
+          tenants={ctx.tenants}
+          active={ctx.active!}
+          email={ctx.user.email ?? ''}
+          name={ctx.profile?.display_name ?? ''}
+        >
+          <PlanBanner
+            status={plan}
+            isOwner={ctx.active.role === 'owner'}
+            d={d.plans}
+          />
+          {children}
+        </Shell>
+      </NavigationWarningProvider>
     </LoadingMessageProvider>
   )
 }

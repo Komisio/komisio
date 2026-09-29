@@ -317,7 +317,9 @@ export default async function Settings({
               intake={d.intake}
             />
           )}
-          <h3>{pr.jobs}</h3>
+          <h3 id="print-jobs" tabIndex={-1}>
+            {pr.jobs}
+          </h3>
           {jobs.length === 0 && <p>{pr.noJobs}</p>}
           {jobs.slice(0, 20).map((j) => (
             <p key={j.id}>

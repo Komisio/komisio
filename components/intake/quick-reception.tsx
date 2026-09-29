@@ -28,6 +28,15 @@ import {
 
 type Seller = { id: string; name: string; contact: string | null }
 type Printer = { id: string; name: string }
+type PrintAttempt = {
+  tenantId: string
+  requestId: string
+  printerId: string
+  kind: 'item'
+  referenceKind: 'item'
+  referenceId: string
+  copies: 1
+}
 /** Slug to value. Which slugs appear is decided by the item type, so a lamp
  * shows a socket where a sweater shows a size. */
 type Facts = Record<string, string>
@@ -212,6 +221,11 @@ export function QuickReception({
   } | null>(null)
   const [uncertain, setUncertain] = useState(false)
   const [stale, setStale] = useState(false)
+  const pendingPrint = useRef<PrintAttempt | null>(null)
+  const printing = useRef(false)
+  const [printIssue, setPrintIssue] = useState<'uncertain' | 'refused' | null>(
+    null,
+  )
   // Photo phases keep their identities here so a retry repeats exactly the
   // phases that were not confirmed; nothing is re-derived from the fields.
   const reception = useRef<Reception | null>(null)
@@ -309,6 +323,35 @@ export function QuickReception({
   const fail = (e: unknown) => {
     const code = e instanceof Error ? e.message : ''
     setError(errors[code] ?? d.failed)
+  }
+
+  async function runPrint() {
+    const command = pendingPrint.current
+    if (!command || printing.current || printIssue === 'refused') return
+    printing.current = true
+    setStage('printing')
+    setPrintIssue(null)
+    setMessage('')
+    try {
+      const result = await post('/api/print', command)
+      if (result?.ok !== true || result?.id !== command.requestId)
+        throw new Error('UNCONFIRMED_PRINT')
+      pendingPrint.current = null
+      setMessage(d.printed)
+      doneHeading.current?.focus({ preventScroll: true })
+    } catch (error) {
+      setPrintIssue(
+        error instanceof RequestFailure &&
+          error.status >= 400 &&
+          error.status < 500
+          ? 'refused'
+          : 'uncertain',
+      )
+      setMessage(d.printFailed)
+    } finally {
+      printing.current = false
+      setStage('idle')
+    }
   }
 
   function dropPhoto() {
@@ -532,24 +575,19 @@ export function QuickReception({
       attempt.current = null
       setUncertain(false)
       setStale(false)
-      if (current.printerId) {
-        setStage('printing')
-        try {
-          await post('/api/print', {
-            tenantId,
-            requestId: crypto.randomUUID(),
-            printerId: current.printerId,
-            kind: 'item',
-            referenceKind: 'item',
-            referenceId: result.itemId,
-            copies: 1,
-          })
-          setMessage(d.printed)
-        } catch {
-          setMessage(d.printFailed)
-        }
-      } else setMessage('')
       setDone({ reference: result.reference, itemId: result.itemId })
+      if (current.printerId) {
+        pendingPrint.current = {
+          tenantId,
+          requestId: crypto.randomUUID(),
+          printerId: current.printerId,
+          kind: 'item',
+          referenceKind: 'item',
+          referenceId: result.itemId,
+          copies: 1,
+        }
+        await runPrint()
+      } else setMessage('')
       if (bagId) {
         // A saved item sorts first; keep the confirmation visible while refreshing that page.
         const url = new URL(window.location.href)
@@ -588,9 +626,12 @@ export function QuickReception({
   }
 
   function next() {
+    if (running.current || printing.current) return
     focusNextItem.current = true
     attempt.current = null
     requestId.current = null
+    pendingPrint.current = null
+    setPrintIssue(null)
     setUncertain(false)
     setStale(false)
     setDone(null)
@@ -1005,10 +1046,39 @@ export function QuickReception({
           <p>
             <strong>{done.reference}</strong> · {facts.description}
           </p>
-          {message && <p>{message}</p>}
+          {message && <p role={printIssue ? 'alert' : 'status'}>{message}</p>}
+          {(printIssue || stage === 'printing') && (
+            <div className="row wrap">
+              {printIssue !== 'refused' && (
+                <Button
+                  variant="secondary"
+                  disabled={busy}
+                  onClick={() => void runPrint()}
+                >
+                  {busy ? d.busy : d.retryPrint}
+                </Button>
+              )}
+              {printIssue === 'refused' && (
+                <Button
+                  variant="secondary"
+                  onClick={() => window.location.reload()}
+                >
+                  {d.reload}
+                </Button>
+              )}
+              <Link
+                className="btn btn-secondary"
+                href="/settings?tab=printing#print-jobs"
+              >
+                {d.openPrintQueue}
+              </Link>
+            </div>
+          )}
           {/* Two actions must fit a 320px phone: wrap instead of pushing the page sideways. */}
           <div className="row wrap">
-            <Button onClick={next}>{d.next}</Button>
+            <Button onClick={next} disabled={busy}>
+              {d.next}
+            </Button>
             <Link
               className="btn btn-secondary"
               href={`/intake/items/${done.itemId}`}

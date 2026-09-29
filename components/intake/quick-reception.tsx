@@ -219,6 +219,24 @@ export function QuickReception({
   >(null)
   const [photoError, setPhotoError] = useState('')
   const photoUnresolved = photoIssue === 'stale' || photoIssue === 'uncertain'
+  // A selected seller/type or remembered printer alone is not unsaved item
+  // content. Type selection carries over to the next item on purpose.
+  const hasUnsavedItem =
+    !done &&
+    (Object.values(facts).some((value) => value.length > 0) ||
+      price.length > 0 ||
+      photoUrl !== null ||
+      uncertain ||
+      photoUnresolved)
+  useEffect(() => {
+    if (!hasUnsavedItem) return
+    const warnBeforeLeaving = (event: BeforeUnloadEvent) => {
+      event.preventDefault()
+      event.returnValue = ''
+    }
+    window.addEventListener('beforeunload', warnBeforeLeaving)
+    return () => window.removeEventListener('beforeunload', warnBeforeLeaving)
+  }, [hasUnsavedItem])
   // A file chosen before React has taken over the server-rendered input
   // fires a change event nothing handles and is silently lost. The picker
   // opens only once the handler is attached; the first frame still matches
@@ -679,6 +697,11 @@ export function QuickReception({
                   // Switching sellers discards the attempt; not while a
                   // photo or a submit is unresolved.
                   if (busy || uncertain || photoUnresolved) return
+                  if (
+                    hasUnsavedItem &&
+                    !window.confirm(d.discardForSellerChange)
+                  )
+                    return
                   setSeller(null)
                   next()
                 }}

@@ -167,12 +167,14 @@ export function InspectionForm({
       <section className="card intake-form" role="status">
         <h2>{s.saved}</h2>
         <p>{s.savedHint}</p>
-        <a className="text-link" href={`${path}?draft=${draftId}`}>
-          {s.resume}
-        </a>
-        <a className="text-link" href={path}>
-          {s.another}
-        </a>
+        <div className="row wrap inspection-saved-actions">
+          <a className="text-link" href={`${path}?draft=${draftId}`}>
+            {s.resume}
+          </a>
+          <a className="text-link" href={path}>
+            {s.another}
+          </a>
+        </div>
       </section>
     )
   return (

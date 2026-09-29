@@ -1,4 +1,9 @@
 @import 'tailwindcss';
+.inspection-saved-actions > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
 textarea {
   width: 100%;
   min-height: 120px;

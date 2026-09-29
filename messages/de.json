@@ -49,6 +49,7 @@
     "noSeller": "Kein passender Einlieferer.",
     "newSeller": "Neuen Einlieferer registrieren",
     "changeSeller": "Verkäufer wechseln",
+    "discardForSellerChange": "Verkäufer wechseln? Nicht gespeicherte Angaben zu diesem Artikel gehen verloren.",
     "garment": "Artikel",
     "photo": "Foto",
     "photoHint": "Optional · JPEG oder PNG, bis 3 MB.",

@@ -88,6 +88,20 @@ test('saved details fold away on the editable draft and stay open where they are
       .fill('Synthetic blue coat, lined')
     await page.getByRole('button', { name: s.save, exact: true }).click()
     await expect(page.getByRole('status')).toContainText(s.saved)
+    const actions = page.locator('.inspection-saved-actions')
+    const resume = actions.getByRole('link', { name: s.resume, exact: true })
+    const another = actions.getByRole('link', { name: s.another, exact: true })
+    const firstBox = (await resume.boundingBox())!
+    const secondBox = (await another.boundingBox())!
+    expect(firstBox.height).toBeGreaterThanOrEqual(44)
+    expect(secondBox.height).toBeGreaterThanOrEqual(44)
+    expect(
+      secondBox.x >= firstBox.x + firstBox.width + 8 ||
+        secondBox.y >= firstBox.y + firstBox.height + 8,
+    ).toBe(true)
+    await actions.screenshot({
+      path: 'test-results/inspection-saved-actions.png',
+    })
     await expect(saved.locator('summary')).toContainText(`${s.version} 2`)
     await saved.locator('summary').click()
     await expect(saved.getByText('Synthetic blue coat, lined')).toBeVisible()

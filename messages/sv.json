@@ -49,6 +49,7 @@
     "noSeller": "Ingen säljare matchar.",
     "newSeller": "Registrera ny säljare",
     "changeSeller": "Byt säljare",
+    "discardForSellerChange": "Byta säljare? Osparade uppgifter för varan försvinner.",
     "garment": "Vara",
     "photo": "Foto",
     "photoHint": "Valfritt · JPEG eller PNG, högst 3 MB.",

@@ -1027,7 +1027,8 @@
       "garment": "garment receipt"
     },
     "priceReasons": {
-      "accepted": "accepted price"
+      "accepted": "accepted price",
+      "manual": "Manual price change"
     },
     "eventKinds": {
       "accepted": "Accepted",
@@ -1042,7 +1043,8 @@
     "pageOf": "Page {page} of {pages}",
     "currentPrice": "Current price",
     "labelPrinter": "Label printer",
-    "manageSalePeriod": "Price and sale period"
+    "manageSalePeriod": "Price and sale period",
+    "unknownActor": "Name unavailable"
   },
   "sales": {
     "title": "Sales",

@@ -1027,7 +1027,8 @@
       "garment": "Kleidungsstück-Annahme"
     },
     "priceReasons": {
-      "accepted": "angenommener Preis"
+      "accepted": "angenommener Preis",
+      "manual": "Manuelle Preisänderung"
     },
     "eventKinds": {
       "accepted": "Angenommen",
@@ -1042,7 +1043,8 @@
     "pageOf": "Seite {page} von {pages}",
     "currentPrice": "Aktueller Preis",
     "labelPrinter": "Etikettendrucker",
-    "manageSalePeriod": "Preis und Verkaufszeitraum"
+    "manageSalePeriod": "Preis und Verkaufszeitraum",
+    "unknownActor": "Name nicht verfügbar"
   },
   "sales": {
     "title": "Verkäufe",

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ActorSignature } from '@/components/intake/actor-signature'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
@@ -71,10 +72,13 @@ export default async function Item({
             </strong>
           </p>
         )}
-        <p>
-          {d.acceptedAt}: {when(item.accepted_at)} ·{' '}
-          {d.ownershipKinds[item.ownership]}
-        </p>
+        <div className="item-actor-line">
+          <span>
+            {d.acceptedAt}: {when(item.accepted_at)} ·{' '}
+            {d.ownershipKinds[item.ownership]}
+          </span>
+          <ActorSignature actor={item.actor} unknown={d.unknownActor} />
+        </div>
         <p>
           <Link className="text-link" href={originHref}>
             {d.openOrigin}
@@ -199,9 +203,12 @@ export default async function Item({
         <ul className="item-detail-history">
           {prices.map((p) => (
             <li key={p.id}>
-              <strong>
-                {formatOre(p.price_ore)} {currency}
-              </strong>
+              <div className="item-actor-line">
+                <strong>
+                  {formatOre(p.price_ore)} {currency}
+                </strong>
+                <ActorSignature actor={p.actor} unknown={d.unknownActor} />
+              </div>
               <span>
                 {d.priceReasons[p.reason as keyof typeof d.priceReasons] ??
                   p.reason}
@@ -218,9 +225,12 @@ export default async function Item({
         <ul className="item-detail-history">
           {events.map((e) => (
             <li key={e.id}>
-              <strong>
-                {d.eventKinds[e.kind as keyof typeof d.eventKinds] ?? e.kind}
-              </strong>
+              <div className="item-actor-line">
+                <strong>
+                  {d.eventKinds[e.kind as keyof typeof d.eventKinds] ?? e.kind}
+                </strong>
+                <ActorSignature actor={e.actor} unknown={d.unknownActor} />
+              </div>
               <time dateTime={e.occurred_at}>{when(e.occurred_at)}</time>
             </li>
           ))}

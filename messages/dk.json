@@ -1027,7 +1027,8 @@
       "garment": "modtagelse af tøj"
     },
     "priceReasons": {
-      "accepted": "accepteret pris"
+      "accepted": "accepteret pris",
+      "manual": "Manuel prisændring"
     },
     "eventKinds": {
       "accepted": "Accepteret",
@@ -1042,7 +1043,8 @@
     "pageOf": "Side {page} af {pages}",
     "currentPrice": "Nuværende pris",
     "labelPrinter": "Etiketprinter",
-    "manageSalePeriod": "Pris og salgsperiode"
+    "manageSalePeriod": "Pris og salgsperiode",
+    "unknownActor": "Navn mangler"
   },
   "sales": {
     "title": "Salg",

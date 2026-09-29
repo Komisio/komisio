@@ -1027,7 +1027,8 @@
       "garment": "recepción de prenda"
     },
     "priceReasons": {
-      "accepted": "precio aceptado"
+      "accepted": "precio aceptado",
+      "manual": "Cambio de precio manual"
     },
     "eventKinds": {
       "accepted": "Aceptado",
@@ -1042,7 +1043,8 @@
     "pageOf": "Página {page} de {pages}",
     "currentPrice": "Precio actual",
     "labelPrinter": "Impresora de etiquetas",
-    "manageSalePeriod": "Precio y período de venta"
+    "manageSalePeriod": "Precio y período de venta",
+    "unknownActor": "Nombre no disponible"
   },
   "sales": {
     "title": "Ventas",

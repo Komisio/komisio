@@ -1027,7 +1027,8 @@
       "garment": "plaggkvitto"
     },
     "priceReasons": {
-      "accepted": "accepterat pris"
+      "accepted": "accepterat pris",
+      "manual": "Manuell prisändring"
     },
     "eventKinds": {
       "accepted": "Accepterad",
@@ -1042,7 +1043,8 @@
     "pageOf": "Sida {page} av {pages}",
     "currentPrice": "Nuvarande pris",
     "labelPrinter": "Etikettskrivare",
-    "manageSalePeriod": "Pris och säljperiod"
+    "manageSalePeriod": "Pris och säljperiod",
+    "unknownActor": "Namn saknas"
   },
   "sales": {
     "title": "Försäljning",

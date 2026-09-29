@@ -3099,6 +3099,52 @@ button.text-link:hover:not(:disabled) {
   color: var(--muted);
   font-size: 0.875rem;
 }
+.item-actor-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.actor-signature {
+  position: relative;
+  font-size: 0.75rem;
+  color: var(--ink);
+}
+.item-detail-heading .item-actor-line {
+  flex-wrap: nowrap;
+}
+.item-detail-heading .actor-signature {
+  flex-shrink: 0;
+}
+.actor-signature > summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 600;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+.actor-signature > summary::-webkit-details-marker {
+  display: none;
+}
+.actor-signature > summary:focus-visible {
+  outline: 2px solid currentColor;
+  border-radius: 6px;
+}
+.actor-signature-name {
+  display: block;
+  max-width: min(220px, 50vw);
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  box-shadow: 0 3px 12px #0001;
+  overflow-wrap: anywhere;
+}
 
 /* Keep handover filters readable and touch-sized before the queue on phones. */
 .handover-queue-search .row {

@@ -1027,7 +1027,8 @@
       "garment": "vaatteen vastaanotto"
     },
     "priceReasons": {
-      "accepted": "hyväksytty hinta"
+      "accepted": "hyväksytty hinta",
+      "manual": "Manuaalinen hinnanmuutos"
     },
     "eventKinds": {
       "accepted": "Hyväksytty",
@@ -1042,7 +1043,8 @@
     "pageOf": "Sivu {page}/{pages}",
     "currentPrice": "Nykyinen hinta",
     "labelPrinter": "Etikettitulostin",
-    "manageSalePeriod": "Hinta ja myyntijakso"
+    "manageSalePeriod": "Hinta ja myyntijakso",
+    "unknownActor": "Nimi ei saatavilla"
   },
   "sales": {
     "title": "Myynti",

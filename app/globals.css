@@ -173,6 +173,44 @@ summary {
   min-width: 0;
   overflow-wrap: anywhere;
 }
+.received-bags-search {
+  max-width: 600px;
+  margin-top: 20px;
+}
+.received-bags-search .row {
+  flex-wrap: wrap;
+}
+.received-bags-search input {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+.received-bags-filters:empty {
+  display: none;
+}
+.received-bags-filters {
+  margin: 12px 0;
+}
+.received-bags .intake-bag {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+}
+.received-bag-info {
+  display: grid;
+  gap: 4px;
+  flex: 1 1 240px;
+}
+.received-bag-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+}
+.received-bag-actions .text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
 .intake-confirm {
   display: flex;
   gap: 12px;

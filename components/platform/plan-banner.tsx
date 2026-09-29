@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { NavigationLink as Link } from './navigation-warning'
 import type { Dictionary } from '@/lib/i18n'
 import type { PlanStatus } from '@/lib/engine/plans'
 

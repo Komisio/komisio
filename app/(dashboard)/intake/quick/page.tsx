@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'

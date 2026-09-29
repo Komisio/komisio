@@ -50,6 +50,7 @@
     "newSeller": "Registrera ny säljare",
     "changeSeller": "Byt säljare",
     "discardForSellerChange": "Byta säljare? Osparade uppgifter för varan försvinner.",
+    "leaveItem": "Lämna mottagningen? Osparade uppgifter i formuläret försvinner. Om en sparning inte bekräftades, kontrollera varulistan innan du försöker igen.",
     "garment": "Vara",
     "photo": "Foto",
     "photoHint": "Valfritt · JPEG eller PNG, högst 3 MB.",

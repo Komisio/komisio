@@ -50,6 +50,7 @@
     "newSeller": "Registrer en ny indleverer",
     "changeSeller": "Skift sælger",
     "discardForSellerChange": "Skift sælger? Ikke-gemte oplysninger om varen går tabt.",
+    "leaveItem": "Forlad modtagelsen? Ikke-gemte oplysninger i formularen går tabt. Hvis en gemning ikke blev bekræftet, skal du kontrollere varelisten, før du prøver igen.",
     "garment": "Vare",
     "photo": "Foto",
     "photoHint": "Valgfrit · JPEG eller PNG, højst 3 MB.",

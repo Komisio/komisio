@@ -50,6 +50,7 @@
     "newSeller": "Registrer en ny innleverer",
     "changeSeller": "Bytt selger",
     "discardForSellerChange": "Bytte selger? Ulagrede opplysninger om varen går tapt.",
+    "leaveItem": "Forlate mottaket? Ulagrede opplysninger i skjemaet går tapt. Hvis en lagring ikke ble bekreftet, sjekk varelisten før du prøver igjen.",
     "garment": "Vare",
     "photo": "Bilde",
     "photoHint": "Valgfritt · JPEG eller PNG, maks 3 MB.",

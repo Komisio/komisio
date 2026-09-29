@@ -1,5 +1,5 @@
 import { BagWorkSummary } from './bag-work-summary'
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { BagRegisteredItems } from './bag-registered-items'
 import { redirect } from 'next/navigation'
 import { readBagRegisteredItems } from '@/lib/engine/bag-registered-items'

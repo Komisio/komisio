@@ -8,7 +8,7 @@ import { InspectionPreparation } from '@/components/intake/inspection-preparatio
 import { readInspection } from '@/lib/engine/inspection-read'
 import { readItemForOrigin } from '@/lib/engine/items'
 import { AcceptItemForm } from '@/components/intake/accept-item-form'
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { notFound, redirect } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'

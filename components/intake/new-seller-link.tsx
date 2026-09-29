@@ -1,5 +1,5 @@
 'use client'
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import type { ReactNode } from 'react'
 
 export function NewSellerLink({

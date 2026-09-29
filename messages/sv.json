@@ -1152,7 +1152,7 @@
     },
     "settleHeading": "Avräkna alla säljare",
     "settleHint": "Alla säljare med minst minimibeloppet ({threshold}) och utan öppen utbetalning. En sats begär och godkänner en utbetalning av hela det tillgängliga saldot per vald säljare; sedan betalar du via banken och markerar varje utbetalning som utbetald.",
-    "settleEmpty": "Ingen säljare når minimibeloppet just nu.",
+    "settleEmpty": "Ingen säljare uppfyller villkoren för avräkning just nu.",
     "settleReason": "Anteckning för satsen",
     "settleReasonHint": "Sparas på varje godkännande i satsen, till exempel \"Avräkning september\".",
     "settleConfirm": "Jag betalar dessa belopp och registrerar referenserna.",

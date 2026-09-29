@@ -1152,7 +1152,7 @@
     },
     "settleHeading": "Alle Einlieferer abrechnen",
     "settleHint": "Jeder Einlieferer mit mindestens dem Minimum ({threshold}) ohne offene Auszahlung. Ein Stapel beantragt und genehmigt eine Auszahlung des gesamten verfügbaren Guthabens pro ausgewähltem Einlieferer; Sie zahlen dann über Ihre Bank und markieren jede als bezahlt.",
-    "settleEmpty": "Derzeit erreicht kein Einlieferer das Minimum.",
+    "settleEmpty": "Derzeit erfüllt kein Einlieferer die Voraussetzungen für eine Abrechnung.",
     "settleReason": "Stapelnotiz",
     "settleReasonHint": "Wird auf jeder Genehmigung im Stapel erfasst, zum Beispiel \"Abrechnung September\".",
     "settleConfirm": "Ich werde diese Beträge zahlen und die Referenzen erfassen.",

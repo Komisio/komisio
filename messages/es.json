@@ -1152,7 +1152,7 @@
     },
     "settleHeading": "Liquidar a todos los depositantes",
     "settleHint": "Todos los depositantes con saldo igual o superior al mínimo ({threshold}) sin un pago abierto. Un lote solicita y aprueba un pago por todo el saldo disponible por cada depositante seleccionado; después pagas a través de tu banco y marcas cada uno como pagado.",
-    "settleEmpty": "Ningún depositante alcanza el mínimo ahora mismo.",
+    "settleEmpty": "Ningún depositante cumple los requisitos para la liquidación en este momento.",
     "settleReason": "Nota del lote",
     "settleReasonHint": "Se registra en cada aprobación del lote, por ejemplo \"Liquidación de septiembre\".",
     "settleConfirm": "Pagaré estos importes y registraré las referencias.",

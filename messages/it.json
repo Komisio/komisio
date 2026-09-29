@@ -1152,7 +1152,7 @@
     },
     "settleHeading": "Liquida tutti i conferenti",
     "settleHint": "Ogni conferente al minimo ({threshold}) o sopra, senza un pagamento aperto. Un solo lotto richiede e approva un pagamento dell'intero saldo disponibile per ciascun conferente selezionato; poi paghi tramite la tua banca e segni ciascuno come pagato.",
-    "settleEmpty": "Nessun conferente raggiunge il minimo in questo momento.",
+    "settleEmpty": "Nessun conferente soddisfa al momento i requisiti per la liquidazione.",
     "settleReason": "Nota del lotto",
     "settleReasonHint": "Registrata su ogni approvazione del lotto, ad esempio \"Liquidazione di settembre\".",
     "settleConfirm": "Pagherò questi importi e registrerò i riferimenti.",

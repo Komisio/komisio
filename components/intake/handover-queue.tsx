@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
@@ -34,28 +34,49 @@ export function HandoverQueue({
     receipt?.scrollIntoView({ block: 'start', behavior: 'instant' })
   }, [focus])
   const [requestIds] = useState(() => new Map<string, string>())
+  const [pendingId, setPendingId] = useState<string | null>(null)
+  const running = useRef(false)
   const when = (iso: string) =>
     new Date(iso).toLocaleString(intlLocale(locale), {
       timeZone: 'Europe/Stockholm',
     })
   async function receive(id: string, note: string) {
-    if (!requestIds.has(id)) requestIds.set(id, crypto.randomUUID())
     if (
-      await action.run({
-        action: 'receiveHandover',
-        tenantId,
-        requestId: requestIds.get(id),
-        handoverId: id,
-        source: 'staff_receipt',
-        note,
-      })
+      running.current ||
+      action.needsReload ||
+      (action.locked && pendingId !== id)
     )
-      router.refresh()
+      return
+    if (!requestIds.has(id)) requestIds.set(id, crypto.randomUUID())
+    setPendingId(id)
+    running.current = true
+    try {
+      if (
+        await action.run({
+          action: 'receiveHandover',
+          tenantId,
+          requestId: requestIds.get(id),
+          handoverId: id,
+          source: 'staff_receipt',
+          note,
+        })
+      ) {
+        setPendingId(null)
+        router.refresh()
+      }
+    } finally {
+      running.current = false
+    }
   }
   return (
     <>
       {rows.length === 0 && <p>{d.empty}</p>}
       {action.error && <p role="alert">{action.error}</p>}
+      {action.needsReload && (
+        <Button type="button" onClick={() => window.location.reload()}>
+          {intake.reload}
+        </Button>
+      )}
       {rows.map((h) => (
         <div
           key={h.id}
@@ -99,7 +120,7 @@ export function HandoverQueue({
             >
               <fieldset
                 className="intake-fields"
-                disabled={action.busy || action.locked}
+                disabled={action.busy || action.locked || action.needsReload}
               >
                 <details className="handover-note">
                   <summary>{d.note}</summary>
@@ -117,9 +138,17 @@ export function HandoverQueue({
               </fieldset>
               <Button
                 type="submit"
-                disabled={action.busy || action.needsReload}
+                disabled={
+                  action.busy ||
+                  action.needsReload ||
+                  (action.locked && pendingId !== h.id)
+                }
               >
-                {action.busy ? intake.busy : d.receive}
+                {action.busy && pendingId === h.id
+                  ? intake.busy
+                  : action.locked && pendingId === h.id && !action.needsReload
+                    ? intake.retry
+                    : d.receive}
               </Button>
             </form>
           )}

@@ -226,6 +226,14 @@ export function PayoutDecision({
   const [done, setDone] = useState(false)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    // The retry button has no new decision; the hook owns the frozen command.
+    if (action.locked) {
+      if (await action.run({})) {
+        setDone(true)
+        router.refresh()
+      }
+      return
+    }
     const f = new FormData(event.currentTarget)
     const submitter = (event.nativeEvent as SubmitEvent).submitter
     const kind = submitter?.getAttribute('value') ?? 'approve'
@@ -283,31 +291,39 @@ export function PayoutDecision({
       )}
       {!done && (
         <div className="row">
-          {status === 'requested' ? (
-            <Button
-              type="submit"
-              value="approve"
-              disabled={action.busy || action.needsReload}
-            >
-              {action.busy ? intake.busy : d.approve}
+          {action.locked && !action.needsReload ? (
+            <Button type="submit" disabled={action.busy}>
+              {action.busy ? intake.busy : intake.retry}
             </Button>
           ) : (
-            <Button
-              type="submit"
-              value="paid"
-              disabled={action.busy || action.needsReload}
-            >
-              {action.busy ? intake.busy : d.markPaid}
-            </Button>
+            <>
+              {status === 'requested' ? (
+                <Button
+                  type="submit"
+                  value="approve"
+                  disabled={action.busy || action.needsReload}
+                >
+                  {action.busy ? intake.busy : d.approve}
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  value="paid"
+                  disabled={action.busy || action.needsReload}
+                >
+                  {action.busy ? intake.busy : d.markPaid}
+                </Button>
+              )}
+              <Button
+                type="submit"
+                value="reject"
+                variant="secondary"
+                disabled={action.busy || action.needsReload}
+              >
+                {d.reject}
+              </Button>
+            </>
           )}
-          <Button
-            type="submit"
-            value="reject"
-            variant="secondary"
-            disabled={action.busy || action.needsReload}
-          >
-            {d.reject}
-          </Button>
         </div>
       )}
     </form>

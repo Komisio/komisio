@@ -357,6 +357,9 @@ export async function readPrinters(
   return z.array(printerRow).parse(data)
 }
 
+const jobColumns =
+  'id,printer_id,label_kind,reference_kind,reference_id,copies,status,error,created_at,completed_at'
+
 /** Newest 50 jobs. RLS scopes the read. */
 export async function readPrintJobs(
   client: SupabaseClient,
@@ -364,13 +367,82 @@ export async function readPrintJobs(
 ) {
   const { data, error } = await client
     .from('print_jobs')
-    .select(
-      'id,printer_id,label_kind,reference_kind,reference_id,copies,status,error,created_at,completed_at',
-    )
+    .select(jobColumns)
     .eq('tenant_id', z.uuid().parse(tenantInput))
     .order('created_at', { ascending: false })
     .order('id')
     .limit(50)
   if (error) throw new Error('Unable to read print jobs')
   return z.array(jobRow).parse(data)
+}
+
+/** An exact recovery reference still uses the supplied tenant and caller's RLS. */
+export async function readPrintJob(
+  client: SupabaseClient,
+  tenantInput: string,
+  jobInput: string,
+) {
+  const { data, error } = await client
+    .from('print_jobs')
+    .select(jobColumns)
+    .eq('tenant_id', z.uuid().parse(tenantInput))
+    .eq('id', z.uuid().parse(jobInput))
+    .maybeSingle()
+  if (error) throw new Error('Unable to read print job')
+  return jobRow.nullable().parse(data)
+}
+
+export type PrintReference = { label: string; href: string | null }
+
+/** Resolve numeric custody references in bounded batches, without reading ZPL. */
+export async function readPrintReferences(
+  client: SupabaseClient,
+  tenantInput: string,
+  jobInputs: PrintJob[],
+) {
+  const tenantId = z.uuid().parse(tenantInput)
+  const jobs = z.array(jobRow).max(51).parse(jobInputs)
+  const references = new Map<string, PrintReference>()
+  for (const job of jobs) {
+    if (job.reference_kind === 'item' || job.reference_kind === 'seller') {
+      const item = job.reference_kind === 'item'
+      references.set(`${job.reference_kind}:${job.reference_id}`, {
+        label: `${item ? 'I' : 'S'}-${job.reference_id.slice(0, 8).toUpperCase()}`,
+        href: `/intake/${item ? 'items' : 'sellers'}/${job.reference_id}`,
+      })
+    }
+  }
+  await Promise.all(
+    (['bag_receipt', 'garment_receipt'] as const).map(async (kind) => {
+      const ids = [
+        ...new Set(
+          jobs
+            .filter((job) => job.reference_kind === kind)
+            .map((job) => job.reference_id),
+        ),
+      ]
+      if (ids.length === 0) return
+      const bag = kind === 'bag_receipt'
+      const { data, error } = await client
+        .from(bag ? 'bag_receipts' : 'garment_receipts')
+        .select('id,reference')
+        .eq('tenant_id', tenantId)
+        .in('id', ids)
+      if (error) throw new Error('Unable to read print references')
+      const rows = z
+        .array(
+          z.object({
+            id: z.uuid(),
+            reference: z.union([z.number().int(), z.string().regex(/^\d+$/)]),
+          }),
+        )
+        .parse(data)
+      for (const row of rows)
+        references.set(`${kind}:${row.id}`, {
+          label: `${bag ? 'K' : 'G'}-${row.reference}`,
+          href: bag ? `/intake/bags/${row.id}` : null,
+        })
+    }),
+  )
+  return references
 }

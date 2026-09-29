@@ -196,9 +196,11 @@ export function QuickReception({
     >('idle'),
     [message, setMessage] = useState(''),
     [error, setError] = useState(''),
-    [done, setDone] = useState<{ reference: string; itemId: string } | null>(
-      null,
-    )
+    [done, setDone] = useState<{
+      reference: string
+      itemId: string
+      printJobId: string | null
+    } | null>(null)
   // What this item type asks for, in the profile's order. Changing the type
   // changes the questions; answers to questions the new type does not ask are
   // dropped rather than sent for an item they do not describe.
@@ -575,11 +577,16 @@ export function QuickReception({
       attempt.current = null
       setUncertain(false)
       setStale(false)
-      setDone({ reference: result.reference, itemId: result.itemId })
-      if (current.printerId) {
+      const printJobId = current.printerId ? crypto.randomUUID() : null
+      setDone({
+        reference: result.reference,
+        itemId: result.itemId,
+        printJobId,
+      })
+      if (printJobId) {
         pendingPrint.current = {
           tenantId,
-          requestId: crypto.randomUUID(),
+          requestId: printJobId,
           printerId: current.printerId,
           kind: 'item',
           referenceKind: 'item',
@@ -1068,7 +1075,7 @@ export function QuickReception({
               )}
               <Link
                 className="btn btn-secondary"
-                href="/settings?tab=printing#print-jobs"
+                href={`/settings?tab=printing&job=${done.printJobId}#selected-print-job`}
               >
                 {d.openPrintQueue}
               </Link>

@@ -1,4 +1,5 @@
 import { readStorePolicy } from '@/lib/engine/store-policy'
+import { z } from 'zod'
 import { StorePolicyForm } from '@/components/intake/store-policy-form'
 import { StoreProfileForm } from '@/components/intake/store-profile-form'
 import { readStoreProfile } from '@/lib/engine/store-profile'
@@ -8,7 +9,11 @@ import {
   readLabelTemplates,
   readPrinters,
   readPrintJobs,
+  readPrintJob,
+  readPrintReferences,
+  type PrintJob,
 } from '@/lib/engine/printing'
+import { PrintJobDetails } from '@/components/intake/print-job-details'
 import { LabelFormatsForm } from '@/components/intake/label-formats-form'
 import { LabelTemplatesForm } from '@/components/intake/label-templates-form'
 import { builtinTemplate } from '@/lib/labels/placeholders'
@@ -109,6 +114,24 @@ export default async function Settings({
           readLabelTemplates(ctx.client, active.id),
         ])
       : [[], [], null, null, null]
+  const requestedJob = typeof query.job === 'string' ? query.job : null
+  const parsedJob = z.uuid().safeParse(requestedJob)
+  const selectedJob =
+    intake && tab === 'printing' && parsedJob.success
+      ? (jobs.find((job) => job.id === parsedJob.data) ??
+        (await readPrintJob(ctx.client, active.id, parsedJob.data)))
+      : null
+  const recentJobs = jobs
+    .slice(0, 20)
+    .filter((job) => job.id !== selectedJob?.id)
+  const references = await readPrintReferences(
+    ctx.client,
+    active.id,
+    selectedJob ? [...recentJobs, selectedJob] : recentJobs,
+  )
+  const printerNames = new Map(
+    printers.map((printer) => [printer.id, printer.name]),
+  )
   const previewDpi = (printers.find((p) => p.active)?.dpi ?? 203) as
     203 | 300 | 600
   const plan =
@@ -134,6 +157,16 @@ export default async function Settings({
   if (events.error) throw events.error
   const pr = d.printing,
     us = d.usage
+  const jobDetails = (job: PrintJob) => (
+    <PrintJobDetails
+      key={job.id}
+      job={job}
+      printer={printerNames.get(job.printer_id)}
+      reference={references.get(`${job.reference_kind}:${job.reference_id}`)}
+      locale={ctx.locale}
+      d={pr}
+    />
+  )
   const visible = tabs.filter(
     (t) =>
       (intake || t === 'store') && (t !== 'connectors' || connectorsEnabled()),
@@ -229,6 +262,18 @@ export default async function Settings({
         <section className="card intake-form" aria-label={pr.title}>
           <h2>{pr.title}</h2>
           <p>{pr.intro}</p>
+          {requestedJob !== null && (
+            <section aria-labelledby="selected-print-job">
+              <h3 id="selected-print-job" tabIndex={-1}>
+                {pr.selectedJob}
+              </h3>
+              {selectedJob ? (
+                jobDetails(selectedJob)
+              ) : (
+                <p role="status">{pr.jobUnavailable}</p>
+              )}
+            </section>
+          )}
           {printers.length === 0 && <p>{pr.none}</p>}
           {printers.map((p) => (
             <details key={p.id}>
@@ -321,13 +366,7 @@ export default async function Settings({
             {pr.jobs}
           </h3>
           {jobs.length === 0 && <p>{pr.noJobs}</p>}
-          {jobs.slice(0, 20).map((j) => (
-            <p key={j.id}>
-              {new Date(j.created_at).toLocaleString(ctx.locale)} ·{' '}
-              {pr.kinds[j.label_kind]} · {j.copies} · {pr.statuses[j.status]}
-              {j.error ? ` · ${j.error}` : ''}
-            </p>
-          ))}
+          {recentJobs.map(jobDetails)}
           <p>
             <small>{pr.agentHint}</small>
           </p>

@@ -74,17 +74,26 @@ for (const variant of [
       await expect(done.getByText(d.printed, { exact: true })).toHaveCount(0)
       await expect(
         done.getByRole('link', { name: d.openPrintQueue }),
-      ).toHaveAttribute('href', '/settings?tab=printing#print-jobs')
+      ).toHaveAttribute(
+        'href',
+        `/settings?tab=printing&job=${commands[0].requestId}#selected-print-job`,
+      )
       if (variant === 'lost') {
         const opened = page.context().waitForEvent('page')
         await done
           .getByRole('link', { name: d.openPrintQueue })
           .click({ modifiers: ['Control'] })
         const queuePage = await opened
-        await expect(queuePage.locator('#print-jobs')).toHaveText(
-          sv.printing.jobs,
+        await expect(queuePage.locator('#selected-print-job')).toHaveText(
+          sv.printing.selectedJob,
         )
-        await expect(queuePage.locator('#print-jobs')).toBeInViewport()
+        await expect(queuePage.locator('#selected-print-job')).toBeInViewport()
+        const job = queuePage.locator(`#print-job-${commands[0].requestId}`)
+        await expect(job).toContainText('Synthetic quick printer')
+        await expect(job.getByRole('link')).toHaveAttribute(
+          'href',
+          `/intake/items/${commands[0].referenceId}`,
+        )
         await queuePage.close()
       }
       expect(

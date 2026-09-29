@@ -185,7 +185,7 @@ export default async function Handovers({
             </>
           )}
           <HandoverQueue
-            key={`${active.id}-${rows.map((r) => `${r.id}:${r.status}`).join(',')}`}
+            key={active.id}
             tenantId={active.id}
             rows={rows}
             write={active.role !== 'readonly'}

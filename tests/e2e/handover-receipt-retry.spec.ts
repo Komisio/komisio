@@ -79,17 +79,19 @@ test('an unanswered handover can be retried only from its own row', async ({
       .click()
     await expect(page.locator('p[role="alert"]')).toHaveText(d.intake.failed)
     await expect(rows[0].getByRole('checkbox')).toBeDisabled()
-    await expect(rows[1].getByRole('checkbox')).toBeDisabled()
+    await expect(rows[1].getByRole('checkbox')).toBeEnabled()
     await expect(
       rows[1].getByRole('button', { name: d.handovers.receive, exact: true }),
-    ).toBeDisabled()
+    ).toBeEnabled()
     await expect(
       rows[1].getByRole('button', { name: d.intake.retry, exact: true }),
     ).toHaveCount(0)
     await rows[0]
       .getByRole('button', { name: d.intake.retry, exact: true })
       .click()
-    await expect(rows[0]).toContainText(d.handovers.statuses.received)
+    await expect(rows[0].locator('strong')).toContainText(
+      d.handovers.statuses.received,
+    )
     expect(commands).toHaveLength(2)
     expect(commands[1]).toEqual(commands[0])
     expect(commands[0].handoverId).toBe(ids[0])
@@ -113,7 +115,9 @@ test('an unanswered handover can be retried only from its own row', async ({
     await rows[1]
       .getByRole('button', { name: d.handovers.receive, exact: true })
       .click()
-    await expect(rows[1]).toContainText(d.handovers.statuses.received)
+    await expect(rows[1].locator('strong')).toContainText(
+      d.handovers.statuses.received,
+    )
     expect(commands).toHaveLength(3)
     expect(commands[2].handoverId).toBe(ids[1])
     expect(commands[2].requestId).not.toBe(commands[0].requestId)
@@ -167,6 +171,128 @@ test('a stale handover context offers reload and prevents another receipt', asyn
       .click()
     await expect(rows[0].getByRole('checkbox')).toBeEnabled()
     expect(requests).toBe(1)
+  } finally {
+    await f.close()
+  }
+})
+
+test('receiving one handover preserves another row note and confirmation', async ({
+  page,
+}) => {
+  const email = `handover-notes-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomUUID()}`)
+  const f = await p2Fixture(email)
+  try {
+    const ids = await handovers(f, email)
+    await page.setViewportSize({ width: 320, height: 800 })
+    await page.goto('/intake/handovers')
+    const rows = ids.map((id) => page.locator(`#handover-${id}`))
+    for (const row of rows) {
+      await row.locator('summary').click()
+      await row.getByRole('checkbox').check()
+    }
+    await rows[0]
+      .getByLabel(d.handovers.note, { exact: true })
+      .fill('Synthetic first bag')
+    const secondNote = rows[1].getByLabel(d.handovers.note, { exact: true })
+    await secondNote.fill('Synthetic fragile goods in the second bag')
+    await rows[0]
+      .getByRole('button', { name: d.handovers.receive, exact: true })
+      .click()
+    // Read the refreshed server summary, not the local success message.
+    await expect(rows[0].locator('strong')).toContainText(
+      d.handovers.statuses.received,
+    )
+    await expect(secondNote).toBeVisible()
+    await expect(secondNote).toHaveValue(
+      'Synthetic fragile goods in the second bag',
+    )
+    await expect(rows[1].getByRole('checkbox')).toBeChecked()
+    await rows[1]
+      .getByRole('button', { name: d.handovers.receive, exact: true })
+      .click()
+    await expect(rows[1].locator('strong')).toContainText(
+      d.handovers.statuses.received,
+    )
+    expect(
+      (
+        await f.db.query(
+          "select note from handover_events where handover_id=$1 and kind='received'",
+          [ids[1]],
+        )
+      ).rows,
+    ).toEqual([{ note: 'Synthetic fragile goods in the second bag' }])
+  } finally {
+    await f.close()
+  }
+})
+
+test('another handover can finish while an uncommitted receipt keeps its own retry', async ({
+  page,
+}) => {
+  const email = `handover-independent-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomUUID()}`)
+  const f = await p2Fixture(email)
+  try {
+    const ids = await handovers(f, email)
+    await page.goto('/intake/handovers')
+    const rows = ids.map((id) => page.locator(`#handover-${id}`))
+    await rows[0].locator('summary').click()
+    await rows[0]
+      .getByLabel(d.handovers.note, { exact: true })
+      .fill('Synthetic pending receipt note')
+    await rows[0].getByRole('checkbox').check()
+    const commands: Record<string, unknown>[] = []
+    await page.route('**/api/intake', async (route) => {
+      commands.push(route.request().postDataJSON())
+      // A missing answer is uncertain to the UI whether the write ran or not.
+      if (commands.length === 1)
+        await route.fulfill({ status: 503, json: { error: 'REQUEST_FAILED' } })
+      else await route.continue()
+    })
+    await rows[0]
+      .getByRole('button', { name: d.handovers.receive, exact: true })
+      .click()
+    await expect(rows[0].getByRole('alert')).toHaveText(d.intake.failed)
+    await rows[1].getByRole('checkbox').check()
+    await rows[1]
+      .getByRole('button', { name: d.handovers.receive, exact: true })
+      .click()
+    await expect(rows[1].locator('strong')).toContainText(
+      d.handovers.statuses.received,
+    )
+    expect(commands).toHaveLength(2)
+    expect(commands[1].handoverId).toBe(ids[1])
+    expect(commands[1].requestId).not.toBe(commands[0].requestId)
+    await expect(rows[0].getByRole('alert')).toHaveText(d.intake.failed)
+    await expect(
+      rows[0].getByLabel(d.handovers.note, { exact: true }),
+    ).toHaveValue('Synthetic pending receipt note')
+    await expect(rows[0].getByRole('checkbox')).toBeDisabled()
+    expect(
+      (
+        await f.db.query('select status from seller_handovers where id=$1', [
+          ids[0],
+        ])
+      ).rows[0].status,
+    ).toBe('open')
+    await rows[0]
+      .getByRole('button', { name: d.intake.retry, exact: true })
+      .click()
+    await expect(rows[0].locator('strong')).toContainText(
+      d.handovers.statuses.received,
+    )
+    expect(commands).toHaveLength(3)
+    expect(commands[2]).toEqual(commands[0])
+    for (const id of ids)
+      expect(
+        (
+          await f.db.query(
+            "select count(*)::int n from handover_events where handover_id=$1 and kind='received'",
+            [id],
+          )
+        ).rows[0].n,
+      ).toBe(1)
   } finally {
     await f.close()
   }

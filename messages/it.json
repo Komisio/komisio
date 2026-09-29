@@ -1122,7 +1122,11 @@
     "reason": "Motivo",
     "confirm": "Ho concordato questa correzione e voglio che venga registrata.",
     "adjust": "Registra rettifica",
-    "adjusted": "La rettifica è registrata."
+    "adjusted": "La rettifica è registrata.",
+    "showingRange": "Movimenti di conto {from}–{to} di {total}.",
+    "older": "Movimenti precedenti",
+    "newer": "Movimenti più recenti",
+    "recentOnly": "Questa vista mostra al massimo i 50 movimenti di conto più recenti."
   },
   "payouts": {
     "title": "Pagamenti",

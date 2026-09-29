@@ -37,6 +37,7 @@ import { readPrinters } from '@/lib/engine/printing'
 import {
   readSellerBalance,
   readSellerLedger,
+  readSellerLedgerHistory,
   formatSignedOre,
 } from '@/lib/engine/seller-ledger'
 
@@ -50,6 +51,14 @@ export default async function Seller({
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const id = z.uuid().safeParse((await params).id)
   if (!id.success) notFound()
+  const query = await searchParams
+  const ledgerPageValue = z.coerce
+    .number()
+    .int()
+    .min(0)
+    .max(1000000)
+    .safeParse(query.ledgerPage ?? 0)
+  if (!ledgerPageValue.success) notFound()
   const ctx = await requirePlatform(),
     tenant = ctx.active!,
     currency = await readStoreCurrency(ctx.client, tenant.id),
@@ -76,14 +85,23 @@ export default async function Seller({
     readEffectiveSellerTerms(ctx.client, tenant.id, id.data),
     readSellerTermsHistory(ctx.client, tenant.id, id.data),
     readSellerBalance(ctx.client, tenant.id, id.data),
-    readSellerLedger(ctx.client, tenant.id, id.data),
+    readSellerLedgerHistory(
+      ctx.client,
+      tenant.id,
+      id.data,
+      ledgerPageValue.data,
+    ),
     readSellerStatements(ctx.client, tenant.id, id.data),
     readSellerCommunications(ctx.client, tenant.id, id.data),
     readPayouts(ctx.client, tenant.id, id.data),
     readItems(ctx.client, tenant.id, id.data),
   ])
   const w = all.sellerWorkspace
-  const query = await searchParams
+  // The overview remains newest-first even while the economy tab shows older history.
+  const recentLedger =
+    ledger.page === 0
+      ? ledger.items
+      : await readSellerLedger(ctx.client, tenant.id, id.data)
   const pageValue = z.coerce
     .number()
     .int()
@@ -250,9 +268,9 @@ export default async function Seller({
               </div>
               <section className="card intake-form">
                 <h2>{w.recent}</h2>
-                {ledger.length ? (
+                {recentLedger.length ? (
                   <ul className="seller-workspace-list">
-                    {ledger.slice(0, 5).map((e) => (
+                    {recentLedger.slice(0, 5).map((e) => (
                       <li key={e.id}>
                         <div>
                           <strong>{l.kinds[e.kind]}</strong>
@@ -496,20 +514,68 @@ export default async function Seller({
                     ))}
                   </div>
                 </details>
-                <details className="seller-disclosure">
+                <details
+                  className="seller-disclosure"
+                  id="seller-ledger"
+                  open={query.ledgerPage !== undefined}
+                >
                   <summary>
                     {all.sellerProfile.transactions}{' '}
-                    <span>{ledger.length}</span>
+                    <span>{ledger.total ?? balance.entries}</span>
                   </summary>
                   <div className="seller-disclosure-body">
-                    {ledger.length === 0 && <p>{l.empty}</p>}
-                    {ledger.map((e) => (
+                    {ledger.legacy ? (
+                      <p>{l.recentOnly}</p>
+                    ) : (
+                      ledger.total > 0 && (
+                        <p>
+                          {l.showingRange
+                            .replace(
+                              '{from}',
+                              String(ledger.page * ledger.limit + 1),
+                            )
+                            .replace(
+                              '{to}',
+                              String(
+                                ledger.page * ledger.limit +
+                                  ledger.items.length,
+                              ),
+                            )
+                            .replace('{total}', String(ledger.total))}
+                        </p>
+                      )
+                    )}
+                    {ledger.items.length === 0 && <p>{l.empty}</p>}
+                    {ledger.items.map((e) => (
                       <p key={e.id}>
                         {when(e.occurred_at)} · {l.kinds[e.kind]} ·{' '}
                         {formatSignedOre(e.amount_ore)} {currency}
                         {e.reason ? ` · ${e.reason}` : ''}
                       </p>
                     ))}
+                    {!ledger.legacy && ledger.total > ledger.limit && (
+                      <nav
+                        className="row wrap"
+                        aria-label={all.sellerProfile.transactions}
+                      >
+                        {ledger.page > 0 && (
+                          <Link
+                            className="btn btn-secondary"
+                            href={`${sellerPath}?ledgerPage=${ledger.page - 1}#seller-economy`}
+                          >
+                            {l.newer}
+                          </Link>
+                        )}
+                        {(ledger.page + 1) * ledger.limit < ledger.total && (
+                          <Link
+                            className="btn btn-secondary"
+                            href={`${sellerPath}?ledgerPage=${ledger.page + 1}#seller-economy`}
+                          >
+                            {l.older}
+                          </Link>
+                        )}
+                      </nav>
+                    )}
                   </div>
                 </details>
                 {['owner', 'admin'].includes(tenant.role) && (

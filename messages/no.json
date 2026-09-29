@@ -1122,7 +1122,11 @@
     "reason": "Årsak",
     "confirm": "Jeg har avtalt denne korreksjonen og vil at den registreres.",
     "adjust": "Registrer justering",
-    "adjusted": "Justeringen er registrert."
+    "adjusted": "Justeringen er registrert.",
+    "showingRange": "Viser {from}–{to} av {total} kontobevegelser.",
+    "older": "Eldre poster",
+    "newer": "Nyere poster",
+    "recentOnly": "Denne visningen viser opptil de 50 siste kontobevegelsene."
   },
   "payouts": {
     "title": "Utbetalinger",

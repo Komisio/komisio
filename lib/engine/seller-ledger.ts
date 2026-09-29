@@ -75,6 +75,41 @@ export async function readSellerLedger(
   return z.array(entryRow).parse(r.data)
 }
 
+const ledgerHistoryPage = z.object({
+  items: z.array(entryRow).max(50),
+  total: z.number().int().nonnegative(),
+  page: z.number().int().nonnegative(),
+  limit: z.literal(50),
+})
+
+/** Staff history across all entries, with explicit limited fallback during rollout. */
+export async function readSellerLedgerHistory(
+  client: SupabaseClient,
+  tenantInput: string,
+  sellerInput: string,
+  pageInput = 0,
+) {
+  const tenant = z.uuid().parse(tenantInput)
+  const seller = z.uuid().parse(sellerInput)
+  const page = z.number().int().min(0).max(1000000).parse(pageInput)
+  const result = await client.rpc('seller_ledger_history_page', {
+    p_tenant: tenant,
+    p_seller: seller,
+    p_page: page,
+  })
+  if (result.error?.code === 'PGRST202') {
+    return {
+      items: await readSellerLedger(client, tenant, seller),
+      total: null,
+      page: 0,
+      limit: 50 as const,
+      legacy: true as const,
+    }
+  }
+  if (result.error) throw new Error('Unable to read seller ledger history')
+  return { ...ledgerHistoryPage.parse(result.data), legacy: false as const }
+}
+
 /** "-5.00" → -500; exact decimal text, never float. */
 export function signedOreFromDecimal(input: string) {
   const m = /^(-?)(\d+)\.(\d{2})$/.exec(input)

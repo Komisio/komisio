@@ -1122,7 +1122,11 @@
     "reason": "Syy",
     "confirm": "Olen sopinut tämän korjauksen ja haluan, että se kirjataan.",
     "adjust": "Kirjaa oikaisu",
-    "adjusted": "Oikaisu on kirjattu."
+    "adjusted": "Oikaisu on kirjattu.",
+    "showingRange": "Näytetään tilitapahtumat {from}–{to}/{total}.",
+    "older": "Vanhemmat tapahtumat",
+    "newer": "Uudemmat tapahtumat",
+    "recentOnly": "Tässä näkymässä näytetään enintään 50 viimeisintä tilitapahtumaa."
   },
   "payouts": {
     "title": "Tilitykset",

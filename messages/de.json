@@ -1122,7 +1122,11 @@
     "reason": "Grund",
     "confirm": "Ich habe diese Korrektur vereinbart und möchte sie erfassen lassen.",
     "adjust": "Anpassung erfassen",
-    "adjusted": "Die Anpassung ist erfasst."
+    "adjusted": "Die Anpassung ist erfasst.",
+    "showingRange": "Einträge {from}–{to} von {total} Kontobewegungen.",
+    "older": "Ältere Einträge",
+    "newer": "Neuere Einträge",
+    "recentOnly": "Diese Ansicht zeigt höchstens die 50 neuesten Kontobewegungen."
   },
   "payouts": {
     "title": "Auszahlungen",

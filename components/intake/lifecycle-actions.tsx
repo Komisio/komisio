@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import { useIntakeAction } from './use-intake-action'
@@ -27,11 +27,32 @@ export function LifecycleActions({
   const router = useRouter()
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
   const [done, setDone] = useState<string | null>(null)
+  const submitted = useRef<{
+    command: Record<string, unknown>
+    label: string
+  } | null>(null)
+  const running = useRef(false)
+  const blocked = action.busy || action.locked || action.needsReload
   async function run(command: Record<string, unknown>, label: string) {
-    if (await action.run({ ...command, tenantId, requestId, itemId })) {
-      setDone(label)
-      setRequestId(crypto.randomUUID())
-      router.refresh()
+    if (running.current || action.needsReload) return
+    // The hook replays its pending command. Keep the matching outcome label,
+    // too: another operation must never describe that replay as its own save.
+    const attempt =
+      action.locked && submitted.current
+        ? submitted.current
+        : { command: { ...command, tenantId, requestId, itemId }, label }
+    submitted.current = attempt
+    running.current = true
+    setDone(null)
+    try {
+      if (await action.run(attempt.command)) {
+        setDone(attempt.label)
+        submitted.current = null
+        setRequestId(crypto.randomUUID())
+        router.refresh()
+      }
+    } finally {
+      running.current = false
     }
   }
   return (
@@ -39,7 +60,7 @@ export function LifecycleActions({
       {dueStep !== null && (
         <Button
           type="button"
-          disabled={action.busy}
+          disabled={blocked}
           onClick={() =>
             void run({ action: 'applyMarkdown', step: dueStep }, d.markdownDone)
           }
@@ -72,6 +93,7 @@ export function LifecycleActions({
             min={0.01}
             step={0.01}
             required
+            disabled={blocked}
           />
         </div>
         <div className="field">
@@ -81,9 +103,10 @@ export function LifecycleActions({
             name="priceReason"
             required
             maxLength={500}
+            disabled={blocked}
           />
         </div>
-        <Button type="submit" variant="secondary" disabled={action.busy}>
+        <Button type="submit" variant="secondary" disabled={blocked}>
           {d.setPrice}
         </Button>
       </form>
@@ -112,6 +135,7 @@ export function LifecycleActions({
             max={365}
             defaultValue={14}
             required
+            disabled={blocked}
           />
         </div>
         <div className="field">
@@ -121,9 +145,10 @@ export function LifecycleActions({
             name="reason"
             required
             maxLength={500}
+            disabled={blocked}
           />
         </div>
-        <Button type="submit" variant="secondary" disabled={action.busy}>
+        <Button type="submit" variant="secondary" disabled={blocked}>
           {d.extend}
         </Button>
       </form>
@@ -148,6 +173,7 @@ export function LifecycleActions({
             id={`end-action-${itemId}`}
             name="endAction"
             defaultValue={endOfPeriodAction ?? 'charity'}
+            disabled={blocked}
           >
             <option value="charity">{d.charity}</option>
             <option value="return">{d.return}</option>
@@ -155,17 +181,39 @@ export function LifecycleActions({
         </div>
         <div className="field">
           <label htmlFor={`end-note-${itemId}`}>{d.note}</label>
-          <input id={`end-note-${itemId}`} name="note" maxLength={500} />
+          <input
+            id={`end-note-${itemId}`}
+            name="note"
+            maxLength={500}
+            disabled={blocked}
+          />
         </div>
         <label className="intake-confirm">
-          <input type="checkbox" required />
+          <input type="checkbox" required disabled={blocked} />
           {d.endConfirm}
         </label>
-        <Button type="submit" variant="secondary" disabled={action.busy}>
+        <Button type="submit" variant="secondary" disabled={blocked}>
           {d.end}
         </Button>
       </form>
       {action.error && <p role="alert">{action.error}</p>}
+      {action.locked && !action.needsReload && (
+        <Button
+          type="button"
+          disabled={action.busy}
+          onClick={() => {
+            if (submitted.current)
+              void run(submitted.current.command, submitted.current.label)
+          }}
+        >
+          {action.busy ? intake.busy : intake.retry}
+        </Button>
+      )}
+      {action.needsReload && (
+        <Button type="button" onClick={() => window.location.reload()}>
+          {intake.reload}
+        </Button>
+      )}
       {done && <p role="status">{done}</p>}
     </div>
   )

@@ -357,27 +357,33 @@ export default async function Seller({
                     <p>{w.noItems}</p>
                   ) : (
                     <ul className="seller-workspace-list">
-                      {workspaceItems.items.map((item) => (
-                        <li key={item.id}>
-                          <div>
-                            <Link
-                              className="text-link"
-                              href={'/intake/items/' + item.id}
-                            >
-                              {item.title || all.items.item}
-                            </Link>
-                            <small>
-                              {all.lifecycle.stages[item.stage]} ·{' '}
-                              {when(item.acceptedAt)}
-                            </small>
-                          </div>
-                          <strong>
-                            {item.priceOre === null
-                              ? '—'
-                              : formatSignedOre(item.priceOre) + ' ' + currency}
-                          </strong>
-                        </li>
-                      ))}
+                      {workspaceItems.items.map((item) => {
+                        const price =
+                          item.stage === 'sold'
+                            ? item.soldPriceOre
+                            : item.priceOre
+                        return (
+                          <li key={item.id}>
+                            <div>
+                              <Link
+                                className="text-link"
+                                href={'/intake/items/' + item.id}
+                              >
+                                {item.title || all.items.item}
+                              </Link>
+                              <small>{all.lifecycle.stages[item.stage]}</small>
+                              <small>
+                                {all.items.acceptedAt}: {when(item.acceptedAt)}
+                              </small>
+                            </div>
+                            <strong>
+                              {price === null
+                                ? '—'
+                                : formatSignedOre(price) + ' ' + currency}
+                            </strong>
+                          </li>
+                        )
+                      })}
                     </ul>
                   )}
                   <nav

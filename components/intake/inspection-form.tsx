@@ -1,10 +1,11 @@
 'use client'
-import { useState, useSyncExternalStore } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import type { SavedInspection } from '@/lib/engine/inspection'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { useNavigationWarning } from '@/components/platform/navigation-warning'
 
 const subscribe = () => () => {}
 const clientReady = () => true
@@ -140,6 +141,17 @@ export function InspectionForm({
   const action = useIntakeAction(d.intake)
   const s = d.inspection
   const path = `/intake/bags/${bagId}/inspect`
+  const hasUnsavedDraft = !saved && (dirty || action.locked)
+  useNavigationWarning(hasUnsavedDraft ? s.leaveDraft : null)
+  useEffect(() => {
+    if (!hasUnsavedDraft) return
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault()
+      event.returnValue = ''
+    }
+    window.addEventListener('beforeunload', warn)
+    return () => window.removeEventListener('beforeunload', warn)
+  }, [hasUnsavedDraft])
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const values = new FormData(event.currentTarget)
@@ -184,7 +196,17 @@ export function InspectionForm({
         {dirty ? s.unsaved : base ? `${s.version} ${base.revision}` : s.newHint}
       </p>
       <p>{s.saveHint}</p>
-      <form onSubmit={submit} onChange={() => setDirty(true)}>
+      <form
+        onSubmit={submit}
+        onChange={(event) => {
+          const values = new FormData(event.currentTarget)
+          setDirty(
+            (['description', 'category', 'condition'] as const).some(
+              (field) => values.get(field) !== (base?.[field] ?? ''),
+            ),
+          )
+        }}
+      >
         <fieldset
           className="intake-fields"
           disabled={!ready || action.busy || action.locked}

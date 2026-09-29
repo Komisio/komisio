@@ -446,7 +446,8 @@
         "select_published_terms": "Valitse julkaistu sopimusversio, jonka tuoja lukee.",
         "review_facts": "Tarkista jokainen tieto ja ratkaise avoimet kysymykset ennen julkaisua."
       }
-    }
+    },
+    "leaveDraft": "Poistutaanko luonnoksesta? Tallentamattomat muutokset menetetään. Jos tallennusta ei vahvistettu, tarkista tallennettu luonnos ennen kuin aloitat uudelleen."
   },
   "reviewDecline": "Hylkää tämä tarkistus",
   "reviewColor": "Väri",

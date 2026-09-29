@@ -446,7 +446,8 @@
         "select_published_terms": "Vælg den udgivne aftaleversion, som indlevereren skal læse.",
         "review_facts": "Gennemgå hvert faktum, og afklar åbne spørgsmål, før du udgiver."
       }
-    }
+    },
+    "leaveDraft": "Forlad kladden? Ikke-gemte ændringer går tabt. Hvis lagringen ikke blev bekræftet, skal du kontrollere den gemte kladde, før du starter igen."
   },
   "reviewDecline": "Afvis denne gennemgang",
   "reviewColor": "Farve",

@@ -446,7 +446,8 @@
         "select_published_terms": "Select the published agreement version the seller will read.",
         "review_facts": "Review each fact and resolve open questions before publishing."
       }
-    }
+    },
+    "leaveDraft": "Leave the draft? Unsaved changes will be lost. If saving was not confirmed, check the saved draft before starting again."
   },
   "reviewDecline": "Decline this review",
   "reviewColor": "Colour",

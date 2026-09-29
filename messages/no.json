@@ -446,7 +446,8 @@
         "select_published_terms": "Velg den publiserte avtaleversjonen innlevereren skal lese.",
         "review_facts": "Gå gjennom hvert faktum og avklar åpne spørsmål før publisering."
       }
-    }
+    },
+    "leaveDraft": "Forlate utkastet? Ulagrede endringer går tapt. Hvis lagringen ikke ble bekreftet, kontroller det lagrede utkastet før du begynner på nytt."
   },
   "reviewDecline": "Avslå denne gjennomgangen",
   "reviewColor": "Farge",

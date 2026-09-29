@@ -49,6 +49,7 @@
     "noSeller": "Nessun conferente corrisponde.",
     "newSeller": "Registra un nuovo conferente",
     "changeSeller": "Cambia venditore",
+    "discardForSellerChange": "Cambiare venditore? I dati non salvati di questo articolo andranno persi.",
     "garment": "Articolo",
     "photo": "Foto",
     "photoHint": "Facoltativo · JPEG o PNG, massimo 3 MB.",

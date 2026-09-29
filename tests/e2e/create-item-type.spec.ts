@@ -29,11 +29,17 @@ test('create a type in bag reception, replay a lost reply and retain the item', 
     })
       .png()
       .toBuffer()
-    await page.locator('#quick-photo').setInputFiles({
+    const photoInput = page.locator('#quick-photo')
+    // File selection does not wait for the input's hydration readiness.
+    await expect(photoInput).toBeEnabled()
+    await photoInput.setInputFiles({
       name: 'synthetic.png',
       mimeType: 'image/png',
       buffer: photo,
     })
+    await expect(
+      page.getByRole('img', { name: d.quickIntake.photo, exact: true }),
+    ).toBeVisible()
     const create = page.getByRole('button', {
       name: d.quickIntake.createType,
       exact: true,

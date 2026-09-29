@@ -49,6 +49,7 @@
     "noSeller": "Ingen indleverer matcher.",
     "newSeller": "Registrer en ny indleverer",
     "changeSeller": "Skift sælger",
+    "discardForSellerChange": "Skift sælger? Ikke-gemte oplysninger om varen går tabt.",
     "garment": "Vare",
     "photo": "Foto",
     "photoHint": "Valgfrit · JPEG eller PNG, højst 3 MB.",

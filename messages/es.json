@@ -49,6 +49,7 @@
     "noSeller": "Ningún depositante coincide.",
     "newSeller": "Registrar un nuevo depositante",
     "changeSeller": "Cambiar vendedor",
+    "discardForSellerChange": "¿Cambiar de vendedor? Se perderán los datos sin guardar de este artículo.",
     "garment": "Artículo",
     "photo": "Foto",
     "photoHint": "Opcional · JPEG o PNG, hasta 3 MB.",

@@ -49,6 +49,7 @@
     "noSeller": "Yksikään tuoja ei täsmää.",
     "newSeller": "Rekisteröi uusi tuoja",
     "changeSeller": "Vaihda myyjää",
+    "discardForSellerChange": "Vaihda myyjää? Tuotteen tallentamattomat tiedot menetetään.",
     "garment": "Tuote",
     "photo": "Kuva",
     "photoHint": "Valinnainen · JPEG tai PNG, enintään 3 Mt.",

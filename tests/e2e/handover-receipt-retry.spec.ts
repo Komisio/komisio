@@ -86,6 +86,11 @@ test('an unanswered handover can be retried only from its own row', async ({
     await expect(
       rows[1].getByRole('button', { name: d.intake.retry, exact: true }),
     ).toHaveCount(0)
+    await page.screenshot({
+      path: 'private/handover-retry-mobile.png',
+      fullPage: true,
+      caret: 'initial',
+    })
     await rows[0]
       .getByRole('button', { name: d.intake.retry, exact: true })
       .click()
@@ -176,56 +181,61 @@ test('a stale handover context offers reload and prevents another receipt', asyn
   }
 })
 
-test('receiving one handover preserves another row note and confirmation', async ({
-  page,
-}) => {
-  const email = `handover-notes-${randomUUID()}@example.test`
-  await register(page, email, `K!${randomUUID()}`)
-  const f = await p2Fixture(email)
-  try {
-    const ids = await handovers(f, email)
-    await page.setViewportSize({ width: 320, height: 800 })
-    await page.goto('/intake/handovers')
-    const rows = ids.map((id) => page.locator(`#handover-${id}`))
-    for (const row of rows) {
-      await row.locator('summary').click()
-      await row.getByRole('checkbox').check()
-    }
-    await rows[0]
-      .getByLabel(d.handovers.note, { exact: true })
-      .fill('Synthetic first bag')
-    const secondNote = rows[1].getByLabel(d.handovers.note, { exact: true })
-    await secondNote.fill('Synthetic fragile goods in the second bag')
-    await rows[0]
-      .getByRole('button', { name: d.handovers.receive, exact: true })
-      .click()
-    // Read the refreshed server summary, not the local success message.
-    await expect(rows[0].locator('strong')).toContainText(
-      d.handovers.statuses.received,
-    )
-    await expect(secondNote).toBeVisible()
-    await expect(secondNote).toHaveValue(
-      'Synthetic fragile goods in the second bag',
-    )
-    await expect(rows[1].getByRole('checkbox')).toBeChecked()
-    await rows[1]
-      .getByRole('button', { name: d.handovers.receive, exact: true })
-      .click()
-    await expect(rows[1].locator('strong')).toContainText(
-      d.handovers.statuses.received,
-    )
-    expect(
-      (
-        await f.db.query(
-          "select note from handover_events where handover_id=$1 and kind='received'",
-          [ids[1]],
+for (const status of ['all', 'open'] as const)
+  test(`${status}: receiving one handover preserves another row note and confirmation`, async ({
+    page,
+  }) => {
+    const email = `handover-notes-${randomUUID()}@example.test`
+    await register(page, email, `K!${randomUUID()}`)
+    const f = await p2Fixture(email)
+    try {
+      const ids = await handovers(f, email)
+      await page.setViewportSize({ width: 320, height: 800 })
+      await page.goto(`/intake/handovers?status=${status}`)
+      const rows = ids.map((id) => page.locator(`#handover-${id}`))
+      for (const row of rows) {
+        await row.locator('summary').click()
+        await row.getByRole('checkbox').check()
+      }
+      await rows[0]
+        .getByLabel(d.handovers.note, { exact: true })
+        .fill('Synthetic first bag')
+      const secondNote = rows[1].getByLabel(d.handovers.note, { exact: true })
+      await secondNote.fill('Synthetic fragile goods in the second bag')
+      await rows[0]
+        .getByRole('button', { name: d.handovers.receive, exact: true })
+        .click()
+      // Read the refreshed server summary, not the local success message.
+      if (status === 'open') await expect(rows[0]).toHaveCount(0)
+      else
+        await expect(rows[0].locator('strong')).toContainText(
+          d.handovers.statuses.received,
         )
-      ).rows,
-    ).toEqual([{ note: 'Synthetic fragile goods in the second bag' }])
-  } finally {
-    await f.close()
-  }
-})
+      await expect(secondNote).toBeVisible()
+      await expect(secondNote).toHaveValue(
+        'Synthetic fragile goods in the second bag',
+      )
+      await expect(rows[1].getByRole('checkbox')).toBeChecked()
+      await rows[1]
+        .getByRole('button', { name: d.handovers.receive, exact: true })
+        .click()
+      if (status === 'open') await expect(rows[1]).toHaveCount(0)
+      else
+        await expect(rows[1].locator('strong')).toContainText(
+          d.handovers.statuses.received,
+        )
+      expect(
+        (
+          await f.db.query(
+            "select note from handover_events where handover_id=$1 and kind='received'",
+            [ids[1]],
+          )
+        ).rows,
+      ).toEqual([{ note: 'Synthetic fragile goods in the second bag' }])
+    } finally {
+      await f.close()
+    }
+  })
 
 test('another handover can finish while an uncommitted receipt keeps its own retry', async ({
   page,

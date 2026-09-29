@@ -1152,7 +1152,7 @@
     },
     "settleHeading": "Avregn alle innleverere",
     "settleHint": "Hver innleverer på eller over minimum ({threshold}) uten en åpen utbetaling. Én batch ber om og godkjenner en utbetaling av hele tilgjengelig saldo per valgt innleverer; deretter betaler du via banken og merker hver enkelt som betalt.",
-    "settleEmpty": "Ingen innleverer når minimum akkurat nå.",
+    "settleEmpty": "Ingen innleverere oppfyller vilkårene for avregning akkurat nå.",
     "settleReason": "Batchnotat",
     "settleReasonHint": "Registreres på hver godkjenning i batchen, for eksempel \"Septemberavregning\".",
     "settleConfirm": "Jeg vil betale disse beløpene og registrere referansene.",

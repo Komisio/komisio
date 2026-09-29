@@ -1152,7 +1152,7 @@
     },
     "settleHeading": "Settle all sellers",
     "settleHint": "Every seller at or above the minimum ({threshold}) without an open payout. One batch requests and approves a payout of the full available balance per selected seller; you then pay through your bank and mark each one paid.",
-    "settleEmpty": "No seller reaches the minimum right now.",
+    "settleEmpty": "No sellers are eligible for settlement right now.",
     "settleReason": "Batch note",
     "settleReasonHint": "Recorded on every approval in the batch, for example \"September settlement\".",
     "settleConfirm": "I will pay these amounts and record the references.",

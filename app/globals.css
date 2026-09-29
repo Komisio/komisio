@@ -237,7 +237,7 @@ summary {
 }
 :root {
   --ink: #203d35;
-  --muted: #718178;
+  --muted: #5b6d62;
   --line: #e3e9e2;
   --green: #234e40;
   --mint: #eaf1e7;
@@ -349,6 +349,11 @@ select:focus {
 }
 input:read-only {
   background: var(--paper);
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted);
+  opacity: 1;
 }
 small {
   font-size: 12px;

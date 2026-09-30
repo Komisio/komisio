@@ -129,7 +129,10 @@
     "typeRetry": "Prøv igjen",
     "typeInvalid": "Angi et navn og velg gyldige felt.",
     "typeUncertain": "Lagringen kunne ikke bekreftes. Prøv igjen med de samme opplysningene. Varen er beholdt.",
-    "typeRefused": "Varetypen kunne ikke lagres nå. Avbryt og kontroller butikk og tilgang. Opplysningene om varen er beholdt."
+    "typeRefused": "Varetypen kunne ikke lagres nå. Avbryt og kontroller butikk og tilgang. Opplysningene om varen er beholdt.",
+    "descriptionRequired": "Skriv inn en beskrivelse.",
+    "priceInvalid": "Angi en pris over 0 og høyst 999 999,99. Bruk høyst to desimaler.",
+    "savedPriceUnavailable": "Varen er godkjent, men den lagrede prisen kunne ikke leses. Åpne varen for å kontrollere prisen."
   },
   "intake": {
     "quickLink": "Hurtigmottak: én skjerm per plagg",

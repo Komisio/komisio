@@ -129,7 +129,10 @@
     "typeRetry": "Försök igen",
     "typeInvalid": "Ange ett namn och välj giltiga fält.",
     "typeUncertain": "Sparandet kunde inte bekräftas. Försök igen med samma uppgifter. Varan ligger kvar.",
-    "typeRefused": "Varutypen kunde inte sparas i det aktuella läget. Avbryt och kontrollera butik och behörighet. Varans uppgifter ligger kvar."
+    "typeRefused": "Varutypen kunde inte sparas i det aktuella läget. Avbryt och kontrollera butik och behörighet. Varans uppgifter ligger kvar.",
+    "descriptionRequired": "Ange en beskrivning.",
+    "priceInvalid": "Ange ett pris över 0 och högst 999 999,99. Högst två decimaler.",
+    "savedPriceUnavailable": "Varan är godkänd, men det sparade priset kunde inte läsas. Öppna varan för att kontrollera priset."
   },
   "intake": {
     "quickLink": "Snabb mottagning: en skärm per plagg",

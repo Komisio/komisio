@@ -345,16 +345,24 @@ test('a known refusal leaves the fields correctable under the same request id', 
     })
     await description.fill('Synthetic refused lamp')
     const price = page.getByLabel(d.quickIntake.price, { exact: true })
-    // 1 000 000 in the store currency is 100 000 000 minor units, above the
-    // deployed validator's maximum: the route itself answers 400 before the
-    // engine runs, so nothing is stored and the same id may carry a
-    // corrected command.
-    await price.fill('1000000')
+    // The client now rejects over-limit prices. Inject an over-limit value
+    // into the first request to keep exercising a real route 400, correction
+    // and reuse of the same request id (not merely a mocked refusal).
+    await price.fill('250')
     const requests: Record<string, unknown>[] = []
     const statuses: number[] = []
     await page.route('**/api/intake/quick', async (route) => {
       requests.push(route.request().postDataJSON())
-      const response = await route.fetch()
+      const response = await route.fetch(
+        requests.length === 1
+          ? {
+              postData: {
+                ...route.request().postDataJSON(),
+                priceOre: 100_000_000,
+              },
+            }
+          : {},
+      )
       statuses.push(response.status())
       await route.fulfill({ response })
     })
@@ -383,7 +391,7 @@ test('a known refusal leaves the fields correctable under the same request id', 
     expect(statuses).toEqual([400, 200])
     expect(requests).toHaveLength(2)
     expect(requests[1].requestId).toBe(requests[0].requestId)
-    expect(requests[0].priceOre).toBe(100_000_000)
+    expect(requests[0].priceOre).toBe(25_000)
     expect(requests[1].priceOre).toBe(12_000)
     expect((requests[1].facts as { description: string }).description).toBe(
       'Synthetic corrected lamp',

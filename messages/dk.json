@@ -129,7 +129,10 @@
     "typeRetry": "Prøv igen",
     "typeInvalid": "Angiv et navn, og vælg gyldige felter.",
     "typeUncertain": "Lagringen kunne ikke bekræftes. Prøv igen med de samme oplysninger. Varen er bevaret.",
-    "typeRefused": "Varetypen kunne ikke gemmes nu. Annuller, og kontrollér butik og adgang. Varens oplysninger er bevaret."
+    "typeRefused": "Varetypen kunne ikke gemmes nu. Annuller, og kontrollér butik og adgang. Varens oplysninger er bevaret.",
+    "descriptionRequired": "Indtast en beskrivelse.",
+    "priceInvalid": "Angiv en pris over 0 og højst 999.999,99. Brug højst to decimaler.",
+    "savedPriceUnavailable": "Varen er godkendt, men den gemte pris kunne ikke læses. Åbn varen for at kontrollere prisen."
   },
   "intake": {
     "quickLink": "Hurtig modtagelse: én skærm pr. stykke tøj",

@@ -129,7 +129,10 @@
     "typeRetry": "Try again",
     "typeInvalid": "Enter a name and choose valid fields.",
     "typeUncertain": "The save could not be confirmed. Retry with the same details. Your item is still here.",
-    "typeRefused": "The item type could not be saved in the current context. Cancel and check your store and permissions. Your item details are retained."
+    "typeRefused": "The item type could not be saved in the current context. Cancel and check your store and permissions. Your item details are retained.",
+    "descriptionRequired": "Enter a description.",
+    "priceInvalid": "Enter a price above 0 and at most 999,999.99. Use at most two decimal places.",
+    "savedPriceUnavailable": "The item is accepted, but its saved price could not be read. Open the item to check its price."
   },
   "intake": {
     "quickLink": "Quick reception: one screen per garment",

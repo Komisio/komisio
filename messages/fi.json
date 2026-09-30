@@ -129,7 +129,10 @@
     "typeRetry": "Yritä uudelleen",
     "typeInvalid": "Anna nimi ja valitse kelvolliset kentät.",
     "typeUncertain": "Tallennusta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla. Tuotteen tiedot ovat tallella.",
-    "typeRefused": "Tuotetyyppiä ei voitu tallentaa tässä tilanteessa. Peruuta ja tarkista myymälä ja käyttöoikeudet. Tuotteen tiedot säilyvät."
+    "typeRefused": "Tuotetyyppiä ei voitu tallentaa tässä tilanteessa. Peruuta ja tarkista myymälä ja käyttöoikeudet. Tuotteen tiedot säilyvät.",
+    "descriptionRequired": "Kirjoita kuvaus.",
+    "priceInvalid": "Anna hinta, joka on yli 0 ja enintään 999 999,99. Käytä enintään kahta desimaalia.",
+    "savedPriceUnavailable": "Tuote on hyväksytty, mutta tallennettua hintaa ei voitu lukea. Avaa tuote tarkistaaksesi hinnan."
   },
   "intake": {
     "quickLink": "Pikavastaanotto: yksi näyttö per vaate",

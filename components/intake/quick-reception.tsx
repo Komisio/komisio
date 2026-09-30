@@ -10,9 +10,13 @@ import { useRouter } from 'next/navigation'
 import { QuickSellerPicker } from './quick-seller-picker'
 import { Camera, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import type { Dictionary } from '@/lib/i18n'
+import { intlLocale, type Dictionary } from '@/lib/i18n'
 import { quickAiProposal } from '@/lib/intake/quick-ai-proposal'
-import { quickReceiveResult } from '@/lib/intake/quick-receive-result'
+import { quickPriceOre } from '@/lib/intake/quick-price'
+import {
+  quickReceiveResult,
+  type QuickReceiveResult,
+} from '@/lib/intake/quick-receive-result'
 import {
   createdReception,
   photoReferences,
@@ -196,10 +200,12 @@ export function QuickReception({
     >('idle'),
     [message, setMessage] = useState(''),
     [error, setError] = useState(''),
+    [validationRequested, setValidationRequested] = useState(false),
     [done, setDone] = useState<{
       reference: string
       itemId: string
       printJobId: string | null
+      price: QuickReceiveResult['price']
     } | null>(null)
   // What this item type asks for, in the profile's order. Changing the type
   // changes the questions; answers to questions the new type does not ask are
@@ -521,9 +527,8 @@ export function QuickReception({
   }
 
   function buildCommand() {
-    const ore = Math.round(Number(price.replace(',', '.')) * 100)
-    if (!(facts.description ?? '').trim() || !Number.isInteger(ore) || ore <= 0)
-      return null
+    const ore = quickPriceOre(price)
+    if (!(facts.description ?? '').trim() || ore === null) return null
     const asked = new Set(questions.map((q) => q.definition.slug))
     const cleaned = Object.fromEntries(
       Object.entries(facts)
@@ -559,7 +564,17 @@ export function QuickReception({
     if (!current) {
       const command = buildCommand()
       if (!command) {
+        setValidationRequested(true)
         setError(d.fillIn)
+        requestAnimationFrame(() => {
+          document
+            .getElementById(
+              !(facts.description ?? '').trim()
+                ? 'quick-description'
+                : 'quick-price',
+            )
+            ?.focus()
+        })
         return
       }
       current = { command, printerId }
@@ -582,6 +597,7 @@ export function QuickReception({
         reference: result.reference,
         itemId: result.itemId,
         printJobId,
+        price: result.price,
       })
       if (printJobId) {
         pendingPrint.current = {
@@ -652,9 +668,13 @@ export function QuickReception({
     setSession(null)
     setMessage('')
     setError('')
+    setValidationRequested(false)
   }
 
   const busy = stage !== 'idle'
+  const invalidDescription =
+    validationRequested && !(facts.description ?? '').trim()
+  const invalidPrice = validationRequested && quickPriceOre(price) === null
   // One input per question the item type asks, shaped by the definition: a
   // number carries its unit, a choice offers its values by their stable ids,
   // and free text stays free text.
@@ -702,6 +722,10 @@ export function QuickReception({
             rows={3}
             maxLength={1000}
             required
+            aria-invalid={invalidDescription || undefined}
+            aria-describedby={
+              invalidDescription ? 'quick-description-error' : undefined
+            }
             disabled={busy || !!done || uncertain}
             onChange={(e) => set(e.target.value)}
           />
@@ -715,6 +739,11 @@ export function QuickReception({
             disabled={busy || !!done || uncertain}
             onChange={(e) => set(e.target.value)}
           />
+        )}
+        {key === 'description' && invalidDescription && (
+          <small id="quick-description-error" className="error">
+            {d.descriptionRequired}
+          </small>
         )}
       </div>
     )
@@ -955,11 +984,20 @@ export function QuickReception({
                 <input
                   id="quick-price"
                   required
+                  aria-invalid={invalidPrice || undefined}
+                  aria-describedby={
+                    invalidPrice ? 'quick-price-error' : undefined
+                  }
                   inputMode="decimal"
                   value={price}
                   disabled={busy || uncertain}
                   onChange={(e) => setPrice(e.target.value)}
                 />
+                {invalidPrice && (
+                  <small id="quick-price-error" className="error">
+                    {d.priceInvalid}
+                  </small>
+                )}
               </div>
               {printers.length > 0 && (
                 <div className="field">
@@ -1053,6 +1091,25 @@ export function QuickReception({
           <p>
             <strong>{done.reference}</strong> · {facts.description}
           </p>
+          <dl className="quick-confirmation-details">
+            <div>
+              <dt>{d.seller}</dt>
+              <dd>{seller?.name}</dd>
+            </div>
+            {done.price && (
+              <div>
+                <dt>{d.price}</dt>
+                <dd>
+                  {new Intl.NumberFormat(intlLocale(lang), {
+                    style: 'currency',
+                    currency: done.price.currency,
+                    currencyDisplay: 'code',
+                  }).format(Number(done.price.amount))}
+                </dd>
+              </div>
+            )}
+          </dl>
+          {!done.price && <p>{d.savedPriceUnavailable}</p>}
           {message && <p role={printIssue ? 'alert' : 'status'}>{message}</p>}
           {(printIssue || stage === 'printing') && (
             <div className="row wrap">

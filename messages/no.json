@@ -446,7 +446,8 @@
         "select_published_terms": "Velg den publiserte avtaleversjonen innlevereren skal lese.",
         "review_facts": "Gå gjennom hvert faktum og avklar åpne spørsmål før publisering."
       }
-    }
+    },
+    "leaveDraft": "Forlate utkastet? Ulagrede endringer går tapt. Hvis lagringen ikke ble bekreftet, kontroller det lagrede utkastet før du begynner på nytt."
   },
   "reviewDecline": "Avslå denne gjennomgangen",
   "reviewColor": "Farge",
@@ -1026,7 +1027,8 @@
       "garment": "plaggmottak"
     },
     "priceReasons": {
-      "accepted": "akseptert pris"
+      "accepted": "akseptert pris",
+      "manual": "Manuell prisendring"
     },
     "eventKinds": {
       "accepted": "Tatt imot",
@@ -1041,7 +1043,8 @@
     "pageOf": "Side {page} av {pages}",
     "currentPrice": "Nåværende pris",
     "labelPrinter": "Etikettskriver",
-    "manageSalePeriod": "Pris og salgsperiode"
+    "manageSalePeriod": "Pris og salgsperiode",
+    "unknownActor": "Navn mangler"
   },
   "sales": {
     "title": "Salg",

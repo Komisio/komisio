@@ -269,15 +269,17 @@ export default async function Intake({
           )}
         </div>
       </div>
-      <section className="card intake-form" id="bag-queue">
+      <section className="card intake-form received-bags" id="bag-queue">
         <h2>{d.queue}</h2>
-        <p>
-          {filters.state === 'unstarted'
-            ? all.storeFlow.live.dropoffHelp
-            : filters.state === 'drafts'
-              ? all.storeFlow.live.draftHelp
-              : d.queueHint}
-        </p>
+        {filters.state && (
+          <p>
+            {filters.state === 'unstarted'
+              ? all.storeFlow.live.dropoffHelp
+              : filters.state === 'drafts'
+                ? all.storeFlow.live.draftHelp
+                : d.queueHint}
+          </p>
+        )}
         {filters.state && (
           <p>
             <strong>
@@ -288,28 +290,12 @@ export default async function Intake({
             · <Link href={bagQueueHref({})}>{d.showAllBags}</Link>
           </p>
         )}
-        <details className="intake-reference">
-          <summary>{all.openByReference.title}</summary>
-          <form action="/intake/open" className="row wrap">
-            <label htmlFor="intake-open-ref">
-              {all.openByReference.reference}
-            </label>
-            <input
-              id="intake-open-ref"
-              name="ref"
-              placeholder="K-12"
-              maxLength={16}
-              inputMode="text"
-            />
-            <button className="btn btn-secondary">
-              {all.openByReference.open}
-            </button>
-          </form>
-        </details>
-        <p>
-          {selected.data ? d.bagsFor + ': ' + selected.data.name : d.allSellers}
-        </p>
-        <form action="/intake#bag-queue" className="field">
+        {selected.data && (
+          <p>
+            {d.bagsFor}: <strong>{selected.data.name}</strong>
+          </p>
+        )}
+        <form action="/intake#bag-queue" className="field received-bags-search">
           {filters.state && (
             <input type="hidden" name="state" value={filters.state} />
           )}
@@ -329,7 +315,7 @@ export default async function Intake({
             <button className="btn btn-secondary">{d.findBag}</button>
           </div>
         </form>
-        <div className="row">
+        <div className="row wrap received-bags-filters">
           {filters.bag && (
             <Link
               className="text-link"
@@ -354,33 +340,34 @@ export default async function Intake({
             }
             return (
               <li key={bag.id} className="intake-bag">
-                <Link
-                  className="text-link"
-                  href={`/intake/bags/${bag.id}/inspect`}
-                >
-                  {dictionary(ctx.locale).inspection.title}
-                </Link>
-                <div>
+                <div className="received-bag-info">
                   <strong>
                     {d.bag} K-{bag.reference}
                   </strong>
-                  <br />
-                  {bag.sellers?.name}
-                  <br />
+                  {!selected.data && <span>{bag.sellers?.name}</span>}
                   <small>
                     {new Date(bag.received_at).toLocaleString(
                       intlLocale(ctx.locale),
-                      { timeZone: 'Europe/Stockholm' },
+                      {
+                        timeZone: 'Europe/Stockholm',
+                        dateStyle: 'short',
+                        timeStyle: 'short',
+                      },
                     )}{' '}
                     · {d.awaiting}
                   </small>
                 </div>
-                <Link
-                  className="btn btn-secondary"
-                  href={`/intake/bags/${bag.id}`}
-                >
-                  {d.label}
-                </Link>
+                <div className="received-bag-actions">
+                  <Link
+                    className="btn btn-primary"
+                    href={`/intake/bags/${bag.id}/inspect`}
+                  >
+                    {all.inspection.title}
+                  </Link>
+                  <Link className="text-link" href={`/intake/bags/${bag.id}`}>
+                    {d.label}
+                  </Link>
+                </div>
               </li>
             )
           })}

@@ -1298,7 +1298,7 @@ test('bag queue finds older receipts and keeps seller filters while paging', asy
   await expect(queue).not.toContainText('Queue Beta')
   const ids = async () =>
     queue
-      .locator('.intake-bag a.text-link')
+      .locator('.intake-bag a[href$="/inspect"]')
       .evaluateAll((links) =>
         links.map((a) => a.getAttribute('href')!.split('/')[3]),
       )
@@ -1309,7 +1309,7 @@ test('bag queue finds older receipts and keeps seller filters while paging', asy
   await expect(queue.locator('.intake-bag')).toHaveCount(20)
   await expect(page).toHaveURL(new RegExp(`seller=${sellerId}`))
   await expect(
-    queue.locator('.intake-bag a.text-link').first(),
+    queue.locator('.intake-bag a[href$="/inspect"]').first(),
   ).toHaveAttribute('href', '/intake/bags/' + expected[30] + '/inspect')
   const second = await ids()
   await queue
@@ -1328,13 +1328,16 @@ test('bag queue finds older receipts and keeps seller filters while paging', asy
     .click()
   await expect(queue.locator('.intake-bag')).toHaveCount(20)
   await expect(
-    queue.locator('.intake-bag a.text-link').first(),
+    queue.locator('.intake-bag a[href$="/inspect"]').first(),
   ).toHaveAttribute('href', '/intake/bags/' + expected[30] + '/inspect')
   expect(await ids()).toEqual(second)
   await queue.getByLabel('Sök på inlämningsnummer').fill(`K-${oldestNumber}`)
   await queue.getByRole('button', { name: 'Hitta inlämning' }).click()
   await expect(queue.locator('.intake-bag')).toHaveCount(1)
   expect(await ids()).toEqual([expected[0]])
+  await queue.screenshot({ path: 'test-results/bag-queue-single-desktop.png' })
+  await page.setViewportSize({ width: 390, height: 844 })
+  await queue.screenshot({ path: 'test-results/bag-queue-single-mobile.png' })
   await expect(page).not.toHaveURL(/older=/)
   await page.goto(`/intake?seller=${otherId}&bag=${oldestNumber}#bag-queue`)
   await expect(queue.locator('.intake-bag')).toHaveCount(0)

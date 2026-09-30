@@ -446,7 +446,8 @@
         "select_published_terms": "Välj den publicerade avtalsversion som säljaren ska läsa.",
         "review_facts": "Granska varje uppgift och besvara öppna frågor innan du publicerar."
       }
-    }
+    },
+    "leaveDraft": "Lämna utkastet? Osparade ändringar försvinner. Om sparningen inte bekräftades, kontrollera det sparade utkastet innan du börjar om."
   },
   "reviewDecline": "Avvisa underlaget",
   "reviewColor": "Färg",
@@ -1026,7 +1027,8 @@
       "garment": "plaggkvitto"
     },
     "priceReasons": {
-      "accepted": "accepterat pris"
+      "accepted": "accepterat pris",
+      "manual": "Manuell prisändring"
     },
     "eventKinds": {
       "accepted": "Accepterad",
@@ -1041,7 +1043,8 @@
     "pageOf": "Sida {page} av {pages}",
     "currentPrice": "Nuvarande pris",
     "labelPrinter": "Etikettskrivare",
-    "manageSalePeriod": "Pris och säljperiod"
+    "manageSalePeriod": "Pris och säljperiod",
+    "unknownActor": "Namn saknas"
   },
   "sales": {
     "title": "Försäljning",

@@ -446,7 +446,8 @@
         "select_published_terms": "Valitse julkaistu sopimusversio, jonka tuoja lukee.",
         "review_facts": "Tarkista jokainen tieto ja ratkaise avoimet kysymykset ennen julkaisua."
       }
-    }
+    },
+    "leaveDraft": "Poistutaanko luonnoksesta? Tallentamattomat muutokset menetetään. Jos tallennusta ei vahvistettu, tarkista tallennettu luonnos ennen kuin aloitat uudelleen."
   },
   "reviewDecline": "Hylkää tämä tarkistus",
   "reviewColor": "Väri",
@@ -1026,7 +1027,8 @@
       "garment": "vaatteen vastaanotto"
     },
     "priceReasons": {
-      "accepted": "hyväksytty hinta"
+      "accepted": "hyväksytty hinta",
+      "manual": "Manuaalinen hinnanmuutos"
     },
     "eventKinds": {
       "accepted": "Hyväksytty",
@@ -1041,7 +1043,8 @@
     "pageOf": "Sivu {page}/{pages}",
     "currentPrice": "Nykyinen hinta",
     "labelPrinter": "Etikettitulostin",
-    "manageSalePeriod": "Hinta ja myyntijakso"
+    "manageSalePeriod": "Hinta ja myyntijakso",
+    "unknownActor": "Nimi ei saatavilla"
   },
   "sales": {
     "title": "Myynti",

@@ -47,7 +47,10 @@ const frozenTerms = z
   })
   .loose()
 // Ids from the database are uuids by type; the RFC shape is not required.
+const itemActor = z.object({ id: z.guid(), name: z.string().nullable() })
+export type ItemActor = z.infer<typeof itemActor>
 const itemRow = z.object({
+  actor: itemActor.optional(),
   id: z.guid(),
   origin_kind: originKind,
   origin_id: z.guid(),
@@ -61,12 +64,14 @@ const itemRow = z.object({
 })
 export type ItemRow = z.infer<typeof itemRow>
 const priceRow = z.object({
+  actor: itemActor.optional(),
   id: z.guid(),
   price_ore: z.union([z.number().int(), z.string()]),
   reason: z.string(),
   set_at: z.iso.datetime({ offset: true }),
 })
 const eventRow = z.object({
+  actor: itemActor.optional(),
   id: z.guid(),
   kind: z.string(),
   detail: z.record(z.string(), z.unknown()),

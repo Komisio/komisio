@@ -446,7 +446,8 @@
         "select_published_terms": "Selecciona la versión publicada del acuerdo que leerá el depositante.",
         "review_facts": "Revisa cada dato y resuelve las preguntas abiertas antes de publicar."
       }
-    }
+    },
+    "leaveDraft": "¿Salir del borrador? Se perderán los cambios sin guardar. Si no se confirmó el guardado, comprueba el borrador guardado antes de empezar de nuevo."
   },
   "reviewDecline": "Rechazar esta revisión",
   "reviewColor": "Color",
@@ -1026,7 +1027,8 @@
       "garment": "recepción de prenda"
     },
     "priceReasons": {
-      "accepted": "precio aceptado"
+      "accepted": "precio aceptado",
+      "manual": "Cambio de precio manual"
     },
     "eventKinds": {
       "accepted": "Aceptado",
@@ -1041,7 +1043,8 @@
     "pageOf": "Página {page} de {pages}",
     "currentPrice": "Precio actual",
     "labelPrinter": "Impresora de etiquetas",
-    "manageSalePeriod": "Precio y período de venta"
+    "manageSalePeriod": "Precio y período de venta",
+    "unknownActor": "Nombre no disponible"
   },
   "sales": {
     "title": "Ventas",

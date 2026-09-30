@@ -446,7 +446,8 @@
         "select_published_terms": "Seleziona la versione pubblicata dell'accordo che il conferente leggerà.",
         "review_facts": "Esamina ogni dato e risolvi le questioni aperte prima di pubblicare."
       }
-    }
+    },
+    "leaveDraft": "Uscire dalla bozza? Le modifiche non salvate andranno perse. Se il salvataggio non è stato confermato, controlla la bozza salvata prima di ricominciare."
   },
   "reviewDecline": "Rifiuta questa revisione",
   "reviewColor": "Colore",
@@ -1026,7 +1027,8 @@
       "garment": "ricezione del capo"
     },
     "priceReasons": {
-      "accepted": "prezzo accettato"
+      "accepted": "prezzo accettato",
+      "manual": "Modifica manuale del prezzo"
     },
     "eventKinds": {
       "accepted": "Accettato",
@@ -1041,7 +1043,8 @@
     "pageOf": "Pagina {page} di {pages}",
     "currentPrice": "Prezzo attuale",
     "labelPrinter": "Stampante per etichette",
-    "manageSalePeriod": "Prezzo e periodo di vendita"
+    "manageSalePeriod": "Prezzo e periodo di vendita",
+    "unknownActor": "Nome non disponibile"
   },
   "sales": {
     "title": "Vendite",

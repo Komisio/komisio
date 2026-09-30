@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
 import type { PriceEvidence } from '@/lib/engine/price-evidence'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'

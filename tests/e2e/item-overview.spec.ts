@@ -12,6 +12,7 @@ for (const currency of ['SEK', 'USD']) {
     await register(page, email, 'K!' + randomBytes(16).toString('hex'))
     const f = await p2Fixture(email)
     try {
+      await f.db.query("select save_profile('Synthetic Alex','sv')")
       await f.db.query(
         "select publish_store_policy($1,$2,(current_store_policy($1)->>'id')::uuid,(current_store_policy($1)->'policy') || jsonb_build_object('currency',$3::text))",
         [f.tenant, randomUUID(), currency],
@@ -67,10 +68,23 @@ for (const currency of ['SEK', 'USD']) {
       const history = page.locator('details').filter({
         has: page.locator('summary').filter({ hasText: d.items.prices }),
       })
-      await history.locator('summary').click()
+      await history.locator(':scope > summary').click()
       await expect(history).toContainText('200.00 ' + currency)
       await expect(history).toContainText('123.45 ' + currency)
-      await history.locator('summary').click()
+      await expect(history).toContainText(d.items.priceReasons.manual)
+      const signature = history.locator('.actor-signature').first()
+      await expect(signature.locator('summary')).toHaveText('SA')
+      await signature.locator('summary').focus()
+      await page.keyboard.press('Enter')
+      await expect(signature.locator('.actor-signature-name')).toHaveText(
+        'Synthetic Alex',
+      )
+      await expect(signature.locator('.actor-signature-name')).toBeVisible()
+      await page.screenshot({
+        path: testInfo.outputPath('item-signature-mobile.png'),
+        fullPage: true,
+      })
+      await history.locator(':scope > summary').click()
       await page.screenshot({
         path: testInfo.outputPath('item-overview-mobile.png'),
         fullPage: true,

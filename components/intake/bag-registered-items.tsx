@@ -1,4 +1,5 @@
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
+import PageLink from 'next/link'
 import Image from 'next/image'
 import { dictionary, intlLocale, type Locale } from '@/lib/i18n'
 import type { BagRegisteredPage } from '@/lib/engine/bag-registered-items'
@@ -80,11 +81,13 @@ export function BagRegisteredItems({
       )}
       {legacy && items.length === 50 && <p>{b.limit}</p>}
       {pages > 1 && (
+        // Paging only replaces this list. Both intake views keep their keyed
+        // editor mounted, so these links do not discard entered work.
         <nav className="row wrap" aria-label={title}>
           {itemPage > 1 && (
-            <Link className="btn btn-secondary" href={href(itemPage - 1)}>
+            <PageLink className="btn btn-secondary" href={href(itemPage - 1)}>
               {d.items.previousPage}
-            </Link>
+            </PageLink>
           )}
           <span>
             {d.items.pageOf
@@ -92,9 +95,9 @@ export function BagRegisteredItems({
               .replace('{pages}', String(pages))}
           </span>
           {itemPage < pages && (
-            <Link className="btn btn-secondary" href={href(itemPage + 1)}>
+            <PageLink className="btn btn-secondary" href={href(itemPage + 1)}>
               {d.items.nextPage}
-            </Link>
+            </PageLink>
           )}
         </nav>
       )}

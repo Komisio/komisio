@@ -446,7 +446,8 @@
         "select_published_terms": "Wählen Sie die veröffentlichte Vereinbarungsversion, die der Einlieferer lesen wird.",
         "review_facts": "Prüfen Sie jeden Fakt und klären Sie offene Fragen vor der Veröffentlichung."
       }
-    }
+    },
+    "leaveDraft": "Entwurf verlassen? Nicht gespeicherte Änderungen gehen verloren. Wenn das Speichern nicht bestätigt wurde, prüfe den gespeicherten Entwurf, bevor du erneut beginnst."
   },
   "reviewDecline": "Diese Prüfung ablehnen",
   "reviewColor": "Farbe",
@@ -1026,7 +1027,8 @@
       "garment": "Kleidungsstück-Annahme"
     },
     "priceReasons": {
-      "accepted": "angenommener Preis"
+      "accepted": "angenommener Preis",
+      "manual": "Manuelle Preisänderung"
     },
     "eventKinds": {
       "accepted": "Angenommen",
@@ -1041,7 +1043,8 @@
     "pageOf": "Seite {page} von {pages}",
     "currentPrice": "Aktueller Preis",
     "labelPrinter": "Etikettendrucker",
-    "manageSalePeriod": "Preis und Verkaufszeitraum"
+    "manageSalePeriod": "Preis und Verkaufszeitraum",
+    "unknownActor": "Name nicht verfügbar"
   },
   "sales": {
     "title": "Verkäufe",

@@ -2198,7 +2198,9 @@
       "REQUEST_CONFLICT": "Tämä pyyntötunnus on käytetty toiseen lähetykseen.",
       "INVALID_INPUT": "Pyyntö ei ollut kelvollinen."
     },
-    "companyName": "Yrityksen nimi Fortnoxissa"
+    "companyName": "Yrityksen nimi Fortnoxissa",
+    "voucherUnknown": "Lähetyksen tulos on epävarma:",
+    "recoveryHelp": "Ohje lähetyksen tarkistamiseen"
   },
   "zettle": {
     "automaticTitle": "Automaattinen kuittien nouto",
@@ -2798,5 +2800,75 @@
     "resumeReception": "Avaa odottava vastaanotto",
     "hint": "Luvut koskevat tallennettuja tietoja. Tarkista myös vielä rekisteröimättömät tavarat.",
     "unavailable": "Toimituksen tilannetta ei voi näyttää juuri nyt."
+  },
+  "helpCenter": {
+    "title": "Ohje",
+    "intro": "Ohjeita Fortnoxin käyttöönottoon ja ongelmien ratkaisuun.",
+    "open": "Tämän sivun ohje",
+    "close": "Sulje ohje",
+    "fullArticle": "Avaa koko ohjesivu uuteen välilehteen",
+    "taskLinks": "Siirry tehtävään",
+    "settings": "Tilikartta ja Fortnox",
+    "days": "Päivän päätökset ja viennit",
+    "reconciliation": "Täsmäytys",
+    "providerHelp": "Fortnox: käyttöönotto ja lisenssit (avautuu uuteen välilehteen)",
+    "guide": {
+      "title": "Aloita Fortnoxin käyttö",
+      "intro": "Etene vaiheittain lähetettyyn aineistoon. Tallennetut tiedot säilyvät, kun palaat.",
+      "company": "Yhdistetty yritys",
+      "next": "Seuraava vaihe näkyy alla. Avaa ohje tarvittaessa.",
+      "complete": "Lähetys on kirjattu yhdistetylle yritykselle nykyisellä tilikartalla. Seuraa muita päiviä täsmäytyksessä.",
+      "hostUnavailable": "Komisio-asennuksen ylläpitäjän on valmisteltava yhteys. Ota yhteyttä palvelun ylläpitäjään.",
+      "currency": "Tämä versio tukee Fortnox-lähetyksiä vain SEK-valuuttaa käyttäville myymälöille.",
+      "managerNeeded": "Pyydä myymälän omistajaa tai järjestelmänvalvojaa tekemään tämä vaihe.",
+      "staffNeeded": "Pyydä myymälän henkilökuntaa valmistelemaan aineisto.",
+      "limits": "Tila perustuu tallennettuihin tietoihin, ei uuteen Fortnox-tarkistukseen. Tallennettu tilikartta tai tasapainoinen vienti ei todista kirjanpidon oikeellisuutta. Älä lähetä jo kirjattuja päiviä uudelleen vain oppaan suorittamiseksi.",
+      "steps": {
+        "connected": "Yhdistä oikea yritys",
+        "mapped": "Tallenna tilikartta",
+        "exported": "Valmistele aineisto nykyisellä tilikartalla",
+        "sent": "Kirjaa vahvistettu lähetys yritykselle"
+      },
+      "states": {
+        "done": "Valmis",
+        "needed": "Tekemättä",
+        "unknown": "Tarkistus ei onnistunut – lataa sivu uudelleen"
+      }
+    },
+    "articles": {
+      "fortnox-connect": {
+        "title": "Yhdistä Fortnox",
+        "intro": "Yhdistä myymälän yritys ja valmistele tilikartta. Yhdistäminen ei lähetä kirjanpitotietoja.",
+        "steps": [
+          "Sinun on oltava Komision omistaja tai järjestelmänvalvoja ja voitava hyväksyä oikean Fortnox-yrityksen käyttöoikeus. Tarkista tarvittavat integraatio- ja ohjelmalisenssit Fortnoxin ohjeista.",
+          "Avaa Tilikartta ja Fortnox. Anna yrityksen nimi sellaisena kuin se on Fortnoxissa ja yhdistä. Kirjaudu Fortnoxiin, tarkista yritys ja hyväksy pyydetyt oikeudet.",
+          "Tarkista yrityksen nimi palattuasi. Tarkista nykyinen yhteys yhteyden tarkistustoiminnolla. Valitse sama yritys yhdistäessäsi uudelleen.",
+          "Tallenna kirjanpitäjän kanssa sovitut tilit ja debet-/kredit-valinnat. Komisio ei valitse tilejä puolestasi."
+        ],
+        "notice": "Yhdistetty tila ei tarkoita, että aineisto on lähetetty. Komisio pyytää yritystietojen ja kirjanpidon käyttöoikeutta, mukaan lukien tositteiden luonti lähetystoimintoa käytettäessä."
+      },
+      "fortnox-first-export": {
+        "title": "Valmistele ja lähetä ensimmäinen aineisto",
+        "intro": "Käsittele päivä kerrallaan ja tarkista yritys, päivämäärä ja summat ennen lähettämistä.",
+        "steps": [
+          "Avaa Päivän päätökset ja viennit ja luo päätös oikealle päivälle. Tämä tallentaa yhteenvedon Komisioon, ei tositetta Fortnoxiin.",
+          "Tarkista esikatselun tilit, debet, kredit ja summat, joilta puuttuu tili. Tarkista tilikartta kirjanpitäjän kanssa. Tasapaino yksin ei osoita kirjanpidon oikeellisuutta.",
+          "Tallenna aineisto valitsemalla SIE 4 -vienti. Lataa sitten tiedosto tai lähetä Fortnoxiin omistajana/järjestelmänvalvojana. Älä sekä tuo tiedostoa että lähetä samaa aineistoa suoraan.",
+          "Todellinen lähetys luo tositteen Fortnoxiin. Viite näkyy vahvistuksen jälkeen. Jos tulos on epävarma, avaa lähetysongelmien ohje äläkä lähetä uudelleen."
+        ],
+        "notice": "Automaattinen lähetys on omistajan erillinen valinta valmistelluille vienneille. Päivän päätökset luodaan edelleen käsin. Yhdistäminen tai ohjeen lukeminen ei käynnistä automaatiota."
+      },
+      "fortnox-recovery": {
+        "title": "Tarkista lähetysongelma",
+        "intro": "Erota pysäytetty lähetys puuttuvasta vastauksesta. Tosite saattaa jo olla olemassa, vaikka vastaus puuttuu.",
+        "steps": [
+          "Jos Komisio ilmoittaa nimenomaisesti lähetyksen pysähtyneen ennen kirjaamista, korjaa syy ja käytä tarjottua uudelleenyritystoimintoa.",
+          "Jos lähetys odottaa tai tulos on epävarma, älä lähetä uudelleen. Pyydä omistajaa vertaamaan aineistoa lähetykseen sidotun Fortnox-yritystietokannan tositteisiin.",
+          "Vertaa päivämäärää, summia ja kaikkia rivejä. Jos vastaava tosite löytyy, omistaja voi kirjata sarjan, numeron, tilikauden ja tarkistustiedot vientirivin vahvistustoiminnolla.",
+          "Jos tositetta ei löydy, pyydä asennuksen ylläpitäjää auttamaan selvityksessä. Puuttuva tulos ei vapauta uutta lähetystä. Älä poista tai luo aineistoja uudelleen eston kiertämiseksi."
+        ],
+        "notice": "Täsmäytys tallentaa omistajan tarkistuksen, ei Fortnoxin automaattista vahvistusta. Henkilökunta ja järjestelmänvalvojat voivat lukea ohjeen; vain omistaja voi kirjata tämän vahvistuksen."
+      }
+    }
   }
 }

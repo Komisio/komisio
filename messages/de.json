@@ -2198,7 +2198,9 @@
       "REQUEST_CONFLICT": "Diese Anfrage-ID wurde für einen anderen Versand verwendet.",
       "INVALID_INPUT": "Die Anfrage war ungültig."
     },
-    "companyName": "Firmenname in Fortnox"
+    "companyName": "Firmenname in Fortnox",
+    "voucherUnknown": "Das Ergebnis der Sendung ist ungewiss:",
+    "recoveryHelp": "Hilfe zur Prüfung der Sendung"
   },
   "zettle": {
     "automaticTitle": "Automatischer Belegabruf",
@@ -2798,5 +2800,75 @@
     "resumeReception": "Offene Annahme öffnen",
     "hint": "Die Zahlen beziehen sich auf gespeicherte Daten. Prüfen Sie auch noch nicht erfasste Waren.",
     "unavailable": "Der Stand der Abgabe ist derzeit nicht verfügbar."
+  },
+  "helpCenter": {
+    "title": "Hilfe",
+    "intro": "Anleitung zum Einstieg und zur Lösung von Problemen mit Fortnox.",
+    "open": "Hilfe zu dieser Seite",
+    "close": "Hilfe schließen",
+    "fullArticle": "Vollständige Hilfeseite in neuem Tab öffnen",
+    "taskLinks": "Zur Aufgabe",
+    "settings": "Kontenzuordnung und Fortnox",
+    "days": "Tagesabschlüsse und Exporte",
+    "reconciliation": "Abgleich",
+    "providerHelp": "Fortnox: Aktivierung und Lizenzen (neuer Tab)",
+    "guide": {
+      "title": "Mit Fortnox beginnen",
+      "intro": "Folgen Sie den Schritten bis zum gesendeten Beleg. Gespeicherte Daten bleiben bei Ihrer Rückkehr erhalten.",
+      "company": "Verbundenes Unternehmen",
+      "next": "Der nächste Schritt steht unten. Öffnen Sie bei Bedarf die Hilfe.",
+      "complete": "Eine Sendung ist für das verbundene Unternehmen und die aktuelle Kontenzuordnung erfasst. Weitere Tage finden Sie im Abgleich.",
+      "hostUnavailable": "Die Verbindung muss durch den Betreiber dieser Komisio-Installation vorbereitet werden. Wenden Sie sich an den Betreiber.",
+      "currency": "Diese Version unterstützt Fortnox-Sendungen nur für Geschäfte mit SEK.",
+      "managerNeeded": "Bitten Sie den Eigentümer oder einen Administrator, diesen Schritt auszuführen.",
+      "staffNeeded": "Bitten Sie das Personal, den Export vorzubereiten.",
+      "limits": "Der Status stammt aus gespeicherten Daten, nicht aus einer neuen Fortnox-Prüfung. Eine gespeicherte Kontenzuordnung oder ein ausgeglichener Export beweist keine korrekte Buchführung. Senden Sie bereits gebuchte Tage nicht erneut, nur um die Anleitung abzuschließen.",
+      "steps": {
+        "connected": "Richtiges Unternehmen verbinden",
+        "mapped": "Kontenzuordnung speichern",
+        "exported": "Export mit aktueller Zuordnung vorbereiten",
+        "sent": "Bestätigte Sendung an das Unternehmen erfassen"
+      },
+      "states": {
+        "done": "Erledigt",
+        "needed": "Offen",
+        "unknown": "Prüfung nicht möglich – Seite neu laden"
+      }
+    },
+    "articles": {
+      "fortnox-connect": {
+        "title": "Fortnox verbinden",
+        "intro": "Verbinden Sie das Unternehmen des Geschäfts und bereiten Sie die Kontenzuordnung vor. Dabei werden keine Buchungsdaten gesendet.",
+        "steps": [
+          "Sie müssen Eigentümer oder Administrator in Komisio sein und den Zugriff auf das richtige Fortnox-Unternehmen genehmigen können. Prüfen Sie nötige Integrations- und Programmlizenzen anhand der Fortnox-Anleitung.",
+          "Öffnen Sie Kontenzuordnung und Fortnox. Geben Sie den Unternehmensnamen wie in Fortnox ein und verbinden Sie sich. Melden Sie sich bei Fortnox an, prüfen Sie das Unternehmen und genehmigen Sie die angeforderten Rechte.",
+          "Prüfen Sie nach der Rückkehr den Unternehmensnamen. Nutzen Sie die Verbindungsprüfung für einen aktuellen Stand. Wählen Sie beim erneuten Verbinden dasselbe Unternehmen.",
+          "Speichern Sie die mit Ihrer Buchhaltung vereinbarten Konten und Soll-/Haben-Zuordnungen. Komisio wählt keine Konten für Sie aus."
+        ],
+        "notice": "Verbunden bedeutet nicht, dass ein Export gesendet wurde. Komisio fordert Zugriff auf Unternehmensdaten und Buchführung an, einschließlich Belegerstellung bei Nutzung der Sendefunktion."
+      },
+      "fortnox-first-export": {
+        "title": "Ersten Export vorbereiten und senden",
+        "intro": "Bearbeiten Sie einen Tag nach dem anderen und prüfen Sie Unternehmen, Datum und Beträge vor dem Senden.",
+        "steps": [
+          "Öffnen Sie Tagesabschlüsse und Exporte und erstellen Sie den Abschluss für das richtige Datum. Dies speichert eine Zusammenfassung in Komisio, keinen Beleg in Fortnox.",
+          "Prüfen Sie Konten, Soll, Haben und nicht zugeordnete Beträge in der Vorschau. Stimmen Sie die Zuordnung mit Ihrer Buchhaltung ab. Ausgeglichene Summen allein belegen keine korrekte Buchführung.",
+          "Wählen Sie den Export als SIE 4, um die Grundlage zu speichern. Laden Sie dann die Datei herunter oder senden Sie als Eigentümer/Administrator an Fortnox. Importieren und senden Sie nicht denselben Export doppelt.",
+          "Eine echte Sendung erstellt einen Beleg in Fortnox. Nach Bestätigung erscheint die Referenz. Bei ungewissem Ergebnis öffnen Sie die Hilfe zu Sendeproblemen und senden Sie nicht erneut."
+        ],
+        "notice": "Automatisches Senden ist eine separate Entscheidung des Eigentümers für vorbereitete Exporte. Tagesabschlüsse bleiben manuell. Verbindung oder Hilfe aktivieren keine Automatik."
+      },
+      "fortnox-recovery": {
+        "title": "Sendeproblem prüfen",
+        "intro": "Unterscheiden Sie eine gestoppte Sendung von einer fehlenden Antwort. Der Beleg kann trotz fehlender Antwort bereits existieren.",
+        "steps": [
+          "Wenn Komisio ausdrücklich einen Stopp vor der Registrierung meldet, beheben Sie die Ursache und nutzen Sie die angebotene Wiederholung.",
+          "Bei ausstehender Sendung oder ungewissem Ergebnis nicht erneut senden. Bitten Sie den Eigentümer, den Export mit Belegen in der an die Sendung gebundenen Fortnox-Unternehmensdatenbank zu vergleichen.",
+          "Vergleichen Sie Datum, Beträge und alle Zeilen. Bei einem passenden Beleg kann der Eigentümer Serie, Nummer, Geschäftsjahr und Prüfnachweis über die Bestätigung in der Exportzeile erfassen.",
+          "Wenn kein Beleg gefunden wird, bitten Sie den Installationsbetreiber um Untersuchung. Ein fehlender Treffer erlaubt keine neue Sendung. Löschen oder erstellen Sie keine Exporte neu, um die Sperre zu umgehen."
+        ],
+        "notice": "Der Abgleich erfasst die Prüfung des Eigentümers, keine automatische Fortnox-Verifikation. Personal und Administratoren können die Hilfe lesen; nur der Eigentümer kann diese Bestätigung erfassen."
+      }
+    }
   }
 }

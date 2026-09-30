@@ -2198,7 +2198,9 @@
       "REQUEST_CONFLICT": "Denne forespørsels-ID-en ble brukt til en annen sending.",
       "INVALID_INPUT": "Forespørselen var ikke gyldig."
     },
-    "companyName": "Firmanavn i Fortnox"
+    "companyName": "Firmanavn i Fortnox",
+    "voucherUnknown": "Resultatet av sendingen er usikkert:",
+    "recoveryHelp": "Hjelp med å kontrollere sendingen"
   },
   "zettle": {
     "automaticTitle": "Automatisk henting av kvitteringer",
@@ -2792,5 +2794,75 @@
     "resumeReception": "Åpne ventende mottak",
     "hint": "Antallene gjelder lagrede opplysninger. Sjekk også varer som ennå ikke er registrert.",
     "unavailable": "Status for innleveringen er ikke tilgjengelig nå."
+  },
+  "helpCenter": {
+    "title": "Hjelp",
+    "intro": "Veiledning for å komme i gang og løse problemer med Fortnox.",
+    "open": "Hjelp på siden",
+    "close": "Lukk hjelpen",
+    "fullArticle": "Åpne hele hjelpesiden i ny fane",
+    "taskLinks": "Gå til oppgaven",
+    "settings": "Kontoplan og Fortnox",
+    "days": "Dagsoppgjør og eksporter",
+    "reconciliation": "Avstemming",
+    "providerHelp": "Fortnox: aktivering og lisenser (åpnes i ny fane)",
+    "guide": {
+      "title": "Kom i gang med Fortnox",
+      "intro": "Følg trinnene frem til et sendt grunnlag. Lagrede opplysninger finnes når du kommer tilbake.",
+      "company": "Tilkoblet selskap",
+      "next": "Neste trinn vises nedenfor. Åpne hjelpen for veiledning.",
+      "complete": "En sending er registrert for det tilkoblede selskapet og gjeldende kontoplan. Følg andre dager under Avstemming.",
+      "hostUnavailable": "Den som drifter Komisio-installasjonen må klargjøre tilkoblingen. Kontakt tjenesteansvarlig.",
+      "currency": "Denne versjonen støtter sending til Fortnox bare for butikker med SEK.",
+      "managerNeeded": "Be butikkens eier eller en administrator utføre dette trinnet.",
+      "staffNeeded": "Be butikkens personale klargjøre grunnlaget.",
+      "limits": "Status bygger på lagrede opplysninger, ikke en ny kontroll hos Fortnox. En lagret kontoplan eller balansert eksport beviser ikke at regnskapet er riktig. Ikke send allerede bokførte dager på nytt for å fullføre veiledningen.",
+      "steps": {
+        "connected": "Koble til riktig selskap",
+        "mapped": "Lagre kontoplanen",
+        "exported": "Klargjør et grunnlag med gjeldende kontoplan",
+        "sent": "Registrer en bekreftet sending til selskapet"
+      },
+      "states": {
+        "done": "Ferdig",
+        "needed": "Gjenstår",
+        "unknown": "Kunne ikke kontrolleres – last siden på nytt"
+      }
+    },
+    "articles": {
+      "fortnox-connect": {
+        "title": "Koble til Fortnox",
+        "intro": "Koble til butikkens selskap og klargjør kontoplanen. Ingen regnskapsdata sendes ved tilkobling.",
+        "steps": [
+          "Du må være eier eller administrator i Komisio og kunne godkjenne tilgang til riktig Fortnox-selskap. Kontroller aktuelle integrasjons- og programlisenser i Fortnox-veiledningen.",
+          "Åpne Kontoplan og Fortnox. Skriv selskapsnavnet slik det står i Fortnox, og koble til. Logg inn hos Fortnox, kontroller selskapet og godkjenn tillatelsene.",
+          "Kontroller selskapsnavnet når du kommer tilbake. Bruk tilkoblingskontrollen for en aktuell kontroll. Velg samme selskap ved ny tilkobling.",
+          "Lagre kontonumre og debet-/kreditvalg avtalt med regnskapsføreren. Komisio velger ikke kontoer for dere."
+        ],
+        "notice": "Tilkoblet betyr ikke at et grunnlag er sendt. Komisio ber om tilgang til selskapsinformasjon og bokføring, inkludert opprettelse av bilag når sending brukes."
+      },
+      "fortnox-first-export": {
+        "title": "Klargjør og send første grunnlag",
+        "intro": "Arbeid med én dag av gangen og kontroller selskap, dato og beløp før sending.",
+        "steps": [
+          "Åpne Dagsoppgjør og eksporter og opprett oppgjøret for riktig dato. Dette registrerer en oppsummering i Komisio, ikke et bilag i Fortnox.",
+          "Gransk forhåndsvisningen: kontoer, debet, kredit og beløp uten konto. Avklar kontoplanen med regnskapsføreren. Balanse alene beviser ikke riktig bokføring.",
+          "Velg eksport som SIE 4 for å lagre grunnlaget. Last deretter ned filen eller send til Fortnox som eier/administrator. Unngå både filimport og direkte sending av samme grunnlag.",
+          "En virkelig sending oppretter et bilag i Fortnox. Referansen vises når sendingen er bekreftet. Ved usikkert resultat: åpne hjelpen for sendingsproblemer og ikke send igjen."
+        ],
+        "notice": "Automatisk sending er et eget valg for eieren og gjelder klargjorte eksporter. Dagsoppgjør opprettes fortsatt manuelt. Tilkobling og hjelp aktiverer ikke automatikken."
+      },
+      "fortnox-recovery": {
+        "title": "Kontroller et sendingsproblem",
+        "intro": "Skill mellom en stoppet sending og et manglende svar. Bilaget kan allerede finnes selv om svaret mangler.",
+        "steps": [
+          "Hvis Komisio uttrykkelig sier at sendingen ble stoppet før registrering, rett årsaken og bruk tilbudt handling for nytt forsøk.",
+          "Hvis sendingen venter eller utfallet er usikkert, ikke send igjen. Be eieren sammenligne grunnlaget med bilag i Fortnox-selskapsdatabasen som hører til sendingen.",
+          "Sammenlign dato, beløp og alle linjer. Ved et samsvarende bilag kan eieren registrere serie, nummer, regnskapsår og dokumentasjon via bekreftelsen på eksportraden.",
+          "Hvis bilaget ikke finnes, be driftsansvarlig hjelpe med undersøkelsen. Manglende treff åpner ikke for ny sending. Ikke slett eller opprett grunnlag på nytt for å omgå sperren."
+        ],
+        "notice": "Avstemming registrerer eierens kontroll, ikke automatisk bekreftelse fra Fortnox. Personale og administratorer kan lese hjelpen; bare eieren kan registrere denne bekreftelsen."
+      }
+    }
   }
 }

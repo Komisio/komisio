@@ -1,4 +1,5 @@
 import { FortnoxConnection } from '@/components/intake/fortnox-connection'
+import { FortnoxGuide } from '@/components/help/fortnox-guide'
 import { paypalEnvironment } from '@/lib/engine/paypal-credentials'
 import { credentialKeyConfigured } from '@/lib/platform/credentials'
 import { readFortnoxStatus } from '@/lib/engine/fortnox-connection'
@@ -524,6 +525,17 @@ export default async function Integrations({
         aria-labelledby="integration-accounting"
       >
         <h2 id="integration-accounting">{all.integrationPage.accounting}</h2>
+        <FortnoxGuide
+          client={ctx.client}
+          tenantId={a.id}
+          role={a.role}
+          connection={fortnoxStatus}
+          ready={
+            fortnoxIssue(a.id, fortnoxEnvironment(process.env)) === null &&
+            credentialKeyConfigured(process.env)
+          }
+          d={all.helpCenter}
+        />
         <FortnoxConnection
           key={`fortnox-${a.id}-${fortnoxStatus.refreshedAt ?? 'none'}`}
           tenantId={a.id}

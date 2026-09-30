@@ -2198,7 +2198,9 @@
       "REQUEST_CONFLICT": "Det här förfrågnings-id:t har använts för en annan sändning.",
       "INVALID_INPUT": "Förfrågan var inte giltig."
     },
-    "companyName": "Företagsnamn i Fortnox"
+    "companyName": "Företagsnamn i Fortnox",
+    "voucherUnknown": "Sändningens resultat är osäkert:",
+    "recoveryHelp": "Hjälp att kontrollera sändningen"
   },
   "zettle": {
     "automaticTitle": "Automatisk kvittohämtning",
@@ -2792,5 +2794,75 @@
     "resumeReception": "Öppna väntande mottagning",
     "hint": "Antalen gäller sparade uppgifter. Kontrollera även varor som ännu inte registrerats.",
     "unavailable": "Inlämningens läge kan inte visas just nu."
+  },
+  "helpCenter": {
+    "title": "Hjälp",
+    "intro": "Vägledning för att komma igång och lösa problem med Fortnox.",
+    "open": "Hjälp på sidan",
+    "close": "Stäng hjälpen",
+    "fullArticle": "Öppna hela hjälpsidan i ny flik",
+    "taskLinks": "Gå till uppgiften",
+    "settings": "Kontoplan och Fortnox",
+    "days": "Dagsavslut och exporter",
+    "reconciliation": "Avstämning",
+    "providerHelp": "Fortnox: aktivering och licenser (öppnas i ny flik)",
+    "guide": {
+      "title": "Kom igång med Fortnox",
+      "intro": "Följ stegen till ett skickat underlag. Sparade uppgifter finns kvar när du kommer tillbaka.",
+      "company": "Anslutet företag",
+      "next": "Nästa steg visas nedan. Öppna hjälpen om du behöver vägledning.",
+      "complete": "En sändning är registrerad för det anslutna företaget och den nuvarande kontoplanen. Följ övriga dagar under Avstämning.",
+      "hostUnavailable": "Anslutningen behöver förberedas av den som sköter Komisio-installationen. Kontakta ansvarig för tjänsten.",
+      "currency": "Fortnox-sändning stöds bara för butiker med SEK i den här versionen.",
+      "managerNeeded": "Be butikens ägare eller en administratör att utföra detta steg.",
+      "staffNeeded": "Be butikens personal att förbereda underlaget.",
+      "limits": "Status bygger på sparade uppgifter, inte en ny kontroll hos Fortnox. En sparad kontoplan eller balanserad export bevisar inte att bokföringen är korrekt. Skicka inte om redan bokförda dagar för att slutföra guiden.",
+      "steps": {
+        "connected": "Anslut rätt företag",
+        "mapped": "Spara kontoplanen",
+        "exported": "Förbered ett underlag med nuvarande kontoplan",
+        "sent": "Registrera en bekräftad sändning till företaget"
+      },
+      "states": {
+        "done": "Klart",
+        "needed": "Återstår",
+        "unknown": "Kunde inte kontrolleras – ladda om sidan"
+      }
+    },
+    "articles": {
+      "fortnox-connect": {
+        "title": "Anslut Fortnox",
+        "intro": "Anslut butikens företag och förbered kontoplanen. Ingen bokföring skickas när du ansluter.",
+        "steps": [
+          "Du behöver vara ägare eller administratör i Komisio och kunna godkänna anslutningen till rätt företag i Fortnox. Kontrollera tillämpliga integrations- och programlicenser enligt Fortnox instruktioner.",
+          "Öppna Kontoplan och Fortnox. Ange företagsnamnet som det står i Fortnox och välj att ansluta. Logga in hos Fortnox, kontrollera företaget och godkänn de efterfrågade behörigheterna.",
+          "När du kommer tillbaka: kontrollera företagsnamnet. Använd Kontrollera Fortnox-kopplingen för en aktuell kontroll. Vid förnyad anslutning ska du välja samma företag.",
+          "Spara kontoplanen med de konton och debet-/kreditval ni bestämt med redovisningskonsulten. Komisio väljer inte konton åt er."
+        ],
+        "notice": "Ansluten betyder inte att ett underlag har skickats. Komisio begär tillgång till företagsinformation och bokföring; behörigheten omfattar sändning av verifikationer när funktionen används."
+      },
+      "fortnox-first-export": {
+        "title": "Förbered och skicka första underlaget",
+        "intro": "Arbeta med en dag i taget och kontrollera företag, datum och belopp innan du skickar.",
+        "steps": [
+          "Öppna Dagsavslut och exporter och generera dagsavslutet för rätt datum. Detta registrerar en sammanställning i Komisio, inte en verifikation i Fortnox.",
+          "Granska förhandsvisningen: konton, debet, kredit och belopp som saknar konto. Stäm av kontoplanen med redovisningskonsulten. Att debet och kredit balanserar är inte i sig ett godkännande av bokföringen.",
+          "Välj Exportera som SIE 4 för att spara underlaget. Du kan därefter ladda ned filen eller, som ägare/administratör, använda Skicka till Fortnox. Undvik att både importera filen och skicka samma underlag direkt.",
+          "En riktig sändning skapar en verifikation i Fortnox. När den bekräftats visas referensen. Vid osäkert resultat: öppna hjälpen för sändningsproblem och skicka inte igen."
+        ],
+        "notice": "Automatisk sändning är ett separat val för ägaren och gäller förberedda exporter. Dagsavslut skapas fortfarande manuellt. Anslutning eller läsning av hjälpen aktiverar inte automatiken."
+      },
+      "fortnox-recovery": {
+        "title": "Kontrollera ett sändningsproblem",
+        "intro": "Skilj på en stoppad sändning och ett svar som saknas. Ett uteblivet svar kan betyda att verifikationen redan finns.",
+        "steps": [
+          "Om Komisio uttryckligen anger att sändningen stoppades före registrering: rätta orsaken och använd den återförsöksåtgärd som erbjuds.",
+          "Om sändningen väntar eller resultatet är osäkert: skicka inte igen. Be butikens ägare jämföra underlaget med verifikationerna i den Fortnox-företagsdatabas som hör till sändningen.",
+          "Jämför datum, belopp och samtliga rader. Om en matchande verifikation finns kan ägaren registrera serie, nummer, räkenskapsår och vad som kontrollerats via bekräftelseformuläret på exportraden.",
+          "Om verifikationen inte går att hitta: be ansvarig för installationen om hjälp med utredningen. Frånvaro av en träff öppnar inte för en ny sändning. Radera eller återskapa inte underlag för att kringgå stoppet."
+        ],
+        "notice": "Avstämningen registrerar ägarens kontroll. Den är inte en automatisk verifiering hos Fortnox. Personal och administratörer kan läsa hjälpen; bara ägaren kan registrera denna bekräftelse."
+      }
+    }
   }
 }

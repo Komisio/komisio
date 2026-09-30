@@ -3,6 +3,7 @@ import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import type { FortnoxSendRow } from '@/lib/engine/fortnox-vouchers'
 import type { Dictionary } from '@/lib/i18n'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 
 /** Sends one recorded export to Fortnox as one voucher; shows the recorded outcome. */
 export function FortnoxVoucherSend({
@@ -71,7 +72,11 @@ export function FortnoxVoucherSend({
         status: 'failed',
         series: '',
         number: null,
-        error: r.ok ? body.errorCode : body.error,
+        error: r.ok
+          ? body.status === 'pending'
+            ? 'FORTNOX_SEND_IN_PROGRESS'
+            : body.errorCode
+          : body.error,
         detail: typeof body.detail === 'string' ? body.detail : '',
       })
       setRequestId(crypto.randomUUID())
@@ -80,15 +85,18 @@ export function FortnoxVoucherSend({
         status: 'failed',
         series: '',
         number: null,
-        error: '',
+        error: 'FORTNOX_OUTCOME_UNKNOWN',
         detail: '',
       })
-      setRequestId(crypto.randomUUID())
     } finally {
       running.current = false
       setBusy(false)
     }
   }
+  const held =
+    send?.status === 'pending' ||
+    state?.error === 'FORTNOX_OUTCOME_UNKNOWN' ||
+    state?.error === 'FORTNOX_SEND_IN_PROGRESS'
   if (state?.status === 'sent')
     return (
       <span role="status">
@@ -100,12 +108,17 @@ export function FortnoxVoucherSend({
     <span>
       {state?.status === 'failed' && (
         <span role="alert">
-          {d.voucherFailed} {errors[state.error] ?? d.connectionFailed}
+          {held ? d.voucherUnknown : d.voucherFailed}{' '}
+          {errors[state.error] ?? d.connectionFailed}
           {state.detail ? ` ${d.fortnoxSaid} "${state.detail}"` : ''}{' '}
         </span>
       )}
-      {send?.status === 'pending' ||
-      state?.error === 'FORTNOX_OUTCOME_UNKNOWN' ? (
+      {held && (
+        <Link className="text-link" href="/help/fortnox-recovery">
+          {d.recoveryHelp}
+        </Link>
+      )}
+      {held ? (
         send?.status === 'pending' && (
           <small>{d.errors.FORTNOX_SEND_IN_PROGRESS}</small>
         )

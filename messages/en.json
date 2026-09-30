@@ -2198,7 +2198,9 @@
       "REQUEST_CONFLICT": "This request id was used for another send.",
       "INVALID_INPUT": "The request was not valid."
     },
-    "companyName": "Company name in Fortnox"
+    "companyName": "Company name in Fortnox",
+    "voucherUnknown": "The send outcome is uncertain:",
+    "recoveryHelp": "Help checking the send"
   },
   "zettle": {
     "automaticTitle": "Automatic receipt retrieval",
@@ -2792,5 +2794,75 @@
     "resumeReception": "Open pending reception",
     "hint": "Counts describe saved records. Also check goods that have not yet been registered.",
     "unavailable": "Handover progress is currently unavailable."
+  },
+  "helpCenter": {
+    "title": "Help",
+    "intro": "Guidance for getting started and resolving Fortnox issues.",
+    "open": "Help on this page",
+    "close": "Close help",
+    "fullArticle": "Open the full help page in a new tab",
+    "taskLinks": "Go to the task",
+    "settings": "Account map and Fortnox",
+    "days": "Day closes and exports",
+    "reconciliation": "Reconciliation",
+    "providerHelp": "Fortnox: activation and licences (opens a new tab)",
+    "guide": {
+      "title": "Get started with Fortnox",
+      "intro": "Follow the steps to a sent accounting export. Saved records remain when you return.",
+      "company": "Connected company",
+      "next": "The next step is shown below. Open help for guidance.",
+      "complete": "A send is recorded for the connected company and current account map. Follow other days under Reconciliation.",
+      "hostUnavailable": "The person managing this Komisio installation needs to prepare the connection. Contact the service operator.",
+      "currency": "This version supports sending to Fortnox only for stores using SEK.",
+      "managerNeeded": "Ask the store owner or an administrator to complete this step.",
+      "staffNeeded": "Ask store staff to prepare the export.",
+      "limits": "Status comes from saved records, not a fresh Fortnox check. A saved account map or balanced export does not prove that the accounting is correct. Do not resend days already booked just to complete the guide.",
+      "steps": {
+        "connected": "Connect the correct company",
+        "mapped": "Save the account map",
+        "exported": "Prepare an export with the current map",
+        "sent": "Record a confirmed send to the company"
+      },
+      "states": {
+        "done": "Done",
+        "needed": "Remaining",
+        "unknown": "Could not check – reload the page"
+      }
+    },
+    "articles": {
+      "fortnox-connect": {
+        "title": "Connect Fortnox",
+        "intro": "Connect the store’s company and prepare the account mapping. Connecting sends no accounting data.",
+        "steps": [
+          "You must be an owner or administrator in Komisio and able to authorize access to the correct Fortnox company. Check applicable integration and program licences using Fortnox guidance.",
+          "Open Account map and Fortnox. Enter the company name as shown in Fortnox and connect. Sign in to Fortnox, check the company and approve the requested permissions.",
+          "On return, check the company name. Use Check connection for a current check. Choose the same company when reconnecting.",
+          "Save the accounts and debit/credit choices agreed with your accountant. Komisio does not choose accounts for you."
+        ],
+        "notice": "Connected does not mean an export has been sent. Komisio requests company information and bookkeeping access; the permission includes voucher creation when sending is used."
+      },
+      "fortnox-first-export": {
+        "title": "Prepare and send the first export",
+        "intro": "Work with one day at a time and check the company, date and amounts before sending.",
+        "steps": [
+          "Open Day closes and exports and generate the close for the correct date. This records a summary in Komisio, not a Fortnox voucher.",
+          "Review the preview: accounts, debit, credit and unmapped amounts. Review the mapping with your accountant. Balanced debit and credit do not by themselves establish correct accounting.",
+          "Choose Export as SIE 4 to save the accounting basis. You can then download the file or, as owner/administrator, use Send to Fortnox. Avoid both importing the file and sending the same export directly.",
+          "A real send creates a Fortnox voucher. Its reference appears once confirmed. If the outcome is uncertain, open the send recovery help and do not send again."
+        ],
+        "notice": "Automatic sending is a separate owner choice for prepared exports. Day closes remain manual. Connecting or reading help does not enable automation."
+      },
+      "fortnox-recovery": {
+        "title": "Check a sending issue",
+        "intro": "Distinguish a stopped send from a missing response. A missing response may mean the voucher already exists.",
+        "steps": [
+          "If Komisio explicitly says the send stopped before registration, fix the cause and use the retry action offered.",
+          "If the send is pending or uncertain, do not send again. Ask the store owner to compare the export with vouchers in the Fortnox company database bound to that send.",
+          "Compare the date, amounts and every line. If a matching voucher exists, the owner can record its series, number, financial year and evidence using the confirmation form on the export row.",
+          "If no matching voucher can be found, ask the installation operator to help investigate. Absence does not unlock another send. Do not delete or recreate exports to bypass the hold."
+        ],
+        "notice": "Reconciliation records the owner’s check, not automatic verification by Fortnox. Staff and administrators may read the help; only the owner may record this confirmation."
+      }
+    }
   }
 }

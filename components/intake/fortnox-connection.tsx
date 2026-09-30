@@ -67,7 +67,11 @@ export function FortnoxConnection({
     }
   }
   return (
-    <section className="card intake-form" aria-label={d.title}>
+    <section
+      id="fortnox-connection"
+      className="card intake-form"
+      aria-label={d.title}
+    >
       <h2>{d.title}</h2>
       <p>{d.intro}</p>
       {outcome && (

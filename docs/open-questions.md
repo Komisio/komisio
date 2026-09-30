@@ -1,5 +1,11 @@
 # Open questions
 
+Fortnox help (2026-09-30): owner approved a shared in-product help panel,
+linkable instructions and a checklist derived from existing store facts.
+Guidance retains current permissions, account-map choices and uncertain-send
+holds. Real staff comprehension and hosted activation remain acceptance work;
+the guide does not resolve the reconciliation questions below.
+
 Store usability (2026-09-25): owner prioritizes mobile-first workflows for staff
 inside the store, with fewer taps and less scrolling. Compact layouts must retain
 readable information and usable touch targets. The seller directory is the first

@@ -20,6 +20,8 @@ import type { Tenant } from '@/lib/platform/types'
 import { browserClient } from '@/lib/supabase/client'
 import { useCommand } from './use-command'
 import { Feedback } from './feedback'
+import { HeaderHelp } from '@/components/help/header-help'
+import { Suspense } from 'react'
 export function Shell({
   children,
   d,
@@ -163,6 +165,17 @@ export function Shell({
           </form>
         )}
         <div className="topbar-tools">
+          {intakeEnabled && (
+            <Suspense
+              fallback={
+                <Link className="text-link" href="/help">
+                  {d.helpCenter.title}
+                </Link>
+              }
+            >
+              <HeaderHelp tenantId={active.id} d={d.helpCenter} />
+            </Suspense>
+          )}
           <LanguagePicker locale={locale} label={d.language} />
           <div className="desktop-only row">
             <span className="badge">{d.roles[active.role]}</span>

@@ -2198,7 +2198,9 @@
       "REQUEST_CONFLICT": "Este id de solicitud se usó para otro envío.",
       "INVALID_INPUT": "La solicitud no era válida."
     },
-    "companyName": "Nombre de la empresa en Fortnox"
+    "companyName": "Nombre de la empresa en Fortnox",
+    "voucherUnknown": "El resultado del envío es incierto:",
+    "recoveryHelp": "Ayuda para comprobar el envío"
   },
   "zettle": {
     "automaticTitle": "Obtención automática de recibos",
@@ -2798,5 +2800,75 @@
     "resumeReception": "Abrir recepción pendiente",
     "hint": "Las cifras corresponden a datos guardados. Comprueba también los artículos aún no registrados.",
     "unavailable": "El estado de la entrega no está disponible ahora."
+  },
+  "helpCenter": {
+    "title": "Ayuda",
+    "intro": "Guía para empezar y resolver problemas con Fortnox.",
+    "open": "Ayuda de esta página",
+    "close": "Cerrar ayuda",
+    "fullArticle": "Abrir la ayuda completa en una pestaña nueva",
+    "taskLinks": "Ir a la tarea",
+    "settings": "Mapa de cuentas y Fortnox",
+    "days": "Cierres diarios y exportaciones",
+    "reconciliation": "Conciliación",
+    "providerHelp": "Fortnox: activación y licencias (nueva pestaña)",
+    "guide": {
+      "title": "Primeros pasos con Fortnox",
+      "intro": "Sigue los pasos hasta enviar un documento. Los datos guardados estarán disponibles cuando vuelvas.",
+      "company": "Empresa conectada",
+      "next": "El siguiente paso aparece abajo. Abre la ayuda si la necesitas.",
+      "complete": "Hay un envío registrado para la empresa conectada y la configuración de cuentas actual. Revisa otros días en Conciliación.",
+      "hostUnavailable": "La persona responsable de esta instalación de Komisio debe preparar la conexión. Contacta con quien gestiona el servicio.",
+      "currency": "Esta versión solo permite enviar a Fortnox desde tiendas que utilizan SEK.",
+      "managerNeeded": "Pide al propietario de la tienda o a un administrador que complete este paso.",
+      "staffNeeded": "Pide al personal de la tienda que prepare el documento.",
+      "limits": "El estado procede de datos guardados, no de una nueva comprobación en Fortnox. Una configuración guardada o una exportación equilibrada no demuestra que la contabilidad sea correcta. No reenvíes días ya contabilizados solo para completar la guía.",
+      "steps": {
+        "connected": "Conectar la empresa correcta",
+        "mapped": "Guardar la configuración de cuentas",
+        "exported": "Preparar un documento con las cuentas actuales",
+        "sent": "Registrar un envío confirmado a la empresa"
+      },
+      "states": {
+        "done": "Hecho",
+        "needed": "Pendiente",
+        "unknown": "No se pudo comprobar: recarga la página"
+      }
+    },
+    "articles": {
+      "fortnox-connect": {
+        "title": "Conectar Fortnox",
+        "intro": "Conecta la empresa de la tienda y prepara las cuentas. La conexión no envía datos contables.",
+        "steps": [
+          "Debes ser propietario o administrador en Komisio y poder autorizar el acceso a la empresa correcta de Fortnox. Comprueba las licencias de integración y de programa aplicables en la documentación de Fortnox.",
+          "Abre Mapa de cuentas y Fortnox. Introduce el nombre de la empresa tal como aparece en Fortnox y conecta. Inicia sesión en Fortnox, comprueba la empresa y aprueba los permisos solicitados.",
+          "Al volver, comprueba el nombre de la empresa. Utiliza la comprobación de conexión para conocer su estado actual. Elige la misma empresa al reconectar.",
+          "Guarda las cuentas y las opciones de debe/haber acordadas con tu asesor contable. Komisio no elige las cuentas por ti."
+        ],
+        "notice": "Conectado no significa que se haya enviado un documento. Komisio solicita acceso a información de empresa y contabilidad, incluida la creación de asientos al utilizar el envío."
+      },
+      "fortnox-first-export": {
+        "title": "Preparar y enviar el primer documento",
+        "intro": "Trabaja con un día cada vez y comprueba empresa, fecha e importes antes de enviar.",
+        "steps": [
+          "Abre Cierres diarios y exportaciones y genera el cierre para la fecha correcta. Esto guarda un resumen en Komisio, no un asiento en Fortnox.",
+          "Revisa las cuentas, debe, haber e importes sin cuenta de la vista previa. Consulta la configuración con tu asesor. Que los totales cuadren no demuestra por sí solo una contabilidad correcta.",
+          "Elige exportar como SIE 4 para guardar el documento. Después descarga el archivo o envía a Fortnox como propietario/administrador. Evita importar el archivo y enviar directamente el mismo documento.",
+          "Un envío real crea un asiento en Fortnox. La referencia aparece al confirmarse. Si el resultado es incierto, abre la ayuda sobre problemas de envío y no vuelvas a enviar."
+        ],
+        "notice": "El envío automático es una elección independiente del propietario para exportaciones preparadas. Los cierres diarios siguen siendo manuales. Conectar o leer la ayuda no activa la automatización."
+      },
+      "fortnox-recovery": {
+        "title": "Comprobar un problema de envío",
+        "intro": "Distingue un envío detenido de una respuesta ausente. El asiento podría existir aunque falte la respuesta.",
+        "steps": [
+          "Si Komisio indica expresamente que el envío se detuvo antes del registro, corrige la causa y utiliza la acción de reintento ofrecida.",
+          "Si el envío está pendiente o el resultado es incierto, no vuelvas a enviar. Pide al propietario que compare el documento con los asientos de la base de datos de empresa de Fortnox vinculada al envío.",
+          "Compara fecha, importes y todas las líneas. Si existe un asiento coincidente, el propietario puede registrar serie, número, ejercicio y pruebas mediante la confirmación de la fila de exportación.",
+          "Si no se encuentra el asiento, pide ayuda al responsable de la instalación para investigarlo. La ausencia no permite otro envío. No borres ni recrees documentos para eludir el bloqueo."
+        ],
+        "notice": "La conciliación registra la comprobación del propietario, no una verificación automática de Fortnox. Personal y administradores pueden leer la ayuda; solo el propietario puede registrar esta confirmación."
+      }
+    }
   }
 }

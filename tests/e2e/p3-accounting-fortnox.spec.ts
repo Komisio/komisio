@@ -178,7 +178,7 @@ test('accounting page shows the Fortnox connection state and records a refused s
       "insert into tenant_members(tenant_id,user_id,role) values($1,$2,'owner')",
       [f.tenant, backupOwner],
     )
-    for (const role of ['admin', 'staff']) {
+    for (const role of ['admin', 'staff', 'readonly']) {
       await f.asActor(backupOwner, () =>
         f.db.query('select change_member($1,$2,$3)', [f.tenant, f.actor, role]),
       )
@@ -187,6 +187,16 @@ test('accounting page shows the Fortnox connection state and records a refused s
         page.getByText(d.fortnox.reconcileTitle, { exact: true }),
       ).toHaveCount(0)
       expect((await command(confirmation)).status()).toBe(403)
+      await page.goto('/intake/accounting?view=settings')
+      const helpGuide = page.locator('.fortnox-guide')
+      if (role !== 'admin') {
+        await expect(
+          helpGuide.getByText(d.helpCenter.guide.managerNeeded),
+        ).toBeVisible()
+        await expect(page.locator('#account-map input:enabled')).toHaveCount(0)
+        await expect(page.locator('#account-map input').first()).toBeDisabled()
+      }
+      await page.goto('/intake/accounting')
     }
     await f.asActor(backupOwner, () =>
       f.db.query("select change_member($1,$2,'owner')", [f.tenant, f.actor]),
@@ -195,6 +205,12 @@ test('accounting page shows the Fortnox connection state and records a refused s
     await expect(
       exports.getByRole('button', { name: d.fortnox.sendAgain, exact: true }),
     ).toHaveCount(0)
+    await expect(exports.getByRole('alert')).toContainText(
+      d.fortnox.voucherUnknown,
+    )
+    await expect(
+      exports.getByRole('link', { name: d.fortnox.recoveryHelp }),
+    ).toBeVisible()
     await page.getByText(d.fortnox.reconcileTitle, { exact: true }).click()
     const form = page.getByRole('form', {
       name: d.fortnox.reconcileTitle,
@@ -242,6 +258,48 @@ test('accounting page shows the Fortnox connection state and records a refused s
       reconciled_by: f.actor,
       reconciliation_evidence: confirmation.evidence,
     })
+    await page.goto('/intake/accounting?view=settings')
+    const guide = page.locator('.fortnox-guide')
+    await guide.locator('summary').click()
+    await expect(
+      guide.locator('li').filter({ hasText: d.helpCenter.guide.steps.sent }),
+    ).toContainText(d.helpCenter.guide.states.done)
+    // A confirmed voucher for the previous company is not completion for a new one.
+    await f.asActor(f.actor, async () => {
+      await f.db.query('select disconnect_fortnox($1)', [f.tenant])
+      await f.db.query(
+        "select store_fortnox_connection($1,'9999001','Synthetic other company','',$2::jsonb,'bookkeeping',now()+interval '1 hour')",
+        [
+          f.tenant,
+          JSON.stringify({ iv: 'aWl2', tag: 'dGFn', data: 'ZGF0YQ==' }),
+        ],
+      )
+    })
+    await page.reload()
+    await expect(
+      guide.locator('li').filter({ hasText: d.helpCenter.guide.steps.sent }),
+    ).toContainText(d.helpCenter.guide.states.needed)
+    // A new map must not inherit export/send completion from a different map.
+    await f.asActor(f.actor, async () => {
+      const current = (
+        await f.db.query('select current_accounting_map($1) value', [f.tenant])
+      ).rows[0].value
+      await f.db.query('select publish_accounting_map($1,$2,$3,$4::jsonb)', [
+        f.tenant,
+        randomUUID(),
+        current.id,
+        JSON.stringify({
+          ...current.map,
+          payoutsPaidOre: { account: '1930', side: 'credit' },
+        }),
+      ])
+    })
+    await page.reload()
+    for (const key of ['exported', 'sent'] as const) {
+      await expect(
+        guide.locator('li').filter({ hasText: d.helpCenter.guide.steps[key] }),
+      ).toContainText(d.helpCenter.guide.states.needed)
+    }
   } finally {
     await f.close()
   }

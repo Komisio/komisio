@@ -1122,7 +1122,11 @@
     "reason": "Anledning",
     "confirm": "Jag har kommit överens om rättelsen och vill registrera den.",
     "adjust": "Registrera justering",
-    "adjusted": "Justeringen är registrerad."
+    "adjusted": "Justeringen är registrerad.",
+    "showingRange": "Visar {from}–{to} av {total} kontohändelser.",
+    "older": "Äldre poster",
+    "newer": "Nyare poster",
+    "recentOnly": "Den här vyn visar högst de 50 senaste kontohändelserna."
   },
   "payouts": {
     "title": "Utbetalningar",

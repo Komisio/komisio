@@ -1122,7 +1122,11 @@
     "reason": "Reason",
     "confirm": "I have agreed this correction and want it recorded.",
     "adjust": "Record adjustment",
-    "adjusted": "The adjustment is recorded."
+    "adjusted": "The adjustment is recorded.",
+    "showingRange": "Showing {from}–{to} of {total} ledger entries.",
+    "older": "Older entries",
+    "newer": "Newer entries",
+    "recentOnly": "This view shows up to the 50 most recent ledger entries."
   },
   "payouts": {
     "title": "Payouts",

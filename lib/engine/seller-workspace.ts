@@ -14,6 +14,13 @@ const workspaceItems = z.object({
           .union([z.number().int(), z.string()])
           .transform(Number)
           .nullable(),
+        // Older database revisions do not expose the sale field yet. Never
+        // substitute current list price for an unknown sale amount.
+        soldPriceOre: z
+          .union([z.number().int(), z.string()])
+          .transform(Number)
+          .nullable()
+          .default(null),
       }),
     )
     .max(25),

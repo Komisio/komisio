@@ -129,7 +129,10 @@
     "typeRetry": "Reintentar",
     "typeInvalid": "Introduce un nombre y elige campos válidos.",
     "typeUncertain": "No se pudo confirmar el guardado. Reintenta con los mismos datos. El artículo se conserva.",
-    "typeRefused": "No se pudo guardar el tipo de artículo en este contexto. Cancela y comprueba la tienda y los permisos. Los datos del artículo se conservan."
+    "typeRefused": "No se pudo guardar el tipo de artículo en este contexto. Cancela y comprueba la tienda y los permisos. Los datos del artículo se conservan.",
+    "descriptionRequired": "Introduce una descripción.",
+    "priceInvalid": "Introduce un precio superior a 0 y como máximo de 999.999,99. Usa como máximo dos decimales.",
+    "savedPriceUnavailable": "El artículo está aceptado, pero no se pudo leer el precio guardado. Abre el artículo para comprobar el precio."
   },
   "intake": {
     "quickLink": "Recepción rápida: una pantalla por prenda",

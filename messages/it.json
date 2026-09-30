@@ -129,7 +129,10 @@
     "typeRetry": "Riprova",
     "typeInvalid": "Inserisci un nome e scegli campi validi.",
     "typeUncertain": "Il salvataggio non è stato confermato. Riprova con gli stessi dati. L’articolo è conservato.",
-    "typeRefused": "Non è stato possibile salvare il tipo di articolo nel contesto attuale. Annulla e verifica negozio e permessi. I dati dell’articolo sono conservati."
+    "typeRefused": "Non è stato possibile salvare il tipo di articolo nel contesto attuale. Annulla e verifica negozio e permessi. I dati dell’articolo sono conservati.",
+    "descriptionRequired": "Inserisci una descrizione.",
+    "priceInvalid": "Inserisci un prezzo superiore a 0 e non oltre 999.999,99. Usa al massimo due decimali.",
+    "savedPriceUnavailable": "Articolo accettato, ma non è stato possibile leggere il prezzo salvato. Apri articolo per controllare il prezzo."
   },
   "intake": {
     "quickLink": "Ricezione rapida: una schermata per capo",

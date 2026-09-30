@@ -1,6 +1,9 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { quickReceiveResult } from '../intake/quick-receive-result'
+import {
+  acceptedReceptionPrice,
+  quickReceiveResult,
+} from '../intake/quick-receive-result'
 
 // Quick reception (intake profile "quick"): one call turns a seller's garment
 // into an accepted item. The database composes the existing steps in one
@@ -94,7 +97,27 @@ export async function quickReceive(client: SupabaseClient, input: unknown) {
     },
   )
   if (r.error) throw new Error(errorCode(r.error.message))
-  return quickReceiveResult.parse(r.data)
+  const result = quickReceiveResult.parse(r.data)
+  // Read the immutable accepted version, including on replay. The current
+  // policy, latest review and form values cannot explain an earlier acceptance.
+  try {
+    const review = await client
+      .from('reception_reviews')
+      .select('suggestions')
+      .eq('tenant_id', c.tenantId)
+      .eq('session_id', result.sessionId)
+      .eq('version', result.reviewVersion)
+      .single()
+    const accepted = z
+      .object({ suggestions: z.object({ price: acceptedReceptionPrice }) })
+      .safeParse(review.data)
+    if (!review.error && accepted.success)
+      return { ...result, price: accepted.data.suggestions.price }
+  } catch {
+    // Acceptance is already confirmed. An unavailable optional read must not
+    // make staff repeat a write or prevent the existing print flow.
+  }
+  return result
 }
 
 /** A UUID derived from the request id, so a retried request names the same rows. */

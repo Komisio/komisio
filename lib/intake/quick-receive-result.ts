@@ -1,4 +1,13 @@
 import { z } from 'zod'
+import { storeCurrencies } from '../platform/currencies'
+
+export const acceptedReceptionPrice = z.object({
+  amount: z
+    .string()
+    .regex(/^(?:0|[1-9]\d{0,5})\.\d{2}$/)
+    .refine((v) => v !== '0.00'),
+  currency: z.enum(storeCurrencies),
+})
 
 /**
  * What a completed quick reception reports. Shared by the route (parsing the
@@ -13,5 +22,7 @@ export const quickReceiveResult = z.object({
   sessionId: z.guid(),
   garmentId: z.guid(),
   reviewVersion: z.number().int(),
+  // Older route replies still confirm acceptance; never invent their price.
+  price: acceptedReceptionPrice.optional(),
 })
 export type QuickReceiveResult = z.infer<typeof quickReceiveResult>

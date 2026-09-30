@@ -1522,6 +1522,24 @@ button.text-link:hover:not(:disabled) {
   border-color: #8db59a;
   background: #f3f8f3;
 }
+.quick-confirmation-details {
+  display: grid;
+  gap: 0.5rem;
+  margin-block: 0 1rem;
+}
+.quick-confirmation-details > div {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.5rem;
+}
+.quick-confirmation-details dt {
+  color: var(--muted);
+}
+.quick-confirmation-details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-weight: 600;
+}
 @media (max-width: 700px) {
   .quick-workspace {
     grid-template-columns: 1fr;

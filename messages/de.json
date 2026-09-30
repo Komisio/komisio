@@ -129,7 +129,10 @@
     "typeRetry": "Erneut versuchen",
     "typeInvalid": "Geben Sie einen Namen ein und wählen Sie gültige Felder.",
     "typeUncertain": "Das Speichern konnte nicht bestätigt werden. Versuchen Sie es mit denselben Angaben erneut. Ihre Ware bleibt erhalten.",
-    "typeRefused": "Die Warenart konnte derzeit nicht gespeichert werden. Brechen Sie ab und prüfen Sie Geschäft und Berechtigungen. Die Angaben zur Ware bleiben erhalten."
+    "typeRefused": "Die Warenart konnte derzeit nicht gespeichert werden. Brechen Sie ab und prüfen Sie Geschäft und Berechtigungen. Die Angaben zur Ware bleiben erhalten.",
+    "descriptionRequired": "Geben Sie eine Beschreibung ein.",
+    "priceInvalid": "Geben Sie einen Preis über 0 und höchstens 999.999,99 ein. Verwenden Sie höchstens zwei Nachkommastellen.",
+    "savedPriceUnavailable": "Der Artikel ist angenommen, aber der gespeicherte Preis konnte nicht gelesen werden. Öffnen Sie den Artikel, um den Preis zu prüfen."
   },
   "intake": {
     "quickLink": "Schnellannahme: ein Bildschirm pro Kleidungsstück",

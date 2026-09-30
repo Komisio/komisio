@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-09-30: Quick and bag intake validate exact decimal prices before sending. Confirmation repeats the seller and the accepted review's immutable price/currency, including on retry. An unavailable price read preserves confirmed acceptance; no form or current-policy price is substituted.
+
 - 2026-09-24: All eight languages use packaging-neutral terms for goods a seller hands over on one occasion (Swedish "inlämning", English "drop-off"). Bag remains a physical packaging type or example. Receipt identifiers, storage and acceptance rules stay unchanged.
 
 - 2026-09-24: Store flow explains existing work with linked steps and internal per-step instructions. Owner/admin edits use revision checks; members can read. Instructions never change policy or execute work. Live queue metrics and free graph editing are deferred.

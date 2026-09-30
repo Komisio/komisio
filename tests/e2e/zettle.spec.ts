@@ -122,6 +122,13 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
             ).rows[0].n,
         )
         .toBe('1')
+      // The database commit precedes the configure reply and its refresh.
+      // Wait for the form keyed by that config to remount before exercising
+      // a separate lost sync reply; a late setup refresh can replace the
+      // fixture sync form (keyed by lastSync) and erase its retry state.
+      await expect(
+        page.getByRole('button', { name: d.zettle.saveMapping, exact: true }),
+      ).toBeEnabled()
       const fixtureHeaders = { authorization: `Bearer fixture:${f.tenant}` }
       const products = async () => {
         const r = await page.request.get(

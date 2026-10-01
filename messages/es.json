@@ -2868,6 +2868,17 @@
           "Si no se encuentra el asiento, pide ayuda al responsable de la instalación para investigarlo. La ausencia no permite otro envío. No borres ni recrees documentos para eludir el bloqueo."
         ],
         "notice": "La conciliación registra la comprobación del propietario, no una verificación automática de Fortnox. Personal y administradores pueden leer la ayuda; solo el propietario puede registrar esta confirmación."
+      },
+      "fortnox-automation": {
+        "title": "Cómo funciona el envío automático",
+        "intro": "La automatización envía exportaciones preparadas a la empresa de Fortnox conectada. No crea cierres diarios ni elige cuentas.",
+        "steps": [
+          "Comprueba la empresa y la asignación de cuentas. Revisa las exportaciones existentes antes de activar: también pueden incluirse exportaciones antiguas aptas para el envío. Evita importar el archivo SIE y enviar directamente la misma exportación.",
+          "El propietario de la tienda activa el envío automático en Plan de cuentas y Fortnox. Pendiente significa que el servicio en segundo plano aún no ha aceptado la activación. Si la función no está configurada, contacta con la persona responsable de la instalación de Komisio.",
+          "Sigue creando y revisando cierres diarios y preparando exportaciones manualmente. Última ejecución muestra la hora, el resultado y el número de envíos. Activado no significa que se haya enviado algo, y una ejecución completada no significa que todos los días estén conciliados.",
+          "Tras una ejecución parcial o fallida, abre Conciliación y revisa las exportaciones afectadas. Si el envío está pendiente o su resultado es incierto, sigue la ayuda sobre problemas de envío y pide al propietario que compruebe el resultado. Desactivar y reactivar la automatización no desbloquea un envío retenido."
+        ],
+        "notice": "Leer la ayuda no activa ni envía nada. Las ejecuciones automáticas no reenvían exportaciones con resultado confirmado, pendiente o incierto. Desactivar la automatización no anula los asientos ya creados."
       }
     }
   }

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { FortnoxGuide } from '@/components/help/fortnox-guide'
+import { ContextHelp } from '@/components/help/context-help'
 import { credentialKeyConfigured } from '@/lib/platform/credentials'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
@@ -348,27 +349,35 @@ export default async function Accounting({
             d={all.helpCenter}
           />
           <div className="intake-grid">
-            {['owner', 'admin'].includes(active.role) && (
-              <AutomationSwitch
-                key={active.id}
-                tenantId={active.id}
-                scope="fortnox_send"
-                grants={grants}
-                configured={
-                  !!automationIdentity() &&
-                  automatic?.available === true &&
-                  grants !== null
-                }
-                canEdit={active.role === 'owner'}
-                t={all.fortnox.automation}
+            <div id="fortnox-automation" className="stack">
+              {['owner', 'admin'].includes(active.role) && (
+                <AutomationSwitch
+                  key={`automation-${active.id}`}
+                  tenantId={active.id}
+                  scope="fortnox_send"
+                  grants={grants}
+                  configured={
+                    !!automationIdentity() &&
+                    automatic?.available === true &&
+                    grants !== null
+                  }
+                  canEdit={active.role === 'owner'}
+                  t={all.fortnox.automation}
+                />
+              )}
+              <p>
+                {all.fortnox.automation.lastRun}:{' '}
+                {automatic?.run
+                  ? `${automatic.run.at} · ${all.fortnox.automation[automatic.run.outcome]} · ${automatic.run.sent}`
+                  : all.fortnox.automation.noRun}
+              </p>
+              <ContextHelp
+                key={`automation-help-${active.id}`}
+                topic="fortnox-automation"
+                d={all.helpCenter}
+                label={all.helpCenter.articles['fortnox-automation'].title}
               />
-            )}
-            <p>
-              {all.fortnox.automation.lastRun}:{' '}
-              {automatic?.run
-                ? `${automatic.run.at} · ${all.fortnox.automation[automatic.run.outcome]} · ${automatic.run.sent}`
-                : all.fortnox.automation.noRun}
-            </p>
+            </div>
             <section
               id="account-map"
               className="card intake-form"

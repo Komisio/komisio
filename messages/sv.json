@@ -2862,6 +2862,17 @@
           "Om verifikationen inte går att hitta: be ansvarig för installationen om hjälp med utredningen. Frånvaro av en träff öppnar inte för en ny sändning. Radera eller återskapa inte underlag för att kringgå stoppet."
         ],
         "notice": "Avstämningen registrerar ägarens kontroll. Den är inte en automatisk verifiering hos Fortnox. Personal och administratörer kan läsa hjälpen; bara ägaren kan registrera denna bekräftelse."
+      },
+      "fortnox-automation": {
+        "title": "Så fungerar automatisk sändning",
+        "intro": "Automatiken skickar redan förberedda exporter till det anslutna Fortnox-företaget. Den skapar inga dagsavslut och väljer inga konton.",
+        "steps": [
+          "Kontrollera företaget och kontoplanen. Granska tidigare exporter innan du aktiverar: även äldre underlag som får skickas kan tas med. Undvik att både importera SIE-filen och skicka samma underlag direkt.",
+          "Butikens ägare aktiverar automatisk sändning under Kontoplan och Fortnox. Väntar betyder att bakgrundstjänsten ännu inte har accepterat aktiveringen. Om funktionen inte är förberedd, kontakta den som sköter Komisio-installationen.",
+          "Fortsätt skapa och granska dagsavslut samt förbereda exporter manuellt. Läs Senaste körning för tid, resultat och antal skickade underlag. Aktiverad betyder inte att något har skickats, och en slutförd körning betyder inte att alla dagar är avstämda.",
+          "Vid delvis genomförd eller misslyckad körning: öppna Avstämning och granska berörda exporter. Vid väntande eller osäker sändning, följ hjälpen för sändningsproblem och be ägaren kontrollera resultatet. Att slå av och på automatiken löser inte en spärrad sändning."
+        ],
+        "notice": "Läsning av hjälpen aktiverar eller skickar ingenting. Automatiska körningar skickar inte om underlag med bekräftat, väntande eller osäkert resultat. Att stänga av automatiken återtar inte verifikationer som redan skapats."
       }
     }
   }

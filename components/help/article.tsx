@@ -20,7 +20,14 @@ export function HelpArticle({
       </ol>
       <p className="intake-notice">{article.notice}</p>
       <nav className="stack" aria-label={d.taskLinks}>
-        <Link className="text-link" href="/intake/accounting?view=settings">
+        <Link
+          className="text-link"
+          href={
+            topic === 'fortnox-automation'
+              ? '/intake/accounting?view=settings#fortnox-automation'
+              : '/intake/accounting?view=settings'
+          }
+        >
           {d.settings}
         </Link>
         <Link className="text-link" href="/intake/accounting">
@@ -32,6 +39,11 @@ export function HelpArticle({
         >
           {d.reconciliation}
         </Link>
+        {topic === 'fortnox-automation' && (
+          <Link className="text-link" href="/help/fortnox-recovery">
+            {d.articles['fortnox-recovery'].title}
+          </Link>
+        )}
       </nav>
       {topic === 'fortnox-connect' && (
         <p>

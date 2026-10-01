@@ -2868,6 +2868,17 @@
           "Wenn kein Beleg gefunden wird, bitten Sie den Installationsbetreiber um Untersuchung. Ein fehlender Treffer erlaubt keine neue Sendung. Löschen oder erstellen Sie keine Exporte neu, um die Sperre zu umgehen."
         ],
         "notice": "Der Abgleich erfasst die Prüfung des Eigentümers, keine automatische Fortnox-Verifikation. Personal und Administratoren können die Hilfe lesen; nur der Eigentümer kann diese Bestätigung erfassen."
+      },
+      "fortnox-automation": {
+        "title": "So funktioniert der automatische Versand",
+        "intro": "Die Automatik sendet vorbereitete Exporte an das verbundene Fortnox-Unternehmen. Sie erstellt keine Tagesabschlüsse und wählt keine Konten aus.",
+        "steps": [
+          "Prüfen Sie Unternehmen und Kontenzuordnung. Prüfen Sie vorhandene Exporte vor der Aktivierung: Auch ältere versandfähige Exporte können einbezogen werden. Importieren Sie nicht die SIE-Datei und senden denselben Export zusätzlich direkt.",
+          "Der Ladeninhaber aktiviert den automatischen Versand unter Kontenplan und Fortnox. Wartend bedeutet, dass der Hintergrunddienst die Aktivierung noch nicht angenommen hat. Ist die Funktion nicht eingerichtet, wenden Sie sich an die zuständige Person für die Komisio-Installation.",
+          "Erstellen und prüfen Sie Tagesabschlüsse und bereiten Sie Exporte weiterhin manuell vor. Letzter Lauf zeigt Zeitpunkt, Ergebnis und Anzahl der Sendungen. Aktiviert bedeutet nicht, dass etwas gesendet wurde. Ein abgeschlossener Lauf bedeutet nicht, dass alle Tage abgestimmt sind.",
+          "Öffnen Sie nach einem teilweise abgeschlossenen oder fehlgeschlagenen Lauf die Abstimmung und prüfen Sie betroffene Exporte. Bei wartendem oder ungewissem Versand folgen Sie der Hilfe zu Versandproblemen und bitten den Inhaber um Prüfung. Aus- und Einschalten der Automatik hebt keine Versandsperre auf."
+        ],
+        "notice": "Das Lesen der Hilfe aktiviert und sendet nichts. Automatische Läufe senden Exporte mit bestätigtem, wartendem oder ungewissem Ergebnis nicht erneut. Das Deaktivieren nimmt bereits erstellte Buchungsbelege nicht zurück."
       }
     }
   }

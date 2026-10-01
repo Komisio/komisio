@@ -2862,6 +2862,17 @@
           "If no matching voucher can be found, ask the installation operator to help investigate. Absence does not unlock another send. Do not delete or recreate exports to bypass the hold."
         ],
         "notice": "Reconciliation records the owner’s check, not automatic verification by Fortnox. Staff and administrators may read the help; only the owner may record this confirmation."
+      },
+      "fortnox-automation": {
+        "title": "How automatic sending works",
+        "intro": "Automation sends prepared exports to the connected Fortnox company. It does not create day closes or choose accounts.",
+        "steps": [
+          "Check the company and account mapping. Review existing exports before enabling: older eligible exports may also be included. Avoid importing a SIE file and sending the same export directly.",
+          "The store owner enables automatic sending under Account map and Fortnox. Waiting means the background service has not accepted activation yet. If the feature is not configured, contact the person responsible for the Komisio installation.",
+          "Continue creating and reviewing day closes and preparing exports manually. Read Last run for the time, outcome and number sent. Enabled does not mean anything has been sent, and a completed run does not mean every day is reconciled.",
+          "After a partial or failed run, open Reconciliation and review the affected exports. For a pending or uncertain send, follow the sending-problem guidance and ask the owner to check the outcome. Switching automation off and on does not resolve a held send."
+        ],
+        "notice": "Reading help enables or sends nothing. Automatic runs do not resend exports with confirmed, pending or uncertain outcomes. Disabling automation does not withdraw vouchers already created."
       }
     }
   }

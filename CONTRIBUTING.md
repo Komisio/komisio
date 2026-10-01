@@ -39,11 +39,15 @@ External contributions require the owner's explicit approval of the reviewed
 version before an agent merges them. Changes after approval require renewed
 approval. Owner-directed internal agent work has separate standing authorization.
 
-GitHub enforces pull requests, resolution of review conversations and a passing
-`platform` check from GitHub Actions with the branch up to date. Force-push and
-deletion of main are blocked; the ruleset has no bypass actors. These controls
-also apply when the owner merges. No automatic external-contributor merge is set
-up. Tests help detect regressions but do not replace review of design and intent.
+GitHub enforces pull requests and resolution of review conversations. Maintainers
+review against current main and run relevant checks locally before merging.
+The full `platform` CI runs after merge on main, not on PR updates. Staging
+publication requires successful `platform` and `staging-migrations` checks for
+that commit; a failed run leaves the previous staging application in place.
+Main can temporarily be red and must be fixed or reverted through a PR.
+Force-push and deletion of main remain blocked; the ruleset has no bypass actors.
+These controls also apply when the owner merges. No automatic external-contributor
+merge is set up. Tests do not replace review of design and intent.
 
 There is no global second-reviewer requirement while there is only one
 maintainer. External approval is the owner's review/merge policy, not a separate

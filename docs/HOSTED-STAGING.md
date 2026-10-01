@@ -132,6 +132,23 @@ without those controls. Auth email is controlled separately in Supabase.
 
 ## Verification and release record
 
+The full platform workflow runs on pushes to main only. PRs retain local testing
+and review, but do not run the same CI suite before merge. The staging Vercel
+project keeps its Git connection and builds the exact main commit in parallel.
+Configure its **Deployment Checks** to require both GitHub checks `platform`
+and `staging-migrations` for its Production target (which serves staging, not
+the separate production project). Keep automatic aliasing enabled. Neither
+check alone is sufficient: database preparation depends on platform success,
+and a skipped database job must not permit publication after failed tests.
+
+Do not rename these jobs without updating the Vercel requirements. No deploy
+hook or additional deploy token is needed. A failed or unfinished check leaves
+the previous application on the staging domain. Do not use Force Promote to
+bypass it. Additive migrations that have already run remain applied if a later
+configuration or application step fails. Production retains its separate
+owner-approved workflow and staging-observation gate. Preview builds are not
+proof of passing the full suite or permission to promote.
+
 After the exact revision passes GitHub's Platform checks, verify basic reachability:
 
 ```sh

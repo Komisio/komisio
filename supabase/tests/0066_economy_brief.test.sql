@@ -39,7 +39,11 @@ select is(current_setting('test.m')::jsonb->'period'->>'to','2026-09-30','month 
 select is(current_setting('test.m')::jsonb->'previousPeriod'->>'from','2026-08-01','previous month');
 select is((current_setting('test.m')::jsonb->'current'->>'salesCount')::int,2,'both sales in September');
 select is((current_setting('test.m')::jsonb->'previous'->>'salesCount')::int,0,'none in August');
-select is((current_setting('test.m')::jsonb->>'itemsAccepted')::int,2,'items accepted this month counted');
+-- accept_item records the transaction time, unlike the explicitly dated sales.
+-- Anchor acceptance counts to that same Stockholm month, not September 2026.
+select set_config('test.accepted_month',economy_brief(current_setting('test.tenant')::uuid,'month',(now() at time zone 'Europe/Stockholm')::date)::text,true);
+select is((current_setting('test.accepted_month')::jsonb->>'itemsAccepted')::int,2,'items accepted in the transaction month counted');
+select is((current_setting('test.accepted_month')::jsonb->>'previousItemsAccepted')::int,0,'newly accepted items excluded from the previous month');
 select is(jsonb_typeof(economy_brief(current_setting('test.tenant')::uuid,'week',null)),'object','null anchor means yesterday');
 -- February in a leap year and the year boundary.
 select is(economy_brief(current_setting('test.tenant')::uuid,'month','2028-02-15')->'period'->>'to','2028-02-29','leap February');

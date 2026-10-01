@@ -21,7 +21,12 @@ test('the counter is warned about an existing seller before a second record', as
     await expect(
       page.getByRole('heading', { name: d.intake.title, exact: true }),
     ).toBeVisible()
-    await expect(page.locator('.intake-notice')).toHaveCount(0)
+    // The shared header also mounts a notice inside its closed help dialog.
+    // This assertion concerns notices in the receiving page, not hidden help.
+    await expect(page.getByRole('dialog')).toHaveCount(0)
+    await expect(page.getByRole('main').locator('.intake-notice')).toHaveCount(
+      0,
+    )
     await expect(
       page
         .locator('.intake-paths')

@@ -21,6 +21,10 @@ import { fortnoxEnvironment, fortnoxIssue } from '@/extensions/fortnox/auth'
 import { FortnoxVoucherSend } from '@/components/intake/fortnox-voucher-send'
 import { FortnoxReconcile } from '@/components/intake/fortnox-reconcile'
 import { readFortnoxSends } from '@/lib/engine/fortnox-vouchers'
+import { SpirisVoucherSend } from '@/components/intake/spiris-voucher-send'
+import { SpirisReconcile } from '@/components/intake/spiris-reconcile'
+import { readSpirisSends } from '@/lib/engine/spiris-vouchers'
+import { readSpirisStatus } from '@/lib/engine/spiris-connection'
 import { readAutomaticFortnoxStatus } from '@/lib/engine/fortnox-automation'
 import { automationIdentity, readAutomation } from '@/lib/engine/automation'
 import { AutomationSwitch } from '@/components/intake/automation-switch'
@@ -50,13 +54,16 @@ export default async function Accounting({
     currency = await readStoreCurrency(ctx.client, active.id),
     all = dictionary(ctx.locale),
     d = all.accounting
-  const [closes, map, exports, fortnox, sends] = await Promise.all([
-    readDayCloses(ctx.client, active.id),
-    readAccountingMap(ctx.client, active.id),
-    readAccountingExports(ctx.client, active.id),
-    readFortnoxStatus(ctx.client, active.id),
-    readFortnoxSends(ctx.client, active.id),
-  ])
+  const [closes, map, exports, fortnox, sends, spiris, spirisSends] =
+    await Promise.all([
+      readDayCloses(ctx.client, active.id),
+      readAccountingMap(ctx.client, active.id),
+      readAccountingExports(ctx.client, active.id),
+      readFortnoxStatus(ctx.client, active.id),
+      readFortnoxSends(ctx.client, active.id),
+      readSpirisStatus(ctx.client, active.id),
+      readSpirisSends(ctx.client, active.id),
+    ])
   const requestedPeriod = economyPeriod.safeParse({
     from: query.from,
     to: query.to,
@@ -209,6 +216,7 @@ export default async function Accounting({
               {exports.map((e) => {
                 const c = closeById.get(e.day_close_id)
                 const send = sends.get(e.id)
+                const spirisSend = spirisSends.get(e.id)
                 return (
                   <div key={e.id} className="stack">
                     <p>
@@ -234,6 +242,16 @@ export default async function Accounting({
                         connected={fortnox.connected}
                         canSend={canEditMap}
                         d={all.fortnox}
+                      />{' '}
+                      ·{' '}
+                      <SpirisVoucherSend
+                        key={`spiris-${e.id}-${spirisSend?.id ?? 'none'}-${spirisSend?.status ?? 'none'}`}
+                        tenantId={active.id}
+                        exportId={e.id}
+                        send={spirisSend ?? null}
+                        connected={spiris.connected}
+                        canSend={canEditMap}
+                        d={all.spiris}
                       />
                     </p>
                     {active.role === 'owner' &&
@@ -245,6 +263,18 @@ export default async function Accounting({
                           tenantId={active.id}
                           send={send}
                           d={all.fortnox}
+                        />
+                      )}
+                    {active.role === 'owner' &&
+                      spirisSend &&
+                      (spirisSend.status === 'pending' ||
+                        (spirisSend.status === 'failed' &&
+                          spirisSend.error_code ===
+                            'SPIRIS_OUTCOME_UNKNOWN')) && (
+                        <SpirisReconcile
+                          tenantId={active.id}
+                          send={spirisSend}
+                          d={all.spiris}
                         />
                       )}
                   </div>

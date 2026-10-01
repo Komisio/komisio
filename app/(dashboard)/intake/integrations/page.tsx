@@ -1,4 +1,7 @@
 import { FortnoxConnection } from '@/components/intake/fortnox-connection'
+import { SpirisConnection } from '@/components/intake/spiris-connection'
+import { readSpirisStatus } from '@/lib/engine/spiris-connection'
+import { spirisEnvironment, spirisIssue } from '@/extensions/spiris/auth'
 import { FortnoxGuide } from '@/components/help/fortnox-guide'
 import { paypalEnvironment } from '@/lib/engine/paypal-credentials'
 import { credentialKeyConfigured } from '@/lib/platform/credentials'
@@ -106,6 +109,7 @@ export default async function Integrations({
     ]),
   ]
   const fortnoxStatus = await readFortnoxStatus(ctx.client, a.id)
+  const spirisStatus = await readSpirisStatus(ctx.client, a.id)
   const shopifyStatus = await readShopifyStatus(ctx.client, a.id)
   const shopifySettings = shopifyStatus.connected
     ? await readShopifySettings(ctx.client, a.id)
@@ -545,6 +549,16 @@ export default async function Integrations({
           outcome={typeof params.fortnox === 'string' ? params.fortnox : null}
           locale={ctx.locale}
           d={all.fortnox}
+        />
+        <SpirisConnection
+          key={`spiris-${a.id}-${spirisStatus.refreshedAt ?? 'none'}`}
+          tenantId={a.id}
+          status={spirisStatus}
+          issue={spirisIssue(spirisEnvironment(process.env))}
+          canConnect={['owner', 'admin'].includes(a.role)}
+          outcome={typeof params.spiris === 'string' ? params.spiris : null}
+          locale={ctx.locale}
+          d={all.spiris}
         />
         <p>
           <Link className="text-link" href="/intake/accounting?view=settings">

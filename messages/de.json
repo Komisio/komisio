@@ -2803,7 +2803,7 @@
   },
   "helpCenter": {
     "title": "Hilfe",
-    "intro": "Anleitung zum Einstieg und zur Lösung von Problemen mit Fortnox.",
+    "intro": "Anleitungen zu Warenannahme, Etiketten und Buchhaltungsintegration.",
     "open": "Hilfe zu dieser Seite",
     "close": "Hilfe schließen",
     "fullArticle": "Vollständige Hilfeseite in neuem Tab öffnen",
@@ -2879,7 +2879,34 @@
           "Öffnen Sie nach einem teilweise abgeschlossenen oder fehlgeschlagenen Lauf die Abstimmung und prüfen Sie betroffene Exporte. Bei wartendem oder ungewissem Versand folgen Sie der Hilfe zu Versandproblemen und bitten den Inhaber um Prüfung. Aus- und Einschalten der Automatik hebt keine Versandsperre auf."
         ],
         "notice": "Das Lesen der Hilfe aktiviert und sendet nichts. Automatische Läufe senden Exporte mit bestätigtem, wartendem oder ungewissem Ergebnis nicht erneut. Das Deaktivieren nimmt bereits erstellte Buchungsbelege nicht zurück."
+      },
+      "receiving": {
+        "title": "Waren annehmen und erfassen",
+        "intro": "Beginnen Sie mit dem richtigen Laden und Einlieferer. Erfassen Sie tatsächlich eingetroffene Waren und bearbeiten Sie dann die Artikel.",
+        "steps": [
+          "Prüfen Sie den ausgewählten Laden und suchen Sie nach dem vorhandenen Einlieferer, bevor Sie einen neuen anlegen. Beachten Sie die Vertragsanforderungen und lokalen Abläufe des Ladens.",
+          "Eine Voranmeldung bedeutet nicht, dass Waren angenommen wurden. Bestätigen Sie die Annahme erst, wenn die Waren bei Ihnen sind. Setzen Sie die Arbeit mit der vorhandenen Einlieferung fort.",
+          "Öffnen Sie die Einlieferung in der Prüfwarteschlange oder nutzen Sie die Schnellerfassung für einzelne Artikel. Prüfen Sie Beschreibung, Preis und Einlieferer und beachten Sie angeforderte Freigaben. Ein gespeicherter Entwurf ist kein erfasster Verkaufsartikel.",
+          "Prüfen Sie die Bestätigung und die Liste erfasster Artikel vor dem Etikettieren. Fehlt die Antwort auf eine Speicherung, lassen Sie das Formular geöffnet und nutzen dessen Wiederholungsfunktion. Legen Sie denselben Artikel nicht erneut an, um eine Bestätigung zu erhalten."
+        ],
+        "notice": "Artikelzahlen beschreiben gespeicherte Daten, nicht den Abschluss der gesamten Einlieferung. Prüfen Sie auch die physischen Waren. Die Hilfe ändert keine Daten; bitten Sie berechtigtes Personal um Aktionen, auf die Sie keinen Zugriff haben."
+      },
+      "labels": {
+        "title": "Die richtige Einlieferung oder den Artikel etikettieren",
+        "intro": "Ein Annahmeetikett hält Waren während der Bearbeitung zusammen. Ein Artikeletikett identifiziert den erfassten Artikel und zeigt seinen Preis.",
+        "steps": [
+          "Öffnen Sie die vorhandene Einlieferung oder den Artikel und prüfen Sie Laden und Referenz. Ein Annahmeetikett bedeutet nicht, dass Waren geprüft oder zum Verkauf freigegeben wurden.",
+          "Suchen Sie für ein Artikeletikett den erfassten Artikel, öffnen Sie sein Etikett und prüfen Sie Beschreibung, Preis und Währung. Ist das Etikett nicht verfügbar, kehren Sie zum Artikel zurück und prüfen seine Angaben.",
+          "Nutzen Sie die Druckoptionen der Seite. Wählen Sie für einen verbundenen Drucker den richtigen Drucker und die Kopienzahl oder prüfen Sie den Druckdialog des Browsers. Ein eingereihter Auftrag oder geöffneter Dialog beweist keinen Druck: Prüfen Sie das physische Etikett vor dem Anbringen.",
+          "Fehlt die Antwort auf das Einreihen, wiederholen Sie den Versuch im selben geöffneten Formular. Erstellen Sie nicht immer neue Aufträge. Prüfen Sie den Auftrag unter Drucker und Druckaufträge und bitten Sie bei Problemen die zuständige Person um Hilfe. Die Etikettensuche öffnet eine vorhandene Referenz."
+        ],
+        "notice": "Das Öffnen der Hilfe druckt nichts und erfasst keinen neuen Artikel. Legen Sie kein Artikelduplikat an, um ein Etikett zu ersetzen. Physischer Druck und Scannen müssen mit den Geräten des Ladens geprüft werden."
       }
-    }
+    },
+    "receiving": "Warenannahme öffnen",
+    "storeFlow": "Arbeitsablauf im Laden",
+    "items": "Erfassten Artikel finden",
+    "openReference": "Etikettenreferenz öffnen",
+    "printing": "Drucker und Druckaufträge"
   }
 }

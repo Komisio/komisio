@@ -2797,7 +2797,7 @@
   },
   "helpCenter": {
     "title": "Help",
-    "intro": "Guidance for getting started and resolving Fortnox issues.",
+    "intro": "Guidance for receiving, labelling and accounting integration.",
     "open": "Help on this page",
     "close": "Close help",
     "fullArticle": "Open the full help page in a new tab",
@@ -2873,7 +2873,34 @@
           "After a partial or failed run, open Reconciliation and review the affected exports. For a pending or uncertain send, follow the sending-problem guidance and ask the owner to check the outcome. Switching automation off and on does not resolve a held send."
         ],
         "notice": "Reading help enables or sends nothing. Automatic runs do not resend exports with confirmed, pending or uncertain outcomes. Disabling automation does not withdraw vouchers already created."
+      },
+      "receiving": {
+        "title": "Receive and register goods",
+        "intro": "Start with the correct store and consignor. Record what has physically arrived, then work through the items.",
+        "steps": [
+          "Check the selected store and search for the existing consignor before creating another. Follow the store’s agreement requirements and local routines.",
+          "An announcement does not mean goods have been received. Confirm receiving only once the goods are with you. Reuse the existing drop-off when continuing the work.",
+          "Open the drop-off in the inspection queue or use quick registration for one item at a time. Check description, price and consignor and follow any requested approval. A saved draft is not a registered sale item.",
+          "Check the confirmation and registered-item list before labelling. If a save response is missing, keep the form open and use its retry action. Do not create the same item again to obtain confirmation."
+        ],
+        "notice": "Registered-item counts describe saved records, not completion of the entire drop-off. Check the physical goods too. Help changes no records; ask authorized staff to perform actions you cannot access."
+      },
+      "labels": {
+        "title": "Label the correct drop-off or item",
+        "intro": "A receiving label keeps goods together during processing. An item label identifies a registered item and shows its price.",
+        "steps": [
+          "Open the existing drop-off or item and check the store and reference. A receiving label does not mean goods have been inspected or accepted for sale.",
+          "For an item label, find the registered item, open its label and check description, price and currency. If the label is unavailable, return to the item and check its details.",
+          "Use the page’s print options. Choose the correct printer and copy count for a connected printer, or review the browser print dialog. A queued job or open dialog does not prove printing: check the physical label before attaching it.",
+          "If a queueing response is missing, use retry in the same open form. Do not repeatedly create new jobs. Check the job under Printers and print jobs and ask the printer operator for help when needed. Use label lookup to open an existing reference."
+        ],
+        "notice": "Opening help prints nothing and registers no new item. Do not duplicate an item to replace its label. Physical printing and scanning need checking with the store’s equipment."
       }
-    }
+    },
+    "receiving": "Open receiving",
+    "storeFlow": "Store workflow",
+    "items": "Find a registered item",
+    "openReference": "Open a label reference",
+    "printing": "Printers and print jobs"
   }
 }

@@ -20,29 +20,60 @@ export function HelpArticle({
       </ol>
       <p className="intake-notice">{article.notice}</p>
       <nav className="stack" aria-label={d.taskLinks}>
-        <Link
-          className="text-link"
-          href={
-            topic === 'fortnox-automation'
-              ? '/intake/accounting?view=settings#fortnox-automation'
-              : '/intake/accounting?view=settings'
-          }
-        >
-          {d.settings}
-        </Link>
-        <Link className="text-link" href="/intake/accounting">
-          {d.days}
-        </Link>
-        <Link
-          className="text-link"
-          href="/intake/accounting?view=reconciliation"
-        >
-          {d.reconciliation}
-        </Link>
-        {topic === 'fortnox-automation' && (
-          <Link className="text-link" href="/help/fortnox-recovery">
-            {d.articles['fortnox-recovery'].title}
-          </Link>
+        {topic === 'receiving' ? (
+          <>
+            <Link className="text-link" href="/intake">
+              {d.receiving}
+            </Link>
+            <Link className="text-link" href="/intake/flow">
+              {d.storeFlow}
+            </Link>
+            <Link className="text-link" href="/help/labels">
+              {d.articles.labels.title}
+            </Link>
+          </>
+        ) : topic === 'labels' ? (
+          <>
+            <Link className="text-link" href="/intake/items">
+              {d.items}
+            </Link>
+            <Link className="text-link" href="/intake/open">
+              {d.openReference}
+            </Link>
+            <Link className="text-link" href="/settings?tab=printing">
+              {d.printing}
+            </Link>
+            <Link className="text-link" href="/help/receiving">
+              {d.articles.receiving.title}
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link
+              className="text-link"
+              href={
+                topic === 'fortnox-automation'
+                  ? '/intake/accounting?view=settings#fortnox-automation'
+                  : '/intake/accounting?view=settings'
+              }
+            >
+              {d.settings}
+            </Link>
+            <Link className="text-link" href="/intake/accounting">
+              {d.days}
+            </Link>
+            <Link
+              className="text-link"
+              href="/intake/accounting?view=reconciliation"
+            >
+              {d.reconciliation}
+            </Link>
+            {topic === 'fortnox-automation' && (
+              <Link className="text-link" href="/help/fortnox-recovery">
+                {d.articles['fortnox-recovery'].title}
+              </Link>
+            )}
+          </>
         )}
       </nav>
       {topic === 'fortnox-connect' && (

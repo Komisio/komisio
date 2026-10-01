@@ -1,5 +1,10 @@
 # Open questions
 
+Delivery policy (2026-10-01): owner moves the full CI suite from PRs to main.
+PR review and local verification remain. Staging publication waits for both
+platform and staging-migrations checks; failed main CI leaves the prior
+staging application in place. Production release policy is unchanged.
+
 Fortnox help (2026-09-30): owner approved a shared in-product help panel,
 linkable instructions and a checklist derived from existing store facts.
 Guidance retains current permissions, account-map choices and uncertain-send

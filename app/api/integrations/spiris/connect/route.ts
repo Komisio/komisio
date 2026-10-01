@@ -1,0 +1,56 @@
+import { NextResponse } from 'next/server'
+import { z } from 'zod'
+import { platformContext } from '@/lib/platform/context'
+import { startSpirisConnection } from '@/lib/engine/spiris-connection'
+
+export const STATE_COOKIE = 'komisio-spiris-state'
+
+/** Starts the Spiris authorisation for the active store; owner or admin. */
+export async function GET(request: Request) {
+  if (process.env.KOMISIO_INTAKE_ENABLED !== 'true')
+    return new Response(null, { status: 404 })
+  const origin = process.env.NEXT_PUBLIC_APP_URL
+  if (!origin) return new Response(null, { status: 403 })
+  const ctx = await platformContext()
+  if (!ctx || ctx.mfaRequired || !ctx.active)
+    return NextResponse.redirect(
+      new URL('/login?next=%2Fintake%2Fintegrations', origin),
+    )
+  if (!['owner', 'admin'].includes(ctx.active.role))
+    return new Response(null, { status: 403 })
+  const tenant = z
+    .uuid()
+    .safeParse(new URL(request.url).searchParams.get('tenant'))
+  if (!tenant.success || tenant.data !== ctx.active.id)
+    return new Response(null, { status: 409 })
+  try {
+    const redirectUri = new URL(
+      '/api/integrations/spiris/callback',
+      origin,
+    ).toString()
+    const { url, state } = await startSpirisConnection(
+      ctx.client,
+      ctx.active.id,
+      redirectUri,
+      process.env,
+      new URL(request.url).searchParams.get('company') ?? undefined,
+    )
+    const response = NextResponse.redirect(url)
+    response.cookies.set(STATE_COOKIE, state, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: origin.startsWith('https://'),
+      path: '/api/integrations/spiris',
+      maxAge: 600,
+    })
+    return response
+  } catch (e) {
+    const code = e instanceof Error ? e.message : 'REQUEST_FAILED'
+    return NextResponse.redirect(
+      new URL(
+        `/intake/integrations?spiris=${encodeURIComponent(code)}`,
+        origin,
+      ),
+    )
+  }
+}

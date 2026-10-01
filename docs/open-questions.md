@@ -1,5 +1,16 @@
 # Open questions
 
+Spiris (2026-10-01): owner asked for a second accounting
+integration; Spiris (formerly Visma eEkonomi) was chosen as the most used system
+next to Fortnox in Sweden with the same product across the Nordics. Open:
+the eAccounting API's company settings carry no database id, so the connection is bound to
+the corporate identity number (or the name when it is empty); whether a Spiris
+test company shares its number with the production company, as in Fortnox, is
+to be checked against a real sandbox before the first real voucher. The voucher
+request shape (`VoucherDate`, `VoucherText`, `Rows[].AccountNumber`,
+`DebitAmount`, `CreditAmount`; answer `Id`, `NumberAndNumberSeries`) follows
+Visma's eAccounting API reference and is verified only by synthetic tests until then.
+
 Delivery policy (2026-10-01): owner moves the full CI suite from PRs to main.
 PR review and local verification remain. Staging publication waits for both
 platform and staging-migrations checks; failed main CI leaves the prior

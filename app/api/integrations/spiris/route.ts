@@ -1,0 +1,92 @@
+import { NextResponse } from 'next/server'
+import { z } from 'zod'
+import { platformContext } from '@/lib/platform/context'
+import { boundedJson } from '@/lib/http/bounded-json'
+import {
+  checkSpirisConnection,
+  disconnectSpiris,
+  spirisErrorCode,
+} from '@/lib/engine/spiris-connection'
+import {
+  confirmedSpirisVoucher,
+  confirmSpirisVoucher,
+  sendExportToSpiris,
+} from '@/lib/engine/spiris-vouchers'
+import { SpirisRejected } from '@/extensions/spiris/vouchers'
+
+/** Check the connected company, send one export as a voucher, confirm a held send, or disconnect; owner or admin. */
+export async function POST(request: Request) {
+  const reply = (body: object, status = 200) =>
+    NextResponse.json(body, {
+      status,
+      headers: { 'Cache-Control': 'private, no-store' },
+    })
+  if (process.env.KOMISIO_INTAKE_ENABLED !== 'true')
+    return reply({ error: 'NOT_FOUND' }, 404)
+  const origin = process.env.NEXT_PUBLIC_APP_URL
+  if (!origin || request.headers.get('origin') !== new URL(origin).origin)
+    return reply({ error: 'FORBIDDEN' }, 403)
+  try {
+    const ctx = await platformContext()
+    if (!ctx || ctx.mfaRequired) return reply({ error: 'AUTH_REQUIRED' }, 401)
+    if (!ctx.active || !['owner', 'admin'].includes(ctx.active.role))
+      return reply({ error: 'FORBIDDEN' }, 403)
+    let input: unknown
+    try {
+      input = await boundedJson(request, 4096)
+    } catch {
+      return reply({ error: 'INVALID_INPUT' }, 400)
+    }
+    const parsed = z
+      .discriminatedUnion('action', [
+        confirmedSpirisVoucher.extend({ action: z.literal('confirmVoucher') }),
+        z.strictObject({
+          tenantId: z.uuid(),
+          action: z.enum(['check', 'disconnect']),
+        }),
+        z.strictObject({
+          tenantId: z.uuid(),
+          action: z.literal('sendVoucher'),
+          exportId: z.uuid(),
+          requestId: z.uuid(),
+        }),
+      ])
+      .safeParse(input)
+    if (!parsed.success) return reply({ error: 'INVALID_INPUT' }, 400)
+    if (parsed.data.tenantId !== ctx.active.id)
+      return reply({ error: 'TENANT_CHANGED' }, 409)
+    if (parsed.data.action === 'confirmVoucher') {
+      if (ctx.active.role !== 'owner') return reply({ error: 'FORBIDDEN' }, 403)
+      return reply(
+        await confirmSpirisVoucher(ctx.client, {
+          tenantId: parsed.data.tenantId,
+          sendId: parsed.data.sendId,
+          voucherId: parsed.data.voucherId,
+          voucherNumber: parsed.data.voucherNumber,
+          evidence: parsed.data.evidence,
+        }),
+      )
+    }
+    if (parsed.data.action === 'sendVoucher')
+      return reply(
+        await sendExportToSpiris(
+          ctx.client,
+          ctx.active.id,
+          parsed.data.exportId,
+          parsed.data.requestId,
+          process.env,
+        ),
+      )
+    if (parsed.data.action === 'disconnect')
+      return reply(await disconnectSpiris(ctx.client, ctx.active.id))
+    return reply(
+      await checkSpirisConnection(ctx.client, ctx.active.id, process.env),
+    )
+  } catch (e) {
+    const code = spirisErrorCode(e instanceof Error ? e.message : '')
+    return reply(
+      { error: code, detail: e instanceof SpirisRejected ? e.detail : '' },
+      code === 'FORBIDDEN' ? 403 : code === 'INVALID_INPUT' ? 400 : 409,
+    )
+  }
+}

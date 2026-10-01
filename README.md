@@ -59,7 +59,8 @@ balanced voucher under the store's own account map, downloadable as SIE 4 or
 sent straight to Fortnox as one voucher per day; the same data can feed
 systems such as Accounted. Komisio invents no accounts and no postings and is
 not a bookkeeping application. [Accounting export](docs/ACCOUNTING-EXPORT.md)
-· [Fortnox connection](docs/FORTNOX-CONNECTION.md).
+· [Fortnox connection](docs/FORTNOX-CONNECTION.md)
+· [Spiris connection](docs/SPIRIS-CONNECTION.md).
 
 **Sell through your POS. Keep the seller informed.** Accepted items go out to
 Zettle with stock and product photos, and completed receipts come back as

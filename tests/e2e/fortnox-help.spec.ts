@@ -76,6 +76,56 @@ test('context help preserves edits, traps focus on mobile and has a protected ar
     )
     await article.close()
     await expect(account).toHaveValue('1930')
+    await page.keyboard.press('Escape')
+    let automationWrites = 0
+    page.on('request', (request) => {
+      if (
+        request.method() === 'POST' &&
+        new URL(request.url()).pathname === '/api/automation-grants'
+      )
+        automationWrites++
+    })
+    const automationHelp = page.getByRole('button', {
+      name: d.helpCenter.articles['fortnox-automation'].title,
+      exact: true,
+    })
+    await automationHelp.click()
+    await expect(dialog.getByRole('heading', { level: 2 })).toHaveText(
+      d.helpCenter.articles['fortnox-automation'].title,
+    )
+    await expect(dialog).toContainText(
+      d.helpCenter.articles['fortnox-automation'].notice,
+    )
+    await expect(
+      dialog.getByRole('link', { name: d.helpCenter.settings, exact: true }),
+    ).toHaveAttribute(
+      'href',
+      '/intake/accounting?view=settings#fortnox-automation',
+    )
+    await expect(
+      dialog.getByRole('link', {
+        name: d.helpCenter.articles['fortnox-recovery'].title,
+        exact: true,
+      }),
+    ).toHaveAttribute('href', '/help/fortnox-recovery')
+    expect(
+      await dialog.evaluate((el) => el.scrollWidth <= el.clientWidth),
+    ).toBe(true)
+    await page.keyboard.press('Escape')
+    await expect(automationHelp).toBeFocused()
+    await expect(account).toHaveValue('1930')
+    expect(automationWrites).toBe(0)
+    await page.goto('/help')
+    await page
+      .getByRole('link', {
+        name: d.helpCenter.articles['fortnox-automation'].title,
+        exact: true,
+      })
+      .click()
+    await expect(page).toHaveURL(/\/help\/fortnox-automation$/)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      d.helpCenter.articles['fortnox-automation'].title,
+    )
     // Next returns 200 for streamed notFound responses; assert the actual fallback.
     await page.goto('/help/not-a-topic')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(d.notFound)

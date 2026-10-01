@@ -2862,6 +2862,17 @@
           "Hvis bilaget ikke finnes, be driftsansvarlig hjelpe med undersøkelsen. Manglende treff åpner ikke for ny sending. Ikke slett eller opprett grunnlag på nytt for å omgå sperren."
         ],
         "notice": "Avstemming registrerer eierens kontroll, ikke automatisk bekreftelse fra Fortnox. Personale og administratorer kan lese hjelpen; bare eieren kan registrere denne bekreftelsen."
+      },
+      "fortnox-automation": {
+        "title": "Slik fungerer automatisk sending",
+        "intro": "Automatikken sender klargjorte eksporter til det tilkoblede Fortnox-foretaket. Den oppretter ikke dagsoppgjør og velger ikke kontoer.",
+        "steps": [
+          "Kontroller foretaket og kontokoblingene. Gå gjennom eksisterende eksporter før aktivering: også eldre underlag som kan sendes, kan bli tatt med. Unngå å både importere SIE-filen og sende samme underlag direkte.",
+          "Butikkens eier aktiverer automatisk sending under Kontoplan og Fortnox. Venter betyr at bakgrunnstjenesten ennå ikke har akseptert aktiveringen. Hvis funksjonen ikke er klargjort, kontakt den som drifter Komisio-installasjonen.",
+          "Fortsett å opprette og kontrollere dagsoppgjør og klargjøre eksporter manuelt. Se Siste kjøring for tidspunkt, resultat og antall sendt. Aktivert betyr ikke at noe er sendt, og en fullført kjøring betyr ikke at alle dager er avstemt.",
+          "Etter en delvis eller mislykket kjøring: åpne Avstemming og kontroller de aktuelle eksportene. Ved ventende eller usikker sending, følg hjelpen for sendeproblemer og be eieren kontrollere resultatet. Å slå automatikken av og på løser ikke en sperret sending."
+        ],
+        "notice": "Å lese hjelpen aktiverer eller sender ingenting. Automatiske kjøringer sender ikke på nytt ved bekreftet, ventende eller usikkert resultat. Deaktivering trekker ikke tilbake bilag som allerede er opprettet."
       }
     }
   }

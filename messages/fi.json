@@ -2868,6 +2868,17 @@
           "Jos tositetta ei löydy, pyydä asennuksen ylläpitäjää auttamaan selvityksessä. Puuttuva tulos ei vapauta uutta lähetystä. Älä poista tai luo aineistoja uudelleen eston kiertämiseksi."
         ],
         "notice": "Täsmäytys tallentaa omistajan tarkistuksen, ei Fortnoxin automaattista vahvistusta. Henkilökunta ja järjestelmänvalvojat voivat lukea ohjeen; vain omistaja voi kirjata tämän vahvistuksen."
+      },
+      "fortnox-automation": {
+        "title": "Automaattisen lähetyksen toiminta",
+        "intro": "Automaatio lähettää valmistellut viennit yhdistettyyn Fortnox-yritykseen. Se ei luo päivän päätöksiä eikä valitse tilejä.",
+        "steps": [
+          "Tarkista yritys ja tilikohdistukset. Tarkista olemassa olevat viennit ennen käyttöönottoa: myös vanhemmat lähetyskelpoiset viennit voivat tulla mukaan. Älä sekä tuo SIE-tiedostoa että lähetä samaa aineistoa suoraan.",
+          "Myymälän omistaja ottaa automaattisen lähetyksen käyttöön tilikartan ja Fortnoxin asetuksissa. Odottaa tarkoittaa, ettei taustapalvelu ole vielä hyväksynyt käyttöönottoa. Jos toimintoa ei ole määritetty, ota yhteyttä Komisio-asennuksesta vastaavaan henkilöön.",
+          "Luo ja tarkista päivän päätökset sekä valmistele viennit edelleen käsin. Viimeisin ajo näyttää ajan, tuloksen ja lähetettyjen määrän. Käytössä ei tarkoita, että mitään olisi lähetetty, eikä valmis ajo tarkoita, että kaikki päivät olisi täsmäytetty.",
+          "Osittaisen tai epäonnistuneen ajon jälkeen avaa täsmäytys ja tarkista kyseiset viennit. Jos lähetys odottaa tai tulos on epävarma, noudata lähetysongelmien ohjetta ja pyydä omistajaa tarkistamaan tulos. Automaation poistaminen käytöstä ja uudelleen käyttöönotto ei vapauta estettyä lähetystä."
+        ],
+        "notice": "Ohjeen lukeminen ei ota mitään käyttöön eikä lähetä mitään. Automaattiset ajot eivät lähetä uudelleen vientiä, jonka tulos on vahvistettu, odottava tai epävarma. Käytöstä poistaminen ei peru jo luotuja tositteita."
       }
     }
   }

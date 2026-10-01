@@ -132,7 +132,15 @@
     "typeRefused": "Varetypen kunne ikke gemmes nu. Annuller, og kontrollér butik og adgang. Varens oplysninger er bevaret.",
     "descriptionRequired": "Indtast en beskrivelse.",
     "priceInvalid": "Angiv en pris over 0 og højst 999.999,99. Brug højst to decimaler.",
-    "savedPriceUnavailable": "Varen er godkendt, men den gemte pris kunne ikke læses. Åbn varen for at kontrollere prisen."
+    "savedPriceUnavailable": "Varen er godkendt, men den gemte pris kunne ikke læses. Åbn varen for at kontrollere prisen.",
+    "formHelp": {
+      "label": "Hjælp til hurtig modtagelse",
+      "steps": [
+        "Vælg indleverer, og registrer én vare ad gangen.",
+        "Udfyld beskrivelse, kategori og pris. Kontrollér eventuelle AI-forslag.",
+        "Gem varen. Brug bekræftelsen til at mærke den eller fortsætte med næste vare."
+      ]
+    }
   },
   "intake": {
     "quickLink": "Hurtig modtagelse: én skærm pr. stykke tøj",
@@ -199,7 +207,15 @@
     "quickHint": "Beskrivelse og pris er nok. Billede er valgfrit.",
     "labelPreview": "Forhåndsvisning",
     "otherPrint": "Anden printer eller PDF",
-    "browserPrint": "Åbn udskriftsdialog"
+    "browserPrint": "Åbn udskriftsdialog",
+    "formHelp": {
+      "label": "Hjælp til at modtage en indlevering",
+      "steps": [
+        "Kontrollér, at den rigtige indleverer er valgt.",
+        "Beskriv gerne posen eller genstanden. Bekræft først modtagelsen, når indleveringen er i butikken.",
+        "Bekræft modtagelsen, og åbn etiketten. Varerne gennemgås og registreres separat."
+      ]
+    }
   },
   "brand": "Komisio",
   "tagline": "Mere plads til ting, der får nyt liv.",

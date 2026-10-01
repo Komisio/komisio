@@ -30,6 +30,21 @@ test('receiving and label help preserve drafts and follow the current task witho
       )
         writes++
     })
+    const quickHelp = page.getByRole('button', {
+      name: d.quickIntake.formHelp.label,
+      exact: true,
+    })
+    await expect(quickHelp).toHaveAttribute('aria-expanded', 'false')
+    await quickHelp.focus()
+    await page.keyboard.press('Enter')
+    await expect(quickHelp).toHaveAttribute('aria-expanded', 'true')
+    const quickTips = page.locator('.form-help-content:visible')
+    await expect(quickTips.locator('li')).toHaveCount(3)
+    await expect(quickTips).not.toContainText(d.intake.formHelp.steps[2])
+    await expect(description).toHaveValue('Keep this unsaved item')
+    await quickHelp.click()
+    await expect(quickTips).toHaveCount(0)
+    expect(writes).toBe(0)
     const open = page.getByRole('button', {
       name: d.helpCenter.title,
       exact: true,
@@ -72,6 +87,23 @@ test('receiving and label help preserve drafts and follow the current task witho
     // Empty the local draft deliberately before testing another task.
     await description.fill('')
     await page.getByLabel(d.quickIntake.price, { exact: true }).fill('')
+    await page.goto(`/intake?seller=${f.seller}#new-seller`)
+    const note = page.getByLabel(d.intake.note, { exact: true })
+    await note.fill('Keep this bag note')
+    const receiptHelp = page.getByRole('button', {
+      name: d.intake.formHelp.label,
+      exact: true,
+    })
+    await receiptHelp.click()
+    const receiptTips = page.locator('.form-help-content:visible')
+    await expect(receiptTips.locator('li')).toHaveCount(3)
+    await expect(receiptTips).toContainText(d.intake.formHelp.steps[2])
+    await expect(receiptTips).not.toContainText(d.quickIntake.formHelp.steps[1])
+    await expect(note).toHaveValue('Keep this bag note')
+    await expect(page.locator('body')).toHaveJSProperty('scrollWidth', 320)
+    await page.screenshot({ path: testInfo.outputPath('form-help-mobile.png') })
+    await receiptHelp.click()
+    expect(writes).toBe(0)
     await page.goto(`/intake/items/${item}/label`)
     await open.click()
     await expect(dialog.getByRole('heading', { level: 2 })).toHaveText(

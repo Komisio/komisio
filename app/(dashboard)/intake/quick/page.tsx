@@ -1,3 +1,4 @@
+import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
@@ -30,7 +31,7 @@ export default async function QuickIntake() {
   return (
     <main className="intake">
       <div className="intake-header">
-        <h1>{d.title}</h1>
+        <FormHelpHeading title={d.title} level={1} help={d.formHelp} />
         <Link className="text-link" href="/intake">
           {all.intake.back}
         </Link>

@@ -2797,7 +2797,7 @@
   },
   "helpCenter": {
     "title": "Hjelp",
-    "intro": "Veiledning for å komme i gang og løse problemer med Fortnox.",
+    "intro": "Veiledning for mottak, merking og regnskapsintegrasjon.",
     "open": "Hjelp på siden",
     "close": "Lukk hjelpen",
     "fullArticle": "Åpne hele hjelpesiden i ny fane",
@@ -2873,7 +2873,34 @@
           "Etter en delvis eller mislykket kjøring: åpne Avstemming og kontroller de aktuelle eksportene. Ved ventende eller usikker sending, følg hjelpen for sendeproblemer og be eieren kontrollere resultatet. Å slå automatikken av og på løser ikke en sperret sending."
         ],
         "notice": "Å lese hjelpen aktiverer eller sender ingenting. Automatiske kjøringer sender ikke på nytt ved bekreftet, ventende eller usikkert resultat. Deaktivering trekker ikke tilbake bilag som allerede er opprettet."
+      },
+      "receiving": {
+        "title": "Ta imot og registrer varer",
+        "intro": "Start med riktig butikk og innleverer. Registrer det som faktisk har kommet inn, og fortsett deretter med varene.",
+        "steps": [
+          "Kontroller valgt butikk og søk etter eksisterende innleverer før du oppretter en ny. Følg butikkens avtalekrav og lokale rutiner.",
+          "En forhåndsmelding betyr ikke at varene er mottatt. Bekreft mottaket først når varene er hos dere. Bruk den eksisterende innleveringen når du fortsetter arbeidet.",
+          "Åpne innleveringen i kontrollkøen eller bruk hurtigregistrering for én vare om gangen. Kontroller beskrivelse, pris og innleverer, og følg eventuelle krav om godkjenning. Et lagret utkast er ikke en registrert salgsvare.",
+          "Kontroller bekreftelsen og listen over registrerte varer før merking. Hvis svaret på en lagring mangler, hold skjemaet åpent og bruk funksjonen for nytt forsøk. Ikke opprett samme vare igjen for å få en bekreftelse."
+        ],
+        "notice": "Antall registrerte varer viser lagrede opplysninger, ikke at hele innleveringen er ferdigbehandlet. Kontroller også de fysiske varene. Hjelpen endrer ingenting; be autorisert personale utføre handlinger du ikke har tilgang til."
+      },
+      "labels": {
+        "title": "Merk riktig innlevering eller vare",
+        "intro": "En mottaksetikett holder varene samlet under arbeidet. En vareetikett identifiserer den registrerte varen og viser prisen.",
+        "steps": [
+          "Åpne eksisterende innlevering eller vare og kontroller butikk og referanse. En mottaksetikett betyr ikke at varene er kontrollert eller godkjent for salg.",
+          "For en vareetikett: finn den registrerte varen, åpne etiketten og kontroller beskrivelse, pris og valuta. Hvis etiketten ikke kan vises, gå tilbake til varen og kontroller opplysningene.",
+          "Bruk sidens utskriftsalternativer. Velg riktig skriver og antall kopier for en tilkoblet skriver, eller kontroller nettleserens utskriftsdialog. En jobb i kø eller åpen dialog beviser ikke utskrift: kontroller den fysiske etiketten før den festes.",
+          "Hvis svar om utskriftskøen mangler, bruk nytt forsøk i samme åpne skjema. Ikke opprett nye jobber gjentatte ganger. Kontroller jobben under Skrivere og utskriftsjobber og be skriveransvarlig om hjelp ved problemer. Etikettsøket åpner en eksisterende referanse."
+        ],
+        "notice": "Å åpne hjelpen skriver ikke ut noe og registrerer ingen ny vare. Ikke opprett en kopi av varen for å erstatte etiketten. Fysisk utskrift og skanning må kontrolleres med butikkens utstyr."
       }
-    }
+    },
+    "receiving": "Åpne mottaket",
+    "storeFlow": "Butikkens arbeidsflyt",
+    "items": "Finn en registrert vare",
+    "openReference": "Åpne en etikettreferanse",
+    "printing": "Skrivere og utskriftsjobber"
   }
 }

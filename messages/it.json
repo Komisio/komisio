@@ -2797,7 +2797,7 @@
   },
   "helpCenter": {
     "title": "Aiuto",
-    "intro": "Guida per iniziare e risolvere problemi con Fortnox.",
+    "intro": "Guide alla ricezione, alle etichette e all’integrazione contabile.",
     "open": "Aiuto per questa pagina",
     "close": "Chiudi aiuto",
     "fullArticle": "Apri la guida completa in una nuova scheda",
@@ -2873,7 +2873,34 @@
           "Dopo un’esecuzione parziale o non riuscita, apri Riconciliazione e controlla le esportazioni interessate. Se l’invio è in attesa o incerto, segui la guida ai problemi di invio e chiedi al proprietario di verificare il risultato. Disattivare e riattivare l’automazione non sblocca un invio sospeso."
         ],
         "notice": "Leggere la guida non attiva né invia nulla. Le esecuzioni automatiche non reinviano esportazioni con esito confermato, in attesa o incerto. La disattivazione non annulla le registrazioni contabili già create."
+      },
+      "receiving": {
+        "title": "Ricevere e registrare gli articoli",
+        "intro": "Inizia dal negozio e dal conferente corretti. Registra ciò che è arrivato fisicamente, poi elabora gli articoli.",
+        "steps": [
+          "Controlla il negozio selezionato e cerca il conferente esistente prima di crearne uno nuovo. Segui i requisiti contrattuali e le procedure locali del negozio.",
+          "Un preavviso non significa che gli articoli siano stati ricevuti. Conferma la ricezione solo quando sono presso di voi. Continua il lavoro dalla consegna esistente.",
+          "Apri la consegna nella coda di verifica o usa la registrazione rapida per un articolo alla volta. Controlla descrizione, prezzo e conferente e segui le eventuali approvazioni richieste. Una bozza salvata non è un articolo registrato per la vendita.",
+          "Controlla la conferma e l’elenco degli articoli registrati prima di etichettare. Se manca la risposta al salvataggio, tieni aperto il modulo e usa il suo nuovo tentativo. Non creare di nuovo lo stesso articolo per ottenere una conferma."
+        ],
+        "notice": "Il numero di articoli registrati descrive dati salvati, non il completamento dell’intera consegna. Controlla anche gli articoli fisici. La guida non modifica dati; chiedi al personale autorizzato di eseguire le azioni a cui non hai accesso."
+      },
+      "labels": {
+        "title": "Etichettare la consegna o l’articolo corretto",
+        "intro": "Un’etichetta di ricezione mantiene insieme gli articoli durante la lavorazione. Un’etichetta articolo identifica l’articolo registrato e ne mostra il prezzo.",
+        "steps": [
+          "Apri la consegna o l’articolo esistente e controlla negozio e riferimento. Un’etichetta di ricezione non significa che gli articoli siano stati verificati o accettati per la vendita.",
+          "Per un’etichetta articolo, trova l’articolo registrato, apri l’etichetta e controlla descrizione, prezzo e valuta. Se l’etichetta non è disponibile, torna all’articolo e verificane i dati.",
+          "Usa le opzioni di stampa della pagina. Scegli stampante e numero di copie corretti per una stampante collegata oppure controlla la finestra di stampa del browser. Un lavoro in coda o una finestra aperta non dimostrano la stampa: controlla l’etichetta fisica prima di applicarla.",
+          "Se manca la risposta all’inserimento in coda, riprova nello stesso modulo aperto. Non creare ripetutamente nuovi lavori. Controlla il lavoro in Stampanti e lavori di stampa e chiedi aiuto al responsabile della stampante se necessario. La ricerca etichette apre un riferimento esistente."
+        ],
+        "notice": "Aprire la guida non stampa nulla e non registra nuovi articoli. Non duplicare un articolo per sostituirne l’etichetta. Stampa fisica e scansione devono essere verificate con le attrezzature del negozio."
       }
-    }
+    },
+    "receiving": "Apri ricezione",
+    "storeFlow": "Flusso di lavoro del negozio",
+    "items": "Trova un articolo registrato",
+    "openReference": "Apri un riferimento etichetta",
+    "printing": "Stampanti e lavori di stampa"
   }
 }

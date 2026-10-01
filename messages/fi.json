@@ -2803,7 +2803,7 @@
   },
   "helpCenter": {
     "title": "Ohje",
-    "intro": "Ohjeita Fortnoxin käyttöönottoon ja ongelmien ratkaisuun.",
+    "intro": "Ohjeita vastaanottoon, merkintään ja kirjanpitointegraatioon.",
     "open": "Tämän sivun ohje",
     "close": "Sulje ohje",
     "fullArticle": "Avaa koko ohjesivu uuteen välilehteen",
@@ -2879,7 +2879,34 @@
           "Osittaisen tai epäonnistuneen ajon jälkeen avaa täsmäytys ja tarkista kyseiset viennit. Jos lähetys odottaa tai tulos on epävarma, noudata lähetysongelmien ohjetta ja pyydä omistajaa tarkistamaan tulos. Automaation poistaminen käytöstä ja uudelleen käyttöönotto ei vapauta estettyä lähetystä."
         ],
         "notice": "Ohjeen lukeminen ei ota mitään käyttöön eikä lähetä mitään. Automaattiset ajot eivät lähetä uudelleen vientiä, jonka tulos on vahvistettu, odottava tai epävarma. Käytöstä poistaminen ei peru jo luotuja tositteita."
+      },
+      "receiving": {
+        "title": "Vastaanota ja rekisteröi tuotteet",
+        "intro": "Aloita oikeasta myymälästä ja tavaran toimittajasta. Kirjaa fyysisesti saapuneet tavarat ja käsittele sitten tuotteet.",
+        "steps": [
+          "Tarkista valittu myymälä ja etsi olemassa oleva tavaran toimittaja ennen uuden luomista. Noudata myymälän sopimusvaatimuksia ja paikallisia käytäntöjä.",
+          "Ennakkoilmoitus ei tarkoita, että tavarat on vastaanotettu. Vahvista vastaanotto vasta, kun tavarat ovat teillä. Jatka työtä olemassa olevasta toimituksesta.",
+          "Avaa toimitus tarkastusjonosta tai käytä pikarekisteröintiä yksi tuote kerrallaan. Tarkista kuvaus, hinta ja tavaran toimittaja sekä noudata mahdollisia hyväksyntävaatimuksia. Tallennettu luonnos ei ole rekisteröity myyntituote.",
+          "Tarkista vahvistus ja rekisteröityjen tuotteiden luettelo ennen merkintää. Jos tallennuksen vastaus puuttuu, pidä lomake auki ja käytä sen uudelleenyritystä. Älä luo samaa tuotetta uudelleen saadaksesi vahvistuksen."
+        ],
+        "notice": "Rekisteröityjen tuotteiden määrä kertoo tallennetuista tiedoista, ei koko toimituksen käsittelyn valmistumisesta. Tarkista myös fyysiset tavarat. Ohje ei muuta tietoja; pyydä valtuutettua henkilökuntaa tekemään toimet, joihin sinulla ei ole pääsyä."
+      },
+      "labels": {
+        "title": "Merkitse oikea toimitus tai tuote",
+        "intro": "Vastaanottoetiketti pitää tavarat yhdessä käsittelyn aikana. Tuote-etiketti yksilöi rekisteröidyn tuotteen ja näyttää sen hinnan.",
+        "steps": [
+          "Avaa olemassa oleva toimitus tai tuote ja tarkista myymälä sekä viite. Vastaanottoetiketti ei tarkoita, että tavarat on tarkastettu tai hyväksytty myyntiin.",
+          "Tuote-etikettiä varten etsi rekisteröity tuote, avaa etiketti ja tarkista kuvaus, hinta ja valuutta. Jos etikettiä ei voi näyttää, palaa tuotteeseen ja tarkista sen tiedot.",
+          "Käytä sivun tulostusvaihtoehtoja. Valitse oikea tulostin ja kopiomäärä yhdistetylle tulostimelle tai tarkista selaimen tulostusikkuna. Jonossa oleva työ tai avoin ikkuna ei todista tulostusta: tarkista fyysinen etiketti ennen kiinnittämistä.",
+          "Jos tulostusjonoon lisäämisen vastaus puuttuu, yritä uudelleen samassa avoimessa lomakkeessa. Älä luo jatkuvasti uusia töitä. Tarkista työ tulostimien ja tulostustöiden asetuksista ja pyydä tarvittaessa apua tulostimesta vastaavalta henkilöltä. Etikettihaulla voi avata olemassa olevan viitteen."
+        ],
+        "notice": "Ohjeen avaaminen ei tulosta mitään eikä rekisteröi uutta tuotetta. Älä luo tuotteesta kopiota etiketin korvaamiseksi. Fyysinen tulostus ja skannaus on tarkistettava myymälän laitteilla."
       }
-    }
+    },
+    "receiving": "Avaa vastaanotto",
+    "storeFlow": "Myymälän työnkulku",
+    "items": "Etsi rekisteröity tuote",
+    "openReference": "Avaa etiketin viite",
+    "printing": "Tulostimet ja tulostustyöt"
   }
 }

@@ -11,6 +11,11 @@ Guidance retains current permissions, account-map choices and uncertain-send
 holds. Real staff comprehension and hosted activation remain acceptance work;
 the guide does not resolve the reconciliation questions below.
 
+Receiving and label help (2026-10-01): owner approved extending contextual
+guidance to receiving and printing. Instructions explain existing recorded
+states and recovery controls; they do not establish whole-drop-off completion
+or physical printing. Staff comprehension and hardware acceptance remain open.
+
 Store usability (2026-09-25): owner prioritizes mobile-first workflows for staff
 inside the store, with fewer taps and less scrolling. Compact layouts must retain
 readable information and usable touch targets. The seller directory is the first

@@ -28,6 +28,7 @@
   top: 0;
   padding-bottom: 12px;
   background: var(--paper);
+  box-shadow: 0 -24px 0 var(--paper);
   z-index: 1;
 }
 .help-dialog-heading h2 {

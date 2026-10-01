@@ -2803,7 +2803,7 @@
   },
   "helpCenter": {
     "title": "Ayuda",
-    "intro": "Guía para empezar y resolver problemas con Fortnox.",
+    "intro": "Guías de recepción, etiquetado e integración contable.",
     "open": "Ayuda de esta página",
     "close": "Cerrar ayuda",
     "fullArticle": "Abrir la ayuda completa en una pestaña nueva",
@@ -2879,7 +2879,34 @@
           "Tras una ejecución parcial o fallida, abre Conciliación y revisa las exportaciones afectadas. Si el envío está pendiente o su resultado es incierto, sigue la ayuda sobre problemas de envío y pide al propietario que compruebe el resultado. Desactivar y reactivar la automatización no desbloquea un envío retenido."
         ],
         "notice": "Leer la ayuda no activa ni envía nada. Las ejecuciones automáticas no reenvían exportaciones con resultado confirmado, pendiente o incierto. Desactivar la automatización no anula los asientos ya creados."
+      },
+      "receiving": {
+        "title": "Recibir y registrar artículos",
+        "intro": "Empieza con la tienda y el consignante correctos. Registra lo que ha llegado físicamente y después procesa los artículos.",
+        "steps": [
+          "Comprueba la tienda seleccionada y busca al consignante existente antes de crear uno nuevo. Sigue los requisitos de acuerdos y las rutinas de la tienda.",
+          "Un aviso previo no significa que los artículos se hayan recibido. Confirma la recepción solo cuando estén en la tienda. Continúa el trabajo desde la entrega existente.",
+          "Abre la entrega en la cola de revisión o usa el registro rápido para un artículo cada vez. Comprueba descripción, precio y consignante y sigue cualquier aprobación solicitada. Un borrador guardado no es un artículo registrado para la venta.",
+          "Comprueba la confirmación y la lista de artículos registrados antes de etiquetar. Si falta la respuesta al guardar, mantén abierto el formulario y usa su opción de reintento. No crees el mismo artículo de nuevo para obtener una confirmación."
+        ],
+        "notice": "El número de artículos registrados describe datos guardados, no la finalización de toda la entrega. Comprueba también los artículos físicos. La ayuda no modifica datos; pide al personal autorizado que realice las acciones a las que no tienes acceso."
+      },
+      "labels": {
+        "title": "Etiquetar la entrega o el artículo correcto",
+        "intro": "Una etiqueta de recepción mantiene juntos los artículos durante el proceso. Una etiqueta de artículo identifica el artículo registrado y muestra su precio.",
+        "steps": [
+          "Abre la entrega o el artículo existente y comprueba la tienda y la referencia. Una etiqueta de recepción no significa que los artículos se hayan revisado o aceptado para la venta.",
+          "Para una etiqueta de artículo, busca el artículo registrado, abre la etiqueta y comprueba descripción, precio y moneda. Si la etiqueta no está disponible, vuelve al artículo y revisa sus datos.",
+          "Usa las opciones de impresión de la página. Elige la impresora y el número de copias correctos para una impresora conectada o revisa el diálogo de impresión del navegador. Un trabajo en cola o un diálogo abierto no demuestra que se haya impreso: comprueba la etiqueta física antes de colocarla.",
+          "Si falta la respuesta al poner el trabajo en cola, reintenta en el mismo formulario abierto. No crees trabajos nuevos repetidamente. Comprueba el trabajo en Impresoras y trabajos de impresión y pide ayuda al responsable de la impresora si es necesario. La búsqueda de etiquetas permite abrir una referencia existente."
+        ],
+        "notice": "Abrir la ayuda no imprime nada ni registra un artículo nuevo. No dupliques un artículo para sustituir su etiqueta. La impresión física y el escaneo deben comprobarse con el equipo de la tienda."
       }
-    }
+    },
+    "receiving": "Abrir recepción",
+    "storeFlow": "Flujo de trabajo de la tienda",
+    "items": "Buscar un artículo registrado",
+    "openReference": "Abrir una referencia de etiqueta",
+    "printing": "Impresoras y trabajos de impresión"
   }
 }

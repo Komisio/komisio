@@ -2797,7 +2797,7 @@
   },
   "helpCenter": {
     "title": "Hjälp",
-    "intro": "Vägledning för att komma igång och lösa problem med Fortnox.",
+    "intro": "Vägledning för mottagning, märkning och bokföringsintegration.",
     "open": "Hjälp på sidan",
     "close": "Stäng hjälpen",
     "fullArticle": "Öppna hela hjälpsidan i ny flik",
@@ -2873,7 +2873,34 @@
           "Vid delvis genomförd eller misslyckad körning: öppna Avstämning och granska berörda exporter. Vid väntande eller osäker sändning, följ hjälpen för sändningsproblem och be ägaren kontrollera resultatet. Att slå av och på automatiken löser inte en spärrad sändning."
         ],
         "notice": "Läsning av hjälpen aktiverar eller skickar ingenting. Automatiska körningar skickar inte om underlag med bekräftat, väntande eller osäkert resultat. Att stänga av automatiken återtar inte verifikationer som redan skapats."
+      },
+      "receiving": {
+        "title": "Ta emot och registrera varor",
+        "intro": "Börja med rätt butik och inlämnare. Registrera det som faktiskt har kommit in och fortsätt sedan med varorna.",
+        "steps": [
+          "Kontrollera vald butik och sök efter den befintliga inlämnaren innan du skapar en ny. Följ butikens avtalskrav och lokala rutiner.",
+          "En föranmälan betyder inte att varorna är mottagna. Bekräfta mottagningen först när varorna finns hos er. Använd den befintliga inlämningen när du fortsätter arbetet.",
+          "Öppna inlämningen i kön för granskning eller använd snabbregistrering för en vara i taget. Kontrollera beskrivning, pris och inlämnare samt följ eventuellt efterfrågat godkännande. Ett sparat utkast är inte en registrerad försäljningsvara.",
+          "Kontrollera bekräftelsen och listan med registrerade varor innan du går vidare till märkning. Om svaret på en sparning saknas, håll formuläret öppet och använd dess återförsök. Skapa inte samma vara på nytt för att få en bekräftelse."
+        ],
+        "notice": "Antalet registrerade varor visar sparade uppgifter, inte att hela inlämningen är färdigbehandlad. Kontrollera även de fysiska varorna. Hjälpen ändrar inga uppgifter; be behörig personal utföra åtgärder som du saknar tillgång till."
+      },
+      "labels": {
+        "title": "Märk rätt inlämning eller vara",
+        "intro": "En mottagningsetikett håller ihop varorna under arbetet. En varuetikett identifierar den registrerade varan och visar dess pris.",
+        "steps": [
+          "Öppna den befintliga inlämningen eller varan och kontrollera butik och referens. En mottagningsetikett betyder inte att varorna har granskats eller godkänts för försäljning.",
+          "För en varuetikett: hitta den registrerade varan, öppna etiketten och kontrollera beskrivning, pris och valuta. Om etiketten inte kan visas, gå tillbaka till varan och kontrollera dess uppgifter.",
+          "Använd sidans utskriftsalternativ. Välj rätt skrivare och antal när en ansluten skrivare används, eller granska webbläsarens utskriftsdialog. En köad utskrift eller öppnad dialog bevisar inte att etiketten har skrivits ut: kontrollera etiketten innan den fästs på varan.",
+          "Om ett svar om köad utskrift saknas, använd återförsöket i samma öppna formulär. Skapa inte nya jobb upprepade gånger. Kontrollera utskriftsjobbet under Skrivare och utskrifter och be den som sköter skrivaren om hjälp vid problem. En befintlig referens kan öppnas via etikettsökningen."
+        ],
+        "notice": "Att öppna hjälpen skriver inte ut något och registrerar ingen ny vara. Skapa inte en dubblett av varan för att ersätta en etikett. Fysisk utskrift och skanning behöver kontrolleras med butikens utrustning."
       }
-    }
+    },
+    "receiving": "Öppna mottagningen",
+    "storeFlow": "Butikens arbetsflöde",
+    "items": "Hitta en registrerad vara",
+    "openReference": "Öppna en etikettreferens",
+    "printing": "Skrivare och utskrifter"
   }
 }

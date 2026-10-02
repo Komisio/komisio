@@ -1,5 +1,6 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
+import { Plus } from 'lucide-react'
 import type { Dictionary } from '@/lib/i18n'
 import {
   labelOf,
@@ -29,6 +30,7 @@ export function CreateItemType({
   onSelect: (profile: ItemTypeProfile) => void
   onOpenChange: (open: boolean) => void
 }) {
+  const editorId = useId()
   const [open, setOpen] = useState(false)
   const [name, setName] = useState('')
   const [base, setBase] = useState('')
@@ -118,6 +120,8 @@ export function CreateItemType({
       <Button
         type="button"
         variant="secondary"
+        className="create-type-trigger"
+        aria-expanded={false}
         disabled={disabled}
         onClick={() => {
           setBase(selected ?? '')
@@ -127,14 +131,16 @@ export function CreateItemType({
           onOpenChange(true)
         }}
       >
+        <Plus size={16} aria-hidden="true" />
         {d.createType}
       </Button>
     )
   return (
     <div
-      className="card"
+      className="create-type-editor"
       role="group"
-      aria-label={d.createType}
+      aria-labelledby={`${editorId}-title`}
+      aria-describedby={`${editorId}-intro`}
       onKeyDown={(e) => {
         if (
           e.key === 'Enter' &&
@@ -147,6 +153,10 @@ export function CreateItemType({
         }
       }}
     >
+      <div className="create-type-heading">
+        <h3 id={`${editorId}-title`}>{d.createType}</h3>
+        <p id={`${editorId}-intro`}>{d.typeIntro}</p>
+      </div>
       <div className="field">
         <label htmlFor="new-type-name">{d.typeName}</label>
         <input
@@ -162,6 +172,7 @@ export function CreateItemType({
         <label htmlFor="new-type-base">{d.typeFields}</label>
         <select
           id="new-type-base"
+          aria-describedby={`${editorId}-fields-hint`}
           value={base}
           disabled={busy || locked || disabled}
           onChange={(e) => setBase(e.target.value)}
@@ -178,6 +189,7 @@ export function CreateItemType({
               </option>
             ))}
         </select>
+        <small id={`${editorId}-fields-hint`}>{d.typeFieldsHint}</small>
       </div>
       <div className="row wrap">
         <Button
@@ -195,6 +207,9 @@ export function CreateItemType({
             pending.current = null
             setLocked(false)
             close()
+            requestAnimationFrame(() =>
+              document.getElementById('quick-item-type')?.focus(),
+            )
           }}
         >
           {d.typeCancel}

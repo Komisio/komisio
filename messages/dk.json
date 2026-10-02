@@ -120,11 +120,11 @@
     "sellerSearchRange": "Viser {from}–{to} af {total} sælgere",
     "sellerSearchPrevious": "Forrige",
     "sellerSearchNext": "Næste",
-    "createType": "Ny varetype",
+    "createType": "Tilføj varetype",
     "typeName": "Varetypens navn",
-    "typeFields": "Brug de samme felter som",
-    "typeBasic": "Kun beskrivelse",
-    "typeCreateSelect": "Opret og vælg",
+    "typeFields": "Kopiér spørgsmål fra",
+    "typeBasic": "Ingen skabelon – kun beskrivelse",
+    "typeCreateSelect": "Opret og brug",
     "typeCancel": "Annuller",
     "typeRetry": "Prøv igen",
     "typeInvalid": "Angiv et navn, og vælg gyldige felter.",
@@ -140,7 +140,9 @@
         "Udfyld beskrivelse, kategori og pris. Kontrollér eventuelle AI-forslag.",
         "Gem varen. Brug bekræftelsen til at mærke den eller fortsætte med næste vare."
       ]
-    }
+    },
+    "typeIntro": "Varetypen gemmes for hele butikken og vælges til denne vare.",
+    "typeFieldsHint": "Vælg en lignende varetype for at få de samme spørgsmål, for eksempel størrelse og materiale."
   },
   "intake": {
     "quickLink": "Hurtig modtagelse: én skærm pr. stykke tøj",
@@ -2918,5 +2920,16 @@
     "items": "Find en registreret vare",
     "openReference": "Åbn en etiketreference",
     "printing": "Printere og udskriftsjob"
+  },
+  "dashboard": {
+    "intro": "Det vigtigste for arbejdsdagen, samlet ét sted.",
+    "actions": "Genveje",
+    "followUp": "Til opfølgning",
+    "allSteps": "Vis alle trin",
+    "unavailable": "Oplysning mangler",
+    "itemsHint": "Find og administrer butikkens varer.",
+    "salesHint": "Se registrerede salg.",
+    "snapshot": "Butikkens status",
+    "receiptHint": "Modtag nu, gennemgå varerne senere."
   }
 }

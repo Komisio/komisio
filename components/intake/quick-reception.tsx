@@ -207,7 +207,7 @@ export function QuickReception({
       printJobId: string | null
       price: QuickReceiveResult['price']
     } | null>(null)
-  // What this item type asks for, in the profile's order. Changing the type
+  // The description leads the form; other questions follow profile order. Changing the type
   // changes the questions; answers to questions the new type does not ask are
   // dropped rather than sent for an item they do not describe.
   const questions = questionsFor(vocabulary, itemType).filter(
@@ -837,80 +837,32 @@ export function QuickReception({
               void submit()
             }}
           >
-            <div className="quick-workspace">
-              <div className="quick-photo-panel">
-                <div className="field quick-photo-field">
-                  <label
-                    htmlFor="quick-photo"
-                    className={`quick-photo-picker${!ready || busy || session || uncertain || photoUnresolved ? ' is-disabled' : ''}${photoUnresolved ? ' is-uncertain' : ''}`}
-                  >
-                    {photoUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={photoUrl} alt={d.photo} />
-                    ) : (
-                      <>
-                        <Camera
-                          size={32}
-                          strokeWidth={1.5}
-                          aria-hidden="true"
-                        />
-                        <span>{d.addPhoto}</span>
-                      </>
-                    )}
-                  </label>
-                  <input
-                    id="quick-photo"
-                    className="quick-photo-input"
-                    ref={fileInput}
-                    type="file"
-                    accept="image/jpeg,image/png"
-                    capture="environment"
-                    disabled={
-                      !ready ||
-                      busy ||
-                      !!session ||
-                      uncertain ||
-                      photoUnresolved
-                    }
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]
-                      if (file) void onPhoto(file)
-                    }}
-                  />
-                  <small>{assistance ? d.photoHintAi : d.photoHint}</small>
-                </div>
-                {(message || stage === 'uploading') && (
-                  <p className="quick-status">
-                    {stage === 'uploading' ? d.busy : message}
-                  </p>
-                )}
-                {photoError && (
-                  <p role="alert" className="error quick-photo-alert">
-                    {photoError}
-                  </p>
-                )}
-                {photoUnresolved && (
-                  // Recovery sits next to the photo it concerns; two actions wrap on a 320px phone.
-                  <div className="row wrap">
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      disabled={busy}
-                      onClick={() => void runPhoto()}
-                    >
-                      {d.retry}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      disabled={busy}
-                      onClick={() => window.location.reload()}
-                    >
-                      {d.reload}
-                    </Button>
-                  </div>
+            <div className="quick-essential">
+              {questions
+                .filter((q) => q.definition.slug === 'description')
+                .map((q) => question(q.definition))}
+              <div className="field quick-price-field">
+                <label htmlFor="quick-price">{d.price}</label>
+                <input
+                  id="quick-price"
+                  required
+                  aria-invalid={invalidPrice || undefined}
+                  aria-describedby={
+                    invalidPrice ? 'quick-price-error' : undefined
+                  }
+                  inputMode="decimal"
+                  value={price}
+                  disabled={busy || uncertain}
+                  onChange={(e) => setPrice(e.target.value)}
+                />
+                {invalidPrice && (
+                  <small id="quick-price-error" className="error">
+                    {d.priceInvalid}
+                  </small>
                 )}
               </div>
+            </div>
+            <div className="quick-workspace">
               <div className="quick-facts">
                 <div className="field">
                   <label htmlFor="quick-item-type">{d.itemType}</label>
@@ -974,31 +926,86 @@ export function QuickReception({
                   )}
                 </div>
                 <div className="quick-fields">
-                  {questions.map((q) => question(q.definition))}
+                  {questions
+                    .filter((q) => q.definition.slug !== 'description')
+                    .map((q) => question(q.definition))}
                 </div>
+              </div>
+              <div className="quick-photo-panel">
+                <div className="field quick-photo-field">
+                  <label
+                    htmlFor="quick-photo"
+                    className={`quick-photo-picker${!ready || busy || session || uncertain || photoUnresolved ? ' is-disabled' : ''}${photoUnresolved ? ' is-uncertain' : ''}`}
+                  >
+                    {photoUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={photoUrl} alt={d.photo} />
+                    ) : (
+                      <>
+                        <Camera
+                          size={22}
+                          strokeWidth={1.5}
+                          aria-hidden="true"
+                        />
+                        <span>{d.addPhoto}</span>
+                      </>
+                    )}
+                  </label>
+                  <input
+                    id="quick-photo"
+                    className="quick-photo-input"
+                    ref={fileInput}
+                    type="file"
+                    accept="image/jpeg,image/png"
+                    capture="environment"
+                    disabled={
+                      !ready ||
+                      busy ||
+                      !!session ||
+                      uncertain ||
+                      photoUnresolved
+                    }
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) void onPhoto(file)
+                    }}
+                  />
+                  <small>{assistance ? d.photoHintAi : d.photoHint}</small>
+                </div>
+                {(message || stage === 'uploading') && (
+                  <p className="quick-status">
+                    {stage === 'uploading' ? d.busy : message}
+                  </p>
+                )}
+                {photoError && (
+                  <p role="alert" className="error quick-photo-alert">
+                    {photoError}
+                  </p>
+                )}
+                {photoUnresolved && (
+                  // Recovery sits next to the photo it concerns; two actions wrap on a 320px phone.
+                  <div className="row wrap">
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      disabled={busy}
+                      onClick={() => void runPhoto()}
+                    >
+                      {d.retry}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      disabled={busy}
+                      onClick={() => window.location.reload()}
+                    >
+                      {d.reload}
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
             <div className="quick-finish">
-              <div className="field">
-                <label htmlFor="quick-price">{d.price}</label>
-                <input
-                  id="quick-price"
-                  required
-                  aria-invalid={invalidPrice || undefined}
-                  aria-describedby={
-                    invalidPrice ? 'quick-price-error' : undefined
-                  }
-                  inputMode="decimal"
-                  value={price}
-                  disabled={busy || uncertain}
-                  onChange={(e) => setPrice(e.target.value)}
-                />
-                {invalidPrice && (
-                  <small id="quick-price-error" className="error">
-                    {d.priceInvalid}
-                  </small>
-                )}
-              </div>
               {printers.length > 0 && (
                 <div className="field">
                   <label htmlFor="quick-printer">{d.printer}</label>

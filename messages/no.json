@@ -120,11 +120,11 @@
     "sellerSearchRange": "Viser {from}–{to} av {total} selgere",
     "sellerSearchPrevious": "Forrige",
     "sellerSearchNext": "Neste",
-    "createType": "Ny varetype",
+    "createType": "Legg til varetype",
     "typeName": "Navn på varetypen",
-    "typeFields": "Bruk samme felt som",
-    "typeBasic": "Kun beskrivelse",
-    "typeCreateSelect": "Opprett og velg",
+    "typeFields": "Kopier spørsmål fra",
+    "typeBasic": "Ingen mal – bare beskrivelse",
+    "typeCreateSelect": "Opprett og bruk",
     "typeCancel": "Avbryt",
     "typeRetry": "Prøv igjen",
     "typeInvalid": "Angi et navn og velg gyldige felt.",
@@ -140,7 +140,9 @@
         "Fyll inn beskrivelse, kategori og pris. Kontroller eventuelle KI-forslag.",
         "Lagre varen. Bruk bekreftelsen til å merke den eller fortsette med neste vare."
       ]
-    }
+    },
+    "typeIntro": "Varetypen lagres for hele butikken og velges for denne varen.",
+    "typeFieldsHint": "Velg en lignende varetype for å få de samme spørsmålene, for eksempel størrelse og materiale."
   },
   "intake": {
     "quickLink": "Hurtigmottak: én skjerm per plagg",
@@ -2918,5 +2920,16 @@
     "items": "Finn en registrert vare",
     "openReference": "Åpne en etikettreferanse",
     "printing": "Skrivere og utskriftsjobber"
+  },
+  "dashboard": {
+    "intro": "Det viktigste for arbeidsdagen, samlet på ett sted.",
+    "actions": "Snarveier",
+    "followUp": "Til oppfølging",
+    "allSteps": "Vis alle trinn",
+    "unavailable": "Opplysning mangler",
+    "itemsHint": "Finn og administrer butikkens varer.",
+    "salesHint": "Se registrerte salg.",
+    "snapshot": "Butikkens status",
+    "receiptHint": "Ta imot nå, gå gjennom varene senere."
   }
 }

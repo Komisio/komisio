@@ -120,11 +120,11 @@
     "sellerSearchRange": "{from}–{to} von {total} Verkäufern",
     "sellerSearchPrevious": "Zurück",
     "sellerSearchNext": "Weiter",
-    "createType": "Neue Warenart",
+    "createType": "Artikeltyp hinzufügen",
     "typeName": "Name der Warenart",
-    "typeFields": "Dieselben Felder verwenden wie",
-    "typeBasic": "Nur Beschreibung",
-    "typeCreateSelect": "Erstellen und auswählen",
+    "typeFields": "Fragen kopieren von",
+    "typeBasic": "Keine Vorlage – nur Beschreibung",
+    "typeCreateSelect": "Erstellen und verwenden",
     "typeCancel": "Abbrechen",
     "typeRetry": "Erneut versuchen",
     "typeInvalid": "Geben Sie einen Namen ein und wählen Sie gültige Felder.",
@@ -140,7 +140,9 @@
         "Geben Sie Beschreibung, Kategorie und Preis ein. Prüfen Sie etwaige KI-Vorschläge.",
         "Speichern Sie den Artikel. Über die Bestätigung können Sie ihn etikettieren oder den nächsten Artikel erfassen."
       ]
-    }
+    },
+    "typeIntro": "Der Artikeltyp wird für das gesamte Geschäft gespeichert und für diesen Artikel ausgewählt.",
+    "typeFieldsHint": "Wählen Sie einen ähnlichen Artikeltyp, um dieselben Fragen zu verwenden, etwa zu Größe und Material."
   },
   "intake": {
     "quickLink": "Schnellannahme: ein Bildschirm pro Kleidungsstück",
@@ -2924,5 +2926,16 @@
     "items": "Erfassten Artikel finden",
     "openReference": "Etikettenreferenz öffnen",
     "printing": "Drucker und Druckaufträge"
+  },
+  "dashboard": {
+    "intro": "Das Wichtigste für Ihren Arbeitstag auf einen Blick.",
+    "actions": "Schnellzugriff",
+    "followUp": "Zur Nachverfolgung",
+    "allSteps": "Alle Schritte anzeigen",
+    "unavailable": "Nicht verfügbar",
+    "itemsHint": "Artikel im Laden finden und verwalten.",
+    "salesHint": "Erfasste Verkäufe ansehen.",
+    "snapshot": "Stand im Laden",
+    "receiptHint": "Jetzt annehmen, Artikel später prüfen."
   }
 }

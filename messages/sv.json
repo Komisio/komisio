@@ -120,11 +120,11 @@
     "sellerSearchRange": "Visar {from}–{to} av {total} säljare",
     "sellerSearchPrevious": "Föregående",
     "sellerSearchNext": "Nästa",
-    "createType": "Ny varutyp",
+    "createType": "Lägg till varutyp",
     "typeName": "Varutypens namn",
-    "typeFields": "Använd samma fält som",
-    "typeBasic": "Endast beskrivning",
-    "typeCreateSelect": "Skapa och välj",
+    "typeFields": "Kopiera frågor från",
+    "typeBasic": "Ingen mall – endast beskrivning",
+    "typeCreateSelect": "Skapa och använd",
     "typeCancel": "Avbryt",
     "typeRetry": "Försök igen",
     "typeInvalid": "Ange ett namn och välj giltiga fält.",
@@ -140,7 +140,9 @@
         "Fyll i beskrivning, kategori och pris. Kontrollera eventuella AI-förslag.",
         "Spara varan. Använd bekräftelsen för att märka den eller fortsätta med nästa vara."
       ]
-    }
+    },
+    "typeIntro": "Varutypen sparas för hela butiken och väljs för den här varan.",
+    "typeFieldsHint": "Välj en liknande varutyp för att få samma frågor, till exempel storlek och material."
   },
   "intake": {
     "quickLink": "Snabb mottagning: en skärm per plagg",
@@ -2918,5 +2920,16 @@
     "items": "Hitta en registrerad vara",
     "openReference": "Öppna en etikettreferens",
     "printing": "Skrivare och utskrifter"
+  },
+  "dashboard": {
+    "intro": "Det viktigaste för din arbetsdag, samlat på ett ställe.",
+    "actions": "Genvägar",
+    "followUp": "Att följa upp",
+    "allSteps": "Visa alla steg",
+    "unavailable": "Uppgift saknas",
+    "itemsHint": "Hitta och hantera butikens varor.",
+    "salesHint": "Se registrerade försäljningar.",
+    "snapshot": "Butikens läge",
+    "receiptHint": "Ta emot nu, gå igenom varorna senare."
   }
 }

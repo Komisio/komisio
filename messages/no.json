@@ -959,7 +959,15 @@
     "store_margin": "Avansemetode per vare, når berettigelse er attestert",
     "store_full": "Mva på hele salgsprisen",
     "currency": "Valuta",
-    "currencyIntro": "Én valuta per butikk, valgt her og fryst når det første salget, innkjøpet eller utbetalingen finnes. Alle beløp er i denne valutaen; Komisio konverterer ingenting."
+    "currencyIntro": "Én valuta per butikk, valgt her og fryst når det første salget, innkjøpet eller utbetalingen finnes. Alle beløp er i denne valutaen; Komisio konverterer ingenting.",
+    "itemLanguage": "Språk for varetekst",
+    "itemLanguageHint": "Felles språk for nye KI-forslag i butikken. Lagrede beskrivelser endres ikke. Menyer og navn på varetyper følger ditt eget språkvalg.",
+    "sectionReceiving": "Mottak og avtaler",
+    "sectionEconomy": "Provisjon og utbetaling",
+    "sectionPeriod": "Salgsperiode og prisreduksjoner",
+    "sectionAi": "KI og varetekst",
+    "sectionLinks": "Snarveier i butikkpolicyen",
+    "layoutIntro": "Tilpass butikkens arbeidsflyt og vilkår. Se gjennom endringene og publiser dem samlet nederst."
   },
   "sellerTerms": {
     "title": "Innleverervilkår",

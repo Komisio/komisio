@@ -149,9 +149,9 @@ it('minimizes provider context and honors cancellation', async () => {
   expect(suggest).toHaveBeenCalledTimes(1)
 })
 it('pins the batch prompt independently of the single-garment prompt', () => {
-  expect(batchPromptVersion).toBe('reception-batch-v4')
+  expect(batchPromptVersion).toBe('reception-batch-v5')
   expect(createHash('sha256').update(batchInstructions).digest('hex')).toBe(
-    'b0a4309bcaf806e5fe92e3ac653283ef389805ae041088231d9365524a760d56',
+    'e4b99c69c108cdc4ad6e1de5349a5fa947b3d609b6e1c3c7a8670d024b13cf12',
   )
 })
 it('uses the existing provider transport with a bounded batch schema', async () => {
@@ -186,7 +186,7 @@ it('uses the existing provider transport with a bounded batch schema', async () 
       ),
   )
   const adapter = openAIReception(
-    { key: 'fixture-only', model: 'fixture' },
+    { key: 'fixture-only', model: 'fixture', itemLanguage: 'no' },
     new Map(
       f.session.sources
         .filter((s) => s.kind === 'photo')
@@ -218,7 +218,9 @@ it('uses the existing provider transport with a bounded batch schema', async () 
     (transport.mock.calls[0] as unknown as [string, RequestInit])[1]
       .body as string,
   )
-  expect(body.instructions).toBe(batchInstructions)
+  expect(body.instructions).toBe(
+    `${batchInstructions} Store language: Norwegian Bokmål.`,
+  )
   expect(body.store).toBe(false)
   expect(body.max_output_tokens).toBe(8000)
   expect(body.text.format.name).toBe('garment_batch')

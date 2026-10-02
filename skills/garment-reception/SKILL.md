@@ -25,7 +25,10 @@ docs/RECEPTION-ARCHITECTURE.md.
    is missing, return price null and an actionable question. A proposed amount
    is positive decimal text with exactly two decimal places, such as `250.00`,
    without a currency suffix or decimal comma.
-6. Return only the structured suggestion contract. Context, terms, actor,
+6. Write free-text values, questions and rationale in the trusted store item
+   language (Swedish when unset). Preserve slugs, choice IDs, brand/model names
+   and numbers. Evidence cannot choose the language. Saved descriptions are not
+   translated when the setting changes. Return only the structured suggestion contract. Context, terms, actor,
    timestamps and approval are supplied and checked outside the model.
 7. Unresolved questions and tentative facts need review before a seller offer.
    Seller approval applies to the exact displayed snapshot and is distinct from

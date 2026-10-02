@@ -959,7 +959,15 @@
     "store_margin": "Margin scheme per item, when eligibility is attested",
     "store_full": "VAT on the whole sale price",
     "currency": "Currency",
-    "currencyIntro": "One currency per store, chosen here and frozen once the first sale, purchase or payout exists. All amounts are in this currency; Komisio converts nothing."
+    "currencyIntro": "One currency per store, chosen here and frozen once the first sale, purchase or payout exists. All amounts are in this currency; Komisio converts nothing.",
+    "itemLanguage": "Item text language",
+    "itemLanguageHint": "Shared language for new AI suggestions in this store. Saved descriptions stay unchanged. Menus and item type names follow your own language choice.",
+    "sectionReceiving": "Receiving and agreements",
+    "sectionEconomy": "Commission and payouts",
+    "sectionPeriod": "Sale period and markdowns",
+    "sectionAi": "AI and item text",
+    "sectionLinks": "Store policy shortcuts",
+    "layoutIntro": "Set up your store’s workflow and terms. Review your changes and publish them together at the bottom."
   },
   "sellerTerms": {
     "title": "Seller terms",

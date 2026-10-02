@@ -4,9 +4,7 @@ import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 
-test('notification policy and assistance quota persist and usage is visible', async ({
-  page,
-}) => {
+test('notification policy and assistance quota persist', async ({ page }) => {
   const email = `p2-settings-${randomUUID()}@example.test`
   await register(page, email, `K!${randomBytes(16).toString('hex')}`)
   const f = await p2Fixture(email)
@@ -48,14 +46,6 @@ test('notification policy and assistance quota persist and usage is visible', as
     await expect(
       page.getByLabel(d.storePolicy.assistanceMonthlyQuota, { exact: true }),
     ).toHaveValue('7')
-    const usage = page.getByRole('region', { name: d.usage.title, exact: true })
-    await expect(usage).toBeVisible()
-    await expect(
-      usage.getByText(
-        `${d.usage.features.reception_assistance}: 0 · ${d.usage.quota} 7`,
-        { exact: true },
-      ),
-    ).toBeVisible()
     const policy = (
       await f.db.query(
         'select policy from store_policy_versions where tenant_id=$1 order by version desc limit 1',

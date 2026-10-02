@@ -959,7 +959,15 @@
     "store_margin": "Differenzbesteuerung pro Artikel, wenn die Voraussetzung bestätigt ist",
     "store_full": "MwSt. auf den gesamten Verkaufspreis",
     "currency": "Währung",
-    "currencyIntro": "Eine Währung pro Store, hier gewählt und eingefroren, sobald der erste Verkauf, Einkauf oder die erste Auszahlung existiert. Alle Beträge sind in dieser Währung; Komisio rechnet nichts um."
+    "currencyIntro": "Eine Währung pro Store, hier gewählt und eingefroren, sobald der erste Verkauf, Einkauf oder die erste Auszahlung existiert. Alle Beträge sind in dieser Währung; Komisio rechnet nichts um.",
+    "itemLanguage": "Sprache der Artikeltexte",
+    "itemLanguageHint": "Gemeinsame Sprache für neue KI-Vorschläge im Geschäft. Gespeicherte Beschreibungen bleiben unverändert. Menüs und Artikeltypnamen folgen Ihrer eigenen Sprachwahl.",
+    "sectionReceiving": "Annahme und Vereinbarungen",
+    "sectionEconomy": "Provision und Auszahlungen",
+    "sectionPeriod": "Verkaufszeitraum und Preisnachlässe",
+    "sectionAi": "KI und Artikeltexte",
+    "sectionLinks": "Sprunglinks zur Geschäftsrichtlinie",
+    "layoutIntro": "Passen Sie Abläufe und Bedingungen Ihres Geschäfts an. Prüfen Sie Ihre Änderungen und veröffentlichen Sie sie gemeinsam am Seitenende."
   },
   "sellerTerms": {
     "title": "Einlieferer-Bedingungen",

@@ -3,8 +3,7 @@
 The first concrete provider is an optional OpenAI Responses adapter. It consumes
 the same saved reception sources as manual preparation and returns the existing
 typed proposal. No provider credential is part of the core or browser bundle.
-The current staging installation has no model configuration; it truthfully shows
-unavailable. Test fixtures do not demonstrate live model quality or account access.
+Without model configuration, the adapter truthfully reports unavailable. Test fixtures do not demonstrate live model quality or account access.
 
 ## Enable deliberately
 
@@ -22,11 +21,27 @@ Missing/invalid configuration or an unlisted store is unavailable. A generic
 evaluate representative garment/label/defect examples before enabling a real
 pilot. The 199 SEK product tier has no decided model allowance or billing mapping.
 
+## Store item language
+
+Owners and admins choose **Item text language** under Settings, Store policy,
+Assistance. The shared `itemLanguage` policy key supports sv, en, no (Bokmål),
+dk, fi, de, es and it; missing values retain Swedish. New single and batch AI
+suggestions use this language for free text, questions and price rationale,
+including with the store's own provider key. UI labels still follow each user's
+language. Changing the setting never translates saved descriptions or changes
+slugs, choice IDs, brands, model names or amounts.
+
+Apply the `20261002090000` and `20261002091000` migrations before deploying the
+language-aware adapter. Attempts record `reception-v5-<language>` or
+`reception-batch-v5-<language>`. Older prompt versions remain accepted during
+rollout. Language behavior is covered with provider fixtures; these checks do
+not certify a live model's translation quality.
+
 ## Evidence and boundaries
 
 `lib/assistance/openai-reception.ts` translates the provider wire format into
 Komisio's provider-independent contract. Runtime instructions are versioned
-`reception-v1` code; `skills/garment-reception/SKILL.md` is workflow guidance for
+`reception-v5-<language>` code; `skills/garment-reception/SKILL.md` is workflow guidance for
 agents and people, not an automatically executed permissions file. Changing a
 skill cannot change RLS, price validation or seller authority. A unit test pins
 the exact prompt text to its version: changing the wording requires a new
@@ -108,7 +123,6 @@ Implementation references checked 2026-09-12:
 [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs),
 [Sharp output metadata defaults](https://sharp.pixelplumbing.com/api-output/) and
 [Sharp input bounds](https://sharp.pixelplumbing.com/api-constructor/).
-
 
 ## Explicit fact review
 

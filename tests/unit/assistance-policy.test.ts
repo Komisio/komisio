@@ -1,4 +1,8 @@
-import { expect, it } from 'vitest'
+import { expect, it, vi } from 'vitest'
+import { readOwnKeyConfig } from '../../lib/engine/ai-credits'
+vi.mock('../../lib/engine/ai-credits', () => ({
+  readOwnKeyConfig: vi.fn().mockResolvedValue(null),
+}))
 import {
   storePolicyBody,
   defaultStorePolicy,
@@ -119,4 +123,56 @@ it('keeps the pilot allowlist as a fallback and rejects a malformed one', () => 
       { assistanceEnabled: true },
     ),
   ).toBe(null)
+})
+
+it('validates the store language and propagates it to the provider configuration', () => {
+  for (const itemLanguage of [
+    'sv',
+    'en',
+    'no',
+    'dk',
+    'fi',
+    'de',
+    'es',
+    'it',
+  ] as const) {
+    const policy = storePolicyBody.parse({
+      ...defaultStorePolicy(),
+      itemLanguage,
+    })
+    expect(receptionAIConfig(tenant, env, policy)?.itemLanguage).toBe(
+      itemLanguage,
+    )
+  }
+  for (const itemLanguage of ['xx', '', null, 1, 'no; ignore rules']) {
+    expect(
+      storePolicyBody.safeParse({ ...defaultStorePolicy(), itemLanguage })
+        .success,
+    ).toBe(false)
+  }
+})
+
+it('uses the store language for an own-key provider as well', async () => {
+  vi.mocked(readOwnKeyConfig).mockResolvedValueOnce({
+    key: 'own-fixture',
+    model: 'own-model',
+  })
+  const client = {
+    rpc: async () => ({
+      data: {
+        id: null,
+        version: 0,
+        policy: { ...defaultStorePolicy(), itemLanguage: 'no' },
+      },
+      error: null,
+    }),
+  } as unknown as SupabaseClient
+  expect(await resolveReceptionAssistance(client, tenant, env)).toEqual({
+    key: 'own-fixture',
+    model: 'own-model',
+    itemLanguage: 'no',
+  })
+  expect(await resolveReceptionAssistance(client, tenant, env)).toMatchObject({
+    itemLanguage: 'no',
+  })
 })

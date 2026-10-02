@@ -959,7 +959,15 @@
     "store_margin": "Regime del margine per articolo, quando l'idoneità è attestata",
     "store_full": "IVA sull'intero prezzo di vendita",
     "currency": "Valuta",
-    "currencyIntro": "Una valuta per negozio, scelta qui e congelata dopo la prima vendita, acquisto o pagamento. Tutti gli importi sono in questa valuta; Komisio non converte nulla."
+    "currencyIntro": "Una valuta per negozio, scelta qui e congelata dopo la prima vendita, acquisto o pagamento. Tutti gli importi sono in questa valuta; Komisio non converte nulla.",
+    "itemLanguage": "Lingua dei testi degli articoli",
+    "itemLanguageHint": "Lingua condivisa per i nuovi suggerimenti IA del negozio. Le descrizioni salvate non cambiano. Menu e nomi dei tipi seguono la tua scelta di lingua.",
+    "sectionReceiving": "Ricezione e accordi",
+    "sectionEconomy": "Commissione e pagamenti",
+    "sectionPeriod": "Periodo di vendita e ribassi",
+    "sectionAi": "IA e testi degli articoli",
+    "sectionLinks": "Collegamenti alla politica del negozio",
+    "layoutIntro": "Imposta i processi e le condizioni del negozio. Controlla le modifiche e pubblicale insieme in fondo alla pagina."
   },
   "sellerTerms": {
     "title": "Condizioni del conferente",

@@ -30,7 +30,15 @@ test('mobile economy puts period totals before the brief and keeps the selected 
       exact: true,
     })
     const brief = page.getByTestId('economy-brief')
-    await expect(totals).toContainText('200.00 SEK')
+    await expect(
+      totals.getByText('200.00 SEK', { exact: true }).first(),
+    ).toBeVisible()
+    await expect(
+      page.getByRole('region', {
+        name: sv.economy.liabilityHeading,
+        exact: true,
+      }),
+    ).toContainText('80.00 SEK')
     await expect(brief).not.toHaveAttribute('open', '')
     const totalsTop =
       (await totals.boundingBox())!.y +
@@ -44,6 +52,15 @@ test('mobile economy puts period totals before the brief and keeps the selected 
       path: testInfo.outputPath('economy-mobile.png'),
       fullPage: true,
     })
+    const details = page.getByTestId('economy-details')
+    await expect(details).not.toHaveAttribute('open', '')
+    await details.locator('summary').click()
+    await page.setViewportSize({ width: 1440, height: 1000 })
+    await page.screenshot({
+      path: testInfo.outputPath('economy-desktop.png'),
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 320, height: 720 })
     const breakdown = page.getByRole('group', {
       name: sv.economy.perMode,
       exact: true,
@@ -74,6 +91,12 @@ test('mobile economy puts period totals before the brief and keeps the selected 
     await expect(
       page.getByRole('region', { name: sv.economy.daysHeading, exact: true }),
     ).toContainText(sv.economy.noSales)
+    await expect(
+      page.getByRole('region', {
+        name: sv.economy.liabilityHeading,
+        exact: true,
+      }),
+    ).toContainText('80.00 SEK')
     await brief.getByRole('link', { name: sv.brief.week, exact: true }).click()
     await expect(page).toHaveURL(
       /from=2025-04-01&to=2025-04-30&brief=week#economy-brief$/,

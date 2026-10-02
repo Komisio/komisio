@@ -1310,7 +1310,7 @@
     "to": "Til",
     "show": "Vis",
     "showing": "Viser",
-    "totalsHeading": "Totaler",
+    "totalsHeading": "Periodens tall",
     "sales": "Salg",
     "lines": "linjer",
     "gross": "Brutto",
@@ -1321,22 +1321,30 @@
     "sellerCredit": "Innlevererens tilgodehavende",
     "returns": "Returer",
     "creditReversed": "Godskriving reversert",
-    "payoutsPaid": "Utbetalinger betalt",
+    "payoutsPaid": "Utbetalt til innleverere",
     "perMode": "Per mva-modus",
     "mode": "Modus",
     "liabilityHeading": "Skyldig til innleverere nå",
-    "liabilityHint": "Gjeldende saldo for alle innleverere, ikke begrenset til perioden: tilgjengelig å be om, reservert av godkjente utbetalinger, og utbetalinger som fortsatt er åpne.",
+    "liabilityHint": "Gjeldende saldoer – påvirkes ikke av datoene ovenfor.",
     "owed": "Skyldig totalt",
     "available": "Tilgjengelig",
     "reserved": "Reservert",
     "openPayouts": "Åpne utbetalinger",
     "daysHeading": "Per dag",
     "date": "Dato",
-    "noSales": "Ingen salg i denne perioden."
+    "noSales": "Ingen salg i denne perioden.",
+    "salesAmount": "Salgsbeløp",
+    "grossHint": "Før fradrag for returer",
+    "commissionHint": "Fra periodens salg",
+    "details": "Alle beløp og mva.",
+    "reports": "Rapporter og e-post",
+    "reportsHint": "Oppsummerer inneværende uke eller måned, uavhengig av datoene ovenfor.",
+    "emailHint": "Butikkens eiere får et sammendrag av forrige uke hver mandag.",
+    "emailEnable": "Aktiver ukentlig e-post"
   },
   "accounting": {
     "title": "Regnskap",
-    "intro": "Dagsoppgjør er versjonerte totaler for én lokal dag: salg, mva per modus, kommisjon, innlevererens tilgodehavende, returer og utbetalinger. En uendret dag beholder versjonen sin; en endret dag får en ny.",
+    "intro": "Oppsummer dagens transaksjoner og klargjør underlag til regnskapssystemet.",
     "notice": "Komisio er ikke et kassasystem. Dagsoppgjør mater regnskapet ditt; Fortnox-eksporten følger når regnskapsføreren har satt kontoplanen.",
     "generateHeading": "Avslutt en dag",
     "generateHint": "Velg lokal dato. Å generere på nytt etter et sent salg lager neste versjon; tidligere versjoner bevares.",
@@ -1384,10 +1392,10 @@
     "debitTotal": "debet",
     "creditTotal": "kredit",
     "unmappedAmounts": "Ikke eksportert (ingen konto)",
-    "export": "Eksporter som SIE 4",
+    "export": "Opprett regnskapsunderlag",
     "exported": "Eksportert.",
     "download": "Last ned SIE-fil",
-    "exportsHeading": "Eksporter",
+    "exportsHeading": "Regnskapsunderlag",
     "noExports": "Ingen eksporter ennå.",
     "lines": "linjer",
     "readOnlyMap": "Bare en eier eller administrator kan endre kontoplanen.",
@@ -1395,9 +1403,15 @@
     "views": {
       "days": "Dagsoppgjør",
       "reconciliation": "Avstemming",
-      "settings": "Kontoplan og Fortnox"
+      "settings": "Kontoer og integrasjoner"
     },
-    "mapMissingLink": "Ingen kontoplan ennå: sett den under Kontoplan og Fortnox før du eksporterer."
+    "mapMissingLink": "Angi regnskapskontoer før du oppretter en eksport.",
+    "details": "Vis detaljer",
+    "systems": "Regnskapssystemer",
+    "deliveryHint": "Last ned en SIE-fil eller send underlaget via en tilkoblet integrasjon.",
+    "fileOption": "Eksport via SIE-fil",
+    "fileHint": "For regnskapssystemer som kan importere SIE 4. Ingen direkte tilkobling kreves.",
+    "reconciliationHint": "Kontroller dagsoppgjør og eksporter for perioden. Overføringsstatus gjelder Fortnox; import av SIE-filer bekreftes ikke her."
   },
   "communications": {
     "title": "Meldinger til innlevereren",
@@ -2646,7 +2660,18 @@
     "pos": "Kassesystem (POS)",
     "ecommerce": "Nettbutikk og kasse",
     "accounting": "Regnskap",
-    "accountingSettings": "Åpne regnskapsinnstillinger"
+    "accountingSettings": "Åpne regnskapsinnstillinger",
+    "chooseHint": "Åpne et system for å koble til eller endre innstillinger.",
+    "paypalPurpose": "Kasse i butikken. Send varer til kassen og hent salg.",
+    "shopifyPurpose": "Nettbutikk og kasse. Koble varer og bestillinger til Komisio.",
+    "fortnoxPurpose": "Regnskap. Send klargjort regnskapsunderlag til firmaet ditt i Fortnox.",
+    "configured": "Innstillinger lagret",
+    "setupNeeded": "Må klargjøres",
+    "connectionSaved": "Tilkobling lagret",
+    "notConnected": "Ikke tilkoblet",
+    "reconnect": "Må kobles til på nytt",
+    "setupAction": "Vis innstillinger",
+    "statusHint": "Status viser lagrede opplysninger. Åpne systemet for detaljer; en lagret tilkobling betyr ikke at automatisk synkronisering er på."
   },
   "shopifyPrivacy": {
     "title": "Shopify · Personvernforespørsler",
@@ -2830,7 +2855,7 @@
     "close": "Lukk hjelpen",
     "fullArticle": "Åpne hele hjelpesiden i ny fane",
     "taskLinks": "Gå til oppgaven",
-    "settings": "Kontoplan og Fortnox",
+    "settings": "Kontoer og integrasjoner",
     "days": "Dagsoppgjør og eksporter",
     "reconciliation": "Avstemming",
     "providerHelp": "Fortnox: aktivering og lisenser (åpnes i ny fane)",
@@ -2863,7 +2888,7 @@
         "intro": "Koble til butikkens selskap og klargjør kontoplanen. Ingen regnskapsdata sendes ved tilkobling.",
         "steps": [
           "Du må være eier eller administrator i Komisio og kunne godkjenne tilgang til riktig Fortnox-selskap. Kontroller aktuelle integrasjons- og programlisenser i Fortnox-veiledningen.",
-          "Åpne Kontoplan og Fortnox. Skriv selskapsnavnet slik det står i Fortnox, og koble til. Logg inn hos Fortnox, kontroller selskapet og godkjenn tillatelsene.",
+          "Åpne Kontoer og integrasjoner. Skriv selskapsnavnet slik det står i Fortnox, og koble til. Logg inn hos Fortnox, kontroller selskapet og godkjenn tillatelsene.",
           "Kontroller selskapsnavnet når du kommer tilbake. Bruk tilkoblingskontrollen for en aktuell kontroll. Velg samme selskap ved ny tilkobling.",
           "Lagre kontonumre og debet-/kreditvalg avtalt med regnskapsføreren. Komisio velger ikke kontoer for dere."
         ],
@@ -2896,7 +2921,7 @@
         "intro": "Automatikken sender klargjorte eksporter til det tilkoblede Fortnox-foretaket. Den oppretter ikke dagsoppgjør og velger ikke kontoer.",
         "steps": [
           "Kontroller foretaket og kontokoblingene. Gå gjennom eksisterende eksporter før aktivering: også eldre underlag som kan sendes, kan bli tatt med. Unngå å både importere SIE-filen og sende samme underlag direkte.",
-          "Butikkens eier aktiverer automatisk sending under Kontoplan og Fortnox. Venter betyr at bakgrunnstjenesten ennå ikke har akseptert aktiveringen. Hvis funksjonen ikke er klargjort, kontakt den som drifter Komisio-installasjonen.",
+          "Butikkens eier aktiverer automatisk sending under Kontoer og integrasjoner. Venter betyr at bakgrunnstjenesten ennå ikke har akseptert aktiveringen. Hvis funksjonen ikke er klargjort, kontakt den som drifter Komisio-installasjonen.",
           "Fortsett å opprette og kontrollere dagsoppgjør og klargjøre eksporter manuelt. Se Siste kjøring for tidspunkt, resultat og antall sendt. Aktivert betyr ikke at noe er sendt, og en fullført kjøring betyr ikke at alle dager er avstemt.",
           "Etter en delvis eller mislykket kjøring: åpne Avstemming og kontroller de aktuelle eksportene. Ved ventende eller usikker sending, følg hjelpen for sendeproblemer og be eieren kontrollere resultatet. Å slå automatikken av og på løser ikke en sperret sending."
         ],

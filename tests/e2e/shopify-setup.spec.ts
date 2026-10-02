@@ -46,7 +46,7 @@ test('Shopify setup selects POS or both, persists per tenant and locks after syn
       }
       return route.continue()
     })
-    await page.goto('/intake/integrations')
+    await page.goto('/intake/integrations?provider=shopify')
     const region = page.getByRole('region', {
       name: d.shopify.setup.title,
       exact: true,

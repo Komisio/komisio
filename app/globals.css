@@ -4694,3 +4694,413 @@ button.text-link:hover:not(:disabled) {
   max-width: 700px;
   margin-inline: auto;
 }
+/* Economy: period facts first, current seller balances clearly separated. */
+.economy-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.economy-layout > * {
+  min-width: 0;
+}
+.economy-period,
+.economy-overview {
+  grid-column: 1 / -1;
+}
+.economy-period {
+  padding: 20px 24px;
+}
+.economy-period h2,
+.economy-overview h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+}
+.economy-period-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: end;
+}
+.economy-period-form .field {
+  flex: 1 1 180px;
+  min-width: 0;
+  margin-bottom: 0;
+}
+.economy-period-form input {
+  width: 100%;
+  min-width: 0;
+}
+.economy-period-form [role='alert'] {
+  flex-basis: 100%;
+}
+.economy-period-caption {
+  margin: 12px 0 0;
+  font-size: 14px;
+}
+.economy-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+}
+.economy-metric {
+  padding: 24px;
+  min-width: 0;
+}
+.economy-metric-primary {
+  background: var(--mint);
+}
+.economy-metric dt {
+  font-weight: 600;
+}
+.economy-metric dd {
+  margin: 12px 0 0;
+  font-size: clamp(22px, 2.4vw, 32px);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.economy-metric dd.economy-metric-hint {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.economy-activity {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 32px;
+  padding: 16px 0;
+}
+.economy-details {
+  padding: 8px 24px;
+}
+.economy-details > summary,
+#economy-brief > summary {
+  min-height: 44px;
+  align-content: center;
+  font-weight: 600;
+  cursor: pointer;
+}
+.economy-details[open] {
+  padding-bottom: 24px;
+}
+.economy-details .economy-scroll {
+  margin-top: 16px;
+}
+.economy-details h3 {
+  margin: 24px 0 0;
+}
+.economy-balances {
+  display: grid;
+  gap: 12px;
+  margin: 24px 0;
+}
+.economy-balances > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 16px;
+}
+.economy-balances > div:first-child {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+  font-size: 20px;
+  font-weight: 600;
+}
+.economy-balances dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.economy-payout-status {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+.economy-payout-status p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  justify-content: space-between;
+  margin: 0 0 8px;
+}
+.economy-page .text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.economy-page #economy-brief {
+  grid-column: 1 / -1;
+}
+.economy-page #economy-brief .card {
+  margin-top: 24px;
+  background: var(--paper);
+  box-shadow: none;
+}
+@media (max-width: 760px) {
+  .economy-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .economy-metrics {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .economy-period,
+  .economy-metric,
+  .economy-details {
+    padding: 16px;
+  }
+  .economy-metric dd {
+    margin-top: 8px;
+  }
+  .economy-period-form {
+    gap: 12px;
+  }
+  .economy-period-form .field {
+    flex-basis: 100%;
+  }
+  .economy-period-form .btn {
+    width: 100%;
+  }
+}
+/* Shared accounting workspace; provider controls remain in their own section. */
+.accounting-workspace {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1.3fr);
+  gap: 24px;
+  align-items: start;
+}
+.accounting-workspace > *,
+.accounting-settings > * {
+  min-width: 0;
+}
+.accounting-exports {
+  grid-column: 1 / -1;
+}
+.accounting-record {
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+}
+.accounting-record:last-child {
+  padding-bottom: 0;
+}
+.accounting-record-heading,
+.accounting-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.accounting-record-heading h3,
+.accounting-section-heading h2 {
+  margin: 0;
+}
+.accounting-record-meta {
+  font-size: 14px;
+  margin: 8px 0;
+}
+.accounting-breakdown > summary {
+  cursor: pointer;
+  min-height: 44px;
+  align-content: center;
+  font-weight: 600;
+}
+.accounting-voucher {
+  margin-top: 12px;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+.accounting-voucher > .btn,
+.accounting-voucher > .text-link {
+  margin-top: 8px;
+}
+.accounting-page .text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.accounting-delivery {
+  background: var(--paper);
+  padding: 16px;
+  border-radius: 10px;
+  margin-top: 12px;
+}
+.accounting-delivery h4 {
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+.accounting-settings-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-bottom: 16px;
+}
+.accounting-settings {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.accounting-systems > h2 {
+  margin: 0;
+}
+.accounting-systems > p {
+  margin: 8px 0 20px;
+}
+.accounting-provider {
+  margin-top: 24px;
+  display: grid;
+  gap: 16px;
+}
+.accounting-provider .fortnox-guide {
+  margin: 0;
+}
+.accounting-reconciliation .economy-period-form {
+  margin: 24px 0;
+}
+.accounting-reconciliation .economy-table td:last-child {
+  white-space: normal;
+  min-width: 180px;
+  text-align: left;
+}
+.accounting-page #accounting-systems {
+  scroll-margin-top: 100px;
+}
+@media (max-width: 1000px) {
+  .accounting-settings {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  .accounting-workspace {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .accounting-page .card {
+    padding: 16px;
+  }
+  .accounting-page .view-tabs {
+    flex-wrap: wrap;
+  }
+  .accounting-page .view-tab {
+    white-space: normal;
+  }
+  .accounting-record-heading {
+    align-items: start;
+  }
+}
+/* Integration selection precedes setup and operational detail. */
+.integration-catalog {
+  display: grid;
+  gap: 16px;
+}
+.integration-provider {
+  padding: 0;
+  min-width: 0;
+}
+.integration-provider > summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  padding: 24px;
+  cursor: pointer;
+  list-style: none;
+}
+.integration-provider > summary::-webkit-details-marker {
+  display: none;
+}
+.integration-provider > summary::before {
+  content: '+';
+  font-size: 24px;
+  width: 20px;
+  flex-shrink: 0;
+}
+.integration-provider[open] > summary::before {
+  content: '−';
+}
+.integration-provider > summary:hover {
+  background: var(--mint);
+  border-radius: 15px;
+}
+.integration-provider-copy {
+  display: grid;
+  gap: 8px;
+  flex: 1 1 320px;
+}
+.integration-provider-copy strong {
+  font-size: 21px;
+}
+.integration-provider-copy > span {
+  color: var(--muted);
+  line-height: 1.5;
+}
+.integration-status {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--paper);
+}
+.integration-provider-toggle {
+  font-size: 14px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.integration-provider > .integration-group {
+  margin: 0;
+  padding: 24px;
+  border-top: 1px solid var(--line);
+}
+.integration-provider .integration-group > h2 {
+  margin: 0 0 16px;
+}
+.integration-provider .integration-group > .text-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.integration-overview-hint,
+.integration-status-note {
+  font-size: 14px;
+  max-width: 75ch;
+}
+.integration-status-note {
+  margin-top: 20px;
+}
+@media (max-width: 600px) {
+  .integration-provider > summary {
+    padding: 20px;
+    gap: 12px;
+  }
+  .integration-provider-copy {
+    flex-basis: calc(100% - 32px);
+  }
+  .integration-provider > .integration-group {
+    padding: 16px;
+  }
+  .integration-provider > .integration-group .card {
+    padding: 16px;
+  }
+  .integration-provider .integration-status {
+    margin-left: 32px;
+  }
+}
+@media (max-width: 600px) {
+  .integration-provider > summary {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
+  }
+  .integration-provider-copy,
+  .integration-provider .integration-status,
+  .integration-provider-toggle {
+    grid-column: 2;
+  }
+  .integration-provider .integration-status {
+    margin-left: 0;
+    justify-self: start;
+  }
+}

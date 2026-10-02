@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import type { VoucherPreview } from '@/lib/engine/accounting'
 import { useIntakeAction } from './use-intake-action'
@@ -32,27 +33,33 @@ export function ExportDayClose({
     }
     return d.amountKeys[key as keyof typeof d.amountKeys] ?? key
   }
+  const router = useRouter()
   const action = useIntakeAction(intake)
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
   const [exportId, setExportId] = useState(preview.exportId)
   return (
-    <div>
-      <p>
-        <strong>{d.voucherHeading}</strong> · {d.mapVersion}{' '}
-        {preview.mapVersion} · {preview.balanced ? d.balanced : d.unbalanced} ·{' '}
-        {d.debitTotal} {money(preview.debitOre)} · {d.creditTotal}{' '}
-        {money(preview.creditOre)}
-      </p>
-      {preview.lines.length > 0 && (
-        <ul>
-          {preview.lines.map((l) => (
-            <li key={l.key}>
-              {l.account} · {l.side === 'debit' ? d.debit : d.credit} ·{' '}
-              {money(l.amountOre)} · {accountLabel(l.key)}
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="accounting-voucher">
+      <details className="accounting-breakdown">
+        <summary>
+          {d.voucherHeading} · {preview.balanced ? d.balanced : d.unbalanced}
+        </summary>
+        <p>
+          <strong>{d.voucherHeading}</strong> · {d.mapVersion}{' '}
+          {preview.mapVersion} · {preview.balanced ? d.balanced : d.unbalanced}{' '}
+          · {d.debitTotal} {money(preview.debitOre)} · {d.creditTotal}{' '}
+          {money(preview.creditOre)}
+        </p>
+        {preview.lines.length > 0 && (
+          <ul>
+            {preview.lines.map((l) => (
+              <li key={l.key}>
+                {l.account} · {l.side === 'debit' ? d.debit : d.credit} ·{' '}
+                {money(l.amountOre)} · {accountLabel(l.key)}
+              </li>
+            ))}
+          </ul>
+        )}
+      </details>
       {preview.unmapped.length > 0 && (
         <p>
           <small>
@@ -77,8 +84,10 @@ export function ExportDayClose({
                 requestId,
                 dayCloseId: preview.dayCloseId,
               })
-              if (id) setExportId(id)
-              else if (!action.locked) setRequestId(crypto.randomUUID())
+              if (id) {
+                setExportId(id)
+                router.refresh()
+              } else if (!action.locked) setRequestId(crypto.randomUUID())
             }}
           >
             {action.busy

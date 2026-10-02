@@ -1310,7 +1310,7 @@
     "to": "Till",
     "show": "Visa",
     "showing": "Visar",
-    "totalsHeading": "Summor",
+    "totalsHeading": "Periodens siffror",
     "sales": "Försäljningar",
     "lines": "rader",
     "gross": "Brutto",
@@ -1321,22 +1321,30 @@
     "sellerCredit": "Säljartillgodohavande",
     "returns": "Returer",
     "creditReversed": "Återfört tillgodohavande",
-    "payoutsPaid": "Utbetalda utbetalningar",
+    "payoutsPaid": "Utbetalt till säljare",
     "perMode": "Per momsläge",
     "mode": "Läge",
     "liabilityHeading": "Skuld till säljare just nu",
-    "liabilityHint": "Aktuella saldon för alla säljare, oberoende av perioden: tillgängligt att begära, reserverat av godkända utbetalningar, samt utbetalningar som fortfarande är öppna.",
+    "liabilityHint": "Aktuella saldon – påverkas inte av datumvalet ovan.",
     "owed": "Skuld totalt",
     "available": "Tillgängligt",
     "reserved": "Reserverat",
     "openPayouts": "Öppna utbetalningar",
     "daysHeading": "Per dag",
     "date": "Datum",
-    "noSales": "Ingen försäljning under perioden."
+    "noSales": "Ingen försäljning under perioden.",
+    "salesAmount": "Försäljning",
+    "grossHint": "Före avdrag för returer",
+    "commissionHint": "Från periodens försäljningar",
+    "details": "Alla belopp och moms",
+    "reports": "Rapporter och e-post",
+    "reportsHint": "Sammanfattar aktuell vecka eller månad, oberoende av datumvalet ovan.",
+    "emailHint": "Butikens ägare får en sammanfattning av föregående vecka varje måndag.",
+    "emailEnable": "Aktivera veckomejl"
   },
   "accounting": {
     "title": "Bokföring",
-    "intro": "Dagsavslut är versionerade summor för en lokal dag: försäljning, moms per läge, provision, säljarnas tillgodohavande, returer och utbetalningar. En oförändrad dag behåller sin version; en ändrad dag får en ny.",
+    "intro": "Sammanställ dagens affärer och förbered underlag till ditt bokföringssystem.",
     "notice": "Komisio är inget kassaregister. Dagsavsluten matar er bokföring; Fortnox-exporten kommer när er redovisningskonsult satt kontoplanen.",
     "generateHeading": "Avsluta en dag",
     "generateHint": "Välj det lokala datumet. Att generera igen efter en sen försäljning skapar nästa version; tidigare versioner finns kvar.",
@@ -1384,10 +1392,10 @@
     "debitTotal": "debet",
     "creditTotal": "kredit",
     "unmappedAmounts": "Exporteras inte (inget konto)",
-    "export": "Exportera som SIE 4",
+    "export": "Skapa bokföringsunderlag",
     "exported": "Exporterad.",
     "download": "Ladda ned SIE-fil",
-    "exportsHeading": "Exporter",
+    "exportsHeading": "Bokföringsunderlag",
     "noExports": "Inga exporter ännu.",
     "lines": "rader",
     "readOnlyMap": "Bara en ägare eller administratör kan ändra kontoplanen.",
@@ -1395,9 +1403,15 @@
     "views": {
       "days": "Dagsavslut",
       "reconciliation": "Avstämning",
-      "settings": "Kontoplan och Fortnox"
+      "settings": "Konton och integrationer"
     },
-    "mapMissingLink": "Ingen kontoplan ännu: sätt den under Kontoplan och Fortnox innan du exporterar."
+    "mapMissingLink": "Ange bokföringskonton innan du skapar en export.",
+    "details": "Visa detaljer",
+    "systems": "Bokföringssystem",
+    "deliveryHint": "Ladda ned en SIE-fil eller skicka underlaget via en ansluten integration.",
+    "fileOption": "Export via SIE-fil",
+    "fileHint": "För bokföringssystem som kan importera SIE 4. Ingen direktanslutning krävs.",
+    "reconciliationHint": "Kontrollera dagsavslut och exporter för perioden. Överföringsstatus gäller Fortnox; import av SIE-filer bekräftas inte här."
   },
   "communications": {
     "title": "Meddelanden till säljaren",
@@ -2646,7 +2660,18 @@
     "pos": "Kassasystem (POS)",
     "ecommerce": "Webbshop och kassa",
     "accounting": "Bokföring",
-    "accountingSettings": "Öppna bokföringsinställningar"
+    "accountingSettings": "Öppna bokföringsinställningar",
+    "chooseHint": "Öppna ett system för att ansluta eller ändra inställningar.",
+    "paypalPurpose": "Kassa i butiken. Skicka varor till kassan och hämta försäljningar.",
+    "shopifyPurpose": "Webbutik och kassa. Koppla varor och beställningar till Komisio.",
+    "fortnoxPurpose": "Bokföring. Skicka färdiga bokföringsunderlag till ditt företag i Fortnox.",
+    "configured": "Inställningar sparade",
+    "setupNeeded": "Behöver förberedas",
+    "connectionSaved": "Anslutning sparad",
+    "notConnected": "Inte ansluten",
+    "reconnect": "Behöver anslutas på nytt",
+    "setupAction": "Visa inställningar",
+    "statusHint": "Status visar sparade uppgifter. Öppna systemet för mer information; en sparad anslutning betyder inte att automatisk synkning är på."
   },
   "shopifyPrivacy": {
     "title": "Shopify · Dataskyddsärenden",
@@ -2830,7 +2855,7 @@
     "close": "Stäng hjälpen",
     "fullArticle": "Öppna hela hjälpsidan i ny flik",
     "taskLinks": "Gå till uppgiften",
-    "settings": "Kontoplan och Fortnox",
+    "settings": "Konton och integrationer",
     "days": "Dagsavslut och exporter",
     "reconciliation": "Avstämning",
     "providerHelp": "Fortnox: aktivering och licenser (öppnas i ny flik)",
@@ -2863,7 +2888,7 @@
         "intro": "Anslut butikens företag och förbered kontoplanen. Ingen bokföring skickas när du ansluter.",
         "steps": [
           "Du behöver vara ägare eller administratör i Komisio och kunna godkänna anslutningen till rätt företag i Fortnox. Kontrollera tillämpliga integrations- och programlicenser enligt Fortnox instruktioner.",
-          "Öppna Kontoplan och Fortnox. Ange företagsnamnet som det står i Fortnox och välj att ansluta. Logga in hos Fortnox, kontrollera företaget och godkänn de efterfrågade behörigheterna.",
+          "Öppna Konton och integrationer. Ange företagsnamnet som det står i Fortnox och välj att ansluta. Logga in hos Fortnox, kontrollera företaget och godkänn de efterfrågade behörigheterna.",
           "När du kommer tillbaka: kontrollera företagsnamnet. Använd Kontrollera Fortnox-kopplingen för en aktuell kontroll. Vid förnyad anslutning ska du välja samma företag.",
           "Spara kontoplanen med de konton och debet-/kreditval ni bestämt med redovisningskonsulten. Komisio väljer inte konton åt er."
         ],
@@ -2875,7 +2900,7 @@
         "steps": [
           "Öppna Dagsavslut och exporter och generera dagsavslutet för rätt datum. Detta registrerar en sammanställning i Komisio, inte en verifikation i Fortnox.",
           "Granska förhandsvisningen: konton, debet, kredit och belopp som saknar konto. Stäm av kontoplanen med redovisningskonsulten. Att debet och kredit balanserar är inte i sig ett godkännande av bokföringen.",
-          "Välj Exportera som SIE 4 för att spara underlaget. Du kan därefter ladda ned filen eller, som ägare/administratör, använda Skicka till Fortnox. Undvik att både importera filen och skicka samma underlag direkt.",
+          "Välj Skapa bokföringsunderlag för att spara underlaget. Du kan därefter ladda ned filen eller, som ägare/administratör, använda Skicka till Fortnox. Undvik att både importera filen och skicka samma underlag direkt.",
           "En riktig sändning skapar en verifikation i Fortnox. När den bekräftats visas referensen. Vid osäkert resultat: öppna hjälpen för sändningsproblem och skicka inte igen."
         ],
         "notice": "Automatisk sändning är ett separat val för ägaren och gäller förberedda exporter. Dagsavslut skapas fortfarande manuellt. Anslutning eller läsning av hjälpen aktiverar inte automatiken."
@@ -2896,7 +2921,7 @@
         "intro": "Automatiken skickar redan förberedda exporter till det anslutna Fortnox-företaget. Den skapar inga dagsavslut och väljer inga konton.",
         "steps": [
           "Kontrollera företaget och kontoplanen. Granska tidigare exporter innan du aktiverar: även äldre underlag som får skickas kan tas med. Undvik att både importera SIE-filen och skicka samma underlag direkt.",
-          "Butikens ägare aktiverar automatisk sändning under Kontoplan och Fortnox. Väntar betyder att bakgrundstjänsten ännu inte har accepterat aktiveringen. Om funktionen inte är förberedd, kontakta den som sköter Komisio-installationen.",
+          "Butikens ägare aktiverar automatisk sändning under Konton och integrationer. Väntar betyder att bakgrundstjänsten ännu inte har accepterat aktiveringen. Om funktionen inte är förberedd, kontakta den som sköter Komisio-installationen.",
           "Fortsätt skapa och granska dagsavslut samt förbereda exporter manuellt. Läs Senaste körning för tid, resultat och antal skickade underlag. Aktiverad betyder inte att något har skickats, och en slutförd körning betyder inte att alla dagar är avstämda.",
           "Vid delvis genomförd eller misslyckad körning: öppna Avstämning och granska berörda exporter. Vid väntande eller osäker sändning, följ hjälpen för sändningsproblem och be ägaren kontrollera resultatet. Att slå av och på automatiken löser inte en spärrad sändning."
         ],

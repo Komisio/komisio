@@ -73,19 +73,15 @@ export default async function Economy({
     [d.payoutsPaid, `${t.payoutsPaidCount} · ${money(t.payoutsPaidOre)}`],
   ]
   return (
-    <>
+    <div className="economy-page">
       <div className="page-heading">
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
-        <Link className="text-link" href="/intake">
-          {all.intake.back}
-        </Link>
       </div>
-      <p className="intake-notice">{d.notice}</p>
-      <div className="intake-grid">
-        <section className="card intake-form" aria-label={d.periodHeading}>
+      <div className="economy-layout">
+        <section className="card economy-period" aria-label={d.periodHeading}>
           <h2>{d.periodHeading}</h2>
-          <form method="get" className="intake-fields">
+          <form method="get" className="economy-period-form">
             {params.brief === 'week' || params.brief === 'month' ? (
               <input type="hidden" name="brief" value={briefKind} />
             ) : null}
@@ -114,89 +110,128 @@ export default async function Economy({
             </div>
             <button className="btn btn-primary">{d.show}</button>
           </form>
-          <p>
+          <p className="muted economy-period-caption">
             {d.showing} {summary.from} – {summary.to}
           </p>
         </section>
-        <section className="card intake-form" aria-label={d.totalsHeading}>
+        <section className="economy-overview" aria-label={d.totalsHeading}>
           <h2>{d.totalsHeading}</h2>
-          <div style={{ overflowX: 'auto' }}>
-            <table className="economy-table economy-values">
-              <tbody>
-                {rows.map(([label, value]) => (
-                  <tr key={label}>
-                    <th scope="row">{label}</th>
-                    <td>{value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <dl className="economy-metrics">
+            <div className="card economy-metric economy-metric-primary">
+              <dt>{d.salesAmount}</dt>
+              <dd>{money(t.grossOre)}</dd>
+              <dd className="economy-metric-hint">{d.grossHint}</dd>
+            </div>
+            <div className="card economy-metric">
+              <dt>{d.commission}</dt>
+              <dd>{money(t.commissionOre)}</dd>
+              <dd className="economy-metric-hint">{d.commissionHint}</dd>
+            </div>
+            <div className="card economy-metric">
+              <dt>{d.payoutsPaid}</dt>
+              <dd>{money(t.payoutsPaidOre)}</dd>
+              <dd className="economy-metric-hint">
+                <Link className="text-link" href="/intake/payouts">
+                  {all.payouts.title}
+                </Link>
+              </dd>
+            </div>
+          </dl>
+          <div className="economy-activity">
+            <span>
+              {d.sales}: <strong>{t.salesCount}</strong>
+            </span>
+            <span>
+              {d.returns}:{' '}
+              <strong>
+                {t.returnsCount} · {money(t.refundsOre)}
+              </strong>
+            </span>
           </div>
-          {Object.keys(t.perMode).length > 0 && (
-            <>
-              <h3>{d.perMode}</h3>
-              <div
-                className="economy-scroll"
-                role="group"
-                tabIndex={0}
-                aria-label={d.perMode}
-              >
-                <table className="economy-table">
-                  <thead>
-                    <tr>
-                      <th>{d.mode}</th>
-                      <th>{d.lines}</th>
-                      <th>{d.gross}</th>
-                      <th>{d.vat}</th>
-                      <th>{d.net}</th>
+          <details
+            className="card economy-details"
+            data-testid="economy-details"
+          >
+            <summary>{d.details}</summary>
+            <p className="muted">{d.notice}</p>
+            <div className="economy-scroll">
+              <table className="economy-table economy-values">
+                <tbody>
+                  {rows.map(([label, value]) => (
+                    <tr key={label}>
+                      <th scope="row">{label}</th>
+                      <td>{value}</td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {Object.entries(t.perMode).map(([mode, m]) => (
-                      <tr key={mode}>
-                        <td>{vatModes[mode] ?? mode}</td>
-                        <td>{m.lines}</td>
-                        <td>{money(m.grossOre)}</td>
-                        <td>{money(m.vatOre)}</td>
-                        <td>{money(m.netOre)}</td>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {Object.keys(t.perMode).length > 0 && (
+              <>
+                <h3>{d.perMode}</h3>
+                <div
+                  className="economy-scroll"
+                  role="group"
+                  tabIndex={0}
+                  aria-label={d.perMode}
+                >
+                  <table className="economy-table">
+                    <thead>
+                      <tr>
+                        <th>{d.mode}</th>
+                        <th>{d.lines}</th>
+                        <th>{d.gross}</th>
+                        <th>{d.vat}</th>
+                        <th>{d.net}</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </>
-          )}
+                    </thead>
+                    <tbody>
+                      {Object.entries(t.perMode).map(([mode, m]) => (
+                        <tr key={mode}>
+                          <td>{vatModes[mode] ?? mode}</td>
+                          <td>{m.lines}</td>
+                          <td>{money(m.grossOre)}</td>
+                          <td>{money(m.vatOre)}</td>
+                          <td>{money(m.netOre)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+          </details>
         </section>
-        <section className="card intake-form" aria-label={d.liabilityHeading}>
+        <section
+          className="card intake-form economy-liability"
+          aria-label={d.liabilityHeading}
+        >
           <h2>{d.liabilityHeading}</h2>
           <p>{d.liabilityHint}</p>
-          <div style={{ overflowX: 'auto' }}>
-            <table className="economy-table economy-values">
-              <tbody>
-                <tr>
-                  <th scope="row">{d.owed}</th>
-                  <td>{money(summary.liability.owedOre)}</td>
-                </tr>
-                <tr>
-                  <th scope="row">{d.available}</th>
-                  <td>{money(summary.liability.availableOre)}</td>
-                </tr>
-                <tr>
-                  <th scope="row">{d.reserved}</th>
-                  <td>{money(summary.liability.reservedOre)}</td>
-                </tr>
-                <tr>
-                  <th scope="row">{d.openPayouts}</th>
-                  <td>
-                    {summary.openPayouts.count} ·{' '}
-                    {money(summary.openPayouts.amountOre)}{' '}
-                    <Link className="text-link" href="/intake/payouts">
-                      {all.payouts.title}
-                    </Link>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <dl className="economy-balances">
+            <div>
+              <dt>{d.owed}</dt>
+              <dd>{money(summary.liability.owedOre)}</dd>
+            </div>
+            <div>
+              <dt>{d.available}</dt>
+              <dd>{money(summary.liability.availableOre)}</dd>
+            </div>
+            <div>
+              <dt>{d.reserved}</dt>
+              <dd>{money(summary.liability.reservedOre)}</dd>
+            </div>
+          </dl>
+          <div className="economy-payout-status">
+            <p>
+              <strong>
+                {d.openPayouts}: {summary.openPayouts.count}
+              </strong>
+              <span>{money(summary.openPayouts.amountOre)}</span>
+            </p>
+            <Link className="text-link" href="/intake/payouts">
+              {all.payouts.title}
+            </Link>
           </div>
         </section>
         <section className="card intake-form" aria-label={d.daysHeading}>
@@ -292,9 +327,9 @@ export default async function Economy({
           data-testid="economy-brief"
         >
           <summary>
-            <strong>{all.brief.heading}</strong>
+            <strong>{d.reports}</strong>
           </summary>
-          <p>{all.brief.hint}</p>
+          <p className="muted">{d.reportsHint}</p>
           <p>
             <Link
               className="text-link"
@@ -322,19 +357,23 @@ export default async function Economy({
               </ul>
             </>
           )}
+          {active.role === 'owner' && (
+            <AutomationSwitch
+              key={`${active.id}-${grants?.find((g) => g.scope === 'weekly_brief')?.id ?? 'none'}`}
+              tenantId={active.id}
+              scope="weekly_brief"
+              grants={grants}
+              configured={automationIdentity() !== null}
+              canEdit
+              t={{
+                ...all.brief.email,
+                hint: d.emailHint,
+                enable: d.emailEnable,
+              }}
+            />
+          )}
         </details>
-        {active.role === 'owner' && (
-          <AutomationSwitch
-            key={`${active.id}-${grants?.find((g) => g.scope === 'weekly_brief')?.id ?? 'none'}`}
-            tenantId={active.id}
-            scope="weekly_brief"
-            grants={grants}
-            configured={automationIdentity() !== null}
-            canEdit
-            t={all.brief.email}
-          />
-        )}
       </div>
-    </>
+    </div>
   )
 }

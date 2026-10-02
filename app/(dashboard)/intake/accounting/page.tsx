@@ -103,7 +103,7 @@ export default async function Accounting({
   const canEditMap = ['owner', 'admin'].includes(active.role)
   const attentionCount = recon ? attention.length : null
   return (
-    <>
+    <div className="accounting-page">
       <div className="page-heading">
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
@@ -131,9 +131,8 @@ export default async function Accounting({
       </nav>
       {view === 'days' && (
         <>
-          <p className="intake-notice">{d.notice}</p>
-          <div className="intake-grid">
-            <section className="card intake-form">
+          <div className="accounting-workspace">
+            <section className="card intake-form accounting-create">
               <h2>{d.generateHeading}</h2>
               <p>{d.generateHint}</p>
               {active.role !== 'readonly' ? (
@@ -162,33 +161,39 @@ export default async function Accounting({
               <h2>{d.list}</h2>
               {closes.length === 0 && <p>{d.empty}</p>}
               {closes.map((c) => (
-                <div key={c.id} className="intake-notice">
-                  <strong>
-                    {c.close_date} · {d.version} {c.version} · {d.sales}{' '}
-                    {c.sales_count} · {money(c.gross_ore)}
-                  </strong>
-                  <p>
-                    {d.vat} {money(c.vat_ore)} · {d.commission}{' '}
-                    {money(c.commission_ore)}
-                    {c.commission_vat_ore > 0
-                      ? ` (+ ${d.commissionVat} ${money(c.commission_vat_ore)})`
-                      : ''}{' '}
-                    · {d.sellerCredit} {money(c.seller_credit_ore)}
+                <div key={c.id} className="accounting-record">
+                  <div className="accounting-record-heading">
+                    <h3>{c.close_date}</h3>
+                    <strong>{money(c.gross_ore)}</strong>
+                  </div>
+                  <p className="accounting-record-meta">
+                    {d.sales}: {c.sales_count} · {d.version} {c.version}
                   </p>
-                  <p>
-                    {d.returns} {c.returns_count} · {d.refunds}{' '}
-                    {money(c.refunds_ore)} · {d.creditReversed}{' '}
-                    {money(c.credit_reversed_ore)} · {d.payoutsPaid}{' '}
-                    {money(c.payouts_paid_ore)}
-                  </p>
-                  {Object.entries(c.per_mode).map(([mode, t]) => (
-                    <small key={mode}>
-                      {vatModes[mode] ?? mode}: {t.lines} · {d.net}{' '}
-                      {money(t.netOre)} · {d.vat} {money(t.vatOre)} · {d.gross}{' '}
-                      {money(t.grossOre)}
-                      <br />
-                    </small>
-                  ))}
+                  <details className="accounting-breakdown">
+                    <summary>{d.details}</summary>
+                    <p>
+                      {d.vat} {money(c.vat_ore)} · {d.commission}{' '}
+                      {money(c.commission_ore)}
+                      {c.commission_vat_ore > 0
+                        ? ` (+ ${d.commissionVat} ${money(c.commission_vat_ore)})`
+                        : ''}{' '}
+                      · {d.sellerCredit} {money(c.seller_credit_ore)}
+                    </p>
+                    <p>
+                      {d.returns} {c.returns_count} · {d.refunds}{' '}
+                      {money(c.refunds_ore)} · {d.creditReversed}{' '}
+                      {money(c.credit_reversed_ore)} · {d.payoutsPaid}{' '}
+                      {money(c.payouts_paid_ore)}
+                    </p>
+                    {Object.entries(c.per_mode).map(([mode, t]) => (
+                      <small key={mode}>
+                        {vatModes[mode] ?? mode}: {t.lines} · {d.net}{' '}
+                        {money(t.netOre)} · {d.vat} {money(t.vatOre)} ·{' '}
+                        {d.gross} {money(t.grossOre)}
+                        <br />
+                      </small>
+                    ))}
+                  </details>
                   {previews.has(c.id) && (
                     <ExportDayClose
                       key={`${c.id}-${map.id ?? 'none'}`}
@@ -204,39 +209,66 @@ export default async function Accounting({
                 </div>
               ))}
             </section>
-            <section className="card intake-form" aria-label={d.exportsHeading}>
-              <h2>{d.exportsHeading}</h2>
+            <section
+              className="card intake-form accounting-exports"
+              aria-label={d.exportsHeading}
+            >
+              <div className="accounting-section-heading">
+                <h2>{d.exportsHeading}</h2>
+                <Link
+                  className="text-link"
+                  href="/intake/accounting?view=settings#accounting-systems"
+                >
+                  {d.systems}
+                </Link>
+              </div>
+              <p>{d.deliveryHint}</p>
               {exports.length === 0 && <p>{d.noExports}</p>}
               {exports.map((e) => {
                 const c = closeById.get(e.day_close_id)
                 const send = sends.get(e.id)
                 return (
-                  <div key={e.id} className="stack">
-                    <p>
-                      {c
-                        ? `${c.close_date} · ${d.version} ${c.version}`
-                        : e.day_close_id}{' '}
-                      · {d.mapVersion} {e.accounting_maps?.version ?? '?'} ·{' '}
-                      {e.voucher.length} {d.lines} · {d.debitTotal}{' '}
-                      {money(e.debit_ore)} ·{' '}
-                      {new Date(e.created_at).toLocaleString(ctx.locale, {
-                        timeZone: 'Europe/Stockholm',
-                      })}{' '}
-                      ·{' '}
-                      <a className="text-link" href={`/api/accounting/${e.id}`}>
+                  <div key={e.id} className="accounting-record">
+                    <div className="accounting-record-heading">
+                      <h3>{c ? c.close_date : d.exportsHeading}</h3>
+                      <a
+                        className="btn btn-secondary"
+                        href={`/api/accounting/${e.id}`}
+                      >
                         {d.download}
-                      </a>{' '}
-                      ·{' '}
-                      <FortnoxVoucherSend
-                        key={`${e.id}-${send?.id ?? 'none'}-${send?.status ?? 'none'}`}
-                        tenantId={active.id}
-                        exportId={e.id}
-                        send={send ?? null}
-                        connected={fortnox.connected}
-                        canSend={canEditMap}
-                        d={all.fortnox}
-                      />
+                      </a>
+                    </div>
+                    <p className="accounting-record-meta">
+                      {c ? `${d.version} ${c.version} · ` : ''}
+                      {d.mapVersion} {e.accounting_maps?.version ?? '?'} ·{' '}
+                      {e.voucher.length} {d.lines}
                     </p>
+                    <details className="accounting-breakdown">
+                      <summary>{d.details}</summary>
+                      <p>
+                        {d.debitTotal} {money(e.debit_ore)} ·{' '}
+                        {new Date(e.created_at).toLocaleString(ctx.locale, {
+                          timeZone: 'Europe/Stockholm',
+                          dateStyle: 'medium',
+                          timeStyle: 'short',
+                        })}
+                      </p>
+                      {!c && <p>{e.day_close_id}</p>}
+                    </details>
+                    {(fortnox.connected || send) && (
+                      <div className="accounting-delivery">
+                        <h4>Fortnox</h4>
+                        <FortnoxVoucherSend
+                          key={`${e.id}-${send?.id ?? 'none'}-${send?.status ?? 'none'}`}
+                          tenantId={active.id}
+                          exportId={e.id}
+                          send={send ?? null}
+                          connected={fortnox.connected}
+                          canSend={canEditMap}
+                          d={all.fortnox}
+                        />
+                      </div>
+                    )}
                     {active.role === 'owner' &&
                       send &&
                       (send.status === 'pending' ||
@@ -256,14 +288,14 @@ export default async function Accounting({
         </>
       )}
       {view === 'reconciliation' && (
-        <div className="intake-grid">
+        <div className="accounting-reconciliation">
           <section
             className="card intake-form"
             aria-label={all.reconciliation.heading}
           >
             <h2>{all.reconciliation.heading}</h2>
-            <p>{all.reconciliation.hint}</p>
-            <form method="get" className="intake-fields">
+            <p>{d.reconciliationHint}</p>
+            <form method="get" className="economy-period-form">
               <input type="hidden" name="view" value="reconciliation" />
               {!requestedPeriod.success && (query.from || query.to) && (
                 <p role="alert">{all.reconciliation.periodInvalid}</p>
@@ -303,8 +335,13 @@ export default async function Accounting({
                 <h3>
                   {all.reconciliation.openDays} ({attention.length})
                 </h3>
-                <div style={{ overflowX: 'auto' }}>
-                  <table>
+                <div
+                  className="economy-scroll"
+                  role="group"
+                  tabIndex={0}
+                  aria-label={all.reconciliation.heading}
+                >
+                  <table className="economy-table">
                     <thead>
                       <tr>
                         <th>{all.economy.date}</th>
@@ -337,47 +374,18 @@ export default async function Accounting({
       )}
       {view === 'settings' && (
         <>
-          <FortnoxGuide
-            client={ctx.client}
-            tenantId={active.id}
-            role={active.role}
-            connection={fortnox}
-            ready={
-              fortnoxIssue(active.id, fortnoxEnvironment(process.env)) ===
-                null && credentialKeyConfigured(process.env)
-            }
-            d={all.helpCenter}
-          />
-          <div className="intake-grid">
-            <div id="fortnox-automation" className="stack">
-              {['owner', 'admin'].includes(active.role) && (
-                <AutomationSwitch
-                  key={`automation-${active.id}`}
-                  tenantId={active.id}
-                  scope="fortnox_send"
-                  grants={grants}
-                  configured={
-                    !!automationIdentity() &&
-                    automatic?.available === true &&
-                    grants !== null
-                  }
-                  canEdit={active.role === 'owner'}
-                  t={all.fortnox.automation}
-                />
-              )}
-              <p>
-                {all.fortnox.automation.lastRun}:{' '}
-                {automatic?.run
-                  ? `${automatic.run.at} · ${all.fortnox.automation[automatic.run.outcome]} · ${automatic.run.sent}`
-                  : all.fortnox.automation.noRun}
-              </p>
-              <ContextHelp
-                key={`automation-help-${active.id}`}
-                topic="fortnox-automation"
-                d={all.helpCenter}
-                label={all.helpCenter.articles['fortnox-automation'].title}
-              />
-            </div>
+          <nav
+            className="accounting-settings-links"
+            aria-label={d.views.settings}
+          >
+            <Link className="text-link" href="#account-map">
+              {d.mapHeading}
+            </Link>
+            <Link className="text-link" href="#accounting-systems">
+              {d.systems}
+            </Link>
+          </nav>
+          <div className="accounting-settings">
             <section
               id="account-map"
               className="card intake-form"
@@ -395,19 +403,79 @@ export default async function Accounting({
                 intake={all.intake}
               />
             </section>
-            <FortnoxConnection
-              key={`${active.id}-${fortnox.refreshedAt ?? 'none'}`}
-              tenantId={active.id}
-              status={fortnox}
-              issue={fortnoxIssue(active.id, fortnoxEnvironment(process.env))}
-              canConnect={canEditMap}
-              outcome={fortnoxOutcome}
-              locale={ctx.locale}
-              d={all.fortnox}
-            />
+            <section
+              id="accounting-systems"
+              aria-label={d.systems}
+              className="accounting-systems"
+            >
+              <h2>{d.systems}</h2>
+              <p>{d.deliveryHint}</p>
+              <div className="card intake-form accounting-file-option">
+                <h3>{d.fileOption}</h3>
+                <p>{d.fileHint}</p>
+                <Link className="text-link" href="/intake/accounting">
+                  {d.exportsHeading}
+                </Link>
+              </div>
+              <div className="accounting-provider">
+                <FortnoxConnection
+                  key={`${active.id}-${fortnox.refreshedAt ?? 'none'}`}
+                  tenantId={active.id}
+                  status={fortnox}
+                  issue={fortnoxIssue(
+                    active.id,
+                    fortnoxEnvironment(process.env),
+                  )}
+                  canConnect={canEditMap}
+                  outcome={fortnoxOutcome}
+                  locale={ctx.locale}
+                  d={all.fortnox}
+                />
+                <FortnoxGuide
+                  client={ctx.client}
+                  tenantId={active.id}
+                  role={active.role}
+                  connection={fortnox}
+                  ready={
+                    fortnoxIssue(active.id, fortnoxEnvironment(process.env)) ===
+                      null && credentialKeyConfigured(process.env)
+                  }
+                  d={all.helpCenter}
+                />
+                <div id="fortnox-automation" className="stack">
+                  {['owner', 'admin'].includes(active.role) && (
+                    <AutomationSwitch
+                      key={`automation-${active.id}`}
+                      tenantId={active.id}
+                      scope="fortnox_send"
+                      grants={grants}
+                      configured={
+                        !!automationIdentity() &&
+                        automatic?.available === true &&
+                        grants !== null
+                      }
+                      canEdit={active.role === 'owner'}
+                      t={all.fortnox.automation}
+                    />
+                  )}
+                  <p>
+                    {all.fortnox.automation.lastRun}:{' '}
+                    {automatic?.run
+                      ? `${automatic.run.at} · ${all.fortnox.automation[automatic.run.outcome]} · ${automatic.run.sent}`
+                      : all.fortnox.automation.noRun}
+                  </p>
+                  <ContextHelp
+                    key={`automation-help-${active.id}`}
+                    topic="fortnox-automation"
+                    d={all.helpCenter}
+                    label={all.helpCenter.articles['fortnox-automation'].title}
+                  />
+                </div>
+              </div>
+            </section>
           </div>
         </>
       )}
-    </>
+    </div>
   )
 }

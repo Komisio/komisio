@@ -2981,5 +2981,6 @@
   "auditHint": "De 12 senest registrerede hændelser i butikken.",
   "otherActivity": "Anden butikshændelse",
   "technicalDetails": "Tekniske butiksoplysninger",
-  "skipToContent": "Spring til indholdet"
+  "skipToContent": "Spring til indholdet",
+  "leaveUnsaved": "Forlad siden? Ændringer, der ikke er gemt, går tabt. Hvis en gemning ikke blev bekræftet, skal du kontrollere det gemte indhold, før du starter forfra."
 }

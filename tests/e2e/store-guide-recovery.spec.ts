@@ -47,6 +47,10 @@ test('a stale store guide offers reload and shows the other saved version', asyn
     await expect(
       page.getByRole('button', { name: c.edit, exact: true }),
     ).toBeDisabled()
+    page.once('dialog', async (dialog) => {
+      expect(dialog.type()).toBe('beforeunload')
+      await dialog.accept()
+    })
     await page
       .getByRole('button', { name: d.intake.reload, exact: true })
       .click()

@@ -21,6 +21,7 @@ export default async function GuidePage() {
       editable={['owner', 'admin'].includes(tenant.role)}
       c={guideCopy(ctx.locale)}
       recovery={dictionary(ctx.locale).intake}
+      leaveWarning={dictionary(ctx.locale).leaveUnsaved}
     />
   )
 }

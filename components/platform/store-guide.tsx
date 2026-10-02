@@ -1,6 +1,6 @@
 'use client'
 import { useRef, useState } from 'react'
-import Link from 'next/link'
+import { NavigationLink as Link, useUnsavedChanges } from './navigation-warning'
 import { useRouter } from 'next/navigation'
 import type { GuideCopy } from '@/lib/guide-copy'
 import type { Dictionary } from '@/lib/i18n'
@@ -23,6 +23,7 @@ export function StoreGuide({
   editable,
   c,
   recovery,
+  leaveWarning,
 }: {
   tenantId: string
   tenantName: string
@@ -30,6 +31,7 @@ export function StoreGuide({
   editable: boolean
   c: GuideCopy
   recovery: Pick<Dictionary['intake'], 'failed' | 'retry' | 'reload'>
+  leaveWarning: string
 }) {
   const router = useRouter()
   const [answers, setAnswers] = useState<GuideAnswers>(
@@ -51,6 +53,11 @@ export function StoreGuide({
   const running = useRef(false)
   const [locked, setLocked] = useState(false)
   const [needsReload, setNeedsReload] = useState(false)
+  const [confirmedAnswers, setConfirmedAnswers] = useState(
+    JSON.stringify(initial.answers ?? emptyGuide()),
+  )
+  const dirty = JSON.stringify(answers) !== confirmedAnswers
+  useUnsavedChanges(editable && (dirty || locked) ? leaveWarning : null)
   const heading = useRef<HTMLHeadingElement>(null)
   const steps = guideSteps(answers)
   const summary = step >= steps.length || !editable
@@ -172,6 +179,7 @@ export function StoreGuide({
       if (body?.id !== request.current.requestId)
         throw new Error('Unknown save outcome')
       setCurrentId(body.id)
+      setConfirmedAnswers(JSON.stringify(request.current.answers))
       setSaved(true)
       request.current = null
       setLocked(false)

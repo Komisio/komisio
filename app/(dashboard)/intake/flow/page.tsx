@@ -40,6 +40,7 @@ export default async function FlowPage() {
       editable={['owner', 'admin'].includes(active.role)}
       perItem={policy.policy.sellerReviewMode === 'per_item'}
       d={dictionary(ctx.locale).storeFlow}
+      leaveWarning={d.leaveUnsaved}
     />
   )
 }

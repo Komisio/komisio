@@ -2981,5 +2981,6 @@
   "auditHint": "I 12 eventi registrati più recenti del negozio.",
   "otherActivity": "Altro evento del negozio",
   "technicalDetails": "Dati tecnici del negozio",
-  "skipToContent": "Vai al contenuto principale"
+  "skipToContent": "Vai al contenuto principale",
+  "leaveUnsaved": "Uscire da questa pagina? Le modifiche non salvate andranno perse. Se il salvataggio non è stato confermato, controlla il contenuto salvato prima di ricominciare."
 }

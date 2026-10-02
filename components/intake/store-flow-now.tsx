@@ -1,5 +1,5 @@
 'use client'
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowRight, RefreshCw } from 'lucide-react'

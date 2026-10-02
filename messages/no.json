@@ -2981,5 +2981,6 @@
   "auditHint": "De 12 siste registrerte hendelsene i butikken.",
   "otherActivity": "Annen butikkhendelse",
   "technicalDetails": "Tekniske butikkopplysninger",
-  "skipToContent": "Hopp til innholdet"
+  "skipToContent": "Hopp til innholdet",
+  "leaveUnsaved": "Forlate siden? Endringer som ikke er lagret, går tapt. Hvis lagringen ikke ble bekreftet, kontroller det lagrede innholdet før du begynner på nytt."
 }

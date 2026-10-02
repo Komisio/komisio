@@ -2987,5 +2987,6 @@
   "auditHint": "Myymälän 12 viimeisintä kirjattua tapahtumaa.",
   "otherActivity": "Muu myymälän tapahtuma",
   "technicalDetails": "Myymälän tekniset tiedot",
-  "skipToContent": "Siirry sisältöön"
+  "skipToContent": "Siirry sisältöön",
+  "leaveUnsaved": "Poistutaanko sivulta? Tallentamattomat muutokset katoavat. Jos tallennusta ei vahvistettu, tarkista tallennettu sisältö ennen kuin aloitat uudelleen."
 }

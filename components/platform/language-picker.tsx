@@ -4,6 +4,7 @@ import { useRef, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { ChevronDown, Check } from 'lucide-react'
 import { locales, localeNames, intlLocale, type Locale } from '@/lib/i18n'
+import { useConfirmNavigation } from './navigation-warning'
 
 function Flag({ locale }: { locale: Locale }) {
   const horizontal = (colors: string[]) =>
@@ -78,6 +79,7 @@ export function LanguagePicker({
   label: string
 }) {
   const router = useRouter()
+  const confirmNavigation = useConfirmNavigation()
   const menu = useRef<HTMLDetailsElement>(null)
   const [pending, startTransition] = useTransition()
   function close() {
@@ -111,6 +113,7 @@ export function LanguagePicker({
             disabled={pending}
             aria-pressed={code === locale}
             onClick={() => {
+              if (code !== locale && !confirmNavigation()) return
               close()
               menu.current?.querySelector('summary')?.focus()
               document.cookie = `komisio-locale=${code};path=/;max-age=31536000;SameSite=Lax`

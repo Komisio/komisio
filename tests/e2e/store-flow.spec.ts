@@ -214,6 +214,11 @@ test('current flow counts actual work, refreshes without losing notes and opens 
       path: testInfo.outputPath('flow-now-mobile.png'),
       fullPage: true,
     })
+    page.once('dialog', async (dialog) => {
+      expect(dialog.type()).toBe('confirm')
+      expect(dialog.message()).toBe(d.leaveUnsaved)
+      await dialog.accept()
+    })
     await dropoffs.getByRole('link').click()
     await expect(page).toHaveURL(/state=unstarted/)
     await expect(

@@ -287,7 +287,7 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
   await expect(page.locator('.agreement-text')).toContainText(
     '<script>Not executable</script>',
   )
-  await page.goto('/intake')
+  await page.goto('/intake#new-seller')
   await page.getByLabel('Säljarens namn').fill('Avtalssäljare TEST')
   await page.getByLabel('Telefon', { exact: true }).fill('0000000000')
   await page.getByRole('button', { name: 'Spara säljare' }).click()
@@ -445,7 +445,7 @@ test('staff receives a bag, retries safely and prints a private label', async ({
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
-  await page.goto('/intake')
+  await page.goto('/intake#new-seller')
   await page.getByLabel('Säljarens namn').fill('Test Säljare')
   await page.getByLabel('E-post', { exact: true }).fill('seller@example.test')
   await page.getByRole('button', { name: 'Spara säljare' }).click()

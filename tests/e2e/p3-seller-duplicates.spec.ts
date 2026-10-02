@@ -47,6 +47,9 @@ test('the counter is warned about an existing seller before a second record', as
       fullPage: true,
     })
     await page.setViewportSize({ width: 1280, height: 900 })
+    await page
+      .getByRole('link', { name: d.intake.newSeller, exact: true })
+      .click()
     const form = page
       .getByRole('heading', { name: d.intake.newSeller })
       .locator('..')
@@ -66,7 +69,9 @@ test('the counter is warned about an existing seller before a second record', as
       .click()
     await expect(page).toHaveURL(/\/intake\?seller=[0-9a-f-]{36}#new-seller$/)
     expect(page.url()).not.toContain(f.seller)
-    await expect(page.getByText('Another Name').first()).toBeVisible()
+    await expect(
+      page.locator('.receiving-seller-context').getByText('Another Name'),
+    ).toBeVisible()
   } finally {
     await f.close()
   }

@@ -185,22 +185,23 @@ export function ReceivingPanel({
     }
   }
   return (
-    <section className="card intake-form">
+    <section className="card intake-form receiving-panel">
       {seller ? (
         <FormHelpHeading title={d.receive} help={d.formHelp} />
       ) : (
         <h2>{d.newSeller}</h2>
       )}
       {seller && (
-        <p>
-          <strong>{seller.name}</strong>
-          <br />
-          {seller.email || seller.phone}
-          <br />
-          <Link className="text-link" href="/intake#seller-search">
+        <div className="receiving-seller-context">
+          <div>
+            <strong>{seller.name}</strong>
+            <br />
+            {seller.email || seller.phone}
+          </div>
+          <Link className="btn btn-secondary" href="/intake#seller-search">
             {changeSellerLabel}
           </Link>
-        </p>
+        </div>
       )}
       <form onSubmit={submit}>
         <fieldset

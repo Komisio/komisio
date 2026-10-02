@@ -4278,3 +4278,168 @@ button.text-link:hover:not(:disabled) {
 .policy-section input[type='checkbox'] {
   accent-color: var(--green);
 }
+
+/* Receiving starts with the seller; registration is an explicit alternative. */
+.intake-overview {
+  max-width: 1040px;
+  margin-inline: auto;
+}
+.intake-overview .page-heading {
+  margin-bottom: 20px;
+}
+.intake-overview .intake-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-bottom: 24px;
+}
+.intake-shortcuts .text-link {
+  display: inline-flex;
+  gap: 12px;
+  align-items: center;
+  min-height: 44px;
+}
+.intake-overview > .intake-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+.intake-overview .intake-find-seller {
+  padding: 24px;
+}
+.intake-find-seller > summary,
+.intake-registration > summary {
+  font-size: 19px;
+  font-weight: 600;
+  min-height: 44px;
+  cursor: pointer;
+}
+.intake-find-seller:not([open]) > summary {
+  display: list-item;
+  min-height: 24px;
+}
+.intake-find-seller .row {
+  gap: 12px;
+}
+.intake-find-seller .row input {
+  flex: 1;
+  min-width: 0;
+}
+.intake-find-seller > p {
+  margin-block: 12px;
+}
+.intake-overview .intake-seller-results {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  max-height: 320px;
+  padding: 3px;
+}
+.intake-overview .intake-seller {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 16px;
+  margin: 0;
+  border-color: var(--line);
+  text-decoration: none;
+}
+.intake-overview .intake-seller strong {
+  text-decoration: none;
+}
+.intake-overview .intake-seller small {
+  grid-column: 1;
+}
+.intake-overview .intake-seller > span {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  align-self: center;
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 600;
+}
+.intake-overview .intake-seller:hover {
+  border-color: var(--green);
+}
+.intake-registration {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--white);
+}
+.intake-registration > summary {
+  padding: 20px 24px;
+  font-size: 16px;
+}
+.intake-registration > .receiving-panel {
+  border: 0;
+  margin: 0;
+  border-radius: 0 0 16px 16px;
+  padding-top: 0;
+  box-shadow: none;
+}
+.intake-registration .receiving-panel > h2 {
+  font-size: 18px;
+}
+.receiving-seller-context {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  margin: 20px 0;
+  border-radius: 12px;
+  background: var(--mint);
+  overflow-wrap: anywhere;
+}
+.receiving-seller-context > div {
+  min-width: 0;
+}
+.receiving-seller-context strong {
+  display: inline-block;
+  margin-bottom: 5px;
+}
+.intake-overview .receiving-panel > form {
+  max-width: 700px;
+}
+.intake-overview .receiving-panel .intake-confirm {
+  padding: 16px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.intake-overview .received-bags {
+  margin-top: 32px;
+  scroll-margin-top: 20px;
+}
+.intake-overview .received-bags h2 {
+  margin: 0;
+}
+.intake-overview .received-bags-search {
+  max-width: 520px;
+}
+.intake-overview .received-bag-info strong {
+  font-size: 17px;
+}
+@media (max-width: 640px) {
+  .intake-overview .intake-seller-results {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .intake-overview .intake-form {
+    padding: 20px 16px;
+  }
+  .intake-registration > summary {
+    padding: 20px 16px;
+  }
+  .receiving-seller-context {
+    flex-wrap: wrap;
+  }
+  .intake-overview input:not([type='checkbox']) {
+    font-size: 16px;
+  }
+  .intake-overview .intake-seller {
+    gap: 4px 10px;
+  }
+  .intake-overview .received-bag-actions {
+    width: 100%;
+  }
+}

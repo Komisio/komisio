@@ -94,7 +94,7 @@ export default async function Receptions({
             ) : (
               <p>{sellers.data.length === 0 ? d.noSellers : d.readonly}</p>
             )}
-            <Link href="/intake" className="text-link">
+            <Link href="/intake/sellers/new" className="text-link">
               {d.registerSeller}
             </Link>
           </div>

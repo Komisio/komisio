@@ -90,6 +90,10 @@ test('older purchases remain reachable and can be accepted from their page', asy
         exact: true,
       }),
     })
+    await expect(
+      row.getByLabel(d.items.price, { exact: true }),
+    ).not.toBeVisible()
+    await row.locator('.purchase-accept > summary').click()
     await row.getByLabel(d.items.price, { exact: true }).fill('250')
     await row.getByRole('checkbox').check()
     await row.getByRole('button', { name: d.items.accept, exact: true }).click()

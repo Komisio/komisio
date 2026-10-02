@@ -1707,8 +1707,8 @@
   },
   "purchases": {
     "title": "Acquisti",
-    "intro": "La merce di proprietà del negozio entra da qui, mai attraverso i percorsi del conto vendita.",
-    "notice": "Un acquisto è un fatto su cosa ha comprato il negozio e a quanto. Non è ancora un articolo in vendita; l'accettazione segue.",
+    "intro": "Registra gli articoli acquistati e posseduti dal negozio.",
+    "notice": "Registra prima l’acquisto. Poi apri «{accept}» sull’acquisto e inserisci un prezzo di vendita per preparare l’articolo alla vendita.",
     "registerHeading": "Registra un acquisto",
     "registerHint": "Una registrazione per articolo acquistato. Conserva la ricevuta o la nota; il suo riferimento è obbligatorio.",
     "price": "Prezzo di acquisto",

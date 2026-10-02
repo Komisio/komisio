@@ -24,6 +24,13 @@ for (const action of ['registerPurchase', 'acceptItem'] as const)
         ])
       await f.commit()
       await page.goto('/intake/purchases')
+      await page
+        .locator(
+          action === 'registerPurchase'
+            ? '.purchase-create > summary'
+            : '.purchase-accept > summary',
+        )
+        .click()
       const form = page.locator('form').filter({
         has: page.locator(
           action === 'registerPurchase'
@@ -157,6 +164,13 @@ for (const action of ['registerPurchase', 'acceptItem'] as const)
         ])
       await f.commit()
       await page.goto('/intake/purchases')
+      await page
+        .locator(
+          action === 'registerPurchase'
+            ? '.purchase-create > summary'
+            : '.purchase-accept > summary',
+        )
+        .click()
       const form = page.locator('form').filter({
         has: page.locator(
           action === 'registerPurchase'

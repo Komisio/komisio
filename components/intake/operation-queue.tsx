@@ -213,6 +213,11 @@ export function OperationQueue({
   const format = (value: string) =>
     new Date(value).toLocaleString(intlLocale(locale), {
       timeZone: 'Europe/Stockholm',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     })
   return (
     <ul className="intake-list">
@@ -259,7 +264,7 @@ export function OperationQueue({
                   <div>
                     <dt>{d.price}</dt>
                     <dd>
-                      {o.payload.suggestions.price.amount} ${currency} ·{' '}
+                      {o.payload.suggestions.price.amount} {currency} ·{' '}
                       {o.payload.suggestions.price.rationale}
                       {reviewContext && (
                         <small>
@@ -293,14 +298,14 @@ export function OperationQueue({
                   : ''}
               </p>
               <p>
-                {d.proposedPrice}: {(o.payload.priceOre / 100).toFixed(2)} $
+                {d.proposedPrice}: {(o.payload.priceOre / 100).toFixed(2)}{' '}
                 {currency}
               </p>
             </>
           ) : o.kind === 'recordReturn' ? (
             <p>
               {d.saleLine}: {o.payload.saleLineId} · {d.refund}:{' '}
-              {(o.payload.refundOre / 100).toFixed(2)} ${currency} ·{' '}
+              {(o.payload.refundOre / 100).toFixed(2)} {currency} ·{' '}
               {o.payload.reason}
             </p>
           ) : o.kind === 'adjustLedger' ? (
@@ -311,7 +316,7 @@ export function OperationQueue({
               >
                 {d.seller}
               </Link>{' '}
-              · {d.adjustment}: {(o.payload.amountOre / 100).toFixed(2)} $
+              · {d.adjustment}: {(o.payload.amountOre / 100).toFixed(2)}{' '}
               {currency} · {o.payload.reason}
             </p>
           ) : o.kind === 'applyMarkdownBatch' ? (

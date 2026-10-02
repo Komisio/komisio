@@ -604,6 +604,23 @@ small {
 .operation-navigation {
   flex-wrap: wrap;
 }
+.operation-filters {
+  gap: 8px;
+}
+.operation-filters a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  text-decoration: none;
+}
+.operation-filters a[aria-current='page'] {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+}
 .between {
   display: flex;
   justify-content: space-between;
@@ -2520,6 +2537,45 @@ button.text-link:hover:not(:disabled) {
 .sales-page {
   display: grid;
   gap: 1.5rem;
+}
+.purchases-workspace {
+  display: grid;
+  gap: 20px;
+}
+.purchase-create > summary,
+.purchase-evidence > summary,
+.purchase-accept > summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding: 12px 0;
+}
+.purchase-create > summary,
+.purchase-accept > summary {
+  font-weight: 650;
+}
+.purchase-create > section {
+  border: 0;
+  padding: 16px 0 0;
+  box-shadow: none;
+}
+.purchase-entry > div {
+  width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.purchase-entry-heading {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  font-size: 1.1rem;
+}
+.purchase-entry small,
+.purchase-evidence {
+  color: var(--muted);
+}
+.purchase-entry form {
+  max-width: 640px;
 }
 .agreements-workspace {
   display: grid;

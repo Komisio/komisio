@@ -1707,8 +1707,8 @@
   },
   "purchases": {
     "title": "Inköp",
-    "intro": "Butiksägda varor kommer in här, aldrig via inlämningsflödena.",
-    "notice": "Ett inköp är ett faktum om vad butiken köpt och för hur mycket. Det är ännu ingen vara till salu; acceptans följer.",
+    "intro": "Registrera varor som butiken köper in och äger.",
+    "notice": "Registrera först inköpet. Öppna sedan ”{accept}” vid inköpet och ange ett försäljningspris för att göra varan klar för försäljning.",
     "registerHeading": "Registrera ett inköp",
     "registerHint": "En registrering per köpt vara. Spara kvittot eller anteckningen; dess referens krävs.",
     "price": "Inköpspris",

@@ -1707,8 +1707,8 @@
   },
   "purchases": {
     "title": "Einkäufe",
-    "intro": "Store-eigene Ware kommt hier herein, nie über die Kommissionswege.",
-    "notice": "Ein Einkauf ist ein Fakt darüber, was der Store gekauft hat und für wie viel. Er ist noch kein Artikel zum Verkauf; die Annahme folgt.",
+    "intro": "Erfassen Sie Artikel, die das Geschäft kauft und besitzt.",
+    "notice": "Erfassen Sie zuerst den Einkauf. Öffnen Sie anschließend „{accept}“ beim Einkauf und geben Sie einen Verkaufspreis ein, um den Artikel für den Verkauf vorzubereiten.",
     "registerHeading": "Einkauf registrieren",
     "registerHint": "Eine Registrierung pro gekauftem Artikel. Bewahren Sie den Beleg oder die Notiz auf; deren Referenz ist erforderlich.",
     "price": "Einkaufspreis",

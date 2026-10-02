@@ -1707,8 +1707,8 @@
   },
   "purchases": {
     "title": "Indkøb",
-    "intro": "Butiksejede varer kommer ind her, aldrig via kommissionsvejene.",
-    "notice": "Et indkøb er et faktum om, hvad butikken købte, og for hvor meget. Det er endnu ikke en vare til salg; accept følger.",
+    "intro": "Registrer varer, som butikken køber og ejer.",
+    "notice": "Registrer først købet. Åbn derefter ”{accept}” ved købet og angiv en salgspris for at gøre varen klar til salg.",
     "registerHeading": "Registrer et indkøb",
     "registerHint": "Én registrering pr. købt vare. Behold kvitteringen eller noten; dens reference er påkrævet.",
     "price": "Indkøbspris",

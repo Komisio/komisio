@@ -39,7 +39,10 @@ export default async function Operations({
         </Link>
       </div>
       <p className="intake-notice">{d.notice}</p>
-      <nav className="row operation-navigation" aria-label={d.queueFilter}>
+      <nav
+        className="row operation-navigation operation-filters"
+        aria-label={d.queueFilter}
+      >
         {operationFilter.options.map((status) => (
           <Link
             className="text-link"

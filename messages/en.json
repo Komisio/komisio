@@ -1707,8 +1707,8 @@
   },
   "purchases": {
     "title": "Purchases",
-    "intro": "Store-owned goods enter here, never through the consignment paths.",
-    "notice": "A purchase is a fact about what the store bought and for how much. It is not yet an item for sale; acceptance follows.",
+    "intro": "Record items purchased and owned by the store.",
+    "notice": "Record the purchase first. Then open “{accept}” on the purchase and enter a selling price to make the item ready for sale.",
     "registerHeading": "Register a purchase",
     "registerHint": "One registration per item bought. Keep the receipt or note; its reference is required.",
     "price": "Purchase price",

@@ -1707,8 +1707,8 @@
   },
   "purchases": {
     "title": "Compras",
-    "intro": "Los artículos propiedad de la tienda entran por aquí, nunca por las vías de depósito.",
-    "notice": "Una compra es un hecho sobre qué compró la tienda y por cuánto. Todavía no es un artículo en venta; la aceptación viene después.",
+    "intro": "Registra los artículos que la tienda compra y posee.",
+    "notice": "Registra primero la compra. Después abre «{accept}» en la compra e introduce un precio de venta para preparar el artículo para la venta.",
     "registerHeading": "Registrar una compra",
     "registerHint": "Un registro por artículo comprado. Conserva el recibo o la nota; su referencia es obligatoria.",
     "price": "Precio de compra",

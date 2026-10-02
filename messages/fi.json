@@ -1707,8 +1707,8 @@
   },
   "purchases": {
     "title": "Ostot",
-    "intro": "Kaupan omat tavarat tulevat sisään tästä, eivät koskaan komissiopolkujen kautta.",
-    "notice": "Osto on tosiasia siitä, mitä kauppa osti ja mihin hintaan. Se ei ole vielä myytävä tuote; hyväksyntä seuraa.",
+    "intro": "Kirjaa myymälän ostamat ja omistamat tuotteet.",
+    "notice": "Kirjaa ensin osto. Avaa sitten oston kohdalta ”{accept}” ja anna myyntihinta, jotta tuote on valmis myyntiin.",
     "registerHeading": "Rekisteröi osto",
     "registerHint": "Yksi rekisteröinti per ostettu tuote. Säilytä kuitti tai muistiinpano; sen viite vaaditaan.",
     "price": "Ostohinta",

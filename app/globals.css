@@ -3463,6 +3463,11 @@ button.text-link:hover:not(:disabled) {
 @media print {
   body:has(.item-browser-label) .app-shell {
     display: block;
+    padding: 0;
+    min-height: 0;
+  }
+  body:has(.item-browser-label) {
+    background: white;
   }
   body:has(.item-browser-label) .app-shell > :not(main) {
     display: none;

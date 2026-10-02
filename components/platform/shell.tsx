@@ -82,6 +82,9 @@ export function Shell({
   )
   return (
     <div className="app-shell">
+      <a className="skip-link no-print" href="#main-content">
+        {d.skipToContent}
+      </a>
       <aside className="sidebar">
         <Brand />
         <div className="tenant-picker">
@@ -186,7 +189,7 @@ export function Shell({
         </div>
         <div className="mobile-only">{picker(true)}</div>
       </header>
-      <main className="main">
+      <main className="main" id="main-content" tabIndex={-1}>
         <Feedback error={action.error} />
         {children}
       </main>

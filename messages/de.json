@@ -2986,5 +2986,6 @@
   },
   "auditHint": "Die 12 zuletzt erfassten Ereignisse im Geschäft.",
   "otherActivity": "Anderes Ereignis im Geschäft",
-  "technicalDetails": "Technische Geschäftsdetails"
+  "technicalDetails": "Technische Geschäftsdetails",
+  "skipToContent": "Zum Hauptinhalt springen"
 }

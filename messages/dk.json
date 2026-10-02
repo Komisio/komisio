@@ -2980,5 +2980,6 @@
   },
   "auditHint": "De 12 senest registrerede hændelser i butikken.",
   "otherActivity": "Anden butikshændelse",
-  "technicalDetails": "Tekniske butiksoplysninger"
+  "technicalDetails": "Tekniske butiksoplysninger",
+  "skipToContent": "Spring til indholdet"
 }

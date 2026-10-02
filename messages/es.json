@@ -2986,5 +2986,6 @@
   },
   "auditHint": "Los 12 eventos registrados más recientes de la tienda.",
   "otherActivity": "Otro evento de la tienda",
-  "technicalDetails": "Datos técnicos de la tienda"
+  "technicalDetails": "Datos técnicos de la tienda",
+  "skipToContent": "Saltar al contenido principal"
 }

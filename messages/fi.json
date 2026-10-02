@@ -2986,5 +2986,6 @@
   },
   "auditHint": "Myymälän 12 viimeisintä kirjattua tapahtumaa.",
   "otherActivity": "Muu myymälän tapahtuma",
-  "technicalDetails": "Myymälän tekniset tiedot"
+  "technicalDetails": "Myymälän tekniset tiedot",
+  "skipToContent": "Siirry sisältöön"
 }

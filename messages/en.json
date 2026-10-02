@@ -2980,5 +2980,6 @@
   },
   "auditHint": "The 12 most recent recorded events in the store.",
   "otherActivity": "Other store event",
-  "technicalDetails": "Technical store details"
+  "technicalDetails": "Technical store details",
+  "skipToContent": "Skip to main content"
 }

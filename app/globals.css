@@ -3490,6 +3490,54 @@ button.text-link:hover:not(:disabled) {
 .item-detail-heading h1 {
   overflow-wrap: anywhere;
 }
+.reception-history article {
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+.skip-link {
+  position: fixed;
+  z-index: 1000;
+  top: 12px;
+  left: 12px;
+  max-width: calc(100vw - 24px);
+  padding: 12px 20px;
+  border: 2px solid var(--green);
+  border-radius: 8px;
+  background: white;
+  color: var(--ink);
+  font-weight: 600;
+  transform: translateY(calc(-100% - 24px));
+}
+.skip-link:focus {
+  transform: none;
+}
+.reception-history article h3 {
+  margin: 0 0 4px;
+}
+.reception-history time {
+  display: block;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.reception-history-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: 16px;
+  margin: 16px 0;
+}
+.reception-history-facts dt {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.reception-history-facts dd {
+  margin: 4px 0 0;
+  font-weight: 600;
+}
+.reception-history .reception-history-response {
+  margin-bottom: 4px;
+  font-weight: 600;
+}
 .statement-totals {
   margin: 24px 0;
   max-width: 600px;

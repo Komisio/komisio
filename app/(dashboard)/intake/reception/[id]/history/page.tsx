@@ -36,6 +36,11 @@ export default async function History({
   const time = (value: string) =>
     new Date(value).toLocaleString(intlLocale(ctx.locale), {
       timeZone: 'Europe/Stockholm',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     })
   const older = (key: 'beforeSource' | 'beforeReview', value: number) =>
     `${root}/history?${new URLSearchParams({
@@ -53,26 +58,38 @@ export default async function History({
         <h1>{h.title}</h1>
         <p>{h.notice}</p>
       </div>
-      <section className="card intake-form">
-        <h2>{h.reviews}</h2>
+      <section
+        className="card intake-form reception-history"
+        aria-labelledby="history-reviews"
+      >
+        <h2 id="history-reviews">{h.reviews}</h2>
         {history.reviews.length === 0 && <p>{h.empty}</p>}
         {history.reviews.map((review) => (
           <article key={review.version}>
             <h3>
               {d.version} {review.version}
             </h3>
-            <p>{time(review.createdAt)} (Europe/Stockholm)</p>
-            <p>
-              {h.sourceRevision}: {review.sourceRevision}
-            </p>
+            <time dateTime={review.createdAt} title={review.createdAt}>
+              {time(review.createdAt)}
+            </time>
             <p>{review.description}</p>
-            <p>
-              {d.price}: {review.price} {currency}
-            </p>
-            <p>
-              {d.sharedPhotos}: {review.photoCount}
-            </p>
-            <p>
+            <dl className="reception-history-facts">
+              <div>
+                <dt>{d.price}</dt>
+                <dd>
+                  {review.price === null ? '—' : `${review.price} ${currency}`}
+                </dd>
+              </div>
+              <div>
+                <dt>{h.sourceRevision}</dt>
+                <dd>{review.sourceRevision}</dd>
+              </div>
+              <div>
+                <dt>{d.sharedPhotos}</dt>
+                <dd>{review.photoCount}</dd>
+              </div>
+            </dl>
+            <p className="reception-history-response">
               {review.response
                 ? review.response.decision === 'approve'
                   ? h.approved
@@ -80,7 +97,12 @@ export default async function History({
                 : h.unanswered}
             </p>
             {review.response && (
-              <p>{time(review.response.created_at)} (Europe/Stockholm)</p>
+              <time
+                dateTime={review.response.created_at}
+                title={review.response.created_at}
+              >
+                {time(review.response.created_at)}
+              </time>
             )}
           </article>
         ))}
@@ -93,15 +115,20 @@ export default async function History({
           </Link>
         )}
       </section>
-      <section className="card intake-form">
-        <h2>{h.sources}</h2>
+      <section
+        className="card intake-form reception-history"
+        aria-labelledby="history-sources"
+      >
+        <h2 id="history-sources">{h.sources}</h2>
         {history.sources.length === 0 && <p>{h.empty}</p>}
         {history.sources.map((source) => (
           <article key={source.revision}>
             <h3>
               {h.sourceRevision} {source.revision}
             </h3>
-            <p>{time(source.savedAt)} (Europe/Stockholm)</p>
+            <time dateTime={source.savedAt} title={source.savedAt}>
+              {time(source.savedAt)}
+            </time>
             <ul>
               {source.evidence.map((evidence, index) => (
                 <li key={index}>

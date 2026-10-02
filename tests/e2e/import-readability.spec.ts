@@ -91,7 +91,13 @@ for (const reply of ['lost', 'wrong-id'] as const)
       await page.screenshot({
         path: testInfo.outputPath('import-mobile.png'),
         fullPage: true,
+        caret: 'initial',
       })
+      await file.setInputFiles([])
+      await expect(preview).not.toBeVisible()
+      await expect(
+        page.locator('.import-workspace').getByRole('alert'),
+      ).toHaveCount(0)
       await file.setInputFiles({
         name: 'empty.csv',
         mimeType: 'text/csv',

@@ -53,13 +53,15 @@ export function ImportSellers({
 
   async function onFile(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
-    if (!file || locked || running.current) return
+    if (locked || running.current) return
     const read = ++fileRead.current
     setRows([])
     setStaged(null)
     setMessage('')
     pending.current = null
     setNeedsReload(false)
+    setSource('')
+    if (!file) return
     try {
       const text = await file.text()
       if (read !== fileRead.current) return

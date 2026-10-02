@@ -132,7 +132,15 @@
     "typeRefused": "Varetypen kunne ikke lagres nå. Avbryt og kontroller butikk og tilgang. Opplysningene om varen er beholdt.",
     "descriptionRequired": "Skriv inn en beskrivelse.",
     "priceInvalid": "Angi en pris over 0 og høyst 999 999,99. Bruk høyst to desimaler.",
-    "savedPriceUnavailable": "Varen er godkjent, men den lagrede prisen kunne ikke leses. Åpne varen for å kontrollere prisen."
+    "savedPriceUnavailable": "Varen er godkjent, men den lagrede prisen kunne ikke leses. Åpne varen for å kontrollere prisen.",
+    "formHelp": {
+      "label": "Hjelp med rask mottak",
+      "steps": [
+        "Velg innleverer og registrer én vare om gangen.",
+        "Fyll inn beskrivelse, kategori og pris. Kontroller eventuelle KI-forslag.",
+        "Lagre varen. Bruk bekreftelsen til å merke den eller fortsette med neste vare."
+      ]
+    }
   },
   "intake": {
     "quickLink": "Hurtigmottak: én skjerm per plagg",
@@ -199,7 +207,15 @@
     "quickHint": "Beskrivelse og pris er nok. Bilde er valgfritt.",
     "labelPreview": "Forhåndsvisning",
     "otherPrint": "Annen skriver eller PDF",
-    "browserPrint": "Åpne utskriftsdialog"
+    "browserPrint": "Åpne utskriftsdialog",
+    "formHelp": {
+      "label": "Hjelp med å ta imot en innlevering",
+      "steps": [
+        "Kontroller at riktig innleverer er valgt.",
+        "Beskriv gjerne posen eller gjenstanden. Bekreft mottak først når innleveringen er i butikken.",
+        "Bekreft mottak og åpne etiketten. Varene kontrolleres og registreres separat."
+      ]
+    }
   },
   "brand": "Komisio",
   "tagline": "Mer plass til ting som kan leve videre.",

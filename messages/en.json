@@ -132,7 +132,15 @@
     "typeRefused": "The item type could not be saved in the current context. Cancel and check your store and permissions. Your item details are retained.",
     "descriptionRequired": "Enter a description.",
     "priceInvalid": "Enter a price above 0 and at most 999,999.99. Use at most two decimal places.",
-    "savedPriceUnavailable": "The item is accepted, but its saved price could not be read. Open the item to check its price."
+    "savedPriceUnavailable": "The item is accepted, but its saved price could not be read. Open the item to check its price.",
+    "formHelp": {
+      "label": "Help with quick reception",
+      "steps": [
+        "Select the consignor and register one item at a time.",
+        "Enter description, category and price. Check any AI suggestions.",
+        "Save the item. Use the confirmation to label it or continue with the next item."
+      ]
+    }
   },
   "intake": {
     "quickLink": "Quick reception: one screen per garment",
@@ -199,7 +207,15 @@
     "quickHint": "A description and price are enough. A photo is optional.",
     "labelPreview": "Preview",
     "otherPrint": "Other printer or PDF",
-    "browserPrint": "Open print dialog"
+    "browserPrint": "Open print dialog",
+    "formHelp": {
+      "label": "Help with receiving a drop-off",
+      "steps": [
+        "Check that the correct consignor is selected.",
+        "Optionally describe the bag or object. Confirm receipt only when the drop-off is in the store.",
+        "Confirm receipt and open the label. Items are inspected and registered separately."
+      ]
+    }
   },
   "brand": "Komisio",
   "tagline": "More room for things to live again.",

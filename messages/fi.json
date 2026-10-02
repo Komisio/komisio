@@ -132,7 +132,15 @@
     "typeRefused": "Tuotetyyppiä ei voitu tallentaa tässä tilanteessa. Peruuta ja tarkista myymälä ja käyttöoikeudet. Tuotteen tiedot säilyvät.",
     "descriptionRequired": "Kirjoita kuvaus.",
     "priceInvalid": "Anna hinta, joka on yli 0 ja enintään 999 999,99. Käytä enintään kahta desimaalia.",
-    "savedPriceUnavailable": "Tuote on hyväksytty, mutta tallennettua hintaa ei voitu lukea. Avaa tuote tarkistaaksesi hinnan."
+    "savedPriceUnavailable": "Tuote on hyväksytty, mutta tallennettua hintaa ei voitu lukea. Avaa tuote tarkistaaksesi hinnan.",
+    "formHelp": {
+      "label": "Pika vastaanoton ohje",
+      "steps": [
+        "Valitse tavaran tuoja ja rekisteröi yksi tuote kerrallaan.",
+        "Täytä kuvaus, tuoteryhmä ja hinta. Tarkista mahdolliset tekoälyn ehdotukset.",
+        "Tallenna tuote. Siirry vahvistuksesta tuotteen merkintään tai seuraavaan tuotteeseen."
+      ]
+    }
   },
   "intake": {
     "quickLink": "Pikavastaanotto: yksi näyttö per vaate",
@@ -199,7 +207,15 @@
     "quickHint": "Kuvaus ja hinta riittävät. Kuva on valinnainen.",
     "labelPreview": "Esikatselu",
     "otherPrint": "Muu tulostin tai PDF",
-    "browserPrint": "Avaa tulostusikkuna"
+    "browserPrint": "Avaa tulostusikkuna",
+    "formHelp": {
+      "label": "Tavaraerän vastaanoton ohje",
+      "steps": [
+        "Tarkista, että oikea tavaran tuoja on valittu.",
+        "Voit kuvailla kassia tai esinettä. Vahvista vastaanotto vasta, kun tavaraerä on myymälässä.",
+        "Vahvista vastaanotto ja avaa etiketti. Tuotteet tarkastetaan ja rekisteröidään erikseen."
+      ]
+    }
   },
   "brand": "Komisio",
   "tagline": "Enemmän tilaa tavaroille elää uudelleen.",

@@ -772,3 +772,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-09-30: Fortnox help uses caller-scoped connection, current-map export and company-bound send facts. Help never writes or grants access; unknown outcomes retain reconciliation holds. Shared articles and a modal guide support all eight UI languages.
 - 2026-10-01: Owner moves full CI to main pushes only. PR review and local checks remain; remove the pre-merge platform requirement. Staging promotion requires platform and staging-migrations Deployment Checks for the commit. Production release gates remain unchanged.
 - 2026-10-01: Extend shared help to receiving and labels with task-specific links in all eight languages. Guidance distinguishes custody, drafts, accepted items and print queues without inferring whole-drop-off completion or physical printing; existing permissions and retries remain.
+
+- 2026-10-01: Owner requests heading help icons for quick reception and drop-off receipt. Each expands three form-specific tips in place, without navigation or writes, in all eight languages. General help remains available separately.

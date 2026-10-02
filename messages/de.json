@@ -132,7 +132,15 @@
     "typeRefused": "Die Warenart konnte derzeit nicht gespeichert werden. Brechen Sie ab und prüfen Sie Geschäft und Berechtigungen. Die Angaben zur Ware bleiben erhalten.",
     "descriptionRequired": "Geben Sie eine Beschreibung ein.",
     "priceInvalid": "Geben Sie einen Preis über 0 und höchstens 999.999,99 ein. Verwenden Sie höchstens zwei Nachkommastellen.",
-    "savedPriceUnavailable": "Der Artikel ist angenommen, aber der gespeicherte Preis konnte nicht gelesen werden. Öffnen Sie den Artikel, um den Preis zu prüfen."
+    "savedPriceUnavailable": "Der Artikel ist angenommen, aber der gespeicherte Preis konnte nicht gelesen werden. Öffnen Sie den Artikel, um den Preis zu prüfen.",
+    "formHelp": {
+      "label": "Hilfe zur Schnellannahme",
+      "steps": [
+        "Wählen Sie den Einlieferer und erfassen Sie jeweils einen Artikel.",
+        "Geben Sie Beschreibung, Kategorie und Preis ein. Prüfen Sie etwaige KI-Vorschläge.",
+        "Speichern Sie den Artikel. Über die Bestätigung können Sie ihn etikettieren oder den nächsten Artikel erfassen."
+      ]
+    }
   },
   "intake": {
     "quickLink": "Schnellannahme: ein Bildschirm pro Kleidungsstück",
@@ -199,7 +207,15 @@
     "quickHint": "Beschreibung und Preis genügen. Ein Foto ist optional.",
     "labelPreview": "Vorschau",
     "otherPrint": "Anderer Drucker oder PDF",
-    "browserPrint": "Druckdialog öffnen"
+    "browserPrint": "Druckdialog öffnen",
+    "formHelp": {
+      "label": "Hilfe zur Annahme einer Einlieferung",
+      "steps": [
+        "Prüfen Sie, ob der richtige Einlieferer ausgewählt ist.",
+        "Beschreiben Sie bei Bedarf die Tasche oder den Gegenstand. Bestätigen Sie den Empfang erst, wenn die Einlieferung im Laden ist.",
+        "Bestätigen Sie den Empfang und öffnen Sie das Etikett. Die Artikel werden separat geprüft und erfasst."
+      ]
+    }
   },
   "brand": "Komisio",
   "tagline": "Mehr Raum für Dinge, die weiterleben.",

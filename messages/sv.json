@@ -132,7 +132,15 @@
     "typeRefused": "Varutypen kunde inte sparas i det aktuella läget. Avbryt och kontrollera butik och behörighet. Varans uppgifter ligger kvar.",
     "descriptionRequired": "Ange en beskrivning.",
     "priceInvalid": "Ange ett pris över 0 och högst 999 999,99. Högst två decimaler.",
-    "savedPriceUnavailable": "Varan är godkänd, men det sparade priset kunde inte läsas. Öppna varan för att kontrollera priset."
+    "savedPriceUnavailable": "Varan är godkänd, men det sparade priset kunde inte läsas. Öppna varan för att kontrollera priset.",
+    "formHelp": {
+      "label": "Hjälp för snabb mottagning",
+      "steps": [
+        "Välj inlämnare och registrera en vara i taget.",
+        "Fyll i beskrivning, kategori och pris. Kontrollera eventuella AI-förslag.",
+        "Spara varan. Använd bekräftelsen för att märka den eller fortsätta med nästa vara."
+      ]
+    }
   },
   "intake": {
     "quickLink": "Snabb mottagning: en skärm per plagg",
@@ -199,7 +207,15 @@
     "quickHint": "Beskrivning och pris räcker. Bild är valfritt.",
     "labelPreview": "Förhandsvisning",
     "otherPrint": "Annan skrivare eller PDF",
-    "browserPrint": "Öppna utskriftsdialog"
+    "browserPrint": "Öppna utskriftsdialog",
+    "formHelp": {
+      "label": "Hjälp för att ta emot en inlämning",
+      "steps": [
+        "Kontrollera att rätt inlämnare är vald.",
+        "Beskriv gärna påsen eller föremålet. Bekräfta bara mottagandet när inlämningen finns i butiken.",
+        "Bekräfta mottagandet och öppna märkningen. Varorna granskas och registreras separat."
+      ]
+    }
   },
   "brand": "Komisio",
   "tagline": "Mer utrymme för det som får nytt liv.",

@@ -132,7 +132,15 @@
     "typeRefused": "Non è stato possibile salvare il tipo di articolo nel contesto attuale. Annulla e verifica negozio e permessi. I dati dell’articolo sono conservati.",
     "descriptionRequired": "Inserisci una descrizione.",
     "priceInvalid": "Inserisci un prezzo superiore a 0 e non oltre 999.999,99. Usa al massimo due decimali.",
-    "savedPriceUnavailable": "Articolo accettato, ma non è stato possibile leggere il prezzo salvato. Apri articolo per controllare il prezzo."
+    "savedPriceUnavailable": "Articolo accettato, ma non è stato possibile leggere il prezzo salvato. Apri articolo per controllare il prezzo.",
+    "formHelp": {
+      "label": "Aiuto per la ricezione rapida",
+      "steps": [
+        "Seleziona il conferente e registra un articolo alla volta.",
+        "Inserisci descrizione, categoria e prezzo. Controlla gli eventuali suggerimenti IA.",
+        "Salva l’articolo. Dalla conferma puoi etichettarlo o passare al successivo."
+      ]
+    }
   },
   "intake": {
     "quickLink": "Ricezione rapida: una schermata per capo",
@@ -199,7 +207,15 @@
     "quickHint": "Bastano descrizione e prezzo. La foto è facoltativa.",
     "labelPreview": "Anteprima",
     "otherPrint": "Altra stampante o PDF",
-    "browserPrint": "Apri finestra di stampa"
+    "browserPrint": "Apri finestra di stampa",
+    "formHelp": {
+      "label": "Aiuto per ricevere una consegna",
+      "steps": [
+        "Verifica che sia selezionato il conferente corretto.",
+        "Puoi descrivere la borsa o l’oggetto. Conferma la ricezione solo quando la consegna è in negozio.",
+        "Conferma la ricezione e apri l’etichetta. Gli articoli vengono controllati e registrati separatamente."
+      ]
+    }
   },
   "brand": "Komisio",
   "tagline": "Più spazio perché le cose vivano di nuovo.",

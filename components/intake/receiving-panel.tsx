@@ -1,4 +1,5 @@
 'use client'
+import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -185,7 +186,11 @@ export function ReceivingPanel({
   }
   return (
     <section className="card intake-form">
-      <h2>{seller ? d.receive : d.newSeller}</h2>
+      {seller ? (
+        <FormHelpHeading title={d.receive} help={d.formHelp} />
+      ) : (
+        <h2>{d.newSeller}</h2>
+      )}
       {seller && (
         <p>
           <strong>{seller.name}</strong>

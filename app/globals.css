@@ -604,6 +604,27 @@ small {
 .operation-navigation {
   flex-wrap: wrap;
 }
+.settings-technical {
+  border-top: 1px solid var(--line);
+  margin-top: 24px;
+}
+.settings-technical > summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding: 12px 0;
+  font-weight: 650;
+}
+.settings-technical .read-details {
+  overflow-wrap: anywhere;
+}
+.audit-row > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.audit-row summary {
+  cursor: pointer;
+  padding: 10px 0;
+}
 .operation-filters {
   gap: 8px;
 }
@@ -2608,6 +2629,10 @@ button.text-link:hover:not(:disabled) {
   gap: 20px;
   min-width: 0;
 }
+.payouts-overview > .page-heading,
+.payouts-overview > .intake-notice {
+  margin: 0;
+}
 .payout-disclosure > summary,
 .payout-history > summary {
   cursor: pointer;
@@ -3354,6 +3379,111 @@ button.text-link:hover:not(:disabled) {
 
 .item-detail-heading h1 {
   overflow-wrap: anywhere;
+}
+.statement-totals {
+  margin: 24px 0;
+  max-width: 600px;
+}
+.statement-totals > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.statement-totals dd {
+  margin: 0;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.statement-totals > div:last-child {
+  border-bottom: 0;
+  border-top: 2px solid var(--ink);
+  font-weight: 700;
+}
+.statement-lines {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+.statement-lines th,
+.statement-lines td {
+  text-align: left;
+  vertical-align: top;
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--line);
+}
+.statement-lines .statement-money {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+@media screen and (max-width: 700px) {
+  .statement-lines thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .statement-lines,
+  .statement-lines tbody {
+    display: block;
+  }
+  .statement-lines tr {
+    display: grid;
+    gap: 12px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .statement-lines td {
+    display: block;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+  }
+  .statement-lines td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.8rem;
+    color: var(--muted);
+    white-space: normal;
+  }
+  .statement-lines td:last-child {
+    font-weight: 700;
+  }
+}
+@media print {
+  body:has(.statement) .app-shell {
+    display: block;
+    padding: 0;
+    min-height: 0;
+  }
+  body:has(.statement) {
+    background: white;
+  }
+  body:has(.statement) .app-shell > :not(main),
+  body:has(.statement) main > :not(.statement) {
+    display: none;
+  }
+  body:has(.statement) main {
+    padding: 0;
+    margin: 0;
+    max-width: none;
+  }
+  .statement {
+    border: 0;
+    padding: 0;
+    box-shadow: none;
+    color: #000;
+    border-radius: 0;
+  }
+  .statement-lines tr,
+  .statement-totals > div {
+    break-inside: avoid;
+  }
+  .statement-lines thead {
+    display: table-header-group;
+  }
 }
 .statement-help {
   margin-bottom: 12px;

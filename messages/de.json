@@ -335,8 +335,8 @@
   "tenantIdentity": "Store-Identität",
   "tenantId": "Store-ID",
   "tenantImmutable": "Diese Kennung unterscheidet Ihren Store von anderen Stores.",
-  "audit": "Letzte Zugriffsänderungen",
-  "noAudit": "Noch keine Änderungen vorhanden.",
+  "audit": "Letzte Aktivitäten",
+  "noAudit": "Noch keine Aktivitäten.",
   "accountIntro": "Ihre persönlichen Angaben begleiten Sie über alle Stores hinweg.",
   "profile": "Profil",
   "security": "Sicherheit",
@@ -386,7 +386,11 @@
     "inspection.reopened": "Artikelentwurf wieder geöffnet",
     "reception.created": "Annahme gestartet",
     "reception.sources_saved": "Annahmenachweise gespeichert",
-    "reception.review_published": "Annahmeprüfung vorbereitet"
+    "reception.review_published": "Annahmeprüfung vorbereitet",
+    "item.accepted": "Ein Artikel wurde registriert",
+    "store_policy.published": "Die Geschäftsregeln wurden aktualisiert",
+    "purchase.registered": "Ein Einkauf wurde erfasst",
+    "sale.recorded": "Ein Verkauf wurde erfasst"
   },
   "errors": {
     "FORBIDDEN": "Sie haben keine Berechtigung dafür.",
@@ -2976,5 +2980,8 @@
     "salesHint": "Erfasste Verkäufe ansehen.",
     "snapshot": "Stand im Laden",
     "receiptHint": "Jetzt annehmen, Artikel später prüfen."
-  }
+  },
+  "auditHint": "Die 12 zuletzt erfassten Ereignisse im Geschäft.",
+  "otherActivity": "Anderes Ereignis im Geschäft",
+  "technicalDetails": "Technische Geschäftsdetails"
 }

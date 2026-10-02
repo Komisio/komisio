@@ -393,25 +393,41 @@ export default async function Settings({
                 ) : null
               }
             />
-            <hr className="divider" />
-            <div className="read-details">
-              <label>{d.slug}</label>
-              <p>{active.slug}</p>
-              <label>{d.tenantId}</label>
-              <p>{active.id}</p>
-              <small>{d.tenantImmutable}</small>
-            </div>
+            <details className="settings-technical">
+              <summary>{d.technicalDetails}</summary>
+              <div className="read-details">
+                <strong>{d.slug}</strong>
+                <p>{active.slug}</p>
+                <strong>{d.tenantId}</strong>
+                <p>{active.id}</p>
+                <small>{d.tenantImmutable}</small>
+              </div>
+            </details>
           </section>
           {can(active.role, 'audit.read') && (
             <section className="card">
               <h2>{d.audit}</h2>
+              <p>{d.auditHint}</p>
               {events.data?.map((e) => (
                 <div key={e.id} className="audit-row">
                   <span>
-                    {d.events[e.action as keyof typeof d.events] ?? e.action}
+                    {d.events[e.action as keyof typeof d.events] ?? (
+                      <details>
+                        <summary>{d.otherActivity}</summary>
+                        <code>{e.action}</code>
+                      </details>
+                    )}
                   </span>
                   <small>
-                    {new Date(e.occurred_at).toLocaleDateString(ctx.locale)}
+                    {new Date(e.occurred_at).toLocaleDateString(
+                      intlLocale(ctx.locale),
+                      {
+                        timeZone: 'Europe/Stockholm',
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      },
+                    )}
                   </small>
                 </div>
               ))}

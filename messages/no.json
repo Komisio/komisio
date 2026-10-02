@@ -335,8 +335,8 @@
   "tenantIdentity": "Butikkidentitet",
   "tenantId": "Butikk-ID",
   "tenantImmutable": "Denne identifikatoren skiller butikken din fra andre butikker.",
-  "audit": "Siste tilgangsendringer",
-  "noAudit": "Ingen endringer å vise ennå.",
+  "audit": "Siste aktivitet",
+  "noAudit": "Ingen aktivitet ennå.",
   "accountIntro": "De personlige opplysningene dine følger deg på tvers av butikker.",
   "profile": "Profil",
   "security": "Sikkerhet",
@@ -386,7 +386,11 @@
     "inspection.reopened": "Vareutkast gjenåpnet",
     "reception.created": "Mottak startet",
     "reception.sources_saved": "Mottaksbevis lagret",
-    "reception.review_published": "Mottaksgjennomgang forberedt"
+    "reception.review_published": "Mottaksgjennomgang forberedt",
+    "item.accepted": "En vare ble registrert",
+    "store_policy.published": "Butikkens regler ble oppdatert",
+    "purchase.registered": "Et innkjøp ble registrert",
+    "sale.recorded": "Et salg ble registrert"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tillatelse til å gjøre dette.",
@@ -2970,5 +2974,8 @@
     "salesHint": "Se registrerte salg.",
     "snapshot": "Butikkens status",
     "receiptHint": "Ta imot nå, gå gjennom varene senere."
-  }
+  },
+  "auditHint": "De 12 siste registrerte hendelsene i butikken.",
+  "otherActivity": "Annen butikkhendelse",
+  "technicalDetails": "Tekniske butikkopplysninger"
 }

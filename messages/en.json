@@ -335,8 +335,8 @@
   "tenantIdentity": "Store identity",
   "tenantId": "Store id",
   "tenantImmutable": "This identifier distinguishes your store from other stores.",
-  "audit": "Recent access changes",
-  "noAudit": "No changes to show yet.",
+  "audit": "Recent activity",
+  "noAudit": "No activity yet.",
   "accountIntro": "Your personal details follow you across stores.",
   "profile": "Profile",
   "security": "Security",
@@ -386,7 +386,11 @@
     "inspection.reopened": "Item draft reopened",
     "reception.created": "Reception started",
     "reception.sources_saved": "Reception evidence saved",
-    "reception.review_published": "Reception review prepared"
+    "reception.review_published": "Reception review prepared",
+    "item.accepted": "An item was registered",
+    "store_policy.published": "The store policy was updated",
+    "purchase.registered": "A purchase was recorded",
+    "sale.recorded": "A sale was recorded"
   },
   "errors": {
     "FORBIDDEN": "You do not have permission to do this.",
@@ -2970,5 +2974,8 @@
     "salesHint": "View recorded sales.",
     "snapshot": "Store snapshot",
     "receiptHint": "Receive now, inspect the items later."
-  }
+  },
+  "auditHint": "The 12 most recent recorded events in the store.",
+  "otherActivity": "Other store event",
+  "technicalDetails": "Technical store details"
 }

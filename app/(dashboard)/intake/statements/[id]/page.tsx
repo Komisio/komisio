@@ -47,7 +47,7 @@ export default async function Statement({
           {all.sellerTerms.title}
         </Link>
       </div>
-      <article className="card intake-form statement">
+      <article className="card intake-form statement" lang={documentLanguage}>
         <p className="eyebrow">{active.name}</p>
         <h2>
           {s.kind === 'credit_note' ? d.creditNote : d.statement} {s.number}
@@ -85,7 +85,7 @@ export default async function Statement({
             </Link>
           </p>
         )}
-        <dl>
+        <dl className="statement-totals">
           <div>
             <dt>{d.opening}</dt>
             <dd>{money(s.opening_ore)}</dd>
@@ -123,21 +123,46 @@ export default async function Statement({
         </dl>
         <h3>{d.lines}</h3>
         {lines.length === 0 && <p>{d.noLines}</p>}
-        <table>
+        <table className="statement-lines">
+          <caption className="sr-only">{d.lines}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{all.sellerPortal.date}</th>
+              <th scope="col">{all.sellerPortal.kind}</th>
+              <th scope="col">{d.salePrice}</th>
+              <th scope="col">{d.commission}</th>
+              <th scope="col">
+                {all.sellerPortal.amount.replace('{currency}', currency)}
+              </th>
+            </tr>
+          </thead>
           <tbody>
             {lines.map((l) => (
               <tr key={l.id}>
-                <td>{when(l.occurred_at)}</td>
-                <td>
+                <td data-label={all.sellerPortal.date}>
+                  <time dateTime={l.occurred_at}>{when(l.occurred_at)}</time>
+                </td>
+                <td data-label={all.sellerPortal.kind}>
                   {all.ledger.kinds[l.kind as keyof typeof all.ledger.kinds] ??
                     l.kind}
                 </td>
-                <td>
-                  {l.sale_price_ore !== null
-                    ? `${d.salePrice} ${money(l.sale_price_ore)} · ${d.commission} ${money(l.commission_ore ?? 0)}`
-                    : ''}
+                <td data-label={d.salePrice} className="statement-money">
+                  {l.sale_price_ore !== null ? money(l.sale_price_ore) : '—'}
                 </td>
-                <td>{money(l.amount_ore)}</td>
+                <td data-label={d.commission} className="statement-money">
+                  {l.sale_price_ore !== null
+                    ? money(l.commission_ore ?? 0)
+                    : '—'}
+                </td>
+                <td
+                  data-label={all.sellerPortal.amount.replace(
+                    '{currency}',
+                    currency,
+                  )}
+                  className="statement-money"
+                >
+                  {money(l.amount_ore)}
+                </td>
               </tr>
             ))}
           </tbody>

@@ -335,8 +335,8 @@
   "tenantIdentity": "Butikkens identitet",
   "tenantId": "Butiks-id",
   "tenantImmutable": "Dette id adskiller din butik fra andre butikker.",
-  "audit": "Seneste adgangsændringer",
-  "noAudit": "Ingen ændringer at vise endnu.",
+  "audit": "Seneste aktivitet",
+  "noAudit": "Ingen aktivitet endnu.",
   "accountIntro": "Dine personlige oplysninger følger dig på tværs af butikker.",
   "profile": "Profil",
   "security": "Sikkerhed",
@@ -386,7 +386,11 @@
     "inspection.reopened": "Vareudkast genåbnet",
     "reception.created": "Modtagelse startet",
     "reception.sources_saved": "Modtagelsesdokumentation gemt",
-    "reception.review_published": "Modtagelsesgennemgang forberedt"
+    "reception.review_published": "Modtagelsesgennemgang forberedt",
+    "item.accepted": "En vare blev registreret",
+    "store_policy.published": "Butikkens regler blev opdateret",
+    "purchase.registered": "Et køb blev registreret",
+    "sale.recorded": "Et salg blev registreret"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tilladelse til dette.",
@@ -2970,5 +2974,8 @@
     "salesHint": "Se registrerede salg.",
     "snapshot": "Butikkens status",
     "receiptHint": "Modtag nu, gennemgå varerne senere."
-  }
+  },
+  "auditHint": "De 12 senest registrerede hændelser i butikken.",
+  "otherActivity": "Anden butikshændelse",
+  "technicalDetails": "Tekniske butiksoplysninger"
 }

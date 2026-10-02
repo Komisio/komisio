@@ -18,6 +18,26 @@ test('notification policy and assistance quota persist', async ({ page }) => {
         hydrationErrors.push(message.text())
     })
     await f.commit()
+    await page.setViewportSize({ width: 375, height: 800 })
+    await page.goto('/settings?tab=store')
+    await expect(
+      page.getByRole('heading', { name: d.audit, exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByText(d.events['store_policy.published'], { exact: true }),
+    ).toBeVisible()
+    await expect(page.getByText(f.tenant, { exact: true })).not.toBeVisible()
+    await page.locator('.settings-technical > summary').click()
+    await expect(page.getByText(f.tenant, { exact: true })).toBeVisible()
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true)
+    await page.screenshot({
+      path: 'private/ux-audit-2026-10-02/settings-store-mobile.png',
+      fullPage: true,
+    })
     await page.goto('/settings')
     await page
       .getByLabel(d.storePolicy.automaticSellerNotifications, { exact: true })

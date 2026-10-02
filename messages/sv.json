@@ -335,8 +335,8 @@
   "tenantIdentity": "Butikens identitet",
   "tenantId": "Butiks-id",
   "tenantImmutable": "Identifieraren används för att skilja butiken från andra butiker.",
-  "audit": "Senaste behörighetsändringar",
-  "noAudit": "Inga ändringar att visa ännu.",
+  "audit": "Senaste aktivitet",
+  "noAudit": "Ingen aktivitet ännu.",
   "accountIntro": "Dina personliga uppgifter följer med mellan butikerna.",
   "profile": "Profil",
   "security": "Säkerhet",
@@ -386,7 +386,11 @@
     "inspection.reopened": "Ett varuutkast återöppnades",
     "reception.created": "En mottagning startades",
     "reception.sources_saved": "Underlag för mottagningen sparades",
-    "reception.review_published": "Ett granskningsunderlag sparades"
+    "reception.review_published": "Ett granskningsunderlag sparades",
+    "item.accepted": "En vara registrerades",
+    "store_policy.published": "Butikspolicyn uppdaterades",
+    "purchase.registered": "Ett inköp registrerades",
+    "sale.recorded": "En försäljning registrerades"
   },
   "errors": {
     "FORBIDDEN": "Du har inte behörighet att göra detta.",
@@ -2970,5 +2974,8 @@
     "salesHint": "Se registrerade försäljningar.",
     "snapshot": "Butikens läge",
     "receiptHint": "Ta emot nu, gå igenom varorna senare."
-  }
+  },
+  "auditHint": "De 12 senaste registrerade händelserna i butiken.",
+  "otherActivity": "Annan butikshändelse",
+  "technicalDetails": "Tekniska butiksuppgifter"
 }

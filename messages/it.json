@@ -335,8 +335,8 @@
   "tenantIdentity": "Identità del negozio",
   "tenantId": "ID del negozio",
   "tenantImmutable": "Questo identificativo distingue il tuo negozio dagli altri negozi.",
-  "audit": "Modifiche recenti agli accessi",
-  "noAudit": "Nessuna modifica da mostrare per ora.",
+  "audit": "Attività recente",
+  "noAudit": "Nessuna attività per ora.",
   "accountIntro": "I tuoi dati personali ti seguono in tutti i negozi.",
   "profile": "Profilo",
   "security": "Sicurezza",
@@ -386,7 +386,11 @@
     "inspection.reopened": "Bozza articolo riaperta",
     "reception.created": "Ricezione avviata",
     "reception.sources_saved": "Prove della ricezione salvate",
-    "reception.review_published": "Revisione della ricezione preparata"
+    "reception.review_published": "Revisione della ricezione preparata",
+    "item.accepted": "È stato registrato un articolo",
+    "store_policy.published": "Le regole del negozio sono state aggiornate",
+    "purchase.registered": "È stato registrato un acquisto",
+    "sale.recorded": "È stata registrata una vendita"
   },
   "errors": {
     "FORBIDDEN": "Non hai i permessi per farlo.",
@@ -2970,5 +2974,8 @@
     "salesHint": "Consulta le vendite registrate.",
     "snapshot": "Situazione del negozio",
     "receiptHint": "Ricevi ora, controlla gli articoli dopo."
-  }
+  },
+  "auditHint": "I 12 eventi registrati più recenti del negozio.",
+  "otherActivity": "Altro evento del negozio",
+  "technicalDetails": "Dati tecnici del negozio"
 }

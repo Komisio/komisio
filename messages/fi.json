@@ -335,8 +335,8 @@
   "tenantIdentity": "Kaupan identiteetti",
   "tenantId": "Kaupan tunnus",
   "tenantImmutable": "Tämä tunniste erottaa kauppasi muista kaupoista.",
-  "audit": "Viimeaikaiset käyttöoikeusmuutokset",
-  "noAudit": "Ei vielä näytettäviä muutoksia.",
+  "audit": "Viimeisimmät tapahtumat",
+  "noAudit": "Ei vielä tapahtumia.",
   "accountIntro": "Henkilökohtaiset tietosi seuraavat sinua kaupasta toiseen.",
   "profile": "Profiili",
   "security": "Turvallisuus",
@@ -386,7 +386,11 @@
     "inspection.reopened": "Tuoteluonnos avattu uudelleen",
     "reception.created": "Vastaanotto aloitettu",
     "reception.sources_saved": "Vastaanoton todisteet tallennettu",
-    "reception.review_published": "Vastaanoton tarkistus valmisteltu"
+    "reception.review_published": "Vastaanoton tarkistus valmisteltu",
+    "item.accepted": "Tuote rekisteröitiin",
+    "store_policy.published": "Myymälän käytäntö päivitettiin",
+    "purchase.registered": "Osto kirjattiin",
+    "sale.recorded": "Myynti kirjattiin"
   },
   "errors": {
     "FORBIDDEN": "Sinulla ei ole oikeutta tehdä tätä.",
@@ -2976,5 +2980,8 @@
     "salesHint": "Katso kirjatut myynnit.",
     "snapshot": "Myymälän tilanne",
     "receiptHint": "Ota vastaan nyt, tarkasta tuotteet myöhemmin."
-  }
+  },
+  "auditHint": "Myymälän 12 viimeisintä kirjattua tapahtumaa.",
+  "otherActivity": "Muu myymälän tapahtuma",
+  "technicalDetails": "Myymälän tekniset tiedot"
 }

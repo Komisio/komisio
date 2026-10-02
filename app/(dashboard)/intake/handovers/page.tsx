@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import './handovers.css'
 import { notFound, redirect } from 'next/navigation'
@@ -204,3 +205,6 @@ export default async function Handovers({
     </div>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.handovers.title)

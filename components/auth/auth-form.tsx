@@ -36,6 +36,16 @@ export function AuthForm({
     setLocale(value)
     document.cookie = `komisio-locale=${value};path=/;SameSite=Lax`
     document.documentElement.lang = value
+    const translated = dictionary(value)
+    const title =
+      mode === 'login'
+        ? translated.login
+        : mode === 'register'
+          ? translated.register
+          : mode === 'reset'
+            ? translated.reset
+            : translated.passwordChange
+    document.title = `${title} · Komisio`
   }
   async function submit(form: React.FormEvent<HTMLFormElement>) {
     form.preventDefault()

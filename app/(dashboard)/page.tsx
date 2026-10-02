@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import {
   Check,
@@ -300,3 +301,5 @@ export default async function Home() {
     </div>
   )
 }
+
+export const generateMetadata = () => platformPageMetadata((d) => d.home)

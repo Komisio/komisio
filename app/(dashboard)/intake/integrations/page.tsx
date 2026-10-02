@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { FortnoxConnection } from '@/components/intake/fortnox-connection'
 import { FortnoxGuide } from '@/components/help/fortnox-guide'
 import { paypalEnvironment } from '@/lib/engine/paypal-credentials'
@@ -649,3 +650,6 @@ export default async function Integrations({
     </div>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.nav.integrations)

@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -526,3 +527,6 @@ export default async function Reception({
     </div>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.reception.title)

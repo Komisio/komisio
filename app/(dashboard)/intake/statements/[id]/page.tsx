@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { readStatementSellerContact } from '@/lib/engine/seller-profile'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -177,3 +178,6 @@ export default async function Statement({
     </>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.statements.title)

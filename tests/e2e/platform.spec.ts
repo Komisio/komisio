@@ -4,6 +4,16 @@ import { randomBytes, createHmac } from 'node:crypto'
 import { createRequire } from 'node:module'
 import sharp from 'sharp'
 import d from '../../messages/sv.json' with { type: 'json' }
+import { readFileSync } from 'node:fs'
+import type { Dictionary } from '../../lib/i18n'
+const locales = ['sv', 'en', 'no', 'dk', 'fi', 'de', 'es', 'it'] as const
+const dictionary = (locale: string): Dictionary =>
+  JSON.parse(
+    readFileSync(
+      new URL(`../../messages/${locale}.json`, import.meta.url),
+      'utf8',
+    ),
+  )
 
 test('saved inspection drafts resume safely and preserve conflicting edits', async ({
   page,
@@ -1102,6 +1112,28 @@ test('password recovery and MFA protect the authenticated platform', async ({
       await page.request.get('/api/seller/handovers/code?' + codeQuery)
     ).status(),
   ).toBe(401)
+  for (const locale of locales) {
+    await page
+      .context()
+      .addCookies([
+        { name: 'komisio-locale', value: locale, url: 'http://127.0.0.1:3000' },
+      ])
+    await page.reload()
+    const translated = dictionary(locale)
+    await expect(page).toHaveTitle(`${translated.mfaLogin} · Komisio`)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      translated.mfaLogin,
+    )
+    await expect(
+      page.getByLabel(translated.mfaCode, { exact: true }),
+    ).toBeVisible()
+  }
+  await page
+    .context()
+    .addCookies([
+      { name: 'komisio-locale', value: 'sv', url: 'http://127.0.0.1:3000' },
+    ])
+  await page.reload()
   await page.getByLabel('Sexsiffrig kod').fill(totp(factor.totp.secret))
   await page.getByRole('button', { name: 'Verifiera kod' }).click()
   await expect(page).toHaveURL(

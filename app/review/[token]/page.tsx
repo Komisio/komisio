@@ -1,17 +1,19 @@
 import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { notFound, redirect } from 'next/navigation'
-import { platformContext } from '@/lib/platform/context'
+import { renderPlatformContext as platformContext } from '@/lib/platform/context'
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { readSellerReview } from '@/lib/engine/seller-review'
 import { dictionary, intlLocale } from '@/lib/i18n'
 import { Brand } from '@/components/platform/brand'
 import { Button } from '@/components/ui/button'
 import { SignOut } from '@/components/platform/sign-out'
 import { SellerResponse } from '@/components/reception/seller-response'
-export const metadata = {
-  robots: { index: false, follow: false },
-  referrer: 'no-referrer' as const,
-}
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.reviewTitle, {
+    robots: { index: false, follow: false },
+    referrer: 'no-referrer',
+  })
 export default async function Review({
   params,
 }: {

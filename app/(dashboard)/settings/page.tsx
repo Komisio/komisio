@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import { z } from 'zod'
 import { StorePolicyForm } from '@/components/intake/store-policy-form'
@@ -450,3 +451,5 @@ export default async function Settings({
     </div>
   )
 }
+
+export const generateMetadata = () => platformPageMetadata((d) => d.tenant)

@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { AccountForm, PasswordForm } from '@/components/platform/account-form'
@@ -50,3 +51,5 @@ export default async function Account() {
     </>
   )
 }
+
+export const generateMetadata = () => platformPageMetadata((d) => d.account)

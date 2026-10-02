@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
@@ -53,9 +54,10 @@ export default async function BagLabel({
     throw new Error('Unable to load receipt agreement')
   return (
     <div className="bag-label-page">
-      <Link className="text-link no-print" href="/intake">
+      {/* Reload the queue: cached client navigation can retain #new-seller. */}
+      <a className="text-link no-print" href="/intake">
         {d.back}
-      </Link>
+      </a>
       <div className="page-heading no-print">
         <h1>{d.label}</h1>
       </div>
@@ -139,3 +141,5 @@ export default async function BagLabel({
     </div>
   )
 }
+
+export const generateMetadata = () => platformPageMetadata((d) => d.intake.bag)

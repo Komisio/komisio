@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
@@ -110,3 +111,6 @@ export default async function Agreements({
     </>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.agreements.title)

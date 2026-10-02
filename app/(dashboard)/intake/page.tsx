@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { NewSellerDisclosure } from '@/components/intake/new-seller-disclosure'
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import Link from 'next/link'
@@ -421,3 +422,6 @@ export default async function Intake({
     </div>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.intake.title)

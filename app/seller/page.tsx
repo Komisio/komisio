@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import './seller-portal.css'
 import { notFound, redirect } from 'next/navigation'
-import { platformContext } from '@/lib/platform/context'
+import { renderPlatformContext as platformContext } from '@/lib/platform/context'
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { dictionary, intlLocale } from '@/lib/i18n'
 import {
   readMySellerAccounts,
@@ -22,10 +23,11 @@ import {
 import { readStoreCurrency } from '@/lib/engine/money'
 import { SignOut } from '@/components/platform/sign-out'
 import { Brand } from '@/components/platform/brand'
-export const metadata = {
-  robots: { index: false, follow: false },
-  referrer: 'no-referrer' as const,
-}
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.sellerPortal.title, {
+    robots: { index: false, follow: false },
+    referrer: 'no-referrer',
+  })
 export default async function SellerPortal({
   searchParams,
 }: {

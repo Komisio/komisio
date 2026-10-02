@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { statementPeriodDefaults } from '@/lib/intake/statement-period'
 import { SellerTabs } from '@/components/intake/seller-tabs'
 import { readBagQueue } from '@/lib/engine/bag-queue'
@@ -914,3 +915,6 @@ export default async function Seller({
     </div>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.sellersList.title)

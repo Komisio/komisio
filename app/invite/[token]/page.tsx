@@ -1,7 +1,8 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { notFound, redirect } from 'next/navigation'
-import { platformContext } from '@/lib/platform/context'
+import { renderPlatformContext as platformContext } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { Brand } from '@/components/platform/brand'
 import { AcceptInvite } from '@/components/platform/accept-invite'
@@ -52,3 +53,6 @@ export default async function Invite({
     </main>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.inviteAcceptTitle)

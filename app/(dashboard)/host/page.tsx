@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { requirePlatform } from '@/lib/platform/context'
@@ -44,3 +45,6 @@ export default async function Host() {
     </>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.plans.hostTitle)

@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { ActorSignature } from '@/components/intake/actor-signature'
 import { notFound } from 'next/navigation'
@@ -239,3 +240,5 @@ export default async function Item({
     </>
   )
 }
+
+export const generateMetadata = () => platformPageMetadata((d) => d.items.item)

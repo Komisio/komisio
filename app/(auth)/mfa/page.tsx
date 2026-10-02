@@ -1,6 +1,8 @@
+import { publicPageMetadata } from '@/lib/platform/page-metadata'
 import { redirect } from 'next/navigation'
 import { serverClient } from '@/lib/supabase/server'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, resolveLocale } from '@/lib/i18n'
+import { cookies } from 'next/headers'
 import { MfaForm } from '@/components/auth/mfa-form'
 import { Brand } from '@/components/platform/brand'
 export default async function Mfa({
@@ -16,7 +18,9 @@ export default async function Mfa({
   const { data } = await client.auth.mfa.listFactors()
   const factor = data?.totp.find((f) => f.status === 'verified')
   if (!factor) redirect('/')
-  const d = dictionary()
+  const d = dictionary(
+    resolveLocale((await cookies()).get('komisio-locale')?.value),
+  )
   return (
     <main className="onboarding">
       <Brand />
@@ -27,3 +31,5 @@ export default async function Mfa({
     </main>
   )
 }
+
+export const generateMetadata = () => publicPageMetadata((d) => d.mfaLogin)

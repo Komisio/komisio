@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { FortnoxGuide } from '@/components/help/fortnox-guide'
 import { ContextHelp } from '@/components/help/context-help'
@@ -479,3 +480,6 @@ export default async function Accounting({
     </div>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.accounting.title)

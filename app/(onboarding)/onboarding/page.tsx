@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import Link from 'next/link'
@@ -37,3 +38,6 @@ export default async function Onboarding() {
     </main>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.createTenant)

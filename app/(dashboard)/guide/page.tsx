@@ -3,6 +3,10 @@ import { readStoreGuide } from '@/lib/engine/store-guide'
 import { guideCopy } from '@/lib/guide-copy'
 import { StoreGuide } from '@/components/platform/store-guide'
 import { dictionary } from '@/lib/i18n'
+export async function generateMetadata() {
+  const ctx = await requirePlatform(false)
+  return { title: guideCopy(ctx.locale).start }
+}
 
 export default async function GuidePage() {
   const ctx = await requirePlatform()

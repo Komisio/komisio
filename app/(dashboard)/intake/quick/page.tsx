@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { notFound } from 'next/navigation'
@@ -67,3 +68,6 @@ export default async function QuickIntake() {
     </div>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.quickIntake.title)

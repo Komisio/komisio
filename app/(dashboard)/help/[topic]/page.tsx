@@ -4,6 +4,20 @@ import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { isHelpTopic } from '@/lib/help/topics'
 import { HelpArticle } from '@/components/help/article'
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ topic: string }>
+}) {
+  const { topic } = await params
+  return platformPageMetadata((d) =>
+    isHelpTopic(topic)
+      ? d.helpCenter.articles[topic].title
+      : d.helpCenter.title,
+  )
+}
 
 export default async function HelpPage({
   params,

@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
@@ -29,3 +30,6 @@ export default async function Help() {
     </>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.helpCenter.title)

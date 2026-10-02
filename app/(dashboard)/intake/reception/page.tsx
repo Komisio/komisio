@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { ArrowRight, Plus } from 'lucide-react'
 import { notFound } from 'next/navigation'
@@ -206,3 +207,6 @@ export default async function Receptions({
     </>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.reception.queueTitle)

@@ -24,11 +24,15 @@ export function AccountForm({
     if (action.busy) return
     setEdited(false)
     const form = new FormData(e.currentTarget)
-    const result = await action.run({
-      action: 'profile',
-      name: form.get('name'),
-      locale: form.get('locale'),
-    })
+    const result = await action.run(
+      {
+        action: 'profile',
+        name: form.get('name'),
+        locale: form.get('locale'),
+      },
+      // Refresh once, after the confirmed language is also in the cookie.
+      { refresh: false },
+    )
     if (result) {
       document.cookie = `komisio-locale=${form.get('locale')};path=/;SameSite=Lax`
       document.documentElement.lang = String(form.get('locale'))

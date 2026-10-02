@@ -7,7 +7,7 @@ export function useCommand(d: Dictionary) {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const router = useRouter()
-  async function run(command: object) {
+  async function run(command: object, options: { refresh?: boolean } = {}) {
     setBusy(true)
     setError('')
     setSuccess('')
@@ -20,7 +20,7 @@ export function useCommand(d: Dictionary) {
       const result = await response.json()
       if (!response.ok) throw new Error(result.error)
       setSuccess(d.saved)
-      router.refresh()
+      if (options.refresh !== false) router.refresh()
       return result as {
         data?: string
         inviteUrl?: string

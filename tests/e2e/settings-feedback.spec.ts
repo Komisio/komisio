@@ -41,6 +41,9 @@ test('saved account and store messages never describe a later unsubmitted edit',
     await expect.poll(() => savedStatus).toBe(200)
     release()
     await expect(form.locator('.notice-success')).toHaveText(d.saved)
+    await expect(page.locator('.account-label').first()).toContainText(
+      'Synthetic saved name',
+    )
     await expect(name).toBeEnabled()
     await name.fill('Synthetic not saved yet')
     await expect(form.locator('.notice-success')).toHaveCount(0)
@@ -52,7 +55,8 @@ test('saved account and store messages never describe a later unsubmitted edit',
         )
       ).rows[0].display_name,
     ).toBe('Synthetic saved name')
-    await page.goto('/settings?tab=store')
+    await page.locator('.sidebar-nav a[href="/settings"]').click()
+    await page.locator('.view-tab[href="/settings?tab=store"]').click()
     const tenant = page
       .locator('form')
       .filter({ has: page.locator('#tenant-name') })

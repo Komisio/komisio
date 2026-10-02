@@ -1656,7 +1656,7 @@
     "formatInvalid": "Leveys 20–120 mm, korkeus 15–200 mm, enintään yksi desimaali.",
     "defaultSize": "oletus",
     "title": "Tulostimet ja etiketit",
-    "intro": "Etiketit ovat ZPL-ohjelmia, jotka lisätään kaupan tulostimen jonoon. Tulostimen vieressä oleva paikallinen agentti noutaa työt ja raportoi tuloksen.",
+    "intro": "Hallitse myymälän etikettitulostimia ja tarkista viimeisimmät tulostustyöt. Tavalliselle paperille voi tulostaa etikettejä suoraan tuotesivulta.",
     "none": "Tulostimia ei ole rekisteröity.",
     "registerHeading": "Rekisteröi tulostin",
     "name": "Nimi",

@@ -1656,7 +1656,7 @@
     "formatInvalid": "Width 20 to 120 mm, height 15 to 200 mm, at most one decimal.",
     "defaultSize": "default",
     "title": "Printers and labels",
-    "intro": "Labels are ZPL programs queued for a store printer. A local agent next to the printer picks up jobs and reports the outcome.",
+    "intro": "Manage the store’s label printers and check recent print jobs. Labels on ordinary paper can be printed directly from the item page.",
     "none": "No printers registered.",
     "registerHeading": "Register a printer",
     "name": "Name",

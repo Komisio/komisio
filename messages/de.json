@@ -1656,7 +1656,7 @@
     "formatInvalid": "Breite 20 bis 120 mm, Höhe 15 bis 200 mm, höchstens eine Dezimalstelle.",
     "defaultSize": "Standard",
     "title": "Drucker und Etiketten",
-    "intro": "Etiketten sind ZPL-Programme, die für einen Store-Drucker eingereiht werden. Ein lokaler Agent neben dem Drucker holt Aufträge ab und meldet das Ergebnis.",
+    "intro": "Verwalten Sie die Etikettendrucker des Geschäfts und prüfen Sie die letzten Druckaufträge. Etiketten auf normalem Papier können direkt auf der Artikelseite gedruckt werden.",
     "none": "Keine Drucker registriert.",
     "registerHeading": "Drucker registrieren",
     "name": "Name",

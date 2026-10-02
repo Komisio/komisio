@@ -1656,7 +1656,7 @@
     "formatInvalid": "Bredde 20 til 120 mm, højde 15 til 200 mm, højst én decimal.",
     "defaultSize": "standard",
     "title": "Printere og mærkater",
-    "intro": "Mærkater er ZPL-programmer sat i kø til en butiksprinter. En lokal agent ved siden af printeren henter job og rapporterer resultatet.",
+    "intro": "Administrer butikkens etiketprintere og se seneste udskrifter. Etiketter på almindeligt papir kan udskrives direkte fra varesiden.",
     "none": "Ingen printere registreret.",
     "registerHeading": "Registrer en printer",
     "name": "Navn",

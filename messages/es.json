@@ -1656,7 +1656,7 @@
     "formatInvalid": "Ancho de 20 a 120 mm, alto de 15 a 200 mm, como máximo un decimal.",
     "defaultSize": "por defecto",
     "title": "Impresoras y etiquetas",
-    "intro": "Las etiquetas son programas ZPL puestos en cola para una impresora de la tienda. Un agente local junto a la impresora recoge los trabajos e informa del resultado.",
+    "intro": "Gestiona las impresoras de etiquetas de la tienda y consulta las últimas impresiones. Las etiquetas en papel normal se pueden imprimir directamente desde la página del artículo.",
     "none": "No hay impresoras registradas.",
     "registerHeading": "Registrar una impresora",
     "name": "Nombre",

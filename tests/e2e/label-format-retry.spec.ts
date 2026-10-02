@@ -13,6 +13,7 @@ async function openRow(page: Page, email: string) {
   await f.commit()
   await page.setViewportSize({ width: 320, height: 720 })
   await page.goto('/settings?tab=printing')
+  await page.locator('.label-formats-fold > summary').click()
   const row = page.getByRole('group', {
     name: new RegExp(d.printing.kinds.item),
   })
@@ -114,6 +115,11 @@ for (const reply of [
         alert: row.getByRole('alert'),
       })
       await reload.click()
+      await expect(page.locator('.label-formats-fold')).not.toHaveAttribute(
+        'open',
+        '',
+      )
+      await page.locator('.label-formats-fold > summary').click()
       await expect(width).toHaveValue('72')
       await expect(height).toHaveValue('45')
       await expect(width).toBeEnabled()
@@ -283,6 +289,11 @@ test('known validation is correctable and a later uncertain save clears old conf
     })
     await expect(reload).toBeVisible()
     await reload.click()
+    await expect(page.locator('.label-formats-fold')).not.toHaveAttribute(
+      'open',
+      '',
+    )
+    await page.locator('.label-formats-fold > summary').click()
     await expect(width).toHaveValue('64')
     expect(calls).toBe(3)
     expect(

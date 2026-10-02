@@ -3502,6 +3502,23 @@ button.text-link:hover:not(:disabled) {
   border-top: 1px solid var(--line);
   overflow-wrap: anywhere;
 }
+.printing-workspace > details,
+.printing-workspace .label-formats-fold,
+.printing-jobs {
+  margin: 24px 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.printing-workspace > details > summary,
+.label-formats-fold > summary {
+  cursor: pointer;
+  min-height: 44px;
+  align-content: center;
+  font-weight: 600;
+}
+.printer-register-fold > form {
+  margin-top: 16px;
+}
 .skip-link {
   position: fixed;
   z-index: 1000;

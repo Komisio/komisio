@@ -20,13 +20,18 @@ export function LabelFormatsForm({
   d: Dictionary['printing']
   intake: Dictionary['intake']
 }) {
+  const [expanded, setExpanded] = useState(false)
   const kinds = ['bag', 'garment', 'item', 'markdown', 'onboarding'] as const
   // One group per label kind rather than a table: on a phone the kind, both
   // sizes, the action and any message stack within the viewport instead of
   // scrolling sideways; on a desktop the same groups lay out as rows.
   return (
-    <div>
-      <h3>{d.formatsHeading}</h3>
+    <details
+      className="label-formats-fold"
+      open={expanded}
+      onToggle={(event) => setExpanded(event.currentTarget.open)}
+    >
+      <summary>{d.formatsHeading}</summary>
       <p>{d.formatsIntro}</p>
       <div className="label-formats">
         {kinds.map((kind) => (
@@ -41,7 +46,7 @@ export function LabelFormatsForm({
           />
         ))}
       </div>
-    </div>
+    </details>
   )
 }
 

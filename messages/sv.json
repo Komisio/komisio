@@ -1656,7 +1656,7 @@
     "formatInvalid": "Bredd 20 till 120 mm, höjd 15 till 200 mm, högst en decimal.",
     "defaultSize": "standard",
     "title": "Skrivare och etiketter",
-    "intro": "Etiketter är ZPL-program som köas till en butiksskrivare. En lokal agent vid skrivaren hämtar jobben och rapporterar utfallet.",
+    "intro": "Hantera butikens etikettskrivare och följ senaste utskrifter. Etiketter på vanligt papper kan skrivas ut direkt från varusidan.",
     "none": "Inga skrivare registrerade.",
     "registerHeading": "Registrera en skrivare",
     "name": "Namn",

@@ -1656,7 +1656,7 @@
     "formatInvalid": "Larghezza da 20 a 120 mm, altezza da 15 a 200 mm, al massimo un decimale.",
     "defaultSize": "predefinita",
     "title": "Stampanti ed etichette",
-    "intro": "Le etichette sono programmi ZPL messi in coda per una stampante del negozio. Un agente locale accanto alla stampante preleva i lavori e ne riporta l'esito.",
+    "intro": "Gestisci le stampanti di etichette del negozio e controlla le stampe recenti. Le etichette su carta normale si possono stampare direttamente dalla pagina dell’articolo.",
     "none": "Nessuna stampante registrata.",
     "registerHeading": "Registra una stampante",
     "name": "Nome",

@@ -235,9 +235,15 @@ export default async function Settings({
         />
       )}
       {tab === 'printing' && (
-        <section className="card intake-form" aria-label={pr.title}>
+        <section
+          className="card intake-form printing-workspace"
+          aria-label={pr.title}
+        >
           <h2>{pr.title}</h2>
           <p>{pr.intro}</p>
+          <Link className="text-link" href="/help/labels">
+            {d.helpCenter.articles.labels.title}
+          </Link>
           {requestedJob !== null && (
             <section aria-labelledby="selected-print-job">
               <h3 id="selected-print-job" tabIndex={-1}>
@@ -280,16 +286,26 @@ export default async function Settings({
             </details>
           ))}
           {manages && (
-            <>
-              <h3>{pr.registerHeading}</h3>
+            <details
+              className="printer-register-fold"
+              open={printers.length === 0}
+            >
+              <summary>{pr.registerHeading}</summary>
               <PrinterForm
                 key={`new-${printers.length}`}
                 tenantId={active.id}
                 d={pr}
                 intake={d.intake}
               />
-            </>
+            </details>
           )}
+          <section className="printing-jobs" aria-labelledby="print-jobs">
+            <h3 id="print-jobs" tabIndex={-1}>
+              {pr.jobs}
+            </h3>
+            {jobs.length === 0 && <p>{pr.noJobs}</p>}
+            {recentJobs.map(jobDetails)}
+          </section>
           {formats && (
             <LabelFormatsForm
               key={`formats-${active.id}`}
@@ -338,11 +354,6 @@ export default async function Settings({
               intake={d.intake}
             />
           )}
-          <h3 id="print-jobs" tabIndex={-1}>
-            {pr.jobs}
-          </h3>
-          {jobs.length === 0 && <p>{pr.noJobs}</p>}
-          {recentJobs.map(jobDetails)}
           <p>
             <small>{pr.agentHint}</small>
           </p>

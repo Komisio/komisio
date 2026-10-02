@@ -41,10 +41,18 @@ test('the label template editor fits a 320px phone in every language and keeps t
           has: page.locator('textarea[id^="template-zpl-"]'),
         })
         const zpl = editor.locator('textarea[id^="template-zpl-"]')
-        // Collapsed until asked for; the label sizes stay directly available.
+        // Occasional configuration stays folded below the recent print jobs.
         await expect(fold).not.toHaveAttribute('open', '')
         await expect(zpl).toBeHidden()
-        await expect(page.locator('.label-format-kind').first()).toBeVisible()
+        await expect(page.locator('.label-format-kind').first()).toBeHidden()
+        const sizes = page.locator('.label-formats-fold > summary')
+        await expect(sizes).toHaveText(d.printing.formatsHeading)
+        await expect(
+          page.getByRole('heading', { name: d.printing.jobs, exact: true }),
+        ).toBeVisible()
+        expect((await sizes.boundingBox())!.y).toBeGreaterThan(
+          (await page.locator('#print-jobs').boundingBox())!.y,
+        )
         await expect(summary).toHaveText(d.printing.templatesHeading)
         expect(
           (await summary.boundingBox())!.height,
@@ -102,6 +110,7 @@ test('the label template editor fits a 320px phone in every language and keeps t
           ).toBeVisible()
         // Every label size group (kind, both sizes with their labels, the
         // action) lies inside the viewport without any horizontal scrolling.
+        await page.locator('.label-formats-fold > summary').click()
         const groups = await page.locator('.label-format').all()
         expect(groups.length, `${locale} groups`).toBe(5)
         for (const group of groups) {

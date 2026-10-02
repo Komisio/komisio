@@ -112,7 +112,7 @@ try {
     await page.getByLabel('Lösenord', { exact: true }).fill(password)
     await page.getByRole('button', { name: 'Logga in', exact: true }).click()
     await expect(page).not.toHaveURL(/\/login/)
-    await page.goto(`${origin}/intake/integrations`)
+    await page.goto(`${origin}/intake/integrations?provider=paypal`)
     await page
       .getByText(`PayPal POS · ${dictionary.integrationPage.manage}`, {
         exact: true,

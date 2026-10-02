@@ -10,6 +10,8 @@ import {
 } from '@/lib/engine/store-profile'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
+import { useFormDirty } from '@/components/platform/use-form-dirty'
 
 function OpeningHoursRow({
   day,
@@ -95,6 +97,11 @@ export function StoreProfileForm({
   const submittedFields = useRef<FormData | null>(null)
   const action = useIntakeAction(d.intake),
     router = useRouter()
+  const form = useRef<HTMLFormElement>(null)
+  const { dirty, checkDirty } = useFormDirty(form)
+  useUnsavedChanges(
+    editable && !saved && (dirty || action.locked) ? d.leaveUnsaved : null,
+  )
   const hours = new Map(profile.openingHours.map((h) => [h.day, h]))
   return (
     <section
@@ -105,6 +112,8 @@ export function StoreProfileForm({
       <p>{t.intro}</p>
       <p>{base.id ? `${t.version} ${base.version}` : t.defaults}</p>
       <form
+        ref={form}
+        onChange={checkDirty}
         onSubmit={async (e) => {
           e.preventDefault()
           if (action.busy || action.needsReload) return

@@ -21,7 +21,9 @@ for (const reply of ['lost', 'wrong-id', 'validation-5xx'] as const)
       })
       const city = region.locator('#profile-city')
       await city.fill('Synthetic retry city')
-      await region.getByLabel(d.storeProfile.days.mon, { exact: true }).check()
+      await region
+        .getByRole('checkbox', { name: d.storeProfile.days.mon, exact: true })
+        .check()
       await region.locator('#opens-mon').fill('09:30')
       await region.locator('#closes-mon').fill('17:45')
       const requests: Record<string, unknown>[] = []

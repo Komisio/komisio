@@ -7,6 +7,8 @@ import type { StorePolicyBody } from '@/lib/engine/store-policy'
 import { storePolicyBody } from '@/lib/engine/store-policy'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
+import { useFormDirty } from '@/components/platform/use-form-dirty'
 
 function PolicySection({
   id,
@@ -76,6 +78,14 @@ export function StorePolicyForm({
   const action = useIntakeAction(d.intake),
     router = useRouter(),
     t = d.storePolicy
+  const { dirty, checkDirty } = useFormDirty(form)
+  const stepsChanged =
+    JSON.stringify(steps) !== JSON.stringify(base.policy.markdownSteps)
+  useUnsavedChanges(
+    editable && !saved && (dirty || stepsChanged || action.locked)
+      ? d.leaveUnsaved
+      : null,
+  )
   const numbers = [
     'commissionRatePercent',
     'salePeriodDays',
@@ -168,6 +178,7 @@ export function StorePolicyForm({
         </nav>
         <form
           ref={form}
+          onChange={checkDirty}
           onInvalidCapture={(event) =>
             revealPolicyTarget(event.target as Element)
           }

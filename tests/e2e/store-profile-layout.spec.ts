@@ -25,17 +25,27 @@ test('store hours show only included days, preserve toggled values and publish t
     ).toHaveCount(7)
     await expect(form.locator('#opens-mon')).not.toBeVisible()
     await expect(form.locator('#opens-mon')).toBeDisabled()
-    await form.getByLabel(d.storeProfile.days.mon, { exact: true }).check()
+    await form
+      .getByRole('checkbox', { name: d.storeProfile.days.mon, exact: true })
+      .check()
     await form.locator('#opens-mon').fill('09:30')
     await form.locator('#closes-mon').fill('17:45')
-    await form.getByLabel(d.storeProfile.days.mon, { exact: true }).uncheck()
+    await form
+      .getByRole('checkbox', { name: d.storeProfile.days.mon, exact: true })
+      .uncheck()
     await expect(form.locator('#opens-mon')).not.toBeVisible()
-    await form.getByLabel(d.storeProfile.days.mon, { exact: true }).check()
+    await form
+      .getByRole('checkbox', { name: d.storeProfile.days.mon, exact: true })
+      .check()
     await expect(form.locator('#opens-mon')).toHaveValue('09:30')
     await expect(form.locator('#closes-mon')).toHaveValue('17:45')
-    await form.getByLabel(d.storeProfile.days.tue, { exact: true }).check()
+    await form
+      .getByRole('checkbox', { name: d.storeProfile.days.tue, exact: true })
+      .check()
     await form.locator('#opens-tue').fill('11:00')
-    await form.getByLabel(d.storeProfile.days.tue, { exact: true }).uncheck()
+    await form
+      .getByRole('checkbox', { name: d.storeProfile.days.tue, exact: true })
+      .uncheck()
     const reply = page.waitForResponse(
       (response) =>
         response.url().endsWith('/api/intake') &&
@@ -47,10 +57,16 @@ test('store hours show only included days, preserve toggled values and publish t
     expect((await reply).status()).toBe(200)
     await page.reload()
     await expect(
-      form.getByLabel(d.storeProfile.days.mon, { exact: true }),
+      form.getByRole('checkbox', {
+        name: d.storeProfile.days.mon,
+        exact: true,
+      }),
     ).toBeChecked()
     await expect(
-      form.getByLabel(d.storeProfile.days.tue, { exact: true }),
+      form.getByRole('checkbox', {
+        name: d.storeProfile.days.tue,
+        exact: true,
+      }),
     ).not.toBeChecked()
     await expect(form.locator('#opens-mon')).toHaveValue('09:30')
     const rows = (
@@ -91,7 +107,9 @@ test('store profile sections and opening-hour controls fit all interface languag
         },
       ])
       await page.goto('/settings?tab=profile')
-      await page.getByLabel(d.storeProfile.days.mon, { exact: true }).check()
+      await page
+        .getByRole('checkbox', { name: d.storeProfile.days.mon, exact: true })
+        .check()
       for (const width of [320, 390, 1280]) {
         await page.setViewportSize({ width, height: 800 })
         await page.locator('#opens-mon').scrollIntoViewIfNeeded()
@@ -109,6 +127,9 @@ test('store profile sections and opening-hour controls fit all interface languag
             caret: 'initial',
           })
       }
+      await page
+        .getByRole('checkbox', { name: d.storeProfile.days.mon, exact: true })
+        .uncheck()
     }
   } finally {
     await f.close()

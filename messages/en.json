@@ -1103,9 +1103,9 @@
     "sellerCredit": "Seller credit",
     "vat": "VAT",
     "providers": {
-      "manual": "counter",
+      "manual": "Manually recorded",
       "zettle": "PayPal POS",
-      "shopify": "Shopify POS"
+      "shopify": "Shopify"
     },
     "statuses": {
       "completed": "completed",
@@ -1129,7 +1129,10 @@
     "cart": "Cart",
     "cartEmpty": "Search for the items to record.",
     "remove": "Remove",
-    "total": "Total"
+    "total": "Total",
+    "listHint": "The 50 most recent sales are shown. Open a receipt for items, returns and details.",
+    "financialDetails": "Commission and VAT",
+    "reference": "Receipt reference"
   },
   "ledger": {
     "title": "Balance and ledger",

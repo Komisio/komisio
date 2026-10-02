@@ -5,6 +5,7 @@ import { dictionary, intlLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { readSales, formatOre } from '@/lib/engine/sales'
 import { SaleForm } from '@/components/intake/sale-form'
+import { ArrowRight } from 'lucide-react'
 
 export default async function Sales() {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
@@ -17,15 +18,17 @@ export default async function Sales() {
   const when = (iso: string) =>
     new Date(iso).toLocaleString(intlLocale(ctx.locale), {
       timeZone: 'Europe/Stockholm',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     })
   return (
-    <>
+    <div className="sales-overview">
       <div className="page-heading">
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
-        <Link className="text-link" href="/intake">
-          {all.intake.back}
-        </Link>
       </div>
       <p className="intake-notice">{d.notice}</p>
       <div className="sales-page">
@@ -43,28 +46,37 @@ export default async function Sales() {
         ) : (
           <p>{all.intake.readOnly}</p>
         )}
-        <section className="card intake-form">
-          <h2>{d.recent}</h2>
-          <ul className="intake-list">
+        <section className="card sales-register" aria-labelledby="sales-recent">
+          <h2 id="sales-recent">{d.recent}</h2>
+          <p className="muted">{d.listHint}</p>
+          <ul className="sales-register-list">
             {sales.map((s) => (
-              <li key={s.id} className="intake-bag">
-                <div>
-                  <Link className="text-link" href={`/intake/sales/${s.id}`}>
-                    {formatOre(s.total_ore)} {currency} ·{' '}
-                    {d.providers[s.provider]}
-                  </Link>
-                  <br />
-                  <small>
-                    {when(s.occurred_at)} · {s.external_id} ·{' '}
+              <li key={s.id}>
+                <Link
+                  className="sales-register-row"
+                  href={`/intake/sales/${s.id}`}
+                >
+                  <span className="sales-register-main">
+                    <strong>
+                      {formatOre(s.total_ore)} {currency}
+                    </strong>
+                    <span>{d.providers[s.provider]}</span>
+                  </span>
+                  <time dateTime={s.occurred_at}>{when(s.occurred_at)}</time>
+                  <span className="sales-register-status">
                     {d.statuses[s.status]}
-                  </small>
-                </div>
+                  </span>
+                  <span className="sales-register-open">
+                    {d.open}
+                    <ArrowRight size={16} aria-hidden="true" />
+                  </span>
+                </Link>
               </li>
             ))}
           </ul>
           {!sales.length && <p>{d.empty}</p>}
         </section>
       </div>
-    </>
+    </div>
   )
 }

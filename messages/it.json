@@ -1103,9 +1103,9 @@
     "sellerCredit": "Accredito al conferente",
     "vat": "IVA",
     "providers": {
-      "manual": "banco",
+      "manual": "Registrata manualmente",
       "zettle": "PayPal POS",
-      "shopify": "Shopify POS"
+      "shopify": "Shopify"
     },
     "statuses": {
       "completed": "completata",
@@ -1129,7 +1129,10 @@
     "cart": "Carrello",
     "cartEmpty": "Cerca gli articoli da registrare.",
     "remove": "Rimuovi",
-    "total": "Totale"
+    "total": "Totale",
+    "listHint": "Sono mostrate le 50 vendite più recenti. Apri una ricevuta per articoli, resi e dettagli.",
+    "financialDetails": "Commissione e IVA",
+    "reference": "Riferimento ricevuta"
   },
   "ledger": {
     "title": "Saldo e registro",

@@ -795,3 +795,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-02: Integrations starts with purpose and saved connection state per provider; connection, sync and history controls expand on demand. OAuth outcomes and receipt paging open the relevant provider. Existing permissions, provider calls and automatic-sync grants are unchanged.
 
 - 2026-10-02: Contextual help buttons remain disabled until client hydration completes, so the first click cannot be lost during initial loading. Dialog content, focus handling and navigation behavior are unchanged.
+
+- 2026-10-02: Sales rows prioritize amount, source, status and minute-level time; receipt references and frozen financial details expand on demand. Returns open per line before entry. The latest-50 limit is explicit; sales, return commands and authorization remain unchanged.

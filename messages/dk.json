@@ -1103,9 +1103,9 @@
     "sellerCredit": "Indlevererens tilgodehavende",
     "vat": "Moms",
     "providers": {
-      "manual": "disk",
+      "manual": "Manuelt registreret",
       "zettle": "PayPal POS",
-      "shopify": "Shopify POS"
+      "shopify": "Shopify"
     },
     "statuses": {
       "completed": "gennemført",
@@ -1129,7 +1129,10 @@
     "cart": "Kurv",
     "cartEmpty": "Søg efter varerne, du vil registrere.",
     "remove": "Fjern",
-    "total": "I alt"
+    "total": "I alt",
+    "listHint": "De 50 seneste salg vises. Åbn en kvittering for varer, returneringer og detaljer.",
+    "financialDetails": "Provision og moms",
+    "reference": "Kvitteringsreference"
   },
   "ledger": {
     "title": "Saldo og konto",

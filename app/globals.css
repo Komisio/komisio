@@ -2521,6 +2521,131 @@ button.text-link:hover:not(:disabled) {
   display: grid;
   gap: 1.5rem;
 }
+.sales-overview .page-heading,
+.sale-detail .page-heading {
+  margin-bottom: 24px;
+}
+.sales-register {
+  padding: clamp(16px, 3vw, 28px);
+  min-width: 0;
+}
+.sales-register h2 {
+  margin-top: 0;
+}
+.sales-register-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+}
+.sales-register-list li + li {
+  border-top: 1px solid var(--line);
+}
+.sales-register-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px 20px;
+  padding: 18px 8px;
+  color: var(--ink);
+  text-decoration: none;
+  border-radius: 8px;
+}
+.sales-register-row:hover {
+  background: var(--paper);
+}
+.sales-register-main {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.sales-register-main strong {
+  font-size: 19px;
+  font-variant-numeric: tabular-nums;
+}
+.sales-register-main > span,
+.sales-register-row time {
+  color: var(--muted);
+  font-size: 14px;
+}
+.sales-register-status {
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 14px;
+}
+.sales-register-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  grid-column: 1 / -1;
+  font-weight: 600;
+  font-size: 14px;
+}
+.sale-reference {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.sale-line {
+  padding: 20px 0;
+  overflow-wrap: anywhere;
+}
+.sale-line + .sale-line {
+  border-top: 1px solid var(--line);
+}
+.sale-line-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.sale-line-heading h3 {
+  margin: 0;
+}
+.sale-line-heading > strong {
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+}
+.sale-line-item {
+  margin: 8px 0;
+}
+.sale-line-item a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.sale-line-details {
+  margin-top: 8px;
+  padding: 4px 16px;
+  border-radius: 10px;
+  background: var(--paper);
+}
+.sale-return {
+  margin-top: 12px;
+  padding: 4px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.sale-return > summary {
+  font-weight: 600;
+}
+.sale-return form {
+  padding: 12px 0;
+}
+@media (max-width: 600px) {
+  .sales-register-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 8px;
+    padding: 16px 0;
+  }
+  .sales-register-row time {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .sales-register-main strong {
+    overflow-wrap: anywhere;
+  }
+}
 .sale-manual > summary {
   cursor: pointer;
   font-weight: 600;

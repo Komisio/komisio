@@ -1103,9 +1103,9 @@
     "sellerCredit": "Einlieferer-Gutschrift",
     "vat": "MwSt.",
     "providers": {
-      "manual": "Kasse",
+      "manual": "Manuell erfasst",
       "zettle": "PayPal POS",
-      "shopify": "Shopify POS"
+      "shopify": "Shopify"
     },
     "statuses": {
       "completed": "abgeschlossen",
@@ -1129,7 +1129,10 @@
     "cart": "Warenkorb",
     "cartEmpty": "Suchen Sie die zu erfassenden Artikel.",
     "remove": "Entfernen",
-    "total": "Gesamt"
+    "total": "Gesamt",
+    "listHint": "Die 50 neuesten Verkäufe werden angezeigt. Öffnen Sie einen Beleg für Artikel, Rückgaben und Details.",
+    "financialDetails": "Provision und Mehrwertsteuer",
+    "reference": "Belegreferenz"
   },
   "ledger": {
     "title": "Guthaben und Konto",

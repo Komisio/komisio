@@ -1103,9 +1103,9 @@
     "sellerCredit": "Innlevererens tilgodehavende",
     "vat": "Mva",
     "providers": {
-      "manual": "kasse",
+      "manual": "Manuelt registrert",
       "zettle": "PayPal POS",
-      "shopify": "Shopify POS"
+      "shopify": "Shopify"
     },
     "statuses": {
       "completed": "fullført",
@@ -1129,7 +1129,10 @@
     "cart": "Handlekurv",
     "cartEmpty": "Søk etter varene du vil registrere.",
     "remove": "Fjern",
-    "total": "Totalt"
+    "total": "Totalt",
+    "listHint": "De 50 siste salgene vises. Åpne en kvittering for varer, returer og detaljer.",
+    "financialDetails": "Provisjon og merverdiavgift",
+    "reference": "Kvitteringsreferanse"
   },
   "ledger": {
     "title": "Saldo og reskontro",

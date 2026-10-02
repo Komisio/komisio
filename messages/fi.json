@@ -1103,9 +1103,9 @@
     "sellerCredit": "Tuojan hyvitys",
     "vat": "Alv",
     "providers": {
-      "manual": "tiski",
+      "manual": "Kirjattu käsin",
       "zettle": "PayPal POS",
-      "shopify": "Shopify POS"
+      "shopify": "Shopify"
     },
     "statuses": {
       "completed": "valmis",
@@ -1129,7 +1129,10 @@
     "cart": "Ostoskori",
     "cartEmpty": "Etsi kirjattavat tuotteet.",
     "remove": "Poista",
-    "total": "Yhteensä"
+    "total": "Yhteensä",
+    "listHint": "Näytetään 50 viimeisintä myyntiä. Avaa kuitti nähdäksesi tuotteet, palautukset ja tiedot.",
+    "financialDetails": "Provisio ja arvonlisävero",
+    "reference": "Kuitin viite"
   },
   "ledger": {
     "title": "Saldo ja tilikirja",

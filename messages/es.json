@@ -1103,9 +1103,9 @@
     "sellerCredit": "Crédito del depositante",
     "vat": "IVA",
     "providers": {
-      "manual": "mostrador",
+      "manual": "Registrada manualmente",
       "zettle": "PayPal POS",
-      "shopify": "Shopify POS"
+      "shopify": "Shopify"
     },
     "statuses": {
       "completed": "completada",
@@ -1129,7 +1129,10 @@
     "cart": "Carrito",
     "cartEmpty": "Busca los artículos que quieres registrar.",
     "remove": "Eliminar",
-    "total": "Total"
+    "total": "Total",
+    "listHint": "Se muestran las 50 ventas más recientes. Abre un recibo para ver artículos, devoluciones y detalles.",
+    "financialDetails": "Comisión e IVA",
+    "reference": "Referencia del recibo"
   },
   "ledger": {
     "title": "Saldo y libro",

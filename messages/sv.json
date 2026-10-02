@@ -1103,9 +1103,9 @@
     "sellerCredit": "Säljarens tillgodohavande",
     "vat": "Moms",
     "providers": {
-      "manual": "kassa",
+      "manual": "Manuellt registrerad",
       "zettle": "PayPal POS",
-      "shopify": "Shopify POS"
+      "shopify": "Shopify"
     },
     "statuses": {
       "completed": "genomförd",
@@ -1129,7 +1129,10 @@
     "cart": "Varukorg",
     "cartEmpty": "Sök fram varorna du vill registrera.",
     "remove": "Ta bort",
-    "total": "Totalt"
+    "total": "Totalt",
+    "listHint": "De 50 senaste försäljningarna visas. Öppna ett kvitto för varor, returer och detaljer.",
+    "financialDetails": "Provision och moms",
+    "reference": "Kvittoreferens"
   },
   "ledger": {
     "title": "Saldo",

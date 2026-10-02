@@ -961,7 +961,13 @@
     "currency": "Valuutta",
     "currencyIntro": "Yksi valuutta per kauppa, valitaan täällä ja jäädytetään, kun ensimmäinen myynti, osto tai tilitys on olemassa. Kaikki summat ovat tässä valuutassa; Komisio ei muunna mitään.",
     "itemLanguage": "Tuotetekstien kieli",
-    "itemLanguageHint": "Myymälän uusien tekoälyehdotusten yhteinen kieli. Tallennetut kuvaukset eivät muutu. Valikot ja tuotetyyppien nimet noudattavat omaa kielivalintaasi."
+    "itemLanguageHint": "Myymälän uusien tekoälyehdotusten yhteinen kieli. Tallennetut kuvaukset eivät muutu. Valikot ja tuotetyyppien nimet noudattavat omaa kielivalintaasi.",
+    "sectionReceiving": "Vastaanotto ja sopimukset",
+    "sectionEconomy": "Provisio ja tilitykset",
+    "sectionPeriod": "Myyntiaika ja hinnanalennukset",
+    "sectionAi": "Tekoäly ja tuotetekstit",
+    "sectionLinks": "Kaupan käytännön pikalinkit",
+    "layoutIntro": "Määritä kaupan toimintatavat ja ehdot. Tarkista muutokset ja julkaise ne yhdessä sivun alareunassa."
   },
   "sellerTerms": {
     "title": "Tuojan ehdot",

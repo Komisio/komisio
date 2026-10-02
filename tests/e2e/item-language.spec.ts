@@ -19,7 +19,27 @@ test('store item language persists independently of UI locale and saved descript
       exact: true,
     })
     await expect(language).toHaveValue('sv')
+    await page
+      .getByRole('link', { name: sv.storePolicy.sectionAi, exact: true })
+      .click()
+    await expect(
+      page.getByRole('heading', {
+        name: sv.storePolicy.sectionAi,
+        exact: true,
+      }),
+    ).toBeInViewport()
     await language.selectOption('no')
+    await page
+      .getByRole('link', { name: sv.storePolicy.sectionEconomy, exact: true })
+      .click()
+    await expect(
+      page.getByRole('heading', {
+        name: sv.storePolicy.sectionEconomy,
+        exact: true,
+      }),
+    ).toBeInViewport()
+    // In-page navigation must retain the unsaved selection.
+    await expect(language).toHaveValue('no')
     await page.getByLabel(sv.storePolicy.confirm, { exact: true }).check()
     const saved = page.waitForResponse(
       (r) =>
@@ -42,6 +62,15 @@ test('store item language persists independently of UI locale and saved descript
       page.getByLabel(no.storePolicy.itemLanguage, { exact: true }),
     ).toHaveValue('no')
     await page.setViewportSize({ width: 390, height: 844 })
+    await page
+      .getByRole('link', { name: no.storePolicy.sectionAi, exact: true })
+      .click()
+    await expect(
+      page.getByRole('heading', {
+        name: no.storePolicy.sectionAi,
+        exact: true,
+      }),
+    ).toBeInViewport()
     await page
       .getByLabel(no.storePolicy.itemLanguage, { exact: true })
       .scrollIntoViewIfNeeded()

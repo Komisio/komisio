@@ -961,7 +961,13 @@
     "currency": "Moneda",
     "currencyIntro": "Una moneda por tienda, elegida aquí y congelada en cuanto existe la primera venta, compra o pago. Todos los importes están en esta moneda; Komisio no convierte nada.",
     "itemLanguage": "Idioma de los textos de artículos",
-    "itemLanguageHint": "Idioma común para las nuevas sugerencias de IA de la tienda. Las descripciones guardadas no cambian. Los menús y nombres de tipos siguen tu idioma elegido."
+    "itemLanguageHint": "Idioma común para las nuevas sugerencias de IA de la tienda. Las descripciones guardadas no cambian. Los menús y nombres de tipos siguen tu idioma elegido.",
+    "sectionReceiving": "Recepción y acuerdos",
+    "sectionEconomy": "Comisión y pagos",
+    "sectionPeriod": "Periodo de venta y rebajas",
+    "sectionAi": "IA y textos de artículos",
+    "sectionLinks": "Accesos a la política de la tienda",
+    "layoutIntro": "Adapta los procesos y las condiciones de la tienda. Revisa los cambios y publícalos juntos al final de la página."
   },
   "sellerTerms": {
     "title": "Condiciones del depositante",

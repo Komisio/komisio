@@ -782,3 +782,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-02: Clarify inline item-type creation with store-wide scope, copied-question guidance and an explicit create-and-use action. Existing commands, replay protection and item drafts remain unchanged.
 
 - 2026-10-02: Store policy itemLanguage selects one of eight languages for new AI item text in single and batch reception. Absent means Swedish. UI labels follow the user locale; saved facts stay unchanged. Attempts record the language-specific prompt version.
+- 2026-10-02: Group store policy settings by receiving, economy, sale period, VAT, AI text and notifications with in-page links. Retain one versioned publication, all inputs, validation and existing permissions.

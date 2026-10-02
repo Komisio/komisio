@@ -961,7 +961,13 @@
     "currency": "Valuta",
     "currencyIntro": "En valuta per butik, vald här och fryst när den första försäljningen, inköpet eller utbetalningen finns. Alla belopp är i denna valuta; Komisio räknar inte om något.",
     "itemLanguage": "Språk för varutext",
-    "itemLanguageHint": "Gemensamt språk för nya AI-förslag i butiken. Sparade beskrivningar ändras inte. Menyer och varutypsnamn följer ditt eget språkval."
+    "itemLanguageHint": "Gemensamt språk för nya AI-förslag i butiken. Sparade beskrivningar ändras inte. Menyer och varutypsnamn följer ditt eget språkval.",
+    "sectionReceiving": "Mottagning och avtal",
+    "sectionEconomy": "Provision och utbetalning",
+    "sectionPeriod": "Säljperiod och prissänkningar",
+    "sectionAi": "AI och varutext",
+    "sectionLinks": "Genvägar i butikspolicyn",
+    "layoutIntro": "Anpassa butikens arbetssätt och villkor. Granska dina ändringar och publicera dem tillsammans längst ned."
   },
   "sellerTerms": {
     "title": "Säljarvillkor",

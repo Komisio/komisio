@@ -172,7 +172,7 @@ export default async function Settings({
       (intake || t === 'store') && (t !== 'connectors' || connectorsEnabled()),
   )
   return (
-    <>
+    <div className="settings-page">
       <div className="page-heading">
         <h1>{d.tenant}</h1>
         <p>{d.tenantIntro}</p>
@@ -444,6 +444,6 @@ export default async function Settings({
           )}
         </div>
       )}
-    </>
+    </div>
   )
 }

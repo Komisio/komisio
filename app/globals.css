@@ -4689,3 +4689,8 @@ button.text-link:hover:not(:disabled) {
     flex-wrap: wrap;
   }
 }
+
+.seller-registration-page {
+  max-width: 700px;
+  margin-inline: auto;
+}

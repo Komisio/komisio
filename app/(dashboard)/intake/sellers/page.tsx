@@ -52,9 +52,11 @@ export default async function Sellers({
     <div className="seller-directory-page">
       <div className="page-heading seller-directory-heading">
         <h1>{d.title}</h1>
-        <Link className="btn btn-primary" href="/intake">
-          {d.register}
-        </Link>
+        {active.role !== 'readonly' && (
+          <Link className="btn btn-primary" href="/intake/sellers/new">
+            {d.register}
+          </Link>
+        )}
       </div>
       <section className="card seller-directory" aria-label={d.title}>
         <form action="/intake/sellers" className="seller-directory-search">

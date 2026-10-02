@@ -2982,5 +2982,7 @@
   "otherActivity": "Anden butikshændelse",
   "technicalDetails": "Tekniske butiksoplysninger",
   "skipToContent": "Spring til indholdet",
-  "leaveUnsaved": "Forlad siden? Ændringer, der ikke er gemt, går tabt. Hvis en gemning ikke blev bekræftet, skal du kontrollere det gemte indhold, før du starter forfra."
+  "leaveUnsaved": "Forlad siden? Ændringer, der ikke er gemt, går tabt. Hvis en gemning ikke blev bekræftet, skal du kontrollere det gemte indhold, før du starter forfra.",
+  "showPassword": "Vis adgangskode",
+  "hidePassword": "Skjul adgangskode"
 }

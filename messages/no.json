@@ -2982,5 +2982,7 @@
   "otherActivity": "Annen butikkhendelse",
   "technicalDetails": "Tekniske butikkopplysninger",
   "skipToContent": "Hopp til innholdet",
-  "leaveUnsaved": "Forlate siden? Endringer som ikke er lagret, går tapt. Hvis lagringen ikke ble bekreftet, kontroller det lagrede innholdet før du begynner på nytt."
+  "leaveUnsaved": "Forlate siden? Endringer som ikke er lagret, går tapt. Hvis lagringen ikke ble bekreftet, kontroller det lagrede innholdet før du begynner på nytt.",
+  "showPassword": "Vis passord",
+  "hidePassword": "Skjul passord"
 }

@@ -2982,5 +2982,7 @@
   "otherActivity": "Altro evento del negozio",
   "technicalDetails": "Dati tecnici del negozio",
   "skipToContent": "Vai al contenuto principale",
-  "leaveUnsaved": "Uscire da questa pagina? Le modifiche non salvate andranno perse. Se il salvataggio non è stato confermato, controlla il contenuto salvato prima di ricominciare."
+  "leaveUnsaved": "Uscire da questa pagina? Le modifiche non salvate andranno perse. Se il salvataggio non è stato confermato, controlla il contenuto salvato prima di ricominciare.",
+  "showPassword": "Mostra password",
+  "hidePassword": "Nascondi password"
 }

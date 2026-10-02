@@ -1,4 +1,5 @@
 'use client'
+import { PasswordInput } from './password-input'
 import { useState, useSyncExternalStore } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -204,18 +205,24 @@ export function AuthForm({
                   <label htmlFor="password">
                     {mode === 'password' ? d.newPassword : d.password}
                   </label>
-                  <input
+                  <PasswordInput
                     id="password"
                     name="password"
                     disabled={!ready}
-                    type="password"
+                    showLabel={d.showPassword}
+                    hideLabel={d.hidePassword}
                     autoComplete={
                       mode === 'login' ? 'current-password' : 'new-password'
                     }
                     minLength={mode === 'login' ? 1 : 10}
+                    aria-describedby={
+                      mode !== 'login' ? 'password-hint' : undefined
+                    }
                     required
                   />
-                  {mode !== 'login' && <small>{d.passwordHint}</small>}
+                  {mode !== 'login' && (
+                    <small id="password-hint">{d.passwordHint}</small>
+                  )}
                 </div>
               )}
               {mode === 'login' && (

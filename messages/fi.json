@@ -2988,5 +2988,7 @@
   "otherActivity": "Muu myymälän tapahtuma",
   "technicalDetails": "Myymälän tekniset tiedot",
   "skipToContent": "Siirry sisältöön",
-  "leaveUnsaved": "Poistutaanko sivulta? Tallentamattomat muutokset katoavat. Jos tallennusta ei vahvistettu, tarkista tallennettu sisältö ennen kuin aloitat uudelleen."
+  "leaveUnsaved": "Poistutaanko sivulta? Tallentamattomat muutokset katoavat. Jos tallennusta ei vahvistettu, tarkista tallennettu sisältö ennen kuin aloitat uudelleen.",
+  "showPassword": "Näytä salasana",
+  "hidePassword": "Piilota salasana"
 }

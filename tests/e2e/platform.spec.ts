@@ -1075,10 +1075,20 @@ test('password recovery and MFA protect the authenticated platform', async ({
   await confirmEmail(page, email, 'Reset')
   await expect(page).toHaveURL(/\/account/)
   await page.getByLabel('Nytt lösenord', { exact: true }).fill(newPassword)
+  await page.getByRole('button', { name: d.showPassword, exact: true }).click()
+  await expect(
+    page.getByLabel('Nytt lösenord', { exact: true }),
+  ).toHaveAttribute('type', 'text')
   await page
     .getByRole('button', { name: 'Spara lösenord', exact: true })
     .click()
   await expect(page.getByText('Ändringarna har sparats.')).toBeVisible()
+  await expect(page.getByLabel('Nytt lösenord', { exact: true })).toHaveValue(
+    '',
+  )
+  await expect(
+    page.getByLabel('Nytt lösenord', { exact: true }),
+  ).toHaveAttribute('type', 'password')
   await page.goto('/onboarding')
   await page.getByLabel('Butikens namn').fill('E2E Security')
   await page.getByRole('button', { name: 'Skapa min butik' }).click()

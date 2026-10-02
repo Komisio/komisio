@@ -2982,5 +2982,7 @@
   "otherActivity": "Annan butikshändelse",
   "technicalDetails": "Tekniska butiksuppgifter",
   "skipToContent": "Hoppa till innehållet",
-  "leaveUnsaved": "Lämna sidan? Osparade ändringar försvinner. Om en sparning inte bekräftades, kontrollera det sparade innehållet innan du börjar om."
+  "leaveUnsaved": "Lämna sidan? Osparade ändringar försvinner. Om en sparning inte bekräftades, kontrollera det sparade innehållet innan du börjar om.",
+  "showPassword": "Visa lösenord",
+  "hidePassword": "Dölj lösenord"
 }

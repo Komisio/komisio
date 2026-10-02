@@ -2988,5 +2988,7 @@
   "otherActivity": "Otro evento de la tienda",
   "technicalDetails": "Datos técnicos de la tienda",
   "skipToContent": "Saltar al contenido principal",
-  "leaveUnsaved": "¿Salir de esta página? Se perderán los cambios sin guardar. Si no se confirmó el guardado, comprueba el contenido guardado antes de empezar de nuevo."
+  "leaveUnsaved": "¿Salir de esta página? Se perderán los cambios sin guardar. Si no se confirmó el guardado, comprueba el contenido guardado antes de empezar de nuevo.",
+  "showPassword": "Mostrar contraseña",
+  "hidePassword": "Ocultar contraseña"
 }

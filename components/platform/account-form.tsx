@@ -4,6 +4,7 @@ import { useCommand } from './use-command'
 import { Feedback } from './feedback'
 import { Button } from '@/components/ui/button'
 import { browserClient } from '@/lib/supabase/client'
+import { PasswordInput } from '@/components/auth/password-input'
 import { localeNames, locales, type Dictionary, type Locale } from '@/lib/i18n'
 export function AccountForm({
   d,
@@ -66,12 +67,14 @@ export function PasswordForm({ d }: { d: Dictionary }) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [saved, setSaved] = useState(false)
+  const [passwordVersion, setPasswordVersion] = useState(0)
   return (
     <form
       onSubmit={async (e) => {
         e.preventDefault()
         setBusy(true)
         setError('')
+        setSaved(false)
         const form = e.currentTarget
         const fields = new FormData(form)
         try {
@@ -81,6 +84,7 @@ export function PasswordForm({ d }: { d: Dictionary }) {
           if (error) throw error
           setSaved(true)
           form.reset()
+          setPasswordVersion((version) => version + 1)
         } catch {
           setError(d.authError)
         } finally {
@@ -90,15 +94,19 @@ export function PasswordForm({ d }: { d: Dictionary }) {
     >
       <div className="field">
         <label htmlFor="new-password">{d.newPassword}</label>
-        <input
+        <PasswordInput
+          key={passwordVersion}
           id="new-password"
           name="password"
-          type="password"
+          showLabel={d.showPassword}
+          hideLabel={d.hidePassword}
           minLength={10}
           required
           autoComplete="new-password"
+          aria-describedby="new-password-hint"
+          onChange={() => setSaved(false)}
         />
-        <small>{d.passwordHint}</small>
+        <small id="new-password-hint">{d.passwordHint}</small>
       </div>
       <Button variant="secondary" disabled={busy}>
         {d.savePassword}

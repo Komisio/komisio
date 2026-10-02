@@ -52,12 +52,9 @@ export default async function Agreements({
       <div className="page-heading">
         <h1>{a.title}</h1>
         <p>{a.intro}</p>
-        <Link className="text-link" href="/intake">
-          {d.intake.back}
-        </Link>
       </div>
-      <div className="intake-grid">
-        <section className="card intake-form">
+      <div className="agreements-workspace">
+        <section className="card intake-form agreement-reader">
           {shown ? (
             <>
               <span className="badge">
@@ -65,6 +62,11 @@ export default async function Agreements({
                 {a.version} {shown.version}
               </span>
               <h2>{shown.title}</h2>
+              {shown.id !== current?.id && (
+                <Link className="text-link" href="/intake/agreements">
+                  {a.current}
+                </Link>
+              )}
               <p>
                 {a.language}:{' '}
                 {localeNames[resolveLocale(undefined, shown.language)]}
@@ -75,7 +77,9 @@ export default async function Agreements({
           ) : (
             <p>{a.none}</p>
           )}
-          <h2>{a.history}</h2>
+        </section>
+        <details className="card agreement-history">
+          <summary>{a.history}</summary>
           <p>{a.historyHint}</p>
           <ul className="intake-list">
             {history.data?.map((v) => (
@@ -83,13 +87,14 @@ export default async function Agreements({
                 <Link
                   className="text-link"
                   href={`/intake/agreements?version=${v.id}`}
+                  aria-current={v.id === shown?.id ? 'page' : undefined}
                 >
                   {a.version} {v.version} – {v.title}
                 </Link>
               </li>
             ))}
           </ul>
-        </section>
+        </details>
         {['owner', 'admin'].includes(active.role) ? (
           <AgreementPublisher
             key={active.id}

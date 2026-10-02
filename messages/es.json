@@ -19,7 +19,7 @@
     "required": "Se requiere evidencia antes de la recepción.",
     "optional": "La evidencia es opcional en la recepción.",
     "none": "No hay ningún acuerdo de depositante publicado. No se aplica ningún requisito de acuerdo nuevo a la recepción.",
-    "history": "Versiones anteriores",
+    "history": "Versiones del acuerdo",
     "historyHint": "Las 20 versiones más recientes. Las versiones más antiguas siguen accesibles desde sus recibos.",
     "adminOnly": "Los propietarios y administradores pueden publicar versiones del acuerdo.",
     "manage": "Ver y gestionar los acuerdos de depositante",
@@ -1166,7 +1166,7 @@
   },
   "payouts": {
     "title": "Pagos",
-    "intro": "Un pago pasa de solicitado a aprobado y a pagado, o se rechaza. La aprobación reserva el importe en el libro del depositante; el pago lo liquida.",
+    "intro": "Gestiona los pagos a vendedores y consulta cuáles están pendientes de pago.",
     "notice": "Komisio registra los pagos; no mueve dinero. Paga a través de tu banco y registra aquí la referencia.",
     "requestHeading": "Solicitar un pago",
     "requestHint": "En nombre del vendedor, al menos el mínimo de la tienda y como máximo el saldo disponible.",
@@ -1192,7 +1192,7 @@
       "paid": "pagado",
       "rejected": "rechazado"
     },
-    "settleHeading": "Liquidar a todos los depositantes",
+    "settleHeading": "Preparar pagos",
     "settleHint": "Todos los depositantes con saldo igual o superior al mínimo ({threshold}) sin un pago abierto. Un lote solicita y aprueba un pago por todo el saldo disponible por cada depositante seleccionado; después pagas a través de tu banco y marcas cada uno como pagado.",
     "settleEmpty": "Ningún depositante cumple los requisitos para la liquidación en este momento.",
     "settleReason": "Nota del lote",
@@ -1203,7 +1203,8 @@
     "settleTotal": "Total",
     "requestNone": "No hay saldo disponible en esta lista. Abra un depositante para ver su saldo.",
     "directory": "Buscar entre todos los depositantes",
-    "latestFifty": "Se muestran los 50 pagos más recientes. La página de cada depositante muestra sus pagos recientes."
+    "latestFifty": "Se muestran los 50 pagos más recientes. La página de cada depositante muestra sus pagos recientes.",
+    "history": "Historial y referencias"
   },
   "returns": {
     "reason": "Motivo de la devolución",

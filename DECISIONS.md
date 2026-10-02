@@ -797,3 +797,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-02: Contextual help buttons remain disabled until client hydration completes, so the first click cannot be lost during initial loading. Dialog content, focus handling and navigation behavior are unchanged.
 
 - 2026-10-02: Sales rows prioritize amount, source, status and minute-level time; receipt references and frozen financial details expand on demand. Returns open per line before entry. The latest-50 limit is explicit; sales, return commands and authorization remain unchanged.
+- 2026-10-02: Payout requests and batch preparation expand above a full-width payout list; history expands per payout. Bank-payment guidance and decision forms remain visible. Commands, limits, reservations and authorization are unchanged.
+- 2026-10-02: Agreement pages prioritize the published text; version history and publication expand separately. First publication starts open, and collapsing preserves drafts. Historical versions link to the current agreement; publication and evidence rules are unchanged.

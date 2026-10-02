@@ -19,7 +19,7 @@
     "required": "La prova è richiesta prima della ricezione.",
     "optional": "La prova è facoltativa alla ricezione.",
     "none": "Nessun accordo con i conferenti è pubblicato. Nessun nuovo prerequisito di accordo si applica alla ricezione.",
-    "history": "Versioni precedenti",
+    "history": "Versioni dell’accordo",
     "historyHint": "Le 20 versioni più recenti. Le versioni più vecchie restano accessibili dalle loro ricevute.",
     "adminOnly": "Proprietari e amministratori possono pubblicare versioni dell'accordo.",
     "manage": "Visualizza e gestisci gli accordi con i conferenti",
@@ -1166,7 +1166,7 @@
   },
   "payouts": {
     "title": "Pagamenti",
-    "intro": "Un pagamento passa da richiesto ad approvato a pagato, oppure viene rifiutato. L'approvazione riserva l'importo nel registro del conferente; il pagamento lo salda.",
+    "intro": "Gestisci i pagamenti ai venditori e controlla quali sono in attesa di pagamento.",
     "notice": "Komisio registra i pagamenti; non sposta denaro. Paga tramite la tua banca e registra qui il riferimento.",
     "requestHeading": "Richiedi un pagamento",
     "requestHint": "Per conto del venditore, almeno il minimo del negozio e non oltre il saldo disponibile.",
@@ -1192,7 +1192,7 @@
       "paid": "pagato",
       "rejected": "rifiutato"
     },
-    "settleHeading": "Liquida tutti i conferenti",
+    "settleHeading": "Prepara i pagamenti",
     "settleHint": "Ogni conferente al minimo ({threshold}) o sopra, senza un pagamento aperto. Un solo lotto richiede e approva un pagamento dell'intero saldo disponibile per ciascun conferente selezionato; poi paghi tramite la tua banca e segni ciascuno come pagato.",
     "settleEmpty": "Nessun conferente soddisfa al momento i requisiti per la liquidazione.",
     "settleReason": "Nota del lotto",
@@ -1203,7 +1203,8 @@
     "settleTotal": "Totale",
     "requestNone": "Nessun saldo disponibile in questo elenco. Apri un conferente per vederne il saldo.",
     "directory": "Cerca tra tutti i conferenti",
-    "latestFifty": "Sono mostrati gli ultimi 50 pagamenti. La pagina di ogni conferente mostra i suoi pagamenti recenti."
+    "latestFifty": "Sono mostrati gli ultimi 50 pagamenti. La pagina di ogni conferente mostra i suoi pagamenti recenti.",
+    "history": "Cronologia e riferimenti"
   },
   "returns": {
     "reason": "Motivo del reso",

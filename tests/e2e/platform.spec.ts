@@ -345,6 +345,10 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
   try {
     await stalePublisher.goto('/intake/agreements')
     await stalePublisher
+      .getByTestId('agreement-publisher')
+      .locator('summary')
+      .click()
+    await stalePublisher
       .getByLabel('Avtalets rubrik')
       .fill('Unpublished older draft')
     await stalePublisher
@@ -358,6 +362,7 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
       .getByLabel('Jag bekräftar att inlämningen', { exact: false })
       .check()
     await page.goto('/intake/agreements')
+    await page.getByTestId('agreement-publisher').locator('summary').click()
     await page.getByLabel('Avtalets rubrik').fill('TEST Villkor 2')
     await page
       .getByLabel('Avtalstext', { exact: true })
@@ -370,6 +375,7 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
     await expect(page.getByRole('status')).toContainText(
       'Avtalsversionen är publicerad',
     )
+    await stalePublisher.locator('.agreement-history > summary').click()
     await stalePublisher
       .getByRole('link', { name: /Version 1.*TEST Villkor 1/ })
       .click()

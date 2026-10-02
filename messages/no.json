@@ -19,7 +19,7 @@
     "required": "Bevis kreves før mottak.",
     "optional": "Bevis er valgfritt ved mottak.",
     "none": "Ingen innlevereravtale er publisert. Ingen ny avtaleforutsetning gjelder for mottak.",
-    "history": "Tidligere versjoner",
+    "history": "Avtaleversjoner",
     "historyHint": "De 20 siste versjonene. Eldre versjoner er fortsatt tilgjengelige fra kvitteringene sine.",
     "adminOnly": "Eiere og administratorer kan publisere avtaleversjoner.",
     "manage": "Vis og administrer innlevereravtaler",
@@ -1166,7 +1166,7 @@
   },
   "payouts": {
     "title": "Utbetalinger",
-    "intro": "En utbetaling går fra forespurt til godkjent til betalt, eller avvises. Godkjenning reserverer beløpet i innlevererens reskontro; betalingen gjør opp.",
+    "intro": "Administrer utbetalinger til selgere og se hvilke som venter på betaling.",
     "notice": "Komisio registrerer utbetalinger; det flytter ikke penger. Betal via banken din og registrer referansen her.",
     "requestHeading": "Be om en utbetaling",
     "requestHint": "På vegne av selgeren, minst butikkens minstebeløp og høyst tilgjengelig saldo.",
@@ -1192,7 +1192,7 @@
       "paid": "betalt",
       "rejected": "avvist"
     },
-    "settleHeading": "Avregn alle innleverere",
+    "settleHeading": "Forbered utbetalinger",
     "settleHint": "Hver innleverer på eller over minimum ({threshold}) uten en åpen utbetaling. Én batch ber om og godkjenner en utbetaling av hele tilgjengelig saldo per valgt innleverer; deretter betaler du via banken og merker hver enkelt som betalt.",
     "settleEmpty": "Ingen innleverere oppfyller vilkårene for avregning akkurat nå.",
     "settleReason": "Batchnotat",
@@ -1203,7 +1203,8 @@
     "settleTotal": "Totalt",
     "requestNone": "Ingen tilgjengelig saldo i denne listen. Åpne en innleverer for å se saldoen.",
     "directory": "Søk blant alle innleverere",
-    "latestFifty": "Viser de 50 siste utbetalingene. Hver innleverers side viser innlevererens siste utbetalinger."
+    "latestFifty": "Viser de 50 siste utbetalingene. Hver innleverers side viser innlevererens siste utbetalinger.",
+    "history": "Historikk og referanser"
   },
   "returns": {
     "reason": "Returårsak",

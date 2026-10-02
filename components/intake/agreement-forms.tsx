@@ -19,6 +19,7 @@ export function AgreementPublisher({
 }) {
   const action = useIntakeAction(d.intake)
   const [saved, setSaved] = useState(false)
+  const [expanded, setExpanded] = useState(!current)
   // Keep the reviewed base while editing, even if navigation refreshes server props.
   const [base, setBase] = useState(current)
   const router = useRouter()
@@ -44,92 +45,100 @@ export function AgreementPublisher({
     }
   }
   return (
-    <section className="card intake-form">
-      <h2>{a.publishHeading}</h2>
-      <p>{a.publishHint}</p>
-      {saved ? (
-        <div role="status">
-          <p>{a.published}</p>
-          <Button
-            onClick={() => {
-              setBase(current)
-              setSaved(false)
-            }}
-          >
-            {a.nextVersion}
-          </Button>
-        </div>
-      ) : (
-        <form onSubmit={submit}>
-          <fieldset
-            className="intake-fields"
-            disabled={action.busy || action.locked}
-          >
-            <div className="field">
-              <label htmlFor="agreement-title">{a.name}</label>
-              <input
-                id="agreement-title"
-                name="title"
-                required
-                maxLength={120}
-                defaultValue={base?.title ?? ''}
-              />
-            </div>
-            <div className="field">
-              <label htmlFor="agreement-language">{a.language}</label>
-              <select
-                id="agreement-language"
-                name="language"
-                defaultValue={base?.language ?? locale}
-              >
-                {locales.map((language) => (
-                  <option key={language} value={language}>
-                    {localeNames[language]}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="field">
-              <label htmlFor="agreement-body">{a.body}</label>
-              <textarea
-                id="agreement-body"
-                name="body"
-                rows={10}
-                required
-                maxLength={12000}
-                defaultValue={base?.body ?? ''}
-              />
-              <small>{a.languageHint}</small>
-            </div>
-            <label className="intake-confirm">
-              <input
-                type="checkbox"
-                name="required"
-                defaultChecked={base?.required_before_receipt ?? false}
-              />
-              {a.requireEvidence}
-            </label>
-            <label className="intake-confirm">
-              <input type="checkbox" required />
-              {a.confirmPublish}
-            </label>
-          </fieldset>
-          {action.error && <p role="alert">{action.error}</p>}
-          {action.needsReload && (
-            <a className="text-link" href="/intake/agreements">
-              {d.intake.reload}
-            </a>
-          )}
-          <Button type="submit" disabled={action.busy || action.needsReload}>
-            {action.busy
-              ? d.intake.busy
-              : action.locked
-                ? d.intake.retry
-                : a.publish}
-          </Button>
-        </form>
-      )}
-    </section>
+    <details
+      className="card agreement-publisher"
+      open={expanded}
+      onToggle={(event) => setExpanded(event.currentTarget.open)}
+      data-testid="agreement-publisher"
+    >
+      <summary>{current ? a.nextVersion : a.publishHeading}</summary>
+      <section className="intake-form">
+        <h2>{a.publishHeading}</h2>
+        <p>{a.publishHint}</p>
+        {saved ? (
+          <div role="status">
+            <p>{a.published}</p>
+            <Button
+              onClick={() => {
+                setBase(current)
+                setSaved(false)
+              }}
+            >
+              {a.nextVersion}
+            </Button>
+          </div>
+        ) : (
+          <form onSubmit={submit}>
+            <fieldset
+              className="intake-fields"
+              disabled={action.busy || action.locked}
+            >
+              <div className="field">
+                <label htmlFor="agreement-title">{a.name}</label>
+                <input
+                  id="agreement-title"
+                  name="title"
+                  required
+                  maxLength={120}
+                  defaultValue={base?.title ?? ''}
+                />
+              </div>
+              <div className="field">
+                <label htmlFor="agreement-language">{a.language}</label>
+                <select
+                  id="agreement-language"
+                  name="language"
+                  defaultValue={base?.language ?? locale}
+                >
+                  {locales.map((language) => (
+                    <option key={language} value={language}>
+                      {localeNames[language]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="field">
+                <label htmlFor="agreement-body">{a.body}</label>
+                <textarea
+                  id="agreement-body"
+                  name="body"
+                  rows={10}
+                  required
+                  maxLength={12000}
+                  defaultValue={base?.body ?? ''}
+                />
+                <small>{a.languageHint}</small>
+              </div>
+              <label className="intake-confirm">
+                <input
+                  type="checkbox"
+                  name="required"
+                  defaultChecked={base?.required_before_receipt ?? false}
+                />
+                {a.requireEvidence}
+              </label>
+              <label className="intake-confirm">
+                <input type="checkbox" required />
+                {a.confirmPublish}
+              </label>
+            </fieldset>
+            {action.error && <p role="alert">{action.error}</p>}
+            {action.needsReload && (
+              <a className="text-link" href="/intake/agreements">
+                {d.intake.reload}
+              </a>
+            )}
+            <Button type="submit" disabled={action.busy || action.needsReload}>
+              {action.busy
+                ? d.intake.busy
+                : action.locked
+                  ? d.intake.retry
+                  : a.publish}
+            </Button>
+          </form>
+        )}
+      </section>
+    </details>
   )
 }
 

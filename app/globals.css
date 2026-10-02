@@ -2521,6 +2521,76 @@ button.text-link:hover:not(:disabled) {
   display: grid;
   gap: 1.5rem;
 }
+.agreements-workspace {
+  display: grid;
+  gap: 20px;
+  max-width: 960px;
+}
+.agreement-reader .agreement-text {
+  max-width: 72ch;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.agreement-publisher > summary,
+.agreement-history > summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding: 12px 0;
+  font-weight: 650;
+}
+.agreement-publisher[open] > summary,
+.agreement-history[open] > summary {
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+.agreement-history a[aria-current='page'] {
+  font-weight: 700;
+}
+.payouts-overview,
+.payouts-workspace {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+.payout-disclosure > summary,
+.payout-history > summary {
+  cursor: pointer;
+  padding: 12px 0;
+  min-height: 44px;
+}
+.payout-disclosure[open] > summary {
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 16px;
+}
+.payout-entry {
+  background: var(--paper);
+  overflow-wrap: anywhere;
+}
+.payout-entry-heading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  align-items: center;
+}
+.payout-entry-heading > a {
+  flex: 1 1 220px;
+  font-size: 1.1rem;
+}
+.payout-entry-heading > strong {
+  font-size: 1.2rem;
+}
+.payout-entry > p,
+.payout-history {
+  color: var(--muted);
+}
+.payout-entry form {
+  max-width: 640px;
+  margin-top: 16px;
+}
+.payout-entry form button {
+  max-width: 100%;
+  white-space: normal;
+}
 .sales-overview .page-heading,
 .sale-detail .page-heading {
   margin-bottom: 24px;

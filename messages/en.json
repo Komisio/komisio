@@ -19,7 +19,7 @@
     "required": "Evidence is required before receiving.",
     "optional": "Evidence is optional at receiving.",
     "none": "No seller agreement is published. No new agreement prerequisite applies to receiving.",
-    "history": "Previous versions",
+    "history": "Agreement versions",
     "historyHint": "The 20 latest versions. Older versions remain accessible from their receipts.",
     "adminOnly": "Owners and admins can publish agreement versions.",
     "manage": "View and manage seller agreements",
@@ -1166,7 +1166,7 @@
   },
   "payouts": {
     "title": "Payouts",
-    "intro": "A payout goes from requested to approved to paid, or is rejected. Approval reserves the amount in the seller's ledger; payment settles it.",
+    "intro": "Manage seller payouts and see which are awaiting payment.",
     "notice": "Komisio records payouts; it does not move money. Pay through your bank and record the reference here.",
     "requestHeading": "Request a payout",
     "requestHint": "On the seller’s behalf, at least the store’s minimum and no more than the available balance.",
@@ -1192,7 +1192,7 @@
       "paid": "paid",
       "rejected": "rejected"
     },
-    "settleHeading": "Settle all sellers",
+    "settleHeading": "Prepare payouts",
     "settleHint": "Every seller at or above the minimum ({threshold}) without an open payout. One batch requests and approves a payout of the full available balance per selected seller; you then pay through your bank and mark each one paid.",
     "settleEmpty": "No sellers are eligible for settlement right now.",
     "settleReason": "Batch note",
@@ -1203,7 +1203,8 @@
     "settleTotal": "Total",
     "requestNone": "No available balance in this list. Open a seller to see their balance.",
     "directory": "Search all sellers",
-    "latestFifty": "Showing the latest 50 payouts. Each seller's page shows that seller's recent payouts."
+    "latestFifty": "Showing the latest 50 payouts. Each seller's page shows that seller's recent payouts.",
+    "history": "History and references"
   },
   "returns": {
     "reason": "Return reason",

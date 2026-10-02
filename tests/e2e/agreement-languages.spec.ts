@@ -45,6 +45,8 @@ test('agreements support all product languages and preserve the saved language',
     lastId = (await published.json()).id
     await expect(page.getByRole('status')).toContainText(a.published)
     await page.reload()
+    await expect(page.locator('#agreement-title')).not.toBeVisible()
+    await page.getByTestId('agreement-publisher').locator('summary').click()
     await expect(page.locator('#agreement-language')).toHaveValue(language)
     await expect(page.locator('.agreement-text')).toHaveText(
       `Synthetic test text ${language}`,
@@ -56,6 +58,7 @@ test('agreements support all product languages and preserve the saved language',
       { name: 'komisio-locale', value: 'no', url: 'http://127.0.0.1:3000' },
     ])
   await page.goto(`/intake/agreements?version=${lastId}`)
+  await page.getByTestId('agreement-publisher').locator('summary').click()
   await expect(page.locator('#agreement-language')).toHaveValue('it')
   await expect(page.locator('.agreement-text')).toHaveText(
     'Synthetic test text it',

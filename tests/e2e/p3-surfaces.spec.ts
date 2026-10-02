@@ -27,6 +27,7 @@ test('settlement batch reserves every candidate and the economy page shows the p
     )
     await f.commit()
     await page.goto('/intake/payouts')
+    await page.getByTestId('payout-settlement').locator('summary').click()
     const settle = page.locator('section', {
       has: page.getByRole('heading', {
         name: d.payouts.settleHeading,
@@ -48,6 +49,7 @@ test('settlement batch reserves every candidate and the economy page shows the p
       page.getByText(d.payouts.settled, { exact: true }),
     ).toBeVisible()
     await page.reload()
+    await page.getByTestId('payout-settlement').locator('summary').click()
     await expect(
       page.getByText(d.payouts.settleEmpty, { exact: true }),
     ).toBeVisible()

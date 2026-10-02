@@ -19,7 +19,7 @@
     "required": "Todiste vaaditaan ennen vastaanottoa.",
     "optional": "Todiste on valinnainen vastaanotossa.",
     "none": "Tuojasopimusta ei ole julkaistu. Vastaanottoon ei sovelleta uutta sopimusedellytystä.",
-    "history": "Aiemmat versiot",
+    "history": "Sopimusversiot",
     "historyHint": "20 uusinta versiota. Vanhemmat versiot ovat edelleen saatavilla kuiteistaan.",
     "adminOnly": "Omistajat ja ylläpitäjät voivat julkaista sopimusversioita.",
     "manage": "Näytä ja hallitse tuojasopimuksia",
@@ -1166,7 +1166,7 @@
   },
   "payouts": {
     "title": "Tilitykset",
-    "intro": "Maksupyyntö etenee pyydetystä hyväksyttyyn ja maksettuun tai hylätään. Hyväksyntä varaa summan tuojan tilikirjassa; maksu selvittää sen.",
+    "intro": "Hallitse myyjien tilityksiä ja tarkista, mitkä odottavat maksua.",
     "notice": "Komisio kirjaa tilitykset; se ei siirrä rahaa. Maksa pankkisi kautta ja kirjaa viite tähän.",
     "requestHeading": "Pyydä tilitystä",
     "requestHint": "Myyjän puolesta, vähintään kaupan vähimmäissumma ja enintään käytettävissä oleva saldo.",
@@ -1192,7 +1192,7 @@
       "paid": "maksettu",
       "rejected": "hylätty"
     },
-    "settleHeading": "Tilitä kaikille tuojille",
+    "settleHeading": "Valmistele tilitykset",
     "settleHint": "Jokainen tuoja, jonka saldo on vähintään vähimmäismäärä ({threshold}) ja jolla ei ole avointa maksupyyntöä. Yksi erä pyytää ja hyväksyy koko käytettävissä olevan saldon tilityksen jokaiselle valitulle tuojalle; sen jälkeen maksat pankkisi kautta ja merkitset jokaisen maksetuksi.",
     "settleEmpty": "Yksikään tuoja ei tällä hetkellä täytä tilityksen ehtoja.",
     "settleReason": "Erän huomautus",
@@ -1203,7 +1203,8 @@
     "settleTotal": "Yhteensä",
     "requestNone": "Tässä luettelossa ei ole käytettävissä olevaa saldoa. Avaa tuoja nähdäksesi saldon.",
     "directory": "Hae kaikista tuojista",
-    "latestFifty": "Näytetään 50 viimeisintä tilitystä. Kunkin tuojan sivu näyttää tuojan viimeisimmät tilitykset."
+    "latestFifty": "Näytetään 50 viimeisintä tilitystä. Kunkin tuojan sivu näyttää tuojan viimeisimmät tilitykset.",
+    "history": "Historia ja viitteet"
   },
   "returns": {
     "reason": "Palautuksen syy",

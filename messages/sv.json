@@ -19,7 +19,7 @@
     "required": "Underlag krävs före mottagning.",
     "optional": "Underlag är valfritt vid mottagning.",
     "none": "Inget säljaravtal är publicerat. Inget nytt avtalskrav gäller vid mottagning.",
-    "history": "Tidigare versioner",
+    "history": "Avtalsversioner",
     "historyHint": "De 20 senaste versionerna. Äldre versioner nås från respektive mottagning.",
     "adminOnly": "Ägare och administratörer kan publicera avtalsversioner.",
     "manage": "Visa och hantera säljaravtal",
@@ -1166,7 +1166,7 @@
   },
   "payouts": {
     "title": "Utbetalningar",
-    "intro": "En utbetalning går från begärd till godkänd till utbetald, eller avvisas. Godkännandet reserverar beloppet i säljarens reskontra; betalningen avräknar det.",
+    "intro": "Hantera säljares utbetalningar och följ vilka som väntar på betalning.",
     "notice": "Komisio registrerar utbetalningar; Komisio flyttar inga pengar. Betala via banken och registrera referensen här.",
     "requestHeading": "Begär en utbetalning",
     "requestHint": "För säljarens räkning, minst butikens minimibelopp och högst tillgängligt saldo.",
@@ -1192,7 +1192,7 @@
       "paid": "utbetald",
       "rejected": "avvisad"
     },
-    "settleHeading": "Avräkna alla säljare",
+    "settleHeading": "Förbered utbetalningar",
     "settleHint": "Alla säljare med minst minimibeloppet ({threshold}) och utan öppen utbetalning. En sats begär och godkänner en utbetalning av hela det tillgängliga saldot per vald säljare; sedan betalar du via banken och markerar varje utbetalning som utbetald.",
     "settleEmpty": "Ingen säljare uppfyller villkoren för avräkning just nu.",
     "settleReason": "Anteckning för satsen",
@@ -1203,7 +1203,8 @@
     "settleTotal": "Summa",
     "requestNone": "Inget tillgängligt saldo i den här listan. Öppna en säljare för att se säljarens saldo.",
     "directory": "Sök bland alla säljare",
-    "latestFifty": "Visar de 50 senaste utbetalningarna. Varje säljares sida visar säljarens senaste utbetalningar."
+    "latestFifty": "Visar de 50 senaste utbetalningarna. Varje säljares sida visar säljarens senaste utbetalningar.",
+    "history": "Historik och referenser"
   },
   "returns": {
     "reason": "Anledning till retur",

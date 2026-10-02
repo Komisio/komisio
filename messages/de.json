@@ -19,7 +19,7 @@
     "required": "Ein Nachweis ist vor der Annahme erforderlich.",
     "optional": "Ein Nachweis ist bei der Annahme optional.",
     "none": "Es ist keine Einlieferervereinbarung veröffentlicht. Für die Annahme gilt keine neue Vereinbarungsvoraussetzung.",
-    "history": "Frühere Versionen",
+    "history": "Vertragsversionen",
     "historyHint": "Die 20 neuesten Versionen. Ältere Versionen bleiben über ihre Belege zugänglich.",
     "adminOnly": "Inhaber und Administratoren können Vereinbarungsversionen veröffentlichen.",
     "manage": "Einlieferervereinbarungen anzeigen und verwalten",
@@ -1166,7 +1166,7 @@
   },
   "payouts": {
     "title": "Auszahlungen",
-    "intro": "Eine Auszahlung geht von beantragt über genehmigt zu bezahlt oder wird abgelehnt. Die Genehmigung reserviert den Betrag im Konto des Einlieferers; die Zahlung gleicht ihn aus.",
+    "intro": "Verwalten Sie Auszahlungen an Verkäufer und sehen Sie, welche noch auf Zahlung warten.",
     "notice": "Komisio erfasst Auszahlungen; es bewegt kein Geld. Zahlen Sie über Ihre Bank und erfassen Sie die Referenz hier.",
     "requestHeading": "Auszahlung beantragen",
     "requestHint": "Im Auftrag des Einlieferers, mindestens der Mindestbetrag des Ladens und höchstens das verfügbare Guthaben.",
@@ -1192,7 +1192,7 @@
       "paid": "bezahlt",
       "rejected": "abgelehnt"
     },
-    "settleHeading": "Alle Einlieferer abrechnen",
+    "settleHeading": "Auszahlungen vorbereiten",
     "settleHint": "Jeder Einlieferer mit mindestens dem Minimum ({threshold}) ohne offene Auszahlung. Ein Stapel beantragt und genehmigt eine Auszahlung des gesamten verfügbaren Guthabens pro ausgewähltem Einlieferer; Sie zahlen dann über Ihre Bank und markieren jede als bezahlt.",
     "settleEmpty": "Derzeit erfüllt kein Einlieferer die Voraussetzungen für eine Abrechnung.",
     "settleReason": "Stapelnotiz",
@@ -1203,7 +1203,8 @@
     "settleTotal": "Gesamt",
     "requestNone": "Kein verfügbares Guthaben in dieser Liste. Öffnen Sie einen Einlieferer, um dessen Guthaben zu sehen.",
     "directory": "Alle Einlieferer durchsuchen",
-    "latestFifty": "Die 50 neuesten Auszahlungen werden angezeigt. Die Seite jedes Einlieferers zeigt dessen letzte Auszahlungen."
+    "latestFifty": "Die 50 neuesten Auszahlungen werden angezeigt. Die Seite jedes Einlieferers zeigt dessen letzte Auszahlungen.",
+    "history": "Verlauf und Referenzen"
   },
   "returns": {
     "reason": "Rückgabegrund",

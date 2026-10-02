@@ -19,7 +19,7 @@
     "required": "Dokumentation er påkrævet før modtagelse.",
     "optional": "Dokumentation er valgfri ved modtagelse.",
     "none": "Der er ikke udgivet nogen indlevereraftale. Der gælder ingen ny aftaleforudsætning for modtagelse.",
-    "history": "Tidligere versioner",
+    "history": "Aftaleversioner",
     "historyHint": "De 20 seneste versioner. Ældre versioner kan stadig nås fra deres kvitteringer.",
     "adminOnly": "Ejere og administratorer kan udgive aftaleversioner.",
     "manage": "Se og administrer indlevereraftaler",
@@ -1166,7 +1166,7 @@
   },
   "payouts": {
     "title": "Udbetalinger",
-    "intro": "En udbetaling går fra anmodet til godkendt til betalt eller afvises. Godkendelse reserverer beløbet på indlevererens konto; betaling afregner det.",
+    "intro": "Administrer udbetalinger til sælgere og se, hvilke der afventer betaling.",
     "notice": "Komisio registrerer udbetalinger; det flytter ingen penge. Betal via din bank, og registrer referencen her.",
     "requestHeading": "Anmod om en udbetaling",
     "requestHint": "På sælgerens vegne, mindst butikkens minimumsbeløb og højst den tilgængelige saldo.",
@@ -1192,7 +1192,7 @@
       "paid": "betalt",
       "rejected": "afvist"
     },
-    "settleHeading": "Afregn alle indleverere",
+    "settleHeading": "Forbered udbetalinger",
     "settleHint": "Hver indleverer på eller over minimum ({threshold}) uden en åben udbetaling. Én batch anmoder om og godkender en udbetaling af hele den tilgængelige saldo pr. valgt indleverer; du betaler derefter via din bank og markerer hver enkelt som betalt.",
     "settleEmpty": "Ingen indleverere opfylder betingelserne for afregning lige nu.",
     "settleReason": "Batchnote",
@@ -1203,7 +1203,8 @@
     "settleTotal": "I alt",
     "requestNone": "Ingen tilgængelig saldo på denne liste. Åbn en indleverer for at se saldoen.",
     "directory": "Søg blandt alle indleverere",
-    "latestFifty": "Viser de 50 seneste udbetalinger. Hver indleverers side viser indlevererens seneste udbetalinger."
+    "latestFifty": "Viser de 50 seneste udbetalinger. Hver indleverers side viser indlevererens seneste udbetalinger.",
+    "history": "Historik og referencer"
   },
   "returns": {
     "reason": "Returårsag",

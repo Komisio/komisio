@@ -64,22 +64,20 @@ export default async function Payouts() {
   const when = (iso: string) =>
     new Date(iso).toLocaleString(intlLocale(ctx.locale), {
       timeZone: 'Europe/Stockholm',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     })
   return (
-    <>
+    <div className="payouts-overview">
       <div className="page-heading">
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
-        <Link className="text-link" href="/intake">
-          {all.intake.back}
-        </Link>
       </div>
       <p className="intake-notice">{d.notice}</p>
-      <div className="intake-grid">
-        {/* Order on a phone: flagged returns first, then the on-behalf request
-            folded to one line so it stays reachable above many payout cards
-            without its empty form in the way, then the settlement and the
-            open payouts that need a decision. */}
+      <div className="payouts-workspace">
         {flagged.length > 0 && (
           <section className="card intake-form">
             <h2>{all.returns.flaggedHeading}</h2>
@@ -95,8 +93,11 @@ export default async function Payouts() {
             ))}
           </section>
         )}
-        <details className="card intake-form" data-testid="payout-request">
-          <summary style={{ cursor: 'pointer', padding: '10px 0' }}>
+        <details
+          className="card intake-form payout-disclosure"
+          data-testid="payout-request"
+        >
+          <summary>
             <strong>{d.requestHeading}</strong>
           </summary>
           {!write ? (
@@ -122,30 +123,41 @@ export default async function Payouts() {
             </Link>
           </p>
         </details>
-        <section className="card intake-form">
-          <h2>{d.settleHeading}</h2>
-          <p>
-            {d.settleHint.replace(
-              '{threshold}',
-              `${(settlement.thresholdOre / 100).toFixed(2)} ${currency}`,
+        <details
+          className="card payout-disclosure"
+          data-testid="payout-settlement"
+        >
+          <summary>
+            <strong>{d.settleHeading}</strong>
+          </summary>
+          <section className="intake-form">
+            <h2>{d.settleHeading}</h2>
+            <p>
+              {d.settleHint.replace(
+                '{threshold}',
+                `${(settlement.thresholdOre / 100).toFixed(2)} ${currency}`,
+              )}
+            </p>
+            {settlement.sellers.length === 0 ? (
+              <p>{d.settleEmpty}</p>
+            ) : write ? (
+              <SettlementForm
+                key={`${active.id}-${settlement.sellers.map((s) => s.sellerId).join(',')}`}
+                tenantId={active.id}
+                currency={currency}
+                candidates={settlement.sellers}
+                d={d}
+                intake={all.intake}
+              />
+            ) : (
+              <p>{all.intake.readOnly}</p>
             )}
-          </p>
-          {settlement.sellers.length === 0 ? (
-            <p>{d.settleEmpty}</p>
-          ) : write ? (
-            <SettlementForm
-              key={`${active.id}-${settlement.sellers.map((s) => s.sellerId).join(',')}`}
-              tenantId={active.id}
-              currency={currency}
-              candidates={settlement.sellers}
-              d={d}
-              intake={all.intake}
-            />
-          ) : (
-            <p>{all.intake.readOnly}</p>
-          )}
-        </section>
-        <section className="card intake-form" data-testid="payout-list">
+          </section>
+        </details>
+        <section
+          className="card intake-form payout-register"
+          data-testid="payout-list"
+        >
           <h2>{d.list}</h2>
           {payouts.length === 0 && <p>{d.empty}</p>}
           {payouts.length >= 50 && (
@@ -154,32 +166,41 @@ export default async function Payouts() {
             </p>
           )}
           {payouts.map((p) => (
-            <div key={p.id} className="intake-notice">
-              <strong>
-                {formatSignedOre(p.amount_ore)} {currency} ·{' '}
+            <div key={p.id} className="intake-notice payout-entry">
+              <div className="payout-entry-heading">
                 <Link
                   className="text-link"
                   href={`/intake/sellers/${p.seller_id}`}
                 >
                   {names.get(p.seller_id) ?? p.seller_id}
-                </Link>{' '}
-                · {d.statuses[p.status]}
-              </strong>
+                </Link>
+                <strong>
+                  {formatSignedOre(p.amount_ore)} {currency}
+                </strong>
+                <span className="badge">{d.statuses[p.status]}</span>
+              </div>
               <p>
-                {d.requestedAt} {when(p.requested_at)} ·{' '}
-                {all.sellerPortal.source}: {all.sellerPortal[p.request_source]}
-                {p.paid_at
-                  ? ` · ${d.paidAt} ${when(p.paid_at)} · ${p.payment_reference}`
-                  : ''}
+                {d.requestedAt}{' '}
+                <time dateTime={p.requested_at}>{when(p.requested_at)}</time>
               </p>
-              {(events.get(p.id) ?? []).map((e) => (
-                <small key={e.id}>
-                  {when(e.occurred_at)} · {d.statuses[e.kind]}
-                  {e.reason ? ` · ${e.reason}` : ''}
-                  {e.reference ? ` · ${e.reference}` : ''}
-                  <br />
-                </small>
-              ))}
+              <details className="payout-history">
+                <summary>{d.history}</summary>
+                <p>
+                  {all.sellerPortal.source}:{' '}
+                  {all.sellerPortal[p.request_source]}
+                  {p.paid_at
+                    ? ` · ${d.paidAt} ${when(p.paid_at)} · ${p.payment_reference}`
+                    : ''}
+                </p>
+                {(events.get(p.id) ?? []).map((e) => (
+                  <small key={e.id}>
+                    {when(e.occurred_at)} · {d.statuses[e.kind]}
+                    {e.reason ? ` · ${e.reason}` : ''}
+                    {e.reference ? ` · ${e.reference}` : ''}
+                    <br />
+                  </small>
+                ))}
+              </details>
               {write &&
                 (p.status === 'requested' || p.status === 'approved') && (
                   <PayoutDecision
@@ -195,6 +216,6 @@ export default async function Payouts() {
           ))}
         </section>
       </div>
-    </>
+    </div>
   )
 }

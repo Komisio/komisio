@@ -21,6 +21,9 @@ for (const reply of ['lost', 'wrong-id', 'validation-5xx'] as const)
       })
       const city = region.locator('#profile-city')
       await city.fill('Synthetic retry city')
+      await region.getByLabel(d.storeProfile.days.mon, { exact: true }).check()
+      await region.locator('#opens-mon').fill('09:30')
+      await region.locator('#closes-mon').fill('17:45')
       const requests: Record<string, unknown>[] = []
       let committedId = ''
       let firstStatus = 0
@@ -60,6 +63,9 @@ for (const reply of ['lost', 'wrong-id', 'validation-5xx'] as const)
         .click()
       await expect.poll(() => requests.length).toBe(2)
       expect(requests[1]).toEqual(requests[0])
+      expect(requests[1].profile).toMatchObject({
+        openingHours: [{ day: 'mon', opens: '09:30', closes: '17:45' }],
+      })
       await expect(region).toContainText(`${d.storeProfile.version} 1`)
       await expect(city).toHaveValue('Synthetic retry city')
       await expect(city).toBeEnabled()

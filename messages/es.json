@@ -899,7 +899,9 @@
       "sun": "Domingo"
     },
     "country": "País",
-    "countryHelp": "El país de la tienda determina la moneda para las compras de créditos de IA."
+    "countryHelp": "El país de la tienda determina la moneda para las compras de créditos de IA.",
+    "noHours": "Sin horario indicado",
+    "hoursHint": "Selecciona los días para los que quieras indicar un horario. Si desmarcas un día, no se publicará su horario."
   },
   "storePolicy": {
     "markdowns": "Rebajas",

@@ -899,7 +899,9 @@
       "sun": "Söndag"
     },
     "country": "Land",
-    "countryHelp": "Butikens land bestämmer valutan för köp av AI-krediter."
+    "countryHelp": "Butikens land bestämmer valutan för köp av AI-krediter.",
+    "noHours": "Inga tider angivna",
+    "hoursHint": "Markera de dagar du vill ange tider för. Om du avmarkerar en dag publiceras inga tider för den."
   },
   "storePolicy": {
     "markdowns": "Prissänkningar",

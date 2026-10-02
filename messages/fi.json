@@ -899,7 +899,9 @@
       "sun": "Sunnuntai"
     },
     "country": "Maa",
-    "countryHelp": "Kaupan maa määrittää AI-krediittiostojen valuutan."
+    "countryHelp": "Kaupan maa määrittää AI-krediittiostojen valuutan.",
+    "noHours": "Aikoja ei ole annettu",
+    "hoursHint": "Valitse päivät, joille haluat antaa ajat. Jos poistat päivän valinnan, sen aikoja ei julkaista."
   },
   "storePolicy": {
     "markdowns": "Alennukset",

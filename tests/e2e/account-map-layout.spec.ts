@@ -20,15 +20,13 @@ test('account mapping keeps amounts and complete debit-credit controls readable 
           'utf8',
         ),
       )
-      await page
-        .context()
-        .addCookies([
-          {
-            name: 'komisio-locale',
-            value: locale,
-            url: 'http://127.0.0.1:3000',
-          },
-        ])
+      await page.context().addCookies([
+        {
+          name: 'komisio-locale',
+          value: locale,
+          url: 'http://127.0.0.1:3000',
+        },
+      ])
       await page.goto('/intake/accounting?view=settings')
       const map = page.locator('#account-map')
       const account = map.getByLabel(d.accounting.amountKeys.grossOre, {

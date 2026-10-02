@@ -201,7 +201,7 @@ textarea {
   width: 100%;
   min-height: 120px;
   padding: 12px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--control-line);
   border-radius: 9px;
   background: white;
   color: var(--ink);
@@ -473,6 +473,7 @@ summary {
   --green: #234e40;
   --mint: #eaf1e7;
   --paper: #f7f8f5;
+  --control-line: #788e7d;
   --white: #fff;
 }
 * {
@@ -567,7 +568,7 @@ label {
 input,
 select {
   width: 100%;
-  border: 1px solid #d7e0d6;
+  border: 1px solid var(--control-line);
   background: white;
   border-radius: 9px;
   padding: 11px 13px;
@@ -4812,6 +4813,77 @@ button.text-link:hover:not(:disabled) {
   grid-template-columns: 190px minmax(0, 1fr);
   gap: 24px;
   align-items: start;
+}
+.profile-field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.profile-field-grid .field {
+  min-width: 0;
+  margin-bottom: 0;
+}
+.profile-field-wide {
+  grid-column: 1 / -1;
+}
+.store-profile-editor h3 {
+  margin: 20px 0 12px;
+  font-size: 18px;
+}
+.profile-hours {
+  margin-bottom: 24px;
+}
+.profile-hours-row {
+  display: grid;
+  grid-template-columns: minmax(140px, 0.7fr) minmax(0, 1.5fr);
+  gap: 16px;
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+.profile-hours-day {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.profile-hours-day:has(small) {
+  grid-column: 1 / -1;
+}
+.profile-hours-day .intake-confirm {
+  margin: 0;
+  min-height: 44px;
+}
+.profile-hours-times {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  min-width: 0;
+}
+.profile-hours-times[hidden] {
+  display: none;
+}
+.profile-hours-times .field {
+  min-width: 0;
+  margin: 0;
+}
+.profile-hours-times input {
+  min-width: 0;
+  padding: 8px;
+  font-size: 16px;
+}
+@media (max-width: 640px) {
+  .profile-field-grid,
+  .profile-hours-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 360px) {
+  .profile-hours-times {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 .policy-layout > form {
   min-width: 0;

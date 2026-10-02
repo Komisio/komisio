@@ -899,7 +899,9 @@
       "sun": "Sonntag"
     },
     "country": "Land",
-    "countryHelp": "Das Land des Stores bestimmt die Währung für den Kauf von KI-Credits."
+    "countryHelp": "Das Land des Stores bestimmt die Währung für den Kauf von KI-Credits.",
+    "noHours": "Keine Zeiten angegeben",
+    "hoursHint": "Wählen Sie die Tage, für die Sie Zeiten angeben möchten. Für abgewählte Tage werden keine Zeiten veröffentlicht."
   },
   "storePolicy": {
     "markdowns": "Preissenkungen",

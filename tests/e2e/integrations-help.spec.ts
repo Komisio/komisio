@@ -29,15 +29,13 @@ test('general integration help stays relevant and preserves the selected provide
           'utf8',
         ),
       )
-      await page
-        .context()
-        .addCookies([
-          {
-            name: 'komisio-locale',
-            value: locale,
-            url: 'http://127.0.0.1:3000',
-          },
-        ])
+      await page.context().addCookies([
+        {
+          name: 'komisio-locale',
+          value: locale,
+          url: 'http://127.0.0.1:3000',
+        },
+      ])
       await page.goto('/intake/integrations?provider=paypal')
       const provider = page.getByTestId('integration-paypal')
       await expect(provider).toHaveAttribute('open', '')

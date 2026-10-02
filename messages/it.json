@@ -899,7 +899,9 @@
       "sun": "Domenica"
     },
     "country": "Paese",
-    "countryHelp": "Il paese del negozio determina la valuta per l'acquisto dei crediti AI."
+    "countryHelp": "Il paese del negozio determina la valuta per l'acquisto dei crediti AI.",
+    "noHours": "Nessun orario indicato",
+    "hoursHint": "Seleziona i giorni per cui vuoi indicare gli orari. Deselezionando un giorno, i suoi orari non verranno pubblicati."
   },
   "storePolicy": {
     "markdowns": "Ribassi",

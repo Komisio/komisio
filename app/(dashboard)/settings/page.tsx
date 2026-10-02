@@ -61,7 +61,7 @@ const tabs = [
 type Tab = (typeof tabs)[number]
 
 /**
- * Store settings in four tabs. Only the selected tab's data beyond the shared
+ * Store settings in available tabs. Only the selected tab's data beyond the shared
  * reads is fetched. A Stripe return (`billing=`) lands on the store tab.
  */
 export default async function Settings({
@@ -82,9 +82,13 @@ export default async function Settings({
   }))
   const active = ctx.active!
   const intake = process.env.KOMISIO_INTAKE_ENABLED === 'true'
+  const visible = tabs.filter(
+    (t) =>
+      (intake || t === 'store') && (t !== 'connectors' || connectorsEnabled()),
+  )
   const tab: Tab = !intake
     ? 'store'
-    : tabs.includes(query.tab as Tab)
+    : visible.includes(query.tab as Tab)
       ? (query.tab as Tab)
       : query.billing
         ? 'store'
@@ -161,10 +165,6 @@ export default async function Settings({
       locale={ctx.locale}
       d={pr}
     />
-  )
-  const visible = tabs.filter(
-    (t) =>
-      (intake || t === 'store') && (t !== 'connectors' || connectorsEnabled()),
   )
   return (
     <div className="settings-page">

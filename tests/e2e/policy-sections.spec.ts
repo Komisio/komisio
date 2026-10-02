@@ -103,15 +103,13 @@ test('policy section summaries fit every language and preserve editable controls
           'utf8',
         ),
       )
-      await page
-        .context()
-        .addCookies([
-          {
-            name: 'komisio-locale',
-            value: locale,
-            url: 'http://127.0.0.1:3000',
-          },
-        ])
+      await page.context().addCookies([
+        {
+          name: 'komisio-locale',
+          value: locale,
+          url: 'http://127.0.0.1:3000',
+        },
+      ])
       await page.setViewportSize({ width: 320, height: 800 })
       await page.goto('/settings')
       for (const id of [

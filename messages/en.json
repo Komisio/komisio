@@ -899,7 +899,9 @@
       "sun": "Sunday"
     },
     "country": "Country",
-    "countryHelp": "The store country determines the currency for AI credit purchases."
+    "countryHelp": "The store country determines the currency for AI credit purchases.",
+    "noHours": "No hours set",
+    "hoursHint": "Select the days you want to enter hours for. Deselecting a day removes its hours from the published profile."
   },
   "storePolicy": {
     "markdowns": "Markdowns",

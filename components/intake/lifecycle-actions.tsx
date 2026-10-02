@@ -83,6 +83,7 @@ export function LifecycleActions({
           )
         }}
       >
+        <h3>{d.setPrice}</h3>
         <div className="field">
           <label htmlFor={`price-${itemId}`}>{d.price}</label>
           <input
@@ -125,6 +126,7 @@ export function LifecycleActions({
           )
         }}
       >
+        <h3>{d.extend}</h3>
         <div className="field">
           <label htmlFor={`days-${itemId}`}>{d.days}</label>
           <input
@@ -167,6 +169,7 @@ export function LifecycleActions({
           )
         }}
       >
+        <h3>{d.end}</h3>
         <div className="field">
           <label htmlFor={`end-action-${itemId}`}>{d.endAction}</label>
           <select

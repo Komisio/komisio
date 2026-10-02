@@ -1546,7 +1546,8 @@
     "clearSearch": "Tyhjennä haku",
     "matches": "Tuloksia: {count}",
     "noMatches": "Valitussa tilassa ei ole hakua vastaavia tuotteita.",
-    "searchScopeHint": "Suodattimet vaikuttavat vain luetteloon. Hinnanalennukset koskevat koko myymälää."
+    "searchScopeHint": "Suodattimet vaikuttavat vain luetteloon. Hinnanalennukset koskevat koko myymälää.",
+    "storeMarkdowns": "Koko kaupan hinnanalennukset"
   },
   "openByReference": {
     "title": "Avaa etiketillä",

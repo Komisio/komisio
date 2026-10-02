@@ -1546,7 +1546,8 @@
     "clearSearch": "Cancella ricerca",
     "matches": "Risultati: {count}",
     "noMatches": "Nessun articolo corrisponde alla ricerca nello stato selezionato.",
-    "searchScopeHint": "I filtri riguardano solo l’elenco. Le riduzioni di prezzo si applicano a tutto il negozio."
+    "searchScopeHint": "I filtri riguardano solo l’elenco. Le riduzioni di prezzo si applicano a tutto il negozio.",
+    "storeMarkdowns": "Ribassi per tutto il negozio"
   },
   "openByReference": {
     "title": "Apri da etichetta",

@@ -1546,7 +1546,8 @@
     "clearSearch": "Borrar búsqueda",
     "matches": "Resultados: {count}",
     "noMatches": "Ningún artículo coincide con la búsqueda y el estado seleccionado.",
-    "searchScopeHint": "Los filtros solo afectan a la lista. Las rebajas se aplican a toda la tienda."
+    "searchScopeHint": "Los filtros solo afectan a la lista. Las rebajas se aplican a toda la tienda.",
+    "storeMarkdowns": "Rebajas en toda la tienda"
   },
   "openByReference": {
     "title": "Abrir por etiqueta",

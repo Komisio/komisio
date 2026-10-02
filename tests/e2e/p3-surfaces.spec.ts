@@ -254,7 +254,7 @@ test('markdown runs apply every due step by hand and the policy switch turns the
     await f.commit()
     await page.goto('/intake/lifecycle')
     const runs = page.locator('details.lifecycle-automation')
-    await runs.getByText(d.lifecycle.agentHeading, { exact: true }).click()
+    await runs.getByText(d.lifecycle.storeMarkdowns, { exact: true }).click()
     await expect(
       runs.getByText(d.lifecycle.agentOff, { exact: true }),
     ).toBeVisible()
@@ -309,7 +309,7 @@ test('markdown runs apply every due step by hand and the policy switch turns the
       page.getByLabel(d.storePolicy.automaticMarkdowns, { exact: true }),
     ).toBeChecked()
     await page.goto('/intake/lifecycle')
-    await runs.getByText(d.lifecycle.agentHeading, { exact: true }).click()
+    await runs.getByText(d.lifecycle.storeMarkdowns, { exact: true }).click()
     await expect(
       runs.getByText(d.lifecycle.agentOn, { exact: true }),
     ).toBeVisible()

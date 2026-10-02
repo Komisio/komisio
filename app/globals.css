@@ -4551,3 +4551,141 @@ button.text-link:hover:not(:disabled) {
     grid-row: 3;
   }
 }
+
+/* Lifecycle workbench shares the item directory's reading order and density. */
+.lifecycle-page {
+  max-width: 1120px;
+  margin-inline: auto;
+}
+.lifecycle-page .lifecycle-automation {
+  padding: 14px 20px;
+}
+.lifecycle-page .lifecycle-automation > summary {
+  min-height: 44px;
+  align-content: center;
+  cursor: pointer;
+}
+.lifecycle-page .lifecycle-automation > p {
+  max-width: 75ch;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-block: 12px;
+}
+.lifecycle-scope {
+  border-left: 3px solid var(--green);
+  padding-left: 12px;
+}
+.lifecycle-workspace {
+  padding: 24px;
+}
+.lifecycle-workspace > .lifecycle-filter {
+  margin-top: 0;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+.lifecycle-workspace > p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-block: 16px;
+}
+.lifecycle-workspace > .lifecycle-list {
+  padding: 0;
+}
+.lifecycle-page .lifecycle-row > summary {
+  grid-template-columns: minmax(0, 1fr) auto minmax(150px, 220px);
+  gap: 10px 20px;
+  padding: 20px 8px;
+  cursor: pointer;
+}
+.lifecycle-page .lifecycle-row > summary:hover {
+  background: var(--paper);
+}
+.lifecycle-page .lifecycle-item {
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+.lifecycle-page .lifecycle-price {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.lifecycle-page .lifecycle-status {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: start;
+  background: var(--paper);
+  color: var(--muted);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 400;
+}
+.lifecycle-page .lifecycle-status-on_sale {
+  background: var(--mint);
+  color: var(--green);
+}
+.lifecycle-page .lifecycle-status-markdown_due,
+.lifecycle-page .lifecycle-status-period_ending,
+.lifecycle-page .lifecycle-status-period_ended {
+  background: #fff4df;
+  color: #735115;
+}
+.lifecycle-page .lifecycle-end {
+  padding-left: 22px;
+}
+.lifecycle-page .lifecycle-detail {
+  padding: 20px 8px;
+}
+.lifecycle-page .lifecycle-detail > .lifecycle-reference {
+  margin-bottom: 10px;
+}
+.lifecycle-page .lifecycle-detail > p {
+  font-size: 14px;
+  color: var(--muted);
+  margin-block: 12px;
+}
+.lifecycle-page .lifecycle-actions {
+  gap: 16px;
+}
+.lifecycle-page .lifecycle-actions form {
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+.lifecycle-page .lifecycle-actions h3 {
+  font-size: 16px;
+  margin: 0 0 20px;
+}
+.lifecycle-page .lifecycle-actions .intake-confirm {
+  font-size: 13px;
+  font-weight: 400;
+}
+@media (max-width: 900px) {
+  .lifecycle-page .lifecycle-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  .lifecycle-workspace {
+    padding: 20px 16px;
+  }
+  .lifecycle-page .lifecycle-row > summary {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding-inline: 0;
+  }
+  .lifecycle-page .lifecycle-status {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-left: 22px;
+  }
+  .lifecycle-page .lifecycle-price {
+    font-size: 14px;
+  }
+  .lifecycle-page input,
+  .lifecycle-page select {
+    font-size: 16px;
+  }
+  .lifecycle-page .lifecycle-pagination {
+    flex-wrap: wrap;
+  }
+}

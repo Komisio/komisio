@@ -1546,7 +1546,8 @@
     "clearSearch": "Ryd søgning",
     "matches": "Resultater: {count}",
     "noMatches": "Ingen varer matcher søgningen med den valgte status.",
-    "searchScopeHint": "Filtrene påvirker kun listen. Prisnedsættelserne gælder hele butikken."
+    "searchScopeHint": "Filtrene påvirker kun listen. Prisnedsættelserne gælder hele butikken.",
+    "storeMarkdowns": "Prisnedsættelser for hele butikken"
   },
   "openByReference": {
     "title": "Åbn via mærkat",

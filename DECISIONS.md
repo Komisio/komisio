@@ -755,7 +755,7 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-09-28: An uncertain label-size save requires reloading the current dimensions before another write; set_label_format has no replay identity. A successful response must match the submitted kind and dimensions.
 - 2026-09-28: Owners/admins may create a store item type during reception and select it without leaving the item. Creation uses an actor-bound request ID, replays only matching content and never overwrites a later edit. Staff vocabulary permissions remain unchanged.
-- 2026-09-28: Seller registration supports optional address and national ID in the existing profile, saved atomically with actor-bound replay. National ID is unverified text, never a login or match key. Existing profile permissions, history and export apply; statements retain contact-only snapshots.
+- 2026-09-28: Seller registration supports optional address and national ID in the profile, saved atomically with actor-bound replay. National ID is unverified text, never a login or match key. Existing profile permissions, history and export apply; statements retain contact-only snapshots.
 - 2026-09-29: Quick reception warns before unloading entered item data and confirms discarding it on seller change. Accepted items and empty next-item forms need no warning. This is not autosave or a client-side navigation guard; uncertain-save retry rules remain unchanged.
 - 2026-09-29: The platform CI job has a 35-minute execution budget for the full existing check sequence. Individual test timeouts, mandatory checks and staging/production gates remain unchanged.
 - 2026-09-29: Quick intake registers a scoped warning for app navigation links and shell store-switch/sign-out actions while item work is unsaved or uncertain. Cancellation preserves the form; same-page anchors and new tabs do not prompt. This adds no autosave or browser-history interception.
@@ -774,3 +774,9 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-01: Extend shared help to receiving and labels with task-specific links in all eight languages. Guidance distinguishes custody, drafts, accepted items and print queues without inferring whole-drop-off completion or physical printing; existing permissions and retries remain.
 
 - 2026-10-01: Owner requests heading help icons for quick reception and drop-off receipt. Each expands three form-specific tips in place, without navigation or writes, in all eight languages. General help remains available separately.
+
+- 2026-10-02: Locally redesign overview around daily actions, existing sales facts and follow-up queues. Compact onboarding retains all steps; missing reads remain unknown and existing permissions apply. No new business metrics or writes.
+
+- 2026-10-02: Local quick-reception layout prioritizes item fields before the optional photo in DOM and visual order. Description and price lead; compact seller context, optional details and save action retain existing input, consent, retry, printing and next-item behavior.
+
+- 2026-10-02: Clarify inline item-type creation with store-wide scope, copied-question guidance and an explicit create-and-use action. Existing commands, replay protection and item drafts remain unchanged.

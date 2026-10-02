@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { ArrowRight } from 'lucide-react'
 import type { Dictionary } from '@/lib/i18n'
 import {
   sellerSearchResult,
@@ -121,8 +122,11 @@ export function QuickSellerPicker({
                   className="intake-seller"
                   onClick={() => onSelect(seller)}
                 >
-                  <strong>{seller.name}</strong>
-                  <small>{seller.contact ?? ''}</small>
+                  <span className="quick-seller-choice-copy">
+                    <strong>{seller.name}</strong>
+                    <small>{seller.contact ?? ''}</small>
+                  </span>
+                  <ArrowRight size={18} aria-hidden="true" />
                 </button>
               </li>
             ))}

@@ -120,11 +120,11 @@
     "sellerSearchRange": "Visualizzati {from}–{to} di {total} venditori",
     "sellerSearchPrevious": "Precedente",
     "sellerSearchNext": "Successivo",
-    "createType": "Nuovo tipo di articolo",
+    "createType": "Aggiungi tipo di articolo",
     "typeName": "Nome del tipo di articolo",
-    "typeFields": "Usa gli stessi campi di",
-    "typeBasic": "Solo descrizione",
-    "typeCreateSelect": "Crea e seleziona",
+    "typeFields": "Copia le domande da",
+    "typeBasic": "Nessun modello: solo descrizione",
+    "typeCreateSelect": "Crea e usa",
     "typeCancel": "Annulla",
     "typeRetry": "Riprova",
     "typeInvalid": "Inserisci un nome e scegli campi validi.",
@@ -140,7 +140,9 @@
         "Inserisci descrizione, categoria e prezzo. Controlla gli eventuali suggerimenti IA.",
         "Salva l’articolo. Dalla conferma puoi etichettarlo o passare al successivo."
       ]
-    }
+    },
+    "typeIntro": "Il tipo viene salvato per tutto il negozio e selezionato per questo articolo.",
+    "typeFieldsHint": "Scegli un tipo di articolo simile per usare le stesse domande, come taglia e materiale."
   },
   "intake": {
     "quickLink": "Ricezione rapida: una schermata per capo",
@@ -2918,5 +2920,16 @@
     "items": "Trova un articolo registrato",
     "openReference": "Apri un riferimento etichetta",
     "printing": "Stampanti e lavori di stampa"
+  },
+  "dashboard": {
+    "intro": "Le informazioni essenziali della giornata, in un solo posto.",
+    "actions": "Accessi rapidi",
+    "followUp": "Da seguire",
+    "allSteps": "Mostra tutti i passaggi",
+    "unavailable": "Non disponibile",
+    "itemsHint": "Trova e gestisci gli articoli del negozio.",
+    "salesHint": "Consulta le vendite registrate.",
+    "snapshot": "Situazione del negozio",
+    "receiptHint": "Ricevi ora, controlla gli articoli dopo."
   }
 }

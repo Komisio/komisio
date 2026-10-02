@@ -120,11 +120,11 @@
     "sellerSearchRange": "Näytetään {from}–{to} / {total} myyjää",
     "sellerSearchPrevious": "Edellinen",
     "sellerSearchNext": "Seuraava",
-    "createType": "Uusi tuotetyyppi",
+    "createType": "Lisää tuotetyyppi",
     "typeName": "Tuotetyypin nimi",
-    "typeFields": "Käytä samoja kenttiä kuin",
-    "typeBasic": "Vain kuvaus",
-    "typeCreateSelect": "Luo ja valitse",
+    "typeFields": "Kopioi kysymykset tuotetyypistä",
+    "typeBasic": "Ei mallia – vain kuvaus",
+    "typeCreateSelect": "Luo ja käytä",
     "typeCancel": "Peruuta",
     "typeRetry": "Yritä uudelleen",
     "typeInvalid": "Anna nimi ja valitse kelvolliset kentät.",
@@ -140,7 +140,9 @@
         "Täytä kuvaus, tuoteryhmä ja hinta. Tarkista mahdolliset tekoälyn ehdotukset.",
         "Tallenna tuote. Siirry vahvistuksesta tuotteen merkintään tai seuraavaan tuotteeseen."
       ]
-    }
+    },
+    "typeIntro": "Tuotetyyppi tallennetaan koko myymälälle ja valitaan tälle tuotteelle.",
+    "typeFieldsHint": "Valitse samankaltainen tuotetyyppi, jos haluat samat kysymykset, kuten koon ja materiaalin."
   },
   "intake": {
     "quickLink": "Pikavastaanotto: yksi näyttö per vaate",
@@ -2924,5 +2926,16 @@
     "items": "Etsi rekisteröity tuote",
     "openReference": "Avaa etiketin viite",
     "printing": "Tulostimet ja tulostustyöt"
+  },
+  "dashboard": {
+    "intro": "Työpäiväsi tärkeimmät asiat yhdellä silmäyksellä.",
+    "actions": "Pikalinkit",
+    "followUp": "Seurattavat asiat",
+    "allSteps": "Näytä kaikki vaiheet",
+    "unavailable": "Tieto puuttuu",
+    "itemsHint": "Etsi ja hallitse myymälän tuotteita.",
+    "salesHint": "Katso kirjatut myynnit.",
+    "snapshot": "Myymälän tilanne",
+    "receiptHint": "Ota vastaan nyt, tarkasta tuotteet myöhemmin."
   }
 }

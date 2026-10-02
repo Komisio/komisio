@@ -120,11 +120,11 @@
     "sellerSearchRange": "Showing {from}–{to} of {total} sellers",
     "sellerSearchPrevious": "Previous",
     "sellerSearchNext": "Next",
-    "createType": "New item type",
+    "createType": "Add item type",
     "typeName": "Item type name",
-    "typeFields": "Use the same fields as",
-    "typeBasic": "Description only",
-    "typeCreateSelect": "Create and select",
+    "typeFields": "Copy questions from",
+    "typeBasic": "No template – description only",
+    "typeCreateSelect": "Create and use",
     "typeCancel": "Cancel",
     "typeRetry": "Try again",
     "typeInvalid": "Enter a name and choose valid fields.",
@@ -140,7 +140,9 @@
         "Enter description, category and price. Check any AI suggestions.",
         "Save the item. Use the confirmation to label it or continue with the next item."
       ]
-    }
+    },
+    "typeIntro": "The item type is saved for the whole store and selected for this item.",
+    "typeFieldsHint": "Choose a similar item type to use the same questions, such as size and material."
   },
   "intake": {
     "quickLink": "Quick reception: one screen per garment",
@@ -2918,5 +2920,16 @@
     "items": "Find a registered item",
     "openReference": "Open a label reference",
     "printing": "Printers and print jobs"
+  },
+  "dashboard": {
+    "intro": "Your working day, at a glance.",
+    "actions": "Shortcuts",
+    "followUp": "Follow up",
+    "allSteps": "Show all steps",
+    "unavailable": "Unavailable",
+    "itemsHint": "Find and manage store items.",
+    "salesHint": "View recorded sales.",
+    "snapshot": "Store snapshot",
+    "receiptHint": "Receive now, inspect the items later."
   }
 }

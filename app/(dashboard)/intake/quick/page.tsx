@@ -29,7 +29,7 @@ export default async function QuickIntake() {
     readAttributeVocabulary(ctx.client, a.id),
   ])
   return (
-    <main className="intake">
+    <main className="intake quick-page">
       <div className="intake-header">
         <FormHelpHeading title={d.title} level={1} help={d.formHelp} />
         <Link className="text-link" href="/intake">

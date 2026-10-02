@@ -4991,3 +4991,116 @@ button.text-link:hover:not(:disabled) {
     align-items: start;
   }
 }
+/* Integration selection precedes setup and operational detail. */
+.integration-catalog {
+  display: grid;
+  gap: 16px;
+}
+.integration-provider {
+  padding: 0;
+  min-width: 0;
+}
+.integration-provider > summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  padding: 24px;
+  cursor: pointer;
+  list-style: none;
+}
+.integration-provider > summary::-webkit-details-marker {
+  display: none;
+}
+.integration-provider > summary::before {
+  content: '+';
+  font-size: 24px;
+  width: 20px;
+  flex-shrink: 0;
+}
+.integration-provider[open] > summary::before {
+  content: '−';
+}
+.integration-provider > summary:hover {
+  background: var(--mint);
+  border-radius: 15px;
+}
+.integration-provider-copy {
+  display: grid;
+  gap: 8px;
+  flex: 1 1 320px;
+}
+.integration-provider-copy strong {
+  font-size: 21px;
+}
+.integration-provider-copy > span {
+  color: var(--muted);
+  line-height: 1.5;
+}
+.integration-status {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--paper);
+}
+.integration-provider-toggle {
+  font-size: 14px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.integration-provider > .integration-group {
+  margin: 0;
+  padding: 24px;
+  border-top: 1px solid var(--line);
+}
+.integration-provider .integration-group > h2 {
+  margin: 0 0 16px;
+}
+.integration-provider .integration-group > .text-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.integration-overview-hint,
+.integration-status-note {
+  font-size: 14px;
+  max-width: 75ch;
+}
+.integration-status-note {
+  margin-top: 20px;
+}
+@media (max-width: 600px) {
+  .integration-provider > summary {
+    padding: 20px;
+    gap: 12px;
+  }
+  .integration-provider-copy {
+    flex-basis: calc(100% - 32px);
+  }
+  .integration-provider > .integration-group {
+    padding: 16px;
+  }
+  .integration-provider > .integration-group .card {
+    padding: 16px;
+  }
+  .integration-provider .integration-status {
+    margin-left: 32px;
+  }
+}
+@media (max-width: 600px) {
+  .integration-provider > summary {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
+  }
+  .integration-provider-copy,
+  .integration-provider .integration-status,
+  .integration-provider-toggle {
+    grid-column: 2;
+  }
+  .integration-provider .integration-status {
+    margin-left: 0;
+    justify-self: start;
+  }
+}

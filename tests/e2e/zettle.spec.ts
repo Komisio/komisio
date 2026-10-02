@@ -27,7 +27,7 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
       const item1 = await f.item('Zettle jacket'),
         item2 = await f.item('Zettle bag')
       await f.commit()
-      await page.goto('/intake/integrations')
+      await page.goto('/intake/integrations?provider=paypal')
       await page
         .getByText(`PayPal POS · ${d.integrationPage.manage}`, { exact: true })
         .click()
@@ -290,7 +290,7 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
           JSON.stringify(more),
         ]),
       )
-      await page.goto('/intake/integrations')
+      await page.goto('/intake/integrations?provider=paypal')
       await page
         .getByText(`PayPal POS · ${d.integrationPage.manage}`, { exact: true })
         .click()

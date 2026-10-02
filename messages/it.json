@@ -2660,7 +2660,18 @@
     "pos": "Punto vendita (POS)",
     "ecommerce": "Negozio online e cassa",
     "accounting": "Contabilità",
-    "accountingSettings": "Apri le impostazioni contabili"
+    "accountingSettings": "Apri le impostazioni contabili",
+    "chooseHint": "Apri un sistema per collegarlo o modificarne le impostazioni.",
+    "paypalPurpose": "Cassa del negozio. Invia articoli alla cassa e recupera le vendite.",
+    "shopifyPurpose": "Negozio online e cassa. Collega articoli e ordini a Komisio.",
+    "fortnoxPurpose": "Contabilità. Invia i documenti preparati alla tua azienda in Fortnox.",
+    "configured": "Impostazioni salvate",
+    "setupNeeded": "Configurazione necessaria",
+    "connectionSaved": "Connessione salvata",
+    "notConnected": "Non collegato",
+    "reconnect": "Ricollegamento necessario",
+    "setupAction": "Mostra impostazioni",
+    "statusHint": "Lo stato riflette le informazioni salvate. Apri il sistema per i dettagli; una connessione salvata non significa che la sincronizzazione automatica sia attiva."
   },
   "shopifyPrivacy": {
     "title": "Shopify · Richieste sulla privacy",

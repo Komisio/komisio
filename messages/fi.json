@@ -2660,7 +2660,18 @@
     "pos": "Kassajärjestelmä (POS)",
     "ecommerce": "Verkkokauppa ja kassa",
     "accounting": "Kirjanpito",
-    "accountingSettings": "Avaa kirjanpidon asetukset"
+    "accountingSettings": "Avaa kirjanpidon asetukset",
+    "chooseHint": "Avaa järjestelmä yhdistääksesi sen tai muuttaaksesi asetuksia.",
+    "paypalPurpose": "Myymälän kassa. Lähetä tuotteita kassaan ja nouda myynnit.",
+    "shopifyPurpose": "Verkkokauppa ja kassa. Yhdistä tuotteet ja tilaukset Komisioon.",
+    "fortnoxPurpose": "Kirjanpito. Lähetä valmisteltu kirjanpitoaineisto Fortnox-yritykseesi.",
+    "configured": "Asetukset tallennettu",
+    "setupNeeded": "Valmistelu tarvitaan",
+    "connectionSaved": "Yhteys tallennettu",
+    "notConnected": "Ei yhdistetty",
+    "reconnect": "Yhdistä uudelleen",
+    "setupAction": "Näytä asetukset",
+    "statusHint": "Tila perustuu tallennettuihin tietoihin. Avaa järjestelmä nähdäksesi lisätiedot; tallennettu yhteys ei tarkoita automaattisen synkronoinnin olevan käytössä."
   },
   "shopifyPrivacy": {
     "title": "Shopify · Tietosuojapyynnöt",

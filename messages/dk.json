@@ -2660,7 +2660,18 @@
     "pos": "Kassesystem (POS)",
     "ecommerce": "Webshop og kasse",
     "accounting": "Bogføring",
-    "accountingSettings": "Åbn bogføringsindstillinger"
+    "accountingSettings": "Åbn bogføringsindstillinger",
+    "chooseHint": "Åbn et system for at tilslutte det eller ændre indstillinger.",
+    "paypalPurpose": "Kasse i butikken. Send varer til kassen og hent salg.",
+    "shopifyPurpose": "Webshop og kasse. Knyt varer og ordrer til Komisio.",
+    "fortnoxPurpose": "Bogføring. Send klargjorte bilag til din virksomhed i Fortnox.",
+    "configured": "Indstillinger gemt",
+    "setupNeeded": "Skal klargøres",
+    "connectionSaved": "Forbindelse gemt",
+    "notConnected": "Ikke tilsluttet",
+    "reconnect": "Tilslut igen",
+    "setupAction": "Vis indstillinger",
+    "statusHint": "Status viser gemte oplysninger. Åbn systemet for detaljer; en gemt forbindelse betyder ikke, at automatisk synkronisering er slået til."
   },
   "shopifyPrivacy": {
     "title": "Shopify · Databeskyttelsesanmodninger",

@@ -791,3 +791,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-02: Economy highlights period sales, commission and paid payouts, separates current seller balances, and collapses detailed amounts and reports. Existing SQL totals, gross/refund separation, permissions and automation commands remain unchanged.
 
 - 2026-10-02: Accounting groups shared day closes, exports and account mapping separately from provider connections. SIE remains a standalone option; Fortnox delivery and reconciliation retain explicit provider scope, authorization and uncertain-send holds. No new provider is activated.
+
+- 2026-10-02: Integrations starts with purpose and saved connection state per provider; connection, sync and history controls expand on demand. OAuth outcomes and receipt paging open the relevant provider. Existing permissions, provider calls and automatic-sync grants are unchanged.

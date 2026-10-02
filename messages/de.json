@@ -2660,7 +2660,18 @@
     "pos": "Kassensystem (POS)",
     "ecommerce": "Onlineshop und Kasse",
     "accounting": "Buchhaltung",
-    "accountingSettings": "Buchhaltungseinstellungen öffnen"
+    "accountingSettings": "Buchhaltungseinstellungen öffnen",
+    "chooseHint": "Öffnen Sie ein System, um es zu verbinden oder Einstellungen zu ändern.",
+    "paypalPurpose": "Kasse im Geschäft. Artikel an die Kasse senden und Verkäufe abrufen.",
+    "shopifyPurpose": "Onlineshop und Kasse. Artikel und Bestellungen mit Komisio verbinden.",
+    "fortnoxPurpose": "Buchhaltung. Vorbereitete Belege an Ihr Unternehmen in Fortnox senden.",
+    "configured": "Einstellungen gespeichert",
+    "setupNeeded": "Einrichtung erforderlich",
+    "connectionSaved": "Verbindung gespeichert",
+    "notConnected": "Nicht verbunden",
+    "reconnect": "Erneut verbinden",
+    "setupAction": "Einstellungen anzeigen",
+    "statusHint": "Der Status basiert auf gespeicherten Angaben. Öffnen Sie das System für Details; eine gespeicherte Verbindung bedeutet nicht, dass die automatische Synchronisierung aktiv ist."
   },
   "shopifyPrivacy": {
     "title": "Shopify · Datenschutzanfragen",

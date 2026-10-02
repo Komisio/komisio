@@ -2660,7 +2660,18 @@
     "pos": "Point of sale (POS)",
     "ecommerce": "Online store and POS",
     "accounting": "Accounting",
-    "accountingSettings": "Open accounting settings"
+    "accountingSettings": "Open accounting settings",
+    "chooseHint": "Open a system to connect it or change its settings.",
+    "paypalPurpose": "In-store checkout. Send items to the till and retrieve sales.",
+    "shopifyPurpose": "Online store and checkout. Connect items and orders to Komisio.",
+    "fortnoxPurpose": "Accounting. Send prepared accounting documents to your Fortnox company.",
+    "configured": "Settings saved",
+    "setupNeeded": "Setup needed",
+    "connectionSaved": "Connection saved",
+    "notConnected": "Not connected",
+    "reconnect": "Reconnect needed",
+    "setupAction": "View settings",
+    "statusHint": "Status reflects saved information. Open a system for details; a saved connection does not mean automatic sync is enabled."
   },
   "shopifyPrivacy": {
     "title": "Shopify · Privacy requests",

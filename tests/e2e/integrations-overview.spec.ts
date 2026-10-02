@@ -15,6 +15,40 @@ test('connections overview shows simple setup guidance before detailed controls'
     await expect(
       page.getByRole('heading', { name: d.nav.integrations, exact: true }),
     ).toBeVisible()
+    for (const provider of ['paypal', 'shopify', 'fortnox']) {
+      await expect(
+        page.getByTestId(`integration-${provider}`),
+      ).not.toHaveAttribute('open', '')
+    }
+    await expect(
+      page.getByText(d.integrationPage.paypalPurpose, { exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByText(d.integrationPage.shopifyPurpose, { exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByText(d.integrationPage.fortnoxPurpose, { exact: true }),
+    ).toBeVisible()
+    await page.screenshot({
+      path: 'private/integrations-overview-desktop.png',
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 375, height: 812 })
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true)
+    await page.screenshot({
+      path: 'private/integrations-overview-mobile.png',
+      fullPage: true,
+    })
+    for (const provider of ['paypal', 'shopify', 'fortnox']) {
+      const panel = page.getByTestId(`integration-${provider}`)
+      await panel.locator(':scope > summary').focus()
+      await page.keyboard.press('Enter')
+      await expect(panel).toHaveAttribute('open', '')
+    }
     await expect(
       page.getByRole('heading', { name: 'PayPal POS', exact: true }),
     ).toBeVisible()
@@ -56,20 +90,6 @@ test('connections overview shows simple setup guidance before detailed controls'
       page.locator('.integration-details').first(),
     ).not.toHaveAttribute('open', '')
     expect(await page.locator('main').first().innerText()).not.toMatch(/pilot/i)
-    await page.screenshot({
-      path: 'private/integrations-overview-desktop.png',
-      fullPage: true,
-    })
-    await page.setViewportSize({ width: 390, height: 844 })
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
-      ),
-    ).toBe(true)
-    await page.screenshot({
-      path: 'private/integrations-overview-mobile.png',
-      fullPage: true,
-    })
     await page
       .getByText(`PayPal POS · ${d.integrationPage.manage}`, { exact: true })
       .click()

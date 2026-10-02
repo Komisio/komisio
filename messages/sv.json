@@ -2660,7 +2660,18 @@
     "pos": "Kassasystem (POS)",
     "ecommerce": "Webbshop och kassa",
     "accounting": "Bokföring",
-    "accountingSettings": "Öppna bokföringsinställningar"
+    "accountingSettings": "Öppna bokföringsinställningar",
+    "chooseHint": "Öppna ett system för att ansluta eller ändra inställningar.",
+    "paypalPurpose": "Kassa i butiken. Skicka varor till kassan och hämta försäljningar.",
+    "shopifyPurpose": "Webbutik och kassa. Koppla varor och beställningar till Komisio.",
+    "fortnoxPurpose": "Bokföring. Skicka färdiga bokföringsunderlag till ditt företag i Fortnox.",
+    "configured": "Inställningar sparade",
+    "setupNeeded": "Behöver förberedas",
+    "connectionSaved": "Anslutning sparad",
+    "notConnected": "Inte ansluten",
+    "reconnect": "Behöver anslutas på nytt",
+    "setupAction": "Visa inställningar",
+    "statusHint": "Status visar sparade uppgifter. Öppna systemet för mer information; en sparad anslutning betyder inte att automatisk synkning är på."
   },
   "shopifyPrivacy": {
     "title": "Shopify · Dataskyddsärenden",

@@ -62,6 +62,30 @@
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 20px;
 }
+.help-topic {
+  display: block;
+  color: var(--ink);
+  text-decoration: none;
+}
+.help-topic h2 {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.help-topic h2 svg {
+  flex-shrink: 0;
+}
+.help-topic p {
+  color: var(--muted);
+  margin-bottom: 0;
+}
+.help-topic:hover {
+  border-color: var(--green);
+  background: var(--mint);
+}
 .account-map-table {
   width: 100%;
   border-collapse: collapse;

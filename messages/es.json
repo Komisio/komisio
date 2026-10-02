@@ -2867,7 +2867,7 @@
   },
   "helpCenter": {
     "title": "Ayuda",
-    "intro": "Guías de recepción, etiquetado e integración contable.",
+    "intro": "Guía de recepción, etiquetado e integraciones.",
     "open": "Ayuda de esta página",
     "close": "Cerrar ayuda",
     "fullArticle": "Abrir la ayuda completa en una pestaña nueva",
@@ -2965,13 +2965,25 @@
           "Si falta la respuesta al poner el trabajo en cola, reintenta en el mismo formulario abierto. No crees trabajos nuevos repetidamente. Comprueba el trabajo en Impresoras y trabajos de impresión y pide ayuda al responsable de la impresora si es necesario. La búsqueda de etiquetas permite abrir una referencia existente."
         ],
         "notice": "Abrir la ayuda no imprime nada ni registra un artículo nuevo. No dupliques un artículo para sustituir su etiqueta. La impresión física y el escaneo deben comprobarse con el equipo de la tienda."
+      },
+      "integrations": {
+        "title": "Conecta los demás sistemas de tu tienda",
+        "intro": "Empieza por el sistema que quieras conectar con Komisio. Abre su sección para ver el estado y los ajustes.",
+        "steps": [
+          "Elige punto de venta, tienda online o contabilidad según lo que quieras conectar.",
+          "Lee el estado de la conexión y sigue los pasos de esa sección. Algunas acciones requieren un propietario o administrador.",
+          "Comprueba qué información se transfiere y en qué dirección antes de activar una función automática.",
+          "Consulta el estado de productos, recibos, pedidos o documentos contables en cada integración. Abre los detalles si algo requiere atención."
+        ],
+        "notice": "Una conexión no significa que todas las funciones automáticas estén activadas. Compruébalas por separado en los ajustes de la integración."
       }
     },
     "receiving": "Abrir recepción",
     "storeFlow": "Flujo de trabajo de la tienda",
     "items": "Buscar un artículo registrado",
     "openReference": "Abrir una referencia de etiqueta",
-    "printing": "Impresoras y trabajos de impresión"
+    "printing": "Impresoras y trabajos de impresión",
+    "integrations": "Abrir integraciones"
   },
   "dashboard": {
     "intro": "Lo más importante de tu jornada, en un solo lugar.",

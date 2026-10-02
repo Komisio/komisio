@@ -2867,7 +2867,7 @@
   },
   "helpCenter": {
     "title": "Hilfe",
-    "intro": "Anleitungen zu Warenannahme, Etiketten und Buchhaltungsintegration.",
+    "intro": "Hilfe zu Warenannahme, Etiketten und Integrationen.",
     "open": "Hilfe zu dieser Seite",
     "close": "Hilfe schließen",
     "fullArticle": "Vollständige Hilfeseite in neuem Tab öffnen",
@@ -2965,13 +2965,25 @@
           "Fehlt die Antwort auf das Einreihen, wiederholen Sie den Versuch im selben geöffneten Formular. Erstellen Sie nicht immer neue Aufträge. Prüfen Sie den Auftrag unter Drucker und Druckaufträge und bitten Sie bei Problemen die zuständige Person um Hilfe. Die Etikettensuche öffnet eine vorhandene Referenz."
         ],
         "notice": "Das Öffnen der Hilfe druckt nichts und erfasst keinen neuen Artikel. Legen Sie kein Artikelduplikat an, um ein Etikett zu ersetzen. Physischer Druck und Scannen müssen mit den Geräten des Ladens geprüft werden."
+      },
+      "integrations": {
+        "title": "Weitere Systeme Ihres Geschäfts verbinden",
+        "intro": "Beginnen Sie mit dem System, das Sie mit Komisio verbinden möchten. Öffnen Sie dessen Bereich für Status und Einstellungen.",
+        "steps": [
+          "Wählen Sie Kassensystem, Onlineshop oder Buchhaltung entsprechend der gewünschten Verbindung.",
+          "Lesen Sie den Verbindungsstatus und folgen Sie den Schritten im Bereich. Manche Aktionen erfordern Inhaber- oder Administratorrechte.",
+          "Prüfen Sie vor dem Aktivieren einer automatischen Funktion, welche Daten in welche Richtung übertragen werden.",
+          "Verfolgen Sie den Status von Produkten, Belegen, Bestellungen oder Buchhaltungsunterlagen in der jeweiligen Integration. Öffnen Sie die Details, wenn Handlungsbedarf besteht."
+        ],
+        "notice": "Eine Verbindung bedeutet nicht, dass alle automatischen Funktionen aktiviert sind. Prüfen Sie diese einzeln in den Integrationseinstellungen."
       }
     },
     "receiving": "Warenannahme öffnen",
     "storeFlow": "Arbeitsablauf im Laden",
     "items": "Erfassten Artikel finden",
     "openReference": "Etikettenreferenz öffnen",
-    "printing": "Drucker und Druckaufträge"
+    "printing": "Drucker und Druckaufträge",
+    "integrations": "Integrationen öffnen"
   },
   "dashboard": {
     "intro": "Das Wichtigste für Ihren Arbeitstag auf einen Blick.",

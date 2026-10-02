@@ -47,6 +47,10 @@ export function HelpArticle({
               {d.articles.receiving.title}
             </Link>
           </>
+        ) : topic === 'integrations' ? (
+          <Link className="text-link" href="/intake/integrations">
+            {d.integrations}
+          </Link>
         ) : (
           <>
             <Link

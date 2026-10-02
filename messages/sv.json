@@ -2861,7 +2861,7 @@
   },
   "helpCenter": {
     "title": "Hjälp",
-    "intro": "Vägledning för mottagning, märkning och bokföringsintegration.",
+    "intro": "Vägledning för mottagning, märkning och integrationer.",
     "open": "Hjälp på sidan",
     "close": "Stäng hjälpen",
     "fullArticle": "Öppna hela hjälpsidan i ny flik",
@@ -2959,13 +2959,25 @@
           "Om ett svar om köad utskrift saknas, använd återförsöket i samma öppna formulär. Skapa inte nya jobb upprepade gånger. Kontrollera utskriftsjobbet under Skrivare och utskrifter och be den som sköter skrivaren om hjälp vid problem. En befintlig referens kan öppnas via etikettsökningen."
         ],
         "notice": "Att öppna hjälpen skriver inte ut något och registrerar ingen ny vara. Skapa inte en dubblett av varan för att ersätta en etikett. Fysisk utskrift och skanning behöver kontrolleras med butikens utrustning."
+      },
+      "integrations": {
+        "title": "Anslut butikens andra system",
+        "intro": "Börja med det system du vill koppla till Komisio. Öppna dess avsnitt för status och inställningar.",
+        "steps": [
+          "Välj kassasystem, webbshop eller bokföring utifrån vad du vill koppla ihop.",
+          "Läs anslutningsstatusen och följ stegen i det valda avsnittet. Vissa åtgärder kräver en ägare eller administratör.",
+          "Kontrollera vilka uppgifter som förs över och i vilken riktning innan du aktiverar en automatisk funktion.",
+          "Följ statusen för produkter, kvitton, order eller bokföringsunderlag i respektive integration. Öppna detaljerna om något behöver åtgärdas."
+        ],
+        "notice": "En anslutning betyder inte att alla automatiska funktioner är påslagna. Kontrollera dem var för sig i integrationens inställningar."
       }
     },
     "receiving": "Öppna mottagningen",
     "storeFlow": "Butikens arbetsflöde",
     "items": "Hitta en registrerad vara",
     "openReference": "Öppna en etikettreferens",
-    "printing": "Skrivare och utskrifter"
+    "printing": "Skrivare och utskrifter",
+    "integrations": "Öppna integrationer"
   },
   "dashboard": {
     "intro": "Det viktigaste för din arbetsdag, samlat på ett ställe.",

@@ -2867,7 +2867,7 @@
   },
   "helpCenter": {
     "title": "Ohje",
-    "intro": "Ohjeita vastaanottoon, merkintään ja kirjanpitointegraatioon.",
+    "intro": "Ohjeita vastaanottoon, merkintään ja integraatioihin.",
     "open": "Tämän sivun ohje",
     "close": "Sulje ohje",
     "fullArticle": "Avaa koko ohjesivu uuteen välilehteen",
@@ -2965,13 +2965,25 @@
           "Jos tulostusjonoon lisäämisen vastaus puuttuu, yritä uudelleen samassa avoimessa lomakkeessa. Älä luo jatkuvasti uusia töitä. Tarkista työ tulostimien ja tulostustöiden asetuksista ja pyydä tarvittaessa apua tulostimesta vastaavalta henkilöltä. Etikettihaulla voi avata olemassa olevan viitteen."
         ],
         "notice": "Ohjeen avaaminen ei tulosta mitään eikä rekisteröi uutta tuotetta. Älä luo tuotteesta kopiota etiketin korvaamiseksi. Fyysinen tulostus ja skannaus on tarkistettava myymälän laitteilla."
+      },
+      "integrations": {
+        "title": "Yhdistä myymälän muut järjestelmät",
+        "intro": "Aloita järjestelmästä, jonka haluat yhdistää Komisioon. Avaa sen osio nähdäksesi tilan ja asetukset.",
+        "steps": [
+          "Valitse kassajärjestelmä, verkkokauppa tai kirjanpito sen mukaan, mitä haluat yhdistää.",
+          "Lue yhteyden tila ja noudata osion vaiheita. Jotkin toiminnot vaativat omistajan tai ylläpitäjän oikeudet.",
+          "Tarkista siirrettävät tiedot ja siirtosuunta ennen automaattisen toiminnon käyttöönottoa.",
+          "Seuraa tuotteiden, kuittien, tilausten tai kirjanpitoaineiston tilaa kussakin integraatiossa. Avaa tiedot, jos jokin vaatii huomiota."
+        ],
+        "notice": "Yhteys ei tarkoita, että kaikki automaattiset toiminnot ovat käytössä. Tarkista ne erikseen integraation asetuksista."
       }
     },
     "receiving": "Avaa vastaanotto",
     "storeFlow": "Myymälän työnkulku",
     "items": "Etsi rekisteröity tuote",
     "openReference": "Avaa etiketin viite",
-    "printing": "Tulostimet ja tulostustyöt"
+    "printing": "Tulostimet ja tulostustyöt",
+    "integrations": "Avaa integraatiot"
   },
   "dashboard": {
     "intro": "Työpäiväsi tärkeimmät asiat yhdellä silmäyksellä.",

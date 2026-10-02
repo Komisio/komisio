@@ -2861,7 +2861,7 @@
   },
   "helpCenter": {
     "title": "Help",
-    "intro": "Guidance for receiving, labelling and accounting integration.",
+    "intro": "Guidance for receiving, labelling and integrations.",
     "open": "Help on this page",
     "close": "Close help",
     "fullArticle": "Open the full help page in a new tab",
@@ -2959,13 +2959,25 @@
           "If a queueing response is missing, use retry in the same open form. Do not repeatedly create new jobs. Check the job under Printers and print jobs and ask the printer operator for help when needed. Use label lookup to open an existing reference."
         ],
         "notice": "Opening help prints nothing and registers no new item. Do not duplicate an item to replace its label. Physical printing and scanning need checking with the store’s equipment."
+      },
+      "integrations": {
+        "title": "Connect your other store systems",
+        "intro": "Start with the system you want to connect to Komisio. Open its section for status and settings.",
+        "steps": [
+          "Choose point of sale, online store or accounting according to what you want to connect.",
+          "Read the connection status and follow the steps in that section. Some actions require an owner or administrator.",
+          "Check which information is transferred and in which direction before enabling an automatic feature.",
+          "Follow the status of products, receipts, orders or accounting documents within each integration. Open the details if anything needs attention."
+        ],
+        "notice": "A connection does not mean every automatic feature is enabled. Check them individually in the integration settings."
       }
     },
     "receiving": "Open receiving",
     "storeFlow": "Store workflow",
     "items": "Find a registered item",
     "openReference": "Open a label reference",
-    "printing": "Printers and print jobs"
+    "printing": "Printers and print jobs",
+    "integrations": "Open integrations"
   },
   "dashboard": {
     "intro": "Your working day, at a glance.",

@@ -2,6 +2,11 @@ import { describe, expect, it } from 'vitest'
 import { helpTopicForPage } from '../../lib/help/topics'
 
 describe('task-specific help routing', () => {
+  it('offers general integration help when no provider is selected', () => {
+    expect(helpTopicForPage('/intake/integrations', null, null)).toBe(
+      'integrations',
+    )
+  })
   it('distinguishes custody and item labels from preparation routes', () => {
     expect(helpTopicForPage('/intake/bags/a', null, null)).toBe('labels')
     expect(helpTopicForPage('/intake/bags/a/inspect', null, null)).toBe(

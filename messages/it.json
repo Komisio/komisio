@@ -2861,7 +2861,7 @@
   },
   "helpCenter": {
     "title": "Aiuto",
-    "intro": "Guide alla ricezione, alle etichette e all’integrazione contabile.",
+    "intro": "Guida a ricezione, etichette e integrazioni.",
     "open": "Aiuto per questa pagina",
     "close": "Chiudi aiuto",
     "fullArticle": "Apri la guida completa in una nuova scheda",
@@ -2959,13 +2959,25 @@
           "Se manca la risposta all’inserimento in coda, riprova nello stesso modulo aperto. Non creare ripetutamente nuovi lavori. Controlla il lavoro in Stampanti e lavori di stampa e chiedi aiuto al responsabile della stampante se necessario. La ricerca etichette apre un riferimento esistente."
         ],
         "notice": "Aprire la guida non stampa nulla e non registra nuovi articoli. Non duplicare un articolo per sostituirne l’etichetta. Stampa fisica e scansione devono essere verificate con le attrezzature del negozio."
+      },
+      "integrations": {
+        "title": "Collega gli altri sistemi del negozio",
+        "intro": "Inizia dal sistema che vuoi collegare a Komisio. Apri la relativa sezione per stato e impostazioni.",
+        "steps": [
+          "Scegli cassa, negozio online o contabilità in base a ciò che vuoi collegare.",
+          "Leggi lo stato della connessione e segui i passaggi della sezione. Alcune azioni richiedono un proprietario o amministratore.",
+          "Controlla quali informazioni vengono trasferite e in quale direzione prima di attivare una funzione automatica.",
+          "Segui lo stato di prodotti, ricevute, ordini o documenti contabili in ogni integrazione. Apri i dettagli se qualcosa richiede attenzione."
+        ],
+        "notice": "Una connessione non significa che tutte le funzioni automatiche siano attive. Controllale singolarmente nelle impostazioni dell’integrazione."
       }
     },
     "receiving": "Apri ricezione",
     "storeFlow": "Flusso di lavoro del negozio",
     "items": "Trova un articolo registrato",
     "openReference": "Apri un riferimento etichetta",
-    "printing": "Stampanti e lavori di stampa"
+    "printing": "Stampanti e lavori di stampa",
+    "integrations": "Apri integrazioni"
   },
   "dashboard": {
     "intro": "Le informazioni essenziali della giornata, in un solo posto.",

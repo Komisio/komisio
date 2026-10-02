@@ -1,6 +1,7 @@
 export const helpTopics = [
   'receiving',
   'labels',
+  'integrations',
   'fortnox-connect',
   'fortnox-first-export',
   'fortnox-automation',
@@ -24,7 +25,7 @@ export function helpTopicForPage(
         ? 'fortnox-recovery'
         : 'fortnox-first-export'
   }
-  if (path === '/intake/integrations') return 'fortnox-connect'
+  if (path === '/intake/integrations') return 'integrations'
   if (
     (path === '/settings' && tab === 'printing') ||
     path === '/intake/open' ||

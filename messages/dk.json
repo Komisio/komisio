@@ -2861,7 +2861,7 @@
   },
   "helpCenter": {
     "title": "Hjælp",
-    "intro": "Vejledning til modtagelse, mærkning og regnskabsintegration.",
+    "intro": "Vejledning til modtagelse, mærkning og integrationer.",
     "open": "Hjælp på siden",
     "close": "Luk hjælpen",
     "fullArticle": "Åbn hele hjælpesiden i en ny fane",
@@ -2959,13 +2959,25 @@
           "Hvis svaret om udskriftskøen mangler, prøv igen i samme åbne formular. Opret ikke nye job gentagne gange. Kontrollér jobbet under Printere og udskriftsjob, og bed den printeransvarlige om hjælp ved problemer. Etiketsøgningen åbner en eksisterende reference."
         ],
         "notice": "At åbne hjælpen udskriver intet og registrerer ingen ny vare. Opret ikke en dublet af varen for at erstatte etiketten. Fysisk udskrivning og scanning skal kontrolleres med butikkens udstyr."
+      },
+      "integrations": {
+        "title": "Tilslut butikkens andre systemer",
+        "intro": "Start med det system, du vil forbinde med Komisio. Åbn afsnittet for status og indstillinger.",
+        "steps": [
+          "Vælg kassesystem, webshop eller regnskab efter, hvad du vil forbinde.",
+          "Læs forbindelsesstatussen, og følg trinnene i afsnittet. Nogle handlinger kræver en ejer eller administrator.",
+          "Kontrollér, hvilke oplysninger der overføres og i hvilken retning, før du aktiverer en automatisk funktion.",
+          "Følg status for produkter, kvitteringer, ordrer eller regnskabsbilag i hver integration. Åbn detaljerne, hvis noget kræver handling."
+        ],
+        "notice": "En forbindelse betyder ikke, at alle automatiske funktioner er slået til. Kontrollér dem enkeltvis i integrationens indstillinger."
       }
     },
     "receiving": "Åbn modtagelsen",
     "storeFlow": "Butikkens arbejdsgang",
     "items": "Find en registreret vare",
     "openReference": "Åbn en etiketreference",
-    "printing": "Printere og udskriftsjob"
+    "printing": "Printere og udskriftsjob",
+    "integrations": "Åbn integrationer"
   },
   "dashboard": {
     "intro": "Det vigtigste for arbejdsdagen, samlet ét sted.",

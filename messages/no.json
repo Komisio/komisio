@@ -2861,7 +2861,7 @@
   },
   "helpCenter": {
     "title": "Hjelp",
-    "intro": "Veiledning for mottak, merking og regnskapsintegrasjon.",
+    "intro": "Veiledning for mottak, merking og integrasjoner.",
     "open": "Hjelp på siden",
     "close": "Lukk hjelpen",
     "fullArticle": "Åpne hele hjelpesiden i ny fane",
@@ -2959,13 +2959,25 @@
           "Hvis svar om utskriftskøen mangler, bruk nytt forsøk i samme åpne skjema. Ikke opprett nye jobber gjentatte ganger. Kontroller jobben under Skrivere og utskriftsjobber og be skriveransvarlig om hjelp ved problemer. Etikettsøket åpner en eksisterende referanse."
         ],
         "notice": "Å åpne hjelpen skriver ikke ut noe og registrerer ingen ny vare. Ikke opprett en kopi av varen for å erstatte etiketten. Fysisk utskrift og skanning må kontrolleres med butikkens utstyr."
+      },
+      "integrations": {
+        "title": "Koble til butikkens andre systemer",
+        "intro": "Start med systemet du vil koble til Komisio. Åpne avsnittet for status og innstillinger.",
+        "steps": [
+          "Velg kassasystem, nettbutikk eller regnskap ut fra hva du vil koble sammen.",
+          "Les tilkoblingsstatusen og følg trinnene i avsnittet. Noen handlinger krever en eier eller administrator.",
+          "Kontroller hvilke opplysninger som overføres og i hvilken retning før du aktiverer en automatisk funksjon.",
+          "Følg statusen for produkter, kvitteringer, ordrer eller regnskapsbilag i hver integrasjon. Åpne detaljene hvis noe må følges opp."
+        ],
+        "notice": "En tilkobling betyr ikke at alle automatiske funksjoner er aktivert. Kontroller dem enkeltvis i integrasjonens innstillinger."
       }
     },
     "receiving": "Åpne mottaket",
     "storeFlow": "Butikkens arbeidsflyt",
     "items": "Finn en registrert vare",
     "openReference": "Åpne en etikettreferanse",
-    "printing": "Skrivere og utskriftsjobber"
+    "printing": "Skrivere og utskriftsjobber",
+    "integrations": "Åpne integrasjoner"
   },
   "dashboard": {
     "intro": "Det viktigste for arbeidsdagen, samlet på ett sted.",

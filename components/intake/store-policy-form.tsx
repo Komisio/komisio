@@ -2,7 +2,7 @@
 import { storeCurrencies } from '@/lib/platform/currencies'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { Dictionary } from '@/lib/i18n'
+import { locales, localeNames, type Dictionary } from '@/lib/i18n'
 import type { StorePolicyBody } from '@/lib/engine/store-policy'
 import { storePolicyBody } from '@/lib/engine/store-policy'
 import { useIntakeAction } from './use-intake-action'
@@ -77,6 +77,7 @@ export function StorePolicyForm({
             ),
             vatRatePercent: rate === '' ? undefined : Number(rate),
             assistanceEnabled: f.get('assistanceEnabled') === 'on',
+            itemLanguage: f.get('itemLanguage'),
             automaticSellerNotifications:
               f.get('automaticSellerNotifications') === 'on',
             automaticMarkdowns: f.get('automaticMarkdowns') === 'on',
@@ -279,6 +280,22 @@ export function StorePolicyForm({
           <fieldset>
             <legend>{t.assistance}</legend>
             <p>{t.assistanceIntro}</p>
+            <div className="field">
+              <label htmlFor="policy-item-language">{t.itemLanguage}</label>
+              <select
+                id="policy-item-language"
+                name="itemLanguage"
+                defaultValue={base.policy.itemLanguage ?? 'sv'}
+                aria-describedby="policy-item-language-hint"
+              >
+                {locales.map((locale) => (
+                  <option key={locale} value={locale}>
+                    {localeNames[locale]}
+                  </option>
+                ))}
+              </select>
+              <small id="policy-item-language-hint">{t.itemLanguageHint}</small>
+            </div>
             <label className="intake-confirm">
               <input
                 type="checkbox"

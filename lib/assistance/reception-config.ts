@@ -1,8 +1,13 @@
 import { z } from 'zod'
+import type { ItemLanguage } from '../engine/item-language'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { readStorePolicy } from '../engine/store-policy'
 import { readOwnKeyConfig } from '../engine/ai-credits'
-export type ReceptionAIConfig = { key: string; model: string }
+export type ReceptionAIConfig = {
+  key: string
+  model: string
+  itemLanguage?: ItemLanguage
+}
 
 /** Reads the tenant's policy through the caller's authenticated client, then resolves. */
 export async function resolveReceptionAssistance(
@@ -17,7 +22,13 @@ export async function resolveReceptionAssistance(
   const policy = await readStorePolicy(client, tenantId)
   if (policy.policy.assistanceEnabled === true) {
     const own = await readOwnKeyConfig(client, tenantId, env).catch(() => null)
-    if (own) return own
+    if (own)
+      return {
+        ...own,
+        ...(policy.policy.itemLanguage
+          ? { itemLanguage: policy.policy.itemLanguage }
+          : {}),
+      }
   }
   return receptionAIConfig(tenantId, env, policy.policy)
 }
@@ -28,7 +39,10 @@ export async function resolveReceptionAssistance(
 export function receptionAIConfig(
   tenantId: string,
   env: Record<string, string | undefined> = process.env,
-  policy: { assistanceEnabled?: boolean } | null = null,
+  policy: {
+    assistanceEnabled?: boolean
+    itemLanguage?: ItemLanguage
+  } | null = null,
 ): ReceptionAIConfig | null {
   if (env.KOMISIO_RECEPTION_AI_PROVIDER !== 'openai') return null
   if (policy?.assistanceEnabled === false) return null
@@ -42,5 +56,11 @@ export function receptionAIConfig(
   if (!tenants.every((id) => z.uuid().safeParse(id).success)) return null
   const enabled =
     policy?.assistanceEnabled === true || tenants.includes(tenantId)
-  return enabled ? { key, model } : null
+  return enabled
+    ? {
+        key,
+        model,
+        ...(policy?.itemLanguage ? { itemLanguage: policy.itemLanguage } : {}),
+      }
+    : null
 }

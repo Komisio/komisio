@@ -959,7 +959,9 @@
     "store_margin": "Marginaaliverotus tuotteittain, kun kelpoisuus on todistettu",
     "store_full": "Alv koko myyntihinnasta",
     "currency": "Valuutta",
-    "currencyIntro": "Yksi valuutta per kauppa, valitaan täällä ja jäädytetään, kun ensimmäinen myynti, osto tai tilitys on olemassa. Kaikki summat ovat tässä valuutassa; Komisio ei muunna mitään."
+    "currencyIntro": "Yksi valuutta per kauppa, valitaan täällä ja jäädytetään, kun ensimmäinen myynti, osto tai tilitys on olemassa. Kaikki summat ovat tässä valuutassa; Komisio ei muunna mitään.",
+    "itemLanguage": "Tuotetekstien kieli",
+    "itemLanguageHint": "Myymälän uusien tekoälyehdotusten yhteinen kieli. Tallennetut kuvaukset eivät muutu. Valikot ja tuotetyyppien nimet noudattavat omaa kielivalintaasi."
   },
   "sellerTerms": {
     "title": "Tuojan ehdot",

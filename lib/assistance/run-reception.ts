@@ -42,7 +42,7 @@ export async function runReceptionAssistance(
       client,
       c,
       config.model,
-      c.mode === 'batch' ? batchPromptVersion : receptionPromptVersion,
+      `${c.mode === 'batch' ? batchPromptVersion : receptionPromptVersion}-${config.itemLanguage ?? 'sv'}`,
     ))
   )
     throw new Error('ASSISTANCE_ALREADY_ATTEMPTED')

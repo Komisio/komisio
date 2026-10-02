@@ -959,7 +959,9 @@
     "store_margin": "Brugtmomsordning pr. vare, når berettigelse er attesteret",
     "store_full": "Moms af hele salgsprisen",
     "currency": "Valuta",
-    "currencyIntro": "Én valuta pr. butik, valgt her og fastfrosset, når det første salg, indkøb eller den første udbetaling findes. Alle beløb er i denne valuta; Komisio omregner intet."
+    "currencyIntro": "Én valuta pr. butik, valgt her og fastfrosset, når det første salg, indkøb eller den første udbetaling findes. Alle beløb er i denne valuta; Komisio omregner intet.",
+    "itemLanguage": "Sprog for varetekst",
+    "itemLanguageHint": "Fælles sprog for nye AI-forslag i butikken. Gemte beskrivelser ændres ikke. Menuer og varetypenavne følger dit eget sprogvalg."
   },
   "sellerTerms": {
     "title": "Indleverervilkår",

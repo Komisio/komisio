@@ -140,3 +140,28 @@ it('returns only a current transient proposal, never a seller review write', asy
   expect(result.proposal?.sellerId).toBe(id(3))
   expect(mocks.reserve).toHaveBeenCalledOnce()
 })
+
+it('binds the trusted store language to the reserved prompt and adapter', async () => {
+  mocks.config.mockReturnValue({
+    key: 'fixture',
+    model: 'fixture',
+    itemLanguage: 'no',
+  })
+  await run()
+  expect(mocks.reserve).toHaveBeenCalledWith(
+    client,
+    command,
+    'fixture',
+    'reception-v1-no',
+  )
+  expect(mocks.adapter.mock.calls[0][0].itemLanguage).toBe('no')
+})
+it('records Swedish for legacy store configurations', async () => {
+  await run()
+  expect(mocks.reserve).toHaveBeenCalledWith(
+    client,
+    command,
+    'fixture',
+    'reception-v1-sv',
+  )
+})

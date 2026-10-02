@@ -959,7 +959,9 @@
     "store_margin": "Régimen del margen por artículo, cuando se acredita la elegibilidad",
     "store_full": "IVA sobre todo el precio de venta",
     "currency": "Moneda",
-    "currencyIntro": "Una moneda por tienda, elegida aquí y congelada en cuanto existe la primera venta, compra o pago. Todos los importes están en esta moneda; Komisio no convierte nada."
+    "currencyIntro": "Una moneda por tienda, elegida aquí y congelada en cuanto existe la primera venta, compra o pago. Todos los importes están en esta moneda; Komisio no convierte nada.",
+    "itemLanguage": "Idioma de los textos de artículos",
+    "itemLanguageHint": "Idioma común para las nuevas sugerencias de IA de la tienda. Las descripciones guardadas no cambian. Los menús y nombres de tipos siguen tu idioma elegido."
   },
   "sellerTerms": {
     "title": "Condiciones del depositante",

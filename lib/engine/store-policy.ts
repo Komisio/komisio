@@ -2,6 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { z } from 'zod'
 import { vatPolicyShape } from './vat'
 import { currencyCode } from './money'
+import { itemLanguage } from './item-language'
 
 // Boundary validation only. SQL owns numeric persistence and calculations.
 const decimal = z
@@ -36,6 +37,8 @@ export const storePolicyBody = z.strictObject({
   ...vatPolicyShape,
   // Built-in assistance (P1 S9): the tenant switches it on; the server holds the kill switch.
   assistanceEnabled: z.boolean().optional(),
+  // Shared language for new AI item text; absence preserves Swedish.
+  itemLanguage: itemLanguage.optional(),
   // Monthly assistance quota (P2 S20): absent means unlimited, 0 blocks the feature.
   assistanceMonthlyQuota: z
     .number()

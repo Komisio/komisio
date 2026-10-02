@@ -2295,7 +2295,7 @@
     "reload": "Reload",
     "revision": "Mapping version",
     "total": "Receipt total",
-    "matchHint": "Copy the full item ID from the end of its page URL. Match each row to a different item.",
+    "matchHint": "Search for the item or scan its label. Choose the correct item and save the match for each receipt line.",
     "open": "Open receipt",
     "done": "Saved",
     "unsupported": "Discounts, refunds, fees and non-unit quantities need a later integration slice.",
@@ -2426,7 +2426,9 @@
     "setupHint": "Enter the client ID and API key from your PayPal POS account. They are verified and stored encrypted for this store.",
     "clientId": "Client ID",
     "apiKey": "API key",
-    "connect": "Connect PayPal POS"
+    "connect": "Connect PayPal POS",
+    "chooseItem": "Choose item",
+    "selectedItem": "Selected item"
   },
   "priceEvidence": {
     "title": "Comparable sales in this store",

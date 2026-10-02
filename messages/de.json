@@ -2295,7 +2295,7 @@
     "reload": "Neu laden",
     "revision": "Zuordnungsversion",
     "total": "Belegsumme",
-    "matchHint": "Kopieren Sie die vollständige Artikel-ID vom Ende der URL seiner Seite. Ordnen Sie jede Zeile einem anderen Artikel zu.",
+    "matchHint": "Suchen Sie den Artikel oder scannen Sie das Etikett. Wählen Sie den richtigen Artikel und speichern Sie die Zuordnung für jede Belegzeile.",
     "open": "Beleg öffnen",
     "done": "Gespeichert",
     "unsupported": "Rabatte, Erstattungen, Gebühren und Mengen ungleich eins benötigen einen späteren Integrationsschritt.",
@@ -2426,7 +2426,9 @@
     "setupHint": "Gib die Client ID und den API-Schlüssel deines PayPal POS-Kontos ein. Die Angaben werden geprüft und für diesen Laden verschlüsselt gespeichert.",
     "clientId": "Client ID",
     "apiKey": "API-Schlüssel",
-    "connect": "PayPal POS verbinden"
+    "connect": "PayPal POS verbinden",
+    "chooseItem": "Artikel auswählen",
+    "selectedItem": "Ausgewählter Artikel"
   },
   "priceEvidence": {
     "title": "Vergleichbare Verkäufe in diesem Store",

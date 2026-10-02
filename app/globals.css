@@ -2559,6 +2559,53 @@ button.text-link:hover:not(:disabled) {
   display: grid;
   gap: 1.5rem;
 }
+.item-match-input {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.item-match-input .field {
+  margin-bottom: 0;
+}
+.item-match-input > button {
+  justify-self: start;
+}
+.item-match-results {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+.item-match-results button {
+  display: grid;
+  justify-content: start;
+  text-align: left;
+  width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.item-match-results small,
+.item-match-selected > span {
+  color: var(--muted);
+}
+.item-match-selected {
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+  padding: 16px;
+  background: var(--mint);
+  border-radius: 12px;
+  overflow-wrap: anywhere;
+}
+.item-match-selected > button {
+  margin-top: 8px;
+}
+.item-match-manual > summary {
+  cursor: pointer;
+  padding: 12px 0;
+  min-height: 44px;
+}
 .import-workspace {
   display: grid;
   grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.2fr);

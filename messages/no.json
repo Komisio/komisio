@@ -2295,7 +2295,7 @@
     "reload": "Last inn på nytt",
     "revision": "Koblingsversjon",
     "total": "Kvitteringstotal",
-    "matchHint": "Kopier hele vare-ID-en fra slutten av varens side-URL. Koble hver rad til en ulik vare.",
+    "matchHint": "Søk etter varen eller skann etiketten. Velg riktig vare og lagre koblingen for hver kvitteringslinje.",
     "open": "Åpne kvittering",
     "done": "Lagret",
     "unsupported": "Rabatter, refusjoner, gebyrer og antall som ikke er hele enheter krever en senere integrasjonsdel.",
@@ -2426,7 +2426,9 @@
     "setupHint": "Oppgi Client ID og API-nøkkelen fra PayPal POS-kontoen din. Opplysningene kontrolleres og lagres kryptert for denne butikken.",
     "clientId": "Client ID",
     "apiKey": "API-nøkkel",
-    "connect": "Koble til PayPal POS"
+    "connect": "Koble til PayPal POS",
+    "chooseItem": "Velg vare",
+    "selectedItem": "Valgt vare"
   },
   "priceEvidence": {
     "title": "Sammenlignbare salg i denne butikken",

@@ -2295,7 +2295,7 @@
     "reload": "Ladda om",
     "revision": "Matchningsversion",
     "total": "Kvittots totalbelopp",
-    "matchHint": "Kopiera varans fullständiga ID från slutet av varusidans webbadress. Matcha varje rad till en egen vara.",
+    "matchHint": "Sök efter varan eller skanna etiketten. Välj rätt vara och spara matchningen för varje kvittorad.",
     "open": "Öppna kvitto",
     "done": "Sparat",
     "unsupported": "Rabatter, returer, avgifter och antal andra än ett hanteras i en senare integrationsdel.",
@@ -2426,7 +2426,9 @@
     "setupHint": "Ange Client ID och API-nyckeln från ditt PayPal POS-konto. Uppgifterna kontrolleras och sparas krypterat för den här butiken.",
     "clientId": "Client ID",
     "apiKey": "API-nyckel",
-    "connect": "Anslut PayPal POS"
+    "connect": "Anslut PayPal POS",
+    "chooseItem": "Välj vara",
+    "selectedItem": "Vald vara"
   },
   "priceEvidence": {
     "title": "Jämförbara försäljningar i butiken",

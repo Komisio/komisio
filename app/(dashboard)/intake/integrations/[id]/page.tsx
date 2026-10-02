@@ -89,8 +89,9 @@ export default async function Receipt({
             )}
             {editable && (
               <ZettleAction
-                key={`${r.mappingRevision}-${row.lineNo}`}
+                key={`${a.id}-${id}-${r.mappingRevision}-${row.lineNo}`}
                 match
+                search={all.sales}
                 command={{
                   action: 'resolve',
                   tenantId: a.id,

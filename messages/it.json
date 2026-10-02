@@ -2295,7 +2295,7 @@
     "reload": "Ricarica",
     "revision": "Versione dell'abbinamento",
     "total": "Totale scontrino",
-    "matchHint": "Copia l'ID completo dell'articolo dalla fine dell'URL della sua pagina. Abbina ogni riga a un articolo diverso.",
+    "matchHint": "Cerca l’articolo o scansiona l’etichetta. Scegli l’articolo corretto e salva l’abbinamento per ogni riga della ricevuta.",
     "open": "Apri scontrino",
     "done": "Salvato",
     "unsupported": "Sconti, rimborsi, commissioni e quantità non unitarie richiedono una fase di integrazione successiva.",
@@ -2426,7 +2426,9 @@
     "setupHint": "Inserisci il Client ID e la chiave API del tuo account PayPal POS. Vengono verificati e salvati in forma crittografata per questo negozio.",
     "clientId": "Client ID",
     "apiKey": "Chiave API",
-    "connect": "Collega PayPal POS"
+    "connect": "Collega PayPal POS",
+    "chooseItem": "Scegli articolo",
+    "selectedItem": "Articolo selezionato"
   },
   "priceEvidence": {
     "title": "Vendite comparabili in questo negozio",

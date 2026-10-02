@@ -2295,7 +2295,7 @@
     "reload": "Lataa uudelleen",
     "revision": "Täsmäytyksen versio",
     "total": "Kuitin loppusumma",
-    "matchHint": "Kopioi tuotteen koko tunnus sen sivun URL-osoitteen lopusta. Täsmäytä jokainen rivi eri tuotteeseen.",
+    "matchHint": "Etsi tuote tai skannaa sen etiketti. Valitse oikea tuote ja tallenna kohdistus jokaiselle kuittiriville.",
     "open": "Avaa kuitti",
     "done": "Tallennettu",
     "unsupported": "Alennukset, hyvitykset, maksut ja muut kuin kappalemäärät vaativat myöhemmän integraatiovaiheen.",
@@ -2426,7 +2426,9 @@
     "setupHint": "Anna PayPal POS -tilisi Client ID ja API-avain. Tiedot tarkistetaan ja tallennetaan salattuina tälle myymälälle.",
     "clientId": "Client ID",
     "apiKey": "API-avain",
-    "connect": "Yhdistä PayPal POS"
+    "connect": "Yhdistä PayPal POS",
+    "chooseItem": "Valitse tuote",
+    "selectedItem": "Valittu tuote"
   },
   "priceEvidence": {
     "title": "Vertailukelpoiset myynnit tässä kaupassa",

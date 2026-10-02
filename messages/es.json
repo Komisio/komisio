@@ -2295,7 +2295,7 @@
     "reload": "Recargar",
     "revision": "Versión de la asignación",
     "total": "Total del recibo",
-    "matchHint": "Copia el ID completo del artículo del final de la URL de su página. Asigna cada fila a un artículo distinto.",
+    "matchHint": "Busca el artículo o escanea su etiqueta. Elige el artículo correcto y guarda la vinculación para cada línea del recibo.",
     "open": "Abrir recibo",
     "done": "Guardado",
     "unsupported": "Los descuentos, reembolsos, comisiones y cantidades no unitarias necesitan una parte posterior de la integración.",
@@ -2426,7 +2426,9 @@
     "setupHint": "Introduce el Client ID y la clave API de tu cuenta de PayPal POS. Se verifican y se guardan cifrados para esta tienda.",
     "clientId": "Client ID",
     "apiKey": "Clave API",
-    "connect": "Conectar PayPal POS"
+    "connect": "Conectar PayPal POS",
+    "chooseItem": "Elegir artículo",
+    "selectedItem": "Artículo seleccionado"
   },
   "priceEvidence": {
     "title": "Ventas comparables en esta tienda",

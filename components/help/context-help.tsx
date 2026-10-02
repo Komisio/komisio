@@ -1,11 +1,15 @@
 'use client'
-import { useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from 'react'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import type { Dictionary } from '@/lib/i18n'
 import type { HelpTopic } from '@/lib/help/topics'
 import { HelpArticle } from './article'
+
+const subscribe = () => () => {}
+const clientReady = () => true
+const serverReady = () => false
 
 /** Native modal semantics keep background forms mounted and focus inside help. */
 export function ContextHelp({
@@ -22,6 +26,7 @@ export function ContextHelp({
   const heading = useRef<HTMLHeadingElement>(null)
   const id = useId()
   const pathname = usePathname()
+  const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const [open, setOpen] = useState(false)
   useEffect(() => {
     dialog.current?.close()
@@ -39,6 +44,7 @@ export function ContextHelp({
       <button
         ref={trigger}
         type="button"
+        disabled={!ready}
         className="btn btn-secondary"
         aria-haspopup="dialog"
         aria-controls={id}

@@ -4,6 +4,48 @@ import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 
+test('label help waits for client readiness and opens on the first click', async ({
+  page,
+}) => {
+  const email = `label-help-ready-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomUUID()}`)
+  const f = await p2Fixture(email)
+  let release!: () => void
+  const scripts = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  try {
+    const item = await f.item('Synthetic help readiness item')
+    await f.commit()
+    await page.route(/\/_next\/.*\.js(?:\?.*)?$/, async (route) => {
+      await scripts
+      await route.continue()
+    })
+    await page.goto(`/intake/items/${item}/label`, { waitUntil: 'commit' })
+    const open = page.getByRole('button', {
+      name: d.helpCenter.title,
+      exact: true,
+    })
+    await expect(open).toBeVisible()
+    await expect(open).toBeDisabled({ timeout: 2000 })
+    release()
+    await expect(open).toBeEnabled()
+    await open.click()
+    const dialog = page.getByRole('dialog')
+    await expect(dialog.getByRole('heading', { level: 2 })).toHaveText(
+      d.helpCenter.articles.labels.title,
+    )
+    await expect(dialog.getByRole('heading', { level: 2 })).toBeFocused()
+    await page.keyboard.press('Escape')
+    await expect(dialog).toBeHidden()
+    await expect(open).toBeFocused()
+  } finally {
+    release()
+    await page.unrouteAll({ behavior: 'wait' })
+    await f.close()
+  }
+})
+
 test('receiving and label help preserve drafts and follow the current task without writes', async ({
   page,
   browser,

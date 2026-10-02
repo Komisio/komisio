@@ -3,6 +3,7 @@ import { test, expect, type Page } from '@playwright/test'
 import { randomBytes, createHmac } from 'node:crypto'
 import { createRequire } from 'node:module'
 import sharp from 'sharp'
+import d from '../../messages/sv.json' with { type: 'json' }
 
 test('saved inspection drafts resume safely and preserve conflicting edits', async ({
   page,
@@ -684,7 +685,9 @@ test('register, verify, create stores, invite, isolate and administer access', a
   const createButton = page.getByRole('button', { name: 'Skapa min butik' })
   await expect(createButton).toBeFocused()
   await createButton.press('Enter')
-  await expect(page.getByRole('heading', { name: 'Välkommen.' })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: d.home, exact: true }),
+  ).toBeVisible()
   const tenantA = await page.getByLabel('Aktiv butik').first().inputValue()
   await page.goto('/account')
   await page.getByLabel('Ditt namn').fill('Alex')
@@ -771,7 +774,9 @@ test('register, verify, create stores, invite, isolate and administer access', a
   await staff
     .getByRole('button', { name: 'Acceptera inbjudan', exact: true })
     .click()
-  await expect(staff.getByRole('heading', { name: 'Välkommen.' })).toBeVisible()
+  await expect(
+    staff.getByRole('heading', { name: d.home, exact: true }),
+  ).toBeVisible()
   const replay = await staff.request.post('/api/platform', {
     headers: { Origin: 'http://127.0.0.1:3000' },
     data: {
@@ -803,7 +808,7 @@ test('register, verify, create stores, invite, isolate and administer access', a
   await page.getByLabel('Butikens namn').fill('E2E Andra Butiken')
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
   await expect(
-    page.getByRole('heading', { name: 'Välkommen, Alex' }),
+    page.getByRole('heading', { name: d.home, exact: true }),
   ).toBeVisible()
   const tenantB = await page.getByLabel('Aktiv butik').first().inputValue()
   expect(tenantB).not.toBe(tenantA)
@@ -837,7 +842,7 @@ test('register, verify, create stores, invite, isolate and administer access', a
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/')
   await expect(
-    page.getByRole('heading', { name: 'Välkommen, Alex' }),
+    page.getByRole('heading', { name: d.home, exact: true }),
   ).toBeVisible()
   await page.screenshot({
     path: 'test-results/platform-mobile.png',
@@ -880,7 +885,7 @@ test('admin and readonly permissions stay scoped to each store', async ({
     await page.getByLabel('Butikens namn').fill('E2E Role Store')
     await page.getByRole('button', { name: 'Skapa min butik' }).click()
     await expect(
-      page.getByRole('heading', { name: 'Välkommen.' }),
+      page.getByRole('heading', { name: d.home, exact: true }),
     ).toBeVisible()
     const tenantA = await page.getByLabel('Aktiv butik').first().inputValue()
     const invitation = await command(page, {
@@ -896,7 +901,7 @@ test('admin and readonly permissions stay scoped to each store', async ({
       .getByRole('button', { name: 'Acceptera inbjudan', exact: true })
       .click()
     await expect(
-      admin.getByRole('heading', { name: 'Välkommen.' }),
+      admin.getByRole('heading', { name: d.home, exact: true }),
     ).toBeVisible()
     await admin.goto('/members')
     await expect(
@@ -938,7 +943,7 @@ test('admin and readonly permissions stay scoped to each store', async ({
       .getByRole('button', { name: 'Acceptera inbjudan', exact: true })
       .click()
     await expect(
-      reader.getByRole('heading', { name: 'Välkommen.' }),
+      reader.getByRole('heading', { name: d.home, exact: true }),
     ).toBeVisible()
     await reader.goto('/members')
     await expect(
@@ -967,7 +972,7 @@ test('admin and readonly permissions stay scoped to each store', async ({
     await reader.getByLabel('Butikens namn').fill('E2E Reader Own Store')
     await reader.getByRole('button', { name: 'Skapa min butik' }).click()
     await expect(
-      reader.getByRole('heading', { name: 'Välkommen.' }),
+      reader.getByRole('heading', { name: d.home, exact: true }),
     ).toBeVisible()
     const tenantB = await reader.getByLabel('Aktiv butik').first().inputValue()
     expect(tenantB).not.toBe(tenantA)
@@ -1049,7 +1054,9 @@ test('password recovery and MFA protect the authenticated platform', async ({
   await page.goto('/onboarding')
   await page.getByLabel('Butikens namn').fill('E2E Security')
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
-  await expect(page.getByRole('heading', { name: 'Välkommen.' })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: d.home, exact: true }),
+  ).toBeVisible()
   await page.goto('/account')
   const factorResponse = page.waitForResponse(
     (r) =>
@@ -1095,7 +1102,9 @@ test('password recovery and MFA protect the authenticated platform', async ({
     'http://127.0.0.1:3000/intake/open?ref=H-999999999999',
   )
   await page.goto('/')
-  await expect(page.getByRole('heading', { name: 'Välkommen.' })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: d.home, exact: true }),
+  ).toBeVisible()
 })
 
 test('archived inspection drafts preserve history and require explicit reopening', async ({

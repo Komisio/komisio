@@ -12,6 +12,13 @@ test('keyboard users can bypass store navigation in every interface language', a
   await register(page, email, `K!${randomUUID()}`)
   const f = await p2Fixture(email)
   try {
+    await f.item('Synthetic navigation jacket')
+    const bag = (
+      await f.db.query(
+        'select id from bag_receipts where tenant_id=$1 limit 1',
+        [f.tenant],
+      )
+    ).rows[0].id
     await f.commit()
     for (const locale of ['sv', 'en', 'no', 'dk', 'fi', 'de', 'es', 'it']) {
       const d: Dictionary = JSON.parse(
@@ -20,15 +27,13 @@ test('keyboard users can bypass store navigation in every interface language', a
           'utf8',
         ),
       )
-      await page
-        .context()
-        .addCookies([
-          {
-            name: 'komisio-locale',
-            value: locale,
-            url: 'http://127.0.0.1:3000',
-          },
-        ])
+      await page.context().addCookies([
+        {
+          name: 'komisio-locale',
+          value: locale,
+          url: 'http://127.0.0.1:3000',
+        },
+      ])
       for (const width of [320, 1280]) {
         await page.setViewportSize({ width, height: 800 })
         await page.goto('/intake/items')
@@ -47,6 +52,16 @@ test('keyboard users can bypass store navigation in every interface language', a
           await page.evaluate(() => !!document.activeElement?.closest('main')),
         ).toBe(true)
       }
+    }
+    for (const path of [
+      '/intake/quick',
+      '/intake/stock',
+      `/intake/bags/${bag}/inspect`,
+    ]) {
+      await page.goto(path)
+      await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+      await expect(page.getByRole('main')).toHaveCount(1)
+      await expect(page.getByRole('main')).toHaveAttribute('id', 'main-content')
     }
   } finally {
     await f.close()

@@ -715,7 +715,14 @@ small {
   font-size: 13px;
 }
 /* Standalone navigation gets a touch target; prose links stay inline. */
-:where(.page-heading, .intake-header, .row, main, .guide-actions)
+:where(
+    .page-heading,
+    .intake-header,
+    .row,
+    main,
+    .guide-actions,
+    .bag-reception-page
+  )
   > a.text-link {
   display: inline-flex;
   align-items: center;

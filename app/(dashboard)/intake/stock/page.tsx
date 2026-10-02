@@ -30,7 +30,7 @@ export default async function Stock({
   const pct = (value: number | null) => (value === null ? '—' : `${value} %`)
   const days = (value: number | null) => (value === null ? '—' : String(value))
   return (
-    <main className="stock-overview">
+    <div className="stock-overview">
       <div className="page-heading">
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
@@ -203,6 +203,6 @@ export default async function Stock({
           </>
         )}
       </section>
-    </main>
+    </div>
   )
 }

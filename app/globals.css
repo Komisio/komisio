@@ -4864,3 +4864,130 @@ button.text-link:hover:not(:disabled) {
     width: 100%;
   }
 }
+/* Shared accounting workspace; provider controls remain in their own section. */
+.accounting-workspace {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1.3fr);
+  gap: 24px;
+  align-items: start;
+}
+.accounting-workspace > *,
+.accounting-settings > * {
+  min-width: 0;
+}
+.accounting-exports {
+  grid-column: 1 / -1;
+}
+.accounting-record {
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+}
+.accounting-record:last-child {
+  padding-bottom: 0;
+}
+.accounting-record-heading,
+.accounting-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.accounting-record-heading h3,
+.accounting-section-heading h2 {
+  margin: 0;
+}
+.accounting-record-meta {
+  font-size: 14px;
+  margin: 8px 0;
+}
+.accounting-breakdown > summary {
+  cursor: pointer;
+  min-height: 44px;
+  align-content: center;
+  font-weight: 600;
+}
+.accounting-voucher {
+  margin-top: 12px;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+.accounting-voucher > .btn,
+.accounting-voucher > .text-link {
+  margin-top: 8px;
+}
+.accounting-page .text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.accounting-delivery {
+  background: var(--paper);
+  padding: 16px;
+  border-radius: 10px;
+  margin-top: 12px;
+}
+.accounting-delivery h4 {
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+.accounting-settings-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-bottom: 16px;
+}
+.accounting-settings {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.accounting-systems > h2 {
+  margin: 0;
+}
+.accounting-systems > p {
+  margin: 8px 0 20px;
+}
+.accounting-provider {
+  margin-top: 24px;
+  display: grid;
+  gap: 16px;
+}
+.accounting-provider .fortnox-guide {
+  margin: 0;
+}
+.accounting-reconciliation .economy-period-form {
+  margin: 24px 0;
+}
+.accounting-reconciliation .economy-table td:last-child {
+  white-space: normal;
+  min-width: 180px;
+  text-align: left;
+}
+.accounting-page #accounting-systems {
+  scroll-margin-top: 100px;
+}
+@media (max-width: 1000px) {
+  .accounting-settings {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  .accounting-workspace {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .accounting-page .card {
+    padding: 16px;
+  }
+  .accounting-page .view-tabs {
+    flex-wrap: wrap;
+  }
+  .accounting-page .view-tab {
+    white-space: normal;
+  }
+  .accounting-record-heading {
+    align-items: start;
+  }
+}

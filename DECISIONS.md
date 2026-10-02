@@ -789,3 +789,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-02: Seller directory registration has its own route and opens the seller workspace after saving or selecting a duplicate. Receiving registration retains its existing destination. Both reuse the same validated command, duplicate warning and retry handling; readonly users cannot register.
 
 - 2026-10-02: Economy highlights period sales, commission and paid payouts, separates current seller balances, and collapses detailed amounts and reports. Existing SQL totals, gross/refund separation, permissions and automation commands remain unchanged.
+
+- 2026-10-02: Accounting groups shared day closes, exports and account mapping separately from provider connections. SIE remains a standalone option; Fortnox delivery and reconciliation retain explicit provider scope, authorization and uncertain-send holds. No new provider is activated.

@@ -1344,7 +1344,7 @@
   },
   "accounting": {
     "title": "Contabilità",
-    "intro": "Le chiusure giornaliere sono totali versionati per un giorno locale: vendite, IVA per modalità, commissione, accredito ai conferenti, resi e pagamenti. Un giorno invariato mantiene la sua versione; un giorno modificato ne riceve una nuova.",
+    "intro": "Riepiloga le operazioni giornaliere e prepara i documenti per il sistema contabile.",
     "notice": "Komisio non è un registratore di cassa. Le chiusure giornaliere alimentano la tua contabilità; l'esportazione a Fortnox segue una volta che il tuo commercialista ha impostato la mappa dei conti.",
     "generateHeading": "Chiudi un giorno",
     "generateHint": "Scegli la data locale. Generare di nuovo dopo una vendita tardiva crea la versione successiva; le versioni precedenti restano.",
@@ -1392,10 +1392,10 @@
     "debitTotal": "dare",
     "creditTotal": "avere",
     "unmappedAmounts": "Non esportati (nessun conto)",
-    "export": "Esporta come SIE 4",
+    "export": "Crea documenti contabili",
     "exported": "Esportato.",
     "download": "Scarica file SIE",
-    "exportsHeading": "Esportazioni",
+    "exportsHeading": "Documenti contabili",
     "noExports": "Nessuna esportazione finora.",
     "lines": "righe",
     "readOnlyMap": "Solo un proprietario o un amministratore può modificare la mappa dei conti.",
@@ -1403,9 +1403,15 @@
     "views": {
       "days": "Chiusure giornaliere",
       "reconciliation": "Riconciliazione",
-      "settings": "Mappa dei conti e Fortnox"
+      "settings": "Conti e integrazioni"
     },
-    "mapMissingLink": "Nessuna mappa dei conti finora: impostala in Mappa dei conti e Fortnox prima di esportare."
+    "mapMissingLink": "Configura i conti contabili prima di creare un’esportazione.",
+    "details": "Mostra dettagli",
+    "systems": "Sistemi contabili",
+    "deliveryHint": "Scarica un file SIE o invia i documenti tramite un’integrazione collegata.",
+    "fileOption": "Esportazione file SIE",
+    "fileHint": "Per sistemi contabili che importano SIE 4. Non è necessaria una connessione diretta.",
+    "reconciliationHint": "Controlla le chiusure giornaliere e le esportazioni del periodo. Lo stato di invio riguarda Fortnox; le importazioni di file SIE non sono confermate qui."
   },
   "communications": {
     "title": "Messaggi al conferente",
@@ -2838,7 +2844,7 @@
     "close": "Chiudi aiuto",
     "fullArticle": "Apri la guida completa in una nuova scheda",
     "taskLinks": "Vai all’attività",
-    "settings": "Mappa dei conti e Fortnox",
+    "settings": "Conti e integrazioni",
     "days": "Chiusure giornaliere ed esportazioni",
     "reconciliation": "Riconciliazione",
     "providerHelp": "Fortnox: attivazione e licenze (nuova scheda)",
@@ -2871,7 +2877,7 @@
         "intro": "Collega l’azienda del negozio e prepara i conti. Il collegamento non invia dati contabili.",
         "steps": [
           "Devi essere proprietario o amministratore in Komisio e poter autorizzare l’accesso all’azienda Fortnox corretta. Controlla le licenze di integrazione e di programma applicabili nella guida Fortnox.",
-          "Apri Mappa dei conti e Fortnox. Inserisci il nome dell’azienda come appare in Fortnox e collegati. Accedi a Fortnox, verifica l’azienda e approva i permessi richiesti.",
+          "Apri Conti e integrazioni. Inserisci il nome dell’azienda come appare in Fortnox e collegati. Accedi a Fortnox, verifica l’azienda e approva i permessi richiesti.",
           "Al ritorno, verifica il nome dell’azienda. Usa il controllo del collegamento per verificarne lo stato attuale. Scegli la stessa azienda quando ti ricolleghi.",
           "Salva i conti e le scelte dare/avere concordate con il commercialista. Komisio non sceglie i conti per te."
         ],

@@ -3,10 +3,11 @@ import { randomUUID, randomBytes } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
+import d from '../../messages/sv.json' with { type: 'json' }
 test('account map, balanced preview and downloadable SIE keep tenant boundaries', async ({
   page,
   browser,
-}) => {
+}, testInfo) => {
   const email = `p2-accounting-${randomUUID()}@example.test`
   await register(page, email, `K!${randomBytes(16).toString('hex')}`)
   const f = await p2Fixture(email)
@@ -27,14 +28,37 @@ test('account map, balanced preview and downloadable SIE keep tenant boundaries'
       close,
     ])
     await f.commit()
+    await page.setViewportSize({ width: 375, height: 812 })
     await page.goto('/intake/accounting')
+    await expect(
+      page.getByRole('link', {
+        name: d.accounting.views.settings,
+        exact: true,
+      }),
+    ).toBeVisible()
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true)
     await expect(
       page.getByRole('heading', { name: 'Bokföring', exact: true }),
     ).toBeVisible()
     await expect(
-      page.getByRole('button', { name: 'Exportera som SIE 4' }),
+      page.getByRole('button', { name: d.accounting.export }),
     ).toBeDisabled()
     await page.goto('/intake/accounting?view=settings')
+    await expect(
+      page.getByRole('heading', { name: d.accounting.systems, exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByText(d.accounting.fileHint, { exact: true }),
+    ).toBeVisible()
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true)
     const map = page.getByRole('region', { name: 'Kontoplan', exact: true })
     for (const [label, account, side] of [
       ['Bruttoförsäljning (mottagna betalningar)', '1930', 'debit'],
@@ -60,11 +84,26 @@ test('account map, balanced preview and downloadable SIE keep tenant boundaries'
       .toBe(1)
     await page.goto('/intake/accounting')
     await expect(
-      page.getByRole('button', { name: 'Exportera som SIE 4' }),
+      page.getByRole('button', { name: d.accounting.export }),
     ).toBeEnabled()
-    await page.getByRole('button', { name: 'Exportera som SIE 4' }).click()
+    await page.getByRole('button', { name: d.accounting.export }).click()
     const link = page.getByRole('link', { name: 'Ladda ned SIE-fil' }).first()
     await expect(link).toBeVisible()
+    await expect(
+      page
+        .getByRole('region', { name: d.accounting.exportsHeading, exact: true })
+        .getByRole('link', { name: d.accounting.download, exact: true }),
+    ).toBeVisible()
+    await page.screenshot({
+      path: testInfo.outputPath('accounting-mobile.png'),
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 1440, height: 1000 })
+    await page.screenshot({
+      path: testInfo.outputPath('accounting-desktop.png'),
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 375, height: 812 })
     const url = await link.getAttribute('href')
     const pending = page.waitForEvent('download')
     await link.click()
@@ -103,6 +142,20 @@ test('account map, balanced preview and downloadable SIE keep tenant boundaries'
     } finally {
       await stranger.close()
     }
+    await page.goto(
+      '/intake/accounting?view=reconciliation&from=2020-01-01&to=2020-01-31',
+    )
+    await expect(
+      page.getByText(d.accounting.reconciliationHint, { exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByText(d.reconciliation.statuses.not_sent, { exact: true }),
+    ).toBeVisible()
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true)
     expect(
       (
         await f.db.query(

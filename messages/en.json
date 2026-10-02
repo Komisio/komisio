@@ -1344,7 +1344,7 @@
   },
   "accounting": {
     "title": "Accounting",
-    "intro": "Day closes are versioned totals for one local day: sales, VAT per mode, commission, seller credit, returns and payouts. An unchanged day keeps its version; a changed day gets a new one.",
+    "intro": "Summarise daily transactions and prepare documents for your accounting system.",
     "notice": "Komisio is not a cash register. Day closes feed your accounting; the Fortnox export follows once your accountant has set the account map.",
     "generateHeading": "Close a day",
     "generateHint": "Pick the local date. Generating again after a late sale creates the next version; earlier versions stay.",
@@ -1392,10 +1392,10 @@
     "debitTotal": "debit",
     "creditTotal": "credit",
     "unmappedAmounts": "Not exported (no account)",
-    "export": "Export as SIE 4",
+    "export": "Create accounting documents",
     "exported": "Exported.",
     "download": "Download SIE file",
-    "exportsHeading": "Exports",
+    "exportsHeading": "Accounting documents",
     "noExports": "No exports yet.",
     "lines": "lines",
     "readOnlyMap": "Only an owner or admin can change the account map.",
@@ -1403,9 +1403,15 @@
     "views": {
       "days": "Day closes",
       "reconciliation": "Reconciliation",
-      "settings": "Account map and Fortnox"
+      "settings": "Accounts and integrations"
     },
-    "mapMissingLink": "No account map yet: set it under Account map and Fortnox before exporting."
+    "mapMissingLink": "Set up accounting accounts before creating an export.",
+    "details": "Show details",
+    "systems": "Accounting systems",
+    "deliveryHint": "Download a SIE file or send the documents through a connected integration.",
+    "fileOption": "SIE file export",
+    "fileHint": "For accounting systems that import SIE 4. No direct connection is required.",
+    "reconciliationHint": "Check day closes and exports for the period. Delivery status refers to Fortnox; SIE file imports are not confirmed here."
   },
   "communications": {
     "title": "Messages to the seller",
@@ -2838,7 +2844,7 @@
     "close": "Close help",
     "fullArticle": "Open the full help page in a new tab",
     "taskLinks": "Go to the task",
-    "settings": "Account map and Fortnox",
+    "settings": "Accounts and integrations",
     "days": "Day closes and exports",
     "reconciliation": "Reconciliation",
     "providerHelp": "Fortnox: activation and licences (opens a new tab)",
@@ -2871,7 +2877,7 @@
         "intro": "Connect the store’s company and prepare the account mapping. Connecting sends no accounting data.",
         "steps": [
           "You must be an owner or administrator in Komisio and able to authorize access to the correct Fortnox company. Check applicable integration and program licences using Fortnox guidance.",
-          "Open Account map and Fortnox. Enter the company name as shown in Fortnox and connect. Sign in to Fortnox, check the company and approve the requested permissions.",
+          "Open Accounts and integrations. Enter the company name as shown in Fortnox and connect. Sign in to Fortnox, check the company and approve the requested permissions.",
           "On return, check the company name. Use Check connection for a current check. Choose the same company when reconnecting.",
           "Save the accounts and debit/credit choices agreed with your accountant. Komisio does not choose accounts for you."
         ],
@@ -2883,7 +2889,7 @@
         "steps": [
           "Open Day closes and exports and generate the close for the correct date. This records a summary in Komisio, not a Fortnox voucher.",
           "Review the preview: accounts, debit, credit and unmapped amounts. Review the mapping with your accountant. Balanced debit and credit do not by themselves establish correct accounting.",
-          "Choose Export as SIE 4 to save the accounting basis. You can then download the file or, as owner/administrator, use Send to Fortnox. Avoid both importing the file and sending the same export directly.",
+          "Choose Create accounting documents to save the accounting basis. You can then download the file or, as owner/administrator, use Send to Fortnox. Avoid both importing the file and sending the same export directly.",
           "A real send creates a Fortnox voucher. Its reference appears once confirmed. If the outcome is uncertain, open the send recovery help and do not send again."
         ],
         "notice": "Automatic sending is a separate owner choice for prepared exports. Day closes remain manual. Connecting or reading help does not enable automation."
@@ -2904,7 +2910,7 @@
         "intro": "Automation sends prepared exports to the connected Fortnox company. It does not create day closes or choose accounts.",
         "steps": [
           "Check the company and account mapping. Review existing exports before enabling: older eligible exports may also be included. Avoid importing a SIE file and sending the same export directly.",
-          "The store owner enables automatic sending under Account map and Fortnox. Waiting means the background service has not accepted activation yet. If the feature is not configured, contact the person responsible for the Komisio installation.",
+          "The store owner enables automatic sending under Accounts and integrations. Waiting means the background service has not accepted activation yet. If the feature is not configured, contact the person responsible for the Komisio installation.",
           "Continue creating and reviewing day closes and preparing exports manually. Read Last run for the time, outcome and number sent. Enabled does not mean anything has been sent, and a completed run does not mean every day is reconciled.",
           "After a partial or failed run, open Reconciliation and review the affected exports. For a pending or uncertain send, follow the sending-problem guidance and ask the owner to check the outcome. Switching automation off and on does not resolve a held send."
         ],

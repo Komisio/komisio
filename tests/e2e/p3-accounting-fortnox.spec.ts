@@ -66,8 +66,11 @@ test('accounting page shows the Fortnox connection state and records a refused s
       exports.getByText(`${d.accounting.mapVersion} 1`),
     ).toBeVisible()
     await expect(
-      exports.getByText(d.fortnox.sendNeedsConnection, { exact: true }),
+      exports.getByText(d.accounting.deliveryHint, { exact: true }),
     ).toBeVisible()
+    await expect(
+      exports.getByText(d.fortnox.sendNeedsConnection, { exact: true }),
+    ).toHaveCount(0)
 
     // A connection stored through the engine (ciphertext is opaque to the page).
     await f.asActor(f.actor, () =>

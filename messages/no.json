@@ -1344,7 +1344,7 @@
   },
   "accounting": {
     "title": "Regnskap",
-    "intro": "Dagsoppgjør er versjonerte totaler for én lokal dag: salg, mva per modus, kommisjon, innlevererens tilgodehavende, returer og utbetalinger. En uendret dag beholder versjonen sin; en endret dag får en ny.",
+    "intro": "Oppsummer dagens transaksjoner og klargjør underlag til regnskapssystemet.",
     "notice": "Komisio er ikke et kassasystem. Dagsoppgjør mater regnskapet ditt; Fortnox-eksporten følger når regnskapsføreren har satt kontoplanen.",
     "generateHeading": "Avslutt en dag",
     "generateHint": "Velg lokal dato. Å generere på nytt etter et sent salg lager neste versjon; tidligere versjoner bevares.",
@@ -1392,10 +1392,10 @@
     "debitTotal": "debet",
     "creditTotal": "kredit",
     "unmappedAmounts": "Ikke eksportert (ingen konto)",
-    "export": "Eksporter som SIE 4",
+    "export": "Opprett regnskapsunderlag",
     "exported": "Eksportert.",
     "download": "Last ned SIE-fil",
-    "exportsHeading": "Eksporter",
+    "exportsHeading": "Regnskapsunderlag",
     "noExports": "Ingen eksporter ennå.",
     "lines": "linjer",
     "readOnlyMap": "Bare en eier eller administrator kan endre kontoplanen.",
@@ -1403,9 +1403,15 @@
     "views": {
       "days": "Dagsoppgjør",
       "reconciliation": "Avstemming",
-      "settings": "Kontoplan og Fortnox"
+      "settings": "Kontoer og integrasjoner"
     },
-    "mapMissingLink": "Ingen kontoplan ennå: sett den under Kontoplan og Fortnox før du eksporterer."
+    "mapMissingLink": "Angi regnskapskontoer før du oppretter en eksport.",
+    "details": "Vis detaljer",
+    "systems": "Regnskapssystemer",
+    "deliveryHint": "Last ned en SIE-fil eller send underlaget via en tilkoblet integrasjon.",
+    "fileOption": "Eksport via SIE-fil",
+    "fileHint": "For regnskapssystemer som kan importere SIE 4. Ingen direkte tilkobling kreves.",
+    "reconciliationHint": "Kontroller dagsoppgjør og eksporter for perioden. Overføringsstatus gjelder Fortnox; import av SIE-filer bekreftes ikke her."
   },
   "communications": {
     "title": "Meldinger til innlevereren",
@@ -2838,7 +2844,7 @@
     "close": "Lukk hjelpen",
     "fullArticle": "Åpne hele hjelpesiden i ny fane",
     "taskLinks": "Gå til oppgaven",
-    "settings": "Kontoplan og Fortnox",
+    "settings": "Kontoer og integrasjoner",
     "days": "Dagsoppgjør og eksporter",
     "reconciliation": "Avstemming",
     "providerHelp": "Fortnox: aktivering og lisenser (åpnes i ny fane)",
@@ -2871,7 +2877,7 @@
         "intro": "Koble til butikkens selskap og klargjør kontoplanen. Ingen regnskapsdata sendes ved tilkobling.",
         "steps": [
           "Du må være eier eller administrator i Komisio og kunne godkjenne tilgang til riktig Fortnox-selskap. Kontroller aktuelle integrasjons- og programlisenser i Fortnox-veiledningen.",
-          "Åpne Kontoplan og Fortnox. Skriv selskapsnavnet slik det står i Fortnox, og koble til. Logg inn hos Fortnox, kontroller selskapet og godkjenn tillatelsene.",
+          "Åpne Kontoer og integrasjoner. Skriv selskapsnavnet slik det står i Fortnox, og koble til. Logg inn hos Fortnox, kontroller selskapet og godkjenn tillatelsene.",
           "Kontroller selskapsnavnet når du kommer tilbake. Bruk tilkoblingskontrollen for en aktuell kontroll. Velg samme selskap ved ny tilkobling.",
           "Lagre kontonumre og debet-/kreditvalg avtalt med regnskapsføreren. Komisio velger ikke kontoer for dere."
         ],
@@ -2904,7 +2910,7 @@
         "intro": "Automatikken sender klargjorte eksporter til det tilkoblede Fortnox-foretaket. Den oppretter ikke dagsoppgjør og velger ikke kontoer.",
         "steps": [
           "Kontroller foretaket og kontokoblingene. Gå gjennom eksisterende eksporter før aktivering: også eldre underlag som kan sendes, kan bli tatt med. Unngå å både importere SIE-filen og sende samme underlag direkte.",
-          "Butikkens eier aktiverer automatisk sending under Kontoplan og Fortnox. Venter betyr at bakgrunnstjenesten ennå ikke har akseptert aktiveringen. Hvis funksjonen ikke er klargjort, kontakt den som drifter Komisio-installasjonen.",
+          "Butikkens eier aktiverer automatisk sending under Kontoer og integrasjoner. Venter betyr at bakgrunnstjenesten ennå ikke har akseptert aktiveringen. Hvis funksjonen ikke er klargjort, kontakt den som drifter Komisio-installasjonen.",
           "Fortsett å opprette og kontrollere dagsoppgjør og klargjøre eksporter manuelt. Se Siste kjøring for tidspunkt, resultat og antall sendt. Aktivert betyr ikke at noe er sendt, og en fullført kjøring betyr ikke at alle dager er avstemt.",
           "Etter en delvis eller mislykket kjøring: åpne Avstemming og kontroller de aktuelle eksportene. Ved ventende eller usikker sending, følg hjelpen for sendeproblemer og be eieren kontrollere resultatet. Å slå automatikken av og på løser ikke en sperret sending."
         ],

@@ -1344,7 +1344,7 @@
   },
   "accounting": {
     "title": "Kirjanpito",
-    "intro": "Päivän päätökset ovat versioituja summia yhdeltä paikalliselta päivältä: myynti, alv tiloittain, komissio, tuojan hyvitys, palautukset ja tilitykset. Muuttumaton päivä säilyttää versionsa; muuttunut päivä saa uuden.",
+    "intro": "Koosta päivän tapahtumat ja valmistele aineisto kirjanpitojärjestelmään.",
     "notice": "Komisio ei ole kassajärjestelmä. Päivän päätökset syöttävät kirjanpitoasi; Fortnox-vienti seuraa, kun kirjanpitäjäsi on määrittänyt tilikartan.",
     "generateHeading": "Päätä päivä",
     "generateHint": "Valitse paikallinen päivämäärä. Uusi luonti myöhäisen myynnin jälkeen luo seuraavan version; aiemmat versiot säilyvät.",
@@ -1392,10 +1392,10 @@
     "debitTotal": "debet",
     "creditTotal": "kredit",
     "unmappedAmounts": "Ei viety (ei tiliä)",
-    "export": "Vie SIE 4 -muodossa",
+    "export": "Luo kirjanpitoaineisto",
     "exported": "Viety.",
     "download": "Lataa SIE-tiedosto",
-    "exportsHeading": "Viennit",
+    "exportsHeading": "Kirjanpitoaineisto",
     "noExports": "Ei vielä vientejä.",
     "lines": "riviä",
     "readOnlyMap": "Vain omistaja tai ylläpitäjä voi muuttaa tilikarttaa.",
@@ -1403,9 +1403,15 @@
     "views": {
       "days": "Päivän päätökset",
       "reconciliation": "Täsmäytys",
-      "settings": "Tilikartta ja Fortnox"
+      "settings": "Tilit ja integraatiot"
     },
-    "mapMissingLink": "Ei vielä tilikarttaa: määritä se kohdassa Tilikartta ja Fortnox ennen vientiä."
+    "mapMissingLink": "Määritä kirjanpitotilit ennen vientiaineiston luontia.",
+    "details": "Näytä tiedot",
+    "systems": "Kirjanpitojärjestelmät",
+    "deliveryHint": "Lataa SIE-tiedosto tai lähetä aineisto yhdistetyn integraation kautta.",
+    "fileOption": "SIE-tiedoston vienti",
+    "fileHint": "Kirjanpitojärjestelmille, jotka voivat tuoda SIE 4 -tiedostoja. Suoraa yhteyttä ei tarvita.",
+    "reconciliationHint": "Tarkista jakson päiväpäätökset ja viennit. Siirron tila koskee Fortnoxia; SIE-tiedostojen tuontia ei vahvisteta täällä."
   },
   "communications": {
     "title": "Viestit tuojalle",
@@ -2844,7 +2850,7 @@
     "close": "Sulje ohje",
     "fullArticle": "Avaa koko ohjesivu uuteen välilehteen",
     "taskLinks": "Siirry tehtävään",
-    "settings": "Tilikartta ja Fortnox",
+    "settings": "Tilit ja integraatiot",
     "days": "Päivän päätökset ja viennit",
     "reconciliation": "Täsmäytys",
     "providerHelp": "Fortnox: käyttöönotto ja lisenssit (avautuu uuteen välilehteen)",
@@ -2877,7 +2883,7 @@
         "intro": "Yhdistä myymälän yritys ja valmistele tilikartta. Yhdistäminen ei lähetä kirjanpitotietoja.",
         "steps": [
           "Sinun on oltava Komision omistaja tai järjestelmänvalvoja ja voitava hyväksyä oikean Fortnox-yrityksen käyttöoikeus. Tarkista tarvittavat integraatio- ja ohjelmalisenssit Fortnoxin ohjeista.",
-          "Avaa Tilikartta ja Fortnox. Anna yrityksen nimi sellaisena kuin se on Fortnoxissa ja yhdistä. Kirjaudu Fortnoxiin, tarkista yritys ja hyväksy pyydetyt oikeudet.",
+          "Avaa Tilit ja integraatiot. Anna yrityksen nimi sellaisena kuin se on Fortnoxissa ja yhdistä. Kirjaudu Fortnoxiin, tarkista yritys ja hyväksy pyydetyt oikeudet.",
           "Tarkista yrityksen nimi palattuasi. Tarkista nykyinen yhteys yhteyden tarkistustoiminnolla. Valitse sama yritys yhdistäessäsi uudelleen.",
           "Tallenna kirjanpitäjän kanssa sovitut tilit ja debet-/kredit-valinnat. Komisio ei valitse tilejä puolestasi."
         ],

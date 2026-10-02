@@ -1344,7 +1344,7 @@
   },
   "accounting": {
     "title": "Regnskab",
-    "intro": "Dagsafslutninger er versionerede totaler for én lokal dag: salg, moms pr. tilstand, kommission, indlevereres tilgodehavende, returer og udbetalinger. En uændret dag beholder sin version; en ændret dag får en ny.",
+    "intro": "Opsummér dagens transaktioner og klargør bilag til dit regnskabssystem.",
     "notice": "Komisio er ikke et kasseapparat. Dagsafslutninger leverer til dit regnskab; Fortnox-eksporten følger, når din revisor har sat kontoplanen.",
     "generateHeading": "Afslut en dag",
     "generateHint": "Vælg den lokale dato. Generering igen efter et sent salg opretter den næste version; tidligere versioner bevares.",
@@ -1392,10 +1392,10 @@
     "debitTotal": "debet",
     "creditTotal": "kredit",
     "unmappedAmounts": "Ikke eksporteret (ingen konto)",
-    "export": "Eksportér som SIE 4",
+    "export": "Opret bogføringsbilag",
     "exported": "Eksporteret.",
     "download": "Download SIE-fil",
-    "exportsHeading": "Eksporter",
+    "exportsHeading": "Bogføringsbilag",
     "noExports": "Ingen eksporter endnu.",
     "lines": "linjer",
     "readOnlyMap": "Kun en ejer eller administrator kan ændre kontoplanen.",
@@ -1403,9 +1403,15 @@
     "views": {
       "days": "Dagsafslutninger",
       "reconciliation": "Afstemning",
-      "settings": "Kontoplan og Fortnox"
+      "settings": "Konti og integrationer"
     },
-    "mapMissingLink": "Ingen kontoplan endnu: sæt den under Kontoplan og Fortnox, før du eksporterer."
+    "mapMissingLink": "Angiv bogføringskonti, før du opretter en eksport.",
+    "details": "Vis detaljer",
+    "systems": "Regnskabssystemer",
+    "deliveryHint": "Download en SIE-fil, eller send bilagene via en tilsluttet integration.",
+    "fileOption": "Eksport via SIE-fil",
+    "fileHint": "Til regnskabssystemer, der kan importere SIE 4. Ingen direkte forbindelse kræves.",
+    "reconciliationHint": "Kontrollér dagsafslutninger og eksporter for perioden. Overførselsstatus gælder Fortnox; import af SIE-filer bekræftes ikke her."
   },
   "communications": {
     "title": "Beskeder til indlevereren",
@@ -2838,7 +2844,7 @@
     "close": "Luk hjælpen",
     "fullArticle": "Åbn hele hjælpesiden i en ny fane",
     "taskLinks": "Gå til opgaven",
-    "settings": "Kontoplan og Fortnox",
+    "settings": "Konti og integrationer",
     "days": "Dagsafslutninger og eksporter",
     "reconciliation": "Afstemning",
     "providerHelp": "Fortnox: aktivering og licenser (åbner en ny fane)",
@@ -2871,7 +2877,7 @@
         "intro": "Tilslut butikkens virksomhed og klargør kontoplanen. Tilslutning sender ingen bogføringsdata.",
         "steps": [
           "Du skal være ejer eller administrator i Komisio og kunne godkende adgang til den rigtige Fortnox-virksomhed. Kontrollér relevante integrations- og programlicenser i Fortnox-vejledningen.",
-          "Åbn Kontoplan og Fortnox. Indtast virksomhedsnavnet som i Fortnox, og tilslut. Log ind hos Fortnox, kontrollér virksomheden og godkend tilladelserne.",
+          "Åbn Konti og integrationer. Indtast virksomhedsnavnet som i Fortnox, og tilslut. Log ind hos Fortnox, kontrollér virksomheden og godkend tilladelserne.",
           "Kontrollér virksomhedsnavnet ved tilbagevenden. Brug forbindelseskontrollen for en aktuel kontrol. Vælg samme virksomhed ved gentilslutning.",
           "Gem de konti og debet-/kreditvalg, I har aftalt med jeres bogholder. Komisio vælger ikke konti for jer."
         ],
@@ -2904,7 +2910,7 @@
         "intro": "Automatikken sender klargjorte eksporter til den tilsluttede Fortnox-virksomhed. Den opretter ikke dagsafslutninger og vælger ikke konti.",
         "steps": [
           "Kontrollér virksomheden og kontotilknytningen. Gennemgå eksisterende eksporter før aktivering: også ældre bilagsgrundlag, der kan sendes, kan blive medtaget. Undgå både at importere SIE-filen og sende samme grundlag direkte.",
-          "Butikkens ejer aktiverer automatisk afsendelse under Kontoplan og Fortnox. Afventer betyder, at baggrundstjenesten endnu ikke har accepteret aktiveringen. Hvis funktionen ikke er klargjort, kontakt den ansvarlige for Komisio-installationen.",
+          "Butikkens ejer aktiverer automatisk afsendelse under Konti og integrationer. Afventer betyder, at baggrundstjenesten endnu ikke har accepteret aktiveringen. Hvis funktionen ikke er klargjort, kontakt den ansvarlige for Komisio-installationen.",
           "Fortsæt med at oprette og gennemgå dagsafslutninger og klargøre eksporter manuelt. Se Seneste kørsel for tidspunkt, resultat og antal sendt. Aktiveret betyder ikke, at noget er sendt, og en fuldført kørsel betyder ikke, at alle dage er afstemt.",
           "Efter en delvis eller mislykket kørsel: åbn Afstemning og gennemgå de berørte eksporter. Ved afventende eller usikker afsendelse, følg hjælpen til afsendelsesproblemer og bed ejeren kontrollere resultatet. At slå automatikken fra og til løser ikke en blokeret afsendelse."
         ],

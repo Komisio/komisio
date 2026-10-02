@@ -1344,7 +1344,7 @@
   },
   "accounting": {
     "title": "Buchhaltung",
-    "intro": "Tagesabschlüsse sind versionierte Summen für einen lokalen Tag: Verkäufe, MwSt. pro Modus, Kommission, Einlieferer-Gutschrift, Rückgaben und Auszahlungen. Ein unveränderter Tag behält seine Version; ein geänderter Tag erhält eine neue.",
+    "intro": "Fassen Sie die Tagesschäfte zusammen und bereiten Sie Belege für Ihr Buchhaltungssystem vor.",
     "notice": "Komisio ist keine Registrierkasse. Tagesabschlüsse speisen Ihre Buchhaltung; der Fortnox-Export folgt, sobald Ihr Steuerberater die Kontenzuordnung festgelegt hat.",
     "generateHeading": "Tag abschließen",
     "generateHint": "Wählen Sie das lokale Datum. Ein erneutes Erstellen nach einem späten Verkauf erzeugt die nächste Version; frühere Versionen bleiben erhalten.",
@@ -1392,10 +1392,10 @@
     "debitTotal": "Soll",
     "creditTotal": "Haben",
     "unmappedAmounts": "Nicht exportiert (kein Konto)",
-    "export": "Als SIE 4 exportieren",
+    "export": "Buchhaltungsbelege erstellen",
     "exported": "Exportiert.",
     "download": "SIE-Datei herunterladen",
-    "exportsHeading": "Exporte",
+    "exportsHeading": "Buchhaltungsbelege",
     "noExports": "Noch keine Exporte.",
     "lines": "Zeilen",
     "readOnlyMap": "Nur ein Inhaber oder Administrator kann die Kontenzuordnung ändern.",
@@ -1403,9 +1403,15 @@
     "views": {
       "days": "Tagesabschlüsse",
       "reconciliation": "Abstimmung",
-      "settings": "Kontenzuordnung und Fortnox"
+      "settings": "Konten und Integrationen"
     },
-    "mapMissingLink": "Noch keine Kontenzuordnung: Legen Sie sie unter Kontenzuordnung und Fortnox fest, bevor Sie exportieren."
+    "mapMissingLink": "Richten Sie Buchhaltungskonten ein, bevor Sie einen Export erstellen.",
+    "details": "Details anzeigen",
+    "systems": "Buchhaltungssysteme",
+    "deliveryHint": "Laden Sie eine SIE-Datei herunter oder senden Sie die Belege über eine verbundene Integration.",
+    "fileOption": "SIE-Dateiexport",
+    "fileHint": "Für Buchhaltungssysteme, die SIE 4 importieren können. Keine direkte Verbindung erforderlich.",
+    "reconciliationHint": "Prüfen Sie Tagesabschlüsse und Exporte für den Zeitraum. Der Übertragungsstatus bezieht sich auf Fortnox; SIE-Dateiimporte werden hier nicht bestätigt."
   },
   "communications": {
     "title": "Nachrichten an den Einlieferer",
@@ -2844,7 +2850,7 @@
     "close": "Hilfe schließen",
     "fullArticle": "Vollständige Hilfeseite in neuem Tab öffnen",
     "taskLinks": "Zur Aufgabe",
-    "settings": "Kontenzuordnung und Fortnox",
+    "settings": "Konten und Integrationen",
     "days": "Tagesabschlüsse und Exporte",
     "reconciliation": "Abgleich",
     "providerHelp": "Fortnox: Aktivierung und Lizenzen (neuer Tab)",
@@ -2877,7 +2883,7 @@
         "intro": "Verbinden Sie das Unternehmen des Geschäfts und bereiten Sie die Kontenzuordnung vor. Dabei werden keine Buchungsdaten gesendet.",
         "steps": [
           "Sie müssen Eigentümer oder Administrator in Komisio sein und den Zugriff auf das richtige Fortnox-Unternehmen genehmigen können. Prüfen Sie nötige Integrations- und Programmlizenzen anhand der Fortnox-Anleitung.",
-          "Öffnen Sie Kontenzuordnung und Fortnox. Geben Sie den Unternehmensnamen wie in Fortnox ein und verbinden Sie sich. Melden Sie sich bei Fortnox an, prüfen Sie das Unternehmen und genehmigen Sie die angeforderten Rechte.",
+          "Öffnen Sie Konten und Integrationen. Geben Sie den Unternehmensnamen wie in Fortnox ein und verbinden Sie sich. Melden Sie sich bei Fortnox an, prüfen Sie das Unternehmen und genehmigen Sie die angeforderten Rechte.",
           "Prüfen Sie nach der Rückkehr den Unternehmensnamen. Nutzen Sie die Verbindungsprüfung für einen aktuellen Stand. Wählen Sie beim erneuten Verbinden dasselbe Unternehmen.",
           "Speichern Sie die mit Ihrer Buchhaltung vereinbarten Konten und Soll-/Haben-Zuordnungen. Komisio wählt keine Konten für Sie aus."
         ],

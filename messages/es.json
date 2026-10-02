@@ -1073,7 +1073,8 @@
     "currentPrice": "Precio actual",
     "labelPrinter": "Impresora de etiquetas",
     "manageSalePeriod": "Precio y período de venta",
-    "unknownActor": "Nombre no disponible"
+    "unknownActor": "Nombre no disponible",
+    "markdownWaiting": "Rebaja pendiente"
   },
   "sales": {
     "title": "Ventas",

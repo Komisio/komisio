@@ -4449,3 +4449,105 @@ button.text-link:hover:not(:disabled) {
     width: 100%;
   }
 }
+
+/* Item directory: recognizable item, current price and one clear status. */
+.items-directory {
+  max-width: 1120px;
+  margin-inline: auto;
+}
+.items-directory .items-directory-filters {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 14px;
+}
+.items-directory-list {
+  margin-top: 18px;
+}
+.items-directory-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(150px, 220px) 20px;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 12px;
+  min-height: 76px;
+  border-top: 1px solid var(--line);
+  color: var(--ink);
+  text-decoration: none;
+}
+.items-directory-row:hover,
+.items-directory-row:focus-visible {
+  background: var(--paper);
+  border-radius: 8px;
+}
+.items-directory-name {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.items-directory-name strong {
+  font-size: 16px;
+  font-weight: 600;
+}
+.items-directory-name small {
+  font-size: 13px;
+}
+.items-directory-price {
+  font-weight: 600;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.items-directory-status {
+  justify-self: start;
+  font-size: 13px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--muted);
+}
+.items-directory-status[data-stage='on_sale'] {
+  background: var(--mint);
+  color: var(--green);
+}
+.items-directory-status[data-stage='markdown_due'],
+.items-directory-status[data-stage='period_ending'],
+.items-directory-status[data-stage='period_ended'] {
+  background: #fff4df;
+  color: #735115;
+}
+.items-directory-arrow {
+  color: var(--muted);
+}
+@media (max-width: 760px) {
+  .items-directory-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 16px;
+    padding: 18px 0;
+  }
+  .items-directory-status {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .items-directory-arrow {
+    display: none;
+  }
+  .items-directory-price {
+    font-size: 14px;
+  }
+  .items-directory input,
+  .items-directory select {
+    font-size: 16px;
+  }
+}
+@media (max-width: 380px) {
+  .items-directory-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .items-directory-price {
+    grid-row: 2;
+  }
+  .items-directory-status {
+    grid-row: 3;
+  }
+}

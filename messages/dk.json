@@ -1073,7 +1073,8 @@
     "currentPrice": "Nuværende pris",
     "labelPrinter": "Etiketprinter",
     "manageSalePeriod": "Pris og salgsperiode",
-    "unknownActor": "Navn mangler"
+    "unknownActor": "Navn mangler",
+    "markdownWaiting": "Prisnedsættelse afventer"
   },
   "sales": {
     "title": "Salg",

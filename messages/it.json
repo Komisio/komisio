@@ -1073,7 +1073,8 @@
     "currentPrice": "Prezzo attuale",
     "labelPrinter": "Stampante per etichette",
     "manageSalePeriod": "Prezzo e periodo di vendita",
-    "unknownActor": "Nome non disponibile"
+    "unknownActor": "Nome non disponibile",
+    "markdownWaiting": "Ribasso in attesa"
   },
   "sales": {
     "title": "Vendite",

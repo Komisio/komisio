@@ -1073,7 +1073,8 @@
     "currentPrice": "Nykyinen hinta",
     "labelPrinter": "Etikettitulostin",
     "manageSalePeriod": "Hinta ja myyntijakso",
-    "unknownActor": "Nimi ei saatavilla"
+    "unknownActor": "Nimi ei saatavilla",
+    "markdownWaiting": "Hinnanalennus odottaa"
   },
   "sales": {
     "title": "Myynti",

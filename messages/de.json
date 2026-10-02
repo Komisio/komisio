@@ -1073,7 +1073,8 @@
     "currentPrice": "Aktueller Preis",
     "labelPrinter": "Etikettendrucker",
     "manageSalePeriod": "Preis und Verkaufszeitraum",
-    "unknownActor": "Name nicht verfügbar"
+    "unknownActor": "Name nicht verfügbar",
+    "markdownWaiting": "Preissenkung ausstehend"
   },
   "sales": {
     "title": "Verkäufe",

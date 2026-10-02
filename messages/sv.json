@@ -1073,7 +1073,8 @@
     "currentPrice": "Nuvarande pris",
     "labelPrinter": "Etikettskrivare",
     "manageSalePeriod": "Pris och säljperiod",
-    "unknownActor": "Namn saknas"
+    "unknownActor": "Namn saknas",
+    "markdownWaiting": "Prissänkning väntar"
   },
   "sales": {
     "title": "Försäljning",

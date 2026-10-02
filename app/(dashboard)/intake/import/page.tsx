@@ -22,7 +22,12 @@ export default async function Import() {
       </div>
       <p className="intake-notice">{d.notice}</p>
       {['owner', 'admin'].includes(active.role) ? (
-        <ImportSellers tenantId={active.id} d={d} />
+        <ImportSellers
+          key={active.id}
+          tenantId={active.id}
+          d={d}
+          intake={all.intake}
+        />
       ) : (
         <p>{d.ownerOnly}</p>
       )}

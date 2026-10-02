@@ -1514,7 +1514,8 @@
     "tooMany": "Filen har mer enn 200 brukbare rader. Del den opp og importer i deler.",
     "nothing": "Ingen brukbare rader. Kontroller kolonnetilordningen.",
     "error": "Importen kunne ikke klargjøres. Last inn på nytt og prøv igjen.",
-    "ownerOnly": "Bare butikkeieren eller en administrator kan importere innleverere."
+    "ownerOnly": "Bare butikkeieren eller en administrator kan importere innleverere.",
+    "fileTooLarge": "Filen er for stor. Del den opp og velg en mindre fil."
   },
   "lifecycle": {
     "agentHeading": "Prisnedsettelseskjøringer",

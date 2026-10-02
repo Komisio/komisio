@@ -242,6 +242,13 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
       await expect(
         page.getByText(d.zettle.recorded, { exact: true }),
       ).toBeVisible()
+      await expect(
+        page.getByRole('link', { name: d.zettle.back, exact: true }),
+      ).toHaveAttribute('href', '/intake/integrations?provider=paypal')
+      await expect(page.locator('.sale-reference')).not.toHaveAttribute(
+        'open',
+        '',
+      )
       const totals = (
         await f.db.query(
           'select (select count(*) from sales where tenant_id=$1) sales,(select count(*) from sale_lines where tenant_id=$1) lines,(select sum(amount_ore) from seller_ledger_entries where tenant_id=$1) credit,(select count(*) from pending_operations where tenant_id=$1) operations',

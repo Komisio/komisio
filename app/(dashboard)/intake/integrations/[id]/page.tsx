@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import { readZettlePurchase } from '@/lib/engine/zettle'
 import { ZettleAction } from '@/components/intake/zettle-action'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
@@ -16,7 +16,8 @@ export default async function Receipt({
   if (!z.uuid().safeParse(id).success) notFound()
   const ctx = await requirePlatform(),
     a = ctx.active!,
-    d = dictionary(ctx.locale).zettle
+    all = dictionary(ctx.locale),
+    d = all.zettle
   const r = await readZettlePurchase(ctx.client, a.id, id).catch((e: Error) => {
     if (e.message === 'ZETTLE_IMPORT_NOT_FOUND') notFound()
     throw e
@@ -26,23 +27,33 @@ export default async function Receipt({
     <>
       <div className="page-heading">
         <h1>{d.receipt}</h1>
-        <p>{r.external_id}</p>
-        <Link className="text-link" href="/intake/integrations">
+        <Link className="text-link" href="/intake/integrations?provider=paypal">
           {d.back}
         </Link>
       </div>
       <section className="card intake-form">
         <p>
-          {new Date(r.occurred_at).toLocaleString(ctx.locale, {
+          {new Date(r.occurred_at).toLocaleString(intlLocale(ctx.locale), {
             timeZone: 'Europe/Stockholm',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
           })}
         </p>
         <p>
           {d.total}: {formatSignedOre(r.amount_ore)} {r.currency}
         </p>
-        <p>
-          {d.revision}: {r.mappingRevision}
-        </p>
+        <details className="sale-reference">
+          <summary>{all.sales.reference}</summary>
+          <p>
+            {all.sales.reference}: {r.external_id}
+          </p>
+          <p>
+            {d.revision}: {r.mappingRevision}
+          </p>
+        </details>
         {r.blocked_reason && (
           <p role="status">
             {d.blocked}: {r.blocked_reason}. {d.unsupported}

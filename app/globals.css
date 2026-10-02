@@ -2559,6 +2559,64 @@ button.text-link:hover:not(:disabled) {
   display: grid;
   gap: 1.5rem;
 }
+.import-workspace {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.2fr);
+  gap: 20px;
+  align-items: start;
+}
+.import-workspace > [role='alert'],
+.import-workspace > a {
+  grid-column: 1 / -1;
+}
+.import-preview-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+.import-preview-table th,
+.import-preview-table td {
+  padding: 10px 8px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+@media (max-width: 900px) {
+  .import-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .import-preview-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .import-preview-table,
+  .import-preview-table tbody {
+    display: block;
+  }
+  .import-preview-table tr {
+    display: grid;
+    gap: 8px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .import-preview-table td {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+  .import-preview-table td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+}
 .purchases-workspace {
   display: grid;
   gap: 20px;

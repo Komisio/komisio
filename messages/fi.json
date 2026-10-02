@@ -1514,7 +1514,8 @@
     "tooMany": "Tiedostossa on yli 200 käyttökelpoista riviä. Jaa se osiin ja tuo osissa.",
     "nothing": "Ei käyttökelpoisia rivejä. Tarkista sarakkeiden kohdistus.",
     "error": "Tuontia ei voitu valmistella. Lataa sivu uudelleen ja yritä uudelleen.",
-    "ownerOnly": "Vain kaupan omistaja tai ylläpitäjä voi tuoda tuojia."
+    "ownerOnly": "Vain kaupan omistaja tai ylläpitäjä voi tuoda tuojia.",
+    "fileTooLarge": "Tiedosto on liian suuri. Jaa se osiin ja valitse pienempi tiedosto."
   },
   "lifecycle": {
     "agentHeading": "Alennusajot",

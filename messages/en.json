@@ -1514,7 +1514,8 @@
     "tooMany": "The file has more than 200 usable rows. Split it and import in parts.",
     "nothing": "No usable rows. Check the column mapping.",
     "error": "The import could not be staged. Reload and try again.",
-    "ownerOnly": "Only the store owner or an admin can import sellers."
+    "ownerOnly": "Only the store owner or an admin can import sellers.",
+    "fileTooLarge": "The file is too large. Split it and choose a smaller file."
   },
   "lifecycle": {
     "agentHeading": "Markdown runs",

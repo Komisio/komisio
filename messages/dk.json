@@ -1514,7 +1514,8 @@
     "tooMany": "Filen har mere end 200 brugbare rækker. Del den op, og importér i dele.",
     "nothing": "Ingen brugbare rækker. Tjek kolonnetilknytningen.",
     "error": "Importen kunne ikke klargøres. Genindlæs, og prøv igen.",
-    "ownerOnly": "Kun butikkens ejer eller en administrator kan importere indleverere."
+    "ownerOnly": "Kun butikkens ejer eller en administrator kan importere indleverere.",
+    "fileTooLarge": "Filen er for stor. Del den op og vælg en mindre fil."
   },
   "lifecycle": {
     "agentHeading": "Prisnedsættelseskørsler",

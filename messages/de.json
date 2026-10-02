@@ -1514,7 +1514,8 @@
     "tooMany": "Die Datei hat mehr als 200 verwendbare Zeilen. Teilen Sie sie auf und importieren Sie in Teilen.",
     "nothing": "Keine verwendbaren Zeilen. Prüfen Sie die Spaltenzuordnung.",
     "error": "Der Import konnte nicht bereitgestellt werden. Laden Sie neu und versuchen Sie es erneut.",
-    "ownerOnly": "Nur der Store-Inhaber oder ein Administrator kann Einlieferer importieren."
+    "ownerOnly": "Nur der Store-Inhaber oder ein Administrator kann Einlieferer importieren.",
+    "fileTooLarge": "Die Datei ist zu groß. Teilen Sie sie auf und wählen Sie eine kleinere Datei."
   },
   "lifecycle": {
     "agentHeading": "Preissenkungsläufe",

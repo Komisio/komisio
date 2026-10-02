@@ -1514,7 +1514,8 @@
     "tooMany": "Il file ha più di 200 righe utilizzabili. Dividilo e importa a parti.",
     "nothing": "Nessuna riga utilizzabile. Controlla la mappatura delle colonne.",
     "error": "Impossibile preparare l'importazione. Ricarica e riprova.",
-    "ownerOnly": "Solo il proprietario del negozio o un amministratore può importare conferenti."
+    "ownerOnly": "Solo il proprietario del negozio o un amministratore può importare conferenti.",
+    "fileTooLarge": "Il file è troppo grande. Dividilo e scegli un file più piccolo."
   },
   "lifecycle": {
     "agentHeading": "Esecuzioni dei ribassi",

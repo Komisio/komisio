@@ -38,6 +38,38 @@ test('keyboard users can bypass store navigation in every interface language', a
         await page.setViewportSize({ width, height: 800 })
         await page.goto('/intake/items')
         await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+        if (width === 320) {
+          const links = await page
+            .locator('.mobile-nav .nav-link')
+            .evaluateAll((elements) =>
+              elements.map((element) => {
+                const bounds = element.getBoundingClientRect()
+                return {
+                  width: bounds.width,
+                  height: bounds.height,
+                  left: bounds.left,
+                  right: bounds.right,
+                  overflow: element.scrollWidth > element.clientWidth,
+                  fontSize: parseFloat(getComputedStyle(element).fontSize),
+                }
+              }),
+            )
+          for (const [index, link] of links.entries()) {
+            expect(link.width).toBeGreaterThanOrEqual(44)
+            expect(link.height).toBeGreaterThanOrEqual(44)
+            expect(link.fontSize).toBeGreaterThanOrEqual(12)
+            expect(link.overflow).toBe(false)
+            expect(link.left).toBeGreaterThanOrEqual(
+              index ? links[index - 1].right - 1 : 0,
+            )
+            expect(link.right).toBeLessThanOrEqual(width)
+          }
+          if (locale === 'fi')
+            await page.screenshot({
+              path: 'private/navigation-fi-320.png',
+              caret: 'initial',
+            })
+        }
         const skip = page.getByRole('link', {
           name: d.skipToContent,
           exact: true,

@@ -790,7 +790,7 @@ small {
 }
 .badge-neutral {
   background: #f2f3ef;
-  color: #758070;
+  color: var(--muted);
 }
 .avatar {
   display: grid;
@@ -999,7 +999,7 @@ button.text-link:hover:not(:disabled) {
 .view-tab {
   padding: 9px 14px;
   font-size: 13px;
-  color: #6c7a6b;
+  color: var(--muted);
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
 }
@@ -1051,7 +1051,7 @@ button.text-link:hover:not(:disabled) {
   border-radius: 9px;
   font-size: 13px;
   margin-bottom: 2px;
-  color: #6c7a6b;
+  color: var(--muted);
 }
 .nav-link.active {
   background: #dfe9d6;
@@ -1171,7 +1171,7 @@ button.text-link:hover:not(:disabled) {
 }
 .breadcrumb {
   font-size: 12px;
-  color: #829082;
+  color: var(--muted);
 }
 .topbar .brand {
   display: none;
@@ -1524,9 +1524,15 @@ button.text-link:hover:not(:disabled) {
   }
   .mobile-nav .nav-link {
     flex-direction: column;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 52px;
     gap: 4px;
-    font-size: 9px;
-    padding: 6px 10px;
+    font-size: 12px;
+    line-height: 1.2;
+    text-align: center;
+    overflow-wrap: anywhere;
+    padding: 6px 2px;
     margin: 0;
   }
   .card {

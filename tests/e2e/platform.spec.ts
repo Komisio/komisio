@@ -851,7 +851,19 @@ test('register, verify, create stores, invite, isolate and administer access', a
     .getByRole('row')
     .filter({ has: page.getByText(staffEmail, { exact: true }) })
   await staffRow.getByRole('button', { name: /Ta bort tillgång/ }).click()
-  await page.getByRole('button', { name: 'Bekräfta', exact: true }).click()
+  const accessDialog = page.getByRole('dialog', { name: d.remove, exact: true })
+  await expect(accessDialog).toContainText(staffEmail)
+  await expect(accessDialog).toContainText('E2E Gröna Garderoben')
+  await expect(
+    accessDialog.getByRole('button', { name: d.cancel, exact: true }),
+  ).toBeFocused()
+  await page.keyboard.press('Escape')
+  await expect(accessDialog).not.toBeVisible()
+  await expect(staffRow).toBeVisible()
+  await staffRow.getByRole('button', { name: /Ta bort tillgång/ }).click()
+  await accessDialog
+    .getByRole('button', { name: 'Bekräfta', exact: true })
+    .click()
   await expect(page.getByText('Ändringarna har sparats.')).toBeVisible()
   await staff.goto('/')
   await expect(staff).toHaveURL(/\/onboarding/)

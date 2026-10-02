@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useId } from 'react'
 import { UserPlus, X, Copy } from 'lucide-react'
 import { intlLocale, type Dictionary, type Locale } from '@/lib/i18n'
 import {
@@ -36,6 +36,10 @@ export function MembersPanel({
     role: Role | null
   } | null>(null)
   const dialog = useRef<HTMLDialogElement>(null)
+  const dialogId = useId()
+  const changedMember = members.find(
+    (member) => member.user_id === change?.userId,
+  )
   useEffect(() => {
     if (change) dialog.current?.showModal()
     else dialog.current?.close()
@@ -313,11 +317,25 @@ export function MembersPanel({
       <dialog
         ref={dialog}
         className="dialog-box"
+        aria-labelledby={`${dialogId}-title`}
+        aria-describedby={`${dialogId}-person ${dialogId}-description`}
         onCancel={() => setChange(null)}
         style={{ margin: 'auto', border: '1px solid var(--line)' }}
       >
-        <h2>{change?.role === null ? d.remove : d.changeRole}</h2>
-        <p>{change?.role === null ? d.removeConfirm : d.roleConfirm}</p>
+        <h2 id={`${dialogId}-title`}>
+          {change?.role === null ? d.remove : d.changeRole}
+        </h2>
+        <p id={`${dialogId}-person`} className="member-confirm-person">
+          <strong>{changedMember?.display_name}</strong>
+          {changedMember?.email &&
+            changedMember.email !== changedMember.display_name && (
+              <span>{changedMember.email}</span>
+            )}
+          <span>{tenant.name}</span>
+        </p>
+        <p id={`${dialogId}-description`}>
+          {change?.role === null ? d.removeConfirm : d.roleConfirm}
+        </p>
         {change?.role && (
           <p>
             <span className="badge">{d.roles[change.role]}</span>

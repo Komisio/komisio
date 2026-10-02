@@ -436,6 +436,9 @@ summary {
   margin: 16px 0;
 }
 @media (max-width: 700px) {
+  html:has(.mobile-nav) {
+    scroll-padding-bottom: calc(84px + env(safe-area-inset-bottom));
+  }
   .intake-grid {
     grid-template-columns: 1fr;
   }
@@ -1485,7 +1488,7 @@ button.text-link:hover:not(:disabled) {
   }
   .app-shell {
     padding-left: 0;
-    padding-bottom: 72px;
+    padding-bottom: calc(72px + env(safe-area-inset-bottom));
   }
   .sidebar {
     display: none;

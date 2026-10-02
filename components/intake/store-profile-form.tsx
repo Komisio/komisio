@@ -22,9 +22,17 @@ function OpeningHoursRow({
 }) {
   const [included, setIncluded] = useState(Boolean(initial))
   return (
-    <div className="profile-hours-row">
+    <div
+      className="profile-hours-row"
+      role="group"
+      aria-labelledby={`profile-day-${day}`}
+    >
       <div className="profile-hours-day">
-        <label className="intake-confirm" htmlFor={`open-${day}`}>
+        <label
+          className="intake-confirm"
+          id={`profile-day-${day}`}
+          htmlFor={`open-${day}`}
+        >
           <input
             id={`open-${day}`}
             type="checkbox"

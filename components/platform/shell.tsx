@@ -21,7 +21,7 @@ import { browserClient } from '@/lib/supabase/client'
 import { useCommand } from './use-command'
 import { Feedback } from './feedback'
 import { HeaderHelp } from '@/components/help/header-help'
-import { Suspense } from 'react'
+import { Suspense, useRef, type FocusEvent } from 'react'
 export function Shell({
   children,
   d,
@@ -51,6 +51,27 @@ export function Shell({
   const groups = buildNavigation(d, { intakeEnabled, host })
   const mobile = mobileNavigation(d, intakeEnabled)
   const current = currentLink(groups, pathname)
+  const mobileNav = useRef<HTMLElement>(null)
+  function revealFocusedControl(event: FocusEvent<HTMLElement>) {
+    const target = event.target
+    if (
+      !target.matches(
+        'a,button,input,select,textarea,summary,[tabindex="0"]',
+      ) ||
+      target.closest('dialog')
+    )
+      return
+    // Native focus scrolling can reveal only a textarea's caret, leaving the
+    // editor under the fixed menu. Measure after that scroll, not before it.
+    requestAnimationFrame(() => {
+      if (!target.isConnected || document.activeElement !== target) return
+      const nav = mobileNav.current?.getBoundingClientRect()
+      if (!nav?.height) return
+      const bounds = target.getBoundingClientRect()
+      if (bounds.bottom > nav.top || bounds.top < 0)
+        target.scrollIntoView({ block: 'center', inline: 'nearest' })
+    })
+  }
   async function select(value: string) {
     if (value === active.id || !confirmNavigation()) return
     const result = await action.run({ action: 'select', tenantId: value })
@@ -189,11 +210,16 @@ export function Shell({
         </div>
         <div className="mobile-only">{picker(true)}</div>
       </header>
-      <main className="main" id="main-content" tabIndex={-1}>
+      <main
+        className="main"
+        id="main-content"
+        tabIndex={-1}
+        onFocusCapture={revealFocusedControl}
+      >
         <Feedback error={action.error} />
         {children}
       </main>
-      <nav className="mobile-nav" aria-label={d.platform}>
+      <nav className="mobile-nav" aria-label={d.platform} ref={mobileNav}>
         {mobile.map(({ path, label, icon }) => (
           <Link
             key={path}

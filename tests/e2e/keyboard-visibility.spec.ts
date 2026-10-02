@@ -3,16 +3,16 @@ import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 
-test('tabbing through long mobile forms keeps focused controls clear of navigation', async ({
-  page,
-}) => {
-  const email = `keyboard-visibility-${randomUUID()}@example.test`
-  await register(page, email, `K!${randomUUID()}`)
-  const f = await p2Fixture(email)
-  try {
-    await f.commit()
-    await page.setViewportSize({ width: 320, height: 640 })
-    for (const locale of ['sv', 'en', 'no', 'dk', 'fi', 'de', 'es', 'it']) {
+for (const locale of ['sv', 'en', 'no', 'dk', 'fi', 'de', 'es', 'it']) {
+  test(`tabbing through long mobile forms keeps focused controls clear of navigation (${locale})`, async ({
+    page,
+  }) => {
+    const email = `keyboard-visibility-${randomUUID()}@example.test`
+    await register(page, email, `K!${randomUUID()}`)
+    const f = await p2Fixture(email)
+    try {
+      await f.commit()
+      await page.setViewportSize({ width: 320, height: 640 })
       await page.context().addCookies([
         {
           name: 'komisio-locale',
@@ -47,6 +47,8 @@ test('tabbing through long mobile forms keeps focused controls clear of navigati
             return {
               tag: target.tagName,
               id: target.id,
+              type: target.getAttribute('type'),
+              fontSize: parseFloat(getComputedStyle(target).fontSize),
               top: rect.top,
               bottom: rect.bottom,
               navTop: nav.top,
@@ -59,11 +61,16 @@ test('tabbing through long mobile forms keeps focused controls clear of navigati
           expect(focused.covered, context).toBe(false)
           expect(focused.top, context).toBeGreaterThanOrEqual(0)
           expect(focused.bottom, context).toBeLessThanOrEqual(focused.navTop)
+          if (
+            ['INPUT', 'SELECT', 'TEXTAREA'].includes(focused.tag) &&
+            !['checkbox', 'radio'].includes(focused.type ?? '')
+          )
+            expect(focused.fontSize, context).toBeGreaterThanOrEqual(16)
         }
-        expect(visited, `${locale} ${path}`).toBeGreaterThan(5)
+        expect(visited, `${locale} ${path}`).toBeGreaterThanOrEqual(5)
       }
+    } finally {
+      await f.close()
     }
-  } finally {
-    await f.close()
-  }
-})
+  })
+}

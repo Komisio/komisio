@@ -149,14 +149,16 @@ export function MembersPanel({
       <Feedback error={action.error} success={action.success} />
       <section className="card table-card">
         <div className="table-wrap">
-          <table className="data-table">
+          <table className="data-table member-directory" aria-label={d.members}>
             <thead>
               <tr>
-                <th>{d.name}</th>
-                <th>{d.role}</th>
-                <th className="joined">{d.joined}</th>
+                <th scope="col">{d.name}</th>
+                <th scope="col">{d.role}</th>
+                <th scope="col" className="joined">
+                  {d.joined}
+                </th>
                 {manage && (
-                  <th>
+                  <th scope="col">
                     <span className="sr-only">{d.changeRole}</span>
                   </th>
                 )}
@@ -165,7 +167,7 @@ export function MembersPanel({
             <tbody>
               {members.map((member) => (
                 <tr key={member.user_id}>
-                  <td>
+                  <td className="member-identity">
                     <div className="row">
                       <span className="avatar">
                         {member.display_name.slice(0, 2).toUpperCase()}
@@ -179,7 +181,7 @@ export function MembersPanel({
                       </span>
                     </div>
                   </td>
-                  <td>
+                  <td className="member-role">
                     <span
                       className={`badge ${member.role === 'readonly' ? 'badge-neutral' : ''}`}
                     >
@@ -195,7 +197,7 @@ export function MembersPanel({
                     </small>
                   </td>
                   {manage && (
-                    <td>
+                    <td className="member-actions">
                       <div className="table-actions">
                         {!['automation', 'device'].includes(
                           member.role as string,
@@ -262,13 +264,16 @@ export function MembersPanel({
             <div className="empty">{d.noInvites}</div>
           ) : (
             <div className="table-wrap">
-              <table className="data-table">
+              <table
+                className="data-table member-invitations"
+                aria-label={d.pendingInvites}
+              >
                 <thead>
                   <tr>
-                    <th>{d.email}</th>
-                    <th>{d.role}</th>
-                    <th>{d.expires}</th>
-                    <th>
+                    <th scope="col">{d.email}</th>
+                    <th scope="col">{d.role}</th>
+                    <th scope="col">{d.expires}</th>
+                    <th scope="col">
                       <span className="sr-only">{d.revoke}</span>
                     </th>
                   </tr>
@@ -276,19 +281,20 @@ export function MembersPanel({
                 <tbody>
                   {invitations.map((invite) => (
                     <tr key={invite.id}>
-                      <td>{invite.email}</td>
+                      <td className="member-identity">{invite.email}</td>
                       <td>
                         <span className="badge">{d.roles[invite.role]}</span>
                       </td>
-                      <td>
+                      <td className="invitation-expiry">
                         <small>
+                          <span className="mobile-only">{d.expires}: </span>
                           {new Date(invite.expires_at).toLocaleDateString(
                             intlLocale(locale),
                             { timeZone: 'Europe/Stockholm' },
                           )}
                         </small>
                       </td>
-                      <td>
+                      <td className="member-actions">
                         {(tenant.role === 'owner' ||
                           invite.role !== 'admin') && (
                           <Button

@@ -436,9 +436,6 @@ summary {
   margin: 16px 0;
 }
 @media (max-width: 700px) {
-  html:has(.mobile-nav) {
-    scroll-padding-bottom: calc(84px + env(safe-area-inset-bottom));
-  }
   .intake-grid {
     grid-template-columns: 1fr;
   }
@@ -1409,6 +1406,78 @@ button.text-link:hover:not(:disabled) {
   background: var(--paper);
   overflow-wrap: anywhere;
 }
+@media (max-width: 700px) {
+  .members-panel .table-card {
+    padding: 0 20px;
+  }
+  .members-panel .data-table,
+  .members-panel .data-table tbody {
+    display: block;
+  }
+  .members-panel .data-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .members-panel .data-table tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .members-panel .data-table tbody tr:last-child {
+    border-bottom: 0;
+  }
+  .members-panel .data-table td {
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  .members-panel .member-identity,
+  .members-panel .member-actions {
+    grid-column: 1 / -1;
+  }
+  .members-panel tr:has(.member-actions select) .member-role {
+    display: none;
+  }
+  .members-panel .member-identity {
+    font-size: 16px;
+    overflow-wrap: anywhere;
+  }
+  .members-panel .person {
+    min-width: 0;
+  }
+  .members-panel .person small {
+    font-size: 13px;
+  }
+  .members-panel .table-actions {
+    flex-wrap: nowrap;
+    gap: 12px;
+  }
+  .members-panel .table-actions select {
+    flex: 1;
+    min-width: 0;
+    max-width: none;
+    font-size: 16px;
+    min-height: 44px;
+    padding: 8px;
+  }
+  .members-panel .table-actions .btn {
+    flex-shrink: 0;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .members-panel .invitation-expiry {
+    text-align: right;
+  }
+  .members-panel .member-actions > .btn {
+    min-height: 44px;
+  }
+}
 .password-input {
   position: relative;
 }
@@ -1473,6 +1542,14 @@ button.text-link:hover:not(:disabled) {
   }
 }
 @media (max-width: 700px) {
+  html:has(.mobile-nav) {
+    scroll-padding-bottom: calc(84px + env(safe-area-inset-bottom));
+  }
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
   h1 {
     font-size: 28px;
   }
@@ -1570,9 +1647,9 @@ button.text-link:hover:not(:disabled) {
   .topbar .mobile-picker {
     max-width: none;
     width: 100%;
-    font-size: 12px;
+    font-size: 16px;
     padding: 7px;
-    min-height: 36px;
+    min-height: 44px;
   }
   .desktop-only {
     display: none;

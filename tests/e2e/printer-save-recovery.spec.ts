@@ -266,6 +266,7 @@ test('an uncertain printer update clears its previous confirmation', async ({
     await form
       .getByLabel(d.printing.model, { exact: true })
       .fill('Unconfirmed synthetic model')
+    await expect(form.getByRole('status')).toHaveCount(0)
     await save.click()
     await expect(form.getByRole('alert')).toHaveText(
       d.printing.printerUncertain,

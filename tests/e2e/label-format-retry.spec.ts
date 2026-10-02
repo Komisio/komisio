@@ -279,6 +279,7 @@ test('known validation is correctable and a later uncertain save clears old conf
     await expect(row.getByRole('status')).toHaveText(d.printing.formatSaved)
     await expect(width).toBeEnabled()
     await width.fill('64')
+    await expect(row.getByRole('status')).toHaveCount(0)
     await save.click()
     await expect(row.getByRole('alert')).toHaveText(d.printing.formatUncertain)
     await expect(row.getByRole('status')).toHaveCount(0)

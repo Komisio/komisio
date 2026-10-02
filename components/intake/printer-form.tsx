@@ -58,7 +58,7 @@ export function PrinterForm({
     }
   }
   return (
-    <form onSubmit={submit}>
+    <form onSubmit={submit} onChange={() => setSaved(false)}>
       <fieldset
         className="intake-fields"
         disabled={action.busy || action.locked || action.needsReload}

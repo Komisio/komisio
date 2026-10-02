@@ -18,8 +18,11 @@ export function AccountForm({
   locale: Locale
 }) {
   const action = useCommand(d)
+  const [edited, setEdited] = useState(false)
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    if (action.busy) return
+    setEdited(false)
     const form = new FormData(e.currentTarget)
     const result = await action.run({
       action: 'profile',
@@ -33,7 +36,7 @@ export function AccountForm({
     }
   }
   return (
-    <form onSubmit={submit}>
+    <form onSubmit={submit} onChange={() => setEdited(true)}>
       <div className="field">
         <label htmlFor="profile-name">{d.displayName}</label>
         <input
@@ -42,6 +45,7 @@ export function AccountForm({
           defaultValue={name}
           maxLength={100}
           autoComplete="name"
+          disabled={action.busy}
         />
       </div>
       <div className="field">
@@ -50,7 +54,12 @@ export function AccountForm({
       </div>
       <div className="field">
         <label htmlFor="profile-language">{d.language}</label>
-        <select id="profile-language" name="locale" defaultValue={locale}>
+        <select
+          id="profile-language"
+          name="locale"
+          defaultValue={locale}
+          disabled={action.busy}
+        >
           {locales.map((code) => (
             <option key={code} value={code}>
               {localeNames[code]}
@@ -59,7 +68,7 @@ export function AccountForm({
         </select>
       </div>
       <Button disabled={action.busy}>{d.save}</Button>
-      <Feedback error={action.error} success={action.success} />
+      <Feedback error={action.error} success={edited ? '' : action.success} />
     </form>
   )
 }
@@ -72,6 +81,7 @@ export function PasswordForm({ d }: { d: Dictionary }) {
     <form
       onSubmit={async (e) => {
         e.preventDefault()
+        if (busy) return
         setBusy(true)
         setError('')
         setSaved(false)
@@ -103,6 +113,7 @@ export function PasswordForm({ d }: { d: Dictionary }) {
           minLength={10}
           required
           autoComplete="new-password"
+          disabled={busy}
           aria-describedby="new-password-hint"
           onChange={() => setSaved(false)}
         />

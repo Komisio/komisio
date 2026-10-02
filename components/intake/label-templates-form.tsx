@@ -141,6 +141,7 @@ function TemplateEditor({
   const [name, setName] = useState(current?.name ?? d.templateDefaultName)
   const [zpl, setZpl] = useState(current?.zpl ?? '')
   const [preview, setPreview] = useState<string | null>(null)
+  const previewRevision = useRef(0)
   const [previewing, setPreviewing] = useState(false)
   const [message, setMessage] = useState('')
   const [invalid, setInvalid] = useState('')
@@ -213,7 +214,9 @@ function TemplateEditor({
   async function previewNow() {
     if (running.current) return
     running.current = true
+    const revision = previewRevision.current
     setPreviewing(true)
+    setPreview(null)
     setMessage('')
     try {
       const r = await fetch('/api/print/preview', {
@@ -227,6 +230,7 @@ function TemplateEditor({
         }),
       })
       const data = await r.json().catch(() => ({}))
+      if (revision !== previewRevision.current) return
       if (!r.ok || !data.image) {
         setPreview(null)
         setMessage(d.previewUnavailable)
@@ -234,11 +238,17 @@ function TemplateEditor({
       }
       setPreview(data.image)
     } catch {
-      setMessage(d.previewUnavailable)
+      if (revision === previewRevision.current) setMessage(d.previewUnavailable)
     } finally {
       running.current = false
       setPreviewing(false)
     }
+  }
+  function editTemplate(value: string) {
+    previewRevision.current++
+    setZpl(value)
+    setPreview(null)
+    setMessage('')
   }
   async function save() {
     const candidate = setLabelTemplateCommand.safeParse({
@@ -273,13 +283,13 @@ function TemplateEditor({
     if (!candidate.success) return
     const done = await send('reset', candidate.data, resetTemplate)
     if (done === true) {
-      setZpl('')
+      editTemplate('')
       setMessage(d.templateReset)
       router.refresh()
     } else if (done === false) {
       // Confirmed: nothing was active any more, someone else already restored
       // the built-in layout. Show the store's state, not this page's memory.
-      setZpl('')
+      editTemplate('')
       setMessage(d.templateBuiltinHint)
       router.refresh()
     }
@@ -299,7 +309,10 @@ function TemplateEditor({
             value={name}
             maxLength={80}
             disabled={!canEdit || busy || frozen}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value)
+              setMessage('')
+            }}
           />
         </div>
         <div className="field">
@@ -311,7 +324,9 @@ function TemplateEditor({
             spellCheck={false}
             disabled={!canEdit || busy || frozen}
             style={{ fontFamily: 'monospace', width: '100%' }}
-            onChange={(e) => setZpl(e.target.value)}
+            onChange={(e) => {
+              editTemplate(e.target.value)
+            }}
             placeholder={d.templatePlaceholder}
           />
         </div>
@@ -330,7 +345,7 @@ function TemplateEditor({
         <div className="row wrap">
           <Button
             variant="secondary"
-            disabled={previewing || busy || frozen}
+            disabled={!canEdit || previewing || busy || frozen}
             onClick={() => void previewNow()}
           >
             {previewing ? d.previewing : d.preview}
@@ -341,13 +356,13 @@ function TemplateEditor({
                 variant="secondary"
                 disabled={busy || frozen}
                 onClick={() => {
-                  if (!busy && !frozen) setZpl(builtin)
+                  if (!busy && !frozen) editTemplate(builtin)
                 }}
               >
                 {d.copyBuiltin}
               </Button>
               <Button
-                disabled={busy || frozen || !zpl.trim()}
+                disabled={previewing || busy || frozen || !zpl.trim()}
                 onClick={() => void save()}
               >
                 {busy && pending.of === 'save' ? intake.busy : d.saveTemplate}
@@ -355,7 +370,7 @@ function TemplateEditor({
               {current && (
                 <Button
                   variant="secondary"
-                  disabled={busy || frozen}
+                  disabled={previewing || busy || frozen}
                   onClick={() => void reset()}
                 >
                   {busy && pending.of === 'reset' ? intake.busy : d.useBuiltin}

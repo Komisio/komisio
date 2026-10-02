@@ -106,7 +106,10 @@ function FormatRow({
           inputMode="decimal"
           value={width}
           disabled={!canEdit || frozen}
-          onChange={(e) => setWidth(e.target.value)}
+          onChange={(e) => {
+            setWidth(e.target.value)
+            setSaved(false)
+          }}
         />
       </div>
       <div className="label-format-size">
@@ -116,7 +119,10 @@ function FormatRow({
           inputMode="decimal"
           value={height}
           disabled={!canEdit || frozen}
-          onChange={(e) => setHeight(e.target.value)}
+          onChange={(e) => {
+            setHeight(e.target.value)
+            setSaved(false)
+          }}
         />
       </div>
       {canEdit && (

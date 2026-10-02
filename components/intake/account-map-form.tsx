@@ -81,22 +81,28 @@ export function AccountMapForm({
         className="intake-fields"
         disabled={!editable || action.locked || saved || action.needsReload}
       >
-        <div style={{ overflowX: 'auto' }}>
-          <table>
+        <div className="account-map-fields">
+          <table className="account-map-table">
             <thead>
               <tr>
                 <th />
-                <th>{d.account}</th>
-                <th>{d.side}</th>
+                <th scope="col">{d.account}</th>
+                <th scope="col">{d.side}</th>
               </tr>
             </thead>
             <tbody>
               {accountingKeys.map((key) => (
                 <tr key={key}>
-                  <td>
+                  <th scope="row">
                     <label htmlFor={`account:${key}`}>{label(key)}</label>
-                  </td>
+                  </th>
                   <td>
+                    <span
+                      className="account-map-mobile-label"
+                      aria-hidden="true"
+                    >
+                      {d.account}
+                    </span>
                     <input
                       id={`account:${key}`}
                       name={`account:${key}`}
@@ -108,6 +114,12 @@ export function AccountMapForm({
                     />
                   </td>
                   <td>
+                    <span
+                      className="account-map-mobile-label"
+                      aria-hidden="true"
+                    >
+                      {d.side}
+                    </span>
                     <select
                       name={`side:${key}`}
                       aria-label={`${label(key)} ${d.side}`}

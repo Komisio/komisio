@@ -62,6 +62,83 @@
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 20px;
 }
+.account-map-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.account-map-table th,
+.account-map-table td {
+  padding: 12px 6px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+.account-map-table th:first-child {
+  width: 52%;
+}
+.account-map-table th:nth-child(2) {
+  width: 20%;
+}
+.account-map-table th:nth-child(3) {
+  width: 28%;
+}
+.account-map-table th label {
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.account-map-table input,
+.account-map-table select {
+  width: 100%;
+  min-width: 0;
+}
+.account-map-mobile-label {
+  display: none;
+}
+@media (max-width: 640px) {
+  .account-map-table,
+  .account-map-table tbody {
+    display: block;
+  }
+  .account-map-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .account-map-table tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 8px 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+  }
+  .account-map-table th,
+  .account-map-table td {
+    display: block;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  .account-map-table tbody th:first-child {
+    grid-column: 1 / -1;
+    width: auto;
+  }
+  .account-map-mobile-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .account-map-table input,
+  .account-map-table select {
+    font-size: 16px;
+  }
+}
 .fortnox-guide {
   margin-bottom: 24px;
 }

@@ -22,7 +22,6 @@ import {
   printAgentDownload,
   readPrintDevices,
 } from '@/lib/engine/print-devices'
-import { readUsageSummary } from '@/lib/engine/usage'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary, intlLocale } from '@/lib/i18n'
 import { storeCountries } from '@/lib/platform/countries'
@@ -96,10 +95,6 @@ export default async function Settings({
     intake && tab === 'policy'
       ? await readStorePolicy(ctx.client, active.id)
       : null
-  const usage =
-    intake && tab === 'policy'
-      ? await readUsageSummary(ctx.client, active.id)
-      : []
   const profile =
     (intake && tab === 'profile') || tab === 'credits'
       ? await readStoreProfile(ctx.client, active.id)
@@ -155,8 +150,7 @@ export default async function Settings({
           .limit(12)
       : { data: [], error: null }
   if (events.error) throw events.error
-  const pr = d.printing,
-    us = d.usage
+  const pr = d.printing
   const jobDetails = (job: PrintJob) => (
     <PrintJobDetails
       key={job.id}
@@ -204,24 +198,6 @@ export default async function Settings({
           editable={manages}
           d={d}
         />
-      )}
-      {tab === 'policy' && usage.length > 0 && (
-        <section className="card intake-form" aria-label={us.title}>
-          <h2>{us.title}</h2>
-          <p>
-            {us.intro} {us.period}: {usage[0].period}
-          </p>
-          <ul>
-            {usage.map((u) => (
-              <li key={u.feature}>
-                {us.features[u.feature]}: {u.units}
-                {u.quota === null
-                  ? ` · ${us.noQuota}`
-                  : ` · ${us.quota} ${u.quota}`}
-              </li>
-            ))}
-          </ul>
-        </section>
       )}
       {tab === 'profile' && profile && (
         <StoreProfileForm

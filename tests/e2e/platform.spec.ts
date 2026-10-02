@@ -2957,6 +2957,9 @@ test('store policy publishes safely and supports agreement-free staff review', a
   await expect(section.getByLabel('Butikens provision (%)')).toHaveValue('60')
   const stale = await page.context().newPage()
   await stale.goto('/settings')
+  await page
+    .getByRole('link', { name: d.storePolicy.sectionEconomy, exact: true })
+    .click()
   await section.getByLabel('Butikens provision (%)').fill('55.25')
   await section.getByLabel('Publicering av underlag', { exact: true }).uncheck()
   await section

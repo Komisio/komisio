@@ -4744,13 +4744,25 @@ button.text-link:hover:not(:disabled) {
   font-size: 19px;
   margin: 0 0 22px;
 }
+.policy-section > details > summary {
+  min-height: 44px;
+  align-content: center;
+  cursor: pointer;
+}
+.policy-section > details > summary h3 {
+  display: inline;
+  margin: 0;
+}
+.policy-section-content {
+  padding-top: 20px;
+}
 .policy-section p {
   color: var(--muted);
   font-size: 14px;
   line-height: 1.6;
   max-width: 75ch;
 }
-.policy-section > p:first-of-type {
+.policy-section-content > p:first-of-type {
   margin-top: 0;
 }
 .policy-section .field:last-child {
@@ -4865,10 +4877,10 @@ button.text-link:hover:not(:disabled) {
     white-space: normal;
   }
 }
-.policy-section > p {
+.policy-section-content > p {
   margin-bottom: 18px;
 }
-.policy-section > .field:has(input[type='number']) input {
+.policy-section-content > .field:has(input[type='number']) input {
   max-width: 240px;
 }
 .policy-section .intake-confirm {

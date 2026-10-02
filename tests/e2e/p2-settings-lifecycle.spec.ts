@@ -40,8 +40,14 @@ test('notification policy and assistance quota persist', async ({ page }) => {
     })
     await page.goto('/settings')
     await page
+      .getByRole('link', { name: d.storePolicy.notifications, exact: true })
+      .click()
+    await page
       .getByLabel(d.storePolicy.automaticSellerNotifications, { exact: true })
       .check()
+    await page
+      .getByRole('link', { name: d.storePolicy.sectionAi, exact: true })
+      .click()
     await page
       .getByLabel(d.storePolicy.assistanceMonthlyQuota, { exact: true })
       .fill('7')

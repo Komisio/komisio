@@ -285,6 +285,9 @@ test('markdown runs apply every due step by hand and the policy switch turns the
       ).toBe(18000)
     await page.goto('/settings')
     await page
+      .getByRole('link', { name: d.storePolicy.sectionPeriod, exact: true })
+      .click()
+    await page
       .getByLabel(d.storePolicy.automaticMarkdowns, { exact: true })
       .check()
     await page.getByLabel(d.storePolicy.confirm, { exact: true }).check()

@@ -1073,7 +1073,8 @@
     "currentPrice": "Precio actual",
     "labelPrinter": "Impresora de etiquetas",
     "manageSalePeriod": "Precio y período de venta",
-    "unknownActor": "Nombre no disponible"
+    "unknownActor": "Nombre no disponible",
+    "markdownWaiting": "Rebaja pendiente"
   },
   "sales": {
     "title": "Ventas",
@@ -1545,7 +1546,8 @@
     "clearSearch": "Borrar búsqueda",
     "matches": "Resultados: {count}",
     "noMatches": "Ningún artículo coincide con la búsqueda y el estado seleccionado.",
-    "searchScopeHint": "Los filtros solo afectan a la lista. Las rebajas se aplican a toda la tienda."
+    "searchScopeHint": "Los filtros solo afectan a la lista. Las rebajas se aplican a toda la tienda.",
+    "storeMarkdowns": "Rebajas en toda la tienda"
   },
   "openByReference": {
     "title": "Abrir por etiqueta",

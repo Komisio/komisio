@@ -79,8 +79,10 @@ export default async function Lifecycle({
     new Date(iso).toLocaleDateString(intlLocale(ctx.locale), {
       timeZone: 'Europe/Stockholm',
     })
+  const stageLabel = (value: keyof typeof d.stages) =>
+    value === 'markdown_due' ? all.items.markdownWaiting : d.stages[value]
   return (
-    <>
+    <div className="lifecycle-page">
       <div className="page-heading">
         <h1>{d.title}</h1>
         <p>{d.listIntro}</p>
@@ -90,11 +92,11 @@ export default async function Lifecycle({
       </div>
 
       <details className="card intake-form lifecycle-automation">
-        <summary>{d.agentHeading}</summary>
+        <summary>{d.storeMarkdowns}</summary>
         <p>
           {policy.policy.automaticMarkdowns === true ? d.agentOn : d.agentOff}
         </p>
-        {(query || stage.success) && <p>{d.searchScopeHint}</p>}
+        <p className="lifecycle-scope">{d.searchScopeHint}</p>
         {write && (
           <ApplyDueMarkdowns
             key={`${active.id}-${dueCount}`}
@@ -115,112 +117,120 @@ export default async function Lifecycle({
           </ul>
         )}
       </details>
-      <form action="/intake/lifecycle" className="lifecycle-filter">
-        <div className="field">
-          <label htmlFor="lifecycle-query">{d.search}</label>
-          <input
-            key={query}
-            id="lifecycle-query"
-            type="search"
-            name="q"
-            maxLength={120}
-            defaultValue={query}
-            placeholder={d.searchHint}
-          />
-        </div>
-        <div className="field">
-          <label htmlFor="lifecycle-stage">{d.filter}</label>
-          <select
-            id="lifecycle-stage"
-            name="stage"
-            defaultValue={stage.success ? stage.data : ''}
-          >
-            <option value="">{d.all}</option>
-            {lifecycleStage.options.map((s) => (
-              <option key={s} value={s}>
-                {d.stages[s]}
-              </option>
-            ))}
-          </select>
-        </div>
-        <button className="btn btn-secondary">{all.items.searchButton}</button>
-        {query && (
-          <Link className="text-link" href={clearHref}>
-            {d.clearSearch}
-          </Link>
-        )}
-      </form>
-      <p>{d.matches.replace('{count}', String(total))}</p>
-      <section className="card lifecycle-list">
-        {total === 0 && <p>{query ? d.noMatches : d.empty}</p>}
-        {visible.map((r) => (
-          <details
-            id={'lifecycle-' + r.item_id}
-            key={r.item_id}
-            className="lifecycle-row"
-            open={query !== '' && total === 1}
-          >
-            <summary>
-              <span className="lifecycle-item">
-                {r.title || `${all.items.open} · ${r.item_id.slice(0, 8)}`}
+      <div className="card lifecycle-workspace">
+        <form action="/intake/lifecycle" className="lifecycle-filter">
+          <div className="field">
+            <label htmlFor="lifecycle-query">{d.search}</label>
+            <input
+              key={query}
+              id="lifecycle-query"
+              type="search"
+              name="q"
+              maxLength={120}
+              defaultValue={query}
+              placeholder={d.searchHint}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="lifecycle-stage">{d.filter}</label>
+            <select
+              id="lifecycle-stage"
+              name="stage"
+              defaultValue={stage.success ? stage.data : ''}
+            >
+              <option value="">{d.all}</option>
+              {lifecycleStage.options.map((s) => (
+                <option key={s} value={s}>
+                  {stageLabel(s)}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button className="btn btn-secondary">
+            {all.items.searchButton}
+          </button>
+          {query && (
+            <Link className="text-link" href={clearHref}>
+              {d.clearSearch}
+            </Link>
+          )}
+        </form>
+        <p>{d.matches.replace('{count}', String(total))}</p>
+        <section className="lifecycle-list" aria-label={d.title}>
+          {total === 0 && <p>{query ? d.noMatches : d.empty}</p>}
+          {visible.map((r) => (
+            <details
+              id={'lifecycle-' + r.item_id}
+              key={r.item_id}
+              className="lifecycle-row"
+              open={query !== '' && total === 1}
+            >
+              <summary>
+                <span className="lifecycle-item">
+                  {r.title || all.items.item}
+                </span>
+                <span
+                  className={`lifecycle-status lifecycle-status-${r.stage}`}
+                >
+                  {stageLabel(r.stage)}
+                </span>
+                <strong className="lifecycle-price">
+                  {r.current_price_ore === null
+                    ? '—'
+                    : `${formatSignedOre(r.current_price_ore)} ${currency}`}
+                </strong>
+                {!['sold', 'ended'].includes(r.stage) && (
+                  <span className="lifecycle-end">
+                    {d.periodEnd} {when(r.period_end)}
+                  </span>
+                )}
+              </summary>
+              <div className="lifecycle-detail">
                 <small className="lifecycle-reference">
                   {'I-' + r.item_id.slice(0, 8).toUpperCase()}
                 </small>
-              </span>
-              <span className={`lifecycle-status lifecycle-status-${r.stage}`}>
-                {d.stages[r.stage]}
-              </span>
-              <strong className="lifecycle-price">
-                {r.current_price_ore === null
-                  ? '—'
-                  : `${formatSignedOre(r.current_price_ore)} ${currency}`}
-              </strong>
-              <span className="lifecycle-end">
-                {d.periodEnd} {when(r.period_end)}
-              </span>
-            </summary>
-            <div className="lifecycle-detail">
-              <Link className="text-link" href={`/intake/items/${r.item_id}`}>
-                {all.items.open} →
-              </Link>
-              <p>
-                {d.accepted} {when(r.accepted_at)}
-                {r.due_step !== null
-                  ? ` · ${d.due.replace('{step}', String(r.due_step)).replace('{percent}', String(r.due_percent))}`
-                  : ''}
-              </p>
-              {write && !['sold', 'ended'].includes(r.stage) && (
-                <LifecycleActions
-                  key={`${r.item_id}-${r.stage}-${r.due_step ?? 0}`}
-                  tenantId={active.id}
-                  itemId={r.item_id}
-                  dueStep={r.due_step}
-                  endOfPeriodAction={r.end_of_period_action}
-                  d={d}
-                  intake={all.intake}
-                />
+                <Link className="text-link" href={`/intake/items/${r.item_id}`}>
+                  {all.items.open} →
+                </Link>
+                <p>
+                  {d.accepted} {when(r.accepted_at)}
+                  {r.due_step !== null
+                    ? ` · ${d.due.replace('{step}', String(r.due_step)).replace('{percent}', String(r.due_percent))}`
+                    : ''}
+                </p>
+                {write && !['sold', 'ended'].includes(r.stage) && (
+                  <LifecycleActions
+                    key={`${r.item_id}-${r.stage}-${r.due_step ?? 0}`}
+                    tenantId={active.id}
+                    itemId={r.item_id}
+                    dueStep={r.due_step}
+                    endOfPeriodAction={r.end_of_period_action}
+                    d={d}
+                    intake={all.intake}
+                  />
+                )}
+              </div>
+            </details>
+          ))}
+          {pages > 1 && (
+            <nav className="lifecycle-pagination" aria-label={d.title}>
+              {page > 1 && (
+                <Link className="btn btn-secondary" href={pageHref(page - 1)}>
+                  {d.previous}
+                </Link>
               )}
-            </div>
-          </details>
-        ))}
-        {pages > 1 && (
-          <nav className="lifecycle-pagination" aria-label={d.title}>
-            {page > 1 && (
-              <Link className="btn btn-secondary" href={pageHref(page - 1)}>
-                {d.previous}
-              </Link>
-            )}
-            <span>
-              {page} / {pages}
-            </span>
-            {page < pages && (
-              <Link className="btn btn-secondary" href={pageHref(page + 1)}>
-                {d.next}
-              </Link>
-            )}
-          </nav>
-        )}
-      </section>
-    </>
+              <span>
+                {page} / {pages}
+              </span>
+              {page < pages && (
+                <Link className="btn btn-secondary" href={pageHref(page + 1)}>
+                  {d.next}
+                </Link>
+              )}
+            </nav>
+          )}
+        </section>
+      </div>
+    </div>
   )
 }

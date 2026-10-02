@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary, intlLocale } from '@/lib/i18n'
+import { dictionary } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import {
   itemStage,
@@ -38,10 +38,8 @@ export default async function Items({
     if (page > 1) search.set('page', String(page))
     return '/intake/items' + (search.size ? '?' + search.toString() : '')
   }
-  const when = (value: string) =>
-    new Date(value).toLocaleString(intlLocale(ctx.locale), {
-      timeZone: 'Europe/Stockholm',
-    })
+  const stageLabel = (value: keyof typeof all.lifecycle.stages) =>
+    value === 'markdown_due' ? d.markdownWaiting : all.lifecycle.stages[value]
   // The overview arrives with its migration; until then the plain list stands.
   const paged = await readItemsOverviewPage(ctx.client, active.id, {
     query,
@@ -59,7 +57,7 @@ export default async function Items({
     }))
   const items = overview ? [] : await readItems(ctx.client, active.id)
   return (
-    <>
+    <div className="items-directory">
       <div className="page-heading">
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
@@ -67,8 +65,7 @@ export default async function Items({
           {all.intake.back}
         </Link>
       </div>
-      <section className="card intake-form">
-        <h2>{d.list}</h2>
+      <section className="card intake-form" aria-label={d.list}>
         {overview && (
           <form
             key={query + ':' + stage}
@@ -92,7 +89,7 @@ export default async function Items({
                 <option value="">{d.allStages}</option>
                 {itemStage.options.map((s) => (
                   <option key={s} value={s}>
-                    {all.lifecycle.stages[s]}
+                    {stageLabel(s)}
                   </option>
                 ))}
               </select>
@@ -119,40 +116,51 @@ export default async function Items({
             </small>
           </p>
         )}
-        <ul className="intake-list">
+        <ul className="intake-list items-directory-list">
           {overview?.items.map((i) => (
-            <li key={i.id} className="intake-bag">
-              <div>
-                <Link className="text-link" href={`/intake/items/${i.id}`}>
-                  {i.title ?? d.originKinds[i.originKind]} ·{' '}
+            <li key={i.id}>
+              <Link
+                className="items-directory-row"
+                href={`/intake/items/${i.id}`}
+              >
+                <span className="items-directory-name">
+                  <strong>{i.title?.trim() || d.item}</strong>
+                  {i.category && i.category !== i.title && (
+                    <small>{i.category}</small>
+                  )}
+                </span>
+                <span className="items-directory-price">
                   {i.currentPriceOre === null
                     ? '—'
                     : `${formatOre(i.currentPriceOre)} ${currency}`}
-                </Link>
-                <br />
-                <small>
-                  {i.category ? `${i.category} · ` : ''}
-                  {d.originKinds[i.originKind]} ·{' '}
-                  {d.ownershipKinds[i.ownership]} ·{' '}
-                  {all.lifecycle.stages[i.stage]} · {when(i.acceptedAt)}
-                </small>
-              </div>
+                </span>
+                <span className="items-directory-status" data-stage={i.stage}>
+                  {stageLabel(i.stage)}
+                </span>
+                <span className="items-directory-arrow" aria-hidden="true">
+                  →
+                </span>
+              </Link>
             </li>
           ))}
           {items.map((i) => (
-            <li key={i.id} className="intake-bag">
-              <div>
-                <Link className="text-link" href={`/intake/items/${i.id}`}>
-                  {d.originKinds[i.origin_kind]} ·{' '}
+            <li key={i.id}>
+              <Link
+                className="items-directory-row"
+                href={`/intake/items/${i.id}`}
+              >
+                <span className="items-directory-name">
+                  <strong>{d.item}</strong>
+                </span>
+                <span className="items-directory-price">
                   {i.priceOre === null
                     ? '—'
                     : `${formatOre(i.priceOre)} ${currency}`}
-                </Link>
-                <br />
-                <small>
-                  {d.ownershipKinds[i.ownership]} · {when(i.accepted_at)}
-                </small>
-              </div>
+                </span>
+                <span className="items-directory-arrow" aria-hidden="true">
+                  →
+                </span>
+              </Link>
             </li>
           ))}
         </ul>
@@ -185,6 +193,6 @@ export default async function Items({
           <p>{query || stage ? d.noMatches : d.empty}</p>
         )}
       </section>
-    </>
+    </div>
   )
 }

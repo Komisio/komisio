@@ -22,7 +22,7 @@ for (const action of ['registerSeller', 'receiveBag'] as const) {
         await page.goto(
           action === 'receiveBag'
             ? `/intake?seller=${f.seller}#new-seller`
-            : '/intake',
+            : '/intake#new-seller',
         )
         const panel = page.locator('#new-seller').locator('.intake-form')
         const commands: Record<string, unknown>[] = []

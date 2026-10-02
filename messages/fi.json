@@ -1073,7 +1073,8 @@
     "currentPrice": "Nykyinen hinta",
     "labelPrinter": "Etikettitulostin",
     "manageSalePeriod": "Hinta ja myyntijakso",
-    "unknownActor": "Nimi ei saatavilla"
+    "unknownActor": "Nimi ei saatavilla",
+    "markdownWaiting": "Hinnanalennus odottaa"
   },
   "sales": {
     "title": "Myynti",
@@ -1545,7 +1546,8 @@
     "clearSearch": "Tyhjennä haku",
     "matches": "Tuloksia: {count}",
     "noMatches": "Valitussa tilassa ei ole hakua vastaavia tuotteita.",
-    "searchScopeHint": "Suodattimet vaikuttavat vain luetteloon. Hinnanalennukset koskevat koko myymälää."
+    "searchScopeHint": "Suodattimet vaikuttavat vain luetteloon. Hinnanalennukset koskevat koko myymälää.",
+    "storeMarkdowns": "Koko kaupan hinnanalennukset"
   },
   "openByReference": {
     "title": "Avaa etiketillä",

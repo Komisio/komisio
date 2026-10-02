@@ -15,7 +15,7 @@ test('new seller navigation focuses the name without resetting typed fields', as
     await page.setViewportSize({ width: 390, height: 844 })
     await page.goto('/intake')
     const name = page.getByRole('textbox', { name: d.intake.name, exact: true })
-    await expect(name).not.toBeFocused()
+    await expect(name).not.toBeVisible()
     const link = page.getByRole('link', {
       name: d.intake.newSeller,
       exact: true,

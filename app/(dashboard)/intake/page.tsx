@@ -1,3 +1,4 @@
+import { NewSellerDisclosure } from '@/components/intake/new-seller-disclosure'
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
@@ -97,32 +98,43 @@ export default async function Intake({
       : { data: null, error: null }
   if (evidenceResult.error) throw new Error('Unable to load agreement evidence')
   const evidence = evidenceResult.data as AgreementEvidence | null
+  const receivingPanel = (
+    <ReceivingPanel
+      key={`${active.id}:${selected.data?.id ?? 'new'}`}
+      tenantId={active.id}
+      seller={selected.data as Seller | null}
+      d={d}
+      details={all.sellerDetails}
+      changeSellerLabel={all.quickIntake.changeSeller}
+      expectedAgreementId={agreement?.id ?? null}
+      agreementBlocked={Boolean(
+        selected.data &&
+        (agreement?.required_before_receipt ||
+          policy.policy.agreementRequiredFor.includes('bag_receipt')) &&
+        !evidence,
+      )}
+    />
+  )
   return (
     <div className="intake-overview">
       <div className="page-heading">
         <h1>{d.title}</h1>
-        <p>{d.overviewIntro}</p>
+        <p>{d.intro}</p>
       </div>
-      <nav className="intake-paths" aria-label={d.title}>
-        <Link
-          className="card intake-path intake-path-primary"
-          href="/intake/quick"
-        >
-          <strong>
-            {all.quickIntake.title} <span aria-hidden="true">→</span>
-          </strong>
-          <span>{d.quickHint}</span>
-        </Link>
-        <a className="card intake-path" href="#bag-receiving">
-          <strong>
-            {d.receive} <span aria-hidden="true">↓</span>
-          </strong>
-          <span>{d.intro}</span>
+      <nav className="intake-paths intake-shortcuts" aria-label={d.title}>
+        <a className="btn btn-secondary" href="#bag-queue">
+          {d.queue} <span aria-hidden="true">↓</span>
         </a>
+        <Link className="text-link" href="/intake/quick">
+          {all.quickIntake.title} <span aria-hidden="true">→</span>
+        </Link>
       </nav>
       <div className="intake-grid" id="bag-receiving">
-        <section className="card intake-form">
-          <h2>{d.find}</h2>
+        <details
+          className="card intake-form intake-find-seller"
+          open={!selected.data}
+        >
+          <summary>{d.find}</summary>
           <form action="/intake#seller-search" className="field">
             <label htmlFor="seller-search">{all.sellersList.search}</label>
             <div className="row">
@@ -197,7 +209,7 @@ export default async function Intake({
               )}
             </nav>
           )}
-        </section>
+        </details>
         <div id="new-seller">
           {selected.data && agreement && (
             <details
@@ -249,21 +261,13 @@ export default async function Intake({
             </details>
           )}
           {active.role !== 'readonly' ? (
-            <ReceivingPanel
-              key={`${active.id}:${selected.data?.id ?? 'new'}`}
-              tenantId={active.id}
-              seller={selected.data as Seller | null}
-              d={d}
-              details={all.sellerDetails}
-              changeSellerLabel={all.quickIntake.changeSeller}
-              expectedAgreementId={agreement?.id ?? null}
-              agreementBlocked={Boolean(
-                selected.data &&
-                (agreement?.required_before_receipt ||
-                  policy.policy.agreementRequiredFor.includes('bag_receipt')) &&
-                !evidence,
-              )}
-            />
+            selected.data ? (
+              receivingPanel
+            ) : (
+              <NewSellerDisclosure title={d.newSeller}>
+                {receivingPanel}
+              </NewSellerDisclosure>
+            )
           ) : (
             <p>{d.readOnly}</p>
           )}
@@ -359,7 +363,7 @@ export default async function Intake({
                 </div>
                 <div className="received-bag-actions">
                   <Link
-                    className="btn btn-primary"
+                    className="btn btn-secondary"
                     href={`/intake/bags/${bag.id}/inspect`}
                   >
                     {all.inspection.title}

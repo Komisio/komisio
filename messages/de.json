@@ -1073,7 +1073,8 @@
     "currentPrice": "Aktueller Preis",
     "labelPrinter": "Etikettendrucker",
     "manageSalePeriod": "Preis und Verkaufszeitraum",
-    "unknownActor": "Name nicht verfügbar"
+    "unknownActor": "Name nicht verfügbar",
+    "markdownWaiting": "Preissenkung ausstehend"
   },
   "sales": {
     "title": "Verkäufe",
@@ -1545,7 +1546,8 @@
     "clearSearch": "Suche löschen",
     "matches": "Treffer: {count}",
     "noMatches": "Keine Artikel entsprechen der Suche im gewählten Status.",
-    "searchScopeHint": "Die Filter betreffen nur die Liste. Die Preissenkungen gelten für das gesamte Geschäft."
+    "searchScopeHint": "Die Filter betreffen nur die Liste. Die Preissenkungen gelten für das gesamte Geschäft.",
+    "storeMarkdowns": "Preissenkungen im gesamten Geschäft"
   },
   "openByReference": {
     "title": "Über Etikett öffnen",

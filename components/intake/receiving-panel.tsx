@@ -17,6 +17,7 @@ export function ReceivingPanel({
   changeSellerLabel,
   expectedAgreementId = null,
   agreementBlocked = false,
+  registrationDestination = 'receiving',
 }: {
   tenantId: string
   seller: Seller | null
@@ -24,9 +25,14 @@ export function ReceivingPanel({
   details: Dictionary['sellerDetails']
   changeSellerLabel: string
   expectedAgreementId?: string | null
+  registrationDestination?: 'receiving' | 'seller'
   agreementBlocked?: boolean
 }) {
   const router = useRouter()
+  const registeredSellerHref = (id: string) =>
+    registrationDestination === 'seller'
+      ? `/intake/sellers/${id}`
+      : `/intake?seller=${id}#new-seller`
   const nameInput = useRef<HTMLInputElement>(null)
   useEffect(() => {
     const focusName = () => {
@@ -175,7 +181,7 @@ export function ReceivingPanel({
       setMatches(null)
       form.reset()
       if (seller) setBagId(result.id)
-      else router.push(`/intake?seller=${result.id}#new-seller`)
+      else router.push(registeredSellerHref(result.id))
       router.refresh()
     } catch {
       uncertain.current = true
@@ -185,22 +191,23 @@ export function ReceivingPanel({
     }
   }
   return (
-    <section className="card intake-form">
+    <section className="card intake-form receiving-panel">
       {seller ? (
         <FormHelpHeading title={d.receive} help={d.formHelp} />
       ) : (
         <h2>{d.newSeller}</h2>
       )}
       {seller && (
-        <p>
-          <strong>{seller.name}</strong>
-          <br />
-          {seller.email || seller.phone}
-          <br />
-          <Link className="text-link" href="/intake#seller-search">
+        <div className="receiving-seller-context">
+          <div>
+            <strong>{seller.name}</strong>
+            <br />
+            {seller.email || seller.phone}
+          </div>
+          <Link className="btn btn-secondary" href="/intake#seller-search">
             {changeSellerLabel}
           </Link>
-        </p>
+        </div>
       )}
       <form onSubmit={submit}>
         <fieldset
@@ -295,10 +302,7 @@ export function ReceivingPanel({
             <ul>
               {matches.map((m) => (
                 <li key={m.id}>
-                  <Link
-                    className="text-link"
-                    href={`/intake?seller=${m.id}#new-seller`}
-                  >
+                  <Link className="text-link" href={registeredSellerHref(m.id)}>
                     {m.name}
                   </Link>{' '}
                   {m.contact}{' '}

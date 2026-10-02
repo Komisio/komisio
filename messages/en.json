@@ -1073,7 +1073,8 @@
     "currentPrice": "Current price",
     "labelPrinter": "Label printer",
     "manageSalePeriod": "Price and sale period",
-    "unknownActor": "Name unavailable"
+    "unknownActor": "Name unavailable",
+    "markdownWaiting": "Markdown pending"
   },
   "sales": {
     "title": "Sales",
@@ -1545,7 +1546,8 @@
     "clearSearch": "Clear search",
     "matches": "Matches: {count}",
     "noMatches": "No items match the search in the selected status.",
-    "searchScopeHint": "Filters only affect the list. The markdown run applies to the whole store."
+    "searchScopeHint": "Filters only affect the list. The markdown run applies to the whole store.",
+    "storeMarkdowns": "Store-wide markdowns"
   },
   "openByReference": {
     "title": "Open by label",

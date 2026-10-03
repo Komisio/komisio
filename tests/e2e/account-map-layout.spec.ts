@@ -36,6 +36,8 @@ test('account mapping keeps amounts and complete debit-credit controls readable 
         name: `${d.accounting.amountKeys.grossOre} ${d.accounting.side}`,
         exact: true,
       })
+      const originalAccount = await account.inputValue()
+      const originalSide = await side.inputValue()
       await account.fill('1930')
       await side.selectOption('credit')
       for (const width of [320, 1280]) {
@@ -64,6 +66,10 @@ test('account mapping keeps amounts and complete debit-credit controls readable 
             caret: 'initial',
           })
       }
+      // This layout audit has finished with its edits; release the draft
+      // warning before changing language or closing the browser context.
+      await account.fill(originalAccount)
+      await side.selectOption(originalSide)
     }
   } finally {
     await f.close()

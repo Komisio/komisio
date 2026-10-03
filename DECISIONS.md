@@ -868,3 +868,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-03: Store-owned purchases are directly discoverable in the shared goods navigation and mobile More menu, including before the first purchase. Existing page permissions and purchase/acceptance rules are unchanged.
 
 - 2026-10-03: The label-template editor also validates the returned command identity and template metadata before confirming a save or reset. An unmatched reply keeps reload-only recovery; non-replayable publication and reset rules are unchanged.
+
+- 2026-10-03: Mobile focus visibility no longer scrolls pointer-focused links or callbacks from an earlier URL back over a requested section. Keyboard-focused controls retain protection from the fixed menu.

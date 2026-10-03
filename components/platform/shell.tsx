@@ -60,13 +60,22 @@ export function Shell({
       !target.matches(
         'a,button,input,select,textarea,summary,[tabindex="0"]',
       ) ||
-      target.closest('dialog')
+      target.closest('dialog') ||
+      (target instanceof HTMLAnchorElement && !target.matches(':focus-visible'))
     )
       return
+    const focusedUrl = window.location.href
     // Native focus scrolling can reveal only a textarea's caret, leaving the
     // editor under the fixed menu. Measure after that scroll, not before it.
     requestAnimationFrame(() => {
-      if (!target.isConnected || document.activeElement !== target) return
+      // A click can navigate to an anchor before this frame; never scroll back
+      // to the old link after the browser has revealed the requested section.
+      if (
+        !target.isConnected ||
+        document.activeElement !== target ||
+        window.location.href !== focusedUrl
+      )
+        return
       const nav = mobileNav.current?.getBoundingClientRect()
       if (!nav?.height) return
       const bounds = target.getBoundingClientRect()

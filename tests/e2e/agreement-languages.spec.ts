@@ -54,6 +54,11 @@ test('agreements support all product languages and preserve the saved language',
     expect(published.request().postDataJSON().language).toBe(language)
     lastId = (await published.json()).id
     await expect(page.getByRole('status')).toContainText(a.published)
+    // Wait for the publication refresh before a separate document reload.
+    // Otherwise Firefox can abort that reload when the earlier refresh lands.
+    await expect(page.locator('.agreement-text')).toHaveText(
+      `Synthetic test text ${language}`,
+    )
     await page.reload()
     await expect(page.locator('#agreement-title')).not.toBeVisible()
     await page.getByTestId('agreement-publisher').locator('summary').click()

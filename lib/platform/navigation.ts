@@ -29,6 +29,11 @@ export function buildNavigation(
         links: [
           { path: '/intake/items', label: d.items.title, icon: 'Package' },
           {
+            path: '/intake/purchases',
+            label: d.purchases.title,
+            icon: 'ShoppingBag',
+          },
+          {
             path: '/intake/lifecycle',
             label: d.lifecycle.title,
             icon: 'Clock',

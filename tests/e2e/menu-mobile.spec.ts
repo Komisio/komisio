@@ -56,7 +56,8 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
           .getByRole('main')
           .evaluate((main) => main.getBoundingClientRect().height)
         console.log('menu content height at 320px:', height)
-        expect(height).toBeLessThan(1220)
+        // Purchases adds one 44px destination; existing menu density is unchanged.
+        expect(height).toBeLessThan(1220 + 44)
       }
       await page.screenshot({
         path: info.outputPath(`menu-${locale}.png`),
@@ -64,6 +65,12 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
         caret: 'initial',
       })
     }
+    const purchases = page.locator('main a[href="/intake/purchases"]')
+    await purchases.focus()
+    await page.keyboard.press('Enter')
+    await expect(page).toHaveURL(/\/intake\/purchases$/)
+    await expect(page.locator('.purchase-create > summary')).toBeVisible()
+    await page.goto('/menu')
     const sellers = page.locator('main a[href="/intake/sellers"]')
     await sellers.focus()
     await page.keyboard.press('Enter')

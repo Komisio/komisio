@@ -864,3 +864,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-03: Invalid manual-sale prices focus and identify the affected cart field; editing or removing that item clears its error. The same price parser and engine sale command remain authoritative.
 
 - 2026-10-03: Connector consent keeps the selected store and scopes disabled while sending approval, so displayed choices cannot diverge from that request. Compact checkboxes retain clickable scope rows at narrow widths. Scope defaults, authorization and redirects are unchanged.
+
+- 2026-10-03: Store-owned purchases are directly discoverable in the shared goods navigation and mobile More menu, including before the first purchase. Existing page permissions and purchase/acceptance rules are unchanged.

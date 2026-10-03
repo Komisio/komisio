@@ -15,6 +15,7 @@ describe('navigation', () => {
     const paths = groups.flatMap((g) => g.links.map((l) => l.path))
     expect(new Set(paths).size).toBe(paths.length)
     expect(paths).toContain('/intake/accounting')
+    expect(paths).toContain('/intake/purchases')
     expect(paths).not.toContain('/host')
     const hostPaths = buildNavigation(d, { intakeEnabled: true, host: true })
       .flatMap((g) => g.links)

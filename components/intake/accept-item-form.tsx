@@ -29,6 +29,7 @@ export function AcceptItemForm({
   const router = useRouter()
   const [requestId] = useState(() => crypto.randomUUID())
   const [priceError, setPriceError] = useState('')
+  const priceRef = useRef<HTMLInputElement>(null)
   const submittedFields = useRef<FormData | null>(null)
   const [saved, setSaved] = useState<string | null>(null)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
@@ -45,6 +46,7 @@ export function AcceptItemForm({
       price = exactPrice(String(fields.get('price')))
     } catch {
       setPriceError(d.priceInvalid)
+      priceRef.current?.focus()
       return
     }
     submittedFields.current = fields
@@ -73,15 +75,23 @@ export function AcceptItemForm({
         <div className="field">
           <label htmlFor={field}>{d.price}</label>
           <input
+            ref={priceRef}
             id={field}
             name="price"
+            aria-invalid={!!priceError || undefined}
+            aria-describedby={`${field}-hint${priceError ? ` ${field}-error` : ''}`}
+            onChange={() => setPriceError('')}
             required
             inputMode="decimal"
             defaultValue={defaultPrice}
             placeholder="250"
           />
-          <small>{d.priceHint}</small>
-          {priceError && <p role="alert">{priceError}</p>}
+          <small id={`${field}-hint`}>{d.priceHint}</small>
+          {priceError && (
+            <p id={`${field}-error`} role="alert">
+              {priceError}
+            </p>
+          )}
         </div>
         <label className="intake-confirm">
           <input type="checkbox" required />

@@ -1,4 +1,5 @@
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
+import { EventTime } from '@/components/ui/event-time'
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { notFound } from 'next/navigation'
@@ -453,11 +454,11 @@ export default async function Reception({
                     <strong>
                       {d.custodyReference} {garmentReference(custody.reference)}
                     </strong>{' '}
-                    · {d.custodyRecorded}{' '}
-                    {new Date(custody.received_at).toLocaleString(
-                      intlLocale(ctx.locale),
-                      { timeZone: 'Europe/Stockholm' },
-                    )}
+                    ·{' '}
+                    <EventTime
+                      value={custody.received_at}
+                      locale={ctx.locale}
+                    />
                     {custody.note ? ` · ${custody.note}` : ''}
                   </p>
                   <Link

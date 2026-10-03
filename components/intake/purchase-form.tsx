@@ -30,6 +30,7 @@ export function PurchaseForm({
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
   const [saved, setSaved] = useState<string | null>(null)
   const [priceError, setPriceError] = useState('')
+  const priceRef = useRef<HTMLInputElement>(null)
   const submittedFields = useRef<FormData | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
   const { ready, dirty, checkDirty, resetDirty } = useFormDirty(
@@ -53,6 +54,7 @@ export function PurchaseForm({
       purchasePrice = exactPrice(String(fields.get('price') ?? ''))
     } catch {
       setPriceError(d.priceInvalid)
+      priceRef.current?.focus()
       return
     }
     submittedFields.current = fields
@@ -95,14 +97,22 @@ export function PurchaseForm({
           <div className="field">
             <label htmlFor="purchase-price">{d.price}</label>
             <input
+              ref={priceRef}
               id="purchase-price"
               name="price"
+              aria-invalid={!!priceError || undefined}
+              aria-describedby={`purchase-price-hint${priceError ? ' purchase-price-error' : ''}`}
+              onChange={() => setPriceError('')}
               required
               inputMode="decimal"
               placeholder="150"
             />
-            <small>{d.priceHint}</small>
-            {priceError && <p role="alert">{priceError}</p>}
+            <small id="purchase-price-hint">{d.priceHint}</small>
+            {priceError && (
+              <p id="purchase-price-error" role="alert">
+                {priceError}
+              </p>
+            )}
           </div>
           <div className="field">
             <label htmlFor="purchase-evidence">{d.evidence}</label>

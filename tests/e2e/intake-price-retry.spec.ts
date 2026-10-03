@@ -209,6 +209,20 @@ for (const action of ['registerPurchase', 'acceptItem'] as const)
           action === 'registerPurchase' ? d.purchases.register : d.items.accept,
         exact: true,
       })
+      await price.fill('12,345')
+      await save.click()
+      await expect(price).toBeFocused()
+      await expect(price).toHaveAttribute('aria-invalid', 'true')
+      await expect(price).toHaveAccessibleDescription(
+        new RegExp(
+          action === 'registerPurchase'
+            ? d.purchases.priceInvalid
+            : d.items.priceInvalid,
+        ),
+      )
+      expect(requests).toHaveLength(0)
+      await price.fill('100')
+      await expect(price).not.toHaveAttribute('aria-invalid', 'true')
       await save.click()
       await expect(form.getByRole('alert')).toHaveText(d.intake.invalid)
       await expect(price).toBeEnabled()

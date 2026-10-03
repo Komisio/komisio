@@ -846,3 +846,7 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-03: Intake success replies echo commandId separately from the engine result. Shared forms confirm only matching commands with the expected result shape, preserving canonical existing sale/day-close/export IDs. Malformed replies retain the original retry; engine rules are unchanged.
 
 - 2026-10-03: Answered intake authentication or access refusals offer a page reload and stop repeat submissions; ambiguous server failures retain the frozen retry. Existing authorization and submitted values are unchanged.
+
+- 2026-10-03: Invalid purchase or acceptance prices focus the price field and expose its hint and error to assistive technology; editing clears that field error. Price validation and engine writes are unchanged.
+
+- 2026-10-03: Detailed receiving shows custody time without seconds or a repeated received label; the exact instant remains available on the time element. Seller-review expiry and recorded custody facts are unchanged.

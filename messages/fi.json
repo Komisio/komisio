@@ -715,7 +715,10 @@
       "noApproval": "Myymälä päättää hinnan. Myyjän hyväksyntää ei tarvita.",
       "optionalShare": "Valinnainen jakaminen myyjälle",
       "registered": "Tuote on rekisteröity"
-    }
+    },
+    "linkUncertain": "Linkin muutosta ei voitu vahvistaa. Lataa sivu uudelleen ja tarkista linkin tila ennen jatkamista.",
+    "copyFailed": "Kopiointi epäonnistui. Linkki on valittu, jotta voit kopioida sen käsin.",
+    "linkRevoked": "Linkki on peruttu."
   },
   "operations": {
     "title": "Ehdotetut operaatiot",

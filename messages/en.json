@@ -715,7 +715,10 @@
       "noApproval": "The store sets the price. Seller approval is not required.",
       "optionalShare": "Optional sharing with the seller",
       "registered": "Item registered"
-    }
+    },
+    "linkUncertain": "The link change could not be confirmed. Reload the page and check its status before continuing.",
+    "copyFailed": "Copying failed. The link is selected so you can copy it manually.",
+    "linkRevoked": "The link has been revoked."
   },
   "operations": {
     "title": "Proposed operations",

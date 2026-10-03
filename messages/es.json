@@ -715,7 +715,10 @@
       "noApproval": "La tienda decide el precio. No se necesita la aprobación del vendedor.",
       "optionalShare": "Compartir con el vendedor es opcional",
       "registered": "Artículo registrado"
-    }
+    },
+    "linkUncertain": "No se pudo confirmar el cambio del enlace. Recarga la página y comprueba su estado antes de continuar.",
+    "copyFailed": "No se pudo copiar. El enlace está seleccionado para que puedas copiarlo manualmente.",
+    "linkRevoked": "El enlace se ha revocado."
   },
   "operations": {
     "title": "Operaciones propuestas",

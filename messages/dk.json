@@ -715,7 +715,10 @@
       "noApproval": "Butikken bestemmer prisen. Sælgerens godkendelse er ikke nødvendig.",
       "optionalShare": "Valgfri deling med sælgeren",
       "registered": "Varen er registreret"
-    }
+    },
+    "linkUncertain": "Linkændringen kunne ikke bekræftes. Genindlæs siden, og kontrollér linkets status, før du fortsætter.",
+    "copyFailed": "Kopiering mislykkedes. Linket er markeret, så du kan kopiere det manuelt.",
+    "linkRevoked": "Linket er tilbagekaldt."
   },
   "operations": {
     "title": "Foreslåede operationer",

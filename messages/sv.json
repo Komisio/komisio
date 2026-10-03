@@ -715,7 +715,10 @@
       "noApproval": "Butiken bestämmer priset. Säljarens godkännande behövs inte.",
       "optionalShare": "Valfri delning med säljaren",
       "registered": "Varan är registrerad"
-    }
+    },
+    "linkUncertain": "Länkändringen kunde inte bekräftas. Ladda om sidan och kontrollera länkens status innan du fortsätter.",
+    "copyFailed": "Det gick inte att kopiera. Länken är markerad så att du kan kopiera den manuellt.",
+    "linkRevoked": "Länken är återkallad."
   },
   "operations": {
     "title": "Föreslagna åtgärder",

@@ -28,6 +28,12 @@ function useWrite(d: D) {
   async function run(path: string, body: object) {
     if (running.current || reload) return null
     pending.current ??= { path, body }
+    // The server creates a fresh secret for a personal link. Replaying the
+    // client request cannot recover that secret, so inspect an uncertain change.
+    const accessRequest =
+      pending.current.path === '/api/reception/access'
+        ? (pending.current.body as { requestId: string; enabled: boolean })
+        : null
     running.current = true
     setBusy(true)
     setLocked(true)
@@ -40,7 +46,19 @@ function useWrite(d: D) {
       })
       const result = await response.json()
       if (!response.ok) {
-        setError(d.failed)
+        setError(accessRequest ? d.linkUncertain : d.failed)
+        setReload(true)
+        return null
+      }
+      if (
+        accessRequest &&
+        (result?.id !== accessRequest.requestId ||
+          (accessRequest.enabled
+            ? typeof result?.path !== 'string' ||
+              !/^\/review\/[a-f0-9]{64}$/.test(result.path)
+            : result?.path !== null))
+      ) {
+        setError(d.linkUncertain)
         setReload(true)
         return null
       }
@@ -48,7 +66,8 @@ function useWrite(d: D) {
       setLocked(false)
       return result as { id: string; path?: string | null }
     } catch {
-      setError(d.retry)
+      setError(accessRequest ? d.linkUncertain : d.retry)
+      if (accessRequest) setReload(true)
       return null
     } finally {
       running.current = false
@@ -344,8 +363,16 @@ export function ReviewAccess({
   const action = useWrite(d),
     [path, setPath] = useState<string | null>(null),
     [copied, setCopied] = useState(false)
+  const linkInput = useRef<HTMLInputElement>(null)
+  const [copyError, setCopyError] = useState('')
+  const [notice, setNotice] = useState('')
   const [refreshing, startRefresh] = useTransition()
   async function change(enabled: boolean) {
+    if (action.busy || action.locked || action.reload || refreshing) return
+    setPath(null)
+    setCopied(false)
+    setCopyError('')
+    setNotice('')
     const result = await action.run('/api/reception/access', {
       tenantId,
       requestId: crypto.randomUUID(),
@@ -356,6 +383,7 @@ export function ReviewAccess({
     if (result) {
       setPath(result.path ?? null)
       setCopied(false)
+      if (!enabled) setNotice(d.linkRevoked)
       startRefresh(() => action.router.refresh())
     }
   }
@@ -368,7 +396,12 @@ export function ReviewAccess({
       <div className="row wrap">
         <Button
           disabled={
-            !available || !email || action.busy || action.reload || refreshing
+            !available ||
+            !email ||
+            action.busy ||
+            action.locked ||
+            action.reload ||
+            refreshing
           }
           onClick={() => change(true)}
         >
@@ -377,7 +410,9 @@ export function ReviewAccess({
         {access?.enabled && (
           <Button
             variant="secondary"
-            disabled={action.busy || action.reload || refreshing}
+            disabled={
+              action.busy || action.locked || action.reload || refreshing
+            }
             onClick={() => change(false)}
           >
             {d.revokeLink}
@@ -388,6 +423,7 @@ export function ReviewAccess({
         <div className="field">
           <label htmlFor="seller-review-link">{d.link}</label>
           <input
+            ref={linkInput}
             id="seller-review-link"
             readOnly
             value={
@@ -399,22 +435,26 @@ export function ReviewAccess({
           <Button
             variant="secondary"
             onClick={async () => {
+              setCopied(false)
+              setCopyError('')
               try {
                 await navigator.clipboard.writeText(
                   window.location.origin + path,
                 )
                 setCopied(true)
               } catch {
-                document
-                  .querySelector<HTMLInputElement>('#seller-review-link')
-                  ?.select()
+                linkInput.current?.focus()
+                linkInput.current?.select()
+                setCopyError(d.copyFailed)
               }
             }}
           >
             {copied ? d.copied : d.copy}
           </Button>
+          {copyError && <p role="alert">{copyError}</p>}
         </div>
       )}
+      {notice && <p role="status">{notice}</p>}
       <Failure action={action} d={d} />
     </div>
   )

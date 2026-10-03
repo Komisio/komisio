@@ -715,7 +715,10 @@
       "noApproval": "Der Laden legt den Preis fest. Eine Zustimmung des Verkäufers ist nicht erforderlich.",
       "optionalShare": "Optional mit dem Verkäufer teilen",
       "registered": "Artikel registriert"
-    }
+    },
+    "linkUncertain": "Die Linkänderung konnte nicht bestätigt werden. Laden Sie die Seite neu und prüfen Sie den Status, bevor Sie fortfahren.",
+    "copyFailed": "Kopieren fehlgeschlagen. Der Link ist markiert und kann manuell kopiert werden.",
+    "linkRevoked": "Der Link wurde widerrufen."
   },
   "operations": {
     "title": "Vorgeschlagene Vorgänge",

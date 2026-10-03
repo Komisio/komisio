@@ -173,26 +173,56 @@ export default async function Seller({
   const c = all.communications
   const printers = await readPrinters(ctx.client, tenant.id)
   const sellerItems = items.filter((i) => i.seller_id === id.data)
-  const soldLines = sellerItems.length
-    ? await ctx.client
-        .from('sale_lines')
-        .select('id,item_id,seller_credit_ore')
-        .eq('tenant_id', tenant.id)
-        .in(
-          'item_id',
-          sellerItems.map((i) => i.id),
+  // The reference list contains at most 50 items. Reuse the current 25-item
+  // projection and read only its missing first/second page, never one RPC per item.
+  const [referencePages, soldLines] = await Promise.all([
+    tenant.role !== 'readonly' && workspaceItems
+      ? Promise.all(
+          Array.from(
+            { length: Math.ceil(sellerItems.length / 25) },
+            (_, page) =>
+              workspaceItems.page === page
+                ? workspaceItems
+                : readSellerWorkspaceItems(
+                    ctx.client,
+                    tenant.id,
+                    id.data,
+                    page,
+                  ),
+          ),
         )
-        .limit(50)
-    : { data: [], error: null }
+      : [],
+    sellerItems.length
+      ? ctx.client
+          .from('sale_lines')
+          .select('id,item_id,seller_credit_ore')
+          .eq('tenant_id', tenant.id)
+          .in(
+            'item_id',
+            sellerItems.map((i) => i.id),
+          )
+          .limit(50)
+      : { data: [], error: null },
+  ])
+  const referenceTitles = new Map(
+    referencePages.flatMap(
+      (page) => page?.items.map((item) => [item.id, item.title] as const) ?? [],
+    ),
+  )
+  const itemReferenceLabel = (itemId: string) => {
+    const reference = 'I-' + itemId.slice(0, 8).toUpperCase()
+    const title = referenceTitles.get(itemId)?.trim()
+    return title ? `${title} · ${reference}` : reference
+  }
   if (soldLines.error) throw new Error('Unable to read seller sale references')
   const references = {
     item_accepted: sellerItems.map((i) => ({
       id: i.id,
-      label: `${all.items.originKinds[i.origin_kind]} · ${i.id.slice(0, 8)}`,
+      label: itemReferenceLabel(i.id),
     })),
     item_sold: (soldLines.data ?? []).map((l) => ({
       id: String(l.id),
-      label: `${all.items.originKinds[sellerItems.find((i) => i.id === l.item_id)?.origin_kind ?? 'purchase']} · ${formatSignedOre(Number(l.seller_credit_ore))} ${currency}`,
+      label: `${itemReferenceLabel(String(l.item_id))} · ${all.sales.sellerCredit}: ${formatSignedOre(Number(l.seller_credit_ore))} ${currency}`,
     })),
     payout_approved: payouts
       .filter((p) => p.status === 'approved')

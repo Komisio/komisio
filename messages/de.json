@@ -3012,5 +3012,7 @@
   "skipToContent": "Zum Hauptinhalt springen",
   "leaveUnsaved": "Seite verlassen? Nicht gespeicherte Änderungen gehen verloren. Falls das Speichern nicht bestätigt wurde, prüfen Sie die gespeicherten Inhalte, bevor Sie erneut beginnen.",
   "showPassword": "Passwort anzeigen",
-  "hidePassword": "Passwort verbergen"
+  "hidePassword": "Passwort verbergen",
+  "reviewRetryApprove": "Genehmigung erneut versuchen",
+  "reviewRetryDecline": "Ablehnung erneut versuchen"
 }

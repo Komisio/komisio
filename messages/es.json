@@ -3012,5 +3012,7 @@
   "skipToContent": "Saltar al contenido principal",
   "leaveUnsaved": "¿Salir de esta página? Se perderán los cambios sin guardar. Si no se confirmó el guardado, comprueba el contenido guardado antes de empezar de nuevo.",
   "showPassword": "Mostrar contraseña",
-  "hidePassword": "Ocultar contraseña"
+  "hidePassword": "Ocultar contraseña",
+  "reviewRetryApprove": "Reintentar la aprobación",
+  "reviewRetryDecline": "Reintentar el rechazo"
 }

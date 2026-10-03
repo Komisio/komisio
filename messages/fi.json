@@ -3012,5 +3012,7 @@
   "skipToContent": "Siirry sisältöön",
   "leaveUnsaved": "Poistutaanko sivulta? Tallentamattomat muutokset katoavat. Jos tallennusta ei vahvistettu, tarkista tallennettu sisältö ennen kuin aloitat uudelleen.",
   "showPassword": "Näytä salasana",
-  "hidePassword": "Piilota salasana"
+  "hidePassword": "Piilota salasana",
+  "reviewRetryApprove": "Yritä hyväksymistä uudelleen",
+  "reviewRetryDecline": "Yritä hylkäämistä uudelleen"
 }

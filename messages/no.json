@@ -3006,5 +3006,7 @@
   "skipToContent": "Hopp til innholdet",
   "leaveUnsaved": "Forlate siden? Endringer som ikke er lagret, går tapt. Hvis lagringen ikke ble bekreftet, kontroller det lagrede innholdet før du begynner på nytt.",
   "showPassword": "Vis passord",
-  "hidePassword": "Skjul passord"
+  "hidePassword": "Skjul passord",
+  "reviewRetryApprove": "Prøv å godkjenne på nytt",
+  "reviewRetryDecline": "Prøv å avvise på nytt"
 }

@@ -3006,5 +3006,7 @@
   "skipToContent": "Skip to main content",
   "leaveUnsaved": "Leave this page? Unsaved changes will be lost. If a save was not confirmed, check the saved content before starting again.",
   "showPassword": "Show password",
-  "hidePassword": "Hide password"
+  "hidePassword": "Hide password",
+  "reviewRetryApprove": "Retry approval",
+  "reviewRetryDecline": "Retry rejection"
 }

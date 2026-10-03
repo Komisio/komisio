@@ -589,7 +589,7 @@ export function OperationQueue({
                             : `${(r.availableOre / 100).toFixed(2)} ${currency}`}
                         </td>
                         <td>
-                          {(r.amountOre / 100).toFixed(2)} ${currency}
+                          {(r.amountOre / 100).toFixed(2)} {currency}
                         </td>
                       </tr>
                     ))}
@@ -597,7 +597,7 @@ export function OperationQueue({
                       <td>{d.total}</td>
                       <td></td>
                       <td>
-                        {(reviewContext.totalOre / 100).toFixed(2)} ${currency}
+                        {(reviewContext.totalOre / 100).toFixed(2)} {currency}
                       </td>
                     </tr>
                   </tbody>

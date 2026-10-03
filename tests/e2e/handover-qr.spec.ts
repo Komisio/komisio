@@ -264,6 +264,10 @@ test('seller code loads on demand and staff login returns to the exact handover'
     await page.route('**/api/seller/handovers/code?**', (route) =>
       route.fulfill({ status: 503, body: '' }),
     )
+    // Start a fresh document before testing a failed load; Firefox can reuse
+    // the already decoded successful image when the same dialog reopens.
+    await page.reload()
+    await expect(receipt.getByRole('img')).toHaveCount(0)
     await receipt
       .getByText(d.sellerPortal.showHandoverCode, { exact: true })
       .click()

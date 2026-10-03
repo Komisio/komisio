@@ -39,12 +39,9 @@ export function useIntakeAction(d: Dictionary['intake']) {
       })
       const result = await response.json()
       if (!response.ok) {
-        // A failed server/proxy response cannot confirm that a settings write
-        // was rejected, even if it carries a familiar validation code.
-        if (
-          (settingsCommand || labelFormatCommand) &&
-          (response.status < 400 || response.status >= 500)
-        ) {
+        // A failed server/proxy response cannot confirm that a write was
+        // rejected, even if it carries a familiar validation or stale-state code.
+        if (response.status < 400 || response.status >= 500) {
           setError(d.failed)
           return null
         }

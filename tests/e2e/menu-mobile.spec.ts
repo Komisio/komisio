@@ -43,7 +43,11 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
         const target = page.locator(`main a[href="${link.path}"]`)
         await expect(target).toHaveAccessibleName(link.label)
         const box = await target.boundingBox()
-        expect(box?.height, `${locale} ${link.path}`).toBeGreaterThanOrEqual(44)
+        // Firefox can report 43.99997 for an exact 44px CSS target.
+        await expect(target).toHaveCSS('min-height', '44px')
+        expect(box?.height, `${locale} ${link.path}`).toBeGreaterThanOrEqual(
+          44 - 0.01,
+        )
       }
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth),

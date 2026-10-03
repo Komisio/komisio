@@ -22,7 +22,10 @@ import { browserClient } from '@/lib/supabase/client'
 import { useCommand } from './use-command'
 import { Feedback } from './feedback'
 import { HeaderHelp } from '@/components/help/header-help'
-import { Suspense, useRef, type FocusEvent } from 'react'
+import { Suspense, useRef, useSyncExternalStore, type FocusEvent } from 'react'
+const subscribe = () => () => {}
+const clientReady = () => true
+const serverReady = () => false
 export function Shell({
   children,
   d,
@@ -44,6 +47,7 @@ export function Shell({
   intakeEnabled?: boolean
   host?: boolean
 }) {
+  const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const pathname = usePathname()
   const isActive = (path: string) => isActivePath(pathname, path)
   const router = useRouter()
@@ -84,7 +88,8 @@ export function Shell({
     })
   }
   async function select(value: string) {
-    if (value === active.id || !confirmNavigation()) return
+    if (!ready || action.busy || value === active.id || !confirmNavigation())
+      return
     const result = await action.run({ action: 'select', tenantId: value })
     if (result) {
       router.push('/')
@@ -102,7 +107,7 @@ export function Shell({
       className={mobile ? 'mobile-picker' : ''}
       aria-label={d.activeTenant}
       value={active.id}
-      disabled={action.busy}
+      disabled={!ready || action.busy}
       onChange={(e) => select(e.target.value)}
     >
       {tenants.map((t) => (

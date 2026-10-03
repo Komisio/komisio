@@ -23,6 +23,7 @@ import {
 import { readStoreCurrency } from '@/lib/engine/money'
 import { SignOut } from '@/components/platform/sign-out'
 import { Brand } from '@/components/platform/brand'
+import { EventTime } from '@/components/ui/event-time'
 export const generateMetadata = () =>
   platformPageMetadata((d) => d.sellerPortal.title, {
     robots: { index: false, follow: false },
@@ -123,7 +124,9 @@ export default async function SellerPortal({
             <tbody>
               {statement.lines.map((l) => (
                 <tr key={l.id}>
-                  <td data-label={d.date}>{when(l.occurred_at)}</td>
+                  <td data-label={d.date}>
+                    <EventTime value={l.occurred_at} locale={ctx.locale} />
+                  </td>
                   <td data-label={d.kind}>{label(all.ledger.kinds, l.kind)}</td>
                   <td data-label={d.amount.replace('{currency}', currency)}>
                     {amount(l.amount_ore)}
@@ -393,11 +396,19 @@ export default async function SellerPortal({
                             })()}
                         </td>
                         <td data-label={d.itemDate}>
-                          {state === 'sold' && i.soldAt
-                            ? when(i.soldAt)
-                            : state === 'ended'
-                              ? '—'
-                              : `${d.until} ${when(i.periodEnd)}`}
+                          {state === 'sold' && i.soldAt ? (
+                            <EventTime value={i.soldAt} locale={ctx.locale} />
+                          ) : state === 'ended' ? (
+                            '—'
+                          ) : (
+                            <>
+                              {d.until}{' '}
+                              <EventTime
+                                value={i.periodEnd}
+                                locale={ctx.locale}
+                              />
+                            </>
+                          )}
                         </td>
                       </tr>
                     )
@@ -415,9 +426,9 @@ export default async function SellerPortal({
         {economy.payouts.length === 0 && <p>{d.none}</p>}
         {economy.payouts.map((p) => (
           <p key={p.id}>
-            {when(p.requested_at)} · {amount(p.amount_ore)} ·{' '}
-            {label(all.payouts.statuses, p.status)} · {d.source}:{' '}
-            {d[p.request_source]}
+            <EventTime value={p.requested_at} locale={ctx.locale} /> ·{' '}
+            {amount(p.amount_ore)} · {label(all.payouts.statuses, p.status)} ·{' '}
+            {d.source}: {d[p.request_source]}
           </p>
         ))}
       </section>
@@ -430,8 +441,8 @@ export default async function SellerPortal({
         {economy.ledger.length === 0 && <p>{d.none}</p>}
         {economy.ledger.map((l) => (
           <p key={l.id}>
-            {when(l.occurred_at)} · {label(all.ledger.kinds, l.kind)} ·{' '}
-            {amount(l.amount_ore)}
+            <EventTime value={l.occurred_at} locale={ctx.locale} /> ·{' '}
+            {label(all.ledger.kinds, l.kind)} · {amount(l.amount_ore)}
           </p>
         ))}
       </details>
@@ -462,7 +473,7 @@ export default async function SellerPortal({
           <article key={m.id}>
             <h3>{m.subject}</h3>
             <p>
-              {when(m.queued_at)} ·{' '}
+              <EventTime value={m.queued_at} locale={ctx.locale} /> ·{' '}
               {label(all.communications.outcomes, m.status)}
             </p>
             <p className="whitespace-pre-wrap">{m.body}</p>

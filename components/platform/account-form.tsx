@@ -1,5 +1,7 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import { useFormDirty } from './use-form-dirty'
+import { useUnsavedChanges } from './navigation-warning'
 import { useCommand } from './use-command'
 import { Feedback } from './feedback'
 import { Button } from '@/components/ui/button'
@@ -25,6 +27,9 @@ export function AccountForm({
 }) {
   const action = useCommand(d)
   const [edited, setEdited] = useState(false)
+  const formRef = useRef<HTMLFormElement>(null)
+  const { dirty, checkDirty, resetDirty } = useFormDirty(formRef)
+  useUnsavedChanges(dirty ? d.leaveUnsaved : null)
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     if (action.busy) return
@@ -40,13 +45,21 @@ export function AccountForm({
       { refresh: false },
     )
     if (result) {
+      resetDirty(form)
       document.cookie = `komisio-locale=${form.get('locale')};path=/;SameSite=Lax`
       document.documentElement.lang = intlLocale(String(form.get('locale')))
       action.router.refresh()
     }
   }
   return (
-    <form onSubmit={submit} onChange={() => setEdited(true)}>
+    <form
+      ref={formRef}
+      onSubmit={submit}
+      onChange={() => {
+        setEdited(true)
+        checkDirty()
+      }}
+    >
       <div className="field">
         <label htmlFor="profile-name">{d.displayName}</label>
         <input

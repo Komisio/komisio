@@ -18,11 +18,17 @@ export function useFormDirty(form: RefObject<HTMLFormElement | null>) {
         )
     })
   }
-  function resetDirty() {
+  function resetDirty(confirmedFields?: FormData) {
+    // A command may finish before React enables its controls again. Callers
+    // with a confirmed submitted snapshot can avoid sampling disabled fields.
+    const snapshot = confirmedFields
+      ? JSON.stringify([...confirmedFields])
+      : null
     // A successful editor can mount a fresh form in the same click event.
     queueMicrotask(() => {
       if (form.current) {
-        baseline.current = JSON.stringify([...new FormData(form.current)])
+        baseline.current =
+          snapshot ?? JSON.stringify([...new FormData(form.current)])
         setDirty(false)
       }
     })

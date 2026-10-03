@@ -55,6 +55,10 @@ test('saved account and store messages never describe a later unsubmitted edit',
         )
       ).rows[0].display_name,
     ).toBe('Synthetic saved name')
+    page.once('dialog', async (dialog) => {
+      expect(dialog.message()).toBe(d.leaveUnsaved)
+      await dialog.accept()
+    })
     await page.locator('.sidebar-nav a[href="/settings"]').click()
     await page.locator('.view-tab[href="/settings?tab=store"]').click()
     const tenant = page

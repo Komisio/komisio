@@ -78,7 +78,9 @@ export function StartReception({
   sellers: { id: string; name: string; email: string; phone: string }[]
   d: D
 }) {
-  const [seller, setSeller] = useState(sellers[0]?.id ?? '')
+  const [seller, setSeller] = useState(
+    sellers.length === 1 ? sellers[0].id : '',
+  )
   const action = useWrite(d)
   return (
     <form
@@ -106,6 +108,9 @@ export function StartReception({
           disabled={action.locked}
           required
         >
+          <option value="" disabled>
+            {d.seller}
+          </option>
           {sellers.map((s) => (
             <option key={s.id} value={s.id}>
               {s.name} — {s.email || s.phone}

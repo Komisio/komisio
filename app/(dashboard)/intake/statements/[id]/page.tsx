@@ -48,7 +48,10 @@ export default async function Statement({
           {all.sellerTerms.title}
         </Link>
       </div>
-      <article className="card intake-form statement" lang={documentLanguage}>
+      <article
+        className="card intake-form statement"
+        lang={intlLocale(documentLanguage)}
+      >
         <p className="eyebrow">{active.name}</p>
         <h2>
           {s.kind === 'credit_note' ? d.creditNote : d.statement} {s.number}

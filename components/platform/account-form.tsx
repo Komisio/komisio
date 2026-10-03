@@ -5,7 +5,13 @@ import { Feedback } from './feedback'
 import { Button } from '@/components/ui/button'
 import { browserClient } from '@/lib/supabase/client'
 import { PasswordInput } from '@/components/auth/password-input'
-import { localeNames, locales, type Dictionary, type Locale } from '@/lib/i18n'
+import {
+  intlLocale,
+  localeNames,
+  locales,
+  type Dictionary,
+  type Locale,
+} from '@/lib/i18n'
 export function AccountForm({
   d,
   name,
@@ -35,7 +41,7 @@ export function AccountForm({
     )
     if (result) {
       document.cookie = `komisio-locale=${form.get('locale')};path=/;SameSite=Lax`
-      document.documentElement.lang = String(form.get('locale'))
+      document.documentElement.lang = intlLocale(String(form.get('locale')))
       action.router.refresh()
     }
   }

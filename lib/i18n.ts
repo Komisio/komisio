@@ -61,7 +61,7 @@ export function resolveLocale(
 export function dictionary(locale: string = 'sv'): Dictionary {
   return dictionaries[isLocale(locale) ? locale : 'sv']
 }
-/** BCP 47 tag for Intl formatting of dates and numbers. */
+/** BCP 47 tag for HTML language declarations and Intl formatting. */
 export function intlLocale(locale?: string | null) {
   return intlTags[isLocale(locale) ? locale : 'sv']
 }

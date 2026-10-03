@@ -450,7 +450,7 @@ export function OperationQueue({
                   <p>{reviewContext.terms.id}</p>
                   <div
                     className="reception-terms"
-                    lang={reviewContext.terms.language}
+                    lang={intlLocale(reviewContext.terms.language)}
                     style={{ whiteSpace: 'pre-wrap' }}
                   >
                     {reviewContext.terms.body}

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary, localeNames, resolveLocale } from '@/lib/i18n'
+import { dictionary, intlLocale, localeNames, resolveLocale } from '@/lib/i18n'
 import type { SellerAgreement } from '@/lib/engine/intake'
 import { AgreementPublisher } from '@/components/intake/agreement-forms'
 
@@ -73,7 +73,9 @@ export default async function Agreements({
                 {localeNames[resolveLocale(undefined, shown.language)]}
               </p>
               <p>{shown.required_before_receipt ? a.required : a.optional}</p>
-              <div className="agreement-text">{shown.body}</div>
+              <div className="agreement-text" lang={intlLocale(shown.language)}>
+                {shown.body}
+              </div>
             </>
           ) : (
             <p>{a.none}</p>

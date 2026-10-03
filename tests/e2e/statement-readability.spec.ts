@@ -31,7 +31,7 @@ test('issued statements keep amounts readable on mobile and print only the docum
     await page.goto(`/intake/statements/${statement}`)
     const document = page.locator('article.statement')
     await expect(document).toBeVisible()
-    await expect(document).toHaveAttribute('lang', 'sv')
+    await expect(document).toHaveAttribute('lang', 'sv-SE')
     const row = document.locator('tbody tr').first()
     await expect(row).toContainText('200.00 SEK')
     await expect(row).toContainText('120.00 SEK')

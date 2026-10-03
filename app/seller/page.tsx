@@ -64,7 +64,7 @@ export default async function SellerPortal({
   const amount = (ore: number) => `${formatSignedOre(ore)} ${currency}`
   if (!account)
     return (
-      <main className="onboarding seller-review">
+      <main className="onboarding seller-review" lang={intlLocale(ctx.locale)}>
         <Brand />
         <SignOut d={all} next="/seller" />
         <section className="card">
@@ -91,7 +91,7 @@ export default async function SellerPortal({
     )
     if (!statement) notFound()
     return (
-      <main className="onboarding seller-review">
+      <main className="onboarding seller-review" lang={intlLocale(ctx.locale)}>
         <Brand />
         <SignOut d={all} next="/seller" />
         <section className="card">
@@ -197,7 +197,10 @@ export default async function SellerPortal({
     ['queued', 'failed'].includes(m.status),
   )
   return (
-    <main className="onboarding seller-review seller-portal">
+    <main
+      className="onboarding seller-review seller-portal"
+      lang={intlLocale(ctx.locale)}
+    >
       <Brand />
       <SignOut d={all} next="/seller" />
       <div className="page-heading">

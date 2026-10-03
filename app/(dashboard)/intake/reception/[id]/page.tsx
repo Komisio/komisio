@@ -351,7 +351,10 @@ export default async function Reception({
                     <summary>
                       {terms.data.title} · {d.version} {terms.data.version}
                     </summary>
-                    <div lang={terms.data.language} className="reception-terms">
+                    <div
+                      lang={intlLocale(terms.data.language)}
+                      className="reception-terms"
+                    >
                       {terms.data.body}
                     </div>
                   </details>
@@ -397,7 +400,10 @@ export default async function Reception({
               {review.terms && (
                 <details>
                   <summary>{d.exactTerms}</summary>
-                  <div className="reception-terms" lang={review.terms.language}>
+                  <div
+                    className="reception-terms"
+                    lang={intlLocale(review.terms.language)}
+                  >
                     {review.terms.body}
                   </div>
                 </details>

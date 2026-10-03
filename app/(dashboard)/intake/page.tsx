@@ -235,7 +235,12 @@ export default async function Intake({
               </p>
               <details>
                 <summary>{a.view}</summary>
-                <div className="agreement-text">{agreement.body}</div>
+                <div
+                  className="agreement-text"
+                  lang={intlLocale(agreement.language)}
+                >
+                  {agreement.body}
+                </div>
               </details>
               <p>{evidence ? a.available : a.missing}</p>
               {evidence ? (

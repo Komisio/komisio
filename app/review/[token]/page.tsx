@@ -26,9 +26,8 @@ export default async function Review({
   )
     notFound()
   const ctx = await platformContext()
-  const d = dictionary(
-    ctx?.locale ?? (await cookies()).get('komisio-locale')?.value,
-  )
+  const language = ctx?.locale ?? (await cookies()).get('komisio-locale')?.value
+  const d = dictionary(language)
   const path = `/review/${token}`,
     next = encodeURIComponent(path)
   if (ctx?.mfaRequired) redirect(`/mfa?next=${next}`)
@@ -43,7 +42,7 @@ export default async function Review({
     condition: d.reviewCondition,
   }
   return (
-    <main className="onboarding seller-review">
+    <main className="onboarding seller-review" lang={intlLocale(language)}>
       <Brand />
       <section className="card">
         <h1>{d.reviewTitle}</h1>
@@ -93,7 +92,7 @@ export default async function Review({
                 <p>{review.price.rationale}</p>
                 <h2>{review.terms.title}</h2>
                 <div
-                  lang={review.terms.language}
+                  lang={intlLocale(review.terms.language)}
                   style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}
                 >
                   {review.terms.body}

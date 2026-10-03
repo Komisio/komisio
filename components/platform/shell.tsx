@@ -14,7 +14,7 @@ import {
 } from '@/lib/platform/navigation'
 import { Brand } from './brand'
 import { Button } from '@/components/ui/button'
-import type { Dictionary, Locale } from '@/lib/i18n'
+import { intlLocale, type Dictionary, type Locale } from '@/lib/i18n'
 import { LanguagePicker } from './language-picker'
 import type { Tenant } from '@/lib/platform/types'
 import { browserClient } from '@/lib/supabase/client'
@@ -102,7 +102,7 @@ export function Shell({
     </select>
   )
   return (
-    <div className="app-shell">
+    <div className="app-shell" lang={intlLocale(locale)}>
       <a className="skip-link no-print" href="#main-content">
         {d.skipToContent}
       </a>

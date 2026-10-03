@@ -128,7 +128,7 @@ export default async function Seller({
       readSellerWorkspaceItems(ctx.client, tenant.id, id.data, itemsPage),
       ctx.client
         .from('seller_agreement_versions')
-        .select('id,title,body,version')
+        .select('id,title,body,version,language')
         .eq('tenant_id', tenant.id)
         .order('version', { ascending: false })
         .limit(1)
@@ -672,7 +672,10 @@ export default async function Seller({
                     </p>
                     <details>
                       <summary>{all.agreements.view}</summary>
-                      <p style={{ whiteSpace: 'pre-wrap' }}>
+                      <p
+                        style={{ whiteSpace: 'pre-wrap' }}
+                        lang={intlLocale(agreement.data.language)}
+                      >
                         {agreement.data.body}
                       </p>
                     </details>

@@ -1,6 +1,6 @@
 'use client'
 import { useId, useRef, useState } from 'react'
-import type { Dictionary } from '@/lib/i18n'
+import { intlLocale, type Dictionary } from '@/lib/i18n'
 import {
   receptionProposal,
   type ReceptionSuggestions,
@@ -238,7 +238,10 @@ export function ReceptionAssistance({
                 <summary>
                   {terms.title} · {d.version} {terms.version}
                 </summary>
-                <div className="reception-terms" lang={terms.language}>
+                <div
+                  className="reception-terms"
+                  lang={intlLocale(terms.language)}
+                >
                   {terms.body}
                 </div>
               </details>

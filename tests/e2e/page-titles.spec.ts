@@ -5,6 +5,16 @@ import { p2Fixture } from '../helpers/p2-fixture'
 import { readFileSync } from 'node:fs'
 import type { Dictionary } from '../../lib/i18n'
 const locales = ['sv', 'en', 'no', 'dk', 'fi', 'de', 'es', 'it'] as const
+const htmlLanguages = {
+  sv: 'sv-SE',
+  en: 'en-GB',
+  no: 'nb-NO',
+  dk: 'da-DK',
+  fi: 'fi-FI',
+  de: 'de-DE',
+  es: 'es-ES',
+  it: 'it-IT',
+}
 const dictionary = (locale: string): Dictionary =>
   JSON.parse(
     readFileSync(
@@ -31,14 +41,23 @@ test('authentication tabs follow language changes without clearing typed fields'
       await page.goto(path)
       await expect(page).toHaveTitle(`${title} · Komisio`)
       await expect(page.locator('title')).toHaveCount(1)
+      await expect(page.locator('html')).toHaveAttribute(
+        'lang',
+        htmlLanguages[locale],
+      )
     }
   }
+  await expect(page.locator('.locale-switch option[value=dk]')).toHaveAttribute(
+    'lang',
+    'da-DK',
+  )
   const current = dictionary('it')
   await page
     .getByLabel(current.email, { exact: true })
     .fill('synthetic-tab@example.test')
   await page.locator('.locale-switch select').selectOption('en')
   await expect(page).toHaveTitle(`${dictionary('en').reset} · Komisio`)
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en-GB')
   await expect(
     page.getByLabel(dictionary('en').email, { exact: true }),
   ).toHaveValue('synthetic-tab@example.test')
@@ -80,10 +99,14 @@ test('store tab titles follow navigation, language and profile fallback without 
         await page.goto(path)
         await expect(page).toHaveTitle(`${title} · Komisio`)
         await expect(page.locator('title')).toHaveCount(1)
+        await expect(page.locator('html')).toHaveAttribute(
+          'lang',
+          htmlLanguages[locale],
+        )
       }
     }
     const updated = await page.request.post('/api/platform', {
-      headers: { origin: 'http://127.0.0.1:3000' },
+      headers: { origin: new URL(page.url()).origin },
       data: { action: 'profile', name: 'Synthetic title user', locale: 'en' },
     })
     expect(updated.status()).toBe(200)
@@ -93,12 +116,14 @@ test('store tab titles follow navigation, language and profile fallback without 
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
       dictionary('en').tenant,
     )
+    await expect(page.locator('.app-shell')).toHaveAttribute('lang', 'en-GB')
     for (const [path, title] of [
       ['/seller', dictionary('en').sellerPortal.title],
       [`/review/${'a'.repeat(64)}`, dictionary('en').reviewTitle],
     ]) {
       await page.goto(path)
       await expect(page).toHaveTitle(`${title} · Komisio`)
+      await expect(page.locator('main')).toHaveAttribute('lang', 'en-GB')
       await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
         'content',
         /noindex.*nofollow/,
@@ -111,7 +136,7 @@ test('store tab titles follow navigation, language and profile fallback without 
     const anonymous = await browser.newContext()
     try {
       const other = await anonymous.newPage()
-      await other.goto('http://127.0.0.1:3000/login')
+      await other.goto(new URL('/login', page.url()).href)
       await expect(other).toHaveTitle(`${sv.login} · Komisio`)
     } finally {
       await anonymous.close()

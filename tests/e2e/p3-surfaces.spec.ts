@@ -48,6 +48,9 @@ test('settlement batch reserves every candidate and the economy page shows the p
     await expect(
       page.getByText(d.payouts.settled, { exact: true }),
     ).toBeVisible()
+    await expect(page.getByTestId('payout-list').locator('.badge')).toHaveText(
+      d.payouts.statuses.approved,
+    )
     await page.reload()
     await page.getByTestId('payout-settlement').locator('summary').click()
     await expect(
@@ -237,6 +240,9 @@ test('a seller announces a handover and staff receive it as a bag', async ({
         seller_id: seller,
       },
     ])
+    await expect(
+      page.getByRole('link', { name: d.handovers.openBag, exact: true }),
+    ).toBeVisible()
     await page.goto(`/seller?seller=${seller}`)
     await expect(
       page
@@ -287,6 +293,7 @@ test('markdown runs apply every due step by hand and the policy switch turns the
         ),
       ).toBe(18000)
     await page.goto('/settings')
+    const previousVersion = await page.locator('.policy-version').innerText()
     await page
       .getByRole('link', { name: d.storePolicy.sectionPeriod, exact: true })
       .click()
@@ -316,6 +323,9 @@ test('markdown runs apply every due step by hand and the policy switch turns the
     await expect(
       page.getByLabel(d.storePolicy.automaticMarkdowns, { exact: true }),
     ).toBeChecked()
+    await expect(page.locator('.policy-version')).not.toHaveText(
+      previousVersion,
+    )
     await page.goto('/intake/lifecycle')
     await runs.getByText(d.lifecycle.storeMarkdowns, { exact: true }).click()
     await expect(
@@ -362,6 +372,9 @@ test('global country labels remain stable across server and browser language dat
       .getByRole('button', { name: d.storeProfile.publish, exact: true })
       .click()
     expect((await published).ok()).toBe(true)
+    await expect(
+      profile.getByText(d.storeProfile.version + ' 1', { exact: true }),
+    ).toBeVisible()
     await page.reload()
     await expect(
       profile.getByText(d.storeProfile.version + ' 1', { exact: true }),

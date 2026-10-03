@@ -711,6 +711,7 @@ test('register, verify, create stores, invite, isolate and administer access', a
     .getByRole('button', { name: 'Spara ändringar', exact: true })
     .click()
   await expect(page.getByText('Ändringarna har sparats.')).toBeVisible()
+  await expect(page.locator('.account-label').first()).toHaveText('Alex')
   await page.goto('/members')
   await page.setViewportSize({ width: 320, height: 800 })
   await expect(page.getByLabel('E-postadress', { exact: true })).toBeVisible()

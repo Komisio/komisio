@@ -4,7 +4,8 @@ import { ActorSignature } from '@/components/intake/actor-signature'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary, intlLocale } from '@/lib/i18n'
+import { dictionary } from '@/lib/i18n'
+import { EventTime } from '@/components/ui/event-time'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { readItem, formatOre } from '@/lib/engine/items'
 import { readItemLabel } from '@/lib/engine/item-label'
@@ -45,10 +46,6 @@ export default async function Item({
     ) ?? []
   const ended = events.some((e) => e.kind === 'period_ended')
   const t = item.terms
-  const when = (iso: string) =>
-    new Date(iso).toLocaleString(intlLocale(ctx.locale), {
-      timeZone: 'Europe/Stockholm',
-    })
   const originHref =
     item.origin_kind === 'reception_review'
       ? `/intake/reception/${item.origin_id}`
@@ -75,7 +72,8 @@ export default async function Item({
         )}
         <div className="item-actor-line">
           <span>
-            {d.acceptedAt}: {when(item.accepted_at)} ·{' '}
+            {d.acceptedAt}:{' '}
+            <EventTime value={item.accepted_at} locale={ctx.locale} /> ·{' '}
             {d.ownershipKinds[item.ownership]}
           </span>
           <ActorSignature actor={item.actor} unknown={d.unknownActor} />
@@ -214,7 +212,7 @@ export default async function Item({
                 {d.priceReasons[p.reason as keyof typeof d.priceReasons] ??
                   p.reason}
               </span>
-              <time dateTime={p.set_at}>{when(p.set_at)}</time>
+              <EventTime value={p.set_at} locale={ctx.locale} />
             </li>
           ))}
         </ul>
@@ -232,7 +230,7 @@ export default async function Item({
                 </strong>
                 <ActorSignature actor={e.actor} unknown={d.unknownActor} />
               </div>
-              <time dateTime={e.occurred_at}>{when(e.occurred_at)}</time>
+              <EventTime value={e.occurred_at} locale={ctx.locale} />
             </li>
           ))}
         </ul>

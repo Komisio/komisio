@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { intlLocale, type Dictionary } from '@/lib/i18n'
+import type { Dictionary } from '@/lib/i18n'
+import { EventTime } from '@/components/ui/event-time'
 import type { PrintJob, PrintReference } from '@/lib/engine/printing'
 
 export function PrintJobDetails({
@@ -15,10 +16,6 @@ export function PrintJobDetails({
   locale: string
   d: Dictionary['printing']
 }) {
-  const when = (iso: string) =>
-    new Date(iso).toLocaleString(intlLocale(locale), {
-      timeZone: 'Europe/Stockholm',
-    })
   return (
     <div className="intake-notice" id={`print-job-${job.id}`}>
       <strong>
@@ -37,10 +34,14 @@ export function PrintJobDetails({
         {d.copies}: {job.copies}
       </p>
       <small>
-        {d.statuses.queued} {when(job.created_at)}
-        {job.completed_at
-          ? ` · ${d.statuses[job.status]} ${when(job.completed_at)}`
-          : ''}
+        {d.statuses.queued} <EventTime value={job.created_at} locale={locale} />
+        {job.completed_at && (
+          <>
+            {' · '}
+            {d.statuses[job.status]}{' '}
+            <EventTime value={job.completed_at} locale={locale} />
+          </>
+        )}
       </small>
       {job.error && <p role="alert">{job.error}</p>}
     </div>

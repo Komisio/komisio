@@ -1,3 +1,4 @@
+import { EventTime } from '@/components/ui/event-time'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { statementPeriodDefaults } from '@/lib/intake/statement-period'
 import { SellerTabs } from '@/components/intake/seller-tabs'
@@ -275,7 +276,12 @@ export default async function Seller({
                       <li key={e.id}>
                         <div>
                           <strong>{l.kinds[e.kind]}</strong>
-                          <small>{when(e.occurred_at)}</small>
+                          <small>
+                            <EventTime
+                              value={e.occurred_at}
+                              locale={ctx.locale}
+                            />
+                          </small>
                         </div>
                         <span>
                           {formatSignedOre(e.amount_ore)} {currency}
@@ -319,7 +325,12 @@ export default async function Seller({
                       >
                         {all.intake.bag} K-{bag.reference}
                       </Link>
-                      <small>{when(bag.received_at)}</small>
+                      <small>
+                        <EventTime
+                          value={bag.received_at}
+                          locale={ctx.locale}
+                        />
+                      </small>
                       {bag.note && <p>{bag.note}</p>}
                     </div>
                     <Link className="text-link" href={'/intake/bags/' + bag.id}>
@@ -392,7 +403,11 @@ export default async function Seller({
                               </Link>
                               <small>{all.lifecycle.stages[item.stage]}</small>
                               <small>
-                                {all.items.acceptedAt}: {when(item.acceptedAt)}
+                                {all.items.acceptedAt}:{' '}
+                                <EventTime
+                                  value={item.acceptedAt}
+                                  locale={ctx.locale}
+                                />
                               </small>
                             </div>
                             <strong>
@@ -494,7 +509,10 @@ export default async function Seller({
                           {all.payouts.statuses[p.status]}
                         </strong>
                         <p>
-                          {when(p.requested_at)}
+                          <EventTime
+                            value={p.requested_at}
+                            locale={ctx.locale}
+                          />
                           {p.payment_reference
                             ? ` · ${p.payment_reference}`
                             : ''}
@@ -549,8 +567,9 @@ export default async function Seller({
                     {ledger.items.length === 0 && <p>{l.empty}</p>}
                     {ledger.items.map((e) => (
                       <p key={e.id}>
-                        {when(e.occurred_at)} · {l.kinds[e.kind]} ·{' '}
-                        {formatSignedOre(e.amount_ore)} {currency}
+                        <EventTime value={e.occurred_at} locale={ctx.locale} />{' '}
+                        · {l.kinds[e.kind]} · {formatSignedOre(e.amount_ore)}{' '}
+                        {currency}
                         {e.reason ? ` · ${e.reason}` : ''}
                       </p>
                     ))}
@@ -659,7 +678,8 @@ export default async function Seller({
                     </details>
                     {evidence.data?.map((e) => (
                       <p key={e.id}>
-                        {when(e.recorded_at)} · {e.reference}
+                        <EventTime value={e.recorded_at} locale={ctx.locale} />{' '}
+                        · {e.reference}
                       </p>
                     ))}
                     {write && (
@@ -727,7 +747,8 @@ export default async function Seller({
                   {history.length === 0 && <p>{d.noHistory}</p>}
                   {history.map((v) => (
                     <p key={v.id}>
-                      {d.version} {v.version} · {when(v.created_at)} ·{' '}
+                      {d.version} {v.version} ·{' '}
+                      <EventTime value={v.created_at} locale={ctx.locale} /> ·{' '}
                       {v.commission_rate_percent === null
                         ? d.usePolicy
                         : `${v.commission_rate_percent} %`}{' '}
@@ -749,8 +770,8 @@ export default async function Seller({
                   {communications.map((m) => (
                     <details key={m.id}>
                       <summary>
-                        {when(m.queued_at)} · {c.kinds[m.kind]} ·{' '}
-                        {c.outcomes[m.status]} · {m.subject}
+                        <EventTime value={m.queued_at} locale={ctx.locale} /> ·{' '}
+                        {c.kinds[m.kind]} · {c.outcomes[m.status]} · {m.subject}
                       </summary>
                       <pre style={{ whiteSpace: 'pre-wrap' }}>{m.body}</pre>
                     </details>
@@ -856,7 +877,11 @@ export default async function Seller({
                       return (
                         <details key={row.id}>
                           <summary>
-                            {when(row.created_at)} · {previous.name}
+                            <EventTime
+                              value={row.created_at}
+                              locale={ctx.locale}
+                            />{' '}
+                            · {previous.name}
                           </summary>
                           <p>
                             {[previous.email, previous.phone]

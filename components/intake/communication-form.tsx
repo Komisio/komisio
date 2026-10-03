@@ -44,6 +44,7 @@ export function CommunicationForm({
   const confirmation = useRef<HTMLInputElement>(null)
   const alert = useRef<HTMLParagraphElement>(null)
   const running = useRef(false)
+  const submittedFields = useRef<FormData | null>(null)
   const pending = useRef<{
     tenantId: string
     requestId: string
@@ -61,6 +62,7 @@ export function CommunicationForm({
     event.preventDefault()
     if (running.current || needsReload) return
     const f = new FormData(event.currentTarget)
+    if (!pending.current) submittedFields.current = f
     const command = pending.current ?? {
       tenantId,
       requestId: crypto.randomUUID(),
@@ -131,7 +133,8 @@ export function CommunicationForm({
       pending.current = null
       setLocked(false)
       if (confirmation.current) confirmation.current.checked = false
-      resetDirty()
+      resetDirty(submittedFields.current ?? undefined)
+      submittedFields.current = null
       router.refresh()
     } catch {
       setError(intake.retry)

@@ -61,7 +61,7 @@ export function PrinterForm({
     if (!candidate.success) return
     if (await action.run(candidate.data)) {
       setSaved(true)
-      resetDirty()
+      resetDirty(f)
       router.refresh()
     }
   }

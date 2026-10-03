@@ -1,5 +1,15 @@
 'use client'
-import { useEffect, useRef, useState, type RefObject } from 'react'
+import {
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type RefObject,
+} from 'react'
+
+const subscribe = () => () => {}
+const clientReady = () => true
+const serverReady = () => false
 
 /** Compare mounted text/settings fields without persisting their contents. */
 export function useFormDirty(
@@ -10,9 +20,23 @@ export function useFormDirty(
     initialFields ? JSON.stringify(initialFields) : null,
   )
   const [dirty, setDirty] = useState(false)
-  useEffect(() => {
-    if (form.current && baseline.current === null)
-      baseline.current = JSON.stringify([...new FormData(form.current)])
+  const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
+  // Read the disabled hydration fields from a detached copy, never enabling
+  // the live form before its handlers attach.
+  useLayoutEffect(() => {
+    if (form.current && baseline.current === null) {
+      const waiting = form.current.querySelector('[data-draft-readiness]')
+      const snapshot = waiting
+        ? (form.current.cloneNode(true) as HTMLFormElement)
+        : form.current
+      if (waiting)
+        snapshot
+          .querySelectorAll<HTMLFieldSetElement>('[data-draft-readiness]')
+          .forEach((fieldset) => {
+            fieldset.disabled = false
+          })
+      baseline.current = JSON.stringify([...new FormData(snapshot)])
+    }
   }, [form])
   function checkDirty() {
     // Conditional fields can become enabled in the same React change event.
@@ -38,5 +62,5 @@ export function useFormDirty(
       }
     })
   }
-  return { dirty, checkDirty, resetDirty }
+  return { ready, dirty, checkDirty, resetDirty }
 }

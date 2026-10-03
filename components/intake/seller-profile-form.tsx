@@ -36,7 +36,7 @@ export function SellerProfileForm({
   const [saved, setSaved] = useState(false),
     [invalid, setInvalid] = useState(false)
   const form = useRef<HTMLFormElement>(null)
-  const { dirty, checkDirty } = useFormDirty(form)
+  const { ready, dirty, checkDirty } = useFormDirty(form)
   useUnsavedChanges(!saved && (dirty || action.locked) ? leaveUnsaved : null)
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -90,8 +90,11 @@ export function SellerProfileForm({
   return (
     <form ref={form} onSubmit={submit} onChange={checkDirty}>
       <fieldset
+        data-draft-readiness={!ready ? '' : undefined}
         className="intake-fields"
-        disabled={action.busy || action.locked || action.needsReload || saved}
+        disabled={
+          !ready || action.busy || action.locked || action.needsReload || saved
+        }
       >
         {field('name', intake.name, 120, 'text', true)}
         <div className="seller-profile-fields">
@@ -163,7 +166,10 @@ export function SellerProfileForm({
       {saved ? (
         <p role="status">{d.saved}</p>
       ) : (
-        <Button type="submit" disabled={action.busy || action.needsReload}>
+        <Button
+          type="submit"
+          disabled={!ready || action.busy || action.needsReload}
+        >
           {action.busy ? intake.busy : action.locked ? intake.retry : d.save}
         </Button>
       )}

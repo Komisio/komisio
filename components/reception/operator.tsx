@@ -178,7 +178,7 @@ export function ReceptionObservation({
     [invalid, setInvalid] = useState('')
   const formRef = useRef<HTMLFormElement>(null)
   const submittedFields = useRef<FormData | null>(null)
-  const { dirty, checkDirty, resetDirty } = useFormDirty(formRef)
+  const { ready, dirty, checkDirty, resetDirty } = useFormDirty(formRef)
   const [refreshing, refresh] = useTransition()
   useUnsavedChanges(dirty || action.locked ? leaveUnsaved : null)
   function saved() {
@@ -230,7 +230,8 @@ export function ReceptionObservation({
       }}
     >
       <fieldset
-        disabled={action.locked || refreshing}
+        data-draft-readiness={!ready ? '' : undefined}
+        disabled={!ready || action.locked || refreshing}
         className="reception-fields"
       >
         <div className="field">
@@ -277,7 +278,7 @@ export function ReceptionObservation({
         </div>
       </fieldset>
       <p>{d.sourceNotice}</p>
-      <Button disabled={action.busy || action.reload || refreshing}>
+      <Button disabled={!ready || action.busy || action.reload || refreshing}>
         {action.locked ? d.retryButton : d.saveSources}
       </Button>
       {invalid && <p role="alert">{invalid}</p>}

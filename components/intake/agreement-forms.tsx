@@ -22,7 +22,7 @@ export function AgreementPublisher({
   const action = useIntakeAction(d.intake)
   const [saved, setSaved] = useState(false)
   const form = useRef<HTMLFormElement>(null)
-  const { dirty, checkDirty, resetDirty } = useFormDirty(form)
+  const { ready, dirty, checkDirty, resetDirty } = useFormDirty(form)
   useUnsavedChanges(!saved && (dirty || action.locked) ? d.leaveUnsaved : null)
   const [expanded, setExpanded] = useState(!current)
   // Keep the reviewed base while editing, even if navigation refreshes server props.
@@ -76,8 +76,9 @@ export function AgreementPublisher({
         ) : (
           <form ref={form} onChange={checkDirty} onSubmit={submit}>
             <fieldset
+              data-draft-readiness={!ready ? '' : undefined}
               className="intake-fields"
-              disabled={action.busy || action.locked}
+              disabled={!ready || action.busy || action.locked}
             >
               <div className="field">
                 <label htmlFor="agreement-title">{a.name}</label>
@@ -134,7 +135,10 @@ export function AgreementPublisher({
                 {d.intake.reload}
               </a>
             )}
-            <Button type="submit" disabled={action.busy || action.needsReload}>
+            <Button
+              type="submit"
+              disabled={!ready || action.busy || action.needsReload}
+            >
               {action.busy
                 ? d.intake.busy
                 : action.locked

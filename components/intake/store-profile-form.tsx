@@ -98,7 +98,7 @@ export function StoreProfileForm({
   const action = useIntakeAction(d.intake),
     router = useRouter()
   const form = useRef<HTMLFormElement>(null)
-  const { dirty, checkDirty } = useFormDirty(form)
+  const { ready, dirty, checkDirty } = useFormDirty(form)
   useUnsavedChanges(
     editable && !saved && (dirty || action.locked) ? d.leaveUnsaved : null,
   )
@@ -170,8 +170,10 @@ export function StoreProfileForm({
         }}
       >
         <fieldset
+          data-draft-readiness={!ready ? '' : undefined}
           className="intake-fields"
           disabled={
+            !ready ||
             !editable ||
             action.busy ||
             action.locked ||
@@ -293,7 +295,10 @@ export function StoreProfileForm({
         )}
         {!editable && <p>{t.readOnly}</p>}
         {editable && !saved && (
-          <Button type="submit" disabled={action.busy || action.needsReload}>
+          <Button
+            type="submit"
+            disabled={!ready || action.busy || action.needsReload}
+          >
             {action.busy
               ? d.intake.busy
               : action.locked

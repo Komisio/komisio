@@ -53,7 +53,7 @@ export function CommunicationForm({
     referenceId: string | null
     freeText: string
   } | null>(null)
-  const { dirty, checkDirty, resetDirty } = useFormDirty(form)
+  const { ready, dirty, checkDirty, resetDirty } = useFormDirty(form)
   useUnsavedChanges(dirty || locked ? leaveUnsaved : null)
   useEffect(() => {
     if (error) alert.current?.focus()
@@ -153,7 +153,11 @@ export function CommunicationForm({
         setOutcome(null)
       }}
     >
-      <fieldset className="intake-fields" disabled={busy || locked}>
+      <fieldset
+        data-draft-readiness={!ready ? '' : undefined}
+        className="intake-fields"
+        disabled={!ready || busy || locked}
+      >
         <div className="field">
           <label htmlFor="communication-kind">{d.kind}</label>
           <select
@@ -220,6 +224,7 @@ export function CommunicationForm({
       <Button
         type="submit"
         disabled={
+          !ready ||
           busy ||
           needsReload ||
           (!locked && kind !== 'message' && options.length === 0)

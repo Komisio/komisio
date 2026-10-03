@@ -78,7 +78,7 @@ export function StorePolicyForm({
   const action = useIntakeAction(d.intake),
     router = useRouter(),
     t = d.storePolicy
-  const { dirty, checkDirty } = useFormDirty(form)
+  const { ready, dirty, checkDirty } = useFormDirty(form)
   const stepsChanged =
     JSON.stringify(steps) !== JSON.stringify(base.policy.markdownSteps)
   useUnsavedChanges(
@@ -248,8 +248,15 @@ export function StorePolicyForm({
           }}
         >
           <fieldset
+            data-draft-readiness={!ready ? '' : undefined}
             className="intake-fields policy-fields"
-            disabled={!editable || action.locked || saved || action.needsReload}
+            disabled={
+              !ready ||
+              !editable ||
+              action.locked ||
+              saved ||
+              action.needsReload
+            }
           >
             <PolicySection id="receiving" title={t.sectionReceiving}>
               <div className="policy-grid">
@@ -501,7 +508,7 @@ export function StorePolicyForm({
             )}
           </fieldset>
           {editable && !saved && (
-            <Button disabled={action.busy || action.needsReload}>
+            <Button disabled={!ready || action.busy || action.needsReload}>
               {action.locked ? d.intake.retry : t.publish}
             </Button>
           )}

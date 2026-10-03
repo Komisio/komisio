@@ -37,7 +37,7 @@ export function PrinterForm({
   const [invalid, setInvalid] = useState(false)
   const [saved, setSaved] = useState(false)
   const form = useRef<HTMLFormElement>(null)
-  const { dirty, checkDirty, resetDirty } = useFormDirty(form)
+  const { ready, dirty, checkDirty, resetDirty } = useFormDirty(form)
   useUnsavedChanges(dirty || action.locked ? leaveUnsaved : null)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -75,8 +75,9 @@ export function PrinterForm({
       }}
     >
       <fieldset
+        data-draft-readiness={!ready ? '' : undefined}
         className="intake-fields"
-        disabled={action.busy || action.locked || action.needsReload}
+        disabled={!ready || action.busy || action.locked || action.needsReload}
       >
         <div className="field">
           <label htmlFor={`printer-name-${fieldId}`}>{d.name}</label>
@@ -160,7 +161,7 @@ export function PrinterForm({
       )}
       <Button
         type="submit"
-        disabled={action.busy || action.locked || action.needsReload}
+        disabled={!ready || action.busy || action.locked || action.needsReload}
       >
         {action.busy ? intake.busy : existing ? d.update : d.register}
       </Button>

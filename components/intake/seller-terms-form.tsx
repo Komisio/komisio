@@ -31,7 +31,7 @@ export function SellerTermsForm({
   const [invalid, setInvalid] = useState(false)
   const [saved, setSaved] = useState(false)
   const form = useRef<HTMLFormElement>(null)
-  const { dirty, checkDirty } = useFormDirty(form)
+  const { ready, dirty, checkDirty } = useFormDirty(form)
   useUnsavedChanges(!saved && (dirty || action.locked) ? leaveUnsaved : null)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -64,8 +64,11 @@ export function SellerTermsForm({
   return (
     <form ref={form} onSubmit={submit} onChange={checkDirty}>
       <fieldset
+        data-draft-readiness={!ready ? '' : undefined}
         className="intake-fields"
-        disabled={action.busy || action.locked || saved || action.needsReload}
+        disabled={
+          !ready || action.busy || action.locked || saved || action.needsReload
+        }
       >
         <div className="field">
           <label htmlFor="terms-basis">{d.commissionBasis}</label>
@@ -126,7 +129,10 @@ export function SellerTermsForm({
         </Button>
       )}
       {!saved && (
-        <Button type="submit" disabled={action.busy || action.needsReload}>
+        <Button
+          type="submit"
+          disabled={!ready || action.busy || action.needsReload}
+        >
           {action.busy ? intake.busy : action.locked ? intake.retry : d.publish}
         </Button>
       )}

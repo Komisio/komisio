@@ -1535,7 +1535,8 @@
     "nothing": "Inga säljare kan importeras. Kontrollera att rätt kolumner är valda och att namn samt e-post eller telefon finns med.",
     "error": "Importen kunde inte förberedas. Försök igen.",
     "ownerOnly": "Endast butikens ägare eller administratör kan importera säljare.",
-    "fileTooLarge": "Filen är för stor. Dela upp den och välj en mindre fil."
+    "fileTooLarge": "Filen är för stor. Dela upp den och välj en mindre fil.",
+    "clearFile": "Ta bort fil"
   },
   "lifecycle": {
     "agentHeading": "Prissänkningskörningar",

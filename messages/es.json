@@ -1535,7 +1535,8 @@
     "nothing": "No hay filas utilizables. Comprueba la asignación de columnas.",
     "error": "No se pudo preparar la importación. Recarga e inténtalo de nuevo.",
     "ownerOnly": "Solo el propietario de la tienda o un administrador puede importar depositantes.",
-    "fileTooLarge": "El archivo es demasiado grande. Divídelo y selecciona un archivo más pequeño."
+    "fileTooLarge": "El archivo es demasiado grande. Divídelo y selecciona un archivo más pequeño.",
+    "clearFile": "Quitar archivo"
   },
   "lifecycle": {
     "agentHeading": "Ejecuciones de rebajas",

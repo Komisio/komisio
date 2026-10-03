@@ -1,5 +1,5 @@
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
@@ -28,6 +28,7 @@ export default async function Import() {
           tenantId={active.id}
           d={d}
           intake={all.intake}
+          leaveUnsaved={all.leaveUnsaved}
         />
       ) : (
         <p>{d.ownerOnly}</p>

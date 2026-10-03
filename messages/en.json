@@ -1535,7 +1535,8 @@
     "nothing": "No usable rows. Check the column mapping.",
     "error": "The import could not be staged. Reload and try again.",
     "ownerOnly": "Only the store owner or an admin can import sellers.",
-    "fileTooLarge": "The file is too large. Split it and choose a smaller file."
+    "fileTooLarge": "The file is too large. Split it and choose a smaller file.",
+    "clearFile": "Remove file"
   },
   "lifecycle": {
     "agentHeading": "Markdown runs",

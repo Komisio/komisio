@@ -1535,7 +1535,8 @@
     "nothing": "Ei käyttökelpoisia rivejä. Tarkista sarakkeiden kohdistus.",
     "error": "Tuontia ei voitu valmistella. Lataa sivu uudelleen ja yritä uudelleen.",
     "ownerOnly": "Vain kaupan omistaja tai ylläpitäjä voi tuoda tuojia.",
-    "fileTooLarge": "Tiedosto on liian suuri. Jaa se osiin ja valitse pienempi tiedosto."
+    "fileTooLarge": "Tiedosto on liian suuri. Jaa se osiin ja valitse pienempi tiedosto.",
+    "clearFile": "Poista tiedosto"
   },
   "lifecycle": {
     "agentHeading": "Alennusajot",

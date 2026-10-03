@@ -1535,7 +1535,8 @@
     "nothing": "Ingen brukbare rader. Kontroller kolonnetilordningen.",
     "error": "Importen kunne ikke klargjøres. Last inn på nytt og prøv igjen.",
     "ownerOnly": "Bare butikkeieren eller en administrator kan importere innleverere.",
-    "fileTooLarge": "Filen er for stor. Del den opp og velg en mindre fil."
+    "fileTooLarge": "Filen er for stor. Del den opp og velg en mindre fil.",
+    "clearFile": "Fjern fil"
   },
   "lifecycle": {
     "agentHeading": "Prisnedsettelseskjøringer",

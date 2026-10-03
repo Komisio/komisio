@@ -1,5 +1,8 @@
 'use client'
-import Link from 'next/link'
+import {
+  NavigationLink as Link,
+  useUnsavedChanges,
+} from '@/components/platform/navigation-warning'
 import { useRef, useState, useSyncExternalStore } from 'react'
 import type { Dictionary } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
@@ -19,10 +22,12 @@ export function ImportSellers({
   tenantId,
   d,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   d: Dictionary['importer']
   intake: Dictionary['intake']
+  leaveUnsaved: string
 }) {
   const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const [rows, setRows] = useState<string[][]>([])
@@ -46,6 +51,10 @@ export function ImportSellers({
   } | null>(null)
   const running = useRef(false)
   const fileRead = useRef(0)
+  const fileInput = useRef<HTMLInputElement>(null)
+  useUnsavedChanges(
+    (rows.length > 0 && !staged) || locked ? leaveUnsaved : null,
+  )
   const header = rows[0] ?? []
   const { accepted, rejected } = rows.length
     ? mapRows(rows, mapping, skipHeader)
@@ -60,7 +69,7 @@ export function ImportSellers({
     setMessage('')
     pending.current = null
     setNeedsReload(false)
-    setSource('')
+    setSource(file?.name.slice(0, 200) ?? '')
     if (!file) return
     // Reject obviously oversized files before allocating their decoded contents.
     // This leaves ample room for multi-byte UTF-8 under the character limit below.
@@ -77,12 +86,22 @@ export function ImportSellers({
       }
       const parsed = parseCsv(text)
       setRows(parsed)
-      setSource(file.name.slice(0, 200))
       setMapping(guessMapping(parsed[0] ?? []))
       if (!parsed.length) setMessage(d.nothing)
     } catch {
       if (read === fileRead.current) setMessage(d.error)
     }
+  }
+  function clearFile() {
+    if (locked || running.current) return
+    fileRead.current++
+    if (fileInput.current) fileInput.current.value = ''
+    setRows([])
+    setSource('')
+    setMessage('')
+    setMapping(guessMapping([]))
+    setSkipHeader(true)
+    fileInput.current?.focus()
   }
   async function stage() {
     if (running.current || needsReload || staged || !accepted.length) return
@@ -165,6 +184,7 @@ export function ImportSellers({
         <div className="field">
           <label htmlFor="import-file">{d.file}</label>
           <input
+            ref={fileInput}
             id="import-file"
             type="file"
             accept=".csv,text/csv,text/plain"
@@ -172,6 +192,16 @@ export function ImportSellers({
             disabled={!ready || busy || locked}
           />
           <small>{d.fileHint}</small>
+          {source && !staged && (
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={busy || locked}
+              onClick={clearFile}
+            >
+              {d.clearFile}
+            </Button>
+          )}
         </div>
         {rows.length > 0 && (
           <>

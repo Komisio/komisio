@@ -1535,7 +1535,8 @@
     "nothing": "Ingen brugbare rækker. Tjek kolonnetilknytningen.",
     "error": "Importen kunne ikke klargøres. Genindlæs, og prøv igen.",
     "ownerOnly": "Kun butikkens ejer eller en administrator kan importere indleverere.",
-    "fileTooLarge": "Filen er for stor. Del den op og vælg en mindre fil."
+    "fileTooLarge": "Filen er for stor. Del den op og vælg en mindre fil.",
+    "clearFile": "Fjern fil"
   },
   "lifecycle": {
     "agentHeading": "Prisnedsættelseskørsler",

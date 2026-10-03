@@ -858,3 +858,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-03: Context-help task links close the dialog after navigation is accepted, including same-page sections. Cancelled draft navigation retains help and edits; new-tab links leave the current help open.
 
 - 2026-10-03: Mobile stock summaries use compact label/value rows and a stacked date filter. Current inventory remains separate from period sales; report calculations and read scope are unchanged.
+
+- 2026-10-03: Unstaged seller-import files and unresolved staging attempts warn before supported navigation or unloading. A remove-file control or confirmed staging releases the warning; import mapping, approval and engine rules are unchanged.

@@ -788,6 +788,7 @@ export default async function Seller({
                         tenantId={tenant.id}
                         sellerId={id.data}
                         current={terms}
+                        leaveUnsaved={all.leaveUnsaved}
                         d={d}
                         intake={all.intake}
                       />

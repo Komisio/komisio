@@ -270,6 +270,7 @@ export default async function Settings({
                   existing={p}
                   d={pr}
                   intake={d.intake}
+                  leaveUnsaved={d.leaveUnsaved}
                 />
               )}
               {p.transport === 'tcp' && devices && (
@@ -297,6 +298,7 @@ export default async function Settings({
                 tenantId={active.id}
                 d={pr}
                 intake={d.intake}
+                leaveUnsaved={d.leaveUnsaved}
               />
             </details>
           )}
@@ -315,6 +317,7 @@ export default async function Settings({
               canEdit={manages}
               d={pr}
               intake={d.intake}
+              leaveUnsaved={d.leaveUnsaved}
             />
           )}
           {formats && templates && (

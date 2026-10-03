@@ -114,6 +114,10 @@ for (const reply of [
         reload,
         alert: row.getByRole('alert'),
       })
+      page.once('dialog', async (dialog) => {
+        expect(dialog.type()).toBe('beforeunload')
+        await dialog.accept()
+      })
       await reload.click()
       await expect(page.locator('.label-formats-fold')).not.toHaveAttribute(
         'open',
@@ -212,6 +216,10 @@ test('a changed active store offers a reload instead of a permanently disabled r
       exact: true,
     })
     await expect(reload).toBeVisible()
+    page.once('dialog', async (dialog) => {
+      expect(dialog.type()).toBe('beforeunload')
+      await dialog.accept()
+    })
     await reload.click()
     await expect(page).toHaveURL(/\/settings\?tab=printing$/)
     // Nothing was written for the original store.
@@ -289,6 +297,10 @@ test('known validation is correctable and a later uncertain save clears old conf
       exact: true,
     })
     await expect(reload).toBeVisible()
+    page.once('dialog', async (dialog) => {
+      expect(dialog.type()).toBe('beforeunload')
+      await dialog.accept()
+    })
     await reload.click()
     await expect(page.locator('.label-formats-fold')).not.toHaveAttribute(
       'open',

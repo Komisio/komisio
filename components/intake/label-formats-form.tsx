@@ -5,6 +5,7 @@ import type { Dictionary } from '@/lib/i18n'
 import { setLabelFormatCommand, type LabelFormats } from '@/lib/engine/printing'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 
 /** Owner or admin sets the label size per kind; a default applies until then. */
 export function LabelFormatsForm({
@@ -13,12 +14,14 @@ export function LabelFormatsForm({
   canEdit,
   d,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   formats: LabelFormats
   canEdit: boolean
   d: Dictionary['printing']
   intake: Dictionary['intake']
+  leaveUnsaved: string
 }) {
   const [expanded, setExpanded] = useState(false)
   const kinds = ['bag', 'garment', 'item', 'markdown', 'onboarding'] as const
@@ -43,6 +46,7 @@ export function LabelFormatsForm({
             canEdit={canEdit}
             d={d}
             intake={intake}
+            leaveUnsaved={leaveUnsaved}
           />
         ))}
       </div>
@@ -57,6 +61,7 @@ function FormatRow({
   canEdit,
   d,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   kind: 'bag' | 'garment' | 'item' | 'markdown' | 'onboarding'
@@ -64,12 +69,19 @@ function FormatRow({
   canEdit: boolean
   d: Dictionary['printing']
   intake: Dictionary['intake']
+  leaveUnsaved: string
 }) {
   const action = useIntakeAction(intake)
   const router = useRouter()
   const id = useId()
   const [width, setWidth] = useState(String(format.widthMm))
   const [height, setHeight] = useState(String(format.heightMm))
+  const [confirmed, setConfirmed] = useState({
+    width: String(format.widthMm),
+    height: String(format.heightMm),
+  })
+  const dirty = width !== confirmed.width || height !== confirmed.height
+  useUnsavedChanges(canEdit && (dirty || action.locked) ? leaveUnsaved : null)
   const [invalid, setInvalid] = useState(false)
   const [saved, setSaved] = useState(false)
   // This mutable setting has no replay identity. Inspect current dimensions
@@ -90,6 +102,7 @@ function FormatRow({
     if (!candidate.success) return
     if (await action.run(candidate.data)) {
       setSaved(true)
+      setConfirmed({ width, height })
       router.refresh()
     }
   }

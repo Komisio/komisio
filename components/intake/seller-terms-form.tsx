@@ -1,11 +1,13 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import type { EffectiveSellerTerms } from '@/lib/engine/seller-terms'
 import { publishSellerTermsCommand } from '@/lib/engine/seller-terms'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { useFormDirty } from '@/components/platform/use-form-dirty'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 
 /** Publishes a new seller terms version; an empty field means "use the store policy". */
 export function SellerTermsForm({
@@ -14,18 +16,23 @@ export function SellerTermsForm({
   current,
   d,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   sellerId: string
   current: EffectiveSellerTerms
   d: Dictionary['sellerTerms']
   intake: Dictionary['intake']
+  leaveUnsaved: string
 }) {
   const action = useIntakeAction(intake)
   const router = useRouter()
   const [requestId] = useState(() => crypto.randomUUID())
   const [invalid, setInvalid] = useState(false)
   const [saved, setSaved] = useState(false)
+  const form = useRef<HTMLFormElement>(null)
+  const { dirty, checkDirty } = useFormDirty(form)
+  useUnsavedChanges(!saved && (dirty || action.locked) ? leaveUnsaved : null)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (action.locked) {
@@ -55,7 +62,7 @@ export function SellerTermsForm({
     }
   }
   return (
-    <form onSubmit={submit}>
+    <form ref={form} onSubmit={submit} onChange={checkDirty}>
       <fieldset
         className="intake-fields"
         disabled={action.busy || action.locked || saved || action.needsReload}

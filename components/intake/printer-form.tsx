@@ -1,10 +1,12 @@
 'use client'
-import { useId, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import { registerPrinterCommand } from '@/lib/engine/printing'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { useFormDirty } from '@/components/platform/use-form-dirty'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 
 /** Owner or admin registers or updates a store printer. */
 export function PrinterForm({
@@ -12,6 +14,7 @@ export function PrinterForm({
   existing,
   d,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   existing?: {
@@ -25,6 +28,7 @@ export function PrinterForm({
   }
   d: Dictionary['printing']
   intake: Dictionary['intake']
+  leaveUnsaved: string
 }) {
   const action = useIntakeAction(intake)
   const router = useRouter()
@@ -32,6 +36,9 @@ export function PrinterForm({
   const [requestId] = useState(() => existing?.id ?? crypto.randomUUID())
   const [invalid, setInvalid] = useState(false)
   const [saved, setSaved] = useState(false)
+  const form = useRef<HTMLFormElement>(null)
+  const { dirty, checkDirty, resetDirty } = useFormDirty(form)
+  useUnsavedChanges(dirty || action.locked ? leaveUnsaved : null)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     // The command ID is the printer ID, not a replay token: an uncertain
@@ -54,11 +61,19 @@ export function PrinterForm({
     if (!candidate.success) return
     if (await action.run(candidate.data)) {
       setSaved(true)
+      resetDirty()
       router.refresh()
     }
   }
   return (
-    <form onSubmit={submit} onChange={() => setSaved(false)}>
+    <form
+      ref={form}
+      onSubmit={submit}
+      onChange={() => {
+        setSaved(false)
+        checkDirty()
+      }}
+    >
       <fieldset
         className="intake-fields"
         disabled={action.busy || action.locked || action.needsReload}

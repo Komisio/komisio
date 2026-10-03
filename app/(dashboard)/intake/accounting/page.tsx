@@ -1,5 +1,5 @@
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { FortnoxGuide } from '@/components/help/fortnox-guide'
 import { ContextHelp } from '@/components/help/context-help'
 import { credentialKeyConfigured } from '@/lib/platform/credentials'
@@ -405,6 +405,7 @@ export default async function Accounting({
                 d={d}
                 vatModes={vatModes}
                 intake={all.intake}
+                leaveUnsaved={all.leaveUnsaved}
               />
             </section>
             <section

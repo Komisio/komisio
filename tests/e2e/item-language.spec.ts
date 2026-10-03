@@ -28,6 +28,7 @@ test('store item language persists independently of UI locale and saved descript
         exact: true,
       }),
     ).toBeInViewport()
+    const previousVersion = await page.locator('.policy-version').innerText()
     await language.selectOption('no')
     await page
       .getByRole('link', { name: sv.storePolicy.sectionEconomy, exact: true })
@@ -50,6 +51,10 @@ test('store item language persists independently of UI locale and saved descript
       .getByRole('button', { name: sv.storePolicy.publish, exact: true })
       .click()
     expect((await saved).status()).toBe(200)
+    await expect(page.locator('.policy-version')).not.toHaveText(
+      previousVersion,
+    )
+    await expect(language).toBeEnabled()
     await page.reload()
     await expect(language).toHaveValue('no')
     await page

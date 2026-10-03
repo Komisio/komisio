@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import {
@@ -9,6 +9,8 @@ import {
 } from '@/lib/engine/accounting'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { useFormDirty } from '@/components/platform/use-form-dirty'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 
 /** The tenant's account map: one account and side per day-close amount, or none. */
 export function AccountMapForm({
@@ -18,6 +20,7 @@ export function AccountMapForm({
   d,
   vatModes,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   current: { id: string | null; version: number; map: AccountingMapBody }
@@ -25,12 +28,18 @@ export function AccountMapForm({
   d: Dictionary['accounting']
   vatModes: Record<string, string>
   intake: Dictionary['intake']
+  leaveUnsaved: string
 }) {
   const action = useIntakeAction(intake)
   const router = useRouter()
   const [base] = useState(current)
   const [invalid, setInvalid] = useState(false)
   const [saved, setSaved] = useState(false)
+  const formRef = useRef<HTMLFormElement>(null)
+  const { ready, dirty, checkDirty } = useFormDirty(formRef)
+  useUnsavedChanges(
+    editable && !saved && (dirty || action.locked) ? leaveUnsaved : null,
+  )
   const label = (key: string) => {
     if (key.startsWith('mode:')) {
       const [, mode, amount] = key.split(':')
@@ -40,8 +49,11 @@ export function AccountMapForm({
   }
   return (
     <form
+      ref={formRef}
+      onChange={checkDirty}
       onSubmit={async (e) => {
         e.preventDefault()
+        if (!ready || !editable || action.busy || action.needsReload) return
         if (action.locked) {
           if (await action.run({})) {
             setSaved(true)
@@ -79,24 +91,33 @@ export function AccountMapForm({
       <p>{base.id ? `${d.mapVersion} ${base.version}` : d.noMap}</p>
       <fieldset
         className="intake-fields"
-        disabled={!editable || action.locked || saved || action.needsReload}
+        data-draft-readiness={!ready && editable ? '' : undefined}
+        disabled={
+          !ready || !editable || action.locked || saved || action.needsReload
+        }
       >
-        <div style={{ overflowX: 'auto' }}>
-          <table>
+        <div className="account-map-fields">
+          <table className="account-map-table">
             <thead>
               <tr>
                 <th />
-                <th>{d.account}</th>
-                <th>{d.side}</th>
+                <th scope="col">{d.account}</th>
+                <th scope="col">{d.side}</th>
               </tr>
             </thead>
             <tbody>
               {accountingKeys.map((key) => (
                 <tr key={key}>
-                  <td>
+                  <th scope="row">
                     <label htmlFor={`account:${key}`}>{label(key)}</label>
-                  </td>
+                  </th>
                   <td>
+                    <span
+                      className="account-map-mobile-label"
+                      aria-hidden="true"
+                    >
+                      {d.account}
+                    </span>
                     <input
                       id={`account:${key}`}
                       name={`account:${key}`}
@@ -108,6 +129,12 @@ export function AccountMapForm({
                     />
                   </td>
                   <td>
+                    <span
+                      className="account-map-mobile-label"
+                      aria-hidden="true"
+                    >
+                      {d.side}
+                    </span>
                     <select
                       name={`side:${key}`}
                       aria-label={`${label(key)} ${d.side}`}
@@ -125,7 +152,7 @@ export function AccountMapForm({
       </fieldset>
       {!editable && <p>{d.readOnlyMap}</p>}
       {editable && !saved && (
-        <Button disabled={action.busy || action.needsReload}>
+        <Button disabled={!ready || action.busy || action.needsReload}>
           {action.busy
             ? intake.busy
             : action.locked

@@ -6,6 +6,7 @@ import { statementPeriodDates } from '@/lib/intake/statement-period'
 import { issueStatementCommand } from '@/lib/engine/statements'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { ReloadAction } from './reload-action'
 
 /** Issues the next numbered statement for a seller over a closed period. */
 export function StatementForm({
@@ -29,6 +30,7 @@ export function StatementForm({
   const [invalid, setInvalid] = useState('')
   const [issued, setIssued] = useState<string | null>(null)
   const submittedFields = useRef<FormData | null>(null)
+  const confirmation = useRef<HTMLInputElement>(null)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     // Keep closed-period validation on the submitted dates during a locked
@@ -66,12 +68,27 @@ export function StatementForm({
     if (id) {
       submittedFields.current = null
       setIssued(id)
+      if (confirmation.current) confirmation.current.checked = false
       setRequestId(crypto.randomUUID())
       router.refresh()
     }
   }
   return (
-    <form onSubmit={submit}>
+    <form
+      onSubmit={submit}
+      onChange={(event) => {
+        if (!action.locked) {
+          setIssued(null)
+          setInvalid('')
+          if (
+            event.target instanceof HTMLInputElement &&
+            ['from', 'to'].includes(event.target.name) &&
+            confirmation.current
+          )
+            confirmation.current.checked = false
+        }
+      }}
+    >
       <fieldset
         className="intake-fields"
         disabled={action.busy || action.locked}
@@ -104,7 +121,7 @@ export function StatementForm({
           </p>
         </div>
         <label className="intake-confirm">
-          <input type="checkbox" required />
+          <input ref={confirmation} type="checkbox" required />
           {d.confirm}
         </label>
       </fieldset>
@@ -114,6 +131,7 @@ export function StatementForm({
       <Button type="submit" disabled={action.busy || action.needsReload}>
         {action.busy ? intake.busy : action.locked ? intake.retry : d.issue}
       </Button>
+      {action.needsReload && <ReloadAction label={intake.reload} />}
       {issued && (
         <p role="status">
           {d.issued}{' '}

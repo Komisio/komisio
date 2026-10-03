@@ -1,7 +1,11 @@
 'use client'
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import {
+  NavigationLink as Link,
+  useUnsavedChanges,
+} from '@/components/platform/navigation-warning'
+import { ReloadAction } from './reload-action'
 import type { Dictionary } from '@/lib/i18n'
 import { exactPrice } from '@/lib/engine/manual-reception'
 import { saleSearchRows, type SaleSearchItem } from '@/lib/engine/sale-search'
@@ -15,11 +19,13 @@ export function SaleForm({
   currency,
   d,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   currency: string
   d: Dictionary['sales']
   intake: Dictionary['intake']
+  leaveUnsaved: string
 }) {
   const action = useIntakeAction(intake),
     router = useRouter()
@@ -30,11 +36,13 @@ export function SaleForm({
   const [searched, setSearched] = useState(false),
     [searching, setSearching] = useState(false)
   const [cart, setCart] = useState<(SaleSearchItem & { price: string })[]>([])
+  const [invalidPriceId, setInvalidPriceId] = useState<string | null>(null)
   const [error, setError] = useState(''),
     [saved, setSaved] = useState<string | null>(null)
   const searchVersion = useRef(0),
     searchInput = useRef<HTMLInputElement>(null)
-  const locked = action.busy || action.locked
+  const locked = action.busy || action.locked || action.needsReload
+  useUnsavedChanges(cart.length > 0 || action.locked ? leaveUnsaved : null)
   let total: bigint | null = 0n
   try {
     for (const item of cart)
@@ -81,13 +89,17 @@ export function SaleForm({
     const form = event.currentTarget
     if (!cart.length) return
     setError('')
-    let lines
-    try {
-      lines = cart.map((i) => ({ itemId: i.id, price: exactPrice(i.price) }))
-    } catch {
-      setError(d.priceInvalid)
-      return
+    const lines: { itemId: string; price: string }[] = []
+    for (const item of cart) {
+      try {
+        lines.push({ itemId: item.id, price: exactPrice(item.price) })
+      } catch {
+        setInvalidPriceId(item.id)
+        document.getElementById(`price-${item.id}`)?.focus()
+        return
+      }
     }
+    setInvalidPriceId(null)
     const id = await action.run({
       action: 'recordSale',
       tenantId,
@@ -191,7 +203,14 @@ export function SaleForm({
                     inputMode="decimal"
                     required
                     value={item.price}
-                    onChange={(e) =>
+                    aria-invalid={invalidPriceId === item.id || undefined}
+                    aria-describedby={
+                      invalidPriceId === item.id
+                        ? `price-error-${item.id}`
+                        : undefined
+                    }
+                    onChange={(e) => {
+                      if (invalidPriceId === item.id) setInvalidPriceId(null)
                       setCart(
                         cart.map((i) =>
                           i.id === item.id
@@ -199,13 +218,21 @@ export function SaleForm({
                             : i,
                         ),
                       )
-                    }
+                    }}
                   />
+                  {invalidPriceId === item.id && (
+                    <small id={`price-error-${item.id}`} role="alert">
+                      {d.priceInvalid}
+                    </small>
+                  )}
                 </div>
                 <button
                   type="button"
                   className="text-link"
-                  onClick={() => setCart(cart.filter((i) => i.id !== item.id))}
+                  onClick={() => {
+                    if (invalidPriceId === item.id) setInvalidPriceId(null)
+                    setCart(cart.filter((i) => i.id !== item.id))
+                  }}
                 >
                   {d.remove}
                 </button>
@@ -229,9 +256,7 @@ export function SaleForm({
         </fieldset>
         {error && <p role="alert">{error}</p>}
         {action.error && <p role="alert">{action.error}</p>}
-        {action.needsReload && (
-          <Link href="/intake/sales">{intake.reload}</Link>
-        )}
+        {action.needsReload && <ReloadAction label={intake.reload} />}
         {cart.length > 0 && (
           <Button type="submit" disabled={action.busy || action.needsReload}>
             {action.busy

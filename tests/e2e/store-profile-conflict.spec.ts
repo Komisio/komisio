@@ -77,6 +77,7 @@ test('a stale store profile reloads the current version on the profile tab witho
       exact: true,
     })
     await expect(reload).toBeVisible()
+    page.once('dialog', (dialog) => dialog.accept())
     await reload.click()
     await expect(page).toHaveURL(/\/settings\?tab=profile$/)
     await expect(form.locator('#profile-city')).toHaveValue(latest)

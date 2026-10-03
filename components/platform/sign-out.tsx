@@ -6,18 +6,21 @@ import { browserClient } from '@/lib/supabase/client'
 import type { Dictionary } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
 import { Feedback } from './feedback'
+import { useConfirmNavigation } from './navigation-warning'
 import { safeNext } from '@/lib/platform/validation'
 
 export function SignOut({ d, next }: { d: Dictionary; next?: string }) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
+  const confirmNavigation = useConfirmNavigation()
   return (
     <>
       <Button
         variant="ghost"
         disabled={busy}
         onClick={async () => {
+          if (busy || !confirmNavigation()) return
           setBusy(true)
           setError('')
           try {

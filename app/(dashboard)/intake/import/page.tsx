@@ -1,4 +1,5 @@
-import Link from 'next/link'
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
@@ -22,10 +23,19 @@ export default async function Import() {
       </div>
       <p className="intake-notice">{d.notice}</p>
       {['owner', 'admin'].includes(active.role) ? (
-        <ImportSellers tenantId={active.id} d={d} />
+        <ImportSellers
+          key={active.id}
+          tenantId={active.id}
+          d={d}
+          intake={all.intake}
+          leaveUnsaved={all.leaveUnsaved}
+        />
       ) : (
         <p>{d.ownerOnly}</p>
       )}
     </>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.importer.title)

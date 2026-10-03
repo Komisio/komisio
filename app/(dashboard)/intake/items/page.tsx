@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
@@ -196,3 +197,5 @@ export default async function Items({
     </div>
   )
 }
+
+export const generateMetadata = () => platformPageMetadata((d) => d.items.title)

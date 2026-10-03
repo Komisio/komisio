@@ -1,12 +1,50 @@
 'use client'
 import { storeCurrencies } from '@/lib/platform/currencies'
-import { useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { locales, localeNames, type Dictionary } from '@/lib/i18n'
 import type { StorePolicyBody } from '@/lib/engine/store-policy'
 import { storePolicyBody } from '@/lib/engine/store-policy'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
+import { useFormDirty } from '@/components/platform/use-form-dirty'
+
+function PolicySection({
+  id,
+  title,
+  children,
+}: {
+  id: string
+  title: string
+  children: ReactNode
+}) {
+  const [open, setOpen] = useState(id === 'receiving')
+  return (
+    <section
+      className="policy-section"
+      id={`policy-section-${id}`}
+      aria-labelledby={`policy-heading-${id}`}
+      tabIndex={-1}
+    >
+      <details
+        open={open}
+        onToggle={(event) => setOpen(event.currentTarget.open)}
+      >
+        <summary>
+          <h3 id={`policy-heading-${id}`}>{title}</h3>
+        </summary>
+        <div className="policy-section-content">{children}</div>
+      </details>
+    </section>
+  )
+}
+
+function revealPolicyTarget(target: Element | null) {
+  const section = target?.closest('.policy-section')
+  const details = section?.querySelector('details')
+  if (details) details.open = true
+}
 
 export function StorePolicyForm({
   tenantId,
@@ -23,9 +61,31 @@ export function StorePolicyForm({
   const [steps, setSteps] = useState(current.policy.markdownSteps)
   const [invalid, setInvalid] = useState(false)
   const [saved, setSaved] = useState(false)
+  const form = useRef<HTMLFormElement>(null)
+  useEffect(() => {
+    function revealHash() {
+      const id = window.location.hash.slice(1)
+      if (!id.startsWith('policy-')) return
+      const target = document.getElementById(id)
+      if (!target || !form.current?.contains(target)) return
+      revealPolicyTarget(target)
+      requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }))
+    }
+    revealHash()
+    window.addEventListener('hashchange', revealHash)
+    return () => window.removeEventListener('hashchange', revealHash)
+  }, [])
   const action = useIntakeAction(d.intake),
     router = useRouter(),
     t = d.storePolicy
+  const { ready, dirty, checkDirty } = useFormDirty(form)
+  const stepsChanged =
+    JSON.stringify(steps) !== JSON.stringify(base.policy.markdownSteps)
+  useUnsavedChanges(
+    editable && !saved && (dirty || stepsChanged || action.locked)
+      ? d.leaveUnsaved
+      : null,
+  )
   const numbers = [
     'commissionRatePercent',
     'salePeriodDays',
@@ -102,13 +162,26 @@ export function StorePolicyForm({
       <div className="policy-layout">
         <nav className="policy-navigation" aria-label={t.sectionLinks}>
           {sections.map(([id, title]) => (
-            <a key={id} href={`#policy-section-${id}`}>
+            <a
+              key={id}
+              href={`#policy-section-${id}`}
+              onClick={() =>
+                revealPolicyTarget(
+                  document.getElementById(`policy-section-${id}`),
+                )
+              }
+            >
               {title}
             </a>
           ))}
           {editable && <a href="#policy-publish">{t.publish}</a>}
         </nav>
         <form
+          ref={form}
+          onChange={checkDirty}
+          onInvalidCapture={(event) =>
+            revealPolicyTarget(event.target as Element)
+          }
           onSubmit={async (e) => {
             e.preventDefault()
             if (action.locked) {
@@ -149,7 +222,17 @@ export function StorePolicyForm({
               ),
             })
             setInvalid(!candidate.success)
-            if (!candidate.success) return
+            if (!candidate.success) {
+              // Schema errors may span fields; keep every section available for correction.
+              form.current
+                ?.querySelectorAll<HTMLDetailsElement>(
+                  '.policy-section > details',
+                )
+                .forEach((details) => {
+                  details.open = true
+                })
+              return
+            }
             if (
               await action.run({
                 action: 'publishStorePolicy',
@@ -165,15 +248,17 @@ export function StorePolicyForm({
           }}
         >
           <fieldset
+            data-draft-readiness={!ready ? '' : undefined}
             className="intake-fields policy-fields"
-            disabled={!editable || action.locked || saved || action.needsReload}
+            disabled={
+              !ready ||
+              !editable ||
+              action.locked ||
+              saved ||
+              action.needsReload
+            }
           >
-            <section
-              className="policy-section"
-              id="policy-section-receiving"
-              aria-labelledby="policy-heading-receiving"
-            >
-              <h3 id="policy-heading-receiving">{t.sectionReceiving}</h3>
+            <PolicySection id="receiving" title={t.sectionReceiving}>
               <div className="policy-grid">
                 {choiceField('intakeProfile')}
                 {choiceField('sellerReviewMode')}
@@ -204,13 +289,8 @@ export function StorePolicyForm({
                 ))}
               </div>
               <p className="policy-note">{t.legacy}</p>
-            </section>
-            <section
-              className="policy-section"
-              id="policy-section-economy"
-              aria-labelledby="policy-heading-economy"
-            >
-              <h3 id="policy-heading-economy">{t.sectionEconomy}</h3>
+            </PolicySection>
+            <PolicySection id="economy" title={t.sectionEconomy}>
               <div className="policy-grid">
                 {numberField('commissionRatePercent')}
                 {choiceField('commissionBasis')}
@@ -232,13 +312,8 @@ export function StorePolicyForm({
                 </div>
               </div>
               <p className="policy-note">{t.currencyIntro}</p>
-            </section>
-            <section
-              className="policy-section"
-              id="policy-section-period"
-              aria-labelledby="policy-heading-period"
-            >
-              <h3 id="policy-heading-period">{t.sectionPeriod}</h3>
+            </PolicySection>
+            <PolicySection id="period" title={t.sectionPeriod}>
               <div className="policy-grid">
                 {numberField('salePeriodDays')}
                 {numberField('unsoldNotifyAfterDays')}
@@ -324,13 +399,8 @@ export function StorePolicyForm({
                   {t.automaticMarkdowns}
                 </label>
               </fieldset>
-            </section>
-            <section
-              className="policy-section"
-              id="policy-section-vat"
-              aria-labelledby="policy-heading-vat"
-            >
-              <h3 id="policy-heading-vat">{t.vat}</h3>
+            </PolicySection>
+            <PolicySection id="vat" title={t.vat}>
               <p>{t.vatIntro}</p>
               {Object.entries(vatModes).map(([key, options]) => (
                 <div className="field" key={key}>
@@ -368,13 +438,8 @@ export function StorePolicyForm({
                   defaultValue={base.policy.vatRatePercent ?? ''}
                 />
               </div>
-            </section>
-            <section
-              className="policy-section"
-              id="policy-section-ai"
-              aria-labelledby="policy-heading-ai"
-            >
-              <h3 id="policy-heading-ai">{t.sectionAi}</h3>
+            </PolicySection>
+            <PolicySection id="ai" title={t.sectionAi}>
               <p>{t.assistanceIntro}</p>
               <div className="field">
                 <label htmlFor="policy-item-language">{t.itemLanguage}</label>
@@ -418,13 +483,8 @@ export function StorePolicyForm({
                 />
                 <small>{t.assistanceQuotaHint}</small>
               </div>
-            </section>
-            <section
-              className="policy-section"
-              id="policy-section-notifications"
-              aria-labelledby="policy-heading-notifications"
-            >
-              <h3 id="policy-heading-notifications">{t.notifications}</h3>
+            </PolicySection>
+            <PolicySection id="notifications" title={t.notifications}>
               <p>{t.notificationsIntro}</p>
               <label className="intake-confirm">
                 <input
@@ -436,7 +496,7 @@ export function StorePolicyForm({
                 />
                 {t.automaticSellerNotifications}
               </label>
-            </section>
+            </PolicySection>
             {editable && (
               <label
                 className="intake-confirm policy-confirm"
@@ -448,7 +508,7 @@ export function StorePolicyForm({
             )}
           </fieldset>
           {editable && !saved && (
-            <Button disabled={action.busy || action.needsReload}>
+            <Button disabled={!ready || action.busy || action.needsReload}>
               {action.locked ? d.intake.retry : t.publish}
             </Button>
           )}

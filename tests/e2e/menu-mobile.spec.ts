@@ -27,6 +27,7 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
           url: 'http://127.0.0.1:3000',
         },
       ])
+      await page.waitForLoadState('networkidle')
       await page.goto('/menu')
       await page.waitForLoadState('networkidle')
       const d = JSON.parse(
@@ -43,18 +44,25 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
         const target = page.locator(`main a[href="${link.path}"]`)
         await expect(target).toHaveAccessibleName(link.label)
         const box = await target.boundingBox()
-        expect(box?.height, `${locale} ${link.path}`).toBeGreaterThanOrEqual(44)
+        // Firefox can report 43.99997 for an exact 44px CSS target.
+        await expect(target).toHaveCSS('min-height', '44px')
+        expect(box?.height, `${locale} ${link.path}`).toBeGreaterThanOrEqual(
+          44 - 0.01,
+        )
       }
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth),
         locale,
       ).toBeLessThanOrEqual(320)
       if (locale === 'sv') {
-        const height = await page.evaluate(
-          () => document.documentElement.scrollHeight,
-        )
-        console.log('menu height at 320px:', height)
-        expect(height).toBeLessThan(1450)
+        // Measure menu density independently of the shell's accessible controls.
+        // The old 1450px document budget included 230px of header/footer space.
+        const height = await page
+          .getByRole('main')
+          .evaluate((main) => main.getBoundingClientRect().height)
+        console.log('menu content height at 320px:', height)
+        // Purchases adds one 44px destination; existing menu density is unchanged.
+        expect(height).toBeLessThan(1220 + 44)
       }
       await page.screenshot({
         path: info.outputPath(`menu-${locale}.png`),
@@ -62,11 +70,33 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
         caret: 'initial',
       })
     }
+    const purchases = page.locator('main a[href="/intake/purchases"]')
+    await purchases.focus()
+    await page.keyboard.press('Enter')
+    await expect(page).toHaveURL(/\/intake\/purchases$/)
+    await expect(page.locator('.purchase-create > summary')).toBeVisible()
+    await page.waitForLoadState('networkidle')
+    await page.goto('/menu')
     const sellers = page.locator('main a[href="/intake/sellers"]')
     await sellers.focus()
     await page.keyboard.press('Enter')
     await expect(page).toHaveURL(/\/intake\/sellers$/)
+    const mobileCurrent = page.locator('.mobile-nav [aria-current]')
+    await expect(mobileCurrent).toHaveCount(1)
+    await expect(mobileCurrent).toHaveAttribute('href', '/menu')
+    await expect(mobileCurrent).toHaveAttribute('aria-current', 'location')
+    await page.waitForLoadState('networkidle')
+    await page.goto('/intake')
+    await expect(mobileCurrent).toHaveCount(1)
+    await expect(mobileCurrent).toHaveAttribute('href', '/intake/quick')
+    await expect(mobileCurrent).toHaveAttribute('aria-current', 'location')
     await page.setViewportSize({ width: 1440, height: 1000 })
+    await expect(page.locator('.sidebar-nav [aria-current]')).toHaveCount(1)
+    await expect(page.locator('.sidebar-nav [aria-current]')).toHaveAttribute(
+      'href',
+      '/intake',
+    )
+    await page.waitForLoadState('networkidle')
     await page.goto('/menu')
     await expect(page.locator('main a[href="/settings"]')).toBeVisible()
     expect(

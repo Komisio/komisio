@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { NewSellerDisclosure } from '@/components/intake/new-seller-disclosure'
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import Link from 'next/link'
@@ -234,7 +235,12 @@ export default async function Intake({
               </p>
               <details>
                 <summary>{a.view}</summary>
-                <div className="agreement-text">{agreement.body}</div>
+                <div
+                  className="agreement-text"
+                  lang={intlLocale(agreement.language)}
+                >
+                  {agreement.body}
+                </div>
               </details>
               <p>{evidence ? a.available : a.missing}</p>
               {evidence ? (
@@ -421,3 +427,6 @@ export default async function Intake({
     </div>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.intake.title)

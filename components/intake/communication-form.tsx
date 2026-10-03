@@ -1,8 +1,10 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
+import { useFormDirty } from '@/components/platform/use-form-dirty'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 
 type Option = { id: string; label: string }
 type D = Dictionary['communications']
@@ -14,6 +16,7 @@ export function CommunicationForm({
   references,
   d,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   sellerId: string
@@ -26,59 +29,135 @@ export function CommunicationForm({
   }
   d: D
   intake: Dictionary['intake']
+  leaveUnsaved: string
 }) {
   const router = useRouter()
   const [kind, setKind] = useState<keyof typeof references | 'message'>(
     'message',
   )
-  const [requestId, setRequestId] = useState(() => crypto.randomUUID())
   const [busy, setBusy] = useState(false)
+  const [locked, setLocked] = useState(false)
+  const [needsReload, setNeedsReload] = useState(false)
   const [error, setError] = useState('')
-  const [outcome, setOutcome] = useState<string | null>(null)
+  const [outcome, setOutcome] = useState<keyof D['outcomes'] | null>(null)
+  const form = useRef<HTMLFormElement>(null)
+  const confirmation = useRef<HTMLInputElement>(null)
+  const alert = useRef<HTMLParagraphElement>(null)
+  const running = useRef(false)
+  const submittedFields = useRef<FormData | null>(null)
+  const pending = useRef<{
+    tenantId: string
+    requestId: string
+    sellerId: string
+    kind: typeof kind
+    referenceId: string | null
+    freeText: string
+  } | null>(null)
+  const { ready, dirty, checkDirty, resetDirty } = useFormDirty(form)
+  useUnsavedChanges(dirty || locked ? leaveUnsaved : null)
+  useEffect(() => {
+    if (error) alert.current?.focus()
+  }, [error])
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (running.current || needsReload) return
     const f = new FormData(event.currentTarget)
+    if (!pending.current) submittedFields.current = f
+    const command = pending.current ?? {
+      tenantId,
+      requestId: crypto.randomUUID(),
+      sellerId,
+      kind,
+      referenceId: kind === 'message' ? null : String(f.get('reference')),
+      freeText: String(f.get('freeText') ?? ''),
+    }
+    pending.current = command
+    running.current = true
     setBusy(true)
+    setLocked(true)
     setError('')
+    setOutcome(null)
     try {
       const response = await fetch('/api/communications', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tenantId,
-          requestId,
-          sellerId,
-          kind,
-          referenceId: kind === 'message' ? null : String(f.get('reference')),
-          freeText: String(f.get('freeText') ?? ''),
-        }),
+        body: JSON.stringify(command),
       })
-      const result = await response.json()
+      const result = await response.json().catch(() => null)
       if (!response.ok) {
+        const answered = response.status >= 400 && response.status < 500
+        const code = answered ? result?.error : 'REQUEST_FAILED'
+        if (['INVALID_INPUT', 'EMAIL_DAILY_CAP'].includes(code)) {
+          pending.current = null
+          setLocked(false)
+        } else if (
+          [
+            'SELLER_EMAIL_MISSING',
+            'SELLER_NOT_FOUND',
+            'REFERENCE_NOT_FOUND',
+            'FORBIDDEN',
+            'AUTH_REQUIRED',
+            'TENANT_CHANGED',
+            'REQUEST_CONFLICT',
+          ].includes(code)
+        ) {
+          setNeedsReload(true)
+        }
         setError(
-          result.error === 'SELLER_EMAIL_MISSING'
+          code === 'SELLER_EMAIL_MISSING'
             ? d.noEmail
-            : result.error === 'EMAIL_DAILY_CAP'
+            : code === 'EMAIL_DAILY_CAP'
               ? d.dailyCap
-              : ['FORBIDDEN', 'AUTH_REQUIRED'].includes(result.error)
+              : ['FORBIDDEN', 'AUTH_REQUIRED'].includes(code)
                 ? intake.denied
-                : intake.failed,
+                : code === 'INVALID_INPUT'
+                  ? intake.invalid
+                  : [
+                        'TENANT_CHANGED',
+                        'REQUEST_CONFLICT',
+                        'SELLER_NOT_FOUND',
+                        'REFERENCE_NOT_FOUND',
+                      ].includes(code)
+                    ? intake.recordChanged
+                    : intake.failed,
         )
         return
       }
+      if (
+        result?.ok !== true ||
+        result.id !== command.requestId ||
+        !Object.hasOwn(d.outcomes, result.delivery)
+      )
+        throw new Error('Unconfirmed communication response')
       setOutcome(result.delivery)
-      setRequestId(crypto.randomUUID())
+      pending.current = null
+      setLocked(false)
+      if (confirmation.current) confirmation.current.checked = false
+      resetDirty(submittedFields.current ?? undefined)
+      submittedFields.current = null
       router.refresh()
     } catch {
       setError(intake.retry)
     } finally {
+      running.current = false
       setBusy(false)
     }
   }
   const options = kind === 'message' ? [] : references[kind]
   return (
-    <form onSubmit={submit}>
-      <fieldset className="intake-fields" disabled={busy}>
+    <form
+      ref={form}
+      onSubmit={submit}
+      onChange={() => {
+        checkDirty()
+        setOutcome(null)
+      }}
+    >
+      <fieldset
+        data-draft-readiness={!ready ? '' : undefined}
+        className="intake-fields"
+        disabled={!ready || busy || locked}
+      >
         <div className="field">
           <label htmlFor="communication-kind">{d.kind}</label>
           <select
@@ -133,22 +212,36 @@ export function CommunicationForm({
           <small>{d.freeTextHint}</small>
         </div>
         <label className="intake-confirm">
-          <input type="checkbox" required />
+          <input ref={confirmation} type="checkbox" required />
           {d.confirm}
         </label>
       </fieldset>
-      {error && <p role="alert">{error}</p>}
-      <Button
-        type="submit"
-        disabled={busy || (kind !== 'message' && options.length === 0)}
-      >
-        {busy ? intake.busy : d.send}
-      </Button>
-      {outcome && (
-        <p role="status">
-          {d.outcomes[outcome as keyof D['outcomes']] ?? outcome}
+      {error && (
+        <p ref={alert} role="alert" tabIndex={-1}>
+          {error}
         </p>
       )}
+      <Button
+        type="submit"
+        disabled={
+          !ready ||
+          busy ||
+          needsReload ||
+          (!locked && kind !== 'message' && options.length === 0)
+        }
+      >
+        {busy ? intake.busy : locked ? intake.retry : d.send}
+      </Button>
+      {needsReload && (
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => window.location.reload()}
+        >
+          {intake.reload}
+        </Button>
+      )}
+      {outcome && <p role="status">{d.outcomes[outcome]}</p>}
     </form>
   )
 }

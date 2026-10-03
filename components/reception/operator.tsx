@@ -16,6 +16,8 @@ import {
   type ReceptionReviewField,
 } from '@/lib/engine/reception-fact-review'
 import { Button } from '@/components/ui/button'
+import { useFormDirty } from '@/components/platform/use-form-dirty'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 type D = Dictionary['reception']
 function useWrite(d: D) {
   const [busy, setBusy] = useState(false),
@@ -28,6 +30,12 @@ function useWrite(d: D) {
   async function run(path: string, body: object) {
     if (running.current || reload) return null
     pending.current ??= { path, body }
+    // The server creates a fresh secret for a personal link. Replaying the
+    // client request cannot recover that secret, so inspect an uncertain change.
+    const accessRequest =
+      pending.current.path === '/api/reception/access'
+        ? (pending.current.body as { requestId: string; enabled: boolean })
+        : null
     running.current = true
     setBusy(true)
     setLocked(true)
@@ -40,15 +48,34 @@ function useWrite(d: D) {
       })
       const result = await response.json()
       if (!response.ok) {
-        setError(d.failed)
+        setError(accessRequest ? d.linkUncertain : d.failed)
         setReload(true)
+        return null
+      }
+      if (
+        accessRequest &&
+        (result?.id !== accessRequest.requestId ||
+          (accessRequest.enabled
+            ? typeof result?.path !== 'string' ||
+              !/^\/review\/[a-f0-9]{64}$/.test(result.path)
+            : result?.path !== null))
+      ) {
+        setError(d.linkUncertain)
+        setReload(true)
+        return null
+      }
+      const requestId = (pending.current.body as { requestId: string })
+        .requestId
+      if (result?.id !== requestId) {
+        setError(d.retry)
         return null
       }
       pending.current = null
       setLocked(false)
       return result as { id: string; path?: string | null }
     } catch {
-      setError(d.retry)
+      setError(accessRequest ? d.linkUncertain : d.retry)
+      if (accessRequest) setReload(true)
       return null
     } finally {
       running.current = false
@@ -78,7 +105,9 @@ export function StartReception({
   sellers: { id: string; name: string; email: string; phone: string }[]
   d: D
 }) {
-  const [seller, setSeller] = useState(sellers[0]?.id ?? '')
+  const [seller, setSeller] = useState(
+    sellers.length === 1 ? sellers[0].id : '',
+  )
   const action = useWrite(d)
   return (
     <form
@@ -106,6 +135,9 @@ export function StartReception({
           disabled={action.locked}
           required
         >
+          <option value="" disabled>
+            {d.seller}
+          </option>
           {sellers.map((s) => (
             <option key={s.id} value={s.id}>
               {s.name} — {s.email || s.phone}
@@ -127,6 +159,7 @@ export function ReceptionObservation({
   sources,
   initial,
   d,
+  leaveUnsaved,
 }: {
   tenantId: string
   sessionId: string
@@ -139,18 +172,31 @@ export function ReceptionObservation({
     rationale: string
   } | null
   d: D
+  leaveUnsaved: string
 }) {
   const action = useWrite(d),
     [invalid, setInvalid] = useState('')
+  const formRef = useRef<HTMLFormElement>(null)
+  const submittedFields = useRef<FormData | null>(null)
+  const { ready, dirty, checkDirty, resetDirty } = useFormDirty(formRef)
+  const [refreshing, refresh] = useTransition()
+  useUnsavedChanges(dirty || action.locked ? leaveUnsaved : null)
+  function saved() {
+    resetDirty(submittedFields.current ?? undefined)
+    refresh(() => action.router.refresh())
+  }
   return (
     <form
+      ref={formRef}
+      onChange={checkDirty}
       className="intake-form"
       onSubmit={async (e) => {
         e.preventDefault()
+        if (refreshing || action.busy || action.reload) return
         setInvalid('')
         if (action.locked) {
           const result = await action.run('/api/intake', {})
-          if (result) action.router.refresh()
+          if (result) saved()
           return
         }
         const form = new FormData(e.currentTarget)
@@ -171,6 +217,7 @@ export function ReceptionObservation({
           setInvalid(d.invalid)
           return
         }
+        submittedFields.current = form
         const result = await action.run('/api/intake', {
           action: 'saveReceptionSources',
           tenantId,
@@ -179,10 +226,14 @@ export function ReceptionObservation({
           expectedRevision: revision,
           sources: next,
         })
-        if (result) action.router.refresh()
+        if (result) saved()
       }}
     >
-      <fieldset disabled={action.locked} className="reception-fields">
+      <fieldset
+        data-draft-readiness={!ready ? '' : undefined}
+        disabled={!ready || action.locked || refreshing}
+        className="reception-fields"
+      >
         <div className="field">
           <label htmlFor="garment-description">{d.description}</label>
           <textarea
@@ -227,7 +278,7 @@ export function ReceptionObservation({
         </div>
       </fieldset>
       <p>{d.sourceNotice}</p>
-      <Button disabled={action.busy || action.reload}>
+      <Button disabled={!ready || action.busy || action.reload || refreshing}>
         {action.locked ? d.retryButton : d.saveSources}
       </Button>
       {invalid && <p role="alert">{invalid}</p>}
@@ -339,8 +390,16 @@ export function ReviewAccess({
   const action = useWrite(d),
     [path, setPath] = useState<string | null>(null),
     [copied, setCopied] = useState(false)
+  const linkInput = useRef<HTMLInputElement>(null)
+  const [copyError, setCopyError] = useState('')
+  const [notice, setNotice] = useState('')
   const [refreshing, startRefresh] = useTransition()
   async function change(enabled: boolean) {
+    if (action.busy || action.locked || action.reload || refreshing) return
+    setPath(null)
+    setCopied(false)
+    setCopyError('')
+    setNotice('')
     const result = await action.run('/api/reception/access', {
       tenantId,
       requestId: crypto.randomUUID(),
@@ -351,6 +410,7 @@ export function ReviewAccess({
     if (result) {
       setPath(result.path ?? null)
       setCopied(false)
+      if (!enabled) setNotice(d.linkRevoked)
       startRefresh(() => action.router.refresh())
     }
   }
@@ -363,7 +423,12 @@ export function ReviewAccess({
       <div className="row wrap">
         <Button
           disabled={
-            !available || !email || action.busy || action.reload || refreshing
+            !available ||
+            !email ||
+            action.busy ||
+            action.locked ||
+            action.reload ||
+            refreshing
           }
           onClick={() => change(true)}
         >
@@ -372,7 +437,9 @@ export function ReviewAccess({
         {access?.enabled && (
           <Button
             variant="secondary"
-            disabled={action.busy || action.reload || refreshing}
+            disabled={
+              action.busy || action.locked || action.reload || refreshing
+            }
             onClick={() => change(false)}
           >
             {d.revokeLink}
@@ -383,6 +450,7 @@ export function ReviewAccess({
         <div className="field">
           <label htmlFor="seller-review-link">{d.link}</label>
           <input
+            ref={linkInput}
             id="seller-review-link"
             readOnly
             value={
@@ -394,22 +462,26 @@ export function ReviewAccess({
           <Button
             variant="secondary"
             onClick={async () => {
+              setCopied(false)
+              setCopyError('')
               try {
                 await navigator.clipboard.writeText(
                   window.location.origin + path,
                 )
                 setCopied(true)
               } catch {
-                document
-                  .querySelector<HTMLInputElement>('#seller-review-link')
-                  ?.select()
+                linkInput.current?.focus()
+                linkInput.current?.select()
+                setCopyError(d.copyFailed)
               }
             }}
           >
             {copied ? d.copied : d.copy}
           </Button>
+          {copyError && <p role="alert">{copyError}</p>}
         </div>
       )}
+      {notice && <p role="status">{notice}</p>}
       <Failure action={action} d={d} />
     </div>
   )

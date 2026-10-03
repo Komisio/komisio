@@ -65,9 +65,18 @@ test('statement defaults are closed and selected days use Stockholm despite the 
         )
       ).rows[0].n,
     ).toBe(1)
-
+    await expect(
+      page.getByLabel(d.statements.confirm, { exact: true }),
+    ).not.toBeChecked()
+    await page.getByLabel(d.statements.confirm, { exact: true }).check()
     await from.fill('2025-03-30')
+    await expect(
+      page.getByLabel(d.statements.confirm, { exact: true }),
+    ).not.toBeChecked()
     await to.fill('2025-03-30')
+    await expect(
+      page.getByRole('link', { name: d.statements.open, exact: true }),
+    ).toHaveCount(0)
     await page.getByLabel(d.statements.confirm, { exact: true }).check()
     await page
       .getByRole('button', { name: d.statements.issue, exact: true })

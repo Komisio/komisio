@@ -2,7 +2,8 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { intlLocale, type Dictionary } from '@/lib/i18n'
+import type { Dictionary } from '@/lib/i18n'
+import { EventTime } from '@/components/ui/event-time'
 import type { HandoverQueueRow } from '@/lib/engine/handovers'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
@@ -33,10 +34,6 @@ export function HandoverQueue({
     receipt?.focus({ preventScroll: true })
     receipt?.scrollIntoView({ block: 'start', behavior: 'instant' })
   }, [focus, focusVisible])
-  const when = (iso: string) =>
-    new Date(iso).toLocaleString(intlLocale(locale), {
-      timeZone: 'Europe/Stockholm',
-    })
   return (
     <>
       {rows.length === 0 && <p>{d.empty}</p>}
@@ -45,31 +42,37 @@ export function HandoverQueue({
           key={h.id}
           id={'handover-' + h.id}
           tabIndex={-1}
-          className="intake-notice"
+          className="intake-notice handover-card"
           style={{
             scrollMarginTop: '1rem',
             ...(focus === h.id ? { outline: '2px solid currentColor' } : {}),
           }}
         >
-          <strong>
-            {h.reference} ·{' '}
+          <strong className="handover-card-heading">
             <Link className="text-link" href={`/intake/sellers/${h.sellerId}`}>
               {h.sellerName}
-            </Link>{' '}
-            · {d.kinds[h.kind]} · {h.estimatedItems} {d.items} ·{' '}
-            {d.statuses[h.status]}
+            </Link>
+            <span className={`handover-status handover-status-${h.status}`}>
+              {d.statuses[h.status]}
+            </span>
           </strong>
-          <p>
-            {d.announced} {when(h.createdAt)}
-            {h.note ? ` · ${h.note}` : ''}
-            {h.bagId ? (
-              <>
-                {' · '}
-                <Link className="text-link" href={`/intake/bags/${h.bagId}`}>
-                  {d.openBag}
-                </Link>
-              </>
-            ) : null}
+          <p className="handover-card-reference">
+            {h.reference} · {d.kinds[h.kind]} ·{' '}
+            {(h.estimatedItems === 1
+              ? d.estimatedCountOne
+              : d.estimatedCount
+            ).replace('{count}', String(h.estimatedItems))}
+          </p>
+          {h.note && <p className="handover-card-note">{h.note}</p>}
+          <p className="handover-card-meta">
+            <span>
+              {d.announced} <EventTime value={h.createdAt} locale={locale} />
+            </span>
+            {h.bagId && (
+              <Link className="text-link" href={`/intake/bags/${h.bagId}`}>
+                {d.openBag}
+              </Link>
+            )}
           </p>
           {write && h.status === 'open' && (
             <HandoverReceipt

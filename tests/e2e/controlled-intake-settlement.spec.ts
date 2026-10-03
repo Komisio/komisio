@@ -220,6 +220,7 @@ test('controlled journey: receive, register, label, sell and approve a settlemen
 
     // 5. Approve the settlement batch for every seller above the threshold (this seller, 160 SEK).
     await page.goto('/intake/payouts')
+    await page.getByTestId('payout-settlement').locator('summary').click()
     const settle = page.locator('section', {
       has: page.getByRole('heading', {
         name: d.payouts.settleHeading,
@@ -245,7 +246,7 @@ test('controlled journey: receive, register, label, sell and approve a settlemen
     const payoutList = page.locator('section', {
       has: page.getByRole('heading', { name: d.payouts.list, exact: true }),
     })
-    await expect(payoutList.locator('strong')).toContainText(
+    await expect(payoutList.locator('.badge')).toContainText(
       d.payouts.statuses.approved,
     )
     await expect(

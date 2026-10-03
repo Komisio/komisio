@@ -1,5 +1,6 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import Link from 'next/link'
 import { SignOut } from '@/components/platform/sign-out'
 import { Brand } from '@/components/platform/brand'
@@ -8,7 +9,7 @@ export default async function Onboarding() {
   const ctx = await requirePlatform(false)
   const d = dictionary(ctx.locale)
   return (
-    <main className="onboarding">
+    <main className="onboarding" lang={intlLocale(ctx.locale)}>
       <Brand />
       <div className="page-heading">
         <div className="eyebrow">{d.createTenant}</div>
@@ -37,3 +38,6 @@ export default async function Onboarding() {
     </main>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.createTenant)

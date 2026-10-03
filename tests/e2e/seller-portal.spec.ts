@@ -96,6 +96,10 @@ test('seller reads own economy, requests payout and opts out without becoming st
     expect((await savedPreference).ok()).toBe(true)
     await expect(page.getByRole('status')).toHaveText('Sparat.')
     await expect(page.getByRole('checkbox')).not.toBeChecked()
+    await expect(page.getByRole('checkbox')).toHaveJSProperty(
+      'defaultChecked',
+      false,
+    )
     await page.reload()
     await expect(page.getByRole('checkbox')).not.toBeChecked()
     await page.getByRole('link', { name: 'Visa avräkning #1' }).click()

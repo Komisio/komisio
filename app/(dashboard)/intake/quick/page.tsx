@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { notFound } from 'next/navigation'
@@ -29,7 +30,7 @@ export default async function QuickIntake() {
     readAttributeVocabulary(ctx.client, a.id),
   ])
   return (
-    <main className="intake quick-page">
+    <div className="intake quick-page">
       <div className="intake-header">
         <FormHelpHeading title={d.title} level={1} help={d.formHelp} />
         <Link className="text-link" href="/intake">
@@ -64,6 +65,9 @@ export default async function QuickIntake() {
           d={d}
         />
       )}
-    </main>
+    </div>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.quickIntake.title)

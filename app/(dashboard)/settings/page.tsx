@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import { z } from 'zod'
 import { StorePolicyForm } from '@/components/intake/store-policy-form'
@@ -33,7 +34,7 @@ import { BillingActions } from '@/components/platform/billing-actions'
 import { stripeConfigured } from '@/extensions/stripe/api'
 import { readChainOverview } from '@/lib/engine/chains'
 import { ChainPanel } from '@/components/platform/chain-panel'
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { ConnectorsPanel } from '@/components/platform/connectors-panel'
 import { AiCreditsPanel } from '@/components/platform/ai-credits-panel'
 import { readAiCredits } from '@/lib/engine/ai-credits'
@@ -60,7 +61,7 @@ const tabs = [
 type Tab = (typeof tabs)[number]
 
 /**
- * Store settings in four tabs. Only the selected tab's data beyond the shared
+ * Store settings in available tabs. Only the selected tab's data beyond the shared
  * reads is fetched. A Stripe return (`billing=`) lands on the store tab.
  */
 export default async function Settings({
@@ -81,9 +82,13 @@ export default async function Settings({
   }))
   const active = ctx.active!
   const intake = process.env.KOMISIO_INTAKE_ENABLED === 'true'
+  const visible = tabs.filter(
+    (t) =>
+      (intake || t === 'store') && (t !== 'connectors' || connectorsEnabled()),
+  )
   const tab: Tab = !intake
     ? 'store'
-    : tabs.includes(query.tab as Tab)
+    : visible.includes(query.tab as Tab)
       ? (query.tab as Tab)
       : query.billing
         ? 'store'
@@ -161,10 +166,6 @@ export default async function Settings({
       d={pr}
     />
   )
-  const visible = tabs.filter(
-    (t) =>
-      (intake || t === 'store') && (t !== 'connectors' || connectorsEnabled()),
-  )
   return (
     <div className="settings-page">
       <div className="page-heading">
@@ -235,9 +236,15 @@ export default async function Settings({
         />
       )}
       {tab === 'printing' && (
-        <section className="card intake-form" aria-label={pr.title}>
+        <section
+          className="card intake-form printing-workspace"
+          aria-label={pr.title}
+        >
           <h2>{pr.title}</h2>
           <p>{pr.intro}</p>
+          <Link className="text-link" href="/help/labels">
+            {d.helpCenter.articles.labels.title}
+          </Link>
           {requestedJob !== null && (
             <section aria-labelledby="selected-print-job">
               <h3 id="selected-print-job" tabIndex={-1}>
@@ -263,6 +270,7 @@ export default async function Settings({
                   existing={p}
                   d={pr}
                   intake={d.intake}
+                  leaveUnsaved={d.leaveUnsaved}
                 />
               )}
               {p.transport === 'tcp' && devices && (
@@ -280,16 +288,27 @@ export default async function Settings({
             </details>
           ))}
           {manages && (
-            <>
-              <h3>{pr.registerHeading}</h3>
+            <details
+              className="printer-register-fold"
+              open={printers.length === 0}
+            >
+              <summary>{pr.registerHeading}</summary>
               <PrinterForm
                 key={`new-${printers.length}`}
                 tenantId={active.id}
                 d={pr}
                 intake={d.intake}
+                leaveUnsaved={d.leaveUnsaved}
               />
-            </>
+            </details>
           )}
+          <section className="printing-jobs" aria-labelledby="print-jobs">
+            <h3 id="print-jobs" tabIndex={-1}>
+              {pr.jobs}
+            </h3>
+            {jobs.length === 0 && <p>{pr.noJobs}</p>}
+            {recentJobs.map(jobDetails)}
+          </section>
           {formats && (
             <LabelFormatsForm
               key={`formats-${active.id}`}
@@ -298,6 +317,7 @@ export default async function Settings({
               canEdit={manages}
               d={pr}
               intake={d.intake}
+              leaveUnsaved={d.leaveUnsaved}
             />
           )}
           {formats && templates && (
@@ -336,13 +356,9 @@ export default async function Settings({
               dpi={previewDpi}
               d={pr}
               intake={d.intake}
+              leaveUnsaved={d.leaveUnsaved}
             />
           )}
-          <h3 id="print-jobs" tabIndex={-1}>
-            {pr.jobs}
-          </h3>
-          {jobs.length === 0 && <p>{pr.noJobs}</p>}
-          {recentJobs.map(jobDetails)}
           <p>
             <small>{pr.agentHint}</small>
           </p>
@@ -393,25 +409,41 @@ export default async function Settings({
                 ) : null
               }
             />
-            <hr className="divider" />
-            <div className="read-details">
-              <label>{d.slug}</label>
-              <p>{active.slug}</p>
-              <label>{d.tenantId}</label>
-              <p>{active.id}</p>
-              <small>{d.tenantImmutable}</small>
-            </div>
+            <details className="settings-technical">
+              <summary>{d.technicalDetails}</summary>
+              <div className="read-details">
+                <strong>{d.slug}</strong>
+                <p>{active.slug}</p>
+                <strong>{d.tenantId}</strong>
+                <p>{active.id}</p>
+                <small>{d.tenantImmutable}</small>
+              </div>
+            </details>
           </section>
           {can(active.role, 'audit.read') && (
             <section className="card">
               <h2>{d.audit}</h2>
+              <p>{d.auditHint}</p>
               {events.data?.map((e) => (
                 <div key={e.id} className="audit-row">
                   <span>
-                    {d.events[e.action as keyof typeof d.events] ?? e.action}
+                    {d.events[e.action as keyof typeof d.events] ?? (
+                      <details>
+                        <summary>{d.otherActivity}</summary>
+                        <code>{e.action}</code>
+                      </details>
+                    )}
                   </span>
                   <small>
-                    {new Date(e.occurred_at).toLocaleDateString(ctx.locale)}
+                    {new Date(e.occurred_at).toLocaleDateString(
+                      intlLocale(ctx.locale),
+                      {
+                        timeZone: 'Europe/Stockholm',
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      },
+                    )}
                   </small>
                 </div>
               ))}
@@ -423,3 +455,5 @@ export default async function Settings({
     </div>
   )
 }
+
+export const generateMetadata = () => platformPageMetadata((d) => d.tenant)

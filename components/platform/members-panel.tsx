@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useId } from 'react'
 import { UserPlus, X, Copy } from 'lucide-react'
 import { intlLocale, type Dictionary, type Locale } from '@/lib/i18n'
 import {
@@ -31,11 +31,17 @@ export function MembersPanel({
   const [inviteUrl, setInviteUrl] = useState('')
   const [delivery, setDelivery] = useState('manual')
   const [copied, setCopied] = useState(false)
+  const [copyError, setCopyError] = useState('')
+  const inviteInput = useRef<HTMLInputElement>(null)
   const [change, setChange] = useState<{
     userId: string
     role: Role | null
   } | null>(null)
   const dialog = useRef<HTMLDialogElement>(null)
+  const dialogId = useId()
+  const changedMember = members.find(
+    (member) => member.user_id === change?.userId,
+  )
   useEffect(() => {
     if (change) dialog.current?.showModal()
     else dialog.current?.close()
@@ -44,6 +50,8 @@ export function MembersPanel({
   async function invite(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setInviteUrl('')
+    setCopied(false)
+    setCopyError('')
     const form = new FormData(e.currentTarget)
     const result = await action.run({
       action: 'invite',
@@ -117,6 +125,7 @@ export function MembersPanel({
                       : d.inviteDelivery}
               </p>
               <input
+                ref={inviteInput}
                 value={inviteUrl}
                 readOnly
                 aria-label={d.inviteReady}
@@ -125,17 +134,22 @@ export function MembersPanel({
               <Button
                 variant="ghost"
                 onClick={async () => {
+                  setCopied(false)
+                  setCopyError('')
                   try {
                     await navigator.clipboard.writeText(inviteUrl)
                     setCopied(true)
                   } catch {
-                    setCopied(false)
+                    setCopyError(d.copyLinkFailed)
+                    inviteInput.current?.focus()
+                    inviteInput.current?.select()
                   }
                 }}
               >
                 <Copy size={14} />
                 {copied ? d.copied : d.copyLink}
               </Button>
+              {copyError && <p role="alert">{copyError}</p>}
             </div>
           )}
         </section>
@@ -145,14 +159,16 @@ export function MembersPanel({
       <Feedback error={action.error} success={action.success} />
       <section className="card table-card">
         <div className="table-wrap">
-          <table className="data-table">
+          <table className="data-table member-directory" aria-label={d.members}>
             <thead>
               <tr>
-                <th>{d.name}</th>
-                <th>{d.role}</th>
-                <th className="joined">{d.joined}</th>
+                <th scope="col">{d.name}</th>
+                <th scope="col">{d.role}</th>
+                <th scope="col" className="joined">
+                  {d.joined}
+                </th>
                 {manage && (
-                  <th>
+                  <th scope="col">
                     <span className="sr-only">{d.changeRole}</span>
                   </th>
                 )}
@@ -161,7 +177,7 @@ export function MembersPanel({
             <tbody>
               {members.map((member) => (
                 <tr key={member.user_id}>
-                  <td>
+                  <td className="member-identity">
                     <div className="row">
                       <span className="avatar">
                         {member.display_name.slice(0, 2).toUpperCase()}
@@ -175,7 +191,7 @@ export function MembersPanel({
                       </span>
                     </div>
                   </td>
-                  <td>
+                  <td className="member-role">
                     <span
                       className={`badge ${member.role === 'readonly' ? 'badge-neutral' : ''}`}
                     >
@@ -191,7 +207,7 @@ export function MembersPanel({
                     </small>
                   </td>
                   {manage && (
-                    <td>
+                    <td className="member-actions">
                       <div className="table-actions">
                         {!['automation', 'device'].includes(
                           member.role as string,
@@ -258,13 +274,16 @@ export function MembersPanel({
             <div className="empty">{d.noInvites}</div>
           ) : (
             <div className="table-wrap">
-              <table className="data-table">
+              <table
+                className="data-table member-invitations"
+                aria-label={d.pendingInvites}
+              >
                 <thead>
                   <tr>
-                    <th>{d.email}</th>
-                    <th>{d.role}</th>
-                    <th>{d.expires}</th>
-                    <th>
+                    <th scope="col">{d.email}</th>
+                    <th scope="col">{d.role}</th>
+                    <th scope="col">{d.expires}</th>
+                    <th scope="col">
                       <span className="sr-only">{d.revoke}</span>
                     </th>
                   </tr>
@@ -272,19 +291,20 @@ export function MembersPanel({
                 <tbody>
                   {invitations.map((invite) => (
                     <tr key={invite.id}>
-                      <td>{invite.email}</td>
+                      <td className="member-identity">{invite.email}</td>
                       <td>
                         <span className="badge">{d.roles[invite.role]}</span>
                       </td>
-                      <td>
+                      <td className="invitation-expiry">
                         <small>
+                          <span className="mobile-only">{d.expires}: </span>
                           {new Date(invite.expires_at).toLocaleDateString(
                             intlLocale(locale),
                             { timeZone: 'Europe/Stockholm' },
                           )}
                         </small>
                       </td>
-                      <td>
+                      <td className="member-actions">
                         {(tenant.role === 'owner' ||
                           invite.role !== 'admin') && (
                           <Button
@@ -313,11 +333,25 @@ export function MembersPanel({
       <dialog
         ref={dialog}
         className="dialog-box"
+        aria-labelledby={`${dialogId}-title`}
+        aria-describedby={`${dialogId}-person ${dialogId}-description`}
         onCancel={() => setChange(null)}
         style={{ margin: 'auto', border: '1px solid var(--line)' }}
       >
-        <h2>{change?.role === null ? d.remove : d.changeRole}</h2>
-        <p>{change?.role === null ? d.removeConfirm : d.roleConfirm}</p>
+        <h2 id={`${dialogId}-title`}>
+          {change?.role === null ? d.remove : d.changeRole}
+        </h2>
+        <p id={`${dialogId}-person`} className="member-confirm-person">
+          <strong>{changedMember?.display_name}</strong>
+          {changedMember?.email &&
+            changedMember.email !== changedMember.display_name && (
+              <span>{changedMember.email}</span>
+            )}
+          <span>{tenant.name}</span>
+        </p>
+        <p id={`${dialogId}-description`}>
+          {change?.role === null ? d.removeConfirm : d.roleConfirm}
+        </p>
         {change?.role && (
           <p>
             <span className="badge">{d.roles[change.role]}</span>

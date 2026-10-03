@@ -19,7 +19,7 @@
     "required": "Ein Nachweis ist vor der Annahme erforderlich.",
     "optional": "Ein Nachweis ist bei der Annahme optional.",
     "none": "Es ist keine Einlieferervereinbarung veröffentlicht. Für die Annahme gilt keine neue Vereinbarungsvoraussetzung.",
-    "history": "Frühere Versionen",
+    "history": "Vertragsversionen",
     "historyHint": "Die 20 neuesten Versionen. Ältere Versionen bleiben über ihre Belege zugänglich.",
     "adminOnly": "Inhaber und Administratoren können Vereinbarungsversionen veröffentlichen.",
     "manage": "Einlieferervereinbarungen anzeigen und verwalten",
@@ -335,8 +335,8 @@
   "tenantIdentity": "Store-Identität",
   "tenantId": "Store-ID",
   "tenantImmutable": "Diese Kennung unterscheidet Ihren Store von anderen Stores.",
-  "audit": "Letzte Zugriffsänderungen",
-  "noAudit": "Noch keine Änderungen vorhanden.",
+  "audit": "Letzte Aktivitäten",
+  "noAudit": "Noch keine Aktivitäten.",
   "accountIntro": "Ihre persönlichen Angaben begleiten Sie über alle Stores hinweg.",
   "profile": "Profil",
   "security": "Sicherheit",
@@ -386,7 +386,11 @@
     "inspection.reopened": "Artikelentwurf wieder geöffnet",
     "reception.created": "Annahme gestartet",
     "reception.sources_saved": "Annahmenachweise gespeichert",
-    "reception.review_published": "Annahmeprüfung vorbereitet"
+    "reception.review_published": "Annahmeprüfung vorbereitet",
+    "item.accepted": "Ein Artikel wurde registriert",
+    "store_policy.published": "Die Geschäftsregeln wurden aktualisiert",
+    "purchase.registered": "Ein Einkauf wurde erfasst",
+    "sale.recorded": "Ein Verkauf wurde erfasst"
   },
   "errors": {
     "FORBIDDEN": "Sie haben keine Berechtigung dafür.",
@@ -711,7 +715,10 @@
       "noApproval": "Der Laden legt den Preis fest. Eine Zustimmung des Verkäufers ist nicht erforderlich.",
       "optionalShare": "Optional mit dem Verkäufer teilen",
       "registered": "Artikel registriert"
-    }
+    },
+    "linkUncertain": "Die Linkänderung konnte nicht bestätigt werden. Laden Sie die Seite neu und prüfen Sie den Status, bevor Sie fortfahren.",
+    "copyFailed": "Kopieren fehlgeschlagen. Der Link ist markiert und kann manuell kopiert werden.",
+    "linkRevoked": "Der Link wurde widerrufen."
   },
   "operations": {
     "title": "Vorgeschlagene Vorgänge",
@@ -855,7 +862,8 @@
     "noComparedChanges": "Keine Änderungen in den verglichenen Feldern. Prüfen Sie dennoch den vollständigen neuen Vorschlag.",
     "sourceVersionChanged": "Die Quellenversion hat sich geändert. Prüfen Sie die Nachweise, auch wenn die Fakten unverändert erscheinen.",
     "agreementVersionChanged": "Die Vereinbarungsversion hat sich geändert. Lesen Sie die vorgeschlagenen Bedingungen unten.",
-    "zettleReceipt": "PayPal POS-Beleg"
+    "zettleReceipt": "PayPal POS-Beleg",
+    "sourceReference": "Quellenreferenz"
   },
   "reviewPhotoAlt": "In dieser Prüfung enthaltenes Foto",
   "reviewPhotos": "Fotos in dieser Prüfung",
@@ -895,7 +903,9 @@
       "sun": "Sonntag"
     },
     "country": "Land",
-    "countryHelp": "Das Land des Stores bestimmt die Währung für den Kauf von KI-Credits."
+    "countryHelp": "Das Land des Stores bestimmt die Währung für den Kauf von KI-Credits.",
+    "noHours": "Keine Zeiten angegeben",
+    "hoursHint": "Wählen Sie die Tage, für die Sie Zeiten angeben möchten. Für abgewählte Tage werden keine Zeiten veröffentlicht."
   },
   "storePolicy": {
     "markdowns": "Preissenkungen",
@@ -1103,9 +1113,9 @@
     "sellerCredit": "Einlieferer-Gutschrift",
     "vat": "MwSt.",
     "providers": {
-      "manual": "Kasse",
+      "manual": "Manuell erfasst",
       "zettle": "PayPal POS",
-      "shopify": "Shopify POS"
+      "shopify": "Shopify"
     },
     "statuses": {
       "completed": "abgeschlossen",
@@ -1129,7 +1139,18 @@
     "cart": "Warenkorb",
     "cartEmpty": "Suchen Sie die zu erfassenden Artikel.",
     "remove": "Entfernen",
-    "total": "Gesamt"
+    "total": "Gesamt",
+    "listHint": "Die 50 neuesten Verkäufe werden angezeigt. Öffnen Sie einen Beleg für Artikel, Rückgaben und Details.",
+    "financialDetails": "Provision und Mehrwertsteuer",
+    "reference": "Belegreferenz",
+    "findReceipt": "Beleg suchen",
+    "receiptSearchHint": "Geben Sie die vollständige Belegreferenz ein, auch für ältere Verkäufe.",
+    "source": "Verkaufsquelle",
+    "allSources": "Alle Quellen",
+    "showLatest": "Neueste anzeigen",
+    "searchResults": "Suchergebnisse",
+    "filteredHint": "Bis zu 50 passende Verkäufe werden angezeigt, die neuesten zuerst.",
+    "noReceipts": "Keine passenden Belege. Prüfen Sie die vollständige Referenz oder wählen Sie eine andere Quelle."
   },
   "ledger": {
     "title": "Guthaben und Konto",
@@ -1163,7 +1184,7 @@
   },
   "payouts": {
     "title": "Auszahlungen",
-    "intro": "Eine Auszahlung geht von beantragt über genehmigt zu bezahlt oder wird abgelehnt. Die Genehmigung reserviert den Betrag im Konto des Einlieferers; die Zahlung gleicht ihn aus.",
+    "intro": "Verwalten Sie Auszahlungen an Verkäufer und sehen Sie, welche noch auf Zahlung warten.",
     "notice": "Komisio erfasst Auszahlungen; es bewegt kein Geld. Zahlen Sie über Ihre Bank und erfassen Sie die Referenz hier.",
     "requestHeading": "Auszahlung beantragen",
     "requestHint": "Im Auftrag des Einlieferers, mindestens der Mindestbetrag des Ladens und höchstens das verfügbare Guthaben.",
@@ -1189,7 +1210,7 @@
       "paid": "bezahlt",
       "rejected": "abgelehnt"
     },
-    "settleHeading": "Alle Einlieferer abrechnen",
+    "settleHeading": "Auszahlungen vorbereiten",
     "settleHint": "Jeder Einlieferer mit mindestens dem Minimum ({threshold}) ohne offene Auszahlung. Ein Stapel beantragt und genehmigt eine Auszahlung des gesamten verfügbaren Guthabens pro ausgewähltem Einlieferer; Sie zahlen dann über Ihre Bank und markieren jede als bezahlt.",
     "settleEmpty": "Derzeit erfüllt kein Einlieferer die Voraussetzungen für eine Abrechnung.",
     "settleReason": "Stapelnotiz",
@@ -1200,7 +1221,8 @@
     "settleTotal": "Gesamt",
     "requestNone": "Kein verfügbares Guthaben in dieser Liste. Öffnen Sie einen Einlieferer, um dessen Guthaben zu sehen.",
     "directory": "Alle Einlieferer durchsuchen",
-    "latestFifty": "Die 50 neuesten Auszahlungen werden angezeigt. Die Seite jedes Einlieferers zeigt dessen letzte Auszahlungen."
+    "latestFifty": "Die 50 neuesten Auszahlungen werden angezeigt. Die Seite jedes Einlieferers zeigt dessen letzte Auszahlungen.",
+    "history": "Verlauf und Referenzen"
   },
   "returns": {
     "reason": "Rückgabegrund",
@@ -1255,16 +1277,16 @@
     "items": "Artikel",
     "note": "Notiz (optional)",
     "confirm": "Die Artikel der Einlieferung sind jetzt im Laden.",
-    "receive": "Einlieferung annehmen und erfassen",
+    "receive": "Abgabe annehmen",
     "openBag": "Einlieferung öffnen",
     "kinds": {
       "bag": "Tüte",
       "box": "Karton"
     },
     "statuses": {
-      "open": "offen",
-      "received": "angenommen",
-      "cancelled": "storniert"
+      "open": "Wartet auf Abgabe",
+      "received": "Angenommen",
+      "cancelled": "Storniert"
     },
     "backToQueue": "Zurück zu angekündigten Einlieferungen",
     "search": "Übergabe suchen",
@@ -1276,7 +1298,9 @@
     "noMatches": "Keine Übergaben entsprechen den Filtern.",
     "limited": "Vorübergehend werden nur die 100 neuesten Übergaben angezeigt. Öffnen Sie eine ältere über ihre H-Referenz.",
     "settings": "Einstellungen öffnen",
-    "askOwner": "Bitte einen Inhaber oder Administrator, die Funktion zu aktivieren."
+    "askOwner": "Bitte einen Inhaber oder Administrator, die Funktion zu aktivieren.",
+    "estimatedCount": "Etwa {count} Artikel",
+    "estimatedCountOne": "Etwa {count} Artikel"
   },
   "chain": {
     "title": "Kette",
@@ -1443,7 +1467,12 @@
       "unconfirmed": "Zustellung nicht bestätigt",
       "failed": "Zustellung fehlgeschlagen"
     },
-    "dailyCap": "Das Tageslimit des Stores für Nachrichten ist erreicht. Versuchen Sie es morgen erneut."
+    "dailyCap": "Das Tageslimit des Stores für Nachrichten ist erreicht. Versuchen Sie es morgen erneut.",
+    "older": "Ältere Nachrichten",
+    "newer": "Neuere Nachrichten",
+    "latest": "Neueste Nachrichten",
+    "showingRange": "Nachrichten {from}–{to} von {total}",
+    "pageEmpty": "Keine Nachrichten auf dieser Seite."
   },
   "stock": {
     "title": "Bestand",
@@ -1506,7 +1535,9 @@
     "tooMany": "Die Datei hat mehr als 200 verwendbare Zeilen. Teilen Sie sie auf und importieren Sie in Teilen.",
     "nothing": "Keine verwendbaren Zeilen. Prüfen Sie die Spaltenzuordnung.",
     "error": "Der Import konnte nicht bereitgestellt werden. Laden Sie neu und versuchen Sie es erneut.",
-    "ownerOnly": "Nur der Store-Inhaber oder ein Administrator kann Einlieferer importieren."
+    "ownerOnly": "Nur der Store-Inhaber oder ein Administrator kann Einlieferer importieren.",
+    "fileTooLarge": "Die Datei ist zu groß. Teilen Sie sie auf und wählen Sie eine kleinere Datei.",
+    "clearFile": "Datei entfernen"
   },
   "lifecycle": {
     "agentHeading": "Preissenkungsläufe",
@@ -1565,9 +1596,9 @@
   },
   "openByReference": {
     "title": "Über Etikett öffnen",
-    "intro": "Gib die Referenz einer Abgabe (K-n), eines Kleidungsstücks (G-n) oder eines Artikels (I-XXXXXXXX) ein oder scanne sie.",
+    "intro": "Scanne ein Etikett oder gib die Referenz vom Etikett oder der Voranmeldung ein.",
     "reference": "Etikettreferenz",
-    "hint": "Zum Beispiel K-12, G-7 oder I-A1B2C3D4.",
+    "hint": "Zum Beispiel K-12, G-7, H-9 oder I-A1B2C3D4.",
     "open": "Öffnen",
     "notFound": "Nichts in diesem Store trägt die Referenz {ref}.",
     "ambiguous": "Mehrere Artikel in diesem Geschäft haben die Referenz {ref}. Wähle den richtigen Artikel aus der Liste.",
@@ -1647,7 +1678,7 @@
     "formatInvalid": "Breite 20 bis 120 mm, Höhe 15 bis 200 mm, höchstens eine Dezimalstelle.",
     "defaultSize": "Standard",
     "title": "Drucker und Etiketten",
-    "intro": "Etiketten sind ZPL-Programme, die für einen Store-Drucker eingereiht werden. Ein lokaler Agent neben dem Drucker holt Aufträge ab und meldet das Ergebnis.",
+    "intro": "Verwalten Sie die Etikettendrucker des Geschäfts und prüfen Sie die letzten Druckaufträge. Etiketten auf normalem Papier können direkt auf der Artikelseite gedruckt werden.",
     "none": "Keine Drucker registriert.",
     "registerHeading": "Drucker registrieren",
     "name": "Name",
@@ -1699,12 +1730,13 @@
     "browserPrint": "Etikett drucken",
     "browserUnavailable": "Das Etikett ist gerade nicht verfügbar. Kehren Sie zum Artikel zurück und versuchen Sie es erneut.",
     "printerUncertain": "Die Druckeränderung konnte nicht bestätigt werden. Lade die Seite neu und prüfe die gespeicherten Einstellungen, bevor du fortfährst.",
-    "formatUncertain": "Die Etikettengröße konnte nicht bestätigt werden. Laden Sie die Seite neu und prüfen Sie die gespeicherte Größe, bevor Sie fortfahren."
+    "formatUncertain": "Die Etikettengröße konnte nicht bestätigt werden. Laden Sie die Seite neu und prüfen Sie die gespeicherte Größe, bevor Sie fortfahren.",
+    "discardTemplate": "Ungespeicherte Änderungen an der Etikettenvorlage verwerfen?"
   },
   "purchases": {
     "title": "Einkäufe",
-    "intro": "Store-eigene Ware kommt hier herein, nie über die Kommissionswege.",
-    "notice": "Ein Einkauf ist ein Fakt darüber, was der Store gekauft hat und für wie viel. Er ist noch kein Artikel zum Verkauf; die Annahme folgt.",
+    "intro": "Erfassen Sie Artikel, die das Geschäft kauft und besitzt.",
+    "notice": "Erfassen Sie zuerst den Einkauf. Öffnen Sie anschließend „{accept}“ beim Einkauf und geben Sie einen Verkaufspreis ein, um den Artikel für den Verkauf vorzubereiten.",
     "registerHeading": "Einkauf registrieren",
     "registerHint": "Eine Registrierung pro gekauftem Artikel. Bewahren Sie den Beleg oder die Notiz auf; deren Referenz ist erforderlich.",
     "price": "Einkaufspreis",
@@ -2286,7 +2318,7 @@
     "reload": "Neu laden",
     "revision": "Zuordnungsversion",
     "total": "Belegsumme",
-    "matchHint": "Kopieren Sie die vollständige Artikel-ID vom Ende der URL seiner Seite. Ordnen Sie jede Zeile einem anderen Artikel zu.",
+    "matchHint": "Suchen Sie den Artikel oder scannen Sie das Etikett. Wählen Sie den richtigen Artikel und speichern Sie die Zuordnung für jede Belegzeile.",
     "open": "Beleg öffnen",
     "done": "Gespeichert",
     "unsupported": "Rabatte, Erstattungen, Gebühren und Mengen ungleich eins benötigen einen späteren Integrationsschritt.",
@@ -2417,7 +2449,9 @@
     "setupHint": "Gib die Client ID und den API-Schlüssel deines PayPal POS-Kontos ein. Die Angaben werden geprüft und für diesen Laden verschlüsselt gespeichert.",
     "clientId": "Client ID",
     "apiKey": "API-Schlüssel",
-    "connect": "PayPal POS verbinden"
+    "connect": "PayPal POS verbinden",
+    "chooseItem": "Artikel auswählen",
+    "selectedItem": "Ausgewählter Artikel"
   },
   "priceEvidence": {
     "title": "Vergleichbare Verkäufe in diesem Store",
@@ -2856,7 +2890,7 @@
   },
   "helpCenter": {
     "title": "Hilfe",
-    "intro": "Anleitungen zu Warenannahme, Etiketten und Buchhaltungsintegration.",
+    "intro": "Hilfe zu Warenannahme, Etiketten und Integrationen.",
     "open": "Hilfe zu dieser Seite",
     "close": "Hilfe schließen",
     "fullArticle": "Vollständige Hilfeseite in neuem Tab öffnen",
@@ -2954,13 +2988,25 @@
           "Fehlt die Antwort auf das Einreihen, wiederholen Sie den Versuch im selben geöffneten Formular. Erstellen Sie nicht immer neue Aufträge. Prüfen Sie den Auftrag unter Drucker und Druckaufträge und bitten Sie bei Problemen die zuständige Person um Hilfe. Die Etikettensuche öffnet eine vorhandene Referenz."
         ],
         "notice": "Das Öffnen der Hilfe druckt nichts und erfasst keinen neuen Artikel. Legen Sie kein Artikelduplikat an, um ein Etikett zu ersetzen. Physischer Druck und Scannen müssen mit den Geräten des Ladens geprüft werden."
+      },
+      "integrations": {
+        "title": "Weitere Systeme Ihres Geschäfts verbinden",
+        "intro": "Beginnen Sie mit dem System, das Sie mit Komisio verbinden möchten. Öffnen Sie dessen Bereich für Status und Einstellungen.",
+        "steps": [
+          "Wählen Sie Kassensystem, Onlineshop oder Buchhaltung entsprechend der gewünschten Verbindung.",
+          "Lesen Sie den Verbindungsstatus und folgen Sie den Schritten im Bereich. Manche Aktionen erfordern Inhaber- oder Administratorrechte.",
+          "Prüfen Sie vor dem Aktivieren einer automatischen Funktion, welche Daten in welche Richtung übertragen werden.",
+          "Verfolgen Sie den Status von Produkten, Belegen, Bestellungen oder Buchhaltungsunterlagen in der jeweiligen Integration. Öffnen Sie die Details, wenn Handlungsbedarf besteht."
+        ],
+        "notice": "Eine Verbindung bedeutet nicht, dass alle automatischen Funktionen aktiviert sind. Prüfen Sie diese einzeln in den Integrationseinstellungen."
       }
     },
     "receiving": "Warenannahme öffnen",
     "storeFlow": "Arbeitsablauf im Laden",
     "items": "Erfassten Artikel finden",
     "openReference": "Etikettenreferenz öffnen",
-    "printing": "Drucker und Druckaufträge"
+    "printing": "Drucker und Druckaufträge",
+    "integrations": "Integrationen öffnen"
   },
   "dashboard": {
     "intro": "Das Wichtigste für Ihren Arbeitstag auf einen Blick.",
@@ -2972,5 +3018,15 @@
     "salesHint": "Erfasste Verkäufe ansehen.",
     "snapshot": "Stand im Laden",
     "receiptHint": "Jetzt annehmen, Artikel später prüfen."
-  }
+  },
+  "auditHint": "Die 12 zuletzt erfassten Ereignisse im Geschäft.",
+  "otherActivity": "Anderes Ereignis im Geschäft",
+  "technicalDetails": "Technische Geschäftsdetails",
+  "skipToContent": "Zum Hauptinhalt springen",
+  "leaveUnsaved": "Seite verlassen? Nicht gespeicherte Änderungen gehen verloren. Falls das Speichern nicht bestätigt wurde, prüfen Sie die gespeicherten Inhalte, bevor Sie erneut beginnen.",
+  "showPassword": "Passwort anzeigen",
+  "hidePassword": "Passwort verbergen",
+  "reviewRetryApprove": "Genehmigung erneut versuchen",
+  "reviewRetryDecline": "Ablehnung erneut versuchen",
+  "copyLinkFailed": "Kopieren fehlgeschlagen. Der Link ist markiert und kann manuell kopiert werden."
 }

@@ -1,10 +1,17 @@
 'use client'
+import { PasswordInput } from './password-input'
 import { useState, useSyncExternalStore } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ArrowRight } from 'lucide-react'
 import { browserClient } from '@/lib/supabase/client'
-import { dictionary, type Locale, locales, localeNames } from '@/lib/i18n'
+import {
+  dictionary,
+  intlLocale,
+  type Locale,
+  locales,
+  localeNames,
+} from '@/lib/i18n'
 import { safeNext } from '@/lib/platform/validation'
 import { Button } from '@/components/ui/button'
 import { Feedback } from '@/components/platform/feedback'
@@ -35,7 +42,17 @@ export function AuthForm({
   function changeLocale(value: Locale) {
     setLocale(value)
     document.cookie = `komisio-locale=${value};path=/;SameSite=Lax`
-    document.documentElement.lang = value
+    document.documentElement.lang = intlLocale(value)
+    const translated = dictionary(value)
+    const title =
+      mode === 'login'
+        ? translated.login
+        : mode === 'register'
+          ? translated.register
+          : mode === 'reset'
+            ? translated.reset
+            : translated.passwordChange
+    document.title = `${title} · Komisio`
   }
   async function submit(form: React.FormEvent<HTMLFormElement>) {
     form.preventDefault()
@@ -120,7 +137,7 @@ export function AuthForm({
           ? d.reset
           : d.passwordChange
   return (
-    <div className="auth-layout">
+    <div className="auth-layout" lang={intlLocale(locale)}>
       <aside className="auth-story">
         <Brand light />
         <div>
@@ -141,11 +158,11 @@ export function AuthForm({
             aria-label={d.language}
             disabled={!ready}
             value={locale}
-            lang={locale}
+            lang={intlLocale(locale)}
             onChange={(e) => changeLocale(e.target.value as Locale)}
           >
             {locales.map((code) => (
-              <option key={code} value={code} lang={code}>
+              <option key={code} value={code} lang={intlLocale(code)}>
                 {localeNames[code]}
               </option>
             ))}
@@ -194,18 +211,24 @@ export function AuthForm({
                   <label htmlFor="password">
                     {mode === 'password' ? d.newPassword : d.password}
                   </label>
-                  <input
+                  <PasswordInput
                     id="password"
                     name="password"
                     disabled={!ready}
-                    type="password"
+                    showLabel={d.showPassword}
+                    hideLabel={d.hidePassword}
                     autoComplete={
                       mode === 'login' ? 'current-password' : 'new-password'
                     }
                     minLength={mode === 'login' ? 1 : 10}
+                    aria-describedby={
+                      mode !== 'login' ? 'password-hint' : undefined
+                    }
                     required
                   />
-                  {mode !== 'login' && <small>{d.passwordHint}</small>}
+                  {mode !== 'login' && (
+                    <small id="password-hint">{d.passwordHint}</small>
+                  )}
                 </div>
               )}
               {mode === 'login' && (

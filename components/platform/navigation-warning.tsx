@@ -53,6 +53,20 @@ export function useNavigationWarning(message: string | null) {
   }, [message, warnings])
 }
 
+/** Warn on supported in-app links and document unload without storing form data. */
+export function useUnsavedChanges(message: string | null) {
+  useNavigationWarning(message)
+  useEffect(() => {
+    if (!message) return
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault()
+      event.returnValue = ''
+    }
+    window.addEventListener('beforeunload', warn)
+    return () => window.removeEventListener('beforeunload', warn)
+  }, [message])
+}
+
 export function useConfirmNavigation() {
   const warnings = useContext(NavigationWarnings)
   return () => warnings?.confirm() ?? true

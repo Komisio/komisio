@@ -5,6 +5,7 @@ import {
   currentLink,
   isActivePath,
   mobileNavigation,
+  mobileCurrentPath,
 } from '../../lib/platform/navigation'
 
 describe('navigation', () => {
@@ -14,6 +15,7 @@ describe('navigation', () => {
     const paths = groups.flatMap((g) => g.links.map((l) => l.path))
     expect(new Set(paths).size).toBe(paths.length)
     expect(paths).toContain('/intake/accounting')
+    expect(paths).toContain('/intake/purchases')
     expect(paths).not.toContain('/host')
     const hostPaths = buildNavigation(d, { intakeEnabled: true, host: true })
       .flatMap((g) => g.links)
@@ -44,6 +46,7 @@ describe('navigation', () => {
     )
     expect(isActivePath('/', '/')).toBe(true)
     expect(isActivePath('/intake/items/1', '/intake')).toBe(false)
+    expect(isActivePath('/intake/bags-extra', '/intake')).toBe(false)
     expect(isActivePath('/intake/items/1', '/intake/items')).toBe(true)
     expect(currentLink(groups, '/intake/reception/abc')?.path).toBe(
       '/intake/operations',
@@ -51,5 +54,33 @@ describe('navigation', () => {
     expect(isActivePath('/intake/reception-extra', '/intake/operations')).toBe(
       false,
     )
+  })
+  it('keeps both receiving forms oriented without marking the desktop quick link', () => {
+    const links = mobileNavigation(dictionary('sv'), true)
+    for (const path of [
+      '/intake',
+      '/intake/bags/a',
+      '/intake/bags/a/inspect',
+    ]) {
+      expect(mobileCurrentPath(path, links)).toBe('/intake/quick')
+      expect(isActivePath(path, '/intake/quick')).toBe(false)
+    }
+    expect(mobileCurrentPath('/intake/quick', links)).toBe('/intake/quick')
+    expect(mobileCurrentPath('/intake/items/a', links)).toBe('/intake/items')
+    expect(mobileCurrentPath('/intake/reception/a', links)).toBe(
+      '/intake/operations',
+    )
+    for (const path of [
+      '/settings',
+      '/account',
+      '/members',
+      '/intake/sellers',
+      '/intake/accounting',
+    ])
+      expect(mobileCurrentPath(path, links)).toBe('/menu')
+    expect(mobileCurrentPath('/', links)).toBe('/')
+    const minimal = mobileNavigation(dictionary('sv'), false)
+    expect(mobileCurrentPath('/members', minimal)).toBe('/members')
+    expect(mobileCurrentPath('/help', minimal)).toBeNull()
   })
 })

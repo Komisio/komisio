@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
+import { readFileSync } from 'node:fs'
+import type { Dictionary } from '../../lib/i18n'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
@@ -12,7 +14,7 @@ async function handovers(
     await f.db.query('select register_seller($1,$2,$3,$4,$5) id', [
       f.tenant,
       randomUUID(),
-      'Synthetic portal seller',
+      'Synthetic portal seller with a longer display name',
       email,
       '',
     ])
@@ -58,7 +60,37 @@ test('an unanswered handover can be retried only from its own row', async ({
   try {
     const ids = await handovers(f, email)
     await page.setViewportSize({ width: 320, height: 800 })
-    await page.goto('/intake/handovers')
+    for (const locale of ['en', 'no', 'dk', 'fi', 'de', 'es', 'it', 'sv']) {
+      const translated: Dictionary = JSON.parse(
+        readFileSync(
+          new URL(`../../messages/${locale}.json`, import.meta.url),
+          'utf8',
+        ),
+      )
+      await page.context().addCookies([
+        {
+          name: 'komisio-locale',
+          value: locale,
+          url: 'http://127.0.0.1:3000',
+        },
+      ])
+      await page.goto('/intake/handovers')
+      const row = page.locator(`#handover-${ids[0]}`)
+      await expect(row.locator('.handover-status')).toHaveText(
+        translated.handovers.statuses.open,
+      )
+      await expect(row).toContainText(
+        translated.handovers.estimatedCountOne.replace('{count}', '1'),
+      )
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth),
+      ).toBeLessThanOrEqual(320)
+      await expect(row.locator('time')).toHaveAttribute('datetime', /T/)
+    }
+    await page.screenshot({
+      path: 'private/handover-cards-320.png',
+      fullPage: true,
+    })
     const rows = ids.map((id) => page.locator(`#handover-${id}`))
     await rows[0].locator('summary').click()
     await rows[0]

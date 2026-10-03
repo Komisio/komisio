@@ -84,6 +84,7 @@ test('staff print an item label with the current price without configuring a pri
       main.prepend(banner)
     })
     await expect(page.locator('[data-test-print-banner]')).toBeVisible()
+    await page.setViewportSize({ width: 1280, height: 900 })
     await page.emulateMedia({ media: 'print' })
     await expect(page.locator('[data-test-print-banner]')).toBeHidden()
     await expect(page.locator('.sidebar')).toBeHidden()
@@ -92,6 +93,7 @@ test('staff print an item label with the current price without configuring a pri
       page.getByRole('button', { name: d.printing.browserPrint, exact: true }),
     ).toBeHidden()
     await expect(label).toBeVisible()
+    expect((await label.boundingBox())!.x).toBeLessThanOrEqual(1)
     expect((await label.boundingBox())!.width).toBeCloseTo((80 * 96) / 25.4, 0)
     await page.screenshot({
       path: testInfo.outputPath('item-label-print.png'),

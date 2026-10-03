@@ -1,6 +1,9 @@
 'use client'
 import { useState, type ReactNode } from 'react'
-import Link from 'next/link'
+import {
+  NavigationLink as Link,
+  useUnsavedChanges,
+} from '@/components/platform/navigation-warning'
 import { useSearchParams } from 'next/navigation'
 import { ArrowDown, ArrowRight, Check, ShoppingBag } from 'lucide-react'
 import type { Dictionary } from '@/lib/i18n'
@@ -19,6 +22,7 @@ export function StoreFlow({
   perItem,
   d,
   live,
+  leaveWarning,
 }: {
   live: ReactNode
   tenantId: string
@@ -26,6 +30,7 @@ export function StoreFlow({
   editable: boolean
   perItem: boolean
   d: Dictionary['storeFlow']
+  leaveWarning: string
 }) {
   const searchParams = useSearchParams()
   const mode = searchParams.get('view') === 'now' ? 'now' : 'work'
@@ -41,6 +46,7 @@ export function StoreFlow({
   const [busy, setBusy] = useState(false)
   const [status, setStatus] = useState('')
   const dirty = JSON.stringify(notes) !== JSON.stringify(saved.notes)
+  useUnsavedChanges(editable && dirty ? leaveWarning : null)
   const step = d.steps[selected]
   function selectStep(id: FlowStepId) {
     setSelected(id)

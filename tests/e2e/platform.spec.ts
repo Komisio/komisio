@@ -4,6 +4,16 @@ import { randomBytes, createHmac } from 'node:crypto'
 import { createRequire } from 'node:module'
 import sharp from 'sharp'
 import d from '../../messages/sv.json' with { type: 'json' }
+import { readFileSync } from 'node:fs'
+import type { Dictionary } from '../../lib/i18n'
+const locales = ['sv', 'en', 'no', 'dk', 'fi', 'de', 'es', 'it'] as const
+const dictionary = (locale: string): Dictionary =>
+  JSON.parse(
+    readFileSync(
+      new URL(`../../messages/${locale}.json`, import.meta.url),
+      'utf8',
+    ),
+  )
 
 test('saved inspection drafts resume safely and preserve conflicting edits', async ({
   page,
@@ -345,6 +355,10 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
   try {
     await stalePublisher.goto('/intake/agreements')
     await stalePublisher
+      .getByTestId('agreement-publisher')
+      .locator('summary')
+      .click()
+    await stalePublisher
       .getByLabel('Avtalets rubrik')
       .fill('Unpublished older draft')
     await stalePublisher
@@ -358,6 +372,7 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
       .getByLabel('Jag bekräftar att inlämningen', { exact: false })
       .check()
     await page.goto('/intake/agreements')
+    await page.getByTestId('agreement-publisher').locator('summary').click()
     await page.getByLabel('Avtalets rubrik').fill('TEST Villkor 2')
     await page
       .getByLabel('Avtalstext', { exact: true })
@@ -370,6 +385,7 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
     await expect(page.getByRole('status')).toContainText(
       'Avtalsversionen är publicerad',
     )
+    await stalePublisher.locator('.agreement-history > summary').click()
     await stalePublisher
       .getByRole('link', { name: /Version 1.*TEST Villkor 1/ })
       .click()
@@ -695,6 +711,7 @@ test('register, verify, create stores, invite, isolate and administer access', a
     .getByRole('button', { name: 'Spara ändringar', exact: true })
     .click()
   await expect(page.getByText('Ändringarna har sparats.')).toBeVisible()
+  await expect(page.locator('.account-label').first()).toHaveText('Alex')
   await page.goto('/members')
   await page.setViewportSize({ width: 320, height: 800 })
   await expect(page.getByLabel('E-postadress', { exact: true })).toBeVisible()
@@ -835,7 +852,19 @@ test('register, verify, create stores, invite, isolate and administer access', a
     .getByRole('row')
     .filter({ has: page.getByText(staffEmail, { exact: true }) })
   await staffRow.getByRole('button', { name: /Ta bort tillgång/ }).click()
-  await page.getByRole('button', { name: 'Bekräfta', exact: true }).click()
+  const accessDialog = page.getByRole('dialog', { name: d.remove, exact: true })
+  await expect(accessDialog).toContainText(staffEmail)
+  await expect(accessDialog).toContainText('E2E Gröna Garderoben')
+  await expect(
+    accessDialog.getByRole('button', { name: d.cancel, exact: true }),
+  ).toBeFocused()
+  await page.keyboard.press('Escape')
+  await expect(accessDialog).not.toBeVisible()
+  await expect(staffRow).toBeVisible()
+  await staffRow.getByRole('button', { name: /Ta bort tillgång/ }).click()
+  await accessDialog
+    .getByRole('button', { name: 'Bekräfta', exact: true })
+    .click()
   await expect(page.getByText('Ändringarna har sparats.')).toBeVisible()
   await staff.goto('/')
   await expect(staff).toHaveURL(/\/onboarding/)
@@ -1047,10 +1076,20 @@ test('password recovery and MFA protect the authenticated platform', async ({
   await confirmEmail(page, email, 'Reset')
   await expect(page).toHaveURL(/\/account/)
   await page.getByLabel('Nytt lösenord', { exact: true }).fill(newPassword)
+  await page.getByRole('button', { name: d.showPassword, exact: true }).click()
+  await expect(
+    page.getByLabel('Nytt lösenord', { exact: true }),
+  ).toHaveAttribute('type', 'text')
   await page
     .getByRole('button', { name: 'Spara lösenord', exact: true })
     .click()
   await expect(page.getByText('Ändringarna har sparats.')).toBeVisible()
+  await expect(page.getByLabel('Nytt lösenord', { exact: true })).toHaveValue(
+    '',
+  )
+  await expect(
+    page.getByLabel('Nytt lösenord', { exact: true }),
+  ).toHaveAttribute('type', 'password')
   await page.goto('/onboarding')
   await page.getByLabel('Butikens namn').fill('E2E Security')
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
@@ -1096,6 +1135,28 @@ test('password recovery and MFA protect the authenticated platform', async ({
       await page.request.get('/api/seller/handovers/code?' + codeQuery)
     ).status(),
   ).toBe(401)
+  for (const locale of locales) {
+    await page
+      .context()
+      .addCookies([
+        { name: 'komisio-locale', value: locale, url: 'http://127.0.0.1:3000' },
+      ])
+    await page.reload()
+    const translated = dictionary(locale)
+    await expect(page).toHaveTitle(`${translated.mfaLogin} · Komisio`)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      translated.mfaLogin,
+    )
+    await expect(
+      page.getByLabel(translated.mfaCode, { exact: true }),
+    ).toBeVisible()
+  }
+  await page
+    .context()
+    .addCookies([
+      { name: 'komisio-locale', value: 'sv', url: 'http://127.0.0.1:3000' },
+    ])
+  await page.reload()
   await page.getByLabel('Sexsiffrig kod').fill(totp(factor.totp.secret))
   await page.getByRole('button', { name: 'Verifiera kod' }).click()
   await expect(page).toHaveURL(
@@ -2058,6 +2119,10 @@ test('operator reception guides saved evidence, exact review and link replacemen
   ).not.toHaveValue(firstLink)
   await page.getByRole('button', { name: 'Återkalla länken' }).click()
   await expect(page.getByLabel('Länk till säljarens granskning')).toHaveCount(0)
+  // The local link clears when the request starts; wait for confirmed revocation.
+  await expect(
+    page.getByRole('button', { name: 'Återkalla länken' }),
+  ).toHaveCount(0)
   await page.reload()
   await expect(page.getByLabel('Beskrivning', { exact: true })).toHaveValue(
     'Blue operator TEST jacket',
@@ -2897,6 +2962,9 @@ test('store policy publishes safely and supports agreement-free staff review', a
   await expect(section.getByLabel('Butikens provision (%)')).toHaveValue('60')
   const stale = await page.context().newPage()
   await stale.goto('/settings')
+  await page
+    .getByRole('link', { name: d.storePolicy.sectionEconomy, exact: true })
+    .click()
   await section.getByLabel('Butikens provision (%)').fill('55.25')
   await section.getByLabel('Publicering av underlag', { exact: true }).uncheck()
   await section

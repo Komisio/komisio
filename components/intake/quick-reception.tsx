@@ -263,10 +263,9 @@ export function QuickReception({
     window.addEventListener('beforeunload', warnBeforeLeaving)
     return () => window.removeEventListener('beforeunload', warnBeforeLeaving)
   }, [hasUnsavedItem])
-  // A file chosen before React has taken over the server-rendered input
-  // fires a change event nothing handles and is silently lost. The picker
-  // opens only once the handler is attached; the first frame still matches
-  // the server's.
+  // Fields and photos must wait for React to attach their handlers. Otherwise
+  // an early native edit can be lost when the next controlled field changes.
+  // The first client frame still matches the server.
   const [ready, setReady] = useState(false)
   useEffect(() => {
     const timer = setTimeout(() => setReady(true), 0)
@@ -671,7 +670,7 @@ export function QuickReception({
     setValidationRequested(false)
   }
 
-  const busy = stage !== 'idle'
+  const busy = !ready || stage !== 'idle'
   const invalidDescription =
     validationRequested && !(facts.description ?? '').trim()
   const invalidPrice = validationRequested && quickPriceOre(price) === null

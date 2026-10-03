@@ -4,7 +4,137 @@ import { createRequire } from 'node:module'
 import { readFileSync } from 'node:fs'
 import type { Dictionary } from '../../lib/i18n'
 import { register } from '../helpers/account'
+import { p2Fixture } from '../helpers/p2-fixture'
 import sv from '../../messages/sv.json' with { type: 'json' }
+
+test('payout and preference retries keep separate payloads after unconfirmed replies', async ({
+  page,
+}) => {
+  const email = `seller-economy-recovery-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomBytes(16).toString('hex')}`)
+  const f = await p2Fixture(email)
+  try {
+    const seller = (
+      await f.db.query('select register_seller($1,$2,$3,$4,$5) id', [
+        f.tenant,
+        randomUUID(),
+        'Synthetic economy seller',
+        email,
+        '',
+      ])
+    ).rows[0].id
+    await f.db.query('select adjust_seller_ledger($1,$2,$3,$4,$5)', [
+      f.tenant,
+      randomUUID(),
+      seller,
+      50000,
+      'Synthetic recovery fixture',
+    ])
+    await f.commit()
+    await page.goto(`/seller?seller=${seller}`)
+    const request = page.getByRole('region', {
+      name: sv.sellerPortal.request,
+      exact: true,
+    })
+    const input = request.getByLabel(
+      sv.sellerPortal.amount.replace('{currency}', 'SEK'),
+      { exact: true },
+    )
+    const checkbox = page.getByRole('checkbox', {
+      name: sv.sellerPortal.emails,
+    })
+    const preferences = page.locator('form').filter({ has: checkbox })
+    const payloads = new Map<string, unknown[]>()
+    await page.route('**/api/seller/economy', async (route) => {
+      const payload = route.request().postDataJSON()
+      const history = payloads.get(payload.action) ?? []
+      history.push(payload)
+      payloads.set(payload.action, history)
+      const response = await route.fetch()
+      expect(response.ok()).toBe(true)
+      if (history.length === 1) {
+        await route.fulfill(
+          payload.action === 'notifications'
+            ? { status: 200, json: { ok: true, id: randomUUID() } }
+            : { status: 503, json: { error: 'INVALID_INPUT' } },
+        )
+      } else await route.fulfill({ response })
+    })
+    await checkbox.uncheck()
+    await preferences
+      .getByRole('button', { name: sv.sellerPortal.save, exact: true })
+      .click()
+    await expect(preferences.getByRole('alert')).toHaveText(
+      sv.sellerPortal.preferenceError,
+    )
+    await expect(checkbox).toBeDisabled()
+    await expect(checkbox).not.toBeChecked()
+    await input.fill('100,00')
+    await request
+      .getByRole('button', { name: sv.sellerPortal.request, exact: true })
+      .click()
+    await expect(request.getByRole('alert')).toHaveText(sv.sellerPortal.error)
+    await expect(input).toBeDisabled()
+    await expect(input).toHaveValue('100,00')
+    await preferences
+      .getByRole('button', { name: sv.intake.retry, exact: true })
+      .click()
+    await expect(preferences.getByRole('status')).toHaveText(
+      sv.sellerPortal.saved,
+    )
+    await expect(checkbox).toHaveJSProperty('defaultChecked', false)
+    await expect(checkbox).not.toBeChecked()
+    await expect(input).toBeDisabled()
+    await expect(input).toHaveValue('100,00')
+    await request
+      .getByRole('button', { name: sv.intake.retry, exact: true })
+      .click()
+    await expect(request.getByRole('status')).toHaveText(
+      sv.sellerPortal.payoutRequested,
+    )
+    await expect(input).toBeEnabled()
+    await expect(input).toHaveValue('')
+    for (const history of payloads.values()) {
+      expect(history).toHaveLength(2)
+      expect(history[0]).toEqual(history[1])
+    }
+    expect(
+      (
+        await f.db.query(
+          'select count(*)::int n from payouts where tenant_id=$1 and seller_id=$2',
+          [f.tenant, seller],
+        )
+      ).rows[0].n,
+    ).toBe(1)
+    expect(
+      (
+        await f.db.query(
+          'select count(*)::int n from seller_notification_preferences where tenant_id=$1 and seller_id=$2',
+          [f.tenant, seller],
+        )
+      ).rows[0].n,
+    ).toBe(1)
+    await input.fill('120')
+    await expect(request.getByRole('status')).toHaveCount(0)
+    await page.unroute('**/api/seller/economy')
+    await page.route('**/api/seller/economy', (route) =>
+      route.fulfill({ status: 401, json: { error: 'AUTH_REQUIRED' } }),
+    )
+    await request
+      .getByRole('button', { name: sv.sellerPortal.request, exact: true })
+      .click()
+    await expect(request.getByRole('alert')).toHaveText(sv.intake.denied)
+    await expect(input).toBeDisabled()
+    await expect(
+      request.getByRole('button', { name: sv.intake.reload, exact: true }),
+    ).toBeVisible()
+    await expect(
+      request.getByRole('button', { name: sv.intake.retry, exact: true }),
+    ).toBeDisabled()
+  } finally {
+    await f.close()
+  }
+})
 
 test('seller payout guidance explains unavailable balances, validates amounts and refreshes a stale balance', async ({
   page,
@@ -189,6 +319,7 @@ test('seller payout guidance explains unavailable balances, validates amounts an
     await submit.click()
     await expect(request.getByRole('alert')).toHaveText(sv.sellerPortal.error)
     await expect(input).toHaveValue('100,00')
+    await expect(input).toBeDisabled()
     // Saving a different action must not forget the uncertain payout request.
     const emails = page.getByRole('checkbox', { name: sv.sellerPortal.emails })
     const nextPreference = !(await emails.isChecked())
@@ -208,7 +339,9 @@ test('seller payout guidance explains unavailable balances, validates amounts an
     // Wait for refreshed server props, not only the immediate checkbox change.
     await expect(emails).toHaveJSProperty('defaultChecked', nextPreference)
     await expect(input).toHaveValue('100,00')
-    await submit.click()
+    await request
+      .getByRole('button', { name: sv.intake.retry, exact: true })
+      .click()
     await expect(request.getByRole('status')).toHaveText(
       sv.sellerPortal.payoutRequested,
     )

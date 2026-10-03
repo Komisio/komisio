@@ -1,12 +1,12 @@
 import { LoadingMessageProvider } from '@/components/platform/loading-message'
 import { NavigationWarningProvider } from '@/components/platform/navigation-warning'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import { Shell } from '@/components/platform/shell'
 import { Brand } from '@/components/platform/brand'
 import { LanguagePicker } from '@/components/platform/language-picker'
 import { SignOut } from '@/components/platform/sign-out'
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { PlanBanner } from '@/components/platform/plan-banner'
 import { isPlatformHost, readPlanStatus } from '@/lib/engine/plans'
 export default async function DashboardLayout({
@@ -19,17 +19,19 @@ export default async function DashboardLayout({
     const d = dictionary(ctx.locale)
     return (
       <LoadingMessageProvider message={d.loading}>
-        <main className="onboarding">
-          <Brand />
-          <LanguagePicker locale={ctx.locale} label={d.language} />
-          {children}
-          <div className="row">
-            <Link href="/onboarding" className="text-link">
-              {d.createTenant}
-            </Link>
-            <SignOut d={d} />
-          </div>
-        </main>
+        <NavigationWarningProvider>
+          <main className="onboarding" lang={intlLocale(ctx.locale)}>
+            <Brand />
+            <LanguagePicker locale={ctx.locale} label={d.language} />
+            {children}
+            <div className="row">
+              <Link href="/onboarding" className="text-link">
+                {d.createTenant}
+              </Link>
+              <SignOut d={d} />
+            </div>
+          </main>
+        </NavigationWarningProvider>
       </LoadingMessageProvider>
     )
   }

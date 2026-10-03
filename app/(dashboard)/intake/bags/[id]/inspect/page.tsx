@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { BagRegisteredItems } from '@/components/intake/bag-registered-items'
 import { readBagRegisteredItems } from '@/lib/engine/bag-registered-items'
 import { BagWorkSummary } from '@/components/intake/bag-work-summary'
@@ -458,3 +459,6 @@ export default async function InspectBag({
     </>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.inspection.title)

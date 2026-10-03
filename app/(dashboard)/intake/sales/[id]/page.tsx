@@ -1,4 +1,9 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
+import {
+  receiptSearch,
+  receiptSearchQuery,
+} from '@/lib/intake/sales-navigation'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
@@ -10,8 +15,10 @@ import { ReturnForm } from '@/components/intake/return-form'
 
 export default async function Sale({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const id = z.uuid().safeParse((await params).id)
@@ -29,14 +36,21 @@ export default async function Sale({
     active.id,
     lines.map((l) => l.id),
   )
+  const search = receiptSearch.safeParse(await searchParams)
+  const back = `/intake/sales${search.success ? receiptSearchQuery(search.data) : ''}`
   const write = active.role !== 'readonly'
   const when = (iso: string) =>
     new Date(iso).toLocaleString(intlLocale(ctx.locale), {
       timeZone: 'Europe/Stockholm',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     })
   return (
-    <>
-      <Link className="text-link" href="/intake/sales">
+    <div className="sale-detail">
+      <Link className="text-link" href={back}>
         {d.backToList}
       </Link>
       <div className="page-heading">
@@ -45,38 +59,54 @@ export default async function Sale({
         </h1>
         <p>
           {when(sale.occurred_at)} · {d.providers[sale.provider]} ·{' '}
-          {sale.external_id} · {d.statuses[sale.status]}
+          {d.statuses[sale.status]}
         </p>
+        <details className="sale-reference">
+          <summary>{d.reference}</summary>
+          <p>{sale.external_id}</p>
+        </details>
       </div>
-      <section className="card intake-form">
+      <section className="card sales-register">
         <h2>{d.lines}</h2>
-        <p>{d.linesHint}</p>
         {lines.map((l) => (
-          <div key={l.id} className="intake-notice">
-            <strong>
-              {d.line} {l.line_no} · {formatOre(l.price_ore)} {currency} ·{' '}
-              {all.items.ownershipKinds[l.ownership]}
-            </strong>
-            <p>
+          <article key={l.id} className="sale-line">
+            <div className="sale-line-heading">
+              <h3>
+                {d.line} {l.line_no}
+              </h3>
+              <strong>
+                {formatOre(l.price_ore)} {currency}
+              </strong>
+            </div>
+            <p className="sale-line-item">
               <Link className="text-link" href={`/intake/items/${l.item_id}`}>
-                {all.items.open}
+                {all.items.open} · I-{l.item_id.slice(0, 8).toUpperCase()}
               </Link>
             </p>
-            {l.ownership === 'consignment' && (
+            <details className="sale-line-details">
+              <summary>{d.financialDetails}</summary>
+              <p className="muted">{d.linesHint}</p>
+              <p>{all.items.ownershipKinds[l.ownership]}</p>
+              {l.ownership === 'consignment' && (
+                <p>
+                  {d.commission}: {formatOre(l.commission_ore)} {currency} (
+                  {l.commission_rate_percent} %,{' '}
+                  {l.commission_basis
+                    ? all.sellerTerms[l.commission_basis]
+                    : ''}
+                  )
+                  {l.commission_vat_ore > 0
+                    ? ` + ${d.commissionVat} ${formatOre(l.commission_vat_ore)} ${currency}`
+                    : ''}{' '}
+                  · {d.sellerCredit}: {formatOre(l.seller_credit_ore)}{' '}
+                  {currency}
+                </p>
+              )}
               <p>
-                {d.commission}: {formatOre(l.commission_ore)} {currency} (
-                {l.commission_rate_percent} %,{' '}
-                {l.commission_basis ? all.sellerTerms[l.commission_basis] : ''})
-                {l.commission_vat_ore > 0
-                  ? ` + ${d.commissionVat} ${formatOre(l.commission_vat_ore)} ${currency}`
-                  : ''}{' '}
-                · {d.sellerCredit}: {formatOre(l.seller_credit_ore)} {currency}
+                {d.vat}: {formatOre(l.vat_ore)} {currency} ·{' '}
+                {d.vatModes[l.vat_mode]} · {l.vat_rate_bp / 100} %
               </p>
-            )}
-            <p>
-              {d.vat}: {formatOre(l.vat_ore)} {currency} ·{' '}
-              {d.vatModes[l.vat_mode]} · {l.vat_rate_bp / 100} %
-            </p>
+            </details>
             {returns.has(l.id) ? (
               <p role="status">
                 {all.returns.returned} {when(returns.get(l.id)!.occurred_at)} ·{' '}
@@ -86,17 +116,23 @@ export default async function Sale({
                   : ''}
               </p>
             ) : write && sale.status === 'completed' ? (
-              <ReturnForm
-                tenantId={active.id}
-                saleLineId={l.id}
-                refund={formatOre(l.price_ore)}
-                d={all.returns}
-                intake={all.intake}
-              />
+              <details className="sale-return">
+                <summary>{all.returns.record}</summary>
+                <ReturnForm
+                  tenantId={active.id}
+                  saleLineId={l.id}
+                  refund={formatOre(l.price_ore)}
+                  d={all.returns}
+                  intake={all.intake}
+                />
+              </details>
             ) : null}
-          </div>
+          </article>
         ))}
       </section>
-    </>
+    </div>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.sales.receipt)

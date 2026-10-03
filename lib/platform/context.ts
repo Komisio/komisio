@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
+import { cache } from 'react'
 import { resolveLocale } from '@/lib/i18n'
 import { serverClient } from '@/lib/supabase/server'
 import type { Tenant } from './types'
@@ -53,8 +54,12 @@ export async function platformContext() {
     ),
   }
 }
+// Share one snapshot only within a server render. API handlers keep the raw
+// reader above; React invalidates this memoization for every server request.
+export const renderPlatformContext = cache(platformContext)
+
 export async function requirePlatform(tenantRequired = true) {
-  const context = await platformContext()
+  const context = await renderPlatformContext()
   if (!context) redirect('/login')
   if (context.mfaRequired) redirect('/mfa')
   if (tenantRequired && !context.active) redirect('/onboarding')

@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { can } from '@/lib/platform/permissions'
@@ -37,3 +38,5 @@ export default async function Members() {
     </>
   )
 }
+
+export const generateMetadata = () => platformPageMetadata((d) => d.members)

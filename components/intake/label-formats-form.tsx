@@ -5,6 +5,7 @@ import type { Dictionary } from '@/lib/i18n'
 import { setLabelFormatCommand, type LabelFormats } from '@/lib/engine/printing'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 
 /** Owner or admin sets the label size per kind; a default applies until then. */
 export function LabelFormatsForm({
@@ -13,20 +14,27 @@ export function LabelFormatsForm({
   canEdit,
   d,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   formats: LabelFormats
   canEdit: boolean
   d: Dictionary['printing']
   intake: Dictionary['intake']
+  leaveUnsaved: string
 }) {
+  const [expanded, setExpanded] = useState(false)
   const kinds = ['bag', 'garment', 'item', 'markdown', 'onboarding'] as const
   // One group per label kind rather than a table: on a phone the kind, both
   // sizes, the action and any message stack within the viewport instead of
   // scrolling sideways; on a desktop the same groups lay out as rows.
   return (
-    <div>
-      <h3>{d.formatsHeading}</h3>
+    <details
+      className="label-formats-fold"
+      open={expanded}
+      onToggle={(event) => setExpanded(event.currentTarget.open)}
+    >
+      <summary>{d.formatsHeading}</summary>
       <p>{d.formatsIntro}</p>
       <div className="label-formats">
         {kinds.map((kind) => (
@@ -38,10 +46,11 @@ export function LabelFormatsForm({
             canEdit={canEdit}
             d={d}
             intake={intake}
+            leaveUnsaved={leaveUnsaved}
           />
         ))}
       </div>
-    </div>
+    </details>
   )
 }
 
@@ -52,6 +61,7 @@ function FormatRow({
   canEdit,
   d,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   kind: 'bag' | 'garment' | 'item' | 'markdown' | 'onboarding'
@@ -59,12 +69,19 @@ function FormatRow({
   canEdit: boolean
   d: Dictionary['printing']
   intake: Dictionary['intake']
+  leaveUnsaved: string
 }) {
   const action = useIntakeAction(intake)
   const router = useRouter()
   const id = useId()
   const [width, setWidth] = useState(String(format.widthMm))
   const [height, setHeight] = useState(String(format.heightMm))
+  const [confirmed, setConfirmed] = useState({
+    width: String(format.widthMm),
+    height: String(format.heightMm),
+  })
+  const dirty = width !== confirmed.width || height !== confirmed.height
+  useUnsavedChanges(canEdit && (dirty || action.locked) ? leaveUnsaved : null)
   const [invalid, setInvalid] = useState(false)
   const [saved, setSaved] = useState(false)
   // This mutable setting has no replay identity. Inspect current dimensions
@@ -85,6 +102,7 @@ function FormatRow({
     if (!candidate.success) return
     if (await action.run(candidate.data)) {
       setSaved(true)
+      setConfirmed({ width, height })
       router.refresh()
     }
   }
@@ -101,7 +119,10 @@ function FormatRow({
           inputMode="decimal"
           value={width}
           disabled={!canEdit || frozen}
-          onChange={(e) => setWidth(e.target.value)}
+          onChange={(e) => {
+            setWidth(e.target.value)
+            setSaved(false)
+          }}
         />
       </div>
       <div className="label-format-size">
@@ -111,7 +132,10 @@ function FormatRow({
           inputMode="decimal"
           value={height}
           disabled={!canEdit || frozen}
-          onChange={(e) => setHeight(e.target.value)}
+          onChange={(e) => {
+            setHeight(e.target.value)
+            setSaved(false)
+          }}
         />
       </div>
       {canEdit && (

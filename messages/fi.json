@@ -19,7 +19,7 @@
     "required": "Todiste vaaditaan ennen vastaanottoa.",
     "optional": "Todiste on valinnainen vastaanotossa.",
     "none": "Tuojasopimusta ei ole julkaistu. Vastaanottoon ei sovelleta uutta sopimusedellytystä.",
-    "history": "Aiemmat versiot",
+    "history": "Sopimusversiot",
     "historyHint": "20 uusinta versiota. Vanhemmat versiot ovat edelleen saatavilla kuiteistaan.",
     "adminOnly": "Omistajat ja ylläpitäjät voivat julkaista sopimusversioita.",
     "manage": "Näytä ja hallitse tuojasopimuksia",
@@ -335,8 +335,8 @@
   "tenantIdentity": "Kaupan identiteetti",
   "tenantId": "Kaupan tunnus",
   "tenantImmutable": "Tämä tunniste erottaa kauppasi muista kaupoista.",
-  "audit": "Viimeaikaiset käyttöoikeusmuutokset",
-  "noAudit": "Ei vielä näytettäviä muutoksia.",
+  "audit": "Viimeisimmät tapahtumat",
+  "noAudit": "Ei vielä tapahtumia.",
   "accountIntro": "Henkilökohtaiset tietosi seuraavat sinua kaupasta toiseen.",
   "profile": "Profiili",
   "security": "Turvallisuus",
@@ -386,7 +386,11 @@
     "inspection.reopened": "Tuoteluonnos avattu uudelleen",
     "reception.created": "Vastaanotto aloitettu",
     "reception.sources_saved": "Vastaanoton todisteet tallennettu",
-    "reception.review_published": "Vastaanoton tarkistus valmisteltu"
+    "reception.review_published": "Vastaanoton tarkistus valmisteltu",
+    "item.accepted": "Tuote rekisteröitiin",
+    "store_policy.published": "Myymälän käytäntö päivitettiin",
+    "purchase.registered": "Osto kirjattiin",
+    "sale.recorded": "Myynti kirjattiin"
   },
   "errors": {
     "FORBIDDEN": "Sinulla ei ole oikeutta tehdä tätä.",
@@ -711,7 +715,10 @@
       "noApproval": "Myymälä päättää hinnan. Myyjän hyväksyntää ei tarvita.",
       "optionalShare": "Valinnainen jakaminen myyjälle",
       "registered": "Tuote on rekisteröity"
-    }
+    },
+    "linkUncertain": "Linkin muutosta ei voitu vahvistaa. Lataa sivu uudelleen ja tarkista linkin tila ennen jatkamista.",
+    "copyFailed": "Kopiointi epäonnistui. Linkki on valittu, jotta voit kopioida sen käsin.",
+    "linkRevoked": "Linkki on peruttu."
   },
   "operations": {
     "title": "Ehdotetut operaatiot",
@@ -855,7 +862,8 @@
     "noComparedChanges": "Ei muutoksia vertailluissa kentissä. Tarkista silti koko uusi ehdotus.",
     "sourceVersionChanged": "Lähdeversio on muuttunut. Tarkista todisteet, vaikka tiedot näyttäisivät muuttumattomilta.",
     "agreementVersionChanged": "Sopimusversio on muuttunut. Lue ehdotetut ehdot alta.",
-    "zettleReceipt": "PayPal POS-kuitti"
+    "zettleReceipt": "PayPal POS-kuitti",
+    "sourceReference": "Lähdeviite"
   },
   "reviewPhotoAlt": "Tähän tarkistukseen sisältyvä kuva",
   "reviewPhotos": "Tämän tarkistuksen kuvat",
@@ -895,7 +903,9 @@
       "sun": "Sunnuntai"
     },
     "country": "Maa",
-    "countryHelp": "Kaupan maa määrittää AI-krediittiostojen valuutan."
+    "countryHelp": "Kaupan maa määrittää AI-krediittiostojen valuutan.",
+    "noHours": "Aikoja ei ole annettu",
+    "hoursHint": "Valitse päivät, joille haluat antaa ajat. Jos poistat päivän valinnan, sen aikoja ei julkaista."
   },
   "storePolicy": {
     "markdowns": "Alennukset",
@@ -1103,9 +1113,9 @@
     "sellerCredit": "Tuojan hyvitys",
     "vat": "Alv",
     "providers": {
-      "manual": "tiski",
+      "manual": "Kirjattu käsin",
       "zettle": "PayPal POS",
-      "shopify": "Shopify POS"
+      "shopify": "Shopify"
     },
     "statuses": {
       "completed": "valmis",
@@ -1129,7 +1139,18 @@
     "cart": "Ostoskori",
     "cartEmpty": "Etsi kirjattavat tuotteet.",
     "remove": "Poista",
-    "total": "Yhteensä"
+    "total": "Yhteensä",
+    "listHint": "Näytetään 50 viimeisintä myyntiä. Avaa kuitti nähdäksesi tuotteet, palautukset ja tiedot.",
+    "financialDetails": "Provisio ja arvonlisävero",
+    "reference": "Kuitin viite",
+    "findReceipt": "Etsi kuitti",
+    "receiptSearchHint": "Anna kuitin koko viite. Haku kattaa myös vanhemmat myynnit.",
+    "source": "Myynnin lähde",
+    "allSources": "Kaikki lähteet",
+    "showLatest": "Näytä uusimmat",
+    "searchResults": "Hakutulokset",
+    "filteredHint": "Näytetään enintään 50 vastaavaa myyntiä, uusimmat ensin.",
+    "noReceipts": "Vastaavia kuitteja ei löytynyt. Tarkista koko viite tai valitse toinen lähde."
   },
   "ledger": {
     "title": "Saldo ja tilikirja",
@@ -1163,7 +1184,7 @@
   },
   "payouts": {
     "title": "Tilitykset",
-    "intro": "Maksupyyntö etenee pyydetystä hyväksyttyyn ja maksettuun tai hylätään. Hyväksyntä varaa summan tuojan tilikirjassa; maksu selvittää sen.",
+    "intro": "Hallitse myyjien tilityksiä ja tarkista, mitkä odottavat maksua.",
     "notice": "Komisio kirjaa tilitykset; se ei siirrä rahaa. Maksa pankkisi kautta ja kirjaa viite tähän.",
     "requestHeading": "Pyydä tilitystä",
     "requestHint": "Myyjän puolesta, vähintään kaupan vähimmäissumma ja enintään käytettävissä oleva saldo.",
@@ -1189,7 +1210,7 @@
       "paid": "maksettu",
       "rejected": "hylätty"
     },
-    "settleHeading": "Tilitä kaikille tuojille",
+    "settleHeading": "Valmistele tilitykset",
     "settleHint": "Jokainen tuoja, jonka saldo on vähintään vähimmäismäärä ({threshold}) ja jolla ei ole avointa maksupyyntöä. Yksi erä pyytää ja hyväksyy koko käytettävissä olevan saldon tilityksen jokaiselle valitulle tuojalle; sen jälkeen maksat pankkisi kautta ja merkitset jokaisen maksetuksi.",
     "settleEmpty": "Yksikään tuoja ei tällä hetkellä täytä tilityksen ehtoja.",
     "settleReason": "Erän huomautus",
@@ -1200,7 +1221,8 @@
     "settleTotal": "Yhteensä",
     "requestNone": "Tässä luettelossa ei ole käytettävissä olevaa saldoa. Avaa tuoja nähdäksesi saldon.",
     "directory": "Hae kaikista tuojista",
-    "latestFifty": "Näytetään 50 viimeisintä tilitystä. Kunkin tuojan sivu näyttää tuojan viimeisimmät tilitykset."
+    "latestFifty": "Näytetään 50 viimeisintä tilitystä. Kunkin tuojan sivu näyttää tuojan viimeisimmät tilitykset.",
+    "history": "Historia ja viitteet"
   },
   "returns": {
     "reason": "Palautuksen syy",
@@ -1255,16 +1277,16 @@
     "items": "tuotetta",
     "note": "Huomautus (valinnainen)",
     "confirm": "Tuontierän tavarat ovat nyt myymälässä.",
-    "receive": "Ota vastaan ja kirjaa tuontierä",
+    "receive": "Vastaanota tuontierä",
     "openBag": "Avaa tuontierä",
     "kinds": {
       "bag": "Pussi",
       "box": "Laatikko"
     },
     "statuses": {
-      "open": "avoin",
-      "received": "vastaanotettu",
-      "cancelled": "peruutettu"
+      "open": "Odottaa tuontia",
+      "received": "Vastaanotettu",
+      "cancelled": "Peruttu"
     },
     "backToQueue": "Takaisin ennakkoilmoituksiin",
     "search": "Hae ennakkoilmoitusta",
@@ -1276,7 +1298,9 @@
     "noMatches": "Yksikään ennakkoilmoitus ei vastaa suodattimia.",
     "limited": "Tilapäisesti näytetään vain 100 uusinta ennakkoilmoitusta. Avaa vanhempi sen H-viitteellä.",
     "settings": "Avaa asetukset",
-    "askOwner": "Pyydä omistajaa tai ylläpitäjää ottamaan toiminto käyttöön."
+    "askOwner": "Pyydä omistajaa tai ylläpitäjää ottamaan toiminto käyttöön.",
+    "estimatedCount": "Arviolta {count} tuotetta",
+    "estimatedCountOne": "Arviolta {count} tuote"
   },
   "chain": {
     "title": "Ketju",
@@ -1443,7 +1467,12 @@
       "unconfirmed": "toimitusta ei vahvistettu",
       "failed": "toimitus epäonnistui"
     },
-    "dailyCap": "Kaupan vuorokausiraja viesteille on täynnä. Yritä huomenna uudelleen."
+    "dailyCap": "Kaupan vuorokausiraja viesteille on täynnä. Yritä huomenna uudelleen.",
+    "older": "Vanhemmat viestit",
+    "newer": "Uudemmat viestit",
+    "latest": "Uusimmat viestit",
+    "showingRange": "Viestit {from}–{to} / {total}",
+    "pageEmpty": "Tällä sivulla ei ole viestejä."
   },
   "stock": {
     "title": "Varasto",
@@ -1506,7 +1535,9 @@
     "tooMany": "Tiedostossa on yli 200 käyttökelpoista riviä. Jaa se osiin ja tuo osissa.",
     "nothing": "Ei käyttökelpoisia rivejä. Tarkista sarakkeiden kohdistus.",
     "error": "Tuontia ei voitu valmistella. Lataa sivu uudelleen ja yritä uudelleen.",
-    "ownerOnly": "Vain kaupan omistaja tai ylläpitäjä voi tuoda tuojia."
+    "ownerOnly": "Vain kaupan omistaja tai ylläpitäjä voi tuoda tuojia.",
+    "fileTooLarge": "Tiedosto on liian suuri. Jaa se osiin ja valitse pienempi tiedosto.",
+    "clearFile": "Poista tiedosto"
   },
   "lifecycle": {
     "agentHeading": "Alennusajot",
@@ -1565,9 +1596,9 @@
   },
   "openByReference": {
     "title": "Avaa etiketillä",
-    "intro": "Kirjoita tai skannaa tuontierän (K-n), vaatteen (G-n) tai tuotteen (I-XXXXXXXX) tunnus.",
+    "intro": "Skannaa etiketti tai kirjoita etiketissä tai ennakkoilmoituksessa oleva tunnus.",
     "reference": "Etiketin viite",
-    "hint": "Esimerkiksi K-12, G-7 tai I-A1B2C3D4.",
+    "hint": "Esimerkiksi K-12, G-7, H-9 tai I-A1B2C3D4.",
     "open": "Avaa",
     "notFound": "Mikään tässä kaupassa ei kanna viitettä {ref}.",
     "ambiguous": "Usealla myymälän tuotteella on tunnus {ref}. Valitse oikea tuote luettelosta.",
@@ -1647,7 +1678,7 @@
     "formatInvalid": "Leveys 20–120 mm, korkeus 15–200 mm, enintään yksi desimaali.",
     "defaultSize": "oletus",
     "title": "Tulostimet ja etiketit",
-    "intro": "Etiketit ovat ZPL-ohjelmia, jotka lisätään kaupan tulostimen jonoon. Tulostimen vieressä oleva paikallinen agentti noutaa työt ja raportoi tuloksen.",
+    "intro": "Hallitse myymälän etikettitulostimia ja tarkista viimeisimmät tulostustyöt. Tavalliselle paperille voi tulostaa etikettejä suoraan tuotesivulta.",
     "none": "Tulostimia ei ole rekisteröity.",
     "registerHeading": "Rekisteröi tulostin",
     "name": "Nimi",
@@ -1699,12 +1730,13 @@
     "browserPrint": "Tulosta etiketti",
     "browserUnavailable": "Etikettiä ei voi näyttää juuri nyt. Palaa tuotteeseen ja yritä uudelleen.",
     "printerUncertain": "Tulostimen muutosta ei voitu vahvistaa. Lataa sivu uudelleen ja tarkista tallennetut asetukset ennen kuin jatkat.",
-    "formatUncertain": "Etiketin kokoa ei voitu vahvistaa. Lataa sivu uudelleen ja tarkista tallennettu koko ennen kuin jatkat."
+    "formatUncertain": "Etiketin kokoa ei voitu vahvistaa. Lataa sivu uudelleen ja tarkista tallennettu koko ennen kuin jatkat.",
+    "discardTemplate": "Hylätäänkö etikettimallin tallentamattomat muutokset?"
   },
   "purchases": {
     "title": "Ostot",
-    "intro": "Kaupan omat tavarat tulevat sisään tästä, eivät koskaan komissiopolkujen kautta.",
-    "notice": "Osto on tosiasia siitä, mitä kauppa osti ja mihin hintaan. Se ei ole vielä myytävä tuote; hyväksyntä seuraa.",
+    "intro": "Kirjaa myymälän ostamat ja omistamat tuotteet.",
+    "notice": "Kirjaa ensin osto. Avaa sitten oston kohdalta ”{accept}” ja anna myyntihinta, jotta tuote on valmis myyntiin.",
     "registerHeading": "Rekisteröi osto",
     "registerHint": "Yksi rekisteröinti per ostettu tuote. Säilytä kuitti tai muistiinpano; sen viite vaaditaan.",
     "price": "Ostohinta",
@@ -2286,7 +2318,7 @@
     "reload": "Lataa uudelleen",
     "revision": "Täsmäytyksen versio",
     "total": "Kuitin loppusumma",
-    "matchHint": "Kopioi tuotteen koko tunnus sen sivun URL-osoitteen lopusta. Täsmäytä jokainen rivi eri tuotteeseen.",
+    "matchHint": "Etsi tuote tai skannaa sen etiketti. Valitse oikea tuote ja tallenna kohdistus jokaiselle kuittiriville.",
     "open": "Avaa kuitti",
     "done": "Tallennettu",
     "unsupported": "Alennukset, hyvitykset, maksut ja muut kuin kappalemäärät vaativat myöhemmän integraatiovaiheen.",
@@ -2417,7 +2449,9 @@
     "setupHint": "Anna PayPal POS -tilisi Client ID ja API-avain. Tiedot tarkistetaan ja tallennetaan salattuina tälle myymälälle.",
     "clientId": "Client ID",
     "apiKey": "API-avain",
-    "connect": "Yhdistä PayPal POS"
+    "connect": "Yhdistä PayPal POS",
+    "chooseItem": "Valitse tuote",
+    "selectedItem": "Valittu tuote"
   },
   "priceEvidence": {
     "title": "Vertailukelpoiset myynnit tässä kaupassa",
@@ -2856,7 +2890,7 @@
   },
   "helpCenter": {
     "title": "Ohje",
-    "intro": "Ohjeita vastaanottoon, merkintään ja kirjanpitointegraatioon.",
+    "intro": "Ohjeita vastaanottoon, merkintään ja integraatioihin.",
     "open": "Tämän sivun ohje",
     "close": "Sulje ohje",
     "fullArticle": "Avaa koko ohjesivu uuteen välilehteen",
@@ -2954,13 +2988,25 @@
           "Jos tulostusjonoon lisäämisen vastaus puuttuu, yritä uudelleen samassa avoimessa lomakkeessa. Älä luo jatkuvasti uusia töitä. Tarkista työ tulostimien ja tulostustöiden asetuksista ja pyydä tarvittaessa apua tulostimesta vastaavalta henkilöltä. Etikettihaulla voi avata olemassa olevan viitteen."
         ],
         "notice": "Ohjeen avaaminen ei tulosta mitään eikä rekisteröi uutta tuotetta. Älä luo tuotteesta kopiota etiketin korvaamiseksi. Fyysinen tulostus ja skannaus on tarkistettava myymälän laitteilla."
+      },
+      "integrations": {
+        "title": "Yhdistä myymälän muut järjestelmät",
+        "intro": "Aloita järjestelmästä, jonka haluat yhdistää Komisioon. Avaa sen osio nähdäksesi tilan ja asetukset.",
+        "steps": [
+          "Valitse kassajärjestelmä, verkkokauppa tai kirjanpito sen mukaan, mitä haluat yhdistää.",
+          "Lue yhteyden tila ja noudata osion vaiheita. Jotkin toiminnot vaativat omistajan tai ylläpitäjän oikeudet.",
+          "Tarkista siirrettävät tiedot ja siirtosuunta ennen automaattisen toiminnon käyttöönottoa.",
+          "Seuraa tuotteiden, kuittien, tilausten tai kirjanpitoaineiston tilaa kussakin integraatiossa. Avaa tiedot, jos jokin vaatii huomiota."
+        ],
+        "notice": "Yhteys ei tarkoita, että kaikki automaattiset toiminnot ovat käytössä. Tarkista ne erikseen integraation asetuksista."
       }
     },
     "receiving": "Avaa vastaanotto",
     "storeFlow": "Myymälän työnkulku",
     "items": "Etsi rekisteröity tuote",
     "openReference": "Avaa etiketin viite",
-    "printing": "Tulostimet ja tulostustyöt"
+    "printing": "Tulostimet ja tulostustyöt",
+    "integrations": "Avaa integraatiot"
   },
   "dashboard": {
     "intro": "Työpäiväsi tärkeimmät asiat yhdellä silmäyksellä.",
@@ -2972,5 +3018,15 @@
     "salesHint": "Katso kirjatut myynnit.",
     "snapshot": "Myymälän tilanne",
     "receiptHint": "Ota vastaan nyt, tarkasta tuotteet myöhemmin."
-  }
+  },
+  "auditHint": "Myymälän 12 viimeisintä kirjattua tapahtumaa.",
+  "otherActivity": "Muu myymälän tapahtuma",
+  "technicalDetails": "Myymälän tekniset tiedot",
+  "skipToContent": "Siirry sisältöön",
+  "leaveUnsaved": "Poistutaanko sivulta? Tallentamattomat muutokset katoavat. Jos tallennusta ei vahvistettu, tarkista tallennettu sisältö ennen kuin aloitat uudelleen.",
+  "showPassword": "Näytä salasana",
+  "hidePassword": "Piilota salasana",
+  "reviewRetryApprove": "Yritä hyväksymistä uudelleen",
+  "reviewRetryDecline": "Yritä hylkäämistä uudelleen",
+  "copyLinkFailed": "Kopiointi epäonnistui. Linkki on valittu, jotta voit kopioida sen käsin."
 }

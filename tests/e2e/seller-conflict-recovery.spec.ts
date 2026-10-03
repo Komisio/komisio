@@ -77,6 +77,10 @@ for (const kind of ['profile', 'terms'] as const) {
       await expect(field).toBeDisabled()
       const reload = panel.getByText(d.intake.reload, { exact: true })
       await expect(reload).toBeVisible()
+      page.once('dialog', async (dialog) => {
+        expect(dialog.type()).toBe('beforeunload')
+        await dialog.accept()
+      })
       await reload.click()
       await expect(page).toHaveURL(new RegExp(`itemsPage=1#seller-${tab}$`))
       await expect(

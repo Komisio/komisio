@@ -3,7 +3,17 @@ import { randomUUID, randomBytes } from 'node:crypto'
 import { register } from '../helpers/account'
 import es from '../../messages/es.json' with { type: 'json' }
 
-const locales = ['sv', 'en', 'no', 'dk', 'fi', 'de', 'es', 'it']
+const locales = ['sv', 'en', 'no', 'dk', 'fi', 'de', 'es', 'it'] as const
+const htmlLanguages = {
+  sv: 'sv-SE',
+  en: 'en-GB',
+  no: 'nb-NO',
+  dk: 'da-DK',
+  fi: 'fi-FI',
+  de: 'de-DE',
+  es: 'es-ES',
+  it: 'it-IT',
+}
 
 test('agreements support all product languages and preserve the saved language', async ({
   page,
@@ -44,8 +54,19 @@ test('agreements support all product languages and preserve the saved language',
     expect(published.request().postDataJSON().language).toBe(language)
     lastId = (await published.json()).id
     await expect(page.getByRole('status')).toContainText(a.published)
+    // Wait for the publication refresh before a separate document reload.
+    // Otherwise Firefox can abort that reload when the earlier refresh lands.
+    await expect(page.locator('.agreement-text')).toHaveText(
+      `Synthetic test text ${language}`,
+    )
     await page.reload()
+    await expect(page.locator('#agreement-title')).not.toBeVisible()
+    await page.getByTestId('agreement-publisher').locator('summary').click()
     await expect(page.locator('#agreement-language')).toHaveValue(language)
+    await expect(page.locator('.agreement-text')).toHaveAttribute(
+      'lang',
+      htmlLanguages[language],
+    )
     await expect(page.locator('.agreement-text')).toHaveText(
       `Synthetic test text ${language}`,
     )
@@ -56,7 +77,9 @@ test('agreements support all product languages and preserve the saved language',
       { name: 'komisio-locale', value: 'no', url: 'http://127.0.0.1:3000' },
     ])
   await page.goto(`/intake/agreements?version=${lastId}`)
+  await page.getByTestId('agreement-publisher').locator('summary').click()
   await expect(page.locator('#agreement-language')).toHaveValue('it')
+  await expect(page.locator('.agreement-text')).toHaveAttribute('lang', 'it-IT')
   await expect(page.locator('.agreement-text')).toHaveText(
     'Synthetic test text it',
   )

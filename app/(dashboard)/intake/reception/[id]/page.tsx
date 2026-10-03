@@ -1,5 +1,7 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
+import { EventTime } from '@/components/ui/event-time'
 import { readStorePolicy } from '@/lib/engine/store-policy'
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
@@ -154,6 +156,7 @@ export default async function Reception({
           sources={sources}
           initial={prepared?.input ?? null}
           d={d}
+          leaveUnsaved={all.leaveUnsaved}
         />
       ) : (
         <p>{d.readonly}</p>
@@ -350,7 +353,10 @@ export default async function Reception({
                     <summary>
                       {terms.data.title} · {d.version} {terms.data.version}
                     </summary>
-                    <div lang={terms.data.language} className="reception-terms">
+                    <div
+                      lang={intlLocale(terms.data.language)}
+                      className="reception-terms"
+                    >
                       {terms.data.body}
                     </div>
                   </details>
@@ -396,7 +402,10 @@ export default async function Reception({
               {review.terms && (
                 <details>
                   <summary>{d.exactTerms}</summary>
-                  <div className="reception-terms" lang={review.terms.language}>
+                  <div
+                    className="reception-terms"
+                    lang={intlLocale(review.terms.language)}
+                  >
                     {review.terms.body}
                   </div>
                 </details>
@@ -445,11 +454,11 @@ export default async function Reception({
                     <strong>
                       {d.custodyReference} {garmentReference(custody.reference)}
                     </strong>{' '}
-                    · {d.custodyRecorded}{' '}
-                    {new Date(custody.received_at).toLocaleString(
-                      intlLocale(ctx.locale),
-                      { timeZone: 'Europe/Stockholm' },
-                    )}
+                    ·{' '}
+                    <EventTime
+                      value={custody.received_at}
+                      locale={ctx.locale}
+                    />
                     {custody.note ? ` · ${custody.note}` : ''}
                   </p>
                   <Link
@@ -526,3 +535,6 @@ export default async function Reception({
     </div>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.reception.title)

@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { ArrowRight, Plus } from 'lucide-react'
 import { notFound } from 'next/navigation'
@@ -94,7 +95,7 @@ export default async function Receptions({
             ) : (
               <p>{sellers.data.length === 0 ? d.noSellers : d.readonly}</p>
             )}
-            <Link href="/intake" className="text-link">
+            <Link href="/intake/sellers/new" className="text-link">
               {d.registerSeller}
             </Link>
           </div>
@@ -206,3 +207,6 @@ export default async function Receptions({
     </>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.reception.queueTitle)

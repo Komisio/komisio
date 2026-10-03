@@ -5,9 +5,11 @@ import { NavigationLink as Link } from '@/components/platform/navigation-warning
 export function HelpArticle({
   topic,
   d,
+  onNavigate,
 }: {
   topic: HelpTopic
   d: Dictionary['helpCenter']
+  onNavigate?: () => void
 }) {
   const article = d.articles[topic]
   return (
@@ -22,34 +24,67 @@ export function HelpArticle({
       <nav className="stack" aria-label={d.taskLinks}>
         {topic === 'receiving' ? (
           <>
-            <Link className="text-link" href="/intake">
+            <Link onNavigate={onNavigate} className="text-link" href="/intake">
               {d.receiving}
             </Link>
-            <Link className="text-link" href="/intake/flow">
+            <Link
+              onNavigate={onNavigate}
+              className="text-link"
+              href="/intake/flow"
+            >
               {d.storeFlow}
             </Link>
-            <Link className="text-link" href="/help/labels">
+            <Link
+              onNavigate={onNavigate}
+              className="text-link"
+              href="/help/labels"
+            >
               {d.articles.labels.title}
             </Link>
           </>
         ) : topic === 'labels' ? (
           <>
-            <Link className="text-link" href="/intake/items">
+            <Link
+              onNavigate={onNavigate}
+              className="text-link"
+              href="/intake/items"
+            >
               {d.items}
             </Link>
-            <Link className="text-link" href="/intake/open">
+            <Link
+              onNavigate={onNavigate}
+              className="text-link"
+              href="/intake/open"
+            >
               {d.openReference}
             </Link>
-            <Link className="text-link" href="/settings?tab=printing">
+            <Link
+              onNavigate={onNavigate}
+              className="text-link"
+              href="/settings?tab=printing"
+            >
               {d.printing}
             </Link>
-            <Link className="text-link" href="/help/receiving">
+            <Link
+              onNavigate={onNavigate}
+              className="text-link"
+              href="/help/receiving"
+            >
               {d.articles.receiving.title}
             </Link>
           </>
+        ) : topic === 'integrations' ? (
+          <Link
+            onNavigate={onNavigate}
+            className="text-link"
+            href="/intake/integrations"
+          >
+            {d.integrations}
+          </Link>
         ) : (
           <>
             <Link
+              onNavigate={onNavigate}
               className="text-link"
               href={
                 topic === 'fortnox-automation'
@@ -59,17 +94,26 @@ export function HelpArticle({
             >
               {d.settings}
             </Link>
-            <Link className="text-link" href="/intake/accounting">
+            <Link
+              onNavigate={onNavigate}
+              className="text-link"
+              href="/intake/accounting"
+            >
               {d.days}
             </Link>
             <Link
+              onNavigate={onNavigate}
               className="text-link"
               href="/intake/accounting?view=reconciliation"
             >
               {d.reconciliation}
             </Link>
             {topic === 'fortnox-automation' && (
-              <Link className="text-link" href="/help/fortnox-recovery">
+              <Link
+                onNavigate={onNavigate}
+                className="text-link"
+                href="/help/fortnox-recovery"
+              >
                 {d.articles['fortnox-recovery'].title}
               </Link>
             )}

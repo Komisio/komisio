@@ -25,3 +25,44 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+.handover-card {
+  padding: 1.25rem;
+}
+.handover-card-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  font-size: 1rem;
+}
+.handover-card-heading > a {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.handover-status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  background: var(--paper);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.handover-status-received {
+  background: var(--mint);
+  color: var(--green);
+}
+.handover-card-reference {
+  margin: 0.5rem 0;
+}
+.handover-card-note {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.handover-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: baseline;
+  color: var(--muted);
+  font-size: 0.875rem;
+}

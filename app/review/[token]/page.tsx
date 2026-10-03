@@ -1,17 +1,20 @@
 import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { notFound, redirect } from 'next/navigation'
-import { platformContext } from '@/lib/platform/context'
+import { renderPlatformContext as platformContext } from '@/lib/platform/context'
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { readSellerReview } from '@/lib/engine/seller-review'
 import { dictionary, intlLocale } from '@/lib/i18n'
 import { Brand } from '@/components/platform/brand'
 import { Button } from '@/components/ui/button'
 import { SignOut } from '@/components/platform/sign-out'
+import { EventTime } from '@/components/ui/event-time'
 import { SellerResponse } from '@/components/reception/seller-response'
-export const metadata = {
-  robots: { index: false, follow: false },
-  referrer: 'no-referrer' as const,
-}
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.reviewTitle, {
+    robots: { index: false, follow: false },
+    referrer: 'no-referrer',
+  })
 export default async function Review({
   params,
 }: {
@@ -24,9 +27,8 @@ export default async function Review({
   )
     notFound()
   const ctx = await platformContext()
-  const d = dictionary(
-    ctx?.locale ?? (await cookies()).get('komisio-locale')?.value,
-  )
+  const language = ctx?.locale ?? (await cookies()).get('komisio-locale')?.value
+  const d = dictionary(language)
   const path = `/review/${token}`,
     next = encodeURIComponent(path)
   if (ctx?.mfaRequired) redirect(`/mfa?next=${next}`)
@@ -41,7 +43,7 @@ export default async function Review({
     condition: d.reviewCondition,
   }
   return (
-    <main className="onboarding seller-review">
+    <main className="onboarding seller-review" lang={intlLocale(language)}>
       <Brand />
       <section className="card">
         <h1>{d.reviewTitle}</h1>
@@ -73,37 +75,6 @@ export default async function Review({
                 <p>
                   {d.reviewVersion} {review.version}
                 </p>
-                <dl>
-                  {/* The ordered list carries the store's own label for an
-                      attribute it defined; the dictionary still names the ones
-                      it knows, and a slug is the last resort. */}
-                  {review.facts.map((fact) => (
-                    <div key={fact.slug}>
-                      <dt>{labels[fact.slug] ?? fact.label}</dt>
-                      <dd>{fact.value}</dd>
-                    </div>
-                  ))}
-                </dl>
-                <h2>
-                  {d.reviewPrice}: {review.price.amount} {review.price.currency}
-                </h2>
-                <p>{d.reviewPriceNotice}</p>
-                <p>{review.price.rationale}</p>
-                <h2>{review.terms.title}</h2>
-                <div
-                  lang={review.terms.language}
-                  style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}
-                >
-                  {review.terms.body}
-                </div>
-                <p>
-                  {d.reviewExpires}{' '}
-                  {new Date(review.expiresAt).toLocaleString(
-                    intlLocale(ctx.locale),
-                    { timeZone: 'Europe/Stockholm' },
-                  )}{' '}
-                  (Europe/Stockholm)
-                </p>
                 <SellerResponse
                   key={review.reviewId}
                   token={token}
@@ -111,7 +82,37 @@ export default async function Review({
                   photos={review.photos}
                   response={review.response}
                   d={d}
-                />
+                >
+                  <dl>
+                    {/* The ordered list carries the store's own label for an
+                      attribute it defined; the dictionary still names the ones
+                      it knows, and a slug is the last resort. */}
+                    {review.facts.map((fact) => (
+                      <div key={fact.slug}>
+                        <dt>{labels[fact.slug] ?? fact.label}</dt>
+                        <dd>{fact.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <h2>
+                    {d.reviewPrice}: {review.price.amount}{' '}
+                    {review.price.currency}
+                  </h2>
+                  <p>{d.reviewPriceNotice}</p>
+                  <p>{review.price.rationale}</p>
+                  <h2>{review.terms.title}</h2>
+                  <div
+                    lang={intlLocale(review.terms.language)}
+                    style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}
+                  >
+                    {review.terms.body}
+                  </div>
+                  <p>
+                    {d.reviewExpires}{' '}
+                    <EventTime value={review.expiresAt} locale={ctx.locale} />{' '}
+                    (Europe/Stockholm)
+                  </p>
+                </SellerResponse>
               </>
             )}
             <p>{d.inviteSwitchAccount}</p>

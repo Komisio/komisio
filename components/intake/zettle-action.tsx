@@ -6,6 +6,7 @@ import type { Dictionary } from '@/lib/i18n'
 import type { zettleCommand } from '@/lib/engine/zettle'
 import type { z } from 'zod'
 import { compareZettleVat } from '@/lib/engine/zettle-vat'
+import { ItemMatchInput } from './item-match-input'
 type Command = z.infer<typeof zettleCommand>
 type Draft<T> = T extends unknown ? Omit<T, 'requestId'> : never
 export function ZettleAction({
@@ -13,6 +14,7 @@ export function ZettleAction({
   d,
   label,
   match = false,
+  search,
   vatModes,
   engineVatBasisPoints,
 }: {
@@ -20,6 +22,7 @@ export function ZettleAction({
   d: Dictionary['zettle']
   label: string
   match?: boolean
+  search?: Dictionary['sales']
   vatModes?: Record<string, string>
   engineVatBasisPoints?: number
 }) {
@@ -31,6 +34,13 @@ export function ZettleAction({
     'idle' | 'busy' | 'retry' | 'failed' | 'done'
   >('idle')
   const [error, setError] = useState('')
+  const [matchItemId, setMatchItemId] = useState('')
+  const validMatch =
+    !match ||
+    !search ||
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      matchItemId.trim(),
+    )
   const [vatValues, setVatValues] = useState<Record<string, string>>(() =>
     command.action === 'configure'
       ? Object.fromEntries(
@@ -120,6 +130,7 @@ export function ZettleAction({
           if (state === 'retry') void send()
           return
         }
+        if (!validMatch) return
         pending.current = {
           ...command,
           requestId: crypto.randomUUID(),
@@ -198,17 +209,29 @@ export function ZettleAction({
           />
         </div>
       )}
-      {match && (
-        <div className="field">
-          <label htmlFor={id}>{d.item}</label>
-          <input
-            id={id}
-            name="itemId"
-            required
-            pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
-            disabled={state !== 'idle'}
-          />
-        </div>
+      {match && search ? (
+        <ItemMatchInput
+          id={id}
+          tenantId={command.tenantId}
+          value={matchItemId}
+          onChange={setMatchItemId}
+          disabled={state !== 'idle'}
+          d={d}
+          search={search}
+        />
+      ) : (
+        match && (
+          <div className="field">
+            <label htmlFor={id}>{d.item}</label>
+            <input
+              id={id}
+              name="itemId"
+              required
+              pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+              disabled={state !== 'idle'}
+            />
+          </div>
+        )
       )}
       {state === 'idle' && error && <p role="status">{error}</p>}
       {state === 'failed' ? (
@@ -221,7 +244,11 @@ export function ZettleAction({
       ) : state === 'done' ? (
         <p role="status">{error || d.done}</p>
       ) : (
-        <Button type="submit" disabled={state === 'busy'}>
+        <Button
+          id={`${id}-confirm`}
+          type="submit"
+          disabled={state === 'busy' || !validMatch}
+        >
           {state === 'busy' ? d.busy : state === 'retry' ? d.retry : label}
         </Button>
       )}

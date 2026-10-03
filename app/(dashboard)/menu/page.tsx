@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
 import styles from './menu.module.css'
@@ -50,3 +51,5 @@ export default async function MenuPage() {
     </div>
   )
 }
+
+export const generateMetadata = () => platformPageMetadata((d) => d.nav.more)

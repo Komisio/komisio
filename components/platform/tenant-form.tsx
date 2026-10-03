@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useSyncExternalStore } from 'react'
+import { useRef, useState, useSyncExternalStore } from 'react'
 import {
   storeCurrencies,
   suggestedStoreCurrency,
@@ -22,10 +22,13 @@ export function TenantForm({
   locale?: string
 }) {
   const action = useCommand(d)
+  const [edited, setEdited] = useState(false)
   const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const requestId = useRef<string | null>(null)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (action.busy) return
+    setEdited(false)
     const form = new FormData(event.currentTarget)
     requestId.current ??= crypto.randomUUID()
     const result = await action.run(
@@ -45,7 +48,7 @@ export function TenantForm({
     }
   }
   return (
-    <form onSubmit={submit}>
+    <form onSubmit={submit} onChange={() => setEdited(true)}>
       <div className="field">
         <label htmlFor="tenant-name">{d.tenantName}</label>
         <input
@@ -55,6 +58,7 @@ export function TenantForm({
           required
           maxLength={100}
           placeholder={d.tenantPlaceholder}
+          disabled={action.busy}
         />
       </div>
       {!tenant && (
@@ -65,6 +69,7 @@ export function TenantForm({
             name="currency"
             defaultValue={suggestedStoreCurrency(locale)}
             required
+            disabled={action.busy}
           >
             {storeCurrencies.map((code) => (
               <option key={code} value={code}>
@@ -78,7 +83,7 @@ export function TenantForm({
       <Button disabled={!ready || action.busy}>
         {action.busy ? d.loading : tenant ? d.save : d.createButton}
       </Button>
-      <Feedback error={action.error} success={action.success} />
+      <Feedback error={action.error} success={edited ? '' : action.success} />
     </form>
   )
 }

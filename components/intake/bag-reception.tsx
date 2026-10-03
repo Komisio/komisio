@@ -66,7 +66,7 @@ export async function BagReception({
     `/intake/bags/${bagId}/inspect?itemPage=${page}#bag-registered`
   if (itemPage > pages) redirect(href(pages))
   return (
-    <main className="bag-reception-page">
+    <div className="bag-reception-page">
       <Link className="text-link" href="/intake">
         {d.intake.back}
       </Link>
@@ -132,6 +132,6 @@ export async function BagReception({
           {b.drafts}
         </Link>
       </nav>
-    </main>
+    </div>
   )
 }

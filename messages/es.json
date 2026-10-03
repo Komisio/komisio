@@ -19,7 +19,7 @@
     "required": "Se requiere evidencia antes de la recepción.",
     "optional": "La evidencia es opcional en la recepción.",
     "none": "No hay ningún acuerdo de depositante publicado. No se aplica ningún requisito de acuerdo nuevo a la recepción.",
-    "history": "Versiones anteriores",
+    "history": "Versiones del acuerdo",
     "historyHint": "Las 20 versiones más recientes. Las versiones más antiguas siguen accesibles desde sus recibos.",
     "adminOnly": "Los propietarios y administradores pueden publicar versiones del acuerdo.",
     "manage": "Ver y gestionar los acuerdos de depositante",
@@ -335,8 +335,8 @@
   "tenantIdentity": "Identidad de la tienda",
   "tenantId": "Id de la tienda",
   "tenantImmutable": "Este identificador distingue tu tienda de las demás.",
-  "audit": "Cambios de acceso recientes",
-  "noAudit": "Aún no hay cambios que mostrar.",
+  "audit": "Actividad reciente",
+  "noAudit": "Aún no hay actividad.",
   "accountIntro": "Tus datos personales te acompañan en todas las tiendas.",
   "profile": "Perfil",
   "security": "Seguridad",
@@ -386,7 +386,11 @@
     "inspection.reopened": "Borrador de artículo reabierto",
     "reception.created": "Recepción iniciada",
     "reception.sources_saved": "Evidencia de recepción guardada",
-    "reception.review_published": "Revisión de recepción preparada"
+    "reception.review_published": "Revisión de recepción preparada",
+    "item.accepted": "Se registró un artículo",
+    "store_policy.published": "Se actualizó la política de la tienda",
+    "purchase.registered": "Se registró una compra",
+    "sale.recorded": "Se registró una venta"
   },
   "errors": {
     "FORBIDDEN": "No tienes permiso para hacer esto.",
@@ -711,7 +715,10 @@
       "noApproval": "La tienda decide el precio. No se necesita la aprobación del vendedor.",
       "optionalShare": "Compartir con el vendedor es opcional",
       "registered": "Artículo registrado"
-    }
+    },
+    "linkUncertain": "No se pudo confirmar el cambio del enlace. Recarga la página y comprueba su estado antes de continuar.",
+    "copyFailed": "No se pudo copiar. El enlace está seleccionado para que puedas copiarlo manualmente.",
+    "linkRevoked": "El enlace se ha revocado."
   },
   "operations": {
     "title": "Operaciones propuestas",
@@ -855,7 +862,8 @@
     "noComparedChanges": "No hay cambios en los campos comparados. Revisa igualmente la propuesta nueva completa.",
     "sourceVersionChanged": "La versión de fuentes ha cambiado. Revisa la evidencia aunque los datos parezcan iguales.",
     "agreementVersionChanged": "La versión del acuerdo ha cambiado. Lee las condiciones propuestas abajo.",
-    "zettleReceipt": "Recibo de PayPal POS"
+    "zettleReceipt": "Recibo de PayPal POS",
+    "sourceReference": "Referencia de la fuente"
   },
   "reviewPhotoAlt": "Foto incluida en esta revisión",
   "reviewPhotos": "Fotos de esta revisión",
@@ -895,7 +903,9 @@
       "sun": "Domingo"
     },
     "country": "País",
-    "countryHelp": "El país de la tienda determina la moneda para las compras de créditos de IA."
+    "countryHelp": "El país de la tienda determina la moneda para las compras de créditos de IA.",
+    "noHours": "Sin horario indicado",
+    "hoursHint": "Selecciona los días para los que quieras indicar un horario. Si desmarcas un día, no se publicará su horario."
   },
   "storePolicy": {
     "markdowns": "Rebajas",
@@ -1103,9 +1113,9 @@
     "sellerCredit": "Crédito del depositante",
     "vat": "IVA",
     "providers": {
-      "manual": "mostrador",
+      "manual": "Registrada manualmente",
       "zettle": "PayPal POS",
-      "shopify": "Shopify POS"
+      "shopify": "Shopify"
     },
     "statuses": {
       "completed": "completada",
@@ -1129,7 +1139,18 @@
     "cart": "Carrito",
     "cartEmpty": "Busca los artículos que quieres registrar.",
     "remove": "Eliminar",
-    "total": "Total"
+    "total": "Total",
+    "listHint": "Se muestran las 50 ventas más recientes. Abre un recibo para ver artículos, devoluciones y detalles.",
+    "financialDetails": "Comisión e IVA",
+    "reference": "Referencia del recibo",
+    "findReceipt": "Buscar recibo",
+    "receiptSearchHint": "Introduce la referencia completa del recibo, también para ventas anteriores.",
+    "source": "Origen de la venta",
+    "allSources": "Todos los orígenes",
+    "showLatest": "Mostrar recientes",
+    "searchResults": "Resultados de búsqueda",
+    "filteredHint": "Se muestran hasta 50 ventas coincidentes, las más recientes primero.",
+    "noReceipts": "No hay recibos coincidentes. Comprueba la referencia completa o elige otro origen."
   },
   "ledger": {
     "title": "Saldo y libro",
@@ -1163,7 +1184,7 @@
   },
   "payouts": {
     "title": "Pagos",
-    "intro": "Un pago pasa de solicitado a aprobado y a pagado, o se rechaza. La aprobación reserva el importe en el libro del depositante; el pago lo liquida.",
+    "intro": "Gestiona los pagos a vendedores y consulta cuáles están pendientes de pago.",
     "notice": "Komisio registra los pagos; no mueve dinero. Paga a través de tu banco y registra aquí la referencia.",
     "requestHeading": "Solicitar un pago",
     "requestHint": "En nombre del vendedor, al menos el mínimo de la tienda y como máximo el saldo disponible.",
@@ -1189,7 +1210,7 @@
       "paid": "pagado",
       "rejected": "rechazado"
     },
-    "settleHeading": "Liquidar a todos los depositantes",
+    "settleHeading": "Preparar pagos",
     "settleHint": "Todos los depositantes con saldo igual o superior al mínimo ({threshold}) sin un pago abierto. Un lote solicita y aprueba un pago por todo el saldo disponible por cada depositante seleccionado; después pagas a través de tu banco y marcas cada uno como pagado.",
     "settleEmpty": "Ningún depositante cumple los requisitos para la liquidación en este momento.",
     "settleReason": "Nota del lote",
@@ -1200,7 +1221,8 @@
     "settleTotal": "Total",
     "requestNone": "No hay saldo disponible en esta lista. Abra un depositante para ver su saldo.",
     "directory": "Buscar entre todos los depositantes",
-    "latestFifty": "Se muestran los 50 pagos más recientes. La página de cada depositante muestra sus pagos recientes."
+    "latestFifty": "Se muestran los 50 pagos más recientes. La página de cada depositante muestra sus pagos recientes.",
+    "history": "Historial y referencias"
   },
   "returns": {
     "reason": "Motivo de la devolución",
@@ -1255,16 +1277,16 @@
     "items": "artículos",
     "note": "Nota (opcional)",
     "confirm": "Los artículos de la entrega ya están en la tienda.",
-    "receive": "Recibir y registrar la entrega",
+    "receive": "Recibir entrega",
     "openBag": "Abrir la entrega",
     "kinds": {
       "bag": "Bolsa",
       "box": "Caja"
     },
     "statuses": {
-      "open": "abierta",
-      "received": "recibida",
-      "cancelled": "cancelada"
+      "open": "Pendiente de entrega",
+      "received": "Recibida",
+      "cancelled": "Cancelada"
     },
     "backToQueue": "Volver a entregas anunciadas",
     "search": "Buscar entrega",
@@ -1276,7 +1298,9 @@
     "noMatches": "Ninguna entrega coincide con los filtros.",
     "limited": "Temporalmente solo se muestran las 100 entregas más recientes. Abra una anterior mediante su referencia H.",
     "settings": "Abrir ajustes",
-    "askOwner": "Pide a un propietario o administrador que active esta función."
+    "askOwner": "Pide a un propietario o administrador que active esta función.",
+    "estimatedCount": "Unos {count} artículos",
+    "estimatedCountOne": "Aproximadamente {count} artículo"
   },
   "chain": {
     "title": "Cadena",
@@ -1443,7 +1467,12 @@
       "unconfirmed": "entrega no confirmada",
       "failed": "entrega fallida"
     },
-    "dailyCap": "Se alcanzó el límite diario de mensajes de la tienda. Inténtalo mañana."
+    "dailyCap": "Se alcanzó el límite diario de mensajes de la tienda. Inténtalo mañana.",
+    "older": "Mensajes anteriores",
+    "newer": "Mensajes más recientes",
+    "latest": "Últimos mensajes",
+    "showingRange": "Mensajes {from}–{to} de {total}",
+    "pageEmpty": "No hay mensajes en esta página."
   },
   "stock": {
     "title": "Existencias",
@@ -1506,7 +1535,9 @@
     "tooMany": "El archivo tiene más de 200 filas utilizables. Divídelo e impórtalo por partes.",
     "nothing": "No hay filas utilizables. Comprueba la asignación de columnas.",
     "error": "No se pudo preparar la importación. Recarga e inténtalo de nuevo.",
-    "ownerOnly": "Solo el propietario de la tienda o un administrador puede importar depositantes."
+    "ownerOnly": "Solo el propietario de la tienda o un administrador puede importar depositantes.",
+    "fileTooLarge": "El archivo es demasiado grande. Divídelo y selecciona un archivo más pequeño.",
+    "clearFile": "Quitar archivo"
   },
   "lifecycle": {
     "agentHeading": "Ejecuciones de rebajas",
@@ -1565,9 +1596,9 @@
   },
   "openByReference": {
     "title": "Abrir por etiqueta",
-    "intro": "Escribe o escanea la referencia de una entrega (K-n), prenda (G-n) o artículo (I-XXXXXXXX).",
+    "intro": "Escanea una etiqueta o escribe la referencia de la etiqueta o del aviso de entrega.",
     "reference": "Referencia de la etiqueta",
-    "hint": "Por ejemplo K-12, G-7 o I-A1B2C3D4.",
+    "hint": "Por ejemplo K-12, G-7, H-9 o I-A1B2C3D4.",
     "open": "Abrir",
     "notFound": "Nada en esta tienda lleva la referencia {ref}.",
     "ambiguous": "Varios artículos de esta tienda tienen la referencia {ref}. Elige el artículo correcto de la lista.",
@@ -1647,7 +1678,7 @@
     "formatInvalid": "Ancho de 20 a 120 mm, alto de 15 a 200 mm, como máximo un decimal.",
     "defaultSize": "por defecto",
     "title": "Impresoras y etiquetas",
-    "intro": "Las etiquetas son programas ZPL puestos en cola para una impresora de la tienda. Un agente local junto a la impresora recoge los trabajos e informa del resultado.",
+    "intro": "Gestiona las impresoras de etiquetas de la tienda y consulta las últimas impresiones. Las etiquetas en papel normal se pueden imprimir directamente desde la página del artículo.",
     "none": "No hay impresoras registradas.",
     "registerHeading": "Registrar una impresora",
     "name": "Nombre",
@@ -1699,12 +1730,13 @@
     "browserPrint": "Imprimir etiqueta",
     "browserUnavailable": "La etiqueta no está disponible ahora. Vuelve al artículo e inténtalo de nuevo.",
     "printerUncertain": "No se pudo confirmar el cambio de la impresora. Recarga la página y comprueba la configuración guardada antes de continuar.",
-    "formatUncertain": "No se pudo confirmar el tamaño de la etiqueta. Recarga la página y comprueba el tamaño guardado antes de continuar."
+    "formatUncertain": "No se pudo confirmar el tamaño de la etiqueta. Recarga la página y comprueba el tamaño guardado antes de continuar.",
+    "discardTemplate": "¿Descartar los cambios sin guardar de la plantilla de etiquetas?"
   },
   "purchases": {
     "title": "Compras",
-    "intro": "Los artículos propiedad de la tienda entran por aquí, nunca por las vías de depósito.",
-    "notice": "Una compra es un hecho sobre qué compró la tienda y por cuánto. Todavía no es un artículo en venta; la aceptación viene después.",
+    "intro": "Registra los artículos que la tienda compra y posee.",
+    "notice": "Registra primero la compra. Después abre «{accept}» en la compra e introduce un precio de venta para preparar el artículo para la venta.",
     "registerHeading": "Registrar una compra",
     "registerHint": "Un registro por artículo comprado. Conserva el recibo o la nota; su referencia es obligatoria.",
     "price": "Precio de compra",
@@ -2286,7 +2318,7 @@
     "reload": "Recargar",
     "revision": "Versión de la asignación",
     "total": "Total del recibo",
-    "matchHint": "Copia el ID completo del artículo del final de la URL de su página. Asigna cada fila a un artículo distinto.",
+    "matchHint": "Busca el artículo o escanea su etiqueta. Elige el artículo correcto y guarda la vinculación para cada línea del recibo.",
     "open": "Abrir recibo",
     "done": "Guardado",
     "unsupported": "Los descuentos, reembolsos, comisiones y cantidades no unitarias necesitan una parte posterior de la integración.",
@@ -2417,7 +2449,9 @@
     "setupHint": "Introduce el Client ID y la clave API de tu cuenta de PayPal POS. Se verifican y se guardan cifrados para esta tienda.",
     "clientId": "Client ID",
     "apiKey": "Clave API",
-    "connect": "Conectar PayPal POS"
+    "connect": "Conectar PayPal POS",
+    "chooseItem": "Elegir artículo",
+    "selectedItem": "Artículo seleccionado"
   },
   "priceEvidence": {
     "title": "Ventas comparables en esta tienda",
@@ -2856,7 +2890,7 @@
   },
   "helpCenter": {
     "title": "Ayuda",
-    "intro": "Guías de recepción, etiquetado e integración contable.",
+    "intro": "Guía de recepción, etiquetado e integraciones.",
     "open": "Ayuda de esta página",
     "close": "Cerrar ayuda",
     "fullArticle": "Abrir la ayuda completa en una pestaña nueva",
@@ -2954,13 +2988,25 @@
           "Si falta la respuesta al poner el trabajo en cola, reintenta en el mismo formulario abierto. No crees trabajos nuevos repetidamente. Comprueba el trabajo en Impresoras y trabajos de impresión y pide ayuda al responsable de la impresora si es necesario. La búsqueda de etiquetas permite abrir una referencia existente."
         ],
         "notice": "Abrir la ayuda no imprime nada ni registra un artículo nuevo. No dupliques un artículo para sustituir su etiqueta. La impresión física y el escaneo deben comprobarse con el equipo de la tienda."
+      },
+      "integrations": {
+        "title": "Conecta los demás sistemas de tu tienda",
+        "intro": "Empieza por el sistema que quieras conectar con Komisio. Abre su sección para ver el estado y los ajustes.",
+        "steps": [
+          "Elige punto de venta, tienda online o contabilidad según lo que quieras conectar.",
+          "Lee el estado de la conexión y sigue los pasos de esa sección. Algunas acciones requieren un propietario o administrador.",
+          "Comprueba qué información se transfiere y en qué dirección antes de activar una función automática.",
+          "Consulta el estado de productos, recibos, pedidos o documentos contables en cada integración. Abre los detalles si algo requiere atención."
+        ],
+        "notice": "Una conexión no significa que todas las funciones automáticas estén activadas. Compruébalas por separado en los ajustes de la integración."
       }
     },
     "receiving": "Abrir recepción",
     "storeFlow": "Flujo de trabajo de la tienda",
     "items": "Buscar un artículo registrado",
     "openReference": "Abrir una referencia de etiqueta",
-    "printing": "Impresoras y trabajos de impresión"
+    "printing": "Impresoras y trabajos de impresión",
+    "integrations": "Abrir integraciones"
   },
   "dashboard": {
     "intro": "Lo más importante de tu jornada, en un solo lugar.",
@@ -2972,5 +3018,15 @@
     "salesHint": "Consulta las ventas registradas.",
     "snapshot": "Estado de la tienda",
     "receiptHint": "Recibe ahora, revisa los artículos después."
-  }
+  },
+  "auditHint": "Los 12 eventos registrados más recientes de la tienda.",
+  "otherActivity": "Otro evento de la tienda",
+  "technicalDetails": "Datos técnicos de la tienda",
+  "skipToContent": "Saltar al contenido principal",
+  "leaveUnsaved": "¿Salir de esta página? Se perderán los cambios sin guardar. Si no se confirmó el guardado, comprueba el contenido guardado antes de empezar de nuevo.",
+  "showPassword": "Mostrar contraseña",
+  "hidePassword": "Ocultar contraseña",
+  "reviewRetryApprove": "Reintentar la aprobación",
+  "reviewRetryDecline": "Reintentar el rechazo",
+  "copyLinkFailed": "No se pudo copiar. El enlace está seleccionado para que puedas copiarlo manualmente."
 }

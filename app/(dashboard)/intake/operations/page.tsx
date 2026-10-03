@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
@@ -39,7 +40,10 @@ export default async function Operations({
         </Link>
       </div>
       <p className="intake-notice">{d.notice}</p>
-      <nav className="row operation-navigation" aria-label={d.queueFilter}>
+      <nav
+        className="row operation-navigation operation-filters"
+        aria-label={d.queueFilter}
+      >
         {operationFilter.options.map((status) => (
           <Link
             className="text-link"
@@ -60,6 +64,7 @@ export default async function Operations({
           canDecide={active.role !== 'readonly'}
           locale={ctx.locale}
           currency={currency}
+          sourceKinds={all.reception.history.kinds}
           d={d}
         />
       ) : (
@@ -89,3 +94,6 @@ export default async function Operations({
     </>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.operations.title)

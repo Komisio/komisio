@@ -1,9 +1,10 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { AccountForm, PasswordForm } from '@/components/platform/account-form'
 import { MfaForm } from '@/components/auth/mfa-form'
 import { SignOut } from '@/components/platform/sign-out'
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 export default async function Account() {
   const ctx = await requirePlatform(false)
   const d = dictionary(ctx.locale)
@@ -50,3 +51,5 @@ export default async function Account() {
     </>
   )
 }
+
+export const generateMetadata = () => platformPageMetadata((d) => d.account)

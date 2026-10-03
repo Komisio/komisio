@@ -1,5 +1,6 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { notFound, redirect } from 'next/navigation'
-import { platformContext } from '@/lib/platform/context'
+import { renderPlatformContext as platformContext } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import {
   authorizeRequest,
@@ -78,3 +79,6 @@ export default async function Authorize({
     />
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.connectors.consent.title)

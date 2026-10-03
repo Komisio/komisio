@@ -1,8 +1,9 @@
 'use client'
 import { useRef, useState } from 'react'
-import Link from 'next/link'
+import { NavigationLink as Link, useUnsavedChanges } from './navigation-warning'
 import { useRouter } from 'next/navigation'
 import type { GuideCopy } from '@/lib/guide-copy'
+import type { Dictionary } from '@/lib/i18n'
 import {
   emptyGuide,
   guideOptions,
@@ -21,12 +22,16 @@ export function StoreGuide({
   initial,
   editable,
   c,
+  recovery,
+  leaveWarning,
 }: {
   tenantId: string
   tenantName: string
   initial: CurrentGuide
   editable: boolean
   c: GuideCopy
+  recovery: Pick<Dictionary['intake'], 'failed' | 'retry' | 'reload'>
+  leaveWarning: string
 }) {
   const router = useRouter()
   const [answers, setAnswers] = useState<GuideAnswers>(
@@ -39,7 +44,20 @@ export function StoreGuide({
   const [saved, setSaved] = useState(!!initial.id)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
-  const request = useRef<string | null>(null)
+  const request = useRef<{
+    tenantId: string
+    requestId: string
+    expectedCurrentId: string | null
+    answers: GuideAnswers
+  } | null>(null)
+  const running = useRef(false)
+  const [locked, setLocked] = useState(false)
+  const [needsReload, setNeedsReload] = useState(false)
+  const [confirmedAnswers, setConfirmedAnswers] = useState(
+    JSON.stringify(initial.answers ?? emptyGuide()),
+  )
+  const dirty = JSON.stringify(answers) !== confirmedAnswers
+  useUnsavedChanges(editable && (dirty || locked) ? leaveWarning : null)
   const heading = useRef<HTMLHeadingElement>(null)
   const steps = guideSteps(answers)
   const summary = step >= steps.length || !editable
@@ -95,12 +113,14 @@ export function StoreGuide({
     },
   }
   function move(to: number) {
+    if (locked || needsReload) return
     setStep(to)
     setError('')
     request.current = null
     setTimeout(() => heading.current?.focus(), 0)
   }
   function choose(value: string) {
+    if (locked || needsReload) return
     const multi = !['pricing', 'pos'].includes(key)
     let values = multi
       ? answers[key].includes(value)
@@ -121,40 +141,53 @@ export function StoreGuide({
     setError('')
   }
   async function save() {
+    if (running.current || needsReload || saved) return
+    running.current = true
     setBusy(true)
+    setLocked(true)
     setError('')
-    request.current ??= crypto.randomUUID()
+    request.current ??= {
+      tenantId,
+      requestId: crypto.randomUUID(),
+      expectedCurrentId: currentId,
+      answers,
+    }
     try {
       const response = await fetch('/api/store-guide', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tenantId,
-          requestId: request.current,
-          expectedCurrentId: currentId,
-          answers,
-        }),
+        body: JSON.stringify(request.current),
       })
+      if (response.status >= 500) throw new Error('Unknown save outcome')
       const body = await response.json()
       if (!response.ok) {
+        if (response.status === 400 && body?.error === 'INVALID_INPUT') {
+          request.current = null
+          setLocked(false)
+        } else setNeedsReload(true)
         setError(
-          body.error === 'TENANT_CHANGED'
+          body?.error === 'TENANT_CHANGED'
             ? c.tenantChanged
-            : ['GUIDE_CHANGED', 'REQUEST_CONFLICT'].includes(body.error)
+            : ['GUIDE_CHANGED', 'REQUEST_CONFLICT'].includes(body?.error)
               ? c.conflict
-              : body.error === 'AUTH_REQUIRED'
+              : body?.error === 'AUTH_REQUIRED'
                 ? c.auth
                 : c.failed,
         )
         return
       }
+      if (body?.id !== request.current.requestId)
+        throw new Error('Unknown save outcome')
       setCurrentId(body.id)
+      setConfirmedAnswers(JSON.stringify(request.current.answers))
       setSaved(true)
       request.current = null
+      setLocked(false)
       router.refresh()
     } catch {
-      setError(c.failed)
+      setError(recovery.failed)
     } finally {
+      running.current = false
       setBusy(false)
     }
   }
@@ -193,7 +226,10 @@ export function StoreGuide({
       ) : (
         <>
           <p>{['pricing', 'pos'].includes(key) ? c.single : c.multi}</p>
-          <fieldset disabled={busy} className="guide-options">
+          <fieldset
+            disabled={busy || locked || needsReload}
+            className="guide-options"
+          >
             <legend className="sr-only">{title(key)}</legend>
             {(key === 'pricing'
               ? pricingOptions(answers)
@@ -218,14 +254,18 @@ export function StoreGuide({
       <div className="guide-actions">
         {editable &&
           (summary ? (
-            <button type="button" disabled={busy} onClick={() => move(0)}>
+            <button
+              type="button"
+              disabled={busy || locked || needsReload}
+              onClick={() => move(0)}
+            >
               {c.edit}
             </button>
           ) : (
             step > 0 && (
               <button
                 type="button"
-                disabled={busy}
+                disabled={busy || locked || needsReload}
                 onClick={() => move(step - 1)}
               >
                 {c.back}
@@ -235,16 +275,24 @@ export function StoreGuide({
         {!summary && (
           <button
             type="button"
-            disabled={busy || !answers[key].length}
+            disabled={busy || locked || needsReload || !answers[key].length}
             onClick={() => move(step + 1)}
           >
             {step === steps.length - 1 ? c.summary : c.next} →
           </button>
         )}
-        {summary && editable && !saved && (
-          <button type="button" disabled={busy} onClick={save}>
-            {busy ? c.saving : c.save}
+        {needsReload ? (
+          <button type="button" onClick={() => window.location.reload()}>
+            {recovery.reload}
           </button>
+        ) : (
+          summary &&
+          editable &&
+          !saved && (
+            <button type="button" disabled={busy} onClick={save}>
+              {busy ? c.saving : locked ? recovery.retry : c.save}
+            </button>
+          )
         )}
         {summary && <Link href="/">{c.home}</Link>}
       </div>

@@ -33,9 +33,8 @@ test('payouts page keeps decisions first and folds the request form on mobile', 
     await f.commit()
     await page.setViewportSize({ width: 320, height: 720 })
     await page.goto('/intake/payouts')
-    const settle = page.locator('section', {
-      has: page.getByRole('heading', { name: p.settleHeading, exact: true }),
-    })
+    const settlement = page.getByTestId('payout-settlement')
+    const settle = settlement.locator('section')
     const list = page.getByTestId('payout-list')
     const request = page.getByTestId('payout-request')
     // Document position, not viewport position, so an already scrolled page cannot pass by accident.
@@ -44,16 +43,17 @@ test('payouts page keeps decisions first and folds the request form on mobile', 
       (await page.evaluate(() => window.scrollY))
     // Order: the folded request one line from the top, then the settlement, then the payout list.
     await expect(request).toBeVisible()
-    await expect(settle).toBeVisible()
+    await expect(settlement).toBeVisible()
+    await expect(settle).not.toBeVisible()
     await expect(list).toBeVisible()
-    expect(await top(request)).toBeLessThan(await top(settle))
-    expect(await top(settle)).toBeLessThan(await top(list))
+    expect(await top(request)).toBeLessThan(await top(settlement))
+    expect(await top(settlement)).toBeLessThan(await top(list))
     expect(
       await request.evaluate((el) => (el as HTMLDetailsElement).open),
     ).toBe(false)
     await expect(request.locator('summary')).toContainText(p.requestHeading)
     // Folded, the request takes one line: the settlement starts within the first screen.
-    expect(await top(settle)).toBeLessThan(720)
+    expect(await top(list)).toBeLessThan(720)
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
@@ -77,6 +77,7 @@ test('payouts page keeps decisions first and folds the request form on mobile', 
     await request.locator('summary').click()
 
     // Settle through the page: the credit is reserved, the approved payout appears.
+    await settlement.locator('summary').click()
     await expect(settle.getByText(/160\.00 SEK/).first()).toBeVisible()
     await settle
       .getByLabel(p.settleReason, { exact: true })
@@ -91,11 +92,16 @@ test('payouts page keeps decisions first and folds the request form on mobile', 
     await expect(page.getByText(p.settled, { exact: true })).toBeVisible()
     // The page refreshes itself after the batch; wait for the refreshed facts, no reload.
     await expect(page.getByText(p.settleEmpty, { exact: true })).toBeVisible()
+    await settlement.locator('summary').click()
     const approved = list.locator('.intake-notice', {
       hasText: p.statuses.approved,
     })
     await expect(approved).toHaveCount(1)
     await expect(approved).toContainText('160.00 SEK')
+    await expect(approved.locator('.payout-history > p')).not.toBeVisible()
+    await approved.locator('.payout-history > summary').click()
+    await expect(approved.locator('.payout-history > p')).toBeVisible()
+    await approved.locator('.payout-history > summary').click()
     // The approved payout is within the first two phone screens of the document, the request still folded above it.
     expect(await top(approved)).toBeLessThan(720 * 2)
     expect(await top(request)).toBeLessThan(await top(approved))

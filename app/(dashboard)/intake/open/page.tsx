@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
@@ -89,11 +90,16 @@ export default async function OpenByReference({
               name="ref"
               autoFocus
               inputMode="text"
+              autoComplete="off"
+              autoCapitalize="characters"
+              spellCheck={false}
+              required
+              aria-describedby="open-ref-hint"
               placeholder="K-12"
               defaultValue={ref}
               maxLength={16}
             />
-            <small>{d.hint}</small>
+            <small id="open-ref-hint">{d.hint}</small>
           </div>
           <button className="btn btn-primary">{d.open}</button>
         </form>
@@ -104,3 +110,6 @@ export default async function OpenByReference({
     </>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.openByReference.title)

@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary, intlLocale } from '@/lib/i18n'
@@ -39,6 +40,10 @@ export default async function FlowPage() {
       editable={['owner', 'admin'].includes(active.role)}
       perItem={policy.policy.sellerReviewMode === 'per_item'}
       d={dictionary(ctx.locale).storeFlow}
+      leaveWarning={d.leaveUnsaved}
     />
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.storeFlow.title)

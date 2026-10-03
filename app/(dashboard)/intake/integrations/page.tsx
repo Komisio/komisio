@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { FortnoxConnection } from '@/components/intake/fortnox-connection'
 import { FortnoxGuide } from '@/components/help/fortnox-guide'
 import { paypalEnvironment } from '@/lib/engine/paypal-credentials'
@@ -19,7 +20,7 @@ import { pilotIssue, pilotEnvironment } from '@/extensions/zettle/auth'
 import { ZettleConnection } from '@/components/intake/zettle-connection'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import {
   readZettleStatus,
   readZettleCatalog,
@@ -201,7 +202,7 @@ export default async function Integrations({
                       <p>
                         {d.pullSince}:{' '}
                         {new Date(pull.connection.cutover).toLocaleString(
-                          ctx.locale,
+                          intlLocale(ctx.locale),
                           {
                             timeZone: 'Europe/Stockholm',
                           },
@@ -221,7 +222,7 @@ export default async function Integrations({
                           {automaticStatus.run && (
                             <p>
                               {new Date(automaticStatus.run.at).toLocaleString(
-                                ctx.locale,
+                                intlLocale(ctx.locale),
                                 { timeZone: 'Europe/Stockholm' },
                               )}
                               {' · '}
@@ -262,7 +263,7 @@ export default async function Integrations({
                               : d.pullPending}
                           :{' '}
                           {new Date(pull.window.end_at).toLocaleString(
-                            ctx.locale,
+                            intlLocale(ctx.locale),
                             {
                               timeZone: 'Europe/Stockholm',
                             },
@@ -326,9 +327,12 @@ export default async function Integrations({
                 <p>
                   {d.lastSync}:{' '}
                   {state.lastSync
-                    ? new Date(state.lastSync).toLocaleString(ctx.locale, {
-                        timeZone: 'Europe/Stockholm',
-                      })
+                    ? new Date(state.lastSync).toLocaleString(
+                        intlLocale(ctx.locale),
+                        {
+                          timeZone: 'Europe/Stockholm',
+                        },
+                      )
                     : d.never}
                 </p>
                 {fixtures && a.role !== 'readonly' && (
@@ -572,7 +576,7 @@ export default async function Integrations({
                       <p>
                         {all.shopify.automation.lastRun}:{' '}
                         {shopifyAuto?.run
-                          ? `${new Date(shopifyAuto.run.at).toLocaleString(ctx.locale, { timeZone: 'Europe/Stockholm' })} · ${all.shopify.automation.outcomes[shopifyAuto.run.outcome]} · ${shopifyAuto.run.received}`
+                          ? `${new Date(shopifyAuto.run.at).toLocaleString(intlLocale(ctx.locale), { timeZone: 'Europe/Stockholm' })} · ${all.shopify.automation.outcomes[shopifyAuto.run.outcome]} · ${shopifyAuto.run.received}`
                           : all.shopify.automation.noRun}
                       </p>
                     </section>
@@ -649,3 +653,6 @@ export default async function Integrations({
     </div>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.nav.integrations)

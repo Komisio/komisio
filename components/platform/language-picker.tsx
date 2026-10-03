@@ -1,9 +1,10 @@
 'use client'
 
-import { useRef, useTransition } from 'react'
+import { useEffect, useRef, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { ChevronDown, Check } from 'lucide-react'
 import { locales, localeNames, intlLocale, type Locale } from '@/lib/i18n'
+import { useConfirmNavigation } from './navigation-warning'
 
 function Flag({ locale }: { locale: Locale }) {
   const horizontal = (colors: string[]) =>
@@ -78,17 +79,32 @@ export function LanguagePicker({
   label: string
 }) {
   const router = useRouter()
+  const confirmNavigation = useConfirmNavigation()
   const menu = useRef<HTMLDetailsElement>(null)
   const [pending, startTransition] = useTransition()
   function close() {
     if (menu.current) menu.current.open = false
   }
+  useEffect(() => {
+    const dismissOutside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !menu.current?.contains(event.target))
+        close()
+    }
+    document.addEventListener('pointerdown', dismissOutside)
+    return () => document.removeEventListener('pointerdown', dismissOutside)
+  }, [])
   return (
     <details
       ref={menu}
       className="language-picker"
       onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) close()
+        // WebKit does not focus buttons on pointer clicks. A null destination
+        // must not hide the option between pointerdown and its click handler.
+        if (
+          event.relatedTarget &&
+          !event.currentTarget.contains(event.relatedTarget)
+        )
+          close()
       }}
       onKeyDown={(event) => {
         if (event.key === 'Escape') {
@@ -111,6 +127,7 @@ export function LanguagePicker({
             disabled={pending}
             aria-pressed={code === locale}
             onClick={() => {
+              if (code !== locale && !confirmNavigation()) return
               close()
               menu.current?.querySelector('summary')?.focus()
               document.cookie = `komisio-locale=${code};path=/;max-age=31536000;SameSite=Lax`

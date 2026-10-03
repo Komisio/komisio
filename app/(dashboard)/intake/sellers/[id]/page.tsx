@@ -1,3 +1,5 @@
+import { EventTime } from '@/components/ui/event-time'
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { statementPeriodDefaults } from '@/lib/intake/statement-period'
 import { SellerTabs } from '@/components/intake/seller-tabs'
 import { readBagQueue } from '@/lib/engine/bag-queue'
@@ -9,7 +11,8 @@ import {
   sellerProfileBody,
 } from '@/lib/engine/seller-profile'
 import { readStoreProfile } from '@/lib/engine/store-profile'
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
+import HistoryLink from 'next/link'
 import { Info } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
@@ -28,7 +31,7 @@ import {
 } from '@/components/intake/payout-forms'
 import { StatementForm } from '@/components/intake/statement-form'
 import { readSellerStatements } from '@/lib/engine/statements'
-import { readSellerCommunications } from '@/lib/engine/communications'
+import { readSellerCommunicationHistory } from '@/lib/engine/communications'
 import { readPayouts } from '@/lib/engine/payouts'
 import { readItems } from '@/lib/engine/items'
 import { CommunicationForm } from '@/components/intake/communication-form'
@@ -59,6 +62,13 @@ export default async function Seller({
     .max(1000000)
     .safeParse(query.ledgerPage ?? 0)
   if (!ledgerPageValue.success) notFound()
+  const messagePageValue = z.coerce
+    .number()
+    .int()
+    .min(0)
+    .max(1000000)
+    .safeParse(query.messagesPage ?? 0)
+  if (!messagePageValue.success) notFound()
   const ctx = await requirePlatform(),
     tenant = ctx.active!,
     currency = await readStoreCurrency(ctx.client, tenant.id),
@@ -78,7 +88,7 @@ export default async function Seller({
     balance,
     ledger,
     statements,
-    communications,
+    communicationHistory,
     payouts,
     items,
   ] = await Promise.all([
@@ -92,11 +102,17 @@ export default async function Seller({
       ledgerPageValue.data,
     ),
     readSellerStatements(ctx.client, tenant.id, id.data),
-    readSellerCommunications(ctx.client, tenant.id, id.data),
+    readSellerCommunicationHistory(
+      ctx.client,
+      tenant.id,
+      id.data,
+      messagePageValue.data,
+    ),
     readPayouts(ctx.client, tenant.id, id.data),
     readItems(ctx.client, tenant.id, id.data),
   ])
   const w = all.sellerWorkspace
+  const communications = communicationHistory.items
   // The overview remains newest-first even while the economy tab shows older history.
   const recentLedger =
     ledger.page === 0
@@ -111,6 +127,13 @@ export default async function Seller({
   if (!pageValue.success) notFound()
   const itemsPage = pageValue.data
   const sellerPath = '/intake/sellers/' + id.data
+  function messagePageHref(page: number) {
+    const next = new URLSearchParams()
+    for (const key of ['ledgerPage', 'itemsPage', 'older', 'newer'])
+      if (typeof query[key] === 'string') next.set(key, query[key])
+    next.set('messagesPage', String(page))
+    return `${sellerPath}?${next}#seller-communication`
+  }
   const [dropoffs, dropoffCount, workspaceItems, agreement] = await Promise.all(
     [
       readBagQueue(ctx.client, tenant.id, {
@@ -126,7 +149,7 @@ export default async function Seller({
       readSellerWorkspaceItems(ctx.client, tenant.id, id.data, itemsPage),
       ctx.client
         .from('seller_agreement_versions')
-        .select('id,title,body,version')
+        .select('id,title,body,version,language')
         .eq('tenant_id', tenant.id)
         .order('version', { ascending: false })
         .limit(1)
@@ -150,26 +173,56 @@ export default async function Seller({
   const c = all.communications
   const printers = await readPrinters(ctx.client, tenant.id)
   const sellerItems = items.filter((i) => i.seller_id === id.data)
-  const soldLines = sellerItems.length
-    ? await ctx.client
-        .from('sale_lines')
-        .select('id,item_id,seller_credit_ore')
-        .eq('tenant_id', tenant.id)
-        .in(
-          'item_id',
-          sellerItems.map((i) => i.id),
+  // The reference list contains at most 50 items. Reuse the current 25-item
+  // projection and read only its missing first/second page, never one RPC per item.
+  const [referencePages, soldLines] = await Promise.all([
+    tenant.role !== 'readonly' && workspaceItems
+      ? Promise.all(
+          Array.from(
+            { length: Math.ceil(sellerItems.length / 25) },
+            (_, page) =>
+              workspaceItems.page === page
+                ? workspaceItems
+                : readSellerWorkspaceItems(
+                    ctx.client,
+                    tenant.id,
+                    id.data,
+                    page,
+                  ),
+          ),
         )
-        .limit(50)
-    : { data: [], error: null }
+      : [],
+    sellerItems.length
+      ? ctx.client
+          .from('sale_lines')
+          .select('id,item_id,seller_credit_ore')
+          .eq('tenant_id', tenant.id)
+          .in(
+            'item_id',
+            sellerItems.map((i) => i.id),
+          )
+          .limit(50)
+      : { data: [], error: null },
+  ])
+  const referenceTitles = new Map(
+    referencePages.flatMap(
+      (page) => page?.items.map((item) => [item.id, item.title] as const) ?? [],
+    ),
+  )
+  const itemReferenceLabel = (itemId: string) => {
+    const reference = 'I-' + itemId.slice(0, 8).toUpperCase()
+    const title = referenceTitles.get(itemId)?.trim()
+    return title ? `${title} · ${reference}` : reference
+  }
   if (soldLines.error) throw new Error('Unable to read seller sale references')
   const references = {
     item_accepted: sellerItems.map((i) => ({
       id: i.id,
-      label: `${all.items.originKinds[i.origin_kind]} · ${i.id.slice(0, 8)}`,
+      label: itemReferenceLabel(i.id),
     })),
     item_sold: (soldLines.data ?? []).map((l) => ({
       id: String(l.id),
-      label: `${all.items.originKinds[sellerItems.find((i) => i.id === l.item_id)?.origin_kind ?? 'purchase']} · ${formatSignedOre(Number(l.seller_credit_ore))} ${currency}`,
+      label: `${itemReferenceLabel(String(l.item_id))} · ${all.sales.sellerCredit}: ${formatSignedOre(Number(l.seller_credit_ore))} ${currency}`,
     })),
     payout_approved: payouts
       .filter((p) => p.status === 'approved')
@@ -274,7 +327,12 @@ export default async function Seller({
                       <li key={e.id}>
                         <div>
                           <strong>{l.kinds[e.kind]}</strong>
-                          <small>{when(e.occurred_at)}</small>
+                          <small>
+                            <EventTime
+                              value={e.occurred_at}
+                              locale={ctx.locale}
+                            />
+                          </small>
                         </div>
                         <span>
                           {formatSignedOre(e.amount_ore)} {currency}
@@ -318,7 +376,12 @@ export default async function Seller({
                       >
                         {all.intake.bag} K-{bag.reference}
                       </Link>
-                      <small>{when(bag.received_at)}</small>
+                      <small>
+                        <EventTime
+                          value={bag.received_at}
+                          locale={ctx.locale}
+                        />
+                      </small>
                       {bag.note && <p>{bag.note}</p>}
                     </div>
                     <Link className="text-link" href={'/intake/bags/' + bag.id}>
@@ -391,7 +454,11 @@ export default async function Seller({
                               </Link>
                               <small>{all.lifecycle.stages[item.stage]}</small>
                               <small>
-                                {all.items.acceptedAt}: {when(item.acceptedAt)}
+                                {all.items.acceptedAt}:{' '}
+                                <EventTime
+                                  value={item.acceptedAt}
+                                  locale={ctx.locale}
+                                />
                               </small>
                             </div>
                             <strong>
@@ -493,7 +560,10 @@ export default async function Seller({
                           {all.payouts.statuses[p.status]}
                         </strong>
                         <p>
-                          {when(p.requested_at)}
+                          <EventTime
+                            value={p.requested_at}
+                            locale={ctx.locale}
+                          />
                           {p.payment_reference
                             ? ` · ${p.payment_reference}`
                             : ''}
@@ -548,8 +618,9 @@ export default async function Seller({
                     {ledger.items.length === 0 && <p>{l.empty}</p>}
                     {ledger.items.map((e) => (
                       <p key={e.id}>
-                        {when(e.occurred_at)} · {l.kinds[e.kind]} ·{' '}
-                        {formatSignedOre(e.amount_ore)} {currency}
+                        <EventTime value={e.occurred_at} locale={ctx.locale} />{' '}
+                        · {l.kinds[e.kind]} · {formatSignedOre(e.amount_ore)}{' '}
+                        {currency}
                         {e.reason ? ` · ${e.reason}` : ''}
                       </p>
                     ))}
@@ -652,13 +723,17 @@ export default async function Seller({
                     </p>
                     <details>
                       <summary>{all.agreements.view}</summary>
-                      <p style={{ whiteSpace: 'pre-wrap' }}>
+                      <p
+                        style={{ whiteSpace: 'pre-wrap' }}
+                        lang={intlLocale(agreement.data.language)}
+                      >
                         {agreement.data.body}
                       </p>
                     </details>
                     {evidence.data?.map((e) => (
                       <p key={e.id}>
-                        {when(e.recorded_at)} · {e.reference}
+                        <EventTime value={e.recorded_at} locale={ctx.locale} />{' '}
+                        · {e.reference}
                       </p>
                     ))}
                     {write && (
@@ -713,6 +788,7 @@ export default async function Seller({
                         tenantId={tenant.id}
                         sellerId={id.data}
                         current={terms}
+                        leaveUnsaved={all.leaveUnsaved}
                         d={d}
                         intake={all.intake}
                       />
@@ -726,7 +802,8 @@ export default async function Seller({
                   {history.length === 0 && <p>{d.noHistory}</p>}
                   {history.map((v) => (
                     <p key={v.id}>
-                      {d.version} {v.version} · {when(v.created_at)} ·{' '}
+                      {d.version} {v.version} ·{' '}
+                      <EventTime value={v.created_at} locale={ctx.locale} /> ·{' '}
                       {v.commission_rate_percent === null
                         ? d.usePolicy
                         : `${v.commission_rate_percent} %`}{' '}
@@ -744,16 +821,6 @@ export default async function Seller({
               <section className="card intake-form">
                 <h2>{c.title}</h2>
                 <div className="seller-disclosure-body">
-                  {communications.length === 0 && <p>{c.empty}</p>}
-                  {communications.map((m) => (
-                    <details key={m.id}>
-                      <summary>
-                        {when(m.queued_at)} · {c.kinds[m.kind]} ·{' '}
-                        {c.outcomes[m.status]} · {m.subject}
-                      </summary>
-                      <pre style={{ whiteSpace: 'pre-wrap' }}>{m.body}</pre>
-                    </details>
-                  ))}
                   {write && (
                     <>
                       <h3>{c.sendHeading}</h3>
@@ -764,8 +831,104 @@ export default async function Seller({
                         references={references}
                         d={c}
                         intake={all.intake}
+                        leaveUnsaved={all.leaveUnsaved}
                       />
                     </>
+                  )}
+                  {communicationHistory.total === 0 ? (
+                    <p>{c.empty}</p>
+                  ) : (
+                    <details
+                      className="seller-message-history"
+                      open={!write || query.messagesPage !== undefined}
+                    >
+                      <summary>
+                        {c.title} ({communicationHistory.total})
+                      </summary>
+                      {communications.length > 0 ? (
+                        <p>
+                          {c.showingRange
+                            .replace(
+                              '{from}',
+                              String(
+                                communicationHistory.page *
+                                  communicationHistory.limit +
+                                  1,
+                              ),
+                            )
+                            .replace(
+                              '{to}',
+                              String(
+                                communicationHistory.page *
+                                  communicationHistory.limit +
+                                  communications.length,
+                              ),
+                            )
+                            .replace(
+                              '{total}',
+                              String(communicationHistory.total),
+                            )}
+                        </p>
+                      ) : (
+                        <p>{c.pageEmpty}</p>
+                      )}
+                      {communications.map((m) => (
+                        <details key={m.id}>
+                          <summary>
+                            <EventTime
+                              value={m.queued_at}
+                              locale={ctx.locale}
+                            />{' '}
+                            · {c.kinds[m.kind]} · {c.outcomes[m.status]} ·{' '}
+                            {m.subject}
+                          </summary>
+                          <pre
+                            style={{
+                              whiteSpace: 'pre-wrap',
+                              overflowWrap: 'anywhere',
+                            }}
+                          >
+                            {m.body}
+                          </pre>
+                        </details>
+                      ))}
+                      {(communicationHistory.page > 0 ||
+                        communicationHistory.total >
+                          communicationHistory.limit) && (
+                        <nav className="row wrap" aria-label={c.title}>
+                          {communicationHistory.page > 0 && (
+                            <HistoryLink
+                              className="btn btn-secondary"
+                              href={messagePageHref(
+                                communicationHistory.page - 1,
+                              )}
+                            >
+                              {c.newer}
+                            </HistoryLink>
+                          )}
+                          {(communicationHistory.page + 1) *
+                            communicationHistory.limit <
+                            communicationHistory.total && (
+                            <HistoryLink
+                              className="btn btn-secondary"
+                              href={messagePageHref(
+                                communicationHistory.page + 1,
+                              )}
+                            >
+                              {c.older}
+                            </HistoryLink>
+                          )}
+                          {communicationHistory.page > 1 && (
+                            <HistoryLink
+                              className="text-link"
+                              href={messagePageHref(0)}
+                            >
+                              {c.latest}
+                            </HistoryLink>
+                          )}
+                        </nav>
+                      )}
+                    </details>
                   )}
                 </div>
               </section>
@@ -841,6 +1004,7 @@ export default async function Seller({
                         d={all.sellerDetails}
                         intake={all.intake}
                         storeLanguage={localeNames[storeLanguage]}
+                        leaveUnsaved={all.leaveUnsaved}
                       />
                     </div>
                   </details>
@@ -855,7 +1019,11 @@ export default async function Seller({
                       return (
                         <details key={row.id}>
                           <summary>
-                            {when(row.created_at)} · {previous.name}
+                            <EventTime
+                              value={row.created_at}
+                              locale={ctx.locale}
+                            />{' '}
+                            · {previous.name}
                           </summary>
                           <p>
                             {[previous.email, previous.phone]
@@ -914,3 +1082,6 @@ export default async function Seller({
     </div>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.sellersList.title)

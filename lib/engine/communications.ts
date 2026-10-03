@@ -41,6 +41,8 @@ const row = z.object({
   delivered_at: z.iso.datetime({ offset: true }).nullable(),
 })
 export type SellerCommunication = z.infer<typeof row>
+const columns =
+  'id,kind,locale,recipient,subject,body,reference_kind,reference_id,status,queued_at,delivered_at'
 
 /** Newest 50 messages for one seller. RLS scopes the read. */
 export async function readSellerCommunications(
@@ -50,9 +52,7 @@ export async function readSellerCommunications(
 ) {
   const { data, error } = await client
     .from('seller_communications')
-    .select(
-      'id,kind,locale,recipient,subject,body,reference_kind,reference_id,status,queued_at,delivered_at',
-    )
+    .select(columns)
     .eq('tenant_id', z.uuid().parse(tenantInput))
     .eq('seller_id', z.uuid().parse(sellerInput))
     .order('queued_at', { ascending: false })
@@ -60,6 +60,53 @@ export async function readSellerCommunications(
     .limit(50)
   if (error) throw new Error('Unable to read communications')
   return z.array(row).parse(data)
+}
+
+/** Staff history, retaining the existing tenant/seller RLS scope and stable order. */
+export async function readSellerCommunicationHistory(
+  client: SupabaseClient,
+  tenantInput: string,
+  sellerInput: string,
+  pageInput = 0,
+) {
+  const tenant = z.uuid().parse(tenantInput)
+  const seller = z.uuid().parse(sellerInput)
+  const page = z.number().int().min(0).max(1000000).parse(pageInput)
+  const limit = 25
+  const { data, error, count } = await client
+    .from('seller_communications')
+    .select(columns, { count: 'exact' })
+    .eq('tenant_id', tenant)
+    .eq('seller_id', seller)
+    .order('queued_at', { ascending: false })
+    .order('id')
+    .range(page * limit, page * limit + limit - 1)
+  // PostgREST returns an invalid-range response for a bookmarked page beyond
+  // the current count. Re-read only that scoped count; other failures stay errors.
+  if (error?.code === 'PGRST103' && page > 0) {
+    const current = await client
+      .from('seller_communications')
+      .select('id', { head: true, count: 'exact' })
+      .eq('tenant_id', tenant)
+      .eq('seller_id', seller)
+    if (current.error) throw new Error('Unable to read communication history')
+    const total = z.number().int().nonnegative().parse(current.count)
+    if (total > page * limit)
+      throw new Error('Unable to read communication history')
+    return {
+      items: [] as SellerCommunication[],
+      total,
+      page,
+      limit,
+    }
+  }
+  if (error) throw new Error('Unable to read communication history')
+  return {
+    items: z.array(row).max(limit).parse(data),
+    total: z.number().int().nonnegative().parse(count),
+    page,
+    limit,
+  }
 }
 
 export const referenceKindFor: Record<

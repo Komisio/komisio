@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { locales, localeNames, type Dictionary } from '@/lib/i18n'
 import {
@@ -8,6 +8,8 @@ import {
 } from '@/lib/engine/seller-profile'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
+import { useFormDirty } from '@/components/platform/use-form-dirty'
 
 export function SellerProfileForm({
   tenantId,
@@ -17,6 +19,7 @@ export function SellerProfileForm({
   d,
   intake,
   storeLanguage,
+  leaveUnsaved,
 }: {
   tenantId: string
   sellerId: string
@@ -25,12 +28,16 @@ export function SellerProfileForm({
   d: Dictionary['sellerDetails']
   intake: Dictionary['intake']
   storeLanguage: string
+  leaveUnsaved: string
 }) {
   const action = useIntakeAction(intake),
     router = useRouter()
   const [requestId] = useState(() => crypto.randomUUID())
   const [saved, setSaved] = useState(false),
     [invalid, setInvalid] = useState(false)
+  const form = useRef<HTMLFormElement>(null)
+  const { ready, dirty, checkDirty } = useFormDirty(form)
+  useUnsavedChanges(!saved && (dirty || action.locked) ? leaveUnsaved : null)
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const data = new FormData(e.currentTarget)
@@ -81,10 +88,13 @@ export function SellerProfileForm({
     </div>
   )
   return (
-    <form onSubmit={submit}>
+    <form ref={form} onSubmit={submit} onChange={checkDirty}>
       <fieldset
+        data-draft-readiness={!ready ? '' : undefined}
         className="intake-fields"
-        disabled={action.busy || action.locked || action.needsReload || saved}
+        disabled={
+          !ready || action.busy || action.locked || action.needsReload || saved
+        }
       >
         {field('name', intake.name, 120, 'text', true)}
         <div className="seller-profile-fields">
@@ -156,7 +166,10 @@ export function SellerProfileForm({
       {saved ? (
         <p role="status">{d.saved}</p>
       ) : (
-        <Button type="submit" disabled={action.busy || action.needsReload}>
+        <Button
+          type="submit"
+          disabled={!ready || action.busy || action.needsReload}
+        >
           {action.busy ? intake.busy : action.locked ? intake.retry : d.save}
         </Button>
       )}

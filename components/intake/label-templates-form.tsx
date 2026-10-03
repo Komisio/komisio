@@ -9,7 +9,9 @@ import {
   setLabelTemplateCommand,
   type LabelTemplates,
 } from '@/lib/engine/printing'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 import { placeholders } from '@/lib/labels/placeholders'
+import { confirmsIntakeResult } from './confirmed-result'
 
 const kinds = ['bag', 'garment', 'item', 'markdown', 'onboarding'] as const
 type Kind = (typeof kinds)[number]
@@ -57,6 +59,7 @@ export function LabelTemplatesForm({
   dpi,
   d,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   templates: LabelTemplates
@@ -65,8 +68,10 @@ export function LabelTemplatesForm({
   dpi: 203 | 300 | 600
   d: Dictionary['printing']
   intake: Dictionary['intake']
+  leaveUnsaved: string
 }) {
   const [kind, setKind] = useState<Kind>('item')
+  const [dirty, setDirty] = useState(false)
   // Switching kind remounts the editor; while its outcome is unresolved that
   // would discard the identity and the unsaved text, so the switch waits.
   const [frozen, setFrozen] = useState(false)
@@ -86,7 +91,8 @@ export function LabelTemplatesForm({
           value={kind}
           disabled={frozen}
           onChange={(e) => {
-            if (!frozen) setKind(e.target.value as Kind)
+            if (!frozen && (!dirty || window.confirm(d.discardTemplate)))
+              setKind(e.target.value as Kind)
           }}
         >
           {kinds.map((k) => (
@@ -109,6 +115,8 @@ export function LabelTemplatesForm({
         dpi={dpi}
         d={d}
         intake={intake}
+        leaveUnsaved={leaveUnsaved}
+        onDirty={setDirty}
         onFrozen={setFrozen}
       />
     </details>
@@ -124,7 +132,9 @@ function TemplateEditor({
   dpi,
   d,
   intake,
+  leaveUnsaved,
   onFrozen,
+  onDirty,
 }: {
   tenantId: string
   kind: Kind
@@ -134,13 +144,25 @@ function TemplateEditor({
   dpi: 203 | 300 | 600
   d: Dictionary['printing']
   intake: Dictionary['intake']
+  leaveUnsaved: string
+  onDirty: (dirty: boolean) => void
   onFrozen: (frozen: boolean) => void
 }) {
   const router = useRouter()
   const running = useRef(false)
   const [name, setName] = useState(current?.name ?? d.templateDefaultName)
   const [zpl, setZpl] = useState(current?.zpl ?? '')
+  const [confirmed, setConfirmed] = useState({
+    name: current?.name ?? d.templateDefaultName,
+    zpl: current?.zpl ?? '',
+  })
+  const dirty = name !== confirmed.name || zpl !== confirmed.zpl
+  useEffect(() => {
+    onDirty(dirty)
+    return () => onDirty(false)
+  }, [dirty, onDirty])
   const [preview, setPreview] = useState<string | null>(null)
+  const previewRevision = useRef(0)
   const [previewing, setPreviewing] = useState(false)
   const [message, setMessage] = useState('')
   const [invalid, setInvalid] = useState('')
@@ -153,6 +175,7 @@ function TemplateEditor({
   // The parent's kind switch remounts this editor; while a command is in
   // flight or unresolved that would discard its outcome, so it waits too.
   const locked = busy || frozen
+  useUnsavedChanges(canEdit && (dirty || locked) ? leaveUnsaved : null)
   useEffect(() => {
     onFrozen(locked)
     return () => onFrozen(false)
@@ -161,7 +184,9 @@ function TemplateEditor({
   /** One command, one classified outcome; guarded against a second click. */
   async function send<T>(
     of: 'save' | 'reset',
-    command: object,
+    command:
+      | z.infer<typeof setLabelTemplateCommand>
+      | z.infer<typeof resetLabelTemplateCommand>,
     shape: z.ZodType<{ ok: true; id: T }>,
   ): Promise<T | null> {
     if (running.current || frozen) return null
@@ -178,7 +203,7 @@ function TemplateEditor({
       const body: unknown = await r.json().catch(() => null)
       if (r.ok) {
         const parsed = shape.safeParse(body)
-        if (!parsed.success) {
+        if (!parsed.success || !confirmsIntakeResult(command, body)) {
           setPending({ phase: 'uncertain', of })
           setInvalid(d.templateUncertain)
           return null
@@ -213,7 +238,9 @@ function TemplateEditor({
   async function previewNow() {
     if (running.current) return
     running.current = true
+    const revision = previewRevision.current
     setPreviewing(true)
+    setPreview(null)
     setMessage('')
     try {
       const r = await fetch('/api/print/preview', {
@@ -227,6 +254,7 @@ function TemplateEditor({
         }),
       })
       const data = await r.json().catch(() => ({}))
+      if (revision !== previewRevision.current) return
       if (!r.ok || !data.image) {
         setPreview(null)
         setMessage(d.previewUnavailable)
@@ -234,11 +262,17 @@ function TemplateEditor({
       }
       setPreview(data.image)
     } catch {
-      setMessage(d.previewUnavailable)
+      if (revision === previewRevision.current) setMessage(d.previewUnavailable)
     } finally {
       running.current = false
       setPreviewing(false)
     }
+  }
+  function editTemplate(value: string) {
+    previewRevision.current++
+    setZpl(value)
+    setPreview(null)
+    setMessage('')
   }
   async function save() {
     const candidate = setLabelTemplateCommand.safeParse({
@@ -255,6 +289,7 @@ function TemplateEditor({
     }
     const saved = await send('save', candidate.data, savedTemplate)
     if (saved && saved.kind === kind) {
+      setConfirmed({ name, zpl })
       setMessage(d.templateSaved)
       router.refresh()
     } else if (saved) {
@@ -273,13 +308,15 @@ function TemplateEditor({
     if (!candidate.success) return
     const done = await send('reset', candidate.data, resetTemplate)
     if (done === true) {
-      setZpl('')
+      editTemplate('')
+      setConfirmed({ name, zpl: '' })
       setMessage(d.templateReset)
       router.refresh()
     } else if (done === false) {
       // Confirmed: nothing was active any more, someone else already restored
       // the built-in layout. Show the store's state, not this page's memory.
-      setZpl('')
+      editTemplate('')
+      setConfirmed({ name, zpl: '' })
       setMessage(d.templateBuiltinHint)
       router.refresh()
     }
@@ -299,7 +336,10 @@ function TemplateEditor({
             value={name}
             maxLength={80}
             disabled={!canEdit || busy || frozen}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value)
+              setMessage('')
+            }}
           />
         </div>
         <div className="field">
@@ -311,7 +351,9 @@ function TemplateEditor({
             spellCheck={false}
             disabled={!canEdit || busy || frozen}
             style={{ fontFamily: 'monospace', width: '100%' }}
-            onChange={(e) => setZpl(e.target.value)}
+            onChange={(e) => {
+              editTemplate(e.target.value)
+            }}
             placeholder={d.templatePlaceholder}
           />
         </div>
@@ -330,7 +372,7 @@ function TemplateEditor({
         <div className="row wrap">
           <Button
             variant="secondary"
-            disabled={previewing || busy || frozen}
+            disabled={!canEdit || previewing || busy || frozen}
             onClick={() => void previewNow()}
           >
             {previewing ? d.previewing : d.preview}
@@ -341,13 +383,20 @@ function TemplateEditor({
                 variant="secondary"
                 disabled={busy || frozen}
                 onClick={() => {
-                  if (!busy && !frozen) setZpl(builtin)
+                  if (
+                    !busy &&
+                    !frozen &&
+                    (zpl === confirmed.zpl ||
+                      zpl === builtin ||
+                      window.confirm(d.discardTemplate))
+                  )
+                    editTemplate(builtin)
                 }}
               >
                 {d.copyBuiltin}
               </Button>
               <Button
-                disabled={busy || frozen || !zpl.trim()}
+                disabled={previewing || busy || frozen || !zpl.trim()}
                 onClick={() => void save()}
               >
                 {busy && pending.of === 'save' ? intake.busy : d.saveTemplate}
@@ -355,7 +404,7 @@ function TemplateEditor({
               {current && (
                 <Button
                   variant="secondary"
-                  disabled={busy || frozen}
+                  disabled={previewing || busy || frozen}
                   onClick={() => void reset()}
                 >
                   {busy && pending.of === 'reset' ? intake.busy : d.useBuiltin}

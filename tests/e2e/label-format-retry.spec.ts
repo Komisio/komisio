@@ -13,6 +13,7 @@ async function openRow(page: Page, email: string) {
   await f.commit()
   await page.setViewportSize({ width: 320, height: 720 })
   await page.goto('/settings?tab=printing')
+  await page.locator('.label-formats-fold > summary').click()
   const row = page.getByRole('group', {
     name: new RegExp(d.printing.kinds.item),
   })
@@ -113,7 +114,16 @@ for (const reply of [
         reload,
         alert: row.getByRole('alert'),
       })
+      page.once('dialog', async (dialog) => {
+        expect(dialog.type()).toBe('beforeunload')
+        await dialog.accept()
+      })
       await reload.click()
+      await expect(page.locator('.label-formats-fold')).not.toHaveAttribute(
+        'open',
+        '',
+      )
+      await page.locator('.label-formats-fold > summary').click()
       await expect(width).toHaveValue('72')
       await expect(height).toHaveValue('45')
       await expect(width).toBeEnabled()
@@ -206,6 +216,10 @@ test('a changed active store offers a reload instead of a permanently disabled r
       exact: true,
     })
     await expect(reload).toBeVisible()
+    page.once('dialog', async (dialog) => {
+      expect(dialog.type()).toBe('beforeunload')
+      await dialog.accept()
+    })
     await reload.click()
     await expect(page).toHaveURL(/\/settings\?tab=printing$/)
     // Nothing was written for the original store.
@@ -273,6 +287,7 @@ test('known validation is correctable and a later uncertain save clears old conf
     await expect(row.getByRole('status')).toHaveText(d.printing.formatSaved)
     await expect(width).toBeEnabled()
     await width.fill('64')
+    await expect(row.getByRole('status')).toHaveCount(0)
     await save.click()
     await expect(row.getByRole('alert')).toHaveText(d.printing.formatUncertain)
     await expect(row.getByRole('status')).toHaveCount(0)
@@ -282,7 +297,16 @@ test('known validation is correctable and a later uncertain save clears old conf
       exact: true,
     })
     await expect(reload).toBeVisible()
+    page.once('dialog', async (dialog) => {
+      expect(dialog.type()).toBe('beforeunload')
+      await dialog.accept()
+    })
     await reload.click()
+    await expect(page.locator('.label-formats-fold')).not.toHaveAttribute(
+      'open',
+      '',
+    )
+    await page.locator('.label-formats-fold > summary').click()
     await expect(width).toHaveValue('64')
     expect(calls).toBe(3)
     expect(

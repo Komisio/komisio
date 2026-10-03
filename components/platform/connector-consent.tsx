@@ -69,12 +69,19 @@ export function ConnectorConsent({
     }
   }
   return (
-    <section className="card intake-form" aria-label={d.consent.title}>
+    <section
+      className="card intake-form connector-consent"
+      aria-label={d.consent.title}
+    >
       <h1>{d.consent.title}</h1>
       <p>{d.consent.intro.replace('{client}', clientName)}</p>
-      <label>
+      <label className="field">
         {d.consent.store}
-        <select value={store} onChange={(e) => setStore(e.target.value)}>
+        <select
+          value={store}
+          disabled={busy}
+          onChange={(e) => setStore(e.target.value)}
+        >
           {stores.map((s) => (
             <option key={s.id} value={s.id}>
               {s.name}
@@ -82,13 +89,14 @@ export function ConnectorConsent({
           ))}
         </select>
       </label>
-      <fieldset>
+      <fieldset className="connector-consent-scopes">
         <legend>{d.consent.scopesHeading}</legend>
         {requested.map((s) => (
           <label key={s} className="row">
             <input
               type="checkbox"
               checked={scopes.includes(s)}
+              disabled={busy}
               onChange={() => toggle(s)}
             />
             {d.scopes[s]}
@@ -96,7 +104,7 @@ export function ConnectorConsent({
         ))}
       </fieldset>
       <p>{d.consent.note}</p>
-      <div className="row">
+      <div className="row wrap">
         <Button onClick={allow} disabled={busy || scopes.length === 0}>
           {busy ? d.consent.working : d.consent.allow}
         </Button>

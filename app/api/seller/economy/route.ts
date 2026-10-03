@@ -35,7 +35,7 @@ export async function POST(request: Request) {
         ].find((e) => r.error!.message.includes(e)) ?? 'REQUEST_FAILED'
       return reply({ error }, error === 'FORBIDDEN' ? 403 : 400)
     }
-    return reply({ ok: true })
+    return reply({ ok: true, id: r.data })
   } catch {
     return reply({ error: 'REQUEST_FAILED' }, 400)
   }

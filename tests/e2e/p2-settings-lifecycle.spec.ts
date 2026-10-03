@@ -18,10 +18,37 @@ test('notification policy and assistance quota persist', async ({ page }) => {
         hydrationErrors.push(message.text())
     })
     await f.commit()
+    await page.setViewportSize({ width: 375, height: 800 })
+    await page.goto('/settings?tab=store')
+    await expect(
+      page.getByRole('heading', { name: d.audit, exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByText(d.events['store_policy.published'], { exact: true }),
+    ).toBeVisible()
+    await expect(page.getByText(f.tenant, { exact: true })).not.toBeVisible()
+    await page.locator('.settings-technical > summary').click()
+    await expect(page.getByText(f.tenant, { exact: true })).toBeVisible()
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true)
+    await page.screenshot({
+      path: 'private/ux-audit-2026-10-02/settings-store-mobile.png',
+      fullPage: true,
+    })
     await page.goto('/settings')
+    const previousVersion = await page.locator('.policy-version').innerText()
+    await page
+      .getByRole('link', { name: d.storePolicy.notifications, exact: true })
+      .click()
     await page
       .getByLabel(d.storePolicy.automaticSellerNotifications, { exact: true })
       .check()
+    await page
+      .getByRole('link', { name: d.storePolicy.sectionAi, exact: true })
+      .click()
     await page
       .getByLabel(d.storePolicy.assistanceMonthlyQuota, { exact: true })
       .fill('7')
@@ -37,6 +64,9 @@ test('notification policy and assistance quota persist', async ({ page }) => {
     await expect(
       page.getByLabel(d.storePolicy.assistanceMonthlyQuota, { exact: true }),
     ).toHaveValue('7')
+    await expect(page.locator('.policy-version')).not.toHaveText(
+      previousVersion,
+    )
     await page.reload()
     await expect(
       page.getByLabel(d.storePolicy.automaticSellerNotifications, {

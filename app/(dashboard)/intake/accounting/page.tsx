@@ -1,10 +1,11 @@
-import Link from 'next/link'
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { FortnoxGuide } from '@/components/help/fortnox-guide'
 import { ContextHelp } from '@/components/help/context-help'
 import { credentialKeyConfigured } from '@/lib/platform/credentials'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { readDayCloses } from '@/lib/engine/day-closes'
 import {
@@ -247,11 +248,14 @@ export default async function Accounting({
                       <summary>{d.details}</summary>
                       <p>
                         {d.debitTotal} {money(e.debit_ore)} ·{' '}
-                        {new Date(e.created_at).toLocaleString(ctx.locale, {
-                          timeZone: 'Europe/Stockholm',
-                          dateStyle: 'medium',
-                          timeStyle: 'short',
-                        })}
+                        {new Date(e.created_at).toLocaleString(
+                          intlLocale(ctx.locale),
+                          {
+                            timeZone: 'Europe/Stockholm',
+                            dateStyle: 'medium',
+                            timeStyle: 'short',
+                          },
+                        )}
                       </p>
                       {!c && <p>{e.day_close_id}</p>}
                     </details>
@@ -401,6 +405,7 @@ export default async function Accounting({
                 d={d}
                 vatModes={vatModes}
                 intake={all.intake}
+                leaveUnsaved={all.leaveUnsaved}
               />
             </section>
             <section
@@ -479,3 +484,6 @@ export default async function Accounting({
     </div>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.accounting.title)

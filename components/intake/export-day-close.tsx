@@ -6,6 +6,7 @@ import type { VoucherPreview } from '@/lib/engine/accounting'
 import { useIntakeAction } from './use-intake-action'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { Button } from '@/components/ui/button'
+import { ReloadAction } from './reload-action'
 
 /** Voucher preview for one day close and the export action; the file link follows the export. */
 export function ExportDayClose({
@@ -99,6 +100,7 @@ export function ExportDayClose({
         )
       )}
       {action.error && <p role="alert">{action.error}</p>}
+      {action.needsReload && <ReloadAction label={intake.reload} />}
     </div>
   )
 }

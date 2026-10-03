@@ -1,3 +1,4 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
@@ -30,7 +31,7 @@ export default async function Stock({
   const pct = (value: number | null) => (value === null ? '—' : `${value} %`)
   const days = (value: number | null) => (value === null ? '—' : String(value))
   return (
-    <main className="stock-overview">
+    <div className="stock-overview">
       <div className="page-heading">
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
@@ -203,6 +204,8 @@ export default async function Stock({
           </>
         )}
       </section>
-    </main>
+    </div>
   )
 }
+
+export const generateMetadata = () => platformPageMetadata((d) => d.stock.title)

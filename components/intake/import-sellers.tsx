@@ -1,6 +1,9 @@
 'use client'
-import Link from 'next/link'
-import { useRef, useState } from 'react'
+import {
+  NavigationLink as Link,
+  useUnsavedChanges,
+} from '@/components/platform/navigation-warning'
+import { useRef, useState, useSyncExternalStore } from 'react'
 import type { Dictionary } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,16 +11,25 @@ import {
   mapRows,
   parseCsv,
   type ColumnMapping,
+  type ImportSellersPayload,
 } from '@/lib/engine/import-sellers'
+const subscribe = () => () => {}
+const clientReady = () => true
+const serverReady = () => false
 
 /** Choose a file, map the columns, read the preview, stage one operation. */
 export function ImportSellers({
   tenantId,
   d,
+  intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   d: Dictionary['importer']
+  intake: Dictionary['intake']
+  leaveUnsaved: string
 }) {
+  const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const [rows, setRows] = useState<string[][]>([])
   const [source, setSource] = useState('')
   const [mapping, setMapping] = useState<ColumnMapping>({
@@ -29,7 +41,20 @@ export function ImportSellers({
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
   const [staged, setStaged] = useState<string | null>(null)
-  const requestId = useRef<string | null>(null)
+  const [locked, setLocked] = useState(false)
+  const [needsReload, setNeedsReload] = useState(false)
+  const pending = useRef<{
+    tenantId: string
+    requestId: string
+    expiresAt: string
+    payload: ImportSellersPayload
+  } | null>(null)
+  const running = useRef(false)
+  const fileRead = useRef(0)
+  const fileInput = useRef<HTMLInputElement>(null)
+  useUnsavedChanges(
+    (rows.length > 0 && !staged) || locked ? leaveUnsaved : null,
+  )
   const header = rows[0] ?? []
   const { accepted, rejected } = rows.length
     ? mapRows(rows, mapping, skipHeader)
@@ -37,45 +62,96 @@ export function ImportSellers({
 
   async function onFile(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
-    if (!file) return
-    const text = await file.text()
-    const parsed = parseCsv(text.slice(0, 2_000_000))
-    setRows(parsed)
-    setSource(file.name.slice(0, 200))
-    setMapping(guessMapping(parsed[0] ?? []))
+    if (locked || running.current) return
+    const read = ++fileRead.current
+    setRows([])
     setStaged(null)
     setMessage('')
-    requestId.current = null
+    pending.current = null
+    setNeedsReload(false)
+    setSource(file?.name.slice(0, 200) ?? '')
+    if (!file) return
+    // Reject obviously oversized files before allocating their decoded contents.
+    // This leaves ample room for multi-byte UTF-8 under the character limit below.
+    if (file.size > 8_000_000) {
+      setMessage(d.fileTooLarge)
+      return
+    }
+    try {
+      const text = await file.text()
+      if (read !== fileRead.current) return
+      if (text.length > 2_000_000) {
+        setMessage(d.fileTooLarge)
+        return
+      }
+      const parsed = parseCsv(text)
+      setRows(parsed)
+      setMapping(guessMapping(parsed[0] ?? []))
+      if (!parsed.length) setMessage(d.nothing)
+    } catch {
+      if (read === fileRead.current) setMessage(d.error)
+    }
+  }
+  function clearFile() {
+    if (locked || running.current) return
+    fileRead.current++
+    if (fileInput.current) fileInput.current.value = ''
+    setRows([])
+    setSource('')
+    setMessage('')
+    setMapping(guessMapping([]))
+    setSkipHeader(true)
+    fileInput.current?.focus()
   }
   async function stage() {
-    if (busy || !accepted.length) return
+    if (running.current || needsReload || staged || !accepted.length) return
     if (accepted.length > 200) {
       setMessage(d.tooMany)
       return
     }
     setBusy(true)
+    running.current = true
+    setLocked(true)
     setMessage('')
-    requestId.current ??= crypto.randomUUID()
+    pending.current ??= {
+      tenantId,
+      requestId: crypto.randomUUID(),
+      expiresAt: new Date(Date.now() + 7 * 24 * 3600 * 1000).toISOString(),
+      payload: { source, rows: accepted },
+    }
     try {
       const r = await fetch('/api/import', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tenantId,
-          requestId: requestId.current,
-          expiresAt: new Date(Date.now() + 7 * 24 * 3600 * 1000).toISOString(),
-          payload: { source, rows: accepted },
-        }),
+        body: JSON.stringify(pending.current),
       })
       const body = await r.json()
       if (!r.ok) {
+        if (r.status >= 500) {
+          setMessage(intake.failed)
+          return
+        }
+        if (r.status === 400 && body.error === 'INVALID_INPUT') {
+          pending.current = null
+          setLocked(false)
+        } else setNeedsReload(true)
         setMessage(d.error)
         return
       }
+      if (
+        body?.ok !== true ||
+        body?.operationId !== pending.current.requestId
+      ) {
+        setMessage(intake.failed)
+        return
+      }
       setStaged(body.operationId)
+      pending.current = null
+      setLocked(false)
     } catch {
-      setMessage(d.error)
+      setMessage(intake.failed)
     } finally {
+      running.current = false
       setBusy(false)
     }
   }
@@ -84,6 +160,7 @@ export function ImportSellers({
       <label htmlFor={`import-${key}`}>{d.column[key]}</label>
       <select
         id={`import-${key}`}
+        disabled={busy || locked || !!staged}
         value={mapping[key] ?? ''}
         onChange={(e) =>
           setMapping({
@@ -102,17 +179,29 @@ export function ImportSellers({
     </div>
   )
   return (
-    <div className="intake-grid">
+    <div className="import-workspace">
       <section className="card intake-form" aria-label={d.file}>
         <div className="field">
           <label htmlFor="import-file">{d.file}</label>
           <input
+            ref={fileInput}
             id="import-file"
             type="file"
             accept=".csv,text/csv,text/plain"
             onChange={onFile}
+            disabled={!ready || busy || locked}
           />
           <small>{d.fileHint}</small>
+          {source && !staged && (
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={busy || locked}
+              onClick={clearFile}
+            >
+              {d.clearFile}
+            </Button>
+          )}
         </div>
         {rows.length > 0 && (
           <>
@@ -121,6 +210,7 @@ export function ImportSellers({
             <label className="row">
               <input
                 type="checkbox"
+                disabled={busy || locked || !!staged}
                 checked={skipHeader}
                 onChange={(e) => setSkipHeader(e.target.checked)}
               />{' '}
@@ -137,25 +227,26 @@ export function ImportSellers({
             {rejected.length ? ` · ${rejected.length} ${d.rejected}` : ''}
           </p>
           {accepted.length === 0 && <p role="alert">{d.nothing}</p>}
+          {accepted.length > 200 && <p role="alert">{d.tooMany}</p>}
           {accepted.length > 0 && (
-            <div style={{ overflowX: 'auto' }}>
+            <div className="import-preview">
               <p>
                 <small>{d.previewHint}</small>
               </p>
-              <table>
+              <table className="import-preview-table">
                 <thead>
                   <tr>
-                    <th>{d.column.name}</th>
-                    <th>{d.column.email}</th>
-                    <th>{d.column.phone}</th>
+                    <th scope="col">{d.column.name}</th>
+                    <th scope="col">{d.column.email}</th>
+                    <th scope="col">{d.column.phone}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {accepted.slice(0, 10).map((r, i) => (
                     <tr key={i}>
-                      <td>{r.name}</td>
-                      <td>{r.email}</td>
-                      <td>{r.phone}</td>
+                      <td data-label={d.column.name}>{r.name}</td>
+                      <td data-label={d.column.email}>{r.email || '—'}</td>
+                      <td data-label={d.column.phone}>{r.phone || '—'}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -179,12 +270,25 @@ export function ImportSellers({
               </Link>
             </p>
           ) : (
-            <Button disabled={busy || accepted.length === 0} onClick={stage}>
-              {d.stage}
+            <Button
+              disabled={
+                busy ||
+                needsReload ||
+                accepted.length === 0 ||
+                accepted.length > 200
+              }
+              onClick={stage}
+            >
+              {busy ? intake.busy : locked ? intake.retry : d.stage}
             </Button>
           )}
-          {message && <p role="alert">{message}</p>}
         </section>
+      )}
+      {message && <p role="alert">{message}</p>}
+      {needsReload && (
+        <a className="text-link" href="/intake/import">
+          {intake.reload}
+        </a>
       )}
     </div>
   )

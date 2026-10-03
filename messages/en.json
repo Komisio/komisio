@@ -19,7 +19,7 @@
     "required": "Evidence is required before receiving.",
     "optional": "Evidence is optional at receiving.",
     "none": "No seller agreement is published. No new agreement prerequisite applies to receiving.",
-    "history": "Previous versions",
+    "history": "Agreement versions",
     "historyHint": "The 20 latest versions. Older versions remain accessible from their receipts.",
     "adminOnly": "Owners and admins can publish agreement versions.",
     "manage": "View and manage seller agreements",
@@ -335,8 +335,8 @@
   "tenantIdentity": "Store identity",
   "tenantId": "Store id",
   "tenantImmutable": "This identifier distinguishes your store from other stores.",
-  "audit": "Recent access changes",
-  "noAudit": "No changes to show yet.",
+  "audit": "Recent activity",
+  "noAudit": "No activity yet.",
   "accountIntro": "Your personal details follow you across stores.",
   "profile": "Profile",
   "security": "Security",
@@ -386,7 +386,11 @@
     "inspection.reopened": "Item draft reopened",
     "reception.created": "Reception started",
     "reception.sources_saved": "Reception evidence saved",
-    "reception.review_published": "Reception review prepared"
+    "reception.review_published": "Reception review prepared",
+    "item.accepted": "An item was registered",
+    "store_policy.published": "The store policy was updated",
+    "purchase.registered": "A purchase was recorded",
+    "sale.recorded": "A sale was recorded"
   },
   "errors": {
     "FORBIDDEN": "You do not have permission to do this.",
@@ -711,7 +715,10 @@
       "noApproval": "The store sets the price. Seller approval is not required.",
       "optionalShare": "Optional sharing with the seller",
       "registered": "Item registered"
-    }
+    },
+    "linkUncertain": "The link change could not be confirmed. Reload the page and check its status before continuing.",
+    "copyFailed": "Copying failed. The link is selected so you can copy it manually.",
+    "linkRevoked": "The link has been revoked."
   },
   "operations": {
     "title": "Proposed operations",
@@ -855,7 +862,8 @@
     "noComparedChanges": "No changes in the compared fields. Still review the complete new proposal.",
     "sourceVersionChanged": "The source version has changed. Review the evidence even if the facts look unchanged.",
     "agreementVersionChanged": "The agreement version has changed. Read the proposed terms below.",
-    "zettleReceipt": "PayPal POS receipt"
+    "zettleReceipt": "PayPal POS receipt",
+    "sourceReference": "Source reference"
   },
   "reviewPhotoAlt": "Photo included in this review",
   "reviewPhotos": "Photos in this review",
@@ -895,7 +903,9 @@
       "sun": "Sunday"
     },
     "country": "Country",
-    "countryHelp": "The store country determines the currency for AI credit purchases."
+    "countryHelp": "The store country determines the currency for AI credit purchases.",
+    "noHours": "No hours set",
+    "hoursHint": "Select the days you want to enter hours for. Deselecting a day removes its hours from the published profile."
   },
   "storePolicy": {
     "markdowns": "Markdowns",
@@ -1103,9 +1113,9 @@
     "sellerCredit": "Seller credit",
     "vat": "VAT",
     "providers": {
-      "manual": "counter",
+      "manual": "Manually recorded",
       "zettle": "PayPal POS",
-      "shopify": "Shopify POS"
+      "shopify": "Shopify"
     },
     "statuses": {
       "completed": "completed",
@@ -1129,7 +1139,18 @@
     "cart": "Cart",
     "cartEmpty": "Search for the items to record.",
     "remove": "Remove",
-    "total": "Total"
+    "total": "Total",
+    "listHint": "The 50 most recent sales are shown. Open a receipt for items, returns and details.",
+    "financialDetails": "Commission and VAT",
+    "reference": "Receipt reference",
+    "findReceipt": "Find a receipt",
+    "receiptSearchHint": "Enter the full receipt reference, including for older sales.",
+    "source": "Sales source",
+    "allSources": "All sources",
+    "showLatest": "Show latest",
+    "searchResults": "Search results",
+    "filteredHint": "Up to 50 matching sales are shown, newest first.",
+    "noReceipts": "No receipts match. Check the full reference or choose another source."
   },
   "ledger": {
     "title": "Balance and ledger",
@@ -1163,7 +1184,7 @@
   },
   "payouts": {
     "title": "Payouts",
-    "intro": "A payout goes from requested to approved to paid, or is rejected. Approval reserves the amount in the seller's ledger; payment settles it.",
+    "intro": "Manage seller payouts and see which are awaiting payment.",
     "notice": "Komisio records payouts; it does not move money. Pay through your bank and record the reference here.",
     "requestHeading": "Request a payout",
     "requestHint": "On the seller’s behalf, at least the store’s minimum and no more than the available balance.",
@@ -1189,7 +1210,7 @@
       "paid": "paid",
       "rejected": "rejected"
     },
-    "settleHeading": "Settle all sellers",
+    "settleHeading": "Prepare payouts",
     "settleHint": "Every seller at or above the minimum ({threshold}) without an open payout. One batch requests and approves a payout of the full available balance per selected seller; you then pay through your bank and mark each one paid.",
     "settleEmpty": "No sellers are eligible for settlement right now.",
     "settleReason": "Batch note",
@@ -1200,7 +1221,8 @@
     "settleTotal": "Total",
     "requestNone": "No available balance in this list. Open a seller to see their balance.",
     "directory": "Search all sellers",
-    "latestFifty": "Showing the latest 50 payouts. Each seller's page shows that seller's recent payouts."
+    "latestFifty": "Showing the latest 50 payouts. Each seller's page shows that seller's recent payouts.",
+    "history": "History and references"
   },
   "returns": {
     "reason": "Return reason",
@@ -1255,16 +1277,16 @@
     "items": "items",
     "note": "Note (optional)",
     "confirm": "The items in the drop-off are now in the store.",
-    "receive": "Receive and record the drop-off",
+    "receive": "Receive drop-off",
     "openBag": "Open the drop-off",
     "kinds": {
       "bag": "Bag",
       "box": "Box"
     },
     "statuses": {
-      "open": "open",
-      "received": "received",
-      "cancelled": "cancelled"
+      "open": "Awaiting drop-off",
+      "received": "Received",
+      "cancelled": "Cancelled"
     },
     "backToQueue": "Back to announced drop-offs",
     "search": "Find a handover",
@@ -1276,7 +1298,9 @@
     "noMatches": "No handovers match the filters.",
     "limited": "Only the 100 most recent handovers are temporarily shown. Open an older handover using its H-reference.",
     "settings": "Open settings",
-    "askOwner": "Ask an owner or administrator to enable this feature."
+    "askOwner": "Ask an owner or administrator to enable this feature.",
+    "estimatedCount": "About {count} items",
+    "estimatedCountOne": "About {count} item"
   },
   "chain": {
     "title": "Chain",
@@ -1443,7 +1467,12 @@
       "unconfirmed": "delivery not confirmed",
       "failed": "delivery failed"
     },
-    "dailyCap": "The store's daily limit for messages is reached. Try again tomorrow."
+    "dailyCap": "The store's daily limit for messages is reached. Try again tomorrow.",
+    "older": "Older messages",
+    "newer": "Newer messages",
+    "latest": "Latest messages",
+    "showingRange": "Messages {from}–{to} of {total}",
+    "pageEmpty": "No messages on this page."
   },
   "stock": {
     "title": "Stock",
@@ -1506,7 +1535,9 @@
     "tooMany": "The file has more than 200 usable rows. Split it and import in parts.",
     "nothing": "No usable rows. Check the column mapping.",
     "error": "The import could not be staged. Reload and try again.",
-    "ownerOnly": "Only the store owner or an admin can import sellers."
+    "ownerOnly": "Only the store owner or an admin can import sellers.",
+    "fileTooLarge": "The file is too large. Split it and choose a smaller file.",
+    "clearFile": "Remove file"
   },
   "lifecycle": {
     "agentHeading": "Markdown runs",
@@ -1565,9 +1596,9 @@
   },
   "openByReference": {
     "title": "Open by label",
-    "intro": "Type or scan the reference on a drop-off (K-n), garment (G-n) or item (I-XXXXXXXX).",
+    "intro": "Scan a label or enter the reference from the label or announced drop-off.",
     "reference": "Label reference",
-    "hint": "For example K-12, G-7 or I-A1B2C3D4.",
+    "hint": "For example K-12, G-7, H-9 or I-A1B2C3D4.",
     "open": "Open",
     "notFound": "Nothing in this store carries the reference {ref}.",
     "ambiguous": "More than one item in this store has the reference {ref}. Choose the correct item from the list.",
@@ -1647,7 +1678,7 @@
     "formatInvalid": "Width 20 to 120 mm, height 15 to 200 mm, at most one decimal.",
     "defaultSize": "default",
     "title": "Printers and labels",
-    "intro": "Labels are ZPL programs queued for a store printer. A local agent next to the printer picks up jobs and reports the outcome.",
+    "intro": "Manage the store’s label printers and check recent print jobs. Labels on ordinary paper can be printed directly from the item page.",
     "none": "No printers registered.",
     "registerHeading": "Register a printer",
     "name": "Name",
@@ -1699,12 +1730,13 @@
     "browserPrint": "Print label",
     "browserUnavailable": "The label is unavailable right now. Return to the item and try again.",
     "printerUncertain": "The printer change could not be confirmed. Reload the page and check the saved settings before continuing.",
-    "formatUncertain": "The label size could not be confirmed. Reload the page and check the saved size before continuing."
+    "formatUncertain": "The label size could not be confirmed. Reload the page and check the saved size before continuing.",
+    "discardTemplate": "Discard unsaved changes to the label template?"
   },
   "purchases": {
     "title": "Purchases",
-    "intro": "Store-owned goods enter here, never through the consignment paths.",
-    "notice": "A purchase is a fact about what the store bought and for how much. It is not yet an item for sale; acceptance follows.",
+    "intro": "Record items purchased and owned by the store.",
+    "notice": "Record the purchase first. Then open “{accept}” on the purchase and enter a selling price to make the item ready for sale.",
     "registerHeading": "Register a purchase",
     "registerHint": "One registration per item bought. Keep the receipt or note; its reference is required.",
     "price": "Purchase price",
@@ -2286,7 +2318,7 @@
     "reload": "Reload",
     "revision": "Mapping version",
     "total": "Receipt total",
-    "matchHint": "Copy the full item ID from the end of its page URL. Match each row to a different item.",
+    "matchHint": "Search for the item or scan its label. Choose the correct item and save the match for each receipt line.",
     "open": "Open receipt",
     "done": "Saved",
     "unsupported": "Discounts, refunds, fees and non-unit quantities need a later integration slice.",
@@ -2417,7 +2449,9 @@
     "setupHint": "Enter the client ID and API key from your PayPal POS account. They are verified and stored encrypted for this store.",
     "clientId": "Client ID",
     "apiKey": "API key",
-    "connect": "Connect PayPal POS"
+    "connect": "Connect PayPal POS",
+    "chooseItem": "Choose item",
+    "selectedItem": "Selected item"
   },
   "priceEvidence": {
     "title": "Comparable sales in this store",
@@ -2850,7 +2884,7 @@
   },
   "helpCenter": {
     "title": "Help",
-    "intro": "Guidance for receiving, labelling and accounting integration.",
+    "intro": "Guidance for receiving, labelling and integrations.",
     "open": "Help on this page",
     "close": "Close help",
     "fullArticle": "Open the full help page in a new tab",
@@ -2948,13 +2982,25 @@
           "If a queueing response is missing, use retry in the same open form. Do not repeatedly create new jobs. Check the job under Printers and print jobs and ask the printer operator for help when needed. Use label lookup to open an existing reference."
         ],
         "notice": "Opening help prints nothing and registers no new item. Do not duplicate an item to replace its label. Physical printing and scanning need checking with the store’s equipment."
+      },
+      "integrations": {
+        "title": "Connect your other store systems",
+        "intro": "Start with the system you want to connect to Komisio. Open its section for status and settings.",
+        "steps": [
+          "Choose point of sale, online store or accounting according to what you want to connect.",
+          "Read the connection status and follow the steps in that section. Some actions require an owner or administrator.",
+          "Check which information is transferred and in which direction before enabling an automatic feature.",
+          "Follow the status of products, receipts, orders or accounting documents within each integration. Open the details if anything needs attention."
+        ],
+        "notice": "A connection does not mean every automatic feature is enabled. Check them individually in the integration settings."
       }
     },
     "receiving": "Open receiving",
     "storeFlow": "Store workflow",
     "items": "Find a registered item",
     "openReference": "Open a label reference",
-    "printing": "Printers and print jobs"
+    "printing": "Printers and print jobs",
+    "integrations": "Open integrations"
   },
   "dashboard": {
     "intro": "Your working day, at a glance.",
@@ -2966,5 +3012,15 @@
     "salesHint": "View recorded sales.",
     "snapshot": "Store snapshot",
     "receiptHint": "Receive now, inspect the items later."
-  }
+  },
+  "auditHint": "The 12 most recent recorded events in the store.",
+  "otherActivity": "Other store event",
+  "technicalDetails": "Technical store details",
+  "skipToContent": "Skip to main content",
+  "leaveUnsaved": "Leave this page? Unsaved changes will be lost. If a save was not confirmed, check the saved content before starting again.",
+  "showPassword": "Show password",
+  "hidePassword": "Hide password",
+  "reviewRetryApprove": "Retry approval",
+  "reviewRetryDecline": "Retry rejection",
+  "copyLinkFailed": "Copying failed. The link is selected so you can copy it manually."
 }

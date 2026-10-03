@@ -102,6 +102,10 @@ for (const reply of [
       // Even a direct submit event must not blindly replay this mutable upsert.
       await form.evaluate((node) => (node as HTMLFormElement).requestSubmit())
       expect(requests).toHaveLength(1)
+      page.once('dialog', async (dialog) => {
+        expect(dialog.type()).toBe('beforeunload')
+        await dialog.accept()
+      })
       await reload.click()
       await expect(page).toHaveURL(/\/settings\?tab=printing$/)
       await expect(
@@ -266,6 +270,7 @@ test('an uncertain printer update clears its previous confirmation', async ({
     await form
       .getByLabel(d.printing.model, { exact: true })
       .fill('Unconfirmed synthetic model')
+    await expect(form.getByRole('status')).toHaveCount(0)
     await save.click()
     await expect(form.getByRole('alert')).toHaveText(
       d.printing.printerUncertain,

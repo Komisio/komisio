@@ -138,6 +138,10 @@ test('a lost save reply freezes the editor and a reload shows the one saved vers
       { version: 1, active: true, zpl: VALID },
     ])
     expect(lost.seen).toHaveLength(1)
+    page.once('dialog', async (dialog) => {
+      expect(dialog.type()).toBe('beforeunload')
+      await dialog.accept()
+    })
     await e.reload.click()
     const after = await openFold(page)
     await expect(after.editor).toContainText(`${d.printing.templateVersion} 1`)
@@ -165,11 +169,20 @@ test('a lost reset reply freezes the editor and a reload shows the built-in layo
     })
     await e.reset.click()
     await expectFrozen(e)
-    expect(lost.real()!.body).toEqual({ ok: true, id: true, notifications: [] })
+    expect(lost.real()!.body).toEqual({
+      ok: true,
+      commandId: lost.seen[0].requestId,
+      id: true,
+      notifications: [],
+    })
     expect((await versions(f)).map((v) => [v.version, v.active])).toEqual([
       [1, true],
       [2, false],
     ])
+    page.once('dialog', async (dialog) => {
+      expect(dialog.type()).toBe('beforeunload')
+      await dialog.accept()
+    })
     await e.reload.click()
     const after = await openFold(page)
     await expect(after.editor).toContainText(d.printing.templateBuiltinHint)
@@ -322,6 +335,10 @@ test('a damaged success envelope is not a confirmation', async ({ page }) => {
     expect(lost.real()!.status).toBe(200)
     expect(await versions(f)).toHaveLength(1)
     expect(lost.seen).toHaveLength(1)
+    page.once('dialog', async (dialog) => {
+      expect(dialog.type()).toBe('beforeunload')
+      await dialog.accept()
+    })
     await e.reload.click()
     const after = await openFold(page)
     await expect(after.editor).toContainText(`${d.printing.templateVersion} 1`)
@@ -330,3 +347,46 @@ test('a damaged success envelope is not a confirmation', async ({ page }) => {
     await f.close()
   }
 })
+
+for (const action of ['setLabelTemplate', 'resetLabelTemplate'] as const)
+  test(`a ${action} reply for a different command cannot confirm this editor`, async ({
+    page,
+  }) => {
+    const { f, ...e } = await openEditor(
+      page,
+      `template-command-${randomUUID()}@example.test`,
+      { custom: action === 'resetLabelTemplate' },
+    )
+    try {
+      let requests = 0
+      await page.route('**/api/intake', async (route) => {
+        if (route.request().postDataJSON()?.action !== action)
+          return route.continue()
+        requests++
+        const reply = await route.fetch()
+        expect(reply.status()).toBe(200)
+        await route.fulfill({
+          response: reply,
+          json: { ...(await reply.json()), commandId: randomUUID() },
+        })
+      })
+      if (action === 'setLabelTemplate') {
+        await e.zpl.fill(VALID)
+        await e.save.click()
+      } else await e.reset.click()
+      await expectFrozen(e)
+      expect(requests).toBe(1)
+      expect(
+        (await versions(f)).map((row) => [row.version, row.active]),
+      ).toEqual(
+        action === 'setLabelTemplate'
+          ? [[1, true]]
+          : [
+              [1, true],
+              [2, false],
+            ],
+      )
+    } finally {
+      await f.close()
+    }
+  })

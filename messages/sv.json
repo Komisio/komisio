@@ -19,7 +19,7 @@
     "required": "Underlag krävs före mottagning.",
     "optional": "Underlag är valfritt vid mottagning.",
     "none": "Inget säljaravtal är publicerat. Inget nytt avtalskrav gäller vid mottagning.",
-    "history": "Tidigare versioner",
+    "history": "Avtalsversioner",
     "historyHint": "De 20 senaste versionerna. Äldre versioner nås från respektive mottagning.",
     "adminOnly": "Ägare och administratörer kan publicera avtalsversioner.",
     "manage": "Visa och hantera säljaravtal",
@@ -335,8 +335,8 @@
   "tenantIdentity": "Butikens identitet",
   "tenantId": "Butiks-id",
   "tenantImmutable": "Identifieraren används för att skilja butiken från andra butiker.",
-  "audit": "Senaste behörighetsändringar",
-  "noAudit": "Inga ändringar att visa ännu.",
+  "audit": "Senaste aktivitet",
+  "noAudit": "Ingen aktivitet ännu.",
   "accountIntro": "Dina personliga uppgifter följer med mellan butikerna.",
   "profile": "Profil",
   "security": "Säkerhet",
@@ -386,7 +386,11 @@
     "inspection.reopened": "Ett varuutkast återöppnades",
     "reception.created": "En mottagning startades",
     "reception.sources_saved": "Underlag för mottagningen sparades",
-    "reception.review_published": "Ett granskningsunderlag sparades"
+    "reception.review_published": "Ett granskningsunderlag sparades",
+    "item.accepted": "En vara registrerades",
+    "store_policy.published": "Butikspolicyn uppdaterades",
+    "purchase.registered": "Ett inköp registrerades",
+    "sale.recorded": "En försäljning registrerades"
   },
   "errors": {
     "FORBIDDEN": "Du har inte behörighet att göra detta.",
@@ -711,7 +715,10 @@
       "noApproval": "Butiken bestämmer priset. Säljarens godkännande behövs inte.",
       "optionalShare": "Valfri delning med säljaren",
       "registered": "Varan är registrerad"
-    }
+    },
+    "linkUncertain": "Länkändringen kunde inte bekräftas. Ladda om sidan och kontrollera länkens status innan du fortsätter.",
+    "copyFailed": "Det gick inte att kopiera. Länken är markerad så att du kan kopiera den manuellt.",
+    "linkRevoked": "Länken är återkallad."
   },
   "operations": {
     "title": "Föreslagna åtgärder",
@@ -855,7 +862,8 @@
     "noComparedChanges": "Inga ändringar i de jämförda uppgifterna. Granska ändå hela det nya underlaget.",
     "sourceVersionChanged": "Källversionen har ändrats. Granska underlaget även om uppgifterna ser likadana ut.",
     "agreementVersionChanged": "Avtalsversionen har ändrats. Läs de föreslagna villkoren nedan.",
-    "zettleReceipt": "PayPal POS-kvitto"
+    "zettleReceipt": "PayPal POS-kvitto",
+    "sourceReference": "Källreferens"
   },
   "reviewPhotoAlt": "Bild som ingår i detta underlag",
   "reviewPhotos": "Bilder i detta underlag",
@@ -895,7 +903,9 @@
       "sun": "Söndag"
     },
     "country": "Land",
-    "countryHelp": "Butikens land bestämmer valutan för köp av AI-krediter."
+    "countryHelp": "Butikens land bestämmer valutan för köp av AI-krediter.",
+    "noHours": "Inga tider angivna",
+    "hoursHint": "Markera de dagar du vill ange tider för. Om du avmarkerar en dag publiceras inga tider för den."
   },
   "storePolicy": {
     "markdowns": "Prissänkningar",
@@ -1103,9 +1113,9 @@
     "sellerCredit": "Säljarens tillgodohavande",
     "vat": "Moms",
     "providers": {
-      "manual": "kassa",
+      "manual": "Manuellt registrerad",
       "zettle": "PayPal POS",
-      "shopify": "Shopify POS"
+      "shopify": "Shopify"
     },
     "statuses": {
       "completed": "genomförd",
@@ -1129,7 +1139,18 @@
     "cart": "Varukorg",
     "cartEmpty": "Sök fram varorna du vill registrera.",
     "remove": "Ta bort",
-    "total": "Totalt"
+    "total": "Totalt",
+    "listHint": "De 50 senaste försäljningarna visas. Öppna ett kvitto för varor, returer och detaljer.",
+    "financialDetails": "Provision och moms",
+    "reference": "Kvittoreferens",
+    "findReceipt": "Sök kvitto",
+    "receiptSearchHint": "Ange hela kvittoreferensen, även för äldre försäljningar.",
+    "source": "Försäljningskälla",
+    "allSources": "Alla källor",
+    "showLatest": "Visa senaste",
+    "searchResults": "Sökresultat",
+    "filteredHint": "Upp till 50 matchande försäljningar visas, nyaste först.",
+    "noReceipts": "Inga kvitton matchar. Kontrollera hela referensen eller välj en annan källa."
   },
   "ledger": {
     "title": "Saldo",
@@ -1163,7 +1184,7 @@
   },
   "payouts": {
     "title": "Utbetalningar",
-    "intro": "En utbetalning går från begärd till godkänd till utbetald, eller avvisas. Godkännandet reserverar beloppet i säljarens reskontra; betalningen avräknar det.",
+    "intro": "Hantera säljares utbetalningar och följ vilka som väntar på betalning.",
     "notice": "Komisio registrerar utbetalningar; Komisio flyttar inga pengar. Betala via banken och registrera referensen här.",
     "requestHeading": "Begär en utbetalning",
     "requestHint": "För säljarens räkning, minst butikens minimibelopp och högst tillgängligt saldo.",
@@ -1189,7 +1210,7 @@
       "paid": "utbetald",
       "rejected": "avvisad"
     },
-    "settleHeading": "Avräkna alla säljare",
+    "settleHeading": "Förbered utbetalningar",
     "settleHint": "Alla säljare med minst minimibeloppet ({threshold}) och utan öppen utbetalning. En sats begär och godkänner en utbetalning av hela det tillgängliga saldot per vald säljare; sedan betalar du via banken och markerar varje utbetalning som utbetald.",
     "settleEmpty": "Ingen säljare uppfyller villkoren för avräkning just nu.",
     "settleReason": "Anteckning för satsen",
@@ -1200,7 +1221,8 @@
     "settleTotal": "Summa",
     "requestNone": "Inget tillgängligt saldo i den här listan. Öppna en säljare för att se säljarens saldo.",
     "directory": "Sök bland alla säljare",
-    "latestFifty": "Visar de 50 senaste utbetalningarna. Varje säljares sida visar säljarens senaste utbetalningar."
+    "latestFifty": "Visar de 50 senaste utbetalningarna. Varje säljares sida visar säljarens senaste utbetalningar.",
+    "history": "Historik och referenser"
   },
   "returns": {
     "reason": "Anledning till retur",
@@ -1255,16 +1277,16 @@
     "items": "varor",
     "note": "Anteckning (valfri)",
     "confirm": "Varorna i inlämningen är i butiken nu.",
-    "receive": "Ta emot och registrera inlämningen",
+    "receive": "Ta emot inlämningen",
     "openBag": "Öppna inlämningen",
     "kinds": {
       "bag": "Påse",
       "box": "Låda"
     },
     "statuses": {
-      "open": "öppen",
-      "received": "mottagen",
-      "cancelled": "avbruten"
+      "open": "Väntar på inlämning",
+      "received": "Mottagen",
+      "cancelled": "Avbruten"
     },
     "backToQueue": "Till föranmälningar",
     "search": "Sök föranmälning",
@@ -1276,7 +1298,9 @@
     "noMatches": "Inga föranmälningar matchar filtren.",
     "limited": "Tillfälligt visas endast de 100 senaste föranmälningarna. Öppna en äldre föranmälning via dess H-referens.",
     "settings": "Öppna inställningar",
-    "askOwner": "Be en ägare eller administratör att aktivera funktionen."
+    "askOwner": "Be en ägare eller administratör att aktivera funktionen.",
+    "estimatedCount": "Cirka {count} varor",
+    "estimatedCountOne": "Cirka {count} vara"
   },
   "chain": {
     "title": "Kedja",
@@ -1443,7 +1467,12 @@
       "unconfirmed": "leverans ej bekräftad",
       "failed": "leverans misslyckades"
     },
-    "dailyCap": "Butikens gräns för meddelanden per dygn är nådd. Försök igen i morgon."
+    "dailyCap": "Butikens gräns för meddelanden per dygn är nådd. Försök igen i morgon.",
+    "older": "Äldre meddelanden",
+    "newer": "Nyare meddelanden",
+    "latest": "Senaste meddelandena",
+    "showingRange": "Meddelanden {from}–{to} av {total}",
+    "pageEmpty": "Inga meddelanden på den här sidan."
   },
   "stock": {
     "title": "Lager",
@@ -1506,7 +1535,9 @@
     "tooMany": "Importera högst 200 säljare åt gången. Dela upp filen och försök igen.",
     "nothing": "Inga säljare kan importeras. Kontrollera att rätt kolumner är valda och att namn samt e-post eller telefon finns med.",
     "error": "Importen kunde inte förberedas. Försök igen.",
-    "ownerOnly": "Endast butikens ägare eller administratör kan importera säljare."
+    "ownerOnly": "Endast butikens ägare eller administratör kan importera säljare.",
+    "fileTooLarge": "Filen är för stor. Dela upp den och välj en mindre fil.",
+    "clearFile": "Ta bort fil"
   },
   "lifecycle": {
     "agentHeading": "Prissänkningskörningar",
@@ -1565,9 +1596,9 @@
   },
   "openByReference": {
     "title": "Öppna via etikett",
-    "intro": "Skriv eller skanna referensen på en inlämning (K-n), ett plagg (G-n) eller en vara (I-XXXXXXXX).",
+    "intro": "Skanna en etikett eller skriv referensen från etiketten eller föranmälan.",
     "reference": "Etikettreferens",
-    "hint": "Till exempel K-12, G-7 eller I-A1B2C3D4.",
+    "hint": "Till exempel K-12, G-7, H-9 eller I-A1B2C3D4.",
     "open": "Öppna",
     "notFound": "Inget i butiken bär referensen {ref}.",
     "ambiguous": "Flera varor i butiken har referensen {ref}. Välj rätt vara i listan.",
@@ -1647,7 +1678,7 @@
     "formatInvalid": "Bredd 20 till 120 mm, höjd 15 till 200 mm, högst en decimal.",
     "defaultSize": "standard",
     "title": "Skrivare och etiketter",
-    "intro": "Etiketter är ZPL-program som köas till en butiksskrivare. En lokal agent vid skrivaren hämtar jobben och rapporterar utfallet.",
+    "intro": "Hantera butikens etikettskrivare och följ senaste utskrifter. Etiketter på vanligt papper kan skrivas ut direkt från varusidan.",
     "none": "Inga skrivare registrerade.",
     "registerHeading": "Registrera en skrivare",
     "name": "Namn",
@@ -1699,12 +1730,13 @@
     "browserPrint": "Skriv ut etikett",
     "browserUnavailable": "Etiketten kan inte visas just nu. Gå tillbaka till varan och försök igen.",
     "printerUncertain": "Det gick inte att bekräfta skrivarändringen. Ladda om sidan och kontrollera de sparade inställningarna innan du fortsätter.",
-    "formatUncertain": "Det gick inte att bekräfta etikettstorleken. Ladda om sidan och kontrollera den sparade storleken innan du fortsätter."
+    "formatUncertain": "Det gick inte att bekräfta etikettstorleken. Ladda om sidan och kontrollera den sparade storleken innan du fortsätter.",
+    "discardTemplate": "Kasta osparade ändringar i etikettmallen?"
   },
   "purchases": {
     "title": "Inköp",
-    "intro": "Butiksägda varor kommer in här, aldrig via inlämningsflödena.",
-    "notice": "Ett inköp är ett faktum om vad butiken köpt och för hur mycket. Det är ännu ingen vara till salu; acceptans följer.",
+    "intro": "Registrera varor som butiken köper in och äger.",
+    "notice": "Registrera först inköpet. Öppna sedan ”{accept}” vid inköpet och ange ett försäljningspris för att göra varan klar för försäljning.",
     "registerHeading": "Registrera ett inköp",
     "registerHint": "En registrering per köpt vara. Spara kvittot eller anteckningen; dess referens krävs.",
     "price": "Inköpspris",
@@ -2286,7 +2318,7 @@
     "reload": "Ladda om",
     "revision": "Matchningsversion",
     "total": "Kvittots totalbelopp",
-    "matchHint": "Kopiera varans fullständiga ID från slutet av varusidans webbadress. Matcha varje rad till en egen vara.",
+    "matchHint": "Sök efter varan eller skanna etiketten. Välj rätt vara och spara matchningen för varje kvittorad.",
     "open": "Öppna kvitto",
     "done": "Sparat",
     "unsupported": "Rabatter, returer, avgifter och antal andra än ett hanteras i en senare integrationsdel.",
@@ -2417,7 +2449,9 @@
     "setupHint": "Ange Client ID och API-nyckeln från ditt PayPal POS-konto. Uppgifterna kontrolleras och sparas krypterat för den här butiken.",
     "clientId": "Client ID",
     "apiKey": "API-nyckel",
-    "connect": "Anslut PayPal POS"
+    "connect": "Anslut PayPal POS",
+    "chooseItem": "Välj vara",
+    "selectedItem": "Vald vara"
   },
   "priceEvidence": {
     "title": "Jämförbara försäljningar i butiken",
@@ -2850,7 +2884,7 @@
   },
   "helpCenter": {
     "title": "Hjälp",
-    "intro": "Vägledning för mottagning, märkning och bokföringsintegration.",
+    "intro": "Vägledning för mottagning, märkning och integrationer.",
     "open": "Hjälp på sidan",
     "close": "Stäng hjälpen",
     "fullArticle": "Öppna hela hjälpsidan i ny flik",
@@ -2948,13 +2982,25 @@
           "Om ett svar om köad utskrift saknas, använd återförsöket i samma öppna formulär. Skapa inte nya jobb upprepade gånger. Kontrollera utskriftsjobbet under Skrivare och utskrifter och be den som sköter skrivaren om hjälp vid problem. En befintlig referens kan öppnas via etikettsökningen."
         ],
         "notice": "Att öppna hjälpen skriver inte ut något och registrerar ingen ny vara. Skapa inte en dubblett av varan för att ersätta en etikett. Fysisk utskrift och skanning behöver kontrolleras med butikens utrustning."
+      },
+      "integrations": {
+        "title": "Anslut butikens andra system",
+        "intro": "Börja med det system du vill koppla till Komisio. Öppna dess avsnitt för status och inställningar.",
+        "steps": [
+          "Välj kassasystem, webbshop eller bokföring utifrån vad du vill koppla ihop.",
+          "Läs anslutningsstatusen och följ stegen i det valda avsnittet. Vissa åtgärder kräver en ägare eller administratör.",
+          "Kontrollera vilka uppgifter som förs över och i vilken riktning innan du aktiverar en automatisk funktion.",
+          "Följ statusen för produkter, kvitton, order eller bokföringsunderlag i respektive integration. Öppna detaljerna om något behöver åtgärdas."
+        ],
+        "notice": "En anslutning betyder inte att alla automatiska funktioner är påslagna. Kontrollera dem var för sig i integrationens inställningar."
       }
     },
     "receiving": "Öppna mottagningen",
     "storeFlow": "Butikens arbetsflöde",
     "items": "Hitta en registrerad vara",
     "openReference": "Öppna en etikettreferens",
-    "printing": "Skrivare och utskrifter"
+    "printing": "Skrivare och utskrifter",
+    "integrations": "Öppna integrationer"
   },
   "dashboard": {
     "intro": "Det viktigaste för din arbetsdag, samlat på ett ställe.",
@@ -2966,5 +3012,15 @@
     "salesHint": "Se registrerade försäljningar.",
     "snapshot": "Butikens läge",
     "receiptHint": "Ta emot nu, gå igenom varorna senare."
-  }
+  },
+  "auditHint": "De 12 senaste registrerade händelserna i butiken.",
+  "otherActivity": "Annan butikshändelse",
+  "technicalDetails": "Tekniska butiksuppgifter",
+  "skipToContent": "Hoppa till innehållet",
+  "leaveUnsaved": "Lämna sidan? Osparade ändringar försvinner. Om en sparning inte bekräftades, kontrollera det sparade innehållet innan du börjar om.",
+  "showPassword": "Visa lösenord",
+  "hidePassword": "Dölj lösenord",
+  "reviewRetryApprove": "Försök godkänna igen",
+  "reviewRetryDecline": "Försök avvisa igen",
+  "copyLinkFailed": "Det gick inte att kopiera. Länken är markerad så att du kan kopiera den manuellt."
 }

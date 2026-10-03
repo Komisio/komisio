@@ -19,7 +19,7 @@
     "required": "Dokumentation er påkrævet før modtagelse.",
     "optional": "Dokumentation er valgfri ved modtagelse.",
     "none": "Der er ikke udgivet nogen indlevereraftale. Der gælder ingen ny aftaleforudsætning for modtagelse.",
-    "history": "Tidligere versioner",
+    "history": "Aftaleversioner",
     "historyHint": "De 20 seneste versioner. Ældre versioner kan stadig nås fra deres kvitteringer.",
     "adminOnly": "Ejere og administratorer kan udgive aftaleversioner.",
     "manage": "Se og administrer indlevereraftaler",
@@ -335,8 +335,8 @@
   "tenantIdentity": "Butikkens identitet",
   "tenantId": "Butiks-id",
   "tenantImmutable": "Dette id adskiller din butik fra andre butikker.",
-  "audit": "Seneste adgangsændringer",
-  "noAudit": "Ingen ændringer at vise endnu.",
+  "audit": "Seneste aktivitet",
+  "noAudit": "Ingen aktivitet endnu.",
   "accountIntro": "Dine personlige oplysninger følger dig på tværs af butikker.",
   "profile": "Profil",
   "security": "Sikkerhed",
@@ -386,7 +386,11 @@
     "inspection.reopened": "Vareudkast genåbnet",
     "reception.created": "Modtagelse startet",
     "reception.sources_saved": "Modtagelsesdokumentation gemt",
-    "reception.review_published": "Modtagelsesgennemgang forberedt"
+    "reception.review_published": "Modtagelsesgennemgang forberedt",
+    "item.accepted": "En vare blev registreret",
+    "store_policy.published": "Butikkens regler blev opdateret",
+    "purchase.registered": "Et køb blev registreret",
+    "sale.recorded": "Et salg blev registreret"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tilladelse til dette.",
@@ -711,7 +715,10 @@
       "noApproval": "Butikken bestemmer prisen. Sælgerens godkendelse er ikke nødvendig.",
       "optionalShare": "Valgfri deling med sælgeren",
       "registered": "Varen er registreret"
-    }
+    },
+    "linkUncertain": "Linkændringen kunne ikke bekræftes. Genindlæs siden, og kontrollér linkets status, før du fortsætter.",
+    "copyFailed": "Kopiering mislykkedes. Linket er markeret, så du kan kopiere det manuelt.",
+    "linkRevoked": "Linket er tilbagekaldt."
   },
   "operations": {
     "title": "Foreslåede operationer",
@@ -855,7 +862,8 @@
     "noComparedChanges": "Ingen ændringer i de sammenlignede felter. Gennemgå alligevel hele det nye forslag.",
     "sourceVersionChanged": "Kildeversionen er ændret. Gennemgå dokumentationen, selvom fakta ser uændrede ud.",
     "agreementVersionChanged": "Aftaleversionen er ændret. Læs de foreslåede vilkår nedenfor.",
-    "zettleReceipt": "PayPal POS-kvittering"
+    "zettleReceipt": "PayPal POS-kvittering",
+    "sourceReference": "Kildereference"
   },
   "reviewPhotoAlt": "Foto, der indgår i denne gennemgang",
   "reviewPhotos": "Fotos i denne gennemgang",
@@ -895,7 +903,9 @@
       "sun": "Søndag"
     },
     "country": "Land",
-    "countryHelp": "Butikkens land bestemmer valutaen for køb af AI-kreditter."
+    "countryHelp": "Butikkens land bestemmer valutaen for køb af AI-kreditter.",
+    "noHours": "Ingen tider angivet",
+    "hoursHint": "Vælg de dage, du vil angive tider for. Hvis du fravælger en dag, offentliggøres ingen tider for den."
   },
   "storePolicy": {
     "markdowns": "Prisnedsættelser",
@@ -1103,9 +1113,9 @@
     "sellerCredit": "Indlevererens tilgodehavende",
     "vat": "Moms",
     "providers": {
-      "manual": "disk",
+      "manual": "Manuelt registreret",
       "zettle": "PayPal POS",
-      "shopify": "Shopify POS"
+      "shopify": "Shopify"
     },
     "statuses": {
       "completed": "gennemført",
@@ -1129,7 +1139,18 @@
     "cart": "Kurv",
     "cartEmpty": "Søg efter varerne, du vil registrere.",
     "remove": "Fjern",
-    "total": "I alt"
+    "total": "I alt",
+    "listHint": "De 50 seneste salg vises. Åbn en kvittering for varer, returneringer og detaljer.",
+    "financialDetails": "Provision og moms",
+    "reference": "Kvitteringsreference",
+    "findReceipt": "Find kvittering",
+    "receiptSearchHint": "Indtast hele kvitteringsreferencen, også for ældre salg.",
+    "source": "Salgskilde",
+    "allSources": "Alle kilder",
+    "showLatest": "Vis seneste",
+    "searchResults": "Søgeresultater",
+    "filteredHint": "Op til 50 matchende salg vises, nyeste først.",
+    "noReceipts": "Ingen kvitteringer matcher. Kontrollér hele referencen, eller vælg en anden kilde."
   },
   "ledger": {
     "title": "Saldo og konto",
@@ -1163,7 +1184,7 @@
   },
   "payouts": {
     "title": "Udbetalinger",
-    "intro": "En udbetaling går fra anmodet til godkendt til betalt eller afvises. Godkendelse reserverer beløbet på indlevererens konto; betaling afregner det.",
+    "intro": "Administrer udbetalinger til sælgere og se, hvilke der afventer betaling.",
     "notice": "Komisio registrerer udbetalinger; det flytter ingen penge. Betal via din bank, og registrer referencen her.",
     "requestHeading": "Anmod om en udbetaling",
     "requestHint": "På sælgerens vegne, mindst butikkens minimumsbeløb og højst den tilgængelige saldo.",
@@ -1189,7 +1210,7 @@
       "paid": "betalt",
       "rejected": "afvist"
     },
-    "settleHeading": "Afregn alle indleverere",
+    "settleHeading": "Forbered udbetalinger",
     "settleHint": "Hver indleverer på eller over minimum ({threshold}) uden en åben udbetaling. Én batch anmoder om og godkender en udbetaling af hele den tilgængelige saldo pr. valgt indleverer; du betaler derefter via din bank og markerer hver enkelt som betalt.",
     "settleEmpty": "Ingen indleverere opfylder betingelserne for afregning lige nu.",
     "settleReason": "Batchnote",
@@ -1200,7 +1221,8 @@
     "settleTotal": "I alt",
     "requestNone": "Ingen tilgængelig saldo på denne liste. Åbn en indleverer for at se saldoen.",
     "directory": "Søg blandt alle indleverere",
-    "latestFifty": "Viser de 50 seneste udbetalinger. Hver indleverers side viser indlevererens seneste udbetalinger."
+    "latestFifty": "Viser de 50 seneste udbetalinger. Hver indleverers side viser indlevererens seneste udbetalinger.",
+    "history": "Historik og referencer"
   },
   "returns": {
     "reason": "Returårsag",
@@ -1255,16 +1277,16 @@
     "items": "varer",
     "note": "Note (valgfrit)",
     "confirm": "Varerne i indleveringen er i butikken nu.",
-    "receive": "Modtag og registrer indleveringen",
+    "receive": "Modtag indleveringen",
     "openBag": "Åbn indleveringen",
     "kinds": {
       "bag": "Pose",
       "box": "Kasse"
     },
     "statuses": {
-      "open": "åben",
-      "received": "modtaget",
-      "cancelled": "annulleret"
+      "open": "Afventer indlevering",
+      "received": "Modtaget",
+      "cancelled": "Annulleret"
     },
     "backToQueue": "Til anmeldte indleveringer",
     "search": "Søg forhåndsanmeldelse",
@@ -1276,7 +1298,9 @@
     "noMatches": "Ingen forhåndsanmeldelser matcher filtrene.",
     "limited": "Midlertidigt vises kun de 100 seneste forhåndsanmeldelser. Åbn en ældre via dens H-reference.",
     "settings": "Åbn indstillinger",
-    "askOwner": "Bed en ejer eller administrator om at aktivere funktionen."
+    "askOwner": "Bed en ejer eller administrator om at aktivere funktionen.",
+    "estimatedCount": "Cirka {count} varer",
+    "estimatedCountOne": "Cirka {count} vare"
   },
   "chain": {
     "title": "Kæde",
@@ -1443,7 +1467,12 @@
       "unconfirmed": "levering ikke bekræftet",
       "failed": "levering mislykkedes"
     },
-    "dailyCap": "Butikkens grænse for beskeder pr. døgn er nået. Prøv igen i morgen."
+    "dailyCap": "Butikkens grænse for beskeder pr. døgn er nået. Prøv igen i morgen.",
+    "older": "Ældre beskeder",
+    "newer": "Nyere beskeder",
+    "latest": "Seneste beskeder",
+    "showingRange": "Beskeder {from}–{to} af {total}",
+    "pageEmpty": "Ingen beskeder på denne side."
   },
   "stock": {
     "title": "Lager",
@@ -1506,7 +1535,9 @@
     "tooMany": "Filen har mere end 200 brugbare rækker. Del den op, og importér i dele.",
     "nothing": "Ingen brugbare rækker. Tjek kolonnetilknytningen.",
     "error": "Importen kunne ikke klargøres. Genindlæs, og prøv igen.",
-    "ownerOnly": "Kun butikkens ejer eller en administrator kan importere indleverere."
+    "ownerOnly": "Kun butikkens ejer eller en administrator kan importere indleverere.",
+    "fileTooLarge": "Filen er for stor. Del den op og vælg en mindre fil.",
+    "clearFile": "Fjern fil"
   },
   "lifecycle": {
     "agentHeading": "Prisnedsættelseskørsler",
@@ -1565,9 +1596,9 @@
   },
   "openByReference": {
     "title": "Åbn via mærkat",
-    "intro": "Skriv eller scan referencen på en indlevering (K-n), et stykke tøj (G-n) eller en vare (I-XXXXXXXX).",
+    "intro": "Scan en mærkat, eller skriv referencen fra mærkaten eller forhåndsanmeldelsen.",
     "reference": "Mærkatreference",
-    "hint": "For eksempel K-12, G-7 eller I-A1B2C3D4.",
+    "hint": "For eksempel K-12, G-7, H-9 eller I-A1B2C3D4.",
     "open": "Åbn",
     "notFound": "Intet i denne butik har referencen {ref}.",
     "ambiguous": "Flere varer i butikken har referencen {ref}. Vælg den rigtige vare på listen.",
@@ -1647,7 +1678,7 @@
     "formatInvalid": "Bredde 20 til 120 mm, højde 15 til 200 mm, højst én decimal.",
     "defaultSize": "standard",
     "title": "Printere og mærkater",
-    "intro": "Mærkater er ZPL-programmer sat i kø til en butiksprinter. En lokal agent ved siden af printeren henter job og rapporterer resultatet.",
+    "intro": "Administrer butikkens etiketprintere og se seneste udskrifter. Etiketter på almindeligt papir kan udskrives direkte fra varesiden.",
     "none": "Ingen printere registreret.",
     "registerHeading": "Registrer en printer",
     "name": "Navn",
@@ -1699,12 +1730,13 @@
     "browserPrint": "Udskriv etiket",
     "browserUnavailable": "Etiketten kan ikke vises lige nu. Gå tilbage til varen og prøv igen.",
     "printerUncertain": "Ændringen af printeren kunne ikke bekræftes. Genindlæs siden, og kontrollér de gemte indstillinger, før du fortsætter.",
-    "formatUncertain": "Etiketstørrelsen kunne ikke bekræftes. Genindlæs siden, og kontrollér den gemte størrelse, før du fortsætter."
+    "formatUncertain": "Etiketstørrelsen kunne ikke bekræftes. Genindlæs siden, og kontrollér den gemte størrelse, før du fortsætter.",
+    "discardTemplate": "Kassér ikke-gemte ændringer i etiketskabelonen?"
   },
   "purchases": {
     "title": "Indkøb",
-    "intro": "Butiksejede varer kommer ind her, aldrig via kommissionsvejene.",
-    "notice": "Et indkøb er et faktum om, hvad butikken købte, og for hvor meget. Det er endnu ikke en vare til salg; accept følger.",
+    "intro": "Registrer varer, som butikken køber og ejer.",
+    "notice": "Registrer først købet. Åbn derefter ”{accept}” ved købet og angiv en salgspris for at gøre varen klar til salg.",
     "registerHeading": "Registrer et indkøb",
     "registerHint": "Én registrering pr. købt vare. Behold kvitteringen eller noten; dens reference er påkrævet.",
     "price": "Indkøbspris",
@@ -2286,7 +2318,7 @@
     "reload": "Genindlæs",
     "revision": "Tilknytningsversion",
     "total": "Kvitteringstotal",
-    "matchHint": "Kopiér det fulde vare-id fra slutningen af dens side-URL. Match hver række til en forskellig vare.",
+    "matchHint": "Søg efter varen eller scan etiketten. Vælg den rigtige vare, og gem tilknytningen for hver kvitteringslinje.",
     "open": "Åbn kvittering",
     "done": "Gemt",
     "unsupported": "Rabatter, refusioner, gebyrer og ikke-hele antal kræver et senere integrationstrin.",
@@ -2417,7 +2449,9 @@
     "setupHint": "Angiv Client ID og API-nøglen fra din PayPal POS-konto. Oplysningerne kontrolleres og gemmes krypteret for denne butik.",
     "clientId": "Client ID",
     "apiKey": "API-nøgle",
-    "connect": "Tilslut PayPal POS"
+    "connect": "Tilslut PayPal POS",
+    "chooseItem": "Vælg vare",
+    "selectedItem": "Valgt vare"
   },
   "priceEvidence": {
     "title": "Sammenlignelige salg i denne butik",
@@ -2850,7 +2884,7 @@
   },
   "helpCenter": {
     "title": "Hjælp",
-    "intro": "Vejledning til modtagelse, mærkning og regnskabsintegration.",
+    "intro": "Vejledning til modtagelse, mærkning og integrationer.",
     "open": "Hjælp på siden",
     "close": "Luk hjælpen",
     "fullArticle": "Åbn hele hjælpesiden i en ny fane",
@@ -2948,13 +2982,25 @@
           "Hvis svaret om udskriftskøen mangler, prøv igen i samme åbne formular. Opret ikke nye job gentagne gange. Kontrollér jobbet under Printere og udskriftsjob, og bed den printeransvarlige om hjælp ved problemer. Etiketsøgningen åbner en eksisterende reference."
         ],
         "notice": "At åbne hjælpen udskriver intet og registrerer ingen ny vare. Opret ikke en dublet af varen for at erstatte etiketten. Fysisk udskrivning og scanning skal kontrolleres med butikkens udstyr."
+      },
+      "integrations": {
+        "title": "Tilslut butikkens andre systemer",
+        "intro": "Start med det system, du vil forbinde med Komisio. Åbn afsnittet for status og indstillinger.",
+        "steps": [
+          "Vælg kassesystem, webshop eller regnskab efter, hvad du vil forbinde.",
+          "Læs forbindelsesstatussen, og følg trinnene i afsnittet. Nogle handlinger kræver en ejer eller administrator.",
+          "Kontrollér, hvilke oplysninger der overføres og i hvilken retning, før du aktiverer en automatisk funktion.",
+          "Følg status for produkter, kvitteringer, ordrer eller regnskabsbilag i hver integration. Åbn detaljerne, hvis noget kræver handling."
+        ],
+        "notice": "En forbindelse betyder ikke, at alle automatiske funktioner er slået til. Kontrollér dem enkeltvis i integrationens indstillinger."
       }
     },
     "receiving": "Åbn modtagelsen",
     "storeFlow": "Butikkens arbejdsgang",
     "items": "Find en registreret vare",
     "openReference": "Åbn en etiketreference",
-    "printing": "Printere og udskriftsjob"
+    "printing": "Printere og udskriftsjob",
+    "integrations": "Åbn integrationer"
   },
   "dashboard": {
     "intro": "Det vigtigste for arbejdsdagen, samlet ét sted.",
@@ -2966,5 +3012,15 @@
     "salesHint": "Se registrerede salg.",
     "snapshot": "Butikkens status",
     "receiptHint": "Modtag nu, gennemgå varerne senere."
-  }
+  },
+  "auditHint": "De 12 senest registrerede hændelser i butikken.",
+  "otherActivity": "Anden butikshændelse",
+  "technicalDetails": "Tekniske butiksoplysninger",
+  "skipToContent": "Spring til indholdet",
+  "leaveUnsaved": "Forlad siden? Ændringer, der ikke er gemt, går tabt. Hvis en gemning ikke blev bekræftet, skal du kontrollere det gemte indhold, før du starter forfra.",
+  "showPassword": "Vis adgangskode",
+  "hidePassword": "Skjul adgangskode",
+  "reviewRetryApprove": "Prøv at godkende igen",
+  "reviewRetryDecline": "Prøv at afvise igen",
+  "copyLinkFailed": "Kopiering mislykkedes. Linket er markeret, så du kan kopiere det manuelt."
 }

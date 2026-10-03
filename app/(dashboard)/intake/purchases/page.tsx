@@ -1,4 +1,6 @@
+import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
+import { NavigationLink } from '@/components/platform/navigation-warning'
 import { notFound, redirect } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
@@ -100,19 +102,22 @@ export default async function Purchases({
       <div className="page-heading">
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
-        <Link className="text-link" href="/intake">
-          {all.intake.back}
-        </Link>
       </div>
-      <p className="intake-notice">{d.notice}</p>
-      <div className="intake-grid">
+      <p className="intake-notice">
+        {d.notice.replace('{accept}', all.items.accept)}
+      </p>
+      <div className="purchases-workspace">
         {active.role !== 'readonly' ? (
-          <PurchaseForm
-            key={active.id}
-            tenantId={active.id}
-            d={d}
-            intake={all.intake}
-          />
+          <details className="card purchase-create">
+            <summary>{d.registerHeading}</summary>
+            <PurchaseForm
+              key={active.id}
+              tenantId={active.id}
+              d={d}
+              intake={all.intake}
+              leaveUnsaved={all.leaveUnsaved}
+            />
+          </details>
         ) : (
           <p>{all.intake.readOnly}</p>
         )}
@@ -122,41 +127,54 @@ export default async function Purchases({
           {pager}
           <ul className="intake-list">
             {purchases.map((p) => (
-              <li key={p.id} className="intake-bag">
+              <li key={p.id} className="intake-bag purchase-entry">
                 <div>
-                  <strong>
-                    {d.reference} P-{p.reference}
-                  </strong>
-                  <br />
-                  {formatOre(p.purchase_price_ore)} {currency} ·{' '}
-                  {p.margin_eligible ? d.marginYes : d.marginNo}
-                  <br />
+                  <div className="purchase-entry-heading">
+                    <strong>
+                      {d.reference} P-{p.reference}
+                    </strong>
+                    <span>
+                      {formatOre(p.purchase_price_ore)} {currency}
+                    </span>
+                  </div>
+                  {p.supplier_note && <p>{p.supplier_note}</p>}
                   <small>
                     {new Date(p.purchased_at).toLocaleString(
                       intlLocale(ctx.locale),
-                      { timeZone: 'Europe/Stockholm' },
+                      {
+                        timeZone: 'Europe/Stockholm',
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      },
                     )}{' '}
-                    · {p.evidence_reference}
-                    {p.supplier_note ? ` · ${p.supplier_note}` : ''}
                   </small>
+                  <details className="purchase-evidence">
+                    <summary>{d.evidence}</summary>
+                    <p>{p.evidence_reference}</p>
+                    <p>{p.margin_eligible ? d.marginYes : d.marginNo}</p>
+                  </details>
                   {accepted.has(p.id) ? (
                     <p>
-                      <Link
+                      <NavigationLink
                         className="text-link"
                         href={`/intake/items/${accepted.get(p.id)!.id}`}
                       >
                         {all.items.alreadyAccepted} {all.items.open}
-                      </Link>
+                      </NavigationLink>
                     </p>
                   ) : active.role !== 'readonly' ? (
-                    <AcceptItemForm
-                      tenantId={active.id}
-                      originKind="purchase"
-                      originId={p.id}
-                      originRevision={null}
-                      d={all.items}
-                      intake={all.intake}
-                    />
+                    <details className="purchase-accept">
+                      <summary>{all.items.accept}</summary>
+                      <AcceptItemForm
+                        tenantId={active.id}
+                        originKind="purchase"
+                        originId={p.id}
+                        originRevision={null}
+                        d={all.items}
+                        intake={all.intake}
+                      />
+                    </details>
                   ) : null}
                 </div>
               </li>
@@ -169,3 +187,6 @@ export default async function Purchases({
     </>
   )
 }
+
+export const generateMetadata = () =>
+  platformPageMetadata((d) => d.purchases.title)

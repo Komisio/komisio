@@ -2,7 +2,7 @@ import { defineConfig } from '@playwright/test'
 export default defineConfig({
   testDir: './tests/e2e',
   timeout: 120000,
-  // The dev server compiles a page on its first hit in CI; give expectations room.
+  // Allow asynchronous responses and first-load compilation in local development.
   expect: { timeout: 15000 },
   fullyParallel: false,
   workers: 1,
@@ -21,7 +21,8 @@ export default defineConfig({
       env: { NEXT_PUBLIC_SUPABASE_URL: 'http://127.0.0.1:54321' },
     },
     {
-      command: 'npm run dev',
+      // CI already builds the application; exercise that artifact without recompiling pages.
+      command: process.env.CI ? 'npm run start' : 'npm run dev',
       env: {
         KOMISIO_ZETTLE_FIXTURES: 'true',
         KOMISIO_CREDENTIAL_KEY: 'ab'.repeat(32),

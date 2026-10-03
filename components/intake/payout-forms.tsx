@@ -1,10 +1,11 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import { exactPrice } from '@/lib/engine/manual-reception'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { ReloadAction } from './reload-action'
 
 type D = Dictionary['payouts']
 
@@ -27,10 +28,14 @@ export function PayoutRequestForm({
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
   const [priceError, setPriceError] = useState('')
   const [saved, setSaved] = useState(false)
+  const submittedFields = useRef<FormData | null>(null)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const form = event.currentTarget,
-      f = new FormData(form)
+      f =
+        action.locked && submittedFields.current
+          ? submittedFields.current
+          : new FormData(form)
     setPriceError('')
     let amount: string
     try {
@@ -39,6 +44,7 @@ export function PayoutRequestForm({
       setPriceError(d.amountInvalid)
       return
     }
+    submittedFields.current = f
     if (
       await action.run({
         action: 'requestPayout',
@@ -49,13 +55,19 @@ export function PayoutRequestForm({
       })
     ) {
       setSaved(true)
+      submittedFields.current = null
       setRequestId(crypto.randomUUID())
       form.reset()
       router.refresh()
     }
   }
   return (
-    <form onSubmit={submit}>
+    <form
+      onSubmit={submit}
+      onChange={() => {
+        if (!action.locked) setSaved(false)
+      }}
+    >
       <fieldset
         className="intake-fields"
         disabled={action.busy || action.locked}
@@ -88,6 +100,7 @@ export function PayoutRequestForm({
         </label>
       </fieldset>
       {action.error && <p role="alert">{action.error}</p>}
+      {action.needsReload && <ReloadAction label={intake.reload} />}
       <Button type="submit" disabled={action.busy || action.needsReload}>
         {action.busy ? intake.busy : action.locked ? intake.retry : d.request}
       </Button>
@@ -189,6 +202,7 @@ export function SettlementForm({
         </label>
       </fieldset>
       {action.error && <p role="alert">{action.error}</p>}
+      {action.needsReload && <ReloadAction label={intake.reload} />}
       {!saved && (
         <Button
           type="submit"

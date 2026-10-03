@@ -5,6 +5,7 @@ import type { Dictionary } from '@/lib/i18n'
 import { adjustSellerLedgerCommand } from '@/lib/engine/seller-ledger'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { ReloadAction } from './reload-action'
 
 /** Owner or admin correction of a seller's ledger: a new signed entry with a reason. */
 export function LedgerAdjustForm({
@@ -57,7 +58,12 @@ export function LedgerAdjustForm({
     }
   }
   return (
-    <form onSubmit={submit}>
+    <form
+      onSubmit={submit}
+      onChange={() => {
+        if (!action.locked) setSaved(false)
+      }}
+    >
       <fieldset
         className="intake-fields"
         disabled={action.busy || action.locked}
@@ -88,6 +94,7 @@ export function LedgerAdjustForm({
       <Button type="submit" disabled={action.busy || action.needsReload}>
         {action.busy ? intake.busy : action.locked ? intake.retry : d.adjust}
       </Button>
+      {action.needsReload && <ReloadAction label={intake.reload} />}
       {saved && <p role="status">{d.adjusted}</p>}
     </form>
   )

@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { ReloadAction } from './reload-action'
 
 /** Generates (or confirms) the close for one local day. */
 export function DayCloseForm({
@@ -38,7 +39,12 @@ export function DayCloseForm({
     }
   }
   return (
-    <form onSubmit={submit}>
+    <form
+      onSubmit={submit}
+      onChange={() => {
+        if (!action.locked) setDone(false)
+      }}
+    >
       <fieldset
         className="intake-fields"
         disabled={action.busy || action.locked}
@@ -58,6 +64,7 @@ export function DayCloseForm({
       <Button type="submit" disabled={action.busy || action.needsReload}>
         {action.busy ? intake.busy : action.locked ? intake.retry : d.generate}
       </Button>
+      {action.needsReload && <ReloadAction label={intake.reload} />}
       {done && <p role="status">{d.generated}</p>}
     </form>
   )

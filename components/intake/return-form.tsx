@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { ReloadAction } from './reload-action'
 
 /** Full return of one sale line; the refund equals the line price in P2. */
 export function ReturnForm({
@@ -61,6 +62,7 @@ export function ReturnForm({
         </label>
       </fieldset>
       {action.error && <p role="alert">{action.error}</p>}
+      {action.needsReload && <ReloadAction label={intake.reload} />}
       {!done && (
         <Button type="submit" disabled={action.busy || action.needsReload}>
           {action.busy ? intake.busy : action.locked ? intake.retry : d.record}

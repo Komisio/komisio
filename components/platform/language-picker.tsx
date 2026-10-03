@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useTransition } from 'react'
+import { useEffect, useRef, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { ChevronDown, Check } from 'lucide-react'
 import { locales, localeNames, intlLocale, type Locale } from '@/lib/i18n'
@@ -85,12 +85,26 @@ export function LanguagePicker({
   function close() {
     if (menu.current) menu.current.open = false
   }
+  useEffect(() => {
+    const dismissOutside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !menu.current?.contains(event.target))
+        close()
+    }
+    document.addEventListener('pointerdown', dismissOutside)
+    return () => document.removeEventListener('pointerdown', dismissOutside)
+  }, [])
   return (
     <details
       ref={menu}
       className="language-picker"
       onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) close()
+        // WebKit does not focus buttons on pointer clicks. A null destination
+        // must not hide the option between pointerdown and its click handler.
+        if (
+          event.relatedTarget &&
+          !event.currentTarget.contains(event.relatedTarget)
+        )
+          close()
       }}
       onKeyDown={(event) => {
         if (event.key === 'Escape') {

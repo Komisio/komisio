@@ -876,3 +876,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-03: Reception proposal facts link to numbered, localized source cards. Exact source IDs remain in expandable references; observations, frozen agreement text and approval requirements remain unchanged. Decision buttons wrap on narrow screens.
 
 - 2026-10-03: Quick receiving holds item fields and actions until their handlers attach, matching the existing photo readiness guard. This prevents early typed descriptions from being lost during hydration; item creation, paging and retry identities are unchanged.
+
+- 2026-10-03: Language menus retain options during pointer clicks in browsers that do not focus buttons. Outside pointer actions, keyboard departure and Escape still dismiss the menu; language changes retain existing unsaved-draft confirmation.

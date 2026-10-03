@@ -62,6 +62,12 @@ export function ImportSellers({
     setNeedsReload(false)
     setSource('')
     if (!file) return
+    // Reject obviously oversized files before allocating their decoded contents.
+    // This leaves ample room for multi-byte UTF-8 under the character limit below.
+    if (file.size > 8_000_000) {
+      setMessage(d.fileTooLarge)
+      return
+    }
     try {
       const text = await file.text()
       if (read !== fileRead.current) return

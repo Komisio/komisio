@@ -163,3 +163,54 @@ test('import file selection waits for its client handler', async ({ page }) => {
     await f.close()
   }
 })
+
+test('an oversized import is rejected before decoding and the next file can still be reviewed', async ({
+  page,
+}) => {
+  const email = `import-size-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomUUID()}`)
+  const f = await p2Fixture(email)
+  try {
+    await f.commit()
+    await page.goto('/intake/import')
+    const input = page.locator('#import-file')
+    await expect(input).toBeEnabled()
+    await page.evaluate(() => {
+      const original = File.prototype.text
+      File.prototype.text = function () {
+        if (this.name === 'oversized.csv')
+          throw new Error('Oversized contents must not be decoded')
+        return original.call(this)
+      }
+    })
+    await input.setInputFiles({
+      name: 'oversized.csv',
+      mimeType: 'text/csv',
+      buffer: Buffer.alloc(8_000_001, 120),
+    })
+    await expect(
+      page.locator('.import-workspace').getByRole('alert'),
+    ).toHaveText(d.importer.fileTooLarge)
+    await expect(
+      page.getByRole('button', { name: d.importer.stage, exact: true }),
+    ).toHaveCount(0)
+    await input.setInputFiles({
+      name: 'small.csv',
+      mimeType: 'text/csv',
+      buffer: Buffer.from(
+        'name,email,phone\nSynthetic small import,small@example.test,',
+      ),
+    })
+    await expect(
+      page.getByRole('region', { name: d.importer.preview, exact: true }),
+    ).toContainText('Synthetic small import')
+    await expect(
+      page.locator('.import-workspace').getByRole('alert'),
+    ).toHaveCount(0)
+    await expect(
+      page.getByRole('button', { name: d.importer.stage, exact: true }),
+    ).toBeEnabled()
+  } finally {
+    await f.close()
+  }
+})

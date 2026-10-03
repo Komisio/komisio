@@ -1141,7 +1141,15 @@
     "total": "Gesamt",
     "listHint": "Die 50 neuesten Verkäufe werden angezeigt. Öffnen Sie einen Beleg für Artikel, Rückgaben und Details.",
     "financialDetails": "Provision und Mehrwertsteuer",
-    "reference": "Belegreferenz"
+    "reference": "Belegreferenz",
+    "findReceipt": "Beleg suchen",
+    "receiptSearchHint": "Geben Sie die vollständige Belegreferenz ein, auch für ältere Verkäufe.",
+    "source": "Verkaufsquelle",
+    "allSources": "Alle Quellen",
+    "showLatest": "Neueste anzeigen",
+    "searchResults": "Suchergebnisse",
+    "filteredHint": "Bis zu 50 passende Verkäufe werden angezeigt, die neuesten zuerst.",
+    "noReceipts": "Keine passenden Belege. Prüfen Sie die vollständige Referenz oder wählen Sie eine andere Quelle."
   },
   "ledger": {
     "title": "Guthaben und Konto",

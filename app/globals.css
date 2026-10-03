@@ -3052,6 +3052,33 @@ button.text-link:hover:not(:disabled) {
 .sales-register h2 {
   margin-top: 0;
 }
+.receipt-search {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 12px 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+.receipt-search .field {
+  min-width: 0;
+}
+.receipt-search-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+.receipt-search-actions a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+@media (max-width: 600px) {
+  .receipt-search {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
 .sales-register-list {
   list-style: none;
   padding: 0;

@@ -1141,7 +1141,15 @@
     "total": "Yhteensä",
     "listHint": "Näytetään 50 viimeisintä myyntiä. Avaa kuitti nähdäksesi tuotteet, palautukset ja tiedot.",
     "financialDetails": "Provisio ja arvonlisävero",
-    "reference": "Kuitin viite"
+    "reference": "Kuitin viite",
+    "findReceipt": "Etsi kuitti",
+    "receiptSearchHint": "Anna kuitin koko viite. Haku kattaa myös vanhemmat myynnit.",
+    "source": "Myynnin lähde",
+    "allSources": "Kaikki lähteet",
+    "showLatest": "Näytä uusimmat",
+    "searchResults": "Hakutulokset",
+    "filteredHint": "Näytetään enintään 50 vastaavaa myyntiä, uusimmat ensin.",
+    "noReceipts": "Vastaavia kuitteja ei löytynyt. Tarkista koko viite tai valitse toinen lähde."
   },
   "ledger": {
     "title": "Saldo ja tilikirja",

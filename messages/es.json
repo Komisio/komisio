@@ -1141,7 +1141,15 @@
     "total": "Total",
     "listHint": "Se muestran las 50 ventas más recientes. Abre un recibo para ver artículos, devoluciones y detalles.",
     "financialDetails": "Comisión e IVA",
-    "reference": "Referencia del recibo"
+    "reference": "Referencia del recibo",
+    "findReceipt": "Buscar recibo",
+    "receiptSearchHint": "Introduce la referencia completa del recibo, también para ventas anteriores.",
+    "source": "Origen de la venta",
+    "allSources": "Todos los orígenes",
+    "showLatest": "Mostrar recientes",
+    "searchResults": "Resultados de búsqueda",
+    "filteredHint": "Se muestran hasta 50 ventas coincidentes, las más recientes primero.",
+    "noReceipts": "No hay recibos coincidentes. Comprueba la referencia completa o elige otro origen."
   },
   "ledger": {
     "title": "Saldo y libro",

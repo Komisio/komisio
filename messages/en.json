@@ -1141,7 +1141,15 @@
     "total": "Total",
     "listHint": "The 50 most recent sales are shown. Open a receipt for items, returns and details.",
     "financialDetails": "Commission and VAT",
-    "reference": "Receipt reference"
+    "reference": "Receipt reference",
+    "findReceipt": "Find a receipt",
+    "receiptSearchHint": "Enter the full receipt reference, including for older sales.",
+    "source": "Sales source",
+    "allSources": "All sources",
+    "showLatest": "Show latest",
+    "searchResults": "Search results",
+    "filteredHint": "Up to 50 matching sales are shown, newest first.",
+    "noReceipts": "No receipts match. Check the full reference or choose another source."
   },
   "ledger": {
     "title": "Balance and ledger",

@@ -1141,7 +1141,15 @@
     "total": "Totalt",
     "listHint": "De 50 senaste försäljningarna visas. Öppna ett kvitto för varor, returer och detaljer.",
     "financialDetails": "Provision och moms",
-    "reference": "Kvittoreferens"
+    "reference": "Kvittoreferens",
+    "findReceipt": "Sök kvitto",
+    "receiptSearchHint": "Ange hela kvittoreferensen, även för äldre försäljningar.",
+    "source": "Försäljningskälla",
+    "allSources": "Alla källor",
+    "showLatest": "Visa senaste",
+    "searchResults": "Sökresultat",
+    "filteredHint": "Upp till 50 matchande försäljningar visas, nyaste först.",
+    "noReceipts": "Inga kvitton matchar. Kontrollera hela referensen eller välj en annan källa."
   },
   "ledger": {
     "title": "Saldo",

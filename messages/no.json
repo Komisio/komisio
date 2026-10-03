@@ -1141,7 +1141,15 @@
     "total": "Totalt",
     "listHint": "De 50 siste salgene vises. Åpne en kvittering for varer, returer og detaljer.",
     "financialDetails": "Provisjon og merverdiavgift",
-    "reference": "Kvitteringsreferanse"
+    "reference": "Kvitteringsreferanse",
+    "findReceipt": "Finn kvittering",
+    "receiptSearchHint": "Skriv inn hele kvitteringsreferansen, også for eldre salg.",
+    "source": "Salgskilde",
+    "allSources": "Alle kilder",
+    "showLatest": "Vis nyeste",
+    "searchResults": "Søkeresultater",
+    "filteredHint": "Opptil 50 samsvarende salg vises, nyeste først.",
+    "noReceipts": "Ingen kvitteringer samsvarer. Kontroller hele referansen eller velg en annen kilde."
   },
   "ledger": {
     "title": "Saldo og reskontro",

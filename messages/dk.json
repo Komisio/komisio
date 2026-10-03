@@ -1141,7 +1141,15 @@
     "total": "I alt",
     "listHint": "De 50 seneste salg vises. Åbn en kvittering for varer, returneringer og detaljer.",
     "financialDetails": "Provision og moms",
-    "reference": "Kvitteringsreference"
+    "reference": "Kvitteringsreference",
+    "findReceipt": "Find kvittering",
+    "receiptSearchHint": "Indtast hele kvitteringsreferencen, også for ældre salg.",
+    "source": "Salgskilde",
+    "allSources": "Alle kilder",
+    "showLatest": "Vis seneste",
+    "searchResults": "Søgeresultater",
+    "filteredHint": "Op til 50 matchende salg vises, nyeste først.",
+    "noReceipts": "Ingen kvitteringer matcher. Kontrollér hele referencen, eller vælg en anden kilde."
   },
   "ledger": {
     "title": "Saldo og konto",

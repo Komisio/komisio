@@ -168,3 +168,48 @@ test('a stale manual sale offers a full reload instead of leaving the frozen car
     await f.close()
   }
 })
+
+test('receipt search warns before discarding a manual cart and proceeds after the cart is emptied', async ({
+  page,
+}) => {
+  const { f, item } = await fixture(page)
+  try {
+    const search = page.getByRole('search', { name: d.sales.findReceipt })
+    await search
+      .getByLabel(d.sales.reference, { exact: true })
+      .fill('SYNTHETIC-NO-MATCH')
+    const prompt = page.waitForEvent('dialog')
+    const click = search
+      .getByRole('button', { name: d.sales.findReceipt, exact: true })
+      .click()
+    const dialog = await prompt
+    expect(dialog.type()).toBe('beforeunload')
+    await dialog.dismiss()
+    await click
+    await expect(page.locator(`#price-${item}`)).toHaveValue('150,50')
+    await expect(page).toHaveURL('/intake/sales')
+    await page
+      .getByRole('button', { name: d.sales.remove, exact: true })
+      .click()
+    await expect(page.locator('.sale-cart li')).toHaveCount(0)
+    await search
+      .getByRole('button', { name: d.sales.findReceipt, exact: true })
+      .click()
+    await expect(
+      page.getByText(d.sales.noReceipts, { exact: true }),
+    ).toBeVisible()
+    expect(new URL(page.url()).searchParams.get('reference')).toBe(
+      'SYNTHETIC-NO-MATCH',
+    )
+    expect(
+      (
+        await f.db.query(
+          'select count(*)::int n from sale_lines where tenant_id=$1 and item_id=$2',
+          [f.tenant, item],
+        )
+      ).rows[0].n,
+    ).toBe(0)
+  } finally {
+    await f.close()
+  }
+})

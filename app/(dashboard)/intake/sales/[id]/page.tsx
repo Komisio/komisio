@@ -1,5 +1,9 @@
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
+import {
+  receiptSearch,
+  receiptSearchQuery,
+} from '@/lib/intake/sales-navigation'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
@@ -11,8 +15,10 @@ import { ReturnForm } from '@/components/intake/return-form'
 
 export default async function Sale({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const id = z.uuid().safeParse((await params).id)
@@ -30,6 +36,8 @@ export default async function Sale({
     active.id,
     lines.map((l) => l.id),
   )
+  const search = receiptSearch.safeParse(await searchParams)
+  const back = `/intake/sales${search.success ? receiptSearchQuery(search.data) : ''}`
   const write = active.role !== 'readonly'
   const when = (iso: string) =>
     new Date(iso).toLocaleString(intlLocale(ctx.locale), {
@@ -42,7 +50,7 @@ export default async function Sale({
     })
   return (
     <div className="sale-detail">
-      <Link className="text-link" href="/intake/sales">
+      <Link className="text-link" href={back}>
         {d.backToList}
       </Link>
       <div className="page-heading">

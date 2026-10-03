@@ -1141,7 +1141,15 @@
     "total": "Totale",
     "listHint": "Sono mostrate le 50 vendite più recenti. Apri una ricevuta per articoli, resi e dettagli.",
     "financialDetails": "Commissione e IVA",
-    "reference": "Riferimento ricevuta"
+    "reference": "Riferimento ricevuta",
+    "findReceipt": "Trova ricevuta",
+    "receiptSearchHint": "Inserisci il riferimento completo della ricevuta, anche per le vendite precedenti.",
+    "source": "Origine della vendita",
+    "allSources": "Tutte le origini",
+    "showLatest": "Mostra recenti",
+    "searchResults": "Risultati di ricerca",
+    "filteredHint": "Sono mostrate fino a 50 vendite corrispondenti, dalle più recenti.",
+    "noReceipts": "Nessuna ricevuta corrispondente. Controlla il riferimento completo o scegli un’altra origine."
   },
   "ledger": {
     "title": "Saldo e registro",

@@ -39,6 +39,9 @@
 .help-dialog-heading button {
   flex-shrink: 0;
 }
+.help-article {
+  overflow-wrap: anywhere;
+}
 .help-article li {
   margin-bottom: 16px;
 }
@@ -4192,6 +4195,8 @@ button.text-link:hover:not(:disabled) {
 }
 .form-help-title > h1,
 .form-help-title > h2 {
+  min-width: 0;
+  overflow-wrap: anywhere;
   margin: 0;
 }
 .form-help-toggle {

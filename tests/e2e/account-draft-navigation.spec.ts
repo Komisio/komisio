@@ -105,3 +105,55 @@ test('a confirmed account save releases the draft warning and defines the new ba
     await f.close()
   }
 })
+
+test('account fields wait for their handlers before accepting edits', async ({
+  page,
+}) => {
+  const email = `account-ready-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomUUID()}`)
+  let release!: () => void
+  const scripts = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  try {
+    await page.route(/\/_next\/.*\.js(?:\?.*)?$/, async (route) => {
+      await scripts
+      await route.continue()
+    })
+    await page.goto('/account', { waitUntil: 'commit' })
+    for (const field of [
+      '#profile-name',
+      '#profile-language',
+      '#new-password',
+    ]) {
+      await expect(page.locator(field)).toBeVisible()
+      await expect(page.locator(field)).toBeDisabled()
+    }
+    await expect(
+      page.getByRole('button', { name: d.save, exact: true }),
+    ).toBeDisabled()
+    await expect(
+      page.getByRole('button', { name: d.savePassword, exact: true }),
+    ).toBeDisabled()
+    release()
+    for (const field of ['#profile-name', '#profile-language', '#new-password'])
+      await expect(page.locator(field)).toBeEnabled()
+    await page.locator('#profile-name').fill('Synthetic ready draft')
+    await cancelLeave(
+      page,
+      page.getByRole('link', { name: d.createTenant, exact: true }),
+    )
+    await page.locator('#profile-name').fill('')
+    let warnings = 0
+    page.on('dialog', async (dialog) => {
+      warnings++
+      await dialog.dismiss()
+    })
+    await page.getByRole('link', { name: d.createTenant, exact: true }).click()
+    await expect(page).toHaveURL('/onboarding')
+    expect(warnings).toBe(0)
+  } finally {
+    release()
+    await page.unrouteAll({ behavior: 'wait' })
+  }
+})

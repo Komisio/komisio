@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useRef, useState, useSyncExternalStore } from 'react'
 import { useFormDirty } from './use-form-dirty'
 import { useUnsavedChanges } from './navigation-warning'
 import { useCommand } from './use-command'
@@ -14,6 +14,10 @@ import {
   type Dictionary,
   type Locale,
 } from '@/lib/i18n'
+const subscribe = () => () => {}
+const clientReady = () => true
+const serverReady = () => false
+
 export function AccountForm({
   d,
   name,
@@ -25,14 +29,18 @@ export function AccountForm({
   email: string
   locale: Locale
 }) {
+  const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const action = useCommand(d)
   const [edited, setEdited] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
-  const { dirty, checkDirty, resetDirty } = useFormDirty(formRef)
+  const { dirty, checkDirty, resetDirty } = useFormDirty(formRef, [
+    ['name', name],
+    ['locale', locale],
+  ])
   useUnsavedChanges(dirty ? d.leaveUnsaved : null)
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (action.busy) return
+    if (!ready || action.busy) return
     setEdited(false)
     const form = new FormData(e.currentTarget)
     const result = await action.run(
@@ -68,7 +76,7 @@ export function AccountForm({
           defaultValue={name}
           maxLength={100}
           autoComplete="name"
-          disabled={action.busy}
+          disabled={!ready || action.busy}
         />
       </div>
       <div className="field">
@@ -81,7 +89,7 @@ export function AccountForm({
           id="profile-language"
           name="locale"
           defaultValue={locale}
-          disabled={action.busy}
+          disabled={!ready || action.busy}
         >
           {locales.map((code) => (
             <option key={code} value={code}>
@@ -90,12 +98,13 @@ export function AccountForm({
           ))}
         </select>
       </div>
-      <Button disabled={action.busy}>{d.save}</Button>
+      <Button disabled={!ready || action.busy}>{d.save}</Button>
       <Feedback error={action.error} success={edited ? '' : action.success} />
     </form>
   )
 }
 export function PasswordForm({ d }: { d: Dictionary }) {
+  const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [saved, setSaved] = useState(false)
@@ -104,7 +113,7 @@ export function PasswordForm({ d }: { d: Dictionary }) {
     <form
       onSubmit={async (e) => {
         e.preventDefault()
-        if (busy) return
+        if (!ready || busy) return
         setBusy(true)
         setError('')
         setSaved(false)
@@ -136,13 +145,13 @@ export function PasswordForm({ d }: { d: Dictionary }) {
           minLength={10}
           required
           autoComplete="new-password"
-          disabled={busy}
+          disabled={!ready || busy}
           aria-describedby="new-password-hint"
           onChange={() => setSaved(false)}
         />
         <small id="new-password-hint">{d.passwordHint}</small>
       </div>
-      <Button variant="secondary" disabled={busy}>
+      <Button variant="secondary" disabled={!ready || busy}>
         {d.savePassword}
       </Button>
       <Feedback error={error} success={saved ? d.saved : ''} />

@@ -2,11 +2,16 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 
 /** Compare mounted text/settings fields without persisting their contents. */
-export function useFormDirty(form: RefObject<HTMLFormElement | null>) {
-  const baseline = useRef<string | null>(null)
+export function useFormDirty(
+  form: RefObject<HTMLFormElement | null>,
+  initialFields?: readonly (readonly [string, string])[],
+) {
+  const baseline = useRef<string | null>(
+    initialFields ? JSON.stringify(initialFields) : null,
+  )
   const [dirty, setDirty] = useState(false)
   useEffect(() => {
-    if (form.current)
+    if (form.current && baseline.current === null)
       baseline.current = JSON.stringify([...new FormData(form.current)])
   }, [form])
   function checkDirty() {

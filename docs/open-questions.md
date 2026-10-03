@@ -1,5 +1,11 @@
 # Open questions
 
+Manual plan end dates (2026-10-03): should host activation through a selected
+calendar date expire at the end of that date in Europe/Stockholm, in the store
+timezone, or under another rule? The current form uses a fixed +02:00 offset
+while displaying dates in Europe/Stockholm. Confirm the intended boundary before
+changing access duration; the store-wide UX review leaves this behavior unchanged.
+
 Delivery policy (2026-10-01): owner moves the full CI suite from PRs to main.
 PR review and local verification remain. Staging publication waits for both
 platform and staging-migrations checks; failed main CI leaves the prior

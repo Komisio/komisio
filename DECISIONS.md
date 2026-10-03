@@ -856,3 +856,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-03: Staff can find receipts beyond the latest 50 using the existing exact-reference and provider filters; detail links retain the search. Filtered empty states and list limits are explicit. Sale, return, currency and access rules are unchanged.
 
 - 2026-10-03: Context-help task links close the dialog after navigation is accepted, including same-page sections. Cancelled draft navigation retains help and edits; new-tab links leave the current help open.
+
+- 2026-10-03: Mobile stock summaries use compact label/value rows and a stacked date filter. Current inventory remains separate from period sales; report calculations and read scope are unchanged.

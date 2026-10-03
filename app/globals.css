@@ -3310,6 +3310,7 @@ button.text-link:hover:not(:disabled) {
 }
 .stock-period .field {
   flex: 1 1 180px;
+  margin: 0;
 }
 .stock-sales-metrics {
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -3354,6 +3355,35 @@ button.text-link:hover:not(:disabled) {
   .stock-metrics,
   .stock-sales-metrics {
     grid-template-columns: 1fr;
+  }
+  .stock-metrics > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.75rem;
+    padding: 1rem;
+  }
+  .stock-metrics dt {
+    flex: 1 1 110px;
+  }
+  .stock-metrics dd {
+    margin: 0;
+    max-width: 100%;
+    font-size: 1.125rem;
+  }
+  .stock-metrics small {
+    flex-basis: 100%;
+  }
+  .stock-sales-metrics {
+    gap: 0;
+  }
+  .stock-sales-metrics > div {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .stock-period {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
   }
   .stock-table-wrap {
     overflow: visible;

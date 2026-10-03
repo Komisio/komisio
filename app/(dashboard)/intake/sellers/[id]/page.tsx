@@ -11,7 +11,7 @@ import {
   sellerProfileBody,
 } from '@/lib/engine/seller-profile'
 import { readStoreProfile } from '@/lib/engine/store-profile'
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { Info } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
@@ -863,6 +863,7 @@ export default async function Seller({
                         d={all.sellerDetails}
                         intake={all.intake}
                         storeLanguage={localeNames[storeLanguage]}
+                        leaveUnsaved={all.leaveUnsaved}
                       />
                     </div>
                   </details>

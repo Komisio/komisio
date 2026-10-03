@@ -251,6 +251,7 @@ export default async function SellerPortal({
         handovers={handovers}
         locale={ctx.locale}
         d={d}
+        recovery={all.intake}
       />
       {mine && (
         <section

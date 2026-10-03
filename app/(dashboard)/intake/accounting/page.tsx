@@ -5,7 +5,7 @@ import { ContextHelp } from '@/components/help/context-help'
 import { credentialKeyConfigured } from '@/lib/platform/credentials'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary } from '@/lib/i18n'
+import { dictionary, intlLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { readDayCloses } from '@/lib/engine/day-closes'
 import {
@@ -248,11 +248,14 @@ export default async function Accounting({
                       <summary>{d.details}</summary>
                       <p>
                         {d.debitTotal} {money(e.debit_ore)} ·{' '}
-                        {new Date(e.created_at).toLocaleString(ctx.locale, {
-                          timeZone: 'Europe/Stockholm',
-                          dateStyle: 'medium',
-                          timeStyle: 'short',
-                        })}
+                        {new Date(e.created_at).toLocaleString(
+                          intlLocale(ctx.locale),
+                          {
+                            timeZone: 'Europe/Stockholm',
+                            dateStyle: 'medium',
+                            timeStyle: 'short',
+                          },
+                        )}
                       </p>
                       {!c && <p>{e.day_close_id}</p>}
                     </details>

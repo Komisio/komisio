@@ -1455,7 +1455,12 @@
       "unconfirmed": "toimitusta ei vahvistettu",
       "failed": "toimitus epäonnistui"
     },
-    "dailyCap": "Kaupan vuorokausiraja viesteille on täynnä. Yritä huomenna uudelleen."
+    "dailyCap": "Kaupan vuorokausiraja viesteille on täynnä. Yritä huomenna uudelleen.",
+    "older": "Vanhemmat viestit",
+    "newer": "Uudemmat viestit",
+    "latest": "Uusimmat viestit",
+    "showingRange": "Viestit {from}–{to} / {total}",
+    "pageEmpty": "Tällä sivulla ei ole viestejä."
   },
   "stock": {
     "title": "Varasto",

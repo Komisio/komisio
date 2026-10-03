@@ -1455,7 +1455,12 @@
       "unconfirmed": "entrega no confirmada",
       "failed": "entrega fallida"
     },
-    "dailyCap": "Se alcanzó el límite diario de mensajes de la tienda. Inténtalo mañana."
+    "dailyCap": "Se alcanzó el límite diario de mensajes de la tienda. Inténtalo mañana.",
+    "older": "Mensajes anteriores",
+    "newer": "Mensajes más recientes",
+    "latest": "Últimos mensajes",
+    "showingRange": "Mensajes {from}–{to} de {total}",
+    "pageEmpty": "No hay mensajes en esta página."
   },
   "stock": {
     "title": "Existencias",

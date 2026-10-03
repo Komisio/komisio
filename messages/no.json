@@ -1455,7 +1455,12 @@
       "unconfirmed": "levering ikke bekreftet",
       "failed": "levering mislyktes"
     },
-    "dailyCap": "Butikkens grense for meldinger per døgn er nådd. Prøv igjen i morgen."
+    "dailyCap": "Butikkens grense for meldinger per døgn er nådd. Prøv igjen i morgen.",
+    "older": "Eldre meldinger",
+    "newer": "Nyere meldinger",
+    "latest": "Siste meldinger",
+    "showingRange": "Meldinger {from}–{to} av {total}",
+    "pageEmpty": "Ingen meldinger på denne siden."
   },
   "stock": {
     "title": "Lager",

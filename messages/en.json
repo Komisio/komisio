@@ -1455,7 +1455,12 @@
       "unconfirmed": "delivery not confirmed",
       "failed": "delivery failed"
     },
-    "dailyCap": "The store's daily limit for messages is reached. Try again tomorrow."
+    "dailyCap": "The store's daily limit for messages is reached. Try again tomorrow.",
+    "older": "Older messages",
+    "newer": "Newer messages",
+    "latest": "Latest messages",
+    "showingRange": "Messages {from}–{to} of {total}",
+    "pageEmpty": "No messages on this page."
   },
   "stock": {
     "title": "Stock",

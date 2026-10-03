@@ -1455,7 +1455,12 @@
       "unconfirmed": "Zustellung nicht bestätigt",
       "failed": "Zustellung fehlgeschlagen"
     },
-    "dailyCap": "Das Tageslimit des Stores für Nachrichten ist erreicht. Versuchen Sie es morgen erneut."
+    "dailyCap": "Das Tageslimit des Stores für Nachrichten ist erreicht. Versuchen Sie es morgen erneut.",
+    "older": "Ältere Nachrichten",
+    "newer": "Neuere Nachrichten",
+    "latest": "Neueste Nachrichten",
+    "showingRange": "Nachrichten {from}–{to} von {total}",
+    "pageEmpty": "Keine Nachrichten auf dieser Seite."
   },
   "stock": {
     "title": "Bestand",

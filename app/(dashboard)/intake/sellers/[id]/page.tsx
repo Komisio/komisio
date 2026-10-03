@@ -12,6 +12,7 @@ import {
 } from '@/lib/engine/seller-profile'
 import { readStoreProfile } from '@/lib/engine/store-profile'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
+import HistoryLink from 'next/link'
 import { Info } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
@@ -30,7 +31,7 @@ import {
 } from '@/components/intake/payout-forms'
 import { StatementForm } from '@/components/intake/statement-form'
 import { readSellerStatements } from '@/lib/engine/statements'
-import { readSellerCommunications } from '@/lib/engine/communications'
+import { readSellerCommunicationHistory } from '@/lib/engine/communications'
 import { readPayouts } from '@/lib/engine/payouts'
 import { readItems } from '@/lib/engine/items'
 import { CommunicationForm } from '@/components/intake/communication-form'
@@ -61,6 +62,13 @@ export default async function Seller({
     .max(1000000)
     .safeParse(query.ledgerPage ?? 0)
   if (!ledgerPageValue.success) notFound()
+  const messagePageValue = z.coerce
+    .number()
+    .int()
+    .min(0)
+    .max(1000000)
+    .safeParse(query.messagesPage ?? 0)
+  if (!messagePageValue.success) notFound()
   const ctx = await requirePlatform(),
     tenant = ctx.active!,
     currency = await readStoreCurrency(ctx.client, tenant.id),
@@ -80,7 +88,7 @@ export default async function Seller({
     balance,
     ledger,
     statements,
-    communications,
+    communicationHistory,
     payouts,
     items,
   ] = await Promise.all([
@@ -94,11 +102,17 @@ export default async function Seller({
       ledgerPageValue.data,
     ),
     readSellerStatements(ctx.client, tenant.id, id.data),
-    readSellerCommunications(ctx.client, tenant.id, id.data),
+    readSellerCommunicationHistory(
+      ctx.client,
+      tenant.id,
+      id.data,
+      messagePageValue.data,
+    ),
     readPayouts(ctx.client, tenant.id, id.data),
     readItems(ctx.client, tenant.id, id.data),
   ])
   const w = all.sellerWorkspace
+  const communications = communicationHistory.items
   // The overview remains newest-first even while the economy tab shows older history.
   const recentLedger =
     ledger.page === 0
@@ -113,6 +127,13 @@ export default async function Seller({
   if (!pageValue.success) notFound()
   const itemsPage = pageValue.data
   const sellerPath = '/intake/sellers/' + id.data
+  function messagePageHref(page: number) {
+    const next = new URLSearchParams()
+    for (const key of ['ledgerPage', 'itemsPage', 'older', 'newer'])
+      if (typeof query[key] === 'string') next.set(key, query[key])
+    next.set('messagesPage', String(page))
+    return `${sellerPath}?${next}#seller-communication`
+  }
   const [dropoffs, dropoffCount, workspaceItems, agreement] = await Promise.all(
     [
       readBagQueue(ctx.client, tenant.id, {
@@ -783,13 +804,43 @@ export default async function Seller({
                       />
                     </>
                   )}
-                  {communications.length === 0 ? (
+                  {communicationHistory.total === 0 ? (
                     <p>{c.empty}</p>
                   ) : (
-                    <details className="seller-message-history" open={!write}>
+                    <details
+                      className="seller-message-history"
+                      open={!write || query.messagesPage !== undefined}
+                    >
                       <summary>
-                        {c.title} ({communications.length})
+                        {c.title} ({communicationHistory.total})
                       </summary>
+                      {communications.length > 0 ? (
+                        <p>
+                          {c.showingRange
+                            .replace(
+                              '{from}',
+                              String(
+                                communicationHistory.page *
+                                  communicationHistory.limit +
+                                  1,
+                              ),
+                            )
+                            .replace(
+                              '{to}',
+                              String(
+                                communicationHistory.page *
+                                  communicationHistory.limit +
+                                  communications.length,
+                              ),
+                            )
+                            .replace(
+                              '{total}',
+                              String(communicationHistory.total),
+                            )}
+                        </p>
+                      ) : (
+                        <p>{c.pageEmpty}</p>
+                      )}
                       {communications.map((m) => (
                         <details key={m.id}>
                           <summary>
@@ -810,6 +861,42 @@ export default async function Seller({
                           </pre>
                         </details>
                       ))}
+                      {(communicationHistory.page > 0 ||
+                        communicationHistory.total >
+                          communicationHistory.limit) && (
+                        <nav className="row wrap" aria-label={c.title}>
+                          {communicationHistory.page > 0 && (
+                            <HistoryLink
+                              className="btn btn-secondary"
+                              href={messagePageHref(
+                                communicationHistory.page - 1,
+                              )}
+                            >
+                              {c.newer}
+                            </HistoryLink>
+                          )}
+                          {(communicationHistory.page + 1) *
+                            communicationHistory.limit <
+                            communicationHistory.total && (
+                            <HistoryLink
+                              className="btn btn-secondary"
+                              href={messagePageHref(
+                                communicationHistory.page + 1,
+                              )}
+                            >
+                              {c.older}
+                            </HistoryLink>
+                          )}
+                          {communicationHistory.page > 1 && (
+                            <HistoryLink
+                              className="text-link"
+                              href={messagePageHref(0)}
+                            >
+                              {c.latest}
+                            </HistoryLink>
+                          )}
+                        </nav>
+                      )}
                     </details>
                   )}
                 </div>

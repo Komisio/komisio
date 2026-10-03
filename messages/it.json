@@ -1455,7 +1455,12 @@
       "unconfirmed": "consegna non confermata",
       "failed": "consegna fallita"
     },
-    "dailyCap": "Il limite giornaliero di messaggi del negozio è stato raggiunto. Riprova domani."
+    "dailyCap": "Il limite giornaliero di messaggi del negozio è stato raggiunto. Riprova domani.",
+    "older": "Messaggi precedenti",
+    "newer": "Messaggi più recenti",
+    "latest": "Ultimi messaggi",
+    "showingRange": "Messaggi {from}–{to} di {total}",
+    "pageEmpty": "Nessun messaggio in questa pagina."
   },
   "stock": {
     "title": "Magazzino",

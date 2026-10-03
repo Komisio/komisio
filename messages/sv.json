@@ -1455,7 +1455,12 @@
       "unconfirmed": "leverans ej bekräftad",
       "failed": "leverans misslyckades"
     },
-    "dailyCap": "Butikens gräns för meddelanden per dygn är nådd. Försök igen i morgon."
+    "dailyCap": "Butikens gräns för meddelanden per dygn är nådd. Försök igen i morgon.",
+    "older": "Äldre meddelanden",
+    "newer": "Nyare meddelanden",
+    "latest": "Senaste meddelandena",
+    "showingRange": "Meddelanden {from}–{to} av {total}",
+    "pageEmpty": "Inga meddelanden på den här sidan."
   },
   "stock": {
     "title": "Lager",

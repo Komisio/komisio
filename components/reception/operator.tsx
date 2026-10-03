@@ -16,6 +16,8 @@ import {
   type ReceptionReviewField,
 } from '@/lib/engine/reception-fact-review'
 import { Button } from '@/components/ui/button'
+import { useFormDirty } from '@/components/platform/use-form-dirty'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 type D = Dictionary['reception']
 function useWrite(d: D) {
   const [busy, setBusy] = useState(false),
@@ -60,6 +62,12 @@ function useWrite(d: D) {
       ) {
         setError(d.linkUncertain)
         setReload(true)
+        return null
+      }
+      const requestId = (pending.current.body as { requestId: string })
+        .requestId
+      if (result?.id !== requestId) {
+        setError(d.retry)
         return null
       }
       pending.current = null
@@ -151,6 +159,7 @@ export function ReceptionObservation({
   sources,
   initial,
   d,
+  leaveUnsaved,
 }: {
   tenantId: string
   sessionId: string
@@ -163,18 +172,31 @@ export function ReceptionObservation({
     rationale: string
   } | null
   d: D
+  leaveUnsaved: string
 }) {
   const action = useWrite(d),
     [invalid, setInvalid] = useState('')
+  const formRef = useRef<HTMLFormElement>(null)
+  const submittedFields = useRef<FormData | null>(null)
+  const { dirty, checkDirty, resetDirty } = useFormDirty(formRef)
+  const [refreshing, refresh] = useTransition()
+  useUnsavedChanges(dirty || action.locked ? leaveUnsaved : null)
+  function saved() {
+    resetDirty(submittedFields.current ?? undefined)
+    refresh(() => action.router.refresh())
+  }
   return (
     <form
+      ref={formRef}
+      onChange={checkDirty}
       className="intake-form"
       onSubmit={async (e) => {
         e.preventDefault()
+        if (refreshing || action.busy || action.reload) return
         setInvalid('')
         if (action.locked) {
           const result = await action.run('/api/intake', {})
-          if (result) action.router.refresh()
+          if (result) saved()
           return
         }
         const form = new FormData(e.currentTarget)
@@ -195,6 +217,7 @@ export function ReceptionObservation({
           setInvalid(d.invalid)
           return
         }
+        submittedFields.current = form
         const result = await action.run('/api/intake', {
           action: 'saveReceptionSources',
           tenantId,
@@ -203,10 +226,13 @@ export function ReceptionObservation({
           expectedRevision: revision,
           sources: next,
         })
-        if (result) action.router.refresh()
+        if (result) saved()
       }}
     >
-      <fieldset disabled={action.locked} className="reception-fields">
+      <fieldset
+        disabled={action.locked || refreshing}
+        className="reception-fields"
+      >
         <div className="field">
           <label htmlFor="garment-description">{d.description}</label>
           <textarea
@@ -251,7 +277,7 @@ export function ReceptionObservation({
         </div>
       </fieldset>
       <p>{d.sourceNotice}</p>
-      <Button disabled={action.busy || action.reload}>
+      <Button disabled={action.busy || action.reload || refreshing}>
         {action.locked ? d.retryButton : d.saveSources}
       </Button>
       {invalid && <p role="alert">{invalid}</p>}

@@ -3017,5 +3017,6 @@
   "showPassword": "Näytä salasana",
   "hidePassword": "Piilota salasana",
   "reviewRetryApprove": "Yritä hyväksymistä uudelleen",
-  "reviewRetryDecline": "Yritä hylkäämistä uudelleen"
+  "reviewRetryDecline": "Yritä hylkäämistä uudelleen",
+  "copyLinkFailed": "Kopiointi epäonnistui. Linkki on valittu, jotta voit kopioida sen käsin."
 }

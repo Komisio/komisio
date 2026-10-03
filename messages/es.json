@@ -3017,5 +3017,6 @@
   "showPassword": "Mostrar contraseña",
   "hidePassword": "Ocultar contraseña",
   "reviewRetryApprove": "Reintentar la aprobación",
-  "reviewRetryDecline": "Reintentar el rechazo"
+  "reviewRetryDecline": "Reintentar el rechazo",
+  "copyLinkFailed": "No se pudo copiar. El enlace está seleccionado para que puedas copiarlo manualmente."
 }

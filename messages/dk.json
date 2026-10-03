@@ -3011,5 +3011,6 @@
   "showPassword": "Vis adgangskode",
   "hidePassword": "Skjul adgangskode",
   "reviewRetryApprove": "Prøv at godkende igen",
-  "reviewRetryDecline": "Prøv at afvise igen"
+  "reviewRetryDecline": "Prøv at afvise igen",
+  "copyLinkFailed": "Kopiering mislykkedes. Linket er markeret, så du kan kopiere det manuelt."
 }

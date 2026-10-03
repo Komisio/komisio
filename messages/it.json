@@ -3011,5 +3011,6 @@
   "showPassword": "Mostra password",
   "hidePassword": "Nascondi password",
   "reviewRetryApprove": "Riprova l'approvazione",
-  "reviewRetryDecline": "Riprova il rifiuto"
+  "reviewRetryDecline": "Riprova il rifiuto",
+  "copyLinkFailed": "Copia non riuscita. Il link è selezionato per consentirti di copiarlo manualmente."
 }

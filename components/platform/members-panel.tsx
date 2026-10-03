@@ -31,6 +31,8 @@ export function MembersPanel({
   const [inviteUrl, setInviteUrl] = useState('')
   const [delivery, setDelivery] = useState('manual')
   const [copied, setCopied] = useState(false)
+  const [copyError, setCopyError] = useState('')
+  const inviteInput = useRef<HTMLInputElement>(null)
   const [change, setChange] = useState<{
     userId: string
     role: Role | null
@@ -48,6 +50,8 @@ export function MembersPanel({
   async function invite(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setInviteUrl('')
+    setCopied(false)
+    setCopyError('')
     const form = new FormData(e.currentTarget)
     const result = await action.run({
       action: 'invite',
@@ -121,6 +125,7 @@ export function MembersPanel({
                       : d.inviteDelivery}
               </p>
               <input
+                ref={inviteInput}
                 value={inviteUrl}
                 readOnly
                 aria-label={d.inviteReady}
@@ -129,17 +134,22 @@ export function MembersPanel({
               <Button
                 variant="ghost"
                 onClick={async () => {
+                  setCopied(false)
+                  setCopyError('')
                   try {
                     await navigator.clipboard.writeText(inviteUrl)
                     setCopied(true)
                   } catch {
-                    setCopied(false)
+                    setCopyError(d.copyLinkFailed)
+                    inviteInput.current?.focus()
+                    inviteInput.current?.select()
                   }
                 }}
               >
                 <Copy size={14} />
                 {copied ? d.copied : d.copyLink}
               </Button>
+              {copyError && <p role="alert">{copyError}</p>}
             </div>
           )}
         </section>

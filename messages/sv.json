@@ -3011,5 +3011,6 @@
   "showPassword": "Visa lösenord",
   "hidePassword": "Dölj lösenord",
   "reviewRetryApprove": "Försök godkänna igen",
-  "reviewRetryDecline": "Försök avvisa igen"
+  "reviewRetryDecline": "Försök avvisa igen",
+  "copyLinkFailed": "Det gick inte att kopiera. Länken är markerad så att du kan kopiera den manuellt."
 }

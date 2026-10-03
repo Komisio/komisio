@@ -1065,7 +1065,7 @@ button.text-link:hover:not(:disabled) {
 @media (forced-colors: active) {
   /* System color modes remove the selected background. Keep selection and
      keyboard focus distinct without changing the navigation's dimensions. */
-  .nav-link[aria-current='page'] {
+  .nav-link[aria-current] {
     outline: 1px solid currentColor;
     outline-offset: -3px;
   }

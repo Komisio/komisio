@@ -11,6 +11,7 @@ import {
   currentLink,
   isActivePath,
   mobileNavigation,
+  mobileCurrentPath,
 } from '@/lib/platform/navigation'
 import { Brand } from './brand'
 import { Button } from '@/components/ui/button'
@@ -50,6 +51,7 @@ export function Shell({
   const confirmNavigation = useConfirmNavigation()
   const groups = buildNavigation(d, { intakeEnabled, host })
   const mobile = mobileNavigation(d, intakeEnabled)
+  const mobileActive = mobileCurrentPath(pathname, mobile)
   const current = currentLink(groups, pathname)
   const mobileNav = useRef<HTMLElement>(null)
   function revealFocusedControl(event: FocusEvent<HTMLElement>) {
@@ -224,8 +226,14 @@ export function Shell({
           <Link
             key={path}
             href={path}
-            className={`nav-link ${isActive(path) ? 'active' : ''}`}
-            aria-current={isActive(path) ? 'page' : undefined}
+            className={`nav-link ${mobileActive === path ? 'active' : ''}`}
+            aria-current={
+              mobileActive === path
+                ? pathname === path
+                  ? 'page'
+                  : 'location'
+                : undefined
+            }
           >
             <NavIcon name={icon} size={19} />
             {label}

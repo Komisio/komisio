@@ -68,7 +68,20 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
     await sellers.focus()
     await page.keyboard.press('Enter')
     await expect(page).toHaveURL(/\/intake\/sellers$/)
+    const mobileCurrent = page.locator('.mobile-nav [aria-current]')
+    await expect(mobileCurrent).toHaveCount(1)
+    await expect(mobileCurrent).toHaveAttribute('href', '/menu')
+    await expect(mobileCurrent).toHaveAttribute('aria-current', 'location')
+    await page.goto('/intake')
+    await expect(mobileCurrent).toHaveCount(1)
+    await expect(mobileCurrent).toHaveAttribute('href', '/intake/quick')
+    await expect(mobileCurrent).toHaveAttribute('aria-current', 'location')
     await page.setViewportSize({ width: 1440, height: 1000 })
+    await expect(page.locator('.sidebar-nav [aria-current]')).toHaveCount(1)
+    await expect(page.locator('.sidebar-nav [aria-current]')).toHaveAttribute(
+      'href',
+      '/intake',
+    )
     await page.goto('/menu')
     await expect(page.locator('main a[href="/settings"]')).toBeVisible()
     expect(

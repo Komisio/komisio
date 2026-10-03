@@ -125,8 +125,24 @@ export function isActivePath(pathname: string, path: string) {
   )
     return true
   if (path === '/intake')
-    return pathname === '/intake' || pathname.startsWith('/intake/bags')
+    return (
+      pathname === '/intake' ||
+      pathname === '/intake/bags' ||
+      pathname.startsWith('/intake/bags/')
+    )
   return pathname === path || pathname.startsWith(`${path}/`)
+}
+
+/** The compact bar groups both receiving forms; other destinations live under More. */
+export function mobileCurrentPath(pathname: string, links: NavLink[]) {
+  const direct = links.find((link) => isActivePath(pathname, link.path))
+  if (direct) return direct.path
+  if (
+    links.some((link) => link.path === '/intake/quick') &&
+    isActivePath(pathname, '/intake')
+  )
+    return '/intake/quick'
+  return links.find((link) => link.path === '/menu')?.path ?? null
 }
 
 /** The link that best describes the current page, for the breadcrumb. */

@@ -169,7 +169,12 @@ test('a lost reset reply freezes the editor and a reload shows the built-in layo
     })
     await e.reset.click()
     await expectFrozen(e)
-    expect(lost.real()!.body).toEqual({ ok: true, id: true, notifications: [] })
+    expect(lost.real()!.body).toEqual({
+      ok: true,
+      commandId: lost.seen[0].requestId,
+      id: true,
+      notifications: [],
+    })
     expect((await versions(f)).map((v) => [v.version, v.active])).toEqual([
       [1, true],
       [2, false],

@@ -878,3 +878,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-03: Quick receiving holds item fields and actions until their handlers attach, matching the existing photo readiness guard. This prevents early typed descriptions from being lost during hydration; item creation, paging and retry identities are unchanged.
 
 - 2026-10-03: Language menus retain options during pointer clicks in browsers that do not focus buttons. Outside pointer actions, keyboard departure and Escape still dismiss the menu; language changes retain existing unsaved-draft confirmation.
+
+- 2026-10-03: CI browser tests use the production artifact built earlier in the job; local tests retain the development server. Per-test progress is logged. Test coverage, isolation, the 35-minute timeout and staging release gates remain unchanged.

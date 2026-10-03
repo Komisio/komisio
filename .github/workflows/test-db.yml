@@ -42,7 +42,7 @@ jobs:
       - run: npm run test:mcp
       - run: npm run test:seller-photos
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
+      - run: npm run test:e2e -- --reporter=list
       - run: npm run test:assistance
       - run: npm run test:zettle-automation
       - run: npm run test:fortnox-automation

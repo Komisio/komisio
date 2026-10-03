@@ -2119,6 +2119,10 @@ test('operator reception guides saved evidence, exact review and link replacemen
   ).not.toHaveValue(firstLink)
   await page.getByRole('button', { name: 'Återkalla länken' }).click()
   await expect(page.getByLabel('Länk till säljarens granskning')).toHaveCount(0)
+  // The local link clears when the request starts; wait for confirmed revocation.
+  await expect(
+    page.getByRole('button', { name: 'Återkalla länken' }),
+  ).toHaveCount(0)
   await page.reload()
   await expect(page.getByLabel('Beskrivning', { exact: true })).toHaveValue(
     'Blue operator TEST jacket',

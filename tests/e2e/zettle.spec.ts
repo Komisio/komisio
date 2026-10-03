@@ -194,6 +194,8 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
           'Synthetic price update',
         ]),
       )
+      // Finish the command's server refresh before starting an independent reload.
+      await page.waitForLoadState('networkidle')
       await page.reload()
       await page
         .getByText(`PayPal POS · ${d.integrationPage.manage}`, { exact: true })

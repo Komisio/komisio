@@ -305,7 +305,9 @@ test('review retry controls remain visible and readable on a phone in every lang
       const bounds = (await retry.boundingBox())!
       expect(bounds.x).toBeGreaterThanOrEqual(0)
       expect(bounds.x + bounds.width).toBeLessThanOrEqual(320)
-      expect(bounds.height).toBeGreaterThanOrEqual(44)
+      await expect(retry).toHaveCSS('min-height', '44px')
+      // Firefox may report a fractional coordinate just below the CSS size.
+      expect(bounds.height).toBeGreaterThanOrEqual(43.99)
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth),
       ).toBeLessThanOrEqual(320)

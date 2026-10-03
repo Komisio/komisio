@@ -21,9 +21,18 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
     })
     for (const width of [320, 390, 768, 1280]) {
       await page.setViewportSize({ width, height: 900 })
-      expect((await newSeller.boundingBox())!.height).toBeGreaterThanOrEqual(44)
+      // Firefox geometry can differ from the exact CSS size by a subpixel.
+      await expect(newSeller).toHaveCSS('min-height', '44px')
+      expect((await newSeller.boundingBox())!.height).toBeGreaterThanOrEqual(
+        43.99,
+      )
       const choice = page.getByRole('button', { name: /Synthetic P2 seller/ })
-      expect((await choice.boundingBox())!.height).toBeGreaterThanOrEqual(44)
+      expect(
+        await choice.evaluate((element) =>
+          parseFloat(getComputedStyle(element).minHeight),
+        ),
+      ).toBeGreaterThanOrEqual(44)
+      expect((await choice.boundingBox())!.height).toBeGreaterThanOrEqual(43.99)
       expect(
         await page.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth,
@@ -152,7 +161,10 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
       .getByRole('link', { name: /Snabb jacka/ })
       .first()
       .click()
-    await expect(page.getByText('250.00 SEK').first()).toBeVisible()
+    // The list already contains this price; wait for the destination's own view.
+    await expect(page.locator('.item-detail-price strong')).toHaveText(
+      '250.00 SEK',
+    )
     await page.goto('/intake/quick')
     await page
       .getByLabel(d.quickIntake.searchSeller, { exact: true })

@@ -356,6 +356,7 @@ export default async function Settings({
               dpi={previewDpi}
               d={pr}
               intake={d.intake}
+              leaveUnsaved={d.leaveUnsaved}
             />
           )}
           <p>

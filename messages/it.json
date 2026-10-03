@@ -1717,7 +1717,8 @@
     "browserPrint": "Stampa etichetta",
     "browserUnavailable": "L’etichetta non è disponibile al momento. Torna all’articolo e riprova.",
     "printerUncertain": "Non è stato possibile confermare la modifica della stampante. Ricarica la pagina e controlla le impostazioni salvate prima di continuare.",
-    "formatUncertain": "Non è stato possibile confermare la dimensione dell’etichetta. Ricarica la pagina e verifica la dimensione salvata prima di continuare."
+    "formatUncertain": "Non è stato possibile confermare la dimensione dell’etichetta. Ricarica la pagina e verifica la dimensione salvata prima di continuare.",
+    "discardTemplate": "Scartare le modifiche non salvate al modello di etichetta?"
   },
   "purchases": {
     "title": "Acquisti",

@@ -1717,7 +1717,8 @@
     "browserPrint": "Udskriv etiket",
     "browserUnavailable": "Etiketten kan ikke vises lige nu. Gå tilbage til varen og prøv igen.",
     "printerUncertain": "Ændringen af printeren kunne ikke bekræftes. Genindlæs siden, og kontrollér de gemte indstillinger, før du fortsætter.",
-    "formatUncertain": "Etiketstørrelsen kunne ikke bekræftes. Genindlæs siden, og kontrollér den gemte størrelse, før du fortsætter."
+    "formatUncertain": "Etiketstørrelsen kunne ikke bekræftes. Genindlæs siden, og kontrollér den gemte størrelse, før du fortsætter.",
+    "discardTemplate": "Kassér ikke-gemte ændringer i etiketskabelonen?"
   },
   "purchases": {
     "title": "Indkøb",

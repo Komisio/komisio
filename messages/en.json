@@ -1717,7 +1717,8 @@
     "browserPrint": "Print label",
     "browserUnavailable": "The label is unavailable right now. Return to the item and try again.",
     "printerUncertain": "The printer change could not be confirmed. Reload the page and check the saved settings before continuing.",
-    "formatUncertain": "The label size could not be confirmed. Reload the page and check the saved size before continuing."
+    "formatUncertain": "The label size could not be confirmed. Reload the page and check the saved size before continuing.",
+    "discardTemplate": "Discard unsaved changes to the label template?"
   },
   "purchases": {
     "title": "Purchases",

@@ -126,6 +126,10 @@ test('template edits discard stale preview replies and clear an obsolete image',
     await preview.click()
     await expect(editor.getByRole('img')).toHaveAttribute('src', image)
     expect(requests).toEqual([before, after])
+    page.once('dialog', async (dialog) => {
+      expect(dialog.message()).toBe(d.printing.discardTemplate)
+      await dialog.accept()
+    })
     await editor
       .getByRole('button', { name: d.printing.copyBuiltin, exact: true })
       .click()

@@ -167,6 +167,7 @@ test('the label template editor fits a 320px phone in every language and keeps t
         await summary.click()
         await expect(zpl).toBeVisible()
         await expect(zpl).toHaveValue('^XA^FDsynthetic^FS^XZ')
+        await zpl.fill('')
       })
     }
     // Desktop keeps the editor and the preview side by side.

@@ -9,6 +9,7 @@ import {
   setLabelTemplateCommand,
   type LabelTemplates,
 } from '@/lib/engine/printing'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 import { placeholders } from '@/lib/labels/placeholders'
 
 const kinds = ['bag', 'garment', 'item', 'markdown', 'onboarding'] as const
@@ -57,6 +58,7 @@ export function LabelTemplatesForm({
   dpi,
   d,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   templates: LabelTemplates
@@ -65,8 +67,10 @@ export function LabelTemplatesForm({
   dpi: 203 | 300 | 600
   d: Dictionary['printing']
   intake: Dictionary['intake']
+  leaveUnsaved: string
 }) {
   const [kind, setKind] = useState<Kind>('item')
+  const [dirty, setDirty] = useState(false)
   // Switching kind remounts the editor; while its outcome is unresolved that
   // would discard the identity and the unsaved text, so the switch waits.
   const [frozen, setFrozen] = useState(false)
@@ -86,7 +90,8 @@ export function LabelTemplatesForm({
           value={kind}
           disabled={frozen}
           onChange={(e) => {
-            if (!frozen) setKind(e.target.value as Kind)
+            if (!frozen && (!dirty || window.confirm(d.discardTemplate)))
+              setKind(e.target.value as Kind)
           }}
         >
           {kinds.map((k) => (
@@ -109,6 +114,8 @@ export function LabelTemplatesForm({
         dpi={dpi}
         d={d}
         intake={intake}
+        leaveUnsaved={leaveUnsaved}
+        onDirty={setDirty}
         onFrozen={setFrozen}
       />
     </details>
@@ -124,7 +131,9 @@ function TemplateEditor({
   dpi,
   d,
   intake,
+  leaveUnsaved,
   onFrozen,
+  onDirty,
 }: {
   tenantId: string
   kind: Kind
@@ -134,12 +143,23 @@ function TemplateEditor({
   dpi: 203 | 300 | 600
   d: Dictionary['printing']
   intake: Dictionary['intake']
+  leaveUnsaved: string
+  onDirty: (dirty: boolean) => void
   onFrozen: (frozen: boolean) => void
 }) {
   const router = useRouter()
   const running = useRef(false)
   const [name, setName] = useState(current?.name ?? d.templateDefaultName)
   const [zpl, setZpl] = useState(current?.zpl ?? '')
+  const [confirmed, setConfirmed] = useState({
+    name: current?.name ?? d.templateDefaultName,
+    zpl: current?.zpl ?? '',
+  })
+  const dirty = name !== confirmed.name || zpl !== confirmed.zpl
+  useEffect(() => {
+    onDirty(dirty)
+    return () => onDirty(false)
+  }, [dirty, onDirty])
   const [preview, setPreview] = useState<string | null>(null)
   const previewRevision = useRef(0)
   const [previewing, setPreviewing] = useState(false)
@@ -154,6 +174,7 @@ function TemplateEditor({
   // The parent's kind switch remounts this editor; while a command is in
   // flight or unresolved that would discard its outcome, so it waits too.
   const locked = busy || frozen
+  useUnsavedChanges(canEdit && (dirty || locked) ? leaveUnsaved : null)
   useEffect(() => {
     onFrozen(locked)
     return () => onFrozen(false)
@@ -265,6 +286,7 @@ function TemplateEditor({
     }
     const saved = await send('save', candidate.data, savedTemplate)
     if (saved && saved.kind === kind) {
+      setConfirmed({ name, zpl })
       setMessage(d.templateSaved)
       router.refresh()
     } else if (saved) {
@@ -284,12 +306,14 @@ function TemplateEditor({
     const done = await send('reset', candidate.data, resetTemplate)
     if (done === true) {
       editTemplate('')
+      setConfirmed({ name, zpl: '' })
       setMessage(d.templateReset)
       router.refresh()
     } else if (done === false) {
       // Confirmed: nothing was active any more, someone else already restored
       // the built-in layout. Show the store's state, not this page's memory.
       editTemplate('')
+      setConfirmed({ name, zpl: '' })
       setMessage(d.templateBuiltinHint)
       router.refresh()
     }
@@ -356,7 +380,14 @@ function TemplateEditor({
                 variant="secondary"
                 disabled={busy || frozen}
                 onClick={() => {
-                  if (!busy && !frozen) editTemplate(builtin)
+                  if (
+                    !busy &&
+                    !frozen &&
+                    (zpl === confirmed.zpl ||
+                      zpl === builtin ||
+                      window.confirm(d.discardTemplate))
+                  )
+                    editTemplate(builtin)
                 }}
               >
                 {d.copyBuiltin}

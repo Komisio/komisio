@@ -1717,7 +1717,8 @@
     "browserPrint": "Tulosta etiketti",
     "browserUnavailable": "Etikettiä ei voi näyttää juuri nyt. Palaa tuotteeseen ja yritä uudelleen.",
     "printerUncertain": "Tulostimen muutosta ei voitu vahvistaa. Lataa sivu uudelleen ja tarkista tallennetut asetukset ennen kuin jatkat.",
-    "formatUncertain": "Etiketin kokoa ei voitu vahvistaa. Lataa sivu uudelleen ja tarkista tallennettu koko ennen kuin jatkat."
+    "formatUncertain": "Etiketin kokoa ei voitu vahvistaa. Lataa sivu uudelleen ja tarkista tallennettu koko ennen kuin jatkat.",
+    "discardTemplate": "Hylätäänkö etikettimallin tallentamattomat muutokset?"
   },
   "purchases": {
     "title": "Ostot",

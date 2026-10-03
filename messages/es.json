@@ -1717,7 +1717,8 @@
     "browserPrint": "Imprimir etiqueta",
     "browserUnavailable": "La etiqueta no está disponible ahora. Vuelve al artículo e inténtalo de nuevo.",
     "printerUncertain": "No se pudo confirmar el cambio de la impresora. Recarga la página y comprueba la configuración guardada antes de continuar.",
-    "formatUncertain": "No se pudo confirmar el tamaño de la etiqueta. Recarga la página y comprueba el tamaño guardado antes de continuar."
+    "formatUncertain": "No se pudo confirmar el tamaño de la etiqueta. Recarga la página y comprueba el tamaño guardado antes de continuar.",
+    "discardTemplate": "¿Descartar los cambios sin guardar de la plantilla de etiquetas?"
   },
   "purchases": {
     "title": "Compras",

@@ -1717,7 +1717,8 @@
     "browserPrint": "Skriv ut etikett",
     "browserUnavailable": "Etiketten kan ikke vises akkurat nå. Gå tilbake til varen og prøv igjen.",
     "printerUncertain": "Kunne ikke bekrefte endringen av skriveren. Last inn siden på nytt og kontroller de lagrede innstillingene før du fortsetter.",
-    "formatUncertain": "Etikettstørrelsen kunne ikke bekreftes. Last siden på nytt og kontroller den lagrede størrelsen før du fortsetter."
+    "formatUncertain": "Etikettstørrelsen kunne ikke bekreftes. Last siden på nytt og kontroller den lagrede størrelsen før du fortsetter.",
+    "discardTemplate": "Forkaste ulagrede endringer i etikettmalen?"
   },
   "purchases": {
     "title": "Innkjøp",

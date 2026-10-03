@@ -1717,7 +1717,8 @@
     "browserPrint": "Etikett drucken",
     "browserUnavailable": "Das Etikett ist gerade nicht verfügbar. Kehren Sie zum Artikel zurück und versuchen Sie es erneut.",
     "printerUncertain": "Die Druckeränderung konnte nicht bestätigt werden. Lade die Seite neu und prüfe die gespeicherten Einstellungen, bevor du fortfährst.",
-    "formatUncertain": "Die Etikettengröße konnte nicht bestätigt werden. Laden Sie die Seite neu und prüfen Sie die gespeicherte Größe, bevor Sie fortfahren."
+    "formatUncertain": "Die Etikettengröße konnte nicht bestätigt werden. Laden Sie die Seite neu und prüfen Sie die gespeicherte Größe, bevor Sie fortfahren.",
+    "discardTemplate": "Ungespeicherte Änderungen an der Etikettenvorlage verwerfen?"
   },
   "purchases": {
     "title": "Einkäufe",

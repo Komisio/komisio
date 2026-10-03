@@ -138,6 +138,10 @@ test('a lost save reply freezes the editor and a reload shows the one saved vers
       { version: 1, active: true, zpl: VALID },
     ])
     expect(lost.seen).toHaveLength(1)
+    page.once('dialog', async (dialog) => {
+      expect(dialog.type()).toBe('beforeunload')
+      await dialog.accept()
+    })
     await e.reload.click()
     const after = await openFold(page)
     await expect(after.editor).toContainText(`${d.printing.templateVersion} 1`)
@@ -170,6 +174,10 @@ test('a lost reset reply freezes the editor and a reload shows the built-in layo
       [1, true],
       [2, false],
     ])
+    page.once('dialog', async (dialog) => {
+      expect(dialog.type()).toBe('beforeunload')
+      await dialog.accept()
+    })
     await e.reload.click()
     const after = await openFold(page)
     await expect(after.editor).toContainText(d.printing.templateBuiltinHint)
@@ -322,6 +330,10 @@ test('a damaged success envelope is not a confirmation', async ({ page }) => {
     expect(lost.real()!.status).toBe(200)
     expect(await versions(f)).toHaveLength(1)
     expect(lost.seen).toHaveLength(1)
+    page.once('dialog', async (dialog) => {
+      expect(dialog.type()).toBe('beforeunload')
+      await dialog.accept()
+    })
     await e.reload.click()
     const after = await openFold(page)
     await expect(after.editor).toContainText(`${d.printing.templateVersion} 1`)

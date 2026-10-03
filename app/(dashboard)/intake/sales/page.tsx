@@ -1,5 +1,5 @@
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary, intlLocale } from '@/lib/i18n'
@@ -42,6 +42,7 @@ export default async function Sales() {
               currency={currency}
               d={d}
               intake={all.intake}
+              leaveUnsaved={all.leaveUnsaved}
             />
           </details>
         ) : (

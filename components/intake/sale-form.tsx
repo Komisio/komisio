@@ -1,7 +1,11 @@
 'use client'
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import {
+  NavigationLink as Link,
+  useUnsavedChanges,
+} from '@/components/platform/navigation-warning'
+import { ReloadAction } from './reload-action'
 import type { Dictionary } from '@/lib/i18n'
 import { exactPrice } from '@/lib/engine/manual-reception'
 import { saleSearchRows, type SaleSearchItem } from '@/lib/engine/sale-search'
@@ -15,11 +19,13 @@ export function SaleForm({
   currency,
   d,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   currency: string
   d: Dictionary['sales']
   intake: Dictionary['intake']
+  leaveUnsaved: string
 }) {
   const action = useIntakeAction(intake),
     router = useRouter()
@@ -34,7 +40,8 @@ export function SaleForm({
     [saved, setSaved] = useState<string | null>(null)
   const searchVersion = useRef(0),
     searchInput = useRef<HTMLInputElement>(null)
-  const locked = action.busy || action.locked
+  const locked = action.busy || action.locked || action.needsReload
+  useUnsavedChanges(cart.length > 0 || action.locked ? leaveUnsaved : null)
   let total: bigint | null = 0n
   try {
     for (const item of cart)
@@ -229,9 +236,7 @@ export function SaleForm({
         </fieldset>
         {error && <p role="alert">{error}</p>}
         {action.error && <p role="alert">{action.error}</p>}
-        {action.needsReload && (
-          <Link href="/intake/sales">{intake.reload}</Link>
-        )}
+        {action.needsReload && <ReloadAction label={intake.reload} />}
         {cart.length > 0 && (
           <Button type="submit" disabled={action.busy || action.needsReload}>
             {action.busy

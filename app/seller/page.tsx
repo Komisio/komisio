@@ -243,6 +243,7 @@ export default async function SellerPortal({
         thresholdOre={economy.thresholdOre}
         enabled={economy.automaticEmails}
         d={d}
+        recovery={all.intake}
       />
       <SellerHandovers
         key={`${account.tenantId}:${account.sellerId}`}

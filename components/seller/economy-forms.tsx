@@ -21,6 +21,7 @@ export function SellerEconomyForms({
   thresholdOre,
   enabled,
   d,
+  recovery,
 }: {
   tenantId: string
   sellerId: string
@@ -29,12 +30,25 @@ export function SellerEconomyForms({
   thresholdOre: number
   enabled: boolean
   d: Dictionary['sellerPortal']
+  recovery: Pick<Dictionary['intake'], 'retry' | 'reload' | 'busy' | 'denied'>
 }) {
   const router = useRouter()
   const [busy, setBusy] = useState(false)
   const [feedback, setFeedback] = useState<Feedback | null>(null)
+  const [pendingPreference, setPendingPreference] = useState<boolean | null>(
+    null,
+  )
+  const [locked, setLocked] = useState<
+    Partial<Record<EconomyAction['action'], boolean>>
+  >({})
+  const [needsReload, setNeedsReload] = useState<
+    Partial<Record<EconomyAction['action'], boolean>>
+  >({})
+  const running = useRef(false)
   const retries = useRef<
-    Partial<Record<EconomyAction['action'], { key: string; id: string }>>
+    Partial<
+      Record<EconomyAction['action'], { payload: EconomyAction; id: string }>
+    >
   >({})
   const payoutForm = useRef<HTMLFormElement>(null)
   const canRequest = availableOre > 0 && availableOre >= thresholdOre
@@ -56,27 +70,61 @@ export function SellerEconomyForms({
     ) : null
   }
   async function submit(payload: EconomyAction) {
+    if (running.current || needsReload[payload.action]) return
+    const request = retries.current[payload.action] ?? {
+      payload,
+      id: crypto.randomUUID(),
+    }
+    retries.current[payload.action] = request
+    if (request.payload.action === 'notifications')
+      setPendingPreference(request.payload.enabled)
+    running.current = true
     setBusy(true)
+    setLocked((previous) => ({ ...previous, [payload.action]: true }))
     setFeedback(null)
-    const key = JSON.stringify(payload)
-    const id =
-      retries.current[payload.action]?.key === key
-        ? retries.current[payload.action]!.id
-        : crypto.randomUUID()
-    retries.current[payload.action] = { key, id }
     try {
       const r = await fetch('/api/seller/economy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tenantId, sellerId, requestId: id, ...payload }),
+        body: JSON.stringify({
+          tenantId,
+          sellerId,
+          requestId: request.id,
+          ...request.payload,
+        }),
       })
+      const body = await r.json().catch(() => null)
       if (!r.ok) {
-        const body = await r.json().catch(() => null)
-        throw new Error(
-          typeof body?.error === 'string' ? body.error : 'REQUEST_FAILED',
-        )
+        const answered = r.status >= 400 && r.status < 500
+        const code =
+          answered && typeof body?.error === 'string'
+            ? body.error
+            : 'REQUEST_FAILED'
+        if (
+          [
+            'INVALID_INPUT',
+            'PAYOUT_EXCEEDS_BALANCE',
+            'PAYOUT_BELOW_THRESHOLD',
+          ].includes(code)
+        ) {
+          delete retries.current[payload.action]
+          if (payload.action === 'notifications') setPendingPreference(null)
+          setLocked((previous) => ({ ...previous, [payload.action]: false }))
+        } else if (
+          ['FORBIDDEN', 'AUTH_REQUIRED', 'REQUEST_CONFLICT'].includes(code)
+        ) {
+          setNeedsReload((previous) => ({
+            ...previous,
+            [payload.action]: true,
+          }))
+        }
+        throw new Error(code)
       }
+      if (body?.ok !== true || body?.id !== request.id)
+        throw new Error('REQUEST_FAILED')
       delete retries.current[payload.action]
+      if (payload.action === 'notifications') setPendingPreference(null)
+      setLocked((previous) => ({ ...previous, [payload.action]: false }))
       if (payload.action === 'requestPayout') payoutForm.current?.reset()
       setFeedback({
         action: payload.action,
@@ -101,11 +149,15 @@ export function SellerEconomyForms({
         setFeedback({
           action: payload.action,
           kind: 'error',
-          text:
-            payload.action === 'requestPayout' ? d.error : d.preferenceError,
+          text: ['FORBIDDEN', 'AUTH_REQUIRED'].includes(code)
+            ? recovery.denied
+            : payload.action === 'requestPayout'
+              ? d.error
+              : d.preferenceError,
         })
       }
     } finally {
+      running.current = false
       setBusy(false)
     }
   }
@@ -118,11 +170,20 @@ export function SellerEconomyForms({
         aria-label={d.request}
       >
         <h2>{d.request}</h2>
-        {canRequest ? (
+        {canRequest || locked.requestPayout ? (
           <form
             ref={payoutForm}
+            onChange={() => {
+              if (!locked.requestPayout && feedback?.action === 'requestPayout')
+                setFeedback(null)
+            }}
             onSubmit={(e) => {
               e.preventDefault()
+              const pending = retries.current.requestPayout
+              if (pending) {
+                void submit(pending.payload)
+                return
+              }
               const value = String(
                 new FormData(e.currentTarget).get('amount'),
               ).trim()
@@ -154,16 +215,29 @@ export function SellerEconomyForms({
               name="amount"
               inputMode="decimal"
               required
-              disabled={busy}
+              disabled={busy || locked.requestPayout}
               aria-invalid={
                 feedback?.action === 'requestPayout' &&
                 feedback.kind === 'error'
               }
               aria-describedby={`payout-limits${feedback?.action === 'requestPayout' ? ' payout-feedback' : ''}`}
             />
-            <Button type="submit" disabled={busy}>
-              {d.request}
+            <Button type="submit" disabled={busy || needsReload.requestPayout}>
+              {busy
+                ? recovery.busy
+                : locked.requestPayout
+                  ? recovery.retry
+                  : d.request}
             </Button>
+            {needsReload.requestPayout && (
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => window.location.reload()}
+              >
+                {recovery.reload}
+              </Button>
+            )}
           </form>
         ) : (
           <p>
@@ -179,6 +253,10 @@ export function SellerEconomyForms({
       </section>
       <form
         className="card intake-form"
+        onChange={() => {
+          if (!locked.notifications && feedback?.action === 'notifications')
+            setFeedback(null)
+        }}
         onSubmit={(e) => {
           e.preventDefault()
           void submit({
@@ -192,14 +270,27 @@ export function SellerEconomyForms({
             type="checkbox"
             name="emails"
             key={String(enabled)}
-            defaultChecked={enabled}
-            disabled={busy}
+            defaultChecked={pendingPreference ?? enabled}
+            disabled={busy || locked.notifications}
           />
           {d.emails}
         </label>
-        <Button type="submit" disabled={busy}>
-          {d.save}
+        <Button type="submit" disabled={busy || needsReload.notifications}>
+          {busy
+            ? recovery.busy
+            : locked.notifications
+              ? recovery.retry
+              : d.save}
         </Button>
+        {needsReload.notifications && (
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => window.location.reload()}
+          >
+            {recovery.reload}
+          </Button>
+        )}
         {responseFor('notifications')}
       </form>
     </div>

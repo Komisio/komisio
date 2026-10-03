@@ -769,16 +769,6 @@ export default async function Seller({
               <section className="card intake-form">
                 <h2>{c.title}</h2>
                 <div className="seller-disclosure-body">
-                  {communications.length === 0 && <p>{c.empty}</p>}
-                  {communications.map((m) => (
-                    <details key={m.id}>
-                      <summary>
-                        <EventTime value={m.queued_at} locale={ctx.locale} /> ·{' '}
-                        {c.kinds[m.kind]} · {c.outcomes[m.status]} · {m.subject}
-                      </summary>
-                      <pre style={{ whiteSpace: 'pre-wrap' }}>{m.body}</pre>
-                    </details>
-                  ))}
                   {write && (
                     <>
                       <h3>{c.sendHeading}</h3>
@@ -789,8 +779,38 @@ export default async function Seller({
                         references={references}
                         d={c}
                         intake={all.intake}
+                        leaveUnsaved={all.leaveUnsaved}
                       />
                     </>
+                  )}
+                  {communications.length === 0 ? (
+                    <p>{c.empty}</p>
+                  ) : (
+                    <details className="seller-message-history" open={!write}>
+                      <summary>
+                        {c.title} ({communications.length})
+                      </summary>
+                      {communications.map((m) => (
+                        <details key={m.id}>
+                          <summary>
+                            <EventTime
+                              value={m.queued_at}
+                              locale={ctx.locale}
+                            />{' '}
+                            · {c.kinds[m.kind]} · {c.outcomes[m.status]} ·{' '}
+                            {m.subject}
+                          </summary>
+                          <pre
+                            style={{
+                              whiteSpace: 'pre-wrap',
+                              overflowWrap: 'anywhere',
+                            }}
+                          >
+                            {m.body}
+                          </pre>
+                        </details>
+                      ))}
+                    </details>
                   )}
                 </div>
               </section>

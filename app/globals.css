@@ -273,7 +273,7 @@ summary {
 .label-format-message {
   margin: 0;
 }
-@media (min-width: 700px) {
+@media (min-width: 1000px) {
   .label-format {
     grid-template-columns: minmax(0, 1fr) 7em 7em auto;
   }
@@ -1091,19 +1091,19 @@ button.text-link:hover:not(:disabled) {
   white-space: nowrap;
 }
 .topbar {
-  height: 75px;
+  min-height: 75px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--line);
-  padding: 0 43px;
+  padding: 12px 43px;
   background: #ffffff9c;
 }
 .topbar-search {
   flex: 1;
   max-width: 320px;
   margin: 0 24px;
-  min-width: 0;
+  min-width: 160px;
 }
 .topbar-tools {
   display: flex;
@@ -1185,6 +1185,8 @@ button.text-link:hover:not(:disabled) {
 .breadcrumb {
   font-size: 12px;
   color: var(--muted);
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .topbar .brand {
   display: none;
@@ -1537,10 +1539,11 @@ button.text-link:hover:not(:disabled) {
     padding: 30px 26px;
   }
   .topbar {
-    padding: 0 26px;
+    padding: 12px 26px;
   }
   .home-grid,
-  .settings-grid {
+  .settings-grid,
+  .label-template-editor {
     grid-template-columns: 1fr;
   }
   .invite-grid {
@@ -1551,6 +1554,23 @@ button.text-link:hover:not(:disabled) {
   }
   .table-actions {
     flex-wrap: wrap;
+  }
+}
+@media (min-width: 701px) and (max-width: 1000px) {
+  .topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+  }
+  .topbar-search {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+  .topbar-tools {
+    gap: 10px;
   }
 }
 @media (max-width: 700px) {

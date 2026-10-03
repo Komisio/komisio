@@ -860,3 +860,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-03: Mobile stock summaries use compact label/value rows and a stacked date filter. Current inventory remains separate from period sales; report calculations and read scope are unchanged.
 
 - 2026-10-03: Unstaged seller-import files and unresolved staging attempts warn before supported navigation or unloading. A remove-file control or confirmed staging releases the warning; import mapping, approval and engine rules are unchanged.
+
+- 2026-10-03: Invalid manual-sale prices focus and identify the affected cart field; editing or removing that item clears its error. The same price parser and engine sale command remain authoritative.

@@ -36,6 +36,7 @@ export function SaleForm({
   const [searched, setSearched] = useState(false),
     [searching, setSearching] = useState(false)
   const [cart, setCart] = useState<(SaleSearchItem & { price: string })[]>([])
+  const [invalidPriceId, setInvalidPriceId] = useState<string | null>(null)
   const [error, setError] = useState(''),
     [saved, setSaved] = useState<string | null>(null)
   const searchVersion = useRef(0),
@@ -88,13 +89,17 @@ export function SaleForm({
     const form = event.currentTarget
     if (!cart.length) return
     setError('')
-    let lines
-    try {
-      lines = cart.map((i) => ({ itemId: i.id, price: exactPrice(i.price) }))
-    } catch {
-      setError(d.priceInvalid)
-      return
+    const lines: { itemId: string; price: string }[] = []
+    for (const item of cart) {
+      try {
+        lines.push({ itemId: item.id, price: exactPrice(item.price) })
+      } catch {
+        setInvalidPriceId(item.id)
+        document.getElementById(`price-${item.id}`)?.focus()
+        return
+      }
     }
+    setInvalidPriceId(null)
     const id = await action.run({
       action: 'recordSale',
       tenantId,
@@ -198,7 +203,14 @@ export function SaleForm({
                     inputMode="decimal"
                     required
                     value={item.price}
-                    onChange={(e) =>
+                    aria-invalid={invalidPriceId === item.id || undefined}
+                    aria-describedby={
+                      invalidPriceId === item.id
+                        ? `price-error-${item.id}`
+                        : undefined
+                    }
+                    onChange={(e) => {
+                      if (invalidPriceId === item.id) setInvalidPriceId(null)
                       setCart(
                         cart.map((i) =>
                           i.id === item.id
@@ -206,13 +218,21 @@ export function SaleForm({
                             : i,
                         ),
                       )
-                    }
+                    }}
                   />
+                  {invalidPriceId === item.id && (
+                    <small id={`price-error-${item.id}`} role="alert">
+                      {d.priceInvalid}
+                    </small>
+                  )}
                 </div>
                 <button
                   type="button"
                   className="text-link"
-                  onClick={() => setCart(cart.filter((i) => i.id !== item.id))}
+                  onClick={() => {
+                    if (invalidPriceId === item.id) setInvalidPriceId(null)
+                    setCart(cart.filter((i) => i.id !== item.id))
+                  }}
                 >
                   {d.remove}
                 </button>

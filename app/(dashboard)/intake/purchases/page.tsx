@@ -1,5 +1,6 @@
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
+import { NavigationLink } from '@/components/platform/navigation-warning'
 import { notFound, redirect } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
@@ -114,6 +115,7 @@ export default async function Purchases({
               tenantId={active.id}
               d={d}
               intake={all.intake}
+              leaveUnsaved={all.leaveUnsaved}
             />
           </details>
         ) : (
@@ -154,12 +156,12 @@ export default async function Purchases({
                   </details>
                   {accepted.has(p.id) ? (
                     <p>
-                      <Link
+                      <NavigationLink
                         className="text-link"
                         href={`/intake/items/${accepted.get(p.id)!.id}`}
                       >
                         {all.items.alreadyAccepted} {all.items.open}
-                      </Link>
+                      </NavigationLink>
                     </p>
                   ) : active.role !== 'readonly' ? (
                     <details className="purchase-accept">

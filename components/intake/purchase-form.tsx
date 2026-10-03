@@ -5,15 +5,25 @@ import type { Dictionary } from '@/lib/i18n'
 import { exactPrice } from '@/lib/engine/manual-reception'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { useFormDirty } from '@/components/platform/use-form-dirty'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
+
+const emptyFields = [
+  ['price', ''],
+  ['evidence', ''],
+  ['note', ''],
+] as const
 
 export function PurchaseForm({
   tenantId,
   d,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   d: Dictionary['purchases']
   intake: Dictionary['intake']
+  leaveUnsaved: string
 }) {
   const action = useIntakeAction(intake)
   const router = useRouter()
@@ -21,8 +31,15 @@ export function PurchaseForm({
   const [saved, setSaved] = useState<string | null>(null)
   const [priceError, setPriceError] = useState('')
   const submittedFields = useRef<FormData | null>(null)
+  const formRef = useRef<HTMLFormElement>(null)
+  const { ready, dirty, checkDirty, resetDirty } = useFormDirty(
+    formRef,
+    emptyFields,
+  )
+  useUnsavedChanges(dirty || action.locked ? leaveUnsaved : null)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (!ready || action.busy || action.needsReload) return
     const form = event.currentTarget,
       // Disabled fields are absent from new FormData. Validate the original
       // values on a locked retry, then let the action replay its frozen command.
@@ -53,6 +70,9 @@ export function PurchaseForm({
       setSaved(id)
       setRequestId(crypto.randomUUID())
       form.reset()
+      const cleared = new FormData()
+      for (const [name, value] of emptyFields) cleared.append(name, value)
+      resetDirty(cleared)
       router.refresh()
     }
   }
@@ -60,10 +80,17 @@ export function PurchaseForm({
     <section className="card intake-form">
       <h2>{d.registerHeading}</h2>
       <p>{d.registerHint}</p>
-      <form onSubmit={submit}>
+      <form
+        ref={formRef}
+        onSubmit={submit}
+        onChange={() => {
+          setSaved(null)
+          checkDirty()
+        }}
+      >
         <fieldset
           className="intake-fields"
-          disabled={action.busy || action.locked}
+          disabled={!ready || action.busy || action.locked}
         >
           <div className="field">
             <label htmlFor="purchase-price">{d.price}</label>
@@ -107,7 +134,10 @@ export function PurchaseForm({
             {intake.reload}
           </a>
         )}
-        <Button type="submit" disabled={action.busy || action.needsReload}>
+        <Button
+          type="submit"
+          disabled={!ready || action.busy || action.needsReload}
+        >
           {action.busy
             ? intake.busy
             : action.locked

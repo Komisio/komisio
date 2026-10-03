@@ -4,7 +4,12 @@ import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 
-for (const kind of ['printer', 'store-profile', 'reception'] as const)
+for (const kind of [
+  'printer',
+  'store-profile',
+  'reception',
+  'quick-bag',
+] as const)
   test(`${kind} draft waits for handlers and compares the first edit with its original value`, async ({
     page,
   }) => {
@@ -23,13 +28,25 @@ for (const kind of ['printer', 'store-profile', 'reception'] as const)
           session,
           f.seller,
         ])
+      let bag: string | undefined
+      if (kind === 'quick-bag') {
+        await f.item('Synthetic existing bag item')
+        bag = (
+          await f.db.query(
+            'select id from bag_receipts where tenant_id=$1 limit 1',
+            [f.tenant],
+          )
+        ).rows[0].id
+      }
       await f.commit()
       const path =
         kind === 'printer'
           ? '/settings?tab=printing'
           : kind === 'store-profile'
             ? '/settings?tab=profile'
-            : `/intake/reception/${session}`
+            : kind === 'quick-bag'
+              ? `/intake/bags/${bag}/inspect?itemPage=1`
+              : `/intake/reception/${session}`
       await page.route(/\/_next\/.*\.js(?:\?.*)?$/, async (route) => {
         await scripts
         await route.continue()
@@ -41,7 +58,9 @@ for (const kind of ['printer', 'store-profile', 'reception'] as const)
           : page.locator(
               kind === 'store-profile'
                 ? '#profile-street'
-                : '#garment-description',
+                : kind === 'quick-bag'
+                  ? '#quick-description'
+                  : '#garment-description',
             )
       await expect(field).toBeVisible()
       await expect(field).toBeDisabled()
@@ -54,7 +73,9 @@ for (const kind of ['printer', 'store-profile', 'reception'] as const)
       let warnings = 0
       page.on('dialog', async (dialog) => {
         warnings++
-        expect(dialog.message()).toBe(d.leaveUnsaved)
+        expect(dialog.message()).toBe(
+          kind === 'quick-bag' ? d.quickIntake.leaveItem : d.leaveUnsaved,
+        )
         await dialog.dismiss()
       })
       const link = page.locator('.sidebar a[href="/intake/items"]')

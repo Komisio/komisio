@@ -874,3 +874,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-03: Desktop and mobile store selectors wait for hydration before allowing a choice, preventing an unhandled native selection from misrepresenting the active store. Existing selection commands, draft warnings and access rules remain unchanged.
 
 - 2026-10-03: Reception proposal facts link to numbered, localized source cards. Exact source IDs remain in expandable references; observations, frozen agreement text and approval requirements remain unchanged. Decision buttons wrap on narrow screens.
+
+- 2026-10-03: Quick receiving holds item fields and actions until their handlers attach, matching the existing photo readiness guard. This prevents early typed descriptions from being lost during hydration; item creation, paging and retry identities are unchanged.

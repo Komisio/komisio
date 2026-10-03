@@ -114,7 +114,7 @@ export function Shell({
           <Link
             href="/onboarding"
             className="text-link row"
-            style={{ fontSize: 11 }}
+            style={{ fontSize: 12 }}
           >
             <Plus size={12} />
             {d.newTenant}
@@ -141,7 +141,7 @@ export function Shell({
           ))}
         </nav>
         <div className="sidebar-footer">
-          <p style={{ fontSize: 11, padding: '0 12px' }}>{d.help}</p>
+          <p style={{ fontSize: 12, padding: '0 12px' }}>{d.help}</p>
           <Link href="/account" className="account-link row">
             <span className="avatar">
               {(name || email).slice(0, 2).toUpperCase()}
@@ -150,7 +150,7 @@ export function Shell({
               <span className="account-label">
                 {name || email.split('@')[0]}
               </span>
-              <small style={{ display: 'block', fontSize: 10 }}>
+              <small style={{ display: 'block', fontSize: 12 }}>
                 {d.roles[active.role]}
               </small>
             </span>

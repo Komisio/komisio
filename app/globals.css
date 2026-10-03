@@ -781,7 +781,7 @@ small {
   color: var(--green);
 }
 .badge {
-  font-size: 11px;
+  font-size: 12px;
   display: inline-flex;
   padding: 4px 9px;
   border-radius: 6px;
@@ -1028,7 +1028,7 @@ button.text-link:hover:not(:disabled) {
   margin-bottom: 18px;
 }
 .tenant-picker small {
-  font-size: 10px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -1260,7 +1260,7 @@ button.text-link:hover:not(:disabled) {
   font-weight: 500;
 }
 .stat small {
-  font-size: 11px;
+  font-size: 12px;
 }
 .footnote {
   font-size: 12px;
@@ -1279,7 +1279,7 @@ button.text-link:hover:not(:disabled) {
   font-size: 13px;
 }
 .data-table th {
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--muted);
@@ -1304,19 +1304,19 @@ button.text-link:hover:not(:disabled) {
   justify-content: flex-end;
 }
 .table-actions select {
-  font-size: 11px;
+  font-size: 14px;
   padding: 5px;
   max-width: 134px;
-  min-height: 34px;
+  min-height: 44px;
 }
 .table-actions .btn {
-  font-size: 11px;
-  min-height: 34px;
+  font-size: 12px;
+  min-height: 44px;
   padding: 7px;
 }
 .person small {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
 }
 .invite-grid {
   display: grid;
@@ -2291,7 +2291,7 @@ button.text-link:hover:not(:disabled) {
 }
 .reception-queue-status {
   justify-self: start;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.5;
   padding: 4px 9px;
   background: #eef1eb;

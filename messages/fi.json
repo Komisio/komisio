@@ -1576,9 +1576,9 @@
   },
   "openByReference": {
     "title": "Avaa etiketillä",
-    "intro": "Kirjoita tai skannaa tuontierän (K-n), vaatteen (G-n) tai tuotteen (I-XXXXXXXX) tunnus.",
+    "intro": "Skannaa etiketti tai kirjoita etiketissä tai ennakkoilmoituksessa oleva tunnus.",
     "reference": "Etiketin viite",
-    "hint": "Esimerkiksi K-12, G-7 tai I-A1B2C3D4.",
+    "hint": "Esimerkiksi K-12, G-7, H-9 tai I-A1B2C3D4.",
     "open": "Avaa",
     "notFound": "Mikään tässä kaupassa ei kanna viitettä {ref}.",
     "ambiguous": "Usealla myymälän tuotteella on tunnus {ref}. Valitse oikea tuote luettelosta.",

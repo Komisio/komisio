@@ -1576,9 +1576,9 @@
   },
   "openByReference": {
     "title": "Åbn via mærkat",
-    "intro": "Skriv eller scan referencen på en indlevering (K-n), et stykke tøj (G-n) eller en vare (I-XXXXXXXX).",
+    "intro": "Scan en mærkat, eller skriv referencen fra mærkaten eller forhåndsanmeldelsen.",
     "reference": "Mærkatreference",
-    "hint": "For eksempel K-12, G-7 eller I-A1B2C3D4.",
+    "hint": "For eksempel K-12, G-7, H-9 eller I-A1B2C3D4.",
     "open": "Åbn",
     "notFound": "Intet i denne butik har referencen {ref}.",
     "ambiguous": "Flere varer i butikken har referencen {ref}. Vælg den rigtige vare på listen.",

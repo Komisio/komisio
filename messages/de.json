@@ -1576,9 +1576,9 @@
   },
   "openByReference": {
     "title": "Über Etikett öffnen",
-    "intro": "Gib die Referenz einer Abgabe (K-n), eines Kleidungsstücks (G-n) oder eines Artikels (I-XXXXXXXX) ein oder scanne sie.",
+    "intro": "Scanne ein Etikett oder gib die Referenz vom Etikett oder der Voranmeldung ein.",
     "reference": "Etikettreferenz",
-    "hint": "Zum Beispiel K-12, G-7 oder I-A1B2C3D4.",
+    "hint": "Zum Beispiel K-12, G-7, H-9 oder I-A1B2C3D4.",
     "open": "Öffnen",
     "notFound": "Nichts in diesem Store trägt die Referenz {ref}.",
     "ambiguous": "Mehrere Artikel in diesem Geschäft haben die Referenz {ref}. Wähle den richtigen Artikel aus der Liste.",

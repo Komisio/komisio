@@ -90,11 +90,16 @@ export default async function OpenByReference({
               name="ref"
               autoFocus
               inputMode="text"
+              autoComplete="off"
+              autoCapitalize="characters"
+              spellCheck={false}
+              required
+              aria-describedby="open-ref-hint"
               placeholder="K-12"
               defaultValue={ref}
               maxLength={16}
             />
-            <small>{d.hint}</small>
+            <small id="open-ref-hint">{d.hint}</small>
           </div>
           <button className="btn btn-primary">{d.open}</button>
         </form>

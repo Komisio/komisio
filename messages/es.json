@@ -1265,16 +1265,16 @@
     "items": "artículos",
     "note": "Nota (opcional)",
     "confirm": "Los artículos de la entrega ya están en la tienda.",
-    "receive": "Recibir y registrar la entrega",
+    "receive": "Recibir entrega",
     "openBag": "Abrir la entrega",
     "kinds": {
       "bag": "Bolsa",
       "box": "Caja"
     },
     "statuses": {
-      "open": "abierta",
-      "received": "recibida",
-      "cancelled": "cancelada"
+      "open": "Pendiente de entrega",
+      "received": "Recibida",
+      "cancelled": "Cancelada"
     },
     "backToQueue": "Volver a entregas anunciadas",
     "search": "Buscar entrega",
@@ -1286,7 +1286,9 @@
     "noMatches": "Ninguna entrega coincide con los filtros.",
     "limited": "Temporalmente solo se muestran las 100 entregas más recientes. Abra una anterior mediante su referencia H.",
     "settings": "Abrir ajustes",
-    "askOwner": "Pide a un propietario o administrador que active esta función."
+    "askOwner": "Pide a un propietario o administrador que active esta función.",
+    "estimatedCount": "Unos {count} artículos",
+    "estimatedCountOne": "Aproximadamente {count} artículo"
   },
   "chain": {
     "title": "Cadena",

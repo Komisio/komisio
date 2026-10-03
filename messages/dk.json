@@ -1265,16 +1265,16 @@
     "items": "varer",
     "note": "Note (valgfrit)",
     "confirm": "Varerne i indleveringen er i butikken nu.",
-    "receive": "Modtag og registrer indleveringen",
+    "receive": "Modtag indleveringen",
     "openBag": "Åbn indleveringen",
     "kinds": {
       "bag": "Pose",
       "box": "Kasse"
     },
     "statuses": {
-      "open": "åben",
-      "received": "modtaget",
-      "cancelled": "annulleret"
+      "open": "Afventer indlevering",
+      "received": "Modtaget",
+      "cancelled": "Annulleret"
     },
     "backToQueue": "Til anmeldte indleveringer",
     "search": "Søg forhåndsanmeldelse",
@@ -1286,7 +1286,9 @@
     "noMatches": "Ingen forhåndsanmeldelser matcher filtrene.",
     "limited": "Midlertidigt vises kun de 100 seneste forhåndsanmeldelser. Åbn en ældre via dens H-reference.",
     "settings": "Åbn indstillinger",
-    "askOwner": "Bed en ejer eller administrator om at aktivere funktionen."
+    "askOwner": "Bed en ejer eller administrator om at aktivere funktionen.",
+    "estimatedCount": "Cirka {count} varer",
+    "estimatedCountOne": "Cirka {count} vare"
   },
   "chain": {
     "title": "Kæde",

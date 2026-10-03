@@ -1265,16 +1265,16 @@
     "items": "articoli",
     "note": "Nota (facoltativa)",
     "confirm": "Gli articoli della consegna sono ora in negozio.",
-    "receive": "Ricevi e registra la consegna",
+    "receive": "Ricevi la consegna",
     "openBag": "Apri la consegna",
     "kinds": {
       "bag": "Sacchetto",
       "box": "Scatola"
     },
     "statuses": {
-      "open": "aperta",
-      "received": "ricevuta",
-      "cancelled": "annullata"
+      "open": "In attesa di consegna",
+      "received": "Ricevuta",
+      "cancelled": "Annullata"
     },
     "backToQueue": "Torna alle consegne annunciate",
     "search": "Cerca consegna",
@@ -1286,7 +1286,9 @@
     "noMatches": "Nessuna consegna corrisponde ai filtri.",
     "limited": "Temporaneamente sono mostrate solo le 100 consegne più recenti. Aprine una precedente tramite il suo riferimento H.",
     "settings": "Apri impostazioni",
-    "askOwner": "Chiedi a un proprietario o amministratore di attivare la funzione."
+    "askOwner": "Chiedi a un proprietario o amministratore di attivare la funzione.",
+    "estimatedCount": "Circa {count} articoli",
+    "estimatedCountOne": "Circa {count} articolo"
   },
   "chain": {
     "title": "Catena",

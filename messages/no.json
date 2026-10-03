@@ -1265,16 +1265,16 @@
     "items": "varer",
     "note": "Notat (valgfritt)",
     "confirm": "Varene i innleveringen er i butikken nå.",
-    "receive": "Ta imot og registrer innleveringen",
+    "receive": "Ta imot innleveringen",
     "openBag": "Åpne innleveringen",
     "kinds": {
       "bag": "Pose",
       "box": "Eske"
     },
     "statuses": {
-      "open": "åpen",
-      "received": "mottatt",
-      "cancelled": "avbrutt"
+      "open": "Venter på innlevering",
+      "received": "Mottatt",
+      "cancelled": "Avbrutt"
     },
     "backToQueue": "Til forhåndsmeldte innleveringer",
     "search": "Søk forhåndsmelding",
@@ -1286,7 +1286,9 @@
     "noMatches": "Ingen forhåndsmeldinger samsvarer med filtrene.",
     "limited": "Midlertidig vises bare de 100 nyeste forhåndsmeldingene. Åpne en eldre med H-referansen.",
     "settings": "Åpne innstillinger",
-    "askOwner": "Be en eier eller administrator om å aktivere funksjonen."
+    "askOwner": "Be en eier eller administrator om å aktivere funksjonen.",
+    "estimatedCount": "Omtrent {count} varer",
+    "estimatedCountOne": "Omtrent {count} vare"
   },
   "chain": {
     "title": "Kjede",

@@ -1265,16 +1265,16 @@
     "items": "varor",
     "note": "Anteckning (valfri)",
     "confirm": "Varorna i inlämningen är i butiken nu.",
-    "receive": "Ta emot och registrera inlämningen",
+    "receive": "Ta emot inlämningen",
     "openBag": "Öppna inlämningen",
     "kinds": {
       "bag": "Påse",
       "box": "Låda"
     },
     "statuses": {
-      "open": "öppen",
-      "received": "mottagen",
-      "cancelled": "avbruten"
+      "open": "Väntar på inlämning",
+      "received": "Mottagen",
+      "cancelled": "Avbruten"
     },
     "backToQueue": "Till föranmälningar",
     "search": "Sök föranmälning",
@@ -1286,7 +1286,9 @@
     "noMatches": "Inga föranmälningar matchar filtren.",
     "limited": "Tillfälligt visas endast de 100 senaste föranmälningarna. Öppna en äldre föranmälning via dess H-referens.",
     "settings": "Öppna inställningar",
-    "askOwner": "Be en ägare eller administratör att aktivera funktionen."
+    "askOwner": "Be en ägare eller administratör att aktivera funktionen.",
+    "estimatedCount": "Cirka {count} varor",
+    "estimatedCountOne": "Cirka {count} vara"
   },
   "chain": {
     "title": "Kedja",

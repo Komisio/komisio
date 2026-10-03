@@ -1265,16 +1265,16 @@
     "items": "tuotetta",
     "note": "Huomautus (valinnainen)",
     "confirm": "Tuontierän tavarat ovat nyt myymälässä.",
-    "receive": "Ota vastaan ja kirjaa tuontierä",
+    "receive": "Vastaanota tuontierä",
     "openBag": "Avaa tuontierä",
     "kinds": {
       "bag": "Pussi",
       "box": "Laatikko"
     },
     "statuses": {
-      "open": "avoin",
-      "received": "vastaanotettu",
-      "cancelled": "peruutettu"
+      "open": "Odottaa tuontia",
+      "received": "Vastaanotettu",
+      "cancelled": "Peruttu"
     },
     "backToQueue": "Takaisin ennakkoilmoituksiin",
     "search": "Hae ennakkoilmoitusta",
@@ -1286,7 +1286,9 @@
     "noMatches": "Yksikään ennakkoilmoitus ei vastaa suodattimia.",
     "limited": "Tilapäisesti näytetään vain 100 uusinta ennakkoilmoitusta. Avaa vanhempi sen H-viitteellä.",
     "settings": "Avaa asetukset",
-    "askOwner": "Pyydä omistajaa tai ylläpitäjää ottamaan toiminto käyttöön."
+    "askOwner": "Pyydä omistajaa tai ylläpitäjää ottamaan toiminto käyttöön.",
+    "estimatedCount": "Arviolta {count} tuotetta",
+    "estimatedCountOne": "Arviolta {count} tuote"
   },
   "chain": {
     "title": "Ketju",

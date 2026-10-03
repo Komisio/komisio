@@ -1265,16 +1265,16 @@
     "items": "Artikel",
     "note": "Notiz (optional)",
     "confirm": "Die Artikel der Einlieferung sind jetzt im Laden.",
-    "receive": "Einlieferung annehmen und erfassen",
+    "receive": "Abgabe annehmen",
     "openBag": "Einlieferung öffnen",
     "kinds": {
       "bag": "Tüte",
       "box": "Karton"
     },
     "statuses": {
-      "open": "offen",
-      "received": "angenommen",
-      "cancelled": "storniert"
+      "open": "Wartet auf Abgabe",
+      "received": "Angenommen",
+      "cancelled": "Storniert"
     },
     "backToQueue": "Zurück zu angekündigten Einlieferungen",
     "search": "Übergabe suchen",
@@ -1286,7 +1286,9 @@
     "noMatches": "Keine Übergaben entsprechen den Filtern.",
     "limited": "Vorübergehend werden nur die 100 neuesten Übergaben angezeigt. Öffnen Sie eine ältere über ihre H-Referenz.",
     "settings": "Einstellungen öffnen",
-    "askOwner": "Bitte einen Inhaber oder Administrator, die Funktion zu aktivieren."
+    "askOwner": "Bitte einen Inhaber oder Administrator, die Funktion zu aktivieren.",
+    "estimatedCount": "Etwa {count} Artikel",
+    "estimatedCountOne": "Etwa {count} Artikel"
   },
   "chain": {
     "title": "Kette",

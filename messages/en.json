@@ -1265,16 +1265,16 @@
     "items": "items",
     "note": "Note (optional)",
     "confirm": "The items in the drop-off are now in the store.",
-    "receive": "Receive and record the drop-off",
+    "receive": "Receive drop-off",
     "openBag": "Open the drop-off",
     "kinds": {
       "bag": "Bag",
       "box": "Box"
     },
     "statuses": {
-      "open": "open",
-      "received": "received",
-      "cancelled": "cancelled"
+      "open": "Awaiting drop-off",
+      "received": "Received",
+      "cancelled": "Cancelled"
     },
     "backToQueue": "Back to announced drop-offs",
     "search": "Find a handover",
@@ -1286,7 +1286,9 @@
     "noMatches": "No handovers match the filters.",
     "limited": "Only the 100 most recent handovers are temporarily shown. Open an older handover using its H-reference.",
     "settings": "Open settings",
-    "askOwner": "Ask an owner or administrator to enable this feature."
+    "askOwner": "Ask an owner or administrator to enable this feature.",
+    "estimatedCount": "About {count} items",
+    "estimatedCountOne": "About {count} item"
   },
   "chain": {
     "title": "Chain",

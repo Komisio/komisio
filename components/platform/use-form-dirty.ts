@@ -18,5 +18,14 @@ export function useFormDirty(form: RefObject<HTMLFormElement | null>) {
         )
     })
   }
-  return { dirty, checkDirty }
+  function resetDirty() {
+    // A successful editor can mount a fresh form in the same click event.
+    queueMicrotask(() => {
+      if (form.current) {
+        baseline.current = JSON.stringify([...new FormData(form.current)])
+        setDirty(false)
+      }
+    })
+  }
+  return { dirty, checkDirty, resetDirty }
 }

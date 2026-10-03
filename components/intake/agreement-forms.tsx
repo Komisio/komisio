@@ -1,10 +1,12 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { locales, localeNames, type Dictionary, type Locale } from '@/lib/i18n'
 import type { SellerAgreement } from '@/lib/engine/intake'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { useFormDirty } from '@/components/platform/use-form-dirty'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 
 export function AgreementPublisher({
   tenantId,
@@ -19,6 +21,9 @@ export function AgreementPublisher({
 }) {
   const action = useIntakeAction(d.intake)
   const [saved, setSaved] = useState(false)
+  const form = useRef<HTMLFormElement>(null)
+  const { dirty, checkDirty, resetDirty } = useFormDirty(form)
+  useUnsavedChanges(!saved && (dirty || action.locked) ? d.leaveUnsaved : null)
   const [expanded, setExpanded] = useState(!current)
   // Keep the reviewed base while editing, even if navigation refreshes server props.
   const [base, setBase] = useState(current)
@@ -62,13 +67,14 @@ export function AgreementPublisher({
               onClick={() => {
                 setBase(current)
                 setSaved(false)
+                resetDirty()
               }}
             >
               {a.nextVersion}
             </Button>
           </div>
         ) : (
-          <form onSubmit={submit}>
+          <form ref={form} onChange={checkDirty} onSubmit={submit}>
             <fieldset
               className="intake-fields"
               disabled={action.busy || action.locked}

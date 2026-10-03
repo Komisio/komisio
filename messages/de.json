@@ -862,7 +862,8 @@
     "noComparedChanges": "Keine Änderungen in den verglichenen Feldern. Prüfen Sie dennoch den vollständigen neuen Vorschlag.",
     "sourceVersionChanged": "Die Quellenversion hat sich geändert. Prüfen Sie die Nachweise, auch wenn die Fakten unverändert erscheinen.",
     "agreementVersionChanged": "Die Vereinbarungsversion hat sich geändert. Lesen Sie die vorgeschlagenen Bedingungen unten.",
-    "zettleReceipt": "PayPal POS-Beleg"
+    "zettleReceipt": "PayPal POS-Beleg",
+    "sourceReference": "Quellenreferenz"
   },
   "reviewPhotoAlt": "In dieser Prüfung enthaltenes Foto",
   "reviewPhotos": "Fotos in dieser Prüfung",

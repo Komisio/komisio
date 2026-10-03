@@ -862,7 +862,8 @@
     "noComparedChanges": "Inga ändringar i de jämförda uppgifterna. Granska ändå hela det nya underlaget.",
     "sourceVersionChanged": "Källversionen har ändrats. Granska underlaget även om uppgifterna ser likadana ut.",
     "agreementVersionChanged": "Avtalsversionen har ändrats. Läs de föreslagna villkoren nedan.",
-    "zettleReceipt": "PayPal POS-kvitto"
+    "zettleReceipt": "PayPal POS-kvitto",
+    "sourceReference": "Källreferens"
   },
   "reviewPhotoAlt": "Bild som ingår i detta underlag",
   "reviewPhotos": "Bilder i detta underlag",

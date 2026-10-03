@@ -6094,3 +6094,39 @@ button.text-link:hover:not(:disabled) {
   margin: 1px 0 0;
   accent-color: var(--green);
 }
+
+.operation-source-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.operation-source-links > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+}
+.operation-source {
+  scroll-margin-top: 16px;
+}
+.operation-source h4 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+.operation-source-reference {
+  margin-top: 8px;
+}
+.operation-source-reference > summary {
+  display: list-item;
+  min-height: 44px;
+  align-content: center;
+}
+.operation-source-reference > code {
+  display: block;
+  overflow-wrap: anywhere;
+  margin-top: 8px;
+}

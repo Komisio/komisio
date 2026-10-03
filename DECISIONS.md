@@ -872,3 +872,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-03: Mobile focus visibility no longer scrolls pointer-focused links or callbacks from an earlier URL back over a requested section. Keyboard-focused controls retain protection from the fixed menu.
 
 - 2026-10-03: Desktop and mobile store selectors wait for hydration before allowing a choice, preventing an unhandled native selection from misrepresenting the active store. Existing selection commands, draft warnings and access rules remain unchanged.
+
+- 2026-10-03: Reception proposal facts link to numbered, localized source cards. Exact source IDs remain in expandable references; observations, frozen agreement text and approval requirements remain unchanged. Decision buttons wrap on narrow screens.

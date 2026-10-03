@@ -862,7 +862,8 @@
     "noComparedChanges": "Ingen endringer i de sammenlignede feltene. Gå likevel gjennom hele det nye forslaget.",
     "sourceVersionChanged": "Kildeversjonen er endret. Gå gjennom bevisene selv om fakta ser uendret ut.",
     "agreementVersionChanged": "Avtaleversjonen er endret. Les de foreslåtte vilkårene nedenfor.",
-    "zettleReceipt": "PayPal POS-kvittering"
+    "zettleReceipt": "PayPal POS-kvittering",
+    "sourceReference": "Kildereferanse"
   },
   "reviewPhotoAlt": "Bilde som inngår i denne gjennomgangen",
   "reviewPhotos": "Bilder i denne gjennomgangen",

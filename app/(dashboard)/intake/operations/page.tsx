@@ -64,6 +64,7 @@ export default async function Operations({
           canDecide={active.role !== 'readonly'}
           locale={ctx.locale}
           currency={currency}
+          sourceKinds={all.reception.history.kinds}
           d={d}
         />
       ) : (

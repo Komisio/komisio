@@ -862,7 +862,8 @@
     "noComparedChanges": "Nessuna modifica nei campi confrontati. Esamina comunque la nuova proposta completa.",
     "sourceVersionChanged": "La versione delle fonti è cambiata. Esamina le prove anche se i dati sembrano invariati.",
     "agreementVersionChanged": "La versione dell'accordo è cambiata. Leggi le condizioni proposte qui sotto.",
-    "zettleReceipt": "Scontrino PayPal POS"
+    "zettleReceipt": "Scontrino PayPal POS",
+    "sourceReference": "Riferimento della fonte"
   },
   "reviewPhotoAlt": "Foto inclusa in questa revisione",
   "reviewPhotos": "Foto in questa revisione",

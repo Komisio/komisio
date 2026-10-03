@@ -13,6 +13,44 @@ import {
 import { Button } from '@/components/ui/button'
 type D = Dictionary['operations']
 
+type SourceKinds = Dictionary['reception']['history']['kinds']
+type ReviewSources = Extract<
+  OperationReviewContext,
+  { kind: 'reception' }
+>['sources']
+
+function SourceReferences({
+  operationId,
+  ids,
+  sources,
+  kinds,
+}: {
+  operationId: string
+  ids: string[]
+  sources: ReviewSources
+  kinds: SourceKinds
+}) {
+  return (
+    <span className="operation-source-links">
+      {ids.map((id) => {
+        const index = sources.findIndex((source) => source.id === id)
+        const source = sources[index]
+        return source ? (
+          <a
+            key={id}
+            className="text-link"
+            href={`#operation-source-${operationId}-${id}`}
+          >
+            {kinds[source.kind]} {index + 1}
+          </a>
+        ) : (
+          <code key={id}>{id}</code>
+        )
+      })}
+    </span>
+  )
+}
+
 function Decision({
   tenantId,
   operation,
@@ -168,7 +206,7 @@ function Decision({
           </Button>
         </div>
       ) : (
-        <div className="row">
+        <div className="row wrap">
           <Button type="submit" value="approve" disabled={busy || !canApprove}>
             {busy
               ? d.busy
@@ -200,6 +238,7 @@ export function OperationQueue({
   locale,
   reviewContext,
   currency,
+  sourceKinds,
   d,
 }: {
   tenantId: string
@@ -208,6 +247,7 @@ export function OperationQueue({
   locale: string
   reviewContext?: OperationReviewContext
   currency: string
+  sourceKinds: SourceKinds
   d: D
 }) {
   const format = (value: string) =>
@@ -253,8 +293,13 @@ export function OperationQueue({
                       </dt>
                       <dd>
                         {fact.value}
-                        {reviewContext && (
-                          <small> · {fact.sourceIds.join(', ')}</small>
+                        {reviewContext?.kind === 'reception' && (
+                          <SourceReferences
+                            operationId={o.id}
+                            ids={fact.sourceIds}
+                            sources={reviewContext.sources}
+                            kinds={sourceKinds}
+                          />
                         )}
                       </dd>
                     </div>
@@ -266,11 +311,13 @@ export function OperationQueue({
                     <dd>
                       {o.payload.suggestions.price.amount} {currency} ·{' '}
                       {o.payload.suggestions.price.rationale}
-                      {reviewContext && (
-                        <small>
-                          {' '}
-                          · {o.payload.suggestions.price.sourceIds.join(', ')}
-                        </small>
+                      {reviewContext?.kind === 'reception' && (
+                        <SourceReferences
+                          operationId={o.id}
+                          ids={o.payload.suggestions.price.sourceIds}
+                          sources={reviewContext.sources}
+                          kinds={sourceKinds}
+                        />
                       )}
                     </dd>
                   </div>
@@ -433,14 +480,23 @@ export function OperationQueue({
             <section aria-label={d.reviewContext}>
               <h3>{d.reviewContext}</h3>
               <p>{d.contextNotice}</p>
-              {reviewContext.sources.map((s) => (
-                <div key={s.id} className="intake-notice">
-                  <strong>
-                    {s.id} · {s.kind}
-                  </strong>
+              {reviewContext.sources.map((s, index) => (
+                <article
+                  key={s.id}
+                  id={`operation-source-${o.id}-${s.id}`}
+                  tabIndex={-1}
+                  className="intake-notice operation-source"
+                >
+                  <h4>
+                    {sourceKinds[s.kind]} {index + 1}
+                  </h4>
                   <p>{s.observation}</p>
                   {s.reference ? <p>{s.reference}</p> : <p>{d.photoNotice}</p>}
-                </div>
+                  <details className="operation-source-reference">
+                    <summary>{d.sourceReference}</summary>
+                    <code>{s.id}</code>
+                  </details>
+                </article>
               ))}
               {reviewContext.terms && (
                 <>

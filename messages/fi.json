@@ -862,7 +862,8 @@
     "noComparedChanges": "Ei muutoksia vertailluissa kentissä. Tarkista silti koko uusi ehdotus.",
     "sourceVersionChanged": "Lähdeversio on muuttunut. Tarkista todisteet, vaikka tiedot näyttäisivät muuttumattomilta.",
     "agreementVersionChanged": "Sopimusversio on muuttunut. Lue ehdotetut ehdot alta.",
-    "zettleReceipt": "PayPal POS-kuitti"
+    "zettleReceipt": "PayPal POS-kuitti",
+    "sourceReference": "Lähdeviite"
   },
   "reviewPhotoAlt": "Tähän tarkistukseen sisältyvä kuva",
   "reviewPhotos": "Tämän tarkistuksen kuvat",

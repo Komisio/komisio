@@ -19,7 +19,8 @@ export default async function OperationDetail({
   const ctx = await requirePlatform(),
     active = ctx.active!,
     currency = await readStoreCurrency(ctx.client, ctx.active!.id),
-    d = dictionary(ctx.locale).operations
+    all = dictionary(ctx.locale),
+    d = all.operations
   const detail = await readOperationReview(ctx.client, active.id, {
     operationId: id,
   }).catch((error: unknown) => {
@@ -47,6 +48,7 @@ export default async function OperationDetail({
         canDecide={active.role !== 'readonly'}
         locale={ctx.locale}
         currency={currency}
+        sourceKinds={all.reception.history.kinds}
         d={d}
       />
     </>

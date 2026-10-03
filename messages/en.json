@@ -862,7 +862,8 @@
     "noComparedChanges": "No changes in the compared fields. Still review the complete new proposal.",
     "sourceVersionChanged": "The source version has changed. Review the evidence even if the facts look unchanged.",
     "agreementVersionChanged": "The agreement version has changed. Read the proposed terms below.",
-    "zettleReceipt": "PayPal POS receipt"
+    "zettleReceipt": "PayPal POS receipt",
+    "sourceReference": "Source reference"
   },
   "reviewPhotoAlt": "Photo included in this review",
   "reviewPhotos": "Photos in this review",

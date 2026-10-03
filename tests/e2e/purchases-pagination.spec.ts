@@ -110,6 +110,9 @@ test('older purchases remain reachable and can be accepted from their page', asy
       'href',
       `/intake/items/${accepted.rows[0].id}`,
     )
+    // The local confirmation link appears before the refreshed receipt replaces
+    // its form. Wait for that replacement before an independent navigation.
+    await expect(row.locator('form')).toHaveCount(0)
     // Huge but syntactically valid page is clamped before an out-of-range read.
     await page.goto('/intake/purchases?page=9999999')
     await expect(page).toHaveURL(/\/intake\/purchases\?page=2(?:#.*)?$/)

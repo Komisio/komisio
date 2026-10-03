@@ -27,6 +27,7 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
           url: 'http://127.0.0.1:3000',
         },
       ])
+      await page.waitForLoadState('networkidle')
       await page.goto('/menu')
       await page.waitForLoadState('networkidle')
       const d = JSON.parse(
@@ -74,6 +75,7 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
     await page.keyboard.press('Enter')
     await expect(page).toHaveURL(/\/intake\/purchases$/)
     await expect(page.locator('.purchase-create > summary')).toBeVisible()
+    await page.waitForLoadState('networkidle')
     await page.goto('/menu')
     const sellers = page.locator('main a[href="/intake/sellers"]')
     await sellers.focus()
@@ -83,6 +85,7 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
     await expect(mobileCurrent).toHaveCount(1)
     await expect(mobileCurrent).toHaveAttribute('href', '/menu')
     await expect(mobileCurrent).toHaveAttribute('aria-current', 'location')
+    await page.waitForLoadState('networkidle')
     await page.goto('/intake')
     await expect(mobileCurrent).toHaveCount(1)
     await expect(mobileCurrent).toHaveAttribute('href', '/intake/quick')
@@ -93,6 +96,7 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
       'href',
       '/intake',
     )
+    await page.waitForLoadState('networkidle')
     await page.goto('/menu')
     await expect(page.locator('main a[href="/settings"]')).toBeVisible()
     expect(

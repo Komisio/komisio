@@ -854,3 +854,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-03: Unsaved accounting-map edits warn before supported navigation or unloading; in-page anchors and reverted fields remain usable. Confirmed publication releases the warning. Existing map versions, validation and access rules are unchanged.
 
 - 2026-10-03: Staff can find receipts beyond the latest 50 using the existing exact-reference and provider filters; detail links retain the search. Filtered empty states and list limits are explicit. Sale, return, currency and access rules are unchanged.
+
+- 2026-10-03: Context-help task links close the dialog after navigation is accepted, including same-page sections. Cancelled draft navigation retains help and edits; new-tab links leave the current help open.

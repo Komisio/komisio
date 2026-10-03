@@ -78,7 +78,11 @@ export function ContextHelp({
             {d.close}
           </Button>
         </div>
-        <HelpArticle topic={topic} d={d} />
+        <HelpArticle
+          topic={topic}
+          d={d}
+          onNavigate={() => dialog.current?.close()}
+        />
         <p>
           <Link
             className="text-link"

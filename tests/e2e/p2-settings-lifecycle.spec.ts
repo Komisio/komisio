@@ -39,6 +39,7 @@ test('notification policy and assistance quota persist', async ({ page }) => {
       fullPage: true,
     })
     await page.goto('/settings')
+    const previousVersion = await page.locator('.policy-version').innerText()
     await page
       .getByRole('link', { name: d.storePolicy.notifications, exact: true })
       .click()
@@ -63,6 +64,9 @@ test('notification policy and assistance quota persist', async ({ page }) => {
     await expect(
       page.getByLabel(d.storePolicy.assistanceMonthlyQuota, { exact: true }),
     ).toHaveValue('7')
+    await expect(page.locator('.policy-version')).not.toHaveText(
+      previousVersion,
+    )
     await page.reload()
     await expect(
       page.getByLabel(d.storePolicy.automaticSellerNotifications, {

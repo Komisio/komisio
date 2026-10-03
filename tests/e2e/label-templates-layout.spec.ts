@@ -96,11 +96,24 @@ test('the label template editor fits a 320px phone in every language and keeps t
           expect(box.x, `${locale} left`).toBeGreaterThanOrEqual(0)
           expect(box.x + box.width, `${locale} right`).toBeLessThanOrEqual(320)
           expect(
-            await control.evaluate(
-              (el) =>
+            await control.evaluate((el) => {
+              // Inline code has clientWidth 0 in Firefox; measure its text
+              // fragments against their parent instead of a block scrollbox.
+              if (getComputedStyle(el).display === 'inline') {
+                const text = document.createRange()
+                text.selectNodeContents(el)
+                const parent = el.parentElement!.getBoundingClientRect()
+                return [...text.getClientRects()].every(
+                  (rect) =>
+                    rect.left >= parent.left - 1 &&
+                    rect.right <= parent.right + 1,
+                )
+              }
+              return (
                 el.scrollWidth <= el.clientWidth + 1 ||
-                el.tagName === 'TEXTAREA',
-            ),
+                el.tagName === 'TEXTAREA'
+              )
+            }),
             `${locale} clipped text`,
           ).toBe(true)
         }
@@ -188,7 +201,9 @@ test('the label template editor fits a 320px phone in every language and keeps t
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true)
+    await page.locator('.label-formats-fold > summary').click()
     const sizeGroup = page.locator('.label-format').first()
+    await expect(sizeGroup).toBeVisible()
     expect(
       await sizeGroup.evaluate(
         (el) => getComputedStyle(el).gridTemplateColumns.split(' ').length,

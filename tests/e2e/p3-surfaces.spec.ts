@@ -117,6 +117,9 @@ test('store profile publishes a version that anyone can read by slug', async ({
       .getByRole('button', { name: d.storeProfile.publish, exact: true })
       .click()
     expect((await published).ok()).toBe(true)
+    await expect(
+      profile.getByText(`${d.storeProfile.version} 1`, { exact: true }),
+    ).toBeVisible()
     await page.reload()
     await expect(
       page

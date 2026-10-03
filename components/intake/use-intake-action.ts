@@ -3,6 +3,7 @@ import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { intakeCommand } from '@/lib/engine/intake'
 import type { Dictionary } from '@/lib/i18n'
+import { confirmsIntakeResult } from './confirmed-result'
 
 export function useIntakeAction(d: Dictionary['intake']) {
   const router = useRouter()
@@ -19,13 +20,6 @@ export function useIntakeAction(d: Dictionary['intake']) {
       setError(d.invalid)
       return null
     }
-    const settingsCommand =
-      command.data.action === 'registerPrinter' ||
-      command.data.action === 'publishStoreProfile'
-        ? command.data
-        : null
-    const labelFormatCommand =
-      command.data.action === 'setLabelFormat' ? command.data : null
     pending.current = command.data
     running.current = true
     setLocked(true)
@@ -142,24 +136,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
         if (result.error === 'AGREEMENT_REQUIRED') router.refresh()
         return null
       }
-      // These two RPCs return exactly the submitted row ID. Other intake
-      // commands have different result shapes (for example a transfer object).
-      if (
-        settingsCommand &&
-        (result?.ok !== true || result?.id !== settingsCommand.requestId)
-      ) {
-        setError(d.failed)
-        return null
-      }
-      // Label dimensions return the saved value, not the unused request ID.
-      if (
-        labelFormatCommand &&
-        (result?.ok !== true ||
-          result?.id?.kind !== labelFormatCommand.kind ||
-          result?.id?.widthMm !== labelFormatCommand.widthMm ||
-          result?.id?.heightMm !== labelFormatCommand.heightMm ||
-          result?.id?.custom !== true)
-      ) {
+      if (!confirmsIntakeResult(command.data, result)) {
         setError(d.failed)
         return null
       }

@@ -218,7 +218,12 @@ export async function POST(request: Request) {
         console.error('Notification after intake failed', { requestId })
       }
     }
-    return reply({ ok: true, id: result.data, notifications })
+    return reply({
+      ok: true,
+      commandId: parsed.data.requestId,
+      id: result.data,
+      notifications,
+    })
   } catch {
     console.error('Intake request failed', { requestId })
     return reply({ error: 'REQUEST_FAILED' }, 500)

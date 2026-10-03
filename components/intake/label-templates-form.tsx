@@ -11,6 +11,7 @@ import {
 } from '@/lib/engine/printing'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 import { placeholders } from '@/lib/labels/placeholders'
+import { confirmsIntakeResult } from './confirmed-result'
 
 const kinds = ['bag', 'garment', 'item', 'markdown', 'onboarding'] as const
 type Kind = (typeof kinds)[number]
@@ -183,7 +184,9 @@ function TemplateEditor({
   /** One command, one classified outcome; guarded against a second click. */
   async function send<T>(
     of: 'save' | 'reset',
-    command: object,
+    command:
+      | z.infer<typeof setLabelTemplateCommand>
+      | z.infer<typeof resetLabelTemplateCommand>,
     shape: z.ZodType<{ ok: true; id: T }>,
   ): Promise<T | null> {
     if (running.current || frozen) return null
@@ -200,7 +203,7 @@ function TemplateEditor({
       const body: unknown = await r.json().catch(() => null)
       if (r.ok) {
         const parsed = shape.safeParse(body)
-        if (!parsed.success) {
+        if (!parsed.success || !confirmsIntakeResult(command, body)) {
           setPending({ phase: 'uncertain', of })
           setInvalid(d.templateUncertain)
           return null

@@ -347,3 +347,46 @@ test('a damaged success envelope is not a confirmation', async ({ page }) => {
     await f.close()
   }
 })
+
+for (const action of ['setLabelTemplate', 'resetLabelTemplate'] as const)
+  test(`a ${action} reply for a different command cannot confirm this editor`, async ({
+    page,
+  }) => {
+    const { f, ...e } = await openEditor(
+      page,
+      `template-command-${randomUUID()}@example.test`,
+      { custom: action === 'resetLabelTemplate' },
+    )
+    try {
+      let requests = 0
+      await page.route('**/api/intake', async (route) => {
+        if (route.request().postDataJSON()?.action !== action)
+          return route.continue()
+        requests++
+        const reply = await route.fetch()
+        expect(reply.status()).toBe(200)
+        await route.fulfill({
+          response: reply,
+          json: { ...(await reply.json()), commandId: randomUUID() },
+        })
+      })
+      if (action === 'setLabelTemplate') {
+        await e.zpl.fill(VALID)
+        await e.save.click()
+      } else await e.reset.click()
+      await expectFrozen(e)
+      expect(requests).toBe(1)
+      expect(
+        (await versions(f)).map((row) => [row.version, row.active]),
+      ).toEqual(
+        action === 'setLabelTemplate'
+          ? [[1, true]]
+          : [
+              [1, true],
+              [2, false],
+            ],
+      )
+    } finally {
+      await f.close()
+    }
+  })

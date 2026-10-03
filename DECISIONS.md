@@ -866,3 +866,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-03: Connector consent keeps the selected store and scopes disabled while sending approval, so displayed choices cannot diverge from that request. Compact checkboxes retain clickable scope rows at narrow widths. Scope defaults, authorization and redirects are unchanged.
 
 - 2026-10-03: Store-owned purchases are directly discoverable in the shared goods navigation and mobile More menu, including before the first purchase. Existing page permissions and purchase/acceptance rules are unchanged.
+
+- 2026-10-03: The label-template editor also validates the returned command identity and template metadata before confirming a save or reset. An unmatched reply keeps reload-only recovery; non-replayable publication and reset rules are unchanged.

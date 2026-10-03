@@ -844,3 +844,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-03: Purchase drafts warn before leaving, including unconfirmed saves, while history paging retains them. Confirmed registration resets fields and the draft baseline; further edits clear old success feedback. Purchase, acceptance and financial rules are unchanged.
 - 2026-10-03: Shared intake forms retain frozen requests for all server/proxy failures, even when a 5xx body contains a validation or stale-state code. Only answered 4xx refusals can release fields or require reload. Engine rejection and replay rules are unchanged.
 - 2026-10-03: Intake success replies echo commandId separately from the engine result. Shared forms confirm only matching commands with the expected result shape, preserving canonical existing sale/day-close/export IDs. Malformed replies retain the original retry; engine rules are unchanged.
+
+- 2026-10-03: Answered intake authentication or access refusals offer a page reload and stop repeat submissions; ambiguous server failures retain the frozen retry. Existing authorization and submitted values are unchanged.

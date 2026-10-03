@@ -81,6 +81,8 @@ export function useIntakeAction(d: Dictionary['intake']) {
         if (
           result.error === 'AGREEMENT_CHANGED' ||
           [
+            'AUTH_REQUIRED',
+            'FORBIDDEN',
             'TENANT_CHANGED',
             'POLICY_CHANGED',
             'PROFILE_CHANGED',

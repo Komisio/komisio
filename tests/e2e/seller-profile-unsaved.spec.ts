@@ -33,12 +33,10 @@ test('seller edits survive tabs and cancelled departure; restoring fields releas
       .click()
     await cancelLeave(
       page,
-      page
-        .getByRole('tabpanel')
-        .getByRole('link', {
-          name: 'Synthetic seller draft item',
-          exact: true,
-        }),
+      page.getByRole('tabpanel').getByRole('link', {
+        name: 'Synthetic seller draft item',
+        exact: true,
+      }),
     )
     await expect(page).toHaveURL(
       new RegExp(`/sellers/${f.seller}#seller-items$`),

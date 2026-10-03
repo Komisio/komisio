@@ -50,11 +50,13 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
         locale,
       ).toBeLessThanOrEqual(320)
       if (locale === 'sv') {
-        const height = await page.evaluate(
-          () => document.documentElement.scrollHeight,
-        )
-        console.log('menu height at 320px:', height)
-        expect(height).toBeLessThan(1450)
+        // Measure menu density independently of the shell's accessible controls.
+        // The old 1450px document budget included 230px of header/footer space.
+        const height = await page
+          .getByRole('main')
+          .evaluate((main) => main.getBoundingClientRect().height)
+        console.log('menu content height at 320px:', height)
+        expect(height).toBeLessThan(1220)
       }
       await page.screenshot({
         path: info.outputPath(`menu-${locale}.png`),

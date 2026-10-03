@@ -1704,6 +1704,9 @@ button.text-link:hover:not(:disabled) {
   border-bottom: 1px solid var(--line);
   overflow-wrap: anywhere;
 }
+.seller-review > .brand {
+  margin-bottom: 16px;
+}
 .seller-review .card {
   overflow-wrap: anywhere;
 }

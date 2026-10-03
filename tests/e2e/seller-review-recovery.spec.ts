@@ -295,7 +295,7 @@ test('a revoked review link offers reload and cannot keep retrying a stale decis
 
 test('a failed authenticated review photo offers recovery and approval waits for a loaded image and confirmation', async ({
   page,
-}) => {
+}, testInfo) => {
   let block = true
   await page.route('**/api/seller/review/*/photo/*', (route) =>
     block ? route.fulfill({ status: 503, body: '' }) : route.continue(),
@@ -340,6 +340,26 @@ test('a failed authenticated review photo offers recovery and approval waits for
     await expect(
       page.getByRole('button', { name: d.reviewApprove, exact: true }),
     ).toBeEnabled()
+    const photo = (await page.locator('.reception-photos img').boundingBox())!
+    const description = (await page
+      .getByText('Synthetic blue coat', { exact: true })
+      .boundingBox())!
+    const terms = (await page
+      .getByRole('heading', { name: 'Synthetic terms', exact: true })
+      .boundingBox())!
+    const confirmation = (await page
+      .getByRole('checkbox', { name: d.reviewConfirm, exact: true })
+      .boundingBox())!
+    expect(photo.y + photo.height).toBeLessThanOrEqual(description.y)
+    expect(description.y).toBeLessThan(terms.y)
+    expect(terms.y).toBeLessThan(confirmation.y)
+    const expiry = page.locator('main time')
+    await expect(expiry).toHaveAttribute('datetime', /T/)
+    await expect(expiry).not.toContainText(/\d{1,2}:\d{2}:\d{2}/)
+    await page.screenshot({
+      path: testInfo.outputPath('seller-review-photo-320.png'),
+      fullPage: true,
+    })
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
     ).toBeLessThanOrEqual(320)
@@ -376,15 +396,13 @@ test('review retry controls remain visible and readable on a phone in every lang
           'utf8',
         ),
       )
-      await page
-        .context()
-        .addCookies([
-          {
-            name: 'komisio-locale',
-            value: locale,
-            url: 'http://127.0.0.1:3000',
-          },
-        ])
+      await page.context().addCookies([
+        {
+          name: 'komisio-locale',
+          value: locale,
+          url: 'http://127.0.0.1:3000',
+        },
+      ])
       await page.goto(`/review/${token}?localeCheck=${locale}`)
       await page
         .getByRole('button', { name: dictionary.reviewDecline, exact: true })

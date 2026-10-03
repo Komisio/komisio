@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
@@ -9,12 +9,14 @@ export function SellerResponse({
   photos,
   response,
   d,
+  children,
 }: {
   token: string
   reviewId: string
   photos: string[]
   response: { decision: 'approve' | 'decline' } | null
   d: Dictionary
+  children: ReactNode
 }) {
   const [busy, setBusy] = useState(false),
     [error, setError] = useState(''),
@@ -139,6 +141,7 @@ export function SellerResponse({
           </Button>
         </div>
       )}
+      {children}
       {answer ? (
         <p role="status" ref={status} tabIndex={-1}>
           {answer === 'approve' ? d.reviewApproved : d.reviewDeclined}

@@ -51,7 +51,7 @@ test('password visibility works with keyboard and all languages without submitti
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth),
       ).toBeLessThanOrEqual(320)
-      await expect(page).toHaveURL(`http://127.0.0.1:3000${path}`)
+      await expect(page).toHaveURL(path)
     }
   }
   expect(submitted).toBe(0)

@@ -55,6 +55,9 @@ test('store hours show only included days, preserve toggled values and publish t
       .getByRole('button', { name: d.storeProfile.publish, exact: true })
       .click()
     expect((await reply).status()).toBe(200)
+    // Wait for the confirmed version, not merely the response headers, before
+    // reloading. The pending form still legitimately guards against leaving.
+    await expect(form).toContainText(`${d.storeProfile.version} 1`)
     await page.reload()
     await expect(
       form.getByRole('checkbox', {

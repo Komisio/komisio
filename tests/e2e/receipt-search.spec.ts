@@ -119,15 +119,13 @@ test('receipt filters remain readable at 320px in all supported languages', asyn
           'utf8',
         ),
       )
-      await page
-        .context()
-        .addCookies([
-          {
-            name: 'komisio-locale',
-            value: locale,
-            url: 'http://127.0.0.1:3000',
-          },
-        ])
+      await page.context().addCookies([
+        {
+          name: 'komisio-locale',
+          value: locale,
+          url: 'http://127.0.0.1:3000',
+        },
+      ])
       await page.goto(
         `/intake/sales?reference=SYNTHETIC&provider=manual&language-check=${locale}`,
       )

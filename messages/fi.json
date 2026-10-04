@@ -1887,23 +1887,23 @@
     "contactToActivate": "Ota yhteyttä Komisioon aktivoidaksesi tilauksen.",
     "details": "Tiedot",
     "hostTitle": "Kaupat ja tilaukset",
-    "hostIntro": "Jokainen tämän asennuksen kauppa ja sen tilaustila. Manuaalinen aktivointi on laskutusasiakkaille ja pilotille; syy kirjataan.",
+    "hostIntro": "Hae ja vertaa myymälöitä. Avaa rivi nähdäksesi myymälän tiedot ja tilauksen hallinnan.",
     "store": "Kauppa",
     "state": "Tila",
-    "provider": "Toimittaja",
+    "provider": "Tilauksen hallinta",
     "until": "Asti",
     "created": "Luotu",
-    "activate": "Aktivoi",
-    "activateHeading": "Aktivoi {name}",
+    "activate": "Hallinnollinen poikkeus",
+    "activateHeading": "Manuaalinen tilaus: {name}",
     "untilOptional": "Aktiivinen asti (valinnainen; tyhjä tarkoittaa toistaiseksi)",
     "reason": "Syy",
-    "confirmActivate": "Aktivoi tilaus",
+    "confirmActivate": "Aseta tilaus aktiiviseksi",
     "cancel": "Peruuta",
     "busy": "Käsitellään…",
     "activated": "{name} on aktiivinen.",
     "errors": {
       "FORBIDDEN": "Et ole alustan ylläpitäjä.",
-      "BILLING_DISABLED": "Laskutus ei ole käytössä tässä asennuksessa.",
+      "BILLING_DISABLED": "Tilausten hallinta on poistettu käytöstä tässä ympäristössä. Manuaalinen aktivointi ei ole käytettävissä.",
       "PLAN_CLOSED": "Omistaja on sulkenut kaupan, eikä sitä voi aktivoida uudelleen täällä.",
       "TENANT_NOT_FOUND": "Kauppaa ei löytynyt.",
       "INVALID_INPUT": "Tarkista päivämäärä ja syy.",
@@ -1924,7 +1924,20 @@
     "lastActivity": "Viimeisin toiminta",
     "searchStores": "Hae myymälää",
     "allStates": "Kaikki tilat",
-    "noStores": "Hakua vastaavia myymälöitä ei löytynyt."
+    "noStores": "Hakua vastaavia myymälöitä ei löytynyt.",
+    "tableCount": "Näytetään {count} / {total} myymälää",
+    "tableHint": "Avaa tiedot napsauttamalla riviä. Lajittele sarakeotsikoista.",
+    "storeTable": "Myymälöiden yleiskatsaus",
+    "editPlan": "Muuta tilauksen tilaa",
+    "activationHint": "Asettaa tilauksen aktiiviseksi manuaalisella hallinnalla. Maksua ei veloiteta. Anna syy ja halutessasi päättymispäivä.",
+    "providers": {
+      "none": "Ei mitään",
+      "manual": "Manuaalinen",
+      "stripe": "Stripe"
+    },
+    "subscriptionHint": "Myymälän omistaja aloittaa tilauksen Stripen kautta myymälän asetuksissa. Stripe päivittää tilan. Manuaalinen aktivointi on hallinnollinen poikkeus eikä aloita tilausta.",
+    "activationUnconfirmed": "Vastausta ei voitu vahvistaa. Muutos on voinut toteutua. Lataa sivu uudelleen ja tarkista tila ennen muita toimia.",
+    "reloadStatus": "Lataa uudelleen ja tarkista tila"
   },
   "reconciliation": {
     "heading": "Täsmäytys",
@@ -3106,6 +3119,32 @@
       "komisio": "Komisio voi lähettää kirjanpitoaineiston Fortnoxiin. Automatiikka lähettää luodut viennit; päiväpäätökset ja vientiaineistot on edelleen luotava.",
       "pos": "Säilytä kassan myyntikirjaukset. Komision automaattinen myyjätilitysten täydennys ei ole vielä saatavilla. Anna kirjanpitäjän hoitaa täydennykset toistaiseksi.",
       "manual": "Luo aineisto kirjanpitäjän täsmäytettäväksi ja kirjattavaksi. Älä tuo jo kirjattuja tapahtumia uudelleen."
+    }
+  },
+  "itemPhotos": {
+    "title": "Kuvat",
+    "hint": "Valitse tuoteluettelossa näytettävä kuva. Kuvat eivät muuta myyjän aiempaa hyväksyntää.",
+    "preview": "Näytä pääkuva · {count} kuvaa",
+    "defaultPhoto": "Pääkuva",
+    "setDefault": "Aseta pääkuvaksi",
+    "remove": "Poista",
+    "add": "Lisää kuva",
+    "empty": "Tuotteella ei vielä ole kuvia.",
+    "fileHint": "JPEG tai PNG, enintään 3 Mt kuvaa kohden. Enintään 20 kuvaa.",
+    "busy": "Tallennetaan kuvaa…",
+    "saved": "Kuvat tallennettu.",
+    "failed": "Kuvan tallennus epäonnistui.",
+    "unconfirmed": "Muutos on voinut tallentua. Yritä samaa muutosta uudelleen.",
+    "changed": "Tuote tai myymälä on muuttunut tai käyttöoikeus puuttuu. Lataa sivu uudelleen ennen jatkamista.",
+    "reload": "Lataa uudelleen",
+    "retry": "Yritä uudelleen",
+    "loadFailed": "Kuvaa ei voitu näyttää.",
+    "errors": {
+      "INVALID_IMAGE": "Valitse kelvollinen JPEG- tai PNG-kuva.",
+      "IMAGE_TOO_LARGE": "Kuvan koko saa olla enintään 3 Mt.",
+      "PHOTO_LIMIT": "Tuotteella voi olla enintään 20 kuvaa.",
+      "PHOTO_NOT_FOUND": "Kuvaa tai tuotetta ei löytynyt.",
+      "ITEM_NOT_FOUND": "Kuvaa tai tuotetta ei löytynyt."
     }
   }
 }

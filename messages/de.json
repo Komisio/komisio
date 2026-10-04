@@ -1887,23 +1887,23 @@
     "contactToActivate": "Wenden Sie sich an Komisio, um das Abonnement zu aktivieren.",
     "details": "Details",
     "hostTitle": "Stores und Pläne",
-    "hostIntro": "Jeder Store in dieser Installation mit seinem Planstatus. Die manuelle Aktivierung ist für Rechnungskunden und den Pilot; der Grund wird erfasst.",
+    "hostIntro": "Geschäfte suchen und vergleichen. Öffnen Sie eine Zeile für Geschäftsdetails und Tarifverwaltung.",
     "store": "Store",
     "state": "Status",
-    "provider": "Anbieter",
+    "provider": "Tarifverwaltung",
     "until": "Bis",
     "created": "Erstellt",
-    "activate": "Aktivieren",
-    "activateHeading": "{name} aktivieren",
+    "activate": "Administrative Ausnahme",
+    "activateHeading": "Manueller Tarif für {name}",
     "untilOptional": "Aktiv bis (optional; leer bedeutet bis auf Weiteres)",
     "reason": "Grund",
-    "confirmActivate": "Plan aktivieren",
+    "confirmActivate": "Tarif auf aktiv setzen",
     "cancel": "Abbrechen",
     "busy": "Wird bearbeitet…",
     "activated": "{name} ist aktiv.",
     "errors": {
       "FORBIDDEN": "Sie sind kein Plattform-Host.",
-      "BILLING_DISABLED": "Die Abrechnung ist in dieser Installation nicht aktiviert.",
+      "BILLING_DISABLED": "Die Abonnementverwaltung ist in dieser Umgebung deaktiviert. Eine manuelle Aktivierung ist nicht verfügbar.",
       "PLAN_CLOSED": "Der Store wurde von seinem Inhaber geschlossen und kann hier nicht reaktiviert werden.",
       "TENANT_NOT_FOUND": "Der Store wurde nicht gefunden.",
       "INVALID_INPUT": "Prüfen Sie das Datum und den Grund.",
@@ -1924,7 +1924,20 @@
     "lastActivity": "Letzte Aktivität",
     "searchStores": "Geschäft suchen",
     "allStates": "Alle Status",
-    "noStores": "Keine Geschäfte entsprechen der Suche."
+    "noStores": "Keine Geschäfte entsprechen der Suche.",
+    "tableCount": "{count} von {total} Geschäften angezeigt",
+    "tableHint": "Klicken Sie auf eine Zeile für Details. Sortieren Sie über die Spaltenüberschriften.",
+    "storeTable": "Geschäftsübersicht",
+    "editPlan": "Tarifstatus ändern",
+    "activationHint": "Setzt den Tarif auf aktiv mit manueller Verwaltung. Es wird keine Zahlung eingezogen. Geben Sie einen Grund und optional ein Enddatum an.",
+    "providers": {
+      "none": "Keine",
+      "manual": "Manuell",
+      "stripe": "Stripe"
+    },
+    "subscriptionHint": "Der Geschäftsinhaber startet das Abonnement über Stripe in den Geschäftseinstellungen. Stripe aktualisiert den Status. Die manuelle Aktivierung ist eine administrative Ausnahme und startet kein Abonnement.",
+    "activationUnconfirmed": "Die Antwort konnte nicht bestätigt werden. Die Änderung wurde möglicherweise übernommen. Laden Sie die Seite neu und prüfen Sie den Status, bevor Sie fortfahren.",
+    "reloadStatus": "Neu laden und Status prüfen"
   },
   "reconciliation": {
     "heading": "Abstimmung",
@@ -3106,6 +3119,32 @@
       "komisio": "Komisio kann Buchungsdaten an Fortnox senden. Die Automatik versendet erstellte Exporte; Tagesabschlüsse und Exportdateien müssen weiterhin erstellt werden.",
       "pos": "Behalten Sie die Verkaufsbuchungen der Kasse bei. Eine automatische Ergänzung der Einliefererabrechnung aus Komisio ist noch nicht verfügbar. Lassen Sie diese Ergänzungen vorerst durch Ihre Buchhaltung vornehmen.",
       "manual": "Erstellen Sie Unterlagen zur Abstimmung und Buchung durch Ihre Buchhaltung. Bereits gebuchte Vorgänge dürfen nicht erneut importiert werden."
+    }
+  },
+  "itemPhotos": {
+    "title": "Bilder",
+    "hint": "Wählen Sie das Bild für die Artikelliste. Die frühere Zustimmung des Verkäufers bleibt unverändert.",
+    "preview": "Hauptbild anzeigen · {count} Bilder",
+    "defaultPhoto": "Hauptbild",
+    "setDefault": "Als Hauptbild verwenden",
+    "remove": "Entfernen",
+    "add": "Bild hinzufügen",
+    "empty": "Dieser Artikel hat noch keine Bilder.",
+    "fileHint": "JPEG oder PNG, jeweils höchstens 3 MB. Bis zu 20 Bilder.",
+    "busy": "Bild wird gespeichert…",
+    "saved": "Bilder gespeichert.",
+    "failed": "Bild konnte nicht gespeichert werden.",
+    "unconfirmed": "Die Änderung wurde möglicherweise gespeichert. Wiederholen Sie dieselbe Änderung.",
+    "changed": "Artikel oder Geschäft geändert oder Zugriff verweigert. Laden Sie die Seite neu, bevor Sie fortfahren.",
+    "reload": "Neu laden",
+    "retry": "Erneut versuchen",
+    "loadFailed": "Bild konnte nicht angezeigt werden.",
+    "errors": {
+      "INVALID_IMAGE": "Wählen Sie ein gültiges JPEG- oder PNG-Bild.",
+      "IMAGE_TOO_LARGE": "Das Bild darf höchstens 3 MB groß sein.",
+      "PHOTO_LIMIT": "Ein Artikel kann bis zu 20 Bilder haben.",
+      "PHOTO_NOT_FOUND": "Bild oder Artikel nicht gefunden.",
+      "ITEM_NOT_FOUND": "Bild oder Artikel nicht gefunden."
     }
   }
 }

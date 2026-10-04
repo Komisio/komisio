@@ -8,6 +8,7 @@ import {
   isPlatformHost,
   readHostActivity,
   readHostOverview,
+  readPlanStatus,
 } from '@/lib/engine/plans'
 import { HostPlans } from '@/components/platform/host-plans'
 import { HostAi } from '@/components/platform/host-ai'
@@ -18,10 +19,11 @@ export default async function Host() {
   const ctx = await requirePlatform()
   if (!(await isPlatformHost(ctx.client))) notFound()
   const d = dictionary(ctx.locale)
-  const [rows, activity, ai] = await Promise.all([
+  const [rows, activity, ai, plan] = await Promise.all([
     readHostOverview(ctx.client),
     readHostActivity(ctx.client),
     readAiPlatformSettings(ctx.client),
+    readPlanStatus(ctx.client, ctx.active!.id),
   ])
   return (
     <div className="host-console">
@@ -32,6 +34,7 @@ export default async function Host() {
       </div>
       <HostPlans
         rows={rows}
+        billingEnabled={plan?.billing === true}
         activity={Object.fromEntries(activity)}
         locale={ctx.locale}
         d={d.plans}

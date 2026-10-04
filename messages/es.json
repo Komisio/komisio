@@ -1887,23 +1887,23 @@
     "contactToActivate": "Contacta con Komisio para activar la suscripción.",
     "details": "Detalles",
     "hostTitle": "Tiendas y planes",
-    "hostIntro": "Todas las tiendas de esta instalación con el estado de su plan. La activación manual es para clientes por factura y para el piloto; el motivo queda registrado.",
+    "hostIntro": "Busca y compara tiendas. Abre una fila para ver los detalles de la tienda y gestionar su plan.",
     "store": "Tienda",
     "state": "Estado",
-    "provider": "Proveedor",
+    "provider": "Gestión del plan",
     "until": "Hasta",
     "created": "Creada",
-    "activate": "Activar",
-    "activateHeading": "Activar {name}",
+    "activate": "Excepción administrativa",
+    "activateHeading": "Plan manual para {name}",
     "untilOptional": "Activo hasta (opcional; vacío significa hasta nuevo aviso)",
     "reason": "Motivo",
-    "confirmActivate": "Activar el plan",
+    "confirmActivate": "Marcar el plan como activo",
     "cancel": "Cancelar",
     "busy": "Procesando…",
     "activated": "{name} está activo.",
     "errors": {
       "FORBIDDEN": "No eres anfitrión de la plataforma.",
-      "BILLING_DISABLED": "La facturación no está activada en esta instalación.",
+      "BILLING_DISABLED": "La gestión de suscripciones está desactivada en este entorno. La activación manual no está disponible.",
       "PLAN_CLOSED": "La tienda ha sido cerrada por su propietario y no se puede reactivar aquí.",
       "TENANT_NOT_FOUND": "No se encontró la tienda.",
       "INVALID_INPUT": "Comprueba la fecha y el motivo.",
@@ -1924,7 +1924,20 @@
     "lastActivity": "Última actividad",
     "searchStores": "Buscar tienda",
     "allStates": "Todos los estados",
-    "noStores": "No hay tiendas que coincidan con la búsqueda."
+    "noStores": "No hay tiendas que coincidan con la búsqueda.",
+    "tableCount": "Mostrando {count} de {total} tiendas",
+    "tableHint": "Haz clic en una fila para ver los detalles. Ordena con los encabezados de columna.",
+    "storeTable": "Resumen de tiendas",
+    "editPlan": "Cambiar el estado del plan",
+    "activationHint": "Establece el plan como activo con gestión manual. No se realiza ningún cobro. Indica un motivo y, si procede, una fecha de finalización.",
+    "providers": {
+      "none": "Ninguno",
+      "manual": "Manual",
+      "stripe": "Stripe"
+    },
+    "subscriptionHint": "El propietario inicia la suscripción mediante Stripe en los ajustes de la tienda. Stripe actualiza el estado. La activación manual es una excepción administrativa y no inicia una suscripción.",
+    "activationUnconfirmed": "No se pudo confirmar la respuesta. Es posible que se haya aplicado el cambio. Recarga y comprueba el estado antes de continuar.",
+    "reloadStatus": "Recargar y comprobar el estado"
   },
   "reconciliation": {
     "heading": "Conciliación",
@@ -3106,6 +3119,32 @@
       "komisio": "Komisio puede enviar los datos contables a Fortnox. La automatización envía las exportaciones creadas; los cierres diarios y documentos de exportación aún deben prepararse.",
       "pos": "Mantén la contabilización de ventas del TPV. La liquidación complementaria automática a consignantes desde Komisio aún no está disponible. Deja esos ajustes a la persona responsable de contabilidad por ahora.",
       "manual": "Prepara documentos para que contabilidad los concilie y registre. Evita importar operaciones ya contabilizadas."
+    }
+  },
+  "itemPhotos": {
+    "title": "Fotos",
+    "hint": "Elige la imagen de la lista de artículos. Las fotos no cambian la aprobación anterior del vendedor.",
+    "preview": "Ver imagen principal · {count} fotos",
+    "defaultPhoto": "Imagen principal",
+    "setDefault": "Usar como principal",
+    "remove": "Quitar",
+    "add": "Añadir foto",
+    "empty": "Este artículo aún no tiene fotos.",
+    "fileHint": "JPEG o PNG, máximo 3 MB por imagen. Hasta 20 fotos.",
+    "busy": "Guardando foto…",
+    "saved": "Fotos guardadas.",
+    "failed": "No se pudo guardar la foto.",
+    "unconfirmed": "Es posible que el cambio se haya guardado. Reintenta el mismo cambio.",
+    "changed": "El artículo o la tienda han cambiado, o no tienes acceso. Recarga antes de continuar.",
+    "reload": "Recargar",
+    "retry": "Reintentar",
+    "loadFailed": "No se pudo mostrar la foto.",
+    "errors": {
+      "INVALID_IMAGE": "Elige una imagen JPEG o PNG válida.",
+      "IMAGE_TOO_LARGE": "La foto no puede superar los 3 MB.",
+      "PHOTO_LIMIT": "Un artículo puede tener hasta 20 fotos.",
+      "PHOTO_NOT_FOUND": "No se encontró la foto o el artículo.",
+      "ITEM_NOT_FOUND": "No se encontró la foto o el artículo."
     }
   }
 }

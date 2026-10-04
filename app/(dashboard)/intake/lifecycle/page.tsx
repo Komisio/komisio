@@ -1,3 +1,5 @@
+import { ItemPhotoPreview } from '@/components/intake/item-photo-preview'
+import { readItemPhotos } from '@/lib/engine/item-photos'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
@@ -68,6 +70,15 @@ export default async function Lifecycle({
     `/intake/lifecycle?${new URLSearchParams({ q: query, stage: stage.success ? stage.data : '', page: String(number) })}`
   if (requestedPage > pages) redirect(pageHref(pages))
   const visible = paged?.rows ?? filtered.slice((page - 1) * 20, page * 20)
+  const photos = new Map(
+    (
+      await readItemPhotos(
+        ctx.client,
+        active.id,
+        visible.map((r) => r.item_id),
+      )
+    ).map((p) => [p.itemId, p]),
+  )
   const clearHref =
     '/intake/lifecycle?' +
     new URLSearchParams({ stage: stage.success ? stage.data : '' })
@@ -169,6 +180,17 @@ export default async function Lifecycle({
               <summary>
                 <span className="lifecycle-item">
                   {r.title || all.items.item}
+                  {photos.get(r.item_id)?.defaultPhotoId && (
+                    <ItemPhotoPreview
+                      key={photos.get(r.item_id)!.defaultPhotoId}
+                      tenantId={active.id}
+                      itemId={r.item_id}
+                      photoId={photos.get(r.item_id)!.defaultPhotoId!}
+                      count={photos.get(r.item_id)!.photos.length}
+                      title={r.title || all.items.item}
+                      d={all.itemPhotos}
+                    />
+                  )}
                 </span>
                 <span
                   className={`lifecycle-status lifecycle-status-${r.stage}`}

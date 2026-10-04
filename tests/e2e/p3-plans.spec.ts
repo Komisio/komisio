@@ -58,16 +58,19 @@ test('trial banner, host activation and read-only state', async ({
       await f.db.query('select slug from tenants where id=$1', [f.tenant])
     ).rows[0].slug as string
     await page.getByLabel(d.plans.searchStores).fill(slug)
-    const row = host.getByRole('article', {
-      name: 'P2 browser store',
+    const row = host.locator('tr.host-store-row').filter({ hasText: slug })
+    const nameHeader = host.getByRole('columnheader', {
+      name: d.plans.store,
       exact: true,
     })
+    await expect(nameHeader).toHaveAttribute('aria-sort', 'ascending')
+    await nameHeader.getByRole('button').click()
+    await expect(nameHeader).toHaveAttribute('aria-sort', 'descending')
     await expect(
       row.getByText(d.plans.states.trial, { exact: true }),
     ).toBeVisible()
-    // Activity next to the plan: one member, one seller, nothing sold.
-    await expect(row.locator('dl').first().locator('dd')).toHaveText([
-      '1',
+    // Activity next to the plan: one seller, no items and nothing sold.
+    await expect(row.locator('td').filter({ hasText: /^[0-9]+$/ })).toHaveText([
       '1',
       '0',
       '0',
@@ -106,14 +109,58 @@ test('trial banner, host activation and read-only state', async ({
       fullPage: true,
     })
     await page.setViewportSize({ width: 1280, height: 900 })
-    await row
-      .getByRole('button', { name: d.plans.activate, exact: true })
+    await row.locator('td').last().click()
+    const detail = host.getByRole('region', {
+      name: 'P2 browser store',
+      exact: true,
+    })
+    await expect(detail).toBeVisible()
+    const storeButton = row.getByRole('button')
+    await storeButton.focus()
+    await page.keyboard.press('Enter')
+    await expect(detail).not.toBeVisible()
+    await page.keyboard.press('Enter')
+    await expect(detail).toBeVisible()
+    await page.screenshot({
+      path: testInfo.outputPath('host-detail.png'),
+      fullPage: true,
+    })
+    await detail.locator('summary').click()
+    await expect(detail.getByText(d.plans.activationHint)).toBeVisible()
+    await detail
+      .getByRole('button', { name: d.plans.editPlan, exact: true })
       .click()
     await expect(
       page.getByRole('heading', {
         name: d.plans.activateHeading.replace('{name}', 'P2 browser store'),
       }),
     ).toBeFocused()
+    // A stalled response must end the spinner without allowing a duplicate write.
+    await page.route('**/api/host', () => {})
+    await page
+      .getByLabel(d.plans.reason, { exact: true })
+      .fill('Stalled request')
+    await page
+      .getByRole('button', { name: d.plans.confirmActivate, exact: true })
+      .click()
+    await expect(
+      page
+        .getByRole('alert')
+        .filter({ hasText: d.plans.activationUnconfirmed }),
+    ).toBeVisible({ timeout: 20000 })
+    await expect(
+      page.getByRole('button', { name: d.plans.confirmActivate, exact: true }),
+    ).toBeDisabled()
+    await page.unroute('**/api/host')
+    await page
+      .getByRole('button', { name: d.plans.reloadStatus, exact: true })
+      .click()
+    await page.getByLabel(d.plans.searchStores).fill(slug)
+    await row.getByRole('button').click()
+    await detail.locator('summary').click()
+    await detail
+      .getByRole('button', { name: d.plans.editPlan, exact: true })
+      .click()
     await page.getByLabel(d.plans.reason, { exact: true }).fill('Pilot store')
     await page
       .getByRole('button', { name: d.plans.confirmActivate, exact: true })
@@ -148,6 +195,20 @@ test('trial banner, host activation and read-only state', async ({
         ),
       ),
     ).rejects.toThrow(/PLAN_READ_ONLY/)
+    // Local/self-hosted billing-off mode must not offer an unusable activation form.
+    await f.db.query('update platform_settings set billing_enabled=false')
+    await page.goto('/host')
+    await expect(
+      host
+        .getByRole('status')
+        .filter({ hasText: d.plans.errors.BILLING_DISABLED }),
+    ).toBeVisible()
+    await page.getByLabel(d.plans.searchStores).fill(slug)
+    await row.getByRole('button').click()
+    await detail.locator('summary').click()
+    await expect(
+      detail.getByRole('button', { name: d.plans.editPlan, exact: true }),
+    ).toHaveCount(0)
   } finally {
     await f.db
       .query('update platform_settings set billing_enabled=false')

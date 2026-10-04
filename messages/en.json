@@ -1887,23 +1887,23 @@
     "contactToActivate": "Contact Komisio to activate the subscription.",
     "details": "Details",
     "hostTitle": "Stores and plans",
-    "hostIntro": "Every store on this deployment with its plan state. Manual activation is for invoice customers and the pilot; the reason is recorded.",
+    "hostIntro": "Find and compare stores. Open a row for store details and plan management.",
     "store": "Store",
     "state": "State",
-    "provider": "Provider",
+    "provider": "Plan management",
     "until": "Until",
     "created": "Created",
-    "activate": "Activate",
-    "activateHeading": "Activate {name}",
+    "activate": "Administrative exception",
+    "activateHeading": "Manual plan for {name}",
     "untilOptional": "Active until (optional; empty means until further notice)",
     "reason": "Reason",
-    "confirmActivate": "Activate the plan",
+    "confirmActivate": "Set plan to active",
     "cancel": "Cancel",
     "busy": "Working…",
     "activated": "{name} is active.",
     "errors": {
       "FORBIDDEN": "You are not a platform host.",
-      "BILLING_DISABLED": "Billing is not enabled on this deployment.",
+      "BILLING_DISABLED": "Subscription management is disabled in this environment. Manual activation is unavailable.",
       "PLAN_CLOSED": "The store is closed by its owner and cannot be reactivated here.",
       "TENANT_NOT_FOUND": "The store was not found.",
       "INVALID_INPUT": "Check the date and the reason.",
@@ -1924,7 +1924,20 @@
     "lastActivity": "Last activity",
     "searchStores": "Search stores",
     "allStates": "All statuses",
-    "noStores": "No stores match your search."
+    "noStores": "No stores match your search.",
+    "tableCount": "Showing {count} of {total} stores",
+    "tableHint": "Click a row for details. Sort using the column headings.",
+    "storeTable": "Store overview",
+    "editPlan": "Change plan status",
+    "activationHint": "Sets the plan to active with manual management. No payment is taken. Enter a reason and an optional end date.",
+    "providers": {
+      "none": "None",
+      "manual": "Manual",
+      "stripe": "Stripe"
+    },
+    "subscriptionHint": "The store owner starts the subscription through Stripe in store settings. Stripe updates the status. Manual activation is an administrative exception and does not start a subscription.",
+    "activationUnconfirmed": "The response could not be confirmed. The change may have been applied. Reload and check the status before taking further action.",
+    "reloadStatus": "Reload and check status"
   },
   "reconciliation": {
     "heading": "Reconciliation",
@@ -3100,6 +3113,32 @@
       "komisio": "Komisio can send accounting data to Fortnox. Automation sends created exports; day closes and export documents still need to be prepared.",
       "pos": "Keep the POS sales postings. Automatic consignor accounting supplements from Komisio are not available yet. Ask your accountant to handle the supplements for now.",
       "manual": "Prepare documents for your accountant to reconcile and post. Avoid importing anything already posted."
+    }
+  },
+  "itemPhotos": {
+    "title": "Photos",
+    "hint": "Choose the image shown in item lists. These photos do not change the seller’s earlier approval.",
+    "preview": "Preview default image · {count} photos",
+    "defaultPhoto": "Default image",
+    "setDefault": "Set as default",
+    "remove": "Remove",
+    "add": "Add photo",
+    "empty": "This item has no photos yet.",
+    "fileHint": "JPEG or PNG, up to 3 MB each. Up to 20 photos.",
+    "busy": "Saving photo…",
+    "saved": "Photos saved.",
+    "failed": "Could not save the photo.",
+    "unconfirmed": "The change may have been saved. Retry the same change.",
+    "changed": "The item or store changed, or access is unavailable. Reload before continuing.",
+    "reload": "Reload",
+    "retry": "Retry",
+    "loadFailed": "Could not display the photo.",
+    "errors": {
+      "INVALID_IMAGE": "Choose a valid JPEG or PNG image.",
+      "IMAGE_TOO_LARGE": "The photo must be no larger than 3 MB.",
+      "PHOTO_LIMIT": "An item can have up to 20 photos.",
+      "PHOTO_NOT_FOUND": "Photo or item not found.",
+      "ITEM_NOT_FOUND": "Photo or item not found."
     }
   }
 }

@@ -1887,23 +1887,23 @@
     "contactToActivate": "Kontakt Komisio for å aktivere abonnementet.",
     "details": "Detaljer",
     "hostTitle": "Butikker og abonnementer",
-    "hostIntro": "Hver butikk i denne installasjonen med sin abonnementsstatus. Manuell aktivering er for fakturakunder og piloten; årsaken registreres.",
+    "hostIntro": "Søk og sammenlign butikker. Åpne en rad for butikkdetaljer og planadministrasjon.",
     "store": "Butikk",
     "state": "Status",
-    "provider": "Leverandør",
+    "provider": "Planadministrasjon",
     "until": "Til",
     "created": "Opprettet",
-    "activate": "Aktiver",
-    "activateHeading": "Aktiver {name}",
+    "activate": "Administrativt unntak",
+    "activateHeading": "Manuell plan for {name}",
     "untilOptional": "Aktiv til (valgfritt; tomt betyr inntil videre)",
     "reason": "Årsak",
-    "confirmActivate": "Aktiver abonnementet",
+    "confirmActivate": "Sett planen til aktiv",
     "cancel": "Avbryt",
     "busy": "Arbeider …",
     "activated": "{name} er aktiv.",
     "errors": {
       "FORBIDDEN": "Du er ikke plattformvert.",
-      "BILLING_DISABLED": "Fakturering er ikke aktivert i denne installasjonen.",
+      "BILLING_DISABLED": "Abonnementsadministrasjon er deaktivert i dette miljøet. Manuell aktivering er ikke tilgjengelig.",
       "PLAN_CLOSED": "Butikken er stengt av eieren og kan ikke reaktiveres her.",
       "TENANT_NOT_FOUND": "Butikken ble ikke funnet.",
       "INVALID_INPUT": "Kontroller datoen og årsaken.",
@@ -1924,7 +1924,20 @@
     "lastActivity": "Siste aktivitet",
     "searchStores": "Søk butikk",
     "allStates": "Alle statuser",
-    "noStores": "Ingen butikker samsvarer med søket."
+    "noStores": "Ingen butikker samsvarer med søket.",
+    "tableCount": "Viser {count} av {total} butikker",
+    "tableHint": "Klikk på en rad for detaljer. Sorter med kolonneoverskriftene.",
+    "storeTable": "Butikkoversikt",
+    "editPlan": "Endre planstatus",
+    "activationHint": "Setter planen til aktiv med manuell administrasjon. Ingen betaling trekkes. Angi en grunn og eventuelt en sluttdato.",
+    "providers": {
+      "none": "Ingen",
+      "manual": "Manuell",
+      "stripe": "Stripe"
+    },
+    "subscriptionHint": "Butikkeieren starter abonnementet via Stripe i butikkinnstillingene. Stripe oppdaterer statusen. Manuell aktivering er et administrativt unntak og starter ikke et abonnement.",
+    "activationUnconfirmed": "Svaret kunne ikke bekreftes. Endringen kan ha blitt gjennomført. Last inn på nytt og kontroller status før du gjør noe mer.",
+    "reloadStatus": "Last inn på nytt og kontroller status"
   },
   "reconciliation": {
     "heading": "Avstemming",
@@ -3100,6 +3113,32 @@
       "komisio": "Komisio kan sende regnskapsgrunnlag til Fortnox. Automatikken sender opprettede eksporter; dagsoppgjør og eksportgrunnlag må fortsatt opprettes.",
       "pos": "Behold kassens salgsbokføring. Automatisk supplering med selgeravregning fra Komisio er ikke tilgjengelig ennå. La regnskapsfører håndtere suppleringen inntil videre.",
       "manual": "Opprett grunnlag som regnskapsfører avstemmer og bokfører. Unngå å importere noe som allerede er bokført."
+    }
+  },
+  "itemPhotos": {
+    "title": "Bilder",
+    "hint": "Velg bildet som vises i varelisten. Bildene endrer ikke selgerens tidligere godkjenning.",
+    "preview": "Vis hovedbilde · {count} bilder",
+    "defaultPhoto": "Hovedbilde",
+    "setDefault": "Bruk som hovedbilde",
+    "remove": "Fjern",
+    "add": "Legg til bilde",
+    "empty": "Varen har ingen bilder ennå.",
+    "fileHint": "JPEG eller PNG, høyst 3 MB per bilde. Opptil 20 bilder.",
+    "busy": "Lagrer bilde…",
+    "saved": "Bildene er lagret.",
+    "failed": "Bildet kunne ikke lagres.",
+    "unconfirmed": "Det er uklart om endringen ble lagret. Prøv samme endring igjen.",
+    "changed": "Varen eller butikken er endret, eller du mangler tilgang. Last inn på nytt før du fortsetter.",
+    "reload": "Last inn på nytt",
+    "retry": "Prøv igjen",
+    "loadFailed": "Bildet kunne ikke vises.",
+    "errors": {
+      "INVALID_IMAGE": "Velg et gyldig JPEG- eller PNG-bilde.",
+      "IMAGE_TOO_LARGE": "Bildet kan være høyst 3 MB.",
+      "PHOTO_LIMIT": "En vare kan ha opptil 20 bilder.",
+      "PHOTO_NOT_FOUND": "Bildet eller varen ble ikke funnet.",
+      "ITEM_NOT_FOUND": "Bildet eller varen ble ikke funnet."
     }
   }
 }

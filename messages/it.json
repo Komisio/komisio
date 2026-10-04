@@ -1887,23 +1887,23 @@
     "contactToActivate": "Contatta Komisio per attivare l'abbonamento.",
     "details": "Dettagli",
     "hostTitle": "Negozi e piani",
-    "hostIntro": "Ogni negozio su questa installazione con lo stato del suo piano. L'attivazione manuale è per i clienti con fattura e per il pilota; il motivo viene registrato.",
+    "hostIntro": "Cerca e confronta i negozi. Apri una riga per i dettagli del negozio e la gestione del piano.",
     "store": "Negozio",
     "state": "Stato",
-    "provider": "Fornitore",
+    "provider": "Gestione del piano",
     "until": "Fino al",
     "created": "Creato",
-    "activate": "Attiva",
-    "activateHeading": "Attiva {name}",
+    "activate": "Eccezione amministrativa",
+    "activateHeading": "Piano manuale per {name}",
     "untilOptional": "Attivo fino al (facoltativo; vuoto significa fino a nuovo avviso)",
     "reason": "Motivo",
-    "confirmActivate": "Attiva il piano",
+    "confirmActivate": "Imposta il piano come attivo",
     "cancel": "Annulla",
     "busy": "Elaborazione…",
     "activated": "{name} è attivo.",
     "errors": {
       "FORBIDDEN": "Non sei un host della piattaforma.",
-      "BILLING_DISABLED": "La fatturazione non è attiva su questa installazione.",
+      "BILLING_DISABLED": "La gestione degli abbonamenti è disattivata in questo ambiente. L’attivazione manuale non è disponibile.",
       "PLAN_CLOSED": "Il negozio è stato chiuso dal suo proprietario e non può essere riattivato qui.",
       "TENANT_NOT_FOUND": "Il negozio non è stato trovato.",
       "INVALID_INPUT": "Controlla la data e il motivo.",
@@ -1924,7 +1924,20 @@
     "lastActivity": "Ultima attività",
     "searchStores": "Cerca negozio",
     "allStates": "Tutti gli stati",
-    "noStores": "Nessun negozio corrisponde alla ricerca."
+    "noStores": "Nessun negozio corrisponde alla ricerca.",
+    "tableCount": "{count} di {total} negozi visualizzati",
+    "tableHint": "Fai clic su una riga per i dettagli. Ordina tramite le intestazioni delle colonne.",
+    "storeTable": "Panoramica dei negozi",
+    "editPlan": "Modifica lo stato del piano",
+    "activationHint": "Imposta il piano come attivo con gestione manuale. Non viene addebitato alcun pagamento. Inserisci un motivo ed eventualmente una data di scadenza.",
+    "providers": {
+      "none": "Nessuno",
+      "manual": "Manuale",
+      "stripe": "Stripe"
+    },
+    "subscriptionHint": "Il proprietario avvia un abbonamento tramite Stripe nelle impostazioni del negozio. Stripe aggiorna lo stato. L’attivazione manuale è un’eccezione amministrativa e non avvia un abbonamento.",
+    "activationUnconfirmed": "Impossibile confermare la risposta. La modifica potrebbe essere stata applicata. Ricarica e verifica lo stato prima di procedere.",
+    "reloadStatus": "Ricarica e verifica lo stato"
   },
   "reconciliation": {
     "heading": "Riconciliazione",
@@ -3100,6 +3113,32 @@
       "komisio": "Komisio può inviare i dati contabili a Fortnox. L’automazione invia le esportazioni create; chiusure giornaliere e documenti di esportazione devono ancora essere preparati.",
       "pos": "Mantieni le registrazioni delle vendite del POS. L’integrazione automatica dei conteggi dei conferenti da Komisio non è ancora disponibile. Affida per ora le integrazioni al responsabile contabile.",
       "manual": "Prepara i documenti per la riconciliazione e la registrazione da parte della contabilità. Evita di importare operazioni già contabilizzate."
+    }
+  },
+  "itemPhotos": {
+    "title": "Foto",
+    "hint": "Scegli l’immagine per l’elenco degli articoli. Le foto non modificano l’approvazione precedente del venditore.",
+    "preview": "Mostra immagine principale · {count} foto",
+    "defaultPhoto": "Immagine principale",
+    "setDefault": "Imposta come principale",
+    "remove": "Rimuovi",
+    "add": "Aggiungi foto",
+    "empty": "Questo articolo non ha ancora foto.",
+    "fileHint": "JPEG o PNG, massimo 3 MB ciascuna. Fino a 20 foto.",
+    "busy": "Salvataggio foto…",
+    "saved": "Foto salvate.",
+    "failed": "Impossibile salvare la foto.",
+    "unconfirmed": "La modifica potrebbe essere stata salvata. Riprova la stessa modifica.",
+    "changed": "Articolo o negozio modificato oppure accesso negato. Ricarica prima di continuare.",
+    "reload": "Ricarica",
+    "retry": "Riprova",
+    "loadFailed": "Impossibile mostrare la foto.",
+    "errors": {
+      "INVALID_IMAGE": "Scegli un’immagine JPEG o PNG valida.",
+      "IMAGE_TOO_LARGE": "La foto non può superare 3 MB.",
+      "PHOTO_LIMIT": "Un articolo può avere fino a 20 foto.",
+      "PHOTO_NOT_FOUND": "Foto o articolo non trovato.",
+      "ITEM_NOT_FOUND": "Foto o articolo non trovato."
     }
   }
 }

@@ -1,3 +1,5 @@
+import { ItemPhotoGallery } from '@/components/intake/item-photo-gallery'
+import { readItemPhotos } from '@/lib/engine/item-photos'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { ActorSignature } from '@/components/intake/actor-signature'
@@ -30,9 +32,10 @@ export default async function Item({
   const result = await readItem(ctx.client, active.id, id.data)
   if (!result) notFound()
   const { item, prices, events } = result
-  const [printers, label] = await Promise.all([
+  const [printers, label, photos] = await Promise.all([
     readPrinters(ctx.client, active.id),
     readItemLabel(ctx.client, active.id, item.id),
+    readItemPhotos(ctx.client, active.id, [item.id]),
   ])
   const currentPrice = label?.priceOre ?? prices[0]?.price_ore ?? null
   const reference = label?.reference ?? `I-${item.id.slice(0, 8).toUpperCase()}`
@@ -116,6 +119,16 @@ export default async function Item({
           </p>
         )}
       </div>
+      {photos[0] && (
+        <ItemPhotoGallery
+          key={item.id}
+          tenantId={active.id}
+          initial={photos[0]}
+          title={label?.title || d.item}
+          write={['owner', 'admin', 'staff'].includes(active.role)}
+          d={all.itemPhotos}
+        />
+      )}
       <details className="card intake-form item-detail-section">
         <summary>{d.terms}</summary>
         <p>{d.termsHint}</p>

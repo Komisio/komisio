@@ -1887,23 +1887,23 @@
     "contactToActivate": "Kontakta Komisio för att aktivera prenumerationen.",
     "details": "Detaljer",
     "hostTitle": "Butiker och planer",
-    "hostIntro": "Alla butiker i den här driftmiljön med planstatus. Manuell aktivering är för fakturakunder och piloten; orsaken sparas.",
+    "hostIntro": "Sök och jämför butiker. Öppna en rad för butiksdetaljer och planhantering.",
     "store": "Butik",
     "state": "Status",
-    "provider": "Leverantör",
+    "provider": "Planhantering",
     "until": "Till",
     "created": "Skapad",
-    "activate": "Aktivera",
-    "activateHeading": "Aktivera {name}",
+    "activate": "Administrativt undantag",
+    "activateHeading": "Manuell plan för {name}",
     "untilOptional": "Aktiv till (valfritt; tomt betyder tills vidare)",
     "reason": "Orsak",
-    "confirmActivate": "Aktivera planen",
+    "confirmActivate": "Sätt planen som aktiv",
     "cancel": "Avbryt",
     "busy": "Arbetar…",
     "activated": "{name} är aktiv.",
     "errors": {
       "FORBIDDEN": "Du är inte plattformsvärd.",
-      "BILLING_DISABLED": "Fakturering är inte aktiverad i den här driftmiljön.",
+      "BILLING_DISABLED": "Abonnemangshantering är avstängd i denna miljö. Manuell aktivering är inte tillgänglig.",
       "PLAN_CLOSED": "Butiken är stängd av sin ägare och kan inte återaktiveras här.",
       "TENANT_NOT_FOUND": "Butiken hittades inte.",
       "INVALID_INPUT": "Kontrollera datum och orsak.",
@@ -1924,7 +1924,20 @@
     "lastActivity": "Senast aktiv",
     "searchStores": "Sök butik",
     "allStates": "Alla statusar",
-    "noStores": "Inga butiker matchar sökningen."
+    "noStores": "Inga butiker matchar sökningen.",
+    "tableCount": "Visar {count} av {total} butiker",
+    "tableHint": "Klicka på en rad för detaljer. Sortera med kolumnrubrikerna.",
+    "storeTable": "Butiksöversikt",
+    "editPlan": "Ändra planstatus",
+    "activationHint": "Sätter planen som aktiv med manuell hantering. Ingen betalning dras. Ange en orsak och eventuellt ett slutdatum.",
+    "providers": {
+      "none": "Ingen",
+      "manual": "Manuell",
+      "stripe": "Stripe"
+    },
+    "subscriptionHint": "Butiksägaren startar abonnemanget via Stripe i butiksinställningarna. Statusen uppdateras från Stripe. Manuell aktivering är ett administrativt undantag och startar inget abonnemang.",
+    "activationUnconfirmed": "Svaret kunde inte bekräftas. Ändringen kan ha genomförts. Ladda om och kontrollera status innan du gör något mer.",
+    "reloadStatus": "Ladda om och kontrollera status"
   },
   "reconciliation": {
     "heading": "Avstämning",
@@ -3100,6 +3113,32 @@
       "komisio": "Komisio kan skicka bokföringsunderlaget till Fortnox. Automatiken skickar skapade exporter; dagsavslut och underlag behöver fortfarande tas fram.",
       "pos": "Behåll kassans försäljningsbokföring. Automatisk komplettering av säljaravräkningen från Komisio finns ännu inte. Låt redovisningsansvarig hantera kompletteringen tills vidare.",
       "manual": "Skapa underlag för redovisningsansvarig, som stämmer av och bokför det. Undvik att importera sådant som redan är bokfört."
+    }
+  },
+  "itemPhotos": {
+    "title": "Bilder",
+    "hint": "Välj vilken bild som ska visas i varulistan. Bilderna här ändrar inte säljarens tidigare godkännande.",
+    "preview": "Visa huvudbild · {count} bilder",
+    "defaultPhoto": "Huvudbild",
+    "setDefault": "Använd som huvudbild",
+    "remove": "Ta bort",
+    "add": "Lägg till bild",
+    "empty": "Varan har inga bilder ännu.",
+    "fileHint": "JPEG eller PNG, högst 3 MB per bild. Upp till 20 bilder.",
+    "busy": "Sparar bild…",
+    "saved": "Bilderna är sparade.",
+    "failed": "Bilden kunde inte sparas.",
+    "unconfirmed": "Det är oklart om ändringen sparades. Försök igen med samma ändring.",
+    "changed": "Varan eller butiken har ändrats, eller du saknar behörighet. Ladda om innan du fortsätter.",
+    "reload": "Ladda om",
+    "retry": "Försök igen",
+    "loadFailed": "Bilden kunde inte visas.",
+    "errors": {
+      "INVALID_IMAGE": "Välj en giltig JPEG- eller PNG-bild.",
+      "IMAGE_TOO_LARGE": "Bilden får vara högst 3 MB.",
+      "PHOTO_LIMIT": "En vara kan ha högst 20 bilder.",
+      "PHOTO_NOT_FOUND": "Bilden eller varan hittades inte.",
+      "ITEM_NOT_FOUND": "Bilden eller varan hittades inte."
     }
   }
 }

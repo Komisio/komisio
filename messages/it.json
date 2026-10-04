@@ -1427,7 +1427,8 @@
     "views": {
       "days": "Chiusure giornaliere",
       "reconciliation": "Riconciliazione",
-      "settings": "Conti e integrazioni"
+      "settings": "Conti e integrazioni",
+      "planning": "Pianifica trasferimenti"
     },
     "mapMissingLink": "Configura i conti contabili prima di creare un’esportazione.",
     "details": "Mostra dettagli",
@@ -3030,5 +3031,75 @@
   "hidePassword": "Nascondi password",
   "reviewRetryApprove": "Riprova l'approvazione",
   "reviewRetryDecline": "Riprova il rifiuto",
-  "copyLinkFailed": "Copia non riuscita. Il link è selezionato per consentirti di copiarlo manualmente."
+  "copyLinkFailed": "Copia non riuscita. Il link è selezionato per consentirti di copiarlo manualmente.",
+  "accountingRouting": {
+    "title": "Chi contabilizza cosa?",
+    "notice": "Solo anteprima. Le scelte non vengono salvate e non modificano i trasferimenti esistenti.",
+    "modeLabel": "Confronta opzioni",
+    "externalLabel": "Un altro collegamento contabilizza le stesse vendite?",
+    "externalHint": "Usato solo in questo esempio. Komisio non ha verificato il collegamento esterno.",
+    "currentHeading": "Dati contabili esistenti",
+    "currentHint": "Le dieci chiusure giornaliere più recenti con la mappatura dei conti attuale. Le scelte non modificano gli importi né creano una nuova registrazione.",
+    "closeLabel": "Scegli chiusura giornaliera",
+    "responsibilities": "Responsabilità proposte",
+    "checkHeading": "Da verificare",
+    "noActivation": "Questa opzione non può essere attivata qui. Esportazioni e trasferimenti automatici continuano con le impostazioni attuali.",
+    "modes": {
+      "komisio": {
+        "title": "Komisio contabilizza le vendite",
+        "hint": "Vendite, resi e conteggi dei conferenti da Komisio."
+      },
+      "pos": {
+        "title": "Il POS contabilizza – Komisio integra",
+        "hint": "Il POS invia le vendite. Komisio deve aggiungere i conteggi dei conferenti."
+      },
+      "manual": {
+        "title": "Documenti per la contabilità",
+        "hint": "Il responsabile contabile verifica e registra i documenti."
+      }
+    },
+    "external": {
+      "unknown": "Non so",
+      "enabled": "Sì",
+      "disabled": "No"
+    },
+    "events": {
+      "sales": "Vendite e resi dei clienti",
+      "sellerCredit": "Crediti dei conferenti e storni",
+      "commission": "Commissione e relativa IVA",
+      "fees": "Commissioni di pagamento",
+      "settlements": "Accrediti POS sul conto del negozio",
+      "payouts": "Pagamenti eseguiti ai conferenti"
+    },
+    "owners": {
+      "komisio": "Komisio",
+      "pos": "Collegamento POS",
+      "accountant": "Responsabile contabile",
+      "review": "Da definire"
+    },
+    "issues": {
+      "duplicateSales": "Le stesse vendite potrebbero essere contabilizzate sia da Komisio sia dal POS.",
+      "missingSales": "In questo esempio non è stata selezionata una fonte delle vendite.",
+      "externalUnknown": "Verifica se un altro collegamento contabilizza le stesse vendite.",
+      "complementUnavailable": "Le registrazioni integrative non sono implementate. Occorre verificare contropartite ed eventuali riclassificazioni di ricavi e IVA.",
+      "coverage": "Verifica che Komisio copra tutte le vendite selezionate, inclusi scontrini misti, buoni regalo e rimborsi parziali.",
+      "cutover": "Concorda una data di inizio e riconcilia esportazioni precedenti, invii con esito sconosciuto e saldi iniziali.",
+      "review": "Verifica con il responsabile contabile le registrazioni e le responsabilità per commissioni, accrediti bancari e pagamenti eseguiti ai conferenti.",
+      "noClose": "Non ci sono chiusure giornaliere da confrontare.",
+      "unbalanced": "La registrazione esistente non è bilanciata.",
+      "unmapped": "Alcuni importi non hanno un conto assegnato.",
+      "manualReview": "Riconcilia i documenti con le registrazioni esistenti prima dell’importazione manuale.",
+      "emptyVoucher": "La registrazione esistente non contiene righe contabili."
+    },
+    "simple": {
+      "entry": "Aiuto per scegliere la configurazione contabile",
+      "advanced": "Dettagli per la contabilità",
+      "settings": "Apri collegamenti e impostazioni",
+      "unknownTitle": "Inizia dal collegamento POS",
+      "unknownHint": "Verifica se il POS invia già le vendite alla contabilità. Ogni vendita deve essere inviata una sola volta.",
+      "komisio": "Komisio può inviare i dati contabili a Fortnox. L’automazione invia le esportazioni create; chiusure giornaliere e documenti di esportazione devono ancora essere preparati.",
+      "pos": "Mantieni le registrazioni delle vendite del POS. L’integrazione automatica dei conteggi dei conferenti da Komisio non è ancora disponibile. Affida per ora le integrazioni al responsabile contabile.",
+      "manual": "Prepara i documenti per la riconciliazione e la registrazione da parte della contabilità. Evita di importare operazioni già contabilizzate."
+    }
+  }
 }

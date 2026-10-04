@@ -1920,7 +1920,10 @@
     "sellers": "Depositantes",
     "items": "Artículos",
     "sales30": "Ventas, 30 días",
-    "lastActivity": "Última actividad"
+    "lastActivity": "Última actividad",
+    "searchStores": "Buscar tienda",
+    "allStates": "Todos los estados",
+    "noStores": "No hay tiendas que coincidan con la búsqueda."
   },
   "reconciliation": {
     "heading": "Conciliación",
@@ -2647,7 +2650,12 @@
       "emailNewCap": "Mensajes por día, tienda nueva",
       "inviteNewCap": "Invitaciones por día, tienda nueva",
       "emailTrustDays": "Días hasta que una tienda se considera establecida",
-      "connectorDailyCap": "Llamadas por asistente conectado y día"
+      "connectorDailyCap": "Llamadas por asistente conectado y día",
+      "budgetHeading": "Presupuesto y créditos",
+      "modelHeading": "Costes del modelo",
+      "limitsHeading": "Límites de solicitudes y mensajes",
+      "adminHeading": "Administración de la plataforma",
+      "adminIntro": "Estos ajustes se aplican a todas las tiendas de este entorno."
     }
   },
   "sellerProfile": {

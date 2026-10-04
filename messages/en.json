@@ -1920,7 +1920,10 @@
     "sellers": "Sellers",
     "items": "Items",
     "sales30": "Sales, 30 days",
-    "lastActivity": "Last activity"
+    "lastActivity": "Last activity",
+    "searchStores": "Search stores",
+    "allStates": "All statuses",
+    "noStores": "No stores match your search."
   },
   "reconciliation": {
     "heading": "Reconciliation",
@@ -2647,7 +2650,12 @@
       "emailNewCap": "Messages per day, new store",
       "inviteNewCap": "Invitations per day, new store",
       "emailTrustDays": "Days before a store counts as established",
-      "connectorDailyCap": "Calls per connected assistant and day"
+      "connectorDailyCap": "Calls per connected assistant and day",
+      "budgetHeading": "Budget and credits",
+      "modelHeading": "Model costs",
+      "limitsHeading": "Request and message limits",
+      "adminHeading": "Platform administration",
+      "adminIntro": "These settings apply to every store in this environment."
     }
   },
   "sellerProfile": {

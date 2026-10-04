@@ -1920,7 +1920,10 @@
     "sellers": "Tuojat",
     "items": "Tuotteet",
     "sales30": "Myynti, 30 päivää",
-    "lastActivity": "Viimeisin toiminta"
+    "lastActivity": "Viimeisin toiminta",
+    "searchStores": "Hae myymälää",
+    "allStates": "Kaikki tilat",
+    "noStores": "Hakua vastaavia myymälöitä ei löytynyt."
   },
   "reconciliation": {
     "heading": "Täsmäytys",
@@ -2647,7 +2650,12 @@
       "emailNewCap": "Viestejä vuorokaudessa, uusi kauppa",
       "inviteNewCap": "Kutsuja vuorokaudessa, uusi kauppa",
       "emailTrustDays": "Vuorokausia ennen kuin kauppa katsotaan vakiintuneeksi",
-      "connectorDailyCap": "Kutsuja per liitetty avustaja ja vuorokausi"
+      "connectorDailyCap": "Kutsuja per liitetty avustaja ja vuorokausi",
+      "budgetHeading": "Budjetti ja krediitit",
+      "modelHeading": "Mallikustannukset",
+      "limitsHeading": "Kutsu- ja viestirajat",
+      "adminHeading": "Alustan hallinta",
+      "adminIntro": "Asetukset koskevat kaikkia tämän ympäristön myymälöitä."
     }
   },
   "sellerProfile": {

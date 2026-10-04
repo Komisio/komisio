@@ -1920,7 +1920,10 @@
     "sellers": "Säljare",
     "items": "Varor",
     "sales30": "Försäljningar, 30 dagar",
-    "lastActivity": "Senast aktiv"
+    "lastActivity": "Senast aktiv",
+    "searchStores": "Sök butik",
+    "allStates": "Alla statusar",
+    "noStores": "Inga butiker matchar sökningen."
   },
   "reconciliation": {
     "heading": "Avstämning",
@@ -2647,7 +2650,12 @@
       "emailNewCap": "Meddelanden per dygn, ny butik",
       "inviteNewCap": "Inbjudningar per dygn, ny butik",
       "emailTrustDays": "Dygn innan en butik räknas som etablerad",
-      "connectorDailyCap": "Anrop per kopplad assistent och dygn"
+      "connectorDailyCap": "Anrop per kopplad assistent och dygn",
+      "budgetHeading": "Budget och krediter",
+      "modelHeading": "Modellkostnader",
+      "limitsHeading": "Anrops- och meddelandegränser",
+      "adminHeading": "Plattformsadministration",
+      "adminIntro": "Inställningarna gäller alla butiker i den här driftmiljön."
     }
   },
   "sellerProfile": {

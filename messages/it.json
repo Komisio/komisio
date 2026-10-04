@@ -1920,7 +1920,10 @@
     "sellers": "Conferenti",
     "items": "Articoli",
     "sales30": "Vendite, 30 giorni",
-    "lastActivity": "Ultima attività"
+    "lastActivity": "Ultima attività",
+    "searchStores": "Cerca negozio",
+    "allStates": "Tutti gli stati",
+    "noStores": "Nessun negozio corrisponde alla ricerca."
   },
   "reconciliation": {
     "heading": "Riconciliazione",
@@ -2647,7 +2650,12 @@
       "emailNewCap": "Messaggi al giorno, negozio nuovo",
       "inviteNewCap": "Inviti al giorno, negozio nuovo",
       "emailTrustDays": "Giorni prima che un negozio sia considerato consolidato",
-      "connectorDailyCap": "Chiamate per assistente collegato al giorno"
+      "connectorDailyCap": "Chiamate per assistente collegato al giorno",
+      "budgetHeading": "Budget e crediti",
+      "modelHeading": "Costi del modello",
+      "limitsHeading": "Limiti di richieste e messaggi",
+      "adminHeading": "Amministrazione della piattaforma",
+      "adminIntro": "Queste impostazioni si applicano a tutti i negozi di questo ambiente."
     }
   },
   "sellerProfile": {

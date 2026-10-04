@@ -1427,7 +1427,8 @@
     "views": {
       "days": "Dagsafslutninger",
       "reconciliation": "Afstemning",
-      "settings": "Konti og integrationer"
+      "settings": "Konti og integrationer",
+      "planning": "Planlæg overførsel"
     },
     "mapMissingLink": "Angiv bogføringskonti, før du opretter en eksport.",
     "details": "Vis detaljer",
@@ -3030,5 +3031,65 @@
   "hidePassword": "Skjul adgangskode",
   "reviewRetryApprove": "Prøv at godkende igen",
   "reviewRetryDecline": "Prøv at afvise igen",
-  "copyLinkFailed": "Kopiering mislykkedes. Linket er markeret, så du kan kopiere det manuelt."
+  "copyLinkFailed": "Kopiering mislykkedes. Linket er markeret, så du kan kopiere det manuelt.",
+  "accountingRouting": {
+    "title": "Hvem skal bogføre hvad?",
+    "notice": "Kun forhåndsvisning. Valgene gemmes ikke og påvirker ikke eksisterende overførsler.",
+    "modeLabel": "Sammenlign opsætninger",
+    "externalLabel": "Bogfører en anden forbindelse det samme salg?",
+    "externalHint": "Bruges kun i eksemplet. Komisio har ikke kontrolleret den eksterne forbindelse.",
+    "currentHeading": "Eksisterende bogføringsgrundlag",
+    "currentHint": "De ti seneste dagsafslutninger med den aktuelle kontoplan. Beløbene ændres ikke af valgene og er ikke en ny postering.",
+    "closeLabel": "Vælg dagsafslutning",
+    "responsibilities": "Foreslået ansvarsfordeling",
+    "checkHeading": "Skal undersøges",
+    "noActivation": "Opsætningen kan ikke aktiveres her. Eksport og eventuel automatisk overførsel fortsætter med de nuværende indstillinger.",
+    "modes": {
+      "komisio": {
+        "title": "Komisio bogfører salget",
+        "hint": "Salg, returneringer og sælgerafregning fra Komisio."
+      },
+      "pos": {
+        "title": "POS bogfører – Komisio supplerer",
+        "hint": "POS sender salget. Komisio skal supplere med sælgerafregning."
+      },
+      "manual": {
+        "title": "Grundlag til bogholderen",
+        "hint": "Bogholderen gennemgår og bogfører grundlaget."
+      }
+    },
+    "external": {
+      "unknown": "Ved ikke",
+      "enabled": "Ja",
+      "disabled": "Nej"
+    },
+    "events": {
+      "sales": "Salg og kundereturneringer",
+      "sellerCredit": "Sælgertilgodehavender og tilbageførsler",
+      "commission": "Provision og tilhørende moms",
+      "fees": "Betalingsgebyrer",
+      "settlements": "POS-udbetalinger til butikkens bank",
+      "payouts": "Gennemførte udbetalinger til sælgere"
+    },
+    "owners": {
+      "komisio": "Komisio",
+      "pos": "POS-forbindelsen",
+      "accountant": "Bogholderen",
+      "review": "Skal afklares"
+    },
+    "issues": {
+      "duplicateSales": "Det samme salg kan blive bogført fra både Komisio og POS.",
+      "missingSales": "Ingen salgskilde er valgt i dette eksempel.",
+      "externalUnknown": "Kontrollér om en anden forbindelse bogfører det samme salg.",
+      "complementUnavailable": "Supplerende postering er ikke implementeret. Modposter og eventuel ompostering af indtægt og moms skal gennemgås.",
+      "coverage": "Bekræft at Komisio dækker hele det valgte salg, herunder blandede kvitteringer, gavekort og delvise refunderinger.",
+      "cutover": "Aftal startdato og afstem tidligere eksporter, ukendte overførselsresultater og primosaldi.",
+      "review": "Gennemgå kontering og ansvar for gebyrer, bankafregning og gennemførte sælgerudbetalinger med bogholderen.",
+      "noClose": "Der er ingen dagsafslutning at sammenligne med.",
+      "unbalanced": "Det eksisterende bilag balancerer ikke.",
+      "unmapped": "Nogle beløb i bilaget mangler kontotilknytning.",
+      "manualReview": "Afstem grundlaget mod eksisterende bogføringer før manuel import.",
+      "emptyVoucher": "Det eksisterende bilag indeholder ingen posteringslinjer."
+    }
+  }
 }

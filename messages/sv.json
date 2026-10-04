@@ -1427,7 +1427,8 @@
     "views": {
       "days": "Dagsavslut",
       "reconciliation": "Avstämning",
-      "settings": "Konton och integrationer"
+      "settings": "Konton och integrationer",
+      "planning": "Planera överföring"
     },
     "mapMissingLink": "Ange bokföringskonton innan du skapar en export.",
     "details": "Visa detaljer",
@@ -3030,5 +3031,65 @@
   "hidePassword": "Dölj lösenord",
   "reviewRetryApprove": "Försök godkänna igen",
   "reviewRetryDecline": "Försök avvisa igen",
-  "copyLinkFailed": "Det gick inte att kopiera. Länken är markerad så att du kan kopiera den manuellt."
+  "copyLinkFailed": "Det gick inte att kopiera. Länken är markerad så att du kan kopiera den manuellt.",
+  "accountingRouting": {
+    "title": "Vem ska bokföra vad?",
+    "notice": "Förhandsgranskning. Valen sparas inte och påverkar inte befintliga överföringar.",
+    "modeLabel": "Jämför upplägg",
+    "externalLabel": "Bokför en annan koppling samma försäljning?",
+    "externalHint": "Uppgiften används bara i exemplet. Komisio har inte kontrollerat den externa kopplingen.",
+    "currentHeading": "Befintligt bokföringsunderlag",
+    "currentHint": "De tio senaste dagsavslutens underlag med aktuell kontoplan. Beloppen ändras inte av valen ovan och är inte en ny kontering.",
+    "closeLabel": "Välj dagsavslut",
+    "responsibilities": "Föreslagen ansvarsfördelning",
+    "checkHeading": "Behöver utredas",
+    "noActivation": "Upplägget kan inte aktiveras här. Befintlig export och eventuell automatisk överföring fortsätter enligt nuvarande inställningar.",
+    "modes": {
+      "komisio": {
+        "title": "Komisio bokför försäljningen",
+        "hint": "Försäljning, returer och säljaravräkning från Komisio."
+      },
+      "pos": {
+        "title": "POS bokför – Komisio kompletterar",
+        "hint": "POS skickar försäljningen. Komisio behöver komplettera med säljaravräkning."
+      },
+      "manual": {
+        "title": "Underlag till redovisningen",
+        "hint": "Redovisningsansvarig granskar och bokför underlagen."
+      }
+    },
+    "external": {
+      "unknown": "Vet inte",
+      "enabled": "Ja",
+      "disabled": "Nej"
+    },
+    "events": {
+      "sales": "Försäljning och kundreturer",
+      "sellerCredit": "Säljares tillgodohavanden och återföringar",
+      "commission": "Provision och tillhörande moms",
+      "fees": "Betalningsavgifter",
+      "settlements": "POS-utbetalningar till butikens bank",
+      "payouts": "Genomförda utbetalningar till säljare"
+    },
+    "owners": {
+      "komisio": "Komisio",
+      "pos": "POS-kopplingen",
+      "accountant": "Redovisningsansvarig",
+      "review": "Behöver bestämmas"
+    },
+    "issues": {
+      "duplicateSales": "Samma försäljning riskerar att bokföras både från Komisio och POS.",
+      "missingSales": "Ingen försäljningskälla är vald i detta exempel.",
+      "externalUnknown": "Kontrollera om en annan koppling bokför samma försäljning.",
+      "complementUnavailable": "Kompletterande kontering är inte implementerad. Motposter och eventuell omföring av intäkt och moms behöver granskas.",
+      "coverage": "Verifiera att Komisio täcker hela den valda försäljningen, även blandade kvitton, presentkort och delreturer.",
+      "cutover": "Bestäm startdatum och stäm av tidigare exporter, okända sändningsutfall och ingående saldon.",
+      "review": "Granska kontering samt ansvar för avgifter, bankavräkning och genomförda säljarutbetalningar med redovisningsansvarig.",
+      "noClose": "Det finns inget dagsavslut att jämföra med.",
+      "unbalanced": "Det befintliga underlaget balanserar inte.",
+      "unmapped": "Det befintliga underlaget saknar kontomappning för vissa belopp.",
+      "manualReview": "Stäm av underlaget mot det som redan bokförts innan manuell import.",
+      "emptyVoucher": "Det befintliga underlaget innehåller inga bokföringsrader."
+    }
+  }
 }

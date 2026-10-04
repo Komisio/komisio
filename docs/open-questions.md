@@ -1,5 +1,19 @@
 # Open questions
 
+Accounting routing proposal (2026-10-04): the owner requests a design for
+Komisio-led sales posting or complementary seller-liability posting alongside
+an external POS export. Before implementation, approve per-event ownership,
+the accountant-reviewed counterentries and VAT treatment for each external
+posting profile, cutover/reconciliation evidence and provider capabilities.
+No financial behavior or active export configuration is changed by this proposal.
+The owner authorized autonomous follow-through. The first implementation is an
+unsaved responsibility preview with existing caller-scoped day-close vouchers;
+it cannot activate routing or generate complementary entries. Financial profile
+approval, external source coverage and cutover evidence remain unresolved.
+Existing voucher previews can balance while reporting unmapped per-mode totals.
+Confirm which aggregate and per-mode keys belong in each approved posting profile;
+the planning view surfaces both facts without changing existing export behavior.
+
 Manual plan end dates (2026-10-03): should host activation through a selected
 calendar date expire at the end of that date in Europe/Stockholm, in the store
 timezone, or under another rule? The current form uses a fixed +02:00 offset

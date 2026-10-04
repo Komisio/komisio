@@ -479,6 +479,92 @@ summary {
   --control-line: #788e7d;
   --white: #fff;
 }
+.accounting-routing-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+}
+.accounting-routing-grid > .stack {
+  align-content: start;
+}
+.accounting-routing-notice {
+  padding: 1rem;
+  background: var(--mint);
+  border-radius: 0.75rem;
+}
+.accounting-routing-options {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+.accounting-routing-options legend {
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+}
+.accounting-routing-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid var(--control-line);
+  border-radius: 0.75rem;
+  cursor: pointer;
+}
+.accounting-routing-choice:has(:checked) {
+  background: var(--mint);
+  border-color: var(--green);
+}
+.accounting-routing-choice input[type='radio'] {
+  flex: 0 0 1.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.2rem;
+  accent-color: var(--green);
+}
+.accounting-routing-choice span span {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+.accounting-routing-owners {
+  margin: 0;
+}
+.accounting-routing-owners > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.accounting-routing-owners dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 700;
+}
+.accounting-routing :is(dt, dd, label, p, li) {
+  overflow-wrap: anywhere;
+}
+.accounting-routing-checks ul {
+  padding-left: 1.25rem;
+}
+.accounting-routing-checks li + li {
+  margin-top: 0.75rem;
+}
+@media (max-width: 760px) {
+  .accounting-routing-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+  .accounting-routing-owners > div {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .accounting-routing-owners dd {
+    text-align: left;
+  }
+}
 * {
   box-sizing: border-box;
 }

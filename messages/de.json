@@ -1427,7 +1427,8 @@
     "views": {
       "days": "Tagesabschlüsse",
       "reconciliation": "Abstimmung",
-      "settings": "Konten und Integrationen"
+      "settings": "Konten und Integrationen",
+      "planning": "Übertragung planen"
     },
     "mapMissingLink": "Richten Sie Buchhaltungskonten ein, bevor Sie einen Export erstellen.",
     "details": "Details anzeigen",
@@ -3036,5 +3037,65 @@
   "hidePassword": "Passwort verbergen",
   "reviewRetryApprove": "Genehmigung erneut versuchen",
   "reviewRetryDecline": "Ablehnung erneut versuchen",
-  "copyLinkFailed": "Kopieren fehlgeschlagen. Der Link ist markiert und kann manuell kopiert werden."
+  "copyLinkFailed": "Kopieren fehlgeschlagen. Der Link ist markiert und kann manuell kopiert werden.",
+  "accountingRouting": {
+    "title": "Wer soll was buchen?",
+    "notice": "Nur Vorschau. Die Auswahl wird nicht gespeichert und verändert keine bestehenden Übertragungen.",
+    "modeLabel": "Modelle vergleichen",
+    "externalLabel": "Bucht eine andere Anbindung dieselben Verkäufe?",
+    "externalHint": "Nur eine Annahme für dieses Beispiel. Komisio hat die externe Anbindung nicht geprüft.",
+    "currentHeading": "Bestehende Buchungsdaten",
+    "currentHint": "Die zehn neuesten Tagesabschlüsse mit aktueller Kontenzuordnung. Die Auswahl verändert diese Beträge nicht; es entsteht keine neue Buchung.",
+    "closeLabel": "Tagesabschluss auswählen",
+    "responsibilities": "Vorgeschlagene Zuständigkeiten",
+    "checkHeading": "Noch zu klären",
+    "noActivation": "Dieses Modell lässt sich hier nicht aktivieren. Bestehende Exporte und automatische Übertragungen laufen mit den aktuellen Einstellungen weiter.",
+    "modes": {
+      "komisio": {
+        "title": "Komisio bucht die Verkäufe",
+        "hint": "Verkäufe, Retouren und Einliefererabrechnung aus Komisio."
+      },
+      "pos": {
+        "title": "POS bucht – Komisio ergänzt",
+        "hint": "POS überträgt die Verkäufe. Komisio muss die Einliefererabrechnung ergänzen."
+      },
+      "manual": {
+        "title": "Unterlagen für die Buchhaltung",
+        "hint": "Die Buchhaltung prüft und bucht die Unterlagen."
+      }
+    },
+    "external": {
+      "unknown": "Unbekannt",
+      "enabled": "Ja",
+      "disabled": "Nein"
+    },
+    "events": {
+      "sales": "Verkäufe und Kundenretouren",
+      "sellerCredit": "Einliefererguthaben und Rückbuchungen",
+      "commission": "Provision und zugehörige Umsatzsteuer",
+      "fees": "Zahlungsgebühren",
+      "settlements": "POS-Auszahlungen auf das Geschäftskonto",
+      "payouts": "Ausgeführte Auszahlungen an Einlieferer"
+    },
+    "owners": {
+      "komisio": "Komisio",
+      "pos": "POS-Anbindung",
+      "accountant": "Buchhaltung",
+      "review": "Noch festzulegen"
+    },
+    "issues": {
+      "duplicateSales": "Dieselben Verkäufe könnten aus Komisio und POS doppelt gebucht werden.",
+      "missingSales": "In diesem Beispiel ist keine Verkaufsquelle ausgewählt.",
+      "externalUnknown": "Prüfen, ob eine andere Anbindung dieselben Verkäufe bucht.",
+      "complementUnavailable": "Ergänzende Buchungen sind noch nicht implementiert. Gegenbuchungen und mögliche Umbuchungen von Erlösen und Umsatzsteuer müssen geprüft werden.",
+      "coverage": "Prüfen, ob Komisio alle ausgewählten Verkäufe abdeckt, einschließlich gemischter Belege, Gutscheine und Teilerstattungen.",
+      "cutover": "Startdatum festlegen und frühere Exporte, unklare Übertragungsergebnisse und Anfangssalden abstimmen.",
+      "review": "Kontierung und Zuständigkeit für Gebühren, Bankverrechnung und ausgeführte Einliefererauszahlungen mit der Buchhaltung prüfen.",
+      "noClose": "Es gibt keinen Tagesabschluss zum Vergleichen.",
+      "unbalanced": "Der bestehende Buchungssatz ist nicht ausgeglichen.",
+      "unmapped": "Für einige Beträge fehlt eine Kontenzuordnung.",
+      "manualReview": "Unterlagen vor dem manuellen Import mit bereits gebuchten Vorgängen abstimmen.",
+      "emptyVoucher": "Der bestehende Buchungssatz enthält keine Buchungszeilen."
+    }
+  }
 }

@@ -28,13 +28,13 @@ import { automationIdentity, readAutomation } from '@/lib/engine/automation'
 import { AutomationSwitch } from '@/components/intake/automation-switch'
 import { currentMonthPeriod, economyPeriod } from '@/lib/engine/economy'
 import { openDays, readReconciliation } from '@/lib/engine/reconciliation'
+import { AccountingRoutingPreview } from '@/components/intake/accounting-routing-preview'
 
-const views = ['days', 'reconciliation', 'settings'] as const
+const views = ['days', 'reconciliation', 'settings', 'planning'] as const
 type View = (typeof views)[number]
 
 /**
- * Three views on one page: the day's work (close, export, send), the
- * reconciliation for a period, and the settings (account map, Fortnox).
+ * Daily work, reconciliation, settings and unsaved responsibility planning.
  * Only the selected view's data beyond the shared reads is fetched.
  */
 export default async function Accounting({
@@ -85,7 +85,7 @@ export default async function Accounting({
       : null
   // Preview the newest closes only; older ones are reachable through their exports.
   const previews = new Map(
-    view === 'days'
+    view === 'days' || view === 'planning'
       ? (
           await Promise.all(
             closes
@@ -130,6 +130,15 @@ export default async function Accounting({
           </Link>
         ))}
       </nav>
+      {view === 'planning' && (
+        <AccountingRoutingPreview
+          key={active.id}
+          previews={Array.from(previews.values())}
+          currency={currency}
+          d={all.accountingRouting}
+          accounting={d}
+        />
+      )}
       {view === 'days' && (
         <>
           <div className="accounting-workspace">

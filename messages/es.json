@@ -1427,7 +1427,8 @@
     "views": {
       "days": "Cierres del día",
       "reconciliation": "Conciliación",
-      "settings": "Cuentas e integraciones"
+      "settings": "Cuentas e integraciones",
+      "planning": "Planificar transferencias"
     },
     "mapMissingLink": "Configura las cuentas contables antes de crear una exportación.",
     "details": "Ver detalles",
@@ -3036,5 +3037,65 @@
   "hidePassword": "Ocultar contraseña",
   "reviewRetryApprove": "Reintentar la aprobación",
   "reviewRetryDecline": "Reintentar el rechazo",
-  "copyLinkFailed": "No se pudo copiar. El enlace está seleccionado para que puedas copiarlo manualmente."
+  "copyLinkFailed": "No se pudo copiar. El enlace está seleccionado para que puedas copiarlo manualmente.",
+  "accountingRouting": {
+    "title": "¿Quién contabiliza cada operación?",
+    "notice": "Solo vista previa. Las opciones no se guardan ni afectan a las transferencias existentes.",
+    "modeLabel": "Comparar opciones",
+    "externalLabel": "¿Otra conexión contabiliza las mismas ventas?",
+    "externalHint": "Solo se utiliza en este ejemplo. Komisio no ha comprobado la conexión externa.",
+    "currentHeading": "Datos contables existentes",
+    "currentHint": "Los diez últimos cierres diarios con la asignación de cuentas actual. Las opciones no cambian estos importes ni crean un asiento nuevo.",
+    "closeLabel": "Elegir cierre diario",
+    "responsibilities": "Responsabilidades propuestas",
+    "checkHeading": "Pendiente de revisión",
+    "noActivation": "Esta opción no se puede activar aquí. Las exportaciones y transferencias automáticas continúan con la configuración actual.",
+    "modes": {
+      "komisio": {
+        "title": "Komisio contabiliza las ventas",
+        "hint": "Ventas, devoluciones y liquidaciones a consignantes desde Komisio."
+      },
+      "pos": {
+        "title": "El TPV contabiliza – Komisio complementa",
+        "hint": "El TPV envía las ventas. Komisio debe añadir las liquidaciones a consignantes."
+      },
+      "manual": {
+        "title": "Documentación para contabilidad",
+        "hint": "La persona responsable revisa y contabiliza los documentos."
+      }
+    },
+    "external": {
+      "unknown": "No lo sé",
+      "enabled": "Sí",
+      "disabled": "No"
+    },
+    "events": {
+      "sales": "Ventas y devoluciones de clientes",
+      "sellerCredit": "Saldos de consignantes y anulaciones",
+      "commission": "Comisión e IVA correspondiente",
+      "fees": "Comisiones de pago",
+      "settlements": "Liquidaciones del TPV al banco de la tienda",
+      "payouts": "Pagos realizados a consignantes"
+    },
+    "owners": {
+      "komisio": "Komisio",
+      "pos": "Conexión del TPV",
+      "accountant": "Responsable contable",
+      "review": "Por determinar"
+    },
+    "issues": {
+      "duplicateSales": "Las mismas ventas podrían contabilizarse desde Komisio y desde el TPV.",
+      "missingSales": "No se ha elegido una fuente de ventas en este ejemplo.",
+      "externalUnknown": "Comprueba si otra conexión contabiliza las mismas ventas.",
+      "complementUnavailable": "Los asientos complementarios no están implementados. Hay que revisar las contrapartidas y posibles reclasificaciones de ingresos e IVA.",
+      "coverage": "Verifica que Komisio cubre todas las ventas seleccionadas, incluidos tickets mixtos, tarjetas regalo y reembolsos parciales.",
+      "cutover": "Acuerda una fecha de inicio y concilia exportaciones previas, envíos con resultado desconocido y saldos iniciales.",
+      "review": "Revisa con contabilidad los asientos y la responsabilidad sobre comisiones, liquidaciones bancarias y pagos realizados a consignantes.",
+      "noClose": "No hay ningún cierre diario para comparar.",
+      "unbalanced": "El asiento existente no está cuadrado.",
+      "unmapped": "Algunos importes del asiento no tienen cuenta asignada.",
+      "manualReview": "Concilia los documentos con lo ya contabilizado antes de la importación manual.",
+      "emptyVoucher": "El asiento existente no contiene líneas contables."
+    }
+  }
 }

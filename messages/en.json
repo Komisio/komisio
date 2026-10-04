@@ -1427,7 +1427,8 @@
     "views": {
       "days": "Day closes",
       "reconciliation": "Reconciliation",
-      "settings": "Accounts and integrations"
+      "settings": "Accounts and integrations",
+      "planning": "Plan transfers"
     },
     "mapMissingLink": "Set up accounting accounts before creating an export.",
     "details": "Show details",
@@ -3030,5 +3031,65 @@
   "hidePassword": "Hide password",
   "reviewRetryApprove": "Retry approval",
   "reviewRetryDecline": "Retry rejection",
-  "copyLinkFailed": "Copying failed. The link is selected so you can copy it manually."
+  "copyLinkFailed": "Copying failed. The link is selected so you can copy it manually.",
+  "accountingRouting": {
+    "title": "Who should post what?",
+    "notice": "Preview only. Choices are not saved and do not affect existing transfers.",
+    "modeLabel": "Compare arrangements",
+    "externalLabel": "Does another connection post the same sales?",
+    "externalHint": "Used only for this example. Komisio has not checked the external connection.",
+    "currentHeading": "Existing accounting data",
+    "currentHint": "The ten latest day closes under the current account map. These amounts do not change with your choices and are not a new journal.",
+    "closeLabel": "Choose day close",
+    "responsibilities": "Proposed responsibilities",
+    "checkHeading": "Needs investigation",
+    "noActivation": "This arrangement cannot be activated here. Existing exports and any automatic sending continue under current settings.",
+    "modes": {
+      "komisio": {
+        "title": "Komisio posts sales",
+        "hint": "Sales, returns and consignor accounting from Komisio."
+      },
+      "pos": {
+        "title": "POS posts – Komisio supplements",
+        "hint": "POS sends sales. Komisio needs to add consignor accounting."
+      },
+      "manual": {
+        "title": "Documents for your accountant",
+        "hint": "Your accountant reviews and posts the documents."
+      }
+    },
+    "external": {
+      "unknown": "Not sure",
+      "enabled": "Yes",
+      "disabled": "No"
+    },
+    "events": {
+      "sales": "Sales and customer returns",
+      "sellerCredit": "Consignor credits and reversals",
+      "commission": "Commission and related VAT",
+      "fees": "Payment fees",
+      "settlements": "POS settlements to the store bank",
+      "payouts": "Completed consignor payouts"
+    },
+    "owners": {
+      "komisio": "Komisio",
+      "pos": "POS connection",
+      "accountant": "Accountant",
+      "review": "To be decided"
+    },
+    "issues": {
+      "duplicateSales": "The same sales could be posted by both Komisio and POS.",
+      "missingSales": "No sales source is selected in this example.",
+      "externalUnknown": "Check whether another connection posts the same sales.",
+      "complementUnavailable": "Complementary posting is not implemented. Counterentries and any revenue or VAT reclassification need review.",
+      "coverage": "Verify that Komisio covers all selected sales, including mixed receipts, gift cards and partial refunds.",
+      "cutover": "Agree a start date and reconcile previous exports, unknown send outcomes and opening balances.",
+      "review": "Review posting and responsibility for fees, bank settlements and completed consignor payouts with your accountant.",
+      "noClose": "There is no day close to compare.",
+      "unbalanced": "The existing journal does not balance.",
+      "unmapped": "Some amounts in the existing journal have no account mapping.",
+      "manualReview": "Reconcile the documents with existing postings before manual import.",
+      "emptyVoucher": "The existing journal contains no posting lines."
+    }
+  }
 }

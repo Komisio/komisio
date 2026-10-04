@@ -1427,7 +1427,8 @@
     "views": {
       "days": "Päivän päätökset",
       "reconciliation": "Täsmäytys",
-      "settings": "Tilit ja integraatiot"
+      "settings": "Tilit ja integraatiot",
+      "planning": "Suunnittele siirrot"
     },
     "mapMissingLink": "Määritä kirjanpitotilit ennen vientiaineiston luontia.",
     "details": "Näytä tiedot",
@@ -3036,5 +3037,65 @@
   "hidePassword": "Piilota salasana",
   "reviewRetryApprove": "Yritä hyväksymistä uudelleen",
   "reviewRetryDecline": "Yritä hylkäämistä uudelleen",
-  "copyLinkFailed": "Kopiointi epäonnistui. Linkki on valittu, jotta voit kopioida sen käsin."
+  "copyLinkFailed": "Kopiointi epäonnistui. Linkki on valittu, jotta voit kopioida sen käsin.",
+  "accountingRouting": {
+    "title": "Kuka kirjaa mitä?",
+    "notice": "Vain esikatselu. Valintoja ei tallenneta eivätkä ne vaikuta nykyisiin siirtoihin.",
+    "modeLabel": "Vertaa vaihtoehtoja",
+    "externalLabel": "Kirjaako toinen integraatio samat myynnit?",
+    "externalHint": "Tietoa käytetään vain esimerkissä. Komisio ei ole tarkistanut ulkoista integraatiota.",
+    "currentHeading": "Nykyinen kirjanpitoaineisto",
+    "currentHint": "Kymmenen viimeisintä päiväpäätöstä nykyisellä tilikartalla. Valinnat eivät muuta summia, eikä tämä ole uusi kirjaus.",
+    "closeLabel": "Valitse päiväpäätös",
+    "responsibilities": "Ehdotettu vastuunjako",
+    "checkHeading": "Selvitettävät asiat",
+    "noActivation": "Tätä järjestelyä ei voi ottaa käyttöön tässä. Viennit ja mahdolliset automaattiset siirrot jatkuvat nykyisillä asetuksilla.",
+    "modes": {
+      "komisio": {
+        "title": "Komisio kirjaa myynnit",
+        "hint": "Myynnit, palautukset ja myyjien tilitykset Komisiosta."
+      },
+      "pos": {
+        "title": "POS kirjaa – Komisio täydentää",
+        "hint": "POS lähettää myynnit. Komision tulee täydentää myyjien tilitykset."
+      },
+      "manual": {
+        "title": "Aineisto kirjanpitäjälle",
+        "hint": "Kirjanpitäjä tarkistaa ja kirjaa aineiston."
+      }
+    },
+    "external": {
+      "unknown": "En tiedä",
+      "enabled": "Kyllä",
+      "disabled": "Ei"
+    },
+    "events": {
+      "sales": "Myynnit ja asiakaspalautukset",
+      "sellerCredit": "Myyjien saatavat ja niiden peruutukset",
+      "commission": "Provisio ja siihen liittyvä ALV",
+      "fees": "Maksupalvelumaksut",
+      "settlements": "POS-tilitykset kaupan pankkiin",
+      "payouts": "Toteutuneet maksut myyjille"
+    },
+    "owners": {
+      "komisio": "Komisio",
+      "pos": "POS-integraatio",
+      "accountant": "Kirjanpitäjä",
+      "review": "Selvitettävä"
+    },
+    "issues": {
+      "duplicateSales": "Samat myynnit saatetaan kirjata sekä Komisiosta että POS-järjestelmästä.",
+      "missingSales": "Tässä esimerkissä ei ole valittu myyntien lähdettä.",
+      "externalUnknown": "Tarkista, kirjaako toinen integraatio samat myynnit.",
+      "complementUnavailable": "Täydentävää kirjausta ei ole toteutettu. Vastakirjaukset ja mahdolliset tuottojen ja ALV:n oikaisut on tarkistettava.",
+      "coverage": "Varmista, että Komisio kattaa kaikki valitut myynnit, myös sekakuitit, lahjakortit ja osittaiset palautukset.",
+      "cutover": "Sovi aloituspäivä ja täsmäytä aiemmat viennit, epäselvät siirrot ja alkusaldot.",
+      "review": "Tarkista kirjanpitäjän kanssa kirjaukset ja vastuut maksuista, pankkitilityksistä ja toteutuneista myyjämaksuista.",
+      "noClose": "Vertailtavaa päiväpäätöstä ei ole.",
+      "unbalanced": "Nykyinen tosite ei ole tasapainossa.",
+      "unmapped": "Joiltakin tositteen summilta puuttuu tilikohdistus.",
+      "manualReview": "Täsmäytä aineisto nykyisiin kirjauksiin ennen manuaalista tuontia.",
+      "emptyVoucher": "Nykyinen tosite ei sisällä kirjausrivejä."
+    }
+  }
 }

@@ -1427,7 +1427,8 @@
     "views": {
       "days": "Dagsoppgjør",
       "reconciliation": "Avstemming",
-      "settings": "Kontoer og integrasjoner"
+      "settings": "Kontoer og integrasjoner",
+      "planning": "Planlegg overføring"
     },
     "mapMissingLink": "Angi regnskapskontoer før du oppretter en eksport.",
     "details": "Vis detaljer",
@@ -3030,5 +3031,65 @@
   "hidePassword": "Skjul passord",
   "reviewRetryApprove": "Prøv å godkjenne på nytt",
   "reviewRetryDecline": "Prøv å avvise på nytt",
-  "copyLinkFailed": "Kopiering mislyktes. Lenken er markert slik at du kan kopiere den manuelt."
+  "copyLinkFailed": "Kopiering mislyktes. Lenken er markert slik at du kan kopiere den manuelt.",
+  "accountingRouting": {
+    "title": "Hvem skal bokføre hva?",
+    "notice": "Kun forhåndsvisning. Valgene lagres ikke og påvirker ikke eksisterende overføringer.",
+    "modeLabel": "Sammenlign oppsett",
+    "externalLabel": "Bokfører en annen kobling det samme salget?",
+    "externalHint": "Brukes bare i eksemplet. Komisio har ikke kontrollert den eksterne koblingen.",
+    "currentHeading": "Eksisterende regnskapsgrunnlag",
+    "currentHint": "De ti siste dagsoppgjørene med gjeldende kontoplan. Beløpene endres ikke av valgene og er ikke en ny postering.",
+    "closeLabel": "Velg dagsoppgjør",
+    "responsibilities": "Foreslått ansvarsfordeling",
+    "checkHeading": "Må undersøkes",
+    "noActivation": "Oppsettet kan ikke aktiveres her. Eksport og eventuell automatisk overføring fortsetter med gjeldende innstillinger.",
+    "modes": {
+      "komisio": {
+        "title": "Komisio bokfører salget",
+        "hint": "Salg, returer og selgeravregning fra Komisio."
+      },
+      "pos": {
+        "title": "POS bokfører – Komisio supplerer",
+        "hint": "POS sender salget. Komisio må supplere med selgeravregning."
+      },
+      "manual": {
+        "title": "Grunnlag til regnskapsfører",
+        "hint": "Regnskapsfører kontrollerer og bokfører grunnlaget."
+      }
+    },
+    "external": {
+      "unknown": "Vet ikke",
+      "enabled": "Ja",
+      "disabled": "Nei"
+    },
+    "events": {
+      "sales": "Salg og kundereturer",
+      "sellerCredit": "Selgertilgodehavender og tilbakeføringer",
+      "commission": "Provisjon og tilhørende merverdiavgift",
+      "fees": "Betalingsgebyrer",
+      "settlements": "POS-utbetalinger til butikkens bank",
+      "payouts": "Gjennomførte utbetalinger til selgere"
+    },
+    "owners": {
+      "komisio": "Komisio",
+      "pos": "POS-koblingen",
+      "accountant": "Regnskapsfører",
+      "review": "Må avklares"
+    },
+    "issues": {
+      "duplicateSales": "Det samme salget kan bli bokført fra både Komisio og POS.",
+      "missingSales": "Ingen salgskilde er valgt i dette eksemplet.",
+      "externalUnknown": "Kontroller om en annen kobling bokfører det samme salget.",
+      "complementUnavailable": "Supplerende postering er ikke implementert. Motposter og eventuell ompostering av inntekt og merverdiavgift må vurderes.",
+      "coverage": "Bekreft at Komisio dekker hele det valgte salget, også blandede kvitteringer, gavekort og delvise refusjoner.",
+      "cutover": "Avtal startdato og avstem tidligere eksporter, ukjente overføringsutfall og inngående saldoer.",
+      "review": "Gjennomgå kontering og ansvar for gebyrer, bankavregning og gjennomførte selgerutbetalinger med regnskapsfører.",
+      "noClose": "Det finnes ikke noe dagsoppgjør å sammenligne med.",
+      "unbalanced": "Det eksisterende bilaget balanserer ikke.",
+      "unmapped": "Noen beløp i bilaget mangler kontotilknytning.",
+      "manualReview": "Avstem grunnlaget mot det som allerede er bokført før manuell import.",
+      "emptyVoucher": "Det eksisterende bilaget inneholder ingen posteringslinjer."
+    }
+  }
 }

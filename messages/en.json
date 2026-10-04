@@ -3090,6 +3090,16 @@
       "unmapped": "Some amounts in the existing journal have no account mapping.",
       "manualReview": "Reconcile the documents with existing postings before manual import.",
       "emptyVoucher": "The existing journal contains no posting lines."
+    },
+    "simple": {
+      "entry": "Help choosing an accounting setup",
+      "advanced": "Details for your accountant",
+      "settings": "Open connections and settings",
+      "unknownTitle": "Start with your POS connection",
+      "unknownHint": "Check whether your POS already sends sales to accounting. Each sale should only be sent once.",
+      "komisio": "Komisio can send accounting data to Fortnox. Automation sends created exports; day closes and export documents still need to be prepared.",
+      "pos": "Keep the POS sales postings. Automatic consignor accounting supplements from Komisio are not available yet. Ask your accountant to handle the supplements for now.",
+      "manual": "Prepare documents for your accountant to reconcile and post. Avoid importing anything already posted."
     }
   }
 }

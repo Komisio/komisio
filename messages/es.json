@@ -3096,6 +3096,16 @@
       "unmapped": "Algunos importes del asiento no tienen cuenta asignada.",
       "manualReview": "Concilia los documentos con lo ya contabilizado antes de la importación manual.",
       "emptyVoucher": "El asiento existente no contiene líneas contables."
+    },
+    "simple": {
+      "entry": "Ayuda para elegir la configuración contable",
+      "advanced": "Detalles para contabilidad",
+      "settings": "Abrir conexiones y ajustes",
+      "unknownTitle": "Empieza por la conexión del TPV",
+      "unknownHint": "Comprueba si el TPV ya envía las ventas a contabilidad. Cada venta debe enviarse una sola vez.",
+      "komisio": "Komisio puede enviar los datos contables a Fortnox. La automatización envía las exportaciones creadas; los cierres diarios y documentos de exportación aún deben prepararse.",
+      "pos": "Mantén la contabilización de ventas del TPV. La liquidación complementaria automática a consignantes desde Komisio aún no está disponible. Deja esos ajustes a la persona responsable de contabilidad por ahora.",
+      "manual": "Prepara documentos para que contabilidad los concilie y registre. Evita importar operaciones ya contabilizadas."
     }
   }
 }

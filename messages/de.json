@@ -3096,6 +3096,16 @@
       "unmapped": "Für einige Beträge fehlt eine Kontenzuordnung.",
       "manualReview": "Unterlagen vor dem manuellen Import mit bereits gebuchten Vorgängen abstimmen.",
       "emptyVoucher": "Der bestehende Buchungssatz enthält keine Buchungszeilen."
+    },
+    "simple": {
+      "entry": "Hilfe bei der Wahl des Buchhaltungsmodells",
+      "advanced": "Details für die Buchhaltung",
+      "settings": "Anbindungen und Einstellungen öffnen",
+      "unknownTitle": "Mit der Kassenanbindung beginnen",
+      "unknownHint": "Prüfen Sie, ob Ihre Kasse die Verkäufe bereits an die Buchhaltung sendet. Jeder Verkauf sollte nur einmal übertragen werden.",
+      "komisio": "Komisio kann Buchungsdaten an Fortnox senden. Die Automatik versendet erstellte Exporte; Tagesabschlüsse und Exportdateien müssen weiterhin erstellt werden.",
+      "pos": "Behalten Sie die Verkaufsbuchungen der Kasse bei. Eine automatische Ergänzung der Einliefererabrechnung aus Komisio ist noch nicht verfügbar. Lassen Sie diese Ergänzungen vorerst durch Ihre Buchhaltung vornehmen.",
+      "manual": "Erstellen Sie Unterlagen zur Abstimmung und Buchung durch Ihre Buchhaltung. Bereits gebuchte Vorgänge dürfen nicht erneut importiert werden."
     }
   }
 }

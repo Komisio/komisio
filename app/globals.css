@@ -487,6 +487,20 @@ summary {
 .accounting-routing-grid > .stack {
   align-content: start;
 }
+.accounting-routing-question,
+.accounting-routing-recommendation {
+  max-width: 42rem;
+  margin: 1.25rem 0;
+}
+.accounting-routing-recommendation p {
+  margin-top: 0.5rem;
+}
+.accounting-routing-advanced {
+  margin-top: 1.5rem;
+}
+.accounting-routing-advanced > .accounting-routing-grid {
+  margin-top: 1.25rem;
+}
 .accounting-routing-notice {
   padding: 1rem;
   background: var(--mint);

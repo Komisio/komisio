@@ -3090,6 +3090,16 @@
       "unmapped": "Alcuni importi non hanno un conto assegnato.",
       "manualReview": "Riconcilia i documenti con le registrazioni esistenti prima dell’importazione manuale.",
       "emptyVoucher": "La registrazione esistente non contiene righe contabili."
+    },
+    "simple": {
+      "entry": "Aiuto per scegliere la configurazione contabile",
+      "advanced": "Dettagli per la contabilità",
+      "settings": "Apri collegamenti e impostazioni",
+      "unknownTitle": "Inizia dal collegamento POS",
+      "unknownHint": "Verifica se il POS invia già le vendite alla contabilità. Ogni vendita deve essere inviata una sola volta.",
+      "komisio": "Komisio può inviare i dati contabili a Fortnox. L’automazione invia le esportazioni create; chiusure giornaliere e documenti di esportazione devono ancora essere preparati.",
+      "pos": "Mantieni le registrazioni delle vendite del POS. L’integrazione automatica dei conteggi dei conferenti da Komisio non è ancora disponibile. Affida per ora le integrazioni al responsabile contabile.",
+      "manual": "Prepara i documenti per la riconciliazione e la registrazione da parte della contabilità. Evita di importare operazioni già contabilizzate."
     }
   }
 }

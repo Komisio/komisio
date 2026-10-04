@@ -3090,6 +3090,16 @@
       "unmapped": "Noen beløp i bilaget mangler kontotilknytning.",
       "manualReview": "Avstem grunnlaget mot det som allerede er bokført før manuell import.",
       "emptyVoucher": "Det eksisterende bilaget inneholder ingen posteringslinjer."
+    },
+    "simple": {
+      "entry": "Hjelp til å velge regnskapsoppsett",
+      "advanced": "Detaljer for regnskapsfører",
+      "settings": "Åpne koblinger og innstillinger",
+      "unknownTitle": "Start med kassens kobling",
+      "unknownHint": "Kontroller om kassen allerede sender salget til regnskapet. Det samme salget skal bare sendes én gang.",
+      "komisio": "Komisio kan sende regnskapsgrunnlag til Fortnox. Automatikken sender opprettede eksporter; dagsoppgjør og eksportgrunnlag må fortsatt opprettes.",
+      "pos": "Behold kassens salgsbokføring. Automatisk supplering med selgeravregning fra Komisio er ikke tilgjengelig ennå. La regnskapsfører håndtere suppleringen inntil videre.",
+      "manual": "Opprett grunnlag som regnskapsfører avstemmer og bokfører. Unngå å importere noe som allerede er bokført."
     }
   }
 }

@@ -3090,6 +3090,16 @@
       "unmapped": "Det befintliga underlaget saknar kontomappning för vissa belopp.",
       "manualReview": "Stäm av underlaget mot det som redan bokförts innan manuell import.",
       "emptyVoucher": "Det befintliga underlaget innehåller inga bokföringsrader."
+    },
+    "simple": {
+      "entry": "Hjälp att välja bokföringsupplägg",
+      "advanced": "Detaljer för redovisningsansvarig",
+      "settings": "Öppna kopplingar och inställningar",
+      "unknownTitle": "Börja med kassans koppling",
+      "unknownHint": "Kontrollera om kassan redan skickar försäljningen till bokföringen. Samma försäljning ska bara skickas en gång.",
+      "komisio": "Komisio kan skicka bokföringsunderlaget till Fortnox. Automatiken skickar skapade exporter; dagsavslut och underlag behöver fortfarande tas fram.",
+      "pos": "Behåll kassans försäljningsbokföring. Automatisk komplettering av säljaravräkningen från Komisio finns ännu inte. Låt redovisningsansvarig hantera kompletteringen tills vidare.",
+      "manual": "Skapa underlag för redovisningsansvarig, som stämmer av och bokför det. Undvik att importera sådant som redan är bokfört."
     }
   }
 }

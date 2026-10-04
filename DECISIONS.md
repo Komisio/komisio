@@ -883,3 +883,4 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-10-04: Host administration leads with searchable store cards and groups platform settings behind disclosures. All store facts remain available; host authorization, financial commands and plan end-date semantics are unchanged.
 - 2026-10-04: Accounting routing is an unsaved planning preview using caller-scoped voucher facts. Choices describe proposed responsibilities, never authorize exports or change current sends. Complementary posting, source coverage and cutover remain unverified; no financial rule changes.
+- 2026-10-04: Accounting setup guidance starts with one POS-posting question and folds the responsibility comparison for accountants. It is linked from settings, not daily navigation. Recommendations remain unsaved; existing Fortnox automation sends recorded exports only.

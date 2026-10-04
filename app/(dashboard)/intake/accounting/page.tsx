@@ -110,25 +110,33 @@ export default async function Accounting({
         <p>{d.intro}</p>
       </div>
       <nav className="view-tabs" aria-label={d.viewsLabel}>
-        {views.map((v) => (
-          <Link
-            key={v}
-            href={
-              v === 'days'
-                ? '/intake/accounting'
-                : `/intake/accounting?view=${v}`
-            }
-            className={`view-tab ${view === v ? 'active' : ''}`}
-            aria-current={view === v ? 'page' : undefined}
-          >
-            {d.views[v]}
-            {v === 'reconciliation' &&
-            attentionCount !== null &&
-            attentionCount > 0
-              ? ` (${attentionCount})`
-              : ''}
-          </Link>
-        ))}
+        {views
+          .filter((v) => v !== 'planning')
+          .map((v) => (
+            <Link
+              key={v}
+              href={
+                v === 'days'
+                  ? '/intake/accounting'
+                  : `/intake/accounting?view=${v}`
+              }
+              className={`view-tab ${view === v || (view === 'planning' && v === 'settings') ? 'active' : ''}`}
+              aria-current={
+                view === v
+                  ? 'page'
+                  : view === 'planning' && v === 'settings'
+                    ? 'location'
+                    : undefined
+              }
+            >
+              {d.views[v]}
+              {v === 'reconciliation' &&
+              attentionCount !== null &&
+              attentionCount > 0
+                ? ` (${attentionCount})`
+                : ''}
+            </Link>
+          ))}
       </nav>
       {view === 'planning' && (
         <AccountingRoutingPreview
@@ -137,6 +145,7 @@ export default async function Accounting({
           currency={currency}
           d={all.accountingRouting}
           accounting={d}
+          currencyWarning={all.helpCenter.guide.currency}
         />
       )}
       {view === 'days' && (
@@ -391,6 +400,9 @@ export default async function Accounting({
             className="accounting-settings-links"
             aria-label={d.views.settings}
           >
+            <Link className="text-link" href="/intake/accounting?view=planning">
+              {all.accountingRouting.simple.entry}
+            </Link>
             <Link className="text-link" href="#account-map">
               {d.mapHeading}
             </Link>

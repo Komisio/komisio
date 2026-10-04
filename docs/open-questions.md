@@ -13,6 +13,10 @@ approval, external source coverage and cutover evidence remain unresolved.
 Existing voucher previews can balance while reporting unmapped per-mode totals.
 Confirm which aggregate and per-mode keys belong in each approved posting profile;
 the planning view surfaces both facts without changing existing export behavior.
+The owner requests minimal daily involvement: setup guidance starts with whether
+the POS already posts sales and folds accounting details. Existing Fortnox
+automation sends recorded exports; automatic close/export generation and
+complementary posting are not delivered or implied by this release.
 
 Manual plan end dates (2026-10-03): should host activation through a selected
 calendar date expire at the end of that date in Europe/Stockholm, in the store

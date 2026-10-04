@@ -3096,6 +3096,16 @@
       "unmapped": "Joiltakin tositteen summilta puuttuu tilikohdistus.",
       "manualReview": "Täsmäytä aineisto nykyisiin kirjauksiin ennen manuaalista tuontia.",
       "emptyVoucher": "Nykyinen tosite ei sisällä kirjausrivejä."
+    },
+    "simple": {
+      "entry": "Apua kirjanpitojärjestelyn valintaan",
+      "advanced": "Lisätiedot kirjanpitäjälle",
+      "settings": "Avaa yhteydet ja asetukset",
+      "unknownTitle": "Aloita kassayhteydestä",
+      "unknownHint": "Tarkista, lähettääkö kassa jo myynnit kirjanpitoon. Sama myynti tulee lähettää vain kerran.",
+      "komisio": "Komisio voi lähettää kirjanpitoaineiston Fortnoxiin. Automatiikka lähettää luodut viennit; päiväpäätökset ja vientiaineistot on edelleen luotava.",
+      "pos": "Säilytä kassan myyntikirjaukset. Komision automaattinen myyjätilitysten täydennys ei ole vielä saatavilla. Anna kirjanpitäjän hoitaa täydennykset toistaiseksi.",
+      "manual": "Luo aineisto kirjanpitäjän täsmäytettäväksi ja kirjattavaksi. Älä tuo jo kirjattuja tapahtumia uudelleen."
     }
   }
 }

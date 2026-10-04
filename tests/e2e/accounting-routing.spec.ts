@@ -37,9 +37,26 @@ test('accounting planning uses existing vouchers, stays unsaved and never sends 
       '2026-09-30',
     ])
     await f.commit()
-    await page.goto('/intake/accounting?view=planning')
+    await page.goto('/intake/accounting?view=settings')
+    await page.getByRole('link', { name: d.simple.entry }).click()
     const section = page.getByRole('region', { name: d.title })
     await expect(section).toBeVisible()
+    const checks = section.locator('.accounting-routing-checks')
+    await expect(section.getByRole('radio')).toHaveCount(0)
+    await expect(section.getByRole('status')).toContainText(
+      d.simple.unknownHint,
+    )
+    await page.setViewportSize({ width: 1440, height: 1100 })
+    await page.screenshot({
+      path: testInfo.outputPath('setup-desktop.png'),
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.screenshot({
+      path: testInfo.outputPath('setup-mobile.png'),
+      fullPage: true,
+    })
+    await section.getByText(d.simple.advanced, { exact: true }).click()
     const writes: string[] = []
     page.on('request', (request) => {
       if (
@@ -50,30 +67,28 @@ test('accounting planning uses existing vouchers, stays unsaved and never sends 
     })
     await expect(section).toContainText(d.issues.externalUnknown)
     await section.getByLabel(d.externalLabel).selectOption('enabled')
-    await expect(section.getByRole('status')).toContainText(
-      d.issues.duplicateSales,
-    )
+    await expect(section.getByRole('status')).toContainText(d.simple.pos)
+    await section
+      .getByRole('radio', { name: d.modes.komisio.title, exact: false })
+      .check()
+    await expect(checks).toContainText(d.issues.duplicateSales)
     await section
       .getByRole('radio', { name: d.modes.pos.title, exact: false })
       .check()
-    await expect(section.getByRole('status')).toContainText(
-      d.issues.complementUnavailable,
-    )
-    await expect(section.getByRole('status')).not.toContainText(
-      d.issues.duplicateSales,
-    )
+    await expect(checks).toContainText(d.issues.complementUnavailable)
+    await expect(checks).not.toContainText(d.issues.duplicateSales)
     await section.getByLabel(d.externalLabel).selectOption('disabled')
-    await expect(section.getByRole('status')).toContainText(
-      d.issues.missingSales,
-    )
+    await expect(section.getByRole('status')).toContainText(d.simple.komisio)
+    await section
+      .getByRole('radio', { name: d.modes.pos.title, exact: false })
+      .check()
+    await expect(checks).toContainText(d.issues.missingSales)
     await section.getByText(d.currentHeading, { exact: true }).click()
     await expect(section.getByLabel(d.closeLabel)).toContainText('2026-09-30')
-    await expect(section.getByRole('status')).not.toContainText(
-      d.issues.unbalanced,
-    )
+    await expect(checks).not.toContainText(d.issues.unbalanced)
     // This existing three-account fixture balances, but leaves per-mode totals
     // unmapped. Planning must still surface that rather than imply readiness.
-    await expect(section.getByRole('status')).toContainText(d.issues.unmapped)
+    await expect(checks).toContainText(d.issues.unmapped)
     await expect(section.getByText('200.00 SEK', { exact: true })).toHaveCount(
       2,
     )
@@ -102,16 +117,12 @@ test('accounting planning uses existing vouchers, stays unsaved and never sends 
     await section
       .getByRole('radio', { name: d.modes.manual.title, exact: false })
       .check()
-    await expect(section.getByLabel(d.externalLabel)).toHaveCount(0)
-    await expect(section.getByRole('status')).toContainText(
-      d.issues.manualReview,
-    )
+    await expect(section.getByLabel(d.externalLabel)).toHaveValue('disabled')
+    await expect(checks).toContainText(d.issues.manualReview)
     await expect(section.getByRole('button')).toHaveCount(0)
     expect(writes).toEqual([])
     await page.reload()
-    await expect(
-      section.getByRole('radio', { name: d.modes.komisio.title, exact: false }),
-    ).toBeChecked()
+    await expect(section.locator('input[value=komisio]')).toBeChecked()
     await expect(section.getByLabel(d.externalLabel)).toHaveValue('unknown')
   } finally {
     await f.close()

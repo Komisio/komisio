@@ -1920,7 +1920,10 @@
     "sellers": "Indleverere",
     "items": "Varer",
     "sales30": "Salg, 30 dage",
-    "lastActivity": "Seneste aktivitet"
+    "lastActivity": "Seneste aktivitet",
+    "searchStores": "Søg butik",
+    "allStates": "Alle statusser",
+    "noStores": "Ingen butikker matcher søgningen."
   },
   "reconciliation": {
     "heading": "Afstemning",
@@ -2647,7 +2650,12 @@
       "emailNewCap": "Beskeder pr. døgn, ny butik",
       "inviteNewCap": "Invitationer pr. døgn, ny butik",
       "emailTrustDays": "Døgn før en butik regnes som etableret",
-      "connectorDailyCap": "Kald pr. forbundet assistent og døgn"
+      "connectorDailyCap": "Kald pr. forbundet assistent og døgn",
+      "budgetHeading": "Budget og kreditter",
+      "modelHeading": "Modelomkostninger",
+      "limitsHeading": "Grænser for kald og beskeder",
+      "adminHeading": "Platformadministration",
+      "adminIntro": "Indstillingerne gælder alle butikker i dette driftsmiljø."
     }
   },
   "sellerProfile": {

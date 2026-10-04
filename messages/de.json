@@ -1920,7 +1920,10 @@
     "sellers": "Einlieferer",
     "items": "Artikel",
     "sales30": "Verkäufe, 30 Tage",
-    "lastActivity": "Letzte Aktivität"
+    "lastActivity": "Letzte Aktivität",
+    "searchStores": "Geschäft suchen",
+    "allStates": "Alle Status",
+    "noStores": "Keine Geschäfte entsprechen der Suche."
   },
   "reconciliation": {
     "heading": "Abstimmung",
@@ -2647,7 +2650,12 @@
       "emailNewCap": "Nachrichten pro Tag, neuer Store",
       "inviteNewCap": "Einladungen pro Tag, neuer Store",
       "emailTrustDays": "Tage, bis ein Store als etabliert gilt",
-      "connectorDailyCap": "Aufrufe pro verbundenem Assistenten und Tag"
+      "connectorDailyCap": "Aufrufe pro verbundenem Assistenten und Tag",
+      "budgetHeading": "Budget und Guthaben",
+      "modelHeading": "Modellkosten",
+      "limitsHeading": "Anfrage- und Nachrichtenlimits",
+      "adminHeading": "Plattformverwaltung",
+      "adminIntro": "Diese Einstellungen gelten für alle Geschäfte in dieser Umgebung."
     }
   },
   "sellerProfile": {

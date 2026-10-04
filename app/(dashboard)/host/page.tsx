@@ -1,3 +1,4 @@
+import './host.css'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
@@ -23,26 +24,28 @@ export default async function Host() {
     readAiPlatformSettings(ctx.client),
   ])
   return (
-    <>
+    <div className="host-console">
       <div className="page-heading">
         <div className="eyebrow">{d.platform}</div>
         <h1>{d.plans.hostTitle}</h1>
         <p>{d.plans.hostIntro}</p>
       </div>
-      <Link
-        className="text-link"
-        href="/intake/integrations/privacy?unmatched=1"
-      >
-        {d.shopifyPrivacy.unmatched}
-      </Link>
-      <HostAi settings={ai} stores={rows} d={d.credits.host} />
       <HostPlans
         rows={rows}
         activity={Object.fromEntries(activity)}
         locale={ctx.locale}
         d={d.plans}
       />
-    </>
+      <HostAi settings={ai} stores={rows} d={d.credits.host} />
+      <div className="host-privacy">
+        <Link
+          className="text-link"
+          href="/intake/integrations/privacy?unmatched=1"
+        >
+          {d.shopifyPrivacy.unmatched}
+        </Link>
+      </div>
+    </div>
   )
 }
 

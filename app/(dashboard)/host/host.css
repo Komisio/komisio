@@ -1,0 +1,167 @@
+.host-console {
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+}
+.host-console .page-heading {
+  margin-bottom: 0;
+}
+.host-console .page-heading p {
+  max-width: 65ch;
+}
+.host-section-heading h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.host-count {
+  font-size: 0.875rem;
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: var(--mint);
+  color: var(--green);
+}
+.host-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 16px;
+  margin-block: 16px 24px;
+}
+.host-stores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr));
+  gap: 16px;
+}
+.host-store {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  min-width: 0;
+}
+.host-store-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.host-store-heading h3 {
+  font-size: 1.125rem;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.host-state {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  font-size: 0.8125rem;
+  flex-shrink: 0;
+}
+.host-state[data-state='active'] {
+  background: var(--mint);
+  color: var(--green);
+}
+.host-store-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-block: 24px 16px;
+}
+.host-store-stats dt,
+.host-last-activity,
+.host-store-detail dt {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.host-store-stats dd {
+  margin: 2px 0 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.host-store-actions {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+.host-store-actions details {
+  min-width: 0;
+  flex: 1;
+}
+.host-store-actions summary {
+  min-height: 44px;
+  padding-block: 10px;
+  cursor: pointer;
+}
+.host-store-detail {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+.host-store-detail dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.host-activation {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--green);
+  border-radius: 14px;
+  background: var(--paper);
+}
+.host-setting-group {
+  border-top: 1px solid var(--line);
+}
+.host-setting-group > summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.125rem;
+  padding-block: 20px;
+  min-height: 44px;
+}
+.host-setting-content {
+  display: grid;
+  gap: 20px;
+  padding-bottom: 24px;
+}
+.host-setting-fields {
+  min-width: 0;
+  border: 0;
+  padding: 0;
+}
+.host-setting-fields legend {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.host-field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.host-console .field {
+  min-width: 0;
+}
+.host-console .field input,
+.host-console .field select {
+  width: 100%;
+  min-width: 0;
+}
+.host-privacy {
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 600px) {
+  .host-filters,
+  .host-field-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .host-store {
+    padding: 16px;
+  }
+  .host-store-heading {
+    flex-wrap: wrap;
+  }
+}

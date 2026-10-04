@@ -880,3 +880,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-03: Language menus retain options during pointer clicks in browsers that do not focus buttons. Outside pointer actions, keyboard departure and Escape still dismiss the menu; language changes retain existing unsaved-draft confirmation.
 
 - 2026-10-03: CI browser tests use the production artifact built earlier in the job; local tests retain the development server. Per-test progress is logged. Test coverage, isolation, the 35-minute timeout and staging release gates remain unchanged.
+
+- 2026-10-04: Host administration leads with searchable store cards and groups platform settings behind disclosures. All store facts remain available; host authorization, financial commands and plan end-date semantics are unchanged.

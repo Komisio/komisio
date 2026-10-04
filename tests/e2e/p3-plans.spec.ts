@@ -7,7 +7,9 @@ import d from '../../messages/sv.json' with { type: 'json' }
 // Plans and trial through the browser: billing switched on for the test,
 // the trial banner, manual activation on the host page, and the read-only
 // state; billing is switched off again at the end.
-test('trial banner, host activation and read-only state', async ({ page }) => {
+test('trial banner, host activation and read-only state', async ({
+  page,
+}, testInfo) => {
   const email = `p3-plans-${randomUUID()}@example.test`
   await register(page, email, `K!${randomBytes(16).toString('hex')}`)
   const f = await p2Fixture(email)
@@ -55,17 +57,63 @@ test('trial banner, host activation and read-only state', async ({ page }) => {
     const slug = (
       await f.db.query('select slug from tenants where id=$1', [f.tenant])
     ).rows[0].slug as string
-    const row = host.getByRole('row', { name: new RegExp(slug) })
+    await page.getByLabel(d.plans.searchStores).fill(slug)
+    const row = host.getByRole('article', {
+      name: 'P2 browser store',
+      exact: true,
+    })
     await expect(
       row.getByText(d.plans.states.trial, { exact: true }),
     ).toBeVisible()
     // Activity next to the plan: one member, one seller, nothing sold.
-    await expect(row.getByRole('cell').nth(5)).toHaveText('1')
-    await expect(row.getByRole('cell').nth(6)).toHaveText('1')
-    await expect(row.getByRole('cell').nth(8)).toHaveText('0')
+    await expect(row.locator('dl').first().locator('dd')).toHaveText([
+      '1',
+      '1',
+      '0',
+      '0',
+    ])
+    await page.getByLabel(d.plans.searchStores).fill('no-such-store-unique')
+    await expect(page.getByText(d.plans.noStores)).toBeVisible()
+    await page.getByLabel(d.plans.searchStores).fill(slug)
+    await page.getByLabel(d.plans.state, { exact: true }).selectOption('closed')
+    await expect(page.getByText(d.plans.noStores)).toBeVisible()
+    await page.getByLabel(d.plans.state, { exact: true }).selectOption('trial')
+    await expect(row).toBeVisible()
+    await page.getByLabel(d.plans.state, { exact: true }).selectOption('')
+    await page.screenshot({
+      path: testInfo.outputPath('host-desktop.png'),
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 375, height: 812 })
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+    await page
+      .locator('summary')
+      .filter({ hasText: d.credits.host.title })
+      .click()
+    await expect(
+      page.getByLabel(d.credits.host.monthlyCap, { exact: true }),
+    ).toBeVisible()
+    await page
+      .locator('summary')
+      .filter({ hasText: d.credits.host.title })
+      .click()
+    await page.screenshot({
+      path: testInfo.outputPath('host-mobile.png'),
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 1280, height: 900 })
     await row
       .getByRole('button', { name: d.plans.activate, exact: true })
       .click()
+    await expect(
+      page.getByRole('heading', {
+        name: d.plans.activateHeading.replace('{name}', 'P2 browser store'),
+      }),
+    ).toBeFocused()
     await page.getByLabel(d.plans.reason, { exact: true }).fill('Pilot store')
     await page
       .getByRole('button', { name: d.plans.confirmActivate, exact: true })

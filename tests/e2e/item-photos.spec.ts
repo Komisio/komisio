@@ -14,7 +14,11 @@ test('item gallery keeps retries and concurrent defaults safe; compact list prev
   await register(page, email, `Test!${randomUUID()}`)
   const f = await p2Fixture(email)
   try {
-    const item = await f.item('Photo test jacket')
+    // Persisted PostgreSQL identifiers can predate RFC-shaped derived IDs.
+    const legacyId = randomUUID().split('-')
+    legacyId[2] = '0' + legacyId[2].slice(1)
+    legacyId[3] = '0' + legacyId[3].slice(1)
+    const item = await f.item('Photo test jacket', legacyId.join('-'))
     await f.commit()
     await page.goto(`/intake/items/${item}`)
     const gallery = page.getByRole('region', {

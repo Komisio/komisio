@@ -78,7 +78,7 @@ export async function GET(request: Request, { params }: Context) {
     if (!ctx || ctx.mfaRequired) return reply({ error: 'AUTH_REQUIRED' }, 401)
     const q = new URL(request.url).searchParams
     const c = z
-      .object({ tenant: z.uuid(), item: z.uuid(), photo: z.uuid() })
+      .object({ tenant: z.uuid(), item: z.guid(), photo: z.guid() })
       .parse({
         tenant: q.get('tenant'),
         item: (await params).id,

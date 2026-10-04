@@ -430,3 +430,13 @@ Owner confirms that seller signatures are optional by default. This supersedes t
 
 ### Seller profile scope (resolved 2026-09-18)
 Owner approved editable contact details, optional address, preferred language and internal staff notes. Quick registration still requires only a name and one contact method. Profile changes retain immutable history; statement contacts are frozen. Payment details, personal identifiers and active/inactive lifecycle semantics remain deferred.
+
+### Hosted trial implementation gap (2026-10-04)
+
+The 2026-09-17 decision specifies three free calendar months, then SEK 299 per
+store/month excluding VAT. Repository `start_trial()` still uses 30 days, and
+Stripe Checkout does not pass the remaining trial end. The actual Stripe price
+configuration has not been verified. A billing follow-up must reconcile these
+with the decision and test early checkout without shortening the free period.
+How should existing trials and manual pilot plans be migrated? No commercial
+state or billing configuration was changed during the host table UI review.

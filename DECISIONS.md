@@ -884,3 +884,8 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-04: Host administration leads with searchable store cards and groups platform settings behind disclosures. All store facts remain available; host authorization, financial commands and plan end-date semantics are unchanged.
 - 2026-10-04: Accounting routing is an unsaved planning preview using caller-scoped voucher facts. Choices describe proposed responsibilities, never authorize exports or change current sends. Complementary posting, source coverage and cutover remain unverified; no financial rule changes.
 - 2026-10-04: Accounting setup guidance starts with one POS-posting question and folds the responsibility comparison for accountants. It is linked from settings, not daily navigation. Recommendations remain unsaved; existing Fortnox automation sends recorded exports only.
+- 2026-10-04: Host stores use a searchable, status-filtered, sortable table with row-expanded details. Manual plan management appears only in details and explains active/manual status without charging. Host authorization, activation commands and end-date semantics are unchanged.
+
+- 2026-10-04: Host manual activation is labelled an exception to Stripe subscriptions and unavailable when billing is off. Unconfirmed requests stop after 15 seconds and require reload before further changes. Commercial rules and billing configuration are unchanged.
+
+- 2026-10-04: Owner approves item photo revisions: up to 20 private images per item, one default, inherited frozen reception photos, staff edits through engine commands with replay and revision checks. Originals stay immutable; no seller/public/POS publication is added.

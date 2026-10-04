@@ -56,7 +56,7 @@ export async function p2Fixture(email: string) {
       }),
     ],
   )
-  async function item(title: string) {
+  async function item(title: string, id: string = randomUUID()) {
     const bag = (
       await db.query('select receive_bag_with_agreement($1,$2,$3,$4,$5) id', [
         tenant,
@@ -66,8 +66,7 @@ export async function p2Fixture(email: string) {
         agreement,
       ])
     ).rows[0].id
-    const draft = randomUUID(),
-      id = randomUUID()
+    const draft = randomUUID()
     await db.query('select save_inspection_draft($1,$2,$3,$4,0,$5,$6,$7)', [
       tenant,
       randomUUID(),

@@ -11,7 +11,7 @@ export async function readItemPhotos(
   tenantId: string,
   itemIds: string[],
 ) {
-  const ids = z.array(z.uuid()).max(20).parse(itemIds)
+  const ids = z.array(z.guid()).max(20).parse(itemIds)
   if (!ids.length) return []
   const r = await client.rpc('item_photo_state', {
     p_tenant: z.uuid().parse(tenantId),
@@ -75,7 +75,7 @@ export async function readItemPhotoBytes(
   itemId: string,
   photoId: string,
 ) {
-  const id = z.uuid().parse(photoId)
+  const id = z.guid().parse(photoId)
   const state = (await readItemPhotos(client, tenantId, [itemId]))[0]
   const photo = state?.photos.find((p) => p.id === id)
   if (!photo) return null

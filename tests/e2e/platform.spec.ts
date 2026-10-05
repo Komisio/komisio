@@ -281,7 +281,6 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
     .getByLabel('Avtalstext', { exact: true })
     .fill('Endast fiktiva testvillkor. <script>Not executable</script>')
   await page.getByLabel('Kräv registrerat underlag', { exact: false }).check()
-  await page.getByLabel('Jag har granskat texten', { exact: false }).check()
   const publishResponse = page.waitForResponse(
     (r) => r.url().endsWith('/api/intake') && r.request().method() === 'POST',
   )
@@ -361,9 +360,6 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
     await stalePublisher
       .getByLabel('Avtalets rubrik')
       .fill('Unpublished older draft')
-    await stalePublisher
-      .getByLabel('Jag har granskat texten', { exact: false })
-      .check()
     await stale.goto(sellerUrl)
     await stale
       .getByLabel('Kännetecken på inlämningen (valfritt)')
@@ -378,7 +374,6 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
       .getByLabel('Avtalstext', { exact: true })
       .fill('New fictional terms, not a real seller contract.')
     await page.getByLabel('Avtalets språk').selectOption('en')
-    await page.getByLabel('Jag har granskat texten', { exact: false }).check()
     await page
       .getByRole('button', { name: 'Publicera version', exact: true })
       .click()
@@ -2866,7 +2861,7 @@ test('operation queue pages reach older proposals and retain status filters', as
       from generate_series(1,55) g`,
       [tenantId, actor],
     )
-    await page.goto('/intake/operations')
+    await page.goto('/intake/operations?status=all')
     const rows = page.getByRole('link', {
       name: 'Granska f\u00f6rslaget',
       exact: true,
@@ -2922,7 +2917,10 @@ test('operation queue pages reach older proposals and retain status filters', as
     await filters.locator('a[href$="status=rejected"]').click()
     await expect(rows).toHaveCount(0)
     await expect(
-      page.getByText('Inga f\u00f6rslag matchar den h\u00e4r vyn.'),
+      page.getByRole('heading', {
+        name: d.operations.emptyFiltered,
+        exact: true,
+      }),
     ).toBeVisible()
     await page.goto(`/intake/operations?beforeId=${crypto.randomUUID()}`)
     // Streamed Next.js notFound renders a denial page with HTTP 200.

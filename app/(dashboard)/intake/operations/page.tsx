@@ -39,6 +39,9 @@ export default async function Operations({
       <div className="page-heading">
         <FormHelpHeading title={d.title} level={1} help={d.queueHelp} />
         <p>{d.intro}</p>
+        <Link className="text-link" href="/intake/reception">
+          {all.reception.ongoing}
+        </Link>
       </div>
       <nav
         className="row operation-navigation operation-filters"

@@ -1,3 +1,4 @@
+import { openAccountingSettings } from '../helpers/accounting-settings'
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -13,6 +14,7 @@ test('help task links reveal the current section while cancelled navigation keep
   try {
     await f.commit()
     await page.goto('/intake/accounting?view=settings')
+    await openAccountingSettings(page)
     const account = page.locator('#account-map input').first()
     await account.fill('1930')
     const open = page.getByRole('button', {

@@ -1,3 +1,4 @@
+import { openAccountingSettings } from '../tests/helpers/accounting-settings.ts'
 import { spawn } from 'node:child_process'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { existsSync } from 'node:fs'
@@ -105,6 +106,7 @@ try {
     await page.getByRole('button', { name: 'Logga in', exact: true }).click()
     await expect(page).not.toHaveURL(/\/login/)
     await page.goto(`${origin}/intake/accounting?view=settings`)
+    await openAccountingSettings(page)
     return page
   }
   const ownerPage = await login(ownerEmail)
@@ -139,6 +141,7 @@ try {
     fixture.db.query('select accept_automation_grants()'),
   )
   await ownerPage.reload()
+  await openAccountingSettings(ownerPage)
   await expect(panel.getByText(text.enabled, { exact: true })).toBeVisible()
   await fixture.asActor(worker, () =>
     fixture.db.query(
@@ -147,6 +150,7 @@ try {
     ),
   )
   await ownerPage.reload()
+  await openAccountingSettings(ownerPage)
   await expect(ownerPage.getByText(new RegExp(text.complete))).toBeVisible()
   const staffPage = await login(staffEmail)
   await expect(

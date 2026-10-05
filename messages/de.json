@@ -18,7 +18,7 @@
     "nextVersion": "Nächste Version vorbereiten",
     "required": "Ein Nachweis ist vor der Annahme erforderlich.",
     "optional": "Ein Nachweis ist bei der Annahme optional.",
-    "none": "Es ist keine Einlieferervereinbarung veröffentlicht. Für die Annahme gilt keine neue Vereinbarungsvoraussetzung.",
+    "none": "Es ist keine Einlieferervereinbarung veröffentlicht.",
     "history": "Vertragsversionen",
     "historyHint": "Die 20 neuesten Versionen. Ältere Versionen bleiben über ihre Belege zugänglich.",
     "adminOnly": "Inhaber und Administratoren können Vereinbarungsversionen veröffentlichen.",
@@ -39,7 +39,42 @@
     "noEvidence": "Mit diesem Beleg wurde kein Nachweis verknüpft.",
     "evidenceNote": "Der Vereinbarungsvermerk gibt den Inhalt nicht zum Verkauf frei.",
     "optionalReceiptAgreement": "Keine Vereinbarung erfasst – für dieses Geschäft optional.",
-    "evidenceHelp": "Was bedeutet eine erfasste Vereinbarung?"
+    "evidenceHelp": "Was bedeutet eine erfasste Vereinbarung?",
+    "usage": {
+      "intro": "Die Bedingungen zwischen dem Laden und der Person, die Artikel zum Verkauf abgibt.",
+      "helpLabel": "So nutzen Sie Verkäufervereinbarungen",
+      "prepare": "Verfassen Sie Ihre Bedingungen und veröffentlichen Sie eine Version. Der Text ändert keine Einstellungen zu Provision, Preisen oder Verkaufszeiträumen.",
+      "accept": "Lassen Sie den Verkäufer die richtige Version lesen und bestätigen, etwa auf Papier oder per E-Mail. Komisio bietet keine digitale Vertragsunterzeichnung.",
+      "record": "Öffnen Sie den Verkäufer und wählen Sie Verträge und Konditionen. Erfassen Sie den Verweis auf die Zustimmung und bewahren Sie das Original auf. Jede neue Version benötigt einen eigenen Nachweis.",
+      "chooseSeller": "Verkäufer wählen und Zustimmung erfassen",
+      "print": "Drucken / als PDF speichern",
+      "sellerName": "Name des Verkäufers",
+      "date": "Datum",
+      "sellerSignature": "Unterschrift des Verkäufers",
+      "storeSignature": "Unterschrift des Ladens",
+      "printHint": "Drucken erfasst keine Zustimmung in Komisio.",
+      "checklistLabel": "Was sollten Ihre Bedingungen erklären?",
+      "checklist1": "Beschreiben Sie die Zuständigkeit für Preise und Preisnachlässe, den Anteil des Ladens, den Verkaufszeitraum und den Umgang mit unverkauften Artikeln.",
+      "checklist2": "Erklären Sie auch Auszahlungen, Rücknahme und Reklamationen. Die Bedingungen sollten Ihren Abläufen und Einstellungen entsprechen."
+    },
+    "ai": {
+      "create": "Mit KI erstellen",
+      "busy": "Entwurf wird erstellt…",
+      "check": "Entwurf prüfen",
+      "preview": "KI-Entwurf",
+      "use": "Entwurf übernehmen",
+      "close": "Verwerfen",
+      "questions": "Noch zu ergänzen",
+      "replace": "Text im Formular ersetzen",
+      "help": "Über KI-Entwürfe",
+      "hint": "Nutzt die Geschäftseinstellungen und gewählte Vertragssprache. Vor Veröffentlichung prüfen und ergänzen. Zählt zur regulären KI-Nutzung.",
+      "unavailable": "KI ist für dieses Geschäft nicht verfügbar.",
+      "limit": "KI-Nutzungslimit erreicht. Später versuchen oder KI-Einstellungen prüfen.",
+      "failed": "Entwurf konnte nicht erstellt werden. Erneut versuchen.",
+      "changed": "Einstellungen oder Vertrag wurden geändert. Seite neu laden.",
+      "pending": "Noch keine Antwort. Denselben Entwurf erneut prüfen.",
+      "retryUse": "Antwort fehlt. Dieselbe Auswahl erneut versuchen."
+    }
   },
   "quickIntake": {
     "title": "Schnellannahme",
@@ -721,8 +756,27 @@
     "linkRevoked": "Der Link wurde widerrufen."
   },
   "operations": {
-    "title": "Vorgeschlagene Vorgänge",
-    "intro": "Vorschläge von KI-Agenten warten hier. Nichts wird veröffentlicht, bis ein Mitarbeiter es genehmigt.",
+    "queueLabels": {
+      "open": "Zu prüfen",
+      "failed": "Fehlgeschlagen",
+      "executed": "Ausgeführt",
+      "rejected": "Abgelehnt",
+      "expired": "Abgelaufen",
+      "all": "Alle"
+    },
+    "emptyOpenTitle": "Nichts zu prüfen",
+    "emptyOpenHint": "Neue Vorschläge erscheinen hier, wenn Ihre Entscheidung benötigt wird.",
+    "emptyFilterHint": "Wählen Sie einen anderen Filter, um weitere Vorschläge zu sehen.",
+    "queueHelp": {
+      "label": "Hilfe zu Vorschlägen",
+      "steps": [
+        "Öffnen Sie einen Vorschlag, um die geplante Änderung zu sehen. Beim Öffnen wird nichts ausgeführt.",
+        "Genehmigen Sie die Änderung, um sie in Ihrem Namen auszuführen, oder lehnen Sie sie ab, um nichts zu ändern.",
+        "Ein genehmigter Entwurf oder Prüfbericht macht den Artikel noch nicht verkaufsbereit. Das ist ein separater Schritt."
+      ]
+    },
+    "title": "Aufgaben",
+    "intro": "Prüfen Sie Vorschläge, bevor sie ausgeführt werden.",
     "notice": "Die Genehmigung führt denselben Vorgang aus, den Sie selbst ausführen könnten, erfasst in Ihrem Namen. Ein Vorschlag ist nie ein Fakt. Die Genehmigung einer Prüfung ist keine kommerzielle Annahme.",
     "empty": "Keine vorgeschlagenen Vorgänge.",
     "proposedBy": "Vorgeschlagen von",
@@ -757,7 +811,8 @@
       "exportDayClose": "Tagesabschluss exportieren",
       "settlePayouts": "Einlieferer abrechnen",
       "updateStoreProfile": "Store-Profil aktualisieren",
-      "importSellers": "Einlieferer importieren"
+      "importSellers": "Einlieferer importieren",
+      "useAgreementDraft": "KI-Vertragsentwurf"
     },
     "importRows": "Zeilen",
     "openDays": "offene Tage",
@@ -851,7 +906,7 @@
     "queueFilter": "Vorgänge filtern",
     "filterAll": "Alle Vorschläge",
     "liveQueue": "Der Status kann sich ändern, während Sie blättern. Kehren Sie zur ersten Seite zurück, um eine aktuelle Übersicht zu erhalten.",
-    "emptyFiltered": "Keine Vorschläge entsprechen dieser Ansicht.",
+    "emptyFiltered": "Keine Vorschläge in dieser Ansicht",
     "queuePages": "Vorschläge durchblättern",
     "older": "Ältere Vorschläge anzeigen",
     "firstPage": "Zurück zur ersten Seite",
@@ -1436,7 +1491,17 @@
     "deliveryHint": "Laden Sie eine SIE-Datei herunter oder senden Sie die Belege über eine verbundene Integration.",
     "fileOption": "SIE-Dateiexport",
     "fileHint": "Für Buchhaltungssysteme, die SIE 4 importieren können. Keine direkte Verbindung erforderlich.",
-    "reconciliationHint": "Prüfen Sie Tagesabschlüsse und Exporte für den Zeitraum. Der Übertragungsstatus bezieht sich auf Fortnox; SIE-Dateiimporte werden hier nicht bestätigt."
+    "reconciliationHint": "Prüfen Sie Tagesabschlüsse und Exporte für den Zeitraum. Der Übertragungsstatus bezieht sich auf Fortnox; SIE-Dateiimporte werden hier nicht bestätigt.",
+    "setup": {
+      "mapHelp": "Zur Kontenzuordnung",
+      "mapHint": "Konten für die Buchhaltung Ihres Ladens.",
+      "mapMissing": "Einrichtung erforderlich",
+      "systemHelp": "Zu Buchhaltungssystemen",
+      "systemHint": "Öffnen Sie eine Verbindung für Einstellungen und Hilfe.",
+      "providerHint": "Direkte Verbindung zu Ihrem Buchhaltungssystem.",
+      "notConnected": "Nicht verbunden",
+      "planningHint": "Erfahren Sie, wie Komisio und Ihr Kassensystem die Buchhaltung aufteilen können. Der Leitfaden ändert keine Einstellungen."
+    }
   },
   "communications": {
     "title": "Nachrichten an den Einlieferer",
@@ -1478,7 +1543,7 @@
   "stock": {
     "title": "Bestand",
     "intro": "Marge, Abverkaufsquote und Bestandsalter pro Kategorie für einen Zeitraum, aus den eigenen Fakten des Stores. Der Bestand ist zum jetzigen Zeitpunkt; Verkäufe sind die im Zeitraum.",
-    "notice": "Nur Lesen. Die Marge ist der Anteil des Stores: die Kommission bei Kommissionsverkäufen und Preis minus MwSt. minus Einkaufspreis bei Verkäufen Store-eigener Ware.",
+    "notice": "Die Marge ist der Anteil des Stores: die Kommission bei Kommissionsverkäufen und Preis minus MwSt. minus Einkaufspreis bei Verkäufen Store-eigener Ware.",
     "notAvailable": "Der Bestandsbericht ist in dieser Installation noch nicht verfügbar.",
     "totalsHeading": "Summen",
     "categoriesHeading": "Pro Kategorie",
@@ -1500,11 +1565,19 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "Die Abverkaufsquote ist die Anzahl der im Zeitraum verkauften Artikel geteilt durch verkaufte plus aktuell im Bestand befindliche Artikel. Die Altersgruppen folgen dem Standard-Preissenkungsplan.",
+    "definitions": "Die Abverkaufsquote ist die Anzahl der im Zeitraum verkauften Artikel geteilt durch verkaufte plus aktuell im Bestand befindliche Artikel.",
     "current": "Aktueller Bestand",
     "salesPeriod": "Verkäufe im Zeitraum",
     "more": "Weitere Kennzahlen anzeigen",
-    "valueHint": "Summe der Verkaufspreise der Artikel."
+    "valueHint": "Summe der Verkaufspreise der Artikel.",
+    "helpLabel": "Zum Lagerbestand",
+    "scopeHint": "Der Bestand zeigt die Artikel, die sich aktuell im Laden befinden.",
+    "ageHint": "Das Lageralter beginnt am Tag der Freigabe zum Verkauf.",
+    "salesHelpLabel": "Zu den Verkäufen",
+    "salesHint": "Die Datumsangaben gelten nur für die Verkäufe, nicht für den Bestand oben.",
+    "metricsHeading": "Weitere Kennzahlen",
+    "metricsHelpLabel": "Zu den Kennzahlen",
+    "missingHint": "Ein Strich bedeutet, dass Daten für die Berechnung fehlen."
   },
   "importer": {
     "title": "Einlieferer importieren",
@@ -1859,7 +1932,7 @@
   },
   "plans": {
     "heading": "Plan",
-    "priceNote": "Komisio ist Open Source und jede Funktion ist enthalten, ohne Limits für Artikel, Drucker oder Integrationen. Die Software kostet keine Lizenzgebühr: Betreiben Sie sie selbst oder bei einem beliebigen Hosting-Partner. Hosting durch Inority ist drei Monate kostenlos, danach 299 SEK pro Store und Monat zzgl. MwSt., ohne Vertragsbindung. Das KI-Guthaben wird separat gemessen, siehe den Tab KI-Guthaben.",
+    "priceNote": "Komisio ist Open Source und ohne Lizenzgebühr nutzbar. Alle Funktionen sind enthalten, ohne Begrenzung von Artikeln, Druckern oder Integrationen. Betreiben Sie die Software selbst oder wählen Sie einen Hosting-Partner. Das Hosting bei Inority umfasst drei kostenlose Monate ohne Vertragsbindung. Stripe zeigt Preis und Währung an, bevor Sie das Abonnement abschließen. Die Angaben zu einem bestehenden Abonnement finden Sie unter Abonnement verwalten. KI-Guthaben wird separat gekauft.",
     "trialEndsAt": "Testphase endet",
     "graceEndsAt": "Nachfrist endet",
     "activeUntil": "aktiv bis",
@@ -2519,7 +2592,7 @@
       "subject": "Zahlung überfällig für {store}",
       "text": "Hallo,\n\ndie letzte Zahlung für {store} ist fehlgeschlagen. Wird sie nicht bis {date} beglichen, läuft der Store ohne Abonnement weiter; alle Funktionen bleiben offen. Aktualisieren Sie die Zahlungsmethode unter Einstellungen:\n{link}"
     },
-    "footer": "Komisio · gehosteter Plan, SEK 199 pro Store und Monat exklusive MwSt. · Diese Nachricht wird einmal pro Schritt gesendet und hat keine Anhänge."
+    "footer": "Komisio · Die Abonnementdetails finden Sie in den Store-Einstellungen. Diese Nachricht wird einmal pro Schritt gesendet und hat keine Anhänge."
   },
   "overview": {
     "heading": "Heute",
@@ -2615,7 +2688,7 @@
   },
   "credits": {
     "title": "KI-Credits",
-    "intro": "Komisio ist Open Source, und das Hosting durch Inority ist drei Monate kostenlos und danach 299 SEK pro Store und Monat zzgl. MwSt. Darüber hinaus wird nur die Modellnutzung des KI-Assistenten gemessen, wenn sie über den eigenen Schlüssel von Komisio läuft. Ein Guthaben entspricht einer schwedischen Krone Modellkosten.",
+    "intro": "Komisio ist Open Source. Das Hosting bei Inority umfasst drei kostenlose Monate. Preis und Währung finden Sie in den Abonnementdetails in den Store-Einstellungen. KI-Guthaben wird verwendet, wenn der Assistent den API-Schlüssel von Komisio nutzt.",
     "offer": "{included} Credits sind jeden Monat enthalten, normalerweise genug für etwa {items} angenommene Artikel. Wenn sie aufgebraucht sind, kaufen Sie {pack} weitere für {price} oder verbinden den eigenen Modellschlüssel des Stores; dann werden keine Credits abgezogen.",
     "selfHosted": "Diese Installation zählt keine Credits: Der Assistent läuft über den eigenen Schlüssel der Installation.",
     "includedLeft": "Verbleibend von den Credits dieses Monats",

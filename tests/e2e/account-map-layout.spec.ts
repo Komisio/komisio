@@ -1,3 +1,4 @@
+import { openAccountingSettings } from '../helpers/accounting-settings'
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { readFileSync } from 'node:fs'
@@ -28,6 +29,7 @@ test('account mapping keeps amounts and complete debit-credit controls readable 
         },
       ])
       await page.goto('/intake/accounting?view=settings')
+      await openAccountingSettings(page)
       const map = page.locator('#account-map')
       const account = map.getByLabel(d.accounting.amountKeys.grossOre, {
         exact: true,

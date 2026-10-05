@@ -1,3 +1,4 @@
+import { openAccountingSettings } from '../helpers/accounting-settings'
 import { test, expect } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -47,6 +48,7 @@ test('accounting page shows the Fortnox connection state and records a refused s
     await f.commit()
 
     await page.goto('/intake/accounting?view=settings')
+    await openAccountingSettings(page)
     const fortnox = page.getByRole('region', {
       name: d.fortnox.title,
       exact: true,
@@ -83,6 +85,7 @@ test('accounting page shows the Fortnox connection state and records a refused s
       ),
     )
     await page.goto('/intake/accounting?view=settings')
+    await openAccountingSettings(page)
     await expect(fortnox.getByText('Komisio Test').first()).toBeVisible()
     await expect(
       fortnox.getByText(`${d.fortnox.databaseNumber} 1751085`),
@@ -97,6 +100,7 @@ test('accounting page shows the Fortnox connection state and records a refused s
       ]),
     )
     await page.reload()
+    await openAccountingSettings(page)
     await expect(
       fortnox.getByText(d.fortnox.errors.FORTNOX_REFRESH_INVALID_GRANT, {
         exact: false,
@@ -121,6 +125,7 @@ test('accounting page shows the Fortnox connection state and records a refused s
       { status: 'failed', error_code: 'FORTNOX_PREFLIGHT_FAILED' },
     ])
     await page.reload()
+    await openAccountingSettings(page)
     await expect(exports.getByRole('alert')).toContainText(
       d.fortnox.errors.FORTNOX_PREFLIGHT_FAILED,
     )
@@ -186,11 +191,13 @@ test('accounting page shows the Fortnox connection state and records a refused s
         f.db.query('select change_member($1,$2,$3)', [f.tenant, f.actor, role]),
       )
       await page.reload()
+      await openAccountingSettings(page)
       await expect(
         page.getByText(d.fortnox.reconcileTitle, { exact: true }),
       ).toHaveCount(0)
       expect((await command(confirmation)).status()).toBe(403)
       await page.goto('/intake/accounting?view=settings')
+      await openAccountingSettings(page)
       const helpGuide = page.locator('.fortnox-guide')
       if (role !== 'admin') {
         await expect(
@@ -205,6 +212,7 @@ test('accounting page shows the Fortnox connection state and records a refused s
       f.db.query("select change_member($1,$2,'owner')", [f.tenant, f.actor]),
     )
     await page.reload()
+    await openAccountingSettings(page)
     await expect(
       exports.getByRole('button', { name: d.fortnox.sendAgain, exact: true }),
     ).toHaveCount(0)
@@ -262,6 +270,7 @@ test('accounting page shows the Fortnox connection state and records a refused s
       reconciliation_evidence: confirmation.evidence,
     })
     await page.goto('/intake/accounting?view=settings')
+    await openAccountingSettings(page)
     const guide = page.locator('.fortnox-guide')
     await guide.locator('summary').click()
     await expect(
@@ -279,6 +288,7 @@ test('accounting page shows the Fortnox connection state and records a refused s
       )
     })
     await page.reload()
+    await openAccountingSettings(page)
     await expect(
       guide.locator('li').filter({ hasText: d.helpCenter.guide.steps.sent }),
     ).toContainText(d.helpCenter.guide.states.needed)
@@ -298,6 +308,7 @@ test('accounting page shows the Fortnox connection state and records a refused s
       ])
     })
     await page.reload()
+    await openAccountingSettings(page)
     for (const key of ['exported', 'sent'] as const) {
       await expect(
         guide.locator('li').filter({ hasText: d.helpCenter.guide.steps[key] }),

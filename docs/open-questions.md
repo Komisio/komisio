@@ -440,3 +440,18 @@ configuration has not been verified. A billing follow-up must reconcile these
 with the decision and test early checkout without shortening the free period.
 How should existing trials and manual pilot plans be migrated? No commercial
 state or billing configuration was changed during the host table UI review.
+
+Regional subscription pricing (2026-10-04): the owner approved removing fixed
+SEK amounts from translated product information. Subscription checkout still
+uses one configured Stripe price; regional subscription amounts and their
+selection rules remain undecided. Actual pricing is shown in Stripe Checkout
+and the customer portal, not fetched into the Komisio settings panel. UI
+language must not select a different billing currency. AI credit-pack prices
+remain governed by their separate existing country-based configuration.
+
+Seller agreement self-service (2026-10-05): the current flow publishes immutable
+versions and lets staff record a reference to external seller acceptance. The
+local UX slice adds printable versions and guidance, not seller authentication,
+digital signing or storage of signed documents. A seller-facing acceptance flow
+still needs an owner decision on identity assurance and retained evidence before
+introducing new agreement records or changing access permissions.

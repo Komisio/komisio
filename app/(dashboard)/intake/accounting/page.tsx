@@ -1,5 +1,6 @@
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
+import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { FortnoxGuide } from '@/components/help/fortnox-guide'
 import { ContextHelp } from '@/components/help/context-help'
 import { credentialKeyConfigured } from '@/lib/platform/credentials'
@@ -107,7 +108,7 @@ export default async function Accounting({
     <div className="accounting-page">
       <div className="page-heading">
         <h1>{d.title}</h1>
-        <p>{d.intro}</p>
+        {view !== 'settings' && <p>{d.intro}</p>}
       </div>
       <nav className="view-tabs" aria-label={d.viewsLabel}>
         {views
@@ -396,46 +397,19 @@ export default async function Accounting({
       )}
       {view === 'settings' && (
         <>
-          <nav
-            className="accounting-settings-links"
-            aria-label={d.views.settings}
-          >
-            <Link className="text-link" href="/intake/accounting?view=planning">
-              {all.accountingRouting.simple.entry}
-            </Link>
-            <Link className="text-link" href="#account-map">
-              {d.mapHeading}
-            </Link>
-            <Link className="text-link" href="#accounting-systems">
-              {d.systems}
-            </Link>
-          </nav>
           <div className="accounting-settings">
-            <section
-              id="account-map"
-              className="card intake-form"
-              aria-label={d.mapHeading}
-            >
-              <h2>{d.mapHeading}</h2>
-              <p>{d.mapIntro}</p>
-              <AccountMapForm
-                key={`${active.id}-${map.id ?? 'none'}`}
-                tenantId={active.id}
-                current={map}
-                editable={canEditMap}
-                d={d}
-                vatModes={vatModes}
-                intake={all.intake}
-                leaveUnsaved={all.leaveUnsaved}
-              />
-            </section>
             <section
               id="accounting-systems"
               aria-label={d.systems}
               className="accounting-systems"
             >
-              <h2>{d.systems}</h2>
-              <p>{d.deliveryHint}</p>
+              <FormHelpHeading
+                title={d.systems}
+                help={{
+                  label: d.setup.systemHelp,
+                  steps: [d.deliveryHint, d.setup.systemHint],
+                }}
+              />
               <div className="card intake-form accounting-file-option">
                 <h3>{d.fileOption}</h3>
                 <p>{d.fileHint}</p>
@@ -443,62 +417,128 @@ export default async function Accounting({
                   {d.exportsHeading}
                 </Link>
               </div>
-              <div className="accounting-provider">
-                <FortnoxConnection
-                  key={`${active.id}-${fortnox.refreshedAt ?? 'none'}`}
-                  tenantId={active.id}
-                  status={fortnox}
-                  issue={fortnoxIssue(
-                    active.id,
-                    fortnoxEnvironment(process.env),
-                  )}
-                  canConnect={canEditMap}
-                  outcome={fortnoxOutcome}
-                  locale={ctx.locale}
-                  d={all.fortnox}
-                />
-                <FortnoxGuide
-                  client={ctx.client}
-                  tenantId={active.id}
-                  role={active.role}
-                  connection={fortnox}
-                  ready={
-                    fortnoxIssue(active.id, fortnoxEnvironment(process.env)) ===
-                      null && credentialKeyConfigured(process.env)
-                  }
-                  d={all.helpCenter}
-                />
-                <div id="fortnox-automation" className="stack">
-                  {['owner', 'admin'].includes(active.role) && (
-                    <AutomationSwitch
-                      key={`automation-${active.id}`}
-                      tenantId={active.id}
-                      scope="fortnox_send"
-                      grants={grants}
-                      configured={
-                        !!automationIdentity() &&
-                        automatic?.available === true &&
-                        grants !== null
-                      }
-                      canEdit={active.role === 'owner'}
-                      t={all.fortnox.automation}
-                    />
-                  )}
-                  <p>
-                    {all.fortnox.automation.lastRun}:{' '}
-                    {automatic?.run
-                      ? `${automatic.run.at} · ${all.fortnox.automation[automatic.run.outcome]} · ${automatic.run.sent}`
-                      : all.fortnox.automation.noRun}
-                  </p>
-                  <ContextHelp
-                    key={`automation-help-${active.id}`}
-                    topic="fortnox-automation"
-                    d={all.helpCenter}
-                    label={all.helpCenter.articles['fortnox-automation'].title}
+              <details
+                className="card accounting-setting-disclosure accounting-provider-disclosure"
+                open={!!fortnoxOutcome}
+              >
+                <summary>
+                  <span>
+                    <strong>Fortnox</strong>
+                    <small>{d.setup.providerHint}</small>
+                  </span>
+                  <span className="accounting-setup-status">
+                    {fortnox.connected
+                      ? all.fortnox.connected
+                      : d.setup.notConnected}
+                  </span>
+                </summary>
+                <div className="accounting-provider">
+                  <FortnoxConnection
+                    key={`${active.id}-${fortnox.refreshedAt ?? 'none'}`}
+                    tenantId={active.id}
+                    status={fortnox}
+                    issue={fortnoxIssue(
+                      active.id,
+                      fortnoxEnvironment(process.env),
+                    )}
+                    canConnect={canEditMap}
+                    outcome={fortnoxOutcome}
+                    locale={ctx.locale}
+                    d={all.fortnox}
                   />
+                  <FortnoxGuide
+                    client={ctx.client}
+                    tenantId={active.id}
+                    role={active.role}
+                    connection={fortnox}
+                    ready={
+                      fortnoxIssue(
+                        active.id,
+                        fortnoxEnvironment(process.env),
+                      ) === null && credentialKeyConfigured(process.env)
+                    }
+                    d={all.helpCenter}
+                    initiallyOpen={false}
+                  />
+                  <div id="fortnox-automation" className="stack">
+                    {['owner', 'admin'].includes(active.role) && (
+                      <AutomationSwitch
+                        key={`automation-${active.id}`}
+                        tenantId={active.id}
+                        scope="fortnox_send"
+                        grants={grants}
+                        configured={
+                          !!automationIdentity() &&
+                          automatic?.available === true &&
+                          grants !== null
+                        }
+                        canEdit={active.role === 'owner'}
+                        t={all.fortnox.automation}
+                      />
+                    )}
+                    <p>
+                      {all.fortnox.automation.lastRun}:{' '}
+                      {automatic?.run
+                        ? `${automatic.run.at} · ${all.fortnox.automation[automatic.run.outcome]} · ${automatic.run.sent}`
+                        : all.fortnox.automation.noRun}
+                    </p>
+                    <ContextHelp
+                      key={`automation-help-${active.id}`}
+                      topic="fortnox-automation"
+                      d={all.helpCenter}
+                      label={
+                        all.helpCenter.articles['fortnox-automation'].title
+                      }
+                    />
+                  </div>
                 </div>
-              </div>
+              </details>
             </section>
+            <details className="card accounting-setting-disclosure accounting-map-disclosure">
+              <summary>
+                <span>
+                  <strong>{d.mapHeading}</strong>
+                  <small>{d.setup.mapHint}</small>
+                </span>
+                <span className="accounting-setup-status">
+                  {map.id
+                    ? `${d.mapVersion} ${map.version}`
+                    : d.setup.mapMissing}
+                </span>
+              </summary>
+              <section
+                id="account-map"
+                className="card intake-form"
+                aria-label={d.mapHeading}
+              >
+                <FormHelpHeading
+                  title={d.mapHeading}
+                  help={{ label: d.setup.mapHelp, steps: [d.mapIntro] }}
+                />
+                <Link className="text-link" href="#accounting-systems">
+                  {d.systems} ↑
+                </Link>
+                <AccountMapForm
+                  key={`${active.id}-${map.id ?? 'none'}`}
+                  tenantId={active.id}
+                  current={map}
+                  editable={canEditMap}
+                  d={d}
+                  vatModes={vatModes}
+                  intake={all.intake}
+                  leaveUnsaved={all.leaveUnsaved}
+                />
+              </section>
+            </details>
+            <div className="accounting-setup-guidance">
+              <Link
+                className="text-link"
+                href="/intake/accounting?view=planning"
+              >
+                {all.accountingRouting.simple.entry} →
+              </Link>
+              <p>{d.setup.planningHint}</p>
+            </div>
           </div>
         </>
       )}

@@ -18,7 +18,7 @@
     "nextVersion": "Valmistele seuraava versio",
     "required": "Todiste vaaditaan ennen vastaanottoa.",
     "optional": "Todiste on valinnainen vastaanotossa.",
-    "none": "Tuojasopimusta ei ole julkaistu. Vastaanottoon ei sovelleta uutta sopimusedellytystä.",
+    "none": "Tuojasopimusta ei ole julkaistu.",
     "history": "Sopimusversiot",
     "historyHint": "20 uusinta versiota. Vanhemmat versiot ovat edelleen saatavilla kuiteistaan.",
     "adminOnly": "Omistajat ja ylläpitäjät voivat julkaista sopimusversioita.",
@@ -39,7 +39,42 @@
     "noEvidence": "Tähän kuittiin ei liitetty todistetta.",
     "evidenceNote": "Sopimusmerkintä ei hyväksy sisältöä myyntiin.",
     "optionalReceiptAgreement": "Sopimusta ei ole kirjattu – se on tälle myymälälle valinnainen.",
-    "evidenceHelp": "Mitä kirjattu sopimus tarkoittaa?"
+    "evidenceHelp": "Mitä kirjattu sopimus tarkoittaa?",
+    "usage": {
+      "intro": "Kaupan ja tuotteita myyntiin tuovan henkilön väliset ehdot.",
+      "helpLabel": "Näin käytät myyjäsopimuksia",
+      "prepare": "Kirjoita kaupan ehdot ja julkaise versio. Sopimusteksti ei muuta provisio-, hinta- tai myyntiaika-asetuksia.",
+      "accept": "Anna myyjän lukea ja hyväksyä oikea versio esimerkiksi paperilla tai sähköpostitse. Komisio ei tarjoa digitaalista sopimuksen allekirjoitusta.",
+      "record": "Avaa myyjä ja valitse Sopimukset ja ehdot. Kirjaa hyväksynnän säilytyspaikka ja säilytä alkuperäinen. Uusi sopimusversio tarvitsee oman todisteen.",
+      "chooseSeller": "Valitse myyjä ja kirjaa hyväksyntä",
+      "print": "Tulosta / tallenna PDF-tiedostona",
+      "sellerName": "Myyjän nimi",
+      "date": "Päivämäärä",
+      "sellerSignature": "Myyjän allekirjoitus",
+      "storeSignature": "Kaupan allekirjoitus",
+      "printHint": "Tulostaminen ei kirjaa hyväksyntää Komisioon.",
+      "checklistLabel": "Mitä kaupan ehtojen tulisi selittää?",
+      "checklist1": "Kuvaa vastuu hinnoittelusta ja alennuksista, kaupan osuus, myyntiaika ja myymättömien tuotteiden käsittely.",
+      "checklist2": "Selitä myös maksut, tuotteiden takaisinotto ja reklamaatiot. Käytä kaupan toimintatapoja ja asetuksia vastaavia ehtoja."
+    },
+    "ai": {
+      "create": "Luo tekoälyllä",
+      "busy": "Luodaan luonnosta…",
+      "check": "Tarkista luonnos",
+      "preview": "Tekoälyluonnos",
+      "use": "Käytä luonnosta",
+      "close": "Hylkää",
+      "questions": "Täydennettävää",
+      "replace": "Korvaa lomakkeen teksti",
+      "help": "Tietoa tekoälyluonnoksista",
+      "hint": "Käyttää liikkeen asetuksia ja valittua sopimuskieltä. Tarkista ja täydennä ennen julkaisua. Lasketaan tavalliseen tekoälykäyttöön.",
+      "unavailable": "Tekoäly ei ole käytettävissä tässä liikkeessä.",
+      "limit": "Tekoälyn käyttöraja on saavutettu. Yritä myöhemmin tai tarkista asetukset.",
+      "failed": "Luonnosta ei voitu luoda. Yritä uudelleen.",
+      "changed": "Asetukset tai sopimus ovat muuttuneet. Lataa sivu uudelleen.",
+      "pending": "Vastausta odotetaan. Tarkista sama luonnos uudelleen.",
+      "retryUse": "Vastaus puuttuu. Yritä samaa valintaa uudelleen."
+    }
   },
   "quickIntake": {
     "title": "Pikavastaanotto",
@@ -721,8 +756,27 @@
     "linkRevoked": "Linkki on peruttu."
   },
   "operations": {
-    "title": "Ehdotetut operaatiot",
-    "intro": "AI-agenttien ehdotukset odottavat täällä. Mitään ei julkaista ennen kuin henkilökunnan jäsen hyväksyy sen.",
+    "queueLabels": {
+      "open": "Tarkistettavat",
+      "failed": "Epäonnistuneet",
+      "executed": "Toteutetut",
+      "rejected": "Hylätyt",
+      "expired": "Vanhentuneet",
+      "all": "Kaikki"
+    },
+    "emptyOpenTitle": "Ei tarkistettavaa",
+    "emptyOpenHint": "Uudet ehdotukset näkyvät täällä, kun ne tarvitsevat päätöksesi.",
+    "emptyFilterHint": "Valitse toinen suodatin nähdäksesi lisää ehdotuksia.",
+    "queueHelp": {
+      "label": "Ohje ehdotusten käsittelyyn",
+      "steps": [
+        "Avaa ehdotus nähdäksesi, mitä muutettaisiin. Avaaminen ei toteuta muutosta.",
+        "Hyväksy muutos toteuttaaksesi sen omissa nimissäsi tai hylkää ehdotus jättääksesi kaiken ennalleen.",
+        "Luonnoksen tai tarkistusaineiston hyväksyminen ei tee tuotteesta myyntivalmista. Se on erillinen vaihe."
+      ]
+    },
+    "title": "Tehtävät",
+    "intro": "Tarkista ehdotukset ennen niiden toteuttamista.",
     "notice": "Hyväksyminen suorittaa saman operaation, jonka voisit tehdä itse, ja se kirjataan sinun nimiisi. Ehdotus ei koskaan ole tosiasia. Tarkistuksen hyväksyminen ei ole kaupallinen hyväksyntä.",
     "empty": "Ei ehdotettuja operaatioita.",
     "proposedBy": "Ehdottaja",
@@ -757,7 +811,8 @@
       "exportDayClose": "Vie päivän päätös",
       "settlePayouts": "Tilitä tuojille",
       "updateStoreProfile": "Päivitä kaupan profiili",
-      "importSellers": "Tuo tuojat"
+      "importSellers": "Tuo tuojat",
+      "useAgreementDraft": "Tekoälyn sopimusluonnos"
     },
     "importRows": "riviä",
     "openDays": "avointa päivää",
@@ -851,7 +906,7 @@
     "queueFilter": "Suodata operaatioita",
     "filterAll": "Kaikki ehdotukset",
     "liveQueue": "Tila voi muuttua selauksen aikana. Palaa ensimmäiselle sivulle nähdäksesi ajantasaisen yleiskatsauksen.",
-    "emptyFiltered": "Yksikään ehdotus ei vastaa tätä näkymää.",
+    "emptyFiltered": "Ei ehdotuksia tässä näkymässä",
     "queuePages": "Selaa ehdotuksia",
     "older": "Näytä vanhemmat ehdotukset",
     "firstPage": "Takaisin ensimmäiselle sivulle",
@@ -1436,7 +1491,17 @@
     "deliveryHint": "Lataa SIE-tiedosto tai lähetä aineisto yhdistetyn integraation kautta.",
     "fileOption": "SIE-tiedoston vienti",
     "fileHint": "Kirjanpitojärjestelmille, jotka voivat tuoda SIE 4 -tiedostoja. Suoraa yhteyttä ei tarvita.",
-    "reconciliationHint": "Tarkista jakson päiväpäätökset ja viennit. Siirron tila koskee Fortnoxia; SIE-tiedostojen tuontia ei vahvisteta täällä."
+    "reconciliationHint": "Tarkista jakson päiväpäätökset ja viennit. Siirron tila koskee Fortnoxia; SIE-tiedostojen tuontia ei vahvisteta täällä.",
+    "setup": {
+      "mapHelp": "Tietoa tilikartasta",
+      "mapHint": "Kaupan kirjanpitotilit.",
+      "mapMissing": "Määritys tarvitaan",
+      "systemHelp": "Tietoa kirjanpitojärjestelmistä",
+      "systemHint": "Avaa yhteys nähdäksesi asetukset ja ohjeet.",
+      "providerHint": "Suora yhteys kirjanpitojärjestelmään.",
+      "notConnected": "Ei yhdistetty",
+      "planningHint": "Katso, miten Komisio ja kassajärjestelmä voivat jakaa kirjanpitotehtävät. Opas ei muuta asetuksia."
+    }
   },
   "communications": {
     "title": "Viestit tuojalle",
@@ -1478,7 +1543,7 @@
   "stock": {
     "title": "Varasto",
     "intro": "Kate, myyntiaste ja varaston ikä luokittain jaksolta, kaupan omista tosiasioista. Varasto on tämänhetkinen; myynnit ovat jakson myyntejä.",
-    "notice": "Vain luku. Kate on kaupan osuus: komissio komissiomyynneistä, ja hinta miinus alv miinus ostohinta kaupan omien tavaroiden myynneistä.",
+    "notice": "Kate on kaupan osuus: komissio komissiomyynneistä, ja hinta miinus alv miinus ostohinta kaupan omien tavaroiden myynneistä.",
     "notAvailable": "Varastoraportti ei ole vielä saatavilla tässä asennuksessa.",
     "totalsHeading": "Yhteensä",
     "categoriesHeading": "Luokittain",
@@ -1500,11 +1565,19 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "Myyntiaste on jaksolla myydyt jaettuna myydyillä plus nyt varastossa olevilla. Ikäluokat noudattavat oletusalennusaikataulua.",
+    "definitions": "Myyntiaste on jaksolla myydyt jaettuna myydyillä plus nyt varastossa olevilla.",
     "current": "Varasto nyt",
     "salesPeriod": "Jakson myynti",
     "more": "Näytä lisää tunnuslukuja",
-    "valueHint": "Tuotteiden yhteenlaskettu myyntihinta."
+    "valueHint": "Tuotteiden yhteenlaskettu myyntihinta.",
+    "helpLabel": "Tietoa varastosta",
+    "scopeHint": "Varasto näyttää tällä hetkellä kaupassa olevat tuotteet.",
+    "ageHint": "Varastoikä lasketaan päivästä, jolloin tuote hyväksyttiin myyntiin.",
+    "salesHelpLabel": "Tietoa myynnistä",
+    "salesHint": "Päivämäärät koskevat vain myyntiä, eivät yllä olevaa varastoa.",
+    "metricsHeading": "Lisää tunnuslukuja",
+    "metricsHelpLabel": "Tietoa tunnusluvuista",
+    "missingHint": "Viiva tarkoittaa, ettei laskentaan ole riittävästi tietoja."
   },
   "importer": {
     "title": "Tuo tuojat",
@@ -1859,7 +1932,7 @@
   },
   "plans": {
     "heading": "Tilaus",
-    "priceNote": "Komisio on avointa lähdekoodia ja kaikki toiminnot sisältyvät, ilman rajoja tuotteille, tulostimille tai integraatioille. Ohjelmistosta ei peritä lisenssimaksua: aja se itse tai millä tahansa hostauskumppanilla. Inorityn hostaus on ilmaista kolme kuukautta, sitten 299 SEK per kauppa ja kuukausi ilman alv:tä, ilman sitoutumisaikaa. AI-avustajan krediitit mitataan erikseen, katso AI-krediitit-välilehti.",
+    "priceNote": "Komisio on avointa lähdekoodia ilman lisenssimaksua. Kaikki toiminnot sisältyvät ilman tuote-, tulostin- tai integraatiorajoja. Voit ylläpitää ohjelmistoa itse tai valita ylläpitokumppanin. Inorityn ylläpitoon sisältyy kolme maksutonta kuukautta ilman sitoutumisaikaa. Stripe näyttää hinnan ja valuutan ennen tilauksen tekemistä. Nykyisen tilauksen tiedot näet kohdasta Hallitse tilausta. AI-krediitit ostetaan erikseen.",
     "trialEndsAt": "kokeilu päättyy",
     "graceEndsAt": "lisäaika päättyy",
     "activeUntil": "aktiivinen asti",
@@ -2519,7 +2592,7 @@
       "subject": "Maksu myöhässä kaupalta {store}",
       "text": "Hei,\n\nKaupan {store} viimeisin maksu epäonnistui. Jos sitä ei suoriteta {date} mennessä, kauppa jatkaa ilman tilausta; kaikki ominaisuudet pysyvät käytössä. Päivitä maksutapa Asetuksissa:\n{link}"
     },
-    "footer": "Komisio · hostattu tilaus, SEK 199 per kauppa ja kuukausi ilman alv:tä · tämä viesti lähetetään kerran per vaihe, eikä siinä ole liitteitä."
+    "footer": "Komisio · Katso tilaustiedot kaupan asetuksista. Tämä viesti lähetetään kerran per vaihe, eikä siinä ole liitteitä."
   },
   "overview": {
     "heading": "Tänään",
@@ -2615,7 +2688,7 @@
   },
   "credits": {
     "title": "AI-krediitit",
-    "intro": "Komisio on avointa lähdekoodia, ja Inorityn hostaus on ilmaista kolme kuukautta ja sitten 299 SEK per kauppa ja kuukausi ilman alv:tä. Ainoa muu mitattava asia on AI-avustajan mallikutsut, kun ne käyttävät Komision omaa avainta. Yksi krediitti vastaa yhtä Ruotsin kruunua mallikustannusta.",
+    "intro": "Komisio on avointa lähdekoodia. Inorityn ylläpitoon sisältyy kolme maksutonta kuukautta. Hinta ja valuutta löytyvät kaupan asetusten tilaustiedoista. AI-krediittejä käytetään, kun avustaja käyttää Komision API-avainta.",
     "offer": "{included} krediittiä sisältyy joka kuukausi, mikä riittää yleensä noin {items} vastaanotettuun tuotteeseen. Kun ne loppuvat, ostat {pack} lisää hintaan {price} tai yhdistät kaupan oman malliavaimen; silloin krediittejä ei kuluteta.",
     "selfHosted": "Tämä asennus ei mittaa krediittejä: avustaja toimii asennuksen omalla avaimella.",
     "includedLeft": "Jäljellä tämän kuun krediiteistä",

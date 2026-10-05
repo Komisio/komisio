@@ -1,3 +1,5 @@
+import { ClipboardCheck } from 'lucide-react'
+import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -6,7 +8,6 @@ import { dictionary } from '@/lib/i18n'
 import {
   readOperationPage,
   operationPageInput,
-  operationFilter,
 } from '@/lib/engine/operation-page'
 import { operationQueueHref } from '@/lib/intake/operation-navigation'
 import { OperationQueue } from '@/components/intake/operation-queue'
@@ -23,7 +24,10 @@ export default async function Operations({
     currency = await readStoreCurrency(ctx.client, ctx.active!.id),
     all = dictionary(ctx.locale),
     d = all.operations
-  const parsed = operationPageInput.safeParse(await searchParams)
+  const parsed = operationPageInput.safeParse({
+    status: 'open',
+    ...(await searchParams),
+  })
   if (!parsed.success) notFound()
   const { items: operations, nextBefore } = await readOperationPage(
     ctx.client,
@@ -31,31 +35,28 @@ export default async function Operations({
     parsed.data,
   )
   return (
-    <>
+    <div className="operations-page">
       <div className="page-heading">
-        <h1>{d.title}</h1>
+        <FormHelpHeading title={d.title} level={1} help={d.queueHelp} />
         <p>{d.intro}</p>
-        <Link className="text-link" href="/intake/reception">
-          {all.reception.ongoing}
-        </Link>
       </div>
-      <p className="intake-notice">{d.notice}</p>
       <nav
         className="row operation-navigation operation-filters"
         aria-label={d.queueFilter}
       >
-        {operationFilter.options.map((status) => (
+        {(
+          ['open', 'failed', 'executed', 'rejected', 'expired', 'all'] as const
+        ).map((status) => (
           <Link
             className="text-link"
             key={status}
             aria-current={parsed.data.status === status ? 'page' : undefined}
             href={operationQueueHref({ status })}
           >
-            {status === 'all' ? d.filterAll : d.status[status]}
+            {d.queueLabels[status]}
           </Link>
         ))}
       </nav>
-      <p>{d.liveQueue}</p>
       {operations.length ? (
         <OperationQueue
           key={active.id}
@@ -68,30 +69,57 @@ export default async function Operations({
           d={d}
         />
       ) : (
-        <p>{d.emptyFiltered}</p>
+        <section
+          className="operations-empty card"
+          aria-labelledby="operations-empty-title"
+        >
+          <span className="operations-empty-icon">
+            <ClipboardCheck size={28} aria-hidden="true" />
+          </span>
+          <h2 id="operations-empty-title">
+            {parsed.data.status === 'open' && !parsed.data.beforeCreated
+              ? d.emptyOpenTitle
+              : d.emptyFiltered}
+          </h2>
+          <p>
+            {parsed.data.status === 'open' && !parsed.data.beforeCreated
+              ? d.emptyOpenHint
+              : d.emptyFilterHint}
+          </p>
+          {parsed.data.status !== 'all' && (
+            <Link
+              className="text-link"
+              href={operationQueueHref({ status: 'all' })}
+            >
+              {d.filterAll}
+            </Link>
+          )}
+        </section>
       )}
-      <nav className="row operation-navigation" aria-label={d.queuePages}>
-        {nextBefore && (
-          <Link
-            className="text-link"
-            href={operationQueueHref({
-              status: parsed.data.status,
-              ...nextBefore,
-            })}
-          >
-            {d.older}
-          </Link>
-        )}
-        {parsed.data.beforeCreated && (
-          <Link
-            className="text-link"
-            href={operationQueueHref({ status: parsed.data.status })}
-          >
-            {d.firstPage}
-          </Link>
-        )}
-      </nav>
-    </>
+      {(nextBefore || parsed.data.beforeCreated) && (
+        <nav className="row operation-navigation" aria-label={d.queuePages}>
+          {nextBefore && (
+            <Link
+              className="text-link"
+              href={operationQueueHref({
+                status: parsed.data.status,
+                ...nextBefore,
+              })}
+            >
+              {d.older}
+            </Link>
+          )}
+          {parsed.data.beforeCreated && (
+            <Link
+              className="text-link"
+              href={operationQueueHref({ status: parsed.data.status })}
+            >
+              {d.firstPage}
+            </Link>
+          )}
+        </nav>
+      )}
+    </div>
   )
 }
 

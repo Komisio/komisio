@@ -1,3 +1,4 @@
+import { openAccountingSettings } from '../helpers/accounting-settings'
 import { test, expect } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
@@ -48,6 +49,7 @@ test('account map, balanced preview and downloadable SIE keep tenant boundaries'
       page.getByRole('button', { name: d.accounting.export }),
     ).toBeDisabled()
     await page.goto('/intake/accounting?view=settings')
+    await openAccountingSettings(page)
     await expect(
       page.getByRole('heading', { name: d.accounting.systems, exact: true }),
     ).toBeVisible()

@@ -4,6 +4,9 @@ import { useRouter } from 'next/navigation'
 import { locales, localeNames, type Dictionary, type Locale } from '@/lib/i18n'
 import type { SellerAgreement } from '@/lib/engine/intake'
 import { useIntakeAction } from './use-intake-action'
+import { AgreementAssistant } from './agreement-assistant'
+import type { RestoredAgreementDraft } from '@/lib/engine/agreement-assistance'
+import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { Button } from '@/components/ui/button'
 import { useFormDirty } from '@/components/platform/use-form-dirty'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
@@ -11,20 +14,23 @@ import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 export function AgreementPublisher({
   tenantId,
   current,
+  draft,
   locale,
   d,
 }: {
   tenantId: string
   current: SellerAgreement | null
+  draft: RestoredAgreementDraft | null
   locale: Locale
   d: Dictionary
 }) {
   const action = useIntakeAction(d.intake)
+  const [aiBusy, setAiBusy] = useState(false)
   const [saved, setSaved] = useState(false)
   const form = useRef<HTMLFormElement>(null)
   const { ready, dirty, checkDirty, resetDirty } = useFormDirty(form)
   useUnsavedChanges(!saved && (dirty || action.locked) ? d.leaveUnsaved : null)
-  const [expanded, setExpanded] = useState(!current)
+  const [expanded, setExpanded] = useState(!current || !!draft)
   // Keep the reviewed base while editing, even if navigation refreshes server props.
   const [base, setBase] = useState(current)
   const router = useRouter()
@@ -58,8 +64,14 @@ export function AgreementPublisher({
     >
       <summary>{current ? a.nextVersion : a.publishHeading}</summary>
       <section className="intake-form">
-        <h2>{a.publishHeading}</h2>
-        <p>{a.publishHint}</p>
+        <FormHelpHeading
+          title={a.publishHeading}
+          help={{
+            label: a.usage.checklistLabel,
+            steps: [a.usage.checklist1, a.usage.checklist2, a.ai.hint],
+          }}
+        />
+
         {saved ? (
           <div role="status">
             <p>{a.published}</p>
@@ -75,10 +87,47 @@ export function AgreementPublisher({
           </div>
         ) : (
           <form ref={form} onChange={checkDirty} onSubmit={submit}>
+            <AgreementAssistant
+              tenantId={tenantId}
+              baseId={base?.id ?? null}
+              d={a.ai}
+              busyChanged={setAiBusy}
+              initial={draft}
+              disabled={
+                !ready || action.busy || action.locked || action.needsReload
+              }
+              language={() =>
+                (new FormData(form.current!).get('language') ??
+                  locale) as Locale
+              }
+              hasText={() =>
+                !!(
+                  form.current?.elements.namedItem(
+                    'body',
+                  ) as HTMLTextAreaElement | null
+                )?.value.trim()
+              }
+              apply={(draft, language) => {
+                if (!form.current) return
+                ;(
+                  form.current.elements.namedItem('title') as HTMLInputElement
+                ).value = draft.title
+                ;(
+                  form.current.elements.namedItem('body') as HTMLTextAreaElement
+                ).value = draft.body
+                ;(
+                  form.current.elements.namedItem(
+                    'language',
+                  ) as HTMLSelectElement
+                ).value = language
+                checkDirty()
+              }}
+            />
+
             <fieldset
               data-draft-readiness={!ready ? '' : undefined}
               className="intake-fields"
-              disabled={!ready || action.busy || action.locked}
+              disabled={!ready || action.busy || action.locked || aiBusy}
             >
               <div className="field">
                 <label htmlFor="agreement-title">{a.name}</label>
@@ -114,7 +163,6 @@ export function AgreementPublisher({
                   maxLength={12000}
                   defaultValue={base?.body ?? ''}
                 />
-                <small>{a.languageHint}</small>
               </div>
               <label className="intake-confirm">
                 <input
@@ -123,10 +171,6 @@ export function AgreementPublisher({
                   defaultChecked={base?.required_before_receipt ?? false}
                 />
                 {a.requireEvidence}
-              </label>
-              <label className="intake-confirm">
-                <input type="checkbox" required />
-                {a.confirmPublish}
               </label>
             </fieldset>
             {action.error && <p role="alert">{action.error}</p>}
@@ -137,7 +181,7 @@ export function AgreementPublisher({
             )}
             <Button
               type="submit"
-              disabled={!ready || action.busy || action.needsReload}
+              disabled={!ready || action.busy || action.needsReload || aiBusy}
             >
               {action.busy
                 ? d.intake.busy

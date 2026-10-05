@@ -1,0 +1,55 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000001901','agreement-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000001902','agreement-staff@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000001901","role":"authenticated"}';
+select set_config('test.a',create_tenant('Agreement AI A','agreement-ai-a',gen_random_uuid())::text,true);
+select set_config('test.b',create_tenant('Agreement AI B','agreement-ai-b',gen_random_uuid())::text,true);
+select set_config('test.req',gen_random_uuid()::text,true);
+select set_config('test.decision',gen_random_uuid()::text,true);
+select is(begin_agreement_assistance(current_setting('test.a')::uuid,current_setting('test.req')::uuid,null,'no','model')->>'reserved','true','first attempt reserves');
+select is(begin_agreement_assistance(current_setting('test.a')::uuid,current_setting('test.req')::uuid,null,'no','model')->>'status','pending','replay remains pending and does not reserve twice');
+select is((select context->>'language' from agreement_ai_attempts where id=current_setting('test.req')::uuid),'no','language is pinned');
+select is((select count(*) from usage_events where tenant_id=current_setting('test.a')::uuid and feature='reception_assistance'),1::bigint,'one shared quota unit');
+select throws_ok($$select begin_agreement_assistance(current_setting('test.b')::uuid,current_setting('test.req')::uuid,null,'no','model')$$,'P0001','REQUEST_CONFLICT','cross tenant replay denied');
+select throws_ok($$select begin_agreement_assistance(current_setting('test.a')::uuid,current_setting('test.req')::uuid,null,'sv','model')$$,'P0001','REQUEST_CONFLICT','language conflict denied');
+select throws_ok($$select begin_agreement_assistance(current_setting('test.a')::uuid,gen_random_uuid(),null,'sv','model')$$,'P0001','ASSISTANCE_LIMIT','cooldown applies');
+select throws_ok($$select complete_agreement_assistance(current_setting('test.a')::uuid,current_setting('test.req')::uuid,'{"title":"Test"}',0,0)$$,'P0001','INVALID_INPUT','malformed output denied');
+select lives_ok($$select complete_agreement_assistance(current_setting('test.a')::uuid,current_setting('test.req')::uuid,'{"title":"Test","body":"Synthetic draft","questions":["Complete store name"]}',100,50)$$,'completion stages draft');
+select lives_ok($$select complete_agreement_assistance(current_setting('test.a')::uuid,current_setting('test.req')::uuid,'{"title":"Test","body":"Synthetic draft","questions":["Complete store name"]}',100,50)$$,'completion replay is immutable');
+select is(begin_agreement_assistance(current_setting('test.a')::uuid,current_setting('test.req')::uuid,null,'no','model')->>'status','ready','lost response recovers saved output');
+select is((select risk_level from pending_operations where id=current_setting('test.req')::uuid),'low','copy-only approval is low risk');
+select lives_ok($$select decide_operation(current_setting('test.a')::uuid,current_setting('test.decision')::uuid,current_setting('test.req')::uuid,'approved','')$$,'owner can use own draft');
+select is((select outcome from operation_decisions where id=current_setting('test.decision')::uuid),'executed','draft use executed');
+select is((select count(*) from seller_agreement_versions where tenant_id=current_setting('test.a')::uuid),0::bigint,'approval does not publish');
+select throws_ok($$delete from agreement_ai_results$$,'42501',null,'API cannot delete result');
+select throws_ok($$update agreement_ai_attempts set model='other'$$,'42501',null,'API cannot alter attempt');
+-- Complete a result after policy changes: save it for audit, but do not allow use.
+select set_config('test.stale',gen_random_uuid()::text,true);
+select begin_agreement_assistance(current_setting('test.b')::uuid,current_setting('test.stale')::uuid,null,'sv','model');
+select publish_store_policy(current_setting('test.b')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.b')::uuid)->'policy')||'{"assistanceEnabled":true}');
+select lives_ok($$select complete_agreement_assistance(current_setting('test.b')::uuid,current_setting('test.stale')::uuid,'{"title":"Old","body":"Old snapshot","questions":[]}',100,10)$$,'stale result still settles and saves');
+select decide_operation(current_setting('test.b')::uuid,gen_random_uuid(),current_setting('test.stale')::uuid,'approved','');
+select is((select outcome from operation_decisions where operation_id=current_setting('test.stale')::uuid),'failed','changed policy prevents applying draft');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.a')::uuid,'f0000000-0000-4000-8000-000000001902','staff');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000001902","role":"authenticated"}';
+select is((select count(*) from agreement_ai_attempts),0::bigint,'staff cannot read attempts');
+select is((select count(*) from agreement_ai_results),0::bigint,'staff cannot read results');
+select throws_ok($$select begin_agreement_assistance(current_setting('test.a')::uuid,gen_random_uuid(),null,'sv','model')$$,'P0001','FORBIDDEN','staff cannot spend on agreement generation');
+select throws_ok($$select complete_agreement_assistance(current_setting('test.a')::uuid,current_setting('test.req')::uuid,null,0,0)$$,'P0001','FORBIDDEN','staff cannot complete generation');
+reset role;
+insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values(gen_random_uuid(),'f0000000-0000-4000-8000-000000001901','totp','verified',now(),now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000001901","role":"authenticated","aal":"aal1"}';
+select is((select count(*) from agreement_ai_results),0::bigint,'MFA is required for reads');
+select throws_like($$select begin_agreement_assistance(current_setting('test.a')::uuid,gen_random_uuid(),null,'sv','model')$$,'%AUTH_REQUIRED%','MFA is required for generation');
+set local role anon;
+select throws_ok($$select begin_agreement_assistance(current_setting('test.a')::uuid,gen_random_uuid(),null,'sv','model')$$,'42501',null,'anonymous cannot invoke engine');
+select * from finish();
+rollback;
+

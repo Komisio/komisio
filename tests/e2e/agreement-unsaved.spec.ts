@@ -74,7 +74,6 @@ test('uncertain publication retains warning and retry identity; next version get
     await page.goto('/intake/agreements')
     await page.getByTestId('agreement-publisher').locator('summary').click()
     await page.locator('#agreement-body').fill('Synthetic confirmed agreement')
-    await page.getByLabel(d.agreements.confirmPublish, { exact: true }).check()
     const requests: unknown[] = []
     await page.route('**/api/intake', async (route) => {
       const payload = route.request().postDataJSON()
@@ -123,6 +122,34 @@ test('uncertain publication retains warning and retry identity; next version get
         )
       ).rows[0].n,
     ).toBe(2)
+  } finally {
+    await f.close()
+  }
+})
+
+test('agreement requirement reflects the store policy even when the agreement flag is optional', async ({
+  page,
+}) => {
+  const email = `agreement-policy-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomUUID()}`)
+  const f = await p2Fixture(email)
+  try {
+    await f.db.query(
+      "select publish_store_policy($1,$2,(current_store_policy($1)->>'id')::uuid,(current_store_policy($1)->'policy') || $3::jsonb)",
+      [
+        f.tenant,
+        randomUUID(),
+        JSON.stringify({ agreementRequiredFor: ['bag_receipt'] }),
+      ],
+    )
+    await f.commit()
+    await page.goto('/intake/agreements')
+    await expect(
+      page.getByText(d.agreements.required, { exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByText(d.agreements.optional, { exact: true }),
+    ).not.toBeVisible()
   } finally {
     await f.close()
   }

@@ -18,7 +18,7 @@
     "nextVersion": "Prepara la versione successiva",
     "required": "La prova è richiesta prima della ricezione.",
     "optional": "La prova è facoltativa alla ricezione.",
-    "none": "Nessun accordo con i conferenti è pubblicato. Nessun nuovo prerequisito di accordo si applica alla ricezione.",
+    "none": "Nessun accordo con i conferenti è pubblicato.",
     "history": "Versioni dell’accordo",
     "historyHint": "Le 20 versioni più recenti. Le versioni più vecchie restano accessibili dalle loro ricevute.",
     "adminOnly": "Proprietari e amministratori possono pubblicare versioni dell'accordo.",
@@ -39,7 +39,42 @@
     "noEvidence": "Nessuna prova è stata collegata a questa ricevuta.",
     "evidenceNote": "La registrazione dell'accordo non approva il contenuto per la vendita.",
     "optionalReceiptAgreement": "Nessun accordo registrato: è facoltativo per questo negozio.",
-    "evidenceHelp": "Che cosa implica un accordo registrato?"
+    "evidenceHelp": "Che cosa implica un accordo registrato?",
+    "usage": {
+      "intro": "Le condizioni tra il negozio e chi lascia articoli in vendita.",
+      "helpLabel": "Come usare gli accordi con i venditori",
+      "prepare": "Scrivi le condizioni del negozio e pubblica una versione. Il testo non modifica le impostazioni di commissioni, prezzi o periodi di vendita.",
+      "accept": "Fai leggere e accettare al venditore la versione corretta, ad esempio su carta o via email. Komisio non offre la firma digitale degli accordi.",
+      "record": "Apri il venditore e seleziona Accordi e condizioni. Registra dove si trova l’accettazione e conserva l’originale. Ogni nuova versione richiede una propria prova.",
+      "chooseSeller": "Scegli il venditore e registra l’accettazione",
+      "print": "Stampa / salva come PDF",
+      "sellerName": "Nome del venditore",
+      "date": "Data",
+      "sellerSignature": "Firma del venditore",
+      "storeSignature": "Firma del negozio",
+      "printHint": "La stampa non registra alcuna accettazione in Komisio.",
+      "checklistLabel": "Cosa devono spiegare le condizioni?",
+      "checklist1": "Descrivi la responsabilità per prezzi e ribassi, la quota del negozio, il periodo di vendita e la gestione degli articoli invenduti.",
+      "checklist2": "Spiega anche pagamenti, ritiro degli articoli e reclami. Usa condizioni coerenti con le pratiche e le impostazioni del negozio."
+    },
+    "ai": {
+      "create": "Crea con IA",
+      "busy": "Creazione bozza…",
+      "check": "Controlla bozza",
+      "preview": "Bozza IA",
+      "use": "Usa bozza",
+      "close": "Scarta",
+      "questions": "Da completare",
+      "replace": "Sostituisci il testo nel modulo",
+      "help": "Informazioni sulle bozze IA",
+      "hint": "Usa le impostazioni del negozio e la lingua scelta per il contratto. Controlla e completa prima di pubblicare. Conta come normale utilizzo IA.",
+      "unavailable": "IA non disponibile per questo negozio.",
+      "limit": "Limite IA raggiunto. Riprova più tardi o controlla le impostazioni.",
+      "failed": "Impossibile creare la bozza. Riprova.",
+      "changed": "Impostazioni o contratto modificati. Ricarica la pagina.",
+      "pending": "Nessuna risposta. Controlla di nuovo la stessa bozza.",
+      "retryUse": "Risposta mancante. Riprova la stessa scelta."
+    }
   },
   "quickIntake": {
     "title": "Ricezione rapida",
@@ -721,8 +756,27 @@
     "linkRevoked": "Il link è stato revocato."
   },
   "operations": {
-    "title": "Operazioni proposte",
-    "intro": "Le proposte degli agenti AI attendono qui. Nulla viene pubblicato finché un membro del personale non lo approva.",
+    "queueLabels": {
+      "open": "Da controllare",
+      "failed": "Non riuscite",
+      "executed": "Eseguite",
+      "rejected": "Rifiutate",
+      "expired": "Scadute",
+      "all": "Tutte"
+    },
+    "emptyOpenTitle": "Nulla da controllare",
+    "emptyOpenHint": "Le nuove proposte appaiono qui quando richiedono una tua decisione.",
+    "emptyFilterHint": "Scegli un altro filtro per vedere altre proposte.",
+    "queueHelp": {
+      "label": "Aiuto sulle proposte",
+      "steps": [
+        "Apri una proposta per vedere cosa cambierebbe. Aprirla non esegue alcuna modifica.",
+        "Approva per eseguire la modifica a tuo nome oppure rifiuta per lasciare tutto invariato.",
+        "Approvare una bozza o una revisione non rende l’articolo pronto per la vendita. È un passaggio separato."
+      ]
+    },
+    "title": "Attività",
+    "intro": "Controlla le proposte prima di eseguirle.",
     "notice": "Approvare esegue la stessa operazione che potresti fare tu stesso, registrata a tuo nome. Una proposta non è mai un fatto. L'approvazione di una revisione non è un'accettazione commerciale.",
     "empty": "Nessuna operazione proposta.",
     "proposedBy": "Proposta da",
@@ -757,7 +811,8 @@
       "exportDayClose": "Esporta una chiusura giornaliera",
       "settlePayouts": "Liquida i conferenti",
       "updateStoreProfile": "Aggiorna il profilo del negozio",
-      "importSellers": "Importa conferenti"
+      "importSellers": "Importa conferenti",
+      "useAgreementDraft": "Bozza di contratto IA"
     },
     "importRows": "righe",
     "openDays": "giorni aperti",
@@ -851,7 +906,7 @@
     "queueFilter": "Filtra operazioni",
     "filterAll": "Tutte le proposte",
     "liveQueue": "Lo stato può cambiare mentre navighi. Torna alla prima pagina per una panoramica aggiornata.",
-    "emptyFiltered": "Nessuna proposta corrisponde a questa vista.",
+    "emptyFiltered": "Nessuna proposta in questa vista",
     "queuePages": "Sfoglia le proposte",
     "older": "Mostra proposte meno recenti",
     "firstPage": "Torna alla prima pagina",
@@ -1436,7 +1491,17 @@
     "deliveryHint": "Scarica un file SIE o invia i documenti tramite un’integrazione collegata.",
     "fileOption": "Esportazione file SIE",
     "fileHint": "Per sistemi contabili che importano SIE 4. Non è necessaria una connessione diretta.",
-    "reconciliationHint": "Controlla le chiusure giornaliere e le esportazioni del periodo. Lo stato di invio riguarda Fortnox; le importazioni di file SIE non sono confermate qui."
+    "reconciliationHint": "Controlla le chiusure giornaliere e le esportazioni del periodo. Lo stato di invio riguarda Fortnox; le importazioni di file SIE non sono confermate qui.",
+    "setup": {
+      "mapHelp": "Informazioni sui conti",
+      "mapHint": "Conti per la contabilità del negozio.",
+      "mapMissing": "Da configurare",
+      "systemHelp": "Informazioni sui sistemi contabili",
+      "systemHint": "Apri una connessione per visualizzare impostazioni e aiuto.",
+      "providerHint": "Connessione diretta al tuo sistema contabile.",
+      "notConnected": "Non collegato",
+      "planningHint": "Scopri come Komisio e il tuo POS possono suddividere la contabilità. La guida non modifica le impostazioni."
+    }
   },
   "communications": {
     "title": "Messaggi al conferente",
@@ -1478,7 +1543,7 @@
   "stock": {
     "title": "Magazzino",
     "intro": "Margine, tasso di vendita e anzianità di magazzino per categoria in un periodo, dai fatti propri del negozio. Il magazzino è quello attuale; le vendite sono quelle del periodo.",
-    "notice": "Sola lettura. Il margine è la quota del negozio: la commissione sulle vendite in conto vendita, e prezzo meno IVA meno prezzo di acquisto sulle vendite di merce di proprietà del negozio.",
+    "notice": "Il margine è la quota del negozio: la commissione sulle vendite in conto vendita, e prezzo meno IVA meno prezzo di acquisto sulle vendite di merce di proprietà del negozio.",
     "notAvailable": "Il report di magazzino non è ancora disponibile su questa installazione.",
     "totalsHeading": "Totali",
     "categoriesHeading": "Per categoria",
@@ -1500,11 +1565,19 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "Il tasso di vendita è il venduto nel periodo diviso per venduto più in magazzino ora. Le fasce di anzianità seguono il calendario di ribasso predefinito.",
+    "definitions": "Il tasso di vendita è il venduto nel periodo diviso per venduto più in magazzino ora.",
     "current": "Magazzino attuale",
     "salesPeriod": "Vendite nel periodo",
     "more": "Mostra altri indicatori",
-    "valueHint": "Somma dei prezzi di vendita degli articoli."
+    "valueHint": "Somma dei prezzi di vendita degli articoli.",
+    "helpLabel": "Informazioni sul magazzino",
+    "scopeHint": "Il magazzino mostra gli articoli attualmente presenti in negozio.",
+    "ageHint": "L’anzianità si calcola dal giorno in cui l’articolo è stato accettato per la vendita.",
+    "salesHelpLabel": "Informazioni sulle vendite",
+    "salesHint": "Le date si applicano solo alle vendite, non al magazzino riportato sopra.",
+    "metricsHeading": "Altri indicatori",
+    "metricsHelpLabel": "Informazioni sugli indicatori",
+    "missingHint": "Un trattino indica che mancano dati per il calcolo."
   },
   "importer": {
     "title": "Importa conferenti",
@@ -1859,7 +1932,7 @@
   },
   "plans": {
     "heading": "Piano",
-    "priceNote": "Komisio è open source e ogni funzione è inclusa, senza limiti di articoli, stampanti o integrazioni. Il software non ha canone di licenza: eseguilo tu o presso qualsiasi partner di hosting. L'hosting di Inority è gratuito per tre mesi, poi 299 SEK per negozio al mese IVA esclusa, senza vincoli di durata. I crediti dell'assistente IA sono misurati a parte, vedi la scheda crediti IA.",
+    "priceNote": "Komisio è open source e non prevede costi di licenza. Tutte le funzioni sono incluse, senza limiti di articoli, stampanti o integrazioni. Puoi gestire l’hosting autonomamente o scegliere un fornitore. L’hosting di Inority include tre mesi gratuiti, senza vincoli di durata. Stripe mostra prezzo e valuta prima della sottoscrizione. Per un abbonamento esistente, seleziona Gestisci abbonamento per consultarne i dettagli. I crediti IA si acquistano separatamente.",
     "trialEndsAt": "la prova termina",
     "graceEndsAt": "il periodo di tolleranza termina",
     "activeUntil": "attivo fino al",
@@ -2519,7 +2592,7 @@
       "subject": "Pagamento scaduto per {store}",
       "text": "Ciao,\n\nL'ultimo pagamento per {store} non è riuscito. Se non viene saldato entro il {date}, il negozio continua senza abbonamento; ogni funzione resta aperta. Aggiorna il metodo di pagamento in Impostazioni:\n{link}"
     },
-    "footer": "Komisio · piano hosted, SEK 199 per negozio al mese IVA esclusa · questo messaggio viene inviato una volta per fase e non ha allegati."
+    "footer": "Komisio · Consulta i dettagli dell’abbonamento nelle impostazioni del negozio. Questo messaggio viene inviato una volta per fase e non ha allegati."
   },
   "overview": {
     "heading": "Oggi",
@@ -2615,7 +2688,7 @@
   },
   "credits": {
     "title": "Crediti AI",
-    "intro": "Komisio è open source, e l'hosting di Inority è gratuito per tre mesi e poi 299 SEK per negozio al mese IVA esclusa. L'unica altra cosa misurata sono le chiamate al modello dell'assistente IA quando usano la chiave di Komisio. Un credito equivale a una corona svedese di costo del modello.",
+    "intro": "Komisio è open source. L’hosting di Inority include tre mesi gratuiti. Consulta prezzo e valuta nei dettagli dell’abbonamento nelle impostazioni del negozio. I crediti IA vengono utilizzati quando l’assistente usa la chiave API di Komisio.",
     "offer": "{included} crediti sono inclusi ogni mese, normalmente sufficienti per circa {items} articoli ricevuti. Quando finiscono, ne acquisti altri {pack} per {price} oppure colleghi la chiave del modello del negozio; in quel caso nessun credito viene consumato.",
     "selfHosted": "Questa installazione non conteggia crediti: l'assistente usa la chiave dell'installazione stessa.",
     "includedLeft": "Rimanenti dei crediti di questo mese",

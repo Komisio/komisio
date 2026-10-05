@@ -889,3 +889,19 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-04: Host manual activation is labelled an exception to Stripe subscriptions and unavailable when billing is off. Unconfirmed requests stop after 15 seconds and require reload before further changes. Commercial rules and billing configuration are unchanged.
 
 - 2026-10-04: Owner approves item photo revisions: up to 20 private images per item, one default, inherited frozen reception photos, staff edits through engine commands with replay and revision checks. Originals stay immutable; no seller/public/POS publication is added.
+
+- 2026-10-04: Hosted-plan information and notices omit hardcoded amounts in every locale; Stripe checkout and the customer portal show actual price and currency. Language changes never select a billing currency. Regional subscription prices require owner approval.
+
+- 2026-10-05: The staff task page defaults to open proposals, uses short status filters and contextual heading help, and distinguishes an empty queue from an empty filter. Proposal detail, explicit approval, authorization and execution rules remain unchanged.
+
+- 2026-10-05: Stock reporting separates current inventory from period sales; calculation help is contextual and extra metrics are collapsed by default. Report formulas and access remain unchanged.
+
+- 2026-10-05: Accounting settings show file export and compact provider/map disclosures. Provider guidance opens on demand; mapping, delivery, automation grants and reconciliation safeguards remain unchanged.
+
+- 2026-10-05: Seller agreements explain publication, external acceptance and version-bound staff evidence. Printing includes the displayed version, store and blank signature fields; it neither signs nor records acceptance and does not change store policy.
+
+- 2026-10-05: The current agreement receipt requirement displays both the agreement flag and the existing store-policy bag-receipt requirement, matching the engine. Historical versions do not claim current receipt requirements.
+
+- 2026-10-05: Owner approved persisted AI agreement drafts and deployment. Generation uses store policy and selected language, existing AI credits/quota and immutable attempts/results. Low-risk useAgreementDraft approval copies a draft only; ordinary human publication remains separate.
+
+- 2026-10-05: Owner prioritizes simple store workflows: concise labels, contextual help and no redundant acknowledgement before publishing seller agreements. Using an AI draft and publishing remain distinct actions.

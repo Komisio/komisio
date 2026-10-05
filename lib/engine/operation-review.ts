@@ -209,7 +209,8 @@ export async function readOperationReview(
     pending.data.kind === 'sendMessage' ||
     pending.data.kind === 'exportDayClose' ||
     pending.data.kind === 'updateStoreProfile' ||
-    pending.data.kind === 'importSellers'
+    pending.data.kind === 'importSellers' ||
+    pending.data.kind === 'useAgreementDraft'
   ) {
     // P2 kinds carry their own facts; the only cheap hint is whether the
     // subject still exists or is already done. SQL rechecks on approval.
@@ -309,6 +310,8 @@ export async function readOperationReview(
     const stale =
       alreadyDone ||
       profileStale ||
+      (kind === 'useAgreementDraft' &&
+        !['owner', 'admin'].includes(role.data)) ||
       (kind === 'adjustLedger' && !subject.data) ||
       (kind === 'sendMessage' && (!subject.data || !sellerEmail)) ||
       (kind === 'exportDayClose' && !subject.data) ||

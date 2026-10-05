@@ -1,3 +1,4 @@
+import { openAccountingSettings } from '../helpers/accounting-settings'
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -13,6 +14,7 @@ test('account mapping warns before leaving but allows in-page guidance and rever
   try {
     await f.commit()
     await page.goto('/intake/accounting?view=settings')
+    await openAccountingSettings(page)
     const region = page.locator('#account-map')
     const gross = region.locator('input[name="account:grossOre"]')
     const side = region.locator('select[name="side:grossOre"]')
@@ -24,9 +26,7 @@ test('account mapping warns before leaving but allows in-page guidance and rever
       expect(dialog.message()).toBe(d.leaveUnsaved)
       await dialog.dismiss()
     })
-    await page
-      .locator('.accounting-settings-links a[href="#accounting-systems"]')
-      .click()
+    await page.locator('#account-map a[href="#accounting-systems"]').click()
     expect(warnings).toBe(0)
     const next = page.locator('a[href="/intake/accounting"]').first()
     await next.click()
@@ -60,6 +60,7 @@ test('account mapping keeps one uncertain publication and clears the warning aft
   try {
     await f.commit()
     await page.goto('/intake/accounting?view=settings')
+    await openAccountingSettings(page)
     const region = page.locator('#account-map')
     const gross = region.locator('input[name="account:grossOre"]')
     await gross.fill('1930')

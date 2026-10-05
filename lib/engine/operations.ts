@@ -7,6 +7,8 @@ import { locales } from '../i18n'
 
 // A staged operation is a proposal by a non-human actor. It publishes nothing
 // until a person decides; execution then reuses the ordinary engine function.
+export const useAgreementDraftPayload = z.strictObject({ draftId: z.uuid() })
+
 export const operationKind = z.enum([
   'publishReceptionReview',
   'saveInspectionDraft',
@@ -22,6 +24,7 @@ export const operationKind = z.enum([
   'settlePayouts',
   'updateStoreProfile',
   'importSellers',
+  'useAgreementDraft',
 ])
 export const publishReceptionReviewPayload = z.strictObject({
   sessionId: z.guid(),
@@ -240,6 +243,10 @@ export const proposeOperationCommand = z.discriminatedUnion('kind', [
     payload: updateStoreProfilePayload,
   }),
   proposeBase.extend({
+    kind: z.literal('useAgreementDraft'),
+    payload: useAgreementDraftPayload,
+  }),
+  proposeBase.extend({
     kind: z.literal('importSellers'),
     payload: importSellersPayload,
   }),
@@ -327,6 +334,10 @@ export const operationRow = z.discriminatedUnion('kind', [
   operationBaseRow.extend({
     kind: z.literal('updateStoreProfile'),
     payload: updateStoreProfilePayload,
+  }),
+  operationBaseRow.extend({
+    kind: z.literal('useAgreementDraft'),
+    payload: useAgreementDraftPayload,
   }),
   operationBaseRow.extend({
     kind: z.literal('importSellers'),

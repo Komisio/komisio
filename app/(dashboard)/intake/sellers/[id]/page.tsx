@@ -730,6 +730,12 @@ export default async function Seller({
                         {agreement.data.body}
                       </p>
                     </details>
+                    <Link
+                      className="text-link"
+                      href={`/intake/agreements?version=${agreement.data.id}`}
+                    >
+                      {all.agreements.usage.print} →
+                    </Link>
                     {evidence.data?.map((e) => (
                       <p key={e.id}>
                         <EventTime value={e.recorded_at} locale={ctx.locale} />{' '}

@@ -18,7 +18,7 @@
     "nextVersion": "Forbered neste versjon",
     "required": "Bevis kreves før mottak.",
     "optional": "Bevis er valgfritt ved mottak.",
-    "none": "Ingen innlevereravtale er publisert. Ingen ny avtaleforutsetning gjelder for mottak.",
+    "none": "Ingen innlevereravtale er publisert.",
     "history": "Avtaleversjoner",
     "historyHint": "De 20 siste versjonene. Eldre versjoner er fortsatt tilgjengelige fra kvitteringene sine.",
     "adminOnly": "Eiere og administratorer kan publisere avtaleversjoner.",
@@ -39,7 +39,42 @@
     "noEvidence": "Ingen bevis ble knyttet til denne kvitteringen.",
     "evidenceNote": "Avtaleregistreringen godkjenner ikke innholdet for salg.",
     "optionalReceiptAgreement": "Ingen avtale registrert – valgfritt for denne butikken.",
-    "evidenceHelp": "Hva innebærer en registrert avtale?"
+    "evidenceHelp": "Hva innebærer en registrert avtale?",
+    "usage": {
+      "intro": "Vilkårene mellom butikken og den som leverer varer for salg.",
+      "helpLabel": "Slik bruker du selgeravtaler",
+      "prepare": "Skriv butikkens vilkår og publiser en versjon. Avtaleteksten endrer ikke innstillinger for provisjon, priser eller salgsperioder.",
+      "accept": "La selgeren lese og godta riktig versjon, for eksempel på papir eller via e-post. Komisio har ikke digital avtalesignering.",
+      "record": "Åpne selgeren og velg Avtaler og vilkår. Registrer hvor godkjenningen finnes, og behold originalen. En ny avtaleversjon trenger eget underlag.",
+      "chooseSeller": "Velg selger og registrer godkjenning",
+      "print": "Skriv ut / lagre som PDF",
+      "sellerName": "Selgerens navn",
+      "date": "Dato",
+      "sellerSignature": "Selgerens underskrift",
+      "storeSignature": "Butikkens underskrift",
+      "printHint": "Utskrift registrerer ingen godkjenning i Komisio.",
+      "checklistLabel": "Hva bør butikkens vilkår forklare?",
+      "checklist1": "Beskriv ansvar for prising og prisnedsettelser, butikkens andel, salgsperioden og håndtering av usolgte varer.",
+      "checklist2": "Forklar også utbetaling, tilbakehenting og reklamasjoner. Bruk vilkår som stemmer med butikkens praksis og innstillinger."
+    },
+    "ai": {
+      "create": "Lag med AI",
+      "busy": "Lager forslag…",
+      "check": "Sjekk forslag",
+      "preview": "AI-forslag",
+      "use": "Bruk utkast",
+      "close": "Forkast",
+      "questions": "Må utfylles",
+      "replace": "Erstatt teksten i skjemaet",
+      "help": "Om AI-forslag",
+      "hint": "Bruker butikkens innstillinger og valgt avtalespråk. Se gjennom og fullfør før publisering. Teller som vanlig AI-bruk.",
+      "unavailable": "AI er ikke tilgjengelig for butikken.",
+      "limit": "Grensen for AI-bruk er nådd. Prøv senere eller sjekk AI-innstillingene.",
+      "failed": "Kunne ikke lage forslag. Prøv igjen.",
+      "changed": "Innstillingene eller avtalen er endret. Last siden på nytt.",
+      "pending": "Venter på svar. Sjekk samme forslag igjen.",
+      "retryUse": "Svar mangler. Prøv samme valg igjen."
+    }
   },
   "quickIntake": {
     "title": "Hurtigmottak",
@@ -721,8 +756,27 @@
     "linkRevoked": "Lenken er tilbakekalt."
   },
   "operations": {
-    "title": "Foreslåtte operasjoner",
-    "intro": "Forslag fra AI-agenter venter her. Ingenting publiseres før en i personalet godkjenner det.",
+    "queueLabels": {
+      "open": "Til gjennomgang",
+      "failed": "Mislykkede",
+      "executed": "Utførte",
+      "rejected": "Avviste",
+      "expired": "Utløpte",
+      "all": "Alle"
+    },
+    "emptyOpenTitle": "Ingenting å gjennomgå",
+    "emptyOpenHint": "Nye forslag vises her når de trenger din beslutning.",
+    "emptyFilterHint": "Velg et annet filter for å se flere forslag.",
+    "queueHelp": {
+      "label": "Hjelp med forslag",
+      "steps": [
+        "Åpne et forslag for å se hva som skal endres. Ingenting utføres når du åpner det.",
+        "Godkjenn for å utføre endringen i ditt navn, eller avvis for å la alt være som det er.",
+        "Et godkjent utkast eller grunnlag gjør ikke varen klar for salg. Det er et eget steg."
+      ]
+    },
+    "title": "Å gjøre",
+    "intro": "Se gjennom forslag før de gjennomføres.",
     "notice": "Godkjenning kjører samme operasjon som du kunne utført selv, registrert i ditt navn. Et forslag er aldri et faktum. Godkjenning av en gjennomgang er ikke kommersielt mottak.",
     "empty": "Ingen foreslåtte operasjoner.",
     "proposedBy": "Foreslått av",
@@ -757,7 +811,8 @@
       "exportDayClose": "Eksporter et dagsoppgjør",
       "settlePayouts": "Avregn innleverere",
       "updateStoreProfile": "Oppdater butikkprofilen",
-      "importSellers": "Importer innleverere"
+      "importSellers": "Importer innleverere",
+      "useAgreementDraft": "AI-avtaleutkast"
     },
     "importRows": "rader",
     "openDays": "åpne dager",
@@ -851,7 +906,7 @@
     "queueFilter": "Filtrer operasjoner",
     "filterAll": "Alle forslag",
     "liveQueue": "Status kan endre seg mens du blar. Gå tilbake til første side for en oppdatert oversikt.",
-    "emptyFiltered": "Ingen forslag samsvarer med denne visningen.",
+    "emptyFiltered": "Ingen forslag i denne visningen",
     "queuePages": "Bla i forslag",
     "older": "Vis eldre forslag",
     "firstPage": "Tilbake til første side",
@@ -1436,7 +1491,17 @@
     "deliveryHint": "Last ned en SIE-fil eller send underlaget via en tilkoblet integrasjon.",
     "fileOption": "Eksport via SIE-fil",
     "fileHint": "For regnskapssystemer som kan importere SIE 4. Ingen direkte tilkobling kreves.",
-    "reconciliationHint": "Kontroller dagsoppgjør og eksporter for perioden. Overføringsstatus gjelder Fortnox; import av SIE-filer bekreftes ikke her."
+    "reconciliationHint": "Kontroller dagsoppgjør og eksporter for perioden. Overføringsstatus gjelder Fortnox; import av SIE-filer bekreftes ikke her.",
+    "setup": {
+      "mapHelp": "Om kontoplanen",
+      "mapHint": "Kontoer for butikkens regnskap.",
+      "mapMissing": "Må settes opp",
+      "systemHelp": "Om regnskapssystemer",
+      "systemHint": "Åpne en tilkobling for innstillinger og hjelp.",
+      "providerHint": "Direkte tilkobling til regnskapssystemet.",
+      "notConnected": "Ikke tilkoblet",
+      "planningHint": "Se hvordan Komisio og kassasystemet kan dele regnskapsoppgavene. Veiledningen endrer ingen innstillinger."
+    }
   },
   "communications": {
     "title": "Meldinger til innlevereren",
@@ -1478,7 +1543,7 @@
   "stock": {
     "title": "Lager",
     "intro": "Margin, omløp og lageralder per kategori for en periode, fra butikkens egne fakta. Lageret er per nå; salgene er de i perioden.",
-    "notice": "Kun lesing. Margin er butikkens andel: kommisjonen på kommisjonssalg, og pris minus mva minus innkjøpspris på salg av butikkeide varer.",
+    "notice": "Margin er butikkens andel: kommisjonen på kommisjonssalg, og pris minus mva minus innkjøpspris på salg av butikkeide varer.",
     "notAvailable": "Lagerrapporten er ikke tilgjengelig ennå i denne installasjonen.",
     "totalsHeading": "Totaler",
     "categoriesHeading": "Per kategori",
@@ -1500,11 +1565,19 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "Omløp er solgt i perioden delt på solgt pluss på lager nå. Aldersgruppene følger standardplanen for prisnedsettelser.",
+    "definitions": "Omløp er solgt i perioden delt på solgt pluss på lager nå.",
     "current": "Lageret akkurat nå",
     "salesPeriod": "Salg i perioden",
     "more": "Vis flere nøkkeltall",
-    "valueHint": "Varens samlede salgspris."
+    "valueHint": "Varens samlede salgspris.",
+    "helpLabel": "Om lageret",
+    "scopeHint": "Lageret viser varene som er i butikken akkurat nå.",
+    "ageHint": "Lageralderen regnes fra dagen varen ble godkjent for salg.",
+    "salesHelpLabel": "Om salget",
+    "salesHint": "Datoene gjelder bare salget, ikke lageret ovenfor.",
+    "metricsHeading": "Flere nøkkeltall",
+    "metricsHelpLabel": "Om nøkkeltallene",
+    "missingHint": "En strek betyr at det mangler grunnlag for beregningen."
   },
   "importer": {
     "title": "Importer innleverere",
@@ -1859,7 +1932,7 @@
   },
   "plans": {
     "heading": "Abonnement",
-    "priceNote": "Komisio er åpen kildekode og alle funksjoner er inkludert, uten grenser for varer, skrivere eller integrasjoner. Programvaren koster ingen lisensavgift: kjør den selv eller hos hvilken driftspartner du vil. Drift hos Inority er gratis i tre måneder, deretter 299 SEK per butikk og måned eks. mva., uten bindingstid. AI-assistentens kreditter måles separat, se fanen AI-kreditter.",
+    "priceNote": "Komisio er åpen kildekode uten lisensavgift. Alle funksjoner er inkludert, uten grenser for varer, skrivere eller integrasjoner. Drift løsningen selv eller velg en driftspartner. Hos Inority er tre måneder gratis, uten bindingstid. Stripe viser pris og valuta før du tegner abonnementet. Velg Administrer abonnement for å se opplysningene for et eksisterende abonnement. AI-kreditter kjøpes separat.",
     "trialEndsAt": "prøveperioden slutter",
     "graceEndsAt": "henstandsperioden slutter",
     "activeUntil": "aktiv til",
@@ -2519,7 +2592,7 @@
       "subject": "Betaling forfalt for {store}",
       "text": "Hei,\n\nSiste betaling for {store} mislyktes. Hvis den ikke er gjort opp innen {date}, fortsetter butikken uten abonnement; alle funksjoner forblir åpne. Oppdater betalingsmåten under Innstillinger:\n{link}"
     },
-    "footer": "Komisio · hostet abonnement, SEK 199 per butikk og måned ekskludert mva · denne meldingen sendes én gang per steg og har ingen vedlegg."
+    "footer": "Komisio · Se butikkinnstillingene for abonnementsopplysninger. Denne meldingen sendes én gang per steg og har ingen vedlegg."
   },
   "overview": {
     "heading": "I dag",
@@ -2615,7 +2688,7 @@
   },
   "credits": {
     "title": "AI-kreditter",
-    "intro": "Komisio er åpen kildekode, og drift hos Inority er gratis i tre måneder og deretter 299 SEK per butikk og måned eks. mva. Det eneste som måles utover det, er AI-assistentens modellkall når de går på Komisios egen nøkkel. Én kreditt tilsvarer én svensk krone i modellkostnad.",
+    "intro": "Komisio er åpen kildekode. Hos Inority er tre måneder gratis. Se abonnementsopplysningene i butikkinnstillingene for pris og valuta. AI-kreditter brukes når assistenten kjører med Komisios API-nøkkel.",
     "offer": "{included} kreditter er inkludert hver måned, normalt nok til omtrent {items} mottatte varer. Når de er brukt opp, kjøper du {pack} til for {price} eller kobler til butikkens egen modellnøkkel; da trekkes ingen kreditter.",
     "selfHosted": "Denne installasjonen måler ingen kreditter: assistenten kjører på installasjonens egen nøkkel.",
     "includedLeft": "Igjen av månedens kreditter",

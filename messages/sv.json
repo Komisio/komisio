@@ -18,7 +18,7 @@
     "nextVersion": "Förbered nästa version",
     "required": "Underlag krävs före mottagning.",
     "optional": "Underlag är valfritt vid mottagning.",
-    "none": "Inget säljaravtal är publicerat. Inget nytt avtalskrav gäller vid mottagning.",
+    "none": "Inget säljaravtal är publicerat.",
     "history": "Avtalsversioner",
     "historyHint": "De 20 senaste versionerna. Äldre versioner nås från respektive mottagning.",
     "adminOnly": "Ägare och administratörer kan publicera avtalsversioner.",
@@ -39,7 +39,42 @@
     "noEvidence": "Inget underlag kopplades till mottagningen.",
     "evidenceNote": "Avtalsnoteringen godkänner inte innehållet för försäljning.",
     "optionalReceiptAgreement": "Inget avtal registrerat – valfritt för denna butik.",
-    "evidenceHelp": "Vad innebär ett registrerat avtal?"
+    "evidenceHelp": "Vad innebär ett registrerat avtal?",
+    "usage": {
+      "intro": "Villkoren mellan butiken och den som lämnar in varor till försäljning.",
+      "helpLabel": "Så använder du säljaravtal",
+      "prepare": "Skriv butikens villkor och publicera en version. Avtalstexten ändrar inte butikens inställningar för provision, priser eller säljperioder.",
+      "accept": "Låt säljaren läsa och godkänna rätt version, exempelvis på papper eller via mejl. Komisio har ingen digital avtalssignering.",
+      "record": "Öppna säljaren och välj Avtal & villkor. Registrera var godkännandet finns och behåll originalet. En ny avtalsversion behöver eget underlag.",
+      "chooseSeller": "Välj säljare och registrera godkännande",
+      "print": "Skriv ut / spara som PDF",
+      "sellerName": "Säljarens namn",
+      "date": "Datum",
+      "sellerSignature": "Säljarens underskrift",
+      "storeSignature": "Butikens underskrift",
+      "printHint": "Utskriften registrerar inget godkännande i Komisio.",
+      "checklistLabel": "Vad bör butikens villkor förklara?",
+      "checklist1": "Beskriv ansvar för prissättning och prissänkning, butikens andel, säljperiod samt hur osålda varor hanteras.",
+      "checklist2": "Förklara också hur utbetalning, återtag och reklamationer hanteras. Använd villkor som stämmer med butikens arbetssätt och inställningar."
+    },
+    "ai": {
+      "create": "Skapa med AI",
+      "busy": "Skapar förslag…",
+      "check": "Kontrollera förslag",
+      "preview": "AI-förslag",
+      "use": "Använd utkast",
+      "close": "Förkasta",
+      "questions": "Att komplettera",
+      "replace": "Ersätt texten i formuläret",
+      "help": "Om AI-förslag",
+      "hint": "Utgår från butikens inställningar och valt avtalsspråk. Granska och komplettera innan du publicerar. AI-användning räknas som övrig assistans.",
+      "unavailable": "AI är inte tillgängligt för butiken.",
+      "limit": "Gränsen för AI-användning är nådd. Försök senare eller kontrollera AI-inställningarna.",
+      "failed": "Förslaget kunde inte skapas. Försök igen.",
+      "changed": "Inställningarna eller avtalet har ändrats. Ladda om sidan.",
+      "pending": "Inget svar ännu. Kontrollera samma förslag igen.",
+      "retryUse": "Svaret saknas. Försök med samma val igen."
+    }
   },
   "quickIntake": {
     "title": "Snabb mottagning",
@@ -721,8 +756,27 @@
     "linkRevoked": "Länken är återkallad."
   },
   "operations": {
-    "title": "Föreslagna åtgärder",
-    "intro": "Förslag från AI-agenter väntar här. Inget publiceras förrän en i personalen godkänner det.",
+    "queueLabels": {
+      "open": "Att granska",
+      "failed": "Misslyckade",
+      "executed": "Utförda",
+      "rejected": "Avvisade",
+      "expired": "Utgångna",
+      "all": "Alla"
+    },
+    "emptyOpenTitle": "Inget att granska",
+    "emptyOpenHint": "Nya förslag visas här när de behöver ditt beslut.",
+    "emptyFilterHint": "Välj ett annat filter för att se fler förslag.",
+    "queueHelp": {
+      "label": "Hjälp med förslag",
+      "steps": [
+        "Öppna ett förslag för att se vad som ska ändras. Inget utförs när du öppnar det.",
+        "Godkänn för att utföra ändringen i ditt namn, eller avvisa för att lämna det som det är.",
+        "Ett godkänt utkast eller underlag gör inte varan klar för försäljning. Det är ett separat steg."
+      ]
+    },
+    "title": "Att göra",
+    "intro": "Granska förslag innan de genomförs.",
     "notice": "Ett godkännande utför samma åtgärd som du själv kunde ha gjort, registrerad i ditt namn. Ett förslag är aldrig ett faktum. Godkänt underlag är inte kommersiellt accepterat.",
     "empty": "Inga föreslagna åtgärder.",
     "proposedBy": "Föreslaget av",
@@ -757,7 +811,8 @@
       "exportDayClose": "Exportera ett dagsavslut",
       "settlePayouts": "Avräkna säljare",
       "updateStoreProfile": "Uppdatera butiksprofilen",
-      "importSellers": "Importera inlämnare"
+      "importSellers": "Importera inlämnare",
+      "useAgreementDraft": "AI-avtalsutkast"
     },
     "importRows": "rader",
     "openDays": "öppetdagar",
@@ -851,7 +906,7 @@
     "queueFilter": "Filtrera åtgärder",
     "filterAll": "Alla förslag",
     "liveQueue": "Status kan ändras medan du bläddrar. Gå till första sidan för en aktuell överblick.",
-    "emptyFiltered": "Inga förslag matchar den här vyn.",
+    "emptyFiltered": "Inga förslag i den här vyn",
     "queuePages": "Bläddra bland förslag",
     "older": "Visa äldre förslag",
     "firstPage": "Till första sidan",
@@ -1436,7 +1491,17 @@
     "deliveryHint": "Ladda ned en SIE-fil eller skicka underlaget via en ansluten integration.",
     "fileOption": "Export via SIE-fil",
     "fileHint": "För bokföringssystem som kan importera SIE 4. Ingen direktanslutning krävs.",
-    "reconciliationHint": "Kontrollera dagsavslut och exporter för perioden. Överföringsstatus gäller Fortnox; import av SIE-filer bekräftas inte här."
+    "reconciliationHint": "Kontrollera dagsavslut och exporter för perioden. Överföringsstatus gäller Fortnox; import av SIE-filer bekräftas inte här.",
+    "setup": {
+      "mapHelp": "Om kontoplanen",
+      "mapHint": "Konton för butikens bokföring.",
+      "mapMissing": "Behöver ställas in",
+      "systemHelp": "Om bokföringssystem",
+      "systemHint": "Öppna en anslutning för att se inställningar och hjälp.",
+      "providerHint": "Direktanslutning till ditt bokföringssystem.",
+      "notConnected": "Inte ansluten",
+      "planningHint": "Se hur Komisio och ditt kassasystem kan dela på bokföringen. Guiden ändrar inga inställningar."
+    }
   },
   "communications": {
     "title": "Meddelanden till säljaren",
@@ -1478,7 +1543,7 @@
   "stock": {
     "title": "Lager",
     "intro": "Se hur många varor som finns i lager, deras värde och hur länge de har funnits i butiken.",
-    "notice": "Endast läsning. Marginal är butikens andel: provisionen på kommissionsförsäljning, och pris minus moms minus inköpspris på butiksägda varor.",
+    "notice": "Marginal är butikens andel: provisionen på kommissionsförsäljning, och pris minus moms minus inköpspris på butiksägda varor.",
     "notAvailable": "Lagerrapporten är inte tillgänglig ännu i den här driftmiljön.",
     "totalsHeading": "Totalt",
     "categoriesHeading": "Per kategori",
@@ -1495,16 +1560,24 @@
     "marginPercent": "Marginal %",
     "sellThrough": "Omsättningsgrad",
     "daysToSale": "Dagar till försäljning",
-    "age": "Hur länge har varorna legat i lager?",
+    "age": "Tid i lager",
     "bucket0": "0–14 dagar",
     "bucket15": "15–28 dagar",
     "bucket29": "29–42 dagar",
     "bucket43": "43 dagar eller mer",
-    "definitions": "Omsättningsgrad visar sålda varor under perioden delat med sålda varor plus dagens lager. Lageråldern räknas i dagar sedan varan godkändes för försäljning.",
+    "definitions": "Omsättningsgrad visar sålda varor under perioden delat med sålda varor plus dagens lager.",
     "current": "Lagret just nu",
     "salesPeriod": "Försäljning under perioden",
     "more": "Visa fler nyckeltal",
-    "valueHint": "Varornas sammanlagda försäljningspris."
+    "valueHint": "Varornas sammanlagda försäljningspris.",
+    "helpLabel": "Om lagret",
+    "scopeHint": "Lagret visar varorna som finns kvar i butiken just nu.",
+    "ageHint": "Lageråldern räknas från dagen varan godkändes för försäljning.",
+    "salesHelpLabel": "Om försäljningen",
+    "salesHint": "Datumen gäller bara försäljningen, inte lagret ovan.",
+    "metricsHeading": "Fler nyckeltal",
+    "metricsHelpLabel": "Om nyckeltalen",
+    "missingHint": "Ett streck betyder att det saknas underlag för beräkningen."
   },
   "importer": {
     "title": "Importera säljare",
@@ -1859,7 +1932,7 @@
   },
   "plans": {
     "heading": "Plan",
-    "priceNote": "Komisio är öppen källkod och alla funktioner ingår, utan gränser för varor, skrivare eller integrationer. Programvaran kostar ingen licensavgift: kör den själv eller hos vilken driftpartner du vill. Driften hos Inority är kostnadsfri i tre månader, därefter 299 kr per butik och månad exklusive moms, utan bindningstid. AI-assistentens krediter mäts separat, se fliken AI-krediter.",
+    "priceNote": "Komisio är öppen källkod utan licensavgift. Alla funktioner ingår, utan gränser för varor, skrivare eller integrationer. Kör programvaran själv eller välj en driftpartner. Hos Inority ingår tre kostnadsfria månader utan bindningstid. Pris och valuta visas i Stripe innan du tecknar abonnemanget. Har du redan ett abonnemang ser du uppgifterna under Hantera abonnemang. AI-krediter köps separat.",
     "trialEndsAt": "provperioden slutar",
     "graceEndsAt": "fristen slutar",
     "activeUntil": "aktiv till",
@@ -2519,7 +2592,7 @@
       "subject": "Betalning saknas för {store}",
       "text": "Hej,\n\nDen senaste betalningen för {store} misslyckades. Om den inte är löst senast {date} fortsätter butiken utan prenumeration; alla funktioner är öppna ändå. Uppdatera betalsättet under Inställningar:\n{link}"
     },
-    "footer": "Komisio · tjänsten kostar 199 kr per butik och månad exklusive moms · det här meddelandet skickas en gång per steg och har inga bilagor."
+    "footer": "Komisio · Se butiksinställningarna för abonnemangsuppgifter. Det här meddelandet skickas en gång per steg och har inga bilagor."
   },
   "overview": {
     "heading": "Idag",
@@ -2615,7 +2688,7 @@
   },
   "credits": {
     "title": "AI-krediter",
-    "intro": "Komisio är öppen källkod, och driften hos Inority är kostnadsfri i tre månader och därefter 299 kr per butik och månad exklusive moms. Det enda som mäts utöver det är AI-assistentens modellanrop när de går på Komisios egen nyckel. En kredit motsvarar en svensk krona i modellkostnad.",
+    "intro": "Komisio är öppen källkod. Hos Inority ingår tre kostnadsfria månader. Se abonnemangsuppgifterna i butiksinställningarna för pris och valuta. AI-krediter används när assistenten körs med Komisios API-nyckel.",
     "offer": "{included} krediter ingår varje månad, vilket normalt räcker till cirka {items} mottagna varor. När de är slut köper du {pack} nya för {price} eller kopplar butikens egen modellnyckel; då dras inga krediter.",
     "selfHosted": "Den här installationen mäter inga krediter: assistenten går på installationens egen nyckel.",
     "includedLeft": "Kvar av månadens krediter",

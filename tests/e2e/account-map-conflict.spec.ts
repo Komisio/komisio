@@ -1,3 +1,4 @@
+import { openAccountingSettings } from '../helpers/accounting-settings'
 import { test, expect } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -20,6 +21,7 @@ test('a stale account map reloads the current version in place without writing',
   try {
     await f.commit()
     await page.goto('/intake/accounting?view=settings')
+    await openAccountingSettings(page)
     const form = page.getByRole('region', {
       name: d.accounting.mapHeading,
       exact: true,
@@ -59,6 +61,8 @@ test('a stale account map reloads the current version in place without writing',
     })
     await expect(reload).toBeVisible()
     await reload.click()
+    await page.waitForLoadState()
+    await openAccountingSettings(page)
     await expect(page).toHaveURL(/\/intake\/accounting\?view=settings$/)
     await expect(form.locator('#account\\:grossOre')).toHaveValue('1930')
     await expect(form.locator('#account\\:grossOre')).toBeEnabled()

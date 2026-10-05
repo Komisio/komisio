@@ -6322,3 +6322,253 @@ button.text-link:hover:not(:disabled) {
     min-height: 44px;
   }
 }
+
+/* Task queue: keep instructions on demand and the current filter visible. */
+.operations-page .page-heading {
+  margin-bottom: 24px;
+}
+.operations-page .operation-filters {
+  margin-bottom: 24px;
+}
+.operations-empty {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 48px 24px;
+  text-align: center;
+}
+.operations-empty h2,
+.operations-empty p {
+  margin: 0;
+}
+.operations-empty p {
+  color: var(--muted);
+  max-width: 44ch;
+}
+.operations-empty-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  color: var(--green);
+  background: var(--mint);
+}
+.operations-page > .operation-navigation:last-child {
+  margin-top: 24px;
+}
+@media (max-width: 600px) {
+  .operations-page .operation-filters {
+    gap: 8px;
+  }
+  .operations-page .operation-filters a {
+    padding: 8px 12px;
+  }
+  .operations-empty {
+    padding: 32px 16px;
+  }
+}
+
+.stock-current-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: 1.5rem;
+}
+.stock-current-grid > section {
+  min-width: 0;
+}
+.stock-details {
+  border-top: 1px solid var(--line);
+}
+.stock-extra-metrics > div {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+@media (max-width: 1000px) {
+  .stock-current-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.accounting-settings {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 960px;
+}
+.accounting-systems {
+  display: grid;
+  gap: 16px;
+}
+.accounting-setting-disclosure {
+  padding: 0;
+  overflow: clip;
+}
+.accounting-setting-disclosure > summary {
+  cursor: pointer;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 72px;
+}
+.accounting-setting-disclosure > summary::before {
+  content: '+';
+  font-size: 24px;
+  color: var(--muted);
+}
+.accounting-setting-disclosure[open] > summary::before {
+  content: '−';
+}
+.accounting-setting-disclosure > summary > span:first-of-type {
+  flex: 1;
+  min-width: 0;
+}
+.accounting-setting-disclosure summary strong {
+  display: block;
+  font-size: 18px;
+}
+.accounting-setting-disclosure summary small {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+}
+.accounting-setup-status {
+  font-size: 14px;
+  color: var(--muted);
+}
+.accounting-setting-disclosure > .intake-form {
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  margin: 0;
+  box-shadow: none;
+}
+.accounting-provider-disclosure .accounting-provider {
+  margin: 0;
+  padding: 0 24px 24px;
+}
+.accounting-provider-disclosure .accounting-provider > .card {
+  box-shadow: none;
+}
+.accounting-file-option p {
+  max-width: 60ch;
+}
+.accounting-setup-guidance p {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 4px;
+  max-width: 65ch;
+}
+@media (max-width: 600px) {
+  .accounting-page .accounting-setting-disclosure {
+    padding: 0;
+  }
+  .accounting-setting-disclosure > summary {
+    flex-wrap: wrap;
+    padding: 16px;
+  }
+  .accounting-setup-status {
+    flex-basis: 100%;
+    padding-left: 30px;
+  }
+  .accounting-provider-disclosure .accounting-provider {
+    padding: 0 16px 16px;
+  }
+}
+
+.agreement-print-store,
+.agreement-signatures {
+  display: none;
+}
+.agreement-print-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin: 20px 0;
+}
+.agreement-print-actions small {
+  color: var(--muted);
+  max-width: 45ch;
+}
+@media print {
+  body:has(.agreements-page) {
+    background: white;
+  }
+  body:has(.agreements-page) .app-shell {
+    display: block;
+    padding: 0;
+    min-height: 0;
+  }
+  body:has(.agreements-page) .app-shell > :not(main),
+  body:has(.agreements-page) main > :not(.agreements-page),
+  .agreements-page > .page-heading,
+  .agreements-workspace > :not(.agreement-reader),
+  .agreement-reader .no-print,
+  .agreement-reader a {
+    display: none !important;
+  }
+  body:has(.agreements-page) main {
+    padding: 0;
+    margin: 0;
+    max-width: none;
+  }
+  .agreements-workspace {
+    display: block;
+  }
+  .agreement-reader {
+    border: 0;
+    padding: 0;
+    box-shadow: none;
+    color: black;
+  }
+  .agreement-text {
+    overflow: visible;
+    max-height: none;
+    overflow-wrap: anywhere;
+  }
+  .agreement-print-store {
+    display: block;
+    font-weight: 600;
+  }
+  .agreement-signatures {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 40px;
+    break-inside: avoid;
+  }
+  .agreement-signatures > div > div {
+    height: 40px;
+    border-bottom: 1px solid black;
+  }
+}
+
+.agreement-ai {
+  margin: 16px 0 24px;
+}
+.agreement-ai-preview {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 16px;
+}
+.agreement-ai-preview .agreement-text {
+  max-height: 360px;
+  overflow-y: auto;
+}
+.agreement-ai-help {
+  position: relative;
+}
+.agreement-ai-help summary {
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  color: var(--muted);
+}
+.agreement-ai-help p {
+  max-width: 48ch;
+}

@@ -271,7 +271,14 @@ export function OperationQueue({
             {d.riskLevel}: {d.risk[o.risk_level]} · {d.validUntil}:{' '}
             {format(o.expires_at)}
           </p>
-          {o.kind === 'publishReceptionReview' ? (
+          {o.kind === 'useAgreementDraft' ? (
+            <Link
+              className="text-link"
+              href={`/intake/agreements?draft=${o.payload.draftId}`}
+            >
+              {d.openOrigin}
+            </Link>
+          ) : o.kind === 'publishReceptionReview' ? (
             <>
               <p>
                 <Link
@@ -664,21 +671,24 @@ export function OperationQueue({
               )}
             </section>
           )}
-          {reviewContext && !o.outcome && canDecide && (
-            <Decision
-              tenantId={tenantId}
-              operation={o}
-              canApprove={reviewContext.canApprove}
-              fieldsToConfirm={
-                reviewContext.kind === 'inspection'
-                  ? reviewContext.changes.map((c) => c.field)
-                  : o.kind === 'publishReceptionReview'
-                    ? receptionReviewFields(o.payload.suggestions)
-                    : []
-              }
-              d={d}
-            />
-          )}
+          {reviewContext &&
+            !o.outcome &&
+            canDecide &&
+            o.kind !== 'useAgreementDraft' && (
+              <Decision
+                tenantId={tenantId}
+                operation={o}
+                canApprove={reviewContext.canApprove}
+                fieldsToConfirm={
+                  reviewContext.kind === 'inspection'
+                    ? reviewContext.changes.map((c) => c.field)
+                    : o.kind === 'publishReceptionReview'
+                      ? receptionReviewFields(o.payload.suggestions)
+                      : []
+                }
+                d={d}
+              />
+            )}
           {o.outcome && (
             <p>
               {d.decided}: {d.status[o.status]}

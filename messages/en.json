@@ -18,7 +18,7 @@
     "nextVersion": "Prepare next version",
     "required": "Evidence is required before receiving.",
     "optional": "Evidence is optional at receiving.",
-    "none": "No seller agreement is published. No new agreement prerequisite applies to receiving.",
+    "none": "No seller agreement is published.",
     "history": "Agreement versions",
     "historyHint": "The 20 latest versions. Older versions remain accessible from their receipts.",
     "adminOnly": "Owners and admins can publish agreement versions.",
@@ -39,7 +39,42 @@
     "noEvidence": "No evidence was linked to this receipt.",
     "evidenceNote": "The agreement record does not approve the contents for sale.",
     "optionalReceiptAgreement": "No agreement recorded – optional for this store.",
-    "evidenceHelp": "What does a recorded agreement mean?"
+    "evidenceHelp": "What does a recorded agreement mean?",
+    "usage": {
+      "intro": "The terms between the store and the person leaving items for sale.",
+      "helpLabel": "How to use seller agreements",
+      "prepare": "Write your store’s terms and publish a version. Agreement text does not change commission, pricing or sale-period settings.",
+      "accept": "Let the seller read and accept the correct version, for example on paper or by email. Komisio does not provide digital agreement signing.",
+      "record": "Open the seller and select Agreements & terms. Record where the acceptance is kept and retain the original. A new agreement version needs its own evidence.",
+      "chooseSeller": "Choose a seller and record acceptance",
+      "print": "Print / save as PDF",
+      "sellerName": "Seller’s name",
+      "date": "Date",
+      "sellerSignature": "Seller’s signature",
+      "storeSignature": "Store’s signature",
+      "printHint": "Printing does not record acceptance in Komisio.",
+      "checklistLabel": "What should your terms explain?",
+      "checklist1": "Describe responsibility for pricing and reductions, the store’s share, the sale period and handling of unsold items.",
+      "checklist2": "Also explain payouts, withdrawal of items and complaints. Use terms that match your store’s practices and settings."
+    },
+    "ai": {
+      "create": "Create with AI",
+      "busy": "Creating draft…",
+      "check": "Check draft",
+      "preview": "AI draft",
+      "use": "Use draft",
+      "close": "Discard",
+      "questions": "To complete",
+      "replace": "Replace the text in the form",
+      "help": "About AI drafts",
+      "hint": "Uses store settings and the selected agreement language. Review and complete before publishing. Counts towards ordinary AI usage.",
+      "unavailable": "AI is unavailable for this store.",
+      "limit": "AI usage limit reached. Try later or check AI settings.",
+      "failed": "Unable to create a draft. Try again.",
+      "changed": "Settings or agreement changed. Reload the page.",
+      "pending": "No reply yet. Check the same draft again.",
+      "retryUse": "Reply missing. Retry the same choice."
+    }
   },
   "quickIntake": {
     "title": "Quick reception",
@@ -721,8 +756,27 @@
     "linkRevoked": "The link has been revoked."
   },
   "operations": {
-    "title": "Proposed operations",
-    "intro": "Proposals from AI agents wait here. Nothing is published until a staff member approves it.",
+    "queueLabels": {
+      "open": "To review",
+      "failed": "Failed",
+      "executed": "Completed",
+      "rejected": "Rejected",
+      "expired": "Expired",
+      "all": "All"
+    },
+    "emptyOpenTitle": "Nothing to review",
+    "emptyOpenHint": "New proposals appear here when they need your decision.",
+    "emptyFilterHint": "Choose another filter to see more proposals.",
+    "queueHelp": {
+      "label": "Help with proposals",
+      "steps": [
+        "Open a proposal to see what would change. Opening it does not carry it out.",
+        "Approve to carry out the change in your name, or reject to leave things as they are.",
+        "Approving a draft or review does not make the item ready for sale. That is a separate step."
+      ]
+    },
+    "title": "To do",
+    "intro": "Review proposals before they are carried out.",
     "notice": "Approving runs the same operation you could perform yourself, recorded in your name. A proposal is never a fact. Approval of a review is not commercial acceptance.",
     "empty": "No proposed operations.",
     "proposedBy": "Proposed by",
@@ -757,7 +811,8 @@
       "exportDayClose": "Export a day close",
       "settlePayouts": "Settle sellers",
       "updateStoreProfile": "Update the store profile",
-      "importSellers": "Import sellers"
+      "importSellers": "Import sellers",
+      "useAgreementDraft": "AI agreement draft"
     },
     "importRows": "rows",
     "openDays": "open days",
@@ -851,7 +906,7 @@
     "queueFilter": "Filter operations",
     "filterAll": "All proposals",
     "liveQueue": "Status can change while you browse. Return to the first page for a current overview.",
-    "emptyFiltered": "No proposals match this view.",
+    "emptyFiltered": "No proposals in this view",
     "queuePages": "Browse proposals",
     "older": "Show older proposals",
     "firstPage": "Back to first page",
@@ -1436,7 +1491,17 @@
     "deliveryHint": "Download a SIE file or send the documents through a connected integration.",
     "fileOption": "SIE file export",
     "fileHint": "For accounting systems that import SIE 4. No direct connection is required.",
-    "reconciliationHint": "Check day closes and exports for the period. Delivery status refers to Fortnox; SIE file imports are not confirmed here."
+    "reconciliationHint": "Check day closes and exports for the period. Delivery status refers to Fortnox; SIE file imports are not confirmed here.",
+    "setup": {
+      "mapHelp": "About account mapping",
+      "mapHint": "Accounts for your store’s bookkeeping.",
+      "mapMissing": "Setup needed",
+      "systemHelp": "About accounting systems",
+      "systemHint": "Open a connection to view its settings and help.",
+      "providerHint": "Direct connection to your accounting system.",
+      "notConnected": "Not connected",
+      "planningHint": "See how Komisio and your POS can share bookkeeping responsibilities. The guide does not change settings."
+    }
   },
   "communications": {
     "title": "Messages to the seller",
@@ -1478,7 +1543,7 @@
   "stock": {
     "title": "Stock",
     "intro": "Margin, sell-through and stock age per category for a period, from the store's own facts. Stock is as of now; sales are those in the period.",
-    "notice": "Read only. Margin is the store's share: the commission on consignment sales, and price minus VAT minus purchase price on store-owned sales.",
+    "notice": "Margin is the store's share: the commission on consignment sales, and price minus VAT minus purchase price on store-owned sales.",
     "notAvailable": "The stock report is not available yet on this deployment.",
     "totalsHeading": "Totals",
     "categoriesHeading": "Per category",
@@ -1500,11 +1565,19 @@
     "bucket15": "15–28:",
     "bucket29": "29–42:",
     "bucket43": "43+:",
-    "definitions": "Sell-through is sold in the period divided by sold plus in stock now. Age buckets follow the default markdown schedule.",
+    "definitions": "Sell-through is sold in the period divided by sold plus in stock now.",
     "current": "Stock right now",
     "salesPeriod": "Sales during the period",
     "more": "Show more figures",
-    "valueHint": "Combined selling price of the items."
+    "valueHint": "Combined selling price of the items.",
+    "helpLabel": "About inventory",
+    "scopeHint": "Inventory shows the items currently in the store.",
+    "ageHint": "Stock age starts on the day an item was accepted for sale.",
+    "salesHelpLabel": "About sales",
+    "salesHint": "The dates apply only to sales, not to the inventory above.",
+    "metricsHeading": "More metrics",
+    "metricsHelpLabel": "About these metrics",
+    "missingHint": "A dash means there is not enough data to calculate the value."
   },
   "importer": {
     "title": "Import sellers",
@@ -1859,7 +1932,7 @@
   },
   "plans": {
     "heading": "Plan",
-    "priceNote": "Komisio is open source and every feature is included, with no limits on items, printers or integrations. The software carries no licence fee: run it yourself or at any hosting partner. Hosting by Inority is free for three months, then SEK 299 per store and month excluding VAT, with no lock-in period. The AI assistant's credits are metered separately, see the AI credits tab.",
+    "priceNote": "Komisio is open source with no licence fee. All features are included, with no limits on items, printers or integrations. Host it yourself or choose a hosting partner. Hosting by Inority includes three months free with no lock-in period. Stripe shows the price and currency before you subscribe. For an existing subscription, choose Manage subscription to view its details. AI credits are purchased separately.",
     "trialEndsAt": "trial ends",
     "graceEndsAt": "grace ends",
     "activeUntil": "active until",
@@ -2519,7 +2592,7 @@
       "subject": "Payment overdue for {store}",
       "text": "Hello,\n\nThe last payment for {store} failed. If it is not settled by {date} the store continues without a subscription; every feature stays open. Update the payment method under Settings:\n{link}"
     },
-    "footer": "Komisio · hosted plan, SEK 199 per store and month excluding VAT · this message is sent once per step and has no attachments."
+    "footer": "Komisio · See store settings for subscription details. This message is sent once per step and has no attachments."
   },
   "overview": {
     "heading": "Today",
@@ -2615,7 +2688,7 @@
   },
   "credits": {
     "title": "AI credits",
-    "intro": "Komisio is open source, and hosting by Inority is free for three months and then SEK 299 per store and month excluding VAT. The only thing metered beyond that is the AI assistant's model calls when they run on Komisio's own key. One credit is one Swedish krona of model cost.",
+    "intro": "Komisio is open source. Hosting by Inority includes three months free. See the subscription details in store settings for pricing and currency. AI credits are used when the assistant runs on Komisio’s API key.",
     "offer": "{included} credits are included every month, normally enough for about {items} received items. When they run out you buy {pack} more for {price} or connect the store's own model key; then no credits are drawn.",
     "selfHosted": "This installation meters no credits: the assistant runs on the installation's own key.",
     "includedLeft": "Left of this month's credits",

@@ -45,6 +45,16 @@ test('stock overview separates current inventory from period sales on desktop an
     await page.locator('.stock-details summary').click()
     await expect(
       page.getByText(d.stock.definitions, { exact: true }),
+    ).not.toBeVisible()
+    const help = page.getByRole('button', {
+      name: d.stock.metricsHelpLabel,
+      exact: true,
+    })
+    await help.focus()
+    await page.keyboard.press('Enter')
+    await expect(help).toHaveAttribute('aria-expanded', 'true')
+    await expect(
+      page.getByText(d.stock.definitions, { exact: true }),
     ).toBeVisible()
     expect(
       await page.evaluate(

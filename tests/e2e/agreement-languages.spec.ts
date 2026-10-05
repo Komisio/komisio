@@ -37,6 +37,7 @@ test('agreements support all product languages and preserve the saved language',
     locales.length,
   )
   let lastId = ''
+  let firstId = ''
   for (const language of locales) {
     const a = es.agreements
     await page.locator('#agreement-title').fill(`Synthetic ${language}`)
@@ -44,7 +45,6 @@ test('agreements support all product languages and preserve the saved language',
       .locator('#agreement-body')
       .fill(`Synthetic test text ${language}`)
     await page.locator('#agreement-language').selectOption(language)
-    await page.getByLabel(a.confirmPublish, { exact: true }).check()
     const response = page.waitForResponse(
       (r) => r.url().endsWith('/api/intake') && r.request().method() === 'POST',
     )
@@ -53,6 +53,7 @@ test('agreements support all product languages and preserve the saved language',
     expect(published.status()).toBe(200)
     expect(published.request().postDataJSON().language).toBe(language)
     lastId = (await published.json()).id
+    firstId ||= lastId
     await expect(page.getByRole('status')).toContainText(a.published)
     // Wait for the publication refresh before a separate document reload.
     // Otherwise Firefox can abort that reload when the earlier refresh lands.
@@ -83,4 +84,20 @@ test('agreements support all product languages and preserve the saved language',
   await expect(page.locator('.agreement-text')).toHaveText(
     'Synthetic test text it',
   )
+  // Print the requested historical version, not the latest publication.
+  await page.goto(`/intake/agreements?version=${firstId}`)
+  await expect(page.locator('.agreement-text')).toHaveText(
+    'Synthetic test text sv',
+  )
+  await page.emulateMedia({ media: 'print' })
+  await expect(page.locator('.agreement-print-store')).toHaveText(
+    'Synthetic multilingual store',
+  )
+  await expect(page.locator('.agreement-signatures')).toBeVisible()
+  await expect(page.getByTestId('agreement-publisher')).not.toBeVisible()
+  await expect(page.locator('.agreement-history')).not.toBeVisible()
+  await expect(page.locator('.agreement-print-actions')).not.toBeVisible()
+  await page.screenshot({ path: 'private/agreement-print.png', fullPage: true })
+  await page.emulateMedia({ media: 'screen' })
+  await expect(page.locator('.agreement-signatures')).not.toBeVisible()
 })

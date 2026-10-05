@@ -21,6 +21,30 @@ globalThis.fetch = async (input, init) => {
       init.headers.Authorization !== 'Bearer komisio-http-fixture-not-a-key'
     )
       throw new Error('Fixture configuration mismatch')
+    if (body.text.format.name === 'agreement_draft') {
+      const context = JSON.parse(body.input[0].content[0].text)
+      if (context.language !== 'no' || !context.policy || body.store !== false)
+        throw new Error('Agreement fixture context mismatch')
+      return Response.json({
+        status: 'completed',
+        usage: { input_tokens: 120, output_tokens: 80 },
+        output: [
+          {
+            type: 'message',
+            content: [
+              {
+                type: 'output_text',
+                text: JSON.stringify({
+                  title: 'Syntetisk avtale',
+                  body: `HTTP FIXTURE – butikkens andel ${context.policy.commissionRatePercent} %. [Butikknavn]`,
+                  questions: ['Fyll inn butikknavn.'],
+                }),
+              },
+            ],
+          },
+        ],
+      })
+    }
     const { sources } = JSON.parse(body.input[0].content[0].text),
       observation = sources.find((s) => s.kind === 'observation'),
       pricing = sources.find((s) => s.kind === 'price-evidence')

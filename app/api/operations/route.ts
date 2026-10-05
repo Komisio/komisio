@@ -52,6 +52,14 @@ export async function POST(request: Request) {
             : 409,
       )
     }
+    const recorded = await ctx.client
+      .from('operation_decisions')
+      .select('outcome,result_id,operation_id')
+      .eq('tenant_id', c.data.tenantId)
+      .eq('id', result.data)
+      .single()
+    if (recorded.error || recorded.data.operation_id !== c.data.operationId)
+      return reply({ error: 'REQUEST_FAILED' }, 500)
     // Automatic seller notifications (S18) after an executed approval, when
     // the store opted in. Never affects the recorded decision.
     let notifications: NotifyOutcome[] = []
@@ -129,7 +137,12 @@ export async function POST(request: Request) {
         console.error('Notification after decision failed')
       }
     }
-    return reply({ id: result.data, notifications })
+    return reply({
+      id: result.data,
+      notifications,
+      outcome: recorded.data.outcome,
+      resultId: recorded.data.result_id,
+    })
   } catch {
     return reply({ error: 'REQUEST_FAILED' }, 500)
   }

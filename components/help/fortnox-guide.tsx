@@ -19,11 +19,13 @@ export async function FortnoxGuide({
   connection,
   ready,
   d,
+  initiallyOpen = true,
 }: {
   client: SupabaseClient
   tenantId: string
   role: string
   connection: FortnoxConnectionStatus
+  initiallyOpen?: boolean
   ready: boolean
   d: Dictionary['helpCenter']
 }) {
@@ -63,7 +65,7 @@ export async function FortnoxGuide({
         ? '/intake/accounting?view=settings#account-map'
         : '/intake/accounting'
   return (
-    <details className="card fortnox-guide" open={!!next}>
+    <details className="card fortnox-guide" open={initiallyOpen && !!next}>
       <summary>{d.guide.title}</summary>
       <p>{d.guide.intro}</p>
       {connection.connected && (

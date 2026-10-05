@@ -1,3 +1,4 @@
+import { openAccountingSettings } from '../helpers/accounting-settings'
 import { test, expect } from '@playwright/test'
 import { randomBytes, randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -15,6 +16,7 @@ test('context help preserves edits, traps focus on mobile and has a protected ar
   try {
     await f.commit()
     await page.goto('/intake/accounting?view=settings')
+    await openAccountingSettings(page)
     const guide = page.locator('.fortnox-guide')
     await expect(guide).toContainText(d.helpCenter.guide.title)
     await expect(
@@ -184,6 +186,7 @@ test('a lost send response offers reconciliation help without another send', asy
     )
     await f.commit()
     await page.goto('/intake/accounting?view=settings')
+    await openAccountingSettings(page)
     const guide = page.locator('.fortnox-guide')
     await expect(
       guide

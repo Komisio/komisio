@@ -1,5 +1,6 @@
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
+import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
@@ -33,8 +34,14 @@ export default async function Stock({
   return (
     <div className="stock-overview">
       <div className="page-heading">
-        <h1>{d.title}</h1>
-        <p>{d.intro}</p>
+        <FormHelpHeading
+          title={d.title}
+          level={1}
+          help={{
+            label: d.helpLabel,
+            steps: [d.scopeHint, d.valueHint, d.ageHint],
+          }}
+        />
         <Link className="text-link" href="/intake/items">
           {all.items.title} →
         </Link>
@@ -42,39 +49,40 @@ export default async function Stock({
       {!report && <p>{d.notAvailable}</p>}
       {report && (
         <>
-          <section aria-label={d.current}>
-            <h2>{d.current}</h2>
-            <dl className="stock-metrics">
-              <div className="card">
-                <dt>{d.inStock}</dt>
-                <dd>{report.total.inStock}</dd>
-              </div>
-              <div className="card">
-                <dt>{d.stockValue}</dt>
-                <dd>{money(report.total.stockValueOre)}</dd>
-                <small>{d.valueHint}</small>
-              </div>
-            </dl>
-          </section>
-          <section className="card stock-panel" aria-label={d.age}>
-            <h2>{d.age}</h2>
-            <dl className="stock-age">
-              {[
-                [d.bucket0, report.total.ageBuckets.d0to14],
-                [d.bucket15, report.total.ageBuckets.d15to28],
-                [d.bucket29, report.total.ageBuckets.d29to42],
-                [d.bucket43, report.total.ageBuckets.d43plus],
-              ].map(([label, count]) => (
-                <div key={String(label)}>
-                  <dt>{label}</dt>
-                  <dd>{count}</dd>
+          <div className="stock-current-grid">
+            <section aria-label={d.current}>
+              <h2>{d.current}</h2>
+              <dl className="stock-metrics">
+                <div className="card">
+                  <dt>{d.inStock}</dt>
+                  <dd>{report.total.inStock}</dd>
                 </div>
-              ))}
-            </dl>
-            <Link className="text-link" href="/intake/lifecycle">
-              {all.lifecycle.title} →
-            </Link>
-          </section>
+                <div className="card">
+                  <dt>{d.stockValue}</dt>
+                  <dd>{money(report.total.stockValueOre)}</dd>
+                </div>
+              </dl>
+            </section>
+            <section className="card stock-panel" aria-label={d.age}>
+              <h2>{d.age}</h2>
+              <dl className="stock-age">
+                {[
+                  [d.bucket0, report.total.ageBuckets.d0to14],
+                  [d.bucket15, report.total.ageBuckets.d15to28],
+                  [d.bucket29, report.total.ageBuckets.d29to42],
+                  [d.bucket43, report.total.ageBuckets.d43plus],
+                ].map(([label, count]) => (
+                  <div key={String(label)}>
+                    <dt>{label}</dt>
+                    <dd>{count}</dd>
+                  </div>
+                ))}
+              </dl>
+              <Link className="text-link" href="/intake/lifecycle">
+                {all.lifecycle.title} →
+              </Link>
+            </section>
+          </div>
           <section
             className="card stock-panel"
             aria-label={d.categoriesHeading}
@@ -113,8 +121,11 @@ export default async function Stock({
           </section>
         </>
       )}
-      <section className="card stock-panel" aria-label={e.periodHeading}>
-        <h2>{d.salesPeriod}</h2>
+      <section className="card stock-panel" aria-label={d.salesPeriod}>
+        <FormHelpHeading
+          title={d.salesPeriod}
+          help={{ label: d.salesHelpLabel, steps: [d.salesHint, d.notice] }}
+        />
         <form method="get" className="stock-period">
           {!requested.success && (params.from || params.to) && (
             <p role="alert">{e.periodInvalid}</p>
@@ -162,12 +173,23 @@ export default async function Stock({
             </dl>
             <details className="stock-details">
               <summary>{d.more}</summary>
-              <p>{d.notice}</p>
-              <p>{d.definitions}</p>
-              <p>
-                {d.marginPercent}: {pct(report.total.marginPercent)} ·{' '}
-                {d.sellThrough}: {pct(report.total.sellThroughPercent)}
-              </p>
+              <FormHelpHeading
+                title={d.metricsHeading}
+                help={{
+                  label: d.metricsHelpLabel,
+                  steps: [d.definitions, d.missingHint],
+                }}
+              />
+              <dl className="stock-metrics stock-extra-metrics">
+                <div>
+                  <dt>{d.marginPercent}</dt>
+                  <dd>{pct(report.total.marginPercent)}</dd>
+                </div>
+                <div>
+                  <dt>{d.sellThrough}</dt>
+                  <dd>{pct(report.total.sellThroughPercent)}</dd>
+                </div>
+              </dl>
               <div className="stock-table-wrap">
                 <table className="stock-table">
                   <thead>

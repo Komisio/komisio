@@ -9,6 +9,7 @@ import {
 import { applyStripeEvent } from '../../lib/engine/billing'
 import {
   credits,
+  publicPricing,
   readOwnKeyConfig,
   settleAssistance,
   storeOwnKey,
@@ -24,6 +25,18 @@ const env = {
 const tenant = '0b6c4f1e-2c2e-4b5e-9a1f-1234567890ab'
 
 describe('AI credits', () => {
+  it('never exposes legacy store examples while preserving pricing', () => {
+    const result = publicPricing.parse({
+      includedOre: 10000,
+      packOre: 10000,
+      estimatedItemsPerMonth: 500,
+      measured: true,
+      stores: [{ label: 'Retired example', itemsPerMonth: 10, costOre: 200 }],
+    })
+    expect(result.stores).toEqual([])
+    expect(result.includedOre).toBe(10000)
+    expect(result.measured).toBe(true)
+  })
   it('shows whole kronor', () => {
     expect(credits(10000)).toBe(100)
     expect(credits(9950)).toBe(99)

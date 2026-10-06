@@ -39,7 +39,7 @@ export default async function Host() {
         locale={ctx.locale}
         d={d.plans}
       />
-      <HostAi settings={ai} stores={rows} d={d.credits.host} />
+      <HostAi settings={ai} d={d.credits.host} />
       <div className="host-privacy">
         <Link
           className="text-link"

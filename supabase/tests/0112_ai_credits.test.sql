@@ -81,13 +81,15 @@ select is((ai_credits(current_setting('test.tenant')::uuid)->>'ownKey')::boolean
 select lives_ok($$select store_shopify_connection(current_setting('test.other')::uuid,'komisio-test.myshopify.com','Komisio Test','SEK','{"iv":"aWl2","tag":"dGFn","data":"ZGF0YQ=="}'::jsonb,'read_orders',null)$$,'Shopify is open');
 select lives_ok($$select create_chain(gen_random_uuid(),'Kedjan',array[current_setting('test.other')::uuid])$$,'chains are open');
 select is(plan_status(current_setting('test.other')::uuid) ? 'tier',false,'no tier is reported');
--- Public pricing and the showcase.
+-- Public pricing no longer exposes store marketing examples.
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000971","role":"authenticated"}';
-select is(jsonb_array_length(set_store_showcase(current_setting('test.tenant')::uuid,'second hand-butik i Teststad')->'showcase'),1,'the host lists a store');
+select is(has_function_privilege('authenticated','public.set_store_showcase(uuid,text)','execute'),false,'retired showcase writes are inaccessible');
+reset role;
+insert into public.store_showcase(tenant_id,label,added_by) values(current_setting('test.tenant')::uuid,'Retired example','f0000000-0000-4000-8000-000000000971');
 set local role anon;
 select is((public_pricing()->>'includedOre')::int,120,'anyone reads the offer');
-select is(public_pricing()->'stores'->0->>'label','second hand-butik i Teststad','with the listed store, anonymously');
-select is((public_pricing()->'stores'->0->>'costOre')::int,10000,'and its purchases of the last thirty days');
+select is(public_pricing()->'stores','[]'::jsonb,'even existing examples are absent from public pricing');
+select is(has_table_privilege('anon','public.store_showcase','select'),false,'retired examples remain inaccessible directly');
 select throws_ok($$select ai_credits(current_setting('test.tenant')::uuid)$$,'42501',null,'balances need a session');
 select * from finish();
 rollback;

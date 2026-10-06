@@ -905,3 +905,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-05: Owner approved persisted AI agreement drafts and deployment. Generation uses store policy and selected language, existing AI credits/quota and immutable attempts/results. Low-risk useAgreementDraft approval copies a draft only; ordinary human publication remains separate.
 
 - 2026-10-05: Owner prioritizes simple store workflows: concise labels, contextual help and no redundant acknowledgement before publishing seller agreements. Using an AI draft and publishing remain distinct actions.
+
+- 2026-10-06: Owner removes store marketing examples. Host showcase controls and writes are retired; public pricing returns an empty stores array for compatibility. Existing financial records and general AI pricing remain unchanged.

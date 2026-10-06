@@ -4,8 +4,7 @@ import { publicJson, publicPreflight } from '@/lib/http/public-json'
 
 /**
  * The offer in numbers, for the marketing site: included credits, the pack
- * price, the measured estimate of items per month, and the anonymous figures
- * of the stores the host chose to show. No identities, no session.
+ * price and the measured estimate of items per month. No store examples.
  */
 export async function GET() {
   try {

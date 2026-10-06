@@ -149,7 +149,7 @@ export async function startCreditsCheckout(
   return { url: session.url }
 }
 
-// Host: platform-wide settings and the showcase list.
+// Host: platform-wide settings.
 export const aiPlatformSettings = z.object({
   enabled: z.boolean(),
   monthlyCapOre: z.number().int(),
@@ -167,7 +167,6 @@ export const aiPlatformSettings = z.object({
   emailNewCap: z.number().int(),
   inviteNewCap: z.number().int(),
   emailTrustDays: z.number().int(),
-  showcase: z.array(z.object({ tenantId: z.uuid(), label: z.string() })),
 })
 export type AiPlatformSettings = z.infer<typeof aiPlatformSettings>
 export async function readAiPlatformSettings(client: SupabaseClient) {
@@ -203,33 +202,13 @@ export async function setAiPlatformSettings(
   if (r.error) throw new Error(aiCreditsErrorCode(r.error.message))
   return aiPlatformSettings.parse(r.data)
 }
-export const showcaseCommand = z.strictObject({
-  tenantId: z.uuid(),
-  label: z.string().trim().max(120),
-})
-export async function setStoreShowcase(client: SupabaseClient, input: unknown) {
-  const c = showcaseCommand.parse(input)
-  const r = await client.rpc('set_store_showcase', {
-    p_tenant: c.tenantId,
-    p_label: c.label,
-  })
-  if (r.error) throw new Error(aiCreditsErrorCode(r.error.message))
-  return aiPlatformSettings.parse(r.data)
-}
-
-// Public: the offer and real, anonymous figures for the marketing site.
+// Public: general pricing only; retired store examples stay empty.
 export const publicPricing = z.object({
   includedOre: z.number().int(),
   packOre: z.number().int(),
   estimatedItemsPerMonth: z.number().int(),
   measured: z.boolean(),
-  stores: z.array(
-    z.object({
-      label: z.string(),
-      itemsPerMonth: z.number().int(),
-      costOre: z.number().int(),
-    }),
-  ),
+  stores: z.array(z.never()).catch([]),
 })
 export type PublicPricing = z.infer<typeof publicPricing>
 export async function readPublicPricing(client: SupabaseClient) {

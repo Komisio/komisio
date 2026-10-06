@@ -45,12 +45,6 @@ Proposed wording (Swedish first, the owner edits before publishing):
 > taket köper du 100 nya AI-krediter för 100 kr, eller kopplar enkelt Komisio
 > till ditt eget abonnemang hos Claude eller ChatGPT.
 >
-> Så här mycket betalar butiker som kör Komisio skarpt idag:
-> {for each listed store: "{label}, tar emot cirka {itemsPerMonth} varor per
-> månad: {cost} kr per månad för Komisio."}
->
-> Jämför med konkurrenternas system som kostar från 699 kr/mån och uppåt.
-
 Every number in that text comes from `GET /api/public/pricing` (no session,
 cached ten minutes):
 
@@ -59,10 +53,10 @@ cached ten minutes):
 | `includedOre`, `packOre` | The host's platform settings                                                                                                 |
 | `estimatedItemsPerMonth` | Included credits divided by the measured average cost per assistant call over the last ninety days (once twenty calls exist) |
 | `measured`               | Whether that average is measured or still the configured estimate                                                            |
-| `stores[]`               | The stores the host listed under Plattform, with their label, items accepted in the last thirty days and credits bought      |
+| `stores[]`               | Always empty; store marketing examples were retired on 2026-10-06      |
 
-The figures are real or absent. Until stores run live, the page shows the
-configured estimate and no store list; an invented example is not published.
+Store labels, activity and credit purchases are not published. The general
+pricing estimate remains available.
 
 ## Where the rules live
 
@@ -91,8 +85,8 @@ configured estimate and no store list; an invented example is not published.
 - `record_ai_credit_purchase` is called by the billing actor from the Stripe
   webhook (`checkout.session.completed`, mode `payment`, metadata
   `kind=ai_credits`), once per event id.
-- `public_pricing()` is the only anonymous read; it returns aggregates and
-  the host's labels, never a store id or a person.
+- `public_pricing()` is the only anonymous read; it returns general pricing
+  aggregates and an empty compatibility list, never store examples.
 
 ## Verification
 
@@ -100,7 +94,7 @@ configured estimate and no store list; an invented example is not published.
   settlement to the token cost, exhaustion with no attempt written, purchases
   once per event and only by the billing actor, purchased credits under the
   cap, own key never metered, everything ungated, public pricing and the
-  showcase.
+  absence of store examples.
 - pgTAP `0110_open_core`: an ended trial changes nothing; 101 items, two
   devices, Shopify and a chain on a store without a subscription; read-only
   still holds.

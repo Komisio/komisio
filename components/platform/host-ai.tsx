@@ -3,16 +3,13 @@ import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
 import { credits, type AiPlatformSettings } from '@/lib/engine/ai-credits'
-import type { PlanOverviewRow } from '@/lib/engine/plans'
 
-/** The host's AI settings: the platform cap, the included amount, the pack, the model prices and the showcase. Amounts in whole kronor. */
+/** The host's AI settings: the platform cap, the included amount, the pack, the model prices. Amounts in whole kronor. */
 export function HostAi({
   settings,
-  stores,
   d,
 }: {
   settings: AiPlatformSettings
-  stores: PlanOverviewRow[]
   d: Dictionary['credits']['host']
 }) {
   const running = useRef(false)
@@ -35,10 +32,6 @@ export function HostAi({
     inviteNewCap: String(settings.inviteNewCap),
     emailTrustDays: String(settings.emailTrustDays),
   })
-  const [showcaseTenant, setShowcaseTenant] = useState(
-    stores[0]?.tenant_id ?? '',
-  )
-  const [showcaseLabel, setShowcaseLabel] = useState('')
   async function post(body: object) {
     if (running.current) return
     running.current = true
@@ -171,70 +164,6 @@ export function HostAi({
               }
             >
               {busy ? d.working : d.save}
-            </Button>
-          </div>
-        </div>
-      </details>
-      <details className="host-setting-group">
-        <summary>{d.showcaseHeading}</summary>
-        <div className="host-setting-content">
-          <p>{d.showcaseIntro}</p>
-          <ul>
-            {current.showcase.map((s) => (
-              <li key={s.tenantId}>
-                {s.label}{' '}
-                <Button
-                  variant="ghost"
-                  disabled={busy}
-                  onClick={() =>
-                    post({
-                      action: 'showcase',
-                      tenantId: s.tenantId,
-                      label: '',
-                    })
-                  }
-                >
-                  {d.showcaseRemove}
-                </Button>
-              </li>
-            ))}
-          </ul>
-          <div className="field">
-            <label htmlFor="showcase-store">{d.showcaseStore}</label>
-            <select
-              id="showcase-store"
-              value={showcaseTenant}
-              onChange={(e) => setShowcaseTenant(e.target.value)}
-            >
-              {stores.map((s) => (
-                <option key={s.tenant_id} value={s.tenant_id}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="field">
-            <label htmlFor="showcase-label">{d.showcaseLabel}</label>
-            <input
-              id="showcase-label"
-              value={showcaseLabel}
-              maxLength={120}
-              onChange={(e) => setShowcaseLabel(e.target.value)}
-            />
-          </div>
-          <div className="row">
-            <Button
-              variant="secondary"
-              disabled={busy || !showcaseTenant || !showcaseLabel.trim()}
-              onClick={() =>
-                post({
-                  action: 'showcase',
-                  tenantId: showcaseTenant,
-                  label: showcaseLabel.trim(),
-                })
-              }
-            >
-              {d.showcaseAdd}
             </Button>
           </div>
         </div>

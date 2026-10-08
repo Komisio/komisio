@@ -3207,5 +3207,28 @@
       "PHOTO_NOT_FOUND": "Photo or item not found.",
       "ITEM_NOT_FOUND": "Photo or item not found."
     }
+  },
+  "submissions": {
+    "title": "Send photos to the store",
+    "intro": "Show an item before bringing it in. The store will give you a preliminary response.",
+    "description": "Describe the item",
+    "photos": "Photos",
+    "photoHint": "1–8 JPEG or PNG images, up to 3 MB each.",
+    "send": "Send to store",
+    "sent": "Your submission has been sent.",
+    "pending": "Awaiting reply",
+    "invite": "Welcome to bring it in",
+    "more_information": "More information needed",
+    "decline": "No thank you",
+    "note": "Message to seller",
+    "save": "Save response",
+    "empty": "No submissions yet.",
+    "retry": "Try again",
+    "failure": "The response could not be confirmed. Retry with the same details.",
+    "complement": "Send more information",
+    "back": "Back",
+    "queue": "Photo submissions",
+    "next": "Next",
+    "previous": "Previous"
   }
 }

@@ -27,7 +27,8 @@
     "db:migrate": "node scripts/supabase.mjs migration up --local",
     "test:concurrency": "node scripts/owner-race.mjs",
     "backup:exercise": "node scripts/backup-exercise.mjs",
-    "test:seller-photos": "node --import tsx scripts/test-seller-photos.mjs"
+    "test:seller-photos": "node --import tsx scripts/test-seller-photos.mjs",
+    "test:seller-submissions": "node --import tsx scripts/test-seller-submissions.mjs"
   },
   "dependencies": {
     "@bwip-js/generic": "4.11.4",

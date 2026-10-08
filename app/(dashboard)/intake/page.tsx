@@ -123,6 +123,11 @@ export default async function Intake({
         <p>{d.intro}</p>
       </div>
       <nav className="intake-paths intake-shortcuts" aria-label={d.title}>
+        {process.env.KOMISIO_SELLER_SUBMISSIONS_ENABLED === 'true' && (
+          <Link className="text-link" href="/intake/submissions">
+            {all.submissions.queue}
+          </Link>
+        )}
         <a className="btn btn-secondary" href="#bag-queue">
           {d.queue} <span aria-hidden="true">↓</span>
         </a>

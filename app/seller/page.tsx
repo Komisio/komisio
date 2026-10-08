@@ -219,6 +219,14 @@ export default async function SellerPortal({
         </p>
       </section>
       <nav className="seller-portal-shortcuts" aria-label={d.title}>
+        {process.env.KOMISIO_SELLER_SUBMISSIONS_ENABLED === 'true' && (
+          <Link
+            className="btn btn-secondary"
+            href={`/seller/submissions?seller=${account.sellerId}`}
+          >
+            {all.submissions.title}
+          </Link>
+        )}
         {mine && (
           <a className="btn btn-secondary" href="#portal-items">
             {d.items}

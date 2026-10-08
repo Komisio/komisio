@@ -3207,5 +3207,28 @@
       "PHOTO_NOT_FOUND": "Bildet eller varen ble ikke funnet.",
       "ITEM_NOT_FOUND": "Bildet eller varen ble ikke funnet."
     }
+  },
+  "submissions": {
+    "title": "Send bilder til butikken",
+    "intro": "Vis en vare før du leverer den. Butikken gir deg et foreløpig svar.",
+    "description": "Beskriv varen",
+    "photos": "Bilder",
+    "photoHint": "1–8 JPEG- eller PNG-bilder, maks 3 MB per bilde.",
+    "send": "Send til butikken",
+    "sent": "Forslaget er sendt.",
+    "pending": "Venter på svar",
+    "invite": "Velkommen til å levere",
+    "more_information": "Mer informasjon ønskes",
+    "decline": "Nei takk",
+    "note": "Melding til selgeren",
+    "save": "Lagre svar",
+    "empty": "Ingen forslag ennå.",
+    "retry": "Prøv igjen",
+    "failure": "Svaret kunne ikke bekreftes. Prøv igjen med de samme opplysningene.",
+    "complement": "Send mer informasjon",
+    "back": "Tilbake",
+    "queue": "Bildeforslag",
+    "next": "Neste",
+    "previous": "Forrige"
   }
 }

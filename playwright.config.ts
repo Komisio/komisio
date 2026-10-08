@@ -25,6 +25,7 @@ export default defineConfig({
       command: process.env.CI ? 'npm run start' : 'npm run dev',
       env: {
         KOMISIO_ZETTLE_FIXTURES: 'true',
+        KOMISIO_SELLER_SUBMISSIONS_ENABLED: 'true',
         KOMISIO_CREDENTIAL_KEY: 'ab'.repeat(32),
         SHOPIFY_CLIENT_SECRET: 'synthetic-shopify-privacy-secret',
       },

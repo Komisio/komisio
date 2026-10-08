@@ -928,3 +928,6 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-10-08: Owner separates photo pre-review availability from price responsibility (store, seller, seller with store approval). Seller prices and currency freeze on submission; invitations never imply custody or sale acceptance. Existing stores keep store pricing and photo submissions enabled.
 - 2026-10-08: Price assistance extracts observed item facts for bounded Swedish web comparison. A rounded indicative midpoint is computed in SQL; evidence ranges remain available. Source access, tenant isolation, model-key selection and credit reservations remain enforced.
+
+- 2026-10-08: Owner authorizes a submission-to-reception link. Invited proposals prepare one reusable reception draft with copied photos and staff-confirmed description/price; existing custody, agreement and acceptance gates remain mandatory.
+- 2026-10-08: Submission review notices use the existing communication log, seller preferences and delivery caps. Saving a review succeeds independently of email; retries keep the review and notification identities.

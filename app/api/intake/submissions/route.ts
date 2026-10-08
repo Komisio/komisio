@@ -1,3 +1,4 @@
+import { notifySubmissionReview } from '@/lib/communications/submission-notification'
 import { NextResponse } from 'next/server'
 import { platformContext } from '@/lib/platform/context'
 import { boundedJson } from '@/lib/http/bounded-json'
@@ -26,7 +27,17 @@ export async function POST(request: Request) {
     if (!c.success) return reply({ error: 'INVALID_INPUT' }, 400)
     if (ctx.active?.id !== c.data.tenantId)
       return reply({ error: 'TENANT_CHANGED' }, 409)
-    return reply(await reviewSellerSubmission(ctx.client, c.data))
+    const saved = await reviewSellerSubmission(ctx.client, c.data)
+    const notification = await notifySubmissionReview(
+      ctx.client,
+      {
+        tenantId: ctx.active.id,
+        storeName: ctx.active.name,
+        locale: ctx.locale,
+      },
+      saved.id,
+    )
+    return reply({ ...saved, notification })
   } catch (error) {
     const code = submissionError(error instanceof Error ? error.message : '')
     return reply(

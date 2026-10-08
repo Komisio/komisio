@@ -86,3 +86,11 @@
   color: var(--ink, #173c34);
   border: 1px solid currentColor;
 }
+
+.submission-notification {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-block: 0.75rem;
+}

@@ -176,7 +176,7 @@ export async function readSubmissionQueue(
   const result = await client
     .from('seller_submissions')
     .select(
-      'id,seller_id,description,photos,created_at,assistance_output,pricing_mode,seller_price,price_currency,sellers(name),seller_submission_reviews(decision,note,price_approved)',
+      'id,seller_id,description,photos,created_at,assistance_output,pricing_mode,seller_price,price_currency,sellers(name),seller_submission_reviews(id,decision,note,price_approved),submission_receptions(session_id)',
       { count: 'exact' },
     )
     .eq('tenant_id', tenantId)
@@ -197,8 +197,10 @@ export async function readSubmissionQueue(
       .object({ suggestion: submissionSuggestion, currency: z.string() })
       .nullable(),
     sellers: z.object({ name: z.string() }).nullable(),
+    submission_receptions: z.array(z.object({ session_id: z.uuid() })),
     seller_submission_reviews: z.array(
       z.object({
+        id: z.uuid(),
         decision: z.enum(['invite', 'more_information', 'decline']),
         note: z.string(),
         price_approved: z.boolean(),

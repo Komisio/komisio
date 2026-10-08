@@ -1,3 +1,7 @@
+import { prepareSubmissionReception } from '../lib/engine/submission-reception.ts'
+import { quickReceive } from '../lib/engine/quick-intake.ts'
+import { readItemPhotos } from '../lib/engine/item-photos.ts'
+import { notifySubmissionReview } from '../lib/communications/submission-notification.ts'
 import { runSellerAssistance } from '../lib/engine/seller-assistance.ts'
 import assert from 'node:assert/strict'
 import { randomUUID, randomBytes } from 'node:crypto'
@@ -316,6 +320,96 @@ try {
       .seller_submission_reviews[0].decision,
     'invite',
   )
+  const preparation = {
+    tenantId: tenant,
+    submissionId: command.requestId,
+    description: 'Synthetic jacket',
+    price: '150.00',
+  }
+  await assert.rejects(prepareSubmissionReception(stranger.app, preparation))
+  const [first, second] = await Promise.all([
+    prepareSubmissionReception(owner.app, preparation),
+    prepareSubmissionReception(owner.app, preparation),
+  ])
+  assert.equal(first.sessionId, second.sessionId)
+  const linked = await db.query(
+    'select * from submission_receptions where submission_id=$1',
+    [command.requestId],
+  )
+  assert.equal(linked.rows.length, 1)
+  const source = (
+    await db.query(
+      'select sources,revision from reception_source_revisions where session_id=$1',
+      [first.sessionId],
+    )
+  ).rows
+  assert.equal(source.length, 1)
+  assert.equal(source[0].sources.filter((s) => s.kind === 'photo').length, 1)
+  assert.equal(
+    (
+      await db.query('select count(*)::int n from items where tenant_id=$1', [
+        tenant,
+      ])
+    ).rows[0].n,
+    0,
+  )
+  const accepted = await quickReceive(owner.app, {
+    tenantId: tenant,
+    requestId: randomUUID(),
+    sessionId: first.sessionId,
+    expectedRevision: 1,
+    sellerId,
+    facts: { description: 'Synthetic jacket' },
+    priceOre: 15000,
+  })
+  assert.equal(
+    (await readItemPhotos(owner.app, tenant, [accepted.itemId]))[0].photos
+      .length,
+    1,
+  )
+  assert.equal(
+    (await prepareSubmissionReception(owner.app, preparation)).sessionId,
+    first.sessionId,
+  )
+  assert.equal(
+    (
+      await db.query('select count(*)::int n from items where tenant_id=$1', [
+        tenant,
+      ])
+    ).rows[0].n,
+    1,
+  )
+  // Local-only transport: queue and record the actual notification without contacting a provider.
+  process.env.SELLER_EMAIL_DELIVERY = 'manual'
+  const reviewId = (
+    await db.query(
+      'select id from seller_submission_reviews where submission_id=$1',
+      [command.requestId],
+    )
+  ).rows[0].id
+  const store = { tenantId: tenant, storeName: 'Photo fixture', locale: 'sv' }
+  const currentPolicy = await rpc('current_store_policy', { p_tenant: tenant })
+  await rpc('publish_store_policy', {
+    p_tenant: tenant,
+    p_id: randomUUID(),
+    p_expected_current: currentPolicy.id,
+    p_policy: { ...currentPolicy.policy, automaticSellerNotifications: true },
+  })
+  assert.equal(
+    await notifySubmissionReview(owner.app, store, reviewId),
+    'manual',
+  )
+  await notifySubmissionReview(owner.app, store, reviewId, true)
+  await notifySubmissionReview(owner.app, store, reviewId, true)
+  const notices = (
+    await db.query(
+      "select body,status from seller_communications where tenant_id=$1 and template_key='seller.submission_reply'",
+      [tenant],
+    )
+  ).rows
+  assert.equal(notices.length, 1)
+  assert.equal(notices[0].status, 'manual')
+  assert.ok(notices[0].body.includes('/seller/submissions?seller=' + sellerId))
   console.log(
     'PASS: real seller Storage, immutable retries, stripped metadata, private access, submission, queue and review.',
   )

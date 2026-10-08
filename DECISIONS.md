@@ -907,3 +907,7 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-05: Owner prioritizes simple store workflows: concise labels, contextual help and no redundant acknowledgement before publishing seller agreements. Using an AI draft and publishing remain distinct actions.
 
 - 2026-10-06: Owner removes store marketing examples. Host showcase controls and writes are retired; public pricing returns an empty stores array for compatibility. Existing financial records and general AI pricing remain unchanged.
+
+- 2026-10-06: Store guide choices offer concise localized examples through separate information buttons on hover, focus or click. Help never selects an answer; rental checkout guidance follows the displayed question. Saving and business rules are unchanged.
+
+- 2026-10-06: Store guide records whether seller agreement acceptance is wanted before sale (yes/no/undecided). This is descriptive only, never a policy or acceptance event. Legacy answers remain valid and show the new question as unanswered.

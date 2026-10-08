@@ -16,7 +16,7 @@ test('a stale store guide offers reload and shows the other saved version', asyn
   try {
     await f.commit()
     await page.goto('/guide')
-    for (const label of [c.owned, c.clothes, c.store, c.other, c.shop]) {
+    for (const label of [c.owned, 'Ja', c.clothes, c.store, c.other, c.shop]) {
       await page.getByLabel(label, { exact: true }).check()
       await page
         .getByRole('button', {
@@ -84,7 +84,14 @@ for (const reply of ['lost', 'wrong-id'] as const)
       await f.commit()
       await page.setViewportSize({ width: 320, height: 800 })
       await page.goto('/guide')
-      for (const label of [c.owned, c.clothes, c.store, c.other, c.shop]) {
+      for (const label of [
+        c.owned,
+        'Ja',
+        c.clothes,
+        c.store,
+        c.other,
+        c.shop,
+      ]) {
         await page.getByLabel(label, { exact: true }).check()
         await page
           .getByRole('button', {

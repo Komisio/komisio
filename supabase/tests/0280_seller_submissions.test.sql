@@ -1,0 +1,48 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000008001','submission-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000008002','submission-seller@example.test',now()),
+ ('f0000000-0000-4000-8000-000000008003','submission-stranger@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000008001","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Submissions test','submissions-test',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Synthetic seller','submission-seller@example.test','')::text,true);
+select set_config('test.id',gen_random_uuid()::text,true);
+select set_config('test.path',current_setting('test.tenant')||'/'||current_setting('test.seller')||'/'||gen_random_uuid()::text||'.jpg',true);
+select set_config('test.photos',jsonb_build_array(current_setting('test.path'))::text,true);
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000008002","role":"authenticated"}';
+select is(public.seller_submission_photo_access(current_setting('test.path'),true),true,'seller can upload own photo');
+select throws_like($$select submit_my_items(current_setting('test.tenant')::uuid,current_setting('test.id')::uuid,current_setting('test.seller')::uuid,null,'A jacket',current_setting('test.photos')::jsonb)$$,'%PHOTO_NOT_FOUND%','unuploaded photo rejected');
+insert into storage.objects(bucket_id,name) values('seller-submission-photos',current_setting('test.path'));
+select is(submit_my_items(current_setting('test.tenant')::uuid,current_setting('test.id')::uuid,current_setting('test.seller')::uuid,null,'A jacket',current_setting('test.photos')::jsonb),current_setting('test.id')::uuid,'seller submits');
+select is(submit_my_items(current_setting('test.tenant')::uuid,current_setting('test.id')::uuid,current_setting('test.seller')::uuid,null,'A jacket',current_setting('test.photos')::jsonb),current_setting('test.id')::uuid,'retry is idempotent');
+select throws_like($$select submit_my_items(current_setting('test.tenant')::uuid,current_setting('test.id')::uuid,current_setting('test.seller')::uuid,null,'Changed',current_setting('test.photos')::jsonb)$$,'%REQUEST_CONFLICT%','replay cannot change text');
+select is(jsonb_array_length(my_item_submissions(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid)),1,'seller sees own submission');
+select is((select count(*) from seller_submissions),0::bigint,'seller has no raw table read');
+select throws_ok($$select review_seller_submission(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id')::uuid,'invite','')$$,'42501',null,'seller cannot review');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000008003","role":"authenticated"}';
+select is(public.seller_submission_photo_access(current_setting('test.path'),false),false,'stranger cannot read photo');
+select throws_ok($$select my_item_submissions(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid)$$,'42501',null,'stranger cannot read submissions');
+select throws_ok($$select submit_my_items(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,null,'A jacket',current_setting('test.photos')::jsonb)$$,'42501',null,'stranger cannot submit');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000008001","role":"authenticated"}';
+select is((select count(*) from seller_submissions),1::bigint,'staff sees queue');
+select set_config('test.review',gen_random_uuid()::text,true);
+select throws_like($$select review_seller_submission(current_setting('test.tenant')::uuid,current_setting('test.review')::uuid,current_setting('test.id')::uuid,'more_information','')$$,'%INVALID_INPUT%','request for details needs explanation');
+select is(review_seller_submission(current_setting('test.tenant')::uuid,current_setting('test.review')::uuid,current_setting('test.id')::uuid,'more_information','Please show the label'),current_setting('test.review')::uuid,'staff requests detail');
+select is(review_seller_submission(current_setting('test.tenant')::uuid,current_setting('test.review')::uuid,current_setting('test.id')::uuid,'more_information','Please show the label'),current_setting('test.review')::uuid,'review retry is idempotent');
+select throws_like($$select review_seller_submission(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id')::uuid,'invite','')$$,'%SUBMISSION_CHANGED%','second decision blocked');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000008002","role":"authenticated"}';
+select set_config('test.next',gen_random_uuid()::text,true);
+select is(submit_my_items(current_setting('test.tenant')::uuid,current_setting('test.next')::uuid,current_setting('test.seller')::uuid,current_setting('test.id')::uuid,'A jacket with label',current_setting('test.photos')::jsonb),current_setting('test.next')::uuid,'seller complements as new revision');
+select throws_like($$select submit_my_items(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.id')::uuid,'Another version',current_setting('test.photos')::jsonb)$$,'%SUBMISSION_CHANGED%','revision cannot fork');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000008001","role":"authenticated"}';
+select lives_ok($$select review_seller_submission(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.next')::uuid,'invite','Bring the jacket')$$,'staff invites seller');
+select is((select count(*) from bag_receipts where tenant_id=current_setting('test.tenant')::uuid),0::bigint,'invitation is not custody');
+select is((select count(*) from items where tenant_id=current_setting('test.tenant')::uuid),0::bigint,'invitation is not inventory');
+reset role;
+select throws_ok($$update seller_submissions set description='rewritten' where id=current_setting('test.id')::uuid$$,'55000',null,'submission history immutable');
+select throws_ok($$delete from seller_submission_reviews where id=current_setting('test.review')::uuid$$,'55000',null,'review history immutable');
+select * from finish();
+rollback;

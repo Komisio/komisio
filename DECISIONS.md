@@ -911,3 +911,9 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-06: Store guide choices offer concise localized examples through separate information buttons on hover, focus or click. Help never selects an answer; rental checkout guidance follows the displayed question. Saving and business rules are unchanged.
 
 - 2026-10-06: Store guide records whether seller agreement acceptance is wanted before sale (yes/no/undecided). This is descriptive only, never a policy or acceptance event. Legacy answers remain valid and show the new question as unanswered.
+
+- 2026-10-08: Owner approves private seller photo submissions, review history and persisted price evidence/proposals. A positive pre-review invites physical inspection only; no custody, acceptance, price publication or financial event is inferred.
+- 2026-10-08: Resale-price assistance uses store country/currency for market and store language for prose. Separate own-store completed sales from external asking prices; retain dated provenance, preserve uncertainty and require human approval before setting prices.
+- 2026-10-08: Seller photo AI proposes editable text, an indicative price range and non-binding store fit. Missing price evidence or intake criteria stays unknown. Server-authenticated attempts retain provenance and existing credit/quota controls; no acceptance or price is executed.
+
+- 2026-10-08: Swedish external price comparisons require SE/SEK, at least two distinct opened listing pages and dated source links. Asking prices stay separate from achieved sales. Search is bounded, server-authorized and credit-reserved; insufficient evidence yields no external range.

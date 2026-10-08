@@ -1504,6 +1504,12 @@
     }
   },
   "communications": {
+    "welcomeTitle": "Velkomstmail",
+    "welcomeSend": "Send velkomstmail",
+    "welcomeResend": "Send igen",
+    "welcomeNotSent": "Ikke sendt",
+    "welcomeSubject": "Velkommen til {store}",
+    "welcomeBody": "Hej {seller},\n\nDu er registreret som sælger hos {store}. Følg dine varer og salg i Komisio.\n\nAktivér dit login:\n{url}\n\nOpret kontoen med den e-mailadresse, som modtog denne besked, og bekræft adressen. Har du allerede en konto? Log ind med samme adresse.",
     "title": "Beskeder til indlevereren",
     "intro": "Hver besked logges med den nøjagtige tekst, som den blev sendt, og dens leveringsresultat. Skabeloner er faste; du kan tilføje en note i ren tekst.",
     "empty": "Ingen beskeder endnu.",

@@ -13,10 +13,15 @@ export const sendSellerCommunicationCommand = z
     kind: communicationKind,
     referenceId: z.uuid().nullable().default(null),
     freeText: z.string().max(1000).default(''),
+    welcome: z.literal(true).optional(),
   })
   .refine(
     (v) => (v.kind === 'message') === (v.referenceId === null),
     'A free message carries no reference; every other kind needs one',
+  )
+  .refine(
+    (v) => !v.welcome || (v.kind === 'message' && v.freeText === ''),
+    'Welcome messages use the fixed template',
   )
 export const communicationStatus = z.enum([
   'queued',
@@ -41,6 +46,23 @@ const row = z.object({
   delivered_at: z.iso.datetime({ offset: true }).nullable(),
 })
 export type SellerCommunication = z.infer<typeof row>
+export async function readSellerWelcome(
+  client: SupabaseClient,
+  tenant: string,
+  seller: string,
+) {
+  const { data, error } = await client
+    .from('seller_communications')
+    .select('status')
+    .eq('tenant_id', z.uuid().parse(tenant))
+    .eq('seller_id', z.uuid().parse(seller))
+    .eq('template_key', 'seller.welcome')
+    .order('queued_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  if (error) throw new Error('Unable to read welcome delivery')
+  return data ? communicationStatus.parse(data.status) : null
+}
 const columns =
   'id,kind,locale,recipient,subject,body,reference_kind,reference_id,status,queued_at,delivered_at'
 

@@ -1504,6 +1504,12 @@
     }
   },
   "communications": {
+    "welcomeTitle": "Willkommensmail",
+    "welcomeSend": "Willkommensmail senden",
+    "welcomeResend": "Erneut senden",
+    "welcomeNotSent": "Nicht gesendet",
+    "welcomeSubject": "Willkommen bei {store}",
+    "welcomeBody": "Hallo {seller},\n\nSie sind bei {store} als Verkäufer registriert. Verfolgen Sie Ihre Artikel und Verkäufe in Komisio.\n\nZugang aktivieren:\n{url}\n\nErstellen Sie Ihr Konto mit der E-Mail-Adresse, an die diese Nachricht gesendet wurde, und bestätigen Sie diese. Sie haben bereits ein Konto? Melden Sie sich mit derselben Adresse an.",
     "title": "Nachrichten an den Einlieferer",
     "intro": "Jede Nachricht wird mit dem genauen gesendeten Text und ihrem Zustellergebnis protokolliert. Vorlagen sind fest; Sie können eine Notiz im Klartext hinzufügen.",
     "empty": "Noch keine Nachrichten.",

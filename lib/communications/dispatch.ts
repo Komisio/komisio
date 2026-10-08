@@ -1,4 +1,5 @@
 import { readStoreProfile } from '../engine/store-profile'
+import { renderSellerWelcome } from './welcome'
 import { createHash } from 'node:crypto'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
@@ -32,7 +33,7 @@ export type CommunicationError =
 
 /** Deterministic id for the one automatic message a fact may produce (UUID v5 shape). */
 export function factCommunicationId(
-  kind: CommunicationKind,
+  kind: CommunicationKind | 'welcome',
   referenceId: string,
 ) {
   const hex = createHash('sha1')
@@ -52,6 +53,7 @@ export interface SendInput {
   kind: CommunicationKind
   referenceId: string | null
   freeText: string
+  welcome?: true
 }
 
 export async function sendSellerCommunication(
@@ -139,7 +141,38 @@ export async function sendSellerCommunication(
       facts.amount = formatSignedOre(ore.parse(statement.data.closing_ore))
     }
   }
-  const rendered = renderSellerMessage(c.kind, locale, facts)
+  let rendered = c.welcome
+    ? renderSellerWelcome(
+        locale,
+        c.storeName,
+        seller.data.name,
+        process.env.NEXT_PUBLIC_APP_URL ?? '',
+      )
+    : renderSellerMessage(c.kind, locale, facts)
+  if (c.welcome) {
+    if (c.kind !== 'message' || c.referenceId !== null || c.freeText !== '')
+      return { ok: false, error: 'INVALID_INPUT' }
+    const prior = await client
+      .from('seller_communications')
+      .select('seller_id,template_key,template_version,subject,body')
+      .eq('tenant_id', c.tenantId)
+      .eq('id', c.requestId)
+      .maybeSingle()
+    if (prior.error) return { ok: false, error: 'REQUEST_FAILED' }
+    if (prior.data) {
+      if (
+        prior.data.seller_id !== c.sellerId ||
+        prior.data.template_key !== 'seller.welcome'
+      )
+        return { ok: false, error: 'REQUEST_CONFLICT' }
+      rendered = {
+        templateKey: prior.data.template_key,
+        templateVersion: prior.data.template_version,
+        subject: prior.data.subject,
+        body: prior.data.body,
+      }
+    }
+  }
   const queued = await client.rpc('queue_seller_communication', {
     p_tenant: c.tenantId,
     p_id: c.requestId,

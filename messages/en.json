@@ -1504,6 +1504,12 @@
     }
   },
   "communications": {
+    "welcomeTitle": "Welcome email",
+    "welcomeSend": "Send welcome email",
+    "welcomeResend": "Send again",
+    "welcomeNotSent": "Not sent",
+    "welcomeSubject": "Welcome to {store}",
+    "welcomeBody": "Hello {seller},\n\nYou are registered as a seller at {store}. Follow your items and sales in Komisio.\n\nActivate your login:\n{url}\n\nCreate your account using the email address that received this message and confirm it. Already have an account? Sign in with the same address.",
     "title": "Messages to the seller",
     "intro": "Every message is logged with the exact text as sent and its delivery outcome. Templates are fixed; you may add a plain-text note.",
     "empty": "No messages yet.",

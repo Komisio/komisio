@@ -10,6 +10,13 @@ test('directory registration and duplicate selection stay in the seller workspac
   const email = `seller-directory-${randomUUID()}@example.test`
   await register(page, email, `K!${randomUUID()}`)
   const f = await p2Fixture(email)
+  let registration: Record<string, unknown> | null = null
+  page.on('request', (request) => {
+    if (request.method() === 'POST' && request.url().endsWith('/api/intake')) {
+      const body = request.postDataJSON()
+      if (body.action === 'registerSeller') registration = body
+    }
+  })
   try {
     const existing = (
       await f.db.query('select email from sellers where id=$1', [f.seller])
@@ -53,6 +60,35 @@ test('directory registration and duplicate selection stay in the seller workspac
         exact: true,
       }),
     ).toBeVisible()
+    const sellerId = page.url().split('/').at(-1)!
+    const countWelcome = async () =>
+      (
+        await f.db.query(
+          "select count(*)::int n from seller_communications where seller_id=$1 and template_key='seller.welcome'",
+          [sellerId],
+        )
+      ).rows[0].n
+    expect(await countWelcome()).toBe(1)
+    const replay = await page.request.post('/api/intake', {
+      headers: { Origin: 'http://127.0.0.1:3000' },
+      data: registration,
+    })
+    expect(replay.ok()).toBe(true)
+    expect(await countWelcome()).toBe(1)
+    await page.goto(`/intake/sellers/${sellerId}#seller-communication`)
+    await page
+      .getByRole('button', {
+        name: d.communications.welcomeResend,
+        exact: true,
+      })
+      .click()
+    await expect.poll(countWelcome).toBe(2)
+    const welcome = await f.db.query(
+      "select body,status from seller_communications where seller_id=$1 and template_key='seller.welcome' order by queued_at desc",
+      [sellerId],
+    )
+    expect(welcome.rows[0].body).toContain('/register?next=%2Fseller&locale=sv')
+    expect(welcome.rows[0].status).not.toBe('queued')
   } finally {
     await f.close()
   }

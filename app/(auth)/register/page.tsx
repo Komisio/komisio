@@ -1,19 +1,22 @@
 import { publicPageMetadata } from '@/lib/platform/page-metadata'
 import { cookies } from 'next/headers'
 import { AuthForm } from '@/components/auth/auth-form'
-import { resolveLocale } from '@/lib/i18n'
+import { resolveLocale, isLocale } from '@/lib/i18n'
 export default async function Register({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string }>
+  searchParams: Promise<{ next?: string; locale?: string }>
 }) {
+  const query = await searchParams
   return (
     <AuthForm
       mode="register"
-      next={(await searchParams).next}
-      initialLocale={resolveLocale(
-        (await cookies()).get('komisio-locale')?.value,
-      )}
+      next={query.next}
+      initialLocale={
+        isLocale(query.locale)
+          ? query.locale
+          : resolveLocale((await cookies()).get('komisio-locale')?.value)
+      }
     />
   )
 }

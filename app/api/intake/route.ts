@@ -6,6 +6,8 @@ import { readStorePolicy } from '@/lib/engine/store-policy'
 import {
   notifyAfterFacts,
   notificationsForIntake,
+  sendSellerCommunication,
+  factCommunicationId,
   type NotifyOutcome,
 } from '@/lib/communications/dispatch'
 
@@ -218,8 +220,28 @@ export async function POST(request: Request) {
         console.error('Notification after intake failed', { requestId })
       }
     }
+    let welcome = null
+    if (parsed.data.action === 'registerSeller' && parsed.data.email) {
+      try {
+        welcome = await sendSellerCommunication(ctx.client, {
+          tenantId: parsed.data.tenantId,
+          sellerId: String(result.data),
+          storeName: ctx.active.name,
+          locale: ctx.locale,
+          requestId: factCommunicationId('welcome', String(result.data)),
+          kind: 'message',
+          referenceId: null,
+          freeText: '',
+          welcome: true,
+        })
+      } catch {
+        // A delivery failure must not undo or hide seller registration.
+        welcome = { ok: false, error: 'REQUEST_FAILED' }
+      }
+    }
     return reply({
       ok: true,
+      welcome,
       commandId: parsed.data.requestId,
       id: result.data,
       notifications,

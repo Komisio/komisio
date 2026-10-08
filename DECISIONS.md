@@ -921,3 +921,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-08: Seller photo selection appends up to eight images. Removal re-evaluates the remaining set; invalid additions preserve the draft. Manually edited descriptions survive re-analysis. Submitted versions remain immutable.
 
 - 2026-10-08: Seller AI prose follows the active portal locale, frozen per attempt; market and currency remain store-bound. Owner permits a clearly labelled model-only price range when comparable evidence is absent. It never claims verified retail prices or changes the final selling price.
+
+- 2026-10-08: Interactive seller registration sends one welcome message through the existing communication log and caps. Staff can explicitly resend. The activation link leads to verified self-registration; no Auth account or tenant membership is created automatically.

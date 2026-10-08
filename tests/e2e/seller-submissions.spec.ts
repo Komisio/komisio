@@ -53,8 +53,10 @@ test('seller submits photos, receives a request and sends a new immutable versio
     })
       .jpeg()
       .toBuffer()
+    const analysedPhotos: string[][] = []
     await page.route('**/api/seller/submissions/assistance', async (route) => {
       const command = route.request().postDataJSON()
+      analysedPhotos.push(command.photos)
       await route.fulfill({
         json: {
           id: command.requestId,
@@ -63,32 +65,41 @@ test('seller submits photos, receives a request and sends a new immutable versio
           output: {
             description: 'Synthetic AI jacket',
             price: null,
-            externalComparison: {
-              from: '150.00',
-              to: '250.00',
-              basis: 'asking',
-              observedAt: new Date().toISOString(),
-              sources: [
-                {
-                  url: 'https://example.com/items/1',
-                  title: 'Comparable jacket',
-                  amount: '150.00',
-                },
-                {
-                  url: 'https://example.org/items/2',
-                  title: 'Another jacket',
-                  amount: '250.00',
-                },
-              ].map((source) => ({
-                ...source,
-                condition: 'Used',
-                status: 'asking',
-                soldAt: null,
-                country: 'SE',
-                currency: 'SEK',
-                priceBasis: 'item_only',
-              })),
+            approximatePrice: {
+              from: '80.00',
+              to: '160.00',
+              basis: 'ai_estimate',
             },
+            ...(analysedPhotos.length === 2
+              ? {}
+              : {
+                  externalComparison: {
+                    from: '150.00',
+                    to: '250.00',
+                    basis: 'asking',
+                    observedAt: new Date().toISOString(),
+                    sources: [
+                      {
+                        url: 'https://example.com/items/1',
+                        title: 'Comparable jacket',
+                        amount: '150.00',
+                      },
+                      {
+                        url: 'https://example.org/items/2',
+                        title: 'Another jacket',
+                        amount: '250.00',
+                      },
+                    ].map((source) => ({
+                      ...source,
+                      condition: 'Used',
+                      status: 'asking',
+                      soldAt: null,
+                      country: 'SE',
+                      currency: 'SEK',
+                      priceBasis: 'item_only',
+                    })),
+                  },
+                }),
             suitability: 'uncertain',
             reason: 'Store review needed',
           },
@@ -122,6 +133,50 @@ test('seller submits photos, receives a request and sends a new immutable versio
       path: test.info().outputPath('seller-ai-estimate.png'),
       fullPage: true,
     })
+    const firstPath = analysedPhotos[0][0]
+    await page
+      .getByLabel('Beskrivning', { exact: true })
+      .fill('My edited description')
+    await page.getByLabel('Bilder', { exact: true }).setInputFiles({
+      name: 'label.jpg',
+      mimeType: 'image/jpeg',
+      buffer: photo,
+    })
+    await expect(
+      page.getByRole('button', { name: 'Ta bort bild 2', exact: true }),
+    ).toBeEnabled()
+    await expect(
+      page.getByText('80.00–160.00 SEK', { exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByText('Ungefärlig AI-bedömning. Butiken sätter priset.', {
+        exact: true,
+      }),
+    ).toBeVisible()
+    expect(analysedPhotos.at(-1)).toHaveLength(2)
+    expect(analysedPhotos.at(-1)?.[0]).toBe(firstPath)
+    await expect(page.getByLabel('Beskrivning', { exact: true })).toHaveValue(
+      'My edited description',
+    )
+    await page.getByLabel('Bilder', { exact: true }).setInputFiles({
+      name: 'invalid.txt',
+      mimeType: 'text/plain',
+      buffer: Buffer.from('invalid'),
+    })
+    await expect(
+      page.getByRole('button', { name: 'Ta bort bild 2', exact: true }),
+    ).toBeVisible()
+    expect(analysedPhotos).toHaveLength(2)
+    await page
+      .getByRole('button', { name: 'Ta bort bild 2', exact: true })
+      .click()
+    await expect(
+      page.getByRole('button', { name: 'Ta bort bild 1', exact: true }),
+    ).toBeEnabled()
+    expect(analysedPhotos.at(-1)).toEqual([firstPath])
+    await expect(
+      page.getByRole('button', { name: 'Ta bort bild 2', exact: true }),
+    ).toHaveCount(0)
     await page.unroute('**/api/seller/submissions/assistance')
     await page.getByLabel('Bilder', { exact: true }).setInputFiles({
       name: 'manual.jpg',
@@ -145,6 +200,13 @@ test('seller submits photos, receives a request and sends a new immutable versio
         sellerId,
       ])
     ).rows[0].id
+    expect(
+      (
+        await db.query('select photos from seller_submissions where id=$1', [
+          submission,
+        ])
+      ).rows[0].photos,
+    ).toHaveLength(2)
     await staff.goto('/intake/submissions')
     await staff
       .getByLabel('Spara besked', { exact: true })

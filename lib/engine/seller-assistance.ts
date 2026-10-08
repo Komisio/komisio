@@ -7,7 +7,7 @@ import {
   submissionSuggestion,
   validateSubmissionSuggestion,
 } from '../assistance/submission-suggestion'
-import { locales } from '../i18n'
+import { locales, type Locale } from '../i18n'
 import { currencyCode } from './money'
 
 export const sellerAssistanceCommand = z.strictObject({
@@ -41,6 +41,7 @@ export async function runSellerAssistance(
   signal: AbortSignal,
   env: Record<string, string | undefined> = process.env,
   transport: typeof fetch = fetch,
+  locale?: Locale,
 ) {
   const c = sellerAssistanceCommand.parse(input)
   if (env.KOMISIO_RECEPTION_AI_PROVIDER !== 'openai')
@@ -78,6 +79,7 @@ export async function runSellerAssistance(
     p_photos: c.photos,
     p_model: model,
     p_web_rate: webRate,
+    p_language: locale ?? null,
   })
   if (start.error) throw new Error(start.error.message)
   const run = z

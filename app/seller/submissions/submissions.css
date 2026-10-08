@@ -67,3 +67,22 @@
   margin-top: 0;
   font-weight: 600;
 }
+
+.submission-photo {
+  position: relative;
+}
+.submission-photo-remove {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--surface, white);
+  color: var(--ink, #173c34);
+  border: 1px solid currentColor;
+}

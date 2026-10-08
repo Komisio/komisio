@@ -31,7 +31,14 @@ export async function POST(request: Request) {
     if (!input.success) return reply({ error: 'INVALID_INPUT' }, 400)
     const client = await serverClient({ 'x-komisio-seller-ai': secret })
     return reply(
-      await runSellerAssistance(client, input.data, AbortSignal.timeout(45000)),
+      await runSellerAssistance(
+        client,
+        input.data,
+        AbortSignal.timeout(45000),
+        process.env,
+        fetch,
+        ctx.locale,
+      ),
     )
   } catch (error) {
     const code = error instanceof Error ? error.message : ''

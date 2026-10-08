@@ -25,6 +25,7 @@ export function SubmissionForm({
   const router = useRouter(),
     hintId = useId()
   const fileInput = useRef<HTMLInputElement>(null)
+  const descriptionEdited = useRef(false)
   const [fileNames, setFileNames] = useState<string[]>([])
   const photos = useRef<Photo[]>([]),
     analysisId = useRef<string | null>(null),
@@ -99,7 +100,7 @@ export function SubmissionForm({
         )
           throw new Error('INVALID_RESULT')
         setSuggestion({ output, currency: result.currency })
-        setDescription(output.description)
+        if (!descriptionEdited.current) setDescription(output.description)
       } else if (result.status === 'failed') {
         analysisId.current = null
         setAiMessage(d.aiUnavailable)
@@ -119,7 +120,7 @@ export function SubmissionForm({
           running.current ||
           saved ||
           uploaded.length === 0 ||
-          !uploaded.length
+          uploaded.length !== photos.current.length
         )
           return
         pending.current ??= {
@@ -173,7 +174,7 @@ export function SubmissionForm({
                 aria-describedby={hintId}
                 onClick={() => fileInput.current?.click()}
               >
-                {d.choosePhotos}
+                {hasPhotos ? d.addPhotos : d.choosePhotos}
               </button>
               <span role="status">
                 {fileNames.length === 0
@@ -196,39 +197,35 @@ export function SubmissionForm({
                 aria-describedby={hintId}
                 onChange={(event) => {
                   const files = Array.from(event.target.files ?? [])
+                  event.target.value = ''
+                  if (!files.length || running.current || locked) return
                   if (
-                    !files.length ||
-                    files.length > 8 ||
+                    photos.current.length + files.length > 8 ||
                     files.some(
                       (f) =>
                         f.size > photoLimit ||
                         !['image/jpeg', 'image/png'].includes(f.type),
                     )
                   ) {
-                    event.target.value = ''
-                    photos.current = []
-                    setFileNames([])
-                    setUploaded([])
-                    setHasPhotos(false)
-                    setSuggestion(null)
                     setError(d.photoHint)
                     return
                   }
-                  photos.current = files.map((file) => {
-                    const id = crypto.randomUUID()
-                    return {
-                      file,
-                      id,
-                      path: `${tenantId}/${sellerId}/${id}.jpg`,
-                      uploaded: false,
-                    }
-                  })
-                  setFileNames(files.map((file) => file.name))
+                  photos.current = [
+                    ...photos.current,
+                    ...files.map((file) => {
+                      const id = crypto.randomUUID()
+                      return {
+                        file,
+                        id,
+                        path: `${tenantId}/${sellerId}/${id}.jpg`,
+                        uploaded: false,
+                      }
+                    }),
+                  ]
+                  setFileNames(photos.current.map((photo) => photo.file.name))
                   analysisId.current = null
                   pending.current = null
                   setSuggestion(null)
-                  setUploaded([])
-                  setDescription('')
                   setHasPhotos(true)
                   void analyse()
                 }}
@@ -237,7 +234,34 @@ export function SubmissionForm({
             <small id={hintId}>{d.photoHint}</small>
           </fieldset>
           {!!uploaded.length && (
-            <SubmissionPhotos photos={uploaded} label={d.photos} />
+            <SubmissionPhotos
+              photos={uploaded}
+              label={d.photos}
+              removeLabel={d.removePhoto}
+              disabled={locked || analysing}
+              onRemove={(path) => {
+                if (running.current || locked) return
+                photos.current = photos.current.filter(
+                  (photo) => photo.path !== path,
+                )
+                setFileNames(photos.current.map((photo) => photo.file.name))
+                setUploaded(
+                  photos.current
+                    .filter((photo) => photo.uploaded)
+                    .map((photo) => photo.path),
+                )
+                analysisId.current = null
+                pending.current = null
+                setSuggestion(null)
+                setAiMessage('')
+                setError('')
+                setHasPhotos(photos.current.length > 0)
+                if (!photos.current.length) {
+                  setDescription('')
+                  descriptionEdited.current = false
+                } else void analyse()
+              }}
+            />
           )}
           {analysing && <p role="status">{d.analysing}</p>}
           {aiMessage && <p role="status">{aiMessage}</p>}
@@ -259,7 +283,10 @@ export function SubmissionForm({
                 id={`${hintId}-description`}
                 name="description"
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e) => {
+                  descriptionEdited.current = true
+                  setDescription(e.target.value)
+                }}
                 required
                 maxLength={2000}
                 rows={3}
@@ -275,6 +302,7 @@ export function SubmissionForm({
                 busy ||
                 analysing ||
                 uploaded.length === 0 ||
+                uploaded.length !== fileNames.length ||
                 !description.trim()
               }
               aria-busy={busy}

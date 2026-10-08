@@ -2,6 +2,7 @@ import { z } from 'zod'
 import type { ReceptionAIConfig } from './reception-config'
 import { boundedJson } from '../http/bounded-json'
 import {
+  approximatePrice,
   submissionInstructions,
   submissionBaseSuggestion,
 } from './submission-suggestion'
@@ -45,7 +46,11 @@ export async function generateSubmissionSuggestion(
           type: 'json_schema',
           name: 'seller_photo_suggestion',
           strict: true,
-          schema: z.toJSONSchema(submissionBaseSuggestion),
+          schema: z.toJSONSchema(
+            submissionBaseSuggestion.extend({
+              approximatePrice: approximatePrice.nullable(),
+            }),
+          ),
         },
       },
     }),

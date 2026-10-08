@@ -917,3 +917,7 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-08: Seller photo AI proposes editable text, an indicative price range and non-binding store fit. Missing price evidence or intake criteria stays unknown. Server-authenticated attempts retain provenance and existing credit/quota controls; no acceptance or price is executed.
 
 - 2026-10-08: Swedish external price comparisons require SE/SEK, at least two distinct opened listing pages and dated source links. Asking prices stay separate from achieved sales. Search is bounded, server-authorized and credit-reserved; insufficient evidence yields no external range.
+
+- 2026-10-08: Seller photo selection appends up to eight images. Removal re-evaluates the remaining set; invalid additions preserve the draft. Manually edited descriptions survive re-analysis. Submitted versions remain immutable.
+
+- 2026-10-08: Seller AI prose follows the active portal locale, frozen per attempt; market and currency remain store-bound. Owner permits a clearly labelled model-only price range when comparable evidence is absent. It never claims verified retail prices or changes the final selling price.

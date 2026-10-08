@@ -201,6 +201,10 @@ try {
         ],
       })
     }
+    const context = JSON.parse(JSON.parse(init.body).input[0].content[0].text)
+    assert.equal(context.language, 'en')
+    assert.equal(context.country, 'SE')
+    assert.equal(context.currency, 'SEK')
     return Response.json({
       status: 'completed',
       usage: { input_tokens: 100, output_tokens: 40 },
@@ -213,6 +217,11 @@ try {
               text: JSON.stringify({
                 description: 'Synthetic jacket suggestion',
                 price: null,
+                approximatePrice: {
+                  from: '60.00',
+                  to: '120.00',
+                  basis: 'ai_estimate',
+                },
                 suitability: 'uncertain',
                 reason: 'Store review needed',
               }),
@@ -228,8 +237,10 @@ try {
     AbortSignal.timeout(10000),
     env,
     provider,
+    'en',
   )
   assert.equal(ai.status, 'ready')
+  assert.equal(ai.output.approximatePrice.basis, 'ai_estimate')
   assert.equal(ai.output.externalComparison.basis, 'asking')
   assert.equal(
     (
@@ -239,6 +250,7 @@ try {
         AbortSignal.timeout(10000),
         env,
         provider,
+        'en',
       )
     ).status,
     'ready',

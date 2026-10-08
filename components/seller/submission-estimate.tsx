@@ -9,7 +9,8 @@ export function SubmissionEstimate({
   currency: string
   d: Dictionary['submissions']
 }) {
-  const price = output.price ?? output.externalComparison
+  const price =
+    output.price ?? output.externalComparison ?? output.approximatePrice
   return (
     <aside className="submission-estimate" aria-label={d.assessment}>
       <dl>
@@ -18,7 +19,11 @@ export function SubmissionEstimate({
           {price ? `${price.from}–${price.to} ${currency}` : d.noEstimate}
         </dd>
       </dl>
-      <small>{d.priceNote}</small>
+      <small>
+        {!output.price && !output.externalComparison && output.approximatePrice
+          ? d.approximatePriceNote
+          : d.priceNote}
+      </small>
       {output.externalComparison && (
         <>
           <p>

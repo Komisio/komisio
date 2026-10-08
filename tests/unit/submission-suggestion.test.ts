@@ -17,6 +17,26 @@ const output = {
   reason: 'The store needs to review the item',
 }
 describe('seller photo assistance', () => {
+  it('keeps model estimates separate from verified evidence', () => {
+    const approximatePrice = {
+      from: '80.00',
+      to: '160.00',
+      basis: 'ai_estimate',
+    }
+    expect(
+      validateSubmissionSuggestion({ ...output, approximatePrice }, context)
+        .approximatePrice,
+    ).toEqual(approximatePrice)
+    expect(() =>
+      validateSubmissionSuggestion(
+        {
+          ...output,
+          approximatePrice: { ...approximatePrice, basis: 'verified' },
+        },
+        context,
+      ),
+    ).toThrow()
+  })
   it('does not claim fit without store criteria', () => {
     expect(() =>
       validateSubmissionSuggestion(

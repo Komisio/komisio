@@ -3229,6 +3229,18 @@
     "back": "Tillbaka",
     "queue": "Fotoförslag",
     "next": "Nästa",
-    "previous": "Föregående"
+    "previous": "Föregående",
+    "analyse": "Föreslå utifrån bilderna",
+    "analysing": "Bedömer bilderna…",
+    "estimatedPrice": "Uppskattat pris",
+    "priceNote": "Endast en indikation. Butiken sätter slutpriset.",
+    "noEstimate": "Kan inte uppskattas ännu",
+    "likely": "Verkar passa butiken",
+    "uncertain": "Behöver bedömas av butiken",
+    "unlikely": "Verkar inte passa butiken",
+    "aiUnavailable": "Bildanalys är inte tillgänglig just nu. Du kan skriva beskrivningen själv.",
+    "descriptionLabel": "Beskrivning",
+    "assessment": "Preliminär bedömning",
+    "aiPending": "Analysen är inte bekräftad ännu. Försök igen för att hämta svaret."
   }
 }

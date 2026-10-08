@@ -93,7 +93,7 @@ export function SubmissionReview({
         </label>
       </fieldset>
       {!saved && (
-        <button className="btn" disabled={busy} aria-busy={busy}>
+        <button className="btn btn-primary" disabled={busy} aria-busy={busy}>
           {busy ? '…' : locked ? d.retry : d.save}
         </button>
       )}

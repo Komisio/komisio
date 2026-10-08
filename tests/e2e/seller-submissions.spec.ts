@@ -47,17 +47,61 @@ test('seller submits photos, receives a request and sends a new immutable versio
     ).rows[0].id
     await db.query('commit')
     await page.goto(`/seller/submissions?seller=${sellerId}`)
-    await page.getByLabel('Beskriv varan').fill('Synthetic blue jacket')
+
     const photo = await sharp({
       create: { width: 30, height: 30, channels: 3, background: '#123456' },
     })
       .jpeg()
       .toBuffer()
+    await page.route('**/api/seller/submissions/assistance', async (route) => {
+      const command = route.request().postDataJSON()
+      await route.fulfill({
+        json: {
+          id: command.requestId,
+          status: 'ready',
+          currency: 'SEK',
+          output: {
+            description: 'Synthetic AI jacket',
+            price: {
+              from: '150.00',
+              to: '250.00',
+              evidenceIds: [randomUUID()],
+            },
+            suitability: 'uncertain',
+            reason: 'Store review needed',
+          },
+        },
+      })
+    })
     await page.getByLabel('Bilder', { exact: true }).setInputFiles({
       name: 'jacket.jpg',
       mimeType: 'image/jpeg',
       buffer: photo,
     })
+    await expect(page.getByLabel('Beskrivning', { exact: true })).toHaveValue(
+      'Synthetic AI jacket',
+    )
+    await expect(
+      page.getByText('150.00–250.00 SEK', { exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByText('Endast en indikation. Butiken sätter slutpriset.'),
+    ).toBeVisible()
+    await page.screenshot({
+      path: test.info().outputPath('seller-ai-estimate.png'),
+      fullPage: true,
+    })
+    await page.unroute('**/api/seller/submissions/assistance')
+    await page
+      .getByLabel('Bilder', { exact: true })
+      .setInputFiles({
+        name: 'manual.jpg',
+        mimeType: 'image/jpeg',
+        buffer: photo,
+      })
+    await page
+      .getByLabel('Beskrivning', { exact: true })
+      .fill('Synthetic blue jacket')
     await page
       .getByRole('button', { name: 'Skicka till butiken', exact: true })
       .click()
@@ -89,12 +133,15 @@ test('seller submits photos, receives a request and sends a new immutable versio
     await expect(
       page.getByText('Add a photo of the label').first(),
     ).toBeVisible()
-    await page.getByLabel('Beskriv varan').fill('Synthetic jacket with label')
+
     await page.getByLabel('Bilder', { exact: true }).setInputFiles({
       name: 'label.jpg',
       mimeType: 'image/jpeg',
       buffer: photo,
     })
+    await page
+      .getByLabel('Beskrivning', { exact: true })
+      .fill('Synthetic jacket with label')
     await page
       .getByRole('button', { name: 'Skicka komplettering', exact: true })
       .click()

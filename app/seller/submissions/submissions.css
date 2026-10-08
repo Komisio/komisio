@@ -26,3 +26,22 @@
 .submission-record {
   margin-block: 1rem;
 }
+.submission-description-field {
+  display: grid;
+  gap: 0.4rem;
+  margin-block: 1rem;
+}
+.submission-estimate {
+  margin-block: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+.submission-estimate dl {
+  margin: 0 0 0.4rem;
+}
+.submission-estimate dd {
+  margin: 0.25rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}

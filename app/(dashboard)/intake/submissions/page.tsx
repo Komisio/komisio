@@ -5,6 +5,7 @@ import { dictionary } from '@/lib/i18n'
 import { readSubmissionQueue } from '@/lib/engine/seller-submissions'
 import { SubmissionReview } from '@/components/intake/submission-review'
 import { SubmissionPhotos } from '@/components/seller/submission-photos'
+import { SubmissionEstimate } from '@/components/seller/submission-estimate'
 import '@/app/seller/submissions/submissions.css'
 
 export default async function Submissions({
@@ -34,6 +35,13 @@ export default async function Submissions({
             <h2>{row.sellers?.name}</h2>
             <p className="submission-description">{row.description}</p>
             <SubmissionPhotos photos={row.photos} label={d.photos} />
+            {row.assistance_output && (
+              <SubmissionEstimate
+                output={row.assistance_output.suggestion}
+                currency={row.assistance_output.currency}
+                d={d}
+              />
+            )}
             {review ? (
               <>
                 <strong>{d[review.decision]}</strong>

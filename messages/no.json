@@ -3229,6 +3229,18 @@
     "back": "Tilbake",
     "queue": "Bildeforslag",
     "next": "Neste",
-    "previous": "Forrige"
+    "previous": "Forrige",
+    "analyse": "Foreslå ut fra bildene",
+    "analysing": "Vurderer bildene…",
+    "estimatedPrice": "Anslått pris",
+    "priceNote": "Kun en indikasjon. Butikken setter sluttprisen.",
+    "noEstimate": "Kan ikke anslås ennå",
+    "likely": "Kan passe butikken",
+    "uncertain": "Må vurderes av butikken",
+    "unlikely": "Passer kanskje ikke butikken",
+    "aiUnavailable": "Bildeanalyse er utilgjengelig nå. Du kan skrive beskrivelsen selv.",
+    "descriptionLabel": "Beskrivelse",
+    "assessment": "Foreløpig vurdering",
+    "aiPending": "Analysen er ikke bekreftet ennå. Prøv igjen for å hente svaret."
   }
 }

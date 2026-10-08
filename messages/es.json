@@ -3235,6 +3235,18 @@
     "back": "Volver",
     "queue": "Propuestas con fotos",
     "next": "Siguiente",
-    "previous": "Anterior"
+    "previous": "Anterior",
+    "analyse": "Sugerir a partir de las fotos",
+    "analysing": "Evaluando fotos…",
+    "estimatedPrice": "Precio estimado",
+    "priceNote": "Solo orientativo. La tienda fija el precio final.",
+    "noEstimate": "Aún no se puede estimar",
+    "likely": "Podría encajar en la tienda",
+    "uncertain": "Requiere revisión de la tienda",
+    "unlikely": "Podría no encajar en la tienda",
+    "aiUnavailable": "El análisis de fotos no está disponible ahora. Puedes escribir la descripción.",
+    "descriptionLabel": "Descripción",
+    "assessment": "Evaluación preliminar",
+    "aiPending": "El análisis aún no está confirmado. Reintenta para recuperar la respuesta."
   }
 }

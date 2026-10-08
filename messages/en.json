@@ -3229,6 +3229,18 @@
     "back": "Back",
     "queue": "Photo submissions",
     "next": "Next",
-    "previous": "Previous"
+    "previous": "Previous",
+    "analyse": "Suggest from photos",
+    "analysing": "Assessing photos…",
+    "estimatedPrice": "Estimated price",
+    "priceNote": "An indication only. The store sets the final price.",
+    "noEstimate": "Cannot estimate yet",
+    "likely": "May suit the store",
+    "uncertain": "Needs store review",
+    "unlikely": "May not suit the store",
+    "aiUnavailable": "Photo analysis is unavailable right now. You can write the description yourself.",
+    "descriptionLabel": "Description",
+    "assessment": "Preliminary assessment",
+    "aiPending": "The analysis is not confirmed yet. Retry to retrieve the result."
   }
 }

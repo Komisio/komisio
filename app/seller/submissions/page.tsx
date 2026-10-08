@@ -6,6 +6,7 @@ import { readMySellerAccounts } from '@/lib/engine/seller-portal'
 import { readMySubmissions } from '@/lib/engine/seller-submissions'
 import { SubmissionForm } from '@/components/seller/submission-form'
 import { SubmissionPhotos } from '@/components/seller/submission-photos'
+import { SubmissionEstimate } from '@/components/seller/submission-estimate'
 import './submissions.css'
 
 export default async function Submissions({
@@ -60,6 +61,13 @@ export default async function Submissions({
           <strong>{row.decision ? d[row.decision] : d.pending}</strong>
           <p className="submission-description">{row.description}</p>
           <SubmissionPhotos photos={row.photos} label={d.photos} />
+          {row.assistance_output && (
+            <SubmissionEstimate
+              output={row.assistance_output.suggestion}
+              currency={row.assistance_output.currency}
+              d={d}
+            />
+          )}
           {row.note && <p>{row.note}</p>}
           {row.decision === 'more_information' &&
             !rows.some((child) => child.previous_id === row.id) && (

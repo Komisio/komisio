@@ -3235,6 +3235,18 @@
     "back": "Zurück",
     "queue": "Fotovorschläge",
     "next": "Weiter",
-    "previous": "Zurück"
+    "previous": "Zurück",
+    "analyse": "Anhand der Fotos vorschlagen",
+    "analysing": "Fotos werden bewertet…",
+    "estimatedPrice": "Geschätzter Preis",
+    "priceNote": "Nur ein Richtwert. Den Endpreis legt der Laden fest.",
+    "noEstimate": "Noch nicht einschätzbar",
+    "likely": "Könnte zum Laden passen",
+    "uncertain": "Prüfung durch den Laden nötig",
+    "unlikely": "Passt möglicherweise nicht zum Laden",
+    "aiUnavailable": "Die Fotoanalyse ist derzeit nicht verfügbar. Sie können die Beschreibung selbst schreiben.",
+    "descriptionLabel": "Beschreibung",
+    "assessment": "Vorläufige Einschätzung",
+    "aiPending": "Die Analyse ist noch nicht bestätigt. Erneut versuchen, um das Ergebnis abzurufen."
   }
 }

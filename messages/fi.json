@@ -3235,6 +3235,18 @@
     "back": "Takaisin",
     "queue": "Kuvaehdotukset",
     "next": "Seuraava",
-    "previous": "Edellinen"
+    "previous": "Edellinen",
+    "analyse": "Ehdota kuvien perusteella",
+    "analysing": "Arvioidaan kuvia…",
+    "estimatedPrice": "Arvioitu hinta",
+    "priceNote": "Vain suuntaa antava. Myymälä päättää lopullisen hinnan.",
+    "noEstimate": "Ei vielä arvioitavissa",
+    "likely": "Saattaa sopia myymälään",
+    "uncertain": "Vaatii myymälän arvion",
+    "unlikely": "Ei ehkä sovi myymälään",
+    "aiUnavailable": "Kuva-analyysi ei ole nyt käytettävissä. Voit kirjoittaa kuvauksen itse.",
+    "descriptionLabel": "Kuvaus",
+    "assessment": "Alustava arvio",
+    "aiPending": "Analyysia ei ole vielä vahvistettu. Hae vastaus yrittämällä uudelleen."
   }
 }

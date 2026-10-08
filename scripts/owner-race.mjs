@@ -1,4 +1,7 @@
-import { raceSellerSubmission } from './seller-submission-race.mjs'
+import {
+  raceSellerSubmission,
+  raceSellerAI,
+} from './seller-submission-race.mjs'
 import { raceAgreementAssistance } from './agreement-assistance-race.mjs'
 import { raceShopifySettings } from './shopify-settings-race.mjs'
 import { raceShopifyPrivacy } from './shopify-privacy-race.mjs'
@@ -107,6 +110,7 @@ try {
   await raceStorePolicy({ setup, sessions, tenant })
   await raceStoreGuide({ setup, sessions, tenant })
   await raceSellerSubmission({ setup, sessions, tenant })
+  await raceSellerAI({ setup, sessions, tenant })
   await racePayPalCredentials({ setup, sessions, tenant })
   await raceShopifySettings({ setup, sessions, tenant })
   await raceShopifyPrivacy({ setup, sessions, tenant })

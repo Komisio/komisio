@@ -1,3 +1,4 @@
+import { runSellerAssistance } from '../lib/engine/seller-assistance.ts'
 import assert from 'node:assert/strict'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { existsSync } from 'node:fs'
@@ -25,6 +26,9 @@ const client = (token, capability) =>
     auth: { persistSession: false, autoRefreshToken: false },
     global: {
       headers: {
+        ...(process.env.KOMISIO_SELLER_AI_SERVER_KEY
+          ? { 'x-komisio-seller-ai': process.env.KOMISIO_SELLER_AI_SERVER_KEY }
+          : {}),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...(capability ? { 'x-komisio-review-token': capability } : {}),
       },
@@ -114,11 +118,68 @@ try {
         .download(photo.path)
     ).error,
   )
+  let calls = 0
+  const aiCommand = {
+    tenantId: tenant,
+    sellerId,
+    requestId: randomUUID(),
+    photos: [photo.path],
+  }
+  const env = {
+    KOMISIO_RECEPTION_AI_PROVIDER: 'openai',
+    KOMISIO_RECEPTION_AI_KEY: 'synthetic',
+    KOMISIO_RECEPTION_AI_MODEL: 'test-model',
+  }
+  const provider = async () => {
+    calls++
+    return Response.json({
+      status: 'completed',
+      usage: { input_tokens: 100, output_tokens: 40 },
+      output: [
+        {
+          type: 'message',
+          content: [
+            {
+              type: 'output_text',
+              text: JSON.stringify({
+                description: 'Synthetic jacket suggestion',
+                price: null,
+                suitability: 'uncertain',
+                reason: 'Store review needed',
+              }),
+            },
+          ],
+        },
+      ],
+    })
+  }
+  const ai = await runSellerAssistance(
+    seller.app,
+    aiCommand,
+    AbortSignal.timeout(10000),
+    env,
+    provider,
+  )
+  assert.equal(ai.status, 'ready')
+  assert.equal(
+    (
+      await runSellerAssistance(
+        seller.app,
+        aiCommand,
+        AbortSignal.timeout(10000),
+        env,
+        provider,
+      )
+    ).status,
+    'ready',
+  )
+  assert.equal(calls, 1)
   const command = {
     tenantId: tenant,
     sellerId,
     requestId: randomUUID(),
     previousId: null,
+    assistanceId: aiCommand.requestId,
     description: 'Synthetic jacket',
     photos: [photo.path],
   }

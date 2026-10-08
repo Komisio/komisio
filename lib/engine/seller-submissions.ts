@@ -2,12 +2,14 @@ import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { receptionDerivative } from '../media/reception-image'
 import { photoType } from '../media/reception-photo'
+import { submissionSuggestion } from '../assistance/submission-suggestion'
 
 const context = { tenantId: z.uuid(), sellerId: z.uuid() }
 export const submitItemsCommand = z.strictObject({
   ...context,
   requestId: z.uuid(),
   previousId: z.uuid().nullable(),
+  assistanceId: z.uuid().optional(),
   description: z.string().trim().min(1).max(2000),
   photos: z
     .array(z.string().max(200))
@@ -29,14 +31,18 @@ export async function submitSellerItems(
   input: unknown,
 ) {
   const c = submitItemsCommand.parse(input)
-  const r = await client.rpc('submit_my_items', {
-    p_tenant: c.tenantId,
-    p_id: c.requestId,
-    p_seller: c.sellerId,
-    p_previous: c.previousId,
-    p_description: c.description,
-    p_photos: c.photos,
-  })
+  const r = await client.rpc(
+    c.assistanceId ? 'submit_my_assisted_items' : 'submit_my_items',
+    {
+      p_tenant: c.tenantId,
+      p_id: c.requestId,
+      p_seller: c.sellerId,
+      p_previous: c.previousId,
+      p_description: c.description,
+      p_photos: c.photos,
+      ...(c.assistanceId ? { p_assistance: c.assistanceId } : {}),
+    },
+  )
   if (r.error) throw new Error(submissionError(r.error.message))
   if (r.data !== c.requestId) throw new Error('UNCONFIRMED_RESULT')
   return { id: c.requestId }
@@ -65,6 +71,9 @@ export const submissionRow = z.object({
   created_at: z.iso.datetime({ offset: true }),
   decision: z.enum(['invite', 'more_information', 'decline']).nullable(),
   note: z.string().nullable(),
+  assistance_output: z
+    .object({ suggestion: submissionSuggestion, currency: z.string() })
+    .nullable(),
 })
 export async function readMySubmissions(
   client: SupabaseClient,
@@ -135,7 +144,7 @@ export async function readSubmissionQueue(
   const result = await client
     .from('seller_submissions')
     .select(
-      'id,seller_id,description,photos,created_at,sellers(name),seller_submission_reviews(decision,note)',
+      'id,seller_id,description,photos,created_at,assistance_output,sellers(name),seller_submission_reviews(decision,note)',
       { count: 'exact' },
     )
     .eq('tenant_id', tenantId)
@@ -149,6 +158,9 @@ export async function readSubmissionQueue(
     description: z.string(),
     photos: z.array(z.string()),
     created_at: z.string(),
+    assistance_output: z
+      .object({ suggestion: submissionSuggestion, currency: z.string() })
+      .nullable(),
     sellers: z.object({ name: z.string() }).nullable(),
     seller_submission_reviews: z.array(
       z.object({

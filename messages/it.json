@@ -3229,6 +3229,18 @@
     "back": "Indietro",
     "queue": "Proposte con foto",
     "next": "Avanti",
-    "previous": "Precedente"
+    "previous": "Precedente",
+    "analyse": "Suggerisci dalle foto",
+    "analysing": "Valutazione delle foto…",
+    "estimatedPrice": "Prezzo stimato",
+    "priceNote": "Solo indicativo. Il negozio stabilisce il prezzo finale.",
+    "noEstimate": "Non ancora stimabile",
+    "likely": "Potrebbe essere adatto al negozio",
+    "uncertain": "Serve una valutazione del negozio",
+    "unlikely": "Potrebbe non essere adatto al negozio",
+    "aiUnavailable": "Analisi delle foto non disponibile. Puoi scrivere la descrizione.",
+    "descriptionLabel": "Descrizione",
+    "assessment": "Valutazione preliminare",
+    "aiPending": "Analisi non ancora confermata. Riprova per recuperare la risposta."
   }
 }

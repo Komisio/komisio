@@ -42,6 +42,21 @@ set local role authenticated;
 select is((current_store_guide(current_setting('test.tenant')::uuid)->>'version')::int,2,'readonly reads');
 select throws_ok($$select save_store_guide(current_setting('test.tenant')::uuid,gen_random_uuid(),null,current_setting('test.answers')::jsonb)$$,'42501',null,'readonly cannot save');
 reset role;
+-- Additive question: legacy versions stay unchanged and each new answer round-trips.
+select ok(komisio_private.valid_store_guide(jsonb_set(current_setting('test.answers')::jsonb,'{agreement}','[]')), 'unanswered is retained without assuming consent');
+select ok(not komisio_private.valid_store_guide(jsonb_set(current_setting('test.answers')::jsonb,'{agreement}','["yes","no"]')), 'agreement accepts only one answer');
+select ok(not komisio_private.valid_store_guide(jsonb_set(current_setting('test.answers')::jsonb,'{agreement}','["invalid"]')), 'unknown agreement answer rejected');
+select ok(not komisio_private.valid_store_guide(jsonb_set(current_setting('test.answers')::jsonb,'{agreement}','null')), 'null agreement answer rejected');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000901","role":"authenticated"}';
+select lives_ok($q$select save_store_guide(current_setting('test.tenant')::uuid,gen_random_uuid(),(current_store_guide(current_setting('test.tenant')::uuid)->>'id')::uuid,jsonb_set(current_setting('test.answers')::jsonb,'{agreement}','["yes"]'))$q$,'save agreement yes');
+select is(current_store_guide(current_setting('test.tenant')::uuid)->'answers'->'agreement','["yes"]'::jsonb,'read agreement yes');
+select lives_ok($q$select save_store_guide(current_setting('test.tenant')::uuid,gen_random_uuid(),(current_store_guide(current_setting('test.tenant')::uuid)->>'id')::uuid,jsonb_set(current_setting('test.answers')::jsonb,'{agreement}','["no"]'))$q$,'save agreement no');
+select is(current_store_guide(current_setting('test.tenant')::uuid)->'answers'->'agreement','["no"]'::jsonb,'read agreement no');
+select lives_ok($q$select save_store_guide(current_setting('test.tenant')::uuid,gen_random_uuid(),(current_store_guide(current_setting('test.tenant')::uuid)->>'id')::uuid,jsonb_set(current_setting('test.answers')::jsonb,'{agreement}','["later"]'))$q$,'save agreement later');
+select is(current_store_guide(current_setting('test.tenant')::uuid)->'answers'->'agreement','["later"]'::jsonb,'read agreement later');
+select is((select answers ? 'agreement' from store_guide_versions where id=current_setting('test.id')::uuid),false,'legacy version remains unchanged');
+reset role;
 insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at)
  values(gen_random_uuid(),'f0000000-0000-4000-8000-000000000901','totp','verified',now(),now());
 set local role authenticated;

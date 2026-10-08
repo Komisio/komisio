@@ -3,6 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 
 export const guideOptions = {
   intake: ['single', 'bags', 'owned', 'new', 'pickup', 'space', 'other'],
+  agreement: ['yes', 'no', 'later'],
   goods: ['clothes', 'kids', 'home', 'furniture', 'hobby', 'mixed', 'other'],
   pricing: ['store', 'together', 'seller', 'suggestion', 'both', 'later'],
   period: ['collect', 'donate', 'extend', 'individual', 'later'],
@@ -13,6 +14,7 @@ export type GuideKey = keyof typeof guideOptions
 export type GuideAnswers = Record<GuideKey, string[]>
 export const emptyGuide = (): GuideAnswers => ({
   intake: [],
+  agreement: [],
   goods: [],
   pricing: [],
   period: [],
@@ -35,6 +37,7 @@ export function pricingOptions(a: GuideAnswers): string[] {
 export function guideSteps(a: GuideAnswers): GuideKey[] {
   return [
     'intake',
+    'agreement',
     'goods',
     'pricing',
     ...(hasConsignment(a) ? ['period' as const] : []),
@@ -55,6 +58,7 @@ const choices = (options: readonly string[], min = 1, max = 7) =>
 export const guideAnswers = z
   .strictObject({
     intake: choices(guideOptions.intake),
+    agreement: choices(guideOptions.agreement, 0, 1).default([]),
     goods: choices(guideOptions.goods),
     pricing: choices(guideOptions.pricing, 1, 1),
     period: choices(guideOptions.period, 0),

@@ -9,6 +9,7 @@ import { guideCopy } from '../../lib/guide-copy'
 import { locales } from '../../lib/i18n'
 const answers: GuideAnswers = {
   intake: ['bags'],
+  agreement: ['yes'],
   goods: ['clothes'],
   pricing: ['store'],
   period: ['collect', 'donate'],
@@ -16,6 +17,12 @@ const answers: GuideAnswers = {
   channels: ['shop'],
 }
 describe('store guide', () => {
+  it('reads historical answers without inventing agreement acceptance', () => {
+    const legacy = Object.fromEntries(
+      Object.entries(answers).filter(([key]) => key !== 'agreement'),
+    )
+    expect(guideAnswers.parse(legacy).agreement).toEqual([])
+  })
   it('keeps codes independent of all eight complete translations', () => {
     const reference = Object.keys(guideCopy('sv'))
     for (const locale of locales) {
@@ -29,6 +36,8 @@ describe('store guide', () => {
   })
   it('rejects hidden, unknown, duplicate and contradictory answers', () => {
     for (const changed of [
+      { agreement: ['yes', 'no'] },
+      { agreement: ['invalid'] },
       { intake: ['owned'] },
       { pos: ['invalid'] },
       { goods: ['clothes', 'clothes'] },

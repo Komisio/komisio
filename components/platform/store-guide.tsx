@@ -14,6 +14,8 @@ import {
   type GuideAnswers,
   type GuideKey,
 } from '@/lib/engine/store-guide'
+import type { GuideOptionHelp } from '@/lib/guide-option-help'
+import { GuideOptionInfo } from './guide-option-info'
 import './store-guide.css'
 
 export function StoreGuide({
@@ -22,6 +24,7 @@ export function StoreGuide({
   initial,
   editable,
   c,
+  help,
   recovery,
   leaveWarning,
 }: {
@@ -30,6 +33,7 @@ export function StoreGuide({
   initial: CurrentGuide
   editable: boolean
   c: GuideCopy
+  help: GuideOptionHelp
   recovery: Pick<Dictionary['intake'], 'failed' | 'retry' | 'reload'>
   leaveWarning: string
 }) {
@@ -63,8 +67,13 @@ export function StoreGuide({
   const summary = step >= steps.length || !editable
   const key = steps[Math.min(step, steps.length - 1)]
   const title = (k: GuideKey) =>
-    k === 'pricing' && rentalOnly(answers) ? c.checkout : c[k]
+    k === 'agreement'
+      ? help.agreementQuestion
+      : k === 'pricing' && rentalOnly(answers)
+        ? c.checkout
+        : c[k]
   const labels: Record<GuideKey, Record<string, string>> = {
+    agreement: help.agreementLabels,
     intake: {
       single: c.singleItem,
       bags: c.bags,
@@ -81,7 +90,7 @@ export function StoreGuide({
       furniture: c.furniture,
       hobby: c.hobby,
       mixed: c.mixed,
-      other: c.other,
+      other: help.otherGoodsLabel,
     },
     pricing: {
       store: c.store,
@@ -121,7 +130,7 @@ export function StoreGuide({
   }
   function choose(value: string) {
     if (locked || needsReload) return
-    const multi = !['pricing', 'pos'].includes(key)
+    const multi = !['pricing', 'pos', 'agreement'].includes(key)
     let values = multi
       ? answers[key].includes(value)
         ? answers[key].filter((x) => x !== value)
@@ -212,20 +221,19 @@ export function StoreGuide({
               <div className="guide-summary-row" key={k}>
                 <dt>{title(k)}</dt>
                 <dd>
-                  {answers[k].map((v) => labels[k][v]).join(' · ') || c.later}
+                  {answers[k].map((v) => labels[k][v]).join(' · ') ||
+                    (k === 'agreement' ? help.unanswered : c.later)}
                 </dd>
               </div>
             ))}
           </dl>
           <p>{c.notice}</p>
-          {(answers.intake.some((x) =>
-            ['space', 'pickup', 'new'].includes(x),
-          ) ||
-            answers.channels.includes('market')) && <p>{c.unsupported}</p>}
         </>
       ) : (
         <>
-          <p>{['pricing', 'pos'].includes(key) ? c.single : c.multi}</p>
+          <p>
+            {['pricing', 'pos', 'agreement'].includes(key) ? c.single : c.multi}
+          </p>
           <fieldset
             disabled={busy || locked || needsReload}
             className="guide-options"
@@ -235,18 +243,34 @@ export function StoreGuide({
               ? pricingOptions(answers)
               : guideOptions[key]
             ).map((value) => (
-              <label
-                key={value}
-                className={answers[key].includes(value) ? 'selected' : ''}
+              <div
+                key={`${key}:${value}`}
+                className={`guide-option${answers[key].includes(value) ? ' selected' : ''}`}
               >
-                <input
-                  type={['pricing', 'pos'].includes(key) ? 'radio' : 'checkbox'}
-                  name={key}
-                  checked={answers[key].includes(value)}
-                  onChange={() => choose(value)}
+                <label>
+                  <input
+                    type={
+                      ['pricing', 'pos', 'agreement'].includes(key)
+                        ? 'radio'
+                        : 'checkbox'
+                    }
+                    name={key}
+                    checked={answers[key].includes(value)}
+                    onChange={() => choose(value)}
+                  />
+                  <span>{labels[key][value]}</span>
+                </label>
+                <GuideOptionInfo
+                  label={`${help.label} ${labels[key][value]}`}
+                  text={
+                    (key === 'pricing' && rentalOnly(answers)
+                      ? (help.checkout as Record<string, string>)
+                      : (help.descriptions[key] as Record<string, string>))[
+                      value
+                    ]
+                  }
                 />
-                <span>{labels[key][value]}</span>
-              </label>
+              </div>
             ))}
           </fieldset>
         </>

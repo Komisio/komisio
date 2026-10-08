@@ -17,18 +17,26 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
+.guide-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid #cbdcd2;
+  border-radius: 14px;
+  background: #fff;
+  color: #163f35;
+}
 .guide-options label {
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 12px;
-  border: 1px solid #cbdcd2;
-  border-radius: 14px;
-  padding: 18px;
-  background: #fff;
+  padding: 18px 4px 18px 18px;
   cursor: pointer;
   color: #163f35;
 }
-.guide-options label.selected {
+.guide-option.selected {
   background: #e6f1cf;
   border-color: #163f35;
 }
@@ -70,4 +78,47 @@
   .guide-options {
     grid-template-columns: 1fr;
   }
+}
+
+.guide-option-info {
+  flex: 0 0 44px;
+  margin-right: 6px;
+}
+.guide-info-button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.guide-info-button:hover,
+.guide-info-button[aria-expanded='true'] {
+  background: #edf3ee;
+}
+.guide-info-button:focus-visible {
+  outline: 2px solid #163f35;
+  outline-offset: 2px;
+}
+.guide-option:has(.guide-info-button[aria-expanded='true']) {
+  z-index: 2;
+}
+.guide-option-tooltip {
+  position: absolute;
+  top: calc(100% - 4px);
+  left: 0;
+  right: 0;
+  z-index: 3;
+  padding: 14px 16px;
+  border: 1px solid #cbdcd2;
+  border-radius: 12px;
+  background: #fff;
+  color: #163f35;
+  box-shadow: 0 8px 24px #163f3520;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }

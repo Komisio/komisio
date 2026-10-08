@@ -1,5 +1,6 @@
 import { requirePlatform } from '@/lib/platform/context'
 import { readStoreGuide } from '@/lib/engine/store-guide'
+import { guideOptionHelp } from '@/lib/guide-option-help'
 import { guideCopy } from '@/lib/guide-copy'
 import { StoreGuide } from '@/components/platform/store-guide'
 import { dictionary } from '@/lib/i18n'
@@ -20,6 +21,7 @@ export default async function GuidePage() {
       initial={initial}
       editable={['owner', 'admin'].includes(tenant.role)}
       c={guideCopy(ctx.locale)}
+      help={guideOptionHelp(ctx.locale)}
       recovery={dictionary(ctx.locale).intake}
       leaveWarning={dictionary(ctx.locale).leaveUnsaved}
     />

@@ -241,7 +241,7 @@ export async function POST(request: Request) {
     }
     return reply({
       ok: true,
-      welcome,
+      ...(parsed.data.action === 'registerSeller' ? { welcome } : {}),
       commandId: parsed.data.requestId,
       id: result.data,
       notifications,

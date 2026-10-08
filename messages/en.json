@@ -3248,6 +3248,7 @@
     "askingComparison": "Compared with asking prices, not confirmed sales.",
     "soldComparison": "Compared with sold items.",
     "priceSources": "View price sources",
-    "sourcesChecked": "Checked"
+    "sourcesChecked": "Checked",
+    "sendAnother": "Submit another item"
   }
 }

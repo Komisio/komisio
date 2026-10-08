@@ -3248,6 +3248,7 @@
     "askingComparison": "Sammenlignet med annoncepriser, ikke bekræftede salg.",
     "soldComparison": "Sammenlignet med solgte varer.",
     "priceSources": "Vis prisgrundlag",
-    "sourcesChecked": "Kontrolleret"
+    "sourcesChecked": "Kontrolleret",
+    "sendAnother": "Indsend en vare mere"
   }
 }

@@ -193,6 +193,20 @@ test('seller submits photos, receives a request and sends a new immutable versio
         )
       ).rows[0].n,
     ).toBe(2)
+    await page
+      .getByRole('link', { name: 'Skicka in en till vara', exact: true })
+      .click()
+    await expect(page).toHaveURL(`/seller/submissions?seller=${sellerId}`)
+    await expect(
+      page.getByRole('button', { name: 'Välj bilder', exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByText('Inga bilder valda', { exact: true }),
+    ).toBeVisible()
+    await expect(page.getByLabel('Beskrivning', { exact: true })).toHaveCount(0)
+    await expect(
+      page.getByText('Synthetic jacket with label', { exact: true }),
+    ).toBeVisible()
     await page.setViewportSize({ width: 390, height: 844 })
     await expect
       .poll(() =>

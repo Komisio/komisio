@@ -8,6 +8,7 @@ import {
   type SubmissionSuggestion,
 } from '@/lib/assistance/submission-suggestion'
 import { SubmissionEstimate } from './submission-estimate'
+import { SubmissionSuccess } from './submission-success'
 import { SubmissionPhotos } from './submission-photos'
 type Photo = { file: File; id: string; path: string; uploaded: boolean }
 export function SubmissionForm({
@@ -290,7 +291,7 @@ export function SubmissionForm({
         </>
       )}
       {error && <p role="alert">{error}</p>}
-      {saved && <p role="status">{d.sent}</p>}
+      {saved && <SubmissionSuccess sellerId={sellerId} d={d} />}
     </form>
   )
 }

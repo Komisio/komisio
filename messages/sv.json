@@ -3248,6 +3248,7 @@
     "askingComparison": "Jämförelse med annonserade priser – inte bekräftade försäljningar.",
     "soldComparison": "Jämförelse med sålda varor.",
     "priceSources": "Visa prisunderlag",
-    "sourcesChecked": "Kontrollerat"
+    "sourcesChecked": "Kontrollerat",
+    "sendAnother": "Skicka in en till vara"
   }
 }

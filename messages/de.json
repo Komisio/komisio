@@ -3254,6 +3254,7 @@
     "askingComparison": "Vergleich mit Angebotspreisen, nicht bestätigten Verkäufen.",
     "soldComparison": "Vergleich mit verkauften Artikeln.",
     "priceSources": "Preisquellen anzeigen",
-    "sourcesChecked": "Geprüft"
+    "sourcesChecked": "Geprüft",
+    "sendAnother": "Weiteren Artikel einreichen"
   }
 }

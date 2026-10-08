@@ -56,3 +56,14 @@
   overflow-wrap: anywhere;
   min-width: 0;
 }
+
+.submission-success {
+  padding: 1rem;
+  margin-block: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+.submission-success > p {
+  margin-top: 0;
+  font-weight: 600;
+}

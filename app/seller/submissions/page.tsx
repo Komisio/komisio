@@ -4,6 +4,7 @@ import { renderPlatformContext } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { readMySellerAccounts } from '@/lib/engine/seller-portal'
 import { readMySubmissions } from '@/lib/engine/seller-submissions'
+import { SubmissionSuccess } from '@/components/seller/submission-success'
 import { SubmissionForm } from '@/components/seller/submission-form'
 import { SubmissionPhotos } from '@/components/seller/submission-photos'
 import { SubmissionEstimate } from '@/components/seller/submission-estimate'
@@ -44,7 +45,7 @@ export default async function Submissions({
       <section className="card">
         {previous && <p>{previous.note}</p>}
         {previous && rows.some((child) => child.previous_id === previous.id) ? (
-          <p role="status">{d.sent}</p>
+          <SubmissionSuccess sellerId={account.sellerId} d={d} />
         ) : (
           <SubmissionForm
             key={previous?.id ?? 'new'}

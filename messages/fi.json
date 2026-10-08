@@ -3254,6 +3254,7 @@
     "askingComparison": "Vertailu pyyntihintoihin, ei vahvistettuihin myynteihin.",
     "soldComparison": "Vertailu myytyihin tuotteisiin.",
     "priceSources": "Näytä hintalähteet",
-    "sourcesChecked": "Tarkistettu"
+    "sourcesChecked": "Tarkistettu",
+    "sendAnother": "Lähetä toinen tuote"
   }
 }

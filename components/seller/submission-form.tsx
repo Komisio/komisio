@@ -23,6 +23,8 @@ export function SubmissionForm({
 }) {
   const router = useRouter(),
     hintId = useId()
+  const fileInput = useRef<HTMLInputElement>(null)
+  const [fileNames, setFileNames] = useState<string[]>([])
   const photos = useRef<Photo[]>([]),
     analysisId = useRef<string | null>(null),
     running = useRef(false)
@@ -162,14 +164,34 @@ export function SubmissionForm({
             disabled={locked || analysing}
             className="submission-fields"
           >
-            <label>
-              {d.photos}
+            <label htmlFor={`${hintId}-photos`}>{d.photos}</label>
+            <div className="submission-file-picker">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                aria-describedby={hintId}
+                onClick={() => fileInput.current?.click()}
+              >
+                {d.choosePhotos}
+              </button>
+              <span role="status">
+                {fileNames.length === 0
+                  ? d.noPhotosChosen
+                  : fileNames.length === 1
+                    ? fileNames[0]
+                    : d.photosChosen.replace(
+                        '{count}',
+                        String(fileNames.length),
+                      )}
+              </span>
               <input
+                ref={fileInput}
+                id={`${hintId}-photos`}
+                hidden
                 name="photos"
                 type="file"
                 accept="image/jpeg,image/png"
                 multiple
-                required
                 aria-describedby={hintId}
                 onChange={(event) => {
                   const files = Array.from(event.target.files ?? [])
@@ -184,6 +206,7 @@ export function SubmissionForm({
                   ) {
                     event.target.value = ''
                     photos.current = []
+                    setFileNames([])
                     setUploaded([])
                     setHasPhotos(false)
                     setSuggestion(null)
@@ -199,6 +222,7 @@ export function SubmissionForm({
                       uploaded: false,
                     }
                   })
+                  setFileNames(files.map((file) => file.name))
                   analysisId.current = null
                   pending.current = null
                   setSuggestion(null)
@@ -208,7 +232,7 @@ export function SubmissionForm({
                   void analyse()
                 }}
               />
-            </label>
+            </div>
             <small id={hintId}>{d.photoHint}</small>
           </fieldset>
           {!!uploaded.length && (

@@ -3247,6 +3247,13 @@
     "aiUnavailable": "Kuva-analyysi ei ole nyt käytettävissä. Voit kirjoittaa kuvauksen itse.",
     "descriptionLabel": "Kuvaus",
     "assessment": "Alustava arvio",
-    "aiPending": "Analyysia ei ole vielä vahvistettu. Hae vastaus yrittämällä uudelleen."
+    "aiPending": "Analyysia ei ole vielä vahvistettu. Hae vastaus yrittämällä uudelleen.",
+    "choosePhotos": "Valitse kuvat",
+    "noPhotosChosen": "Ei valittuja kuvia",
+    "photosChosen": "{count} kuvaa valittu",
+    "askingComparison": "Vertailu pyyntihintoihin, ei vahvistettuihin myynteihin.",
+    "soldComparison": "Vertailu myytyihin tuotteisiin.",
+    "priceSources": "Näytä hintalähteet",
+    "sourcesChecked": "Tarkistettu"
   }
 }

@@ -3247,6 +3247,13 @@
     "aiUnavailable": "El análisis de fotos no está disponible ahora. Puedes escribir la descripción.",
     "descriptionLabel": "Descripción",
     "assessment": "Evaluación preliminar",
-    "aiPending": "El análisis aún no está confirmado. Reintenta para recuperar la respuesta."
+    "aiPending": "El análisis aún no está confirmado. Reintenta para recuperar la respuesta.",
+    "choosePhotos": "Elegir fotos",
+    "noPhotosChosen": "Ninguna foto seleccionada",
+    "photosChosen": "{count} fotos seleccionadas",
+    "askingComparison": "Comparación con precios anunciados, no ventas confirmadas.",
+    "soldComparison": "Comparación con artículos vendidos.",
+    "priceSources": "Ver fuentes de precios",
+    "sourcesChecked": "Comprobado"
   }
 }

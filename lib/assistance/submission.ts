@@ -3,7 +3,7 @@ import type { ReceptionAIConfig } from './reception-config'
 import { boundedJson } from '../http/bounded-json'
 import {
   submissionInstructions,
-  submissionSuggestion,
+  submissionBaseSuggestion,
 } from './submission-suggestion'
 
 export async function generateSubmissionSuggestion(
@@ -45,7 +45,7 @@ export async function generateSubmissionSuggestion(
           type: 'json_schema',
           name: 'seller_photo_suggestion',
           strict: true,
-          schema: z.toJSONSchema(submissionSuggestion),
+          schema: z.toJSONSchema(submissionBaseSuggestion),
         },
       },
     }),
@@ -80,7 +80,7 @@ export async function generateSubmissionSuggestion(
     messages[0].content[0].type === 'output_text'
   ) {
     try {
-      output = submissionSuggestion.parse(
+      output = submissionBaseSuggestion.parse(
         JSON.parse(messages[0].content[0].text ?? ''),
       )
     } catch {

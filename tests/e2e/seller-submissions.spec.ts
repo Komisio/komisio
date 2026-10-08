@@ -62,10 +62,32 @@ test('seller submits photos, receives a request and sends a new immutable versio
           currency: 'SEK',
           output: {
             description: 'Synthetic AI jacket',
-            price: {
+            price: null,
+            externalComparison: {
               from: '150.00',
               to: '250.00',
-              evidenceIds: [randomUUID()],
+              basis: 'asking',
+              observedAt: new Date().toISOString(),
+              sources: [
+                {
+                  url: 'https://example.com/items/1',
+                  title: 'Comparable jacket',
+                  amount: '150.00',
+                },
+                {
+                  url: 'https://example.org/items/2',
+                  title: 'Another jacket',
+                  amount: '250.00',
+                },
+              ].map((source) => ({
+                ...source,
+                condition: 'Used',
+                status: 'asking',
+                soldAt: null,
+                country: 'SE',
+                currency: 'SEK',
+                priceBasis: 'item_only',
+              })),
             },
             suitability: 'uncertain',
             reason: 'Store review needed',
@@ -87,25 +109,34 @@ test('seller submits photos, receives a request and sends a new immutable versio
     await expect(
       page.getByText('Endast en indikation. Butiken sätter slutpriset.'),
     ).toBeVisible()
+    await expect(
+      page.getByText(
+        'Jämförelse med annonserade priser – inte bekräftade försäljningar.',
+      ),
+    ).toBeVisible()
+    await page.getByText('Visa prisunderlag', { exact: true }).click()
+    await expect(
+      page.getByRole('link', { name: 'Comparable jacket' }),
+    ).toHaveAttribute('href', 'https://example.com/items/1')
     await page.screenshot({
       path: test.info().outputPath('seller-ai-estimate.png'),
       fullPage: true,
     })
     await page.unroute('**/api/seller/submissions/assistance')
-    await page
-      .getByLabel('Bilder', { exact: true })
-      .setInputFiles({
-        name: 'manual.jpg',
-        mimeType: 'image/jpeg',
-        buffer: photo,
-      })
+    await page.getByLabel('Bilder', { exact: true }).setInputFiles({
+      name: 'manual.jpg',
+      mimeType: 'image/jpeg',
+      buffer: photo,
+    })
     await page
       .getByLabel('Beskrivning', { exact: true })
       .fill('Synthetic blue jacket')
     await page
       .getByRole('button', { name: 'Skicka till butiken', exact: true })
       .click()
-    await expect(page.getByRole('status')).toHaveText('Förslaget är skickat.')
+    await expect(
+      page.getByRole('status').filter({ hasText: 'Förslaget är skickat.' }),
+    ).toHaveText('Förslaget är skickat.')
     await expect(
       page.getByText('Väntar på svar', { exact: true }),
     ).toBeVisible()
@@ -145,7 +176,9 @@ test('seller submits photos, receives a request and sends a new immutable versio
     await page
       .getByRole('button', { name: 'Skicka komplettering', exact: true })
       .click()
-    await expect(page.getByRole('status')).toHaveText('Förslaget är skickat.')
+    await expect(
+      page.getByRole('status').filter({ hasText: 'Förslaget är skickat.' }),
+    ).toHaveText('Förslaget är skickat.')
     await expect(
       page.getByText('Synthetic jacket with label', { exact: true }),
     ).toBeVisible()

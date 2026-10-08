@@ -67,6 +67,19 @@ try {
     p_slug: `photo-${randomUUID()}`,
     p_request_id: randomUUID(),
   })
+  await rpc('publish_store_profile', {
+    p_tenant: tenant,
+    p_id: randomUUID(),
+    p_expected_current: null,
+    p_profile: {
+      address: { street: '', postalCode: '', city: '', country: 'SE' },
+      contact: { email: '', phone: '', website: '' },
+      openingHours: [],
+      accepts: '',
+      concept: '',
+      language: 'sv',
+    },
+  })
   const sellerId = await rpc('register_seller', {
     p_tenant: tenant,
     p_id: randomUUID(),
@@ -129,9 +142,65 @@ try {
     KOMISIO_RECEPTION_AI_PROVIDER: 'openai',
     KOMISIO_RECEPTION_AI_KEY: 'synthetic',
     KOMISIO_RECEPTION_AI_MODEL: 'test-model',
+    KOMISIO_RESALE_WEB_SEARCH: 'true',
+    KOMISIO_RESALE_WEB_SEARCH_ORE_PER_CALL: '10',
   }
-  const provider = async () => {
+  const provider = async (_url, init) => {
     calls++
+    if (JSON.parse(init.body).tools) {
+      const sources = [
+        {
+          url: 'https://example.com/items/1',
+          title: 'Blue jacket',
+          amount: '100.00',
+        },
+        {
+          url: 'https://example.org/items/2',
+          title: 'Similar jacket',
+          amount: '200.00',
+        },
+      ].map((s) => ({
+        ...s,
+        condition: 'Used',
+        status: 'asking',
+        soldAt: null,
+        country: 'SE',
+        currency: 'SEK',
+        priceBasis: 'item_only',
+      }))
+      return Response.json({
+        status: 'completed',
+        usage: { input_tokens: 100, output_tokens: 40 },
+        output: [
+          {
+            type: 'web_search_call',
+            status: 'completed',
+            action: { type: 'search' },
+          },
+          ...sources.map((s) => ({
+            type: 'web_search_call',
+            status: 'completed',
+            action: { type: 'open_page', url: s.url },
+          })),
+          {
+            type: 'message',
+            content: [
+              {
+                type: 'output_text',
+                text: JSON.stringify({
+                  comparison: {
+                    from: '100.00',
+                    to: '200.00',
+                    basis: 'asking',
+                    sources,
+                  },
+                }),
+              },
+            ],
+          },
+        ],
+      })
+    }
     return Response.json({
       status: 'completed',
       usage: { input_tokens: 100, output_tokens: 40 },
@@ -161,6 +230,7 @@ try {
     provider,
   )
   assert.equal(ai.status, 'ready')
+  assert.equal(ai.output.externalComparison.basis, 'asking')
   assert.equal(
     (
       await runSellerAssistance(
@@ -173,7 +243,7 @@ try {
     ).status,
     'ready',
   )
-  assert.equal(calls, 1)
+  assert.equal(calls, 2)
   const command = {
     tenantId: tenant,
     sellerId,
@@ -191,6 +261,11 @@ try {
     1,
   )
   assert.equal((await readSubmissionQueue(owner.app, tenant, 1)).rows.length, 1)
+  assert.equal(
+    (await readMySubmissions(seller.app, { tenantId: tenant, sellerId }))[0]
+      .assistance_output.suggestion.externalComparison.sources.length,
+    2,
+  )
   await assert.rejects(
     readMySubmissions(stranger.app, { tenantId: tenant, sellerId }),
   )

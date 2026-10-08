@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { compareSwedishPrices } from '../assistance/external-pricing'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { open } from '../platform/credentials'
 import { generateSubmissionSuggestion } from '../assistance/submission'
@@ -16,6 +17,7 @@ export const sellerAssistanceCommand = z.strictObject({
   photos: z.array(z.string().max(200)).min(1).max(8),
 })
 const contextSchema = z.object({
+  webRateOre: z.number().int().min(0).max(10000).optional(),
   language: z.enum(locales),
   currency: currencyCode,
   country: z.string().nullable(),
@@ -60,12 +62,22 @@ export async function runSellerAssistance(
     : env.KOMISIO_RECEPTION_AI_KEY
   const model = own?.model ?? env.KOMISIO_RECEPTION_AI_MODEL
   if (!key || !model) throw new Error('ASSISTANCE_DISABLED')
+  const configuredRate = env.KOMISIO_RESALE_WEB_SEARCH_ORE_PER_CALL
+  const webRate =
+    env.KOMISIO_RESALE_WEB_SEARCH === 'true'
+      ? own
+        ? 0
+        : configuredRate && /^[1-9][0-9]{0,3}$/.test(configuredRate)
+          ? Number(configuredRate)
+          : null
+      : null
   const start = await client.rpc('begin_seller_photo_assistance', {
     p_tenant: c.tenantId,
     p_seller: c.sellerId,
     p_id: c.requestId,
     p_photos: c.photos,
     p_model: model,
+    p_web_rate: webRate,
   })
   if (start.error) throw new Error(start.error.message)
   const run = z
@@ -83,6 +95,7 @@ export async function runSellerAssistance(
       output: run.output,
       currency: run.context.currency,
     }
+  let searchCalls = 0
   let output = null
   let usage = { input_tokens: 0, output_tokens: 0 }
   try {
@@ -108,6 +121,31 @@ export async function runSellerAssistance(
     usage = result.usage
     if (result.output)
       output = validateSubmissionSuggestion(result.output, run.context)
+    if (
+      output &&
+      !output.price &&
+      run.context.webRateOre !== undefined &&
+      run.context.country === 'SE' &&
+      run.context.currency === 'SEK'
+    ) {
+      try {
+        const external = await compareSwedishPrices(
+          { key, model },
+          output.description,
+          AbortSignal.any([signal, AbortSignal.timeout(25000)]),
+          transport,
+        )
+        usage = {
+          input_tokens: usage.input_tokens + external.usage.input_tokens,
+          output_tokens: usage.output_tokens + external.usage.output_tokens,
+        }
+        searchCalls = external.searchCalls
+        if (external.comparison)
+          output = { ...output, externalComparison: external.comparison }
+      } catch {
+        /* A failed lookup never discards the photo description or invents a price. */
+      }
+    }
   } catch {
     /* Failed attempts retain their request identity and never fabricate output. */
   }
@@ -118,13 +156,18 @@ export async function runSellerAssistance(
     p_output: output,
     p_input: usage.input_tokens,
     p_output_tokens: usage.output_tokens,
+    p_web_calls: searchCalls,
   }
   let finish = await client.rpc('complete_seller_photo_assistance', completion)
   if (finish.error?.message === 'INVALID_INPUT' && output) {
-    output = null
+    if (output.externalComparison) {
+      const { externalComparison: rejected, ...base } = output
+      void rejected
+      output = base
+    } else output = null
     finish = await client.rpc('complete_seller_photo_assistance', {
       ...completion,
-      p_output: null,
+      p_output: output,
     })
   }
   if (finish.error) throw new Error(finish.error.message)

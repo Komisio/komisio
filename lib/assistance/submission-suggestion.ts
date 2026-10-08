@@ -1,7 +1,8 @@
 import { z } from 'zod'
+import { externalComparison } from './external-price-schema'
 
 const money = z.string().regex(/^(?:0|[1-9]\d{0,8})\.\d{2}$/)
-export const submissionSuggestion = z.strictObject({
+export const submissionBaseSuggestion = z.strictObject({
   description: z.string().trim().min(1).max(2000),
   price: z
     .strictObject({
@@ -12,6 +13,9 @@ export const submissionSuggestion = z.strictObject({
     .nullable(),
   suitability: z.enum(['likely', 'uncertain', 'unlikely']),
   reason: z.string().trim().min(1).max(300),
+})
+export const submissionSuggestion = submissionBaseSuggestion.extend({
+  externalComparison: externalComparison.optional(),
 })
 export type SubmissionSuggestion = z.infer<typeof submissionSuggestion>
 

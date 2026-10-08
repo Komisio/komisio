@@ -3247,6 +3247,13 @@
     "aiUnavailable": "Die Fotoanalyse ist derzeit nicht verfügbar. Sie können die Beschreibung selbst schreiben.",
     "descriptionLabel": "Beschreibung",
     "assessment": "Vorläufige Einschätzung",
-    "aiPending": "Die Analyse ist noch nicht bestätigt. Erneut versuchen, um das Ergebnis abzurufen."
+    "aiPending": "Die Analyse ist noch nicht bestätigt. Erneut versuchen, um das Ergebnis abzurufen.",
+    "choosePhotos": "Bilder auswählen",
+    "noPhotosChosen": "Keine Bilder ausgewählt",
+    "photosChosen": "{count} Bilder ausgewählt",
+    "askingComparison": "Vergleich mit Angebotspreisen, nicht bestätigten Verkäufen.",
+    "soldComparison": "Vergleich mit verkauften Artikeln.",
+    "priceSources": "Preisquellen anzeigen",
+    "sourcesChecked": "Geprüft"
   }
 }

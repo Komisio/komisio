@@ -3241,6 +3241,13 @@
     "aiUnavailable": "Bildeanalyse er utilgjengelig nå. Du kan skrive beskrivelsen selv.",
     "descriptionLabel": "Beskrivelse",
     "assessment": "Foreløpig vurdering",
-    "aiPending": "Analysen er ikke bekreftet ennå. Prøv igjen for å hente svaret."
+    "aiPending": "Analysen er ikke bekreftet ennå. Prøv igjen for å hente svaret.",
+    "choosePhotos": "Velg bilder",
+    "noPhotosChosen": "Ingen bilder valgt",
+    "photosChosen": "{count} bilder valgt",
+    "askingComparison": "Sammenlignet med annonsepriser, ikke bekreftede salg.",
+    "soldComparison": "Sammenlignet med solgte varer.",
+    "priceSources": "Vis prisgrunnlag",
+    "sourcesChecked": "Kontrollert"
   }
 }

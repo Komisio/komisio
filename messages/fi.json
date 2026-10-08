@@ -3249,6 +3249,7 @@
     "noEstimate": "Ei vielä arvioitavissa",
     "likely": "Saattaa sopia myymälään",
     "uncertain": "Vaatii myymälän arvion",
+    "storeAssessment": "Myymälä arvioi, voiko se ottaa tuotteen vastaan.",
     "unlikely": "Ei ehkä sovi myymälään",
     "aiUnavailable": "Kuva-analyysi ei ole nyt käytettävissä. Voit kirjoittaa kuvauksen itse.",
     "descriptionLabel": "Kuvaus",

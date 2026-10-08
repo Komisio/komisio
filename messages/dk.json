@@ -3243,6 +3243,7 @@
     "noEstimate": "Kan ikke anslås endnu",
     "likely": "Kan passe til butikken",
     "uncertain": "Kræver butikkens vurdering",
+    "storeAssessment": "Butikken vurderer, om den kan tage imod varen.",
     "unlikely": "Passer måske ikke til butikken",
     "aiUnavailable": "Billedanalyse er ikke tilgængelig nu. Du kan selv skrive beskrivelsen.",
     "descriptionLabel": "Beskrivelse",

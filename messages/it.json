@@ -3243,6 +3243,7 @@
     "noEstimate": "Non ancora stimabile",
     "likely": "Potrebbe essere adatto al negozio",
     "uncertain": "Serve una valutazione del negozio",
+    "storeAssessment": "Il negozio valuterà se può accettare l’articolo.",
     "unlikely": "Potrebbe non essere adatto al negozio",
     "aiUnavailable": "Analisi delle foto non disponibile. Puoi scrivere la descrizione.",
     "descriptionLabel": "Descrizione",

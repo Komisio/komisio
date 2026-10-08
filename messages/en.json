@@ -3243,6 +3243,7 @@
     "noEstimate": "Cannot estimate yet",
     "likely": "May suit the store",
     "uncertain": "Needs store review",
+    "storeAssessment": "The store will decide whether it can accept the item.",
     "unlikely": "May not suit the store",
     "aiUnavailable": "Photo analysis is unavailable right now. You can write the description yourself.",
     "descriptionLabel": "Description",

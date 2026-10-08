@@ -3249,6 +3249,7 @@
     "noEstimate": "Noch nicht einschätzbar",
     "likely": "Könnte zum Laden passen",
     "uncertain": "Prüfung durch den Laden nötig",
+    "storeAssessment": "Das Geschäft prüft, ob es den Artikel annehmen kann.",
     "unlikely": "Passt möglicherweise nicht zum Laden",
     "aiUnavailable": "Die Fotoanalyse ist derzeit nicht verfügbar. Sie können die Beschreibung selbst schreiben.",
     "descriptionLabel": "Beschreibung",

@@ -3249,6 +3249,7 @@
     "noEstimate": "Aún no se puede estimar",
     "likely": "Podría encajar en la tienda",
     "uncertain": "Requiere revisión de la tienda",
+    "storeAssessment": "La tienda valorará si puede aceptar el artículo.",
     "unlikely": "Podría no encajar en la tienda",
     "aiUnavailable": "El análisis de fotos no está disponible ahora. Puedes escribir la descripción.",
     "descriptionLabel": "Descripción",

@@ -1867,7 +1867,7 @@
       "return": "återlämnad till dig",
       "transfer": "flyttad till en annan butik i kedjan"
     },
-    "handovers": "Anmäl inlämning",
+    "handovers": "Avisera inlämning",
     "handoverIntro": "Anmäl en inlämning innan du kommer. Visa referensen i kassan; butiken registrerar mottagandet och du ser inlämningsnumret här.",
     "handoverDisabled": "Butiken tar inte emot föranmälningar ännu. Lämna dina varor i kassan.",
     "handoverKind": "Vad du lämnar",
@@ -3243,6 +3243,7 @@
     "noEstimate": "Kan inte uppskattas ännu",
     "likely": "Verkar passa butiken",
     "uncertain": "Behöver bedömas av butiken",
+    "storeAssessment": "Butiken bedömer om den kan ta emot varan.",
     "unlikely": "Verkar inte passa butiken",
     "aiUnavailable": "Bildanalys är inte tillgänglig just nu. Du kan skriva beskrivningen själv.",
     "descriptionLabel": "Beskrivning",

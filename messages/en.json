@@ -3258,6 +3258,26 @@
     "soldComparison": "Compared with sold items.",
     "priceSources": "View price sources",
     "sourcesChecked": "Checked",
-    "sendAnother": "Submit another item"
+    "sendAnother": "Submit another item",
+    "enablePhotos": "Allow photo pre-review",
+    "pricingResponsibility": "Who decides the price?",
+    "pricingModes": {
+      "store": "The store",
+      "seller": "The seller",
+      "approval": "Seller proposes, store approves"
+    },
+    "sellerPrice": "Your selling price",
+    "requestedPrice": "Requested selling price",
+    "approvePrice": "Approve the seller’s price",
+    "priceApproved": "Price approved",
+    "indicativePrice": "About {price}",
+    "approximateOnly": "Approximate AI estimate.",
+    "storePriceNote": "The store sets the final price.",
+    "sellerPriceNote": "You choose the price.",
+    "approvalPriceNote": "The store approves your proposed price.",
+    "priceRange": "Price range",
+    "useSuggestedPrice": "Use suggested price",
+    "settingsChanged": "The store settings have changed. Reload the page.",
+    "reload": "Reload"
   }
 }

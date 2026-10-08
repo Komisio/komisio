@@ -3264,6 +3264,26 @@
     "soldComparison": "Vergleich mit verkauften Artikeln.",
     "priceSources": "Preisquellen anzeigen",
     "sourcesChecked": "Geprüft",
-    "sendAnother": "Weiteren Artikel einreichen"
+    "sendAnother": "Weiteren Artikel einreichen",
+    "enablePhotos": "Fotovorprüfung erlauben",
+    "pricingResponsibility": "Wer bestimmt den Preis?",
+    "pricingModes": {
+      "store": "Das Geschäft",
+      "seller": "Die verkaufende Person",
+      "approval": "Preisvorschlag mit Freigabe durch das Geschäft"
+    },
+    "sellerPrice": "Ihr Verkaufspreis",
+    "requestedPrice": "Gewünschter Verkaufspreis",
+    "approvePrice": "Preisvorschlag genehmigen",
+    "priceApproved": "Preis genehmigt",
+    "indicativePrice": "Etwa {price}",
+    "approximateOnly": "Ungefähre KI-Schätzung.",
+    "storePriceNote": "Das Geschäft legt den Endpreis fest.",
+    "sellerPriceNote": "Sie wählen den Preis.",
+    "approvalPriceNote": "Das Geschäft genehmigt Ihren Preisvorschlag.",
+    "priceRange": "Preisspanne",
+    "useSuggestedPrice": "Preisvorschlag übernehmen",
+    "settingsChanged": "Die Einstellungen des Geschäfts haben sich geändert. Laden Sie die Seite neu.",
+    "reload": "Neu laden"
   }
 }

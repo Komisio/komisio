@@ -1,5 +1,14 @@
 # Open questions
 
+Seller pre-review pricing (2026-10-08): owner confirms independent photo availability
+and store/seller/seller-with-approval price responsibility. Explicit store policy
+controls new submissions; guide answers do not activate it. Prices and currency
+freeze with each submission; invitation is not receipt or sale acceptance.
+Carrying a submitted price into physical item reception is a separate workflow;
+this implementation does not automatically set inventory prices. Hosted shared-key
+web search still requires a configured credit tariff; no new tariff is assumed.
+
+
 Accounting routing proposal (2026-10-04): the owner requests a design for
 Komisio-led sales posting or complementary seller-liability posting alongside
 an external POS export. Before implementation, approve per-event ownership,

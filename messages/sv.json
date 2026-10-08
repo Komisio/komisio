@@ -3258,6 +3258,26 @@
     "soldComparison": "Jämförelse med sålda varor.",
     "priceSources": "Visa prisunderlag",
     "sourcesChecked": "Kontrollerat",
-    "sendAnother": "Skicka in en till vara"
+    "sendAnother": "Skicka in en till vara",
+    "enablePhotos": "Tillåt bildförhandsbedömning",
+    "pricingResponsibility": "Vem bestämmer priset?",
+    "pricingModes": {
+      "store": "Butiken",
+      "seller": "Säljaren",
+      "approval": "Säljaren föreslår, butiken godkänner"
+    },
+    "sellerPrice": "Ditt försäljningspris",
+    "requestedPrice": "Önskat försäljningspris",
+    "approvePrice": "Godkänn säljarens pris",
+    "priceApproved": "Priset godkänt",
+    "indicativePrice": "Cirka {price}",
+    "approximateOnly": "Ungefärlig AI-bedömning.",
+    "storePriceNote": "Butiken sätter slutpriset.",
+    "sellerPriceNote": "Du väljer priset.",
+    "approvalPriceNote": "Butiken godkänner ditt prisförslag.",
+    "priceRange": "Prisintervall",
+    "useSuggestedPrice": "Använd prisförslaget",
+    "settingsChanged": "Butikens inställningar har ändrats. Ladda om sidan.",
+    "reload": "Ladda om"
   }
 }

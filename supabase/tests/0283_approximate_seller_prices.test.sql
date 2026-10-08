@@ -35,6 +35,7 @@ select set_config('test.output','{"description":"Jacket","price":null,"suitabili
 select lives_ok($$select complete_seller_photo_assistance(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.id')::uuid,current_setting('test.output')::jsonb,1,1)$$,'stores advisory result');
 select lives_ok($$select complete_seller_photo_assistance(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.id')::uuid,current_setting('test.output')::jsonb,1,1)$$,'completion replay');
 select is(begin_seller_photo_assistance(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.id')::uuid,current_setting('test.photos')::jsonb,'test-model',null,'en')->>'status','ready','lost response restores result');
+select is(begin_seller_photo_assistance(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.id')::uuid,current_setting('test.photos')::jsonb,'test-model',null,'en')->'output'->>'indicativePrice','75.00','database derives indicative midpoint without changing evidence range');
 select set_config('test.submission',gen_random_uuid()::text,true);
 select lives_ok($$select submit_my_assisted_items(current_setting('test.tenant')::uuid,current_setting('test.submission')::uuid,current_setting('test.seller')::uuid,null,'Edited jacket',current_setting('test.photos')::jsonb,current_setting('test.id')::uuid)$$,'seller may edit description and attach AI provenance');
 select set_config('request.headers','{}',true);

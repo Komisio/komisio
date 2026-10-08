@@ -3264,6 +3264,26 @@
     "soldComparison": "Comparación con artículos vendidos.",
     "priceSources": "Ver fuentes de precios",
     "sourcesChecked": "Comprobado",
-    "sendAnother": "Enviar otro artículo"
+    "sendAnother": "Enviar otro artículo",
+    "enablePhotos": "Permitir evaluación previa por fotos",
+    "pricingResponsibility": "¿Quién decide el precio?",
+    "pricingModes": {
+      "store": "La tienda",
+      "seller": "El vendedor",
+      "approval": "El vendedor propone y la tienda aprueba"
+    },
+    "sellerPrice": "Tu precio de venta",
+    "requestedPrice": "Precio de venta deseado",
+    "approvePrice": "Aprobar el precio del vendedor",
+    "priceApproved": "Precio aprobado",
+    "indicativePrice": "Aproximadamente {price}",
+    "approximateOnly": "Estimación aproximada de IA.",
+    "storePriceNote": "La tienda fija el precio final.",
+    "sellerPriceNote": "Tú eliges el precio.",
+    "approvalPriceNote": "La tienda aprueba tu propuesta de precio.",
+    "priceRange": "Rango de precios",
+    "useSuggestedPrice": "Usar precio sugerido",
+    "settingsChanged": "La configuración de la tienda ha cambiado. Recarga la página.",
+    "reload": "Recargar"
   }
 }

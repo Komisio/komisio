@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { readSubmissionSettings } from '@/lib/engine/seller-submissions'
 import './seller-portal.css'
 import { notFound, redirect } from 'next/navigation'
 import { renderPlatformContext as platformContext } from '@/lib/platform/context'
@@ -22,7 +23,7 @@ import {
 } from '@/lib/engine/seller-items'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { SignOut } from '@/components/platform/sign-out'
-import { Brand } from '@/components/platform/brand'
+import { SellerHeader } from '@/components/seller/header'
 import { EventTime } from '@/components/ui/event-time'
 export const generateMetadata = () =>
   platformPageMetadata((d) => d.sellerPortal.title, {
@@ -65,7 +66,7 @@ export default async function SellerPortal({
   if (!account)
     return (
       <main className="onboarding seller-review" lang={intlLocale(ctx.locale)}>
-        <Brand />
+        <SellerHeader locale={ctx.locale} />
         <SignOut d={all} next="/seller" />
         <section className="card">
           <h1>{d.title}</h1>
@@ -79,6 +80,11 @@ export default async function SellerPortal({
         </section>
       </main>
     )
+  const submissionSettings = await readSubmissionSettings(
+    ctx.client,
+    account.tenantId,
+    account.sellerId,
+  )
   const base = `/seller?seller=${account.sellerId}`
   const currency = await readStoreCurrency(ctx.client, account.tenantId)
   if (params.statement) {
@@ -92,7 +98,7 @@ export default async function SellerPortal({
     if (!statement) notFound()
     return (
       <main className="onboarding seller-review" lang={intlLocale(ctx.locale)}>
-        <Brand />
+        <SellerHeader locale={ctx.locale} />
         <SignOut d={all} next="/seller" />
         <section className="card">
           <Link className="text-link" href={base + '#portal-statements'}>
@@ -201,7 +207,7 @@ export default async function SellerPortal({
       className="onboarding seller-review seller-portal"
       lang={intlLocale(ctx.locale)}
     >
-      <Brand />
+      <SellerHeader locale={ctx.locale} />
       <SignOut d={all} next="/seller" />
       <div className="page-heading">
         <Link href="/seller">{d.back}</Link>
@@ -219,14 +225,15 @@ export default async function SellerPortal({
         </p>
       </section>
       <nav className="seller-portal-shortcuts" aria-label={d.title}>
-        {process.env.KOMISIO_SELLER_SUBMISSIONS_ENABLED === 'true' && (
-          <Link
-            className="btn btn-secondary"
-            href={`/seller/submissions?seller=${account.sellerId}`}
-          >
-            {all.submissions.title}
-          </Link>
-        )}
+        {process.env.KOMISIO_SELLER_SUBMISSIONS_ENABLED === 'true' &&
+          submissionSettings.enabled && (
+            <Link
+              className="btn btn-secondary"
+              href={`/seller/submissions?seller=${account.sellerId}`}
+            >
+              {all.submissions.title}
+            </Link>
+          )}
         {mine && (
           <a className="btn btn-secondary" href="#portal-items">
             {d.items}

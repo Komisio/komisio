@@ -45,6 +45,15 @@ test('seller submits photos, receives a request and sends a new immutable versio
         '',
       ])
     ).rows[0].id
+    const policy = (
+      await db.query('select current_store_policy($1) p', [tenant])
+    ).rows[0].p
+    await db.query('select publish_store_policy($1,$2,$3,$4)', [
+      tenant,
+      randomUUID(),
+      policy.id,
+      { ...policy.policy, submissionPricing: 'approval' },
+    ])
     await db.query('commit')
     await page.goto(`/seller/submissions?seller=${sellerId}`)
 
@@ -65,6 +74,7 @@ test('seller submits photos, receives a request and sends a new immutable versio
           output: {
             description: 'Synthetic AI jacket',
             price: null,
+            indicativePrice: analysedPhotos.length === 2 ? '120.00' : '200.00',
             approximatePrice: {
               from: '80.00',
               to: '160.00',
@@ -114,18 +124,16 @@ test('seller submits photos, receives a request and sends a new immutable versio
     await expect(page.getByLabel('Beskrivning', { exact: true })).toHaveValue(
       'Synthetic AI jacket',
     )
+    await expect(page.getByText('Cirka 200 kr', { exact: true })).toBeVisible()
     await expect(
-      page.getByText('150.00–250.00 SEK', { exact: true }),
+      page.getByText('Butiken godkänner ditt prisförslag.'),
     ).toBeVisible()
-    await expect(
-      page.getByText('Endast en indikation. Butiken sätter slutpriset.'),
-    ).toBeVisible()
+    await page.getByText('Visa prisunderlag', { exact: true }).click()
     await expect(
       page.getByText(
         'Jämförelse med annonserade priser – inte bekräftade försäljningar.',
       ),
     ).toBeVisible()
-    await page.getByText('Visa prisunderlag', { exact: true }).click()
     await expect(
       page.getByRole('link', { name: 'Comparable jacket' }),
     ).toHaveAttribute('href', 'https://example.com/items/1')
@@ -133,6 +141,13 @@ test('seller submits photos, receives a request and sends a new immutable versio
       path: test.info().outputPath('seller-ai-estimate.png'),
       fullPage: true,
     })
+    await expect(page.getByLabel(/Önskat försäljningspris/)).toHaveValue('')
+    await page
+      .getByRole('button', { name: 'Använd prisförslaget', exact: true })
+      .click()
+    await expect(page.getByLabel(/Önskat försäljningspris/)).toHaveValue(
+      '200.00',
+    )
     const firstPath = analysedPhotos[0][0]
     await page
       .getByLabel('Beskrivning', { exact: true })
@@ -145,13 +160,14 @@ test('seller submits photos, receives a request and sends a new immutable versio
     await expect(
       page.getByRole('button', { name: 'Ta bort bild 2', exact: true }),
     ).toBeEnabled()
+    await expect(page.getByText('Cirka 120 kr', { exact: true })).toBeVisible()
     await expect(
-      page.getByText('80.00–160.00 SEK', { exact: true }),
-    ).toBeVisible()
-    await expect(
-      page.getByText('Ungefärlig AI-bedömning. Butiken sätter priset.', {
-        exact: true,
-      }),
+      page.getByText(
+        'Ungefärlig AI-bedömning. Butiken godkänner ditt prisförslag.',
+        {
+          exact: true,
+        },
+      ),
     ).toBeVisible()
     expect(analysedPhotos.at(-1)).toHaveLength(2)
     expect(analysedPhotos.at(-1)?.[0]).toBe(firstPath)
@@ -186,6 +202,7 @@ test('seller submits photos, receives a request and sends a new immutable versio
     await page
       .getByLabel('Beskrivning', { exact: true })
       .fill('Synthetic blue jacket')
+    await page.getByLabel(/Önskat försäljningspris/).fill('175')
     await page
       .getByRole('button', { name: 'Skicka till butiken', exact: true })
       .click()
@@ -235,6 +252,7 @@ test('seller submits photos, receives a request and sends a new immutable versio
     await page
       .getByLabel('Beskrivning', { exact: true })
       .fill('Synthetic jacket with label')
+    await page.getByLabel(/Önskat försäljningspris/).fill('180')
     await page
       .getByRole('button', { name: 'Skicka komplettering', exact: true })
       .click()
@@ -268,6 +286,14 @@ test('seller submits photos, receives a request and sends a new immutable versio
     await expect(page.getByLabel('Beskrivning', { exact: true })).toHaveCount(0)
     await expect(
       page.getByText('Synthetic jacket with label', { exact: true }),
+    ).toBeVisible()
+    await staff.reload()
+    await staff.getByLabel('Godkänn säljarens pris').check()
+    await staff
+      .getByRole('button', { name: 'Spara besked', exact: true })
+      .click()
+    await expect(
+      staff.getByText('Priset godkänt', { exact: false }),
     ).toBeVisible()
     await page.setViewportSize({ width: 390, height: 844 })
     await expect

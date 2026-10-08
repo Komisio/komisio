@@ -136,6 +136,7 @@ export async function runSellerAssistance(
           output.description,
           AbortSignal.any([signal, AbortSignal.timeout(25000)]),
           transport,
+          output.itemFacts,
         )
         usage = {
           input_tokens: usage.input_tokens + external.usage.input_tokens,
@@ -173,10 +174,27 @@ export async function runSellerAssistance(
     })
   }
   if (finish.error) throw new Error(finish.error.message)
+  // SQL derives the indicative price with numeric arithmetic from the selected range.
+  const saved = await client.rpc('begin_seller_photo_assistance', {
+    p_tenant: c.tenantId,
+    p_seller: c.sellerId,
+    p_id: c.requestId,
+    p_photos: c.photos,
+    p_model: model,
+    p_web_rate: webRate,
+    p_language: locale ?? null,
+  })
+  if (saved.error) throw new Error(saved.error.message)
+  const confirmed = z
+    .object({
+      output: submissionSuggestion.nullable(),
+      status: z.enum(['ready', 'failed']),
+    })
+    .parse(saved.data)
   return {
     id: c.requestId,
-    status: output ? ('ready' as const) : ('failed' as const),
-    output,
+    status: confirmed.status,
+    output: confirmed.output,
     currency: run.context.currency,
   }
 }

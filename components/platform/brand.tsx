@@ -1,8 +1,14 @@
 import { NavigationLink as Link } from './navigation-warning'
-export function Brand({ light = false }: { light?: boolean }) {
+export function Brand({
+  light = false,
+  href = '/',
+}: {
+  light?: boolean
+  href?: string
+}) {
   return (
     <Link
-      href="/"
+      href={href}
       className={`brand ${light ? 'brand-light' : ''}`}
       aria-label="Komisio"
     >

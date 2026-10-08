@@ -8,6 +8,16 @@ test('seller reads own economy, requests payout and opts out without becoming st
   const email = `seller-portal-${randomUUID()}@example.test`
   await register(page, email, `K!${randomBytes(16).toString('hex')}`, '/seller')
   await expect(page).toHaveURL(/\/seller$/)
+  await page.getByRole('link', { name: 'Komisio', exact: true }).click()
+  await expect(page).toHaveURL(/\/seller$/)
+  await page.locator('.seller-header summary').click()
+  await page.getByRole('button', { name: 'English', exact: true }).click()
+  await expect(page.locator('main')).toHaveAttribute('lang', 'en-GB')
+  await page.reload()
+  await expect(page.locator('.seller-header summary')).toHaveText('English')
+  await page.locator('.seller-header summary').click()
+  await page.getByRole('button', { name: 'Svenska', exact: true }).click()
+  await expect(page.locator('main')).toHaveAttribute('lang', 'sv-SE')
   const { Client } = createRequire(import.meta.url)('pg')
   const db = new Client({
     connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',

@@ -3258,6 +3258,26 @@
     "soldComparison": "Sammenlignet med solgte varer.",
     "priceSources": "Vis prisgrundlag",
     "sourcesChecked": "Kontrolleret",
-    "sendAnother": "Indsend en vare mere"
+    "sendAnother": "Indsend en vare mere",
+    "enablePhotos": "Tillad forhåndsvurdering af billeder",
+    "pricingResponsibility": "Hvem bestemmer prisen?",
+    "pricingModes": {
+      "store": "Butikken",
+      "seller": "Sælgeren",
+      "approval": "Sælger foreslår, butikken godkender"
+    },
+    "sellerPrice": "Din salgspris",
+    "requestedPrice": "Ønsket salgspris",
+    "approvePrice": "Godkend sælgerens pris",
+    "priceApproved": "Pris godkendt",
+    "indicativePrice": "Ca. {price}",
+    "approximateOnly": "Omtrentlig AI-vurdering.",
+    "storePriceNote": "Butikken fastsætter slutprisen.",
+    "sellerPriceNote": "Du vælger prisen.",
+    "approvalPriceNote": "Butikken godkender dit prisforslag.",
+    "priceRange": "Prisinterval",
+    "useSuggestedPrice": "Brug prisforslaget",
+    "settingsChanged": "Butikkens indstillinger er ændret. Genindlæs siden.",
+    "reload": "Genindlæs"
   }
 }

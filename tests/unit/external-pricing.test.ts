@@ -143,9 +143,21 @@ describe('Swedish external comparisons', () => {
         sent = JSON.parse(String(init?.body))
         return Response.json(envelope())
       },
+      {
+        category: 'jacket',
+        brand: null,
+        model: 'Observed model',
+        articleNumber: null,
+        material: 'wool',
+        size: null,
+        condition: 'used',
+      },
     )
     expect(sent.max_tool_calls).toBe(4)
     expect(sent.store).toBe(false)
+    expect(String(sent.input)).toContain('Observed model')
+    expect(String(sent.input)).toContain('wool')
+    expect(String(sent.input)).not.toContain('Blue jacket')
     expect(String(sent.input)).not.toContain('@')
     expect(String(sent.input)).not.toContain('https:')
     expect(sent.tools).toEqual([

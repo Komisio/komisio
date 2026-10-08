@@ -923,3 +923,8 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-08: Seller AI prose follows the active portal locale, frozen per attempt; market and currency remain store-bound. Owner permits a clearly labelled model-only price range when comparable evidence is absent. It never claims verified retail prices or changes the final selling price.
 
 - 2026-10-08: Interactive seller registration sends one welcome message through the existing communication log and caps. Staff can explicitly resend. The activation link leads to verified self-registration; no Auth account or tenant membership is created automatically.
+
+- 2026-10-08: Seller portal navigation stays in /seller and exposes the existing personal language picker. Indicative price ranges use localized whole-currency display only; stored money, store currency and existing seller/staff authorization are unchanged.
+
+- 2026-10-08: Owner separates photo pre-review availability from price responsibility (store, seller, seller with store approval). Seller prices and currency freeze on submission; invitations never imply custody or sale acceptance. Existing stores keep store pricing and photo submissions enabled.
+- 2026-10-08: Price assistance extracts observed item facts for bounded Swedish web comparison. A rounded indicative midpoint is computed in SQL; evidence ranges remain available. Source access, tenant isolation, model-key selection and credit reservations remain enforced.

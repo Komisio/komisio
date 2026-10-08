@@ -1,0 +1,16 @@
+.seller-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.seller-header .brand {
+  margin: 0;
+}
+@media print {
+  .seller-header .language-picker {
+    display: none;
+  }
+}

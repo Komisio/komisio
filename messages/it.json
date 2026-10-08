@@ -1504,6 +1504,12 @@
     }
   },
   "communications": {
+    "welcomeTitle": "Email di benvenuto",
+    "welcomeSend": "Invia benvenuto",
+    "welcomeResend": "Invia di nuovo",
+    "welcomeNotSent": "Non inviata",
+    "welcomeSubject": "Benvenuto da {store}",
+    "welcomeBody": "Ciao {seller},\n\nSei registrato come venditore presso {store}. Segui i tuoi articoli e le vendite in Komisio.\n\nAttiva il tuo accesso:\n{url}\n\nCrea il tuo account con l’indirizzo che ha ricevuto questa email e confermalo. Hai già un account? Accedi con lo stesso indirizzo.",
     "title": "Messaggi al conferente",
     "intro": "Ogni messaggio viene registrato con il testo esatto inviato e l'esito della consegna. I modelli sono fissi; puoi aggiungere una nota in testo semplice.",
     "empty": "Nessun messaggio finora.",

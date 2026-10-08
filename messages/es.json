@@ -1504,6 +1504,12 @@
     }
   },
   "communications": {
+    "welcomeTitle": "Correo de bienvenida",
+    "welcomeSend": "Enviar bienvenida",
+    "welcomeResend": "Enviar de nuevo",
+    "welcomeNotSent": "No enviado",
+    "welcomeSubject": "Bienvenido a {store}",
+    "welcomeBody": "Hola {seller},\n\nEstás registrado como vendedor en {store}. Sigue tus artículos y ventas en Komisio.\n\nActiva tu acceso:\n{url}\n\nCrea tu cuenta con la dirección que recibió este correo y confírmala. ¿Ya tienes una cuenta? Inicia sesión con la misma dirección.",
     "title": "Mensajes al depositante",
     "intro": "Cada mensaje se registra con el texto exacto enviado y el resultado de su entrega. Las plantillas son fijas; puedes añadir una nota en texto plano.",
     "empty": "Aún no hay mensajes.",

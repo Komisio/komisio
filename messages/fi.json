@@ -1504,6 +1504,12 @@
     }
   },
   "communications": {
+    "welcomeTitle": "Tervetuloviesti",
+    "welcomeSend": "Lähetä tervetuloviesti",
+    "welcomeResend": "Lähetä uudelleen",
+    "welcomeNotSent": "Ei lähetetty",
+    "welcomeSubject": "Tervetuloa: {store}",
+    "welcomeBody": "Hei {seller},\n\nSinut on rekisteröity myyjäksi liikkeessä {store}. Seuraa tuotteitasi ja myyntiäsi Komisiossa.\n\nAktivoi kirjautuminen:\n{url}\n\nLuo tili tämän viestin vastaanottaneella sähköpostiosoitteella ja vahvista osoite. Onko sinulla jo tili? Kirjaudu samalla osoitteella.",
     "title": "Viestit tuojalle",
     "intro": "Jokainen viesti kirjataan täsmälleen lähetetyllä tekstillä ja toimitustuloksella. Viestipohjat ovat kiinteitä; voit lisätä pelkkää tekstiä sisältävän huomautuksen.",
     "empty": "Ei vielä viestejä.",

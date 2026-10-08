@@ -1,4 +1,6 @@
 import { EventTime } from '@/components/ui/event-time'
+import { SellerWelcome } from '@/components/intake/seller-welcome'
+import { readSellerWelcome } from '@/lib/engine/communications'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { statementPeriodDefaults } from '@/lib/intake/statement-period'
 import { SellerTabs } from '@/components/intake/seller-tabs'
@@ -82,6 +84,7 @@ export default async function Seller({
     .maybeSingle()
   if (seller.error) throw new Error('Unable to read seller')
   if (!seller.data) notFound()
+  const welcomeStatus = await readSellerWelcome(ctx.client, tenant.id, id.data)
   const [
     terms,
     history,
@@ -830,6 +833,15 @@ export default async function Seller({
                   {write && (
                     <>
                       <h3>{c.sendHeading}</h3>
+                      <SellerWelcome
+                        tenantId={tenant.id}
+                        sellerId={id.data}
+                        status={welcomeStatus}
+                        hasEmail={Boolean(seller.data.email)}
+                        d={c}
+                        failure={all.intake.failed}
+                        retry={all.intake.retry}
+                      />
 
                       <CommunicationForm
                         tenantId={tenant.id}

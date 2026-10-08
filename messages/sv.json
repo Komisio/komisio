@@ -1504,6 +1504,12 @@
     }
   },
   "communications": {
+    "welcomeTitle": "Välkomstmejl",
+    "welcomeSend": "Skicka välkomstmejl",
+    "welcomeResend": "Skicka igen",
+    "welcomeNotSent": "Inte skickat",
+    "welcomeSubject": "Välkommen till {store}",
+    "welcomeBody": "Hej {seller},\n\nDu är registrerad som säljare hos {store}. Följ dina varor och din försäljning i Komisio.\n\nAktivera din inloggning:\n{url}\n\nSkapa kontot med den e-postadress som fick detta mejl och bekräfta adressen. Har du redan ett konto? Logga in med samma adress.",
     "title": "Meddelanden till säljaren",
     "intro": "Varje meddelande loggas med exakt den text som skickades och utfallet. Mallarna är fasta; du kan lägga till en anteckning i klartext.",
     "empty": "Inga meddelanden ännu.",

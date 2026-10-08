@@ -40,6 +40,7 @@ export async function POST(request: Request) {
       kind: c.kind,
       referenceId: c.referenceId,
       freeText: c.freeText,
+      welcome: c.welcome,
     })
     if (!sent.ok)
       return reply(

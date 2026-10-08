@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { configureSellerAIRuntime } from '../../scripts/configure-seller-ai-runtime.mjs'
-const env = {
+const env: NodeJS.ProcessEnv = {
+  NODE_ENV: 'test',
   GITHUB_ACTIONS: 'true',
   GITHUB_REPOSITORY: 'Komisio/komisio',
   GITHUB_REF: 'refs/heads/main',

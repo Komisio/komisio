@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import { guideCopy } from '../../lib/guide-copy'
+import { guideOptionHelp } from '../../lib/guide-option-help'
 import d from '../../messages/sv.json' with { type: 'json' }
 
 async function cancelNavigation(page: Page, target: Locator) {
@@ -51,7 +52,13 @@ test('store guide protects answers across sidebar, language and reload attempts 
     await expect(page.getByLabel(c.owned, { exact: true })).toBeChecked()
     await picker.locator('summary').click()
     await page.getByRole('button', { name: `${c.next} →`, exact: true }).click()
-    for (const label of [c.clothes, c.store, c.other, c.shop]) {
+    for (const label of [
+      guideOptionHelp('sv').agreementLabels.no,
+      c.clothes,
+      c.store,
+      c.other,
+      c.shop,
+    ]) {
       await page.getByLabel(label, { exact: true }).check()
       await page
         .getByRole('button', {

@@ -33,12 +33,24 @@ export default async function Submissions({
         return (
           <article key={row.id} className="card submission-record">
             <h2>{row.sellers?.name}</h2>
+            {row.seller_price !== null && (
+              <p>
+                {row.pricing_mode === 'seller'
+                  ? d.sellerPrice
+                  : d.requestedPrice}
+                : {row.seller_price} {row.price_currency}
+                {review?.price_approved ? ` · ${d.priceApproved}` : ''}
+              </p>
+            )}
             <p className="submission-description">{row.description}</p>
             <SubmissionPhotos photos={row.photos} label={d.photos} />
             {row.assistance_output && (
               <SubmissionEstimate
+                staff
+                pricing={row.pricing_mode}
                 output={row.assistance_output.suggestion}
                 currency={row.assistance_output.currency}
+                locale={ctx.locale}
                 d={d}
               />
             )}
@@ -51,6 +63,7 @@ export default async function Submissions({
               <SubmissionReview
                 tenantId={active.id}
                 submissionId={row.id}
+                pricing={row.pricing_mode}
                 d={d}
               />
             ) : (

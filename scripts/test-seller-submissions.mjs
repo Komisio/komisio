@@ -148,6 +148,11 @@ try {
   const provider = async (_url, init) => {
     calls++
     if (JSON.parse(init.body).tools) {
+      assert.match(JSON.parse(init.body).input, /Observed model/)
+      assert.doesNotMatch(
+        JSON.parse(init.body).input,
+        /Synthetic jacket suggestion/,
+      )
       const sources = [
         {
           url: 'https://example.com/items/1',
@@ -216,6 +221,15 @@ try {
               type: 'output_text',
               text: JSON.stringify({
                 description: 'Synthetic jacket suggestion',
+                itemFacts: {
+                  category: 'jacket',
+                  brand: null,
+                  model: 'Observed model',
+                  articleNumber: null,
+                  material: 'wool',
+                  size: null,
+                  condition: 'used',
+                },
                 price: null,
                 approximatePrice: {
                   from: '60.00',
@@ -240,6 +254,8 @@ try {
     'en',
   )
   assert.equal(ai.status, 'ready')
+  assert.equal(ai.output.indicativePrice, '150.00')
+  assert.equal(ai.output.itemFacts.model, 'Observed model')
   assert.equal(ai.output.approximatePrice.basis, 'ai_estimate')
   assert.equal(ai.output.externalComparison.basis, 'asking')
   assert.equal(
@@ -265,8 +281,10 @@ try {
     description: 'Synthetic jacket',
     photos: [photo.path],
   }
-  await submitSellerItems(seller.app, command)
-  await submitSellerItems(seller.app, command)
+  await Promise.all([
+    submitSellerItems(seller.app, command),
+    submitSellerItems(seller.app, command),
+  ])
   assert.equal(
     (await readMySubmissions(seller.app, { tenantId: tenant, sellerId }))
       .length,

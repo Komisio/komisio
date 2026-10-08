@@ -3258,6 +3258,26 @@
     "soldComparison": "Sammenlignet med solgte varer.",
     "priceSources": "Vis prisgrunnlag",
     "sourcesChecked": "Kontrollert",
-    "sendAnother": "Send inn en vare til"
+    "sendAnother": "Send inn en vare til",
+    "enablePhotos": "Tillat forhåndsvurdering av bilder",
+    "pricingResponsibility": "Hvem bestemmer prisen?",
+    "pricingModes": {
+      "store": "Butikken",
+      "seller": "Selgeren",
+      "approval": "Selger foreslår, butikken godkjenner"
+    },
+    "sellerPrice": "Din salgspris",
+    "requestedPrice": "Ønsket salgspris",
+    "approvePrice": "Godkjenn selgerens pris",
+    "priceApproved": "Pris godkjent",
+    "indicativePrice": "Ca. {price}",
+    "approximateOnly": "Omtrentlig KI-vurdering.",
+    "storePriceNote": "Butikken setter sluttprisen.",
+    "sellerPriceNote": "Du velger prisen.",
+    "approvalPriceNote": "Butikken godkjenner prisforslaget ditt.",
+    "priceRange": "Prisintervall",
+    "useSuggestedPrice": "Bruk prisforslaget",
+    "settingsChanged": "Butikkens innstillinger er endret. Last inn siden på nytt.",
+    "reload": "Last inn på nytt"
   }
 }

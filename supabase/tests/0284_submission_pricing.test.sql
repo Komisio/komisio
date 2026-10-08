@@ -1,0 +1,51 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000008001','submission-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000008002','submission-seller@example.test',now()),
+ ('f0000000-0000-4000-8000-000000008003','submission-stranger@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000008001","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Submissions test','submissions-test',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Synthetic seller','submission-seller@example.test','')::text,true);
+select set_config('test.id',gen_random_uuid()::text,true);
+select set_config('test.path',current_setting('test.tenant')||'/'||current_setting('test.seller')||'/'||gen_random_uuid()::text||'.jpg',true);
+select set_config('test.photos',jsonb_build_array(current_setting('test.path'))::text,true);
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000008002","role":"authenticated"}';
+insert into storage.objects(bucket_id,name) values('seller-submission-photos',current_setting('test.path'));
+select is(my_submission_settings(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid)->>'pricing','store','default store pricing');
+select throws_like($$select submit_my_assisted_items(current_setting('test.tenant')::uuid,current_setting('test.id')::uuid,current_setting('test.seller')::uuid,null,'Jacket',current_setting('test.photos')::jsonb,null,'100.00','store','SEK')$$,'%INVALID_INPUT%','seller cannot set price in store mode');
+select lives_ok($$select submit_my_assisted_items(current_setting('test.tenant')::uuid,current_setting('test.id')::uuid,current_setting('test.seller')::uuid,null,'Jacket',current_setting('test.photos')::jsonb,null,null,'store','SEK')$$,'ordinary submission preserved');
+select is(my_item_submissions(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid)->0->>'pricing_mode','store','frozen mode visible');
+
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000008001","role":"authenticated"}';
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy')||'{"submissionPricing":"seller"}');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000008002","role":"authenticated"}';
+select set_config('test.priced',gen_random_uuid()::text,true);
+select throws_like($$select submit_my_assisted_items(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,null,'Jacket',current_setting('test.photos')::jsonb,null,null,'store','SEK')$$,'%SUBMISSION_CHANGED%','stale pricing mode cannot submit');
+select lives_ok($$select submit_my_assisted_items(current_setting('test.tenant')::uuid,current_setting('test.priced')::uuid,current_setting('test.seller')::uuid,null,'Jacket',current_setting('test.photos')::jsonb,null,'125.50','seller','SEK')$$,'seller price submitted');
+select lives_ok($$select submit_my_assisted_items(current_setting('test.tenant')::uuid,current_setting('test.priced')::uuid,current_setting('test.seller')::uuid,null,'Jacket',current_setting('test.photos')::jsonb,null,'125.50','seller','SEK')$$,'price retry idempotent');
+select throws_like($$select submit_my_assisted_items(current_setting('test.tenant')::uuid,current_setting('test.priced')::uuid,current_setting('test.seller')::uuid,null,'Jacket',current_setting('test.photos')::jsonb,null,'126','seller','SEK')$$,'%REQUEST_CONFLICT%','cannot change saved seller price on retry');
+select throws_like($$select submit_my_items(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,null,'Jacket',current_setting('test.photos')::jsonb)$$,'%SUBMISSION_CHANGED%','legacy endpoint cannot bypass price mode');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000008001","role":"authenticated"}';
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),(current_store_policy(current_setting('test.tenant')::uuid)->>'id')::uuid,(current_store_policy(current_setting('test.tenant')::uuid)->'policy')||'{"submissionPricing":"approval"}');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000008002","role":"authenticated"}';
+select set_config('test.approval',gen_random_uuid()::text,true);
+select lives_ok($$select submit_my_assisted_items(current_setting('test.tenant')::uuid,current_setting('test.approval')::uuid,current_setting('test.seller')::uuid,null,'Jacket',current_setting('test.photos')::jsonb,null,'150','approval','SEK')$$,'seller proposes price for approval');
+select throws_like($$select review_seller_submission(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.approval')::uuid,'invite','',true)$$,'%FORBIDDEN%','seller cannot approve own price');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000008001","role":"authenticated"}';
+select throws_like($$select review_seller_submission(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.approval')::uuid,'invite','')$$,'%INVALID_INPUT%','invitation requires explicit price approval');
+select lives_ok($$select review_seller_submission(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.approval')::uuid,'invite','',true)$$,'staff explicitly approves price');
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),(current_store_policy(current_setting('test.tenant')::uuid)->>'id')::uuid,(current_store_policy(current_setting('test.tenant')::uuid)->'policy')||'{"photoSubmissionsEnabled":false}');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000008002","role":"authenticated"}';
+select is(seller_submission_photo_access(current_setting('test.path'),true),false,'disabled store blocks new uploads');
+select is(seller_submission_photo_access(current_setting('test.path'),false),true,'disabled store retains photo read access');
+select throws_like($$select submit_my_assisted_items(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,null,'Jacket',current_setting('test.photos')::jsonb,null,'150','approval','SEK')$$,'%SUBMISSIONS_DISABLED%','disabled store blocks submission');
+select lives_ok($$select submit_my_assisted_items(current_setting('test.tenant')::uuid,current_setting('test.priced')::uuid,current_setting('test.seller')::uuid,null,'Jacket',current_setting('test.photos')::jsonb,null,'125.50','seller','SEK')$$,'retry survives later policy change');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000008003","role":"authenticated"}';
+select throws_ok($$select my_submission_settings(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid)$$,'42501',null,'settings require seller identity');
+reset role;
+select is((select count(*) from items where tenant_id=current_setting('test.tenant')::uuid),0::bigint,'submission does not accept inventory');
+select * from finish();
+rollback;

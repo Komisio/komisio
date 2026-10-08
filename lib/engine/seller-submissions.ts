@@ -4,12 +4,37 @@ import { receptionDerivative } from '../media/reception-image'
 import { photoType } from '../media/reception-photo'
 import { submissionSuggestion } from '../assistance/submission-suggestion'
 
+export const submissionSettings = z.object({
+  enabled: z.boolean(),
+  pricing: z.enum(['store', 'seller', 'approval']),
+  currency: z.string().regex(/^[A-Z]{3}$/),
+})
+export type SubmissionSettings = z.infer<typeof submissionSettings>
+export async function readSubmissionSettings(
+  client: SupabaseClient,
+  tenantId: string,
+  sellerId: string,
+) {
+  const result = await client.rpc('my_submission_settings', {
+    p_tenant: z.uuid().parse(tenantId),
+    p_seller: z.uuid().parse(sellerId),
+  })
+  if (result.error) throw new Error('FORBIDDEN')
+  return submissionSettings.parse(result.data)
+}
 const context = { tenantId: z.uuid(), sellerId: z.uuid() }
 export const submitItemsCommand = z.strictObject({
   ...context,
   requestId: z.uuid(),
   previousId: z.uuid().nullable(),
   assistanceId: z.uuid().optional(),
+  price: z
+    .string()
+    .regex(/^(0|[1-9]\d{0,8})(\.\d{1,2})?$/)
+    .nullable()
+    .optional(),
+  pricing: submissionSettings.shape.pricing.default('store'),
+  currency: submissionSettings.shape.currency.optional(),
   description: z.string().trim().min(1).max(2000),
   photos: z
     .array(z.string().max(200))
@@ -24,6 +49,7 @@ export const reviewSubmissionCommand = z
     submissionId: z.uuid(),
     decision: z.enum(['invite', 'more_information', 'decline']),
     note: z.string().trim().max(1000),
+    priceApproved: z.boolean().default(false),
   })
   .refine((v) => v.decision !== 'more_information' || v.note.length > 0)
 export async function submitSellerItems(
@@ -31,18 +57,18 @@ export async function submitSellerItems(
   input: unknown,
 ) {
   const c = submitItemsCommand.parse(input)
-  const r = await client.rpc(
-    c.assistanceId ? 'submit_my_assisted_items' : 'submit_my_items',
-    {
-      p_tenant: c.tenantId,
-      p_id: c.requestId,
-      p_seller: c.sellerId,
-      p_previous: c.previousId,
-      p_description: c.description,
-      p_photos: c.photos,
-      ...(c.assistanceId ? { p_assistance: c.assistanceId } : {}),
-    },
-  )
+  const r = await client.rpc('submit_my_assisted_items', {
+    p_tenant: c.tenantId,
+    p_id: c.requestId,
+    p_seller: c.sellerId,
+    p_previous: c.previousId,
+    p_description: c.description,
+    p_photos: c.photos,
+    p_assistance: c.assistanceId ?? null,
+    p_price: c.price ?? null,
+    p_pricing: c.pricing,
+    p_currency: c.currency ?? null,
+  })
   if (r.error) throw new Error(submissionError(r.error.message))
   if (r.data !== c.requestId) throw new Error('UNCONFIRMED_RESULT')
   return { id: c.requestId }
@@ -58,6 +84,7 @@ export async function reviewSellerSubmission(
     p_submission: c.submissionId,
     p_decision: c.decision,
     p_note: c.note,
+    p_price_approved: c.priceApproved,
   })
   if (r.error) throw new Error(submissionError(r.error.message))
   if (r.data !== c.requestId) throw new Error('UNCONFIRMED_RESULT')
@@ -71,6 +98,10 @@ export const submissionRow = z.object({
   created_at: z.iso.datetime({ offset: true }),
   decision: z.enum(['invite', 'more_information', 'decline']).nullable(),
   note: z.string().nullable(),
+  pricing_mode: submissionSettings.shape.pricing,
+  seller_price: z.string().nullable(),
+  price_currency: z.string().nullable(),
+  price_approved: z.boolean().nullable(),
   assistance_output: z
     .object({ suggestion: submissionSuggestion, currency: z.string() })
     .nullable(),
@@ -128,6 +159,7 @@ export function submissionError(message: string) {
       'INVALID_INPUT',
       'PHOTO_NOT_FOUND',
       'SUBMISSION_CHANGED',
+      'SUBMISSIONS_DISABLED',
       'SUBMISSION_NOT_FOUND',
       'REQUEST_CONFLICT',
     ].find((c) => c === message) ?? 'REQUEST_FAILED'
@@ -144,7 +176,7 @@ export async function readSubmissionQueue(
   const result = await client
     .from('seller_submissions')
     .select(
-      'id,seller_id,description,photos,created_at,assistance_output,sellers(name),seller_submission_reviews(decision,note)',
+      'id,seller_id,description,photos,created_at,assistance_output,pricing_mode,seller_price,price_currency,sellers(name),seller_submission_reviews(decision,note,price_approved)',
       { count: 'exact' },
     )
     .eq('tenant_id', tenantId)
@@ -158,6 +190,9 @@ export async function readSubmissionQueue(
     description: z.string(),
     photos: z.array(z.string()),
     created_at: z.string(),
+    pricing_mode: submissionSettings.shape.pricing,
+    seller_price: z.union([z.number(), z.string()]).nullable(),
+    price_currency: z.string().nullable(),
     assistance_output: z
       .object({ suggestion: submissionSuggestion, currency: z.string() })
       .nullable(),
@@ -166,6 +201,7 @@ export async function readSubmissionQueue(
       z.object({
         decision: z.enum(['invite', 'more_information', 'decline']),
         note: z.string(),
+        price_approved: z.boolean(),
       }),
     ),
   })

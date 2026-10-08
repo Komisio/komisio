@@ -7,10 +7,12 @@ export function SubmissionReview({
   tenantId,
   submissionId,
   d,
+  pricing,
 }: {
   tenantId: string
   submissionId: string
   d: Dictionary['submissions']
+  pricing: 'store' | 'seller' | 'approval'
 }) {
   const router = useRouter()
   const decisionId = useId()
@@ -18,6 +20,7 @@ export function SubmissionReview({
     requestId: string
     decision: string
     note: string
+    priceApproved: boolean
   } | null>(null)
   const running = useRef(false)
   const [decision, setDecision] = useState('invite')
@@ -36,6 +39,10 @@ export function SubmissionReview({
             requestId: crypto.randomUUID(),
             decision,
             note: String(data.get('note')).trim(),
+            priceApproved:
+              pricing === 'approval' &&
+              decision === 'invite' &&
+              data.get('priceApproved') === 'on',
           }
         }
         running.current = true
@@ -82,6 +89,12 @@ export function SubmissionReview({
             )}
           </select>
         </div>
+        {pricing === 'approval' && decision === 'invite' && (
+          <label>
+            <input name="priceApproved" type="checkbox" required />
+            {d.approvePrice}
+          </label>
+        )}
         <label>
           {d.note}
           <textarea

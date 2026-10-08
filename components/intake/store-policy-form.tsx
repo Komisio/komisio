@@ -204,6 +204,9 @@ export function StorePolicyForm({
                 ]),
               ),
               vatRatePercent: rate === '' ? undefined : Number(rate),
+              photoSubmissionsEnabled:
+                f.get('photoSubmissionsEnabled') === 'on',
+              submissionPricing: f.get('submissionPricing'),
               assistanceEnabled: f.get('assistanceEnabled') === 'on',
               itemLanguage: f.get('itemLanguage'),
               automaticSellerNotifications:
@@ -260,6 +263,29 @@ export function StorePolicyForm({
           >
             <PolicySection id="receiving" title={t.sectionReceiving}>
               <div className="policy-grid">
+                <label>
+                  <input
+                    type="checkbox"
+                    name="photoSubmissionsEnabled"
+                    defaultChecked={
+                      base.policy.photoSubmissionsEnabled !== false
+                    }
+                  />
+                  {d.submissions.enablePhotos}
+                </label>
+                <label>
+                  {d.submissions.pricingResponsibility}
+                  <select
+                    name="submissionPricing"
+                    defaultValue={base.policy.submissionPricing ?? 'store'}
+                  >
+                    {(['store', 'seller', 'approval'] as const).map((mode) => (
+                      <option key={mode} value={mode}>
+                        {d.submissions.pricingModes[mode]}
+                      </option>
+                    ))}
+                  </select>
+                </label>
                 {choiceField('intakeProfile')}
                 {choiceField('sellerReviewMode')}
               </div>

@@ -1,7 +1,7 @@
 'use client'
 import { useId, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { Dictionary } from '@/lib/i18n'
+import type { Dictionary, Locale } from '@/lib/i18n'
 import { photoLimit } from '@/lib/media/reception-photo'
 import {
   submissionSuggestion,
@@ -10,22 +10,29 @@ import {
 import { SubmissionEstimate } from './submission-estimate'
 import { SubmissionSuccess } from './submission-success'
 import { SubmissionPhotos } from './submission-photos'
+import type { SubmissionSettings } from '@/lib/engine/seller-submissions'
 type Photo = { file: File; id: string; path: string; uploaded: boolean }
 export function SubmissionForm({
   tenantId,
   sellerId,
   previousId = null,
+  locale,
+  settings,
   d,
 }: {
   tenantId: string
   sellerId: string
   previousId?: string | null
+  locale: Locale
+  settings: SubmissionSettings
   d: Dictionary['submissions']
 }) {
   const router = useRouter(),
     hintId = useId()
   const fileInput = useRef<HTMLInputElement>(null)
   const descriptionEdited = useRef(false)
+  const [settingsChanged, setSettingsChanged] = useState(false)
+  const [sellerPrice, setSellerPrice] = useState('')
   const [fileNames, setFileNames] = useState<string[]>([])
   const photos = useRef<Photo[]>([]),
     analysisId = useRef<string | null>(null),
@@ -34,6 +41,9 @@ export function SubmissionForm({
     requestId: string
     description: string
     photos: string[]
+    price: string | null
+    pricing: SubmissionSettings['pricing']
+    currency: string
     assistanceId?: string
   } | null>(null)
   const [uploaded, setUploaded] = useState<string[]>([]),
@@ -126,6 +136,12 @@ export function SubmissionForm({
         pending.current ??= {
           requestId: crypto.randomUUID(),
           description: description.trim(),
+          price:
+            settings.pricing === 'store'
+              ? null
+              : sellerPrice.trim().replace(',', '.'),
+          pricing: settings.pricing,
+          currency: settings.currency,
           photos: uploaded,
           ...(suggestion && analysisId.current
             ? { assistanceId: analysisId.current }
@@ -148,6 +164,15 @@ export function SubmissionForm({
             signal: AbortSignal.timeout(30000),
           })
           const result = await response.json()
+          if (
+            ['SUBMISSION_CHANGED', 'SUBMISSIONS_DISABLED'].includes(
+              result.error,
+            )
+          ) {
+            setSettingsChanged(true)
+            setError(d.settingsChanged)
+            return
+          }
           if (!response.ok || result.id !== pending.current.requestId)
             throw new Error('UNCONFIRMED')
           setSaved(true)
@@ -294,11 +319,47 @@ export function SubmissionForm({
               />
             </div>
           )}
-          {suggestion && <SubmissionEstimate {...suggestion} d={d} />}
+          {suggestion && (
+            <SubmissionEstimate
+              {...suggestion}
+              pricing={settings.pricing}
+              locale={locale}
+              d={d}
+            />
+          )}
+          {hasPhotos &&
+            settings.pricing !== 'store' &&
+            suggestion?.output.indicativePrice && (
+              <button
+                type="button"
+                className="btn btn-secondary"
+                disabled={locked || analysing}
+                onClick={() =>
+                  setSellerPrice(suggestion.output.indicativePrice!)
+                }
+              >
+                {d.useSuggestedPrice}
+              </button>
+            )}
+          {hasPhotos && settings.pricing !== 'store' && (
+            <label>
+              {settings.pricing === 'seller' ? d.sellerPrice : d.requestedPrice}{' '}
+              ({settings.currency})
+              <input
+                inputMode="decimal"
+                value={sellerPrice}
+                onChange={(e) => setSellerPrice(e.target.value)}
+                required
+                pattern="[0-9]+([.,][0-9]{1,2})?"
+                disabled={locked || analysing}
+              />
+            </label>
+          )}
           {hasPhotos && (
             <button
               className="btn btn-primary"
               disabled={
+                settingsChanged ||
                 busy ||
                 analysing ||
                 uploaded.length === 0 ||
@@ -319,6 +380,15 @@ export function SubmissionForm({
         </>
       )}
       {error && <p role="alert">{error}</p>}
+      {settingsChanged && (
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={() => window.location.reload()}
+        >
+          {d.reload}
+        </button>
+      )}
       {saved && <SubmissionSuccess sellerId={sellerId} d={d} />}
     </form>
   )

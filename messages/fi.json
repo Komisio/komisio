@@ -3264,6 +3264,26 @@
     "soldComparison": "Vertailu myytyihin tuotteisiin.",
     "priceSources": "Näytä hintalähteet",
     "sourcesChecked": "Tarkistettu",
-    "sendAnother": "Lähetä toinen tuote"
+    "sendAnother": "Lähetä toinen tuote",
+    "enablePhotos": "Salli kuvien ennakkoarviointi",
+    "pricingResponsibility": "Kuka päättää hinnan?",
+    "pricingModes": {
+      "store": "Myymälä",
+      "seller": "Myyjä",
+      "approval": "Myyjä ehdottaa, myymälä hyväksyy"
+    },
+    "sellerPrice": "Myyntihintasi",
+    "requestedPrice": "Toivottu myyntihinta",
+    "approvePrice": "Hyväksy myyjän hinta",
+    "priceApproved": "Hinta hyväksytty",
+    "indicativePrice": "Noin {price}",
+    "approximateOnly": "Suuntaa antava tekoälyarvio.",
+    "storePriceNote": "Myymälä päättää lopullisen hinnan.",
+    "sellerPriceNote": "Valitset hinnan.",
+    "approvalPriceNote": "Myymälä hyväksyy hintaehdotuksesi.",
+    "priceRange": "Hintahaarukka",
+    "useSuggestedPrice": "Käytä hintaehdotusta",
+    "settingsChanged": "Myymälän asetukset ovat muuttuneet. Lataa sivu uudelleen.",
+    "reload": "Lataa uudelleen"
   }
 }

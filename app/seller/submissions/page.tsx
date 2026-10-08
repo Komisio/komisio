@@ -1,9 +1,13 @@
 import Link from 'next/link'
+import { SellerHeader } from '@/components/seller/header'
 import { notFound, redirect } from 'next/navigation'
 import { renderPlatformContext } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { readMySellerAccounts } from '@/lib/engine/seller-portal'
-import { readMySubmissions } from '@/lib/engine/seller-submissions'
+import {
+  readMySubmissions,
+  readSubmissionSettings,
+} from '@/lib/engine/seller-submissions'
 import { SubmissionSuccess } from '@/components/seller/submission-success'
 import { SubmissionForm } from '@/components/seller/submission-form'
 import { SubmissionPhotos } from '@/components/seller/submission-photos'
@@ -24,6 +28,11 @@ export default async function Submissions({
     (a) => a.sellerId === params.seller,
   )
   if (!account) notFound()
+  const settings = await readSubmissionSettings(
+    ctx.client,
+    account.tenantId,
+    account.sellerId,
+  )
   const d = dictionary(ctx.locale).submissions
   const rows = await readMySubmissions(ctx.client, {
     tenantId: account.tenantId,
@@ -37,35 +46,50 @@ export default async function Submissions({
   if (params.previous && !previous) notFound()
   return (
     <main className="onboarding">
+      <SellerHeader locale={ctx.locale} />
       <Link href={`/seller?seller=${account.sellerId}`}>
         {d.back} · {account.storeName}
       </Link>
       <h1>{d.title}</h1>
       <p>{d.intro}</p>
-      <section className="card">
-        {previous && <p>{previous.note}</p>}
-        {previous && rows.some((child) => child.previous_id === previous.id) ? (
-          <SubmissionSuccess sellerId={account.sellerId} d={d} />
-        ) : (
-          <SubmissionForm
-            key={previous?.id ?? 'new'}
-            tenantId={account.tenantId}
-            sellerId={account.sellerId}
-            previousId={previous?.id}
-            d={d}
-          />
-        )}
-      </section>
+      {settings.enabled && (
+        <section className="card">
+          {previous && <p>{previous.note}</p>}
+          {previous &&
+          rows.some((child) => child.previous_id === previous.id) ? (
+            <SubmissionSuccess sellerId={account.sellerId} d={d} />
+          ) : (
+            <SubmissionForm
+              key={previous?.id ?? 'new'}
+              tenantId={account.tenantId}
+              sellerId={account.sellerId}
+              previousId={previous?.id}
+              settings={settings}
+              locale={ctx.locale}
+              d={d}
+            />
+          )}
+        </section>
+      )}
       {!rows.length && <p>{d.empty}</p>}
       {rows.map((row) => (
         <article className="card submission-record" key={row.id}>
           <strong>{row.decision ? d[row.decision] : d.pending}</strong>
+          {row.seller_price && (
+            <p>
+              {row.pricing_mode === 'seller' ? d.sellerPrice : d.requestedPrice}
+              : {row.seller_price} {row.price_currency}
+              {row.price_approved ? ` · ${d.priceApproved}` : ''}
+            </p>
+          )}
           <p className="submission-description">{row.description}</p>
           <SubmissionPhotos photos={row.photos} label={d.photos} />
           {row.assistance_output && (
             <SubmissionEstimate
+              pricing={row.pricing_mode}
               output={row.assistance_output.suggestion}
               currency={row.assistance_output.currency}
+              locale={ctx.locale}
               d={d}
             />
           )}

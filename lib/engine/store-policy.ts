@@ -17,6 +17,8 @@ const days = z.number().int().nonnegative()
  * Parsing is not authorization, policy publication or agreement evidence.
  */
 export const storePolicyBody = z.strictObject({
+  photoSubmissionsEnabled: z.boolean().optional(),
+  submissionPricing: z.enum(['store', 'seller', 'approval']).optional(),
   commissionBasis: z.enum(['inclusive', 'exclusive']),
   commissionRatePercent: percent,
   agreementRequiredFor: z

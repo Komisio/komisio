@@ -295,6 +295,50 @@ test('seller submits photos, receives a request and sends a new immutable versio
     await expect(
       staff.getByText('Priset godkänt', { exact: false }),
     ).toBeVisible()
+    await staff
+      .locator('summary')
+      .filter({ hasText: 'Förbered mottagning' })
+      .click()
+    await expect(staff.getByLabel('Pris vid mottagning')).toHaveValue('180')
+    await staff.setViewportSize({ width: 390, height: 844 })
+    await expect
+      .poll(() =>
+        staff.evaluate(
+          () => document.documentElement.scrollWidth <= window.innerWidth,
+        ),
+      )
+      .toBe(true)
+    await staff.screenshot({
+      path: test.info().outputPath('submission-reception-mobile.png'),
+      fullPage: true,
+    })
+    await staff.route(
+      '**/api/intake/submissions/reception',
+      async (route) => {
+        await route.fetch()
+        await route.abort('failed')
+      },
+      { times: 1 },
+    )
+
+    await staff
+      .getByRole('button', { name: 'Förbered mottagning', exact: true })
+      .click()
+    await expect(
+      staff.getByText(
+        'Underlaget kunde inte bekräftas. Försök igen med samma uppgifter.',
+      ),
+    ).toBeVisible()
+    await staff
+      .getByRole('button', { name: 'Försök igen', exact: true })
+      .click()
+    await expect(staff).toHaveURL(/\/intake\/reception\/[a-f0-9-]+$/)
+    const linkedUrl = staff.url()
+    await staff.goto('/intake/submissions')
+    await staff
+      .getByRole('link', { name: 'Fortsätt mottagning', exact: true })
+      .click()
+    await expect(staff).toHaveURL(linkedUrl)
     await page.setViewportSize({ width: 390, height: 844 })
     await expect
       .poll(() =>

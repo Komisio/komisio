@@ -88,9 +88,15 @@ export function SubmissionEstimate({
         </details>
       )}
       <p>
-        <strong>{d[output.suitability]}</strong>
-        <br />
-        {output.reason}
+        {!staff && output.suitability === 'uncertain' ? (
+          d.storeAssessment
+        ) : (
+          <>
+            <strong>{d[output.suitability]}</strong>
+            <br />
+            {output.reason}
+          </>
+        )}
       </p>
     </aside>
   )

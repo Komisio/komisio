@@ -1,3 +1,4 @@
+import { renderSubmissionReply } from './submission-reply'
 import { readStoreProfile } from '../engine/store-profile'
 import { renderSellerWelcome } from './welcome'
 import { createHash } from 'node:crypto'
@@ -33,7 +34,7 @@ export type CommunicationError =
 
 /** Deterministic id for the one automatic message a fact may produce (UUID v5 shape). */
 export function factCommunicationId(
-  kind: CommunicationKind | 'welcome',
+  kind: CommunicationKind | 'welcome' | 'submission_review',
   referenceId: string,
 ) {
   const hex = createHash('sha1')
@@ -54,6 +55,7 @@ export interface SendInput {
   referenceId: string | null
   freeText: string
   welcome?: true
+  submissionReviewId?: string
 }
 
 export async function sendSellerCommunication(
@@ -141,15 +143,48 @@ export async function sendSellerCommunication(
       facts.amount = formatSignedOre(ore.parse(statement.data.closing_ore))
     }
   }
-  let rendered = c.welcome
-    ? renderSellerWelcome(
+  if (c.submissionReviewId) {
+    if (
+      c.kind !== 'message' ||
+      c.referenceId !== null ||
+      c.freeText !== '' ||
+      c.welcome ||
+      c.requestId !==
+        factCommunicationId('submission_review', c.submissionReviewId)
+    )
+      return { ok: false, error: 'INVALID_INPUT' }
+    const review = await client
+      .from('seller_submission_reviews')
+      .select('submission_id')
+      .eq('tenant_id', c.tenantId)
+      .eq('id', c.submissionReviewId)
+      .single()
+    if (review.error) return { ok: false, error: 'REFERENCE_NOT_FOUND' }
+    const proposal = await client
+      .from('seller_submissions')
+      .select('seller_id')
+      .eq('tenant_id', c.tenantId)
+      .eq('id', review.data.submission_id)
+      .single()
+    if (proposal.error || proposal.data.seller_id !== c.sellerId)
+      return { ok: false, error: 'REFERENCE_NOT_FOUND' }
+  }
+  let rendered = c.submissionReviewId
+    ? renderSubmissionReply(
         locale,
         c.storeName,
-        seller.data.name,
+        c.sellerId,
         process.env.NEXT_PUBLIC_APP_URL ?? '',
       )
-    : renderSellerMessage(c.kind, locale, facts)
-  if (c.welcome) {
+    : c.welcome
+      ? renderSellerWelcome(
+          locale,
+          c.storeName,
+          seller.data.name,
+          process.env.NEXT_PUBLIC_APP_URL ?? '',
+        )
+      : renderSellerMessage(c.kind, locale, facts)
+  if (c.welcome || c.submissionReviewId) {
     if (c.kind !== 'message' || c.referenceId !== null || c.freeText !== '')
       return { ok: false, error: 'INVALID_INPUT' }
     const prior = await client
@@ -162,7 +197,8 @@ export async function sendSellerCommunication(
     if (prior.data) {
       if (
         prior.data.seller_id !== c.sellerId ||
-        prior.data.template_key !== 'seller.welcome'
+        prior.data.template_key !==
+          (c.welcome ? 'seller.welcome' : 'seller.submission_reply')
       )
         return { ok: false, error: 'REQUEST_CONFLICT' }
       rendered = {

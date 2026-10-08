@@ -1,3 +1,6 @@
+import { SubmissionReception } from '@/components/intake/submission-reception'
+import { SubmissionNotification } from '@/components/intake/submission-notification'
+import { factCommunicationId } from '@/lib/communications/dispatch'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
@@ -21,6 +24,29 @@ export default async function Submissions({
   const page =
     params.page && /^[1-9]\d{0,4}$/.test(params.page) ? Number(params.page) : 1
   const { rows, total } = await readSubmissionQueue(ctx.client, active.id, page)
+  const sessionIds = rows.flatMap((r) =>
+    r.submission_receptions.map((s) => s.session_id),
+  )
+  const notificationIds = rows.flatMap((r) =>
+    r.seller_submission_reviews.map((v) =>
+      factCommunicationId('submission_review', v.id),
+    ),
+  )
+  const drafts = sessionIds.length
+    ? await ctx.client
+        .from('reception_sources_current')
+        .select('session_id')
+        .eq('tenant_id', active.id)
+        .in('session_id', sessionIds)
+    : { data: [], error: null }
+  const notices = notificationIds.length
+    ? await ctx.client
+        .from('seller_communications')
+        .select('id,status')
+        .eq('tenant_id', active.id)
+        .in('id', notificationIds)
+    : { data: [], error: null }
+  if (drafts.error || notices.error) throw new Error('REQUEST_FAILED')
   const pages = Math.max(1, Math.ceil(total / 25))
   if (page > pages) redirect(`/intake/submissions?page=${pages}`)
   return (
@@ -58,6 +84,46 @@ export default async function Submissions({
               <>
                 <strong>{d[review.decision]}</strong>
                 <p>{review.note}</p>
+                {active.role !== 'readonly' && (
+                  <SubmissionNotification
+                    tenantId={active.id}
+                    reviewId={review.id}
+                    status={
+                      notices.data?.find(
+                        (n) =>
+                          n.id ===
+                          factCommunicationId('submission_review', review.id),
+                      )?.status ?? null
+                    }
+                    d={d}
+                  />
+                )}
+                {review.decision === 'invite' &&
+                  active.role !== 'readonly' &&
+                  (drafts.data?.some(
+                    (s) =>
+                      s.session_id === row.submission_receptions[0]?.session_id,
+                  ) ? (
+                    <Link
+                      className="btn btn-primary"
+                      href={`/intake/reception/${row.submission_receptions[0].session_id}`}
+                    >
+                      {d.continueReception}
+                    </Link>
+                  ) : (
+                    <SubmissionReception
+                      tenantId={active.id}
+                      submissionId={row.id}
+                      description={row.description}
+                      price={
+                        row.seller_price === null
+                          ? (row.assistance_output?.suggestion
+                              .indicativePrice ?? '')
+                          : String(row.seller_price)
+                      }
+                      d={d}
+                    />
+                  ))}
               </>
             ) : active.role !== 'readonly' ? (
               <SubmissionReview

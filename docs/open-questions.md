@@ -4,8 +4,11 @@ Seller pre-review pricing (2026-10-08): owner confirms independent photo availab
 and store/seller/seller-with-approval price responsibility. Explicit store policy
 controls new submissions; guide answers do not activate it. Prices and currency
 freeze with each submission; invitation is not receipt or sale acceptance.
-Carrying a submitted price into physical item reception is a separate workflow;
-this implementation does not automatically set inventory prices. Hosted shared-key
+Owner follow-up authorizes an immutable link to one reception draft. Photos and
+staff-confirmed description/price carry over; physical custody, agreement and
+commercial acceptance still use the existing reception steps. No invitation
+creates inventory. Review emails follow existing automatic notification policy
+and seller preferences; an explicit staff notification remains available. Hosted shared-key
 web search still requires a configured credit tariff; no new tariff is assumed.
 
 

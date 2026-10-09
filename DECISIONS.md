@@ -9,6 +9,7 @@
 - 2026-10-09: Seller portal economy and handover sections use distinct stable component identities. Refreshes retain one economy form and update its authoritative balance; store/seller switches still reset local state. Financial rules and access controls are unchanged.
 
 - 2026-10-09: Payment sheets list approved unpaid payouts oldest first, 50 per page, with snapshot CSV/print and page totals. Downloading never pays; staff record actual payment through the existing referenced engine command. No bank instructions, ledger rules or permissions change.
+- 2026-10-09: Offline pricing evaluation separates staff prices from non-returned sales, rejects future-informed estimates and mixed currencies, and reports coverage, range width and error with sample counts. It never changes prices or treats unsold items as zero-price sales.
 
 - 2026-09-30: Quick and bag intake validate exact decimal prices before sending. Confirmation repeats the seller and the accepted review's immutable price/currency, including on retry. An unavailable price read preserves confirmed acceptance; no form or current-policy price is substituted.
 

@@ -53,6 +53,16 @@ it('rejects duplicate goods and mixed currency rather than averaging unlike samp
     evaluatePricing({ ...cohort, observations: [row, row] }),
   ).toThrow()
   expect(() => evaluatePricing({ ...cohort, currency: 'EUR' })).toThrow()
+  const itemId = 'abcdefab-0000-4000-8000-000000000001'
+  expect(() =>
+    evaluatePricing({
+      ...cohort,
+      observations: [
+        { ...row, itemId },
+        { ...row, itemId: itemId.toUpperCase() },
+      ],
+    }),
+  ).toThrow()
 })
 it('rejects hindsight estimates, reversed ranges and fractional minor units', () => {
   for (const prediction of [

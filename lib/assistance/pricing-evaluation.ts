@@ -5,7 +5,7 @@ const time = z.iso.datetime({ offset: true })
 const basis = z.enum(['store_sales', 'web', 'model_estimate', 'mixed'])
 const observation = z
   .strictObject({
-    itemId: z.uuid(),
+    itemId: z.uuid().transform((id) => id.toLowerCase()),
     currency: z.string().regex(/^[A-Z]{3}$/),
     prediction: z
       .strictObject({ at: time, lowOre: ore, highOre: ore, basis })

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { SignOut } from '@/components/platform/sign-out'
 import { Brand } from '@/components/platform/brand'
 import { TenantForm, OpenTenant } from '@/components/platform/tenant-form'
+import { AdsConsentControl } from '@/components/platform/ads-consent'
 export default async function Onboarding() {
   const ctx = await requirePlatform(false)
   const d = dictionary(ctx.locale)
@@ -17,6 +18,7 @@ export default async function Onboarding() {
         <p>{d.onboardingIntro}</p>
       </div>
       <section className="card">
+        <AdsConsentControl d={d} locale={ctx.locale} />
         <TenantForm d={d} locale={ctx.locale} />
       </section>
       {ctx.tenants.length > 0 && (

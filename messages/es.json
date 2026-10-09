@@ -3296,5 +3296,13 @@
     "useSuggestedPrice": "Usar precio sugerido",
     "settingsChanged": "La configuración de la tienda ha cambiado. Recarga la página.",
     "reload": "Recargar"
+  },
+  "adsMeasurement": {
+    "title": "Medición de anuncios",
+    "intro": "¿Permitir cookies para medir si nuestros anuncios de Google generan nuevas tiendas?",
+    "details": "Más información",
+    "reject": "No, gracias",
+    "accept": "Permitir",
+    "settings": "Configuración de cookies"
   }
 }

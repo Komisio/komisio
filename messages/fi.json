@@ -3296,5 +3296,13 @@
     "useSuggestedPrice": "Käytä hintaehdotusta",
     "settingsChanged": "Myymälän asetukset ovat muuttuneet. Lataa sivu uudelleen.",
     "reload": "Lataa uudelleen"
+  },
+  "adsMeasurement": {
+    "title": "Mainonnan mittaus",
+    "intro": "Sallitko evästeet, joilla mitataan, johtavatko Google-mainoksemme uusiin kauppoihin?",
+    "details": "Lue lisää",
+    "reject": "Ei kiitos",
+    "accept": "Salli",
+    "settings": "Evästeasetukset"
   }
 }

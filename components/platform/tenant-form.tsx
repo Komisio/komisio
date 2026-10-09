@@ -9,6 +9,7 @@ import type { Tenant } from '@/lib/platform/types'
 import { Button } from '@/components/ui/button'
 import { useCommand } from './use-command'
 import { Feedback } from './feedback'
+import { measureStoreRegistration } from '@/lib/platform/ads-measurement'
 const subscribe = () => () => {}
 const clientReady = () => true
 const serverReady = () => false
@@ -41,9 +42,18 @@ export function TenantForm({
             requestId: requestId.current,
             currency: form.get('currency'),
           },
+      { refresh: false },
     )
     if (result && !tenant) {
+      if (await measureStoreRegistration(requestId.current)) {
+        // Unload the optional tag before entering the private store workspace.
+        // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+        window.location.assign('/')
+        return
+      }
       action.router.push('/')
+      action.router.refresh()
+    } else if (result) {
       action.router.refresh()
     }
   }

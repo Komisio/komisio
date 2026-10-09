@@ -3290,5 +3290,13 @@
     "useSuggestedPrice": "Använd prisförslaget",
     "settingsChanged": "Butikens inställningar har ändrats. Ladda om sidan.",
     "reload": "Ladda om"
+  },
+  "adsMeasurement": {
+    "title": "Annonsmätning",
+    "intro": "Tillåt cookies för att mäta om våra Google-annonser leder till nya butiker?",
+    "details": "Läs mer",
+    "reject": "Nej tack",
+    "accept": "Tillåt",
+    "settings": "Cookieinställningar"
   }
 }

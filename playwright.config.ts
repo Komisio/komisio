@@ -6,6 +6,8 @@ export default defineConfig({
   expect: { timeout: 15000 },
   fullyParallel: false,
   workers: 1,
+  // Stop known-red CI runs early; a green release still runs the whole suite.
+  maxFailures: process.env.CI ? 1 : 0,
   use: {
     baseURL: 'http://127.0.0.1:3000',
     headless: true,

@@ -199,7 +199,7 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
     await expect(
       page
         .getByRole('region', { name: d.bagProcessing.title, exact: true })
-        .getByRole('status'),
+        .locator('[data-bag-processing-state]'),
     ).toHaveText(d.bagProcessing.open)
     await page
       .locator('.bag-received-items li')

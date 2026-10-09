@@ -340,7 +340,7 @@ export default async function Intake({
               bag: filters.bag || undefined,
             })}
           >
-            {d.showAllBags}
+            {all.handovers.allStatuses}
           </Link>
           {(['open', 'completed'] as const).map((state) => (
             <Link

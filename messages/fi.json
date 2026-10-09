@@ -255,7 +255,10 @@
       ]
     },
     "bagPendingWork": "Käsittelemättömiä tuoteluonnoksia on jäljellä.",
-    "bagCompleted": "Tämä vastaanotto on käsitelty. Avaa se uudelleen jatkaaksesi."
+    "bagCompleted": "Tämä vastaanotto on käsitelty. Avaa se uudelleen jatkaaksesi.",
+    "stocktakeAmbiguous": "Koodi vastaa useita tuotteita. Avaa oikea tuote ja käytä sen koko tunnusta.",
+    "stocktakeItemMissing": "Tuotetta ei löytynyt tästä myymälästä.",
+    "stocktakePending": "Tarkista jäljellä olevat tuotteet ennen päättämistä."
   },
   "brand": "Komisio",
   "tagline": "Enemmän tilaa tavaroille elää uudelleen.",
@@ -3349,5 +3352,36 @@
     "pending": "Viimeistele tai arkistoi jäljellä olevat tuoteluonnokset ensin.",
     "history": "Viimeisimmät tapahtumat",
     "saved": "Tila tallennettu."
+  },
+  "stocktake": {
+    "title": "Inventointi",
+    "start": "Aloita inventointi",
+    "scan": "Kirjaa",
+    "reference": "Skannaa tai kirjoita tuotekoodi",
+    "scanned": "Kirjattu",
+    "finish": "Päätä inventointi",
+    "closed": "Päätetty",
+    "open": "Käynnissä",
+    "all": "Kaikki",
+    "unchecked": "Tarkistamatta",
+    "deviations": "Poikkeamat",
+    "found": "Löytynyt",
+    "missing": "Puuttuu",
+    "damaged": "Vaurioitunut",
+    "changed": "Ei enää varastossa",
+    "unexpected": "Alkulistan ulkopuolella",
+    "finding": "Kirjaa havainto",
+    "reason": "Kommentti",
+    "save": "Tallenna",
+    "history": "Viimeisimmät tapahtumat",
+    "recent": "Viimeisimmät inventoinnit",
+    "empty": "Tällä listalla ei ole tuotteita.",
+    "total": "Tuotteet",
+    "help": "Tietoa inventoinnista",
+    "scope": "Skannaa tuotteiden etiketit. Alkulista sisältää myymälän varaston inventoinnin alkaessa.",
+    "effects": "Kirjaa puuttuvat tai vaurioituneet tuotteet kommentin kanssa. Tämä ei muuta myyntejä tai myyjän saldoa.",
+    "next": "Seuraava",
+    "previous": "Edellinen",
+    "back": "Varastoon"
   }
 }

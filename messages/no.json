@@ -255,7 +255,10 @@
       ]
     },
     "bagPendingWork": "Det finnes vareutkast som må behandles.",
-    "bagCompleted": "Innleveringen er ferdigbehandlet. Åpne den igjen for å fortsette."
+    "bagCompleted": "Innleveringen er ferdigbehandlet. Åpne den igjen for å fortsette.",
+    "stocktakeAmbiguous": "Koden matcher flere varer. Åpne riktig vare og bruk hele ID-en.",
+    "stocktakeItemMissing": "Varen finnes ikke i denne butikken.",
+    "stocktakePending": "Kontroller de resterende varene før du avslutter."
   },
   "brand": "Komisio",
   "tagline": "Mer plass til ting som kan leve videre.",
@@ -3343,5 +3346,36 @@
     "pending": "Fullfør eller arkiver gjenstående vareutkast først.",
     "history": "Siste hendelser",
     "saved": "Status lagret."
+  },
+  "stocktake": {
+    "title": "Varetelling",
+    "start": "Start varetelling",
+    "scan": "Registrer",
+    "reference": "Skann eller skriv varekode",
+    "scanned": "Registrert",
+    "finish": "Avslutt varetelling",
+    "closed": "Avsluttet",
+    "open": "Pågår",
+    "all": "Alle",
+    "unchecked": "Ikke kontrollert",
+    "deviations": "Avvik",
+    "found": "Funnet",
+    "missing": "Mangler",
+    "damaged": "Skadet",
+    "changed": "Ikke lenger på lager",
+    "unexpected": "Utenfor startlisten",
+    "finding": "Registrer avvik",
+    "reason": "Kommentar",
+    "save": "Lagre",
+    "history": "Siste hendelser",
+    "recent": "Siste varetellinger",
+    "empty": "Ingen varer i denne listen.",
+    "total": "Varer",
+    "help": "Om varetelling",
+    "scope": "Skann vareetikettene. Startlisten inneholder butikkens lager da varetellingen startet.",
+    "effects": "Registrer manglende eller skadede varer med en kommentar. Dette endrer ikke salg eller selgerens saldo.",
+    "next": "Neste",
+    "previous": "Forrige",
+    "back": "Til lageret"
   }
 }

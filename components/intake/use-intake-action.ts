@@ -60,6 +60,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
           return null
         }
         const definitive = [
+          'STOCKTAKE_AMBIGUOUS',
           'INVALID_INPUT',
           'AGREEMENT_CHANGED',
           'POLICY_CHANGED',
@@ -74,7 +75,10 @@ export function useIntakeAction(d: Dictionary['intake']) {
           'INSPECTION_ARCHIVED',
           'INSPECTION_STATUS_UNCHANGED',
         ].includes(result.error)
-        if (definitive) {
+        const stocktakeItemMissing =
+          command.data.action === 'scanStocktake' &&
+          result.error === 'ITEM_NOT_FOUND'
+        if (definitive || stocktakeItemMissing) {
           pending.current = null
           setLocked(false)
         }
@@ -84,6 +88,11 @@ export function useIntakeAction(d: Dictionary['intake']) {
             'AUTH_REQUIRED',
             'FORBIDDEN',
             'TENANT_CHANGED',
+            'STOCKTAKE_OPEN',
+            'STOCKTAKE_CHANGED',
+            'STOCKTAKE_CLOSED',
+            'STOCKTAKE_NOT_FOUND',
+            'STOCKTAKE_PENDING',
             'BAG_PENDING_WORK',
             'BAG_PROCESSING_CHANGED',
             'BAG_COMPLETED',
@@ -103,46 +112,61 @@ export function useIntakeAction(d: Dictionary['intake']) {
         )
           setNeedsReload(true)
         setError(
-          result.error === 'BAG_PENDING_WORK'
-            ? d.bagPendingWork
-            : result.error === 'BAG_COMPLETED'
-              ? d.bagCompleted
-              : result.error === 'BAG_PROCESSING_CHANGED'
-                ? d.recordChanged
+          result.error === 'STOCKTAKE_AMBIGUOUS'
+            ? d.stocktakeAmbiguous
+            : stocktakeItemMissing
+              ? d.stocktakeItemMissing
+              : result.error === 'STOCKTAKE_PENDING'
+                ? d.stocktakePending
                 : [
-                      'INSPECTION_ARCHIVED',
-                      'INSPECTION_STATUS_UNCHANGED',
-                      'INSPECTION_NOT_FOUND',
+                      'STOCKTAKE_OPEN',
+                      'STOCKTAKE_CHANGED',
+                      'STOCKTAKE_CLOSED',
+                      'STOCKTAKE_NOT_FOUND',
                     ].includes(result.error)
-                  ? d.inspectionUnavailable
-                  : result.error === 'INSPECTION_DRAFT_CHANGED'
-                    ? d.inspectionChanged
-                    : result.error === 'INSPECTION_CONTEXT_CHANGED'
-                      ? d.changed
-                      : [
-                            'PROFILE_CHANGED',
-                            'SELLER_TERMS_CHANGED',
-                            'MAP_CHANGED',
-                            'PAYOUT_NOT_REQUESTED',
-                            'PAYOUT_NOT_APPROVED',
-                            'PAYOUT_DECIDED',
-                          ].includes(result.error)
+                  ? d.recordChanged
+                  : result.error === 'BAG_PENDING_WORK'
+                    ? d.bagPendingWork
+                    : result.error === 'BAG_COMPLETED'
+                      ? d.bagCompleted
+                      : result.error === 'BAG_PROCESSING_CHANGED'
                         ? d.recordChanged
-                        : result.error === 'AGREEMENT_CHANGED'
-                          ? d.agreementChanged
-                          : result.error === 'AGREEMENT_REQUIRED'
-                            ? d.agreementRequired
-                            : result.error === 'INVALID_INPUT'
-                              ? d.invalid
-                              : ['TENANT_CHANGED', 'POLICY_CHANGED'].includes(
-                                    result.error,
-                                  )
-                                ? d.changed
-                                : ['FORBIDDEN', 'AUTH_REQUIRED'].includes(
-                                      result.error,
-                                    )
-                                  ? d.denied
-                                  : d.failed,
+                        : [
+                              'INSPECTION_ARCHIVED',
+                              'INSPECTION_STATUS_UNCHANGED',
+                              'INSPECTION_NOT_FOUND',
+                            ].includes(result.error)
+                          ? d.inspectionUnavailable
+                          : result.error === 'INSPECTION_DRAFT_CHANGED'
+                            ? d.inspectionChanged
+                            : result.error === 'INSPECTION_CONTEXT_CHANGED'
+                              ? d.changed
+                              : [
+                                    'PROFILE_CHANGED',
+                                    'SELLER_TERMS_CHANGED',
+                                    'MAP_CHANGED',
+                                    'PAYOUT_NOT_REQUESTED',
+                                    'PAYOUT_NOT_APPROVED',
+                                    'PAYOUT_DECIDED',
+                                  ].includes(result.error)
+                                ? d.recordChanged
+                                : result.error === 'AGREEMENT_CHANGED'
+                                  ? d.agreementChanged
+                                  : result.error === 'AGREEMENT_REQUIRED'
+                                    ? d.agreementRequired
+                                    : result.error === 'INVALID_INPUT'
+                                      ? d.invalid
+                                      : [
+                                            'TENANT_CHANGED',
+                                            'POLICY_CHANGED',
+                                          ].includes(result.error)
+                                        ? d.changed
+                                        : [
+                                              'FORBIDDEN',
+                                              'AUTH_REQUIRED',
+                                            ].includes(result.error)
+                                          ? d.denied
+                                          : d.failed,
         )
         if (result.error === 'AGREEMENT_REQUIRED') router.refresh()
         return null

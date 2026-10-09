@@ -6,6 +6,9 @@ completion explicitly closes preparation, only when no drafts or receptions
 remain unfinished. Reopening requires a reason. These observations do not
 change custody, item lifecycle, seller balances or accounting; financial
 adjustments for missing/damaged goods still require separate decisions.
+The inventory session freezes expected stock, distinguishes unchecked items
+from explicit missing/damaged findings, and records stock changes separately.
+Physical scanner and real-store acceptance remain unverified.
 
 Seller agreement self-service (2026-10-09): the owner prioritizes explicit
 acceptance of the current published agreement in the seller portal. Existing
@@ -88,8 +91,8 @@ this does not change financial rules or agreement evidence requirements.
 Store flow (2026-09-24): owner approved an explanatory map with work-area links
 and internal editable instructions. Instructions do not configure or execute
 operations. The owner approved a live intake snapshot: unstarted drop-offs, unaccepted
-drafts, reception queues and inventory stages. Whole-drop-off completion is not
-recorded; starting registration does not establish completion. Individual item
+drafts, reception queues and inventory stages. Whole-drop-off completion now
+has an explicit staff action; starting registration still does not establish it. Individual item
 progress and free diagram editing remain follow-ups.
 
 Shopify public distribution (2026-09-23): App Store readiness requires

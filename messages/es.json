@@ -255,7 +255,10 @@
       ]
     },
     "bagPendingWork": "Quedan borradores de artículos por revisar.",
-    "bagCompleted": "Esta entrega está completada. Reábrela para continuar."
+    "bagCompleted": "Esta entrega está completada. Reábrela para continuar.",
+    "stocktakeAmbiguous": "El código coincide con varios artículos. Abre el correcto y usa su ID completo.",
+    "stocktakeItemMissing": "No se encontró el artículo en esta tienda.",
+    "stocktakePending": "Comprueba los artículos restantes antes de finalizar."
   },
   "brand": "Komisio",
   "tagline": "Más espacio para que las cosas vuelvan a vivir.",
@@ -3349,5 +3352,36 @@
     "pending": "Completa o archiva primero los borradores de artículos pendientes.",
     "history": "Actividad reciente",
     "saved": "Estado guardado."
+  },
+  "stocktake": {
+    "title": "Inventario",
+    "start": "Iniciar inventario",
+    "scan": "Registrar",
+    "reference": "Escanear o escribir código",
+    "scanned": "Registrado",
+    "finish": "Finalizar inventario",
+    "closed": "Finalizado",
+    "open": "En curso",
+    "all": "Todos",
+    "unchecked": "Sin comprobar",
+    "deviations": "Diferencias",
+    "found": "Encontrado",
+    "missing": "Falta",
+    "damaged": "Dañado",
+    "changed": "Ya no está en stock",
+    "unexpected": "Fuera de la lista inicial",
+    "finding": "Registrar incidencia",
+    "reason": "Comentario",
+    "save": "Guardar",
+    "history": "Actividad reciente",
+    "recent": "Inventarios recientes",
+    "empty": "No hay artículos en esta lista.",
+    "total": "Artículos",
+    "help": "Acerca del inventario",
+    "scope": "Escanea las etiquetas. La lista inicial contiene el stock de la tienda al comenzar el inventario.",
+    "effects": "Registra los artículos que faltan o están dañados con un comentario. Esto no cambia las ventas ni el saldo del vendedor.",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "back": "Volver al stock"
   }
 }

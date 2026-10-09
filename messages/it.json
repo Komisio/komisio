@@ -255,7 +255,10 @@
       ]
     },
     "bagPendingWork": "Ci sono ancora bozze di articoli da gestire.",
-    "bagCompleted": "Questa consegna è completata. Riaprila per continuare."
+    "bagCompleted": "Questa consegna è completata. Riaprila per continuare.",
+    "stocktakeAmbiguous": "Il codice corrisponde a più articoli. Apri quello corretto e usa il suo ID completo.",
+    "stocktakeItemMissing": "Articolo non trovato in questo negozio.",
+    "stocktakePending": "Controlla gli articoli rimanenti prima di concludere."
   },
   "brand": "Komisio",
   "tagline": "Più spazio perché le cose vivano di nuovo.",
@@ -3343,5 +3346,36 @@
     "pending": "Completa o archivia prima le bozze degli articoli rimanenti.",
     "history": "Attività recenti",
     "saved": "Stato salvato."
+  },
+  "stocktake": {
+    "title": "Inventario",
+    "start": "Avvia inventario",
+    "scan": "Registra",
+    "reference": "Scansiona o inserisci il codice",
+    "scanned": "Registrato",
+    "finish": "Concludi inventario",
+    "closed": "Concluso",
+    "open": "In corso",
+    "all": "Tutti",
+    "unchecked": "Da controllare",
+    "deviations": "Differenze",
+    "found": "Trovato",
+    "missing": "Mancante",
+    "damaged": "Danneggiato",
+    "changed": "Non più in magazzino",
+    "unexpected": "Fuori dalla lista iniziale",
+    "finding": "Registra anomalia",
+    "reason": "Commento",
+    "save": "Salva",
+    "history": "Attività recenti",
+    "recent": "Inventari recenti",
+    "empty": "Nessun articolo in questa lista.",
+    "total": "Articoli",
+    "help": "Informazioni sull’inventario",
+    "scope": "Scansiona le etichette. La lista iniziale contiene gli articoli in magazzino all’avvio dell’inventario.",
+    "effects": "Registra gli articoli mancanti o danneggiati con un commento. Vendite e saldo del venditore non vengono modificati.",
+    "next": "Avanti",
+    "previous": "Indietro",
+    "back": "Torna al magazzino"
   }
 }

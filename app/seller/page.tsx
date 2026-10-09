@@ -275,7 +275,7 @@ export default async function SellerPortal({
         </section>
       )}
       <SellerEconomyForms
-        key={`${account.tenantId}:${account.sellerId}`}
+        key={`economy:${account.tenantId}:${account.sellerId}`}
         tenantId={account.tenantId}
         sellerId={account.sellerId}
         currency={currency}
@@ -286,7 +286,7 @@ export default async function SellerPortal({
         recovery={all.intake}
       />
       <SellerHandovers
-        key={`${account.tenantId}:${account.sellerId}`}
+        key={`handovers:${account.tenantId}:${account.sellerId}`}
         tenantId={account.tenantId}
         sellerId={account.sellerId}
         handovers={handovers}

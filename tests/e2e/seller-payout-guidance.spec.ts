@@ -283,6 +283,7 @@ test('seller payout guidance explains unavailable balances, validates amounts an
     )
     await submit.click()
     expect((await refused).status()).toBe(400)
+    await expect(request).toHaveCount(1)
     await expect(request.getByRole('alert')).toHaveText(
       sv.sellerPortal.payoutErrors.PAYOUT_EXCEEDS_BALANCE,
     )

@@ -9,7 +9,7 @@ const reference = z
 export const bagQueueNavigation = z
   .object({
     seller: z.uuid().optional(),
-    state: z.enum(['unstarted', 'drafts']).optional(),
+    state: z.enum(['unstarted', 'drafts', 'open', 'completed']).optional(),
     bag: z
       .string()
       .trim()
@@ -38,6 +38,7 @@ const bagQueueRow = z.object({
   reference: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
   note: z.string(),
   received_at: z.iso.datetime({ offset: true }),
+  processing_state: z.enum(['open', 'completed']).default('open'),
   sellers: z.object({ name: z.string() }),
 })
 

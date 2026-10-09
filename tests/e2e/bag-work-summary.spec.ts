@@ -137,7 +137,11 @@ test('handover progress includes both intake paths and opens unfinished work', a
     await expect(summary.locator('[data-bag-count=drafts]')).toHaveText('0')
     await expect(summary.locator('[data-bag-count=receptions]')).toHaveText('0')
     await expect(summary.getByRole('link')).toHaveCount(0)
-    await expect(summary.getByText(d.bagProgress.hint)).toBeVisible()
+    await expect(
+      page
+        .getByRole('region', { name: d.bagProcessing.title, exact: true })
+        .getByRole('status'),
+    ).toHaveText(d.bagProcessing.open)
   } finally {
     await f.close()
   }

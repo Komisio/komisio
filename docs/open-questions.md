@@ -1,5 +1,12 @@
 # Open questions
 
+Drop-off completion and stocktaking (2026-10-09): the owner approves the new
+immutable completion/reopen history and inventory session/scan tables. A staff
+completion explicitly closes preparation, only when no drafts or receptions
+remain unfinished. Reopening requires a reason. These observations do not
+change custody, item lifecycle, seller balances or accounting; financial
+adjustments for missing/damaged goods still require separate decisions.
+
 Seller agreement self-service (2026-10-09): the owner prioritizes explicit
 acceptance of the current published agreement in the seller portal. Existing
 identity linkage and immutable agreement evidence are reused; seller acceptance

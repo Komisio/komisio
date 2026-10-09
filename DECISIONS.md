@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-09: Owner approves immutable drop-off completion/reopen history and stocktaking sessions with scan history. Staff complete drop-offs only without pending drafts/receptions; reopening requires a reason. Inventory observations never create sales or financial adjustments.
+
 - 2026-10-09: Seller portal economy and handover sections use distinct stable component identities. Refreshes retain one economy form and update its authoritative balance; store/seller switches still reset local state. Financial rules and access controls are unchanged.
 
 - 2026-10-09: Payment sheets list approved unpaid payouts oldest first, 50 per page, with snapshot CSV/print and page totals. Downloading never pays; staff record actual payment through the existing referenced engine command. No bank instructions, ledger rules or permissions change.

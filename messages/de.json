@@ -145,7 +145,8 @@
       "PHOTO_UPLOAD_FAILED": "Das Foto konnte nicht hochgeladen werden. Versuchen Sie ein anderes Foto.",
       "IMAGE_TOO_LARGE": "Das Foto ist zu groß (höchstens 3 MB).",
       "INVALID_IMAGE": "Die Datei ist kein gültiges JPEG- oder PNG-Bild.",
-      "REQUEST_FAILED": "Die Anfrage ist fehlgeschlagen. Versuchen Sie es erneut."
+      "REQUEST_FAILED": "Die Anfrage ist fehlgeschlagen. Versuchen Sie es erneut.",
+      "BAG_COMPLETED": "Diese Einlieferung ist abgeschlossen. Öffnen Sie sie erneut, um fortzufahren."
     },
     "addPhoto": "Foto aufnehmen oder auswählen",
     "sellerSearchHint": "Name, E-Mail oder Telefon",
@@ -252,7 +253,9 @@
         "Beschreiben Sie bei Bedarf die Tasche oder den Gegenstand. Bestätigen Sie den Empfang erst, wenn die Einlieferung im Laden ist.",
         "Bestätigen Sie den Empfang und öffnen Sie das Etikett. Die Artikel werden separat geprüft und erfasst."
       ]
-    }
+    },
+    "bagPendingWork": "Es sind noch Artikelentwürfe zu bearbeiten.",
+    "bagCompleted": "Diese Einlieferung ist abgeschlossen. Öffnen Sie sie erneut, um fortzufahren."
   },
   "brand": "Komisio",
   "tagline": "Mehr Raum für Dinge, die weiterleben.",
@@ -3335,5 +3338,16 @@
     "navigation": "Seiten der Zahlungsübersicht",
     "previous": "Zurück",
     "next": "Weiter"
+  },
+  "bagProcessing": {
+    "title": "Einlieferung",
+    "open": "In Bearbeitung",
+    "completed": "Abgeschlossen",
+    "complete": "Als abgeschlossen markieren",
+    "reopen": "Wieder öffnen",
+    "reason": "Grund für die Wiedereröffnung",
+    "pending": "Schließen Sie zunächst die übrigen Artikelentwürfe ab oder archivieren Sie sie.",
+    "history": "Letzte Aktivitäten",
+    "saved": "Status gespeichert."
   }
 }

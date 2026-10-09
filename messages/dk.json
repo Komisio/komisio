@@ -145,7 +145,8 @@
       "PHOTO_UPLOAD_FAILED": "Fotoet kunne ikke uploades. Prøv et andet foto.",
       "IMAGE_TOO_LARGE": "Fotoet er for stort (højst 3 MB).",
       "INVALID_IMAGE": "Filen er ikke et gyldigt JPEG- eller PNG-billede.",
-      "REQUEST_FAILED": "Forespørgslen mislykkedes. Prøv igen."
+      "REQUEST_FAILED": "Forespørgslen mislykkedes. Prøv igen.",
+      "BAG_COMPLETED": "Indleveringen er færdigbehandlet. Genåbn den for at fortsætte."
     },
     "addPhoto": "Tag eller vælg et billede",
     "sellerSearchHint": "Navn, e-mail eller telefon",
@@ -252,7 +253,9 @@
         "Beskriv gerne posen eller genstanden. Bekræft først modtagelsen, når indleveringen er i butikken.",
         "Bekræft modtagelsen, og åbn etiketten. Varerne gennemgås og registreres separat."
       ]
-    }
+    },
+    "bagPendingWork": "Der er varekladder, som mangler at blive behandlet.",
+    "bagCompleted": "Indleveringen er færdigbehandlet. Genåbn den for at fortsætte."
   },
   "brand": "Komisio",
   "tagline": "Mere plads til ting, der får nyt liv.",
@@ -3329,5 +3332,16 @@
     "navigation": "Sider i betalingsoversigten",
     "previous": "Forrige",
     "next": "Næste"
+  },
+  "bagProcessing": {
+    "title": "Indlevering",
+    "open": "Påbegyndt",
+    "completed": "Færdigbehandlet",
+    "complete": "Markér som færdigbehandlet",
+    "reopen": "Genåbn",
+    "reason": "Hvorfor genåbner du?",
+    "pending": "Færdiggør eller arkivér de resterende varekladder først.",
+    "history": "Seneste aktivitet",
+    "saved": "Status gemt."
   }
 }

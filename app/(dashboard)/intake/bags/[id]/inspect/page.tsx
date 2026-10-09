@@ -1,3 +1,4 @@
+import { readBagProcessing } from '@/lib/engine/bag-processing'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { BagRegisteredItems } from '@/components/intake/bag-registered-items'
 import { readBagRegisteredItems } from '@/lib/engine/bag-registered-items'
@@ -105,6 +106,7 @@ export default async function InspectBag({
         canManageTypes={['owner', 'admin'].includes(ctx.active!.role)}
       />
     )
+  const processing = await readBagProcessing(ctx.client, tenantId, id)
   const registered = await readBagRegisteredItems(
     ctx.client,
     tenantId,
@@ -168,25 +170,33 @@ export default async function InspectBag({
         tenantId={tenantId}
         bagId={id}
         locale={ctx.locale}
+        processing={processing}
+        readonly={ctx.active!.role === 'readonly'}
       />
-      {ctx.active!.role !== 'readonly' && !version && !selected?.archived && (
-        <InspectionForm
-          key={`${tenantId}:${id}:${draft ?? 'new'}`}
-          tenantId={tenantId}
-          bagId={id}
-          current={selected}
-          d={d}
-        />
-      )}
-      {selected && ctx.active!.role !== 'readonly' && !version && (
-        <InspectionArchiveForm
-          key={draft}
-          tenantId={tenantId}
-          bagId={id}
-          current={selected}
-          d={d}
-        />
-      )}
+      {processing.state === 'open' &&
+        ctx.active!.role !== 'readonly' &&
+        !version &&
+        !selected?.archived && (
+          <InspectionForm
+            key={`${tenantId}:${id}:${draft ?? 'new'}`}
+            tenantId={tenantId}
+            bagId={id}
+            current={selected}
+            d={d}
+          />
+        )}
+      {selected &&
+        processing.state === 'open' &&
+        ctx.active!.role !== 'readonly' &&
+        !version && (
+          <InspectionArchiveForm
+            key={draft}
+            tenantId={tenantId}
+            bagId={id}
+            current={selected}
+            d={d}
+          />
+        )}
       {historical && (
         <section className="card intake-form inspection-historical">
           <h2>
@@ -287,7 +297,7 @@ export default async function InspectBag({
             </p>
           ) : selected.archived ? (
             <p role="status">{s.archived}</p>
-          ) : ctx.active!.role !== 'readonly' ? (
+          ) : processing.state === 'open' && ctx.active!.role !== 'readonly' ? (
             <AcceptItemForm
               tenantId={tenantId}
               originKind="inspection_draft"

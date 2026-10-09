@@ -145,7 +145,8 @@
       "PHOTO_UPLOAD_FAILED": "The photo could not be uploaded. Try another photo.",
       "IMAGE_TOO_LARGE": "The photo is too large (3 MB at most).",
       "INVALID_IMAGE": "The file is not a valid JPEG or PNG image.",
-      "REQUEST_FAILED": "The request failed. Retry."
+      "REQUEST_FAILED": "The request failed. Retry.",
+      "BAG_COMPLETED": "This drop-off is completed. Reopen it to continue."
     },
     "addPhoto": "Take or choose a photo",
     "sellerSearchHint": "Name, email or phone",
@@ -252,7 +253,9 @@
         "Optionally describe the bag or object. Confirm receipt only when the drop-off is in the store.",
         "Confirm receipt and open the label. Items are inspected and registered separately."
       ]
-    }
+    },
+    "bagPendingWork": "There are unfinished item drafts.",
+    "bagCompleted": "This drop-off is completed. Reopen it to continue."
   },
   "brand": "Komisio",
   "tagline": "More room for things to live again.",
@@ -3329,5 +3332,16 @@
     "navigation": "Payment sheet pages",
     "previous": "Previous",
     "next": "Next"
+  },
+  "bagProcessing": {
+    "title": "Drop-off",
+    "open": "In progress",
+    "completed": "Completed",
+    "complete": "Mark as completed",
+    "reopen": "Reopen",
+    "reason": "Reason for reopening",
+    "pending": "Finish or archive the remaining item drafts first.",
+    "history": "Recent activity",
+    "saved": "Status saved."
   }
 }

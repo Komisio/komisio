@@ -196,9 +196,11 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
     await page.reload()
     await expect(page.locator('.bag-received-items li')).toHaveCount(10)
     await expect(page.locator('[data-bag-count="accepted"]')).toHaveText('10')
-    await expect(page.locator('.bag-progress')).toContainText(
-      d.bagProgress.hint,
-    )
+    await expect(
+      page
+        .getByRole('region', { name: d.bagProcessing.title, exact: true })
+        .getByRole('status'),
+    ).toHaveText(d.bagProcessing.open)
     await page
       .locator('.bag-received-items li')
       .filter({ hasText: 'Synthetic day item 16' })

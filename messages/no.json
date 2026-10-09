@@ -1108,7 +1108,8 @@
     "evidenceKinds": {
       "staff_recorded": "avtalebevis registrert av personalet",
       "seller_response": "innlevererens godkjenning av gjennomgangen",
-      "none": "ingen"
+      "none": "ingen",
+      "seller_portal": "avtale godtatt i selgerportalen"
     },
     "transferHeading": "Flytt til en annen butikk i kjeden",
     "transferHint": "Avslutter salgsperioden her med årsaken overføring, og tar imot en innlevering for samme innleverer i den andre butikken med ett utkast som bærer denne beskrivelsen. Den andre butikken tar den imot under sine egne vilkår; innlevererens saldo blir værende her.",
@@ -3298,5 +3299,16 @@
     "reject": "Nei takk",
     "accept": "Tillat",
     "settings": "Innstillinger for informasjonskapsler"
+  },
+  "sellerAgreement": {
+    "title": "Selgeravtale",
+    "view": "Vis avtalen",
+    "review": "Les og godta avtalen",
+    "accepted": "Avtalen er godtatt",
+    "recorded": "Butikken har registrert avtalen din",
+    "accept": "Jeg godtar avtalen",
+    "failed": "Svaret kunne ikke bekreftes. Prøv igjen.",
+    "changed": "Avtalen er endret. Les den nye versjonen før du godtar.",
+    "acceptedBy": "Godtatt av"
   }
 }

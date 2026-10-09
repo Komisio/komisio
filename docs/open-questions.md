@@ -1,5 +1,12 @@
 # Open questions
 
+Seller agreement self-service (2026-10-09): the owner prioritizes explicit
+acceptance of the current published agreement in the seller portal. Existing
+identity linkage and immutable agreement evidence are reused; seller acceptance
+is distinguished from staff-recorded evidence. Existing store receipt and
+commercial-acceptance prerequisites are unchanged. This is account-authenticated
+acceptance, not independent legal-identity verification or an e-signature service.
+
 Advertising measurement (2026-10-09): owner authorizes Google Ads store-registration
 measurement. The action is created with no value, one conversion, enhanced
 conversions off, and a campaign-specific registration goal. The owner published

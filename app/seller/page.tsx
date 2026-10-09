@@ -25,6 +25,7 @@ import { readStoreCurrency } from '@/lib/engine/money'
 import { SignOut } from '@/components/platform/sign-out'
 import { SellerHeader } from '@/components/seller/header'
 import { EventTime } from '@/components/ui/event-time'
+import { readMySellerAgreement } from '@/lib/engine/seller-agreement'
 export const generateMetadata = () =>
   platformPageMetadata((d) => d.sellerPortal.title, {
     robots: { index: false, follow: false },
@@ -86,6 +87,11 @@ export default async function SellerPortal({
     account.sellerId,
   )
   const base = `/seller?seller=${account.sellerId}`
+  const agreement = await readMySellerAgreement(
+    ctx.client,
+    account.tenantId,
+    account.sellerId,
+  )
   const currency = await readStoreCurrency(ctx.client, account.tenantId)
   if (params.statement) {
     if (!/^[0-9a-f-]{36}$/i.test(params.statement)) notFound()
@@ -249,6 +255,25 @@ export default async function SellerPortal({
           {d.statements}
         </a>
       </nav>
+      {agreement.agreement && (
+        <section className="card" aria-label={all.sellerAgreement.title}>
+          <Link
+            className="text-link"
+            href={`/seller/agreement?seller=${account.sellerId}`}
+          >
+            {agreement.acceptance
+              ? all.sellerAgreement.view
+              : all.sellerAgreement.review}
+          </Link>
+          {agreement.acceptance && (
+            <p>
+              {agreement.acceptance.source === 'seller_portal'
+                ? all.sellerAgreement.accepted
+                : all.sellerAgreement.recorded}
+            </p>
+          )}
+        </section>
+      )}
       <SellerEconomyForms
         key={`${account.tenantId}:${account.sellerId}`}
         tenantId={account.tenantId}

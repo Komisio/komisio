@@ -933,3 +933,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-08: Submission review notices use the existing communication log, seller preferences and delivery caps. Saving a review succeeds independently of email; retries keep the review and notification identities.
 
 - 2026-10-08: Google Ads acquisition measurement is opt-in and disabled without configuration. Only successful store creation emits a deduplicated registration event; seller/account sign-ups and failed requests do not. Never send names, email, tenant IDs or authentication URLs.
+- 2026-10-09: An authenticated seller may accept the current agreement for their uniquely linked store account. Immutable evidence records version, actor, email and time with seller-portal provenance. Retries deduplicate; stale versions fail; existing store agreement gates remain in force.

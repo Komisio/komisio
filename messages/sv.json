@@ -1108,7 +1108,8 @@
     "evidenceKinds": {
       "staff_recorded": "avtalsbevis registrerat av personal",
       "seller_response": "säljarens godkännande av underlaget",
-      "none": "inget"
+      "none": "inget",
+      "seller_portal": "avtal accepterat i säljarportalen"
     },
     "transferHeading": "Flytta till en annan butik i kedjan",
     "transferHint": "Avslutar säljperioden här med skälet flytt, och tar emot en inlämning för samma inlämnare i den andra butiken med ett utkast som bär den här beskrivningen. Den andra butiken accepterar under sina egna villkor; inlämnarens saldo stannar här.",
@@ -3298,5 +3299,16 @@
     "reject": "Nej tack",
     "accept": "Tillåt",
     "settings": "Cookieinställningar"
+  },
+  "sellerAgreement": {
+    "title": "Säljaravtal",
+    "view": "Visa avtalet",
+    "review": "Läs och acceptera avtalet",
+    "accepted": "Avtalet är accepterat",
+    "recorded": "Butiken har registrerat ditt avtal",
+    "accept": "Jag accepterar avtalet",
+    "failed": "Svaret kunde inte bekräftas. Försök igen.",
+    "changed": "Avtalet har ändrats. Läs den nya versionen innan du accepterar.",
+    "acceptedBy": "Accepterat av"
   }
 }

@@ -1108,7 +1108,8 @@
     "evidenceKinds": {
       "staff_recorded": "evidencia del acuerdo registrada por el personal",
       "seller_response": "aprobación de la revisión por el depositante",
-      "none": "ninguna"
+      "none": "ninguna",
+      "seller_portal": "acuerdo aceptado en el portal del vendedor"
     },
     "transferHeading": "Trasladar a otra tienda de la cadena",
     "transferHint": "Termina aquí el periodo de venta con el motivo traslado y recibe una entrega para el mismo depositante en la otra tienda con un borrador que lleva esta descripción. La otra tienda lo acepta según sus propias condiciones; el saldo del depositante se queda aquí.",
@@ -3304,5 +3305,16 @@
     "reject": "No, gracias",
     "accept": "Permitir",
     "settings": "Configuración de cookies"
+  },
+  "sellerAgreement": {
+    "title": "Acuerdo del vendedor",
+    "view": "Ver acuerdo",
+    "review": "Leer y aceptar el acuerdo",
+    "accepted": "Acuerdo aceptado",
+    "recorded": "La tienda ha registrado tu acuerdo",
+    "accept": "Acepto el acuerdo",
+    "failed": "No se pudo confirmar la respuesta. Inténtalo de nuevo.",
+    "changed": "El acuerdo ha cambiado. Lee la nueva versión antes de aceptarlo.",
+    "acceptedBy": "Aceptado por"
   }
 }

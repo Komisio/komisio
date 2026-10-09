@@ -3310,5 +3310,24 @@
     "failed": "Svaret kunne ikke bekreftes. Prøv igjen.",
     "changed": "Avtalen er endret. Les den nye versjonen før du godtar.",
     "acceptedBy": "Godtatt av"
+  },
+  "payoutSheet": {
+    "title": "Betalingsoversikt",
+    "hint": "Betal via banken. Registrer deretter betalingen her.",
+    "snapshot": "Oversikt opprettet",
+    "page": "Side {page} av {pages}",
+    "count": "{count} venter på betaling",
+    "total": "Sum på denne siden",
+    "print": "Skriv ut",
+    "download": "Last ned CSV",
+    "store": "Butikk",
+    "pageColumn": "Side",
+    "reference": "Utbetalings-ID",
+    "currency": "Valuta",
+    "confirm": "Registrer betaling",
+    "empty": "Ingen godkjente utbetalinger på denne siden.",
+    "navigation": "Sider i betalingsoversikten",
+    "previous": "Forrige",
+    "next": "Neste"
   }
 }

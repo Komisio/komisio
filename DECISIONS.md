@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-09: Payment sheets list approved unpaid payouts oldest first, 50 per page, with snapshot CSV/print and page totals. Downloading never pays; staff record actual payment through the existing referenced engine command. No bank instructions, ledger rules or permissions change.
+
 - 2026-09-30: Quick and bag intake validate exact decimal prices before sending. Confirmation repeats the seller and the accepted review's immutable price/currency, including on retry. An unavailable price read preserves confirmed acceptance; no form or current-policy price is substituted.
 
 - 2026-09-24: All eight languages use packaging-neutral terms for goods a seller hands over on one occasion (Swedish "inlämning", English "drop-off"). Bag remains a physical packaging type or example. Receipt identifiers, storage and acceptance rules stay unchanged.

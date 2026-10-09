@@ -3310,5 +3310,24 @@
     "failed": "Impossibile confermare la risposta. Riprova.",
     "changed": "L’accordo è cambiato. Leggi la nuova versione prima di accettare.",
     "acceptedBy": "Accettato da"
+  },
+  "payoutSheet": {
+    "title": "Prospetto dei pagamenti",
+    "hint": "Paga tramite la banca. Poi registra il pagamento qui.",
+    "snapshot": "Prospetto creato",
+    "page": "Pagina {page} di {pages}",
+    "count": "{count} in attesa di pagamento",
+    "total": "Totale di questa pagina",
+    "print": "Stampa",
+    "download": "Scarica CSV",
+    "store": "Negozio",
+    "pageColumn": "Pagina",
+    "reference": "ID pagamento",
+    "currency": "Valuta",
+    "confirm": "Registra pagamento",
+    "empty": "Nessun pagamento approvato in questa pagina.",
+    "navigation": "Pagine del prospetto dei pagamenti",
+    "previous": "Precedente",
+    "next": "Successiva"
   }
 }

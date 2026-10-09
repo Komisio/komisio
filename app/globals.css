@@ -6580,3 +6580,65 @@ button.text-link:hover:not(:disabled) {
 .agreement-ai-help p {
   max-width: 48ch;
 }
+.payment-sheet {
+  max-width: 60rem;
+  margin-inline: auto;
+}
+.payment-sheet-rows {
+  display: grid;
+}
+.payment-sheet .form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.payment-sheet-row {
+  padding-block: 1rem;
+  border-top: 1px solid var(--border);
+}
+.payment-sheet-summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+.payment-sheet-reference {
+  font-size: 0.875rem;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.payment-sheet summary {
+  cursor: pointer;
+  padding-block: 0.75rem;
+}
+@media print {
+  body:has(.payment-sheet) {
+    background: white;
+  }
+  body:has(.payment-sheet) .app-shell {
+    display: block;
+    padding: 0;
+    min-height: 0;
+  }
+  body:has(.payment-sheet) .app-shell > :not(main),
+  body:has(.payment-sheet) main > :not(.payment-sheet),
+  .payment-sheet .no-print {
+    display: none !important;
+  }
+  body:has(.payment-sheet) main {
+    padding: 0;
+    margin: 0;
+    max-width: none;
+  }
+  .payment-sheet {
+    max-width: none;
+  }
+  .payment-sheet .card {
+    border: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+  .payment-sheet-row {
+    break-inside: avoid;
+  }
+}

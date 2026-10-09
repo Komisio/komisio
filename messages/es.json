@@ -3316,5 +3316,24 @@
     "failed": "No se pudo confirmar la respuesta. Inténtalo de nuevo.",
     "changed": "El acuerdo ha cambiado. Lee la nueva versión antes de aceptarlo.",
     "acceptedBy": "Aceptado por"
+  },
+  "payoutSheet": {
+    "title": "Relación de pagos",
+    "hint": "Paga a través del banco. Después registra el pago aquí.",
+    "snapshot": "Relación creada",
+    "page": "Página {page} de {pages}",
+    "count": "{count} pendientes de pago",
+    "total": "Total de esta página",
+    "print": "Imprimir",
+    "download": "Descargar CSV",
+    "store": "Tienda",
+    "pageColumn": "Página",
+    "reference": "ID del pago",
+    "currency": "Moneda",
+    "confirm": "Registrar pago",
+    "empty": "No hay pagos aprobados en esta página.",
+    "navigation": "Páginas de la relación de pagos",
+    "previous": "Anterior",
+    "next": "Siguiente"
   }
 }

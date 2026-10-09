@@ -97,6 +97,40 @@ export async function readPayouts(
 }
 
 const oreField = z.union([z.number().int(), z.string()]).transform(Number)
+
+/** Approved unpaid work, oldest first, scoped by tenant and existing RLS. */
+export async function readApprovedPayoutsPage(
+  client: SupabaseClient,
+  tenantInput: string,
+  pageInput: number,
+) {
+  const page = z.number().int().min(1).max(100000).parse(pageInput)
+  const { data, error, count } = await client
+    .from('payouts')
+    .select(columns, { count: 'exact' })
+    .eq('tenant_id', z.uuid().parse(tenantInput))
+    .eq('status', 'approved')
+    .order('approved_at')
+    .order('id')
+    .range((page - 1) * 50, page * 50 - 1)
+  // Paying the last row on a later page can make that page disappear.
+  // Recover only the scoped count for PostgREST's explicit invalid-range error.
+  if (error?.code === 'PGRST103' && page > 1) {
+    const current = await client
+      .from('payouts')
+      .select('id', { head: true, count: 'exact' })
+      .eq('tenant_id', z.uuid().parse(tenantInput))
+      .eq('status', 'approved')
+    if (current.error) throw new Error('Unable to read approved payouts')
+    const total = z.number().int().nonnegative().parse(current.count)
+    if (total > (page - 1) * 50)
+      throw new Error('Unable to read approved payouts')
+    return { rows: [] as PayoutRow[], count: total }
+  }
+  if (error || count === null)
+    throw new Error('Unable to read approved payouts')
+  return { rows: z.array(payoutRow).parse(data), count }
+}
 export const settlementCandidates = z.strictObject({
   thresholdOre: oreField,
   sellers: z

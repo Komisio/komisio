@@ -3310,5 +3310,24 @@
     "failed": "Svaret kunne ikke bekræftes. Prøv igen.",
     "changed": "Aftalen er ændret. Læs den nye version, før du accepterer.",
     "acceptedBy": "Accepteret af"
+  },
+  "payoutSheet": {
+    "title": "Betalingsoversigt",
+    "hint": "Betal via banken. Registrer derefter betalingen her.",
+    "snapshot": "Oversigt oprettet",
+    "page": "Side {page} af {pages}",
+    "count": "{count} afventer betaling",
+    "total": "Sum på denne side",
+    "print": "Udskriv",
+    "download": "Hent CSV",
+    "store": "Butik",
+    "pageColumn": "Side",
+    "reference": "Udbetalings-ID",
+    "currency": "Valuta",
+    "confirm": "Registrer betaling",
+    "empty": "Ingen godkendte udbetalinger på denne side.",
+    "navigation": "Sider i betalingsoversigten",
+    "previous": "Forrige",
+    "next": "Næste"
   }
 }

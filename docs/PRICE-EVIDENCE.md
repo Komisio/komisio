@@ -1,10 +1,10 @@
 # Price evidence
 
-The roadmap's "visual similarity pricing" becomes, in the first step, the
-store's own comparable sales: what the store accepted an item at and what it
-later sold for. It is evidence for a person or an agent to cite when
-proposing a price. It is never a price, never a suggestion, and nothing is
-fetched from outside the store.
+The store's own comparable sales show what an item was accepted at and what
+it later sold for. The `price_evidence` read described here supplies facts
+for a person or an agent to cite; it does not generate a suggestion or fetch
+external prices. Separate [AI assistance](RECEPTION-ASSISTANCE.md) can use
+pricing evidence when proposing a price.
 
 ## Read
 
@@ -31,10 +31,11 @@ insensitive; text matches anywhere in the title; either may be empty.
   and stages a one-item `bulkItemUpdate` at medium risk with the citation in
   the reason; a different person approves.
 
-## What this does not do
+## Scope of the store-sales read
 
-No cross-store data (explicit opt-in design first), no external market
-prices, no computed suggestion, no image similarity.
+This read has no cross-store data, external market prices, computed suggestion
+or image similarity. That scope does not describe the separate AI pricing
+and external comparison features.
 
 ## Verification
 

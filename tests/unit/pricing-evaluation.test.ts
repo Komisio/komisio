@@ -77,3 +77,19 @@ it('reports missed ranges and direction without rounding monetary inputs', () =>
   expect(result.completedSale.rangeCoveragePercent).toBe(0)
   expect(result.completedSale.meanBiasPercent).toBe(-21.9)
 })
+it('keeps half-minor-unit midpoints exact in descriptive ratios', () => {
+  const result = evaluatePricing({
+    ...cohort,
+    observations: [
+      {
+        ...row,
+        prediction: { ...row.prediction, lowOre: 1, highOre: 2 },
+        staffDecision: { ...row.staffDecision, priceOre: 1 },
+        sale: { ...row.sale, priceOre: 2 },
+      },
+    ],
+  })
+  expect(result.staffDecision.meanBiasPercent).toBe(50)
+  expect(result.completedSale.meanBiasPercent).toBe(-25)
+  expect(result.completedSale.meanRangeWidthPercent).toBe(50)
+})

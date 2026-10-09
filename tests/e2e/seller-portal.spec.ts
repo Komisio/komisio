@@ -85,6 +85,9 @@ test('seller reads own economy, requests payout and opts out without becoming st
       'Din begäran är registrerad. Butiken granskar och hanterar utbetalningen.',
     )
     await expect(page.getByText(/Begärd av:/)).toBeVisible()
+    await expect(
+      page.getByRole('region', { name: 'Begär utbetalning', exact: true }),
+    ).toHaveCount(1)
     const row = (
       await db.query(
         'select request_source,status,requested_by from payouts where tenant_id=$1 and seller_id=$2',

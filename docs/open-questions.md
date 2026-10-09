@@ -26,7 +26,6 @@ creates inventory. Review emails follow existing automatic notification policy
 and seller preferences; an explicit staff notification remains available. Hosted shared-key
 web search still requires a configured credit tariff; no new tariff is assumed.
 
-
 Accounting routing proposal (2026-10-04): the owner requests a design for
 Komisio-led sales posting or complementary seller-liability posting alongside
 an external POS export. Before implementation, approve per-event ownership,
@@ -461,6 +460,7 @@ sends no payment and does not automatically reconcile bank transactions.
 Owner confirms that seller signatures are optional by default. This supersedes the earlier default requiring agreements at review publication and acceptance. Existing published policies remain unchanged; no missing agreement is represented as signed.
 
 ### Seller profile scope (resolved 2026-09-18)
+
 Owner approved editable contact details, optional address, preferred language and internal staff notes. Quick registration still requires only a name and one contact method. Profile changes retain immutable history; statement contacts are frozen. Payment details, personal identifiers and active/inactive lifecycle semantics remain deferred.
 
 ### Hosted trial implementation gap (2026-10-04)

@@ -1,5 +1,13 @@
 @import 'tailwindcss';
 
+.ads-consent {
+  margin-block: 1rem;
+  font-size: 0.875rem;
+}
+.ads-consent p {
+  margin-bottom: 0.75rem;
+}
+
 .help-dialog {
   position: fixed;
   inset: 0 0 0 auto;

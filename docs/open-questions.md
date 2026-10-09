@@ -1,5 +1,13 @@
 # Open questions
 
+Advertising measurement (2026-10-09): owner authorizes Google Ads store-registration
+measurement. The action is created with no value, one conversion, enhanced
+conversions off, and a campaign-specific registration goal. The owner published
+the marketing site via FTP; consent, withdrawal and privacy disclosure are
+verified on the live site. Activation still awaits app deployment and verified
+end-to-end attribution. Neither account nor seller registration is
+a store conversion. No production measurement is claimed yet.
+
 Seller pre-review pricing (2026-10-08): owner confirms independent photo availability
 and store/seller/seller-with-approval price responsibility. Explicit store policy
 controls new submissions; guide answers do not activate it. Prices and currency

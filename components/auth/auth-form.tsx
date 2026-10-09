@@ -16,6 +16,7 @@ import { safeNext } from '@/lib/platform/validation'
 import { Button } from '@/components/ui/button'
 import { Feedback } from '@/components/platform/feedback'
 import { Brand } from '@/components/platform/brand'
+import { AdsConsentControl } from '@/components/platform/ads-consent'
 const subscribe = () => () => {}
 const clientReady = () => true
 const serverReady = () => false
@@ -173,6 +174,9 @@ export function AuthForm({
             <Brand />
           </div>
           <h1>{title}</h1>
+          {mode === 'register' && destination === '/' && (
+            <AdsConsentControl d={d} locale={locale} />
+          )}
           <p>
             {mode === 'register'
               ? d.registerIntro

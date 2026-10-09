@@ -931,3 +931,5 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-10-08: Owner authorizes a submission-to-reception link. Invited proposals prepare one reusable reception draft with copied photos and staff-confirmed description/price; existing custody, agreement and acceptance gates remain mandatory.
 - 2026-10-08: Submission review notices use the existing communication log, seller preferences and delivery caps. Saving a review succeeds independently of email; retries keep the review and notification identities.
+
+- 2026-10-08: Google Ads acquisition measurement is opt-in and disabled without configuration. Only successful store creation emits a deduplicated registration event; seller/account sign-ups and failed requests do not. Never send names, email, tenant IDs or authentication URLs.

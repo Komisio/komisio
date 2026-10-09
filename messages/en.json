@@ -3290,5 +3290,13 @@
     "useSuggestedPrice": "Use suggested price",
     "settingsChanged": "The store settings have changed. Reload the page.",
     "reload": "Reload"
+  },
+  "adsMeasurement": {
+    "title": "Ad measurement",
+    "intro": "Allow cookies to measure whether our Google ads lead to new stores?",
+    "details": "Learn more",
+    "reject": "No thanks",
+    "accept": "Allow",
+    "settings": "Cookie settings"
   }
 }

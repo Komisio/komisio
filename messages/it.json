@@ -3290,5 +3290,13 @@
     "useSuggestedPrice": "Usa il prezzo suggerito",
     "settingsChanged": "Le impostazioni del negozio sono cambiate. Ricarica la pagina.",
     "reload": "Ricarica"
+  },
+  "adsMeasurement": {
+    "title": "Misurazione degli annunci",
+    "intro": "Consentire i cookie per misurare se i nostri annunci Google portano a nuovi negozi?",
+    "details": "Scopri di più",
+    "reject": "No, grazie",
+    "accept": "Consenti",
+    "settings": "Impostazioni cookie"
   }
 }

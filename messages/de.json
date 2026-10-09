@@ -3296,5 +3296,13 @@
     "useSuggestedPrice": "Preisvorschlag übernehmen",
     "settingsChanged": "Die Einstellungen des Geschäfts haben sich geändert. Laden Sie die Seite neu.",
     "reload": "Neu laden"
+  },
+  "adsMeasurement": {
+    "title": "Anzeigenmessung",
+    "intro": "Cookies erlauben, um zu messen, ob unsere Google-Anzeigen zu neuen Geschäften führen?",
+    "details": "Mehr erfahren",
+    "reject": "Nein danke",
+    "accept": "Erlauben",
+    "settings": "Cookie-Einstellungen"
   }
 }

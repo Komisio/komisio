@@ -3290,5 +3290,13 @@
     "useSuggestedPrice": "Bruk prisforslaget",
     "settingsChanged": "Butikkens innstillinger er endret. Last inn siden på nytt.",
     "reload": "Last inn på nytt"
+  },
+  "adsMeasurement": {
+    "title": "Annonsemåling",
+    "intro": "Tillat informasjonskapsler for å måle om Google-annonsene våre fører til nye butikker?",
+    "details": "Les mer",
+    "reject": "Nei takk",
+    "accept": "Tillat",
+    "settings": "Innstillinger for informasjonskapsler"
   }
 }

@@ -140,7 +140,7 @@ test('handover progress includes both intake paths and opens unfinished work', a
     await expect(
       page
         .getByRole('region', { name: d.bagProcessing.title, exact: true })
-        .getByRole('status'),
+        .locator('[data-bag-processing-state]'),
     ).toHaveText(d.bagProcessing.open)
   } finally {
     await f.close()

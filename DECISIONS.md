@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-09: Main CI browser tests stop at the first failure to shorten feedback on blocked releases. A successful run still executes the full selected suite; platform and staging-migrations remain mandatory deployment checks. Local diagnostic runs keep all failures.
+
 - 2026-10-09: Stocktakes freeze the stock-report item set. One session is open per store. Scans preserve damage findings; corrections require reasons. Unchecked is not missing. Closing requires all still-stocked expected items checked and freezes stock changes; no financial or lifecycle writes occur.
 
 - 2026-10-09: Owner approves immutable drop-off completion/reopen history and stocktaking sessions with scan history. Staff complete drop-offs only without pending drafts/receptions; reopening requires a reason. Inventory observations never create sales or financial adjustments.

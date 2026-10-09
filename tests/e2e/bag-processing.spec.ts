@@ -27,7 +27,7 @@ test('staff completes a drop-off, retries safely and reopens with history', asyn
       name: d.bagProcessing.title,
       exact: true,
     })
-    await expect(processing.getByRole('status')).toHaveText(
+    await expect(processing.locator('[data-bag-processing-state]')).toHaveText(
       d.bagProcessing.open,
     )
     let dropped = false
@@ -66,7 +66,7 @@ test('staff completes a drop-off, retries safely and reopens with history', asyn
       page.getByRole('button', { name: d.bagIntake.save, exact: true }),
     ).toHaveCount(0)
     await page.reload()
-    await expect(processing.getByRole('status')).toHaveText(
+    await expect(processing.locator('[data-bag-processing-state]')).toHaveText(
       d.bagProcessing.completed,
     )
     await processing
@@ -78,7 +78,7 @@ test('staff completes a drop-off, retries safely and reopens with history', asyn
     await processing
       .getByRole('button', { name: d.bagProcessing.reopen, exact: true })
       .click()
-    await expect(processing.getByRole('status')).toHaveText(
+    await expect(processing.locator('[data-bag-processing-state]')).toHaveText(
       d.bagProcessing.open,
     )
     await expect(

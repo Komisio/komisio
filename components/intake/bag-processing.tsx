@@ -67,7 +67,7 @@ export function BagProcessing({
     <section className="card intake-form" aria-label={s.title}>
       <div className="row wrap">
         <h2>{s.title}</h2>
-        <strong role="status">
+        <strong data-bag-processing-state aria-live="polite">
           {s[saved ? (completed ? 'open' : 'completed') : current.state]}
         </strong>
       </div>

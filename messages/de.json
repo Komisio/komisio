@@ -1108,7 +1108,8 @@
     "evidenceKinds": {
       "staff_recorded": "von Mitarbeitern erfasster Vereinbarungsnachweis",
       "seller_response": "Genehmigung der Prüfung durch den Einlieferer",
-      "none": "keiner"
+      "none": "keiner",
+      "seller_portal": "im Verkäuferportal akzeptierter Vertrag"
     },
     "transferHeading": "In einen anderen Store der Kette verschieben",
     "transferHint": "Beendet die Verkaufsperiode hier mit dem Grund Transfer und nimmt im anderen Store eine Einlieferung für denselben Einlieferer mit einem Entwurf an, der diese Beschreibung trägt. Der andere Store nimmt ihn zu seinen eigenen Bedingungen an; das Guthaben des Einlieferers bleibt hier.",
@@ -3304,5 +3305,35 @@
     "reject": "Nein danke",
     "accept": "Erlauben",
     "settings": "Cookie-Einstellungen"
+  },
+  "sellerAgreement": {
+    "title": "Verkäufervertrag",
+    "view": "Vertrag anzeigen",
+    "review": "Vertrag lesen und akzeptieren",
+    "accepted": "Vertrag akzeptiert",
+    "recorded": "Das Geschäft hat Ihren Vertrag erfasst",
+    "accept": "Ich akzeptiere den Vertrag",
+    "failed": "Die Antwort konnte nicht bestätigt werden. Bitte erneut versuchen.",
+    "changed": "Der Vertrag wurde geändert. Lesen Sie vor der Zustimmung die neue Version.",
+    "acceptedBy": "Akzeptiert von"
+  },
+  "payoutSheet": {
+    "title": "Zahlungsübersicht",
+    "hint": "Überweisen Sie über Ihre Bank. Erfassen Sie anschließend die Zahlung hier.",
+    "snapshot": "Übersicht erstellt",
+    "page": "Seite {page} von {pages}",
+    "count": "{count} warten auf Zahlung",
+    "total": "Summe auf dieser Seite",
+    "print": "Drucken",
+    "download": "CSV herunterladen",
+    "store": "Geschäft",
+    "pageColumn": "Seite",
+    "reference": "Auszahlungs-ID",
+    "currency": "Währung",
+    "confirm": "Zahlung erfassen",
+    "empty": "Keine genehmigten Auszahlungen auf dieser Seite.",
+    "navigation": "Seiten der Zahlungsübersicht",
+    "previous": "Zurück",
+    "next": "Weiter"
   }
 }

@@ -1,5 +1,12 @@
 # Open questions
 
+Seller agreement self-service (2026-10-09): the owner prioritizes explicit
+acceptance of the current published agreement in the seller portal. Existing
+identity linkage and immutable agreement evidence are reused; seller acceptance
+is distinguished from staff-recorded evidence. Existing store receipt and
+commercial-acceptance prerequisites are unchanged. This is account-authenticated
+acceptance, not independent legal-identity verification or an e-signature service.
+
 Advertising measurement (2026-10-09): owner authorizes Google Ads store-registration
 measurement. The action is created with no value, one conversion, enhanced
 conversions off, and a campaign-specific registration goal. The owner published
@@ -18,7 +25,6 @@ commercial acceptance still use the existing reception steps. No invitation
 creates inventory. Review emails follow existing automatic notification policy
 and seller preferences; an explicit staff notification remains available. Hosted shared-key
 web search still requires a configured credit tariff; no new tariff is assumed.
-
 
 Accounting routing proposal (2026-10-04): the owner requests a design for
 Komisio-led sales posting or complementary seller-liability posting alongside
@@ -428,6 +434,11 @@ Both questions block the automatic payout rail; the manual rail is unaffected
 and stays correct until they are answered. Background and the consequences of
 each answer are in [SWISH-PAYOUTS.md](SWISH-PAYOUTS.md).
 
+The payment sheet provides a paged snapshot of approved unpaid payouts for
+printing or CSV export. Staff still verify the bank transfer and record its
+reference through the existing payout command. It contains no bank details,
+sends no payment and does not automatically reconcile bank transactions.
+
 - **Who holds the Swish signing certificate?** Either Inority registers once
   with Swish as a technical supplier and uses its own certificate for every
   store's Swish number, or each store creates its own certificate in its bank's
@@ -449,6 +460,7 @@ each answer are in [SWISH-PAYOUTS.md](SWISH-PAYOUTS.md).
 Owner confirms that seller signatures are optional by default. This supersedes the earlier default requiring agreements at review publication and acceptance. Existing published policies remain unchanged; no missing agreement is represented as signed.
 
 ### Seller profile scope (resolved 2026-09-18)
+
 Owner approved editable contact details, optional address, preferred language and internal staff notes. Quick registration still requires only a name and one contact method. Profile changes retain immutable history; statement contacts are frozen. Payment details, personal identifiers and active/inactive lifecycle semantics remain deferred.
 
 ### Hosted trial implementation gap (2026-10-04)

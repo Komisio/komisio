@@ -1108,7 +1108,8 @@
     "evidenceKinds": {
       "staff_recorded": "aftaledokumentation registreret af personale",
       "seller_response": "indlevererens godkendelse af gennemgangen",
-      "none": "ingen"
+      "none": "ingen",
+      "seller_portal": "aftale accepteret i sælgerportalen"
     },
     "transferHeading": "Flyt til en anden butik i kæden",
     "transferHint": "Afslutter salgsperioden her med årsagen flytning og modtager en indlevering for den samme indleverer i den anden butik med ét udkast, der bærer denne beskrivelse. Den anden butik accepterer den under sine egne vilkår; indlevererens saldo bliver her.",
@@ -3298,5 +3299,35 @@
     "reject": "Nej tak",
     "accept": "Tillad",
     "settings": "Cookieindstillinger"
+  },
+  "sellerAgreement": {
+    "title": "Sælgeraftale",
+    "view": "Vis aftalen",
+    "review": "Læs og accepter aftalen",
+    "accepted": "Aftalen er accepteret",
+    "recorded": "Butikken har registreret din aftale",
+    "accept": "Jeg accepterer aftalen",
+    "failed": "Svaret kunne ikke bekræftes. Prøv igen.",
+    "changed": "Aftalen er ændret. Læs den nye version, før du accepterer.",
+    "acceptedBy": "Accepteret af"
+  },
+  "payoutSheet": {
+    "title": "Betalingsoversigt",
+    "hint": "Betal via banken. Registrer derefter betalingen her.",
+    "snapshot": "Oversigt oprettet",
+    "page": "Side {page} af {pages}",
+    "count": "{count} afventer betaling",
+    "total": "Sum på denne side",
+    "print": "Udskriv",
+    "download": "Hent CSV",
+    "store": "Butik",
+    "pageColumn": "Side",
+    "reference": "Udbetalings-ID",
+    "currency": "Valuta",
+    "confirm": "Registrer betaling",
+    "empty": "Ingen godkendte udbetalinger på denne side.",
+    "navigation": "Sider i betalingsoversigten",
+    "previous": "Forrige",
+    "next": "Næste"
   }
 }

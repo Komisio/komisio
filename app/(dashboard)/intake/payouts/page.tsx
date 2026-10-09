@@ -76,6 +76,9 @@ export default async function Payouts() {
       <div className="page-heading">
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
+        <Link className="text-link" href="/intake/payouts/payment-sheet">
+          {all.payoutSheet.title}
+        </Link>
       </div>
       <p className="intake-notice">{d.notice}</p>
       <div className="payouts-workspace">

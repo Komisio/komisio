@@ -40,7 +40,12 @@ const frozenTerms = z
     ),
     storePolicyVersion: z.number().int(),
     agreementVersionId: z.uuid().nullable(),
-    evidenceKind: z.enum(['staff_recorded', 'seller_response', 'none']),
+    evidenceKind: z.enum([
+      'staff_recorded',
+      'seller_portal',
+      'seller_response',
+      'none',
+    ]),
     purchasePriceOre: z.number().int().optional(),
     marginEligible: z.boolean().optional(),
     origin: z.record(z.string(), z.unknown()),

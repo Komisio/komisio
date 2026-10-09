@@ -1108,7 +1108,8 @@
     "evidenceKinds": {
       "staff_recorded": "henkilökunnan kirjaama sopimustodiste",
       "seller_response": "tuojan hyväksyntä tarkistukselle",
-      "none": "ei mitään"
+      "none": "ei mitään",
+      "seller_portal": "myyjäportaalissa hyväksytty sopimus"
     },
     "transferHeading": "Siirrä toiseen ketjun kauppaan",
     "transferHint": "Päättää myyntijakson täällä syyllä siirto ja ottaa vastaan tuontierän samalle tuojalle toisessa kaupassa yhdellä luonnoksella, joka kantaa tämän kuvauksen. Toinen kauppa hyväksyy sen omilla ehdoillaan; tuojan saldo pysyy täällä.",
@@ -3304,5 +3305,35 @@
     "reject": "Ei kiitos",
     "accept": "Salli",
     "settings": "Evästeasetukset"
+  },
+  "sellerAgreement": {
+    "title": "Myyjäsopimus",
+    "view": "Näytä sopimus",
+    "review": "Lue ja hyväksy sopimus",
+    "accepted": "Sopimus hyväksytty",
+    "recorded": "Myymälä on kirjannut sopimuksesi",
+    "accept": "Hyväksyn sopimuksen",
+    "failed": "Vastausta ei voitu vahvistaa. Yritä uudelleen.",
+    "changed": "Sopimus on muuttunut. Lue uusi versio ennen hyväksymistä.",
+    "acceptedBy": "Hyväksyjä"
+  },
+  "payoutSheet": {
+    "title": "Maksuluettelo",
+    "hint": "Maksa pankin kautta. Kirjaa sitten maksu tähän.",
+    "snapshot": "Luettelo luotu",
+    "page": "Sivu {page}/{pages}",
+    "count": "{count} odottaa maksua",
+    "total": "Tämän sivun summa",
+    "print": "Tulosta",
+    "download": "Lataa CSV",
+    "store": "Myymälä",
+    "pageColumn": "Sivu",
+    "reference": "Maksun tunniste",
+    "currency": "Valuutta",
+    "confirm": "Kirjaa maksu",
+    "empty": "Tällä sivulla ei ole hyväksyttyjä maksuja.",
+    "navigation": "Maksuluettelon sivut",
+    "previous": "Edellinen",
+    "next": "Seuraava"
   }
 }

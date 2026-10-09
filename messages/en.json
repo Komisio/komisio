@@ -1108,7 +1108,8 @@
     "evidenceKinds": {
       "staff_recorded": "staff-recorded agreement evidence",
       "seller_response": "seller approval of the review",
-      "none": "none"
+      "none": "none",
+      "seller_portal": "agreement accepted in the seller portal"
     },
     "transferHeading": "Move to another store in the chain",
     "transferHint": "Ends the sale period here with the reason transfer, and receives a drop-off for the same seller in the other store with one draft carrying this description. The other store accepts it under its own terms; the seller's balance stays here.",
@@ -3298,5 +3299,35 @@
     "reject": "No thanks",
     "accept": "Allow",
     "settings": "Cookie settings"
+  },
+  "sellerAgreement": {
+    "title": "Seller agreement",
+    "view": "View agreement",
+    "review": "Read and accept the agreement",
+    "accepted": "Agreement accepted",
+    "recorded": "The store has recorded your agreement",
+    "accept": "I accept the agreement",
+    "failed": "The response could not be confirmed. Please try again.",
+    "changed": "The agreement has changed. Read the new version before accepting.",
+    "acceptedBy": "Accepted by"
+  },
+  "payoutSheet": {
+    "title": "Payment sheet",
+    "hint": "Pay through your bank. Then record the payment here.",
+    "snapshot": "Snapshot created",
+    "page": "Page {page} of {pages}",
+    "count": "{count} awaiting payment",
+    "total": "Total on this page",
+    "print": "Print",
+    "download": "Download CSV",
+    "store": "Store",
+    "pageColumn": "Page",
+    "reference": "Payout ID",
+    "currency": "Currency",
+    "confirm": "Record payment",
+    "empty": "No approved payouts on this page.",
+    "navigation": "Payment sheet pages",
+    "previous": "Previous",
+    "next": "Next"
   }
 }

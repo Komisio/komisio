@@ -3,6 +3,7 @@ import {
   raceSellerAI,
 } from './seller-submission-race.mjs'
 import { raceAgreementAssistance } from './agreement-assistance-race.mjs'
+import { raceSellerAgreement } from './seller-agreement-race.mjs'
 import { raceShopifySettings } from './shopify-settings-race.mjs'
 import { raceShopifyPrivacy } from './shopify-privacy-race.mjs'
 import { raceStoreCreation } from './store-creation-race.mjs'
@@ -66,6 +67,7 @@ try {
       ),
     )
   await raceAgreementAssistance({ setup, connectionString: parsed.toString() })
+  await raceSellerAgreement({ setup, connectionString: parsed.toString() })
   await raceZettleStock({ setup, connectionString: parsed.toString() })
   await raceZettleImage({ setup, connectionString: parsed.toString() })
   await raceZettlePull({ setup, connectionString: parsed.toString() })

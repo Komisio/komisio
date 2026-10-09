@@ -1,0 +1,47 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('28600000-0000-4000-8000-000000000001','owner@agreement-portal.test',now()),
+ ('28600000-0000-4000-8000-000000000002','seller@agreement-portal.test',now()),
+ ('28600000-0000-4000-8000-000000000003','other@agreement-portal.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"28600000-0000-4000-8000-000000000001","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Agreement portal TEST','agreement-portal-test',gen_random_uuid())::text,true);
+select set_config('test.other',create_tenant('Other TEST','agreement-portal-other',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Seller TEST','seller@agreement-portal.test','')::text,true);
+select set_config('test.v1',gen_random_uuid()::text,true);
+select set_config('test.v2',gen_random_uuid()::text,true);
+select set_config('test.accept',gen_random_uuid()::text,true);
+select publish_seller_agreement(current_setting('test.tenant')::uuid,current_setting('test.v1')::uuid,null,'TEST terms','Fictional test agreement','sv',true);
+set local "request.jwt.claims"='{"sub":"28600000-0000-4000-8000-000000000002","role":"authenticated"}';
+select is((my_seller_agreement(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid)->'agreement'->>'id'),current_setting('test.v1'),'seller can read current version');
+select is((select count(*) from seller_agreement_versions),0::bigint,'seller has no raw agreement table access');
+select throws_like($$select my_seller_agreement(current_setting('test.other')::uuid,current_setting('test.seller')::uuid)$$,'%FORBIDDEN%','cross-store projection denied');
+select lives_ok($$select accept_my_seller_agreement(current_setting('test.tenant')::uuid,current_setting('test.accept')::uuid,current_setting('test.seller')::uuid,current_setting('test.v1')::uuid)$$,'seller explicitly accepts');
+select is(accept_my_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.v1')::uuid),current_setting('test.accept')::uuid,'new request for same acceptance deduplicates');
+select is(my_seller_agreement(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid)->'acceptance'->>'source','seller_portal','projection distinguishes seller acceptance');
+set local "request.jwt.claims"='{"sub":"28600000-0000-4000-8000-000000000003","role":"authenticated"}';
+select throws_like($$select accept_my_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.v1')::uuid)$$,'%FORBIDDEN%','another seller cannot accept');
+set local "request.jwt.claims"='{"sub":"28600000-0000-4000-8000-000000000001","role":"authenticated"}';
+select is((select recorded_by from seller_agreement_evidence where id=current_setting('test.accept')::uuid),'28600000-0000-4000-8000-000000000002'::uuid,'actor is authenticated seller');
+select is((select reference from seller_agreement_evidence where id=current_setting('test.accept')::uuid),'seller@agreement-portal.test','accepted email snapshot is visible to staff');
+select is((select count(*) from seller_agreement_evidence where seller_id=current_setting('test.seller')::uuid),1::bigint,'no duplicate evidence');
+select lives_ok($$select receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'TEST receipt',current_setting('test.v1')::uuid)$$,'portal evidence satisfies existing receipt gate');
+select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'TEST provenance',current_setting('test.v1')::uuid)::text,true);
+select set_config('test.draft',gen_random_uuid()::text,true);
+select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'TEST jacket','','');
+select set_config('test.item',accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'inspection_draft',current_setting('test.draft')::uuid,1,10000)::text,true);
+select is((select terms->>'evidenceKind' from items where id=current_setting('test.item')::uuid),'seller_portal','item preserves seller-portal provenance');
+select publish_seller_agreement(current_setting('test.tenant')::uuid,current_setting('test.v2')::uuid,current_setting('test.v1')::uuid,'New TEST terms','New fictional agreement','sv',true);
+set local "request.jwt.claims"='{"sub":"28600000-0000-4000-8000-000000000002","role":"authenticated"}';
+select is(accept_my_seller_agreement(current_setting('test.tenant')::uuid,current_setting('test.accept')::uuid,current_setting('test.seller')::uuid,current_setting('test.v1')::uuid),current_setting('test.accept')::uuid,'lost-response retry resolves original even after new publication');
+select throws_like($$select accept_my_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.v1')::uuid)$$,'%AGREEMENT_CHANGED%','new stale acceptance rejected');
+select throws_like($$select accept_my_seller_agreement(current_setting('test.tenant')::uuid,current_setting('test.accept')::uuid,current_setting('test.seller')::uuid,current_setting('test.v2')::uuid)$$,'%REQUEST_CONFLICT%','request cannot change agreement');
+select is(my_seller_agreement(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid)->'acceptance','null'::jsonb,'new version remains unaccepted');
+select lives_ok($$select accept_my_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.v2')::uuid)$$,'seller can accept replacement version');
+reset role;
+select throws_like($$update seller_agreement_evidence set reference='changed' where id=current_setting('test.accept')::uuid$$,'%IMMUTABLE_AGREEMENT_RECORD%','evidence remains immutable');
+select ok(not has_function_privilege('anon','public.accept_my_seller_agreement(uuid,uuid,uuid,uuid)','execute'),'anonymous acceptance denied');
+select * from finish();
+rollback;

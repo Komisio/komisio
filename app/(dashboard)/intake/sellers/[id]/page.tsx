@@ -164,7 +164,7 @@ export default async function Seller({
   const evidence = agreement.data
     ? await ctx.client
         .from('seller_agreement_evidence')
-        .select('id,reference,recorded_at')
+        .select('id,reference,recorded_at,source')
         .eq('tenant_id', tenant.id)
         .eq('seller_id', id.data)
         .eq('agreement_id', agreement.data.id)
@@ -742,7 +742,10 @@ export default async function Seller({
                     {evidence.data?.map((e) => (
                       <p key={e.id}>
                         <EventTime value={e.recorded_at} locale={ctx.locale} />{' '}
-                        · {e.reference}
+                        ·{' '}
+                        {e.source === 'seller_portal'
+                          ? `${all.sellerAgreement.acceptedBy} ${e.reference}`
+                          : e.reference}
                       </p>
                     ))}
                     {write && (

@@ -1108,7 +1108,8 @@
     "evidenceKinds": {
       "staff_recorded": "prova dell'accordo registrata dal personale",
       "seller_response": "approvazione della revisione da parte del conferente",
-      "none": "nessuna"
+      "none": "nessuna",
+      "seller_portal": "accordo accettato nel portale del venditore"
     },
     "transferHeading": "Sposta in un altro negozio della catena",
     "transferHint": "Termina qui il periodo di vendita con motivo trasferimento e riceve una consegna per lo stesso conferente nell'altro negozio, con una bozza che porta questa descrizione. L'altro negozio lo accetta alle proprie condizioni; il saldo del conferente resta qui.",
@@ -3298,5 +3299,35 @@
     "reject": "No, grazie",
     "accept": "Consenti",
     "settings": "Impostazioni cookie"
+  },
+  "sellerAgreement": {
+    "title": "Accordo del venditore",
+    "view": "Visualizza accordo",
+    "review": "Leggi e accetta l’accordo",
+    "accepted": "Accordo accettato",
+    "recorded": "Il negozio ha registrato il tuo accordo",
+    "accept": "Accetto l’accordo",
+    "failed": "Impossibile confermare la risposta. Riprova.",
+    "changed": "L’accordo è cambiato. Leggi la nuova versione prima di accettare.",
+    "acceptedBy": "Accettato da"
+  },
+  "payoutSheet": {
+    "title": "Prospetto dei pagamenti",
+    "hint": "Paga tramite la banca. Poi registra il pagamento qui.",
+    "snapshot": "Prospetto creato",
+    "page": "Pagina {page} di {pages}",
+    "count": "{count} in attesa di pagamento",
+    "total": "Totale di questa pagina",
+    "print": "Stampa",
+    "download": "Scarica CSV",
+    "store": "Negozio",
+    "pageColumn": "Pagina",
+    "reference": "ID pagamento",
+    "currency": "Valuta",
+    "confirm": "Registra pagamento",
+    "empty": "Nessun pagamento approvato in questa pagina.",
+    "navigation": "Pagine del prospetto dei pagamenti",
+    "previous": "Precedente",
+    "next": "Successiva"
   }
 }

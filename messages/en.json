@@ -3298,5 +3298,24 @@
     "reject": "No thanks",
     "accept": "Allow",
     "settings": "Cookie settings"
+  },
+  "payoutSheet": {
+    "title": "Payment sheet",
+    "hint": "Pay through your bank. Then record the payment here.",
+    "snapshot": "Snapshot created",
+    "page": "Page {page} of {pages}",
+    "count": "{count} awaiting payment",
+    "total": "Total on this page",
+    "print": "Print",
+    "download": "Download CSV",
+    "store": "Store",
+    "pageColumn": "Page",
+    "reference": "Payout ID",
+    "currency": "Currency",
+    "confirm": "Record payment",
+    "empty": "No approved payouts on this page.",
+    "navigation": "Payment sheet pages",
+    "previous": "Previous",
+    "next": "Next"
   }
 }

@@ -3304,5 +3304,24 @@
     "reject": "Ei kiitos",
     "accept": "Salli",
     "settings": "Evästeasetukset"
+  },
+  "payoutSheet": {
+    "title": "Maksuluettelo",
+    "hint": "Maksa pankin kautta. Kirjaa sitten maksu tähän.",
+    "snapshot": "Luettelo luotu",
+    "page": "Sivu {page}/{pages}",
+    "count": "{count} odottaa maksua",
+    "total": "Tämän sivun summa",
+    "print": "Tulosta",
+    "download": "Lataa CSV",
+    "store": "Myymälä",
+    "pageColumn": "Sivu",
+    "reference": "Maksun tunniste",
+    "currency": "Valuutta",
+    "confirm": "Kirjaa maksu",
+    "empty": "Tällä sivulla ei ole hyväksyttyjä maksuja.",
+    "navigation": "Maksuluettelon sivut",
+    "previous": "Edellinen",
+    "next": "Seuraava"
   }
 }

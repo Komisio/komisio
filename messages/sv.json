@@ -3298,5 +3298,24 @@
     "reject": "Nej tack",
     "accept": "Tillåt",
     "settings": "Cookieinställningar"
+  },
+  "payoutSheet": {
+    "title": "Betalningsunderlag",
+    "hint": "Betala via banken. Registrera sedan betalningen här.",
+    "snapshot": "Underlag skapat",
+    "page": "Sida {page} av {pages}",
+    "count": "{count} väntar på betalning",
+    "total": "Summa på denna sida",
+    "print": "Skriv ut",
+    "download": "Hämta CSV",
+    "store": "Butik",
+    "pageColumn": "Sida",
+    "reference": "Utbetalnings-ID",
+    "currency": "Valuta",
+    "confirm": "Registrera betalning",
+    "empty": "Inga godkända utbetalningar på denna sida.",
+    "navigation": "Sidor i betalningsunderlaget",
+    "previous": "Föregående",
+    "next": "Nästa"
   }
 }

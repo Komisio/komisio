@@ -1,3 +1,4 @@
+import { setBagProcessingCommand } from './bag-processing'
 import {
   saveSellerProfileCommand,
   initialSellerProfile,
@@ -52,6 +53,7 @@ import {
 import { locales, type Locale } from '../i18n'
 
 export const intakeCommand = z.discriminatedUnion('action', [
+  setBagProcessingCommand,
   saveSellerProfileCommand,
   publishStorePolicyCommand,
   publishSellerTermsCommand,
@@ -155,6 +157,15 @@ export const intakeCommand = z.discriminatedUnion('action', [
 export async function executeIntake(client: SupabaseClient, input: unknown) {
   const c = intakeCommand.parse(input)
   switch (c.action) {
+    case 'setBagProcessing':
+      return client.rpc('set_bag_processing', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_bag: c.bagId,
+        p_expected: c.expectedVersion,
+        p_state: c.state,
+        p_reason: c.reason,
+      })
     case 'publishStorePolicy':
       return client.rpc('publish_store_policy', {
         p_tenant: c.tenantId,

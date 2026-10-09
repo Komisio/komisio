@@ -1,0 +1,56 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+('c0000000-0000-4000-8000-000000009901','progress-owner@example.test',now()),
+('c0000000-0000-4000-8000-000000009902','progress-reader@example.test',now()),
+('c0000000-0000-4000-8000-000000009903','progress-outsider@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"c0000000-0000-4000-8000-000000009901","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Progress store','progress-store',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Synthetic seller','','123')::text,true);
+select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'Progress',null)::text,true);
+
+select is(bag_processing(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'state','open','new receipt is open');
+select set_config('test.request',gen_random_uuid()::text,true);
+select set_config('test.draft',gen_random_uuid()::text,true);
+select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Lamp','','Good');
+select throws_like($$select set_bag_processing(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.bag')::uuid,0,'completed','')$$,'%BAG_PENDING_WORK%','open drafts prevent completion');
+select set_inspection_archived(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,1,true,'Not proceeding');
+select is(set_bag_processing(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.bag')::uuid,0,'completed',''),current_setting('test.request')::uuid,'explicit completion');
+select is(set_bag_processing(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.bag')::uuid,0,'completed',''),current_setting('test.request')::uuid,'idempotent retry');
+select is((select count(*) from bag_processing_events where tenant_id=current_setting('test.tenant')::uuid),1::bigint,'one event');
+select is((bag_queue_page(current_setting('test.tenant')::uuid,null,null,null,null)->0)->>'processing_state','completed','queue reports explicit completion');
+select is((select count(*) from flow_dropoffs(current_setting('test.tenant')::uuid,'completed')),1::bigint,'completed filter includes receipt');
+select is((select count(*) from flow_dropoffs(current_setting('test.tenant')::uuid,'drafts')),0::bigint,'completed receipts are absent from unfinished work');
+select throws_like($$select set_bag_processing(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.bag')::uuid,0,'completed','Different payload')$$,'%REQUEST_CONFLICT%','request content is frozen');
+select throws_like($$select set_bag_processing(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,0,'open','Correction')$$,'%BAG_PROCESSING_CHANGED%','stale state rejected');
+select throws_like($$select set_bag_processing(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,1,'open','')$$,'%INVALID_INPUT%','reopen requires reason');
+select throws_like($$select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,gen_random_uuid(),0,'New item','','')$$,'%BAG_COMPLETED%','closed bag rejects drafts');
+select throws_like($$select create_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.bag')::uuid)$$,'%BAG_COMPLETED%','closed bag rejects receptions');
+select lives_ok($$select set_bag_processing(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,1,'open','Another item found')$$,'reopen records correction');
+select is(set_bag_processing(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.bag')::uuid,0,'completed',''),current_setting('test.request')::uuid,'old retry stays idempotent after reopen');
+select is(bag_processing(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'state','open','old retry does not reclose');
+select is(jsonb_array_length(bag_processing(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->'history'),2,'history retained');
+select create_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.bag')::uuid);
+select throws_like($$select set_bag_processing(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,2,'completed','')$$,'%BAG_PENDING_WORK%','unfinished reception blocks completion');
+select throws_ok($$delete from bag_processing_events$$,'42501',null,'direct writes denied');
+reset role;
+select throws_like($$delete from bag_processing_events where tenant_id=current_setting('test.tenant')::uuid$$,'%IMMUTABLE%','history immutable');
+insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.tenant')::uuid,'c0000000-0000-4000-8000-000000009902','readonly');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"c0000000-0000-4000-8000-000000009902","role":"authenticated"}';
+select is(bag_processing(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'state','open','readonly reads');
+select throws_ok($$select set_bag_processing(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,2,'completed','')$$,'42501',null,'readonly cannot complete');
+set local "request.jwt.claims"='{"sub":"c0000000-0000-4000-8000-000000009903","role":"authenticated"}';
+select throws_ok($$select bag_processing(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)$$,'42501',null,'outsider denied');
+select is((select count(*) from bag_processing_events),0::bigint,'RLS isolates stores');
+reset role;
+select ok(not has_function_privilege('anon','public.set_bag_processing(uuid,uuid,uuid,integer,text,text)','execute'),'anonymous denied');
+insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values(gen_random_uuid(),'c0000000-0000-4000-8000-000000009901','totp','verified',now(),now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"c0000000-0000-4000-8000-000000009901","role":"authenticated","aal":"aal1"}';
+select throws_ok($$select bag_processing(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)$$,'42501',null,'MFA enforced for reads');
+select throws_like($$select set_bag_processing(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,2,'completed','')$$,'%AUTH_REQUIRED%','MFA enforced for writes');
+reset role;
+select * from finish(); rollback;

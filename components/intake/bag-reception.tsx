@@ -1,3 +1,4 @@
+import { readBagProcessing } from '@/lib/engine/bag-processing'
 import { BagWorkSummary } from './bag-work-summary'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { BagRegisteredItems } from './bag-registered-items'
@@ -58,6 +59,7 @@ export async function BagReception({
       readBagRegisteredItems(client, tenantId, bagId, (itemPage - 1) * 25),
     ])
   if (seller.error) throw new Error('Unable to read bag reception')
+  const processing = await readBagProcessing(client, tenantId, bagId)
   const { total, legacy } = received
   const registeredTitle =
     received.scope === 'all' ? b.allRegistered : b.registered
@@ -75,7 +77,7 @@ export async function BagReception({
           {d.intake.bag} K-{reference} · {seller.data.name}
         </p>
         <h1>{d.inspection.title}</h1>
-        <p>{b.intro}</p>
+        {processing.state === 'open' && <p>{b.intro}</p>}
         {note && <p className="bag-note">{note}</p>}
         {total > 0 && (
           <Link className="text-link" href="#bag-registered">
@@ -89,8 +91,10 @@ export async function BagReception({
         tenantId={tenantId}
         bagId={bagId}
         locale={locale}
+        processing={processing}
+        readonly={readonly}
       />
-      {!readonly && (
+      {!readonly && processing.state === 'open' && (
         <QuickReception
           key={bagId}
           tenantId={tenantId}

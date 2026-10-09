@@ -1,9 +1,23 @@
 # Seller agreement evidence
 
-This staff pilot adds versioned store terms and references to approval evidence.
-It does not provide seller login, electronic signatures, verified identity,
-legal review or
-financial authorization. Use synthetic terms and evidence while evaluating it.
+Stores publish immutable agreement versions. A seller can accept the current
+version in the seller portal; staff can also record a reference to approval
+obtained outside Komisio. These are distinct evidence sources. Portal acceptance
+identifies the authenticated account, not an independently verified legal identity.
+Komisio does not review the terms or provide a certified e-signature service.
+
+## Seller journey
+
+1. Sign in with the verified email uniquely linked to the store's seller record.
+   Select the store and open its agreement from the seller portal.
+2. Read the published version and choose **Accept**. The surrounding interface
+   follows the portal language; the agreement retains its published language.
+3. The page shows the acceptance time. Printing or saving through the browser's
+   print dialog is available; printing alone never records acceptance.
+
+Staff can see the version, time, account email and portal provenance in the
+seller's agreement evidence. An existing staff-recorded acceptance is labelled
+separately. Publishing new terms does not rewrite earlier evidence or receipts.
 
 ## Staff journey
 
@@ -19,10 +33,11 @@ financial authorization. Use synthetic terms and evidence while evaluating it.
    exact version and evidence identifiers used. Open its label/detail page to
    inspect them; evidence references are excluded from the printed bag label.
 
-No published agreement means no new prerequisite. An optional-evidence version
-allows receiving without evidence. Changing the requirement publishes another
-version; it never rewrites existing receipts. All staff/readonly members can
-read terms and evidence in their own store; readonly cannot record or publish.
+The agreement's receiving flag and the store policy's agreement requirements
+remain authoritative. A version with its receiving flag off does not override
+a store policy that requires evidence. Seller acceptance does not itself receive
+goods or authorize a sale. All staff/readonly members can read terms and evidence
+in their own store; readonly cannot record or publish.
 
 ## Version and retry contract
 
@@ -42,14 +57,27 @@ Agreement text has one explicit language in this slice. It is rendered as plain
 text, with no implicit translation or HTML execution. Missing evidence is never
 inferred from a translation failure or a staff user's login.
 
+Portal acceptance uses `POST /api/seller/agreement`, the engine adapter and
+`accept_my_seller_agreement`. The request pins tenant, seller, agreement version
+and request ID; actor and verified email come from the authenticated identity.
+Database authorization uses the existing seller linkage and MFA boundary, not
+staff membership or client-supplied identity. `my_seller_agreement` exposes only
+that seller's current agreement and relevant acceptance.
+
+A new request for an obsolete version returns `AGREEMENT_CHANGED`; the seller
+reloads and reads the new version. A successful request can be retried after a
+new publication and still returns its original evidence. Concurrent requests by
+the same account for the same seller/version produce one acceptance record.
+
 ## Delivery and rollback
 
-Apply migration `20260911150000_seller_agreements.sql` to the verified staging
-project after CI passes and before merging/deploying the new application. It is
-additive for existing receipts and keeps the previous receiving function for
-no-agreement stores and unchanged old retries. Do not publish agreements until
-the new UI has deployed. The existing `KOMISIO_INTAKE_ENABLED` flag covers this
-slice; no additional activation flag or provider credential is required.
+Apply all committed migrations through the repository's release workflow.
+The original agreement migration is `20260911150000_seller_agreements.sql`;
+`20261009110000_seller_portal_agreement.sql` adds portal acceptance using the
+existing evidence table and preserves existing rows as `staff_recorded`.
+Deploy the compatible application after the database migration. The existing
+`KOMISIO_INTAKE_ENABLED` flag covers this feature; no additional activation
+flag or signing-provider credential is required.
 
 Once terms have been published, the pre-agreement UI cannot start new receipts
 against an unseen version. For a release failure, disable the intake surface
@@ -59,14 +87,17 @@ around an authorization failure.
 
 ## Verification and next boundaries
 
-Local coverage: 112 pgTAP assertions across the project, 32 unit tests and nine
-browser journeys. Concurrency checks cover ownership, receipt replay, competing
-publications and publication racing receipt. The agreement browser journey
-covers required evidence, version change, stale forms, historical receipt links,
-literal HTML text and mobile layout. Full CI must pass before merge.
+The agreement database tests are `supabase/tests/0005_agreements.test.sql` and
+`supabase/tests/0286_seller_agreement_portal.test.sql`. They cover scoped reads,
+actor-bound evidence, immutability, required evidence and version/retry rules.
+`scripts/seller-agreement-race.mjs`, included in the concurrency suite, checks
+competing acceptance requests. `tests/e2e/seller-agreement.spec.ts` covers portal
+acceptance, uncertain-response retry, reload, new-version conflicts and mobile
+layout. Full main CI gates the staging release under the repository merge policy.
 
-Before external pilot use, add evidence correction/revocation with append-only
-events and define when evidence needs renewed verification. Seller-authenticated
-acceptance, identity matching, document attachments, retention requirements,
-multiple translations and automated agreement drafting remain separate work.
-No live legal terms or real seller approvals are synthesized for tests.
+Evidence correction/revocation, independent identity verification, signed-file
+attachments and translated versions of the same agreement remain separate work.
+AI-generated drafts require review and ordinary explicit publication; generating
+a draft never records seller acceptance. Tests use synthetic accounts and terms,
+not real seller approvals. Hosted authenticated acceptance and the store's legal
+suitability checks are separate from automated regression coverage.

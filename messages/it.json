@@ -145,7 +145,8 @@
       "PHOTO_UPLOAD_FAILED": "Impossibile caricare la foto. Prova un'altra foto.",
       "IMAGE_TOO_LARGE": "La foto è troppo grande (massimo 3 MB).",
       "INVALID_IMAGE": "Il file non è un’immagine JPEG o PNG valida.",
-      "REQUEST_FAILED": "La richiesta non è riuscita. Riprova."
+      "REQUEST_FAILED": "La richiesta non è riuscita. Riprova.",
+      "BAG_COMPLETED": "Questa consegna è completata. Riaprila per continuare."
     },
     "addPhoto": "Scatta o scegli una foto",
     "sellerSearchHint": "Nome, email o telefono",
@@ -252,7 +253,9 @@
         "Puoi descrivere la borsa o l’oggetto. Conferma la ricezione solo quando la consegna è in negozio.",
         "Conferma la ricezione e apri l’etichetta. Gli articoli vengono controllati e registrati separatamente."
       ]
-    }
+    },
+    "bagPendingWork": "Ci sono ancora bozze di articoli da gestire.",
+    "bagCompleted": "Questa consegna è completata. Riaprila per continuare."
   },
   "brand": "Komisio",
   "tagline": "Più spazio perché le cose vivano di nuovo.",
@@ -3329,5 +3332,16 @@
     "navigation": "Pagine del prospetto dei pagamenti",
     "previous": "Precedente",
     "next": "Successiva"
+  },
+  "bagProcessing": {
+    "title": "Consegna",
+    "open": "In corso",
+    "completed": "Completata",
+    "complete": "Segna come completata",
+    "reopen": "Riapri",
+    "reason": "Motivo della riapertura",
+    "pending": "Completa o archivia prima le bozze degli articoli rimanenti.",
+    "history": "Attività recenti",
+    "saved": "Stato salvato."
   }
 }

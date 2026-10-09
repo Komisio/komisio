@@ -145,7 +145,8 @@
       "PHOTO_UPLOAD_FAILED": "Kuvaa ei voitu ladata. Kokeile toista kuvaa.",
       "IMAGE_TOO_LARGE": "Kuva on liian suuri (enintään 3 Mt).",
       "INVALID_IMAGE": "Tiedosto ei ole kelvollinen JPEG- tai PNG-kuva.",
-      "REQUEST_FAILED": "Pyyntö epäonnistui. Yritä uudelleen."
+      "REQUEST_FAILED": "Pyyntö epäonnistui. Yritä uudelleen.",
+      "BAG_COMPLETED": "Tämä vastaanotto on käsitelty. Avaa se uudelleen jatkaaksesi."
     },
     "addPhoto": "Ota tai valitse kuva",
     "sellerSearchHint": "Nimi, sähköposti tai puhelin",
@@ -252,7 +253,9 @@
         "Voit kuvailla kassia tai esinettä. Vahvista vastaanotto vasta, kun tavaraerä on myymälässä.",
         "Vahvista vastaanotto ja avaa etiketti. Tuotteet tarkastetaan ja rekisteröidään erikseen."
       ]
-    }
+    },
+    "bagPendingWork": "Käsittelemättömiä tuoteluonnoksia on jäljellä.",
+    "bagCompleted": "Tämä vastaanotto on käsitelty. Avaa se uudelleen jatkaaksesi."
   },
   "brand": "Komisio",
   "tagline": "Enemmän tilaa tavaroille elää uudelleen.",
@@ -3335,5 +3338,16 @@
     "navigation": "Maksuluettelon sivut",
     "previous": "Edellinen",
     "next": "Seuraava"
+  },
+  "bagProcessing": {
+    "title": "Tavaroiden vastaanotto",
+    "open": "Kesken",
+    "completed": "Käsitelty",
+    "complete": "Merkitse käsitellyksi",
+    "reopen": "Avaa uudelleen",
+    "reason": "Uudelleen avaamisen syy",
+    "pending": "Viimeistele tai arkistoi jäljellä olevat tuoteluonnokset ensin.",
+    "history": "Viimeisimmät tapahtumat",
+    "saved": "Tila tallennettu."
   }
 }

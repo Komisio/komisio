@@ -300,7 +300,9 @@ export default async function Intake({
             <strong>
               {filters.state === 'unstarted'
                 ? all.storeFlow.live.dropoffs
-                : all.storeFlow.live.drafts}
+                : filters.state === 'drafts'
+                  ? all.storeFlow.live.drafts
+                  : all.bagProcessing[filters.state]}
             </strong>{' '}
             · <Link href={bagQueueHref({})}>{d.showAllBags}</Link>
           </p>
@@ -331,6 +333,29 @@ export default async function Intake({
           </div>
         </form>
         <div className="row wrap received-bags-filters">
+          <Link
+            className="text-link"
+            href={bagQueueHref({
+              seller: filters.seller,
+              bag: filters.bag || undefined,
+            })}
+          >
+            {d.showAllBags}
+          </Link>
+          {(['open', 'completed'] as const).map((state) => (
+            <Link
+              key={state}
+              className="text-link"
+              aria-current={filters.state === state ? 'page' : undefined}
+              href={bagQueueHref({
+                seller: filters.seller,
+                bag: filters.bag || undefined,
+                state,
+              })}
+            >
+              {all.bagProcessing[state]}
+            </Link>
+          ))}
           {filters.bag && (
             <Link
               className="text-link"
@@ -369,7 +394,7 @@ export default async function Intake({
                         timeStyle: 'short',
                       },
                     )}{' '}
-                    · {d.awaiting}
+                    · {all.bagProcessing[row.processing_state]}
                   </small>
                 </div>
                 <div className="received-bag-actions">

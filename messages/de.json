@@ -255,7 +255,10 @@
       ]
     },
     "bagPendingWork": "Es sind noch Artikelentwürfe zu bearbeiten.",
-    "bagCompleted": "Diese Einlieferung ist abgeschlossen. Öffnen Sie sie erneut, um fortzufahren."
+    "bagCompleted": "Diese Einlieferung ist abgeschlossen. Öffnen Sie sie erneut, um fortzufahren.",
+    "stocktakeAmbiguous": "Der Code passt zu mehreren Artikeln. Öffnen Sie den richtigen Artikel und verwenden Sie seine vollständige ID.",
+    "stocktakeItemMissing": "Dieser Artikel wurde in diesem Geschäft nicht gefunden.",
+    "stocktakePending": "Prüfen Sie die übrigen Artikel vor dem Abschluss."
   },
   "brand": "Komisio",
   "tagline": "Mehr Raum für Dinge, die weiterleben.",
@@ -3349,5 +3352,36 @@
     "pending": "Schließen Sie zunächst die übrigen Artikelentwürfe ab oder archivieren Sie sie.",
     "history": "Letzte Aktivitäten",
     "saved": "Status gespeichert."
+  },
+  "stocktake": {
+    "title": "Inventur",
+    "start": "Inventur starten",
+    "scan": "Erfassen",
+    "reference": "Artikelcode scannen oder eingeben",
+    "scanned": "Erfasst",
+    "finish": "Inventur abschließen",
+    "closed": "Abgeschlossen",
+    "open": "In Bearbeitung",
+    "all": "Alle",
+    "unchecked": "Ungeprüft",
+    "deviations": "Abweichungen",
+    "found": "Gefunden",
+    "missing": "Fehlt",
+    "damaged": "Beschädigt",
+    "changed": "Nicht mehr auf Lager",
+    "unexpected": "Nicht auf der Startliste",
+    "finding": "Abweichung erfassen",
+    "reason": "Kommentar",
+    "save": "Speichern",
+    "history": "Letzte Aktivitäten",
+    "recent": "Letzte Inventuren",
+    "empty": "Keine Artikel in dieser Liste.",
+    "total": "Artikel",
+    "help": "Zur Inventur",
+    "scope": "Scannen Sie die Artikeletiketten. Die Startliste enthält den Lagerbestand zu Beginn der Inventur.",
+    "effects": "Erfassen Sie fehlende oder beschädigte Artikel mit einem Kommentar. Verkäufe und Verkäuferguthaben bleiben unverändert.",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "back": "Zum Lager"
   }
 }

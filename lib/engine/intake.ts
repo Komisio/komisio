@@ -1,3 +1,9 @@
+import {
+  startStocktakeCommand,
+  scanStocktakeCommand,
+  recordStocktakeFindingCommand,
+  finishStocktakeCommand,
+} from './stocktake'
 import { setBagProcessingCommand } from './bag-processing'
 import {
   saveSellerProfileCommand,
@@ -53,6 +59,10 @@ import {
 import { locales, type Locale } from '../i18n'
 
 export const intakeCommand = z.discriminatedUnion('action', [
+  startStocktakeCommand,
+  scanStocktakeCommand,
+  recordStocktakeFindingCommand,
+  finishStocktakeCommand,
   setBagProcessingCommand,
   saveSellerProfileCommand,
   publishStorePolicyCommand,
@@ -157,6 +167,31 @@ export const intakeCommand = z.discriminatedUnion('action', [
 export async function executeIntake(client: SupabaseClient, input: unknown) {
   const c = intakeCommand.parse(input)
   switch (c.action) {
+    case 'startStocktake':
+      return client.rpc('start_stocktake', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+      })
+    case 'scanStocktake':
+    case 'recordStocktakeFinding':
+    case 'finishStocktake':
+      return client.rpc('record_stocktake', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_session: c.sessionId,
+        p_kind:
+          c.action === 'scanStocktake'
+            ? 'scan'
+            : c.action === 'finishStocktake'
+              ? 'closed'
+              : 'finding',
+        p_reference: c.action === 'scanStocktake' ? c.reference : '',
+        p_item: c.action === 'recordStocktakeFinding' ? c.itemId : null,
+        p_expected: c.action === 'scanStocktake' ? null : c.expectedVersion,
+        p_observation:
+          c.action === 'recordStocktakeFinding' ? c.observation : null,
+        p_reason: c.action === 'recordStocktakeFinding' ? c.reason : '',
+      })
     case 'setBagProcessing':
       return client.rpc('set_bag_processing', {
         p_tenant: c.tenantId,

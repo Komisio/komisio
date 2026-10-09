@@ -255,7 +255,10 @@
       ]
     },
     "bagPendingWork": "Der er varekladder, som mangler at blive behandlet.",
-    "bagCompleted": "Indleveringen er færdigbehandlet. Genåbn den for at fortsætte."
+    "bagCompleted": "Indleveringen er færdigbehandlet. Genåbn den for at fortsætte.",
+    "stocktakeAmbiguous": "Koden matcher flere varer. Åbn den rigtige vare og brug hele ID’et.",
+    "stocktakeItemMissing": "Varen findes ikke i denne butik.",
+    "stocktakePending": "Kontrollér de resterende varer, før du afslutter."
   },
   "brand": "Komisio",
   "tagline": "Mere plads til ting, der får nyt liv.",
@@ -3343,5 +3346,36 @@
     "pending": "Færdiggør eller arkivér de resterende varekladder først.",
     "history": "Seneste aktivitet",
     "saved": "Status gemt."
+  },
+  "stocktake": {
+    "title": "Lageroptælling",
+    "start": "Start lageroptælling",
+    "scan": "Registrer",
+    "reference": "Scan eller skriv varekode",
+    "scanned": "Registreret",
+    "finish": "Afslut lageroptælling",
+    "closed": "Afsluttet",
+    "open": "I gang",
+    "all": "Alle",
+    "unchecked": "Ikke kontrolleret",
+    "deviations": "Afvigelser",
+    "found": "Fundet",
+    "missing": "Mangler",
+    "damaged": "Beskadiget",
+    "changed": "Ikke længere på lager",
+    "unexpected": "Uden for startlisten",
+    "finding": "Registrer afvigelse",
+    "reason": "Kommentar",
+    "save": "Gem",
+    "history": "Seneste hændelser",
+    "recent": "Seneste lageroptællinger",
+    "empty": "Ingen varer på denne liste.",
+    "total": "Varer",
+    "help": "Om lageroptælling",
+    "scope": "Scan varernes etiketter. Startlisten indeholder butikkens lager, da optællingen begyndte.",
+    "effects": "Registrer manglende eller beskadigede varer med en kommentar. Det ændrer ikke salg eller sælgerens saldo.",
+    "next": "Næste",
+    "previous": "Forrige",
+    "back": "Til lageret"
   }
 }

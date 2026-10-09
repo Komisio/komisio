@@ -255,7 +255,10 @@
       ]
     },
     "bagPendingWork": "There are unfinished item drafts.",
-    "bagCompleted": "This drop-off is completed. Reopen it to continue."
+    "bagCompleted": "This drop-off is completed. Reopen it to continue.",
+    "stocktakeAmbiguous": "The code matches several items. Open the correct item and use its full ID.",
+    "stocktakeItemMissing": "This item was not found in this store.",
+    "stocktakePending": "Check the remaining items before finishing."
   },
   "brand": "Komisio",
   "tagline": "More room for things to live again.",
@@ -3343,5 +3346,36 @@
     "pending": "Finish or archive the remaining item drafts first.",
     "history": "Recent activity",
     "saved": "Status saved."
+  },
+  "stocktake": {
+    "title": "Stocktake",
+    "start": "Start stocktake",
+    "scan": "Record",
+    "reference": "Scan or enter item code",
+    "scanned": "Recorded",
+    "finish": "Finish stocktake",
+    "closed": "Completed",
+    "open": "In progress",
+    "all": "All",
+    "unchecked": "Unchecked",
+    "deviations": "Discrepancies",
+    "found": "Found",
+    "missing": "Missing",
+    "damaged": "Damaged",
+    "changed": "No longer in stock",
+    "unexpected": "Outside starting list",
+    "finding": "Record a finding",
+    "reason": "Comment",
+    "save": "Save",
+    "history": "Recent activity",
+    "recent": "Recent stocktakes",
+    "empty": "No items in this list.",
+    "total": "Items",
+    "help": "About stocktaking",
+    "scope": "Scan item labels. The starting list contains the store’s stock when this stocktake began.",
+    "effects": "Record missing or damaged items with a comment. This does not change sales or seller balances.",
+    "next": "Next",
+    "previous": "Previous",
+    "back": "Back to stock"
   }
 }

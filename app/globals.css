@@ -6642,3 +6642,61 @@ button.text-link:hover:not(:disabled) {
     break-inside: avoid;
   }
 }
+
+/* Compact observations; expanded controls stay beside the affected item. */
+.stocktake-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.stocktake-list > li {
+  padding: 0.75rem 1rem;
+}
+.stocktake-list .row {
+  justify-content: space-between;
+}
+.stocktake-list p {
+  margin: 0.35rem 0;
+}
+.stocktake-list details {
+  margin-top: 0.5rem;
+}
+.stocktake-list fieldset {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+.stocktake-list a {
+  overflow-wrap: anywhere;
+}
+#stocktake-scan {
+  min-width: 0;
+  flex: 1 1 14rem;
+}
+
+.stocktake-page {
+  gap: 1rem;
+}
+.stocktake-page .page-heading {
+  margin-bottom: 0;
+}
+.stocktake-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+}
+.stocktake-metrics > div {
+  padding: 0.75rem;
+}
+.stocktake-metrics dt {
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+.stocktake-metrics dd {
+  margin: 0.25rem 0 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}

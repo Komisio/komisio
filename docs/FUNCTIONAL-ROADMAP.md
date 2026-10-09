@@ -24,10 +24,16 @@ live view can be bookmarked. Receiving now pages through registered items
 from both quick reception and inspected drafts, with current lifecycle state
 and actual sold price where recorded. Saved draft summaries are compact;
 editing and history remain available. Registered items and existing drafts
-are observable facts: there is no recorded whole-handover completion or
-reliable count of physically unregistered goods. Do not infer either from an
-estimated seller count or the first registered item. Instructions do not
-execute store policy.
+are observable facts. Staff can explicitly mark a whole drop-off as processed
+when no drafts or receptions remain, and reopen it with a reason. This does not
+establish a reliable count of physically unregistered goods; never infer that
+count from an estimate or the first registered item. Instructions do not execute
+store policy.
+
+Stocktaking freezes expected stock and records scans and explicit findings.
+Unchecked items are distinct from missing or damaged items. Closing freezes the
+observed discrepancies and stock changes, without creating sales, seller-balance
+adjustments or lifecycle events. Financial handling of losses remains undecided.
 
 Production also has complete platform vocabulary labels in all eight supported
 languages, clearer payout-list and request placement, and economy totals

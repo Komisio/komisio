@@ -42,6 +42,9 @@ export default async function Stock({
             steps: [d.scopeHint, d.valueHint, d.ageHint],
           }}
         />
+        <Link className="btn btn-secondary" href="/intake/stocktake">
+          {all.stocktake.title}
+        </Link>
         <Link className="text-link" href="/intake/items">
           {all.items.title} →
         </Link>

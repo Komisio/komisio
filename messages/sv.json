@@ -255,7 +255,10 @@
       ]
     },
     "bagPendingWork": "Det finns varuutkast kvar att hantera.",
-    "bagCompleted": "Inlämningen är färdigbehandlad. Återöppna den för att fortsätta."
+    "bagCompleted": "Inlämningen är färdigbehandlad. Återöppna den för att fortsätta.",
+    "stocktakeAmbiguous": "Koden matchar flera varor. Öppna rätt vara och använd dess fullständiga ID.",
+    "stocktakeItemMissing": "Varan finns inte i den här butiken.",
+    "stocktakePending": "Kontrollera återstående varor innan du avslutar."
   },
   "brand": "Komisio",
   "tagline": "Mer utrymme för det som får nytt liv.",
@@ -3343,5 +3346,36 @@
     "pending": "Slutför eller arkivera återstående varuutkast först.",
     "history": "Senaste händelser",
     "saved": "Status sparad."
+  },
+  "stocktake": {
+    "title": "Inventering",
+    "start": "Starta inventering",
+    "scan": "Registrera",
+    "reference": "Skanna eller skriv etikettkod",
+    "scanned": "Registrerad",
+    "finish": "Avsluta inventering",
+    "closed": "Avslutad",
+    "open": "Pågående",
+    "all": "Alla",
+    "unchecked": "Att kontrollera",
+    "deviations": "Avvikelser",
+    "found": "Hittad",
+    "missing": "Saknas",
+    "damaged": "Skadad",
+    "changed": "Inte längre i lagret",
+    "unexpected": "Utanför startlistan",
+    "finding": "Registrera avvikelse",
+    "reason": "Kommentar",
+    "save": "Spara",
+    "history": "Senaste händelser",
+    "recent": "Senaste inventeringar",
+    "empty": "Inga varor i den här listan.",
+    "total": "Varor",
+    "help": "Om inventering",
+    "scope": "Skanna varornas etiketter. Startlistan innehåller butikens lager när inventeringen startades.",
+    "effects": "Registrera saknade eller skadade varor med en kommentar. Det ändrar inte försäljning eller säljarens saldo.",
+    "next": "Nästa",
+    "previous": "Föregående",
+    "back": "Till lagret"
   }
 }

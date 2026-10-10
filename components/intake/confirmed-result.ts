@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import type { intakeCommand } from '@/lib/engine/intake'
+import { feeAccrualResult } from '../../lib/engine/consignment-fees'
 
 type Command = z.infer<typeof intakeCommand>
 const uuid = z.uuid()
@@ -45,6 +46,10 @@ export function confirmsIntakeResult(
     return false
   const result = parsed.data.id
   switch (command.action) {
+    case 'accrueSellerConsignmentFees': {
+      const saved = feeAccrualResult.safeParse(result)
+      return saved.success && saved.data.sellerId === command.sellerId
+    }
     // These operations can return an already existing canonical record.
     case 'recordSale':
     case 'generateDayClose':

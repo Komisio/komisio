@@ -87,6 +87,42 @@ Choose a backup frequency and recovery objective, protect backup access, and
 perform a restore into an isolated environment before admitting pilot users.
 No backup/restore exercise or externally hosted deployment has been verified yet.
 
+## Optional monthly consignment fees
+
+Owners/admins enable calendar periods under Settings → Sale period. Choose the
+number of months from physical receipt, collection days, and optionally a monthly
+fee per seller. Fee amounts can include or exclude a separately selected VAT
+rate. Collection is either a seller-balance deduction (which may create debt) or
+a separate external checkout payment. No fee or receipt period is backfilled.
+
+Each seller's first receipt anchors billing months in Stockholm local time.
+Further deliveries share the current month. Every started month is charged in
+full; only accepted, active items ending after its boundary renew the next month.
+Sold or collected items and collection grace alone do not renew it. A new receipt
+after billing stops starts a new period. Receipt deadlines and billing terms
+remain frozen when settings change; existing explicit extensions still apply.
+Staff record actual collection or recycling, with recycling available after the
+collection deadline. A deadline does not assert that physical disposal occurred.
+
+The database-only `komisio-consignment-fees` job runs hourly at minute 7 when
+`pg_cron` is installed. It acts as the period's policy publisher only while that
+identity remains an owner/admin. Closed/read-only stores are skipped. Self-hosted
+operators without pg_cron must schedule
+`select komisio_private.run_automatic_consignment_fees()` using their database
+scheduler; never grant this function to application roles. Staff can also catch
+up a seller's fees from their Economy tab. Payout approval catches up due fees
+before reserving money. Each month and reversal is idempotent under concurrent
+requests; a run processes at most 120 due months per period.
+
+The Economy tab and seller portal show fee history. Staff record separate
+payments with an external receipt reference; Komisio does not process payment.
+Owner/admin corrections append a full reversal, never edit the original fee.
+An already paid external fee requires an external refund workflow, which is not
+implemented here. Balance fees and their reversals appear separately in day
+closes and require their six explicit accounting map keys before export.
+Separate POS payments are excluded from this export to avoid duplicate booking.
+The store currency is frozen once a fee exists.
+
 ## Local verification
 
 ```sh

@@ -105,6 +105,16 @@ with the required operator access. Space booking still requires the unresolved
 fee/cancellation decisions below. Stripe activation remains deferred; hourly
 price decay remains outside version 1.
 
+Owner-approved extension (2026-10-10): seller-wide monthly consignment fees,
+with store-selected separate payment or balance deduction. Charge every started
+month in full; renew automatically while an active item's end exceeds the
+current month's end. Calendar-month sale periods start at physical receipt,
+followed by a collection grace period and recorded recycling. New core records
+are approved; an item-count limit is explicitly excluded. Reuse existing seller,
+agreement and acceptance boundaries. Negative seller balances are allowed; fee
+amounts can include or exclude separately configured VAT. Decisions are in
+[open questions](open-questions.md#intake-and-space-booking-follow-up).
+
 Older dated inventories below describe their own checkpoint, not the current
 implementation backlog. A listed capability is not proof of live integration
 acceptance or authorization to implement an unresolved business rule.

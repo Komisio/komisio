@@ -258,7 +258,8 @@
     "bagCompleted": "Questa consegna è completata. Riaprila per continuare.",
     "stocktakeAmbiguous": "Il codice corrisponde a più articoli. Apri quello corretto e usa il suo ID completo.",
     "stocktakeItemMissing": "Articolo non trovato in questo negozio.",
-    "stocktakePending": "Controlla gli articoli rimanenti prima di concludere."
+    "stocktakePending": "Controlla gli articoli rimanenti prima di concludere.",
+    "collectionNotDue": "Il termine per il ritiro non è ancora scaduto."
   },
   "brand": "Komisio",
   "tagline": "Più spazio perché le cose vivano di nuovo.",
@@ -1038,7 +1039,12 @@
     "sectionPeriod": "Periodo di vendita e ribassi",
     "sectionAi": "IA e testi degli articoli",
     "sectionLinks": "Collegamenti alla politica del negozio",
-    "layoutIntro": "Imposta i processi e le condizioni del negozio. Controlla le modifiche e pubblicale insieme in fondo alla pagina."
+    "layoutIntro": "Imposta i processi e le condizioni del negozio. Controlla le modifiche e pubblicale insieme in fondo alla pagina.",
+    "consignmentCalendar": "Periodo di vendita in mesi di calendario",
+    "consignmentCalendarEnabled": "Contare i mesi dalla consegna",
+    "consignmentCalendarHelp": "Si applica alle nuove consegne in conto vendita. Sostituisce il periodo in giorni; le consegne precedenti mantengono le condizioni. Gli articoli invenduti vanno ritirati. Il personale registra il ritiro effettivo o il riciclo dopo la scadenza.",
+    "consignmentMonths": "Mesi in vendita",
+    "collectionDays": "Giorni per il ritiro"
   },
   "sellerTerms": {
     "title": "Condizioni del conferente",
@@ -1229,7 +1235,9 @@
       "payout_paid": "Pagamento effettuato",
       "payout_released": "Riserva rilasciata",
       "booking_charge": "Addebito di prenotazione",
-      "adjustment": "Rettifica"
+      "adjustment": "Rettifica",
+      "consignment_fee": "Quote mensili",
+      "consignment_fee_reversal": "Storna quota"
     },
     "adjustHeading": "Rettifica il registro",
     "adjustHint": "Solo proprietario o amministratore. Una correzione è una nuova voce con un motivo; nulla viene modificato.",
@@ -1464,7 +1472,13 @@
       "commissionVatOre": "IVA sulla commissione",
       "sellerCreditOre": "Accredito ai conferenti (debito verso i conferenti)",
       "creditReversedOre": "Accredito ai conferenti stornato",
-      "payoutsPaidOre": "Pagamenti effettuati"
+      "payoutsPaidOre": "Pagamenti effettuati",
+      "mode:consignment_fee:grossOre": "Quote mensili · Quota nella valuta del negozio",
+      "mode:consignment_fee:netOre": "Quote mensili · IVA esclusa",
+      "mode:consignment_fee:vatOre": "Quote mensili · IVA",
+      "mode:consignment_fee_reversal:grossOre": "Storna quota · Quota nella valuta del negozio",
+      "mode:consignment_fee_reversal:netOre": "Storna quota · IVA esclusa",
+      "mode:consignment_fee_reversal:vatOre": "Storna quota · IVA"
     },
     "netOf": "netto",
     "vatOf": "IVA",
@@ -1698,7 +1712,9 @@
     "matches": "Risultati: {count}",
     "noMatches": "Nessun articolo corrisponde alla ricerca nello stato selezionato.",
     "searchScopeHint": "I filtri riguardano solo l’elenco. Le riduzioni di prezzo si applicano a tutto il negozio.",
-    "storeMarkdowns": "Ribassi per tutto il negozio"
+    "storeMarkdowns": "Ribassi per tutto il negozio",
+    "recycle": "Riciclo",
+    "collectionDeadline": "Ritirare entro"
   },
   "openByReference": {
     "title": "Apri da etichetta",
@@ -1909,7 +1925,8 @@
     "endedAs": {
       "charity": "donato in beneficenza",
       "return": "restituito a te",
-      "transfer": "spostato in un altro negozio della catena"
+      "transfer": "spostato in un altro negozio della catena",
+      "recycle": "riciclato"
     },
     "title": "Le mie vendite",
     "empty": "Nessun conferente corrisponde alla tua e-mail verificata. Contatta il negozio se manca un account.",
@@ -1960,7 +1977,8 @@
       "INVALID_INPUT": "Inserisci un importo maggiore di zero con al massimo due decimali.",
       "PAYOUT_BELOW_THRESHOLD": "L’importo è inferiore al minimo del negozio.",
       "PAYOUT_EXCEEDS_BALANCE": "L’importo supera il saldo disponibile. Controlla il saldo indicato sopra."
-    }
+    },
+    "collectionDeadline": "Ritirare entro"
   },
   "plans": {
     "heading": "Piano",
@@ -3484,5 +3502,33 @@
       "ambiguous": "Più venditori condividono questa email. Inserisci l’ID Komisio.",
       "conflict": "L’ID del venditore e l’email non corrispondono."
     }
+  },
+  "consignmentFees": {
+    "title": "Quote mensili",
+    "enabled": "Attiva una quota mensile per venditore",
+    "amount": "Quota nella valuta del negozio",
+    "vatBasis": "Base IVA dell’importo",
+    "vatRate": "IVA della quota (%)",
+    "collection": "Metodo di riscossione",
+    "balance": "Detrazione dal saldo del venditore",
+    "separate": "Pagamento separato alla cassa",
+    "net": "IVA esclusa",
+    "vat": "IVA",
+    "reference": "Riferimento ricevuta",
+    "reason": "Motivo della rettifica",
+    "pay": "Registra pagamento",
+    "reverse": "Storna quota",
+    "accrue": "Aggiorna quote scadute",
+    "saved": "Salvato",
+    "confirmPayment": "Confermo che la quota è stata pagata alla cassa.",
+    "confirmReversal": "Confermo lo storno dell’intera quota.",
+    "status": {
+      "deducted": "Detratta dal saldo",
+      "unpaid": "Da pagare",
+      "paid": "Pagata",
+      "reversed": "Stornata"
+    },
+    "help": "Ogni mese iniziato viene addebitato interamente dalla consegna. Tutte le consegne del venditore condividono il periodo di addebito. Le detrazioni possono generare un saldo negativo. Scegliere l’IVA della quota separatamente da quella degli articoli. Le condizioni si applicano ai nuovi periodi.",
+    "historyHelp": "Le quote si rinnovano automaticamente finché gli articoli attivi terminano dopo il mese di addebito. L’istante finale non è incluso nel mese di addebito."
   }
 }

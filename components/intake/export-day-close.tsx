@@ -28,6 +28,8 @@ export function ExportDayClose({
 }) {
   const money = (ore: number) => `${formatSignedOre(ore)} ${currency}`
   const accountLabel = (key: string) => {
+    if (key in d.amountKeys)
+      return d.amountKeys[key as keyof typeof d.amountKeys]
     if (key.startsWith('mode:')) {
       const [, mode, amount] = key.split(':')
       return `${vatModes[mode] ?? mode} · ${amount === 'netOre' ? d.netOf : d.vatOf}`

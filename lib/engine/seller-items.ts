@@ -28,6 +28,7 @@ export const myItems = z.object({
           'sold',
         ]),
         periodEnd: z.string(),
+        collectionDeadline: z.string().nullable().optional(),
         endOfPeriodAction: z.enum(['charity', 'return']).nullable(),
         endedAs: z.string().nullable(),
         soldAt: z.string().nullable(),

@@ -13,6 +13,8 @@ export function LifecycleActions({
   itemId,
   dueStep,
   endOfPeriodAction,
+  collectionDeadline,
+  collectionDue = false,
   d,
   intake,
 }: {
@@ -20,6 +22,8 @@ export function LifecycleActions({
   itemId: string
   dueStep: number | null
   endOfPeriodAction: 'charity' | 'return' | null
+  collectionDeadline?: string | null
+  collectionDue?: boolean
   d: D
   intake: Dictionary['intake']
 }) {
@@ -180,6 +184,11 @@ export function LifecycleActions({
           >
             <option value="charity">{d.charity}</option>
             <option value="return">{d.return}</option>
+            {collectionDeadline && (
+              <option value="recycle" disabled={!collectionDue}>
+                {d.recycle}
+              </option>
+            )}
           </select>
         </div>
         <div className="field">

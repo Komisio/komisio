@@ -9,6 +9,7 @@ import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 import { useFormDirty } from '@/components/platform/use-form-dirty'
+import { feeAmountFromInput } from '@/lib/engine/consignment-fees'
 
 function PolicySection({
   id,
@@ -59,7 +60,13 @@ export function StorePolicyForm({
 }) {
   const [base] = useState(current)
   const [steps, setSteps] = useState(current.policy.markdownSteps)
+  const [calendarPeriod, setCalendarPeriod] = useState(
+    !!current.policy.consignmentPeriod,
+  )
   const [invalid, setInvalid] = useState(false)
+  const [monthlyFee, setMonthlyFee] = useState(
+    !!current.policy.consignmentPeriod?.monthlyFee,
+  )
   const [saved, setSaved] = useState(false)
   const form = useRef<HTMLFormElement>(null)
   useEffect(() => {
@@ -197,6 +204,25 @@ export function StorePolicyForm({
             const rate = String(f.get('vatRatePercent') ?? '')
             const candidate = storePolicyBody.safeParse({
               ...input,
+              consignmentPeriod: calendarPeriod
+                ? {
+                    months: Number(f.get('consignmentMonths')),
+                    collectionDays: Number(f.get('collectionDays')),
+                    monthlyFee: monthlyFee
+                      ? {
+                          amountOre: feeAmountFromInput(
+                            String(f.get('feeAmount') ?? ''),
+                          ),
+                          vatBasis: f.get('feeVatBasis'),
+                          vatRatePercent:
+                            String(f.get('feeVatRate') ?? '').trim() === ''
+                              ? undefined
+                              : Number(f.get('feeVatRate')),
+                          collection: f.get('feeCollection'),
+                        }
+                      : undefined,
+                  }
+                : undefined,
               ...Object.fromEntries(
                 Object.keys(vatModes).map((key) => [
                   key,
@@ -340,6 +366,134 @@ export function StorePolicyForm({
               <p className="policy-note">{t.currencyIntro}</p>
             </PolicySection>
             <PolicySection id="period" title={t.sectionPeriod}>
+              <fieldset>
+                <legend>{t.consignmentCalendar}</legend>
+                <label className="intake-confirm">
+                  <input
+                    type="checkbox"
+                    name="consignmentCalendar"
+                    checked={calendarPeriod}
+                    onChange={(e) => setCalendarPeriod(e.target.checked)}
+                  />
+                  {t.consignmentCalendarEnabled}
+                </label>
+                <p>{t.consignmentCalendarHelp}</p>
+                {calendarPeriod && (
+                  <div className="policy-grid">
+                    <div className="field">
+                      <label htmlFor="consignment-months">
+                        {t.consignmentMonths}
+                      </label>
+                      <input
+                        id="consignment-months"
+                        name="consignmentMonths"
+                        type="number"
+                        min={1}
+                        max={36}
+                        step={1}
+                        required
+                        defaultValue={
+                          base.policy.consignmentPeriod?.months ?? 3
+                        }
+                      />
+                    </div>
+                    <div className="field">
+                      <label htmlFor="collection-days">
+                        {t.collectionDays}
+                      </label>
+                      <input
+                        id="collection-days"
+                        name="collectionDays"
+                        type="number"
+                        min={0}
+                        max={365}
+                        step={1}
+                        required
+                        defaultValue={
+                          base.policy.consignmentPeriod?.collectionDays ?? 2
+                        }
+                      />
+                    </div>
+                    <label className="intake-confirm">
+                      <input
+                        type="checkbox"
+                        name="monthlyFeeEnabled"
+                        checked={monthlyFee}
+                        onChange={(e) => setMonthlyFee(e.target.checked)}
+                      />
+                      {d.consignmentFees.enabled}
+                    </label>
+                    {monthlyFee && (
+                      <>
+                        <p>{d.consignmentFees.help}</p>
+                        <label>
+                          {d.consignmentFees.amount}
+                          <input
+                            name="feeAmount"
+                            inputMode="decimal"
+                            required
+                            defaultValue={(
+                              (base.policy.consignmentPeriod?.monthlyFee
+                                ?.amountOre ?? 10000) / 100
+                            ).toFixed(2)}
+                          />
+                        </label>
+                        <div className="field">
+                          <label htmlFor="policy-feeVatBasis">
+                            {d.consignmentFees.vatBasis}
+                          </label>
+                          <select
+                            id="policy-feeVatBasis"
+                            name="feeVatBasis"
+                            defaultValue={
+                              base.policy.consignmentPeriod?.monthlyFee
+                                ?.vatBasis ?? 'inclusive'
+                            }
+                          >
+                            <option value="inclusive">{t.inclusive}</option>
+                            <option value="exclusive">{t.exclusive}</option>
+                          </select>
+                        </div>
+                        <label>
+                          {d.consignmentFees.vatRate}
+                          <input
+                            name="feeVatRate"
+                            type="number"
+                            min={0}
+                            max={100}
+                            step={0.01}
+                            required
+                            defaultValue={
+                              base.policy.consignmentPeriod?.monthlyFee
+                                ?.vatRatePercent ?? ''
+                            }
+                          />
+                        </label>
+                        <div className="field">
+                          <label htmlFor="policy-feeCollection">
+                            {d.consignmentFees.collection}
+                          </label>
+                          <select
+                            id="policy-feeCollection"
+                            name="feeCollection"
+                            defaultValue={
+                              base.policy.consignmentPeriod?.monthlyFee
+                                ?.collection ?? 'balance'
+                            }
+                          >
+                            <option value="balance">
+                              {d.consignmentFees.balance}
+                            </option>
+                            <option value="separate">
+                              {d.consignmentFees.separate}
+                            </option>
+                          </select>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+              </fieldset>
               <div className="policy-grid">
                 {numberField('salePeriodDays')}
                 {numberField('unsoldNotifyAfterDays')}

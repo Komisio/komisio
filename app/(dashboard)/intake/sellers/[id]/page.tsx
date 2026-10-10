@@ -1,3 +1,5 @@
+import { readConsignmentFees } from '@/lib/engine/consignment-fees'
+import { ConsignmentFeeHistory } from '@/components/intake/consignment-fee-history'
 import { EventTime } from '@/components/ui/event-time'
 import { SellerWelcome } from '@/components/intake/seller-welcome'
 import { readSellerWelcome } from '@/lib/engine/communications'
@@ -57,6 +59,13 @@ export default async function Seller({
   const id = z.uuid().safeParse((await params).id)
   if (!id.success) notFound()
   const query = await searchParams
+  const feePageValue = z.coerce
+    .number()
+    .int()
+    .min(0)
+    .max(1000000)
+    .safeParse(query.feePage ?? 0)
+  if (!feePageValue.success) notFound()
   const ledgerPageValue = z.coerce
     .number()
     .int()
@@ -84,6 +93,12 @@ export default async function Seller({
     .maybeSingle()
   if (seller.error) throw new Error('Unable to read seller')
   if (!seller.data) notFound()
+  const fees = await readConsignmentFees(
+    ctx.client,
+    tenant.id,
+    id.data,
+    feePageValue.data * 25,
+  )
   const welcomeStatus = await readSellerWelcome(ctx.client, tenant.id, id.data)
   const [
     terms,
@@ -510,6 +525,18 @@ export default async function Seller({
           ),
           economy: (
             <>
+              <ConsignmentFeeHistory
+                fees={fees}
+                tenantId={tenant.id}
+                sellerId={id.data}
+                writable={write}
+                admin={tenant.role === 'owner' || tenant.role === 'admin'}
+                d={all}
+                locale={ctx.locale}
+                page={feePageValue.data}
+                base={sellerPath}
+                staff
+              />
               <section className="card intake-form seller-economy">
                 <h2>{all.sellerProfile.balance}</h2>
 

@@ -295,6 +295,21 @@ proposal's owner clarification for scope and outstanding details.
 
 ## Intake and space booking follow-up
 
+- **Monthly consignment periods (owner answers, 2026-10-10):** fee and billing
+  period are per seller across handovers. Stores choose separate payment or
+  balance deduction. Periods start at physical receipt. Each started month is
+  charged in full, with automatic renewal while an active item's end exceeds
+  the current month's end. The owner approves new core records, three calendar
+  months plus two calendar days for collection, and staff-recorded recycling.
+  No item-count limit is wanted. Keep source-store names and URLs out of
+  repository content, fixtures, commit messages and PRs.
+  Answered: balance deductions may create debt covered by future sales. The
+  store chooses inclusive or exclusive fee amounts and a separate explicit VAT
+  rate. Frozen balance fees and reversals require their own accounting map keys.
+  Separate payments record external receipt evidence and are booked by that POS.
+  Paid external fees cannot be reversed without an external refund workflow;
+  that workflow remains outside this slice. Corrections always append new facts.
+
 - **Owner direction 2026-09-11:** support single-garment wall/vision reception
   with metadata and a sourced selling-price proposal, then seller mobile review.
   This complements bag-first receiving. The owner authorizes reasonable

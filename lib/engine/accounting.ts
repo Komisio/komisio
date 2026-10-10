@@ -6,6 +6,12 @@ import { voucherLine } from '../accounting/sie'
 // under it. SQL validates the map, builds voucher lines and refuses an
 // unbalanced voucher; this module validates the boundary and reads.
 export const accountingKeys = [
+  'mode:consignment_fee:grossOre',
+  'mode:consignment_fee:netOre',
+  'mode:consignment_fee:vatOre',
+  'mode:consignment_fee_reversal:grossOre',
+  'mode:consignment_fee_reversal:netOre',
+  'mode:consignment_fee_reversal:vatOre',
   'grossOre',
   'refundsOre',
   'commissionOre',

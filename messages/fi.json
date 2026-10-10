@@ -1526,7 +1526,8 @@
       "helpDates": "Alkaa käyttöönottopäivästä Ruotsin ajan mukaan. Viimeiset seitsemän päivää tarkistetaan uudelleen myöhäisten muutosten varalta. Vanhemmat muutokset käsitellään täsmäytyksessä.",
       "preparedThrough": "Tarkistettu päivään",
       "catchingUp": "Lisää päiviä valmistellaan seuraavalla ajolla"
-    }
+    },
+    "openExport": "Avaa aineisto"
   },
   "communications": {
     "welcomeTitle": "Tervetuloviesti",
@@ -2060,7 +2061,7 @@
       "not_exported": "Päätetty, ei viety",
       "export_outdated": "Viety vanhemmalla tilikartalla; vie uudelleen",
       "not_sent": "Viety, ei lähetetty Fortnoxiin",
-      "send_pending": "Lähetetään Fortnoxiin",
+      "send_pending": "Odottaa Fortnoxin vahvistusta",
       "send_failed": "Fortnox hylkäsi tositteen",
       "sent": "Lähetetty Fortnoxiin"
     }

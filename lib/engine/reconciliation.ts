@@ -80,7 +80,7 @@ export async function readReconciliation(
   return reconciliation.parse(result.data)
 }
 
-/** Days that still need a person: everything but sent and in progress. */
+/** Only a confirmed send is complete; a pending request may have lost its response. */
 export function openDays(r: Reconciliation) {
-  return r.days.filter((d) => !['sent', 'send_pending'].includes(d.status))
+  return r.days.filter((d) => d.status !== 'sent')
 }

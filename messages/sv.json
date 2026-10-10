@@ -1526,7 +1526,8 @@
       "helpDates": "Börjar med dagen du slår på funktionen, enligt svensk tid. De senaste sju dagarna kontrolleras igen för sena ändringar. Äldre ändringar hanteras under Avstämning.",
       "preparedThrough": "Kontrollerat till och med",
       "catchingUp": "Fler dagar förbereds vid nästa körning"
-    }
+    },
+    "openExport": "Öppna underlag"
   },
   "communications": {
     "welcomeTitle": "Välkomstmejl",
@@ -2060,7 +2061,7 @@
       "not_exported": "Avslutat, inte exporterat",
       "export_outdated": "Exporterat under en äldre kontoplan; exportera igen",
       "not_sent": "Exporterat, inte skickat till Fortnox",
-      "send_pending": "Skickas till Fortnox",
+      "send_pending": "Väntar på bekräftelse från Fortnox",
       "send_failed": "Fortnox avvisade verifikationen",
       "sent": "Skickat till Fortnox"
     }

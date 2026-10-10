@@ -1526,7 +1526,8 @@
       "helpDates": "Inizia dal giorno di attivazione, secondo l’orario svedese. Gli ultimi sette giorni vengono ricontrollati per modifiche tardive. Gestisci le modifiche precedenti nella riconciliazione.",
       "preparedThrough": "Controllato fino al",
       "catchingUp": "Altri giorni saranno preparati alla prossima esecuzione"
-    }
+    },
+    "openExport": "Apri documento"
   },
   "communications": {
     "welcomeTitle": "Email di benvenuto",
@@ -2060,7 +2061,7 @@
       "not_exported": "Chiuso, non esportato",
       "export_outdated": "Esportato con una mappa precedente; esporta di nuovo",
       "not_sent": "Esportato, non inviato a Fortnox",
-      "send_pending": "Invio a Fortnox in corso",
+      "send_pending": "In attesa di conferma da Fortnox",
       "send_failed": "Fortnox ha rifiutato la registrazione",
       "sent": "Inviato a Fortnox"
     }

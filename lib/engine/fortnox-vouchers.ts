@@ -79,15 +79,19 @@ export type FortnoxSendRow = z.infer<typeof sendRow>
 export async function readFortnoxSends(
   client: SupabaseClient,
   tenantInput: string,
+  exportInput?: string,
 ) {
-  const r = await client
+  let query = client
     .from('fortnox_voucher_sends')
     .select(
       'id,export_id,database_number,status,voucher_series,voucher_number,financial_year,error_code,detail,created_at,completed_at',
     )
     .eq('tenant_id', z.uuid().parse(tenantInput))
+  // Filter before limiting, so an older unresolved export is still reachable.
+  if (exportInput) query = query.eq('export_id', z.uuid().parse(exportInput))
+  const r = await query
     .order('created_at', { ascending: false })
-    .limit(200)
+    .limit(exportInput ? 1 : 200)
   // Table not migrated yet (deploy gap): no sends to show.
   if (r.error?.code === 'PGRST205' || r.error?.code === '42P01')
     return new Map<string, FortnoxSendRow>()

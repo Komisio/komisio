@@ -1526,7 +1526,8 @@
       "helpDates": "Comienza el día de la activación, según la hora sueca. Se revisan los últimos siete días para detectar cambios tardíos. Gestiona los cambios anteriores en Conciliación.",
       "preparedThrough": "Revisado hasta",
       "catchingUp": "Se prepararán más días en la próxima ejecución"
-    }
+    },
+    "openExport": "Abrir documento"
   },
   "communications": {
     "welcomeTitle": "Correo de bienvenida",
@@ -2060,7 +2061,7 @@
       "not_exported": "Cerrado, no exportado",
       "export_outdated": "Exportado con un mapa anterior; exporta de nuevo",
       "not_sent": "Exportado, no enviado a Fortnox",
-      "send_pending": "Enviando a Fortnox",
+      "send_pending": "Pendiente de confirmación de Fortnox",
       "send_failed": "Fortnox rechazó el asiento",
       "sent": "Enviado a Fortnox"
     }

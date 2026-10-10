@@ -65,7 +65,15 @@ describe('reconciliation', () => {
       days: base.days.map((d) => ({ ...d, grossOre: String(d.grossOre) })),
     })
     expect(parsed.days[0].grossOre).toBe(7900)
-    expect(openDays(parsed).map((d) => d.date)).toEqual(['2026-09-02'])
+    expect(openDays(parsed).map((d) => d.date)).toEqual([
+      '2026-09-02',
+      '2026-09-03',
+    ])
+  })
+  it('does not report pending or unknown transfers as complete', () => {
+    const pending = { ...base, days: [base.days[2]] }
+    expect(openDays(pending)).toHaveLength(1)
+    expect(openDays({ ...base, days: [base.days[0]] })).toHaveLength(0)
   })
   it('refuses unknown statuses', () => {
     expect(() =>

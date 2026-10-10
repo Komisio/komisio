@@ -256,6 +256,12 @@ export default async function Accounting({
                   <div key={e.id} className="accounting-record">
                     <div className="accounting-record-heading">
                       <h3>{c ? c.close_date : d.exportsHeading}</h3>
+                      <Link
+                        className="text-link"
+                        href={`/intake/accounting/exports/${e.id}`}
+                      >
+                        {d.openExport}
+                      </Link>
                       <a
                         className="btn btn-secondary"
                         href={`/api/accounting/${e.id}`}
@@ -385,10 +391,22 @@ export default async function Accounting({
                           <td>{day.salesCount}</td>
                           <td>{money(day.grossOre)}</td>
                           <td>
-                            {all.reconciliation.statuses[day.status]}
-                            {day.send?.errorCode
-                              ? ` · ${(all.fortnox.errors as Record<string, string>)[day.send.errorCode] ?? day.send.errorCode}`
-                              : ''}
+                            <span>
+                              {all.reconciliation.statuses[day.status]}
+                              {day.send?.errorCode
+                                ? ` · ${(all.fortnox.errors as Record<string, string>)[day.send.errorCode] ?? day.send.errorCode}`
+                                : ''}
+                            </span>
+                            {day.export && (
+                              <p>
+                                <Link
+                                  className="text-link"
+                                  href={`/intake/accounting/exports/${day.export.id}`}
+                                >
+                                  {d.openExport}
+                                </Link>
+                              </p>
+                            )}
                           </td>
                         </tr>
                       ))}

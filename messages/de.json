@@ -1526,7 +1526,8 @@
       "helpDates": "Beginnt mit dem Tag der Aktivierung nach schwedischer Zeit. Die letzten sieben Tage werden auf nachträgliche Änderungen geprüft. Ältere Änderungen bearbeiten Sie unter Abstimmung.",
       "preparedThrough": "Geprüft bis einschließlich",
       "catchingUp": "Weitere Tage werden beim nächsten Lauf vorbereitet"
-    }
+    },
+    "openExport": "Beleg öffnen"
   },
   "communications": {
     "welcomeTitle": "Willkommensmail",
@@ -2060,7 +2061,7 @@
       "not_exported": "Abgeschlossen, nicht exportiert",
       "export_outdated": "Unter einer älteren Zuordnung exportiert; erneut exportieren",
       "not_sent": "Exportiert, nicht an Fortnox gesendet",
-      "send_pending": "Wird an Fortnox gesendet",
+      "send_pending": "Bestätigung von Fortnox steht aus",
       "send_failed": "Fortnox hat den Buchungsbeleg abgelehnt",
       "sent": "An Fortnox gesendet"
     }

@@ -1526,7 +1526,8 @@
       "helpDates": "Starts with the day you turn it on, using Swedish time. The latest seven days are checked again for late changes. Handle older changes under Reconciliation.",
       "preparedThrough": "Checked through",
       "catchingUp": "More days will be prepared on the next run"
-    }
+    },
+    "openExport": "Open export"
   },
   "communications": {
     "welcomeTitle": "Welcome email",
@@ -2060,7 +2061,7 @@
       "not_exported": "Closed, not exported",
       "export_outdated": "Exported under an older map; export again",
       "not_sent": "Exported, not sent to Fortnox",
-      "send_pending": "Sending to Fortnox",
+      "send_pending": "Awaiting confirmation from Fortnox",
       "send_failed": "Fortnox refused the voucher",
       "sent": "Sent to Fortnox"
     }

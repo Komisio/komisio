@@ -37,7 +37,7 @@ const session = z.object({
   actor: z.string(),
   closed: z.boolean(),
 })
-const row = z.object({
+export const stocktakeRow = z.object({
   id: z.uuid(),
   title: z.string(),
   expected: z.boolean(),
@@ -58,7 +58,7 @@ export const stocktakeReport = z.object({
     deviations: z.number().int().nonnegative(),
   }),
   matching: z.number().int().nonnegative(),
-  rows: z.array(row).max(50),
+  rows: z.array(stocktakeRow).max(50),
   history: z
     .array(
       z.object({

@@ -1526,7 +1526,8 @@
       "helpDates": "Starter med dagen du slår på funksjonen, etter svensk tid. De siste sju dagene kontrolleres på nytt for sene endringer. Eldre endringer håndteres under Avstemming.",
       "preparedThrough": "Kontrollert til og med",
       "catchingUp": "Flere dager klargjøres ved neste kjøring"
-    }
+    },
+    "openExport": "Åpne bilag"
   },
   "communications": {
     "welcomeTitle": "Velkomstmail",
@@ -2060,7 +2061,7 @@
       "not_exported": "Avsluttet, ikke eksportert",
       "export_outdated": "Eksportert under en eldre kontoplan; eksporter på nytt",
       "not_sent": "Eksportert, ikke sendt til Fortnox",
-      "send_pending": "Sender til Fortnox",
+      "send_pending": "Venter på bekreftelse fra Fortnox",
       "send_failed": "Fortnox avviste bilaget",
       "sent": "Sendt til Fortnox"
     }

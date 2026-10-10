@@ -39,6 +39,9 @@ Owners can opt into daily preparation of completed day closes using existing
 accounting totals. Recent late entries produce new immutable close versions;
 bounded runs retain catch-up progress. This does not create exports, send
 vouchers or activate the proposed complementary POS accounting profiles.
+Pending transfers remain visible in reconciliation until confirmed; exact export
+details are reachable beyond the overview's recent-history limits. Owners use
+the existing evidence-based reconciliation instead of resending an unknown outcome.
 
 The payment sheet supports printing, CSV export and recording up to 50 completed
 manual payments together with their individual references. The engine verifies

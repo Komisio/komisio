@@ -105,7 +105,7 @@ export function FortnoxVoucherSend({
       </span>
     )
   return (
-    <span>
+    <span className="fortnox-send-status">
       {state?.status === 'failed' && (
         <span role="alert">
           {held ? d.voucherUnknown : d.voucherFailed}{' '}

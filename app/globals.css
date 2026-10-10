@@ -3395,6 +3395,13 @@ button.text-link:hover:not(:disabled) {
 .inventory-import-workspace td {
   overflow-wrap: anywhere;
 }
+
+.fortnox-send-status {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
 .pricing-follow-up > .stock-metrics > div {
   padding: 1rem;
 }

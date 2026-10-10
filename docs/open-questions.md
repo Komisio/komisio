@@ -71,6 +71,10 @@ bounded catch-up and recent-day rechecks. Automatic export generation and
 complementary posting remain unresolved; this scope grants neither. Hosted
 scheduled execution and a real store's accountant-reviewed workflow still need
 acceptance verification.
+Reconciliation now keeps pending sends visible and links to exact export details,
+including older exports. Only a confirmed send counts as complete. This changes
+neither provider outcomes nor the existing owner/evidence requirement for resolving
+an unknown send; bank/POS reconciliation and accounting-profile approval remain open.
 
 Manual plan end dates (2026-10-03): should host activation through a selected
 calendar date expire at the end of that date in Europe/Stockholm, in the store

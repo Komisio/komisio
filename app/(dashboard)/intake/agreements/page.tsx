@@ -1,7 +1,7 @@
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
-import { PrintLabel } from '@/components/intake/print-label'
+import { agreementPdfUrl } from '@/lib/documents/agreement-pdf-url'
 import { EventTime } from '@/components/ui/event-time'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
@@ -292,7 +292,17 @@ export default async function Agreements({
                     </p>
                   )}
                   <div className="no-print agreement-print-actions">
-                    <PrintLabel label={a.usage.print} />
+                    <a
+                      className="btn btn-secondary"
+                      href={agreementPdfUrl({
+                        tenantId: active.id,
+                        agreementId: shown.id,
+                        textId: translation?.id,
+                      })}
+                      download
+                    >
+                      {a.pdf.download}
+                    </a>
                     <a className="text-link" href="#agreements-sellers">
                       {w.acceptances} →
                     </a>

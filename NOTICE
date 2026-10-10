@@ -47,3 +47,12 @@ retain the packages' own notices when distributing builds. This is the direct
 | Vitest, pg | MIT | Tests |
 | @playwright/test | Apache-2.0 | Browser tests |
 | pgTAP | PostgreSQL | Database tests |
+
+| PDFKit, @types/pdfkit | MIT | Server-side agreement PDF rendering and development types |
+
+Embedded fonts
+
+assets/fonts/NotoSans-Regular.ttf and NotoSans-Bold.ttf are unmodified Noto Sans
+fonts from https://github.com/notofonts/noto-fonts/tree/main/hinted/ttf/NotoSans.
+Copyright 2018 The Noto Project Authors. Licensed under SIL Open Font License
+1.1; the full notice is retained in assets/fonts/OFL.txt.

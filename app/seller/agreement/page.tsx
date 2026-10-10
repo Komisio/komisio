@@ -7,7 +7,7 @@ import { dictionary, intlLocale, localeNames } from '@/lib/i18n'
 import { readMySellerAccounts } from '@/lib/engine/seller-portal'
 import { readMySellerAgreementArchive } from '@/lib/engine/seller-agreement'
 import { AgreementAcceptance } from '@/components/seller/agreement-acceptance'
-import { PrintLabel } from '@/components/intake/print-label'
+import { agreementPdfUrl } from '@/lib/documents/agreement-pdf-url'
 import { EventTime } from '@/components/ui/event-time'
 
 export const generateMetadata = () =>
@@ -121,7 +121,19 @@ export default async function SellerAgreementPage({
           />
         ) : null}
         <div className="no-print">
-          <PrintLabel label={d.agreements.usage.print} />
+          <a
+            className="btn btn-secondary"
+            href={agreementPdfUrl({
+              tenantId: account.tenantId,
+              sellerId: account.sellerId,
+              agreementId: agreement.id,
+              textId: agreement.translationId ?? agreement.id,
+              portal: true,
+            })}
+            download
+          >
+            {d.agreements.pdf.personal}
+          </a>
         </div>
       </article>
       {state.total > 0 && (

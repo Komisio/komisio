@@ -79,6 +79,8 @@ profile editing can atomically record staff evidence of an already approved
 current agreement; printing and unchecked fields create none. Each version may
 have multiple immutable language texts. Acceptance in any language satisfies that
 version, while staff/portal evidence and exports retain the exact accepted text.
+Published texts have private PDF downloads with saved party names and no browser
+headers. Downloads store no files and do not create acceptance or signatures.
 
 Sellers can read and print their previously accepted agreement versions from
 paged portal history. Old terms are clearly separated from the current agreement;

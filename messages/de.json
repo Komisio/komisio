@@ -111,6 +111,13 @@
       "publish": "Sprachversion veröffentlichen",
       "published": "Die Sprachversion wurde veröffentlicht.",
       "acceptedLanguage": "Akzeptierte Sprache"
+    },
+    "pdf": {
+      "download": "PDF herunterladen",
+      "personal": "PDF mit Verkäufername herunterladen",
+      "language": "Sprache der PDF",
+      "savedName": "Die PDF verwendet den zuletzt gespeicherten Namen des Verkäufers.",
+      "afterSave": "Speichern Sie zuerst den Verkäufer, um eine PDF mit ausgefülltem Namen herunterzuladen."
     }
   },
   "quickIntake": {

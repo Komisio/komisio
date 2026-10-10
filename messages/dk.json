@@ -111,6 +111,13 @@
       "publish": "Udgiv sprogversion",
       "published": "Sprogversionen er udgivet.",
       "acceptedLanguage": "Godkendt sprog"
+    },
+    "pdf": {
+      "download": "Hent PDF",
+      "personal": "Hent PDF med sælgerens navn",
+      "language": "Sprog i PDF",
+      "savedName": "PDF-en bruger sælgerens senest gemte navn.",
+      "afterSave": "Gem sælgeren først for at hente en PDF med navnet udfyldt."
     }
   },
   "quickIntake": {

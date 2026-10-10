@@ -111,6 +111,13 @@
       "publish": "Pubblica versione linguistica",
       "published": "La versione linguistica è pubblicata.",
       "acceptedLanguage": "Lingua accettata"
+    },
+    "pdf": {
+      "download": "Scarica PDF",
+      "personal": "Scarica PDF con il nome del venditore",
+      "language": "Lingua del PDF",
+      "savedName": "Il PDF usa l’ultimo nome salvato del venditore.",
+      "afterSave": "Salva prima il venditore per scaricare un PDF con il nome compilato."
     }
   },
   "quickIntake": {

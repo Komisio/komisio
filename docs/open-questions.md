@@ -7,6 +7,9 @@ Existing version-bound evidence and retained references apply; printing is not
 acceptance. Owner confirmed multiple languages within the same active version:
 acceptance in any published language counts for that version, with the exact
 language text retained. New terms require a new version; existing evidence stays.
+PDF follow-up: generate private copies on demand with the saved seller name,
+without storing duplicate files or recording acceptance. The retained signed
+original remains separate from a newly generated copy.
 
 Inventory migration (2026-10-10): owner/admin file preflight validates references,
 prices, currency and exact current seller matches without registering goods.

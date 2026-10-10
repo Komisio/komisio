@@ -111,6 +111,13 @@
       "publish": "Publicera språkversion",
       "published": "Språkversionen är publicerad.",
       "acceptedLanguage": "Godkänt språk"
+    },
+    "pdf": {
+      "download": "Hämta PDF",
+      "personal": "Hämta PDF med säljarens namn",
+      "language": "Språk i PDF",
+      "savedName": "PDF:en använder säljarens senast sparade namn.",
+      "afterSave": "Spara säljaren först för att hämta en PDF med namnet ifyllt."
     }
   },
   "quickIntake": {

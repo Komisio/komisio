@@ -1,6 +1,7 @@
 'use client'
 import { useId, useState } from 'react'
 import Link from 'next/link'
+import { agreementPdfUrl } from '@/lib/documents/agreement-pdf-url'
 import { localeNames, type Dictionary } from '@/lib/i18n'
 import type { SellerAgreement } from '@/lib/engine/intake'
 
@@ -12,10 +13,14 @@ export function SellerAgreementFields({
   agreement,
   d,
   accepted = false,
+  tenantId,
+  sellerId,
 }: {
   agreement: AgreementSummary | null
   d: Dictionary['agreements']
   accepted?: boolean
+  tenantId: string
+  sellerId?: string
 }) {
   // A background refresh must never change the terms an unchecked/checked form
   // refers to. The engine rejects new approvals if this version is superseded.
@@ -60,6 +65,19 @@ export function SellerAgreementFields({
       >
         {w.open} ↗
       </Link>
+      <a
+        className="text-link"
+        href={agreementPdfUrl({
+          tenantId,
+          sellerId,
+          agreementId: base.id,
+          textId: translationId || base.id,
+        })}
+        download
+      >
+        {sellerId ? d.pdf.personal : d.pdf.download}
+      </a>
+      <small>{sellerId ? d.pdf.savedName : d.pdf.afterSave}</small>
       {accepted ? (
         <p>{w.approved}</p>
       ) : (

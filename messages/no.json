@@ -111,6 +111,13 @@
       "publish": "Publiser språkversjon",
       "published": "Språkversjonen er publisert.",
       "acceptedLanguage": "Godkjent språk"
+    },
+    "pdf": {
+      "download": "Last ned PDF",
+      "personal": "Last ned PDF med selgerens navn",
+      "language": "Språk i PDF",
+      "savedName": "PDF-en bruker selgerens sist lagrede navn.",
+      "afterSave": "Lagre selgeren først for å laste ned en PDF med navnet utfylt."
     }
   },
   "quickIntake": {

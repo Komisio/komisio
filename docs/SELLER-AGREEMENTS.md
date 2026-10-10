@@ -12,8 +12,8 @@ Komisio does not review the terms or provide a certified e-signature service.
    Select the store and open its agreement from the seller portal.
 2. Read the published version and choose **Accept**. The surrounding interface
    follows the portal language; the agreement retains its published language.
-3. The page shows the acceptance time. Printing or saving through the browser's
-   print dialog is available; printing alone never records acceptance.
+3. The page shows the acceptance time. Download a PDF to save or print a copy;
+   downloading or printing alone never records acceptance.
 
 Staff can see the version, time, account email and portal provenance in the
 seller's agreement evidence. An existing staff-recorded acceptance is labelled
@@ -131,3 +131,24 @@ AI-generated drafts require review and ordinary explicit publication; generating
 a draft never records seller acceptance. Tests use synthetic accounts and terms,
 not real seller approvals. Hosted authenticated acceptance and the store's legal
 suitability checks are separate from automated regression coverage.
+
+## Downloadable PDF copies
+
+Published texts can be downloaded as A4 PDFs without browser-added URLs or
+print timestamps. Staff can select a saved seller and language; the seller
+portal offers the same copy for an accessible current or accepted version.
+PDF labels follow the document language. The saved store and seller names are
+read at download time, not claimed as historical identity snapshots. Unsaved
+profile changes and unpublished drafts are excluded.
+
+Rendering uses PDFKit and embedded Noto Sans locally in the application server.
+No document or identity data is sent to a PDF service. Files are generated on
+demand, never persisted or cached; immutable version and language text remain
+the source. Generation does not record acceptance, reproduce a handwritten
+signature or replace the retained signed original. Existing evidence references
+and portal acceptance remain unchanged.
+
+The additive `20261010230000_agreement_pdf.sql` projection reuses the seller
+archive authorization before returning only the document and saved party names.
+Keep it applied if the application is rolled back. No core data is changed by
+the projection or either PDF endpoint.

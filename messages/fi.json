@@ -3349,7 +3349,8 @@
       "pending": "Arvioitavana",
       "invited": "Odottaa vastaanottoa",
       "registered": "Kirjatut"
-    }
+    },
+    "replyDelivery": "Sähköposti-ilmoitus"
   },
   "adsMeasurement": {
     "title": "Mainonnan mittaus",

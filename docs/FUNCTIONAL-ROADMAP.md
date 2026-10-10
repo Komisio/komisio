@@ -67,6 +67,9 @@ The staff photo queue supports scoped seller/description search and work filters
 before pagination. Invitations remain separate from registered items; an accepted
 item links directly to its record. Unsaved review or preparation work warns before
 queue navigation. These reads do not change receipt or acceptance prerequisites.
+Review notices show their actual delivery outcome and link to the seller's
+message history. An unanswered request requires checking status; queued or
+terminal outcomes never expose a fresh-send action from the review card.
 
 Sellers can read and print their previously accepted agreement versions from
 paged portal history. Old terms are clearly separated from the current agreement;

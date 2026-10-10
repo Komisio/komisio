@@ -3,6 +3,8 @@ import { readStoreProfile } from '../engine/store-profile'
 import { renderSellerWelcome } from './welcome'
 import { createHash } from 'node:crypto'
 import { z } from 'zod'
+import { factCommunicationId } from './fact-id'
+export { factCommunicationId } from './fact-id'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { renderSellerMessage, type CommunicationKind } from './templates'
 import { referenceKindFor } from '../engine/communications'
@@ -31,19 +33,6 @@ export const communicationErrorCodes = [
 ] as const
 export type CommunicationError =
   (typeof communicationErrorCodes)[number] | 'REQUEST_FAILED'
-
-/** Deterministic id for the one automatic message a fact may produce (UUID v5 shape). */
-export function factCommunicationId(
-  kind: CommunicationKind | 'welcome' | 'submission_review',
-  referenceId: string,
-) {
-  const hex = createHash('sha1')
-    .update(`komisio:communication:${kind}:${referenceId.toLowerCase()}`)
-    .digest('hex')
-    .slice(0, 32)
-  const variant = ((parseInt(hex[16], 16) & 0x3) | 0x8).toString(16)
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-5${hex.slice(13, 16)}-${variant}${hex.slice(17, 20)}-${hex.slice(20, 32)}`
-}
 
 export interface SendInput {
   tenantId: string

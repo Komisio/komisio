@@ -3349,7 +3349,8 @@
       "pending": "Por revisar",
       "invited": "Pendientes de recepción",
       "registered": "Registradas"
-    }
+    },
+    "replyDelivery": "Aviso por correo"
   },
   "adsMeasurement": {
     "title": "Medición de anuncios",

@@ -3,6 +3,7 @@ import { randomUUID, randomBytes } from 'node:crypto'
 import { createRequire } from 'node:module'
 import sharp from 'sharp'
 import { register } from '../helpers/account'
+import { factCommunicationId } from '../../lib/communications/fact-id'
 import d from '../../messages/sv.json' with { type: 'json' }
 test('seller submits photos, receives a request and sends a new immutable version', async ({
   page,
@@ -454,6 +455,127 @@ test('seller submits photos, receives a request and sends a new immutable versio
     expect(
       await staff.evaluate(() => document.documentElement.scrollWidth),
     ).toBeLessThanOrEqual(390)
+    // Persist each delivery outcome without invoking an email transport.
+    const states = [
+      'queued',
+      'sent',
+      'restricted',
+      'manual',
+      'unconfirmed',
+      'failed',
+      'new',
+    ] as const
+    const noticeReviews = new Map<string, string>()
+    await db.query('begin')
+    await db.query('set local role authenticated')
+    for (const state of states) {
+      await db.query("select set_config('request.jwt.claims',$1,true)", [
+        JSON.stringify({ sub: sellerActor, role: 'authenticated' }),
+      ])
+      const proposalId = randomUUID(),
+        reviewId = randomUUID()
+      await db.query(
+        'select submit_my_assisted_items($1,$2,$3,null,$4,$5,null,$6,$7,$8)',
+        [
+          tenant,
+          proposalId,
+          sellerId,
+          `Synthetic notice ${state}`,
+          JSON.stringify(photos),
+          '180.00',
+          'approval',
+          'SEK',
+        ],
+      )
+      await db.query("select set_config('request.jwt.claims',$1,true)", [
+        JSON.stringify({ sub: owner, role: 'authenticated' }),
+      ])
+      await db.query(
+        "select review_seller_submission($1,$2,$3,'more_information','Synthetic notice test',false)",
+        [tenant, reviewId, proposalId],
+      )
+      noticeReviews.set(state, reviewId)
+      if (state !== 'new') {
+        const id = factCommunicationId('submission_review', reviewId)
+        await db.query(
+          "select queue_seller_communication($1,$2,$3,'message','seller.submission_reply','v1','sv','Synthetic notice','Test only','none',null)",
+          [tenant, id, sellerId],
+        )
+        if (state !== 'queued')
+          await db.query('select record_communication_delivery($1,$2,$3)', [
+            tenant,
+            id,
+            state,
+          ])
+      }
+    }
+    await db.query('commit')
+    await staff.goto('/intake/submissions?q=Synthetic+notice')
+    for (const state of states) {
+      const card = staff.locator('article').filter({
+        has: staff.getByText(`Synthetic notice ${state}`, { exact: true }),
+      })
+      const expected =
+        state === 'new'
+          ? d.communications.welcomeNotSent
+          : d.communications.outcomes[state]
+      await expect(card.getByRole('status')).toHaveText(
+        `${d.submissions.replyDelivery}: ${expected}`,
+      )
+      await expect(
+        card.getByRole('button', {
+          name: d.submissions.notifySeller,
+          exact: true,
+        }),
+      ).toHaveCount(state === 'new' ? 1 : 0)
+      await expect(
+        card.getByRole('link', {
+          name: d.sellerWorkspace.communication,
+          exact: true,
+        }),
+      ).toHaveAttribute(
+        'href',
+        `/intake/sellers/${sellerId}#seller-communication`,
+      )
+    }
+    const fresh = staff
+      .locator('article')
+      .filter({ has: staff.getByText('Synthetic notice new', { exact: true }) })
+    let notifyCalls = 0
+    await staff.route('**/api/intake/submissions/notify', async (route) => {
+      notifyCalls++
+      expect(route.request().postDataJSON()).toEqual({
+        tenantId: tenant,
+        reviewId: noticeReviews.get('new'),
+      })
+      await route.abort('failed')
+    })
+    await fresh
+      .getByRole('button', { name: d.submissions.notifySeller, exact: true })
+      .click()
+    await expect(fresh.getByRole('status')).toContainText(
+      d.communications.outcomes.unconfirmed,
+    )
+    await expect(
+      fresh.getByRole('button', {
+        name: d.submissions.notifySeller,
+        exact: true,
+      }),
+    ).toHaveCount(0)
+    await fresh
+      .getByRole('button', { name: d.intake.reload, exact: true })
+      .click()
+    await expect(
+      fresh.getByRole('button', {
+        name: d.submissions.notifySeller,
+        exact: true,
+      }),
+    ).toBeVisible()
+    expect(notifyCalls).toBe(1)
+    await staff.screenshot({
+      path: test.info().outputPath('submission-delivery-status-mobile.png'),
+      fullPage: true,
+    })
   } finally {
     await staffContext.close()
     await db.end()

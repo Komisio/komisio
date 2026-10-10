@@ -3349,7 +3349,8 @@
       "pending": "Zu prüfen",
       "invited": "Zur Annahme",
       "registered": "Registriert"
-    }
+    },
+    "replyDelivery": "E-Mail-Benachrichtigung"
   },
   "adsMeasurement": {
     "title": "Anzeigenmessung",

@@ -95,6 +95,12 @@ export default async function Submissions({
       {!rows.length && <p>{d.empty}</p>}
       {rows.map((row) => {
         const review = row.seller_submission_reviews[0]
+        const delivery = review
+          ? (notices.data?.find(
+              (n) =>
+                n.id === factCommunicationId('submission_review', review.id),
+            )?.status ?? null)
+          : null
         return (
           <article
             key={`${row.id}:${view}:${query}`}
@@ -129,20 +135,15 @@ export default async function Submissions({
               <>
                 <strong>{d[review.decision]}</strong>
                 <p>{review.note}</p>
-                {active.role !== 'readonly' && (
-                  <SubmissionNotification
-                    tenantId={active.id}
-                    reviewId={review.id}
-                    status={
-                      notices.data?.find(
-                        (n) =>
-                          n.id ===
-                          factCommunicationId('submission_review', review.id),
-                      )?.status ?? null
-                    }
-                    d={d}
-                  />
-                )}
+                <SubmissionNotification
+                  key={`${review.id}:${delivery ?? 'none'}`}
+                  tenantId={active.id}
+                  reviewId={review.id}
+                  sellerId={row.seller_id}
+                  canSend={active.role !== 'readonly'}
+                  status={delivery}
+                  d={dictionary(ctx.locale)}
+                />
                 {row.item_id ? (
                   <Link
                     className="btn btn-secondary"

@@ -3343,7 +3343,8 @@
       "pending": "Til vurdering",
       "invited": "Afventer modtagelse",
       "registered": "Registrerede"
-    }
+    },
+    "replyDelivery": "E-mailbesked"
   },
   "adsMeasurement": {
     "title": "Annoncemåling",

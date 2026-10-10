@@ -3343,7 +3343,8 @@
       "pending": "Att granska",
       "invited": "Att ta emot",
       "registered": "Registrerade"
-    }
+    },
+    "replyDelivery": "E-postbesked"
   },
   "adsMeasurement": {
     "title": "Annonsmätning",

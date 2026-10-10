@@ -6,7 +6,7 @@ import type { SellerAgreement } from '@/lib/engine/intake'
 
 export type AgreementSummary = Pick<
   SellerAgreement,
-  'id' | 'title' | 'version' | 'language'
+  'id' | 'title' | 'version' | 'language' | 'translations'
 >
 export function SellerAgreementFields({
   agreement,
@@ -20,19 +20,41 @@ export function SellerAgreementFields({
   // A background refresh must never change the terms an unchecked/checked form
   // refers to. The engine rejects new approvals if this version is superseded.
   const [base] = useState(agreement)
+  const [translationId, setTranslationId] = useState('')
   const [checked, setChecked] = useState(false)
   const id = useId(),
     w = d.workspace
   if (!base) return <p>{d.none}</p>
+  const selected =
+    base.translations?.find((t) => t.id === translationId) ?? base
   return (
     <section className="seller-agreement-fields">
       <h3>{d.title}</h3>
       <p>
-        {base.title} · {d.version} {base.version} · {localeNames[base.language]}
+        {selected.title} · {d.version} {base.version} ·{' '}
+        {localeNames[selected.language]}
       </p>
+      {!!base.translations?.length && (
+        <div className="field">
+          <label htmlFor={id + '-language'}>{d.language}</label>
+          <select
+            id={id + '-language'}
+            name="approvalTranslationId"
+            value={translationId}
+            onChange={(e) => setTranslationId(e.target.value)}
+          >
+            <option value="">{localeNames[base.language]}</option>
+            {base.translations.map((t) => (
+              <option key={t.id} value={t.id}>
+                {localeNames[t.language]}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
       <Link
         className="text-link"
-        href={`/intake/agreements?version=${base.id}#agreement-document`}
+        href={`/intake/agreements?version=${base.id}${translationId ? '&translation=' + translationId : ''}#agreement-document`}
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -77,6 +99,9 @@ export function approvalFromFields(fields: FormData) {
     ? {
         agreementId: String(fields.get('approvalAgreementId') ?? ''),
         reference: String(fields.get('approvalReference') ?? '').trim(),
+        ...(fields.get('approvalTranslationId')
+          ? { translationId: String(fields.get('approvalTranslationId')) }
+          : {}),
       }
     : undefined
 }

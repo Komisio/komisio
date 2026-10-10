@@ -104,6 +104,13 @@
       "previous": "Föregående",
       "next": "Nästa",
       "status": "Avtalsstatus"
+    },
+    "translations": {
+      "add": "Lägg till språk",
+      "hint": "Publicera samma villkor på ett annat språk. Godkännande på ett språk gäller hela avtalsversionen. Publicerade texter är låsta; ändrade villkor kräver en ny avtalsversion.",
+      "publish": "Publicera språkversion",
+      "published": "Språkversionen är publicerad.",
+      "acceptedLanguage": "Godkänt språk"
     }
   },
   "quickIntake": {

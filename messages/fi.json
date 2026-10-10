@@ -104,6 +104,13 @@
       "previous": "Edellinen",
       "next": "Seuraava",
       "status": "Sopimuksen tila"
+    },
+    "translations": {
+      "add": "Lisää kieli",
+      "hint": "Julkaise samat ehdot toisella kielellä. Hyväksyntä yhdellä kielellä koskee koko sopimusversiota. Julkaistut tekstit on lukittu; muuttuneet ehdot vaativat uuden sopimusversion.",
+      "publish": "Julkaise kieliversio",
+      "published": "Kieliversio on julkaistu.",
+      "acceptedLanguage": "Hyväksytty kieli"
     }
   },
   "quickIntake": {

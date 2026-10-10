@@ -8,11 +8,13 @@ export function AgreementAcceptance({
   tenantId,
   sellerId,
   agreementId,
+  translationId,
   d,
 }: {
   tenantId: string
   sellerId: string
   agreementId: string
+  translationId?: string | null
   d: Dictionary
 }) {
   const router = useRouter()
@@ -36,6 +38,7 @@ export function AgreementAcceptance({
           tenantId,
           sellerId,
           agreementId,
+          translationId,
           requestId: requestId.current,
         }),
       })

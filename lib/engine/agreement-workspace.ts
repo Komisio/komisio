@@ -1,8 +1,10 @@
 import { z } from 'zod'
+import { locales } from '../i18n'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export const agreementApproval = z.strictObject({
   agreementId: z.uuid(),
+  translationId: z.uuid().nullable().optional(),
   reference: z.string().trim().min(1).max(500),
 })
 const acceptance = z.object({
@@ -10,6 +12,8 @@ const acceptance = z.object({
   at: z.string(),
   source: z.enum(['staff_recorded', 'seller_portal']),
   reference: z.string(),
+  translationId: z.uuid().nullable().optional(),
+  language: z.enum(locales).optional(),
 })
 const register = z.object({
   total: z.number().int().nonnegative(),

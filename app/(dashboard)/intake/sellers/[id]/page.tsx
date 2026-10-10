@@ -167,7 +167,9 @@ export default async function Seller({
       readSellerWorkspaceItems(ctx.client, tenant.id, id.data, itemsPage),
       ctx.client
         .from('seller_agreement_versions')
-        .select('id,title,body,version,language')
+        .select(
+          'id,title,body,version,language,translations:seller_agreement_translations(id,title,language)',
+        )
         .eq('tenant_id', tenant.id)
         .order('version', { ascending: false })
         .limit(1)
@@ -179,7 +181,7 @@ export default async function Seller({
   const evidence = agreement.data
     ? await ctx.client
         .from('seller_agreement_evidence')
-        .select('id,reference,recorded_at,source')
+        .select('id,reference,recorded_at,source,translation_id')
         .eq('tenant_id', tenant.id)
         .eq('seller_id', id.data)
         .eq('agreement_id', agreement.data.id)
@@ -770,6 +772,16 @@ export default async function Seller({
                       <p key={e.id}>
                         <EventTime value={e.recorded_at} locale={ctx.locale} />{' '}
                         ·{' '}
+                        {
+                          localeNames[
+                            (agreement.data!.translations.find(
+                              (t) => t.id === e.translation_id,
+                            )?.language ??
+                              agreement.data!
+                                .language) as keyof typeof localeNames
+                          ]
+                        }{' '}
+                        ·{' '}
                         {e.source === 'seller_portal'
                           ? `${all.sellerAgreement.acceptedBy} ${e.reference}`
                           : e.reference}
@@ -786,6 +798,9 @@ export default async function Seller({
                           tenantId={tenant.id}
                           sellerId={id.data}
                           agreementId={agreement.data.id}
+                          agreement={
+                            agreement.data as import('@/lib/engine/intake').SellerAgreement
+                          }
                           d={all}
                         />
                       </details>

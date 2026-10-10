@@ -76,7 +76,9 @@ terminal outcomes never expose a fresh-send action from the review card.
 Staff manage paged agreement versions and seller acceptances in separate tabs,
 with language, active status and accepted/missing filters. Registration and
 profile editing can atomically record staff evidence of an already approved
-current agreement; printing and unchecked fields create none.
+current agreement; printing and unchecked fields create none. Each version may
+have multiple immutable language texts. Acceptance in any language satisfies that
+version, while staff/portal evidence and exports retain the exact accepted text.
 
 Sellers can read and print their previously accepted agreement versions from
 paged portal history. Old terms are clearly separated from the current agreement;

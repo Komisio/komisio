@@ -11,6 +11,11 @@ test('staff can record the displayed agreement while registering or editing a se
   await register(page, email, `K!${randomUUID()}`)
   const f = await p2Fixture(email)
   try {
+    const translation = randomUUID()
+    await f.db.query(
+      "select publish_agreement_translation($1,$2,$3,'TEST svenska','Synthetic Swedish terms','sv')",
+      [f.tenant, translation, f.agreement],
+    )
     await f.commit()
     await page.goto('/intake/sellers/new')
     await page
@@ -20,6 +25,9 @@ test('staff can record the displayed agreement while registering or editing a se
     await expect(
       page.getByLabel(d.agreements.workspace.approval),
     ).not.toBeChecked()
+    await page
+      .getByLabel(d.agreements.language, { exact: true })
+      .selectOption(translation)
     await page.getByLabel(d.agreements.workspace.approval).check()
     await page
       .getByLabel(d.agreements.workspace.reference, { exact: true })
@@ -48,7 +56,7 @@ test('staff can record the displayed agreement while registering or editing a se
     expect(
       (
         await f.db.query(
-          'select agreement_id,reference,source from seller_agreement_evidence where seller_id=$1',
+          'select agreement_id,reference,source,translation_id from seller_agreement_evidence where seller_id=$1',
           [seller],
         )
       ).rows,
@@ -57,6 +65,7 @@ test('staff can record the displayed agreement while registering or editing a se
         agreement_id: f.agreement,
         reference: 'Paper TEST 1',
         source: 'staff_recorded',
+        translation_id: translation,
       },
     ])
     await page.goto(`/intake/sellers/${seller}#seller-terms`)

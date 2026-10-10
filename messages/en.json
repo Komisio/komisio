@@ -3343,7 +3343,8 @@
       "pending": "To review",
       "invited": "Awaiting reception",
       "registered": "Registered"
-    }
+    },
+    "replyDelivery": "Email notice"
   },
   "adsMeasurement": {
     "title": "Ad measurement",

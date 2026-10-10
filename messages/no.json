@@ -3343,7 +3343,8 @@
       "pending": "Til vurdering",
       "invited": "Venter på mottak",
       "registered": "Registrerte"
-    }
+    },
+    "replyDelivery": "E-postvarsel"
   },
   "adsMeasurement": {
     "title": "Annonsemåling",

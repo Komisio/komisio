@@ -3343,7 +3343,8 @@
       "pending": "Da valutare",
       "invited": "In attesa di ricezione",
       "registered": "Registrate"
-    }
+    },
+    "replyDelivery": "Notifica via email"
   },
   "adsMeasurement": {
     "title": "Misurazione degli annunci",

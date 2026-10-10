@@ -111,6 +111,13 @@
       "publish": "Julkaise kieliversio",
       "published": "Kieliversio on julkaistu.",
       "acceptedLanguage": "Hyväksytty kieli"
+    },
+    "pdf": {
+      "download": "Lataa PDF",
+      "personal": "Lataa PDF myyjän nimellä",
+      "language": "PDF:n kieli",
+      "savedName": "PDF käyttää myyjän viimeksi tallennettua nimeä.",
+      "afterSave": "Tallenna myyjä ensin, jotta voit ladata PDF:n, jossa nimi on täytetty."
     }
   },
   "quickIntake": {

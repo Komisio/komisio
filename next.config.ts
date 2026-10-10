@@ -4,6 +4,11 @@ const config: NextConfig = {
   output: process.env.VERCEL === '1' ? undefined : 'standalone',
   poweredByHeader: false,
   devIndicators: false,
+  serverExternalPackages: ['pdfkit'],
+  outputFileTracingIncludes: {
+    '/api/agreements/pdf': ['./assets/fonts/*'],
+    '/api/seller/agreement/pdf': ['./assets/fonts/*'],
+  },
   async headers() {
     return [
       {

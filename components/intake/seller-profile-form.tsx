@@ -163,6 +163,8 @@ export function SellerProfileForm({
           </div>
         </details>
         <SellerAgreementFields
+          tenantId={tenantId}
+          sellerId={sellerId}
           agreement={agreement}
           accepted={agreementAccepted}
           d={agreements}

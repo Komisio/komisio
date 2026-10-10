@@ -1,0 +1,41 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('30300000-0000-4000-8000-000000000001','owner@agreement-pdf.test',now()),
+ ('30300000-0000-4000-8000-000000000002','seller@agreement-pdf.test',now()),
+ ('30300000-0000-4000-8000-000000000003','outsider@agreement-pdf.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"30300000-0000-4000-8000-000000000001","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('PDF TEST store','agreement-pdf-test',gen_random_uuid())::text,true);
+select set_config('test.agreement',publish_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'TEST terms','Original text','en',false)::text,true);
+select set_config('test.translation',publish_agreement_translation(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.agreement')::uuid,'TEST villkor','ÅÄÖ: svensk text','sv')::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Åsa TEST','seller@agreement-pdf.test','')::text,true);
+set local "request.jwt.claims"='{"sub":"30300000-0000-4000-8000-000000000002","role":"authenticated"}';
+select is(my_seller_agreement_document(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,current_setting('test.translation')::uuid)->>'sellerName','Åsa TEST','PDF uses saved seller name');
+select is(my_seller_agreement_document(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,current_setting('test.translation')::uuid)->>'storeName','PDF TEST store','PDF uses saved store name');
+select is(my_seller_agreement_document(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,current_setting('test.translation')::uuid)->'agreement'->>'body','ÅÄÖ: svensk text','PDF returns exact selected language');
+select is(my_seller_agreement_document(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,current_setting('test.agreement')::uuid)->'agreement'->>'body','Original text','base language is explicitly selectable');
+select throws_ok($$select my_seller_agreement_document(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.agreement')::uuid,null)$$,'42501',null,'foreign seller is denied');
+select throws_ok($$select my_seller_agreement_document(gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,null)$$,'42501',null,'foreign tenant is denied');
+select throws_like($$select my_seller_agreement_document(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,gen_random_uuid())$$,'%AGREEMENT_NOT_FOUND%','unrelated text cannot be substituted');
+set local "request.jwt.claims"='{"sub":"30300000-0000-4000-8000-000000000003","role":"authenticated"}';
+select throws_ok($$select my_seller_agreement_document(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,null)$$,'42501',null,'outsider cannot download another seller document');
+set local "request.jwt.claims"='{"sub":"30300000-0000-4000-8000-000000000001","role":"authenticated"}';
+select is((select count(*) from seller_agreement_evidence where tenant_id=current_setting('test.tenant')::uuid),0::bigint,'downloads never create evidence');
+select set_config('test.next',publish_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.agreement')::uuid,'Next TEST','New terms','sv',false)::text,true);
+set local "request.jwt.claims"='{"sub":"30300000-0000-4000-8000-000000000002","role":"authenticated"}';
+select is(my_seller_agreement_document(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,null)->'agreement','null'::jsonb,'unaccepted historical version remains inaccessible');
+select lives_ok($$select accept_my_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.next')::uuid)$$,'seller accepts current version');
+set local "request.jwt.claims"='{"sub":"30300000-0000-4000-8000-000000000001","role":"authenticated"}';
+select publish_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.next')::uuid,'Latest TEST','Latest terms','en',false);
+set local "request.jwt.claims"='{"sub":"30300000-0000-4000-8000-000000000002","role":"authenticated"}';
+select is(my_seller_agreement_document(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.next')::uuid,null)->'agreement'->>'body','New terms','accepted historical version retains its exact text');
+reset role;
+select ok(not has_function_privilege('anon','public.my_seller_agreement_document(uuid,uuid,uuid,uuid)','execute'),'anonymous PDF projection denied');
+insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values(gen_random_uuid(),'30300000-0000-4000-8000-000000000002','totp','verified',now(),now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"30300000-0000-4000-8000-000000000002","role":"authenticated","aal":"aal1"}';
+select throws_ok($$select my_seller_agreement_document(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.next')::uuid,null)$$,'42501',null,'PDF projection retains MFA');
+select * from finish();
+rollback;

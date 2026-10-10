@@ -304,6 +304,7 @@ export function ReceivingPanel({
               </details>
               {agreements && (
                 <SellerAgreementFields
+                  tenantId={tenantId}
                   agreement={agreement ?? null}
                   d={agreements}
                 />

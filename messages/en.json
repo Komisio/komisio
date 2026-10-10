@@ -111,6 +111,13 @@
       "publish": "Publish language version",
       "published": "The language version is published.",
       "acceptedLanguage": "Accepted language"
+    },
+    "pdf": {
+      "download": "Download PDF",
+      "personal": "Download PDF with seller name",
+      "language": "PDF language",
+      "savedName": "The PDF uses the seller’s most recently saved name.",
+      "afterSave": "Save the seller first to download a PDF with the name filled in."
     }
   },
   "quickIntake": {

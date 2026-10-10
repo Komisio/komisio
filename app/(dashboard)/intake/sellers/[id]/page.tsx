@@ -1,3 +1,4 @@
+import { SellerAgreementPdf } from '@/components/intake/agreement-pdf-link'
 import { readConsignmentFees } from '@/lib/engine/consignment-fees'
 import { ConsignmentFeeHistory } from '@/components/intake/consignment-fee-history'
 import { EventTime } from '@/components/ui/event-time'
@@ -762,12 +763,16 @@ export default async function Seller({
                         {agreement.data.body}
                       </p>
                     </details>
-                    <Link
-                      className="text-link"
-                      href={`/intake/agreements?version=${agreement.data.id}`}
-                    >
-                      {all.agreements.usage.print} →
-                    </Link>
+                    <SellerAgreementPdf
+                      key={agreement.data.id}
+                      tenantId={tenant.id}
+                      sellerId={id.data}
+                      agreement={
+                        agreement.data as import('@/components/intake/seller-agreement-fields').AgreementSummary
+                      }
+                      initialText={evidence.data?.[0]?.translation_id}
+                      d={all.agreements}
+                    />
                     {evidence.data?.map((e) => (
                       <p key={e.id}>
                         <EventTime value={e.recorded_at} locale={ctx.locale} />{' '}

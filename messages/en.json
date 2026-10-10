@@ -3401,5 +3401,29 @@
     "next": "Next",
     "previous": "Previous",
     "back": "Back to stock"
+  },
+  "pricingFollowUp": {
+    "title": "Review AI prices",
+    "helpLabel": "About price follow-up",
+    "scopeHelp": "Items received from photo submissions during the selected period. Missing estimates and unsold items remain in the data.",
+    "comparisonHelp": "Price difference compares the midpoint of the saved AI range with the accepted or sale price. Returns are excluded. Markdowns and staff choices can influence the outcome.",
+    "downloadHelp": "The data contains item IDs, dates and prices. No names, descriptions or photos are included.",
+    "period": "Received during this period",
+    "periodInvalid": "Choose a valid period of up to one year, ending today or earlier.",
+    "narrowPeriod": "Too many items. Choose a shorter period.",
+    "received": "Items received",
+    "estimates": "With AI price",
+    "comparableSales": "Comparable sales",
+    "comparison": "AI suggestions and actual prices",
+    "compareWith": "Compare with",
+    "count": "Items",
+    "difference": "Average price difference",
+    "acceptedPrice": "Price at reception",
+    "soldPrice": "Sale price",
+    "download": "Download data",
+    "setMarket": "Set the store country in store settings",
+    "empty": "No comparable price data yet.",
+    "omitted": "{count} items have no comparable price data.",
+    "returned": "{count} returned items are excluded from sales."
   }
 }

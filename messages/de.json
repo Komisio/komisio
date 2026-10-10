@@ -3407,5 +3407,29 @@
     "next": "Weiter",
     "previous": "Zurück",
     "back": "Zum Lager"
+  },
+  "pricingFollowUp": {
+    "title": "KI-Preise überprüfen",
+    "helpLabel": "Zur Preisüberprüfung",
+    "scopeHelp": "Im gewählten Zeitraum angenommene Artikel aus Fotoeinreichungen. Fehlende Schätzungen und unverkaufte Artikel bleiben im Datensatz.",
+    "comparisonHelp": "Die Preisdifferenz vergleicht den Mittelpunkt der gespeicherten KI-Spanne mit dem Annahme- oder Verkaufspreis. Retouren werden ausgeschlossen. Preisnachlässe und Entscheidungen des Personals können das Ergebnis beeinflussen.",
+    "downloadHelp": "Der Datensatz enthält Artikel-IDs, Daten und Preise. Namen, Beschreibungen und Fotos sind nicht enthalten.",
+    "period": "Im Zeitraum angenommen",
+    "periodInvalid": "Wählen Sie einen gültigen Zeitraum von höchstens einem Jahr bis spätestens heute.",
+    "narrowPeriod": "Zu viele Artikel. Wählen Sie einen kürzeren Zeitraum.",
+    "received": "Angenommene Artikel",
+    "estimates": "Mit KI-Preis",
+    "comparableSales": "Vergleichbare Verkäufe",
+    "comparison": "KI-Vorschläge und tatsächliche Preise",
+    "compareWith": "Vergleich mit",
+    "count": "Artikel",
+    "difference": "Durchschnittliche Preisdifferenz",
+    "acceptedPrice": "Preis bei Annahme",
+    "soldPrice": "Verkaufspreis",
+    "download": "Daten herunterladen",
+    "setMarket": "Land des Geschäfts in den Einstellungen angeben",
+    "empty": "Noch keine vergleichbaren Preisdaten.",
+    "omitted": "Für {count} Artikel fehlen vergleichbare Preisdaten.",
+    "returned": "{count} retournierte Artikel werden von den Verkäufen ausgeschlossen."
   }
 }

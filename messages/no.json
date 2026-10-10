@@ -3401,5 +3401,29 @@
     "next": "Neste",
     "previous": "Forrige",
     "back": "Til lageret"
+  },
+  "pricingFollowUp": {
+    "title": "Følg opp AI-priser",
+    "helpLabel": "Om prisoppfølgingen",
+    "scopeHelp": "Varer mottatt fra bildeforslag i valgt periode. Manglende anslag og usolgte varer beholdes i grunnlaget.",
+    "comparisonHelp": "Prisforskjellen sammenligner midtpunktet i det lagrede AI-intervallet med mottaks- eller salgsprisen. Returer utelates. Prisreduksjoner og personalets valg kan påvirke resultatet.",
+    "downloadHelp": "Grunnlaget inneholder vare-ID, datoer og priser. Ingen navn, beskrivelser eller bilder følger med.",
+    "period": "Mottatt i perioden",
+    "periodInvalid": "Velg en gyldig periode på høyst ett år, frem til i dag.",
+    "narrowPeriod": "For mange varer. Velg en kortere periode.",
+    "received": "Mottatte varer",
+    "estimates": "Med AI-pris",
+    "comparableSales": "Sammenlignbare salg",
+    "comparison": "AI-forslag og faktiske priser",
+    "compareWith": "Sammenlign med",
+    "count": "Antall varer",
+    "difference": "Gjennomsnittlig prisforskjell",
+    "acceptedPrice": "Pris ved mottak",
+    "soldPrice": "Salgspris",
+    "download": "Last ned grunnlag",
+    "setMarket": "Angi butikkens land i butikkinnstillingene",
+    "empty": "Ingen sammenlignbare prisdata ennå.",
+    "omitted": "{count} varer mangler sammenlignbare prisdata.",
+    "returned": "{count} returnerte varer utelates fra salg."
   }
 }

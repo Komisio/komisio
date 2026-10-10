@@ -46,6 +46,12 @@ the approved amounts and currency, records all or none, and safely replays an
 unconfirmed request. Staff still verify actual transfers; bank matching and
 automatic payment rails are not delivered by this workflow.
 
+Owners/admins can follow up saved AI prices for received photo submissions,
+compare them with accepted and sold prices, and download a private evaluation
+cohort. Missing estimates, unsold goods, returns and excluded markets/currencies
+are explicit. No AI rerun or price change occurs; a representative real-store
+pilot is still required before claiming pricing accuracy.
+
 Production also has complete platform vocabulary labels in all eight supported
 languages, clearer payout-list and request placement, and economy totals
 before secondary reports on mobile. Statement dates use completed Stockholm

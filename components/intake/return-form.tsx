@@ -63,7 +63,7 @@ export function ReturnForm({
       </fieldset>
       {action.error && <p role="alert">{action.error}</p>}
       {action.needsReload && <ReloadAction label={intake.reload} />}
-      {!done && !action.needsReload && (
+      {!done && !action.returnUnavailable && (
         <Button type="submit" disabled={action.busy || action.needsReload}>
           {action.busy ? intake.busy : action.locked ? intake.retry : d.record}
         </Button>

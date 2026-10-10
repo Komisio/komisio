@@ -54,7 +54,21 @@ export async function renderAgreementPdf(input: AgreementDocument) {
   // Published text stays literal. Never interpolate placeholders or parse HTML.
   doc.text(agreement.body, { width, lineGap: 4, paragraphGap: 5 })
   doc.moveDown(1.5)
-  if (doc.y + 132 > doc.page.height - 64) doc.addPage()
+  if (doc.y + 132 > doc.page.height - 64) {
+    doc.addPage()
+    // A detached signature sheet must still identify the parties and terms.
+    doc.font('Bold').fontSize(14).text(agreement.title)
+    doc.moveDown(0.5)
+    doc.font('Regular').fontSize(10).text(storeName)
+    doc.text(
+      `${a.version} ${agreement.version} · ${localeNames[agreement.language]}`,
+    )
+    doc.moveDown(1)
+    doc.text(
+      `${a.usage.sellerName}: ${sellerName || '________________________________'}`,
+    )
+    doc.moveDown(1.5)
+  }
   const top = doc.y
   doc.font('Regular').fontSize(9).fillColor('#45534b')
   doc.text(a.usage.date, 52, top)

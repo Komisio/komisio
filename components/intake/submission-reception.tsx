@@ -2,18 +2,21 @@
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 export function SubmissionReception({
   tenantId,
   submissionId,
   description,
   price,
   d,
+  leaveWarning,
 }: {
   tenantId: string
   submissionId: string
   description: string
   price: string
   d: Dictionary['submissions']
+  leaveWarning: string
 }) {
   const router = useRouter(),
     pending = useRef<object | null>(null),
@@ -21,10 +24,14 @@ export function SubmissionReception({
   const [busy, setBusy] = useState(false),
     [error, setError] = useState(false),
     [locked, setLocked] = useState(false)
+  const [dirty, setDirty] = useState(false),
+    [saved, setSaved] = useState(false)
+  useUnsavedChanges(!saved && (dirty || locked) ? leaveWarning : null)
   return (
     <details>
       <summary>{d.prepareReception}</summary>
       <form
+        onChange={() => setDirty(true)}
         onSubmit={async (e) => {
           e.preventDefault()
           if (running.current) return
@@ -52,6 +59,7 @@ export function SubmissionReception({
               !/^[a-f0-9-]{36}$/.test(result.sessionId)
             )
               throw Error()
+            setSaved(true)
             router.push(`/intake/reception/${result.sessionId}`)
           } catch {
             setError(true)

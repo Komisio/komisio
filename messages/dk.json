@@ -3315,7 +3315,17 @@
     "priceRange": "Prisinterval",
     "useSuggestedPrice": "Brug prisforslaget",
     "settingsChanged": "Butikkens indstillinger er ændret. Genindlæs siden.",
-    "reload": "Genindlæs"
+    "reload": "Genindlæs",
+    "queueSearch": "Søg efter sælger eller vare",
+    "queueFind": "Søg",
+    "queueView": "Vis billedforslag",
+    "queueViewItem": "Vis registreret vare",
+    "queueFilters": {
+      "all": "Alle",
+      "pending": "Til vurdering",
+      "invited": "Afventer modtagelse",
+      "registered": "Registrerede"
+    }
   },
   "adsMeasurement": {
     "title": "Annoncemåling",

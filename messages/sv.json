@@ -3315,7 +3315,17 @@
     "priceRange": "Prisintervall",
     "useSuggestedPrice": "Använd prisförslaget",
     "settingsChanged": "Butikens inställningar har ändrats. Ladda om sidan.",
-    "reload": "Ladda om"
+    "reload": "Ladda om",
+    "queueSearch": "Sök säljare eller vara",
+    "queueFind": "Sök",
+    "queueView": "Visa fotoförslag",
+    "queueViewItem": "Visa registrerad vara",
+    "queueFilters": {
+      "all": "Alla",
+      "pending": "Att granska",
+      "invited": "Att ta emot",
+      "registered": "Registrerade"
+    }
   },
   "adsMeasurement": {
     "title": "Annonsmätning",

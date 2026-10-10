@@ -3321,7 +3321,17 @@
     "priceRange": "Rango de precios",
     "useSuggestedPrice": "Usar precio sugerido",
     "settingsChanged": "La configuración de la tienda ha cambiado. Recarga la página.",
-    "reload": "Recargar"
+    "reload": "Recargar",
+    "queueSearch": "Buscar vendedor o artículo",
+    "queueFind": "Buscar",
+    "queueView": "Mostrar propuestas con fotos",
+    "queueViewItem": "Ver artículo registrado",
+    "queueFilters": {
+      "all": "Todas",
+      "pending": "Por revisar",
+      "invited": "Pendientes de recepción",
+      "registered": "Registradas"
+    }
   },
   "adsMeasurement": {
     "title": "Medición de anuncios",

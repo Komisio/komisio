@@ -2,17 +2,20 @@
 import { useId, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 
 export function SubmissionReview({
   tenantId,
   submissionId,
   d,
   pricing,
+  leaveWarning,
 }: {
   tenantId: string
   submissionId: string
   d: Dictionary['submissions']
   pricing: 'store' | 'seller' | 'approval'
+  leaveWarning: string
 }) {
   const router = useRouter()
   const decisionId = useId()
@@ -28,8 +31,11 @@ export function SubmissionReview({
   const [locked, setLocked] = useState(false)
   const [error, setError] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [dirty, setDirty] = useState(false)
+  useUnsavedChanges(!saved && (dirty || locked) ? leaveWarning : null)
   return (
     <form
+      onChange={() => setDirty(true)}
       onSubmit={async (e) => {
         e.preventDefault()
         if (running.current || saved) return

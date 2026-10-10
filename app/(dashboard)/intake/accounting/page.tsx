@@ -106,7 +106,11 @@ export default async function Accounting({
     timeZone: 'Europe/Stockholm',
   })
   const money = (ore: number) => `${formatSignedOre(ore)} ${currency}`
-  const vatModes = all.sales.vatModes as Record<string, string>
+  const vatModes: Record<string, string> = {
+    ...all.sales.vatModes,
+    consignment_fee: all.consignmentFees.title,
+    consignment_fee_reversal: `${all.consignmentFees.title} (${all.consignmentFees.status.reversed})`,
+  }
   const canEditMap = ['owner', 'admin'].includes(active.role)
   const attentionCount = recon ? attention.length : null
   return (

@@ -45,8 +45,30 @@ window, bounds and tenant denial.
 
 ## Offline pilot evaluation
 
+Owners and admins can open **Review AI prices** from the photo-submission queue.
+Choose a reception period to compare saved estimates with original accepted
+prices and later sales, or download the same snapshot as a cohort JSON file.
+The page makes no AI calls and changes no prices.
+
+This read covers only photo submissions linked to physically accepted items.
+It uses the saved assessment, its original market/currency and the acceptance
+policy's currency. Missing assessments and mismatched markets/currencies are
+counted separately. Missing price estimates and unsold goods remain in the
+eligible cohort. Estimates after either outcome are excluded from comparison.
+The latest completed sale is used; a return excludes that sale from accuracy.
+Unreceived proposals, declined goods and other intake methods are outside this
+cohort, so this is not a representative sample of every store item by default.
+
+The reception window uses Stockholm calendar dates, is limited to 366 days and
+refuses more than 5,000 items instead of silently truncating them. Market and
+currency are shown explicitly. The download includes internal item IDs, dates
+and prices, but no names, descriptions or photos; keep it private. These IDs
+are pseudonymous references, not irreversible anonymization. The accepted-price
+comparison also covers seller-set prices confirmed by staff and is not an
+independent valuation. Pilot verification with real garments remains necessary.
+
 Run `npm run pricing:evaluate -- private/pricing-cohort.json` with an explicitly
-prepared, anonymized cohort. The tool reads only that local file, makes no AI
+prepared cohort (maximum 4 MB). The tool reads only that local file, makes no AI
 or network calls, and prints aggregate metrics without item identifiers.
 Keep real observations out of version control. Example input with synthetic data:
 

@@ -3401,5 +3401,29 @@
     "next": "Nästa",
     "previous": "Föregående",
     "back": "Till lagret"
+  },
+  "pricingFollowUp": {
+    "title": "Följ upp AI-priser",
+    "helpLabel": "Om prisuppföljningen",
+    "scopeHelp": "Mottagna varor från fotoförslag under vald period. Saknade uppskattningar och osålda varor finns kvar i underlaget.",
+    "comparisonHelp": "Prisskillnaden jämför mittpunkten i det sparade AI-spannet med mottagnings- eller försäljningspriset. Returer räknas bort. Prissänkningar och personalens val kan påverka utfallet.",
+    "downloadHelp": "Underlaget innehåller varu-ID, datum och priser. Inga namn, beskrivningar eller bilder följer med.",
+    "period": "Mottagna under perioden",
+    "periodInvalid": "Välj en giltig period på högst ett år, fram till idag.",
+    "narrowPeriod": "För många varor. Välj en kortare period.",
+    "received": "Mottagna varor",
+    "estimates": "Med AI-pris",
+    "comparableSales": "Sålda och jämförbara",
+    "comparison": "AI-förslag jämfört med verkliga priser",
+    "compareWith": "Jämför med",
+    "count": "Antal varor",
+    "difference": "Genomsnittlig prisskillnad",
+    "acceptedPrice": "Pris vid mottagning",
+    "soldPrice": "Försäljningspris",
+    "download": "Hämta underlag",
+    "setMarket": "Ange butikens land i butiksinställningarna",
+    "empty": "Inget jämförbart prisunderlag ännu.",
+    "omitted": "{count} varor saknar jämförbart prisunderlag.",
+    "returned": "{count} returnerade varor räknas inte som försäljningar."
   }
 }

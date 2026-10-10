@@ -53,6 +53,11 @@ export default async function Submissions({
     <>
       <Link href="/intake">{d.back}</Link>
       <h1>{d.queue}</h1>
+      {['owner', 'admin'].includes(active.role) && (
+        <Link className="text-link" href="/intake/pricing">
+          {dictionary(ctx.locale).pricingFollowUp.title}
+        </Link>
+      )}
       {!rows.length && <p>{d.empty}</p>}
       {rows.map((row) => {
         const review = row.seller_submission_reviews[0]

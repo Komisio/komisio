@@ -3407,5 +3407,29 @@
     "next": "Seuraava",
     "previous": "Edellinen",
     "back": "Varastoon"
+  },
+  "pricingFollowUp": {
+    "title": "Seuraa tekoälyn hinta-arvioita",
+    "helpLabel": "Tietoa hintaseurannasta",
+    "scopeHelp": "Valittuna ajanjaksona kuvaehdotuksista vastaanotetut tuotteet. Puuttuvat arviot ja myymättömät tuotteet säilyvät aineistossa.",
+    "comparisonHelp": "Hintaero vertaa tallennetun tekoälyarvion vaihteluvälin keskipistettä vastaanotto- tai myyntihintaan. Palautukset jätetään pois. Hinnanalennukset ja henkilökunnan valinnat voivat vaikuttaa tulokseen.",
+    "downloadHelp": "Aineisto sisältää tuotetunnukset, päivämäärät ja hinnat. Nimiä, kuvauksia tai kuvia ei sisällytetä.",
+    "period": "Vastaanotettu ajanjaksolla",
+    "periodInvalid": "Valitse kelvollinen, enintään vuoden ajanjakso, joka päättyy viimeistään tänään.",
+    "narrowPeriod": "Liikaa tuotteita. Valitse lyhyempi ajanjakso.",
+    "received": "Vastaanotetut tuotteet",
+    "estimates": "Tekoälyn hinta-arvio",
+    "comparableSales": "Vertailukelpoiset myynnit",
+    "comparison": "Tekoälyn arviot ja toteutuneet hinnat",
+    "compareWith": "Vertailukohde",
+    "count": "Tuotteita",
+    "difference": "Keskimääräinen hintaero",
+    "acceptedPrice": "Hinta vastaanotettaessa",
+    "soldPrice": "Myyntihinta",
+    "download": "Lataa aineisto",
+    "setMarket": "Määritä myymälän maa myymäläasetuksissa",
+    "empty": "Vertailukelpoisia hintatietoja ei vielä ole.",
+    "omitted": "{count} tuotteelta puuttuu vertailukelpoinen hintatieto.",
+    "returned": "{count} palautettua tuotetta jätetään myyntivertailun ulkopuolelle."
   }
 }

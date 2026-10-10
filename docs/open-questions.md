@@ -36,6 +36,13 @@ creates inventory. Review emails follow existing automatic notification policy
 and seller preferences; an explicit staff notification remains available. Hosted shared-key
 web search still requires a configured credit tariff; no new tariff is assumed.
 
+Pricing verification (2026-10-10): a read-only owner/admin follow-up now links
+saved photo-submission estimates to physically accepted items and actual sales.
+It separates original market/currency, missing estimates, unsold goods and
+returns; a private cohort export feeds the offline evaluator. Received photo
+submissions are only one intake cohort. Representative real garments and their
+outcomes still need pilot review; no general accuracy level is established.
+
 Accounting routing proposal (2026-10-04): the owner requests a design for
 Komisio-led sales posting or complementary seller-liability posting alongside
 an external POS export. Before implementation, approve per-event ownership,

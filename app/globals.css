@@ -3384,6 +3384,12 @@ button.text-link:hover:not(:disabled) {
   gap: 1rem;
   margin: 1rem 0;
 }
+.pricing-follow-up > .stock-metrics {
+  gap: 0.75rem;
+}
+.pricing-follow-up > .stock-metrics > div {
+  padding: 1rem;
+}
 .stock-metrics > div {
   padding: 1.25rem;
 }

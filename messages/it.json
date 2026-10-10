@@ -3401,5 +3401,29 @@
     "next": "Avanti",
     "previous": "Indietro",
     "back": "Torna al magazzino"
+  },
+  "pricingFollowUp": {
+    "title": "Verifica i prezzi IA",
+    "helpLabel": "Informazioni sul confronto dei prezzi",
+    "scopeHelp": "Articoli ricevuti da proposte fotografiche nel periodo selezionato. Le stime mancanti e gli articoli invenduti restano nei dati.",
+    "comparisonHelp": "La differenza di prezzo confronta il punto medio dell’intervallo IA salvato con il prezzo di ricezione o vendita. I resi sono esclusi. Ribassi e scelte del personale possono influenzare il risultato.",
+    "downloadHelp": "I dati contengono identificativi degli articoli, date e prezzi. Non includono nomi, descrizioni o foto.",
+    "period": "Ricevuti nel periodo",
+    "periodInvalid": "Scegli un periodo valido di massimo un anno che termini oggi o prima.",
+    "narrowPeriod": "Troppi articoli. Scegli un periodo più breve.",
+    "received": "Articoli ricevuti",
+    "estimates": "Con prezzo IA",
+    "comparableSales": "Vendite confrontabili",
+    "comparison": "Proposte IA e prezzi effettivi",
+    "compareWith": "Confronta con",
+    "count": "Articoli",
+    "difference": "Differenza media di prezzo",
+    "acceptedPrice": "Prezzo alla ricezione",
+    "soldPrice": "Prezzo di vendita",
+    "download": "Scarica i dati",
+    "setMarket": "Indica il paese del negozio nelle impostazioni",
+    "empty": "Nessun dato di prezzo confrontabile disponibile.",
+    "omitted": "{count} articoli non hanno dati di prezzo confrontabili.",
+    "returned": "{count} articoli resi sono esclusi dalle vendite."
   }
 }

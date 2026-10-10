@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-10: Owners/admins may preflight up to 200 inventory-file rows using exact current seller ID/e-mail matching, explicit currency and source references. This read-only check creates no inventory, custody, terms or balances and does not authorize historical stock migration.
+
 - 2026-10-09: Main CI browser tests stop at the first failure to shorten feedback on blocked releases. A successful run still executes the full selected suite; platform and staging-migrations remain mandatory deployment checks. Local diagnostic runs keep all failures.
 
 - 2026-10-09: Stocktakes freeze the stock-report item set. One session is open per store. Scans preserve damage findings; corrections require reasons. Unchecked is not missing. Closing requires all still-stocked expected items checked and freezes stock changes; no financial or lifecycle writes occur.

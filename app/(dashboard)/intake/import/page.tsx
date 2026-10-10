@@ -20,6 +20,11 @@ export default async function Import() {
         <Link className="text-link" href="/intake/sellers">
           {all.nav.sellersList}
         </Link>
+        {['owner', 'admin'].includes(active.role) && (
+          <Link className="text-link" href="/intake/import/items">
+            {all.inventoryImport.title}
+          </Link>
+        )}
       </div>
       <p className="intake-notice">{d.notice}</p>
       {['owner', 'admin'].includes(active.role) ? (

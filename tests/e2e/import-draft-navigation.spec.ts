@@ -11,6 +11,7 @@ async function fixture(page: Page) {
   try {
     await f.commit()
     await page.goto('/intake/import')
+    await expect(page.locator('#import-file')).toBeEnabled()
     await page.locator('#import-file').setInputFiles({
       name: 'synthetic-mapped.csv',
       mimeType: 'text/csv',
@@ -45,8 +46,12 @@ test('cancelled import navigation retains the file and mapping; clearing it rele
 }) => {
   const f = await fixture(page)
   try {
-    const back = page.locator('main .page-heading a')
+    const back = page.locator('main .page-heading a[href="/intake/sellers"]')
     await cancelLeave(page, back)
+    await cancelLeave(
+      page,
+      page.getByRole('link', { name: d.inventoryImport.title, exact: true }),
+    )
     await cancelLeave(page, page.locator('.sidebar a[href="/intake/items"]'))
     await expect(page.locator('#import-name')).toHaveValue('0')
     await expect(page.locator('#import-email')).toHaveValue('1')
@@ -119,7 +124,10 @@ test('unconfirmed import staging keeps its leave warning and exact retry; confir
       exact: true,
     })
     await expect(retry).toBeVisible()
-    await cancelLeave(page, page.locator('main .page-heading a'))
+    await cancelLeave(
+      page,
+      page.locator('main .page-heading a[href="/intake/sellers"]'),
+    )
     await expect(page.locator('#import-email')).toBeDisabled()
     await expect(
       page.getByRole('button', { name: d.importer.clearFile, exact: true }),

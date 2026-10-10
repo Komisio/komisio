@@ -23,7 +23,29 @@ first slice imports sellers; items and balances are separate decisions.
 - The operation payload is the provenance: file name and the rows as
   staged, kept with the decision.
 
-## Not in this slice
+## Inventory-file preflight
+
+Owners/admins can open `/intake/import/items` from the seller-import page.
+Download the CSV template, keep its six headers (`reference`, `sellerId`,
+`email`, `description`, `price`, `currency`), replace the example and check up
+to 200 rows. This is a read-only preparation tool, not an inventory import.
+
+Every row needs a unique source reference, description, positive decimal price
+and the store's explicit currency. Prices accept a decimal comma or dot, up to
+two decimal places, without thousands separators; no conversion or rounding is
+guessed. Use an existing Komisio seller UUID, exact current email, or both if
+they agree. Duplicate emails require an ID. Names are never fuzzy-matched.
+The template's headers are fixed across UI languages; column order may change.
+
+The result keeps every row and lists corrections, including both occurrences
+of duplicate references. A private JSON report records the checked snapshot.
+Files and reports are not persisted by the server. Matching is tenant-scoped,
+owner/admin and MFA protected. File structure and row limits fail visibly
+instead of dropping rows. Passing the check does not establish custody,
+ownership, historical agreements, commission, VAT, or absence of duplicates
+in an earlier system or a previous file.
+
+## Not imported
 
 Items, balances, agreements and history. Importing balances would create
 ledger rows from an outside source and needs its own decision; importing
@@ -37,3 +59,7 @@ writes, preflight count of known e-mails, approval by the same person,
 skipped duplicates, counts, queue filter, read-only refused) and
 `tests/unit/import-sellers.test.ts` (parser, mapping guess, row mapping,
 payload bounds).
+Inventory preflight is covered by `0292_inventory_import_preflight.test.sql`,
+`tests/unit/inventory-import.test.ts` and a browser journey checking correction,
+private report, mobile layout, tenant changes, staff denial and absence of
+inventory writes.

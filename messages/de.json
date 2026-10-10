@@ -3368,7 +3368,10 @@
     "accept": "Ich akzeptiere den Vertrag",
     "failed": "Die Antwort konnte nicht bestätigt werden. Bitte erneut versuchen.",
     "changed": "Der Vertrag wurde geändert. Lesen Sie vor der Zustimmung die neue Version.",
-    "acceptedBy": "Akzeptiert von"
+    "acceptedBy": "Akzeptiert von",
+    "history": "Vertragsverlauf",
+    "previousVersion": "Frühere Version",
+    "currentVersion": "Aktuellen Vertrag anzeigen"
   },
   "payoutSheet": {
     "title": "Zahlungsübersicht",

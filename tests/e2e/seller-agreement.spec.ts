@@ -119,6 +119,44 @@ test('seller accepts the displayed agreement with safe retries and sees new vers
     await expect(page.getByRole('status')).toContainText(
       'Avtalet är accepterat',
     )
+    await page.reload()
+    await page.getByText('Avtalshistorik', { exact: true }).click()
+    await page
+      .getByRole('link', {
+        name: 'Version 1 · TEST seller agreement',
+        exact: true,
+      })
+      .click()
+    await expect(
+      page.getByRole('heading', { name: 'TEST seller agreement', exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByText('Tidigare version', { exact: false }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: 'Jag accepterar avtalet' }),
+    ).toHaveCount(0)
+    await expect(page.getByRole('status')).toContainText(
+      'Avtalet är accepterat',
+    )
+    await page.emulateMedia({ media: 'print' })
+    await expect(
+      page.getByText('Fictional terms for browser testing only.'),
+    ).toBeVisible()
+    await expect(page.locator('details')).toBeHidden()
+    await page.emulateMedia({ media: 'screen' })
+    await page.screenshot({
+      path: test.info().outputPath('seller-agreement-history-mobile.png'),
+      fullPage: true,
+    })
+    await page.getByRole('link', { name: 'Visa aktuellt avtal' }).click()
+    await expect(
+      page.getByRole('heading', { name: 'Latest TEST agreement' }),
+    ).toBeVisible()
+    const denied = await page.goto(
+      `/seller/agreement?seller=${seller}&version=${v2}`,
+    )
+    expect(denied?.status()).toBe(404)
   } finally {
     await db.end()
   }

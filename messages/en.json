@@ -3362,7 +3362,10 @@
     "accept": "I accept the agreement",
     "failed": "The response could not be confirmed. Please try again.",
     "changed": "The agreement has changed. Read the new version before accepting.",
-    "acceptedBy": "Accepted by"
+    "acceptedBy": "Accepted by",
+    "history": "Agreement history",
+    "previousVersion": "Previous version",
+    "currentVersion": "View current agreement"
   },
   "payoutSheet": {
     "title": "Payment sheet",

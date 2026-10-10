@@ -68,6 +68,11 @@ before pagination. Invitations remain separate from registered items; an accepte
 item links directly to its record. Unsaved review or preparation work warns before
 queue navigation. These reads do not change receipt or acceptance prerequisites.
 
+Sellers can read and print their previously accepted agreement versions from
+paged portal history. Old terms are clearly separated from the current agreement;
+only the current version can receive a new acceptance. Internal evidence references
+remain private, and existing seller identity and MFA checks still apply.
+
 Production also has complete platform vocabulary labels in all eight supported
 languages, clearer payout-list and request placement, and economy totals
 before secondary reports on mobile. Statement dates use completed Stockholm

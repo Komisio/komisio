@@ -31,6 +31,20 @@ export const storePolicyBody = z.strictObject({
     .refine((values) => new Set(values).size === values.length),
   sellerReviewMode: z.enum(['delegated', 'per_item']),
   salePeriodDays: days.positive(),
+  consignmentPeriod: z
+    .strictObject({
+      months: z.number().int().min(1).max(36),
+      collectionDays: z.number().int().min(0).max(365),
+      monthlyFee: z
+        .strictObject({
+          amountOre: z.number().int().min(1).max(9_999_999_999),
+          vatBasis: z.enum(['inclusive', 'exclusive']),
+          vatRatePercent: percent,
+          collection: z.enum(['balance', 'separate']),
+        })
+        .optional(),
+    })
+    .optional(),
   unsoldNotifyAfterDays: days,
   markdownSteps: z.array(z.strictObject({ afterDays: days, percent })),
   endOfPeriodAction: z.enum(['charity', 'return']),

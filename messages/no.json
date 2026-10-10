@@ -258,7 +258,8 @@
     "bagCompleted": "Innleveringen er ferdigbehandlet. Åpne den igjen for å fortsette.",
     "stocktakeAmbiguous": "Koden matcher flere varer. Åpne riktig vare og bruk hele ID-en.",
     "stocktakeItemMissing": "Varen finnes ikke i denne butikken.",
-    "stocktakePending": "Kontroller de resterende varene før du avslutter."
+    "stocktakePending": "Kontroller de resterende varene før du avslutter.",
+    "collectionNotDue": "Hentefristen har ikke gått ut."
   },
   "brand": "Komisio",
   "tagline": "Mer plass til ting som kan leve videre.",
@@ -1038,7 +1039,12 @@
     "sectionPeriod": "Salgsperiode og prisreduksjoner",
     "sectionAi": "KI og varetekst",
     "sectionLinks": "Snarveier i butikkpolicyen",
-    "layoutIntro": "Tilpass butikkens arbeidsflyt og vilkår. Se gjennom endringene og publiser dem samlet nederst."
+    "layoutIntro": "Tilpass butikkens arbeidsflyt og vilkår. Se gjennom endringene og publiser dem samlet nederst.",
+    "consignmentCalendar": "Salgsperiode i kalendermåneder",
+    "consignmentCalendarEnabled": "Tell kalendermåneder fra innlevering",
+    "consignmentCalendarHelp": "Gjelder nye kommisjonsinnleveringer. Erstatter perioden i dager for disse varene; tidligere innleveringer beholder vilkårene. Usolgte varer skal hentes. Personalet registrerer faktisk henting eller gjenvinning etter fristen.",
+    "consignmentMonths": "Måneder til salgs",
+    "collectionDays": "Dager for henting"
   },
   "sellerTerms": {
     "title": "Innleverervilkår",
@@ -1229,7 +1235,9 @@
       "payout_paid": "Utbetaling betalt",
       "payout_released": "Reservasjon frigitt",
       "booking_charge": "Bookinggebyr",
-      "adjustment": "Justering"
+      "adjustment": "Justering",
+      "consignment_fee": "Månedsavgifter",
+      "consignment_fee_reversal": "Tilbakefør avgift"
     },
     "adjustHeading": "Juster reskontroen",
     "adjustHint": "Bare eier eller administrator. En korreksjon er en ny postering med en årsak; ingenting redigeres.",
@@ -1464,7 +1472,13 @@
       "commissionVatOre": "Mva på kommisjon",
       "sellerCreditOre": "Innlevererens tilgodehavende (gjeld til innleverere)",
       "creditReversedOre": "Innlevererens tilgodehavende reversert",
-      "payoutsPaidOre": "Utbetalinger betalt"
+      "payoutsPaidOre": "Utbetalinger betalt",
+      "mode:consignment_fee:grossOre": "Månedsavgifter · Avgift i butikkens valuta",
+      "mode:consignment_fee:netOre": "Månedsavgifter · Eksklusive mva",
+      "mode:consignment_fee:vatOre": "Månedsavgifter · Mva",
+      "mode:consignment_fee_reversal:grossOre": "Tilbakefør avgift · Avgift i butikkens valuta",
+      "mode:consignment_fee_reversal:netOre": "Tilbakefør avgift · Eksklusive mva",
+      "mode:consignment_fee_reversal:vatOre": "Tilbakefør avgift · Mva"
     },
     "netOf": "netto",
     "vatOf": "mva",
@@ -1698,7 +1712,9 @@
     "matches": "Treff: {count}",
     "noMatches": "Ingen varer samsvarer med søket i valgt status.",
     "searchScopeHint": "Filtrene påvirker bare listen. Prisreduksjonene gjelder hele butikken.",
-    "storeMarkdowns": "Prisreduksjoner for hele butikken"
+    "storeMarkdowns": "Prisreduksjoner for hele butikken",
+    "recycle": "Gjenvinning",
+    "collectionDeadline": "Hentes senest"
   },
   "openByReference": {
     "title": "Åpne via etikett",
@@ -1909,7 +1925,8 @@
     "endedAs": {
       "charity": "gitt til veldedighet",
       "return": "returnert til deg",
-      "transfer": "flyttet til en annen butikk i kjeden"
+      "transfer": "flyttet til en annen butikk i kjeden",
+      "recycle": "gjenvunnet"
     },
     "title": "Mine salg",
     "empty": "Ingen innleverer samsvarer med din bekreftede e-post. Kontakt butikken hvis en konto mangler.",
@@ -1960,7 +1977,8 @@
       "INVALID_INPUT": "Angi et beløp større enn null med høyst to desimaler.",
       "PAYOUT_BELOW_THRESHOLD": "Beløpet er lavere enn butikkens minstebeløp.",
       "PAYOUT_EXCEEDS_BALANCE": "Beløpet overstiger tilgjengelig saldo. Kontroller saldoen ovenfor."
-    }
+    },
+    "collectionDeadline": "Hentes senest"
   },
   "plans": {
     "heading": "Abonnement",
@@ -3494,5 +3512,33 @@
       "ambiguous": "Flere selgere har denne e-posten. Angi Komisio-ID.",
       "conflict": "Selgerens ID og e-post samsvarer ikke."
     }
+  },
+  "consignmentFees": {
+    "title": "Månedsavgifter",
+    "enabled": "Aktiver månedsavgift per selger",
+    "amount": "Avgift i butikkens valuta",
+    "vatBasis": "Beløpets mva-grunnlag",
+    "vatRate": "Avgiftens mva (%)",
+    "collection": "Betalingsmåte",
+    "balance": "Trekk fra selgerens saldo",
+    "separate": "Separat betaling i kassen",
+    "net": "Eksklusive mva",
+    "vat": "Mva",
+    "reference": "Kvitteringsreferanse",
+    "reason": "Årsak til rettelse",
+    "pay": "Registrer betaling",
+    "reverse": "Tilbakefør avgift",
+    "accrue": "Oppdater forfalte avgifter",
+    "saved": "Lagret",
+    "confirmPayment": "Jeg bekrefter at avgiften er betalt i kassen.",
+    "confirmReversal": "Jeg bekrefter tilbakeføring av hele avgiften.",
+    "status": {
+      "deducted": "Trukket fra saldo",
+      "unpaid": "Ubetalt",
+      "paid": "Betalt",
+      "reversed": "Tilbakeført"
+    },
+    "help": "Hver påbegynte måned belastes fullt fra innlevering. Alle selgerens innleveringer deler avgiftsperiode. Trekk kan gi negativ saldo. Velg avgiftens mva separat fra varenes mva. Vilkårene gjelder nye avgiftsperioder.",
+    "historyHelp": "Avgifter fornyes automatisk mens aktive varer har senere sluttdato enn avgiftsmåneden. Sluttidspunktet er ikke med i avgiftsmåneden."
   }
 }

@@ -258,7 +258,8 @@
     "bagCompleted": "Tämä vastaanotto on käsitelty. Avaa se uudelleen jatkaaksesi.",
     "stocktakeAmbiguous": "Koodi vastaa useita tuotteita. Avaa oikea tuote ja käytä sen koko tunnusta.",
     "stocktakeItemMissing": "Tuotetta ei löytynyt tästä myymälästä.",
-    "stocktakePending": "Tarkista jäljellä olevat tuotteet ennen päättämistä."
+    "stocktakePending": "Tarkista jäljellä olevat tuotteet ennen päättämistä.",
+    "collectionNotDue": "Noutoaika ei ole vielä päättynyt."
   },
   "brand": "Komisio",
   "tagline": "Enemmän tilaa tavaroille elää uudelleen.",
@@ -1038,7 +1039,12 @@
     "sectionPeriod": "Myyntiaika ja hinnanalennukset",
     "sectionAi": "Tekoäly ja tuotetekstit",
     "sectionLinks": "Kaupan käytännön pikalinkit",
-    "layoutIntro": "Määritä kaupan toimintatavat ja ehdot. Tarkista muutokset ja julkaise ne yhdessä sivun alareunassa."
+    "layoutIntro": "Määritä kaupan toimintatavat ja ehdot. Tarkista muutokset ja julkaise ne yhdessä sivun alareunassa.",
+    "consignmentCalendar": "Myyntiaika kalenterikuukausina",
+    "consignmentCalendarEnabled": "Laske kalenterikuukaudet vastaanotosta",
+    "consignmentCalendarHelp": "Koskee uusia välitysmyyntiin jätettyjä tavaroita. Korvaa niiden päivinä lasketun myyntiajan; aiemmat ehdot säilyvät. Myymättömät tavarat noudetaan. Henkilökunta kirjaa toteutuneen noudon tai kierrätyksen määräajan jälkeen.",
+    "consignmentMonths": "Myyntikuukaudet",
+    "collectionDays": "Noutoaika päivinä"
   },
   "sellerTerms": {
     "title": "Tuojan ehdot",
@@ -1229,7 +1235,9 @@
       "payout_paid": "Tilitys maksettu",
       "payout_released": "Varaus vapautettu",
       "booking_charge": "Kirjausmaksu",
-      "adjustment": "Oikaisu"
+      "adjustment": "Oikaisu",
+      "consignment_fee": "Kuukausimaksut",
+      "consignment_fee_reversal": "Hyvitä maksu"
     },
     "adjustHeading": "Oikaise tilikirjaa",
     "adjustHint": "Vain omistaja tai ylläpitäjä. Korjaus on uusi merkintä syyllä; mitään ei muokata.",
@@ -1464,7 +1472,13 @@
       "commissionVatOre": "Alv komissiosta",
       "sellerCreditOre": "Tuojan hyvitys (velka tuojille)",
       "creditReversedOre": "Tuojan hyvitys peruttu",
-      "payoutsPaidOre": "Maksetut tilitykset"
+      "payoutsPaidOre": "Maksetut tilitykset",
+      "mode:consignment_fee:grossOre": "Kuukausimaksut · Maksu liikkeen valuutassa",
+      "mode:consignment_fee:netOre": "Kuukausimaksut · Ilman ALV:tä",
+      "mode:consignment_fee:vatOre": "Kuukausimaksut · ALV",
+      "mode:consignment_fee_reversal:grossOre": "Hyvitä maksu · Maksu liikkeen valuutassa",
+      "mode:consignment_fee_reversal:netOre": "Hyvitä maksu · Ilman ALV:tä",
+      "mode:consignment_fee_reversal:vatOre": "Hyvitä maksu · ALV"
     },
     "netOf": "netto",
     "vatOf": "alv",
@@ -1698,7 +1712,9 @@
     "matches": "Tuloksia: {count}",
     "noMatches": "Valitussa tilassa ei ole hakua vastaavia tuotteita.",
     "searchScopeHint": "Suodattimet vaikuttavat vain luetteloon. Hinnanalennukset koskevat koko myymälää.",
-    "storeMarkdowns": "Koko kaupan hinnanalennukset"
+    "storeMarkdowns": "Koko kaupan hinnanalennukset",
+    "recycle": "Kierrätys",
+    "collectionDeadline": "Noudettava viimeistään"
   },
   "openByReference": {
     "title": "Avaa etiketillä",
@@ -1909,7 +1925,8 @@
     "endedAs": {
       "charity": "lahjoitettu hyväntekeväisyyteen",
       "return": "palautettu sinulle",
-      "transfer": "siirretty toiseen ketjun kauppaan"
+      "transfer": "siirretty toiseen ketjun kauppaan",
+      "recycle": "kierrätetty"
     },
     "title": "Omat myyntini",
     "empty": "Yksikään tuoja ei vastaa vahvistettua sähköpostiasi. Ota yhteyttä kauppaan, jos tili puuttuu.",
@@ -1960,7 +1977,8 @@
       "INVALID_INPUT": "Anna nollaa suurempi summa enintään kahdella desimaalilla.",
       "PAYOUT_BELOW_THRESHOLD": "Summa alittaa kaupan vähimmäissumman.",
       "PAYOUT_EXCEEDS_BALANCE": "Summa ylittää käytettävissä olevan saldosi. Tarkista yllä oleva saldo."
-    }
+    },
+    "collectionDeadline": "Noudettava viimeistään"
   },
   "plans": {
     "heading": "Tilaus",
@@ -3500,5 +3518,33 @@
       "ambiguous": "Useilla myyjillä on tämä sähköposti. Anna Komisio-tunnus.",
       "conflict": "Myyjän tunnus ja sähköposti eivät vastaa toisiaan."
     }
+  },
+  "consignmentFees": {
+    "title": "Kuukausimaksut",
+    "enabled": "Ota myyjäkohtainen kuukausimaksu käyttöön",
+    "amount": "Maksu liikkeen valuutassa",
+    "vatBasis": "Summan ALV-peruste",
+    "vatRate": "Maksun ALV (%)",
+    "collection": "Maksutapa",
+    "balance": "Vähennys myyjän saldosta",
+    "separate": "Erillinen maksu kassalla",
+    "net": "Ilman ALV:tä",
+    "vat": "ALV",
+    "reference": "Kuittiviite",
+    "reason": "Korjauksen syy",
+    "pay": "Kirjaa maksu",
+    "reverse": "Hyvitä maksu",
+    "accrue": "Päivitä erääntyneet maksut",
+    "saved": "Tallennettu",
+    "confirmPayment": "Vahvistan, että maksu on maksettu kassalla.",
+    "confirmReversal": "Vahvistan koko maksun hyvityksen.",
+    "status": {
+      "deducted": "Vähennetty saldosta",
+      "unpaid": "Maksamatta",
+      "paid": "Maksettu",
+      "reversed": "Hyvitetty"
+    },
+    "help": "Jokainen alkanut kuukausi veloitetaan kokonaan luovutuksesta lähtien. Myyjän kaikilla luovutuksilla on yhteinen maksukausi. Vähennykset voivat tehdä saldosta negatiivisen. Valitse maksun ALV erikseen tavaroiden ALV:stä. Ehdot koskevat uusia maksukausia.",
+    "historyHelp": "Maksut uusiutuvat automaattisesti, kun aktiivisten tuotteiden päättymisaika on maksukuukauden lopun jälkeen. Päättymishetki ei sisälly maksukuukauteen."
   }
 }

@@ -55,7 +55,7 @@ export const extendSalePeriodCommand = z.strictObject({
 export const endSalePeriodCommand = z.strictObject({
   action: z.literal('endSalePeriod'),
   ...ids,
-  endAction: z.enum(['charity', 'return']),
+  endAction: z.enum(['charity', 'return', 'recycle']),
   note: z.string().trim().max(500).default(''),
 })
 // Transfer to another store in the chain (CHAIN-GROUPING step 2): ends the
@@ -90,6 +90,8 @@ const row = z.object({
   stage: lifecycleStage,
   accepted_at: z.iso.datetime({ offset: true }),
   period_end: z.iso.datetime({ offset: true }),
+  collection_due: z.boolean().optional(),
+  collection_deadline: z.iso.datetime({ offset: true }).nullable().optional(),
   current_price_ore: ore.nullable(),
   due_step: z.number().int().nullable(),
   due_percent: z.union([z.number(), z.string()]).nullable(),

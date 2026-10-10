@@ -1,0 +1,42 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000002941','boundary-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000002942','boundary-outsider@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000002941","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Fee test','boundary-test',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Fee seller','fee-seller@example.test','')::text,true);
+select set_config('test.policy',gen_random_uuid()::text,true);
+select publish_store_policy(current_setting('test.tenant')::uuid,current_setting('test.policy')::uuid,null,
+ (current_store_policy(current_setting('test.tenant')::uuid)->'policy')||'{"consignmentPeriod":{"months":3,"collectionDays":2,"monthlyFee":{"amountOre":10000,"vatBasis":"inclusive","vatRatePercent":25,"collection":"balance"}},"vatModeConsignmentPrivate":"consignment_margin","markdownSteps":[],"endOfPeriodAction":"return"}');
+select set_config('test.bag',receive_bag(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'First')::text,true);
+select set_config('test.period',(select id::text from seller_consignment_periods where seller_id=current_setting('test.seller')::uuid),true);
+select set_config('test.fee',(select id::text from consignment_fees where period_id=current_setting('test.period')::uuid),true);
+select is((seller_balance(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid)->>'availableOre')::bigint,-10000::bigint,'first full fee may create a negative seller balance');
+select is((select vat_ore from consignment_fees where id=current_setting('test.fee')::uuid),2000::numeric,'inclusive VAT is frozen separately');
+select receive_bag(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'Second');
+select is((select count(*) from consignment_fees),1::bigint,'two handovers in one seller month have one fee');
+select is((select count(*) from seller_consignment_periods),1::bigint,'period belongs to seller across handovers');
+select set_config('test.draft',gen_random_uuid()::text,true);
+select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Fee coat','Coats','Good');
+select set_config('test.item',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,50000);
+select set_config('test.sale',record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','synthetic-fee-sale',now(),'SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item'),'priceOre',50000)))::text,true);
+select is((seller_balance(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid)->>'availableOre')::bigint,10000::bigint,'future sales first cover the monthly fee debt');
+reset role;
+select is(komisio_private.accrue_consignment_fees(current_setting('test.period')::uuid,now()+interval '1 month 1 hour','f0000000-0000-4000-8000-000000002941'),0,'sold items do not renew a month');
+set local role authenticated;
+select record_return(current_setting('test.tenant')::uuid,gen_random_uuid(),(select id from sale_lines where sale_id=current_setting('test.sale')::uuid),50000,'Synthetic full return');
+reset role;
+select is(komisio_private.accrue_consignment_fees(current_setting('test.period')::uuid,now()+interval '1 month 1 hour','f0000000-0000-4000-8000-000000002941'),1,'returned active item renews at next boundary');
+set local role authenticated;
+select end_sale_period(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item')::uuid,'return','Seller collected');
+reset role;
+select is(komisio_private.accrue_consignment_fees(current_setting('test.period')::uuid,now()+interval '2 months 1 hour','f0000000-0000-4000-8000-000000002941'),0,'collected item does not renew');
+set local role authenticated;
+select set_config('test.statement',issue_statement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,now()-interval '1 day',clock_timestamp())::text,true);
+select is((select count(*) from settlement_statement_lines where statement_id=current_setting('test.statement')::uuid and kind='consignment_fee'),2::bigint,'immutable statement includes fee ledger facts');
+select * from finish();
+rollback;

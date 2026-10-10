@@ -11,6 +11,8 @@ export const ledgerKind = z.enum([
   'payout_paid',
   'payout_released',
   'booking_charge',
+  'consignment_fee',
+  'consignment_fee_reversal',
   'adjustment',
 ])
 export const adjustSellerLedgerCommand = z.strictObject({

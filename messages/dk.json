@@ -258,7 +258,8 @@
     "bagCompleted": "Indleveringen er færdigbehandlet. Genåbn den for at fortsætte.",
     "stocktakeAmbiguous": "Koden matcher flere varer. Åbn den rigtige vare og brug hele ID’et.",
     "stocktakeItemMissing": "Varen findes ikke i denne butik.",
-    "stocktakePending": "Kontrollér de resterende varer, før du afslutter."
+    "stocktakePending": "Kontrollér de resterende varer, før du afslutter.",
+    "collectionNotDue": "Afhentningsfristen er ikke udløbet."
   },
   "brand": "Komisio",
   "tagline": "Mere plads til ting, der får nyt liv.",
@@ -1038,7 +1039,12 @@
     "sectionPeriod": "Salgsperiode og prisnedsættelser",
     "sectionAi": "AI og varetekst",
     "sectionLinks": "Genveje i butikspolitikken",
-    "layoutIntro": "Tilpas butikkens arbejdsgange og vilkår. Gennemgå dine ændringer, og udgiv dem samlet nederst."
+    "layoutIntro": "Tilpas butikkens arbejdsgange og vilkår. Gennemgå dine ændringer, og udgiv dem samlet nederst.",
+    "consignmentCalendar": "Salgsperiode i kalendermåneder",
+    "consignmentCalendarEnabled": "Tæl kalendermåneder fra indlevering",
+    "consignmentCalendarHelp": "Gælder nye kommissionsindleveringer. Erstatter perioden i dage for disse varer; tidligere indleveringer beholder vilkårene. Usolgte varer skal afhentes. Personalet registrerer faktisk afhentning eller genanvendelse efter fristen.",
+    "consignmentMonths": "Måneder til salg",
+    "collectionDays": "Dage til afhentning"
   },
   "sellerTerms": {
     "title": "Indleverervilkår",
@@ -1229,7 +1235,9 @@
       "payout_paid": "Udbetaling betalt",
       "payout_released": "Reservation frigivet",
       "booking_charge": "Bookinggebyr",
-      "adjustment": "Justering"
+      "adjustment": "Justering",
+      "consignment_fee": "Månedsgebyrer",
+      "consignment_fee_reversal": "Tilbagefør gebyr"
     },
     "adjustHeading": "Juster kontoen",
     "adjustHint": "Kun ejer eller administrator. En rettelse er en ny postering med en årsag; intet redigeres.",
@@ -1464,7 +1472,13 @@
       "commissionVatOre": "Moms af kommission",
       "sellerCreditOre": "Indlevereres tilgodehavende (gæld til indleverere)",
       "creditReversedOre": "Indlevereres tilgodehavende tilbageført",
-      "payoutsPaidOre": "Udbetalinger betalt"
+      "payoutsPaidOre": "Udbetalinger betalt",
+      "mode:consignment_fee:grossOre": "Månedsgebyrer · Gebyr i butikkens valuta",
+      "mode:consignment_fee:netOre": "Månedsgebyrer · Eksklusive moms",
+      "mode:consignment_fee:vatOre": "Månedsgebyrer · Moms",
+      "mode:consignment_fee_reversal:grossOre": "Tilbagefør gebyr · Gebyr i butikkens valuta",
+      "mode:consignment_fee_reversal:netOre": "Tilbagefør gebyr · Eksklusive moms",
+      "mode:consignment_fee_reversal:vatOre": "Tilbagefør gebyr · Moms"
     },
     "netOf": "netto",
     "vatOf": "moms",
@@ -1698,7 +1712,9 @@
     "matches": "Resultater: {count}",
     "noMatches": "Ingen varer matcher søgningen med den valgte status.",
     "searchScopeHint": "Filtrene påvirker kun listen. Prisnedsættelserne gælder hele butikken.",
-    "storeMarkdowns": "Prisnedsættelser for hele butikken"
+    "storeMarkdowns": "Prisnedsættelser for hele butikken",
+    "recycle": "Genanvendelse",
+    "collectionDeadline": "Afhentes senest"
   },
   "openByReference": {
     "title": "Åbn via mærkat",
@@ -1909,7 +1925,8 @@
     "endedAs": {
       "charity": "doneret til velgørenhed",
       "return": "returneret til dig",
-      "transfer": "flyttet til en anden butik i kæden"
+      "transfer": "flyttet til en anden butik i kæden",
+      "recycle": "genanvendt"
     },
     "title": "Mine salg",
     "empty": "Ingen indleverer matcher din bekræftede e-mail. Kontakt butikken, hvis en konto mangler.",
@@ -1960,7 +1977,8 @@
       "INVALID_INPUT": "Angiv et beløb større end nul med højst to decimaler.",
       "PAYOUT_BELOW_THRESHOLD": "Beløbet er under butikkens minimumsbeløb.",
       "PAYOUT_EXCEEDS_BALANCE": "Beløbet overstiger din tilgængelige saldo. Kontrollér saldoen ovenfor."
-    }
+    },
+    "collectionDeadline": "Afhentes senest"
   },
   "plans": {
     "heading": "Abonnement",
@@ -3494,5 +3512,33 @@
       "ambiguous": "Flere sælgere har denne e-mail. Angiv Komisio-ID.",
       "conflict": "Sælgerens ID og e-mail stemmer ikke overens."
     }
+  },
+  "consignmentFees": {
+    "title": "Månedsgebyrer",
+    "enabled": "Aktivér månedsgebyr pr. sælger",
+    "amount": "Gebyr i butikkens valuta",
+    "vatBasis": "Beløbets momsgrundlag",
+    "vatRate": "Gebyrets moms (%)",
+    "collection": "Betalingsmetode",
+    "balance": "Træk fra sælgerens saldo",
+    "separate": "Separat betaling i kassen",
+    "net": "Eksklusive moms",
+    "vat": "Moms",
+    "reference": "Kvitteringsreference",
+    "reason": "Årsag til rettelse",
+    "pay": "Registrér betaling",
+    "reverse": "Tilbagefør gebyr",
+    "accrue": "Opdatér forfaldne gebyrer",
+    "saved": "Gemt",
+    "confirmPayment": "Jeg bekræfter, at gebyret er betalt i kassen.",
+    "confirmReversal": "Jeg bekræfter tilbageførsel af hele gebyret.",
+    "status": {
+      "deducted": "Trukket fra saldo",
+      "unpaid": "Ubetalt",
+      "paid": "Betalt",
+      "reversed": "Tilbageført"
+    },
+    "help": "Hver påbegyndt måned opkræves fuldt fra indlevering. Alle sælgerens indleveringer deler gebyrperiode. Fradrag kan give negativ saldo. Vælg gebyrets moms separat fra varernes moms. Vilkårene gælder nye gebyrperioder.",
+    "historyHelp": "Gebyrer fornyes automatisk, mens aktive varer har senere slutdato end gebyrmåneden. Sluttidspunktet er ikke med i gebyrmåneden."
   }
 }

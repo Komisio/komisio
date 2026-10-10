@@ -258,7 +258,8 @@
     "bagCompleted": "Inlämningen är färdigbehandlad. Återöppna den för att fortsätta.",
     "stocktakeAmbiguous": "Koden matchar flera varor. Öppna rätt vara och använd dess fullständiga ID.",
     "stocktakeItemMissing": "Varan finns inte i den här butiken.",
-    "stocktakePending": "Kontrollera återstående varor innan du avslutar."
+    "stocktakePending": "Kontrollera återstående varor innan du avslutar.",
+    "collectionNotDue": "Hämtningsfristen har inte gått ut."
   },
   "brand": "Komisio",
   "tagline": "Mer utrymme för det som får nytt liv.",
@@ -1038,7 +1039,12 @@
     "sectionPeriod": "Säljperiod och prissänkningar",
     "sectionAi": "AI och varutext",
     "sectionLinks": "Genvägar i butikspolicyn",
-    "layoutIntro": "Anpassa butikens arbetssätt och villkor. Granska dina ändringar och publicera dem tillsammans längst ned."
+    "layoutIntro": "Anpassa butikens arbetssätt och villkor. Granska dina ändringar och publicera dem tillsammans längst ned.",
+    "consignmentCalendar": "Försäljningstid i kalendermånader",
+    "consignmentCalendarEnabled": "Räkna kalendermånader från inlämningen",
+    "consignmentCalendarHelp": "Gäller nya kommissionsinlämningar. Ersätter tiden i dagar för dessa artiklar; tidigare inlämningar behåller sina villkor. Osålda artiklar ska hämtas. Personalen registrerar faktisk hämtning eller återvinning efter fristen.",
+    "consignmentMonths": "Månader till försäljning",
+    "collectionDays": "Dagar för hämtning"
   },
   "sellerTerms": {
     "title": "Säljarvillkor",
@@ -1229,7 +1235,9 @@
       "payout_paid": "Utbetalning gjord",
       "payout_released": "Reservation frisläppt",
       "booking_charge": "Bokningsavgift",
-      "adjustment": "Justering"
+      "adjustment": "Justering",
+      "consignment_fee": "Månadsavgifter",
+      "consignment_fee_reversal": "Återför avgift"
     },
     "adjustHeading": "Justera saldo",
     "adjustHint": "Endast ägare eller administratör. En rättelse är en ny post med en anledning; inget redigeras.",
@@ -1464,7 +1472,13 @@
       "commissionVatOre": "Moms på provision",
       "sellerCreditOre": "Säljartillgodo (skuld till säljare)",
       "creditReversedOre": "Återfört säljartillgodo",
-      "payoutsPaidOre": "Utbetalt"
+      "payoutsPaidOre": "Utbetalt",
+      "mode:consignment_fee:grossOre": "Månadsavgifter · Avgift i butikens valuta",
+      "mode:consignment_fee:netOre": "Månadsavgifter · Exklusive moms",
+      "mode:consignment_fee:vatOre": "Månadsavgifter · Moms",
+      "mode:consignment_fee_reversal:grossOre": "Återför avgift · Avgift i butikens valuta",
+      "mode:consignment_fee_reversal:netOre": "Återför avgift · Exklusive moms",
+      "mode:consignment_fee_reversal:vatOre": "Återför avgift · Moms"
     },
     "netOf": "netto",
     "vatOf": "moms",
@@ -1698,7 +1712,9 @@
     "matches": "Träffar: {count}",
     "noMatches": "Inga varor matchar sökningen i valt läge.",
     "searchScopeHint": "Filtren påverkar bara listan. Prissänkningarna gäller hela butiken.",
-    "storeMarkdowns": "Prissänkningar för hela butiken"
+    "storeMarkdowns": "Prissänkningar för hela butiken",
+    "recycle": "Återvinning",
+    "collectionDeadline": "Hämtas senast"
   },
   "openByReference": {
     "title": "Öppna via etikett",
@@ -1891,7 +1907,8 @@
     "endedAs": {
       "charity": "skänkt till välgörenhet",
       "return": "återlämnad till dig",
-      "transfer": "flyttad till en annan butik i kedjan"
+      "transfer": "flyttad till en annan butik i kedjan",
+      "recycle": "återvunnen"
     },
     "handovers": "Avisera inlämning",
     "handoverIntro": "Anmäl en inlämning innan du kommer. Visa referensen i kassan; butiken registrerar mottagandet och du ser inlämningsnumret här.",
@@ -1960,7 +1977,8 @@
       "INVALID_INPUT": "Ange ett belopp större än noll med högst två decimaler.",
       "PAYOUT_BELOW_THRESHOLD": "Beloppet är lägre än butikens minimibelopp.",
       "PAYOUT_EXCEEDS_BALANCE": "Beloppet överstiger ditt tillgängliga saldo. Kontrollera saldot ovan."
-    }
+    },
+    "collectionDeadline": "Hämtas senast"
   },
   "plans": {
     "heading": "Plan",
@@ -3494,5 +3512,33 @@
       "ambiguous": "Flera säljare har denna e-post. Ange Komisio-ID.",
       "conflict": "Säljarens ID och e-post stämmer inte överens."
     }
+  },
+  "consignmentFees": {
+    "title": "Månadsavgifter",
+    "enabled": "Aktivera månadsavgift per säljare",
+    "amount": "Avgift i butikens valuta",
+    "vatBasis": "Beloppets momsgrund",
+    "vatRate": "Avgiftens moms (%)",
+    "collection": "Betalningssätt",
+    "balance": "Avdrag från säljarens saldo",
+    "separate": "Separat betalning i kassan",
+    "net": "Exklusive moms",
+    "vat": "Moms",
+    "reference": "Kvittoreferens",
+    "reason": "Orsak till rättelse",
+    "pay": "Registrera betalning",
+    "reverse": "Återför avgift",
+    "accrue": "Uppdatera förfallna avgifter",
+    "saved": "Sparat",
+    "confirmPayment": "Jag bekräftar att avgiften är betald i kassan.",
+    "confirmReversal": "Jag bekräftar återföringen av hela avgiften.",
+    "status": {
+      "deducted": "Avdraget från saldo",
+      "unpaid": "Obetald",
+      "paid": "Betald",
+      "reversed": "Återförd"
+    },
+    "help": "Varje påbörjad månad debiteras fullt från inlämningen. Alla säljarens inlämningar delar avgiftsperiod. Saldoavdrag kan ge negativt saldo. Avgiftens moms väljs separat från varornas moms. Villkoren gäller nya avgiftsperioder.",
+    "historyHelp": "Avgifter fortsätter automatiskt så länge aktiva artiklar har en senare sluttid än avgiftsmånadens slut. Sluttidpunkten ingår inte i avgiftsmånaden."
   }
 }

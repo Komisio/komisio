@@ -41,6 +41,8 @@ export function AccountMapForm({
     editable && !saved && (dirty || action.locked) ? leaveUnsaved : null,
   )
   const label = (key: string) => {
+    if (key in d.amountKeys)
+      return d.amountKeys[key as keyof typeof d.amountKeys]
     if (key.startsWith('mode:')) {
       const [, mode, amount] = key.split(':')
       return `${vatModes[mode] ?? mode} · ${amount === 'netOre' ? d.netOf : d.vatOf}`

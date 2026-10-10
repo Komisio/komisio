@@ -258,7 +258,8 @@
     "bagCompleted": "Diese Einlieferung ist abgeschlossen. Öffnen Sie sie erneut, um fortzufahren.",
     "stocktakeAmbiguous": "Der Code passt zu mehreren Artikeln. Öffnen Sie den richtigen Artikel und verwenden Sie seine vollständige ID.",
     "stocktakeItemMissing": "Dieser Artikel wurde in diesem Geschäft nicht gefunden.",
-    "stocktakePending": "Prüfen Sie die übrigen Artikel vor dem Abschluss."
+    "stocktakePending": "Prüfen Sie die übrigen Artikel vor dem Abschluss.",
+    "collectionNotDue": "Die Abholfrist ist noch nicht abgelaufen."
   },
   "brand": "Komisio",
   "tagline": "Mehr Raum für Dinge, die weiterleben.",
@@ -1038,7 +1039,12 @@
     "sectionPeriod": "Verkaufszeitraum und Preisnachlässe",
     "sectionAi": "KI und Artikeltexte",
     "sectionLinks": "Sprunglinks zur Geschäftsrichtlinie",
-    "layoutIntro": "Passen Sie Abläufe und Bedingungen Ihres Geschäfts an. Prüfen Sie Ihre Änderungen und veröffentlichen Sie sie gemeinsam am Seitenende."
+    "layoutIntro": "Passen Sie Abläufe und Bedingungen Ihres Geschäfts an. Prüfen Sie Ihre Änderungen und veröffentlichen Sie sie gemeinsam am Seitenende.",
+    "consignmentCalendar": "Verkaufszeit in Kalendermonaten",
+    "consignmentCalendarEnabled": "Kalendermonate ab Einlieferung zählen",
+    "consignmentCalendarHelp": "Gilt für neue Kommissionseinlieferungen. Ersetzt deren Frist in Tagen; bisherige Einlieferungen behalten ihre Bedingungen. Unverkaufte Artikel sind abzuholen. Das Personal erfasst die tatsächliche Abholung oder das Recycling nach Fristablauf.",
+    "consignmentMonths": "Monate im Verkauf",
+    "collectionDays": "Tage zur Abholung"
   },
   "sellerTerms": {
     "title": "Einlieferer-Bedingungen",
@@ -1229,7 +1235,9 @@
       "payout_paid": "Auszahlung bezahlt",
       "payout_released": "Reservierung freigegeben",
       "booking_charge": "Buchungsgebühr",
-      "adjustment": "Anpassung"
+      "adjustment": "Anpassung",
+      "consignment_fee": "Monatsgebühren",
+      "consignment_fee_reversal": "Gebühr stornieren"
     },
     "adjustHeading": "Konto anpassen",
     "adjustHint": "Nur Inhaber oder Administrator. Eine Korrektur ist ein neuer Eintrag mit Grund; nichts wird bearbeitet.",
@@ -1464,7 +1472,13 @@
       "commissionVatOre": "MwSt. auf Kommission",
       "sellerCreditOre": "Einlieferer-Gutschrift (Verbindlichkeit gegenüber Einlieferern)",
       "creditReversedOre": "Einlieferer-Gutschrift storniert",
-      "payoutsPaidOre": "Auszahlungen bezahlt"
+      "payoutsPaidOre": "Auszahlungen bezahlt",
+      "mode:consignment_fee:grossOre": "Monatsgebühren · Gebühr in Geschäftswährung",
+      "mode:consignment_fee:netOre": "Monatsgebühren · Ohne Umsatzsteuer",
+      "mode:consignment_fee:vatOre": "Monatsgebühren · Umsatzsteuer",
+      "mode:consignment_fee_reversal:grossOre": "Gebühr stornieren · Gebühr in Geschäftswährung",
+      "mode:consignment_fee_reversal:netOre": "Gebühr stornieren · Ohne Umsatzsteuer",
+      "mode:consignment_fee_reversal:vatOre": "Gebühr stornieren · Umsatzsteuer"
     },
     "netOf": "netto",
     "vatOf": "MwSt.",
@@ -1698,7 +1712,9 @@
     "matches": "Treffer: {count}",
     "noMatches": "Keine Artikel entsprechen der Suche im gewählten Status.",
     "searchScopeHint": "Die Filter betreffen nur die Liste. Die Preissenkungen gelten für das gesamte Geschäft.",
-    "storeMarkdowns": "Preissenkungen im gesamten Geschäft"
+    "storeMarkdowns": "Preissenkungen im gesamten Geschäft",
+    "recycle": "Recycling",
+    "collectionDeadline": "Abholen bis"
   },
   "openByReference": {
     "title": "Über Etikett öffnen",
@@ -1909,7 +1925,8 @@
     "endedAs": {
       "charity": "für wohltätige Zwecke gespendet",
       "return": "an Sie zurückgegeben",
-      "transfer": "in einen anderen Store der Kette verschoben"
+      "transfer": "in einen anderen Store der Kette verschoben",
+      "recycle": "recycelt"
     },
     "title": "Meine Verkäufe",
     "empty": "Kein Einlieferer entspricht Ihrer bestätigten E-Mail-Adresse. Wenden Sie sich an den Store, falls ein Konto fehlt.",
@@ -1960,7 +1977,8 @@
       "INVALID_INPUT": "Gib einen Betrag größer als null mit höchstens zwei Nachkommastellen ein.",
       "PAYOUT_BELOW_THRESHOLD": "Der Betrag liegt unter dem Mindestbetrag des Ladens.",
       "PAYOUT_EXCEEDS_BALANCE": "Der Betrag übersteigt dein verfügbares Guthaben. Prüfe den oben angezeigten Betrag."
-    }
+    },
+    "collectionDeadline": "Abholen bis"
   },
   "plans": {
     "heading": "Plan",
@@ -3500,5 +3518,33 @@
       "ambiguous": "Mehrere Verkäufer haben diese E-Mail. Komisio-ID angeben.",
       "conflict": "Verkäufer-ID und E-Mail stimmen nicht überein."
     }
+  },
+  "consignmentFees": {
+    "title": "Monatsgebühren",
+    "enabled": "Monatliche Gebühr je Verkäufer aktivieren",
+    "amount": "Gebühr in Geschäftswährung",
+    "vatBasis": "Umsatzsteuerbasis des Betrags",
+    "vatRate": "Umsatzsteuer der Gebühr (%)",
+    "collection": "Zahlungsart",
+    "balance": "Vom Verkäuferguthaben abziehen",
+    "separate": "Separate Zahlung an der Kasse",
+    "net": "Ohne Umsatzsteuer",
+    "vat": "Umsatzsteuer",
+    "reference": "Belegreferenz",
+    "reason": "Korrekturgrund",
+    "pay": "Zahlung erfassen",
+    "reverse": "Gebühr stornieren",
+    "accrue": "Fällige Gebühren aktualisieren",
+    "saved": "Gespeichert",
+    "confirmPayment": "Ich bestätige die Zahlung der Gebühr an der Kasse.",
+    "confirmReversal": "Ich bestätige die vollständige Stornierung der Gebühr.",
+    "status": {
+      "deducted": "Vom Guthaben abgezogen",
+      "unpaid": "Unbezahlt",
+      "paid": "Bezahlt",
+      "reversed": "Storniert"
+    },
+    "help": "Jeder angefangene Monat wird ab Abgabe voll berechnet. Alle Abgaben eines Verkäufers teilen einen Gebührenzeitraum. Abzüge können ein negatives Guthaben erzeugen. Wählen Sie die Steuer der Gebühr getrennt von der Warensteuer. Bedingungen gelten für neue Gebührenzeiträume.",
+    "historyHelp": "Gebühren verlängern sich automatisch, solange aktive Artikel nach dem Gebührenmonat enden. Der Endzeitpunkt gehört nicht zum Gebührenmonat."
   }
 }

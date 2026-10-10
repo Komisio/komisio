@@ -13,6 +13,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
   const [locked, setLocked] = useState(false)
   const [error, setError] = useState('')
   const [needsReload, setNeedsReload] = useState(false)
+  const [returnUnavailable, setReturnUnavailable] = useState(false)
   async function run(input: unknown): Promise<string | null> {
     if (running.current || needsReload) return null
     const command = intakeCommand.safeParse(pending.current ?? input)
@@ -49,6 +50,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
             'SALE_LINE_NOT_FOUND',
           ].includes(result.error)
         ) {
+          setReturnUnavailable(true)
           setNeedsReload(true)
           setError(d.recordChanged)
           return null
@@ -209,5 +211,5 @@ export function useIntakeAction(d: Dictionary['intake']) {
       setBusy(false)
     }
   }
-  return { run, busy, locked, error, needsReload }
+  return { run, busy, locked, error, needsReload, returnUnavailable }
 }

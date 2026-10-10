@@ -1508,6 +1508,24 @@
       "providerHint": "Direkte tilkobling til regnskapssystemet.",
       "notConnected": "Ikke tilkoblet",
       "planningHint": "Se hvordan Komisio og kassasystemet kan dele regnskapsoppgavene. Veiledningen endrer ingen innstillinger."
+    },
+    "dayCloseAutomation": {
+      "heading": "Automatiske dagsoppgjør",
+      "hint": "Klargjør avsluttede dager hver morgen.",
+      "enable": "Slå på",
+      "disable": "Slå av",
+      "enabled": "På",
+      "waiting": "På – venter på første kjøring",
+      "off": "Av",
+      "notConfigured": "Automatiske dagsoppgjør er ikke tilgjengelige ennå.",
+      "ownerOnly": "Bare butikkeieren kan slå på dette.",
+      "busy": "Lagrer…",
+      "failed": "Innstillingen kunne ikke bekreftes. Last inn siden på nytt før du prøver igjen.",
+      "help": "Om automatiske dagsoppgjør",
+      "helpScope": "Oppsummerer registrerte salg, returer og utbetalinger. Eksport og overføring til regnskapssystem gjøres separat.",
+      "helpDates": "Starter med dagen du slår på funksjonen, etter svensk tid. De siste sju dagene kontrolleres på nytt for sene endringer. Eldre endringer håndteres under Avstemming.",
+      "preparedThrough": "Kontrollert til og med",
+      "catchingUp": "Flere dager klargjøres ved neste kjøring"
     }
   },
   "communications": {

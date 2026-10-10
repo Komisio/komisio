@@ -15,12 +15,12 @@ select ok(not has_table_privilege('authenticated','public.seller_ai_attempts','S
 select ok(not has_table_privilege('authenticated','public.seller_ai_results','SELECT'),'seller AI results cannot be read directly');
 -- Helpers for the dynamic sweep, created by the superuser before switching role.
 -- A table the role may not read at all counts as zero visible rows.
-create function pg_temp.tenant_rows(p_table text,p_tenant uuid) returns bigint language plpgsql as $$
-declare n bigint; begin execute format('select count(*) from public.%I where tenant_id=$1',p_table) into n using p_tenant; return n;
--- The planner may call this before the tenant_id filter; a table without the column counts as zero.
+create function pg_temp.tenant_rows(p_table regclass,p_tenant uuid) returns bigint language plpgsql as $$
+declare n bigint; begin execute format('select count(*) from %s where tenant_id=$1',p_table) into n using p_tenant; return n;
+-- The planner may call this before namespace/column filters. Keep the actual relation identity; a table without tenant_id counts as zero.
 exception when insufficient_privilege or undefined_column then return 0; end $$;
-create function pg_temp.all_rows(p_table text) returns bigint language plpgsql as $$
-declare n bigint; begin execute format('select count(*) from public.%I',p_table) into n; return n;
+create function pg_temp.all_rows(p_table regclass) returns bigint language plpgsql as $$
+declare n bigint; begin execute format('select count(*) from %s',p_table) into n; return n;
 exception when insufficient_privilege then return 0; end $$;
 -- Tenant A with rows in as many tables as the fixtures reach.
 insert into auth.users(id,email,email_confirmed_at) values
@@ -53,13 +53,13 @@ select register_printer(current_setting('test.a')::uuid,gen_random_uuid(),'Count
 select propose_operation(current_setting('test.a')::uuid,gen_random_uuid(),'updateStoreProfile',jsonb_build_object('expectedCurrentId',current_setting('test.profile'),'profile','{"address":{"street":"","postalCode":"","city":"Stockholm"},"contact":{"email":"","phone":"","website":""},"openingHours":[],"accepts":"","concept":"Proposed","language":"sv"}'::jsonb),'agent',now()+interval '1 day');
 -- Coverage: how many tenant-scoped tables hold at least one row of A now.
 reset role;
-select set_config('test.covered',(select count(*)::text from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public' and c.relkind='r' and exists(select 1 from pg_attribute a where a.attrelid=c.oid and a.attname='tenant_id' and not a.attisdropped) and pg_temp.tenant_rows(c.relname,current_setting('test.a')::uuid)>0),true);
+select set_config('test.covered',(select count(*)::text from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public' and c.relkind='r' and exists(select 1 from pg_attribute a where a.attrelid=c.oid and a.attname='tenant_id' and not a.attisdropped) and pg_temp.tenant_rows(c.oid::regclass,current_setting('test.a')::uuid)>0),true);
 select cmp_ok(current_setting('test.covered')::int,'>=',28,'the fixture reaches at least 28 tenant-scoped tables ('||current_setting('test.covered')||')');
 -- Tenant B's owner sees nothing of A in any tenant-scoped table.
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000342","role":"authenticated"}';
 select set_config('test.b',create_tenant('Isolation B','isolation-b',gen_random_uuid())::text,true);
-select is(pg_temp.tenant_rows(c.relname,current_setting('test.a')::uuid),0::bigint,'tenant B sees no rows of A in '||c.relname)
+select is(pg_temp.tenant_rows(c.oid::regclass,current_setting('test.a')::uuid),0::bigint,'tenant B sees no rows of A in '||c.relname)
  from pg_class c join pg_namespace n on n.oid=c.relnamespace
  where n.nspname='public' and c.relkind='r' and exists(select 1 from pg_attribute a where a.attrelid=c.oid and a.attname='tenant_id' and not a.attisdropped)
  order by c.relname;
@@ -70,7 +70,7 @@ select throws_ok($$select settlement_candidates(current_setting('test.a')::uuid)
 select throws_ok($$select * from operation_queue_filtered_page(current_setting('test.a')::uuid,'all',null,null,null)$$,'42501',null,'B cannot read the operations queue of A');
 -- Anonymous sessions see no row of any table at all.
 set local role anon;
-select is(pg_temp.all_rows(c.relname),0::bigint,'anon sees no rows in '||c.relname)
+select is(pg_temp.all_rows(c.oid::regclass),0::bigint,'anon sees no rows in '||c.relname)
  from pg_class c join pg_namespace n on n.oid=c.relnamespace
  where n.nspname='public' and c.relkind='r' and c.relname not in ('tenants','user_profiles')
  order by c.relname;

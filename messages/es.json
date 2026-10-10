@@ -1508,6 +1508,24 @@
       "providerHint": "Conexión directa con tu sistema contable.",
       "notConnected": "Sin conexión",
       "planningHint": "Consulta cómo Komisio y tu TPV pueden repartirse la contabilidad. La guía no modifica los ajustes."
+    },
+    "dayCloseAutomation": {
+      "heading": "Cierres diarios automáticos",
+      "hint": "Prepara los días completos cada mañana.",
+      "enable": "Activar",
+      "disable": "Desactivar",
+      "enabled": "Activado",
+      "waiting": "Activado – esperando la primera ejecución",
+      "off": "Desactivado",
+      "notConfigured": "Los cierres diarios automáticos aún no están disponibles.",
+      "ownerOnly": "Solo el propietario de la tienda puede activar esta opción.",
+      "busy": "Guardando…",
+      "failed": "No se pudo confirmar el ajuste. Recarga la página antes de volver a intentarlo.",
+      "help": "Acerca de los cierres diarios automáticos",
+      "helpScope": "Resume las ventas, devoluciones y pagos a vendedores registrados. La exportación y el envío al sistema contable se realizan por separado.",
+      "helpDates": "Comienza el día de la activación, según la hora sueca. Se revisan los últimos siete días para detectar cambios tardíos. Gestiona los cambios anteriores en Conciliación.",
+      "preparedThrough": "Revisado hasta",
+      "catchingUp": "Se prepararán más días en la próxima ejecución"
     }
   },
   "communications": {

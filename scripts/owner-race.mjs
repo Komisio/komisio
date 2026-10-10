@@ -5,6 +5,7 @@ import {
 import { raceAgreementAssistance } from './agreement-assistance-race.mjs'
 import { raceSellerAgreement } from './seller-agreement-race.mjs'
 import { raceStocktake } from './stocktake-race.mjs'
+import { raceDayCloseAutomation } from './day-close-automation-race.mjs'
 import { raceBagProcessing } from './bag-processing-race.mjs'
 import { raceShopifySettings } from './shopify-settings-race.mjs'
 import { raceShopifyPrivacy } from './shopify-privacy-race.mjs'
@@ -72,6 +73,7 @@ try {
   await raceSellerAgreement({ setup, connectionString: parsed.toString() })
   await raceBagProcessing({ setup, connectionString: parsed.toString() })
   await raceStocktake({ setup, connectionString: parsed.toString() })
+  await raceDayCloseAutomation({ setup, connectionString: parsed.toString() })
   await raceZettleStock({ setup, connectionString: parsed.toString() })
   await raceZettleImage({ setup, connectionString: parsed.toString() })
   await raceZettlePull({ setup, connectionString: parsed.toString() })

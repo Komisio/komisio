@@ -25,6 +25,7 @@ import { FortnoxVoucherSend } from '@/components/intake/fortnox-voucher-send'
 import { FortnoxReconcile } from '@/components/intake/fortnox-reconcile'
 import { readFortnoxSends } from '@/lib/engine/fortnox-vouchers'
 import { readAutomaticFortnoxStatus } from '@/lib/engine/fortnox-automation'
+import { readAutomaticDayCloseStatus } from '@/lib/engine/day-close-automation'
 import { automationIdentity, readAutomation } from '@/lib/engine/automation'
 import { AutomationSwitch } from '@/components/intake/automation-switch'
 import { currentMonthPeriod, economyPeriod } from '@/lib/engine/economy'
@@ -67,6 +68,10 @@ export default async function Accounting({
   const automatic =
     view === 'settings'
       ? await readAutomaticFortnoxStatus(ctx.client, active.id)
+      : null
+  const automaticCloses =
+    view === 'settings' && ['owner', 'admin'].includes(active.role)
+      ? await readAutomaticDayCloseStatus(ctx.client, active.id)
       : null
   const grants =
     view === 'settings' && ['owner', 'admin'].includes(active.role)
@@ -398,6 +403,38 @@ export default async function Accounting({
       {view === 'settings' && (
         <>
           <div className="accounting-settings">
+            {['owner', 'admin'].includes(active.role) && (
+              <div id="day-close-automation">
+                <AutomationSwitch
+                  key={`day-close-${active.id}`}
+                  tenantId={active.id}
+                  scope="day_close"
+                  grants={grants}
+                  configured={
+                    !!automationIdentity() &&
+                    automaticCloses?.available === true &&
+                    grants !== null
+                  }
+                  canEdit={active.role === 'owner'}
+                  t={d.dayCloseAutomation}
+                  help={{
+                    label: d.dayCloseAutomation.help,
+                    steps: [
+                      d.dayCloseAutomation.helpScope,
+                      d.dayCloseAutomation.helpDates,
+                    ],
+                  }}
+                  lastRun={
+                    automaticCloses?.run?.through
+                      ? {
+                          grantId: automaticCloses.run.grantId,
+                          text: `${d.dayCloseAutomation.preparedThrough} ${new Intl.DateTimeFormat(intlLocale(ctx.locale), { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(`${automaticCloses.run.through}T12:00:00Z`))}${automaticCloses.run.outcome === 'partial' ? ` · ${d.dayCloseAutomation.catchingUp}` : ''}`,
+                        }
+                      : null
+                  }
+                />
+              </div>
+            )}
             <section
               id="accounting-systems"
               aria-label={d.systems}

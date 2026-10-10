@@ -945,3 +945,4 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-10-08: Google Ads acquisition measurement is opt-in and disabled without configuration. Only successful store creation emits a deduplicated registration event; seller/account sign-ups and failed requests do not. Never send names, email, tenant IDs or authentication URLs.
 - 2026-10-09: An authenticated seller may accept the current agreement for their uniquely linked store account. Immutable evidence records version, actor, email and time with seller-portal provenance. Retries deduplicate; stale versions fail; existing store agreement gates remain in force.
+- 2026-10-10: Owners may enable day-close automation for completed Stockholm days from activation. Bounded runs preserve immutable versions and retry progress, revisiting recent days. This scope grants neither export creation nor provider sending.

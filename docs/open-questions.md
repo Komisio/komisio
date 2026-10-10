@@ -51,8 +51,12 @@ Confirm which aggregate and per-mode keys belong in each approved posting profil
 the planning view surfaces both facts without changing existing export behavior.
 The owner requests minimal daily involvement: setup guidance starts with whether
 the POS already posts sales and folds accounting details. Existing Fortnox
-automation sends recorded exports; automatic close/export generation and
-complementary posting are not delivered or implied by this release.
+automation sends recorded exports. Owner-enabled automatic day-close preparation
+now reuses existing totals for completed Stockholm days from activation, with
+bounded catch-up and recent-day rechecks. Automatic export generation and
+complementary posting remain unresolved; this scope grants neither. Hosted
+scheduled execution and a real store's accountant-reviewed workflow still need
+acceptance verification.
 
 Manual plan end dates (2026-10-03): should host activation through a selected
 calendar date expire at the end of that date in Europe/Stockholm, in the store

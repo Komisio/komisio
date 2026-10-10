@@ -11,6 +11,7 @@ export const automationScopes = [
   'fortnox_send',
   'weekly_brief',
   'shopify_pull',
+  'day_close',
 ] as const
 export type AutomationScope = (typeof automationScopes)[number]
 export const automationGrant = z.object({

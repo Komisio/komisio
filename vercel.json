@@ -3,6 +3,10 @@
   "regions": ["arn1"],
   "crons": [
     {
+      "path": "/api/automation/day-closes",
+      "schedule": "45 6 * * *"
+    },
+    {
       "path": "/api/automation/fortnox-send",
       "schedule": "0 7 * * *"
     },

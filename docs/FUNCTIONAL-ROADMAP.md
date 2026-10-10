@@ -35,6 +35,11 @@ Unchecked items are distinct from missing or damaged items. Closing freezes the
 observed discrepancies and stock changes, without creating sales, seller-balance
 adjustments or lifecycle events. Financial handling of losses remains undecided.
 
+Owners can opt into daily preparation of completed day closes using existing
+accounting totals. Recent late entries produce new immutable close versions;
+bounded runs retain catch-up progress. This does not create exports, send
+vouchers or activate the proposed complementary POS accounting profiles.
+
 Production also has complete platform vocabulary labels in all eight supported
 languages, clearer payout-list and request placement, and economy totals
 before secondary reports on mobile. Statement dates use completed Stockholm

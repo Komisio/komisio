@@ -1508,6 +1508,24 @@
       "providerHint": "Direktanslutning till ditt bokföringssystem.",
       "notConnected": "Inte ansluten",
       "planningHint": "Se hur Komisio och ditt kassasystem kan dela på bokföringen. Guiden ändrar inga inställningar."
+    },
+    "dayCloseAutomation": {
+      "heading": "Automatiska dagsavslut",
+      "hint": "Förbered färdiga dagar varje morgon.",
+      "enable": "Slå på",
+      "disable": "Stäng av",
+      "enabled": "På",
+      "waiting": "På – väntar på första körningen",
+      "off": "Av",
+      "notConfigured": "Automatiska dagsavslut är inte tillgängliga ännu.",
+      "ownerOnly": "Bara butikens ägare kan slå på detta.",
+      "busy": "Sparar…",
+      "failed": "Inställningen kunde inte bekräftas. Ladda om sidan innan du försöker igen.",
+      "help": "Om automatiska dagsavslut",
+      "helpScope": "Sammanställer butikens registrerade försäljningar, returer och utbetalningar. Export och överföring till bokföringssystem görs separat.",
+      "helpDates": "Börjar med dagen du slår på funktionen, enligt svensk tid. De senaste sju dagarna kontrolleras igen för sena ändringar. Äldre ändringar hanteras under Avstämning.",
+      "preparedThrough": "Kontrollerat till och med",
+      "catchingUp": "Fler dagar förbereds vid nästa körning"
     }
   },
   "communications": {

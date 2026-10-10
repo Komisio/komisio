@@ -68,7 +68,9 @@ The queue contains at most 100 exports with no send history or exclusively
 remain excluded. Each send obtains its own fresh engine dispatch claim; concurrent
 workers cannot bypass it. One failure stops that store. After 200 seconds no
 further send starts; remaining exports wait for another run. A full 100-entry
-batch is conservatively reported as partial. Day closes remain manual.
+batch is conservatively reported as partial. Owners may separately enable
+[automatic day-close preparation](ACCOUNTING-EXPORT.md#automatic-preparation).
+Accounting exports still require an explicit action; neither scope creates them.
 
 Run summaries are replay-safe append-only access events carrying a bounded sent
 count and complete/partial/failed outcome, never provider bodies or credentials.

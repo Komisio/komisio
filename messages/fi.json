@@ -1508,6 +1508,24 @@
       "providerHint": "Suora yhteys kirjanpitojärjestelmään.",
       "notConnected": "Ei yhdistetty",
       "planningHint": "Katso, miten Komisio ja kassajärjestelmä voivat jakaa kirjanpitotehtävät. Opas ei muuta asetuksia."
+    },
+    "dayCloseAutomation": {
+      "heading": "Automaattiset päiväyhteenvedot",
+      "hint": "Valmistele päättyneet päivät joka aamu.",
+      "enable": "Ota käyttöön",
+      "disable": "Poista käytöstä",
+      "enabled": "Käytössä",
+      "waiting": "Käytössä – odottaa ensimmäistä ajoa",
+      "off": "Ei käytössä",
+      "notConfigured": "Automaattiset päiväyhteenvedot eivät ole vielä saatavilla.",
+      "ownerOnly": "Vain kaupan omistaja voi ottaa tämän käyttöön.",
+      "busy": "Tallennetaan…",
+      "failed": "Asetusta ei voitu vahvistaa. Lataa sivu uudelleen ennen uutta yritystä.",
+      "help": "Tietoa automaattisista päiväyhteenvedoista",
+      "helpScope": "Kokoaa kirjatut myynnit, palautukset ja tilitykset. Vienti ja siirto kirjanpitojärjestelmään tehdään erikseen.",
+      "helpDates": "Alkaa käyttöönottopäivästä Ruotsin ajan mukaan. Viimeiset seitsemän päivää tarkistetaan uudelleen myöhäisten muutosten varalta. Vanhemmat muutokset käsitellään täsmäytyksessä.",
+      "preparedThrough": "Tarkistettu päivään",
+      "catchingUp": "Lisää päiviä valmistellaan seuraavalla ajolla"
     }
   },
   "communications": {

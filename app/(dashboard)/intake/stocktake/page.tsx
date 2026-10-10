@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { requirePlatform } from '@/lib/platform/context'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
@@ -31,12 +31,18 @@ export default async function Stocktake({
     d = dictionary(ctx.locale),
     s = d.stocktake,
     params = await searchParams
-  const sessions = await readStocktakeSessions(ctx.client, active.id)
+  const historyPage =
+    z.coerce.number().int().min(1).max(100000).safeParse(params.historyPage)
+      .data ?? 1
+  const history = await readStocktakeSessions(
+    ctx.client,
+    active.id,
+    historyPage,
+  )
+  const sessions = history.rows
   const requested = z.uuid().safeParse(params.session)
   if (params.session && !requested.success) notFound()
-  const selected = requested.success
-    ? requested.data
-    : sessions.find((s) => !s.closed)?.id
+  const selected = requested.success ? requested.data : history.activeId
   const filter = stocktakeFilter.safeParse(params.filter).data ?? 'all'
   const page =
     z.coerce.number().int().min(1).max(20001).safeParse(params.page).data ?? 1
@@ -51,8 +57,17 @@ export default async function Stocktake({
     : null
   if (selected && !report) notFound()
   const readonly = active.role === 'readonly'
+  const historyPages = Math.max(1, Math.ceil(history.total / 20))
+  const historyLink = (
+    target: number,
+    session = selected,
+    f: string = filter,
+    itemPage = page,
+  ) =>
+    `/intake/stocktake?${new URLSearchParams({ ...(session ? { session } : {}), filter: f, page: String(itemPage), historyPage: String(target) })}`
+  if (historyPage > historyPages) redirect(historyLink(historyPages))
   const link = (f: string = filter, p: number = 1) =>
-    `/intake/stocktake?session=${selected}&filter=${f}&page=${p}`
+    historyLink(historyPage, selected, f, p)
   return (
     <div className="stack stocktake-page">
       <div className="page-heading">
@@ -72,7 +87,7 @@ export default async function Stocktake({
             <h2>{report.closed ? s.closed : s.open}</h2>
             {report.closed && (
               <Link className="text-link" href="/intake/stocktake">
-                {sessions.some((s) => !s.closed) ? s.open : s.start}
+                {history.activeId ? s.open : s.start}
               </Link>
             )}
           </div>
@@ -183,14 +198,15 @@ export default async function Stocktake({
         </StocktakeWorkspace>
       )}
       {sessions.length > 0 && (
-        <details>
+        <details className="stocktake-session-history" open={historyPage > 1}>
           <summary>{s.recent}</summary>
           <ul>
             {sessions.map((session) => (
               <li key={session.id}>
                 <Link
                   className="text-link"
-                  href={`/intake/stocktake?session=${session.id}`}
+                  href={historyLink(historyPage, session.id, 'all', 1)}
+                  aria-current={session.id === selected ? 'page' : undefined}
                 >
                   <EventTime value={session.at} locale={ctx.locale} /> ·{' '}
                   {session.closed ? s.closed : s.open}
@@ -198,6 +214,23 @@ export default async function Stocktake({
               </li>
             ))}
           </ul>
+          {historyPages > 1 && (
+            <nav className="row wrap" aria-label={s.recent}>
+              {historyPage > 1 && (
+                <Link className="text-link" href={historyLink(historyPage - 1)}>
+                  {s.previous}
+                </Link>
+              )}
+              <span>
+                {historyPage} / {historyPages}
+              </span>
+              {historyPage < historyPages && (
+                <Link className="text-link" href={historyLink(historyPage + 1)}>
+                  {s.next}
+                </Link>
+              )}
+            </nav>
+          )}
         </details>
       )}
     </div>

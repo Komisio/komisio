@@ -78,12 +78,20 @@ export const stocktakeFilter = z.enum(['all', 'unchecked', 'deviations'])
 export async function readStocktakeSessions(
   client: SupabaseClient,
   tenant: string,
+  page = 1,
 ) {
-  const result = await client.rpc('stocktake_sessions_page', {
+  const result = await client.rpc('stocktake_session_history', {
     p_tenant: z.uuid().parse(tenant),
+    p_offset: (z.number().int().min(1).max(100000).parse(page) - 1) * 20,
   })
   if (result.error) throw new Error('Unable to read stocktake sessions')
-  return z.array(session).max(20).parse(result.data)
+  return z
+    .object({
+      rows: z.array(session).max(20),
+      total: z.number().int().nonnegative(),
+      activeId: z.uuid().nullable(),
+    })
+    .parse(result.data)
 }
 export async function readStocktake(
   client: SupabaseClient,

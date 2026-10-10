@@ -258,7 +258,8 @@
     "bagCompleted": "This drop-off is completed. Reopen it to continue.",
     "stocktakeAmbiguous": "The code matches several items. Open the correct item and use its full ID.",
     "stocktakeItemMissing": "This item was not found in this store.",
-    "stocktakePending": "Check the remaining items before finishing."
+    "stocktakePending": "Check the remaining items before finishing.",
+    "collectionNotDue": "The collection deadline has not passed."
   },
   "brand": "Komisio",
   "tagline": "More room for things to live again.",
@@ -1038,7 +1039,12 @@
     "sectionPeriod": "Sale period and markdowns",
     "sectionAi": "AI and item text",
     "sectionLinks": "Store policy shortcuts",
-    "layoutIntro": "Set up your store’s workflow and terms. Review your changes and publish them together at the bottom."
+    "layoutIntro": "Set up your store’s workflow and terms. Review your changes and publish them together at the bottom.",
+    "consignmentCalendar": "Calendar sale period",
+    "consignmentCalendarEnabled": "Count calendar months from receipt",
+    "consignmentCalendarHelp": "Applies to new consignment receipts. Replaces the day-based period for those items; existing receipts keep their terms. Unsold items are to be collected. Staff records actual collection or recycling after the deadline.",
+    "consignmentMonths": "Months for sale",
+    "collectionDays": "Days allowed for collection"
   },
   "sellerTerms": {
     "title": "Seller terms",
@@ -1229,7 +1235,9 @@
       "payout_paid": "Payout paid",
       "payout_released": "Reservation released",
       "booking_charge": "Booking charge",
-      "adjustment": "Adjustment"
+      "adjustment": "Adjustment",
+      "consignment_fee": "Monthly fees",
+      "consignment_fee_reversal": "Reverse fee"
     },
     "adjustHeading": "Adjust the ledger",
     "adjustHint": "Owner or admin only. A correction is a new entry with a reason; nothing is edited.",
@@ -1464,7 +1472,13 @@
       "commissionVatOre": "VAT on commission",
       "sellerCreditOre": "Seller credit (liability to sellers)",
       "creditReversedOre": "Seller credit reversed",
-      "payoutsPaidOre": "Payouts paid"
+      "payoutsPaidOre": "Payouts paid",
+      "mode:consignment_fee:grossOre": "Monthly fees · Fee in store currency",
+      "mode:consignment_fee:netOre": "Monthly fees · Excluding VAT",
+      "mode:consignment_fee:vatOre": "Monthly fees · VAT",
+      "mode:consignment_fee_reversal:grossOre": "Reverse fee · Fee in store currency",
+      "mode:consignment_fee_reversal:netOre": "Reverse fee · Excluding VAT",
+      "mode:consignment_fee_reversal:vatOre": "Reverse fee · VAT"
     },
     "netOf": "net",
     "vatOf": "VAT",
@@ -1698,7 +1712,9 @@
     "matches": "Matches: {count}",
     "noMatches": "No items match the search in the selected status.",
     "searchScopeHint": "Filters only affect the list. The markdown run applies to the whole store.",
-    "storeMarkdowns": "Store-wide markdowns"
+    "storeMarkdowns": "Store-wide markdowns",
+    "recycle": "Recycle",
+    "collectionDeadline": "Collect by"
   },
   "openByReference": {
     "title": "Open by label",
@@ -1909,7 +1925,8 @@
     "endedAs": {
       "charity": "donated to charity",
       "return": "returned to you",
-      "transfer": "moved to another store in the chain"
+      "transfer": "moved to another store in the chain",
+      "recycle": "recycled"
     },
     "title": "My sales",
     "empty": "No seller matches your verified email. Contact the store if an account is missing.",
@@ -1960,7 +1977,8 @@
       "INVALID_INPUT": "Enter an amount greater than zero with no more than two decimal places.",
       "PAYOUT_BELOW_THRESHOLD": "The amount is below the store’s minimum.",
       "PAYOUT_EXCEEDS_BALANCE": "The amount exceeds your available balance. Check the balance above."
-    }
+    },
+    "collectionDeadline": "Collect by"
   },
   "plans": {
     "heading": "Plan",
@@ -3484,5 +3502,33 @@
       "ambiguous": "Several sellers share this email. Enter the Komisio ID.",
       "conflict": "The seller ID and email do not match."
     }
+  },
+  "consignmentFees": {
+    "title": "Monthly fees",
+    "enabled": "Enable a monthly fee per seller",
+    "amount": "Fee in store currency",
+    "vatBasis": "Amount VAT basis",
+    "vatRate": "Fee VAT (%)",
+    "collection": "Collection method",
+    "balance": "Deduct from seller balance",
+    "separate": "Separate payment at checkout",
+    "net": "Excluding VAT",
+    "vat": "VAT",
+    "reference": "Receipt reference",
+    "reason": "Correction reason",
+    "pay": "Record payment",
+    "reverse": "Reverse fee",
+    "accrue": "Update due fees",
+    "saved": "Saved",
+    "confirmPayment": "I confirm this fee was paid at checkout.",
+    "confirmReversal": "I confirm reversal of the full fee.",
+    "status": {
+      "deducted": "Deducted from balance",
+      "unpaid": "Unpaid",
+      "paid": "Paid",
+      "reversed": "Reversed"
+    },
+    "help": "Every started month is charged in full from delivery. All deliveries for a seller share a billing period. Deductions can create a negative balance. Select fee VAT separately from goods VAT. Terms apply to new billing periods.",
+    "historyHelp": "Fees renew automatically while active items end after the billing month. The end timestamp is excluded from the billing month."
   }
 }

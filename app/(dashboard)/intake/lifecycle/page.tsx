@@ -221,6 +221,12 @@ export default async function Lifecycle({
                     ? ` · ${d.due.replace('{step}', String(r.due_step)).replace('{percent}', String(r.due_percent))}`
                     : ''}
                 </p>
+                {r.collection_deadline &&
+                  !['sold', 'ended'].includes(r.stage) && (
+                    <p>
+                      {d.collectionDeadline} {when(r.collection_deadline)}
+                    </p>
+                  )}
                 {write && !['sold', 'ended'].includes(r.stage) && (
                   <LifecycleActions
                     key={`${r.item_id}-${r.stage}-${r.due_step ?? 0}`}
@@ -228,6 +234,8 @@ export default async function Lifecycle({
                     itemId={r.item_id}
                     dueStep={r.due_step}
                     endOfPeriodAction={r.end_of_period_action}
+                    collectionDeadline={r.collection_deadline}
+                    collectionDue={r.collection_due === true}
                     d={d}
                     intake={all.intake}
                   />

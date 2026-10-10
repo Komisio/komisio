@@ -61,6 +61,8 @@ export function useIntakeAction(d: Dictionary['intake']) {
         }
         const definitive = [
           'STOCKTAKE_AMBIGUOUS',
+          'COLLECTION_NOT_DUE',
+          'FEE_DECIDED',
           'INVALID_INPUT',
           'AGREEMENT_CHANGED',
           'POLICY_CHANGED',
@@ -98,6 +100,8 @@ export function useIntakeAction(d: Dictionary['intake']) {
             'BAG_PROCESSING_CHANGED',
             'BAG_COMPLETED',
             'POLICY_CHANGED',
+            'FEE_DECIDED',
+            'FEE_NOT_FOUND',
             'PROFILE_CHANGED',
             'SELLER_TERMS_CHANGED',
             'MAP_CHANGED',
@@ -114,62 +118,64 @@ export function useIntakeAction(d: Dictionary['intake']) {
         )
           setNeedsReload(true)
         setError(
-          result.error === 'STOCKTAKE_AMBIGUOUS'
-            ? d.stocktakeAmbiguous
-            : stocktakeItemMissing
-              ? d.stocktakeItemMissing
-              : result.error === 'STOCKTAKE_PENDING'
-                ? d.stocktakePending
-                : [
-                      'STOCKTAKE_OPEN',
-                      'STOCKTAKE_CHANGED',
-                      'STOCKTAKE_CLOSED',
-                      'STOCKTAKE_NOT_FOUND',
-                    ].includes(result.error)
-                  ? d.recordChanged
-                  : result.error === 'BAG_PENDING_WORK'
-                    ? d.bagPendingWork
-                    : result.error === 'BAG_COMPLETED'
-                      ? d.bagCompleted
-                      : result.error === 'BAG_PROCESSING_CHANGED'
-                        ? d.recordChanged
-                        : [
-                              'INSPECTION_ARCHIVED',
-                              'INSPECTION_STATUS_UNCHANGED',
-                              'INSPECTION_NOT_FOUND',
-                            ].includes(result.error)
-                          ? d.inspectionUnavailable
-                          : result.error === 'INSPECTION_DRAFT_CHANGED'
-                            ? d.inspectionChanged
-                            : result.error === 'INSPECTION_CONTEXT_CHANGED'
-                              ? d.changed
-                              : [
-                                    'PROFILE_CHANGED',
-                                    'SELLER_TERMS_CHANGED',
-                                    'MAP_CHANGED',
-                                    'PAYOUT_NOT_REQUESTED',
-                                    'PAYOUT_NOT_APPROVED',
-                                    'PAYOUT_CHANGED',
-                                    'PAYOUT_DECIDED',
-                                  ].includes(result.error)
-                                ? d.recordChanged
-                                : result.error === 'AGREEMENT_CHANGED'
-                                  ? d.agreementChanged
-                                  : result.error === 'AGREEMENT_REQUIRED'
-                                    ? d.agreementRequired
-                                    : result.error === 'INVALID_INPUT'
-                                      ? d.invalid
-                                      : [
-                                            'TENANT_CHANGED',
-                                            'POLICY_CHANGED',
-                                          ].includes(result.error)
-                                        ? d.changed
+          result.error === 'COLLECTION_NOT_DUE'
+            ? d.collectionNotDue
+            : result.error === 'STOCKTAKE_AMBIGUOUS'
+              ? d.stocktakeAmbiguous
+              : stocktakeItemMissing
+                ? d.stocktakeItemMissing
+                : result.error === 'STOCKTAKE_PENDING'
+                  ? d.stocktakePending
+                  : [
+                        'STOCKTAKE_OPEN',
+                        'STOCKTAKE_CHANGED',
+                        'STOCKTAKE_CLOSED',
+                        'STOCKTAKE_NOT_FOUND',
+                      ].includes(result.error)
+                    ? d.recordChanged
+                    : result.error === 'BAG_PENDING_WORK'
+                      ? d.bagPendingWork
+                      : result.error === 'BAG_COMPLETED'
+                        ? d.bagCompleted
+                        : result.error === 'BAG_PROCESSING_CHANGED'
+                          ? d.recordChanged
+                          : [
+                                'INSPECTION_ARCHIVED',
+                                'INSPECTION_STATUS_UNCHANGED',
+                                'INSPECTION_NOT_FOUND',
+                              ].includes(result.error)
+                            ? d.inspectionUnavailable
+                            : result.error === 'INSPECTION_DRAFT_CHANGED'
+                              ? d.inspectionChanged
+                              : result.error === 'INSPECTION_CONTEXT_CHANGED'
+                                ? d.changed
+                                : [
+                                      'PROFILE_CHANGED',
+                                      'SELLER_TERMS_CHANGED',
+                                      'MAP_CHANGED',
+                                      'PAYOUT_NOT_REQUESTED',
+                                      'PAYOUT_NOT_APPROVED',
+                                      'PAYOUT_CHANGED',
+                                      'PAYOUT_DECIDED',
+                                    ].includes(result.error)
+                                  ? d.recordChanged
+                                  : result.error === 'AGREEMENT_CHANGED'
+                                    ? d.agreementChanged
+                                    : result.error === 'AGREEMENT_REQUIRED'
+                                      ? d.agreementRequired
+                                      : result.error === 'INVALID_INPUT'
+                                        ? d.invalid
                                         : [
-                                              'FORBIDDEN',
-                                              'AUTH_REQUIRED',
+                                              'TENANT_CHANGED',
+                                              'POLICY_CHANGED',
                                             ].includes(result.error)
-                                          ? d.denied
-                                          : d.failed,
+                                          ? d.changed
+                                          : [
+                                                'FORBIDDEN',
+                                                'AUTH_REQUIRED',
+                                              ].includes(result.error)
+                                            ? d.denied
+                                            : d.failed,
         )
         if (result.error === 'AGREEMENT_REQUIRED') router.refresh()
         return null

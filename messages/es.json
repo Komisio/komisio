@@ -258,7 +258,8 @@
     "bagCompleted": "Esta entrega está completada. Reábrela para continuar.",
     "stocktakeAmbiguous": "El código coincide con varios artículos. Abre el correcto y usa su ID completo.",
     "stocktakeItemMissing": "No se encontró el artículo en esta tienda.",
-    "stocktakePending": "Comprueba los artículos restantes antes de finalizar."
+    "stocktakePending": "Comprueba los artículos restantes antes de finalizar.",
+    "collectionNotDue": "El plazo de recogida aún no ha vencido."
   },
   "brand": "Komisio",
   "tagline": "Más espacio para que las cosas vuelvan a vivir.",
@@ -1038,7 +1039,12 @@
     "sectionPeriod": "Periodo de venta y rebajas",
     "sectionAi": "IA y textos de artículos",
     "sectionLinks": "Accesos a la política de la tienda",
-    "layoutIntro": "Adapta los procesos y las condiciones de la tienda. Revisa los cambios y publícalos juntos al final de la página."
+    "layoutIntro": "Adapta los procesos y las condiciones de la tienda. Revisa los cambios y publícalos juntos al final de la página.",
+    "consignmentCalendar": "Plazo de venta en meses naturales",
+    "consignmentCalendarEnabled": "Contar meses naturales desde la entrega",
+    "consignmentCalendarHelp": "Se aplica a nuevas entregas en consignación. Sustituye su plazo en días; las entregas anteriores conservan sus condiciones. Los artículos no vendidos deben recogerse. El personal registra la recogida real o el reciclaje tras vencer el plazo.",
+    "consignmentMonths": "Meses en venta",
+    "collectionDays": "Días para recoger"
   },
   "sellerTerms": {
     "title": "Condiciones del depositante",
@@ -1229,7 +1235,9 @@
       "payout_paid": "Pago pagado",
       "payout_released": "Reserva liberada",
       "booking_charge": "Cargo por registro",
-      "adjustment": "Ajuste"
+      "adjustment": "Ajuste",
+      "consignment_fee": "Cuotas mensuales",
+      "consignment_fee_reversal": "Anular cuota"
     },
     "adjustHeading": "Ajustar el libro",
     "adjustHint": "Solo propietario o administrador. Una corrección es un asiento nuevo con un motivo; no se edita nada.",
@@ -1464,7 +1472,13 @@
       "commissionVatOre": "IVA sobre la comisión",
       "sellerCreditOre": "Crédito del depositante (pasivo con los depositantes)",
       "creditReversedOre": "Crédito del depositante anulado",
-      "payoutsPaidOre": "Pagos pagados"
+      "payoutsPaidOre": "Pagos pagados",
+      "mode:consignment_fee:grossOre": "Cuotas mensuales · Cuota en la moneda de la tienda",
+      "mode:consignment_fee:netOre": "Cuotas mensuales · Sin IVA",
+      "mode:consignment_fee:vatOre": "Cuotas mensuales · IVA",
+      "mode:consignment_fee_reversal:grossOre": "Anular cuota · Cuota en la moneda de la tienda",
+      "mode:consignment_fee_reversal:netOre": "Anular cuota · Sin IVA",
+      "mode:consignment_fee_reversal:vatOre": "Anular cuota · IVA"
     },
     "netOf": "neto",
     "vatOf": "IVA",
@@ -1698,7 +1712,9 @@
     "matches": "Resultados: {count}",
     "noMatches": "Ningún artículo coincide con la búsqueda y el estado seleccionado.",
     "searchScopeHint": "Los filtros solo afectan a la lista. Las rebajas se aplican a toda la tienda.",
-    "storeMarkdowns": "Rebajas en toda la tienda"
+    "storeMarkdowns": "Rebajas en toda la tienda",
+    "recycle": "Reciclaje",
+    "collectionDeadline": "Recoger antes de"
   },
   "openByReference": {
     "title": "Abrir por etiqueta",
@@ -1909,7 +1925,8 @@
     "endedAs": {
       "charity": "donado a beneficencia",
       "return": "devuelto a ti",
-      "transfer": "trasladado a otra tienda de la cadena"
+      "transfer": "trasladado a otra tienda de la cadena",
+      "recycle": "reciclado"
     },
     "title": "Mis ventas",
     "empty": "Ningún depositante coincide con tu correo electrónico verificado. Contacta con la tienda si falta una cuenta.",
@@ -1960,7 +1977,8 @@
       "INVALID_INPUT": "Introduce un importe mayor que cero con un máximo de dos decimales.",
       "PAYOUT_BELOW_THRESHOLD": "El importe es inferior al mínimo de la tienda.",
       "PAYOUT_EXCEEDS_BALANCE": "El importe supera tu saldo disponible. Comprueba el saldo de arriba."
-    }
+    },
+    "collectionDeadline": "Recoger antes de"
   },
   "plans": {
     "heading": "Plan",
@@ -3490,5 +3508,33 @@
       "ambiguous": "Varios vendedores comparten este correo. Indica el ID de Komisio.",
       "conflict": "El ID del vendedor y su correo no coinciden."
     }
+  },
+  "consignmentFees": {
+    "title": "Cuotas mensuales",
+    "enabled": "Activar cuota mensual por vendedor",
+    "amount": "Cuota en la moneda de la tienda",
+    "vatBasis": "Base de IVA del importe",
+    "vatRate": "IVA de la cuota (%)",
+    "collection": "Forma de cobro",
+    "balance": "Descontar del saldo del vendedor",
+    "separate": "Pago separado en caja",
+    "net": "Sin IVA",
+    "vat": "IVA",
+    "reference": "Referencia del recibo",
+    "reason": "Motivo de la corrección",
+    "pay": "Registrar pago",
+    "reverse": "Anular cuota",
+    "accrue": "Actualizar cuotas vencidas",
+    "saved": "Guardado",
+    "confirmPayment": "Confirmo que la cuota se ha pagado en caja.",
+    "confirmReversal": "Confirmo la anulación de toda la cuota.",
+    "status": {
+      "deducted": "Descontada del saldo",
+      "unpaid": "Pendiente",
+      "paid": "Pagada",
+      "reversed": "Anulada"
+    },
+    "help": "Cada mes iniciado se cobra completo desde la entrega. Todas las entregas del vendedor comparten un período de cobro. Los descuentos pueden generar saldo negativo. Elija el IVA de la cuota por separado del IVA de los artículos. Las condiciones se aplican a nuevos períodos.",
+    "historyHelp": "Las cuotas se renuevan automáticamente mientras haya artículos activos cuyo plazo termine después del mes de cobro. El instante final no se incluye en el mes de cobro."
   }
 }

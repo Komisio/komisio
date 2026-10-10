@@ -10,6 +10,11 @@ import {
   initialSellerProfile,
 } from './seller-profile'
 import { publishStorePolicyCommand } from './store-policy'
+import {
+  recordConsignmentFeePaymentCommand,
+  reverseConsignmentFeeCommand,
+  accrueSellerConsignmentFeesCommand,
+} from './consignment-fees'
 import { publishSellerTermsCommand } from './seller-terms'
 import { acceptItemCommand } from './items'
 import { recordSaleCommand } from './sales'
@@ -60,6 +65,9 @@ import {
 import { locales, type Locale } from '../i18n'
 
 export const intakeCommand = z.discriminatedUnion('action', [
+  recordConsignmentFeePaymentCommand,
+  reverseConsignmentFeeCommand,
+  accrueSellerConsignmentFeesCommand,
   startStocktakeCommand,
   scanStocktakeCommand,
   recordStocktakeFindingCommand,
@@ -169,6 +177,25 @@ export const intakeCommand = z.discriminatedUnion('action', [
 export async function executeIntake(client: SupabaseClient, input: unknown) {
   const c = intakeCommand.parse(input)
   switch (c.action) {
+    case 'recordConsignmentFeePayment':
+      return client.rpc('record_consignment_fee_payment', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_fee: c.feeId,
+        p_reference: c.reference,
+      })
+    case 'reverseConsignmentFee':
+      return client.rpc('reverse_consignment_fee', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_fee: c.feeId,
+        p_reason: c.reason,
+      })
+    case 'accrueSellerConsignmentFees':
+      return client.rpc('accrue_seller_consignment_fees', {
+        p_tenant: c.tenantId,
+        p_seller: c.sellerId,
+      })
     case 'startStocktake':
       return client.rpc('start_stocktake', {
         p_tenant: c.tenantId,

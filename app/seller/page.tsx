@@ -1,3 +1,5 @@
+import { readConsignmentFees } from '@/lib/engine/consignment-fees'
+import { ConsignmentFeeHistory } from '@/components/intake/consignment-fee-history'
 import Link from 'next/link'
 import { readSubmissionSettings } from '@/lib/engine/seller-submissions'
 import './seller-portal.css'
@@ -39,6 +41,7 @@ export default async function SellerPortal({
     statement?: string
     q?: string
     page?: string
+    feePage?: string
   }>
 }) {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
@@ -157,6 +160,20 @@ export default async function SellerPortal({
       </main>
     )
   }
+  const feePage =
+    params.feePage === undefined
+      ? 0
+      : /^\d{1,7}$/.test(params.feePage)
+        ? Number(params.feePage)
+        : -1
+  if (feePage < 0 || feePage > 1000000) notFound()
+  const fees = await readConsignmentFees(
+    ctx.client,
+    account.tenantId,
+    account.sellerId,
+    feePage * 25,
+    true,
+  )
   const query =
     typeof params.q === 'string' ? params.q.trim().slice(0, 120) : ''
   const requestedPage =
@@ -452,6 +469,16 @@ export default async function SellerPortal({
                                 value={i.periodEnd}
                                 locale={ctx.locale}
                               />
+                              {i.collectionDeadline && (
+                                <>
+                                  <br />
+                                  {d.collectionDeadline}{' '}
+                                  <EventTime
+                                    value={i.collectionDeadline}
+                                    locale={ctx.locale}
+                                  />
+                                </>
+                              )}
                             </>
                           )}
                         </td>
@@ -491,6 +518,15 @@ export default async function SellerPortal({
           </p>
         ))}
       </details>
+      <ConsignmentFeeHistory
+        fees={fees}
+        tenantId={account.tenantId}
+        sellerId={account.sellerId}
+        d={all}
+        locale={ctx.locale}
+        page={feePage}
+        base={base}
+      />
       <section id="portal-statements" className="card" tabIndex={-1}>
         <h2>{d.statements}</h2>
         {economy.statements.length === 0 && <p>{d.none}</p>}

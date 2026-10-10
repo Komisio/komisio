@@ -104,6 +104,13 @@
       "previous": "Previous",
       "next": "Next",
       "status": "Agreement status"
+    },
+    "translations": {
+      "add": "Add language",
+      "hint": "Publish the same terms in another language. Acceptance in one language covers this agreement version. Published texts are locked; changed terms require a new agreement version.",
+      "publish": "Publish language version",
+      "published": "The language version is published.",
+      "acceptedLanguage": "Accepted language"
     }
   },
   "quickIntake": {

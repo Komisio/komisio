@@ -73,7 +73,7 @@ export default async function Intake({
       : Promise.resolve({ data: null, error: null }),
     ctx.client
       .from('seller_agreement_versions')
-      .select('*')
+      .select('*,translations:seller_agreement_translations(id,title,language)')
       .eq('tenant_id', active.id)
       .order('version', { ascending: false })
       .limit(1)
@@ -88,7 +88,7 @@ export default async function Intake({
     agreement && selected.data
       ? await ctx.client
           .from('seller_agreement_evidence')
-          .select('id,agreement_id,reference,recorded_at')
+          .select('id,agreement_id,reference,recorded_at,translation_id,source')
           .eq('tenant_id', active.id)
           .eq('agreement_id', agreement.id)
           .eq('seller_id', selected.data.id)
@@ -252,13 +252,23 @@ export default async function Intake({
               <p>{evidence ? a.available : a.missing}</p>
               {evidence ? (
                 <p>
-                  {a.staffRecorded}:{' '}
+                  {evidence.source === 'seller_portal'
+                    ? all.sellerAgreement.accepted
+                    : a.staffRecorded}
+                  :{' '}
                   {new Date(evidence.recorded_at).toLocaleString(
                     intlLocale(ctx.locale),
                     { timeZone: 'Europe/Stockholm' },
                   )}
                   <br />
-                  {evidence.reference}
+                  {evidence.reference} ·{' '}
+                  {
+                    localeNames[
+                      agreement.translations?.find(
+                        (t) => t.id === evidence.translation_id,
+                      )?.language ?? agreement.language
+                    ]
+                  }
                 </p>
               ) : (
                 active.role !== 'readonly' && (
@@ -267,6 +277,7 @@ export default async function Intake({
                     tenantId={active.id}
                     sellerId={selected.data.id}
                     agreementId={agreement.id}
+                    agreement={agreement}
                     d={all}
                   />
                 )

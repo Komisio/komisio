@@ -22,7 +22,7 @@ separately. Publishing new terms does not rewrite earlier evidence or receipts.
 ## Staff journey
 
 The agreement workspace has separate **Agreements**, **Acceptances** and
-**New agreement** tabs. The paged version list shows each text's language,
+**New agreement** tabs. The paged version list shows each version's available languages,
 publication date and active/previous status. Selecting a version also selects
 the acceptance register: search sellers and filter accepted or missing evidence
 for that exact version. A missing acceptance does not imply that an older version
@@ -68,9 +68,22 @@ An old tab is rejected after a new publication, even when the old evidence was
 valid. Successful retries resolve before checking current policy and preserve
 the original receipt. Reusing a request ID with different content is a conflict.
 
-Agreement text has one explicit language in this slice. It is rendered as plain
-text, with no implicit translation or HTML execution. Missing evidence is never
-inferred from a translation failure or a staff user's login.
+Each version has its original text and may have owner/admin-published equivalent
+translations. **Add language** publishes one immutable text per language for the
+current version; it does not change the active version or require another
+acceptance. Text is plain, with no implicit translation or HTML execution.
+Changed terms, including a correction to published language text, require a new
+agreement version. A new version does not inherit translations or acceptances.
+
+Staff choose the approved language when registering/editing a seller or recording
+external evidence. Sellers choose a published language before accepting in the
+portal. Acceptance in any language satisfies the canonical version's existing
+receipt and commercial acceptance gates. Evidence retains the exact translation
+identifier (null means the original text), actor, source and time. Staff registers
+show the accepted language; the portal defaults to the previously accepted text
+and retains it in history. Seller exports include the accepted translation texts.
+Publication, acceptance and retries remain tenant-serialized and actor-bound.
+Missing evidence is never inferred from a translation failure or staff login.
 
 Portal acceptance uses `POST /api/seller/agreement`, the engine adapter and
 `accept_my_seller_agreement`. The request pins tenant, seller, agreement version
@@ -90,6 +103,8 @@ Apply all committed migrations through the repository's release workflow.
 The original agreement migration is `20260911150000_seller_agreements.sql`;
 `20261009110000_seller_portal_agreement.sql` adds portal acceptance using the
 existing evidence table and preserves existing rows as `staff_recorded`.
+`20261010210000_agreement_languages.sql` adds immutable translated texts and exact
+language provenance without changing existing agreement/evidence identifiers.
 Deploy the compatible application after the database migration. The existing
 `KOMISIO_INTAKE_ENABLED` flag covers this feature; no additional activation
 flag or signing-provider credential is required.
@@ -111,7 +126,7 @@ acceptance, uncertain-response retry, reload, new-version conflicts and mobile
 layout. Full main CI gates the staging release under the repository merge policy.
 
 Evidence correction/revocation, independent identity verification, signed-file
-attachments and translated versions of the same agreement remain separate work.
+attachments and automatic translation assistance remain separate work.
 AI-generated drafts require review and ordinary explicit publication; generating
 a draft never records seller acceptance. Tests use synthetic accounts and terms,
 not real seller approvals. Hosted authenticated acceptance and the store's legal

@@ -6,7 +6,8 @@ import { setTimeout as pause } from 'node:timers/promises'
 export async function raceSellerAgreement({ setup, connectionString }) {
   const owner = randomUUID(),
     user = randomUUID(),
-    version = randomUUID()
+    version = randomUUID(),
+    translation = randomUUID()
   await setup.query(
     'insert into auth.users(id,email,email_confirmed_at) values($1,$2,now()),($3,$4,now())',
     [owner, `${owner}@example.test`, user, `${user}@example.test`],
@@ -36,6 +37,10 @@ export async function raceSellerAgreement({ setup, connectionString }) {
     "select publish_seller_agreement($1,$2,null,'TEST terms','Fictional test agreement','en',false)",
     [tenant, version],
   )
+  await setup.query(
+    "select publish_agreement_translation($1,$2,$3,'TEST svenska','Synthetic Swedish terms','sv')",
+    [tenant, translation, version],
+  )
   await setup.query('commit')
   const clients = [
     new pg.Client({ connectionString }),
@@ -51,11 +56,12 @@ export async function raceSellerAgreement({ setup, connectionString }) {
     }
     const results = await Promise.all(
       clients.map((c) =>
-        c.query('select accept_my_seller_agreement($1,$2,$3,$4) id', [
+        c.query('select accept_my_seller_agreement_text($1,$2,$3,$4,$5) id', [
           tenant,
           randomUUID(),
           seller,
           version,
+          translation,
         ]),
       ),
     )
@@ -76,6 +82,20 @@ export async function raceSellerAgreement({ setup, connectionString }) {
       await c.query("select set_config('request.jwt.claims',$1,false)", [
         JSON.stringify({ sub: owner, role: 'authenticated' }),
       ])
+    const translations = await Promise.allSettled(
+      clients.map((c) =>
+        c.query(
+          "select publish_agreement_translation($1,$2,$3,'TEST Deutsch','Synthetic German terms','de')",
+          [tenant, randomUUID(), version],
+        ),
+      ),
+    )
+    assert.equal(translations.filter((r) => r.status === 'fulfilled').length, 1)
+    const refused = translations.find((r) => r.status === 'rejected')
+    assert.match(refused.reason.message, /INVALID_INPUT/)
+    console.log(
+      'PASS: concurrent language publication preserves one immutable text per agreement language.',
+    )
     const next = randomUUID(),
       registration = randomUUID()
     const profile = {

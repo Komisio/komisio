@@ -166,12 +166,22 @@ export const intakeCommand = z.discriminatedUnion('action', [
     required: z.boolean(),
   }),
   z.object({
+    action: z.literal('publishAgreementTranslation'),
+    tenantId: z.uuid(),
+    requestId: z.uuid(),
+    agreementId: z.uuid(),
+    title: z.string().trim().min(1).max(120),
+    body: z.string().trim().min(1).max(12000),
+    language: z.enum(locales),
+  }),
+  z.object({
     action: z.literal('recordEvidence'),
     tenantId: z.uuid(),
     requestId: z.uuid(),
     sellerId: z.uuid(),
     agreementId: z.uuid(),
     reference: z.string().trim().min(1).max(500),
+    translationId: z.uuid().nullable().optional(),
   }),
 ])
 
@@ -529,15 +539,23 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
       })
     case 'saveSellerProfile':
       if (c.agreementApproval)
-        return client.rpc('save_seller_with_agreement', {
-          p_tenant: c.tenantId,
-          p_id: c.requestId,
-          p_seller: c.sellerId,
-          p_expected: c.expectedRevision,
-          p_profile: c.profile,
-          p_agreement: c.agreementApproval.agreementId,
-          p_reference: c.agreementApproval.reference,
-        })
+        return client.rpc(
+          c.agreementApproval.translationId
+            ? 'save_seller_with_agreement_text'
+            : 'save_seller_with_agreement',
+          {
+            ...(c.agreementApproval.translationId
+              ? { p_translation: c.agreementApproval.translationId }
+              : {}),
+            p_tenant: c.tenantId,
+            p_id: c.requestId,
+            p_seller: c.sellerId,
+            p_expected: c.expectedRevision,
+            p_profile: c.profile,
+            p_agreement: c.agreementApproval.agreementId,
+            p_reference: c.agreementApproval.reference,
+          },
+        )
       return client.rpc('save_seller_profile', {
         p_tenant: c.tenantId,
         p_id: c.requestId,
@@ -547,15 +565,23 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
       })
     case 'registerSeller':
       if (c.agreementApproval)
-        return client.rpc('save_seller_with_agreement', {
-          p_tenant: c.tenantId,
-          p_id: c.requestId,
-          p_seller: null,
-          p_expected: null,
-          p_profile: { ...initialSellerProfile(c), ...c.details },
-          p_agreement: c.agreementApproval.agreementId,
-          p_reference: c.agreementApproval.reference,
-        })
+        return client.rpc(
+          c.agreementApproval.translationId
+            ? 'save_seller_with_agreement_text'
+            : 'save_seller_with_agreement',
+          {
+            ...(c.agreementApproval.translationId
+              ? { p_translation: c.agreementApproval.translationId }
+              : {}),
+            p_tenant: c.tenantId,
+            p_id: c.requestId,
+            p_seller: null,
+            p_expected: null,
+            p_profile: { ...initialSellerProfile(c), ...c.details },
+            p_agreement: c.agreementApproval.agreementId,
+            p_reference: c.agreementApproval.reference,
+          },
+        )
       if (c.details)
         return client.rpc('register_seller_with_profile', {
           p_tenant: c.tenantId,
@@ -587,14 +613,29 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_language: c.language,
         p_required: c.required,
       })
-    case 'recordEvidence':
-      return client.rpc('record_agreement_evidence', {
+    case 'publishAgreementTranslation':
+      return client.rpc('publish_agreement_translation', {
         p_tenant: c.tenantId,
         p_id: c.requestId,
-        p_seller: c.sellerId,
         p_agreement: c.agreementId,
-        p_reference: c.reference,
+        p_title: c.title,
+        p_body: c.body,
+        p_language: c.language,
       })
+    case 'recordEvidence':
+      return client.rpc(
+        c.translationId
+          ? 'record_agreement_evidence_text'
+          : 'record_agreement_evidence',
+        {
+          ...(c.translationId ? { p_translation: c.translationId } : {}),
+          p_tenant: c.tenantId,
+          p_id: c.requestId,
+          p_seller: c.sellerId,
+          p_agreement: c.agreementId,
+          p_reference: c.reference,
+        },
+      )
   }
 }
 
@@ -606,7 +647,14 @@ export type BagReceipt = {
   note: string
   received_at: string
 }
+export type AgreementTranslation = {
+  id: string
+  title: string
+  language: Locale
+  body?: string
+}
 export type SellerAgreement = {
+  translations?: AgreementTranslation[]
   id: string
   version: number
   title: string
@@ -616,6 +664,8 @@ export type SellerAgreement = {
   created_at: string
 }
 export type AgreementEvidence = {
+  translation_id?: string | null
+  source?: 'staff_recorded' | 'seller_portal'
   id: string
   agreement_id: string
   reference: string

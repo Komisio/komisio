@@ -104,6 +104,13 @@
       "previous": "Forrige",
       "next": "Næste",
       "status": "Aftalestatus"
+    },
+    "translations": {
+      "add": "Tilføj sprog",
+      "hint": "Udgiv de samme vilkår på et andet sprog. Godkendelse på ét sprog gælder hele aftaleversionen. Udgivne tekster er låst; ændrede vilkår kræver en ny aftaleversion.",
+      "publish": "Udgiv sprogversion",
+      "published": "Sprogversionen er udgivet.",
+      "acceptedLanguage": "Godkendt sprog"
     }
   },
   "quickIntake": {

@@ -14,7 +14,9 @@ export default async function NewSeller() {
   const d = dictionary(ctx.locale)
   const agreement = await ctx.client
     .from('seller_agreement_versions')
-    .select('id,title,version,language')
+    .select(
+      'id,title,version,language,translations:seller_agreement_translations(id,title,language)',
+    )
     .eq('tenant_id', active.id)
     .order('version', { ascending: false })
     .limit(1)

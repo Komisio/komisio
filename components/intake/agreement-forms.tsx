@@ -200,11 +200,13 @@ export function EvidenceRecorder({
   tenantId,
   sellerId,
   agreementId,
+  agreement,
   d,
 }: {
   tenantId: string
   sellerId: string
   agreementId: string
+  agreement?: Pick<SellerAgreement, 'language' | 'translations'>
   d: Dictionary
 }) {
   const action = useIntakeAction(d.intake)
@@ -223,6 +225,9 @@ export function EvidenceRecorder({
       sellerId,
       agreementId,
       reference: fields.get('reference') ?? '',
+      ...(fields.get('translationId')
+        ? { translationId: fields.get('translationId') }
+        : {}),
     })
     if (id) {
       setSaved(true)
@@ -238,6 +243,19 @@ export function EvidenceRecorder({
         disabled={action.busy || action.locked}
       >
         <div className="field">
+          {!!agreement?.translations?.length && (
+            <>
+              <label htmlFor="evidence-language">{a.language}</label>
+              <select id="evidence-language" name="translationId">
+                <option value="">{localeNames[agreement.language]}</option>
+                {agreement.translations.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {localeNames[t.language]}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
           <label htmlFor="evidence-reference">{a.reference}</label>
           <input
             id="evidence-reference"

@@ -11,6 +11,7 @@ import { readStorePolicy } from '@/lib/engine/store-policy'
 import type { SellerAgreement } from '@/lib/engine/intake'
 import { readAgreementDraft } from '@/lib/engine/agreement-assistance'
 import { readAgreementSellers } from '@/lib/engine/agreement-workspace'
+import { AgreementTranslationPublisher } from '@/components/intake/agreement-translation-publisher'
 import { AgreementPublisher } from '@/components/intake/agreement-forms'
 import {
   AgreementTabs,
@@ -19,6 +20,7 @@ import {
 
 const navigation = z.object({
   version: z.uuid().optional(),
+  translation: z.uuid().optional(),
   draft: z.uuid().optional(),
   page: z.coerce.number().int().min(1).max(1000000).default(1),
   sellersPage: z.coerce.number().int().min(1).max(1000000).default(1),
@@ -43,21 +45,28 @@ export default async function Agreements({
   const [latest, history, requested, policy] = await Promise.all([
     ctx.client
       .from('seller_agreement_versions')
-      .select('*')
+      .select(
+        '*,translations:seller_agreement_translations(id,title,body,language)',
+      )
       .eq('tenant_id', active.id)
       .order('version', { ascending: false })
       .limit(1)
       .maybeSingle(),
     ctx.client
       .from('seller_agreement_versions')
-      .select('id,version,title,language,created_at', { count: 'exact' })
+      .select(
+        'id,version,title,language,created_at,translations:seller_agreement_translations(id,title,language)',
+        { count: 'exact' },
+      )
       .eq('tenant_id', active.id)
       .order('version', { ascending: false })
       .range((params.page - 1) * 20, params.page * 20 - 1),
     params.version
       ? ctx.client
           .from('seller_agreement_versions')
-          .select('*')
+          .select(
+            '*,translations:seller_agreement_translations(id,title,body,language)',
+          )
           .eq('tenant_id', active.id)
           .eq('id', params.version)
           .maybeSingle()
@@ -69,6 +78,11 @@ export default async function Agreements({
   if (params.version && !requested.data) notFound()
   const current = latest.data as SellerAgreement | null
   const shown = (requested.data ?? current) as SellerAgreement | null
+  const translation = shown?.translations?.find(
+    (t) => t.id === params.translation,
+  )
+  if (params.translation && !translation) notFound()
+  const text = shown && { ...shown, ...(translation ?? {}) }
   const [draft, acceptances] = await Promise.all([
     manage
       ? readAgreementDraft(
@@ -93,6 +107,8 @@ export default async function Agreements({
   function href(change: Record<string, string>, tab = 'versions') {
     const next = new URLSearchParams()
     if (params.version) next.set('version', params.version)
+    if (params.translation && !change.version)
+      next.set('translation', params.translation)
     if (params.page > 1) next.set('page', String(params.page))
     if (params.q) next.set('q', params.q)
     if (params.status !== 'all') next.set('status', params.status)
@@ -106,7 +122,9 @@ export default async function Agreements({
   const versionContext = shown && (
     <p>
       <strong>{shown.title}</strong> · {a.version} {shown.version} ·{' '}
-      {localeNames[shown.language]}{' '}
+      {[shown.language, ...(shown.translations ?? []).map((t) => t.language)]
+        .map((l) => localeNames[l])
+        .join(', ')}{' '}
       <span className="badge">
         {shown.id === current?.id ? w.active : w.historical}
       </span>
@@ -168,6 +186,15 @@ export default async function Agreements({
                                   v.language as keyof typeof localeNames
                                 ]
                               }
+                              {v.translations
+                                ?.map(
+                                  (t) =>
+                                    ', ' +
+                                    localeNames[
+                                      t.language as keyof typeof localeNames
+                                    ],
+                                )
+                                .join('')}
                             </td>
                             <td data-label={w.publishedAt}>
                               <EventTime
@@ -210,7 +237,7 @@ export default async function Agreements({
                   </nav>
                 )}
               </section>
-              {shown && (
+              {shown && text && (
                 <section
                   className="card intake-form agreement-reader"
                   id="agreement-document"
@@ -220,10 +247,34 @@ export default async function Agreements({
                     {shown.id === current?.id ? a.current : a.historical} ·{' '}
                     {a.version} {shown.version}
                   </span>
-                  <h2>{shown.title}</h2>
+                  <h2>{text.title}</h2>
                   <p>
-                    {a.language}: {localeNames[shown.language]}
+                    {a.language}: {localeNames[text.language]}
                   </p>
+                  {!!shown.translations?.length && (
+                    <nav className="row wrap no-print" aria-label={a.language}>
+                      <AgreementWorkspaceLink
+                        href={href({ version: shown.id }, 'document')}
+                        aria-current={!translation ? 'page' : undefined}
+                      >
+                        {localeNames[shown.language]}
+                      </AgreementWorkspaceLink>
+                      {shown.translations.map((t) => (
+                        <AgreementWorkspaceLink
+                          key={t.id}
+                          href={href(
+                            { version: shown.id, translation: t.id },
+                            'document',
+                          )}
+                          aria-current={
+                            translation?.id === t.id ? 'page' : undefined
+                          }
+                        >
+                          {localeNames[t.language]}
+                        </AgreementWorkspaceLink>
+                      ))}
+                    </nav>
+                  )}
                   {shown.id !== current?.id && (
                     <AgreementWorkspaceLink
                       className="text-link"
@@ -248,9 +299,9 @@ export default async function Agreements({
                   </div>
                   <div
                     className="agreement-text"
-                    lang={intlLocale(shown.language)}
+                    lang={intlLocale(text.language)}
                   >
-                    {shown.body}
+                    {text.body}
                   </div>
                   <div className="agreement-signatures">
                     {[
@@ -266,6 +317,16 @@ export default async function Agreements({
                     ))}
                   </div>
                 </section>
+              )}
+              {manage && current && (
+                <div hidden={shown?.id !== current.id} className="no-print">
+                  <AgreementTranslationPublisher
+                    key={active.id}
+                    tenantId={active.id}
+                    agreement={current}
+                    d={d}
+                  />
+                </div>
               )}
             </>
           ),
@@ -324,6 +385,7 @@ export default async function Agreements({
                             <th>{d.intake.name}</th>
                             <th>{w.status}</th>
                             <th>{w.source}</th>
+                            <th>{a.translations.acceptedLanguage}</th>
                             <th>{a.usage.date}</th>
                           </tr>
                         </thead>
@@ -351,6 +413,11 @@ export default async function Agreements({
                                   ? s.acceptance.source === 'seller_portal'
                                     ? w.portal
                                     : w.staff
+                                  : '—'}
+                              </td>
+                              <td data-label={a.translations.acceptedLanguage}>
+                                {s.acceptance?.language
+                                  ? localeNames[s.acceptance.language]
                                   : '—'}
                               </td>
                               <td data-label={a.usage.date}>

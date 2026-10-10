@@ -79,7 +79,8 @@ inviting a photo proposal does not create saleable inventory. Drop-off completio
 and stocktaking record observations without inventing sales or balance changes.
 
 The staff agreement-evidence slice adds immutable `seller_agreement_versions`
-and `seller_agreement_evidence`. It distinguishes staff-recorded external evidence from
+`seller_agreement_translations` and `seller_agreement_evidence`. Equivalent
+language texts share the canonical version; evidence pins the exact text. It distinguishes staff-recorded external evidence from
 account-authenticated seller acceptance. The portal accepts the current agreement
 and retains access to previously accepted text. Receiving preserves exact version/evidence references;
 publication and receiving serialize with membership changes. See

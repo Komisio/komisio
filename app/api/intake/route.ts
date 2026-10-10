@@ -56,6 +56,7 @@ export async function POST(request: Request) {
     if (
       [
         'publishAgreement',
+        'publishAgreementTranslation',
         'publishStorePolicy',
         'adjustSellerLedger',
         'reverseConsignmentFee',

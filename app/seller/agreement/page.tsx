@@ -3,7 +3,7 @@ import { notFound, redirect } from 'next/navigation'
 import { z } from 'zod'
 import { renderPlatformContext as platformContext } from '@/lib/platform/context'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import { dictionary, intlLocale } from '@/lib/i18n'
+import { dictionary, intlLocale, localeNames } from '@/lib/i18n'
 import { readMySellerAccounts } from '@/lib/engine/seller-portal'
 import { readMySellerAgreementArchive } from '@/lib/engine/seller-agreement'
 import { AgreementAcceptance } from '@/components/seller/agreement-acceptance'
@@ -18,14 +18,20 @@ export const generateMetadata = () =>
 export default async function SellerAgreementPage({
   searchParams,
 }: {
-  searchParams: Promise<{ seller?: string; version?: string; page?: string }>
+  searchParams: Promise<{
+    seller?: string
+    version?: string
+    page?: string
+    text?: string
+  }>
 }) {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const ctx = await platformContext()
   if (!ctx) redirect('/login?next=%2Fseller')
   if (ctx.mfaRequired) redirect('/mfa?next=%2Fseller')
-  const { seller, version, page: pageParam } = await searchParams
+  const { seller, version, page: pageParam, text } = await searchParams
   if (version !== undefined && !z.uuid().safeParse(version).success) notFound()
+  if (text !== undefined && !z.uuid().safeParse(text).success) notFound()
   const page = /^\d{1,6}$/.test(pageParam ?? '')
     ? Math.max(1, Math.min(100000, Number(pageParam)))
     : 1
@@ -40,6 +46,7 @@ export default async function SellerAgreementPage({
     account.sellerId,
     version ?? null,
     page,
+    text ?? null,
   )
   if (!state.agreement) notFound()
   const agreement = state.agreement
@@ -66,6 +73,26 @@ export default async function SellerAgreementPage({
             <Link href={href(null)}>{d.sellerAgreement.currentVersion}</Link>
           </p>
         )}
+        <p>
+          {d.agreements.language}: {localeNames[agreement.language]}
+        </p>
+        {state.languages.length > 1 && (
+          <nav className="row wrap no-print" aria-label={d.agreements.language}>
+            {state.languages.map((language) => (
+              <Link
+                key={language.id}
+                href={href(agreement.id) + '&text=' + language.id}
+                aria-current={
+                  language.id === (agreement.translationId ?? agreement.id)
+                    ? 'page'
+                    : undefined
+                }
+              >
+                {localeNames[language.language]}
+              </Link>
+            ))}
+          </nav>
+        )}
         <div
           lang={intlLocale(agreement.language)}
           style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}
@@ -77,14 +104,19 @@ export default async function SellerAgreementPage({
             {state.acceptance.source === 'seller_portal'
               ? d.sellerAgreement.accepted
               : d.sellerAgreement.recorded}{' '}
-            · <EventTime value={state.acceptance.at} locale={ctx.locale} />
+            ·{' '}
+            {state.acceptance.language && (
+              <>{localeNames[state.acceptance.language]} · </>
+            )}
+            <EventTime value={state.acceptance.at} locale={ctx.locale} />
           </p>
         ) : state.current ? (
           <AgreementAcceptance
-            key={agreement.id}
+            key={`${agreement.id}:${agreement.translationId ?? 'base'}`}
             tenantId={account.tenantId}
             sellerId={account.sellerId}
             agreementId={agreement.id}
+            translationId={agreement.translationId}
             d={d}
           />
         ) : null}

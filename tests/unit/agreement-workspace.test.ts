@@ -57,6 +57,23 @@ describe('seller agreement registration boundary', () => {
       expect.any(Object),
     )
   })
+  it('preserves an explicit translation in the atomic registration call', async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: requestId, error: null })
+    await executeIntake({ rpc } as unknown as SupabaseClient, {
+      ...registration,
+      agreementApproval: {
+        ...registration.agreementApproval,
+        translationId: requestId,
+      },
+    })
+    expect(rpc).toHaveBeenCalledExactlyOnceWith(
+      'save_seller_with_agreement_text',
+      expect.objectContaining({
+        p_agreement: agreementId,
+        p_translation: requestId,
+      }),
+    )
+  })
   it('binds profile revision and agreement evidence in one call', async () => {
     const rpc = vi.fn().mockResolvedValue({ data: requestId, error: null }),
       client = { rpc } as unknown as SupabaseClient

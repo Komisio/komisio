@@ -104,6 +104,13 @@
       "previous": "Precedente",
       "next": "Successivo",
       "status": "Stato del contratto"
+    },
+    "translations": {
+      "add": "Aggiungi lingua",
+      "hint": "Pubblica le stesse condizioni in un’altra lingua. L’accettazione in una lingua vale per l’intera versione del contratto. I testi pubblicati sono bloccati; condizioni modificate richiedono una nuova versione del contratto.",
+      "publish": "Pubblica versione linguistica",
+      "published": "La versione linguistica è pubblicata.",
+      "acceptedLanguage": "Lingua accettata"
     }
   },
   "quickIntake": {

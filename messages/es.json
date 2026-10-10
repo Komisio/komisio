@@ -104,6 +104,13 @@
       "previous": "Anterior",
       "next": "Siguiente",
       "status": "Estado del contrato"
+    },
+    "translations": {
+      "add": "Añadir idioma",
+      "hint": "Publica las mismas condiciones en otro idioma. La aceptación en un idioma cubre toda esta versión del contrato. Los textos publicados están bloqueados; los cambios requieren una nueva versión del contrato.",
+      "publish": "Publicar versión de idioma",
+      "published": "La versión de idioma está publicada.",
+      "acceptedLanguage": "Idioma aceptado"
     }
   },
   "quickIntake": {

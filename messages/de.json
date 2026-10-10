@@ -104,6 +104,13 @@
       "previous": "Zurück",
       "next": "Weiter",
       "status": "Vertragsstatus"
+    },
+    "translations": {
+      "add": "Sprache hinzufügen",
+      "hint": "Veröffentlichen Sie dieselben Bedingungen in einer anderen Sprache. Die Zustimmung in einer Sprache gilt für die gesamte Vertragsversion. Veröffentlichte Texte sind gesperrt; geänderte Bedingungen erfordern eine neue Vertragsversion.",
+      "publish": "Sprachversion veröffentlichen",
+      "published": "Die Sprachversion wurde veröffentlicht.",
+      "acceptedLanguage": "Akzeptierte Sprache"
     }
   },
   "quickIntake": {

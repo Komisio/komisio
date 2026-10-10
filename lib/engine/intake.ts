@@ -55,6 +55,7 @@ import {
 import { publishStoreProfileCommand } from './store-profile'
 import { receiveHandoverCommand } from './handovers'
 import { z } from 'zod'
+import { agreementApproval } from './agreement-workspace'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { saveInspectionCommand, archiveInspectionCommand } from './inspection'
 import {
@@ -111,6 +112,7 @@ export const intakeCommand = z.discriminatedUnion('action', [
   z
     .object({
       action: z.literal('registerSeller'),
+      agreementApproval: agreementApproval.optional(),
       tenantId: z.uuid(),
       requestId: z.uuid(),
       name: z.string().trim().min(1).max(120),
@@ -526,6 +528,16 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_condition: c.fields.condition,
       })
     case 'saveSellerProfile':
+      if (c.agreementApproval)
+        return client.rpc('save_seller_with_agreement', {
+          p_tenant: c.tenantId,
+          p_id: c.requestId,
+          p_seller: c.sellerId,
+          p_expected: c.expectedRevision,
+          p_profile: c.profile,
+          p_agreement: c.agreementApproval.agreementId,
+          p_reference: c.agreementApproval.reference,
+        })
       return client.rpc('save_seller_profile', {
         p_tenant: c.tenantId,
         p_id: c.requestId,
@@ -534,6 +546,16 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_profile: c.profile,
       })
     case 'registerSeller':
+      if (c.agreementApproval)
+        return client.rpc('save_seller_with_agreement', {
+          p_tenant: c.tenantId,
+          p_id: c.requestId,
+          p_seller: null,
+          p_expected: null,
+          p_profile: { ...initialSellerProfile(c), ...c.details },
+          p_agreement: c.agreementApproval.agreementId,
+          p_reference: c.agreementApproval.reference,
+        })
       if (c.details)
         return client.rpc('register_seller_with_profile', {
           p_tenant: c.tenantId,

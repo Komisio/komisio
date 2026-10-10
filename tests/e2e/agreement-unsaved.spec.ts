@@ -24,14 +24,21 @@ test('agreement draft survives folding, history and cancelled departure; restore
     await f.commit()
     await page.goto('/intake/agreements')
     const publisher = page.getByTestId('agreement-publisher')
-    await publisher.locator('summary').click()
+    await page
+      .getByRole('tab', { name: d.agreements.workspace.publish, exact: true })
+      .click()
     const body = page.locator('#agreement-body')
     const original = await body.inputValue()
     await body.fill('Synthetic unpublished agreement draft')
     await publisher.locator('summary').click()
-    await page.locator('.agreement-history summary').click()
+    await page
+      .getByRole('tab', { name: d.agreements.workspace.versions, exact: true })
+      .click()
     await page.locator('.agreement-history a').first().click()
     await expect(page).toHaveURL(/agreements\?version=/)
+    await page
+      .getByRole('tab', { name: d.agreements.workspace.publish, exact: true })
+      .click()
     await publisher.locator('summary').click()
     await expect(body).toHaveValue('Synthetic unpublished agreement draft')
     await cancelLeave(page)
@@ -72,7 +79,7 @@ test('uncertain publication retains warning and retry identity; next version get
   try {
     await f.commit()
     await page.goto('/intake/agreements')
-    await page.getByTestId('agreement-publisher').locator('summary').click()
+    await page.getByRole('tab').last().click()
     await page.locator('#agreement-body').fill('Synthetic confirmed agreement')
     const requests: unknown[] = []
     await page.route('**/api/intake', async (route) => {

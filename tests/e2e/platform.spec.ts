@@ -353,10 +353,7 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
   const stalePublisher = await page.context().newPage()
   try {
     await stalePublisher.goto('/intake/agreements')
-    await stalePublisher
-      .getByTestId('agreement-publisher')
-      .locator('summary')
-      .click()
+    await stalePublisher.getByRole('tab').last().click()
     await stalePublisher
       .getByLabel('Avtalets rubrik')
       .fill('Unpublished older draft')
@@ -368,7 +365,7 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
       .getByLabel('Jag bekräftar att inlämningen', { exact: false })
       .check()
     await page.goto('/intake/agreements')
-    await page.getByTestId('agreement-publisher').locator('summary').click()
+    await page.getByRole('tab').last().click()
     await page.getByLabel('Avtalets rubrik').fill('TEST Villkor 2')
     await page
       .getByLabel('Avtalstext', { exact: true })
@@ -380,11 +377,12 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
     await expect(page.getByRole('status')).toContainText(
       'Avtalsversionen är publicerad',
     )
-    await stalePublisher.locator('.agreement-history > summary').click()
+    await stalePublisher.getByRole('tab').first().click()
     await stalePublisher
       .getByRole('link', { name: /Version 1.*TEST Villkor 1/ })
       .click()
     await expect(stalePublisher).toHaveURL(/version=/)
+    await stalePublisher.getByRole('tab').last().click()
     await expect(stalePublisher.getByLabel('Avtalets rubrik')).toHaveValue(
       'Unpublished older draft',
     )

@@ -30,7 +30,7 @@ export function AgreementPublisher({
   const form = useRef<HTMLFormElement>(null)
   const { ready, dirty, checkDirty, resetDirty } = useFormDirty(form)
   useUnsavedChanges(!saved && (dirty || action.locked) ? d.leaveUnsaved : null)
-  const [expanded, setExpanded] = useState(!current || !!draft)
+  const [expanded, setExpanded] = useState(true)
   // Keep the reviewed base while editing, even if navigation refreshes server props.
   const [base, setBase] = useState(current)
   const router = useRouter()

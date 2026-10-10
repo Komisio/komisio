@@ -776,7 +776,10 @@ export default async function Seller({
                       </p>
                     ))}
                     {write && (
-                      <details className="seller-disclosure">
+                      <details
+                        className="seller-disclosure"
+                        open={!evidence.data?.length}
+                      >
                         <summary>{all.agreements.evidenceHeading}</summary>
                         <EvidenceRecorder
                           key={agreement.data.id}
@@ -1053,6 +1056,9 @@ export default async function Seller({
                         intake={all.intake}
                         storeLanguage={localeNames[storeLanguage]}
                         leaveUnsaved={all.leaveUnsaved}
+                        agreement={agreement.data}
+                        agreementAccepted={Boolean(evidence.data?.length)}
+                        agreements={all.agreements}
                       />
                     </div>
                   </details>

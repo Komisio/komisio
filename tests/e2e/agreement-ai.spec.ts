@@ -20,7 +20,7 @@ test('AI HTTP fixture creates, restores and applies an agreement without publish
     )
     await f.commit()
     await page.goto('/intake/agreements')
-    await page.getByTestId('agreement-publisher').locator('summary').click()
+    await page.getByRole('tab').last().click()
     await page.locator('#agreement-language').selectOption('no')
     const generated = page.waitForResponse((r) =>
       r.url().endsWith('/api/agreements/assistance'),

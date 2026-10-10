@@ -21,6 +21,21 @@ separately. Publishing new terms does not rewrite earlier evidence or receipts.
 
 ## Staff journey
 
+The agreement workspace has separate **Agreements**, **Acceptances** and
+**New agreement** tabs. The paged version list shows each text's language,
+publication date and active/previous status. Selecting a version also selects
+the acceptance register: search sellers and filter accepted or missing evidence
+for that exact version. A missing acceptance does not imply that an older version
+was never accepted. Staff and seller-portal evidence retain their distinct source.
+
+When registering a seller or editing their details, staff can explicitly check
+that the displayed agreement has already been signed/accepted and supply a
+reference to the retained original. The engine saves the profile and evidence in
+one transaction. A superseded version refuses the whole change; a lost-response
+retry returns the original facts. An unchecked box creates no evidence and never
+revokes existing evidence. The seller's Terms tab also offers printing and a
+separate evidence form, open by default when the current acceptance is missing.
+
 1. Open **Seller agreements** from Intake or Store settings. An owner/admin enters
    the store's own plain text, selects its language and chooses whether evidence
    is required before receiving. Review and publish an immutable new version.

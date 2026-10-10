@@ -10,6 +10,11 @@ import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 import { useFormDirty } from '@/components/platform/use-form-dirty'
+import {
+  SellerAgreementFields,
+  approvalFromFields,
+  type AgreementSummary,
+} from './seller-agreement-fields'
 
 export function SellerProfileForm({
   tenantId,
@@ -20,6 +25,9 @@ export function SellerProfileForm({
   intake,
   storeLanguage,
   leaveUnsaved,
+  agreement,
+  agreementAccepted,
+  agreements,
 }: {
   tenantId: string
   sellerId: string
@@ -29,6 +37,9 @@ export function SellerProfileForm({
   intake: Dictionary['intake']
   storeLanguage: string
   leaveUnsaved: string
+  agreement: AgreementSummary | null
+  agreementAccepted: boolean
+  agreements: Dictionary['agreements']
 }) {
   const action = useIntakeAction(intake),
     router = useRouter()
@@ -56,6 +67,7 @@ export function SellerProfileForm({
         ? {}
         : {
             action: 'saveSellerProfile',
+            agreementApproval: approvalFromFields(data),
             tenantId,
             sellerId,
             requestId,
@@ -150,6 +162,11 @@ export function SellerProfileForm({
             </div>
           </div>
         </details>
+        <SellerAgreementFields
+          agreement={agreement}
+          accepted={agreementAccepted}
+          d={agreements}
+        />
       </fieldset>
       {(invalid || action.error) && (
         <p role="alert">{invalid ? intake.invalid : action.error}</p>

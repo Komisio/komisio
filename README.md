@@ -47,8 +47,10 @@ roles, store switching and a web interface in eight languages (Swedish, English,
 one shared engine for the interface, extensions and AI agents. Agents should
 prepare work for approval, with permissions and business rules enforced by the
 system. Photo-based reception, optional AI suggestions and local MCP reads are
-available as a pilot. Durable agent approvals and financial operations are still
-ahead of us. [See how AI fits](docs/HOW-AI-FITS.md).
+available. Supported agent proposals persist for authorized staff review;
+sales, returns, seller balances and manual payout confirmation use the same
+engine. Real-store acceptance and unresolved financial integrations remain
+separate verification work. [See how AI fits](docs/HOW-AI-FITS.md).
 
 **Open means you can look under the hood.** Inspect the code, run the current
 platform locally and help shape what comes next. AGPL-3.0-or-later, with a

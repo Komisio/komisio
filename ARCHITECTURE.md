@@ -2,9 +2,10 @@
 
 Komisio is a multi-tenant consignment engine for second-hand stores. This
 document explains how the system is put together and why some parts are
-deliberately rigid. Identity, receiving and preparation/review are implemented;
-saleable inventory, financial operations and durable agent execution remain
-planned. See `README.md` and `ROADMAP.md` for status.
+deliberately rigid. Receiving, saleable inventory, sales and returns, seller balances, manual payout
+confirmation, accounting exports and reviewed agent proposals are implemented.
+See `docs/FUNCTIONAL-ROADMAP.md` for current scope and unresolved work; code
+availability does not establish hosted activation or real-store verification.
 
 ## Overview
 
@@ -14,7 +15,8 @@ planned. See `README.md` and `ROADMAP.md` for status.
 - **Deployment**: Vercel/Supabase staging is available. Docker self-hosting remains
   a target; local Docker-based Supabase is verified, a packaged external Docker
   deployment is not (`docs/SELF-HOSTING.md`).
-- **UI language**: Swedish and English via message files.
+- **UI languages**: Swedish, English, Norwegian, Danish, Finnish, German,
+  Spanish and Italian via message files.
 
 Five choices are fixed before any product model exists: one engine for all
 writes, rules enforced in the database, staged operations for agents, a strict
@@ -33,7 +35,8 @@ engine: identity and team administration are not consignment operations.
 Authenticated mutations enter `/api/platform`, validate same-origin requests and
 input, check the active tenant and call narrowly scoped database functions using
 the user's session. RLS and function authorization independently enforce access.
-There is no application service-role credential. No agent write endpoint exists.
+There is no application service-role credential. Domain and staged-operation
+routes use the engine boundary; agent proposals do not bypass staff review.
 
 The database contains `tenants`, `tenant_members`, `user_profiles`,
 `tenant_invitations` and `access_events`, plus Supabase-managed auth identities.
@@ -58,8 +61,8 @@ sporadic fresh-JWT timing rejection observed in the CLI's default v16.2.
 No application timing workaround, token leeway change or authentication bypass
 is used. See docs/SELF-HOSTING.md before changing service versions.
 
-The interface uses Tailwind, Radix Slot and original shared components. Swedish
-and English messages live in `messages/`. It works without an AI subscription or
+The interface uses Tailwind, Radix Slot and original shared components. Localized
+messages live in `messages/`. It works without an AI subscription or
 model key. Audit events record successful administrative changes; failed HTTP
 requests carry a request ID, but a comprehensive security-event stream is future
 pilot work.
@@ -71,11 +74,14 @@ The first gated domain slice now adds `sellers` and `bag_receipts` behind
 custody only. SQL functions validate role/MFA and serialize with membership
 changes; direct table mutations are denied. See
 `docs/SELLER-FLOW-IMPLEMENTATION.md` for activation and remaining workflow scope.
-There is still no saleable-item lifecycle, financial ledger, payout or agent write executor.
+Commercial acceptance is a separate engine operation: receiving a bag or
+inviting a photo proposal does not create saleable inventory. Drop-off completion
+and stocktaking record observations without inventing sales or balance changes.
 
 The staff agreement-evidence slice adds immutable `seller_agreement_versions`
-and `seller_agreement_evidence`. It records external evidence, not a seller's
-electronic acceptance. Receiving preserves exact version/evidence references;
+and `seller_agreement_evidence`. It distinguishes staff-recorded external evidence from
+account-authenticated seller acceptance. The portal accepts the current agreement
+and retains access to previously accepted text. Receiving preserves exact version/evidence references;
 publication and receiving serialize with membership changes. See
 `docs/SELLER-AGREEMENTS.md` for the policy, replay and deployment contract.
 
@@ -96,24 +102,29 @@ publication and receiving serialize with membership changes. See
 1. **Engine.** All writes with financial consequence — item state, recording
    a sale, a return, ledger entries, payouts, settlements — go through one
    engine. The UI and the MCP server are two callers of the same functions;
-   neither has its own write path. The first [local MCP adapter](mcp/README.md)
-   exposes authenticated text/opt-in image reads and unsaved reception previews. It has no
-   write executor, hosted OAuth or automatic model invocation.
+   neither has its own write path. The [local MCP adapter](mcp/README.md)
+   exposes scoped reads, previews and supported durable proposals. Authorized
+   staff decide proposals through the engine; the model does not execute its
+   own approval. Built-in inference and hosted connector authorization are
+   separate from the local adapter.
 2. **Database as boundary.** Tenant isolation, role permissions and business
    rules are enforced by PostgreSQL (RLS, grants, triggers) and proven by
    pgTAP tests against a real database. Application code that hits a
    database rule is wrong; the rule is documented in `DECISIONS.md` and its
    test shows what it guarantees.
-3. **Surfaces.** The web UI serves staff and exact mobile seller reviews; a full
-   consignor portal is planned. Local MCP currently uses a configured user JWT
-   and process-level scopes. Hosted delegated keys and durable staged execution
-   are future work, not guarantees supplied by the current preview envelope.
+3. **Surfaces.** The web UI serves staff and verified sellers. The seller portal
+   includes own-account items and balances, agreements, photo proposals and
+   store replies. Local MCP uses a configured user JWT and process-level scopes;
+   these scopes do not narrow the underlying JWT. Hosted connector access has
+   its own authorization boundary. A preview is never a committed operation.
 4. **Extensions.** Everything beyond the core is an extension: Zettle (POS
    and certified cash register), web shop and marketplace sync, Swish/bank
    payouts, AI-assisted intake, accounting export to Accounted or Fortnox.
    Extensions read core data and store their own; they never write core
    tables directly. Where an extension must cause a core write (a POS sale),
-   it stages an operation through the engine; see `docs/EXTENSIONS.md`.
+   it uses the engine; see `docs/EXTENSIONS.md`. Owner-authorized deterministic
+   synchronization of verified POS facts follows its explicit replay-safe path.
+   AI-proposed writes retain their approval requirements.
 5. **Domain knowledge as skills.** Swedish consignment rules, VAT cases and
    cash-register law live in `skills/` as readable knowledge for agents and
    people, and are codified only when a decision requires it.
@@ -142,17 +153,18 @@ Private images live in Storage; the database pins references and enforces scope.
 Optional inference is bounded, tentative and separate from publication. Local MCP
 reads and previews use the same contracts. See [how AI fits](docs/HOW-AI-FITS.md)
 for the current file map and [reception architecture](docs/RECEPTION-ARCHITECTURE.md)
-for constraints. Nothing in this path creates saleable inventory or a payout.
+for constraints. Preparation creates neither inventory nor a payout;
+subsequent commercial acceptance registers the item separately.
 
-## Invariants the core will enforce
+## Core invariants
 
-Written here as intent; each becomes a `DECISIONS.md` line and a test when the
-slice that needs it is built.
+Precise rules and exceptions belong in `DECISIONS.md` and database tests.
 
 - An item is the consignor's property until sold; every status and price
   change carries an identified actor.
-- The consignor ledger is append-only; corrections are new rows; a payout
-  never exceeds the balance.
+- The consignor ledger is append-only; corrections are new rows. Payout
+  reservations check available funds. Later returns or fees can create a
+  negative balance without rewriting a completed payment.
 - A settlement statement is numbered sequentially, immutable once issued,
   corrected by credit note.
 - Audit logs and documents with legal weight are never deleted.
@@ -170,10 +182,9 @@ The tenant is the single store: the unit of data isolation. Users belong to
 tenants through `tenant_members` with a role; membership is the source of staff
 access, and a user may be a member of many tenants. Exact seller reviews use a
 separate verified-email/MFA/capability boundary without granting membership.
-A chain is an optional
-grouping above tenants that will be added when the first chain customer needs it; it grants access, it does not
-merge data. What, if anything, is shared across a chain beyond access is an
-open follow-up (`docs/open-questions.md`).
+A chain is an optional grouping above stores. It does not merge tenant data
+or grant blanket membership. Cross-store reads and transfers apply explicit
+authorization checks; unresolved sharing rules remain in `docs/open-questions.md`.
 
 ## Repository map (target)
 
@@ -185,7 +196,7 @@ lib/media/      bounded image decoding and minimization
 lib/platform/   current request context, permissions and validation
 lib/supabase/   implemented browser/server clients
 extensions/     one folder per extension, each with manifest.json
-mcp/            local read/image/preview tools; durable staging remains planned
+mcp/            local scoped reads, previews and durable proposals
 supabase/       migrations, tests (pgTAP), seed
 skills/         domain knowledge
 docs/           architecture notes, contracts

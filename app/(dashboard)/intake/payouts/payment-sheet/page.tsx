@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { notFound, redirect } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
@@ -108,7 +108,7 @@ export default async function PaymentSheet({
               />
             </div>
             <PaymentSheetRows
-              key={active.id}
+              key={`${active.id}:${page}`}
               tenantId={active.id}
               currency={currency}
               rows={rows}
@@ -116,6 +116,7 @@ export default async function PaymentSheet({
               d={d}
               payouts={all.payouts}
               intake={all.intake}
+              unsavedMessage={all.inspection.unsaved}
             />
           </>
         ) : (

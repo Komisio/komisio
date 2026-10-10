@@ -26,6 +26,14 @@
 .submission-record {
   margin-block: 1rem;
 }
+.submission-queue-search {
+  align-items: end;
+  margin-block: 1rem;
+}
+.submission-queue-search .field {
+  flex: 1 1 15rem;
+  min-width: 0;
+}
 .submission-description-field {
   display: grid;
   gap: 0.4rem;

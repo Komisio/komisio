@@ -63,6 +63,11 @@ row-level validation without writing stock. Historical stock and opening seller
 balances still require migration provenance, retained terms and reconciliation;
 the file check does not perform that migration.
 
+The staff photo queue supports scoped seller/description search and work filters
+before pagination. Invitations remain separate from registered items; an accepted
+item links directly to its record. Unsaved review or preparation work warns before
+queue navigation. These reads do not change receipt or acceptance prerequisites.
+
 Production also has complete platform vocabulary labels in all eight supported
 languages, clearer payout-list and request placement, and economy totals
 before secondary reports on mobile. Statement dates use completed Stockholm

@@ -3,6 +3,7 @@ import { randomUUID, randomBytes } from 'node:crypto'
 import { createRequire } from 'node:module'
 import sharp from 'sharp'
 import { register } from '../helpers/account'
+import d from '../../messages/sv.json' with { type: 'json' }
 test('seller submits photos, receives a request and sends a new immutable version', async ({
   page,
   browser,
@@ -351,6 +352,108 @@ test('seller submits photos, receives a request and sends a new immutable versio
       path: test.info().outputPath('seller-submissions-mobile.png'),
       fullPage: true,
     })
+    // Filter before paging: an older work item must stay searchable in a busy queue.
+    const sellerActor = (
+      await db.query('select id from auth.users where email=$1', [email])
+    ).rows[0].id
+    const photos = (
+      await db.query('select photos from seller_submissions where id=$1', [
+        submission,
+      ])
+    ).rows[0].photos
+    await db.query('begin')
+    await db.query('set local role authenticated')
+    await db.query("select set_config('request.jwt.claims',$1,true)", [
+      JSON.stringify({ sub: sellerActor, role: 'authenticated' }),
+    ])
+    for (let i = 1; i <= 28; i++) {
+      await db.query(
+        'select submit_my_assisted_items($1,$2,$3,null,$4,$5,null,$6,$7,$8)',
+        [
+          tenant,
+          randomUUID(),
+          sellerId,
+          `Synthetic queue marker ${i}`,
+          JSON.stringify(photos),
+          '180.00',
+          'approval',
+          'SEK',
+        ],
+      )
+    }
+    await db.query('commit')
+    await staff.goto('/intake/submissions')
+    await expect(staff.locator('article.submission-record')).toHaveCount(25)
+    await staff
+      .getByRole('link', { name: d.submissions.next, exact: true })
+      .click()
+    await expect(staff.locator('article.submission-record')).toHaveCount(5)
+    await staff
+      .getByRole('link', {
+        name: d.submissions.queueFilters.pending,
+        exact: true,
+      })
+      .click()
+    await expect(staff).toHaveURL(/view=pending.*page=1/)
+    await staff
+      .getByLabel(d.submissions.note, { exact: true })
+      .first()
+      .fill('Unsaved synthetic reply')
+    staff.once('dialog', (dialog) => dialog.dismiss())
+    await staff
+      .getByRole('link', {
+        name: d.submissions.queueFilters.invited,
+        exact: true,
+      })
+      .click()
+    await expect(staff).toHaveURL(/view=pending/)
+    await staff.getByLabel(d.submissions.queueSearch).fill('marker 27')
+    staff.once('dialog', (dialog) => dialog.dismiss())
+    await staff
+      .getByRole('button', { name: d.submissions.queueFind, exact: true })
+      .click()
+    await expect(
+      staff.getByLabel(d.submissions.note, { exact: true }).first(),
+    ).toHaveValue('Unsaved synthetic reply')
+    staff.once('dialog', (dialog) => dialog.accept())
+    await staff
+      .getByRole('button', { name: d.submissions.queueFind, exact: true })
+      .click()
+    await expect(staff.locator('article.submission-record')).toHaveCount(1)
+    await expect(
+      staff.getByText('Synthetic queue marker 27', { exact: true }),
+    ).toBeVisible()
+    await staff
+      .getByRole('link', {
+        name: d.submissions.queueFilters.invited,
+        exact: true,
+      })
+      .click()
+    await expect(staff.locator('article.submission-record')).toHaveCount(0)
+    await staff.getByLabel(d.submissions.queueSearch).fill('')
+    await staff
+      .getByRole('button', { name: d.submissions.queueFind, exact: true })
+      .click()
+    await expect(staff.locator('article.submission-record')).toHaveCount(1)
+    await expect(
+      staff.getByRole('link', {
+        name: d.submissions.continueReception,
+        exact: true,
+      }),
+    ).toHaveAttribute('href', new URL(linkedUrl).pathname)
+    await expect(
+      staff.getByRole('link', {
+        name: d.submissions.queueViewItem,
+        exact: true,
+      }),
+    ).toHaveCount(0)
+    await staff.screenshot({
+      path: test.info().outputPath('submission-queue-mobile.png'),
+      fullPage: true,
+    })
+    expect(
+      await staff.evaluate(() => document.documentElement.scrollWidth),
+    ).toBeLessThanOrEqual(390)
   } finally {
     await staffContext.close()
     await db.end()

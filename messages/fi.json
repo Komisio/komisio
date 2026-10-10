@@ -3339,7 +3339,17 @@
     "priceRange": "Hintahaarukka",
     "useSuggestedPrice": "Käytä hintaehdotusta",
     "settingsChanged": "Myymälän asetukset ovat muuttuneet. Lataa sivu uudelleen.",
-    "reload": "Lataa uudelleen"
+    "reload": "Lataa uudelleen",
+    "queueSearch": "Hae myyjää tai tuotetta",
+    "queueFind": "Hae",
+    "queueView": "Näytä kuvaehdotukset",
+    "queueViewItem": "Näytä kirjattu tuote",
+    "queueFilters": {
+      "all": "Kaikki",
+      "pending": "Arvioitavana",
+      "invited": "Odottaa vastaanottoa",
+      "registered": "Kirjatut"
+    }
   },
   "adsMeasurement": {
     "title": "Mainonnan mittaus",

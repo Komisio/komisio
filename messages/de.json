@@ -3339,7 +3339,17 @@
     "priceRange": "Preisspanne",
     "useSuggestedPrice": "Preisvorschlag übernehmen",
     "settingsChanged": "Die Einstellungen des Geschäfts haben sich geändert. Laden Sie die Seite neu.",
-    "reload": "Neu laden"
+    "reload": "Neu laden",
+    "queueSearch": "Verkäufer oder Artikel suchen",
+    "queueFind": "Suchen",
+    "queueView": "Fotovorschläge anzeigen",
+    "queueViewItem": "Registrierten Artikel ansehen",
+    "queueFilters": {
+      "all": "Alle",
+      "pending": "Zu prüfen",
+      "invited": "Zur Annahme",
+      "registered": "Registriert"
+    }
   },
   "adsMeasurement": {
     "title": "Anzeigenmessung",

@@ -3333,7 +3333,17 @@
     "priceRange": "Price range",
     "useSuggestedPrice": "Use suggested price",
     "settingsChanged": "The store settings have changed. Reload the page.",
-    "reload": "Reload"
+    "reload": "Reload",
+    "queueSearch": "Search seller or item",
+    "queueFind": "Search",
+    "queueView": "Show photo proposals",
+    "queueViewItem": "View registered item",
+    "queueFilters": {
+      "all": "All",
+      "pending": "To review",
+      "invited": "Awaiting reception",
+      "registered": "Registered"
+    }
   },
   "adsMeasurement": {
     "title": "Ad measurement",

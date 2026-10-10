@@ -3333,7 +3333,17 @@
     "priceRange": "Fascia di prezzo",
     "useSuggestedPrice": "Usa il prezzo suggerito",
     "settingsChanged": "Le impostazioni del negozio sono cambiate. Ricarica la pagina.",
-    "reload": "Ricarica"
+    "reload": "Ricarica",
+    "queueSearch": "Cerca venditore o articolo",
+    "queueFind": "Cerca",
+    "queueView": "Mostra proposte con foto",
+    "queueViewItem": "Vedi articolo registrato",
+    "queueFilters": {
+      "all": "Tutte",
+      "pending": "Da valutare",
+      "invited": "In attesa di ricezione",
+      "registered": "Registrate"
+    }
   },
   "adsMeasurement": {
     "title": "Misurazione degli annunci",

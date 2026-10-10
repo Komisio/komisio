@@ -166,23 +166,25 @@ export function submissionError(message: string) {
   )
 }
 
+export const submissionQueueFilter = z.enum([
+  'all',
+  'pending',
+  'invited',
+  'registered',
+])
 export async function readSubmissionQueue(
   client: SupabaseClient,
   tenantId: string,
   page: number,
+  filter: z.infer<typeof submissionQueueFilter> = 'all',
+  query = '',
 ) {
-  z.uuid().parse(tenantId)
-  z.number().int().min(1).max(100000).parse(page)
-  const result = await client
-    .from('seller_submissions')
-    .select(
-      'id,seller_id,description,photos,created_at,assistance_output,pricing_mode,seller_price,price_currency,sellers(name),seller_submission_reviews(id,decision,note,price_approved),submission_receptions(session_id)',
-      { count: 'exact' },
-    )
-    .eq('tenant_id', tenantId)
-    .order('created_at', { ascending: false })
-    .order('id', { ascending: false })
-    .range((page - 1) * 25, page * 25 - 1)
+  const result = await client.rpc('submission_queue', {
+    p_tenant: z.uuid().parse(tenantId),
+    p_offset: (z.number().int().min(1).max(100000).parse(page) - 1) * 25,
+    p_filter: submissionQueueFilter.parse(filter),
+    p_query: z.string().trim().max(100).parse(query),
+  })
   if (result.error) throw new Error('REQUEST_FAILED')
   const row = z.object({
     id: z.uuid(),
@@ -197,6 +199,7 @@ export async function readSubmissionQueue(
       .object({ suggestion: submissionSuggestion, currency: z.string() })
       .nullable(),
     sellers: z.object({ name: z.string() }).nullable(),
+    item_id: z.uuid().nullable(),
     submission_receptions: z.array(z.object({ session_id: z.uuid() })),
     seller_submission_reviews: z.array(
       z.object({
@@ -207,5 +210,10 @@ export async function readSubmissionQueue(
       }),
     ),
   })
-  return { rows: z.array(row).parse(result.data), total: result.count ?? 0 }
+  return z
+    .object({
+      rows: z.array(row).max(25),
+      total: z.number().int().nonnegative(),
+    })
+    .parse(result.data)
 }

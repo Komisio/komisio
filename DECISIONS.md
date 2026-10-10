@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-10: The staff photo queue filters pending replies, invited proposals awaiting registration and registered items, with scoped seller/description search. Preparation alone never means received; only the existing linked accepted item enables its item link. No review or reception rule changes.
+
 - 2026-10-10: Rescanning a damaged item preserves its finding, comment and recording actor/time in stocktake summaries and exports. The latest event sequence still governs edits; every scan remains in immutable history.
 
 - 2026-10-10: Members may download completed stocktake observations, all or discrepancies only, under existing read/MFA permissions. One bounded database snapshot supplies the file; oversized reports fail without truncation. Downloads never change stock, balances or findings.

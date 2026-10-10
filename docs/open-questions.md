@@ -16,6 +16,8 @@ adjustments for missing/damaged goods still require separate decisions.
 The inventory session freezes expected stock, distinguishes unchecked items
 from explicit missing/damaged findings, and records stock changes separately.
 Physical scanner and real-store acceptance remain unverified.
+Completed stocktake exports support discrepancy follow-up without changing stock
+or money. Their observations are not write-off, compensation or settlement decisions.
 
 Seller agreement self-service (2026-10-09): the owner prioritizes explicit
 acceptance of the current published agreement in the seller portal. Existing

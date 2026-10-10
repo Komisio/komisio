@@ -6,6 +6,7 @@ import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { dictionary } from '@/lib/i18n'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { EventTime } from '@/components/ui/event-time'
+import { StocktakeDownload } from '@/components/intake/stocktake-download'
 import {
   readStocktake,
   readStocktakeSessions,
@@ -103,6 +104,15 @@ export default async function Stocktake({
               </Link>
             ))}
           </nav>
+          {report.closed && filter !== 'unchecked' && (
+            <StocktakeDownload
+              key={`${active.id}:${report.id}:${filter}`}
+              tenantId={active.id}
+              sessionId={report.id}
+              filter={filter}
+              s={s}
+            />
+          )}
           {report.rows.length === 0 && <p>{s.empty}</p>}
           <ul className="stocktake-list">
             {report.rows.map((item) => (

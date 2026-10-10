@@ -34,6 +34,9 @@ Stocktaking freezes expected stock and records scans and explicit findings.
 Unchecked items are distinct from missing or damaged items. Closing freezes the
 observed discrepancies and stock changes, without creating sales, seller-balance
 adjustments or lifecycle events. Financial handling of losses remains undecided.
+Completed counts can be downloaded as a full or discrepancy-only CSV, including
+observations and comments beyond the screen's first page. Read permissions and
+MFA still apply; oversized results fail explicitly instead of becoming partial files.
 
 Owners can opt into daily preparation of completed day closes using existing
 accounting totals. Recent late entries produce new immutable close versions;

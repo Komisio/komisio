@@ -1,5 +1,9 @@
 # Decision Log
 
+- 2026-10-10: Rescanning a damaged item preserves its finding, comment and recording actor/time in stocktake summaries and exports. The latest event sequence still governs edits; every scan remains in immutable history.
+
+- 2026-10-10: Members may download completed stocktake observations, all or discrepancies only, under existing read/MFA permissions. One bounded database snapshot supplies the file; oversized reports fail without truncation. Downloads never change stock, balances or findings.
+
 - 2026-10-10: Accounting reconciliation keeps pending sends visible until their outcome is confirmed. A pending send is never reported as sent. Exact export details retain existing owner-only evidence reconciliation and never retry an unknown provider outcome automatically.
 
 - 2026-10-10: Owners/admins may preflight up to 200 inventory-file rows using exact current seller ID/e-mail matching, explicit currency and source references. This read-only check creates no inventory, custody, terms or balances and does not authorize historical stock migration.

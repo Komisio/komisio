@@ -532,9 +532,9 @@ and the customer portal, not fetched into the Komisio settings panel. UI
 language must not select a different billing currency. AI credit-pack prices
 remain governed by their separate existing country-based configuration.
 
-Seller agreement self-service (2026-10-05): the current flow publishes immutable
-versions and lets staff record a reference to external seller acceptance. The
-local UX slice adds printable versions and guidance, not seller authentication,
-digital signing or storage of signed documents. A seller-facing acceptance flow
-still needs an owner decision on identity assurance and retained evidence before
-introducing new agreement records or changing access permissions.
+Seller agreement self-service (resolved 2026-10-09): the owner-approved portal
+flow records the authenticated, uniquely linked seller's acceptance of the current
+version, with immutable identity, email, time and source evidence. Staff-recorded
+external acceptance remains distinct. Sellers can also read and print their own
+accepted versions after replacement; internal references stay private. This is
+not a qualified digital-signature service or storage of signed paper documents.

@@ -3362,7 +3362,10 @@
     "accept": "Jag accepterar avtalet",
     "failed": "Svaret kunde inte bekräftas. Försök igen.",
     "changed": "Avtalet har ändrats. Läs den nya versionen innan du accepterar.",
-    "acceptedBy": "Accepterat av"
+    "acceptedBy": "Accepterat av",
+    "history": "Avtalshistorik",
+    "previousVersion": "Tidigare version",
+    "currentVersion": "Visa aktuellt avtal"
   },
   "payoutSheet": {
     "title": "Betalningsunderlag",

@@ -3362,7 +3362,10 @@
     "accept": "Jeg godtar avtalen",
     "failed": "Svaret kunne ikke bekreftes. Prøv igjen.",
     "changed": "Avtalen er endret. Les den nye versjonen før du godtar.",
-    "acceptedBy": "Godtatt av"
+    "acceptedBy": "Godtatt av",
+    "history": "Avtalehistorikk",
+    "previousVersion": "Tidligere versjon",
+    "currentVersion": "Vis gjeldende avtale"
   },
   "payoutSheet": {
     "title": "Betalingsoversikt",

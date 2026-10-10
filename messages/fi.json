@@ -3368,7 +3368,10 @@
     "accept": "Hyväksyn sopimuksen",
     "failed": "Vastausta ei voitu vahvistaa. Yritä uudelleen.",
     "changed": "Sopimus on muuttunut. Lue uusi versio ennen hyväksymistä.",
-    "acceptedBy": "Hyväksyjä"
+    "acceptedBy": "Hyväksyjä",
+    "history": "Sopimushistoria",
+    "previousVersion": "Aiempi versio",
+    "currentVersion": "Näytä nykyinen sopimus"
   },
   "payoutSheet": {
     "title": "Maksuluettelo",

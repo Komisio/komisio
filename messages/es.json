@@ -3368,7 +3368,10 @@
     "accept": "Acepto el acuerdo",
     "failed": "No se pudo confirmar la respuesta. Inténtalo de nuevo.",
     "changed": "El acuerdo ha cambiado. Lee la nueva versión antes de aceptarlo.",
-    "acceptedBy": "Aceptado por"
+    "acceptedBy": "Aceptado por",
+    "history": "Historial de acuerdos",
+    "previousVersion": "Versión anterior",
+    "currentVersion": "Ver acuerdo actual"
   },
   "payoutSheet": {
     "title": "Relación de pagos",

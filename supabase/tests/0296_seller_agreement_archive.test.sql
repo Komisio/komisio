@@ -1,0 +1,57 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('29600000-0000-4000-8000-000000000001','owner@agreement-archive.test',now()),
+ ('29600000-0000-4000-8000-000000000002','seller@agreement-archive.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"29600000-0000-4000-8000-000000000001","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Archive TEST','agreement-archive-test',gen_random_uuid())::text,true);
+select set_config('test.other',create_tenant('Other TEST','agreement-archive-other',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Seller TEST','seller@agreement-archive.test','')::text,true);
+select set_config('test.other_seller',register_seller(current_setting('test.other')::uuid,gen_random_uuid(),'Seller TEST','seller@agreement-archive.test','')::text,true);
+do $$declare prior uuid; next_id uuid; begin
+ for n in 1..23 loop
+  next_id:=gen_random_uuid();
+  perform publish_seller_agreement(current_setting('test.tenant')::uuid,next_id,prior,'TEST agreement '||n,'Fictional exact terms '||n,'sv',false);
+  if n<>22 then perform record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,next_id,'Private staff reference'); end if;
+  if n=1 then perform set_config('test.first',next_id::text,true); end if;
+  if n=22 then perform set_config('test.unaccepted',next_id::text,true); end if;
+  prior:=next_id;
+ end loop;
+ perform set_config('test.latest',prior::text,true);
+end $$;
+select set_config('test.foreign',publish_seller_agreement(current_setting('test.other')::uuid,gen_random_uuid(),null,'Other agreement','Other terms','en',false)::text,true);
+set local "request.jwt.claims"='{"sub":"29600000-0000-4000-8000-000000000002","role":"authenticated"}';
+select is(my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,null,0)->'agreement'->>'id',current_setting('test.latest'),'default shows latest terms');
+select is(my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,null,0)->>'current','true','latest version identified');
+select is((my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,null,0)->>'total')::integer,22,'history counts only own evidenced versions');
+select is(jsonb_array_length(my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,null,0)->'history'),20,'first page bounded');
+select is(jsonb_array_length(my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,null,20)->'history'),2,'older versions reachable');
+select is(my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,null,0)->'history'->0->>'id',current_setting('test.latest'),'newest accepted version first');
+select is(my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.first')::uuid,0)->'agreement'->>'body','Fictional exact terms 1','old text remains exact');
+select is(my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.first')::uuid,0)->>'current','false','old version distinguished');
+select is(my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.first')::uuid,0)->'acceptance'->>'source','staff_recorded','external evidence is not represented as portal acceptance');
+select ok(not (my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.first')::uuid,0)::text like '%Private staff reference%'),'internal references excluded');
+select ok(not (my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.first')::uuid,0)->'acceptance' ? 'recorded_by'),'internal actor excluded');
+select is(my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.unaccepted')::uuid,0)->'agreement','null'::jsonb,'unaccepted superseded terms hidden');
+select is(my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,current_setting('test.foreign')::uuid,0)->'agreement','null'::jsonb,'foreign version hidden even for same email');
+select throws_like($$select my_seller_agreement_archive(current_setting('test.other')::uuid,current_setting('test.seller')::uuid,null,0)$$,'%FORBIDDEN%','seller remains tenant-bound');
+select throws_like($$select accept_my_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.first')::uuid)$$,'%AGREEMENT_CHANGED%','archive does not allow accepting old versions');
+select throws_like($$select my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,null,-1)$$,'%INVALID_INPUT%','negative offset rejected');
+select is(jsonb_array_length(my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,null,200)->'history'),0,'high page has no rows');
+select is((my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,null,200)->>'total')::integer,22,'high page preserves count');
+select accept_my_seller_agreement(current_setting('test.tenant')::uuid,'ffffffff-2960-4000-8000-000000000001',current_setting('test.seller')::uuid,current_setting('test.latest')::uuid);
+select is(my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,null,0)->'acceptance'->>'source','seller_portal','latest evidence source preserved');
+select is((my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,null,0)->>'total')::integer,22,'multiple evidence rows do not duplicate versions');
+set local "request.jwt.claims"='{"sub":"29600000-0000-4000-8000-000000000001","role":"authenticated"}';
+select throws_like($$select my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,null,0)$$,'%FORBIDDEN%','owner is not implicitly this seller');
+reset role;
+insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values(gen_random_uuid(),'29600000-0000-4000-8000-000000000002','totp','verified',now(),now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"29600000-0000-4000-8000-000000000002","role":"authenticated","aal":"aal1"}';
+select throws_ok($$select my_seller_agreement_archive(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,null,0)$$,'42501',null,'MFA challenge denies archive');
+reset role;
+select ok(not has_function_privilege('anon','public.my_seller_agreement_archive(uuid,uuid,uuid,integer)','execute'),'anonymous access denied');
+select * from finish();
+rollback;

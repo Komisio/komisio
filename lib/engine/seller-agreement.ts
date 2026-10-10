@@ -26,6 +26,37 @@ export const sellerAgreementCommand = z.strictObject({
   requestId: z.uuid(),
   agreementId: z.uuid(),
 })
+export const sellerAgreementArchive = sellerAgreementState.extend({
+  current: z.boolean(),
+  total: z.number().int().nonnegative(),
+  history: z
+    .array(
+      z.object({
+        id: z.uuid(),
+        version: z.number().int().positive(),
+        title: z.string(),
+        at: z.string(),
+        source: z.enum(['staff_recorded', 'seller_portal']),
+      }),
+    )
+    .max(20),
+})
+export async function readMySellerAgreementArchive(
+  client: SupabaseClient,
+  tenant: string,
+  seller: string,
+  version: string | null,
+  page: number,
+) {
+  const result = await client.rpc('my_seller_agreement_archive', {
+    p_tenant: z.uuid().parse(tenant),
+    p_seller: z.uuid().parse(seller),
+    p_version: z.uuid().nullable().parse(version),
+    p_offset: (z.number().int().min(1).max(100000).parse(page) - 1) * 20,
+  })
+  if (result.error) throw new Error('Unable to read seller agreement history')
+  return sellerAgreementArchive.parse(result.data)
+}
 export async function readMySellerAgreement(
   client: SupabaseClient,
   tenant: string,

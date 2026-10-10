@@ -3362,7 +3362,10 @@
     "accept": "Accetto l’accordo",
     "failed": "Impossibile confermare la risposta. Riprova.",
     "changed": "L’accordo è cambiato. Leggi la nuova versione prima di accettare.",
-    "acceptedBy": "Accettato da"
+    "acceptedBy": "Accettato da",
+    "history": "Storico degli accordi",
+    "previousVersion": "Versione precedente",
+    "currentVersion": "Visualizza accordo attuale"
   },
   "payoutSheet": {
     "title": "Prospetto dei pagamenti",

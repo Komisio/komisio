@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { useIntakeAction } from './use-intake-action'
 import { PayoutDecision } from './payout-forms'
 import { ReloadAction } from './reload-action'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 
 type Row = { id: string; seller: string; amountOre: number }
 
@@ -19,6 +20,7 @@ export function PaymentSheetRows({
   d,
   payouts,
   intake,
+  unsavedMessage,
 }: {
   tenantId: string
   currency: string
@@ -27,6 +29,7 @@ export function PaymentSheetRows({
   d: Dictionary['payoutSheet']
   payouts: Dictionary['payouts']
   intake: Dictionary['intake']
+  unsavedMessage: string
 }) {
   const formId = useId()
   const router = useRouter()
@@ -48,6 +51,15 @@ export function PaymentSheetRows({
   const total = chosen.reduce((sum, row) => sum + row.amountOre, 0)
   if (!Number.isSafeInteger(total)) throw new Error('Invalid payout total')
   const frozen = action.busy || action.locked || action.needsReload
+  useUnsavedChanges(
+    editable &&
+      !action.needsReload &&
+      (action.locked ||
+        selected.length > 0 ||
+        Object.values(references).some(Boolean))
+      ? unsavedMessage
+      : null,
+  )
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setSaved(false)

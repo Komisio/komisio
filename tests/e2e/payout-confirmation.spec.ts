@@ -100,6 +100,15 @@ test('staff confirms completed payments together and a lost response retries the
         .locator(`[data-payout="${ids[0]}"]`)
         .getByLabel(d.payouts.reference, { exact: true }),
     ).toBeDisabled()
+    page.once('dialog', async (dialog) => {
+      expect(dialog.message()).toBe(d.inspection.unsaved)
+      await dialog.dismiss()
+    })
+    await page
+      .locator('.payment-sheet')
+      .getByRole('link', { name: d.payouts.title, exact: true })
+      .click()
+    await expect(page).toHaveURL(/\/payment-sheet$/)
     await page
       .getByRole('button', { name: d.intake.retry, exact: true })
       .click()
@@ -135,6 +144,56 @@ test('staff confirms completed payments together and a lost response retries the
         )
       ).rows[0].n,
     ).toBe(1)
+    let warnedAfterSave = false
+    page.once('dialog', async (dialog) => {
+      warnedAfterSave = true
+      await dialog.dismiss()
+    })
+    await page
+      .locator('.payment-sheet')
+      .getByRole('link', { name: d.payouts.title, exact: true })
+      .click()
+    await expect(page).toHaveURL(/\/intake\/payouts$/)
+    expect(warnedAfterSave).toBe(false)
+  } finally {
+    await f.close()
+  }
+})
+
+test('payment references survive cancelled navigation and clear after explicit discard', async ({
+  page,
+}) => {
+  const { f, ids } = await prepare(page)
+  try {
+    const back = page
+      .locator('.payment-sheet')
+      .getByRole('link', { name: d.payouts.title, exact: true })
+    page.once('dialog', async (dialog) => {
+      expect(dialog.message()).toBe(d.inspection.unsaved)
+      await dialog.dismiss()
+    })
+    await back.click()
+    await expect(page).toHaveURL(/\/payment-sheet$/)
+    await expect(
+      page
+        .locator(`[data-payout="${ids[0]}"]`)
+        .getByLabel(d.payouts.reference, { exact: true }),
+    ).toHaveValue('SYNTHETIC-BANK-1')
+    page.once('dialog', (dialog) => dialog.accept())
+    await back.click()
+    await expect(page).toHaveURL(/\/intake\/payouts$/)
+    await page
+      .getByRole('link', { name: d.payoutSheet.title, exact: true })
+      .click()
+    await expect(page.locator('.payment-sheet-confirmation')).toHaveCount(0)
+    expect(
+      (
+        await f.db.query(
+          'select count(*)::int n from payouts where id=any($1::uuid[]) and status=$2',
+          [ids, 'approved'],
+        )
+      ).rows[0].n,
+    ).toBe(2)
   } finally {
     await f.close()
   }

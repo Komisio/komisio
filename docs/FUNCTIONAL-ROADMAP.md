@@ -73,6 +73,11 @@ Review notices show their actual delivery outcome and link to the seller's
 message history. An unanswered request requires checking status; queued or
 terminal outcomes never expose a fresh-send action from the review card.
 
+Staff manage paged agreement versions and seller acceptances in separate tabs,
+with language, active status and accepted/missing filters. Registration and
+profile editing can atomically record staff evidence of an already approved
+current agreement; printing and unchecked fields create none.
+
 Sellers can read and print their previously accepted agreement versions from
 paged portal history. Old terms are clearly separated from the current agreement;
 only the current version can receive a new acceptance. Internal evidence references

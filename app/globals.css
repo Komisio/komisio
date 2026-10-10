@@ -3079,6 +3079,40 @@ button.text-link:hover:not(:disabled) {
   display: grid;
   gap: 20px;
   max-width: 960px;
+  min-width: 0;
+}
+.agreement-tabpanel:not([hidden]) {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+.agreement-tablist {
+  flex-wrap: wrap;
+  margin-bottom: 0;
+}
+.agreement-filters {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.agreement-filters .field {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.seller-agreement-fields {
+  display: grid;
+  gap: 12px;
+  padding-top: 16px;
+  margin-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.seller-agreement-fields small {
+  color: var(--muted);
+}
+.seller-agreement-fields p,
+.agreement-history td {
+  overflow-wrap: anywhere;
 }
 .agreement-reader .agreement-text {
   max-width: 72ch;
@@ -6533,7 +6567,8 @@ button.text-link:hover:not(:disabled) {
   body:has(.agreements-page) .app-shell > :not(main),
   body:has(.agreements-page) main > :not(.agreements-page),
   .agreements-page > .page-heading,
-  .agreements-workspace > :not(.agreement-reader),
+  .agreements-workspace > :not([data-panel='versions']),
+  .agreement-tabpanel > :not(.agreement-reader),
   .agreement-reader .no-print,
   .agreement-reader a {
     display: none !important;
@@ -6545,6 +6580,9 @@ button.text-link:hover:not(:disabled) {
   }
   .agreements-workspace {
     display: block;
+  }
+  .agreement-tabpanel[data-panel='versions'] {
+    display: block !important;
   }
   .agreement-reader {
     border: 0;

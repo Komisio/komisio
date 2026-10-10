@@ -8,6 +8,11 @@ import type { Seller } from '@/lib/engine/intake'
 import type { SellerMatches } from '@/lib/engine/sellers'
 import { intakeCommand } from '@/lib/engine/intake'
 import { Button } from '@/components/ui/button'
+import {
+  SellerAgreementFields,
+  approvalFromFields,
+  type AgreementSummary,
+} from './seller-agreement-fields'
 
 export function ReceivingPanel({
   tenantId,
@@ -18,6 +23,8 @@ export function ReceivingPanel({
   expectedAgreementId = null,
   agreementBlocked = false,
   registrationDestination = 'receiving',
+  agreement,
+  agreements,
 }: {
   tenantId: string
   seller: Seller | null
@@ -27,6 +34,8 @@ export function ReceivingPanel({
   expectedAgreementId?: string | null
   registrationDestination?: 'receiving' | 'seller'
   agreementBlocked?: boolean
+  agreement?: AgreementSummary | null
+  agreements?: Dictionary['agreements']
 }) {
   const router = useRouter()
   const registeredSellerHref = (id: string) =>
@@ -71,6 +80,7 @@ export function ReceivingPanel({
           }
         : {
             action: 'registerSeller',
+            agreementApproval: approvalFromFields(fields),
             tenantId,
             requestId: crypto.randomUUID(),
             name: String(fields.get('name') ?? '').trim(),
@@ -292,6 +302,12 @@ export function ReceivingPanel({
                   ))}
                 </div>
               </details>
+              {agreements && (
+                <SellerAgreementFields
+                  agreement={agreement ?? null}
+                  d={agreements}
+                />
+              )}
             </>
           )}
         </fieldset>
@@ -328,7 +344,11 @@ export function ReceivingPanel({
         {needsReload && (
           <a
             className="text-link"
-            href={`/intake?seller=${seller?.id ?? ''}#new-seller`}
+            href={
+              registrationDestination === 'seller'
+                ? '/intake/sellers/new'
+                : `/intake?seller=${seller?.id ?? ''}#new-seller`
+            }
           >
             {d.reload}
           </a>

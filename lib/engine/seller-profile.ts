@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { locales } from '../i18n'
+import { agreementApproval } from './agreement-workspace'
 
 export const sellerProfileBody = z
   .strictObject({
@@ -25,6 +26,7 @@ export const saveSellerProfileCommand = z.strictObject({
   sellerId: z.uuid(),
   expectedRevision: z.number().int().nonnegative(),
   profile: sellerProfileBody,
+  agreementApproval: agreementApproval.optional(),
 })
 export function initialSellerProfile(seller: {
   name: string

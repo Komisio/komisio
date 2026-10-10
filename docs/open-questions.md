@@ -1,5 +1,12 @@
 # Open questions
 
+Agreement workspace (resolved 2026-10-10): the owner requests visible versions,
+languages, active status and seller acceptances, plus explicit staff recording
+of an already signed/accepted agreement during seller registration or editing.
+Existing version-bound evidence and retained references apply; printing is not
+acceptance. Multiple translated texts belonging to one version remain separate
+from the existing one-language-per-version model.
+
 Inventory migration (2026-10-10): owner/admin file preflight validates references,
 prices, currency and exact current seller matches without registering goods.
 Actual historical stock migration still needs source identity/deduplication,

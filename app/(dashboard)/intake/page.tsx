@@ -108,6 +108,8 @@ export default async function Intake({
       details={all.sellerDetails}
       changeSellerLabel={all.quickIntake.changeSeller}
       expectedAgreementId={agreement?.id ?? null}
+      agreement={agreement}
+      agreements={all.agreements}
       agreementBlocked={Boolean(
         selected.data &&
         (agreement?.required_before_receipt ||

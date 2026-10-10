@@ -276,8 +276,12 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
   await page.goto('/intake/agreements')
-  await page.getByLabel('Avtalets rubrik').fill('TEST Villkor 1')
   await page
+    .getByTestId('agreement-publisher')
+    .getByLabel('Avtalets rubrik')
+    .fill('TEST Villkor 1')
+  await page
+    .getByTestId('agreement-publisher')
     .getByLabel('Avtalstext', { exact: true })
     .fill('Endast fiktiva testvillkor. <script>Not executable</script>')
   await page.getByLabel('Kräv registrerat underlag', { exact: false }).check()
@@ -355,6 +359,7 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
     await stalePublisher.goto('/intake/agreements')
     await stalePublisher.getByRole('tab').last().click()
     await stalePublisher
+      .getByTestId('agreement-publisher')
       .getByLabel('Avtalets rubrik')
       .fill('Unpublished older draft')
     await stale.goto(sellerUrl)
@@ -366,11 +371,18 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
       .check()
     await page.goto('/intake/agreements')
     await page.getByRole('tab').last().click()
-    await page.getByLabel('Avtalets rubrik').fill('TEST Villkor 2')
     await page
+      .getByTestId('agreement-publisher')
+      .getByLabel('Avtalets rubrik')
+      .fill('TEST Villkor 2')
+    await page
+      .getByTestId('agreement-publisher')
       .getByLabel('Avtalstext', { exact: true })
       .fill('New fictional terms, not a real seller contract.')
-    await page.getByLabel('Avtalets språk').selectOption('en')
+    await page
+      .getByTestId('agreement-publisher')
+      .getByLabel('Avtalets språk')
+      .selectOption('en')
     await page
       .getByRole('button', { name: 'Publicera version', exact: true })
       .click()
@@ -383,9 +395,11 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
       .click()
     await expect(stalePublisher).toHaveURL(/version=/)
     await stalePublisher.getByRole('tab').last().click()
-    await expect(stalePublisher.getByLabel('Avtalets rubrik')).toHaveValue(
-      'Unpublished older draft',
-    )
+    await expect(
+      stalePublisher
+        .getByTestId('agreement-publisher')
+        .getByLabel('Avtalets rubrik'),
+    ).toHaveValue('Unpublished older draft')
     await stalePublisher
       .getByRole('button', { name: 'Publicera version', exact: true })
       .click()

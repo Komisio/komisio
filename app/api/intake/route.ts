@@ -119,6 +119,7 @@ export async function POST(request: Request) {
           'PAYOUT_EXCEEDS_BALANCE',
           'PAYOUT_NOT_REQUESTED',
           'PAYOUT_NOT_APPROVED',
+          'PAYOUT_CHANGED',
           'PAYOUT_DECIDED',
           'PAYOUT_PENDING',
           'PROFILE_CHANGED',
@@ -176,6 +177,7 @@ export async function POST(request: Request) {
                 'PAYOUT_EXCEEDS_BALANCE',
                 'PAYOUT_NOT_REQUESTED',
                 'PAYOUT_NOT_APPROVED',
+                'PAYOUT_CHANGED',
                 'PAYOUT_DECIDED',
                 'PAYOUT_PENDING',
                 'PROFILE_CHANGED',
@@ -209,6 +211,7 @@ export async function POST(request: Request) {
         'recordSale',
         'approvePayout',
         'markPayoutPaid',
+        'confirmPayoutPayments',
         'settlePayouts',
         'issueStatement',
       ].includes(parsed.data.action)

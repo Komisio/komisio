@@ -3358,7 +3358,13 @@
     "empty": "Keine genehmigten Auszahlungen auf dieser Seite.",
     "navigation": "Seiten der Zahlungsübersicht",
     "previous": "Zurück",
-    "next": "Weiter"
+    "next": "Weiter",
+    "selectAll": "Alle auf dieser Seite auswählen",
+    "select": "{seller}, {amount} auswählen",
+    "individual": "Einzelne Aktionen",
+    "selected": "Ausgewählt: {count}",
+    "confirmSelected": "Als bezahlt erfassen",
+    "confirmed": "Zahlungen erfasst."
   },
   "bagProcessing": {
     "title": "Einlieferung",

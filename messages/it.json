@@ -3352,7 +3352,13 @@
     "empty": "Nessun pagamento approvato in questa pagina.",
     "navigation": "Pagine del prospetto dei pagamenti",
     "previous": "Precedente",
-    "next": "Successiva"
+    "next": "Successiva",
+    "selectAll": "Seleziona tutti nella pagina",
+    "select": "Seleziona {seller}, {amount}",
+    "individual": "Azioni individuali",
+    "selected": "Selezionati: {count}",
+    "confirmSelected": "Registra come pagati",
+    "confirmed": "Pagamenti registrati."
   },
   "bagProcessing": {
     "title": "Consegna",

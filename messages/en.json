@@ -3352,7 +3352,13 @@
     "empty": "No approved payouts on this page.",
     "navigation": "Payment sheet pages",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "selectAll": "Select all on this page",
+    "select": "Select {seller}, {amount}",
+    "individual": "Individual actions",
+    "selected": "Selected: {count}",
+    "confirmSelected": "Record as paid",
+    "confirmed": "Payments recorded."
   },
   "bagProcessing": {
     "title": "Drop-off",

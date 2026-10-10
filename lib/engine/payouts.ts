@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { currencyCode } from './money'
 
 // Payouts (P2 S15): request, approve, pay, reject as facts. Money moves only
 // in the ledger through the SQL transitions; this module validates the boundary.
@@ -23,6 +24,26 @@ export const markPayoutPaidCommand = z.strictObject({
   payoutId: z.uuid(),
   reference: z.string().trim().min(1).max(200),
   reason: z.string().trim().max(500).default(''),
+})
+export const confirmPayoutPaymentsCommand = z.strictObject({
+  action: z.literal('confirmPayoutPayments'),
+  ...ids,
+  currency: currencyCode,
+  payments: z
+    .array(
+      z.strictObject({
+        payoutId: z.uuid(),
+        amountOre: z.number().int().min(1).max(99999999999),
+        reference: z.string().trim().min(1).max(200),
+      }),
+    )
+    .min(1)
+    .max(50)
+    .refine(
+      (rows) =>
+        new Set(rows.map((r) => r.payoutId.toLowerCase())).size === rows.length,
+      'Each payout once',
+    ),
 })
 export const rejectPayoutCommand = z.strictObject({
   action: z.literal('rejectPayout'),

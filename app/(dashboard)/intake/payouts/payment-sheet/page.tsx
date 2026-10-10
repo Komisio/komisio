@@ -7,7 +7,7 @@ import { dictionary, intlLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { readApprovedPayoutsPage } from '@/lib/engine/payouts'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
-import { PayoutDecision } from '@/components/intake/payout-forms'
+import { PaymentSheetRows } from '@/components/intake/payment-sheet-rows'
 import { PrintLabel } from '@/components/intake/print-label'
 import { PaymentSheetDownload } from '@/components/intake/payment-sheet-download'
 
@@ -107,37 +107,16 @@ export default async function PaymentSheet({
                 label={d.download}
               />
             </div>
-            <div className="payment-sheet-rows">
-              {rows.map((row) => (
-                <section
-                  key={row.id}
-                  className="payment-sheet-row"
-                  data-payout={row.id}
-                >
-                  <div className="payment-sheet-summary">
-                    <strong>{row.seller}</strong>
-                    <strong>
-                      {formatSignedOre(row.amountOre)} {currency}
-                    </strong>
-                  </div>
-                  <p className="payment-sheet-reference">
-                    {d.reference}: {row.id}
-                  </p>
-                  {active.role !== 'readonly' && (
-                    <details className="no-print">
-                      <summary>{d.confirm}</summary>
-                      <PayoutDecision
-                        tenantId={active.id}
-                        payoutId={row.id}
-                        status="approved"
-                        d={all.payouts}
-                        intake={all.intake}
-                      />
-                    </details>
-                  )}
-                </section>
-              ))}
-            </div>
+            <PaymentSheetRows
+              key={active.id}
+              tenantId={active.id}
+              currency={currency}
+              rows={rows}
+              editable={active.role !== 'readonly'}
+              d={d}
+              payouts={all.payouts}
+              intake={all.intake}
+            />
           </>
         ) : (
           <p role="status">{d.empty}</p>

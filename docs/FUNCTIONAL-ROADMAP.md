@@ -40,6 +40,12 @@ accounting totals. Recent late entries produce new immutable close versions;
 bounded runs retain catch-up progress. This does not create exports, send
 vouchers or activate the proposed complementary POS accounting profiles.
 
+The payment sheet supports printing, CSV export and recording up to 50 completed
+manual payments together with their individual references. The engine verifies
+the approved amounts and currency, records all or none, and safely replays an
+unconfirmed request. Staff still verify actual transfers; bank matching and
+automatic payment rails are not delivered by this workflow.
+
 Production also has complete platform vocabulary labels in all eight supported
 languages, clearer payout-list and request placement, and economy totals
 before secondary reports on mobile. Statement dates use completed Stockholm

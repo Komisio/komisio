@@ -1508,6 +1508,24 @@
       "providerHint": "Direct connection to your accounting system.",
       "notConnected": "Not connected",
       "planningHint": "See how Komisio and your POS can share bookkeeping responsibilities. The guide does not change settings."
+    },
+    "dayCloseAutomation": {
+      "heading": "Automatic day closes",
+      "hint": "Prepare completed days every morning.",
+      "enable": "Turn on",
+      "disable": "Turn off",
+      "enabled": "On",
+      "waiting": "On – waiting for the first run",
+      "off": "Off",
+      "notConfigured": "Automatic day closes are not available yet.",
+      "ownerOnly": "Only the store owner can turn this on.",
+      "busy": "Saving…",
+      "failed": "The setting could not be confirmed. Reload the page before trying again.",
+      "help": "About automatic day closes",
+      "helpScope": "Summarises recorded sales, returns and payouts. Exporting and sending to accounting systems are separate steps.",
+      "helpDates": "Starts with the day you turn it on, using Swedish time. The latest seven days are checked again for late changes. Handle older changes under Reconciliation.",
+      "preparedThrough": "Checked through",
+      "catchingUp": "More days will be prepared on the next run"
     }
   },
   "communications": {

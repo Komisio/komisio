@@ -51,6 +51,36 @@ download links and the Fortnox send state. "Reconciliation": the period
 view described below. "Account map and Fortnox": the map form (owner or
 admin) and the Fortnox connection.
 
+## Automatic preparation
+
+An owner can enable **Automatic day closes** in Accounting → Settings. The
+`day_close` grant uses the deployment's ordinary automation account and gives
+it no export, provider-send or policy-edit permission. The owner can turn it
+off from the same control. Deployment never enables a store automatically.
+
+The daily `GET /api/automation/day-closes` job runs at 06:45 UTC with the same
+`CRON_SECRET`, `KOMISIO_AUTOMATION_EMAIL` and `KOMISIO_AUTOMATION_PASSWORD`
+configuration as other scheduled jobs. Self-hosters schedule that authenticated
+request themselves. Only completed Europe/Stockholm days from activation are
+included. Quiet days are skipped; days with existing closes are checked again.
+
+Each atomic batch checks at most 31 dates, saves progress with its grant and
+rechecks the previous seven processed dates for late imports. After an outage,
+further runs advance the backlog. Unchanged totals retain their existing version;
+changed totals create a new version. Older late entries still require a manual
+refresh in Reconciliation. Runs are serialized with manual closes and grant
+revocation; an uncertain response is safe to retry with the same request ID.
+
+The endpoint processes up to 200 eligible stores, oldest run first, within a
+200-second launch budget. A failed store does not stop the others. Errors return
+500; an exhausted budget returns 503, and remaining work stays eligible. A 200
+response with `catchingUp: true` means further scheduled runs are needed. Settings
+shows the last checked date for the current grant; it is not proof of export or
+delivery. Runtime failures must also be monitored by the deployment operator.
+
+Automatic export creation and complementary POS posting remain separate work.
+An accountant still needs to verify the account map and posting responsibility.
+
 ## Reconciliation
 
 `accounting_reconciliation(tenant, from, to)` (any member, at most one year)
@@ -66,6 +96,13 @@ period (current month by default); agents read the full list through
 written; the person acts on the day close, export or send as usual.
 
 ## Verification
+
+`supabase/tests/0289_day_close_automation.test.sql` covers scoped access,
+activation boundaries, replay, recent corrections, bounded backlog, revocation
+and MFA. `scripts/day-close-automation-race.mjs` covers competing workers,
+manual generation and revocation. The browser journey covers owner activation,
+an uncertain save, progress display and deactivation; hosted scheduling remains
+an operator acceptance check.
 
 `supabase/tests/0067_accounting_reconciliation.test.sql`: every status in
 order, quiet days left out, export under the current map preferred, a return

@@ -1,6 +1,7 @@
 'use client'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { FormHelpHeading } from '@/components/help/form-help-heading'
 import type { AutomationGrant, AutomationScope } from '@/lib/engine/automation'
 
 /** One owner switch for an automation scope: enable, disable, and the grant's state. */
@@ -11,12 +12,16 @@ export function AutomationSwitch({
   configured,
   canEdit,
   t,
+  help,
+  lastRun,
 }: {
   tenantId: string
   scope: AutomationScope
   grants: AutomationGrant[] | null
   configured: boolean
   canEdit: boolean
+  help?: { label: string; steps: string[] }
+  lastRun?: { grantId: string; text: string } | null
   t: {
     heading: string
     hint: string
@@ -66,12 +71,17 @@ export function AutomationSwitch({
   }
   return (
     <section className="card intake-form" aria-label={t.heading}>
-      <h2>{t.heading}</h2>
+      {help ? (
+        <FormHelpHeading title={t.heading} help={help} />
+      ) : (
+        <h2>{t.heading}</h2>
+      )}
       <p>{t.hint}</p>
       <p role="status">
         {current ? (current.accepted ? t.enabled : t.waiting) : t.off}
       </p>
-      {!configured ? (
+      {lastRun && current?.id === lastRun.grantId && <p>{lastRun.text}</p>}
+      {!configured && !current ? (
         <p>
           <small>{t.notConfigured}</small>
         </p>

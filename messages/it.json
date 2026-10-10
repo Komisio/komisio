@@ -1508,6 +1508,24 @@
       "providerHint": "Connessione diretta al tuo sistema contabile.",
       "notConnected": "Non collegato",
       "planningHint": "Scopri come Komisio e il tuo POS possono suddividere la contabilità. La guida non modifica le impostazioni."
+    },
+    "dayCloseAutomation": {
+      "heading": "Chiusure giornaliere automatiche",
+      "hint": "Prepara i giorni conclusi ogni mattina.",
+      "enable": "Attiva",
+      "disable": "Disattiva",
+      "enabled": "Attivo",
+      "waiting": "Attivo – in attesa della prima esecuzione",
+      "off": "Disattivo",
+      "notConfigured": "Le chiusure giornaliere automatiche non sono ancora disponibili.",
+      "ownerOnly": "Solo il proprietario del negozio può attivare questa opzione.",
+      "busy": "Salvataggio…",
+      "failed": "Non è stato possibile confermare la modifica. Ricarica la pagina prima di riprovare.",
+      "help": "Informazioni sulle chiusure giornaliere automatiche",
+      "helpScope": "Riepiloga vendite, resi e pagamenti ai venditori registrati. Esportazione e invio al sistema contabile sono operazioni separate.",
+      "helpDates": "Inizia dal giorno di attivazione, secondo l’orario svedese. Gli ultimi sette giorni vengono ricontrollati per modifiche tardive. Gestisci le modifiche precedenti nella riconciliazione.",
+      "preparedThrough": "Controllato fino al",
+      "catchingUp": "Altri giorni saranno preparati alla prossima esecuzione"
     }
   },
   "communications": {

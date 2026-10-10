@@ -1508,6 +1508,24 @@
       "providerHint": "Direkte forbindelse til dit bogføringssystem.",
       "notConnected": "Ikke tilsluttet",
       "planningHint": "Se hvordan Komisio og kassesystemet kan dele bogføringsopgaverne. Guiden ændrer ingen indstillinger."
+    },
+    "dayCloseAutomation": {
+      "heading": "Automatiske dagsafslutninger",
+      "hint": "Klargør afsluttede dage hver morgen.",
+      "enable": "Slå til",
+      "disable": "Slå fra",
+      "enabled": "Til",
+      "waiting": "Til – venter på første kørsel",
+      "off": "Fra",
+      "notConfigured": "Automatiske dagsafslutninger er ikke tilgængelige endnu.",
+      "ownerOnly": "Kun butikkens ejer kan slå dette til.",
+      "busy": "Gemmer…",
+      "failed": "Indstillingen kunne ikke bekræftes. Genindlæs siden, før du prøver igen.",
+      "help": "Om automatiske dagsafslutninger",
+      "helpScope": "Opsummerer registrerede salg, returneringer og udbetalinger. Eksport og overførsel til regnskabssystemer sker separat.",
+      "helpDates": "Starter med den dag, du slår funktionen til, efter svensk tid. De seneste syv dage kontrolleres igen for sene ændringer. Ældre ændringer håndteres under Afstemning.",
+      "preparedThrough": "Kontrolleret til og med",
+      "catchingUp": "Flere dage klargøres ved næste kørsel"
     }
   },
   "communications": {

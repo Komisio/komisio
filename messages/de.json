@@ -1508,6 +1508,24 @@
       "providerHint": "Direkte Verbindung zu Ihrem Buchhaltungssystem.",
       "notConnected": "Nicht verbunden",
       "planningHint": "Erfahren Sie, wie Komisio und Ihr Kassensystem die Buchhaltung aufteilen können. Der Leitfaden ändert keine Einstellungen."
+    },
+    "dayCloseAutomation": {
+      "heading": "Automatische Tagesabschlüsse",
+      "hint": "Abgeschlossene Tage jeden Morgen vorbereiten.",
+      "enable": "Einschalten",
+      "disable": "Ausschalten",
+      "enabled": "Ein",
+      "waiting": "Ein – wartet auf den ersten Lauf",
+      "off": "Aus",
+      "notConfigured": "Automatische Tagesabschlüsse sind noch nicht verfügbar.",
+      "ownerOnly": "Nur der Ladeninhaber kann dies einschalten.",
+      "busy": "Wird gespeichert…",
+      "failed": "Die Einstellung konnte nicht bestätigt werden. Laden Sie die Seite vor einem neuen Versuch neu.",
+      "help": "Über automatische Tagesabschlüsse",
+      "helpScope": "Fasst erfasste Verkäufe, Rückgaben und Auszahlungen zusammen. Export und Übertragung an die Buchhaltung erfolgen separat.",
+      "helpDates": "Beginnt mit dem Tag der Aktivierung nach schwedischer Zeit. Die letzten sieben Tage werden auf nachträgliche Änderungen geprüft. Ältere Änderungen bearbeiten Sie unter Abstimmung.",
+      "preparedThrough": "Geprüft bis einschließlich",
+      "catchingUp": "Weitere Tage werden beim nächsten Lauf vorbereitet"
     }
   },
   "communications": {

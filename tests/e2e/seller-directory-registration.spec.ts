@@ -76,17 +76,31 @@ test('directory registration and duplicate selection stay in the seller workspac
     expect(replay.ok()).toBe(true)
     expect(await countWelcome()).toBe(1)
     await page.goto(`/intake/sellers/${sellerId}#seller-communication`)
+    // A queued row precedes delivery recording. Await the command's outcome,
+    // not the intermediate count, before asserting the persisted status.
+    const deliveryResponse = page.waitForResponse(
+      (response) =>
+        response.url().endsWith('/api/communications') &&
+        response.request().method() === 'POST' &&
+        response.request().postDataJSON().welcome === true,
+    )
     await page
       .getByRole('button', {
         name: d.communications.welcomeResend,
         exact: true,
       })
       .click()
+    const response = await deliveryResponse
+    expect(response.ok()).toBe(true)
+    const outcome = await response.json()
+    expect(outcome.ok).toBe(true)
     await expect.poll(countWelcome).toBe(2)
     const welcome = await f.db.query(
-      "select body,status from seller_communications where seller_id=$1 and template_key='seller.welcome' order by queued_at desc",
-      [sellerId],
+      "select body,status from seller_communications where seller_id=$1 and id=$2 and template_key='seller.welcome'",
+      [sellerId, outcome.id],
     )
+    expect(welcome.rows).toHaveLength(1)
+    expect(welcome.rows[0].status).toBe(outcome.delivery)
     expect(welcome.rows[0].body).toContain('/register?next=%2Fseller&locale=sv')
     expect(welcome.rows[0].status).not.toBe('queued')
   } finally {

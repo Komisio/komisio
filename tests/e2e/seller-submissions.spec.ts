@@ -572,6 +572,157 @@ test('seller submits photos, receives a request and sends a new immutable versio
       }),
     ).toBeVisible()
     expect(notifyCalls).toBe(1)
+    const exported = await staff.request.get(`/api/sellers/${sellerId}/export`)
+    expect(exported.status()).toBe(200)
+    expect(exported.headers()['content-disposition']).toContain('attachment;')
+    expect(exported.headers()['cache-control']).toContain('no-store')
+    const data = await exported.json()
+    expect(
+      data.photoSubmissions.find(
+        (row: { id: string }) => row.id === submission,
+      ),
+    ).toMatchObject({
+      description: 'Synthetic blue jacket',
+      seller_id: sellerId,
+      pricing_mode: 'approval',
+      seller_price: 175,
+      price_currency: 'SEK',
+    })
+    expect(data.photoSubmissionReviews).toContainEqual(
+      expect.objectContaining({
+        submission_id: submission,
+        decision: 'more_information',
+        note: 'Add a photo of the label',
+      }),
+    )
+    expect(data.submissionReceptions).toContainEqual(
+      expect.objectContaining({
+        session_id: new URL(linkedUrl).pathname.split('/').at(-1),
+      }),
+    )
+    expect(
+      data.photoSubmissions.every(
+        (row: Record<string, unknown>) =>
+          !('assistance_id' in row) && !('tenant_id' in row),
+      ),
+    ).toBe(true)
+    // Older replies must remain reachable beyond the original 50-row window.
+    const older = randomUUID()
+    async function asActor(actor: string, work: () => Promise<void>) {
+      await db.query('begin')
+      await db.query('set local role authenticated')
+      await db.query("select set_config('request.jwt.claims',$1,true)", [
+        JSON.stringify({ sub: actor, role: 'authenticated' }),
+      ])
+      try {
+        await work()
+        await db.query('commit')
+      } catch (error) {
+        await db.query('rollback')
+        throw error
+      }
+    }
+    await asActor(sellerActor, async () => {
+      await db.query(
+        'select submit_my_assisted_items($1,$2,$3,null,$4,$5,null,$6,$7,$8)',
+        [
+          tenant,
+          older,
+          sellerId,
+          'Synthetic older correction',
+          JSON.stringify(photos),
+          '180.00',
+          'approval',
+          'SEK',
+        ],
+      )
+    })
+    await asActor(owner, async () => {
+      await db.query('select review_seller_submission($1,$2,$3,$4,$5)', [
+        tenant,
+        randomUUID(),
+        older,
+        'more_information',
+        'Show the older label',
+      ])
+    })
+    await asActor(sellerActor, async () => {
+      for (let i = 0; i < 55; i++)
+        await db.query(
+          'select submit_my_assisted_items($1,$2,$3,null,$4,$5,null,$6,$7,$8)',
+          [
+            tenant,
+            randomUUID(),
+            sellerId,
+            `Synthetic newer photo ${i}`,
+            JSON.stringify(photos),
+            '180.00',
+            'approval',
+            'SEK',
+          ],
+        )
+    })
+    await page.goto(`/seller/submissions?seller=${sellerId}`)
+    await expect(page.locator('article.submission-record')).toHaveCount(25)
+    await page
+      .getByRole('link', { name: d.submissions.next, exact: true })
+      .click()
+    await expect(page).toHaveURL(/page=2/)
+    await expect(page.locator('article.submission-record')).toHaveCount(25)
+    await page.goto(`/seller/submissions?seller=${sellerId}&previous=${older}`)
+    await expect(
+      page
+        .locator('section.card')
+        .getByText('Show the older label', { exact: true }),
+    ).toBeVisible()
+    await page.getByLabel('Bilder', { exact: true }).setInputFiles({
+      name: 'label.jpg',
+      mimeType: 'image/jpeg',
+      buffer: photo,
+    })
+    await page
+      .getByLabel('Beskrivning', { exact: true })
+      .fill('Synthetic unsent correction')
+    page.once('dialog', (dialog) => dialog.dismiss())
+    await page
+      .getByRole('link', { name: d.submissions.next, exact: true })
+      .click()
+    await expect(page).not.toHaveURL(/page=2/)
+    await expect(page.getByLabel('Beskrivning', { exact: true })).toHaveValue(
+      'Synthetic unsent correction',
+    )
+    // A child on another page suppresses another correction, including bookmarked URLs.
+    await asActor(sellerActor, async () => {
+      await db.query(
+        'select submit_my_assisted_items($1,$2,$3,$4,$5,$6,null,$7,$8,$9)',
+        [
+          tenant,
+          randomUUID(),
+          sellerId,
+          older,
+          'Synthetic completed correction',
+          JSON.stringify(photos),
+          '180.00',
+          'approval',
+          'SEK',
+        ],
+      )
+    })
+    page.once('dialog', (dialog) => dialog.accept())
+    await page.reload()
+    await expect(page.locator('section.card').getByRole('status')).toHaveText(
+      d.submissions.sent,
+    )
+    await expect(page.getByLabel('Bilder', { exact: true })).toHaveCount(0)
+    await page.goto(`/seller/submissions?seller=${sellerId}&page=99999`)
+    await expect(page).toHaveURL(/page=4/)
+    await expect(
+      page.getByText('Synthetic blue jacket', { exact: true }),
+    ).toBeVisible()
+    await page.screenshot({
+      path: test.info().outputPath('seller-photo-history-mobile.png'),
+      fullPage: true,
+    })
     await staff.screenshot({
       path: test.info().outputPath('submission-delivery-status-mobile.png'),
       fullPage: true,

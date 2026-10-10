@@ -77,6 +77,12 @@ Sellers can read and print their previously accepted agreement versions from
 paged portal history. Old terms are clearly separated from the current agreement;
 only the current version can receive a new acceptance. Internal evidence references
 remain private, and existing seller identity and MFA checks still apply.
+The audited owner/admin seller export includes photo proposals, their saved
+suggestions and reviews, reception links and evidenced agreement texts. It
+does not include model attempts, credentials or image binaries.
+The seller photo history is paged; older requests for more information stay
+reachable independently of the visible page. Completed corrections are detected
+across the full account history, and leaving an unsent form warns the seller.
 
 Production also has complete platform vocabulary labels in all eight supported
 languages, clearer payout-list and request placement, and economy totals

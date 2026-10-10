@@ -38,6 +38,10 @@ event history, bags and their inspection
 drafts, receptions with their source revisions, reviews, seller responses and garments, items
 with events and prices, sale lines with their sale headers, returns, ledger
 entries, payouts with events, statements with lines, and communications.
+It also includes the seller's photo proposals and corrections, frozen price and
+AI suggestion, review decisions, reception-preparation links and the exact
+agreement texts for which that seller has acceptance evidence. Photo references
+are included; downloading this JSON does not download the image files.
 Tenant ids are stripped; nothing about other sellers is reachable. Owner or
 admin only; every call is an access event `seller.exported`. The seller page
 offers it as a download (`/api/sellers/<id>/export`) to owners and admins.

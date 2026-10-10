@@ -119,6 +119,34 @@ export async function readMySubmissions(
   return z.array(submissionRow).max(50).parse(r.data)
 }
 
+export async function readMySubmissionHistory(
+  client: SupabaseClient,
+  input: unknown,
+) {
+  const c = z
+    .strictObject({
+      ...context,
+      page: z.number().int().min(1).max(100000),
+      previousId: z.uuid().nullable(),
+    })
+    .parse(input)
+  const result = await client.rpc('my_submission_history', {
+    p_tenant: c.tenantId,
+    p_seller: c.sellerId,
+    p_offset: (c.page - 1) * 25,
+    p_previous: c.previousId,
+  })
+  if (result.error) throw new Error(submissionError(result.error.message))
+  const row = submissionRow.extend({ has_correction: z.boolean() })
+  return z
+    .object({
+      total: z.number().int().nonnegative(),
+      rows: z.array(row).max(25),
+      selected: row.nullable(),
+    })
+    .parse(result.data)
+}
+
 /** Reuses image sanitization, but never staff reception storage or permissions. */
 export async function uploadSellerSubmissionPhoto(
   client: SupabaseClient,

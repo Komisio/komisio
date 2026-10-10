@@ -1,6 +1,7 @@
 'use client'
 import { useId, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 import type { Dictionary, Locale } from '@/lib/i18n'
 import { photoLimit } from '@/lib/media/reception-photo'
 import {
@@ -19,6 +20,7 @@ export function SubmissionForm({
   locale,
   settings,
   d,
+  unsavedMessage,
 }: {
   tenantId: string
   sellerId: string
@@ -26,6 +28,7 @@ export function SubmissionForm({
   locale: Locale
   settings: SubmissionSettings
   d: Dictionary['submissions']
+  unsavedMessage: string
 }) {
   const router = useRouter(),
     hintId = useId()
@@ -59,6 +62,11 @@ export function SubmissionForm({
   const [error, setError] = useState(''),
     [aiMessage, setAiMessage] = useState(''),
     [hasPhotos, setHasPhotos] = useState(false)
+  useUnsavedChanges(
+    !saved && (hasPhotos || !!description || !!sellerPrice)
+      ? unsavedMessage
+      : null,
+  )
   async function analyse() {
     if (running.current || !photos.current.length) return
     running.current = true

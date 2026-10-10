@@ -18,11 +18,42 @@ shape with its own project, secrets and domain
 | Shopify order retrieval  | Vercel Cron `/api/automation/shopify-pull` | every 15 min                           | automation identity, scope `shopify_pull` | `CRON_SECRET`, `KOMISIO_AUTOMATION_*`, per-store grant, Shopify pilot settings                                       |
 | Production migrations    | GitHub Actions `Production database`       | when the owner dispatches and approves | management token (production)             | `production-database` environment: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_ID`, optional `VERCEL_DEPLOY_HOOK_URL` |
 
-Every cron route answers 404 when its secrets are missing, 403 on a wrong
-`Authorization: Bearer <CRON_SECRET>`, 503 when the automation identity
-cannot sign in, and 200 with a JSON summary otherwise. Calling a route by
-hand with `curl` is safe: every job is idempotent (event ids, per-week and
-per-kind records, replay-safe pulls).
+Daily day-close preparation runs at 06:45 UTC on
+`/api/automation/day-closes`, using the ordinary automation identity and an
+owner-enabled `day_close` grant. Existing Fortnox sending runs separately at
+07:00 UTC on `/api/automation/fortnox-send` with its own `fortnox_send` grant.
+Both require `CRON_SECRET` and the configured automation credentials.
+
+Cron routes reject missing configuration and invalid bearer authorization;
+the exact 4xx/5xx response depends on the route. Read the response and the
+recorded outcome, not just whether the request reached the server. A manual
+call executes the same real actions as the schedule, including messages and
+provider writes where enabled. Replay protection does not make these routes
+read-only health checks.
+
+### Automatic day-close preparation
+
+The owner enables preparation in Accounting settings. No store is enabled by
+deployment. Preparation starts with the grant's activation date and considers
+only completed Stockholm calendar days. Each store run checks at most 31 days,
+revisits seven processed dates for late entries and records an immutable cursor
+in `access_events` with action `day_close.automatic_run`. A `partial` result
+means catch-up remains; it is not a provider-send outcome. The worker processes
+at most 200 stores within its time budget, with oldest processed stores first.
+
+Recorded balance-collected consignment fees and their reversals count as active
+days even without sales. Separately collected fees remain under their existing
+POS accounting treatment. Preparation never charges fees, creates exports or
+sends vouchers. Unmapped fee entries still require the store's approved account
+mapping before export.
+
+Use the settings page's prepared-through date and Vercel's job result to check
+progress. A database exception rolls back that store's batch; a lost HTTP reply
+can still follow a committed batch, so inspect its audit outcome. Existing totals
+are reused on a retry. Restore the worker configuration or resolve the reported
+failure before rerunning. Older corrections outside the seven-day revisit window remain
+visible in Accounting reconciliation and need explicit handling. A grant enabled
+today normally has no completed date to report until tomorrow.
 
 ## Secrets and settings (Vercel, Production target of the staging project)
 

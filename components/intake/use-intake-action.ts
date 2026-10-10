@@ -39,6 +39,20 @@ export function useIntakeAction(d: Dictionary['intake']) {
           setError(d.failed)
           return null
         }
+        // A confirmed return refusal means the displayed sale is stale.
+        // An unanswered/5xx request above still replays its original identity.
+        if (
+          command.data.action === 'recordReturn' &&
+          [
+            'LINE_ALREADY_RETURNED',
+            'SALE_NOT_COMPLETED',
+            'SALE_LINE_NOT_FOUND',
+          ].includes(result.error)
+        ) {
+          setNeedsReload(true)
+          setError(d.recordChanged)
+          return null
+        }
         // These answered transfer refusals mean the displayed item or chain
         // can no longer support this command. Keep its identity frozen and
         // inspect current facts instead of offering an endless retry. A 5xx

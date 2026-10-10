@@ -3387,6 +3387,14 @@ button.text-link:hover:not(:disabled) {
 .pricing-follow-up > .stock-metrics {
   gap: 0.75rem;
 }
+
+.inventory-import-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.inventory-import-workspace td {
+  overflow-wrap: anywhere;
+}
 .pricing-follow-up > .stock-metrics > div {
   padding: 1rem;
 }

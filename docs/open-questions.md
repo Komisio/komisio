@@ -1,5 +1,12 @@
 # Open questions
 
+Inventory migration (2026-10-10): owner/admin file preflight validates references,
+prices, currency and exact current seller matches without registering goods.
+Actual historical stock migration still needs source identity/deduplication,
+physical custody, ownership, retained agreement/commission/VAT terms and cutover
+decisions. Opening seller balances need a separate reconciled source and approved
+accounting treatment. A valid file does not resolve those financial decisions.
+
 Drop-off completion and stocktaking (2026-10-09): the owner approves the new
 immutable completion/reopen history and inventory session/scan tables. A staff
 completion explicitly closes preparation, only when no drafts or receptions

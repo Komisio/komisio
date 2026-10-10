@@ -52,6 +52,11 @@ cohort. Missing estimates, unsold goods, returns and excluded markets/currencies
 are explicit. No AI rerun or price change occurs; a representative real-store
 pilot is still required before claiming pricing accuracy.
 
+Inventory-file preparation provides a CSV template, exact seller matching and
+row-level validation without writing stock. Historical stock and opening seller
+balances still require migration provenance, retained terms and reconciliation;
+the file check does not perform that migration.
+
 Production also has complete platform vocabulary labels in all eight supported
 languages, clearer payout-list and request placement, and economy totals
 before secondary reports on mobile. Statement dates use completed Stockholm

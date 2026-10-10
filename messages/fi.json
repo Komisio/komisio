@@ -3358,7 +3358,13 @@
     "empty": "Tällä sivulla ei ole hyväksyttyjä maksuja.",
     "navigation": "Maksuluettelon sivut",
     "previous": "Edellinen",
-    "next": "Seuraava"
+    "next": "Seuraava",
+    "selectAll": "Valitse kaikki tältä sivulta",
+    "select": "Valitse {seller}, {amount}",
+    "individual": "Yksittäiset toiminnot",
+    "selected": "Valittu: {count}",
+    "confirmSelected": "Merkitse maksetuiksi",
+    "confirmed": "Maksut on kirjattu."
   },
   "bagProcessing": {
     "title": "Tavaroiden vastaanotto",

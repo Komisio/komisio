@@ -3352,7 +3352,13 @@
     "empty": "Inga godkända utbetalningar på denna sida.",
     "navigation": "Sidor i betalningsunderlaget",
     "previous": "Föregående",
-    "next": "Nästa"
+    "next": "Nästa",
+    "selectAll": "Välj alla på sidan",
+    "select": "Välj {seller}, {amount}",
+    "individual": "Enskild hantering",
+    "selected": "Valda: {count}",
+    "confirmSelected": "Registrera som betalda",
+    "confirmed": "Betalningarna är registrerade."
   },
   "bagProcessing": {
     "title": "Inlämning",

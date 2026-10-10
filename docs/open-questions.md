@@ -449,9 +449,11 @@ and stays correct until they are answered. Background and the consequences of
 each answer are in [SWISH-PAYOUTS.md](SWISH-PAYOUTS.md).
 
 The payment sheet provides a paged snapshot of approved unpaid payouts for
-printing or CSV export. Staff still verify the bank transfer and record its
-reference through the existing payout command. It contains no bank details,
-sends no payment and does not automatically reconcile bank transactions.
+printing or CSV export. Staff verify actual transfers and can record up to 50
+payments together, each with its payment reference. Changed amounts or statuses
+stop the whole confirmation; retries cannot duplicate ledger entries. Individual
+confirmation remains available. The sheet contains no bank details, sends no
+payment and does not automatically reconcile bank transactions.
 
 - **Who holds the Swish signing certificate?** Either Inority registers once
   with Swish as a technical supplier and uses its own certificate for every

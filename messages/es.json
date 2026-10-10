@@ -3358,7 +3358,13 @@
     "empty": "No hay pagos aprobados en esta página.",
     "navigation": "Páginas de la relación de pagos",
     "previous": "Anterior",
-    "next": "Siguiente"
+    "next": "Siguiente",
+    "selectAll": "Seleccionar toda la página",
+    "select": "Seleccionar {seller}, {amount}",
+    "individual": "Acciones individuales",
+    "selected": "Seleccionados: {count}",
+    "confirmSelected": "Registrar como pagados",
+    "confirmed": "Pagos registrados."
   },
   "bagProcessing": {
     "title": "Entrega",

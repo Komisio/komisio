@@ -3352,7 +3352,13 @@
     "empty": "Ingen godkjente utbetalinger på denne siden.",
     "navigation": "Sider i betalingsoversikten",
     "previous": "Forrige",
-    "next": "Neste"
+    "next": "Neste",
+    "selectAll": "Velg alle på siden",
+    "select": "Velg {seller}, {amount}",
+    "individual": "Enkeltvis behandling",
+    "selected": "Valgt: {count}",
+    "confirmSelected": "Registrer som betalt",
+    "confirmed": "Betalingene er registrert."
   },
   "bagProcessing": {
     "title": "Innlevering",

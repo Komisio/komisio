@@ -278,6 +278,16 @@ export async function notificationsForIntake(
       ]
     case 'markPayoutPaid':
       return [{ kind: 'payout_paid', referenceId: String(command.payoutId) }]
+    case 'confirmPayoutPayments':
+      return z
+        .array(z.object({ payoutId: z.uuid() }))
+        .min(1)
+        .max(50)
+        .parse(command.payments)
+        .map((payment) => ({
+          kind: 'payout_paid' as const,
+          referenceId: payment.payoutId.toLowerCase(),
+        }))
     case 'settlePayouts':
       return settlementPayoutIds(command.requestId, command.sellers).map(
         (id) => ({ kind: 'payout_approved' as const, referenceId: id }),

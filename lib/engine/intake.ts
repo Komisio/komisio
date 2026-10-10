@@ -21,6 +21,7 @@ import {
   requestPayoutCommand,
   approvePayoutCommand,
   markPayoutPaidCommand,
+  confirmPayoutPaymentsCommand,
   rejectPayoutCommand,
   settlePayoutsCommand,
 } from './payouts'
@@ -70,6 +71,7 @@ export const intakeCommand = z.discriminatedUnion('action', [
   requestPayoutCommand,
   approvePayoutCommand,
   markPayoutPaidCommand,
+  confirmPayoutPaymentsCommand,
   rejectPayoutCommand,
   settlePayoutsCommand,
   recordReturnCommand,
@@ -415,6 +417,13 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_payout: c.payoutId,
         p_reference: c.reference,
         p_reason: c.reason,
+      })
+    case 'confirmPayoutPayments':
+      return client.rpc('confirm_payout_payments', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_currency: c.currency,
+        p_payments: c.payments,
       })
     case 'rejectPayout':
       return client.rpc('reject_payout', {

@@ -69,6 +69,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
           'MAP_CHANGED',
           'PAYOUT_NOT_REQUESTED',
           'PAYOUT_NOT_APPROVED',
+          'PAYOUT_CHANGED',
           'PAYOUT_DECIDED',
           'AGREEMENT_REQUIRED',
           'INSPECTION_DRAFT_CHANGED',
@@ -102,6 +103,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
             'MAP_CHANGED',
             'PAYOUT_NOT_REQUESTED',
             'PAYOUT_NOT_APPROVED',
+            'PAYOUT_CHANGED',
             'PAYOUT_DECIDED',
           ].includes(result.error) ||
           result.error === 'INSPECTION_DRAFT_CHANGED' ||
@@ -147,6 +149,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
                                     'MAP_CHANGED',
                                     'PAYOUT_NOT_REQUESTED',
                                     'PAYOUT_NOT_APPROVED',
+                                    'PAYOUT_CHANGED',
                                     'PAYOUT_DECIDED',
                                   ].includes(result.error)
                                 ? d.recordChanged

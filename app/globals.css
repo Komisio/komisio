@@ -6586,6 +6586,30 @@ button.text-link:hover:not(:disabled) {
 }
 .payment-sheet-rows {
   display: grid;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.payment-sheet-select-all,
+.payment-sheet-payee {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.payment-sheet-select-all {
+  padding-block: 0.75rem;
+}
+.payment-sheet input[type='checkbox'] {
+  flex: 0 0 auto;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.payment-sheet-confirmation {
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+  display: grid;
+  gap: 0.75rem;
 }
 .payment-sheet .form-actions {
   display: flex;

@@ -81,7 +81,9 @@ counting and paging; item rows and details show consignment versus store ownersh
 Own purchases retain explicit evidence and a separate sale-acceptance step. Payouts
 separate open work and completed history into paged lists, with individual
 requests and batch preparation in separate tabs. Decision forms open on demand;
-unsaved references warn before navigation. Payment still happens outside Komisio.
+unsaved references warn before navigation. Batch preparation pages candidates,
+retains selection across pages and limits each command to 100 sellers, with an
+explicit next group after confirmation. Payment still happens outside Komisio.
 Stocktaking separates the selected count from session history; switching tabs
 retains scan drafts, and a selected historical count opens its own workspace.
 Store-owned item records link directly to their immutable purchase evidence,

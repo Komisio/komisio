@@ -1343,13 +1343,13 @@
       "rejected": "rejected"
     },
     "settleHeading": "Prepare payouts",
-    "settleHint": "Every seller at or above the minimum ({threshold}) without an open payout. One batch requests and approves a payout of the full available balance per selected seller; you then pay through your bank and mark each one paid.",
+    "settleHint": "Sellers with at least {threshold} and no open payout. Each full available balance is prepared for payment.",
     "settleEmpty": "No sellers are eligible for settlement right now.",
     "settleReason": "Batch note",
     "settleReasonHint": "Recorded on every approval in the batch, for example \"September settlement\".",
-    "settleConfirm": "I will pay these amounts and record the references.",
-    "settle": "Settle {count} sellers",
-    "settled": "The batch is recorded: every selected seller now has an approved payout awaiting payment.",
+    "settleConfirm": "I approve the selected amounts for payout.",
+    "settle": "Prepare {count} payouts",
+    "settled": "Payouts are prepared. Pay through your bank and record the references.",
     "settleTotal": "Total",
     "requestNone": "No available balance in this list. Open a seller to see their balance.",
     "directory": "Search all sellers",
@@ -1369,7 +1369,11 @@
     "reviewRequest": "Review request",
     "recordPayment": "Record payment",
     "paymentHint": "Pay through your bank first. Then enter the payment reference here.",
-    "prepareMore": "Prepare more"
+    "prepareMore": "Prepare more",
+    "selectedCandidates": "{selected} of {total} sellers selected",
+    "candidateLimit": "Up to 100 per batch.",
+    "selectCandidates": "Select first 100",
+    "clearCandidates": "Clear selection"
   },
   "returns": {
     "reason": "Return reason",

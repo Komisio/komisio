@@ -1343,13 +1343,13 @@
       "rejected": "avvisad"
     },
     "settleHeading": "Förbered utbetalningar",
-    "settleHint": "Alla säljare med minst minimibeloppet ({threshold}) och utan öppen utbetalning. En sats begär och godkänner en utbetalning av hela det tillgängliga saldot per vald säljare; sedan betalar du via banken och markerar varje utbetalning som utbetald.",
+    "settleHint": "Säljare med minst {threshold} och utan pågående utbetalning. Hela det tillgängliga saldot förbereds för betalning.",
     "settleEmpty": "Ingen säljare uppfyller villkoren för avräkning just nu.",
     "settleReason": "Anteckning för satsen",
     "settleReasonHint": "Sparas på varje godkännande i satsen, till exempel \"Avräkning september\".",
-    "settleConfirm": "Jag betalar dessa belopp och registrerar referenserna.",
-    "settle": "Avräkna {count} säljare",
-    "settled": "Satsen är registrerad: varje vald säljare har nu en godkänd utbetalning som väntar på betalning.",
+    "settleConfirm": "Jag godkänner de valda beloppen för utbetalning.",
+    "settle": "Förbered {count} utbetalningar",
+    "settled": "Utbetalningarna är förberedda. Betala via banken och registrera referenserna.",
     "settleTotal": "Summa",
     "requestNone": "Inget tillgängligt saldo i den här listan. Öppna en säljare för att se säljarens saldo.",
     "directory": "Sök bland alla säljare",
@@ -1369,7 +1369,11 @@
     "reviewRequest": "Granska begäran",
     "recordPayment": "Registrera betalning",
     "paymentHint": "Betala först via banken. Ange sedan betalningsreferensen här.",
-    "prepareMore": "Förbered fler"
+    "prepareMore": "Förbered fler",
+    "selectedCandidates": "{selected} av {total} säljare valda",
+    "candidateLimit": "Högst 100 per omgång.",
+    "selectCandidates": "Välj de första 100",
+    "clearCandidates": "Avmarkera alla"
   },
   "returns": {
     "reason": "Anledning till retur",

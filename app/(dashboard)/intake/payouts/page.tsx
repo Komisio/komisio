@@ -209,7 +209,10 @@ export default async function Payouts({
         <FormHelpHeading
           title={d.title}
           level={1}
-          help={{ label: d.helpLabel, steps: [d.intro, d.notice] }}
+          help={{
+            label: d.helpLabel,
+            steps: [d.intro, d.notice, d.settleReasonHint],
+          }}
         />
         <Link
           className="btn btn-secondary"
@@ -292,26 +295,28 @@ export default async function Payouts({
                   id: 'prepare',
                   label: d.tabs.prepare,
                   content: (
-                    <div className="card" data-testid="payout-settlement">
-                      <section className="intake-form">
-                        <h2>{d.settleHeading}</h2>
-                        <p>
-                          {d.settleHint.replace(
-                            '{threshold}',
-                            `${(settlement.thresholdOre / 100).toFixed(2)} ${currency}`,
-                          )}
-                        </p>
-                        <SettlementForm
-                          key={active.id}
-                          tenantId={active.id}
-                          currency={currency}
-                          candidates={settlement.sellers}
-                          d={d}
-                          intake={all.intake}
-                          leaveUnsaved={all.leaveUnsaved}
-                        />
-                      </section>
-                    </div>
+                    <section
+                      className="card intake-form"
+                      data-testid="payout-settlement"
+                    >
+                      <h2>{d.settleHeading}</h2>
+                      <p>
+                        {d.settleHint.replace(
+                          '{threshold}',
+                          `${(settlement.thresholdOre / 100).toFixed(2)} ${currency}`,
+                        )}
+                      </p>
+                      <SettlementForm
+                        key={active.id}
+                        tenantId={active.id}
+                        currency={currency}
+                        candidates={settlement.sellers}
+                        d={d}
+                        paging={all.sellersList}
+                        intake={all.intake}
+                        leaveUnsaved={all.leaveUnsaved}
+                      />
+                    </section>
                   ),
                 },
               ]

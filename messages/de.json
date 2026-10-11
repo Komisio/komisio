@@ -1343,13 +1343,13 @@
       "rejected": "abgelehnt"
     },
     "settleHeading": "Auszahlungen vorbereiten",
-    "settleHint": "Jeder Einlieferer mit mindestens dem Minimum ({threshold}) ohne offene Auszahlung. Ein Stapel beantragt und genehmigt eine Auszahlung des gesamten verfügbaren Guthabens pro ausgewähltem Einlieferer; Sie zahlen dann über Ihre Bank und markieren jede als bezahlt.",
+    "settleHint": "Verkäufer mit mindestens {threshold} und ohne offene Auszahlung. Das gesamte verfügbare Guthaben wird zur Auszahlung vorbereitet.",
     "settleEmpty": "Derzeit erfüllt kein Einlieferer die Voraussetzungen für eine Abrechnung.",
     "settleReason": "Stapelnotiz",
     "settleReasonHint": "Wird auf jeder Genehmigung im Stapel erfasst, zum Beispiel \"Abrechnung September\".",
-    "settleConfirm": "Ich werde diese Beträge zahlen und die Referenzen erfassen.",
-    "settle": "{count} Einlieferer abrechnen",
-    "settled": "Der Stapel ist erfasst: Jeder ausgewählte Einlieferer hat jetzt eine genehmigte Auszahlung, die auf Zahlung wartet.",
+    "settleConfirm": "Ich genehmige die ausgewählten Beträge zur Auszahlung.",
+    "settle": "{count} Auszahlungen vorbereiten",
+    "settled": "Die Auszahlungen sind vorbereitet. Überweisen Sie über Ihre Bank und erfassen Sie die Referenzen.",
     "settleTotal": "Gesamt",
     "requestNone": "Kein verfügbares Guthaben in dieser Liste. Öffnen Sie einen Einlieferer, um dessen Guthaben zu sehen.",
     "directory": "Alle Einlieferer durchsuchen",
@@ -1369,7 +1369,11 @@
     "reviewRequest": "Anfrage prüfen",
     "recordPayment": "Zahlung erfassen",
     "paymentHint": "Zuerst über die Bank bezahlen. Danach hier die Zahlungsreferenz eingeben.",
-    "prepareMore": "Weitere vorbereiten"
+    "prepareMore": "Weitere vorbereiten",
+    "selectedCandidates": "{selected} von {total} Verkäufern ausgewählt",
+    "candidateLimit": "Höchstens 100 pro Durchgang.",
+    "selectCandidates": "Erste 100 auswählen",
+    "clearCandidates": "Auswahl aufheben"
   },
   "returns": {
     "reason": "Rückgabegrund",

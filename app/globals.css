@@ -6982,3 +6982,8 @@ button.text-link:hover:not(:disabled) {
 .purchase-receipt {
   overflow-wrap: anywhere;
 }
+
+.settlement-selection-summary {
+  display: grid;
+  gap: 12px;
+}

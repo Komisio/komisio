@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState, useTransition } from 'react'
+import { useRef, useState, useTransition, useSyncExternalStore } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import { exactPrice } from '@/lib/engine/manual-reception'
@@ -154,6 +154,13 @@ export function PayoutRequestForm({
   )
 }
 
+const subscribeReady = () => () => {}
+const clientReady = () => true
+const serverReady = () => false
+// The engine already limits a single settlement command to one hundred sellers.
+const settlementLimit = 100
+const candidatePageSize = 25
+
 /**
  * One batch for every selected candidate: the full available balance per
  * seller, requested and approved together. Refused whole by the engine if any
@@ -166,6 +173,7 @@ export function SettlementForm({
   d,
   intake,
   leaveUnsaved,
+  paging,
 }: {
   tenantId: string
   currency: string
@@ -173,30 +181,81 @@ export function SettlementForm({
   d: D
   intake: Dictionary['intake']
   leaveUnsaved?: string
+  paging: Dictionary['sellersList']
 }) {
   const action = useIntakeAction(intake)
   const router = useRouter()
+  const ready = useSyncExternalStore(subscribeReady, clientReady, serverReady)
   const [refreshing, startRefresh] = useTransition()
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
-  const [selected, setSelected] = useState(
-    () => new Set(candidates.map((c) => c.sellerId)),
+  const [initialSelected, setInitialSelected] = useState(
+    () => new Set(candidates.slice(0, settlementLimit).map((c) => c.sellerId)),
   )
+  const [selected, setSelected] = useState(() => new Set(initialSelected))
+  const [page, setPage] = useState(1)
+  const [reason, setReason] = useState('')
+  const [confirmed, setConfirmed] = useState(false)
   const [saved, setSaved] = useState(false)
   const [submittedCandidates, setSubmittedCandidates] = useState(candidates)
   const displayedCandidates = action.locked ? submittedCandidates : candidates
-  const formRef = useRef<HTMLFormElement>(null)
-  const { ready, dirty, checkDirty, resetDirty } = useFormDirty(formRef)
+  const eligibleIds = new Set(displayedCandidates.map((c) => c.sellerId))
+  const chosen = displayedCandidates.filter((c) => selected.has(c.sellerId))
+  const dirty =
+    reason !== '' ||
+    confirmed ||
+    selected.size !== initialSelected.size ||
+    [...selected].some((id) => !initialSelected.has(id))
   useUnsavedChanges(
     !saved && !action.needsReload && (dirty || action.locked)
       ? (leaveUnsaved ?? null)
       : null,
   )
-  const chosen = displayedCandidates.filter((c) => selected.has(c.sellerId))
   const totalOre = chosen.reduce((sum, c) => sum + c.availableOre, 0)
+  const pages = Math.max(
+    1,
+    Math.ceil(displayedCandidates.length / candidatePageSize),
+  )
+  const currentPage = Math.min(page, pages)
+  const shown = displayedCandidates.slice(
+    (currentPage - 1) * candidatePageSize,
+    currentPage * candidatePageSize,
+  )
+  const pager =
+    pages > 1 ? (
+      <nav className="seller-directory-pagination" aria-label={d.settleHeading}>
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={currentPage === 1}
+          onClick={() => setPage(currentPage - 1)}
+        >
+          {paging.previousPage}
+        </Button>
+        <span>
+          {paging.pageOf
+            .replace('{page}', String(currentPage))
+            .replace('{pages}', String(pages))}
+        </span>
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={currentPage === pages}
+          onClick={() => setPage(currentPage + 1)}
+        >
+          {paging.nextPage}
+        </Button>
+      </nav>
+    ) : null
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const form = event.currentTarget,
-      f = new FormData(form)
+    if (
+      !ready ||
+      action.busy ||
+      action.needsReload ||
+      saved ||
+      chosen.length > settlementLimit
+    )
+      return
     if (!action.locked) setSubmittedCandidates(candidates)
     if (
       (action.locked || chosen.length > 0) &&
@@ -204,7 +263,7 @@ export function SettlementForm({
         action: 'settlePayouts',
         tenantId,
         requestId,
-        reason: String(f.get('reason') ?? ''),
+        reason,
         sellers: chosen.map((c) => ({
           sellerId: c.sellerId,
           amount: (c.availableOre / 100).toFixed(2),
@@ -213,36 +272,83 @@ export function SettlementForm({
     ) {
       setSaved(true)
       setRequestId(crypto.randomUUID())
-      form.reset()
+      setReason('')
+      setConfirmed(false)
       startRefresh(() => router.refresh())
     }
   }
   return (
-    <form ref={formRef} onSubmit={submit} onChange={checkDirty}>
+    <form onSubmit={submit}>
       {candidates.length === 0 && !action.locked && <p>{d.settleEmpty}</p>}
       {displayedCandidates.length > 0 && !saved && (
         <fieldset
           className="intake-fields"
-          data-draft-readiness
-          disabled={!ready || action.busy || action.locked || saved}
+          disabled={!ready || action.busy || action.locked}
         >
-          {displayedCandidates.map((c) => (
+          <div className="settlement-selection-summary">
+            <strong>
+              {d.selectedCandidates
+                .replace('{selected}', String(chosen.length))
+                .replace('{total}', String(displayedCandidates.length))}
+            </strong>
+            {displayedCandidates.length > candidatePageSize && (
+              <div className="workspace-actions">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() =>
+                    setSelected(
+                      new Set(
+                        displayedCandidates
+                          .slice(0, settlementLimit)
+                          .map((c) => c.sellerId),
+                      ),
+                    )
+                  }
+                >
+                  {d.selectCandidates}
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setSelected(new Set())}
+                >
+                  {d.clearCandidates}
+                </Button>
+              </div>
+            )}
+          </div>
+          {displayedCandidates.length > settlementLimit && (
+            <p className="muted">{d.candidateLimit}</p>
+          )}
+          {pager}
+          {shown.map((c) => (
             <label className="intake-confirm" key={c.sellerId}>
               <input
                 type="checkbox"
                 name="seller"
                 value={c.sellerId}
                 checked={selected.has(c.sellerId)}
-                onChange={(e) => {
-                  const next = new Set(selected)
-                  if (e.target.checked) next.add(c.sellerId)
-                  else next.delete(c.sellerId)
-                  setSelected(next)
+                disabled={
+                  !selected.has(c.sellerId) && chosen.length >= settlementLimit
+                }
+                onChange={(event) => {
+                  const checked = event.target.checked
+                  setSelected((previous) => {
+                    const next = new Set(
+                      [...previous].filter((id) => eligibleIds.has(id)),
+                    )
+                    if (checked && next.size < settlementLimit)
+                      next.add(c.sellerId)
+                    else if (!checked) next.delete(c.sellerId)
+                    return next
+                  })
                 }}
               />
               {c.name} · {(c.availableOre / 100).toFixed(2)} {currency}
             </label>
           ))}
+          {pager}
           <p>
             {d.settleTotal}: {(totalOre / 100).toFixed(2)} {currency}
           </p>
@@ -254,11 +360,17 @@ export function SettlementForm({
               required
               maxLength={500}
               placeholder="September"
+              value={reason}
+              onChange={(event) => setReason(event.target.value)}
             />
-            <small>{d.settleReasonHint}</small>
           </div>
           <label className="intake-confirm">
-            <input type="checkbox" required />
+            <input
+              type="checkbox"
+              required
+              checked={confirmed}
+              onChange={(event) => setConfirmed(event.target.checked)}
+            />
             {d.settleConfirm}
           </label>
         </fieldset>
@@ -269,7 +381,11 @@ export function SettlementForm({
         <Button
           type="submit"
           disabled={
-            !ready || action.busy || action.needsReload || chosen.length === 0
+            !ready ||
+            action.busy ||
+            action.needsReload ||
+            chosen.length === 0 ||
+            chosen.length > settlementLimit
           }
         >
           {action.busy
@@ -288,13 +404,15 @@ export function SettlementForm({
               variant="secondary"
               disabled={refreshing}
               onClick={() => {
-                setSelected(new Set(candidates.map((c) => c.sellerId)))
+                const next = new Set(
+                  candidates.slice(0, settlementLimit).map((c) => c.sellerId),
+                )
+                setInitialSelected(next)
+                setSelected(new Set(next))
+                setPage(1)
+                setReason('')
+                setConfirmed(false)
                 setSaved(false)
-                const cleared = new FormData()
-                for (const candidate of candidates)
-                  cleared.append('seller', candidate.sellerId)
-                cleared.append('reason', '')
-                resetDirty(cleared)
               }}
             >
               {d.prepareMore}

@@ -1343,13 +1343,13 @@
       "rejected": "avvist"
     },
     "settleHeading": "Forbered utbetalinger",
-    "settleHint": "Hver innleverer på eller over minimum ({threshold}) uten en åpen utbetaling. Én batch ber om og godkjenner en utbetaling av hele tilgjengelig saldo per valgt innleverer; deretter betaler du via banken og merker hver enkelt som betalt.",
+    "settleHint": "Selgere med minst {threshold} og uten åpen utbetaling. Hele den tilgjengelige saldoen klargjøres for betaling.",
     "settleEmpty": "Ingen innleverere oppfyller vilkårene for avregning akkurat nå.",
     "settleReason": "Batchnotat",
     "settleReasonHint": "Registreres på hver godkjenning i batchen, for eksempel \"Septemberavregning\".",
-    "settleConfirm": "Jeg vil betale disse beløpene og registrere referansene.",
-    "settle": "Avregn {count} innleverere",
-    "settled": "Batchen er registrert: hver valgt innleverer har nå en godkjent utbetaling som venter på betaling.",
+    "settleConfirm": "Jeg godkjenner de valgte beløpene for utbetaling.",
+    "settle": "Klargjør {count} utbetalinger",
+    "settled": "Utbetalingene er klargjort. Betal via banken og registrer referansene.",
     "settleTotal": "Totalt",
     "requestNone": "Ingen tilgjengelig saldo i denne listen. Åpne en innleverer for å se saldoen.",
     "directory": "Søk blant alle innleverere",
@@ -1369,7 +1369,11 @@
     "reviewRequest": "Vurder forespørsel",
     "recordPayment": "Registrer betaling",
     "paymentHint": "Betal først via banken. Oppgi deretter betalingsreferansen her.",
-    "prepareMore": "Forbered flere"
+    "prepareMore": "Forbered flere",
+    "selectedCandidates": "{selected} av {total} selgere valgt",
+    "candidateLimit": "Maksimalt 100 per omgang.",
+    "selectCandidates": "Velg de første 100",
+    "clearCandidates": "Fjern alle valg"
   },
   "returns": {
     "reason": "Returårsak",

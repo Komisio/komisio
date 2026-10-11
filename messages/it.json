@@ -1343,13 +1343,13 @@
       "rejected": "rifiutato"
     },
     "settleHeading": "Prepara i pagamenti",
-    "settleHint": "Ogni conferente al minimo ({threshold}) o sopra, senza un pagamento aperto. Un solo lotto richiede e approva un pagamento dell'intero saldo disponibile per ciascun conferente selezionato; poi paghi tramite la tua banca e segni ciascuno come pagato.",
+    "settleHint": "Venditori con almeno {threshold} e senza un pagamento aperto. L’intero saldo disponibile viene preparato per il pagamento.",
     "settleEmpty": "Nessun conferente soddisfa al momento i requisiti per la liquidazione.",
     "settleReason": "Nota del lotto",
     "settleReasonHint": "Registrata su ogni approvazione del lotto, ad esempio \"Liquidazione di settembre\".",
-    "settleConfirm": "Pagherò questi importi e registrerò i riferimenti.",
-    "settle": "Liquida {count} conferenti",
-    "settled": "Il lotto è registrato: ogni conferente selezionato ha ora un pagamento approvato in attesa di essere pagato.",
+    "settleConfirm": "Approvo gli importi selezionati per il pagamento.",
+    "settle": "Prepara {count} pagamenti",
+    "settled": "I pagamenti sono preparati. Paga tramite la banca e registra i riferimenti.",
     "settleTotal": "Totale",
     "requestNone": "Nessun saldo disponibile in questo elenco. Apri un conferente per vederne il saldo.",
     "directory": "Cerca tra tutti i conferenti",
@@ -1369,7 +1369,11 @@
     "reviewRequest": "Esamina richiesta",
     "recordPayment": "Registra pagamento",
     "paymentHint": "Paga prima tramite la banca. Poi inserisci qui il riferimento del pagamento.",
-    "prepareMore": "Prepara altri"
+    "prepareMore": "Prepara altri",
+    "selectedCandidates": "{selected} venditori selezionati su {total}",
+    "candidateLimit": "Massimo 100 per gruppo.",
+    "selectCandidates": "Seleziona i primi 100",
+    "clearCandidates": "Deseleziona tutti"
   },
   "returns": {
     "reason": "Motivo del reso",

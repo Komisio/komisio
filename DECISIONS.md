@@ -990,3 +990,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-11: A store-owned item links to its exact immutable purchase receipt rather than the first history page. Receipt details use active-tenant reads and existing RLS; opening evidence neither registers a purchase nor accepts an item.
 
 - 2026-10-11: Unsaved sale-acceptance prices and uncertain commands warn before leaving their origin. Purchase history paging guards acceptance forms while retaining new-purchase drafts. Switching an inspection origin starts a fresh form; engine transitions and retry identity are unchanged.
+
+- 2026-10-11: Payout preparation pages candidates, retains selection across pages and selects at most the engine limit of 100 sellers per command. Later groups start explicitly after refresh; full-balance approval, payment evidence and eligibility rules are unchanged.

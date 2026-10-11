@@ -32,7 +32,7 @@ test('payouts page separates open work, requests and batch preparation on mobile
     await page.setViewportSize({ width: 320, height: 720 })
     await page.goto('/intake/payouts')
     const settlement = page.getByTestId('payout-settlement')
-    const settle = settlement.locator('section')
+    const settle = settlement
     const list = page.getByTestId('payout-list')
     const request = page.getByTestId('payout-request')
     // Document position, not viewport position, so an already scrolled page cannot pass by accident.

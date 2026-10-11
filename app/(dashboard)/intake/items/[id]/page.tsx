@@ -54,7 +54,7 @@ export default async function Item({
       ? `/intake/reception/${item.origin_id}`
       : item.origin_kind === 'inspection_draft'
         ? `/intake/bags/${String(t.origin.bagId ?? '')}/inspect?draft=${item.origin_id}`
-        : '/intake/purchases'
+        : `/intake/purchases/${item.origin_id}`
   return (
     <>
       <Link className="text-link" href="/intake/items">

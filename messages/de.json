@@ -1963,8 +1963,8 @@
     "recent": "Erfasste Einkäufe",
     "recentHint": "20 Einkäufe pro Seite, die neuesten zuerst. Blättern Sie, um ältere Einkäufe zu finden.",
     "reference": "Einkauf",
-    "marginYes": "Differenzbesteuerung",
-    "marginNo": "volle MwSt.",
+    "marginYes": "Nachweis zur Differenzbesteuerung bestätigt",
+    "marginNo": "Nachweis zur Differenzbesteuerung nicht bestätigt",
     "empty": "Noch keine Einkäufe registriert.",
     "history": "Verlauf",
     "newPurchase": "Neuer Einkauf",
@@ -1973,7 +1973,8 @@
     "continueToItem": "Weiter zum Verkaufspreis",
     "itemRegistered": "Artikel registriert",
     "prepareItem": "Verkaufspreis festlegen",
-    "taxHeading": "Umsatzsteuer"
+    "taxHeading": "Umsatzsteuer",
+    "purchasedAt": "Kaufdatum"
   },
   "sellerPortal": {
     "handovers": "Abgabe ankündigen",

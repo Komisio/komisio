@@ -1963,8 +1963,8 @@
     "recent": "Registrerade inköp",
     "recentHint": "20 inköp per sida, med de senaste först. Bläddra för att hitta äldre inköp.",
     "reference": "Inköp",
-    "marginYes": "vinstmarginal",
-    "marginNo": "full moms",
+    "marginYes": "VMB-underlag intygat",
+    "marginNo": "VMB-underlag inte intygat",
     "empty": "Inga inköp registrerade ännu.",
     "history": "Historik",
     "newPurchase": "Nytt inköp",
@@ -1973,7 +1973,8 @@
     "continueToItem": "Fortsätt till försäljningspris",
     "itemRegistered": "Vara registrerad",
     "prepareItem": "Ange försäljningspris",
-    "taxHeading": "Moms"
+    "taxHeading": "Moms",
+    "purchasedAt": "Inköpsdatum"
   },
   "sellerPortal": {
     "items": "Mina varor",

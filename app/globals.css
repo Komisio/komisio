@@ -6978,3 +6978,7 @@ button.text-link:hover:not(:disabled) {
   padding-block: 0.7rem;
   min-height: 44px;
 }
+
+.purchase-receipt {
+  overflow-wrap: anywhere;
+}

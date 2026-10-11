@@ -1963,8 +1963,8 @@
     "recent": "Compras registradas",
     "recentHint": "20 compras por página, de la más reciente a la más antigua. Navega para encontrar compras anteriores.",
     "reference": "Compra",
-    "marginYes": "régimen del margen",
-    "marginNo": "IVA completo",
+    "marginYes": "Justificante del régimen de margen confirmado",
+    "marginNo": "Justificante del régimen de margen no confirmado",
     "empty": "Aún no hay compras registradas.",
     "history": "Historial",
     "newPurchase": "Nueva compra",
@@ -1973,7 +1973,8 @@
     "continueToItem": "Continuar al precio de venta",
     "itemRegistered": "Artículo registrado",
     "prepareItem": "Indicar precio de venta",
-    "taxHeading": "IVA"
+    "taxHeading": "IVA",
+    "purchasedAt": "Fecha de compra"
   },
   "sellerPortal": {
     "handovers": "Anunciar una entrega",

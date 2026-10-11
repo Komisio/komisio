@@ -11,16 +11,8 @@ import { readStoreCurrency } from '@/lib/engine/money'
 import { PurchaseForm } from '@/components/intake/purchase-form'
 import { AcceptItemForm } from '@/components/intake/accept-item-form'
 import { readItemsForOrigins } from '@/lib/engine/items'
+import { purchaseReceipt } from '@/lib/engine/purchases'
 
-const row = z.object({
-  id: z.uuid(),
-  reference: z.union([z.number().int(), z.string()]),
-  supplier_note: z.string(),
-  purchase_price_ore: z.union([z.number().int(), z.string()]),
-  evidence_reference: z.string(),
-  margin_eligible: z.boolean(),
-  purchased_at: z.iso.datetime({ offset: true }),
-})
 function formatOre(value: number | string) {
   const ore = BigInt(value)
   const kronor = ore / 100n,
@@ -71,7 +63,7 @@ export default async function Purchases({
     .range(offset, offset + pageSize - 1)
   if (error) throw new Error('Unable to load purchases')
   const purchases = z
-    .array(row)
+    .array(purchaseReceipt)
     .max(pageSize)
     .parse(data ?? [])
   const accepted = await readItemsForOrigins(

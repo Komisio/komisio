@@ -27,6 +27,7 @@ export default async function Stock({
     to: params.to,
   })
   const period = requested.success ? requested.data : currentMonthPeriod()
+  const initialTab = params.from || params.to ? 'sales' : 'overview'
   const ownership =
     params.ownership === 'store' || params.ownership === 'consignment'
       ? params.ownership
@@ -66,7 +67,12 @@ export default async function Stock({
         id="stock"
         label={d.title}
         toolbar={
-          <form method="get" className="stock-ownership-filter">
+          <form
+            method="get"
+            action={`/intake/stock#stock-${initialTab}`}
+            data-workspace-filter
+            className="stock-ownership-filter"
+          >
             <div className="field">
               <label htmlFor="stock-ownership">{all.items.ownership}</label>
               <select
@@ -86,7 +92,7 @@ export default async function Stock({
             <button className="btn btn-secondary">{e.show}</button>
           </form>
         }
-        initial={params.from || params.to ? 'sales' : 'overview'}
+        initial={initialTab}
         tabs={[
           {
             id: 'overview',

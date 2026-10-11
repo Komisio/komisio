@@ -1963,8 +1963,8 @@
     "recent": "Registrerte innkjøp",
     "recentHint": "20 innkjøp per side, med de nyeste først. Bla for å finne eldre innkjøp.",
     "reference": "Innkjøp",
-    "marginYes": "avansemetode",
-    "marginNo": "full mva",
+    "marginYes": "Grunnlag for avansemetoden bekreftet",
+    "marginNo": "Grunnlag for avansemetoden ikke bekreftet",
     "empty": "Ingen innkjøp registrert ennå.",
     "history": "Historikk",
     "newPurchase": "Nytt innkjøp",
@@ -1973,7 +1973,8 @@
     "continueToItem": "Fortsett til salgspris",
     "itemRegistered": "Vare registrert",
     "prepareItem": "Angi salgspris",
-    "taxHeading": "Mva."
+    "taxHeading": "Mva.",
+    "purchasedAt": "Kjøpsdato"
   },
   "sellerPortal": {
     "handovers": "Meld inn en innlevering",

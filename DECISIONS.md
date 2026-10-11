@@ -986,3 +986,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-11: Payout workspaces separate open work, completed history, individual requests and batch preparation. Status filters apply before counting and paging under existing RLS. Tabs retain mounted drafts; payout eligibility, transitions and payment evidence remain unchanged.
 
 - 2026-10-11: Stocktaking separates the selected count from paged session history in mounted task tabs. Selecting a session opens its count; browsing history retains the active workspace. Scan confirmations, findings, closing prerequisites and inventory facts are unchanged.
+
+- 2026-10-11: A store-owned item links to its exact immutable purchase receipt rather than the first history page. Receipt details use active-tenant reads and existing RLS; opening evidence neither registers a purchase nor accepts an item.

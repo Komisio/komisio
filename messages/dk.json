@@ -1963,8 +1963,8 @@
     "recent": "Registrerede indkøb",
     "recentHint": "20 indkøb pr. side, med de nyeste først. Bladr for at finde ældre indkøb.",
     "reference": "Indkøb",
-    "marginYes": "brugtmomsordning",
-    "marginNo": "fuld moms",
+    "marginYes": "Dokumentation for brugtmoms bekræftet",
+    "marginNo": "Dokumentation for brugtmoms ikke bekræftet",
     "empty": "Ingen indkøb registreret endnu.",
     "history": "Historik",
     "newPurchase": "Nyt indkøb",
@@ -1973,7 +1973,8 @@
     "continueToItem": "Fortsæt til salgspris",
     "itemRegistered": "Vare registreret",
     "prepareItem": "Angiv salgspris",
-    "taxHeading": "Moms"
+    "taxHeading": "Moms",
+    "purchasedAt": "Købsdato"
   },
   "sellerPortal": {
     "handovers": "Anmeld en indlevering",

@@ -47,7 +47,7 @@ for (const error of ['AUTH_REQUIRED', 'FORBIDDEN'])
           name: d.intake.retry,
           exact: true,
         })
-        const reload = form.getByRole('link', {
+        const reload = form.getByRole('button', {
           name: d.intake.reload,
           exact: true,
         })
@@ -62,6 +62,16 @@ for (const error of ['AUTH_REQUIRED', 'FORBIDDEN'])
           await expect(reload).toBeVisible()
           await expect(retry).toBeDisabled()
           expect(requests).toHaveLength(1)
+          await reload.click()
+          await expect(price).toBeEnabled()
+          await expect(price).toHaveValue('')
+          await expect(form.getByRole('alert')).toHaveCount(0)
+          await expect(
+            page.getByRole('tab', {
+              name: d.purchases.newPurchase,
+              exact: true,
+            }),
+          ).toHaveAttribute('aria-selected', 'true')
         }
         expect(
           (

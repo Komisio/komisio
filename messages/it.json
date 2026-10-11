@@ -1963,8 +1963,8 @@
     "recent": "Acquisti registrati",
     "recentHint": "20 acquisti per pagina, dal più recente. Sfoglia le pagine per trovare gli acquisti precedenti.",
     "reference": "Acquisto",
-    "marginYes": "regime del margine",
-    "marginNo": "IVA piena",
+    "marginYes": "Documentazione per il regime del margine confermata",
+    "marginNo": "Documentazione per il regime del margine non confermata",
     "empty": "Nessun acquisto registrato finora.",
     "history": "Storico",
     "newPurchase": "Nuovo acquisto",
@@ -1973,7 +1973,8 @@
     "continueToItem": "Continua al prezzo di vendita",
     "itemRegistered": "Articolo registrato",
     "prepareItem": "Imposta prezzo di vendita",
-    "taxHeading": "IVA"
+    "taxHeading": "IVA",
+    "purchasedAt": "Data di acquisto"
   },
   "sellerPortal": {
     "handovers": "Annuncia una consegna",

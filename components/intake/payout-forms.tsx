@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useRef, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import { exactPrice } from '@/lib/engine/manual-reception'
@@ -176,6 +176,7 @@ export function SettlementForm({
 }) {
   const action = useIntakeAction(intake)
   const router = useRouter()
+  const [refreshing, startRefresh] = useTransition()
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
   const [selected, setSelected] = useState(
     () => new Set(candidates.map((c) => c.sellerId)),
@@ -213,7 +214,7 @@ export function SettlementForm({
       setSaved(true)
       setRequestId(crypto.randomUUID())
       form.reset()
-      router.refresh()
+      startRefresh(() => router.refresh())
     }
   }
   return (
@@ -285,6 +286,7 @@ export function SettlementForm({
             <Button
               type="button"
               variant="secondary"
+              disabled={refreshing}
               onClick={() => {
                 setSelected(new Set(candidates.map((c) => c.sellerId)))
                 setSaved(false)

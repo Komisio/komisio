@@ -52,6 +52,23 @@ export function WorkspaceTabs({
   return (
     <div
       className="workspace-tabs"
+      onSubmitCapture={(event) => {
+        const form = event.target
+        if (
+          !(form instanceof HTMLFormElement) ||
+          !form.hasAttribute('data-workspace-filter') ||
+          form.method !== 'get'
+        )
+          return
+        const destination = new URL(form.action)
+        if (
+          destination.origin !== window.location.origin ||
+          destination.pathname !== window.location.pathname
+        )
+          return
+        destination.hash = `${id}-${selected}`
+        form.action = destination.href
+      }}
       onClickCapture={(event) => {
         if (
           event.defaultPrevented ||

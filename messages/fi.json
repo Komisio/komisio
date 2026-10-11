@@ -1963,8 +1963,8 @@
     "recent": "Kirjatut ostot",
     "recentHint": "20 ostoa sivulla, uusimmat ensin. Selaa löytääksesi vanhemmat ostot.",
     "reference": "Osto",
-    "marginYes": "marginaaliverotus",
-    "marginNo": "täysi alv",
+    "marginYes": "Marginaaliverotuksen tositteet vahvistettu",
+    "marginNo": "Marginaaliverotuksen tositteita ei vahvistettu",
     "empty": "Ostoja ei ole vielä rekisteröity.",
     "history": "Historia",
     "newPurchase": "Uusi osto",
@@ -1973,7 +1973,8 @@
     "continueToItem": "Jatka myyntihintaan",
     "itemRegistered": "Tuote rekisteröity",
     "prepareItem": "Aseta myyntihinta",
-    "taxHeading": "ALV"
+    "taxHeading": "ALV",
+    "purchasedAt": "Ostopäivä"
   },
   "sellerPortal": {
     "handovers": "Ilmoita tavaroiden tuonnista",

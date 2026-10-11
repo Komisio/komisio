@@ -113,6 +113,7 @@
       "acceptedLanguage": "Hyväksytty kieli"
     },
     "pdf": {
+      "view": "Näytä myyjäsopimus",
       "download": "Lataa PDF",
       "personal": "Lataa PDF myyjän nimellä",
       "language": "PDF:n kieli",
@@ -237,7 +238,7 @@
       "steps": [
         "Valitse tavaran tuoja ja rekisteröi yksi tuote kerrallaan.",
         "Täytä kuvaus, tuoteryhmä ja hinta. Tarkista mahdolliset tekoälyn ehdotukset.",
-        "Tallenna tuote. Siirry vahvistuksesta tuotteen merkintään tai seuraavaan tuotteeseen."
+        "Tallenna tuote."
       ]
     },
     "typeIntro": "Tuotetyyppi tallennetaan koko myymälälle ja valitaan tälle tuotteelle.",

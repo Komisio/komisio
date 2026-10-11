@@ -113,6 +113,7 @@
       "acceptedLanguage": "Accepted language"
     },
     "pdf": {
+      "view": "View seller agreement",
       "download": "Download PDF",
       "personal": "Download PDF with seller name",
       "language": "PDF language",
@@ -237,7 +238,7 @@
       "steps": [
         "Select the consignor and register one item at a time.",
         "Enter description, category and price. Check any AI suggestions.",
-        "Save the item. Use the confirmation to label it or continue with the next item."
+        "Save the item."
       ]
     },
     "typeIntro": "The item type is saved for the whole store and selected for this item.",

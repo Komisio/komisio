@@ -1,6 +1,5 @@
 'use client'
 import { useId, useState } from 'react'
-import Link from 'next/link'
 import { agreementPdfUrl } from '@/lib/documents/agreement-pdf-url'
 import { localeNames, type Dictionary } from '@/lib/i18n'
 import type { SellerAgreement } from '@/lib/engine/intake'
@@ -32,15 +31,8 @@ export function SellerAgreementFields({
   const id = useId(),
     w = d.workspace
   if (!base) return <p>{d.none}</p>
-  const selected =
-    base.translations?.find((t) => t.id === translationId) ?? base
   return (
     <section className="seller-agreement-fields">
-      <h3>{d.title}</h3>
-      <p>
-        {selected.title} · {d.version} {base.version} ·{' '}
-        {localeNames[selected.language]}
-      </p>
       {!!base.translations?.length && (
         <div className="field">
           <label htmlFor={id + '-language'}>{d.language}</label>
@@ -59,14 +51,6 @@ export function SellerAgreementFields({
           </select>
         </div>
       )}
-      <Link
-        className="text-link"
-        href={`/intake/agreements?version=${base.id}${translationId ? '&translation=' + translationId : ''}#agreement-document`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {w.open} ↗
-      </Link>
       <a
         className="text-link"
         href={agreementPdfUrl({
@@ -77,7 +61,7 @@ export function SellerAgreementFields({
         })}
         download
       >
-        {sellerId ? d.pdf.personal : d.pdf.download}
+        {d.pdf.view}
       </a>
       <small>{sellerId ? d.pdf.savedName : d.pdf.afterSave}</small>
       {accepted ? (
@@ -91,11 +75,9 @@ export function SellerAgreementFields({
               name="agreementApproved"
               checked={checked}
               onChange={(event) => setChecked(event.target.checked)}
-              aria-describedby={id + '-hint'}
             />
             {w.approval}
           </label>
-          <small id={id + '-hint'}>{w.approvalHint}</small>
           <div className="field" hidden={!checked}>
             <label htmlFor={id + '-reference'}>{w.reference}</label>
             <input

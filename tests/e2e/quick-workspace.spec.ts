@@ -90,7 +90,7 @@ test('continuous reception retains registration, personal agreement, approval an
       ).status(),
     ).toBe(404)
     const pdf = page.getByRole('link', {
-      name: d.agreements.pdf.personal,
+      name: d.agreements.pdf.view,
       exact: true,
     })
     await expect(pdf).toHaveAttribute('href', new RegExp(`seller=${seller}`))
@@ -242,7 +242,14 @@ test('changed agreement is reloaded inside reception without losing the item', a
       .getByRole('button', { name: d.quickIntake.recordAgreement, exact: true })
       .click()
     await expect(page.locator('#quick-agreement')).toHaveAttribute('open', '')
-    await expect(page.getByText(/Synthetic changed terms/)).toBeVisible()
+    const agreementPdf = page.getByRole('link', {
+      name: d.agreements.pdf.view,
+      exact: true,
+    })
+    await expect(agreementPdf).toHaveAttribute(
+      'href',
+      new RegExp(`version=${nextAgreement}`),
+    )
     await expect(
       page.getByLabel(d.agreements.workspace.approval),
     ).not.toBeChecked()
@@ -270,7 +277,10 @@ test('changed agreement is reloaded inside reception without losing the item', a
         exact: true,
       })
       .click()
-    await expect(page.getByText(/Synthetic latest terms/)).toBeVisible()
+    await expect(agreementPdf).toHaveAttribute(
+      'href',
+      new RegExp(`version=${latest}`),
+    )
     await expect(
       page.getByLabel(d.agreements.workspace.approval),
     ).not.toBeChecked()

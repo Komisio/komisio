@@ -113,6 +113,7 @@
       "acceptedLanguage": "Godkendt sprog"
     },
     "pdf": {
+      "view": "Vis sælgeraftale",
       "download": "Hent PDF",
       "personal": "Hent PDF med sælgerens navn",
       "language": "Sprog i PDF",
@@ -237,7 +238,7 @@
       "steps": [
         "Vælg indleverer, og registrer én vare ad gangen.",
         "Udfyld beskrivelse, kategori og pris. Kontrollér eventuelle AI-forslag.",
-        "Gem varen. Brug bekræftelsen til at mærke den eller fortsætte med næste vare."
+        "Gem varen."
       ]
     },
     "typeIntro": "Varetypen gemmes for hele butikken og vælges til denne vare.",

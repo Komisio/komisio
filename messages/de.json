@@ -113,6 +113,7 @@
       "acceptedLanguage": "Akzeptierte Sprache"
     },
     "pdf": {
+      "view": "Verkäufervertrag ansehen",
       "download": "PDF herunterladen",
       "personal": "PDF mit Verkäufername herunterladen",
       "language": "Sprache der PDF",
@@ -237,7 +238,7 @@
       "steps": [
         "Wählen Sie den Einlieferer und erfassen Sie jeweils einen Artikel.",
         "Geben Sie Beschreibung, Kategorie und Preis ein. Prüfen Sie etwaige KI-Vorschläge.",
-        "Speichern Sie den Artikel. Über die Bestätigung können Sie ihn etikettieren oder den nächsten Artikel erfassen."
+        "Speichern Sie den Artikel."
       ]
     },
     "typeIntro": "Der Artikeltyp wird für das gesamte Geschäft gespeichert und für diesen Artikel ausgewählt.",

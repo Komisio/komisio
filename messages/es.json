@@ -113,6 +113,7 @@
       "acceptedLanguage": "Idioma aceptado"
     },
     "pdf": {
+      "view": "Ver contrato del vendedor",
       "download": "Descargar PDF",
       "personal": "Descargar PDF con el nombre del vendedor",
       "language": "Idioma del PDF",
@@ -237,7 +238,7 @@
       "steps": [
         "Selecciona al consignador y registra un artículo cada vez.",
         "Introduce descripción, categoría y precio. Revisa las sugerencias de IA.",
-        "Guarda el artículo. Desde la confirmación puedes etiquetarlo o continuar con el siguiente."
+        "Guarda el artículo."
       ]
     },
     "typeIntro": "El tipo se guarda para toda la tienda y se selecciona para este artículo.",

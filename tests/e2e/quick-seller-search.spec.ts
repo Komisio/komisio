@@ -5,7 +5,7 @@ import { p2Fixture } from '../helpers/p2-fixture'
 import all from '../../messages/sv.json' with { type: 'json' }
 const d = all.quickIntake
 
-test('quick intake finds sellers beyond the first hundred and keeps stale choices out', async ({
+test('quick intake searches a 300-seller store and keeps stale choices out', async ({
   page,
   request,
 }, testInfo) => {
@@ -13,11 +13,13 @@ test('quick intake finds sellers beyond the first hundred and keeps stale choice
   await register(page, email, 'K!' + randomBytes(16).toString('hex'))
   const f = await p2Fixture(email)
   try {
-    for (let i = 0; i < 105; i++)
+    for (let i = 0; i < 298; i++)
       await f.db.query('select register_seller($1,$2,$3,$4,$5)', [
         f.tenant,
         randomUUID(),
-        'AA Search seller ' + String(i).padStart(3, '0'),
+        i >= 296
+          ? 'Shared synthetic name'
+          : 'AA Search seller ' + String(i).padStart(3, '0'),
         'lookup-' + randomUUID() + '@example.test',
         '0701111111',
       ])
@@ -35,6 +37,23 @@ test('quick intake finds sellers beyond the first hundred and keeps stale choice
     await page.goto('/intake/quick')
     const choices = page.locator('.quick-seller .intake-list button')
     const search = page.getByLabel(d.searchSeller, { exact: true })
+    await expect(choices).toHaveCount(0)
+    await expect(
+      page.getByText(d.workspace.searchAmong.replace('{count}', '300'), {
+        exact: true,
+      }),
+    ).toBeVisible()
+    await expect(page.getByRole('tab')).toHaveCount(0)
+    for (const width of [320, 1440]) {
+      await page.setViewportSize({ width, height: 900 })
+      await page.screenshot({
+        path: `private/quick-300-start-${width}.png`,
+        fullPage: true,
+      })
+    }
+    await page
+      .getByRole('button', { name: d.workspace.browseSellers, exact: true })
+      .click()
     await expect(choices).toHaveCount(12)
     await expect(choices.first()).toContainText('AA Search seller 000')
     await page
@@ -45,6 +64,12 @@ test('quick intake finds sellers beyond the first hundred and keeps stale choice
       .getByRole('button', { name: d.sellerSearchPrevious, exact: true })
       .click()
     await expect(choices.first()).toContainText('AA Search seller 000')
+    await page.setViewportSize({ width: 320, height: 800 })
+    await search.fill('Shared synthetic name')
+    await expect(choices).toHaveCount(2)
+    const contacts = await choices.locator('small').allTextContents()
+    expect(new Set(contacts).size).toBe(2)
+    await expect(page.locator('.quick-seller-context')).toHaveCount(0)
     await search.fill('0709876543')
     await expect(choices).toHaveCount(1)
     await expect(choices.first()).toContainText('ZZ Target seller')
@@ -92,7 +117,10 @@ test('quick intake finds sellers beyond the first hundred and keeps stale choice
     await expect(choices).toHaveCount(1)
     await expect(choices.first()).toContainText('ZZ Target seller')
     releaseSlow()
-    await choices.first().click()
+    await search.focus()
+    await search.press('Tab')
+    await expect(choices.first()).toBeFocused()
+    await choices.first().press('Enter')
     await expect(page.locator('.quick-seller-context')).toContainText(
       'ZZ Target seller',
     )
@@ -103,7 +131,7 @@ test('quick intake finds sellers beyond the first hundred and keeps stale choice
     await page
       .getByRole('button', { name: d.changeSeller, exact: true })
       .click()
-    await expect(choices).toHaveCount(12)
+    await expect(choices).toHaveCount(0)
     await page.unroute('**/api/sellers/search?**')
     await page.route(
       '**/api/sellers/search?**',
@@ -123,7 +151,7 @@ test('quick intake finds sellers beyond the first hundred and keeps stale choice
     await search.fill('No such seller')
     await expect(page.getByText(d.noSeller, { exact: true })).toBeVisible()
     await search.fill('')
-    await expect(choices).toHaveCount(12)
+    await expect(choices).toHaveCount(0)
 
     const endpoint = '/api/sellers/search?tenant=' + f.tenant
     const result = await page.request.get(endpoint + '&q=0709876543')

@@ -2,7 +2,6 @@
 import { ReceivingPanel } from './receiving-panel'
 import { QuickSellerAgreement } from './quick-seller-agreement'
 import type { AgreementSummary } from './seller-agreement-fields'
-import './seller-tabs.css'
 import { CreateItemType } from './create-item-type'
 import { useEffect, useRef, useState } from 'react'
 import {
@@ -186,7 +185,6 @@ export function QuickReception({
 }) {
   const router = useRouter()
   const confirmNavigation = useConfirmNavigation()
-  const [tab, setTab] = useState<'seller' | 'item'>('seller')
   const [registering, setRegistering] = useState(false)
   const [registrationLocked, setRegistrationLocked] = useState(false)
   const [agreementRevision, setAgreementRevision] = useState(0)
@@ -196,11 +194,13 @@ export function QuickReception({
     locked: false,
   })
   function reloadAgreement() {
-    setTab('seller')
     if (agreementGuard.locked) return
     if (agreementGuard.dirty && !window.confirm(d.workspace.leaveSeller)) return
     setAgreementGuard({ dirty: false, locked: false })
     setAgreementRevision((revision) => revision + 1)
+    requestAnimationFrame(() =>
+      document.getElementById('quick-seller-evidence')?.focus(),
+    )
   }
   const [createdTypes, setCreatedTypes] = useState<
     AttributeVocabulary['types']
@@ -315,18 +315,12 @@ export function QuickReception({
   useEffect(() => {
     // Only an explicit seller selection or Next item moves the user's place.
     // Focus the heading so mobile users can choose photo or typing themselves.
-    if (
-      !focusNextItem.current ||
-      !seller ||
-      done ||
-      (!bagId && tab !== 'item') ||
-      !itemHeading.current
-    )
+    if (!focusNextItem.current || !seller || done || !itemHeading.current)
       return
     focusNextItem.current = false
     itemHeading.current.focus({ preventScroll: true })
     itemHeading.current.scrollIntoView({ block: 'start', behavior: 'instant' })
-  }, [seller, done, tab, bagId])
+  }, [seller, done])
   useEffect(() => {
     // "Ready for the shelf" unmounts the button that had focus. Move focus to
     // the confirmation heading so completion is announced and the next Tab
@@ -793,92 +787,64 @@ export function QuickReception({
       {!bagId && (
         <>
           {seller && (
-            <div className="quick-seller-context">
+            <div
+              className="quick-seller-context"
+              id="quick-selected-seller"
+              tabIndex={-1}
+            >
               <div>
                 <small>{d.seller}</small>
                 <strong>{seller.name}</strong>
                 {seller.contact && <span>{seller.contact}</span>}
               </div>
-              <button
-                type="button"
-                className="text-link"
-                disabled={
-                  busy || uncertain || photoUnresolved || agreementGuard.locked
-                }
-                onClick={() => {
-                  if (
+              <div className="quick-seller-actions">
+                <Link
+                  className="text-link"
+                  href={`/intake/sellers/${seller.id}`}
+                >
+                  {d.workspace.openSeller}
+                </Link>
+                <button
+                  type="button"
+                  className="text-link"
+                  disabled={
                     busy ||
                     uncertain ||
                     photoUnresolved ||
                     agreementGuard.locked
-                  )
-                    return
-                  if (
-                    (hasUnsavedItem || agreementGuard.dirty) &&
-                    !window.confirm(d.discardForSellerChange)
-                  )
-                    return
-                  setSeller(null)
-                  setRegistered(false)
-                  setRegistering(false)
-                  setAgreementGuard({ dirty: false, locked: false })
-                  setTab('seller')
-                  next()
-                }}
-              >
-                {d.changeSeller}
-              </button>
+                  }
+                  onClick={() => {
+                    if (
+                      busy ||
+                      uncertain ||
+                      photoUnresolved ||
+                      agreementGuard.locked
+                    )
+                      return
+                    if (
+                      (hasUnsavedItem || agreementGuard.dirty) &&
+                      !window.confirm(d.discardForSellerChange)
+                    )
+                      return
+                    setSeller(null)
+                    setRegistered(false)
+                    setRegistering(false)
+                    setAgreementGuard({ dirty: false, locked: false })
+                    next()
+                  }}
+                >
+                  {d.changeSeller}
+                </button>
+              </div>
             </div>
           )}
-          <div
-            className="seller-tablist quick-tablist"
-            role="tablist"
-            aria-label={d.title}
-          >
-            {(['seller', 'item'] as const).map((value, index) => (
-              <button
-                key={value}
-                id={'quick-tab-' + value}
-                type="button"
-                role="tab"
-                aria-selected={tab === value}
-                aria-controls={'quick-panel-' + value}
-                tabIndex={tab === value ? 0 : -1}
-                disabled={busy}
-                onClick={() => setTab(value)}
-                onKeyDown={(event) => {
-                  const target =
-                    event.key === 'Home'
-                      ? 'seller'
-                      : event.key === 'End'
-                        ? 'item'
-                        : ['ArrowLeft', 'ArrowRight'].includes(event.key)
-                          ? index === 0
-                            ? 'item'
-                            : 'seller'
-                          : null
-                  if (target) {
-                    event.preventDefault()
-                    setTab(target)
-                    document.getElementById('quick-tab-' + target)?.focus()
-                  }
-                }}
-              >
-                {value === 'seller'
-                  ? d.workspace.sellerTab
-                  : d.workspace.itemTab}
-              </button>
-            ))}
-          </div>
-          <section
-            id="quick-panel-seller"
-            role="tabpanel"
-            aria-labelledby="quick-tab-seller"
-            hidden={tab !== 'seller'}
-          >
+          <section className="quick-seller-workspace">
             {seller ? (
-              <div className="card intake-form quick-seller-details">
-                <h2>{d.workspace.sellerTab}</h2>
+              <div
+                className="quick-seller-details"
+                id="quick-seller-evidence"
+                tabIndex={-1}
+              >
                 {registered && (
                   <p id="quick-seller-saved" tabIndex={-1} role="status">
                     {d.workspace.sellerSaved}
@@ -896,72 +862,67 @@ export function QuickReception({
                     onReload={reloadAgreement}
                   />
                 )}
-                <div className="row wrap">
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      setTab('item')
-                      focusNextItem.current = true
-                    }}
-                  >
-                    {d.workspace.continue}
-                  </Button>
-                  <Link
-                    className="text-link"
-                    href={`/intake/sellers/${seller.id}`}
-                  >
-                    {d.workspace.openSeller}
-                  </Link>
-                </div>
               </div>
             ) : (
               <>
-                <div className="row wrap quick-seller-mode">
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    aria-pressed={!registering}
-                    disabled={registrationLocked}
-                    onClick={() => setRegistering(false)}
-                  >
-                    {d.searchSeller}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    aria-pressed={registering}
-                    disabled={registrationLocked}
-                    onClick={() => {
-                      setRegistering(true)
-                      requestAnimationFrame(() =>
-                        document.getElementById('seller-name')?.focus(),
-                      )
-                    }}
-                  >
-                    {d.newSeller}
-                  </Button>
-                </div>
                 <section
                   className="card intake-form quick-seller"
                   hidden={registering}
                   aria-label={d.seller}
                 >
-                  <h2>{d.searchSeller}</h2>
+                  <div className="quick-seller-search-heading">
+                    <h2>{d.workspace.chooseSeller}</h2>
+                    {sellerForms && (
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        onClick={() => {
+                          setRegistering(true)
+                          requestAnimationFrame(() =>
+                            document.getElementById('seller-name')?.focus(),
+                          )
+                        }}
+                      >
+                        {d.newSeller}
+                      </Button>
+                    )}
+                  </div>
                   <QuickSellerPicker
                     tenantId={tenantId}
                     sellers={sellers}
                     total={sellersTotal}
                     onSelect={(selected) => {
                       if (!confirmNavigation()) return
-                      focusNextItem.current = true
                       setSeller(selected)
-                      setTab('item')
+                      requestAnimationFrame(() =>
+                        document
+                          .getElementById('quick-selected-seller')
+                          ?.focus(),
+                      )
                     }}
                     d={d}
                   />
                 </section>
                 {sellerForms && (
-                  <div hidden={!registering}>
+                  <div
+                    className="quick-seller-registration"
+                    hidden={!registering}
+                  >
+                    <button
+                      type="button"
+                      className="text-link quick-search-back"
+                      disabled={registrationLocked}
+                      onClick={() => {
+                        setRegistering(false)
+                        requestAnimationFrame(() =>
+                          document
+                            .getElementById('quick-seller-search')
+                            ?.focus(),
+                        )
+                      }}
+                    >
+                      {d.workspace.backToSearch}
+                    </button>
                     <ReceivingPanel
                       tenantId={tenantId}
                       seller={null}
@@ -982,11 +943,9 @@ export function QuickReception({
                         )
                         setSeller(selected)
                         setRegistered(true)
-                        setTab('seller')
                       }}
                       onSelectSeller={(selected) => {
                         setSeller(selected)
-                        setTab('seller')
                       }}
                     />
                   </div>
@@ -996,20 +955,7 @@ export function QuickReception({
           </section>
         </>
       )}
-      <div
-        id={bagId ? undefined : 'quick-panel-item'}
-        role={bagId ? undefined : 'tabpanel'}
-        aria-labelledby={bagId ? undefined : 'quick-tab-item'}
-        hidden={!bagId && tab !== 'item'}
-      >
-        {!seller && (
-          <div className="card intake-form">
-            <p>{d.workspace.selectSeller}</p>
-            <Button type="button" onClick={() => setTab('seller')}>
-              {d.workspace.sellerTab}
-            </Button>
-          </div>
-        )}
+      <div>
         {seller && !done && (
           <section
             className="card intake-form quick-item"
@@ -1021,11 +967,6 @@ export function QuickReception({
               tabIndex={-1}
               style={{ scrollMarginTop: '1rem' }}
             >
-              {!bagId && (
-                <span className="quick-step" aria-hidden="true">
-                  2
-                </span>
-              )}
               {d.garment}
             </h2>
             <form

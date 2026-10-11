@@ -3,7 +3,7 @@ import { randomUUID, randomBytes } from 'node:crypto'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
-test('AI HTTP fixture creates, restores and applies an agreement without publishing', async ({
+test('AI HTTP fixture replaces agreement text directly and retries without duplicate generation', async ({
   page,
 }) => {
   test.skip(
@@ -21,67 +21,114 @@ test('AI HTTP fixture creates, restores and applies an agreement without publish
     await f.commit()
     await page.goto('/intake/agreements')
     await page.getByRole('tab').last().click()
-    await page.locator('.agreement-ai-disclosure > summary').click()
     await page.locator('#agreement-language').selectOption('no')
-    const generated = page.waitForResponse((r) =>
-      r.url().endsWith('/api/agreements/assistance'),
-    )
+    await page.locator('#agreement-title').fill('My agreement')
     await page
-      .getByRole('button', { name: d.agreements.ai.create, exact: true })
-      .click()
-    const response = await generated
-    expect(response.status(), await response.text()).toBe(200)
-    const result = await response.json()
-    await expect(page.locator('.agreement-ai-preview')).toContainText(
-      'Syntetisk avtale',
-    )
-    await expect(page.locator('#agreement-body')).toHaveValue('Only a test')
-    expect(
-      (
-        await f.db.query(
-          'select count(*)::int n from seller_agreement_versions where tenant_id=$1',
-          [f.tenant],
-        )
-      ).rows[0].n,
-    ).toBe(1)
-    const repeated = await page.request.post('/api/agreements/assistance', {
-      headers: { Origin: 'http://127.0.0.1:3000' },
-      data: response.request().postDataJSON(),
+      .locator('#agreement-body')
+      .fill('Keep this until generation succeeds')
+    const generationRequests: Record<string, unknown>[] = []
+    const decisionRequests: Record<string, unknown>[] = []
+    await page.route('**/api/agreements/assistance', async (route) => {
+      generationRequests.push(route.request().postDataJSON())
+      const response = await route.fetch()
+      expect(response.status(), await response.text()).toBe(200)
+      if (generationRequests.length === 1) await route.abort('failed')
+      else await route.fulfill({ response })
     })
-    expect(await repeated.json()).toEqual(result)
-    await page.reload()
-    await page.locator('.agreement-ai-disclosure > summary').click()
-    await expect(page.locator('.agreement-ai-preview')).toContainText(
-      'Syntetisk avtale',
-    )
+    await page.route('**/api/operations', async (route) => {
+      decisionRequests.push(route.request().postDataJSON())
+      const response = await route.fetch()
+      expect((await response.json()).outcome).toBe('executed')
+      if (decisionRequests.length === 1) await route.abort('failed')
+      else await route.fulfill({ response })
+    })
+    const generate = page.locator('.agreement-ai button')
+    await generate.click()
     await expect(
-      page.getByRole('button', { name: d.agreements.ai.use, exact: true }),
-    ).toBeDisabled()
-    await page.getByLabel(d.agreements.ai.replace, { exact: true }).check()
-    const applied = page.waitForResponse((r) =>
-      r.url().endsWith('/api/operations'),
+      page.locator('.agreement-ai').getByRole('alert'),
+    ).toContainText(d.agreements.ai.pending)
+    await expect(page.locator('#agreement-body')).toHaveValue(
+      'Keep this until generation succeeds',
     )
-    await page
-      .getByRole('button', { name: d.agreements.ai.use, exact: true })
-      .click()
-    expect((await (await applied).json()).outcome).toBe('executed')
-    await expect(page.locator('#agreement-title')).toHaveValue(
-      'Syntetisk avtale',
+    await generate.click()
+    await expect(
+      page.locator('.agreement-ai').getByRole('alert'),
+    ).toContainText(d.agreements.ai.retryUse)
+    await expect(page.locator('#agreement-body')).toHaveValue(
+      'Keep this until generation succeeds',
     )
-    await expect(page.locator('#agreement-language')).toHaveValue('no')
+    await generate.click()
     await expect(page.locator('#agreement-body')).toHaveValue(/HTTP FIXTURE/)
-    expect(
-      (
-        await f.db.query(
-          'select count(*)::int n from seller_agreement_versions where tenant_id=$1',
-          [f.tenant],
-        )
-      ).rows[0].n,
-    ).toBe(1)
+    await expect(page.locator('#agreement-title')).toHaveValue('My agreement')
+    await expect(page.locator('#agreement-language')).toHaveValue('no')
+    expect(generationRequests).toHaveLength(2)
+    expect(generationRequests[1]).toEqual(generationRequests[0])
+    expect(decisionRequests).toHaveLength(2)
+    expect(decisionRequests[1]).toEqual(decisionRequests[0])
+    await expect(page.locator('.agreement-ai-preview')).toHaveCount(0)
+    await expect(
+      page.getByText('Fyll inn butikknavn.', { exact: true }),
+    ).toHaveCount(0)
     expect(
       (
         await f.db.query(
           'select count(*)::int n from agreement_ai_attempts where tenant_id=$1',
+          [f.tenant],
+        )
+      ).rows[0].n,
+    ).toBe(1)
+    expect(
+      (
+        await f.db.query(
+          'select count(*)::int n from seller_agreement_versions where tenant_id=$1',
+          [f.tenant],
+        )
+      ).rows[0].n,
+    ).toBe(1)
+    // Successful generation is an unsaved edit, never an implicit publication.
+    let warned = false
+    page.once('dialog', async (dialog) => {
+      warned = true
+      await dialog.accept()
+    })
+    await page.reload()
+    expect(warned).toBe(true)
+    await expect(page.locator('#agreement-body')).toHaveValue('Only a test')
+    await page.locator('#agreement-language').selectOption('no')
+    await page.locator('#agreement-title').fill('')
+    // A fresh generation respects the existing 20-second tenant rate limit.
+    await expect
+      .poll(
+        async () =>
+          (
+            await f.db.query(
+              "select not exists(select 1 from agreement_ai_attempts where tenant_id=$1 and created_at>clock_timestamp()-interval '20 seconds') ready",
+              [f.tenant],
+            )
+          ).rows[0].ready,
+        { timeout: 25000, intervals: [1000] },
+      )
+      .toBe(true)
+    await generate.click()
+    await expect(page.locator('#agreement-body')).toHaveValue(/HTTP FIXTURE/)
+    await expect(page.locator('#agreement-title')).toHaveValue(
+      'Syntetisk avtale',
+    )
+    expect(generationRequests[2].requestId).not.toBe(
+      generationRequests[0].requestId,
+    )
+    expect(
+      (
+        await f.db.query(
+          'select count(*)::int n from agreement_ai_attempts where tenant_id=$1',
+          [f.tenant],
+        )
+      ).rows[0].n,
+    ).toBe(2)
+    expect(
+      (
+        await f.db.query(
+          'select count(*)::int n from seller_agreement_versions where tenant_id=$1',
           [f.tenant],
         )
       ).rows[0].n,

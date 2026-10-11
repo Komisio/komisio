@@ -4,10 +4,8 @@ import { useRouter } from 'next/navigation'
 import { locales, localeNames, type Dictionary, type Locale } from '@/lib/i18n'
 import type { SellerAgreement } from '@/lib/engine/intake'
 import { useIntakeAction } from './use-intake-action'
-import { AgreementPreview, readAgreementPreview } from './agreement-preview'
 import { AgreementAssistant } from './agreement-assistant'
 import type { RestoredAgreementDraft } from '@/lib/engine/agreement-assistance'
-import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { Button } from '@/components/ui/button'
 import { useFormDirty } from '@/components/platform/use-form-dirty'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
@@ -30,14 +28,11 @@ export function AgreementPublisher({
   const [saved, setSaved] = useState(false)
   const form = useRef<HTMLFormElement>(null)
   const { ready, dirty, checkDirty, resetDirty } = useFormDirty(form)
-  useUnsavedChanges(!saved && (dirty || action.locked) ? d.leaveUnsaved : null)
+  useUnsavedChanges(
+    !saved && (dirty || action.locked || aiBusy) ? d.leaveUnsaved : null,
+  )
   // Keep the reviewed base while editing, even if navigation refreshes server props.
   const [base, setBase] = useState(current)
-  const [preview, setPreview] = useState({
-    title: current?.title ?? '',
-    body: current?.body ?? '',
-    language: current?.language ?? locale,
-  })
   const router = useRouter()
   const a = d.agreements
   async function submit(event: React.FormEvent<HTMLFormElement>) {
@@ -65,19 +60,6 @@ export function AgreementPublisher({
       className="card intake-form agreement-publisher"
       data-testid="agreement-publisher"
     >
-      <FormHelpHeading
-        title={base ? a.nextVersion : a.publishHeading}
-        help={{
-          label: a.usage.checklistLabel,
-          steps: [a.usage.checklist1, a.usage.checklist2, a.ai.hint],
-        }}
-      />
-
-      {!saved && (
-        <p className="agreement-editor-context">
-          {base ? a.editor.newVersionHint : a.editor.firstVersionHint}
-        </p>
-      )}
       {saved ? (
         <div role="status">
           <p>{a.published}</p>
@@ -92,11 +74,6 @@ export function AgreementPublisher({
           <Button
             onClick={() => {
               setBase(current)
-              setPreview({
-                title: current?.title ?? '',
-                body: current?.body ?? '',
-                language: current?.language ?? locale,
-              })
               setSaved(false)
               resetDirty()
             }}
@@ -105,14 +82,34 @@ export function AgreementPublisher({
           </Button>
         </div>
       ) : (
-        <form
-          ref={form}
-          onChange={() => {
-            checkDirty()
-            if (form.current) setPreview(readAgreementPreview(form.current))
-          }}
-          onSubmit={submit}
-        >
+        <form ref={form} onChange={checkDirty} onSubmit={submit}>
+          <AgreementAssistant
+            tenantId={tenantId}
+            baseId={base?.id ?? null}
+            d={a.ai}
+            busyChanged={setAiBusy}
+            initial={draft}
+            disabled={
+              !ready || action.busy || action.locked || action.needsReload
+            }
+            language={() =>
+              (new FormData(form.current!).get('language') ?? locale) as Locale
+            }
+            apply={(draft, language) => {
+              if (!form.current) return
+              const title = form.current.elements.namedItem(
+                'title',
+              ) as HTMLInputElement
+              if (!title.value.trim()) title.value = draft.title
+              ;(
+                form.current.elements.namedItem('body') as HTMLTextAreaElement
+              ).value = draft.body
+              ;(
+                form.current.elements.namedItem('language') as HTMLSelectElement
+              ).value = language
+              checkDirty()
+            }}
+          />
           <fieldset
             data-draft-readiness={!ready ? '' : undefined}
             className="intake-fields"
@@ -144,19 +141,16 @@ export function AgreementPublisher({
                 </select>
               </div>
             </div>
-            <div className="agreement-editor-columns">
-              <div className="field">
-                <label htmlFor="agreement-body">{a.body}</label>
-                <textarea
-                  id="agreement-body"
-                  name="body"
-                  rows={18}
-                  required
-                  maxLength={12000}
-                  defaultValue={base?.body ?? ''}
-                />
-              </div>
-              <AgreementPreview text={preview} labels={a.editor} />
+            <div className="field">
+              <label htmlFor="agreement-body">{a.body}</label>
+              <textarea
+                id="agreement-body"
+                name="body"
+                rows={18}
+                required
+                maxLength={12000}
+                defaultValue={base?.body ?? ''}
+              />
             </div>
             <label className="intake-confirm">
               <input
@@ -167,46 +161,6 @@ export function AgreementPublisher({
               {a.requireEvidence}
             </label>
           </fieldset>
-          <details className="agreement-ai-disclosure">
-            <summary>{a.ai.create}</summary>
-            <AgreementAssistant
-              tenantId={tenantId}
-              baseId={base?.id ?? null}
-              d={a.ai}
-              busyChanged={setAiBusy}
-              initial={draft}
-              disabled={
-                !ready || action.busy || action.locked || action.needsReload
-              }
-              language={() =>
-                (new FormData(form.current!).get('language') ??
-                  locale) as Locale
-              }
-              hasText={() =>
-                !!(
-                  form.current?.elements.namedItem(
-                    'body',
-                  ) as HTMLTextAreaElement | null
-                )?.value.trim()
-              }
-              apply={(draft, language) => {
-                if (!form.current) return
-                ;(
-                  form.current.elements.namedItem('title') as HTMLInputElement
-                ).value = draft.title
-                ;(
-                  form.current.elements.namedItem('body') as HTMLTextAreaElement
-                ).value = draft.body
-                ;(
-                  form.current.elements.namedItem(
-                    'language',
-                  ) as HTMLSelectElement
-                ).value = language
-                setPreview({ title: draft.title, body: draft.body, language })
-                checkDirty()
-              }}
-            />
-          </details>
           {action.error && <p role="alert">{action.error}</p>}
           {action.needsReload && (
             <a className="text-link" href="/intake/agreements">

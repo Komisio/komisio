@@ -1354,7 +1354,22 @@
     "requestNone": "Nessun saldo disponibile in questo elenco. Apri un conferente per vederne il saldo.",
     "directory": "Cerca tra tutti i conferenti",
     "latestFifty": "Sono mostrati gli ultimi 50 pagamenti. La pagina di ogni conferente mostra i suoi pagamenti recenti.",
-    "history": "Cronologia e riferimenti"
+    "history": "Cronologia e riferimenti",
+    "tabs": {
+      "open": "In corso",
+      "history": "Cronologia",
+      "request": "Richiedi pagamento",
+      "prepare": "Prepara più pagamenti"
+    },
+    "helpLabel": "Informazioni sui pagamenti",
+    "listCount": "Totale: {count}",
+    "noOpen": "Nessun pagamento in corso.",
+    "noHistory": "Nessun pagamento concluso.",
+    "viewOpen": "Mostra pagamenti in corso",
+    "reviewRequest": "Esamina richiesta",
+    "recordPayment": "Registra pagamento",
+    "paymentHint": "Paga prima tramite la banca. Poi inserisci qui il riferimento del pagamento.",
+    "prepareMore": "Prepara altri"
   },
   "returns": {
     "reason": "Motivo del reso",
@@ -1948,8 +1963,8 @@
     "recent": "Acquisti registrati",
     "recentHint": "20 acquisti per pagina, dal più recente. Sfoglia le pagine per trovare gli acquisti precedenti.",
     "reference": "Acquisto",
-    "marginYes": "regime del margine",
-    "marginNo": "IVA piena",
+    "marginYes": "Documentazione per il regime del margine confermata",
+    "marginNo": "Documentazione per il regime del margine non confermata",
     "empty": "Nessun acquisto registrato finora.",
     "history": "Storico",
     "newPurchase": "Nuovo acquisto",
@@ -1958,7 +1973,8 @@
     "continueToItem": "Continua al prezzo di vendita",
     "itemRegistered": "Articolo registrato",
     "prepareItem": "Imposta prezzo di vendita",
-    "taxHeading": "IVA"
+    "taxHeading": "IVA",
+    "purchasedAt": "Data di acquisto"
   },
   "sellerPortal": {
     "handovers": "Annuncia una consegna",
@@ -3530,7 +3546,10 @@
     "exportObservation": "Osservazione",
     "exportException": "Discrepanza",
     "exportActor": "Registrato da",
-    "exportObservedAt": "Registrato (UTC)"
+    "exportObservedAt": "Registrato (UTC)",
+    "countTab": "Inventario",
+    "historyTab": "Cronologia",
+    "noSessions": "Nessun inventario precedente."
   },
   "pricingFollowUp": {
     "title": "Verifica i prezzi IA",

@@ -65,6 +65,7 @@ for (const c of [
       const row = page
         .locator('.intake-notice')
         .filter({ has: page.locator(`#reason-${payout}`) })
+      await row.locator('.payout-decision > summary').click()
       await row.locator(`#reason-${payout}`).fill('Synthetic decision reason')
       if (c.action === 'markPayoutPaid')
         await row.locator(`#ref-${payout}`).fill('SYNTHETIC-NO-TRANSFER')

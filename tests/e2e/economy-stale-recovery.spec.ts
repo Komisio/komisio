@@ -64,12 +64,16 @@ test('staff economy forms provide a reload when the active store became stale', 
     }
     await page.goto('/intake/payouts')
     const request = page.getByTestId('payout-request')
-    await request.locator('summary').click()
+    await page
+      .getByRole('tab', { name: d.payouts.tabs.request, exact: true })
+      .click()
     await request.getByLabel(d.payouts.amount, { exact: true }).fill('100')
     await request.getByRole('checkbox').check()
     await refuse(request, d.payouts.request)
     const settlement = page.getByTestId('payout-settlement')
-    await settlement.locator('summary').click()
+    await page
+      .getByRole('tab', { name: d.payouts.tabs.prepare, exact: true })
+      .click()
     await settlement
       .getByLabel(d.payouts.settleReason, { exact: true })
       .fill('Synthetic batch')

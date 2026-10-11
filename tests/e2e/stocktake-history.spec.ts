@@ -27,14 +27,22 @@ test('older stocktakes stay reachable without losing the open count', async ({
     await page.goto('/intake/stocktake')
     await expect(page.getByLabel(d.stocktake.reference)).toBeVisible()
     const history = page.locator('.stocktake-session-history')
-    await history.locator('summary').click()
+    await page
+      .getByRole('tab', { name: d.stocktake.historyTab, exact: true })
+      .click()
     await expect(history.locator('li')).toHaveCount(20)
     const firstPage = await history
       .locator('li a')
       .evaluateAll((links) =>
         links.map((link) => (link as HTMLAnchorElement).href),
       )
+    await page
+      .getByRole('tab', { name: d.stocktake.countTab, exact: true })
+      .click()
     await page.getByLabel(d.stocktake.reference).fill('I-12345678')
+    await page
+      .getByRole('tab', { name: d.stocktake.historyTab, exact: true })
+      .click()
     page.once('dialog', (dialog) => dialog.dismiss())
     await history
       .getByRole('link', { name: d.stocktake.next, exact: true })
@@ -43,13 +51,25 @@ test('older stocktakes stay reachable without losing the open count', async ({
     await expect(page.getByLabel(d.stocktake.reference)).toHaveValue(
       'I-12345678',
     )
+    await page
+      .getByRole('tab', { name: d.stocktake.countTab, exact: true })
+      .click()
     await page.getByLabel(d.stocktake.reference).fill('')
+    await page
+      .getByRole('tab', { name: d.stocktake.historyTab, exact: true })
+      .click()
     await history
       .getByRole('link', { name: d.stocktake.next, exact: true })
       .click()
     await expect(page).toHaveURL(/historyPage=2/)
     await expect(history.locator('li')).toHaveCount(3)
+    await page
+      .getByRole('tab', { name: d.stocktake.countTab, exact: true })
+      .click()
     await expect(page.getByLabel(d.stocktake.reference)).toBeVisible()
+    await page
+      .getByRole('tab', { name: d.stocktake.historyTab, exact: true })
+      .click()
     const secondPage = await history
       .locator('li a')
       .evaluateAll((links) =>

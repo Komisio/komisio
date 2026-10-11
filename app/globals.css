@@ -6970,3 +6970,15 @@ button.text-link:hover:not(:disabled) {
 .economy-page .workspace-toolbar > .economy-layout {
   margin-bottom: 24px;
 }
+
+.payout-decision > summary {
+  cursor: pointer;
+  color: var(--ink);
+  font-weight: 600;
+  padding-block: 0.7rem;
+  min-height: 44px;
+}
+
+.purchase-receipt {
+  overflow-wrap: anywhere;
+}

@@ -71,6 +71,10 @@ test('ownership filters count and page all goods and carry through stock reports
     ).toHaveText(d.items.ownershipKinds.consignment)
 
     await page.goto('/intake/stock?ownership=store')
+    await page.locator('.stock-ownership-filter').getByRole('button').click()
+    await expect(
+      page.getByRole('tab', { name: d.stock.tabs.overview, exact: true }),
+    ).toHaveAttribute('aria-selected', 'true')
     await expect(
       page.getByRole('region', { name: d.stock.current }),
     ).toContainText('6500.00 SEK')
@@ -102,12 +106,29 @@ test('ownership filters count and page all goods and carry through stock reports
       .getByRole('combobox', { name: d.items.ownership })
       .selectOption('consignment')
     await page.locator('.stock-ownership-filter').getByRole('button').click()
-    await page
-      .getByRole('tab', { name: d.stock.tabs.overview, exact: true })
-      .click()
+    await expect(
+      page.getByRole('tab', { name: d.stock.tabs.overview, exact: true }),
+    ).toHaveAttribute('aria-selected', 'true')
     await expect(
       page.getByRole('region', { name: d.stock.current }),
     ).toContainText('200.00 SEK')
+    for (const [tab, ownership] of [
+      [d.stock.tabs.categories, 'store'],
+      [d.stock.tabs.sales, 'consignment'],
+    ]) {
+      const selected = page.getByRole('tab', { name: tab, exact: true })
+      await selected.click()
+      await page
+        .getByRole('combobox', { name: d.items.ownership })
+        .selectOption(ownership)
+      await page.locator('.stock-ownership-filter').getByRole('button').click()
+      await expect(page).toHaveURL(new RegExp('ownership=' + ownership))
+      await expect(selected).toHaveAttribute('aria-selected', 'true')
+      expect(new URL(page.url()).searchParams.get('from')).toBe('2020-01-01')
+    }
+    await page
+      .getByRole('tab', { name: d.stock.tabs.overview, exact: true })
+      .click()
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,

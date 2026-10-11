@@ -222,13 +222,10 @@ test('controlled journey: receive, register, label, sell and approve a settlemen
 
     // 5. Approve the settlement batch for every seller above the threshold (this seller, 160 SEK).
     await page.goto('/intake/payouts')
-    await page.getByTestId('payout-settlement').locator('summary').click()
-    const settle = page.locator('section', {
-      has: page.getByRole('heading', {
-        name: d.payouts.settleHeading,
-        exact: true,
-      }),
-    })
+    await page
+      .getByRole('tab', { name: d.payouts.tabs.prepare, exact: true })
+      .click()
+    const settle = page.getByTestId('payout-settlement')
     await expect(settle.getByText(/160\.00 SEK/).first()).toBeVisible()
     await settle
       .getByLabel(d.payouts.settleReason, { exact: true })
@@ -245,17 +242,19 @@ test('controlled journey: receive, register, label, sell and approve a settlemen
     ).toBeVisible()
     // Wait for the refreshed server view: the approved payout must be visible
     // and the reserved credit must no longer be offered for another batch.
-    const payoutList = page.locator('section', {
-      has: page.getByRole('heading', { name: d.payouts.list, exact: true }),
-    })
+    const payoutList = page.getByTestId('payout-list')
     await expect(payoutList.locator('.badge')).toContainText(
       d.payouts.statuses.approved,
     )
     await expect(
-      payoutList.getByRole('button', { name: d.payouts.markPaid, exact: true }),
-    ).toBeVisible()
-    await expect(
       settle.getByText(d.payouts.settleEmpty, { exact: true }),
+    ).toBeVisible()
+    await page
+      .getByRole('tab', { name: d.payouts.tabs.open, exact: true })
+      .click()
+    await payoutList.locator('.payout-decision > summary').click()
+    await expect(
+      payoutList.getByRole('button', { name: d.payouts.markPaid, exact: true }),
     ).toBeVisible()
     await noOverflow()
     await page.screenshot({

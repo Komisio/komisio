@@ -40,6 +40,7 @@ test('an already approved payout is not re-reserved and the row recovers on the 
       has: page.locator(`#reason-${payout}`),
     })
     await expect(row).toContainText(d.payouts.statuses.requested)
+    await row.locator('.payout-decision > summary').click()
     await row.locator(`#reason-${payout}`).fill('Synthetic browser approval')
     // The other session approves first.
     await f.asActor(f.actor, async () => {
@@ -83,6 +84,7 @@ test('an already approved payout is not re-reserved and the row recovers on the 
       has: page.locator(`#ref-${payout}`),
     })
     await expect(after).toContainText(d.payouts.statuses.approved)
+    await after.locator('.payout-decision > summary').click()
     await expect(
       after.getByRole('button', { name: d.payouts.markPaid, exact: true }),
     ).toBeEnabled()

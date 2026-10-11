@@ -1354,7 +1354,22 @@
     "requestNone": "Tässä luettelossa ei ole käytettävissä olevaa saldoa. Avaa tuoja nähdäksesi saldon.",
     "directory": "Hae kaikista tuojista",
     "latestFifty": "Näytetään 50 viimeisintä tilitystä. Kunkin tuojan sivu näyttää tuojan viimeisimmät tilitykset.",
-    "history": "Historia ja viitteet"
+    "history": "Historia ja viitteet",
+    "tabs": {
+      "open": "Avoimet",
+      "history": "Historia",
+      "request": "Pyydä tilitystä",
+      "prepare": "Valmistele useita"
+    },
+    "helpLabel": "Tietoa tilityksistä",
+    "listCount": "Yhteensä: {count}",
+    "noOpen": "Ei avoimia tilityksiä.",
+    "noHistory": "Ei päättyneitä tilityksiä.",
+    "viewOpen": "Näytä avoimet tilitykset",
+    "reviewRequest": "Tarkista pyyntö",
+    "recordPayment": "Kirjaa maksu",
+    "paymentHint": "Maksa ensin pankin kautta. Kirjaa sitten maksun viite tähän.",
+    "prepareMore": "Valmistele lisää"
   },
   "returns": {
     "reason": "Palautuksen syy",
@@ -1948,8 +1963,8 @@
     "recent": "Kirjatut ostot",
     "recentHint": "20 ostoa sivulla, uusimmat ensin. Selaa löytääksesi vanhemmat ostot.",
     "reference": "Osto",
-    "marginYes": "marginaaliverotus",
-    "marginNo": "täysi alv",
+    "marginYes": "Marginaaliverotuksen tositteet vahvistettu",
+    "marginNo": "Marginaaliverotuksen tositteita ei vahvistettu",
     "empty": "Ostoja ei ole vielä rekisteröity.",
     "history": "Historia",
     "newPurchase": "Uusi osto",
@@ -1958,7 +1973,8 @@
     "continueToItem": "Jatka myyntihintaan",
     "itemRegistered": "Tuote rekisteröity",
     "prepareItem": "Aseta myyntihinta",
-    "taxHeading": "ALV"
+    "taxHeading": "ALV",
+    "purchasedAt": "Ostopäivä"
   },
   "sellerPortal": {
     "handovers": "Ilmoita tavaroiden tuonnista",
@@ -3536,7 +3552,10 @@
     "exportObservation": "Havainto",
     "exportException": "Poikkeama",
     "exportActor": "Kirjaaja",
-    "exportObservedAt": "Kirjattu (UTC)"
+    "exportObservedAt": "Kirjattu (UTC)",
+    "countTab": "Inventointi",
+    "historyTab": "Historia",
+    "noSessions": "Ei aiempia inventointeja."
   },
   "pricingFollowUp": {
     "title": "Seuraa tekoälyn hinta-arvioita",

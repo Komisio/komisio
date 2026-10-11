@@ -50,7 +50,61 @@ export function WorkspaceTabs({
     window.dispatchEvent(new HashChangeEvent('hashchange'))
   }
   return (
-    <div className="workspace-tabs">
+    <div
+      className="workspace-tabs"
+      onSubmitCapture={(event) => {
+        const form = event.target
+        if (
+          !(form instanceof HTMLFormElement) ||
+          !form.hasAttribute('data-workspace-filter') ||
+          form.method !== 'get'
+        )
+          return
+        const destination = new URL(form.action)
+        if (
+          destination.origin !== window.location.origin ||
+          destination.pathname !== window.location.pathname
+        )
+          return
+        destination.hash = `${id}-${selected}`
+        form.action = destination.href
+      }}
+      onClickCapture={(event) => {
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey
+        )
+          return
+        const link =
+          event.target instanceof Element
+            ? event.target.closest('a[href]')
+            : null
+        if (
+          !(link instanceof HTMLAnchorElement) ||
+          link.hasAttribute('download') ||
+          (link.target && link.target !== '_self')
+        )
+          return
+        const destination = new URL(link.href)
+        if (
+          destination.origin !== window.location.origin ||
+          destination.pathname !== window.location.pathname ||
+          destination.search !== window.location.search
+        )
+          return
+        const tab = tabs.find((tab) => destination.hash === `#${id}-${tab.id}`)
+        if (!tab) return
+        // Next Link can update a fragment without a native hashchange event.
+        // Handle same-workspace anchors here so their mounted panels follow it.
+        event.preventDefault()
+        select(tab.id)
+        document.getElementById(`${id}-tab-${tab.id}`)?.focus()
+      }}
+    >
       <div className="workspace-tablist" role="tablist" aria-label={label}>
         {tabs.map((tab, index) => (
           <button

@@ -27,13 +27,10 @@ test('settlement batch reserves every candidate and the economy page shows the p
     )
     await f.commit()
     await page.goto('/intake/payouts')
-    await page.getByTestId('payout-settlement').locator('summary').click()
-    const settle = page.locator('section', {
-      has: page.getByRole('heading', {
-        name: d.payouts.settleHeading,
-        exact: true,
-      }),
-    })
+    await page
+      .getByRole('tab', { name: d.payouts.tabs.prepare, exact: true })
+      .click()
+    const settle = page.getByTestId('payout-settlement')
     await expect(settle.getByText(/160\.00 SEK/).first()).toBeVisible()
     await settle
       .getByLabel(d.payouts.settleReason, { exact: true })
@@ -52,7 +49,9 @@ test('settlement batch reserves every candidate and the economy page shows the p
       d.payouts.statuses.approved,
     )
     await page.reload()
-    await page.getByTestId('payout-settlement').locator('summary').click()
+    await page
+      .getByRole('tab', { name: d.payouts.tabs.prepare, exact: true })
+      .click()
     await expect(
       page.getByText(d.payouts.settleEmpty, { exact: true }),
     ).toBeVisible()

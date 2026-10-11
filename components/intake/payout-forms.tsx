@@ -1,11 +1,16 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useRef, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import { exactPrice } from '@/lib/engine/manual-reception'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
 import { ReloadAction } from './reload-action'
+import {
+  NavigationLink,
+  useUnsavedChanges,
+} from '@/components/platform/navigation-warning'
+import { useFormDirty } from '@/components/platform/use-form-dirty'
 
 type D = Dictionary['payouts']
 
@@ -16,12 +21,14 @@ export function PayoutRequestForm({
   sellers,
   d,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   currency: string
   sellers: { id: string; name: string; availableOre: number }[]
   d: D
   intake: Dictionary['intake']
+  leaveUnsaved?: string
 }) {
   const action = useIntakeAction(intake)
   const router = useRouter()
@@ -29,6 +36,15 @@ export function PayoutRequestForm({
   const [priceError, setPriceError] = useState('')
   const [saved, setSaved] = useState(false)
   const submittedFields = useRef<FormData | null>(null)
+  const [submittedSellers, setSubmittedSellers] = useState(sellers)
+  const displayedSellers = action.locked ? submittedSellers : sellers
+  const formRef = useRef<HTMLFormElement>(null)
+  const { ready, dirty, checkDirty, resetDirty } = useFormDirty(formRef)
+  useUnsavedChanges(
+    !action.needsReload && (dirty || action.locked)
+      ? (leaveUnsaved ?? null)
+      : null,
+  )
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const form = event.currentTarget,
@@ -45,6 +61,7 @@ export function PayoutRequestForm({
       return
     }
     submittedFields.current = f
+    if (!action.locked) setSubmittedSellers(sellers)
     if (
       await action.run({
         action: 'requestPayout',
@@ -58,53 +75,81 @@ export function PayoutRequestForm({
       submittedFields.current = null
       setRequestId(crypto.randomUUID())
       form.reset()
+      const cleared = new FormData()
+      cleared.append('seller', sellers[0]?.id ?? '')
+      cleared.append('amount', '')
+      resetDirty(cleared)
       router.refresh()
     }
   }
   return (
     <form
+      ref={formRef}
       onSubmit={submit}
       onChange={() => {
         if (!action.locked) setSaved(false)
+        checkDirty()
       }}
     >
-      <fieldset
-        className="intake-fields"
-        disabled={action.busy || action.locked}
-      >
-        <div className="field">
-          <label htmlFor="payout-seller">{d.seller}</label>
-          <select id="payout-seller" name="seller" required>
-            {sellers.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name} · {(s.availableOre / 100).toFixed(2)} {currency}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="field">
-          <label htmlFor="payout-amount">{d.amount}</label>
-          <input
-            id="payout-amount"
-            name="amount"
-            required
-            inputMode="decimal"
-            placeholder="100"
-          />
-          <small>{d.amountHint}</small>
-          {priceError && <p role="alert">{priceError}</p>}
-        </div>
-        <label className="intake-confirm">
-          <input type="checkbox" required />
-          {d.requestConfirm}
-        </label>
-      </fieldset>
+      {displayedSellers.length === 0 && <p role="status">{d.requestNone}</p>}
+      {displayedSellers.length > 0 && (
+        <>
+          <p>{d.requestHint}</p>
+          <fieldset
+            className="intake-fields"
+            data-draft-readiness
+            disabled={!ready || action.busy || action.locked}
+          >
+            <div className="field">
+              <label htmlFor="payout-seller">{d.seller}</label>
+              <select id="payout-seller" name="seller" required>
+                {displayedSellers.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name} · {(s.availableOre / 100).toFixed(2)} {currency}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="field">
+              <label htmlFor="payout-amount">{d.amount}</label>
+              <input
+                id="payout-amount"
+                name="amount"
+                required
+                inputMode="decimal"
+                placeholder="100"
+              />
+              <small>{d.amountHint}</small>
+              {priceError && <p role="alert">{priceError}</p>}
+            </div>
+            <label className="intake-confirm">
+              <input type="checkbox" required />
+              {d.requestConfirm}
+            </label>
+          </fieldset>
+        </>
+      )}
       {action.error && <p role="alert">{action.error}</p>}
       {action.needsReload && <ReloadAction label={intake.reload} />}
-      <Button type="submit" disabled={action.busy || action.needsReload}>
-        {action.busy ? intake.busy : action.locked ? intake.retry : d.request}
-      </Button>
-      {saved && <p role="status">{d.requested}</p>}
+      {displayedSellers.length > 0 && (
+        <Button
+          type="submit"
+          disabled={!ready || action.busy || action.needsReload}
+        >
+          {action.busy ? intake.busy : action.locked ? intake.retry : d.request}
+        </Button>
+      )}
+      {saved && (
+        <>
+          <p role="status">{d.requested}</p>
+          <NavigationLink
+            className="text-link"
+            href="/intake/payouts#payouts-open"
+          >
+            {d.viewOpen}
+          </NavigationLink>
+        </>
+      )}
     </form>
   )
 }
@@ -120,28 +165,41 @@ export function SettlementForm({
   candidates,
   d,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   currency: string
   candidates: { sellerId: string; name: string; availableOre: number }[]
   d: D
   intake: Dictionary['intake']
+  leaveUnsaved?: string
 }) {
   const action = useIntakeAction(intake)
   const router = useRouter()
+  const [refreshing, startRefresh] = useTransition()
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
   const [selected, setSelected] = useState(
     () => new Set(candidates.map((c) => c.sellerId)),
   )
   const [saved, setSaved] = useState(false)
-  const chosen = candidates.filter((c) => selected.has(c.sellerId))
+  const [submittedCandidates, setSubmittedCandidates] = useState(candidates)
+  const displayedCandidates = action.locked ? submittedCandidates : candidates
+  const formRef = useRef<HTMLFormElement>(null)
+  const { ready, dirty, checkDirty, resetDirty } = useFormDirty(formRef)
+  useUnsavedChanges(
+    !saved && !action.needsReload && (dirty || action.locked)
+      ? (leaveUnsaved ?? null)
+      : null,
+  )
+  const chosen = displayedCandidates.filter((c) => selected.has(c.sellerId))
   const totalOre = chosen.reduce((sum, c) => sum + c.availableOre, 0)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const form = event.currentTarget,
       f = new FormData(form)
+    if (!action.locked) setSubmittedCandidates(candidates)
     if (
-      chosen.length &&
+      (action.locked || chosen.length > 0) &&
       (await action.run({
         action: 'settlePayouts',
         tenantId,
@@ -156,57 +214,63 @@ export function SettlementForm({
       setSaved(true)
       setRequestId(crypto.randomUUID())
       form.reset()
-      router.refresh()
+      startRefresh(() => router.refresh())
     }
   }
   return (
-    <form onSubmit={submit}>
-      <fieldset
-        className="intake-fields"
-        disabled={action.busy || action.locked || saved}
-      >
-        {candidates.map((c) => (
-          <label className="intake-confirm" key={c.sellerId}>
+    <form ref={formRef} onSubmit={submit} onChange={checkDirty}>
+      {candidates.length === 0 && !action.locked && <p>{d.settleEmpty}</p>}
+      {displayedCandidates.length > 0 && !saved && (
+        <fieldset
+          className="intake-fields"
+          data-draft-readiness
+          disabled={!ready || action.busy || action.locked || saved}
+        >
+          {displayedCandidates.map((c) => (
+            <label className="intake-confirm" key={c.sellerId}>
+              <input
+                type="checkbox"
+                name="seller"
+                value={c.sellerId}
+                checked={selected.has(c.sellerId)}
+                onChange={(e) => {
+                  const next = new Set(selected)
+                  if (e.target.checked) next.add(c.sellerId)
+                  else next.delete(c.sellerId)
+                  setSelected(next)
+                }}
+              />
+              {c.name} · {(c.availableOre / 100).toFixed(2)} {currency}
+            </label>
+          ))}
+          <p>
+            {d.settleTotal}: {(totalOre / 100).toFixed(2)} {currency}
+          </p>
+          <div className="field">
+            <label htmlFor="settle-reason">{d.settleReason}</label>
             <input
-              type="checkbox"
-              name="seller"
-              value={c.sellerId}
-              checked={selected.has(c.sellerId)}
-              onChange={(e) => {
-                const next = new Set(selected)
-                if (e.target.checked) next.add(c.sellerId)
-                else next.delete(c.sellerId)
-                setSelected(next)
-              }}
+              id="settle-reason"
+              name="reason"
+              required
+              maxLength={500}
+              placeholder="September"
             />
-            {c.name} · {(c.availableOre / 100).toFixed(2)} {currency}
+            <small>{d.settleReasonHint}</small>
+          </div>
+          <label className="intake-confirm">
+            <input type="checkbox" required />
+            {d.settleConfirm}
           </label>
-        ))}
-        <p>
-          {d.settleTotal}: {(totalOre / 100).toFixed(2)} {currency}
-        </p>
-        <div className="field">
-          <label htmlFor="settle-reason">{d.settleReason}</label>
-          <input
-            id="settle-reason"
-            name="reason"
-            required
-            maxLength={500}
-            placeholder="September"
-          />
-          <small>{d.settleReasonHint}</small>
-        </div>
-        <label className="intake-confirm">
-          <input type="checkbox" required />
-          {d.settleConfirm}
-        </label>
-      </fieldset>
+        </fieldset>
+      )}
       {action.error && <p role="alert">{action.error}</p>}
       {action.needsReload && <ReloadAction label={intake.reload} />}
-      {!saved && (
+      {!saved && displayedCandidates.length > 0 && (
         <Button
           type="submit"
-          disabled={action.busy || action.needsReload || chosen.length === 0}
+          disabled={
+            !ready || action.busy || action.needsReload || chosen.length === 0
+          }
         >
           {action.busy
             ? intake.busy
@@ -215,7 +279,35 @@ export function SettlementForm({
               : d.settle.replace('{count}', String(chosen.length))}
         </Button>
       )}
-      {saved && <p role="status">{d.settled}</p>}
+      {saved && (
+        <>
+          <p role="status">{d.settled}</p>
+          {candidates.length > 0 && (
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={refreshing}
+              onClick={() => {
+                setSelected(new Set(candidates.map((c) => c.sellerId)))
+                setSaved(false)
+                const cleared = new FormData()
+                for (const candidate of candidates)
+                  cleared.append('seller', candidate.sellerId)
+                cleared.append('reason', '')
+                resetDirty(cleared)
+              }}
+            >
+              {d.prepareMore}
+            </Button>
+          )}
+          <NavigationLink
+            className="text-link"
+            href="/intake/payouts#payouts-open"
+          >
+            {d.viewOpen}
+          </NavigationLink>
+        </>
+      )}
     </form>
   )
 }
@@ -227,17 +319,26 @@ export function PayoutDecision({
   status,
   d,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   payoutId: string
   status: 'requested' | 'approved'
   d: D
   intake: Dictionary['intake']
+  leaveUnsaved?: string
 }) {
   const action = useIntakeAction(intake)
   const router = useRouter()
   const [requestId] = useState(() => crypto.randomUUID())
   const [done, setDone] = useState(false)
+  const formRef = useRef<HTMLFormElement>(null)
+  const { ready, dirty, checkDirty } = useFormDirty(formRef)
+  useUnsavedChanges(
+    !done && !action.needsReload && (dirty || action.locked)
+      ? (leaveUnsaved ?? null)
+      : null,
+  )
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     // The retry button has no new decision; the hook owns the frozen command.
@@ -272,10 +373,13 @@ export function PayoutDecision({
     }
   }
   return (
-    <form onSubmit={submit}>
+    <form ref={formRef} onSubmit={submit} onChange={checkDirty}>
       <fieldset
         className="intake-fields"
-        disabled={action.busy || action.locked || action.needsReload || done}
+        data-draft-readiness
+        disabled={
+          !ready || action.busy || action.locked || action.needsReload || done
+        }
       >
         {status === 'approved' && (
           <div className="field">
@@ -315,7 +419,7 @@ export function PayoutDecision({
                 <Button
                   type="submit"
                   value="approve"
-                  disabled={action.busy || action.needsReload}
+                  disabled={!ready || action.busy || action.needsReload}
                 >
                   {action.busy ? intake.busy : d.approve}
                 </Button>
@@ -323,7 +427,7 @@ export function PayoutDecision({
                 <Button
                   type="submit"
                   value="paid"
-                  disabled={action.busy || action.needsReload}
+                  disabled={!ready || action.busy || action.needsReload}
                 >
                   {action.busy ? intake.busy : d.markPaid}
                 </Button>
@@ -332,7 +436,7 @@ export function PayoutDecision({
                 type="submit"
                 value="reject"
                 variant="secondary"
-                disabled={action.busy || action.needsReload}
+                disabled={!ready || action.busy || action.needsReload}
               >
                 {d.reject}
               </Button>

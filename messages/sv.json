@@ -1354,7 +1354,22 @@
     "requestNone": "Inget tillgängligt saldo i den här listan. Öppna en säljare för att se säljarens saldo.",
     "directory": "Sök bland alla säljare",
     "latestFifty": "Visar de 50 senaste utbetalningarna. Varje säljares sida visar säljarens senaste utbetalningar.",
-    "history": "Historik och referenser"
+    "history": "Historik och referenser",
+    "tabs": {
+      "open": "Pågående",
+      "history": "Historik",
+      "request": "Begär utbetalning",
+      "prepare": "Förbered flera"
+    },
+    "helpLabel": "Om utbetalningar",
+    "listCount": "Antal: {count}",
+    "noOpen": "Inga pågående utbetalningar.",
+    "noHistory": "Inga avslutade utbetalningar.",
+    "viewOpen": "Visa pågående utbetalningar",
+    "reviewRequest": "Granska begäran",
+    "recordPayment": "Registrera betalning",
+    "paymentHint": "Betala först via banken. Ange sedan betalningsreferensen här.",
+    "prepareMore": "Förbered fler"
   },
   "returns": {
     "reason": "Anledning till retur",
@@ -1948,8 +1963,8 @@
     "recent": "Registrerade inköp",
     "recentHint": "20 inköp per sida, med de senaste först. Bläddra för att hitta äldre inköp.",
     "reference": "Inköp",
-    "marginYes": "vinstmarginal",
-    "marginNo": "full moms",
+    "marginYes": "VMB-underlag intygat",
+    "marginNo": "VMB-underlag inte intygat",
     "empty": "Inga inköp registrerade ännu.",
     "history": "Historik",
     "newPurchase": "Nytt inköp",
@@ -1958,7 +1973,8 @@
     "continueToItem": "Fortsätt till försäljningspris",
     "itemRegistered": "Vara registrerad",
     "prepareItem": "Ange försäljningspris",
-    "taxHeading": "Moms"
+    "taxHeading": "Moms",
+    "purchasedAt": "Inköpsdatum"
   },
   "sellerPortal": {
     "items": "Mina varor",
@@ -3530,7 +3546,10 @@
     "exportObservation": "Observation",
     "exportException": "Avvikelse",
     "exportActor": "Registrerad av",
-    "exportObservedAt": "Registrerad (UTC)"
+    "exportObservedAt": "Registrerad (UTC)",
+    "countTab": "Inventering",
+    "historyTab": "Historik",
+    "noSessions": "Inga tidigare inventeringar."
   },
   "pricingFollowUp": {
     "title": "Följ upp AI-priser",

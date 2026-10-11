@@ -1354,7 +1354,22 @@
     "requestNone": "Ingen tilgjengelig saldo i denne listen. Åpne en innleverer for å se saldoen.",
     "directory": "Søk blant alle innleverere",
     "latestFifty": "Viser de 50 siste utbetalingene. Hver innleverers side viser innlevererens siste utbetalinger.",
-    "history": "Historikk og referanser"
+    "history": "Historikk og referanser",
+    "tabs": {
+      "open": "Pågående",
+      "history": "Historikk",
+      "request": "Be om utbetaling",
+      "prepare": "Forbered flere"
+    },
+    "helpLabel": "Om utbetalinger",
+    "listCount": "Antall: {count}",
+    "noOpen": "Ingen pågående utbetalinger.",
+    "noHistory": "Ingen avsluttede utbetalinger.",
+    "viewOpen": "Vis pågående utbetalinger",
+    "reviewRequest": "Vurder forespørsel",
+    "recordPayment": "Registrer betaling",
+    "paymentHint": "Betal først via banken. Oppgi deretter betalingsreferansen her.",
+    "prepareMore": "Forbered flere"
   },
   "returns": {
     "reason": "Returårsak",
@@ -1948,8 +1963,8 @@
     "recent": "Registrerte innkjøp",
     "recentHint": "20 innkjøp per side, med de nyeste først. Bla for å finne eldre innkjøp.",
     "reference": "Innkjøp",
-    "marginYes": "avansemetode",
-    "marginNo": "full mva",
+    "marginYes": "Grunnlag for avansemetoden bekreftet",
+    "marginNo": "Grunnlag for avansemetoden ikke bekreftet",
     "empty": "Ingen innkjøp registrert ennå.",
     "history": "Historikk",
     "newPurchase": "Nytt innkjøp",
@@ -1958,7 +1973,8 @@
     "continueToItem": "Fortsett til salgspris",
     "itemRegistered": "Vare registrert",
     "prepareItem": "Angi salgspris",
-    "taxHeading": "Mva."
+    "taxHeading": "Mva.",
+    "purchasedAt": "Kjøpsdato"
   },
   "sellerPortal": {
     "handovers": "Meld inn en innlevering",
@@ -3530,7 +3546,10 @@
     "exportObservation": "Observasjon",
     "exportException": "Avvik",
     "exportActor": "Registrert av",
-    "exportObservedAt": "Registrert (UTC)"
+    "exportObservedAt": "Registrert (UTC)",
+    "countTab": "Varetelling",
+    "historyTab": "Historikk",
+    "noSessions": "Ingen tidligere varetellinger."
   },
   "pricingFollowUp": {
     "title": "Følg opp AI-priser",

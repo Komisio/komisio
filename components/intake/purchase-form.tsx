@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import { exactPrice } from '@/lib/engine/manual-reception'
 import { useIntakeAction } from './use-intake-action'
+import { ReloadAction } from './reload-action'
 import { Button } from '@/components/ui/button'
 import { useFormDirty } from '@/components/platform/use-form-dirty'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
@@ -39,7 +40,9 @@ export function PurchaseForm({
     formRef,
     emptyFields,
   )
-  useUnsavedChanges(dirty || action.locked ? leaveUnsaved : null)
+  useUnsavedChanges(
+    !action.needsReload && (dirty || action.locked) ? leaveUnsaved : null,
+  )
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (!ready || action.busy || action.needsReload) return
@@ -84,7 +87,10 @@ export function PurchaseForm({
     <section className="card intake-form">
       <FormHelpHeading
         title={d.registerHeading}
-        help={{ label: d.helpLabel, steps: [d.registerHint, d.intro] }}
+        help={{
+          label: d.helpLabel,
+          steps: [d.registerHint, d.evidenceHint, d.priceHint, d.intro],
+        }}
       />
       <form
         ref={formRef}
@@ -109,13 +115,12 @@ export function PurchaseForm({
               id="purchase-price"
               name="price"
               aria-invalid={!!priceError || undefined}
-              aria-describedby={`purchase-price-hint${priceError ? ' purchase-price-error' : ''}`}
+              aria-describedby={priceError ? 'purchase-price-error' : undefined}
               onChange={() => setPriceError('')}
               required
               inputMode="decimal"
               placeholder="150"
             />
-            <small id="purchase-price-hint">{d.priceHint}</small>
             {priceError && (
               <p id="purchase-price-error" role="alert">
                 {priceError}
@@ -130,7 +135,6 @@ export function PurchaseForm({
               required
               maxLength={500}
             />
-            <small>{d.evidenceHint}</small>
           </div>
           <FormHelpHeading
             title={d.taxHeading}
@@ -146,11 +150,7 @@ export function PurchaseForm({
           </label>
         </fieldset>
         {action.error && <p role="alert">{action.error}</p>}
-        {action.needsReload && (
-          <a className="text-link" href="/intake/purchases">
-            {intake.reload}
-          </a>
-        )}
+        {action.needsReload && <ReloadAction label={intake.reload} />}
         <Button
           type="submit"
           disabled={!ready || action.busy || action.needsReload}

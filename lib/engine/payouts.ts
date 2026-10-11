@@ -117,6 +117,41 @@ export async function readPayouts(
   return z.array(payoutRow).parse(data)
 }
 
+/** Staff directory: open work and completed history, filtered before paging. */
+export async function readPayoutsPage(
+  client: SupabaseClient,
+  tenantInput: string,
+  groupInput: 'open' | 'history',
+  pageInput: number,
+) {
+  const tenant = z.uuid().parse(tenantInput)
+  const group = z.enum(['open', 'history']).parse(groupInput)
+  const page = z.number().int().min(1).max(100000).parse(pageInput)
+  const statuses =
+    group === 'open' ? ['requested', 'approved'] : ['paid', 'rejected']
+  const { data, error, count } = await client
+    .from('payouts')
+    .select(columns, { count: 'exact' })
+    .eq('tenant_id', tenant)
+    .in('status', statuses)
+    .order('requested_at', { ascending: group === 'open' })
+    .order('id')
+    .range((page - 1) * 25, page * 25 - 1)
+  if (error?.code === 'PGRST103' && page > 1) {
+    const current = await client
+      .from('payouts')
+      .select('id', { head: true, count: 'exact' })
+      .eq('tenant_id', tenant)
+      .in('status', statuses)
+    if (current.error) throw new Error('Unable to read payouts')
+    const total = z.number().int().nonnegative().parse(current.count)
+    if (total > (page - 1) * 25) throw new Error('Unable to read payouts')
+    return { rows: [] as PayoutRow[], count: total }
+  }
+  if (error || count === null) throw new Error('Unable to read payouts')
+  return { rows: z.array(payoutRow).max(25).parse(data), count }
+}
+
 const oreField = z.union([z.number().int(), z.string()]).transform(Number)
 
 /** Approved unpaid work, oldest first, scoped by tenant and existing RLS. */

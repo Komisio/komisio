@@ -982,3 +982,9 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-11: Sales separate receipts from manual entry; economy separates overview, daily figures and reports. Context help replaces repeated introductions. Tabs preserve mounted work and existing report dates; sale recording, accounting and payment rules do not change.
 
 - 2026-10-11: Standard receiving separates seller/receipt work from the received-bag queue in mounted tabs. Existing receipt, seller-search and queue bookmarks still open their task. This changes no custody, agreement or commercial-acceptance prerequisite.
+
+- 2026-10-11: Payout workspaces separate open work, completed history, individual requests and batch preparation. Status filters apply before counting and paging under existing RLS. Tabs retain mounted drafts; payout eligibility, transitions and payment evidence remain unchanged.
+
+- 2026-10-11: Stocktaking separates the selected count from paged session history in mounted task tabs. Selecting a session opens its count; browsing history retains the active workspace. Scan confirmations, findings, closing prerequisites and inventory facts are unchanged.
+
+- 2026-10-11: A store-owned item links to its exact immutable purchase receipt rather than the first history page. Receipt details use active-tenant reads and existing RLS; opening evidence neither registers a purchase nor accepts an item.

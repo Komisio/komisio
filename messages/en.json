@@ -1354,7 +1354,22 @@
     "requestNone": "No available balance in this list. Open a seller to see their balance.",
     "directory": "Search all sellers",
     "latestFifty": "Showing the latest 50 payouts. Each seller's page shows that seller's recent payouts.",
-    "history": "History and references"
+    "history": "History and references",
+    "tabs": {
+      "open": "Open",
+      "history": "History",
+      "request": "Request payout",
+      "prepare": "Prepare batch"
+    },
+    "helpLabel": "About payouts",
+    "listCount": "Total: {count}",
+    "noOpen": "No open payouts.",
+    "noHistory": "No completed payouts.",
+    "viewOpen": "View open payouts",
+    "reviewRequest": "Review request",
+    "recordPayment": "Record payment",
+    "paymentHint": "Pay through your bank first. Then enter the payment reference here.",
+    "prepareMore": "Prepare more"
   },
   "returns": {
     "reason": "Return reason",
@@ -1948,8 +1963,8 @@
     "recent": "Registered purchases",
     "recentHint": "20 purchases per page, newest first. Browse to find older purchases.",
     "reference": "Purchase",
-    "marginYes": "margin scheme",
-    "marginNo": "full VAT",
+    "marginYes": "Margin-scheme evidence confirmed",
+    "marginNo": "Margin-scheme evidence not confirmed",
     "empty": "No purchases registered yet.",
     "history": "History",
     "newPurchase": "New purchase",
@@ -1958,7 +1973,8 @@
     "continueToItem": "Continue to selling price",
     "itemRegistered": "Item registered",
     "prepareItem": "Set selling price",
-    "taxHeading": "VAT"
+    "taxHeading": "VAT",
+    "purchasedAt": "Purchase date"
   },
   "sellerPortal": {
     "handovers": "Announce a drop-off",
@@ -3530,7 +3546,10 @@
     "exportObservation": "Observation",
     "exportException": "Discrepancy",
     "exportActor": "Recorded by",
-    "exportObservedAt": "Recorded (UTC)"
+    "exportObservedAt": "Recorded (UTC)",
+    "countTab": "Stocktake",
+    "historyTab": "History",
+    "noSessions": "No previous stocktakes."
   },
   "pricingFollowUp": {
     "title": "Review AI prices",

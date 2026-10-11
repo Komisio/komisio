@@ -73,6 +73,10 @@ Review notices show their actual delivery outcome and link to the seller's
 message history. An unanswered request requires checking status; queued or
 terminal outcomes never expose a fresh-send action from the review card.
 
+Quick reception separates seller/agreement and item tabs. Seller registration
+uses the shared form without leaving reception; staff can download a personal
+agreement and record approval before continuing. Tab changes retain form drafts.
+
 Staff manage paged agreement versions and seller acceptances in separate tabs,
 with language, active status and accepted/missing filters. Registration and
 profile editing can atomically record staff evidence of an already approved

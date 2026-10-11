@@ -121,6 +121,18 @@
     }
   },
   "quickIntake": {
+    "workspace": {
+      "refreshAgreement": "Hent gældende aftale",
+      "sellerTab": "Sælger og aftale",
+      "itemTab": "Registrer vare",
+      "sellerSaved": "Sælgeren er gemt. Download aftalen med sælgerens navn og registrer godkendelsen her.",
+      "continue": "Fortsæt til varen",
+      "openSeller": "Åbn sælgerprofil",
+      "selectSeller": "Vælg eller registrer først en sælger under Sælger og aftale.",
+      "loadingAgreement": "Henter sælgerens aftale…",
+      "agreementFailed": "Sælgerens aftale kunne ikke hentes. Prøv igen.",
+      "leaveSeller": "Forlad sælgeroplysningerne? Ikke-gemte oplysninger eller godkendelser går tabt."
+    },
     "title": "Hurtig modtagelse",
     "intro": "Beskrivelse og pris er nok. Tilføj et billede eller flere oplysninger, hvis du vil.",
     "seller": "Indleverer",

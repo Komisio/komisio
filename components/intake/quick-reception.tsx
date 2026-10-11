@@ -1,10 +1,14 @@
 'use client'
-import { NewSellerLink } from '@/components/intake/new-seller-link'
+import { ReceivingPanel } from './receiving-panel'
+import { QuickSellerAgreement } from './quick-seller-agreement'
+import type { AgreementSummary } from './seller-agreement-fields'
+import './seller-tabs.css'
 import { CreateItemType } from './create-item-type'
 import { useEffect, useRef, useState } from 'react'
 import {
   NavigationLink as Link,
   useNavigationWarning,
+  useConfirmNavigation,
 } from '@/components/platform/navigation-warning'
 import { useRouter } from 'next/navigation'
 import { QuickSellerPicker } from './quick-seller-picker'
@@ -160,6 +164,8 @@ export function QuickReception({
   lang,
   d,
   bagId,
+  sellerForms,
+  agreement,
 }: {
   tenantId: string
   sellers: Seller[]
@@ -171,8 +177,31 @@ export function QuickReception({
   lang: string
   d: Dictionary['quickIntake']
   bagId?: string
+  sellerForms?: {
+    intake: Dictionary['intake']
+    details: Dictionary['sellerDetails']
+    agreements: Dictionary['agreements']
+  }
+  agreement?: AgreementSummary | null
 }) {
   const router = useRouter()
+  const confirmNavigation = useConfirmNavigation()
+  const [tab, setTab] = useState<'seller' | 'item'>('seller')
+  const [registering, setRegistering] = useState(false)
+  const [registrationLocked, setRegistrationLocked] = useState(false)
+  const [agreementRevision, setAgreementRevision] = useState(0)
+  const [registered, setRegistered] = useState(false)
+  const [agreementGuard, setAgreementGuard] = useState({
+    dirty: false,
+    locked: false,
+  })
+  function reloadAgreement() {
+    setTab('seller')
+    if (agreementGuard.locked) return
+    if (agreementGuard.dirty && !window.confirm(d.workspace.leaveSeller)) return
+    setAgreementGuard({ dirty: false, locked: false })
+    setAgreementRevision((revision) => revision + 1)
+  }
   const [createdTypes, setCreatedTypes] = useState<
     AttributeVocabulary['types']
   >([])
@@ -286,12 +315,18 @@ export function QuickReception({
   useEffect(() => {
     // Only an explicit seller selection or Next item moves the user's place.
     // Focus the heading so mobile users can choose photo or typing themselves.
-    if (!focusNextItem.current || !seller || done || !itemHeading.current)
+    if (
+      !focusNextItem.current ||
+      !seller ||
+      done ||
+      (!bagId && tab !== 'item') ||
+      !itemHeading.current
+    )
       return
     focusNextItem.current = false
     itemHeading.current.focus({ preventScroll: true })
     itemHeading.current.scrollIntoView({ block: 'start', behavior: 'instant' })
-  }, [seller, done])
+  }, [seller, done, tab, bagId])
   useEffect(() => {
     // "Ready for the shelf" unmounts the button that had focus. Move focus to
     // the confirmation heading so completion is announced and the next Tab
@@ -756,411 +791,584 @@ export function QuickReception({
         {stage === 'uploading' ? d.busy : message}
       </span>
       {!bagId && (
-        <section
-          className={`card intake-form quick-seller${seller ? ' is-selected' : ''}`}
-          aria-label={d.seller}
-        >
-          <h2>
-            <span className="quick-step" aria-hidden="true">
-              {seller ? <Check size={16} /> : '1'}
-            </span>
-            {d.seller}
-          </h2>
-          {seller ? (
-            <div className="quick-seller-selected">
+        <>
+          {seller && (
+            <div className="quick-seller-context">
               <div>
+                <small>{d.seller}</small>
                 <strong>{seller.name}</strong>
-                {seller.contact && <small>{seller.contact}</small>}
+                {seller.contact && <span>{seller.contact}</span>}
               </div>
               <button
                 type="button"
                 className="text-link"
-                disabled={busy || uncertain || photoUnresolved}
+                disabled={
+                  busy || uncertain || photoUnresolved || agreementGuard.locked
+                }
                 onClick={() => {
-                  // Switching sellers discards the attempt; not while a
-                  // photo or a submit is unresolved.
-                  if (busy || uncertain || photoUnresolved) return
                   if (
-                    hasUnsavedItem &&
+                    busy ||
+                    uncertain ||
+                    photoUnresolved ||
+                    agreementGuard.locked
+                  )
+                    return
+                  if (
+                    (hasUnsavedItem || agreementGuard.dirty) &&
                     !window.confirm(d.discardForSellerChange)
                   )
                     return
                   setSeller(null)
+                  setRegistered(false)
+                  setRegistering(false)
+                  setAgreementGuard({ dirty: false, locked: false })
+                  setTab('seller')
                   next()
                 }}
               >
                 {d.changeSeller}
               </button>
             </div>
-          ) : (
-            <>
-              <QuickSellerPicker
-                tenantId={tenantId}
-                sellers={sellers}
-                total={sellersTotal}
-                onSelect={(selected) => {
-                  focusNextItem.current = true
-                  setSeller(selected)
-                }}
-                d={d}
-              />
-              <p>
-                <NewSellerLink className="btn btn-secondary">
-                  {d.newSeller}
-                </NewSellerLink>
-              </p>
-            </>
           )}
-        </section>
-      )}
-      {seller && !done && (
-        <section
-          className="card intake-form quick-item"
-          aria-label={d.garment}
-          aria-busy={busy}
-        >
-          <h2
-            ref={itemHeading}
-            tabIndex={-1}
-            style={{ scrollMarginTop: '1rem' }}
+          <div
+            className="seller-tablist quick-tablist"
+            role="tablist"
+            aria-label={d.title}
           >
-            {!bagId && (
-              <span className="quick-step" aria-hidden="true">
-                2
-              </span>
-            )}
-            {d.garment}
-          </h2>
-          <form
-            className="quick-item-form"
-            noValidate
-            onSubmit={(event) => {
-              event.preventDefault()
-              void submit()
-            }}
-          >
-            <div className="quick-essential">
-              {questions
-                .filter((q) => q.definition.slug === 'description')
-                .map((q) => question(q.definition))}
-              <div className="field quick-price-field">
-                <label htmlFor="quick-price">{d.price}</label>
-                <input
-                  id="quick-price"
-                  required
-                  aria-invalid={invalidPrice || undefined}
-                  aria-describedby={
-                    invalidPrice ? 'quick-price-error' : undefined
+            {(['seller', 'item'] as const).map((value, index) => (
+              <button
+                key={value}
+                id={'quick-tab-' + value}
+                type="button"
+                role="tab"
+                aria-selected={tab === value}
+                aria-controls={'quick-panel-' + value}
+                tabIndex={tab === value ? 0 : -1}
+                disabled={busy}
+                onClick={() => setTab(value)}
+                onKeyDown={(event) => {
+                  const target =
+                    event.key === 'Home'
+                      ? 'seller'
+                      : event.key === 'End'
+                        ? 'item'
+                        : ['ArrowLeft', 'ArrowRight'].includes(event.key)
+                          ? index === 0
+                            ? 'item'
+                            : 'seller'
+                          : null
+                  if (target) {
+                    event.preventDefault()
+                    setTab(target)
+                    document.getElementById('quick-tab-' + target)?.focus()
                   }
-                  inputMode="decimal"
-                  value={price}
-                  disabled={busy || uncertain}
-                  onChange={(e) => setPrice(e.target.value)}
-                />
-                {invalidPrice && (
-                  <small id="quick-price-error" className="error">
-                    {d.priceInvalid}
-                  </small>
+                }}
+              >
+                {value === 'seller'
+                  ? d.workspace.sellerTab
+                  : d.workspace.itemTab}
+              </button>
+            ))}
+          </div>
+          <section
+            id="quick-panel-seller"
+            role="tabpanel"
+            aria-labelledby="quick-tab-seller"
+            hidden={tab !== 'seller'}
+          >
+            {seller ? (
+              <div className="card intake-form quick-seller-details">
+                <h2>{d.workspace.sellerTab}</h2>
+                {registered && (
+                  <p id="quick-seller-saved" tabIndex={-1} role="status">
+                    {d.workspace.sellerSaved}
+                  </p>
                 )}
-              </div>
-            </div>
-            <div className="quick-workspace">
-              <div className="quick-facts">
-                <div className="field">
-                  <label htmlFor="quick-item-type">{d.itemType}</label>
-                  <input
-                    id="quick-item-type"
-                    list="quick-item-types"
-                    autoComplete="off"
-                    placeholder={d.itemTypeNone}
-                    value={typeQuery}
-                    disabled={busy || !!done || uncertain}
-                    onChange={(e) => {
-                      const value = e.target.value
-                      setTypeQuery(value)
-                      const match = activeTypes.find(
-                        (t) =>
-                          labelOf(t, lang).toLocaleLowerCase(lang) ===
-                          value.trim().toLocaleLowerCase(lang),
-                      )
-                      setItemType(match?.slug ?? null)
-                    }}
-                    onKeyDown={(event) => {
-                      itemTypeEnter.current = event.key === 'Enter'
-                    }}
-                    onKeyUp={() => {
-                      itemTypeEnter.current = false
-                    }}
-                    onBlur={() => {
-                      itemTypeEnter.current = false
-                      const selected = activeTypes.find(
-                        (t) => t.slug === itemType,
-                      )
-                      setTypeQuery(selected ? labelOf(selected, lang) : '')
-                    }}
+                {sellerForms && (
+                  <QuickSellerAgreement
+                    key={`${seller.id}:${agreementRevision}`}
+                    tenantId={tenantId}
+                    sellerId={seller.id}
+                    d={sellerForms.agreements}
+                    intake={sellerForms.intake}
+                    quick={d}
+                    onGuardChange={setAgreementGuard}
+                    onReload={reloadAgreement}
                   />
-                  <datalist id="quick-item-types">
-                    {activeTypes.map((t) => (
-                      <option key={t.slug} value={labelOf(t, lang)} />
-                    ))}
-                  </datalist>
-                  {canManageTypes && (
-                    <CreateItemType
+                )}
+                <div className="row wrap">
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      setTab('item')
+                      focusNextItem.current = true
+                    }}
+                  >
+                    {d.workspace.continue}
+                  </Button>
+                  <Link
+                    className="text-link"
+                    href={`/intake/sellers/${seller.id}`}
+                  >
+                    {d.workspace.openSeller}
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="row wrap quick-seller-mode">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    aria-pressed={!registering}
+                    disabled={registrationLocked}
+                    onClick={() => setRegistering(false)}
+                  >
+                    {d.searchSeller}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    aria-pressed={registering}
+                    disabled={registrationLocked}
+                    onClick={() => {
+                      setRegistering(true)
+                      requestAnimationFrame(() =>
+                        document.getElementById('seller-name')?.focus(),
+                      )
+                    }}
+                  >
+                    {d.newSeller}
+                  </Button>
+                </div>
+                <section
+                  className="card intake-form quick-seller"
+                  hidden={registering}
+                  aria-label={d.seller}
+                >
+                  <h2>{d.searchSeller}</h2>
+                  <QuickSellerPicker
+                    tenantId={tenantId}
+                    sellers={sellers}
+                    total={sellersTotal}
+                    onSelect={(selected) => {
+                      if (!confirmNavigation()) return
+                      focusNextItem.current = true
+                      setSeller(selected)
+                      setTab('item')
+                    }}
+                    d={d}
+                  />
+                </section>
+                {sellerForms && (
+                  <div hidden={!registering}>
+                    <ReceivingPanel
                       tenantId={tenantId}
-                      vocabulary={vocabulary}
-                      selected={itemType}
-                      lang={lang}
-                      d={d}
-                      disabled={busy || uncertain || photoUnresolved}
-                      onOpenChange={setTypeEditorOpen}
-                      onSelect={(profile) => {
-                        setCreatedTypes((types) => [
-                          ...types.filter((t) => t.slug !== profile.slug),
-                          profile,
-                        ])
-                        setItemType(profile.slug)
-                        setTypeQuery(labelOf(profile, lang))
+                      seller={null}
+                      d={sellerForms.intake}
+                      details={sellerForms.details}
+                      changeSellerLabel={d.changeSeller}
+                      agreement={agreement}
+                      agreements={sellerForms.agreements}
+                      leaveUnsaved={d.workspace.leaveSeller}
+                      reloadHref="/intake/quick"
+                      onLockChange={setRegistrationLocked}
+                      onRegistered={(selected) => {
+                        setRegistrationLocked(false)
                         requestAnimationFrame(() =>
-                          document.getElementById('quick-item-type')?.focus(),
+                          document
+                            .getElementById('quick-seller-saved')
+                            ?.focus(),
                         )
+                        setSeller(selected)
+                        setRegistered(true)
+                        setTab('seller')
+                      }}
+                      onSelectSeller={(selected) => {
+                        setSeller(selected)
+                        setTab('seller')
                       }}
                     />
-                  )}
-                </div>
-                <div className="quick-fields">
-                  {questions
-                    .filter((q) => q.definition.slug !== 'description')
-                    .map((q) => question(q.definition))}
-                </div>
-              </div>
-              <div className="quick-photo-panel">
-                <div className="field quick-photo-field">
-                  <label
-                    htmlFor="quick-photo"
-                    className={`quick-photo-picker${!ready || busy || session || uncertain || photoUnresolved ? ' is-disabled' : ''}${photoUnresolved ? ' is-uncertain' : ''}`}
-                  >
-                    {photoUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={photoUrl} alt={d.photo} />
-                    ) : (
-                      <>
-                        <Camera
-                          size={22}
-                          strokeWidth={1.5}
-                          aria-hidden="true"
-                        />
-                        <span>{d.addPhoto}</span>
-                      </>
-                    )}
-                  </label>
-                  <input
-                    id="quick-photo"
-                    className="quick-photo-input"
-                    ref={fileInput}
-                    type="file"
-                    accept="image/jpeg,image/png"
-                    capture="environment"
-                    disabled={
-                      !ready ||
-                      busy ||
-                      !!session ||
-                      uncertain ||
-                      photoUnresolved
-                    }
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]
-                      if (file) void onPhoto(file)
-                    }}
-                  />
-                  <small>{assistance ? d.photoHintAi : d.photoHint}</small>
-                </div>
-                {(message || stage === 'uploading') && (
-                  <p className="quick-status">
-                    {stage === 'uploading' ? d.busy : message}
-                  </p>
-                )}
-                {photoError && (
-                  <p role="alert" className="error quick-photo-alert">
-                    {photoError}
-                  </p>
-                )}
-                {photoUnresolved && (
-                  // Recovery sits next to the photo it concerns; two actions wrap on a 320px phone.
-                  <div className="row wrap">
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      disabled={busy}
-                      onClick={() => void runPhoto()}
-                    >
-                      {d.retry}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      disabled={busy}
-                      onClick={() => window.location.reload()}
-                    >
-                      {d.reload}
-                    </Button>
                   </div>
                 )}
-              </div>
-            </div>
-            <div className="quick-finish">
-              {printers.length > 0 && (
-                <div className="field">
-                  <label htmlFor="quick-printer">{d.printer}</label>
-                  <select
-                    id="quick-printer"
-                    value={printerId}
+              </>
+            )}
+          </section>
+        </>
+      )}
+      <div
+        id={bagId ? undefined : 'quick-panel-item'}
+        role={bagId ? undefined : 'tabpanel'}
+        aria-labelledby={bagId ? undefined : 'quick-tab-item'}
+        hidden={!bagId && tab !== 'item'}
+      >
+        {!seller && (
+          <div className="card intake-form">
+            <p>{d.workspace.selectSeller}</p>
+            <Button type="button" onClick={() => setTab('seller')}>
+              {d.workspace.sellerTab}
+            </Button>
+          </div>
+        )}
+        {seller && !done && (
+          <section
+            className="card intake-form quick-item"
+            aria-label={d.garment}
+            aria-busy={busy}
+          >
+            <h2
+              ref={itemHeading}
+              tabIndex={-1}
+              style={{ scrollMarginTop: '1rem' }}
+            >
+              {!bagId && (
+                <span className="quick-step" aria-hidden="true">
+                  2
+                </span>
+              )}
+              {d.garment}
+            </h2>
+            <form
+              className="quick-item-form"
+              noValidate
+              onSubmit={(event) => {
+                event.preventDefault()
+                void submit()
+              }}
+            >
+              <div className="quick-essential">
+                {questions
+                  .filter((q) => q.definition.slug === 'description')
+                  .map((q) => question(q.definition))}
+                <div className="field quick-price-field">
+                  <label htmlFor="quick-price">{d.price}</label>
+                  <input
+                    id="quick-price"
+                    required
+                    aria-invalid={invalidPrice || undefined}
+                    aria-describedby={
+                      invalidPrice ? 'quick-price-error' : undefined
+                    }
+                    inputMode="decimal"
+                    value={price}
                     disabled={busy || uncertain}
-                    onChange={(e) => {
-                      setPrinterId(e.target.value)
-                      try {
-                        localStorage.setItem(PRINTER_KEY, e.target.value)
-                      } catch {
-                        /* Not remembered. */
+                    onChange={(e) => setPrice(e.target.value)}
+                  />
+                  {invalidPrice && (
+                    <small id="quick-price-error" className="error">
+                      {d.priceInvalid}
+                    </small>
+                  )}
+                </div>
+              </div>
+              <div className="quick-workspace">
+                <div className="quick-facts">
+                  <div className="field">
+                    <label htmlFor="quick-item-type">{d.itemType}</label>
+                    <input
+                      id="quick-item-type"
+                      list="quick-item-types"
+                      autoComplete="off"
+                      placeholder={d.itemTypeNone}
+                      value={typeQuery}
+                      disabled={busy || !!done || uncertain}
+                      onChange={(e) => {
+                        const value = e.target.value
+                        setTypeQuery(value)
+                        const match = activeTypes.find(
+                          (t) =>
+                            labelOf(t, lang).toLocaleLowerCase(lang) ===
+                            value.trim().toLocaleLowerCase(lang),
+                        )
+                        setItemType(match?.slug ?? null)
+                      }}
+                      onKeyDown={(event) => {
+                        itemTypeEnter.current = event.key === 'Enter'
+                      }}
+                      onKeyUp={() => {
+                        itemTypeEnter.current = false
+                      }}
+                      onBlur={() => {
+                        itemTypeEnter.current = false
+                        const selected = activeTypes.find(
+                          (t) => t.slug === itemType,
+                        )
+                        setTypeQuery(selected ? labelOf(selected, lang) : '')
+                      }}
+                    />
+                    <datalist id="quick-item-types">
+                      {activeTypes.map((t) => (
+                        <option key={t.slug} value={labelOf(t, lang)} />
+                      ))}
+                    </datalist>
+                    {canManageTypes && (
+                      <CreateItemType
+                        tenantId={tenantId}
+                        vocabulary={vocabulary}
+                        selected={itemType}
+                        lang={lang}
+                        d={d}
+                        disabled={busy || uncertain || photoUnresolved}
+                        onOpenChange={setTypeEditorOpen}
+                        onSelect={(profile) => {
+                          setCreatedTypes((types) => [
+                            ...types.filter((t) => t.slug !== profile.slug),
+                            profile,
+                          ])
+                          setItemType(profile.slug)
+                          setTypeQuery(labelOf(profile, lang))
+                          requestAnimationFrame(() =>
+                            document.getElementById('quick-item-type')?.focus(),
+                          )
+                        }}
+                      />
+                    )}
+                  </div>
+                  <div className="quick-fields">
+                    {questions
+                      .filter((q) => q.definition.slug !== 'description')
+                      .map((q) => question(q.definition))}
+                  </div>
+                </div>
+                <div className="quick-photo-panel">
+                  <div className="field quick-photo-field">
+                    <label
+                      htmlFor="quick-photo"
+                      className={`quick-photo-picker${!ready || busy || session || uncertain || photoUnresolved ? ' is-disabled' : ''}${photoUnresolved ? ' is-uncertain' : ''}`}
+                    >
+                      {photoUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={photoUrl} alt={d.photo} />
+                      ) : (
+                        <>
+                          <Camera
+                            size={22}
+                            strokeWidth={1.5}
+                            aria-hidden="true"
+                          />
+                          <span>{d.addPhoto}</span>
+                        </>
+                      )}
+                    </label>
+                    <input
+                      id="quick-photo"
+                      className="quick-photo-input"
+                      ref={fileInput}
+                      type="file"
+                      accept="image/jpeg,image/png"
+                      capture="environment"
+                      disabled={
+                        !ready ||
+                        busy ||
+                        !!session ||
+                        uncertain ||
+                        photoUnresolved
                       }
-                    }}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) void onPhoto(file)
+                      }}
+                    />
+                    <small>{assistance ? d.photoHintAi : d.photoHint}</small>
+                  </div>
+                  {(message || stage === 'uploading') && (
+                    <p className="quick-status">
+                      {stage === 'uploading' ? d.busy : message}
+                    </p>
+                  )}
+                  {photoError && (
+                    <p role="alert" className="error quick-photo-alert">
+                      {photoError}
+                    </p>
+                  )}
+                  {photoUnresolved && (
+                    // Recovery sits next to the photo it concerns; two actions wrap on a 320px phone.
+                    <div className="row wrap">
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        disabled={busy}
+                        onClick={() => void runPhoto()}
+                      >
+                        {d.retry}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        disabled={busy}
+                        onClick={() => window.location.reload()}
+                      >
+                        {d.reload}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="quick-finish">
+                {printers.length > 0 && (
+                  <div className="field">
+                    <label htmlFor="quick-printer">{d.printer}</label>
+                    <select
+                      id="quick-printer"
+                      value={printerId}
+                      disabled={busy || uncertain}
+                      onChange={(e) => {
+                        setPrinterId(e.target.value)
+                        try {
+                          localStorage.setItem(PRINTER_KEY, e.target.value)
+                        } catch {
+                          /* Not remembered. */
+                        }
+                      }}
+                    >
+                      <option value="">{d.noPrinter}</option>
+                      {printers.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+                <Button
+                  // A visible photo whose save is unresolved must not become a
+                  // photoless item.
+                  disabled={busy || photoUnresolved || typeEditorOpen}
+                  type="submit"
+                  onClick={(event) => {
+                    // Suppress only the implicit click from Enter in the type
+                    // list. Explicit pointer or assistive activations still work.
+                    if (itemTypeEnter.current && event.detail === 0)
+                      event.preventDefault()
+                    itemTypeEnter.current = false
+                  }}
+                  className="quick-submit"
+                >
+                  {stage === 'saving'
+                    ? d.busy
+                    : stage === 'printing'
+                      ? d.printing
+                      : uncertain
+                        ? d.retry
+                        : d.submit}
+                </Button>
+              </div>
+              {error && (
+                <p role="alert" className="error">
+                  {error}
+                  {error === errors.AGREEMENT_REQUIRED && (
+                    <>
+                      {' '}
+                      {bagId ? (
+                        <Link
+                          className="text-link"
+                          href={`/intake/sellers/${seller.id}`}
+                        >
+                          {d.recordAgreement}
+                        </Link>
+                      ) : (
+                        <button
+                          type="button"
+                          className="text-link"
+                          onClick={reloadAgreement}
+                        >
+                          {d.recordAgreement}
+                        </button>
+                      )}
+                    </>
+                  )}
+                </p>
+              )}
+              {(uncertain || stale) && (
+                <div className="row wrap">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    disabled={busy}
+                    onClick={() => window.location.reload()}
                   >
-                    <option value="">{d.noPrinter}</option>
-                    {printers.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name}
-                      </option>
-                    ))}
-                  </select>
+                    {d.reload}
+                  </Button>
                 </div>
               )}
-              <Button
-                // A visible photo whose save is unresolved must not become a
-                // photoless item.
-                disabled={busy || photoUnresolved || typeEditorOpen}
-                type="submit"
-                onClick={(event) => {
-                  // Suppress only the implicit click from Enter in the type
-                  // list. Explicit pointer or assistive activations still work.
-                  if (itemTypeEnter.current && event.detail === 0)
-                    event.preventDefault()
-                  itemTypeEnter.current = false
-                }}
-                className="quick-submit"
-              >
-                {stage === 'saving'
-                  ? d.busy
-                  : stage === 'printing'
-                    ? d.printing
-                    : uncertain
-                      ? d.retry
-                      : d.submit}
-              </Button>
-            </div>
-            {error && (
-              <p role="alert" className="error">
-                {error}
-                {error === errors.AGREEMENT_REQUIRED && (
-                  <>
-                    {' '}
-                    <Link
-                      className="text-link"
-                      href={`/intake/sellers/${seller.id}`}
-                    >
-                      {d.recordAgreement}
-                    </Link>
-                  </>
-                )}
-              </p>
-            )}
-            {(uncertain || stale) && (
-              <div className="row wrap">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  disabled={busy}
-                  onClick={() => window.location.reload()}
-                >
-                  {d.reload}
-                </Button>
-              </div>
-            )}
-          </form>
-        </section>
-      )}
-      {done && (
-        <section className="card intake-form quick-done" aria-label={d.done}>
-          <h2
-            ref={doneHeading}
-            tabIndex={-1}
-            style={{ scrollMarginTop: '1rem' }}
-          >
-            <Check aria-hidden="true" />
-            {d.done}
-          </h2>
-          <p>
-            <strong>{done.reference}</strong> · {facts.description}
-          </p>
-          <dl className="quick-confirmation-details">
-            <div>
-              <dt>{d.seller}</dt>
-              <dd>{seller?.name}</dd>
-            </div>
-            {done.price && (
+            </form>
+          </section>
+        )}
+        {done && (
+          <section className="card intake-form quick-done" aria-label={d.done}>
+            <h2
+              ref={doneHeading}
+              tabIndex={-1}
+              style={{ scrollMarginTop: '1rem' }}
+            >
+              <Check aria-hidden="true" />
+              {d.done}
+            </h2>
+            <p>
+              <strong>{done.reference}</strong> · {facts.description}
+            </p>
+            <dl className="quick-confirmation-details">
               <div>
-                <dt>{d.price}</dt>
-                <dd>
-                  {new Intl.NumberFormat(intlLocale(lang), {
-                    style: 'currency',
-                    currency: done.price.currency,
-                    currencyDisplay: 'code',
-                  }).format(Number(done.price.amount))}
-                </dd>
+                <dt>{d.seller}</dt>
+                <dd>{seller?.name}</dd>
+              </div>
+              {done.price && (
+                <div>
+                  <dt>{d.price}</dt>
+                  <dd>
+                    {new Intl.NumberFormat(intlLocale(lang), {
+                      style: 'currency',
+                      currency: done.price.currency,
+                      currencyDisplay: 'code',
+                    }).format(Number(done.price.amount))}
+                  </dd>
+                </div>
+              )}
+            </dl>
+            {!done.price && <p>{d.savedPriceUnavailable}</p>}
+            {message && <p role={printIssue ? 'alert' : 'status'}>{message}</p>}
+            {(printIssue || stage === 'printing') && (
+              <div className="row wrap">
+                {printIssue !== 'refused' && (
+                  <Button
+                    variant="secondary"
+                    disabled={busy}
+                    onClick={() => void runPrint()}
+                  >
+                    {busy ? d.busy : d.retryPrint}
+                  </Button>
+                )}
+                {printIssue === 'refused' && (
+                  <Button
+                    variant="secondary"
+                    onClick={() => window.location.reload()}
+                  >
+                    {d.reload}
+                  </Button>
+                )}
+                <Link
+                  className="btn btn-secondary"
+                  href={`/settings?tab=printing&job=${done.printJobId}#selected-print-job`}
+                >
+                  {d.openPrintQueue}
+                </Link>
               </div>
             )}
-          </dl>
-          {!done.price && <p>{d.savedPriceUnavailable}</p>}
-          {message && <p role={printIssue ? 'alert' : 'status'}>{message}</p>}
-          {(printIssue || stage === 'printing') && (
+            {/* Two actions must fit a 320px phone: wrap instead of pushing the page sideways. */}
             <div className="row wrap">
-              {printIssue !== 'refused' && (
-                <Button
-                  variant="secondary"
-                  disabled={busy}
-                  onClick={() => void runPrint()}
-                >
-                  {busy ? d.busy : d.retryPrint}
-                </Button>
-              )}
-              {printIssue === 'refused' && (
-                <Button
-                  variant="secondary"
-                  onClick={() => window.location.reload()}
-                >
-                  {d.reload}
-                </Button>
-              )}
+              <Button onClick={next} disabled={busy}>
+                {d.next}
+              </Button>
               <Link
                 className="btn btn-secondary"
-                href={`/settings?tab=printing&job=${done.printJobId}#selected-print-job`}
+                href={`/intake/items/${done.itemId}`}
               >
-                {d.openPrintQueue}
+                {d.openItem}
               </Link>
             </div>
-          )}
-          {/* Two actions must fit a 320px phone: wrap instead of pushing the page sideways. */}
-          <div className="row wrap">
-            <Button onClick={next} disabled={busy}>
-              {d.next}
-            </Button>
-            <Link
-              className="btn btn-secondary"
-              href={`/intake/items/${done.itemId}`}
-            >
-              {d.openItem}
-            </Link>
-          </div>
-        </section>
-      )}
+          </section>
+        )}
+      </div>
     </div>
   )
 }

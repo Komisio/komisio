@@ -1,5 +1,10 @@
 # Open questions
 
+Quick reception layout (resolved 2026-10-11): the owner requests tabs and
+in-context seller registration. Saving keeps the seller selected, with personal
+agreement downloads and explicit approval available before proceeding to items.
+The same registration form serves the seller directory; no domain rule changes.
+
 Agreement workspace (resolved 2026-10-10): the owner requests visible versions,
 languages, active status and seller acceptances, plus explicit staff recording
 of an already signed/accepted agreement during seller registration or editing.

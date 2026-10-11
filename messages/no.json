@@ -121,6 +121,18 @@
     }
   },
   "quickIntake": {
+    "workspace": {
+      "refreshAgreement": "Hent gjeldende avtale",
+      "sellerTab": "Selger og avtale",
+      "itemTab": "Registrer vare",
+      "sellerSaved": "Selgeren er lagret. Last ned avtalen med selgerens navn og registrer godkjenningen her.",
+      "continue": "Fortsett til varen",
+      "openSeller": "Åpne selgerprofil",
+      "selectSeller": "Velg eller registrer først en selger i fanen Selger og avtale.",
+      "loadingAgreement": "Henter selgerens avtale…",
+      "agreementFailed": "Selgerens avtale kunne ikke hentes. Prøv igjen.",
+      "leaveSeller": "Forlate selgeropplysningene? Ulagrede opplysninger eller godkjenninger går tapt."
+    },
     "title": "Hurtigmottak",
     "intro": "Beskrivelse og pris er nok. Legg til et bilde eller flere opplysninger om du vil.",
     "seller": "Innleverer",

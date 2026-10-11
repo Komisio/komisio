@@ -121,6 +121,18 @@
     }
   },
   "quickIntake": {
+    "workspace": {
+      "refreshAgreement": "Hämta aktuellt avtal",
+      "sellerTab": "Säljare & avtal",
+      "itemTab": "Registrera vara",
+      "sellerSaved": "Säljaren är sparad. Hämta avtalet med säljarens namn och registrera godkännandet här.",
+      "continue": "Fortsätt till varan",
+      "openSeller": "Öppna säljarprofil",
+      "selectSeller": "Välj eller registrera en säljare i fliken Säljare & avtal först.",
+      "loadingAgreement": "Hämtar säljarens avtal…",
+      "agreementFailed": "Säljarens avtal kunde inte hämtas. Försök igen.",
+      "leaveSeller": "Lämna säljaruppgifterna? Osparade uppgifter eller godkännanden försvinner."
+    },
     "title": "Snabb mottagning",
     "intro": "Beskrivning och pris räcker. Lägg till bild eller fler uppgifter om du vill.",
     "seller": "Säljare",

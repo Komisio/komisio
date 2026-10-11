@@ -34,7 +34,7 @@ test('new seller navigation focuses the name without resetting typed fields', as
     await expect(name).toHaveValue('Synthetic new seller')
     await page.goto('/intake/quick')
     await page
-      .getByRole('link', { name: d.quickIntake.newSeller, exact: true })
+      .getByRole('button', { name: d.quickIntake.newSeller, exact: true })
       .click()
     await expect(name).toBeFocused()
     await expect(name).toBeInViewport()

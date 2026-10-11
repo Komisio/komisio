@@ -1,3 +1,5 @@
+import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
+import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { notFound } from 'next/navigation'
@@ -44,101 +46,132 @@ export default async function Sales({
   return (
     <div className="sales-overview">
       <div className="page-heading">
-        <h1>{d.title}</h1>
-        <p>{d.intro}</p>
+        <FormHelpHeading
+          title={d.title}
+          level={1}
+          help={{ label: d.helpLabel, steps: [d.intro] }}
+        />
       </div>
-      <p className="intake-notice">{d.notice}</p>
-      <div className="sales-page">
-        {active.role !== 'readonly' ? (
-          <details className="sale-manual">
-            <summary>{d.recordHeading}</summary>
-            <SaleForm
-              key={active.id}
-              tenantId={active.id}
-              currency={currency}
-              d={d}
-              intake={all.intake}
-              leaveUnsaved={all.leaveUnsaved}
-            />
-          </details>
-        ) : (
-          <p>{all.intake.readOnly}</p>
-        )}
-        <section className="card sales-register" aria-labelledby="sales-recent">
-          <h2 id="sales-recent">{filtered ? d.searchResults : d.recent}</h2>
-          <form
-            key={query}
-            method="get"
-            action="/intake/sales"
-            role="search"
-            aria-label={d.findReceipt}
-            className="receipt-search"
-          >
-            <div className="field">
-              <label htmlFor="receipt-reference">{d.reference}</label>
-              <input
-                id="receipt-reference"
-                name="reference"
-                type="search"
-                maxLength={200}
-                defaultValue={search.reference}
-                aria-describedby="receipt-search-hint"
-              />
-              <small id="receipt-search-hint">{d.receiptSearchHint}</small>
-            </div>
-            <div className="field">
-              <label htmlFor="receipt-provider">{d.source}</label>
-              <select
-                id="receipt-provider"
-                name="provider"
-                defaultValue={search.provider}
+      <WorkspaceTabs
+        id="sales"
+        label={d.title}
+        tabs={[
+          {
+            id: 'receipts',
+            label: d.receiptsTab,
+            content: (
+              <section
+                className="card sales-register"
+                aria-labelledby="sales-recent"
               >
-                <option value="">{d.allSources}</option>
-                {saleProvider.options.map((provider) => (
-                  <option key={provider} value={provider}>
-                    {d.providers[provider]}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="receipt-search-actions">
-              <button className="btn btn-secondary">{d.findReceipt}</button>
-              {filtered && (
-                <Link className="text-link" href="/intake/sales">
-                  {d.showLatest}
-                </Link>
-              )}
-            </div>
-          </form>
-          <p className="muted">{filtered ? d.filteredHint : d.listHint}</p>
-          <ul className="sales-register-list">
-            {sales.map((s) => (
-              <li key={s.id}>
-                <Link
-                  className="sales-register-row"
-                  href={`/intake/sales/${s.id}${query}`}
+                <h2 id="sales-recent">
+                  {filtered ? d.searchResults : d.recent}
+                </h2>
+                <form
+                  key={query}
+                  method="get"
+                  action="/intake/sales"
+                  role="search"
+                  aria-label={d.findReceipt}
+                  className="receipt-search"
                 >
-                  <span className="sales-register-main">
-                    <strong>
-                      {formatOre(s.total_ore)} {currency}
-                    </strong>
-                    <span>{d.providers[s.provider]}</span>
-                  </span>
-                  <time dateTime={s.occurred_at}>{when(s.occurred_at)}</time>
-                  <span className="sales-register-status">
-                    {d.statuses[s.status]}
-                  </span>
-                  <span className="sales-register-open">
-                    {d.open}
-                    <ArrowRight size={16} aria-hidden="true" />
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          {!sales.length && <p>{filtered ? d.noReceipts : d.empty}</p>}
-        </section>
-      </div>
+                  <div className="field">
+                    <label htmlFor="receipt-reference">{d.reference}</label>
+                    <input
+                      id="receipt-reference"
+                      name="reference"
+                      type="search"
+                      maxLength={200}
+                      defaultValue={search.reference}
+                      aria-describedby="receipt-search-hint"
+                    />
+                    <small id="receipt-search-hint">
+                      {d.receiptSearchHint}
+                    </small>
+                  </div>
+                  <div className="field">
+                    <label htmlFor="receipt-provider">{d.source}</label>
+                    <select
+                      id="receipt-provider"
+                      name="provider"
+                      defaultValue={search.provider}
+                    >
+                      <option value="">{d.allSources}</option>
+                      {saleProvider.options.map((provider) => (
+                        <option key={provider} value={provider}>
+                          {d.providers[provider]}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="receipt-search-actions">
+                    <button className="btn btn-secondary">
+                      {d.findReceipt}
+                    </button>
+                    {filtered && (
+                      <Link className="text-link" href="/intake/sales">
+                        {d.showLatest}
+                      </Link>
+                    )}
+                  </div>
+                </form>
+                <p className="muted">
+                  {filtered ? d.filteredHint : d.listHint}
+                </p>
+                <ul className="sales-register-list">
+                  {sales.map((s) => (
+                    <li key={s.id}>
+                      <Link
+                        className="sales-register-row"
+                        href={`/intake/sales/${s.id}${query}`}
+                      >
+                        <span className="sales-register-main">
+                          <strong>
+                            {formatOre(s.total_ore)} {currency}
+                          </strong>
+                          <span>{d.providers[s.provider]}</span>
+                        </span>
+                        <time dateTime={s.occurred_at}>
+                          {when(s.occurred_at)}
+                        </time>
+                        <span className="sales-register-status">
+                          {d.statuses[s.status]}
+                        </span>
+                        <span className="sales-register-open">
+                          {d.open}
+                          <ArrowRight size={16} aria-hidden="true" />
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+                {!sales.length && <p>{filtered ? d.noReceipts : d.empty}</p>}
+              </section>
+            ),
+          },
+          ...(active.role !== 'readonly'
+            ? [
+                {
+                  id: 'manual',
+                  label: d.manualTab,
+                  content: (
+                    <div className="sale-manual">
+                      <p className="intake-notice">{d.notice}</p>
+                      <SaleForm
+                        key={active.id}
+                        tenantId={active.id}
+                        currency={currency}
+                        d={d}
+                        intake={all.intake}
+                        leaveUnsaved={all.leaveUnsaved}
+                      />
+                    </div>
+                  ),
+                },
+              ]
+            : []),
+        ]}
+      />
     </div>
   )
 }

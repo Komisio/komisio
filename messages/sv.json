@@ -315,7 +315,8 @@
     "stocktakeAmbiguous": "Koden matchar flera varor. Öppna rätt vara och använd dess fullständiga ID.",
     "stocktakeItemMissing": "Varan finns inte i den här butiken.",
     "stocktakePending": "Kontrollera återstående varor innan du avslutar.",
-    "collectionNotDue": "Hämtningsfristen har inte gått ut."
+    "collectionNotDue": "Hämtningsfristen har inte gått ut.",
+    "overviewHelpLabel": "Om inlämning"
   },
   "brand": "Komisio",
   "tagline": "Mer utrymme för det som får nytt liv.",
@@ -1170,8 +1171,8 @@
       "purchase": "Butiksinköp"
     },
     "ownershipKinds": {
-      "consignment": "inlämnad",
-      "store": "butiksägd"
+      "consignment": "Kommissionsvaror",
+      "store": "Egna varor"
     },
     "evidenceKinds": {
       "staff_recorded": "avtalsbevis registrerat av personal",
@@ -1208,7 +1209,9 @@
     "labelPrinter": "Etikettskrivare",
     "manageSalePeriod": "Pris och säljperiod",
     "unknownActor": "Namn saknas",
-    "markdownWaiting": "Prissänkning väntar"
+    "markdownWaiting": "Prissänkning väntar",
+    "allOwnerships": "Alla varor",
+    "ownership": "Ägande"
   },
   "sales": {
     "title": "Försäljning",
@@ -1274,7 +1277,10 @@
     "showLatest": "Visa senaste",
     "searchResults": "Sökresultat",
     "filteredHint": "Upp till 50 matchande försäljningar visas, nyaste först.",
-    "noReceipts": "Inga kvitton matchar. Kontrollera hela referensen eller välj en annan källa."
+    "noReceipts": "Inga kvitton matchar. Kontrollera hela referensen eller välj en annan källa.",
+    "receiptsTab": "Kvitton",
+    "manualTab": "Registrera manuellt",
+    "helpLabel": "Om försäljning"
   },
   "ledger": {
     "title": "Saldo",
@@ -1488,9 +1494,15 @@
     "commissionHint": "Från periodens försäljningar",
     "details": "Alla belopp och moms",
     "reports": "Rapporter och e-post",
-    "reportsHint": "Sammanfattar aktuell vecka eller månad, oberoende av datumvalet ovan.",
+    "reportsHint": "Sammanfattningar för aktuell vecka eller månad.",
     "emailHint": "Butikens ägare får en sammanfattning av föregående vecka varje måndag.",
-    "emailEnable": "Aktivera veckomejl"
+    "emailEnable": "Aktivera veckomejl",
+    "tabs": {
+      "overview": "Översikt",
+      "days": "Per dag",
+      "reports": "Rapporter"
+    },
+    "helpLabel": "Om ekonomin"
   },
   "accounting": {
     "title": "Bokföring",
@@ -1676,10 +1688,15 @@
     "scopeHint": "Lagret visar varorna som finns kvar i butiken just nu.",
     "ageHint": "Lageråldern räknas från dagen varan godkändes för försäljning.",
     "salesHelpLabel": "Om försäljningen",
-    "salesHint": "Datumen gäller bara försäljningen, inte lagret ovan.",
+    "salesHint": "Datumen gäller försäljningen. Lagret visar alltid läget just nu.",
     "metricsHeading": "Fler nyckeltal",
     "metricsHelpLabel": "Om nyckeltalen",
-    "missingHint": "Ett streck betyder att det saknas underlag för beräkningen."
+    "missingHint": "Ett streck betyder att det saknas underlag för beräkningen.",
+    "tabs": {
+      "overview": "Översikt",
+      "categories": "Kategorier",
+      "sales": "Försäljning"
+    }
   },
   "importer": {
     "title": "Importera säljare",
@@ -1912,20 +1929,20 @@
     "discardTemplate": "Kasta osparade ändringar i etikettmallen?"
   },
   "purchases": {
-    "title": "Inköp",
+    "title": "Egna inköp",
     "intro": "Registrera varor som butiken köper in och äger.",
-    "notice": "Registrera först inköpet. Öppna sedan ”{accept}” vid inköpet och ange ett försäljningspris för att göra varan klar för försäljning.",
+    "notice": "Spara inköpet och välj sedan ”{accept}”.",
     "registerHeading": "Registrera ett inköp",
     "registerHint": "En registrering per köpt vara. Spara kvittot eller anteckningen; dess referens krävs.",
     "price": "Inköpspris",
     "priceHint": "till exempel 150 eller 150,50.",
     "priceInvalid": "Ange ett pris med högst två decimaler.",
-    "evidence": "Underlagsreferens",
+    "evidence": "Kvitto eller referens",
     "evidenceHint": "Kvittonummer, eller en anteckning om vem som sålde och när. Undvik personnummer.",
-    "note": "Leverantörsanteckning (valfri)",
-    "marginEligible": "Berättigar till vinstmarginalbeskattning: köpt från privatperson utan moms, med dokumentation per vara",
+    "note": "Vara / leverantör (valfritt)",
+    "marginEligible": "Köpt från privatperson utan moms, med underlag för varan (VMB)",
     "marginHint": "Detta intygar du nu, vid inköpet. Butikens momsläge avgör hur det används vid försäljning.",
-    "confirm": "Jag bekräftar att butiken köpt denna vara och att underlagsreferensen stämmer.",
+    "confirm": "Butiken har köpt varan och underlaget stämmer.",
     "register": "Registrera inköp",
     "registered": "Inköpet är registrerat.",
     "recent": "Registrerade inköp",
@@ -1933,7 +1950,15 @@
     "reference": "Inköp",
     "marginYes": "vinstmarginal",
     "marginNo": "full moms",
-    "empty": "Inga inköp registrerade ännu."
+    "empty": "Inga inköp registrerade ännu.",
+    "history": "Historik",
+    "newPurchase": "Nytt inköp",
+    "helpLabel": "Om egna inköp",
+    "marginHelpLabel": "Om moms för inköpet",
+    "continueToItem": "Fortsätt till försäljningspris",
+    "itemRegistered": "Vara registrerad",
+    "prepareItem": "Ange försäljningspris",
+    "taxHeading": "Moms"
   },
   "sellerPortal": {
     "items": "Mina varor",

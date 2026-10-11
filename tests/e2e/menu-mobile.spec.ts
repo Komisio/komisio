@@ -74,7 +74,7 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
     await purchases.focus()
     await page.keyboard.press('Enter')
     await expect(page).toHaveURL(/\/intake\/purchases$/)
-    await expect(page.locator('.purchase-create > summary')).toBeVisible()
+    await expect(page.locator('#purchases-tab-new')).toBeVisible()
     await page.waitForLoadState('networkidle')
     await page.goto('/menu')
     const sellers = page.locator('main a[href="/intake/sellers"]')

@@ -73,6 +73,13 @@ Review notices show their actual delivery outcome and link to the seller's
 message history. An unanswered request requires checking status; queued or
 terminal outcomes never expose a fresh-send action from the review card.
 
+Store workspaces separate receiving from its bag queue, own-purchase history
+from registration, receipts from manual sales, and inventory/economy reports
+into task tabs. Tabs retain mounted drafts and support keyboard navigation and
+bookmarks. Item lists and stock reports filter by recorded ownership before
+counting and paging; item rows and details show consignment versus store ownership.
+Own purchases retain explicit evidence and a separate sale-acceptance step.
+
 Quick reception separates seller/agreement and item tabs. Seller registration
 uses the shared form without leaving reception; staff can download a personal
 agreement and record approval before continuing. Tab changes retain form drafts.

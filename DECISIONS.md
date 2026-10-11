@@ -974,3 +974,11 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-10: Owner approves multiple immutable language texts per agreement version. Acceptance in any published language satisfies that version; evidence pins the exact text. Owner/admin publishes equivalent translations; changed terms require a new version and new acceptance.
 
 - 2026-10-10: Agreement PDFs render on demand from the exact published language text, with the saved seller name where selected. Downloads neither store files nor record acceptance. PDFKit (MIT), its development types and embedded Noto Sans (OFL-1.1) provide local rendering without browser headers.
+
+- 2026-10-11: Store task tabs retain mounted drafts and support bookmarks. Stock separates overview, categories and sales; own purchases separate history from registration. Required purchase evidence and explicit confirmations remain unchanged.
+
+- 2026-10-11: Item directories and stock reports may filter by recorded ownership before counting and paging. Existing tenant/MFA checks and stock/sales formulas apply; legacy RPC contracts remain unchanged. Ownership labels distinguish consignment from store-owned goods.
+
+- 2026-10-11: Sales separate receipts from manual entry; economy separates overview, daily figures and reports. Context help replaces repeated introductions. Tabs preserve mounted work and existing report dates; sale recording, accounting and payment rules do not change.
+
+- 2026-10-11: Standard receiving separates seller/receipt work from the received-bag queue in mounted tabs. Existing receipt, seller-search and queue bookmarks still open their task. This changes no custody, agreement or commercial-acceptance prerequisite.

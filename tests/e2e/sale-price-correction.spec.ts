@@ -16,7 +16,9 @@ test('an invalid manual-sale price focuses its cart item before one corrected sa
     await f.commit()
     await page.setViewportSize({ width: 320, height: 800 })
     await page.goto('/intake/sales')
-    await page.locator('.sale-manual > summary').click()
+    await page
+      .getByRole('tab', { name: d.sales.manualTab, exact: true })
+      .click()
     const search = page.getByLabel(d.sales.search, { exact: true })
     await search.fill('Synthetic price correction')
     await search.press('Enter')

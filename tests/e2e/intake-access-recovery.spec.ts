@@ -15,7 +15,9 @@ for (const error of ['AUTH_REQUIRED', 'FORBIDDEN'])
       try {
         await f.commit()
         await page.goto('/intake/purchases')
-        await page.locator('.purchase-create > summary').click()
+        await page
+          .getByRole('tab', { name: d.purchases.newPurchase, exact: true })
+          .click()
         const price = page.locator('#purchase-price')
         const form = page.locator('form').filter({ has: price })
         await price.fill('45,25')

@@ -6849,3 +6849,124 @@ button.text-link:hover:not(:disabled) {
   background: var(--mint);
   border-color: var(--green);
 }
+
+/* Shared task tabs: hidden panels remain mounted to retain unfinished forms. */
+.workspace-tabs {
+  min-width: 0;
+}
+.workspace-tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+}
+.workspace-tablist > button,
+.workspace-tablist > a {
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--ink);
+  font-weight: 600;
+  cursor: pointer;
+}
+.workspace-tablist > button[aria-selected='true'],
+.workspace-tablist > a[aria-current='page'] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--white);
+}
+.workspace-tabpanel[hidden] {
+  display: none;
+}
+.workspace-tabpanel:not([hidden]) {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+.ownership-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 3px 9px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink);
+  background: var(--white);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.ownership-badge[data-ownership='store'] {
+  background: var(--mint);
+}
+
+.workspace-tablist > a {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+.workspace-actions,
+.stock-ownership-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+}
+.stock-ownership-filter .field {
+  min-width: 0;
+  flex: 0 1 260px;
+}
+.stock-ownership-filter select {
+  width: 100%;
+}
+.stock-ownership-filter {
+  margin-bottom: 24px;
+}
+
+.workspace-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.workspace-heading h1 {
+  margin: 0;
+}
+.workspace-actions {
+  align-items: center;
+}
+.stock-ownership-filter .field {
+  margin: 0;
+}
+.workspace-tablist > button:disabled {
+  cursor: wait;
+}
+@media (max-width: 600px) {
+  .stock-age {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .stock-age > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: baseline;
+  }
+  .stock-age dd {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+  .workspace-tablist > button,
+  .workspace-tablist > a {
+    padding-inline: 12px;
+  }
+}
+
+.economy-page .workspace-toolbar > .economy-layout {
+  margin-bottom: 24px;
+}

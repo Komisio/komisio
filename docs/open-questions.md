@@ -1,5 +1,10 @@
 # Open questions
 
+Inventory ownership (resolved 2026-10-11): directories and stock reports
+distinguish consignment from store-owned goods using recorded ownership.
+Existing financial rules remain unchanged; POS catalog migration still needs
+the separate provenance decisions below.
+
 Quick reception layout (resolved 2026-10-11): the owner requests tabs and
 in-context seller registration. Saving keeps the seller selected, with personal
 agreement downloads and explicit approval available before proceeding to items.

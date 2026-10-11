@@ -53,13 +53,21 @@ export async function readStockReport(
   client: SupabaseClient,
   tenantInput: string,
   periodInput: unknown,
+  ownershipInput?: 'consignment' | 'store',
 ) {
   const period = economyPeriod.parse(periodInput)
-  const r = await client.rpc('stock_report', {
-    p_tenant: z.uuid().parse(tenantInput),
-    p_from: period.from,
-    p_to: period.to,
-  })
+  const ownership = ownershipInput
+    ? z.enum(['consignment', 'store']).parse(ownershipInput)
+    : null
+  const r = await client.rpc(
+    ownership ? 'stock_report_by_ownership' : 'stock_report',
+    {
+      ...(ownership ? { p_ownership: ownership } : {}),
+      p_tenant: z.uuid().parse(tenantInput),
+      p_from: period.from,
+      p_to: period.to,
+    },
+  )
   if (r.error?.code === 'PGRST202') return null
   if (r.error) {
     if (r.error.message.includes('INVALID_INPUT'))

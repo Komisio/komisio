@@ -1,5 +1,7 @@
 'use client'
 import { useRef, useState } from 'react'
+import { NavigationLink } from '@/components/platform/navigation-warning'
+import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import { exactPrice } from '@/lib/engine/manual-reception'
@@ -9,9 +11,9 @@ import { useFormDirty } from '@/components/platform/use-form-dirty'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 
 const emptyFields = [
+  ['note', ''],
   ['price', ''],
   ['evidence', ''],
-  ['note', ''],
 ] as const
 
 export function PurchaseForm({
@@ -80,8 +82,10 @@ export function PurchaseForm({
   }
   return (
     <section className="card intake-form">
-      <h2>{d.registerHeading}</h2>
-      <p>{d.registerHint}</p>
+      <FormHelpHeading
+        title={d.registerHeading}
+        help={{ label: d.helpLabel, steps: [d.registerHint, d.intro] }}
+      />
       <form
         ref={formRef}
         onSubmit={submit}
@@ -94,6 +98,10 @@ export function PurchaseForm({
           className="intake-fields"
           disabled={!ready || action.busy || action.locked}
         >
+          <div className="field">
+            <label htmlFor="purchase-note">{d.note}</label>
+            <input id="purchase-note" name="note" maxLength={500} />
+          </div>
           <div className="field">
             <label htmlFor="purchase-price">{d.price}</label>
             <input
@@ -124,15 +132,14 @@ export function PurchaseForm({
             />
             <small>{d.evidenceHint}</small>
           </div>
-          <div className="field">
-            <label htmlFor="purchase-note">{d.note}</label>
-            <input id="purchase-note" name="note" maxLength={500} />
-          </div>
+          <FormHelpHeading
+            title={d.taxHeading}
+            help={{ label: d.marginHelpLabel, steps: [d.marginHint] }}
+          />
           <label className="intake-confirm">
             <input type="checkbox" name="margin" />
             {d.marginEligible}
           </label>
-          <small>{d.marginHint}</small>
           <label className="intake-confirm">
             <input type="checkbox" required />
             {d.confirm}
@@ -154,7 +161,17 @@ export function PurchaseForm({
               ? intake.retry
               : d.register}
         </Button>
-        {saved && <p role="status">{d.registered}</p>}
+        {saved && (
+          <>
+            <p role="status">{d.registered}</p>
+            <NavigationLink
+              className="btn btn-secondary"
+              href={`/intake/purchases?purchase=${saved}#purchases-history`}
+            >
+              {d.continueToItem}
+            </NavigationLink>
+          </>
+        )}
       </form>
     </section>
   )

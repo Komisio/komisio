@@ -1,3 +1,5 @@
+import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
+import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { NewSellerDisclosure } from '@/components/intake/new-seller-disclosure'
 import { readStorePolicy } from '@/lib/engine/store-policy'
@@ -121,8 +123,11 @@ export default async function Intake({
   return (
     <div className="intake-overview">
       <div className="page-heading">
-        <h1>{d.title}</h1>
-        <p>{d.intro}</p>
+        <FormHelpHeading
+          title={d.title}
+          level={1}
+          help={{ label: d.overviewHelpLabel, steps: [d.intro] }}
+        />
       </div>
       <nav className="intake-paths intake-shortcuts" aria-label={d.title}>
         {process.env.KOMISIO_SELLER_SUBMISSIONS_ENABLED === 'true' && (
@@ -130,343 +135,395 @@ export default async function Intake({
             {all.submissions.queue}
           </Link>
         )}
-        <a className="btn btn-secondary" href="#bag-queue">
-          {d.queue} <span aria-hidden="true">↓</span>
-        </a>
         <Link className="text-link" href="/intake/quick">
           {all.quickIntake.title} <span aria-hidden="true">→</span>
         </Link>
       </nav>
-      <div className="intake-grid" id="bag-receiving">
-        <details
-          className="card intake-form intake-find-seller"
-          open={!selected.data}
-        >
-          <summary>{d.find}</summary>
-          <form action="/intake#seller-search" className="field">
-            <label htmlFor="seller-search">{all.sellersList.search}</label>
-            <div className="row">
-              <input
-                key={q}
-                id="seller-search"
-                type="search"
-                placeholder={all.sellersList.searchHint}
-                name="q"
-                defaultValue={q}
-                maxLength={120}
-              />
-              <button className="btn btn-secondary">{d.searchButton}</button>
-            </div>
-          </form>
-          <p>
-            <NewSellerLink className="text-link">{d.newSeller}</NewSellerLink>
-          </p>
-          {q && (
-            <p>
-              <Link className="text-link" href="/intake#seller-search">
-                {all.sellersList.clear}
-              </Link>
-            </p>
-          )}
-          {sellers.total > 0 && (
-            <p>
-              <small>
-                {all.sellersList.showingRange
-                  .replace('{from}', String(sellers.offset + 1))
-                  .replace(
-                    '{to}',
-                    String(sellers.offset + sellers.sellers.length),
-                  )
-                  .replace('{total}', String(sellers.total))}
-              </small>
-            </p>
-          )}
-          <ul className="intake-list intake-seller-results">
-            {sellers.sellers.map((s) => (
-              <li key={s.id}>
-                <Link
-                  href={`/intake?seller=${s.id}#new-seller`}
-                  className="intake-seller"
-                  aria-current={selected.data?.id === s.id ? 'true' : undefined}
+      <WorkspaceTabs
+        id="intake"
+        label={d.title}
+        initial={
+          filters.state || filters.bag || filters.older || filters.newer
+            ? 'queue'
+            : 'receive'
+        }
+        tabs={[
+          {
+            id: 'receive',
+            label: all.nav.receiveBag,
+            anchors: ['bag-receiving', 'seller-search', 'new-seller'],
+            content: (
+              <div className="intake-grid" id="bag-receiving">
+                <details
+                  className="card intake-form intake-find-seller"
+                  open={!selected.data}
                 >
-                  <strong>{s.name}</strong>
-                  <small>{s.email || s.phone}</small>
-                  <span>{d.choose}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          {sellers.sellers.length === 0 && <p>{d.noSellers}</p>}
-          {sellerPages > 1 && (
-            <nav className="row wrap" aria-label={all.sellersList.title}>
-              {sellerPage > 1 && (
-                <Link
-                  className="btn btn-secondary"
-                  href={sellerPageHref(sellerPage - 1)}
-                >
-                  {all.sellersList.previousPage}
-                </Link>
-              )}
-              {sellerPage < sellerPages && (
-                <Link
-                  className="btn btn-secondary"
-                  href={sellerPageHref(sellerPage + 1)}
-                >
-                  {all.sellersList.nextPage}
-                </Link>
-              )}
-            </nav>
-          )}
-        </details>
-        <div id="new-seller">
-          {selected.data && agreement && (
-            <details
-              className="card intake-form agreement-at-intake"
-              open={Boolean(
-                !evidence &&
-                (agreement.required_before_receipt ||
-                  policy.policy.agreementRequiredFor.includes('bag_receipt')),
-              )}
-            >
-              <summary>{a.evidenceHeading}</summary>
-              <p>
-                <strong>
-                  {agreement.title} · {a.version} {agreement.version}
-                </strong>
-                <br />
-                {a.language}:{' '}
-                {localeNames[resolveLocale(undefined, agreement.language)]}
-              </p>
-              <p>
-                {agreement.required_before_receipt ? a.required : a.optional}
-              </p>
-              <details>
-                <summary>{a.view}</summary>
-                <div
-                  className="agreement-text"
-                  lang={intlLocale(agreement.language)}
-                >
-                  {agreement.body}
-                </div>
-              </details>
-              <p>{evidence ? a.available : a.missing}</p>
-              {evidence ? (
-                <p>
-                  {evidence.source === 'seller_portal'
-                    ? all.sellerAgreement.accepted
-                    : a.staffRecorded}
-                  :{' '}
-                  {new Date(evidence.recorded_at).toLocaleString(
-                    intlLocale(ctx.locale),
-                    { timeZone: 'Europe/Stockholm' },
+                  <summary>{d.find}</summary>
+                  <form action="/intake#seller-search" className="field">
+                    <label htmlFor="seller-search">
+                      {all.sellersList.search}
+                    </label>
+                    <div className="row">
+                      <input
+                        key={q}
+                        id="seller-search"
+                        type="search"
+                        placeholder={all.sellersList.searchHint}
+                        name="q"
+                        defaultValue={q}
+                        maxLength={120}
+                      />
+                      <button className="btn btn-secondary">
+                        {d.searchButton}
+                      </button>
+                    </div>
+                  </form>
+                  <p>
+                    <NewSellerLink className="text-link">
+                      {d.newSeller}
+                    </NewSellerLink>
+                  </p>
+                  {q && (
+                    <p>
+                      <Link className="text-link" href="/intake#seller-search">
+                        {all.sellersList.clear}
+                      </Link>
+                    </p>
                   )}
-                  <br />
-                  {evidence.reference} ·{' '}
-                  {
-                    localeNames[
-                      agreement.translations?.find(
-                        (t) => t.id === evidence.translation_id,
-                      )?.language ?? agreement.language
-                    ]
-                  }
-                </p>
-              ) : (
-                active.role !== 'readonly' && (
-                  <EvidenceRecorder
-                    key={`${active.id}:${selected.data.id}:${agreement.id}`}
-                    tenantId={active.id}
-                    sellerId={selected.data.id}
-                    agreementId={agreement.id}
-                    agreement={agreement}
-                    d={all}
-                  />
-                )
-              )}
-            </details>
-          )}
-          {active.role !== 'readonly' ? (
-            selected.data ? (
-              receivingPanel
-            ) : (
-              <NewSellerDisclosure title={d.newSeller}>
-                {receivingPanel}
-              </NewSellerDisclosure>
-            )
-          ) : (
-            <p>{d.readOnly}</p>
-          )}
-        </div>
-      </div>
-      <section className="card intake-form received-bags" id="bag-queue">
-        <h2>{d.queue}</h2>
-        {filters.state && (
-          <p>
-            {filters.state === 'unstarted'
-              ? all.storeFlow.live.dropoffHelp
-              : filters.state === 'drafts'
-                ? all.storeFlow.live.draftHelp
-                : d.queueHint}
-          </p>
-        )}
-        {filters.state && (
-          <p>
-            <strong>
-              {filters.state === 'unstarted'
-                ? all.storeFlow.live.dropoffs
-                : filters.state === 'drafts'
-                  ? all.storeFlow.live.drafts
-                  : all.bagProcessing[filters.state]}
-            </strong>{' '}
-            · <Link href={bagQueueHref({})}>{d.showAllBags}</Link>
-          </p>
-        )}
-        {selected.data && (
-          <p>
-            {d.bagsFor}: <strong>{selected.data.name}</strong>
-          </p>
-        )}
-        <form action="/intake#bag-queue" className="field received-bags-search">
-          {filters.state && (
-            <input type="hidden" name="state" value={filters.state} />
-          )}
-          {filters.seller && (
-            <input type="hidden" name="seller" value={filters.seller} />
-          )}
-          <label htmlFor="bag-search">{d.bagSearch}</label>
-          <div className="row">
-            <input
-              id="bag-search"
-              name="bag"
-              defaultValue={filters.bag || ''}
-              maxLength={20}
-              placeholder="K-123"
-              pattern="[ ]*([Kk][ ]*-[ ]*)?[1-9][0-9]*[ ]*|"
-            />
-            <button className="btn btn-secondary">{d.findBag}</button>
-          </div>
-        </form>
-        <div className="row wrap received-bags-filters">
-          <Link
-            className="text-link"
-            href={bagQueueHref({
-              seller: filters.seller,
-              bag: filters.bag || undefined,
-            })}
-          >
-            {all.handovers.allStatuses}
-          </Link>
-          {(['open', 'completed'] as const).map((state) => (
-            <Link
-              key={state}
-              className="text-link"
-              aria-current={filters.state === state ? 'page' : undefined}
-              href={bagQueueHref({
-                seller: filters.seller,
-                bag: filters.bag || undefined,
-                state,
-              })}
-            >
-              {all.bagProcessing[state]}
-            </Link>
-          ))}
-          {filters.bag && (
-            <Link
-              className="text-link"
-              href={bagQueueHref({
-                seller: filters.seller,
-                state: filters.state,
-              })}
-            >
-              {d.clearBagSearch}
-            </Link>
-          )}
-          {filters.seller && (
-            <Link className="text-link" href={bagQueueHref({})}>
-              {d.showAllBags}
-            </Link>
-          )}
-        </div>
-        <ul className="intake-list">
-          {bags.items.map((row) => {
-            const bag = row as unknown as BagReceipt & {
-              sellers: { name: string } | null
-            }
-            return (
-              <li key={bag.id} className="intake-bag">
-                <div className="received-bag-info">
-                  <strong>
-                    {d.bag} K-{bag.reference}
-                  </strong>
-                  {!selected.data && <span>{bag.sellers?.name}</span>}
-                  <small>
-                    {new Date(bag.received_at).toLocaleString(
-                      intlLocale(ctx.locale),
-                      {
-                        timeZone: 'Europe/Stockholm',
-                        dateStyle: 'short',
-                        timeStyle: 'short',
-                      },
-                    )}{' '}
-                    · {all.bagProcessing[row.processing_state]}
-                  </small>
+                  {sellers.total > 0 && (
+                    <p>
+                      <small>
+                        {all.sellersList.showingRange
+                          .replace('{from}', String(sellers.offset + 1))
+                          .replace(
+                            '{to}',
+                            String(sellers.offset + sellers.sellers.length),
+                          )
+                          .replace('{total}', String(sellers.total))}
+                      </small>
+                    </p>
+                  )}
+                  <ul className="intake-list intake-seller-results">
+                    {sellers.sellers.map((s) => (
+                      <li key={s.id}>
+                        <Link
+                          href={`/intake?seller=${s.id}#new-seller`}
+                          className="intake-seller"
+                          aria-current={
+                            selected.data?.id === s.id ? 'true' : undefined
+                          }
+                        >
+                          <strong>{s.name}</strong>
+                          <small>{s.email || s.phone}</small>
+                          <span>{d.choose}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                  {sellers.sellers.length === 0 && <p>{d.noSellers}</p>}
+                  {sellerPages > 1 && (
+                    <nav
+                      className="row wrap"
+                      aria-label={all.sellersList.title}
+                    >
+                      {sellerPage > 1 && (
+                        <Link
+                          className="btn btn-secondary"
+                          href={sellerPageHref(sellerPage - 1)}
+                        >
+                          {all.sellersList.previousPage}
+                        </Link>
+                      )}
+                      {sellerPage < sellerPages && (
+                        <Link
+                          className="btn btn-secondary"
+                          href={sellerPageHref(sellerPage + 1)}
+                        >
+                          {all.sellersList.nextPage}
+                        </Link>
+                      )}
+                    </nav>
+                  )}
+                </details>
+                <div id="new-seller">
+                  {selected.data && agreement && (
+                    <details
+                      className="card intake-form agreement-at-intake"
+                      open={Boolean(
+                        !evidence &&
+                        (agreement.required_before_receipt ||
+                          policy.policy.agreementRequiredFor.includes(
+                            'bag_receipt',
+                          )),
+                      )}
+                    >
+                      <summary>{a.evidenceHeading}</summary>
+                      <p>
+                        <strong>
+                          {agreement.title} · {a.version} {agreement.version}
+                        </strong>
+                        <br />
+                        {a.language}:{' '}
+                        {
+                          localeNames[
+                            resolveLocale(undefined, agreement.language)
+                          ]
+                        }
+                      </p>
+                      <p>
+                        {agreement.required_before_receipt
+                          ? a.required
+                          : a.optional}
+                      </p>
+                      <details>
+                        <summary>{a.view}</summary>
+                        <div
+                          className="agreement-text"
+                          lang={intlLocale(agreement.language)}
+                        >
+                          {agreement.body}
+                        </div>
+                      </details>
+                      <p>{evidence ? a.available : a.missing}</p>
+                      {evidence ? (
+                        <p>
+                          {evidence.source === 'seller_portal'
+                            ? all.sellerAgreement.accepted
+                            : a.staffRecorded}
+                          :{' '}
+                          {new Date(evidence.recorded_at).toLocaleString(
+                            intlLocale(ctx.locale),
+                            { timeZone: 'Europe/Stockholm' },
+                          )}
+                          <br />
+                          {evidence.reference} ·{' '}
+                          {
+                            localeNames[
+                              agreement.translations?.find(
+                                (t) => t.id === evidence.translation_id,
+                              )?.language ?? agreement.language
+                            ]
+                          }
+                        </p>
+                      ) : (
+                        active.role !== 'readonly' && (
+                          <EvidenceRecorder
+                            key={`${active.id}:${selected.data.id}:${agreement.id}`}
+                            tenantId={active.id}
+                            sellerId={selected.data.id}
+                            agreementId={agreement.id}
+                            agreement={agreement}
+                            d={all}
+                          />
+                        )
+                      )}
+                    </details>
+                  )}
+                  {active.role !== 'readonly' ? (
+                    selected.data ? (
+                      receivingPanel
+                    ) : (
+                      <NewSellerDisclosure title={d.newSeller}>
+                        {receivingPanel}
+                      </NewSellerDisclosure>
+                    )
+                  ) : (
+                    <p>{d.readOnly}</p>
+                  )}
                 </div>
-                <div className="received-bag-actions">
+              </div>
+            ),
+          },
+          {
+            id: 'queue',
+            label: d.queue,
+            anchors: ['bag-queue'],
+            content: (
+              <section
+                className="card intake-form received-bags"
+                id="bag-queue"
+              >
+                <h2>{d.queue}</h2>
+                {filters.state && (
+                  <p>
+                    {filters.state === 'unstarted'
+                      ? all.storeFlow.live.dropoffHelp
+                      : filters.state === 'drafts'
+                        ? all.storeFlow.live.draftHelp
+                        : d.queueHint}
+                  </p>
+                )}
+                {filters.state && (
+                  <p>
+                    <strong>
+                      {filters.state === 'unstarted'
+                        ? all.storeFlow.live.dropoffs
+                        : filters.state === 'drafts'
+                          ? all.storeFlow.live.drafts
+                          : all.bagProcessing[filters.state]}
+                    </strong>{' '}
+                    · <Link href={bagQueueHref({})}>{d.showAllBags}</Link>
+                  </p>
+                )}
+                {selected.data && (
+                  <p>
+                    {d.bagsFor}: <strong>{selected.data.name}</strong>
+                  </p>
+                )}
+                <form
+                  action="/intake#bag-queue"
+                  className="field received-bags-search"
+                >
+                  {filters.state && (
+                    <input type="hidden" name="state" value={filters.state} />
+                  )}
+                  {filters.seller && (
+                    <input type="hidden" name="seller" value={filters.seller} />
+                  )}
+                  <label htmlFor="bag-search">{d.bagSearch}</label>
+                  <div className="row">
+                    <input
+                      id="bag-search"
+                      name="bag"
+                      defaultValue={filters.bag || ''}
+                      maxLength={20}
+                      placeholder="K-123"
+                      pattern="[ ]*([Kk][ ]*-[ ]*)?[1-9][0-9]*[ ]*|"
+                    />
+                    <button className="btn btn-secondary">{d.findBag}</button>
+                  </div>
+                </form>
+                <div className="row wrap received-bags-filters">
                   <Link
-                    className="btn btn-secondary"
-                    href={`/intake/bags/${bag.id}/inspect`}
+                    className="text-link"
+                    href={bagQueueHref({
+                      seller: filters.seller,
+                      bag: filters.bag || undefined,
+                    })}
                   >
-                    {all.inspection.title}
+                    {all.handovers.allStatuses}
                   </Link>
-                  <Link className="text-link" href={`/intake/bags/${bag.id}`}>
-                    {d.label}
-                  </Link>
+                  {(['open', 'completed'] as const).map((state) => (
+                    <Link
+                      key={state}
+                      className="text-link"
+                      aria-current={
+                        filters.state === state ? 'page' : undefined
+                      }
+                      href={bagQueueHref({
+                        seller: filters.seller,
+                        bag: filters.bag || undefined,
+                        state,
+                      })}
+                    >
+                      {all.bagProcessing[state]}
+                    </Link>
+                  ))}
+                  {filters.bag && (
+                    <Link
+                      className="text-link"
+                      href={bagQueueHref({
+                        seller: filters.seller,
+                        state: filters.state,
+                      })}
+                    >
+                      {d.clearBagSearch}
+                    </Link>
+                  )}
+                  {filters.seller && (
+                    <Link className="text-link" href={bagQueueHref({})}>
+                      {d.showAllBags}
+                    </Link>
+                  )}
                 </div>
-              </li>
-            )
-          })}
-        </ul>
-        {!bags.items.length && <p>{d.noMatchingBags}</p>}
-        <nav className="row" aria-label={d.bagPages}>
-          {bags.hasNewer && bags.items[0] && (
-            <Link
-              className="text-link"
-              href={bagQueueHref({
-                state: filters.state,
-                seller: filters.seller,
-                bag: filters.bag,
-                newer: bags.items[0].reference,
-              })}
-            >
-              {d.newerBags}
-            </Link>
-          )}
-          {bags.hasOlder && bags.items.at(-1) && (
-            <Link
-              className="text-link"
-              href={bagQueueHref({
-                state: filters.state,
-                seller: filters.seller,
-                bag: filters.bag,
-                older: bags.items.at(-1)!.reference,
-              })}
-            >
-              {d.olderBags}
-            </Link>
-          )}
-          {(filters.older || filters.newer) && (
-            <Link
-              className="text-link"
-              href={bagQueueHref({
-                state: filters.state,
-                seller: filters.seller,
-                bag: filters.bag,
-              })}
-            >
-              {d.firstBags}
-            </Link>
-          )}
-        </nav>
-      </section>
+                <ul className="intake-list">
+                  {bags.items.map((row) => {
+                    const bag = row as unknown as BagReceipt & {
+                      sellers: { name: string } | null
+                    }
+                    return (
+                      <li key={bag.id} className="intake-bag">
+                        <div className="received-bag-info">
+                          <strong>
+                            {d.bag} K-{bag.reference}
+                          </strong>
+                          {!selected.data && <span>{bag.sellers?.name}</span>}
+                          <small>
+                            {new Date(bag.received_at).toLocaleString(
+                              intlLocale(ctx.locale),
+                              {
+                                timeZone: 'Europe/Stockholm',
+                                dateStyle: 'short',
+                                timeStyle: 'short',
+                              },
+                            )}{' '}
+                            · {all.bagProcessing[row.processing_state]}
+                          </small>
+                        </div>
+                        <div className="received-bag-actions">
+                          <Link
+                            className="btn btn-secondary"
+                            href={`/intake/bags/${bag.id}/inspect`}
+                          >
+                            {all.inspection.title}
+                          </Link>
+                          <Link
+                            className="text-link"
+                            href={`/intake/bags/${bag.id}`}
+                          >
+                            {d.label}
+                          </Link>
+                        </div>
+                      </li>
+                    )
+                  })}
+                </ul>
+                {!bags.items.length && <p>{d.noMatchingBags}</p>}
+                <nav className="row" aria-label={d.bagPages}>
+                  {bags.hasNewer && bags.items[0] && (
+                    <Link
+                      className="text-link"
+                      href={bagQueueHref({
+                        state: filters.state,
+                        seller: filters.seller,
+                        bag: filters.bag,
+                        newer: bags.items[0].reference,
+                      })}
+                    >
+                      {d.newerBags}
+                    </Link>
+                  )}
+                  {bags.hasOlder && bags.items.at(-1) && (
+                    <Link
+                      className="text-link"
+                      href={bagQueueHref({
+                        state: filters.state,
+                        seller: filters.seller,
+                        bag: filters.bag,
+                        older: bags.items.at(-1)!.reference,
+                      })}
+                    >
+                      {d.olderBags}
+                    </Link>
+                  )}
+                  {(filters.older || filters.newer) && (
+                    <Link
+                      className="text-link"
+                      href={bagQueueHref({
+                        state: filters.state,
+                        seller: filters.seller,
+                        bag: filters.bag,
+                      })}
+                    >
+                      {d.firstBags}
+                    </Link>
+                  )}
+                </nav>
+              </section>
+            ),
+          },
+        ]}
+      />
     </div>
   )
 }

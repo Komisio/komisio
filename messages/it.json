@@ -315,7 +315,8 @@
     "stocktakeAmbiguous": "Il codice corrisponde a più articoli. Apri quello corretto e usa il suo ID completo.",
     "stocktakeItemMissing": "Articolo non trovato in questo negozio.",
     "stocktakePending": "Controlla gli articoli rimanenti prima di concludere.",
-    "collectionNotDue": "Il termine per il ritiro non è ancora scaduto."
+    "collectionNotDue": "Il termine per il ritiro non è ancora scaduto.",
+    "overviewHelpLabel": "Sulla ricezione"
   },
   "brand": "Komisio",
   "tagline": "Più spazio perché le cose vivano di nuovo.",
@@ -1170,8 +1171,8 @@
       "purchase": "Acquisto del negozio"
     },
     "ownershipKinds": {
-      "consignment": "conto vendita",
-      "store": "di proprietà del negozio"
+      "consignment": "Articoli in conto vendita",
+      "store": "Articoli propri"
     },
     "evidenceKinds": {
       "staff_recorded": "prova dell'accordo registrata dal personale",
@@ -1208,7 +1209,9 @@
     "labelPrinter": "Stampante per etichette",
     "manageSalePeriod": "Prezzo e periodo di vendita",
     "unknownActor": "Nome non disponibile",
-    "markdownWaiting": "Ribasso in attesa"
+    "markdownWaiting": "Ribasso in attesa",
+    "allOwnerships": "Tutti gli articoli",
+    "ownership": "Proprietà"
   },
   "sales": {
     "title": "Vendite",
@@ -1274,7 +1277,10 @@
     "showLatest": "Mostra recenti",
     "searchResults": "Risultati di ricerca",
     "filteredHint": "Sono mostrate fino a 50 vendite corrispondenti, dalle più recenti.",
-    "noReceipts": "Nessuna ricevuta corrispondente. Controlla il riferimento completo o scegli un’altra origine."
+    "noReceipts": "Nessuna ricevuta corrispondente. Controlla il riferimento completo o scegli un’altra origine.",
+    "receiptsTab": "Ricevute",
+    "manualTab": "Registra manualmente",
+    "helpLabel": "Sulle vendite"
   },
   "ledger": {
     "title": "Saldo e registro",
@@ -1488,9 +1494,15 @@
     "commissionHint": "Dalle vendite del periodo",
     "details": "Tutti gli importi e IVA",
     "reports": "Rapporti ed e-mail",
-    "reportsHint": "Riepiloga la settimana o il mese corrente, indipendentemente dalle date selezionate sopra.",
+    "reportsHint": "Riepiloghi della settimana o del mese corrente.",
     "emailHint": "I proprietari ricevono un riepilogo della settimana precedente ogni lunedì.",
-    "emailEnable": "Attiva e-mail settimanale"
+    "emailEnable": "Attiva e-mail settimanale",
+    "tabs": {
+      "overview": "Panoramica",
+      "days": "Per giorno",
+      "reports": "Report"
+    },
+    "helpLabel": "Sulle finanze"
   },
   "accounting": {
     "title": "Contabilità",
@@ -1676,10 +1688,15 @@
     "scopeHint": "Il magazzino mostra gli articoli attualmente presenti in negozio.",
     "ageHint": "L’anzianità si calcola dal giorno in cui l’articolo è stato accettato per la vendita.",
     "salesHelpLabel": "Informazioni sulle vendite",
-    "salesHint": "Le date si applicano solo alle vendite, non al magazzino riportato sopra.",
+    "salesHint": "Le date si applicano alle vendite. Il magazzino mostra sempre la situazione attuale.",
     "metricsHeading": "Altri indicatori",
     "metricsHelpLabel": "Informazioni sugli indicatori",
-    "missingHint": "Un trattino indica che mancano dati per il calcolo."
+    "missingHint": "Un trattino indica che mancano dati per il calcolo.",
+    "tabs": {
+      "overview": "Panoramica",
+      "categories": "Categorie",
+      "sales": "Vendite"
+    }
   },
   "importer": {
     "title": "Importa conferenti",
@@ -1912,20 +1929,20 @@
     "discardTemplate": "Scartare le modifiche non salvate al modello di etichetta?"
   },
   "purchases": {
-    "title": "Acquisti",
+    "title": "Acquisti propri",
     "intro": "Registra gli articoli acquistati e posseduti dal negozio.",
-    "notice": "Registra prima l’acquisto. Poi apri «{accept}» sull’acquisto e inserisci un prezzo di vendita per preparare l’articolo alla vendita.",
+    "notice": "Salva l’acquisto, poi scegli «{accept}».",
     "registerHeading": "Registra un acquisto",
     "registerHint": "Una registrazione per articolo acquistato. Conserva la ricevuta o la nota; il suo riferimento è obbligatorio.",
     "price": "Prezzo di acquisto",
     "priceHint": "ad esempio 150 o 150.50.",
     "priceInvalid": "Inserisci un prezzo con al massimo due decimali.",
-    "evidence": "Riferimento della prova",
+    "evidence": "Ricevuta o riferimento",
     "evidenceHint": "Numero della ricevuta, oppure una nota su chi ha venduto e quando. Evita codici fiscali e numeri di identità personali.",
-    "note": "Nota sul fornitore (facoltativa)",
-    "marginEligible": "Idoneo al regime del margine: acquistato da un privato senza IVA, con documentazione per articolo",
+    "note": "Articolo / fornitore (facoltativo)",
+    "marginEligible": "Acquistato da un privato senza IVA, con documento per articolo (regime del margine)",
     "marginHint": "Questo viene attestato adesso, all'acquisto, da te. La modalità IVA del negozio decide come viene usato alla vendita.",
-    "confirm": "Confermo che il negozio ha acquistato questo articolo e che il riferimento della prova è corretto.",
+    "confirm": "Il negozio ha acquistato l’articolo e il documento è corretto.",
     "register": "Registra acquisto",
     "registered": "L'acquisto è registrato.",
     "recent": "Acquisti registrati",
@@ -1933,7 +1950,15 @@
     "reference": "Acquisto",
     "marginYes": "regime del margine",
     "marginNo": "IVA piena",
-    "empty": "Nessun acquisto registrato finora."
+    "empty": "Nessun acquisto registrato finora.",
+    "history": "Storico",
+    "newPurchase": "Nuovo acquisto",
+    "helpLabel": "Sugli acquisti propri",
+    "marginHelpLabel": "Sull’IVA dell’acquisto",
+    "continueToItem": "Continua al prezzo di vendita",
+    "itemRegistered": "Articolo registrato",
+    "prepareItem": "Imposta prezzo di vendita",
+    "taxHeading": "IVA"
   },
   "sellerPortal": {
     "handovers": "Annuncia una consegna",

@@ -315,7 +315,8 @@
     "stocktakeAmbiguous": "The code matches several items. Open the correct item and use its full ID.",
     "stocktakeItemMissing": "This item was not found in this store.",
     "stocktakePending": "Check the remaining items before finishing.",
-    "collectionNotDue": "The collection deadline has not passed."
+    "collectionNotDue": "The collection deadline has not passed.",
+    "overviewHelpLabel": "About receiving"
   },
   "brand": "Komisio",
   "tagline": "More room for things to live again.",
@@ -1170,8 +1171,8 @@
       "purchase": "Store purchase"
     },
     "ownershipKinds": {
-      "consignment": "consignment",
-      "store": "store-owned"
+      "consignment": "Consignment items",
+      "store": "Store-owned items"
     },
     "evidenceKinds": {
       "staff_recorded": "staff-recorded agreement evidence",
@@ -1208,7 +1209,9 @@
     "labelPrinter": "Label printer",
     "manageSalePeriod": "Price and sale period",
     "unknownActor": "Name unavailable",
-    "markdownWaiting": "Markdown pending"
+    "markdownWaiting": "Markdown pending",
+    "allOwnerships": "All items",
+    "ownership": "Ownership"
   },
   "sales": {
     "title": "Sales",
@@ -1274,7 +1277,10 @@
     "showLatest": "Show latest",
     "searchResults": "Search results",
     "filteredHint": "Up to 50 matching sales are shown, newest first.",
-    "noReceipts": "No receipts match. Check the full reference or choose another source."
+    "noReceipts": "No receipts match. Check the full reference or choose another source.",
+    "receiptsTab": "Receipts",
+    "manualTab": "Record manually",
+    "helpLabel": "About sales"
   },
   "ledger": {
     "title": "Balance and ledger",
@@ -1488,9 +1494,15 @@
     "commissionHint": "From sales in this period",
     "details": "All amounts and VAT",
     "reports": "Reports and email",
-    "reportsHint": "Summarises the current week or month, independently of the dates above.",
+    "reportsHint": "Summaries for the current week or month.",
     "emailHint": "Store owners receive a summary of the previous week every Monday.",
-    "emailEnable": "Enable weekly email"
+    "emailEnable": "Enable weekly email",
+    "tabs": {
+      "overview": "Overview",
+      "days": "By day",
+      "reports": "Reports"
+    },
+    "helpLabel": "About finances"
   },
   "accounting": {
     "title": "Accounting",
@@ -1676,10 +1688,15 @@
     "scopeHint": "Inventory shows the items currently in the store.",
     "ageHint": "Stock age starts on the day an item was accepted for sale.",
     "salesHelpLabel": "About sales",
-    "salesHint": "The dates apply only to sales, not to the inventory above.",
+    "salesHint": "The dates apply to sales. Inventory always shows the current stock.",
     "metricsHeading": "More metrics",
     "metricsHelpLabel": "About these metrics",
-    "missingHint": "A dash means there is not enough data to calculate the value."
+    "missingHint": "A dash means there is not enough data to calculate the value.",
+    "tabs": {
+      "overview": "Overview",
+      "categories": "Categories",
+      "sales": "Sales"
+    }
   },
   "importer": {
     "title": "Import sellers",
@@ -1912,20 +1929,20 @@
     "discardTemplate": "Discard unsaved changes to the label template?"
   },
   "purchases": {
-    "title": "Purchases",
+    "title": "Own purchases",
     "intro": "Record items purchased and owned by the store.",
-    "notice": "Record the purchase first. Then open “{accept}” on the purchase and enter a selling price to make the item ready for sale.",
+    "notice": "Save the purchase, then choose “{accept}”.",
     "registerHeading": "Register a purchase",
     "registerHint": "One registration per item bought. Keep the receipt or note; its reference is required.",
     "price": "Purchase price",
     "priceHint": "for example 150 or 150.50.",
     "priceInvalid": "Enter a price with up to two decimals.",
-    "evidence": "Evidence reference",
+    "evidence": "Receipt or reference",
     "evidenceHint": "Receipt number, or a note of who sold it and when. Avoid personal identity numbers.",
-    "note": "Supplier note (optional)",
-    "marginEligible": "Margin scheme eligible: bought from a private person without VAT, with per-item documentation",
+    "note": "Item / supplier (optional)",
+    "marginEligible": "Bought from a private individual without VAT, with item documentation (margin scheme)",
     "marginHint": "This is attested now, at the purchase, by you. The store's VAT mode decides how it is used at sale.",
-    "confirm": "I confirm that the store bought this item and that the evidence reference is correct.",
+    "confirm": "The store bought this item and the evidence is correct.",
     "register": "Register purchase",
     "registered": "The purchase is registered.",
     "recent": "Registered purchases",
@@ -1933,7 +1950,15 @@
     "reference": "Purchase",
     "marginYes": "margin scheme",
     "marginNo": "full VAT",
-    "empty": "No purchases registered yet."
+    "empty": "No purchases registered yet.",
+    "history": "History",
+    "newPurchase": "New purchase",
+    "helpLabel": "About own purchases",
+    "marginHelpLabel": "About purchase VAT",
+    "continueToItem": "Continue to selling price",
+    "itemRegistered": "Item registered",
+    "prepareItem": "Set selling price",
+    "taxHeading": "VAT"
   },
   "sellerPortal": {
     "handovers": "Announce a drop-off",

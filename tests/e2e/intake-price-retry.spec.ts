@@ -25,13 +25,14 @@ for (const failureCode of ['REQUEST_FAILED', 'INVALID_INPUT', 'POLICY_CHANGED'])
           ])
         await f.commit()
         await page.goto('/intake/purchases')
-        await page
-          .locator(
-            action === 'registerPurchase'
-              ? '.purchase-create > summary'
-              : '.purchase-accept > summary',
-          )
-          .click()
+        await (
+          action === 'registerPurchase'
+            ? page.getByRole('tab', {
+                name: d.purchases.newPurchase,
+                exact: true,
+              })
+            : page.locator('.purchase-accept > summary')
+        ).click()
         const form = page.locator('form').filter({
           has: page.locator(
             action === 'registerPurchase'
@@ -165,13 +166,14 @@ for (const action of ['registerPurchase', 'acceptItem'] as const)
         ])
       await f.commit()
       await page.goto('/intake/purchases')
-      await page
-        .locator(
-          action === 'registerPurchase'
-            ? '.purchase-create > summary'
-            : '.purchase-accept > summary',
-        )
-        .click()
+      await (
+        action === 'registerPurchase'
+          ? page.getByRole('tab', {
+              name: d.purchases.newPurchase,
+              exact: true,
+            })
+          : page.locator('.purchase-accept > summary')
+      ).click()
       const form = page.locator('form').filter({
         has: page.locator(
           action === 'registerPurchase'

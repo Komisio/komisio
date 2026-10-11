@@ -78,7 +78,12 @@ from registration, receipts from manual sales, and inventory/economy reports
 into task tabs. Tabs retain mounted drafts and support keyboard navigation and
 bookmarks. Item lists and stock reports filter by recorded ownership before
 counting and paging; item rows and details show consignment versus store ownership.
-Own purchases retain explicit evidence and a separate sale-acceptance step.
+Own purchases retain explicit evidence and a separate sale-acceptance step. Payouts
+separate open work and completed history into paged lists, with individual
+requests and batch preparation in separate tabs. Decision forms open on demand;
+unsaved references warn before navigation. Payment still happens outside Komisio.
+Stocktaking separates the selected count from session history; switching tabs
+retains scan drafts, and a selected historical count opens its own workspace.
 
 Quick reception separates seller/agreement and item tabs. Seller registration
 uses the shared form without leaving reception; staff can download a personal

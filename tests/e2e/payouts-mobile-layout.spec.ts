@@ -5,14 +5,12 @@ import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 const p = d.payouts
 
-// The payouts page on a phone: decisions first (settlement, open payouts),
-// the on-behalf request folded near the top, and a truthful message about
-// its bounded seller list instead of an empty form. No money moves: the
-// journey ends at an approved payout, nothing is marked paid.
-test('payouts page keeps decisions first and folds the request form on mobile', async ({
+// Open work is the default mobile task. Request and batch tabs preserve
+// explicit eligibility and payment boundaries; no money is marked paid.
+test('payouts page separates open work, requests and batch preparation on mobile', async ({
   page,
   browser,
-}, testInfo) => {
+}) => {
   const email = `payouts-mobile-${randomUUID()}@example.test`
   await register(page, email, `K!${randomBytes(16).toString('hex')}`)
   const f = await p2Fixture(email)
@@ -41,26 +39,16 @@ test('payouts page keeps decisions first and folds the request form on mobile', 
     const top = async (locator: typeof settle) =>
       (await locator.boundingBox())!.y +
       (await page.evaluate(() => window.scrollY))
-    // Order: the folded request one line from the top, then the settlement, then the payout list.
-    await expect(request).toBeVisible()
-    await expect(settlement).toBeVisible()
-    await expect(settle).not.toBeVisible()
+    await expect(request).not.toBeVisible()
+    await expect(settlement).not.toBeVisible()
     await expect(list).toBeVisible()
-    expect(await top(request)).toBeLessThan(await top(settlement))
-    expect(await top(settlement)).toBeLessThan(await top(list))
-    expect(
-      await request.evaluate((el) => (el as HTMLDetailsElement).open),
-    ).toBe(false)
-    await expect(request.locator('summary')).toContainText(p.requestHeading)
-    // Folded, the request takes one line: the settlement starts within the first screen.
     expect(await top(list)).toBeLessThan(720)
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true)
-    // With credit available the manual request is still there, one tap away.
-    await request.locator('summary').click()
+    await page.getByRole('tab', { name: p.tabs.request, exact: true }).click()
     await expect(
       request.getByText(p.requestHint, { exact: true }),
     ).toBeVisible()
@@ -74,14 +62,18 @@ test('payouts page keeps decisions first and folds the request form on mobile', 
     await expect(
       request.getByRole('link', { name: p.directory, exact: true }),
     ).toHaveAttribute('href', '/intake/sellers')
-    await request.locator('summary').click()
 
     // Settle through the page: the credit is reserved, the approved payout appears.
-    await settlement.locator('summary').click()
+    await page.getByRole('tab', { name: p.tabs.prepare, exact: true }).click()
     await expect(settle.getByText(/160\.00 SEK/).first()).toBeVisible()
     await settle
       .getByLabel(p.settleReason, { exact: true })
       .fill('Synthetic mobile settlement')
+    await page.getByRole('tab', { name: p.tabs.history, exact: true }).click()
+    await page.getByRole('tab', { name: p.tabs.prepare, exact: true }).click()
+    await expect(
+      settle.getByLabel(p.settleReason, { exact: true }),
+    ).toHaveValue('Synthetic mobile settlement')
     await settle.getByLabel(p.settleConfirm, { exact: true }).check()
     await settle
       .getByRole('button', {
@@ -92,7 +84,8 @@ test('payouts page keeps decisions first and folds the request form on mobile', 
     await expect(page.getByText(p.settled, { exact: true })).toBeVisible()
     // The page refreshes itself after the batch; wait for the refreshed facts, no reload.
     await expect(page.getByText(p.settleEmpty, { exact: true })).toBeVisible()
-    await settlement.locator('summary').click()
+    await expect(settle.getByRole('status')).toHaveText(p.settled)
+    await page.getByRole('tab', { name: p.tabs.open, exact: true }).click()
     const approved = list.locator('.intake-notice', {
       hasText: p.statuses.approved,
     })
@@ -102,19 +95,16 @@ test('payouts page keeps decisions first and folds the request form on mobile', 
     await approved.locator('.payout-history > summary').click()
     await expect(approved.locator('.payout-history > p')).toBeVisible()
     await approved.locator('.payout-history > summary').click()
-    // The approved payout is within the first two phone screens of the document, the request still folded above it.
     expect(await top(approved)).toBeLessThan(720 * 2)
-    expect(await top(request)).toBeLessThan(await top(approved))
-    expect(
-      await request.evaluate((el) => (el as HTMLDetailsElement).open),
-    ).toBe(false)
+    await expect(request).not.toBeVisible()
+    await page.evaluate(() => window.scrollTo(0, 0))
     await page.screenshot({
-      path: testInfo.outputPath('payouts-after-settlement-mobile.png'),
+      path: 'private/payouts-after-settlement-mobile.png',
       fullPage: true,
       caret: 'initial',
     })
     // The bounded request list is now empty: say so about this list, keep the way to any seller.
-    await request.locator('summary').click()
+    await page.getByRole('tab', { name: p.tabs.request, exact: true }).click()
     await expect(request.getByRole('status')).toHaveText(p.requestNone)
     await expect(request.getByLabel(p.seller, { exact: true })).toHaveCount(0)
     await expect(request.getByText(p.requestHint, { exact: true })).toHaveCount(
@@ -139,7 +129,7 @@ test('payouts page keeps decisions first and folds the request form on mobile', 
       { status: 'approved', amount_ore: '16000', paid_at: null },
     ])
 
-    // A readonly member sees the same order and no way to write.
+    // A readonly member sees both lists and no mutation forms.
     const readerEmail = `payouts-reader-${randomUUID()}@example.test`
     const reader = await browser.newContext({
       baseURL: 'http://127.0.0.1:3000',
@@ -163,13 +153,12 @@ test('payouts page keeps decisions first and folds the request form on mobile', 
       )
       await readerPage.setViewportSize({ width: 320, height: 720 })
       await readerPage.goto('/intake/payouts')
-      const readerRequest = readerPage.getByTestId('payout-request')
-      await readerRequest.locator('summary').click()
-      await expect(readerRequest.getByText(d.intake.readOnly)).toBeVisible()
+      await expect(readerPage.getByTestId('payout-request')).toHaveCount(0)
+      await expect(readerPage.getByTestId('payout-settlement')).toHaveCount(0)
+      await expect(readerPage.getByRole('tab')).toHaveCount(2)
       await expect(
-        readerRequest.getByText(p.requestHint, { exact: true }),
+        readerPage.getByTestId('payout-list').locator('form'),
       ).toHaveCount(0)
-      await expect(readerPage.getByRole('button')).toHaveCount(0)
       await expect(
         readerPage
           .getByTestId('payout-list')
@@ -183,8 +172,7 @@ test('payouts page keeps decisions first and folds the request form on mobile', 
   }
 })
 
-// The payout list is the newest 50 payouts for any seller; its names must not
-// depend on the request form's first 50 sellers by name.
+// Paged payout display names do not depend on the request selector cap.
 test('a payout for a seller beyond the first fifty names shows the name, not an id', async ({
   page,
 }) => {
@@ -232,7 +220,7 @@ test('a payout for a seller beyond the first fifty names shows the name, not an 
     await expect(card).not.toContainText(f.seller)
     // The request form's bounded list is the first 50 by name, none of them with credit.
     const request = page.getByTestId('payout-request')
-    await request.locator('summary').click()
+    await page.getByRole('tab', { name: p.tabs.request, exact: true }).click()
     await expect(request.getByRole('status')).toHaveText(p.requestNone)
     await expect(
       request.getByRole('link', { name: p.directory, exact: true }),

@@ -1354,7 +1354,22 @@
     "requestNone": "Ingen tilgængelig saldo på denne liste. Åbn en indleverer for at se saldoen.",
     "directory": "Søg blandt alle indleverere",
     "latestFifty": "Viser de 50 seneste udbetalinger. Hver indleverers side viser indlevererens seneste udbetalinger.",
-    "history": "Historik og referencer"
+    "history": "Historik og referencer",
+    "tabs": {
+      "open": "I gang",
+      "history": "Historik",
+      "request": "Anmod om udbetaling",
+      "prepare": "Forbered flere"
+    },
+    "helpLabel": "Om udbetalinger",
+    "listCount": "Antal: {count}",
+    "noOpen": "Ingen igangværende udbetalinger.",
+    "noHistory": "Ingen afsluttede udbetalinger.",
+    "viewOpen": "Vis igangværende udbetalinger",
+    "reviewRequest": "Gennemgå anmodning",
+    "recordPayment": "Registrer betaling",
+    "paymentHint": "Betal først via banken. Angiv derefter betalingsreferencen her.",
+    "prepareMore": "Forbered flere"
   },
   "returns": {
     "reason": "Returårsag",
@@ -3530,7 +3545,10 @@
     "exportObservation": "Observation",
     "exportException": "Afvigelse",
     "exportActor": "Registreret af",
-    "exportObservedAt": "Registreret (UTC)"
+    "exportObservedAt": "Registreret (UTC)",
+    "countTab": "Lageroptælling",
+    "historyTab": "Historik",
+    "noSessions": "Ingen tidligere lageroptællinger."
   },
   "pricingFollowUp": {
     "title": "Følg op på AI-priser",

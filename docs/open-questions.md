@@ -5,10 +5,12 @@ distinguish consignment from store-owned goods using recorded ownership.
 Existing financial rules remain unchanged; POS catalog migration still needs
 the separate provenance decisions below.
 
-Quick reception layout (resolved 2026-10-11): the owner requests tabs and
-in-context seller registration. Saving keeps the seller selected, with personal
-agreement downloads and explicit approval available before proceeding to items.
-The same registration form serves the seller directory; no domain rule changes.
+Quick reception layout (resolved 2026-10-11): owner rejects nested tabs and
+requests a simpler flow that works with 300 sellers. One continuous workspace
+keeps seller selection, agreement evidence and item entry together. Large lists
+start with search and offer bounded browsing. Saved sellers remain selected;
+personal PDFs and explicit approval remain available without leaving reception.
+No domain rule changes.
 
 Agreement workspace (resolved 2026-10-10): the owner requests visible versions,
 languages, active status and seller acceptances, plus explicit staff recording

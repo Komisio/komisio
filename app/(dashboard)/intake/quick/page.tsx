@@ -49,7 +49,6 @@ export default async function QuickIntake() {
           {all.intake.back}
         </Link>
       </div>
-      <p>{d.intro}</p>
       {profile === 'full' ? (
         <p className="intake-notice">
           {d.profileFull}{' '}

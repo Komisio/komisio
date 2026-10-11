@@ -21,10 +21,12 @@ export function QuickSellerPicker({
   d: Dictionary['quickIntake']
 }) {
   const [query, setQuery] = useState('')
+  const [browsing, setBrowsing] = useState(false)
   const [offset, setOffset] = useState(0)
   const [retry, setRetry] = useState(0)
   const q = query.trim()
   const key = JSON.stringify([tenantId, q, offset, retry])
+  const idle = q === '' && !browsing && total > 12
   const initial = q === '' && offset === 0
   const [answer, setAnswer] = useState<{
     key: string
@@ -32,7 +34,7 @@ export function QuickSellerPicker({
     failed?: boolean
   } | null>(null)
   useEffect(() => {
-    if (initial) return
+    if (initial || idle) return
     const controller = new AbortController()
     let active = true
     const timer = setTimeout(async () => {
@@ -58,18 +60,20 @@ export function QuickSellerPicker({
       clearTimeout(timer)
       controller.abort()
     }
-  }, [tenantId, q, offset, key, initial])
+  }, [tenantId, q, offset, key, initial, idle])
   // Never show or allow selection from a response for an earlier query.
   const current: typeof answer = initial
     ? { key, data: { sellers, total, offset: 0 } }
     : answer?.key === key
       ? answer
       : null
-  const data = current?.data
+  const data = idle ? undefined : current?.data
   return (
     <>
       <div className="field">
-        <label htmlFor="quick-seller-search">{d.searchSeller}</label>
+        <label htmlFor="quick-seller-search" className="sr-only">
+          {d.searchSeller}
+        </label>
         <input
           id="quick-seller-search"
           type="search"
@@ -81,11 +85,26 @@ export function QuickSellerPicker({
           maxLength={120}
           autoFocus
           placeholder={d.sellerSearchHint}
+          aria-describedby={idle ? 'quick-search-prompt' : undefined}
         />
       </div>
+      {idle && (
+        <div className="quick-search-idle">
+          <p id="quick-search-prompt">
+            {d.workspace.searchAmong.replace('{count}', String(total))}
+          </p>
+          <button
+            type="button"
+            className="text-link"
+            onClick={() => setBrowsing(true)}
+          >
+            {d.workspace.browseSellers}
+          </button>
+        </div>
+      )}
       <div aria-live="polite" role="status">
-        {!current && <p>{d.sellerSearching}</p>}
-        {current?.failed && (
+        {!idle && !current && <p>{d.sellerSearching}</p>}
+        {!idle && current?.failed && (
           <p>
             {d.sellerSearchFailed}{' '}
             <button
@@ -114,7 +133,7 @@ export function QuickSellerPicker({
       </div>
       {data && (
         <>
-          <ul className="intake-list">
+          <ul className="intake-list quick-seller-results">
             {data.sellers.map((seller) => (
               <li key={seller.id}>
                 <button

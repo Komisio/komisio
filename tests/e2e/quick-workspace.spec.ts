@@ -4,7 +4,7 @@ import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 
-test('quick tabs retain registration, personal agreement, approval and item drafts without leaving reception', async ({
+test('continuous reception retains registration, personal agreement, approval and item drafts', async ({
   page,
   request,
 }) => {
@@ -19,14 +19,7 @@ test('quick tabs retain registration, personal agreement, approval and item draf
     )
     await f.commit()
     await page.goto('/intake/quick')
-    const sellerTab = page.getByRole('tab', {
-      name: d.quickIntake.workspace.sellerTab,
-      exact: true,
-    })
-    const itemTab = page.getByRole('tab', {
-      name: d.quickIntake.workspace.itemTab,
-      exact: true,
-    })
+    await expect(page.getByRole('tab')).toHaveCount(0)
     await page
       .getByRole('button', { name: d.quickIntake.newSeller, exact: true })
       .click()
@@ -36,14 +29,15 @@ test('quick tabs retain registration, personal agreement, approval and item draf
     await page
       .getByLabel(d.intake.email, { exact: true })
       .fill(`quick-seller-${randomUUID()}@example.test`)
-    await sellerTab.focus()
-    await sellerTab.press('ArrowRight')
-    await expect(itemTab).toBeFocused()
+    await page
+      .getByRole('button', { name: d.quickIntake.workspace.backToSearch })
+      .click()
     await expect(
-      page.getByText(d.quickIntake.workspace.selectSeller),
-    ).toBeVisible()
-    await itemTab.press('Home')
-    await expect(sellerTab).toBeFocused()
+      page.getByLabel(d.quickIntake.searchSeller, { exact: true }),
+    ).toBeFocused()
+    await page
+      .getByRole('button', { name: d.quickIntake.newSeller, exact: true })
+      .click()
     await expect(page.getByLabel(d.intake.name, { exact: true })).toHaveValue(
       'Synthetic quick seller',
     )
@@ -66,12 +60,10 @@ test('quick tabs retain registration, personal agreement, approval and item draf
     await expect(page.getByRole('alert')).toBeVisible()
     await expect(
       page.getByRole('button', {
-        name: d.quickIntake.searchSeller,
+        name: d.quickIntake.workspace.backToSearch,
         exact: true,
       }),
     ).toBeDisabled()
-    await itemTab.click()
-    await sellerTab.click()
     await page
       .getByRole('button', { name: d.intake.retry, exact: true })
       .click()
@@ -120,12 +112,15 @@ test('quick tabs retain registration, personal agreement, approval and item draf
     await page
       .getByLabel(d.agreements.workspace.reference, { exact: true })
       .fill('Synthetic signed paper')
-    await itemTab.click()
     await page
       .getByLabel(d.quickIntake.description, { exact: true })
-      .fill('Synthetic tabbed coat')
+      .fill('Synthetic continuous coat')
     await page.getByLabel(d.quickIntake.price, { exact: true }).fill('180')
-    await sellerTab.click()
+    await page.locator('#quick-agreement summary').click()
+    await expect(
+      page.getByLabel(d.quickIntake.description, { exact: true }),
+    ).toBeVisible()
+    await page.locator('#quick-agreement summary').click()
     await expect(
       page.getByLabel(d.agreements.workspace.reference, { exact: true }),
     ).toHaveValue('Synthetic signed paper')
@@ -133,8 +128,15 @@ test('quick tabs retain registration, personal agreement, approval and item draf
       .getByRole('button', { name: d.agreements.record, exact: true })
       .click()
     await expect(
-      page.getByText(d.agreements.recorded, { exact: true }),
+      page
+        .locator('#quick-agreement summary')
+        .getByText(d.quickIntake.workspace.agreementAccepted, { exact: true }),
     ).toBeVisible()
+    await expect(page.locator('#quick-agreement summary')).toBeFocused()
+    await expect(page.locator('#quick-agreement')).not.toHaveAttribute(
+      'open',
+      '',
+    )
     expect(
       (
         await f.db.query(
@@ -149,7 +151,9 @@ test('quick tabs retain registration, personal agreement, approval and item draf
         translation_id: translation,
       },
     ])
+    await page.locator('#quick-agreement summary').press('Enter')
     await expect(pdf).toHaveAttribute('href', new RegExp(`text=${translation}`))
+    await page.locator('#quick-agreement summary').press('Enter')
     for (const width of [320, 390, 1280]) {
       await page.setViewportSize({ width, height: 900 })
       expect(
@@ -158,19 +162,13 @@ test('quick tabs retain registration, personal agreement, approval and item draf
         ),
       ).toBe(true)
       await page.screenshot({
-        path: `private/quick-seller-tabs-${width}.png`,
+        path: `private/quick-continuous-${width}.png`,
         fullPage: true,
       })
     }
-    await page
-      .getByRole('button', {
-        name: d.quickIntake.workspace.continue,
-        exact: true,
-      })
-      .click()
     await expect(
       page.getByLabel(d.quickIntake.description, { exact: true }),
-    ).toHaveValue('Synthetic tabbed coat')
+    ).toHaveValue('Synthetic continuous coat')
     await expect(
       page.getByLabel(d.quickIntake.price, { exact: true }),
     ).toHaveValue('180')
@@ -190,7 +188,9 @@ test('quick tabs retain registration, personal agreement, approval and item draf
     await page
       .getByRole('button', { name: d.quickIntake.next, exact: true })
       .click()
-    await expect(itemTab).toHaveAttribute('aria-selected', 'true')
+    await expect(
+      page.getByLabel(d.quickIntake.description, { exact: true }),
+    ).toBeVisible()
     await expect(page.locator('.quick-seller-context')).toContainText(
       'Synthetic quick seller',
     )
@@ -217,19 +217,13 @@ test('changed agreement is reloaded inside reception without losing the item', a
     await f.commit()
     await page.goto('/intake/quick')
     await page.getByRole('button', { name: /Synthetic P2 seller/ }).click()
-    const sellerTab = page.getByRole('tab', {
-      name: d.quickIntake.workspace.sellerTab,
-      exact: true,
-    })
-    const itemTab = page.getByRole('tab', {
-      name: d.quickIntake.workspace.itemTab,
-      exact: true,
-    })
-    await sellerTab.click()
+    await expect(page.locator('#quick-agreement summary')).toContainText(
+      d.quickIntake.workspace.agreementAccepted,
+    )
+    await page.locator('#quick-agreement summary').click()
     await expect(
       page.getByText(d.agreements.workspace.approved, { exact: true }),
     ).toBeVisible()
-    await itemTab.click()
     await page
       .getByLabel(d.quickIntake.description, { exact: true })
       .fill('Synthetic retained coat')
@@ -247,7 +241,7 @@ test('changed agreement is reloaded inside reception without losing the item', a
     await page
       .getByRole('button', { name: d.quickIntake.recordAgreement, exact: true })
       .click()
-    await expect(sellerTab).toHaveAttribute('aria-selected', 'true')
+    await expect(page.locator('#quick-agreement')).toHaveAttribute('open', '')
     await expect(page.getByText(/Synthetic changed terms/)).toBeVisible()
     await expect(
       page.getByLabel(d.agreements.workspace.approval),
@@ -280,7 +274,6 @@ test('changed agreement is reloaded inside reception without losing the item', a
     await expect(
       page.getByLabel(d.agreements.workspace.approval),
     ).not.toBeChecked()
-    await itemTab.click()
     await expect(
       page.getByLabel(d.quickIntake.description, { exact: true }),
     ).toHaveValue('Synthetic retained coat')

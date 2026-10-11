@@ -992,3 +992,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-11: Unsaved sale-acceptance prices and uncertain commands warn before leaving their origin. Purchase history paging guards acceptance forms while retaining new-purchase drafts. Switching an inspection origin starts a fresh form; engine transitions and retry identity are unchanged.
 
 - 2026-10-11: Payout preparation pages candidates, retains selection across pages and selects at most the engine limit of 100 sellers per command. Later groups start explicitly after refresh; full-balance approval, payment evidence and eligibility rules are unchanged.
+
+- 2026-10-11: Quick reception uses one continuous seller, agreement and item flow instead of nested tabs. Large seller directories start with search and offer explicit paged browsing; compact results retain tenant-scoped reads. Registration, approval and item retry rules are unchanged.

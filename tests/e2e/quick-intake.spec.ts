@@ -68,7 +68,7 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
       .getByLabel(d.quickIntake.searchSeller, { exact: true })
       .fill('Synthetic')
     await page.getByRole('button', { name: /Synthetic P2 seller/ }).click()
-    await expect(page.locator('.quick-item h2')).toBeFocused()
+    await expect(page.locator('.quick-seller-context')).toBeFocused()
     await expect(page.locator('.quick-item h2')).toBeInViewport()
     await expect(
       page.getByLabel(d.quickIntake.description, { exact: true }),

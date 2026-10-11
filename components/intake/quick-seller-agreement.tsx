@@ -103,6 +103,7 @@ function ApprovalForm({
   const [saved, setSaved] = useState(false)
   const [missing, setMissing] = useState(false)
   const form = useRef<HTMLFormElement>(null)
+  const summary = useRef<HTMLElement>(null)
   const { dirty, checkDirty } = useFormDirty(form)
   useUnsavedChanges(
     !saved && (dirty || action.locked) ? quick.workspace.leaveSeller : null,
@@ -113,58 +114,86 @@ function ApprovalForm({
       locked: !saved && (action.busy || action.locked),
     })
   }, [saved, dirty, action.busy, action.locked, onGuardChange])
+  if (!snapshot.agreement) return null
   return (
-    <form
-      ref={form}
-      onChange={checkDirty}
-      onSubmit={async (event) => {
-        event.preventDefault()
-        const approval = approvalFromFields(new FormData(event.currentTarget))
-        if (!approval && !action.locked) {
-          setMissing(true)
-          return
-        }
-        setMissing(false)
-        const id = await action.run(
-          action.locked
-            ? {}
-            : {
-                action: 'recordEvidence',
-                tenantId,
-                sellerId,
-                requestId: crypto.randomUUID(),
-                ...approval,
-              },
-        )
-        if (id) setSaved(true)
-      }}
+    <details
+      id="quick-agreement"
+      className="quick-agreement"
+      open={!snapshot.accepted && !saved}
     >
-      <fieldset
-        className="intake-fields"
-        disabled={action.busy || action.locked || action.needsReload}
+      <summary ref={summary}>
+        {quick.workspace.agreement}{' '}
+        <span
+          className={
+            snapshot.accepted || saved
+              ? 'quick-agreement-approved'
+              : 'quick-agreement-pending'
+          }
+        >
+          {snapshot.accepted || saved
+            ? quick.workspace.agreementAccepted
+            : quick.workspace.agreementPending}
+        </span>
+      </summary>
+      <form
+        ref={form}
+        onChange={checkDirty}
+        onSubmit={async (event) => {
+          event.preventDefault()
+          const approval = approvalFromFields(new FormData(event.currentTarget))
+          if (!approval && !action.locked) {
+            setMissing(true)
+            return
+          }
+          setMissing(false)
+          const id = await action.run(
+            action.locked
+              ? {}
+              : {
+                  action: 'recordEvidence',
+                  tenantId,
+                  sellerId,
+                  requestId: crypto.randomUUID(),
+                  ...approval,
+                },
+          )
+          if (id) {
+            setSaved(true)
+            requestAnimationFrame(() => summary.current?.focus())
+          }
+        }}
       >
-        <SellerAgreementFields
-          saveWithSeller={false}
-          tenantId={tenantId}
-          sellerId={sellerId}
-          agreement={snapshot.agreement}
-          accepted={snapshot.accepted || saved}
-          d={d}
-        />
-      </fieldset>
-      {missing && <p role="alert">{d.confirmEvidence}</p>}
-      {action.error && <p role="alert">{action.error}</p>}
-      {snapshot.agreement && !snapshot.accepted && !saved && (
-        <Button type="submit" disabled={action.busy || action.needsReload}>
-          {action.busy ? intake.busy : action.locked ? intake.retry : d.record}
-        </Button>
-      )}
-      {action.needsReload && (
-        <Button type="button" variant="secondary" onClick={onReload}>
-          {quick.workspace.refreshAgreement}
-        </Button>
-      )}
-      {saved && <p role="status">{d.recorded}</p>}
-    </form>
+        <fieldset
+          className="intake-fields"
+          disabled={action.busy || action.locked || action.needsReload}
+        >
+          <SellerAgreementFields
+            saveWithSeller={false}
+            tenantId={tenantId}
+            sellerId={sellerId}
+            agreement={snapshot.agreement}
+            accepted={snapshot.accepted || saved}
+            d={d}
+          />
+        </fieldset>
+        {missing && <p role="alert">{d.confirmEvidence}</p>}
+        {action.error && <p role="alert">{action.error}</p>}
+        {snapshot.agreement && !snapshot.accepted && !saved && (
+          <Button type="submit" disabled={action.busy || action.needsReload}>
+            {action.busy
+              ? intake.busy
+              : action.locked
+                ? intake.retry
+                : d.record}
+          </Button>
+        )}
+        {action.needsReload && (
+          <Button type="button" variant="secondary" onClick={onReload}>
+            {quick.workspace.refreshAgreement}
+          </Button>
+        )}
+        {saved && <p role="status">{d.recorded}</p>}
+      </form>
+    </details>
   )
 }

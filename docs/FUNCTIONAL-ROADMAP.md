@@ -73,6 +73,10 @@ Review notices show their actual delivery outcome and link to the seller's
 message history. An unanswered request requires checking status; queued or
 terminal outcomes never expose a fresh-send action from the review card.
 
+Quick reception uses one continuous seller, agreement and item workspace.
+Large seller directories start with search and optional paged browsing;
+registration stays in context and selected sellers remain visible.
+
 Store workspaces separate receiving from its bag queue, own-purchase history
 from registration, receipts from manual sales, and inventory/economy reports
 into task tabs. Tabs retain mounted drafts and support keyboard navigation and

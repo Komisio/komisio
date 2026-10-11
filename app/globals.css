@@ -6785,7 +6785,7 @@ button.text-link:hover:not(:disabled) {
   body:has(.agreements-page) .app-shell > :not(main),
   body:has(.agreements-page) main > :not(.agreements-page),
   .agreements-page > .page-heading,
-  .agreements-workspace > :not([data-panel='versions']),
+  .agreements-workspace > :not([data-panel='languages']),
   .agreement-tabpanel > :not(.agreement-reader),
   .agreement-reader .no-print,
   .agreement-reader a {
@@ -6798,9 +6798,6 @@ button.text-link:hover:not(:disabled) {
   }
   .agreements-workspace {
     display: block;
-  }
-  .agreement-tabpanel[data-panel='versions'] {
-    display: block !important;
   }
   .agreement-reader {
     border: 0;
@@ -7264,4 +7261,140 @@ button.text-link:hover:not(:disabled) {
 .settlement-selection-summary {
   display: grid;
   gap: 12px;
+}
+
+/* Agreement authoring keeps the document and its language context together. */
+.agreements-page {
+  max-width: 1160px;
+}
+.agreement-section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.agreement-section-heading h2 {
+  margin: 0;
+}
+.agreement-editor-context {
+  color: var(--muted);
+  max-width: 76ch;
+  margin: 0;
+}
+.agreement-editor-meta {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+}
+.agreement-editor-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.agreement-editor-columns > * {
+  min-width: 0;
+}
+.agreement-editor-columns textarea {
+  height: 420px;
+  min-height: 280px;
+  resize: vertical;
+  line-height: 1.6;
+}
+.agreement-editor-preview {
+  min-width: 0;
+}
+.agreement-editor-preview h3 {
+  font: inherit;
+  font-weight: 650;
+  margin: 0 0 10px;
+}
+.agreement-editor-preview article {
+  padding: 24px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-height: 420px;
+  max-height: 620px;
+  overflow: auto;
+  overflow-wrap: anywhere;
+}
+.agreement-editor-preview h4 {
+  font-size: 20px;
+  line-height: 1.4;
+  margin: 0 0 20px;
+}
+.agreement-editor-preview .agreement-preview-body {
+  white-space: pre-wrap;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.agreement-ai-disclosure {
+  border-top: 1px solid var(--line);
+  padding-block: 12px;
+}
+.agreement-ai-disclosure > summary,
+.agreement-translations > summary {
+  cursor: pointer;
+  font-weight: 650;
+  min-height: 44px;
+  align-content: center;
+}
+.agreement-ai-disclosure[open] > summary {
+  margin-bottom: 16px;
+}
+.agreement-language-list [aria-current='page'] {
+  font-weight: 700;
+  text-decoration-thickness: 2px;
+}
+.agreement-translations {
+  scroll-margin-top: 24px;
+}
+@media (max-width: 800px) {
+  .agreement-editor-meta,
+  .agreement-editor-columns {
+    grid-template-columns: 1fr;
+  }
+  .agreements-page .card {
+    padding: 16px;
+  }
+  .agreement-editor-columns textarea {
+    height: 280px;
+    min-height: 200px;
+  }
+  .agreement-editor-preview article {
+    min-height: 160px;
+    max-height: 420px;
+    padding: 16px;
+  }
+}
+
+/* Match the base layer's important hidden rule when printing another tab. */
+@layer base {
+  @media print {
+    .agreements-workspace .agreement-tabpanel[data-panel='languages'] {
+      display: block !important;
+    }
+  }
+}
+
+.agreement-publisher,
+.agreement-publisher form,
+.agreement-translations form,
+.agreement-publisher .intake-fields,
+.agreement-translations .intake-fields {
+  display: grid;
+  gap: 20px;
+}
+
+.agreement-editor-meta .field,
+.agreement-editor-columns .field {
+  margin-bottom: 0;
+}
+@media (min-width: 801px) {
+  .agreement-publisher form > .btn,
+  .agreement-translations form > .btn {
+    justify-self: start;
+  }
 }

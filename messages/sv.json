@@ -103,7 +103,9 @@
       "languages": "Språk",
       "previous": "Föregående",
       "next": "Nästa",
-      "status": "Avtalsstatus"
+      "status": "Avtalsstatus",
+      "manageLanguages": "Visa språk",
+      "languagePublished": "Publicerad"
     },
     "translations": {
       "add": "Lägg till språk",
@@ -119,6 +121,12 @@
       "language": "Språk i PDF",
       "savedName": "PDF:en använder säljarens senast sparade namn.",
       "afterSave": "Spara säljaren först för att hämta en PDF med namnet ifyllt."
+    },
+    "editor": {
+      "preview": "Förhandsvisning",
+      "emptyPreview": "Avtalstexten visas här när du skriver.",
+      "newVersionHint": "Utgå från det aktiva avtalet. Publicering skapar en ny aktiv version som behöver godkännas på nytt.",
+      "firstVersionHint": "Skriv avtalet på ett språk. Fler språk läggs till efter publicering."
     }
   },
   "quickIntake": {

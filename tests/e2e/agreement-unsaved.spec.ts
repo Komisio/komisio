@@ -14,7 +14,7 @@ async function cancelLeave(page: Page) {
   await click
 }
 
-test('agreement draft survives folding, history and cancelled departure; restored text clears warning', async ({
+test('agreement draft survives tabs, history and cancelled departure; restored text clears warning', async ({
   page,
 }) => {
   const email = `agreement-draft-${randomUUID()}@example.test`
@@ -23,23 +23,20 @@ test('agreement draft survives folding, history and cancelled departure; restore
   try {
     await f.commit()
     await page.goto('/intake/agreements')
-    const publisher = page.getByTestId('agreement-publisher')
     await page
       .getByRole('tab', { name: d.agreements.workspace.publish, exact: true })
       .click()
     const body = page.locator('#agreement-body')
     const original = await body.inputValue()
     await body.fill('Synthetic unpublished agreement draft')
-    await publisher.locator('summary').click()
     await page
       .getByRole('tab', { name: d.agreements.workspace.versions, exact: true })
       .click()
-    await page.locator('.agreement-history a').first().click()
+    await page.locator('.agreement-history tbody a').first().click()
     await expect(page).toHaveURL(/agreements\?version=/)
     await page
       .getByRole('tab', { name: d.agreements.workspace.publish, exact: true })
       .click()
-    await publisher.locator('summary').click()
     await expect(body).toHaveValue('Synthetic unpublished agreement draft')
     await cancelLeave(page)
     const prompt = page.waitForEvent('dialog')
@@ -150,7 +147,7 @@ test('agreement requirement reflects the store policy even when the agreement fl
       ],
     )
     await f.commit()
-    await page.goto('/intake/agreements')
+    await page.goto('/intake/agreements#agreements-languages')
     await expect(
       page.getByText(d.agreements.required, { exact: true }),
     ).toBeVisible()

@@ -996,3 +996,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-11: Quick reception uses one continuous seller, agreement and item flow instead of nested tabs. Large seller directories start with search and offer explicit paged browsing; compact results retain tenant-scoped reads. Registration, approval and item retry rules are unchanged.
 
 - 2026-10-11: Staff inventory uses a compact sortable table and advanced filters before bounded paging. Read-only search reuses current lifecycle, photo and seller facts under existing tenant/MFA checks; legacy reads stay intact. This supersedes the October 2 minimal-row layout.
+
+- 2026-10-11: Agreement management separates versions, language texts and acceptances. Authors preview plain text beside the editor; AI assistance stays optional. Existing immutable publication, translation and acceptance rules remain unchanged.

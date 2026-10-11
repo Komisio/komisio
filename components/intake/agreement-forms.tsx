@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { locales, localeNames, type Dictionary, type Locale } from '@/lib/i18n'
 import type { SellerAgreement } from '@/lib/engine/intake'
 import { useIntakeAction } from './use-intake-action'
+import { AgreementPreview, readAgreementPreview } from './agreement-preview'
 import { AgreementAssistant } from './agreement-assistant'
 import type { RestoredAgreementDraft } from '@/lib/engine/agreement-assistance'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
@@ -30,9 +31,13 @@ export function AgreementPublisher({
   const form = useRef<HTMLFormElement>(null)
   const { ready, dirty, checkDirty, resetDirty } = useFormDirty(form)
   useUnsavedChanges(!saved && (dirty || action.locked) ? d.leaveUnsaved : null)
-  const [expanded, setExpanded] = useState(true)
   // Keep the reviewed base while editing, even if navigation refreshes server props.
   const [base, setBase] = useState(current)
+  const [preview, setPreview] = useState({
+    title: current?.title ?? '',
+    body: current?.body ?? '',
+    language: current?.language ?? locale,
+  })
   const router = useRouter()
   const a = d.agreements
   async function submit(event: React.FormEvent<HTMLFormElement>) {
@@ -56,37 +61,114 @@ export function AgreementPublisher({
     }
   }
   return (
-    <details
-      className="card agreement-publisher"
-      open={expanded}
-      onToggle={(event) => setExpanded(event.currentTarget.open)}
+    <section
+      className="card intake-form agreement-publisher"
       data-testid="agreement-publisher"
     >
-      <summary>{current ? a.nextVersion : a.publishHeading}</summary>
-      <section className="intake-form">
-        <FormHelpHeading
-          title={a.publishHeading}
-          help={{
-            label: a.usage.checklistLabel,
-            steps: [a.usage.checklist1, a.usage.checklist2, a.ai.hint],
-          }}
-        />
+      <FormHelpHeading
+        title={base ? a.nextVersion : a.publishHeading}
+        help={{
+          label: a.usage.checklistLabel,
+          steps: [a.usage.checklist1, a.usage.checklist2, a.ai.hint],
+        }}
+      />
 
-        {saved ? (
-          <div role="status">
-            <p>{a.published}</p>
-            <Button
-              onClick={() => {
-                setBase(current)
-                setSaved(false)
-                resetDirty()
-              }}
+      {!saved && (
+        <p className="agreement-editor-context">
+          {base ? a.editor.newVersionHint : a.editor.firstVersionHint}
+        </p>
+      )}
+      {saved ? (
+        <div role="status">
+          <p>{a.published}</p>
+          <p>
+            <a
+              className="text-link"
+              href="/intake/agreements#agreements-languages"
             >
-              {a.nextVersion}
-            </Button>
-          </div>
-        ) : (
-          <form ref={form} onChange={checkDirty} onSubmit={submit}>
+              {a.workspace.manageLanguages}
+            </a>
+          </p>
+          <Button
+            onClick={() => {
+              setBase(current)
+              setPreview({
+                title: current?.title ?? '',
+                body: current?.body ?? '',
+                language: current?.language ?? locale,
+              })
+              setSaved(false)
+              resetDirty()
+            }}
+          >
+            {a.nextVersion}
+          </Button>
+        </div>
+      ) : (
+        <form
+          ref={form}
+          onChange={() => {
+            checkDirty()
+            if (form.current) setPreview(readAgreementPreview(form.current))
+          }}
+          onSubmit={submit}
+        >
+          <fieldset
+            data-draft-readiness={!ready ? '' : undefined}
+            className="intake-fields"
+            disabled={!ready || action.busy || action.locked || aiBusy}
+          >
+            <div className="agreement-editor-meta">
+              <div className="field">
+                <label htmlFor="agreement-title">{a.name}</label>
+                <input
+                  id="agreement-title"
+                  name="title"
+                  required
+                  maxLength={120}
+                  defaultValue={base?.title ?? ''}
+                />
+              </div>
+              <div className="field">
+                <label htmlFor="agreement-language">{a.language}</label>
+                <select
+                  id="agreement-language"
+                  name="language"
+                  defaultValue={base?.language ?? locale}
+                >
+                  {locales.map((language) => (
+                    <option key={language} value={language}>
+                      {localeNames[language]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="agreement-editor-columns">
+              <div className="field">
+                <label htmlFor="agreement-body">{a.body}</label>
+                <textarea
+                  id="agreement-body"
+                  name="body"
+                  rows={18}
+                  required
+                  maxLength={12000}
+                  defaultValue={base?.body ?? ''}
+                />
+              </div>
+              <AgreementPreview text={preview} labels={a.editor} />
+            </div>
+            <label className="intake-confirm">
+              <input
+                type="checkbox"
+                name="required"
+                defaultChecked={base?.required_before_receipt ?? false}
+              />
+              {a.requireEvidence}
+            </label>
+          </fieldset>
+          <details className="agreement-ai-disclosure">
+            <summary>{a.ai.create}</summary>
             <AgreementAssistant
               tenantId={tenantId}
               baseId={base?.id ?? null}
@@ -120,79 +202,30 @@ export function AgreementPublisher({
                     'language',
                   ) as HTMLSelectElement
                 ).value = language
+                setPreview({ title: draft.title, body: draft.body, language })
                 checkDirty()
               }}
             />
-
-            <fieldset
-              data-draft-readiness={!ready ? '' : undefined}
-              className="intake-fields"
-              disabled={!ready || action.busy || action.locked || aiBusy}
-            >
-              <div className="field">
-                <label htmlFor="agreement-title">{a.name}</label>
-                <input
-                  id="agreement-title"
-                  name="title"
-                  required
-                  maxLength={120}
-                  defaultValue={base?.title ?? ''}
-                />
-              </div>
-              <div className="field">
-                <label htmlFor="agreement-language">{a.language}</label>
-                <select
-                  id="agreement-language"
-                  name="language"
-                  defaultValue={base?.language ?? locale}
-                >
-                  {locales.map((language) => (
-                    <option key={language} value={language}>
-                      {localeNames[language]}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="field">
-                <label htmlFor="agreement-body">{a.body}</label>
-                <textarea
-                  id="agreement-body"
-                  name="body"
-                  rows={10}
-                  required
-                  maxLength={12000}
-                  defaultValue={base?.body ?? ''}
-                />
-              </div>
-              <label className="intake-confirm">
-                <input
-                  type="checkbox"
-                  name="required"
-                  defaultChecked={base?.required_before_receipt ?? false}
-                />
-                {a.requireEvidence}
-              </label>
-            </fieldset>
-            {action.error && <p role="alert">{action.error}</p>}
-            {action.needsReload && (
-              <a className="text-link" href="/intake/agreements">
-                {d.intake.reload}
-              </a>
-            )}
-            <Button
-              type="submit"
-              disabled={!ready || action.busy || action.needsReload || aiBusy}
-            >
-              {action.busy
-                ? d.intake.busy
-                : action.locked
-                  ? d.intake.retry
-                  : a.publish}
-            </Button>
-          </form>
-        )}
-      </section>
-    </details>
+          </details>
+          {action.error && <p role="alert">{action.error}</p>}
+          {action.needsReload && (
+            <a className="text-link" href="/intake/agreements">
+              {d.intake.reload}
+            </a>
+          )}
+          <Button
+            type="submit"
+            disabled={!ready || action.busy || action.needsReload || aiBusy}
+          >
+            {action.busy
+              ? d.intake.busy
+              : action.locked
+                ? d.intake.retry
+                : a.publish}
+          </Button>
+        </form>
+      )}
+    </section>
   )
 }
 

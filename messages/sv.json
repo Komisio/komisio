@@ -1137,6 +1137,26 @@
     "noHistory": "Inga versioner ännu."
   },
   "items": {
+    "directory": {
+      "advanced": "Utökad sökning",
+      "any": "Alla",
+      "photo": "Bild",
+      "withPhoto": "Med bild",
+      "withoutPhoto": "Utan bild",
+      "minPrice": "Pris från",
+      "maxPrice": "Pris till",
+      "acceptedFrom": "Registrerad från",
+      "acceptedTo": "Registrerad till",
+      "endsBefore": "Säljperiod slutar senast",
+      "origin": "Ursprung",
+      "registered": "Registrerad",
+      "periodEnd": "Säljperiod slutar",
+      "details": "Bild och ägande",
+      "invalid": "Kontrollera filter och intervall. Från-värdet får inte vara större än till-värdet.",
+      "markdownOn": "Prissänkning väntar sedan {date} ({percent} %).",
+      "sortAsc": "Sortera stigande",
+      "sortDesc": "Sortera fallande"
+    },
     "title": "Varor",
     "item": "Vara",
     "intro": "Sök bland butikens varor och se pris och status.",

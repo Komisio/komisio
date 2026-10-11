@@ -1137,6 +1137,26 @@
     "noHistory": "Nessuna versione finora."
   },
   "items": {
+    "directory": {
+      "advanced": "Ricerca avanzata",
+      "any": "Tutti",
+      "photo": "Foto",
+      "withPhoto": "Con foto",
+      "withoutPhoto": "Senza foto",
+      "minPrice": "Prezzo da",
+      "maxPrice": "Prezzo a",
+      "acceptedFrom": "Registrato dal",
+      "acceptedTo": "Registrato al",
+      "endsBefore": "Fine vendita entro",
+      "origin": "Origine",
+      "registered": "Registrato",
+      "periodEnd": "Fine vendita",
+      "details": "Foto e proprietà",
+      "invalid": "Controlla filtri e intervalli. Il valore iniziale non deve superare quello finale.",
+      "markdownOn": "Ribasso in attesa dal {date} ({percent}%).",
+      "sortAsc": "Ordine crescente",
+      "sortDesc": "Ordine decrescente"
+    },
     "title": "Articoli",
     "item": "Articolo",
     "intro": "Cerca gli articoli del negozio e consulta prezzo e stato.",

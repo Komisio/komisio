@@ -1137,6 +1137,26 @@
     "noHistory": "Ei vielä versioita."
   },
   "items": {
+    "directory": {
+      "advanced": "Laajennettu haku",
+      "any": "Kaikki",
+      "photo": "Kuva",
+      "withPhoto": "Kuvalliset",
+      "withoutPhoto": "Kuvattomat",
+      "minPrice": "Hinta alkaen",
+      "maxPrice": "Hinta enintään",
+      "acceptedFrom": "Rekisteröity alkaen",
+      "acceptedTo": "Rekisteröity viimeistään",
+      "endsBefore": "Myyntiaika päättyy viimeistään",
+      "origin": "Alkuperä",
+      "registered": "Rekisteröity",
+      "periodEnd": "Myyntiaika päättyy",
+      "details": "Kuva ja omistus",
+      "invalid": "Tarkista suodattimet ja aikavälit. Alkuarvo ei saa ylittää loppuarvoa.",
+      "markdownOn": "Hinnanalennus odottaa {date} alkaen ({percent} %).",
+      "sortAsc": "Lajittele nousevasti",
+      "sortDesc": "Lajittele laskevasti"
+    },
     "title": "Tuotteet",
     "item": "Tuote",
     "intro": "Hae myymälän tuotteita ja katso niiden hinnat ja tilat.",

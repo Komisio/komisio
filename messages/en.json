@@ -1137,6 +1137,26 @@
     "noHistory": "No versions yet."
   },
   "items": {
+    "directory": {
+      "advanced": "Advanced search",
+      "any": "All",
+      "photo": "Photo",
+      "withPhoto": "With photo",
+      "withoutPhoto": "Without photo",
+      "minPrice": "Price from",
+      "maxPrice": "Price to",
+      "acceptedFrom": "Registered from",
+      "acceptedTo": "Registered to",
+      "endsBefore": "Sale period ends by",
+      "origin": "Origin",
+      "registered": "Registered",
+      "periodEnd": "Sale period ends",
+      "details": "Photo and ownership",
+      "invalid": "Check filters and ranges. The start must not exceed the end.",
+      "markdownOn": "Markdown pending since {date} ({percent}%).",
+      "sortAsc": "Sort ascending",
+      "sortDesc": "Sort descending"
+    },
     "title": "Items",
     "item": "Item",
     "intro": "Find items in your store and see their price and status.",

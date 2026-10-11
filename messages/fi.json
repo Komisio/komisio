@@ -103,7 +103,9 @@
       "languages": "Kielet",
       "previous": "Edellinen",
       "next": "Seuraava",
-      "status": "Sopimuksen tila"
+      "status": "Sopimuksen tila",
+      "manageLanguages": "Näytä kielet",
+      "languagePublished": "Julkaistu"
     },
     "translations": {
       "add": "Lisää kieli",
@@ -119,6 +121,12 @@
       "language": "PDF:n kieli",
       "savedName": "PDF käyttää myyjän viimeksi tallennettua nimeä.",
       "afterSave": "Tallenna myyjä ensin, jotta voit ladata PDF:n, jossa nimi on täytetty."
+    },
+    "editor": {
+      "preview": "Esikatselu",
+      "emptyPreview": "Sopimusteksti näkyy tässä kirjoittaessasi.",
+      "newVersionHint": "Käytä aktiivista sopimusta pohjana. Julkaisu luo uuden aktiivisen version, joka on hyväksyttävä uudelleen.",
+      "firstVersionHint": "Kirjoita sopimus yhdellä kielellä. Lisää muita kieliä julkaisun jälkeen."
     }
   },
   "quickIntake": {

@@ -89,6 +89,7 @@ test('agreements support all product languages and preserve the saved language',
   await expect(page.locator('.agreement-text')).toHaveText(
     'Synthetic test text sv',
   )
+  await page.getByRole('tab').first().click()
   await page.emulateMedia({ media: 'print' })
   await expect(page.locator('.agreement-print-store')).toHaveText(
     'Synthetic multilingual store',

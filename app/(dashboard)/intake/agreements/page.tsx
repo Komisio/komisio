@@ -6,7 +6,7 @@ import { EventTime } from '@/components/ui/event-time'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
-import { dictionary, intlLocale, localeNames } from '@/lib/i18n'
+import { dictionary, intlLocale, localeNames, locales } from '@/lib/i18n'
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import type { SellerAgreement } from '@/lib/engine/intake'
 import { readAgreementDraft } from '@/lib/engine/agreement-assistance'
@@ -145,12 +145,25 @@ export default async function Agreements({
       <AgreementTabs
         key={active.id}
         labels={w}
-        initial={manage && (!current || params.draft) ? 'publish' : 'versions'}
+        initial={
+          manage && (!current || params.draft)
+            ? 'publish'
+            : params.version || params.translation
+              ? 'languages'
+              : 'versions'
+        }
         panels={{
           versions: (
             <>
               <section className="card intake-form agreement-history">
-                <h2>{w.versions}</h2>
+                <div className="agreement-section-heading">
+                  <h2>{w.versions}</h2>
+                  {manage && (
+                    <a className="btn btn-primary" href="#agreements-publish">
+                      {w.publish}
+                    </a>
+                  )}
+                </div>
                 {!current && <p>{a.none}</p>}
                 {!!history.data?.length && (
                   <div className="seller-directory-results">
@@ -161,6 +174,7 @@ export default async function Agreements({
                           <th>{a.language}</th>
                           <th>{w.publishedAt}</th>
                           <th>{w.status}</th>
+                          <th>{w.manageLanguages}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -207,6 +221,17 @@ export default async function Agreements({
                                 {v.id === current?.id ? w.active : w.historical}
                               </span>
                             </td>
+                            <td data-label={w.languages}>
+                              <AgreementWorkspaceLink
+                                className="text-link"
+                                href={href(
+                                  { version: v.id, sellersPage: '1' },
+                                  'languages',
+                                )}
+                              >
+                                {w.manageLanguages}
+                              </AgreementWorkspaceLink>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -237,6 +262,92 @@ export default async function Agreements({
                   </nav>
                 )}
               </section>
+            </>
+          ),
+          languages: (
+            <>
+              {shown && (
+                <section className="card intake-form agreement-language-list">
+                  <div className="agreement-section-heading">
+                    <h2>{w.languages}</h2>
+                    {manage &&
+                      shown.id === current?.id &&
+                      (shown.translations?.length ?? 0) + 1 <
+                        locales.length && (
+                        <a className="text-link" href="#agreement-add-language">
+                          {a.translations.add}
+                        </a>
+                      )}
+                  </div>
+                  {versionContext}
+                  <div className="seller-directory-results">
+                    <table className="seller-directory-table">
+                      <thead>
+                        <tr>
+                          <th>{a.language}</th>
+                          <th>{a.name}</th>
+                          <th>{w.status}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          {
+                            id: shown.id,
+                            title: shown.title,
+                            language: shown.language,
+                          },
+                          ...(shown.translations ?? []),
+                        ].map((t) => (
+                          <tr key={t.id}>
+                            <td data-label={a.language}>
+                              <AgreementWorkspaceLink
+                                className="text-link"
+                                href={href(
+                                  {
+                                    version: shown.id,
+                                    ...(t.id !== shown.id
+                                      ? { translation: t.id }
+                                      : {}),
+                                  },
+                                  'document',
+                                )}
+                                aria-current={
+                                  (translation?.id ?? shown.id) === t.id
+                                    ? 'page'
+                                    : undefined
+                                }
+                              >
+                                {localeNames[t.language]}
+                              </AgreementWorkspaceLink>
+                            </td>
+                            <td data-label={a.name}>{t.title}</td>
+                            <td data-label={w.status}>{w.languagePublished}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
+              )}
+              {!shown && (
+                <section className="card">
+                  <p>{a.none}</p>
+                </section>
+              )}
+              {manage && current && (
+                <div
+                  hidden={shown?.id !== current.id}
+                  className="no-print"
+                  id="agreement-add-language"
+                >
+                  <AgreementTranslationPublisher
+                    key={active.id}
+                    tenantId={active.id}
+                    agreement={current}
+                    d={d}
+                  />
+                </div>
+              )}
               {shown && text && (
                 <section
                   className="card intake-form agreement-reader"
@@ -251,30 +362,6 @@ export default async function Agreements({
                   <p>
                     {a.language}: {localeNames[text.language]}
                   </p>
-                  {!!shown.translations?.length && (
-                    <nav className="row wrap no-print" aria-label={a.language}>
-                      <AgreementWorkspaceLink
-                        href={href({ version: shown.id }, 'document')}
-                        aria-current={!translation ? 'page' : undefined}
-                      >
-                        {localeNames[shown.language]}
-                      </AgreementWorkspaceLink>
-                      {shown.translations.map((t) => (
-                        <AgreementWorkspaceLink
-                          key={t.id}
-                          href={href(
-                            { version: shown.id, translation: t.id },
-                            'document',
-                          )}
-                          aria-current={
-                            translation?.id === t.id ? 'page' : undefined
-                          }
-                        >
-                          {localeNames[t.language]}
-                        </AgreementWorkspaceLink>
-                      ))}
-                    </nav>
-                  )}
                   {shown.id !== current?.id && (
                     <AgreementWorkspaceLink
                       className="text-link"
@@ -327,16 +414,6 @@ export default async function Agreements({
                     ))}
                   </div>
                 </section>
-              )}
-              {manage && current && (
-                <div hidden={shown?.id !== current.id} className="no-print">
-                  <AgreementTranslationPublisher
-                    key={active.id}
-                    tenantId={active.id}
-                    agreement={current}
-                    d={d}
-                  />
-                </div>
               )}
             </>
           ),

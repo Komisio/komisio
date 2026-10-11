@@ -103,7 +103,9 @@
       "languages": "Språk",
       "previous": "Forrige",
       "next": "Neste",
-      "status": "Avtalestatus"
+      "status": "Avtalestatus",
+      "manageLanguages": "Vis språk",
+      "languagePublished": "Publisert"
     },
     "translations": {
       "add": "Legg til språk",
@@ -119,6 +121,12 @@
       "language": "Språk i PDF",
       "savedName": "PDF-en bruker selgerens sist lagrede navn.",
       "afterSave": "Lagre selgeren først for å laste ned en PDF med navnet utfylt."
+    },
+    "editor": {
+      "preview": "Forhåndsvisning",
+      "emptyPreview": "Avtaleteksten vises her når du skriver.",
+      "newVersionHint": "Ta utgangspunkt i den aktive avtalen. Publisering oppretter en ny aktiv versjon som må godkjennes på nytt.",
+      "firstVersionHint": "Skriv avtalen på ett språk. Legg til flere språk etter publisering."
     }
   },
   "quickIntake": {

@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 import type { Dictionary } from '@/lib/i18n'
 import './seller-tabs.css'
 
-const tabs = ['versions', 'sellers', 'publish'] as const
+const tabs = ['versions', 'languages', 'sellers', 'publish'] as const
 type Tab = (typeof tabs)[number]
 const AgreementNavigation = createContext<((href: string) => void) | null>(null)
 export function AgreementWorkspaceLink({
@@ -62,7 +62,12 @@ export function AgreementTabs({
   const selected = useSyncExternalStore(
     subscribe,
     () => {
-      if (window.location.hash === '#agreement-document') return 'versions'
+      if (
+        ['#agreement-document', '#agreement-add-language'].includes(
+          window.location.hash,
+        )
+      )
+        return 'languages'
       const hash = window.location.hash.replace('#agreements-', '') as Tab
       return available.includes(hash)
         ? hash

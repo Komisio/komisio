@@ -103,7 +103,9 @@
       "languages": "Sprachen",
       "previous": "Zurück",
       "next": "Weiter",
-      "status": "Vertragsstatus"
+      "status": "Vertragsstatus",
+      "manageLanguages": "Sprachen anzeigen",
+      "languagePublished": "Veröffentlicht"
     },
     "translations": {
       "add": "Sprache hinzufügen",
@@ -119,6 +121,12 @@
       "language": "Sprache der PDF",
       "savedName": "Die PDF verwendet den zuletzt gespeicherten Namen des Verkäufers.",
       "afterSave": "Speichern Sie zuerst den Verkäufer, um eine PDF mit ausgefülltem Namen herunterzuladen."
+    },
+    "editor": {
+      "preview": "Vorschau",
+      "emptyPreview": "Der Vertragstext erscheint hier während der Eingabe.",
+      "newVersionHint": "Nutzen Sie den aktiven Vertrag als Vorlage. Die Veröffentlichung erstellt eine neue aktive Version, die erneut akzeptiert werden muss.",
+      "firstVersionHint": "Schreiben Sie den Vertrag in einer Sprache. Weitere Sprachen können Sie nach der Veröffentlichung hinzufügen."
     }
   },
   "quickIntake": {

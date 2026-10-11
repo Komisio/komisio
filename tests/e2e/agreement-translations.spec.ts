@@ -21,7 +21,15 @@ test('one agreement offers multiple immutable languages and portal acceptance co
     ])
     await f.commit()
     await page.goto('/intake/agreements')
-    await page.getByText(d.agreements.translations.add, { exact: true }).click()
+    await page
+      .getByRole('link', {
+        name: d.agreements.workspace.manageLanguages,
+        exact: true,
+      })
+      .click()
+    await page
+      .getByRole('link', { name: d.agreements.translations.add, exact: true })
+      .click()
     const publisher = page.locator('.agreement-translations')
     await publisher
       .getByLabel(d.agreements.language, { exact: true })
@@ -39,7 +47,7 @@ test('one agreement offers multiple immutable languages and portal acceptance co
       })
       .click()
     await page
-      .getByRole('tab', { name: d.agreements.workspace.versions, exact: true })
+      .getByRole('tab', { name: d.agreements.workspace.languages, exact: true })
       .click()
     await expect(
       publisher.getByLabel(d.agreements.body, { exact: true }),
@@ -57,12 +65,16 @@ test('one agreement offers multiple immutable languages and portal acceptance co
     await expect(page.locator('.agreement-history')).toContainText('Svenska')
     await expect(page.locator('.agreement-history')).toContainText('English')
     await page
-      .locator('.agreement-reader')
+      .locator('.agreement-language-list')
       .getByRole('link', { name: 'Svenska', exact: true })
       .click()
     await expect(page.locator('.agreement-text')).toHaveText(
       'Syntetisk svensk avtalstext för test.',
     )
+    await page.screenshot({
+      path: 'private/agreement-language-list.png',
+      fullPage: true,
+    })
     await page.emulateMedia({ media: 'print' })
     await expect(page.locator('.agreement-text')).toBeVisible()
     await expect(publisher).toBeHidden()

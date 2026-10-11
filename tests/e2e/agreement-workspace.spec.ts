@@ -153,18 +153,18 @@ test('staff can record the displayed agreement while registering or editing a se
     await versionsTab.press('ArrowRight')
     await expect(
       page.getByRole('tab', {
-        name: d.agreements.workspace.sellers,
+        name: d.agreements.workspace.languages,
         exact: true,
       }),
     ).toBeFocused()
     await expect(
       page.getByRole('tab', {
-        name: d.agreements.workspace.sellers,
+        name: d.agreements.workspace.languages,
         exact: true,
       }),
     ).toHaveAttribute('aria-selected', 'true')
     await page
-      .getByRole('tab', { name: d.agreements.workspace.sellers, exact: true })
+      .getByRole('tab', { name: d.agreements.workspace.languages, exact: true })
       .press('Home')
     await expect(versionsTab).toBeFocused()
     await expect(versionsTab).toHaveAttribute('aria-selected', 'true')

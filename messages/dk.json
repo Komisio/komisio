@@ -103,7 +103,9 @@
       "languages": "Sprog",
       "previous": "Forrige",
       "next": "Næste",
-      "status": "Aftalestatus"
+      "status": "Aftalestatus",
+      "manageLanguages": "Vis sprog",
+      "languagePublished": "Udgivet"
     },
     "translations": {
       "add": "Tilføj sprog",
@@ -119,6 +121,12 @@
       "language": "Sprog i PDF",
       "savedName": "PDF-en bruger sælgerens senest gemte navn.",
       "afterSave": "Gem sælgeren først for at hente en PDF med navnet udfyldt."
+    },
+    "editor": {
+      "preview": "Forhåndsvisning",
+      "emptyPreview": "Aftaleteksten vises her, mens du skriver.",
+      "newVersionHint": "Tag udgangspunkt i den aktive aftale. Udgivelse opretter en ny aktiv version, som skal godkendes igen.",
+      "firstVersionHint": "Skriv aftalen på ét sprog. Tilføj flere sprog efter udgivelse."
     }
   },
   "quickIntake": {

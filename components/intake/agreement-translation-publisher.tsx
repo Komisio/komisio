@@ -1,8 +1,9 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { locales, localeNames, type Dictionary } from '@/lib/i18n'
 import type { SellerAgreement } from '@/lib/engine/intake'
+import { AgreementPreview, readAgreementPreview } from './agreement-preview'
 import { useIntakeAction } from './use-intake-action'
 import { useFormDirty } from '@/components/platform/use-form-dirty'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
@@ -18,6 +19,15 @@ export function AgreementTranslationPublisher({
   d: Dictionary
 }) {
   const [base, setBase] = useState(agreement)
+  const [expanded, setExpanded] = useState(false)
+  useEffect(() => {
+    const reveal = () => {
+      if (window.location.hash === '#agreement-add-language') setExpanded(true)
+    }
+    reveal()
+    window.addEventListener('hashchange', reveal)
+    return () => window.removeEventListener('hashchange', reveal)
+  }, [])
   const [saved, setSaved] = useState(false)
   const form = useRef<HTMLFormElement>(null)
   const { ready, dirty, checkDirty, resetDirty } = useFormDirty(form)
@@ -30,9 +40,18 @@ export function AgreementTranslationPublisher({
       l !== base.language && !base.translations?.some((v) => v.language === l),
   )
   useUnsavedChanges(!saved && (dirty || action.locked) ? d.leaveUnsaved : null)
+  const [preview, setPreview] = useState({
+    title: '',
+    body: '',
+    language: available[0] ?? agreement.language,
+  })
   if (!available.length) return null
   return (
-    <details className="card intake-form no-print agreement-translations">
+    <details
+      className="card intake-form no-print agreement-translations"
+      open={expanded}
+      onToggle={(event) => setExpanded(event.currentTarget.open)}
+    >
       <summary>{t.add}</summary>
       <p>{t.hint}</p>
       <p>
@@ -44,6 +63,16 @@ export function AgreementTranslationPublisher({
           <Button
             onClick={() => {
               setBase(agreement)
+              setPreview({
+                title: '',
+                body: '',
+                language:
+                  locales.find(
+                    (l) =>
+                      l !== agreement.language &&
+                      !agreement.translations?.some((t) => t.language === l),
+                  ) ?? agreement.language,
+              })
               setSaved(false)
               resetDirty()
             }}
@@ -54,7 +83,10 @@ export function AgreementTranslationPublisher({
       ) : (
         <form
           ref={form}
-          onChange={checkDirty}
+          onChange={() => {
+            checkDirty()
+            if (form.current) setPreview(readAgreementPreview(form.current))
+          }}
           onSubmit={async (event) => {
             event.preventDefault()
             const fields = new FormData(event.currentTarget)
@@ -81,34 +113,39 @@ export function AgreementTranslationPublisher({
             }
             data-draft-readiness={!ready ? '' : undefined}
           >
-            <div className="field">
-              <label htmlFor="translation-language">{a.language}</label>
-              <select id="translation-language" name="language">
-                {available.map((l) => (
-                  <option key={l} value={l}>
-                    {localeNames[l]}
-                  </option>
-                ))}
-              </select>
+            <div className="agreement-editor-meta">
+              <div className="field">
+                <label htmlFor="translation-title">{a.name}</label>
+                <input
+                  id="translation-title"
+                  name="title"
+                  required
+                  maxLength={120}
+                />
+              </div>
+              <div className="field">
+                <label htmlFor="translation-language">{a.language}</label>
+                <select id="translation-language" name="language">
+                  {available.map((l) => (
+                    <option key={l} value={l}>
+                      {localeNames[l]}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-            <div className="field">
-              <label htmlFor="translation-title">{a.name}</label>
-              <input
-                id="translation-title"
-                name="title"
-                required
-                maxLength={120}
-              />
-            </div>
-            <div className="field">
-              <label htmlFor="translation-body">{a.body}</label>
-              <textarea
-                id="translation-body"
-                name="body"
-                required
-                maxLength={12000}
-                rows={10}
-              />
+            <div className="agreement-editor-columns">
+              <div className="field">
+                <label htmlFor="translation-body">{a.body}</label>
+                <textarea
+                  id="translation-body"
+                  name="body"
+                  required
+                  maxLength={12000}
+                  rows={18}
+                />
+              </div>
+              <AgreementPreview text={preview} labels={d.agreements.editor} />
             </div>
           </fieldset>
           {action.error && <p role="alert">{action.error}</p>}

@@ -103,7 +103,9 @@
       "languages": "Lingue",
       "previous": "Precedente",
       "next": "Successivo",
-      "status": "Stato del contratto"
+      "status": "Stato del contratto",
+      "manageLanguages": "Mostra lingue",
+      "languagePublished": "Pubblicato"
     },
     "translations": {
       "add": "Aggiungi lingua",
@@ -119,6 +121,12 @@
       "language": "Lingua del PDF",
       "savedName": "Il PDF usa l’ultimo nome salvato del venditore.",
       "afterSave": "Salva prima il venditore per scaricare un PDF con il nome compilato."
+    },
+    "editor": {
+      "preview": "Anteprima",
+      "emptyPreview": "Il testo del contratto appare qui mentre scrivi.",
+      "newVersionHint": "Parti dal contratto attivo. La pubblicazione crea una nuova versione attiva che richiede una nuova accettazione.",
+      "firstVersionHint": "Scrivi il contratto in una lingua. Aggiungi altre lingue dopo la pubblicazione."
     }
   },
   "quickIntake": {

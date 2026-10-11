@@ -11,8 +11,8 @@ import {
 } from 'react'
 
 type Warnings = {
-  register: (message: string) => () => void
-  confirm: () => boolean
+  register: (message: string, scope?: string) => () => void
+  confirm: (scope?: string) => boolean
 }
 const NavigationWarnings = createContext<Warnings | null>(null)
 
@@ -22,18 +22,26 @@ export function NavigationWarningProvider({
 }: {
   children: ReactNode
 }) {
-  const messages = useRef(new Map<symbol, string>())
+  const messages = useRef(
+    new Map<symbol, { message: string; scope?: string }>(),
+  )
   const warnings = useMemo<Warnings>(
     () => ({
-      register(message) {
+      register(message, scope) {
         const key = Symbol()
-        messages.current.set(key, message)
+        messages.current.set(key, { message, scope })
         return () => {
           messages.current.delete(key)
         }
       },
-      confirm() {
-        const active = [...new Set(messages.current.values())]
+      confirm(scope) {
+        const active = [
+          ...new Set(
+            [...messages.current.values()]
+              .filter((entry) => scope === undefined || entry.scope === scope)
+              .map((entry) => entry.message),
+          ),
+        ]
         return active.length === 0 || window.confirm(active.join('\n\n'))
       },
     }),
@@ -46,16 +54,16 @@ export function NavigationWarningProvider({
   )
 }
 
-export function useNavigationWarning(message: string | null) {
+export function useNavigationWarning(message: string | null, scope?: string) {
   const warnings = useContext(NavigationWarnings)
   useEffect(() => {
-    if (message && warnings) return warnings.register(message)
-  }, [message, warnings])
+    if (message && warnings) return warnings.register(message, scope)
+  }, [message, scope, warnings])
 }
 
 /** Warn on supported in-app links and document unload without storing form data. */
-export function useUnsavedChanges(message: string | null) {
-  useNavigationWarning(message)
+export function useUnsavedChanges(message: string | null, scope?: string) {
+  useNavigationWarning(message, scope)
   useEffect(() => {
     if (!message) return
     const warn = (event: BeforeUnloadEvent) => {
@@ -67,17 +75,21 @@ export function useUnsavedChanges(message: string | null) {
   }, [message])
 }
 
-export function useConfirmNavigation() {
+export function useConfirmNavigation(scope?: string) {
   const warnings = useContext(NavigationWarnings)
-  return () => warnings?.confirm() ?? true
+  return () => warnings?.confirm(scope) ?? true
 }
 
-/** onNavigate leaves downloads, external links and new-tab clicks alone. */
+/**
+ * onNavigate leaves downloads, external links and new-tab clicks alone.
+ * A scope is only for navigation that retains every other mounted draft.
+ */
 export function NavigationLink({
   onNavigate,
+  warningScope,
   ...props
-}: ComponentProps<typeof Link>) {
-  const confirm = useConfirmNavigation()
+}: ComponentProps<typeof Link> & { warningScope?: string }) {
+  const confirm = useConfirmNavigation(warningScope)
   return (
     <Link
       {...props}

@@ -1,7 +1,6 @@
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from 'next/link'
 import { NavigationLink } from '@/components/platform/navigation-warning'
 import { notFound, redirect } from 'next/navigation'
 import { z } from 'zod'
@@ -77,9 +76,13 @@ export default async function Purchases({
     pages > 1 ? (
       <nav className="seller-directory-pagination" aria-label={d.title}>
         {requestedPage > 1 && (
-          <Link className="btn btn-secondary" href={href(requestedPage - 1)}>
+          <NavigationLink
+            warningScope="item-acceptance"
+            className="btn btn-secondary"
+            href={href(requestedPage - 1)}
+          >
             {common.previousPage}
-          </Link>
+          </NavigationLink>
         )}
         <span>
           {common.pageOf
@@ -87,9 +90,13 @@ export default async function Purchases({
             .replace('{pages}', String(pages))}
         </span>
         {requestedPage < pages && (
-          <Link className="btn btn-secondary" href={href(requestedPage + 1)}>
+          <NavigationLink
+            warningScope="item-acceptance"
+            className="btn btn-secondary"
+            href={href(requestedPage + 1)}
+          >
             {common.nextPage}
-          </Link>
+          </NavigationLink>
         )}
       </nav>
     ) : null
@@ -177,6 +184,7 @@ export default async function Purchases({
                               originRevision={null}
                               d={all.items}
                               intake={all.intake}
+                              leaveUnsaved={all.leaveUnsaved}
                             />
                           </details>
                         ) : null}

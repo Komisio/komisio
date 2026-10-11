@@ -83,6 +83,18 @@ for (const failureCode of ['REQUEST_FAILED', 'INVALID_INPUT', 'POLICY_CHANGED'])
           })
           .click()
         await expect(form.getByRole('alert')).toHaveText(d.intake.failed)
+        if (action === 'acceptItem' && failureCode === 'REQUEST_FAILED') {
+          const waiting = page.waitForEvent('dialog')
+          const leaving = page
+            .locator('.mobile-nav a[href="/intake/items"]')
+            .click()
+          const dialog = await waiting
+          expect(dialog.message()).toBe(d.leaveUnsaved)
+          await dialog.dismiss()
+          await leaving
+          await expect(price).toHaveValue('145,25')
+          await expect(price).toBeDisabled()
+        }
         expect(firstStatus).toBe(200)
         expect(committedId).toBe(requests[0].requestId)
         await expect(price).toBeDisabled()

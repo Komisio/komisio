@@ -988,3 +988,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-11: Stocktaking separates the selected count from paged session history in mounted task tabs. Selecting a session opens its count; browsing history retains the active workspace. Scan confirmations, findings, closing prerequisites and inventory facts are unchanged.
 
 - 2026-10-11: A store-owned item links to its exact immutable purchase receipt rather than the first history page. Receipt details use active-tenant reads and existing RLS; opening evidence neither registers a purchase nor accepts an item.
+
+- 2026-10-11: Unsaved sale-acceptance prices and uncertain commands warn before leaving their origin. Purchase history paging guards acceptance forms while retaining new-purchase drafts. Switching an inspection origin starts a fresh form; engine transitions and retry identity are unchanged.

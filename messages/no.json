@@ -1137,6 +1137,26 @@
     "noHistory": "Ingen versjoner ennå."
   },
   "items": {
+    "directory": {
+      "advanced": "Utvidet søk",
+      "any": "Alle",
+      "photo": "Bilde",
+      "withPhoto": "Med bilde",
+      "withoutPhoto": "Uten bilde",
+      "minPrice": "Pris fra",
+      "maxPrice": "Pris til",
+      "acceptedFrom": "Registrert fra",
+      "acceptedTo": "Registrert til",
+      "endsBefore": "Salgsperiode slutter senest",
+      "origin": "Opprinnelse",
+      "registered": "Registrert",
+      "periodEnd": "Salgsperiode slutter",
+      "details": "Bilde og eierskap",
+      "invalid": "Kontroller filtre og intervaller. Fra-verdien må ikke være større enn til-verdien.",
+      "markdownOn": "Prisreduksjon venter siden {date} ({percent} %).",
+      "sortAsc": "Sorter stigende",
+      "sortDesc": "Sorter synkende"
+    },
     "title": "Varer",
     "item": "Vare",
     "intro": "Søk blant butikkens varer og se pris og status.",

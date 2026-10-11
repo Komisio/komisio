@@ -32,15 +32,17 @@ test('ownership filters count and page all goods and carry through stock reports
     await f.commit()
     await page.setViewportSize({ width: 390, height: 844 })
     await page.goto('/intake/items?ownership=store')
-    const rows = page.locator('.items-directory-row')
+    const rows = page.locator('.inventory-row')
     await expect(rows).toHaveCount(25)
     await expect(
-      page
-        .getByRole('navigation', { name: d.items.ownership })
-        .getByRole('link', { name: d.items.ownershipKinds.store }),
-    ).toHaveAttribute('aria-current', 'page')
-    for (const badge of await rows.locator('.ownership-badge').all())
-      await expect(badge).toHaveText(d.items.ownershipKinds.store)
+      page.getByLabel(d.items.ownership, { exact: true }),
+    ).toHaveValue('store')
+    await expect(
+      rows.getByRole('button', {
+        name: d.items.ownershipKinds.store,
+        exact: true,
+      }),
+    ).toHaveCount(25)
     await page
       .getByRole('link', { name: d.items.nextPage, exact: true })
       .click()
@@ -49,6 +51,7 @@ test('ownership filters count and page all goods and carry through stock reports
     await page.getByLabel(d.items.search, { exact: true }).fill('lamp 25')
     await page
       .getByRole('button', { name: d.items.searchButton, exact: true })
+      .first()
       .click()
     await expect(rows).toHaveCount(1)
     await expect(rows).toContainText('Synthetic own lamp 25')
@@ -57,15 +60,22 @@ test('ownership filters count and page all goods and carry through stock reports
       .getByRole('link', { name: d.items.clearFilters, exact: true })
       .click()
     await expect(rows).toHaveCount(25)
+    await page.locator('.inventory-advanced summary').click()
     await page
-      .getByRole('navigation', { name: d.items.ownership })
-      .getByRole('link', { name: d.items.ownershipKinds.consignment })
+      .getByLabel(d.items.ownership, { exact: true })
+      .selectOption('consignment')
+    await page
+      .locator('.inventory-basic')
+      .getByRole('button', { name: d.items.searchButton, exact: true })
       .click()
     await expect(rows).toHaveCount(1)
-    await expect(rows.locator('.ownership-badge')).toHaveText(
-      d.items.ownershipKinds.consignment,
-    )
-    await rows.click()
+    await expect(
+      rows.getByRole('button', {
+        name: d.items.ownershipKinds.consignment,
+        exact: true,
+      }),
+    ).toBeVisible()
+    await rows.locator('.inventory-item-link').click()
     await expect(
       page.locator('main > .page-heading .ownership-badge'),
     ).toHaveText(d.items.ownershipKinds.consignment)

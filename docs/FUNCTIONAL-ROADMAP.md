@@ -80,8 +80,12 @@ registration stays in context and selected sellers remain visible.
 Store workspaces separate receiving from its bag queue, own-purchase history
 from registration, receipts from manual sales, and inventory/economy reports
 into task tabs. Tabs retain mounted drafts and support keyboard navigation and
-bookmarks. Item lists and stock reports filter by recorded ownership before
-counting and paging; item rows and details show consignment versus store ownership.
+bookmarks. Staff inventory uses a compact table with server-side sorting and
+25-row pages. Advanced search combines ownership, seller, category, price,
+registration dates, period end, photo presence and origin with text and stage.
+Photo previews load the current default only on interaction; compact ownership
+and due-markdown indicators also support keyboard and touch. Stock reports retain
+ownership filtering. Existing lifecycle calculations and access checks apply.
 Own purchases retain explicit evidence and a separate sale-acceptance step. Payouts
 separate open work and completed history into paged lists, with individual
 requests and batch preparation in separate tabs. Decision forms open on demand;

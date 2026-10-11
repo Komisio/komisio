@@ -1137,6 +1137,26 @@
     "noHistory": "Noch keine Versionen."
   },
   "items": {
+    "directory": {
+      "advanced": "Erweiterte Suche",
+      "any": "Alle",
+      "photo": "Bild",
+      "withPhoto": "Mit Bild",
+      "withoutPhoto": "Ohne Bild",
+      "minPrice": "Preis von",
+      "maxPrice": "Preis bis",
+      "acceptedFrom": "Registriert ab",
+      "acceptedTo": "Registriert bis",
+      "endsBefore": "Verkaufszeit endet bis",
+      "origin": "Herkunft",
+      "registered": "Registriert",
+      "periodEnd": "Verkaufszeit endet",
+      "details": "Bild und Eigentum",
+      "invalid": "Filter und Bereiche prüfen. Der Anfang darf nicht nach dem Ende liegen.",
+      "markdownOn": "Preissenkung ausstehend seit {date} ({percent} %).",
+      "sortAsc": "Aufsteigend sortieren",
+      "sortDesc": "Absteigend sortieren"
+    },
     "title": "Artikel",
     "item": "Artikel",
     "intro": "Finden Sie Artikel im Geschäft und sehen Sie Preis und Status.",

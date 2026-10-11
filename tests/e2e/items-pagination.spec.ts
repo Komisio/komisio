@@ -17,7 +17,7 @@ test('staff can reach all matching items and retain filters on a phone', async (
     await f.commit()
     await page.setViewportSize({ width: 320, height: 800 })
     await page.goto('/intake/items?q=Paging&stage=markdown_due')
-    const rows = page.locator('.intake-list li')
+    const rows = page.locator('.inventory-row')
     await expect(rows).toHaveCount(25)
     await expect
       .poll(
@@ -28,7 +28,7 @@ test('staff can reach all matching items and retain filters on a phone', async (
       .toBeGreaterThan(180)
     const seen = new Set(
       await rows
-        .locator('a')
+        .locator('.inventory-item-link')
         .evaluateAll((links) => links.map((link) => link.getAttribute('href'))),
     )
     const next = () =>
@@ -49,7 +49,7 @@ test('staff can reach all matching items and retain filters on a phone', async (
       expect(new URL(page.url()).searchParams.get('q')).toBe('Paging')
       expect(new URL(page.url()).searchParams.get('stage')).toBe('markdown_due')
       for (const href of await rows
-        .locator('a')
+        .locator('.inventory-item-link')
         .evaluateAll((links) =>
           links.map((link) => link.getAttribute('href')),
         )) {

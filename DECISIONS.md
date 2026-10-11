@@ -994,3 +994,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-11: Payout preparation pages candidates, retains selection across pages and selects at most the engine limit of 100 sellers per command. Later groups start explicitly after refresh; full-balance approval, payment evidence and eligibility rules are unchanged.
 
 - 2026-10-11: Quick reception uses one continuous seller, agreement and item flow instead of nested tabs. Large seller directories start with search and offer explicit paged browsing; compact results retain tenant-scoped reads. Registration, approval and item retry rules are unchanged.
+
+- 2026-10-11: Staff inventory uses a compact sortable table and advanced filters before bounded paging. Read-only search reuses current lifecycle, photo and seller facts under existing tenant/MFA checks; legacy reads stay intact. This supersedes the October 2 minimal-row layout.

@@ -1,5 +1,10 @@
 # Open questions
 
+Inventory table (resolved 2026-10-11): owner requests compact sortable rows,
+on-demand default-image previews, discreet ownership/markdown indicators and
+advanced filters instead of ownership tabs. Sorting and filtering precede paging;
+markdown dates reuse the existing plan. No financial or lifecycle rule changes.
+
 Inventory ownership (resolved 2026-10-11): directories and stock reports
 distinguish consignment from store-owned goods using recorded ownership.
 Existing financial rules remain unchanged; POS catalog migration still needs

@@ -113,6 +113,7 @@
       "acceptedLanguage": "Lingua accettata"
     },
     "pdf": {
+      "view": "Visualizza contratto del venditore",
       "download": "Scarica PDF",
       "personal": "Scarica PDF con il nome del venditore",
       "language": "Lingua del PDF",
@@ -237,7 +238,7 @@
       "steps": [
         "Seleziona il conferente e registra un articolo alla volta.",
         "Inserisci descrizione, categoria e prezzo. Controlla gli eventuali suggerimenti IA.",
-        "Salva l’articolo. Dalla conferma puoi etichettarlo o passare al successivo."
+        "Salva l’articolo."
       ]
     },
     "typeIntro": "Il tipo viene salvato per tutto il negozio e selezionato per questo articolo.",

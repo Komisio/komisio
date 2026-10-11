@@ -113,6 +113,7 @@
       "acceptedLanguage": "Godkänt språk"
     },
     "pdf": {
+      "view": "Visa säljaravtal",
       "download": "Hämta PDF",
       "personal": "Hämta PDF med säljarens namn",
       "language": "Språk i PDF",
@@ -237,7 +238,7 @@
       "steps": [
         "Välj inlämnare och registrera en vara i taget.",
         "Fyll i beskrivning, kategori och pris. Kontrollera eventuella AI-förslag.",
-        "Spara varan. Använd bekräftelsen för att märka den eller fortsätta med nästa vara."
+        "Spara varan."
       ]
     },
     "typeIntro": "Varutypen sparas för hela butiken och väljs för den här varan.",

@@ -268,25 +268,33 @@ export async function readItemsOverviewPage(
     stage?: string
     limit?: number
     offset?: number
+    ownership?: 'consignment' | 'store'
   } = {},
 ) {
-  const r = await client.rpc('items_overview_page', {
-    p_tenant: z.uuid().parse(tenantInput),
-    p_query: (filter.query ?? '').trim().slice(0, 120),
-    p_stage: filter.stage ? itemStage.parse(filter.stage) : null,
-    p_limit: z
-      .number()
-      .int()
-      .min(1)
-      .max(100)
-      .parse(filter.limit ?? 25),
-    p_offset: z
-      .number()
-      .int()
-      .min(0)
-      .max(2147483647)
-      .parse(filter.offset ?? 0),
-  })
+  const ownership = filter.ownership
+    ? z.enum(['consignment', 'store']).parse(filter.ownership)
+    : null
+  const r = await client.rpc(
+    ownership ? 'items_directory_page' : 'items_overview_page',
+    {
+      ...(ownership ? { p_ownership: ownership } : {}),
+      p_tenant: z.uuid().parse(tenantInput),
+      p_query: (filter.query ?? '').trim().slice(0, 120),
+      p_stage: filter.stage ? itemStage.parse(filter.stage) : null,
+      p_limit: z
+        .number()
+        .int()
+        .min(1)
+        .max(100)
+        .parse(filter.limit ?? 25),
+      p_offset: z
+        .number()
+        .int()
+        .min(0)
+        .max(2147483647)
+        .parse(filter.offset ?? 0),
+    },
+  )
   if (r.error?.code === 'PGRST202') return null
   if (r.error) throw new Error('FORBIDDEN')
   return itemsOverview

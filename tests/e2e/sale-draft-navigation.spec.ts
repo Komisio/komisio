@@ -29,7 +29,9 @@ async function fixture(page: Page) {
     ])
     await f.commit()
     await page.goto('/intake/sales')
-    await page.locator('.sale-manual > summary').click()
+    await page
+      .getByRole('tab', { name: d.sales.manualTab, exact: true })
+      .click()
     const search = page.getByLabel(d.sales.search, { exact: true })
     await search.fill('Synthetic pending cart item')
     await search.press('Enter')
@@ -50,10 +52,14 @@ test('manual cart keeps edited prices when leaving is cancelled and releases nav
     const receipt = page.locator(
       `.sales-register-row[href="/intake/sales/${sale}"]`,
     )
-    await page.locator('.sale-manual > summary').click()
+    await page
+      .getByRole('tab', { name: d.sales.receiptsTab, exact: true })
+      .click()
     await cancelLeave(page, receipt)
     await cancelLeave(page, page.locator('.sidebar a[href="/intake/items"]'))
-    await page.locator('.sale-manual > summary').click()
+    await page
+      .getByRole('tab', { name: d.sales.manualTab, exact: true })
+      .click()
     await expect(page.locator(`#price-${item}`)).toHaveValue('150,50')
     await page
       .getByRole('button', { name: d.sales.remove, exact: true })
@@ -63,6 +69,9 @@ test('manual cart keeps edited prices when leaving is cancelled and releases nav
       warnings++
       await dialog.dismiss()
     })
+    await page
+      .getByRole('tab', { name: d.sales.receiptsTab, exact: true })
+      .click()
     await receipt.click()
     await expect(page).toHaveURL(`/intake/sales/${sale}`)
     expect(warnings).toBe(0)
@@ -152,8 +161,12 @@ test('a stale manual sale offers a full reload instead of leaving the frozen car
     await page
       .getByRole('button', { name: d.intake.reload, exact: true })
       .click()
-    await expect(page.locator('.sale-manual')).not.toHaveAttribute('open', '')
-    await page.locator('.sale-manual > summary').click()
+    await expect(
+      page.getByRole('tab', { name: d.sales.manualTab, exact: true }),
+    ).toHaveAttribute('aria-selected', 'true')
+    await page
+      .getByRole('tab', { name: d.sales.manualTab, exact: true })
+      .click()
     await expect(page.locator('.sale-cart li')).toHaveCount(0)
     await expect(page.getByLabel(d.sales.search, { exact: true })).toBeEnabled()
     expect(
@@ -174,6 +187,9 @@ test('receipt search warns before discarding a manual cart and proceeds after th
 }) => {
   const { f, item } = await fixture(page)
   try {
+    await page
+      .getByRole('tab', { name: d.sales.receiptsTab, exact: true })
+      .click()
     const search = page.getByRole('search', { name: d.sales.findReceipt })
     await search
       .getByLabel(d.sales.reference, { exact: true })
@@ -187,11 +203,17 @@ test('receipt search warns before discarding a manual cart and proceeds after th
     await dialog.dismiss()
     await click
     await expect(page.locator(`#price-${item}`)).toHaveValue('150,50')
-    await expect(page).toHaveURL('/intake/sales')
+    await expect(page).toHaveURL('/intake/sales#sales-receipts')
+    await page
+      .getByRole('tab', { name: d.sales.manualTab, exact: true })
+      .click()
     await page
       .getByRole('button', { name: d.sales.remove, exact: true })
       .click()
     await expect(page.locator('.sale-cart li')).toHaveCount(0)
+    await page
+      .getByRole('tab', { name: d.sales.receiptsTab, exact: true })
+      .click()
     await search
       .getByRole('button', { name: d.sales.findReceipt, exact: true })
       .click()

@@ -33,21 +33,20 @@ test('mobile economy puts period totals before the brief and keeps the selected 
     await expect(
       totals.getByText('200.00 SEK', { exact: true }).first(),
     ).toBeVisible()
+    await page
+      .getByRole('tab', { name: sv.economy.tabs.overview, exact: true })
+      .click()
     await expect(
       page.getByRole('region', {
         name: sv.economy.liabilityHeading,
         exact: true,
       }),
     ).toContainText('80.00 SEK')
-    await expect(brief).not.toHaveAttribute('open', '')
+    await expect(brief).not.toBeVisible()
     const totalsTop =
       (await totals.boundingBox())!.y +
       (await page.evaluate(() => window.scrollY))
     expect(totalsTop).toBeLessThan(900)
-    expect(totalsTop).toBeLessThan(
-      (await brief.boundingBox())!.y +
-        (await page.evaluate(() => window.scrollY)),
-    )
     await page.screenshot({
       path: testInfo.outputPath('economy-mobile.png'),
       fullPage: true,
@@ -70,12 +69,17 @@ test('mobile economy puts period totals before the brief and keeps the selected 
     await expect
       .poll(() => breakdown.evaluate((el) => el.scrollLeft))
       .toBeGreaterThan(0)
-    await brief.locator('summary').click()
+    await page
+      .getByRole('tab', { name: sv.economy.tabs.reports, exact: true })
+      .click()
     await brief.getByRole('link', { name: sv.brief.month, exact: true }).click()
     await expect(page).toHaveURL(
       /from=2025-03-01&to=2025-03-31&brief=month#economy-brief$/,
     )
-    await expect(brief).toHaveAttribute('open', '')
+    await expect(brief).toBeVisible()
+    await page
+      .getByRole('tab', { name: sv.economy.tabs.overview, exact: true })
+      .click()
     await expect(totals).toContainText('200.00 SEK')
     await page.getByLabel(sv.economy.from, { exact: true }).fill('2025-04-01')
     await page.getByLabel(sv.economy.to, { exact: true }).fill('2025-04-30')
@@ -85,18 +89,30 @@ test('mobile economy puts period totals before the brief and keeps the selected 
     await expect(page.getByLabel(sv.economy.from, { exact: true })).toHaveValue(
       '2025-04-01',
     )
+    await page
+      .getByRole('tab', { name: sv.economy.tabs.reports, exact: true })
+      .click()
     await expect(
       brief.getByRole('link', { name: sv.brief.month, exact: true }),
     ).toHaveAttribute('aria-current', 'page')
+    await page
+      .getByRole('tab', { name: sv.economy.tabs.days, exact: true })
+      .click()
     await expect(
       page.getByRole('region', { name: sv.economy.daysHeading, exact: true }),
     ).toContainText(sv.economy.noSales)
+    await page
+      .getByRole('tab', { name: sv.economy.tabs.overview, exact: true })
+      .click()
     await expect(
       page.getByRole('region', {
         name: sv.economy.liabilityHeading,
         exact: true,
       }),
     ).toContainText('80.00 SEK')
+    await page
+      .getByRole('tab', { name: sv.economy.tabs.reports, exact: true })
+      .click()
     await brief.getByRole('link', { name: sv.brief.week, exact: true }).click()
     await expect(page).toHaveURL(
       /from=2025-04-01&to=2025-04-30&brief=week#economy-brief$/,
@@ -125,7 +141,7 @@ test('mobile economy puts period totals before the brief and keeps the selected 
         ).toContainText('200.00 SEK')
         await expect(
           page.getByText(d.economy.intro, { exact: true }),
-        ).toBeVisible()
+        ).not.toBeVisible()
         expect(
           await page.evaluate(
             () => document.documentElement.scrollWidth <= window.innerWidth,

@@ -16,7 +16,9 @@ test('sale cart finds older stock, scans a reference and safely retries a multi-
     for (let i = 0; i < 1000; i++) await f.item(`Later synthetic item ${i}`)
     await f.commit()
     await page.goto('/intake/sales')
-    await page.getByText(d.sales.recordHeading, { exact: true }).click()
+    await page
+      .getByRole('tab', { name: d.sales.manualTab, exact: true })
+      .click()
     const search = page.getByLabel(d.sales.search, { exact: true })
     await search.fill('Older blue lamp')
     await search.press('Enter')

@@ -315,7 +315,8 @@
     "stocktakeAmbiguous": "Koden matcher flere varer. Åpne riktig vare og bruk hele ID-en.",
     "stocktakeItemMissing": "Varen finnes ikke i denne butikken.",
     "stocktakePending": "Kontroller de resterende varene før du avslutter.",
-    "collectionNotDue": "Hentefristen har ikke gått ut."
+    "collectionNotDue": "Hentefristen har ikke gått ut.",
+    "overviewHelpLabel": "Om innlevering"
   },
   "brand": "Komisio",
   "tagline": "Mer plass til ting som kan leve videre.",
@@ -1170,8 +1171,8 @@
       "purchase": "Butikkinnkjøp"
     },
     "ownershipKinds": {
-      "consignment": "kommisjon",
-      "store": "butikkeid"
+      "consignment": "Kommisjonsvarer",
+      "store": "Egne varer"
     },
     "evidenceKinds": {
       "staff_recorded": "avtalebevis registrert av personalet",
@@ -1208,7 +1209,9 @@
     "labelPrinter": "Etikettskriver",
     "manageSalePeriod": "Pris og salgsperiode",
     "unknownActor": "Navn mangler",
-    "markdownWaiting": "Prisreduksjon venter"
+    "markdownWaiting": "Prisreduksjon venter",
+    "allOwnerships": "Alle varer",
+    "ownership": "Eierskap"
   },
   "sales": {
     "title": "Salg",
@@ -1274,7 +1277,10 @@
     "showLatest": "Vis nyeste",
     "searchResults": "Søkeresultater",
     "filteredHint": "Opptil 50 samsvarende salg vises, nyeste først.",
-    "noReceipts": "Ingen kvitteringer samsvarer. Kontroller hele referansen eller velg en annen kilde."
+    "noReceipts": "Ingen kvitteringer samsvarer. Kontroller hele referansen eller velg en annen kilde.",
+    "receiptsTab": "Kvitteringer",
+    "manualTab": "Registrer manuelt",
+    "helpLabel": "Om salg"
   },
   "ledger": {
     "title": "Saldo og reskontro",
@@ -1488,9 +1494,15 @@
     "commissionHint": "Fra periodens salg",
     "details": "Alle beløp og mva.",
     "reports": "Rapporter og e-post",
-    "reportsHint": "Oppsummerer inneværende uke eller måned, uavhengig av datoene ovenfor.",
+    "reportsHint": "Sammendrag for gjeldende uke eller måned.",
     "emailHint": "Butikkens eiere får et sammendrag av forrige uke hver mandag.",
-    "emailEnable": "Aktiver ukentlig e-post"
+    "emailEnable": "Aktiver ukentlig e-post",
+    "tabs": {
+      "overview": "Oversikt",
+      "days": "Per dag",
+      "reports": "Rapporter"
+    },
+    "helpLabel": "Om økonomien"
   },
   "accounting": {
     "title": "Regnskap",
@@ -1676,10 +1688,15 @@
     "scopeHint": "Lageret viser varene som er i butikken akkurat nå.",
     "ageHint": "Lageralderen regnes fra dagen varen ble godkjent for salg.",
     "salesHelpLabel": "Om salget",
-    "salesHint": "Datoene gjelder bare salget, ikke lageret ovenfor.",
+    "salesHint": "Datoene gjelder salg. Lageret viser alltid dagens beholdning.",
     "metricsHeading": "Flere nøkkeltall",
     "metricsHelpLabel": "Om nøkkeltallene",
-    "missingHint": "En strek betyr at det mangler grunnlag for beregningen."
+    "missingHint": "En strek betyr at det mangler grunnlag for beregningen.",
+    "tabs": {
+      "overview": "Oversikt",
+      "categories": "Kategorier",
+      "sales": "Salg"
+    }
   },
   "importer": {
     "title": "Importer innleverere",
@@ -1912,20 +1929,20 @@
     "discardTemplate": "Forkaste ulagrede endringer i etikettmalen?"
   },
   "purchases": {
-    "title": "Innkjøp",
+    "title": "Egne innkjøp",
     "intro": "Registrer varer som butikken kjøper inn og eier.",
-    "notice": "Registrer innkjøpet først. Åpne deretter «{accept}» ved innkjøpet og angi en salgspris for å gjøre varen klar for salg.",
+    "notice": "Lagre innkjøpet og velg deretter «{accept}».",
     "registerHeading": "Registrer et innkjøp",
     "registerHint": "Én registrering per kjøpt vare. Ta vare på kvitteringen eller notatet; referansen er påkrevd.",
     "price": "Innkjøpspris",
     "priceHint": "for eksempel 150 eller 150,50.",
     "priceInvalid": "Oppgi en pris med opptil to desimaler.",
-    "evidence": "Bevisreferanse",
+    "evidence": "Kvittering eller referanse",
     "evidenceHint": "Kvitteringsnummer, eller et notat om hvem som solgte den og når. Unngå fødselsnumre.",
-    "note": "Leverandørnotat (valgfritt)",
-    "marginEligible": "Berettiget til avansemetoden: kjøpt fra en privatperson uten mva, med dokumentasjon per vare",
+    "note": "Vare / leverandør (valgfritt)",
+    "marginEligible": "Kjøpt fra privatperson uten mva., med dokumentasjon for varen (avansesystem)",
     "marginHint": "Dette attesteres nå, ved innkjøpet, av deg. Butikkens mva-modus avgjør hvordan det brukes ved salg.",
-    "confirm": "Jeg bekrefter at butikken kjøpte denne varen og at bevisreferansen er riktig.",
+    "confirm": "Butikken har kjøpt varen og dokumentasjonen stemmer.",
     "register": "Registrer innkjøp",
     "registered": "Innkjøpet er registrert.",
     "recent": "Registrerte innkjøp",
@@ -1933,7 +1950,15 @@
     "reference": "Innkjøp",
     "marginYes": "avansemetode",
     "marginNo": "full mva",
-    "empty": "Ingen innkjøp registrert ennå."
+    "empty": "Ingen innkjøp registrert ennå.",
+    "history": "Historikk",
+    "newPurchase": "Nytt innkjøp",
+    "helpLabel": "Om egne innkjøp",
+    "marginHelpLabel": "Om mva. ved innkjøp",
+    "continueToItem": "Fortsett til salgspris",
+    "itemRegistered": "Vare registrert",
+    "prepareItem": "Angi salgspris",
+    "taxHeading": "Mva."
   },
   "sellerPortal": {
     "handovers": "Meld inn en innlevering",

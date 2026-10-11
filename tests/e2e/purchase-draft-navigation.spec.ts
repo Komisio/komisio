@@ -33,7 +33,9 @@ test('purchase drafts survive history paging and cancelled item navigation; rest
     ])
     await f.commit()
     await page.goto('/intake/purchases')
-    await page.locator('.purchase-create > summary').click()
+    await page
+      .getByRole('tab', { name: d.purchases.newPurchase, exact: true })
+      .click()
     const price = page.locator('#purchase-price'),
       evidence = page.locator('#purchase-evidence')
     await price.fill('125')
@@ -44,6 +46,7 @@ test('purchase drafts survive history paging and cancelled item navigation; rest
       expect(dialog.message()).toBe(d.leaveUnsaved)
       await dialog.dismiss()
     })
+    await page.getByRole('tab', { name: d.purchases.history }).click()
     await page
       .getByRole('link', { name: d.sellersList.nextPage, exact: true })
       .first()
@@ -58,13 +61,17 @@ test('purchase drafts survive history paging and cancelled item navigation; rest
     await expect(page.locator('.purchase-entry')).toHaveCount(20)
     await page.locator(`a[href="/intake/items/${item}"]`).click()
     await expect.poll(() => warnings).toBe(1)
+    await page.locator('a[href="/intake/items?ownership=store"]').click()
+    await expect.poll(() => warnings).toBe(2)
     await expect(price).toHaveValue('125')
     await expect(evidence).toHaveValue('Synthetic draft receipt identifier')
+    await page.getByRole('tab', { name: d.purchases.newPurchase }).click()
     await price.fill('')
     await evidence.fill('')
+    await page.getByRole('tab', { name: d.purchases.history }).click()
     await page.locator(`a[href="/intake/items/${item}"]`).click()
     await expect(page).toHaveURL(`/intake/items/${item}`)
-    expect(warnings).toBe(1)
+    expect(warnings).toBe(2)
     expect(
       (
         await f.db.query(
@@ -87,7 +94,9 @@ test('a lost purchase reply keeps its draft protected and a confirmed retry clea
   try {
     await f.commit()
     await page.goto('/intake/purchases')
-    await page.locator('.purchase-create > summary').click()
+    await page
+      .getByRole('tab', { name: d.purchases.newPurchase, exact: true })
+      .click()
     const price = page.locator('#purchase-price'),
       evidence = page.locator('#purchase-evidence')
     const form = page.locator('form').filter({ has: price })

@@ -315,7 +315,8 @@
     "stocktakeAmbiguous": "Koodi vastaa useita tuotteita. Avaa oikea tuote ja käytä sen koko tunnusta.",
     "stocktakeItemMissing": "Tuotetta ei löytynyt tästä myymälästä.",
     "stocktakePending": "Tarkista jäljellä olevat tuotteet ennen päättämistä.",
-    "collectionNotDue": "Noutoaika ei ole vielä päättynyt."
+    "collectionNotDue": "Noutoaika ei ole vielä päättynyt.",
+    "overviewHelpLabel": "Tietoa vastaanotosta"
   },
   "brand": "Komisio",
   "tagline": "Enemmän tilaa tavaroille elää uudelleen.",
@@ -1170,8 +1171,8 @@
       "purchase": "Kaupan osto"
     },
     "ownershipKinds": {
-      "consignment": "komissio",
-      "store": "kaupan oma"
+      "consignment": "Välitysmyyntituotteet",
+      "store": "Omat tuotteet"
     },
     "evidenceKinds": {
       "staff_recorded": "henkilökunnan kirjaama sopimustodiste",
@@ -1208,7 +1209,9 @@
     "labelPrinter": "Etikettitulostin",
     "manageSalePeriod": "Hinta ja myyntijakso",
     "unknownActor": "Nimi ei saatavilla",
-    "markdownWaiting": "Hinnanalennus odottaa"
+    "markdownWaiting": "Hinnanalennus odottaa",
+    "allOwnerships": "Kaikki tuotteet",
+    "ownership": "Omistus"
   },
   "sales": {
     "title": "Myynti",
@@ -1274,7 +1277,10 @@
     "showLatest": "Näytä uusimmat",
     "searchResults": "Hakutulokset",
     "filteredHint": "Näytetään enintään 50 vastaavaa myyntiä, uusimmat ensin.",
-    "noReceipts": "Vastaavia kuitteja ei löytynyt. Tarkista koko viite tai valitse toinen lähde."
+    "noReceipts": "Vastaavia kuitteja ei löytynyt. Tarkista koko viite tai valitse toinen lähde.",
+    "receiptsTab": "Kuitit",
+    "manualTab": "Kirjaa käsin",
+    "helpLabel": "Tietoa myynnistä"
   },
   "ledger": {
     "title": "Saldo ja tilikirja",
@@ -1488,9 +1494,15 @@
     "commissionHint": "Jakson myynneistä",
     "details": "Kaikki summat ja ALV",
     "reports": "Raportit ja sähköposti",
-    "reportsHint": "Yhteenveto kuluvasta viikosta tai kuukaudesta yllä olevasta päivämäärävalinnasta riippumatta.",
+    "reportsHint": "Yhteenvedot kuluvalta viikolta tai kuukaudelta.",
     "emailHint": "Kaupan omistajat saavat edellisen viikon yhteenvedon joka maanantai.",
-    "emailEnable": "Ota viikoittainen sähköposti käyttöön"
+    "emailEnable": "Ota viikoittainen sähköposti käyttöön",
+    "tabs": {
+      "overview": "Yleiskuva",
+      "days": "Päivittäin",
+      "reports": "Raportit"
+    },
+    "helpLabel": "Tietoa taloudesta"
   },
   "accounting": {
     "title": "Kirjanpito",
@@ -1676,10 +1688,15 @@
     "scopeHint": "Varasto näyttää tällä hetkellä kaupassa olevat tuotteet.",
     "ageHint": "Varastoikä lasketaan päivästä, jolloin tuote hyväksyttiin myyntiin.",
     "salesHelpLabel": "Tietoa myynnistä",
-    "salesHint": "Päivämäärät koskevat vain myyntiä, eivät yllä olevaa varastoa.",
+    "salesHint": "Päivämäärät koskevat myyntiä. Varasto näyttää aina nykytilanteen.",
     "metricsHeading": "Lisää tunnuslukuja",
     "metricsHelpLabel": "Tietoa tunnusluvuista",
-    "missingHint": "Viiva tarkoittaa, ettei laskentaan ole riittävästi tietoja."
+    "missingHint": "Viiva tarkoittaa, ettei laskentaan ole riittävästi tietoja.",
+    "tabs": {
+      "overview": "Yleiskuva",
+      "categories": "Kategoriat",
+      "sales": "Myynti"
+    }
   },
   "importer": {
     "title": "Tuo tuojat",
@@ -1912,20 +1929,20 @@
     "discardTemplate": "Hylätäänkö etikettimallin tallentamattomat muutokset?"
   },
   "purchases": {
-    "title": "Ostot",
+    "title": "Omat ostot",
     "intro": "Kirjaa myymälän ostamat ja omistamat tuotteet.",
-    "notice": "Kirjaa ensin osto. Avaa sitten oston kohdalta ”{accept}” ja anna myyntihinta, jotta tuote on valmis myyntiin.",
+    "notice": "Tallenna osto ja valitse sitten ”{accept}”.",
     "registerHeading": "Rekisteröi osto",
     "registerHint": "Yksi rekisteröinti per ostettu tuote. Säilytä kuitti tai muistiinpano; sen viite vaaditaan.",
     "price": "Ostohinta",
     "priceHint": "esimerkiksi 150 tai 150.50.",
     "priceInvalid": "Anna hinta enintään kahdella desimaalilla.",
-    "evidence": "Todisteen viite",
+    "evidence": "Kuitti tai viite",
     "evidenceHint": "Kuitin numero tai muistiinpano siitä, kuka myi ja milloin. Vältä henkilötunnuksia.",
-    "note": "Toimittajan huomautus (valinnainen)",
-    "marginEligible": "Marginaaliverotukseen oikeutettu: ostettu yksityishenkilöltä ilman alv:tä, tuotekohtaisella dokumentaatiolla",
+    "note": "Tuote / toimittaja (valinnainen)",
+    "marginEligible": "Ostettu yksityishenkilöltä ilman arvonlisäveroa, tuotekohtainen tosite (marginaaliverotus)",
     "marginHint": "Tämän todistat sinä nyt, oston yhteydessä. Kaupan alv-tila päättää, miten sitä käytetään myynnissä.",
-    "confirm": "Vahvistan, että kauppa osti tämän tuotteen ja että todisteen viite on oikea.",
+    "confirm": "Liike osti tuotteen ja tosite on oikein.",
     "register": "Rekisteröi osto",
     "registered": "Osto on rekisteröity.",
     "recent": "Kirjatut ostot",
@@ -1933,7 +1950,15 @@
     "reference": "Osto",
     "marginYes": "marginaaliverotus",
     "marginNo": "täysi alv",
-    "empty": "Ostoja ei ole vielä rekisteröity."
+    "empty": "Ostoja ei ole vielä rekisteröity.",
+    "history": "Historia",
+    "newPurchase": "Uusi osto",
+    "helpLabel": "Tietoa omista ostoista",
+    "marginHelpLabel": "Oston arvonlisävero",
+    "continueToItem": "Jatka myyntihintaan",
+    "itemRegistered": "Tuote rekisteröity",
+    "prepareItem": "Aseta myyntihinta",
+    "taxHeading": "ALV"
   },
   "sellerPortal": {
     "handovers": "Ilmoita tavaroiden tuonnista",

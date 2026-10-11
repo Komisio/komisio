@@ -16,10 +16,16 @@ test('stock overview separates current inventory from period sales on desktop an
     await expect(
       page.getByRole('region', { name: d.stock.current }),
     ).toContainText('200.00 SEK')
+    await page
+      .getByRole('tab', { name: d.stock.tabs.categories, exact: true })
+      .click()
     await expect(
       page.getByRole('region', { name: d.stock.categoriesHeading }),
     ).toContainText('Jackets')
     await expect(page.locator('.stock-details')).not.toHaveAttribute('open', '')
+    await page
+      .getByRole('tab', { name: d.stock.tabs.overview, exact: true })
+      .click()
     await page.screenshot({
       path: 'private/stock-overview-desktop.png',
       fullPage: true,
@@ -34,13 +40,17 @@ test('stock overview separates current inventory from period sales on desktop an
       path: 'private/stock-overview-mobile.png',
       fullPage: true,
     })
+    await page
+      .getByRole('tab', { name: d.stock.tabs.sales, exact: true })
+      .click()
     await page.getByLabel(d.economy.from, { exact: true }).fill('2020-01-01')
     await page.getByLabel(d.economy.to, { exact: true }).fill('2020-01-31')
     await page
+      .locator('.stock-period')
       .getByRole('button', { name: d.economy.show, exact: true })
       .click()
     await expect(
-      page.getByRole('region', { name: d.stock.current }),
+      page.getByRole('region', { name: d.stock.current, includeHidden: true }),
     ).toContainText('200.00 SEK')
     await page.locator('.stock-details summary').click()
     await expect(

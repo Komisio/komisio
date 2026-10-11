@@ -132,6 +132,10 @@ test('receiving and label help preserve drafts and follow the current task witho
     await page.goto(`/intake?seller=${f.seller}#new-seller`)
     const note = page.getByLabel(d.intake.note, { exact: true })
     await note.fill('Keep this bag note')
+    await page.getByRole('tab', { name: d.intake.queue, exact: true }).click()
+    await expect(note).not.toBeVisible()
+    await page.getByRole('tab', { name: d.nav.receiveBag, exact: true }).click()
+    await expect(note).toHaveValue('Keep this bag note')
     const receiptHelp = page.getByRole('button', {
       name: d.intake.formHelp.label,
       exact: true,

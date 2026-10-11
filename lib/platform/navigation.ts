@@ -28,6 +28,7 @@ export function buildNavigation(
         label: n.goods,
         links: [
           { path: '/intake/items', label: d.items.title, icon: 'Package' },
+          { path: '/intake/stock', label: d.stock.title, icon: 'Boxes' },
           {
             path: '/intake/purchases',
             label: d.purchases.title,
@@ -63,7 +64,6 @@ export function buildNavigation(
         links: [
           { path: '/intake/sales', label: d.sales.title, icon: 'Receipt' },
           { path: '/intake/economy', label: d.economy.title, icon: 'ChartPie' },
-          { path: '/intake/stock', label: d.stock.title, icon: 'Boxes' },
           {
             path: '/intake/accounting',
             label: d.accounting.title,

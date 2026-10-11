@@ -315,7 +315,8 @@
     "stocktakeAmbiguous": "Der Code passt zu mehreren Artikeln. Öffnen Sie den richtigen Artikel und verwenden Sie seine vollständige ID.",
     "stocktakeItemMissing": "Dieser Artikel wurde in diesem Geschäft nicht gefunden.",
     "stocktakePending": "Prüfen Sie die übrigen Artikel vor dem Abschluss.",
-    "collectionNotDue": "Die Abholfrist ist noch nicht abgelaufen."
+    "collectionNotDue": "Die Abholfrist ist noch nicht abgelaufen.",
+    "overviewHelpLabel": "Über die Annahme"
   },
   "brand": "Komisio",
   "tagline": "Mehr Raum für Dinge, die weiterleben.",
@@ -1170,8 +1171,8 @@
       "purchase": "Store-Einkauf"
     },
     "ownershipKinds": {
-      "consignment": "Kommission",
-      "store": "Store-eigen"
+      "consignment": "Kommissionsware",
+      "store": "Eigene Ware"
     },
     "evidenceKinds": {
       "staff_recorded": "von Mitarbeitern erfasster Vereinbarungsnachweis",
@@ -1208,7 +1209,9 @@
     "labelPrinter": "Etikettendrucker",
     "manageSalePeriod": "Preis und Verkaufszeitraum",
     "unknownActor": "Name nicht verfügbar",
-    "markdownWaiting": "Preissenkung ausstehend"
+    "markdownWaiting": "Preissenkung ausstehend",
+    "allOwnerships": "Alle Artikel",
+    "ownership": "Eigentum"
   },
   "sales": {
     "title": "Verkäufe",
@@ -1274,7 +1277,10 @@
     "showLatest": "Neueste anzeigen",
     "searchResults": "Suchergebnisse",
     "filteredHint": "Bis zu 50 passende Verkäufe werden angezeigt, die neuesten zuerst.",
-    "noReceipts": "Keine passenden Belege. Prüfen Sie die vollständige Referenz oder wählen Sie eine andere Quelle."
+    "noReceipts": "Keine passenden Belege. Prüfen Sie die vollständige Referenz oder wählen Sie eine andere Quelle.",
+    "receiptsTab": "Belege",
+    "manualTab": "Manuell erfassen",
+    "helpLabel": "Über Verkäufe"
   },
   "ledger": {
     "title": "Guthaben und Konto",
@@ -1488,9 +1494,15 @@
     "commissionHint": "Aus Verkäufen in diesem Zeitraum",
     "details": "Alle Beträge und MwSt.",
     "reports": "Berichte und E-Mail",
-    "reportsHint": "Fasst die aktuelle Woche oder den aktuellen Monat zusammen, unabhängig von den oben gewählten Daten.",
+    "reportsHint": "Zusammenfassungen für die aktuelle Woche oder den aktuellen Monat.",
     "emailHint": "Die Geschäftsinhaber erhalten jeden Montag eine Zusammenfassung der Vorwoche.",
-    "emailEnable": "Wöchentliche E-Mail aktivieren"
+    "emailEnable": "Wöchentliche E-Mail aktivieren",
+    "tabs": {
+      "overview": "Übersicht",
+      "days": "Pro Tag",
+      "reports": "Berichte"
+    },
+    "helpLabel": "Über die Finanzen"
   },
   "accounting": {
     "title": "Buchhaltung",
@@ -1676,10 +1688,15 @@
     "scopeHint": "Der Bestand zeigt die Artikel, die sich aktuell im Laden befinden.",
     "ageHint": "Das Lageralter beginnt am Tag der Freigabe zum Verkauf.",
     "salesHelpLabel": "Zu den Verkäufen",
-    "salesHint": "Die Datumsangaben gelten nur für die Verkäufe, nicht für den Bestand oben.",
+    "salesHint": "Die Daten gelten für Verkäufe. Der Bestand zeigt immer den aktuellen Stand.",
     "metricsHeading": "Weitere Kennzahlen",
     "metricsHelpLabel": "Zu den Kennzahlen",
-    "missingHint": "Ein Strich bedeutet, dass Daten für die Berechnung fehlen."
+    "missingHint": "Ein Strich bedeutet, dass Daten für die Berechnung fehlen.",
+    "tabs": {
+      "overview": "Übersicht",
+      "categories": "Kategorien",
+      "sales": "Verkäufe"
+    }
   },
   "importer": {
     "title": "Einlieferer importieren",
@@ -1912,20 +1929,20 @@
     "discardTemplate": "Ungespeicherte Änderungen an der Etikettenvorlage verwerfen?"
   },
   "purchases": {
-    "title": "Einkäufe",
+    "title": "Eigene Einkäufe",
     "intro": "Erfassen Sie Artikel, die das Geschäft kauft und besitzt.",
-    "notice": "Erfassen Sie zuerst den Einkauf. Öffnen Sie anschließend „{accept}“ beim Einkauf und geben Sie einen Verkaufspreis ein, um den Artikel für den Verkauf vorzubereiten.",
+    "notice": "Einkauf speichern, dann „{accept}“ wählen.",
     "registerHeading": "Einkauf registrieren",
     "registerHint": "Eine Registrierung pro gekauftem Artikel. Bewahren Sie den Beleg oder die Notiz auf; deren Referenz ist erforderlich.",
     "price": "Einkaufspreis",
     "priceHint": "zum Beispiel 150 oder 150.50.",
     "priceInvalid": "Geben Sie einen Preis mit bis zu zwei Dezimalstellen ein.",
-    "evidence": "Nachweisreferenz",
+    "evidence": "Beleg oder Referenz",
     "evidenceHint": "Belegnummer oder eine Notiz, wer es wann verkauft hat. Vermeiden Sie Personenkennnummern.",
-    "note": "Lieferantennotiz (optional)",
-    "marginEligible": "Für Differenzbesteuerung geeignet: von einer Privatperson ohne MwSt. gekauft, mit Dokumentation pro Artikel",
+    "note": "Artikel / Lieferant (optional)",
+    "marginEligible": "Von einer Privatperson ohne MwSt. gekauft, mit Artikelbeleg (Differenzbesteuerung)",
     "marginHint": "Dies wird jetzt, beim Einkauf, von Ihnen bestätigt. Der MwSt.-Modus des Stores entscheidet, wie es beim Verkauf verwendet wird.",
-    "confirm": "Ich bestätige, dass der Store diesen Artikel gekauft hat und dass die Nachweisreferenz korrekt ist.",
+    "confirm": "Das Geschäft hat den Artikel gekauft und der Beleg ist korrekt.",
     "register": "Einkauf registrieren",
     "registered": "Der Einkauf ist registriert.",
     "recent": "Erfasste Einkäufe",
@@ -1933,7 +1950,15 @@
     "reference": "Einkauf",
     "marginYes": "Differenzbesteuerung",
     "marginNo": "volle MwSt.",
-    "empty": "Noch keine Einkäufe registriert."
+    "empty": "Noch keine Einkäufe registriert.",
+    "history": "Verlauf",
+    "newPurchase": "Neuer Einkauf",
+    "helpLabel": "Über eigene Einkäufe",
+    "marginHelpLabel": "Zur Umsatzsteuer beim Einkauf",
+    "continueToItem": "Weiter zum Verkaufspreis",
+    "itemRegistered": "Artikel registriert",
+    "prepareItem": "Verkaufspreis festlegen",
+    "taxHeading": "Umsatzsteuer"
   },
   "sellerPortal": {
     "handovers": "Abgabe ankündigen",

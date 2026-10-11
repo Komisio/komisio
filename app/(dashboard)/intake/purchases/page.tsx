@@ -1,3 +1,5 @@
+import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
+import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { NavigationLink } from '@/components/platform/navigation-warning'
@@ -44,7 +46,9 @@ export default async function Purchases({
       ? Number(params.page)
       : 1
   const href = (page: number) =>
-    '/intake/purchases' + (page > 1 ? '?page=' + page : '') + '#purchase-list'
+    '/intake/purchases' +
+    (page > 1 ? '?page=' + page : '') +
+    '#purchases-history'
   // Count within the active store before reading a range, so an oversized
   // page can be redirected without issuing an out-of-range database request.
   const totals = await ctx.client
@@ -99,91 +103,119 @@ export default async function Purchases({
     ) : null
   return (
     <>
-      <div className="page-heading">
-        <h1>{d.title}</h1>
-        <p>{d.intro}</p>
+      <div className="page-heading workspace-heading">
+        <FormHelpHeading
+          title={d.title}
+          level={1}
+          help={{
+            label: d.helpLabel,
+            steps: [d.intro, d.notice.replace('{accept}', d.prepareItem)],
+          }}
+        />
+        <NavigationLink
+          className="text-link"
+          href="/intake/items?ownership=store"
+        >
+          {all.items.ownershipKinds.store} →
+        </NavigationLink>
       </div>
-      <p className="intake-notice">
-        {d.notice.replace('{accept}', all.items.accept)}
-      </p>
-      <div className="purchases-workspace">
-        {active.role !== 'readonly' ? (
-          <details className="card purchase-create">
-            <summary>{d.registerHeading}</summary>
-            <PurchaseForm
-              key={active.id}
-              tenantId={active.id}
-              d={d}
-              intake={all.intake}
-              leaveUnsaved={all.leaveUnsaved}
-            />
-          </details>
-        ) : (
-          <p>{all.intake.readOnly}</p>
-        )}
-        <section className="card intake-form" id="purchase-list">
-          <h2>{d.recent}</h2>
-          <p>{d.recentHint}</p>
-          {pager}
-          <ul className="intake-list">
-            {purchases.map((p) => (
-              <li key={p.id} className="intake-bag purchase-entry">
-                <div>
-                  <div className="purchase-entry-heading">
-                    <strong>
-                      {d.reference} P-{p.reference}
-                    </strong>
-                    <span>
-                      {formatOre(p.purchase_price_ore)} {currency}
-                    </span>
-                  </div>
-                  {p.supplier_note && <p>{p.supplier_note}</p>}
-                  <small>
-                    {new Date(p.purchased_at).toLocaleString(
-                      intlLocale(ctx.locale),
-                      {
-                        timeZone: 'Europe/Stockholm',
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      },
-                    )}{' '}
-                  </small>
-                  <details className="purchase-evidence">
-                    <summary>{d.evidence}</summary>
-                    <p>{p.evidence_reference}</p>
-                    <p>{p.margin_eligible ? d.marginYes : d.marginNo}</p>
-                  </details>
-                  {accepted.has(p.id) ? (
-                    <p>
-                      <NavigationLink
-                        className="text-link"
-                        href={`/intake/items/${accepted.get(p.id)!.id}`}
-                      >
-                        {all.items.alreadyAccepted} {all.items.open}
-                      </NavigationLink>
-                    </p>
-                  ) : active.role !== 'readonly' ? (
-                    <details className="purchase-accept">
-                      <summary>{all.items.accept}</summary>
-                      <AcceptItemForm
-                        tenantId={active.id}
-                        originKind="purchase"
-                        originId={p.id}
-                        originRevision={null}
-                        d={all.items}
-                        intake={all.intake}
-                      />
-                    </details>
-                  ) : null}
-                </div>
-              </li>
-            ))}
-          </ul>
-          {!purchases.length && <p>{d.empty}</p>}
-          {pager}
-        </section>
-      </div>
+      <WorkspaceTabs
+        id="purchases"
+        label={d.title}
+        tabs={[
+          {
+            id: 'history',
+            label: d.history,
+            content: (
+              <section className="card intake-form" id="purchase-list">
+                <h2>{d.recent}</h2>
+                {pager}
+                <ul className="intake-list">
+                  {purchases.map((p) => (
+                    <li
+                      key={p.id}
+                      id={`purchase-${p.id}`}
+                      className="intake-bag purchase-entry"
+                    >
+                      <div>
+                        <div className="purchase-entry-heading">
+                          <strong>
+                            {d.reference} P-{p.reference}
+                          </strong>
+                          <span>
+                            {formatOre(p.purchase_price_ore)} {currency}
+                          </span>
+                        </div>
+                        {p.supplier_note && <p>{p.supplier_note}</p>}
+                        <small>
+                          {new Date(p.purchased_at).toLocaleString(
+                            intlLocale(ctx.locale),
+                            {
+                              timeZone: 'Europe/Stockholm',
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                            },
+                          )}{' '}
+                        </small>
+                        <details className="purchase-evidence">
+                          <summary>{d.evidence}</summary>
+                          <p>{p.evidence_reference}</p>
+                          <p>{p.margin_eligible ? d.marginYes : d.marginNo}</p>
+                        </details>
+                        {accepted.has(p.id) ? (
+                          <p>
+                            <NavigationLink
+                              className="text-link"
+                              href={`/intake/items/${accepted.get(p.id)!.id}`}
+                            >
+                              {d.itemRegistered} · {all.items.open}
+                            </NavigationLink>
+                          </p>
+                        ) : active.role !== 'readonly' ? (
+                          <details
+                            className="purchase-accept"
+                            open={params.purchase === p.id || undefined}
+                          >
+                            <summary>{d.prepareItem}</summary>
+                            <AcceptItemForm
+                              tenantId={active.id}
+                              originKind="purchase"
+                              originId={p.id}
+                              originRevision={null}
+                              d={all.items}
+                              intake={all.intake}
+                            />
+                          </details>
+                        ) : null}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                {!purchases.length && <p>{d.empty}</p>}
+                {pager}
+              </section>
+            ),
+          },
+          ...(active.role !== 'readonly'
+            ? [
+                {
+                  id: 'new',
+                  label: d.newPurchase,
+                  content: (
+                    <PurchaseForm
+                      key={active.id}
+                      tenantId={active.id}
+                      d={d}
+                      intake={all.intake}
+                      leaveUnsaved={all.leaveUnsaved}
+                    />
+                  ),
+                },
+              ]
+            : []),
+        ]}
+      />
     </>
   )
 }

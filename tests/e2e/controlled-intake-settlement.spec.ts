@@ -161,7 +161,9 @@ test('controlled journey: receive, register, label, sell and approve a settlemen
 
     // 4. Record the sale at the list price through the sales page.
     await page.goto('/intake/sales')
-    await page.getByText(d.sales.recordHeading, { exact: true }).click()
+    await page
+      .getByRole('tab', { name: d.sales.manualTab, exact: true })
+      .click()
     const search = page.getByLabel(d.sales.search, { exact: true })
     await search.fill(reference)
     await search.press('Enter')

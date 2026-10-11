@@ -315,7 +315,8 @@
     "stocktakeAmbiguous": "Koden matcher flere varer. Åbn den rigtige vare og brug hele ID’et.",
     "stocktakeItemMissing": "Varen findes ikke i denne butik.",
     "stocktakePending": "Kontrollér de resterende varer, før du afslutter.",
-    "collectionNotDue": "Afhentningsfristen er ikke udløbet."
+    "collectionNotDue": "Afhentningsfristen er ikke udløbet.",
+    "overviewHelpLabel": "Om indlevering"
   },
   "brand": "Komisio",
   "tagline": "Mere plads til ting, der får nyt liv.",
@@ -1170,8 +1171,8 @@
       "purchase": "Butiksindkøb"
     },
     "ownershipKinds": {
-      "consignment": "kommission",
-      "store": "butiksejet"
+      "consignment": "Kommissionsvarer",
+      "store": "Egne varer"
     },
     "evidenceKinds": {
       "staff_recorded": "aftaledokumentation registreret af personale",
@@ -1208,7 +1209,9 @@
     "labelPrinter": "Etiketprinter",
     "manageSalePeriod": "Pris og salgsperiode",
     "unknownActor": "Navn mangler",
-    "markdownWaiting": "Prisnedsættelse afventer"
+    "markdownWaiting": "Prisnedsættelse afventer",
+    "allOwnerships": "Alle varer",
+    "ownership": "Ejerskab"
   },
   "sales": {
     "title": "Salg",
@@ -1274,7 +1277,10 @@
     "showLatest": "Vis seneste",
     "searchResults": "Søgeresultater",
     "filteredHint": "Op til 50 matchende salg vises, nyeste først.",
-    "noReceipts": "Ingen kvitteringer matcher. Kontrollér hele referencen, eller vælg en anden kilde."
+    "noReceipts": "Ingen kvitteringer matcher. Kontrollér hele referencen, eller vælg en anden kilde.",
+    "receiptsTab": "Kvitteringer",
+    "manualTab": "Registrer manuelt",
+    "helpLabel": "Om salg"
   },
   "ledger": {
     "title": "Saldo og konto",
@@ -1488,9 +1494,15 @@
     "commissionHint": "Fra periodens salg",
     "details": "Alle beløb og moms",
     "reports": "Rapporter og e-mail",
-    "reportsHint": "Opsummerer den aktuelle uge eller måned, uafhængigt af datoerne ovenfor.",
+    "reportsHint": "Oversigter for den aktuelle uge eller måned.",
     "emailHint": "Butikkens ejere får en oversigt over den foregående uge hver mandag.",
-    "emailEnable": "Aktivér ugentlig e-mail"
+    "emailEnable": "Aktivér ugentlig e-mail",
+    "tabs": {
+      "overview": "Overblik",
+      "days": "Pr. dag",
+      "reports": "Rapporter"
+    },
+    "helpLabel": "Om økonomien"
   },
   "accounting": {
     "title": "Regnskab",
@@ -1676,10 +1688,15 @@
     "scopeHint": "Lageret viser de varer, der er i butikken lige nu.",
     "ageHint": "Lageralderen regnes fra den dag, varen blev godkendt til salg.",
     "salesHelpLabel": "Om salget",
-    "salesHint": "Datoerne gælder kun salget, ikke lageret ovenfor.",
+    "salesHint": "Datoerne gælder salg. Lageret viser altid den aktuelle beholdning.",
     "metricsHeading": "Flere nøgletal",
     "metricsHelpLabel": "Om nøgletallene",
-    "missingHint": "En streg betyder, at der mangler data til beregningen."
+    "missingHint": "En streg betyder, at der mangler data til beregningen.",
+    "tabs": {
+      "overview": "Overblik",
+      "categories": "Kategorier",
+      "sales": "Salg"
+    }
   },
   "importer": {
     "title": "Importér indleverere",
@@ -1912,20 +1929,20 @@
     "discardTemplate": "Kassér ikke-gemte ændringer i etiketskabelonen?"
   },
   "purchases": {
-    "title": "Indkøb",
+    "title": "Egne indkøb",
     "intro": "Registrer varer, som butikken køber og ejer.",
-    "notice": "Registrer først købet. Åbn derefter ”{accept}” ved købet og angiv en salgspris for at gøre varen klar til salg.",
+    "notice": "Gem indkøbet, og vælg derefter »{accept}«.",
     "registerHeading": "Registrer et indkøb",
     "registerHint": "Én registrering pr. købt vare. Behold kvitteringen eller noten; dens reference er påkrævet.",
     "price": "Indkøbspris",
     "priceHint": "for eksempel 150 eller 150.50.",
     "priceInvalid": "Angiv en pris med højst to decimaler.",
-    "evidence": "Dokumentationsreference",
+    "evidence": "Kvittering eller reference",
     "evidenceHint": "Kvitteringsnummer eller en note om, hvem der solgte den, og hvornår. Undgå CPR-numre.",
-    "note": "Leverandørnote (valgfrit)",
-    "marginEligible": "Berettiget til brugtmomsordningen: købt af en privatperson uden moms, med dokumentation pr. vare",
+    "note": "Vare / leverandør (valgfrit)",
+    "marginEligible": "Købt fra privatperson uden moms, med dokumentation for varen (brugtmoms)",
     "marginHint": "Dette attesteres nu, ved indkøbet, af dig. Butikkens momstilstand afgør, hvordan det bruges ved salg.",
-    "confirm": "Jeg bekræfter, at butikken har købt denne vare, og at dokumentationsreferencen er korrekt.",
+    "confirm": "Butikken har købt varen, og dokumentationen er korrekt.",
     "register": "Registrer indkøb",
     "registered": "Indkøbet er registreret.",
     "recent": "Registrerede indkøb",
@@ -1933,7 +1950,15 @@
     "reference": "Indkøb",
     "marginYes": "brugtmomsordning",
     "marginNo": "fuld moms",
-    "empty": "Ingen indkøb registreret endnu."
+    "empty": "Ingen indkøb registreret endnu.",
+    "history": "Historik",
+    "newPurchase": "Nyt indkøb",
+    "helpLabel": "Om egne indkøb",
+    "marginHelpLabel": "Om moms ved indkøb",
+    "continueToItem": "Fortsæt til salgspris",
+    "itemRegistered": "Vare registreret",
+    "prepareItem": "Angiv salgspris",
+    "taxHeading": "Moms"
   },
   "sellerPortal": {
     "handovers": "Anmeld en indlevering",

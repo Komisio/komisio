@@ -65,6 +65,9 @@ export default async function Item({
           {label?.title || `${d.item} ${d.originKinds[item.origin_kind]}`}
         </h1>
         <p className="item-detail-reference">{reference}</p>
+        <span className="ownership-badge" data-ownership={item.ownership}>
+          {d.ownershipKinds[item.ownership]}
+        </span>
         {currentPrice !== null && (
           <p className="item-detail-price">
             <span>{d.currentPrice}</span>
@@ -76,8 +79,7 @@ export default async function Item({
         <div className="item-actor-line">
           <span>
             {d.acceptedAt}:{' '}
-            <EventTime value={item.accepted_at} locale={ctx.locale} /> ·{' '}
-            {d.ownershipKinds[item.ownership]}
+            <EventTime value={item.accepted_at} locale={ctx.locale} />
           </span>
           <ActorSignature actor={item.actor} unknown={d.unknownActor} />
         </div>

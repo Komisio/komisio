@@ -1,3 +1,4 @@
+import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from 'next/link'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
@@ -26,14 +27,23 @@ export default async function Stock({
     to: params.to,
   })
   const period = requested.success ? requested.data : currentMonthPeriod()
-  const report = await readStockReport(ctx.client, active.id, period)
+  const ownership =
+    params.ownership === 'store' || params.ownership === 'consignment'
+      ? params.ownership
+      : ''
+  const report = await readStockReport(
+    ctx.client,
+    active.id,
+    period,
+    ownership || undefined,
+  )
   const money = (ore: number) =>
     `${formatSignedOre(ore)} ${report?.currency ?? ''}`
   const pct = (value: number | null) => (value === null ? '—' : `${value} %`)
   const days = (value: number | null) => (value === null ? '—' : String(value))
   return (
     <div className="stock-overview">
-      <div className="page-heading">
+      <div className="page-heading workspace-heading">
         <FormHelpHeading
           title={d.title}
           level={1}
@@ -42,193 +52,249 @@ export default async function Stock({
             steps: [d.scopeHint, d.valueHint, d.ageHint],
           }}
         />
-        <Link className="btn btn-secondary" href="/intake/stocktake">
-          {all.stocktake.title}
-        </Link>
-        <Link className="text-link" href="/intake/items">
-          {all.items.title} →
-        </Link>
+        <div className="workspace-actions">
+          <Link className="btn btn-secondary" href="/intake/stocktake">
+            {all.stocktake.title}
+          </Link>
+          <Link className="text-link" href="/intake/items">
+            {all.items.title} →
+          </Link>
+        </div>
       </div>
       {!report && <p>{d.notAvailable}</p>}
-      {report && (
-        <>
-          <div className="stock-current-grid">
-            <section aria-label={d.current}>
-              <h2>{d.current}</h2>
-              <dl className="stock-metrics">
-                <div className="card">
-                  <dt>{d.inStock}</dt>
-                  <dd>{report.total.inStock}</dd>
-                </div>
-                <div className="card">
-                  <dt>{d.stockValue}</dt>
-                  <dd>{money(report.total.stockValueOre)}</dd>
-                </div>
-              </dl>
-            </section>
-            <section className="card stock-panel" aria-label={d.age}>
-              <h2>{d.age}</h2>
-              <dl className="stock-age">
-                {[
-                  [d.bucket0, report.total.ageBuckets.d0to14],
-                  [d.bucket15, report.total.ageBuckets.d15to28],
-                  [d.bucket29, report.total.ageBuckets.d29to42],
-                  [d.bucket43, report.total.ageBuckets.d43plus],
-                ].map(([label, count]) => (
-                  <div key={String(label)}>
-                    <dt>{label}</dt>
-                    <dd>{count}</dd>
+      <WorkspaceTabs
+        id="stock"
+        label={d.title}
+        toolbar={
+          <form method="get" className="stock-ownership-filter">
+            <div className="field">
+              <label htmlFor="stock-ownership">{all.items.ownership}</label>
+              <select
+                id="stock-ownership"
+                name="ownership"
+                defaultValue={ownership}
+              >
+                <option value="">{all.items.allOwnerships}</option>
+                <option value="consignment">
+                  {all.items.ownershipKinds.consignment}
+                </option>
+                <option value="store">{all.items.ownershipKinds.store}</option>
+              </select>
+            </div>
+            <input type="hidden" name="from" value={period.from} />
+            <input type="hidden" name="to" value={period.to} />
+            <button className="btn btn-secondary">{e.show}</button>
+          </form>
+        }
+        initial={params.from || params.to ? 'sales' : 'overview'}
+        tabs={[
+          {
+            id: 'overview',
+            label: d.tabs.overview,
+            content: report && (
+              <div className="stock-current-grid">
+                <section aria-label={d.current}>
+                  <h2>{d.current}</h2>
+                  <dl className="stock-metrics">
+                    <div className="card">
+                      <dt>{d.inStock}</dt>
+                      <dd>{report.total.inStock}</dd>
+                    </div>
+                    <div className="card">
+                      <dt>{d.stockValue}</dt>
+                      <dd>{money(report.total.stockValueOre)}</dd>
+                    </div>
+                  </dl>
+                </section>
+                <section className="card stock-panel" aria-label={d.age}>
+                  <h2>{d.age}</h2>
+                  <dl className="stock-age">
+                    {[
+                      [d.bucket0, report.total.ageBuckets.d0to14],
+                      [d.bucket15, report.total.ageBuckets.d15to28],
+                      [d.bucket29, report.total.ageBuckets.d29to42],
+                      [d.bucket43, report.total.ageBuckets.d43plus],
+                    ].map(([label, count]) => (
+                      <div key={String(label)}>
+                        <dt>{label}</dt>
+                        <dd>{count}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <Link className="text-link" href="/intake/lifecycle">
+                    {all.lifecycle.title} →
+                  </Link>
+                </section>
+              </div>
+            ),
+          },
+          {
+            id: 'categories',
+            label: d.tabs.categories,
+            content: report && (
+              <section
+                className="card stock-panel"
+                aria-label={d.categoriesHeading}
+              >
+                <h2>{d.categoriesHeading}</h2>
+                {!report.categories.length ? (
+                  <p>{d.empty}</p>
+                ) : (
+                  <div className="stock-table-wrap">
+                    <table className="stock-table">
+                      <thead>
+                        <tr>
+                          <th>{d.category}</th>
+                          <th>{d.inStock}</th>
+                          <th>{d.stockValue}</th>
+                          <th>{d.averageAge}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {report.categories.map((c) => (
+                          <tr key={c.category || '-'}>
+                            <th scope="row">{c.category || d.uncategorised}</th>
+                            <td data-label={d.inStock}>{c.inStock}</td>
+                            <td data-label={d.stockValue}>
+                              {money(c.stockValueOre)}
+                            </td>
+                            <td data-label={d.averageAge}>
+                              {days(c.averageAgeDays)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-                ))}
-              </dl>
-              <Link className="text-link" href="/intake/lifecycle">
-                {all.lifecycle.title} →
-              </Link>
-            </section>
-          </div>
-          <section
-            className="card stock-panel"
-            aria-label={d.categoriesHeading}
-          >
-            <h2>{d.categoriesHeading}</h2>
-            {!report.categories.length ? (
-              <p>{d.empty}</p>
-            ) : (
-              <div className="stock-table-wrap">
-                <table className="stock-table">
-                  <thead>
-                    <tr>
-                      <th>{d.category}</th>
-                      <th>{d.inStock}</th>
-                      <th>{d.stockValue}</th>
-                      <th>{d.averageAge}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {report.categories.map((c) => (
-                      <tr key={c.category || '-'}>
-                        <th scope="row">{c.category || d.uncategorised}</th>
-                        <td data-label={d.inStock}>{c.inStock}</td>
-                        <td data-label={d.stockValue}>
-                          {money(c.stockValueOre)}
-                        </td>
-                        <td data-label={d.averageAge}>
-                          {days(c.averageAgeDays)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </section>
-        </>
-      )}
-      <section className="card stock-panel" aria-label={d.salesPeriod}>
-        <FormHelpHeading
-          title={d.salesPeriod}
-          help={{ label: d.salesHelpLabel, steps: [d.salesHint, d.notice] }}
-        />
-        <form method="get" className="stock-period">
-          {!requested.success && (params.from || params.to) && (
-            <p role="alert">{e.periodInvalid}</p>
-          )}
-          <div className="field">
-            <label htmlFor="stock-from">{e.from}</label>
-            <input
-              id="stock-from"
-              name="from"
-              type="date"
-              defaultValue={period.from}
-              required
-            />
-          </div>
-          <div className="field">
-            <label htmlFor="stock-to">{e.to}</label>
-            <input
-              id="stock-to"
-              name="to"
-              type="date"
-              defaultValue={period.to}
-              required
-            />
-          </div>
-          <button className="btn btn-primary">{e.show}</button>
-        </form>
-        {report && (
-          <>
-            <p className="muted">
-              {e.showing} {report.from} – {report.to}
-            </p>
-            <dl className="stock-metrics stock-sales-metrics">
-              <div>
-                <dt>{d.sold}</dt>
-                <dd>{report.total.soldCount}</dd>
-              </div>
-              <div>
-                <dt>{d.soldGross}</dt>
-                <dd>{money(report.total.soldGrossOre)}</dd>
-              </div>
-              <div>
-                <dt>{d.margin}</dt>
-                <dd>{money(report.total.marginOre)}</dd>
-              </div>
-            </dl>
-            <details className="stock-details">
-              <summary>{d.more}</summary>
-              <FormHelpHeading
-                title={d.metricsHeading}
-                help={{
-                  label: d.metricsHelpLabel,
-                  steps: [d.definitions, d.missingHint],
-                }}
-              />
-              <dl className="stock-metrics stock-extra-metrics">
-                <div>
-                  <dt>{d.marginPercent}</dt>
-                  <dd>{pct(report.total.marginPercent)}</dd>
-                </div>
-                <div>
-                  <dt>{d.sellThrough}</dt>
-                  <dd>{pct(report.total.sellThroughPercent)}</dd>
-                </div>
-              </dl>
-              <div className="stock-table-wrap">
-                <table className="stock-table">
-                  <thead>
-                    <tr>
-                      <th>{d.category}</th>
-                      <th>{d.sold}</th>
-                      <th>{d.margin}</th>
-                      <th>{d.sellThrough}</th>
-                      <th>{d.daysToSale}</th>
-                      <th>{d.oldest}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {report.categories.map((c) => (
-                      <tr key={c.category || '-'}>
-                        <th scope="row">{c.category || d.uncategorised}</th>
-                        <td data-label={d.sold}>{c.soldCount}</td>
-                        <td data-label={d.margin}>
-                          {money(c.marginOre)} · {pct(c.marginPercent)}
-                        </td>
-                        <td data-label={d.sellThrough}>
-                          {pct(c.sellThroughPercent)}
-                        </td>
-                        <td data-label={d.daysToSale}>
-                          {days(c.averageDaysToSale)}
-                        </td>
-                        <td data-label={d.oldest}>{days(c.oldestAgeDays)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </details>
-          </>
-        )}
-      </section>
+                )}
+              </section>
+            ),
+          },
+          {
+            id: 'sales',
+            label: d.tabs.sales,
+            content: (
+              <section className="card stock-panel" aria-label={d.salesPeriod}>
+                <FormHelpHeading
+                  title={d.salesPeriod}
+                  help={{
+                    label: d.salesHelpLabel,
+                    steps: [d.salesHint, d.notice],
+                  }}
+                />
+                <form
+                  method="get"
+                  action="/intake/stock#stock-sales"
+                  className="stock-period"
+                >
+                  <input type="hidden" name="ownership" value={ownership} />
+                  {!requested.success && (params.from || params.to) && (
+                    <p role="alert">{e.periodInvalid}</p>
+                  )}
+                  <div className="field">
+                    <label htmlFor="stock-from">{e.from}</label>
+                    <input
+                      id="stock-from"
+                      name="from"
+                      type="date"
+                      defaultValue={period.from}
+                      required
+                    />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="stock-to">{e.to}</label>
+                    <input
+                      id="stock-to"
+                      name="to"
+                      type="date"
+                      defaultValue={period.to}
+                      required
+                    />
+                  </div>
+                  <button className="btn btn-primary">{e.show}</button>
+                </form>
+                {report && (
+                  <>
+                    <p className="muted">
+                      {e.showing} {report.from} – {report.to}
+                    </p>
+                    <dl className="stock-metrics stock-sales-metrics">
+                      <div>
+                        <dt>{d.sold}</dt>
+                        <dd>{report.total.soldCount}</dd>
+                      </div>
+                      <div>
+                        <dt>{d.soldGross}</dt>
+                        <dd>{money(report.total.soldGrossOre)}</dd>
+                      </div>
+                      <div>
+                        <dt>{d.margin}</dt>
+                        <dd>{money(report.total.marginOre)}</dd>
+                      </div>
+                    </dl>
+                    <details className="stock-details">
+                      <summary>{d.more}</summary>
+                      <FormHelpHeading
+                        title={d.metricsHeading}
+                        help={{
+                          label: d.metricsHelpLabel,
+                          steps: [d.definitions, d.missingHint],
+                        }}
+                      />
+                      <dl className="stock-metrics stock-extra-metrics">
+                        <div>
+                          <dt>{d.marginPercent}</dt>
+                          <dd>{pct(report.total.marginPercent)}</dd>
+                        </div>
+                        <div>
+                          <dt>{d.sellThrough}</dt>
+                          <dd>{pct(report.total.sellThroughPercent)}</dd>
+                        </div>
+                      </dl>
+                      <div className="stock-table-wrap">
+                        <table className="stock-table">
+                          <thead>
+                            <tr>
+                              <th>{d.category}</th>
+                              <th>{d.sold}</th>
+                              <th>{d.margin}</th>
+                              <th>{d.sellThrough}</th>
+                              <th>{d.daysToSale}</th>
+                              <th>{d.oldest}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {report.categories.map((c) => (
+                              <tr key={c.category || '-'}>
+                                <th scope="row">
+                                  {c.category || d.uncategorised}
+                                </th>
+                                <td data-label={d.sold}>{c.soldCount}</td>
+                                <td data-label={d.margin}>
+                                  {money(c.marginOre)} · {pct(c.marginPercent)}
+                                </td>
+                                <td data-label={d.sellThrough}>
+                                  {pct(c.sellThroughPercent)}
+                                </td>
+                                <td data-label={d.daysToSale}>
+                                  {days(c.averageDaysToSale)}
+                                </td>
+                                <td data-label={d.oldest}>
+                                  {days(c.oldestAgeDays)}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </details>
+                  </>
+                )}
+              </section>
+            ),
+          },
+        ]}
+      />
     </div>
   )
 }

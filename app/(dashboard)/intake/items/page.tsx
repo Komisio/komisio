@@ -25,6 +25,10 @@ export default async function Items({
     d = all.items,
     params = await searchParams,
     query = typeof params.q === 'string' ? params.q.trim().slice(0, 120) : '',
+    ownership =
+      params.ownership === 'store' || params.ownership === 'consignment'
+        ? params.ownership
+        : '',
     stageParam = typeof params.stage === 'string' ? params.stage : '',
     stage = itemStage.safeParse(stageParam).success ? stageParam : '',
     pageSize = 25,
@@ -34,6 +38,7 @@ export default async function Items({
         : 1
   const pageHref = (page: number) => {
     const search = new URLSearchParams()
+    if (ownership) search.set('ownership', ownership)
     if (query) search.set('q', query)
     if (stage) search.set('stage', stage)
     if (page > 1) search.set('page', String(page))
@@ -44,6 +49,7 @@ export default async function Items({
   // The overview arrives with its migration; until then the plain list stands.
   const paged = await readItemsOverviewPage(ctx.client, active.id, {
     query,
+    ownership: ownership || undefined,
     stage: stage || undefined,
     limit: pageSize,
     offset: (requestedPage - 1) * pageSize,
@@ -52,28 +58,61 @@ export default async function Items({
   if (paged && requestedPage > pageCount) redirect(pageHref(pageCount))
   const overview =
     paged ??
-    (await readItemsOverview(ctx.client, active.id, {
-      query,
-      stage: stage || undefined,
-    }))
-  const items = overview ? [] : await readItems(ctx.client, active.id)
+    (!ownership
+      ? await readItemsOverview(ctx.client, active.id, {
+          query,
+          stage: stage || undefined,
+        })
+      : null)
+  const items =
+    overview || ownership ? [] : await readItems(ctx.client, active.id)
   return (
     <div className="items-directory">
-      <div className="page-heading">
+      <div className="page-heading workspace-heading">
         <h1>{d.title}</h1>
-        <p>{d.intro}</p>
-        <Link className="text-link" href="/intake">
-          {all.intake.back}
-        </Link>
+        {active.role !== 'readonly' && (
+          <div className="workspace-actions">
+            <Link className="btn btn-secondary" href="/intake/quick">
+              {all.quickIntake.title}
+            </Link>
+            <Link
+              className="btn btn-secondary"
+              href="/intake/purchases#purchases-new"
+            >
+              {all.purchases.newPurchase}
+            </Link>
+          </div>
+        )}
       </div>
+      <nav className="workspace-tablist" aria-label={d.ownership}>
+        {(['', 'consignment', 'store'] as const).map((kind) => {
+          const search = new URLSearchParams()
+          if (kind) search.set('ownership', kind)
+          if (query) search.set('q', query)
+          if (stage) search.set('stage', stage)
+          return (
+            <Link
+              key={kind}
+              href={'/intake/items' + (search.size ? '?' + search : '')}
+              aria-current={ownership === kind ? 'page' : undefined}
+            >
+              {kind ? d.ownershipKinds[kind] : d.allOwnerships}
+            </Link>
+          )
+        })}
+      </nav>
+      {ownership && !paged && <p role="status">{all.stock.notAvailable}</p>}
       <section className="card intake-form" aria-label={d.list}>
         {overview && (
           <form
-            key={query + ':' + stage}
+            key={query + ':' + stage + ':' + ownership}
             action="/intake/items"
             className="items-directory-filters"
             role="search"
           >
+            {ownership && (
+              <input type="hidden" name="ownership" value={ownership} />
+            )}
             <div className="field">
               <label htmlFor="items-q">{d.search}</label>
               <input
@@ -97,7 +136,14 @@ export default async function Items({
             </div>
             <button className="btn btn-primary">{d.searchButton}</button>
             {(query || stage) && (
-              <Link className="btn btn-secondary" href="/intake/items">
+              <Link
+                className="btn btn-secondary"
+                href={
+                  ownership
+                    ? `/intake/items?ownership=${ownership}`
+                    : '/intake/items'
+                }
+              >
                 {d.clearFilters}
               </Link>
             )}
@@ -126,6 +172,12 @@ export default async function Items({
               >
                 <span className="items-directory-name">
                   <strong>{i.title?.trim() || d.item}</strong>
+                  <span
+                    className="ownership-badge"
+                    data-ownership={i.ownership}
+                  >
+                    {d.ownershipKinds[i.ownership]}
+                  </span>
                   {i.category && i.category !== i.title && (
                     <small>{i.category}</small>
                   )}
@@ -152,6 +204,12 @@ export default async function Items({
               >
                 <span className="items-directory-name">
                   <strong>{d.item}</strong>
+                  <span
+                    className="ownership-badge"
+                    data-ownership={i.ownership}
+                  >
+                    {d.ownershipKinds[i.ownership]}
+                  </span>
                 </span>
                 <span className="items-directory-price">
                   {i.priceOre === null
@@ -190,8 +248,8 @@ export default async function Items({
             )}
           </nav>
         )}
-        {!items.length && !overview?.items.length && (
-          <p>{query || stage ? d.noMatches : d.empty}</p>
+        {!items.length && !overview?.items.length && (!ownership || paged) && (
+          <p>{query || stage || ownership ? d.noMatches : d.empty}</p>
         )}
       </section>
     </div>

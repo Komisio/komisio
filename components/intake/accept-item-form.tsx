@@ -6,6 +6,11 @@ import type { OriginKind } from '@/lib/engine/items'
 import { exactPrice } from '@/lib/engine/manual-reception'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { useFormDirty } from '@/components/platform/use-form-dirty'
+import {
+  NavigationLink,
+  useUnsavedChanges,
+} from '@/components/platform/navigation-warning'
 
 /** Commercial acceptance of one origin. SQL rechecks every precondition and freezes terms. */
 export function AcceptItemForm({
@@ -16,6 +21,7 @@ export function AcceptItemForm({
   defaultPrice,
   d,
   intake,
+  leaveUnsaved,
 }: {
   tenantId: string
   originKind: OriginKind
@@ -24,6 +30,7 @@ export function AcceptItemForm({
   defaultPrice?: string
   d: Dictionary['items']
   intake: Dictionary['intake']
+  leaveUnsaved: string
 }) {
   const action = useIntakeAction(intake)
   const router = useRouter()
@@ -32,8 +39,17 @@ export function AcceptItemForm({
   const priceRef = useRef<HTMLInputElement>(null)
   const submittedFields = useRef<FormData | null>(null)
   const [saved, setSaved] = useState<string | null>(null)
+  const formRef = useRef<HTMLFormElement>(null)
+  const { ready, dirty, checkDirty } = useFormDirty(formRef)
+  useUnsavedChanges(
+    !saved && !action.needsReload && (dirty || action.locked)
+      ? leaveUnsaved
+      : null,
+    'item-acceptance',
+  )
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (!ready || action.busy || action.needsReload || saved) return
     setPriceError('')
     // A disabled fieldset is omitted by FormData. Keep the submitted values
     // available for local validation while the action owns a frozen retry.
@@ -67,10 +83,11 @@ export function AcceptItemForm({
   }
   const field = `accept-price-${originId}`
   return (
-    <form onSubmit={submit}>
+    <form ref={formRef} onSubmit={submit} onChange={checkDirty}>
       <fieldset
         className="intake-fields"
-        disabled={action.busy || action.locked || !!saved}
+        data-draft-readiness
+        disabled={!ready || action.busy || action.locked || !!saved}
       >
         <div className="field">
           <label htmlFor={field}>{d.price}</label>
@@ -94,7 +111,7 @@ export function AcceptItemForm({
           )}
         </div>
         <label className="intake-confirm">
-          <input type="checkbox" required />
+          <input type="checkbox" name="confirmed" required />
           {d.confirm}
         </label>
       </fieldset>
@@ -105,16 +122,19 @@ export function AcceptItemForm({
         </Button>
       )}
       {!saved && (
-        <Button type="submit" disabled={action.busy || action.needsReload}>
+        <Button
+          type="submit"
+          disabled={!ready || action.busy || action.needsReload}
+        >
           {action.busy ? intake.busy : action.locked ? intake.retry : d.accept}
         </Button>
       )}
       {saved && (
         <p role="status">
           {d.accepted}{' '}
-          <a className="text-link" href={`/intake/items/${saved}`}>
+          <NavigationLink className="text-link" href={`/intake/items/${saved}`}>
             {d.open}
-          </a>
+          </NavigationLink>
         </p>
       )}
     </form>

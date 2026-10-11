@@ -504,6 +504,7 @@ export default async function Reception({
                 <p role="status">{all.items.acceptBlocked}</p>
               ) : write ? (
                 <AcceptItemForm
+                  key={`${tenant.id}:${id.data}`}
                   tenantId={tenant.id}
                   originKind="reception_review"
                   originId={id.data}
@@ -511,6 +512,7 @@ export default async function Reception({
                   defaultPrice={review.suggestions.price?.amount}
                   d={all.items}
                   intake={all.intake}
+                  leaveUnsaved={all.leaveUnsaved}
                 />
               ) : null}
             </section>

@@ -85,7 +85,9 @@ unsaved references warn before navigation. Payment still happens outside Komisio
 Stocktaking separates the selected count from session history; switching tabs
 retains scan drafts, and a selected historical count opens its own workspace.
 Store-owned item records link directly to their immutable purchase evidence,
-including receipts older than the first history page.
+including receipts older than the first history page. Sale-price drafts warn
+before their origin is left; history paging retains new-purchase entry without
+an unrelated warning, and another inspection origin starts with fresh fields.
 
 Quick reception separates seller/agreement and item tabs. Seller registration
 uses the shared form without leaving reception; staff can download a personal

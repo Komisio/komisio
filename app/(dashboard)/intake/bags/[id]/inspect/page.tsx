@@ -299,12 +299,14 @@ export default async function InspectBag({
             <p role="status">{s.archived}</p>
           ) : processing.state === 'open' && ctx.active!.role !== 'readonly' ? (
             <AcceptItemForm
+              key={`${tenantId}:${selected.draft_id}`}
               tenantId={tenantId}
               originKind="inspection_draft"
               originId={selected.draft_id}
               originRevision={selected.revision}
               d={d.items}
               intake={d.intake}
+              leaveUnsaved={d.leaveUnsaved}
             />
           ) : null}
         </section>

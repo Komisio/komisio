@@ -5,7 +5,7 @@ import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 
-test('agreement workspace previews edits, preserves drafts and fits all interface languages', async ({
+test('agreement workspace keeps a compact editor, preserves drafts and fits all interface languages', async ({
   page,
 }) => {
   const email = `agreement-editor-${randomUUID()}@example.test`
@@ -16,12 +16,28 @@ test('agreement workspace previews edits, preserves drafts and fits all interfac
     await page.setViewportSize({ width: 1440, height: 1000 })
     await page.goto('/intake/agreements#agreements-publish')
     const publisher = page.getByTestId('agreement-publisher')
-    const preview = publisher.getByRole('region', {
-      name: d.agreements.editor.preview,
+    const generate = publisher.getByRole('button', {
+      name: d.agreements.ai.create,
+      exact: true,
     })
+    await expect(generate).toBeVisible()
+    await expect(publisher.getByRole('heading')).toHaveCount(0)
+    await expect(publisher.getByRole('region')).toHaveCount(0)
+    await expect(publisher.locator('details')).toHaveCount(0)
     await expect(
-      publisher.locator('.agreement-ai-disclosure'),
-    ).not.toHaveAttribute('open', '')
+      publisher.getByText(d.agreements.editor.newVersionHint),
+    ).toHaveCount(0)
+    for (const text of [
+      d.agreements.ai.use,
+      d.agreements.ai.close,
+      d.agreements.ai.questions,
+      d.agreements.ai.replace,
+    ]) {
+      await expect(publisher.getByText(text, { exact: true })).toHaveCount(0)
+    }
+    expect((await generate.boundingBox())!.y).toBeLessThan(
+      (await page.locator('#agreement-title').boundingBox())!.y,
+    )
     await page.locator('#agreement-title').fill('Villkor för inlämning')
     await page
       .locator('#agreement-body')
@@ -29,17 +45,6 @@ test('agreement workspace previews edits, preserves drafts and fits all interfac
         'Testvillkor för butiken.\n\nPriser och försäljningsperiod beslutas vid inlämningen.\n<b>Detta är vanlig text.</b>',
       )
     await page.locator('#agreement-language').selectOption('sv')
-    await expect(preview).toContainText('Villkor för inlämning')
-    await expect(preview).toContainText('<b>Detta är vanlig text.</b>')
-    await expect(preview.locator('b')).toHaveCount(0)
-    await expect(preview.locator('article')).toHaveAttribute('lang', 'sv-SE')
-    await expect
-      .poll(
-        async () =>
-          (await preview.boundingBox())!.x >
-          (await page.locator('#agreement-body').boundingBox())!.x,
-      )
-      .toBe(true)
     await page.screenshot({
       path: 'private/agreement-editor-desktop.png',
       fullPage: true,
@@ -65,7 +70,12 @@ test('agreement workspace previews edits, preserves drafts and fits all interfac
     await page
       .getByRole('tab', { name: d.agreements.workspace.publish, exact: true })
       .click()
-    await expect(preview).toContainText('Villkor för inlämning')
+    await expect(page.locator('#agreement-title')).toHaveValue(
+      'Villkor för inlämning',
+    )
+    await expect(page.locator('#agreement-body')).toHaveValue(
+      /<b>Detta är vanlig text.<\/b>/,
+    )
     await page.setViewportSize({ width: 320, height: 740 })
     await expect
       .poll(() =>
@@ -104,8 +114,8 @@ test('agreement workspace previews edits, preserves drafts and fits all interfac
       await page.goto('/intake/agreements#agreements-publish')
       await page.reload()
       await expect(
-        publisher.getByRole('region', {
-          name: words.agreements.editor.preview,
+        publisher.getByRole('button', {
+          name: words.agreements.ai.create,
         }),
       ).toBeVisible()
       await expect

@@ -6828,31 +6828,7 @@ button.text-link:hover:not(:disabled) {
 }
 
 .agreement-ai {
-  margin: 16px 0 24px;
-}
-.agreement-ai-preview {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 20px;
-  margin-top: 16px;
-}
-.agreement-ai-preview .agreement-text {
-  max-height: 360px;
-  overflow-y: auto;
-}
-.agreement-ai-help {
-  position: relative;
-}
-.agreement-ai-help summary {
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  width: 44px;
-  height: 44px;
-  color: var(--muted);
-}
-.agreement-ai-help p {
-  max-width: 48ch;
+  margin: 0;
 }
 .payment-sheet {
   max-width: 60rem;
@@ -7296,6 +7272,7 @@ button.text-link:hover:not(:disabled) {
 .agreement-editor-columns > * {
   min-width: 0;
 }
+.agreement-publisher textarea,
 .agreement-editor-columns textarea {
   height: 420px;
   min-height: 280px;
@@ -7330,19 +7307,11 @@ button.text-link:hover:not(:disabled) {
   font-size: 15px;
   line-height: 1.7;
 }
-.agreement-ai-disclosure {
-  border-top: 1px solid var(--line);
-  padding-block: 12px;
-}
-.agreement-ai-disclosure > summary,
 .agreement-translations > summary {
   cursor: pointer;
   font-weight: 650;
   min-height: 44px;
   align-content: center;
-}
-.agreement-ai-disclosure[open] > summary {
-  margin-bottom: 16px;
 }
 .agreement-language-list [aria-current='page'] {
   font-weight: 700;
@@ -7359,6 +7328,7 @@ button.text-link:hover:not(:disabled) {
   .agreements-page .card {
     padding: 16px;
   }
+  .agreement-publisher textarea,
   .agreement-editor-columns textarea {
     height: 280px;
     min-height: 200px;

@@ -121,6 +121,18 @@
     }
   },
   "quickIntake": {
+    "workspace": {
+      "refreshAgreement": "Load current agreement",
+      "sellerTab": "Seller & agreement",
+      "itemTab": "Register item",
+      "sellerSaved": "The seller is saved. Download the agreement with their name and record approval here.",
+      "continue": "Continue to item",
+      "openSeller": "Open seller profile",
+      "selectSeller": "First select or register a seller in the Seller & agreement tab.",
+      "loadingAgreement": "Loading seller agreement…",
+      "agreementFailed": "The seller agreement could not be loaded. Try again.",
+      "leaveSeller": "Leave seller details? Unsaved details or approvals will be lost."
+    },
     "title": "Quick reception",
     "intro": "A description and price are all you need. Add a photo or more details if you like.",
     "seller": "Seller",

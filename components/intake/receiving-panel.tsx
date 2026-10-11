@@ -2,7 +2,12 @@
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import {
+  NavigationLink as Link,
+  useUnsavedChanges,
+} from '@/components/platform/navigation-warning'
+import { useFormDirty } from '@/components/platform/use-form-dirty'
+import type { SellerChoice } from '@/lib/intake/seller-search'
 import type { Dictionary } from '@/lib/i18n'
 import type { Seller } from '@/lib/engine/intake'
 import type { SellerMatches } from '@/lib/engine/sellers'
@@ -25,6 +30,11 @@ export function ReceivingPanel({
   registrationDestination = 'receiving',
   agreement,
   agreements,
+  onRegistered,
+  onLockChange,
+  onSelectSeller,
+  leaveUnsaved,
+  reloadHref,
 }: {
   tenantId: string
   seller: Seller | null
@@ -36,12 +46,20 @@ export function ReceivingPanel({
   agreementBlocked?: boolean
   agreement?: AgreementSummary | null
   agreements?: Dictionary['agreements']
+  onLockChange?: (locked: boolean) => void
+  onRegistered?: (seller: SellerChoice) => void
+  onSelectSeller?: (seller: SellerChoice) => void
+  leaveUnsaved?: string
+  reloadHref?: string
 }) {
   const router = useRouter()
   const registeredSellerHref = (id: string) =>
     registrationDestination === 'seller'
       ? `/intake/sellers/${id}`
       : `/intake?seller=${id}#new-seller`
+  const formRef = useRef<HTMLFormElement>(null)
+  const { dirty, checkDirty, resetDirty } = useFormDirty(formRef)
+  const [confirmed, setConfirmed] = useState(false)
   const nameInput = useRef<HTMLInputElement>(null)
   useEffect(() => {
     const focusName = () => {
@@ -57,6 +75,12 @@ export function ReceivingPanel({
   const uncertain = useRef(false)
   const [locked, setLocked] = useState(false)
   const [busy, setBusy] = useState(false)
+  useUnsavedChanges(
+    !confirmed && (dirty || locked) && leaveUnsaved ? leaveUnsaved : null,
+  )
+  useEffect(() => {
+    onLockChange?.(busy || locked)
+  }, [busy, locked, onLockChange])
   const [error, setError] = useState('')
   const [bagId, setBagId] = useState('')
   const [needsReload, setNeedsReload] = useState(false)
@@ -189,8 +213,16 @@ export function ReceivingPanel({
       uncertain.current = false
       setLocked(false)
       setMatches(null)
+      setConfirmed(true)
       form.reset()
+      resetDirty()
       if (seller) setBagId(result.id)
+      else if (onRegistered)
+        onRegistered({
+          id: result.id,
+          name: String(command.name),
+          contact: String(command.email || command.phone) || null,
+        })
       else router.push(registeredSellerHref(result.id))
       router.refresh()
     } catch {
@@ -219,7 +251,14 @@ export function ReceivingPanel({
           </Link>
         </div>
       )}
-      <form onSubmit={submit}>
+      <form
+        ref={formRef}
+        onSubmit={submit}
+        onChange={() => {
+          setConfirmed(false)
+          checkDirty()
+        }}
+      >
         <fieldset
           disabled={busy || locked}
           className="intake-fields"
@@ -319,9 +358,24 @@ export function ReceivingPanel({
             <ul>
               {matches.map((m) => (
                 <li key={m.id}>
-                  <Link className="text-link" href={registeredSellerHref(m.id)}>
-                    {m.name}
-                  </Link>{' '}
+                  {busy || locked ? (
+                    <span>{m.name}</span>
+                  ) : (
+                    <Link
+                      className="text-link"
+                      href={registeredSellerHref(m.id)}
+                      onNavigate={
+                        onSelectSeller
+                          ? (event) => {
+                              event.preventDefault()
+                              onSelectSeller(m)
+                            }
+                          : undefined
+                      }
+                    >
+                      {m.name}
+                    </Link>
+                  )}{' '}
                   {m.contact}{' '}
                   <small>
                     (
@@ -346,9 +400,10 @@ export function ReceivingPanel({
           <a
             className="text-link"
             href={
-              registrationDestination === 'seller'
+              reloadHref ??
+              (registrationDestination === 'seller'
                 ? '/intake/sellers/new'
-                : `/intake?seller=${seller?.id ?? ''}#new-seller`
+                : `/intake?seller=${seller?.id ?? ''}#new-seller`)
             }
           >
             {d.reload}

@@ -6783,3 +6783,69 @@ button.text-link:hover:not(:disabled) {
   font-size: 1.5rem;
   font-weight: 600;
 }
+
+/* Reception tabs retain their mounted draft and retry state. */
+.quick-reception [hidden] {
+  display: none !important;
+}
+.quick-tablist {
+  margin-bottom: 0;
+  flex-wrap: wrap;
+  overflow: visible;
+}
+.quick-tablist button {
+  min-height: 44px;
+  flex: 1 1 auto;
+}
+.quick-seller-context {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--white);
+}
+.quick-seller-context > div {
+  display: grid;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.quick-seller-context small,
+.quick-seller-context span {
+  color: var(--muted);
+}
+.quick-seller-context button {
+  min-height: 44px;
+  flex-shrink: 0;
+}
+.quick-seller-mode {
+  margin-bottom: 16px;
+}
+.quick-seller-details,
+.quick-reception .receiving-panel {
+  padding: 24px;
+}
+.quick-seller-details form {
+  display: grid;
+  gap: 16px;
+}
+.quick-seller-details .seller-agreement-fields {
+  margin: 0;
+}
+@media (max-width: 700px) {
+  .quick-seller-context {
+    padding: 16px;
+    flex-wrap: wrap;
+  }
+  .quick-seller-details,
+  .quick-reception .receiving-panel {
+    padding: 20px;
+  }
+}
+
+.quick-seller-mode [aria-pressed='true'] {
+  background: var(--mint);
+  border-color: var(--green);
+}

@@ -121,6 +121,18 @@
     }
   },
   "quickIntake": {
+    "workspace": {
+      "refreshAgreement": "Cargar contrato actual",
+      "sellerTab": "Vendedor y contrato",
+      "itemTab": "Registrar artículo",
+      "sellerSaved": "El vendedor se ha guardado. Descarga el contrato con su nombre y registra la aprobación aquí.",
+      "continue": "Continuar al artículo",
+      "openSeller": "Abrir perfil del vendedor",
+      "selectSeller": "Primero selecciona o registra un vendedor en la pestaña Vendedor y contrato.",
+      "loadingAgreement": "Cargando el contrato…",
+      "agreementFailed": "No se pudo cargar el contrato. Inténtalo de nuevo.",
+      "leaveSeller": "¿Salir de los datos del vendedor? Se perderán los datos o las aprobaciones sin guardar."
+    },
     "title": "Recepción rápida",
     "intro": "Basta con una descripción y un precio. La foto y los demás datos son opcionales.",
     "seller": "Depositante",

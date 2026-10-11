@@ -8,6 +8,7 @@ import { readSellersOverview } from '@/lib/engine/sellers'
 import { readPrinters } from '@/lib/engine/printing'
 import { resolveReceptionAssistance } from '@/lib/assistance/reception-config'
 import { readAttributeVocabulary } from '@/lib/engine/attributes'
+import type { AgreementSummary } from '@/components/intake/seller-agreement-fields'
 import { QuickReception } from '@/components/intake/quick-reception'
 
 /** Quick reception: seller, photo, facts, price, label; one screen per garment. */
@@ -23,12 +24,23 @@ export default async function QuickIntake() {
   })
   const profile =
     (policy.data?.policy?.intakeProfile as string | undefined) ?? 'quick'
-  const [sellers, printers, assistance, vocabulary] = await Promise.all([
-    readSellersOverview(ctx.client, a.id, '', 12),
-    readPrinters(ctx.client, a.id),
-    resolveReceptionAssistance(ctx.client, a.id),
-    readAttributeVocabulary(ctx.client, a.id),
-  ])
+  const [sellers, printers, assistance, vocabulary, agreement] =
+    await Promise.all([
+      readSellersOverview(ctx.client, a.id, '', 12),
+      readPrinters(ctx.client, a.id),
+      resolveReceptionAssistance(ctx.client, a.id),
+      readAttributeVocabulary(ctx.client, a.id),
+      ctx.client
+        .from('seller_agreement_versions')
+        .select(
+          'id,title,version,language,translations:seller_agreement_translations(id,title,language)',
+        )
+        .eq('tenant_id', a.id)
+        .order('version', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+    ])
+  if (agreement.error) throw new Error('Unable to read current agreement')
   return (
     <div className="intake quick-page">
       <div className="intake-header">
@@ -63,6 +75,12 @@ export default async function QuickIntake() {
           lang={ctx.locale}
           assistance={assistance !== null}
           d={d}
+          sellerForms={{
+            intake: all.intake,
+            details: all.sellerDetails,
+            agreements: all.agreements,
+          }}
+          agreement={agreement.data as AgreementSummary | null}
         />
       )}
     </div>

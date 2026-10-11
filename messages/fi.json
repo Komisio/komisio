@@ -121,6 +121,18 @@
     }
   },
   "quickIntake": {
+    "workspace": {
+      "refreshAgreement": "Lataa nykyinen sopimus",
+      "sellerTab": "Myyjä ja sopimus",
+      "itemTab": "Rekisteröi tuote",
+      "sellerSaved": "Myyjä on tallennettu. Lataa sopimus myyjän nimellä ja kirjaa hyväksyntä tässä.",
+      "continue": "Jatka tuotteeseen",
+      "openSeller": "Avaa myyjän profiili",
+      "selectSeller": "Valitse tai rekisteröi ensin myyjä Myyjä ja sopimus -välilehdellä.",
+      "loadingAgreement": "Ladataan myyjän sopimusta…",
+      "agreementFailed": "Myyjän sopimusta ei voitu ladata. Yritä uudelleen.",
+      "leaveSeller": "Poistutaanko myyjän tiedoista? Tallentamattomat tiedot tai hyväksynnät katoavat."
+    },
     "title": "Pikavastaanotto",
     "intro": "Kuvaus ja hinta riittävät. Lisää halutessasi kuva tai muita tietoja.",
     "seller": "Tuoja",

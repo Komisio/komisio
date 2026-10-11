@@ -93,7 +93,7 @@ test('quick intake finds sellers beyond the first hundred and keeps stale choice
     await expect(choices.first()).toContainText('ZZ Target seller')
     releaseSlow()
     await choices.first().click()
-    await expect(page.locator('.quick-seller-selected')).toContainText(
+    await expect(page.locator('.quick-seller-context')).toContainText(
       'ZZ Target seller',
     )
     await expect(page.getByLabel(d.description, { exact: true })).toBeVisible()

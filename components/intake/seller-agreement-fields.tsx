@@ -15,12 +15,14 @@ export function SellerAgreementFields({
   accepted = false,
   tenantId,
   sellerId,
+  saveWithSeller = true,
 }: {
   agreement: AgreementSummary | null
   d: Dictionary['agreements']
   accepted?: boolean
   tenantId: string
   sellerId?: string
+  saveWithSeller?: boolean
 }) {
   // A background refresh must never change the terms an unchecked/checked form
   // refers to. The engine rejects new approvals if this version is superseded.
@@ -105,7 +107,7 @@ export function SellerAgreementFields({
               aria-describedby={id + '-reference-hint'}
             />
             <small id={id + '-reference-hint'}>{w.referenceHint}</small>
-            <small>{w.saveHint}</small>
+            {saveWithSeller && <small>{w.saveHint}</small>}
           </div>
         </>
       )}

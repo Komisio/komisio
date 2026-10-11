@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-11: Quick reception separates seller/agreement and item tabs, retaining mounted drafts and retry identities. Shared seller registration stays in context; personal PDFs and explicit agreement evidence are available before continuing. No receiving or approval rules change.
+
 - 2026-10-10: Agreement management separates versions, seller acceptance and publication. Staff may record approval of the displayed active agreement atomically with seller registration/profile editing, retaining its reference and actor; printing and unchecked boxes never create evidence.
 
 - 2026-10-10: The staff photo queue filters pending replies, invited proposals awaiting registration and registered items, with scoped seller/description search. Preparation alone never means received; only the existing linked accepted item enables its item link. No review or reception rule changes.

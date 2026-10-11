@@ -25,7 +25,7 @@ export default async function NewSeller() {
   return (
     <div className="seller-registration-page">
       <div className="page-heading">
-        <h1>{d.sellersList.title}</h1>
+        <h1>{d.intake.newSeller}</h1>
         <Link className="text-link" href="/intake/sellers">
           ← {d.sellersList.title}
         </Link>
@@ -40,6 +40,7 @@ export default async function NewSeller() {
         registrationDestination="seller"
         agreement={agreement.data as AgreementSummary | null}
         agreements={d.agreements}
+        leaveUnsaved={d.quickIntake.workspace.leaveSeller}
       />
     </div>
   )

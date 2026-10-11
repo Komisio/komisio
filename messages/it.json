@@ -121,6 +121,18 @@
     }
   },
   "quickIntake": {
+    "workspace": {
+      "refreshAgreement": "Carica il contratto attuale",
+      "sellerTab": "Venditore e contratto",
+      "itemTab": "Registra articolo",
+      "sellerSaved": "Il venditore è stato salvato. Scarica il contratto con il suo nome e registra qui l’approvazione.",
+      "continue": "Continua con l’articolo",
+      "openSeller": "Apri profilo venditore",
+      "selectSeller": "Seleziona o registra prima un venditore nella scheda Venditore e contratto.",
+      "loadingAgreement": "Caricamento del contratto…",
+      "agreementFailed": "Impossibile caricare il contratto. Riprova.",
+      "leaveSeller": "Uscire dai dati del venditore? I dati o le approvazioni non salvati andranno persi."
+    },
     "title": "Ricezione rapida",
     "intro": "Bastano descrizione e prezzo. Foto e altri dettagli sono facoltativi.",
     "seller": "Conferente",

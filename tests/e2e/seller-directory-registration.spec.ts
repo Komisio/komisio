@@ -41,6 +41,23 @@ test('directory registration and duplicate selection stay in the seller workspac
       'href',
       `/intake/sellers/${f.seller}`,
     )
+    // Selecting a match replaces the entered registration. Both choices in
+    // the unsaved-details warning must preserve their intended destination.
+    page.once('dialog', async (dialog) => {
+      expect(dialog.type()).toBe('confirm')
+      expect(dialog.message()).toBe(d.quickIntake.workspace.leaveSeller)
+      await dialog.dismiss()
+    })
+    await duplicate.click()
+    await expect(page).toHaveURL('/intake/sellers/new')
+    await expect(page.getByLabel(d.intake.name, { exact: true })).toHaveValue(
+      'Synthetic directory seller',
+    )
+    expect(registration).toBeNull()
+    page.once('dialog', async (dialog) => {
+      expect(dialog.message()).toBe(d.quickIntake.workspace.leaveSeller)
+      await dialog.accept()
+    })
     await duplicate.click()
     await expect(page).toHaveURL(`/intake/sellers/${f.seller}`)
     await page.goto('/intake/sellers/new')

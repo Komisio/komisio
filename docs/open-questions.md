@@ -1,3 +1,7 @@
+PayPal workspace (resolved 2026-10-12): owner requests one compact panel with
+sales, products and settings tabs, shorter copy and clearer sync controls.
+Receipt retrieval and product export remain separate owner-enabled scopes.
+
 # Open questions
 
 PayPal partner onboarding (2026-10-12): the owner registered the shared public
@@ -162,6 +166,10 @@ Store usability (2026-09-25): owner prioritizes mobile-first workflows for staff
 inside the store, with fewer taps and less scrolling. Compact layouts must retain
 readable information and usable touch targets. The seller directory is the first
 application of this direction; wider navigation changes remain separate work.
+
+Seller item table (resolved 2026-10-12): owner requests sorting and search in
+the seller workspace. Reuse the inventory table presentation, with all matching
+seller items searched and sorted before paging. No financial rule changes.
 
 Seller workspace (2026-09-24): owner requested one seller page with tabs, using
 the earlier back office as inspiration. Existing receiving, items, finances,

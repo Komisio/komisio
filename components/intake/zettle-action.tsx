@@ -8,6 +8,7 @@ import type { zettleCommand } from '@/lib/engine/zettle'
 import type { z } from 'zod'
 import { compareZettleVat } from '@/lib/engine/zettle-vat'
 import { ItemMatchInput } from './item-match-input'
+import { Download, RefreshCw, LoaderCircle } from 'lucide-react'
 type Command = z.infer<typeof zettleCommand>
 type Draft<T> = T extends unknown ? Omit<T, 'requestId'> : never
 export function ZettleAction({
@@ -18,6 +19,8 @@ export function ZettleAction({
   search,
   vatModes,
   engineVatBasisPoints,
+  compact = false,
+  secondary = false,
 }: {
   command: Draft<Command>
   d: Dictionary['zettle']
@@ -26,6 +29,8 @@ export function ZettleAction({
   search?: Dictionary['sales']
   vatModes?: Record<string, string>
   engineVatBasisPoints?: number
+  compact?: boolean
+  secondary?: boolean
 }) {
   const router = useRouter(),
     id = useId(),
@@ -125,7 +130,8 @@ export function ZettleAction({
   }
   return (
     <form
-      className="intake-fields"
+      className={compact ? 'intake-fields pos-action' : 'intake-fields'}
+      aria-busy={state === 'busy'}
       onSubmit={(e) => {
         e.preventDefault()
         if (pending.current) {
@@ -258,8 +264,21 @@ export function ZettleAction({
         <Button
           id={`${id}-confirm`}
           type="submit"
+          variant={secondary ? 'secondary' : 'primary'}
           disabled={state === 'busy' || !validMatch}
         >
+          {compact &&
+            (state === 'busy' ? (
+              <LoaderCircle
+                size={16}
+                className="pos-spinner"
+                aria-hidden="true"
+              />
+            ) : command.action === 'pull' ? (
+              <Download size={16} aria-hidden="true" />
+            ) : ['export', 'exportImage', 'sync'].includes(command.action) ? (
+              <RefreshCw size={16} aria-hidden="true" />
+            ) : null)}
           {state === 'busy' ? d.busy : state === 'retry' ? d.retry : label}
         </Button>
       )}

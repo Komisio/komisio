@@ -14,11 +14,13 @@ export function SyncPreferences({
   initial,
   d,
   children,
+  compact = false,
 }: {
   tenantId: string
   initial: SyncPreference
   d: Dictionary
   children?: ReactNode
+  compact?: boolean
 }) {
   const t = d.itemSync.preferences
   const [base, setBase] = useState(initial)
@@ -75,10 +77,14 @@ export function SyncPreferences({
   }
   return (
     <section
-      className="card intake-form sync-preferences"
+      className={
+        compact
+          ? 'pos-preferences sync-preferences'
+          : 'card intake-form sync-preferences'
+      }
       aria-label={`${d.itemSync.providers[initial.provider]} · ${t.title}`}
     >
-      <h2>{t.title}</h2>
+      {!compact && <h2>{t.title}</h2>}
       <form
         onSubmit={(event) => {
           event.preventDefault()
@@ -98,7 +104,7 @@ export function SyncPreferences({
           />
           {t.images}
         </label>
-        <p className="muted">{t.hint}</p>
+        {!compact && <p className="muted">{t.hint}</p>}
         <Button
           type="submit"
           disabled={busy || (!uncertain && images === base.images)}
@@ -106,6 +112,7 @@ export function SyncPreferences({
           {busy ? t.saving : uncertain ? d.itemSync.retry : t.save}
         </Button>
       </form>
+      {compact && <small className="muted">{t.hint}</small>}
       {message && <p role={ok ? 'status' : 'alert'}>{message}</p>}
       {children && (
         <>

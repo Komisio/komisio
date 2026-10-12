@@ -7548,3 +7548,231 @@ button.text-link:hover:not(:disabled) {
   flex: none;
   accent-color: var(--ink);
 }
+
+.seller-item-table-scroll {
+  margin-top: 16px;
+}
+
+/* PayPal POS: one workspace, compact controls and readable state labels. */
+.pos-workspace {
+  padding: 0 24px 24px;
+  min-width: 0;
+}
+.pos-workspace h2 {
+  font-size: 20px;
+  margin: 0;
+}
+.pos-workspace h3 {
+  font-size: 15px;
+  margin: 0;
+}
+.pos-workspace p {
+  margin: 0;
+}
+.pos-workspace .workspace-tablist {
+  margin-bottom: 20px;
+}
+.pos-workspace .workspace-tabpanel:not([hidden]) {
+  gap: 18px;
+}
+.pos-section-heading,
+.pos-actions,
+.pos-connection,
+.pos-preferences form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.pos-section-heading {
+  justify-content: space-between;
+}
+.pos-section-heading > div {
+  display: grid;
+  gap: 5px;
+}
+.pos-section-heading .muted,
+.pos-workspace small {
+  font-size: 13px;
+}
+.pos-workspace .btn {
+  min-height: 40px;
+  padding: 8px 14px;
+  font-size: 14px;
+  gap: 7px;
+}
+.pos-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 4px 9px;
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.pos-status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.pos-status-on {
+  background: #e9f3ec;
+  color: #246146;
+}
+.pos-status-warning {
+  background: #fff3db;
+  color: #875514;
+}
+.pos-automation {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  padding: 14px 16px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.pos-automation > h3 {
+  margin-right: auto;
+}
+.pos-automation .pos-action {
+  margin-left: auto;
+}
+.pos-action {
+  min-width: 0;
+  gap: 8px;
+}
+.pos-action .btn {
+  width: fit-content;
+}
+.pos-action [role='alert'],
+.pos-action [role='status'] {
+  font-size: 13px;
+  max-width: 65ch;
+}
+.pos-details {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+  font-size: 14px;
+}
+.pos-details > summary {
+  width: fit-content;
+  cursor: pointer;
+  min-height: 34px;
+  padding-block: 6px;
+  color: var(--muted);
+  font-weight: 600;
+}
+.pos-details[open] {
+  display: grid;
+  gap: 12px;
+}
+.pos-details > p {
+  max-width: 70ch;
+}
+.pos-product-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.pos-product-row > a {
+  margin-right: auto;
+  font-size: 14px;
+  font-weight: 600;
+}
+.pos-product-row .pos-action {
+  flex: 0 1 auto;
+}
+.pos-settings-section {
+  display: grid;
+  gap: 12px;
+}
+.pos-settings-section + .pos-settings-section {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
+.pos-preferences {
+  display: grid;
+  gap: 8px;
+}
+.pos-preferences form {
+  justify-content: space-between;
+}
+.pos-preferences .checkbox-label {
+  margin: 0;
+  font-size: 14px;
+}
+.pos-empty {
+  padding: 18px 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.pos-receipt-link {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.pos-receipts th:first-child {
+  position: static;
+  border-right: 0;
+}
+.pos-receipts time {
+  white-space: nowrap;
+  font-weight: 500;
+}
+.pos-spinner {
+  animation: pos-spin 1s linear infinite;
+}
+@keyframes pos-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pos-spinner {
+    animation: none;
+  }
+}
+@media (max-width: 600px) {
+  .pos-workspace {
+    padding: 0 16px 16px;
+  }
+  .pos-workspace .workspace-tablist {
+    gap: 4px;
+  }
+  .pos-workspace .workspace-tablist > button {
+    padding: 9px 10px;
+    font-size: 13px;
+  }
+  .pos-section-heading {
+    align-items: flex-start;
+  }
+  .pos-automation {
+    gap: 10px;
+    padding: 12px;
+  }
+  .pos-automation .pos-action {
+    margin-left: 0;
+  }
+  .pos-connection > form,
+  .pos-connection > div {
+    max-width: 100%;
+  }
+  .pos-product-row {
+    align-items: flex-start;
+  }
+  .paypal-provider > summary > .pos-status {
+    grid-column: 2;
+  }
+}

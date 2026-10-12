@@ -3044,7 +3044,31 @@
     "notConnected": "Non collegato",
     "reconnect": "Ricollegamento necessario",
     "setupAction": "Mostra impostazioni",
-    "statusHint": "Lo stato riflette le informazioni salvate. Apri il sistema per i dettagli; una connessione salvata non significa che la sincronizzazione automatica sia attiva."
+    "statusHint": "Lo stato riflette le informazioni salvate. Apri il sistema per i dettagli; una connessione salvata non significa che la sincronizzazione automatica sia attiva.",
+    "paypalWorkspace": {
+      "sales": "Vendite",
+      "products": "Articoli",
+      "settings": "Impostazioni",
+      "connection": "Connessione",
+      "connected": "Connesso",
+      "reconnect": "Riconnetti",
+      "disconnected": "Non connesso",
+      "pull": "Recupera vendite",
+      "syncItem": "Sincronizza articolo",
+      "syncImage": "Sincronizza immagine",
+      "lastPull": "Ultimo recupero",
+      "never": "Nessun recupero ancora",
+      "interval": "Ogni dieci minuti",
+      "details": "Dettagli",
+      "received": "Recuperato",
+      "attention": "Da gestire",
+      "noItems": "Nessun articolo da mostrare.",
+      "vat": "IVA in cassa",
+      "images": "Immagini",
+      "check": "Verifica connessione",
+      "start": "Inizia",
+      "automatic": "Recupero automatico"
+    }
   },
   "shopifyPrivacy": {
     "title": "Shopify · Richieste sulla privacy",

@@ -11,6 +11,8 @@ export function ZettleConnection({
   setupAvailable,
   result,
   d,
+  compact = false,
+  checkLabel,
 }: {
   tenantId: string
   connected: boolean
@@ -18,6 +20,8 @@ export function ZettleConnection({
   setupAvailable: boolean
   result?: string
   d: Dictionary['zettle']
+  compact?: boolean
+  checkLabel?: string
 }) {
   const running = useRef(false)
   const router = useRouter()
@@ -63,7 +67,7 @@ export function ZettleConnection({
       } else {
         if (typeof body.organizationId !== 'string')
           throw new Error('Invalid result')
-        setMessage(`${d.connectionVerified} ${body.organizationId}`)
+        setMessage(d.connectionVerified)
       }
       setOk(true)
     } catch {
@@ -82,9 +86,12 @@ export function ZettleConnection({
           ? errorText(result)
           : ''
   return (
-    <section className="card intake-form" aria-label={d.connectionTitle}>
-      <h2>{d.connectionTitle}</h2>
-      <p>{d.oauth.hint}</p>
+    <section
+      className={compact ? 'pos-connection' : 'card intake-form'}
+      aria-label={d.connectionTitle}
+    >
+      {!compact && <h2>{d.connectionTitle}</h2>}
+      {(!connected || !compact) && <p>{d.oauth.hint}</p>}
       {notice && (
         <p
           role={
@@ -103,7 +110,15 @@ export function ZettleConnection({
           action={`/api/integrations/paypal/connect?tenant=${encodeURIComponent(tenantId)}`}
           onSubmit={() => setBusy(true)}
         >
-          <Button type="submit" disabled={busy}>
+          <Button
+            type="submit"
+            variant={
+              compact && connected && !reconnectRequired
+                ? 'secondary'
+                : 'primary'
+            }
+            disabled={busy}
+          >
             {busy ? d.busy : connected ? d.oauth.reconnect : d.oauth.connect}
           </Button>
         </form>
@@ -116,8 +131,9 @@ export function ZettleConnection({
             type="button"
             onClick={() => void act('check')}
             disabled={busy}
+            variant={compact ? 'secondary' : 'primary'}
           >
-            {d.checkConnection}
+            {checkLabel ?? d.checkConnection}
           </Button>
           <Button
             type="button"

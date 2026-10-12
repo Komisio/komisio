@@ -43,7 +43,7 @@ test('connection image preferences stay independent and a lost save replays once
       [f.tenant, item],
     )
     await f.commit()
-    await page.goto('/intake/integrations?provider=paypal')
+    await page.goto('/intake/integrations?provider=paypal#paypal-settings')
     const paypal = page.getByRole('region', {
       name: `PayPal POS · ${d.itemSync.preferences.title}`,
       exact: true,

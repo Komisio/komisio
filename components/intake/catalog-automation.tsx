@@ -17,12 +17,14 @@ export function CatalogAutomationSettings({
   configured,
   canEdit,
   d,
+  compact = false,
 }: {
   tenantId: string
   initial: CatalogAutomation
   configured: boolean
   canEdit: boolean
   d: Dictionary
+  compact?: boolean
 }) {
   const t = d.itemSync.automatic
   const errors = d.itemSync.preferences
@@ -79,10 +81,20 @@ export function CatalogAutomationSettings({
     }
   }
   return (
-    <section aria-label={t.title} className="intake-form">
+    <section
+      aria-label={t.title}
+      className={compact ? 'pos-automation' : 'intake-form'}
+    >
       <h3>{t.title}</h3>
-      <p className="muted">{t.hint}</p>
-      <p role="status">
+      {!compact && <p className="muted">{t.hint}</p>}
+      <p
+        role="status"
+        className={
+          compact
+            ? `pos-status ${state.enabled ? 'pos-status-on' : ''}`
+            : undefined
+        }
+      >
         {state.enabled ? t.on : t.off}
         {state.lastOutcome &&
           (state.enabled || state.lastOutcome !== 'running') && (
@@ -98,6 +110,7 @@ export function CatalogAutomationSettings({
       {canEdit ? (
         <Button
           type="button"
+          variant={compact ? 'secondary' : 'primary'}
           disabled={busy || (!configured && !state.enabled && !uncertain)}
           onClick={() => void change()}
         >

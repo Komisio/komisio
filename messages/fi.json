@@ -3044,7 +3044,31 @@
     "notConnected": "Ei yhdistetty",
     "reconnect": "Yhdistä uudelleen",
     "setupAction": "Näytä asetukset",
-    "statusHint": "Tila perustuu tallennettuihin tietoihin. Avaa järjestelmä nähdäksesi lisätiedot; tallennettu yhteys ei tarkoita automaattisen synkronoinnin olevan käytössä."
+    "statusHint": "Tila perustuu tallennettuihin tietoihin. Avaa järjestelmä nähdäksesi lisätiedot; tallennettu yhteys ei tarkoita automaattisen synkronoinnin olevan käytössä.",
+    "paypalWorkspace": {
+      "sales": "Myynnit",
+      "products": "Tuotteet",
+      "settings": "Asetukset",
+      "connection": "Yhteys",
+      "connected": "Yhdistetty",
+      "reconnect": "Yhdistä uudelleen",
+      "disconnected": "Ei yhdistetty",
+      "pull": "Hae myynnit",
+      "syncItem": "Synkronoi tuote",
+      "syncImage": "Synkronoi kuva",
+      "lastPull": "Viimeksi haettu",
+      "never": "Ei vielä haettu",
+      "interval": "Kymmenen minuutin välein",
+      "details": "Lisätiedot",
+      "received": "Haettu",
+      "attention": "Vaatii käsittelyä",
+      "noItems": "Ei näytettäviä tuotteita.",
+      "vat": "Kassan ALV",
+      "images": "Kuvat",
+      "check": "Tarkista yhteys",
+      "start": "Aloita",
+      "automatic": "Automaattinen haku"
+    }
   },
   "shopifyPrivacy": {
     "title": "Shopify · Tietosuojapyynnöt",

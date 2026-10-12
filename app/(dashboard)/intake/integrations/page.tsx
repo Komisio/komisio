@@ -24,7 +24,7 @@ import {
   readZettlePull,
   readZettleWindowClosure,
 } from '@/lib/engine/zettle-live'
-import Link from '@/components/platform/working-link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { ZettleConnection } from '@/components/intake/zettle-connection'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'

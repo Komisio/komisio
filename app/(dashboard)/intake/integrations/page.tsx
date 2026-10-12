@@ -5,7 +5,10 @@ import { readSyncPreferences } from '@/lib/engine/sync-preferences'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { FortnoxConnection } from '@/components/intake/fortnox-connection'
 import { FortnoxGuide } from '@/components/help/fortnox-guide'
-import { paypalEnvironment } from '@/lib/engine/paypal-credentials'
+import {
+  readPayPalStatus,
+  paypalAppAvailable,
+} from '@/lib/engine/paypal-credentials'
 import { credentialKeyConfigured } from '@/lib/platform/credentials'
 import { readFortnoxStatus } from '@/lib/engine/fortnox-connection'
 import { fortnoxEnvironment, fortnoxIssue } from '@/extensions/fortnox/auth'
@@ -20,7 +23,6 @@ import {
   readZettleWindowClosure,
 } from '@/lib/engine/zettle-live'
 import Link from '@/components/platform/working-link'
-import { pilotIssue, pilotEnvironment } from '@/extensions/zettle/auth'
 import { ZettleConnection } from '@/components/intake/zettle-connection'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
@@ -76,10 +78,10 @@ export default async function Integrations({
     pull = ['owner', 'admin'].includes(a.role)
       ? await readZettlePull(ctx.client, a.id)
       : null,
-    pilot = ['owner', 'admin'].includes(a.role)
-      ? await paypalEnvironment(ctx.client, a.id, process.env)
-      : pilotEnvironment({}),
-    liveReady = pilotIssue(a.id, pilot) === null && !!pilot.ZETTLE_MERCHANT_ID
+    paypal = ['owner', 'admin'].includes(a.role)
+      ? await readPayPalStatus(ctx.client, a.id)
+      : null,
+    liveReady = !!paypal?.connected && !paypal.reconnectRequired
   const stocks = ['owner', 'admin'].includes(a.role)
     ? await readZettleStock(ctx.client, a.id)
     : []
@@ -174,8 +176,12 @@ export default async function Integrations({
               <ZettleConnection
                 key={a.id}
                 tenantId={a.id}
-                issue={pilotIssue(a.id, pilot)}
-                setupAvailable={credentialKeyConfigured(process.env)}
+                connected={!!paypal?.connected}
+                reconnectRequired={!!paypal?.reconnectRequired}
+                result={
+                  typeof params.paypal === 'string' ? params.paypal : undefined
+                }
+                setupAvailable={paypalAppAvailable(process.env)}
                 d={d}
               />
             )}

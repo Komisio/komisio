@@ -2646,7 +2646,7 @@
       "ZETTLE_WINDOW_INVALID": "PayPal POS svarade med uppgifter utanför valt tidsintervall. Hämtningen stoppades.",
       "ZETTLE_WINDOW_COMPLETE": "Intervallet har redan hämtats klart. Ladda om sidan.",
       "ZETTLE_WINDOW_ABANDONED": "Ägaren har stängt intervallet. Inga fler sidor kan importeras till det. Ladda om sidan.",
-      "ZETTLE_AUTH_REQUIRED": "PayPal POS nekade inloggningen. Kontrollera API-nyckeln och dess behörigheter.",
+      "ZETTLE_AUTH_REQUIRED": "Anslut igen för att fortsätta.",
       "ZETTLE_CONNECTION_FAILED": "Anslutningen kunde inte verifieras. Kontrollera konfigurationen eller försök senare.",
       "ZETTLE_INVENTORY_FAILED": "PayPal POS:s lager kunde inte bekräftas. Kontrollera varans sparade status innan du går vidare.",
       "ZETTLE_INVENTORY_CONFLICT": "PayPal POS:s lager kunde inte bekräftas. Kontrollera varans sparade status innan du går vidare.",
@@ -2672,7 +2672,11 @@
       "ZETTLE_REFUND_MISMATCH": "Returen kan inte kopplas säkert till originalets varor.",
       "ZETTLE_RETURN_FAILED": "Returen kunde inte registreras. Kontrollera originalkvittot.",
       "PARTIAL_REFUND_UNSUPPORTED": "Delbelopp stöds inte. Returbeloppet måste motsvara hela varans försäljningspris.",
-      "LINE_ALREADY_RETURNED": "Varan har redan returnerats i Komisio. Kontrollera tidigare retur."
+      "LINE_ALREADY_RETURNED": "Varan har redan returnerats i Komisio. Kontrollera tidigare retur.",
+      "PAYPAL_REFRESH_BUSY": "Anslutningen uppdateras. Försök igen om en stund.",
+      "PAYPAL_RECONNECT_REQUIRED": "Anslut igen för att fortsätta.",
+      "PAYPAL_CONNECTION_CHANGED": "Anslut igen för att fortsätta.",
+      "PAYPAL_APP_UNAVAILABLE": "PayPal POS-anslutningen är ännu inte aktiverad av Komisio."
     },
     "approvalHint": "Matchade kvitton registreras automatiskt. Endast avvikelser behöver utredas; ingen andra godkännare krävs.",
     "held": "Kvittot kunde inte bokas. Utred orsaken innan nytt försök.",
@@ -2713,11 +2717,6 @@
     "connectionHint": "Koppla kassan för att skicka varor och hämta försäljningar.",
     "checkConnection": "Kontrollera PayPal POS-anslutning",
     "connectionUnavailable": "PayPal POS är inte aktiverat för den här butiken.",
-    "connectionTenantMissing": "Butikens PayPal POS-koppling är inte färdig.",
-    "connectionClientMissing": "PayPal POS-kopplingen behöver kompletteras.",
-    "connectionKeyMissing": "PayPal POS-kopplingen behöver kompletteras.",
-    "connectionMerchantInvalid": "Butikens PayPal POS-konto behöver kontrolleras.",
-    "connectionConfigHint": "Kontakta Komisio för hjälp att komma igång.",
     "connectionVerified": "Anslutningen fungerar. PayPal POS-butik:",
     "connectionFailed": "Anslutningen kunde inte kontrolleras. Försök igen eller kontakta Komisio.",
     "merchantPinned": "Kontot matchar den låsta butikskopplingen.",
@@ -2749,10 +2748,6 @@
       "conflict": "Lagret behöver kontrolleras - inget nytt exemplar läggs till"
     },
     "responseFields": "Svarsfält",
-    "setup": "Anslut ditt konto",
-    "setupHint": "Ange Client ID och API-nyckeln från ditt PayPal POS-konto. Uppgifterna kontrolleras och sparas krypterat för den här butiken.",
-    "clientId": "Client ID",
-    "apiKey": "API-nyckel",
     "connect": "Anslut PayPal POS",
     "chooseItem": "Välj vara",
     "selectedItem": "Vald vara",
@@ -2782,6 +2777,18 @@
       "recorded": "Returen är registrerad i Komisio.",
       "original": "Visa originalförsäljning",
       "retry": "Kontrollera returen igen"
+    },
+    "oauth": {
+      "connect": "Anslut PayPal POS",
+      "reconnect": "Anslut igen",
+      "disconnect": "Koppla från",
+      "hint": "Logga in hos PayPal POS och godkänn att Komisio får ansluta till butikens konto.",
+      "connected": "PayPal POS är anslutet.",
+      "cancelled": "Anslutningen avbröts.",
+      "disconnected": "PayPal POS är frånkopplat i Komisio.",
+      "retry": "Anslut igen för att fortsätta.",
+      "refreshBusy": "Anslutningen uppdateras. Försök igen om en stund.",
+      "unavailable": "PayPal POS-anslutningen är ännu inte aktiverad av Komisio."
     }
   },
   "priceEvidence": {

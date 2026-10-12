@@ -2646,7 +2646,7 @@
       "ZETTLE_WINDOW_INVALID": "PayPal POS ha restituito dati fuori dall'intervallo selezionato. Recupero interrotto.",
       "ZETTLE_WINDOW_COMPLETE": "Questo intervallo è già completato. Ricarica la pagina.",
       "ZETTLE_WINDOW_ABANDONED": "Il proprietario ha chiuso questo intervallo. Non è più possibile importare pagine al suo interno. Ricarica la pagina.",
-      "ZETTLE_AUTH_REQUIRED": "PayPal POS ha rifiutato l'autenticazione. Controlla la chiave API e i suoi permessi.",
+      "ZETTLE_AUTH_REQUIRED": "Ricollega per continuare.",
       "ZETTLE_CONNECTION_FAILED": "Impossibile verificare la connessione. Controlla la configurazione o riprova più tardi.",
       "ZETTLE_INVENTORY_FAILED": "Impossibile confermare lo stock PayPal POS. Controlla lo stato salvato dell'articolo prima di procedere.",
       "ZETTLE_INVENTORY_CONFLICT": "Impossibile confermare lo stock PayPal POS. Controlla lo stato salvato dell'articolo prima di procedere.",
@@ -2672,7 +2672,11 @@
       "ZETTLE_REFUND_MISMATCH": "Il reso non può essere collegato con certezza agli articoli originali.",
       "ZETTLE_RETURN_FAILED": "Impossibile registrare il reso. Controlla la ricevuta originale.",
       "PARTIAL_REFUND_UNSUPPORTED": "Gli importi parziali non sono supportati. Il rimborso deve corrispondere all’intero prezzo di vendita dell’articolo.",
-      "LINE_ALREADY_RETURNED": "L’articolo è già stato reso in Komisio. Controlla il reso precedente."
+      "LINE_ALREADY_RETURNED": "L’articolo è già stato reso in Komisio. Controlla il reso precedente.",
+      "PAYPAL_REFRESH_BUSY": "Il collegamento si sta aggiornando. Riprova tra poco.",
+      "PAYPAL_RECONNECT_REQUIRED": "Ricollega per continuare.",
+      "PAYPAL_CONNECTION_CHANGED": "Ricollega per continuare.",
+      "PAYPAL_APP_UNAVAILABLE": "Komisio non ha ancora attivato il collegamento a PayPal POS."
     },
     "approvalHint": "Gli scontrini abbinati vengono registrati automaticamente. Solo le eccezioni richiedono una verifica; non serve un secondo approvatore.",
     "held": "Impossibile registrare lo scontrino. Verifica prima di riprovare.",
@@ -2713,11 +2717,6 @@
     "connectionHint": "Verifica la credenziale conservata sul server e il suo commerciante PayPal POS. Questa verifica non crea prodotti e non importa vendite.",
     "checkConnection": "Verifica la connessione PayPal POS",
     "connectionUnavailable": "La connessione pilota non è associata a questo negozio.",
-    "connectionTenantMissing": "Nella configurazione distribuita manca l'associazione al negozio (ZETTLE_PILOT_TENANT_ID).",
-    "connectionClientMissing": "Nella configurazione distribuita l'ID client è mancante o malformato.",
-    "connectionKeyMissing": "Nella configurazione distribuita manca la chiave API.",
-    "connectionMerchantInvalid": "L'ID commerciante PayPal POS configurato è malformato.",
-    "connectionConfigHint": "Controlla l'associazione al negozio e le impostazioni Vercel (Production). Ridistribuisci dopo le modifiche. Nessun valore delle credenziali viene mostrato qui.",
     "connectionVerified": "Connessione verificata. Commerciante PayPal POS:",
     "connectionFailed": "Impossibile verificare la connessione. Controlla la configurazione o riprova più tardi.",
     "merchantPinned": "Il commerciante corrisponde alla connessione associata.",
@@ -2749,10 +2748,6 @@
       "conflict": "Lo stock richiede una verifica - nessuna nuova unità verrà aggiunta"
     },
     "responseFields": "Campi della risposta",
-    "setup": "Collega il tuo account",
-    "setupHint": "Inserisci il Client ID e la chiave API del tuo account PayPal POS. Vengono verificati e salvati in forma crittografata per questo negozio.",
-    "clientId": "Client ID",
-    "apiKey": "Chiave API",
     "connect": "Collega PayPal POS",
     "chooseItem": "Scegli articolo",
     "selectedItem": "Articolo selezionato",
@@ -2782,6 +2777,18 @@
       "recorded": "Il reso è registrato in Komisio.",
       "original": "Visualizza vendita originale",
       "retry": "Controlla di nuovo il reso"
+    },
+    "oauth": {
+      "connect": "Collega PayPal POS",
+      "reconnect": "Ricollega",
+      "disconnect": "Scollega",
+      "hint": "Accedi a PayPal POS e consenti a Komisio di collegarsi al conto del negozio.",
+      "connected": "PayPal POS è collegato.",
+      "cancelled": "Collegamento annullato.",
+      "disconnected": "PayPal POS è scollegato in Komisio.",
+      "retry": "Ricollega per continuare.",
+      "refreshBusy": "Il collegamento si sta aggiornando. Riprova tra poco.",
+      "unavailable": "Komisio non ha ancora attivato il collegamento a PayPal POS."
     }
   },
   "priceEvidence": {

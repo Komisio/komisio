@@ -19,10 +19,10 @@ const env = {
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'publishable',
 }
 const source = {
+  ZETTLE_ACCESS_EXPIRES_AT: String(Date.now() + 7200000),
   ZETTLE_PILOT_TENANT_ID: tenantId,
   ZETTLE_MERCHANT_ID: merchant,
-  ZETTLE_CLIENT_ID: 'client',
-  ZETTLE_API_KEY: 'secret',
+  ZETTLE_ACCESS_TOKEN: 'secret',
 }
 const request = () =>
   new Request('https://example.test/api/automation/catalog-export', {

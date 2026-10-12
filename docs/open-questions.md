@@ -1,5 +1,11 @@
 # Open questions
 
+PayPal partner onboarding (2026-10-12): the owner registered the shared public
+app and confirmed no stores use the old API-key flow. Replace that flow outright
+with PKCE OAuth and tenant-bound tokens. Public app credentials were issued
+immediately. Hosted redirect registration, environment configuration and a real
+merchant consent/refresh test remain release verification, not financial rules.
+
 Integration follow-up (2026-10-12): the owner requested item-level status/retry,
 automatic product export, optional current default-image export, POS returns and
 seller-balance payments. The owner clarified that settings and item sync views must be provider-neutral,

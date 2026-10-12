@@ -1129,9 +1129,9 @@ test('password recovery and MFA protect the authenticated platform', async ({
   expect(blocked.status()).toBe(403)
   await page.goto('/scan?ref=H-999999999999')
   await expect(page).toHaveURL(/\/mfa\?next=/)
-  expect(new URL(page.url()).searchParams.get('next')).toBe(
-    '/intake/open?ref=H-999999999999',
-  )
+  await expect
+    .poll(() => new URL(page.url()).searchParams.get('next'))
+    .toBe('/intake/open?ref=H-999999999999')
   const codeQuery = new URLSearchParams({
     tenant: crypto.randomUUID(),
     seller: crypto.randomUUID(),
@@ -2907,19 +2907,27 @@ test('operation queue pages reach older proposals and retain status filters', as
     })
     await filters.locator('a[href$="status=open"]').click()
     await expect(rows).toHaveCount(20)
-    expect(new URL(page.url()).searchParams.has('beforeId')).toBe(false)
+    await expect
+      .poll(() => new URL(page.url()).searchParams.has('beforeId'))
+      .toBe(false)
     await older()
     await expect(rows).toHaveCount(20)
-    expect(new URL(page.url()).searchParams.get('status')).toBe('open')
-    expect(new URL(page.url()).searchParams.get('beforeCreated')).toMatch(
-      /\.\d{6}/,
-    )
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('status'))
+      .toBe('open')
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('beforeCreated'))
+      .toMatch(/\.\d{6}/)
     await older()
     await expect(rows).toHaveCount(14)
     await page.getByRole('link', { name: 'Till f\u00f6rsta sidan' }).click()
     await expect(rows).toHaveCount(20)
-    expect(new URL(page.url()).searchParams.get('status')).toBe('open')
-    expect(new URL(page.url()).searchParams.has('beforeId')).toBe(false)
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('status'))
+      .toBe('open')
+    await expect
+      .poll(() => new URL(page.url()).searchParams.has('beforeId'))
+      .toBe(false)
     await filters.locator('a[href$="status=expired"]').click()
     await expect(rows).toHaveCount(1)
     await page.setViewportSize({ width: 375, height: 812 })

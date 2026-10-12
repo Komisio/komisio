@@ -129,7 +129,9 @@ test('inventory sorts all results, combines advanced filters and previews defaul
     await expect(rows.first().locator('.inventory-price')).toHaveText(
       '66.00 SEK',
     )
-    expect(new URL(page.url()).searchParams.has('page')).toBe(false)
+    await expect
+      .poll(() => new URL(page.url()).searchParams.has('page'))
+      .toBe(false)
     await expect(page.locator('th[aria-sort="descending"]')).toContainText(
       d.quickIntake.price,
     )

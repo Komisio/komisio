@@ -40,13 +40,19 @@ test('lifecycle search preserves paging and batch scope, and item shortcuts open
     await search.fill('SEARCH coat')
     await submit.click()
     await expect(rows).toHaveCount(20)
-    expect(new URL(page.url()).searchParams.has('page')).toBe(false)
+    await expect
+      .poll(() => new URL(page.url()).searchParams.has('page'))
+      .toBe(false)
     await page
       .getByRole('link', { name: d.lifecycle.next, exact: true })
       .click()
     await expect(rows).toHaveCount(1)
-    expect(new URL(page.url()).searchParams.get('q')).toBe('SEARCH coat')
-    expect(new URL(page.url()).searchParams.get('stage')).toBe('markdown_due')
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('q'))
+      .toBe('SEARCH coat')
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('stage'))
+      .toBe('markdown_due')
     await expect(page.locator('.lifecycle-row[open]')).toHaveCount(0)
     await search.fill('Target chair')
     await submit.click()

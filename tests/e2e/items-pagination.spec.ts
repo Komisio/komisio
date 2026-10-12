@@ -46,8 +46,12 @@ test('staff can reach all matching items and retain filters on a phone', async (
         ),
       ).toBeVisible()
       await expect(rows).toHaveCount(expectedCount)
-      expect(new URL(page.url()).searchParams.get('q')).toBe('Paging')
-      expect(new URL(page.url()).searchParams.get('stage')).toBe('markdown_due')
+      await expect
+        .poll(() => new URL(page.url()).searchParams.get('q'))
+        .toBe('Paging')
+      await expect
+        .poll(() => new URL(page.url()).searchParams.get('stage'))
+        .toBe('markdown_due')
       for (const href of await rows
         .locator('.inventory-item-link')
         .evaluateAll((links) =>
@@ -79,7 +83,9 @@ test('staff can reach all matching items and retain filters on a phone', async (
       .getByRole('button', { name: d.items.searchButton, exact: true })
       .click()
     await expect(rows).toHaveCount(1)
-    expect(new URL(page.url()).searchParams.has('page')).toBe(false)
+    await expect
+      .poll(() => new URL(page.url()).searchParams.has('page'))
+      .toBe(false)
     await page
       .getByRole('link', { name: d.items.clearFilters, exact: true })
       .click()
@@ -92,7 +98,9 @@ test('staff can reach all matching items and retain filters on a phone', async (
     )
     await page.goto('/intake/items?q=Paging&stage=markdown_due&page=999')
     await expect(rows).toHaveCount(3)
-    expect(new URL(page.url()).searchParams.get('page')).toBe('3')
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('page'))
+      .toBe('3')
     await page.setViewportSize({ width: 1280, height: 900 })
     await expect(
       page.getByRole('heading', { name: d.items.title, exact: true }),

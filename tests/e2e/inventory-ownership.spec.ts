@@ -47,7 +47,9 @@ test('ownership filters count and page all goods and carry through stock reports
       .getByRole('link', { name: d.items.nextPage, exact: true })
       .click()
     await expect(rows).toHaveCount(1)
-    expect(new URL(page.url()).searchParams.get('ownership')).toBe('store')
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('ownership'))
+      .toBe('store')
     await page.getByLabel(d.items.search, { exact: true }).fill('lamp 25')
     await page
       .getByRole('button', { name: d.items.searchButton, exact: true })
@@ -55,7 +57,9 @@ test('ownership filters count and page all goods and carry through stock reports
       .click()
     await expect(rows).toHaveCount(1)
     await expect(rows).toContainText('Synthetic own lamp 25')
-    expect(new URL(page.url()).searchParams.get('page')).toBeNull()
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('page'))
+      .toBeNull()
     await page
       .getByRole('link', { name: d.items.clearFilters, exact: true })
       .click()
@@ -92,6 +96,7 @@ test('ownership filters count and page all goods and carry through stock reports
       name: d.stock.tabs.sales,
       exact: true,
     })
+    await expect(salesTab).toBeEnabled()
     await page
       .getByRole('tab', { name: d.stock.tabs.overview, exact: true })
       .focus()
@@ -105,7 +110,9 @@ test('ownership filters count and page all goods and carry through stock reports
       .getByRole('button', { name: d.economy.show, exact: true })
       .click()
     await expect(salesTab).toHaveAttribute('aria-selected', 'true')
-    expect(new URL(page.url()).searchParams.get('ownership')).toBe('store')
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('ownership'))
+      .toBe('store')
     await page
       .getByRole('tab', { name: d.stock.tabs.overview, exact: true })
       .click()
@@ -134,7 +141,9 @@ test('ownership filters count and page all goods and carry through stock reports
       await page.locator('.stock-ownership-filter').getByRole('button').click()
       await expect(page).toHaveURL(new RegExp('ownership=' + ownership))
       await expect(selected).toHaveAttribute('aria-selected', 'true')
-      expect(new URL(page.url()).searchParams.get('from')).toBe('2020-01-01')
+      await expect
+        .poll(() => new URL(page.url()).searchParams.get('from'))
+        .toBe('2020-01-01')
     }
     await page
       .getByRole('tab', { name: d.stock.tabs.overview, exact: true })

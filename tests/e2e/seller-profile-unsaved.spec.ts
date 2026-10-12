@@ -38,6 +38,13 @@ test('seller edits survive tabs and cancelled departure; restoring fields releas
         exact: true,
       }),
     )
+    await cancelLeave(
+      page,
+      page.getByRole('tabpanel').getByRole('link', {
+        name: `${d.items.item}: ${d.items.directory.sortAsc}`,
+        exact: true,
+      }),
+    )
     await expect(page).toHaveURL(
       new RegExp(`/sellers/${f.seller}#seller-items$`),
     )

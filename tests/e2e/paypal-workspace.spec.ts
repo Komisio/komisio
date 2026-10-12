@@ -108,6 +108,18 @@ test('PayPal tabs separate sales, products and settings, preserve drafts and sho
     })
     await images.check()
     await provider.getByRole('tab', { name: p.products, exact: true }).click()
+    const prompt = page.waitForEvent('dialog')
+    const leave = panel
+      .getByRole('link', { name: d.itemSync.allItems, exact: true })
+      .click()
+    const dialog = await prompt
+    expect(dialog.type()).toBe('confirm')
+    expect(dialog.message()).toBe(d.leaveUnsaved)
+    await dialog.dismiss()
+    await leave
+    await expect(page).toHaveURL(
+      /\/intake\/integrations\?provider=paypal#paypal-products$/,
+    )
     await provider.getByRole('tab', { name: p.settings, exact: true }).click()
     await expect(images).toBeChecked()
     await images.uncheck()

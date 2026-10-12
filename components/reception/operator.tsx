@@ -1,6 +1,10 @@
 'use client'
-import { useState, useRef, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
+import {
+  useBusyState,
+  useBusyTransition as useTransition,
+} from '@/components/platform/work-activity'
+import { useState, useRef } from 'react'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import type {
   ReceptionSession,
@@ -20,7 +24,7 @@ import { useFormDirty } from '@/components/platform/use-form-dirty'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 type D = Dictionary['reception']
 function useWrite(d: D) {
-  const [busy, setBusy] = useState(false),
+  const [busy, setBusy] = useBusyState(false),
     [locked, setLocked] = useState(false),
     [error, setError] = useState(''),
     [reload, setReload] = useState(false)

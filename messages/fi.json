@@ -374,6 +374,7 @@
   "resend": "Lähetä vahvistus uudelleen",
   "authError": "Pyyntöä ei voitu suorittaa. Tarkista tietosi ja yritä uudelleen.",
   "callbackError": "Tätä linkkiä ei voitu käyttää. Pyydä uusi linkki ja avaa se samassa selaimessa.",
+  "working": "Komisio käsittelee…",
   "loading": "Hetkinen…",
   "save": "Tallenna muutokset",
   "saved": "Muutoksesi on tallennettu.",

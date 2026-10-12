@@ -1,6 +1,6 @@
 'use client'
 import { useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import type { OriginKind } from '@/lib/engine/items'
 import { exactPrice } from '@/lib/engine/manual-reception'

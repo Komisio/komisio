@@ -1000,3 +1000,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-11: Agreement management separates versions, language texts and acceptances. Authors preview plain text beside the editor; AI assistance stays optional. Existing immutable publication, translation and acceptance rules remain unchanged.
 
 - 2026-10-12: At the owner's request, Generate with AI replaces the editable agreement text directly through the existing audited draft operation. The publisher omits preview and intermediate draft controls; publication remains a separate explicit action. Retry identities are preserved.
+
+- 2026-10-12: A shared, localized work indicator reflects active UI requests and navigation. Parallel work keeps it visible until all tracked work finishes; quick actions do not flash. It does not retry commands, infer success or change draft/navigation guards.

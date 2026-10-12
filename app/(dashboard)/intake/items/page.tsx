@@ -1,5 +1,6 @@
+import { WorkingForm } from '@/components/platform/working-form'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import {
   ArrowDown,
   ArrowUp,
@@ -155,7 +156,7 @@ export default async function Items({
         )}
       </div>
       <section className="inventory-panel" aria-label={d.list}>
-        <form
+        <WorkingForm
           key={JSON.stringify(raw) + sort + direction}
           action="/intake/items"
           className="inventory-filters"
@@ -227,7 +228,7 @@ export default async function Items({
             </div>
             <button className="btn btn-secondary">{d.searchButton}</button>
           </details>
-        </form>
+        </WorkingForm>
         {!parsed.success && (
           <p role="alert" className="inventory-message">
             {t.invalid}

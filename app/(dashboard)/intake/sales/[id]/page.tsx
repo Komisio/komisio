@@ -1,5 +1,5 @@
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import {
   receiptSearch,
   receiptSearchQuery,

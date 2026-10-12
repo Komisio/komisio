@@ -1,5 +1,6 @@
+import { WorkingForm } from '@/components/platform/working-form'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { notFound, redirect } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
@@ -60,7 +61,10 @@ export default async function Sellers({
         )}
       </div>
       <section className="card seller-directory" aria-label={d.title}>
-        <form action="/intake/sellers" className="seller-directory-search">
+        <WorkingForm
+          action="/intake/sellers"
+          className="seller-directory-search"
+        >
           <label htmlFor="sellers-q">{d.search}</label>
           <div className="row">
             <input
@@ -78,7 +82,7 @@ export default async function Sellers({
               </Link>
             )}
           </div>
-        </form>
+        </WorkingForm>
         {overview && (
           <p className="seller-directory-count">
             <small>

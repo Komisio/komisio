@@ -374,6 +374,7 @@
   "resend": "Send bekreftelsen på nytt",
   "authError": "Forespørselen kunne ikke fullføres. Kontroller opplysningene og prøv igjen.",
   "callbackError": "Denne lenken kunne ikke brukes. Be om en ny lenke og åpne den i samme nettleser.",
+  "working": "Komisio jobber…",
   "loading": "Et øyeblikk …",
   "save": "Lagre endringer",
   "saved": "Endringene dine er lagret.",

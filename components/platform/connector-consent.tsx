@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
@@ -31,7 +32,7 @@ export function ConnectorConsent({
   const running = useRef(false)
   const [store, setStore] = useState(defaultStore)
   const [scopes, setScopes] = useState<ConnectorScope[]>(requested)
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [message, setMessage] = useState('')
   const toggle = (s: ConnectorScope) =>
     setScopes((prev) =>

@@ -1,6 +1,6 @@
 'use client'
 import { useId, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { Button } from '@/components/ui/button'

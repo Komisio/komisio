@@ -1,9 +1,10 @@
+import { WorkingForm } from '@/components/platform/working-form'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { NewSellerDisclosure } from '@/components/intake/new-seller-disclosure'
 import { readStorePolicy } from '@/lib/engine/store-policy'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { notFound, redirect } from 'next/navigation'
 import { readSellersOverviewPage } from '@/lib/engine/sellers'
 import { z } from 'zod'
@@ -159,7 +160,7 @@ export default async function Intake({
                   open={!selected.data}
                 >
                   <summary>{d.find}</summary>
-                  <form action="/intake#seller-search" className="field">
+                  <WorkingForm action="/intake#seller-search" className="field">
                     <label htmlFor="seller-search">
                       {all.sellersList.search}
                     </label>
@@ -177,7 +178,7 @@ export default async function Intake({
                         {d.searchButton}
                       </button>
                     </div>
-                  </form>
+                  </WorkingForm>
                   <p>
                     <NewSellerLink className="text-link">
                       {d.newSeller}
@@ -370,7 +371,7 @@ export default async function Intake({
                     {d.bagsFor}: <strong>{selected.data.name}</strong>
                   </p>
                 )}
-                <form
+                <WorkingForm
                   action="/intake#bag-queue"
                   className="field received-bags-search"
                 >
@@ -392,7 +393,7 @@ export default async function Intake({
                     />
                     <button className="btn btn-secondary">{d.findBag}</button>
                   </div>
-                </form>
+                </WorkingForm>
                 <div className="row wrap received-bags-filters">
                   <Link
                     className="text-link"

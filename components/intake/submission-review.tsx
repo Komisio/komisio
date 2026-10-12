@@ -1,6 +1,7 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useId, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 
@@ -27,7 +28,7 @@ export function SubmissionReview({
   } | null>(null)
   const running = useRef(false)
   const [decision, setDecision] = useState('invite')
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [locked, setLocked] = useState(false)
   const [error, setError] = useState(false)
   const [saved, setSaved] = useState(false)

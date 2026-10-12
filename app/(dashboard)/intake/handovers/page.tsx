@@ -1,5 +1,6 @@
+import { WorkingForm } from '@/components/platform/working-form'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import './handovers.css'
 import { notFound, redirect } from 'next/navigation'
 import { z } from 'zod'
@@ -124,7 +125,7 @@ export default async function Handovers({
           {!focus.success && (
             <>
               {result ? (
-                <form
+                <WorkingForm
                   key={q + ':' + status}
                   action="/intake/handovers"
                   className="seller-directory-search handover-queue-search"
@@ -165,7 +166,7 @@ export default async function Handovers({
                       </Link>
                     )}
                   </div>
-                </form>
+                </WorkingForm>
               ) : (
                 <p role="status">{d.limited}</p>
               )}

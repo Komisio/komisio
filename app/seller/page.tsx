@@ -1,6 +1,7 @@
+import { WorkingForm } from '@/components/platform/working-form'
 import { readConsignmentFees } from '@/lib/engine/consignment-fees'
 import { ConsignmentFeeHistory } from '@/components/intake/consignment-fee-history'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { readSubmissionSettings } from '@/lib/engine/seller-submissions'
 import './seller-portal.css'
 import { notFound, redirect } from 'next/navigation'
@@ -322,7 +323,7 @@ export default async function SellerPortal({
           <p>{d.itemsIntro}</p>
           {paged ? (
             <>
-              <form
+              <WorkingForm
                 key={query}
                 action="/seller#portal-items"
                 role="search"
@@ -350,7 +351,7 @@ export default async function SellerPortal({
                     {all.items.clearFilters}
                   </Link>
                 )}
-              </form>
+              </WorkingForm>
               <p>
                 <small>
                   {paged.total > 0

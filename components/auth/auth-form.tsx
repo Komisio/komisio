@@ -1,8 +1,9 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { PasswordInput } from './password-input'
 import { useState, useSyncExternalStore } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import Link from '@/components/platform/working-link'
+import { useRouter } from '@/components/platform/use-working-router'
 import { ArrowRight } from 'lucide-react'
 import { browserClient } from '@/lib/supabase/client'
 import {
@@ -34,7 +35,7 @@ export function AuthForm({
   const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const [locale, setLocale] = useState<Locale>(initialLocale)
   const d = dictionary(locale)
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [email, setEmail] = useState('')

@@ -1,3 +1,4 @@
+import { WorkingForm } from '@/components/platform/working-form'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
@@ -67,9 +68,9 @@ export default async function Sales({
                 <h2 id="sales-recent">
                   {filtered ? d.searchResults : d.recent}
                 </h2>
-                <form
+                <WorkingForm
                   key={query}
-                  method="get"
+
                   action="/intake/sales"
                   role="search"
                   aria-label={d.findReceipt}
@@ -114,7 +115,7 @@ export default async function Sales({
                       </Link>
                     )}
                   </div>
-                </form>
+                </WorkingForm>
                 <p className="muted">
                   {filtered ? d.filteredHint : d.listHint}
                 </p>

@@ -1,6 +1,7 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
 import { useFormDirty } from '@/components/platform/use-form-dirty'
@@ -35,7 +36,7 @@ export function CommunicationForm({
   const [kind, setKind] = useState<keyof typeof references | 'message'>(
     'message',
   )
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [locked, setLocked] = useState(false)
   const [needsReload, setNeedsReload] = useState(false)
   const [error, setError] = useState('')

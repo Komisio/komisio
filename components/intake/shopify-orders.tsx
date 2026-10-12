@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
@@ -17,7 +18,7 @@ export function ShopifyOrders({
   d: Dictionary['shopify']
 }) {
   const running = useRef(false)
-  const [busy, setBusy] = useState<string | null>(null),
+  const [busy, setBusy] = useBusyState<string | null>(null),
     [message, setMessage] = useState(''),
     [ok, setOk] = useState(false)
   const errors = d.errors as Record<string, string>

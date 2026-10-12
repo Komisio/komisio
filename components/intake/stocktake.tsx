@@ -1,13 +1,10 @@
 'use client'
 import {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-  useTransition,
-} from 'react'
-import { useRouter } from 'next/navigation'
+  useBusyState,
+  useBusyTransition as useTransition,
+} from '@/components/platform/work-activity'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import type { StocktakeReport } from '@/lib/engine/stocktake'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
@@ -27,7 +24,7 @@ export function StocktakeWorkspace({
 }) {
   const router = useRouter(),
     running = useRef(false)
-  const [working, setWorking] = useState(false),
+  const [working, setWorking] = useBusyState(false),
     [pending, transition] = useTransition()
   return (
     <Workspace.Provider

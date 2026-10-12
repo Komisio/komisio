@@ -1,7 +1,8 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import Image from 'next/image'
 import { useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
 import {
@@ -31,7 +32,7 @@ export function ItemPhotoGallery({
   d: Dictionary['itemPhotos']
 }) {
   const [state, setState] = useState(initial)
-  const [busy, setBusy] = useState(false),
+  const [busy, setBusy] = useBusyState(false),
     [pending, setPending] = useState<Pending | null>(null)
   const [error, setError] = useState(''),
     [message, setMessage] = useState(''),

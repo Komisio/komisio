@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState, useSyncExternalStore } from 'react'
 import { useFormDirty } from './use-form-dirty'
 import { useUnsavedChanges } from './navigation-warning'
@@ -105,7 +106,7 @@ export function AccountForm({
 }
 export function PasswordForm({ d }: { d: Dictionary }) {
   const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [error, setError] = useState('')
   const [saved, setSaved] = useState(false)
   const [passwordVersion, setPasswordVersion] = useState(0)

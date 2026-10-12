@@ -1,7 +1,8 @@
+import { WorkingForm } from '@/components/platform/working-form'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
@@ -95,7 +96,7 @@ export default async function Economy({
               aria-label={d.periodHeading}
             >
               <h2>{d.periodHeading}</h2>
-              <form method="get" className="economy-period-form">
+              <WorkingForm className="economy-period-form">
                 {params.brief === 'week' || params.brief === 'month' ? (
                   <input type="hidden" name="brief" value={briefKind} />
                 ) : null}
@@ -123,7 +124,7 @@ export default async function Economy({
                   />
                 </div>
                 <button className="btn btn-primary">{d.show}</button>
-              </form>
+              </WorkingForm>
               <p className="muted economy-period-caption">
                 {d.showing} {summary.from} – {summary.to}
               </p>

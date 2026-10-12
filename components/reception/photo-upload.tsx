@@ -1,6 +1,7 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState, useSyncExternalStore } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { ReceptionSession } from '@/lib/engine/reception'
 import type { Dictionary } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
@@ -30,7 +31,7 @@ export function PhotoUpload({
     } | null>(null),
     removal = useRef<{ id: string; requestId: string } | null>(null),
     running = useRef(false)
-  const [busy, setBusy] = useState(false),
+  const [busy, setBusy] = useBusyState(false),
     [error, setError] = useState(''),
     [locked, setLocked] = useState(false),
     [conflict, setConflict] = useState(false),

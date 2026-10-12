@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
@@ -27,7 +28,7 @@ export function PrintDevices({
   const [code, setCode] = useState<{ code: string; expiresAt: string } | null>(
     null,
   )
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [message, setMessage] = useState('')
   const when = (iso: string) =>
     new Date(iso).toLocaleString(intlLocale(locale), {

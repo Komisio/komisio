@@ -1,6 +1,7 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
 import type { ShopifySettingsStatus } from '@/lib/engine/shopify-settings'
@@ -26,7 +27,7 @@ export function ShopifySetup({
   const [location, setLocation] = useState(status.settings?.locationId ?? '')
   const [web, setWeb] = useState(status.settings?.webPublicationId ?? '')
   const [pos, setPos] = useState(status.settings?.posPublicationId ?? '')
-  const [busy, setBusy] = useState(false),
+  const [busy, setBusy] = useBusyState(false),
     [error, setError] = useState('')
   async function post(save: boolean) {
     if (running.current) return

@@ -1,5 +1,6 @@
 'use client'
 
+import { useWorkActivity } from './work-activity'
 import { createContext, useContext } from 'react'
 
 const LoadingMessageContext = createContext('')
@@ -19,9 +20,11 @@ export function LoadingMessageProvider({
 }
 
 export function LoadingMessage() {
+  useWorkActivity(true)
   const message = useContext(LoadingMessageContext)
   return (
-    <div className="card" role="status">
+    <div className="card work-loading" role="status">
+      <span className="work-spinner" aria-hidden="true" />
       {message}
     </div>
   )

@@ -1,14 +1,14 @@
 'use client'
+import { useBusyTransition as useTransition } from '@/components/platform/work-activity'
 import {
   createContext,
   useContext,
   useState,
   useSyncExternalStore,
-  useTransition,
   type ReactNode,
 } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import Link from '@/components/platform/working-link'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import './seller-tabs.css'
 

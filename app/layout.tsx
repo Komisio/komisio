@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
 import './globals.css'
-import { intlLocale, resolveLocale } from '@/lib/i18n'
+import { dictionary, intlLocale, resolveLocale } from '@/lib/i18n'
+import { WorkActivityProvider } from '@/components/platform/work-activity'
+import { LoadingMessageProvider } from '@/components/platform/loading-message'
 import { LocaleProvider } from '@/components/platform/locale-provider'
 export const metadata: Metadata = {
   title: { default: 'Komisio', template: '%s · Komisio' },
@@ -16,7 +18,13 @@ export default async function RootLayout({
   return (
     <html lang={intlLocale(locale)}>
       <body>
-        <LocaleProvider locale={locale}>{children}</LocaleProvider>
+        <LocaleProvider locale={locale}>
+          <WorkActivityProvider message={dictionary(locale).working}>
+            <LoadingMessageProvider message={dictionary(locale).loading}>
+              {children}
+            </LoadingMessageProvider>
+          </WorkActivityProvider>
+        </LocaleProvider>
       </body>
     </html>
   )

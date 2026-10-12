@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useId, useRef, useState } from 'react'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
 import {
@@ -45,7 +46,7 @@ export function ReceptionAssistance({
   d: Dictionary['reception']
 }) {
   const [candidate, setCandidate] = useState<ReceptionSuggestions | null>(null),
-    [busy, setBusy] = useState(false),
+    [busy, setBusy] = useBusyState(false),
     [error, setError] = useState(''),
     [attempted, setAttempted] = useState(false)
   const [mode, setMode] = useState<'single' | 'batch'>('single')

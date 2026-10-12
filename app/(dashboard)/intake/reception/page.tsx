@@ -1,5 +1,6 @@
+import { WorkingForm } from '@/components/platform/working-form'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { ArrowRight, Plus } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
@@ -63,7 +64,7 @@ export default async function Receptions({
             {d.start}
           </summary>
           <div className="reception-start-content">
-            <form action="/intake/reception">
+            <WorkingForm action="/intake/reception">
               <input
                 type="hidden"
                 name="stage"
@@ -83,7 +84,7 @@ export default async function Receptions({
                   </button>
                 </div>
               </div>
-            </form>
+            </WorkingForm>
             {sellers.data.length >= 50 && <small>{d.searchLimit}</small>}
             {tenant.role !== 'readonly' && sellers.data.length > 0 ? (
               <StartReception
@@ -105,7 +106,10 @@ export default async function Receptions({
             <h2>{d.queueTitle}</h2>
           </div>
           {!parsed.success && <p role="alert">{d.invalid}</p>}
-          <form action="/intake/reception" className="reception-queue-filter">
+          <WorkingForm
+            action="/intake/reception"
+            className="reception-queue-filter"
+          >
             <input type="hidden" name="q" value={q} />
             <label htmlFor="queue-stage">{d.queueFilter}</label>
             <select
@@ -121,7 +125,7 @@ export default async function Receptions({
               ))}
             </select>
             <button className="btn btn-secondary">{d.queueFilter}</button>
-          </form>
+          </WorkingForm>
           <ul className="reception-queue-list">
             {recent.items.map((r) => {
               return (
@@ -181,7 +185,7 @@ export default async function Receptions({
         </section>
         <details className="reception-lookup" open={Boolean(p.session)}>
           <summary>{d.findSession}</summary>{' '}
-          <form action="/intake/reception">
+          <WorkingForm action="/intake/reception">
             <div className="field">
               <label htmlFor="reception-id">{d.sessionId}</label>
               <input
@@ -191,7 +195,7 @@ export default async function Receptions({
               />
             </div>
             <button className="btn btn-secondary">{d.findSession}</button>
-          </form>
+          </WorkingForm>
           {exact?.success ? (
             <Link
               href={`/intake/reception/${exact.data}`}

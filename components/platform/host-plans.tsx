@@ -1,6 +1,7 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { Fragment, useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import { ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
@@ -31,7 +32,7 @@ export function HostPlans({
 }) {
   const router = useRouter()
   const running = useRef(false)
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [uncertain, setUncertain] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')

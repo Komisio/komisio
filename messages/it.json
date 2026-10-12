@@ -374,6 +374,7 @@
   "resend": "Invia di nuovo la conferma",
   "authError": "Impossibile completare la richiesta. Controlla i dati e riprova.",
   "callbackError": "Questo link non può essere usato. Richiedi un nuovo link e aprilo nello stesso browser.",
+  "working": "Komisio sta lavorando…",
   "loading": "Un momento…",
   "save": "Salva modifiche",
   "saved": "Le modifiche sono state salvate.",

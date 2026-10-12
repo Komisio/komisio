@@ -1,6 +1,7 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 export function SubmissionReception({
@@ -21,7 +22,7 @@ export function SubmissionReception({
   const router = useRouter(),
     pending = useRef<object | null>(null),
     running = useRef(false)
-  const [busy, setBusy] = useState(false),
+  const [busy, setBusy] = useBusyState(false),
     [error, setError] = useState(false),
     [locked, setLocked] = useState(false)
   const [dirty, setDirty] = useState(false),

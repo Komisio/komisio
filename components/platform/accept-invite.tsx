@@ -1,5 +1,5 @@
 'use client'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import type { Dictionary } from '@/lib/i18n'
 import { useCommand } from './use-command'
 import { Button } from '@/components/ui/button'

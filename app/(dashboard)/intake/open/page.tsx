@@ -1,5 +1,6 @@
+import { WorkingForm } from '@/components/platform/working-form'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { notFound, redirect } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
@@ -81,7 +82,7 @@ export default async function OpenByReference({
             </Link>
           </p>
         )}
-        <form action="/intake/open">
+        <WorkingForm action="/intake/open">
           <div className="field">
             <label htmlFor="open-ref">{d.reference}</label>
             <input
@@ -102,7 +103,7 @@ export default async function OpenByReference({
             <small id="open-ref-hint">{d.hint}</small>
           </div>
           <button className="btn btn-primary">{d.open}</button>
-        </form>
+        </WorkingForm>
         <Link className="text-link" href="/intake">
           {dictionary(ctx.locale).intake.back}
         </Link>

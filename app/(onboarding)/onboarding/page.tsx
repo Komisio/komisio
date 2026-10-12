@@ -1,7 +1,7 @@
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary, intlLocale } from '@/lib/i18n'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { SignOut } from '@/components/platform/sign-out'
 import { Brand } from '@/components/platform/brand'
 import { TenantForm, OpenTenant } from '@/components/platform/tenant-form'

@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
@@ -20,7 +21,7 @@ export function ConnectorsPanel({
 }) {
   const running = useRef(false)
   const [list, setList] = useState(connectors)
-  const [busy, setBusy] = useState('')
+  const [busy, setBusy] = useBusyState('')
   const [message, setMessage] = useState('')
   const when = (iso: string | null) =>
     iso

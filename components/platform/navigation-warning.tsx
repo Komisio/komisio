@@ -1,5 +1,5 @@
 'use client'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import {
   createContext,
   useContext,

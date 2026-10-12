@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 
 import { useState } from 'react'
 import type { Dictionary } from '@/lib/i18n'
@@ -14,7 +15,7 @@ export function StocktakeDownload({
   filter: 'all' | 'deviations'
   s: Dictionary['stocktake']
 }) {
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [error, setError] = useState('')
   async function download() {
     if (busy) return

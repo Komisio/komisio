@@ -1,5 +1,6 @@
 'use client'
-import Link from 'next/link'
+import { useBusyState } from '@/components/platform/work-activity'
+import Link from '@/components/platform/working-link'
 import { useRef, useState } from 'react'
 import type { Dictionary } from '@/lib/i18n'
 import type {
@@ -51,7 +52,7 @@ function BatchRow({
 }: Props & { candidate: BatchCandidate; row: number }) {
   const [selected, setSelected] = useState<ReceptionReviewField[]>([]),
     [confirmed, setConfirmed] = useState(false),
-    [busy, setBusy] = useState(false),
+    [busy, setBusy] = useBusyState(false),
     [failed, setFailed] = useState(false),
     [dismissed, setDismissed] = useState(false),
     [result, setResult] = useState<{

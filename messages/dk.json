@@ -374,6 +374,7 @@
   "resend": "Send bekræftelse igen",
   "authError": "Forespørgslen kunne ikke gennemføres. Tjek dine oplysninger, og prøv igen.",
   "callbackError": "Dette link kunne ikke bruges. Anmod om et nyt link, og åbn det i den samme browser.",
+  "working": "Komisio arbejder…",
   "loading": "Et øjeblik…",
   "save": "Gem ændringer",
   "saved": "Dine ændringer er gemt.",

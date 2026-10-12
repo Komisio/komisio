@@ -1,7 +1,8 @@
 'use client'
+import { useBusyTransition as useTransition } from '@/components/platform/work-activity'
 
-import { useEffect, useRef, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useRef } from 'react'
+import { useRouter } from '@/components/platform/use-working-router'
 import { ChevronDown, Check } from 'lucide-react'
 import { locales, localeNames, intlLocale, type Locale } from '@/lib/i18n'
 import { useConfirmNavigation } from './navigation-warning'

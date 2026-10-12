@@ -1,4 +1,5 @@
 'use client'
+import { useWorkActivity } from '@/components/platform/work-activity'
 import { ReceivingPanel } from './receiving-panel'
 import { QuickSellerAgreement } from './quick-seller-agreement'
 import type { AgreementSummary } from './seller-agreement-fields'
@@ -9,7 +10,7 @@ import {
   useNavigationWarning,
   useConfirmNavigation,
 } from '@/components/platform/navigation-warning'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import { QuickSellerPicker } from './quick-seller-picker'
 import { Camera, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -702,6 +703,7 @@ export function QuickReception({
     setValidationRequested(false)
   }
 
+  useWorkActivity(stage !== 'idle')
   const busy = !ready || stage !== 'idle'
   const invalidDescription =
     validationRequested && !(facts.description ?? '').trim()

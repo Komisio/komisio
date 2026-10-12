@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
@@ -14,7 +15,7 @@ export function HostAi({
 }) {
   const running = useRef(false)
   const [current, setCurrent] = useState(settings)
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [message, setMessage] = useState('')
   const [form, setForm] = useState({
     enabled: settings.enabled,

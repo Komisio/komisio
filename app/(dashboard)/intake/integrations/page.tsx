@@ -15,7 +15,7 @@ import {
   readZettlePull,
   readZettleWindowClosure,
 } from '@/lib/engine/zettle-live'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { pilotIssue, pilotEnvironment } from '@/extensions/zettle/auth'
 import { ZettleConnection } from '@/components/intake/zettle-connection'
 import { notFound } from 'next/navigation'

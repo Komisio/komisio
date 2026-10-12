@@ -374,6 +374,7 @@
   "resend": "Resend confirmation",
   "authError": "The request could not be completed. Check your details and try again.",
   "callbackError": "This link could not be used. Request a new link and open it in the same browser.",
+  "working": "Komisio is working…",
   "loading": "One moment…",
   "save": "Save changes",
   "saved": "Your changes have been saved.",

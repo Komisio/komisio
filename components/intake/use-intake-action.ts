@@ -1,6 +1,7 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import { intakeCommand } from '@/lib/engine/intake'
 import type { Dictionary } from '@/lib/i18n'
 import { confirmsIntakeResult } from './confirmed-result'
@@ -9,7 +10,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
   const router = useRouter()
   const pending = useRef<unknown>(null)
   const running = useRef(false)
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [locked, setLocked] = useState(false)
   const [error, setError] = useState('')
   const [needsReload, setNeedsReload] = useState(false)

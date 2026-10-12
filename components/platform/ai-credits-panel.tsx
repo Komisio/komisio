@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
@@ -28,7 +29,7 @@ export function AiCreditsPanel({
 }) {
   const running = useRef(false)
   const [current, setCurrent] = useState(state)
-  const [busy, setBusy] = useState('')
+  const [busy, setBusy] = useBusyState('')
   const [message, setMessage] = useState('')
   const [model, setModel] = useState('gpt-4.1-mini')
   const [key, setKey] = useState('')

@@ -1,6 +1,7 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import type { Printer } from '@/lib/engine/printing'
 import { Button } from '@/components/ui/button'
@@ -28,7 +29,7 @@ export function PrintJobButton({
   const router = useRouter()
   const active = printers.filter((p) => p.active)
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [error, setError] = useState('')
   const [done, setDone] = useState(false)
   const pending = useRef<string | null>(null)

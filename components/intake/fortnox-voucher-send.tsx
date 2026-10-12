@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import type { FortnoxSendRow } from '@/lib/engine/fortnox-vouchers'
@@ -23,7 +24,7 @@ export function FortnoxVoucherSend({
 }) {
   const running = useRef(false)
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [state, setState] = useState<{
     status: 'sent' | 'failed'
     series: string

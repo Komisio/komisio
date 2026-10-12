@@ -1,3 +1,4 @@
+import { WorkingForm } from '@/components/platform/working-form'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
 import type { PriceEvidence } from '@/lib/engine/price-evidence'
@@ -25,7 +26,7 @@ export function PriceEvidencePanel({
       <h2>{d.title}</h2>
       <p>{d.intro}</p>
       {formAction && (
-        <form action={formAction} className="row wrap">
+        <WorkingForm action={formAction} className="row wrap">
           <label htmlFor="evidence-category">{d.category}</label>
           <input
             id="evidence-category"
@@ -41,7 +42,7 @@ export function PriceEvidencePanel({
             defaultValue={evidence.query ?? ''}
           />
           <button className="btn btn-secondary">{d.search}</button>
-        </form>
+        </WorkingForm>
       )}
       <p>
         {d.summary

@@ -1,7 +1,7 @@
 import { ItemPhotoGallery } from '@/components/intake/item-photo-gallery'
 import { readItemPhotos } from '@/lib/engine/item-photos'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { ActorSignature } from '@/components/intake/actor-signature'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'

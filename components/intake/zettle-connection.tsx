@@ -1,6 +1,7 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import { Button } from '@/components/ui/button'
 import type { PilotIssue } from '@/extensions/zettle/auth'
 import type { Dictionary } from '@/lib/i18n'
@@ -19,7 +20,7 @@ export function ZettleConnection({
   const router = useRouter()
   const [clientId, setClientId] = useState('')
   const [apiKey, setApiKey] = useState('')
-  const [busy, setBusy] = useState(false),
+  const [busy, setBusy] = useBusyState(false),
     [message, setMessage] = useState(''),
     [ok, setOk] = useState(false)
   async function check(connect = false) {

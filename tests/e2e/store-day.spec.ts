@@ -235,10 +235,15 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
     await page.goto(`/intake/sellers/${f.seller}#seller-items`)
     const sold = page
       .getByRole('tabpanel')
-      .locator('li')
-      .filter({ hasText: 'Synthetic day item 1' })
+      .getByRole('row')
+      .filter({
+        has: page.getByRole('link', {
+          name: 'Synthetic day item 1',
+          exact: true,
+        }),
+      })
     await expect(sold).toContainText(d.lifecycle.stages.sold)
-    await expect(sold.locator('strong')).toHaveText('90.00 SEK')
+    await expect(sold.locator('.inventory-price')).toHaveText('90.00 SEK')
     await page
       .getByRole('tab', { name: d.sellerWorkspace.economy, exact: true })
       .click()

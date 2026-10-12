@@ -12,7 +12,7 @@ async function openRow(page: Page, email: string) {
   const f = await p2Fixture(email)
   await f.commit()
   await page.setViewportSize({ width: 320, height: 720 })
-  await page.goto('/settings?tab=printing')
+  await page.goto('/settings?tab=printing#printing-labels')
   await page.locator('.label-formats-fold > summary').click()
   const row = page.getByRole('group', {
     name: new RegExp(d.printing.kinds.item),
@@ -221,7 +221,7 @@ test('a changed active store offers a reload instead of a permanently disabled r
       await dialog.accept()
     })
     await reload.click()
-    await expect(page).toHaveURL(/\/settings\?tab=printing$/)
+    await expect(page).toHaveURL(/\/settings\?tab=printing#printing-labels$/)
     // Nothing was written for the original store.
     expect(
       (

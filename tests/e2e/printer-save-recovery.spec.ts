@@ -163,14 +163,18 @@ test('a printer address rejected before saving remains correctable', async ({
       name: d.printing.register,
       exact: true,
     })
-    const refused = page.waitForResponse(
-      (r) =>
-        r.url().endsWith('/api/intake') &&
-        r.request().postDataJSON()?.action === 'registerPrinter',
-    )
+    let requests = 0
+    page.on('request', (request) => {
+      if (
+        request.url().endsWith('/api/intake') &&
+        request.postDataJSON()?.action === 'registerPrinter'
+      )
+        requests++
+    })
     await save.click()
-    expect((await refused).status()).toBe(400)
-    await expect(form.getByRole('alert')).toHaveText(d.intake.invalid)
+    await expect(form.getByRole('alert')).toHaveText(d.printing.addressInvalid)
+    await expect(address).toBeFocused()
+    expect(requests).toBe(0)
     await expect(address).toBeEnabled()
     await expect(
       form.getByRole('button', { name: d.intake.reload, exact: true }),

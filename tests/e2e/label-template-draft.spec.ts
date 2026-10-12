@@ -28,7 +28,7 @@ test('template drafts survive cancelled kind, copy and navigation changes; confi
   const f = await p2Fixture(email)
   try {
     await f.commit()
-    await page.goto('/settings?tab=printing')
+    await page.goto('/settings?tab=printing#printing-labels')
     const summary = page.locator('.label-templates-fold > summary')
     await summary.click()
     const editor = page.locator('.label-template-editor')
@@ -76,7 +76,7 @@ test('template drafts survive cancelled kind, copy and navigation changes; confi
     await expect(page).toHaveURL('/settings')
     expect(warnings).toBe(0)
     page.off('dialog', unexpected)
-    await page.goto('/settings?tab=printing')
+    await page.goto('/settings?tab=printing#printing-labels')
     await summary.click()
     await zpl.fill(content + ' unsaved')
     await decide(page, d.printing.discardTemplate, true, () =>

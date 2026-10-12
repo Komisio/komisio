@@ -11,13 +11,11 @@ export function PrintDevices({
   printerId,
   devices,
   canManage,
-  downloadUrl,
   locale,
   d,
 }: {
   tenantId: string
   printerId: string
-  downloadUrl: string
   devices: PrintDevice[]
   canManage: boolean
   locale: string
@@ -62,19 +60,14 @@ export function PrintDevices({
     }
   }
   return (
-    <div>
+    <div className="print-devices">
       <h4>{d.devicesTitle}</h4>
-      <p>{d.devicesIntro}</p>
-      <ol>
-        <li>
-          <a className="text-link" href={downloadUrl}>
-            {d.download}
-          </a>
-          . {d.deviceStep1}
-        </li>
-        <li>{d.deviceStep2}</li>
-        <li>{d.deviceStep3}</li>
-      </ol>
+      <p>
+        {d.pairHint}{' '}
+        <a className="text-link" href="#printing-install">
+          {d.tabs.install}
+        </a>
+      </p>
       {canManage && (
         <div className="row">
           <Button

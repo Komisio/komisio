@@ -3979,14 +3979,14 @@ button.text-link:hover:not(:disabled) {
   border-top: 1px solid var(--line);
   overflow-wrap: anywhere;
 }
-.printing-workspace > details,
+.printing-printers > details,
 .printing-workspace .label-formats-fold,
 .printing-jobs {
   margin: 24px 0;
   padding-top: 20px;
   border-top: 1px solid var(--line);
 }
-.printing-workspace > details > summary,
+.printing-printers > details > summary,
 .label-formats-fold > summary {
   cursor: pointer;
   min-height: 44px;
@@ -7417,5 +7417,79 @@ button.text-link:hover:not(:disabled) {
 @media (prefers-reduced-motion: reduce) {
   .work-spinner {
     animation: none;
+  }
+}
+
+/* Printer setup keeps installation separate from daily status and label editing. */
+.printing-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.printing-heading h2 {
+  margin: 0;
+}
+.printing-heading > a {
+  white-space: normal;
+  text-align: center;
+}
+.printing-workspace .printing-hint {
+  color: var(--muted);
+  max-width: 70ch;
+}
+.printer-form .intake-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 24px;
+  margin: 16px 0;
+}
+.printer-form .field {
+  min-width: 0;
+  margin: 0;
+}
+.printer-form .intake-confirm {
+  align-self: end;
+  min-height: 44px;
+}
+.print-devices {
+  padding-top: 20px;
+  margin-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.print-devices h4 {
+  margin-bottom: 8px;
+}
+.print-devices .row {
+  margin: 16px 0;
+}
+.printing-install {
+  max-width: 70ch;
+}
+.printing-install ol {
+  list-style: decimal;
+  padding-left: 24px;
+  margin: 24px 0;
+}
+.printing-install li {
+  padding-left: 8px;
+  margin-bottom: 20px;
+}
+.printing-install li p {
+  margin: 4px 0;
+}
+.printing-workspace .printing-jobs {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+@media (max-width: 600px) {
+  .printer-form .intake-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .printing-heading > a {
+    width: 100%;
   }
 }

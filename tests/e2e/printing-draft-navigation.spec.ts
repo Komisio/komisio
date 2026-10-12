@@ -23,7 +23,9 @@ for (const kind of ['printer', 'dimensions'] as const) {
     const f = await p2Fixture(email)
     try {
       await f.commit()
-      await page.goto('/settings?tab=printing')
+      await page.goto(
+        `/settings?tab=printing${kind === 'dimensions' ? '#printing-labels' : ''}`,
+      )
       if (kind === 'dimensions')
         await page.locator('.label-formats-fold > summary').click()
       const field =
@@ -34,7 +36,9 @@ for (const kind of ['printer', 'dimensions'] as const) {
       await field.fill(kind === 'printer' ? 'Synthetic printer draft' : '62')
       const link = page.locator('.view-tab[href="/settings"]')
       await cancelLeave(page, link)
-      await expect(page).toHaveURL('/settings?tab=printing')
+      await expect(page).toHaveURL(
+        `/settings?tab=printing${kind === 'dimensions' ? '#printing-labels' : ''}`,
+      )
       await expect(field).toHaveValue(
         kind === 'printer' ? 'Synthetic printer draft' : '62',
       )
@@ -82,10 +86,16 @@ test('saving one printing form preserves another draft and establishes the confi
       .first()
     const name = form.locator('input[name="name"]')
     await name.fill('Synthetic updated printer')
+    await page
+      .getByRole('tab', { name: d.printing.tabs.labels, exact: true })
+      .click()
     await page.locator('.label-formats-fold > summary').click()
     const row = page.locator('.label-format').first()
     const width = row.locator('input').first()
     await width.fill('62')
+    await page
+      .getByRole('tab', { name: d.printing.tabs.printers, exact: true })
+      .click()
     await form
       .getByRole('button', { name: d.printing.update, exact: true })
       .click()
@@ -95,6 +105,9 @@ test('saving one printing form preserves another draft and establishes the confi
     await name.fill('Synthetic updated printer')
     const other = page.locator('.view-tab[href="/settings"]')
     await cancelLeave(page, other)
+    await page
+      .getByRole('tab', { name: d.printing.tabs.labels, exact: true })
+      .click()
     await expect(width).toHaveValue('62')
     await row
       .getByRole('button', { name: d.printing.saveFormat, exact: true })

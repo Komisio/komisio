@@ -34,25 +34,24 @@ test('the label template editor fits a 320px phone in every language and keeps t
             url: 'http://127.0.0.1:3000',
           },
         ])
-        await page.goto('/settings?tab=printing')
+        await page.goto('/settings?tab=printing#printing-labels')
+        // A repeated URL with a fragment can be a same-document navigation.
+        // Reload to read the changed locale cookie and start with fresh folds.
+        await page.reload()
         const fold = page.locator('details.label-templates-fold')
         const summary = fold.locator('summary')
         const editor = page.locator('.intake-grid').filter({
           has: page.locator('textarea[id^="template-zpl-"]'),
         })
         const zpl = editor.locator('textarea[id^="template-zpl-"]')
-        // Occasional configuration stays folded below the recent print jobs.
+        // Occasional configuration stays folded in its own task tab.
         await expect(fold).not.toHaveAttribute('open', '')
         await expect(zpl).toBeHidden()
         await expect(page.locator('.label-format-kind').first()).toBeHidden()
         const sizes = page.locator('.label-formats-fold > summary')
         await expect(sizes).toHaveText(d.printing.formatsHeading)
-        await expect(
-          page.getByRole('heading', { name: d.printing.jobs, exact: true }),
-        ).toBeVisible()
-        expect((await sizes.boundingBox())!.y).toBeGreaterThan(
-          (await page.locator('#print-jobs').boundingBox())!.y,
-        )
+        await expect(sizes).toBeVisible()
+        await expect(page.locator('#print-jobs')).toBeHidden()
         await expect(summary).toHaveText(d.printing.templatesHeading)
         expect(
           (await summary.boundingBox())!.height,
@@ -185,7 +184,8 @@ test('the label template editor fits a 320px phone in every language and keeps t
     }
     // Desktop keeps the editor and the preview side by side.
     await page.setViewportSize({ width: 1280, height: 900 })
-    await page.goto('/settings?tab=printing')
+    await page.goto('/settings?tab=printing#printing-labels')
+    await page.reload()
     const editor = page.locator('.intake-grid').filter({
       has: page.locator('textarea[id^="template-zpl-"]'),
     })

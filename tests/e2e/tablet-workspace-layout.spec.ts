@@ -23,7 +23,7 @@ for (const locale of ['sv', 'en', 'no', 'dk', 'fi', 'de', 'es', 'it']) {
       for (const path of [
         '/intake/quick',
         '/intake/agreements',
-        '/settings?tab=printing',
+        '/settings?tab=printing#printing-labels',
       ]) {
         await page.goto(path)
         await expect(page.locator('h1')).toBeVisible()

@@ -1937,7 +1937,7 @@
     "tcp": "Rete (TCP)",
     "usb": "USB",
     "address": "Indirizzo",
-    "addressHint": "Host o IP con porta, ad esempio 192.168.1.50:9100. Lascia vuoto per USB.",
+    "addressHint": "Inserisci l’indirizzo IP o il nome host, ad esempio 192.168.1.50:9100. La porta predefinita è 9100.",
     "model": "Modello",
     "dpi": "Risoluzione (dpi)",
     "active": "Attiva",
@@ -1982,7 +1982,27 @@
     "browserUnavailable": "L’etichetta non è disponibile al momento. Torna all’articolo e riprova.",
     "printerUncertain": "Non è stato possibile confermare la modifica della stampante. Ricarica la pagina e controlla le impostazioni salvate prima di continuare.",
     "formatUncertain": "Non è stato possibile confermare la dimensione dell’etichetta. Ricarica la pagina e verifica la dimensione salvata prima di continuare.",
-    "discardTemplate": "Scartare le modifiche non salvate al modello di etichetta?"
+    "discardTemplate": "Scartare le modifiche non salvate al modello di etichetta?",
+    "tabs": {
+      "printers": "Stampanti",
+      "install": "Installa Komisio Print",
+      "labels": "Etichette",
+      "history": "Cronologia di stampa"
+    },
+    "networkSupport": "Komisio Print supporta stampanti Zebra/ZPL collegate alla rete. Il computer deve poter raggiungere la stampante sulla rete del negozio.",
+    "installIntro": "Il servizio collega Komisio alla stampante di etichette. Richiede Windows a 64 bit e una stampante Zebra/ZPL di rete. USB diretto non è supportato.",
+    "installDownload": "Scarica ed estrai",
+    "installDownloadHint": "Usa il pulsante di download in alto. Puoi scaricare il pacchetto prima di registrare una stampante. Estrailo in una cartella da conservare sul computer.",
+    "installPair": "Registra la stampante e crea un codice",
+    "installPairHint": "Apri Stampanti, inserisci l’indirizzo di rete e salva. Poi apri la stampante e crea un nuovo codice di associazione.",
+    "installRun": "Installa sul computer",
+    "installRunHint": "Esegui install.cmd come amministratore e inserisci il codice di associazione. Il codice è valido per 15 minuti e può essere usato una volta.",
+    "installRunning": "Il servizio si avvia automaticamente con il computer. Lascia il computer acceso durante la stampa. Lo stato della connessione appare sotto ogni stampante.",
+    "pairHint": "Associa il computer a questa stampante con un codice monouso.",
+    "paperHint": "Le etichette su carta normale si stampano direttamente dalla pagina dell’articolo.",
+    "addressInvalid": "Inserisci un indirizzo di rete come 192.168.1.50:9100. Non includere spazi o http://.",
+    "usbUnavailable": "USB (non supportato da Komisio Print)",
+    "usbHint": "Puoi mantenere questa configurazione USB, ma Komisio Print richiede una connessione di rete."
   },
   "purchases": {
     "title": "Acquisti propri",

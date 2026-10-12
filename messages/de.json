@@ -1937,7 +1937,7 @@
     "tcp": "Netzwerk (TCP)",
     "usb": "USB",
     "address": "Adresse",
-    "addressHint": "Host oder IP mit Port, zum Beispiel 192.168.1.50:9100. Für USB leer lassen.",
+    "addressHint": "Geben Sie die IP-Adresse oder den Hostnamen ein, zum Beispiel 192.168.1.50:9100. Der Standardport ist 9100.",
     "model": "Modell",
     "dpi": "Auflösung (dpi)",
     "active": "Aktiv",
@@ -1982,7 +1982,27 @@
     "browserUnavailable": "Das Etikett ist gerade nicht verfügbar. Kehren Sie zum Artikel zurück und versuchen Sie es erneut.",
     "printerUncertain": "Die Druckeränderung konnte nicht bestätigt werden. Lade die Seite neu und prüfe die gespeicherten Einstellungen, bevor du fortfährst.",
     "formatUncertain": "Die Etikettengröße konnte nicht bestätigt werden. Laden Sie die Seite neu und prüfen Sie die gespeicherte Größe, bevor Sie fortfahren.",
-    "discardTemplate": "Ungespeicherte Änderungen an der Etikettenvorlage verwerfen?"
+    "discardTemplate": "Ungespeicherte Änderungen an der Etikettenvorlage verwerfen?",
+    "tabs": {
+      "printers": "Drucker",
+      "install": "Komisio Print installieren",
+      "labels": "Etiketten",
+      "history": "Druckverlauf"
+    },
+    "networkSupport": "Komisio Print unterstützt Zebra/ZPL-Netzwerkdrucker. Der Computer muss den Drucker im Netzwerk des Geschäfts erreichen können.",
+    "installIntro": "Der Dienst verbindet Komisio mit dem Etikettendrucker. Erfordert Windows 64-Bit und einen Zebra/ZPL-Netzwerkdrucker. Direktes USB wird nicht unterstützt.",
+    "installDownload": "Herunterladen und entpacken",
+    "installDownloadHint": "Verwenden Sie die Download-Schaltfläche oben. Sie können das Paket vor der Druckerregistrierung herunterladen. Entpacken Sie es in einen dauerhaft gespeicherten Ordner.",
+    "installPair": "Drucker registrieren und Code erstellen",
+    "installPairHint": "Öffnen Sie Drucker, geben Sie die Netzwerkadresse ein und speichern Sie. Öffnen Sie anschließend den Drucker und erstellen Sie einen neuen Kopplungscode.",
+    "installRun": "Auf dem Computer installieren",
+    "installRunHint": "Führen Sie install.cmd als Administrator aus und geben Sie den Kopplungscode ein. Der Code gilt 15 Minuten und kann einmal verwendet werden.",
+    "installRunning": "Der Dienst startet automatisch mit dem Computer. Lassen Sie den Computer beim Drucken eingeschaltet. Der Verbindungsstatus wird beim jeweiligen Drucker angezeigt.",
+    "pairHint": "Verbinden Sie den Computer mit diesem Drucker über einen Einmalcode.",
+    "paperHint": "Etiketten auf normalem Papier können direkt von der Artikelseite gedruckt werden.",
+    "addressInvalid": "Geben Sie eine Netzwerkadresse wie 192.168.1.50:9100 ein. Keine Leerzeichen oder http:// verwenden.",
+    "usbUnavailable": "USB (von Komisio Print nicht unterstützt)",
+    "usbHint": "Diese USB-Konfiguration kann beibehalten werden, Komisio Print benötigt jedoch eine Netzwerkverbindung."
   },
   "purchases": {
     "title": "Eigene Einkäufe",

@@ -9,16 +9,24 @@ printer.
 
 ## For the store
 
-1. Settings, Printing: register the printer (name, IP address with port
-   9100, model, resolution) and set the label sizes.
-2. Download Komisio Print for Windows (the link is next to the printer),
-   unzip, run `install.cmd` as administrator.
-3. Press "New pairing code" next to the printer and enter it when the
-   installer asks. The code is valid fifteen minutes and works once.
+Requires 64-bit Windows and a network-connected Zebra/ZPL printer reachable
+from that computer. Komisio Print does not support direct USB printing.
+
+1. Settings, Printers and labels: download Komisio Print for Windows using
+   the button above the tabs. No registered printer is needed to download.
+   Unzip to a permanent folder; the Installation tab explains setup.
+2. In the Printers tab, register the printer (name, network address,
+   model, resolution). Port 9100 is used if omitted. Open the saved printer
+   and press "New pairing code".
+3. Run `install.cmd` as administrator and enter the code when asked.
+   The code is valid fifteen minutes and works once.
 4. Done. Komisio Print runs as a Windows service, starts with the computer
    and prints what the store queues to that printer. Its status (last seen,
    printer reachable, version) shows next to the printer; "Disconnect"
    revokes it at once.
+
+Label sizes and optional custom layouts are in the Labels tab; recent jobs
+and linked job recovery are in Print history. Switching tabs retains drafts.
 
 No account, no password, nothing to type but the code. One device per
 printer; a second computer gets its own code.

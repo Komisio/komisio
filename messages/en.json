@@ -1937,7 +1937,7 @@
     "tcp": "Network (TCP)",
     "usb": "USB",
     "address": "Address",
-    "addressHint": "Host or IP with port, for example 192.168.1.50:9100. Leave empty for USB.",
+    "addressHint": "Enter the printer IP address or hostname, for example 192.168.1.50:9100. The default port is 9100.",
     "model": "Model",
     "dpi": "Resolution (dpi)",
     "active": "Active",
@@ -1982,7 +1982,27 @@
     "browserUnavailable": "The label is unavailable right now. Return to the item and try again.",
     "printerUncertain": "The printer change could not be confirmed. Reload the page and check the saved settings before continuing.",
     "formatUncertain": "The label size could not be confirmed. Reload the page and check the saved size before continuing.",
-    "discardTemplate": "Discard unsaved changes to the label template?"
+    "discardTemplate": "Discard unsaved changes to the label template?",
+    "tabs": {
+      "printers": "Printers",
+      "install": "Install Komisio Print",
+      "labels": "Labels",
+      "history": "Print history"
+    },
+    "networkSupport": "Komisio Print supports network-connected Zebra/ZPL printers. The computer must be able to reach the printer on the store network.",
+    "installIntro": "The service connects Komisio to your label printer. Requires 64-bit Windows and a network-connected Zebra/ZPL printer. Direct USB is not supported.",
+    "installDownload": "Download and unzip",
+    "installDownloadHint": "Use the download button above. You can download the package before registering a printer. Extract it to a folder you will keep on the computer.",
+    "installPair": "Register the printer and create a code",
+    "installPairHint": "Open Printers, enter the printer network address and save. Then open the printer and choose New pairing code.",
+    "installRun": "Install on the computer",
+    "installRunHint": "Run install.cmd as administrator and enter the pairing code. The code is valid for 15 minutes and can be used once.",
+    "installRunning": "The service starts automatically with the computer. Keep the computer on while printing. Connection status appears under each printer.",
+    "pairHint": "Pair the computer with this printer using a one-time code.",
+    "paperHint": "Labels on ordinary paper can be printed directly from the item page.",
+    "addressInvalid": "Enter a network address such as 192.168.1.50:9100. Do not include spaces or http://.",
+    "usbUnavailable": "USB (not supported by Komisio Print)",
+    "usbHint": "You can keep this USB configuration, but Komisio Print requires a network connection."
   },
   "purchases": {
     "title": "Own purchases",

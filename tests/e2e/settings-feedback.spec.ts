@@ -88,7 +88,7 @@ test('template edits discard stale preview replies and clear an obsolete image',
   let release = () => {}
   try {
     await f.commit()
-    await page.goto('/settings?tab=printing')
+    await page.goto('/settings?tab=printing#printing-labels')
     await page.locator('.label-templates-fold > summary').click()
     const editor = page.locator('.label-template-editor')
     const zpl = editor.locator('textarea')

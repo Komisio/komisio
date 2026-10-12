@@ -1,3 +1,5 @@
+import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
+import { Button } from '@/components/ui/button'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import { z } from 'zod'
@@ -240,128 +242,198 @@ export default async function Settings({
           className="card intake-form printing-workspace"
           aria-label={pr.title}
         >
-          <h2>{pr.title}</h2>
-          <p>{pr.intro}</p>
-          <Link className="text-link" href="/help/labels">
-            {d.helpCenter.articles.labels.title}
-          </Link>
-          {requestedJob !== null && (
-            <section aria-labelledby="selected-print-job">
-              <h3 id="selected-print-job" tabIndex={-1}>
-                {pr.selectedJob}
-              </h3>
-              {selectedJob ? (
-                jobDetails(selectedJob)
-              ) : (
-                <p role="status">{pr.jobUnavailable}</p>
-              )}
-            </section>
-          )}
-          {printers.length === 0 && <p>{pr.none}</p>}
-          {printers.map((p) => (
-            <details key={p.id}>
-              <summary>
-                {p.name} · {p.transport === 'tcp' ? p.address : pr.usb} ·{' '}
-                {p.active ? pr.activeLabel : pr.inactiveLabel}
-              </summary>
-              {manages && (
-                <PrinterForm
-                  tenantId={active.id}
-                  existing={p}
-                  d={pr}
-                  intake={d.intake}
-                  leaveUnsaved={d.leaveUnsaved}
-                />
-              )}
-              {p.transport === 'tcp' && devices && (
-                <PrintDevices
-                  key={`devices-${p.id}`}
-                  tenantId={active.id}
-                  printerId={p.id}
-                  devices={devices.filter((x) => x.printerId === p.id)}
-                  canManage={manages}
-                  downloadUrl={printAgentDownload()}
-                  locale={ctx.locale}
-                  d={pr}
-                />
-              )}
-            </details>
-          ))}
-          {manages && (
-            <details
-              className="printer-register-fold"
-              open={printers.length === 0}
-            >
-              <summary>{pr.registerHeading}</summary>
-              <PrinterForm
-                key={`new-${printers.length}`}
-                tenantId={active.id}
-                d={pr}
-                intake={d.intake}
-                leaveUnsaved={d.leaveUnsaved}
-              />
-            </details>
-          )}
-          <section className="printing-jobs" aria-labelledby="print-jobs">
-            <h3 id="print-jobs" tabIndex={-1}>
-              {pr.jobs}
-            </h3>
-            {jobs.length === 0 && <p>{pr.noJobs}</p>}
-            {recentJobs.map(jobDetails)}
-          </section>
-          {formats && (
-            <LabelFormatsForm
-              key={`formats-${active.id}`}
-              tenantId={active.id}
-              formats={formats}
-              canEdit={manages}
-              d={pr}
-              intake={d.intake}
-              leaveUnsaved={d.leaveUnsaved}
-            />
-          )}
-          {formats && templates && (
-            <LabelTemplatesForm
-              key={`templates-${active.id}`}
-              tenantId={active.id}
-              templates={templates}
-              builtins={{
-                bag: builtinTemplate('bag', {
-                  widthMm: formats.bag.widthMm,
-                  heightMm: formats.bag.heightMm,
-                  dpi: previewDpi,
-                }),
-                garment: builtinTemplate('garment', {
-                  widthMm: formats.garment.widthMm,
-                  heightMm: formats.garment.heightMm,
-                  dpi: previewDpi,
-                }),
-                item: builtinTemplate('item', {
-                  widthMm: formats.item.widthMm,
-                  heightMm: formats.item.heightMm,
-                  dpi: previewDpi,
-                }),
-                markdown: builtinTemplate('markdown', {
-                  widthMm: formats.markdown.widthMm,
-                  heightMm: formats.markdown.heightMm,
-                  dpi: previewDpi,
-                }),
-                onboarding: builtinTemplate('onboarding', {
-                  widthMm: formats.onboarding.widthMm,
-                  heightMm: formats.onboarding.heightMm,
-                  dpi: previewDpi,
-                }),
-              }}
-              canEdit={manages}
-              dpi={previewDpi}
-              d={pr}
-              intake={d.intake}
-              leaveUnsaved={d.leaveUnsaved}
-            />
-          )}
-          <p>
-            <small>{pr.agentHint}</small>
-          </p>
+          <div className="printing-heading">
+            <h2>{pr.title}</h2>
+            <Button asChild variant="secondary">
+              <a href={printAgentDownload()}>{pr.download}</a>
+            </Button>
+          </div>
+          <WorkspaceTabs
+            id="printing"
+            label={pr.title}
+            initial={requestedJob !== null ? 'history' : 'printers'}
+            tabs={[
+              {
+                id: 'printers',
+                label: pr.tabs.printers,
+                content: (
+                  <div className="printing-printers">
+                    <p className="printing-hint">{pr.networkSupport}</p>
+                    {printers.length === 0 && <p>{pr.none}</p>}
+                    {printers.map((p) => (
+                      <details key={p.id}>
+                        <summary>
+                          {p.name} ·{' '}
+                          {p.transport === 'tcp' ? p.address : pr.usb} ·{' '}
+                          {p.active ? pr.activeLabel : pr.inactiveLabel}
+                        </summary>
+                        {manages && (
+                          <PrinterForm
+                            tenantId={active.id}
+                            existing={p}
+                            d={pr}
+                            intake={d.intake}
+                            leaveUnsaved={d.leaveUnsaved}
+                          />
+                        )}
+                        {p.transport === 'tcp' && devices && (
+                          <PrintDevices
+                            key={`devices-${p.id}`}
+                            tenantId={active.id}
+                            printerId={p.id}
+                            devices={devices.filter(
+                              (x) => x.printerId === p.id,
+                            )}
+                            canManage={manages}
+                            locale={ctx.locale}
+                            d={pr}
+                          />
+                        )}
+                      </details>
+                    ))}
+                    {manages && (
+                      <details
+                        className="printer-register-fold"
+                        open={printers.length === 0}
+                      >
+                        <summary>{pr.registerHeading}</summary>
+                        <PrinterForm
+                          key={`new-${printers.length}`}
+                          tenantId={active.id}
+                          d={pr}
+                          intake={d.intake}
+                          leaveUnsaved={d.leaveUnsaved}
+                        />
+                      </details>
+                    )}
+                  </div>
+                ),
+              },
+              {
+                id: 'install',
+                label: pr.tabs.install,
+                content: (
+                  <div className="printing-install">
+                    <h3>Komisio Print</h3>
+                    <p>{pr.installIntro}</p>
+                    <ol>
+                      <li>
+                        <strong>{pr.installDownload}</strong>
+                        <p>{pr.installDownloadHint}</p>
+                      </li>
+                      <li>
+                        <strong>{pr.installPair}</strong>
+                        <p>{pr.installPairHint}</p>
+                        <a className="text-link" href="#printing-printers">
+                          {pr.tabs.printers}
+                        </a>
+                      </li>
+                      <li>
+                        <strong>{pr.installRun}</strong>
+                        <p>{pr.installRunHint}</p>
+                      </li>
+                    </ol>
+                    <p className="printing-hint">{pr.installRunning}</p>
+                  </div>
+                ),
+              },
+              {
+                id: 'labels',
+                label: pr.tabs.labels,
+                content: (
+                  <>
+                    <p className="printing-hint">
+                      {pr.paperHint}{' '}
+                      <Link className="text-link" href="/help/labels">
+                        {d.helpCenter.articles.labels.title}
+                      </Link>
+                    </p>
+                    {formats && (
+                      <LabelFormatsForm
+                        key={`formats-${active.id}`}
+                        tenantId={active.id}
+                        formats={formats}
+                        canEdit={manages}
+                        d={pr}
+                        intake={d.intake}
+                        leaveUnsaved={d.leaveUnsaved}
+                      />
+                    )}
+                    {formats && templates && (
+                      <LabelTemplatesForm
+                        key={`templates-${active.id}`}
+                        tenantId={active.id}
+                        templates={templates}
+                        builtins={{
+                          bag: builtinTemplate('bag', {
+                            widthMm: formats.bag.widthMm,
+                            heightMm: formats.bag.heightMm,
+                            dpi: previewDpi,
+                          }),
+                          garment: builtinTemplate('garment', {
+                            widthMm: formats.garment.widthMm,
+                            heightMm: formats.garment.heightMm,
+                            dpi: previewDpi,
+                          }),
+                          item: builtinTemplate('item', {
+                            widthMm: formats.item.widthMm,
+                            heightMm: formats.item.heightMm,
+                            dpi: previewDpi,
+                          }),
+                          markdown: builtinTemplate('markdown', {
+                            widthMm: formats.markdown.widthMm,
+                            heightMm: formats.markdown.heightMm,
+                            dpi: previewDpi,
+                          }),
+                          onboarding: builtinTemplate('onboarding', {
+                            widthMm: formats.onboarding.widthMm,
+                            heightMm: formats.onboarding.heightMm,
+                            dpi: previewDpi,
+                          }),
+                        }}
+                        canEdit={manages}
+                        dpi={previewDpi}
+                        d={pr}
+                        intake={d.intake}
+                        leaveUnsaved={d.leaveUnsaved}
+                      />
+                    )}
+                  </>
+                ),
+              },
+              {
+                id: 'history',
+                label: pr.tabs.history,
+                anchors: ['print-jobs', 'selected-print-job'],
+                content: (
+                  <>
+                    {requestedJob !== null && (
+                      <section aria-labelledby="selected-print-job">
+                        <h3 id="selected-print-job" tabIndex={-1}>
+                          {pr.selectedJob}
+                        </h3>
+                        {selectedJob ? (
+                          jobDetails(selectedJob)
+                        ) : (
+                          <p role="status">{pr.jobUnavailable}</p>
+                        )}
+                      </section>
+                    )}
+                    <section
+                      className="printing-jobs"
+                      aria-labelledby="print-jobs"
+                    >
+                      <h3 id="print-jobs" tabIndex={-1}>
+                        {pr.jobs}
+                      </h3>
+                      {jobs.length === 0 && <p>{pr.noJobs}</p>}
+                      {recentJobs.map(jobDetails)}
+                    </section>
+                  </>
+                ),
+              },
+            ]}
+          />
         </section>
       )}
       {tab === 'store' && (

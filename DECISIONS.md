@@ -1002,3 +1002,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-12: At the owner's request, Generate with AI replaces the editable agreement text directly through the existing audited draft operation. The publisher omits preview and intermediate draft controls; publication remains a separate explicit action. Retry identities are preserved.
 
 - 2026-10-12: A shared, localized work indicator reflects active UI requests and navigation. Parallel work keeps it visible until all tracked work finishes; quick actions do not flash. It does not retry commands, infer success or change draft/navigation guards.
+
+- 2026-10-12: Printing settings separate printers, installation, labels and history in draft-preserving tabs. The environment-specific Windows download is available before printer registration; pairing remains printer-bound. Network address errors are shown at the field; USB support is not implied.

@@ -35,6 +35,8 @@ export function PrinterForm({
   const fieldId = useId()
   const [requestId] = useState(() => existing?.id ?? crypto.randomUUID())
   const [invalid, setInvalid] = useState(false)
+  const [addressInvalid, setAddressInvalid] = useState(false)
+  const [transport, setTransport] = useState(existing?.transport ?? 'tcp')
   const [saved, setSaved] = useState(false)
   const form = useRef<HTMLFormElement>(null)
   const { ready, dirty, checkDirty, resetDirty } = useFormDirty(form)
@@ -46,6 +48,17 @@ export function PrinterForm({
     if (action.busy || action.locked || action.needsReload) return
     setSaved(false)
     const f = new FormData(event.currentTarget)
+    // Match the existing database address syntax before sending a write.
+    const badAddress =
+      transport === 'tcp' &&
+      !/^[A-Za-z0-9.\-]+(:[0-9]{2,5})?$/.test(
+        String(f.get('address') ?? '').trim(),
+      )
+    setAddressInvalid(badAddress)
+    if (badAddress) {
+      form.current?.querySelector<HTMLInputElement>('[name="address"]')?.focus()
+      return
+    }
     const candidate = registerPrinterCommand.safeParse({
       action: 'registerPrinter',
       tenantId,
@@ -68,9 +81,12 @@ export function PrinterForm({
   return (
     <form
       ref={form}
+      className="printer-form"
       onSubmit={submit}
       onChange={() => {
         setSaved(false)
+        setInvalid(false)
+        setAddressInvalid(false)
         checkDirty()
       }}
     >
@@ -95,10 +111,16 @@ export function PrinterForm({
             id={`printer-transport-${fieldId}`}
             name="transport"
             defaultValue={existing?.transport ?? 'tcp'}
+            onChange={(event) =>
+              setTransport(event.target.value as 'tcp' | 'usb')
+            }
           >
             <option value="tcp">{d.tcp}</option>
-            <option value="usb">{d.usb}</option>
+            <option value="usb" disabled={existing?.transport !== 'usb'}>
+              {d.usbUnavailable}
+            </option>
           </select>
+          {transport === 'usb' && <small>{d.usbHint}</small>}
         </div>
         <div className="field">
           <label htmlFor={`printer-address-${fieldId}`}>{d.address}</label>
@@ -108,8 +130,20 @@ export function PrinterForm({
             maxLength={200}
             placeholder="192.168.1.50:9100"
             defaultValue={existing?.address ?? ''}
+            aria-required={transport === 'tcp'}
+            aria-invalid={addressInvalid || undefined}
+            aria-describedby={`printer-address-hint-${fieldId}${addressInvalid ? ` printer-address-error-${fieldId}` : ''}`}
           />
-          <small>{d.addressHint}</small>
+          <small id={`printer-address-hint-${fieldId}`}>{d.addressHint}</small>
+          {addressInvalid && (
+            <p
+              className="field-error"
+              id={`printer-address-error-${fieldId}`}
+              role="alert"
+            >
+              {d.addressInvalid}
+            </p>
+          )}
         </div>
         <div className="field">
           <label htmlFor={`printer-model-${fieldId}`}>{d.model}</label>
@@ -118,6 +152,7 @@ export function PrinterForm({
             name="model"
             maxLength={80}
             defaultValue={existing?.model ?? ''}
+            placeholder="Zebra ZD420"
           />
         </div>
         <div className="field">

@@ -1937,7 +1937,7 @@
     "tcp": "Verkko (TCP)",
     "usb": "USB",
     "address": "Osoite",
-    "addressHint": "Isäntä tai IP portteineen, esimerkiksi 192.168.1.50:9100. Jätä tyhjäksi USB:lle.",
+    "addressHint": "Anna tulostimen IP-osoite tai isäntänimi, esimerkiksi 192.168.1.50:9100. Oletusportti on 9100.",
     "model": "Malli",
     "dpi": "Tarkkuus (dpi)",
     "active": "Aktiivinen",
@@ -1982,7 +1982,27 @@
     "browserUnavailable": "Etikettiä ei voi näyttää juuri nyt. Palaa tuotteeseen ja yritä uudelleen.",
     "printerUncertain": "Tulostimen muutosta ei voitu vahvistaa. Lataa sivu uudelleen ja tarkista tallennetut asetukset ennen kuin jatkat.",
     "formatUncertain": "Etiketin kokoa ei voitu vahvistaa. Lataa sivu uudelleen ja tarkista tallennettu koko ennen kuin jatkat.",
-    "discardTemplate": "Hylätäänkö etikettimallin tallentamattomat muutokset?"
+    "discardTemplate": "Hylätäänkö etikettimallin tallentamattomat muutokset?",
+    "tabs": {
+      "printers": "Tulostimet",
+      "install": "Asenna Komisio Print",
+      "labels": "Etiketit",
+      "history": "Tulostushistoria"
+    },
+    "networkSupport": "Komisio Print tukee verkkoon liitettyjä Zebra/ZPL-tulostimia. Tietokoneen on saatava yhteys tulostimeen myymälän verkossa.",
+    "installIntro": "Palvelu yhdistää Komision etikettitulostimeen. Vaatii 64-bittisen Windowsin ja verkkoon liitetyn Zebra/ZPL-tulostimen. Suoraa USB-yhteyttä ei tueta.",
+    "installDownload": "Lataa ja pura",
+    "installDownloadHint": "Käytä yllä olevaa latauspainiketta. Voit ladata paketin ennen tulostimen rekisteröintiä. Pura se kansioon, jonka säilytät tietokoneella.",
+    "installPair": "Rekisteröi tulostin ja luo koodi",
+    "installPairHint": "Avaa Tulostimet, anna tulostimen verkko-osoite ja tallenna. Avaa sitten tulostin ja luo uusi parituskoodi.",
+    "installRun": "Asenna tietokoneelle",
+    "installRunHint": "Suorita install.cmd järjestelmänvalvojana ja anna parituskoodi. Koodi on voimassa 15 minuuttia ja sen voi käyttää kerran.",
+    "installRunning": "Palvelu käynnistyy automaattisesti tietokoneen mukana. Pidä tietokone käynnissä tulostuksen aikana. Yhteyden tila näkyy kunkin tulostimen kohdalla.",
+    "pairHint": "Yhdistä tietokone tähän tulostimeen kertakäyttöisellä koodilla.",
+    "paperHint": "Tavalliselle paperille tarkoitetut etiketit tulostetaan suoraan tuotesivulta.",
+    "addressInvalid": "Anna verkko-osoite, esimerkiksi 192.168.1.50:9100. Älä käytä välilyöntejä tai http://-alkua.",
+    "usbUnavailable": "USB (Komisio Print ei tue tätä)",
+    "usbHint": "Voit säilyttää tämän USB-määrityksen, mutta Komisio Print vaatii verkkoyhteyden."
   },
   "purchases": {
     "title": "Omat ostot",

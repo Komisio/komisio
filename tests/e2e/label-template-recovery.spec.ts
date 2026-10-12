@@ -29,7 +29,7 @@ async function openEditor(
 }
 
 async function openFold(page: Page) {
-  await page.goto('/settings?tab=printing')
+  await page.goto('/settings?tab=printing#printing-labels')
   await page.locator('details.label-templates-fold summary').click()
   const e = openFoldLocators(page)
   await expect(e.zpl).toBeVisible()

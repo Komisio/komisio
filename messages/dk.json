@@ -1937,7 +1937,7 @@
     "tcp": "Netværk (TCP)",
     "usb": "USB",
     "address": "Adresse",
-    "addressHint": "Host eller IP med port, for eksempel 192.168.1.50:9100. Lad stå tomt for USB.",
+    "addressHint": "Indtast printerens IP-adresse eller værtsnavn, for eksempel 192.168.1.50:9100. Standardporten er 9100.",
     "model": "Model",
     "dpi": "Opløsning (dpi)",
     "active": "Aktiv",
@@ -1982,7 +1982,27 @@
     "browserUnavailable": "Etiketten kan ikke vises lige nu. Gå tilbage til varen og prøv igen.",
     "printerUncertain": "Ændringen af printeren kunne ikke bekræftes. Genindlæs siden, og kontrollér de gemte indstillinger, før du fortsætter.",
     "formatUncertain": "Etiketstørrelsen kunne ikke bekræftes. Genindlæs siden, og kontrollér den gemte størrelse, før du fortsætter.",
-    "discardTemplate": "Kassér ikke-gemte ændringer i etiketskabelonen?"
+    "discardTemplate": "Kassér ikke-gemte ændringer i etiketskabelonen?",
+    "tabs": {
+      "printers": "Printere",
+      "install": "Installer Komisio Print",
+      "labels": "Etiketter",
+      "history": "Udskriftshistorik"
+    },
+    "networkSupport": "Komisio Print understøtter netværkstilsluttede Zebra/ZPL-printere. Computeren skal kunne nå printeren på butikkens netværk.",
+    "installIntro": "Tjenesten forbinder Komisio med etiketprinteren. Kræver Windows 64-bit og en netværkstilsluttet Zebra/ZPL-printer. Direkte USB understøttes ikke.",
+    "installDownload": "Download og pak ud",
+    "installDownloadHint": "Brug downloadknappen ovenfor. Du kan hente pakken, før du registrerer en printer. Pak den ud i en mappe, du beholder på computeren.",
+    "installPair": "Registrer printeren og opret en kode",
+    "installPairHint": "Åbn Printere, indtast printerens netværksadresse og gem. Åbn derefter printeren og vælg Ny parringskode.",
+    "installRun": "Installer på computeren",
+    "installRunHint": "Kør install.cmd som administrator og indtast tilslutningskoden. Koden gælder i 15 minutter og kan bruges én gang.",
+    "installRunning": "Tjenesten starter automatisk med computeren. Lad computeren være tændt ved udskrivning. Forbindelsens status vises under hver printer.",
+    "pairHint": "Tilslut computeren til denne printer med en engangskode.",
+    "paperHint": "Etiketter på almindeligt papir udskrives direkte fra varesiden.",
+    "addressInvalid": "Indtast en netværksadresse, for eksempel 192.168.1.50:9100. Brug ikke mellemrum eller http://.",
+    "usbUnavailable": "USB (understøttes ikke af Komisio Print)",
+    "usbHint": "Du kan beholde denne USB-konfiguration, men Komisio Print kræver netværksforbindelse."
   },
   "purchases": {
     "title": "Egne indkøb",

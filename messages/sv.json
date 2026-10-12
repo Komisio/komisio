@@ -3778,7 +3778,7 @@
       "unknown": "Okänt"
     },
     "preferences": {
-      "title": "Bildöverföring",
+      "title": "Synkning",
       "images": "Skicka varans standardbild",
       "hint": "Gäller den här anslutningen. Redan skickade bilder tas inte bort när valet stängs av.",
       "save": "Spara",
@@ -3789,6 +3789,22 @@
       "errors": {
         "SYNC_CONNECTION_CHANGED": "Anslutningen har ändrats. Ladda om sidan.",
         "SYNC_SETTINGS_CHANGED": "Inställningen har ändrats. Ladda om sidan."
+      }
+    },
+    "automatic": {
+      "title": "Automatisk synkning",
+      "hint": "Skicka nya varor och prisändringar i bakgrunden. Bildvalet ovan gäller även här.",
+      "on": "På",
+      "off": "Av",
+      "enable": "Aktivera",
+      "disable": "Stäng av",
+      "ownerOnly": "Endast butiksägaren kan ändra detta.",
+      "unavailable": "Automatisk synkning är inte konfigurerad på servern.",
+      "outcomes": {
+        "running": "Synkning pågår",
+        "complete": "Senaste vara synkad",
+        "held": "Behöver kontrolleras",
+        "failed": "Senaste synkning misslyckades"
       }
     }
   }

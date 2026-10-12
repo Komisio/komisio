@@ -33,6 +33,7 @@ const payload = {
 const locations = { STORE: tenant, SUPPLIER: merchant, SOLD: item, BIN: job }
 function setup(
   options: {
+    leased?: boolean
     fresh?: boolean
     role?: string
     tracked?: boolean
@@ -61,6 +62,12 @@ function setup(
     events.push(name)
     if (name === 'tenant_role')
       return { data: options.role ?? 'owner', error: null }
+    if (name === 'catalog_export_item_access')
+      return { data: options.leased ?? false, error: null }
+    if (name === 'catalog_export_connection')
+      return { data: { merchant_id: merchant }, error: null }
+    if (name === 'catalog_export_payload')
+      return { data: { payload, previous_payload: null }, error: null }
     if (name === 'repair_zettle_product_identity') {
       if (options.repairDenied)
         return { data: null, error: { message: 'ZETTLE_IDENTITY_HELD' } }
@@ -410,4 +417,21 @@ it('an empty HTTP tracking response cannot re-enable an old claim', async () => 
   expect(
     http.mock.calls.map(([input]) => new URL(String(input)).pathname),
   ).toEqual(['/v3/inventories', '/v3/products/status'])
+})
+
+it('leased automation uses scoped reads and preserves the sole stock movement', async () => {
+  const f = setup({ role: 'automation', leased: true })
+  expect((await f.run()).stock).toBe('initialized')
+  await f.run(merchant)
+  expect(f.client.from).not.toHaveBeenCalled()
+  expect(f.inventory.initialize).toHaveBeenCalledTimes(1)
+  expect(f.rpc).toHaveBeenCalledWith('catalog_export_payload', {
+    p_tenant: tenant,
+    p_export: job,
+  })
+})
+it('an automation identity without a lease cannot start provider access', async () => {
+  const f = setup({ role: 'automation' })
+  await expect(f.run()).rejects.toThrow('FORBIDDEN')
+  expect(f.factory).not.toHaveBeenCalled()
 })

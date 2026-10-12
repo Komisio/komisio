@@ -3784,7 +3784,7 @@
       "unknown": "Unbekannt"
     },
     "preferences": {
-      "title": "Bildübertragung",
+      "title": "Synchronisierung",
       "images": "Standardbild des Artikels senden",
       "hint": "Gilt für diese Verbindung. Bereits gesendete Bilder bleiben beim Ausschalten erhalten.",
       "save": "Speichern",
@@ -3795,6 +3795,22 @@
       "errors": {
         "SYNC_CONNECTION_CHANGED": "Die Verbindung wurde geändert. Seite neu laden.",
         "SYNC_SETTINGS_CHANGED": "Die Einstellung wurde geändert. Seite neu laden."
+      }
+    },
+    "automatic": {
+      "title": "Automatische Synchronisierung",
+      "hint": "Neue Artikel und Preisänderungen im Hintergrund senden. Die Bildeinstellung oben gilt auch hier.",
+      "on": "Ein",
+      "off": "Aus",
+      "enable": "Aktivieren",
+      "disable": "Deaktivieren",
+      "ownerOnly": "Nur der Ladeninhaber kann dies ändern.",
+      "unavailable": "Die automatische Synchronisierung ist auf dem Server nicht konfiguriert.",
+      "outcomes": {
+        "running": "Synchronisierung läuft",
+        "complete": "Letzter Artikel synchronisiert",
+        "held": "Prüfung erforderlich",
+        "failed": "Letzte Synchronisierung fehlgeschlagen"
       }
     }
   }

@@ -14,7 +14,9 @@ Do not publish the private original or provider URL in the log.
 
 Read-role update (2026-09-14): staff can read registered image URLs and image
 statuses for their tenant, including a read-only status list on the integrations
-page. Upload and association remain owner/admin only. Private source references
+page. Manual upload and association remain owner/admin only. Owner-enabled catalog
+automation can perform them for its leased item when image transfer is enabled.
+Private source references
 remain protected. A versioned status RPC returns unavailable only on PGRST202
 during deployment; authorization failures are never treated as an empty list.
 
@@ -23,7 +25,7 @@ sends one image for an already exported item. It is deliberately separate from
 stock initialization, including for items with a held stock attempt.
 
 Image inclusion during product synchronization is opt-in per connected account,
-under **Image transfer** in integration settings. PayPal POS and Shopify have
+under **Synchronization** in integration settings. PayPal POS and Shopify have
 independent preferences, defaulting off. Saving a preference does not export
 anything. Manual PayPal image export remains an explicit one-item action.
 Shopify sends the current default on first image export; changing an already

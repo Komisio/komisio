@@ -48,7 +48,12 @@ test('connection image preferences stay independent and a lost save replays once
       name: `PayPal POS · ${d.itemSync.preferences.title}`,
       exact: true,
     })
-    await expect(paypal.getByRole('checkbox')).not.toBeChecked()
+    await expect(
+      paypal.getByRole('checkbox', {
+        name: d.itemSync.preferences.images,
+        exact: true,
+      }),
+    ).not.toBeChecked()
     const requests: string[] = []
     await page.route('**/api/integrations/sync-settings', async (route) => {
       const body = route.request().postDataJSON()
@@ -63,20 +68,32 @@ test('connection image preferences stay independent and a lost save replays once
       if (requests.length === 1) await route.abort('connectionreset')
       else await route.fulfill({ response })
     })
-    await paypal.getByRole('checkbox').check()
+    await paypal
+      .getByRole('checkbox', {
+        name: d.itemSync.preferences.images,
+        exact: true,
+      })
+      .check()
     await paypal
       .getByRole('button', { name: d.itemSync.preferences.save, exact: true })
       .click()
     await expect(paypal.getByRole('alert')).toHaveText(
       d.itemSync.preferences.uncertain,
     )
-    await expect(paypal.getByRole('checkbox')).toBeDisabled()
+    await expect(
+      paypal.getByRole('checkbox', {
+        name: d.itemSync.preferences.images,
+        exact: true,
+      }),
+    ).toBeDisabled()
     await paypal
       .getByRole('button', { name: d.itemSync.retry, exact: true })
       .click()
-    await expect(paypal.getByRole('status')).toHaveText(
-      d.itemSync.preferences.saved,
-    )
+    await expect(
+      paypal
+        .getByRole('status')
+        .filter({ hasText: d.itemSync.preferences.saved }),
+    ).toHaveText(d.itemSync.preferences.saved)
     expect(requests).toHaveLength(2)
     expect(requests[0]).toBe(requests[1])
     const rows = await f.db.query(

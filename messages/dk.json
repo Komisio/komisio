@@ -2666,7 +2666,8 @@
       "ZETTLE_CREATE_FAILED": "PayPal POS bekræftede ikke produktoprettelsen. Afstem med det samme produkt-id.",
       "ZETTLE_UPDATE_FAILED": "PayPal POS bekræftede ikke produktopdateringen.",
       "ZETTLE_READ_FAILED": "Produkt- eller integrationsposterne kunne ikke læses.",
-      "ZETTLE_RETRY_LATER": "PayPal POS returnerede en serverfejl. Prøv igen senere med det samme produkt-id."
+      "ZETTLE_RETRY_LATER": "PayPal POS returnerede en serverfejl. Prøv igen senere med det samme produkt-id.",
+      "ZETTLE_IMAGES_DISABLED": "Billedoverførsel er slået fra for forbindelsen."
     },
     "approvalHint": "Matchede kvitteringer registreres automatisk. Kun undtagelser kræver undersøgelse; der kræves ingen anden godkender.",
     "held": "Kvitteringen kunne ikke registreres. Undersøg, før du prøver igen.",
@@ -3766,13 +3767,29 @@
       "held": "Kontrollér billedet",
       "uploaded": "Uploadet",
       "pending": "Afventer",
-      "failed": "Mislykket"
+      "failed": "Mislykket",
+      "changed": "Ændret",
+      "not_sent": "Ikke sendt"
     },
     "productStates": {
       "synced": "Synkroniseret",
       "failed": "Kunne ikke synkronisere",
       "pending": "Afventer",
       "unknown": "Ukendt"
+    },
+    "preferences": {
+      "title": "Billedoverførsel",
+      "images": "Send varens standardbillede",
+      "hint": "Gælder denne forbindelse. Allerede sendte billeder beholdes, når valget slås fra.",
+      "save": "Gem",
+      "saving": "Gemmer…",
+      "saved": "Indstillingen er gemt.",
+      "failed": "Kunne ikke gemme.",
+      "uncertain": "Svaret mangler. Prøv igen for at kontrollere samme ændring.",
+      "errors": {
+        "SYNC_CONNECTION_CHANGED": "Forbindelsen er ændret. Genindlæs siden.",
+        "SYNC_SETTINGS_CHANGED": "Indstillingen er ændret. Genindlæs siden."
+      }
     }
   }
 }

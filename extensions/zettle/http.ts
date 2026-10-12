@@ -14,6 +14,7 @@ export interface ZettleClient extends ZettleTransport {
     product: CatalogProduct,
     previous: CatalogProduct | null,
     imageUrl?: string,
+    previousImageUrl?: string,
   ): Promise<void>
 }
 /** Current official API hosts only; token lifecycle is supplied by the connected host. */
@@ -98,8 +99,9 @@ export function zettleHttpClient(options: {
     }
   }
   return {
-    async putProduct(input, old, imageUrl) {
+    async putProduct(input, old, imageUrl, previousImageUrl) {
       if (imageUrl !== undefined) zettleImageUrl.parse(imageUrl)
+      if (previousImageUrl !== undefined) zettleImageUrl.parse(previousImageUrl)
       await verify()
       const p = catalogProduct.parse(input),
         previous = old ? catalogProduct.parse(old) : null
@@ -119,7 +121,9 @@ export function zettleHttpClient(options: {
         throw error
       }
       const image =
-        remote && imageUrl ? productImageFields(remote.raw, imageUrl) : null
+        remote && imageUrl
+          ? productImageFields(remote.raw, imageUrl, previousImageUrl)
+          : null
       if (remote && sameProduct(remote.product, p) && (!image || image.matches))
         return
       if (!remote) {

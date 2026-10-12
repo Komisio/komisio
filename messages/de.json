@@ -2666,7 +2666,8 @@
       "ZETTLE_CREATE_FAILED": "PayPal POS hat die Produkterstellung nicht bestätigt. Stimmen Sie mit derselben Produkt-ID ab.",
       "ZETTLE_UPDATE_FAILED": "PayPal POS hat die Produktaktualisierung nicht bestätigt.",
       "ZETTLE_READ_FAILED": "Die Produkt- oder Integrationsdaten konnten nicht gelesen werden.",
-      "ZETTLE_RETRY_LATER": "PayPal POS hat einen Serverfehler zurückgegeben. Versuchen Sie es später mit derselben Produkt-ID erneut."
+      "ZETTLE_RETRY_LATER": "PayPal POS hat einen Serverfehler zurückgegeben. Versuchen Sie es später mit derselben Produkt-ID erneut.",
+      "ZETTLE_IMAGES_DISABLED": "Bildübertragung ist für diese Verbindung deaktiviert."
     },
     "approvalHint": "Zugeordnete Belege werden automatisch erfasst. Nur Ausnahmen müssen untersucht werden; ein zweiter Genehmiger ist nicht erforderlich.",
     "held": "Der Beleg konnte nicht erfasst werden. Untersuchen Sie, bevor Sie es erneut versuchen.",
@@ -3772,13 +3773,29 @@
       "held": "Bild prüfen",
       "uploaded": "Hochgeladen",
       "pending": "Ausstehend",
-      "failed": "Fehlgeschlagen"
+      "failed": "Fehlgeschlagen",
+      "changed": "Geändert",
+      "not_sent": "Nicht gesendet"
     },
     "productStates": {
       "synced": "Synchronisiert",
       "failed": "Konnte nicht synchronisiert werden",
       "pending": "Ausstehend",
       "unknown": "Unbekannt"
+    },
+    "preferences": {
+      "title": "Bildübertragung",
+      "images": "Standardbild des Artikels senden",
+      "hint": "Gilt für diese Verbindung. Bereits gesendete Bilder bleiben beim Ausschalten erhalten.",
+      "save": "Speichern",
+      "saving": "Wird gespeichert…",
+      "saved": "Einstellung gespeichert.",
+      "failed": "Speichern fehlgeschlagen.",
+      "uncertain": "Keine Antwort erhalten. Wiederholen Sie denselben Vorgang.",
+      "errors": {
+        "SYNC_CONNECTION_CHANGED": "Die Verbindung wurde geändert. Seite neu laden.",
+        "SYNC_SETTINGS_CHANGED": "Die Einstellung wurde geändert. Seite neu laden."
+      }
     }
   }
 }

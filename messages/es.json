@@ -2666,7 +2666,8 @@
       "ZETTLE_CREATE_FAILED": "PayPal POS no confirmó la creación del producto. Concilia usando el mismo ID de producto.",
       "ZETTLE_UPDATE_FAILED": "PayPal POS no confirmó la actualización del producto.",
       "ZETTLE_READ_FAILED": "No se pudieron leer los registros del producto o de la integración.",
-      "ZETTLE_RETRY_LATER": "PayPal POS devolvió un error del servidor. Vuelve a intentarlo más tarde con el mismo ID de producto."
+      "ZETTLE_RETRY_LATER": "PayPal POS devolvió un error del servidor. Vuelve a intentarlo más tarde con el mismo ID de producto.",
+      "ZETTLE_IMAGES_DISABLED": "La transferencia de imágenes está desactivada para esta conexión."
     },
     "approvalHint": "Los recibos coincidentes se registran automáticamente. Solo las excepciones necesitan investigación; no se requiere un segundo aprobador.",
     "held": "No se pudo registrar el recibo. Investiga antes de reintentar.",
@@ -3772,13 +3773,29 @@
       "held": "Revisar imagen",
       "uploaded": "Subida",
       "pending": "Pendiente",
-      "failed": "Error"
+      "failed": "Error",
+      "changed": "Modificado",
+      "not_sent": "Sin enviar"
     },
     "productStates": {
       "synced": "Sincronizado",
       "failed": "No se pudo sincronizar",
       "pending": "Pendiente",
       "unknown": "Desconocido"
+    },
+    "preferences": {
+      "title": "Transferencia de imágenes",
+      "images": "Enviar la imagen predeterminada del artículo",
+      "hint": "Se aplica a esta conexión. Al desactivarla se conservan las imágenes ya enviadas.",
+      "save": "Guardar",
+      "saving": "Guardando…",
+      "saved": "Configuración guardada.",
+      "failed": "No se pudo guardar.",
+      "uncertain": "No se recibió respuesta. Reintenta el mismo cambio.",
+      "errors": {
+        "SYNC_CONNECTION_CHANGED": "La conexión ha cambiado. Recarga la página.",
+        "SYNC_SETTINGS_CHANGED": "La configuración ha cambiado. Recarga la página."
+      }
     }
   }
 }

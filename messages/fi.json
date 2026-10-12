@@ -2666,7 +2666,8 @@
       "ZETTLE_CREATE_FAILED": "PayPal POS ei vahvistanut tuotteen luontia. Täsmäytä samalla tuotetunnuksella.",
       "ZETTLE_UPDATE_FAILED": "PayPal POS ei vahvistanut tuotteen päivitystä.",
       "ZETTLE_READ_FAILED": "Tuotteen tai integraation tietueita ei voitu lukea.",
-      "ZETTLE_RETRY_LATER": "PayPal POS palautti palvelinvirheen. Yritä myöhemmin uudelleen samalla tuotetunnuksella."
+      "ZETTLE_RETRY_LATER": "PayPal POS palautti palvelinvirheen. Yritä myöhemmin uudelleen samalla tuotetunnuksella.",
+      "ZETTLE_IMAGES_DISABLED": "Kuvien siirto on poistettu käytöstä tälle yhteydelle."
     },
     "approvalHint": "Täsmäävät kuitit kirjataan automaattisesti. Vain poikkeukset vaativat tutkintaa; toista hyväksyjää ei tarvita.",
     "held": "Kuittia ei voitu kirjata. Tutki ennen uutta yritystä.",
@@ -3772,13 +3773,29 @@
       "held": "Tarkista kuva",
       "uploaded": "Ladattu",
       "pending": "Odottaa",
-      "failed": "Epäonnistui"
+      "failed": "Epäonnistui",
+      "changed": "Muuttunut",
+      "not_sent": "Ei lähetetty"
     },
     "productStates": {
       "synced": "Synkronoitu",
       "failed": "Synkronointi epäonnistui",
       "pending": "Odottaa",
       "unknown": "Tuntematon"
+    },
+    "preferences": {
+      "title": "Kuvien siirto",
+      "images": "Lähetä tuotteen oletuskuva",
+      "hint": "Koskee tätä yhteyttä. Aiemmin lähetettyjä kuvia ei poisteta, kun valinta poistetaan käytöstä.",
+      "save": "Tallenna",
+      "saving": "Tallennetaan…",
+      "saved": "Asetus tallennettu.",
+      "failed": "Tallennus epäonnistui.",
+      "uncertain": "Vastausta ei saatu. Tarkista sama muutos yrittämällä uudelleen.",
+      "errors": {
+        "SYNC_CONNECTION_CHANGED": "Yhteys on muuttunut. Lataa sivu uudelleen.",
+        "SYNC_SETTINGS_CHANGED": "Asetus on muuttunut. Lataa sivu uudelleen."
+      }
     }
   }
 }

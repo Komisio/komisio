@@ -22,13 +22,22 @@ The owner/admin action **Export product photo** on the Zettle integration page
 sends one image for an already exported item. It is deliberately separate from
 stock initialization, including for items with a held stock attempt.
 
+Image inclusion during product synchronization is opt-in per connected account,
+under **Image transfer** in integration settings. PayPal POS and Shopify have
+independent preferences, defaulting off. Saving a preference does not export
+anything. Manual PayPal image export remains an explicit one-item action.
+Shopify sends the current default on first image export; changing an already
+exported Shopify image is held pending a provider-specific replacement workflow.
+Unknown image uploads remain held rather than generating duplicate files.
+
 ## Source and privacy
 
-The engine chooses the first photo, in stored array order, from the source
-revision of the item's accepted reception review. A later reception edit never
-silently changes the exported photo. Inspection drafts, purchases and reviews
-without photos report no photo; no seller avatar, document or unrelated image is
-substituted. Replacement and removal are not part of this slice.
+The engine chooses the item's current default photo, including photos added after
+acceptance and store-owned goods. Frozen acceptance evidence remains unchanged.
+No seller avatar, document or unrelated image is substituted. PayPal replacement
+binds the previous managed image URL and uses conditional updates; external edits
+or removal stop the operation. Disabling image transfer or removing the local
+default does not remove the remote image.
 
 Storage downloads use the current user's session and existing RLS. The server
 decodes and orients the image, strips metadata, and uploads a JPEG no larger than

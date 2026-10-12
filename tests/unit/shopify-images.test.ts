@@ -36,7 +36,8 @@ const json = (body: unknown, status = 200) =>
 
 async function setup(
   options: {
-    photo?: 'none' | 'fresh' | 'synced'
+    images?: boolean
+    photo?: 'none' | 'fresh' | 'synced' | 'unknown'
     uploadFails?: boolean
     mediaRejected?: boolean
   } = {},
@@ -54,6 +55,18 @@ async function setup(
   const calls: [string, Record<string, unknown>][] = []
   const rpc = vi.fn(async (name: string, args: Record<string, unknown>) => {
     calls.push([name, args])
+    if (name === 'integration_sync_preferences')
+      return {
+        data: [
+          {
+            provider: 'shopify',
+            connectionId: shop,
+            revision: null,
+            images: options.images !== false,
+          },
+        ],
+        error: null,
+      }
     if (name === 'tenant_role') return { data: 'owner', error: null }
     if (name === 'read_shopify_connection')
       return {
@@ -72,14 +85,15 @@ async function setup(
       return { data: exportId, error: null }
     if (name === 'finish_shopify_product')
       return { data: exportId, error: null }
-    if (name === 'prepare_shopify_image')
+    if (name === 'prepare_shopify_sync_image')
       return {
         data:
           (options.photo ?? 'fresh') === 'none'
             ? null
             : {
                 id: intent,
-                fresh: options.photo !== 'synced',
+                fresh:
+                  options.photo !== 'synced' && options.photo !== 'unknown',
                 reference: `${tenant}/${session}/${photo}.jpg`,
                 productGid: 'gid://shopify/Product/1',
                 mediaGid:
@@ -215,6 +229,22 @@ async function setup(
 }
 
 describe('product image after export', () => {
+  it('does not download or upload images when disabled for this connection', async () => {
+    const s = await setup({ images: false })
+    expect((await s.run()).image).toBe('none')
+    expect(s.download).not.toHaveBeenCalled()
+    expect(
+      s.calls.some(([name]) => name === 'prepare_shopify_sync_image'),
+    ).toBe(false)
+  })
+  it('holds an unconfirmed media creation instead of sending a duplicate', async () => {
+    const s = await setup({ photo: 'unknown' })
+    expect((await s.run()).image).toBe('failed')
+    expect(s.download).not.toHaveBeenCalled()
+    expect(
+      s.requests.some((q) => q.graphql.includes('productCreateMedia(')),
+    ).toBe(false)
+  })
   it('uploads the reception photo through a staged upload and attaches it once', async () => {
     const s = await setup()
     const r = await s.run()

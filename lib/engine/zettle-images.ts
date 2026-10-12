@@ -53,6 +53,7 @@ export async function exportZettleImage(
   itemId: string,
   source: PilotEnvironment,
   factory = connectedPilotImages,
+  requirePreference = false,
 ) {
   for (const id of [tenantId, requestId, itemId]) z.uuid().parse(id)
   const role = await client.rpc('tenant_role', { p_tenant: tenantId })
@@ -67,7 +68,10 @@ export async function exportZettleImage(
     p_item: itemId,
     p_merchant: env.ZETTLE_MERCHANT_ID,
   }
-  const prepared = await client.rpc('prepare_zettle_image', parameters)
+  const prepareRpc = requirePreference
+    ? 'prepare_zettle_sync_image'
+    : 'prepare_zettle_image'
+  const prepared = await client.rpc(prepareRpc, parameters)
   if (prepared.error) throw new Error(prepared.error.message)
   if (prepared.data === null)
     return { id: requestId, image: 'no_photo' as const }
@@ -76,6 +80,11 @@ export async function exportZettleImage(
       id: z.uuid(),
       fresh: z.boolean(),
       exportId: z.uuid(),
+      bucket: z
+        .enum(['reception-photos', 'item-photos'])
+        .default('reception-photos'),
+      previousUrl: zettleImageUrl.nullable().optional(),
+      imageUrl: zettleImageUrl.nullable().optional(),
       reference: z
         .string()
         .regex(/^[a-f0-9-]{36}\/[a-f0-9-]{36}\/[a-f0-9-]{36}\.(jpg|png)$/),
@@ -83,22 +92,27 @@ export async function exportZettleImage(
     .parse(prepared.data)
   if (!claim.reference.startsWith(`${tenantId}/`))
     throw new Error('ZETTLE_IMAGE_INVALID')
-  let url = await readZettleImageUrl(client, tenantId, itemId)
+  let url =
+    claim.imageUrl === undefined
+      ? await readZettleImageUrl(client, tenantId, itemId)
+      : claim.imageUrl
   if (!url && !claim.fresh) throw new Error('ZETTLE_IMAGE_HELD')
   const remote = await factory(tenantId, env)
   const requireCurrent = async () => {
-    const current = await client.rpc('prepare_zettle_image', parameters)
+    const current = await client.rpc(prepareRpc, parameters)
     if (current.error) throw new Error(current.error.message)
     if (
       current.data?.exportId !== claim.exportId ||
       current.data?.id !== claim.id ||
-      current.data?.reference !== claim.reference
+      current.data?.reference !== claim.reference ||
+      (current.data?.bucket ?? 'reception-photos') !== claim.bucket ||
+      (current.data?.previousUrl ?? null) !== (claim.previousUrl ?? null)
     )
       throw new Error('ZETTLE_CONFIG_CHANGED')
   }
   if (!url) {
     const downloaded = await client.storage
-      .from('reception-photos')
+      .from(claim.bucket)
       .download(claim.reference)
     if (
       downloaded.error ||
@@ -135,7 +149,7 @@ export async function exportZettleImage(
   if (stored.error) throw new Error('ZETTLE_READ_FAILED')
   const product = catalogProduct.parse(stored.data.payload)
   await requireCurrent()
-  await remote.putProduct(product, product, url)
+  await remote.putProduct(product, product, url, claim.previousUrl ?? undefined)
   const finished = await client.rpc('finish_zettle_image', {
     p_tenant: tenantId,
     p_intent: claim.id,

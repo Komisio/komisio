@@ -2666,7 +2666,8 @@
       "ZETTLE_CREATE_FAILED": "PayPal POS did not confirm product creation. Reconcile using the same product ID.",
       "ZETTLE_UPDATE_FAILED": "PayPal POS did not confirm the product update.",
       "ZETTLE_READ_FAILED": "The product or integration records could not be read.",
-      "ZETTLE_RETRY_LATER": "PayPal POS returned a server error. Retry later using the same product ID."
+      "ZETTLE_RETRY_LATER": "PayPal POS returned a server error. Retry later using the same product ID.",
+      "ZETTLE_IMAGES_DISABLED": "Image transfer is disabled for this connection."
     },
     "approvalHint": "Matched receipts are recorded automatically. Only exceptions need investigation; no second approver is required.",
     "held": "The receipt could not be recorded. Investigate before retrying.",
@@ -3766,13 +3767,29 @@
       "held": "Check image",
       "uploaded": "Uploaded",
       "pending": "Pending",
-      "failed": "Failed"
+      "failed": "Failed",
+      "changed": "Changed",
+      "not_sent": "Not sent"
     },
     "productStates": {
       "synced": "Synced",
       "failed": "Could not sync",
       "pending": "Pending",
       "unknown": "Unknown"
+    },
+    "preferences": {
+      "title": "Image transfer",
+      "images": "Send the item’s default image",
+      "hint": "Applies to this connection. Turning this off keeps images already sent.",
+      "save": "Save",
+      "saving": "Saving…",
+      "saved": "Setting saved.",
+      "failed": "Could not save.",
+      "uncertain": "No response received. Retry to check the same change.",
+      "errors": {
+        "SYNC_CONNECTION_CHANGED": "The connection changed. Reload the page.",
+        "SYNC_SETTINGS_CHANGED": "The setting changed. Reload the page."
+      }
     }
   }
 }

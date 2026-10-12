@@ -1,3 +1,5 @@
+import { SyncPreferences } from '@/components/intake/sync-preferences'
+import { readSyncPreferences } from '@/lib/engine/sync-preferences'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { FortnoxConnection } from '@/components/intake/fortnox-connection'
 import { FortnoxGuide } from '@/components/help/fortnox-guide'
@@ -83,6 +85,9 @@ export default async function Integrations({
     ? vatRateBasisPoints((await readStorePolicy(ctx.client, a.id)).policy)
     : undefined
 
+  const syncPreferences = ['owner', 'admin'].includes(a.role)
+    ? await readSyncPreferences(ctx.client, a.id)
+    : null
   const closure = pull?.window
     ? await readZettleWindowClosure(ctx.client, a.id, pull.window.id)
     : null
@@ -169,6 +174,16 @@ export default async function Integrations({
                 d={d}
               />
             )}
+            {syncPreferences
+              ?.filter((p) => p.provider === 'paypal')
+              .map((p) => (
+                <SyncPreferences
+                  key={p.connectionId}
+                  tenantId={a.id}
+                  initial={p}
+                  d={all}
+                />
+              ))}
             <details
               className="card integration-details"
               open={Boolean(paging)}
@@ -527,6 +542,16 @@ export default async function Integrations({
                 d={all.shopify}
               />
             )}
+            {syncPreferences
+              ?.filter((p) => p.provider === 'shopify')
+              .map((p) => (
+                <SyncPreferences
+                  key={p.connectionId}
+                  tenantId={a.id}
+                  initial={p}
+                  d={all}
+                />
+              ))}
             {shopifySettings && ['owner', 'admin'].includes(a.role) && (
               <ShopifySetup
                 key={a.id + shopifySettings.revision}

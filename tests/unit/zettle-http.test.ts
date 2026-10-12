@@ -38,6 +38,49 @@ function setup(responses: Response[]) {
   return { client, http }
 }
 
+it('replaces only the previous managed image and reconciles a lost successful replacement', async () => {
+  const previousImage = 'https://image.izettle.com/product/previous.jpg'
+  const after = { ...product, presentation: { imageUrl } }
+  const { client, http } = setup([
+    json({ organizationUuid: org }),
+    json({ ...product, presentation: { imageUrl: previousImage } }, 200, {
+      ETag: '"image-replacement"',
+    }),
+    new Response(null, { status: 204 }),
+    json(after),
+    json(after),
+  ])
+  await client.putProduct(product, product, imageUrl, previousImage)
+  await client.putProduct(product, product, imageUrl, previousImage)
+  const writes = http.mock.calls.filter(([, r]) => r?.method === 'PUT')
+  expect(writes).toHaveLength(1)
+  expect(writes[0][1]?.headers).toMatchObject({
+    'If-Match': '"image-replacement"',
+  })
+  expect(JSON.parse(String(writes[0][1]?.body))).toEqual(after)
+})
+
+it.each(['https://image.izettle.com/product/external.jpg', null])(
+  'refuses replacement after an external image edit or removal: %s',
+  async (actual) => {
+    const { client, http } = setup([
+      json({ organizationUuid: org }),
+      json({ ...product, presentation: { imageUrl: actual } }, 200, {
+        ETag: '"external"',
+      }),
+    ])
+    await expect(
+      client.putProduct(
+        product,
+        product,
+        imageUrl,
+        'https://image.izettle.com/product/previous.jpg',
+      ),
+    ).rejects.toThrow('ZETTLE_REMOTE_CHANGED')
+    expect(http.mock.calls.some(([, r]) => r?.method === 'PUT')).toBe(false)
+  },
+)
+
 it('associates a registered photo conditionally and reconciles an exact retry without another PUT', async () => {
   const pictured = { ...product, presentation: { imageUrl } }
   const { client, http } = setup([

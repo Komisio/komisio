@@ -6,8 +6,10 @@ seller-balance payments. The owner clarified that settings and item sync views m
 with independent status and settings per connection. PayPal POS is the first write
 adapter being extended; existing Shopify facts also belong in the shared view.
 The first delivery adds recorded item status and bounded
-filtering with the existing export retry. Automatic export, media replacement and
-return ingestion remain separate follow-ups. Seller-balance rules approved by the
+filtering with the existing export retry. Image inclusion is now opt-in per
+connection. Current default photos and guarded PayPal image replacement are
+implemented; Shopify image replacement, automatic export and return ingestion
+remain separate follow-ups. Seller-balance rules approved by the
 owner on 2026-10-12: use only available funds (no credit), allow split payment, and
 restore the balance-funded part to the same seller on return. The POS payment-method/receipt linkage must also be
 verified before enabling redemption; a manual ledger adjustment is not checkout.

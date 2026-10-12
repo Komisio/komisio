@@ -69,8 +69,13 @@ export function imageHttpClient(
   }
 }
 
-export function productImageFields(raw: unknown, expected: string) {
+export function productImageFields(
+  raw: unknown,
+  expected: string,
+  previous?: string,
+) {
   zettleImageUrl.parse(expected)
+  if (previous !== undefined) zettleImageUrl.parse(previous)
   const parsed = z
     .object({
       presentation: z
@@ -92,7 +97,11 @@ export function productImageFields(raw: unknown, expected: string) {
   if (!parsed.success) throw new Error('ZETTLE_REMOTE_CHANGED')
   const { presentation, imageLookupKeys } = parsed.data
   const actual = presentation?.imageUrl
-  if ((actual && actual !== expected) || (!actual && imageLookupKeys?.length))
+  if (
+    (actual !== expected &&
+      (previous !== undefined ? actual !== previous : !!actual)) ||
+    (!actual && !!imageLookupKeys?.length)
+  )
     throw new Error('ZETTLE_REMOTE_CHANGED')
   return {
     matches: actual === expected,

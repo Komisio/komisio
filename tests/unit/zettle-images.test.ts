@@ -150,6 +150,7 @@ it('does not retry a lost upload response', async () => {
 
 async function setup(
   options: {
+    replacement?: boolean
     role?: string
     noPhoto?: boolean
     fresh?: boolean
@@ -178,6 +179,13 @@ async function setup(
         const claim = {
           id: request,
           fresh,
+          ...(options.replacement
+            ? {
+                bucket: 'item-photos',
+                previousUrl: 'https://image.izettle.com/product/previous.jpg',
+                imageUrl: savedUrl,
+              }
+            : {}),
           exportId: options.changed && preparations > 1 ? item : job,
           reference: `${tenant}/${item}/${request}.jpg`,
         }
@@ -236,6 +244,18 @@ async function setup(
   return { run, rpc, factory, download, uploadImage, putProduct, events }
 }
 
+it('passes the previous managed image with the current default during replacement', async () => {
+  const fixture = await setup({ replacement: true })
+  await fixture.run()
+  expect(fixture.putProduct).toHaveBeenCalledWith(
+    product,
+    product,
+    url,
+    'https://image.izettle.com/product/previous.jpg',
+  )
+  expect(fixture.uploadImage).toHaveBeenCalledTimes(1)
+})
+
 it('minimizes the exact source, persists upload before association, and never touches stock', async () => {
   const fixture = await setup()
   expect(await fixture.run()).toEqual({ id: request, image: 'synced' })
@@ -244,7 +264,12 @@ it('minimizes the exact source, persists upload before association, and never to
     `${tenant}/${item}/${request}.jpg`,
   )
   expect(fixture.uploadImage).toHaveBeenCalledTimes(1)
-  expect(fixture.putProduct).toHaveBeenCalledWith(product, product, url)
+  expect(fixture.putProduct).toHaveBeenCalledWith(
+    product,
+    product,
+    url,
+    undefined,
+  )
   expect(fixture.events.indexOf('prepare_zettle_image')).toBeLessThan(
     fixture.events.indexOf('upload'),
   )

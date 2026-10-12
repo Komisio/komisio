@@ -29,11 +29,18 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
       await f.commit()
       await page.goto('/intake/integrations?provider=paypal')
       await page
-        .locator('summary')
-        .filter({ hasText: d.integrationPage.manage })
-        .filter({ hasText: 'PayPal POS' })
+        .getByRole('tab', {
+          name: d.integrationPage.paypalWorkspace.sales,
+          exact: true,
+        })
         .click()
       await expect(page.getByText(d.zettle.fixture)).toBeVisible()
+      await page
+        .getByRole('tab', {
+          name: d.integrationPage.paypalWorkspace.settings,
+          exact: true,
+        })
+        .click()
       await expect(page.getByLabel('Client ID', { exact: true })).toHaveCount(0)
       await expect(
         page.getByRole('button', { name: d.zettle.oauth.connect, exact: true }),
@@ -102,9 +109,10 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
           page.getByText(d.zettle.oauth.cancelled, { exact: true }),
         ).toBeVisible()
         await page
-          .locator('summary')
-          .filter({ hasText: d.integrationPage.manage })
-          .filter({ hasText: 'PayPal POS' })
+          .getByRole('tab', {
+            name: d.integrationPage.paypalWorkspace.sales,
+            exact: true,
+          })
           .click()
       }
       for (const action of ['enablePull', 'pull', 'export', 'exportImage']) {
@@ -157,7 +165,15 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
         ).status(),
       ).toBe(400)
 
-      await page.getByText(d.zettle.vatTitle, { exact: true }).click()
+      await page
+        .getByRole('tab', {
+          name: d.integrationPage.paypalWorkspace.settings,
+          exact: true,
+        })
+        .click()
+      await page
+        .getByText(d.integrationPage.paypalWorkspace.vat, { exact: true })
+        .click()
       await page
         .getByLabel(`${d.sales.vatModes.consignment_margin} (%)`, {
           exact: true,
@@ -184,6 +200,12 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
       await expect(
         page.getByRole('button', { name: d.zettle.saveMapping, exact: true }),
       ).toBeEnabled()
+      await page
+        .getByRole('tab', {
+          name: d.integrationPage.paypalWorkspace.sales,
+          exact: true,
+        })
+        .click()
       const fixtureHeaders = { authorization: `Bearer fixture:${f.tenant}` }
       const products = async () => {
         const r = await page.request.get(
@@ -253,9 +275,10 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
       await page.waitForLoadState('networkidle')
       await page.reload()
       await page
-        .locator('summary')
-        .filter({ hasText: d.integrationPage.manage })
-        .filter({ hasText: 'PayPal POS' })
+        .getByRole('tab', {
+          name: d.integrationPage.paypalWorkspace.sales,
+          exact: true,
+        })
         .click()
       await page
         .getByRole('button', { name: d.zettle.sync, exact: true })
@@ -295,9 +318,10 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
       for (const r of responses) expect(r.status(), await r.text()).toBe(200)
       await page.reload()
       await page
-        .locator('summary')
-        .filter({ hasText: d.integrationPage.manage })
-        .filter({ hasText: 'PayPal POS' })
+        .getByRole('tab', {
+          name: d.integrationPage.paypalWorkspace.sales,
+          exact: true,
+        })
         .click()
       await page.getByRole('link', { name: new RegExp(d.zettle.open) }).click()
       await expect(
@@ -360,9 +384,10 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
       )
       await page.goto('/intake/integrations?provider=paypal')
       await page
-        .locator('summary')
-        .filter({ hasText: d.integrationPage.manage })
-        .filter({ hasText: 'PayPal POS' })
+        .getByRole('tab', {
+          name: d.integrationPage.paypalWorkspace.sales,
+          exact: true,
+        })
         .click()
       await expect(
         page.getByRole('link', { name: new RegExp(d.zettle.open) }),

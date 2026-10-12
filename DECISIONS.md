@@ -1031,3 +1031,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-12: Owner defers seller-balance checkout until POS support is verified. Approved future rules remain available funds only, split tender allowed and balance-funded refunds restored to the same seller. No manual balance adjustment substitutes for a POS payment.
 
 - 2026-10-12: Staff seller items use a compact table with seller-scoped search, status filters and sorting before 25-row paging. Sold rows retain actual sale prices; other rows retain current prices. Existing identity, tenant, seller and immutable financial rules are unchanged.
+
+- 2026-10-12: PayPal POS setup uses one workspace with sales, products and settings tabs. Compact statuses distinguish connection, receipt retrieval and product export. Existing commands, automation opt-ins, financial rules and replay safeguards stay unchanged.

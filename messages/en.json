@@ -3044,7 +3044,31 @@
     "notConnected": "Not connected",
     "reconnect": "Reconnect needed",
     "setupAction": "View settings",
-    "statusHint": "Status reflects saved information. Open a system for details; a saved connection does not mean automatic sync is enabled."
+    "statusHint": "Status reflects saved information. Open a system for details; a saved connection does not mean automatic sync is enabled.",
+    "paypalWorkspace": {
+      "sales": "Sales",
+      "products": "Products",
+      "settings": "Settings",
+      "connection": "Connection",
+      "connected": "Connected",
+      "reconnect": "Reconnect",
+      "disconnected": "Not connected",
+      "pull": "Fetch sales",
+      "syncItem": "Sync item",
+      "syncImage": "Sync image",
+      "lastPull": "Last fetched",
+      "never": "Not fetched yet",
+      "interval": "Every ten minutes",
+      "details": "Details",
+      "received": "Fetched",
+      "attention": "Needs attention",
+      "noItems": "No items to show.",
+      "vat": "POS VAT",
+      "images": "Images",
+      "check": "Check connection",
+      "start": "Get started",
+      "automatic": "Automatic retrieval"
+    }
   },
   "shopifyPrivacy": {
     "title": "Shopify · Privacy requests",

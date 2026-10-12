@@ -1,3 +1,5 @@
+import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
+import { EventTime } from '@/components/ui/event-time'
 import { SyncPreferences } from '@/components/intake/sync-preferences'
 import { CatalogAutomationSettings } from '@/components/intake/catalog-automation'
 import { readCatalogAutomation } from '@/lib/engine/catalog-automation'
@@ -135,389 +137,532 @@ export default async function Integrations({
             : null,
         ])
       : [null, null, null, null]
+  const p = all.integrationPage.paypalWorkspace
+  const admin = ['owner', 'admin'].includes(a.role)
   return (
     <div className="integrations-page">
       <div className="page-heading">
         <h1>{all.nav.integrations}</h1>
         <p>{all.integrationPage.intro}</p>
-        <p className="integration-overview-hint">
-          {all.integrationPage.chooseHint}
-        </p>
       </div>
       {!['owner', 'admin'].includes(a.role) && (
         <p>{all.integrationPage.adminOnly}</p>
       )}
       <div className="integration-catalog">
         <details
-          className="card integration-provider"
+          className="card integration-provider paypal-provider"
           data-testid="integration-paypal"
-          open={Boolean(paging) || params.provider === 'paypal'}
+          open={
+            Boolean(paging) ||
+            params.provider === 'paypal' ||
+            typeof params.paypal === 'string'
+          }
         >
           <summary>
             <span className="integration-provider-copy">
               <strong>PayPal POS</strong>
               <span>{all.integrationPage.paypalPurpose}</span>
             </span>
-            <span className="integration-status">
-              {liveReady
-                ? all.integrationPage.configured
-                : all.integrationPage.setupNeeded}
-            </span>
-            <span className="integration-provider-toggle">
-              {all.integrationPage.setupAction}
-            </span>
-          </summary>
-          <section
-            className="integration-group"
-            aria-labelledby="integration-pos"
-          >
-            <h2 id="integration-pos">{all.integrationPage.pos}</h2>
-            {['owner', 'admin'].includes(a.role) && (
-              <ZettleConnection
-                key={a.id}
-                tenantId={a.id}
-                connected={!!paypal?.connected}
-                reconnectRequired={!!paypal?.reconnectRequired}
-                result={
-                  typeof params.paypal === 'string' ? params.paypal : undefined
-                }
-                setupAvailable={paypalAppAvailable(process.env)}
-                d={d}
-              />
+            {admin && (
+              <span
+                className={`pos-status ${liveReady ? 'pos-status-on' : paypal?.reconnectRequired ? 'pos-status-warning' : ''}`}
+              >
+                {liveReady
+                  ? p.connected
+                  : paypal?.reconnectRequired
+                    ? p.reconnect
+                    : p.disconnected}
+              </span>
             )}
-            {syncPreferences
-              ?.filter((p) => p.provider === 'paypal')
-              .map((p) => (
-                <SyncPreferences
-                  key={p.connectionId}
-                  tenantId={a.id}
-                  initial={p}
-                  d={all}
-                >
-                  {catalogAutomation && (
-                    <CatalogAutomationSettings
-                      tenantId={a.id}
-                      initial={catalogAutomation}
-                      configured={!!automationIdentity()}
-                      canEdit={a.role === 'owner'}
-                      d={all}
-                    />
-                  )}
-                </SyncPreferences>
-              ))}
-            <details
-              className="card integration-details"
-              open={Boolean(paging)}
-            >
-              <summary>PayPal POS · {all.integrationPage.manage}</summary>
-              {a.role === 'staff' && images !== null && images.length > 0 && (
-                <section
-                  className="card intake-form"
-                  aria-label={d.imageStatusTitle}
-                >
-                  <h2>{d.imageStatusTitle}</h2>
-                  {images.map((image) => (
-                    <p key={image.item_id}>
-                      <Link
-                        className="text-link"
-                        href={`/intake/items/${image.item_id}`}
-                      >
-                        I-{image.item_id.slice(0, 8).toUpperCase()}
-                      </Link>{' '}
-                      · {d.imageStates[image.status]}
-                    </p>
-                  ))}
-                </section>
-              )}
-              {liveReady && pull && (
-                <section className="card intake-form" aria-label={d.pullTitle}>
-                  <h2>{d.pullTitle}</h2>
-                  <p>{d.pullHint}</p>
-                  {pull.connection ? (
+          </summary>
+          <div className="pos-workspace">
+            <WorkspaceTabs
+              id="paypal"
+              label="PayPal POS"
+              initial={
+                paging
+                  ? 'sales'
+                  : params.paypal || (!liveReady && admin)
+                    ? 'settings'
+                    : 'sales'
+              }
+              tabs={[
+                {
+                  id: 'sales',
+                  label: p.sales,
+                  content: (
                     <>
-                      <p>
-                        {d.pullSince}:{' '}
-                        {new Date(pull.connection.cutover).toLocaleString(
-                          intlLocale(ctx.locale),
-                          {
-                            timeZone: 'Europe/Stockholm',
-                          },
-                        )}
-                      </p>
-                      {automation !== null && automaticStatus?.available && (
+                      <div className="pos-section-heading">
                         <div>
-                          <h3>{d.automaticTitle}</h3>
-                          <p>{d.automaticHint}</p>
-                          <p>
-                            {automaticGrant
-                              ? automaticGrant.accepted
-                                ? d.automaticEnabled
-                                : d.automaticPending
-                              : d.automaticDisabled}
-                          </p>
-                          {automaticStatus.run && (
-                            <p>
-                              {new Date(automaticStatus.run.at).toLocaleString(
-                                intlLocale(ctx.locale),
-                                { timeZone: 'Europe/Stockholm' },
-                              )}
-                              {' · '}
-                              {d.automaticOutcomes[automaticStatus.run.outcome]}
-                              {' · '}
-                              {automaticStatus.run.received}
-                            </p>
-                          )}
-                          {a.role === 'owner' &&
-                            (automaticGrant || automationIdentity()) && (
-                              <ZettleAction
-                                key={automaticGrant?.id ?? 'automatic-off'}
-                                command={{
-                                  action: automaticGrant
-                                    ? 'disableAutomaticPull'
-                                    : 'enableAutomaticPull',
-                                  tenantId: a.id,
-                                }}
-                                d={d}
-                                label={
-                                  automaticGrant
-                                    ? d.automaticDisable
-                                    : d.automaticEnable
-                                }
+                          <h2>{p.sales}</h2>
+                          <p className="muted">
+                            {p.lastPull}:{' '}
+                            {state.lastSync ? (
+                              <EventTime
+                                value={state.lastSync}
+                                locale={ctx.locale}
                               />
+                            ) : (
+                              p.never
                             )}
-                          {!automationIdentity() && (
-                            <p>{d.automaticUnconfigured}</p>
-                          )}
+                          </p>
                         </div>
-                      )}
-                      {pull.window && (
-                        <p>
-                          {closure?.closure
-                            ? d.abandoned
-                            : pull.page?.purchase_count === 0
-                              ? d.pullComplete
-                              : d.pullPending}
-                          :{' '}
-                          {new Date(pull.window.end_at).toLocaleString(
-                            intlLocale(ctx.locale),
-                            {
-                              timeZone: 'Europe/Stockholm',
-                            },
-                          )}
-                        </p>
-                      )}
-                      <ZettleAction
-                        key={
-                          closure?.closure?.id ??
-                          pull.page?.id ??
-                          pull.window?.id ??
-                          'pull'
-                        }
-                        command={{ action: 'pull', tenantId: a.id }}
-                        d={d}
-                        label={d.pullNow}
-                      />
-                      {closure?.closure && (
-                        <p>
-                          {d.abandonReason}: {closure.closure.reason}
-                        </p>
-                      )}
-                      {a.role === 'owner' &&
-                        pull.window &&
-                        closure?.available &&
-                        !closure.closure &&
-                        pull.page?.purchase_count !== 0 && (
-                          <details>
-                            <summary>{d.abandonWindow}</summary>
+                        {liveReady &&
+                          pull &&
+                          (pull.connection ? (
                             <ZettleAction
-                              key={pull.window.id}
-                              command={{
-                                action: 'abandonWindow',
-                                tenantId: a.id,
-                                windowId: pull.window.id,
-                                reason: '',
-                              }}
+                              compact
+                              key={
+                                closure?.closure?.id ??
+                                pull.page?.id ??
+                                pull.window?.id ??
+                                'pull'
+                              }
+                              command={{ action: 'pull', tenantId: a.id }}
                               d={d}
-                              label={d.abandonWindow}
+                              label={p.pull}
                             />
-                          </details>
-                        )}
-                    </>
-                  ) : (
-                    <ZettleAction
-                      command={{ action: 'enablePull', tenantId: a.id }}
-                      d={d}
-                      label={d.pullEnable}
-                    />
-                  )}
-                </section>
-              )}
-              <section className="card intake-form">
-                <p className="intake-notice">
-                  {fixtures
-                    ? d.fixture
-                    : pull?.connection
-                      ? d.catalogOffline
-                      : d.offline}
-                </p>
-                <p>
-                  {d.lastSync}:{' '}
-                  {state.lastSync
-                    ? new Date(state.lastSync).toLocaleString(
-                        intlLocale(ctx.locale),
-                        {
-                          timeZone: 'Europe/Stockholm',
-                        },
-                      )
-                    : d.never}
-                </p>
-                {fixtures && a.role !== 'readonly' && (
-                  <ZettleAction
-                    key={`${a.id}-${state.lastSync}`}
-                    command={{
-                      action: 'sync',
-                      tenantId: a.id,
-                      previous: state.cursor,
-                    }}
-                    d={d}
-                    label={d.sync}
-                  />
-                )}
-                <h2>{d.catalogTitle}</h2>
-                <Link
-                  className="text-link"
-                  href="/intake/items?sort=title&direction=asc"
-                >
-                  {d.itemSync.allItems}
-                </Link>
-                <p>{d.catalogHint}</p>
-                <p>
-                  {d.pendingProducts}: {catalog.candidates.length}
-                </p>
-                {liveReady && pull?.connection && (
-                  <section aria-label={d.stockTitle}>
-                    <h2>{d.stockTitle}</h2>
-                    <p>{d.stockHint}</p>
-                    {images !== null && <p>{d.imageHint}</p>}
-                    {exportItems.map((itemId) => {
-                      const stock = stocks.find((s) => s.item_id === itemId)
-                      return (
-                        <div
-                          key={itemId}
-                          className="card"
-                          data-testid={`zettle-export-${itemId}`}
-                        >
-                          <Link
-                            className="text-link"
-                            href={`/intake/items/${itemId}`}
-                          >
-                            I-{itemId.slice(0, 8).toUpperCase()}
-                          </Link>
-                          {stock && <p>{d.stockStates[stock.status]}</p>}
-                          {(images ?? [])
-                            .filter((image) => image.item_id === itemId)
-                            .map((image) => (
-                              <p key={image.item_id}>
-                                {d.imageStates[image.status]}
+                          ) : (
+                            <ZettleAction
+                              compact
+                              command={{ action: 'enablePull', tenantId: a.id }}
+                              d={d}
+                              label={d.pullEnable}
+                            />
+                          ))}
+                      </div>
+                      {!liveReady && admin && !fixtures && (
+                        <Link className="text-link" href="#paypal-settings">
+                          {p.start}
+                        </Link>
+                      )}
+                      {liveReady && pull?.connection && (
+                        <>
+                          {automation !== null &&
+                            automaticStatus?.available && (
+                              <div className="pos-automation">
+                                <h3>{p.automatic}</h3>
+                                <small>{p.interval}</small>
+                                <p
+                                  className={`pos-status ${automaticGrant?.accepted ? 'pos-status-on' : ''}`}
+                                >
+                                  {automaticGrant
+                                    ? automaticGrant.accepted
+                                      ? d.automaticEnabled
+                                      : d.automaticPending
+                                    : d.automaticDisabled}
+                                </p>
+                                {automaticStatus.run && (
+                                  <p>
+                                    {new Date(
+                                      automaticStatus.run.at,
+                                    ).toLocaleString(intlLocale(ctx.locale), {
+                                      timeZone: 'Europe/Stockholm',
+                                    })}
+                                    {' · '}
+                                    {
+                                      d.automaticOutcomes[
+                                        automaticStatus.run.outcome
+                                      ]
+                                    }
+                                    {' · '}
+                                    {automaticStatus.run.received}
+                                  </p>
+                                )}
+                                {a.role === 'owner' &&
+                                  (automaticGrant || automationIdentity()) && (
+                                    <ZettleAction
+                                      compact
+                                      secondary
+                                      key={
+                                        automaticGrant?.id ?? 'automatic-off'
+                                      }
+                                      command={{
+                                        action: automaticGrant
+                                          ? 'disableAutomaticPull'
+                                          : 'enableAutomaticPull',
+                                        tenantId: a.id,
+                                      }}
+                                      d={d}
+                                      label={
+                                        automaticGrant
+                                          ? d.automaticDisable
+                                          : d.automaticEnable
+                                      }
+                                    />
+                                  )}
+                                {!automationIdentity() && (
+                                  <p>{d.automaticUnconfigured}</p>
+                                )}
+                              </div>
+                            )}
+
+                          <details className="pos-details">
+                            <summary>{p.details}</summary>
+                            <p>
+                              {d.pullSince}:{' '}
+                              <EventTime
+                                value={pull.connection.cutover}
+                                locale={ctx.locale}
+                              />
+                            </p>
+                            <p>{d.pullHint}</p>
+                            {pull.window && (
+                              <p>
+                                {closure?.closure
+                                  ? d.abandoned
+                                  : pull.page?.purchase_count === 0
+                                    ? d.pullComplete
+                                    : d.pullPending}
+                                :{' '}
+                                {new Date(pull.window.end_at).toLocaleString(
+                                  intlLocale(ctx.locale),
+                                  {
+                                    timeZone: 'Europe/Stockholm',
+                                  },
+                                )}
                               </p>
-                            ))}
-                          {stock && images !== null && (
+                            )}
+
+                            {closure?.closure && (
+                              <p>
+                                {d.abandonReason}: {closure.closure.reason}
+                              </p>
+                            )}
+                            {a.role === 'owner' &&
+                              pull.window &&
+                              closure?.available &&
+                              !closure.closure &&
+                              pull.page?.purchase_count !== 0 && (
+                                <details>
+                                  <summary>{d.abandonWindow}</summary>
+                                  <ZettleAction
+                                    key={pull.window.id}
+                                    command={{
+                                      action: 'abandonWindow',
+                                      tenantId: a.id,
+                                      windowId: pull.window.id,
+                                      reason: '',
+                                    }}
+                                    d={d}
+                                    label={d.abandonWindow}
+                                  />
+                                </details>
+                              )}
+                          </details>
+                        </>
+                      )}
+                      {fixtures && (
+                        <div className="pos-fixture">
+                          <p>{d.fixture}</p>
+                          {a.role !== 'readonly' && (
                             <ZettleAction
+                              compact
+                              key={`${a.id}-${state.lastSync}`}
                               command={{
-                                action: 'exportImage',
+                                action: 'sync',
                                 tenantId: a.id,
-                                itemId,
+                                previous: state.cursor,
                               }}
                               d={d}
-                              label={d.exportImage}
-                            />
-                          )}
-                          {stock?.status !== 'depleted' && (
-                            <ZettleAction
-                              key={`${itemId}-${stock?.checked_at ?? 'new'}`}
-                              command={{
-                                action: 'export',
-                                tenantId: a.id,
-                                itemId,
-                              }}
-                              d={d}
-                              label={stock ? d.checkStock : d.exportItem}
+                              label={d.sync}
                             />
                           )}
                         </div>
-                      )
-                    })}
-                  </section>
-                )}
-                <details>
-                  <summary>{d.vatTitle}</summary>
-                  <p>{d.vatHint}</p>
-                  <p>{d.vatComparisonHint}</p>
-                  {['owner', 'admin'].includes(a.role) && (
-                    <ZettleAction
-                      key={catalog.config?.id ?? 'new'}
-                      command={{
-                        action: 'configure',
-                        tenantId: a.id,
-                        previousId: catalog.config?.id ?? null,
-                        vatMap: catalog.config?.vat_map ?? {},
-                      }}
-                      d={d}
-                      label={d.saveMapping}
-                      vatModes={all.sales.vatModes}
-                      engineVatBasisPoints={engineVat}
-                    />
-                  )}
-                </details>
-                <details>
-                  <summary>{d.productStatus}</summary>
-                  {catalog.outcomes.map((o, i) => (
-                    <p key={`${o.export_id}-${i}`}>
-                      {o.status === 'synced' ? d.synced : d.productFailed}
-                      {o.error_code
-                        ? `: ${(d.errors as Record<string, string>)[o.error_code] ?? d.failed}`
-                        : ''}
-                    </p>
-                  ))}
-                </details>
-                <h2>{d.recent}</h2>
-                {!state.imports.length && <p>{d.empty}</p>}
-                {state.imports.map((r) => (
-                  <p key={r.id}>
-                    <Link
-                      className="text-link"
-                      href={`/intake/integrations/${r.id}`}
-                    >
-                      {d.open} · {r.external_id}
-                    </Link>{' '}
-                    · {formatSignedOre(r.amount_ore)} {r.currency}
-                    {r.returned
-                      ? ` · ${d.returns.recorded}`
-                      : r.blocked_reason
-                        ? ` · ${d.blocked}`
-                        : ''}
-                  </p>
-                ))}
-                {state.next && (
-                  <p>
-                    <Link
-                      className="text-link"
-                      href={`/intake/integrations?${new URLSearchParams(state.next)}`}
-                    >
-                      {d.older}
-                    </Link>
-                  </p>
-                )}
-                {paging && (
-                  <p>
-                    <Link className="text-link" href="/intake/integrations">
-                      {d.newest}
-                    </Link>
-                  </p>
-                )}
-              </section>
-            </details>
-          </section>
+                      )}
+                      <h3>{d.recent}</h3>
+                      {!state.imports.length ? (
+                        <p className="pos-empty">{d.empty}</p>
+                      ) : (
+                        <div
+                          className="inventory-table-scroll"
+                          tabIndex={0}
+                          role="region"
+                          aria-label={d.recent}
+                        >
+                          <table className="inventory-table pos-receipts">
+                            <thead>
+                              <tr>
+                                <th scope="col">{p.received}</th>
+                                <th scope="col">{all.items.stage}</th>
+                                <th scope="col" className="inventory-number">
+                                  {all.sales.total}
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {state.imports.map((r) => (
+                                <tr key={r.id}>
+                                  <th scope="row">
+                                    <Link
+                                      className="pos-receipt-link"
+                                      href={`/intake/integrations/${r.id}`}
+                                      aria-label={`${d.open} · ${r.external_id}`}
+                                    >
+                                      <EventTime
+                                        value={r.created_at}
+                                        locale={ctx.locale}
+                                      />
+                                    </Link>
+                                  </th>
+                                  <td>
+                                    <span
+                                      className={`pos-status ${r.blocked_reason ? 'pos-status-warning' : ''}`}
+                                    >
+                                      {r.returned
+                                        ? d.returns.recorded
+                                        : r.blocked_reason
+                                          ? p.attention
+                                          : p.received}
+                                    </span>
+                                  </td>
+                                  <td className="inventory-number">
+                                    {formatSignedOre(r.amount_ore)} {r.currency}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+                      <nav className="pos-actions" aria-label={d.recent}>
+                        {state.next && (
+                          <Link
+                            className="btn btn-secondary"
+                            href={`/intake/integrations?provider=paypal&${new URLSearchParams(state.next)}#paypal-sales`}
+                          >
+                            {d.older}
+                          </Link>
+                        )}
+                        {paging && (
+                          <Link
+                            className="btn btn-secondary"
+                            href="/intake/integrations?provider=paypal#paypal-sales"
+                          >
+                            {d.newest}
+                          </Link>
+                        )}
+                      </nav>
+                    </>
+                  ),
+                },
+                {
+                  id: 'products',
+                  label: p.products,
+                  content: (
+                    <>
+                      <div className="pos-section-heading">
+                        <h2>{p.products}</h2>
+                        <Link
+                          className="btn btn-secondary"
+                          href="/intake/items?syncProvider=paypal&sort=title&direction=asc"
+                        >
+                          {d.itemSync.allItems}
+                        </Link>
+                      </div>
+                      {catalogAutomation && (
+                        <CatalogAutomationSettings
+                          compact
+                          tenantId={a.id}
+                          initial={catalogAutomation}
+                          configured={!!automationIdentity()}
+                          canEdit={a.role === 'owner'}
+                          d={all}
+                        />
+                      )}
+                      <p className="muted">
+                        {d.pendingProducts}: {catalog.candidates.length}
+                      </p>
+                      {liveReady && pull?.connection && (
+                        <section
+                          className="pos-products"
+                          aria-label={d.stockTitle}
+                        >
+                          {!exportItems.length && (
+                            <p className="pos-empty">{p.noItems}</p>
+                          )}
+                          {exportItems.map((itemId) => {
+                            const stock = stocks.find(
+                              (s) => s.item_id === itemId,
+                            )
+                            return (
+                              <div
+                                className="pos-product-row"
+                                key={itemId}
+                                data-testid={`zettle-export-${itemId}`}
+                              >
+                                <Link
+                                  className="text-link"
+                                  href={`/intake/items/${itemId}`}
+                                >
+                                  I-{itemId.slice(0, 8).toUpperCase()}
+                                </Link>
+                                {stock && (
+                                  <span
+                                    className={`pos-status ${stock.status === 'initialized' ? 'pos-status-on' : stock.status === 'depleted' ? '' : 'pos-status-warning'}`}
+                                    title={d.stockStates[stock.status]}
+                                  >
+                                    {all.itemSync.stockStates[stock.status]}
+                                  </span>
+                                )}
+                                {(images ?? [])
+                                  .filter((image) => image.item_id === itemId)
+                                  .map((image) => (
+                                    <span
+                                      className={`pos-status ${image.status === 'synced' ? 'pos-status-on' : 'pos-status-warning'}`}
+                                      title={d.imageStates[image.status]}
+                                      key={image.item_id}
+                                    >
+                                      {p.images}:{' '}
+                                      {all.itemSync.imageStates[image.status]}
+                                    </span>
+                                  ))}
+                                {stock && images !== null && (
+                                  <ZettleAction
+                                    compact
+                                    secondary
+                                    command={{
+                                      action: 'exportImage',
+                                      tenantId: a.id,
+                                      itemId,
+                                    }}
+                                    d={d}
+                                    label={p.syncImage}
+                                  />
+                                )}
+                                {stock?.status !== 'depleted' && (
+                                  <ZettleAction
+                                    compact
+                                    secondary
+                                    key={`${itemId}-${stock?.checked_at ?? 'new'}`}
+                                    command={{
+                                      action: 'export',
+                                      tenantId: a.id,
+                                      itemId,
+                                    }}
+                                    d={d}
+                                    label={p.syncItem}
+                                  />
+                                )}
+                              </div>
+                            )
+                          })}
+                        </section>
+                      )}
+                      {a.role === 'staff' &&
+                        images !== null &&
+                        images.length > 0 && (
+                          <section aria-label={d.imageStatusTitle}>
+                            {images.map((image) => (
+                              <div
+                                className="pos-product-row"
+                                key={image.item_id}
+                              >
+                                <Link
+                                  className="text-link"
+                                  href={`/intake/items/${image.item_id}`}
+                                >
+                                  I-{image.item_id.slice(0, 8).toUpperCase()}
+                                </Link>
+                                <span className="pos-status">
+                                  {d.imageStates[image.status]}
+                                </span>
+                              </div>
+                            ))}
+                          </section>
+                        )}
+                      <details className="pos-details">
+                        <summary>{d.productStatus}</summary>
+                        {catalog.outcomes.map((o, i) => (
+                          <p key={`${o.export_id}-${i}`}>
+                            <span
+                              className={`pos-status ${o.status === 'synced' ? 'pos-status-on' : 'pos-status-warning'}`}
+                            >
+                              {o.status === 'synced'
+                                ? d.synced
+                                : d.productFailed}
+                            </span>{' '}
+                            <EventTime
+                              value={o.created_at}
+                              locale={ctx.locale}
+                            />
+                            {o.error_code
+                              ? `: ${(d.errors as Record<string, string>)[o.error_code] ?? d.failed}`
+                              : ''}
+                          </p>
+                        ))}
+                      </details>
+                    </>
+                  ),
+                },
+                {
+                  id: 'settings',
+                  label: p.settings,
+                  content: (
+                    <>
+                      {admin && (
+                        <section className="pos-settings-section">
+                          <h2>{p.connection}</h2>
+                          <ZettleConnection
+                            compact
+                            checkLabel={p.check}
+                            key={a.id}
+                            tenantId={a.id}
+                            connected={!!paypal?.connected}
+                            reconnectRequired={!!paypal?.reconnectRequired}
+                            result={
+                              typeof params.paypal === 'string'
+                                ? params.paypal
+                                : undefined
+                            }
+                            setupAvailable={paypalAppAvailable(process.env)}
+                            d={d}
+                          />
+                        </section>
+                      )}
+                      {syncPreferences
+                        ?.filter((pref) => pref.provider === 'paypal')
+                        .map((pref) => (
+                          <section
+                            className="pos-settings-section"
+                            key={pref.connectionId}
+                          >
+                            <h2>{p.images}</h2>
+                            <SyncPreferences
+                              compact
+                              tenantId={a.id}
+                              initial={pref}
+                              d={all}
+                            />
+                          </section>
+                        ))}
+                      <details className="pos-details">
+                        <summary>{p.vat}</summary>
+                        <p>{d.vatHint}</p>
+                        <p>{d.vatComparisonHint}</p>
+                        {['owner', 'admin'].includes(a.role) && (
+                          <ZettleAction
+                            compact
+                            key={catalog.config?.id ?? 'new'}
+                            command={{
+                              action: 'configure',
+                              tenantId: a.id,
+                              previousId: catalog.config?.id ?? null,
+                              vatMap: catalog.config?.vat_map ?? {},
+                            }}
+                            d={d}
+                            label={d.saveMapping}
+                            vatModes={all.sales.vatModes}
+                            engineVatBasisPoints={engineVat}
+                          />
+                        )}
+                      </details>
+                    </>
+                  ),
+                },
+              ]}
+            />
+          </div>
         </details>
         <details
           className="card integration-provider"

@@ -50,7 +50,10 @@ test('connections overview shows simple setup guidance before detailed controls'
       await expect(panel).toHaveAttribute('open', '')
     }
     await expect(
-      page.getByRole('heading', { name: 'PayPal POS', exact: true }),
+      page.getByRole('heading', {
+        name: d.integrationPage.paypalWorkspace.connection,
+        exact: true,
+      }),
     ).toBeVisible()
     await expect(
       page
@@ -58,7 +61,6 @@ test('connections overview shows simple setup guidance before detailed controls'
         .getByText(d.zettle.oauth.hint, { exact: true }),
     ).toBeVisible()
     for (const category of [
-      d.integrationPage.pos,
       d.integrationPage.ecommerce,
       d.integrationPage.accounting,
     ]) {
@@ -86,12 +88,14 @@ test('connections overview shows simple setup guidance before detailed controls'
       'Zettle',
     )
 
-    await expect(
-      page.locator('.integration-details').first(),
-    ).not.toHaveAttribute('open', '')
     expect(await page.locator('main').first().innerText()).not.toMatch(/pilot/i)
-    await page
-      .getByText(`PayPal POS · ${d.integrationPage.manage}`, { exact: true })
+    const paypal = page.getByTestId('integration-paypal')
+    await expect(paypal.getByRole('tab')).toHaveCount(3)
+    await paypal
+      .getByRole('tab', {
+        name: d.integrationPage.paypalWorkspace.sales,
+        exact: true,
+      })
       .click()
     await expect(page.getByText(d.zettle.recent, { exact: true })).toBeVisible()
     await page.goto('/api/integrations/fortnox/callback?error=access_denied')

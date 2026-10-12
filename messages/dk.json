@@ -3044,7 +3044,31 @@
     "notConnected": "Ikke tilsluttet",
     "reconnect": "Tilslut igen",
     "setupAction": "Vis indstillinger",
-    "statusHint": "Status viser gemte oplysninger. Åbn systemet for detaljer; en gemt forbindelse betyder ikke, at automatisk synkronisering er slået til."
+    "statusHint": "Status viser gemte oplysninger. Åbn systemet for detaljer; en gemt forbindelse betyder ikke, at automatisk synkronisering er slået til.",
+    "paypalWorkspace": {
+      "sales": "Salg",
+      "products": "Varer",
+      "settings": "Indstillinger",
+      "connection": "Forbindelse",
+      "connected": "Tilsluttet",
+      "reconnect": "Tilslut igen",
+      "disconnected": "Ikke tilsluttet",
+      "pull": "Hent salg",
+      "syncItem": "Synkroniser vare",
+      "syncImage": "Synkroniser billede",
+      "lastPull": "Senest hentet",
+      "never": "Ikke hentet endnu",
+      "interval": "Hvert tiende minut",
+      "details": "Detaljer",
+      "received": "Hentet",
+      "attention": "Kræver behandling",
+      "noItems": "Ingen varer at vise.",
+      "vat": "Moms i kassen",
+      "images": "Billeder",
+      "check": "Kontrollér forbindelse",
+      "start": "Kom i gang",
+      "automatic": "Automatisk hentning"
+    }
   },
   "shopifyPrivacy": {
     "title": "Shopify · Databeskyttelsesanmodninger",

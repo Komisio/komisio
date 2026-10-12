@@ -1,3 +1,7 @@
+PayPal workspace (resolved 2026-10-12): owner requests one compact panel with
+sales, products and settings tabs, shorter copy and clearer sync controls.
+Receipt retrieval and product export remain separate owner-enabled scopes.
+
 # Open questions
 
 PayPal partner onboarding (2026-10-12): the owner registered the shared public

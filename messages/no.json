@@ -3044,7 +3044,31 @@
     "notConnected": "Ikke tilkoblet",
     "reconnect": "Må kobles til på nytt",
     "setupAction": "Vis innstillinger",
-    "statusHint": "Status viser lagrede opplysninger. Åpne systemet for detaljer; en lagret tilkobling betyr ikke at automatisk synkronisering er på."
+    "statusHint": "Status viser lagrede opplysninger. Åpne systemet for detaljer; en lagret tilkobling betyr ikke at automatisk synkronisering er på.",
+    "paypalWorkspace": {
+      "sales": "Salg",
+      "products": "Varer",
+      "settings": "Innstillinger",
+      "connection": "Tilkobling",
+      "connected": "Tilkoblet",
+      "reconnect": "Koble til på nytt",
+      "disconnected": "Ikke tilkoblet",
+      "pull": "Hent salg",
+      "syncItem": "Synkroniser vare",
+      "syncImage": "Synkroniser bilde",
+      "lastPull": "Sist hentet",
+      "never": "Ikke hentet ennå",
+      "interval": "Hvert tiende minutt",
+      "details": "Detaljer",
+      "received": "Hentet",
+      "attention": "Må behandles",
+      "noItems": "Ingen varer å vise.",
+      "vat": "Mva. i kassen",
+      "images": "Bilder",
+      "check": "Kontroller tilkobling",
+      "start": "Kom i gang",
+      "automatic": "Automatisk henting"
+    }
   },
   "shopifyPrivacy": {
     "title": "Shopify · Personvernforespørsler",

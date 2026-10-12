@@ -3044,7 +3044,31 @@
     "notConnected": "Inte ansluten",
     "reconnect": "Behöver anslutas på nytt",
     "setupAction": "Visa inställningar",
-    "statusHint": "Status visar sparade uppgifter. Öppna systemet för mer information; en sparad anslutning betyder inte att automatisk synkning är på."
+    "statusHint": "Status visar sparade uppgifter. Öppna systemet för mer information; en sparad anslutning betyder inte att automatisk synkning är på.",
+    "paypalWorkspace": {
+      "sales": "Försäljningar",
+      "products": "Varor",
+      "settings": "Inställningar",
+      "connection": "Anslutning",
+      "connected": "Ansluten",
+      "reconnect": "Anslut igen",
+      "disconnected": "Inte ansluten",
+      "pull": "Hämta försäljningar",
+      "syncItem": "Synka vara",
+      "syncImage": "Synka bild",
+      "lastPull": "Senast hämtat",
+      "never": "Ingen hämtning ännu",
+      "interval": "Var tionde minut",
+      "details": "Detaljer",
+      "received": "Hämtat",
+      "attention": "Behöver hanteras",
+      "noItems": "Inga varor att visa.",
+      "vat": "Moms i kassan",
+      "images": "Bilder",
+      "check": "Kontrollera anslutning",
+      "start": "Kom igång",
+      "automatic": "Automatisk hämtning"
+    }
   },
   "shopifyPrivacy": {
     "title": "Shopify · Dataskyddsärenden",

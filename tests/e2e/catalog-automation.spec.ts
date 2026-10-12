@@ -41,7 +41,7 @@ test('owner enables one account, lost save replays, competing workers serialize,
         [bot],
       )
     }
-    await page.goto('/intake/integrations?provider=paypal')
+    await page.goto('/intake/integrations?provider=paypal#paypal-products')
     const form = page.getByRole('region', {
       name: d.itemSync.automatic.title,
       exact: true,

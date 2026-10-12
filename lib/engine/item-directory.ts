@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { itemStage, originKind } from './items'
+import { paypalItemState, paypalSyncStatus } from './paypal-status'
 
 export const itemSort = z.enum([
   'title',
@@ -28,6 +29,7 @@ export const itemFilters = z
     endsBefore: date.optional(),
     photo: z.enum(['yes', 'no']).optional(),
     origin: originKind.optional(),
+    paypal: paypalSyncStatus.optional(),
   })
   .refine(
     (f) => !f.acceptedFrom || !f.acceptedTo || f.acceptedFrom <= f.acceptedTo,
@@ -59,6 +61,7 @@ export const filterKeys = [
   'endsBefore',
   'photo',
   'origin',
+  'paypal',
 ] as const
 const item = z.object({
   id: z.guid(),
@@ -76,6 +79,7 @@ const item = z.object({
   photoCount: z.number().int().nonnegative(),
   nextMarkdownAt: z.string().nullable(),
   nextMarkdownPercent: z.number().nullable(),
+  paypal: paypalItemState.optional(),
 })
 export type DirectoryItem = z.infer<typeof item>
 export async function readItemDirectory(

@@ -1,5 +1,25 @@
 # PayPal POS connection
 
+## Item status and recovery
+
+The items table includes a PayPal POS status and an advanced status filter.
+Filtering happens before pagination, so older items remain reachable. Each
+status links to the item's POS panel, with separate recorded product, stock and
+image outcomes and their available timestamps. These are saved observations,
+not a continuous read of the merchant's current inventory.
+
+Only a current acknowledged product snapshot with confirmed initial stock is
+shown as synced. A changed price, catalog mapping or bound store policy needs
+another export. Sold or ended items are not offered for export. Image outcome
+remains separate; it does not imply the current default photo was transferred.
+
+Owners/admins can choose **Sync now** from the item panel after activating the
+connection. It uses the existing export engine and stock safeguards. Retrying a
+reported export failure retains the request identity and does not reload the
+page. Uncertain stock or provider conflicts still require reconciliation, and
+retries never grant another unit. Staff/read-only members see status without an
+export action. No automatic product export is enabled by this read-only slice.
+
 ## Store-owned accounts
 
 The integrations page uses the PayPal POS name; provider codes and API routes

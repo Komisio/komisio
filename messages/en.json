@@ -2681,7 +2681,7 @@
     "productStatus": "Recent product attempts",
     "synced": "Synced",
     "productFailed": "Could not sync",
-    "catalogOffline": "Exports and receipt retrieval are started manually. No scheduled synchronization is enabled.",
+    "catalogOffline": "Product export is manual. Automatic receipt retrieval has a separate setting.",
     "pullTitle": "Sales from PayPal POS",
     "pullHint": "Retrieval starts at activation time. Each click fetches at most 100 receipts. Matched purchases are recorded automatically; other receipts await resolution. This starts no scheduled retrieval or product export.",
     "pullSince": "Activated from",
@@ -2749,7 +2749,28 @@
     "apiKey": "API key",
     "connect": "Connect PayPal POS",
     "chooseItem": "Choose item",
-    "selectedItem": "Selected item"
+    "selectedItem": "Selected item",
+    "itemSync": {
+      "states": {
+        "not_sent": "Not sent",
+        "changed": "Changed",
+        "failed": "Failed",
+        "attention": "Check required",
+        "synced": "Synced",
+        "inactive": "Not for sale"
+      },
+      "product": "Product",
+      "stock": "Stock",
+      "image": "Image",
+      "notConfirmed": "Not confirmed",
+      "notSent": "Not sent",
+      "syncNow": "Sync now",
+      "settings": "Settings",
+      "observation": "Last recorded result. Changes made in PayPal POS appear after the next check.",
+      "allItems": "View sync status for all items",
+      "details": "Details",
+      "retry": "Try again"
+    }
   },
   "priceEvidence": {
     "title": "Comparable sales in this store",

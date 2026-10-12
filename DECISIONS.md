@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-12: PayPal POS status is read per item and filtered before paging. Product acknowledgement, stock confirmation and image outcome remain distinct. Owners/admins reuse the existing export command from item details; no retry invents stock or overwrites a provider conflict.
+
 - 2026-10-11: Quick reception separates seller/agreement and item tabs, retaining mounted drafts and retry identities. Shared seller registration stays in context; personal PDFs and explicit agreement evidence are available before continuing. No receiving or approval rules change.
 
 - 2026-10-10: Agreement management separates versions, seller acceptance and publication. Staff may record approval of the displayed active agreement atomically with seller registration/profile editing, retaining its reference and actor; printing and unchecked boxes never create evidence.

@@ -2681,7 +2681,7 @@
     "productStatus": "Tentativi recenti sui prodotti",
     "synced": "Sincronizzato",
     "productFailed": "Sincronizzazione non riuscita",
-    "catalogOffline": "Esportazioni e recupero degli scontrini vengono avviati manualmente. Nessuna sincronizzazione pianificata è attiva.",
+    "catalogOffline": "L’esportazione degli articoli è manuale. Il recupero automatico delle ricevute ha un’impostazione separata.",
     "pullTitle": "Vendite da PayPal POS",
     "pullHint": "Il recupero inizia dal momento dell'attivazione. Ogni clic recupera al massimo 100 scontrini. Gli acquisti abbinati vengono registrati automaticamente; gli altri scontrini attendono una risoluzione. Questo non avvia alcun recupero pianificato né esportazione di prodotti.",
     "pullSince": "Attivato dal",
@@ -2749,7 +2749,28 @@
     "apiKey": "Chiave API",
     "connect": "Collega PayPal POS",
     "chooseItem": "Scegli articolo",
-    "selectedItem": "Articolo selezionato"
+    "selectedItem": "Articolo selezionato",
+    "itemSync": {
+      "states": {
+        "not_sent": "Non inviato",
+        "changed": "Modificato",
+        "failed": "Non riuscito",
+        "attention": "Da verificare",
+        "synced": "Sincronizzato",
+        "inactive": "Non in vendita"
+      },
+      "product": "Articolo",
+      "stock": "Scorte",
+      "image": "Immagine",
+      "notConfirmed": "Non confermato",
+      "notSent": "Non inviato",
+      "syncNow": "Sincronizza ora",
+      "settings": "Impostazioni",
+      "observation": "Ultimo risultato salvato. Le modifiche in PayPal POS appaiono dopo la prossima verifica.",
+      "allItems": "Mostra lo stato di sincronizzazione di tutti gli articoli",
+      "details": "Dettagli",
+      "retry": "Riprova"
+    }
   },
   "priceEvidence": {
     "title": "Vendite comparabili in questo negozio",

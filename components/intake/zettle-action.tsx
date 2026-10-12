@@ -239,8 +239,17 @@ export function ZettleAction({
       {state === 'failed' ? (
         <>
           <p role="alert">{error || d.failed}</p>
-          <Button type="button" onClick={() => window.location.reload()}>
-            {d.reload}
+          <Button
+            type="button"
+            onClick={() =>
+              command.action === 'export' || command.action === 'exportImage'
+                ? void send()
+                : window.location.reload()
+            }
+          >
+            {command.action === 'export' || command.action === 'exportImage'
+              ? d.itemSync.retry
+              : d.reload}
           </Button>
         </>
       ) : state === 'done' ? (

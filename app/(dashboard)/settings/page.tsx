@@ -251,6 +251,7 @@ export default async function Settings({
           <WorkspaceTabs
             id="printing"
             label={pr.title}
+            scrollAnchors
             initial={requestedJob !== null ? 'history' : 'printers'}
             tabs={[
               {

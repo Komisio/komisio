@@ -10,6 +10,7 @@ test('print history identifies its item and printer and can inspect a job beyond
   const email = `print-history-${randomUUID()}@example.test`
   await register(page, email, `K!${randomUUID()}`)
   const f = await p2Fixture(email)
+  let releaseScripts = () => {}
   try {
     const items = [
       await f.item('Synthetic coat label'),
@@ -41,7 +42,24 @@ test('print history identifies its item and printer and can inspect a job beyond
     }
     const jobs = [await queue(0), await queue(1)]
     await page.setViewportSize({ width: 320, height: 720 })
-    await page.goto('/settings?tab=printing#print-jobs')
+    const scripts = new Promise<void>((resolve) => {
+      releaseScripts = resolve
+    })
+    await page.route(/\/_next\/.*\.js(?:\?.*)?$/, async (route) => {
+      await scripts
+      await route.continue()
+    })
+    await page.goto('/settings?tab=printing#print-jobs', {
+      waitUntil: 'commit',
+    })
+    // Native fragment scrolling cannot find a hidden panel before hydration.
+    await expect(
+      page.getByRole('tab', { name: d.printing.tabs.history, exact: true }),
+    ).toBeDisabled()
+    await expect(page.locator('#print-jobs')).toBeHidden()
+    releaseScripts()
+    await expect(page.locator('#print-jobs')).toBeInViewport()
+    await page.unroute(/\/_next\/.*\.js(?:\?.*)?$/)
     for (const [index, id] of jobs.entries()) {
       const row = page.locator(`#print-job-${id}`)
       await expect(row).toContainText(`Synthetic printer ${index + 1}`)
@@ -110,6 +128,8 @@ test('print history identifies its item and printer and can inspect a job beyond
       ).toHaveCount(0)
     }
   } finally {
+    releaseScripts()
+    await page.unrouteAll({ behavior: 'wait' })
     await f.close()
   }
 })

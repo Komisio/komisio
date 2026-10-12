@@ -26,6 +26,8 @@ export function ZettleConnection({
   const [ok, setOk] = useState(false)
   const errorText = (code: string) => {
     if (code === 'PAYPAL_REFRESH_BUSY') return d.oauth.refreshBusy
+    if (code === 'PAYPAL_APP_AUTH_FAILED') return d.oauth.appAuthFailed
+    if (code === 'ZETTLE_AUTH_REQUIRED') return d.oauth.authorizationFailed
     if (
       [
         'PAYPAL_STATE_INVALID',

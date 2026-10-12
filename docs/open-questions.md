@@ -2,9 +2,11 @@
 
 PayPal partner onboarding (2026-10-12): the owner registered the shared public
 app and confirmed no stores use the old API-key flow. Replace that flow outright
-with PKCE OAuth and tenant-bound tokens. Public app credentials were issued
-immediately. Hosted redirect registration, environment configuration and a real
-merchant consent/refresh test remain release verification, not financial rules.
+with partner authorization-code OAuth and tenant-bound tokens. App credentials
+were issued immediately. The live callback exposed the incorrect SDK PKCE
+selection; the partner flow requires the shared server-side client secret.
+Redirect URIs are registered. Secret configuration and a successful real merchant
+consent/refresh test remain release verification, not financial rules.
 
 Integration follow-up (2026-10-12): the owner requested item-level status/retry,
 automatic product export, optional current default-image export, POS returns and

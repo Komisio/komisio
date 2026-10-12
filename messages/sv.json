@@ -2788,7 +2788,9 @@
       "disconnected": "PayPal POS är frånkopplat i Komisio.",
       "retry": "Anslut igen för att fortsätta.",
       "refreshBusy": "Anslutningen uppdateras. Försök igen om en stund.",
-      "unavailable": "PayPal POS-anslutningen är ännu inte aktiverad av Komisio."
+      "unavailable": "PayPal POS-anslutningen är ännu inte aktiverad av Komisio.",
+      "appAuthFailed": "PayPal POS nekade Komisios appanslutning. Kontakta Komisio; du behöver inte ändra butikens konto.",
+      "authorizationFailed": "Anslutningen till PayPal POS slutfördes inte. Försök ansluta igen. Om felet kvarstår, kontakta Komisio."
     }
   },
   "priceEvidence": {

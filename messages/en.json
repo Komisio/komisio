@@ -2788,7 +2788,9 @@
       "disconnected": "PayPal POS is disconnected in Komisio.",
       "retry": "Reconnect to continue.",
       "refreshBusy": "The connection is updating. Try again shortly.",
-      "unavailable": "The PayPal POS connection has not yet been enabled by Komisio."
+      "unavailable": "The PayPal POS connection has not yet been enabled by Komisio.",
+      "appAuthFailed": "PayPal POS rejected the Komisio app connection. Contact Komisio; you do not need to change the store account.",
+      "authorizationFailed": "The PayPal POS connection was not completed. Try connecting again. If the problem persists, contact Komisio."
     }
   },
   "priceEvidence": {

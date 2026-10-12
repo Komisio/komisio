@@ -577,8 +577,9 @@ retention and erasure).
 ### Explicit P5 slice: multi-tenant Zettle connections
 
 Owner selected this slice on 2026-10-12: replace unused per-store API keys
-and the pilot environment fallback with shared partner-hosted PKCE authorization,
-tenant-bound encrypted token storage, serialized rotation and local disconnect.
+and the pilot environment fallback with shared partner-hosted authorization-code
+flow with server client authentication, tenant-bound encrypted token storage,
+serialized rotation and local disconnect.
 The implementation preserves merchant pins, tenant isolation, server-only tokens
 and immutable connection provenance. Hosted OAuth consent and token renewal
 remain release verification. Existing accepted automation grants control receipt

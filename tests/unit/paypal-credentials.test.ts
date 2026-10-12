@@ -1,10 +1,10 @@
-import { createHash } from 'node:crypto'
 import { describe, expect, it, vi } from 'vitest'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   startPayPalConnection,
   completePayPalConnection,
   paypalEnvironment,
+  paypalAppAvailable,
 } from '../../lib/engine/paypal-credentials'
 import { open, seal } from '../../lib/platform/credentials'
 import {
@@ -17,6 +17,7 @@ const tenant = 'f1460000-0000-4000-8000-000000000001',
 const env = {
   KOMISIO_CREDENTIAL_KEY: 'ab'.repeat(32),
   PAYPAL_POS_CLIENT_ID: 'shared-public-client',
+  PAYPAL_POS_CLIENT_SECRET: 'synthetic-partner-secret',
 }
 const tokens = {
   access_token: 'test-access',
@@ -64,7 +65,7 @@ async function start(f: ReturnType<typeof fixture>) {
   return { ...result, state: new URL(result.url).searchParams.get('state')! }
 }
 describe('PayPal partner OAuth', () => {
-  it('uses random S256 PKCE and binds state to tenant, actor and browser cookie', async () => {
+  it('uses partner code grant and binds state and redirect URI to the browser cookie', async () => {
     const f = fixture(),
       a = await start(f),
       b = await start(f),
@@ -76,12 +77,14 @@ describe('PayPal partner OAuth', () => {
       'paypal-oauth-state',
       JSON.parse(Buffer.from(a.cookie, 'base64url').toString()),
       env,
-    ) as { state: string; verifier: string }
-    expect(url.searchParams.get('code_challenge')).toBe(
-      createHash('sha256').update(cookie.verifier).digest('base64url'),
-    )
-    expect(a.state).not.toContain(cookie.verifier)
-    expect(url.searchParams.get('code_challenge_method')).toBe('S256')
+    ) as { state: string; redirectUri: string }
+    expect(cookie).toEqual({ state: a.state, redirectUri: uri })
+    expect(url.searchParams.get('response_type')).toBe('code')
+    expect(url.searchParams.get('redirect_uri')).toBe(uri)
+    expect(url.searchParams.has('code_challenge')).toBe(false)
+    expect(url.searchParams.has('code_challenge_method')).toBe(false)
+    expect(a.url).not.toContain(env.PAYPAL_POS_CLIENT_SECRET)
+    expect(JSON.stringify(cookie)).not.toContain(env.PAYPAL_POS_CLIENT_SECRET)
   })
   it('verifies the merchant before persisting tenant-sealed tokens; does not enable synchronization', async () => {
     const f = fixture(),
@@ -107,12 +110,23 @@ describe('PayPal partner OAuth', () => {
     const body = new URLSearchParams(String(f.http.mock.calls[0][1]?.body))
     expect(body.get('grant_type')).toBe('authorization_code')
     expect(body.get('client_id')).toBe(env.PAYPAL_POS_CLIENT_ID)
-    expect(body.has('client_secret')).toBe(false)
-    expect(body.has('code_verifier')).toBe(true)
+    expect(body.get('client_secret')).toBe(env.PAYPAL_POS_CLIENT_SECRET)
+    expect(body.get('redirect_uri')).toBe(uri)
+    expect(body.has('code_verifier')).toBe(false)
   })
   it.each(['staff', 'readonly'])('denies connection for %s', async (role) => {
     const f = fixture(role)
     await expect(start(f)).rejects.toThrow('FORBIDDEN')
+    expect(f.http).not.toHaveBeenCalled()
+  })
+  it('requires the shared server secret before starting authorization', async () => {
+    const f = fixture()
+    const source = { ...env, PAYPAL_POS_CLIENT_SECRET: '' }
+    expect(paypalAppAvailable(source)).toBe(false)
+    expect(paypalAppAvailable(env)).toBe(true)
+    await expect(
+      startPayPalConnection(f.client, tenant, other, uri, source),
+    ).rejects.toThrow('PAYPAL_APP_UNAVAILABLE')
     expect(f.http).not.toHaveBeenCalled()
   })
   it.each(['cookie', 'state', 'tenant', 'user', 'expired', 'revision'])(
@@ -226,6 +240,11 @@ describe('PayPal partner OAuth', () => {
             'grant_type',
           ),
         ).toBe('refresh_token')
+        expect(
+          new URLSearchParams(String(f.http.mock.calls[0][1]?.body)).get(
+            'client_secret',
+          ),
+        ).toBe(env.PAYPAL_POS_CLIENT_SECRET)
       } else {
         await expect(
           paypalEnvironment(f.client, tenant, env, f.http),
@@ -258,6 +277,50 @@ describe('PayPal partner OAuth', () => {
       paypalEnvironment(f.client, tenant, env, f.http),
     ).rejects.toThrow('PAYPAL_RECONNECT_REQUIRED')
   })
+  it('does not claim a refresh token when the server secret is missing', async () => {
+    const f = fixture()
+    f.rpc.mockResolvedValue({
+      data: {
+        merchantId: merchant,
+        revision: '1',
+        expiresAt: new Date(0).toISOString(),
+        cipher: seal(`paypal-oauth:${tenant}`, tokens, env),
+      },
+      error: null,
+    })
+    await expect(
+      paypalEnvironment(
+        f.client,
+        tenant,
+        {
+          ...env,
+          PAYPAL_POS_CLIENT_SECRET: '',
+        },
+        f.http,
+      ),
+    ).rejects.toThrow('PAYPAL_APP_UNAVAILABLE')
+    expect(f.rpc.mock.calls.map((c) => c[0])).toEqual([
+      'read_paypal_credentials',
+    ])
+    expect(f.http).not.toHaveBeenCalled()
+  })
+  it.each(['invalid_client', 'unauthorized_client'])(
+    'reports %s without exposing provider details',
+    async (error) => {
+      const http = vi.fn<typeof fetch>().mockResolvedValue(
+        Response.json(
+          {
+            error,
+            error_description: 'private credential details',
+          },
+          { status: 401 },
+        ),
+      )
+      await expect(
+        paypalTokenRequest({ code: 'private' }, http),
+      ).rejects.toThrow(/^PAYPAL_APP_AUTH_FAILED$/)
+    },
+  )
   it('sanitizes token errors and rejects missing refresh token or insufficient scopes', async () => {
     for (const response of [
       new Response('private', { status: 400 }),

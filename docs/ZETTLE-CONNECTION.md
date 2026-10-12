@@ -25,14 +25,17 @@ export action. No automatic product export is enabled by this read-only slice.
 ## Partner-hosted connection
 
 Owners/admins choose **Connect PayPal POS**, sign in with PayPal and approve
-Komisio. Stores never create developer credentials. The shared public app uses
-[authorization code with S256 PKCE](https://developer.zettle.com/docs/api/oauth/overview);
-the documented PKCE exchange uses the app client ID and a one-use verifier,
-not the app client secret. Requested scopes are READ:USERINFO, READ:PRODUCT,
-WRITE:PRODUCT and READ:PURCHASE. No payment or refund execution is requested.
+Komisio. Stores never create developer credentials. The shared partner-hosted app uses
+[authorization code grant](https://developer.zettle.com/docs/api/oauth/api-reference)
+with the app client ID and server-only client secret. The SDK-app PKCE flow is
+not the partner-hosted credential contract. Requested scopes are READ:USERINFO,
+READ:PRODUCT, WRITE:PRODUCT and READ:PURCHASE. No payment or refund execution
+is requested.
 
 The callback binds the authenticated staff identity, active tenant, expiring
-signed state, encrypted HttpOnly cookie and current connection revision.
+signed state, encrypted HttpOnly cookie and current connection revision. The
+exact redirect URI used at authorization is bound into that cookie and reused
+for the token exchange.
 The server verifies the merchant through users/self before sealing the access
 and refresh tokens with tenant-bound AES-256-GCM. A reconnection must match the
 existing merchant, including the immutable synchronization connection pin.
@@ -48,8 +51,10 @@ revoke the app in PayPal; merchants can also remove that authorization there.
 ## Host configuration
 
 1. Register a public API app in the PayPal POS developer portal.
-2. Configure server-only `PAYPAL_POS_CLIENT_ID` and `KOMISIO_CREDENTIAL_KEY`.
-   PKCE does not require storing the downloaded client secret in Komisio.
+2. Configure server-only `PAYPAL_POS_CLIENT_ID`, `PAYPAL_POS_CLIENT_SECRET`
+   and `KOMISIO_CREDENTIAL_KEY`. Use the matching app credentials from the portal.
+   Configure both staging and production hosts and redeploy after changes.
+   The secret is required for both code exchange and token renewal.
 3. Register each exact callback URL in the app's OAuth Redirect URIs:
    - Staging: `https://komisio-staging.vercel.app/api/integrations/paypal/callback`
    - Production: `https://app.komisio.com/api/integrations/paypal/callback`
@@ -80,7 +85,8 @@ The integrations page reads status without decrypting or refreshing credentials.
 
 ## Verification
 
-Unit tests cover PKCE, tenant/user/cookie binding, expiry, stale callbacks,
+Unit tests cover partner client authentication, exact redirect reuse,
+tenant/user/cookie binding, expiry, stale callbacks,
 merchant verification, encrypted token storage and renewal failures. pgTAP
 covers role/MFA and worker authorization; a multi-connection test proves one
 refresh claimant. Browser tests cover setup and callback rejection without

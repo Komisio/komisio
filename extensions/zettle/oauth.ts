@@ -21,11 +21,15 @@ export function paypalClientId(source: Record<string, string | undefined>) {
   if (!result.success) throw new Error('PAYPAL_APP_UNAVAILABLE')
   return result.data
 }
+export function paypalClientSecret(source: Record<string, string | undefined>) {
+  const result = secret.safeParse(source.PAYPAL_POS_CLIENT_SECRET?.trim())
+  if (!result.success) throw new Error('PAYPAL_APP_UNAVAILABLE')
+  return result.data
+}
 export function paypalAuthorizeUrl(
   clientId: string,
   redirectUri: string,
   state: string,
-  challenge: string,
 ) {
   const url = new URL('https://oauth.zettle.com/authorize')
   url.search = new URLSearchParams({
@@ -34,8 +38,6 @@ export function paypalAuthorizeUrl(
     redirect_uri: redirectUri,
     state,
     scope: PAYPAL_SCOPES,
-    code_challenge: challenge,
-    code_challenge_method: 'S256',
   }).toString()
   return url.toString()
 }
@@ -56,7 +58,16 @@ export async function paypalTokenRequest(
       signal: AbortSignal.timeout(10000),
     })
     if (response.status === 429) throw new Error('ZETTLE_RATE_LIMITED')
-    if (!response.ok) throw new Error('ZETTLE_AUTH_REQUIRED')
+    if (!response.ok) {
+      const body = await boundedJson(response, 8192).catch(() => null)
+      const code = z.object({ error: z.string() }).safeParse(body)
+      if (
+        code.success &&
+        ['invalid_client', 'unauthorized_client'].includes(code.data.error)
+      )
+        throw new Error('PAYPAL_APP_AUTH_FAILED')
+      throw new Error('ZETTLE_AUTH_REQUIRED')
+    }
     const tokens = paypalTokens.parse(await boundedJson(response, 100000))
     if (tokens.token_type && tokens.token_type.toLowerCase() !== 'bearer')
       throw new Error('ZETTLE_AUTH_REQUIRED')
@@ -71,7 +82,11 @@ export async function paypalTokenRequest(
   } catch (error) {
     if (
       error instanceof Error &&
-      ['ZETTLE_AUTH_REQUIRED', 'ZETTLE_RATE_LIMITED'].includes(error.message)
+      [
+        'ZETTLE_AUTH_REQUIRED',
+        'ZETTLE_RATE_LIMITED',
+        'PAYPAL_APP_AUTH_FAILED',
+      ].includes(error.message)
     )
       throw error
     throw new Error('ZETTLE_CONNECTION_FAILED')

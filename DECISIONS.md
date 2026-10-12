@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-12: Correct PayPal partner OAuth to the documented confidential authorization-code grant; SDK PKCE is not its app contract. Code exchange binds the original redirect URI; exchange and renewal require the server client secret. Tenant, browser, revision and merchant checks stay enforced.
+
 - 2026-10-12: Owner replaces unused per-store PayPal API keys with the shared partner app and PKCE OAuth. Tenant/user-bound callbacks pin the merchant; encrypted tokens renew under one durable claim. Unknown refresh outcomes require reconnection. Existing sync grants remain separate.
 
 - 2026-10-12: Owner approves seller-balance checkout using available funds only, with no credit. Split payment with another tender is allowed. Returns restore the balance-funded portion to the same seller; POS receipt linkage must be verified before activation.

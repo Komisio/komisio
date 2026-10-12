@@ -30,6 +30,7 @@ export default defineConfig({
         KOMISIO_SELLER_SUBMISSIONS_ENABLED: 'true',
         KOMISIO_CREDENTIAL_KEY: 'ab'.repeat(32),
         PAYPAL_POS_CLIENT_ID: 'synthetic-paypal-public-app',
+        PAYPAL_POS_CLIENT_SECRET: 'synthetic-paypal-client-secret',
         SHOPIFY_CLIENT_SECRET: 'synthetic-shopify-privacy-secret',
         KOMISIO_AUTOMATION_EMAIL: 'automation-e2e@example.test',
         KOMISIO_AUTOMATION_PASSWORD: 'synthetic-automation-e2e-password',

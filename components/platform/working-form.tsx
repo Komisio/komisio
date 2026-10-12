@@ -1,6 +1,7 @@
 'use client'
 import { usePathname, useSearchParams } from 'next/navigation'
-import type { FormHTMLAttributes } from 'react'
+import { useContext, type FormHTMLAttributes } from 'react'
+import { WorkspaceSearchTransition } from '@/components/ui/workspace-tabs'
 import { useRouter } from './use-working-router'
 import { useConfirmNavigation } from './navigation-warning'
 
@@ -25,6 +26,7 @@ function SearchForm({
 }: SearchFormProps) {
   const confirm = useConfirmNavigation()
   const router = useRouter()
+  const startSearch = useContext(WorkspaceSearchTransition)
   return (
     <form
       {...props}
@@ -56,9 +58,13 @@ function SearchForm({
             typeof value === 'string' ? value : value.name,
           ]),
         ).toString()
-        router.push(
-          destination.pathname + destination.search + destination.hash,
-        )
+        const navigate = () =>
+          router.push(
+            destination.pathname + destination.search + destination.hash,
+          )
+        // A tab's history update must not cancel the pending search navigation.
+        if (startSearch) startSearch(navigate)
+        else navigate()
       }}
     >
       {children}

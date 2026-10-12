@@ -41,6 +41,9 @@ test('receipt search finds older sales beyond the latest fifty and preserves the
     await search
       .getByRole('button', { name: d.sales.findReceipt, exact: true })
       .click()
+    await expect(page).toHaveURL(
+      `/intake/sales?${new URLSearchParams({ reference, provider: 'manual' })}`,
+    )
     const filtered = page.url()
     await expect(page.locator('.sales-register-row')).toHaveCount(1)
     const row = page.locator('.sales-register-row')

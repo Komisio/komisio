@@ -131,9 +131,11 @@ test('navigation work ends after rendering and a cancelled dirty-form link does 
     await page.locator('#stock-ownership').selectOption('store')
     await page.locator('.stock-ownership-filter').getByRole('button').click()
     await expect(indicator).toBeVisible()
+    await expect(page.getByRole('tab').first()).toBeDisabled()
     release()
     await expect(page).toHaveURL(/ownership=store/)
     await expect(indicator).toHaveCount(0)
+    await expect(page.getByRole('tab').first()).toBeEnabled()
   } finally {
     release()
     await f.close()

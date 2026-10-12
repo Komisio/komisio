@@ -2667,7 +2667,12 @@
       "ZETTLE_UPDATE_FAILED": "PayPal POS did not confirm the product update.",
       "ZETTLE_READ_FAILED": "The product or integration records could not be read.",
       "ZETTLE_RETRY_LATER": "PayPal POS returned a server error. Retry later using the same product ID.",
-      "ZETTLE_IMAGES_DISABLED": "Image transfer is disabled for this connection."
+      "ZETTLE_IMAGES_DISABLED": "Image transfer is disabled for this connection.",
+      "ZETTLE_ORIGINAL_SALE_REQUIRED": "The original sale is missing from Komisio. Sync it first, then retry.",
+      "ZETTLE_REFUND_MISMATCH": "The refund cannot be matched safely to the original items.",
+      "ZETTLE_RETURN_FAILED": "The return could not be recorded. Check the original receipt.",
+      "PARTIAL_REFUND_UNSUPPORTED": "Partial amounts are not supported. The refund must equal the entire item sale price.",
+      "LINE_ALREADY_RETURNED": "The item has already been returned in Komisio. Check the previous return."
     },
     "approvalHint": "Matched receipts are recorded automatically. Only exceptions need investigation; no second approver is required.",
     "held": "The receipt could not be recorded. Investigate before retrying.",
@@ -2771,6 +2776,12 @@
       "allItems": "View sync status for all items",
       "details": "Details",
       "retry": "Try again"
+    },
+    "returns": {
+      "receipt": "Refund receipt",
+      "recorded": "The return is recorded in Komisio.",
+      "original": "View original sale",
+      "retry": "Check return again"
     }
   },
   "priceEvidence": {

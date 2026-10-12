@@ -2667,7 +2667,12 @@
       "ZETTLE_UPDATE_FAILED": "PayPal POS no confirmó la actualización del producto.",
       "ZETTLE_READ_FAILED": "No se pudieron leer los registros del producto o de la integración.",
       "ZETTLE_RETRY_LATER": "PayPal POS devolvió un error del servidor. Vuelve a intentarlo más tarde con el mismo ID de producto.",
-      "ZETTLE_IMAGES_DISABLED": "La transferencia de imágenes está desactivada para esta conexión."
+      "ZETTLE_IMAGES_DISABLED": "La transferencia de imágenes está desactivada para esta conexión.",
+      "ZETTLE_ORIGINAL_SALE_REQUIRED": "La venta original no está en Komisio. Sincronízala primero e inténtalo de nuevo.",
+      "ZETTLE_REFUND_MISMATCH": "La devolución no se puede vincular de forma segura con los artículos originales.",
+      "ZETTLE_RETURN_FAILED": "No se pudo registrar la devolución. Revisa el recibo original.",
+      "PARTIAL_REFUND_UNSUPPORTED": "No se admiten importes parciales. El reembolso debe coincidir con el precio de venta completo del artículo.",
+      "LINE_ALREADY_RETURNED": "El artículo ya fue devuelto en Komisio. Revisa la devolución anterior."
     },
     "approvalHint": "Los recibos coincidentes se registran automáticamente. Solo las excepciones necesitan investigación; no se requiere un segundo aprobador.",
     "held": "No se pudo registrar el recibo. Investiga antes de reintentar.",
@@ -2771,6 +2776,12 @@
       "allItems": "Ver el estado de sincronización de todos los artículos",
       "details": "Detalles",
       "retry": "Volver a intentar"
+    },
+    "returns": {
+      "receipt": "Recibo de devolución",
+      "recorded": "La devolución está registrada en Komisio.",
+      "original": "Ver venta original",
+      "retry": "Revisar devolución de nuevo"
     }
   },
   "priceEvidence": {

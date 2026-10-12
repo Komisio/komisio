@@ -59,14 +59,14 @@ page; there is no silent skip. The owner escape below records an explicit gap. T
 interval and its durable watermark do not change. Identical receipt IDs across
 overlap windows remain
 idempotent; conflicting facts stop the page. Only already-supported, fully matched
-purchases record sales and seller credit. Refunds, discounts and unmatched lines
-retain the existing held behavior; this adds no tax or commission rule.
+purchases record sales and seller credit. Verified whole-line refunds follow the
+return path below; discounts and unmatched lines remain held.
 
 ## Limits
 
 Two-minute lag and five-minute overlap are operational choices, not a guarantee
 against arbitrarily late provider data. Scheduled retrieval, backoff, long-range
-reconciliation, refund/discount handling and merchant credential rotation remain
+reconciliation, partial-refund/discount handling and merchant credential rotation remain
 separate work. Product export, inventory initialization and delisting are still
 not live. A working token alone does not prove Purchase API permission; the first
 actual pull verifies that permission. The merchant must enable the right scopes.
@@ -96,3 +96,29 @@ pages remain replayable. The next window starts at the closed window's exact end
 This deliberately skips the remaining receipts in that interval. Reconcile the
 gap against Zettle manually; closing is not proof of a complete import.
 The control is hidden during the brief missing-RPC deployment gap.
+
+## Completed POS refunds
+
+The adapter imports refunds already completed in PayPal POS; it does not initiate
+customer payments. The documented refund purchase has a negative amount and
+quantity, positive unit prices and `refundsPurchaseUUID1` identifying the original
+purchase. See the [Purchase API contract](https://developer.zettle.com/docs/api/purchase/api-reference-md).
+The original purchase's mutable `refunded` flag does not alter sale facts.
+
+Only exact product/variant matches against a recorded original sale, one returned
+unit per line and the full original line price enter the existing return engine.
+It reverses consignor sale credit and records returned inventory atomically.
+Custom amounts, discounts, ambiguous matches and partial values remain held.
+An original sale arriving later retries up to 50 pending linked refund receipts;
+staff can also retry a held receipt. Receipt details link to the original sale.
+
+Duplicate pages and concurrent retries cannot reverse credit twice. Fresh
+classification evidence supplements immutable legacy blocked receipts rather
+than changing them. Return ingestion never increments POS stock: the catalog
+adapter must observe remote stock independently under its existing safeguards.
+
+Migrations `20261012170000` through `20261012172000` add integration evidence and
+reconciliation. Synthetic database and browser tests cover replay, original-sale
+ordering, atomic rollback, worker revocation and concurrent delivery. Real merchant
+refund verification is still required. Seller-balance checkout remains deferred
+by the owner until a supported POS payment flow is verified.

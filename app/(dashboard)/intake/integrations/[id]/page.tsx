@@ -23,11 +23,12 @@ export default async function Receipt({
     if (e.message === 'ZETTLE_IMPORT_NOT_FOUND') notFound()
     throw e
   })
-  const editable = a.role !== 'readonly' && !r.saleId && !r.blocked_reason
+  const editable =
+    a.role !== 'readonly' && !r.saleId && !r.blocked_reason && !r.returnInfo
   return (
     <>
       <div className="page-heading">
-        <h1>{d.receipt}</h1>
+        <h1>{r.returnInfo ? d.returns.receipt : d.receipt}</h1>
         <Link className="text-link" href="/intake/integrations?provider=paypal">
           {d.back}
         </Link>
@@ -55,12 +56,21 @@ export default async function Receipt({
             {d.revision}: {r.mappingRevision}
           </p>
         </details>
-        {r.blocked_reason && (
+        {r.blocked_reason && !r.returnInfo && (
           <p role="status">
             {d.blocked}: {r.blocked_reason}. {d.unsupported}
           </p>
         )}
         {r.saleId && <p role="status">{d.recorded}</p>}
+        {r.returnInfo?.returnIds && <p role="status">{d.returns.recorded}</p>}
+        {r.returnInfo?.originalSaleId && (
+          <Link
+            className="text-link"
+            href={`/intake/sales/${r.returnInfo.originalSaleId}`}
+          >
+            {d.returns.original}
+          </Link>
+        )}
         {editable && <p>{d.matchHint}</p>}
         {r.rows.map((row) => (
           <section
@@ -119,7 +129,14 @@ export default async function Receipt({
             label={d.retryReceipt}
           />
         )}
-        <p>{d.approvalHint}</p>
+        {r.returnInfo && !r.returnInfo.returnIds && a.role !== 'readonly' && (
+          <ZettleAction
+            command={{ action: 'retry', tenantId: a.id, importId: id }}
+            d={d}
+            label={d.returns.retry}
+          />
+        )}
+        {!r.returnInfo && <p>{d.approvalHint}</p>}
       </section>
     </>
   )

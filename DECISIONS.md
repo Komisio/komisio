@@ -1017,3 +1017,7 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-12: Image inclusion is opt-in per connected account, defaults off and preserves existing remote images when disabled. Preferences are immutable integration revisions with optimistic concurrency and replay identity. Changed account bindings cannot inherit a stale save.
 
 - 2026-10-12: Catalog automation requires an owner-enabled account binding and a separate accepted scope. Leased item jobs bound each adapter call; revocation stops further work. Existing stock/image claims prevent repeated mutations. PayPal is the first automatic export adapter.
+
+- 2026-10-12: Verified PayPal refunds match the original sale and exact product pair, then reuse whole-line returns atomically. Ambiguous or partial amounts stay held. Fresh receipt classifications append evidence; mutable refunded flags never rewrite a sale. No customer payment is initiated.
+
+- 2026-10-12: Owner defers seller-balance checkout until POS support is verified. Approved future rules remain available funds only, split tender allowed and balance-funded refunds restored to the same seller. No manual balance adjustment substitutes for a POS payment.

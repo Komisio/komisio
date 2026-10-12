@@ -102,6 +102,7 @@ test('the sellers list shows holdings and balance and opens the seller', async (
     await list
       .getByRole('button', { name: d.sellersList.searchButton, exact: true })
       .click()
+    await expect(page).toHaveURL((url) => url.searchParams.get('q') === email)
     await expect(row).toBeVisible()
     await list
       .getByLabel(d.sellersList.search, { exact: true })

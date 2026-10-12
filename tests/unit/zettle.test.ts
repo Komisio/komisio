@@ -50,7 +50,6 @@ it('maps documented UUID, integer gross and exact labels, stripping unrelated da
 it.each([
   { source: 'WEB_SHOP' },
   { refund: true },
-  { refunded: true },
   { amount: -20000 },
   { currency: 'EUR' },
   { discounts: [{}] },
@@ -170,5 +169,63 @@ it.each(['EUR', 'USD'])(
     expect(mapZettlePurchase({ ...base, currency }, 'SEK').blockedReason).toBe(
       'currency',
     )
+  },
+)
+
+it('the mutable refunded flag does not change the original sale facts', () => {
+  expect(mapZettlePurchase({ ...base, refunded: true }, 'SEK')).toEqual(
+    mapZettlePurchase({ ...base, refunded: false }, 'SEK'),
+  )
+})
+const refundProduct = {
+  ...base.products[0],
+  quantity: '-1',
+  productUuid: '22222222-2222-4222-8222-222222222222',
+  variantUuid: '33333333-3333-4333-8333-333333333333',
+}
+const refund = {
+  ...base,
+  purchaseUUID1: '44444444-4444-4444-8444-444444444444',
+  refund: true,
+  refundsPurchaseUUID1: base.purchaseUUID1,
+  amount: -20000,
+  products: [refundProduct],
+}
+it('links a documented whole-product refund without retaining payment or customer fields', () => {
+  const result = mapZettlePurchase(
+    {
+      ...refund,
+      payments: [{ token: 'private' }],
+      customer: { name: 'private' },
+    },
+    'SEK',
+  )
+  expect(result.refundOf).toBe(base.purchaseUUID1)
+  expect(result.blockedReason).toBe('refund')
+  expect(result.amountOre).toBe(-20000)
+  expect(result.lines[0].priceOre).toBe(20000)
+  expect(JSON.stringify(result)).not.toContain('private')
+})
+it.each([
+  { refund: false },
+  { refundsPurchaseUUID1: undefined },
+  { refundsPurchaseUUID1: 'invalid' },
+  { refundsPurchaseUUID1: refund.purchaseUUID1 },
+  { customAmountSale: true },
+  { amount: -20001 },
+  { currency: 'EUR' },
+  { discounts: [{}] },
+  { serviceCharge: {} },
+  { products: [{ ...refundProduct, quantity: '-2' }] },
+  { products: [{ ...refundProduct, productUuid: undefined }] },
+  { products: [{ ...refundProduct, type: 'CUSTOM_AMOUNT' }] },
+  { products: [{ ...refundProduct, discountValue: 1 }] },
+  { products: [{ ...refundProduct, barcode: 'I-99999999' }] },
+])(
+  'retains unsupported refund evidence without authorizing a return: %j',
+  (patch) => {
+    const r = mapZettlePurchase({ ...refund, ...patch }, 'SEK')
+    expect(r.refundOf).toBeUndefined()
+    expect(r.blockedReason).not.toBeNull()
   },
 )

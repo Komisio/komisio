@@ -2667,7 +2667,12 @@
       "ZETTLE_UPDATE_FAILED": "PayPal POS non ha confermato l'aggiornamento del prodotto.",
       "ZETTLE_READ_FAILED": "Impossibile leggere il prodotto o i record dell'integrazione.",
       "ZETTLE_RETRY_LATER": "PayPal POS ha restituito un errore del server. Riprova più tardi usando lo stesso ID prodotto.",
-      "ZETTLE_IMAGES_DISABLED": "Il trasferimento delle immagini è disattivato per questo collegamento."
+      "ZETTLE_IMAGES_DISABLED": "Il trasferimento delle immagini è disattivato per questo collegamento.",
+      "ZETTLE_ORIGINAL_SALE_REQUIRED": "La vendita originale manca in Komisio. Sincronizzala prima e riprova.",
+      "ZETTLE_REFUND_MISMATCH": "Il reso non può essere collegato con certezza agli articoli originali.",
+      "ZETTLE_RETURN_FAILED": "Impossibile registrare il reso. Controlla la ricevuta originale.",
+      "PARTIAL_REFUND_UNSUPPORTED": "Gli importi parziali non sono supportati. Il rimborso deve corrispondere all’intero prezzo di vendita dell’articolo.",
+      "LINE_ALREADY_RETURNED": "L’articolo è già stato reso in Komisio. Controlla il reso precedente."
     },
     "approvalHint": "Gli scontrini abbinati vengono registrati automaticamente. Solo le eccezioni richiedono una verifica; non serve un secondo approvatore.",
     "held": "Impossibile registrare lo scontrino. Verifica prima di riprovare.",
@@ -2771,6 +2776,12 @@
       "allItems": "Mostra lo stato di sincronizzazione di tutti gli articoli",
       "details": "Dettagli",
       "retry": "Riprova"
+    },
+    "returns": {
+      "receipt": "Ricevuta di rimborso",
+      "recorded": "Il reso è registrato in Komisio.",
+      "original": "Visualizza vendita originale",
+      "retry": "Controlla di nuovo il reso"
     }
   },
   "priceEvidence": {

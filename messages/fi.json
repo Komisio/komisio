@@ -2667,7 +2667,12 @@
       "ZETTLE_UPDATE_FAILED": "PayPal POS ei vahvistanut tuotteen päivitystä.",
       "ZETTLE_READ_FAILED": "Tuotteen tai integraation tietueita ei voitu lukea.",
       "ZETTLE_RETRY_LATER": "PayPal POS palautti palvelinvirheen. Yritä myöhemmin uudelleen samalla tuotetunnuksella.",
-      "ZETTLE_IMAGES_DISABLED": "Kuvien siirto on poistettu käytöstä tälle yhteydelle."
+      "ZETTLE_IMAGES_DISABLED": "Kuvien siirto on poistettu käytöstä tälle yhteydelle.",
+      "ZETTLE_ORIGINAL_SALE_REQUIRED": "Alkuperäinen myynti puuttuu Komisiosta. Synkronoi se ensin ja yritä uudelleen.",
+      "ZETTLE_REFUND_MISMATCH": "Palautusta ei voida yhdistää luotettavasti alkuperäisiin tuotteisiin.",
+      "ZETTLE_RETURN_FAILED": "Palautusta ei voitu kirjata. Tarkista alkuperäinen kuitti.",
+      "PARTIAL_REFUND_UNSUPPORTED": "Osittaisia summia ei tueta. Hyvityksen on vastattava tuotteen koko myyntihintaa.",
+      "LINE_ALREADY_RETURNED": "Tuote on jo palautettu Komisiossa. Tarkista aiempi palautus."
     },
     "approvalHint": "Täsmäävät kuitit kirjataan automaattisesti. Vain poikkeukset vaativat tutkintaa; toista hyväksyjää ei tarvita.",
     "held": "Kuittia ei voitu kirjata. Tutki ennen uutta yritystä.",
@@ -2771,6 +2776,12 @@
       "allItems": "Näytä kaikkien tuotteiden synkronointitila",
       "details": "Tiedot",
       "retry": "Yritä uudelleen"
+    },
+    "returns": {
+      "receipt": "Palautuskuitti",
+      "recorded": "Palautus on kirjattu Komisioon.",
+      "original": "Näytä alkuperäinen myynti",
+      "retry": "Tarkista palautus uudelleen"
     }
   },
   "priceEvidence": {

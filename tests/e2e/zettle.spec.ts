@@ -56,9 +56,11 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
         expect(started.status()).toBe(303)
         const authorization = new URL(started.headers().location)
         expect(authorization.origin).toBe('https://oauth.zettle.com')
-        expect(authorization.searchParams.get('code_challenge_method')).toBe(
-          'S256',
+        expect(authorization.searchParams.get('response_type')).toBe('code')
+        expect(authorization.searchParams.has('code_challenge_method')).toBe(
+          false,
         )
+        expect(authorization.searchParams.has('client_secret')).toBe(false)
         expect(authorization.searchParams.get('redirect_uri')).toBe(
           'http://127.0.0.1:3000/api/integrations/paypal/callback',
         )
@@ -83,6 +85,18 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
           { headers: { origin: 'http://127.0.0.1:3000' }, maxRedirects: 0 },
         )
         expect(stale.headers().location).toContain('TENANT_CHANGED')
+        await page.goto(
+          '/intake/integrations?provider=paypal&paypal=PAYPAL_APP_AUTH_FAILED',
+        )
+        await expect(
+          page.getByTestId('integration-paypal').getByRole('alert'),
+        ).toHaveText(d.zettle.oauth.appAuthFailed)
+        await page.goto(
+          '/intake/integrations?provider=paypal&paypal=ZETTLE_AUTH_REQUIRED',
+        )
+        await expect(
+          page.getByTestId('integration-paypal').getByRole('alert'),
+        ).toHaveText(d.zettle.oauth.authorizationFailed)
         await page.goto('/intake/integrations?provider=paypal&paypal=cancelled')
         await expect(
           page.getByText(d.zettle.oauth.cancelled, { exact: true }),

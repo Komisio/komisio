@@ -2788,7 +2788,9 @@
       "disconnected": "PayPal POS -yhteys on katkaistu Komisiossa.",
       "retry": "Jatka yhdistämällä uudelleen.",
       "refreshBusy": "Yhteyttä päivitetään. Yritä pian uudelleen.",
-      "unavailable": "Komisio ei ole vielä ottanut PayPal POS -yhteyttä käyttöön."
+      "unavailable": "Komisio ei ole vielä ottanut PayPal POS -yhteyttä käyttöön.",
+      "appAuthFailed": "PayPal POS hylkäsi Komision sovellusyhteyden. Ota yhteyttä Komisioon; kaupan tiliä ei tarvitse muuttaa.",
+      "authorizationFailed": "PayPal POS -yhteyden muodostaminen ei valmistunut. Yritä uudelleen. Jos ongelma jatkuu, ota yhteyttä Komisioon."
     }
   },
   "priceEvidence": {

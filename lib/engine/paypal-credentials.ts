@@ -1,4 +1,4 @@
-import { createHash, randomBytes, randomUUID } from 'node:crypto'
+import { randomUUID } from 'node:crypto'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
@@ -12,6 +12,7 @@ import {
 import {
   paypalAuthorizeUrl,
   paypalClientId,
+  paypalClientSecret,
   paypalMerchant,
   paypalTokenRequest,
   paypalTokens,
@@ -22,6 +23,7 @@ export const PAYPAL_COOKIE = 'komisio-paypal-oauth'
 export function paypalAppAvailable(source: Record<string, string | undefined>) {
   try {
     paypalClientId(source)
+    paypalClientSecret(source)
     return credentialKeyConfigured(source)
   } catch {
     return false
@@ -63,7 +65,6 @@ export async function startPayPalConnection(
   await owner(client, tenantId, userId)
   if (!paypalAppAvailable(source)) throw new Error('PAYPAL_APP_UNAVAILABLE')
   const current = await readPayPalStatus(client, tenantId)
-  const verifier = randomBytes(32).toString('base64url')
   const state = signState(
     STATE,
     { tenantId, userId, revision: current.revision, nonce: randomUUID() },
@@ -71,17 +72,11 @@ export async function startPayPalConnection(
     source,
   )
   const cookie = Buffer.from(
-    JSON.stringify(seal(STATE, { state, verifier }, source)),
+    JSON.stringify(seal(STATE, { state, redirectUri }, source)),
   ).toString('base64url')
-  const challenge = createHash('sha256').update(verifier).digest('base64url')
   return {
     cookie,
-    url: paypalAuthorizeUrl(
-      paypalClientId(source),
-      redirectUri,
-      state,
-      challenge,
-    ),
+    url: paypalAuthorizeUrl(paypalClientId(source), redirectUri, state),
   }
 }
 export async function completePayPalConnection(
@@ -102,12 +97,12 @@ export async function completePayPalConnection(
     input.cookie.length > 8192
   )
     throw new Error('PAYPAL_STATE_INVALID')
-  let bound: { state: string; verifier: string }
+  let bound: { state: string; redirectUri: string }
   try {
     bound = z
       .object({
         state: z.string(),
-        verifier: z.string().regex(/^[A-Za-z0-9_-]{43}$/),
+        redirectUri: z.url(),
       })
       .parse(
         open(
@@ -128,8 +123,9 @@ export async function completePayPalConnection(
     {
       grant_type: 'authorization_code',
       client_id: paypalClientId(source),
+      client_secret: paypalClientSecret(source),
+      redirect_uri: bound.redirectUri,
       code,
-      code_verifier: bound.verifier,
     },
     http,
   )
@@ -174,6 +170,9 @@ export async function paypalEnvironment(
     let expiresAt = Date.parse(row.expiresAt)
     if (!Number.isFinite(expiresAt)) throw new Error('CREDENTIAL_UNREADABLE')
     if (expiresAt <= Date.now() + 60000) {
+      // Validate host configuration before claiming a single-use refresh token.
+      const clientId = paypalClientId(source)
+      const clientSecret = paypalClientSecret(source)
       const claim = randomUUID()
       const r = await client.rpc('claim_paypal_refresh', {
         p_tenant: tenantId,
@@ -189,7 +188,8 @@ export async function paypalEnvironment(
       tokens = await paypalTokenRequest(
         {
           grant_type: 'refresh_token',
-          client_id: paypalClientId(source),
+          client_id: clientId,
+          client_secret: clientSecret,
           refresh_token: tokens.refresh_token,
         },
         http,
@@ -234,6 +234,7 @@ export function paypalErrorCode(message: string) {
     'ZETTLE_RATE_LIMITED',
     'ZETTLE_CONNECTION_FAILED',
     'PAYPAL_APP_UNAVAILABLE',
+    'PAYPAL_APP_AUTH_FAILED',
     'PAYPAL_STATE_INVALID',
     'PAYPAL_CONNECTION_CHANGED',
     'PAYPAL_REFRESH_BUSY',

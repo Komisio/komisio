@@ -66,6 +66,7 @@ try {
     NEXT_PUBLIC_APP_URL: origin,
     KOMISIO_CREDENTIAL_KEY: 'ab'.repeat(32),
     PAYPAL_POS_CLIENT_ID: 'synthetic-client',
+    PAYPAL_POS_CLIENT_SECRET: 'synthetic-client-secret',
     KOMISIO_AUTOMATION_EMAIL: workerEmail,
     KOMISIO_AUTOMATION_PASSWORD: password,
     CRON_SECRET: '',

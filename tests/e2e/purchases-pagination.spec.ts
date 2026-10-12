@@ -82,7 +82,9 @@ test('older purchases remain reachable and can be accepted from their page', asy
       .first()
       .click()
     await expect(rows).toHaveCount(3)
-    expect(new URL(page.url()).searchParams.get('page')).toBe('2')
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('page'))
+      .toBe('2')
     // Existing acceptance from an older receipt remains the same engine path.
     const older = ordered[20]
     const row = rows.filter({
@@ -100,7 +102,9 @@ test('older purchases remain reachable and can be accepted from their page', asy
     await expect(
       row.getByRole('link', { name: new RegExp(d.items.open) }),
     ).toBeVisible()
-    expect(new URL(page.url()).searchParams.get('page')).toBe('2')
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('page'))
+      .toBe('2')
     const accepted = await f.db.query(
       "select id from items where tenant_id=$1 and origin_kind='purchase' and origin_id=$2",
       [f.tenant, older.id],

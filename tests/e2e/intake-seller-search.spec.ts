@@ -52,7 +52,9 @@ test('bag intake finds all sellers by contact and focuses reception without skip
       .getByRole('link', { name: d.sellersList.previousPage, exact: true })
       .click()
     await expect(rows).toHaveCount(12)
-    expect(new URL(page.url()).searchParams.get('q')).toBe('Paged')
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('q'))
+      .toBe('Paged')
     await search.fill('0708765432')
     await page
       .locator('form')
@@ -61,7 +63,9 @@ test('bag intake finds all sellers by contact and focuses reception without skip
       .click()
     await expect(rows).toHaveCount(1)
     await expect(rows.first()).toContainText('ZZ Intake target')
-    expect(new URL(page.url()).searchParams.has('sellerPage')).toBe(false)
+    await expect
+      .poll(() => new URL(page.url()).searchParams.has('sellerPage'))
+      .toBe(false)
     await rows.getByRole('link').click()
     await expect(page).toHaveURL('/intake?seller=' + target + '#new-seller')
     const receiving = page.locator('#new-seller')
@@ -137,7 +141,9 @@ test('bag intake finds all sellers by contact and focuses reception without skip
     await expect(rows).toHaveCount(12)
     await page.goto('/intake?q=Paged&sellerPage=999')
     await expect(rows).toHaveCount(5)
-    expect(new URL(page.url()).searchParams.get('sellerPage')).toBe('5')
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('sellerPage'))
+      .toBe('5')
     await search.fill('No matching intake seller')
     await page
       .locator('form')

@@ -42,7 +42,9 @@ test('staff can browse every matching seller on a phone and search from later pa
         ),
       ).toBeVisible()
       await expect(rows).toHaveCount(currentPage === 2 ? 25 : 3)
-      expect(new URL(page.url()).searchParams.get('q')).toBe('Paging')
+      await expect
+        .poll(() => new URL(page.url()).searchParams.get('q'))
+        .toBe('Paging')
       for (const href of await links().evaluateAll((nodes) =>
         nodes.map((a) => a.getAttribute('href')),
       )) {
@@ -70,7 +72,9 @@ test('staff can browse every matching seller on a phone and search from later pa
       .click()
     await expect(rows).toHaveCount(1)
     await expect(rows).toContainText('Paging contact 52')
-    expect(new URL(page.url()).searchParams.has('page')).toBe(false)
+    await expect
+      .poll(() => new URL(page.url()).searchParams.has('page'))
+      .toBe(false)
     await page.getByRole('link', { name: d.clear, exact: true }).click()
     await expect(rows).toHaveCount(25)
     await expect(page.getByLabel(d.search, { exact: true })).toHaveValue('')

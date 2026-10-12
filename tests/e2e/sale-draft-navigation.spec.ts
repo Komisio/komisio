@@ -199,7 +199,8 @@ test('receipt search warns before discarding a manual cart and proceeds after th
       .getByRole('button', { name: d.sales.findReceipt, exact: true })
       .click()
     const dialog = await prompt
-    expect(dialog.type()).toBe('beforeunload')
+    expect(dialog.type()).toBe('confirm')
+    expect(dialog.message()).toBe(d.leaveUnsaved)
     await dialog.dismiss()
     await click
     await expect(page.locator(`#price-${item}`)).toHaveValue('150,50')
@@ -220,9 +221,9 @@ test('receipt search warns before discarding a manual cart and proceeds after th
     await expect(
       page.getByText(d.sales.noReceipts, { exact: true }),
     ).toBeVisible()
-    expect(new URL(page.url()).searchParams.get('reference')).toBe(
-      'SYNTHETIC-NO-MATCH',
-    )
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('reference'))
+      .toBe('SYNTHETIC-NO-MATCH')
     expect(
       (
         await f.db.query(

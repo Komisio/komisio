@@ -101,6 +101,26 @@ export async function raceZettleStock({ setup, connectionString }) {
         [tenant, randomUUID(), job, merchant, locations],
       )
       assert.equal(replay.rows[0].claim.fresh, false)
+      await a.query("select finish_zettle_product($1,$2,'synced',null)", [
+        tenant,
+        job,
+      ])
+      await a.query(
+        "select correct_item_attribute($1,$2,$3,'description','Updated title','Correct displayed title')",
+        [tenant, randomUUID(), item],
+      )
+      const renamed = await Promise.all(
+        [a, b].map((c) =>
+          c.query('select prepare_zettle_product($1,$2) id', [tenant, item]),
+        ),
+      )
+      assert.equal(renamed[0].rows[0].id, renamed[1].rows[0].id)
+      assert.notEqual(renamed[0].rows[0].id, job)
+      const renamedClaim = await a.query(
+        'select claim_zettle_stock($1,$2,$3,$4,$5) claim',
+        [tenant, randomUUID(), renamed[0].rows[0].id, merchant, locations],
+      )
+      assert.equal(renamedClaim.rows[0].claim.fresh, false)
     }
     assert.equal(
       (

@@ -164,14 +164,25 @@ export function zettleHttpClient(options: {
           : remote.raw,
         'update',
       )
+      const update = {
+        ...p,
+        // Explicitly keep the single variant aligned with the mapped product
+        // rate; a merge update must not preserve an older inherited rate.
+        variants: p.variants.map((v) => ({
+          ...v,
+          vatPercentage: String(p.vatPercentage),
+        })),
+        ...(image?.fields ?? {}),
+      }
       const r = await call(
         `https://products.izettle.com/organizations/${org}/products/v2/${p.uuid}`,
         'PUT',
-        image ? { ...p, ...image.fields } : p,
+        update,
         remote.etag,
       )
       if (r.status === 412) throw new Error('ZETTLE_REMOTE_CHANGED')
-      if (r.status !== 204) throw new Error('ZETTLE_UPDATE_FAILED')
+      if (![200, 204].includes(r.status))
+        throw new Error('ZETTLE_UPDATE_FAILED')
       remote = await get(p.uuid)
       if (
         !remote ||

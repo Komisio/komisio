@@ -331,19 +331,15 @@ it.each([false, true])(
         return new Response(null, { status: 204 })
       }
       if (path === `/v3/stock/${locations.STORE}/products/${item}`)
-        return Response.json(
-          balance === 0
-            ? []
-            : [
-                {
-                  organizationUuid: merchant,
-                  inventoryUuid: locations.STORE,
-                  productUuid: item,
-                  variantUuid: job,
-                  balance,
-                },
-              ],
-        )
+        return Response.json([
+          {
+            organizationUuid: merchant,
+            inventoryUuid: locations.STORE,
+            productUuid: item,
+            variantUuid: job,
+            balance: String(balance),
+          },
+        ])
       if (path === '/v3/movements') {
         expect(tracked).toBe(true)
         expect(JSON.parse(String(init?.body))).toEqual({

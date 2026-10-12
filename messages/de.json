@@ -3732,5 +3732,53 @@
     },
     "help": "Jeder angefangene Monat wird ab Abgabe voll berechnet. Alle Abgaben eines Verkäufers teilen einen Gebührenzeitraum. Abzüge können ein negatives Guthaben erzeugen. Wählen Sie die Steuer der Gebühr getrennt von der Warensteuer. Bedingungen gelten für neue Gebührenzeiträume.",
     "historyHelp": "Gebühren verlängern sich automatisch, solange aktive Artikel nach dem Gebührenmonat enden. Der Endzeitpunkt gehört nicht zum Gebührenmonat."
+  },
+  "itemSync": {
+    "states": {
+      "not_sent": "Nicht gesendet",
+      "changed": "Geändert",
+      "failed": "Fehlgeschlagen",
+      "attention": "Prüfen",
+      "synced": "Synchronisiert",
+      "inactive": "Nicht im Verkauf"
+    },
+    "product": "Artikel",
+    "stock": "Bestand",
+    "image": "Bild",
+    "notConfirmed": "Nicht bestätigt",
+    "notSent": "Nicht gesendet",
+    "syncNow": "Jetzt synchronisieren",
+    "settings": "Einstellungen",
+    "observation": "Zuletzt gespeichertes Ergebnis je verbundenem System.",
+    "allItems": "Synchronisierungsstatus aller Artikel anzeigen",
+    "details": "Details",
+    "retry": "Erneut versuchen",
+    "title": "Synchronisierung",
+    "system": "System",
+    "connect": "System verbinden",
+    "providers": {
+      "paypal": "PayPal POS",
+      "shopify": "Shopify"
+    },
+    "stockStates": {
+      "initialized": "Ein Stück bestätigt",
+      "depleted": "Nicht auf Lager",
+      "unknown": "Unbestätigt",
+      "conflict": "Bestand prüfen"
+    },
+    "imageStates": {
+      "synced": "Synchronisiert",
+      "no_photo": "Kein Bild",
+      "held": "Bild prüfen",
+      "uploaded": "Hochgeladen",
+      "pending": "Ausstehend",
+      "failed": "Fehlgeschlagen"
+    },
+    "productStates": {
+      "synced": "Synchronisiert",
+      "failed": "Konnte nicht synchronisiert werden",
+      "pending": "Ausstehend",
+      "unknown": "Unbekannt"
+    }
   }
 }

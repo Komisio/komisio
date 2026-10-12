@@ -2,13 +2,15 @@
 
 ## Item status and recovery
 
-The items table includes a PayPal POS status and an advanced status filter.
-Filtering happens before pagination, so older items remain reachable. Each
-status links to the item's POS panel, with separate recorded product, stock and
-image outcomes and their available timestamps. These are saved observations,
-not a continuous read of the merchant's current inventory.
+The items table has a shared **Synchronization** column. Each connected system
+has its own status; PayPal POS and Shopify can show different results for the
+same item. Advanced search filters by system and status together before
+pagination. Each status opens the item's shared panel, with separate recorded
+product, stock and image outcomes and their available timestamps. These are
+saved observations, not continuous reads of the remote inventory. A Shopify
+product acknowledgement does not invent a separate inventory observation.
 
-Only a current acknowledged product snapshot with confirmed initial stock is
+For PayPal POS, only a current acknowledged product snapshot with confirmed initial stock is
 shown as synced. A changed price, catalog mapping or bound store policy needs
 another export. Sold or ended items are not offered for export. Image outcome
 remains separate; it does not imply the current default photo was transferred.
@@ -34,7 +36,6 @@ An accepted zettle_pull automation grant can read only its tenant's credentials.
 
 The deployment credential configuration below remains a legacy fallback for its
 explicitly bound tenant only. A stored tenant connection takes precedence.
-
 
 The owner supplied clientId and an API key in Vercel, not a client secret.
 The official [assertion grant](https://developer.zettle.com/docs/api/oauth/user-guides/set-up-app-authorisation/set-up-authorisation-assertion-grant)

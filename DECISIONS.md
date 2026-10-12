@@ -1,5 +1,9 @@
 # Decision Log
 
+- 2026-10-12: Owner approves seller-balance checkout using available funds only, with no credit. Split payment with another tender is allowed. Returns restore the balance-funded portion to the same seller; POS receipt linkage must be verified before activation.
+
+- 2026-10-12: PayPal image export uses the current item default photo. Stores opt into images with product sync; off leaves remote images intact. Immutable attempts bind source and prior managed image; uncertain uploads hold, and external image edits are never overwritten.
+
 - 2026-10-12: PayPal POS status is read per item and filtered before paging. Product acknowledgement, stock confirmation and image outcome remain distinct. Owners/admins reuse the existing export command from item details; no retry invents stock or overwrites a provider conflict.
 
 - 2026-10-11: Quick reception separates seller/agreement and item tabs, retaining mounted drafts and retry identities. Shared seller registration stays in context; personal PDFs and explicit agreement evidence are available before continuing. No receiving or approval rules change.
@@ -1007,3 +1011,5 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-10-12: Printing settings separate printers, installation, labels and history in draft-preserving tabs. The environment-specific Windows download is available before printer registration; pairing remains printer-bound. Network address errors are shown at the field; USB support is not implied.
 - 2026-10-12: Printing history restores explicit job-fragment scrolling after its tab becomes visible. Other workspaces retain their current scrolling; deep links do not create or retry print jobs.
+
+- 2026-10-12: Owner requires provider-neutral item sync views and per-connection settings. Each connected system has independent status and retry; PayPal POS and Shopify adapt their recorded facts. Unconfirmed stock remains unconfirmed; filtering pairs provider and status on the same connection.

@@ -3726,5 +3726,53 @@
     },
     "help": "Varje påbörjad månad debiteras fullt från inlämningen. Alla säljarens inlämningar delar avgiftsperiod. Saldoavdrag kan ge negativt saldo. Avgiftens moms väljs separat från varornas moms. Villkoren gäller nya avgiftsperioder.",
     "historyHelp": "Avgifter fortsätter automatiskt så länge aktiva artiklar har en senare sluttid än avgiftsmånadens slut. Sluttidpunkten ingår inte i avgiftsmånaden."
+  },
+  "itemSync": {
+    "states": {
+      "not_sent": "Inte skickad",
+      "changed": "Ändrad",
+      "failed": "Misslyckad",
+      "attention": "Kontrollera",
+      "synced": "Synkad",
+      "inactive": "Ej till försäljning"
+    },
+    "product": "Artikel",
+    "stock": "Lager",
+    "image": "Bild",
+    "notConfirmed": "Inte bekräftat",
+    "notSent": "Inte skickad",
+    "syncNow": "Synka nu",
+    "settings": "Inställningar",
+    "observation": "Senast registrerade resultat per anslutet system.",
+    "allItems": "Visa alla varors synkstatus",
+    "details": "Detaljer",
+    "retry": "Försök igen",
+    "title": "Synkningar",
+    "system": "System",
+    "connect": "Anslut system",
+    "providers": {
+      "paypal": "PayPal POS",
+      "shopify": "Shopify"
+    },
+    "stockStates": {
+      "initialized": "Ett exemplar bekräftat",
+      "depleted": "Slut i lager",
+      "unknown": "Inte bekräftat",
+      "conflict": "Kontrollera lagret"
+    },
+    "imageStates": {
+      "synced": "Synkad",
+      "no_photo": "Ingen bild",
+      "held": "Kontrollera bilden",
+      "uploaded": "Uppladdad",
+      "pending": "Väntar",
+      "failed": "Misslyckad"
+    },
+    "productStates": {
+      "synced": "Synkad",
+      "failed": "Kunde inte synkas",
+      "pending": "Väntar",
+      "unknown": "Okänt"
+    }
   }
 }

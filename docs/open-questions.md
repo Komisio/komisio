@@ -10,11 +10,15 @@ filtering with the existing export retry. Image inclusion is now opt-in per
 connection. Current default photos and guarded PayPal image replacement are
 implemented. Owner-enabled automatic catalog export uses account-bound jobs and
 the existing PayPal adapter; hosted scheduling and real POS observation still
-need verification. Shopify automatic export/image replacement and PayPal return
-ingestion remain separate follow-ups. Seller-balance rules approved by the
+need verification. Shopify automatic export/image replacement remains separate.
+PayPal return ingestion reuses whole-line returns for exact original-sale/product
+matches; unsupported or partial amounts stay held. Real POS verification is pending.
+Seller-balance rules approved by the
 owner on 2026-10-12: use only available funds (no credit), allow split payment, and
 restore the balance-funded part to the same seller on return. The POS payment-method/receipt linkage must also be
 verified before enabling redemption; a manual ledger adjustment is not checkout.
+The owner explicitly deferred seller-balance checkout on 2026-10-12 until that
+POS support is verified. No checkout or balance-payment action is enabled.
 
 Inventory table (resolved 2026-10-11): owner requests compact sortable rows,
 on-demand default-image previews, discreet ownership/markdown indicators and

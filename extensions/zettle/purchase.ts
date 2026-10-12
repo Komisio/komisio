@@ -23,6 +23,7 @@ const wire = z.object({
   refund: z.boolean().optional(),
   refunded: z.boolean().optional(),
   refundsPurchaseUUID1: z.string().optional(),
+  customAmountSale: z.boolean().optional(),
   discounts: z.array(z.unknown()).max(50).optional(),
   serviceCharge: z.unknown().optional(),
 })
@@ -40,6 +41,7 @@ export const importLine = z.strictObject({
 })
 export const importPurchase = z.strictObject({
   externalId: z.uuid(),
+  refundOf: z.uuid().optional(),
   occurredAt: z.iso.datetime(),
   amountOre: money,
   currency: z.string().max(10),
@@ -93,7 +95,7 @@ export function mapZettlePurchase(
   const blockedReason =
     p.source !== 'POS'
       ? 'source'
-      : p.refund || p.refunded || p.refundsPurchaseUUID1 || p.amount < 0
+      : p.refund || p.refundsPurchaseUUID1 || p.amount < 0
         ? 'refund'
         : p.currency !== currency
           ? 'currency'
@@ -114,8 +116,36 @@ export function mapZettlePurchase(
                         BigInt(p.amount)
                     ? 'amount'
                     : null
+  // The original sale's mutable `refunded` flag is not a different sale.
+  // Only complete, product-bound refund rows can enter the existing return rule.
+  const refundOf = z.uuid().safeParse(p.refundsPurchaseUUID1)
+  const eligibleRefund =
+    p.source === 'POS' &&
+    p.refund === true &&
+    refundOf.success &&
+    refundOf.data.toLowerCase() !== p.purchaseUUID1.toLowerCase() &&
+    p.currency === currency &&
+    p.amount < 0 &&
+    !p.customAmountSale &&
+    !p.discounts?.length &&
+    p.serviceCharge == null &&
+    p.products.every(
+      (r) =>
+        r.type === 'PRODUCT' &&
+        r.productUuid &&
+        r.variantUuid &&
+        /^-1(?:\.0+)?$/.test(r.quantity) &&
+        r.unitPrice > 0 &&
+        r.discount == null &&
+        !r.discountValue,
+    ) &&
+    lines.every((l) => !l.labelConflict) &&
+    lines.reduce((sum, l) => sum + BigInt(l.priceOre), 0n) === -BigInt(p.amount)
   return importPurchase.parse({
     externalId: p.purchaseUUID1.toLowerCase(),
+    ...(eligibleRefund && refundOf.success
+      ? { refundOf: refundOf.data.toLowerCase() }
+      : {}),
     occurredAt: new Date(stamp).toISOString(),
     amountOre: p.amount,
     currency: p.currency,

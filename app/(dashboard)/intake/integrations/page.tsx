@@ -485,7 +485,11 @@ export default async function Integrations({
                       {d.open} · {r.external_id}
                     </Link>{' '}
                     · {formatSignedOre(r.amount_ore)} {r.currency}
-                    {r.blocked_reason ? ` · ${d.blocked}` : ''}
+                    {r.returned
+                      ? ` · ${d.returns.recorded}`
+                      : r.blocked_reason
+                        ? ` · ${d.blocked}`
+                        : ''}
                   </p>
                 ))}
                 {state.next && (

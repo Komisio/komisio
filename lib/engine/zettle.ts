@@ -121,7 +121,7 @@ export async function readZettlePurchase(
     .maybeSingle()
   if (receipt.error || !receipt.data) throw new Error('ZETTLE_IMPORT_NOT_FOUND')
   const row = receiptRow.parse(receipt.data)
-  const [matches, sale, latest, outcome] = await Promise.all([
+  const [matches, sale, latest, outcome, classifications] = await Promise.all([
     client.rpc('zettle_matches', {
       p_tenant: tenantId,
       p_import: id,
@@ -148,7 +148,9 @@ export async function readZettlePurchase(
       .eq('import_id', id)
       .order('created_at', { ascending: false })
       .limit(1),
+    readZettleReturnStatus(client, tenantId, [id]),
   ])
+  const classification = classifications[0]
   if (matches.error || sale.error || latest.error || outcome.error)
     throw new Error('ZETTLE_READ_FAILED')
   const resolutions = z
@@ -164,14 +166,44 @@ export async function readZettlePurchase(
   const currentRevision = latest.data?.[0]?.revision ?? 0
   return {
     ...row,
+    blocked_reason: classification?.kind === 'sale' ? null : row.blocked_reason,
+    returnInfo: classification?.kind === 'refund' ? classification : null,
     mappingRevision: currentRevision,
     saleId: sale.data?.id ?? null,
-    errorCode: outcome.data?.[0]?.error_code ?? null,
+    errorCode: classification
+      ? classification.errorCode
+      : (outcome.data?.[0]?.error_code ?? null),
     rows: row.lines.map((l) => ({
       ...l,
       itemId: resolutions.find((r) => r.line_no === l.lineNo)?.item_id ?? null,
     })),
   }
+}
+async function readZettleReturnStatus(
+  client: SupabaseClient,
+  tenantId: string,
+  ids: string[],
+) {
+  if (!ids.length) return []
+  const result = await client.rpc('zettle_return_status', {
+    p_tenant: tenantId,
+    p_imports: ids,
+  })
+  if (result.error?.code === 'PGRST202') return []
+  if (result.error) throw new Error('ZETTLE_READ_FAILED')
+  return z
+    .array(
+      z.object({
+        importId: z.uuid(),
+        kind: z.enum(['sale', 'refund']),
+        originalExternalId: z.uuid().nullable(),
+        originalSaleId: z.uuid().nullable(),
+        returnIds: z.array(z.uuid()).max(50).nullable(),
+        errorCode: z.string().nullable(),
+      }),
+    )
+    .max(50)
+    .parse(result.data)
 }
 export const zettlePageCursor = z.strictObject({
   before: z.iso.datetime({ offset: true }),
@@ -205,10 +237,28 @@ export async function readZettleStatus(
       .limit(51),
   ])
   if (runs.error || imports.error) throw new Error('ZETTLE_READ_FAILED')
+  const receipts = (imports.data ?? []).slice(0, 50)
+  const classifications = new Map(
+    (
+      await readZettleReturnStatus(
+        client,
+        tenantId,
+        receipts.map((r) => r.id),
+      )
+    ).map((c) => [c.importId, c]),
+  )
   return {
     lastSync: runs.data?.[0]?.created_at ?? null,
     cursor: runs.data?.[0]?.cursor_after ?? null,
-    imports: (imports.data ?? []).slice(0, 50),
+    imports: receipts.map((r) => {
+      const c = classifications.get(r.id)
+      return {
+        ...r,
+        blocked_reason:
+          c?.kind === 'sale' || c?.returnIds ? null : r.blocked_reason,
+        returned: !!c?.returnIds,
+      }
+    }),
     next:
       (imports.data?.length ?? 0) > 50
         ? {

@@ -2667,7 +2667,12 @@
       "ZETTLE_UPDATE_FAILED": "PayPal POS hat die Produktaktualisierung nicht bestätigt.",
       "ZETTLE_READ_FAILED": "Die Produkt- oder Integrationsdaten konnten nicht gelesen werden.",
       "ZETTLE_RETRY_LATER": "PayPal POS hat einen Serverfehler zurückgegeben. Versuchen Sie es später mit derselben Produkt-ID erneut.",
-      "ZETTLE_IMAGES_DISABLED": "Bildübertragung ist für diese Verbindung deaktiviert."
+      "ZETTLE_IMAGES_DISABLED": "Bildübertragung ist für diese Verbindung deaktiviert.",
+      "ZETTLE_ORIGINAL_SALE_REQUIRED": "Der ursprüngliche Verkauf fehlt in Komisio. Zuerst synchronisieren, dann erneut versuchen.",
+      "ZETTLE_REFUND_MISMATCH": "Die Rückgabe lässt sich den ursprünglichen Artikeln nicht sicher zuordnen.",
+      "ZETTLE_RETURN_FAILED": "Die Rückgabe konnte nicht erfasst werden. Prüfen Sie den Originalbeleg.",
+      "PARTIAL_REFUND_UNSUPPORTED": "Teilbeträge werden nicht unterstützt. Die Erstattung muss dem gesamten Verkaufspreis des Artikels entsprechen.",
+      "LINE_ALREADY_RETURNED": "Der Artikel wurde in Komisio bereits zurückgegeben. Prüfen Sie die frühere Rückgabe."
     },
     "approvalHint": "Zugeordnete Belege werden automatisch erfasst. Nur Ausnahmen müssen untersucht werden; ein zweiter Genehmiger ist nicht erforderlich.",
     "held": "Der Beleg konnte nicht erfasst werden. Untersuchen Sie, bevor Sie es erneut versuchen.",
@@ -2771,6 +2776,12 @@
       "allItems": "Synchronisierungsstatus aller Artikel anzeigen",
       "details": "Details",
       "retry": "Erneut versuchen"
+    },
+    "returns": {
+      "receipt": "Rückerstattungsbeleg",
+      "recorded": "Die Rückgabe ist in Komisio erfasst.",
+      "original": "Ursprünglichen Verkauf anzeigen",
+      "retry": "Rückgabe erneut prüfen"
     }
   },
   "priceEvidence": {

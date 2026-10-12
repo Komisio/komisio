@@ -2667,7 +2667,12 @@
       "ZETTLE_UPDATE_FAILED": "PayPal POS bekräftade inte produktuppdateringen.",
       "ZETTLE_READ_FAILED": "Produkten eller integrationsuppgifterna kunde inte läsas.",
       "ZETTLE_RETRY_LATER": "PayPal POS svarade med ett serverfel. Försök senare med samma produkt-ID.",
-      "ZETTLE_IMAGES_DISABLED": "Bildöverföring är avstängd för anslutningen."
+      "ZETTLE_IMAGES_DISABLED": "Bildöverföring är avstängd för anslutningen.",
+      "ZETTLE_ORIGINAL_SALE_REQUIRED": "Originalförsäljningen saknas i Komisio. Synka den först och försök igen.",
+      "ZETTLE_REFUND_MISMATCH": "Returen kan inte kopplas säkert till originalets varor.",
+      "ZETTLE_RETURN_FAILED": "Returen kunde inte registreras. Kontrollera originalkvittot.",
+      "PARTIAL_REFUND_UNSUPPORTED": "Delbelopp stöds inte. Returbeloppet måste motsvara hela varans försäljningspris.",
+      "LINE_ALREADY_RETURNED": "Varan har redan returnerats i Komisio. Kontrollera tidigare retur."
     },
     "approvalHint": "Matchade kvitton registreras automatiskt. Endast avvikelser behöver utredas; ingen andra godkännare krävs.",
     "held": "Kvittot kunde inte bokas. Utred orsaken innan nytt försök.",
@@ -2771,6 +2776,12 @@
       "allItems": "Visa alla varors synkstatus",
       "details": "Detaljer",
       "retry": "Försök igen"
+    },
+    "returns": {
+      "receipt": "Returkvitto",
+      "recorded": "Returen är registrerad i Komisio.",
+      "original": "Visa originalförsäljning",
+      "retry": "Kontrollera returen igen"
     }
   },
   "priceEvidence": {

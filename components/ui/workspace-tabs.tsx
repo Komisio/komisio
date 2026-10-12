@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  useEffect,
   useSyncExternalStore,
   useTransition,
   type ReactNode,
@@ -31,6 +32,7 @@ export function WorkspaceTabs({
   initial,
   toolbar,
   toolbarTabs,
+  scrollAnchors = false,
   tabs,
 }: {
   id: string
@@ -38,6 +40,7 @@ export function WorkspaceTabs({
   initial?: string
   toolbar?: ReactNode
   toolbarTabs?: string[]
+  scrollAnchors?: boolean
   tabs: { id: string; label: string; content: ReactNode; anchors?: string[] }[]
 }) {
   const [searching, startSearch] = useTransition()
@@ -45,16 +48,28 @@ export function WorkspaceTabs({
   const fallback = tabs.some((tab) => tab.id === initial)
     ? initial!
     : tabs[0].id
-  const selected = useSyncExternalStore(
+  const hash = useSyncExternalStore(
     subscribe,
-    () =>
-      tabs.find(
-        (tab) =>
-          window.location.hash === `#${id}-${tab.id}` ||
-          tab.anchors?.some((anchor) => window.location.hash === '#' + anchor),
-      )?.id ?? fallback,
-    () => fallback,
+    () => window.location.hash,
+    () => '',
   )
+  const selected =
+    tabs.find(
+      (tab) =>
+        hash === `#${id}-${tab.id}` ||
+        tab.anchors?.some((anchor) => hash === '#' + anchor),
+    )?.id ?? fallback
+  const anchor = scrollAnchors
+    ? tabs
+        .find((tab) => tab.id === selected)
+        ?.anchors?.find((anchor) => hash === '#' + anchor)
+    : undefined
+  useEffect(() => {
+    // A browser can resolve the fragment while its tab is still hidden or
+    // streaming. Restore explicit deep-link scrolling after the panel commits.
+    if (anchor)
+      document.getElementById(anchor)?.scrollIntoView({ block: 'start' })
+  }, [anchor])
   function select(tab: string) {
     if (searching) return
     window.history.pushState(null, '', `#${id}-${tab}`)

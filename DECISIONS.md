@@ -1004,3 +1004,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-12: A shared, localized work indicator reflects active UI requests and navigation. Parallel work keeps it visible until all tracked work finishes; quick actions do not flash. It does not retry commands, infer success or change draft/navigation guards.
 
 - 2026-10-12: Printing settings separate printers, installation, labels and history in draft-preserving tabs. The environment-specific Windows download is available before printer registration; pairing remains printer-bound. Network address errors are shown at the field; USB support is not implied.
+- 2026-10-12: Printing history restores explicit job-fragment scrolling after its tab becomes visible. Other workspaces retain their current scrolling; deep links do not create or retry print jobs.

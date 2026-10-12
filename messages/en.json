@@ -3726,5 +3726,53 @@
     },
     "help": "Every started month is charged in full from delivery. All deliveries for a seller share a billing period. Deductions can create a negative balance. Select fee VAT separately from goods VAT. Terms apply to new billing periods.",
     "historyHelp": "Fees renew automatically while active items end after the billing month. The end timestamp is excluded from the billing month."
+  },
+  "itemSync": {
+    "states": {
+      "not_sent": "Not sent",
+      "changed": "Changed",
+      "failed": "Failed",
+      "attention": "Check required",
+      "synced": "Synced",
+      "inactive": "Not for sale"
+    },
+    "product": "Product",
+    "stock": "Stock",
+    "image": "Image",
+    "notConfirmed": "Not confirmed",
+    "notSent": "Not sent",
+    "syncNow": "Sync now",
+    "settings": "Settings",
+    "observation": "Last recorded result for each connected system.",
+    "allItems": "View sync status for all items",
+    "details": "Details",
+    "retry": "Try again",
+    "title": "Synchronization",
+    "system": "System",
+    "connect": "Connect a system",
+    "providers": {
+      "paypal": "PayPal POS",
+      "shopify": "Shopify"
+    },
+    "stockStates": {
+      "initialized": "One unit confirmed",
+      "depleted": "Out of stock",
+      "unknown": "Unconfirmed",
+      "conflict": "Check inventory"
+    },
+    "imageStates": {
+      "synced": "Synced",
+      "no_photo": "No image",
+      "held": "Check image",
+      "uploaded": "Uploaded",
+      "pending": "Pending",
+      "failed": "Failed"
+    },
+    "productStates": {
+      "synced": "Synced",
+      "failed": "Could not sync",
+      "pending": "Pending",
+      "unknown": "Unknown"
+    }
   }
 }

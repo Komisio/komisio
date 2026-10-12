@@ -22,7 +22,7 @@ import {
 } from '@/lib/engine/item-directory'
 import { ItemPhotoPreview } from '@/components/intake/item-photo-preview'
 import { ItemIndicator } from '@/components/intake/item-indicator'
-import { paypalSyncStatus } from '@/lib/engine/paypal-status'
+import { itemSyncStatus, syncProvider } from '@/lib/engine/item-sync'
 
 export default async function Items({
   searchParams,
@@ -40,6 +40,11 @@ export default async function Items({
   for (const key of filterKeys) {
     const value = params[key]
     if (typeof value === 'string' && value.trim()) raw[key] = value.trim()
+  }
+  if (raw.paypal) {
+    raw.syncProvider ??= 'paypal'
+    raw.syncStatus ??= raw.paypal
+    delete raw.paypal
   }
   for (const key of ['minPrice', 'maxPrice'])
     if (raw[key]) raw[key] = raw[key].replace(',', '.')
@@ -211,12 +216,17 @@ export default async function Items({
                 ['store', d.ownershipKinds.store],
               ])}
               {select(
-                'paypal',
-                'PayPal POS',
-                paypalSyncStatus.options.map((s) => [
-                  s,
-                  all.zettle.itemSync.states[s],
+                'syncProvider',
+                all.itemSync.system,
+                syncProvider.options.map((provider) => [
+                  provider,
+                  all.itemSync.providers[provider],
                 ]),
+              )}
+              {select(
+                'syncStatus',
+                all.itemSync.title,
+                itemSyncStatus.options.map((s) => [s, all.itemSync.states[s]]),
               )}
               {input('seller', all.quickIntake.seller)}
               {input('category', all.quickIntake.category)}
@@ -268,7 +278,7 @@ export default async function Items({
                     {header('seller', all.quickIntake.seller)}
                     {header('price', all.quickIntake.price, true)}
                     {header('stage', d.stage)}
-                    <th scope="col">PayPal POS</th>
+                    <th scope="col">{all.itemSync.title}</th>
                     {header('accepted', t.registered)}
                     {header('periodEnd', t.periodEnd)}
                   </tr>
@@ -354,18 +364,19 @@ export default async function Items({
                         )}
                       </td>
                       <td>
-                        {i.paypal ? (
-                          <Link
-                            className="paypal-sync-state"
-                            data-state={i.paypal.status}
-                            href={`/intake/items/${i.id}#paypal-status`}
-                            title={all.zettle.itemSync.observation}
-                          >
-                            {all.zettle.itemSync.states[i.paypal.status]}
-                          </Link>
-                        ) : (
-                          '—'
-                        )}
+                        {i.sync?.length
+                          ? i.sync.map((connection) => (
+                              <Link
+                                key={connection.connectionId}
+                                className="item-sync-state inventory-sync-link"
+                                data-state={connection.status}
+                                href={`/intake/items/${i.id}#sync-status`}
+                              >
+                                {all.itemSync.providers[connection.provider]} ·{' '}
+                                {all.itemSync.states[connection.status]}
+                              </Link>
+                            ))
+                          : '—'}
                       </td>
                       <td className="inventory-date">
                         <time dateTime={i.acceptedAt}>

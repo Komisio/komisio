@@ -3726,5 +3726,53 @@
     },
     "help": "Ogni mese iniziato viene addebitato interamente dalla consegna. Tutte le consegne del venditore condividono il periodo di addebito. Le detrazioni possono generare un saldo negativo. Scegliere l’IVA della quota separatamente da quella degli articoli. Le condizioni si applicano ai nuovi periodi.",
     "historyHelp": "Le quote si rinnovano automaticamente finché gli articoli attivi terminano dopo il mese di addebito. L’istante finale non è incluso nel mese di addebito."
+  },
+  "itemSync": {
+    "states": {
+      "not_sent": "Non inviato",
+      "changed": "Modificato",
+      "failed": "Non riuscito",
+      "attention": "Da verificare",
+      "synced": "Sincronizzato",
+      "inactive": "Non in vendita"
+    },
+    "product": "Articolo",
+    "stock": "Scorte",
+    "image": "Immagine",
+    "notConfirmed": "Non confermato",
+    "notSent": "Non inviato",
+    "syncNow": "Sincronizza ora",
+    "settings": "Impostazioni",
+    "observation": "Ultimo risultato registrato per ogni sistema collegato.",
+    "allItems": "Mostra lo stato di sincronizzazione di tutti gli articoli",
+    "details": "Dettagli",
+    "retry": "Riprova",
+    "title": "Sincronizzazione",
+    "system": "Sistema",
+    "connect": "Collega un sistema",
+    "providers": {
+      "paypal": "PayPal POS",
+      "shopify": "Shopify"
+    },
+    "stockStates": {
+      "initialized": "Una unità confermata",
+      "depleted": "Esaurito",
+      "unknown": "Non confermato",
+      "conflict": "Controlla scorte"
+    },
+    "imageStates": {
+      "synced": "Sincronizzata",
+      "no_photo": "Nessuna immagine",
+      "held": "Controlla immagine",
+      "uploaded": "Caricata",
+      "pending": "In attesa",
+      "failed": "Non riuscito"
+    },
+    "productStates": {
+      "synced": "Sincronizzato",
+      "failed": "Sincronizzazione non riuscita",
+      "pending": "In attesa",
+      "unknown": "Sconosciuto"
+    }
   }
 }

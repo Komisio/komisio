@@ -3732,5 +3732,53 @@
     },
     "help": "Cada mes iniciado se cobra completo desde la entrega. Todas las entregas del vendedor comparten un período de cobro. Los descuentos pueden generar saldo negativo. Elija el IVA de la cuota por separado del IVA de los artículos. Las condiciones se aplican a nuevos períodos.",
     "historyHelp": "Las cuotas se renuevan automáticamente mientras haya artículos activos cuyo plazo termine después del mes de cobro. El instante final no se incluye en el mes de cobro."
+  },
+  "itemSync": {
+    "states": {
+      "not_sent": "Sin enviar",
+      "changed": "Modificado",
+      "failed": "Error",
+      "attention": "Revisar",
+      "synced": "Sincronizado",
+      "inactive": "No está a la venta"
+    },
+    "product": "Artículo",
+    "stock": "Existencias",
+    "image": "Imagen",
+    "notConfirmed": "Sin confirmar",
+    "notSent": "Sin enviar",
+    "syncNow": "Sincronizar ahora",
+    "settings": "Configuración",
+    "observation": "Último resultado registrado por sistema conectado.",
+    "allItems": "Ver el estado de sincronización de todos los artículos",
+    "details": "Detalles",
+    "retry": "Volver a intentar",
+    "title": "Sincronización",
+    "system": "Sistema",
+    "connect": "Conectar un sistema",
+    "providers": {
+      "paypal": "PayPal POS",
+      "shopify": "Shopify"
+    },
+    "stockStates": {
+      "initialized": "Una unidad confirmada",
+      "depleted": "Sin existencias",
+      "unknown": "Sin confirmar",
+      "conflict": "Revisar existencias"
+    },
+    "imageStates": {
+      "synced": "Sincronizada",
+      "no_photo": "Sin imagen",
+      "held": "Revisar imagen",
+      "uploaded": "Subida",
+      "pending": "Pendiente",
+      "failed": "Error"
+    },
+    "productStates": {
+      "synced": "Sincronizado",
+      "failed": "No se pudo sincronizar",
+      "pending": "Pendiente",
+      "unknown": "Desconocido"
+    }
   }
 }

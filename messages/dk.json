@@ -3726,5 +3726,53 @@
     },
     "help": "Hver påbegyndt måned opkræves fuldt fra indlevering. Alle sælgerens indleveringer deler gebyrperiode. Fradrag kan give negativ saldo. Vælg gebyrets moms separat fra varernes moms. Vilkårene gælder nye gebyrperioder.",
     "historyHelp": "Gebyrer fornyes automatisk, mens aktive varer har senere slutdato end gebyrmåneden. Sluttidspunktet er ikke med i gebyrmåneden."
+  },
+  "itemSync": {
+    "states": {
+      "not_sent": "Ikke sendt",
+      "changed": "Ændret",
+      "failed": "Mislykket",
+      "attention": "Skal kontrolleres",
+      "synced": "Synkroniseret",
+      "inactive": "Ikke til salg"
+    },
+    "product": "Vare",
+    "stock": "Lager",
+    "image": "Billede",
+    "notConfirmed": "Ikke bekræftet",
+    "notSent": "Ikke sendt",
+    "syncNow": "Synkroniser nu",
+    "settings": "Indstillinger",
+    "observation": "Senest registrerede resultat pr. tilsluttet system.",
+    "allItems": "Vis synkroniseringsstatus for alle varer",
+    "details": "Detaljer",
+    "retry": "Prøv igen",
+    "title": "Synkronisering",
+    "system": "System",
+    "connect": "Tilslut system",
+    "providers": {
+      "paypal": "PayPal POS",
+      "shopify": "Shopify"
+    },
+    "stockStates": {
+      "initialized": "Ét eksemplar bekræftet",
+      "depleted": "Udsolgt",
+      "unknown": "Ikke bekræftet",
+      "conflict": "Kontrollér lager"
+    },
+    "imageStates": {
+      "synced": "Synkroniseret",
+      "no_photo": "Intet billede",
+      "held": "Kontrollér billedet",
+      "uploaded": "Uploadet",
+      "pending": "Afventer",
+      "failed": "Mislykket"
+    },
+    "productStates": {
+      "synced": "Synkroniseret",
+      "failed": "Kunne ikke synkronisere",
+      "pending": "Afventer",
+      "unknown": "Ukendt"
+    }
   }
 }

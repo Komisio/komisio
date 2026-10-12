@@ -3732,5 +3732,53 @@
     },
     "help": "Jokainen alkanut kuukausi veloitetaan kokonaan luovutuksesta lähtien. Myyjän kaikilla luovutuksilla on yhteinen maksukausi. Vähennykset voivat tehdä saldosta negatiivisen. Valitse maksun ALV erikseen tavaroiden ALV:stä. Ehdot koskevat uusia maksukausia.",
     "historyHelp": "Maksut uusiutuvat automaattisesti, kun aktiivisten tuotteiden päättymisaika on maksukuukauden lopun jälkeen. Päättymishetki ei sisälly maksukuukauteen."
+  },
+  "itemSync": {
+    "states": {
+      "not_sent": "Ei lähetetty",
+      "changed": "Muuttunut",
+      "failed": "Epäonnistui",
+      "attention": "Tarkistettava",
+      "synced": "Synkronoitu",
+      "inactive": "Ei myynnissä"
+    },
+    "product": "Tuote",
+    "stock": "Varasto",
+    "image": "Kuva",
+    "notConfirmed": "Ei vahvistettu",
+    "notSent": "Ei lähetetty",
+    "syncNow": "Synkronoi nyt",
+    "settings": "Asetukset",
+    "observation": "Viimeisin tallennettu tulos kullekin yhdistetylle järjestelmälle.",
+    "allItems": "Näytä kaikkien tuotteiden synkronointitila",
+    "details": "Tiedot",
+    "retry": "Yritä uudelleen",
+    "title": "Synkronointi",
+    "system": "Järjestelmä",
+    "connect": "Yhdistä järjestelmä",
+    "providers": {
+      "paypal": "PayPal POS",
+      "shopify": "Shopify"
+    },
+    "stockStates": {
+      "initialized": "Yksi kappale vahvistettu",
+      "depleted": "Loppunut varastosta",
+      "unknown": "Vahvistamaton",
+      "conflict": "Tarkista varasto"
+    },
+    "imageStates": {
+      "synced": "Synkronoitu",
+      "no_photo": "Ei kuvaa",
+      "held": "Tarkista kuva",
+      "uploaded": "Ladattu",
+      "pending": "Odottaa",
+      "failed": "Epäonnistui"
+    },
+    "productStates": {
+      "synced": "Synkronoitu",
+      "failed": "Synkronointi epäonnistui",
+      "pending": "Odottaa",
+      "unknown": "Tuntematon"
+    }
   }
 }

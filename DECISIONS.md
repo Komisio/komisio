@@ -1029,3 +1029,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-12: Verified PayPal refunds match the original sale and exact product pair, then reuse whole-line returns atomically. Ambiguous or partial amounts stay held. Fresh receipt classifications append evidence; mutable refunded flags never rewrite a sale. No customer payment is initiated.
 
 - 2026-10-12: Owner defers seller-balance checkout until POS support is verified. Approved future rules remain available funds only, split tender allowed and balance-funded refunds restored to the same seller. No manual balance adjustment substitutes for a POS payment.
+
+- 2026-10-12: Staff seller items use a compact table with seller-scoped search, status filters and sorting before 25-row paging. Sold rows retain actual sale prices; other rows retain current prices. Existing identity, tenant, seller and immutable financial rules are unchanged.

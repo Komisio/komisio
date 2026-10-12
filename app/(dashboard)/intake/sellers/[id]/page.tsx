@@ -1,3 +1,4 @@
+import { SellerItemsTable } from '@/components/intake/seller-items-table'
 import { SellerAgreementPdf } from '@/components/intake/agreement-pdf-link'
 import { readConsignmentFees } from '@/lib/engine/consignment-fees'
 import { ConsignmentFeeHistory } from '@/components/intake/consignment-fee-history'
@@ -444,87 +445,15 @@ export default async function Seller({
             </section>
           ),
           items: (
-            <section className="card intake-form">
-              <h2>{w.items}</h2>
-              {!workspaceItems ? (
-                <p role="alert">{all.intake.failed}</p>
-              ) : (
-                <>
-                  <p>
-                    {w.showing
-                      .replace('{shown}', String(workspaceItems.items.length))
-                      .replace('{total}', String(workspaceItems.total))}
-                  </p>
-                  {!workspaceItems.items.length ? (
-                    <p>{w.noItems}</p>
-                  ) : (
-                    <ul className="seller-workspace-list">
-                      {workspaceItems.items.map((item) => {
-                        const price =
-                          item.stage === 'sold'
-                            ? item.soldPriceOre
-                            : item.priceOre
-                        return (
-                          <li key={item.id}>
-                            <div>
-                              <Link
-                                className="text-link"
-                                href={'/intake/items/' + item.id}
-                              >
-                                {item.title || all.items.item}
-                              </Link>
-                              <small>{all.lifecycle.stages[item.stage]}</small>
-                              <small>
-                                {all.items.acceptedAt}:{' '}
-                                <EventTime
-                                  value={item.acceptedAt}
-                                  locale={ctx.locale}
-                                />
-                              </small>
-                            </div>
-                            <strong>
-                              {price === null
-                                ? '—'
-                                : formatSignedOre(price) + ' ' + currency}
-                            </strong>
-                          </li>
-                        )
-                      })}
-                    </ul>
-                  )}
-                  <nav
-                    className="seller-workspace-actions"
-                    aria-label={w.items}
-                  >
-                    {itemsPage > 0 && (
-                      <Link
-                        href={
-                          sellerPath +
-                          '?itemsPage=' +
-                          (itemsPage - 1) +
-                          '#seller-items'
-                        }
-                      >
-                        {w.previous}
-                      </Link>
-                    )}
-                    {(itemsPage + 1) * workspaceItems.limit <
-                      workspaceItems.total && (
-                      <Link
-                        href={
-                          sellerPath +
-                          '?itemsPage=' +
-                          (itemsPage + 1) +
-                          '#seller-items'
-                        }
-                      >
-                        {w.next}
-                      </Link>
-                    )}
-                  </nav>
-                </>
-              )}
-            </section>
+            <SellerItemsTable
+              client={ctx.client}
+              tenant={tenant.id}
+              seller={id.data}
+              query={query}
+              all={all}
+              locale={ctx.locale}
+              currency={currency}
+            />
           ),
           economy: (
             <>

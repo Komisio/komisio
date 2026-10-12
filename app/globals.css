@@ -7548,3 +7548,7 @@ button.text-link:hover:not(:disabled) {
   flex: none;
   accent-color: var(--ink);
 }
+
+.seller-item-table-scroll {
+  margin-top: 16px;
+}

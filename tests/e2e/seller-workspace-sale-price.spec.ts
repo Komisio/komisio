@@ -22,14 +22,20 @@ test('seller workspace distinguishes actual sale price from list price through r
     await page.setViewportSize({ width: 320, height: 800 })
     await page.goto(`/intake/sellers/${f.seller}#seller-items`)
     const panel = page.getByRole('tabpanel')
-    const row = panel.locator('li').filter({ hasText: 'Synthetic sold coat' })
+    const row = panel
+      .locator('tbody tr')
+      .filter({ hasText: 'Synthetic sold coat' })
     const unsold = panel
-      .locator('li')
+      .locator('tbody tr')
       .filter({ hasText: 'Synthetic unsold lamp' })
     await expect(row).toContainText(d.lifecycle.stages.sold)
-    await expect(row).toContainText(d.items.acceptedAt + ':')
-    await expect(row.locator('strong')).toHaveText('150.00 SEK')
-    await expect(unsold.locator('strong')).toHaveText('200.00 SEK')
+    await expect(
+      panel.getByRole('columnheader', {
+        name: new RegExp(d.items.directory.registered),
+      }),
+    ).toBeVisible()
+    await expect(row.locator('.inventory-price')).toHaveText('150.00 SEK')
+    await expect(unsold.locator('.inventory-price')).toHaveText('200.00 SEK')
     await expect(unsold).toContainText(d.lifecycle.stages.markdown_due)
     expect(
       await page.evaluate(
@@ -57,7 +63,7 @@ test('seller workspace distinguishes actual sale price from list price through r
     })
     await page.reload()
     await expect(row).toContainText(d.lifecycle.stages.markdown_due)
-    await expect(row.locator('strong')).toHaveText('200.00 SEK')
+    await expect(row.locator('.inventory-price')).toHaveText('200.00 SEK')
     await f.asActor(f.actor, async () => {
       await f.db.query(
         "select record_sale($1,$2,'manual','synthetic-workspace-resale',now(),'SEK',$3::jsonb)",
@@ -70,8 +76,8 @@ test('seller workspace distinguishes actual sale price from list price through r
     })
     await page.reload()
     await expect(row).toContainText(d.lifecycle.stages.sold)
-    await expect(row.locator('strong')).toHaveText('170.00 SEK')
-    await expect(unsold.locator('strong')).toHaveText('200.00 SEK')
+    await expect(row.locator('.inventory-price')).toHaveText('170.00 SEK')
+    await expect(unsold.locator('.inventory-price')).toHaveText('200.00 SEK')
     await row.getByRole('link').click()
     await expect(page).toHaveURL(new RegExp(`/intake/items/${sold}$`))
   } finally {

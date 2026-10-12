@@ -1,4 +1,6 @@
 import { SyncPreferences } from '@/components/intake/sync-preferences'
+import { CatalogAutomationSettings } from '@/components/intake/catalog-automation'
+import { readCatalogAutomation } from '@/lib/engine/catalog-automation'
 import { readSyncPreferences } from '@/lib/engine/sync-preferences'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { FortnoxConnection } from '@/components/intake/fortnox-connection'
@@ -87,6 +89,9 @@ export default async function Integrations({
 
   const syncPreferences = ['owner', 'admin'].includes(a.role)
     ? await readSyncPreferences(ctx.client, a.id)
+    : null
+  const catalogAutomation = ['owner', 'admin'].includes(a.role)
+    ? await readCatalogAutomation(ctx.client, a.id, 'paypal')
     : null
   const closure = pull?.window
     ? await readZettleWindowClosure(ctx.client, a.id, pull.window.id)
@@ -182,7 +187,17 @@ export default async function Integrations({
                   tenantId={a.id}
                   initial={p}
                   d={all}
-                />
+                >
+                  {catalogAutomation && (
+                    <CatalogAutomationSettings
+                      tenantId={a.id}
+                      initial={catalogAutomation}
+                      configured={!!automationIdentity()}
+                      canEdit={a.role === 'owner'}
+                      d={all}
+                    />
+                  )}
+                </SyncPreferences>
               ))}
             <details
               className="card integration-details"

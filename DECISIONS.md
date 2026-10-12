@@ -1015,3 +1015,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-12: Owner requires provider-neutral item sync views and per-connection settings. Each connected system has independent status and retry; PayPal POS and Shopify adapt their recorded facts. Unconfirmed stock remains unconfirmed; filtering pairs provider and status on the same connection.
 
 - 2026-10-12: Image inclusion is opt-in per connected account, defaults off and preserves existing remote images when disabled. Preferences are immutable integration revisions with optimistic concurrency and replay identity. Changed account bindings cannot inherit a stale save.
+
+- 2026-10-12: Catalog automation requires an owner-enabled account binding and a separate accepted scope. Leased item jobs bound each adapter call; revocation stops further work. Existing stock/image claims prevent repeated mutations. PayPal is the first automatic export adapter.

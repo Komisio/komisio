@@ -1,4 +1,41 @@
-# Scheduled Zettle retrieval
+# Scheduled PayPal POS synchronization
+
+## Automatic catalog export
+
+In the connected account's integration settings, the owner can enable **Automatic
+sync** separately from receipt retrieval. It sends saleable accepted items and
+changed prices using the existing product/stock exporter. The independent image
+preference controls current-default photo export. Both preferences default off;
+enabling receipt retrieval does not authorize catalog writes.
+
+The provider-neutral configuration and job contract currently has a PayPal export
+adapter. Shopify status and image preferences remain separate; no Shopify
+automatic-export control is offered before its adapter is implemented.
+
+`/api/automation/catalog-export` uses the same configured automation identity and
+cron authentication as receipt retrieval, with the separate `catalog_export`
+scope. A grant alone cannot export: a current owner-enabled account binding,
+accepted grant and live item lease must all match. Every adapter write rechecks
+this boundary; existing manual permissions and table RLS remain unchanged.
+
+The five-minute schedule handles at most ten jobs per request in connection order,
+with a three-minute deadline for starting work and a five-minute route ceiling.
+Each lease lasts ten minutes. Only one unfinished, unexpired job can run per
+connection. Scans rotate between stores, including empty queues. Completed items
+are skipped; unresolved attempts cool down for one hour and price changes after
+success for five minutes. Existing stock/image claims prevent repeated mutation;
+unknown outcomes are inspected rather than treated as permission to upload or
+increase stock again. Manual item retry remains available.
+
+Disable **Automatic sync** to revoke further operations, including active leases.
+Already transmitted provider requests cannot be recalled. The shared automation
+identity remains available for any other enabled scopes. No live-store setting
+is activated by deployment. Local database, browser and adapter fixtures verify
+the boundaries; scheduled hosted runs and real POS observations remain pilot
+acceptance work. Self-hosted installations can invoke the authenticated route
+from their scheduler.
+
+## Receipt retrieval
 
 Owner-selected model, 2026-09-14: [AUTOMATION-ACTOR.md](AUTOMATION-ACTOR.md),
 not the superseded pg_cron/owner-actor proposal. Vercel Cron calls the GET route

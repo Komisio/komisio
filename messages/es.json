@@ -3784,7 +3784,7 @@
       "unknown": "Desconocido"
     },
     "preferences": {
-      "title": "Transferencia de imágenes",
+      "title": "Sincronización",
       "images": "Enviar la imagen predeterminada del artículo",
       "hint": "Se aplica a esta conexión. Al desactivarla se conservan las imágenes ya enviadas.",
       "save": "Guardar",
@@ -3795,6 +3795,22 @@
       "errors": {
         "SYNC_CONNECTION_CHANGED": "La conexión ha cambiado. Recarga la página.",
         "SYNC_SETTINGS_CHANGED": "La configuración ha cambiado. Recarga la página."
+      }
+    },
+    "automatic": {
+      "title": "Sincronización automática",
+      "hint": "Envía artículos nuevos y cambios de precio en segundo plano. La opción de imágenes anterior también se aplica aquí.",
+      "on": "Activada",
+      "off": "Desactivada",
+      "enable": "Activar",
+      "disable": "Desactivar",
+      "ownerOnly": "Solo el propietario de la tienda puede cambiar esto.",
+      "unavailable": "La sincronización automática no está configurada en el servidor.",
+      "outcomes": {
+        "running": "Sincronización en curso",
+        "complete": "Último artículo sincronizado",
+        "held": "Requiere revisión",
+        "failed": "La última sincronización falló"
       }
     }
   }

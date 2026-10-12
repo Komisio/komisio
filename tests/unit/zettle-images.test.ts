@@ -151,6 +151,7 @@ it('does not retry a lost upload response', async () => {
 async function setup(
   options: {
     replacement?: boolean
+    leased?: boolean
     role?: string
     noPhoto?: boolean
     fresh?: boolean
@@ -170,6 +171,10 @@ async function setup(
   const rpc = vi.fn(
     async (name: string, parameters?: Record<string, unknown>) => {
       events.push(name)
+      if (name === 'catalog_export_item_access')
+        return { data: options.leased ?? false, error: null }
+      if (name === 'catalog_export_payload')
+        return { data: { payload: product }, error: null }
       if (name === 'tenant_role')
         return { data: options.role ?? 'owner', error: null }
       if (name === 'prepare_zettle_image') {
@@ -316,3 +321,14 @@ it.each([{ invalidPhoto: true }, { changed: true }, { revoked: true }])(
     expect(fixture.uploadImage).not.toHaveBeenCalled()
   },
 )
+
+it('leased automation reuses the same image claim and scoped product read', async () => {
+  const f = await setup({ role: 'automation', leased: true })
+  expect(await f.run()).toEqual({ id: request, image: 'synced' })
+  await f.run()
+  expect(f.uploadImage).toHaveBeenCalledTimes(1)
+  expect(f.rpc).toHaveBeenCalledWith('catalog_export_payload', {
+    p_tenant: tenant,
+    p_export: job,
+  })
+})

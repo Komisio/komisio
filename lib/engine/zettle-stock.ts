@@ -1,4 +1,5 @@
 import { ProductHttpError } from '../../extensions/zettle/http'
+import { requireCatalogItem } from './catalog-automation'
 import { readZettleImageUrl } from './zettle-images'
 import { zettleErrorCode } from './zettle'
 import { z } from 'zod'
@@ -52,16 +53,24 @@ export async function exportZettleItem(
 ) {
   for (const id of [tenantId, requestId, itemId]) z.uuid().parse(id)
   const role = await client.rpc('tenant_role', { p_tenant: tenantId })
-  if (role.error || !['owner', 'admin'].includes(role.data ?? ''))
+  if (role.error) throw new Error('FORBIDDEN')
+  const automatic = role.data === 'automation'
+  if (automatic) await requireCatalogItem(client, tenantId, itemId)
+  else if (!['owner', 'admin'].includes(role.data ?? ''))
     throw new Error('FORBIDDEN')
   const env = pilotEnvironment(source)
   if (!pilotAvailable(tenantId, env) || !env.ZETTLE_MERCHANT_ID)
     throw new Error('ZETTLE_NOT_CONNECTED')
-  const connection = await client
-    .from('zettle_pull_connections')
-    .select('merchant_id')
-    .eq('tenant_id', tenantId)
-    .maybeSingle()
+  const connection = automatic
+    ? await client.rpc('catalog_export_connection', {
+        p_tenant: tenantId,
+        p_item: itemId,
+      })
+    : await client
+        .from('zettle_pull_connections')
+        .select('merchant_id')
+        .eq('tenant_id', tenantId)
+        .maybeSingle()
   if (
     connection.error ||
     connection.data?.merchant_id !== env.ZETTLE_MERCHANT_ID
@@ -83,12 +92,17 @@ export async function exportZettleItem(
   // Read-only discovery before product creation, so ambiguous inventory roles fail early.
   const locations = await remote.inventory.inventories()
   const load = async () => {
-    const stored = await client
-      .from('zettle_product_exports')
-      .select('payload,previous_payload')
-      .eq('tenant_id', tenantId)
-      .eq('id', exportId)
-      .single()
+    const stored = automatic
+      ? await client.rpc('catalog_export_payload', {
+          p_tenant: tenantId,
+          p_export: exportId,
+        })
+      : await client
+          .from('zettle_product_exports')
+          .select('payload,previous_payload')
+          .eq('tenant_id', tenantId)
+          .eq('id', exportId)
+          .single()
     if (stored.error) throw new Error('ZETTLE_READ_FAILED')
     return {
       payload: catalogProduct.parse(stored.data.payload),
@@ -178,10 +192,12 @@ export async function exportZettleItem(
       : {}),
   })
   try {
+    await current()
     const tracked = await remote.inventory.tracked(product)
     tracking = tracked
     if (!tracked && !claim.fresh) throw new Error('ZETTLE_STOCK_HELD')
     if (!tracked) {
+      await current()
       step = 'enable'
       await remote.inventory.enable(product)
       tracking = true

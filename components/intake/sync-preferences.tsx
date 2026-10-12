@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useRef, useState, type ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
 import { useBusyState } from '@/components/platform/work-activity'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
@@ -13,10 +13,12 @@ export function SyncPreferences({
   tenantId,
   initial,
   d,
+  children,
 }: {
   tenantId: string
   initial: SyncPreference
   d: Dictionary
+  children?: ReactNode
 }) {
   const t = d.itemSync.preferences
   const [base, setBase] = useState(initial)
@@ -105,6 +107,12 @@ export function SyncPreferences({
         </Button>
       </form>
       {message && <p role={ok ? 'status' : 'alert'}>{message}</p>}
+      {children && (
+        <>
+          <hr />
+          {children}
+        </>
+      )}
     </section>
   )
 }

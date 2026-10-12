@@ -1,4 +1,5 @@
 import sharp from 'sharp'
+import { requireCatalogItem } from './catalog-automation'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
@@ -57,7 +58,10 @@ export async function exportZettleImage(
 ) {
   for (const id of [tenantId, requestId, itemId]) z.uuid().parse(id)
   const role = await client.rpc('tenant_role', { p_tenant: tenantId })
-  if (role.error || !['owner', 'admin'].includes(role.data ?? ''))
+  if (role.error) throw new Error('FORBIDDEN')
+  const automatic = role.data === 'automation'
+  if (automatic) await requireCatalogItem(client, tenantId, itemId)
+  else if (!['owner', 'admin'].includes(role.data ?? ''))
     throw new Error('FORBIDDEN')
   const env = pilotEnvironment(source)
   if (!pilotAvailable(tenantId, env) || !env.ZETTLE_MERCHANT_ID)
@@ -140,12 +144,17 @@ export async function exportZettleImage(
     })
     if (saved.error) throw new Error('ZETTLE_OUTCOME_FAILED')
   }
-  const stored = await client
-    .from('zettle_product_exports')
-    .select('payload')
-    .eq('tenant_id', tenantId)
-    .eq('id', claim.exportId)
-    .single()
+  const stored = automatic
+    ? await client.rpc('catalog_export_payload', {
+        p_tenant: tenantId,
+        p_export: claim.exportId,
+      })
+    : await client
+        .from('zettle_product_exports')
+        .select('payload')
+        .eq('tenant_id', tenantId)
+        .eq('id', claim.exportId)
+        .single()
   if (stored.error) throw new Error('ZETTLE_READ_FAILED')
   const product = catalogProduct.parse(stored.data.payload)
   await requireCurrent()

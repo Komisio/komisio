@@ -3778,7 +3778,7 @@
       "unknown": "Unknown"
     },
     "preferences": {
-      "title": "Image transfer",
+      "title": "Synchronization",
       "images": "Send the item’s default image",
       "hint": "Applies to this connection. Turning this off keeps images already sent.",
       "save": "Save",
@@ -3789,6 +3789,22 @@
       "errors": {
         "SYNC_CONNECTION_CHANGED": "The connection changed. Reload the page.",
         "SYNC_SETTINGS_CHANGED": "The setting changed. Reload the page."
+      }
+    },
+    "automatic": {
+      "title": "Automatic sync",
+      "hint": "Send new items and price changes in the background. The image setting above also applies here.",
+      "on": "On",
+      "off": "Off",
+      "enable": "Enable",
+      "disable": "Disable",
+      "ownerOnly": "Only the store owner can change this.",
+      "unavailable": "Automatic sync is not configured on the server.",
+      "outcomes": {
+        "running": "Sync in progress",
+        "complete": "Last item synced",
+        "held": "Needs attention",
+        "failed": "Last sync failed"
       }
     }
   }

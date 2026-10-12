@@ -3784,7 +3784,7 @@
       "unknown": "Tuntematon"
     },
     "preferences": {
-      "title": "Kuvien siirto",
+      "title": "Synkronointi",
       "images": "Lähetä tuotteen oletuskuva",
       "hint": "Koskee tätä yhteyttä. Aiemmin lähetettyjä kuvia ei poisteta, kun valinta poistetaan käytöstä.",
       "save": "Tallenna",
@@ -3795,6 +3795,22 @@
       "errors": {
         "SYNC_CONNECTION_CHANGED": "Yhteys on muuttunut. Lataa sivu uudelleen.",
         "SYNC_SETTINGS_CHANGED": "Asetus on muuttunut. Lataa sivu uudelleen."
+      }
+    },
+    "automatic": {
+      "title": "Automaattinen synkronointi",
+      "hint": "Lähetä uudet tuotteet ja hintamuutokset taustalla. Yllä oleva kuva-asetus koskee myös tätä.",
+      "on": "Käytössä",
+      "off": "Pois käytöstä",
+      "enable": "Ota käyttöön",
+      "disable": "Poista käytöstä",
+      "ownerOnly": "Vain kaupan omistaja voi muuttaa tätä.",
+      "unavailable": "Automaattista synkronointia ei ole määritetty palvelimella.",
+      "outcomes": {
+        "running": "Synkronointi käynnissä",
+        "complete": "Viimeisin tuote synkronoitu",
+        "held": "Vaatii tarkistuksen",
+        "failed": "Viimeisin synkronointi epäonnistui"
       }
     }
   }

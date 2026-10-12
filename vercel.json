@@ -2,6 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "regions": ["arn1"],
   "crons": [
+    { "path": "/api/automation/catalog-export", "schedule": "*/5 * * * *" },
     {
       "path": "/api/automation/day-closes",
       "schedule": "45 6 * * *"

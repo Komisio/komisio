@@ -12,6 +12,7 @@ export const automationScopes = [
   'weekly_brief',
   'shopify_pull',
   'day_close',
+  'catalog_export',
 ] as const
 export type AutomationScope = (typeof automationScopes)[number]
 export const automationGrant = z.object({

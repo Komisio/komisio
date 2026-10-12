@@ -3778,7 +3778,7 @@
       "unknown": "Ukjent"
     },
     "preferences": {
-      "title": "Bildeoverføring",
+      "title": "Synkronisering",
       "images": "Send varens standardbilde",
       "hint": "Gjelder denne tilkoblingen. Bilder som er sendt, beholdes når valget slås av.",
       "save": "Lagre",
@@ -3789,6 +3789,22 @@
       "errors": {
         "SYNC_CONNECTION_CHANGED": "Tilkoblingen er endret. Last siden på nytt.",
         "SYNC_SETTINGS_CHANGED": "Innstillingen er endret. Last siden på nytt."
+      }
+    },
+    "automatic": {
+      "title": "Automatisk synkronisering",
+      "hint": "Send nye varer og prisendringer i bakgrunnen. Bildevalget ovenfor gjelder også her.",
+      "on": "På",
+      "off": "Av",
+      "enable": "Aktiver",
+      "disable": "Slå av",
+      "ownerOnly": "Bare butikkeieren kan endre dette.",
+      "unavailable": "Automatisk synkronisering er ikke konfigurert på serveren.",
+      "outcomes": {
+        "running": "Synkronisering pågår",
+        "complete": "Siste vare synkronisert",
+        "held": "Må kontrolleres",
+        "failed": "Siste synkronisering mislyktes"
       }
     }
   }

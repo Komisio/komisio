@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react'
 import { NavigationLink } from '@/components/platform/navigation-warning'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import { exactPrice } from '@/lib/engine/manual-reception'
 import { useIntakeAction } from './use-intake-action'

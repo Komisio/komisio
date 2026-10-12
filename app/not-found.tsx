@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { cookies } from 'next/headers'
 import { dictionary } from '@/lib/i18n'
 export default async function NotFound() {

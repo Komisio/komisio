@@ -1,6 +1,8 @@
 'use client'
+import { useWorkActivity } from '@/components/platform/work-activity'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
@@ -163,7 +165,7 @@ function TemplateEditor({
   }, [dirty, onDirty])
   const [preview, setPreview] = useState<string | null>(null)
   const previewRevision = useRef(0)
-  const [previewing, setPreviewing] = useState(false)
+  const [previewing, setPreviewing] = useBusyState(false)
   const [message, setMessage] = useState('')
   const [invalid, setInvalid] = useState('')
   // Publishing is not replay-safe (every call writes a new version), so an
@@ -171,6 +173,7 @@ function TemplateEditor({
   // reload to inspect what the store actually holds.
   const [pending, setPending] = useState<Pending>({ phase: 'idle', of: null })
   const busy = pending.phase === 'busy'
+  useWorkActivity(busy)
   const frozen = pending.phase === 'uncertain' || pending.phase === 'stale'
   // The parent's kind switch remounts this editor; while a command is in
   // flight or unresolved that would discard its outcome, so it waits too.

@@ -1,6 +1,7 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import { browserClient } from '@/lib/supabase/client'
 import { safeNext } from '@/lib/platform/validation'
 import type { Dictionary } from '@/lib/i18n'
@@ -21,7 +22,7 @@ export function MfaForm({
 }) {
   const [factor, setFactor] = useState(factorId ?? '')
   const [qr, setQr] = useState('')
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [error, setError] = useState('')
   const [done, setDone] = useState(verified)
   const router = useRouter()

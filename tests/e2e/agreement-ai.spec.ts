@@ -31,6 +31,7 @@ test('AI HTTP fixture replaces agreement text directly and retries without dupli
     await page.route('**/api/agreements/assistance', async (route) => {
       generationRequests.push(route.request().postDataJSON())
       const response = await route.fetch()
+      await expect(page.getByTestId('work-indicator')).toBeVisible()
       expect(response.status(), await response.text()).toBe(200)
       if (generationRequests.length === 1) await route.abort('failed')
       else await route.fulfill({ response })
@@ -59,6 +60,7 @@ test('AI HTTP fixture replaces agreement text directly and retries without dupli
     )
     await generate.click()
     await expect(page.locator('#agreement-body')).toHaveValue(/HTTP FIXTURE/)
+    await expect(page.getByTestId('work-indicator')).toHaveCount(0)
     await expect(page.locator('#agreement-title')).toHaveValue('My agreement')
     await expect(page.locator('#agreement-language')).toHaveValue('no')
     expect(generationRequests).toHaveLength(2)

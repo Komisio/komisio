@@ -1,7 +1,8 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 
 type EconomyAction =
@@ -33,7 +34,7 @@ export function SellerEconomyForms({
   recovery: Pick<Dictionary['intake'], 'retry' | 'reload' | 'busy' | 'denied'>
 }) {
   const router = useRouter()
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [feedback, setFeedback] = useState<Feedback | null>(null)
   const [pendingPreference, setPendingPreference] = useState<boolean | null>(
     null,

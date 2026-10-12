@@ -1,6 +1,7 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { PrivacyRequestRow } from '@/lib/engine/shopify-privacy'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
@@ -48,7 +49,7 @@ function PrivacyCard({
     'processing',
   )
   const [note, setNote] = useState(''),
-    [busy, setBusy] = useState(false),
+    [busy, setBusy] = useBusyState(false),
     [error, setError] = useState('')
   const retry = useRef<{ signature: string; id: string } | null>(null)
   const when = (value: string) =>

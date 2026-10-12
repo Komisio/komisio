@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
@@ -37,7 +38,7 @@ export function AutomationSwitch({
   }
 }) {
   const running = useRef(false)
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [error, setError] = useState('')
   const [current, setCurrent] = useState<AutomationGrant | null>(
     grants?.find((g) => g.scope === scope) ?? null,

@@ -1,8 +1,9 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { ReceptionComparison } from './reception-comparison'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
 import type { PendingOperation } from '@/lib/engine/operations'
 import type { OperationReviewContext } from '@/lib/engine/operation-review'
@@ -65,7 +66,7 @@ function Decision({
   d: D
 }) {
   const router = useRouter()
-  const [busy, setBusy] = useState(false),
+  const [busy, setBusy] = useBusyState(false),
     [error, setError] = useState(''),
     [reload, setReload] = useState(false),
     [confirmed, setConfirmed] = useState(false),

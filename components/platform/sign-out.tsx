@@ -1,6 +1,7 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import { LogOut } from 'lucide-react'
 import { browserClient } from '@/lib/supabase/client'
 import type { Dictionary } from '@/lib/i18n'
@@ -10,7 +11,7 @@ import { useConfirmNavigation } from './navigation-warning'
 import { safeNext } from '@/lib/platform/validation'
 
 export function SignOut({ d, next }: { d: Dictionary; next?: string }) {
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [error, setError] = useState('')
   const router = useRouter()
   const confirmNavigation = useConfirmNavigation()

@@ -7368,3 +7368,54 @@ button.text-link:hover:not(:disabled) {
     justify-self: start;
   }
 }
+
+/* A shared activity signal stays visible without blocking controls or moving content. */
+.work-announcement {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1100;
+  pointer-events: none;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+}
+.work-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border: 1px solid var(--control-line);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: 0 2px 8px #203d351a;
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+.work-spinner {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: work-spin 0.8s linear infinite;
+}
+.work-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+@keyframes work-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .work-spinner {
+    animation: none;
+  }
+}

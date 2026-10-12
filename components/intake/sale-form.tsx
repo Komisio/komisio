@@ -1,6 +1,7 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import {
   NavigationLink as Link,
   useUnsavedChanges,
@@ -34,7 +35,7 @@ export function SaleForm({
   const [query, setQuery] = useState(''),
     [results, setResults] = useState<SaleSearchItem[]>([])
   const [searched, setSearched] = useState(false),
-    [searching, setSearching] = useState(false)
+    [searching, setSearching] = useBusyState(false)
   const [cart, setCart] = useState<(SaleSearchItem & { price: string })[]>([])
   const [invalidPriceId, setInvalidPriceId] = useState<string | null>(null)
   const [error, setError] = useState(''),

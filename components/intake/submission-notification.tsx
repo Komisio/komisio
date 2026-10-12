@@ -1,6 +1,7 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import { communicationStatus } from '@/lib/engine/communications'
 import { NavigationLink } from '@/components/platform/navigation-warning'
@@ -19,7 +20,7 @@ export function SubmissionNotification({
   canSend: boolean
   d: Dictionary
 }) {
-  const [busy, setBusy] = useState(false),
+  const [busy, setBusy] = useBusyState(false),
     [outcome, setOutcome] = useState(status),
     [uncertain, setUncertain] = useState(false),
     router = useRouter()

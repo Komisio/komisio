@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useState, type ReactNode } from 'react'
 import {
   NavigationLink as Link,
@@ -43,7 +44,7 @@ export function StoreFlow({
   const [selected, setSelected] = useState<FlowStepId>('receive')
   const [saved, setSaved] = useState(current)
   const [notes, setNotes] = useState(current.notes)
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [status, setStatus] = useState('')
   const dirty = JSON.stringify(notes) !== JSON.stringify(saved.notes)
   useUnsavedChanges(editable && dirty ? leaveWarning : null)

@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import type { Dictionary } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
@@ -42,8 +43,8 @@ export function ImportInventoryPreview({
   const [file, setFile] = useState<InventoryFile | null>(null)
   const [result, setResult] = useState<InventoryPreview | null>(null)
   const [error, setError] = useState('')
-  const [busy, setBusy] = useState(false)
-  const [reading, setReading] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
+  const [reading, setReading] = useBusyState(false)
   const [checkedAt, setCheckedAt] = useState('')
   const summary = useRef<HTMLHeadingElement>(null)
   useEffect(() => {

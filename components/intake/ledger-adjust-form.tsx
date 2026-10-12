@@ -1,6 +1,6 @@
 'use client'
 import { useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import { adjustSellerLedgerCommand } from '@/lib/engine/seller-ledger'
 import { useIntakeAction } from './use-intake-action'

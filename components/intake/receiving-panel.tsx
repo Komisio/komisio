@@ -1,7 +1,8 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import {
   NavigationLink as Link,
   useUnsavedChanges,
@@ -74,7 +75,7 @@ export function ReceivingPanel({
   // A later refusal cannot settle an earlier request whose reply was lost.
   const uncertain = useRef(false)
   const [locked, setLocked] = useState(false)
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   useUnsavedChanges(
     !confirmed && (dirty || locked) && leaveUnsaved ? leaveUnsaved : null,
   )

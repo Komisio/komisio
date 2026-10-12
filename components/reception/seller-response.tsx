@@ -1,6 +1,7 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useEffect, useState, useRef, type ReactNode } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
 export function SellerResponse({
@@ -18,7 +19,7 @@ export function SellerResponse({
   d: Dictionary
   children: ReactNode
 }) {
-  const [busy, setBusy] = useState(false),
+  const [busy, setBusy] = useBusyState(false),
     [error, setError] = useState(''),
     [checked, setChecked] = useState(false)
   const [loaded, setLoaded] = useState<string[]>([]),

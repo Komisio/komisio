@@ -1,7 +1,8 @@
+import { WorkingForm } from '@/components/platform/working-form'
 import { ItemPhotoPreview } from '@/components/intake/item-photo-preview'
 import { readItemPhotos } from '@/lib/engine/item-photos'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { notFound, redirect } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary, intlLocale } from '@/lib/i18n'
@@ -130,7 +131,7 @@ export default async function Lifecycle({
         )}
       </details>
       <div className="card lifecycle-workspace">
-        <form action="/intake/lifecycle" className="lifecycle-filter">
+        <WorkingForm action="/intake/lifecycle" className="lifecycle-filter">
           <div className="field">
             <label htmlFor="lifecycle-query">{d.search}</label>
             <input
@@ -166,7 +167,7 @@ export default async function Lifecycle({
               {d.clearSearch}
             </Link>
           )}
-        </form>
+        </WorkingForm>
         <p>{d.matches.replace('{count}', String(total))}</p>
         <section className="lifecycle-list" aria-label={d.title}>
           {total === 0 && <p>{query ? d.noMatches : d.empty}</p>}

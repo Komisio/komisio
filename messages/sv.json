@@ -374,6 +374,7 @@
   "resend": "Skicka bekräftelsen igen",
   "authError": "Det gick inte att genomföra begäran. Kontrollera uppgifterna och försök igen.",
   "callbackError": "Länken kunde inte användas. Begär en ny länk och öppna den i samma webbläsare.",
+  "working": "Komisio arbetar…",
   "loading": "Ett ögonblick…",
   "save": "Spara ändringar",
   "saved": "Ändringarna har sparats.",

@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import type { FortnoxIssue } from '@/extensions/fortnox/auth'
@@ -24,7 +25,7 @@ export function FortnoxConnection({
   d: Dictionary['fortnox']
 }) {
   const running = useRef(false)
-  const [busy, setBusy] = useState(false),
+  const [busy, setBusy] = useBusyState(false),
     [message, setMessage] = useState(''),
     [ok, setOk] = useState(false),
     [company, setCompany] = useState('')

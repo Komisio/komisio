@@ -1,6 +1,6 @@
 'use client'
 import { useId, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import { registerPrinterCommand } from '@/lib/engine/printing'
 import { useIntakeAction } from './use-intake-action'

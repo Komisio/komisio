@@ -1,6 +1,6 @@
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { readStatementSellerContact } from '@/lib/engine/seller-profile'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'

@@ -1,3 +1,4 @@
+import { WorkingForm } from '@/components/platform/working-form'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
@@ -333,7 +334,7 @@ export default async function Accounting({
           >
             <h2>{all.reconciliation.heading}</h2>
             <p>{d.reconciliationHint}</p>
-            <form method="get" className="economy-period-form">
+            <WorkingForm className="economy-period-form">
               <input type="hidden" name="view" value="reconciliation" />
               {!requestedPeriod.success && (query.from || query.to) && (
                 <p role="alert">{all.reconciliation.periodInvalid}</p>
@@ -361,7 +362,7 @@ export default async function Accounting({
               <button className="btn btn-primary">
                 {all.reconciliation.show}
               </button>
-            </form>
+            </WorkingForm>
             {recon && recon.days.length === 0 && (
               <p>{all.reconciliation.empty}</p>
             )}

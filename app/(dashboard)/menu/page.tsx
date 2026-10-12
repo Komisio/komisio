@@ -1,5 +1,5 @@
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { ChevronRight } from 'lucide-react'
 import styles from './menu.module.css'
 import { requirePlatform } from '@/lib/platform/context'

@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useId, useRef, useState } from 'react'
 import { Plus } from 'lucide-react'
 import type { Dictionary } from '@/lib/i18n'
@@ -34,7 +35,7 @@ export function CreateItemType({
   const [open, setOpen] = useState(false)
   const [name, setName] = useState('')
   const [base, setBase] = useState('')
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [locked, setLocked] = useState(false)
   const [refused, setRefused] = useState(false)
   const [error, setError] = useState('')

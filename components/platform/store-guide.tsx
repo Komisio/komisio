@@ -1,7 +1,8 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
 import { NavigationLink as Link, useUnsavedChanges } from './navigation-warning'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { GuideCopy } from '@/lib/guide-copy'
 import type { Dictionary } from '@/lib/i18n'
 import {
@@ -46,7 +47,7 @@ export function StoreGuide({
   )
   const [currentId, setCurrentId] = useState(initial.id)
   const [saved, setSaved] = useState(!!initial.id)
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [error, setError] = useState('')
   const request = useRef<{
     tenantId: string

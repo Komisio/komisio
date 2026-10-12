@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import { locales, localeNames, type Dictionary } from '@/lib/i18n'
 import type { SellerAgreement } from '@/lib/engine/intake'
 import { AgreementPreview, readAgreementPreview } from './agreement-preview'

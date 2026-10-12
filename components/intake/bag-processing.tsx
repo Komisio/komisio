@@ -1,6 +1,6 @@
 'use client'
 import { useState, useSyncExternalStore } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary, Locale } from '@/lib/i18n'
 import type { BagProcessingState } from '@/lib/engine/bag-processing'
 import { useIntakeAction } from './use-intake-action'

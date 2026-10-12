@@ -1,3 +1,4 @@
+import { WorkingForm } from '@/components/platform/working-form'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
@@ -424,7 +425,7 @@ export default async function Agreements({
               {shown ? (
                 <>
                   <p>{w.versionHint}</p>
-                  <form
+                  <WorkingForm
                     key={`${shown.id}:${params.q}:${params.status}`}
                     action="/intake/agreements#agreements-sellers"
                     className="agreement-filters"
@@ -457,7 +458,7 @@ export default async function Agreements({
                     <button className="btn btn-secondary">
                       {d.intake.searchButton}
                     </button>
-                  </form>
+                  </WorkingForm>
                   <p>
                     {d.sellersList.showingAll.replace(
                       '{total}',

@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import type { Dictionary } from '@/lib/i18n'
 import { EventTime } from '@/components/ui/event-time'
 import type { PrintJob, PrintReference } from '@/lib/engine/printing'

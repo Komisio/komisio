@@ -1,4 +1,5 @@
 'use client'
+import { useWorkActivity } from '@/components/platform/work-activity'
 import { useEffect, useState } from 'react'
 import { ArrowRight } from 'lucide-react'
 import type { Dictionary } from '@/lib/i18n'
@@ -67,6 +68,7 @@ export function QuickSellerPicker({
     : answer?.key === key
       ? answer
       : null
+  useWorkActivity(!idle && !current)
   const data = idle ? undefined : current?.data
   return (
     <>

@@ -374,6 +374,7 @@
   "resend": "Bestätigung erneut senden",
   "authError": "Die Anfrage konnte nicht abgeschlossen werden. Prüfen Sie Ihre Angaben und versuchen Sie es erneut.",
   "callbackError": "Dieser Link konnte nicht verwendet werden. Fordern Sie einen neuen Link an und öffnen Sie ihn im selben Browser.",
+  "working": "Komisio arbeitet…",
   "loading": "Einen Moment…",
   "save": "Änderungen speichern",
   "saved": "Ihre Änderungen wurden gespeichert.",

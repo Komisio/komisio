@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { cookies } from 'next/headers'
 import { notFound, redirect } from 'next/navigation'
 import { renderPlatformContext as platformContext } from '@/lib/platform/context'

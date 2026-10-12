@@ -1,4 +1,5 @@
 'use client'
+import { useStartWork } from '@/components/platform/work-activity'
 import { useEffect, useRef, useState } from 'react'
 import type { Dictionary } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
@@ -29,11 +30,13 @@ export function QuickSellerAgreement({
   onReload: () => void
   onGuardChange: (state: { dirty: boolean; locked: boolean }) => void
 }) {
+  const startWork = useStartWork()
   const [result, setResult] = useState<Snapshot | null>(null)
   const [failed, setFailed] = useState(false)
   const [retry, setRetry] = useState(0)
   useEffect(() => {
     const controller = new AbortController()
+    const finish = startWork()
     fetch(
       `/api/sellers/${sellerId}/agreement?tenant=${encodeURIComponent(tenantId)}`,
       { cache: 'no-store', signal: controller.signal },
@@ -49,8 +52,12 @@ export function QuickSellerAgreement({
       .catch(() => {
         if (!controller.signal.aborted) setFailed(true)
       })
-    return () => controller.abort()
-  }, [tenantId, sellerId, retry])
+      .finally(finish)
+    return () => {
+      controller.abort()
+      finish()
+    }
+  }, [tenantId, sellerId, retry, startWork])
   if (!result)
     return (
       <div role={failed ? 'alert' : 'status'}>

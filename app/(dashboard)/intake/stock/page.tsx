@@ -1,6 +1,7 @@
+import { WorkingForm } from '@/components/platform/working-form'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
@@ -67,8 +68,7 @@ export default async function Stock({
         id="stock"
         label={d.title}
         toolbar={
-          <form
-            method="get"
+          <WorkingForm
             action={`/intake/stock#stock-${initialTab}`}
             data-workspace-filter
             className="stock-ownership-filter"
@@ -90,7 +90,7 @@ export default async function Stock({
             <input type="hidden" name="from" value={period.from} />
             <input type="hidden" name="to" value={period.to} />
             <button className="btn btn-secondary">{e.show}</button>
-          </form>
+          </WorkingForm>
         }
         initial={initialTab}
         tabs={[
@@ -188,8 +188,7 @@ export default async function Stock({
                     steps: [d.salesHint, d.notice],
                   }}
                 />
-                <form
-                  method="get"
+                <WorkingForm
                   action="/intake/stock#stock-sales"
                   className="stock-period"
                 >
@@ -218,7 +217,7 @@ export default async function Stock({
                     />
                   </div>
                   <button className="btn btn-primary">{e.show}</button>
-                </form>
+                </WorkingForm>
                 {report && (
                   <>
                     <p className="muted">

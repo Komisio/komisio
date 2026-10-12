@@ -1,6 +1,6 @@
 'use client'
 import { useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import { locales, localeNames, type Dictionary, type Locale } from '@/lib/i18n'
 import type { SellerAgreement } from '@/lib/engine/intake'
 import { useIntakeAction } from './use-intake-action'

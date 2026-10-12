@@ -1,8 +1,9 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useEffect, useId, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { HandoverCode } from './handover-code'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
 import type { MyHandovers } from '@/lib/engine/handovers'
 
@@ -45,7 +46,7 @@ export function SellerHandovers({
   recovery: Pick<Dictionary['intake'], 'busy' | 'retry' | 'reload' | 'invalid'>
 }) {
   const router = useRouter()
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [outcomes, setOutcomes] = useState<Record<string, Outcome>>({})
   const [failedTarget, setFailedTarget] = useState<string | null>(null)
   const feedbackId = useId()

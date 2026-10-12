@@ -1,6 +1,7 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useId, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 import type { Dictionary, Locale } from '@/lib/i18n'
 import { photoLimit } from '@/lib/media/reception-photo'
@@ -55,8 +56,8 @@ export function SubmissionForm({
     output: SubmissionSuggestion
     currency: string
   } | null>(null)
-  const [analysing, setAnalysing] = useState(false),
-    [busy, setBusy] = useState(false),
+  const [analysing, setAnalysing] = useBusyState(false),
+    [busy, setBusy] = useBusyState(false),
     [locked, setLocked] = useState(false),
     [saved, setSaved] = useState(false)
   const [error, setError] = useState(''),

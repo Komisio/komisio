@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { EventTime } from '@/components/ui/event-time'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import type { ConsignmentFees } from '@/lib/engine/consignment-fees'

@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
@@ -25,7 +26,7 @@ export function ItemMatchInput({
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<SaleSearchItem[]>([])
   const [selected, setSelected] = useState<SaleSearchItem | null>(null)
-  const [searching, setSearching] = useState(false)
+  const [searching, setSearching] = useBusyState(false)
   const [searched, setSearched] = useState(false)
   const [error, setError] = useState('')
   const version = useRef(0)

@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState, useSyncExternalStore } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import type { SavedInspection } from '@/lib/engine/inspection'
 import { useIntakeAction } from './use-intake-action'

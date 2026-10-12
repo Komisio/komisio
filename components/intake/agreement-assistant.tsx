@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
 import type { Dictionary, Locale } from '@/lib/i18n'
 import {
@@ -30,7 +31,7 @@ export function AgreementAssistant({
   // Resume unconsumed results only on an explicit click. Already applied drafts
   // must not make a new Generate click silently reuse an older result.
   const restored = initial && !initial.decisionId ? initial : null
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [error, setError] = useState('')
   const [unknown, setUnknown] = useState(!!restored)
   const draft = useRef<AgreementSuggestion | null>(restored?.output ?? null)

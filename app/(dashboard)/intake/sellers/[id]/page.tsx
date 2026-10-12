@@ -17,7 +17,7 @@ import {
 } from '@/lib/engine/seller-profile'
 import { readStoreProfile } from '@/lib/engine/store-profile'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
-import HistoryLink from 'next/link'
+import HistoryLink from '@/components/platform/working-link'
 import { Info } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'

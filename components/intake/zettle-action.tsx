@@ -1,6 +1,7 @@
 'use client'
+import { useWorkActivity } from '@/components/platform/work-activity'
 import { useRef, useState, useId } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
 import type { zettleCommand } from '@/lib/engine/zettle'
@@ -34,6 +35,7 @@ export function ZettleAction({
     'idle' | 'busy' | 'retry' | 'failed' | 'done'
   >('idle')
   const [error, setError] = useState('')
+  useWorkActivity(state === 'busy')
   const [matchItemId, setMatchItemId] = useState('')
   const validMatch =
     !match ||

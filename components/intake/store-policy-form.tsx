@@ -1,7 +1,7 @@
 'use client'
 import { storeCurrencies } from '@/lib/platform/currencies'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import { locales, localeNames, type Dictionary } from '@/lib/i18n'
 import type { StorePolicyBody } from '@/lib/engine/store-policy'
 import { storePolicyBody } from '@/lib/engine/store-policy'

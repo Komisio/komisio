@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import {
   NavigationLink as Link,
   useUnsavedChanges,
@@ -38,7 +39,7 @@ export function ImportSellers({
     phone: null,
   })
   const [skipHeader, setSkipHeader] = useState(true)
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [message, setMessage] = useState('')
   const [staged, setStaged] = useState<string | null>(null)
   const [locked, setLocked] = useState(false)

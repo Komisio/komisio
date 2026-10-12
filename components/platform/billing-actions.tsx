@@ -1,4 +1,5 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
@@ -19,7 +20,7 @@ export function BillingActions({
   d: Dictionary['plans']
 }) {
   const running = useRef(false)
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [error, setError] = useState('')
   const errors = d.errors as Record<string, string>
   async function go(action: 'checkout' | 'portal') {

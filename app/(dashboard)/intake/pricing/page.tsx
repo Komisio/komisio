@@ -1,4 +1,5 @@
-import Link from 'next/link'
+import { WorkingForm } from '@/components/platform/working-form'
+import Link from '@/components/platform/working-link'
 import { notFound } from 'next/navigation'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { PricingCohortDownload } from '@/components/intake/pricing-cohort-download'
@@ -74,7 +75,7 @@ export default async function Pricing({
       </div>
       <section className="card stock-panel" aria-label={d.period}>
         <h2>{d.period}</h2>
-        <form method="get" className="stock-period">
+        <WorkingForm className="stock-period">
           <div className="field">
             <label htmlFor="pricing-from">{all.economy.from}</label>
             <input
@@ -98,7 +99,7 @@ export default async function Pricing({
             />
           </div>
           <button className="btn btn-primary">{all.economy.show}</button>
-        </form>
+        </WorkingForm>
         {error && <p role="alert">{error}</p>}
       </section>
       {report && (

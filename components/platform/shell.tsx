@@ -1,5 +1,7 @@
 'use client'
-import { usePathname, useRouter } from 'next/navigation'
+import { useBusyState } from './work-activity'
+import { usePathname } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import {
   NavigationLink as Link,
   useConfirmNavigation,
@@ -52,6 +54,7 @@ export function Shell({
   const isActive = (path: string) => isActivePath(pathname, path)
   const router = useRouter()
   const action = useCommand(d)
+  const [signingOut, setSigningOut] = useBusyState(false)
   const confirmNavigation = useConfirmNavigation()
   const groups = buildNavigation(d, { intakeEnabled, host })
   const mobile = mobileNavigation(d, intakeEnabled)
@@ -97,10 +100,15 @@ export function Shell({
     }
   }
   async function signOut() {
-    if (!confirmNavigation()) return
-    await browserClient().auth.signOut()
-    router.push('/login')
-    router.refresh()
+    if (signingOut || !confirmNavigation()) return
+    setSigningOut(true)
+    try {
+      await browserClient().auth.signOut()
+      router.push('/login')
+      router.refresh()
+    } finally {
+      setSigningOut(false)
+    }
   }
   const picker = (mobile = false) => (
     <select

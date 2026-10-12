@@ -1,6 +1,7 @@
 'use client'
+import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/components/platform/use-working-router'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
 
@@ -20,7 +21,7 @@ export function AgreementAcceptance({
   const router = useRouter()
   const requestId = useRef<string | null>(null)
   const running = useRef(false)
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useBusyState(false)
   const [accepted, setAccepted] = useState(false)
   const [error, setError] = useState('')
   const [stale, setStale] = useState(false)

@@ -130,20 +130,19 @@ try {
     await page.getByLabel('Lösenord', { exact: true }).fill(password)
     await page.getByRole('button', { name: 'Logga in', exact: true }).click()
     await expect(page).not.toHaveURL(/\/login/)
-    await page.goto(`${origin}/intake/integrations?provider=paypal`)
-    await page
-      .getByText(`PayPal POS · ${dictionary.integrationPage.manage}`, {
-        exact: true,
-      })
-      .click()
+    await page.goto(
+      `${origin}/intake/integrations?provider=paypal#paypal-sales`,
+    )
     return page
   }
   const ownerPage = await login(ownerEmail)
   const text = dictionary.zettle
-  const panel = ownerPage.getByRole('region', {
-    name: text.pullTitle,
-    exact: true,
-  })
+  const panel = ownerPage
+    .getByTestId('integration-paypal')
+    .getByRole('tabpanel', {
+      name: dictionary.integrationPage.paypalWorkspace.sales,
+      exact: true,
+    })
   await expect(
     panel.getByText(text.automaticDisabled, { exact: true }),
   ).toBeVisible()
@@ -176,11 +175,6 @@ try {
     fixture.db.query('select accept_automation_grants()'),
   )
   await ownerPage.reload()
-  await ownerPage
-    .getByText(`PayPal POS · ${dictionary.integrationPage.manage}`, {
-      exact: true,
-    })
-    .click()
   await expect(
     panel.getByText(text.automaticEnabled, { exact: true }),
   ).toBeVisible()
@@ -198,11 +192,6 @@ try {
     )
   })
   await ownerPage.reload()
-  await ownerPage
-    .getByText(`PayPal POS · ${dictionary.integrationPage.manage}`, {
-      exact: true,
-    })
-    .click()
   await expect(
     panel.getByText(new RegExp(text.automaticOutcomes.waiting)),
   ).toBeVisible()

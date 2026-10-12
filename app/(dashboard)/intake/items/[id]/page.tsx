@@ -15,6 +15,8 @@ import { readPrinters } from '@/lib/engine/printing'
 import { PrintJobButton } from '@/components/intake/print-job-button'
 import { readChainOverview } from '@/lib/engine/chains'
 import { TransferItemForm } from '@/components/intake/transfer-item-form'
+import { readPayPalItemStatus } from '@/lib/engine/paypal-status'
+import { PayPalItemStatus } from '@/components/intake/paypal-item-status'
 
 export default async function Item({
   params,
@@ -32,10 +34,11 @@ export default async function Item({
   const result = await readItem(ctx.client, active.id, id.data)
   if (!result) notFound()
   const { item, prices, events } = result
-  const [printers, label, photos] = await Promise.all([
+  const [printers, label, photos, paypal] = await Promise.all([
     readPrinters(ctx.client, active.id),
     readItemLabel(ctx.client, active.id, item.id),
     readItemPhotos(ctx.client, active.id, [item.id]),
+    readPayPalItemStatus(ctx.client, active.id, [item.id]),
   ])
   const currentPrice = label?.priceOre ?? prices[0]?.price_ore ?? null
   const reference = label?.reference ?? `I-${item.id.slice(0, 8).toUpperCase()}`
@@ -130,6 +133,17 @@ export default async function Item({
           write={['owner', 'admin', 'staff'].includes(active.role)}
           d={all.itemPhotos}
         />
+      )}
+      {paypal?.[0] && (
+        <div id="paypal-status">
+          <PayPalItemStatus
+            state={paypal[0]}
+            tenantId={active.id}
+            manage={manages}
+            locale={ctx.locale}
+            d={all.zettle}
+          />
+        </div>
       )}
       <details className="card intake-form item-detail-section">
         <summary>{d.terms}</summary>

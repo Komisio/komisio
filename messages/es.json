@@ -2681,7 +2681,7 @@
     "productStatus": "Intentos de producto recientes",
     "synced": "Sincronizado",
     "productFailed": "No se pudo sincronizar",
-    "catalogOffline": "Las exportaciones y la obtención de recibos se inician manualmente. No hay ninguna sincronización programada activada.",
+    "catalogOffline": "La exportación de artículos es manual. La consulta automática de recibos tiene un ajuste independiente.",
     "pullTitle": "Ventas desde PayPal POS",
     "pullHint": "La obtención empieza en el momento de la activación. Cada clic obtiene como máximo 100 recibos. Las compras coincidentes se registran automáticamente; los demás recibos esperan resolución. Esto no inicia ninguna obtención programada ni exportación de productos.",
     "pullSince": "Activado desde",
@@ -2749,7 +2749,28 @@
     "apiKey": "Clave API",
     "connect": "Conectar PayPal POS",
     "chooseItem": "Elegir artículo",
-    "selectedItem": "Artículo seleccionado"
+    "selectedItem": "Artículo seleccionado",
+    "itemSync": {
+      "states": {
+        "not_sent": "Sin enviar",
+        "changed": "Modificado",
+        "failed": "Error",
+        "attention": "Revisar",
+        "synced": "Sincronizado",
+        "inactive": "No está a la venta"
+      },
+      "product": "Artículo",
+      "stock": "Existencias",
+      "image": "Imagen",
+      "notConfirmed": "Sin confirmar",
+      "notSent": "Sin enviar",
+      "syncNow": "Sincronizar ahora",
+      "settings": "Configuración",
+      "observation": "Último resultado guardado. Los cambios en PayPal POS aparecen después de la siguiente comprobación.",
+      "allItems": "Ver el estado de sincronización de todos los artículos",
+      "details": "Detalles",
+      "retry": "Volver a intentar"
+    }
   },
   "priceEvidence": {
     "title": "Ventas comparables en esta tienda",

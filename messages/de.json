@@ -2681,7 +2681,7 @@
     "productStatus": "Letzte Produktversuche",
     "synced": "Synchronisiert",
     "productFailed": "Konnte nicht synchronisiert werden",
-    "catalogOffline": "Exporte und Belegabruf werden manuell gestartet. Es ist keine geplante Synchronisierung aktiviert.",
+    "catalogOffline": "Der Artikelexport wird manuell gestartet. Der automatische Belegabruf hat eine eigene Einstellung.",
     "pullTitle": "Verkäufe aus PayPal POS",
     "pullHint": "Der Abruf beginnt zum Zeitpunkt der Aktivierung. Jeder Klick holt höchstens 100 Belege. Zugeordnete Käufe werden automatisch erfasst; andere Belege warten auf Klärung. Dies startet keinen geplanten Abruf oder Produktexport.",
     "pullSince": "Aktiviert ab",
@@ -2749,7 +2749,28 @@
     "apiKey": "API-Schlüssel",
     "connect": "PayPal POS verbinden",
     "chooseItem": "Artikel auswählen",
-    "selectedItem": "Ausgewählter Artikel"
+    "selectedItem": "Ausgewählter Artikel",
+    "itemSync": {
+      "states": {
+        "not_sent": "Nicht gesendet",
+        "changed": "Geändert",
+        "failed": "Fehlgeschlagen",
+        "attention": "Prüfen",
+        "synced": "Synchronisiert",
+        "inactive": "Nicht im Verkauf"
+      },
+      "product": "Artikel",
+      "stock": "Bestand",
+      "image": "Bild",
+      "notConfirmed": "Nicht bestätigt",
+      "notSent": "Nicht gesendet",
+      "syncNow": "Jetzt synchronisieren",
+      "settings": "Einstellungen",
+      "observation": "Zuletzt gespeichertes Ergebnis. Änderungen in PayPal POS erscheinen nach der nächsten Prüfung.",
+      "allItems": "Synchronisierungsstatus aller Artikel anzeigen",
+      "details": "Details",
+      "retry": "Erneut versuchen"
+    }
   },
   "priceEvidence": {
     "title": "Vergleichbare Verkäufe in diesem Store",

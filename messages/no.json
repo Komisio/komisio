@@ -2681,7 +2681,7 @@
     "productStatus": "Siste produktforsøk",
     "synced": "Synkronisert",
     "productFailed": "Kunne ikke synkronisere",
-    "catalogOffline": "Eksporter og henting av kvitteringer startes manuelt. Ingen planlagt synkronisering er aktivert.",
+    "catalogOffline": "Vareeksport startes manuelt. Automatisk kvittohenting har en egen innstilling.",
     "pullTitle": "Salg fra PayPal POS",
     "pullHint": "Hentingen starter ved aktiveringstidspunktet. Hvert klikk henter høyst 100 kvitteringer. Kjøp med treff registreres automatisk; andre kvitteringer venter på avklaring. Dette starter ingen planlagt henting eller produkteksport.",
     "pullSince": "Aktivert fra",
@@ -2749,7 +2749,28 @@
     "apiKey": "API-nøkkel",
     "connect": "Koble til PayPal POS",
     "chooseItem": "Velg vare",
-    "selectedItem": "Valgt vare"
+    "selectedItem": "Valgt vare",
+    "itemSync": {
+      "states": {
+        "not_sent": "Ikke sendt",
+        "changed": "Endret",
+        "failed": "Mislyktes",
+        "attention": "Må kontrolleres",
+        "synced": "Synkronisert",
+        "inactive": "Ikke til salgs"
+      },
+      "product": "Vare",
+      "stock": "Lager",
+      "image": "Bilde",
+      "notConfirmed": "Ikke bekreftet",
+      "notSent": "Ikke sendt",
+      "syncNow": "Synkroniser nå",
+      "settings": "Innstillinger",
+      "observation": "Sist lagrede resultat. Endringer i PayPal POS vises etter neste kontroll.",
+      "allItems": "Vis synkroniseringsstatus for alle varer",
+      "details": "Detaljer",
+      "retry": "Prøv igjen"
+    }
   },
   "priceEvidence": {
     "title": "Sammenlignbare salg i denne butikken",

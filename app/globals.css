@@ -7493,3 +7493,36 @@ button.text-link:hover:not(:disabled) {
     width: 100%;
   }
 }
+.paypal-sync-state {
+  display: inline-flex;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--ink);
+}
+.paypal-sync-state[data-state='synced'] {
+  color: #22634c;
+}
+.paypal-sync-state[data-state='attention'],
+.paypal-sync-state[data-state='failed'] {
+  color: #8a3b18;
+}
+.paypal-sync-facts {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+}
+.paypal-sync-facts > div {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  gap: 1rem;
+}
+.paypal-sync-facts dt {
+  font-weight: 600;
+}
+.paypal-sync-facts dd {
+  margin: 0;
+}
+.paypal-item-status .workspace-heading {
+  margin-bottom: 0;
+}

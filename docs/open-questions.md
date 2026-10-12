@@ -1,5 +1,14 @@
 # Open questions
 
+PayPal POS follow-up (2026-10-12): the owner requested item-level status/retry,
+automatic product export, optional current default-image export, POS returns and
+seller-balance payments. The first delivery adds recorded item status and bounded
+filtering with the existing export retry. Automatic export, media replacement and
+return ingestion remain separate follow-ups. Seller-balance rules await an answer:
+use only available funds, allow split payment, and restore the balance-funded part
+to the same seller on return. The POS payment-method/receipt linkage must also be
+verified before enabling redemption; a manual ledger adjustment is not checkout.
+
 Inventory table (resolved 2026-10-11): owner requests compact sortable rows,
 on-demand default-image previews, discreet ownership/markdown indicators and
 advanced filters instead of ownership tabs. Sorting and filtering precede paging;

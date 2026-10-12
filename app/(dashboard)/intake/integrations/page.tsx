@@ -348,6 +348,12 @@ export default async function Integrations({
                   />
                 )}
                 <h2>{d.catalogTitle}</h2>
+                <Link
+                  className="text-link"
+                  href="/intake/items?sort=title&direction=asc"
+                >
+                  {d.itemSync.allItems}
+                </Link>
                 <p>{d.catalogHint}</p>
                 <p>
                   {d.pendingProducts}: {catalog.candidates.length}

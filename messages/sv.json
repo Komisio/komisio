@@ -2681,7 +2681,7 @@
     "productStatus": "Senaste produktförsök",
     "synced": "Synkad",
     "productFailed": "Kunde inte synkas",
-    "catalogOffline": "Varuexport och kvittohämtning startas manuellt. Ingen schemalagd synkning är aktiverad.",
+    "catalogOffline": "Varuexport startas manuellt. Automatisk kvittohämtning har en separat inställning.",
     "pullTitle": "Försäljningar från PayPal POS",
     "pullHint": "Hämtning startar från aktiveringstidpunkten. Varje klick hämtar högst 100 kvitton. Matchade köp registreras automatiskt; övriga väntar på hantering. Ingen schemalagd hämtning eller produktexport startas.",
     "pullSince": "Aktiverad från",
@@ -2749,7 +2749,28 @@
     "apiKey": "API-nyckel",
     "connect": "Anslut PayPal POS",
     "chooseItem": "Välj vara",
-    "selectedItem": "Vald vara"
+    "selectedItem": "Vald vara",
+    "itemSync": {
+      "states": {
+        "not_sent": "Inte skickad",
+        "changed": "Ändrad",
+        "failed": "Misslyckad",
+        "attention": "Kontrollera",
+        "synced": "Synkad",
+        "inactive": "Ej till försäljning"
+      },
+      "product": "Artikel",
+      "stock": "Lager",
+      "image": "Bild",
+      "notConfirmed": "Inte bekräftat",
+      "notSent": "Inte skickad",
+      "syncNow": "Synka nu",
+      "settings": "Inställningar",
+      "observation": "Senast sparade resultat. Ändringar direkt i PayPal POS syns efter nästa kontroll.",
+      "allItems": "Visa alla varors synkstatus",
+      "details": "Detaljer",
+      "retry": "Försök igen"
+    }
   },
   "priceEvidence": {
     "title": "Jämförbara försäljningar i butiken",

@@ -2681,7 +2681,7 @@
     "productStatus": "Viimeaikaiset tuoteyritykset",
     "synced": "Synkronoitu",
     "productFailed": "Synkronointi epäonnistui",
-    "catalogOffline": "Viennit ja kuittien nouto käynnistetään manuaalisesti. Ajastettua synkronointia ei ole käytössä.",
+    "catalogOffline": "Tuotevienti käynnistetään käsin. Automaattisella kuittien haulla on erillinen asetus.",
     "pullTitle": "Myynnit PayPal POStä",
     "pullHint": "Nouto alkaa aktivointihetkestä. Jokainen napsautus noutaa enintään 100 kuittia. Täsmäävät ostot kirjataan automaattisesti; muut kuitit odottavat ratkaisua. Tämä ei käynnistä ajastettua noutoa tai tuotevientiä.",
     "pullSince": "Aktivoitu alkaen",
@@ -2749,7 +2749,28 @@
     "apiKey": "API-avain",
     "connect": "Yhdistä PayPal POS",
     "chooseItem": "Valitse tuote",
-    "selectedItem": "Valittu tuote"
+    "selectedItem": "Valittu tuote",
+    "itemSync": {
+      "states": {
+        "not_sent": "Ei lähetetty",
+        "changed": "Muuttunut",
+        "failed": "Epäonnistui",
+        "attention": "Tarkistettava",
+        "synced": "Synkronoitu",
+        "inactive": "Ei myynnissä"
+      },
+      "product": "Tuote",
+      "stock": "Varasto",
+      "image": "Kuva",
+      "notConfirmed": "Ei vahvistettu",
+      "notSent": "Ei lähetetty",
+      "syncNow": "Synkronoi nyt",
+      "settings": "Asetukset",
+      "observation": "Viimeisin tallennettu tulos. PayPal POSissa tehdyt muutokset näkyvät seuraavan tarkistuksen jälkeen.",
+      "allItems": "Näytä kaikkien tuotteiden synkronointitila",
+      "details": "Tiedot",
+      "retry": "Yritä uudelleen"
+    }
   },
   "priceEvidence": {
     "title": "Vertailukelpoiset myynnit tässä kaupassa",

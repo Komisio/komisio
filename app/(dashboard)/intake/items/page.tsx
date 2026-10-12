@@ -22,6 +22,7 @@ import {
 } from '@/lib/engine/item-directory'
 import { ItemPhotoPreview } from '@/components/intake/item-photo-preview'
 import { ItemIndicator } from '@/components/intake/item-indicator'
+import { paypalSyncStatus } from '@/lib/engine/paypal-status'
 
 export default async function Items({
   searchParams,
@@ -209,6 +210,14 @@ export default async function Items({
                 ['consignment', d.ownershipKinds.consignment],
                 ['store', d.ownershipKinds.store],
               ])}
+              {select(
+                'paypal',
+                'PayPal POS',
+                paypalSyncStatus.options.map((s) => [
+                  s,
+                  all.zettle.itemSync.states[s],
+                ]),
+              )}
               {input('seller', all.quickIntake.seller)}
               {input('category', all.quickIntake.category)}
               {select('photo', t.photo, [
@@ -259,6 +268,7 @@ export default async function Items({
                     {header('seller', all.quickIntake.seller)}
                     {header('price', all.quickIntake.price, true)}
                     {header('stage', d.stage)}
+                    <th scope="col">PayPal POS</th>
                     {header('accepted', t.registered)}
                     {header('periodEnd', t.periodEnd)}
                   </tr>
@@ -341,6 +351,20 @@ export default async function Items({
                           </ItemIndicator>
                         ) : (
                           stageLabel(i.stage)
+                        )}
+                      </td>
+                      <td>
+                        {i.paypal ? (
+                          <Link
+                            className="paypal-sync-state"
+                            data-state={i.paypal.status}
+                            href={`/intake/items/${i.id}#paypal-status`}
+                            title={all.zettle.itemSync.observation}
+                          >
+                            {all.zettle.itemSync.states[i.paypal.status]}
+                          </Link>
+                        ) : (
+                          '—'
                         )}
                       </td>
                       <td className="inventory-date">

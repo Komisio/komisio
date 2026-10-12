@@ -2646,7 +2646,7 @@
       "ZETTLE_WINDOW_INVALID": "PayPal POS palautti tietoja valitun aikavälin ulkopuolelta. Nouto pysäytetty.",
       "ZETTLE_WINDOW_COMPLETE": "Tämä aikaväli on jo valmis. Lataa sivu uudelleen.",
       "ZETTLE_WINDOW_ABANDONED": "Omistaja sulki tämän aikavälin. Siihen ei voi enää tuoda sivuja. Lataa sivu uudelleen.",
-      "ZETTLE_AUTH_REQUIRED": "PayPal POS hylkäsi todennuksen. Tarkista API-avain ja sen oikeudet.",
+      "ZETTLE_AUTH_REQUIRED": "Jatka yhdistämällä uudelleen.",
       "ZETTLE_CONNECTION_FAILED": "Yhteyttä ei voitu tarkistaa. Tarkista määritykset tai yritä myöhemmin uudelleen.",
       "ZETTLE_INVENTORY_FAILED": "PayPal POSn varastoa ei voitu vahvistaa. Tarkista tallennettu tuotetila ennen jatkotoimia.",
       "ZETTLE_INVENTORY_CONFLICT": "PayPal POSn varastoa ei voitu vahvistaa. Tarkista tallennettu tuotetila ennen jatkotoimia.",
@@ -2672,7 +2672,11 @@
       "ZETTLE_REFUND_MISMATCH": "Palautusta ei voida yhdistää luotettavasti alkuperäisiin tuotteisiin.",
       "ZETTLE_RETURN_FAILED": "Palautusta ei voitu kirjata. Tarkista alkuperäinen kuitti.",
       "PARTIAL_REFUND_UNSUPPORTED": "Osittaisia summia ei tueta. Hyvityksen on vastattava tuotteen koko myyntihintaa.",
-      "LINE_ALREADY_RETURNED": "Tuote on jo palautettu Komisiossa. Tarkista aiempi palautus."
+      "LINE_ALREADY_RETURNED": "Tuote on jo palautettu Komisiossa. Tarkista aiempi palautus.",
+      "PAYPAL_REFRESH_BUSY": "Yhteyttä päivitetään. Yritä pian uudelleen.",
+      "PAYPAL_RECONNECT_REQUIRED": "Jatka yhdistämällä uudelleen.",
+      "PAYPAL_CONNECTION_CHANGED": "Jatka yhdistämällä uudelleen.",
+      "PAYPAL_APP_UNAVAILABLE": "Komisio ei ole vielä ottanut PayPal POS -yhteyttä käyttöön."
     },
     "approvalHint": "Täsmäävät kuitit kirjataan automaattisesti. Vain poikkeukset vaativat tutkintaa; toista hyväksyjää ei tarvita.",
     "held": "Kuittia ei voitu kirjata. Tutki ennen uutta yritystä.",
@@ -2713,11 +2717,6 @@
     "connectionHint": "Tarkista palvelimella säilytettävä tunnistetieto ja sen PayPal POS-kauppias. Tämä tarkistus ei luo tuotteita eikä tuo myyntejä.",
     "checkConnection": "Tarkista PayPal POS-yhteys",
     "connectionUnavailable": "Pilottiyhteyttä ei ole sidottu tähän kauppaan.",
-    "connectionTenantMissing": "Asennuksen määrityksistä puuttuu kaupan sidonta (ZETTLE_PILOT_TENANT_ID).",
-    "connectionClientMissing": "Asennuksen määrityksissä on puuttuva tai virheellinen asiakastunnus.",
-    "connectionKeyMissing": "API-avain puuttuu asennuksen määrityksistä.",
-    "connectionMerchantInvalid": "Määritetty PayPal POS-kauppiastunnus on virheellinen.",
-    "connectionConfigHint": "Tarkista kaupan sidonta ja Vercel-asetukset (Production). Ota käyttöön uudelleen muutosten jälkeen. Tunnistetietojen arvoja ei näytetä täällä.",
     "connectionVerified": "Yhteys tarkistettu. PayPal POS-kauppias:",
     "connectionFailed": "Yhteyttä ei voitu tarkistaa. Tarkista määritykset tai yritä myöhemmin uudelleen.",
     "merchantPinned": "Kauppias vastaa kiinnitettyä yhteyttä.",
@@ -2749,10 +2748,6 @@
       "conflict": "Varasto vaatii tutkintaa - uutta kappaletta ei lisätä"
     },
     "responseFields": "Vastauksen kentät",
-    "setup": "Yhdistä tilisi",
-    "setupHint": "Anna PayPal POS -tilisi Client ID ja API-avain. Tiedot tarkistetaan ja tallennetaan salattuina tälle myymälälle.",
-    "clientId": "Client ID",
-    "apiKey": "API-avain",
     "connect": "Yhdistä PayPal POS",
     "chooseItem": "Valitse tuote",
     "selectedItem": "Valittu tuote",
@@ -2782,6 +2777,18 @@
       "recorded": "Palautus on kirjattu Komisioon.",
       "original": "Näytä alkuperäinen myynti",
       "retry": "Tarkista palautus uudelleen"
+    },
+    "oauth": {
+      "connect": "Yhdistä PayPal POS",
+      "reconnect": "Yhdistä uudelleen",
+      "disconnect": "Katkaise yhteys",
+      "hint": "Kirjaudu PayPal POS -palveluun ja anna Komisiolle pääsy kaupan tiliin.",
+      "connected": "PayPal POS on yhdistetty.",
+      "cancelled": "Yhdistäminen peruutettiin.",
+      "disconnected": "PayPal POS -yhteys on katkaistu Komisiossa.",
+      "retry": "Jatka yhdistämällä uudelleen.",
+      "refreshBusy": "Yhteyttä päivitetään. Yritä pian uudelleen.",
+      "unavailable": "Komisio ei ole vielä ottanut PayPal POS -yhteyttä käyttöön."
     }
   },
   "priceEvidence": {

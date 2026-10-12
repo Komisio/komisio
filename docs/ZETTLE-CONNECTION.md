@@ -22,84 +22,70 @@ page. Uncertain stock or provider conflicts still require reconciliation, and
 retries never grant another unit. Staff/read-only members see status without an
 export action. No automatic product export is enabled by this read-only slice.
 
-## Store-owned accounts
+## Partner-hosted connection
 
-The integrations page uses the PayPal POS name; provider codes and API routes
-remain `zettle`. Owner/admin can enter a client ID and API key for their own
-account. The server exchanges the key, verifies the merchant through users/self,
-and stores tenant-bound AES-GCM ciphertext using KOMISIO_CREDENTIAL_KEY.
-Migration 20260922140000 must be applied before this application version.
-Credentials are never returned to the browser or written to audit events.
-Replacing credentials retains the merchant pin, including an existing live-pull
-connection. Connecting does not enable synchronization or an automation grant.
-An accepted zettle_pull automation grant can read only its tenant's credentials.
+Owners/admins choose **Connect PayPal POS**, sign in with PayPal and approve
+Komisio. Stores never create developer credentials. The shared public app uses
+[authorization code with S256 PKCE](https://developer.zettle.com/docs/api/oauth/overview);
+the documented PKCE exchange uses the app client ID and a one-use verifier,
+not the app client secret. Requested scopes are READ:USERINFO, READ:PRODUCT,
+WRITE:PRODUCT and READ:PURCHASE. No payment or refund execution is requested.
 
-The deployment credential configuration below remains a legacy fallback for its
-explicitly bound tenant only. A stored tenant connection takes precedence.
+The callback binds the authenticated staff identity, active tenant, expiring
+signed state, encrypted HttpOnly cookie and current connection revision.
+The server verifies the merchant through users/self before sealing the access
+and refresh tokens with tenant-bound AES-256-GCM. A reconnection must match the
+existing merchant, including the immutable synchronization connection pin.
+Connecting does not enable catalog export, receipt import or automation grants.
 
-The owner supplied clientId and an API key in Vercel, not a client secret.
-The official [assertion grant](https://developer.zettle.com/docs/api/oauth/user-guides/set-up-app-authorisation/set-up-authorisation-assertion-grant)
-exchanges that key for a short-lived access token. The server then calls
-`https://oauth.zettle.com/users/self`. Only the merchant UUID, check time and
-whether it matches a configured pin reach the browser. Neither credential,
-access token, provider error body nor user profile is logged or returned.
+The old API-key form, assertion grant and deployment credential fallback are
+retired. Migration `20261012180000` extends the existing operational credentials
+table and revokes the old write function. Financial and synchronization history
+is retained. A local disconnect erases usable encrypted tokens and stops future
+credential acquisition. It does not recall requests already sent to PayPal or
+revoke the app in PayPal; merchants can also remove that authorization there.
 
-## Legacy deployment configuration and verification
+## Host configuration
 
-In the staging project's Production environment, configure server-only variables:
+1. Register a public API app in the PayPal POS developer portal.
+2. Configure server-only `PAYPAL_POS_CLIENT_ID` and `KOMISIO_CREDENTIAL_KEY`.
+   PKCE does not require storing the downloaded client secret in Komisio.
+3. Register each exact callback URL in the app's OAuth Redirect URIs:
+   - Staging: `https://komisio-staging.vercel.app/api/integrations/paypal/callback`
+   - Production: `https://app.komisio.com/api/integrations/paypal/callback`
+   - Self-hosted: `<NEXT_PUBLIC_APP_URL>/api/integrations/paypal/callback`.
+4. Apply the migration before deploying. The canonical NEXT_PUBLIC_APP_URL
+   must match the app registration. Use HTTPS outside loopback development.
+5. Connect a test merchant, verify its identity, and separately activate the
+   required synchronization settings. Registration alone is not a live OAuth test.
 
-- `ZETTLE_CLIENT_ID` and sensitive `ZETTLE_API_KEY`: supplied by the owner.
-- `ZETTLE_PILOT_TENANT_ID`: the explicit Komisio tenant UUID approved by the owner.
-  Missing or mismatched tenant means no provider request, even for administrators.
-- `ZETTLE_MERCHANT_ID`: optional for first read-only discovery. After verifying the
-  returned merchant, pin that UUID here. Subsequent checks reject a different
-  merchant. Changing credentials does not silently accept a new pinned merchant.
+Do not put real credentials in source control, logs or test fixtures. Keep the
+credential encryption key stable: changing it makes stored tokens unreadable.
+Existing obsolete ZETTLE_CLIENT_ID/API_KEY/PILOT_TENANT_ID/MERCHANT_ID deployment
+variables are ignored and can be removed.
 
-Publish after the configuration is saved. As owner/admin of the selected store,
-open Intake → Zettle integration → Check Zettle connection. Existing MFA and
-SQL tenant-role checks apply before the adapter receives credentials. The request
-body accepts a tenant ID for diagnostics or tenant-scoped credentials for setup. Requests
-with a foreign origin, switched tenant, anonymous identity or insufficient role
-are denied. There is no default pilot credential for all stores.
+## Token renewal and recovery
 
-This is a read-only connection diagnostic, **not live sync activation**. It does
-not create products, initialize inventory, query purchases or import old sales.
-Success establishes credential/merchant identity, not Product or Purchase scopes,
-VAT configuration, a safe synchronization window or POS inventory behavior.
-The existing synthetic synchronization remains loopback-only.
+Only owner/admin sessions or the existing accepted, scoped automation actor
+can read/renew tokens. A durable database claim is acquired before sending a
+rotating refresh token. Concurrent requests wait until their next invocation;
+they never send the same refresh token a second time. Saving the replacement
+requires the same claim and connection revision. Reconnection or disconnect
+invalidates in-flight saves. Tokens and raw provider errors never reach the GUI.
 
-## Storage and multi-tenant path
+If a refresh request or save has an unknown outcome, do not replay it. After
+one minute the connection page asks for reconnection. The store reconnects to
+the same merchant. Catalog outcomes and sales keep their existing retry rules.
+The integrations page reads status without decrypting or refreshing credentials.
 
-Current pilot secrets remain in Vercel; no new SQL credential table or service-role
-client. The server-side environment is a single explicit pilot slot, not the final
-self-service model. A partner-hosted OAuth authorization flow remains future
-work; the current setup uses merchant-supplied API keys. Key revocation takes
-place in PayPal POS. The app's normal membership model remains
-unchanged. Do not extend the pilot by falling back across tenants.
+## Verification
 
-## Verification and release
-
-`tests/unit/zettle-auth.test.ts` covers the exact token request, tenant denial,
-merchant mismatch, malformed/expired token responses, redacted failures and role
-checking before network access. `tests/e2e/zettle.spec.ts` covers the new protected
-route alongside the full existing synthetic product/sale loop.
-
-Local command: set `KOMISIO_INTAKE_ENABLED=true`, configure local Supabase and run
-`node node_modules/@playwright/test/cli.js test tests/e2e/zettle.spec.ts`.
-No real API key is needed for automated tests. Never use the pilot credentials in
-CI or fixtures. The legacy environment-only diagnostic needs no additional migration. If necessary, remove the pilot tenant
-variable and redeploy to disable diagnostics; no financial rollback is involved.
-
-## Missing check button
-
-The button is present only when the deployed server configuration is ready.
-Client IDs are opaque strings (not necessarily UUIDs); surrounding pasted
-whitespace is removed from the four environment values before both validation
-and transport. The tenant UUID must still match exactly. Owners/admins see
-fixed missing-client, missing-key or invalid-merchant messages only after that
-tenant match; other stores receive the generic unavailable message. No values
-are sent to the client. Save Production variables and redeploy: merely editing
-Vercel settings does not update an existing deployment.
+Unit tests cover PKCE, tenant/user/cookie binding, expiry, stale callbacks,
+merchant verification, encrypted token storage and renewal failures. pgTAP
+covers role/MFA and worker authorization; a multi-connection test proves one
+refresh claimant. Browser tests cover setup and callback rejection without
+calling a real merchant. A successful hosted consent/callback and real token
+renewal still need verification with the registered app after host configuration.
 
 ## Receipt retrieval after verification
 

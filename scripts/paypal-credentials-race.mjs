@@ -8,7 +8,7 @@ export async function racePayPalCredentials({ setup, sessions, tenant }) {
   await setup.query('select id from tenants where id=$1 for update', [tenant])
   const attempts = sessions.map(({ c }, i) =>
     c
-      .query('select store_paypal_credentials($1,$2,$3)', [
+      .query("select store_paypal_oauth($1,$2,$3,now()+interval '1 hour',0)", [
         tenant,
         merchants[i],
         { iv: 'aWl2', tag: 'dGFn', data: 'ZGF0YQ==' },
@@ -43,7 +43,23 @@ export async function racePayPalCredentials({ setup, sessions, tenant }) {
     ).rows[0].n,
     1,
   )
+  await setup.query(
+    "update paypal_credentials set expires_at=now()-interval '1 second' where tenant_id=$1",
+    [tenant],
+  )
+  const claims = await Promise.all(
+    sessions.map(({ c }) =>
+      c.query('select claim_paypal_refresh($1,1,$2) result', [
+        tenant,
+        randomUUID(),
+      ]),
+    ),
+  )
+  assert.deepEqual(claims.map((r) => r.rows[0].result.status).sort(), [
+    'busy',
+    'claimed',
+  ])
   console.log(
-    'PASS: concurrent PayPal connections pin one merchant and refuse the other.',
+    'PASS: concurrent OAuth connections pin one merchant; only one worker claims token renewal.',
   )
 }

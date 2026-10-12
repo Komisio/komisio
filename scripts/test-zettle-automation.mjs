@@ -1,3 +1,4 @@
+import { seal } from '../lib/platform/credentials.ts'
 import { spawn } from 'node:child_process'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { existsSync } from 'node:fs'
@@ -63,14 +64,30 @@ try {
     ...process.env,
     KOMISIO_INTAKE_ENABLED: 'true',
     NEXT_PUBLIC_APP_URL: origin,
-    ZETTLE_PILOT_TENANT_ID: fixture.tenant,
-    ZETTLE_MERCHANT_ID: merchant,
-    ZETTLE_CLIENT_ID: 'synthetic-not-a-client',
-    ZETTLE_API_KEY: 'synthetic-not-a-key',
+    KOMISIO_CREDENTIAL_KEY: 'ab'.repeat(32),
+    PAYPAL_POS_CLIENT_ID: 'synthetic-client',
     KOMISIO_AUTOMATION_EMAIL: workerEmail,
     KOMISIO_AUTOMATION_PASSWORD: password,
     CRON_SECRET: '',
   }
+  await fixture.asActor(fixture.actor, () =>
+    fixture.db.query(
+      "select store_paypal_oauth($1,$2,$3,now()+interval '1 hour',0)",
+      [
+        fixture.tenant,
+        merchant,
+        seal(
+          `paypal-oauth:${fixture.tenant}`,
+          {
+            access_token: 'synthetic-access',
+            refresh_token: 'synthetic-refresh',
+            expires_in: 3600,
+          },
+          env,
+        ),
+      ],
+    ),
+  )
   server = spawn(
     process.execPath,
     ['--import', './tests/fixtures/local-fetch-only.mjs', 'scripts/start.mjs'],

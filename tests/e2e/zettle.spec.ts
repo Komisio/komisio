@@ -29,20 +29,15 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
       await f.commit()
       await page.goto('/intake/integrations?provider=paypal')
       await page
-        .getByText(`PayPal POS · ${d.integrationPage.manage}`, { exact: true })
+        .locator('summary')
+        .filter({ hasText: d.integrationPage.manage })
+        .filter({ hasText: 'PayPal POS' })
         .click()
       await expect(page.getByText(d.zettle.fixture)).toBeVisible()
+      await expect(page.getByLabel('Client ID', { exact: true })).toHaveCount(0)
       await expect(
-        page.getByLabel(d.zettle.clientId, { exact: true }),
+        page.getByRole('button', { name: d.zettle.oauth.connect, exact: true }),
       ).toBeVisible()
-      await expect(
-        page
-          .getByRole('region', { name: 'PayPal POS', exact: true })
-          .getByLabel(d.zettle.apiKey, { exact: true }),
-      ).toBeVisible()
-      await expect(
-        page.getByRole('button', { name: d.zettle.connect, exact: true }),
-      ).toBeDisabled()
       await expect(
         page.getByRole('button', {
           name: d.zettle.checkConnection,
@@ -52,6 +47,52 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
       await expect(
         page.getByRole('button', { name: d.zettle.pullEnable, exact: true }),
       ).toHaveCount(0)
+      if (currency === 'SEK') {
+        const connectPath = `/api/integrations/paypal/connect?tenant=${f.tenant}`
+        const started = await page.request.post(connectPath, {
+          headers: { origin: 'http://127.0.0.1:3000' },
+          maxRedirects: 0,
+        })
+        expect(started.status()).toBe(303)
+        const authorization = new URL(started.headers().location)
+        expect(authorization.origin).toBe('https://oauth.zettle.com')
+        expect(authorization.searchParams.get('code_challenge_method')).toBe(
+          'S256',
+        )
+        expect(authorization.searchParams.get('redirect_uri')).toBe(
+          'http://127.0.0.1:3000/api/integrations/paypal/callback',
+        )
+        expect(started.headers()['set-cookie']).toContain('HttpOnly')
+        expect(started.headers()['set-cookie']).toContain('SameSite=lax')
+        const rejected = await page.request.get(
+          '/api/integrations/paypal/callback?code=synthetic&state=invalid',
+          { maxRedirects: 0 },
+        )
+        expect(rejected.status()).toBe(303)
+        expect(rejected.headers().location).toContain(
+          'paypal=PAYPAL_STATE_INVALID',
+        )
+        expect(rejected.headers()['set-cookie']).toContain('Max-Age=0')
+        const foreign = await page.request.post(connectPath, {
+          headers: { origin: 'https://foreign.example' },
+          maxRedirects: 0,
+        })
+        expect(foreign.status()).toBe(403)
+        const stale = await page.request.post(
+          `/api/integrations/paypal/connect?tenant=${randomUUID()}`,
+          { headers: { origin: 'http://127.0.0.1:3000' }, maxRedirects: 0 },
+        )
+        expect(stale.headers().location).toContain('TENANT_CHANGED')
+        await page.goto('/intake/integrations?provider=paypal&paypal=cancelled')
+        await expect(
+          page.getByText(d.zettle.oauth.cancelled, { exact: true }),
+        ).toBeVisible()
+        await page
+          .locator('summary')
+          .filter({ hasText: d.integrationPage.manage })
+          .filter({ hasText: 'PayPal POS' })
+          .click()
+      }
       for (const action of ['enablePull', 'pull', 'export', 'exportImage']) {
         const denied = await page.request.post('/api/integrations/zettle', {
           headers: { origin: 'http://127.0.0.1:3000' },
@@ -198,7 +239,9 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
       await page.waitForLoadState('networkidle')
       await page.reload()
       await page
-        .getByText(`PayPal POS · ${d.integrationPage.manage}`, { exact: true })
+        .locator('summary')
+        .filter({ hasText: d.integrationPage.manage })
+        .filter({ hasText: 'PayPal POS' })
         .click()
       await page
         .getByRole('button', { name: d.zettle.sync, exact: true })
@@ -238,7 +281,9 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
       for (const r of responses) expect(r.status(), await r.text()).toBe(200)
       await page.reload()
       await page
-        .getByText(`PayPal POS · ${d.integrationPage.manage}`, { exact: true })
+        .locator('summary')
+        .filter({ hasText: d.integrationPage.manage })
+        .filter({ hasText: 'PayPal POS' })
         .click()
       await page.getByRole('link', { name: new RegExp(d.zettle.open) }).click()
       await expect(
@@ -301,7 +346,9 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
       )
       await page.goto('/intake/integrations?provider=paypal')
       await page
-        .getByText(`PayPal POS · ${d.integrationPage.manage}`, { exact: true })
+        .locator('summary')
+        .filter({ hasText: d.integrationPage.manage })
+        .filter({ hasText: 'PayPal POS' })
         .click()
       await expect(
         page.getByRole('link', { name: new RegExp(d.zettle.open) }),

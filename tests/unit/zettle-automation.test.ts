@@ -1,3 +1,4 @@
+import { seal } from '../../lib/platform/credentials'
 import { describe, expect, it, vi } from 'vitest'
 import type { createClient, SupabaseClient } from '@supabase/supabase-js'
 import {
@@ -8,15 +9,16 @@ import {
 
 const tenantId = '10000000-0000-4000-8000-000000000001'
 const env = {
+  KOMISIO_CREDENTIAL_KEY: 'ab'.repeat(32),
   KOMISIO_INTAKE_ENABLED: 'true',
   KOMISIO_AUTOMATION_EMAIL: 'worker@example.test',
   KOMISIO_AUTOMATION_PASSWORD: 'password-long-enough',
   CRON_SECRET: 'cron-secret-long-enough',
   NEXT_PUBLIC_SUPABASE_URL: 'https://example.supabase.co',
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'publishable',
+  ZETTLE_ACCESS_EXPIRES_AT: String(Date.now() + 7200000),
   ZETTLE_PILOT_TENANT_ID: tenantId,
-  ZETTLE_CLIENT_ID: 'client',
-  ZETTLE_API_KEY: 'provider-secret',
+  ZETTLE_ACCESS_TOKEN: 'provider-secret',
   ZETTLE_MERCHANT_ID: '20000000-0000-4000-8000-000000000002',
 }
 const request = () =>
@@ -26,15 +28,30 @@ const request = () =>
 function fixture() {
   const signInWithPassword = vi.fn().mockResolvedValue({ error: null })
   const signOut = vi.fn().mockResolvedValue({ error: null })
-  const rpc = vi.fn(async (name: string) => ({
-    error: null,
-    data:
-      name === 'read_paypal_credentials'
-        ? null
-        : name === 'accept_automation_grants'
-          ? []
-          : [{ tenantId }],
-  }))
+  const rpc = vi.fn(
+    async (name: string): Promise<{ data: unknown; error: null }> => ({
+      error: null,
+      data:
+        name === 'read_paypal_credentials'
+          ? {
+              merchantId: env.ZETTLE_MERCHANT_ID,
+              revision: '1',
+              expiresAt: new Date(Date.now() + 7200000).toISOString(),
+              cipher: seal(
+                `paypal-oauth:${tenantId}`,
+                {
+                  access_token: 'provider-secret',
+                  refresh_token: 'refresh',
+                  expires_in: 7200,
+                },
+                env,
+              ),
+            }
+          : name === 'accept_automation_grants'
+            ? []
+            : [{ tenantId }],
+    }),
+  )
   const client = {
     auth: { signInWithPassword, signOut },
     rpc,

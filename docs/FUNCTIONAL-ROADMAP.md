@@ -576,13 +576,13 @@ retention and erasure).
 
 ### Explicit P5 slice: multi-tenant Zettle connections
 
-Replace the single pilot environment credential slot with partner-hosted
-authorization and tenant-bound encrypted credential storage, rotation and
-revocation. Preserve merchant verification, tenant isolation, server-only secrets
-and immutable connection provenance. This is planned work, not delivered by the
-pilot binding. Scheduled receipt retrieval remains a separate follow-up using
-the enabling owner/admin identity and a database-owner-only pg_cron entry point;
-do not introduce a service-role client or reuse a staff click as a worker actor.
+Owner selected this slice on 2026-10-12: replace unused per-store API keys
+and the pilot environment fallback with shared partner-hosted PKCE authorization,
+tenant-bound encrypted token storage, serialized rotation and local disconnect.
+The implementation preserves merchant pins, tenant isolation, server-only tokens
+and immutable connection provenance. Hosted OAuth consent and token renewal
+remain release verification. Existing accepted automation grants control receipt
+retrieval and catalog export separately; no service-role client is introduced.
 
 ## 8. Questions this document raised
 

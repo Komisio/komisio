@@ -2646,7 +2646,7 @@
       "ZETTLE_WINDOW_INVALID": "PayPal POS returned data outside the selected interval. Retrieval stopped.",
       "ZETTLE_WINDOW_COMPLETE": "This interval is already complete. Reload the page.",
       "ZETTLE_WINDOW_ABANDONED": "The owner closed this interval. No more pages can be imported into it. Reload the page.",
-      "ZETTLE_AUTH_REQUIRED": "PayPal POS rejected authentication. Check the API key and its permissions.",
+      "ZETTLE_AUTH_REQUIRED": "Reconnect to continue.",
       "ZETTLE_CONNECTION_FAILED": "Could not verify the connection. Check configuration or retry later.",
       "ZETTLE_INVENTORY_FAILED": "PayPal POS stock could not be confirmed. Check the saved item status before taking further action.",
       "ZETTLE_INVENTORY_CONFLICT": "PayPal POS stock could not be confirmed. Check the saved item status before taking further action.",
@@ -2672,7 +2672,11 @@
       "ZETTLE_REFUND_MISMATCH": "The refund cannot be matched safely to the original items.",
       "ZETTLE_RETURN_FAILED": "The return could not be recorded. Check the original receipt.",
       "PARTIAL_REFUND_UNSUPPORTED": "Partial amounts are not supported. The refund must equal the entire item sale price.",
-      "LINE_ALREADY_RETURNED": "The item has already been returned in Komisio. Check the previous return."
+      "LINE_ALREADY_RETURNED": "The item has already been returned in Komisio. Check the previous return.",
+      "PAYPAL_REFRESH_BUSY": "The connection is updating. Try again shortly.",
+      "PAYPAL_RECONNECT_REQUIRED": "Reconnect to continue.",
+      "PAYPAL_CONNECTION_CHANGED": "Reconnect to continue.",
+      "PAYPAL_APP_UNAVAILABLE": "The PayPal POS connection has not yet been enabled by Komisio."
     },
     "approvalHint": "Matched receipts are recorded automatically. Only exceptions need investigation; no second approver is required.",
     "held": "The receipt could not be recorded. Investigate before retrying.",
@@ -2713,11 +2717,6 @@
     "connectionHint": "Verify the server-held credential and its PayPal POS merchant. This check creates no products and imports no sales.",
     "checkConnection": "Check PayPal POS connection",
     "connectionUnavailable": "The pilot connection is not bound to this store.",
-    "connectionTenantMissing": "The deployed configuration is missing the store binding (ZETTLE_PILOT_TENANT_ID).",
-    "connectionClientMissing": "The deployed configuration has a missing or malformed client ID.",
-    "connectionKeyMissing": "The API key is missing from the deployed configuration.",
-    "connectionMerchantInvalid": "The configured PayPal POS merchant ID is malformed.",
-    "connectionConfigHint": "Check the store binding and Vercel settings (Production). Redeploy after changes. No credential values are shown here.",
     "connectionVerified": "Connection verified. PayPal POS merchant:",
     "connectionFailed": "Could not verify the connection. Check configuration or retry later.",
     "merchantPinned": "The merchant matches the pinned connection.",
@@ -2749,10 +2748,6 @@
       "conflict": "Stock needs investigation - no new unit will be added"
     },
     "responseFields": "Response fields",
-    "setup": "Connect your account",
-    "setupHint": "Enter the client ID and API key from your PayPal POS account. They are verified and stored encrypted for this store.",
-    "clientId": "Client ID",
-    "apiKey": "API key",
     "connect": "Connect PayPal POS",
     "chooseItem": "Choose item",
     "selectedItem": "Selected item",
@@ -2782,6 +2777,18 @@
       "recorded": "The return is recorded in Komisio.",
       "original": "View original sale",
       "retry": "Check return again"
+    },
+    "oauth": {
+      "connect": "Connect PayPal POS",
+      "reconnect": "Reconnect",
+      "disconnect": "Disconnect",
+      "hint": "Sign in to PayPal POS and allow Komisio to connect to your store account.",
+      "connected": "PayPal POS is connected.",
+      "cancelled": "Connection cancelled.",
+      "disconnected": "PayPal POS is disconnected in Komisio.",
+      "retry": "Reconnect to continue.",
+      "refreshBusy": "The connection is updating. Try again shortly.",
+      "unavailable": "The PayPal POS connection has not yet been enabled by Komisio."
     }
   },
   "priceEvidence": {

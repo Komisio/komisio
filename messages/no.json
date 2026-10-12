@@ -2646,7 +2646,7 @@
       "ZETTLE_WINDOW_INVALID": "PayPal POS returnerte data utenfor valgt intervall. Hentingen stoppet.",
       "ZETTLE_WINDOW_COMPLETE": "Dette intervallet er allerede fullført. Last inn siden på nytt.",
       "ZETTLE_WINDOW_ABANDONED": "Eieren lukket dette intervallet. Ingen flere sider kan importeres til det. Last inn siden på nytt.",
-      "ZETTLE_AUTH_REQUIRED": "PayPal POS avviste autentiseringen. Kontroller API-nøkkelen og dens tillatelser.",
+      "ZETTLE_AUTH_REQUIRED": "Koble til igjen for å fortsette.",
       "ZETTLE_CONNECTION_FAILED": "Kunne ikke verifisere tilkoblingen. Kontroller konfigurasjonen eller prøv igjen senere.",
       "ZETTLE_INVENTORY_FAILED": "PayPal POS-lageret kunne ikke bekreftes. Kontroller den lagrede varestatusen før du gjør noe mer.",
       "ZETTLE_INVENTORY_CONFLICT": "PayPal POS-lageret kunne ikke bekreftes. Kontroller den lagrede varestatusen før du gjør noe mer.",
@@ -2672,7 +2672,11 @@
       "ZETTLE_REFUND_MISMATCH": "Returen kan ikke kobles sikkert til de opprinnelige varene.",
       "ZETTLE_RETURN_FAILED": "Returen kunne ikke registreres. Kontroller originalkvitteringen.",
       "PARTIAL_REFUND_UNSUPPORTED": "Delbeløp støttes ikke. Returbeløpet må tilsvare hele varens salgspris.",
-      "LINE_ALREADY_RETURNED": "Varen er allerede returnert i Komisio. Kontroller tidligere retur."
+      "LINE_ALREADY_RETURNED": "Varen er allerede returnert i Komisio. Kontroller tidligere retur.",
+      "PAYPAL_REFRESH_BUSY": "Tilkoblingen oppdateres. Prøv igjen om litt.",
+      "PAYPAL_RECONNECT_REQUIRED": "Koble til igjen for å fortsette.",
+      "PAYPAL_CONNECTION_CHANGED": "Koble til igjen for å fortsette.",
+      "PAYPAL_APP_UNAVAILABLE": "PayPal POS-tilkoblingen er ennå ikke aktivert av Komisio."
     },
     "approvalHint": "Kvitteringer med treff registreres automatisk. Bare unntak må undersøkes; ingen ekstra godkjenner kreves.",
     "held": "Kvitteringen kunne ikke registreres. Undersøk før du prøver igjen.",
@@ -2713,11 +2717,6 @@
     "connectionHint": "Verifiser legitimasjonen som holdes på serveren og dens PayPal POS-forhandler. Denne kontrollen oppretter ingen produkter og importerer ingen salg.",
     "checkConnection": "Kontroller PayPal POS-tilkoblingen",
     "connectionUnavailable": "Pilottilkoblingen er ikke knyttet til denne butikken.",
-    "connectionTenantMissing": "Den distribuerte konfigurasjonen mangler butikkbindingen (ZETTLE_PILOT_TENANT_ID).",
-    "connectionClientMissing": "Den distribuerte konfigurasjonen har en manglende eller feilformet klient-ID.",
-    "connectionKeyMissing": "API-nøkkelen mangler i den distribuerte konfigurasjonen.",
-    "connectionMerchantInvalid": "Den konfigurerte PayPal POS-forhandler-ID-en er feilformet.",
-    "connectionConfigHint": "Kontroller butikkbindingen og Vercel-innstillingene (Production). Distribuer på nytt etter endringer. Ingen legitimasjonsverdier vises her.",
     "connectionVerified": "Tilkobling verifisert. PayPal POS-forhandler:",
     "connectionFailed": "Kunne ikke verifisere tilkoblingen. Kontroller konfigurasjonen eller prøv igjen senere.",
     "merchantPinned": "Forhandleren samsvarer med den låste tilkoblingen.",
@@ -2749,10 +2748,6 @@
       "conflict": "Lageret må undersøkes - ingen ny enhet legges til"
     },
     "responseFields": "Svarfelt",
-    "setup": "Koble til kontoen din",
-    "setupHint": "Oppgi Client ID og API-nøkkelen fra PayPal POS-kontoen din. Opplysningene kontrolleres og lagres kryptert for denne butikken.",
-    "clientId": "Client ID",
-    "apiKey": "API-nøkkel",
     "connect": "Koble til PayPal POS",
     "chooseItem": "Velg vare",
     "selectedItem": "Valgt vare",
@@ -2782,6 +2777,18 @@
       "recorded": "Returen er registrert i Komisio.",
       "original": "Vis opprinnelig salg",
       "retry": "Kontroller returen på nytt"
+    },
+    "oauth": {
+      "connect": "Koble til PayPal POS",
+      "reconnect": "Koble til igjen",
+      "disconnect": "Koble fra",
+      "hint": "Logg inn hos PayPal POS og gi Komisio tilgang til butikkens konto.",
+      "connected": "PayPal POS er tilkoblet.",
+      "cancelled": "Tilkoblingen ble avbrutt.",
+      "disconnected": "PayPal POS er frakoblet i Komisio.",
+      "retry": "Koble til igjen for å fortsette.",
+      "refreshBusy": "Tilkoblingen oppdateres. Prøv igjen om litt.",
+      "unavailable": "PayPal POS-tilkoblingen er ennå ikke aktivert av Komisio."
     }
   },
   "priceEvidence": {

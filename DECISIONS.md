@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-12: Owner replaces unused per-store PayPal API keys with the shared partner app and PKCE OAuth. Tenant/user-bound callbacks pin the merchant; encrypted tokens renew under one durable claim. Unknown refresh outcomes require reconnection. Existing sync grants remain separate.
+
 - 2026-10-12: Owner approves seller-balance checkout using available funds only, with no credit. Split payment with another tender is allowed. Returns restore the balance-funded portion to the same seller; POS receipt linkage must be verified before activation.
 
 - 2026-10-12: PayPal image export uses the current item default photo. Stores opt into images with product sync; off leaves remote images intact. Immutable attempts bind source and prior managed image; uncertain uploads hold, and external image edits are never overwritten.

@@ -3,27 +3,41 @@ import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
 import { useRouter } from '@/components/platform/use-working-router'
 import { Button } from '@/components/ui/button'
-import type { PilotIssue } from '@/extensions/zettle/auth'
 import type { Dictionary } from '@/lib/i18n'
 export function ZettleConnection({
   tenantId,
-  issue,
+  connected,
+  reconnectRequired,
   setupAvailable,
+  result,
   d,
 }: {
   tenantId: string
-  issue: PilotIssue | null
+  connected: boolean
+  reconnectRequired: boolean
   setupAvailable: boolean
+  result?: string
   d: Dictionary['zettle']
 }) {
   const running = useRef(false)
   const router = useRouter()
-  const [clientId, setClientId] = useState('')
-  const [apiKey, setApiKey] = useState('')
-  const [busy, setBusy] = useBusyState(false),
-    [message, setMessage] = useState(''),
-    [ok, setOk] = useState(false)
-  async function check(connect = false) {
+  const [busy, setBusy] = useBusyState(false)
+  const [message, setMessage] = useState('')
+  const [ok, setOk] = useState(false)
+  const errorText = (code: string) => {
+    if (code === 'PAYPAL_REFRESH_BUSY') return d.oauth.refreshBusy
+    if (
+      [
+        'PAYPAL_STATE_INVALID',
+        'PAYPAL_CONNECTION_CHANGED',
+        'PAYPAL_RECONNECT_REQUIRED',
+      ].includes(code)
+    )
+      return d.oauth.retry
+    if (code === 'PAYPAL_APP_UNAVAILABLE') return d.oauth.unavailable
+    return (d.errors as Record<string, string>)[code] ?? d.connectionFailed
+  }
+  async function act(action: 'check' | 'disconnect') {
     if (running.current) return
     running.current = true
     setBusy(true)
@@ -33,33 +47,23 @@ export function ZettleConnection({
       const r = await fetch('/api/integrations/zettle/connection', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tenantId,
-          ...(connect ? { credentials: { clientId, apiKey } } : {}),
-        }),
+        body: JSON.stringify({ tenantId, action }),
       })
       const body = await r.json()
       if (!r.ok) {
-        setMessage(
-          (d.errors as Record<string, string>)[body.error] ??
-            d.connectionFailed,
-        )
+        setMessage(errorText(body.error))
         return
       }
-      if (
-        typeof body.organizationId !== 'string' ||
-        !/^[0-9a-f-]{36}$/.test(body.organizationId)
-      )
-        throw new Error('Invalid result')
-      setOk(true)
-      if (connect) {
-        setApiKey('')
-        setClientId('')
+      if (action === 'disconnect') {
+        if (body.disconnected !== true) throw new Error('Invalid result')
+        setMessage(d.oauth.disconnected)
         router.refresh()
+      } else {
+        if (typeof body.organizationId !== 'string')
+          throw new Error('Invalid result')
+        setMessage(`${d.connectionVerified} ${body.organizationId}`)
       }
-      setMessage(
-        `${d.connectionVerified} ${body.organizationId}. ${body.merchantPinned ? d.merchantPinned : d.merchantUnpinned}`,
-      )
+      setOk(true)
     } catch {
       setMessage(d.connectionFailed)
     } finally {
@@ -67,59 +71,61 @@ export function ZettleConnection({
       setBusy(false)
     }
   }
+  const notice =
+    result === 'connected'
+      ? d.oauth.connected
+      : result === 'cancelled'
+        ? d.oauth.cancelled
+        : result
+          ? errorText(result)
+          : ''
   return (
     <section className="card intake-form" aria-label={d.connectionTitle}>
       <h2>{d.connectionTitle}</h2>
-      <p>{d.connectionHint}</p>
-      {issue === null ? (
-        <Button type="button" onClick={() => void check()} disabled={busy}>
-          {busy ? d.busy : d.checkConnection}
-        </Button>
-      ) : !setupAvailable ? (
-        <div>
-          <p role="status">{d[issue]}</p>
-          <p>{d.connectionConfigHint}</p>
-        </div>
-      ) : null}
-      {setupAvailable && (
-        <details open={issue !== null}>
-          <summary>{d.setup}</summary>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              void check(true)
-            }}
+      <p>{d.oauth.hint}</p>
+      {notice && (
+        <p
+          role={
+            result === 'connected' || result === 'cancelled'
+              ? 'status'
+              : 'alert'
+          }
+        >
+          {notice}
+        </p>
+      )}
+      {reconnectRequired && <p role="alert">{d.oauth.retry}</p>}
+      {setupAvailable ? (
+        <form
+          method="post"
+          action={`/api/integrations/paypal/connect?tenant=${encodeURIComponent(tenantId)}`}
+          onSubmit={() => setBusy(true)}
+        >
+          <Button type="submit" disabled={busy}>
+            {busy ? d.busy : connected ? d.oauth.reconnect : d.oauth.connect}
+          </Button>
+        </form>
+      ) : (
+        <p role="status">{d.oauth.unavailable}</p>
+      )}
+      {connected && (
+        <div className="flex flex-wrap gap-2">
+          <Button
+            type="button"
+            onClick={() => void act('check')}
+            disabled={busy}
           >
-            <p>{d.setupHint}</p>
-            <label>
-              {d.clientId}
-              <input
-                value={clientId}
-                onChange={(e) => setClientId(e.target.value)}
-                required
-                maxLength={4096}
-                autoComplete="off"
-              />
-            </label>
-            <label>
-              {d.apiKey}
-              <input
-                type="password"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                required
-                maxLength={32768}
-                autoComplete="new-password"
-              />
-            </label>
-            <Button
-              type="submit"
-              disabled={busy || !clientId.trim() || !apiKey.trim()}
-            >
-              {busy ? d.busy : d.connect}
-            </Button>
-          </form>
-        </details>
+            {d.checkConnection}
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => void act('disconnect')}
+            disabled={busy}
+          >
+            {d.oauth.disconnect}
+          </Button>
+        </div>
       )}
       {message && <p role={ok ? 'status' : 'alert'}>{message}</p>}
     </section>

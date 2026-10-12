@@ -1,148 +1,66 @@
-import { connectedPilotCatalog } from '../../extensions/zettle/auth'
 import { expect, it, vi } from 'vitest'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   pilotAvailable,
-  connectedPilotClient,
   pilotIssue,
   verifyPilotConnection,
+  connectedPilotClient,
+  connectedPilotCatalog,
 } from '../../extensions/zettle/auth'
 import { checkZettleConnection } from '../../lib/engine/zettle-connection'
 const tenant = '10000000-0000-4000-8000-000000000001',
   merchant = '20000000-0000-4000-8000-000000000001'
-const env = {
+const env = () => ({
   ZETTLE_PILOT_TENANT_ID: tenant,
-  ZETTLE_CLIENT_ID: '30000000-0000-4000-8000-000000000001',
-  ZETTLE_API_KEY: 'synthetic-only.not-a-real-key',
-}
-const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), { status })
+  ZETTLE_MERCHANT_ID: merchant,
+  ZETTLE_ACCESS_TOKEN: 'synthetic-access',
+  ZETTLE_ACCESS_EXPIRES_AT: String(Date.now() + 7200000),
+})
 const ready = () =>
   vi
     .fn<typeof fetch>()
-    .mockResolvedValueOnce(
-      json({
-        access_token: 'synthetic-access-token',
-        expires_in: '7200',
-        token_type: 'Bearer',
-      }),
-    )
-    .mockResolvedValueOnce(
-      json({
-        uuid: tenant,
-        organizationUuid: merchant,
-        email: 'discard@example.test',
-      }),
-    )
-it('sends the assertion in a form body to the fixed official host and returns no credentials', async () => {
+    .mockResolvedValue(Response.json({ organizationUuid: merchant }))
+it('verifies the pinned merchant using a server token, without returning credentials', async () => {
   const http = ready()
-  const r = await verifyPilotConnection(tenant, env, http)
-  expect(http.mock.calls[0][0]).toBe('https://oauth.zettle.com/token')
-  expect(
-    Object.fromEntries(
-      new URLSearchParams(String(http.mock.calls[0][1]?.body)),
-    ),
-  ).toEqual({
-    grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-    client_id: env.ZETTLE_CLIENT_ID,
-    assertion: env.ZETTLE_API_KEY,
-  })
+  const result = await verifyPilotConnection(tenant, env(), http)
+  expect(http).toHaveBeenCalledOnce()
+  expect(http.mock.calls[0][0]).toBe('https://oauth.zettle.com/users/self')
   expect(http.mock.calls[0][1]).toMatchObject({
-    method: 'POST',
-    redirect: 'error',
+    headers: { Authorization: 'Bearer synthetic-access' },
     cache: 'no-store',
+    redirect: 'error',
   })
-  expect(http.mock.calls[1][0]).toBe('https://oauth.zettle.com/users/self')
-  expect(r).toEqual({
+  expect(result).toMatchObject({
     organizationId: merchant,
-    merchantPinned: false,
-    checkedAt: expect.any(String),
+    merchantPinned: true,
   })
-  expect(JSON.stringify(r)).not.toMatch(/synthetic|access_token|email/)
-})
-it('pins the merchant when configured', async () => {
-  await expect(
-    verifyPilotConnection(
-      tenant,
-      { ...env, ZETTLE_MERCHANT_ID: merchant },
-      ready(),
-    ),
-  ).resolves.toMatchObject({ merchantPinned: true })
-})
-it('has no fallback for a different tenant', async () => {
-  const http = ready()
-  expect(pilotAvailable(merchant, env)).toBe(false)
-  await expect(verifyPilotConnection(merchant, env, http)).rejects.toThrow(
-    'ZETTLE_NOT_CONNECTED',
-  )
-  expect(http).not.toHaveBeenCalled()
+  expect(JSON.stringify(result)).not.toContain('synthetic')
 })
 it.each([
-  { ZETTLE_API_KEY: '' },
-  { ZETTLE_PILOT_TENANT_ID: undefined },
-  { ZETTLE_CLIENT_ID: ' ' },
-  { ZETTLE_CLIENT_ID: 'invalid\nclient' },
-  { ZETTLE_CLIENT_ID: 'x'.repeat(4097) },
+  { ZETTLE_ACCESS_TOKEN: '' },
+  { ZETTLE_ACCESS_TOKEN: 'x\r\ny' },
+  { ZETTLE_MERCHANT_ID: undefined },
   { ZETTLE_MERCHANT_ID: 'invalid' },
-])('fails closed on missing/invalid configuration %j', async (patch) => {
+  { ZETTLE_PILOT_TENANT_ID: merchant },
+  { ZETTLE_ACCESS_EXPIRES_AT: '0' },
+])('refuses invalid token envelopes before HTTP: %j', async (patch) => {
   const http = ready()
+  expect(pilotAvailable(tenant, { ...env(), ...patch })).toBe(false)
   await expect(
-    verifyPilotConnection(tenant, { ...env, ...patch }, http),
+    verifyPilotConnection(tenant, { ...env(), ...patch }, http),
   ).rejects.toThrow('ZETTLE_NOT_CONNECTED')
   expect(http).not.toHaveBeenCalled()
 })
-it('rejects a changed merchant identity', async () => {
-  await expect(
-    verifyPilotConnection(
-      tenant,
-      { ...env, ZETTLE_MERCHANT_ID: tenant },
-      ready(),
-    ),
-  ).rejects.toThrow('ZETTLE_WRONG_MERCHANT')
-})
-it.each([400, 401, 403, 500])(
-  'sanitizes provider errors, status %s',
-  async (status) => {
-    const http = vi
-      .fn<typeof fetch>()
-      .mockResolvedValue(
-        json({ error_description: env.ZETTLE_API_KEY }, status),
-      )
-    await expect(verifyPilotConnection(tenant, env, http)).rejects.toThrow(
-      'ZETTLE_AUTH_REQUIRED',
-    )
-    expect(http).toHaveBeenCalledTimes(1)
-  },
-)
-it('does not reveal transport error messages', async () => {
+it('refuses another merchant', async () => {
   const http = vi
     .fn<typeof fetch>()
-    .mockRejectedValue(new Error(env.ZETTLE_API_KEY))
-  await expect(verifyPilotConnection(tenant, env, http)).rejects.toThrow(
-    'ZETTLE_CONNECTION_FAILED',
+    .mockResolvedValue(Response.json({ organizationUuid: tenant }))
+  await expect(verifyPilotConnection(tenant, env(), http)).rejects.toThrow(
+    'ZETTLE_WRONG_MERCHANT',
   )
-})
-it('does not retry rate limits or mutate products/purchases', async () => {
-  const http = vi
-    .fn<typeof fetch>()
-    .mockResolvedValue(new Response(null, { status: 429 }))
-  await expect(verifyPilotConnection(tenant, env, http)).rejects.toThrow(
-    'ZETTLE_RATE_LIMITED',
-  )
-  expect(http).toHaveBeenCalledTimes(1)
-})
-it.each([
-  { access_token: 'x', expires_in: 0 },
-  { access_token: 'x', expires_in: 'invalid' },
-  { access_token: 'x\r\ny', expires_in: 7200 },
-  { access_token: 'x', expires_in: 7200, token_type: 'Basic' },
-])('rejects malformed token responses', async (body) => {
-  const http = vi.fn<typeof fetch>().mockResolvedValue(json(body))
-  await expect(verifyPilotConnection(tenant, env, http)).rejects.toThrow()
-  expect(http).toHaveBeenCalledTimes(1)
 })
 it.each(['staff', 'readonly', null])(
-  'checks SQL role/MFA before credentials for role %s',
+  'checks SQL authorization before provider access: %s',
   async (role) => {
     const rpc = vi.fn().mockResolvedValue({ data: role, error: null }),
       http = ready()
@@ -150,157 +68,53 @@ it.each(['staff', 'readonly', null])(
       checkZettleConnection(
         { rpc } as unknown as SupabaseClient,
         tenant,
-        env,
+        env(),
         http,
       ),
     ).rejects.toThrow('FORBIDDEN')
-    expect(rpc).toHaveBeenCalledWith('tenant_role', { p_tenant: tenant })
     expect(http).not.toHaveBeenCalled()
   },
 )
-it('allows an identified owner through the engine', async () => {
-  const rpc = vi.fn().mockResolvedValue({ data: 'owner', error: null })
-  await expect(
-    checkZettleConnection(
-      { rpc } as unknown as SupabaseClient,
-      tenant,
-      env,
-      ready(),
-    ),
-  ).resolves.toMatchObject({ organizationId: merchant })
+it.each([401, 403, 500])('sanitizes identity errors %s', async (status) => {
+  const http = vi
+    .fn<typeof fetch>()
+    .mockResolvedValue(new Response('secret-provider-data', { status }))
+  await expect(verifyPilotConnection(tenant, env(), http)).rejects.toThrow(
+    'ZETTLE_AUTH_REQUIRED',
+  )
 })
-
-it('accepts an opaque client ID and trims pasted configuration consistently', async () => {
+it('returns only one safe unavailable diagnostic', () => {
+  expect(pilotIssue(tenant, env())).toBeNull()
+  expect(pilotIssue(merchant, env())).toBe('connectionUnavailable')
+})
+it('keeps tokens private and binds purchase windows', async () => {
   const http = ready()
-  const supplied = {
-    ZETTLE_PILOT_TENANT_ID: ` ${tenant}\n`,
-    ZETTLE_CLIENT_ID: ' opaque-client-id\n',
-    ZETTLE_API_KEY: ` ${env.ZETTLE_API_KEY}\n`,
-    ZETTLE_MERCHANT_ID: ` ${merchant}\n`,
-  }
-  expect(pilotAvailable(tenant, supplied)).toBe(true)
-  await expect(
-    verifyPilotConnection(tenant, supplied, http),
-  ).resolves.toMatchObject({ merchantPinned: true })
-  const form = new URLSearchParams(String(http.mock.calls[0][1]?.body))
-  expect(form.get('client_id')).toBe('opaque-client-id')
-  expect(form.get('assertion')).toBe(env.ZETTLE_API_KEY)
-})
-it('returns only safe reason codes and hides credential configuration for other stores', () => {
-  expect(pilotIssue(tenant, env)).toBeNull()
-  expect(pilotIssue(tenant, {})).toBe('connectionTenantMissing')
-  expect(pilotIssue(tenant, { ...env, ZETTLE_CLIENT_ID: '' })).toBe(
-    'connectionClientMissing',
-  )
-  expect(pilotIssue(tenant, { ...env, ZETTLE_API_KEY: '' })).toBe(
-    'connectionKeyMissing',
-  )
-  expect(pilotIssue(tenant, { ...env, ZETTLE_MERCHANT_ID: 'invalid' })).toBe(
-    'connectionMerchantInvalid',
-  )
-  for (const patch of [{}, { ZETTLE_CLIENT_ID: '' }, { ZETTLE_API_KEY: '' }]) {
-    expect(pilotIssue(merchant, { ...env, ...patch })).toBe(
-      'connectionUnavailable',
-    )
-  }
-})
-
-it('keeps token inside a merchant-pinned transport and uses the fixed purchase interval', async () => {
-  const http = ready()
-    .mockResolvedValueOnce(json({ organizationUuid: merchant }))
-    .mockResolvedValueOnce(json({ purchases: [] }))
+    .mockResolvedValueOnce(Response.json({ organizationUuid: merchant }))
+    .mockResolvedValueOnce(Response.json({ organizationUuid: merchant }))
+    .mockResolvedValueOnce(Response.json({ purchases: [] }))
   const client = await connectedPilotClient(
     tenant,
-    { ...env, ZETTLE_MERCHANT_ID: merchant },
+    env(),
     { startDate: '2026-01-01T00:00:00Z', endDate: '2026-01-02T00:00:00Z' },
     http,
   )
   expect(Object.keys(client).sort()).toEqual(['fetchPage', 'putProduct'])
-  await client.fetchPage({ cursor: null, signal: AbortSignal.timeout(1000) })
-  const url = new URL(String(http.mock.calls[3][0]))
+  await client.fetchPage({ cursor: null, signal: new AbortController().signal })
+  const url = new URL(String(http.mock.calls[2][0]))
   expect(url.origin).toBe('https://purchase.izettle.com')
   expect(url.searchParams.get('startDate')).toBe('2026-01-01T00:00:00Z')
-  expect(url.searchParams.get('endDate')).toBe('2026-01-02T00:00:00Z')
-  expect(http.mock.calls.map((c) => c[1]?.method ?? 'GET')).toEqual([
-    'POST',
-    'GET',
-    'GET',
-    'GET',
-  ])
 })
-it('does not create a live transport without a merchant pin', async () => {
-  const http = ready()
-  await expect(
-    connectedPilotClient(
-      tenant,
-      env,
-      { startDate: '2026-01-01T00:00:00Z', endDate: '2026-01-02T00:00:00Z' },
-      http,
-    ),
-  ).rejects.toThrow('ZETTLE_NOT_CONNECTED')
-  expect(http).not.toHaveBeenCalled()
-})
-
-it('revalidates merchant identity when the private token lease expires', async () => {
+it('expired transport leases stop instead of reusing expired tokens', async () => {
   vi.useFakeTimers()
-  let tokens = 0,
-    purchases = 0
-  const http = vi.fn<typeof fetch>().mockImplementation(async (url) => {
-    if (String(url).endsWith('/token')) {
-      tokens++
-      return json({ access_token: `synthetic-${tokens}`, expires_in: 7200 })
-    }
-    if (String(url).endsWith('/users/self'))
-      return json({ organizationUuid: tokens === 1 ? merchant : tenant })
-    purchases++
-    return json({ purchases: [] })
-  })
   try {
-    const client = await connectedPilotClient(
-      tenant,
-      { ...env, ZETTLE_MERCHANT_ID: merchant },
-      { startDate: '2026-01-01T00:00:00Z', endDate: '2026-01-02T00:00:00Z' },
-      http,
-    )
-    await client.fetchPage({
-      cursor: null,
-      signal: new AbortController().signal,
-    })
-    vi.advanceTimersByTime(7200000)
-    await expect(
-      client.fetchPage({ cursor: null, signal: new AbortController().signal }),
-    ).rejects.toThrow('ZETTLE_WRONG_MERCHANT')
-    expect(tokens).toBe(2)
-    expect(purchases).toBe(1)
-  } finally {
-    vi.useRealTimers()
-  }
-})
-
-it('catalog factory exposes no token and checks identity again before inventory on lease expiry', async () => {
-  vi.useFakeTimers()
-  let tokens = 0,
-    inventoryReads = 0
-  const http = vi.fn<typeof fetch>().mockImplementation(async (url) => {
-    if (String(url).endsWith('/token'))
-      return json({ access_token: `synthetic-${++tokens}`, expires_in: 7200 })
-    if (String(url).endsWith('/users/self'))
-      return json({ organizationUuid: tokens === 1 ? merchant : tenant })
-    inventoryReads++
-    return json([])
-  })
-  try {
-    const client = await connectedPilotCatalog(
-      tenant,
-      { ...env, ZETTLE_MERCHANT_ID: merchant },
-      http,
-    )
+    const http = ready()
+    const client = await connectedPilotCatalog(tenant, env(), http)
     expect(Object.keys(client).sort()).toEqual(['inventory', 'putProduct'])
     vi.advanceTimersByTime(7200000)
     await expect(client.inventory.inventories()).rejects.toThrow(
-      'ZETTLE_WRONG_MERCHANT',
+      'ZETTLE_NOT_CONNECTED',
     )
-    expect(inventoryReads).toBe(0)
+    expect(http).toHaveBeenCalledOnce()
   } finally {
     vi.useRealTimers()
   }

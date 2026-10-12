@@ -16,10 +16,10 @@ const request = '40000000-0000-4000-8000-000000000001'
 const job = '50000000-0000-4000-8000-000000000001'
 const url = 'https://image.izettle.com/product/synthetic.jpg'
 const env = {
+  ZETTLE_ACCESS_EXPIRES_AT: String(Date.now() + 7200000),
   ZETTLE_PILOT_TENANT_ID: tenant,
   ZETTLE_MERCHANT_ID: merchant,
-  ZETTLE_CLIENT_ID: 'synthetic',
-  ZETTLE_API_KEY: 'synthetic',
+  ZETTLE_ACCESS_TOKEN: 'synthetic',
 }
 const product = {
   uuid: item,
@@ -41,31 +41,19 @@ const jpeg = () =>
     .jpeg()
     .toBuffer()
 
-it('image credentials stay private and a changed merchant on refresh prevents uploading', async () => {
+it('image credentials stay private and expired leases prevent uploading', async () => {
   vi.useFakeTimers()
-  let tokens = 0
-  let uploads = 0
-  const http = vi.fn<typeof fetch>(async (input) => {
-    if (String(input).endsWith('/token'))
-      return Response.json({
-        access_token: `synthetic-${++tokens}`,
-        expires_in: 7200,
-      })
-    if (String(input).endsWith('/users/self'))
-      return Response.json({
-        organizationUuid: tokens === 1 ? merchant : tenant,
-      })
-    uploads++
-    return Response.json({ imageLookupKey: 'synthetic', imageUrls: [url] })
-  })
+  const http = vi
+    .fn<typeof fetch>()
+    .mockResolvedValue(Response.json({ organizationUuid: merchant }))
   try {
     const client = await connectedPilotImages(tenant, env, http)
     expect(Object.keys(client).sort()).toEqual(['putProduct', 'uploadImage'])
     vi.advanceTimersByTime(7200000)
     await expect(client.uploadImage(await jpeg())).rejects.toThrow(
-      'ZETTLE_WRONG_MERCHANT',
+      'ZETTLE_IMAGE_FAILED',
     )
-    expect(uploads).toBe(0)
+    expect(http).toHaveBeenCalledOnce()
   } finally {
     vi.useRealTimers()
   }

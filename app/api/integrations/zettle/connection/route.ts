@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import {
   paypalEnvironment,
-  paypalCredentials,
-  connectPayPal,
+  disconnectPayPal,
+  paypalErrorCode,
 } from '@/lib/engine/paypal-credentials'
 import { z } from 'zod'
 import { platformContext } from '@/lib/platform/context'
@@ -33,21 +33,14 @@ export async function POST(request: Request) {
     const parsed = z
       .strictObject({
         tenantId: z.uuid(),
-        credentials: paypalCredentials.optional(),
+        action: z.enum(['check', 'disconnect']).default('check'),
       })
       .safeParse(input)
     if (!parsed.success) return reply({ error: 'INVALID_INPUT' }, 400)
     if (parsed.data.tenantId !== ctx.active.id)
       return reply({ error: 'TENANT_CHANGED' }, 409)
-    if (parsed.data.credentials)
-      return reply(
-        await connectPayPal(
-          ctx.client,
-          ctx.active.id,
-          parsed.data.credentials,
-          process.env,
-        ),
-      )
+    if (parsed.data.action === 'disconnect')
+      return reply(await disconnectPayPal(ctx.client, ctx.active.id))
     return reply(
       await checkZettleConnection(
         ctx.client,
@@ -60,14 +53,7 @@ export async function POST(request: Request) {
     if (code === 'FORBIDDEN') return reply({ error: code }, 403)
     return reply(
       {
-        error: [
-          'ZETTLE_NOT_CONNECTED',
-          'ZETTLE_AUTH_REQUIRED',
-          'ZETTLE_WRONG_MERCHANT',
-          'ZETTLE_RATE_LIMITED',
-        ].includes(code)
-          ? code
-          : 'ZETTLE_CONNECTION_FAILED',
+        error: paypalErrorCode(code),
       },
       409,
     )

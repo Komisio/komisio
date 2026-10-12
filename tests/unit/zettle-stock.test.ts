@@ -11,10 +11,10 @@ const tenant = '10000000-0000-4000-8000-000000000001',
   request = '40000000-0000-4000-8000-000000000001',
   job = '50000000-0000-4000-8000-000000000001'
 const env = {
+  ZETTLE_ACCESS_EXPIRES_AT: String(Date.now() + 7200000),
   ZETTLE_PILOT_TENANT_ID: tenant,
   ZETTLE_MERCHANT_ID: merchant,
-  ZETTLE_CLIENT_ID: 'synthetic',
-  ZETTLE_API_KEY: 'synthetic',
+  ZETTLE_ACCESS_TOKEN: 'synthetic',
 }
 const payload = {
   uuid: item,

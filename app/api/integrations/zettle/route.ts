@@ -1,7 +1,7 @@
 import { ProductHttpError } from '@/extensions/zettle/http'
 import { enableAutomation, disableAutomation } from '@/lib/engine/automation'
 import { ProductReadError } from '@/extensions/zettle/catalog'
-import { exportZettleItem } from '@/lib/engine/zettle-stock'
+import { syncPayPalItem } from '@/lib/engine/paypal-sync'
 import { exportZettleImage } from '@/lib/engine/zettle-images'
 import {
   enableZettlePull,
@@ -85,9 +85,7 @@ export async function POST(request: Request) {
       if (!['owner', 'admin'].includes(ctx.active.role))
         return reply({ error: 'FORBIDDEN' }, 403)
       return reply(
-        await (
-          c.action === 'exportImage' ? exportZettleImage : exportZettleItem
-        )(
+        await (c.action === 'exportImage' ? exportZettleImage : syncPayPalItem)(
           ctx.client,
           c.tenantId,
           c.requestId,

@@ -2666,7 +2666,8 @@
       "ZETTLE_CREATE_FAILED": "PayPal POS non ha confermato la creazione del prodotto. Riconcilia usando lo stesso ID prodotto.",
       "ZETTLE_UPDATE_FAILED": "PayPal POS non ha confermato l'aggiornamento del prodotto.",
       "ZETTLE_READ_FAILED": "Impossibile leggere il prodotto o i record dell'integrazione.",
-      "ZETTLE_RETRY_LATER": "PayPal POS ha restituito un errore del server. Riprova più tardi usando lo stesso ID prodotto."
+      "ZETTLE_RETRY_LATER": "PayPal POS ha restituito un errore del server. Riprova più tardi usando lo stesso ID prodotto.",
+      "ZETTLE_IMAGES_DISABLED": "Il trasferimento delle immagini è disattivato per questo collegamento."
     },
     "approvalHint": "Gli scontrini abbinati vengono registrati automaticamente. Solo le eccezioni richiedono una verifica; non serve un secondo approvatore.",
     "held": "Impossibile registrare lo scontrino. Verifica prima di riprovare.",
@@ -3766,13 +3767,29 @@
       "held": "Controlla immagine",
       "uploaded": "Caricata",
       "pending": "In attesa",
-      "failed": "Non riuscito"
+      "failed": "Non riuscito",
+      "changed": "Modificato",
+      "not_sent": "Non inviato"
     },
     "productStates": {
       "synced": "Sincronizzato",
       "failed": "Sincronizzazione non riuscita",
       "pending": "In attesa",
       "unknown": "Sconosciuto"
+    },
+    "preferences": {
+      "title": "Trasferimento immagini",
+      "images": "Invia l’immagine predefinita dell’articolo",
+      "hint": "Si applica a questo collegamento. Disattivando l’opzione si conservano le immagini già inviate.",
+      "save": "Salva",
+      "saving": "Salvataggio…",
+      "saved": "Impostazione salvata.",
+      "failed": "Salvataggio non riuscito.",
+      "uncertain": "Nessuna risposta ricevuta. Riprova la stessa modifica.",
+      "errors": {
+        "SYNC_CONNECTION_CHANGED": "Il collegamento è cambiato. Ricarica la pagina.",
+        "SYNC_SETTINGS_CHANGED": "L’impostazione è cambiata. Ricarica la pagina."
+      }
     }
   }
 }

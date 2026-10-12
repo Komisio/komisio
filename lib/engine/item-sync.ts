@@ -22,7 +22,15 @@ export const itemSyncConnection = z.object({
     .nullable(),
   stockAt: z.string().nullable(),
   imageStatus: z
-    .enum(['synced', 'uploaded', 'held', 'failed', 'pending'])
+    .enum([
+      'synced',
+      'uploaded',
+      'held',
+      'failed',
+      'pending',
+      'changed',
+      'not_sent',
+    ])
     .nullable(),
   errorCode: z.string().nullable(),
   canExport: z.boolean(),

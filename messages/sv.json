@@ -2666,7 +2666,8 @@
       "ZETTLE_CREATE_FAILED": "PayPal POS bekräftade inte produktskapandet. Resultatet behöver kontrolleras med samma produkt-ID.",
       "ZETTLE_UPDATE_FAILED": "PayPal POS bekräftade inte produktuppdateringen.",
       "ZETTLE_READ_FAILED": "Produkten eller integrationsuppgifterna kunde inte läsas.",
-      "ZETTLE_RETRY_LATER": "PayPal POS svarade med ett serverfel. Försök senare med samma produkt-ID."
+      "ZETTLE_RETRY_LATER": "PayPal POS svarade med ett serverfel. Försök senare med samma produkt-ID.",
+      "ZETTLE_IMAGES_DISABLED": "Bildöverföring är avstängd för anslutningen."
     },
     "approvalHint": "Matchade kvitton registreras automatiskt. Endast avvikelser behöver utredas; ingen andra godkännare krävs.",
     "held": "Kvittot kunde inte bokas. Utred orsaken innan nytt försök.",
@@ -3766,13 +3767,29 @@
       "held": "Kontrollera bilden",
       "uploaded": "Uppladdad",
       "pending": "Väntar",
-      "failed": "Misslyckad"
+      "failed": "Misslyckad",
+      "changed": "Ändrad",
+      "not_sent": "Inte skickad"
     },
     "productStates": {
       "synced": "Synkad",
       "failed": "Kunde inte synkas",
       "pending": "Väntar",
       "unknown": "Okänt"
+    },
+    "preferences": {
+      "title": "Bildöverföring",
+      "images": "Skicka varans standardbild",
+      "hint": "Gäller den här anslutningen. Redan skickade bilder tas inte bort när valet stängs av.",
+      "save": "Spara",
+      "saving": "Sparar…",
+      "saved": "Inställningen är sparad.",
+      "failed": "Kunde inte spara.",
+      "uncertain": "Svaret saknas. Försök igen för att kontrollera samma ändring.",
+      "errors": {
+        "SYNC_CONNECTION_CHANGED": "Anslutningen har ändrats. Ladda om sidan.",
+        "SYNC_SETTINGS_CHANGED": "Inställningen har ändrats. Ladda om sidan."
+      }
     }
   }
 }

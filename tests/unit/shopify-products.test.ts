@@ -58,6 +58,18 @@ function setup(
   const calls: string[] = []
   const rpc = vi.fn(async (name: string, args: Record<string, unknown>) => {
     calls.push(name)
+    if (name === 'integration_sync_preferences')
+      return {
+        data: [
+          {
+            provider: 'shopify',
+            connectionId: shop,
+            revision: null,
+            images: false,
+          },
+        ],
+        error: null,
+      }
     if (name === 'tenant_role') return { data: 'owner', error: null }
     if (name === 'read_shopify_connection')
       return {

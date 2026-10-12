@@ -1,3 +1,4 @@
+import { readSyncPreferences } from './sync-preferences'
 import { publishProduct } from '../../extensions/shopify/publications'
 import { randomUUID } from 'node:crypto'
 import { z } from 'zod'
@@ -90,6 +91,9 @@ export async function exportShopifyItem(
   http?: typeof fetch,
 ) {
   const c = exportShopifyItemInput.parse(input)
+  const preferences = await readSyncPreferences(client, c.tenantId)
+  const includeImage =
+    preferences?.find((p) => p.provider === 'shopify')?.images ?? false
   const { accessToken, row } = await shopifyAccessToken(
     client,
     c.tenantId,
@@ -185,15 +189,17 @@ export async function exportShopifyItem(
       )
     }
     await finish('synced', null, result)
-    const image = await attachImage(
-      client,
-      c.tenantId,
-      c.itemId,
-      row.shopDomain,
-      accessToken,
-      payload.title,
-      http,
-    )
+    const image = includeImage
+      ? await attachImage(
+          client,
+          c.tenantId,
+          c.itemId,
+          row.shopDomain,
+          accessToken,
+          payload.title,
+          http,
+        )
+      : ('none' as const)
     return {
       exportId,
       status: 'synced' as const,
@@ -223,6 +229,9 @@ export async function exportShopifyItem(
 const imageClaim = z.object({
   id: z.uuid(),
   fresh: z.boolean(),
+  bucket: z
+    .enum(['reception-photos', 'item-photos'])
+    .default('reception-photos'),
   reference: z
     .string()
     .regex(/^[a-f0-9-]{36}\/[a-f0-9-]{36}\/[a-f0-9-]{36}\.(jpg|png)$/),
@@ -231,9 +240,8 @@ const imageClaim = z.object({
 })
 
 /**
- * The item's first reception photo as the product's image, once. No photo
- * (store-owned items, imports) means no image. A failure is recorded with its
- * code and never fails the export itself; the next export retries it.
+ * Send the current default photo once when enabled for this account.
+ * Uncertain media creation is held rather than creating duplicate images.
  */
 async function attachImage(
   client: SupabaseClient,
@@ -244,16 +252,24 @@ async function attachImage(
   title: string,
   http?: typeof fetch,
 ): Promise<'synced' | 'none' | 'failed'> {
-  const prepared = await client.rpc('prepare_shopify_image', {
-    p_tenant: tenantId,
-    p_id: randomUUID(),
-    p_item: itemId,
-  })
+  const parameters = { p_tenant: tenantId, p_id: randomUUID(), p_item: itemId }
+  const prepared = await client.rpc('prepare_shopify_sync_image', parameters)
   if (prepared.error) return 'failed'
   if (prepared.data === null) return 'none'
   const claim = imageClaim.safeParse(prepared.data)
   if (!claim.success) return 'failed'
   if (claim.data.mediaGid) return 'synced'
+  if (!claim.data.fresh) return 'failed'
+  const requireCurrent = async () => {
+    const current = await client.rpc('prepare_shopify_sync_image', parameters)
+    if (
+      current.error ||
+      current.data?.id !== claim.data.id ||
+      current.data?.reference !== claim.data.reference ||
+      (current.data?.bucket ?? 'reception-photos') !== claim.data.bucket
+    )
+      throw new Error('SHOPIFY_IMAGE_SOURCE_CHANGED')
+  }
   if (!claim.data.reference.startsWith(`${tenantId}/`)) return 'failed'
   const record = async (mediaGid: string | null, error: string | null) => {
     await client.rpc('record_shopify_image_result', {
@@ -265,7 +281,7 @@ async function attachImage(
   }
   try {
     const downloaded = await client.storage
-      .from('reception-photos')
+      .from(claim.data.bucket)
       .download(claim.data.reference)
     if (
       downloaded.error ||
@@ -281,6 +297,7 @@ async function attachImage(
     } catch {
       throw new Error('SHOPIFY_IMAGE_INVALID')
     }
+    await requireCurrent()
     const resourceUrl = await stageImageUpload(
       shop,
       accessToken,
@@ -288,6 +305,7 @@ async function attachImage(
       bytes,
       http,
     )
+    await requireCurrent()
     const mediaGid = await createProductImage(
       shop,
       accessToken,

@@ -17,6 +17,14 @@ export const catalogProduct = z.strictObject({
   variants: z.tuple([catalogVariant]),
 })
 export type CatalogProduct = z.infer<typeof catalogProduct>
+const remoteVat = z.union([
+  catalogProduct.shape.vatPercentage,
+  z
+    .string()
+    .regex(/^[0-9]{1,3}(\.[0-9]{1,4})?$/)
+    .transform(Number)
+    .pipe(catalogProduct.shape.vatPercentage),
+])
 /** Compare only our managed fields; provider read-only metadata is not copied back. */
 export function sameProduct(a: CatalogProduct, b: CatalogProduct) {
   return (
@@ -38,14 +46,7 @@ export function projectRemoteProduct(
   const parsed = z
     .object({
       ...catalogProduct.shape,
-      vatPercentage: z.union([
-        catalogProduct.shape.vatPercentage,
-        z
-          .string()
-          .regex(/^[0-9]{1,3}(\.[0-9]{1,4})?$/)
-          .transform(Number)
-          .pipe(catalogProduct.shape.vatPercentage),
-      ]),
+      vatPercentage: remoteVat,
       variants: z.array(z.object(catalogVariant.shape)).length(1),
     })
     .passthrough()
@@ -79,11 +80,21 @@ export function projectRemoteProduct(
     .filter(([k, v]) => !allowed.has(k) && !empty(v))
     .map(([k]) => k)
   const variant = (input as { variants: Record<string, unknown>[] }).variants[0]
+  // PayPal echoes inherited VAT on variants. A distinct variant rate is an
+  // external tax edit, not harmless read metadata, even during reconciliation.
+  if (!empty(variant.vatPercentage)) {
+    const vat = remoteVat.safeParse(variant.vatPercentage)
+    if (!vat.success || vat.data !== remote.vatPercentage)
+      throw new ProductReadError('ZETTLE_PRODUCT_FIELDS_UNSUPPORTED', [
+        'vatPercentage',
+      ])
+  }
   unsupported.push(
     ...Object.entries(variant)
       .filter(
         ([k, v]) =>
-          !['uuid', 'sku', 'barcode', 'price'].includes(k) && !empty(v),
+          !['uuid', 'sku', 'barcode', 'price', 'vatPercentage'].includes(k) &&
+          !empty(v),
       )
       .map(([k]) => k),
   )

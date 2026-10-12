@@ -1,5 +1,17 @@
 import { z } from 'zod'
 import { boundedJson } from '../../lib/http/bounded-json'
+// Quantities may be serialized as decimal strings. Never coerce null, blanks,
+// booleans or fractional quantities into an initial zero balance.
+const wholeBalance = z
+  .union([
+    z.number(),
+    z
+      .string()
+      .max(32)
+      .regex(/^-?(0|[1-9]\d*)(\.0+)?$/)
+      .transform(Number),
+  ])
+  .pipe(z.number().int().min(-1000000).max(1000000))
 export type InventoryIds = {
   STORE: string
   SUPPLIER: string
@@ -116,7 +128,7 @@ export function inventoryHttpClient(
             inventoryUuid: z.uuid(),
             productUuid: z.uuid(),
             variantUuid: z.uuid(),
-            balance: z.number().int().min(-1000000).max(1000000),
+            balance: wholeBalance,
           }),
         )
         .max(1)
@@ -172,6 +184,11 @@ export class InventoryReadError extends Error {
       'organizationUuid',
       'enabled',
       'balance',
+      'balance:null',
+      'balance:missing',
+      'balance:string',
+      'balance:number',
+      'balance:other',
     ])
     this.fields = [
       ...new Set(fields.map((f) => (known.has(f) ? f : 'other'))),
@@ -180,12 +197,29 @@ export class InventoryReadError extends Error {
 }
 function parseInventory<T>(schema: z.ZodType<T>, value: unknown): T {
   const parsed = schema.safeParse(value)
-  if (!parsed.success)
-    throw new InventoryReadError(
-      200,
-      parsed.error.issues.flatMap((i) =>
-        i.path.filter((p): p is string => typeof p === 'string'),
-      ),
+  if (!parsed.success) {
+    const fields = parsed.error.issues.flatMap((i) =>
+      i.path.filter((p): p is string => typeof p === 'string'),
     )
+    if (
+      fields.includes('balance') &&
+      Array.isArray(value) &&
+      value.length === 1
+    ) {
+      const balance = value[0]?.balance
+      const kind =
+        balance === null
+          ? 'null'
+          : balance === undefined
+            ? 'missing'
+            : typeof balance === 'number'
+              ? 'number'
+              : typeof balance === 'string'
+                ? 'string'
+                : 'other'
+      fields.push(`balance:${kind}`)
+    }
+    throw new InventoryReadError(200, fields)
+  }
   return parsed.data
 }

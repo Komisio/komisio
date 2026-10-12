@@ -57,7 +57,10 @@ it('replaces only the previous managed image and reconciles a lost successful re
   expect(writes[0][1]?.headers).toMatchObject({
     'If-Match': '"image-replacement"',
   })
-  expect(JSON.parse(String(writes[0][1]?.body))).toEqual(after)
+  expect(JSON.parse(String(writes[0][1]?.body))).toEqual({
+    ...after,
+    variants: [{ ...product.variants[0], vatPercentage: '0' }],
+  })
 })
 
 it.each(['https://image.izettle.com/product/external.jpg', null])(
@@ -95,7 +98,10 @@ it('associates a registered photo conditionally and reconciles an exact retry wi
   expect(
     http.mock.calls.filter(([, options]) => options?.method === 'PUT'),
   ).toHaveLength(1)
-  expect(JSON.parse(String(http.mock.calls[2][1]?.body))).toEqual(pictured)
+  expect(JSON.parse(String(http.mock.calls[2][1]?.body))).toEqual({
+    ...pictured,
+    variants: [{ ...product.variants[0], vatPercentage: '0' }],
+  })
   expect(http.mock.calls[2][1]?.headers).toMatchObject({
     'If-Match': '"image-1"',
   })
@@ -118,7 +124,10 @@ it('preserves registered imagery and presentation colors during a price update',
     json(expected),
   ])
   await client.putProduct(next, product, imageUrl)
-  expect(JSON.parse(String(http.mock.calls[2][1]?.body))).toEqual(expected)
+  expect(JSON.parse(String(http.mock.calls[2][1]?.body))).toEqual({
+    ...expected,
+    variants: [{ ...next.variants[0], vatPercentage: '0' }],
+  })
 })
 
 it.each([
@@ -496,3 +505,71 @@ it.each(['EUR', 'USD'] as const)(
     })
   },
 )
+
+it('updates the title and image when PayPal echoes inherited VAT on the variant, then verifies HTTP 200 by reading back', async () => {
+  const before = {
+    ...product,
+    vatPercentage: 25,
+    variants: [{ ...product.variants[0], vatPercentage: '25.0' }],
+  }
+  const next = { ...product, name: 'Red sweater', vatPercentage: 25 }
+  const after = { ...before, name: next.name, presentation: { imageUrl } }
+  const { client, http } = setup([
+    json({ organizationUuid: org }),
+    json(before, 200, { ETag: '"title-1"' }),
+    json(after),
+    json(after),
+    json(after),
+  ])
+  await client.putProduct(next, { ...product, vatPercentage: 25 }, imageUrl)
+  await client.putProduct(next, { ...product, vatPercentage: 25 }, imageUrl)
+  const writes = http.mock.calls.filter(
+    ([, options]) => options?.method === 'PUT',
+  )
+  expect(writes).toHaveLength(1)
+  expect(writes[0][1]?.headers).toMatchObject({ 'If-Match': '"title-1"' })
+  expect(JSON.parse(String(writes[0][1]?.body))).toEqual({
+    ...next,
+    presentation: { imageUrl },
+    variants: [{ ...product.variants[0], vatPercentage: '25' }],
+  })
+})
+it.each(['12.0', 'invalid', 12])(
+  'holds an independently edited variant VAT %s before any PUT',
+  async (vatPercentage) => {
+    const { client, http } = setup([
+      json({ organizationUuid: org }),
+      json(
+        { ...product, variants: [{ ...product.variants[0], vatPercentage }] },
+        200,
+        { ETag: '"external"' },
+      ),
+    ])
+    await expect(
+      client.putProduct({ ...product, name: 'New title' }, product),
+    ).rejects.toThrow('ZETTLE_PRODUCT_FIELDS_UNSUPPORTED')
+    expect(
+      http.mock.calls.some(([, options]) => options?.method === 'PUT'),
+    ).toBe(false)
+  },
+)
+it('updates inherited variant VAT together with a changed mapped product rate', async () => {
+  const before = {
+    ...product,
+    variants: [{ ...product.variants[0], vatPercentage: '0.0' }],
+  }
+  const next = { ...product, vatPercentage: 25 }
+  const { client, http } = setup([
+    json({ organizationUuid: org }),
+    json(before, 200, { ETag: '"vat-1"' }),
+    new Response(null, { status: 204 }),
+    json({
+      ...next,
+      variants: [{ ...product.variants[0], vatPercentage: '25.0' }],
+    }),
+  ])
+  await client.putProduct(next, product)
+  expect(
+    JSON.parse(String(http.mock.calls[2][1]?.body)).variants[0].vatPercentage,
+  ).toBe('25')
+})

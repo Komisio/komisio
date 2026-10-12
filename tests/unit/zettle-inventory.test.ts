@@ -161,7 +161,20 @@ it('treats missing stock rows as zero, not evidence of a successful movement', a
     'unknown',
   )
 })
-it.each([0.5, '1', null])('rejects unsupported balance %j', async (balance) => {
+it.each([
+  0.5,
+  '0.5',
+  null,
+  '',
+  ' ',
+  true,
+  '1e0',
+  '0x0',
+  {},
+  '1000001',
+  '-1000001',
+  'NaN',
+])('rejects unsupported balance %j', async (balance) => {
   const { client } = setup([
     json([
       {
@@ -175,6 +188,25 @@ it.each([0.5, '1', null])('rejects unsupported balance %j', async (balance) => {
   ])
   await expect(client.stock(product, variant, ids)).rejects.toThrow()
 })
+it.each(['0', '1', '-1', '1.000', '-1000000', '1000000'])(
+  'reads exact whole stock encoded as %s without changing identity checks',
+  async (balance) => {
+    const { client } = setup([
+      json([
+        {
+          organizationUuid: org,
+          inventoryUuid: ids.STORE,
+          productUuid: product,
+          variantUuid: variant,
+          balance,
+        },
+      ]),
+    ])
+    expect(await client.stock(product, variant, ids)).toEqual({
+      store: Number(balance),
+    })
+  },
+)
 it('sends exactly one unit with an intent correlation, without transport retries', async () => {
   const { client, http } = setup([new Response(null, { status: 204 })])
   await client.initialize(product, variant, ids, intent)
@@ -242,4 +274,21 @@ it('retains HTTP status without retaining a provider body', async () => {
     expect(e).toMatchObject({ httpStatus: 422, fields: [] })
     expect(JSON.stringify(e)).not.toContain('private-provider-body')
   }
+})
+
+it('reports only the balance type when a provider returns an invalid quantity', async () => {
+  const { client } = setup([
+    json([
+      {
+        organizationUuid: org,
+        inventoryUuid: ids.STORE,
+        productUuid: product,
+        variantUuid: variant,
+        balance: 'private-value',
+      },
+    ]),
+  ])
+  await expect(client.stock(product, variant, ids)).rejects.toMatchObject({
+    fields: ['balance', 'balance:string'],
+  })
 })

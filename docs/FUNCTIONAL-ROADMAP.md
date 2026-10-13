@@ -67,6 +67,12 @@ references, skip identical imports and reject conflicts. Historical stock and
 opening seller balances still require retained terms and reconciliation;
 new-intake import does not perform that historical migration.
 
+POS catalog import offers the same current-terms intake through per-product
+review for PayPal POS and Shopify, or an explicit link to an existing item.
+Source variants retain account and barcode provenance, remain managed in the
+POS, and match later sales/returns through the existing receipt integration.
+New own-stock purchases, historical balances and source image copying are excluded.
+
 The staff photo queue supports scoped seller/description search and work filters
 before pagination. Invitations remain separate from registered items; an accepted
 item links directly to its record. Unsaved review or preparation work warns before

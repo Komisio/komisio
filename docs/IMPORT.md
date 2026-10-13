@@ -67,6 +67,37 @@ An uncertain response locks the request snapshot for safe retry. The result
 shows created/skipped counts and links to the actual items and their new Komisio
 references. Source references do not replace Komisio label/barcode identities.
 
+## Products from a connected POS
+
+Owners/admins use `/intake/import/pos` for PayPal POS and Shopify. Fetch a
+bounded catalog page, search the fetched rows, and review each product variant.
+More pages are fetched explicitly. Exact Komisio references suggest matches;
+staff always choose whether to link an existing item or receive a new
+consignment. Existing store-owned items can be linked; new ones must first use
+the purchase workflow. Price and currency must agree when linking.
+
+New consignments require an existing seller and confirmation of physical custody
+of one unit. They use the same current-terms reception engine as file imports.
+Known quantities other than one are refused. PayPal catalog reads do not provide
+stock quantities; Shopify untracked stock is also shown as unknown. The review
+is actor/account-bound and source facts are checked again before committing.
+
+Immutable links retain provider, account, product, variant, SKU and barcode.
+The source catalog is never changed: no product creation, stock initialization,
+image copying or replacement of an existing barcode. Continue using existing POS
+labels; new Komisio labels do not update the source barcode. Source-managed
+products are excluded from outbound catalog updates, so price and stock changes
+remain in the POS for now. Item status and search distinguish **Linked** from
+**Synced**.
+
+Sales after the link time can match the provider identity through the existing
+receipt integration. Its connection, retrieval/automation, channel and location
+settings still apply. Historical sales are not applied to the new intake.
+Whole-line refunds reuse the original sale and ordinary return rules. Duplicate
+imports, simultaneous confirmations and lost responses cannot create another
+item for the same source variant. A different variant remains a separate product;
+matching by description is never automatic.
+
 ## Not imported
 
 Historical terms, balances, agreements, sales, photos and store-owned purchases.
@@ -89,3 +120,9 @@ import, replay, immutable references, atomic rollback, agreement and access
 guards. `inventory-import.spec.ts` tests confirmation, lost responses and renamed
 files in the browser; `inventory-import-race.mjs` proves concurrent imports of
 the same source reference create one item.
+
+POS coverage includes `0314_pos_catalog_import.test.sql`, adapter and review-token
+unit tests, `pos-import-race.mjs`, and `pos-import.spec.ts` (both providers,
+paging, 301 sellers, lost responses, existing-item linking and mobile layout).
+External provider responses are synthetic in automated tests; these do not
+establish acceptance against a live merchant catalog or a physical scanner.

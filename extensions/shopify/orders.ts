@@ -31,7 +31,10 @@ const orderNode = z.object({
           nodes: z
             .array(
               z.object({
-                lineItem: z.object({ sku: z.string().nullable() }),
+                lineItem: z.object({
+                  sku: z.string().nullable(),
+                  variant: z.object({ id: z.string() }).nullable().optional(),
+                }),
                 quantity: z.number().int(),
                 subtotalSet: money,
                 totalTaxSet: money,
@@ -48,6 +51,7 @@ const orderNode = z.object({
       .array(
         z.object({
           sku: z.string().nullable(),
+          variant: z.object({ id: z.string() }).nullable().optional(),
           title: z.string(),
           quantity: z.number().int(),
           discountedTotalSet: money,
@@ -63,9 +67,9 @@ const ORDERS = `query PaidOrders($q: String!, $first: Int!) {
   orders(first: $first, query: $q, sortKey: UPDATED_AT) {
     nodes {
       id name createdAt updatedAt displayFinancialStatus test cancelledAt sourceName retailLocation { id }
-      lineItems(first: 50) { nodes { sku title quantity discountedTotalSet { shopMoney { amount currencyCode } } } }
+      lineItems(first: 50) { nodes { sku variant { id } title quantity discountedTotalSet { shopMoney { amount currencyCode } } } }
       refunds(first: 20) { id createdAt totalRefundedSet { shopMoney { amount currencyCode } }
-        refundLineItems(first: 50) { nodes { lineItem { sku } quantity subtotalSet { shopMoney { amount currencyCode } } totalTaxSet { shopMoney { amount currencyCode } } } } }
+        refundLineItems(first: 50) { nodes { lineItem { sku variant { id } } quantity subtotalSet { shopMoney { amount currencyCode } } totalTaxSet { shopMoney { amount currencyCode } } } } }
     }
   }
 }`
@@ -125,6 +129,10 @@ export const orderEvidence = z.object({
           z.object({
             lineNo: z.number().int(),
             sku: z.string().nullable(),
+            variantGid: z
+              .string()
+              .regex(/^gid:\/\/shopify\/ProductVariant\/\d{1,30}$/)
+              .optional(),
             quantity: z.number().int(),
             amountOre: z.number().int(),
           }),
@@ -136,6 +144,10 @@ export const orderEvidence = z.object({
     z.object({
       lineNo: z.number().int(),
       sku: z.string().nullable(),
+      variantGid: z
+        .string()
+        .regex(/^gid:\/\/shopify\/ProductVariant\/\d{1,30}$/)
+        .optional(),
       description: z.string().max(120),
       quantity: z.number().int(),
       priceOre: z.number().int(),
@@ -155,6 +167,7 @@ export function orderToEvidence(order: OrderNode): OrderEvidence {
   const lines = order.lineItems.nodes.map((l, i) => ({
     lineNo: i + 1,
     sku: l.sku && l.sku.length <= 200 ? l.sku : null,
+    ...(l.variant?.id ? { variantGid: l.variant.id } : {}),
     description: l.title.slice(0, 120),
     quantity: l.quantity,
     priceOre: toOre(l.discountedTotalSet.shopMoney.amount),
@@ -188,6 +201,9 @@ export function orderToEvidence(order: OrderNode): OrderEvidence {
             ? l.lineItem.sku
             : null,
         quantity: l.quantity,
+        ...(l.lineItem.variant?.id
+          ? { variantGid: l.lineItem.variant.id }
+          : {}),
         amountOre:
           toOre(l.subtotalSet.shopMoney.amount) +
           toOre(l.totalTaxSet.shopMoney.amount),

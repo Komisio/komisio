@@ -45,6 +45,42 @@ const order = (over: Partial<OrderNode> = {}): OrderNode => ({
 })
 
 describe('order evidence', () => {
+  it('retains variant identity on sales and refunds without rewriting the source SKU', () => {
+    const original = order()
+    const variant = { id: 'gid://shopify/ProductVariant/321' }
+    const evidence = orderToEvidence({
+      ...original,
+      lineItems: {
+        nodes: [{ ...original.lineItems.nodes[0], sku: 'OLD-321', variant }],
+      },
+      refunds: [
+        {
+          id: 'gid://shopify/Refund/321',
+          createdAt: '2026-09-15T12:00:00Z',
+          totalRefundedSet: money('250.00'),
+          refundLineItems: {
+            nodes: [
+              {
+                lineItem: { sku: 'OLD-321', variant },
+                quantity: 1,
+                subtotalSet: money('200.00'),
+                totalTaxSet: money('50.00'),
+              },
+            ],
+          },
+        },
+      ],
+    })
+    expect(evidence.lines[0]).toMatchObject({
+      sku: 'OLD-321',
+      variantGid: variant.id,
+    })
+    expect(evidence.refunds?.[0].lines[0]).toMatchObject({
+      sku: 'OLD-321',
+      variantGid: variant.id,
+      amountOre: 25000,
+    })
+  })
   it('retains POS channel and location on discounted checkout evidence', () => {
     const e = orderToEvidence(
       order({

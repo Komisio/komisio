@@ -716,7 +716,7 @@
     "custodyRecorded": "Custody recorded",
     "custodyMissing": "No custody recorded",
     "custodyReference": "Garment",
-    "custodyPrint": "Print garment label",
+    "custodyPrint": "Print receiving label",
     "delegatedNotice": "The store sets the price (delegated pricing per store policy). The seller link is optional; acceptance does not need the seller's answer.",
     "queueStages": {
       "awaiting_custody": "Awaiting custody",
@@ -834,7 +834,10 @@
     },
     "linkUncertain": "The link change could not be confirmed. Reload the page and check its status before continuing.",
     "copyFailed": "Copying failed. The link is selected so you can copy it manually.",
-    "linkRevoked": "The link has been revoked."
+    "linkRevoked": "The link has been revoked.",
+    "labelBack": "Back to reception",
+    "labelHint": "Identifies a received item. Does not include a price.",
+    "labelContent": "Label content"
   },
   "operations": {
     "queueLabels": {
@@ -1983,7 +1986,7 @@
     "onboardingHint": "A slip with the seller reference and a QR code to the seller page.",
     "kinds": {
       "bag": "Drop-off label",
-      "garment": "Garment label",
+      "garment": "Receiving label",
       "item": "Item label",
       "onboarding": "Onboarding slip",
       "markdown": "Markdown label"

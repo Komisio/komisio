@@ -716,7 +716,7 @@
     "custodyRecorded": "Gewahrsam erfasst",
     "custodyMissing": "Kein Gewahrsam erfasst",
     "custodyReference": "Kleidungsstück",
-    "custodyPrint": "Etikett für Kleidungsstück drucken",
+    "custodyPrint": "Annahmeetikett drucken",
     "delegatedNotice": "Der Store legt den Preis fest (delegierte Preisgestaltung gemäß Store-Richtlinie). Der Einlieferer-Link ist optional; die Annahme benötigt keine Antwort des Einlieferers.",
     "queueStages": {
       "awaiting_custody": "Wartet auf Gewahrsam",
@@ -834,7 +834,10 @@
     },
     "linkUncertain": "Die Linkänderung konnte nicht bestätigt werden. Laden Sie die Seite neu und prüfen Sie den Status, bevor Sie fortfahren.",
     "copyFailed": "Kopieren fehlgeschlagen. Der Link ist markiert und kann manuell kopiert werden.",
-    "linkRevoked": "Der Link wurde widerrufen."
+    "linkRevoked": "Der Link wurde widerrufen.",
+    "labelBack": "Zurück zur Annahme",
+    "labelHint": "Kennzeichnet einen angenommenen Artikel. Enthält keinen Preis.",
+    "labelContent": "Etiketteninhalt"
   },
   "operations": {
     "queueLabels": {
@@ -1983,7 +1986,7 @@
     "onboardingHint": "Ein Zettel mit der Einlieferer-Referenz und einem QR-Code zur Einliefererseite.",
     "kinds": {
       "bag": "Einlieferungsetikett",
-      "garment": "Kleidungsstück-Etikett",
+      "garment": "Annahmeetikett",
       "item": "Artikeletikett",
       "onboarding": "Willkommenszettel",
       "markdown": "Preissenkungsetikett"

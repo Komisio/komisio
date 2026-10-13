@@ -716,7 +716,7 @@
     "custodyRecorded": "Custodia registrata",
     "custodyMissing": "Nessuna custodia registrata",
     "custodyReference": "Capo",
-    "custodyPrint": "Stampa etichetta del capo",
+    "custodyPrint": "Stampa etichetta di ricezione",
     "delegatedNotice": "Il negozio fissa il prezzo (prezzo delegato secondo la politica del negozio). Il link per il conferente è facoltativo; l'accettazione non richiede la risposta del conferente.",
     "queueStages": {
       "awaiting_custody": "In attesa di custodia",
@@ -834,7 +834,10 @@
     },
     "linkUncertain": "Impossibile confermare la modifica del link. Ricarica la pagina e controlla il suo stato prima di continuare.",
     "copyFailed": "Copia non riuscita. Il link è selezionato per consentirti di copiarlo manualmente.",
-    "linkRevoked": "Il link è stato revocato."
+    "linkRevoked": "Il link è stato revocato.",
+    "labelBack": "Torna alla ricezione",
+    "labelHint": "Identifica un articolo ricevuto. Non include il prezzo.",
+    "labelContent": "Contenuto dell’etichetta"
   },
   "operations": {
     "queueLabels": {
@@ -1983,7 +1986,7 @@
     "onboardingHint": "Un tagliando con il riferimento del conferente e un codice QR alla pagina del conferente.",
     "kinds": {
       "bag": "Etichetta consegna",
-      "garment": "Etichetta capo",
+      "garment": "Etichetta di ricezione",
       "item": "Etichetta articolo",
       "onboarding": "Tagliando di benvenuto",
       "markdown": "Etichetta ribasso"

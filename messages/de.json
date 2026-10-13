@@ -3865,6 +3865,8 @@
     "confirm": "Bestätigen und weiter",
     "passwordTitle": "Passwort wählen",
     "continue": "Weiter zu meinem Konto",
-    "emailNote": "Wenn du diese E-Mail nicht erwartet hast, kannst du sie ignorieren."
+    "emailNote": "Wenn du diese E-Mail nicht erwartet hast, kannst du sie ignorieren.",
+    "alreadyActive": "Dein Konto ist bereits aktiviert",
+    "keepPassword": "Dein bisheriges Passwort bleibt unverändert."
   }
 }

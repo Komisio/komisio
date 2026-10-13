@@ -3859,6 +3859,8 @@
     "confirm": "Bekräfta och fortsätt",
     "passwordTitle": "Välj lösenord",
     "continue": "Fortsätt till mina sidor",
-    "emailNote": "Om du inte väntade dig det här mejlet kan du bortse från det."
+    "emailNote": "Om du inte väntade dig det här mejlet kan du bortse från det.",
+    "alreadyActive": "Ditt konto är redan aktiverat",
+    "keepPassword": "Du behåller ditt nuvarande lösenord."
   }
 }

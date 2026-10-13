@@ -1,6 +1,6 @@
 import { LoadingMessageProvider } from '@/components/platform/loading-message'
 import { NavigationWarningProvider } from '@/components/platform/navigation-warning'
-import { requirePlatform } from '@/lib/platform/context'
+import { isSellerOnly, requirePlatform } from '@/lib/platform/context'
 import { dictionary, intlLocale } from '@/lib/i18n'
 import { Shell } from '@/components/platform/shell'
 import { Brand } from '@/components/platform/brand'
@@ -17,18 +17,22 @@ export default async function DashboardLayout({
   const ctx = await requirePlatform(false)
   if (!ctx.active) {
     const d = dictionary(ctx.locale)
+    const sellerOnly = await isSellerOnly(ctx)
     return (
       <LoadingMessageProvider message={d.loading}>
         <NavigationWarningProvider>
           <main className="onboarding" lang={intlLocale(ctx.locale)}>
-            <Brand />
+            <Brand href={sellerOnly ? '/seller' : '/'} />
             <LanguagePicker locale={ctx.locale} label={d.language} />
             {children}
             <div className="row">
-              <Link href="/onboarding" className="text-link">
-                {d.createTenant}
+              <Link
+                href={sellerOnly ? '/seller' : '/onboarding'}
+                className="text-link"
+              >
+                {sellerOnly ? d.sellerPortal.title : d.createTenant}
               </Link>
-              <SignOut d={d} />
+              <SignOut d={d} next={sellerOnly ? '/seller' : undefined} />
             </div>
           </main>
         </NavigationWarningProvider>

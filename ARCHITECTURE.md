@@ -45,6 +45,11 @@ link directly; staff see only a token-free notice and delivery status. Confirmat
 runs in the seller's browser after an explicit click, preserving staff sessions.
 Existing identity, email verification and MFA checks still govern seller access;
 activation never grants tenant membership or overwrites an existing password.
+Activation-created accounts track unfinished password setup in protected Auth
+app metadata; OTP's generated random password does not count as a user choice.
+A password change after verification clears that state. A self-only, MFA-gated
+RPC returns the setup result without exposing hashes. Repeated activation of an
+established account shows confirmation and a link to the seller workspace.
 
 Branded activation uses a signed Supabase Send Email hook. A staff-authorized
 claim issues a recipient-bound, single-use, five-minute capability; only its

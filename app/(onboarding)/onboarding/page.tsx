@@ -1,5 +1,6 @@
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import { requirePlatform } from '@/lib/platform/context'
+import { isSellerOnly, requirePlatform } from '@/lib/platform/context'
+import { redirect } from 'next/navigation'
 import { dictionary, intlLocale } from '@/lib/i18n'
 import Link from '@/components/platform/working-link'
 import { SignOut } from '@/components/platform/sign-out'
@@ -8,6 +9,7 @@ import { TenantForm, OpenTenant } from '@/components/platform/tenant-form'
 import { AdsConsentControl } from '@/components/platform/ads-consent'
 export default async function Onboarding() {
   const ctx = await requirePlatform(false)
+  if (await isSellerOnly(ctx)) redirect('/seller')
   const d = dictionary(ctx.locale)
   return (
     <main className="onboarding" lang={intlLocale(ctx.locale)}>

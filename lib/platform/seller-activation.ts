@@ -49,7 +49,11 @@ export async function sendSellerActivation(
         apikey: env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, create_user: true, data: { locale } }),
+      body: JSON.stringify({
+        email,
+        create_user: true,
+        data: { locale, komisio_activation_signup: true },
+      }),
       // No PKCE verifier belongs to the staff browser. The recipient verifies
       // the one-time email hash from their own browser in /auth/activate.
       signal: AbortSignal.timeout(8000),

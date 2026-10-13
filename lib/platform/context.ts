@@ -3,6 +3,7 @@ import { cookies } from 'next/headers'
 import { cache } from 'react'
 import { resolveLocale } from '@/lib/i18n'
 import { serverClient } from '@/lib/supabase/server'
+import { readMySellerAccounts } from '@/lib/engine/seller-portal'
 import type { Tenant } from './types'
 import type { Role } from './permissions'
 export async function platformContext() {
@@ -58,10 +59,25 @@ export async function platformContext() {
 // reader above; React invalidates this memoization for every server request.
 export const renderPlatformContext = cache(platformContext)
 
+// Routing only. Seller access remains enforced by the engine's identity checks.
+export const isSellerOnly = cache(
+  async (context: NonNullable<Awaited<ReturnType<typeof platformContext>>>) => {
+    if (
+      context.active ||
+      !context.user.email_confirmed_at ||
+      context.mfaRequired ||
+      process.env.KOMISIO_INTAKE_ENABLED !== 'true'
+    )
+      return false
+    return (await readMySellerAccounts(context.client)).length > 0
+  },
+)
+
 export async function requirePlatform(tenantRequired = true) {
   const context = await renderPlatformContext()
   if (!context) redirect('/login')
   if (context.mfaRequired) redirect('/mfa')
-  if (tenantRequired && !context.active) redirect('/onboarding')
+  if (tenantRequired && !context.active)
+    redirect((await isSellerOnly(context)) ? '/seller' : '/onboarding')
   return context
 }

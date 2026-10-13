@@ -15,6 +15,16 @@ Branded content (resolved 2026-10-13): the actual email and history must share t
 store welcome subject, seller name and localized text. Auth tokens remain absent
 from history. The signed email hook and its staged activation require hosted
 verification before the branded delivery flag is enabled.
+Repeated activation (resolved 2026-10-13): an existing password must lead to an
+already-activated confirmation and seller-page link, without password setup.
+First password setup is tracked in protected Auth app metadata because OTP
+signup assigns a random password internally. Only an actual password change
+after verification clears the pending state. Existing confirmed accounts keep
+their passwords; editable metadata cannot reset their setup state.
+Seller routing (resolved 2026-10-13): verified sellers without store membership
+return to the portal from normal login, the store entry and onboarding routes.
+Their account navigation must not offer store creation. Store members and new
+owner registrations retain the existing onboarding flow.
 
 PayPal partner onboarding (2026-10-12): the owner registered the shared public
 app and confirmed no stores use the old API-key flow. Replace that flow outright

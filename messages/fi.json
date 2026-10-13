@@ -716,7 +716,7 @@
     "custodyRecorded": "Hallussapito kirjattu",
     "custodyMissing": "Hallussapitoa ei ole kirjattu",
     "custodyReference": "Vaate",
-    "custodyPrint": "Tulosta vaatteen etiketti",
+    "custodyPrint": "Tulosta vastaanottotarra",
     "delegatedNotice": "Kauppa asettaa hinnan (delegoitu hinnoittelu kaupan käytännön mukaan). Tuojan linkki on valinnainen; hyväksyntä ei vaadi tuojan vastausta.",
     "queueStages": {
       "awaiting_custody": "Odottaa hallussapitoa",
@@ -834,7 +834,10 @@
     },
     "linkUncertain": "Linkin muutosta ei voitu vahvistaa. Lataa sivu uudelleen ja tarkista linkin tila ennen jatkamista.",
     "copyFailed": "Kopiointi epäonnistui. Linkki on valittu, jotta voit kopioida sen käsin.",
-    "linkRevoked": "Linkki on peruttu."
+    "linkRevoked": "Linkki on peruttu.",
+    "labelBack": "Takaisin vastaanottoon",
+    "labelHint": "Tunnistaa vastaanotetun tuotteen. Ei sisällä hintaa.",
+    "labelContent": "Tarran sisältö"
   },
   "operations": {
     "queueLabels": {
@@ -1983,7 +1986,7 @@
     "onboardingHint": "Lappu, jossa on tuojan viite ja QR-koodi tuojan sivulle.",
     "kinds": {
       "bag": "Tuontierän etiketti",
-      "garment": "Vaatteen etiketti",
+      "garment": "Vastaanottotarra",
       "item": "Tuote-etiketti",
       "onboarding": "Aloituslappu",
       "markdown": "Alennusetiketti"

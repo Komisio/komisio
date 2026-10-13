@@ -716,7 +716,7 @@
     "custodyRecorded": "Custodia registrada",
     "custodyMissing": "Sin custodia registrada",
     "custodyReference": "Prenda",
-    "custodyPrint": "Imprimir etiqueta de la prenda",
+    "custodyPrint": "Imprimir etiqueta de recepción",
     "delegatedNotice": "La tienda fija el precio (precio delegado según la política de la tienda). El enlace del depositante es opcional; la aceptación no necesita la respuesta del depositante.",
     "queueStages": {
       "awaiting_custody": "Pendiente de custodia",
@@ -834,7 +834,10 @@
     },
     "linkUncertain": "No se pudo confirmar el cambio del enlace. Recarga la página y comprueba su estado antes de continuar.",
     "copyFailed": "No se pudo copiar. El enlace está seleccionado para que puedas copiarlo manualmente.",
-    "linkRevoked": "El enlace se ha revocado."
+    "linkRevoked": "El enlace se ha revocado.",
+    "labelBack": "Volver a la recepción",
+    "labelHint": "Identifica un artículo recibido. No incluye precio.",
+    "labelContent": "Contenido de la etiqueta"
   },
   "operations": {
     "queueLabels": {
@@ -1983,7 +1986,7 @@
     "onboardingHint": "Una ficha con la referencia del depositante y un código QR a la página del depositante.",
     "kinds": {
       "bag": "Etiqueta de entrega",
-      "garment": "Etiqueta de prenda",
+      "garment": "Etiqueta de recepción",
       "item": "Etiqueta de artículo",
       "onboarding": "Ficha de alta",
       "markdown": "Etiqueta de rebaja"

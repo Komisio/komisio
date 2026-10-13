@@ -716,7 +716,7 @@
     "custodyRecorded": "Besittelse registrert",
     "custodyMissing": "Ingen besittelse registrert",
     "custodyReference": "Plagg",
-    "custodyPrint": "Skriv ut plaggetikett",
+    "custodyPrint": "Skriv ut mottaksetikett",
     "delegatedNotice": "Butikken setter prisen (delegert prising etter butikkpolicy). Innlevererlenken er valgfri; mottak krever ikke innlevererens svar.",
     "queueStages": {
       "awaiting_custody": "Venter på besittelse",
@@ -834,7 +834,10 @@
     },
     "linkUncertain": "Endringen av lenken kunne ikke bekreftes. Last inn siden på nytt og kontroller lenkens status før du fortsetter.",
     "copyFailed": "Kopiering mislyktes. Lenken er markert slik at du kan kopiere den manuelt.",
-    "linkRevoked": "Lenken er tilbakekalt."
+    "linkRevoked": "Lenken er tilbakekalt.",
+    "labelBack": "Tilbake til mottaket",
+    "labelHint": "Merker en mottatt vare. Inneholder ingen pris.",
+    "labelContent": "Etikettinnhold"
   },
   "operations": {
     "queueLabels": {
@@ -1983,7 +1986,7 @@
     "onboardingHint": "En lapp med innlevererreferansen og en QR-kode til innlevererens side.",
     "kinds": {
       "bag": "Innleveringsetikett",
-      "garment": "Plaggetikett",
+      "garment": "Mottaksetikett",
       "item": "Vareetikett",
       "onboarding": "Velkomstlapp",
       "markdown": "Prisnedsettelsesetikett"

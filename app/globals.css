@@ -2619,6 +2619,10 @@ button.text-link:hover:not(:disabled) {
 .bag-label-print {
   padding: 24px;
 }
+.reception-label-page .bag-label-alternative button {
+  width: 100%;
+  margin-top: 0;
+}
 .label-print-form {
   display: grid;
   gap: 8px;

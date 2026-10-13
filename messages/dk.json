@@ -716,7 +716,7 @@
     "custodyRecorded": "Besiddelse registreret",
     "custodyMissing": "Ingen besiddelse registreret",
     "custodyReference": "Beklædningsgenstand",
-    "custodyPrint": "Udskriv tøjmærkat",
+    "custodyPrint": "Udskriv modtagelsesetiket",
     "delegatedNotice": "Butikken fastsætter prisen (delegeret prissætning ifølge butikspolitikken). Indlevererlinket er valgfrit; accept kræver ikke indlevererens svar.",
     "queueStages": {
       "awaiting_custody": "Afventer besiddelse",
@@ -834,7 +834,10 @@
     },
     "linkUncertain": "Linkændringen kunne ikke bekræftes. Genindlæs siden, og kontrollér linkets status, før du fortsætter.",
     "copyFailed": "Kopiering mislykkedes. Linket er markeret, så du kan kopiere det manuelt.",
-    "linkRevoked": "Linket er tilbagekaldt."
+    "linkRevoked": "Linket er tilbagekaldt.",
+    "labelBack": "Tilbage til modtagelsen",
+    "labelHint": "Mærker en modtaget vare. Indeholder ingen pris.",
+    "labelContent": "Etiketindhold"
   },
   "operations": {
     "queueLabels": {
@@ -1983,7 +1986,7 @@
     "onboardingHint": "En seddel med indlevererreferencen og en QR-kode til indleverersiden.",
     "kinds": {
       "bag": "Indleveringsmærkat",
-      "garment": "Tøjmærkat",
+      "garment": "Modtagelsesetiket",
       "item": "Varemærkat",
       "onboarding": "Velkomstseddel",
       "markdown": "Prisnedsættelsesmærkat"

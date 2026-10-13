@@ -716,7 +716,7 @@
     "custodyRecorded": "Mottagande registrerat",
     "custodyMissing": "Inget mottagande registrerat",
     "custodyReference": "Plagg",
-    "custodyPrint": "Skriv ut plaggetikett",
+    "custodyPrint": "Skriv ut mottagningsetikett",
     "delegatedNotice": "Butiken sätter priset (delegerad prissättning enligt butikspolicyn). Säljarlänken är valfri; acceptans kräver inte säljarens svar.",
     "queueStages": {
       "awaiting_custody": "Väntar på mottagande",
@@ -834,7 +834,10 @@
     },
     "linkUncertain": "Länkändringen kunde inte bekräftas. Ladda om sidan och kontrollera länkens status innan du fortsätter.",
     "copyFailed": "Det gick inte att kopiera. Länken är markerad så att du kan kopiera den manuellt.",
-    "linkRevoked": "Länken är återkallad."
+    "linkRevoked": "Länken är återkallad.",
+    "labelBack": "Tillbaka till mottagningen",
+    "labelHint": "Märker en mottagen vara. Innehåller inget pris.",
+    "labelContent": "Etikettinnehåll"
   },
   "operations": {
     "queueLabels": {
@@ -1983,7 +1986,7 @@
     "onboardingHint": "En lapp med säljarens referens och en QR-kod till säljarsidan.",
     "kinds": {
       "bag": "Inlämningsetikett",
-      "garment": "Plaggetikett",
+      "garment": "Mottagningsetikett",
       "item": "Varuetikett",
       "onboarding": "Introduktionslapp",
       "markdown": "Prissänkningsetikett"

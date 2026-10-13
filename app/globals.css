@@ -5236,55 +5236,57 @@ button.text-link:hover:not(:disabled) {
   gap: 4px;
   position: sticky;
   top: 24px;
+  min-width: 0;
 }
 .policy-navigation a {
   display: flex;
   align-items: center;
   min-height: 44px;
   padding: 10px 12px;
-  border-radius: 8px;
-  font-size: 13px;
+  border-radius: 6px;
+  font-size: 14px;
   color: var(--ink);
   text-decoration: none;
 }
 .policy-navigation a:hover,
 .policy-navigation a:focus-visible {
   background: var(--mint);
-  text-decoration: underline;
+}
+.policy-navigation a[aria-current] {
+  background: var(--mint);
+  box-shadow: inset 3px 0 var(--green);
+  font-weight: 700;
 }
 .policy-section {
   background: var(--white);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: 12px;
   padding: 24px;
-  margin-bottom: 20px;
   scroll-margin-top: 24px;
   min-width: 0;
 }
+.policy-section[hidden] {
+  display: none;
+}
 .policy-section h3 {
   font-size: 19px;
-  margin: 0 0 22px;
+  margin: 0 0 24px;
 }
-.policy-section > details > summary {
-  min-height: 44px;
-  align-content: center;
-  cursor: pointer;
+.policy-section-content > :last-child {
+  margin-bottom: 0;
 }
-.policy-section > details > summary h3 {
-  display: inline;
-  margin: 0;
-}
-.policy-section-content {
-  padding-top: 20px;
-}
-.policy-section p {
+.policy-section p,
+.policy-section small {
   color: var(--muted);
-  font-size: 14px;
-  line-height: 1.6;
-  max-width: 75ch;
+  font-size: 13px;
+  line-height: 1.5;
+  max-width: 70ch;
 }
-.policy-section-content > p:first-of-type {
-  margin-top: 0;
+.policy-section .field small,
+.policy-option small {
+  display: block;
+  margin-top: 6px;
+  font-weight: 400;
 }
 .policy-section .field:last-child {
   margin-bottom: 0;
@@ -5305,7 +5307,7 @@ button.text-link:hover:not(:disabled) {
 .policy-section fieldset {
   border: 0;
   padding: 0;
-  margin: 0 0 20px;
+  margin: 0 0 24px;
 }
 .policy-section legend {
   font-size: 14px;
@@ -5313,15 +5315,31 @@ button.text-link:hover:not(:disabled) {
   padding: 0;
   margin-bottom: 12px;
 }
-.policy-section .intake-confirm {
+.policy-section .intake-confirm,
+.policy-publish-bar .intake-confirm {
+  display: flex;
   align-items: flex-start;
   min-height: 44px;
   font-size: 14px;
+  font-weight: 400;
   gap: 10px;
+  margin: 0;
 }
-.policy-section .intake-confirm input {
-  margin-top: 3px;
-  flex-shrink: 0;
+.policy-section input[type='checkbox'],
+.policy-publish-bar input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  min-height: 18px;
+  padding: 0;
+  margin: 2px 0 0;
+  flex: 0 0 18px;
+  accent-color: var(--green);
+}
+.policy-section .policy-option {
+  padding: 12px 0;
+}
+.policy-option + .policy-option {
+  border-top: 1px solid var(--line);
 }
 .policy-section .policy-note {
   font-size: 13px;
@@ -5329,15 +5347,27 @@ button.text-link:hover:not(:disabled) {
   padding-top: 12px;
   border-top: 1px solid var(--line);
 }
+.policy-help {
+  margin: 0 0 20px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.policy-help summary {
+  min-height: 36px;
+  align-content: center;
+  cursor: pointer;
+}
+.policy-help p {
+  margin: 8px 0 0;
+}
 .policy-markdown-row {
   display: grid;
   grid-template-columns: 1fr 1fr auto;
   gap: 12px;
   align-items: end;
-  padding: 16px;
-  background: var(--paper);
-  border-radius: 10px;
+  padding-bottom: 12px;
   margin-bottom: 12px;
+  border-bottom: 1px solid var(--line);
 }
 .policy-markdown-row label {
   margin: 0;
@@ -5345,36 +5375,52 @@ button.text-link:hover:not(:disabled) {
 .policy-markdown-row input {
   margin-top: 8px;
 }
-.policy-confirm {
-  background: var(--mint);
-  border: 1px solid var(--line);
-  padding: 20px;
-  border-radius: 12px;
+.policy-publish-bar {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0;
+  margin-top: 8px;
+  background: var(--paper);
+  border-top: 1px solid var(--line);
+  z-index: 1;
   scroll-margin-top: 24px;
 }
-.policy-editor .policy-section:target {
-  border-color: var(--green);
+.policy-publish-bar .policy-confirm {
+  align-items: center;
+  max-width: 48ch;
+  font-size: 13px;
+}
+.policy-publish-bar > .btn {
+  flex-shrink: 0;
 }
 @media (max-width: 1100px) {
   .policy-layout {
     grid-template-columns: minmax(0, 1fr);
-    gap: 20px;
+    gap: 16px;
   }
   .policy-navigation {
     position: static;
     flex-direction: row;
-    flex-wrap: wrap;
-    gap: 6px;
+    overflow-x: auto;
+    gap: 4px;
+    padding-bottom: 4px;
   }
   .policy-navigation a {
-    background: var(--white);
-    border: 1px solid var(--line);
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .policy-navigation a[aria-current] {
+    box-shadow: inset 0 -3px var(--green);
   }
 }
 @media (max-width: 640px) {
   .policy-header {
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
   }
   .policy-section {
     padding: 20px 16px;
@@ -5384,7 +5430,6 @@ button.text-link:hover:not(:disabled) {
   }
   .policy-markdown-row {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    padding: 12px;
   }
   .policy-markdown-row .btn {
     grid-column: 1 / -1;
@@ -5397,19 +5442,15 @@ button.text-link:hover:not(:disabled) {
   .policy-version {
     white-space: normal;
   }
-}
-.policy-section-content > p {
-  margin-bottom: 18px;
+  .policy-publish-bar {
+    position: static;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+  }
 }
 .policy-section-content > .field:has(input[type='number']) input {
   max-width: 240px;
-}
-.policy-section .intake-confirm {
-  font-weight: 400;
-  margin-bottom: 6px;
-}
-.policy-section input[type='checkbox'] {
-  accent-color: var(--green);
 }
 
 /* Receiving starts with the seller; registration is an explicit alternative. */

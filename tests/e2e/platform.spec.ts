@@ -2984,7 +2984,12 @@ test('store policy publishes safely and supports agreement-free staff review', a
     .getByRole('link', { name: d.storePolicy.sectionEconomy, exact: true })
     .click()
   await section.getByLabel('Butikens provision (%)').fill('55.25')
-  await section.getByLabel('Publicering av underlag', { exact: true }).uncheck()
+  await page
+    .getByRole('link', { name: d.storePolicy.editor.agreements, exact: true })
+    .click()
+  await section
+    .getByLabel(d.storePolicy.review_publication, { exact: true })
+    .uncheck()
   await section
     .getByLabel('Jag har granskat villkoren', { exact: false })
     .check()

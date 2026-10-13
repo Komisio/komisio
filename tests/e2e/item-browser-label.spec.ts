@@ -32,6 +32,9 @@ test('staff print an item label with the current price without configuring a pri
       .getByRole('link', { name: d.printing.browserOpen, exact: true })
       .click()
     const label = page.locator('.item-browser-label')
+    // Both pages expose the same shortcut. Wait for the destination before
+    // opening it, otherwise the source dialog closes when navigation commits.
+    await expect(label).toBeVisible()
     await page.getByRole('button', { name: d.printing.zebraPrint }).click()
     const dialog = page.getByRole('dialog', { name: d.printing.zebraPrint })
     await expect(dialog.getByText(d.printing.noPrinters)).toBeVisible()

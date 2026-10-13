@@ -9,6 +9,9 @@ import { readItemLabel } from '@/lib/engine/item-label'
 import { formatOre } from '@/lib/engine/items'
 import { itemBarcode } from '@/lib/labels/browser-barcode'
 import { PrintLabel } from '@/components/intake/print-label'
+import { ItemPrintDialog } from '@/components/intake/item-print-dialog'
+import { readPrinters } from '@/lib/engine/printing'
+import { readItem } from '@/lib/engine/items'
 
 export default async function ItemLabel({
   params,
@@ -20,8 +23,13 @@ export default async function ItemLabel({
   if (!id.success) notFound()
   const ctx = await requirePlatform()
   const active = ctx.active!
-  const d = dictionary(ctx.locale).printing
-  const label = await readItemLabel(ctx.client, active.id, id.data)
+  const all = dictionary(ctx.locale)
+  const d = all.printing
+  const [label, printers, item] = await Promise.all([
+    readItemLabel(ctx.client, active.id, id.data),
+    readPrinters(ctx.client, active.id),
+    readItem(ctx.client, active.id, id.data),
+  ])
   const svg = label?.priceOre != null ? itemBarcode(label.reference) : null
   const dimensions = svg?.match(/viewBox="0 0 (\d+) (\d+)"/)
   return (
@@ -34,7 +42,20 @@ export default async function ItemLabel({
           <h1>{d.itemLabel}</h1>
           <p>{d.browserHint}</p>
         </div>
-        {svg && <PrintLabel label={d.browserPrint} />}
+        <div className="item-detail-shortcuts">
+          {item && active.role !== 'readonly' && (
+            <ItemPrintDialog
+              tenantId={active.id}
+              itemId={id.data}
+              printers={printers}
+              kind={item.prices.length > 1 ? 'markdown' : 'item'}
+              manage={['owner', 'admin'].includes(active.role)}
+              d={d}
+              intake={all.intake}
+            />
+          )}
+          {svg && <PrintLabel label={d.browserOpen} />}
+        </div>
       </div>
       {label && svg && dimensions ? (
         <article className="item-browser-label" aria-label={d.itemLabel}>

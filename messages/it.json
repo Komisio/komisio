@@ -1995,6 +1995,8 @@
       "failed": "fallito",
       "cancelled": "annullato"
     },
+    "zebraPrint": "Stampa su Zebra",
+    "close": "Chiudi",
     "browserOpen": "Stampa dal browser",
     "browserBack": "Torna all’articolo",
     "browserHint": "L’etichetta è larga 80 mm e può essere stampata su carta comune. Scegli una scala del 100% e disattiva intestazioni e piè di pagina nella finestra di stampa.",

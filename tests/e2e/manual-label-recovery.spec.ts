@@ -112,9 +112,7 @@ async function openPrint(page: Page) {
   await page.goto(`/intake/items/${item}`)
   const printer = page.locator(`#printer-${item}`)
   await page
-    .locator('details')
-    .filter({ has: printer })
-    .locator('summary')
+    .getByRole('button', { name: d.printing.zebraPrint, exact: true })
     .click()
   const form = page.locator('form').filter({ has: printer })
   const copies = page.locator(`#copies-${item}`)
@@ -163,6 +161,15 @@ for (const reply of [
       await expect(form.getByRole('status')).toHaveCount(0)
       await expect(printer).toBeDisabled()
       await expect(copies).toBeDisabled()
+      await page.keyboard.press('Escape')
+      const trigger = page.getByRole('button', {
+        name: d.printing.zebraPrint,
+        exact: true,
+      })
+      await expect(trigger).toBeFocused()
+      await trigger.click()
+      await expect(printer).toBeDisabled()
+      await expect(copies).toHaveValue('2')
       await form
         .getByRole('button', { name: d.intake.retry, exact: true })
         .click()

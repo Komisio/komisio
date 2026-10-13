@@ -1995,6 +1995,8 @@
       "failed": "misslyckad",
       "cancelled": "avbruten"
     },
+    "zebraPrint": "Skriv ut på Zebra",
+    "close": "Stäng",
     "browserOpen": "Skriv ut via webbläsaren",
     "browserBack": "Tillbaka till varan",
     "browserHint": "Etiketten är 80 mm bred och kan skrivas ut på vanligt papper. Välj 100 % skala och stäng av sidhuvud och sidfot i utskriftsdialogen.",

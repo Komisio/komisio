@@ -1,5 +1,154 @@
 @import 'tailwindcss';
 
+.pos-import {
+  min-width: 0;
+}
+.pos-import-toolbar,
+.pos-import-summary,
+.pos-import-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.pos-import-toolbar .field {
+  margin: 0;
+}
+.pos-import-toolbar select {
+  width: auto;
+  min-width: 180px;
+}
+.pos-import-toolbar .pos-import-search {
+  flex: 1;
+  min-width: 220px;
+}
+.pos-import-summary {
+  padding-block: 12px;
+  border-block: 1px solid var(--line);
+}
+.pos-import-summary small {
+  margin-left: auto;
+  overflow-wrap: anywhere;
+}
+.pos-import-table {
+  position: relative;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: white;
+}
+.pos-import-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.pos-import-table th,
+.pos-import-table td {
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+.pos-import-table th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+.pos-import-table td:first-child {
+  min-width: 190px;
+  max-width: 360px;
+  overflow-wrap: anywhere;
+}
+.pos-import-table td small {
+  display: block;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.pos-import-table .pos-import-number {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.pos-import .text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.pos-import .text-link:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.pos-import-editor {
+  padding: 14px 6px;
+  max-width: 780px;
+}
+.pos-import-editor-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.pos-import-modes,
+.pos-import-choices {
+  border: 0;
+  padding: 0;
+  margin: 12px 0;
+}
+.pos-import-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.pos-import-modes label,
+.pos-import-check,
+.pos-import-choices label {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.pos-import-choices label {
+  padding: 10px 0;
+}
+.pos-import-choices label + label {
+  border-top: 1px solid var(--line);
+}
+.pos-import input[type='radio'],
+.pos-import input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  margin: 0;
+}
+.pos-import-selection {
+  margin: 16px 0;
+  max-width: 680px;
+}
+.pos-import-selection p {
+  margin: 12px 0;
+}
+.pos-import-selection .pos-import-toolbar input {
+  flex: 1;
+  min-width: 180px;
+}
+.pos-import-footer {
+  margin-top: 16px;
+}
+@media (max-width: 600px) {
+  .pos-import-toolbar > .field,
+  .pos-import-toolbar select {
+    width: 100%;
+  }
+  .pos-import-table td:has(.pos-import-editor) {
+    padding: 10px;
+  }
+  .pos-import-editor {
+    max-width: calc(100vw - 80px);
+  }
+  .pos-import-summary small {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
 .ads-consent {
   margin-block: 1rem;
   font-size: 0.875rem;

@@ -9,6 +9,7 @@ export const itemSyncStatus = z.enum([
   'attention',
   'synced',
   'inactive',
+  'linked',
 ])
 export const itemSyncConnection = z.object({
   provider: syncProvider,

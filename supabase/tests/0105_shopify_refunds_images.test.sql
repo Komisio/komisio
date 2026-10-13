@@ -44,7 +44,7 @@ select record_shopify_order_page(current_setting('test.tenant')::uuid,gen_random
 select is((select count(*) from sales where tenant_id=current_setting('test.tenant')::uuid and provider='shopify'),2::bigint,'two sales recorded');
 select throws_like($$select record_shopify_order_page(current_setting('test.tenant')::uuid,gen_random_uuid(),'2026-09-15T00:00:00Z','2026-09-15T01:00:00Z',jsonb_build_array(pg_temp.ord('1','#2001','K-'||current_setting('test.item2'),25000,'REFUNDED','[{"refundGid":"x"}]'::jsonb)))$$,'%INVALID_INPUT%','malformed refunds are refused');
 select record_shopify_order_page(current_setting('test.tenant')::uuid,gen_random_uuid(),'2026-09-15T00:00:00Z','2026-09-15T01:00:00Z',jsonb_build_array(
- pg_temp.ord('1','#2001','K-'||current_setting('test.item2'),25000,'REFUNDED',pg_temp.refund('11','K-'||current_setting('test.item2'),25000))));
+ pg_temp.ord('1','#2001','K-'||current_setting('test.item2'),25000,'REFUNDED',jsonb_set(pg_temp.refund('11','K-'||current_setting('test.item2'),25000),'{0,lines,0,variantGid}','"gid://shopify/ProductVariant/1"'))));
 select is((select count(*) from sale_returns where tenant_id=current_setting('test.tenant')::uuid),1::bigint,'the whole-line refund became a return');
 select is((select refund_ore from sale_returns where tenant_id=current_setting('test.tenant')::uuid),25000::bigint,'return carries the line price');
 select is((select count(*) from item_events where tenant_id=current_setting('test.tenant')::uuid and item_id=current_setting('test.item2')::uuid and kind='returned'),1::bigint,'item marked returned');

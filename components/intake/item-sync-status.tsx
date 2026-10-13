@@ -36,7 +36,11 @@ export function ItemSyncStatus({
             </div>
             <details>
               <summary>{t.details}</summary>
-              <p className="muted">{t.observation}</p>
+              <p className="muted">
+                {state.status === 'linked'
+                  ? d.posImport.helpLink
+                  : t.observation}
+              </p>
               <dl className="item-sync-facts">
                 <div>
                   <dt>{t.product}</dt>

@@ -639,3 +639,5 @@ version, with immutable identity, email, time and source evidence. Staff-recorde
 external acceptance remains distinct. Sellers can also read and print their own
 accepted versions after replacement; internal references stay private. This is
 not a qualified digital-signature service or storage of signed paper documents.
+
+POS catalog onboarding (2026-10-13): owner requests a dedicated per-product review for PayPal POS and Shopify. New consignments use the approved current-terms intake path. Historical stock terms and opening balances remain excluded. Owner confirms: existing own items can be linked; new own items must first use the purchase workflow. Source products remain managed in the POS; links apply to sales after linking, without backfilling historical sales or changing source stock.

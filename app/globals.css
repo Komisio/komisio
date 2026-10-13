@@ -2989,19 +2989,6 @@ button.text-link:hover:not(:disabled) {
   gap: 20px;
   align-items: start;
 }
-.import-page-heading {
-  display: flex;
-  align-items: start;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 16px 24px;
-}
-.import-page-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 24px;
-  padding-block: 12px;
-}
 .import-section-heading {
   display: flex;
   align-items: center;

@@ -29,7 +29,8 @@ first slice imports sellers; items and balances are separate decisions.
 
 ## Inventory-file preflight
 
-Owners/admins can open `/intake/import/items` from the seller-import page.
+Owners/admins can open `/intake/import/items` directly. The seller-import page
+does not link to this separate inventory preflight.
 Download the CSV template, keep its six headers (`reference`, `sellerId`,
 `email`, `description`, `price`, `currency`), replace the example and check up
 to 200 rows. This is a read-only preparation tool, not an inventory import.

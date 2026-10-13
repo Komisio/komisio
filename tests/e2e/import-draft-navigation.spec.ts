@@ -46,12 +46,8 @@ test('cancelled import navigation retains the file and mapping; clearing it rele
 }) => {
   const f = await fixture(page)
   try {
-    const back = page.locator('main .page-heading a[href="/intake/sellers"]')
+    const back = page.locator('.sidebar a[href="/intake/sellers"]')
     await cancelLeave(page, back)
-    await cancelLeave(
-      page,
-      page.getByRole('link', { name: d.inventoryImport.title, exact: true }),
-    )
     await cancelLeave(page, page.locator('.sidebar a[href="/intake/items"]'))
     await expect(page.locator('#import-name')).toHaveValue('0')
     await expect(page.locator('#import-email')).toHaveValue('1')
@@ -124,10 +120,7 @@ test('unconfirmed import keeps its leave warning and exact retry; completed impo
       exact: true,
     })
     await expect(retry).toBeVisible()
-    await cancelLeave(
-      page,
-      page.locator('main .page-heading a[href="/intake/sellers"]'),
-    )
+    await cancelLeave(page, page.locator('.sidebar a[href="/intake/sellers"]'))
     await expect(page.locator('#import-email')).toBeDisabled()
     await expect(
       page.getByRole('button', { name: d.importer.clearFile, exact: true }),

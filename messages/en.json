@@ -1668,14 +1668,14 @@
     "openExport": "Open export"
   },
   "communications": {
-    "welcomeTitle": "Welcome email",
-    "welcomeSend": "Send welcome email",
+    "welcomeTitle": "Activation email",
+    "welcomeSend": "Send activation email",
     "welcomeResend": "Send again",
     "welcomeNotSent": "Not sent",
     "welcomeSubject": "Welcome to {store}",
-    "welcomeBody": "Hello {seller},\n\nYou are registered as a seller at {store}. Follow your items and sales in Komisio.\n\nActivate your login:\n{url}\n\nCreate your account using the email address that received this message and confirm it. Already have an account? Sign in with the same address.",
+    "welcomeBody": "Hello {seller},\n\nYou are registered as a seller at {store}. An activation email is requested from Komisio. Follow the link in that email to confirm your address and choose a password.\n\nAlready have an account? Your password stays unchanged. Sign in:\n{url}",
     "title": "Messages to the seller",
-    "intro": "Every message is logged with the exact text as sent and its delivery outcome. Templates are fixed; you may add a plain-text note.",
+    "intro": "Messages and delivery status. Personal activation links are not shown here.",
     "empty": "No messages yet.",
     "sendHeading": "Send a message",
     "sendHint": "Pick what the message is about. In the pilot, delivery goes only to allowlisted addresses; other outcomes are logged.",
@@ -3851,5 +3851,13 @@
         "failed": "Last sync failed"
       }
     }
+  },
+  "sellerActivation": {
+    "title": "Activate your account",
+    "intro": "Confirm your email address to open your seller account.",
+    "confirm": "Confirm and continue",
+    "passwordTitle": "Choose a password",
+    "continue": "Continue to my account",
+    "emailNote": "If you were not expecting this email, you can ignore it."
   }
 }

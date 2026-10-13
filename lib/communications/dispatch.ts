@@ -9,6 +9,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { renderSellerMessage, type CommunicationKind } from './templates'
 import { referenceKindFor } from '../engine/communications'
 import { sendSellerEmailWithId } from '../platform/seller-email'
+import { sendSellerActivation } from '../platform/seller-activation'
 import { formatSignedOre } from '../engine/seller-ledger'
 import { readStoreCurrency } from '../engine/money'
 import { intlLocale, isLocale } from '../i18n'
@@ -18,6 +19,8 @@ import { intlLocale, isLocale } from '../i18n'
 // SQL, send through the transport, record the outcome. Staff sends and
 // automatic notifications share it; the automatic ones differ only in who
 // asked and in a request id derived from the fact, so a fact notifies once.
+// Activation is the exception to exact-body history: Auth keeps the secret link,
+// while the communication row records a token-free notice and one send attempt.
 const ore = z.union([z.number().int(), z.string()]).transform(Number)
 import type { Locale } from '../i18n'
 export type { Locale }
@@ -229,12 +232,25 @@ export async function sendSellerCommunication(
   if (existing.error) return { ok: false, error: 'REQUEST_FAILED' }
   if (existing.data.status !== 'queued')
     return { ok: true, id: c.requestId, delivery: existing.data.status }
-  const outcome = await sendSellerEmailWithId({
-    communicationId: c.requestId,
-    to: existing.data.recipient,
-    subject: existing.data.subject,
-    text: existing.data.body,
-  })
+  const activation = c.welcome && rendered.templateVersion === 'v2'
+  if (activation) {
+    const claimed = await client.rpc('claim_seller_activation', {
+      p_tenant: c.tenantId,
+      p_id: c.requestId,
+      p_recipient: existing.data.recipient,
+    })
+    if (claimed.error) return { ok: false, error: 'REQUEST_FAILED' }
+    if (claimed.data !== true)
+      return { ok: true, id: c.requestId, delivery: 'unconfirmed' }
+  }
+  const outcome = activation
+    ? await sendSellerActivation(existing.data.recipient, locale)
+    : await sendSellerEmailWithId({
+        communicationId: c.requestId,
+        to: existing.data.recipient,
+        subject: existing.data.subject,
+        text: existing.data.body,
+      })
   const recorded = await client.rpc('record_communication_delivery', {
     p_tenant: c.tenantId,
     p_id: c.requestId,

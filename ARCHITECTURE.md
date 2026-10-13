@@ -38,6 +38,14 @@ the user's session. RLS and function authorization independently enforce access.
 There is no application service-role credential. Domain and staged-operation
 routes use the engine boundary; agent proposals do not bypass staff review.
 
+Staff seller registration requests account activation through the public Auth
+passwordless API after the seller is saved. The capped communication queue grants
+one durable send attempt. Auth creates or reuses the identity and emails a secret
+link directly; staff see only a token-free notice and delivery status. Confirmation
+runs in the seller's browser after an explicit click, preserving staff sessions.
+Existing identity, email verification and MFA checks still govern seller access;
+activation never grants tenant membership or overwrites an existing password.
+
 The database contains `tenants`, `tenant_members`, `user_profiles`,
 `tenant_invitations` and `access_events`, plus Supabase-managed auth identities.
 Membership and creator references have foreign keys. Removing a membership does

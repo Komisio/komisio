@@ -53,7 +53,7 @@ export async function readSellerWelcome(
 ) {
   const { data, error } = await client
     .from('seller_communications')
-    .select('status')
+    .select('status,activation_claimed_at')
     .eq('tenant_id', z.uuid().parse(tenant))
     .eq('seller_id', z.uuid().parse(seller))
     .eq('template_key', 'seller.welcome')
@@ -61,7 +61,11 @@ export async function readSellerWelcome(
     .limit(1)
     .maybeSingle()
   if (error) throw new Error('Unable to read welcome delivery')
-  return data ? communicationStatus.parse(data.status) : null
+  return data
+    ? data.status === 'queued' && data.activation_claimed_at
+      ? 'unconfirmed'
+      : communicationStatus.parse(data.status)
+    : null
 }
 const columns =
   'id,kind,locale,recipient,subject,body,reference_kind,reference_id,status,queued_at,delivered_at'

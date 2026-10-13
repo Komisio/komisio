@@ -13,6 +13,7 @@ import { raceShopifySettings } from './shopify-settings-race.mjs'
 import { raceShopifyPrivacy } from './shopify-privacy-race.mjs'
 import { raceStoreCreation } from './store-creation-race.mjs'
 import { raceSellerProfile } from './seller-profile-race.mjs'
+import { raceSellerActivation } from './seller-activation-race.mjs'
 import { raceZettleStock } from './zettle-stock-race.mjs'
 import { raceFortnoxSend } from './fortnox-send-race.mjs'
 import { raceZettleImage } from './zettle-image-race.mjs'
@@ -74,6 +75,7 @@ try {
   await raceConsignmentFees({ setup, connectionString: parsed.toString() })
   await raceAgreementAssistance({ setup, connectionString: parsed.toString() })
   await raceSellerAgreement({ setup, connectionString: parsed.toString() })
+  await raceSellerActivation({ setup, connectionString: parsed.toString() })
   await raceBagProcessing({ setup, connectionString: parsed.toString() })
   await raceStocktake({ setup, connectionString: parsed.toString() })
   await raceDayCloseAutomation({ setup, connectionString: parsed.toString() })

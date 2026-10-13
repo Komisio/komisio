@@ -1668,14 +1668,14 @@
     "openExport": "Åbn bilag"
   },
   "communications": {
-    "welcomeTitle": "Velkomstmail",
-    "welcomeSend": "Send velkomstmail",
+    "welcomeTitle": "Aktiveringsmail",
+    "welcomeSend": "Send aktiveringsmail",
     "welcomeResend": "Send igen",
     "welcomeNotSent": "Ikke sendt",
     "welcomeSubject": "Velkommen til {store}",
-    "welcomeBody": "Hej {seller},\n\nDu er registreret som sælger hos {store}. Følg dine varer og salg i Komisio.\n\nAktivér dit login:\n{url}\n\nOpret kontoen med den e-mailadresse, som modtog denne besked, og bekræft adressen. Har du allerede en konto? Log ind med samme adresse.",
+    "welcomeBody": "Hej {seller},\n\nDu er registreret som sælger hos {store}. Der anmodes om en aktiveringsmail fra Komisio. Følg linket i mailen for at bekræfte din e-mailadresse og vælge adgangskode.\n\nHar du allerede en konto, beholder du din adgangskode. Log ind:\n{url}",
     "title": "Beskeder til indlevereren",
-    "intro": "Hver besked logges med den nøjagtige tekst, som den blev sendt, og dens leveringsresultat. Skabeloner er faste; du kan tilføje en note i ren tekst.",
+    "intro": "Beskeder og leveringsstatus. Personlige aktiveringslinks vises ikke her.",
     "empty": "Ingen beskeder endnu.",
     "sendHeading": "Send en besked",
     "sendHint": "Vælg, hvad beskeden handler om. I piloten leveres kun til adresser på tilladelseslisten; andre resultater logges.",
@@ -3851,5 +3851,13 @@
         "failed": "Seneste synkronisering mislykkedes"
       }
     }
+  },
+  "sellerActivation": {
+    "title": "Aktivér din konto",
+    "intro": "Bekræft din e-mailadresse for at åbne din sælgerkonto.",
+    "confirm": "Bekræft og fortsæt",
+    "passwordTitle": "Vælg adgangskode",
+    "continue": "Fortsæt til mine sider",
+    "emailNote": "Hvis du ikke forventede denne mail, kan du se bort fra den."
   }
 }

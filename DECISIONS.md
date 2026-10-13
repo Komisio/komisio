@@ -961,7 +961,7 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-10-08: Seller AI prose follows the active portal locale, frozen per attempt; market and currency remain store-bound. Owner permits a clearly labelled model-only price range when comparable evidence is absent. It never claims verified retail prices or changes the final selling price.
 
-- 2026-10-08: Interactive seller registration sends one welcome message through the existing communication log and caps. Staff can explicitly resend. The activation link leads to verified self-registration; no Auth account or tenant membership is created automatically.
+- 2026-10-08: Interactive seller registration sends one welcome message through the communication log and caps. Staff can explicitly resend. Superseded for account activation by the 2026-10-13 decision below.
 
 - 2026-10-08: Seller portal navigation stays in /seller and exposes the existing personal language picker. Indicative price ranges use localized whole-currency display only; stored money, store currency and existing seller/staff authorization are unchanged.
 
@@ -1033,3 +1033,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-12: Staff seller items use a compact table with seller-scoped search, status filters and sorting before 25-row paging. Sold rows retain actual sale prices; other rows retain current prices. Existing identity, tenant, seller and immutable financial rules are unchanged.
 
 - 2026-10-12: PayPal POS setup uses one workspace with sales, products and settings tabs. Compact statuses distinguish connection, receipt retrieval and product export. Existing commands, automation opt-ins, financial rules and replay safeguards stay unchanged.
+
+- 2026-10-13: Seller registration requests Auth account creation through capped activation sends. Existing passwords remain; verification/MFA gate access, with no store membership. Claimed sends never auto-retry. Staff may resend. Logs hold token-free notices, not secret Auth email links.

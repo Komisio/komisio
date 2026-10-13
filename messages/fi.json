@@ -1668,14 +1668,14 @@
     "openExport": "Avaa aineisto"
   },
   "communications": {
-    "welcomeTitle": "Tervetuloviesti",
-    "welcomeSend": "Lähetä tervetuloviesti",
+    "welcomeTitle": "Aktivointiviesti",
+    "welcomeSend": "Lähetä aktivointiviesti",
     "welcomeResend": "Lähetä uudelleen",
     "welcomeNotSent": "Ei lähetetty",
     "welcomeSubject": "Tervetuloa: {store}",
-    "welcomeBody": "Hei {seller},\n\nSinut on rekisteröity myyjäksi liikkeessä {store}. Seuraa tuotteitasi ja myyntiäsi Komisiossa.\n\nAktivoi kirjautuminen:\n{url}\n\nLuo tili tämän viestin vastaanottaneella sähköpostiosoitteella ja vahvista osoite. Onko sinulla jo tili? Kirjaudu samalla osoitteella.",
+    "welcomeBody": "Hei {seller},\n\nSinut on rekisteröity myyjäksi liikkeeseen {store}. Komisiolta pyydetään aktivointiviesti. Vahvista sähköpostiosoitteesi ja valitse salasana viestin linkistä.\n\nJos sinulla on jo tili, salasanasi säilyy. Kirjaudu sisään:\n{url}",
     "title": "Viestit tuojalle",
-    "intro": "Jokainen viesti kirjataan täsmälleen lähetetyllä tekstillä ja toimitustuloksella. Viestipohjat ovat kiinteitä; voit lisätä pelkkää tekstiä sisältävän huomautuksen.",
+    "intro": "Viestit ja toimitustila. Henkilökohtaisia aktivointilinkkejä ei näytetä täällä.",
     "empty": "Ei vielä viestejä.",
     "sendHeading": "Lähetä viesti",
     "sendHint": "Valitse, mitä viesti koskee. Pilotissa toimitus tapahtuu vain sallittuihin osoitteisiin; muut tulokset kirjataan.",
@@ -3857,5 +3857,13 @@
         "failed": "Viimeisin synkronointi epäonnistui"
       }
     }
+  },
+  "sellerActivation": {
+    "title": "Aktivoi tilisi",
+    "intro": "Vahvista sähköpostiosoitteesi avataksesi myyjätilisi.",
+    "confirm": "Vahvista ja jatka",
+    "passwordTitle": "Valitse salasana",
+    "continue": "Jatka omille sivuille",
+    "emailNote": "Jos et odottanut tätä viestiä, voit jättää sen huomiotta."
   }
 }

@@ -4,6 +4,14 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+Seller account activation (resolved 2026-10-13): the owner requests automatic
+account creation when staff register a seller with email. Public Auth passwordless
+signup reuses existing identities and requires email verification before access.
+No store membership is added. Phone-only sellers remain supported. Existing
+sellers can use the explicit activation send; no bulk account backfill is run.
+Delivery-disabled deployments retain a manual outcome and create no Auth account.
+Hosted Auth SMTP delivery and cross-browser activation need release verification.
+
 PayPal partner onboarding (2026-10-12): the owner registered the shared public
 app and confirmed no stores use the old API-key flow. Replace that flow outright
 with partner authorization-code OAuth and tenant-bound tokens. App credentials

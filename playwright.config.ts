@@ -26,6 +26,8 @@ export default defineConfig({
       // CI already builds the application; exercise that artifact without recompiling pages.
       command: process.env.CI ? 'npm run start' : 'npm run dev',
       env: {
+        SELLER_ACCOUNT_DELIVERY: 'auth',
+        SELLER_EMAIL_ALLOWLIST: '*',
         KOMISIO_ZETTLE_FIXTURES: 'true',
         KOMISIO_SELLER_SUBMISSIONS_ENABLED: 'true',
         KOMISIO_CREDENTIAL_KEY: 'ab'.repeat(32),

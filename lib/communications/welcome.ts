@@ -10,7 +10,7 @@ export function renderSellerWelcome(
   const base = new URL(appUrl)
   if (!['http:', 'https:'].includes(base.protocol))
     throw new Error('INVALID_INPUT')
-  const link = new URL('/register', base.origin)
+  const link = new URL('/login', base.origin)
   link.searchParams.set('next', '/seller')
   link.searchParams.set('locale', locale)
   const values: Record<string, string> = {
@@ -23,7 +23,9 @@ export function renderSellerWelcome(
   const d = dictionary(locale).communications
   return {
     templateKey: 'seller.welcome',
-    templateVersion: 'v1',
+    // The log is a token-free notice. Auth renders the actual activation mail;
+    // its secret link must never appear in staff-readable communication history.
+    templateVersion: 'v2',
     subject: fill(d.welcomeSubject).slice(0, 200),
     body: fill(d.welcomeBody),
   }

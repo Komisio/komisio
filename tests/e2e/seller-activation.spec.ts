@@ -202,7 +202,9 @@ test('registration creates an unconfirmed account, activation works in another b
     await sellerPage
       .getByRole('button', { name: d.sellerActivation.confirm })
       .click()
-    await expect(sellerPage.getByRole('alert')).toBeVisible()
+    await expect(
+      sellerPage.getByRole('alert').filter({ hasText: d.callbackError }),
+    ).toBeVisible()
     await sellerPage.screenshot({
       path: testInfo.outputPath('used-activation-link.png'),
     })

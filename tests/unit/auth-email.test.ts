@@ -170,10 +170,27 @@ it('handles verification codes and account-security notices without silently acc
     const request = vi.fn().mockResolvedValue(Response.json({ id: 'sent' }))
     const { raw, headers } = signed(action, 'https://app.example.test', {
       token: '12345678',
+      old_email: 'previous@example.test',
     })
     expect(await handleAuthEmail(raw, headers, env, request)).toBe(
       action === 'unknown' ? 400 : 200,
     )
     expect(request).toHaveBeenCalledTimes(action === 'unknown' ? 0 : 1)
+    if (action === 'email_changed_notification')
+      expect(JSON.parse(request.mock.calls[0][1].body).to).toEqual([
+        'previous@example.test',
+      ])
+  }
+})
+it('does not send an email-change warning to the new address when the old address is missing or invalid', async () => {
+  for (const old_email of [undefined, '', 'invalid']) {
+    const { raw, headers } = signed(
+      'email_changed_notification',
+      'https://app.example.test',
+      { old_email },
+    )
+    const request = vi.fn()
+    expect(await handleAuthEmail(raw, headers, env, request)).toBe(400)
+    expect(request).not.toHaveBeenCalled()
   }
 })

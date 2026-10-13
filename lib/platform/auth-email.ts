@@ -25,6 +25,7 @@ const eventSchema = z.object({
     token_hash_new: z.string().optional(),
     token: z.string().optional(),
     token_new: z.string().optional(),
+    old_email: z.string().optional(),
     redirect_to: z.string().default(''),
   }),
 })
@@ -275,9 +276,15 @@ export async function handleAuthEmail(
         }
         const title = notifications[e.email_action_type]
         if (!title) return 400
+        // After an email change, Auth's user.email is already the new address.
+        // Preserve the security notification to the previous account owner.
+        const recipient =
+          e.email_action_type === 'email_changed_notification'
+            ? z.email().parse(e.old_email)
+            : user.email
         mails.push(
           render(
-            user.email,
+            recipient,
             title,
             `${title}.\n\nIf you did not make this change, contact support immediately.`,
           ),

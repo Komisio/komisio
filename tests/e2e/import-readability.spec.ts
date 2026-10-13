@@ -379,15 +379,13 @@ test('a failed decision does not claim that sellers were imported', async ({
     await f.commit()
     await page.goto('/intake/import')
     await expect(page.locator('#import-file')).toBeEnabled()
-    await page
-      .locator('#import-file')
-      .setInputFiles({
-        name: 'synthetic.csv',
-        mimeType: 'text/csv',
-        buffer: Buffer.from(
-          'name,email\nSynthetic Seller,synthetic@example.test',
-        ),
-      })
+    await page.locator('#import-file').setInputFiles({
+      name: 'synthetic.csv',
+      mimeType: 'text/csv',
+      buffer: Buffer.from(
+        'name,email\nSynthetic Seller,synthetic@example.test',
+      ),
+    })
     await page.route('**/api/operations', (route) =>
       route.fulfill({
         status: 200,

@@ -1779,10 +1779,10 @@
   },
   "importer": {
     "title": "Import sellers",
-    "intro": "Bring the sellers from your previous system into this store. Choose a CSV file, check which column holds what, read the preview and stage the import; it is registered when it is approved in the operations queue.",
+    "intro": "Move your seller register from your previous system.",
     "notice": "Only names and contact details are imported here. Balances, items and history stay in the old system; agreements are recorded in Komisio when each seller next hands in.",
     "file": "CSV file",
-    "fileHint": "First row with column names; comma or semicolon separated; at most 200 sellers per import.",
+    "fileHint": "CSV file · Up to 200 sellers at a time",
     "columns": "Columns",
     "column": {
       "name": "Name",
@@ -1809,7 +1809,13 @@
     "error": "The import could not be staged. Reload and try again.",
     "ownerOnly": "Only the store owner or an admin can import sellers.",
     "fileTooLarge": "The file is too large. Split it and choose a smaller file.",
-    "clearFile": "Remove file"
+    "clearFile": "Remove file",
+    "chooseFile": "Choose file",
+    "changeFile": "Change file",
+    "noFile": "No file selected",
+    "infoLabel": "How importing works",
+    "layoutHelp": "No special template is needed. Columns can have any names and appear in any order – you choose which contain names, email addresses and phone numbers. Save the file as CSV if you use Excel.",
+    "reviewHelp": "Preview the details and adjust the column mapping before continuing. No sellers are added until you approve the import in the next step."
   },
   "lifecycle": {
     "agentHeading": "Markdown runs",

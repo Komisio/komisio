@@ -78,7 +78,7 @@ test('cancelled import navigation retains the file and mapping; clearing it rele
     await page
       .getByRole('button', { name: d.importer.clearFile, exact: true })
       .click()
-    await expect(page.locator('#import-file')).toBeFocused()
+    await expect(page.locator('#import-file-button')).toBeFocused()
     await expect(
       page.getByRole('region', { name: d.importer.preview, exact: true }),
     ).toHaveCount(0)

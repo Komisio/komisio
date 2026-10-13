@@ -1779,10 +1779,10 @@
   },
   "importer": {
     "title": "Importer innleverere",
-    "intro": "Hent innlevererne fra ditt forrige system inn i denne butikken. Velg en CSV-fil, kontroller hvilken kolonne som inneholder hva, les forhåndsvisningen og klargjør importen; den registreres når den godkjennes i operasjonskøen.",
+    "intro": "Flytt selgerregisteret fra det tidligere systemet ditt.",
     "notice": "Bare navn og kontaktopplysninger importeres her. Saldo, varer og historikk blir i det gamle systemet; avtaler registreres i Komisio når hver innleverer leverer inn neste gang.",
     "file": "CSV-fil",
-    "fileHint": "Første rad med kolonnenavn; komma- eller semikolonseparert; maks 200 innleverere per import.",
+    "fileHint": "CSV-fil · Opptil 200 selgere om gangen",
     "columns": "Kolonner",
     "column": {
       "name": "Navn",
@@ -1809,7 +1809,13 @@
     "error": "Importen kunne ikke klargjøres. Last inn på nytt og prøv igjen.",
     "ownerOnly": "Bare butikkeieren eller en administrator kan importere innleverere.",
     "fileTooLarge": "Filen er for stor. Del den opp og velg en mindre fil.",
-    "clearFile": "Fjern fil"
+    "clearFile": "Fjern fil",
+    "chooseFile": "Velg fil",
+    "changeFile": "Bytt fil",
+    "noFile": "Ingen fil valgt",
+    "infoLabel": "Slik fungerer importen",
+    "layoutHelp": "Du trenger ingen egen mal. Kolonnene kan ha valgfrie navn og stå i valgfri rekkefølge – du velger selv hvilke som inneholder navn, e-post og telefon. Lagre filen som CSV hvis du bruker Excel.",
+    "reviewHelp": "Du får forhåndsvise opplysningene og justere kolonnevalgene før du fortsetter. Ingen selgere legges til før du godkjenner importen i neste trinn."
   },
   "lifecycle": {
     "agentHeading": "Prisnedsettelseskjøringer",

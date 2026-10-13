@@ -14,19 +14,22 @@ export default async function Import() {
     d = all.importer
   return (
     <>
-      <div className="page-heading">
-        <h1>{d.title}</h1>
-        <p>{d.intro}</p>
-        <Link className="text-link" href="/intake/sellers">
-          {all.nav.sellersList}
-        </Link>
-        {['owner', 'admin'].includes(active.role) && (
-          <Link className="text-link" href="/intake/import/items">
-            {all.inventoryImport.title}
+      <div className="page-heading import-page-heading">
+        <div>
+          <h1>{d.title}</h1>
+          <p>{d.intro}</p>
+        </div>
+        <div className="import-page-links">
+          <Link className="text-link" href="/intake/sellers">
+            {all.nav.sellersList}
           </Link>
-        )}
+          {['owner', 'admin'].includes(active.role) && (
+            <Link className="text-link" href="/intake/import/items">
+              {all.inventoryImport.title}
+            </Link>
+          )}
+        </div>
       </div>
-      <p className="intake-notice">{d.notice}</p>
       {['owner', 'admin'].includes(active.role) ? (
         <ImportSellers
           key={active.id}

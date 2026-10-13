@@ -3,6 +3,138 @@ import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
+import en from '../../messages/en.json' with { type: 'json' }
+import no from '../../messages/no.json' with { type: 'json' }
+import dk from '../../messages/dk.json' with { type: 'json' }
+import fi from '../../messages/fi.json' with { type: 'json' }
+import de from '../../messages/de.json' with { type: 'json' }
+import es from '../../messages/es.json' with { type: 'json' }
+import it from '../../messages/it.json' with { type: 'json' }
+
+test('localized file controls explain flexible CSV columns and preview without importing', async ({
+  page,
+}, testInfo) => {
+  const email = `import-language-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomUUID()}`)
+  const f = await p2Fixture(email)
+  try {
+    await f.commit()
+    for (const [locale, messages] of Object.entries({
+      sv: d,
+      en,
+      no,
+      dk,
+      fi,
+      de,
+      es,
+      it,
+    })) {
+      const copy = messages.importer
+      await page.context().addCookies([
+        {
+          name: 'komisio-locale',
+          value: locale,
+          url: 'http://127.0.0.1:3000',
+        },
+      ])
+      await page.goto('/intake/import')
+      const choose = page.getByRole('button', {
+        name: copy.chooseFile,
+        exact: true,
+      })
+      await expect(choose).toBeEnabled()
+      await expect(page.locator('#import-file')).toBeHidden()
+      const info = page.getByRole('button', {
+        name: copy.infoLabel,
+        exact: true,
+      })
+      await expect(info).toHaveAttribute('aria-expanded', 'false')
+      await info.press('Enter')
+      await expect(
+        page.getByText(copy.layoutHelp, { exact: true }),
+      ).toBeVisible()
+      await expect(
+        page.getByText(copy.reviewHelp, { exact: true }),
+      ).toBeVisible()
+      for (const width of [1440, 320]) {
+        await page.setViewportSize({ width, height: 1000 })
+        expect(
+          await page.evaluate(
+            () => document.documentElement.scrollWidth <= innerWidth,
+          ),
+        ).toBe(true)
+        if (locale === 'sv')
+          await page.screenshot({
+            path: testInfo.outputPath(`import-info-${width}.png`),
+            fullPage: true,
+          })
+      }
+      await info.press('Escape')
+      await expect(info).toHaveAttribute('aria-expanded', 'false')
+      const chooser = page.waitForEvent('filechooser')
+      await choose.press('Enter')
+      await (
+        await chooser
+      ).setFiles({
+        name: 'custom-columns.csv',
+        mimeType: 'text/csv',
+        buffer: Buffer.from(
+          'contact;person;extra\nsynthetic-import@example.test;Synthetic Seller;unused',
+        ),
+      })
+      await expect(
+        page.getByRole('button', { name: copy.changeFile, exact: true }),
+      ).toBeVisible()
+      await expect(page.locator('#import-file-name')).toHaveText(
+        'custom-columns.csv',
+      )
+      await page.locator('#import-name').selectOption('1')
+      await page.locator('#import-email').selectOption('0')
+      const checkbox = await page
+        .getByLabel(copy.skipHeader, { exact: true })
+        .boundingBox()
+      expect(checkbox?.width).toBe(20)
+      expect(checkbox?.height).toBe(20)
+      await expect(
+        page.getByRole('region', { name: copy.preview, exact: true }),
+      ).toContainText('Synthetic Seller')
+      if (locale === 'sv') {
+        await page.screenshot({
+          path: testInfo.outputPath('import-preview-mobile.png'),
+          fullPage: true,
+        })
+        await page.setViewportSize({ width: 1440, height: 1000 })
+        await page.screenshot({
+          path: testInfo.outputPath('import-preview-desktop.png'),
+          fullPage: true,
+        })
+      }
+      await page
+        .getByRole('button', { name: copy.clearFile, exact: true })
+        .click()
+      await expect(choose).toBeFocused()
+      await expect(page.locator('#import-file-name')).toHaveText(copy.noFile)
+    }
+    expect(
+      (
+        await f.db.query(
+          "select count(*)::int n from pending_operations where tenant_id=$1 and kind='importSellers'",
+          [f.tenant],
+        )
+      ).rows[0].n,
+    ).toBe(0)
+    expect(
+      (
+        await f.db.query(
+          'select count(*)::int n from sellers where tenant_id=$1',
+          [f.tenant],
+        )
+      ).rows[0].n,
+    ).toBe(1)
+  } finally {
+    await f.close()
+  }
+})
 
 for (const reply of ['lost', 'wrong-id'] as const)
   test(`seller import keeps the reviewed file frozen after a ${reply} response`, async ({
@@ -153,10 +285,16 @@ test('import file selection waits for its client handler', async ({ page }) => {
     })
     await page.goto('/intake/import', { waitUntil: 'commit' })
     const file = page.locator('#import-file')
-    await expect(file).toBeVisible()
+    const picker = page.getByRole('button', {
+      name: d.importer.chooseFile,
+      exact: true,
+    })
+    await expect(picker).toBeVisible()
+    await expect(picker).toBeDisabled()
     await expect(file).toBeDisabled()
     release()
     await expect(file).toBeEnabled()
+    await expect(picker).toBeEnabled()
   } finally {
     release()
     await page.unrouteAll({ behavior: 'wait' })

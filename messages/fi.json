@@ -1779,10 +1779,10 @@
   },
   "importer": {
     "title": "Tuo tuojat",
-    "intro": "Tuo aiemman järjestelmäsi tuojat tähän kauppaan. Valitse CSV-tiedosto, tarkista mikä sarake sisältää mitäkin, lue esikatselu ja valmistele tuonti; se rekisteröidään, kun se hyväksytään operaatiojonossa.",
+    "intro": "Siirrä myyjärekisteri aiemmasta järjestelmästäsi.",
     "notice": "Täällä tuodaan vain nimet ja yhteystiedot. Saldot, tuotteet ja historia jäävät vanhaan järjestelmään; sopimukset kirjataan Komisioon, kun kukin tuoja seuraavan kerran tuo tavaraa.",
     "file": "CSV-tiedosto",
-    "fileHint": "Ensimmäinen rivi sarakkeiden nimillä; pilkulla tai puolipisteellä eroteltu; enintään 200 tuojaa per tuonti.",
+    "fileHint": "CSV-tiedosto · Enintään 200 myyjää kerrallaan",
     "columns": "Sarakkeet",
     "column": {
       "name": "Nimi",
@@ -1809,7 +1809,13 @@
     "error": "Tuontia ei voitu valmistella. Lataa sivu uudelleen ja yritä uudelleen.",
     "ownerOnly": "Vain kaupan omistaja tai ylläpitäjä voi tuoda tuojia.",
     "fileTooLarge": "Tiedosto on liian suuri. Jaa se osiin ja valitse pienempi tiedosto.",
-    "clearFile": "Poista tiedosto"
+    "clearFile": "Poista tiedosto",
+    "chooseFile": "Valitse tiedosto",
+    "changeFile": "Vaihda tiedosto",
+    "noFile": "Tiedostoa ei ole valittu",
+    "infoLabel": "Näin tuonti toimii",
+    "layoutHelp": "Erillistä mallipohjaa ei tarvita. Sarakkeiden nimet ja järjestys ovat vapaat – valitset itse, mitkä sarakkeet sisältävät nimen, sähköpostin ja puhelinnumeron. Jos käytät Exceliä, tallenna tiedosto CSV-muodossa.",
+    "reviewHelp": "Voit esikatsella tiedot ja muuttaa sarakevalintoja ennen jatkamista. Myyjiä lisätään vasta, kun hyväksyt tuonnin seuraavassa vaiheessa."
   },
   "lifecycle": {
     "agentHeading": "Alennusajot",

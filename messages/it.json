@@ -1779,10 +1779,10 @@
   },
   "importer": {
     "title": "Importa conferenti",
-    "intro": "Porta in questo negozio i conferenti dal tuo sistema precedente. Scegli un file CSV, controlla quale colonna contiene cosa, leggi l'anteprima e prepara l'importazione; viene registrata quando è approvata nella coda delle operazioni.",
+    "intro": "Trasferisci il registro venditori dal sistema precedente.",
     "notice": "Qui vengono importati solo nomi e dati di contatto. Saldi, articoli e cronologia restano nel vecchio sistema; gli accordi vengono registrati in Komisio alla prossima consegna di ciascun conferente.",
     "file": "File CSV",
-    "fileHint": "Prima riga con i nomi delle colonne; separato da virgola o punto e virgola; al massimo 200 conferenti per importazione.",
+    "fileHint": "File CSV · Fino a 200 venditori alla volta",
     "columns": "Colonne",
     "column": {
       "name": "Nome",
@@ -1809,7 +1809,13 @@
     "error": "Impossibile preparare l'importazione. Ricarica e riprova.",
     "ownerOnly": "Solo il proprietario del negozio o un amministratore può importare conferenti.",
     "fileTooLarge": "Il file è troppo grande. Dividilo e scegli un file più piccolo.",
-    "clearFile": "Rimuovi file"
+    "clearFile": "Rimuovi file",
+    "chooseFile": "Scegli file",
+    "changeFile": "Cambia file",
+    "noFile": "Nessun file selezionato",
+    "infoLabel": "Come funziona l’importazione",
+    "layoutHelp": "Non serve un modello specifico. Le colonne possono avere qualsiasi nome e ordine: scegli tu quelle che contengono nome, e-mail e telefono. Se usi Excel, salva il file in formato CSV.",
+    "reviewHelp": "Puoi controllare l’anteprima e modificare le colonne prima di continuare. Nessun venditore viene aggiunto finché non approvi l’importazione nel passaggio successivo."
   },
   "lifecycle": {
     "agentHeading": "Esecuzioni dei ribassi",

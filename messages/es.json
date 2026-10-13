@@ -1779,10 +1779,10 @@
   },
   "importer": {
     "title": "Importar depositantes",
-    "intro": "Trae a esta tienda los depositantes de tu sistema anterior. Elige un archivo CSV, comprueba qué columna contiene qué, lee la vista previa y prepara la importación; se registra cuando se aprueba en la cola de operaciones.",
+    "intro": "Transfiere el registro de vendedores de tu sistema anterior.",
     "notice": "Aquí solo se importan nombres y datos de contacto. Los saldos, artículos e historial se quedan en el sistema antiguo; los acuerdos se registran en Komisio la próxima vez que cada depositante entregue.",
     "file": "Archivo CSV",
-    "fileHint": "Primera fila con los nombres de columna; separado por comas o puntos y coma; como máximo 200 depositantes por importación.",
+    "fileHint": "Archivo CSV · Hasta 200 vendedores a la vez",
     "columns": "Columnas",
     "column": {
       "name": "Nombre",
@@ -1809,7 +1809,13 @@
     "error": "No se pudo preparar la importación. Recarga e inténtalo de nuevo.",
     "ownerOnly": "Solo el propietario de la tienda o un administrador puede importar depositantes.",
     "fileTooLarge": "El archivo es demasiado grande. Divídelo y selecciona un archivo más pequeño.",
-    "clearFile": "Quitar archivo"
+    "clearFile": "Quitar archivo",
+    "chooseFile": "Seleccionar archivo",
+    "changeFile": "Cambiar archivo",
+    "noFile": "Ningún archivo seleccionado",
+    "infoLabel": "Cómo funciona la importación",
+    "layoutHelp": "No necesitas una plantilla específica. Las columnas pueden tener cualquier nombre y orden: tú eliges cuáles contienen el nombre, el correo electrónico y el teléfono. Si usas Excel, guarda el archivo como CSV.",
+    "reviewHelp": "Puedes revisar la vista previa y ajustar las columnas antes de continuar. No se añade ningún vendedor hasta que apruebes la importación en el siguiente paso."
   },
   "lifecycle": {
     "agentHeading": "Ejecuciones de rebajas",

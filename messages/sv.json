@@ -1779,10 +1779,10 @@
   },
   "importer": {
     "title": "Importera säljare",
-    "intro": "Flytta säljarregistret från ditt tidigare system. Välj en fil och kontrollera uppgifterna innan du godkänner importen.",
+    "intro": "Flytta säljarregistret från ditt tidigare system.",
     "notice": "Importen tar med namn, e-post och telefon. Saldon, varor, avtal och historik följer inte med.",
     "file": "1. Välj fil",
-    "fileHint": "CSV-fil från ditt tidigare system eller Excel. Högst 200 säljare åt gången.",
+    "fileHint": "CSV-fil · Högst 200 säljare åt gången",
     "columns": "2. Kontrollera kolumnerna",
     "column": {
       "name": "Namn",
@@ -1809,7 +1809,13 @@
     "error": "Importen kunde inte förberedas. Försök igen.",
     "ownerOnly": "Endast butikens ägare eller administratör kan importera säljare.",
     "fileTooLarge": "Filen är för stor. Dela upp den och välj en mindre fil.",
-    "clearFile": "Ta bort fil"
+    "clearFile": "Ta bort fil",
+    "chooseFile": "Välj fil",
+    "changeFile": "Byt fil",
+    "noFile": "Ingen fil vald",
+    "infoLabel": "Så fungerar importen",
+    "layoutHelp": "Ingen särskild mall behövs. Kolumnerna kan ha valfria namn och ligga i valfri ordning – du väljer själv vilka som innehåller namn, e-post och telefon. Spara filen som CSV om du använder Excel.",
+    "reviewHelp": "Du får förhandsgranska uppgifterna och justera kolumnvalen innan du fortsätter. Inga säljare läggs till förrän du godkänner importen i nästa steg."
   },
   "lifecycle": {
     "agentHeading": "Prissänkningskörningar",

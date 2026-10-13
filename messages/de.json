@@ -1779,10 +1779,10 @@
   },
   "importer": {
     "title": "Einlieferer importieren",
-    "intro": "Übernehmen Sie die Einlieferer aus Ihrem bisherigen System in diesen Store. Wählen Sie eine CSV-Datei, prüfen Sie, welche Spalte was enthält, lesen Sie die Vorschau und stellen Sie den Import bereit; er wird registriert, wenn er in der Vorgangswarteschlange genehmigt wird.",
+    "intro": "Übertragen Sie Ihre Verkäuferdaten aus Ihrem bisherigen System.",
     "notice": "Hier werden nur Namen und Kontaktdaten importiert. Guthaben, Artikel und Verlauf bleiben im alten System; Vereinbarungen werden in Komisio erfasst, wenn jeder Einlieferer das nächste Mal einliefert.",
     "file": "CSV-Datei",
-    "fileHint": "Erste Zeile mit Spaltennamen; durch Komma oder Semikolon getrennt; höchstens 200 Einlieferer pro Import.",
+    "fileHint": "CSV-Datei · Bis zu 200 Verkäufer auf einmal",
     "columns": "Spalten",
     "column": {
       "name": "Name",
@@ -1809,7 +1809,13 @@
     "error": "Der Import konnte nicht bereitgestellt werden. Laden Sie neu und versuchen Sie es erneut.",
     "ownerOnly": "Nur der Store-Inhaber oder ein Administrator kann Einlieferer importieren.",
     "fileTooLarge": "Die Datei ist zu groß. Teilen Sie sie auf und wählen Sie eine kleinere Datei.",
-    "clearFile": "Datei entfernen"
+    "clearFile": "Datei entfernen",
+    "chooseFile": "Datei auswählen",
+    "changeFile": "Datei wechseln",
+    "noFile": "Keine Datei ausgewählt",
+    "infoLabel": "So funktioniert der Import",
+    "layoutHelp": "Sie benötigen keine feste Vorlage. Spalten können beliebige Namen haben und in beliebiger Reihenfolge stehen – Sie wählen selbst die Spalten für Name, E-Mail und Telefon. Speichern Sie Excel-Dateien als CSV.",
+    "reviewHelp": "Prüfen Sie die Vorschau und passen Sie die Spaltenzuordnung an, bevor Sie fortfahren. Verkäufer werden erst hinzugefügt, wenn Sie den Import im nächsten Schritt bestätigen."
   },
   "lifecycle": {
     "agentHeading": "Preissenkungsläufe",

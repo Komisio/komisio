@@ -5,6 +5,7 @@ import {
   useUnsavedChanges,
 } from '@/components/platform/navigation-warning'
 import { useRef, useState, useSyncExternalStore } from 'react'
+import { FileUp, Info } from 'lucide-react'
 import type { Dictionary } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
 import {
@@ -32,6 +33,7 @@ export function ImportSellers({
 }) {
   const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const [rows, setRows] = useState<string[][]>([])
+  const [showInfo, setShowInfo] = useState(false)
   const [source, setSource] = useState('')
   const [mapping, setMapping] = useState<ColumnMapping>({
     name: null,
@@ -53,6 +55,7 @@ export function ImportSellers({
   const running = useRef(false)
   const fileRead = useRef(0)
   const fileInput = useRef<HTMLInputElement>(null)
+  const fileButton = useRef<HTMLButtonElement>(null)
   useUnsavedChanges(
     (rows.length > 0 && !staged) || locked ? leaveUnsaved : null,
   )
@@ -102,7 +105,7 @@ export function ImportSellers({
     setMessage('')
     setMapping(guessMapping([]))
     setSkipHeader(true)
-    fileInput.current?.focus()
+    fileButton.current?.focus()
   }
   async function stage() {
     if (running.current || needsReload || staged || !accepted.length) return
@@ -181,18 +184,65 @@ export function ImportSellers({
   )
   return (
     <div className="import-workspace">
-      <section className="card intake-form" aria-label={d.file}>
-        <div className="field">
-          <label htmlFor="import-file">{d.file}</label>
+      <section className="card import-upload" aria-label={d.file}>
+        <div className="import-section-heading">
+          <h2>{d.file}</h2>
+          <button
+            type="button"
+            className="import-info-button"
+            aria-label={d.infoLabel}
+            aria-expanded={showInfo}
+            aria-controls="import-file-info"
+            onClick={() => setShowInfo(!showInfo)}
+            onKeyDown={(event) => {
+              if (event.key === 'Escape') setShowInfo(false)
+            }}
+          >
+            <Info size={20} aria-hidden="true" />
+          </button>
+        </div>
+        <div
+          id="import-file-info"
+          hidden={!showInfo}
+          className="import-file-info"
+        >
+          <p>{d.layoutHelp}</p>
+          <p>{d.reviewHelp}</p>
+          <p>{d.notice}</p>
+        </div>
+        <p id="import-file-hint" className="muted">
+          {d.fileHint}
+        </p>
+        <div className="import-file-picker">
+          <FileUp size={28} aria-hidden="true" className="import-file-icon" />
           <input
             ref={fileInput}
             id="import-file"
             type="file"
+            hidden
+            aria-label={d.file}
             accept=".csv,text/csv,text/plain"
             onChange={onFile}
             disabled={!ready || busy || locked}
           />
-          <small>{d.fileHint}</small>
+          <button
+            ref={fileButton}
+            id="import-file-button"
+            type="button"
+            className={source ? 'btn btn-secondary' : 'btn btn-primary'}
+            disabled={!ready || busy || locked}
+            aria-describedby="import-file-hint import-file-name"
+            onClick={() => fileInput.current?.click()}
+          >
+            {source ? d.changeFile : d.chooseFile}
+          </button>
+          <span
+            id="import-file-name"
+            className="import-file-name"
+            aria-live="polite"
+          >
+            {source || d.noFile}
+          </span>
           {source && !staged && (
             <Button
               type="button"
@@ -204,22 +254,24 @@ export function ImportSellers({
             </Button>
           )}
         </div>
-        {rows.length > 0 && (
-          <>
-            <h3>{d.columns}</h3>
-            {(['name', 'email', 'phone'] as const).map(select)}
-            <label className="row">
-              <input
-                type="checkbox"
-                disabled={busy || locked || !!staged}
-                checked={skipHeader}
-                onChange={(e) => setSkipHeader(e.target.checked)}
-              />{' '}
-              {d.skipHeader}
-            </label>
-          </>
-        )}
       </section>
+      {rows.length > 0 && (
+        <section className="card intake-form" aria-label={d.columns}>
+          <h2>{d.columns}</h2>
+          <div className="import-column-mapping">
+            {(['name', 'email', 'phone'] as const).map(select)}
+          </div>
+          <label className="import-header-checkbox">
+            <input
+              type="checkbox"
+              disabled={busy || locked || !!staged}
+              checked={skipHeader}
+              onChange={(e) => setSkipHeader(e.target.checked)}
+            />{' '}
+            {d.skipHeader}
+          </label>
+        </section>
+      )}
       {rows.length > 0 && (
         <section className="card intake-form" aria-label={d.preview}>
           <h2>{d.preview}</h2>

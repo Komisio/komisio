@@ -1781,9 +1781,9 @@
     "title": "Importer innleverere",
     "intro": "Flytt selgerregisteret fra det tidligere systemet ditt.",
     "notice": "Bare navn og kontaktopplysninger importeres her. Saldo, varer og historikk blir i det gamle systemet; avtaler registreres i Komisio når hver innleverer leverer inn neste gang.",
-    "file": "CSV-fil",
+    "file": "Velg fil",
     "fileHint": "CSV-fil · Opptil 200 selgere om gangen",
-    "columns": "Kolonner",
+    "columns": "Endre kolonner",
     "column": {
       "name": "Navn",
       "email": "E-post",
@@ -1791,8 +1791,7 @@
     },
     "ignore": "Ikke i filen",
     "skipHeader": "Første rad er en overskrift",
-    "preview": "Forhåndsvisning",
-    "previewHint": "Viser de første ti radene som vil bli importert.",
+    "preview": "Kontroller opplysningene",
     "accepted": "rader importeres",
     "rejected": "rader utelates",
     "reasons": {
@@ -1801,9 +1800,6 @@
       "email": "e-posten er ikke gyldig"
     },
     "line": "linje",
-    "stage": "Klargjør importen",
-    "staged": "Importen er klargjort. Godkjenn den i operasjonskøen for å registrere innlevererne.",
-    "openQueue": "Åpne operasjonskøen",
     "tooMany": "Filen har mer enn 200 brukbare rader. Del den opp og importer i deler.",
     "nothing": "Ingen brukbare rader. Kontroller kolonnetilordningen.",
     "error": "Importen kunne ikke klargjøres. Last inn på nytt og prøv igjen.",
@@ -1815,7 +1811,10 @@
     "noFile": "Ingen fil valgt",
     "infoLabel": "Slik fungerer importen",
     "layoutHelp": "Du trenger ingen egen mal. Kolonnene kan ha valgfrie navn og stå i valgfri rekkefølge – du velger selv hvilke som inneholder navn, e-post og telefon. Lagre filen som CSV hvis du bruker Excel.",
-    "reviewHelp": "Du får forhåndsvise opplysningene og justere kolonnevalgene før du fortsetter. Ingen selgere legges til før du godkjenner importen i neste trinn."
+    "reviewHelp": "Kontroller navn og kontaktopplysninger i forhåndsvisningen. Klikk deretter på Importer for å legge til selgerne. Eksisterende e-postadresser hoppes over.",
+    "import": "Importer",
+    "completed": "Importen er fullført.",
+    "viewSellers": "Vis selgere"
   },
   "lifecycle": {
     "agentHeading": "Prisnedsettelseskjøringer",

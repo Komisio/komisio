@@ -1781,9 +1781,9 @@
     "title": "Import sellers",
     "intro": "Move your seller register from your previous system.",
     "notice": "Only names and contact details are imported here. Balances, items and history stay in the old system; agreements are recorded in Komisio when each seller next hands in.",
-    "file": "CSV file",
+    "file": "Choose file",
     "fileHint": "CSV file · Up to 200 sellers at a time",
-    "columns": "Columns",
+    "columns": "Change columns",
     "column": {
       "name": "Name",
       "email": "E-mail",
@@ -1791,8 +1791,7 @@
     },
     "ignore": "Not in the file",
     "skipHeader": "The first row is a header",
-    "preview": "Preview",
-    "previewHint": "Showing the first ten rows that will be imported.",
+    "preview": "Check the details",
     "accepted": "rows will be imported",
     "rejected": "rows are left out",
     "reasons": {
@@ -1801,9 +1800,6 @@
       "email": "e-mail is not valid"
     },
     "line": "line",
-    "stage": "Stage the import",
-    "staged": "The import is staged. Approve it in the operations queue to register the sellers.",
-    "openQueue": "Open the operations queue",
     "tooMany": "The file has more than 200 usable rows. Split it and import in parts.",
     "nothing": "No usable rows. Check the column mapping.",
     "error": "The import could not be staged. Reload and try again.",
@@ -1815,7 +1811,10 @@
     "noFile": "No file selected",
     "infoLabel": "How importing works",
     "layoutHelp": "No special template is needed. Columns can have any names and appear in any order – you choose which contain names, email addresses and phone numbers. Save the file as CSV if you use Excel.",
-    "reviewHelp": "Preview the details and adjust the column mapping before continuing. No sellers are added until you approve the import in the next step."
+    "reviewHelp": "Check names and contact details in the preview. Then click Import to add the sellers. Existing email addresses are skipped.",
+    "import": "Import",
+    "completed": "Import complete.",
+    "viewSellers": "View sellers"
   },
   "lifecycle": {
     "agentHeading": "Markdown runs",

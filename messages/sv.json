@@ -1781,9 +1781,9 @@
     "title": "Importera säljare",
     "intro": "Flytta säljarregistret från ditt tidigare system.",
     "notice": "Importen tar med namn, e-post och telefon. Saldon, varor, avtal och historik följer inte med.",
-    "file": "1. Välj fil",
+    "file": "Välj fil",
     "fileHint": "CSV-fil · Högst 200 säljare åt gången",
-    "columns": "2. Kontrollera kolumnerna",
+    "columns": "Ändra kolumner",
     "column": {
       "name": "Namn",
       "email": "E-post",
@@ -1791,8 +1791,7 @@
     },
     "ignore": "Finns inte i filen",
     "skipHeader": "Första raden innehåller kolumnnamn",
-    "preview": "3. Granska säljarna",
-    "previewHint": "Här visas de första 10 säljarna.",
+    "preview": "Kontrollera uppgifterna",
     "accepted": "säljare kan importeras",
     "rejected": "rader kan inte importeras",
     "reasons": {
@@ -1801,9 +1800,6 @@
       "email": "e-posten är inte giltig"
     },
     "line": "rad",
-    "stage": "Fortsätt till godkännande",
-    "staged": "Importen är redo att godkännas. Inga säljare har lagts till ännu.",
-    "openQueue": "Granska och godkänn",
     "tooMany": "Importera högst 200 säljare åt gången. Dela upp filen och försök igen.",
     "nothing": "Inga säljare kan importeras. Kontrollera att rätt kolumner är valda och att namn samt e-post eller telefon finns med.",
     "error": "Importen kunde inte förberedas. Försök igen.",
@@ -1815,7 +1811,10 @@
     "noFile": "Ingen fil vald",
     "infoLabel": "Så fungerar importen",
     "layoutHelp": "Ingen särskild mall behövs. Kolumnerna kan ha valfria namn och ligga i valfri ordning – du väljer själv vilka som innehåller namn, e-post och telefon. Spara filen som CSV om du använder Excel.",
-    "reviewHelp": "Du får förhandsgranska uppgifterna och justera kolumnvalen innan du fortsätter. Inga säljare läggs till förrän du godkänner importen i nästa steg."
+    "reviewHelp": "Kontrollera namn och kontaktuppgifter i förhandsgranskningen. Klicka sedan på Importera för att lägga till säljarna. Befintliga e-postadresser hoppas över.",
+    "import": "Importera",
+    "completed": "Importen är klar.",
+    "viewSellers": "Visa säljare"
   },
   "lifecycle": {
     "agentHeading": "Prissänkningskörningar",

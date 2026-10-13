@@ -103,7 +103,7 @@ test('cancelled import navigation retains the file and mapping; clearing it rele
   }
 })
 
-test('unconfirmed import staging keeps its leave warning and exact retry; confirmed staging releases it', async ({
+test('unconfirmed import keeps its leave warning and exact retry; completed import releases it', async ({
   page,
 }) => {
   const f = await fixture(page)
@@ -117,7 +117,7 @@ test('unconfirmed import staging keeps its leave warning and exact retry; confir
       else await route.fulfill({ response })
     })
     await page
-      .getByRole('button', { name: d.importer.stage, exact: true })
+      .getByRole('button', { name: d.importer.import, exact: true })
       .click()
     const retry = page.getByRole('button', {
       name: d.intake.retry,
@@ -134,7 +134,7 @@ test('unconfirmed import staging keeps its leave warning and exact retry; confir
     ).toBeDisabled()
     await retry.click()
     const queued = page.getByRole('link', {
-      name: d.importer.openQueue,
+      name: d.importer.viewSellers,
       exact: true,
     })
     await expect(queued).toBeVisible()
@@ -146,7 +146,7 @@ test('unconfirmed import staging keeps its leave warning and exact retry; confir
       await dialog.dismiss()
     })
     await queued.click()
-    await expect(page).toHaveURL(`/intake/operations/${requests[0].requestId}`)
+    await expect(page).toHaveURL('/intake/sellers')
     expect(warnings).toBe(0)
     expect(
       (
@@ -163,7 +163,7 @@ test('unconfirmed import staging keeps its leave warning and exact retry; confir
           [f.tenant],
         )
       ).rows[0].n,
-    ).toBe(1)
+    ).toBe(2)
   } finally {
     await f.close()
   }

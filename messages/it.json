@@ -1781,9 +1781,9 @@
     "title": "Importa conferenti",
     "intro": "Trasferisci il registro venditori dal sistema precedente.",
     "notice": "Qui vengono importati solo nomi e dati di contatto. Saldi, articoli e cronologia restano nel vecchio sistema; gli accordi vengono registrati in Komisio alla prossima consegna di ciascun conferente.",
-    "file": "File CSV",
+    "file": "Scegli file",
     "fileHint": "File CSV · Fino a 200 venditori alla volta",
-    "columns": "Colonne",
+    "columns": "Modifica colonne",
     "column": {
       "name": "Nome",
       "email": "E-mail",
@@ -1791,8 +1791,7 @@
     },
     "ignore": "Non presente nel file",
     "skipHeader": "La prima riga è un'intestazione",
-    "preview": "Anteprima",
-    "previewHint": "Vengono mostrate le prime dieci righe che saranno importate.",
+    "preview": "Controlla i dati",
     "accepted": "righe saranno importate",
     "rejected": "righe vengono escluse",
     "reasons": {
@@ -1801,9 +1800,6 @@
       "email": "l'e-mail non è valida"
     },
     "line": "riga",
-    "stage": "Prepara l'importazione",
-    "staged": "L'importazione è preparata. Approvala nella coda delle operazioni per registrare i conferenti.",
-    "openQueue": "Apri la coda delle operazioni",
     "tooMany": "Il file ha più di 200 righe utilizzabili. Dividilo e importa a parti.",
     "nothing": "Nessuna riga utilizzabile. Controlla la mappatura delle colonne.",
     "error": "Impossibile preparare l'importazione. Ricarica e riprova.",
@@ -1815,7 +1811,10 @@
     "noFile": "Nessun file selezionato",
     "infoLabel": "Come funziona l’importazione",
     "layoutHelp": "Non serve un modello specifico. Le colonne possono avere qualsiasi nome e ordine: scegli tu quelle che contengono nome, e-mail e telefono. Se usi Excel, salva il file in formato CSV.",
-    "reviewHelp": "Puoi controllare l’anteprima e modificare le colonne prima di continuare. Nessun venditore viene aggiunto finché non approvi l’importazione nel passaggio successivo."
+    "reviewHelp": "Controlla nomi e contatti nell’anteprima. Poi fai clic su Importa per aggiungere i venditori. Gli indirizzi e-mail già presenti vengono saltati.",
+    "import": "Importa",
+    "completed": "Importazione completata.",
+    "viewSellers": "Mostra venditori"
   },
   "lifecycle": {
     "agentHeading": "Esecuzioni dei ribassi",

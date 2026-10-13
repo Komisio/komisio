@@ -1781,9 +1781,9 @@
     "title": "Einlieferer importieren",
     "intro": "Übertragen Sie Ihre Verkäuferdaten aus Ihrem bisherigen System.",
     "notice": "Hier werden nur Namen und Kontaktdaten importiert. Guthaben, Artikel und Verlauf bleiben im alten System; Vereinbarungen werden in Komisio erfasst, wenn jeder Einlieferer das nächste Mal einliefert.",
-    "file": "CSV-Datei",
+    "file": "Datei auswählen",
     "fileHint": "CSV-Datei · Bis zu 200 Verkäufer auf einmal",
-    "columns": "Spalten",
+    "columns": "Spalten ändern",
     "column": {
       "name": "Name",
       "email": "E-Mail",
@@ -1791,8 +1791,7 @@
     },
     "ignore": "Nicht in der Datei",
     "skipHeader": "Die erste Zeile ist eine Kopfzeile",
-    "preview": "Vorschau",
-    "previewHint": "Es werden die ersten zehn Zeilen angezeigt, die importiert werden.",
+    "preview": "Angaben prüfen",
     "accepted": "Zeilen werden importiert",
     "rejected": "Zeilen werden ausgelassen",
     "reasons": {
@@ -1801,9 +1800,6 @@
       "email": "E-Mail-Adresse ist ungültig"
     },
     "line": "Zeile",
-    "stage": "Import bereitstellen",
-    "staged": "Der Import ist bereitgestellt. Genehmigen Sie ihn in der Vorgangswarteschlange, um die Einlieferer zu registrieren.",
-    "openQueue": "Vorgangswarteschlange öffnen",
     "tooMany": "Die Datei hat mehr als 200 verwendbare Zeilen. Teilen Sie sie auf und importieren Sie in Teilen.",
     "nothing": "Keine verwendbaren Zeilen. Prüfen Sie die Spaltenzuordnung.",
     "error": "Der Import konnte nicht bereitgestellt werden. Laden Sie neu und versuchen Sie es erneut.",
@@ -1815,7 +1811,10 @@
     "noFile": "Keine Datei ausgewählt",
     "infoLabel": "So funktioniert der Import",
     "layoutHelp": "Sie benötigen keine feste Vorlage. Spalten können beliebige Namen haben und in beliebiger Reihenfolge stehen – Sie wählen selbst die Spalten für Name, E-Mail und Telefon. Speichern Sie Excel-Dateien als CSV.",
-    "reviewHelp": "Prüfen Sie die Vorschau und passen Sie die Spaltenzuordnung an, bevor Sie fortfahren. Verkäufer werden erst hinzugefügt, wenn Sie den Import im nächsten Schritt bestätigen."
+    "reviewHelp": "Prüfen Sie Namen und Kontaktdaten in der Vorschau. Klicken Sie dann auf Importieren, um die Verkäufer hinzuzufügen. Bereits vorhandene E-Mail-Adressen werden übersprungen.",
+    "import": "Importieren",
+    "completed": "Import abgeschlossen.",
+    "viewSellers": "Verkäufer anzeigen"
   },
   "lifecycle": {
     "agentHeading": "Preissenkungsläufe",

@@ -3067,6 +3067,23 @@ button.text-link:hover:not(:disabled) {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
 }
+.import-mapping > summary {
+  cursor: pointer;
+  padding-block: 12px;
+  min-height: 44px;
+  color: var(--muted);
+}
+.import-preview {
+  max-height: 440px;
+  overflow: auto;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.import-preview-table th {
+  position: sticky;
+  top: 0;
+  background: var(--white);
+}
 .import-header-checkbox {
   display: flex;
   align-items: center;

@@ -19,7 +19,7 @@ const subscribe = () => () => {}
 const clientReady = () => true
 const serverReady = () => false
 
-/** Choose a file, map the columns, read the preview, stage one operation. */
+/** Choose a file, map the columns, read the preview, import the reviewed rows with one explicit confirmation. */
 export function ImportSellers({
   tenantId,
   d,
@@ -43,21 +43,26 @@ export function ImportSellers({
   const [skipHeader, setSkipHeader] = useState(true)
   const [busy, setBusy] = useBusyState(false)
   const [message, setMessage] = useState('')
-  const [staged, setStaged] = useState<string | null>(null)
+  const [completed, setCompleted] = useState(false)
+  const [mappingOpen, setMappingOpen] = useState(false)
   const [locked, setLocked] = useState(false)
   const [needsReload, setNeedsReload] = useState(false)
   const pending = useRef<{
-    tenantId: string
-    requestId: string
-    expiresAt: string
-    payload: ImportSellersPayload
+    proposal: {
+      tenantId: string
+      requestId: string
+      expiresAt: string
+      payload: ImportSellersPayload
+    }
+    decisionId: string
+    proposed: boolean
   } | null>(null)
   const running = useRef(false)
   const fileRead = useRef(0)
   const fileInput = useRef<HTMLInputElement>(null)
   const fileButton = useRef<HTMLButtonElement>(null)
   useUnsavedChanges(
-    (rows.length > 0 && !staged) || locked ? leaveUnsaved : null,
+    (rows.length > 0 && !completed) || locked ? leaveUnsaved : null,
   )
   const header = rows[0] ?? []
   const { accepted, rejected } = rows.length
@@ -69,7 +74,7 @@ export function ImportSellers({
     if (locked || running.current) return
     const read = ++fileRead.current
     setRows([])
-    setStaged(null)
+    setCompleted(false)
     setMessage('')
     pending.current = null
     setNeedsReload(false)
@@ -90,7 +95,12 @@ export function ImportSellers({
       }
       const parsed = parseCsv(text)
       setRows(parsed)
-      setMapping(guessMapping(parsed[0] ?? []))
+      const guessed = guessMapping(parsed[0] ?? [])
+      setMapping(guessed)
+      setMappingOpen(
+        guessed.name === null ||
+          (guessed.email === null && guessed.phone === null),
+      )
       if (!parsed.length) setMessage(d.nothing)
     } catch {
       if (read === fileRead.current) setMessage(d.error)
@@ -107,8 +117,8 @@ export function ImportSellers({
     setSkipHeader(true)
     fileButton.current?.focus()
   }
-  async function stage() {
-    if (running.current || needsReload || staged || !accepted.length) return
+  async function importReviewed() {
+    if (running.current || needsReload || completed || !accepted.length) return
     if (accepted.length > 200) {
       setMessage(d.tooMany)
       return
@@ -118,38 +128,80 @@ export function ImportSellers({
     setLocked(true)
     setMessage('')
     pending.current ??= {
-      tenantId,
-      requestId: crypto.randomUUID(),
-      expiresAt: new Date(Date.now() + 7 * 24 * 3600 * 1000).toISOString(),
-      payload: { source, rows: accepted },
+      proposal: {
+        tenantId,
+        requestId: crypto.randomUUID(),
+        expiresAt: new Date(Date.now() + 7 * 24 * 3600 * 1000).toISOString(),
+        payload: { source, rows: accepted },
+      },
+      decisionId: crypto.randomUUID(),
+      proposed: false,
     }
     try {
-      const r = await fetch('/api/import', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pending.current),
-      })
-      const body = await r.json()
-      if (!r.ok) {
-        if (r.status >= 500) {
+      const attempt = pending.current
+      if (!attempt.proposed) {
+        const r = await fetch('/api/import', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(attempt.proposal),
+        })
+        const body = await r.json()
+        if (!r.ok) {
+          if (r.status >= 500) {
+            setMessage(intake.failed)
+            return
+          }
+          if (r.status === 400 && body.error === 'INVALID_INPUT') {
+            pending.current = null
+            setLocked(false)
+          } else setNeedsReload(true)
+          setMessage(d.error)
+          return
+        }
+        if (
+          body?.ok !== true ||
+          body?.operationId !== attempt.proposal.requestId
+        ) {
           setMessage(intake.failed)
           return
         }
-        if (r.status === 400 && body.error === 'INVALID_INPUT') {
-          pending.current = null
-          setLocked(false)
-        } else setNeedsReload(true)
-        setMessage(d.error)
+        attempt.proposed = true
+      }
+      // The Import click approves exactly the previewed snapshot. Retain both
+      // request identities across uncertain responses; never import a second copy.
+      const decision = await fetch('/api/operations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tenantId,
+          requestId: attempt.decisionId,
+          operationId: attempt.proposal.requestId,
+          decision: 'approve',
+          reason: '',
+        }),
+      })
+      const result = await decision.json()
+      if (!decision.ok) {
+        if (decision.status >= 500) setMessage(intake.failed)
+        else {
+          setNeedsReload(true)
+          setMessage(d.error)
+        }
         return
       }
       if (
-        body?.ok !== true ||
-        body?.operationId !== pending.current.requestId
+        result?.id !== attempt.decisionId ||
+        !['executed', 'failed', 'rejected'].includes(result?.outcome)
       ) {
         setMessage(intake.failed)
         return
       }
-      setStaged(body.operationId)
+      if (result.outcome !== 'executed') {
+        setMessage(d.error)
+        setNeedsReload(true)
+        return
+      }
+      setCompleted(true)
       pending.current = null
       setLocked(false)
     } catch {
@@ -164,7 +216,7 @@ export function ImportSellers({
       <label htmlFor={`import-${key}`}>{d.column[key]}</label>
       <select
         id={`import-${key}`}
-        disabled={busy || locked || !!staged}
+        disabled={busy || locked || completed}
         value={mapping[key] ?? ''}
         onChange={(e) =>
           setMapping({
@@ -243,7 +295,7 @@ export function ImportSellers({
           >
             {source || d.noFile}
           </span>
-          {source && !staged && (
+          {source && !completed && (
             <Button
               type="button"
               variant="secondary"
@@ -256,25 +308,27 @@ export function ImportSellers({
         </div>
       </section>
       {rows.length > 0 && (
-        <section className="card intake-form" aria-label={d.columns}>
-          <h2>{d.columns}</h2>
-          <div className="import-column-mapping">
-            {(['name', 'email', 'phone'] as const).map(select)}
-          </div>
-          <label className="import-header-checkbox">
-            <input
-              type="checkbox"
-              disabled={busy || locked || !!staged}
-              checked={skipHeader}
-              onChange={(e) => setSkipHeader(e.target.checked)}
-            />{' '}
-            {d.skipHeader}
-          </label>
-        </section>
-      )}
-      {rows.length > 0 && (
         <section className="card intake-form" aria-label={d.preview}>
           <h2>{d.preview}</h2>
+          <details
+            className="import-mapping"
+            open={mappingOpen}
+            onToggle={(event) => setMappingOpen(event.currentTarget.open)}
+          >
+            <summary>{d.columns}</summary>
+            <div className="import-column-mapping">
+              {(['name', 'email', 'phone'] as const).map(select)}
+            </div>
+            <label className="import-header-checkbox">
+              <input
+                type="checkbox"
+                disabled={busy || locked || completed}
+                checked={skipHeader}
+                onChange={(e) => setSkipHeader(e.target.checked)}
+              />{' '}
+              {d.skipHeader}
+            </label>
+          </details>
           <p>
             {accepted.length} {d.accepted}
             {rejected.length ? ` · ${rejected.length} ${d.rejected}` : ''}
@@ -282,10 +336,12 @@ export function ImportSellers({
           {accepted.length === 0 && <p role="alert">{d.nothing}</p>}
           {accepted.length > 200 && <p role="alert">{d.tooMany}</p>}
           {accepted.length > 0 && (
-            <div className="import-preview">
-              <p>
-                <small>{d.previewHint}</small>
-              </p>
+            <div
+              className="import-preview"
+              tabIndex={0}
+              role="group"
+              aria-label={d.preview}
+            >
               <table className="import-preview-table">
                 <thead>
                   <tr>
@@ -295,7 +351,7 @@ export function ImportSellers({
                   </tr>
                 </thead>
                 <tbody>
-                  {accepted.slice(0, 10).map((r, i) => (
+                  {accepted.slice(0, 200).map((r, i) => (
                     <tr key={i}>
                       <td data-label={d.column.name}>{r.name}</td>
                       <td data-label={d.column.email}>{r.email || '—'}</td>
@@ -315,11 +371,11 @@ export function ImportSellers({
               ))}
             </ul>
           )}
-          {staged ? (
+          {completed ? (
             <p role="status">
-              {d.staged}{' '}
-              <Link className="text-link" href={`/intake/operations/${staged}`}>
-                {d.openQueue}
+              {d.completed}{' '}
+              <Link className="text-link" href="/intake/sellers">
+                {d.viewSellers}
               </Link>
             </p>
           ) : (
@@ -330,9 +386,9 @@ export function ImportSellers({
                 accepted.length === 0 ||
                 accepted.length > 200
               }
-              onClick={stage}
+              onClick={importReviewed}
             >
-              {busy ? intake.busy : locked ? intake.retry : d.stage}
+              {busy ? intake.busy : locked ? intake.retry : d.import}
             </Button>
           )}
         </section>

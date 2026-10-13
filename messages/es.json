@@ -1781,9 +1781,9 @@
     "title": "Importar depositantes",
     "intro": "Transfiere el registro de vendedores de tu sistema anterior.",
     "notice": "Aquí solo se importan nombres y datos de contacto. Los saldos, artículos e historial se quedan en el sistema antiguo; los acuerdos se registran en Komisio la próxima vez que cada depositante entregue.",
-    "file": "Archivo CSV",
+    "file": "Seleccionar archivo",
     "fileHint": "Archivo CSV · Hasta 200 vendedores a la vez",
-    "columns": "Columnas",
+    "columns": "Cambiar columnas",
     "column": {
       "name": "Nombre",
       "email": "Correo electrónico",
@@ -1791,8 +1791,7 @@
     },
     "ignore": "No está en el archivo",
     "skipHeader": "La primera fila es un encabezado",
-    "preview": "Vista previa",
-    "previewHint": "Se muestran las diez primeras filas que se importarán.",
+    "preview": "Revisar los datos",
     "accepted": "filas se importarán",
     "rejected": "filas se dejan fuera",
     "reasons": {
@@ -1801,9 +1800,6 @@
       "email": "el correo electrónico no es válido"
     },
     "line": "línea",
-    "stage": "Preparar la importación",
-    "staged": "La importación está preparada. Apruébala en la cola de operaciones para registrar los depositantes.",
-    "openQueue": "Abrir la cola de operaciones",
     "tooMany": "El archivo tiene más de 200 filas utilizables. Divídelo e impórtalo por partes.",
     "nothing": "No hay filas utilizables. Comprueba la asignación de columnas.",
     "error": "No se pudo preparar la importación. Recarga e inténtalo de nuevo.",
@@ -1815,7 +1811,10 @@
     "noFile": "Ningún archivo seleccionado",
     "infoLabel": "Cómo funciona la importación",
     "layoutHelp": "No necesitas una plantilla específica. Las columnas pueden tener cualquier nombre y orden: tú eliges cuáles contienen el nombre, el correo electrónico y el teléfono. Si usas Excel, guarda el archivo como CSV.",
-    "reviewHelp": "Puedes revisar la vista previa y ajustar las columnas antes de continuar. No se añade ningún vendedor hasta que apruebes la importación en el siguiente paso."
+    "reviewHelp": "Revisa los nombres y los datos de contacto en la vista previa. Después, haz clic en Importar para añadir los vendedores. Se omiten las direcciones de correo electrónico existentes.",
+    "import": "Importar",
+    "completed": "Importación completada.",
+    "viewSellers": "Ver vendedores"
   },
   "lifecycle": {
     "agentHeading": "Ejecuciones de rebajas",

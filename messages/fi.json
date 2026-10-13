@@ -1781,9 +1781,9 @@
     "title": "Tuo tuojat",
     "intro": "Siirrä myyjärekisteri aiemmasta järjestelmästäsi.",
     "notice": "Täällä tuodaan vain nimet ja yhteystiedot. Saldot, tuotteet ja historia jäävät vanhaan järjestelmään; sopimukset kirjataan Komisioon, kun kukin tuoja seuraavan kerran tuo tavaraa.",
-    "file": "CSV-tiedosto",
+    "file": "Valitse tiedosto",
     "fileHint": "CSV-tiedosto · Enintään 200 myyjää kerrallaan",
-    "columns": "Sarakkeet",
+    "columns": "Muuta sarakkeita",
     "column": {
       "name": "Nimi",
       "email": "Sähköposti",
@@ -1791,8 +1791,7 @@
     },
     "ignore": "Ei tiedostossa",
     "skipHeader": "Ensimmäinen rivi on otsikkorivi",
-    "preview": "Esikatselu",
-    "previewHint": "Näytetään kymmenen ensimmäistä tuotavaa riviä.",
+    "preview": "Tarkista tiedot",
     "accepted": "riviä tuodaan",
     "rejected": "riviä jätetään pois",
     "reasons": {
@@ -1801,9 +1800,6 @@
       "email": "sähköposti ei ole kelvollinen"
     },
     "line": "rivi",
-    "stage": "Valmistele tuonti",
-    "staged": "Tuonti on valmisteltu. Hyväksy se operaatiojonossa rekisteröidäksesi tuojat.",
-    "openQueue": "Avaa operaatiojono",
     "tooMany": "Tiedostossa on yli 200 käyttökelpoista riviä. Jaa se osiin ja tuo osissa.",
     "nothing": "Ei käyttökelpoisia rivejä. Tarkista sarakkeiden kohdistus.",
     "error": "Tuontia ei voitu valmistella. Lataa sivu uudelleen ja yritä uudelleen.",
@@ -1815,7 +1811,10 @@
     "noFile": "Tiedostoa ei ole valittu",
     "infoLabel": "Näin tuonti toimii",
     "layoutHelp": "Erillistä mallipohjaa ei tarvita. Sarakkeiden nimet ja järjestys ovat vapaat – valitset itse, mitkä sarakkeet sisältävät nimen, sähköpostin ja puhelinnumeron. Jos käytät Exceliä, tallenna tiedosto CSV-muodossa.",
-    "reviewHelp": "Voit esikatsella tiedot ja muuttaa sarakevalintoja ennen jatkamista. Myyjiä lisätään vasta, kun hyväksyt tuonnin seuraavassa vaiheessa."
+    "reviewHelp": "Tarkista nimet ja yhteystiedot esikatselussa. Lisää myyjät napsauttamalla Tuo. Olemassa olevat sähköpostiosoitteet ohitetaan.",
+    "import": "Tuo",
+    "completed": "Tuonti valmis.",
+    "viewSellers": "Näytä myyjät"
   },
   "lifecycle": {
     "agentHeading": "Alennusajot",

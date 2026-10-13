@@ -10,12 +10,16 @@ first slice imports sellers; items and balances are separate decisions.
   parsed in the browser (`parseCsv`: comma or semicolon, quotes, CRLF, BOM);
   the header names are matched against a fixed list of Swedish and English
   names (`guessMapping`), and the person can change every column. The
-  preview shows the first ten accepted rows and why others are left out (no
+  preview shows all accepted rows up to the 200-row limit and why others are left out (no
   name, neither e-mail nor phone, invalid e-mail). No AI is involved yet; a
   model-proposed mapping is a later step behind the same review.
 - Staging posts one `importSellers` operation with the file name and up to
   200 rows to `/api/import`. Nothing is registered by the upload.
-- Approval in the operations queue registers every row through
+- The single Import button on the preview stages and approves the reviewed
+  snapshot through the existing authenticated APIs, using stable proposal and
+  decision IDs for retries. No separate queue review or reason is required.
+  Only a verified executed decision shows completion on the same page.
+  Approval registers every row through
   `register_seller` as the approver. A row whose e-mail already belongs to a
   seller of the store is skipped; the access event `sellers.imported`
   records created and skipped counts. Low risk: the person who staged may

@@ -29,6 +29,11 @@ if errorlevel 1 (
   exit /b 1
 )
 KomisioPrintService.exe start
+if errorlevel 1 (
+  echo The service could not be started. Check the service logs.
+  pause
+  exit /b 1
+)
 echo.
 echo Komisio Print is installed and running as a Windows service. It starts with the computer.
 echo The device appears in Settings, Printing within a minute.

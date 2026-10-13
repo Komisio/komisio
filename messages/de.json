@@ -1991,7 +1991,7 @@
     "statuses": {
       "queued": "eingereiht",
       "claimed": "wird gedruckt",
-      "printed": "gedruckt",
+      "printed": "An Drucker gesendet",
       "failed": "fehlgeschlagen",
       "cancelled": "abgebrochen"
     },
@@ -2009,20 +2009,22 @@
       "labels": "Etiketten",
       "history": "Druckverlauf"
     },
-    "networkSupport": "Komisio Print unterstützt Zebra/ZPL-Netzwerkdrucker. Der Computer muss den Drucker im Netzwerk des Geschäfts erreichen können.",
-    "installIntro": "Der Dienst verbindet Komisio mit dem Etikettendrucker. Erfordert Windows 64-Bit und einen Zebra/ZPL-Netzwerkdrucker. Direktes USB wird nicht unterstützt.",
+    "networkSupport": "Zebra/ZPL-Drucker lassen sich über USB oder das Ladennetzwerk verbinden.",
+    "installIntro": "Verbindet Komisio über Netzwerk oder USB mit einem Zebra/ZPL-Drucker. Erfordert Windows 10/11 (64 Bit). USB erfordert Komisio Print 1.1 oder neuer und den Zebra-Windows-Treiber.",
     "installDownload": "Herunterladen und entpacken",
     "installDownloadHint": "Verwenden Sie die Download-Schaltfläche oben. Sie können das Paket vor der Druckerregistrierung herunterladen. Entpacken Sie es in einen dauerhaft gespeicherten Ordner.",
     "installPair": "Drucker registrieren und Code erstellen",
-    "installPairHint": "Öffnen Sie Drucker, geben Sie die Netzwerkadresse ein und speichern Sie. Öffnen Sie anschließend den Drucker und erstellen Sie einen neuen Kopplungscode.",
+    "installPairHint": "Öffnen Sie Drucker und wählen Sie Netzwerk oder USB. Geben Sie die Netzwerkadresse oder den genauen Windows-Druckernamen ein und speichern Sie. Wählen Sie dann einen neuen Kopplungscode.",
     "installRun": "Auf dem Computer installieren",
     "installRunHint": "Führen Sie install.cmd als Administrator aus und geben Sie den Kopplungscode ein. Der Code gilt 15 Minuten und kann einmal verwendet werden.",
     "installRunning": "Der Dienst startet automatisch mit dem Computer. Lassen Sie den Computer beim Drucken eingeschaltet. Der Verbindungsstatus wird beim jeweiligen Drucker angezeigt.",
     "pairHint": "Verbinden Sie den Computer mit diesem Drucker über einen Einmalcode.",
     "paperHint": "Etiketten auf normalem Papier können direkt von der Artikelseite gedruckt werden.",
     "addressInvalid": "Geben Sie eine Netzwerkadresse wie 192.168.1.50:9100 ein. Keine Leerzeichen oder http:// verwenden.",
-    "usbUnavailable": "USB (von Komisio Print nicht unterstützt)",
-    "usbHint": "Diese USB-Konfiguration kann beibehalten werden, Komisio Print benötigt jedoch eine Netzwerkverbindung."
+    "usbHint": "Erfordert Komisio Print 1.1 oder neuer und den Zebra-Windows-Treiber.",
+    "usbQueueName": "Druckername in Windows",
+    "usbQueueHint": "Geben Sie den genauen Namen in Windows ein. Starten Sie list-usb-printers.cmd im Komisio-Print-Ordner, um USB-Drucker anzuzeigen.",
+    "usbQueueInvalid": "Geben Sie einen lokalen Windows-USB-Druckernamen ohne umgekehrte Schrägstriche oder Zeilenumbrüche ein."
   },
   "purchases": {
     "title": "Eigene Einkäufe",

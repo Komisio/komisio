@@ -48,12 +48,12 @@ export function PrinterForm({
     if (action.busy || action.locked || action.needsReload) return
     setSaved(false)
     const f = new FormData(event.currentTarget)
-    // Match the existing database address syntax before sending a write.
+    // Validate the network address or local Windows queue before saving.
+    const address = String(f.get('address') ?? '').trim()
     const badAddress =
-      transport === 'tcp' &&
-      !/^[A-Za-z0-9.\-]+(:[0-9]{2,5})?$/.test(
-        String(f.get('address') ?? '').trim(),
-      )
+      transport === 'tcp'
+        ? !/^[A-Za-z0-9.\-]+(:[0-9]{2,5})?$/.test(address)
+        : !address || /[\\\x00-\x1f\x7f]/.test(address)
     setAddressInvalid(badAddress)
     if (badAddress) {
       form.current?.querySelector<HTMLInputElement>('[name="address"]')?.focus()
@@ -116,32 +116,38 @@ export function PrinterForm({
             }
           >
             <option value="tcp">{d.tcp}</option>
-            <option value="usb" disabled={existing?.transport !== 'usb'}>
-              {d.usbUnavailable}
-            </option>
+            <option value="usb">{d.usb}</option>
           </select>
           {transport === 'usb' && <small>{d.usbHint}</small>}
         </div>
         <div className="field">
-          <label htmlFor={`printer-address-${fieldId}`}>{d.address}</label>
+          <label htmlFor={`printer-address-${fieldId}`}>
+            {transport === 'usb' ? d.usbQueueName : d.address}
+          </label>
           <input
             id={`printer-address-${fieldId}`}
             name="address"
             maxLength={200}
-            placeholder="192.168.1.50:9100"
+            placeholder={
+              transport === 'usb'
+                ? 'ZDesigner ZD420-203dpi ZPL'
+                : '192.168.1.50:9100'
+            }
             defaultValue={existing?.address ?? ''}
-            aria-required={transport === 'tcp'}
+            aria-required="true"
             aria-invalid={addressInvalid || undefined}
             aria-describedby={`printer-address-hint-${fieldId}${addressInvalid ? ` printer-address-error-${fieldId}` : ''}`}
           />
-          <small id={`printer-address-hint-${fieldId}`}>{d.addressHint}</small>
+          <small id={`printer-address-hint-${fieldId}`}>
+            {transport === 'usb' ? d.usbQueueHint : d.addressHint}
+          </small>
           {addressInvalid && (
             <p
               className="field-error"
               id={`printer-address-error-${fieldId}`}
               role="alert"
             >
-              {d.addressInvalid}
+              {transport === 'usb' ? d.usbQueueInvalid : d.addressInvalid}
             </p>
           )}
         </div>

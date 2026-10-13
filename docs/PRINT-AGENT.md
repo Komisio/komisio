@@ -9,14 +9,20 @@ printer.
 
 ## For the store
 
-Requires 64-bit Windows and a network-connected Zebra/ZPL printer reachable
-from that computer. Komisio Print does not support direct USB printing.
+Requires Windows 10/11 x64 and a Zebra/ZPL printer connected by network or USB.
+USB requires Komisio Print 1.1 or later, the Zebra Windows driver and a local
+machine-installed Windows queue on a USBxxx or DOT4_xxx port. The bundled
+`KomisioUsb.exe` uses .NET Framework 4.x and Windows RAW spooler calls; it must
+stay beside `KomisioPrint.exe`. It never installs drivers or opens file/network
+queues. Windows queue acceptance does not prove that a physical label printed.
 
 1. Settings, Printers and labels: download Komisio Print for Windows using
    the button above the tabs. No registered printer is needed to download.
    Unzip to a permanent folder; the Installation tab explains setup.
-2. In the Printers tab, register the printer (name, network address,
-   model, resolution). Port 9100 is used if omitted. Open the saved printer
+2. In the Printers tab, select network or USB. For network, enter the address
+   (port 9100 if omitted). For USB, run `list-usb-printers.cmd` in the extracted
+   folder and enter the exact Windows printer name. Set the model/resolution.
+   Open the saved printer
    and press "New pairing code".
 3. Run `install.cmd` as administrator and enter the code when asked.
    The code is valid fifteen minutes and works once.
@@ -30,6 +36,16 @@ and linked job recovery are in Print history. Switching tabs retains drafts.
 
 No account, no password, nothing to type but the code. One device per
 printer; a second computer gets its own code.
+
+To upgrade an existing installation, extract the complete new package into a
+new permanent folder and run `update.cmd` there as administrator. It stops and
+reinstalls the service from the new folder while preserving the ProgramData
+pairing. Verify version 1.1.0 under the printer before switching it to USB.
+The service runs as LocalSystem: user-only shared printer connections are not
+supported. Read `README.txt` in the package for error codes and queue checks.
+If Windows retains a job while the USB printer is disconnected, inspect that
+queue before requesting another copy. Timeouts have an uncertain outcome and
+must not be treated as proof that nothing printed.
 
 ## Browser item labels
 
@@ -58,11 +74,15 @@ navigation.
 - Anonymous sign-ins must be enabled on the Supabase project (Auth,
   Providers, Anonymous); the local config enables them.
 - The program (`print-agent/agent.cjs`) has no dependencies: Node's fetch
-  talks to Auth and PostgREST, a TCP socket sends ZPL to the printer. It
+  talks to Auth and PostgREST, a TCP socket sends network ZPL and the bundled
+  original C# helper sends USB ZPL through OpenPrinter/StartDocPrinter with RAW
+  data, WritePrinter and EndDocPrinter. JSON over stdin carries queue names,
+  base64 UTF-8 ZPL and copy count; no payload becomes a shell command. Native
+  partial writes are completed or failed/aborted, with handles always released. It
   renews its session itself, retries on errors, and exits when revoked (the
   service restarts it after thirty seconds, so a re-pair takes effect).
 - The Windows package is built by the `Print agent` workflow: the agent as a
-  Node single executable with the environment's Supabase URL and
+  Node single executable plus the compiled USB helper, with the environment's Supabase URL and
   publishable key baked in (`print-agent/build.mjs`), WinSW 2.12.0 as the
   service wrapper, `install.cmd` and `uninstall.cmd`. A tag `print-v*`
   publishes `KomisioPrint-win-x64.zip` (production) and
@@ -84,6 +104,11 @@ navigation.
 Developer path: `node print-agent/agent.cjs pair` and
 `node print-agent/agent.cjs run` with `KOMISIO_PRINT_SUPABASE_URL` and
 `KOMISIO_PRINT_PUBLISHABLE_KEY` set (a local stack works).
+On Windows, run `node print-agent/build-usb.mjs` first for USB support.
+`node print-agent/test-usb.mjs` verifies RAW write/failure handling with a fake
+spooler and probes the real Windows API without printing. CI runs it on Windows;
+transport routing, validation and printer registration also have unit/browser
+coverage. USB physical output remains pending a hardware pilot.
 
 ## Verification record
 

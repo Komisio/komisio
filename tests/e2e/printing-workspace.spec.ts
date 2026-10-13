@@ -4,6 +4,99 @@ import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 
+test('USB registration validates the Windows queue and keeps its name across tabs', async ({
+  page,
+}, testInfo) => {
+  const email = `usb-printer-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomUUID()}`)
+  const f = await p2Fixture(email)
+  try {
+    await f.commit()
+    await page.goto('/settings?tab=printing')
+    const form = page.locator('.printer-register-fold form')
+    await form
+      .getByLabel(d.printing.name, { exact: true })
+      .fill('Synthetic USB printer')
+    await form
+      .getByLabel(d.printing.transport, { exact: true })
+      .selectOption('usb')
+    const address = form.getByLabel(d.printing.usbQueueName, { exact: true })
+    await expect(
+      form.getByText(d.printing.usbHint, { exact: true }),
+    ).toBeVisible()
+    let writes = 0
+    page.on('request', (request) => {
+      if (request.method() === 'POST' && request.url().endsWith('/api/intake'))
+        writes++
+    })
+    await form
+      .getByRole('button', { name: d.printing.register, exact: true })
+      .click()
+    await expect(address).toBeFocused()
+    await expect(form.getByRole('alert')).toHaveText(d.printing.usbQueueInvalid)
+    await address.fill('\\\\server\\printer')
+    await form
+      .getByRole('button', { name: d.printing.register, exact: true })
+      .click()
+    await expect(form.getByRole('alert')).toHaveText(d.printing.usbQueueInvalid)
+    expect(writes).toBe(0)
+    const queue = "ZDesigner USB (åäö) & 'label'"
+    await address.fill(queue)
+    await page.setViewportSize({ width: 1280, height: 900 })
+    await page.screenshot({
+      path: testInfo.outputPath('usb-desktop.png'),
+      fullPage: true,
+    })
+    await page.setViewportSize({ width: 375, height: 800 })
+    await page.screenshot({
+      path: testInfo.outputPath('usb-mobile.png'),
+      fullPage: true,
+    })
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth),
+    ).toBeLessThanOrEqual(375)
+    await page
+      .getByRole('tab', { name: d.printing.tabs.install, exact: true })
+      .click()
+    await expect(
+      page.getByText(d.printing.installIntro, { exact: true }),
+    ).toBeVisible()
+    await page
+      .getByRole('tab', { name: d.printing.tabs.printers, exact: true })
+      .click()
+    await expect(address).toHaveValue(queue)
+    await form
+      .getByRole('button', { name: d.printing.register, exact: true })
+      .click()
+    const printer = page.locator('.printing-printers > details').filter({
+      has: page.locator('summary', { hasText: 'Synthetic USB printer' }),
+    })
+    await expect(printer.locator('summary')).toBeVisible()
+    await printer.locator('summary').click()
+    await expect(
+      printer.getByLabel(d.printing.usbQueueName, { exact: true }),
+    ).toHaveValue(queue)
+    expect(
+      (
+        await f.db.query(
+          'select transport,address from printers where tenant_id=$1',
+          [f.tenant],
+        )
+      ).rows,
+    ).toEqual([{ transport: 'usb', address: queue }])
+    expect(
+      (
+        await f.db.query(
+          'select count(*)::int n from print_jobs where tenant_id=$1',
+          [f.tenant],
+        )
+      ).rows[0].n,
+    ).toBe(0)
+  } finally {
+    await f.close()
+  }
+})
+
 test('printer setup offers installation before registration and preserves drafts between task tabs', async ({
   page,
 }, testInfo) => {

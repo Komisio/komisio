@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process'
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
+import './build-usb.mjs'
 
 // Builds KomisioPrint.exe for one environment: the agent with the
 // environment's Supabase URL and publishable key baked in, packed into a

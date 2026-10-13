@@ -4,15 +4,17 @@
 // from Settings, it signs in as its own anonymous user, holds the role
 // `device` for one printer, and prints what the store queues to it. It has
 // no dependencies: Node's fetch talks to Supabase Auth and PostgREST, and a
-// TCP socket talks ZPL to the printer. Built into KomisioPrint.exe by the
+// TCP socket or the bundled Windows RAW helper talks ZPL to the printer. Built into KomisioPrint.exe by the
 // print-agent workflow; also runs as `node print-agent/agent.cjs <command>`.
 const fs = require('node:fs')
 const net = require('node:net')
 const os = require('node:os')
 const path = require('node:path')
 const readline = require('node:readline')
+const { execFile } = require('node:child_process')
+const { isSea } = require('node:sea')
 
-const VERSION = '1.0.0'
+const VERSION = '1.1.0'
 // Replaced by the build for each environment; the environment variables win.
 const BUILT_URL = '__KOMISIO_SUPABASE_URL__'
 const BUILT_KEY = '__KOMISIO_PUBLISHABLE_KEY__'
@@ -154,6 +156,95 @@ function splitAddress(address) {
   return { host, port: Number(port || 9100) }
 }
 
+function usbRequest(request) {
+  if (process.platform !== 'win32')
+    return Promise.reject(new Error('USB printing requires Windows'))
+  const helper = path.join(
+    isSea() ? path.dirname(process.execPath) : path.join(__dirname, 'dist'),
+    'KomisioUsb.exe',
+  )
+  return new Promise((resolve, reject) => {
+    // Names and ZPL travel over stdin, never through a shell or command line.
+    const child = execFile(
+      helper,
+      [],
+      { windowsHide: true, timeout: 30000, maxBuffer: 256 * 1024 },
+      (error, stdout) => {
+        let result
+        try {
+          result = JSON.parse(stdout)
+        } catch {
+          /* No trusted response. */
+        }
+        if (error || result?.ok !== true) {
+          reject(
+            new Error(
+              typeof result?.error === 'string' &&
+                /^USB_[A-Z0-9_]+$/.test(result.error)
+                ? result.error
+                : error?.code === 'ENOENT'
+                  ? 'USB_HELPER_MISSING: reinstall Komisio Print 1.1 or later'
+                  : 'USB_RESULT_UNKNOWN: inspect the Windows queue before reprinting',
+            ),
+          )
+        } else resolve(result)
+      },
+    )
+    child.stdin.on('error', () => {
+      /* execFile reports exit or timeout. */
+    })
+    child.stdin.end(JSON.stringify(request))
+  })
+}
+
+function createTransport(context, dependencies = {}) {
+  const usb = dependencies.usbRequest || usbRequest
+  if (context.transport === 'usb') {
+    const printer = String(context.address || '').trim()
+    if (!printer || printer.length > 200 || /[\\\x00-\x1f\x7f]/.test(printer))
+      throw new Error(
+        'USB_INVALID_QUEUE_NAME: enter the Windows printer name in Settings',
+      )
+    return {
+      probe: async () => {
+        await usb({ operation: 'probe', printer })
+        return true
+      },
+      send: async (job) => {
+        const data = Buffer.from(job.payload, 'utf8')
+        if (
+          !data.length ||
+          data.length > 80000 ||
+          !Number.isInteger(job.copies) ||
+          job.copies < 1 ||
+          job.copies > 20
+        )
+          throw new Error('USB_INVALID_JOB')
+        const result = await usb({
+          operation: 'print',
+          printer,
+          data: data.toString('base64'),
+          copies: job.copies,
+        })
+        if (!Number.isInteger(result.jobId) || result.jobId <= 0)
+          throw new Error(
+            'USB_RESULT_UNKNOWN: inspect the Windows queue before reprinting',
+          )
+      },
+    }
+  }
+  if (context.transport !== 'tcp')
+    throw new Error('Unsupported printer transport')
+  const { host, port } = splitAddress(context.address)
+  return {
+    probe: () => (dependencies.probe || probe)(host, port),
+    send: async (job) => {
+      for (let i = 0; i < job.copies; i++)
+        await (dependencies.sendZpl || sendZpl)(host, port, job.payload)
+    },
+  }
+}
+
 async function ask(question) {
   const rl = readline.createInterface({
     input: process.stdin,
@@ -217,9 +308,8 @@ async function run() {
   let session = await refresh(url, key, config.refreshToken)
   writeConfig({ ...config, refreshToken: session.refreshToken })
   let context = await rpc(url, key, session.accessToken, 'print_device_context')
-  let { host, port } = splitAddress(context.address)
   log(
-    `Komisio Print ${VERSION}: printer "${context.printerName}" at ${host}:${port}`,
+    `Komisio Print ${VERSION}: printer "${context.printerName}" (${context.transport})`,
   )
   let lastHeartbeat = 0
   let lastRefresh = Date.now()
@@ -251,8 +341,13 @@ async function run() {
       }
       if (Date.now() - lastHeartbeat > 60 * 1000) {
         context = await call('print_device_context')
-        ;({ host, port } = splitAddress(context.address))
-        const reachable = await probe(host, port)
+        let reachable = false
+        try {
+          reachable = context.active && (await createTransport(context).probe())
+          if (reachable) lastError = ''
+        } catch (e) {
+          lastError = e instanceof Error ? e.message : 'printer unavailable'
+        }
         await call('report_print_device', {
           p_status: {
             version: VERSION,
@@ -273,8 +368,10 @@ async function run() {
       let ok = true
       let error = ''
       try {
-        for (let i = 0; i < job.copies; i++)
-          await sendZpl(host, port, job.payload)
+        // Refresh the printer binding before each job, including transport edits.
+        context = await call('print_device_context')
+        if (!context.active) throw new Error('PRINTER_INACTIVE')
+        await createTransport(context).send(job)
       } catch (e) {
         ok = false
         error = e instanceof Error ? e.message : 'print failed'
@@ -287,7 +384,7 @@ async function run() {
         p_error: error,
       })
       log(
-        `${ok ? 'printed' : 'failed'} ${job.kind} ${job.jobId}${error ? ` (${error})` : ''}`,
+        `${ok ? 'sent to printer' : 'failed'} ${job.kind} ${job.jobId}${error ? ` (${error})` : ''}`,
       )
     } catch (e) {
       const message = e instanceof Error ? e.message : String(e)
@@ -335,6 +432,15 @@ function unpair() {
 async function main() {
   const [command, arg] = process.argv.slice(2)
   switch (command) {
+    case 'printers': {
+      const result = await usbRequest({ operation: 'list' })
+      for (const printer of result.printers) console.log(printer)
+      if (!result.printers.length)
+        console.log(
+          'No local USB printer queues found. Install the Zebra Windows driver first.',
+        )
+      return 0
+    }
     case 'pair':
       return pair(arg)
     case 'run':
@@ -345,7 +451,7 @@ async function main() {
       return unpair()
     default:
       console.log(
-        `Komisio Print ${VERSION}\n  KomisioPrint pair [code]   pair this computer with a printer (code from Settings)\n  KomisioPrint run           print what the store queues (the service runs this)\n  KomisioPrint status\n  KomisioPrint unpair`,
+        `Komisio Print ${VERSION}\n  KomisioPrint printers      list local Windows USB printer names\n  KomisioPrint pair [code]   pair this computer with a printer (code from Settings)\n  KomisioPrint run           print what the store queues (the service runs this)\n  KomisioPrint status\n  KomisioPrint unpair`,
       )
       return command ? 2 : 0
   }
@@ -360,4 +466,10 @@ if (require.main === module)
     },
   )
 
-module.exports = { configDir, splitAddress, VERSION }
+module.exports = {
+  configDir,
+  splitAddress,
+  createTransport,
+  usbRequest,
+  VERSION,
+}

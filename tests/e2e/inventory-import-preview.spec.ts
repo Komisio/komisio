@@ -54,7 +54,9 @@ test('owner checks a stock file without creating stock and can correct and retry
       page.getByText(d.inventoryImport.issues.missing, { exact: true }),
     ).toBeVisible()
     await expect(
-      page.getByText(d.inventoryImport.noWrites, { exact: true }),
+      page
+        .getByRole('region', { name: d.inventoryImport.result })
+        .getByText(d.inventoryImport.currentTerms, { exact: true }),
     ).toBeVisible()
     await expect(
       page.getByRole('heading', {

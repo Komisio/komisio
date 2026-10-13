@@ -2,11 +2,14 @@
 import { useBusyState } from '@/components/platform/work-activity'
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import type { Dictionary } from '@/lib/i18n'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 import {
   inventoryColumns,
   inventoryPreview,
+  inventoryImportCommand,
+  inventoryImportResult,
   parseInventoryFile,
   type InventoryFile,
   type InventoryPreview,
@@ -46,6 +49,14 @@ export function ImportInventoryPreview({
   const [busy, setBusy] = useBusyState(false)
   const [reading, setReading] = useBusyState(false)
   const [checkedAt, setCheckedAt] = useState('')
+  const [received, setReceived] = useState(false)
+  const [locked, setLocked] = useState(false)
+  const [completion, setCompletion] = useState<ReturnType<
+    typeof inventoryImportResult.parse
+  > | null>(null)
+  const attempt = useRef<ReturnType<
+    typeof inventoryImportCommand.parse
+  > | null>(null)
   const summary = useRef<HTMLHeadingElement>(null)
   useEffect(() => {
     if (result) summary.current?.focus()
@@ -53,13 +64,17 @@ export function ImportInventoryPreview({
   const input = useRef<HTMLInputElement>(null)
   const generation = useRef(0),
     running = useRef(false)
-  useUnsavedChanges(file ? leaveUnsaved : null)
+  useUnsavedChanges(file && !completion ? leaveUnsaved : null)
   function clear() {
     generation.current++
     setFile(null)
     setResult(null)
     setError('')
     setReading(false)
+    setReceived(false)
+    setCompletion(null)
+    setLocked(false)
+    attempt.current = null
     if (input.current) input.current.value = ''
   }
   async function load(event: React.ChangeEvent<HTMLInputElement>) {
@@ -88,12 +103,13 @@ export function ImportInventoryPreview({
     }
   }
   async function check() {
-    if (!file || running.current) return
+    if (!file || running.current || locked) return
     const current = generation.current
     running.current = true
     setBusy(true)
     setError('')
     setResult(null)
+    setReceived(false)
     try {
       const response = await fetch('/api/import/items/preview', {
         method: 'POST',
@@ -118,12 +134,83 @@ export function ImportInventoryPreview({
       setBusy(false)
     }
   }
+  async function commit() {
+    if (
+      !file ||
+      !result ||
+      !received ||
+      running.current ||
+      completion ||
+      result.rows.some((r) => r.issues.length)
+    )
+      return
+    if (!attempt.current) {
+      attempt.current = inventoryImportCommand.parse({
+        tenantId,
+        requestId: crypto.randomUUID(),
+        source: file.source,
+        context: result.context,
+        received: true,
+        rows: file.rows.map((row, i) => ({
+          reference: row.reference,
+          description: row.description,
+          email: row.email,
+          sellerId:
+            result.rows[i].seller?.status === 'matched'
+              ? result.rows[i].seller.id
+              : null,
+          priceOre: result.rows[i].priceOre,
+          currency: result.currency,
+        })),
+      })
+    }
+    const command = attempt.current
+    running.current = true
+    setLocked(true)
+    setBusy(true)
+    setError('')
+    try {
+      const response = await fetch('/api/import/items', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(command),
+      })
+      const body = await response.json()
+      if (!response.ok) {
+        if (response.status < 500 && typeof body.error === 'string') {
+          attempt.current = null
+          setLocked(false)
+          const code = body.error as keyof typeof d.errors
+          setError(d.errors[code] ?? d.failed)
+          return
+        }
+        throw new Error('REQUEST_FAILED')
+      }
+      const done = inventoryImportResult.parse(body)
+      if (
+        done.requestId !== command.requestId ||
+        done.created + done.skipped !== command.rows.length ||
+        done.items.length !== command.rows.length ||
+        done.items.some(
+          (r, i) => r.sourceReference !== command.rows[i].reference,
+        )
+      )
+        throw new Error('REQUEST_FAILED')
+      setCompletion(done)
+      setLocked(false)
+    } catch {
+      // Keep the exact snapshot and request ID until its outcome is confirmed.
+      setError(d.retry)
+    } finally {
+      running.current = false
+      setBusy(false)
+    }
+  }
   const problems = result?.rows.filter((row) => row.issues.length).length ?? 0
   return (
     <div className="import-workspace inventory-import-workspace">
-      <section className="card intake-form" aria-label={d.file}>
-        <div className="field">
-          <label htmlFor="inventory-file">{d.file}</label>
+      {!completion && (
+        <section className="card intake-form" aria-label={d.file}>
           <input
             ref={input}
             id="inventory-file"
@@ -131,61 +218,131 @@ export function ImportInventoryPreview({
             type="file"
             accept=".csv,text/csv,text/plain"
             onChange={load}
-            disabled={!ready || busy}
+            disabled={!ready || busy || locked}
           />
-          <div className="row">
-            <Button
-              variant="secondary"
-              type="button"
-              disabled={!ready || busy}
-              onClick={() => input.current?.click()}
-            >
-              {d.choose}
-            </Button>
-            <span>{file?.source}</span>
-          </div>
-          <small>{d.fileHint.replace('{currency}', currency)}</small>
-        </div>
-        <div className="row">
-          <Button
-            variant="secondary"
-            type="button"
-            disabled={!ready || busy}
-            onClick={() =>
-              download(
-                '\uFEFF' +
-                  inventoryColumns.join(';') +
-                  '\r\nREF-001;;seller@example.test;' +
-                  d.example +
-                  ';200;' +
-                  currency +
-                  '\r\n',
-                'komisio-items-template.csv',
-                'text/csv;charset=utf-8',
-              )
-            }
-          >
-            {d.template}
-          </Button>
-          {file && (
-            <Button variant="secondary" disabled={busy} onClick={clear}>
-              {d.clear}
-            </Button>
+          {result && file ? (
+            <div className="row">
+              <span>
+                <strong>{file.source}</strong>
+                <br />
+                <small>
+                  {d.rows.replace('{count}', String(file.rows.length))}
+                </small>
+              </span>
+              <Button
+                variant="secondary"
+                disabled={busy || locked}
+                onClick={clear}
+              >
+                {d.clear}
+              </Button>
+              {error && (
+                <Button
+                  variant="secondary"
+                  disabled={busy || locked}
+                  onClick={check}
+                >
+                  {d.check}
+                </Button>
+              )}
+            </div>
+          ) : (
+            <>
+              <h2>{d.file}</h2>
+              <p className="muted">
+                {d.fileHint.replace('{currency}', currency)}
+              </p>
+              <div className="import-file-picker">
+                <Button
+                  type="button"
+                  disabled={!ready || busy}
+                  onClick={() => input.current?.click()}
+                >
+                  {d.choose}
+                </Button>
+                {file && (
+                  <span className="import-file-name">{file.source}</span>
+                )}
+              </div>
+              <div className="row">
+                {file && (
+                  <Button disabled={busy || reading} onClick={check}>
+                    {busy ? intake.busy : d.check}
+                  </Button>
+                )}
+                <Button
+                  variant="secondary"
+                  type="button"
+                  disabled={!ready || busy}
+                  onClick={() =>
+                    download(
+                      '\uFEFF' +
+                        inventoryColumns.join(';') +
+                        '\r\nREF-001;;seller@example.test;' +
+                        d.example +
+                        ';200;' +
+                        currency +
+                        '\r\n',
+                      'komisio-items-template.csv',
+                      'text/csv;charset=utf-8',
+                    )
+                  }
+                >
+                  {d.template}
+                </Button>
+                {file && (
+                  <Button variant="secondary" disabled={busy} onClick={clear}>
+                    {d.clear}
+                  </Button>
+                )}
+              </div>
+              {reading && <p role="status">{intake.busy}</p>}
+              {error && <p role="alert">{error}</p>}
+            </>
           )}
-        </div>
-        {reading && <p role="status">{intake.busy}</p>}
-        {file && (
-          <>
-            <p>{d.rows.replace('{count}', String(file.rows.length))}</p>
-            <Button disabled={busy} onClick={check}>
-              {busy ? intake.busy : d.check}
-            </Button>
-          </>
-        )}
-        {error && <p role="alert">{error}</p>}
-      </section>
-      {result && file && (
-        <section className="card stock-panel" aria-label={d.result}>
+        </section>
+      )}
+      {completion && (
+        <section className="card intake-form" aria-label={d.complete}>
+          <h2>{d.complete}</h2>
+          <p role="status">
+            {d.completed
+              .replace('{created}', String(completion.created))
+              .replace('{skipped}', String(completion.skipped))}
+          </p>
+          <div className="import-preview">
+            <table className="stock-table">
+              <thead>
+                <tr>
+                  <th>{d.reference}</th>
+                  <th>{d.description}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {completion.items.map((item, i) => (
+                  <tr key={item.sourceReference}>
+                    <td data-label={d.reference}>{item.sourceReference}</td>
+                    <td data-label={d.description}>
+                      <Link href={`/intake/items/${item.itemId}`}>
+                        {file?.rows[i].description} · {item.reference}
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="row">
+            <Button onClick={clear}>{d.another}</Button>
+            <Link href="/intake/items">{d.viewItems}</Link>
+          </div>
+        </section>
+      )}
+      {result && file && !completion && (
+        <section
+          className="card stock-panel inventory-import-preview"
+          aria-label={d.result}
+        >
           <h2 ref={summary} tabIndex={-1}>
             {d.result}
           </h2>
@@ -194,8 +351,8 @@ export function ImportInventoryPreview({
               ? d.problems.replace('{count}', String(problems))
               : d.noProblems}
           </p>
-          <p className="muted">{d.noWrites}</p>
-          <div className="stock-table-wrap">
+          <p className="muted">{d.currentTerms}</p>
+          <div className="stock-table-wrap import-preview">
             <table className="stock-table">
               <thead>
                 <tr>
@@ -245,31 +402,52 @@ export function ImportInventoryPreview({
               </tbody>
             </table>
           </div>
-          <Button
-            variant="secondary"
-            onClick={() =>
-              download(
-                JSON.stringify(
-                  {
-                    version: 1,
-                    source: file.source,
-                    checkedAt,
-                    currency: result.currency,
-                    rows: file.rows.map((row, i) => ({
-                      ...row,
-                      ...result.rows[i],
-                    })),
-                  },
-                  null,
-                  2,
-                ),
-                'komisio-items-check.json',
-                'application/json',
-              )
-            }
-          >
-            {d.download}
-          </Button>
+          {!problems && (
+            <>
+              <label className="import-header-checkbox">
+                <input
+                  type="checkbox"
+                  checked={received}
+                  disabled={busy || locked}
+                  onChange={(e) => setReceived(e.target.checked)}
+                />
+                {d.received}
+              </label>
+              <div className="row">
+                <Button disabled={!received || busy} onClick={commit}>
+                  {busy ? intake.busy : d.import}
+                </Button>
+              </div>
+            </>
+          )}
+          {error && <p role="alert">{error}</p>}
+          {problems > 0 && (
+            <Button
+              variant="secondary"
+              onClick={() =>
+                download(
+                  JSON.stringify(
+                    {
+                      version: 1,
+                      source: file.source,
+                      checkedAt,
+                      currency: result.currency,
+                      rows: file.rows.map((row, i) => ({
+                        ...row,
+                        ...result.rows[i],
+                      })),
+                    },
+                    null,
+                    2,
+                  ),
+                  'komisio-items-check.json',
+                  'application/json',
+                )
+              }
+            >
+              {d.download}
+            </Button>
+          )}
         </section>
       )}
     </div>

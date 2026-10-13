@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-13: Owner/admin item import registers new intakes under current store/seller terms after preview and custody confirmation. Existing agreement guards apply. Atomic batches retain source references in immutable audit events; retries skip identical imports and reject changed references.
+
 - 2026-10-13: Seller import preview has one Import confirmation that proposes and approves the exact rows via existing APIs. Stable proposal/decision IDs survive retries; only executed outcomes show success. No separate queue review or reason is required; authorization and audit remain unchanged.
 
 - 2026-10-13: Seller import uses localized file controls and an information disclosure explaining flexible CSV columns, preview and explicit approval. Upload, mapping and preview remain separate steps; seller creation and existing staging safeguards are unchanged.

@@ -2989,6 +2989,11 @@ button.text-link:hover:not(:disabled) {
   gap: 20px;
   align-items: start;
 }
+
+.inventory-import-preview > .row,
+.inventory-import-preview > button {
+  margin-top: 12px;
+}
 .import-section-heading {
   display: flex;
   align-items: center;

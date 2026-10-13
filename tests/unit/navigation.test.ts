@@ -48,6 +48,10 @@ describe('navigation', () => {
     expect(isActivePath('/intake/items/1', '/intake')).toBe(false)
     expect(isActivePath('/intake/bags-extra', '/intake')).toBe(false)
     expect(isActivePath('/intake/items/1', '/intake/items')).toBe(true)
+    expect(isActivePath('/intake/import/items', '/intake/import')).toBe(false)
+    expect(currentLink(groups, '/intake/import/items')?.label).toBe(
+      'Importera varor',
+    )
     expect(currentLink(groups, '/intake/reception/abc')?.path).toBe(
       '/intake/operations',
     )

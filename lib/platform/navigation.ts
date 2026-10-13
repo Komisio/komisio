@@ -30,6 +30,11 @@ export function buildNavigation(
           { path: '/intake/items', label: d.items.title, icon: 'Package' },
           { path: '/intake/stock', label: d.stock.title, icon: 'Boxes' },
           {
+            path: '/intake/import/items',
+            label: d.inventoryImport.title,
+            icon: 'Upload',
+          },
+          {
             path: '/intake/purchases',
             label: d.purchases.title,
             icon: 'ShoppingBag',
@@ -123,6 +128,7 @@ export function mobileNavigation(
 
 export function isActivePath(pathname: string, path: string) {
   if (path === '/') return pathname === '/'
+  if (path === '/intake/import') return pathname === path
   if (
     path === '/intake/operations' &&
     (pathname === '/intake/reception' ||

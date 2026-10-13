@@ -285,6 +285,12 @@ max_frequency = "5s"
 # inactivity_timeout = "8h"
 
 # This hook runs before a new user is created and allows developers to reject the request based on the incoming user object.
+[auth.hook.send_email]
+enabled = true
+uri = "http://host.docker.internal:3457"
+# Synthetic loopback key only; hosted environments must use separate secrets.
+secrets = "v1,whsec_BwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwc="
+
 # [auth.hook.before_user_created]
 # enabled = true
 # uri = "pg-functions://postgres/auth/before-user-created-hook"

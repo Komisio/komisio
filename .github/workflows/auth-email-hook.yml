@@ -1,0 +1,34 @@
+name: Auth email hook
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Environment with the reviewed email handler already deployed
+        required: true
+        type: choice
+        options: [staging, production]
+permissions:
+  contents: read
+jobs:
+  configure:
+    if: github.ref == 'refs/heads/main' && github.repository == 'Komisio/komisio'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: ${{ inputs.target == 'production' && 'production-database' || 'staging-database' }}
+    concurrency:
+      group: auth-email-hook-${{ inputs.target }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Probe, configure and verify the Auth email hook
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ vars.SUPABASE_PROJECT_ID }}
+          KOMISIO_AUTH_EMAIL_HOOK_SECRET: ${{ secrets.KOMISIO_AUTH_EMAIL_HOOK_SECRET }}
+          HOOK_TARGET: ${{ inputs.target }}
+        run: node scripts/configure-auth-email-hook.mjs "$HOOK_TARGET"

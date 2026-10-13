@@ -33,6 +33,19 @@ if (!publicKey)
     'Use a Supabase publishable or legacy anon key, never a secret/service-role key',
   )
 const environment = process.env.KOMISIO_ENVIRONMENT
+if (process.env.KOMISIO_AUTH_EMAIL_HOOK_ENABLED === 'true') {
+  if (
+    !/^v1,whsec_[A-Za-z0-9+/]{43}=$/.test(
+      process.env.KOMISIO_AUTH_EMAIL_HOOK_SECRET ?? '',
+    )
+  )
+    failures.push('Branded activation requires KOMISIO_AUTH_EMAIL_HOOK_SECRET')
+  if (
+    !process.env.RESEND_API_KEY ||
+    !(process.env.SELLER_EMAIL_FROM || process.env.INVITATION_EMAIL_FROM)
+  )
+    failures.push('Branded activation requires the Auth hook email transport')
+}
 if (!['staging', 'production'].includes(environment ?? ''))
   failures.push('KOMISIO_ENVIRONMENT must be staging or production')
 const delivery = process.env.INVITATION_EMAIL_DELIVERY ?? 'manual'

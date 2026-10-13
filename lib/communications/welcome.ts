@@ -6,6 +6,7 @@ export function renderSellerWelcome(
   storeName: string,
   sellerName: string,
   appUrl: string,
+  branded = true,
 ) {
   const base = new URL(appUrl)
   if (!['http:', 'https:'].includes(base.protocol))
@@ -17,16 +18,23 @@ export function renderSellerWelcome(
     store: plainText(storeName).replace(/\n/g, ' '),
     seller: plainText(sellerName).replace(/\n/g, ' '),
     url: link.href,
+    activation: dictionary(locale).sellerActivation.confirm,
   }
   const fill = (text: string) =>
-    text.replace(/\{(store|seller|url)\}/g, (_, key: string) => values[key])
+    text.replace(
+      /\{(store|seller|url|activation)\}/g,
+      (_, key: string) => values[key],
+    )
   const d = dictionary(locale).communications
   return {
     templateKey: 'seller.welcome',
-    // The log is a token-free notice. Auth renders the actual activation mail;
-    // its secret link must never appear in staff-readable communication history.
-    templateVersion: 'v2',
+    // The email hook uses this frozen copy, adding only the secret button URL.
+    templateVersion: branded ? 'v3' : 'v2',
     subject: fill(d.welcomeSubject).slice(0, 200),
-    body: fill(d.welcomeBody),
+    body: branded
+      ? fill(d.activationBody) +
+        '\n\n' +
+        dictionary(locale).sellerActivation.emailNote
+      : fill(d.welcomeBody),
   }
 }

@@ -1708,7 +1708,8 @@
     "newer": "Uudemmat viestit",
     "latest": "Uusimmat viestit",
     "showingRange": "Viestit {from}–{to} / {total}",
-    "pageEmpty": "Tällä sivulla ei ole viestejä."
+    "pageEmpty": "Tällä sivulla ei ole viestejä.",
+    "activationBody": "Hei {seller},\n\nSinut on rekisteröity myyjäksi liikkeessä {store}. Vahvista sähköpostiosoitteesi alla olevalla painikkeella. Jos tilisi on uusi, voit sen jälkeen valita salasanan.\n\n{activation}\n\nJos sinulla on jo tili, salasanasi pysyy samana. Kirjaudu sisään:\n{url}"
   },
   "stock": {
     "title": "Varasto",

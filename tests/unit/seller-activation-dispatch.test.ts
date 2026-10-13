@@ -30,6 +30,7 @@ function client(
   } = {},
 ) {
   vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://example.test')
+  vi.stubEnv('KOMISIO_AUTH_EMAIL_HOOK_ENABLED', 'true')
   const rpc = vi.fn(async (name: string) => {
     if (name === 'store_currency') return { data: 'SEK', error: null }
     if (name === 'queue_seller_communication')
@@ -37,8 +38,12 @@ function client(
         data: id,
         error: options.cap ? { message: 'EMAIL_DAILY_CAP' } : null,
       }
-    if (name === 'claim_seller_activation')
-      return { data: options.claim ?? true, error: null }
+    if (name === 'prepare_seller_activation_email')
+      return {
+        data: options.claim === false ? null : 'ab'.repeat(32),
+        error: null,
+      }
+    if (name === 'claim_seller_activation') return { data: true, error: null }
     return {
       data: id,
       error: options.recordError ? { message: 'lost reply' } : null,
@@ -81,6 +86,36 @@ function client(
   }
   return { value: { from, rpc } as unknown as SupabaseClient, rpc }
 }
+it('retains generic Auth activation until the branded hook is enabled', async () => {
+  const c = client()
+  vi.stubEnv('KOMISIO_AUTH_EMAIL_HOOK_ENABLED', 'false')
+  vi.mocked(sendSellerActivation).mockResolvedValueOnce({
+    status: 'sent',
+    providerMessageId: 'supabase-auth',
+  })
+  expect(await sendSellerCommunication(c.value, input)).toMatchObject({
+    ok: true,
+    delivery: 'sent',
+  })
+  expect(c.rpc).toHaveBeenCalledWith(
+    'queue_seller_communication',
+    expect.objectContaining({ p_template_version: 'v2' }),
+  )
+  expect(c.rpc).toHaveBeenCalledWith(
+    'claim_seller_activation',
+    expect.anything(),
+  )
+  expect(
+    c.rpc.mock.calls.some(
+      ([name]) => name === 'prepare_seller_activation_email',
+    ),
+  ).toBe(false)
+  expect(sendSellerActivation).toHaveBeenCalledWith(
+    'seller@example.test',
+    'en',
+    undefined,
+  )
+})
 it('sends nothing when capped, already decided or another request claimed the send', async () => {
   for (const options of [{ cap: true }, { decided: true }, { claim: false }]) {
     const c = client(options)

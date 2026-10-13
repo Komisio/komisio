@@ -73,6 +73,46 @@ export async function raceSellerActivation({ setup, connectionString }) {
     console.log(
       'PASS: concurrent seller activation requests permit exactly one Auth send.',
     )
+    const branded = randomUUID()
+    await clients[0].query(
+      "select queue_seller_communication($1,$2,$3,'message','seller.welcome','v3','en','Welcome','Frozen copy','none',null)",
+      [tenant, branded, seller],
+    )
+    const ticket = (
+      await clients[0].query(
+        'select prepare_seller_activation_email($1,$2,$3) ticket',
+        [tenant, branded, 'activation-race@example.test'],
+      )
+    ).rows[0].ticket
+    for (const c of clients) await c.query('set role anon')
+    await setup.query('begin')
+    await setup.query(
+      'select id from seller_communications where id=$1 for update',
+      [branded],
+    )
+    const deliveries = clients.map((c) =>
+      c.query('select consume_seller_activation_email($1,$2) message', [
+        ticket,
+        'activation-race@example.test',
+      ]),
+    )
+    waiting = 0
+    for (let i = 0; i < 100; i++) {
+      waiting = (
+        await setup.query(
+          "select count(*)::int n from pg_stat_activity where application_name like 'activation_race_%' and wait_event_type='Lock'",
+        )
+      ).rows[0].n
+      if (waiting === 2) break
+      await pause(20)
+    }
+    await setup.query('commit')
+    const delivered = await Promise.all(deliveries)
+    assert.equal(waiting, 2)
+    assert.equal(delivered.filter((r) => r.rows[0].message !== null).length, 1)
+    console.log(
+      'PASS: concurrent Auth callbacks consume the welcome capability only once.',
+    )
   } finally {
     await setup.query('rollback')
     await Promise.all(clients.map((c) => c.end()))

@@ -3,8 +3,13 @@ import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
+import { readFileSync } from 'node:fs'
 
-async function activationMail(page: Page, email: string) {
+async function activationMail(
+  page: Page,
+  email: string,
+  frozen?: { subject: string; body: string },
+) {
   let link = ''
   await expect
     .poll(async () => {
@@ -20,6 +25,15 @@ async function activationMail(page: Page, email: string) {
           `http://127.0.0.1:54324/api/v1/message/${message.ID}`,
         )
       ).json()
+      if (frozen) {
+        expect(message.Subject).toBe(frozen.subject)
+        expect(
+          detail.Text.replaceAll('\r\n', '\n')
+            .replace(/\nhttp[^\s]*\/auth\/activate\?[^\s]*/g, '')
+            .trim(),
+        ).toBe(frozen.body)
+        expect(detail.HTML).not.toContain('ticket=')
+      }
       link = (
         detail.HTML?.match(/href="(http[^\"]*\/auth\/activate[^\"]*)"/)?.[1] ??
         ''
@@ -77,7 +91,15 @@ test('registration creates an unconfirmed account, activation works in another b
         ).rows[0].count,
       )
     expect(await authCount()).toBe(1)
-    const getLink = await activationMail(page, email)
+    const firstCopy = (
+      await f.db.query(
+        'select subject,body from seller_communications where seller_id=$1 order by queued_at desc limit 1',
+        [command.requestId],
+      )
+    ).rows[0]
+    expect(firstCopy.subject).toBe('Välkommen till P2 browser store')
+    expect(firstCopy.body).toContain('Activation seller')
+    const getLink = await activationMail(page, email, firstCopy)
     const replays = await Promise.all([save(), save()])
     for (const replay of replays)
       expect((await replay.json()).welcome.delivery).toBe('sent')
@@ -157,7 +179,7 @@ test('registration creates an unconfirmed account, activation works in another b
         )
       ).rows[0].encrypted_password,
     ).toBe(passwordHash)
-    const renewedLink = await activationMail(page, email)
+    const renewedLink = await activationMail(page, email, firstCopy)
     expect(renewedLink).not.toBe(getLink)
     await sellerContext.clearCookies()
     await sellerPage.goto(renewedLink)
@@ -211,5 +233,108 @@ test('registration creates an unconfirmed account, activation works in another b
   } finally {
     await sellerContext.close()
     await f.close()
+  }
+})
+
+test('an existing account gets the current store copy and seller language across stores', async ({
+  page,
+}) => {
+  const owner = `branded-existing-${randomUUID()}@example.test`
+  await register(page, owner, `K!${randomUUID()}`)
+  const fixtures = []
+  try {
+    for (const locale of ['en', 'sv'] as const) {
+      const f = await p2Fixture(owner)
+      fixtures.push(f)
+      await f.commit()
+      const send = (path: string, data: object) =>
+        page.request.post(path, {
+          headers: { origin: 'http://127.0.0.1:3000' },
+          data,
+        })
+      expect(
+        (
+          await send('/api/platform', { action: 'select', tenantId: f.tenant })
+        ).ok(),
+      ).toBe(true)
+      const store = `Synthetic ${locale} store`
+      expect(
+        (
+          await send('/api/platform', {
+            action: 'rename',
+            tenantId: f.tenant,
+            name: store,
+          })
+        ).ok(),
+      ).toBe(true)
+      expect(
+        (
+          await send('/api/intake', {
+            action: 'saveSellerProfile',
+            tenantId: f.tenant,
+            requestId: randomUUID(),
+            sellerId: f.seller,
+            expectedRevision: 0,
+            profile: {
+              name: 'Synthetic existing seller',
+              email: owner,
+              phone: '',
+              addressLine1: '',
+              addressLine2: '',
+              postalCode: '',
+              city: '',
+              country: '',
+              notes: '',
+              language: locale,
+            },
+          })
+        ).ok(),
+      ).toBe(true)
+      const metadata = (
+        await f.db.query(
+          'select raw_user_meta_data from auth.users where email=$1',
+          [owner],
+        )
+      ).rows[0].raw_user_meta_data
+      await page.goto(`/intake/sellers/${f.seller}#seller-communication`)
+      const result = page.waitForResponse(
+        (r) =>
+          r.url().endsWith('/api/communications') &&
+          r.request().method() === 'POST',
+      )
+      await page
+        .getByRole('button', {
+          name: d.communications.welcomeSend,
+          exact: true,
+        })
+        .click()
+      const response = await result
+      expect(response.ok()).toBe(true)
+      const outcome = await response.json()
+      expect(outcome.delivery).toBe('sent')
+      const frozen = (
+        await f.db.query(
+          'select subject,body from seller_communications where id=$1',
+          [outcome.id],
+        )
+      ).rows[0]
+      expect(frozen.subject).toBe(
+        JSON.parse(
+          readFileSync(`messages/${locale}.json`, 'utf8'),
+        ).communications.welcomeSubject.replace('{store}', store),
+      )
+      const link = await activationMail(page, owner, frozen)
+      expect(new URL(link).searchParams.get('locale')).toBe(locale)
+      expect(
+        (
+          await f.db.query(
+            'select raw_user_meta_data from auth.users where email=$1',
+            [owner],
+          )
+        ).rows[0].raw_user_meta_data,
+      ).toEqual(metadata)
+    }
+  } finally {
+    await Promise.all(fixtures.map((f) => f.close()))
   }
 })

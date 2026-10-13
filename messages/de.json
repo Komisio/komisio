@@ -1708,7 +1708,8 @@
     "newer": "Neuere Nachrichten",
     "latest": "Neueste Nachrichten",
     "showingRange": "Nachrichten {from}–{to} von {total}",
-    "pageEmpty": "Keine Nachrichten auf dieser Seite."
+    "pageEmpty": "Keine Nachrichten auf dieser Seite.",
+    "activationBody": "Hallo {seller},\n\nDu bist als Verkäufer bei {store} registriert. Bestätige deine E-Mail-Adresse mit der Schaltfläche unten. Wenn dein Konto neu ist, kannst du anschließend ein Passwort wählen.\n\n{activation}\n\nWenn du bereits ein Konto hast, bleibt dein Passwort unverändert. Anmelden:\n{url}"
   },
   "stock": {
     "title": "Bestand",

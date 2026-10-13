@@ -1995,6 +1995,8 @@
       "failed": "fallido",
       "cancelled": "cancelado"
     },
+    "zebraPrint": "Imprimir en Zebra",
+    "close": "Cerrar",
     "browserOpen": "Imprimir desde el navegador",
     "browserBack": "Volver al artículo",
     "browserHint": "La etiqueta mide 80 mm de ancho y se puede imprimir en papel normal. Selecciona una escala del 100 % y desactiva los encabezados y pies de página en el diálogo de impresión.",

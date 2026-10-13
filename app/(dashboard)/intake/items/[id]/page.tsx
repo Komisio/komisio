@@ -12,7 +12,7 @@ import { readStoreCurrency } from '@/lib/engine/money'
 import { readItem, formatOre } from '@/lib/engine/items'
 import { readItemLabel } from '@/lib/engine/item-label'
 import { readPrinters } from '@/lib/engine/printing'
-import { PrintJobButton } from '@/components/intake/print-job-button'
+import { ItemPrintDialog } from '@/components/intake/item-print-dialog'
 import { readChainOverview } from '@/lib/engine/chains'
 import { TransferItemForm } from '@/components/intake/transfer-item-form'
 import { readItemSyncStatus } from '@/lib/engine/item-sync'
@@ -103,7 +103,7 @@ export default async function Item({
           )}
         </p>
         {active.role !== 'readonly' && (
-          <p className="item-detail-shortcuts">
+          <div className="item-detail-shortcuts">
             <Link
               className="btn btn-secondary"
               href={
@@ -115,13 +115,22 @@ export default async function Item({
             >
               {d.manageSalePeriod}
             </Link>
+            <ItemPrintDialog
+              tenantId={active.id}
+              itemId={item.id}
+              printers={printers}
+              kind={prices.length > 1 ? 'markdown' : 'item'}
+              manage={manages}
+              d={all.printing}
+              intake={all.intake}
+            />
             <Link
               className="btn btn-secondary"
               href={`/intake/items/${item.id}/label`}
             >
               {all.printing.browserOpen}
             </Link>
-          </p>
+          </div>
         )}
       </div>
       {photos[0] && (
@@ -208,22 +217,6 @@ export default async function Item({
             />
           </section>
         )}
-      {active.role !== 'readonly' && printers.some((p) => p.active) && (
-        <details className="card intake-form item-detail-section">
-          <summary>{d.labelPrinter}</summary>
-          <p>{all.printing.itemLabelHint}</p>
-          <PrintJobButton
-            tenantId={active.id}
-            printers={printers}
-            kind={prices.length > 1 ? 'markdown' : 'item'}
-            referenceKind="item"
-            referenceId={item.id}
-            d={all.printing}
-            intake={all.intake}
-            compact
-          />
-        </details>
-      )}
       <details className="card intake-form item-detail-section">
         <summary>
           {d.prices} <span>({prices.length})</span>

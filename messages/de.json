@@ -1995,6 +1995,8 @@
       "failed": "fehlgeschlagen",
       "cancelled": "abgebrochen"
     },
+    "zebraPrint": "Auf Zebra drucken",
+    "close": "Schließen",
     "browserOpen": "Im Browser drucken",
     "browserBack": "Zurück zum Artikel",
     "browserHint": "Das Etikett ist 80 mm breit und kann auf normalem Papier gedruckt werden. Wählen Sie im Druckdialog 100 % Skalierung und deaktivieren Sie Kopf- und Fußzeilen.",

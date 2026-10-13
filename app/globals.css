@@ -7817,3 +7817,33 @@ button.text-link:hover:not(:disabled) {
     grid-column: 2;
   }
 }
+
+.item-print-dialog {
+  margin: auto;
+  width: min(480px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.item-print-dialog::backdrop {
+  background: rgb(0 0 0 / 28%);
+}
+.item-print-dialog-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.item-print-dialog-heading h2 {
+  margin: 0;
+}
+.item-print-dialog select {
+  min-width: 0;
+  width: 100%;
+}

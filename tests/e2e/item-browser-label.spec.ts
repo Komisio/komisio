@@ -32,6 +32,14 @@ test('staff print an item label with the current price without configuring a pri
       .getByRole('link', { name: d.printing.browserOpen, exact: true })
       .click()
     const label = page.locator('.item-browser-label')
+    await page.getByRole('button', { name: d.printing.zebraPrint }).click()
+    const dialog = page.getByRole('dialog', { name: d.printing.zebraPrint })
+    await expect(dialog.getByText(d.printing.noPrinters)).toBeVisible()
+    await expect(
+      dialog.getByRole('link', { name: d.printing.title }),
+    ).toHaveAttribute('href', '/settings?tab=printing')
+    await page.keyboard.press('Escape')
+    await expect(dialog).toBeHidden()
     await expect(label).toContainText('123.45 SEK')
     await expect(label).toContainText('Vintage oak chair')
     await expect(label).toContainText(reference)
@@ -69,7 +77,7 @@ test('staff print an item label with the current price without configuring a pri
       }
     })
     await page
-      .getByRole('button', { name: d.printing.browserPrint, exact: true })
+      .getByRole('button', { name: d.printing.browserOpen, exact: true })
       .click()
     await expect(page.locator('html')).toHaveAttribute(
       'data-print-requested',
@@ -90,7 +98,7 @@ test('staff print an item label with the current price without configuring a pri
     await expect(page.locator('.sidebar')).toBeHidden()
     await expect(page.locator('.topbar')).toBeHidden()
     await expect(
-      page.getByRole('button', { name: d.printing.browserPrint, exact: true }),
+      page.getByRole('button', { name: d.printing.browserOpen, exact: true }),
     ).toBeHidden()
     await expect(label).toBeVisible()
     expect((await label.boundingBox())!.x).toBeLessThanOrEqual(1)

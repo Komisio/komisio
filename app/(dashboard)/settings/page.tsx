@@ -172,12 +172,6 @@ export default async function Settings({
     <div className="settings-page">
       <div className="page-heading">
         <h1>{d.tenant}</h1>
-        <p>{d.tenantIntro}</p>
-        {intake && (
-          <Link className="text-link" href="/intake/agreements">
-            {d.agreements.manage}
-          </Link>
-        )}
       </div>
       {visible.length > 1 && (
         <nav className="view-tabs" aria-label={d.settingsTabsLabel}>

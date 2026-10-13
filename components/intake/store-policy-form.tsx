@@ -1,50 +1,42 @@
 'use client'
 import { storeCurrencies } from '@/lib/platform/currencies'
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { useRouter } from '@/components/platform/use-working-router'
 import { locales, localeNames, type Dictionary } from '@/lib/i18n'
 import type { StorePolicyBody } from '@/lib/engine/store-policy'
 import { storePolicyBody } from '@/lib/engine/store-policy'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
-import { useUnsavedChanges } from '@/components/platform/navigation-warning'
+import {
+  NavigationLink,
+  useUnsavedChanges,
+} from '@/components/platform/navigation-warning'
 import { useFormDirty } from '@/components/platform/use-form-dirty'
 import { feeAmountFromInput } from '@/lib/engine/consignment-fees'
 
 function PolicySection({
   id,
   title,
+  active,
   children,
 }: {
   id: string
   title: string
+  active: boolean
   children: ReactNode
 }) {
-  const [open, setOpen] = useState(id === 'receiving')
   return (
     <section
       className="policy-section"
       id={`policy-section-${id}`}
       aria-labelledby={`policy-heading-${id}`}
+      hidden={!active}
       tabIndex={-1}
     >
-      <details
-        open={open}
-        onToggle={(event) => setOpen(event.currentTarget.open)}
-      >
-        <summary>
-          <h3 id={`policy-heading-${id}`}>{title}</h3>
-        </summary>
-        <div className="policy-section-content">{children}</div>
-      </details>
+      <h3 id={`policy-heading-${id}`}>{title}</h3>
+      <div className="policy-section-content">{children}</div>
     </section>
   )
-}
-
-function revealPolicyTarget(target: Element | null) {
-  const section = target?.closest('.policy-section')
-  const details = section?.querySelector('details')
-  if (details) details.open = true
 }
 
 export function StorePolicyForm({
@@ -69,6 +61,11 @@ export function StorePolicyForm({
   )
   const [saved, setSaved] = useState(false)
   const form = useRef<HTMLFormElement>(null)
+  const [activeSection, setActiveSection] = useState('receiving')
+  const revealPolicyTarget = useCallback((target: Element | null) => {
+    const section = target?.closest('.policy-section')
+    if (section) setActiveSection(section.id.replace('policy-section-', ''))
+  }, [])
   useEffect(() => {
     function revealHash() {
       const id = window.location.hash.slice(1)
@@ -81,7 +78,7 @@ export function StorePolicyForm({
     revealHash()
     window.addEventListener('hashchange', revealHash)
     return () => window.removeEventListener('hashchange', revealHash)
-  }, [])
+  }, [revealPolicyTarget])
   const action = useIntakeAction(d.intake),
     router = useRouter(),
     t = d.storePolicy
@@ -149,6 +146,8 @@ export function StorePolicyForm({
   )
   const sections = [
     ['receiving', t.sectionReceiving],
+    ['pricing', t.editor.pricing],
+    ['agreements', t.editor.agreements],
     ['economy', t.sectionEconomy],
     ['period', t.sectionPeriod],
     ['vat', t.vat],
@@ -160,7 +159,6 @@ export function StorePolicyForm({
       <header className="policy-header">
         <div>
           <h2>{t.title}</h2>
-          <p>{t.layoutIntro}</p>
         </div>
         <span className="policy-version">
           {base.id ? `${t.version} ${base.version}` : t.defaults}
@@ -172,23 +170,25 @@ export function StorePolicyForm({
             <a
               key={id}
               href={`#policy-section-${id}`}
-              onClick={() =>
-                revealPolicyTarget(
-                  document.getElementById(`policy-section-${id}`),
+              aria-current={activeSection === id ? 'location' : undefined}
+              onClick={(event) => {
+                event.preventDefault()
+                setActiveSection(id)
+                window.history.replaceState(
+                  window.history.state,
+                  '',
+                  `#policy-section-${id}`,
                 )
-              }
+              }}
             >
               {title}
             </a>
           ))}
-          {editable && <a href="#policy-publish">{t.publish}</a>}
         </nav>
         <form
           ref={form}
           onChange={checkDirty}
-          onInvalidCapture={(event) =>
-            revealPolicyTarget(event.target as Element)
-          }
+          noValidate
           onSubmit={async (e) => {
             e.preventDefault()
             if (action.locked) {
@@ -196,6 +196,17 @@ export function StorePolicyForm({
                 setSaved(true)
                 router.refresh()
               }
+              return
+            }
+            if (!e.currentTarget.checkValidity()) {
+              const field = e.currentTarget.querySelector<HTMLInputElement>(
+                'input:invalid, select:invalid, textarea:invalid',
+              )
+              revealPolicyTarget(field)
+              requestAnimationFrame(() => {
+                field?.focus()
+                field?.reportValidity()
+              })
               return
             }
             const f = new FormData(e.currentTarget)
@@ -252,14 +263,25 @@ export function StorePolicyForm({
             })
             setInvalid(!candidate.success)
             if (!candidate.success) {
-              // Schema errors may span fields; keep every section available for correction.
-              form.current
-                ?.querySelectorAll<HTMLDetailsElement>(
-                  '.policy-section > details',
+              const path = candidate.error.issues[0]?.path ?? []
+              const fields: Record<string, string> = {
+                'consignmentPeriod.months': 'consignmentMonths',
+                'consignmentPeriod.collectionDays': 'collectionDays',
+                'consignmentPeriod.monthlyFee.amountOre': 'feeAmount',
+                'consignmentPeriod.monthlyFee.vatBasis': 'feeVatBasis',
+                'consignmentPeriod.monthlyFee.vatRatePercent': 'feeVatRate',
+                'consignmentPeriod.monthlyFee.collection': 'feeCollection',
+              }
+              const key = fields[path.join('.')] ?? String(path[0] ?? '')
+              const target =
+                form.current?.querySelector<HTMLElement>(`[name="${key}"]`) ??
+                (['consignmentPeriod', 'markdownSteps'].includes(
+                  String(path[0]),
                 )
-                .forEach((details) => {
-                  details.open = true
-                })
+                  ? document.getElementById('policy-section-period')
+                  : null)
+              revealPolicyTarget(target)
+              requestAnimationFrame(() => target?.focus())
               return
             }
             if (
@@ -287,62 +309,133 @@ export function StorePolicyForm({
               action.needsReload
             }
           >
-            <PolicySection id="receiving" title={t.sectionReceiving}>
-              <div className="policy-grid">
-                <label>
-                  <input
-                    type="checkbox"
-                    name="photoSubmissionsEnabled"
-                    defaultChecked={
-                      base.policy.photoSubmissionsEnabled !== false
-                    }
-                  />
-                  {d.submissions.enablePhotos}
-                </label>
-                <label>
-                  {d.submissions.pricingResponsibility}
-                  <select
-                    name="submissionPricing"
-                    defaultValue={base.policy.submissionPricing ?? 'store'}
-                  >
-                    {(['store', 'seller', 'approval'] as const).map((mode) => (
-                      <option key={mode} value={mode}>
-                        {d.submissions.pricingModes[mode]}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                {choiceField('intakeProfile')}
-                {choiceField('sellerReviewMode')}
-              </div>
-              <div className="policy-grid">
-                {' '}
-                {Object.entries(subsets).map(([key, options]) => (
-                  <fieldset
-                    key={key}
-                    id={`policy-${key}`}
-                    style={{ scrollMarginTop: '1rem' }}
-                  >
-                    <legend>{t[key as keyof typeof subsets]}</legend>
-                    {options.map((value) => (
-                      <label className="intake-confirm" key={value}>
-                        <input
-                          type="checkbox"
-                          name={key}
-                          value={value}
-                          defaultChecked={(
-                            base.policy[key as keyof typeof subsets] as string[]
-                          ).includes(value)}
-                        />
-                        {t[value]}
-                      </label>
-                    ))}
-                  </fieldset>
+            <PolicySection
+              id="receiving"
+              title={t.sectionReceiving}
+              active={activeSection === 'receiving'}
+            >
+              {choiceField('intakeProfile')}
+              <fieldset id="policy-custodySources">
+                <legend>{t.custodySources}</legend>
+                {subsets.custodySources.map((value) => (
+                  <label className="intake-confirm" key={value}>
+                    <input
+                      type="checkbox"
+                      name="custodySources"
+                      value={value}
+                      defaultChecked={base.policy.custodySources.includes(
+                        value,
+                      )}
+                    />
+                    {t[value]}
+                  </label>
                 ))}
-              </div>
-              <p className="policy-note">{t.legacy}</p>
+              </fieldset>
+              <label className="intake-confirm policy-option">
+                <input
+                  type="checkbox"
+                  name="photoSubmissionsEnabled"
+                  aria-label={d.submissions.enablePhotos}
+                  aria-describedby="policy-photos-help"
+                  defaultChecked={base.policy.photoSubmissionsEnabled !== false}
+                />
+                <span>
+                  {d.submissions.enablePhotos}
+                  <small id="policy-photos-help">{t.editor.photosHelp}</small>
+                </span>
+              </label>
             </PolicySection>
-            <PolicySection id="economy" title={t.sectionEconomy}>
+            <PolicySection
+              id="pricing"
+              title={t.editor.pricing}
+              active={activeSection === 'pricing'}
+            >
+              <div className="field">
+                <label htmlFor="policy-sellerReviewMode">
+                  {t.editor.pricingReview}
+                </label>
+                <select
+                  id="policy-sellerReviewMode"
+                  name="sellerReviewMode"
+                  defaultValue={base.policy.sellerReviewMode}
+                  aria-describedby="policy-review-help"
+                >
+                  <option value="delegated">{t.editor.noReview}</option>
+                  <option value="per_item">{t.editor.perItemReview}</option>
+                </select>
+                <small id="policy-review-help">
+                  {t.editor.pricingReviewHelp}
+                </small>
+              </div>
+              <div className="field">
+                <label htmlFor="policy-submissionPricing">
+                  {t.editor.submissionPricing}
+                </label>
+                <select
+                  id="policy-submissionPricing"
+                  name="submissionPricing"
+                  defaultValue={base.policy.submissionPricing ?? 'store'}
+                  aria-describedby="policy-submission-help"
+                >
+                  <option value="store">{t.editor.submissionStore}</option>
+                  <option value="seller">{t.editor.submissionSeller}</option>
+                  <option value="approval">
+                    {t.editor.submissionApproval}
+                  </option>
+                </select>
+                <small id="policy-submission-help">
+                  {t.editor.submissionPricingHelp}
+                </small>
+              </div>
+            </PolicySection>
+            <PolicySection
+              id="agreements"
+              title={t.editor.agreements}
+              active={activeSection === 'agreements'}
+            >
+              <fieldset
+                id="policy-agreementRequiredFor"
+                aria-describedby="policy-agreement-help"
+              >
+                <legend>{t.agreementRequiredFor}</legend>
+                <p id="policy-agreement-help">{t.editor.agreementHelp}</p>
+                {subsets.agreementRequiredFor.map((value, index) => (
+                  <label className="intake-confirm policy-option" key={value}>
+                    <input
+                      type="checkbox"
+                      name="agreementRequiredFor"
+                      aria-label={t[value]}
+                      aria-describedby={`policy-agreement-help-${value}`}
+                      value={value}
+                      defaultChecked={base.policy.agreementRequiredFor.includes(
+                        value,
+                      )}
+                    />
+                    <span>
+                      {t[value]}
+                      <small id={`policy-agreement-help-${value}`}>
+                        {
+                          [
+                            t.editor.bagHelp,
+                            t.editor.reviewHelp,
+                            t.editor.acceptanceHelp,
+                          ][index]
+                        }
+                      </small>
+                    </span>
+                  </label>
+                ))}
+              </fieldset>
+              <p className="policy-note">{t.legacy}</p>
+              <NavigationLink className="text-link" href="/intake/agreements">
+                {d.agreements.manage}
+              </NavigationLink>
+            </PolicySection>
+            <PolicySection
+              id="economy"
+              title={t.sectionEconomy}
+              active={activeSection === 'economy'}
+            >
               <div className="policy-grid">
                 {numberField('commissionRatePercent')}
                 {choiceField('commissionBasis')}
@@ -363,9 +456,16 @@ export function StorePolicyForm({
                   </select>
                 </div>
               </div>
-              <p className="policy-note">{t.currencyIntro}</p>
+              <details className="policy-help">
+                <summary>{t.editor.more}</summary>
+                <p>{t.currencyIntro}</p>
+              </details>
             </PolicySection>
-            <PolicySection id="period" title={t.sectionPeriod}>
+            <PolicySection
+              id="period"
+              title={t.sectionPeriod}
+              active={activeSection === 'period'}
+            >
               <fieldset>
                 <legend>{t.consignmentCalendar}</legend>
                 <label className="intake-confirm">
@@ -580,8 +680,15 @@ export function StorePolicyForm({
                 </label>
               </fieldset>
             </PolicySection>
-            <PolicySection id="vat" title={t.vat}>
-              <p>{t.vatIntro}</p>
+            <PolicySection
+              id="vat"
+              title={t.vat}
+              active={activeSection === 'vat'}
+            >
+              <details className="policy-help">
+                <summary>{t.editor.more}</summary>
+                <p>{t.vatIntro}</p>
+              </details>
               {Object.entries(vatModes).map(([key, options]) => (
                 <div className="field" key={key}>
                   <label htmlFor={`policy-${key}`}>
@@ -619,8 +726,15 @@ export function StorePolicyForm({
                 />
               </div>
             </PolicySection>
-            <PolicySection id="ai" title={t.sectionAi}>
-              <p>{t.assistanceIntro}</p>
+            <PolicySection
+              id="ai"
+              title={t.sectionAi}
+              active={activeSection === 'ai'}
+            >
+              <details className="policy-help">
+                <summary>{t.editor.more}</summary>
+                <p>{t.assistanceIntro}</p>
+              </details>
               <div className="field">
                 <label htmlFor="policy-item-language">{t.itemLanguage}</label>
                 <select
@@ -664,8 +778,15 @@ export function StorePolicyForm({
                 <small>{t.assistanceQuotaHint}</small>
               </div>
             </PolicySection>
-            <PolicySection id="notifications" title={t.notifications}>
-              <p>{t.notificationsIntro}</p>
+            <PolicySection
+              id="notifications"
+              title={t.notifications}
+              active={activeSection === 'notifications'}
+            >
+              <details className="policy-help">
+                <summary>{t.editor.more}</summary>
+                <p>{t.notificationsIntro}</p>
+              </details>
               <label className="intake-confirm">
                 <input
                   type="checkbox"
@@ -677,20 +798,21 @@ export function StorePolicyForm({
                 {t.automaticSellerNotifications}
               </label>
             </PolicySection>
-            {editable && (
-              <label
-                className="intake-confirm policy-confirm"
-                id="policy-publish"
-              >
-                <input type="checkbox" required />
-                {t.confirm}
-              </label>
-            )}
           </fieldset>
           {editable && !saved && (
-            <Button disabled={!ready || action.busy || action.needsReload}>
-              {action.locked ? d.intake.retry : t.publish}
-            </Button>
+            <div className="policy-publish-bar" id="policy-publish">
+              <label className="intake-confirm policy-confirm">
+                <input
+                  type="checkbox"
+                  required
+                  disabled={!ready || action.locked || action.needsReload}
+                />
+                {t.confirm}
+              </label>
+              <Button disabled={!ready || action.busy || action.needsReload}>
+                {action.locked ? d.intake.retry : t.publish}
+              </Button>
+            </div>
           )}
           {saved && <p role="status">{t.saved}</p>}
           {(invalid || action.error) && (

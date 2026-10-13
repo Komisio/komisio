@@ -7,6 +7,7 @@ import {
   inspectInventoryRows,
   parseInventoryFile,
   previewInventoryImport,
+  importInventory,
 } from '../../lib/engine/inventory-import'
 
 const header = inventoryColumns.join(';')
@@ -76,7 +77,8 @@ describe('inventory-file preflight', () => {
       expect(inventoryPrice(value)).toBeNull()
     expect(inventoryPrice('150,25')).toBe(15025)
     expect(inventoryPrice('150.2')).toBe(15020)
-    expect(inventoryPrice('999999999.99')).toBe(99999999999)
+    expect(inventoryPrice('999999.99')).toBe(99999999)
+    expect(inventoryPrice('1000000')).toBeNull()
     expect(inventoryPrice('0.01')).toBe(1)
   })
   it('marks both duplicate rows, missing metadata, bad seller references and mixed currencies', () => {
@@ -139,6 +141,7 @@ describe('inventory-file preflight', () => {
           { status: 'ambiguous' },
         ],
       })
+      .mockResolvedValueOnce({ data: 'a'.repeat(32) })
     const client = { rpc } as unknown as SupabaseClient
     const result = await previewInventoryImport(client, seller, {
       source: 'x',
@@ -162,6 +165,53 @@ describe('inventory-file preflight', () => {
         ],
       },
     ])
+  })
+  it('confirms only an exact import result and preserves the caller request on retries', async () => {
+    const input = {
+      tenantId: seller,
+      requestId: seller,
+      source: 'x.csv',
+      context: 'a'.repeat(32),
+      received: true,
+      rows: [
+        {
+          reference: '1',
+          sellerId: seller,
+          email: '',
+          description: 'Shirt',
+          priceOre: 1250,
+          currency: 'SEK',
+        },
+      ],
+    }
+    const output = {
+      requestId: seller,
+      created: 1,
+      skipped: 0,
+      items: [
+        { sourceReference: '1', itemId: seller, reference: 'I-10000000' },
+      ],
+    }
+    const rpc = vi.fn().mockResolvedValue({ data: output })
+    const client = { rpc } as unknown as SupabaseClient
+    expect(await importInventory(client, input)).toEqual(output)
+    expect(await importInventory(client, input)).toEqual(output)
+    expect(rpc.mock.calls[0]).toEqual(rpc.mock.calls[1])
+    for (const invalid of [
+      { ...output, created: 2 },
+      { ...output, items: [] },
+      { ...output, requestId: '20000000-0000-4000-8000-000000000001' },
+    ]) {
+      rpc.mockResolvedValueOnce({ data: invalid })
+      await expect(importInventory(client, input)).rejects.toThrow()
+    }
+    rpc.mockResolvedValueOnce({ error: { message: 'AGREEMENT_REQUIRED' } })
+    await expect(importInventory(client, input)).rejects.toThrow(
+      'AGREEMENT_REQUIRED',
+    )
+    await expect(
+      importInventory(client, { ...input, received: false }),
+    ).rejects.toThrow()
   })
   it('fails closed on missing lookup results and permission failures', async () => {
     for (const reply of [{ data: [] }, { error: { message: 'FORBIDDEN' } }]) {

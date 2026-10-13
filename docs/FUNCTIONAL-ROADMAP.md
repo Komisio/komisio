@@ -60,10 +60,12 @@ cohort. Missing estimates, unsold goods, returns and excluded markets/currencies
 are explicit. No AI rerun or price change occurs; a representative real-store
 pilot is still required before claiming pricing accuracy.
 
-Inventory-file preparation provides a CSV template, exact seller matching and
-row-level validation without writing stock. Historical stock and opening seller
-balances still require migration provenance, retained terms and reconciliation;
-the file check does not perform that migration.
+Item import provides a CSV template, exact seller matching and read-only preview.
+Owners/admins confirm physical custody and import new intakes under current
+store/seller terms through ordinary reception. Atomic batches retain source
+references, skip identical imports and reject conflicts. Historical stock and
+opening seller balances still require retained terms and reconciliation;
+new-intake import does not perform that historical migration.
 
 The staff photo queue supports scoped seller/description search and work filters
 before pagination. Invitations remain separate from registered items; an accepted

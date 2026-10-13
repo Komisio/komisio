@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation'
-import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { ImportInventoryPreview } from '@/components/intake/import-inventory-preview'
 import { requirePlatform } from '@/lib/platform/context'
@@ -18,9 +17,6 @@ export default async function InventoryImport() {
   const currency = await readStoreCurrency(ctx.client, ctx.active!.id)
   return (
     <>
-      <Link className="text-link" href="/intake/import">
-        {all.importer.title}
-      </Link>
       <div className="page-heading">
         <FormHelpHeading
           title={d.title}

@@ -56,12 +56,13 @@ const match = z.discriminatedUnion('status', [
 ])
 export const inventoryPreview = z.strictObject({
   currency: currencyCode,
+  context: z.string().regex(/^[a-f0-9]{32}$/),
   rows: z
     .array(
       z.strictObject({
         line: z.number().int(),
         seller: match.nullable(),
-        priceOre: z.number().int().positive().max(99999999999).nullable(),
+        priceOre: z.number().int().positive().max(99999999).nullable(),
         issues: z.array(z.enum(inventoryIssues)),
       }),
     )
@@ -146,7 +147,7 @@ export function inventoryPrice(value: string): number | null {
   if (!/^\d{1,9}(?:[.,]\d{1,2})?$/.test(value)) return null
   const [whole, fraction = ''] = value.split(/[.,]/)
   const ore = BigInt(whole) * 100n + BigInt(fraction.padEnd(2, '0'))
-  return ore > 0n && ore <= 99999999999n ? Number(ore) : null
+  return ore > 0n && ore <= 99999999n ? Number(ore) : null
 }
 
 export function inspectInventoryRows(file: InventoryFile, currency: string) {
@@ -204,9 +205,19 @@ export async function previewInventoryImport(
       result.error.message === 'FORBIDDEN' ? 'FORBIDDEN' : 'REQUEST_FAILED',
     )
   const matches = z.array(match).length(references.length).parse(result.data)
+  const context = await client.rpc('inventory_import_context', {
+    p_tenant: tenant,
+    p_sellers: [
+      ...new Set(
+        matches.flatMap((s) => (s.status === 'matched' ? [s.id] : [])),
+      ),
+    ],
+  })
+  if (context.error) throw new Error('REQUEST_FAILED')
   let index = 0
   return inventoryPreview.parse({
     currency,
+    context: context.data,
     rows: checked.map((row) => {
       const seller = row.lookup ? matches[index++] : null
       return {
@@ -220,4 +231,78 @@ export async function previewInventoryImport(
       }
     }),
   })
+}
+
+export const inventoryImportRow = z.strictObject({
+  reference: z.string().trim().min(1).max(120),
+  sellerId: z.uuid(),
+  email: z.string().trim().max(254),
+  description: z.string().trim().min(1).max(1000),
+  priceOre: z.number().int().min(1).max(99999999),
+  currency: currencyCode,
+})
+export const inventoryImportCommand = z.strictObject({
+  tenantId: z.uuid(),
+  requestId: z.uuid(),
+  source: z.string().trim().min(1).max(200),
+  rows: z.array(inventoryImportRow).min(1).max(200),
+  context: z.string().regex(/^[a-f0-9]{32}$/),
+  received: z.literal(true),
+})
+export const inventoryImportResult = z.strictObject({
+  requestId: z.uuid(),
+  created: z.number().int().min(0).max(200),
+  skipped: z.number().int().min(0).max(200),
+  items: z
+    .array(
+      z.strictObject({
+        sourceReference: z.string(),
+        itemId: z.uuid(),
+        reference: z.string(),
+      }),
+    )
+    .min(1)
+    .max(200),
+})
+export const inventoryImportErrors = [
+  'FORBIDDEN',
+  'CUSTODY_REQUIRED',
+  'IMPORT_CHANGED',
+  'IMPORT_SELLER_CHANGED',
+  'IMPORT_REFERENCE_CONFLICT',
+  'REQUEST_CONFLICT',
+  'CURRENCY_MISMATCH',
+  'AGREEMENT_REQUIRED',
+  'SELLER_APPROVAL_REQUIRED',
+  'INTAKE_PROFILE_FULL',
+  'PLAN_LIMIT_ITEMS',
+  'PLAN_PLUS_REQUIRED',
+  'INVALID_INPUT',
+] as const
+
+/** Explicit staff confirmation; one transaction composes the existing intake engine. */
+export async function importInventory(client: SupabaseClient, input: unknown) {
+  const c = inventoryImportCommand.parse(input)
+  const result = await client.rpc('import_inventory', {
+    p_tenant: c.tenantId,
+    p_request: c.requestId,
+    p_source: c.source,
+    p_rows: c.rows,
+    p_context: c.context,
+    p_received: c.received,
+  })
+  if (result.error)
+    throw new Error(
+      inventoryImportErrors.find((code) => code === result.error.message) ??
+        'REQUEST_FAILED',
+    )
+  const confirmed = inventoryImportResult.parse(result.data)
+  if (
+    confirmed.requestId !== c.requestId ||
+    confirmed.created + confirmed.skipped !== c.rows.length ||
+    confirmed.items.length !== c.rows.length ||
+    confirmed.items.some((r, i) => r.sourceReference !== c.rows[i].reference)
+  )
+    throw new Error('REQUEST_FAILED')
+  return confirmed
 }

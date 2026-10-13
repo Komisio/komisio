@@ -46,12 +46,8 @@ test('cancelled import navigation retains the file and mapping; clearing it rele
 }) => {
   const f = await fixture(page)
   try {
-    const back = page.locator('main .page-heading a[href="/intake/sellers"]')
+    const back = page.locator('.sidebar a[href="/intake/sellers"]')
     await cancelLeave(page, back)
-    await cancelLeave(
-      page,
-      page.getByRole('link', { name: d.inventoryImport.title, exact: true }),
-    )
     await cancelLeave(page, page.locator('.sidebar a[href="/intake/items"]'))
     await expect(page.locator('#import-name')).toHaveValue('0')
     await expect(page.locator('#import-email')).toHaveValue('1')
@@ -78,7 +74,7 @@ test('cancelled import navigation retains the file and mapping; clearing it rele
     await page
       .getByRole('button', { name: d.importer.clearFile, exact: true })
       .click()
-    await expect(page.locator('#import-file')).toBeFocused()
+    await expect(page.locator('#import-file-button')).toBeFocused()
     await expect(
       page.getByRole('region', { name: d.importer.preview, exact: true }),
     ).toHaveCount(0)
@@ -103,7 +99,7 @@ test('cancelled import navigation retains the file and mapping; clearing it rele
   }
 })
 
-test('unconfirmed import staging keeps its leave warning and exact retry; confirmed staging releases it', async ({
+test('unconfirmed import keeps its leave warning and exact retry; completed import releases it', async ({
   page,
 }) => {
   const f = await fixture(page)
@@ -117,24 +113,21 @@ test('unconfirmed import staging keeps its leave warning and exact retry; confir
       else await route.fulfill({ response })
     })
     await page
-      .getByRole('button', { name: d.importer.stage, exact: true })
+      .getByRole('button', { name: d.importer.import, exact: true })
       .click()
     const retry = page.getByRole('button', {
       name: d.intake.retry,
       exact: true,
     })
     await expect(retry).toBeVisible()
-    await cancelLeave(
-      page,
-      page.locator('main .page-heading a[href="/intake/sellers"]'),
-    )
+    await cancelLeave(page, page.locator('.sidebar a[href="/intake/sellers"]'))
     await expect(page.locator('#import-email')).toBeDisabled()
     await expect(
       page.getByRole('button', { name: d.importer.clearFile, exact: true }),
     ).toBeDisabled()
     await retry.click()
     const queued = page.getByRole('link', {
-      name: d.importer.openQueue,
+      name: d.importer.viewSellers,
       exact: true,
     })
     await expect(queued).toBeVisible()
@@ -146,7 +139,7 @@ test('unconfirmed import staging keeps its leave warning and exact retry; confir
       await dialog.dismiss()
     })
     await queued.click()
-    await expect(page).toHaveURL(`/intake/operations/${requests[0].requestId}`)
+    await expect(page).toHaveURL('/intake/sellers')
     expect(warnings).toBe(0)
     expect(
       (
@@ -163,7 +156,7 @@ test('unconfirmed import staging keeps its leave warning and exact retry; confir
           [f.tenant],
         )
       ).rows[0].n,
-    ).toBe(1)
+    ).toBe(2)
   } finally {
     await f.close()
   }

@@ -1,5 +1,4 @@
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
@@ -17,16 +16,7 @@ export default async function Import() {
       <div className="page-heading">
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
-        <Link className="text-link" href="/intake/sellers">
-          {all.nav.sellersList}
-        </Link>
-        {['owner', 'admin'].includes(active.role) && (
-          <Link className="text-link" href="/intake/import/items">
-            {all.inventoryImport.title}
-          </Link>
-        )}
       </div>
-      <p className="intake-notice">{d.notice}</p>
       {['owner', 'admin'].includes(active.role) ? (
         <ImportSellers
           key={active.id}

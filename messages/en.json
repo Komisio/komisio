@@ -1708,7 +1708,8 @@
     "newer": "Newer messages",
     "latest": "Latest messages",
     "showingRange": "Messages {from}–{to} of {total}",
-    "pageEmpty": "No messages on this page."
+    "pageEmpty": "No messages on this page.",
+    "activationBody": "Hello {seller},\n\nYou are registered as a seller at {store}. Confirm your email address using the button below. If your account is new, you can then choose a password.\n\n{activation}\n\nIf you already have an account, your password stays the same. Sign in:\n{url}"
   },
   "stock": {
     "title": "Stock",

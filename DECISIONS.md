@@ -1035,3 +1035,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-12: PayPal POS setup uses one workspace with sales, products and settings tabs. Compact statuses distinguish connection, receipt retrieval and product export. Existing commands, automation opt-ins, financial rules and replay safeguards stay unchanged.
 
 - 2026-10-13: Seller registration requests Auth account creation through capped activation sends. Existing passwords remain; verification/MFA gate access, with no store membership. Claimed sends never auto-retry. Staff may resend. Logs hold token-free notices, not secret Auth email links.
+- 2026-10-13: Activation emails use frozen store copy and seller language. A signed Auth hook consumes a five-minute, recipient-bound, single-use capability; history omits the secret URL. Account metadata and historic messages stay unchanged; other Auth emails retain their flows.

@@ -1708,7 +1708,8 @@
     "newer": "Nyere beskeder",
     "latest": "Seneste beskeder",
     "showingRange": "Beskeder {from}–{to} af {total}",
-    "pageEmpty": "Ingen beskeder på denne side."
+    "pageEmpty": "Ingen beskeder på denne side.",
+    "activationBody": "Hej {seller},\n\nDu er registreret som sælger hos {store}. Bekræft din e-mailadresse med knappen nedenfor. Hvis kontoen er ny, kan du derefter vælge en adgangskode.\n\n{activation}\n\nHar du allerede en konto, beholder du din adgangskode. Log ind:\n{url}"
   },
   "stock": {
     "title": "Lager",

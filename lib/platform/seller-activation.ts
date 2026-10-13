@@ -6,6 +6,7 @@ import type { SellerEmailDelivery } from './seller-email'
 export async function sendSellerActivation(
   email: string,
   locale: Locale,
+  ticket?: string,
   env: Record<string, string | undefined> = process.env,
   request: typeof fetch = fetch,
 ): Promise<{ status: SellerEmailDelivery; providerMessageId: string }> {
@@ -32,12 +33,16 @@ export async function sendSellerActivation(
     !env.NEXT_PUBLIC_APP_URL
   )
     return result('failed')
+  if (
+    ticket &&
+    (!/^[a-f0-9]{64}$/.test(ticket) || !env.KOMISIO_AUTH_EMAIL_HOOK_SECRET)
+  )
+    return result('failed')
   try {
     const endpoint = new URL('/auth/v1/otp', env.NEXT_PUBLIC_SUPABASE_URL)
-    endpoint.searchParams.set(
-      'redirect_to',
-      new URL('/auth/activate', env.NEXT_PUBLIC_APP_URL).href,
-    )
+    const redirect = new URL('/auth/activate', env.NEXT_PUBLIC_APP_URL)
+    if (ticket) redirect.searchParams.set('ticket', ticket)
+    endpoint.searchParams.set('redirect_to', redirect.href)
     const response = await request(endpoint, {
       method: 'POST',
       headers: {

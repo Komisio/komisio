@@ -174,6 +174,7 @@ export async function sendSellerCommunication(
           c.storeName,
           seller.data.name,
           process.env.NEXT_PUBLIC_APP_URL ?? '',
+          process.env.KOMISIO_AUTH_EMAIL_HOOK_ENABLED === 'true',
         )
       : renderSellerMessage(c.kind, locale, facts)
   if (c.welcome || c.submissionReviewId) {
@@ -232,19 +233,25 @@ export async function sendSellerCommunication(
   if (existing.error) return { ok: false, error: 'REQUEST_FAILED' }
   if (existing.data.status !== 'queued')
     return { ok: true, id: c.requestId, delivery: existing.data.status }
-  const activation = c.welcome && rendered.templateVersion === 'v2'
+  const branded = c.welcome && rendered.templateVersion === 'v3'
+  const activation = c.welcome && (rendered.templateVersion === 'v2' || branded)
+  let ticket: string | undefined
   if (activation) {
-    const claimed = await client.rpc('claim_seller_activation', {
-      p_tenant: c.tenantId,
-      p_id: c.requestId,
-      p_recipient: existing.data.recipient,
-    })
+    const claimed = await client.rpc(
+      branded ? 'prepare_seller_activation_email' : 'claim_seller_activation',
+      {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_recipient: existing.data.recipient,
+      },
+    )
     if (claimed.error) return { ok: false, error: 'REQUEST_FAILED' }
-    if (claimed.data !== true)
+    if (branded ? typeof claimed.data !== 'string' : claimed.data !== true)
       return { ok: true, id: c.requestId, delivery: 'unconfirmed' }
+    if (branded) ticket = claimed.data
   }
   const outcome = activation
-    ? await sendSellerActivation(existing.data.recipient, locale)
+    ? await sendSellerActivation(existing.data.recipient, locale, ticket)
     : await sendSellerEmailWithId({
         communicationId: c.requestId,
         to: existing.data.recipient,

@@ -1708,7 +1708,8 @@
     "newer": "Nyare meddelanden",
     "latest": "Senaste meddelandena",
     "showingRange": "Meddelanden {from}–{to} av {total}",
-    "pageEmpty": "Inga meddelanden på den här sidan."
+    "pageEmpty": "Inga meddelanden på den här sidan.",
+    "activationBody": "Hej {seller},\n\nDu är registrerad som säljare hos {store}. Bekräfta din e-postadress med knappen nedan. Om ditt konto är nytt kan du sedan välja ett lösenord.\n\n{activation}\n\nHar du redan ett konto behåller du ditt lösenord. Logga in:\n{url}"
   },
   "stock": {
     "title": "Lager",

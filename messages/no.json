@@ -1708,7 +1708,8 @@
     "newer": "Nyere meldinger",
     "latest": "Siste meldinger",
     "showingRange": "Meldinger {from}–{to} av {total}",
-    "pageEmpty": "Ingen meldinger på denne siden."
+    "pageEmpty": "Ingen meldinger på denne siden.",
+    "activationBody": "Hei {seller},\n\nDu er registrert som selger hos {store}. Bekreft e-postadressen din med knappen nedenfor. Hvis kontoen er ny, kan du deretter velge et passord.\n\n{activation}\n\nHar du allerede en konto, beholder du passordet ditt. Logg inn:\n{url}"
   },
   "stock": {
     "title": "Lager",

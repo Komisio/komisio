@@ -17,6 +17,12 @@ export default defineConfig({
   },
   webServer: [
     {
+      command:
+        'node --env-file=.env.local --import tsx tests/fixtures/auth-email-server.ts',
+      url: 'http://127.0.0.1:3457/health',
+      reuseExistingServer: true,
+    },
+    {
       command: 'node --import tsx tests/fixtures/zettle-server.ts',
       url: 'http://127.0.0.1:3456/health',
       reuseExistingServer: !process.env.CI,
@@ -27,6 +33,8 @@ export default defineConfig({
       command: process.env.CI ? 'npm run start' : 'npm run dev',
       env: {
         SELLER_ACCOUNT_DELIVERY: 'auth',
+        KOMISIO_AUTH_EMAIL_HOOK_ENABLED: 'true',
+        KOMISIO_AUTH_EMAIL_HOOK_SECRET: `v1,whsec_${Buffer.alloc(32, 7).toString('base64')}`,
         SELLER_EMAIL_ALLOWLIST: '*',
         KOMISIO_ZETTLE_FIXTURES: 'true',
         KOMISIO_SELLER_SUBMISSIONS_ENABLED: 'true',

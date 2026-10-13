@@ -32,6 +32,8 @@ jobs:
           docker tag "postgrest/postgrest:${rest_version}" "ghcr.io/supabase/postgrest:${rest_version}"
           supabase start -x studio,imgproxy,edge-runtime,logflare,vector > /dev/null
       - run: node scripts/configure-local.mjs
+      - name: Start local Auth email transport
+        run: node --env-file=.env.local --import tsx tests/fixtures/auth-email-server.ts > /tmp/komisio-auth-email.log 2>&1 &
       - run: npm run lint
       - run: npm run format:check
       - run: npm test

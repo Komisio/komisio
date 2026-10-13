@@ -1,0 +1,50 @@
+{
+  "en": [
+    "Confirm your email address",
+    "Welcome to Komisio! Confirm your email address to finish creating your account.",
+    "Confirm email address",
+    "If you did not create this account, you can ignore this email."
+  ],
+  "sv": [
+    "Verifiera din e-postadress",
+    "Välkommen till Komisio! Verifiera din e-postadress för att slutföra registreringen.",
+    "Verifiera e-postadress",
+    "Om du inte har skapat kontot kan du bortse från det här mailet."
+  ],
+  "no": [
+    "Bekreft e-postadressen din",
+    "Velkommen til Komisio! Bekreft e-postadressen din for å fullføre registreringen.",
+    "Bekreft e-postadresse",
+    "Hvis du ikke har opprettet kontoen, kan du se bort fra denne e-posten."
+  ],
+  "dk": [
+    "Bekræft din e-mailadresse",
+    "Velkommen til Komisio! Bekræft din e-mailadresse for at afslutte oprettelsen af din konto.",
+    "Bekræft e-mailadresse",
+    "Hvis du ikke har oprettet kontoen, kan du se bort fra denne e-mail."
+  ],
+  "fi": [
+    "Vahvista sähköpostiosoitteesi",
+    "Tervetuloa Komisioon! Vahvista sähköpostiosoitteesi viimeistelläksesi tilin luomisen.",
+    "Vahvista sähköpostiosoite",
+    "Jos et luonut tätä tiliä, voit jättää tämän viestin huomiotta."
+  ],
+  "de": [
+    "Bestätige deine E-Mail-Adresse",
+    "Willkommen bei Komisio! Bestätige deine E-Mail-Adresse, um die Registrierung abzuschließen.",
+    "E-Mail-Adresse bestätigen",
+    "Wenn du dieses Konto nicht erstellt hast, kannst du diese E-Mail ignorieren."
+  ],
+  "es": [
+    "Confirma tu dirección de correo electrónico",
+    "¡Te damos la bienvenida a Komisio! Confirma tu dirección de correo electrónico para terminar de crear tu cuenta.",
+    "Confirmar correo electrónico",
+    "Si no has creado esta cuenta, puedes ignorar este correo."
+  ],
+  "it": [
+    "Conferma il tuo indirizzo email",
+    "Ti diamo il benvenuto su Komisio! Conferma il tuo indirizzo email per completare la registrazione.",
+    "Conferma indirizzo email",
+    "Se non hai creato questo account, puoi ignorare questa email."
+  ]
+}

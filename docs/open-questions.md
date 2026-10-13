@@ -10,7 +10,11 @@ signup reuses existing identities and requires email verification before access.
 No store membership is added. Phone-only sellers remain supported. Existing
 sellers can use the explicit activation send; no bulk account backfill is run.
 Delivery-disabled deployments retain a manual outcome and create no Auth account.
-Hosted Auth SMTP delivery and cross-browser activation need release verification.
+The owner verified hosted activation delivery and the account flow on 2026-10-13.
+Branded content (resolved 2026-10-13): the actual email and history must share the
+store welcome subject, seller name and localized text. Auth tokens remain absent
+from history. The signed email hook and its staged activation require hosted
+verification before the branded delivery flag is enabled.
 
 PayPal partner onboarding (2026-10-12): the owner registered the shared public
 app and confirmed no stores use the old API-key flow. Replace that flow outright

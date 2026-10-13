@@ -118,7 +118,7 @@ test('directory registration and duplicate selection stay in the seller workspac
     )
     expect(welcome.rows).toHaveLength(1)
     expect(welcome.rows[0].status).toBe(outcome.delivery)
-    expect(welcome.rows[0].template_version).toBe('v2')
+    expect(welcome.rows[0].template_version).toBe('v3')
     expect(welcome.rows[0].body).toContain('/login?next=%2Fseller&locale=sv')
     expect(welcome.rows[0].body).not.toContain('token_hash')
     expect(welcome.rows[0].status).not.toBe('queued')

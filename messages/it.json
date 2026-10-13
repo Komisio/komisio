@@ -1708,7 +1708,8 @@
     "newer": "Messaggi più recenti",
     "latest": "Ultimi messaggi",
     "showingRange": "Messaggi {from}–{to} di {total}",
-    "pageEmpty": "Nessun messaggio in questa pagina."
+    "pageEmpty": "Nessun messaggio in questa pagina.",
+    "activationBody": "Ciao {seller},\n\nSei registrato come venditore presso {store}. Conferma il tuo indirizzo email con il pulsante qui sotto. Se il tuo account è nuovo, potrai poi scegliere una password.\n\n{activation}\n\nSe hai già un account, la tua password rimane invariata. Accedi:\n{url}"
   },
   "stock": {
     "title": "Magazzino",

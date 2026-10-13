@@ -1708,7 +1708,8 @@
     "newer": "Mensajes más recientes",
     "latest": "Últimos mensajes",
     "showingRange": "Mensajes {from}–{to} de {total}",
-    "pageEmpty": "No hay mensajes en esta página."
+    "pageEmpty": "No hay mensajes en esta página.",
+    "activationBody": "Hola {seller}:\n\nEstás registrado como vendedor en {store}. Confirma tu dirección de correo electrónico con el botón de abajo. Si tu cuenta es nueva, después podrás elegir una contraseña.\n\n{activation}\n\nSi ya tienes una cuenta, conservarás tu contraseña. Inicia sesión:\n{url}"
   },
   "stock": {
     "title": "Existencias",

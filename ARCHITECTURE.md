@@ -46,6 +46,15 @@ runs in the seller's browser after an explicit click, preserving staff sessions.
 Existing identity, email verification and MFA checks still govern seller access;
 activation never grants tenant membership or overwrites an existing password.
 
+Branded activation uses a signed Supabase Send Email hook. A staff-authorized
+claim issues a recipient-bound, single-use, five-minute capability; only its
+digest is stored. The hook consumes it through a narrow anonymous RPC to read
+the frozen message, then adds Auth's secret button link and delivers via Resend.
+The hook is the sole Auth email transport when enabled, including confirmation,
+recovery and secure email change. No administrator client or metadata mutation
+is needed. Install the hook before enabling new v3 messages; SMTP/v2 remains
+available for staged rollout. Historic communication bodies remain immutable.
+
 The database contains `tenants`, `tenant_members`, `user_profiles`,
 `tenant_invitations` and `access_events`, plus Supabase-managed auth identities.
 Membership and creator references have foreign keys. Removing a membership does

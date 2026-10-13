@@ -3859,6 +3859,8 @@
     "confirm": "Conferma e continua",
     "passwordTitle": "Scegli una password",
     "continue": "Continua al mio account",
-    "emailNote": "Se non aspettavi questa email, puoi ignorarla."
+    "emailNote": "Se non aspettavi questa email, puoi ignorarla.",
+    "alreadyActive": "Il tuo account è già attivato",
+    "keepPassword": "La tua password attuale rimane invariata."
   }
 }

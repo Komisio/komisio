@@ -50,6 +50,7 @@ test('registration creates an unconfirmed account, activation works in another b
 }, testInfo) => {
   const owner = `activation-owner-${randomUUID()}@example.test`
   const email = `activation-seller-${randomUUID()}@example.test`
+  const sellerPassword = `K!${randomUUID()}`
   await register(page, owner, `K!${randomUUID()}`)
   const f = await p2Fixture(owner)
   const sellerContext = await browser.newContext()
@@ -115,6 +116,8 @@ test('registration creates an unconfirmed account, activation works in another b
     await page.goto('/account')
     await expect(page.locator('#profile-email')).toHaveValue(owner)
     const sellerPage = await sellerContext.newPage()
+    await sellerPage.goto('/seller/activate')
+    await expect(sellerPage).toHaveURL(/\/login\?next=/)
     const response = await sellerPage.goto(getLink)
     expect(response?.headers()['referrer-policy']).toBe('no-referrer')
     expect(
@@ -129,16 +132,58 @@ test('registration creates an unconfirmed account, activation works in another b
       .getByRole('button', { name: d.sellerActivation.confirm })
       .click()
     await expect(sellerPage).toHaveURL(/\/seller\/activate$/)
+    await expect(
+      sellerPage.getByRole('heading', {
+        name: d.sellerActivation.passwordTitle,
+      }),
+    ).toBeVisible()
     await sellerPage
       .getByLabel(d.newPassword, { exact: true })
-      .fill(`K!${randomUUID()}`)
+      .fill(sellerPassword)
     await sellerPage
       .getByRole('button', { name: d.savePassword, exact: true })
       .click()
     await expect(sellerPage.getByText(d.saved, { exact: true })).toBeVisible()
+    await sellerPage.reload()
+    await expect(
+      sellerPage.getByRole('heading', {
+        name: d.sellerActivation.alreadyActive,
+      }),
+    ).toBeVisible()
+    await expect(
+      sellerPage.getByLabel(d.newPassword, { exact: true }),
+    ).toHaveCount(0)
     await sellerPage
       .getByRole('link', { name: d.sellerActivation.continue })
       .click()
+    await expect(sellerPage).toHaveURL(/\/seller$/)
+    await sellerPage.reload()
+    await expect(sellerPage).toHaveURL(/\/seller$/)
+    await expect(
+      sellerPage.getByRole('heading', { name: d.sellerPortal.title }),
+    ).toBeVisible()
+    await sellerPage.getByRole('link', { name: 'P2 browser store' }).click()
+    await expect(sellerPage).toHaveURL(
+      new RegExp(`/seller\\?seller=${command.requestId}$`),
+    )
+    await sellerPage.reload()
+    await expect(sellerPage).toHaveURL(
+      new RegExp(`/seller\\?seller=${command.requestId}$`),
+    )
+    await expect(sellerPage.locator('a[href="/onboarding"]')).toHaveCount(0)
+    for (const route of ['/', '/onboarding', '/intake']) {
+      await sellerPage.goto(route)
+      await expect(sellerPage).toHaveURL(/\/seller$/)
+      await expect(
+        sellerPage.getByRole('heading', { name: d.sellerPortal.title }),
+      ).toBeVisible()
+    }
+    await sellerPage.goto('/account')
+    await expect(
+      sellerPage.getByRole('heading', { name: d.account }),
+    ).toBeVisible()
+    await expect(sellerPage.locator('a[href="/onboarding"]')).toHaveCount(0)
+    await sellerPage.getByRole('link', { name: 'Komisio', exact: true }).click()
     await expect(sellerPage).toHaveURL(/\/seller$/)
     expect(
       Number(
@@ -187,6 +232,17 @@ test('registration creates an unconfirmed account, activation works in another b
       .getByRole('button', { name: d.sellerActivation.confirm })
       .click()
     await expect(sellerPage).toHaveURL(/\/seller\/activate$/)
+    await expect(
+      sellerPage.getByRole('heading', {
+        name: d.sellerActivation.alreadyActive,
+      }),
+    ).toBeVisible()
+    await expect(
+      sellerPage.getByText(d.sellerActivation.keepPassword),
+    ).toBeVisible()
+    await expect(
+      sellerPage.getByLabel(d.newPassword, { exact: true }),
+    ).toHaveCount(0)
     await sellerPage
       .getByRole('link', { name: d.sellerActivation.continue })
       .click()
@@ -199,6 +255,28 @@ test('registration creates an unconfirmed account, activation works in another b
         )
       ).rows[0].encrypted_password,
     ).toBe(passwordHash)
+    const passwordContext = await browser.newContext()
+    try {
+      const loginPage = await passwordContext.newPage()
+      // A normal login without a return URL must also select the seller portal.
+      await loginPage.goto('/login')
+      await loginPage.getByLabel(d.email, { exact: true }).fill(email)
+      await loginPage
+        .getByLabel(d.password, { exact: true })
+        .fill(sellerPassword)
+      await loginPage
+        .getByRole('button', { name: d.login, exact: true })
+        .click()
+      await expect(loginPage).toHaveURL(/\/seller$/)
+      await loginPage.reload()
+      await expect(loginPage).toHaveURL(/\/seller$/)
+      // Losing the session on refresh must retain the seller return path.
+      await passwordContext.clearCookies()
+      await loginPage.reload()
+      await expect(loginPage).toHaveURL(/\/login\?next=%2Fseller$/)
+    } finally {
+      await passwordContext.close()
+    }
     const phoneOnly = await page.request.post('/api/intake', {
       headers: { origin: 'http://127.0.0.1:3000' },
       data: {

@@ -32,7 +32,7 @@ it('requests creation or reuse through public Auth without passwords, sessions o
   expect(JSON.parse(options.body)).toEqual({
     email: 'seller@example.test',
     create_user: true,
-    data: { locale: 'sv' },
+    data: { locale: 'sv', komisio_activation_signup: true },
   })
   expect(options.redirect).toBe('error')
 })
@@ -75,7 +75,10 @@ it('binds branded activation to an opaque ticket without putting names or messag
   expect(
     new URL(url.searchParams.get('redirect_to')).searchParams.get('ticket'),
   ).toBe('ab'.repeat(32))
-  expect(JSON.parse(options.body).data).toEqual({ locale: 'sv' })
+  expect(JSON.parse(options.body).data).toEqual({
+    locale: 'sv',
+    komisio_activation_signup: true,
+  })
   request.mockClear()
   expect(
     (

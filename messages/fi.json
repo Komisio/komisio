@@ -3865,6 +3865,8 @@
     "confirm": "Vahvista ja jatka",
     "passwordTitle": "Valitse salasana",
     "continue": "Jatka omille sivuille",
-    "emailNote": "Jos et odottanut tätä viestiä, voit jättää sen huomiotta."
+    "emailNote": "Jos et odottanut tätä viestiä, voit jättää sen huomiotta.",
+    "alreadyActive": "Tilisi on jo aktivoitu",
+    "keepPassword": "Nykyinen salasanasi säilyy ennallaan."
   }
 }

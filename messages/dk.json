@@ -3859,6 +3859,8 @@
     "confirm": "Bekræft og fortsæt",
     "passwordTitle": "Vælg adgangskode",
     "continue": "Fortsæt til mine sider",
-    "emailNote": "Hvis du ikke forventede denne mail, kan du se bort fra den."
+    "emailNote": "Hvis du ikke forventede denne mail, kan du se bort fra den.",
+    "alreadyActive": "Din konto er allerede aktiveret",
+    "keepPassword": "Du beholder din nuværende adgangskode."
   }
 }

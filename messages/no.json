@@ -3859,6 +3859,8 @@
     "confirm": "Bekreft og fortsett",
     "passwordTitle": "Velg passord",
     "continue": "Fortsett til mine sider",
-    "emailNote": "Hvis du ikke ventet denne e-posten, kan du se bort fra den."
+    "emailNote": "Hvis du ikke ventet denne e-posten, kan du se bort fra den.",
+    "alreadyActive": "Kontoen din er allerede aktivert",
+    "keepPassword": "Du beholder det nåværende passordet ditt."
   }
 }

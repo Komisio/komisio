@@ -12,17 +12,27 @@ import { formatOre } from './items'
 
 // Printing (P2 S19): printers per tenant and a job queue a local agent works
 // through. The engine renders the label; SQL binds it to a printer and a fact.
-export const registerPrinterCommand = z.strictObject({
-  action: z.literal('registerPrinter'),
-  tenantId: z.uuid(),
-  requestId: z.uuid(),
-  name: z.string().trim().min(1).max(80),
-  transport: z.enum(['tcp', 'usb']),
-  address: z.string().trim().max(200).default(''),
-  model: z.string().trim().max(80).default(''),
-  dpi: z.union([z.literal(203), z.literal(300), z.literal(600)]).default(203),
-  active: z.boolean().default(true),
-})
+export const registerPrinterCommand = z
+  .strictObject({
+    action: z.literal('registerPrinter'),
+    tenantId: z.uuid(),
+    requestId: z.uuid(),
+    name: z.string().trim().min(1).max(80),
+    transport: z.enum(['tcp', 'usb']),
+    address: z.string().trim().max(200).default(''),
+    model: z.string().trim().max(80).default(''),
+    dpi: z.union([z.literal(203), z.literal(300), z.literal(600)]).default(203),
+    active: z.boolean().default(true),
+  })
+  .refine(
+    (value) =>
+      value.transport !== 'usb' ||
+      (value.address.length > 0 && !/[\\\x00-\x1f\x7f]/.test(value.address)),
+    {
+      path: ['address'],
+      message: 'A local Windows USB printer name is required',
+    },
+  )
 export const labelFormatKind = z.enum([
   'bag',
   'garment',

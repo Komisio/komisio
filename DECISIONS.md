@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-13: Komisio Print 1.1 sends existing ZPL jobs to local Windows USB queues as RAW through a bundled .NET Framework/Winspool helper. Queue names are data, never shell commands. Spool acceptance is not physical delivery; device binding and job authorization remain unchanged.
+
 - 2026-10-12: PayPal product names use the current item description, capped at 120 characters. Title corrections append export snapshots while retaining product, variant and barcode identities. Retries never replenish stock; missing or invalid balances are not zero.
 
 - 2026-10-12: PayPal updates accept mirrored variant VAT only when it equals product VAT and send both from the explicit mapping. Divergent variant rates stay held. Whole stock counts may be decimal strings; invalid balances expose only a bounded type label. HTTP 200 updates require read-back confirmation.

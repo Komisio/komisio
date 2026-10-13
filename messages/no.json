@@ -1991,7 +1991,7 @@
     "statuses": {
       "queued": "i kø",
       "claimed": "skriver ut",
-      "printed": "skrevet ut",
+      "printed": "Sendt til skriveren",
       "failed": "mislyktes",
       "cancelled": "avbrutt"
     },
@@ -2009,20 +2009,22 @@
       "labels": "Etiketter",
       "history": "Utskriftshistorikk"
     },
-    "networkSupport": "Komisio Print støtter nettverkstilkoblede Zebra/ZPL-skrivere. Datamaskinen må kunne nå skriveren på butikkens nettverk.",
-    "installIntro": "Tjenesten kobler Komisio til etikettskriveren. Krever Windows 64-bit og en nettverkstilkoblet Zebra/ZPL-skriver. Direkte USB støttes ikke.",
+    "networkSupport": "Zebra/ZPL-skrivere kan kobles til via USB eller butikkens nettverk.",
+    "installIntro": "Kobler Komisio til en Zebra/ZPL-skriver via nettverk eller USB. Krever Windows 10/11 (64-bit). USB krever Komisio Print 1.1 eller nyere og Zebra-driveren for Windows.",
     "installDownload": "Last ned og pakk ut",
     "installDownloadHint": "Bruk nedlastingsknappen ovenfor. Du kan laste ned pakken før du registrerer en skriver. Pakk den ut i en mappe du beholder på datamaskinen.",
     "installPair": "Registrer skriveren og opprett en kode",
-    "installPairHint": "Åpne Skrivere, angi skriverens nettverksadresse og lagre. Åpne deretter skriveren og velg Ny paringskode.",
+    "installPairHint": "Åpne Skrivere og velg nettverk eller USB. Angi nettverksadressen eller det nøyaktige skrivernavnet i Windows og lagre. Velg deretter Ny paringskode.",
     "installRun": "Installer på datamaskinen",
     "installRunHint": "Kjør install.cmd som administrator og angi tilkoblingskoden. Koden gjelder i 15 minutter og kan brukes én gang.",
     "installRunning": "Tjenesten starter automatisk med datamaskinen. La datamaskinen være på ved utskrift. Tilkoblingsstatus vises under hver skriver.",
     "pairHint": "Koble datamaskinen til denne skriveren med en engangskode.",
     "paperHint": "Etiketter på vanlig papir skrives ut direkte fra varesiden.",
     "addressInvalid": "Angi en nettverksadresse, for eksempel 192.168.1.50:9100. Ikke bruk mellomrom eller http://.",
-    "usbUnavailable": "USB (støttes ikke av Komisio Print)",
-    "usbHint": "Du kan beholde dette USB-oppsettet, men Komisio Print krever nettverkstilkobling."
+    "usbHint": "Krever Komisio Print 1.1 eller nyere og Zebra-driveren for Windows.",
+    "usbQueueName": "Skrivernavn i Windows",
+    "usbQueueHint": "Angi det nøyaktige navnet i Windows. Kjør list-usb-printers.cmd i Komisio Print-mappen for å vise USB-skrivere.",
+    "usbQueueInvalid": "Angi navnet på en lokal USB-skriver i Windows uten omvendte skråstreker eller linjeskift."
   },
   "purchases": {
     "title": "Egne innkjøp",

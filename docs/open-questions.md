@@ -547,6 +547,17 @@ HTTP fixtures test the product/purchase loop without a real merchant account.
 
 **Pilot verification2026-09-13:** real assertion-grant authentication and the explicit merchant pin have been verified in staging. The next slice adds durable bounded receipt windows from explicit activation time. Product inventory initialization/delisting, scheduled retrieval, longer-range delayed-event reconciliation and tax mapping remain open.
 
+## USB print verification, 2026-10-13
+
+The owner requested native ZPL output to a USB Zebra and has hardware for a
+later pilot. Komisio Print 1.1 uses local Windows RAW queues and retains the
+existing device binding and label templates. Native fake-spooler tests and
+Windows API probes do not establish physical output. Verify the actual model,
+label stock, DPI, Swedish characters, barcode scanning, disconnect/reconnect
+and service restart with that printer before claiming hardware compatibility.
+Windows accepting a job is not evidence that a label has printed; inspect its
+queue before reprinting after an uncertain outcome.
+
 ## Print agent staging release, 2026-09-16
 
 A14 staging configuration is provisioned: anonymous sign-ins are enabled on

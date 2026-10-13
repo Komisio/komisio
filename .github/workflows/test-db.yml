@@ -8,6 +8,18 @@ permissions:
   contents: read
 
 jobs:
+  usb-print:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Start the isolated Windows print spooler for API probes
+        run: Start-Service Spooler
+      - run: node print-agent/test-usb.mjs
+
   platform:
     env:
       KOMISIO_INTAKE_ENABLED: 'true'
@@ -68,7 +80,7 @@ jobs:
         run: supabase stop
 
   staging-migrations:
-    needs: platform
+    needs: [platform, usb-print]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10

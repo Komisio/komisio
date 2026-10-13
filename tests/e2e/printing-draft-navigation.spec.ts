@@ -69,7 +69,7 @@ test('saving one printing form preserves another draft and establishes the confi
       randomUUID(),
       'Synthetic existing printer',
       'usb',
-      '',
+      'Synthetic Windows USB queue',
       '',
       203,
       true,

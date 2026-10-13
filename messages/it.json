@@ -1991,7 +1991,7 @@
     "statuses": {
       "queued": "in coda",
       "claimed": "in stampa",
-      "printed": "stampato",
+      "printed": "Inviato alla stampante",
       "failed": "fallito",
       "cancelled": "annullato"
     },
@@ -2009,20 +2009,22 @@
       "labels": "Etichette",
       "history": "Cronologia di stampa"
     },
-    "networkSupport": "Komisio Print supporta stampanti Zebra/ZPL collegate alla rete. Il computer deve poter raggiungere la stampante sulla rete del negozio.",
-    "installIntro": "Il servizio collega Komisio alla stampante di etichette. Richiede Windows a 64 bit e una stampante Zebra/ZPL di rete. USB diretto non è supportato.",
+    "networkSupport": "Le stampanti Zebra/ZPL possono essere collegate tramite USB o alla rete del negozio.",
+    "installIntro": "Collega Komisio a una stampante Zebra/ZPL tramite rete o USB. Richiede Windows 10/11 (64 bit). USB richiede Komisio Print 1.1 o successivo e il driver Zebra per Windows.",
     "installDownload": "Scarica ed estrai",
     "installDownloadHint": "Usa il pulsante di download in alto. Puoi scaricare il pacchetto prima di registrare una stampante. Estrailo in una cartella da conservare sul computer.",
     "installPair": "Registra la stampante e crea un codice",
-    "installPairHint": "Apri Stampanti, inserisci l’indirizzo di rete e salva. Poi apri la stampante e crea un nuovo codice di associazione.",
+    "installPairHint": "Apri Stampanti e scegli rete o USB. Inserisci l’indirizzo di rete o il nome esatto della stampante in Windows e salva. Poi crea un nuovo codice di abbinamento.",
     "installRun": "Installa sul computer",
     "installRunHint": "Esegui install.cmd come amministratore e inserisci il codice di associazione. Il codice è valido per 15 minuti e può essere usato una volta.",
     "installRunning": "Il servizio si avvia automaticamente con il computer. Lascia il computer acceso durante la stampa. Lo stato della connessione appare sotto ogni stampante.",
     "pairHint": "Associa il computer a questa stampante con un codice monouso.",
     "paperHint": "Le etichette su carta normale si stampano direttamente dalla pagina dell’articolo.",
     "addressInvalid": "Inserisci un indirizzo di rete come 192.168.1.50:9100. Non includere spazi o http://.",
-    "usbUnavailable": "USB (non supportato da Komisio Print)",
-    "usbHint": "Puoi mantenere questa configurazione USB, ma Komisio Print richiede una connessione di rete."
+    "usbHint": "Richiede Komisio Print 1.1 o successivo e il driver Zebra per Windows.",
+    "usbQueueName": "Nome della stampante in Windows",
+    "usbQueueHint": "Inserisci il nome esatto in Windows. Esegui list-usb-printers.cmd nella cartella Komisio Print per elencare le stampanti USB.",
+    "usbQueueInvalid": "Inserisci il nome di una stampante USB locale di Windows, senza barre inverse o interruzioni di riga."
   },
   "purchases": {
     "title": "Acquisti propri",

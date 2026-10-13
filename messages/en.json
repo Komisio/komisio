@@ -1991,7 +1991,7 @@
     "statuses": {
       "queued": "queued",
       "claimed": "printing",
-      "printed": "printed",
+      "printed": "Sent to printer",
       "failed": "failed",
       "cancelled": "cancelled"
     },
@@ -2009,20 +2009,22 @@
       "labels": "Labels",
       "history": "Print history"
     },
-    "networkSupport": "Komisio Print supports network-connected Zebra/ZPL printers. The computer must be able to reach the printer on the store network.",
-    "installIntro": "The service connects Komisio to your label printer. Requires 64-bit Windows and a network-connected Zebra/ZPL printer. Direct USB is not supported.",
+    "networkSupport": "Zebra/ZPL printers can connect through USB or the store network.",
+    "installIntro": "Connects Komisio to a Zebra/ZPL printer over the network or USB. Requires Windows 10/11 (64-bit). USB requires Komisio Print 1.1 or later and the Zebra Windows driver.",
     "installDownload": "Download and unzip",
     "installDownloadHint": "Use the download button above. You can download the package before registering a printer. Extract it to a folder you will keep on the computer.",
     "installPair": "Register the printer and create a code",
-    "installPairHint": "Open Printers, enter the printer network address and save. Then open the printer and choose New pairing code.",
+    "installPairHint": "Open Printers and choose network or USB. Enter the network address or exact Windows printer name and save. Then choose New pairing code.",
     "installRun": "Install on the computer",
     "installRunHint": "Run install.cmd as administrator and enter the pairing code. The code is valid for 15 minutes and can be used once.",
     "installRunning": "The service starts automatically with the computer. Keep the computer on while printing. Connection status appears under each printer.",
     "pairHint": "Pair the computer with this printer using a one-time code.",
     "paperHint": "Labels on ordinary paper can be printed directly from the item page.",
     "addressInvalid": "Enter a network address such as 192.168.1.50:9100. Do not include spaces or http://.",
-    "usbUnavailable": "USB (not supported by Komisio Print)",
-    "usbHint": "You can keep this USB configuration, but Komisio Print requires a network connection."
+    "usbHint": "Requires Komisio Print 1.1 or later and the Zebra Windows driver.",
+    "usbQueueName": "Windows printer name",
+    "usbQueueHint": "Enter the exact name in Windows. Run list-usb-printers.cmd in the Komisio Print folder to list USB printers.",
+    "usbQueueInvalid": "Enter a local Windows USB printer name without backslashes or line breaks."
   },
   "purchases": {
     "title": "Own purchases",

@@ -68,6 +68,19 @@ it('validates printer registration and job requests', () => {
       dpi: 150,
     }).success,
   ).toBe(false)
+  const usb = {
+    action: 'registerPrinter',
+    ...base,
+    name: 'USB printer',
+    transport: 'usb',
+  }
+  expect(
+    intakeCommand.parse({ ...usb, address: 'ZDesigner USB (åäö)' }).action,
+  ).toBe('registerPrinter')
+  for (const address of ['', '\\\\server\\printer', 'printer\ncommand'])
+    expect(registerPrinterCommand.safeParse({ ...usb, address }).success).toBe(
+      false,
+    )
   const ref = '33333333-3333-4333-8333-333333333333'
   expect(
     queuePrintJobInput.parse({

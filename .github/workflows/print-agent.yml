@@ -40,12 +40,18 @@ jobs:
           KOMISIO_PRINT_SUPABASE_URL: ${{ vars.PRINT_SUPABASE_URL }}
           KOMISIO_PRINT_PUBLISHABLE_KEY: ${{ vars.PRINT_PUBLISHABLE_KEY }}
         run: node print-agent/build.mjs
+      - name: Start the isolated Windows print spooler for API probes
+        run: Start-Service Spooler
       - name: Verify the executable starts
         shell: pwsh
         run: |
           $help = & ./print-agent/dist/KomisioPrint.exe
           if ($LASTEXITCODE -ne 0 -or ($help -join "`n") -notmatch 'Komisio Print') { throw 'Print agent startup check failed' }
           Write-Host ($help -join "`n")
+          & ./print-agent/dist/KomisioPrint.exe printers | Out-Null
+          if ($LASTEXITCODE -ne 0) { throw 'Packaged USB helper lookup failed' }
+      - name: Verify USB spooler bridge without physical printing
+        run: node print-agent/test-usb.mjs
       - name: Fetch the service wrapper (WinSW 2.12.0)
         shell: pwsh
         run: |
@@ -60,6 +66,7 @@ jobs:
           $pkg = 'print-agent/dist/package'
           New-Item -ItemType Directory -Force $pkg | Out-Null
           Copy-Item print-agent/dist/KomisioPrint.exe $pkg
+          Copy-Item print-agent/dist/KomisioUsb.exe $pkg
           Copy-Item print-agent/dist/KomisioPrintService.exe $pkg
           Copy-Item print-agent/package/* $pkg
           $name = if ('${{ matrix.environment }}' -eq 'production') { 'KomisioPrint-win-x64.zip' } else { 'KomisioPrint-staging-win-x64.zip' }

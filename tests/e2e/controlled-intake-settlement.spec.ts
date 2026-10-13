@@ -139,7 +139,7 @@ test('controlled journey: receive, register, label, sell and approve a settlemen
       }
     })
     await page
-      .getByRole('button', { name: d.printing.browserPrint, exact: true })
+      .getByRole('button', { name: d.printing.browserOpen, exact: true })
       .click()
     await expect(page.locator('html')).toHaveAttribute(
       'data-print-requested',

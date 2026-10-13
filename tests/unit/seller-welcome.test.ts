@@ -15,7 +15,7 @@ it('renders activation links without recipient details in every supported langua
     expect(result.templateKey).toBe('seller.welcome')
     const url = new URL(result.body.match(/https:\/\/\S+/)![0])
     expect(url.origin).toBe('https://example.test')
-    expect(url.pathname).toBe('/register')
+    expect(url.pathname).toBe('/login')
     expect(url.searchParams.get('next')).toBe('/seller')
     expect(url.searchParams.get('locale')).toBe(locale)
     expect(result.body).not.toMatch(/\{(store|seller|url)\}/)

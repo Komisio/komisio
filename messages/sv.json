@@ -1668,14 +1668,14 @@
     "openExport": "Öppna underlag"
   },
   "communications": {
-    "welcomeTitle": "Välkomstmejl",
-    "welcomeSend": "Skicka välkomstmejl",
+    "welcomeTitle": "Aktiveringsmejl",
+    "welcomeSend": "Skicka aktiveringsmejl",
     "welcomeResend": "Skicka igen",
     "welcomeNotSent": "Inte skickat",
     "welcomeSubject": "Välkommen till {store}",
-    "welcomeBody": "Hej {seller},\n\nDu är registrerad som säljare hos {store}. Följ dina varor och din försäljning i Komisio.\n\nAktivera din inloggning:\n{url}\n\nSkapa kontot med den e-postadress som fick detta mejl och bekräfta adressen. Har du redan ett konto? Logga in med samma adress.",
+    "welcomeBody": "Hej {seller},\n\nDu är registrerad som säljare hos {store}. Ett aktiveringsmejl begärs från Komisio. Följ länken i det mejlet för att bekräfta din e-postadress och välja lösenord.\n\nHar du redan ett konto behåller du ditt lösenord. Logga in:\n{url}",
     "title": "Meddelanden till säljaren",
-    "intro": "Varje meddelande loggas med exakt den text som skickades och utfallet. Mallarna är fasta; du kan lägga till en anteckning i klartext.",
+    "intro": "Meddelanden och leveransstatus. Personliga aktiveringslänkar visas inte här.",
     "empty": "Inga meddelanden ännu.",
     "sendHeading": "Skicka ett meddelande",
     "sendHint": "Välj vad meddelandet gäller. Under piloten skickas bara till godkända adresser; övriga utfall loggas.",
@@ -3851,5 +3851,13 @@
         "failed": "Senaste synkning misslyckades"
       }
     }
+  },
+  "sellerActivation": {
+    "title": "Aktivera ditt konto",
+    "intro": "Bekräfta din e-postadress för att öppna ditt säljarkonto.",
+    "confirm": "Bekräfta och fortsätt",
+    "passwordTitle": "Välj lösenord",
+    "continue": "Fortsätt till mina sidor",
+    "emailNote": "Om du inte väntade dig det här mejlet kan du bortse från det."
   }
 }

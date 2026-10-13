@@ -47,30 +47,60 @@ describe('localized confirmation emails', () => {
       expect(request).not.toHaveBeenCalled()
     }
   })
-  it('patches only confirmation content and subject and verifies both', async () => {
+  it('patches confirmation and activation templates and verifies them', async () => {
+    const current = {
+      site_url: 'https://app.example.test',
+      uri_allow_list: 'https://app.example.test/auth/callback',
+    }
+    const expected = {
+      ...confirmationConfig(),
+      uri_allow_list:
+        current.uri_allow_list + ',https://app.example.test/auth/activate',
+    }
     const request = vi
       .fn()
+      .mockResolvedValueOnce(Response.json(current))
       .mockResolvedValueOnce(new Response('{}'))
-      .mockResolvedValueOnce(Response.json(confirmationConfig()))
+      .mockResolvedValueOnce(Response.json(expected))
     await configureAuthEmails('production', env, request)
-    expect(JSON.parse(request.mock.calls[0][1].body)).toEqual(
-      confirmationConfig(),
-    )
+    expect(JSON.parse(request.mock.calls[1][1].body)).toEqual(expected)
     expect(
-      Object.keys(JSON.parse(request.mock.calls[0][1].body)).sort(),
+      Object.keys(JSON.parse(request.mock.calls[1][1].body)).sort(),
     ).toEqual([
       'mailer_subjects_confirmation',
+      'mailer_subjects_magic_link',
       'mailer_templates_confirmation_content',
+      'mailer_templates_magic_link_content',
+      'uri_allow_list',
     ])
-    expect(request).toHaveBeenCalledTimes(2)
+    expect(request).toHaveBeenCalledTimes(3)
   })
   it('fails deployment if readback differs', async () => {
     const request = vi
       .fn()
+      .mockResolvedValueOnce(
+        Response.json({
+          site_url: 'https://app.example.test',
+          uri_allow_list: '',
+        }),
+      )
       .mockResolvedValueOnce(new Response('{}'))
       .mockResolvedValueOnce(Response.json({}))
     await expect(
       configureAuthEmails('production', env, request),
     ).rejects.toThrow('mismatch')
+  })
+  it('refuses ambiguous origins without changing the Auth configuration', async () => {
+    for (const site_url of [
+      'https://example.test/',
+      'http://example.test',
+      'https://example.test/other',
+    ]) {
+      const request = vi.fn().mockResolvedValueOnce(Response.json({ site_url }))
+      await expect(
+        configureAuthEmails('production', env, request),
+      ).rejects.toThrow('Site URL')
+      expect(request).toHaveBeenCalledTimes(1)
+    }
   })
 })

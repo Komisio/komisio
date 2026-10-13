@@ -1668,14 +1668,14 @@
     "openExport": "Apri documento"
   },
   "communications": {
-    "welcomeTitle": "Email di benvenuto",
-    "welcomeSend": "Invia benvenuto",
+    "welcomeTitle": "Email di attivazione",
+    "welcomeSend": "Invia email di attivazione",
     "welcomeResend": "Invia di nuovo",
     "welcomeNotSent": "Non inviata",
     "welcomeSubject": "Benvenuto da {store}",
-    "welcomeBody": "Ciao {seller},\n\nSei registrato come venditore presso {store}. Segui i tuoi articoli e le vendite in Komisio.\n\nAttiva il tuo accesso:\n{url}\n\nCrea il tuo account con l’indirizzo che ha ricevuto questa email e confermalo. Hai già un account? Accedi con lo stesso indirizzo.",
+    "welcomeBody": "Ciao {seller},\n\nSei registrato come venditore presso {store}. Viene richiesta un’email di attivazione a Komisio. Segui il link in quell’email per confermare il tuo indirizzo e scegliere una password.\n\nSe hai già un account, la tua password rimane invariata. Accedi:\n{url}",
     "title": "Messaggi al conferente",
-    "intro": "Ogni messaggio viene registrato con il testo esatto inviato e l'esito della consegna. I modelli sono fissi; puoi aggiungere una nota in testo semplice.",
+    "intro": "Messaggi e stato di invio. I link personali di attivazione non vengono mostrati qui.",
     "empty": "Nessun messaggio finora.",
     "sendHeading": "Invia un messaggio",
     "sendHint": "Scegli l'argomento del messaggio. Nel pilota la consegna avviene solo verso indirizzi autorizzati; gli altri esiti vengono registrati.",
@@ -3851,5 +3851,13 @@
         "failed": "Ultima sincronizzazione non riuscita"
       }
     }
+  },
+  "sellerActivation": {
+    "title": "Attiva il tuo account",
+    "intro": "Conferma il tuo indirizzo email per aprire il tuo account venditore.",
+    "confirm": "Conferma e continua",
+    "passwordTitle": "Scegli una password",
+    "continue": "Continua al mio account",
+    "emailNote": "Se non aspettavi questa email, puoi ignorarla."
   }
 }

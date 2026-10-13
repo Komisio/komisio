@@ -50,7 +50,8 @@ try {
   await setup.connect()
   await setup.query(`create schema extensions;
  create schema auth;
- create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz);
+ create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz,
+  encrypted_password text,raw_user_meta_data jsonb,raw_app_meta_data jsonb);
  create table auth.mfa_factors(user_id uuid,status text);
  create function auth.jwt() returns jsonb language sql stable as 'select coalesce(nullif(current_setting(''request.jwt.claims'',true),'''')::jsonb,''{}''::jsonb)';
  create function auth.uid() returns uuid language sql stable as 'select (auth.jwt()->>''sub'')::uuid';

@@ -3742,7 +3742,7 @@
   },
   "inventoryImport": {
     "title": "Artikel importieren",
-    "helpLabel": "Hilfe zur Warendatei",
+    "helpLabel": "Über den Artikelimport",
     "helpFile": "Verwenden Sie die CSV-Vorlage. Behalten Sie die Spaltenüberschriften bei und vergeben Sie je Artikel eine eindeutige Referenz.",
     "helpSeller": "Der Verkäufer muss bereits in Komisio erfasst sein. Verwenden Sie seine E-Mail oder Komisio-ID; Namen werden nicht abgeglichen.",
     "helpTerms": "Artikel werden als neue Annahmen zu aktuellen Bedingungen erfasst. Jede Quellreferenz wird nur einmal importiert.",
@@ -3802,7 +3802,9 @@
       "REQUEST_CONFLICT": "Der Import konnte nicht abgeschlossen werden. Keine neuen Artikel wurden erfasst.",
       "CURRENCY_MISMATCH": "Die Bedingungen haben sich geändert. Öffnen Sie die Vorschau erneut.",
       "CUSTODY_REQUIRED": "Ich bestätige, dass die Artikel im Geschäft sind."
-    }
+    },
+    "fromFile": "Aus Datei",
+    "fromPos": "Aus Kassensystem"
   },
   "consignmentFees": {
     "title": "Monatsgebühren",

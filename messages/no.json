@@ -3736,7 +3736,7 @@
   },
   "inventoryImport": {
     "title": "Importer varer",
-    "helpLabel": "Hjelp med varefilen",
+    "helpLabel": "Om vareimport",
     "helpFile": "Bruk CSV-malen. Behold overskriftene og angi en unik referanse for hver vare.",
     "helpSeller": "Selgeren må finnes i Komisio. Bruk e-post eller selgerens Komisio-ID; navn brukes ikke til matching.",
     "helpTerms": "Varene registreres som nye innleveringer med gjeldende vilkår. Hver kildereferanse importeres bare én gang.",
@@ -3796,7 +3796,9 @@
       "REQUEST_CONFLICT": "Importen kunne ikke fullføres. Ingen nye varer ble registrert.",
       "CURRENCY_MISMATCH": "Vilkårene er endret. Forhåndsvis filen igjen.",
       "CUSTODY_REQUIRED": "Jeg bekrefter at varene er i butikken."
-    }
+    },
+    "fromFile": "Fra fil",
+    "fromPos": "Fra kasse"
   },
   "consignmentFees": {
     "title": "Månedsavgifter",

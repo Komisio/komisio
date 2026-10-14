@@ -1050,3 +1050,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-13: Item and browser-label pages expose Zebra printing through a shared modal. Opening or closing never queues a job; the mounted form retains uncertain retries. Existing printer, role, tenant and label-kind rules apply; physical output is not implied.
 - 2026-10-13: Receiving labels use a content summary beside compact Zebra controls and a separate browser-print action. Naming distinguishes custody labels from item price labels; existing references, rendering, queue retries and authorization remain unchanged.
 - 2026-10-13: POS import reviews each product before linking an existing item or receiving a new consignment under current terms. Keep account/variant IDs and barcodes; reject ambiguous links. New own items require the purchase flow. Source products stay POS-managed; only later sales use the link.
+
+- 2026-10-14: Item import groups file and POS sources in mounted tabs under one navigation entry. Tab changes retain previews and uncertain retries; legacy POS bookmarks redirect to its tab. Existing import rules and authorization remain unchanged.

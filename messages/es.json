@@ -3742,7 +3742,7 @@
   },
   "inventoryImport": {
     "title": "Importar artículos",
-    "helpLabel": "Ayuda del archivo",
+    "helpLabel": "Acerca de la importación de artículos",
     "helpFile": "Usa la plantilla CSV. Conserva los encabezados e indica una referencia única para cada artículo.",
     "helpSeller": "El vendedor debe existir en Komisio. Usa su correo o ID de Komisio; no se comparan los nombres.",
     "helpTerms": "Los artículos se registran como nuevas entregas con las condiciones actuales. Cada referencia de origen se importa solo una vez.",
@@ -3802,7 +3802,9 @@
       "REQUEST_CONFLICT": "No se pudo completar la importación. No se registraron artículos nuevos.",
       "CURRENCY_MISMATCH": "Las condiciones han cambiado. Revisa el archivo de nuevo.",
       "CUSTODY_REQUIRED": "Confirmo que los artículos están en la tienda."
-    }
+    },
+    "fromFile": "Desde archivo",
+    "fromPos": "Desde TPV"
   },
   "consignmentFees": {
     "title": "Cuotas mensuales",

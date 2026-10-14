@@ -3736,7 +3736,7 @@
   },
   "inventoryImport": {
     "title": "Importa articoli",
-    "helpLabel": "Aiuto per il file",
+    "helpLabel": "Informazioni sull’importazione di articoli",
     "helpFile": "Usa il modello CSV. Mantieni le intestazioni e assegna un riferimento univoco a ogni articolo.",
     "helpSeller": "Il venditore deve essere già presente in Komisio. Usa la sua email o il suo ID Komisio; i nomi non vengono usati per la corrispondenza.",
     "helpTerms": "Gli articoli sono registrati come nuove consegne alle condizioni attuali. Ogni riferimento viene importato una sola volta.",
@@ -3796,7 +3796,9 @@
       "REQUEST_CONFLICT": "Impossibile completare l’importazione. Nessun nuovo articolo registrato.",
       "CURRENCY_MISMATCH": "Le condizioni sono cambiate. Visualizza nuovamente l’anteprima.",
       "CUSTODY_REQUIRED": "Confermo che gli articoli si trovano in negozio."
-    }
+    },
+    "fromFile": "Da file",
+    "fromPos": "Dal POS"
   },
   "consignmentFees": {
     "title": "Quote mensili",

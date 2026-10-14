@@ -3742,7 +3742,7 @@
   },
   "inventoryImport": {
     "title": "Tuo tuotteita",
-    "helpLabel": "Tuotetiedoston ohje",
+    "helpLabel": "Tietoa tuotteiden tuonnista",
     "helpFile": "Käytä CSV-mallia. Säilytä sarakeotsikot ja anna jokaiselle tuotteelle yksilöllinen viite.",
     "helpSeller": "Myyjän on oltava Komisiossa. Käytä sähköpostia tai Komisio-tunnusta; nimiä ei käytetä kohdistamiseen.",
     "helpTerms": "Tuotteet kirjataan uusina vastaanottoina nykyisillä ehdoilla. Jokainen lähdeviite tuodaan vain kerran.",
@@ -3802,7 +3802,9 @@
       "REQUEST_CONFLICT": "Tuontia ei voitu suorittaa. Uusia tuotteita ei kirjattu.",
       "CURRENCY_MISMATCH": "Ehdot ovat muuttuneet. Esikatsele tiedosto uudelleen.",
       "CUSTODY_REQUIRED": "Vahvistan, että tuotteet ovat myymälässä."
-    }
+    },
+    "fromFile": "Tiedostosta",
+    "fromPos": "Kassasta"
   },
   "consignmentFees": {
     "title": "Kuukausimaksut",

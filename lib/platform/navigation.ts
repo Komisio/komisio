@@ -35,11 +35,6 @@ export function buildNavigation(
             icon: 'Upload',
           },
           {
-            path: '/intake/import/pos',
-            label: d.posImport.title,
-            icon: 'Download',
-          },
-          {
             path: '/intake/purchases',
             label: d.purchases.title,
             icon: 'ShoppingBag',

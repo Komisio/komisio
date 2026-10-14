@@ -123,6 +123,16 @@ test('POS review handles paging, 300 sellers, uncertain imports and existing ite
   })
   try {
     await page.goto('/intake/import/pos')
+    await expect(page).toHaveURL(/\/intake\/import\/items#item-import-pos$/)
+    await expect(
+      page.getByRole('heading', { name: d.inventoryImport.title, exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.locator('.sidebar-nav a[href="/intake/import/pos"]'),
+    ).toHaveCount(0)
+    await expect(
+      page.getByRole('tab', { name: d.inventoryImport.fromPos }),
+    ).toHaveAttribute('aria-selected', 'true')
     await page
       .getByRole('button', { name: d.posImport.load, exact: true })
       .click()
@@ -142,6 +152,14 @@ test('POS review handles paging, 300 sellers, uncertain imports and existing ite
       }),
     ).toBeVisible()
     await page.locator('#pos-search').fill('Synthetic product 00')
+    await page.getByRole('tab', { name: d.inventoryImport.fromFile }).click()
+    await expect(
+      page.getByRole('button', { name: d.inventoryImport.choose, exact: true }),
+    ).toBeVisible()
+    await page.getByRole('tab', { name: d.inventoryImport.fromPos }).click()
+    await expect(page.locator('#pos-search')).toHaveValue(
+      'Synthetic product 00',
+    )
     await page
       .getByRole('button', { name: d.posImport.review, exact: true })
       .click()
@@ -175,6 +193,11 @@ test('POS review handles paging, 300 sellers, uncertain imports and existing ite
     await expect(
       page.getByRole('button', { name: d.posImport.review, exact: true }),
     ).toBeDisabled()
+    await page.getByRole('tab', { name: d.inventoryImport.fromFile }).click()
+    await page.getByRole('tab', { name: d.inventoryImport.fromPos }).click()
+    await expect(
+      page.getByText(d.posImport.retryInfo, { exact: true }),
+    ).toBeVisible()
     await page
       .getByRole('button', { name: d.posImport.retry, exact: true })
       .click()

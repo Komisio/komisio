@@ -3736,7 +3736,7 @@
   },
   "inventoryImport": {
     "title": "Import items",
-    "helpLabel": "Inventory file help",
+    "helpLabel": "About item import",
     "helpFile": "Use the CSV template. Keep the headers and give every item a unique reference.",
     "helpSeller": "The seller must already exist in Komisio. Use their email or Komisio seller ID; names are not used for matching.",
     "helpTerms": "Items are registered as new intakes under current terms. Each source reference is imported only once.",
@@ -3796,7 +3796,9 @@
       "REQUEST_CONFLICT": "Import could not be completed. No new items were registered.",
       "CURRENCY_MISMATCH": "Terms have changed. Preview the file again.",
       "CUSTODY_REQUIRED": "I confirm that the items are in the store."
-    }
+    },
+    "fromFile": "From file",
+    "fromPos": "From POS"
   },
   "consignmentFees": {
     "title": "Monthly fees",

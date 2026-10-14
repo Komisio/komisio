@@ -69,7 +69,7 @@ references. Source references do not replace Komisio label/barcode identities.
 
 ## Products from a connected POS
 
-Owners/admins use `/intake/import/pos` for PayPal POS and Shopify. Fetch a
+Owners/admins use the POS tab at `/intake/import/items#item-import-pos` for PayPal POS and Shopify. The file and POS tabs retain work when switching; old `/intake/import/pos` bookmarks redirect to the POS tab. Fetch a
 bounded catalog page, search the fetched rows, and review each product variant.
 More pages are fetched explicitly. Exact Komisio references suggest matches;
 staff always choose whether to link an existing item or receive a new

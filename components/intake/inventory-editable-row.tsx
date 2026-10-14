@@ -39,11 +39,34 @@ export function InventoryEditableRow({
   )
   return (
     <tr
-      className={`inventory-row${edit ? ' inventory-row-editing' : ''}`}
+      className={`inventory-row inventory-row-open${edit ? ' inventory-row-editing' : ''}`}
       data-selected={selected.includes(item.id) || undefined}
       aria-busy={busy || undefined}
+      onClick={(event) => {
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey ||
+          edit ||
+          busy ||
+          !(event.target instanceof Element) ||
+          !event.currentTarget.contains(event.target) ||
+          event.target.closest(
+            'a, button, input, select, textarea, label, summary, dialog, [role="button"], [role="link"], [contenteditable="true"], [data-row-control]',
+          ) ||
+          window.getSelection()?.toString()
+        )
+          return
+        // Reuse the real link's navigation guard, loading feedback and destination.
+        event.currentTarget
+          .querySelector<HTMLAnchorElement>('.inventory-open-item')
+          ?.click()
+      }}
     >
-      <td>
+      <td data-row-control>
         <InventorySelectItem
           id={item.id}
           label={`${d.labelSheets.title}: ${current.title || item.id}`}

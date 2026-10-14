@@ -1,6 +1,15 @@
 .inventory-table-scroll {
   position: relative;
 }
+.inventory-row-open {
+  cursor: pointer;
+}
+.inventory-table .inventory-row-open:not([data-selected]):hover > * {
+  background: var(--mint);
+}
+.inventory-row-open > [data-row-control] {
+  cursor: default;
+}
 .inventory-table input.inventory-checkbox {
   width: 17px;
   height: 17px;

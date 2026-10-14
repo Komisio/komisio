@@ -4221,5 +4221,58 @@
     "translations": "Översättningar (valfritt)",
     "languages": "Språk",
     "noCategories": "Inga kategorier ännu."
+  },
+  "settingsHelp": {
+    "label": "Hjälp",
+    "policy": [
+      "Bestäm hur ni tar emot varor, sätter priser och delar försäljningen med säljaren.",
+      "Här finns också avtalskrav, säljperioder och momsinställningar. Granska ändringarna och publicera dem när allt stämmer."
+    ],
+    "profile": [
+      "Fyll i butikens adress, kontaktuppgifter och öppettider.",
+      "Beskriv vilka varor ni tar emot och välj butikens språk. Det hjälper säljare att få rätt information."
+    ],
+    "vocabulary": [
+      "Kategori är en bred indelning, till exempel Kläder. Varutyp är mer specifik, till exempel Jacka.",
+      "Attribut är uppgifter om varan, som storlek och färg. Sortimentsgrupper är egna samlingar, till exempel Vintage.",
+      "Börja med de val ni använder ofta. Här skapar du val för varorna, inte själva varorna. Varje flik har fler exempel."
+    ],
+    "store": [
+      "Här kan du ändra butikens namn och se abonnemanget.",
+      "Kontrollera plan och fakturering här. Butikens adress och öppettider finns under Butiksprofil."
+    ],
+    "printing": [
+      "Börja med att ladda ner och installera Komisio Print på datorn som ska sköta etikettskrivaren.",
+      "Registrera skrivaren och koppla datorn med kopplingskoden. Välj sedan etikettstorlek som passar rullen.",
+      "Här kan du också anpassa etiketter och följa utskrifter."
+    ],
+    "credits": [
+      "Se hur många AI-krediter butiken har och köp fler vid behov.",
+      "Krediter används till AI-funktioner, till exempel textförslag. Här kan du följa användningen."
+    ],
+    "connectors": [
+      "Anslut en AI-assistent om ni vill använda den med Komisio.",
+      "Granska vad assistenten får göra. Här ser du anslutningarna och kan koppla bort dem."
+    ],
+    "categories": [
+      "Skapa breda kategorier, till exempel Kläder, Hem och inredning eller Böcker. De hjälper er att dela in varorna.",
+      "Ange kategorins namn. Lägg gärna till översättningar om ni använder flera språk; egna namn översätts inte automatiskt.",
+      "Kategorin väljs på varan. Att skapa en kategori ändrar inte befintliga varor."
+    ],
+    "types": [
+      "Skapa varutyper som Jacka eller Byxor. Varutypen styr vilka uppgifter personalen får fylla i vid mottagningen.",
+      "Ge varutypen ett namn och välj de attribut som behövs, till exempel Storlek och Material. Du kan kopiera frågor från en liknande varutyp.",
+      "Saknas ett attribut? Skapa det i fliken Attribut först och välj det när du skapar varutypen."
+    ],
+    "attributes": [
+      "Attribut är frågor om varan, till exempel Storlek, Färg, Märke, Material och Skick. Själva svaret, som M eller blå, fylls i på varan.",
+      "Välj text för fria svar, tal för mått, en lista för fasta alternativ eller ja/nej. För mått kan du ange enhet, till exempel cm.",
+      "När attributet är skapat väljer du det när du skapar en varutyp, så visas frågan vid mottagningen."
+    ],
+    "groups": [
+      "Sortimentsgrupper är valfria samlingar som ni själva bestämmer, till exempel Vintage, Premium eller Säsong.",
+      "Samma grupp kan innehålla olika varutyper. En vintagejacka kan ha kategorin Kläder, varutypen Jacka och sortimentsgruppen Vintage.",
+      "Skapa gruppen här och välj den sedan på en eller flera varor. Gruppen ändrar inte pris eller villkor automatiskt."
+    ]
   }
 }

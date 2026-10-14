@@ -1,4 +1,5 @@
 'use client'
+import { SettingsSectionHelp } from './settings-section-help'
 
 import { useRef, useState } from 'react'
 import type { Dictionary } from '@/lib/i18n'
@@ -92,6 +93,10 @@ export function AssortmentSettings({
     .sort((a, b) => a.name.localeCompare(b.name))
   return (
     <div className="card vocabulary-panel">
+      <SettingsSectionHelp
+        label={`${d.settingsHelp.label}: ${d.vocabularySettings.groups}`}
+        steps={d.settingsHelp.groups}
+      />
       <p className="muted">{t.groupsHint}</p>
       <div className="vocabulary-toolbar">
         <div className="field">

@@ -8,6 +8,7 @@ import { CreateItemType } from './create-item-type'
 import { CreateAttribute } from './create-attribute'
 import { AssortmentSettings } from './assortment-settings'
 import { CategorySettings } from './category-settings'
+import { SettingsSectionHelp } from './settings-section-help'
 import type { ItemCategory } from '@/lib/engine/item-categories'
 import './vocabulary-settings.css'
 
@@ -78,6 +79,10 @@ export function VocabularySettings({
             label: t.types,
             content: (
               <div className="card vocabulary-panel">
+                <SettingsSectionHelp
+                  label={`${d.settingsHelp.label}: ${t.types}`}
+                  steps={d.settingsHelp.types}
+                />
                 <div className="vocabulary-toolbar">
                   <div className="field">
                     <label htmlFor="type-search">{t.searchTypes}</label>
@@ -149,6 +154,10 @@ export function VocabularySettings({
             label: t.attributes,
             content: (
               <div className="card vocabulary-panel">
+                <SettingsSectionHelp
+                  label={`${d.settingsHelp.label}: ${t.attributes}`}
+                  steps={d.settingsHelp.attributes}
+                />
                 <div className="vocabulary-toolbar">
                   <div className="field">
                     <label htmlFor="attribute-search">{t.searchFields}</label>

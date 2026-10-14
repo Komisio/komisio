@@ -4221,5 +4221,58 @@
     "translations": "Oversettelser (valgfritt)",
     "languages": "Språk",
     "noCategories": "Ingen kategorier ennå."
+  },
+  "settingsHelp": {
+    "label": "Hjelp",
+    "policy": [
+      "Bestem hvordan dere tar imot varer, setter priser og fordeler salgsbeløpet med selgeren.",
+      "Her finner du også avtalekrav, salgsperioder og mva-innstillinger. Se over endringene og publiser når alt stemmer."
+    ],
+    "profile": [
+      "Fyll inn butikkens adresse, kontaktopplysninger og åpningstider.",
+      "Beskriv hvilke varer dere tar imot, og velg butikkens språk slik at selgerne får riktig informasjon."
+    ],
+    "vocabulary": [
+      "Kategori er en bred inndeling, for eksempel Klær. Varetype er mer spesifikk, for eksempel Jakke.",
+      "Attributter er opplysninger om varen, som størrelse og farge. Sortimentsgrupper er egne samlinger, for eksempel Vintage.",
+      "Start med valgene dere bruker ofte. Her lager du valg for varene, ikke selve varene. Hver fane har flere eksempler."
+    ],
+    "store": [
+      "Her kan du endre butikkens navn og se abonnementet.",
+      "Kontroller abonnement og fakturering her. Adresse og åpningstider finner du under Butikkprofil."
+    ],
+    "printing": [
+      "Start med å laste ned og installere Komisio Print på datamaskinen som skal håndtere etikettskriveren.",
+      "Registrer skriveren og koble til datamaskinen med koblingskoden. Velg deretter en etikettstørrelse som passer rullen.",
+      "Her kan du også tilpasse etiketter og følge utskrifter."
+    ],
+    "credits": [
+      "Se hvor mange AI-kreditter butikken har, og kjøp flere ved behov.",
+      "Kreditter brukes til AI-funksjoner, som tekstforslag. Her kan du følge bruken."
+    ],
+    "connectors": [
+      "Koble til en AI-assistent hvis dere vil bruke den med Komisio.",
+      "Se over hva assistenten får gjøre. Her ser du tilkoblingene og kan koble dem fra."
+    ],
+    "categories": [
+      "Lag brede kategorier, som Klær, Hjem og interiør eller Bøker, for å organisere varene.",
+      "Skriv inn kategorinavnet. Legg til oversettelser hvis dere bruker flere språk; egne navn oversettes ikke automatisk.",
+      "Kategorien velges på varen. En ny kategori endrer ikke eksisterende varer."
+    ],
+    "types": [
+      "Lag varetyper som Jakke eller Bukse. Varetypen styrer hvilke opplysninger personalet fyller inn ved mottak.",
+      "Gi varetypen et navn og velg attributter, som Størrelse og Materiale. Du kan kopiere spørsmål fra en lignende varetype.",
+      "Mangler et attributt? Opprett det under Attributter først, og velg det når du oppretter varetypen."
+    ],
+    "attributes": [
+      "Attributter er spørsmål om varen, som Størrelse, Farge, Merke, Materiale og Tilstand. Svaret, som M eller blå, fylles inn på varen.",
+      "Velg tekst for frie svar, tall for mål, liste for faste alternativer eller ja/nei. For mål kan du legge til enhet, som cm.",
+      "Velg attributtet når du oppretter en varetype, så vises spørsmålet ved mottak."
+    ],
+    "groups": [
+      "Sortimentsgrupper er valgfrie samlinger dere bestemmer selv, som Vintage, Premium eller Sesong.",
+      "En gruppe kan inneholde ulike varetyper. En vintagejakke kan ha kategorien Klær, varetypen Jakke og sortimentsgruppen Vintage.",
+      "Opprett gruppen her, og velg den på én eller flere varer. Gruppen endrer ikke priser eller vilkår automatisk."
+    ]
   }
 }

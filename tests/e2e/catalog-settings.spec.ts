@@ -7,6 +7,102 @@ import { localTestUrl } from '../helpers/local-services'
 import d from '../../messages/sv.json' with { type: 'json' }
 import en from '../../messages/en.json' with { type: 'json' }
 
+test('settings help is contextual, keyboard accessible and preserves form input', async ({
+  page,
+}, testInfo) => {
+  const email = `settings-help-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomUUID()}`)
+  const f = await p2Fixture(email)
+  try {
+    await f.commit()
+    await page.goto('/settings?tab=vocabulary#vocabulary-categories')
+    const category = page
+      .getByRole('form', {
+        name: d.vocabularySettings.addCategory,
+        exact: true,
+      })
+      .getByLabel(d.vocabularySettings.addCategory, { exact: true })
+    await category.fill('Draft category')
+    for (const key of [
+      'categories',
+      'types',
+      'attributes',
+      'groups',
+    ] as const) {
+      await page
+        .getByRole('tab', { name: d.vocabularySettings[key], exact: true })
+        .click()
+      const panel = page.locator(`#vocabulary-${key}`)
+      const help = panel.locator('.settings-section-help')
+      await expect(help.locator('ul')).toBeHidden()
+      await help.locator('summary').focus()
+      await page.keyboard.press('Enter')
+      await expect(help.locator('li')).toHaveText(d.settingsHelp[key])
+      await expect(help.locator('ul')).toBeVisible()
+    }
+    await page
+      .getByRole('tab', { name: d.vocabularySettings.categories, exact: true })
+      .click()
+    await expect(category).toHaveValue('Draft category')
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.screenshot({
+      path: testInfo.outputPath('settings-help-mobile.png'),
+      fullPage: true,
+    })
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+    await category.fill('')
+    await page.setViewportSize({ width: 1280, height: 960 })
+    for (const tab of [
+      'policy',
+      'profile',
+      'store',
+      'printing',
+      'credits',
+    ] as const) {
+      await page.goto(`/settings?tab=${tab}`)
+      const help = page.getByRole('button', {
+        name: `${d.settingsHelp.label}: ${d.settingsTabs[tab]}`,
+        exact: true,
+      })
+      await expect(help).toHaveAttribute('aria-expanded', 'false')
+      await help.click()
+      await expect(
+        page.locator('.page-heading .form-help-content li'),
+      ).toHaveText(d.settingsHelp[tab])
+    }
+    await page
+      .context()
+      .addCookies([
+        {
+          name: 'komisio-locale',
+          value: 'en',
+          url: new URL(page.url()).origin,
+        },
+      ])
+    await page.goto('/settings?tab=vocabulary#vocabulary-categories')
+    const englishHelp = page.locator(
+      '#vocabulary-categories .settings-section-help',
+    )
+    await expect(englishHelp.locator('summary')).toHaveText(
+      `${en.settingsHelp.label}: ${en.vocabularySettings.categories}`,
+    )
+    await englishHelp.locator('summary').click()
+    await expect(englishHelp.locator('li')).toHaveText(
+      en.settingsHelp.categories,
+    )
+    await page.screenshot({
+      path: testInfo.outputPath('settings-help-desktop-en.png'),
+      fullPage: true,
+    })
+  } finally {
+    await f.close()
+  }
+})
+
 test('categories and groups are registered in settings and selected on items', async ({
   page,
 }, testInfo) => {

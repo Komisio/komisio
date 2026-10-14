@@ -4227,5 +4227,58 @@
     "translations": "Käännökset (valinnainen)",
     "languages": "Kielet",
     "noCategories": "Ei vielä kategorioita."
+  },
+  "settingsHelp": {
+    "label": "Ohje",
+    "policy": [
+      "Valitse, miten vastaanotatte tuotteita, hinnoittelette ne ja jaatte myyntitulot myyjän kanssa.",
+      "Täällä ovat myös sopimusvaatimukset, myyntijaksot ja arvonlisäveroasetukset. Tarkista muutokset ja julkaise ne, kun kaikki on oikein."
+    ],
+    "profile": [
+      "Täytä liikkeen osoite, yhteystiedot ja aukioloajat.",
+      "Kuvaile, mitä tuotteita otatte vastaan, ja valitse liikkeen kieli, jotta myyjät saavat oikeat tiedot."
+    ],
+    "vocabulary": [
+      "Kategoria on laaja ryhmä, kuten Vaatteet. Tuotetyyppi on tarkempi, kuten Takki.",
+      "Ominaisuudet kuvaavat tuotetta, esimerkiksi koko ja väri. Valikoimaryhmät ovat omia kokoelmia, kuten Vintage.",
+      "Aloita usein käytetyistä valinnoista. Täällä luot tuotteiden valintoja, et itse tuotteita. Jokaisella välilehdellä on lisää esimerkkejä."
+    ],
+    "store": [
+      "Täällä voit muuttaa liikkeen nimeä ja tarkastella tilausta.",
+      "Tarkista tilaus ja laskutus täällä. Osoite ja aukioloajat löytyvät liikkeen profiilista."
+    ],
+    "printing": [
+      "Lataa ja asenna ensin Komisio Print tietokoneelle, joka hoitaa etikettitulostimen.",
+      "Rekisteröi tulostin ja yhdistä tietokone parituskoodilla. Valitse sitten etikettirullaan sopiva koko.",
+      "Voit myös muokata etikettejä ja seurata tulostuksia täällä."
+    ],
+    "credits": [
+      "Näet liikkeen tekoälykrediitit ja voit ostaa lisää tarvittaessa.",
+      "Krediittejä käytetään tekoälytoimintoihin, kuten tekstiehdotuksiin. Voit seurata käyttöä täällä."
+    ],
+    "connectors": [
+      "Yhdistä tekoälyavustaja, jos haluatte käyttää sitä Komision kanssa.",
+      "Tarkista, mitä avustaja saa tehdä. Näet yhteydet ja voit katkaista ne täällä."
+    ],
+    "categories": [
+      "Luo laajoja kategorioita, kuten Vaatteet, Koti ja sisustus tai Kirjat, tuotteiden järjestämiseen.",
+      "Anna kategorian nimi. Lisää käännökset, jos käytätte useita kieliä; omia nimiä ei käännetä automaattisesti.",
+      "Kategoria valitaan tuotteelle. Uuden kategorian luominen ei muuta olemassa olevia tuotteita."
+    ],
+    "types": [
+      "Luo tuotetyyppejä, kuten Takki tai Housut. Tuotetyyppi määrittää vastaanotossa täytettävät tiedot.",
+      "Nimeä tuotetyyppi ja valitse ominaisuudet, kuten Koko ja Materiaali. Voit kopioida kysymykset samankaltaisesta tuotetyypistä.",
+      "Puuttuuko ominaisuus? Luo se ensin Ominaisuudet-välilehdellä ja valitse se tuotetyyppiä luodessasi."
+    ],
+    "attributes": [
+      "Ominaisuudet ovat tuotetta koskevia kysymyksiä, kuten Koko, Väri, Merkki, Materiaali ja Kunto. Vastaus, kuten M tai sininen, täytetään tuotteelle.",
+      "Valitse teksti vapaille vastauksille, numero mitoille, lista valmiille vaihtoehdoille tai kyllä/ei. Mitoille voi antaa yksikön, kuten cm.",
+      "Valitse luotu ominaisuus tuotetyyppiä luodessasi, jotta kysymys näkyy vastaanotossa."
+    ],
+    "groups": [
+      "Valikoimaryhmät ovat vapaaehtoisia kokoelmia, kuten Vintage, Premium tai Kausi.",
+      "Ryhmään voi kuulua eri tuotetyyppejä. Vintagetakin kategoria voi olla Vaatteet, tuotetyyppi Takki ja valikoimaryhmä Vintage.",
+      "Luo ryhmä täällä ja valitse se yhdelle tai useammalle tuotteelle. Ryhmä ei muuta hintoja tai ehtoja automaattisesti."
+    ]
   }
 }

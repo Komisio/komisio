@@ -4227,5 +4227,58 @@
     "translations": "Traducciones (opcional)",
     "languages": "Idiomas",
     "noCategories": "Aún no hay categorías."
+  },
+  "settingsHelp": {
+    "label": "Ayuda",
+    "policy": [
+      "Decide cómo recibís artículos, fijáis precios y repartís el importe de las ventas con el vendedor.",
+      "Aquí también están los requisitos de contrato, los periodos de venta y los ajustes de IVA. Revisa los cambios y publícalos cuando estén correctos."
+    ],
+    "profile": [
+      "Introduce la dirección, los datos de contacto y el horario de la tienda.",
+      "Describe qué artículos aceptáis y elige el idioma de la tienda para informar correctamente a los vendedores."
+    ],
+    "vocabulary": [
+      "Una categoría es una división amplia, como Ropa. Un tipo de artículo es más específico, como Chaqueta.",
+      "Los atributos describen el artículo, como talla y color. Los grupos de surtido son colecciones propias, como Vintage.",
+      "Empieza con las opciones que usáis a menudo. Aquí creas opciones para los artículos, no los artículos en sí. Cada pestaña tiene más ejemplos."
+    ],
+    "store": [
+      "Aquí puedes cambiar el nombre de la tienda y consultar la suscripción.",
+      "Consulta el plan y la facturación aquí. La dirección y el horario están en el perfil de la tienda."
+    ],
+    "printing": [
+      "Primero descarga e instala Komisio Print en el ordenador que gestionará la impresora de etiquetas.",
+      "Registra la impresora y conecta el ordenador con el código de vinculación. Después elige un tamaño de etiqueta adecuado para el rollo.",
+      "Aquí también puedes personalizar etiquetas y seguir las impresiones."
+    ],
+    "credits": [
+      "Consulta los créditos de IA de la tienda y compra más cuando sea necesario.",
+      "Los créditos se usan para funciones de IA, como sugerencias de texto. Aquí puedes consultar el consumo."
+    ],
+    "connectors": [
+      "Conecta un asistente de IA si queréis usarlo con Komisio.",
+      "Revisa qué puede hacer el asistente. Aquí puedes ver las conexiones y desconectarlas."
+    ],
+    "categories": [
+      "Crea categorías amplias, como Ropa, Hogar y decoración o Libros, para organizar los artículos.",
+      "Introduce el nombre de la categoría. Añade traducciones si usáis varios idiomas; los nombres propios no se traducen automáticamente.",
+      "La categoría se elige en el artículo. Crear una categoría no modifica los artículos existentes."
+    ],
+    "types": [
+      "Crea tipos como Chaqueta o Pantalones. El tipo determina qué datos rellena el personal al recibir el artículo.",
+      "Pon un nombre al tipo y elige atributos como Talla y Material. Puedes copiar preguntas de un tipo similar.",
+      "¿Falta un atributo? Créalo primero en Atributos y selecciónalo al crear el tipo."
+    ],
+    "attributes": [
+      "Los atributos son preguntas sobre el artículo, como Talla, Color, Marca, Material y Estado. La respuesta, como M o azul, se introduce en el artículo.",
+      "Elige texto para respuestas libres, números para medidas, una lista para opciones fijas o sí/no. Puedes añadir una unidad para medidas, como cm.",
+      "Selecciona el atributo al crear un tipo de artículo para que la pregunta aparezca en la recepción."
+    ],
+    "groups": [
+      "Los grupos de surtido son colecciones opcionales que definís, como Vintage, Premium o Temporada.",
+      "Un grupo puede contener varios tipos. Una chaqueta vintage puede tener la categoría Ropa, el tipo Chaqueta y el grupo Vintage.",
+      "Crea el grupo aquí y selecciónalo en uno o varios artículos. El grupo no cambia precios ni condiciones automáticamente."
+    ]
   }
 }

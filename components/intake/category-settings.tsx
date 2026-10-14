@@ -10,6 +10,7 @@ import {
 import { useBusyState } from '@/components/platform/work-activity'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 import { Button } from '@/components/ui/button'
+import { SettingsSectionHelp } from './settings-section-help'
 
 export function CategorySettings({
   tenantId,
@@ -126,6 +127,10 @@ export function CategorySettings({
     )
   return (
     <div className="card vocabulary-panel">
+      <SettingsSectionHelp
+        label={`${d.settingsHelp.label}: ${t.categories}`}
+        steps={d.settingsHelp.categories}
+      />
       <div className="vocabulary-toolbar">
         <div className="field">
           <label htmlFor="category-search">{t.searchCategories}</label>

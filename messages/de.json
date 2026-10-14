@@ -4227,5 +4227,58 @@
     "translations": "Übersetzungen (optional)",
     "languages": "Sprachen",
     "noCategories": "Noch keine Kategorien."
+  },
+  "settingsHelp": {
+    "label": "Hilfe",
+    "policy": [
+      "Legen Sie fest, wie Sie Artikel annehmen, Preise setzen und Verkaufserlöse mit Einlieferern teilen.",
+      "Hier finden Sie auch Vertragsanforderungen, Verkaufszeiträume und Umsatzsteuereinstellungen. Prüfen und veröffentlichen Sie Ihre Änderungen."
+    ],
+    "profile": [
+      "Tragen Sie Adresse, Kontaktdaten und Öffnungszeiten des Geschäfts ein.",
+      "Beschreiben Sie, welche Artikel Sie annehmen, und wählen Sie die Sprache des Geschäfts, damit Einlieferer passende Informationen erhalten."
+    ],
+    "vocabulary": [
+      "Eine Kategorie ist eine grobe Einteilung, etwa Kleidung. Ein Artikeltyp ist genauer, etwa Jacke.",
+      "Attribute beschreiben den Artikel, etwa Größe und Farbe. Sortimentsgruppen sind eigene Zusammenstellungen, etwa Vintage.",
+      "Beginnen Sie mit häufig genutzten Auswahlmöglichkeiten. Hier erstellen Sie Auswahlmöglichkeiten für Artikel, nicht die Artikel selbst. Jeder Tab enthält weitere Beispiele."
+    ],
+    "store": [
+      "Hier ändern Sie den Namen des Geschäfts und sehen Ihr Abonnement.",
+      "Prüfen Sie hier Tarif und Abrechnung. Adresse und Öffnungszeiten finden Sie im Geschäftsprofil."
+    ],
+    "printing": [
+      "Laden Sie zuerst Komisio Print herunter und installieren Sie es auf dem Computer für den Etikettendrucker.",
+      "Registrieren Sie den Drucker und verbinden Sie den Computer mit dem Kopplungscode. Wählen Sie dann die zur Rolle passende Etikettengröße.",
+      "Hier können Sie auch Etiketten anpassen und Druckaufträge verfolgen."
+    ],
+    "credits": [
+      "Sehen Sie das KI-Guthaben des Geschäfts und kaufen Sie bei Bedarf mehr.",
+      "Guthaben wird für KI-Funktionen wie Textvorschläge verwendet. Hier können Sie den Verbrauch verfolgen."
+    ],
+    "connectors": [
+      "Verbinden Sie einen KI-Assistenten, wenn Sie ihn mit Komisio nutzen möchten.",
+      "Prüfen Sie seine Berechtigungen. Hier sehen und trennen Sie die Verbindungen."
+    ],
+    "categories": [
+      "Erstellen Sie grobe Kategorien wie Kleidung, Wohnen oder Bücher, um Artikel zu ordnen.",
+      "Geben Sie den Kategorienamen ein. Ergänzen Sie bei Bedarf Übersetzungen; eigene Namen werden nicht automatisch übersetzt.",
+      "Die Kategorie wird am Artikel gewählt. Eine neue Kategorie verändert keine bestehenden Artikel."
+    ],
+    "types": [
+      "Erstellen Sie Artikeltypen wie Jacke oder Hose. Der Typ bestimmt, welche Angaben bei der Annahme ausgefüllt werden.",
+      "Benennen Sie den Typ und wählen Sie Attribute wie Größe und Material. Fragen können von einem ähnlichen Typ kopiert werden.",
+      "Fehlt ein Attribut? Erstellen Sie es zuerst im Tab Attribute und wählen Sie es beim Erstellen des Artikeltyps aus."
+    ],
+    "attributes": [
+      "Attribute sind Fragen zum Artikel, etwa Größe, Farbe, Marke, Material und Zustand. Die Antwort, etwa M oder blau, wird am Artikel eingetragen.",
+      "Wählen Sie Text für freie Antworten, Zahlen für Maße, eine Liste für feste Optionen oder Ja/Nein. Für Maße können Sie eine Einheit wie cm angeben.",
+      "Wählen Sie das erstellte Attribut beim Erstellen eines Artikeltyps aus, damit die Frage bei der Annahme erscheint."
+    ],
+    "groups": [
+      "Sortimentsgruppen sind optionale eigene Zusammenstellungen wie Vintage, Premium oder Saison.",
+      "Eine Gruppe kann verschiedene Artikeltypen enthalten. Eine Vintagejacke kann zur Kategorie Kleidung, zum Typ Jacke und zur Sortimentsgruppe Vintage gehören.",
+      "Erstellen Sie die Gruppe hier und wählen Sie sie bei einem oder mehreren Artikeln. Preise und Bedingungen ändern sich dadurch nicht automatisch."
+    ]
   }
 }

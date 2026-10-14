@@ -1,4 +1,5 @@
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
+import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { VocabularySettings } from '@/components/intake/vocabulary-settings'
 import { readAttributeVocabulary } from '@/lib/engine/attributes'
 import { readAssortmentGroups } from '@/lib/engine/item-classification'
@@ -184,7 +185,15 @@ export default async function Settings({
   return (
     <div className="settings-page">
       <div className="page-heading">
-        <h1>{d.tenant}</h1>
+        <FormHelpHeading
+          key={tab}
+          title={d.tenant}
+          level={1}
+          help={{
+            label: `${d.settingsHelp.label}: ${d.settingsTabs[tab]}`,
+            steps: d.settingsHelp[tab],
+          }}
+        />
       </div>
       {visible.length > 1 && (
         <nav className="view-tabs" aria-label={d.settingsTabsLabel}>

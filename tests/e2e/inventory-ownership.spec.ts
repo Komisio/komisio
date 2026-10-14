@@ -81,8 +81,10 @@ test('ownership filters count and page all goods and carry through stock reports
     ).toBeVisible()
     await rows.locator('.inventory-open-item').click()
     await expect(
-      page.locator('main > .page-heading .ownership-badge'),
-    ).toHaveText(d.items.ownershipKinds.consignment)
+      page
+        .locator('.item-workspace-meta')
+        .getByText(d.items.ownershipKinds.consignment, { exact: true }),
+    ).toBeVisible()
 
     await page.goto('/intake/stock?ownership=store')
     await page.locator('.stock-ownership-filter').getByRole('button').click()

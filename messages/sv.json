@@ -1235,7 +1235,7 @@
       "purchase": "Butiksinköp"
     },
     "ownershipKinds": {
-      "consignment": "Kommissionsvaror",
+      "consignment": "Kommissionsvara",
       "store": "Egna varor"
     },
     "evidenceKinds": {

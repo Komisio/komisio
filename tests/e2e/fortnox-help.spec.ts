@@ -22,6 +22,7 @@ test('context help preserves edits, traps focus on mobile and has a protected ar
     await expect(
       guide.getByText(d.helpCenter.guide.states.unknown, { exact: true }),
     ).toHaveCount(0)
+    await page.goto('/intake/accounting?view=accounts')
     const account = page.locator('#account-map input').first()
     await account.fill('1930')
     const open = page.getByRole('button', {
@@ -72,13 +73,16 @@ test('context help preserves edits, traps focus on mobile and has a protected ar
     const articlePromise = page.waitForEvent('popup')
     await dialog.getByRole('link', { name: d.helpCenter.fullArticle }).click()
     const article = await articlePromise
-    await expect(article).toHaveURL(/\/help\/fortnox-connect$/)
+    await expect(article).toHaveURL(/\/help\/fortnox-first-export$/)
     await expect(article.getByRole('heading', { level: 1 })).toHaveText(
-      d.helpCenter.articles['fortnox-connect'].title,
+      d.helpCenter.articles['fortnox-first-export'].title,
     )
     await article.close()
     await expect(account).toHaveValue('1930')
     await page.keyboard.press('Escape')
+    await account.fill('')
+    await page.goto('/intake/accounting?view=settings')
+    await openAccountingSettings(page)
     let automationWrites = 0
     page.on('request', (request) => {
       if (
@@ -115,7 +119,6 @@ test('context help preserves edits, traps focus on mobile and has a protected ar
     ).toBe(true)
     await page.keyboard.press('Escape')
     await expect(automationHelp).toBeFocused()
-    await expect(account).toHaveValue('1930')
     expect(automationWrites).toBe(0)
     await page.goto('/help')
     await page
@@ -196,7 +199,7 @@ test('a lost send response offers reconciliation help without another send', asy
     await expect(
       guide.getByText(d.helpCenter.guide.states.unknown, { exact: true }),
     ).toHaveCount(0)
-    await page.goto('/intake/accounting')
+    await page.goto('/intake/accounting?view=exports')
     let sends = 0
     await page.route('**/api/integrations/fortnox', async (route) => {
       if (route.request().postDataJSON()?.action !== 'sendVoucher')
@@ -224,7 +227,7 @@ test('a lost send response offers reconciliation help without another send', asy
       d.helpCenter.articles['fortnox-recovery'].title,
     )
     expect(sends).toBe(1)
-    await page.goto('/intake/accounting')
+    await page.goto('/intake/accounting?view=exports')
     await expect(exports.getByRole('alert')).toContainText(
       d.fortnox.errors.FORTNOX_PREFLIGHT_FAILED,
     )

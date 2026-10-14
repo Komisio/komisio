@@ -1944,9 +1944,7 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   await expect(
     page.getByRole('heading', { name: 'Blue TEST jacket', exact: true }),
   ).toBeVisible()
-  await page
-    .getByRole('tab', { name: d.itemDetail.terms, exact: true })
-    .click()
+  await page.getByRole('tab', { name: d.itemDetail.terms, exact: true }).click()
   await expect(page.getByText('Frysta villkor')).toBeVisible()
   await page
     .getByRole('tab', { name: d.itemDetail.history, exact: true })

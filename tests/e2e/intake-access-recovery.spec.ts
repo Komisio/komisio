@@ -24,7 +24,6 @@ for (const error of ['AUTH_REQUIRED', 'FORBIDDEN'])
         await page
           .locator('#purchase-evidence')
           .fill('Synthetic access recovery')
-        await form.locator('input[type=checkbox][required]').check()
         const requests: Record<string, unknown>[] = []
         await page.route('**/api/intake', async (route) => {
           const command = route.request().postDataJSON()

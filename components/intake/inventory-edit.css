@@ -242,3 +242,11 @@
 .inventory-table .inventory-row[data-selected] > * {
   background: color-mix(in srgb, var(--mint) 45%, var(--white));
 }
+.bag-inventory {
+  margin-top: 24px;
+}
+.bag-inventory > h2 {
+  font-size: 20px;
+  padding: 24px 20px 16px;
+  margin: 0;
+}

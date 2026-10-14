@@ -5,13 +5,27 @@ import {
   useEffect,
   useRef,
   useState,
+  useCallback,
   type ReactNode,
 } from 'react'
+import type { DirectoryItem } from '@/lib/engine/item-directory'
+type ItemUpdate = Pick<
+  DirectoryItem,
+  'id' | 'title' | 'category' | 'classification'
+>
 const Selection = createContext<{
   ids: string[]
   selected: string[]
   setSelected: (ids: string[]) => void
-}>({ ids: [], selected: [], setSelected: () => {} })
+  updates: Record<string, ItemUpdate>
+  updateItem: (item: ItemUpdate) => void
+}>({
+  ids: [],
+  selected: [],
+  setSelected: () => {},
+  updates: {},
+  updateItem: () => {},
+})
 export function InventorySelection({
   ids,
   children,
@@ -20,8 +34,19 @@ export function InventorySelection({
   children: ReactNode
 }) {
   const [selected, setSelected] = useState<string[]>([])
+  const [updates, setUpdates] = useState<Record<string, ItemUpdate>>({})
+  const updateItem = useCallback((item: ItemUpdate) => {
+    setUpdates((previous) =>
+      (previous[item.id]?.classification?.version ?? -1) >=
+      (item.classification?.version ?? 0)
+        ? previous
+        : { ...previous, [item.id]: item },
+    )
+  }, [])
   return (
-    <Selection.Provider value={{ ids, selected, setSelected }}>
+    <Selection.Provider
+      value={{ ids, selected, setSelected, updates, updateItem }}
+    >
       {children}
     </Selection.Provider>
   )

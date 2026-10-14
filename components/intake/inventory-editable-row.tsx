@@ -1,5 +1,5 @@
 'use client'
-import { type ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { ArrowUpRight, Check, LoaderCircle } from 'lucide-react'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import type { DirectoryItem } from '@/lib/engine/item-directory'
@@ -33,10 +33,33 @@ export function InventoryEditableRow({
 }) {
   const t = d.itemWorkflow,
     w = d.inventoryWorkspace
-  const { selected } = useInventorySelection()
+  const { selected, updateItem } = useInventorySelection()
   const { cell, current, edit, busy, state, message, retry } = useItemQuickEdit(
-    { item, tenantId, write, d },
+    { item, tenantId, write, d, warningScope: 'inventory-table' },
   )
+  // Selection actions must use the confirmed edit even before the server
+  // refresh returns, including its optimistic concurrency version.
+  useEffect(() => {
+    updateItem({
+      id: item.id,
+      title: current.title,
+      category: current.category,
+      classification: {
+        id: item.id,
+        version: current.version,
+        itemType: current.itemType || null,
+        assortment: current.assortment || null,
+      },
+    })
+  }, [
+    item.id,
+    current.title,
+    current.category,
+    current.version,
+    current.itemType,
+    current.assortment,
+    updateItem,
+  ])
   return (
     <tr
       className={`inventory-row inventory-row-open${edit ? ' inventory-row-editing' : ''}`}

@@ -15,11 +15,13 @@ export function useItemQuickEdit({
   tenantId,
   write,
   d,
+  warningScope,
 }: {
   item: Pick<DirectoryItem, 'id' | 'title' | 'category' | 'classification'>
   tenantId: string
   write: boolean
   d: Dictionary
+  warningScope?: string
 }) {
   const router = useRouter(),
     t = d.itemWorkflow,
@@ -52,7 +54,7 @@ export function useItemQuickEdit({
     (dirty && state !== 'refused') || busy || state === 'uncertain'
       ? d.leaveUnsaved
       : null,
-    `inventory-${item.id}`,
+    warningScope ?? `inventory-${item.id}`,
   )
 
   function open(field: Field) {

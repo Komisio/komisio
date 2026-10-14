@@ -1,116 +1,107 @@
-import { NavigationLink as Link } from '@/components/platform/navigation-warning'
-import PageLink from '@/components/platform/working-link'
-import Image from 'next/image'
-import { dictionary, intlLocale, type Locale } from '@/lib/i18n'
-import type { BagRegisteredPage } from '@/lib/engine/bag-registered-items'
-export function BagRegisteredItems({
+import type { SupabaseClient } from '@supabase/supabase-js'
+import { NavigationLink as PageLink } from '@/components/platform/navigation-warning'
+import { dictionary, type Locale } from '@/lib/i18n'
+import type { BagInventoryPage } from '@/lib/engine/bag-inventory'
+import type { ItemSort } from '@/lib/engine/item-directory'
+import { readAssortmentGroups } from '@/lib/engine/item-classification'
+import { readAttributeVocabulary } from '@/lib/engine/attributes'
+import { readItemCategories } from '@/lib/engine/item-categories'
+import { InventoryTable } from './inventory-table'
+
+export async function BagRegisteredItems({
   data,
   locale,
-  currency,
   itemPage,
   href,
   bagId,
+  client,
+  tenantId,
+  role,
+  sort,
+  direction,
 }: {
-  data: BagRegisteredPage
+  data: BagInventoryPage
   locale: Locale
-  currency: string
   itemPage: number
-  href: (page: number) => string
+  href: (page: number, sort?: ItemSort, direction?: 'asc' | 'desc') => string
   bagId: string
+  client: SupabaseClient
+  tenantId: string
+  role: string
+  sort: ItemSort
+  direction: 'asc' | 'desc'
 }) {
-  const d = dictionary(locale),
-    b = d.bagIntake
-  const { items, total, offset, legacy } = data
-  const pages = legacy ? 1 : Math.max(1, Math.ceil(total / 25))
-  const title = data.scope === 'all' ? b.allRegistered : b.registered
+  const d = dictionary(locale)
+  const { items, total, offset } = data
+  const pages = Math.max(1, Math.ceil(total / 25))
+  const title = d.bagIntake.allRegistered
+  const [groups, vocabulary, categories] = await Promise.all([
+    readAssortmentGroups(client, tenantId),
+    readAttributeVocabulary(client, tenantId),
+    readItemCategories(client, tenantId),
+  ])
   return (
     <section
       id="bag-registered"
-      className="card bag-received-items"
+      className="inventory-panel bag-inventory"
       style={{ scrollMarginTop: '1rem' }}
     >
       <h2>{title}</h2>
-      {total > 0 && (
-        <Link
-          className="btn btn-secondary"
-          href={`/intake/items/labels?bag=${bagId}`}
-        >
-          {d.labelSheets.title}
-        </Link>
-      )}
-      {!legacy && total > 0 && (
-        <p>
-          <small>
+      <InventoryTable
+        items={items}
+        tenantId={tenantId}
+        currency={data.currency}
+        locale={locale}
+        groups={groups}
+        types={vocabulary.types}
+        categories={categories}
+        write={['owner', 'admin', 'staff'].includes(role)}
+        manage={['owner', 'admin'].includes(role)}
+        sort={sort}
+        direction={direction}
+        sortHref={(key, next) => href(1, key, next)}
+        selectionKey={tenantId + bagId + itemPage + sort + direction}
+        preserveDraft
+      >
+        {!items.length && (
+          <p className="inventory-message">{d.bagIntake.empty}</p>
+        )}
+        <footer className="inventory-footer">
+          <span>
             {d.items.showingRange
-              .replace('{from}', String(offset + 1))
+              .replace('{from}', String(total ? offset + 1 : 0))
               .replace('{to}', String(offset + items.length))
               .replace('{total}', String(total))}
-          </small>
-        </p>
-      )}
-      {!items.length ? (
-        <p>{b.empty}</p>
-      ) : (
-        <ul>
-          {items.map((item) => {
-            const price =
-              item.stage === 'sold' ? item.sold_price_ore : item.price_ore
-            return (
-              <li key={item.id}>
-                <Link href={`/intake/items/${item.id}`}>
-                  {item.photo_id && item.session_id && (
-                    <Image
-                      alt=""
-                      width={52}
-                      height={52}
-                      unoptimized
-                      loading="lazy"
-                      src={`/api/reception/${item.session_id}/photo?photo=${item.photo_id}`}
-                    />
-                  )}
-                  <span>
-                    {item.title || d.quickIntake.garment}
-                    <small>{'I-' + item.id.slice(0, 8).toUpperCase()}</small>
-                    {item.stage && (
-                      <small>{d.lifecycle.stages[item.stage]}</small>
-                    )}
-                  </span>
-                  <strong>
-                    {price
-                      ? new Intl.NumberFormat(intlLocale(locale), {
-                          style: 'currency',
-                          currency,
-                        }).format(Number(price) / 100)
-                      : '—'}
-                  </strong>
-                </Link>
-              </li>
-            )
-          })}
-        </ul>
-      )}
-      {legacy && items.length === 50 && <p>{b.limit}</p>}
-      {pages > 1 && (
-        // Paging only replaces this list. Both intake views keep their keyed
-        // editor mounted, so these links do not discard entered work.
-        <nav className="row wrap" aria-label={title}>
-          {itemPage > 1 && (
-            <PageLink className="btn btn-secondary" href={href(itemPage - 1)}>
-              {d.items.previousPage}
-            </PageLink>
-          )}
-          <span>
-            {d.items.pageOf
-              .replace('{page}', String(itemPage))
-              .replace('{pages}', String(pages))}
           </span>
-          {itemPage < pages && (
-            <PageLink className="btn btn-secondary" href={href(itemPage + 1)}>
-              {d.items.nextPage}
-            </PageLink>
+          {pages > 1 && (
+            <nav className="inventory-pagination" aria-label={title}>
+              {itemPage > 1 && (
+                <PageLink
+                  warningScope="inventory-table"
+                  className="btn btn-secondary"
+                  href={href(itemPage - 1)}
+                >
+                  {d.items.previousPage}
+                </PageLink>
+              )}
+              <span>
+                {d.items.pageOf
+                  .replace('{page}', String(itemPage))
+                  .replace('{pages}', String(pages))}
+              </span>
+              {itemPage < pages && (
+                <PageLink
+                  warningScope="inventory-table"
+                  className="btn btn-secondary"
+                  href={href(itemPage + 1)}
+                >
+                  {d.items.nextPage}
+                </PageLink>
+              )}
+            </nav>
           )}
-        </nav>
-      )}
+        </footer>
+      </InventoryTable>
     </section>
   )
 }

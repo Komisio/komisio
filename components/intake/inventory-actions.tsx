@@ -33,12 +33,19 @@ export function InventoryActions({
   manage: boolean
   d: Dictionary
 }) {
-  const { ids, selected, setSelected } = useInventorySelection()
-  const chosen = items.filter(
-    (item) => ids.includes(item.id) && selected.includes(item.id),
-  )
+  const { ids, selected, setSelected, updates } = useInventorySelection()
+  const chosen = items
+    .map((item) => {
+      const update = updates[item.id]
+      return update &&
+        (update.classification?.version ?? 0) >
+          (item.classification?.version ?? 0)
+        ? { ...item, ...update }
+        : item
+    })
+    .filter((item) => ids.includes(item.id) && selected.includes(item.id))
   const [batch, setBatch] = useState<SelectedItem[] | null>(null)
-  const confirm = useConfirmNavigation()
+  const confirm = useConfirmNavigation('inventory-table')
   const editButton = useRef<HTMLButtonElement>(null)
   const single = chosen.length === 1 ? chosen[0] : null
   function close() {
@@ -154,7 +161,7 @@ function BatchDialog({
   const dialog = useRef<HTMLDialogElement>(null),
     id = useId()
   const [locked, setLocked] = useState(false)
-  useUnsavedChanges(locked ? d.leaveUnsaved : null, 'inventory-batch')
+  useUnsavedChanges(locked ? d.leaveUnsaved : null, 'inventory-table')
   useEffect(() => {
     dialog.current?.showModal()
   }, [])

@@ -91,11 +91,11 @@ test('handover item stages and actual sale price remain clear on mobile in every
         },
       ])
       await page.reload()
-      const rows = page.locator('.bag-received-items li')
+      const rows = page.locator('.bag-inventory .inventory-row')
       await expect(rows).toHaveCount(3)
       const sold = rows.filter({ hasText: 'Synthetic sold chair' })
       await expect(sold).toContainText(d.lifecycle.stages.sold)
-      await expect(sold.locator('strong')).toHaveText(/150[,.]00/)
+      await expect(sold.locator('.inventory-price')).toHaveText(/150[,.]00/)
       await expect(
         rows.filter({ hasText: 'Synthetic ended chair' }),
       ).toContainText(d.lifecycle.stages.ended)

@@ -1,9 +1,10 @@
+import type { ItemSort } from '@/lib/engine/item-directory'
 import { readBagProcessing } from '@/lib/engine/bag-processing'
 import { BagWorkSummary } from './bag-work-summary'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { BagRegisteredItems } from './bag-registered-items'
 import { redirect } from 'next/navigation'
-import { readBagRegisteredItems } from '@/lib/engine/bag-registered-items'
+import { readBagInventory } from '@/lib/engine/bag-inventory'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { dictionary, type Locale } from '@/lib/i18n'
 import { QuickReception } from './quick-reception'
@@ -18,9 +19,11 @@ export async function BagReception({
   reference,
   note,
   locale,
-  currency,
   readonly,
   itemPage = 1,
+  sort,
+  direction,
+  role,
 }: {
   client: SupabaseClient
   tenantId: string
@@ -28,8 +31,10 @@ export async function BagReception({
   reference: string | number
   note: string
   locale: Locale
-  currency: string
   readonly: boolean
+  sort: ItemSort
+  direction: 'asc' | 'desc'
+  role: string
   itemPage?: number
 }) {
   const d = dictionary(locale),
@@ -54,16 +59,22 @@ export async function BagReception({
       readonly
         ? Promise.resolve(null)
         : resolveReceptionAssistance(client, tenantId),
-      readBagRegisteredItems(client, tenantId, bagId, (itemPage - 1) * 25),
+      readBagInventory(
+        client,
+        tenantId,
+        bagId,
+        (itemPage - 1) * 25,
+        sort,
+        direction,
+      ),
     ])
   if (seller.error) throw new Error('Unable to read bag reception')
   const processing = await readBagProcessing(client, tenantId, bagId)
-  const { total, legacy } = received
-  const registeredTitle =
-    received.scope === 'all' ? b.allRegistered : b.registered
-  const pages = legacy ? 1 : Math.max(1, Math.ceil(total / 25))
-  const href = (page: number) =>
-    `/intake/bags/${bagId}/inspect?itemPage=${page}#bag-registered`
+  const { total } = received
+  const registeredTitle = b.allRegistered
+  const pages = Math.max(1, Math.ceil(total / 25))
+  const href = (page: number, nextSort = sort, nextDirection = direction) =>
+    `/intake/bags/${bagId}/inspect?itemSort=${nextSort}&itemDirection=${nextDirection}&itemPage=${page}#bag-registered`
   if (itemPage > pages) redirect(href(pages))
   return (
     <div className="bag-reception-page">
@@ -79,8 +90,7 @@ export async function BagReception({
         {note && <p className="bag-note">{note}</p>}
         {total > 0 && (
           <Link className="text-link" href="#bag-registered">
-            {registeredTitle} ({total}
-            {legacy && total === 50 ? ' +' : ''})
+            {registeredTitle} ({total})
           </Link>
         )}
       </header>
@@ -122,7 +132,11 @@ export async function BagReception({
         bagId={bagId}
         data={received}
         locale={locale}
-        currency={currency}
+        client={client}
+        tenantId={tenantId}
+        role={role}
+        sort={sort}
+        direction={direction}
         itemPage={itemPage}
         href={href}
       />

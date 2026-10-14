@@ -86,11 +86,11 @@ test('controlled journey: receive, register, label, sell and approve a settlemen
     await page
       .getByRole('button', { name: d.bagIntake.save, exact: true })
       .click()
-    const row = page.locator('.bag-received-items li').first()
+    const row = page.locator('.bag-inventory .inventory-row').first()
     await expect(row).toContainText('Synthetic wool coat')
-    await expect(row).toContainText('400,00')
+    await expect(row).toContainText('400.00')
     await noOverflow()
-    const itemHref = await row.locator('a').getAttribute('href')
+    const itemHref = await row.locator('.inventory-open-item').getAttribute('href')
     const itemId = itemHref!.split('/').at(-1)!
     const items = (
       await f.db.query(

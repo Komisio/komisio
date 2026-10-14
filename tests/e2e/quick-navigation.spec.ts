@@ -234,7 +234,7 @@ test('bag intake keeps an unfinished item while staff inspect its navigation cho
     await page
       .getByRole('button', { name: d.bagIntake.save, exact: true })
       .click()
-    await expect(page.locator('.bag-received-items li')).toHaveCount(1)
+    await expect(page.locator('.bag-inventory .inventory-row')).toHaveCount(1)
     await page
       .getByRole('button', { name: d.bagIntake.next, exact: true })
       .click()
@@ -242,7 +242,7 @@ test('bag intake keeps an unfinished item while staff inspect its navigation cho
     await page.locator('a[href="#bag-registered"]').click()
     await expect(description).toHaveValue('Synthetic unfinished scarf')
     for (const control of [
-      page.locator('.bag-received-items a').first(),
+      page.locator('.bag-inventory .inventory-open-item').first(),
       page.locator('.bag-inspection-links a[href="?view=drafts"]'),
       page.getByRole('link', { name: d.intake.back, exact: true }),
     ]) {

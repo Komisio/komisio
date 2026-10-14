@@ -342,6 +342,9 @@ export default async function Items({
                     <th scope="col">{all.itemSync.title}</th>
                     {header('accepted', t.registered)}
                     {header('periodEnd', t.periodEnd)}
+                    <th scope="col">
+                      <span className="sr-only">{d.ownership}</span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -361,13 +364,6 @@ export default async function Items({
                       d={all}
                       indicators={
                         <div className="inventory-indicators">
-                          <ItemIndicator label={d.ownershipKinds[i.ownership]}>
-                            {i.ownership === 'store' ? (
-                              <Store size={16} aria-hidden="true" />
-                            ) : (
-                              <Handshake size={16} aria-hidden="true" />
-                            )}
-                          </ItemIndicator>
                           {i.defaultPhotoId && (
                             <ItemPhotoPreview
                               tenantId={active.id}
@@ -442,6 +438,15 @@ export default async function Items({
                       </td>
                       <td className="inventory-date">
                         <time dateTime={i.periodEnd}>{date(i.periodEnd)}</time>
+                      </td>
+                      <td>
+                        <ItemIndicator label={d.ownershipKinds[i.ownership]}>
+                          {i.ownership === 'store' ? (
+                            <Store size={16} aria-hidden="true" />
+                          ) : (
+                            <Handshake size={16} aria-hidden="true" />
+                          )}
+                        </ItemIndicator>
                       </td>
                     </InventoryEditableRow>
                   ))}

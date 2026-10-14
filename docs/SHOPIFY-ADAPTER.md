@@ -188,8 +188,14 @@ Migration `20260916330000`, pgTAP `0103`, `extensions/shopify/orders.ts`,
 `lib/engine/shopify-orders.ts`, route actions `pullOrders` and
 `retryOrder`, and an "Orders from Shopify" section on the integrations page.
 
-- **One page per pull.** `orders(first: 50, sortKey: UPDATED_AT, query:
-"financial_status:paid updated_at:>='<watermark>'")`. The watermark starts
+- **One page per pull.** Up to 50 paid, partially refunded or refunded orders,
+  sorted by `UPDATED_AT` from the watermark. Explicit GraphQL
+  `MAX_COST_EXCEEDED` rejections reduce the request batch size; provider cursors
+  join smaller batches into the same engine page. Other errors stop the pull.
+  The 2026-07 `Order.refunds` field is a list without pagination arguments.
+  Nested order/refund lines must be complete: a `hasNextPage` response stops
+  the pull rather than recording a partial sale or refund. No failed read
+  records the page or advances its watermark. The watermark starts
   at the connection time and moves to the newest `updatedAt` on the page;
   an order seen again is skipped by its id, so the overlap at the watermark
   costs nothing. Each pull is one request id; a replay records nothing new

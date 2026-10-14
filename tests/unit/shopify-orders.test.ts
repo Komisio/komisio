@@ -3,6 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { seal } from '../../lib/platform/credentials'
 import {
   nextCursor,
+  listPaidOrders,
   orderToEvidence,
   toOre,
   type OrderNode,
@@ -42,6 +43,173 @@ const order = (over: Partial<OrderNode> = {}): OrderNode => ({
     ],
   },
   ...over,
+})
+
+const completeOrder = (value = order()) => ({
+  ...value,
+  lineItems: { ...value.lineItems, pageInfo: { hasNextPage: false } },
+  refunds: (value.refunds ?? []).map((refund) => ({
+    ...refund,
+    refundLineItems: {
+      ...refund.refundLineItems,
+      pageInfo: { hasNextPage: false },
+    },
+  })),
+})
+const orderPage = (
+  nodes: unknown[],
+  more = false,
+  cursor: string | null = null,
+) =>
+  Response.json({
+    data: {
+      orders: { nodes, pageInfo: { hasNextPage: more, endCursor: cursor } },
+    },
+  })
+
+describe('Shopify order read contract', () => {
+  it('uses the documented refund list and requests completeness markers', async () => {
+    const http = vi.fn(async (_url, init) => {
+      const { query } = JSON.parse(String(init?.body))
+      expect(query).not.toMatch(/refunds\s*\(/)
+      expect(query).toContain('refunds {')
+      expect(query.match(/hasNextPage/g)).toHaveLength(3)
+      return orderPage([completeOrder()])
+    })
+    expect(await listPaidOrders(shop, 'synthetic', since, http)).toHaveLength(1)
+  })
+
+  it('reduces rejected query cost and follows provider cursors without skipping orders', async () => {
+    const seen: Array<{ first: number; after: string | null }> = []
+    const http = vi.fn(async (_url, init) => {
+      const { variables } = JSON.parse(String(init?.body))
+      seen.push(variables)
+      if (variables.first > 12)
+        return Response.json({
+          errors: [
+            {
+              message: 'synthetic cost rejection',
+              extensions: { code: 'MAX_COST_EXCEEDED' },
+            },
+          ],
+        })
+      return variables.after === null
+        ? orderPage([completeOrder()], true, 'cursor-one')
+        : orderPage([completeOrder(order({ id: 'gid://shopify/Order/2' }))])
+    })
+    expect(await listPaidOrders(shop, 'synthetic', since, http)).toHaveLength(2)
+    expect(seen.map((v) => v.first)).toEqual([50, 25, 12, 12])
+    expect(seen.map((v) => v.after)).toEqual([null, null, null, 'cursor-one'])
+  })
+
+  it('does not return a partial page when a later read fails', async () => {
+    const http = vi
+      .fn()
+      .mockResolvedValueOnce(orderPage([completeOrder()], true, 'cursor-one'))
+      .mockResolvedValueOnce(
+        Response.json({
+          errors: [
+            { message: 'private error', extensions: { code: 'ACCESS_DENIED' } },
+          ],
+        }),
+      )
+    await expect(
+      listPaidOrders(shop, 'synthetic', since, http),
+    ).rejects.toThrow('SHOPIFY_READ_FAILED')
+  })
+
+  it('preserves the engine page size when smaller provider batches are required', async () => {
+    let offset = 0
+    const http = vi.fn(async (_url, init) => {
+      const { variables } = JSON.parse(String(init?.body))
+      if (variables.first > 12)
+        return Response.json({
+          errors: [
+            { message: 'cost', extensions: { code: 'MAX_COST_EXCEEDED' } },
+          ],
+        })
+      expect(variables.after).toBe(offset ? `cursor-${offset}` : null)
+      const nodes = Array.from({ length: variables.first }, () =>
+        completeOrder(order({ id: `gid://shopify/Order/${++offset}` })),
+      )
+      return orderPage(nodes, true, `cursor-${offset}`)
+    })
+    const result = await listPaidOrders(shop, 'synthetic', since, http)
+    expect(result).toHaveLength(50)
+    expect(new Set(result.map((o) => o.id)).size).toBe(50)
+    expect(offset).toBe(50)
+  })
+
+  it('bounds cost retries and does not retry throttling or access failures', async () => {
+    for (const [code, calls, error] of [
+      ['MAX_COST_EXCEEDED', 6, 'SHOPIFY_READ_FAILED'],
+      ['THROTTLED', 1, 'SHOPIFY_RATE_LIMITED'],
+      ['ACCESS_DENIED', 1, 'SHOPIFY_READ_FAILED'],
+    ] as const) {
+      const http = vi.fn(async () =>
+        Response.json({
+          errors: [{ message: 'private', extensions: { code } }],
+        }),
+      )
+      await expect(
+        listPaidOrders(shop, 'synthetic', since, http),
+      ).rejects.toThrow(error)
+      expect(http).toHaveBeenCalledTimes(calls)
+    }
+  })
+
+  it('refuses duplicate orders and broken continuation cursors', async () => {
+    for (const pages of [
+      [orderPage([completeOrder(), completeOrder()])],
+      [orderPage([completeOrder()], true, null)],
+      [orderPage([], true, 'cursor-one')],
+      [
+        orderPage([completeOrder()], true, 'cursor-one'),
+        orderPage([completeOrder()]),
+      ],
+      [
+        orderPage([completeOrder()], true, 'cursor-one'),
+        orderPage(
+          [completeOrder(order({ id: 'gid://shopify/Order/2' }))],
+          true,
+          'cursor-one',
+        ),
+      ],
+    ]) {
+      const http = vi.fn(async () => {
+        const page = pages.shift()
+        if (!page) throw new Error('unexpected request')
+        return page
+      })
+      await expect(
+        listPaidOrders(shop, 'synthetic', since, http),
+      ).rejects.toThrow('SHOPIFY_READ_FAILED')
+      expect(pages).toHaveLength(0)
+    }
+  })
+
+  it('refuses truncated order lines and refund lines', async () => {
+    const original = completeOrder()
+    const refund = {
+      id: 'gid://shopify/Refund/1',
+      createdAt: original.updatedAt,
+      totalRefundedSet: money('250.00'),
+      refundLineItems: { nodes: [], pageInfo: { hasNextPage: true } },
+    }
+    for (const value of [
+      {
+        ...original,
+        lineItems: { ...original.lineItems, pageInfo: { hasNextPage: true } },
+      },
+      { ...original, refunds: [refund] },
+    ]) {
+      await expect(
+        listPaidOrders(shop, 'synthetic', since, async () =>
+          orderPage([value]),
+        ),
+      ).rejects.toThrow('SHOPIFY_READ_FAILED')
+    }
+  })
 })
 
 describe('order evidence', () => {
@@ -223,12 +391,7 @@ function setup(
   const requests: string[] = []
   const http = vi.fn(async (_input: unknown, init?: RequestInit) => {
     requests.push(String(init?.body ?? ''))
-    return new Response(
-      JSON.stringify({
-        data: { orders: { nodes: options.orders ?? [order()] } },
-      }),
-      { status: 200 },
-    )
+    return orderPage((options.orders ?? [order()]).map(completeOrder))
   })
   const client = { rpc, from } as unknown as SupabaseClient
   const run = () =>
@@ -238,10 +401,20 @@ function setup(
       options.acceptTest ? { ...env, SHOPIFY_ACCEPT_TEST_ORDERS: 'true' } : env,
       http as unknown as typeof fetch,
     )
-  return { run, pages, requests }
+  return { run, pages, requests, http }
 }
 
 describe('pullShopifyOrders', () => {
+  it('does not record sales or move the cursor after a later provider batch fails', async () => {
+    const s = setup()
+    s.http
+      .mockResolvedValueOnce(orderPage([completeOrder()], true, 'cursor-one'))
+      .mockResolvedValueOnce(
+        Response.json({ errors: [{ message: 'private' }] }),
+      )
+    await expect(s.run()).rejects.toThrow('SHOPIFY_READ_FAILED')
+    expect(s.pages).toEqual([])
+  })
   it('asks for paid orders since the watermark and records the page on top of it', async () => {
     const s = setup()
     const r = await s.run()

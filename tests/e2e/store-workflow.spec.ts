@@ -43,7 +43,7 @@ test('staff correct text, classify inventory and download private A4 price label
     ).toContainText(['Välj…', 'Ingen', 'Premium'])
     await page
       .getByLabel(d.quickIntake.itemType, { exact: true })
-      .selectOption('sweater')
+      .selectOption('jacket')
     await page
       .getByLabel(d.itemWorkflow.group, { exact: true })
       .selectOption({ label: 'Premium' })

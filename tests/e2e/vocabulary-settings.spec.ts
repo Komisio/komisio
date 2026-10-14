@@ -5,6 +5,128 @@ import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import { localTestUrl } from '../helpers/local-services'
 import d from '../../messages/sv.json' with { type: 'json' }
+import en from '../../messages/en.json' with { type: 'json' }
+
+test('concurrent store creation initializes the starter vocabulary once', async ({
+  page,
+}) => {
+  const email = `starter-race-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomUUID()}`)
+  const f = await p2Fixture(email)
+  const { Client } = createRequire(import.meta.url)('pg')
+  const clients = [0, 1].map(
+    () =>
+      new Client({
+        connectionString: localTestUrl(
+          'TEST_DATABASE_URL',
+          'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+        ),
+      }),
+  )
+  try {
+    await f.commit()
+    const requestId = randomUUID()
+    const results = await Promise.all(
+      clients.map(async (client) => {
+        await client.connect()
+        await client.query('begin')
+        await client.query('set local role authenticated')
+        await client.query("select set_config('request.jwt.claims',$1,true)", [
+          JSON.stringify({ sub: f.actor, role: 'authenticated' }),
+        ])
+        const result = await client.query('select create_tenant($1,$2,$3) id', [
+          'Concurrent starter store',
+          `starter-${requestId}`,
+          requestId,
+        ])
+        await client.query('commit')
+        return result.rows[0].id
+      }),
+    )
+    expect(results[0]).toBe(results[1])
+    const counts = (
+      await f.db.query(
+        `select
+      (select count(*)::int from item_types where tenant_id=$1 and active) types,
+      (select count(*)::int from item_type_attributes where tenant_id=$1 and type_slug in ('jacket','trousers')) fields,
+      (select count(*)::int from access_events where tenant_id=$1 and action='tenant.created') events`,
+        [results[0]],
+      )
+    ).rows[0]
+    expect(counts).toEqual({ types: 2, fields: 14, events: 1 })
+  } finally {
+    await Promise.all(clients.map((c) => c.end()))
+    await f.close()
+  }
+})
+
+test('a new store starts with translated clothing types and five base attributes', async ({
+  page,
+}, testInfo) => {
+  const email = `starter-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomUUID()}`)
+  const f = await p2Fixture(email)
+  try {
+    await f.commit()
+    await page.context().addCookies([
+      {
+        name: 'komisio-locale',
+        value: 'en',
+        url: new URL(page.url()).origin,
+      },
+    ])
+    await page.goto('/settings?tab=vocabulary')
+    const rows = page.locator('#vocabulary-types tbody tr')
+    await expect(rows).toHaveCount(2)
+    await expect(rows.nth(0)).toContainText('Jacket')
+    await expect(rows.nth(1)).toContainText('Trousers')
+    await expect(rows.nth(0)).toBeVisible()
+    for (const field of ['Size', 'Colour', 'Brand', 'Material', 'Condition']) {
+      await expect(rows.nth(0)).toContainText(field)
+      await expect(rows.nth(1)).toContainText(field)
+    }
+    await page.screenshot({
+      path: testInfo.outputPath('starter-types-en.png'),
+      fullPage: true,
+    })
+    await page
+      .getByRole('tab', { name: en.vocabularySettings.attributes, exact: true })
+      .click()
+    await expect(page.locator('#vocabulary-attributes tbody tr')).toHaveCount(7)
+    await expect(page.locator('#vocabulary-attributes')).not.toContainText(
+      'Socket',
+    )
+    await page.goto('/intake/quick')
+    await page.getByRole('button', { name: /Synthetic P2 seller/ }).click()
+    await page.locator('#quick-item-type').fill('Jacket')
+    for (const field of ['Size', 'Colour', 'Brand', 'Material', 'Condition'])
+      await expect(page.getByLabel(field, { exact: true })).toBeVisible()
+    await expect(page.getByLabel('Socket', { exact: true })).toHaveCount(0)
+    await page.context().addCookies([
+      {
+        name: 'komisio-locale',
+        value: 'sv',
+        url: new URL(page.url()).origin,
+      },
+    ])
+    await page.goto('/settings?tab=vocabulary')
+    await expect(rows.nth(0)).toContainText('Byxor')
+    await expect(rows.nth(1)).toContainText('Jacka')
+    await expect(rows.nth(0)).toBeVisible()
+    await page.setViewportSize({ width: 390, height: 844 })
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true)
+    await page.screenshot({
+      path: testInfo.outputPath('starter-types-sv-mobile.png'),
+      fullPage: true,
+    })
+  } finally {
+    await f.close()
+  }
+})
 
 test('settings creates an attribute safely and reception renders only the selected profile', async ({
   page,
@@ -105,8 +227,8 @@ test('settings creates an attribute safely and reception renders only the select
     await page.locator('#quick-item-type').fill('Synthetic bench')
     await page.getByLabel('Synthetic width (cm)', { exact: true }).fill('80')
     await expect(page.getByLabel('Sockel', { exact: true })).toHaveCount(0)
-    await page.locator('#quick-item-type').fill('Lampa')
-    await expect(page.getByLabel('Sockel', { exact: true })).toBeVisible()
+    await page.locator('#quick-item-type').fill('Jacka')
+    await expect(page.getByLabel('Storlek', { exact: true })).toBeVisible()
     await expect(
       page.getByLabel('Synthetic width (cm)', { exact: true }),
     ).toHaveCount(0)

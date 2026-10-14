@@ -55,6 +55,23 @@ test('standard item questions and choices use every UI language on a phone', asy
   await register(page, email, `K!${randomBytes(16).toString('hex')}`)
   const f = await p2Fixture(email)
   try {
+    // These legacy profiles exercise translated choice values. New stores
+    // start with clothing basics, so activate the test profiles explicitly.
+    await f.db.query(
+      `
+      select set_attribute_definition($1,slug,jsonb_build_object(
+        'dataType',data_type,'unit',unit,'choices',choices,'labels',labels,'help',help,'active',true))
+      from attribute_definitions where tenant_id=$1 and slug in ('fit','height_cm','socket','max_wattage','dimmable')`,
+      [f.tenant],
+    )
+    await f.db.query(
+      `
+      select set_item_type($1,t.slug,jsonb_build_object('labels',t.labels,'active',true,'attributes',
+        (select jsonb_agg(jsonb_build_object('slug',a.attribute_slug,'sort',a.sort,'expected',a.expected))
+         from item_type_attributes a where a.tenant_id=$1 and a.type_slug=t.slug)))
+      from item_types t where t.tenant_id=$1 and t.slug in ('lamp','sweater')`,
+      [f.tenant],
+    )
     await f.commit()
     await page.setViewportSize({ width: 320, height: 800 })
     for (const [
@@ -77,7 +94,7 @@ test('standard item questions and choices use every UI language on a phone', asy
           {
             name: 'komisio-locale',
             value: locale,
-            url: 'http://127.0.0.1:3000',
+            url: new URL(page.url()).origin,
           },
         ])
         await page.goto('/intake/quick')

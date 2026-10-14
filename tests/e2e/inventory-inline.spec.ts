@@ -66,7 +66,7 @@ test('inventory workspace selects page items and saves cells with safe retry and
     await expect(dialog).toContainText('Synthetic inline item')
     await dialog
       .getByLabel(d.quickIntake.itemType, { exact: true })
-      .selectOption('sweater')
+      .selectOption('jacket')
     await dialog
       .getByLabel(d.itemWorkflow.group, { exact: true })
       .selectOption(group)
@@ -157,7 +157,7 @@ test('inventory workspace selects page items and saves cells with safe retry and
       .click()
     await row
       .getByRole('combobox', { name: d.quickIntake.itemType, exact: true })
-      .selectOption('sweater')
+      .selectOption('jacket')
     await page.keyboard.press('Tab')
     await expect(row).toContainText('Outerwear')
     await expect(

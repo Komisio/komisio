@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-14: New stores start with Jacket and Trousers and the size, colour, brand, material and condition attributes, translated into all eight UI languages. Description/category remain core fields. Legacy examples are hidden only in new stores; creation retries never reset vocabulary.
+
 - 2026-10-14: Register item types and attributes in store settings, not reception. Owner/admin creation uses the existing vocabulary with exact replay protection; reception renders only the selected profile. New fields do not change historical observations.
 
 - 2026-10-14: Shopify order reads use the current refund schema, reduce query batches on explicit cost-limit errors and preserve the 50-order engine page. Incomplete nested pages stop import; provider read failures never advance the cursor or create partial sales.

@@ -116,7 +116,7 @@ test('inventory workspace selects page items and saves cells with safe retry and
     await name.click()
     await page.keyboard.press('Tab')
     await expect(
-      row.getByRole('textbox', { name: d.quickIntake.category, exact: true }),
+      row.getByRole('combobox', { name: d.quickIntake.category, exact: true }),
     ).toBeFocused()
     await page.keyboard.press('Escape')
     expect(commands).toHaveLength(0)
@@ -145,8 +145,8 @@ test('inventory workspace selects page items and saves cells with safe retry and
       })
       .click()
     await row
-      .getByRole('textbox', { name: d.quickIntake.category, exact: true })
-      .fill('Outerwear')
+      .getByRole('combobox', { name: d.quickIntake.category, exact: true })
+      .selectOption('Clothing')
     // Clicking the next cell while blur saves queues that editor, preserving the new snapshot.
     await row
       .getByRole('button', {
@@ -159,7 +159,7 @@ test('inventory workspace selects page items and saves cells with safe retry and
       .getByRole('combobox', { name: d.quickIntake.itemType, exact: true })
       .selectOption('jacket')
     await page.keyboard.press('Tab')
-    await expect(row).toContainText('Outerwear')
+    await expect(row).toContainText('Kläder')
     await expect(
       row.getByRole('combobox', { name: d.itemWorkflow.group, exact: true }),
     ).toBeFocused()

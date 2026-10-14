@@ -449,7 +449,7 @@
     "printing": "Printere og mærkater",
     "connectors": "AI-assistenter",
     "credits": "AI-kreditter",
-    "vocabulary": "Varetyper og attributter"
+    "vocabulary": "Vareindstillinger"
   },
   "tenantIdentity": "Butikkens identitet",
   "tenantId": "Butiks-id",
@@ -4177,8 +4177,8 @@
     "editHint": "Klik på blyanten for at redigere. Ændringen gemmes, når du forlader feltet."
   },
   "vocabularySettings": {
-    "title": "Varetyper og attributter",
-    "intro": "Varetypen bestemmer, hvilke felter der vises ved modtagelse.",
+    "title": "Vareindstillinger",
+    "intro": "Vælg, hvordan butikkens varer grupperes og beskrives.",
     "types": "Varetyper",
     "attributes": "Attributter",
     "searchTypes": "Søg efter varetype",
@@ -4205,6 +4205,21 @@
       "boolean": "Ja/nej"
     },
     "uncertain": "Lagringen kunne ikke bekræftes. Prøv igen med de samme oplysninger.",
-    "refused": "Kunne ikke gemme. Annuller, og kontrollér butik og adgang."
+    "refused": "Kunne ikke gemme. Annuller, og kontrollér butik og adgang.",
+    "groups": "Sortimentsgrupper",
+    "searchGroups": "Søg efter sortimentsgruppe",
+    "groupsHint": "Egne grupper, for eksempel Premium eller Vintage.",
+    "noGroups": "Ingen sortimentsgrupper endnu.",
+    "manageGroups": "Administrer sortimentsgrupper",
+    "nameRequired": "Angiv et navn, og kontrollér felterne.",
+    "groupExists": "Der findes allerede en sortimentsgruppe med dette navn.",
+    "categories": "Kategorier",
+    "searchCategories": "Søg efter kategori",
+    "addCategory": "Ny kategori",
+    "createCategory": "Opret kategori",
+    "categoryExists": "Der findes allerede en kategori med dette navn.",
+    "translations": "Oversættelser (valgfrit)",
+    "languages": "Sprog",
+    "noCategories": "Ingen kategorier endnu."
   }
 }

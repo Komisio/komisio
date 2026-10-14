@@ -449,7 +449,7 @@
     "printing": "Printers and labels",
     "connectors": "AI assistants",
     "credits": "AI credits",
-    "vocabulary": "Item types and attributes"
+    "vocabulary": "Item settings"
   },
   "tenantIdentity": "Store identity",
   "tenantId": "Store id",
@@ -4177,8 +4177,8 @@
     "editHint": "Click the pencil to edit. Changes are saved when you leave the field."
   },
   "vocabularySettings": {
-    "title": "Item types and attributes",
-    "intro": "The item type determines which fields appear when receiving goods.",
+    "title": "Item settings",
+    "intro": "Choose how the store’s items are grouped and described.",
     "types": "Item types",
     "attributes": "Attributes",
     "searchTypes": "Search item types",
@@ -4205,6 +4205,21 @@
       "boolean": "Yes/no"
     },
     "uncertain": "Saving could not be confirmed. Retry with the same details.",
-    "refused": "Could not save. Cancel and check the store and your permissions."
+    "refused": "Could not save. Cancel and check the store and your permissions.",
+    "groups": "Assortment groups",
+    "searchGroups": "Search assortment groups",
+    "groupsHint": "Your own groups, such as Premium or Vintage.",
+    "noGroups": "No assortment groups yet.",
+    "manageGroups": "Manage assortment groups",
+    "nameRequired": "Enter a name and check the fields.",
+    "groupExists": "An assortment group with that name already exists.",
+    "categories": "Categories",
+    "searchCategories": "Search categories",
+    "addCategory": "New category",
+    "createCategory": "Create category",
+    "categoryExists": "A category with that name already exists.",
+    "translations": "Translations (optional)",
+    "languages": "Languages",
+    "noCategories": "No categories yet."
   }
 }

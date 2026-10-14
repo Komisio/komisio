@@ -449,7 +449,7 @@
     "printing": "Impresoras y etiquetas",
     "connectors": "Asistentes de IA",
     "credits": "Créditos de IA",
-    "vocabulary": "Tipos de artículo y atributos"
+    "vocabulary": "Configuración de artículos"
   },
   "tenantIdentity": "Identidad de la tienda",
   "tenantId": "Id de la tienda",
@@ -4183,8 +4183,8 @@
     "editHint": "Pulsa el lápiz para editar. Los cambios se guardan al salir del campo."
   },
   "vocabularySettings": {
-    "title": "Tipos de artículo y atributos",
-    "intro": "El tipo de artículo determina los campos que aparecen en la recepción.",
+    "title": "Configuración de artículos",
+    "intro": "Define cómo se agrupan y describen los artículos de la tienda.",
     "types": "Tipos de artículo",
     "attributes": "Atributos",
     "searchTypes": "Buscar tipo de artículo",
@@ -4211,6 +4211,21 @@
       "boolean": "Sí/no"
     },
     "uncertain": "No se pudo confirmar el guardado. Reintenta con los mismos datos.",
-    "refused": "No se pudo guardar. Cancela y revisa la tienda y tus permisos."
+    "refused": "No se pudo guardar. Cancela y revisa la tienda y tus permisos.",
+    "groups": "Grupos de surtido",
+    "searchGroups": "Buscar grupo de surtido",
+    "groupsHint": "Grupos propios, como Premium o Vintage.",
+    "noGroups": "Aún no hay grupos de surtido.",
+    "manageGroups": "Gestionar grupos de surtido",
+    "nameRequired": "Introduce un nombre y revisa los campos.",
+    "groupExists": "Ya existe un grupo de surtido con ese nombre.",
+    "categories": "Categorías",
+    "searchCategories": "Buscar categoría",
+    "addCategory": "Nueva categoría",
+    "createCategory": "Crear categoría",
+    "categoryExists": "Ya existe una categoría con ese nombre.",
+    "translations": "Traducciones (opcional)",
+    "languages": "Idiomas",
+    "noCategories": "Aún no hay categorías."
   }
 }

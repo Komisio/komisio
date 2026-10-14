@@ -449,7 +449,7 @@
     "printing": "Drucker und Etiketten",
     "connectors": "KI-Assistenten",
     "credits": "KI-Credits",
-    "vocabulary": "Artikeltypen und Merkmale"
+    "vocabulary": "Artikeleinstellungen"
   },
   "tenantIdentity": "Store-Identität",
   "tenantId": "Store-ID",
@@ -4183,8 +4183,8 @@
     "editHint": "Zum Bearbeiten auf den Stift klicken. Änderungen werden beim Verlassen des Feldes gespeichert."
   },
   "vocabularySettings": {
-    "title": "Artikeltypen und Merkmale",
-    "intro": "Der Artikeltyp bestimmt, welche Felder bei der Annahme erscheinen.",
+    "title": "Artikeleinstellungen",
+    "intro": "Legen Sie fest, wie die Artikel gruppiert und beschrieben werden.",
     "types": "Artikeltypen",
     "attributes": "Merkmale",
     "searchTypes": "Artikeltyp suchen",
@@ -4211,6 +4211,21 @@
       "boolean": "Ja/nein"
     },
     "uncertain": "Das Speichern konnte nicht bestätigt werden. Versuchen Sie es mit denselben Angaben erneut.",
-    "refused": "Speichern nicht möglich. Brechen Sie ab und prüfen Sie Laden und Berechtigungen."
+    "refused": "Speichern nicht möglich. Brechen Sie ab und prüfen Sie Laden und Berechtigungen.",
+    "groups": "Sortimentsgruppen",
+    "searchGroups": "Sortimentsgruppe suchen",
+    "groupsHint": "Eigene Gruppen, zum Beispiel Premium oder Vintage.",
+    "noGroups": "Noch keine Sortimentsgruppen.",
+    "manageGroups": "Sortimentsgruppen verwalten",
+    "nameRequired": "Geben Sie einen Namen ein und prüfen Sie die Felder.",
+    "groupExists": "Eine Sortimentsgruppe mit diesem Namen existiert bereits.",
+    "categories": "Kategorien",
+    "searchCategories": "Kategorie suchen",
+    "addCategory": "Neue Kategorie",
+    "createCategory": "Kategorie erstellen",
+    "categoryExists": "Eine Kategorie mit diesem Namen existiert bereits.",
+    "translations": "Übersetzungen (optional)",
+    "languages": "Sprachen",
+    "noCategories": "Noch keine Kategorien."
   }
 }

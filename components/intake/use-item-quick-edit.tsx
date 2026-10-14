@@ -187,6 +187,15 @@ export function useItemQuickEdit({
     options?: { id: string; name: string }[],
   ) {
     const active = edit?.field === field
+    // Existing free-text categories remain selectable even if the store has
+    // not registered them. Translated labels never replace the stored value.
+    if (
+      field === 'category' &&
+      options &&
+      current.category &&
+      !options.some((o) => o.id === current.category)
+    )
+      options = [{ id: current.category, name: current.category }, ...options]
     const shown = options
       ? (options.find((option) => option.id === current[field])?.name ?? '—')
       : current[field] || '—'

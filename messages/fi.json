@@ -449,7 +449,7 @@
     "printing": "Tulostimet ja etiketit",
     "connectors": "AI-avustajat",
     "credits": "AI-krediitit",
-    "vocabulary": "Tuotetyypit ja ominaisuudet"
+    "vocabulary": "Tuoteasetukset"
   },
   "tenantIdentity": "Kaupan identiteetti",
   "tenantId": "Kaupan tunnus",
@@ -4183,8 +4183,8 @@
     "editHint": "Muokkaa napsauttamalla kynää. Muutos tallentuu, kun poistut kentästä."
   },
   "vocabularySettings": {
-    "title": "Tuotetyypit ja ominaisuudet",
-    "intro": "Tuotetyyppi määrittää vastaanotossa näytettävät kentät.",
+    "title": "Tuoteasetukset",
+    "intro": "Valitse, miten myymälän tuotteet ryhmitellään ja kuvataan.",
     "types": "Tuotetyypit",
     "attributes": "Ominaisuudet",
     "searchTypes": "Hae tuotetyyppiä",
@@ -4211,6 +4211,21 @@
       "boolean": "Kyllä/ei"
     },
     "uncertain": "Tallennusta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla.",
-    "refused": "Tallennus epäonnistui. Peruuta ja tarkista myymälä ja käyttöoikeutesi."
+    "refused": "Tallennus epäonnistui. Peruuta ja tarkista myymälä ja käyttöoikeutesi.",
+    "groups": "Valikoimaryhmät",
+    "searchGroups": "Hae valikoimaryhmää",
+    "groupsHint": "Omat ryhmät, esimerkiksi Premium tai Vintage.",
+    "noGroups": "Ei vielä valikoimaryhmiä.",
+    "manageGroups": "Hallinnoi valikoimaryhmiä",
+    "nameRequired": "Anna nimi ja tarkista kentät.",
+    "groupExists": "Samanniminen valikoimaryhmä on jo olemassa.",
+    "categories": "Kategoriat",
+    "searchCategories": "Hae kategoriaa",
+    "addCategory": "Uusi kategoria",
+    "createCategory": "Luo kategoria",
+    "categoryExists": "Samanniminen kategoria on jo olemassa.",
+    "translations": "Käännökset (valinnainen)",
+    "languages": "Kielet",
+    "noCategories": "Ei vielä kategorioita."
   }
 }

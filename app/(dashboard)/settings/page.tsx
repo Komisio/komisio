@@ -1,6 +1,8 @@
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { VocabularySettings } from '@/components/intake/vocabulary-settings'
 import { readAttributeVocabulary } from '@/lib/engine/attributes'
+import { readAssortmentGroups } from '@/lib/engine/item-classification'
+import { readItemCategories } from '@/lib/engine/item-categories'
 import { Button } from '@/components/ui/button'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { readStorePolicy } from '@/lib/engine/store-policy'
@@ -101,10 +103,14 @@ export default async function Settings({
           ? 'credits'
           : 'policy'
   const manages = ['owner', 'admin'].includes(active.role)
-  const vocabulary =
+  const [vocabulary, assortmentGroups, categories] =
     intake && tab === 'vocabulary'
-      ? await readAttributeVocabulary(ctx.client, active.id)
-      : null
+      ? await Promise.all([
+          readAttributeVocabulary(ctx.client, active.id),
+          readAssortmentGroups(ctx.client, active.id),
+          readItemCategories(ctx.client, active.id),
+        ])
+      : [null, [], []]
   const policy =
     intake && tab === 'policy'
       ? await readStorePolicy(ctx.client, active.id)
@@ -208,6 +214,8 @@ export default async function Settings({
           key={active.id}
           tenantId={active.id}
           initial={vocabulary}
+          groups={assortmentGroups}
+          categories={categories}
           locale={ctx.locale}
           editable={manages}
           d={d}

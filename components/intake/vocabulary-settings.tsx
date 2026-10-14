@@ -6,17 +6,24 @@ import { labelOf, type AttributeVocabulary } from '@/lib/engine/attributes'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { CreateItemType } from './create-item-type'
 import { CreateAttribute } from './create-attribute'
+import { AssortmentSettings } from './assortment-settings'
+import { CategorySettings } from './category-settings'
+import type { ItemCategory } from '@/lib/engine/item-categories'
 import './vocabulary-settings.css'
 
 export function VocabularySettings({
   tenantId,
   initial,
+  groups,
+  categories,
   locale,
   editable,
   d,
 }: {
   tenantId: string
   initial: AttributeVocabulary
+  groups: { id: string; name: string }[]
+  categories: ItemCategory[]
   locale: string
   editable: boolean
   d: Dictionary
@@ -50,8 +57,22 @@ export function VocabularySettings({
       </div>
       <WorkspaceTabs
         id="vocabulary"
+        initial="types"
         label={t.title}
         tabs={[
+          {
+            id: 'categories',
+            label: t.categories,
+            content: (
+              <CategorySettings
+                tenantId={tenantId}
+                initial={categories}
+                locale={locale}
+                editable={editable}
+                d={d}
+              />
+            ),
+          },
           {
             id: 'types',
             label: t.types,
@@ -199,6 +220,18 @@ export function VocabularySettings({
                 </table>
                 {attributes.length === 0 && <p>{t.noMatches}</p>}
               </div>
+            ),
+          },
+          {
+            id: 'groups',
+            label: t.groups,
+            content: (
+              <AssortmentSettings
+                tenantId={tenantId}
+                initial={groups}
+                editable={editable}
+                d={d}
+              />
             ),
           },
         ]}

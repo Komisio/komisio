@@ -30,7 +30,11 @@ export async function POST(request: Request) {
   } catch (error) {
     const code = error instanceof Error ? error.message : ''
     return reply(
-      { error: code === 'REQUEST_FAILED' ? 'REQUEST_FAILED' : 'CHANGED' },
+      {
+        error: ['REQUEST_FAILED', 'GROUP_EXISTS'].includes(code)
+          ? code
+          : 'CHANGED',
+      },
       code === 'REQUEST_FAILED' ? 503 : 409,
     )
   }

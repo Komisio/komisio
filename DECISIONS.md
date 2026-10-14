@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-14: Owner approves a tenant category registry with translated names, preserving item category text and history. Category, type, attribute and assortment setup live in store settings. New stores get Clothing and Home & décor categories; assortment groups remain optional and store-defined.
+
 - 2026-10-14: New stores start with Jacket and Trousers and the size, colour, brand, material and condition attributes, translated into all eight UI languages. Description/category remain core fields. Legacy examples are hidden only in new stores; creation retries never reset vocabulary.
 
 - 2026-10-14: Register item types and attributes in store settings, not reception. Owner/admin creation uses the existing vocabulary with exact replay protection; reception renders only the selected profile. New fields do not change historical observations.

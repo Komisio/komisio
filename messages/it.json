@@ -449,7 +449,7 @@
     "printing": "Stampanti ed etichette",
     "connectors": "Assistenti AI",
     "credits": "Crediti AI",
-    "vocabulary": "Tipi di articolo e attributi"
+    "vocabulary": "Impostazioni articoli"
   },
   "tenantIdentity": "Identità del negozio",
   "tenantId": "ID del negozio",
@@ -4177,8 +4177,8 @@
     "editHint": "Premi la matita per modificare. Le modifiche vengono salvate quando esci dal campo."
   },
   "vocabularySettings": {
-    "title": "Tipi di articolo e attributi",
-    "intro": "Il tipo di articolo determina i campi visualizzati alla ricezione.",
+    "title": "Impostazioni articoli",
+    "intro": "Scegli come raggruppare e descrivere gli articoli del negozio.",
     "types": "Tipi di articolo",
     "attributes": "Attributi",
     "searchTypes": "Cerca tipo di articolo",
@@ -4205,6 +4205,21 @@
       "boolean": "Sì/no"
     },
     "uncertain": "Non è stato possibile confermare il salvataggio. Riprova con gli stessi dati.",
-    "refused": "Impossibile salvare. Annulla e controlla il negozio e i tuoi permessi."
+    "refused": "Impossibile salvare. Annulla e controlla il negozio e i tuoi permessi.",
+    "groups": "Gruppi di assortimento",
+    "searchGroups": "Cerca gruppo di assortimento",
+    "groupsHint": "Gruppi personalizzati, come Premium o Vintage.",
+    "noGroups": "Nessun gruppo di assortimento presente.",
+    "manageGroups": "Gestisci gruppi di assortimento",
+    "nameRequired": "Inserisci un nome e controlla i campi.",
+    "groupExists": "Esiste già un gruppo di assortimento con questo nome.",
+    "categories": "Categorie",
+    "searchCategories": "Cerca categoria",
+    "addCategory": "Nuova categoria",
+    "createCategory": "Crea categoria",
+    "categoryExists": "Esiste già una categoria con questo nome.",
+    "translations": "Traduzioni (facoltative)",
+    "languages": "Lingue",
+    "noCategories": "Nessuna categoria presente."
   }
 }

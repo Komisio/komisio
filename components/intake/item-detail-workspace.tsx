@@ -18,6 +18,7 @@ export function ItemDetailWorkspace({
   write,
   types,
   groups,
+  categories,
   d,
   locale,
   reference,
@@ -35,6 +36,7 @@ export function ItemDetailWorkspace({
   write: boolean
   types: { id: string; name: string }[]
   groups: { id: string; name: string }[]
+  categories: { id: string; name: string }[]
   d: Dictionary
   locale: Locale
   reference: string
@@ -166,7 +168,13 @@ export function ItemDetailWorkspace({
                   <dl className="item-quick-facts">
                     <div>
                       <dt>{d.quickIntake.category}</dt>
-                      <dd>{editor.cell('category', d.quickIntake.category)}</dd>
+                      <dd>
+                        {editor.cell(
+                          'category',
+                          d.quickIntake.category,
+                          categories,
+                        )}
+                      </dd>
                     </div>
                     <div>
                       <dt>{d.quickIntake.itemType}</dt>

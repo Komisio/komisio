@@ -32,6 +32,7 @@ import { ItemIndicator } from '@/components/intake/item-indicator'
 import { itemSyncStatus, syncProvider } from '@/lib/engine/item-sync'
 import { readAssortmentGroups } from '@/lib/engine/item-classification'
 import { readAttributeVocabulary, labelOf } from '@/lib/engine/attributes'
+import { readItemCategories, categoryName } from '@/lib/engine/item-categories'
 
 export default async function Items({
   searchParams,
@@ -45,9 +46,10 @@ export default async function Items({
     d = all.items,
     t = d.directory,
     params = await searchParams
-  const [groups, vocabulary] = await Promise.all([
+  const [groups, vocabulary, categories] = await Promise.all([
     readAssortmentGroups(ctx.client, active.id),
     readAttributeVocabulary(ctx.client, active.id),
+    readItemCategories(ctx.client, active.id),
   ])
   const raw: Record<string, string> = {}
   for (const key of filterKeys) {
@@ -349,6 +351,10 @@ export default async function Items({
                           name: labelOf(type, ctx.locale),
                         }))}
                       groups={groups}
+                      categories={categories.map((c) => ({
+                        id: c.name,
+                        name: categoryName(c, ctx.locale),
+                      }))}
                       d={all}
                       indicators={
                         <div className="inventory-indicators">

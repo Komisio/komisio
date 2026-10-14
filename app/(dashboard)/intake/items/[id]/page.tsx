@@ -3,6 +3,7 @@ import { ItemDetailWorkspace } from '@/components/intake/item-detail-workspace'
 import { readItemDirectory } from '@/lib/engine/item-directory'
 import { readAssortmentGroups } from '@/lib/engine/item-classification'
 import { readAttributeVocabulary, labelOf } from '@/lib/engine/attributes'
+import { readItemCategories, categoryName } from '@/lib/engine/item-categories'
 import { readItemPhotos } from '@/lib/engine/item-photos'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
@@ -38,23 +39,25 @@ export default async function Item({
   const result = await readItem(ctx.client, active.id, id.data)
   if (!result) notFound()
   const { item, prices, events } = result
-  const [printers, label, photos, sync, directory, groups, vocabulary] =
-    await Promise.all([
-      readPrinters(ctx.client, active.id),
-      readItemLabel(ctx.client, active.id, item.id),
-      readItemPhotos(ctx.client, active.id, [item.id]),
-      readItemSyncStatus(ctx.client, active.id, [item.id]),
-      readItemDirectory(
-        ctx.client,
-        active.id,
-        { q: item.id },
-        'title',
-        'asc',
-        1,
-      ),
-      readAssortmentGroups(ctx.client, active.id),
-      readAttributeVocabulary(ctx.client, active.id),
-    ])
+  const [
+    printers,
+    label,
+    photos,
+    sync,
+    directory,
+    groups,
+    vocabulary,
+    categories,
+  ] = await Promise.all([
+    readPrinters(ctx.client, active.id),
+    readItemLabel(ctx.client, active.id, item.id),
+    readItemPhotos(ctx.client, active.id, [item.id]),
+    readItemSyncStatus(ctx.client, active.id, [item.id]),
+    readItemDirectory(ctx.client, active.id, { q: item.id }, 'title', 'asc', 1),
+    readAssortmentGroups(ctx.client, active.id),
+    readAttributeVocabulary(ctx.client, active.id),
+    readItemCategories(ctx.client, active.id),
+  ])
   const currentPrice = label?.priceOre ?? prices[0]?.price_ore ?? null
   const reference = label?.reference ?? `I-${item.id.slice(0, 8).toUpperCase()}`
   // Transfer targets: other stores in the chain where this person is owner or admin,
@@ -99,6 +102,10 @@ export default async function Item({
             name: labelOf(type, ctx.locale),
           }))}
         groups={groups}
+        categories={categories.map((c) => ({
+          id: c.name,
+          name: categoryName(c, ctx.locale),
+        }))}
         d={all}
         locale={ctx.locale}
         reference={reference}

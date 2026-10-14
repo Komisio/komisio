@@ -449,7 +449,7 @@
     "printing": "Skrivere og etiketter",
     "connectors": "AI-assistenter",
     "credits": "AI-kreditter",
-    "vocabulary": "Varetyper og attributter"
+    "vocabulary": "Vareinnstillinger"
   },
   "tenantIdentity": "Butikkidentitet",
   "tenantId": "Butikk-ID",
@@ -4177,8 +4177,8 @@
     "editHint": "Klikk på blyanten for å redigere. Endringen lagres når du forlater feltet."
   },
   "vocabularySettings": {
-    "title": "Varetyper og attributter",
-    "intro": "Varetypen bestemmer hvilke felt som vises ved mottak.",
+    "title": "Vareinnstillinger",
+    "intro": "Velg hvordan butikkens varer grupperes og beskrives.",
     "types": "Varetyper",
     "attributes": "Attributter",
     "searchTypes": "Søk etter varetype",
@@ -4205,6 +4205,21 @@
       "boolean": "Ja/nei"
     },
     "uncertain": "Lagringen kunne ikke bekreftes. Prøv igjen med de samme opplysningene.",
-    "refused": "Kunne ikke lagre. Avbryt og kontroller butikk og tilgang."
+    "refused": "Kunne ikke lagre. Avbryt og kontroller butikk og tilgang.",
+    "groups": "Sortimentsgrupper",
+    "searchGroups": "Søk etter sortimentsgruppe",
+    "groupsHint": "Egne grupper, for eksempel Premium eller Vintage.",
+    "noGroups": "Ingen sortimentsgrupper ennå.",
+    "manageGroups": "Administrer sortimentsgrupper",
+    "nameRequired": "Angi et navn og kontroller feltene.",
+    "groupExists": "En sortimentsgruppe med dette navnet finnes allerede.",
+    "categories": "Kategorier",
+    "searchCategories": "Søk etter kategori",
+    "addCategory": "Ny kategori",
+    "createCategory": "Opprett kategori",
+    "categoryExists": "En kategori med dette navnet finnes allerede.",
+    "translations": "Oversettelser (valgfritt)",
+    "languages": "Språk",
+    "noCategories": "Ingen kategorier ennå."
   }
 }

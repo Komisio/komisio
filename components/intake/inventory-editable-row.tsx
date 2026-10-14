@@ -16,6 +16,7 @@ export function InventoryEditableRow({
   write,
   types,
   groups,
+  categories,
   d,
   indicators,
   children,
@@ -25,6 +26,7 @@ export function InventoryEditableRow({
   write: boolean
   types: { id: string; name: string }[]
   groups: { id: string; name: string }[]
+  categories: { id: string; name: string }[]
   d: Dictionary
   indicators: ReactNode
   children: ReactNode
@@ -106,7 +108,7 @@ export function InventoryEditableRow({
         )}
       </th>
       <td>{indicators}</td>
-      <td>{cell('category', d.quickIntake.category)}</td>
+      <td>{cell('category', d.quickIntake.category, categories)}</td>
       <td>{cell('itemType', d.quickIntake.itemType, types)}</td>
       <td>{cell('assortment', t.group, groups)}</td>
       {children}

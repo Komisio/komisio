@@ -449,7 +449,7 @@
     "printing": "Skrivare och etiketter",
     "connectors": "AI-assistenter",
     "credits": "AI-krediter",
-    "vocabulary": "Varutyper och attribut"
+    "vocabulary": "Varuinställningar"
   },
   "tenantIdentity": "Butikens identitet",
   "tenantId": "Butiks-id",
@@ -4177,8 +4177,8 @@
     "editHint": "Klicka på pennan för att ändra. Ändringen sparas när du lämnar fältet."
   },
   "vocabularySettings": {
-    "title": "Varutyper och attribut",
-    "intro": "Varutypen avgör vilka fält som visas vid mottagning.",
+    "title": "Varuinställningar",
+    "intro": "Bestäm hur butikens varor delas in och beskrivs.",
     "types": "Varutyper",
     "attributes": "Attribut",
     "searchTypes": "Sök varutyp",
@@ -4205,6 +4205,21 @@
       "boolean": "Ja/nej"
     },
     "uncertain": "Sparandet kunde inte bekräftas. Försök igen med samma uppgifter.",
-    "refused": "Det gick inte att spara. Avbryt och kontrollera butik och behörighet."
+    "refused": "Det gick inte att spara. Avbryt och kontrollera butik och behörighet.",
+    "groups": "Sortimentsgrupper",
+    "searchGroups": "Sök sortimentsgrupp",
+    "groupsHint": "Egna grupper, till exempel Premium eller Vintage.",
+    "noGroups": "Inga sortimentsgrupper ännu.",
+    "manageGroups": "Hantera sortimentsgrupper",
+    "nameRequired": "Ange ett namn och kontrollera fälten.",
+    "groupExists": "Det finns redan en sortimentsgrupp med det namnet.",
+    "categories": "Kategorier",
+    "searchCategories": "Sök kategori",
+    "addCategory": "Ny kategori",
+    "createCategory": "Skapa kategori",
+    "categoryExists": "Det finns redan en kategori med det namnet.",
+    "translations": "Översättningar (valfritt)",
+    "languages": "Språk",
+    "noCategories": "Inga kategorier ännu."
   }
 }

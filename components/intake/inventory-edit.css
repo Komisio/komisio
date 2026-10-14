@@ -12,7 +12,16 @@
 .inventory-table .inventory-row-actions {
   max-width: none;
 }
+.inventory-item-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.inventory-item-heading .inventory-item-link {
+  min-width: 0;
+}
 .inventory-edit-trigger {
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;

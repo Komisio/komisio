@@ -154,13 +154,26 @@ export function InventoryEditableRow({
             required
           />
         ) : (
-          <Link
-            className="inventory-item-link"
-            href={`/intake/items/${item.id}`}
-            title={item.title || undefined}
-          >
-            {item.title?.trim() || d.items.item}
-          </Link>
+          <div className="inventory-item-heading">
+            {write && (
+              <button
+                type="button"
+                className="inventory-edit-trigger"
+                aria-label={`${t.editRow}: ${item.title || d.items.item}`}
+                title={t.editRow}
+                onClick={open}
+              >
+                <Pencil size={15} aria-hidden="true" />
+              </button>
+            )}
+            <Link
+              className="inventory-item-link"
+              href={`/intake/items/${item.id}`}
+              title={item.title || undefined}
+            >
+              {item.title?.trim() || d.items.item}
+            </Link>
+          </div>
         )}
       </th>
       <td>{indicators}</td>
@@ -224,58 +237,47 @@ export function InventoryEditableRow({
         )}
       </td>
       <td className="inventory-row-actions">
-        {write &&
-          (editing ? (
-            <form
-              id={formId}
-              onSubmit={(e) => {
-                e.preventDefault()
-                void save()
-              }}
-            >
-              <div className="inventory-edit-actions">
-                <button
-                  className="btn btn-primary"
-                  disabled={
-                    busy || refused || (!dirty && !locked) || !title.trim()
-                  }
-                >
-                  {locked ? t.retry : t.save}
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  disabled={busy || locked}
-                  onClick={() => {
-                    setEditing(false)
-                    setMessage('')
-                    pending.current = null
-                  }}
-                >
-                  {t.cancel}
-                </button>
-              </div>
-              {refused && (
-                <button
-                  className="text-link"
-                  type="button"
-                  onClick={() => window.location.reload()}
-                >
-                  {t.reload}
-                </button>
-              )}
-            </form>
-          ) : (
-            <button
-              type="button"
-              className="inventory-edit-trigger"
-              aria-label={`${t.editRow}: ${item.title || d.items.item}`}
-              title={t.editRow}
-              onClick={open}
-            >
-              <Pencil size={15} aria-hidden="true" />
-            </button>
-          ))}
+        {write && editing && (
+          <form
+            id={formId}
+            onSubmit={(e) => {
+              e.preventDefault()
+              void save()
+            }}
+          >
+            <div className="inventory-edit-actions">
+              <button
+                className="btn btn-primary"
+                disabled={
+                  busy || refused || (!dirty && !locked) || !title.trim()
+                }
+              >
+                {locked ? t.retry : t.save}
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                disabled={busy || locked}
+                onClick={() => {
+                  setEditing(false)
+                  setMessage('')
+                  pending.current = null
+                }}
+              >
+                {t.cancel}
+              </button>
+            </div>
+            {refused && (
+              <button
+                className="text-link"
+                type="button"
+                onClick={() => window.location.reload()}
+              >
+                {t.reload}
+              </button>
+            )}
+          </form>
+        )}
         {message && (
           <span
             role="status"

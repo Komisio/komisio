@@ -4153,5 +4153,17 @@
     "use": "Använd dessa kontouppgifter",
     "snapshot": "Granskade uppgifter",
     "manual": "Betalningen görs manuellt i banken."
+  },
+  "inventoryWorkspace": {
+    "selected": "{count} markerade",
+    "editSelected": "Ändra",
+    "clear": "Avmarkera alla",
+    "actions": "Åtgärder för markerade varor",
+    "open": "Öppna vara",
+    "saving": "Sparar…",
+    "saved": "Sparat",
+    "cellHint": "Klicka för att ändra. Enter sparar, Escape återställer.",
+    "invalid": "Ange ett varunamn. Escape återställer.",
+    "selectedOne": "1 markerad"
   }
 }

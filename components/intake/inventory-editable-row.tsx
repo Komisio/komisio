@@ -1,14 +1,23 @@
 'use client'
-import { useRef, useState, type ReactNode } from 'react'
-import { Pencil } from 'lucide-react'
-import { NavigationLink as Link } from '@/components/platform/navigation-warning'
+import { useRef, useState, type ReactNode, type KeyboardEvent } from 'react'
+import { ArrowUpRight, Check, LoaderCircle, Pencil } from 'lucide-react'
+import {
+  NavigationLink as Link,
+  useUnsavedChanges,
+} from '@/components/platform/navigation-warning'
 import { useRouter } from '@/components/platform/use-working-router'
-import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 import { useBusyState } from '@/components/platform/work-activity'
 import { inventoryRowCommand } from '@/lib/engine/inventory-row'
 import type { DirectoryItem } from '@/lib/engine/item-directory'
 import type { Dictionary } from '@/lib/i18n'
-import { InventorySelectItem } from './inventory-selection'
+import {
+  InventorySelectItem,
+  useInventorySelection,
+} from './inventory-selection'
+
+type Field = 'title' | 'category' | 'itemType' | 'assortment'
+type Snapshot = Record<Field, string> & { version: number }
+type Edit = { field: Field; value: string; base: Snapshot }
 export function InventoryEditableRow({
   item,
   tenantId,
@@ -29,264 +38,333 @@ export function InventoryEditableRow({
   children: ReactNode
 }) {
   const router = useRouter(),
-    t = d.itemWorkflow
-  const [editing, setEditing] = useState(false),
-    [title, setTitle] = useState(''),
-    [category, setCategory] = useState(''),
-    [kind, setKind] = useState(''),
-    [group, setGroup] = useState('')
-  const [busy, setBusy] = useBusyState(false),
-    [locked, setLocked] = useState(false),
-    [refused, setRefused] = useState(false),
-    [message, setMessage] = useState('')
-  const [expected, setExpected] = useState({
-    title: '',
-    category: '',
-    version: 0,
-    itemType: '',
-    assortment: '',
-  })
+    t = d.itemWorkflow,
+    w = d.inventoryWorkspace
+  const source: Snapshot = {
+    title: item.title ?? '',
+    category: item.category ?? '',
+    itemType: item.classification?.itemType ?? '',
+    assortment: item.classification?.assortment ?? '',
+    version: item.classification?.version ?? 0,
+  }
+  const { selected } = useInventorySelection()
+  const [confirmed, setConfirmed] = useState<Snapshot | null>(null)
+  // A refresh from an earlier save may arrive after a later cell has committed.
+  const current =
+    confirmed && confirmed.version > source.version ? confirmed : source
+  const [edit, setEdit] = useState<Edit | null>(null)
+  const [busy, setBusy] = useBusyState(false)
+  const [state, setState] = useState<
+    'idle' | 'saved' | 'invalid' | 'uncertain' | 'refused'
+  >('idle')
   const pending = useRef<ReturnType<typeof inventoryRowCommand.parse> | null>(
-      null,
-    ),
-    running = useRef(false)
-  const dirty =
-    editing &&
-    (title !== expected.title ||
-      category !== expected.category ||
-      kind !== expected.itemType ||
-      group !== expected.assortment)
+    null,
+  )
+  const running = useRef(false),
+    cancelled = useRef(false),
+    queued = useRef<Field | null>(null)
+  const buttons = useRef<Partial<Record<Field, HTMLButtonElement | null>>>({})
+  const dirty = !!edit && edit.value !== edit.base[edit.field]
   useUnsavedChanges(
-    dirty || locked ? d.leaveUnsaved : null,
+    (dirty && state !== 'refused') || busy || state === 'uncertain'
+      ? d.leaveUnsaved
+      : null,
     `inventory-${item.id}`,
   )
-  const formId = `inventory-edit-${item.id}`
-  function open() {
-    const snapshot = {
-      title: item.title ?? '',
-      category: item.category ?? '',
-      version: item.classification?.version ?? 0,
-      itemType: item.classification?.itemType ?? '',
-      assortment: item.classification?.assortment ?? '',
+
+  function open(field: Field) {
+    if (state === 'uncertain' || state === 'refused' || state === 'invalid')
+      return
+    if (running.current) {
+      queued.current = field
+      return
     }
-    setExpected(snapshot)
-    setTitle(snapshot.title)
-    setCategory(snapshot.category)
-    setKind(snapshot.itemType)
-    setGroup(snapshot.assortment)
-    setMessage('')
-    setRefused(false)
-    setEditing(true)
+    cancelled.current = false
+    setEdit({ field, value: current[field], base: current })
+    setState('idle')
   }
-  async function save() {
-    if (running.current || refused) return
+  function cancel() {
+    if (!edit || running.current || state === 'uncertain') return
+    cancelled.current = true
+    queued.current = null
+    const field = edit.field
+    setEdit(null)
+    setState('idle')
+    requestAnimationFrame(() => buttons.current[field]?.focus())
+  }
+  async function save(value = edit?.value, focus = false) {
+    if (!edit || running.current || cancelled.current || state === 'refused')
+      return
+    if (!pending.current && value?.trim() === edit.base[edit.field]) {
+      const field = queued.current
+      queued.current = null
+      setEdit(field ? { field, value: current[field], base: current } : null)
+      setState('idle')
+      if (focus && !field)
+        requestAnimationFrame(() => buttons.current[edit.field]?.focus())
+      return
+    }
+    const next = { ...edit.base, [edit.field]: value ?? '' }
     const parsed = inventoryRowCommand.safeParse(
       pending.current ?? {
         tenantId,
         requestId: crypto.randomUUID(),
         itemId: item.id,
         expected: {
-          title: expected.title,
-          category: expected.category,
-          version: expected.version,
+          title: edit.base.title,
+          category: edit.base.category,
+          version: edit.base.version,
         },
-        title,
-        category,
-        itemType: kind || null,
-        assortment: group || null,
+        title: next.title,
+        category: next.category,
+        itemType: next.itemType || null,
+        assortment: next.assortment || null,
       },
     )
     if (!parsed.success) {
-      setMessage(d.intake.invalid)
+      queued.current = null
+      setState('invalid')
       return
     }
     pending.current = parsed.data
     running.current = true
     setBusy(true)
-    setLocked(true)
-    setMessage('')
+    setState('idle')
     try {
-      const r = await fetch('/api/items/row', {
+      const response = await fetch('/api/items/row', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(parsed.data),
       })
-      const body = await r.json()
-      if (r.ok && body.ok === true && body.id === parsed.data.requestId) {
+      const body = await response.json()
+      if (
+        response.ok &&
+        body.ok === true &&
+        body.id === parsed.data.requestId
+      ) {
+        const saved: Snapshot = {
+          title: parsed.data.title,
+          category: parsed.data.category,
+          itemType: parsed.data.itemType ?? '',
+          assortment: parsed.data.assortment ?? '',
+          version: parsed.data.expected.version + 1,
+        }
+        setConfirmed(saved)
         pending.current = null
-        setLocked(false)
-        setEditing(false)
-        setMessage(t.saved)
+        setState('saved')
+        const field = queued.current
+        queued.current = null
+        setEdit(field ? { field, value: saved[field], base: saved } : null)
+        if (focus && !field)
+          requestAnimationFrame(() => buttons.current[edit.field]?.focus())
         router.refresh()
-      } else if (r.status >= 400 && r.status < 500) {
-        setRefused(true)
-        setLocked(false)
-        setMessage(t.changed)
-      } else setMessage(t.uncertain)
+      } else if (response.status >= 400 && response.status < 500) {
+        pending.current = null
+        queued.current = null
+        setState('refused')
+      } else {
+        queued.current = null
+        setState('uncertain')
+      }
     } catch {
-      setMessage(t.uncertain)
+      queued.current = null
+      setState('uncertain')
     } finally {
       running.current = false
       setBusy(false)
     }
   }
-  const fieldProps = {
-    form: formId,
-    disabled: busy || locked || refused,
-    maxLength: 1000,
+  function handleKey(
+    event: KeyboardEvent<HTMLInputElement | HTMLSelectElement>,
+    field: Field,
+  ) {
+    if (event.nativeEvent.isComposing) return
+    if (event.key === 'Escape') {
+      event.preventDefault()
+      cancel()
+    }
+    if (state === 'uncertain' || state === 'refused') return
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      void save(undefined, true)
+    }
+    if (event.key === 'Tab') {
+      const fields: Field[] = ['title', 'category', 'itemType', 'assortment']
+      const next = fields[fields.indexOf(field) + (event.shiftKey ? -1 : 1)]
+      if (next) {
+        event.preventDefault()
+        queued.current = next
+        void save()
+      }
+    }
   }
+  function cell(
+    field: Field,
+    label: string,
+    options?: { id: string; name: string }[],
+  ) {
+    const active = edit?.field === field
+    const shown = options
+      ? (options.find((option) => option.id === current[field])?.name ?? '—')
+      : current[field] || '—'
+    if (!write) return <span className="inventory-cell-text">{shown}</span>
+    return (
+      <div className="inventory-cell-editor">
+        <button
+          type="button"
+          ref={(node) => {
+            buttons.current[field] = node
+          }}
+          className={`inventory-cell-button${field === 'title' ? ' inventory-item-link' : ''}`}
+          data-editing={active || undefined}
+          aria-label={`${t.editRow} ${label}: ${shown}`}
+          aria-disabled={
+            state === 'uncertain' || state === 'refused' || state === 'invalid'
+          }
+          title={w.cellHint}
+          onClick={() => open(field)}
+        >
+          <span>{shown}</span>
+          <Pencil size={12} aria-hidden="true" />
+        </button>
+        {active &&
+          (options ? (
+            <select
+              autoFocus
+              aria-label={label}
+              value={edit.value}
+              disabled={busy || state === 'uncertain' || state === 'refused'}
+              onChange={(e) => {
+                const value = e.target.value
+                setEdit({ ...edit, value })
+                setState('idle')
+              }}
+              onBlur={() => {
+                if (
+                  !running.current &&
+                  state !== 'uncertain' &&
+                  state !== 'refused'
+                )
+                  void save()
+              }}
+              onKeyDown={(e) => handleKey(e, field)}
+            >
+              <option value="">{t.none}</option>
+              {options.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.name}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input
+              autoFocus
+              aria-label={label}
+              aria-invalid={state === 'invalid' || undefined}
+              value={edit.value}
+              maxLength={1000}
+              required={field === 'title'}
+              readOnly={busy || state === 'uncertain' || state === 'refused'}
+              onFocus={(e) => e.target.select()}
+              onChange={(e) => {
+                setEdit({ ...edit, value: e.target.value })
+                setState('idle')
+              }}
+              onBlur={() => {
+                if (state !== 'uncertain' && state !== 'refused') void save()
+              }}
+              onKeyDown={(e) => handleKey(e, field)}
+            />
+          ))}
+      </div>
+    )
+  }
+  const message =
+    state === 'invalid'
+      ? w.invalid
+      : state === 'uncertain'
+        ? t.uncertain
+        : state === 'refused'
+          ? t.changed
+          : busy
+            ? w.saving
+            : state === 'saved'
+              ? w.saved
+              : ''
   return (
-    <tr className={`inventory-row${editing ? ' inventory-row-editing' : ''}`}>
+    <tr
+      className={`inventory-row${edit ? ' inventory-row-editing' : ''}`}
+      data-selected={selected.includes(item.id) || undefined}
+      aria-busy={busy || undefined}
+    >
       <td>
         <InventorySelectItem
           id={item.id}
-          label={`${d.labelSheets.title}: ${item.title || item.id}`}
+          label={`${d.labelSheets.title}: ${current.title || item.id}`}
         />
       </td>
       <th scope="row">
-        {editing ? (
-          <input
-            {...fieldProps}
-            autoFocus
-            aria-label={t.description}
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-        ) : (
-          <div className="inventory-item-heading">
-            {write && (
-              <button
-                type="button"
-                className="inventory-edit-trigger"
-                aria-label={`${t.editRow}: ${item.title || d.items.item}`}
-                title={t.editRow}
-                onClick={open}
-              >
-                <Pencil size={15} aria-hidden="true" />
-              </button>
-            )}
-            <Link
-              className="inventory-item-link"
-              href={`/intake/items/${item.id}`}
-              title={item.title || undefined}
-            >
-              {item.title?.trim() || d.items.item}
-            </Link>
-          </div>
-        )}
-      </th>
-      <td>{indicators}</td>
-      <td>
-        {editing ? (
-          <input
-            {...fieldProps}
-            aria-label={d.quickIntake.category}
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          />
-        ) : (
-          <span
-            className="inventory-cell-text"
-            title={item.category || undefined}
+        <div className="inventory-item-heading">
+          {cell('title', d.items.item)}
+          <Link
+            className="inventory-open-item"
+            href={`/intake/items/${item.id}`}
+            aria-label={`${w.open}: ${current.title || d.items.item}`}
+            title={w.open}
           >
-            {item.category || '—'}
-          </span>
-        )}
-      </td>
-      <td>
-        {editing ? (
-          <select
-            form={formId}
-            disabled={busy || locked || refused}
-            aria-label={d.quickIntake.itemType}
-            value={kind}
-            onChange={(e) => setKind(e.target.value)}
-          >
-            <option value="">{t.none}</option>
-            {types.map((type) => (
-              <option key={type.id} value={type.id}>
-                {type.name}
-              </option>
-            ))}
-          </select>
-        ) : (
-          (types.find((type) => type.id === item.classification?.itemType)
-            ?.name ?? '—')
-        )}
-      </td>
-      <td>
-        {editing ? (
-          <select
-            form={formId}
-            disabled={busy || locked || refused}
-            aria-label={t.group}
-            value={group}
-            onChange={(e) => setGroup(e.target.value)}
-          >
-            <option value="">{t.none}</option>
-            {groups.map((g) => (
-              <option key={g.id} value={g.id}>
-                {g.name}
-              </option>
-            ))}
-          </select>
-        ) : (
-          (groups.find((g) => g.id === item.classification?.assortment)?.name ??
-          '—')
-        )}
-      </td>
-      <td className="inventory-row-actions">
-        {write && editing && (
-          <form
-            id={formId}
-            onSubmit={(e) => {
-              e.preventDefault()
-              void save()
-            }}
-          >
-            <div className="inventory-edit-actions">
-              <button
-                className="btn btn-primary"
-                disabled={
-                  busy || refused || (!dirty && !locked) || !title.trim()
-                }
-              >
-                {locked ? t.retry : t.save}
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                disabled={busy || locked}
-                onClick={() => {
-                  setEditing(false)
-                  setMessage('')
-                  pending.current = null
-                }}
-              >
-                {t.cancel}
-              </button>
-            </div>
-            {refused && (
-              <button
-                className="text-link"
-                type="button"
-                onClick={() => window.location.reload()}
-              >
-                {t.reload}
-              </button>
-            )}
-          </form>
-        )}
+            <ArrowUpRight size={15} aria-hidden="true" />
+          </Link>
+          {(busy || state === 'saved') && (
+            <span className="inventory-save-indicator" title={message}>
+              {busy ? (
+                <LoaderCircle
+                  size={14}
+                  className="inventory-saving"
+                  aria-hidden="true"
+                />
+              ) : (
+                <Check size={14} aria-hidden="true" />
+              )}
+            </span>
+          )}
+        </div>
         {message && (
           <span
             role="status"
-            className={editing ? 'inventory-edit-message' : 'sr-only'}
+            className={
+              state === 'invalid' ||
+              state === 'uncertain' ||
+              state === 'refused'
+                ? 'inventory-edit-message'
+                : 'sr-only'
+            }
           >
             {message}
           </span>
         )}
-      </td>
+        {state === 'uncertain' && (
+          <button
+            type="button"
+            className="text-link inventory-retry"
+            onClick={() => void save()}
+          >
+            {t.retry}
+          </button>
+        )}
+        {state === 'refused' && (
+          <button
+            type="button"
+            className="text-link inventory-retry"
+            onClick={() => window.location.reload()}
+          >
+            {t.reload}
+          </button>
+        )}
+      </th>
+      <td>{indicators}</td>
+      <td>{cell('category', d.quickIntake.category)}</td>
+      <td>{cell('itemType', d.quickIntake.itemType, types)}</td>
+      <td>{cell('assortment', t.group, groups)}</td>
       {children}
     </tr>
   )

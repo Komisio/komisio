@@ -4153,5 +4153,17 @@
     "use": "Use these bank details",
     "snapshot": "Reviewed details",
     "manual": "Make the payment manually in your bank."
+  },
+  "inventoryWorkspace": {
+    "selected": "{count} selected",
+    "editSelected": "Edit",
+    "clear": "Clear selection",
+    "actions": "Actions for selected items",
+    "open": "Open item",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "cellHint": "Click to edit. Enter saves, Escape reverts.",
+    "invalid": "Enter an item name. Escape reverts.",
+    "selectedOne": "1 selected"
   }
 }

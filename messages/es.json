@@ -4159,5 +4159,17 @@
     "use": "Usar estos datos bancarios",
     "snapshot": "Datos revisados",
     "manual": "Realiza el pago manualmente en tu banco."
+  },
+  "inventoryWorkspace": {
+    "selected": "{count} seleccionados",
+    "editSelected": "Editar",
+    "clear": "Quitar selección",
+    "actions": "Acciones para artículos seleccionados",
+    "open": "Abrir artículo",
+    "saving": "Guardando…",
+    "saved": "Guardado",
+    "cellHint": "Haz clic para editar. Enter guarda, Escape deshace.",
+    "invalid": "Introduce el nombre del artículo. Escape deshace.",
+    "selectedOne": "1 seleccionado"
   }
 }

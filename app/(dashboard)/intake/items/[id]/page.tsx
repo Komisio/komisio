@@ -116,6 +116,12 @@ export default async function Item({
           <div className="item-detail-shortcuts">
             <Link
               className="btn btn-secondary"
+              href={`/intake/items/${item.id}/label`}
+            >
+              {all.printing.browserOpen}
+            </Link>
+            <Link
+              className="btn btn-secondary"
               href={`/intake/items/labels?item=${item.id}`}
             >
               {all.labelSheets.title}
@@ -146,12 +152,6 @@ export default async function Item({
               d={all.printing}
               intake={all.intake}
             />
-            <Link
-              className="btn btn-secondary"
-              href={`/intake/items/${item.id}/label`}
-            >
-              {all.printing.browserOpen}
-            </Link>
           </div>
         )}
       </div>

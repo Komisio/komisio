@@ -45,24 +45,8 @@ export function InventorySelectAll({ label }: { label: string }) {
     />
   )
 }
-export function InventorySelectionAction({
-  children,
-  formAction,
-}: {
-  children: ReactNode
-  formAction?: string
-}) {
-  const { ids, selected } = useContext(Selection)
-  return (
-    <button
-      type="submit"
-      className="btn btn-secondary"
-      formAction={formAction}
-      disabled={!ids.some((id) => selected.includes(id))}
-    >
-      {children}
-    </button>
-  )
+export function useInventorySelection() {
+  return useContext(Selection)
 }
 export function InventorySelectItem({
   id,

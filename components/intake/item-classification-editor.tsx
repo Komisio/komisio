@@ -13,6 +13,8 @@ export function ItemClassificationEditor({
   locale,
   manage,
   d,
+  onLockedChange,
+  onSaved,
 }: {
   tenantId: string
   items: { id: string; version: number; title: string }[]
@@ -21,6 +23,8 @@ export function ItemClassificationEditor({
   locale: Locale
   manage: boolean
   d: Dictionary
+  onLockedChange?: (locked: boolean) => void
+  onSaved?: () => void
 }) {
   const t = d.itemWorkflow,
     router = useRouter(),
@@ -59,6 +63,7 @@ export function ItemClassificationEditor({
     running.current = true
     setBusy(true)
     setLocked(true)
+    onLockedChange?.(true)
     setStatus('')
     try {
       const response = await fetch('/api/items/classification', {
@@ -74,11 +79,14 @@ export function ItemClassificationEditor({
       ) {
         pending.current = null
         setLocked(false)
+        onLockedChange?.(false)
         setStatus(t.saved)
         setName('')
         router.refresh()
+        if (parsed.data.action === 'classify') onSaved?.()
       } else if (response.status >= 400 && response.status < 500) {
         setRefused(true)
+        onLockedChange?.(false)
         setStatus(t.changed)
       } else setStatus(t.uncertain)
     } catch {
@@ -138,7 +146,7 @@ export function ItemClassificationEditor({
           </div>
         </fieldset>
         <button
-          className="btn"
+          className="btn btn-primary"
           disabled={
             busy ||
             refused ||

@@ -2,6 +2,7 @@ import { InventoryEditableRow } from '@/components/intake/inventory-editable-row
 import {
   InventorySelection,
   InventorySelectAll,
+  InventorySelectionAction,
 } from '@/components/intake/inventory-selection'
 import '@/components/intake/inventory-edit.css'
 import { WorkingForm } from '@/components/platform/working-form'
@@ -298,16 +299,13 @@ export default async function Items({
               action="/intake/items/labels"
               className="row wrap"
             >
-              <button className="btn btn-secondary">
+              <InventorySelectionAction>
                 {all.labelSheets.title}
-              </button>
+              </InventorySelectionAction>
               {['owner', 'admin', 'staff'].includes(active.role) && (
-                <button
-                  className="btn btn-secondary"
-                  formAction="/intake/items/classify"
-                >
+                <InventorySelectionAction formAction="/intake/items/classify">
                   {all.itemWorkflow.bulk}
-                </button>
+                </InventorySelectionAction>
               )}
               <small>{all.labelSheets.selection}</small>
             </WorkingForm>

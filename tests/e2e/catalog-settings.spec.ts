@@ -74,15 +74,13 @@ test('settings help is contextual, keyboard accessible and preserves form input'
         page.locator('.page-heading .form-help-content li'),
       ).toHaveText(d.settingsHelp[tab])
     }
-    await page
-      .context()
-      .addCookies([
-        {
-          name: 'komisio-locale',
-          value: 'en',
-          url: new URL(page.url()).origin,
-        },
-      ])
+    await page.context().addCookies([
+      {
+        name: 'komisio-locale',
+        value: 'en',
+        url: new URL(page.url()).origin,
+      },
+    ])
     await page.goto('/settings?tab=vocabulary#vocabulary-categories')
     const englishHelp = page.locator(
       '#vocabulary-categories .settings-section-help',

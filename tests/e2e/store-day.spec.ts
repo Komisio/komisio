@@ -161,7 +161,9 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
       }
       if (index === 14) {
         await page.reload()
-        await expect(page.locator('.bag-inventory .inventory-row')).toHaveCount(5)
+        await expect(page.locator('.bag-inventory .inventory-row')).toHaveCount(
+          5,
+        )
         // Reload resumes saved bag context, with a fresh item editor.
         await description.fill('Synthetic temporary item')
         const dialog = page.waitForEvent('dialog')

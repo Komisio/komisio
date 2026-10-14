@@ -101,8 +101,8 @@ export async function raceStoreWorkflow({ setup, connectionString }) {
     const selection = [{ id: item, version: 0 }]
     await race(
       'select classify_items($1,$2,$3,$4,null)',
-      [tenant, randomUUID(), JSON.stringify(selection), 'lamp'],
-      [tenant, randomUUID(), JSON.stringify(selection), 'sweater'],
+      [tenant, randomUUID(), JSON.stringify(selection), 'jacket'],
+      [tenant, randomUUID(), JSON.stringify(selection), 'trousers'],
       'ITEM_CHANGED',
     )
     const facts = (
@@ -122,7 +122,7 @@ export async function raceStoreWorkflow({ setup, connectionString }) {
         expected,
         'Synthetic floor lamp',
         'Lighting',
-        'lamp',
+        'jacket',
       ],
       [
         tenant,
@@ -131,7 +131,7 @@ export async function raceStoreWorkflow({ setup, connectionString }) {
         expected,
         'Synthetic reading lamp',
         'Lamps',
-        'lamp',
+        'jacket',
       ],
       'ITEM_CHANGED',
     )

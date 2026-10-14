@@ -31,6 +31,7 @@ import {
 } from '@/lib/engine/seller-terms'
 import { SellerTermsForm } from '@/components/intake/seller-terms-form'
 import { LedgerAdjustForm } from '@/components/intake/ledger-adjust-form'
+import { LedgerItemSummary } from '@/components/intake/ledger-item-summary'
 import {
   PayoutRequestForm,
   PayoutDecision,
@@ -612,6 +613,25 @@ export default async function Seller({
                         · {l.kinds[e.kind]} · {formatSignedOre(e.amount_ore)}{' '}
                         {currency}
                         {e.reason ? ` · ${e.reason}` : ''}
+                        {e.kind === 'credit_sale' && e.itemDetails && (
+                          <LedgerItemSummary
+                            details={e.itemDetails}
+                            currency={currency}
+                            d={all}
+                          />
+                        )}
+                        {e.itemDetails && (
+                          <>
+                            {' '}
+                            ·{' '}
+                            <Link
+                              href={`/intake/items/${e.itemDetails.itemId}`}
+                            >
+                              {e.itemDetails.title || e.itemDetails.reference} ·{' '}
+                              {e.itemDetails.reference}
+                            </Link>
+                          </>
+                        )}
                       </p>
                     ))}
                     {!ledger.legacy && ledger.total > ledger.limit && (

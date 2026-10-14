@@ -1,4 +1,6 @@
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
+import { readPayoutBanks } from '@/lib/engine/seller-bank'
+import { PayoutBankReview } from '@/components/seller/bank-details'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
@@ -62,6 +64,13 @@ export default async function Payouts({
   if (openPage > openPages) redirect(pageHref('open', openPages))
   if (historyPage > historyPages) redirect(pageHref('history', historyPages))
   const payouts = [...open.rows, ...history.rows]
+  const banks = ['owner', 'admin'].includes(active.role)
+    ? await readPayoutBanks(
+        ctx.client,
+        active.id,
+        payouts.map((p) => p.id),
+      )
+    : {}
   const events = await readPayoutEvents(
     ctx.client,
     active.id,
@@ -180,6 +189,16 @@ export default async function Payouts({
                 </small>
               ))}
             </details>
+            {banks[p.id] && (
+              <PayoutBankReview
+                key={p.id}
+                tenantId={active.id}
+                payoutId={p.id}
+                bank={banks[p.id]}
+                status={p.status}
+                d={all}
+              />
+            )}
             {write && (p.status === 'requested' || p.status === 'approved') && (
               <details className="payout-decision">
                 <summary>
@@ -300,6 +319,7 @@ export default async function Payouts({
                       data-testid="payout-settlement"
                     >
                       <h2>{d.settleHeading}</h2>
+                      <p>{d.bankReviewHint}</p>
                       <p>
                         {d.settleHint.replace(
                           '{threshold}',

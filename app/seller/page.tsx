@@ -1,4 +1,7 @@
 import { WorkingForm } from '@/components/platform/working-form'
+import { LedgerItemSummary } from '@/components/intake/ledger-item-summary'
+import { readSellerBank } from '@/lib/engine/seller-bank'
+import { SellerBankEditor } from '@/components/seller/bank-details'
 import { readConsignmentFees } from '@/lib/engine/consignment-fees'
 import { ConsignmentFeeHistory } from '@/components/intake/consignment-fee-history'
 import Link from '@/components/platform/working-link'
@@ -97,6 +100,11 @@ export default async function SellerPortal({
     account.sellerId,
   )
   const currency = await readStoreCurrency(ctx.client, account.tenantId)
+  const bank = await readSellerBank(
+    ctx.client,
+    account.tenantId,
+    account.sellerId,
+  )
   if (params.statement) {
     if (!/^[0-9a-f-]{36}$/i.test(params.statement)) notFound()
     const statement = await readMySellerStatement(
@@ -302,6 +310,14 @@ export default async function SellerPortal({
         enabled={economy.automaticEmails}
         d={d}
         recovery={all.intake}
+      />
+      <SellerBankEditor
+        key={`bank:${account.sellerId}:${bank?.id}`}
+        tenantId={account.tenantId}
+        sellerId={account.sellerId}
+        current={bank}
+        locale={ctx.locale}
+        d={all}
       />
       <SellerHandovers
         key={`handovers:${account.tenantId}:${account.sellerId}`}
@@ -516,6 +532,20 @@ export default async function SellerPortal({
           <p key={l.id}>
             <EventTime value={l.occurred_at} locale={ctx.locale} /> ·{' '}
             {label(all.ledger.kinds, l.kind)} · {amount(l.amount_ore)}
+            {l.kind === 'credit_sale' && l.itemDetails && (
+              <LedgerItemSummary
+                details={l.itemDetails}
+                currency={currency}
+                d={all}
+              />
+            )}
+            {l.itemDetails && (
+              <>
+                {' '}
+                · {l.itemDetails.title || l.itemDetails.reference} ·{' '}
+                {l.itemDetails.reference}
+              </>
+            )}
           </p>
         ))}
       </details>

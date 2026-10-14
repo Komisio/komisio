@@ -250,7 +250,8 @@
       ]
     },
     "typeIntro": "El tipo se guarda para toda la tienda y se selecciona para este artículo.",
-    "typeFieldsHint": "Elige un tipo de artículo similar para usar las mismas preguntas, como talla y material."
+    "typeFieldsHint": "Elige un tipo de artículo similar para usar las mismas preguntas, como talla y material.",
+    "typeFieldsLegend": "Elegir campos"
   },
   "intake": {
     "quickLink": "Recepción rápida: una pantalla por prenda",
@@ -332,7 +333,8 @@
     "stocktakeItemMissing": "No se encontró el artículo en esta tienda.",
     "stocktakePending": "Comprueba los artículos restantes antes de finalizar.",
     "collectionNotDue": "El plazo de recogida aún no ha vencido.",
-    "overviewHelpLabel": "Sobre la recepción"
+    "overviewHelpLabel": "Sobre la recepción",
+    "payoutBankReviewRequired": "Un propietario o administrador debe revisar primero los datos bancarios del vendedor en Pagos."
   },
   "brand": "Komisio",
   "tagline": "Más espacio para que las cosas vuelvan a vivir.",
@@ -1412,7 +1414,7 @@
     "settleReasonHint": "Se registra en cada aprobación del lote, por ejemplo \"Liquidación de septiembre\".",
     "settleConfirm": "Apruebo los importes seleccionados para el pago.",
     "settle": "Preparar {count} pagos",
-    "settled": "Los pagos están preparados. Pague mediante su banco y registre las referencias.",
+    "settled": "Los pagos están preparados. Pague mediante su banco y registre las referencias. Los pagos con datos bancarios deben revisarse en Pendientes antes de pagar.",
     "settleTotal": "Total",
     "requestNone": "No hay saldo disponible en esta lista. Abra un depositante para ver su saldo.",
     "directory": "Buscar entre todos los depositantes",
@@ -1436,7 +1438,8 @@
     "selectedCandidates": "{selected} de {total} vendedores seleccionados",
     "candidateLimit": "Hasta 100 por lote.",
     "selectCandidates": "Seleccionar los primeros 100",
-    "clearCandidates": "Quitar selección"
+    "clearCandidates": "Quitar selección",
+    "bankReviewHint": "Los pagos con datos bancarios deben revisarse en Pendientes antes de pagar."
   },
   "returns": {
     "reason": "Motivo de la devolución",
@@ -4092,6 +4095,65 @@
       "messages": "Mensajes pendientes o con entrega incierta",
       "legacyStatements": "Las liquidaciones antiguas deben protegerse antes de eliminar los datos",
       "fees": "Cuotas pendientes"
-    }
+    },
+    "bankRemovable": "Datos bancarios sin justificante de pago",
+    "bankRetained": "Datos bancarios utilizados en pagos revisados"
+  },
+  "labelSheets": {
+    "title": "Etiquetas de precio en A4",
+    "size": "Tamaño de etiqueta",
+    "copies": "Copias por artículo",
+    "preview": "Vista previa del PDF",
+    "download": "Descargar PDF",
+    "hint": "Imprime a tamaño real (100 %). La hoja incluye líneas de corte.",
+    "selection": "Selecciona artículos de esta página para las etiquetas.",
+    "empty": "No hay artículos para imprimir.",
+    "skipped": "Se omiten {count} artículos porque ya no están a la venta.",
+    "error": "No se puede leer la selección. Selecciona hasta 200 artículos a la venta.",
+    "back": "Volver a artículos",
+    "limit": "Hasta 400 etiquetas por PDF."
+  },
+  "itemWorkflow": {
+    "edit": "Editar texto del artículo",
+    "description": "Nombre y descripción",
+    "save": "Guardar",
+    "saved": "Guardado",
+    "uncertain": "No se pudo confirmar el guardado. Reintenta con los mismos datos.",
+    "changed": "Los datos han cambiado. Recarga la página e inténtalo de nuevo.",
+    "reload": "Recargar",
+    "classification": "Tipo de artículo y surtido",
+    "group": "Grupo de surtido",
+    "none": "Ninguno",
+    "choose": "Elegir…",
+    "newGroup": "Nuevo grupo de surtido",
+    "name": "Nombre",
+    "createGroup": "Crear grupo",
+    "bulk": "Editar artículos seleccionados",
+    "bulkHint": "Los artículos seleccionados recibirán el tipo y grupo indicados abajo.",
+    "fields": "Elegir campos",
+    "outgoing": "De Komisio a la caja",
+    "incoming": "Ventas de la caja",
+    "salesSync": "Ver sincronización de ventas",
+    "historyHint": "Los acuerdos y ventas anteriores no cambian.",
+    "storeShare": "Parte de la tienda",
+    "sellerShare": "Parte del vendedor"
+  },
+  "sellerBank": {
+    "title": "Cuenta de pago",
+    "holder": "Titular de la cuenta",
+    "country": "País",
+    "kind": "Tipo de cuenta",
+    "local": "Cuenta bancaria local",
+    "account": "Número de cuenta",
+    "routing": "Código bancario",
+    "review": "Revisar datos bancarios",
+    "reviewed": "Datos bancarios revisados",
+    "changed": "La cuenta ha cambiado. Revisa los datos antes del pago.",
+    "privacy": "Estos datos corresponden a esta tienda. Solo tú y su propietario o administrador podéis verlos.",
+    "empty": "No hay datos bancarios guardados.",
+    "invalid": "Comprueba el titular, el país y el número de cuenta.",
+    "use": "Usar estos datos bancarios",
+    "snapshot": "Datos revisados",
+    "manual": "Realiza el pago manualmente en tu banco."
   }
 }

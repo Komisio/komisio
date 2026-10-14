@@ -250,7 +250,8 @@
       ]
     },
     "typeIntro": "The item type is saved for the whole store and selected for this item.",
-    "typeFieldsHint": "Choose a similar item type to use the same questions, such as size and material."
+    "typeFieldsHint": "Choose a similar item type to use the same questions, such as size and material.",
+    "typeFieldsLegend": "Choose fields"
   },
   "intake": {
     "quickLink": "Quick reception: one screen per garment",
@@ -332,7 +333,8 @@
     "stocktakeItemMissing": "This item was not found in this store.",
     "stocktakePending": "Check the remaining items before finishing.",
     "collectionNotDue": "The collection deadline has not passed.",
-    "overviewHelpLabel": "About receiving"
+    "overviewHelpLabel": "About receiving",
+    "payoutBankReviewRequired": "An owner or administrator must review the seller’s bank details under Payouts first."
   },
   "brand": "Komisio",
   "tagline": "More room for things to live again.",
@@ -1412,7 +1414,7 @@
     "settleReasonHint": "Recorded on every approval in the batch, for example \"September settlement\".",
     "settleConfirm": "I approve the selected amounts for payout.",
     "settle": "Prepare {count} payouts",
-    "settled": "Payouts are prepared. Pay through your bank and record the references.",
+    "settled": "Payouts are prepared. Pay through your bank and record the references. Payouts with bank details need review under Open before payment.",
     "settleTotal": "Total",
     "requestNone": "No available balance in this list. Open a seller to see their balance.",
     "directory": "Search all sellers",
@@ -1436,7 +1438,8 @@
     "selectedCandidates": "{selected} of {total} sellers selected",
     "candidateLimit": "Up to 100 per batch.",
     "selectCandidates": "Select first 100",
-    "clearCandidates": "Clear selection"
+    "clearCandidates": "Clear selection",
+    "bankReviewHint": "Payouts with bank details need review under Open before payment."
   },
   "returns": {
     "reason": "Return reason",
@@ -4086,6 +4089,65 @@
       "messages": "Messages awaiting delivery or with an uncertain outcome",
       "legacyStatements": "Older statements need to be secured before erasure",
       "fees": "Unpaid fees"
-    }
+    },
+    "bankRemovable": "Bank details without payout evidence",
+    "bankRetained": "Bank details used in reviewed payouts"
+  },
+  "labelSheets": {
+    "title": "A4 price labels",
+    "size": "Label size",
+    "copies": "Copies per item",
+    "preview": "Preview PDF",
+    "download": "Download PDF",
+    "hint": "Print at actual size (100%). The sheet has cut lines.",
+    "selection": "Select items on this page for price labels.",
+    "empty": "No items to print.",
+    "skipped": "{count} items are skipped because they are no longer for sale.",
+    "error": "Cannot read this selection. Select up to 200 items that are for sale.",
+    "back": "Back to items",
+    "limit": "Up to 400 labels per PDF."
+  },
+  "itemWorkflow": {
+    "edit": "Edit item text",
+    "description": "Item name and description",
+    "save": "Save",
+    "saved": "Saved",
+    "uncertain": "Could not confirm saving. Retry with the same details.",
+    "changed": "The details have changed. Reload the page and try again.",
+    "reload": "Reload",
+    "classification": "Item type and assortment",
+    "group": "Assortment group",
+    "none": "None",
+    "choose": "Choose…",
+    "newGroup": "New assortment group",
+    "name": "Name",
+    "createGroup": "Create group",
+    "bulk": "Edit selected items",
+    "bulkHint": "Selected items will receive the item type and assortment group below.",
+    "fields": "Choose fields",
+    "outgoing": "From Komisio to the POS",
+    "incoming": "Sales from the POS",
+    "salesSync": "View sales sync",
+    "historyHint": "Previous agreements and sales remain unchanged.",
+    "storeShare": "Store share",
+    "sellerShare": "Seller share"
+  },
+  "sellerBank": {
+    "title": "Payout account",
+    "holder": "Account holder",
+    "country": "Country",
+    "kind": "Account type",
+    "local": "Local bank account",
+    "account": "Account number",
+    "routing": "Routing or bank code",
+    "review": "Review bank details",
+    "reviewed": "Bank details reviewed",
+    "changed": "The account has changed. Review the details before payment.",
+    "privacy": "These details apply to this store. Only you and the store owner or administrator can see them.",
+    "empty": "No bank details saved.",
+    "invalid": "Check the account holder, country and account number.",
+    "use": "Use these bank details",
+    "snapshot": "Reviewed details",
+    "manual": "Make the payment manually in your bank."
   }
 }

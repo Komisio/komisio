@@ -1,4 +1,5 @@
 import { expect, type Page } from '@playwright/test'
+import { localTestUrl } from './local-services'
 export async function confirmEmail(
   page: Page,
   email: string,
@@ -9,7 +10,8 @@ export async function confirmEmail(
     .poll(
       async () => {
         const response = await page.request.get(
-          'http://127.0.0.1:54324/api/v1/messages',
+          localTestUrl('TEST_MAIL_URL', 'http://127.0.0.1:54324') +
+            '/api/v1/messages',
         )
         if (!response.ok()) return false
         const inbox = await response.json()
@@ -21,7 +23,7 @@ export async function confirmEmail(
         if (!message) return false
         const detail = await (
           await page.request.get(
-            `http://127.0.0.1:54324/api/v1/message/${message.ID}`,
+            `${localTestUrl('TEST_MAIL_URL', 'http://127.0.0.1:54324')}/api/v1/message/${message.ID}`,
           )
         ).json()
         const html = detail.HTML ?? detail.html ?? ''

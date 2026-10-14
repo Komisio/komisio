@@ -250,7 +250,8 @@
       ]
     },
     "typeIntro": "Der Artikeltyp wird für das gesamte Geschäft gespeichert und für diesen Artikel ausgewählt.",
-    "typeFieldsHint": "Wählen Sie einen ähnlichen Artikeltyp, um dieselben Fragen zu verwenden, etwa zu Größe und Material."
+    "typeFieldsHint": "Wählen Sie einen ähnlichen Artikeltyp, um dieselben Fragen zu verwenden, etwa zu Größe und Material.",
+    "typeFieldsLegend": "Felder auswählen"
   },
   "intake": {
     "quickLink": "Schnellannahme: ein Bildschirm pro Kleidungsstück",
@@ -332,7 +333,8 @@
     "stocktakeItemMissing": "Dieser Artikel wurde in diesem Geschäft nicht gefunden.",
     "stocktakePending": "Prüfen Sie die übrigen Artikel vor dem Abschluss.",
     "collectionNotDue": "Die Abholfrist ist noch nicht abgelaufen.",
-    "overviewHelpLabel": "Über die Annahme"
+    "overviewHelpLabel": "Über die Annahme",
+    "payoutBankReviewRequired": "Ein Inhaber oder Administrator muss zuerst die Bankdaten des Verkäufers unter Auszahlungen prüfen."
   },
   "brand": "Komisio",
   "tagline": "Mehr Raum für Dinge, die weiterleben.",
@@ -1412,7 +1414,7 @@
     "settleReasonHint": "Wird auf jeder Genehmigung im Stapel erfasst, zum Beispiel \"Abrechnung September\".",
     "settleConfirm": "Ich genehmige die ausgewählten Beträge zur Auszahlung.",
     "settle": "{count} Auszahlungen vorbereiten",
-    "settled": "Die Auszahlungen sind vorbereitet. Überweisen Sie über Ihre Bank und erfassen Sie die Referenzen.",
+    "settled": "Die Auszahlungen sind vorbereitet. Überweisen Sie über Ihre Bank und erfassen Sie die Referenzen. Auszahlungen mit Bankdaten müssen vor der Zahlung unter Offen geprüft werden.",
     "settleTotal": "Gesamt",
     "requestNone": "Kein verfügbares Guthaben in dieser Liste. Öffnen Sie einen Einlieferer, um dessen Guthaben zu sehen.",
     "directory": "Alle Einlieferer durchsuchen",
@@ -1436,7 +1438,8 @@
     "selectedCandidates": "{selected} von {total} Verkäufern ausgewählt",
     "candidateLimit": "Höchstens 100 pro Durchgang.",
     "selectCandidates": "Erste 100 auswählen",
-    "clearCandidates": "Auswahl aufheben"
+    "clearCandidates": "Auswahl aufheben",
+    "bankReviewHint": "Auszahlungen mit Bankdaten müssen vor der Zahlung unter Offen geprüft werden."
   },
   "returns": {
     "reason": "Rückgabegrund",
@@ -4092,6 +4095,65 @@
       "messages": "Nachrichten mit ausstehender oder unklarer Zustellung",
       "legacyStatements": "Ältere Abrechnungen müssen vor der Löschung gesichert werden",
       "fees": "Unbezahlte Gebühren"
-    }
+    },
+    "bankRemovable": "Bankdaten ohne Auszahlungsnachweis",
+    "bankRetained": "Bei geprüften Auszahlungen verwendete Bankdaten"
+  },
+  "labelSheets": {
+    "title": "Preisetiketten auf A4",
+    "size": "Etikettengröße",
+    "copies": "Kopien pro Artikel",
+    "preview": "PDF-Vorschau",
+    "download": "PDF herunterladen",
+    "hint": "In tatsächlicher Größe (100 %) drucken. Der Bogen enthält Schnittlinien.",
+    "selection": "Artikel auf dieser Seite für Preisetiketten auswählen.",
+    "empty": "Keine Artikel zum Drucken.",
+    "skipped": "{count} Artikel werden ausgelassen, da sie nicht mehr zum Verkauf stehen.",
+    "error": "Auswahl nicht lesbar. Höchstens 200 zum Verkauf stehende Artikel auswählen.",
+    "back": "Zurück zu Artikeln",
+    "limit": "Höchstens 400 Etiketten pro PDF."
+  },
+  "itemWorkflow": {
+    "edit": "Artikeltext bearbeiten",
+    "description": "Artikelname und Beschreibung",
+    "save": "Speichern",
+    "saved": "Gespeichert",
+    "uncertain": "Speichern nicht bestätigt. Mit denselben Angaben erneut versuchen.",
+    "changed": "Die Angaben wurden geändert. Seite neu laden und erneut versuchen.",
+    "reload": "Neu laden",
+    "classification": "Artikeltyp und Sortiment",
+    "group": "Sortimentsgruppe",
+    "none": "Keine",
+    "choose": "Auswählen…",
+    "newGroup": "Neue Sortimentsgruppe",
+    "name": "Name",
+    "createGroup": "Gruppe erstellen",
+    "bulk": "Ausgewählte Artikel bearbeiten",
+    "bulkHint": "Die ausgewählten Artikel erhalten den folgenden Artikeltyp und die Sortimentsgruppe.",
+    "fields": "Felder auswählen",
+    "outgoing": "Von Komisio zur Kasse",
+    "incoming": "Verkäufe aus der Kasse",
+    "salesSync": "Verkaufssynchronisierung anzeigen",
+    "historyHint": "Frühere Verträge und Verkäufe bleiben unverändert.",
+    "storeShare": "Anteil des Geschäfts",
+    "sellerShare": "Anteil des Verkäufers"
+  },
+  "sellerBank": {
+    "title": "Auszahlungskonto",
+    "holder": "Kontoinhaber",
+    "country": "Land",
+    "kind": "Kontotyp",
+    "local": "Lokales Bankkonto",
+    "account": "Kontonummer",
+    "routing": "Bankleitzahl oder Bankcode",
+    "review": "Bankdaten prüfen",
+    "reviewed": "Bankdaten geprüft",
+    "changed": "Das Konto wurde geändert. Angaben vor der Zahlung prüfen.",
+    "privacy": "Diese Angaben gelten für dieses Geschäft. Nur Sie und der Inhaber oder Administrator können sie sehen.",
+    "empty": "Keine Bankdaten gespeichert.",
+    "invalid": "Kontoinhaber, Land und Kontonummer prüfen.",
+    "use": "Diese Bankdaten verwenden",
+    "snapshot": "Geprüfte Angaben",
+    "manual": "Die Zahlung erfolgt manuell über Ihre Bank."
   }
 }

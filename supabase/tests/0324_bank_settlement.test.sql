@@ -1,0 +1,18 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values('d3240000-0000-4000-8000-000000000001','bank-batch@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"d3240000-0000-4000-8000-000000000001","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Synthetic batch store','synthetic-bank-batch',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Synthetic seller','bank-batch@example.test','')::text,true);
+select save_seller_bank_details(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,null,'{"holder":"Synthetic holder","country":"SE","kind":"local","account":"123456789","routing":"1234"}');
+select adjust_seller_ledger(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,20000,'Synthetic credit');
+select set_config('test.batch',gen_random_uuid()::text,true);
+select lives_ok($$select settle_payouts(current_setting('test.tenant')::uuid,current_setting('test.batch')::uuid,jsonb_build_array(jsonb_build_object('sellerId',current_setting('test.seller'),'amountOre',20000)),'Synthetic batch')$$,'batch prepares bank requests for review');
+select is((select status from payouts where tenant_id=current_setting('test.tenant')::uuid),'requested','new bank payout waits for explicit review');
+select is(seller_balance(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid)->>'availableOre','20000','unreviewed destination does not reserve funds');
+select lives_ok($$select settle_payouts(current_setting('test.tenant')::uuid,current_setting('test.batch')::uuid,jsonb_build_array(jsonb_build_object('sellerId',current_setting('test.seller'),'amountOre',20000)),'Synthetic batch')$$,'retry never implicitly approves pending request');
+select is((select count(*)::int from payouts where tenant_id=current_setting('test.tenant')::uuid),1,'one request per batch seller');
+select * from finish();
+rollback;

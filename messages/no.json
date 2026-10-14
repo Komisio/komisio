@@ -250,7 +250,8 @@
       ]
     },
     "typeIntro": "Varetypen lagres for hele butikken og velges for denne varen.",
-    "typeFieldsHint": "Velg en lignende varetype for å få de samme spørsmålene, for eksempel størrelse og materiale."
+    "typeFieldsHint": "Velg en lignende varetype for å få de samme spørsmålene, for eksempel størrelse og materiale.",
+    "typeFieldsLegend": "Velg felt"
   },
   "intake": {
     "quickLink": "Hurtigmottak: én skjerm per plagg",
@@ -332,7 +333,8 @@
     "stocktakeItemMissing": "Varen finnes ikke i denne butikken.",
     "stocktakePending": "Kontroller de resterende varene før du avslutter.",
     "collectionNotDue": "Hentefristen har ikke gått ut.",
-    "overviewHelpLabel": "Om innlevering"
+    "overviewHelpLabel": "Om innlevering",
+    "payoutBankReviewRequired": "En eier eller administrator må først kontrollere selgerens kontoopplysninger under Utbetalinger."
   },
   "brand": "Komisio",
   "tagline": "Mer plass til ting som kan leve videre.",
@@ -1412,7 +1414,7 @@
     "settleReasonHint": "Registreres på hver godkjenning i batchen, for eksempel \"Septemberavregning\".",
     "settleConfirm": "Jeg godkjenner de valgte beløpene for utbetaling.",
     "settle": "Klargjør {count} utbetalinger",
-    "settled": "Utbetalingene er klargjort. Betal via banken og registrer referansene.",
+    "settled": "Utbetalingene er klargjort. Betal via banken og registrer referansene. Utbetalinger med kontoopplysninger må kontrolleres under Pågående før betaling.",
     "settleTotal": "Totalt",
     "requestNone": "Ingen tilgjengelig saldo i denne listen. Åpne en innleverer for å se saldoen.",
     "directory": "Søk blant alle innleverere",
@@ -1436,7 +1438,8 @@
     "selectedCandidates": "{selected} av {total} selgere valgt",
     "candidateLimit": "Maksimalt 100 per omgang.",
     "selectCandidates": "Velg de første 100",
-    "clearCandidates": "Fjern alle valg"
+    "clearCandidates": "Fjern alle valg",
+    "bankReviewHint": "Utbetalinger med kontoopplysninger må kontrolleres under Pågående før betaling."
   },
   "returns": {
     "reason": "Returårsak",
@@ -4086,6 +4089,65 @@
       "messages": "Meldinger som venter eller har usikker levering",
       "legacyStatements": "Eldre avregninger må sikres før sletting",
       "fees": "Ubetalte avgifter"
-    }
+    },
+    "bankRemovable": "Kontoopplysninger uten utbetalingsgrunnlag",
+    "bankRetained": "Kontoopplysninger brukt i kontrollerte utbetalinger"
+  },
+  "labelSheets": {
+    "title": "Prislapper på A4",
+    "size": "Etikettstørrelse",
+    "copies": "Antall per vare",
+    "preview": "Forhåndsvis PDF",
+    "download": "Last ned PDF",
+    "hint": "Skriv ut i faktisk størrelse (100 %). Arket har klippelinjer.",
+    "selection": "Velg varer på denne siden for prislapper.",
+    "empty": "Ingen varer å skrive ut.",
+    "skipped": "{count} varer utelates fordi de ikke lenger er til salgs.",
+    "error": "Kan ikke lese utvalget. Velg høyst 200 varer som er til salgs.",
+    "back": "Tilbake til varer",
+    "limit": "Høyst 400 etiketter per PDF."
+  },
+  "itemWorkflow": {
+    "edit": "Rediger varetekst",
+    "description": "Varenavn og beskrivelse",
+    "save": "Lagre",
+    "saved": "Lagret",
+    "uncertain": "Lagringen kunne ikke bekreftes. Prøv igjen med samme opplysninger.",
+    "changed": "Opplysningene er endret. Last siden på nytt og prøv igjen.",
+    "reload": "Last på nytt",
+    "classification": "Varetype og sortiment",
+    "group": "Sortimentsgruppe",
+    "none": "Ingen",
+    "choose": "Velg…",
+    "newGroup": "Ny sortimentsgruppe",
+    "name": "Navn",
+    "createGroup": "Opprett gruppe",
+    "bulk": "Endre valgte varer",
+    "bulkHint": "Valgte varer får varetypen og sortimentsgruppen nedenfor.",
+    "fields": "Velg felt",
+    "outgoing": "Fra Komisio til kassen",
+    "incoming": "Salg fra kassen",
+    "salesSync": "Vis salgssynkronisering",
+    "historyHint": "Tidligere avtaler og salg endres ikke.",
+    "storeShare": "Butikkens andel",
+    "sellerShare": "Selgerens andel"
+  },
+  "sellerBank": {
+    "title": "Utbetalingskonto",
+    "holder": "Kontoinnehaver",
+    "country": "Land",
+    "kind": "Kontotype",
+    "local": "Lokal bankkonto",
+    "account": "Kontonummer",
+    "routing": "Bankkode",
+    "review": "Kontroller kontoopplysninger",
+    "reviewed": "Kontoopplysningene er kontrollert",
+    "changed": "Kontoen er endret. Kontroller opplysningene før betaling.",
+    "privacy": "Opplysningene gjelder denne butikken. Bare du og butikkens eier eller administrator kan se dem.",
+    "empty": "Ingen kontoopplysninger lagret.",
+    "invalid": "Kontroller kontoinnehaver, land og kontonummer.",
+    "use": "Bruk disse kontoopplysningene",
+    "snapshot": "Kontrollerte opplysninger",
+    "manual": "Betalingen gjøres manuelt i banken."
   }
 }

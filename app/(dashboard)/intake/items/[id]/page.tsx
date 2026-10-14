@@ -1,4 +1,5 @@
 import { ItemPhotoGallery } from '@/components/intake/item-photo-gallery'
+import { ItemDescriptionEditor } from '@/components/intake/item-description-editor'
 import { readItemPhotos } from '@/lib/engine/item-photos'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from '@/components/platform/working-link'
@@ -67,6 +68,15 @@ export default async function Item({
         <h1>
           {label?.title || `${d.item} ${d.originKinds[item.origin_kind]}`}
         </h1>
+        {['owner', 'admin', 'staff'].includes(active.role) && (
+          <ItemDescriptionEditor
+            key={`${item.id}:${label?.title}`}
+            tenantId={active.id}
+            itemId={item.id}
+            title={label?.title ?? ''}
+            d={all.itemWorkflow}
+          />
+        )}
         <p className="item-detail-reference">{reference}</p>
         <span className="ownership-badge" data-ownership={item.ownership}>
           {d.ownershipKinds[item.ownership]}
@@ -104,6 +114,18 @@ export default async function Item({
         </p>
         {active.role !== 'readonly' && (
           <div className="item-detail-shortcuts">
+            <Link
+              className="btn btn-secondary"
+              href={`/intake/items/labels?item=${item.id}`}
+            >
+              {all.labelSheets.title}
+            </Link>
+            <Link
+              className="btn btn-secondary"
+              href={`/intake/items/classify?item=${item.id}`}
+            >
+              {all.itemWorkflow.classification}
+            </Link>
             <Link
               className="btn btn-secondary"
               href={

@@ -3,6 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { itemStage, originKind } from './items'
 import { paypalItemState, paypalSyncStatus } from './paypal-status'
 import { itemSyncConnections, itemSyncStatus, syncProvider } from './item-sync'
+import { classification } from './item-classification'
 
 export const itemSort = z.enum([
   'title',
@@ -23,6 +24,8 @@ export const itemFilters = z
     ownership: z.enum(['consignment', 'store']).optional(),
     seller: text.optional(),
     category: text.optional(),
+    itemType: text.optional(),
+    assortment: z.uuid().optional(),
     minPrice: money.optional(),
     maxPrice: money.optional(),
     acceptedFrom: date.optional(),
@@ -58,6 +61,8 @@ export const filterKeys = [
   'seller',
   'category',
   'minPrice',
+  'itemType',
+  'assortment',
   'maxPrice',
   'acceptedFrom',
   'acceptedTo',
@@ -86,6 +91,7 @@ const item = z.object({
   nextMarkdownPercent: z.number().nullable(),
   paypal: paypalItemState.optional(),
   sync: itemSyncConnections.optional(),
+  classification: classification.optional(),
 })
 export type DirectoryItem = z.infer<typeof item>
 export async function readItemDirectory(

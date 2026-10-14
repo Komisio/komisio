@@ -35,6 +35,14 @@ export function CreateItemType({
   const [open, setOpen] = useState(false)
   const [name, setName] = useState('')
   const [base, setBase] = useState('')
+  const [fields, setFields] = useState<string[]>([
+    'description',
+    'size',
+    'color',
+    'brand',
+    'material',
+    'condition',
+  ])
   const [busy, setBusy] = useBusyState(false)
   const [locked, setLocked] = useState(false)
   const [refused, setRefused] = useState(false)
@@ -49,9 +57,11 @@ export function CreateItemType({
   }
   async function save() {
     if (disabled || running.current || refused) return
-    const attributes = base
-      ? vocabulary.types.find((t) => t.slug === base)?.attributes
-      : [{ slug: 'description', expected: true, sort: 0 }]
+    const attributes = fields.map((slug, sort) => ({
+      slug,
+      sort,
+      expected: slug === 'description',
+    }))
     const parsed = createItemTypeInput.safeParse(
       pending.current ?? {
         tenantId,
@@ -125,7 +135,27 @@ export function CreateItemType({
         aria-expanded={false}
         disabled={disabled}
         onClick={() => {
-          setBase(selected ?? '')
+          const initialBase =
+            selected ??
+            (vocabulary.types.some((t) => t.slug === 'sweater' && t.active)
+              ? 'sweater'
+              : '')
+          setBase(initialBase)
+          setFields(
+            vocabulary.types
+              .find((t) => t.slug === initialBase)
+              ?.attributes.map((a) => a.slug) ??
+              [
+                'description',
+                'size',
+                'color',
+                'brand',
+                'material',
+                'condition',
+              ].filter((slug) =>
+                vocabulary.definitions.some((d) => d.slug === slug && d.active),
+              ),
+          )
           setError('')
           setRefused(false)
           setOpen(true)
@@ -176,7 +206,14 @@ export function CreateItemType({
           aria-describedby={`${editorId}-fields-hint`}
           value={base}
           disabled={busy || locked || disabled}
-          onChange={(e) => setBase(e.target.value)}
+          onChange={(e) => {
+            setBase(e.target.value)
+            setFields(
+              vocabulary.types
+                .find((t) => t.slug === e.target.value)
+                ?.attributes.map((a) => a.slug) ?? ['description'],
+            )
+          }}
         >
           <option value="">{d.typeBasic}</option>
           {vocabulary.types
@@ -192,6 +229,30 @@ export function CreateItemType({
         </select>
         <small id={`${editorId}-fields-hint`}>{d.typeFieldsHint}</small>
       </div>
+      <fieldset disabled={busy || locked || disabled}>
+        <legend>{d.typeFieldsLegend}</legend>
+        <div className="row wrap">
+          {vocabulary.definitions
+            .filter((a) => a.active && a.slug !== 'category')
+            .map((a) => (
+              <label key={a.slug} className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={fields.includes(a.slug)}
+                  disabled={a.slug === 'description'}
+                  onChange={(e) =>
+                    setFields((current) =>
+                      e.target.checked
+                        ? [...current, a.slug]
+                        : current.filter((s) => s !== a.slug),
+                    )
+                  }
+                />
+                {labelOf(a, lang)}
+              </label>
+            ))}
+        </div>
+      </fieldset>
       <div className="row wrap">
         <Button
           type="button"

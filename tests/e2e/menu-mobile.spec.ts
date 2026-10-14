@@ -61,9 +61,9 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
           .getByRole('main')
           .evaluate((main) => main.getBoundingClientRect().height)
         console.log('menu content height at 320px:', height)
-        // Purchases, file import and POS import each add one 44px destination.
+        // Purchases and item import each add one 44px destination.
         // Keep the per-destination density and accessible target size unchanged.
-        expect(height).toBeLessThan(1220 + 3 * 44)
+        expect(height).toBeLessThan(1220 + 2 * 44)
       }
       await page.screenshot({
         path: info.outputPath(`menu-${locale}.png`),

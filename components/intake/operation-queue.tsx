@@ -272,7 +272,14 @@ export function OperationQueue({
             {d.riskLevel}: {d.risk[o.risk_level]} · {d.validUntil}:{' '}
             {format(o.expires_at)}
           </p>
-          {o.kind === 'useAgreementDraft' ? (
+          {o.kind === 'useAccountingDraft' ? (
+            <Link
+              className="text-link"
+              href={`/intake/accounting?view=accounts&draft=${o.payload.draftId}`}
+            >
+              {d.openOrigin}
+            </Link>
+          ) : o.kind === 'useAgreementDraft' ? (
             <Link
               className="text-link"
               href={`/intake/agreements?draft=${o.payload.draftId}`}
@@ -675,7 +682,8 @@ export function OperationQueue({
           {reviewContext &&
             !o.outcome &&
             canDecide &&
-            o.kind !== 'useAgreementDraft' && (
+            o.kind !== 'useAgreementDraft' &&
+            o.kind !== 'useAccountingDraft' && (
               <Decision
                 tenantId={tenantId}
                 operation={o}

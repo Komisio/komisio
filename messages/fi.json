@@ -896,7 +896,8 @@
       "settlePayouts": "Tilitä tuojille",
       "updateStoreProfile": "Päivitä kaupan profiili",
       "importSellers": "Tuo tuojat",
-      "useAgreementDraft": "Tekoälyn sopimusluonnos"
+      "useAgreementDraft": "Tekoälyn sopimusluonnos",
+      "useAccountingDraft": "Tarkistettavat tiliehdotukset"
     },
     "importRows": "riviä",
     "openDays": "avointa päivää",
@@ -1207,6 +1208,8 @@
     "open": "Avaa tuote",
     "price": "Hyväksytty hinta",
     "priceHint": "esimerkiksi 250 tai 250.50. Tuotekohtaisessa tilassa hinnan on oltava sama kuin tuojan hyväksymä.",
+    "purchaseSalePrice": "Myyntihinta",
+    "purchasePriceHint": "esimerkiksi 250 tai 250.50.",
     "priceInvalid": "Anna hinta enintään kahdella desimaalilla.",
     "confirm": "Vahvistan, että kauppa hyväksyy tämän tuotteen voimassa olevilla ehdoilla.",
     "accept": "Hyväksy tuote",
@@ -1270,7 +1273,8 @@
     "unknownActor": "Nimi ei saatavilla",
     "markdownWaiting": "Hinnanalennus odottaa",
     "allOwnerships": "Kaikki tuotteet",
-    "ownership": "Omistus"
+    "ownership": "Omistus",
+    "createPurchasedItem": "Luo tuote"
   },
   "sales": {
     "title": "Myynti",
@@ -1606,7 +1610,7 @@
     "net": "netto",
     "gross": "brutto",
     "mapHeading": "Tilikartta",
-    "mapIntro": "Kirjanpitäjäsi päättää, mille tilille ja kummalle puolelle kukin päivän päätöksen summa menee. Komisio ei ehdota tilejä. Tyhjäksi jätetyt summat raportoidaan mutta ei viedä; vienti hylätään, jos tosite ei täsmää.",
+    "mapIntro": "Yhdistä summat tileihin ja debet- tai kredit-puolelle. Tarkista tekoälyn ehdotukset kirjanpitäjän kanssa. Tyhjiä rivejä ei viedä. Viennin on oltava tasapainossa.",
     "account": "Tili",
     "side": "Puoli",
     "debit": "Debet",
@@ -1628,10 +1632,10 @@
     },
     "netOf": "netto",
     "vatOf": "alv",
-    "publishMap": "Julkaise tilikartta",
+    "publishMap": "Tallenna tilikartta",
     "mapPublished": "Tilikartta julkaistu.",
     "mapVersion": "kartan versio",
-    "noMap": "Ei vielä tilikarttaa. Omistaja tai ylläpitäjä julkaisee sen kirjanpitäjän tilinumeroilla.",
+    "noMap": "Ei tallennettua tilikarttaa.",
     "voucherHeading": "Tosite",
     "balanced": "Täsmää",
     "unbalanced": "Ei täsmää",
@@ -1649,8 +1653,10 @@
     "views": {
       "days": "Päivän päätökset",
       "reconciliation": "Täsmäytys",
-      "settings": "Tilit ja integraatiot",
-      "planning": "Suunnittele siirrot"
+      "settings": "Asetukset",
+      "planning": "Suunnittele siirrot",
+      "accounts": "Tilikartta",
+      "exports": "Viennit"
     },
     "mapMissingLink": "Määritä kirjanpitotilit ennen vientiaineiston luontia.",
     "details": "Näytä tiedot",
@@ -1687,7 +1693,28 @@
       "preparedThrough": "Tarkistettu päivään",
       "catchingUp": "Lisää päiviä valmistellaan seuraavalla ajolla"
     },
-    "openExport": "Avaa aineisto"
+    "openExport": "Avaa aineisto",
+    "amount": "Summa",
+    "groups": {
+      "basic": "Perustilit",
+      "vat": "ALV-erittely",
+      "fees": "Kuukausimaksut"
+    },
+    "ai": {
+      "busy": "Luodaan luonnosta…",
+      "check": "Tarkista luonnos",
+      "unavailable": "Tekoäly ei ole käytettävissä tässä liikkeessä.",
+      "limit": "Tekoälyn käyttöraja on saavutettu. Yritä myöhemmin tai tarkista asetukset.",
+      "failed": "Luonnosta ei voitu luoda. Yritä uudelleen.",
+      "pending": "Vastausta odotetaan. Tarkista sama luonnos uudelleen.",
+      "retryUse": "Vastaus puuttuu. Yritä samaa valintaa uudelleen.",
+      "create": "Ehdota tilejä tekoälyllä",
+      "review": "Tekoälyn ehdotukset – tarkista tilit ennen tallentamista.",
+      "questions": "Tarkista myös",
+      "reason": "Perustelu",
+      "hint": "Tekoäly täyttää tyhjät rivit. Nykyiset tilit säilyvät.",
+      "changed": "Tilikartta tai asetukset ovat muuttuneet. Lataa sivu uudelleen."
+    }
   },
   "communications": {
     "welcomeTitle": "Aktivointiviesti",
@@ -2041,33 +2068,41 @@
     "intro": "Kirjaa myymälän ostamat ja omistamat tuotteet.",
     "notice": "Tallenna osto ja valitse sitten ”{accept}”.",
     "registerHeading": "Rekisteröi osto",
-    "registerHint": "Yksi rekisteröinti per ostettu tuote. Säilytä kuitti tai muistiinpano; sen viite vaaditaan.",
+    "registerHint": "Yksi rekisteröinti per ostettu tuote.",
     "price": "Ostohinta",
     "priceHint": "esimerkiksi 150 tai 150.50.",
     "priceInvalid": "Anna hinta enintään kahdella desimaalilla.",
     "evidence": "Kuitti tai viite",
     "evidenceHint": "Kuitin numero tai muistiinpano siitä, kuka myi ja milloin. Vältä henkilötunnuksia.",
     "note": "Tuote / toimittaja (valinnainen)",
-    "marginEligible": "Ostettu yksityishenkilöltä ilman arvonlisäveroa, tuotekohtainen tosite (marginaaliverotus)",
+    "marginEligible": "Ostettu yksityishenkilöltä ilman arvonlisäveroa.",
     "marginHint": "Tämän todistat sinä nyt, oston yhteydessä. Kaupan alv-tila päättää, miten sitä käytetään myynnissä.",
-    "confirm": "Liike osti tuotteen ja tosite on oikein.",
     "register": "Rekisteröi osto",
     "registered": "Osto on rekisteröity.",
     "recent": "Kirjatut ostot",
     "recentHint": "20 ostoa sivulla, uusimmat ensin. Selaa löytääksesi vanhemmat ostot.",
     "reference": "Osto",
-    "marginYes": "Marginaaliverotuksen tositteet vahvistettu",
-    "marginNo": "Marginaaliverotuksen tositteita ei vahvistettu",
+    "marginYes": "Osto yksityishenkilöltä ilman arvonlisäveroa ja ostotosite: vahvistettu",
+    "marginNo": "Osto yksityishenkilöltä ilman arvonlisäveroa ja ostotosite: ei vahvistettu",
     "empty": "Ostoja ei ole vielä rekisteröity.",
-    "history": "Historia",
+    "history": "Ostoluettelo",
     "newPurchase": "Uusi osto",
     "helpLabel": "Tietoa omista ostoista",
     "marginHelpLabel": "Oston arvonlisävero",
-    "continueToItem": "Jatka myyntihintaan",
+    "continueToItem": "Aseta myyntihinta",
     "itemRegistered": "Tuote rekisteröity",
     "prepareItem": "Aseta myyntihinta",
     "taxHeading": "ALV",
-    "purchasedAt": "Ostopäivä"
+    "purchasedAt": "Ostopäivä",
+    "search": "Hae",
+    "searchPlaceholder": "Tuote, ostonumero tai kuitti",
+    "status": "Tila",
+    "statusAll": "Kaikki ostot",
+    "statusPending": "Odottaa hintaa",
+    "statusRegistered": "Tuote luotu",
+    "description": "Tuote / toimittaja",
+    "showing": "Näytetään {from}–{to} / {total} ostoa",
+    "noMatches": "Hakua vastaavia ostoja ei löytynyt."
   },
   "sellerPortal": {
     "handovers": "Ilmoita tavaroiden tuonnista",
@@ -3742,10 +3777,10 @@
   },
   "inventoryImport": {
     "title": "Tuo tuotteita",
-    "helpLabel": "Tuotetiedoston ohje",
-    "helpFile": "Käytä CSV-mallia. Säilytä sarakeotsikot ja anna jokaiselle tuotteelle yksilöllinen viite.",
-    "helpSeller": "Myyjän on oltava Komisiossa. Käytä sähköpostia tai Komisio-tunnusta; nimiä ei käytetä kohdistamiseen.",
-    "helpTerms": "Tuotteet kirjataan uusina vastaanottoina nykyisillä ehdoilla. Jokainen lähdeviite tuodaan vain kerran.",
+    "helpLabel": "Tietoa tuotteiden tuonnista",
+    "helpFile": "Tiedostosta: lataa malli ja täytä yksi rivi kutakin tuotetta kohti. Säilytä otsikot ja anna jokaiselle tuotteelle oma numero.",
+    "helpSeller": "Lisää myyjät ensin Komisioon. Kirjoita tiedostoon myyjän sähköpostiosoite tai Komisio-tunnus.",
+    "helpTerms": "Tuotteet lisätään uusina tuontierinä myymälän nykyisillä ehdoilla. Kukin tiedoston tuotenumero tuodaan vain kerran.",
     "file": "Tuotetiedosto",
     "choose": "Valitse tiedosto",
     "fileHint": "CSV · enintään 200 tuotetta · hinnat valuutassa {currency}",
@@ -3781,7 +3816,7 @@
       "ambiguous": "Useilla myyjillä on tämä sähköposti. Anna Komisio-tunnus.",
       "conflict": "Myyjän tunnus ja sähköposti eivät vastaa toisiaan."
     },
-    "currentTerms": "Tuotteet kirjataan uusina vastaanottoina nykyisillä ehdoilla. Jokainen lähdeviite tuodaan vain kerran.",
+    "currentTerms": "Tuotteet lisätään uusina tuontierinä myymälän nykyisillä ehdoilla. Kukin tiedoston tuotenumero tuodaan vain kerran.",
     "received": "Vahvistan, että tuotteet ovat myymälässä.",
     "import": "Tuo",
     "complete": "Tuonti valmis",
@@ -3802,7 +3837,9 @@
       "REQUEST_CONFLICT": "Tuontia ei voitu suorittaa. Uusia tuotteita ei kirjattu.",
       "CURRENCY_MISMATCH": "Ehdot ovat muuttuneet. Esikatsele tiedosto uudelleen.",
       "CUSTODY_REQUIRED": "Vahvistan, että tuotteet ovat myymälässä."
-    }
+    },
+    "fromFile": "Tiedostosta",
+    "fromPos": "Kassasta"
   },
   "consignmentFees": {
     "title": "Kuukausimaksut",
@@ -3970,8 +4007,8 @@
     "skip": "Ohita",
     "retryInfo": "Vastausta ei ole vahvistettu. Tarkista sama toiminto uudelleen ennen jatkamista.",
     "helpLabel": "Tietoa kassatuonnista",
-    "helpSource": "Hae tuotteet ja tarkista yksi rivi kerrallaan. Kassan tuotteita ei muuteta. Kuvia ei kopioida.",
-    "helpLink": "Nykyiset etiketit säilyvät. Yhdistäminen koskee uusia myyntejä yhdistämisen jälkeen. Hallitse näiden tuotteiden hintoja ja varastoa toistaiseksi kassassa.",
+    "helpSource": "Kassasta: hae tuotteet ja tarkista ne yksi kerrallaan ennen tuontia. Kuvat eivät siirry mukana.",
+    "helpLink": "Voit jatkaa tuotteiden etikettien käyttöä. Muuta hinnat ja varastomäärät kassassa. Vain tuonnin jälkeen tehdyt myynnit siirtyvät Komisioon.",
     "errors": {
       "IMPORT_CHANGED": "Tarkistus on vanhentunut. Hae tuotteet uudelleen.",
       "IMPORT_SELLER_CHANGED": "Myyjän tiedot ovat muuttuneet. Esikatsele tiedosto uudelleen.",

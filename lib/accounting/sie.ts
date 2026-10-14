@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
 // SIE 4 export (P2 S17): one voucher per day close, rendered from the lines
-// SQL recorded under the tenant's own account map. Komisio proposes no
-// accounts and no postings; it only formats what the store's accountant set.
+// SQL recorded under the tenant's explicitly saved account map. AI drafting
+// is separate; this renderer never suggests accounts or changes postings.
 // PC8 is declared as SIE readers expect, so text is reduced to ASCII.
 export const voucherLine = z.strictObject({
   key: z.string().min(1).max(60),

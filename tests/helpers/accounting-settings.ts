@@ -4,7 +4,6 @@ import type { Page } from '@playwright/test'
 export async function openAccountingSettings(page: Page) {
   for (const selector of [
     '.accounting-provider-disclosure',
-    '.accounting-map-disclosure',
     '.fortnox-guide',
   ]) {
     const disclosure = page.locator(selector)

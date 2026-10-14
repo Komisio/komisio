@@ -896,7 +896,8 @@
       "settlePayouts": "Afregn indleverere",
       "updateStoreProfile": "Opdater butiksprofilen",
       "importSellers": "Importér indleverere",
-      "useAgreementDraft": "AI-aftaleudkast"
+      "useAgreementDraft": "AI-aftaleudkast",
+      "useAccountingDraft": "Kontoforslag til gennemgang"
     },
     "importRows": "rækker",
     "openDays": "åbne dage",
@@ -1207,6 +1208,8 @@
     "open": "Åbn vare",
     "price": "Accepteret pris",
     "priceHint": "for eksempel 250 eller 250.50. I tilstanden pr. vare skal prisen være lig med den, indlevereren godkendte.",
+    "purchaseSalePrice": "Salgspris",
+    "purchasePriceHint": "for eksempel 250 eller 250.50.",
     "priceInvalid": "Angiv en pris med højst to decimaler.",
     "confirm": "Jeg bekræfter, at butikken accepterer denne vare under de gældende vilkår.",
     "accept": "Accepter vare",
@@ -1270,7 +1273,8 @@
     "unknownActor": "Navn mangler",
     "markdownWaiting": "Prisnedsættelse afventer",
     "allOwnerships": "Alle varer",
-    "ownership": "Ejerskab"
+    "ownership": "Ejerskab",
+    "createPurchasedItem": "Opret vare"
   },
   "sales": {
     "title": "Salg",
@@ -1606,7 +1610,7 @@
     "net": "netto",
     "gross": "brutto",
     "mapHeading": "Kontoplan",
-    "mapIntro": "Din revisor bestemmer, hvilken konto og hvilken side hvert beløb i dagsafslutningen går til. Komisio foreslår ingen konti. Beløb, der er tomme, rapporteres, men eksporteres ikke; en eksport afvises, når bilaget ikke balancerer.",
+    "mapIntro": "Knyt beløb til konti og debet eller kredit. Gennemgå AI-forslag med din bogholder. Tomme rækker eksporteres ikke. Eksporten skal balancere.",
     "account": "Konto",
     "side": "Side",
     "debit": "Debet",
@@ -1628,10 +1632,10 @@
     },
     "netOf": "netto",
     "vatOf": "moms",
-    "publishMap": "Udgiv kontoplan",
+    "publishMap": "Gem kontoplan",
     "mapPublished": "Kontoplan udgivet.",
     "mapVersion": "kontoplanversion",
-    "noMap": "Ingen kontoplan endnu. En ejer eller administrator udgiver den med revisorens kontonumre.",
+    "noMap": "Ingen gemt kontoplan.",
     "voucherHeading": "Bilag",
     "balanced": "Balancerer",
     "unbalanced": "Balancerer ikke",
@@ -1649,8 +1653,10 @@
     "views": {
       "days": "Dagsafslutninger",
       "reconciliation": "Afstemning",
-      "settings": "Konti og integrationer",
-      "planning": "Planlæg overførsel"
+      "settings": "Indstillinger",
+      "planning": "Planlæg overførsel",
+      "accounts": "Kontoplan",
+      "exports": "Eksporter"
     },
     "mapMissingLink": "Angiv bogføringskonti, før du opretter en eksport.",
     "details": "Vis detaljer",
@@ -1687,7 +1693,28 @@
       "preparedThrough": "Kontrolleret til og med",
       "catchingUp": "Flere dage klargøres ved næste kørsel"
     },
-    "openExport": "Åbn bilag"
+    "openExport": "Åbn bilag",
+    "amount": "Beløb",
+    "groups": {
+      "basic": "Grundkonti",
+      "vat": "Momsfordeling",
+      "fees": "Månedsgebyrer"
+    },
+    "ai": {
+      "busy": "Opretter forslag…",
+      "check": "Kontrollér forslag",
+      "unavailable": "AI er ikke tilgængelig for butikken.",
+      "limit": "Grænsen for AI-forbrug er nået. Prøv senere eller kontrollér AI-indstillingerne.",
+      "failed": "Forslaget kunne ikke oprettes. Prøv igen.",
+      "pending": "Afventer svar. Kontrollér samme forslag igen.",
+      "retryUse": "Svar mangler. Prøv samme valg igen.",
+      "create": "Foreslå konti med AI",
+      "review": "AI-forslag – kontrollér kontiene, før du gemmer.",
+      "questions": "Kontrollér også",
+      "reason": "Begrundelse",
+      "hint": "AI udfylder tomme rækker. Eksisterende konti bevares.",
+      "changed": "Kontoplanen eller indstillingerne er ændret. Genindlæs siden."
+    }
   },
   "communications": {
     "welcomeTitle": "Aktiveringsmail",
@@ -2041,33 +2068,41 @@
     "intro": "Registrer varer, som butikken køber og ejer.",
     "notice": "Gem indkøbet, og vælg derefter »{accept}«.",
     "registerHeading": "Registrer et indkøb",
-    "registerHint": "Én registrering pr. købt vare. Behold kvitteringen eller noten; dens reference er påkrævet.",
+    "registerHint": "Én registrering pr. købt vare.",
     "price": "Indkøbspris",
     "priceHint": "for eksempel 150 eller 150.50.",
     "priceInvalid": "Angiv en pris med højst to decimaler.",
     "evidence": "Kvittering eller reference",
     "evidenceHint": "Kvitteringsnummer eller en note om, hvem der solgte den, og hvornår. Undgå CPR-numre.",
     "note": "Vare / leverandør (valgfrit)",
-    "marginEligible": "Købt fra privatperson uden moms, med dokumentation for varen (brugtmoms)",
+    "marginEligible": "Købt fra privatperson uden moms.",
     "marginHint": "Dette attesteres nu, ved indkøbet, af dig. Butikkens momstilstand afgør, hvordan det bruges ved salg.",
-    "confirm": "Butikken har købt varen, og dokumentationen er korrekt.",
     "register": "Registrer indkøb",
     "registered": "Indkøbet er registreret.",
     "recent": "Registrerede indkøb",
     "recentHint": "20 indkøb pr. side, med de nyeste først. Bladr for at finde ældre indkøb.",
     "reference": "Indkøb",
-    "marginYes": "Dokumentation for brugtmoms bekræftet",
-    "marginNo": "Dokumentation for brugtmoms ikke bekræftet",
+    "marginYes": "Køb fra privatperson uden moms med dokumentation: bekræftet",
+    "marginNo": "Køb fra privatperson uden moms med dokumentation: ikke bekræftet",
     "empty": "Ingen indkøb registreret endnu.",
-    "history": "Historik",
+    "history": "Indkøbsliste",
     "newPurchase": "Nyt indkøb",
     "helpLabel": "Om egne indkøb",
     "marginHelpLabel": "Om moms ved indkøb",
-    "continueToItem": "Fortsæt til salgspris",
+    "continueToItem": "Angiv salgspris",
     "itemRegistered": "Vare registreret",
     "prepareItem": "Angiv salgspris",
     "taxHeading": "Moms",
-    "purchasedAt": "Købsdato"
+    "purchasedAt": "Købsdato",
+    "search": "Søg",
+    "searchPlaceholder": "Vare, købsnummer eller kvittering",
+    "status": "Status",
+    "statusAll": "Alle indkøb",
+    "statusPending": "Afventer pris",
+    "statusRegistered": "Vare oprettet",
+    "description": "Vare / leverandør",
+    "showing": "Viser {from}–{to} af {total} indkøb",
+    "noMatches": "Ingen indkøb matcher søgningen."
   },
   "sellerPortal": {
     "handovers": "Anmeld en indlevering",
@@ -3736,10 +3771,10 @@
   },
   "inventoryImport": {
     "title": "Importér varer",
-    "helpLabel": "Hjælp til varefilen",
-    "helpFile": "Brug CSV-skabelonen. Behold overskrifterne og angiv en unik reference for hver vare.",
-    "helpSeller": "Sælgeren skal findes i Komisio. Brug e-mail eller sælgerens Komisio-ID; navne bruges ikke til matchning.",
-    "helpTerms": "Varerne registreres som nye indleveringer med gældende vilkår. Hver kildereference importeres kun én gang.",
+    "helpLabel": "Om vareimport",
+    "helpFile": "Fra fil: hent skabelonen og udfyld én række pr. vare. Behold overskrifterne og giv hver vare sit eget nummer.",
+    "helpSeller": "Opret sælgerne i Komisio først. Angiv sælgerens e-mailadresse eller ID fra Komisio i filen.",
+    "helpTerms": "Varerne tilføjes som nye indleveringer med butikkens gældende vilkår. Hvert varenummer i filen importeres kun én gang.",
     "file": "Varefil",
     "choose": "Vælg fil",
     "fileHint": "CSV · højst 200 varer · priser i {currency}",
@@ -3775,7 +3810,7 @@
       "ambiguous": "Flere sælgere har denne e-mail. Angiv Komisio-ID.",
       "conflict": "Sælgerens ID og e-mail stemmer ikke overens."
     },
-    "currentTerms": "Varerne registreres som nye indleveringer med gældende vilkår. Hver kildereference importeres kun én gang.",
+    "currentTerms": "Varerne tilføjes som nye indleveringer med butikkens gældende vilkår. Hvert varenummer i filen importeres kun én gang.",
     "received": "Jeg bekræfter, at varerne er i butikken.",
     "import": "Importér",
     "complete": "Importen er færdig",
@@ -3796,7 +3831,9 @@
       "REQUEST_CONFLICT": "Importen kunne ikke gennemføres. Ingen nye varer blev registreret.",
       "CURRENCY_MISMATCH": "Vilkårene er ændret. Forhåndsvis filen igen.",
       "CUSTODY_REQUIRED": "Jeg bekræfter, at varerne er i butikken."
-    }
+    },
+    "fromFile": "Fra fil",
+    "fromPos": "Fra kasse"
   },
   "consignmentFees": {
     "title": "Månedsgebyrer",
@@ -3964,8 +4001,8 @@
     "skip": "Spring over",
     "retryInfo": "Svaret er ikke bekræftet. Kontrollér samme handling igen, før du fortsætter.",
     "helpLabel": "Om import fra kasse",
-    "helpSource": "Hent produkter og gennemgå én række ad gangen. Kassens produkter ændres ikke. Billeder kopieres ikke.",
-    "helpLink": "Eksisterende etiketter bevares. Tilknytningen gælder nye salg efter tilknytningstidspunktet. Pris og lager håndteres foreløbigt i kassen.",
+    "helpSource": "Fra kassen: hent varerne og kontrollér dem én ad gangen, før du importerer. Billeder følger ikke med.",
+    "helpLink": "Du kan fortsætte med at bruge vareetiketterne. Ret pris og lagerantal i kassen. Kun salg efter importen overføres til Komisio.",
     "errors": {
       "IMPORT_CHANGED": "Gennemgangen er udløbet. Hent produkterne igen.",
       "IMPORT_SELLER_CHANGED": "Sælgeroplysningerne er ændret. Forhåndsvis filen igen.",

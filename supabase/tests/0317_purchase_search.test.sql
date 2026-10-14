@@ -1,0 +1,51 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000001171','purchase-search-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000001172','purchase-search-reader@example.test',now()),
+ ('f0000000-0000-4000-8000-000000001173','purchase-search-outsider@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000001171","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Purchase search test','purchase-search-test',gen_random_uuid())::text,true);
+select set_config('test.p1',register_purchase(current_setting('test.tenant')::uuid,gen_random_uuid(),'Zebra lamp',30000,'Receipt A',false)::text,true);
+select set_config('test.p2',register_purchase(current_setting('test.tenant')::uuid,gen_random_uuid(),'Alpha chair',9000,'Receipt B',true)::text,true);
+select set_config('test.p3',register_purchase(current_setting('test.tenant')::uuid,gen_random_uuid(),'Beta table',15000,'Receipt C',false)::text,true);
+select set_config('test.item',accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'purchase',current_setting('test.p2')::uuid,null,22000)::text,true);
+select set_config('test.other',create_tenant('Other purchase search test','other-purchase-search-test',gen_random_uuid())::text,true);
+select register_purchase(current_setting('test.other')::uuid,gen_random_uuid(),'PRIVATE OTHER',1000,'Hidden evidence',false);
+
+select is((purchase_search_page(current_setting('test.tenant')::uuid,'','all','cost','asc',1,0)->>'total')::int,3,'count is tenant scoped and precedes paging');
+select is(purchase_search_page(current_setting('test.tenant')::uuid,'','all','cost','asc',1,0)->'rows'->0->>'id',current_setting('test.p2'),'numeric sort before paging');
+select is(purchase_search_page(current_setting('test.tenant')::uuid,'','all','cost','asc',1,1)->'rows'->0->>'id',current_setting('test.p3'),'second sorted page');
+select is(purchase_search_page(current_setting('test.tenant')::uuid,'','all','cost','desc',1,0)->'rows'->0->>'id',current_setting('test.p1'),'descending numeric cost');
+select is(purchase_search_page(current_setting('test.tenant')::uuid,'','all','note','asc',1,0)->'rows'->0->>'id',current_setting('test.p2'),'name sorting');
+select is(purchase_search_page(current_setting('test.tenant')::uuid,'','all','reference','desc',1,0)->'rows'->0->>'id',current_setting('test.p3'),'reference sorting is numeric');
+select is((purchase_search_page(current_setting('test.tenant')::uuid,'','pending','date','desc',20,0)->>'total')::int,2,'pending filter before count');
+select is((purchase_search_page(current_setting('test.tenant')::uuid,'','registered','date','desc',20,0)->>'total')::int,1,'registered filter');
+select is(purchase_search_page(current_setting('test.tenant')::uuid,'','registered','date','desc',20,0)->'rows'->0->>'item_id',current_setting('test.item'),'linked item exposed');
+select is((purchase_search_page(current_setting('test.tenant')::uuid,'','registered','date','desc',20,0)->'rows'->0->>'sale_price_ore')::bigint,22000::bigint,'sale price stays distinct from cost');
+select is(purchase_search_page(current_setting('test.tenant')::uuid,'','all','price','asc',1,0)->'rows'->0->>'id',current_setting('test.p2'),'missing sale prices last');
+select is((purchase_search_page(current_setting('test.tenant')::uuid,'CHAIR','registered','date','desc',20,0)->>'total')::int,1,'case insensitive search intersects status');
+select is((purchase_search_page(current_setting('test.tenant')::uuid,'receipt c','all','date','desc',20,0)->>'total')::int,1,'evidence is searchable');
+select is((purchase_search_page(current_setting('test.tenant')::uuid,(select 'P-'||reference from purchase_receipts where id=current_setting('test.p2')::uuid),'all','date','desc',20,0)->>'total')::int,1,'printable reference search');
+select is((purchase_search_page(current_setting('test.tenant')::uuid,'%','all','date','desc',20,0)->>'total')::int,0,'wildcards stay literal');
+select is(jsonb_array_length(purchase_search_page(current_setting('test.tenant')::uuid,'','all','date','desc',20,99999)->'rows'),0,'oversized page still returns a count without rows');
+select throws_like($$select purchase_search_page(current_setting('test.tenant')::uuid,'','bad','date','desc',20,0)$$,'%INVALID_INPUT%','unknown status rejected');
+select throws_like($$select purchase_search_page(current_setting('test.tenant')::uuid,'','all','bad','desc',20,0)$$,'%INVALID_INPUT%','unknown sorting rejected');
+select throws_like($$select purchase_search_page(current_setting('test.tenant')::uuid,'','all','date','desc',101,0)$$,'%INVALID_INPUT%','limit bounded');
+select throws_like($$select purchase_search_page(current_setting('test.tenant')::uuid,repeat('x',121),'all','date','desc',20,0)$$,'%INVALID_INPUT%','search bounded');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000001172','readonly');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000001172","role":"authenticated"}';
+select is((purchase_search_page(current_setting('test.tenant')::uuid,'','all','date','desc',20,0)->>'total')::int,3,'readonly can read');
+select throws_ok($$select purchase_search_page(current_setting('test.other')::uuid,'','all','date','desc',20,0)$$,'42501',null,'other store denied');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000001173","role":"authenticated"}';
+select throws_ok($$select purchase_search_page(current_setting('test.tenant')::uuid,'','all','date','desc',20,0)$$,'42501',null,'outsider denied');
+set local role anon;
+select throws_ok($$select purchase_search_page(current_setting('test.tenant')::uuid,'','all','date','desc',20,0)$$,'42501',null,'anonymous denied');
+reset role;
+select is((select prosecdef from pg_proc where oid='public.purchase_search_page(uuid,text,text,text,text,integer,integer)'::regprocedure),false,'read uses invoker RLS');
+select * from finish();
+rollback;

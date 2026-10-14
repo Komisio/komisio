@@ -896,7 +896,8 @@
       "settlePayouts": "Einlieferer abrechnen",
       "updateStoreProfile": "Store-Profil aktualisieren",
       "importSellers": "Einlieferer importieren",
-      "useAgreementDraft": "KI-Vertragsentwurf"
+      "useAgreementDraft": "KI-Vertragsentwurf",
+      "useAccountingDraft": "Kontenvorschläge prüfen"
     },
     "importRows": "Zeilen",
     "openDays": "offene Tage",
@@ -1207,6 +1208,8 @@
     "open": "Artikel öffnen",
     "price": "Angenommener Preis",
     "priceHint": "zum Beispiel 250 oder 250.50. Im Modus pro Artikel muss der Preis dem vom Einlieferer genehmigten entsprechen.",
+    "purchaseSalePrice": "Verkaufspreis",
+    "purchasePriceHint": "zum Beispiel 250 oder 250.50.",
     "priceInvalid": "Geben Sie einen Preis mit bis zu zwei Dezimalstellen ein.",
     "confirm": "Ich bestätige, dass der Store diesen Artikel zu den geltenden Bedingungen annimmt.",
     "accept": "Artikel annehmen",
@@ -1270,7 +1273,8 @@
     "unknownActor": "Name nicht verfügbar",
     "markdownWaiting": "Preissenkung ausstehend",
     "allOwnerships": "Alle Artikel",
-    "ownership": "Eigentum"
+    "ownership": "Eigentum",
+    "createPurchasedItem": "Artikel erstellen"
   },
   "sales": {
     "title": "Verkäufe",
@@ -1606,7 +1610,7 @@
     "net": "netto",
     "gross": "brutto",
     "mapHeading": "Kontenzuordnung",
-    "mapIntro": "Ihr Steuerberater entscheidet, auf welches Konto und welche Seite jeder Tagesabschlussbetrag gebucht wird. Komisio schlägt keine Konten vor. Leer gelassene Beträge werden ausgewiesen, aber nicht exportiert; ein Export wird abgelehnt, wenn der Buchungsbeleg nicht ausgeglichen ist.",
+    "mapIntro": "Beträge Konten und Soll oder Haben zuordnen. KI-Vorschläge mit Ihrer Buchhaltung prüfen. Leere Zeilen werden nicht exportiert. Der Export muss ausgeglichen sein.",
     "account": "Konto",
     "side": "Seite",
     "debit": "Soll",
@@ -1628,10 +1632,10 @@
     },
     "netOf": "netto",
     "vatOf": "MwSt.",
-    "publishMap": "Kontenzuordnung veröffentlichen",
+    "publishMap": "Kontenzuordnung speichern",
     "mapPublished": "Kontenzuordnung veröffentlicht.",
     "mapVersion": "Zuordnungsversion",
-    "noMap": "Noch keine Kontenzuordnung. Ein Inhaber oder Administrator veröffentlicht sie mit den Kontonummern des Steuerberaters.",
+    "noMap": "Noch kein Kontenplan gespeichert.",
     "voucherHeading": "Buchungsbeleg",
     "balanced": "Ausgeglichen",
     "unbalanced": "Nicht ausgeglichen",
@@ -1649,8 +1653,10 @@
     "views": {
       "days": "Tagesabschlüsse",
       "reconciliation": "Abstimmung",
-      "settings": "Konten und Integrationen",
-      "planning": "Übertragung planen"
+      "settings": "Einstellungen",
+      "planning": "Übertragung planen",
+      "accounts": "Kontenzuordnung",
+      "exports": "Exporte"
     },
     "mapMissingLink": "Richten Sie Buchhaltungskonten ein, bevor Sie einen Export erstellen.",
     "details": "Details anzeigen",
@@ -1687,7 +1693,28 @@
       "preparedThrough": "Geprüft bis einschließlich",
       "catchingUp": "Weitere Tage werden beim nächsten Lauf vorbereitet"
     },
-    "openExport": "Beleg öffnen"
+    "openExport": "Beleg öffnen",
+    "amount": "Betrag",
+    "groups": {
+      "basic": "Grundkonten",
+      "vat": "Umsatzsteueraufteilung",
+      "fees": "Monatsgebühren"
+    },
+    "ai": {
+      "busy": "Entwurf wird erstellt…",
+      "check": "Entwurf prüfen",
+      "unavailable": "KI ist für dieses Geschäft nicht verfügbar.",
+      "limit": "KI-Nutzungslimit erreicht. Später versuchen oder KI-Einstellungen prüfen.",
+      "failed": "Entwurf konnte nicht erstellt werden. Erneut versuchen.",
+      "pending": "Noch keine Antwort. Denselben Entwurf erneut prüfen.",
+      "retryUse": "Antwort fehlt. Dieselbe Auswahl erneut versuchen.",
+      "create": "Konten mit KI vorschlagen",
+      "review": "KI-Vorschläge – Konten vor dem Speichern prüfen.",
+      "questions": "Außerdem prüfen",
+      "reason": "Begründung",
+      "hint": "KI füllt leere Zeilen. Bestehende Konten bleiben erhalten.",
+      "changed": "Kontenzuordnung oder Einstellungen geändert. Seite neu laden."
+    }
   },
   "communications": {
     "welcomeTitle": "Aktivierungs-E-Mail",
@@ -2041,33 +2068,41 @@
     "intro": "Erfassen Sie Artikel, die das Geschäft kauft und besitzt.",
     "notice": "Einkauf speichern, dann „{accept}“ wählen.",
     "registerHeading": "Einkauf registrieren",
-    "registerHint": "Eine Registrierung pro gekauftem Artikel. Bewahren Sie den Beleg oder die Notiz auf; deren Referenz ist erforderlich.",
+    "registerHint": "Eine Registrierung pro gekauftem Artikel.",
     "price": "Einkaufspreis",
     "priceHint": "zum Beispiel 150 oder 150.50.",
     "priceInvalid": "Geben Sie einen Preis mit bis zu zwei Dezimalstellen ein.",
     "evidence": "Beleg oder Referenz",
     "evidenceHint": "Belegnummer oder eine Notiz, wer es wann verkauft hat. Vermeiden Sie Personenkennnummern.",
     "note": "Artikel / Lieferant (optional)",
-    "marginEligible": "Von einer Privatperson ohne MwSt. gekauft, mit Artikelbeleg (Differenzbesteuerung)",
+    "marginEligible": "Von einer Privatperson ohne Mehrwertsteuer gekauft.",
     "marginHint": "Dies wird jetzt, beim Einkauf, von Ihnen bestätigt. Der MwSt.-Modus des Stores entscheidet, wie es beim Verkauf verwendet wird.",
-    "confirm": "Das Geschäft hat den Artikel gekauft und der Beleg ist korrekt.",
     "register": "Einkauf registrieren",
     "registered": "Der Einkauf ist registriert.",
     "recent": "Erfasste Einkäufe",
     "recentHint": "20 Einkäufe pro Seite, die neuesten zuerst. Blättern Sie, um ältere Einkäufe zu finden.",
     "reference": "Einkauf",
-    "marginYes": "Nachweis zur Differenzbesteuerung bestätigt",
-    "marginNo": "Nachweis zur Differenzbesteuerung nicht bestätigt",
+    "marginYes": "Kauf von einer Privatperson ohne Mehrwertsteuer mit Kaufbeleg: bestätigt",
+    "marginNo": "Kauf von einer Privatperson ohne Mehrwertsteuer mit Kaufbeleg: nicht bestätigt",
     "empty": "Noch keine Einkäufe registriert.",
-    "history": "Verlauf",
+    "history": "Einkaufsliste",
     "newPurchase": "Neuer Einkauf",
     "helpLabel": "Über eigene Einkäufe",
     "marginHelpLabel": "Zur Umsatzsteuer beim Einkauf",
-    "continueToItem": "Weiter zum Verkaufspreis",
+    "continueToItem": "Verkaufspreis festlegen",
     "itemRegistered": "Artikel registriert",
     "prepareItem": "Verkaufspreis festlegen",
     "taxHeading": "Umsatzsteuer",
-    "purchasedAt": "Kaufdatum"
+    "purchasedAt": "Kaufdatum",
+    "search": "Suchen",
+    "searchPlaceholder": "Artikel, Einkaufsnummer oder Beleg",
+    "status": "Status",
+    "statusAll": "Alle Einkäufe",
+    "statusPending": "Preis fehlt",
+    "statusRegistered": "Artikel erstellt",
+    "description": "Artikel / Lieferant",
+    "showing": "{from}–{to} von {total} Einkäufen",
+    "noMatches": "Keine Einkäufe entsprechen der Suche."
   },
   "sellerPortal": {
     "handovers": "Abgabe ankündigen",
@@ -3742,10 +3777,10 @@
   },
   "inventoryImport": {
     "title": "Artikel importieren",
-    "helpLabel": "Hilfe zur Warendatei",
-    "helpFile": "Verwenden Sie die CSV-Vorlage. Behalten Sie die Spaltenüberschriften bei und vergeben Sie je Artikel eine eindeutige Referenz.",
-    "helpSeller": "Der Verkäufer muss bereits in Komisio erfasst sein. Verwenden Sie seine E-Mail oder Komisio-ID; Namen werden nicht abgeglichen.",
-    "helpTerms": "Artikel werden als neue Annahmen zu aktuellen Bedingungen erfasst. Jede Quellreferenz wird nur einmal importiert.",
+    "helpLabel": "Über den Artikelimport",
+    "helpFile": "Aus einer Datei: Vorlage herunterladen und für jeden Artikel eine Zeile ausfüllen. Überschriften beibehalten und jedem Artikel eine eigene Nummer geben.",
+    "helpSeller": "Legen Sie die Verkäufer zuerst in Komisio an. Tragen Sie ihre E-Mail-Adresse oder Komisio-ID in die Datei ein.",
+    "helpTerms": "Die Artikel werden als neue Einlieferungen zu den aktuellen Bedingungen des Geschäfts erfasst. Jede Artikelnummer in der Datei wird nur einmal importiert.",
     "file": "Warendatei",
     "choose": "Datei auswählen",
     "fileHint": "CSV · bis zu 200 Artikel · Preise in {currency}",
@@ -3781,7 +3816,7 @@
       "ambiguous": "Mehrere Verkäufer haben diese E-Mail. Komisio-ID angeben.",
       "conflict": "Verkäufer-ID und E-Mail stimmen nicht überein."
     },
-    "currentTerms": "Artikel werden als neue Annahmen zu aktuellen Bedingungen erfasst. Jede Quellreferenz wird nur einmal importiert.",
+    "currentTerms": "Die Artikel werden als neue Einlieferungen zu den aktuellen Bedingungen des Geschäfts erfasst. Jede Artikelnummer in der Datei wird nur einmal importiert.",
     "received": "Ich bestätige, dass die Artikel im Geschäft sind.",
     "import": "Importieren",
     "complete": "Import abgeschlossen",
@@ -3802,7 +3837,9 @@
       "REQUEST_CONFLICT": "Der Import konnte nicht abgeschlossen werden. Keine neuen Artikel wurden erfasst.",
       "CURRENCY_MISMATCH": "Die Bedingungen haben sich geändert. Öffnen Sie die Vorschau erneut.",
       "CUSTODY_REQUIRED": "Ich bestätige, dass die Artikel im Geschäft sind."
-    }
+    },
+    "fromFile": "Aus Datei",
+    "fromPos": "Aus Kassensystem"
   },
   "consignmentFees": {
     "title": "Monatsgebühren",
@@ -3970,8 +4007,8 @@
     "skip": "Überspringen",
     "retryInfo": "Die Antwort ist unbestätigt. Prüfen Sie dieselbe Aktion erneut, bevor Sie fortfahren.",
     "helpLabel": "Über den Kassenimport",
-    "helpSource": "Produkte laden und einzeln prüfen. Kassenprodukte werden nicht geändert. Bilder werden nicht kopiert.",
-    "helpLink": "Vorhandene Etiketten bleiben erhalten. Die Verknüpfung gilt für neue Verkäufe nach der Zuordnung. Preise und Bestand vorerst in der Kasse verwalten.",
+    "helpSource": "Aus der Kasse: Artikel abrufen und vor dem Import einzeln prüfen. Bilder werden nicht übernommen.",
+    "helpLink": "Sie können die Artikeletiketten weiterverwenden. Ändern Sie Preise und Bestände in der Kasse. Nur Verkäufe nach dem Import werden an Komisio übertragen.",
     "errors": {
       "IMPORT_CHANGED": "Prüfung abgelaufen. Produkte erneut laden.",
       "IMPORT_SELLER_CHANGED": "Die Verkäuferdaten haben sich geändert. Öffnen Sie die Vorschau erneut.",

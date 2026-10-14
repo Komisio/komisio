@@ -20,7 +20,7 @@ test('a stale account map reloads the current version in place without writing',
   const f = await p2Fixture(email)
   try {
     await f.commit()
-    await page.goto('/intake/accounting?view=settings')
+    await page.goto('/intake/accounting?view=accounts')
     await openAccountingSettings(page)
     const form = page.getByRole('region', {
       name: d.accounting.mapHeading,
@@ -63,7 +63,7 @@ test('a stale account map reloads the current version in place without writing',
     await reload.click()
     await page.waitForLoadState()
     await openAccountingSettings(page)
-    await expect(page).toHaveURL(/\/intake\/accounting\?view=settings$/)
+    await expect(page).toHaveURL(/\/intake\/accounting\?view=accounts$/)
     await expect(form.locator('#account\\:grossOre')).toHaveValue('1930')
     await expect(form.locator('#account\\:grossOre')).toBeEnabled()
     await expect(form).toContainText(`${d.accounting.mapVersion} 1`)

@@ -22,6 +22,7 @@ export function AcceptItemForm({
   d,
   intake,
   leaveUnsaved,
+  compact = false,
 }: {
   tenantId: string
   originKind: OriginKind
@@ -31,6 +32,7 @@ export function AcceptItemForm({
   d: Dictionary['items']
   intake: Dictionary['intake']
   leaveUnsaved: string
+  compact?: boolean
 }) {
   const action = useIntakeAction(intake)
   const router = useRouter()
@@ -82,38 +84,58 @@ export function AcceptItemForm({
     }
   }
   const field = `accept-price-${originId}`
+  const inline = compact && originKind === 'purchase'
   return (
-    <form ref={formRef} onSubmit={submit} onChange={checkDirty}>
+    <form
+      className={inline ? 'purchase-inline' : undefined}
+      ref={formRef}
+      onSubmit={submit}
+      onChange={checkDirty}
+    >
       <fieldset
         className="intake-fields"
         data-draft-readiness
         disabled={!ready || action.busy || action.locked || !!saved}
       >
         <div className="field">
-          <label htmlFor={field}>{d.price}</label>
+          <label htmlFor={field}>
+            {originKind === 'purchase' ? d.purchaseSalePrice : d.price}
+          </label>
           <input
             ref={priceRef}
             id={field}
             name="price"
             aria-invalid={!!priceError || undefined}
-            aria-describedby={`${field}-hint${priceError ? ` ${field}-error` : ''}`}
+            aria-describedby={
+              inline
+                ? priceError
+                  ? `${field}-error`
+                  : undefined
+                : `${field}-hint${priceError ? ` ${field}-error` : ''}`
+            }
             onChange={() => setPriceError('')}
             required
             inputMode="decimal"
             defaultValue={defaultPrice}
             placeholder="250"
           />
-          <small id={`${field}-hint`}>{d.priceHint}</small>
+          {!inline && (
+            <small id={`${field}-hint`}>
+              {originKind === 'purchase' ? d.purchasePriceHint : d.priceHint}
+            </small>
+          )}
           {priceError && (
             <p id={`${field}-error`} role="alert">
               {priceError}
             </p>
           )}
         </div>
-        <label className="intake-confirm">
-          <input type="checkbox" name="confirmed" required />
-          {d.confirm}
-        </label>
+        {!inline && (
+          <label className="intake-confirm">
+            <input type="checkbox" name="confirmed" required />
+            {d.confirm}
+          </label>
+        )}
       </fieldset>
       {action.error && <p role="alert">{action.error}</p>}
       {action.needsReload && (
@@ -126,7 +148,13 @@ export function AcceptItemForm({
           type="submit"
           disabled={!ready || action.busy || action.needsReload}
         >
-          {action.busy ? intake.busy : action.locked ? intake.retry : d.accept}
+          {action.busy
+            ? intake.busy
+            : action.locked
+              ? intake.retry
+              : inline
+                ? d.createPurchasedItem
+                : d.accept}
         </Button>
       )}
       {saved && (

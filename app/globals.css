@@ -12,6 +12,14 @@
   flex-wrap: wrap;
   margin-bottom: 20px;
 }
+.pos-import-source {
+  align-items: flex-end;
+}
+.pos-import-source > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
 .pos-import-toolbar .field {
   margin: 0;
 }
@@ -3330,6 +3338,167 @@ button.text-link:hover:not(:disabled) {
 }
 .purchase-entry form {
   max-width: 640px;
+}
+.purchase-directory {
+  min-width: 0;
+  padding: 20px;
+}
+.purchase-filters {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.purchase-filters .field {
+  margin: 0;
+  min-width: 180px;
+}
+.purchase-filters .field:first-child {
+  flex: 1;
+}
+.purchase-count {
+  margin: 20px 0 12px;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.purchase-table-scroll {
+  position: relative;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.purchase-table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.purchase-table th,
+.purchase-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+  text-align: left;
+}
+.purchase-table th {
+  background: var(--paper);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.purchase-table th a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  text-decoration: none;
+}
+.purchase-table th a:hover {
+  text-decoration: underline;
+}
+.purchase-table tbody tr:hover {
+  background: var(--paper);
+}
+.purchase-table .purchase-numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.purchase-reference,
+.purchase-date {
+  white-space: nowrap;
+}
+.purchase-description {
+  min-width: 130px;
+  max-width: 280px;
+  overflow-wrap: anywhere;
+}
+.purchase-status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+.purchase-status.is-pending {
+  color: #795311;
+  background: #fff4de;
+}
+.purchase-status.is-registered {
+  color: var(--ink);
+  background: #eaf1e7;
+}
+.purchase-sale-cell {
+  min-width: 260px;
+}
+.purchase-item-link {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+}
+.purchase-item-link a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  white-space: nowrap;
+}
+.purchase-inline {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) auto;
+  align-items: start;
+  gap: 8px;
+  margin: 0;
+}
+.purchase-inline .intake-fields,
+.purchase-inline .field {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.purchase-inline .field > label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.purchase-inline input {
+  min-width: 0;
+  width: 100%;
+  height: 44px;
+  padding: 8px 10px;
+  font-variant-numeric: tabular-nums;
+}
+.purchase-inline .btn {
+  min-height: 44px;
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+.purchase-inline > [role='alert'],
+.purchase-inline > [role='status'] {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+.purchase-empty {
+  padding: 24px 0;
+  color: var(--muted);
+}
+@media (max-width: 600px) {
+  .purchase-directory {
+    padding: 12px;
+  }
+  .purchase-filters .field:first-child {
+    flex-basis: 100%;
+  }
+  .purchase-filters .field {
+    flex: 1;
+    min-width: 0;
+  }
 }
 .agreements-workspace {
   display: grid;
@@ -8102,4 +8271,61 @@ button.text-link:hover:not(:disabled) {
 .item-print-dialog select {
   min-width: 0;
   width: 100%;
+}
+
+/* Task-focused accounting: compact summaries, editable groups and optional reasons. */
+.accounting-day-record > summary {
+  min-height: 44px;
+  cursor: pointer;
+}
+.accounting-day-record {
+  padding: 8px 0;
+}
+.account-map-group {
+  border-top: 1px solid var(--line);
+  margin-top: 12px;
+}
+.account-map-group > summary {
+  min-height: 48px;
+  align-content: center;
+  cursor: pointer;
+  font-weight: 600;
+}
+.accounting-ai {
+  margin: 12px 0;
+}
+.accounting-ai-review {
+  padding: 12px 16px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin: 16px 0;
+}
+.accounting-ai-review summary,
+.accounting-ai-reason summary {
+  cursor: pointer;
+  min-height: 44px;
+  align-content: center;
+}
+.accounting-ai-reason {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+  max-width: 60ch;
+}
+.accounting-ai-review p,
+.accounting-ai-reason p {
+  margin: 4px 0;
+}
+.accounting-map-note {
+  color: var(--muted);
+  font-size: 14px;
+}
+#account-map {
+  max-width: 1040px;
+}
+#account-map .account-map-table input,
+#account-map .account-map-table select {
+  min-height: 44px;
+  padding-block: 8px;
 }

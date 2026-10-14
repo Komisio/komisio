@@ -1,7 +1,9 @@
 # Accounting export
 
 Day closes leave Komisio as SIE 4 vouchers under the tenant's own account
-map. Komisio proposes no chart of accounts and no postings.
+map. Owners/admins can request AI suggestions for blank account mappings,
+review and edit them, then explicitly save a new map. Suggestions do not
+create postings or change the store VAT policy.
 
 ## Shape
 
@@ -44,12 +46,32 @@ Fortnox and other Swedish bookkeeping software as it is.
 
 ## Surface
 
-The accounting page has three views. "Day closes" (default): generate a
-close, a voucher preview under each recent close with the balance status and
-any unmapped amounts, the export action, and the list of exports with
-download links and the Fortnox send state. "Reconciliation": the period
-view described below. "Account map and Fortnox": the map form (owner or
-admin) and the Fortnox connection.
+The accounting page separates Day closes, Exports, Reconciliation, Account map,
+and Settings. Day closes reveal each voucher preview on demand. Exports contains
+SIE downloads and Fortnox send/recovery status. Settings contains automatic
+preparation, file export guidance and the Fortnox connection. Older account-map
+links redirect to the dedicated tab.
+
+## AI account suggestions
+
+The explicit suggestion action uses the configured AI provider and shared AI
+credits/quota. The server pins the current map and policy, sends only their
+accounting context, and validates structured output against known amount keys
+and a limited catalog of BAS 2026 account identities. No seller or transaction
+personal data is included. BAS identities are reference data, not an approved
+posting profile: settlement accounts, overlapping totals, returns, missing
+counterentries and responsibility for POS-posted sales still require review.
+
+Attempts and results are immutable and tenant scoped. The low-risk staged
+`useAccountingDraft` operation only authorizes copying suggestions into blank
+editor fields. Existing saved and unsaved mappings are preserved. Publication
+still uses the explicit owner/admin `publishAccountingMap` command. A stale
+map or policy prevents applying a draft; lost responses reuse the same attempt
+and decision IDs. Unknown outcomes cannot trigger a second generation silently.
+The existing export balance check and absolute-amount/fixed-side arithmetic remain.
+
+Reference: [BAS 2026, version 1.1](https://www.bas.se/wp-content/uploads/2026/04/BAS_kontoplan_2026_v2.pdf),
+account identities checked 2026-10-14. AI suggestions are not accountant approval.
 
 ## Automatic preparation
 
@@ -96,6 +118,16 @@ period (current month by default); agents read the full list through
 written; the person acts on the day close, export or send as usual.
 
 ## Verification
+
+`supabase/tests/0315_accounting_ai.test.sql` and
+`0316_accounting_ai_credits.test.sql` cover tenant/role/MFA boundaries,
+immutable output, candidate validation, stale context, credits and absence of
+publication side effects. `scripts/accounting-assistance-race.mjs` covers
+concurrent reservation, completion and decision replay. Unit transport tests
+use synthetic responses; browser tests exercise real engine staging/approval,
+lost replies, preserved unsaved mappings and explicit publication. They do not
+establish real-provider accounting recommendation quality.
+
 
 `supabase/tests/0289_day_close_automation.test.sql` covers scoped access,
 activation boundaries, replay, recent corrections, bounded backlog, revocation

@@ -59,16 +59,13 @@ test('accounting page shows the Fortnox connection state and records a refused s
     await expect(
       fortnox.getByText(d.fortnox.connectionClientMissing, { exact: true }),
     ).toBeVisible()
-    await page.goto('/intake/accounting')
+    await page.goto('/intake/accounting?view=exports')
     const exports = page.getByRole('region', {
       name: d.accounting.exportsHeading,
       exact: true,
     })
     await expect(
       exports.getByText(`${d.accounting.mapVersion} 1`),
-    ).toBeVisible()
-    await expect(
-      exports.getByText(d.accounting.deliveryHint, { exact: true }),
     ).toBeVisible()
     await expect(
       exports.getByText(d.fortnox.sendNeedsConnection, { exact: true }),
@@ -106,7 +103,7 @@ test('accounting page shows the Fortnox connection state and records a refused s
         exact: false,
       }),
     ).toBeVisible()
-    await page.goto('/intake/accounting')
+    await page.goto('/intake/accounting?view=exports')
 
     // The send opens in the engine, fails on the missing configuration, and is recorded.
     await exports
@@ -203,10 +200,12 @@ test('accounting page shows the Fortnox connection state and records a refused s
         await expect(
           helpGuide.getByText(d.helpCenter.guide.managerNeeded),
         ).toBeVisible()
+        await page.goto('/intake/accounting?view=accounts')
+        await expect(page.locator('.accounting-ai')).toHaveCount(0)
         await expect(page.locator('#account-map input:enabled')).toHaveCount(0)
         await expect(page.locator('#account-map input').first()).toBeDisabled()
       }
-      await page.goto('/intake/accounting')
+      await page.goto('/intake/accounting?view=exports')
     }
     await f.asActor(backupOwner, () =>
       f.db.query("select change_member($1,$2,'owner')", [f.tenant, f.actor]),

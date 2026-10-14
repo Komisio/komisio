@@ -47,12 +47,12 @@ test('older purchases remain reachable and can be accepted from their page', asy
     await f.commit()
     await page.setViewportSize({ width: 320, height: 800 })
     await page.goto('/intake/purchases?page=2')
-    const list = page.locator('.intake-list')
-    const rows = list.locator(':scope > li')
+    const list = page.locator('.purchase-table')
+    const rows = list.locator('tbody > tr')
     await expect(rows).toHaveCount(3)
     for (const receipt of ordered.slice(20))
       await expect(
-        list.getByText(`${d.purchases.reference} P-${receipt.reference}`, {
+        list.getByText(`P-${receipt.reference}`, {
           exact: true,
         }),
       ).toBeVisible()
@@ -73,7 +73,7 @@ test('older purchases remain reachable and can be accepted from their page', asy
     await expect(rows).toHaveCount(20)
     for (const receipt of ordered.slice(0, 20))
       await expect(
-        list.getByText(`${d.purchases.reference} P-${receipt.reference}`, {
+        list.getByText(`P-${receipt.reference}`, {
           exact: true,
         }),
       ).toBeVisible()
@@ -88,17 +88,14 @@ test('older purchases remain reachable and can be accepted from their page', asy
     // Existing acceptance from an older receipt remains the same engine path.
     const older = ordered[20]
     const row = rows.filter({
-      has: page.getByText(`${d.purchases.reference} P-${older.reference}`, {
+      has: page.getByText(`P-${older.reference}`, {
         exact: true,
       }),
     })
-    await expect(
-      row.getByLabel(d.items.price, { exact: true }),
-    ).not.toBeVisible()
-    await row.locator('.purchase-accept > summary').click()
-    await row.getByLabel(d.items.price, { exact: true }).fill('250')
-    await row.getByRole('checkbox').check()
-    await row.getByRole('button', { name: d.items.accept, exact: true }).click()
+    await row.getByLabel(d.items.purchaseSalePrice, { exact: true }).fill('250')
+    await row
+      .getByRole('button', { name: d.items.createPurchasedItem, exact: true })
+      .click()
     await expect(
       row.getByRole('link', { name: new RegExp(d.items.open) }),
     ).toBeVisible()
@@ -110,10 +107,9 @@ test('older purchases remain reachable and can be accepted from their page', asy
       [f.tenant, older.id],
     )
     expect(accepted.rows).toHaveLength(1)
-    await expect(row.getByRole('link')).toHaveAttribute(
-      'href',
-      `/intake/items/${accepted.rows[0].id}`,
-    )
+    await expect(
+      row.getByRole('link', { name: d.items.open, exact: true }),
+    ).toHaveAttribute('href', `/intake/items/${accepted.rows[0].id}`)
     // The local confirmation link appears before the refreshed receipt replaces
     // its form. Wait for that replacement before an independent navigation.
     await expect(row.locator('form')).toHaveCount(0)
@@ -145,14 +141,14 @@ test('older purchases remain reachable and can be accepted from their page', asy
         await page.goto('/intake/purchases?page=2')
         await expect(rows).toHaveCount(3)
         await expect(
-          page.getByRole('heading', {
-            name: translated.purchases.recent,
+          page.getByRole('tab', {
+            name: translated.purchases.history,
             exact: true,
           }),
         ).toBeVisible()
         const pager = page
           .getByRole('navigation', {
-            name: translated.purchases.title,
+            name: translated.purchases.history,
             exact: true,
           })
           .first()

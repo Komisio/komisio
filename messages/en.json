@@ -896,7 +896,8 @@
       "settlePayouts": "Settle sellers",
       "updateStoreProfile": "Update the store profile",
       "importSellers": "Import sellers",
-      "useAgreementDraft": "AI agreement draft"
+      "useAgreementDraft": "AI agreement draft",
+      "useAccountingDraft": "Account suggestions for review"
     },
     "importRows": "rows",
     "openDays": "open days",
@@ -1207,6 +1208,8 @@
     "open": "Open item",
     "price": "Accepted price",
     "priceHint": "for example 250 or 250.50. In per-item mode the price must equal the one the seller approved.",
+    "purchaseSalePrice": "Sale price",
+    "purchasePriceHint": "for example 250 or 250.50.",
     "priceInvalid": "Enter a price with up to two decimals.",
     "confirm": "I confirm that the store accepts this item under the terms in force.",
     "accept": "Accept item",
@@ -1270,7 +1273,8 @@
     "unknownActor": "Name unavailable",
     "markdownWaiting": "Markdown pending",
     "allOwnerships": "All items",
-    "ownership": "Ownership"
+    "ownership": "Ownership",
+    "createPurchasedItem": "Create item"
   },
   "sales": {
     "title": "Sales",
@@ -1606,7 +1610,7 @@
     "net": "net",
     "gross": "gross",
     "mapHeading": "Account map",
-    "mapIntro": "Your accountant decides which account and which side each day-close amount goes to. Komisio proposes no accounts. Amounts left empty are reported but not exported; an export is refused when the voucher does not balance.",
+    "mapIntro": "Map amounts to accounts and debit or credit. Review AI suggestions with your accountant. Empty rows are not exported. The export must balance.",
     "account": "Account",
     "side": "Side",
     "debit": "Debit",
@@ -1628,10 +1632,10 @@
     },
     "netOf": "net",
     "vatOf": "VAT",
-    "publishMap": "Publish account map",
+    "publishMap": "Save account map",
     "mapPublished": "Account map published.",
     "mapVersion": "map version",
-    "noMap": "No account map yet. An owner or admin publishes it with the accountant's account numbers.",
+    "noMap": "No saved account map.",
     "voucherHeading": "Voucher",
     "balanced": "Balanced",
     "unbalanced": "Not balanced",
@@ -1649,8 +1653,10 @@
     "views": {
       "days": "Day closes",
       "reconciliation": "Reconciliation",
-      "settings": "Accounts and integrations",
-      "planning": "Plan transfers"
+      "settings": "Settings",
+      "planning": "Plan transfers",
+      "accounts": "Account map",
+      "exports": "Exports"
     },
     "mapMissingLink": "Set up accounting accounts before creating an export.",
     "details": "Show details",
@@ -1687,7 +1693,28 @@
       "preparedThrough": "Checked through",
       "catchingUp": "More days will be prepared on the next run"
     },
-    "openExport": "Open export"
+    "openExport": "Open export",
+    "amount": "Amount",
+    "groups": {
+      "basic": "Basic accounts",
+      "vat": "VAT breakdown",
+      "fees": "Monthly fees"
+    },
+    "ai": {
+      "busy": "Creating draft…",
+      "check": "Check draft",
+      "unavailable": "AI is unavailable for this store.",
+      "limit": "AI usage limit reached. Try later or check AI settings.",
+      "failed": "Unable to create a draft. Try again.",
+      "pending": "No reply yet. Check the same draft again.",
+      "retryUse": "Reply missing. Retry the same choice.",
+      "create": "Suggest accounts with AI",
+      "review": "AI suggestions – check the accounts before saving.",
+      "questions": "Also review",
+      "reason": "Reason",
+      "hint": "AI fills empty rows. Existing accounts are kept.",
+      "changed": "The account map or settings changed. Reload the page."
+    }
   },
   "communications": {
     "welcomeTitle": "Activation email",
@@ -2041,33 +2068,41 @@
     "intro": "Record items purchased and owned by the store.",
     "notice": "Save the purchase, then choose “{accept}”.",
     "registerHeading": "Register a purchase",
-    "registerHint": "One registration per item bought. Keep the receipt or note; its reference is required.",
+    "registerHint": "One registration per item bought.",
     "price": "Purchase price",
     "priceHint": "for example 150 or 150.50.",
     "priceInvalid": "Enter a price with up to two decimals.",
     "evidence": "Receipt or reference",
     "evidenceHint": "Receipt number, or a note of who sold it and when. Avoid personal identity numbers.",
     "note": "Item / supplier (optional)",
-    "marginEligible": "Bought from a private individual without VAT, with item documentation (margin scheme)",
+    "marginEligible": "Bought from a private individual without VAT.",
     "marginHint": "This is attested now, at the purchase, by you. The store's VAT mode decides how it is used at sale.",
-    "confirm": "The store bought this item and the evidence is correct.",
     "register": "Register purchase",
     "registered": "The purchase is registered.",
     "recent": "Registered purchases",
     "recentHint": "20 purchases per page, newest first. Browse to find older purchases.",
     "reference": "Purchase",
-    "marginYes": "Margin-scheme evidence confirmed",
-    "marginNo": "Margin-scheme evidence not confirmed",
+    "marginYes": "Purchase from a private individual without VAT, with documentation: confirmed",
+    "marginNo": "Purchase from a private individual without VAT, with documentation: not confirmed",
     "empty": "No purchases registered yet.",
-    "history": "History",
+    "history": "Purchase list",
     "newPurchase": "New purchase",
     "helpLabel": "About own purchases",
     "marginHelpLabel": "About purchase VAT",
-    "continueToItem": "Continue to selling price",
+    "continueToItem": "Set selling price",
     "itemRegistered": "Item registered",
     "prepareItem": "Set selling price",
     "taxHeading": "VAT",
-    "purchasedAt": "Purchase date"
+    "purchasedAt": "Purchase date",
+    "search": "Search",
+    "searchPlaceholder": "Item, purchase number or receipt",
+    "status": "Status",
+    "statusAll": "All purchases",
+    "statusPending": "Awaiting price",
+    "statusRegistered": "Item created",
+    "description": "Item / supplier",
+    "showing": "Showing {from}–{to} of {total} purchases",
+    "noMatches": "No purchases match your search."
   },
   "sellerPortal": {
     "handovers": "Announce a drop-off",
@@ -3736,10 +3771,10 @@
   },
   "inventoryImport": {
     "title": "Import items",
-    "helpLabel": "Inventory file help",
-    "helpFile": "Use the CSV template. Keep the headers and give every item a unique reference.",
-    "helpSeller": "The seller must already exist in Komisio. Use their email or Komisio seller ID; names are not used for matching.",
-    "helpTerms": "Items are registered as new intakes under current terms. Each source reference is imported only once.",
+    "helpLabel": "About item import",
+    "helpFile": "From a file: download the template and fill in one row per item. Keep the headings and give each item its own number.",
+    "helpSeller": "Add the sellers to Komisio first. Enter the seller’s email address or Komisio ID in the file.",
+    "helpTerms": "Items are added as new consignments under the shop’s current terms. Each item number in the file is imported only once.",
     "file": "Inventory file",
     "choose": "Choose file",
     "fileHint": "CSV · up to 200 items · prices in {currency}",
@@ -3775,7 +3810,7 @@
       "ambiguous": "Several sellers share this email. Enter the Komisio ID.",
       "conflict": "The seller ID and email do not match."
     },
-    "currentTerms": "Items are registered as new intakes under current terms. Each source reference is imported only once.",
+    "currentTerms": "Items are added as new consignments under the shop’s current terms. Each item number in the file is imported only once.",
     "received": "I confirm that the items are in the store.",
     "import": "Import",
     "complete": "Import complete",
@@ -3796,7 +3831,9 @@
       "REQUEST_CONFLICT": "Import could not be completed. No new items were registered.",
       "CURRENCY_MISMATCH": "Terms have changed. Preview the file again.",
       "CUSTODY_REQUIRED": "I confirm that the items are in the store."
-    }
+    },
+    "fromFile": "From file",
+    "fromPos": "From POS"
   },
   "consignmentFees": {
     "title": "Monthly fees",
@@ -3964,8 +4001,8 @@
     "skip": "Skip",
     "retryInfo": "The response is unconfirmed. Check the same action again before continuing.",
     "helpLabel": "About POS import",
-    "helpSource": "Fetch products and review one row at a time. POS products are not changed. Images are not copied.",
-    "helpLink": "Existing labels are kept. Links apply to new sales after linking. Manage prices and stock for these products in the POS for now.",
+    "helpSource": "From your till: fetch the items and check them one at a time before importing. Photos are not included.",
+    "helpLink": "You can keep using the item labels. Change prices and stock levels in your till. Only sales made after the import are transferred to Komisio.",
     "errors": {
       "IMPORT_CHANGED": "The review expired. Fetch products again.",
       "IMPORT_SELLER_CHANGED": "Seller details have changed. Preview the file again.",

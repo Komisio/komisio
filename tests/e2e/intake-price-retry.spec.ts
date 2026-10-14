@@ -31,7 +31,7 @@ for (const failureCode of ['REQUEST_FAILED', 'INVALID_INPUT', 'POLICY_CHANGED'])
                 name: d.purchases.newPurchase,
                 exact: true,
               })
-            : page.locator('.purchase-accept > summary')
+            : page.getByRole('tab', { name: d.purchases.history, exact: true })
         ).click()
         const form = page.locator('form').filter({
           has: page.locator(
@@ -41,7 +41,9 @@ for (const failureCode of ['REQUEST_FAILED', 'INVALID_INPUT', 'POLICY_CHANGED'])
           ),
         })
         const price = form.getByLabel(
-          action === 'registerPurchase' ? d.purchases.price : d.items.price,
+          action === 'registerPurchase'
+            ? d.purchases.price
+            : d.items.purchaseSalePrice,
           { exact: true },
         )
         await price.fill('145,25')
@@ -53,8 +55,7 @@ for (const failureCode of ['REQUEST_FAILED', 'INVALID_INPUT', 'POLICY_CHANGED'])
             .getByLabel(d.purchases.note, { exact: true })
             .fill('Synthetic purchase retry')
           await form.locator('input[name="margin"]').check()
-          await form.locator('input[type="checkbox"][required]').check()
-        } else await form.getByRole('checkbox').check()
+        }
         const requests: Record<string, unknown>[] = []
         let committedId = ''
         let firstStatus = 0
@@ -78,7 +79,7 @@ for (const failureCode of ['REQUEST_FAILED', 'INVALID_INPUT', 'POLICY_CHANGED'])
             name:
               action === 'registerPurchase'
                 ? d.purchases.register
-                : d.items.accept,
+                : d.items.createPurchasedItem,
             exact: true,
           })
           .click()
@@ -184,7 +185,7 @@ for (const action of ['registerPurchase', 'acceptItem'] as const)
               name: d.purchases.newPurchase,
               exact: true,
             })
-          : page.locator('.purchase-accept > summary')
+          : page.getByRole('tab', { name: d.purchases.history, exact: true })
       ).click()
       const form = page.locator('form').filter({
         has: page.locator(
@@ -194,7 +195,9 @@ for (const action of ['registerPurchase', 'acceptItem'] as const)
         ),
       })
       const price = form.getByLabel(
-        action === 'registerPurchase' ? d.purchases.price : d.items.price,
+        action === 'registerPurchase'
+          ? d.purchases.price
+          : d.items.purchaseSalePrice,
         { exact: true },
       )
       await price.fill('100')
@@ -202,8 +205,7 @@ for (const action of ['registerPurchase', 'acceptItem'] as const)
         await form
           .getByLabel(d.purchases.evidence, { exact: true })
           .fill('Synthetic initial evidence')
-        await form.locator('input[type="checkbox"][required]').check()
-      } else await form.getByRole('checkbox').check()
+      }
       const requests: Record<string, unknown>[] = []
       await page.route('**/api/intake', async (route) => {
         const command = route.request().postDataJSON()
@@ -220,7 +222,9 @@ for (const action of ['registerPurchase', 'acceptItem'] as const)
       })
       const save = form.getByRole('button', {
         name:
-          action === 'registerPurchase' ? d.purchases.register : d.items.accept,
+          action === 'registerPurchase'
+            ? d.purchases.register
+            : d.items.createPurchasedItem,
         exact: true,
       })
       await price.fill('12,345')
@@ -283,7 +287,6 @@ for (const action of ['registerPurchase', 'acceptItem'] as const)
         await form
           .getByLabel(d.purchases.evidence, { exact: true })
           .fill('Synthetic next evidence')
-        await form.locator('input[type="checkbox"][required]').check()
         await save.click()
         await expect.poll(() => requests.length).toBe(3)
         expect(requests[2].requestId).not.toBe(requests[1].requestId)

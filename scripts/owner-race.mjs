@@ -3,6 +3,7 @@ import {
   raceSellerAI,
 } from './seller-submission-race.mjs'
 import { raceConsignmentFees } from './consignment-fee-race.mjs'
+import { raceAccountingAssistance } from './accounting-assistance-race.mjs'
 import { raceAgreementAssistance } from './agreement-assistance-race.mjs'
 import { raceSellerAgreement } from './seller-agreement-race.mjs'
 import { raceStocktake } from './stocktake-race.mjs'
@@ -77,6 +78,7 @@ try {
     )
   await raceConsignmentFees({ setup, connectionString: parsed.toString() })
   await raceAgreementAssistance({ setup, connectionString: parsed.toString() })
+  await raceAccountingAssistance({ setup, connectionString: parsed.toString() })
   await raceSellerAgreement({ setup, connectionString: parsed.toString() })
   await raceSellerActivation({ setup, connectionString: parsed.toString() })
   await raceInventoryImport({ setup, connectionString: parsed.toString() })

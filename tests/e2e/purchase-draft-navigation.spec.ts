@@ -61,8 +61,6 @@ test('purchase drafts survive history paging and cancelled item navigation; rest
     await expect(page.locator('.purchase-entry')).toHaveCount(20)
     await page.locator(`a[href="/intake/items/${item}"]`).click()
     await expect.poll(() => warnings).toBe(1)
-    await page.locator('a[href="/intake/items?ownership=store"]').click()
-    await expect.poll(() => warnings).toBe(2)
     await expect(price).toHaveValue('125')
     await expect(evidence).toHaveValue('Synthetic draft receipt identifier')
     await page.getByRole('tab', { name: d.purchases.newPurchase }).click()
@@ -71,7 +69,7 @@ test('purchase drafts survive history paging and cancelled item navigation; rest
     await page.getByRole('tab', { name: d.purchases.history }).click()
     await page.locator(`a[href="/intake/items/${item}"]`).click()
     await expect(page).toHaveURL(`/intake/items/${item}`)
-    expect(warnings).toBe(2)
+    expect(warnings).toBe(1)
     expect(
       (
         await f.db.query(
@@ -102,9 +100,6 @@ test('a lost purchase reply keeps its draft protected and a confirmed retry clea
     const form = page.locator('form').filter({ has: price })
     await price.fill('125')
     await evidence.fill('Synthetic retained receipt')
-    await form
-      .getByRole('checkbox', { name: d.purchases.confirm, exact: true })
-      .check()
     const commands: unknown[] = []
     await page.route('**/api/intake', async (route) => {
       if (route.request().postDataJSON().action !== 'registerPurchase')

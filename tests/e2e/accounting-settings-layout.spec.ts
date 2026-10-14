@@ -14,9 +14,9 @@ test('accounting setup reveals details on demand and preserves deep links', asyn
     await fixture.commit()
     await page.goto('/intake/accounting?view=settings#accounting-systems')
     const provider = page.locator('.accounting-provider-disclosure')
-    const map = page.locator('.accounting-map-disclosure')
+    const map = page.locator('#account-map')
     await expect(provider).not.toHaveAttribute('open', '')
-    await expect(map).not.toHaveAttribute('open', '')
+    await expect(map).toHaveCount(0)
     await expect(
       page.getByText(d.accounting.fileHint, { exact: true }),
     ).toBeVisible()

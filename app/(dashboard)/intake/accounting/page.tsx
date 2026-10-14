@@ -1,3 +1,5 @@
+import { readAccountingDraft } from '@/lib/engine/accounting-assistance'
+import { AccountingLegacyMapLink } from '@/components/intake/accounting-legacy-map-link'
 import { WorkingForm } from '@/components/platform/working-form'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
@@ -33,7 +35,14 @@ import { currentMonthPeriod, economyPeriod } from '@/lib/engine/economy'
 import { openDays, readReconciliation } from '@/lib/engine/reconciliation'
 import { AccountingRoutingPreview } from '@/components/intake/accounting-routing-preview'
 
-const views = ['days', 'reconciliation', 'settings', 'planning'] as const
+const views = [
+  'days',
+  'exports',
+  'reconciliation',
+  'accounts',
+  'settings',
+  'planning',
+] as const
 type View = (typeof views)[number]
 
 /**
@@ -114,11 +123,22 @@ export default async function Accounting({
   }
   const canEditMap = ['owner', 'admin'].includes(active.role)
   const attentionCount = recon ? attention.length : null
+  const aiDraft =
+    view === 'accounts' && canEditMap
+      ? await readAccountingDraft(
+          ctx.client,
+          active.id,
+          ctx.user.id,
+          map.id,
+          typeof query.draft === 'string' && /^[0-9a-f-]{36}$/.test(query.draft)
+            ? query.draft
+            : undefined,
+        )
+      : null
   return (
     <div className="accounting-page">
       <div className="page-heading">
         <h1>{d.title}</h1>
-        {view !== 'settings' && <p>{d.intro}</p>}
       </div>
       <nav className="view-tabs" aria-label={d.viewsLabel}>
         {views
@@ -163,8 +183,10 @@ export default async function Accounting({
         <>
           <div className="accounting-workspace">
             <section className="card intake-form accounting-create">
-              <h2>{d.generateHeading}</h2>
-              <p>{d.generateHint}</p>
+              <FormHelpHeading
+                title={d.generateHeading}
+                help={{ label: d.generateHeading, steps: [d.generateHint] }}
+              />
               {active.role !== 'readonly' ? (
                 <DayCloseForm
                   key={active.id}
@@ -180,7 +202,7 @@ export default async function Accounting({
                 <p>
                   <Link
                     className="text-link"
-                    href="/intake/accounting?view=settings"
+                    href="/intake/accounting?view=accounts"
                   >
                     {d.mapMissingLink}
                   </Link>
@@ -190,12 +212,16 @@ export default async function Accounting({
             <section className="card intake-form" aria-label={d.list}>
               <h2>{d.list}</h2>
               {closes.length === 0 && <p>{d.empty}</p>}
-              {closes.map((c) => (
-                <div key={c.id} className="accounting-record">
-                  <div className="accounting-record-heading">
-                    <h3>{c.close_date}</h3>
-                    <strong>{money(c.gross_ore)}</strong>
-                  </div>
+              {closes.map((c, index) => (
+                <details
+                  key={c.id}
+                  className="accounting-record accounting-day-record"
+                  open={index === 0}
+                >
+                  <summary className="accounting-record-heading">
+                    <strong>{c.close_date}</strong>
+                    <span>{money(c.gross_ore)}</span>
+                  </summary>
                   <p className="accounting-record-meta">
                     {d.sales}: {c.sales_count} · {d.version} {c.version}
                   </p>
@@ -236,95 +262,96 @@ export default async function Accounting({
                       intake={all.intake}
                     />
                   )}
-                </div>
+                </details>
               ))}
-            </section>
-            <section
-              className="card intake-form accounting-exports"
-              aria-label={d.exportsHeading}
-            >
-              <div className="accounting-section-heading">
-                <h2>{d.exportsHeading}</h2>
-                <Link
-                  className="text-link"
-                  href="/intake/accounting?view=settings#accounting-systems"
-                >
-                  {d.systems}
-                </Link>
-              </div>
-              <p>{d.deliveryHint}</p>
-              {exports.length === 0 && <p>{d.noExports}</p>}
-              {exports.map((e) => {
-                const c = closeById.get(e.day_close_id)
-                const send = sends.get(e.id)
-                return (
-                  <div key={e.id} className="accounting-record">
-                    <div className="accounting-record-heading">
-                      <h3>{c ? c.close_date : d.exportsHeading}</h3>
-                      <Link
-                        className="text-link"
-                        href={`/intake/accounting/exports/${e.id}`}
-                      >
-                        {d.openExport}
-                      </Link>
-                      <a
-                        className="btn btn-secondary"
-                        href={`/api/accounting/${e.id}`}
-                      >
-                        {d.download}
-                      </a>
-                    </div>
-                    <p className="accounting-record-meta">
-                      {c ? `${d.version} ${c.version} · ` : ''}
-                      {d.mapVersion} {e.accounting_maps?.version ?? '?'} ·{' '}
-                      {e.voucher.length} {d.lines}
-                    </p>
-                    <details className="accounting-breakdown">
-                      <summary>{d.details}</summary>
-                      <p>
-                        {d.debitTotal} {money(e.debit_ore)} ·{' '}
-                        {new Date(e.created_at).toLocaleString(
-                          intlLocale(ctx.locale),
-                          {
-                            timeZone: 'Europe/Stockholm',
-                            dateStyle: 'medium',
-                            timeStyle: 'short',
-                          },
-                        )}
-                      </p>
-                      {!c && <p>{e.day_close_id}</p>}
-                    </details>
-                    {(fortnox.connected || send) && (
-                      <div className="accounting-delivery">
-                        <h4>Fortnox</h4>
-                        <FortnoxVoucherSend
-                          key={`${e.id}-${send?.id ?? 'none'}-${send?.status ?? 'none'}`}
-                          tenantId={active.id}
-                          exportId={e.id}
-                          send={send ?? null}
-                          connected={fortnox.connected}
-                          canSend={canEditMap}
-                          d={all.fortnox}
-                        />
-                      </div>
-                    )}
-                    {active.role === 'owner' &&
-                      send &&
-                      (send.status === 'pending' ||
-                        (send.status === 'failed' &&
-                          send.error_code === 'FORTNOX_OUTCOME_UNKNOWN')) && (
-                        <FortnoxReconcile
-                          tenantId={active.id}
-                          send={send}
-                          d={all.fortnox}
-                        />
-                      )}
-                  </div>
-                )
-              })}
             </section>
           </div>
         </>
+      )}
+      {view === 'exports' && (
+        <section
+          className="card intake-form accounting-exports"
+          aria-label={d.exportsHeading}
+        >
+          <div className="accounting-section-heading">
+            <h2>{d.exportsHeading}</h2>
+            <Link
+              className="text-link"
+              href="/intake/accounting?view=settings#accounting-systems"
+            >
+              {d.systems}
+            </Link>
+          </div>
+          {exports.length === 0 && <p>{d.noExports}</p>}
+          {exports.map((e) => {
+            const c = closeById.get(e.day_close_id)
+            const send = sends.get(e.id)
+            return (
+              <div key={e.id} className="accounting-record">
+                <div className="accounting-record-heading">
+                  <h3>{c ? c.close_date : d.exportsHeading}</h3>
+                  <Link
+                    className="text-link"
+                    href={`/intake/accounting/exports/${e.id}`}
+                  >
+                    {d.openExport}
+                  </Link>
+                  <a
+                    className="btn btn-secondary"
+                    href={`/api/accounting/${e.id}`}
+                  >
+                    {d.download}
+                  </a>
+                </div>
+                <p className="accounting-record-meta">
+                  {c ? `${d.version} ${c.version} · ` : ''}
+                  {d.mapVersion} {e.accounting_maps?.version ?? '?'} ·{' '}
+                  {e.voucher.length} {d.lines}
+                </p>
+                <details className="accounting-breakdown">
+                  <summary>{d.details}</summary>
+                  <p>
+                    {d.debitTotal} {money(e.debit_ore)} ·{' '}
+                    {new Date(e.created_at).toLocaleString(
+                      intlLocale(ctx.locale),
+                      {
+                        timeZone: 'Europe/Stockholm',
+                        dateStyle: 'medium',
+                        timeStyle: 'short',
+                      },
+                    )}
+                  </p>
+                  {!c && <p>{e.day_close_id}</p>}
+                </details>
+                {(fortnox.connected || send) && (
+                  <div className="accounting-delivery">
+                    <h4>Fortnox</h4>
+                    <FortnoxVoucherSend
+                      key={`${e.id}-${send?.id ?? 'none'}-${send?.status ?? 'none'}`}
+                      tenantId={active.id}
+                      exportId={e.id}
+                      send={send ?? null}
+                      connected={fortnox.connected}
+                      canSend={canEditMap}
+                      d={all.fortnox}
+                    />
+                  </div>
+                )}
+                {active.role === 'owner' &&
+                  send &&
+                  (send.status === 'pending' ||
+                    (send.status === 'failed' &&
+                      send.error_code === 'FORTNOX_OUTCOME_UNKNOWN')) && (
+                    <FortnoxReconcile
+                      tenantId={active.id}
+                      send={send}
+                      d={all.fortnox}
+                    />
+                  )}
+              </div>
+            )
+          })}
+        </section>
       )}
       {view === 'reconciliation' && (
         <div className="accounting-reconciliation">
@@ -332,8 +359,13 @@ export default async function Accounting({
             className="card intake-form"
             aria-label={all.reconciliation.heading}
           >
-            <h2>{all.reconciliation.heading}</h2>
-            <p>{d.reconciliationHint}</p>
+            <FormHelpHeading
+              title={all.reconciliation.heading}
+              help={{
+                label: all.reconciliation.heading,
+                steps: [d.reconciliationHint],
+              }}
+            />
             <WorkingForm className="economy-period-form">
               <input type="hidden" name="view" value="reconciliation" />
               {!requestedPeriod.success && (query.from || query.to) && (
@@ -423,9 +455,34 @@ export default async function Accounting({
           </section>
         </div>
       )}
+      {view === 'accounts' && (
+        <section
+          id="account-map"
+          className="card intake-form"
+          aria-label={d.mapHeading}
+        >
+          <FormHelpHeading
+            title={d.mapHeading}
+            help={{ label: d.setup.mapHelp, steps: [d.mapIntro] }}
+          />
+          <AccountMapForm
+            key={`${active.id}-${map.id ?? 'none'}`}
+            tenantId={active.id}
+            current={map}
+            editable={canEditMap}
+            d={d}
+            vatModes={vatModes}
+            intake={all.intake}
+            leaveUnsaved={all.leaveUnsaved}
+            locale={ctx.locale}
+            aiDraft={aiDraft}
+          />
+        </section>
+      )}
       {view === 'settings' && (
         <>
           <div className="accounting-settings">
+            <AccountingLegacyMapLink />
             {['owner', 'admin'].includes(active.role) && (
               <div id="day-close-automation">
                 <AutomationSwitch
@@ -473,7 +530,10 @@ export default async function Accounting({
               <div className="card intake-form accounting-file-option">
                 <h3>{d.fileOption}</h3>
                 <p>{d.fileHint}</p>
-                <Link className="text-link" href="/intake/accounting">
+                <Link
+                  className="text-link"
+                  href="/intake/accounting?view=exports"
+                >
                   {d.exportsHeading}
                 </Link>
               </div>
@@ -554,42 +614,7 @@ export default async function Accounting({
                 </div>
               </details>
             </section>
-            <details className="card accounting-setting-disclosure accounting-map-disclosure">
-              <summary>
-                <span>
-                  <strong>{d.mapHeading}</strong>
-                  <small>{d.setup.mapHint}</small>
-                </span>
-                <span className="accounting-setup-status">
-                  {map.id
-                    ? `${d.mapVersion} ${map.version}`
-                    : d.setup.mapMissing}
-                </span>
-              </summary>
-              <section
-                id="account-map"
-                className="card intake-form"
-                aria-label={d.mapHeading}
-              >
-                <FormHelpHeading
-                  title={d.mapHeading}
-                  help={{ label: d.setup.mapHelp, steps: [d.mapIntro] }}
-                />
-                <Link className="text-link" href="#accounting-systems">
-                  {d.systems} ↑
-                </Link>
-                <AccountMapForm
-                  key={`${active.id}-${map.id ?? 'none'}`}
-                  tenantId={active.id}
-                  current={map}
-                  editable={canEditMap}
-                  d={d}
-                  vatModes={vatModes}
-                  intake={all.intake}
-                  leaveUnsaved={all.leaveUnsaved}
-                />
-              </section>
-            </details>
+
             <div className="accounting-setup-guidance">
               <Link
                 className="text-link"
@@ -597,7 +622,6 @@ export default async function Accounting({
               >
                 {all.accountingRouting.simple.entry} →
               </Link>
-              <p>{d.setup.planningHint}</p>
             </div>
           </div>
         </>

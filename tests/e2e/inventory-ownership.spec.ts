@@ -193,9 +193,6 @@ test('new purchase stays in its tab and explicitly continues to the saved receip
       page.getByLabel(d.purchases.price, { exact: true }),
     ).toHaveValue('125')
     await page
-      .getByRole('checkbox', { name: d.purchases.confirm, exact: true })
-      .check()
-    await page
       .getByRole('button', { name: d.purchases.register, exact: true })
       .click()
     await expect(
@@ -212,20 +209,26 @@ test('new purchase stays in its tab and explicitly continues to the saved receip
       exact: true,
     })
     await expect(history).toBeVisible()
-    await history.getByLabel(d.items.price, { exact: true }).fill('250')
-    await history.getByRole('checkbox').check()
+    const salePrice = history.getByLabel(d.items.purchaseSalePrice, {
+      exact: true,
+    })
+    await expect(
+      history.getByText(d.items.priceHint, { exact: true }),
+    ).toHaveCount(0)
+    await salePrice.fill('250')
     await history
-      .getByRole('button', { name: d.items.accept, exact: true })
+      .getByRole('button', { name: d.items.createPurchasedItem, exact: true })
       .click()
     await expect(
       history.getByRole('link', { name: new RegExp(d.items.open) }),
     ).toBeVisible()
     const items = (
-      await f.db.query('select ownership from items where tenant_id=$1', [
-        f.tenant,
-      ])
+      await f.db.query(
+        'select ownership,seller_id from items where tenant_id=$1',
+        [f.tenant],
+      )
     ).rows
-    expect(items).toEqual([{ ownership: 'store' }])
+    expect(items).toEqual([{ ownership: 'store', seller_id: null }])
   } finally {
     await f.close()
   }

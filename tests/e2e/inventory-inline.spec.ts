@@ -4,6 +4,52 @@ import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 
+test('blank row space opens the item while row controls keep their own actions', async ({
+  page,
+}) => {
+  const email = `row-open-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomUUID()}`)
+  const f = await p2Fixture(email)
+  try {
+    const item = await f.item('Synthetic clickable item')
+    await f.commit()
+    await page.goto('/intake/items')
+    const row = page.locator('.inventory-row')
+    await row.getByRole('checkbox').check()
+    await expect(row.getByRole('checkbox')).toBeChecked()
+    await expect(page).toHaveURL(/\/intake\/items$/)
+    await row.locator('.inventory-item-link').click()
+    await expect(
+      row.getByRole('textbox', { name: d.items.item, exact: true }),
+    ).toBeFocused()
+    await page.keyboard.press('Escape')
+    await row
+      .getByRole('button', {
+        name: d.items.ownershipKinds.consignment,
+        exact: true,
+      })
+      .click()
+    await expect(page.getByRole('tooltip')).toBeVisible()
+    await page.getByRole('tooltip').click()
+    await expect(page).toHaveURL(/\/intake\/items$/)
+    await page.keyboard.press('Escape')
+    // This is the empty photo/indicator cell between the title and category.
+    await row.locator('td').nth(1).click()
+    await expect(page).toHaveURL(new RegExp(`/intake/items/${item}$`))
+    await page.goBack()
+    const seller = row.locator('.inventory-seller')
+    const sellerHref = await seller.getAttribute('href')
+    await seller.click()
+    await expect(page).toHaveURL(new RegExp(`${sellerHref}$`))
+    await page.goBack()
+    await row.locator('.inventory-open-item').focus()
+    await page.keyboard.press('Enter')
+    await expect(page).toHaveURL(new RegExp(`/intake/items/${item}$`))
+  } finally {
+    await f.close()
+  }
+})
+
 test('inventory workspace selects page items and saves cells with safe retry and conflict handling', async ({
   page,
 }, testInfo) => {
@@ -66,7 +112,7 @@ test('inventory workspace selects page items and saves cells with safe retry and
     await expect(dialog).toContainText('Synthetic inline item')
     await dialog
       .getByLabel(d.quickIntake.itemType, { exact: true })
-      .selectOption('sweater')
+      .selectOption('jacket')
     await dialog
       .getByLabel(d.itemWorkflow.group, { exact: true })
       .selectOption(group)
@@ -116,7 +162,7 @@ test('inventory workspace selects page items and saves cells with safe retry and
     await name.click()
     await page.keyboard.press('Tab')
     await expect(
-      row.getByRole('textbox', { name: d.quickIntake.category, exact: true }),
+      row.getByRole('combobox', { name: d.quickIntake.category, exact: true }),
     ).toBeFocused()
     await page.keyboard.press('Escape')
     expect(commands).toHaveLength(0)
@@ -145,8 +191,8 @@ test('inventory workspace selects page items and saves cells with safe retry and
       })
       .click()
     await row
-      .getByRole('textbox', { name: d.quickIntake.category, exact: true })
-      .fill('Outerwear')
+      .getByRole('combobox', { name: d.quickIntake.category, exact: true })
+      .selectOption('Clothing')
     // Clicking the next cell while blur saves queues that editor, preserving the new snapshot.
     await row
       .getByRole('button', {
@@ -157,9 +203,9 @@ test('inventory workspace selects page items and saves cells with safe retry and
       .click()
     await row
       .getByRole('combobox', { name: d.quickIntake.itemType, exact: true })
-      .selectOption('sweater')
+      .selectOption('jacket')
     await page.keyboard.press('Tab')
-    await expect(row).toContainText('Outerwear')
+    await expect(row).toContainText('Kläder')
     await expect(
       row.getByRole('combobox', { name: d.itemWorkflow.group, exact: true }),
     ).toBeFocused()

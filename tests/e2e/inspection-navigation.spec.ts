@@ -184,7 +184,7 @@ test('inspection edits survive paging and cancelled evidence, shell and unload n
     for (const link of [
       evidence,
       page.locator('.mobile-nav a[href="/intake/items"]'),
-      page.locator('.bag-received-items li a').first(),
+      page.locator('.bag-inventory .inventory-open-item').first(),
     ]) {
       await confirmLink(page, link, false, d.inspection.leaveDraft)
       await expect(description).toHaveValue('Synthetic unsaved edit')

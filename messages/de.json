@@ -249,7 +249,7 @@
         "Speichern Sie den Artikel."
       ]
     },
-    "typeIntro": "Der Artikeltyp wird für das gesamte Geschäft gespeichert und für diesen Artikel ausgewählt.",
+    "typeIntro": "Wählen Sie die Felder für diesen Artikeltyp.",
     "typeFieldsHint": "Wählen Sie einen ähnlichen Artikeltyp, um dieselben Fragen zu verwenden, etwa zu Größe und Material.",
     "typeFieldsLegend": "Felder auswählen"
   },
@@ -448,7 +448,8 @@
     "store": "Store und Plan",
     "printing": "Drucker und Etiketten",
     "connectors": "KI-Assistenten",
-    "credits": "KI-Credits"
+    "credits": "KI-Credits",
+    "vocabulary": "Artikeleinstellungen"
   },
   "tenantIdentity": "Store-Identität",
   "tenantId": "Store-ID",
@@ -4180,5 +4181,104 @@
     "terms": "Bedingungen",
     "print": "Drucken",
     "editHint": "Zum Bearbeiten auf den Stift klicken. Änderungen werden beim Verlassen des Feldes gespeichert."
+  },
+  "vocabularySettings": {
+    "title": "Artikeleinstellungen",
+    "intro": "Legen Sie fest, wie die Artikel gruppiert und beschrieben werden.",
+    "types": "Artikeltypen",
+    "attributes": "Merkmale",
+    "searchTypes": "Artikeltyp suchen",
+    "searchFields": "Merkmal suchen",
+    "name": "Name",
+    "fields": "Felder bei der Annahme",
+    "kind": "Antworttyp",
+    "own": "Ladeneigen",
+    "standard": "Standard",
+    "noMatches": "Keine Treffer.",
+    "createType": "Artikeltyp erstellen",
+    "addAttribute": "Merkmal hinzufügen",
+    "createAttribute": "Merkmal erstellen",
+    "unit": "Einheit (optional)",
+    "options": "Antwortoptionen",
+    "optionsHint": "Eine Option pro Zeile.",
+    "invalid": "Geben Sie einen Namen ein und prüfen Sie die Felder. Antwortoptionen müssen unterschiedlich sein.",
+    "saved": "{name} wurde gespeichert.",
+    "leave": "Sie haben ungespeicherte Änderungen. Seite verlassen?",
+    "kinds": {
+      "text": "Text",
+      "number": "Zahl",
+      "choice": "Aus Liste wählen",
+      "boolean": "Ja/nein"
+    },
+    "uncertain": "Das Speichern konnte nicht bestätigt werden. Versuchen Sie es mit denselben Angaben erneut.",
+    "refused": "Speichern nicht möglich. Brechen Sie ab und prüfen Sie Laden und Berechtigungen.",
+    "groups": "Sortimentsgruppen",
+    "searchGroups": "Sortimentsgruppe suchen",
+    "groupsHint": "Eigene Gruppen, zum Beispiel Premium oder Vintage.",
+    "noGroups": "Noch keine Sortimentsgruppen.",
+    "manageGroups": "Sortimentsgruppen verwalten",
+    "nameRequired": "Geben Sie einen Namen ein und prüfen Sie die Felder.",
+    "groupExists": "Eine Sortimentsgruppe mit diesem Namen existiert bereits.",
+    "categories": "Kategorien",
+    "searchCategories": "Kategorie suchen",
+    "addCategory": "Neue Kategorie",
+    "createCategory": "Kategorie erstellen",
+    "categoryExists": "Eine Kategorie mit diesem Namen existiert bereits.",
+    "translations": "Übersetzungen (optional)",
+    "languages": "Sprachen",
+    "noCategories": "Noch keine Kategorien."
+  },
+  "settingsHelp": {
+    "label": "Hilfe",
+    "policy": [
+      "Legen Sie fest, wie Sie Artikel annehmen, Preise setzen und Verkaufserlöse mit Einlieferern teilen.",
+      "Hier finden Sie auch Vertragsanforderungen, Verkaufszeiträume und Umsatzsteuereinstellungen. Prüfen und veröffentlichen Sie Ihre Änderungen."
+    ],
+    "profile": [
+      "Tragen Sie Adresse, Kontaktdaten und Öffnungszeiten des Geschäfts ein.",
+      "Beschreiben Sie, welche Artikel Sie annehmen, und wählen Sie die Sprache des Geschäfts, damit Einlieferer passende Informationen erhalten."
+    ],
+    "vocabulary": [
+      "Eine Kategorie ist eine grobe Einteilung, etwa Kleidung. Ein Artikeltyp ist genauer, etwa Jacke.",
+      "Attribute beschreiben den Artikel, etwa Größe und Farbe. Sortimentsgruppen sind eigene Zusammenstellungen, etwa Vintage.",
+      "Beginnen Sie mit häufig genutzten Auswahlmöglichkeiten. Hier erstellen Sie Auswahlmöglichkeiten für Artikel, nicht die Artikel selbst. Jeder Tab enthält weitere Beispiele."
+    ],
+    "store": [
+      "Hier ändern Sie den Namen des Geschäfts und sehen Ihr Abonnement.",
+      "Prüfen Sie hier Tarif und Abrechnung. Adresse und Öffnungszeiten finden Sie im Geschäftsprofil."
+    ],
+    "printing": [
+      "Laden Sie zuerst Komisio Print herunter und installieren Sie es auf dem Computer für den Etikettendrucker.",
+      "Registrieren Sie den Drucker und verbinden Sie den Computer mit dem Kopplungscode. Wählen Sie dann die zur Rolle passende Etikettengröße.",
+      "Hier können Sie auch Etiketten anpassen und Druckaufträge verfolgen."
+    ],
+    "credits": [
+      "Sehen Sie das KI-Guthaben des Geschäfts und kaufen Sie bei Bedarf mehr.",
+      "Guthaben wird für KI-Funktionen wie Textvorschläge verwendet. Hier können Sie den Verbrauch verfolgen."
+    ],
+    "connectors": [
+      "Verbinden Sie einen KI-Assistenten, wenn Sie ihn mit Komisio nutzen möchten.",
+      "Prüfen Sie seine Berechtigungen. Hier sehen und trennen Sie die Verbindungen."
+    ],
+    "categories": [
+      "Erstellen Sie grobe Kategorien wie Kleidung, Wohnen oder Bücher, um Artikel zu ordnen.",
+      "Geben Sie den Kategorienamen ein. Ergänzen Sie bei Bedarf Übersetzungen; eigene Namen werden nicht automatisch übersetzt.",
+      "Die Kategorie wird am Artikel gewählt. Eine neue Kategorie verändert keine bestehenden Artikel."
+    ],
+    "types": [
+      "Erstellen Sie Artikeltypen wie Jacke oder Hose. Der Typ bestimmt, welche Angaben bei der Annahme ausgefüllt werden.",
+      "Benennen Sie den Typ und wählen Sie Attribute wie Größe und Material. Fragen können von einem ähnlichen Typ kopiert werden.",
+      "Fehlt ein Attribut? Erstellen Sie es zuerst im Tab Attribute und wählen Sie es beim Erstellen des Artikeltyps aus."
+    ],
+    "attributes": [
+      "Attribute sind Fragen zum Artikel, etwa Größe, Farbe, Marke, Material und Zustand. Die Antwort, etwa M oder blau, wird am Artikel eingetragen.",
+      "Wählen Sie Text für freie Antworten, Zahlen für Maße, eine Liste für feste Optionen oder Ja/Nein. Für Maße können Sie eine Einheit wie cm angeben.",
+      "Wählen Sie das erstellte Attribut beim Erstellen eines Artikeltyps aus, damit die Frage bei der Annahme erscheint."
+    ],
+    "groups": [
+      "Sortimentsgruppen sind optionale eigene Zusammenstellungen wie Vintage, Premium oder Saison.",
+      "Eine Gruppe kann verschiedene Artikeltypen enthalten. Eine Vintagejacke kann zur Kategorie Kleidung, zum Typ Jacke und zur Sortimentsgruppe Vintage gehören.",
+      "Erstellen Sie die Gruppe hier und wählen Sie sie bei einem oder mehreren Artikeln. Preise und Bedingungen ändern sich dadurch nicht automatisch."
+    ]
   }
 }

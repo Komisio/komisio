@@ -8,7 +8,10 @@ select no_plan();
 -- version, a store's own socket keeps binding to its own version, a
 -- historical version-1 observation reads back unchanged, and a seller under a
 -- German agreement sees the German label with the same stored value.
--- Everything runs through the engine's own commands; no trigger is touched.
+-- Model stores created before starter-vocabulary initialization. Only the
+-- new defaults trigger is disabled in this rolled-back fixture transaction;
+-- authorization, immutable-history and all domain triggers remain enabled.
+alter table public.tenants disable trigger seed_store_vocabulary;
 insert into auth.users(id,email,email_confirmed_at) values
  ('f0000000-0000-4000-8000-000000000c01','bind-owner@example.test',now()),
  ('f0000000-0000-4000-8000-000000000c02','bind-seller@example.test',now()),

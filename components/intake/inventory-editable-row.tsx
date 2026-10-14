@@ -1,5 +1,5 @@
 'use client'
-import { type ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { ArrowUpRight, Check, LoaderCircle } from 'lucide-react'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import type { DirectoryItem } from '@/lib/engine/item-directory'
@@ -16,6 +16,7 @@ export function InventoryEditableRow({
   write,
   types,
   groups,
+  categories,
   d,
   indicators,
   children,
@@ -25,23 +26,70 @@ export function InventoryEditableRow({
   write: boolean
   types: { id: string; name: string }[]
   groups: { id: string; name: string }[]
+  categories: { id: string; name: string }[]
   d: Dictionary
   indicators: ReactNode
   children: ReactNode
 }) {
   const t = d.itemWorkflow,
     w = d.inventoryWorkspace
-  const { selected } = useInventorySelection()
+  const { selected, updateItem } = useInventorySelection()
   const { cell, current, edit, busy, state, message, retry } = useItemQuickEdit(
-    { item, tenantId, write, d },
+    { item, tenantId, write, d, warningScope: 'inventory-table' },
   )
+  // Selection actions must use the confirmed edit even before the server
+  // refresh returns, including its optimistic concurrency version.
+  useEffect(() => {
+    updateItem({
+      id: item.id,
+      title: current.title,
+      category: current.category,
+      classification: {
+        id: item.id,
+        version: current.version,
+        itemType: current.itemType || null,
+        assortment: current.assortment || null,
+      },
+    })
+  }, [
+    item.id,
+    current.title,
+    current.category,
+    current.version,
+    current.itemType,
+    current.assortment,
+    updateItem,
+  ])
   return (
     <tr
-      className={`inventory-row${edit ? ' inventory-row-editing' : ''}`}
+      className={`inventory-row inventory-row-open${edit ? ' inventory-row-editing' : ''}`}
       data-selected={selected.includes(item.id) || undefined}
       aria-busy={busy || undefined}
+      onClick={(event) => {
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey ||
+          edit ||
+          busy ||
+          !(event.target instanceof Element) ||
+          !event.currentTarget.contains(event.target) ||
+          event.target.closest(
+            'a, button, input, select, textarea, label, summary, dialog, [role="button"], [role="link"], [contenteditable="true"], [data-row-control]',
+          ) ||
+          window.getSelection()?.toString()
+        )
+          return
+        // Reuse the real link's navigation guard, loading feedback and destination.
+        event.currentTarget
+          .querySelector<HTMLAnchorElement>('.inventory-open-item')
+          ?.click()
+      }}
     >
-      <td>
+      <td data-row-control>
         <InventorySelectItem
           id={item.id}
           label={`${d.labelSheets.title}: ${current.title || item.id}`}
@@ -106,7 +154,7 @@ export function InventoryEditableRow({
         )}
       </th>
       <td>{indicators}</td>
-      <td>{cell('category', d.quickIntake.category)}</td>
+      <td>{cell('category', d.quickIntake.category, categories)}</td>
       <td>{cell('itemType', d.quickIntake.itemType, types)}</td>
       <td>{cell('assortment', t.group, groups)}</td>
       {children}

@@ -1,6 +1,15 @@
 .inventory-table-scroll {
   position: relative;
 }
+.inventory-row-open {
+  cursor: pointer;
+}
+.inventory-table .inventory-row-open:not([data-selected]):hover > * {
+  background: var(--mint);
+}
+.inventory-row-open > [data-row-control] {
+  cursor: default;
+}
 .inventory-table input.inventory-checkbox {
   width: 17px;
   height: 17px;
@@ -232,4 +241,12 @@
 }
 .inventory-table .inventory-row[data-selected] > * {
   background: color-mix(in srgb, var(--mint) 45%, var(--white));
+}
+.bag-inventory {
+  margin-top: 24px;
+}
+.bag-inventory > h2 {
+  font-size: 20px;
+  padding: 24px 20px 16px;
+  margin: 0;
 }

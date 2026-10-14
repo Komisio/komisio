@@ -3,7 +3,6 @@ import { useWorkActivity } from '@/components/platform/work-activity'
 import { ReceivingPanel } from './receiving-panel'
 import { QuickSellerAgreement } from './quick-seller-agreement'
 import type { AgreementSummary } from './seller-agreement-fields'
-import { CreateItemType } from './create-item-type'
 import { useEffect, useRef, useState } from 'react'
 import {
   NavigationLink as Link,
@@ -159,8 +158,7 @@ export function QuickReception({
   sellersTotal = sellers.length,
   printers,
   assistance,
-  vocabulary: initialVocabulary,
-  canManageTypes = false,
+  vocabulary,
   lang,
   d,
   bagId,
@@ -173,7 +171,6 @@ export function QuickReception({
   printers: Printer[]
   assistance: boolean
   vocabulary: AttributeVocabulary
-  canManageTypes?: boolean
   lang: string
   d: Dictionary['quickIntake']
   bagId?: string
@@ -203,19 +200,6 @@ export function QuickReception({
       document.getElementById('quick-seller-evidence')?.focus(),
     )
   }
-  const [createdTypes, setCreatedTypes] = useState<
-    AttributeVocabulary['types']
-  >([])
-  const vocabulary = {
-    ...initialVocabulary,
-    types: [
-      ...initialVocabulary.types.filter(
-        (t) => !createdTypes.some((c) => c.slug === t.slug),
-      ),
-      ...createdTypes,
-    ],
-  }
-  const [typeEditorOpen, setTypeEditorOpen] = useState(false)
   const [seller, setSeller] = useState<Seller | null>(
       bagId ? (sellers[0] ?? null) : null,
     ),
@@ -592,8 +576,7 @@ export function QuickReception({
   }
 
   async function submit() {
-    if (running.current || !sellerId || photoUnresolved || typeEditorOpen)
-      return
+    if (running.current || !sellerId || photoUnresolved) return
     // A lost reply is retried with the very command that was sent, never with
     // whatever the fields hold now.
     let current = attempt.current
@@ -1048,28 +1031,6 @@ export function QuickReception({
                         <option key={t.slug} value={labelOf(t, lang)} />
                       ))}
                     </datalist>
-                    {canManageTypes && (
-                      <CreateItemType
-                        tenantId={tenantId}
-                        vocabulary={vocabulary}
-                        selected={itemType}
-                        lang={lang}
-                        d={d}
-                        disabled={busy || uncertain || photoUnresolved}
-                        onOpenChange={setTypeEditorOpen}
-                        onSelect={(profile) => {
-                          setCreatedTypes((types) => [
-                            ...types.filter((t) => t.slug !== profile.slug),
-                            profile,
-                          ])
-                          setItemType(profile.slug)
-                          setTypeQuery(labelOf(profile, lang))
-                          requestAnimationFrame(() =>
-                            document.getElementById('quick-item-type')?.focus(),
-                          )
-                        }}
-                      />
-                    )}
                   </div>
                   <div className="quick-fields">
                     {questions
@@ -1180,7 +1141,7 @@ export function QuickReception({
                 <Button
                   // A visible photo whose save is unresolved must not become a
                   // photoless item.
-                  disabled={busy || photoUnresolved || typeEditorOpen}
+                  disabled={busy || photoUnresolved}
                   type="submit"
                   onClick={(event) => {
                     // Suppress only the implicit click from Enter in the type

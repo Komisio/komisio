@@ -491,7 +491,9 @@ for (const withPhoto of [false, true])
         expect(
           sources.filter((source) => source.kind === 'photo'),
         ).toHaveLength(1)
-        await expect(page.locator('.bag-received-items img')).toHaveCount(1)
+        await expect(
+          page.locator('.bag-inventory .item-photo-icon'),
+        ).toHaveCount(1)
       } else expect(lost.requests[0].sessionId).toBeNull()
       expect(
         (

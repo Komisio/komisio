@@ -31,19 +31,27 @@ test('staff correct text, classify inventory and download private A4 price label
     )
     await page.goto(`/intake/items/classify?item=${item}`)
     await page
-      .locator('summary')
-      .filter({ hasText: d.itemWorkflow.newGroup })
+      .getByRole('link', {
+        name: d.vocabularySettings.manageGroups,
+        exact: true,
+      })
       .click()
-    await page.getByLabel(d.itemWorkflow.name, { exact: true }).fill('Premium')
+    await page
+      .getByRole('textbox', { name: d.itemWorkflow.newGroup, exact: true })
+      .fill('Premium')
     await page
       .getByRole('button', { name: d.itemWorkflow.createGroup, exact: true })
       .click()
+    await expect(
+      page.locator('#vocabulary-groups [role="status"]'),
+    ).toContainText('Premium')
+    await page.goto(`/intake/items/classify?item=${item}`)
     await expect(
       page.getByLabel(d.itemWorkflow.group, { exact: true }).locator('option'),
     ).toContainText(['Välj…', 'Ingen', 'Premium'])
     await page
       .getByLabel(d.quickIntake.itemType, { exact: true })
-      .selectOption('sweater')
+      .selectOption('jacket')
     await page
       .getByLabel(d.itemWorkflow.group, { exact: true })
       .selectOption({ label: 'Premium' })

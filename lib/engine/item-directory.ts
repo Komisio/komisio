@@ -19,6 +19,7 @@ const money = z.string().regex(/^(0|[1-9]\d{0,8})(\.\d{1,2})?$/)
 const date = z.iso.date().refine((value) => !value.startsWith('0000-'))
 export const itemFilters = z
   .strictObject({
+    bag: z.uuid().optional(),
     q: text.optional(),
     stage: itemStage.optional(),
     ownership: z.enum(['consignment', 'store']).optional(),

@@ -55,11 +55,65 @@
 }
 .item-workspace-meta {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 8px 18px;
+  gap: 8px;
   color: var(--muted);
   font-size: 0.875rem;
-  margin-top: 8px;
+  margin-top: 12px;
+}
+.item-meta-reference,
+.item-meta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 30px;
+  line-height: 1.4;
+}
+.item-meta-reference {
+  padding: 3px 8px 3px 0;
+  font-variant-numeric: tabular-nums;
+  user-select: all;
+}
+.item-meta-badge {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: var(--white);
+}
+.item-meta-badge svg {
+  flex-shrink: 0;
+}
+.item-meta-stage {
+  background: #eef0ed;
+  border-color: #dfe4dc;
+  color: #53624f;
+}
+.item-meta-stage[data-stage='on_sale'] {
+  background: var(--mint);
+  border-color: #d6e4d2;
+  color: var(--green);
+}
+.item-meta-stage[data-stage='markdown_due'],
+.item-meta-stage[data-stage='period_ending'],
+.item-meta-stage[data-stage='period_ended'] {
+  background: #fff4df;
+  border-color: #f0dfba;
+  color: #80530d;
+}
+.item-meta-stage[data-stage='sold'] {
+  background: #edf2f7;
+  border-color: #d7e2ed;
+  color: #36576d;
+}
+.item-meta-dot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: currentColor;
 }
 .item-quick-feedback {
   min-height: 24px;

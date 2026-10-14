@@ -249,7 +249,7 @@
         "Save the item."
       ]
     },
-    "typeIntro": "The item type is saved for the whole store and selected for this item.",
+    "typeIntro": "Choose the fields to show for this item type.",
     "typeFieldsHint": "Choose a similar item type to use the same questions, such as size and material.",
     "typeFieldsLegend": "Choose fields"
   },
@@ -448,7 +448,8 @@
     "store": "Store and plan",
     "printing": "Printers and labels",
     "connectors": "AI assistants",
-    "credits": "AI credits"
+    "credits": "AI credits",
+    "vocabulary": "Item settings"
   },
   "tenantIdentity": "Store identity",
   "tenantId": "Store id",
@@ -4174,5 +4175,104 @@
     "terms": "Terms",
     "print": "Print",
     "editHint": "Click the pencil to edit. Changes are saved when you leave the field."
+  },
+  "vocabularySettings": {
+    "title": "Item settings",
+    "intro": "Choose how the store’s items are grouped and described.",
+    "types": "Item types",
+    "attributes": "Attributes",
+    "searchTypes": "Search item types",
+    "searchFields": "Search attributes",
+    "name": "Name",
+    "fields": "Receiving fields",
+    "kind": "Answer type",
+    "own": "Store-defined",
+    "standard": "Standard",
+    "noMatches": "No matches.",
+    "createType": "Create item type",
+    "addAttribute": "Add attribute",
+    "createAttribute": "Create attribute",
+    "unit": "Unit (optional)",
+    "options": "Answer options",
+    "optionsHint": "One option per line.",
+    "invalid": "Enter a name and check the fields. Answer options must be unique.",
+    "saved": "{name} has been saved.",
+    "leave": "You have unsaved changes. Leave this page?",
+    "kinds": {
+      "text": "Text",
+      "number": "Number",
+      "choice": "Choose from a list",
+      "boolean": "Yes/no"
+    },
+    "uncertain": "Saving could not be confirmed. Retry with the same details.",
+    "refused": "Could not save. Cancel and check the store and your permissions.",
+    "groups": "Assortment groups",
+    "searchGroups": "Search assortment groups",
+    "groupsHint": "Your own groups, such as Premium or Vintage.",
+    "noGroups": "No assortment groups yet.",
+    "manageGroups": "Manage assortment groups",
+    "nameRequired": "Enter a name and check the fields.",
+    "groupExists": "An assortment group with that name already exists.",
+    "categories": "Categories",
+    "searchCategories": "Search categories",
+    "addCategory": "New category",
+    "createCategory": "Create category",
+    "categoryExists": "A category with that name already exists.",
+    "translations": "Translations (optional)",
+    "languages": "Languages",
+    "noCategories": "No categories yet."
+  },
+  "settingsHelp": {
+    "label": "Help",
+    "policy": [
+      "Choose how you receive items, set prices and share sales proceeds with the seller.",
+      "You can also set agreement requirements, selling periods and VAT settings. Review your changes and publish when everything is correct."
+    ],
+    "profile": [
+      "Enter the store’s address, contact details and opening hours.",
+      "Describe which items you accept and choose the store’s language to help sellers get the right information."
+    ],
+    "vocabulary": [
+      "A category is a broad division, such as Clothing. An item type is more specific, such as Jacket.",
+      "Attributes describe an item, such as size and colour. Assortment groups are your own collections, such as Vintage.",
+      "Start with the choices you use often. Here you create choices for items, not the items themselves. Each tab has more examples."
+    ],
+    "store": [
+      "Change the store’s name and view its subscription here.",
+      "Check the plan and billing here. The address and opening hours are under Store profile."
+    ],
+    "printing": [
+      "Start by downloading and installing Komisio Print on the computer that will handle the label printer.",
+      "Register the printer and connect the computer using the pairing code. Then choose a label size that matches the roll.",
+      "You can also customise labels and follow print jobs here."
+    ],
+    "credits": [
+      "See how many AI credits the store has and buy more when needed.",
+      "Credits are used for AI features, such as text suggestions. You can follow usage here."
+    ],
+    "connectors": [
+      "Connect an AI assistant if you want to use it with Komisio.",
+      "Review what the assistant may do. View connections and disconnect them here."
+    ],
+    "categories": [
+      "Create broad categories, such as Clothing, Home & décor or Books, to organise your items.",
+      "Enter the category name. Add translations if you use several languages; custom names are not translated automatically.",
+      "Choose the category on the item. Creating a category does not change existing items."
+    ],
+    "types": [
+      "Create item types such as Jacket or Trousers. The type determines which details staff fill in when receiving an item.",
+      "Name the type and choose the attributes it needs, such as Size and Material. You can copy questions from a similar type.",
+      "Missing an attribute? Create it in the Attributes tab first, then select it when creating the type."
+    ],
+    "attributes": [
+      "Attributes are questions about an item, such as Size, Colour, Brand, Material and Condition. The answer, such as M or blue, is entered on the item.",
+      "Choose text for free answers, numbers for measurements, a list for fixed options or yes/no. You can add a unit for measurements, such as cm.",
+      "Once created, select the attribute when creating an item type so the question appears during receiving."
+    ],
+    "groups": [
+      "Assortment groups are optional collections you define, such as Vintage, Premium or Seasonal.",
+      "A group can contain different item types. A vintage jacket can have category Clothing, type Jacket and assortment group Vintage.",
+      "Create the group here, then select it on one or more items. Groups do not change prices or terms automatically."
+    ]
   }
 }

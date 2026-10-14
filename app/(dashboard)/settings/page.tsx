@@ -1,4 +1,9 @@
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
+import { FormHelpHeading } from '@/components/help/form-help-heading'
+import { VocabularySettings } from '@/components/intake/vocabulary-settings'
+import { readAttributeVocabulary } from '@/lib/engine/attributes'
+import { readAssortmentGroups } from '@/lib/engine/item-classification'
+import { readItemCategories } from '@/lib/engine/item-categories'
 import { Button } from '@/components/ui/button'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { readStorePolicy } from '@/lib/engine/store-policy'
@@ -55,6 +60,7 @@ import {
 const tabs = [
   'policy',
   'profile',
+  'vocabulary',
   'store',
   'printing',
   'credits',
@@ -98,6 +104,14 @@ export default async function Settings({
           ? 'credits'
           : 'policy'
   const manages = ['owner', 'admin'].includes(active.role)
+  const [vocabulary, assortmentGroups, categories] =
+    intake && tab === 'vocabulary'
+      ? await Promise.all([
+          readAttributeVocabulary(ctx.client, active.id),
+          readAssortmentGroups(ctx.client, active.id),
+          readItemCategories(ctx.client, active.id),
+        ])
+      : [null, [], []]
   const policy =
     intake && tab === 'policy'
       ? await readStorePolicy(ctx.client, active.id)
@@ -171,7 +185,15 @@ export default async function Settings({
   return (
     <div className="settings-page">
       <div className="page-heading">
-        <h1>{d.tenant}</h1>
+        <FormHelpHeading
+          key={tab}
+          title={d.tenant}
+          level={1}
+          help={{
+            label: `${d.settingsHelp.label}: ${d.settingsTabs[tab]}`,
+            steps: d.settingsHelp[tab],
+          }}
+        />
       </div>
       {visible.length > 1 && (
         <nav className="view-tabs" aria-label={d.settingsTabsLabel}>
@@ -192,6 +214,18 @@ export default async function Settings({
           key={`${active.id}-${policy.id ?? 'default'}`}
           tenantId={active.id}
           current={policy}
+          editable={manages}
+          d={d}
+        />
+      )}
+      {tab === 'vocabulary' && vocabulary && (
+        <VocabularySettings
+          key={active.id}
+          tenantId={active.id}
+          initial={vocabulary}
+          groups={assortmentGroups}
+          categories={categories}
+          locale={ctx.locale}
           editable={manages}
           d={d}
         />

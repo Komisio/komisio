@@ -1,7 +1,8 @@
+import { itemSort } from '@/lib/engine/item-directory'
 import { readBagProcessing } from '@/lib/engine/bag-processing'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { BagRegisteredItems } from '@/components/intake/bag-registered-items'
-import { readBagRegisteredItems } from '@/lib/engine/bag-registered-items'
+import { readBagInventory } from '@/lib/engine/bag-inventory'
 import { BagWorkSummary } from '@/components/intake/bag-work-summary'
 import { prepareInspectionReception } from '@/lib/engine/inspection-reception-preview'
 import { BagReception } from '@/components/intake/bag-reception'
@@ -45,11 +46,15 @@ export default async function InspectBag({
     typeof query.itemPage === 'string' && /^[1-9]\d{0,6}$/.test(query.itemPage)
       ? Number(query.itemPage)
       : 1
+  const sort = itemSort.safeParse(query.itemSort).data ?? 'accepted'
+  const direction = query.itemDirection === 'asc' ? 'asc' : 'desc'
   const inspectionHref = (
     params: Record<string, string | number | undefined>,
   ) =>
     navigationHref({
       view: 'drafts',
+      itemSort: sort,
+      itemDirection: direction,
       status,
       itemPage: itemPage > 1 ? itemPage : undefined,
       ...params,
@@ -95,7 +100,9 @@ export default async function InspectBag({
         reference={bag.reference}
         note={bag.note}
         locale={ctx.locale}
-        currency={policy.policy.currency ?? 'SEK'}
+        sort={sort}
+        direction={direction}
+        role={ctx.active!.role}
         itemPage={
           typeof query.itemPage === 'string' &&
           /^[1-9]\d{0,6}$/.test(query.itemPage)
@@ -103,33 +110,35 @@ export default async function InspectBag({
             : 1
         }
         readonly={ctx.active!.role === 'readonly'}
-        canManageTypes={['owner', 'admin'].includes(ctx.active!.role)}
       />
     )
   const processing = await readBagProcessing(ctx.client, tenantId, id)
-  const registered = await readBagRegisteredItems(
+  const registered = await readBagInventory(
     ctx.client,
     tenantId,
     id,
     (itemPage - 1) * 25,
+    sort,
+    direction,
   )
-  const registeredPages = registered.legacy
-    ? 1
-    : Math.max(1, Math.ceil(registered.total / 25))
-  const registeredHref = (page: number) =>
+  const registeredPages = Math.max(1, Math.ceil(registered.total / 25))
+  const registeredHref = (
+    page: number,
+    nextSort = sort,
+    nextDirection = direction,
+  ) =>
     inspectionHref({
       draft,
       version,
       historyBefore,
       after,
       before,
+      itemSort: nextSort,
+      itemDirection: nextDirection,
       itemPage: page,
     }) + '#bag-registered'
   if (itemPage > registeredPages) redirect(registeredHref(registeredPages))
-  const registeredTitle =
-    registered.scope === 'all'
-      ? d.bagIntake.allRegistered
-      : d.bagIntake.registered
+  const registeredTitle = d.bagIntake.allRegistered
   const acceptedItem = selected
     ? await readItemForOrigin(
         ctx.client,
@@ -161,8 +170,7 @@ export default async function InspectBag({
       {bag.note && <p>{bag.note}</p>}
       {registered.total > 0 && (
         <Link className="text-link" href="#bag-registered">
-          {registeredTitle} ({registered.total}
-          {registered.legacy && registered.total === 50 ? ' +' : ''})
+          {registeredTitle} ({registered.total})
         </Link>
       )}
       <BagWorkSummary
@@ -465,7 +473,11 @@ export default async function InspectBag({
         bagId={id}
         data={registered}
         locale={ctx.locale}
-        currency={policy.policy.currency ?? 'SEK'}
+        client={ctx.client}
+        tenantId={tenantId}
+        role={ctx.active!.role}
+        sort={sort}
+        direction={direction}
         itemPage={itemPage}
         href={registeredHref}
       />

@@ -1,5 +1,11 @@
 # Decision Log
 
+- 2026-10-14: Owner approves a tenant category registry with translated names, preserving item category text and history. Category, type, attribute and assortment setup live in store settings. New stores get Clothing and Home & décor categories; assortment groups remain optional and store-defined.
+
+- 2026-10-14: New stores start with Jacket and Trousers and the size, colour, brand, material and condition attributes, translated into all eight UI languages. Description/category remain core fields. Legacy examples are hidden only in new stores; creation retries never reset vocabulary.
+
+- 2026-10-14: Register item types and attributes in store settings, not reception. Owner/admin creation uses the existing vocabulary with exact replay protection; reception renders only the selected profile. New fields do not change historical observations.
+
 - 2026-10-14: Shopify order reads use the current refund schema, reduce query batches on explicit cost-limit errors and preserve the 50-order engine page. Incomplete nested pages stop import; provider read failures never advance the cursor or create partial sales.
 
 - 2026-10-14: Shopify OAuth code exchange explicitly requests expiring offline tokens, using existing encrypted refresh handling. Callback diagnostics expose only stage, safe error code and HTTP status; never codes, tokens, query strings or provider response bodies.
@@ -1074,3 +1080,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-14: Inventory cells save on blur or Enter; Escape discards unsaved cell input. Contextual selection actions stay in the table. Existing atomic commands, snapshot checks and retry identities remain; uncertain results block further edits to that row.
 
 - 2026-10-14: Item details use task tabs, shared optimistic quick editing and grouped print options. Existing item commands, frozen terms, financial workflows and tenant permissions remain unchanged.
+
+- 2026-10-14: Handover review reuses the inventory table without filters. Bag scope applies before sorting and paging across both intake origins; sold rows retain actual sale prices. Inline edits, selection actions and permissions remain shared; navigation preserves reception drafts.

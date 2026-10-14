@@ -1,7 +1,14 @@
 'use client'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import Image from 'next/image'
-import { ChevronDown, ImagePlus, Printer } from 'lucide-react'
+import {
+  Barcode,
+  ChevronDown,
+  Handshake,
+  ImagePlus,
+  Printer,
+  Store,
+} from 'lucide-react'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { EventTime } from '@/components/ui/event-time'
@@ -18,6 +25,7 @@ export function ItemDetailWorkspace({
   write,
   types,
   groups,
+  categories,
   d,
   locale,
   reference,
@@ -35,6 +43,7 @@ export function ItemDetailWorkspace({
   write: boolean
   types: { id: string; name: string }[]
   groups: { id: string; name: string }[]
+  categories: { id: string; name: string }[]
   d: Dictionary
   locale: Locale
   reference: string
@@ -75,9 +84,25 @@ export function ItemDetailWorkspace({
             {editor.cell('title', d.items.item)}
           </h1>
           <div className="item-workspace-meta">
-            <span className="item-detail-reference">{reference}</span>
-            <span>{d.lifecycle.stages[item.stage]}</span>
-            <span>{d.items.ownershipKinds[item.ownership]}</span>
+            <span className="item-detail-reference item-meta-reference">
+              <Barcode size={17} aria-hidden="true" />
+              {reference}
+            </span>
+            <span
+              className="item-meta-badge item-meta-stage"
+              data-stage={item.stage}
+            >
+              <span className="item-meta-dot" aria-hidden="true" />
+              {d.lifecycle.stages[item.stage]}
+            </span>
+            <span className="item-meta-badge item-meta-ownership">
+              {item.ownership === 'consignment' ? (
+                <Handshake size={15} aria-hidden="true" />
+              ) : (
+                <Store size={15} aria-hidden="true" />
+              )}
+              {d.items.ownershipKinds[item.ownership]}
+            </span>
           </div>
         </div>
         {write && (
@@ -166,7 +191,13 @@ export function ItemDetailWorkspace({
                   <dl className="item-quick-facts">
                     <div>
                       <dt>{d.quickIntake.category}</dt>
-                      <dd>{editor.cell('category', d.quickIntake.category)}</dd>
+                      <dd>
+                        {editor.cell(
+                          'category',
+                          d.quickIntake.category,
+                          categories,
+                        )}
+                      </dd>
                     </div>
                     <div>
                       <dt>{d.quickIntake.itemType}</dt>

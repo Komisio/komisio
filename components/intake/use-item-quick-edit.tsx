@@ -15,11 +15,13 @@ export function useItemQuickEdit({
   tenantId,
   write,
   d,
+  warningScope,
 }: {
   item: Pick<DirectoryItem, 'id' | 'title' | 'category' | 'classification'>
   tenantId: string
   write: boolean
   d: Dictionary
+  warningScope?: string
 }) {
   const router = useRouter(),
     t = d.itemWorkflow,
@@ -52,7 +54,7 @@ export function useItemQuickEdit({
     (dirty && state !== 'refused') || busy || state === 'uncertain'
       ? d.leaveUnsaved
       : null,
-    `inventory-${item.id}`,
+    warningScope ?? `inventory-${item.id}`,
   )
 
   function open(field: Field) {
@@ -187,6 +189,15 @@ export function useItemQuickEdit({
     options?: { id: string; name: string }[],
   ) {
     const active = edit?.field === field
+    // Existing free-text categories remain selectable even if the store has
+    // not registered them. Translated labels never replace the stored value.
+    if (
+      field === 'category' &&
+      options &&
+      current.category &&
+      !options.some((o) => o.id === current.category)
+    )
+      options = [{ id: current.category, name: current.category }, ...options]
     const shown = options
       ? (options.find((option) => option.id === current[field])?.name ?? '—')
       : current[field] || '—'

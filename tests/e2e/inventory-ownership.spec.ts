@@ -51,10 +51,6 @@ test('ownership filters count and page all goods and carry through stock reports
       .poll(() => new URL(page.url()).searchParams.get('ownership'))
       .toBe('store')
     await page.getByLabel(d.items.search, { exact: true }).fill('lamp 25')
-    await page
-      .getByRole('button', { name: d.items.searchButton, exact: true })
-      .first()
-      .click()
     await expect(rows).toHaveCount(1)
     await expect(rows).toContainText('Synthetic own lamp 25')
     await expect
@@ -64,14 +60,13 @@ test('ownership filters count and page all goods and carry through stock reports
       .getByRole('link', { name: d.items.clearFilters, exact: true })
       .click()
     await expect(rows).toHaveCount(25)
-    await page.locator('.inventory-advanced summary').click()
+    if (
+      (await page.locator('.inventory-advanced').getAttribute('open')) === null
+    )
+      await page.locator('.inventory-advanced summary').click()
     await page
       .getByLabel(d.items.ownership, { exact: true })
       .selectOption('consignment')
-    await page
-      .locator('.inventory-basic')
-      .getByRole('button', { name: d.items.searchButton, exact: true })
-      .click()
     await expect(rows).toHaveCount(1)
     await expect(
       rows.getByRole('button', {

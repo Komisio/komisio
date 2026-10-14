@@ -5,6 +5,7 @@ import { useRouter } from '@/components/platform/use-working-router'
 import { classificationCommand } from '@/lib/engine/item-classification'
 import { labelOf, type ItemTypeProfile } from '@/lib/engine/attributes'
 import type { Dictionary, Locale } from '@/lib/i18n'
+import { NavigationLink } from '@/components/platform/navigation-warning'
 export function ItemClassificationEditor({
   tenantId,
   items,
@@ -32,34 +33,26 @@ export function ItemClassificationEditor({
     [locked, setLocked] = useState(false),
     [refused, setRefused] = useState(false),
     [status, setStatus] = useState('')
-  const [pendingAction, setPendingAction] = useState<
-    'group' | 'classify' | null
-  >(null)
   const [kind, setKind] = useState(''),
-    [group, setGroup] = useState(''),
-    [name, setName] = useState('')
+    [group, setGroup] = useState('')
   const pending = useRef<ReturnType<typeof classificationCommand.parse> | null>(
       null,
     ),
     running = useRef(false)
-  async function send(action: 'group' | 'classify') {
+  async function send() {
     if (running.current || refused) return
     const parsed = classificationCommand.safeParse(
-      pending.current ??
-        (action === 'group'
-          ? { action, tenantId, requestId: crypto.randomUUID(), name }
-          : {
-              action,
-              tenantId,
-              requestId: crypto.randomUUID(),
-              items: items.map(({ id, version }) => ({ id, version })),
-              itemType: kind === 'none' ? null : kind,
-              assortment: group === 'none' ? null : group,
-            }),
+      pending.current ?? {
+        action: 'classify',
+        tenantId,
+        requestId: crypto.randomUUID(),
+        items: items.map(({ id, version }) => ({ id, version })),
+        itemType: kind === 'none' ? null : kind,
+        assortment: group === 'none' ? null : group,
+      },
     )
     if (!parsed.success) return
     pending.current = parsed.data
-    setPendingAction(parsed.data.action)
     running.current = true
     setBusy(true)
     setLocked(true)
@@ -81,7 +74,6 @@ export function ItemClassificationEditor({
         setLocked(false)
         onLockedChange?.(false)
         setStatus(t.saved)
-        setName('')
         router.refresh()
         if (parsed.data.action === 'classify') onSaved?.()
       } else if (response.status >= 400 && response.status < 500) {
@@ -102,7 +94,7 @@ export function ItemClassificationEditor({
       <form
         onSubmit={(e) => {
           e.preventDefault()
-          void send('classify')
+          void send()
         }}
       >
         <fieldset disabled={locked || busy}>
@@ -147,47 +139,17 @@ export function ItemClassificationEditor({
         </fieldset>
         <button
           className="btn btn-primary"
-          disabled={
-            busy ||
-            refused ||
-            !items.length ||
-            Boolean(locked && pendingAction !== 'classify')
-          }
+          disabled={busy || refused || !items.length}
         >
           {t.save}
         </button>
       </form>
       {manage && (
-        <details>
-          <summary>{t.newGroup}</summary>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              void send('group')
-            }}
-            className="row wrap"
-            style={{ alignItems: 'end' }}
-          >
-            <label>
-              {t.name}
-              <input
-                required
-                maxLength={80}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                disabled={locked || busy}
-              />
-            </label>
-            <button
-              className="btn btn-secondary"
-              disabled={
-                busy || refused || Boolean(locked && pendingAction !== 'group')
-              }
-            >
-              {t.createGroup}
-            </button>
-          </form>
-        </details>
+        <p>
+          <NavigationLink href="/settings?tab=vocabulary#vocabulary-groups">
+            {d.vocabularySettings.manageGroups}
+          </NavigationLink>
+        </p>
       )}
       {status && <p role="status">{status}</p>}
       {refused && (

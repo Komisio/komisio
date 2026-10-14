@@ -4,6 +4,7 @@ import { createRequire } from 'node:module'
 import sharp from 'sharp'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
+import { localTestUrl } from '../helpers/local-services'
 import d from '../../messages/sv.json' with { type: 'json' }
 
 test('bag reception saves one item at a time with optional photo and inherited seller', async ({
@@ -39,7 +40,7 @@ test('bag reception saves one item at a time with optional photo and inherited s
     await page
       .getByRole('button', { name: d.bagIntake.save, exact: true })
       .click()
-    await expect(page.locator('.bag-received-items li')).toHaveCount(1)
+    await expect(page.locator('.bag-inventory .inventory-row')).toHaveCount(1)
     await page
       .getByRole('button', { name: d.bagIntake.next, exact: true })
       .click()
@@ -72,9 +73,9 @@ test('bag reception saves one item at a time with optional photo and inherited s
     await page
       .getByRole('button', { name: d.bagIntake.save, exact: true })
       .click()
-    await expect(page.locator('.bag-received-items li')).toHaveCount(2)
+    await expect(page.locator('.bag-inventory .inventory-row')).toHaveCount(2)
     await page.reload()
-    await expect(page.locator('.bag-received-items li')).toHaveCount(2)
+    await expect(page.locator('.bag-inventory .inventory-row')).toHaveCount(2)
     const rows = (
       await f.db.query(
         'select s.seller_id,s.bag_id from items i join reception_sessions s on s.id=i.origin_id where i.tenant_id=$1',
@@ -88,7 +89,7 @@ test('bag reception saves one item at a time with optional photo and inherited s
           r.seller_id === f.seller && r.bag_id === bag,
       ),
     ).toBe(true)
-    await expect(page.locator('.bag-received-items img')).toHaveCount(1)
+    await expect(page.locator('.bag-inventory .item-photo-icon')).toHaveCount(1)
     await page.screenshot({
       path: 'private/bag-reception-desktop.png',
       fullPage: true,
@@ -120,8 +121,10 @@ test('concurrent retries create one bag session and one item', async ({
   const clients = [0, 1].map(
     () =>
       new Client({
-        connectionString:
+        connectionString: localTestUrl(
+          'TEST_DATABASE_URL',
           'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+        ),
       }),
   )
   try {

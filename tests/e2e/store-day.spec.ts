@@ -161,7 +161,9 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
       }
       if (index === 14) {
         await page.reload()
-        await expect(page.locator('.bag-received-items li')).toHaveCount(5)
+        await expect(page.locator('.bag-inventory .inventory-row')).toHaveCount(
+          5,
+        )
         // Reload resumes saved bag context, with a fresh item editor.
         await description.fill('Synthetic temporary item')
         const dialog = page.waitForEvent('dialog')
@@ -194,7 +196,7 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
       expect(Number(row.price_ore)).toBe(item.priceOre)
     }
     await page.reload()
-    await expect(page.locator('.bag-received-items li')).toHaveCount(10)
+    await expect(page.locator('.bag-inventory .inventory-row')).toHaveCount(10)
     await expect(page.locator('[data-bag-count="accepted"]')).toHaveText('10')
     await expect(
       page
@@ -202,9 +204,9 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
         .locator('[data-bag-processing-state]'),
     ).toHaveText(d.bagProcessing.open)
     await page
-      .locator('.bag-received-items li')
+      .locator('.bag-inventory .inventory-row')
       .filter({ hasText: 'Synthetic day item 16' })
-      .getByRole('link')
+      .locator('.inventory-open-item')
       .click()
     await expect(page).toHaveURL(
       new RegExp(`/intake/items/${accepted[15].id}$`),

@@ -71,8 +71,8 @@ test('both intake origins remain reachable in both handover views on mobile', as
         })
         .click()
       await expect(page.locator('#bag-registered h2')).toBeInViewport()
-      const rows = page.locator('.bag-received-items li')
-      const links = page.locator('.bag-received-items li a')
+      const rows = page.locator('.bag-inventory .inventory-row')
+      const links = page.locator('.bag-inventory .inventory-open-item')
       const seen = new Set<string>()
       for (let n = 1; n <= 3; n++) {
         await expect(page.locator('#bag-registered')).toContainText(
@@ -135,9 +135,9 @@ test('both intake origins remain reachable in both handover views on mobile', as
     await page
       .getByRole('button', { name: d.bagIntake.save, exact: true })
       .click()
-    await expect(page.locator('.bag-received-items li').first()).toContainText(
-      'Synthetic newest item',
-    )
+    await expect(
+      page.locator('.bag-inventory .inventory-row').first(),
+    ).toContainText('Synthetic newest item')
     await expect(page).not.toHaveURL(/itemPage=2/)
     await expect(
       page.getByRole('button', { name: d.bagIntake.next, exact: true }),

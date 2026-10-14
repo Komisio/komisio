@@ -4130,7 +4130,11 @@
     "salesSync": "View sales sync",
     "historyHint": "Previous agreements and sales remain unchanged.",
     "storeShare": "Store share",
-    "sellerShare": "Seller share"
+    "sellerShare": "Seller share",
+    "editRow": "Edit",
+    "cancel": "Cancel",
+    "retry": "Retry",
+    "selectAll": "Select all eligible items on this page"
   },
   "sellerBank": {
     "title": "Payout account",

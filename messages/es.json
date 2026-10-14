@@ -4136,7 +4136,11 @@
     "salesSync": "Ver sincronización de ventas",
     "historyHint": "Los acuerdos y ventas anteriores no cambian.",
     "storeShare": "Parte de la tienda",
-    "sellerShare": "Parte del vendedor"
+    "sellerShare": "Parte del vendedor",
+    "editRow": "Editar",
+    "cancel": "Cancelar",
+    "retry": "Reintentar",
+    "selectAll": "Seleccionar todos los artículos disponibles en esta página"
   },
   "sellerBank": {
     "title": "Cuenta de pago",

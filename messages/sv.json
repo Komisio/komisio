@@ -4130,7 +4130,11 @@
     "salesSync": "Visa försäljningssynk",
     "historyHint": "Tidigare avtal och försäljningar ändras inte.",
     "storeShare": "Butikens andel",
-    "sellerShare": "Säljarens andel"
+    "sellerShare": "Säljarens andel",
+    "editRow": "Redigera",
+    "cancel": "Avbryt",
+    "retry": "Försök igen",
+    "selectAll": "Markera alla valbara varor på denna sida"
   },
   "sellerBank": {
     "title": "Utbetalningskonto",

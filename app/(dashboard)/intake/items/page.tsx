@@ -1,6 +1,12 @@
+import { InventoryEditableRow } from '@/components/intake/inventory-editable-row'
+import {
+  InventorySelection,
+  InventorySelectAll,
+} from '@/components/intake/inventory-selection'
+import '@/components/intake/inventory-edit.css'
 import { WorkingForm } from '@/components/platform/working-form'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from '@/components/platform/working-link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import {
   ArrowDown,
   ArrowUp,
@@ -277,11 +283,19 @@ export default async function Items({
           </p>
         )}
         {result && (
-          <>
-            <form
+          <InventorySelection
+            key={
+              active.id + JSON.stringify(raw) + requestedPage + sort + direction
+            }
+            ids={result.items
+              .filter((i) =>
+                ['on_sale', 'markdown_due', 'period_ending'].includes(i.stage),
+              )
+              .map((i) => i.id)}
+          >
+            <WorkingForm
               id="label-selection"
               action="/intake/items/labels"
-              method="get"
               className="row wrap"
             >
               <button className="btn btn-secondary">
@@ -296,7 +310,7 @@ export default async function Items({
                 </button>
               )}
               <small>{all.labelSheets.selection}</small>
-            </form>
+            </WorkingForm>
             <div
               className="inventory-table-scroll"
               role="region"
@@ -308,7 +322,7 @@ export default async function Items({
                 <thead>
                   <tr>
                     <th scope="col">
-                      <span className="sr-only">{all.labelSheets.title}</span>
+                      <InventorySelectAll label={all.itemWorkflow.selectAll} />
                     </th>
                     {header('title', d.item)}
                     <th scope="col">
@@ -317,6 +331,11 @@ export default async function Items({
                     {header('category', all.quickIntake.category)}
                     <th scope="col">{all.quickIntake.itemType}</th>
                     <th scope="col">{all.itemWorkflow.group}</th>
+                    <th scope="col">
+                      <span className="sr-only">
+                        {all.itemWorkflow.editRow}
+                      </span>
+                    </th>
                     {header('seller', all.quickIntake.seller)}
                     {header('price', all.quickIntake.price, true)}
                     {header('stage', d.stage)}
@@ -327,33 +346,20 @@ export default async function Items({
                 </thead>
                 <tbody>
                   {result.items.map((i) => (
-                    <tr key={i.id} className="inventory-row">
-                      <td>
-                        <input
-                          type="checkbox"
-                          name="item"
-                          value={i.id}
-                          form="label-selection"
-                          aria-label={`${all.labelSheets.title}: ${i.title || i.id}`}
-                          disabled={
-                            ![
-                              'on_sale',
-                              'markdown_due',
-                              'period_ending',
-                            ].includes(i.stage)
-                          }
-                        />
-                      </td>
-                      <th scope="row">
-                        <Link
-                          className="inventory-item-link"
-                          href={`/intake/items/${i.id}`}
-                          title={i.title || undefined}
-                        >
-                          {i.title?.trim() || d.item}
-                        </Link>
-                      </th>
-                      <td>
+                    <InventoryEditableRow
+                      key={i.id}
+                      item={i}
+                      tenantId={active.id}
+                      write={['owner', 'admin', 'staff'].includes(active.role)}
+                      types={vocabulary.types
+                        .filter((type) => type.active)
+                        .map((type) => ({
+                          id: type.slug,
+                          name: labelOf(type, ctx.locale),
+                        }))}
+                      groups={groups}
+                      d={all}
+                      indicators={
                         <div className="inventory-indicators">
                           <ItemIndicator label={d.ownershipKinds[i.ownership]}>
                             {i.ownership === 'store' ? (
@@ -373,28 +379,8 @@ export default async function Items({
                             />
                           )}
                         </div>
-                      </td>
-                      <td>
-                        <span
-                          className="inventory-cell-text"
-                          title={i.category || undefined}
-                        >
-                          {i.category || '—'}
-                        </span>
-                      </td>
-                      <td>
-                        {(() => {
-                          const type = vocabulary.types.find(
-                            (t) => t.slug === i.classification?.itemType,
-                          )
-                          return type ? labelOf(type, ctx.locale) : '—'
-                        })()}
-                      </td>
-                      <td>
-                        {groups.find(
-                          (g) => g.id === i.classification?.assortment,
-                        )?.name ?? '—'}
-                      </td>
+                      }
+                    >
                       <td>
                         {i.sellerId ? (
                           <Link
@@ -457,7 +443,7 @@ export default async function Items({
                       <td className="inventory-date">
                         <time dateTime={i.periodEnd}>{date(i.periodEnd)}</time>
                       </td>
-                    </tr>
+                    </InventoryEditableRow>
                   ))}
                 </tbody>
               </table>
@@ -511,7 +497,7 @@ export default async function Items({
                 </nav>
               )}
             </footer>
-          </>
+          </InventorySelection>
         )}
       </section>
     </div>

@@ -4136,7 +4136,11 @@
     "salesSync": "Verkaufssynchronisierung anzeigen",
     "historyHint": "Frühere Verträge und Verkäufe bleiben unverändert.",
     "storeShare": "Anteil des Geschäfts",
-    "sellerShare": "Anteil des Verkäufers"
+    "sellerShare": "Anteil des Verkäufers",
+    "editRow": "Bearbeiten",
+    "cancel": "Abbrechen",
+    "retry": "Erneut versuchen",
+    "selectAll": "Alle auswählbaren Artikel auf dieser Seite auswählen"
   },
   "sellerBank": {
     "title": "Auszahlungskonto",

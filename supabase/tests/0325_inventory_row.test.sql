@@ -1,0 +1,38 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('d3250000-0000-4000-8000-000000000001','inline-owner@example.test',now()),
+ ('d3250000-0000-4000-8000-000000000002','inline-reader@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"d3250000-0000-4000-8000-000000000001","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Synthetic inline store','synthetic-inline',gen_random_uuid())::text,true);
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy')||'{"vatModeStoreOwned":"store_full"}');
+select set_config('test.purchase',register_purchase(current_setting('test.tenant')::uuid,gen_random_uuid(),'Synthetic coat',10000,'Synthetic receipt',false)::text,true);
+select set_config('test.item',accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'purchase',current_setting('test.purchase')::uuid,null,20000)::text,true);
+select set_config('test.group',create_assortment_group(current_setting('test.tenant')::uuid,gen_random_uuid(),'Standard')::text,true);
+select set_config('test.edit',gen_random_uuid()::text,true);
+select lives_ok($$select edit_inventory_row(current_setting('test.tenant')::uuid,current_setting('test.edit')::uuid,current_setting('test.item')::uuid,'{"title":"Synthetic coat","category":"","version":0}','Synthetic wool coat','Coats','sweater',current_setting('test.group')::uuid)$$,'all four values saved together');
+select is(item_label_facts(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid)->>'title','Synthetic wool coat','label uses corrected title');
+select is((items_search_page(current_setting('test.tenant')::uuid,'{"category":"Coats"}','title','asc',25,0)->>'total')::int,1,'category correction is searchable');
+select is((item_classifications(current_setting('test.tenant')::uuid,array[current_setting('test.item')::uuid])->0->>'itemType'),'sweater','classification saved');
+select is((select supplier_note from purchase_receipts where id=current_setting('test.purchase')::uuid),'Synthetic coat','original purchase evidence unchanged');
+select lives_ok($$select edit_inventory_row(current_setting('test.tenant')::uuid,current_setting('test.edit')::uuid,current_setting('test.item')::uuid,'{"title":"Synthetic coat","category":"","version":0}','Synthetic wool coat','Coats','sweater',current_setting('test.group')::uuid)$$,'lost response retries exactly');
+select is((select count(*)::int from item_attribute_corrections where item_id=current_setting('test.item')::uuid),2,'retry adds no corrections');
+select throws_ok($$select edit_inventory_row(current_setting('test.tenant')::uuid,current_setting('test.edit')::uuid,current_setting('test.item')::uuid,'{"title":"Synthetic coat","category":"","version":0}','Different coat','Coats','sweater',current_setting('test.group')::uuid)$$,'P0001','REQUEST_CONFLICT','request ID cannot be reused for different text');
+select throws_ok($$select edit_inventory_row(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item')::uuid,'{"title":"Synthetic coat","category":"","version":0}','Stale coat','Old','lamp',null)$$,'P0001','ITEM_CHANGED','stale editor cannot overwrite newer text');
+select throws_ok($$select edit_inventory_row(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item')::uuid,'{"title":"Synthetic wool coat","category":"Coats","version":0}','Stale coat','Old','lamp',null)$$,'P0001','ITEM_CHANGED','stale classification rejects entire row');
+select throws_ok($$select edit_inventory_row(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item')::uuid,'{"title":"Synthetic wool coat","category":"Coats","version":1}','Another coat','Other','undefined_type',null)$$,'P0001','ITEM_TYPE_UNDEFINED','invalid type rejects entire row');
+select is(item_label_facts(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid)->>'title','Synthetic wool coat','failure leaves text unchanged');
+select is((select count(*)::int from item_attribute_corrections where item_id=current_setting('test.item')::uuid),2,'failure leaves no partial corrections');
+select lives_ok($$select edit_inventory_row(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item')::uuid,'{"title":"Synthetic wool coat","category":"Coats","version":1}','Synthetic wool coat','',null,null)$$,'category and classification can be cleared');
+select is((items_search_page(current_setting('test.tenant')::uuid,'{"category":"Coats"}','title','asc',25,0)->>'total')::int,0,'cleared category no longer matches');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.tenant')::uuid,'d3250000-0000-4000-8000-000000000002','readonly');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"d3250000-0000-4000-8000-000000000002","role":"authenticated"}';
+select throws_ok($$select edit_inventory_row(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item')::uuid,'{"title":"Synthetic wool coat","category":"","version":2}','Forbidden','',null,null)$$,'42501','FORBIDDEN','readonly role cannot edit');
+reset role;
+select ok(not has_function_privilege('anon','public.edit_inventory_row(uuid,uuid,uuid,jsonb,text,text,text,uuid)','execute'),'anonymous edits denied');
+select * from finish();
+rollback;

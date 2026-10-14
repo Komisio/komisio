@@ -105,6 +105,36 @@ export async function raceStoreWorkflow({ setup, connectionString }) {
       [tenant, randomUUID(), JSON.stringify(selection), 'sweater'],
       'ITEM_CHANGED',
     )
+    const facts = (
+      await a.query('select item_label_facts($1,$2) facts', [tenant, item])
+    ).rows[0].facts
+    const expected = JSON.stringify({
+      title: facts.title,
+      category: '',
+      version: 1,
+    })
+    await race(
+      'select edit_inventory_row($1,$2,$3,$4,$5,$6,$7,null)',
+      [
+        tenant,
+        randomUUID(),
+        item,
+        expected,
+        'Synthetic floor lamp',
+        'Lighting',
+        'lamp',
+      ],
+      [
+        tenant,
+        randomUUID(),
+        item,
+        expected,
+        'Synthetic reading lamp',
+        'Lamps',
+        'lamp',
+      ],
+      'ITEM_CHANGED',
+    )
     console.log(
       'PASS: concurrent bank, description and classification edits preserve the first committed version and reject stale writes.',
     )

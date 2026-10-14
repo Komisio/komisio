@@ -5,7 +5,10 @@ import {
   InventorySelectAll,
 } from '@/components/intake/inventory-selection'
 import '@/components/intake/inventory-edit.css'
-import { WorkingForm } from '@/components/platform/working-form'
+import {
+  InventoryFilters,
+  InventoryAdvanced,
+} from '@/components/intake/inventory-filters'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import {
@@ -177,12 +180,7 @@ export default async function Items({
         )}
       </div>
       <section className="inventory-panel" aria-label={d.list}>
-        <WorkingForm
-          key={JSON.stringify(raw) + sort + direction}
-          action="/intake/items"
-          className="inventory-filters"
-          role="search"
-        >
+        <InventoryFilters key={active.id}>
           <input type="hidden" name="sort" value={sort} />
           <input type="hidden" name="direction" value={direction} />
           <div className="inventory-basic">
@@ -211,20 +209,25 @@ export default async function Items({
                 ))}
               </select>
             </div>
-            <button className="btn btn-primary">{d.searchButton}</button>
             {!!Object.keys(raw).length && (
               <Link className="text-link" href="/intake/items">
                 {d.clearFilters}
               </Link>
             )}
           </div>
-          <details className="inventory-advanced" open={advancedCount > 0}>
-            <summary>
-              {t.advanced}
-              {advancedCount > 0 && (
-                <span className="inventory-filter-count">{advancedCount}</span>
-              )}
-            </summary>
+          <InventoryAdvanced
+            initialOpen={advancedCount > 0}
+            summary={
+              <>
+                {t.advanced}
+                {advancedCount > 0 && (
+                  <span className="inventory-filter-count">
+                    {advancedCount}
+                  </span>
+                )}
+              </>
+            }
+          >
             <div className="inventory-advanced-grid">
               {select('ownership', d.ownership, [
                 ['consignment', d.ownershipKinds.consignment],
@@ -272,9 +275,8 @@ export default async function Items({
                 originKind.options.map((o) => [o, d.originKinds[o]]),
               )}
             </div>
-            <button className="btn btn-secondary">{d.searchButton}</button>
-          </details>
-        </WorkingForm>
+          </InventoryAdvanced>
+        </InventoryFilters>
         {!parsed.success && (
           <p role="alert" className="inventory-message">
             {t.invalid}

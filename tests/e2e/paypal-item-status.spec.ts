@@ -67,10 +67,6 @@ test('Independent connection status filters the full inventory and opens a scope
     await page
       .getByLabel(d.itemSync.title, { exact: true })
       .selectOption('failed')
-    await page
-      .getByRole('button', { name: d.items.searchButton, exact: true })
-      .last()
-      .click()
     await expect(page.locator('.inventory-row')).toHaveCount(1)
     await expect(page.locator('.inventory-row')).toContainText('POS jacket 56')
     expect(new URL(page.url()).searchParams.has('page')).toBe(false)

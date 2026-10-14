@@ -79,9 +79,6 @@ test('staff can reach all matching items and retain filters on a phone', async (
       fullPage: true,
     })
     await page.getByLabel(d.items.search, { exact: true }).fill('Unrelated')
-    await page
-      .getByRole('button', { name: d.items.searchButton, exact: true })
-      .click()
     await expect(rows).toHaveCount(1)
     await expect
       .poll(() => new URL(page.url()).searchParams.has('page'))

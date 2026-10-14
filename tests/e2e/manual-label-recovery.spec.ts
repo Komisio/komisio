@@ -110,6 +110,7 @@ async function openPrint(page: Page) {
   await f.commit()
   await page.setViewportSize({ width: 320, height: 720 })
   await page.goto(`/intake/items/${item}`)
+  await page.locator('.item-print-options > summary').click()
   const printer = page.locator(`#printer-${item}`)
   await page
     .getByRole('button', { name: d.printing.zebraPrint, exact: true })

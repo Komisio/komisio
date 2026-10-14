@@ -31,7 +31,7 @@ for (const error of ['REQUEST_FAILED', 'ITEM_ENDED'])
       ])
       await f.db.query('select set_active_tenant($1)', [f.tenant])
       await f.commit()
-      await page.goto(`/intake/items/${item}`)
+      await page.goto(`/intake/items/${item}#item-terms`)
       const form = page
         .locator('form')
         .filter({ has: page.locator('#transfer-target') })
@@ -159,7 +159,7 @@ test('an item transferred in another session offers a reload instead of retrying
     ])
     await f.db.query('select set_active_tenant($1)', [f.tenant])
     await f.commit()
-    await page.goto(`/intake/items/${item}`)
+    await page.goto(`/intake/items/${item}#item-terms`)
     const form = page
       .locator('form')
       .filter({ has: page.locator('#transfer-target') })
@@ -203,7 +203,9 @@ test('an item transferred in another session offers a reload instead of retrying
     expect(box.x).toBeGreaterThanOrEqual(0)
     expect(box.x + box.width).toBeLessThanOrEqual(320)
     await reload.click()
-    await expect(page).toHaveURL(new RegExp(`/intake/items/${item}$`))
+    await expect(page).toHaveURL(
+      new RegExp(`/intake/items/${item}#item-terms$`),
+    )
     await expect(page.locator('#transfer-target')).toHaveCount(0)
     const events = await f.db.query(
       "select id, detail->>'toTenant' target from item_events where tenant_id=$1 and item_id=$2 and detail->>'action'='transfer'",

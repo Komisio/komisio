@@ -11,6 +11,7 @@ import d from '../../messages/sv.json' with { type: 'json' }
 // nothing about a physical printer or scanner.
 test('staff print an item label with the current price without configuring a printer', async ({
   page,
+  baseURL,
   browser,
 }, testInfo) => {
   const email = 'browser-label-' + randomUUID() + '@example.test'
@@ -28,6 +29,7 @@ test('staff print an item label with the current price without configuring a pri
     const reference = 'I-' + item.slice(0, 8).toUpperCase()
     await page.setViewportSize({ width: 320, height: 800 })
     await page.goto('/intake/items/' + item)
+    await page.locator('.item-print-options > summary').click()
     await page
       .getByRole('link', { name: d.printing.browserOpen, exact: true })
       .click()
@@ -132,7 +134,7 @@ test('staff print an item label with the current price without configuring a pri
     })
     expect([302, 307]).toContain(hop.status())
     expect(hop.headers()['location']).toBe(
-      'http://127.0.0.1:3000/intake/open?ref=' + reference,
+      baseURL + '/intake/open?ref=' + reference,
     )
     expect(hop.headers()['cache-control']).toContain('no-store')
     await page.goto('/scan?ref=' + screen.text)
@@ -151,12 +153,13 @@ test('staff print an item label with the current price without configuring a pri
     const anonymous = await browser.newContext()
     try {
       const login = await anonymous.request.get(
-        'http://127.0.0.1:3000/scan?ref=' + screen.text,
+        baseURL + '/scan?ref=' + screen.text,
         { maxRedirects: 0 },
       )
       expect([302, 307]).toContain(login.status())
       expect(login.headers()['location']).toBe(
-        'http://127.0.0.1:3000/login?next=' +
+        baseURL +
+          '/login?next=' +
           encodeURIComponent('/intake/open?ref=' + reference),
       )
     } finally {

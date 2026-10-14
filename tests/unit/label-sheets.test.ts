@@ -43,6 +43,12 @@ describe('A4 label sheets', () => {
       true,
     )
     expect(
+      labelSheetQuery.safeParse({
+        tenant,
+        items: '30300000-0000-0000-0000-000000000001',
+      }).success,
+    ).toBe(true)
+    expect(
       labelSheetQuery.safeParse({ tenant, bag: item.id, items: item.id })
         .success,
     ).toBe(false)

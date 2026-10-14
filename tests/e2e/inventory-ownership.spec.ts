@@ -79,7 +79,7 @@ test('ownership filters count and page all goods and carry through stock reports
         exact: true,
       }),
     ).toBeVisible()
-    await rows.locator('.inventory-item-link').click()
+    await rows.locator('.inventory-open-item').click()
     await expect(
       page.locator('main > .page-heading .ownership-badge'),
     ).toHaveText(d.items.ownershipKinds.consignment)

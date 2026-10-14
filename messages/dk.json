@@ -4153,5 +4153,17 @@
     "use": "Brug disse kontooplysninger",
     "snapshot": "Kontrollerede oplysninger",
     "manual": "Betalingen foretages manuelt i banken."
+  },
+  "inventoryWorkspace": {
+    "selected": "{count} valgt",
+    "editSelected": "Rediger",
+    "clear": "Fjern markering",
+    "actions": "Handlinger for valgte varer",
+    "open": "Åbn vare",
+    "saving": "Gemmer…",
+    "saved": "Gemt",
+    "cellHint": "Klik for at redigere. Enter gemmer, Escape fortryder.",
+    "invalid": "Angiv et varenavn. Escape fortryder.",
+    "selectedOne": "1 valgt"
   }
 }

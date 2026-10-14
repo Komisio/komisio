@@ -1070,3 +1070,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-14: Owner approves per-store seller bank details: holder, country and IBAN or local account. Only the linked seller and owner/admin can read them. Approved payouts freeze reviewed details; account changes require renewed review before payment.
 - 2026-10-14: Batch payout preparation leaves requests with bank details pending explicit destination review. Requests without bank details retain existing approval behavior. Bank changes block approval and payment until owner/admin reviews the current version.
 - 2026-10-14: Inventory rows save name, category, type and assortment atomically against the displayed snapshot. Category may be cleared through an append-only correction. Exact retries preserve one result; selection applies only to eligible rows on the current page.
+
+- 2026-10-14: Inventory cells save on blur or Enter; Escape discards unsaved cell input. Contextual selection actions stay in the table. Existing atomic commands, snapshot checks and retry identities remain; uncertain results block further edits to that row.

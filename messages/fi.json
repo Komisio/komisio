@@ -4159,5 +4159,17 @@
     "use": "Käytä näitä tilitietoja",
     "snapshot": "Tarkistetut tiedot",
     "manual": "Tee maksu itse pankissasi."
+  },
+  "inventoryWorkspace": {
+    "selected": "{count} valittu",
+    "editSelected": "Muokkaa",
+    "clear": "Poista valinnat",
+    "actions": "Valittujen tuotteiden toiminnot",
+    "open": "Avaa tuote",
+    "saving": "Tallennetaan…",
+    "saved": "Tallennettu",
+    "cellHint": "Muokkaa napsauttamalla. Enter tallentaa, Escape peruu.",
+    "invalid": "Anna tuotteen nimi. Escape peruu.",
+    "selectedOne": "1 valittu"
   }
 }

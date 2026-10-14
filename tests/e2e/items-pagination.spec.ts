@@ -28,7 +28,7 @@ test('staff can reach all matching items and retain filters on a phone', async (
       .toBeGreaterThan(180)
     const seen = new Set(
       await rows
-        .locator('.inventory-item-link')
+        .locator('.inventory-open-item')
         .evaluateAll((links) => links.map((link) => link.getAttribute('href'))),
     )
     const next = () =>
@@ -53,7 +53,7 @@ test('staff can reach all matching items and retain filters on a phone', async (
         .poll(() => new URL(page.url()).searchParams.get('stage'))
         .toBe('markdown_due')
       for (const href of await rows
-        .locator('.inventory-item-link')
+        .locator('.inventory-open-item')
         .evaluateAll((links) =>
           links.map((link) => link.getAttribute('href')),
         )) {

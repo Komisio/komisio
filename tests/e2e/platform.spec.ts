@@ -1659,7 +1659,9 @@ test('reception sources persist through authenticated API without a bag or GUI',
 test('seller reviews exact terms on mobile without becoming a store member', async ({
   page,
   browser,
+  baseURL,
 }) => {
+  const origin = new URL(baseURL!).origin
   const run = Date.now().toString(36),
     sellerEmail = `seller-review-${run}@example.test`
   await register(
@@ -1673,7 +1675,7 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
   const post = (data: object) =>
     page.request.post('/api/intake', {
-      headers: { Origin: 'http://127.0.0.1:3000' },
+      headers: { Origin: origin },
       data,
     })
   const seller = await post({
@@ -1701,7 +1703,7 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   const upload = await page.request.post(
     `/api/reception/${sessionId}/photo?photo=${photoId}&tenant=${tenantId}`,
     {
-      headers: { Origin: 'http://127.0.0.1:3000', 'Content-Type': 'image/png' },
+      headers: { Origin: origin, 'Content-Type': 'image/png' },
       data: png,
     },
   )
@@ -1773,7 +1775,7 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
     enabled = true,
   ) =>
     page.request.post('/api/reception/access', {
-      headers: { Origin: 'http://127.0.0.1:3000' },
+      headers: { Origin: origin },
       data: {
         tenantId,
         reviewId,
@@ -1796,7 +1798,7 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
     0,
   )
   const sellerContext = await browser.newContext({
-    baseURL: 'http://127.0.0.1:3000',
+    baseURL,
     viewport: { width: 390, height: 844 },
   })
   const mobile = await sellerContext.newPage()
@@ -1942,7 +1944,13 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   await expect(
     page.getByRole('heading', { name: 'Blue TEST jacket', exact: true }),
   ).toBeVisible()
+  await page
+    .getByRole('tab', { name: d.itemDetail.terms, exact: true })
+    .click()
   await expect(page.getByText('Frysta villkor')).toBeVisible()
+  await page
+    .getByRole('tab', { name: d.itemDetail.history, exact: true })
+    .click()
   await page.locator('summary').filter({ hasText: 'Händelser' }).click()
   await expect(page.getByText('Ursprung dokumenterat')).toBeVisible()
   await page.goto('/intake/reception?stage=accepted')
@@ -1993,7 +2001,7 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   expect(
     (
       await mobile.request.post('/api/reception/access', {
-        headers: { Origin: 'http://127.0.0.1:3000' },
+        headers: { Origin: origin },
         data: {
           tenantId,
           reviewId: secondId,

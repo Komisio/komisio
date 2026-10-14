@@ -250,7 +250,8 @@
       ]
     },
     "typeIntro": "Varutypen sparas för hela butiken och väljs för den här varan.",
-    "typeFieldsHint": "Välj en liknande varutyp för att få samma frågor, till exempel storlek och material."
+    "typeFieldsHint": "Välj en liknande varutyp för att få samma frågor, till exempel storlek och material.",
+    "typeFieldsLegend": "Välj fält"
   },
   "intake": {
     "quickLink": "Snabb mottagning: en skärm per plagg",
@@ -332,7 +333,8 @@
     "stocktakeItemMissing": "Varan finns inte i den här butiken.",
     "stocktakePending": "Kontrollera återstående varor innan du avslutar.",
     "collectionNotDue": "Hämtningsfristen har inte gått ut.",
-    "overviewHelpLabel": "Om inlämning"
+    "overviewHelpLabel": "Om inlämning",
+    "payoutBankReviewRequired": "En ägare eller administratör behöver granska säljarens kontouppgifter under Utbetalningar först."
   },
   "brand": "Komisio",
   "tagline": "Mer utrymme för det som får nytt liv.",
@@ -1412,7 +1414,7 @@
     "settleReasonHint": "Sparas på varje godkännande i satsen, till exempel \"Avräkning september\".",
     "settleConfirm": "Jag godkänner de valda beloppen för utbetalning.",
     "settle": "Förbered {count} utbetalningar",
-    "settled": "Utbetalningarna är förberedda. Betala via banken och registrera referenserna.",
+    "settled": "Utbetalningarna är förberedda. Betala via banken och registrera referenserna. Utbetalningar med kontouppgifter behöver granskas under Pågående innan betalning.",
     "settleTotal": "Summa",
     "requestNone": "Inget tillgängligt saldo i den här listan. Öppna en säljare för att se säljarens saldo.",
     "directory": "Sök bland alla säljare",
@@ -1436,7 +1438,8 @@
     "selectedCandidates": "{selected} av {total} säljare valda",
     "candidateLimit": "Högst 100 per omgång.",
     "selectCandidates": "Välj de första 100",
-    "clearCandidates": "Avmarkera alla"
+    "clearCandidates": "Avmarkera alla",
+    "bankReviewHint": "Utbetalningar med kontouppgifter behöver granskas under Pågående innan betalning."
   },
   "returns": {
     "reason": "Anledning till retur",
@@ -4086,6 +4089,65 @@
       "messages": "Meddelanden som väntar eller har osäker leverans",
       "legacyStatements": "Äldre avräkningar behöver säkras före radering",
       "fees": "Obetalda avgifter"
-    }
+    },
+    "bankRemovable": "Kontouppgifter utan utbetalningsunderlag",
+    "bankRetained": "Kontouppgifter som hör till granskade utbetalningar"
+  },
+  "labelSheets": {
+    "title": "Prislappar på A4",
+    "size": "Etikettstorlek",
+    "copies": "Antal per vara",
+    "preview": "Förhandsgranska PDF",
+    "download": "Hämta PDF",
+    "hint": "Skriv ut i faktisk storlek (100 %). Arket har klipplinjer.",
+    "selection": "Välj varor på den här sidan för prislappar.",
+    "empty": "Inga varor att skriva ut.",
+    "skipped": "{count} varor hoppas över eftersom de inte längre är till salu.",
+    "error": "Urvalet kan inte läsas. Välj högst 200 varor som är till salu.",
+    "back": "Tillbaka till varor",
+    "limit": "Högst 400 etiketter per PDF."
+  },
+  "itemWorkflow": {
+    "edit": "Redigera varutext",
+    "description": "Varunamn och beskrivning",
+    "save": "Spara",
+    "saved": "Sparat",
+    "uncertain": "Kunde inte bekräfta sparandet. Försök igen med samma uppgifter.",
+    "changed": "Uppgifterna har ändrats. Ladda om sidan och försök igen.",
+    "reload": "Ladda om",
+    "classification": "Varutyp och sortiment",
+    "group": "Sortimentsgrupp",
+    "none": "Ingen",
+    "choose": "Välj…",
+    "newGroup": "Ny sortimentsgrupp",
+    "name": "Namn",
+    "createGroup": "Skapa grupp",
+    "bulk": "Ändra markerade varor",
+    "bulkHint": "Valda varor får varutypen och sortimentsgruppen nedan.",
+    "fields": "Välj fält",
+    "outgoing": "Från Komisio till kassan",
+    "incoming": "Försäljningar från kassan",
+    "salesSync": "Visa försäljningssynk",
+    "historyHint": "Tidigare avtal och försäljningar ändras inte.",
+    "storeShare": "Butikens andel",
+    "sellerShare": "Säljarens andel"
+  },
+  "sellerBank": {
+    "title": "Utbetalningskonto",
+    "holder": "Kontoinnehavare",
+    "country": "Land",
+    "kind": "Kontotyp",
+    "local": "Lokalt bankkonto",
+    "account": "Kontonummer",
+    "routing": "Clearingnummer eller bankkod",
+    "review": "Granska kontouppgifter",
+    "reviewed": "Kontouppgifterna är granskade",
+    "changed": "Kontot har ändrats. Granska uppgifterna före betalning.",
+    "privacy": "Uppgifterna gäller den här butiken. Bara du och butikens ägare eller administratör kan se dem.",
+    "empty": "Inga kontouppgifter sparade.",
+    "invalid": "Kontrollera kontoinnehavare, land och kontonummer.",
+    "use": "Använd dessa kontouppgifter",
+    "snapshot": "Granskade uppgifter",
+    "manual": "Betalningen görs manuellt i banken."
   }
 }

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { ledgerItemDetails } from './seller-ledger'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 const money = z.number().int()
@@ -19,6 +20,7 @@ export const sellerEconomy = z.object({
   limit: z.literal(100),
   ledger: z.array(
     z.object({
+      itemDetails: ledgerItemDetails.nullable().optional(),
       id: z.uuid(),
       kind: z.string(),
       amount_ore: money,

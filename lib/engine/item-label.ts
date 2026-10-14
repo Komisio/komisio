@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
-const itemLabel = z.object({
+export const itemLabel = z.object({
   id: z.guid(),
   reference: z.string().regex(/^I-[0-9A-F]{8}$/),
   title: z.string().nullable(),

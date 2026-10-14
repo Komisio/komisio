@@ -75,7 +75,7 @@ export function ShopifyOrders({
     }
   }
   return (
-    <section className="card" aria-label={d.ordersTitle}>
+    <section id="shopify-sales" className="card" aria-label={d.ordersTitle}>
       <h2>{d.ordersTitle}</h2>
       <p>{d.ordersIntro}</p>
       <p>

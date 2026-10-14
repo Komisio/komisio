@@ -571,6 +571,10 @@ export function QuickReception({
             (k === 'description' || (v !== '' && (asked.has(k) || !itemType))),
         ),
     )
+    const suggestedCategory = vocabulary.types.find(
+      (t) => t.slug === itemType,
+    )?.suggested_category
+    if (suggestedCategory?.trim()) cleaned.category = suggestedCategory.trim()
     requestId.current ??= crypto.randomUUID()
     return {
       ...(bagId ? { bagId } : {}),

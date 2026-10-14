@@ -9,12 +9,14 @@ export function BagRegisteredItems({
   currency,
   itemPage,
   href,
+  bagId,
 }: {
   data: BagRegisteredPage
   locale: Locale
   currency: string
   itemPage: number
   href: (page: number) => string
+  bagId: string
 }) {
   const d = dictionary(locale),
     b = d.bagIntake
@@ -28,6 +30,14 @@ export function BagRegisteredItems({
       style={{ scrollMarginTop: '1rem' }}
     >
       <h2>{title}</h2>
+      {total > 0 && (
+        <Link
+          className="btn btn-secondary"
+          href={`/intake/items/labels?bag=${bagId}`}
+        >
+          {d.labelSheets.title}
+        </Link>
+      )}
       {!legacy && total > 0 && (
         <p>
           <small>

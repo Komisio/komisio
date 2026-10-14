@@ -21,6 +21,7 @@ export function ItemSyncStatus({
   return (
     <section className="card intake-form item-sync-status" aria-label={t.title}>
       <h2>{t.title}</h2>
+      <p>{d.itemWorkflow.outgoing}</p>
       {connections.length === 0 ? (
         <Link className="text-link" href="/intake/integrations">
           {t.connect}
@@ -90,6 +91,12 @@ export function ItemSyncStatus({
                 href={`/intake/integrations?provider=${state.provider}`}
               >
                 {state.connected ? t.settings : t.connect}
+              </Link>
+              <Link
+                className="text-link"
+                href={`/intake/integrations?provider=${state.provider}#${state.provider}-sales`}
+              >
+                {d.itemWorkflow.salesSync}
               </Link>
             </div>
           </div>

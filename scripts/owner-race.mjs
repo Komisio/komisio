@@ -15,6 +15,7 @@ import { raceShopifyPrivacy } from './shopify-privacy-race.mjs'
 import { raceStoreCreation } from './store-creation-race.mjs'
 import { raceSellerProfile } from './seller-profile-race.mjs'
 import { raceSellerPrivacy } from './seller-privacy-race.mjs'
+import { raceStoreWorkflow } from './store-workflow-race.mjs'
 import { raceSellerActivation } from './seller-activation-race.mjs'
 import { raceInventoryImport } from './inventory-import-race.mjs'
 import { racePosImport } from './pos-import-race.mjs'
@@ -78,6 +79,7 @@ try {
       ),
     )
   await raceConsignmentFees({ setup, connectionString: parsed.toString() })
+  await raceStoreWorkflow({ setup, connectionString: parsed.toString() })
   await raceAgreementAssistance({ setup, connectionString: parsed.toString() })
   await raceAccountingAssistance({ setup, connectionString: parsed.toString() })
   await raceSellerAgreement({ setup, connectionString: parsed.toString() })

@@ -88,6 +88,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
           'MAP_CHANGED',
           'PAYOUT_NOT_REQUESTED',
           'PAYOUT_NOT_APPROVED',
+          'PAYOUT_BANK_REVIEW_REQUIRED',
           'PAYOUT_CHANGED',
           'PAYOUT_DECIDED',
           'AGREEMENT_REQUIRED',
@@ -124,6 +125,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
             'MAP_CHANGED',
             'PAYOUT_NOT_REQUESTED',
             'PAYOUT_NOT_APPROVED',
+            'PAYOUT_BANK_REVIEW_REQUIRED',
             'PAYOUT_CHANGED',
             'PAYOUT_DECIDED',
           ].includes(result.error) ||
@@ -150,49 +152,52 @@ export function useIntakeAction(d: Dictionary['intake']) {
                         'STOCKTAKE_NOT_FOUND',
                       ].includes(result.error)
                     ? d.recordChanged
-                    : result.error === 'BAG_PENDING_WORK'
-                      ? d.bagPendingWork
-                      : result.error === 'BAG_COMPLETED'
-                        ? d.bagCompleted
-                        : result.error === 'BAG_PROCESSING_CHANGED'
-                          ? d.recordChanged
-                          : [
-                                'INSPECTION_ARCHIVED',
-                                'INSPECTION_STATUS_UNCHANGED',
-                                'INSPECTION_NOT_FOUND',
-                              ].includes(result.error)
-                            ? d.inspectionUnavailable
-                            : result.error === 'INSPECTION_DRAFT_CHANGED'
-                              ? d.inspectionChanged
-                              : result.error === 'INSPECTION_CONTEXT_CHANGED'
-                                ? d.changed
-                                : [
-                                      'PROFILE_CHANGED',
-                                      'SELLER_TERMS_CHANGED',
-                                      'MAP_CHANGED',
-                                      'PAYOUT_NOT_REQUESTED',
-                                      'PAYOUT_NOT_APPROVED',
-                                      'PAYOUT_CHANGED',
-                                      'PAYOUT_DECIDED',
-                                    ].includes(result.error)
-                                  ? d.recordChanged
-                                  : result.error === 'AGREEMENT_CHANGED'
-                                    ? d.agreementChanged
-                                    : result.error === 'AGREEMENT_REQUIRED'
-                                      ? d.agreementRequired
-                                      : result.error === 'INVALID_INPUT'
-                                        ? d.invalid
-                                        : [
-                                              'TENANT_CHANGED',
-                                              'POLICY_CHANGED',
-                                            ].includes(result.error)
-                                          ? d.changed
+                    : result.error === 'PAYOUT_BANK_REVIEW_REQUIRED'
+                      ? d.payoutBankReviewRequired
+                      : result.error === 'BAG_PENDING_WORK'
+                        ? d.bagPendingWork
+                        : result.error === 'BAG_COMPLETED'
+                          ? d.bagCompleted
+                          : result.error === 'BAG_PROCESSING_CHANGED'
+                            ? d.recordChanged
+                            : [
+                                  'INSPECTION_ARCHIVED',
+                                  'INSPECTION_STATUS_UNCHANGED',
+                                  'INSPECTION_NOT_FOUND',
+                                ].includes(result.error)
+                              ? d.inspectionUnavailable
+                              : result.error === 'INSPECTION_DRAFT_CHANGED'
+                                ? d.inspectionChanged
+                                : result.error === 'INSPECTION_CONTEXT_CHANGED'
+                                  ? d.changed
+                                  : [
+                                        'PROFILE_CHANGED',
+                                        'SELLER_TERMS_CHANGED',
+                                        'MAP_CHANGED',
+                                        'PAYOUT_NOT_REQUESTED',
+                                        'PAYOUT_NOT_APPROVED',
+                                        'PAYOUT_BANK_REVIEW_REQUIRED',
+                                        'PAYOUT_CHANGED',
+                                        'PAYOUT_DECIDED',
+                                      ].includes(result.error)
+                                    ? d.recordChanged
+                                    : result.error === 'AGREEMENT_CHANGED'
+                                      ? d.agreementChanged
+                                      : result.error === 'AGREEMENT_REQUIRED'
+                                        ? d.agreementRequired
+                                        : result.error === 'INVALID_INPUT'
+                                          ? d.invalid
                                           : [
-                                                'FORBIDDEN',
-                                                'AUTH_REQUIRED',
+                                                'TENANT_CHANGED',
+                                                'POLICY_CHANGED',
                                               ].includes(result.error)
-                                            ? d.denied
-                                            : d.failed,
+                                            ? d.changed
+                                            : [
+                                                  'FORBIDDEN',
+                                                  'AUTH_REQUIRED',
+                                                ].includes(result.error)
+                                              ? d.denied
+                                              : d.failed,
         )
         if (result.error === 'AGREEMENT_REQUIRED') router.refresh()
         return null

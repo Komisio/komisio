@@ -33,7 +33,16 @@ export const sellerBalance = z.strictObject({
   entries: z.number().int().nonnegative(),
 })
 export type SellerBalance = z.infer<typeof sellerBalance>
+export const ledgerItemDetails = z.object({
+  itemId: z.guid(),
+  reference: z.string(),
+  title: z.string().nullable(),
+  salePriceOre: z.string().regex(/^\d+$/),
+  storeShareOre: z.string().regex(/^\d+$/),
+  sellerShareOre: z.string().regex(/^\d+$/),
+})
 const entryRow = z.object({
+  itemDetails: ledgerItemDetails.nullable().optional(),
   id: z.uuid(),
   kind: ledgerKind,
   amount_ore: ore,

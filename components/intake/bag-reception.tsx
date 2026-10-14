@@ -122,6 +122,7 @@ export async function BagReception({
         />
       )}
       <BagRegisteredItems
+        bagId={bagId}
         data={received}
         locale={locale}
         currency={currency}

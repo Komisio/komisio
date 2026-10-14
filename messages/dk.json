@@ -250,7 +250,8 @@
       ]
     },
     "typeIntro": "Varetypen gemmes for hele butikken og vælges til denne vare.",
-    "typeFieldsHint": "Vælg en lignende varetype for at få de samme spørgsmål, for eksempel størrelse og materiale."
+    "typeFieldsHint": "Vælg en lignende varetype for at få de samme spørgsmål, for eksempel størrelse og materiale.",
+    "typeFieldsLegend": "Vælg felter"
   },
   "intake": {
     "quickLink": "Hurtig modtagelse: én skærm pr. stykke tøj",
@@ -332,7 +333,8 @@
     "stocktakeItemMissing": "Varen findes ikke i denne butik.",
     "stocktakePending": "Kontrollér de resterende varer, før du afslutter.",
     "collectionNotDue": "Afhentningsfristen er ikke udløbet.",
-    "overviewHelpLabel": "Om indlevering"
+    "overviewHelpLabel": "Om indlevering",
+    "payoutBankReviewRequired": "En ejer eller administrator skal først kontrollere sælgerens kontooplysninger under Udbetalinger."
   },
   "brand": "Komisio",
   "tagline": "Mere plads til ting, der får nyt liv.",
@@ -1412,7 +1414,7 @@
     "settleReasonHint": "Registreres på hver godkendelse i batchen, for eksempel \"Septemberafregning\".",
     "settleConfirm": "Jeg godkender de valgte beløb til udbetaling.",
     "settle": "Klargør {count} udbetalinger",
-    "settled": "Udbetalingerne er klargjort. Betal via banken og registrer referencerne.",
+    "settled": "Udbetalingerne er klargjort. Betal via banken og registrer referencerne. Udbetalinger med kontooplysninger skal kontrolleres under Igangværende før betaling.",
     "settleTotal": "I alt",
     "requestNone": "Ingen tilgængelig saldo på denne liste. Åbn en indleverer for at se saldoen.",
     "directory": "Søg blandt alle indleverere",
@@ -1436,7 +1438,8 @@
     "selectedCandidates": "{selected} af {total} sælgere valgt",
     "candidateLimit": "Højst 100 pr. omgang.",
     "selectCandidates": "Vælg de første 100",
-    "clearCandidates": "Fravælg alle"
+    "clearCandidates": "Fravælg alle",
+    "bankReviewHint": "Udbetalinger med kontooplysninger skal kontrolleres under Igangværende før betaling."
   },
   "returns": {
     "reason": "Returårsag",
@@ -4086,6 +4089,65 @@
       "messages": "Beskeder med afventende eller usikker levering",
       "legacyStatements": "Ældre afregninger skal sikres før sletning",
       "fees": "Ubetalte gebyrer"
-    }
+    },
+    "bankRemovable": "Kontooplysninger uden udbetalingsbilag",
+    "bankRetained": "Kontooplysninger brugt i kontrollerede udbetalinger"
+  },
+  "labelSheets": {
+    "title": "Prismærker på A4",
+    "size": "Etiketstørrelse",
+    "copies": "Antal pr. vare",
+    "preview": "Vis PDF",
+    "download": "Hent PDF",
+    "hint": "Udskriv i faktisk størrelse (100 %). Arket har klippelinjer.",
+    "selection": "Vælg varer på denne side til prismærker.",
+    "empty": "Ingen varer at udskrive.",
+    "skipped": "{count} varer springes over, da de ikke længere er til salg.",
+    "error": "Udvalget kan ikke læses. Vælg højst 200 varer til salg.",
+    "back": "Tilbage til varer",
+    "limit": "Højst 400 etiketter pr. PDF."
+  },
+  "itemWorkflow": {
+    "edit": "Rediger varetekst",
+    "description": "Varenavn og beskrivelse",
+    "save": "Gem",
+    "saved": "Gemt",
+    "uncertain": "Kunne ikke bekræfte lagring. Prøv igen med samme oplysninger.",
+    "changed": "Oplysningerne er ændret. Genindlæs siden og prøv igen.",
+    "reload": "Genindlæs",
+    "classification": "Varetype og sortiment",
+    "group": "Sortimentsgruppe",
+    "none": "Ingen",
+    "choose": "Vælg…",
+    "newGroup": "Ny sortimentsgruppe",
+    "name": "Navn",
+    "createGroup": "Opret gruppe",
+    "bulk": "Rediger valgte varer",
+    "bulkHint": "Valgte varer får varetypen og sortimentsgruppen nedenfor.",
+    "fields": "Vælg felter",
+    "outgoing": "Fra Komisio til kassen",
+    "incoming": "Salg fra kassen",
+    "salesSync": "Vis salgssynkronisering",
+    "historyHint": "Tidligere aftaler og salg ændres ikke.",
+    "storeShare": "Butikkens andel",
+    "sellerShare": "Sælgerens andel"
+  },
+  "sellerBank": {
+    "title": "Udbetalingskonto",
+    "holder": "Kontohaver",
+    "country": "Land",
+    "kind": "Kontotype",
+    "local": "Lokal bankkonto",
+    "account": "Kontonummer",
+    "routing": "Registreringsnummer eller bankkode",
+    "review": "Kontrollér kontooplysninger",
+    "reviewed": "Kontooplysningerne er kontrolleret",
+    "changed": "Kontoen er ændret. Kontrollér oplysningerne før betaling.",
+    "privacy": "Oplysningerne gælder denne butik. Kun du og butikkens ejer eller administrator kan se dem.",
+    "empty": "Ingen kontooplysninger gemt.",
+    "invalid": "Kontrollér kontohaver, land og kontonummer.",
+    "use": "Brug disse kontooplysninger",
+    "snapshot": "Kontrollerede oplysninger",
+    "manual": "Betalingen foretages manuelt i banken."
   }
 }

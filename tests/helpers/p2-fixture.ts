@@ -1,10 +1,14 @@
 import { createRequire } from 'node:module'
 import { randomUUID } from 'node:crypto'
+import { localTestUrl } from './local-services'
 // Loopback-only fixtures. All domain writes run as an identified store owner.
 export async function p2Fixture(email: string) {
   const { Client } = createRequire(import.meta.url)('pg')
   const db = new Client({
-    connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    connectionString: localTestUrl(
+      'TEST_DATABASE_URL',
+      'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    ),
   })
   await db.connect()
   const actor = (

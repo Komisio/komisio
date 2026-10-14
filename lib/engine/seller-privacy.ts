@@ -20,6 +20,8 @@ export const privacyPreview = z.object({
   }),
   counts: z.object({
     profiles: count,
+    bankRemovable: count.default(0),
+    bankRetained: count.default(0),
     ordinaryMessages: count,
     reviewContacts: count,
     statements: count,

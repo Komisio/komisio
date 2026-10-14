@@ -250,7 +250,8 @@
       ]
     },
     "typeIntro": "Tuotetyyppi tallennetaan koko myymälälle ja valitaan tälle tuotteelle.",
-    "typeFieldsHint": "Valitse samankaltainen tuotetyyppi, jos haluat samat kysymykset, kuten koon ja materiaalin."
+    "typeFieldsHint": "Valitse samankaltainen tuotetyyppi, jos haluat samat kysymykset, kuten koon ja materiaalin.",
+    "typeFieldsLegend": "Valitse kentät"
   },
   "intake": {
     "quickLink": "Pikavastaanotto: yksi näyttö per vaate",
@@ -332,7 +333,8 @@
     "stocktakeItemMissing": "Tuotetta ei löytynyt tästä myymälästä.",
     "stocktakePending": "Tarkista jäljellä olevat tuotteet ennen päättämistä.",
     "collectionNotDue": "Noutoaika ei ole vielä päättynyt.",
-    "overviewHelpLabel": "Tietoa vastaanotosta"
+    "overviewHelpLabel": "Tietoa vastaanotosta",
+    "payoutBankReviewRequired": "Omistajan tai ylläpitäjän on ensin tarkistettava myyjän tilitiedot Maksut-osiossa."
   },
   "brand": "Komisio",
   "tagline": "Enemmän tilaa tavaroille elää uudelleen.",
@@ -1412,7 +1414,7 @@
     "settleReasonHint": "Kirjataan jokaiseen erän hyväksyntään, esimerkiksi \"Syyskuun tilitys\".",
     "settleConfirm": "Hyväksyn valitut summat maksettaviksi.",
     "settle": "Valmistele {count} tilitystä",
-    "settled": "Tilitykset on valmisteltu. Maksa pankin kautta ja kirjaa viitteet.",
+    "settled": "Tilitykset on valmisteltu. Maksa pankin kautta ja kirjaa viitteet. Tilitietoja sisältävät maksut on tarkistettava Avoimet-osiossa ennen maksamista.",
     "settleTotal": "Yhteensä",
     "requestNone": "Tässä luettelossa ei ole käytettävissä olevaa saldoa. Avaa tuoja nähdäksesi saldon.",
     "directory": "Hae kaikista tuojista",
@@ -1436,7 +1438,8 @@
     "selectedCandidates": "{selected} / {total} myyjää valittu",
     "candidateLimit": "Enintään 100 kerrallaan.",
     "selectCandidates": "Valitse ensimmäiset 100",
-    "clearCandidates": "Poista valinnat"
+    "clearCandidates": "Poista valinnat",
+    "bankReviewHint": "Tilitietoja sisältävät maksut on tarkistettava Avoimet-osiossa ennen maksamista."
   },
   "returns": {
     "reason": "Palautuksen syy",
@@ -4092,6 +4095,65 @@
       "messages": "Viestit, joiden toimitus odottaa tai on epävarma",
       "legacyStatements": "Vanhemmat tilitykset on turvattava ennen poistamista",
       "fees": "Maksamattomat maksut"
-    }
+    },
+    "bankRemovable": "Tilitiedot ilman maksutositteita",
+    "bankRetained": "Tarkistetuissa maksuissa käytetyt tilitiedot"
+  },
+  "labelSheets": {
+    "title": "A4-hintalaput",
+    "size": "Etiketin koko",
+    "copies": "Kopioita tuotetta kohti",
+    "preview": "Esikatsele PDF",
+    "download": "Lataa PDF",
+    "hint": "Tulosta todellisessa koossa (100 %). Arkissa on leikkausviivat.",
+    "selection": "Valitse tämän sivun tuotteet hintalappuja varten.",
+    "empty": "Ei tulostettavia tuotteita.",
+    "skipped": "{count} tuotetta ohitetaan, koska ne eivät enää ole myynnissä.",
+    "error": "Valintaa ei voi lukea. Valitse enintään 200 myynnissä olevaa tuotetta.",
+    "back": "Takaisin tuotteisiin",
+    "limit": "Enintään 400 etikettiä PDF-tiedostossa."
+  },
+  "itemWorkflow": {
+    "edit": "Muokkaa tuotetekstiä",
+    "description": "Tuotteen nimi ja kuvaus",
+    "save": "Tallenna",
+    "saved": "Tallennettu",
+    "uncertain": "Tallennusta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla.",
+    "changed": "Tiedot ovat muuttuneet. Lataa sivu uudelleen ja yritä uudestaan.",
+    "reload": "Lataa uudelleen",
+    "classification": "Tuotetyyppi ja valikoima",
+    "group": "Valikoimaryhmä",
+    "none": "Ei mitään",
+    "choose": "Valitse…",
+    "newGroup": "Uusi valikoimaryhmä",
+    "name": "Nimi",
+    "createGroup": "Luo ryhmä",
+    "bulk": "Muokkaa valittuja tuotteita",
+    "bulkHint": "Valitut tuotteet saavat alla olevan tuotetyypin ja valikoimaryhmän.",
+    "fields": "Valitse kentät",
+    "outgoing": "Komisiosta kassaan",
+    "incoming": "Myynnit kassasta",
+    "salesSync": "Näytä myyntien synkronointi",
+    "historyHint": "Aiemmat sopimukset ja myynnit säilyvät ennallaan.",
+    "storeShare": "Myymälän osuus",
+    "sellerShare": "Myyjän osuus"
+  },
+  "sellerBank": {
+    "title": "Maksutili",
+    "holder": "Tilinhaltija",
+    "country": "Maa",
+    "kind": "Tilityyppi",
+    "local": "Paikallinen pankkitili",
+    "account": "Tilinumero",
+    "routing": "Pankki- tai reitityskoodi",
+    "review": "Tarkista tilitiedot",
+    "reviewed": "Tilitiedot tarkistettu",
+    "changed": "Tili on muuttunut. Tarkista tiedot ennen maksua.",
+    "privacy": "Tiedot koskevat tätä myymälää. Vain sinä ja myymälän omistaja tai ylläpitäjä näette ne.",
+    "empty": "Tilitietoja ei ole tallennettu.",
+    "invalid": "Tarkista tilinhaltija, maa ja tilinumero.",
+    "use": "Käytä näitä tilitietoja",
+    "snapshot": "Tarkistetut tiedot",
+    "manual": "Tee maksu itse pankissasi."
   }
 }

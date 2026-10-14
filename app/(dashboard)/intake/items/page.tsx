@@ -23,6 +23,8 @@ import {
 import { ItemPhotoPreview } from '@/components/intake/item-photo-preview'
 import { ItemIndicator } from '@/components/intake/item-indicator'
 import { itemSyncStatus, syncProvider } from '@/lib/engine/item-sync'
+import { readAssortmentGroups } from '@/lib/engine/item-classification'
+import { readAttributeVocabulary, labelOf } from '@/lib/engine/attributes'
 
 export default async function Items({
   searchParams,
@@ -36,6 +38,10 @@ export default async function Items({
     d = all.items,
     t = d.directory,
     params = await searchParams
+  const [groups, vocabulary] = await Promise.all([
+    readAssortmentGroups(ctx.client, active.id),
+    readAttributeVocabulary(ctx.client, active.id),
+  ])
   const raw: Record<string, string> = {}
   for (const key of filterKeys) {
     const value = params[key]
@@ -230,6 +236,18 @@ export default async function Items({
               )}
               {input('seller', all.quickIntake.seller)}
               {input('category', all.quickIntake.category)}
+              {select(
+                'itemType',
+                all.quickIntake.itemType,
+                vocabulary.types
+                  .filter((t) => t.active)
+                  .map((t) => [t.slug, labelOf(t, ctx.locale)]),
+              )}
+              {select(
+                'assortment',
+                all.itemWorkflow.group,
+                groups.map((g) => [g.id, g.name]),
+              )}
               {select('photo', t.photo, [
                 ['yes', t.withPhoto],
                 ['no', t.withoutPhoto],
@@ -260,6 +278,25 @@ export default async function Items({
         )}
         {result && (
           <>
+            <form
+              id="label-selection"
+              action="/intake/items/labels"
+              method="get"
+              className="row wrap"
+            >
+              <button className="btn btn-secondary">
+                {all.labelSheets.title}
+              </button>
+              {['owner', 'admin', 'staff'].includes(active.role) && (
+                <button
+                  className="btn btn-secondary"
+                  formAction="/intake/items/classify"
+                >
+                  {all.itemWorkflow.bulk}
+                </button>
+              )}
+              <small>{all.labelSheets.selection}</small>
+            </form>
             <div
               className="inventory-table-scroll"
               role="region"
@@ -270,11 +307,16 @@ export default async function Items({
                 <caption className="sr-only">{d.list}</caption>
                 <thead>
                   <tr>
+                    <th scope="col">
+                      <span className="sr-only">{all.labelSheets.title}</span>
+                    </th>
                     {header('title', d.item)}
                     <th scope="col">
                       <span className="sr-only">{t.details}</span>
                     </th>
                     {header('category', all.quickIntake.category)}
+                    <th scope="col">{all.quickIntake.itemType}</th>
+                    <th scope="col">{all.itemWorkflow.group}</th>
                     {header('seller', all.quickIntake.seller)}
                     {header('price', all.quickIntake.price, true)}
                     {header('stage', d.stage)}
@@ -286,6 +328,22 @@ export default async function Items({
                 <tbody>
                   {result.items.map((i) => (
                     <tr key={i.id} className="inventory-row">
+                      <td>
+                        <input
+                          type="checkbox"
+                          name="item"
+                          value={i.id}
+                          form="label-selection"
+                          aria-label={`${all.labelSheets.title}: ${i.title || i.id}`}
+                          disabled={
+                            ![
+                              'on_sale',
+                              'markdown_due',
+                              'period_ending',
+                            ].includes(i.stage)
+                          }
+                        />
+                      </td>
                       <th scope="row">
                         <Link
                           className="inventory-item-link"
@@ -323,6 +381,19 @@ export default async function Items({
                         >
                           {i.category || '—'}
                         </span>
+                      </td>
+                      <td>
+                        {(() => {
+                          const type = vocabulary.types.find(
+                            (t) => t.slug === i.classification?.itemType,
+                          )
+                          return type ? labelOf(type, ctx.locale) : '—'
+                        })()}
+                      </td>
+                      <td>
+                        {groups.find(
+                          (g) => g.id === i.classification?.assortment,
+                        )?.name ?? '—'}
                       </td>
                       <td>
                         {i.sellerId ? (

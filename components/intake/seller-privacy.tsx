@@ -128,6 +128,9 @@ export function SellerPrivacy({
               <ul className="mt-2 list-disc space-y-2 pl-5">
                 <li>{d.contact}</li>
                 <li>
+                  {d.bankRemovable} ({preview.counts.bankRemovable})
+                </li>
+                <li>
                   {d.profiles} ({preview.counts.profiles})
                 </li>
                 <li>
@@ -152,6 +155,9 @@ export function SellerPrivacy({
               </li>
               <li>
                 {d.financialMessages} ({preview.counts.financialMessages})
+              </li>
+              <li>
+                {d.bankRetained} ({preview.counts.bankRetained})
               </li>
               <li>
                 {d.sourceEvidence} (

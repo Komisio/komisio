@@ -462,6 +462,7 @@ export default async function InspectBag({
         </nav>
       </section>
       <BagRegisteredItems
+        bagId={id}
         data={registered}
         locale={ctx.locale}
         currency={policy.policy.currency ?? 'SEK'}

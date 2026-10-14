@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { graphql } from './auth'
+import { graphql, ShopifyQueryCostExceeded } from './auth'
 
 // Admin API 2026-07: paid orders updated since a watermark, oldest first,
 // reduced to the evidence the engine records. Amounts are parsed as integer
@@ -63,18 +63,39 @@ const orderNode = z.object({
 /** What a caller hands in: refunds may be absent (older fixtures, orders without refunds). */
 export type OrderNode = z.input<typeof orderNode>
 
-const ORDERS = `query PaidOrders($q: String!, $first: Int!) {
-  orders(first: $first, query: $q, sortKey: UPDATED_AT) {
+const ORDERS = `query PaidOrders($q: String!, $first: Int!, $after: String) {
+  orders(first: $first, after: $after, query: $q, sortKey: UPDATED_AT) {
+    pageInfo { hasNextPage endCursor }
     nodes {
       id name createdAt updatedAt displayFinancialStatus test cancelledAt sourceName retailLocation { id }
-      lineItems(first: 50) { nodes { sku variant { id } title quantity discountedTotalSet { shopMoney { amount currencyCode } } } }
-      refunds(first: 20) { id createdAt totalRefundedSet { shopMoney { amount currencyCode } }
-        refundLineItems(first: 50) { nodes { lineItem { sku variant { id } } quantity subtotalSet { shopMoney { amount currencyCode } } totalTaxSet { shopMoney { amount currencyCode } } } } }
+      lineItems(first: 50) { pageInfo { hasNextPage } nodes { sku variant { id } title quantity discountedTotalSet { shopMoney { amount currencyCode } } } }
+      refunds { id createdAt totalRefundedSet { shopMoney { amount currencyCode } }
+        refundLineItems(first: 50) { pageInfo { hasNextPage } nodes { lineItem { sku variant { id } } quantity subtotalSet { shopMoney { amount currencyCode } } totalTaxSet { shopMoney { amount currencyCode } } } } }
     }
   }
 }`
 
 export const PAGE_SIZE = 50
+
+// Do not turn a truncated checkout into a smaller sale or miss a refund line.
+const completeLines = z.object({
+  pageInfo: z.object({ hasNextPage: z.literal(false) }),
+})
+const completeOrder = orderNode.and(
+  z.object({
+    lineItems: completeLines,
+    refunds: z.array(z.object({ refundLineItems: completeLines })).max(20),
+  }),
+)
+const pageResult = z.object({
+  orders: z.object({
+    nodes: z.array(completeOrder).max(PAGE_SIZE),
+    pageInfo: z.object({
+      hasNextPage: z.boolean(),
+      endCursor: z.string().min(1).nullable(),
+    }),
+  }),
+})
 
 /** Orders paid at some point (paid, partially refunded, refunded) updated at or after the watermark, oldest update first. */
 export async function listPaidOrders(
@@ -84,19 +105,55 @@ export async function listPaidOrders(
   http?: typeof fetch,
 ): Promise<OrderNode[]> {
   const since = z.iso.datetime().parse(sinceIso)
-  const data = await graphql(
-    shop,
-    accessToken,
-    ORDERS,
-    {
-      q: `(financial_status:paid OR financial_status:partially_refunded OR financial_status:refunded) updated_at:>='${since}'`,
-      first: PAGE_SIZE,
-    },
-    http,
-  )
-  return z
-    .object({ orders: z.object({ nodes: z.array(orderNode).max(PAGE_SIZE) }) })
-    .parse(data).orders.nodes
+  const orders: OrderNode[] = []
+  const seenOrders = new Set<string>(),
+    seenCursors = new Set<string>()
+  let batchSize = PAGE_SIZE,
+    after: string | null = null
+  while (orders.length < PAGE_SIZE) {
+    const first = Math.min(batchSize, PAGE_SIZE - orders.length)
+    let data: unknown
+    try {
+      data = await graphql(
+        shop,
+        accessToken,
+        ORDERS,
+        {
+          q: `(financial_status:paid OR financial_status:partially_refunded OR financial_status:refunded) updated_at:>='${since}'`,
+          first,
+          after,
+        },
+        http,
+      )
+    } catch (e) {
+      if (!(e instanceof ShopifyQueryCostExceeded) || first === 1) throw e
+      batchSize = Math.max(1, Math.floor(first / 2))
+      continue
+    }
+    const parsed = pageResult.safeParse(data)
+    if (!parsed.success) throw new Error('SHOPIFY_READ_FAILED')
+    const { nodes, pageInfo } = parsed.data.orders
+    if (
+      nodes.length > first ||
+      new Set(nodes.map((o) => o.id)).size !== nodes.length ||
+      nodes.some((o) => seenOrders.has(o.id))
+    )
+      throw new Error('SHOPIFY_READ_FAILED')
+    for (const node of nodes) {
+      seenOrders.add(node.id)
+      orders.push(node)
+    }
+    if (!pageInfo.hasNextPage || orders.length === PAGE_SIZE) return orders
+    if (
+      !nodes.length ||
+      !pageInfo.endCursor ||
+      seenCursors.has(pageInfo.endCursor)
+    )
+      throw new Error('SHOPIFY_READ_FAILED')
+    after = pageInfo.endCursor
+    seenCursors.add(after)
+  }
+  return orders
 }
 
 /** "250.00" → 25000; refuses anything but a plain decimal with at most two places. */

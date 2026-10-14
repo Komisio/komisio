@@ -212,6 +212,13 @@ export async function refreshTokens(
   return tokenSet.parse(await boundedJson(response, 65536))
 }
 
+/** Read batching may retry this rejection; never retry a mutation implicitly. */
+export class ShopifyQueryCostExceeded extends Error {
+  constructor() {
+    super('SHOPIFY_READ_FAILED')
+  }
+}
+
 export async function graphql(
   shop: string,
   accessToken: string,
@@ -249,10 +256,23 @@ export async function graphql(
   const body = z
     .object({
       data: z.unknown().optional(),
-      errors: z.array(z.object({ message: z.string() })).optional(),
+      errors: z
+        .array(
+          z.object({
+            message: z.string(),
+            extensions: z.object({ code: z.string().optional() }).optional(),
+          }),
+        )
+        .optional(),
     })
     .parse(await boundedJson(response, 1_048_576))
-  if (body.errors?.length) throw new Error('SHOPIFY_READ_FAILED')
+  if (body.errors?.length) {
+    if (body.errors.every((e) => e.extensions?.code === 'MAX_COST_EXCEEDED'))
+      throw new ShopifyQueryCostExceeded()
+    if (body.errors.every((e) => e.extensions?.code === 'THROTTLED'))
+      throw new Error('SHOPIFY_RATE_LIMITED')
+    throw new Error('SHOPIFY_READ_FAILED')
+  }
   return body.data
 }
 

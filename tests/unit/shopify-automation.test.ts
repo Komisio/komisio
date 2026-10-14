@@ -82,7 +82,9 @@ function runFixture(
       displayFinancialStatus: 'PAID',
       test: false,
       cancelledAt: null,
+      refunds: [],
       lineItems: {
+        pageInfo: { hasNextPage: false },
         nodes: [
           {
             sku: 'K-30000000-0000-4000-8000-000000000001',
@@ -95,9 +97,16 @@ function runFixture(
         ],
       },
     }))
-    return new Response(JSON.stringify({ data: { orders: { nodes } } }), {
-      status: 200,
-    })
+    return new Response(
+      JSON.stringify({
+        data: {
+          orders: { nodes, pageInfo: { hasNextPage: false, endCursor: null } },
+        },
+      }),
+      {
+        status: 200,
+      },
+    )
   })
   const client = { rpc, from } as unknown as SupabaseClient
   return { client, rpc, calls, http }

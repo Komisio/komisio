@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-14: Shopify order reads use the current refund schema, reduce query batches on explicit cost-limit errors and preserve the 50-order engine page. Incomplete nested pages stop import; provider read failures never advance the cursor or create partial sales.
+
 - 2026-10-14: Shopify OAuth code exchange explicitly requests expiring offline tokens, using existing encrypted refresh handling. Callback diagnostics expose only stage, safe error code and HTTP status; never codes, tokens, query strings or provider response bodies.
 
 - 2026-10-14: Owner authorizes tenant-scoped seller closure: erase contact history and ordinary messages after review; retain justified legal/accounting evidence. Block unresolved goods, balances and payouts. Preserve shared Auth accounts. Narrow audited erasure exceptions supersede immutability.

@@ -3556,7 +3556,8 @@
       "PHOTO_LIMIT": "Un artículo puede tener hasta 20 fotos.",
       "PHOTO_NOT_FOUND": "No se encontró la foto o el artículo.",
       "ITEM_NOT_FOUND": "No se encontró la foto o el artículo."
-    }
+    },
+    "noFile": "Ninguna imagen seleccionada"
   },
   "submissions": {
     "title": "Enviar fotos a la tienda",
@@ -4159,5 +4160,25 @@
     "use": "Usar estos datos bancarios",
     "snapshot": "Datos revisados",
     "manual": "Realiza el pago manualmente en tu banco."
+  },
+  "inventoryWorkspace": {
+    "selected": "{count} seleccionados",
+    "editSelected": "Editar",
+    "clear": "Quitar selección",
+    "actions": "Acciones para artículos seleccionados",
+    "open": "Abrir artículo",
+    "saving": "Guardando…",
+    "saved": "Guardado",
+    "cellHint": "Haz clic para editar. Enter guarda, Escape deshace.",
+    "invalid": "Introduce el nombre del artículo. Escape deshace.",
+    "selectedOne": "1 seleccionado"
+  },
+  "itemDetail": {
+    "overview": "Resumen",
+    "sync": "Sincronización con TPV",
+    "history": "Historial",
+    "terms": "Condiciones",
+    "print": "Imprimir",
+    "editHint": "Pulsa el lápiz para editar. Los cambios se guardan al salir del campo."
   }
 }

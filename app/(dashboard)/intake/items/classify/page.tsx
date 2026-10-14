@@ -9,6 +9,7 @@ import {
 } from '@/lib/engine/item-classification'
 import { readAttributeVocabulary } from '@/lib/engine/attributes'
 import { ItemClassificationEditor } from '@/components/intake/item-classification-editor'
+import { readItemLabel } from '@/lib/engine/item-label'
 export default async function Classify({
   searchParams,
 }: {
@@ -30,19 +31,31 @@ export default async function Classify({
     readAssortmentGroups(ctx.client, ctx.active!.id),
     readAttributeVocabulary(ctx.client, ctx.active!.id),
   ])
+  const items: { id: string; version: number; title: string }[] = []
+  for (let start = 0; start < rows.length; start += 10) {
+    items.push(
+      ...(await Promise.all(
+        rows.slice(start, start + 10).map(async (row) => {
+          const label = await readItemLabel(ctx.client, ctx.active!.id, row.id)
+          return { ...row, title: label?.title || all.items.item }
+        }),
+      )),
+    )
+  }
   return (
     <>
       <Link href="/intake/items">{all.labelSheets.back}</Link>
       <h1>{all.itemWorkflow.bulk}</h1>
-      <p>
-        {rows.length} ·{' '}
-        {selected.data
-          .map((id) => 'I-' + id.slice(0, 8).toUpperCase())
-          .join(', ')}
-      </p>
+      <ul>
+        {items.map((item) => (
+          <li key={item.id}>
+            {item.title} · <small>I-{item.id.slice(0, 8).toUpperCase()}</small>
+          </li>
+        ))}
+      </ul>
       <ItemClassificationEditor
         tenantId={ctx.active!.id}
-        items={rows.map((r) => ({ ...r, title: '' }))}
+        items={items}
         groups={groups}
         types={vocabulary.types}
         locale={ctx.locale}

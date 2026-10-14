@@ -3550,7 +3550,8 @@
       "PHOTO_LIMIT": "En vare kan have op til 20 billeder.",
       "PHOTO_NOT_FOUND": "Billedet eller varen blev ikke fundet.",
       "ITEM_NOT_FOUND": "Billedet eller varen blev ikke fundet."
-    }
+    },
+    "noFile": "Intet billede valgt"
   },
   "submissions": {
     "title": "Send billeder til butikken",
@@ -4153,5 +4154,25 @@
     "use": "Brug disse kontooplysninger",
     "snapshot": "Kontrollerede oplysninger",
     "manual": "Betalingen foretages manuelt i banken."
+  },
+  "inventoryWorkspace": {
+    "selected": "{count} valgt",
+    "editSelected": "Rediger",
+    "clear": "Fjern markering",
+    "actions": "Handlinger for valgte varer",
+    "open": "Åbn vare",
+    "saving": "Gemmer…",
+    "saved": "Gemt",
+    "cellHint": "Klik for at redigere. Enter gemmer, Escape fortryder.",
+    "invalid": "Angiv et varenavn. Escape fortryder.",
+    "selectedOne": "1 valgt"
+  },
+  "itemDetail": {
+    "overview": "Overblik",
+    "sync": "Kassesynkronisering",
+    "history": "Historik",
+    "terms": "Vilkår",
+    "print": "Udskriv",
+    "editHint": "Klik på blyanten for at redigere. Ændringen gemmes, når du forlader feltet."
   }
 }

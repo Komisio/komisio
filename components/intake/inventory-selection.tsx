@@ -45,6 +45,9 @@ export function InventorySelectAll({ label }: { label: string }) {
     />
   )
 }
+export function useInventorySelection() {
+  return useContext(Selection)
+}
 export function InventorySelectItem({
   id,
   label,

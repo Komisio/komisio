@@ -37,17 +37,44 @@ for (const currency of ['SEK', 'USD']) {
       await expect(page.locator('.item-detail-price')).toContainText(
         '123.45 ' + currency,
       )
+      expect(
+        await page
+          .locator('.item-quick-facts dt')
+          .evaluateAll((labels) =>
+            labels.every((label) => label.scrollWidth <= label.clientWidth),
+          ),
+      ).toBe(true)
       const print = page.getByRole('link', {
         name: d.printing.browserOpen,
         exact: true,
       })
+      const printMenu = page.locator('.item-print-options > summary')
+      await expect(print).not.toBeVisible()
+      await printMenu.click()
       await expect(print).toBeVisible()
       expect((await print.boundingBox())!.y).toBeLessThan(650)
+      await page
+        .getByRole('button', { name: d.printing.zebraPrint, exact: true })
+        .click()
+      await expect(
+        page.getByRole('dialog', { name: d.printing.zebraPrint }),
+      ).toBeVisible()
+      await page
+        .getByRole('dialog')
+        .getByRole('button', { name: d.printing.close, exact: true })
+        .click()
+      await expect(print).toBeVisible()
       expect(
         await page.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth,
         ),
       ).toBe(true)
+      await printMenu.focus()
+      await page.keyboard.press('Escape')
+      await expect(print).not.toBeVisible()
+      await page
+        .getByRole('tab', { name: d.itemDetail.terms, exact: true })
+        .click()
       const terms = page.locator('details').filter({
         has: page.locator('summary').filter({ hasText: d.items.terms }),
       })
@@ -65,6 +92,9 @@ for (const currency of ['SEK', 'USD']) {
         fullPage: true,
       })
       await summary.click()
+      await page
+        .getByRole('tab', { name: d.itemDetail.history, exact: true })
+        .click()
       const history = page.locator('details').filter({
         has: page.locator('summary').filter({ hasText: d.items.prices }),
       })
@@ -85,11 +115,34 @@ for (const currency of ['SEK', 'USD']) {
         fullPage: true,
       })
       await history.locator(':scope > summary').click()
+      await page
+        .getByRole('tab', { name: d.itemDetail.overview, exact: true })
+        .click()
       await page.screenshot({
         path: testInfo.outputPath('item-overview-mobile.png'),
         fullPage: true,
         caret: 'initial',
       })
+      await page.getByRole('tab', { name: /^Bilder/ }).click()
+      await expect(
+        page.getByRole('button', { name: d.itemPhotos.add, exact: true }),
+      ).toBeVisible()
+      await expect(
+        page.getByText(d.itemPhotos.noFile, { exact: true }),
+      ).toBeVisible()
+      await expect(page.locator('#item-photo-file')).toHaveClass('sr-only')
+      await page.reload()
+      await expect(page.getByRole('tab', { name: /^Bilder/ })).toHaveAttribute(
+        'aria-selected',
+        'true',
+      )
+      await page.goto('/intake/items/' + item + '#sync-status')
+      await expect(
+        page.getByRole('tab', { name: d.itemDetail.sync, exact: true }),
+      ).toHaveAttribute('aria-selected', 'true')
+      await page
+        .getByRole('tab', { name: d.itemDetail.overview, exact: true })
+        .click()
       await page.setViewportSize({ width: 1280, height: 900 })
       await page.screenshot({
         path: testInfo.outputPath('item-overview-desktop.png'),

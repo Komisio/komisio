@@ -44,6 +44,24 @@ export function ItemIndicator({
   useEffect(() => {
     if (!open) return
     const close = () => setPosition(null)
+    const reposition = () => {
+      if (document.activeElement !== button.current) return close()
+      const r = button.current?.getBoundingClientRect()
+      if (
+        !r ||
+        r.bottom < 0 ||
+        r.top > innerHeight ||
+        r.right < 0 ||
+        r.left > innerWidth
+      )
+        return close()
+      // Keyboard focus can scroll a far-right table cell into view after onFocus.
+      setPosition({
+        left: Math.max(8, Math.min(r.left, innerWidth - 256)),
+        top:
+          r.bottom + 90 > innerHeight ? Math.max(8, r.top - 90) : r.bottom + 4,
+      })
+    }
     const outside = (e: PointerEvent) => {
       if (
         !button.current?.contains(e.target as Node) &&
@@ -56,13 +74,13 @@ export function ItemIndicator({
     }
     window.addEventListener('pointerdown', outside)
     window.addEventListener('keydown', key)
-    window.addEventListener('scroll', close, true)
-    window.addEventListener('resize', close)
+    window.addEventListener('scroll', reposition, true)
+    window.addEventListener('resize', reposition)
     return () => {
       window.removeEventListener('pointerdown', outside)
       window.removeEventListener('keydown', key)
-      window.removeEventListener('scroll', close, true)
-      window.removeEventListener('resize', close)
+      window.removeEventListener('scroll', reposition, true)
+      window.removeEventListener('resize', reposition)
     }
   }, [open])
   return (

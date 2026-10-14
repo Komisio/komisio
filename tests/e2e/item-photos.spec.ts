@@ -20,7 +20,7 @@ test('item gallery keeps retries and concurrent defaults safe; compact list prev
     legacyId[3] = '0' + legacyId[3].slice(1)
     const item = await f.item('Photo test jacket', legacyId.join('-'))
     await f.commit()
-    await page.goto(`/intake/items/${item}`)
+    await page.goto(`/intake/items/${item}#item-photos`)
     const gallery = page.getByRole('region', {
       name: d.itemPhotos.title,
       exact: true,
@@ -130,10 +130,12 @@ test('item gallery keeps retries and concurrent defaults safe; compact list prev
     const clients = [
       new Client({
         connectionString:
+          process.env.TEST_DATABASE_URL ??
           'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
       }),
       new Client({
         connectionString:
+          process.env.TEST_DATABASE_URL ??
           'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
       }),
     ]
@@ -165,7 +167,7 @@ test('item gallery keeps retries and concurrent defaults safe; compact list prev
     } finally {
       await Promise.all(clients.map((c) => c.end()))
     }
-    await page.goto(`/intake/items/${item}`)
+    await page.goto(`/intake/items/${item}#item-photos`)
     await gallery
       .locator('figure[data-default="true"]')
       .getByRole('button', { name: d.itemPhotos.remove, exact: true })

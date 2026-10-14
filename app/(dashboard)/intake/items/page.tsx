@@ -1,3 +1,4 @@
+import { InventoryActions } from '@/components/intake/inventory-actions'
 import { InventoryEditableRow } from '@/components/intake/inventory-editable-row'
 import {
   InventorySelection,
@@ -293,24 +294,6 @@ export default async function Items({
               )
               .map((i) => i.id)}
           >
-            <WorkingForm
-              id="label-selection"
-              action="/intake/items/labels"
-              className="row wrap"
-            >
-              <button className="btn btn-secondary">
-                {all.labelSheets.title}
-              </button>
-              {['owner', 'admin', 'staff'].includes(active.role) && (
-                <button
-                  className="btn btn-secondary"
-                  formAction="/intake/items/classify"
-                >
-                  {all.itemWorkflow.bulk}
-                </button>
-              )}
-              <small>{all.labelSheets.selection}</small>
-            </WorkingForm>
             <div
               className="inventory-table-scroll"
               role="region"
@@ -320,6 +303,16 @@ export default async function Items({
               <table className="inventory-table">
                 <caption className="sr-only">{d.list}</caption>
                 <thead>
+                  <InventoryActions
+                    items={result.items}
+                    tenantId={active.id}
+                    groups={groups}
+                    types={vocabulary.types}
+                    locale={ctx.locale}
+                    write={['owner', 'admin', 'staff'].includes(active.role)}
+                    manage={['owner', 'admin'].includes(active.role)}
+                    d={all}
+                  />
                   <tr>
                     <th scope="col">
                       <InventorySelectAll label={all.itemWorkflow.selectAll} />
@@ -331,17 +324,15 @@ export default async function Items({
                     {header('category', all.quickIntake.category)}
                     <th scope="col">{all.quickIntake.itemType}</th>
                     <th scope="col">{all.itemWorkflow.group}</th>
-                    <th scope="col">
-                      <span className="sr-only">
-                        {all.itemWorkflow.editRow}
-                      </span>
-                    </th>
                     {header('seller', all.quickIntake.seller)}
                     {header('price', all.quickIntake.price, true)}
                     {header('stage', d.stage)}
                     <th scope="col">{all.itemSync.title}</th>
                     {header('accepted', t.registered)}
                     {header('periodEnd', t.periodEnd)}
+                    <th scope="col">
+                      <span className="sr-only">{d.ownership}</span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -361,13 +352,6 @@ export default async function Items({
                       d={all}
                       indicators={
                         <div className="inventory-indicators">
-                          <ItemIndicator label={d.ownershipKinds[i.ownership]}>
-                            {i.ownership === 'store' ? (
-                              <Store size={16} aria-hidden="true" />
-                            ) : (
-                              <Handshake size={16} aria-hidden="true" />
-                            )}
-                          </ItemIndicator>
                           {i.defaultPhotoId && (
                             <ItemPhotoPreview
                               tenantId={active.id}
@@ -442,6 +426,15 @@ export default async function Items({
                       </td>
                       <td className="inventory-date">
                         <time dateTime={i.periodEnd}>{date(i.periodEnd)}</time>
+                      </td>
+                      <td>
+                        <ItemIndicator label={d.ownershipKinds[i.ownership]}>
+                          {i.ownership === 'store' ? (
+                            <Store size={16} aria-hidden="true" />
+                          ) : (
+                            <Handshake size={16} aria-hidden="true" />
+                          )}
+                        </ItemIndicator>
                       </td>
                     </InventoryEditableRow>
                   ))}

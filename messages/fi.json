@@ -3556,7 +3556,8 @@
       "PHOTO_LIMIT": "Tuotteella voi olla enintään 20 kuvaa.",
       "PHOTO_NOT_FOUND": "Kuvaa tai tuotetta ei löytynyt.",
       "ITEM_NOT_FOUND": "Kuvaa tai tuotetta ei löytynyt."
-    }
+    },
+    "noFile": "Kuvaa ei ole valittu"
   },
   "submissions": {
     "title": "Lähetä kuvat myymälään",
@@ -4159,5 +4160,25 @@
     "use": "Käytä näitä tilitietoja",
     "snapshot": "Tarkistetut tiedot",
     "manual": "Tee maksu itse pankissasi."
+  },
+  "inventoryWorkspace": {
+    "selected": "{count} valittu",
+    "editSelected": "Muokkaa",
+    "clear": "Poista valinnat",
+    "actions": "Valittujen tuotteiden toiminnot",
+    "open": "Avaa tuote",
+    "saving": "Tallennetaan…",
+    "saved": "Tallennettu",
+    "cellHint": "Muokkaa napsauttamalla. Enter tallentaa, Escape peruu.",
+    "invalid": "Anna tuotteen nimi. Escape peruu.",
+    "selectedOne": "1 valittu"
+  },
+  "itemDetail": {
+    "overview": "Yleiskuva",
+    "sync": "Kassasynkronointi",
+    "history": "Historia",
+    "terms": "Ehdot",
+    "print": "Tulosta",
+    "editHint": "Muokkaa napsauttamalla kynää. Muutos tallentuu, kun poistut kentästä."
   }
 }

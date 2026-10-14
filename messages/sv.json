@@ -1235,7 +1235,7 @@
       "purchase": "Butiksinköp"
     },
     "ownershipKinds": {
-      "consignment": "Kommissionsvaror",
+      "consignment": "Kommissionsvara",
       "store": "Egna varor"
     },
     "evidenceKinds": {
@@ -3550,7 +3550,8 @@
       "PHOTO_LIMIT": "En vara kan ha högst 20 bilder.",
       "PHOTO_NOT_FOUND": "Bilden eller varan hittades inte.",
       "ITEM_NOT_FOUND": "Bilden eller varan hittades inte."
-    }
+    },
+    "noFile": "Ingen bild vald"
   },
   "submissions": {
     "title": "Skicka bilder till butiken",
@@ -4153,5 +4154,25 @@
     "use": "Använd dessa kontouppgifter",
     "snapshot": "Granskade uppgifter",
     "manual": "Betalningen görs manuellt i banken."
+  },
+  "inventoryWorkspace": {
+    "selected": "{count} markerade",
+    "editSelected": "Ändra",
+    "clear": "Avmarkera alla",
+    "actions": "Åtgärder för markerade varor",
+    "open": "Öppna vara",
+    "saving": "Sparar…",
+    "saved": "Sparat",
+    "cellHint": "Klicka för att ändra. Enter sparar, Escape återställer.",
+    "invalid": "Ange ett varunamn. Escape återställer.",
+    "selectedOne": "1 markerad"
+  },
+  "itemDetail": {
+    "overview": "Översikt",
+    "sync": "Kassasynkning",
+    "history": "Historik",
+    "terms": "Villkor",
+    "print": "Skriv ut",
+    "editHint": "Klicka på pennan för att ändra. Ändringen sparas när du lämnar fältet."
   }
 }

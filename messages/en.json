@@ -3550,7 +3550,8 @@
       "PHOTO_LIMIT": "An item can have up to 20 photos.",
       "PHOTO_NOT_FOUND": "Photo or item not found.",
       "ITEM_NOT_FOUND": "Photo or item not found."
-    }
+    },
+    "noFile": "No image selected"
   },
   "submissions": {
     "title": "Send photos to the store",
@@ -4153,5 +4154,25 @@
     "use": "Use these bank details",
     "snapshot": "Reviewed details",
     "manual": "Make the payment manually in your bank."
+  },
+  "inventoryWorkspace": {
+    "selected": "{count} selected",
+    "editSelected": "Edit",
+    "clear": "Clear selection",
+    "actions": "Actions for selected items",
+    "open": "Open item",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "cellHint": "Click to edit. Enter saves, Escape reverts.",
+    "invalid": "Enter an item name. Escape reverts.",
+    "selectedOne": "1 selected"
+  },
+  "itemDetail": {
+    "overview": "Overview",
+    "sync": "POS sync",
+    "history": "History",
+    "terms": "Terms",
+    "print": "Print",
+    "editHint": "Click the pencil to edit. Changes are saved when you leave the field."
   }
 }

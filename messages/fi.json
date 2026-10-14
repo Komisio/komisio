@@ -896,7 +896,8 @@
       "settlePayouts": "Tilitä tuojille",
       "updateStoreProfile": "Päivitä kaupan profiili",
       "importSellers": "Tuo tuojat",
-      "useAgreementDraft": "Tekoälyn sopimusluonnos"
+      "useAgreementDraft": "Tekoälyn sopimusluonnos",
+      "useAccountingDraft": "Tarkistettavat tiliehdotukset"
     },
     "importRows": "riviä",
     "openDays": "avointa päivää",
@@ -1606,7 +1607,7 @@
     "net": "netto",
     "gross": "brutto",
     "mapHeading": "Tilikartta",
-    "mapIntro": "Kirjanpitäjäsi päättää, mille tilille ja kummalle puolelle kukin päivän päätöksen summa menee. Komisio ei ehdota tilejä. Tyhjäksi jätetyt summat raportoidaan mutta ei viedä; vienti hylätään, jos tosite ei täsmää.",
+    "mapIntro": "Yhdistä summat tileihin ja debet- tai kredit-puolelle. Tarkista tekoälyn ehdotukset kirjanpitäjän kanssa. Tyhjiä rivejä ei viedä. Viennin on oltava tasapainossa.",
     "account": "Tili",
     "side": "Puoli",
     "debit": "Debet",
@@ -1628,10 +1629,10 @@
     },
     "netOf": "netto",
     "vatOf": "alv",
-    "publishMap": "Julkaise tilikartta",
+    "publishMap": "Tallenna tilikartta",
     "mapPublished": "Tilikartta julkaistu.",
     "mapVersion": "kartan versio",
-    "noMap": "Ei vielä tilikarttaa. Omistaja tai ylläpitäjä julkaisee sen kirjanpitäjän tilinumeroilla.",
+    "noMap": "Ei tallennettua tilikarttaa.",
     "voucherHeading": "Tosite",
     "balanced": "Täsmää",
     "unbalanced": "Ei täsmää",
@@ -1649,8 +1650,10 @@
     "views": {
       "days": "Päivän päätökset",
       "reconciliation": "Täsmäytys",
-      "settings": "Tilit ja integraatiot",
-      "planning": "Suunnittele siirrot"
+      "settings": "Asetukset",
+      "planning": "Suunnittele siirrot",
+      "accounts": "Tilikartta",
+      "exports": "Viennit"
     },
     "mapMissingLink": "Määritä kirjanpitotilit ennen vientiaineiston luontia.",
     "details": "Näytä tiedot",
@@ -1687,7 +1690,28 @@
       "preparedThrough": "Tarkistettu päivään",
       "catchingUp": "Lisää päiviä valmistellaan seuraavalla ajolla"
     },
-    "openExport": "Avaa aineisto"
+    "openExport": "Avaa aineisto",
+    "amount": "Summa",
+    "groups": {
+      "basic": "Perustilit",
+      "vat": "ALV-erittely",
+      "fees": "Kuukausimaksut"
+    },
+    "ai": {
+      "busy": "Luodaan luonnosta…",
+      "check": "Tarkista luonnos",
+      "unavailable": "Tekoäly ei ole käytettävissä tässä liikkeessä.",
+      "limit": "Tekoälyn käyttöraja on saavutettu. Yritä myöhemmin tai tarkista asetukset.",
+      "failed": "Luonnosta ei voitu luoda. Yritä uudelleen.",
+      "pending": "Vastausta odotetaan. Tarkista sama luonnos uudelleen.",
+      "retryUse": "Vastaus puuttuu. Yritä samaa valintaa uudelleen.",
+      "create": "Ehdota tilejä tekoälyllä",
+      "review": "Tekoälyn ehdotukset – tarkista tilit ennen tallentamista.",
+      "questions": "Tarkista myös",
+      "reason": "Perustelu",
+      "hint": "Tekoäly täyttää tyhjät rivit. Nykyiset tilit säilyvät.",
+      "changed": "Tilikartta tai asetukset ovat muuttuneet. Lataa sivu uudelleen."
+    }
   },
   "communications": {
     "welcomeTitle": "Aktivointiviesti",

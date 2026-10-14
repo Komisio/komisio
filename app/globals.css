@@ -8103,3 +8103,60 @@ button.text-link:hover:not(:disabled) {
   min-width: 0;
   width: 100%;
 }
+
+/* Task-focused accounting: compact summaries, editable groups and optional reasons. */
+.accounting-day-record > summary {
+  min-height: 44px;
+  cursor: pointer;
+}
+.accounting-day-record {
+  padding: 8px 0;
+}
+.account-map-group {
+  border-top: 1px solid var(--line);
+  margin-top: 12px;
+}
+.account-map-group > summary {
+  min-height: 48px;
+  align-content: center;
+  cursor: pointer;
+  font-weight: 600;
+}
+.accounting-ai {
+  margin: 12px 0;
+}
+.accounting-ai-review {
+  padding: 12px 16px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin: 16px 0;
+}
+.accounting-ai-review summary,
+.accounting-ai-reason summary {
+  cursor: pointer;
+  min-height: 44px;
+  align-content: center;
+}
+.accounting-ai-reason {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+  max-width: 60ch;
+}
+.accounting-ai-review p,
+.accounting-ai-reason p {
+  margin: 4px 0;
+}
+.accounting-map-note {
+  color: var(--muted);
+  font-size: 14px;
+}
+#account-map {
+  max-width: 1040px;
+}
+#account-map .account-map-table input,
+#account-map .account-map-table select {
+  min-height: 44px;
+  padding-block: 8px;
+}

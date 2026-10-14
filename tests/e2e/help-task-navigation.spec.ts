@@ -15,8 +15,6 @@ test('help task links reveal the current section while cancelled navigation keep
     await f.commit()
     await page.goto('/intake/accounting?view=settings')
     await openAccountingSettings(page)
-    const account = page.locator('#account-map input').first()
-    await account.fill('1930')
     const open = page.getByRole('button', {
       name: d.helpCenter.title,
       exact: true,
@@ -27,7 +25,6 @@ test('help task links reveal the current section while cancelled navigation keep
       .getByRole('link', { name: d.helpCenter.settings, exact: true })
       .click()
     await expect(dialog).toHaveCount(0)
-    await expect(account).toHaveValue('1930')
     await expect(open).toBeFocused()
     expect(await page.evaluate(() => document.body.style.overflow)).not.toBe(
       'hidden',
@@ -43,7 +40,6 @@ test('help task links reveal the current section while cancelled navigation keep
       .click()
     await expect(page).toHaveURL(/#fortnox-automation$/)
     await expect(dialog).toHaveCount(0)
-    await expect(account).toHaveValue('1930')
 
     await open.click()
     const popup = page.waitForEvent('popup')
@@ -54,7 +50,13 @@ test('help task links reveal the current section while cancelled navigation keep
     await expect(article).toHaveURL(/\/help\/fortnox-connect$/)
     await article.close()
     await expect(dialog).toBeVisible()
-    await expect(account).toHaveValue('1930')
+    await dialog
+      .getByRole('button', { name: d.helpCenter.close, exact: true })
+      .click()
+    await page.goto('/intake/accounting?view=accounts')
+    const account = page.locator('#account-map input').first()
+    await account.fill('1930')
+    await open.click()
     page.once('dialog', async (prompt) => {
       expect(prompt.type()).toBe('confirm')
       await prompt.dismiss()

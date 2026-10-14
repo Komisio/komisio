@@ -61,6 +61,7 @@ test('account map, balanced preview and downloadable SIE keep tenant boundaries'
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true)
+    await page.goto('/intake/accounting?view=accounts')
     const map = page.getByRole('region', { name: 'Kontoplan', exact: true })
     for (const [label, account, side] of [
       ['Bruttoförsäljning (mottagna betalningar)', '1930', 'debit'],
@@ -70,7 +71,7 @@ test('account map, balanced preview and downloadable SIE keep tenant boundaries'
       await map.getByLabel(label, { exact: true }).fill(account)
       await map.getByLabel(`${label} Sida`, { exact: true }).selectOption(side)
     }
-    await map.getByRole('button', { name: 'Publicera kontoplan' }).click()
+    await map.getByRole('button', { name: d.accounting.publishMap }).click()
     // The form remounts on refresh, so wait for the fact instead of the flash message.
     await expect
       .poll(
@@ -91,6 +92,7 @@ test('account map, balanced preview and downloadable SIE keep tenant boundaries'
     await page.getByRole('button', { name: d.accounting.export }).click()
     const link = page.getByRole('link', { name: 'Ladda ned SIE-fil' }).first()
     await expect(link).toBeVisible()
+    await page.goto('/intake/accounting?view=exports')
     await expect(
       page
         .getByRole('region', { name: d.accounting.exportsHeading, exact: true })
@@ -147,6 +149,12 @@ test('account map, balanced preview and downloadable SIE keep tenant boundaries'
     await page.goto(
       '/intake/accounting?view=reconciliation&from=2020-01-01&to=2020-01-31',
     )
+    await page
+      .getByRole('button', {
+        name: d.accounting.views.reconciliation,
+        exact: true,
+      })
+      .click()
     await expect(
       page.getByText(d.accounting.reconciliationHint, { exact: true }),
     ).toBeVisible()

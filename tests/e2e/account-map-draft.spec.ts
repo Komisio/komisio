@@ -13,7 +13,7 @@ test('account mapping warns before leaving but allows in-page guidance and rever
   const f = await p2Fixture(email)
   try {
     await f.commit()
-    await page.goto('/intake/accounting?view=settings')
+    await page.goto('/intake/accounting?view=accounts')
     await openAccountingSettings(page)
     const region = page.locator('#account-map')
     const gross = region.locator('input[name="account:grossOre"]')
@@ -26,7 +26,7 @@ test('account mapping warns before leaving but allows in-page guidance and rever
       expect(dialog.message()).toBe(d.leaveUnsaved)
       await dialog.dismiss()
     })
-    await page.locator('#account-map a[href="#accounting-systems"]').click()
+    await page.locator('.account-map-group > summary').last().click()
     expect(warnings).toBe(0)
     const next = page.locator('a[href="/intake/accounting"]').first()
     await next.click()
@@ -59,7 +59,7 @@ test('account mapping keeps one uncertain publication and clears the warning aft
   const f = await p2Fixture(email)
   try {
     await f.commit()
-    await page.goto('/intake/accounting?view=settings')
+    await page.goto('/intake/accounting?view=accounts')
     await openAccountingSettings(page)
     const region = page.locator('#account-map')
     const gross = region.locator('input[name="account:grossOre"]')

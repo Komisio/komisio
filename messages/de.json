@@ -896,7 +896,8 @@
       "settlePayouts": "Einlieferer abrechnen",
       "updateStoreProfile": "Store-Profil aktualisieren",
       "importSellers": "Einlieferer importieren",
-      "useAgreementDraft": "KI-Vertragsentwurf"
+      "useAgreementDraft": "KI-Vertragsentwurf",
+      "useAccountingDraft": "Kontenvorschläge prüfen"
     },
     "importRows": "Zeilen",
     "openDays": "offene Tage",
@@ -1606,7 +1607,7 @@
     "net": "netto",
     "gross": "brutto",
     "mapHeading": "Kontenzuordnung",
-    "mapIntro": "Ihr Steuerberater entscheidet, auf welches Konto und welche Seite jeder Tagesabschlussbetrag gebucht wird. Komisio schlägt keine Konten vor. Leer gelassene Beträge werden ausgewiesen, aber nicht exportiert; ein Export wird abgelehnt, wenn der Buchungsbeleg nicht ausgeglichen ist.",
+    "mapIntro": "Beträge Konten und Soll oder Haben zuordnen. KI-Vorschläge mit Ihrer Buchhaltung prüfen. Leere Zeilen werden nicht exportiert. Der Export muss ausgeglichen sein.",
     "account": "Konto",
     "side": "Seite",
     "debit": "Soll",
@@ -1628,10 +1629,10 @@
     },
     "netOf": "netto",
     "vatOf": "MwSt.",
-    "publishMap": "Kontenzuordnung veröffentlichen",
+    "publishMap": "Kontenzuordnung speichern",
     "mapPublished": "Kontenzuordnung veröffentlicht.",
     "mapVersion": "Zuordnungsversion",
-    "noMap": "Noch keine Kontenzuordnung. Ein Inhaber oder Administrator veröffentlicht sie mit den Kontonummern des Steuerberaters.",
+    "noMap": "Noch kein Kontenplan gespeichert.",
     "voucherHeading": "Buchungsbeleg",
     "balanced": "Ausgeglichen",
     "unbalanced": "Nicht ausgeglichen",
@@ -1649,8 +1650,10 @@
     "views": {
       "days": "Tagesabschlüsse",
       "reconciliation": "Abstimmung",
-      "settings": "Konten und Integrationen",
-      "planning": "Übertragung planen"
+      "settings": "Einstellungen",
+      "planning": "Übertragung planen",
+      "accounts": "Kontenzuordnung",
+      "exports": "Exporte"
     },
     "mapMissingLink": "Richten Sie Buchhaltungskonten ein, bevor Sie einen Export erstellen.",
     "details": "Details anzeigen",
@@ -1687,7 +1690,28 @@
       "preparedThrough": "Geprüft bis einschließlich",
       "catchingUp": "Weitere Tage werden beim nächsten Lauf vorbereitet"
     },
-    "openExport": "Beleg öffnen"
+    "openExport": "Beleg öffnen",
+    "amount": "Betrag",
+    "groups": {
+      "basic": "Grundkonten",
+      "vat": "Umsatzsteueraufteilung",
+      "fees": "Monatsgebühren"
+    },
+    "ai": {
+      "busy": "Entwurf wird erstellt…",
+      "check": "Entwurf prüfen",
+      "unavailable": "KI ist für dieses Geschäft nicht verfügbar.",
+      "limit": "KI-Nutzungslimit erreicht. Später versuchen oder KI-Einstellungen prüfen.",
+      "failed": "Entwurf konnte nicht erstellt werden. Erneut versuchen.",
+      "pending": "Noch keine Antwort. Denselben Entwurf erneut prüfen.",
+      "retryUse": "Antwort fehlt. Dieselbe Auswahl erneut versuchen.",
+      "create": "Konten mit KI vorschlagen",
+      "review": "KI-Vorschläge – Konten vor dem Speichern prüfen.",
+      "questions": "Außerdem prüfen",
+      "reason": "Begründung",
+      "hint": "KI füllt leere Zeilen. Bestehende Konten bleiben erhalten.",
+      "changed": "Kontenzuordnung oder Einstellungen geändert. Seite neu laden."
+    }
   },
   "communications": {
     "welcomeTitle": "Aktivierungs-E-Mail",

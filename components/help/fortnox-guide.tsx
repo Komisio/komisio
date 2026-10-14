@@ -62,8 +62,10 @@ export async function FortnoxGuide({
     next?.key === 'connected'
       ? '/intake/accounting?view=settings#fortnox-connection'
       : next?.key === 'mapped'
-        ? '/intake/accounting?view=settings#account-map'
-        : '/intake/accounting'
+        ? '/intake/accounting?view=accounts#account-map'
+        : next?.key === 'sent'
+          ? '/intake/accounting?view=exports'
+          : '/intake/accounting'
   return (
     <details className="card fortnox-guide" open={initiallyOpen && !!next}>
       <summary>{d.guide.title}</summary>

@@ -25,6 +25,7 @@ export const operationKind = z.enum([
   'updateStoreProfile',
   'importSellers',
   'useAgreementDraft',
+  'useAccountingDraft',
 ])
 export const publishReceptionReviewPayload = z.strictObject({
   sessionId: z.guid(),
@@ -247,6 +248,10 @@ export const proposeOperationCommand = z.discriminatedUnion('kind', [
     payload: useAgreementDraftPayload,
   }),
   proposeBase.extend({
+    kind: z.literal('useAccountingDraft'),
+    payload: useAgreementDraftPayload,
+  }),
+  proposeBase.extend({
     kind: z.literal('importSellers'),
     payload: importSellersPayload,
   }),
@@ -337,6 +342,10 @@ export const operationRow = z.discriminatedUnion('kind', [
   }),
   operationBaseRow.extend({
     kind: z.literal('useAgreementDraft'),
+    payload: useAgreementDraftPayload,
+  }),
+  operationBaseRow.extend({
+    kind: z.literal('useAccountingDraft'),
     payload: useAgreementDraftPayload,
   }),
   operationBaseRow.extend({

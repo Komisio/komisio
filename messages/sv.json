@@ -896,7 +896,8 @@
       "settlePayouts": "Avräkna säljare",
       "updateStoreProfile": "Uppdatera butiksprofilen",
       "importSellers": "Importera inlämnare",
-      "useAgreementDraft": "AI-avtalsutkast"
+      "useAgreementDraft": "AI-avtalsutkast",
+      "useAccountingDraft": "Kontoförslag att granska"
     },
     "importRows": "rader",
     "openDays": "öppetdagar",
@@ -1606,7 +1607,7 @@
     "net": "netto",
     "gross": "brutto",
     "mapHeading": "Kontoplan",
-    "mapIntro": "Er redovisningskonsult bestämmer vilket konto och vilken sida varje belopp i dagsavslutet går till. Komisio föreslår inga konton. Belopp som lämnas tomma redovisas men exporteras inte; en export vägras när verifikationen inte balanserar.",
+    "mapIntro": "Koppla beloppen till konto och debet eller kredit. Granska AI-förslag med din redovisningskonsult. Tomma rader tas inte med i exporten. Exporten måste balansera.",
     "account": "Konto",
     "side": "Sida",
     "debit": "Debet",
@@ -1628,10 +1629,10 @@
     },
     "netOf": "netto",
     "vatOf": "moms",
-    "publishMap": "Publicera kontoplan",
+    "publishMap": "Spara kontoplan",
     "mapPublished": "Kontoplanen är publicerad.",
     "mapVersion": "kontoplansversion",
-    "noMap": "Ingen kontoplan ännu. En ägare eller administratör publicerar den med redovisningskonsultens kontonummer.",
+    "noMap": "Ingen sparad kontoplan.",
     "voucherHeading": "Verifikation",
     "balanced": "Balanserar",
     "unbalanced": "Balanserar inte",
@@ -1649,8 +1650,10 @@
     "views": {
       "days": "Dagsavslut",
       "reconciliation": "Avstämning",
-      "settings": "Konton och integrationer",
-      "planning": "Planera överföring"
+      "settings": "Inställningar",
+      "planning": "Planera överföring",
+      "accounts": "Kontoplan",
+      "exports": "Exporter"
     },
     "mapMissingLink": "Ange bokföringskonton innan du skapar en export.",
     "details": "Visa detaljer",
@@ -1687,7 +1690,28 @@
       "preparedThrough": "Kontrollerat till och med",
       "catchingUp": "Fler dagar förbereds vid nästa körning"
     },
-    "openExport": "Öppna underlag"
+    "openExport": "Öppna underlag",
+    "amount": "Belopp",
+    "groups": {
+      "basic": "Grundkonton",
+      "vat": "Momsuppdelning",
+      "fees": "Månadsavgifter"
+    },
+    "ai": {
+      "busy": "Skapar förslag…",
+      "check": "Kontrollera förslag",
+      "unavailable": "AI är inte tillgängligt för butiken.",
+      "limit": "Gränsen för AI-användning är nådd. Försök senare eller kontrollera AI-inställningarna.",
+      "failed": "Förslaget kunde inte skapas. Försök igen.",
+      "pending": "Inget svar ännu. Kontrollera samma förslag igen.",
+      "retryUse": "Svaret saknas. Försök med samma val igen.",
+      "create": "Föreslå konton med AI",
+      "review": "AI-förslag – kontrollera kontona innan du sparar.",
+      "questions": "Kontrollera även",
+      "reason": "Motivering",
+      "hint": "AI fyller tomma rader. Befintliga konton behålls.",
+      "changed": "Kontoplanen eller inställningarna har ändrats. Ladda om sidan."
+    }
   },
   "communications": {
     "welcomeTitle": "Aktiveringsmejl",

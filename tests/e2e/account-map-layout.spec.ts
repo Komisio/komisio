@@ -28,7 +28,7 @@ test('account mapping keeps amounts and complete debit-credit controls readable 
           url: 'http://127.0.0.1:3000',
         },
       ])
-      await page.goto('/intake/accounting?view=settings')
+      await page.goto('/intake/accounting?view=accounts')
       await openAccountingSettings(page)
       const map = page.locator('#account-map')
       const account = map.getByLabel(d.accounting.amountKeys.grossOre, {

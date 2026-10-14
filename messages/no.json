@@ -896,7 +896,8 @@
       "settlePayouts": "Avregn innleverere",
       "updateStoreProfile": "Oppdater butikkprofilen",
       "importSellers": "Importer innleverere",
-      "useAgreementDraft": "AI-avtaleutkast"
+      "useAgreementDraft": "AI-avtaleutkast",
+      "useAccountingDraft": "Kontoforslag til gjennomgang"
     },
     "importRows": "rader",
     "openDays": "åpne dager",
@@ -1606,7 +1607,7 @@
     "net": "netto",
     "gross": "brutto",
     "mapHeading": "Kontoplan",
-    "mapIntro": "Regnskapsføreren din bestemmer hvilken konto og hvilken side hvert beløp i dagsoppgjøret går til. Komisio foreslår ingen kontoer. Beløp som står tomme rapporteres, men eksporteres ikke; en eksport avvises når bilaget ikke balanserer.",
+    "mapIntro": "Knytt beløp til konto og debet eller kredit. Gjennomgå AI-forslag med regnskapsføreren. Tomme rader eksporteres ikke. Eksporten må balansere.",
     "account": "Konto",
     "side": "Side",
     "debit": "Debet",
@@ -1628,10 +1629,10 @@
     },
     "netOf": "netto",
     "vatOf": "mva",
-    "publishMap": "Publiser kontoplan",
+    "publishMap": "Lagre kontoplan",
     "mapPublished": "Kontoplan publisert.",
     "mapVersion": "kontoplanversjon",
-    "noMap": "Ingen kontoplan ennå. En eier eller administrator publiserer den med regnskapsførerens kontonumre.",
+    "noMap": "Ingen lagret kontoplan.",
     "voucherHeading": "Bilag",
     "balanced": "Balansert",
     "unbalanced": "Ikke balansert",
@@ -1649,8 +1650,10 @@
     "views": {
       "days": "Dagsoppgjør",
       "reconciliation": "Avstemming",
-      "settings": "Kontoer og integrasjoner",
-      "planning": "Planlegg overføring"
+      "settings": "Innstillinger",
+      "planning": "Planlegg overføring",
+      "accounts": "Kontoplan",
+      "exports": "Eksporter"
     },
     "mapMissingLink": "Angi regnskapskontoer før du oppretter en eksport.",
     "details": "Vis detaljer",
@@ -1687,7 +1690,28 @@
       "preparedThrough": "Kontrollert til og med",
       "catchingUp": "Flere dager klargjøres ved neste kjøring"
     },
-    "openExport": "Åpne bilag"
+    "openExport": "Åpne bilag",
+    "amount": "Beløp",
+    "groups": {
+      "basic": "Grunnkontoer",
+      "vat": "MVA-fordeling",
+      "fees": "Månedsavgifter"
+    },
+    "ai": {
+      "busy": "Lager forslag…",
+      "check": "Sjekk forslag",
+      "unavailable": "AI er ikke tilgjengelig for butikken.",
+      "limit": "Grensen for AI-bruk er nådd. Prøv senere eller sjekk AI-innstillingene.",
+      "failed": "Kunne ikke lage forslag. Prøv igjen.",
+      "pending": "Venter på svar. Sjekk samme forslag igjen.",
+      "retryUse": "Svar mangler. Prøv samme valg igjen.",
+      "create": "Foreslå kontoer med AI",
+      "review": "AI-forslag – kontroller kontoene før du lagrer.",
+      "questions": "Kontroller også",
+      "reason": "Begrunnelse",
+      "hint": "AI fyller tomme rader. Eksisterende kontoer beholdes.",
+      "changed": "Kontoplanen eller innstillingene er endret. Last siden på nytt."
+    }
   },
   "communications": {
     "welcomeTitle": "Aktiveringsmelding",

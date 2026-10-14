@@ -32,7 +32,7 @@ export function ExportDayClose({
       return d.amountKeys[key as keyof typeof d.amountKeys]
     if (key.startsWith('mode:')) {
       const [, mode, amount] = key.split(':')
-      return `${vatModes[mode] ?? mode} · ${amount === 'netOre' ? d.netOf : d.vatOf}`
+      return `${vatModes[mode] ?? mode} · ${amount === 'grossOre' ? d.gross : amount === 'netOre' ? d.netOf : d.vatOf}`
     }
     return d.amountKeys[key as keyof typeof d.amountKeys] ?? key
   }
@@ -64,11 +64,16 @@ export function ExportDayClose({
         )}
       </details>
       {preview.unmapped.length > 0 && (
-        <p>
-          <small>
-            {d.unmappedAmounts}: {preview.unmapped.map(accountLabel).join(', ')}
-          </small>
-        </p>
+        <details className="accounting-breakdown">
+          <summary>
+            {d.unmappedAmounts} ({preview.unmapped.length})
+          </summary>
+          <ul>
+            {preview.unmapped.map((key) => (
+              <li key={key}>{accountLabel(key)}</li>
+            ))}
+          </ul>
+        </details>
       )}
       {exportId ? (
         <a className="text-link" href={`/api/accounting/${exportId}`}>

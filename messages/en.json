@@ -896,7 +896,8 @@
       "settlePayouts": "Settle sellers",
       "updateStoreProfile": "Update the store profile",
       "importSellers": "Import sellers",
-      "useAgreementDraft": "AI agreement draft"
+      "useAgreementDraft": "AI agreement draft",
+      "useAccountingDraft": "Account suggestions for review"
     },
     "importRows": "rows",
     "openDays": "open days",
@@ -1606,7 +1607,7 @@
     "net": "net",
     "gross": "gross",
     "mapHeading": "Account map",
-    "mapIntro": "Your accountant decides which account and which side each day-close amount goes to. Komisio proposes no accounts. Amounts left empty are reported but not exported; an export is refused when the voucher does not balance.",
+    "mapIntro": "Map amounts to accounts and debit or credit. Review AI suggestions with your accountant. Empty rows are not exported. The export must balance.",
     "account": "Account",
     "side": "Side",
     "debit": "Debit",
@@ -1628,10 +1629,10 @@
     },
     "netOf": "net",
     "vatOf": "VAT",
-    "publishMap": "Publish account map",
+    "publishMap": "Save account map",
     "mapPublished": "Account map published.",
     "mapVersion": "map version",
-    "noMap": "No account map yet. An owner or admin publishes it with the accountant's account numbers.",
+    "noMap": "No saved account map.",
     "voucherHeading": "Voucher",
     "balanced": "Balanced",
     "unbalanced": "Not balanced",
@@ -1649,8 +1650,10 @@
     "views": {
       "days": "Day closes",
       "reconciliation": "Reconciliation",
-      "settings": "Accounts and integrations",
-      "planning": "Plan transfers"
+      "settings": "Settings",
+      "planning": "Plan transfers",
+      "accounts": "Account map",
+      "exports": "Exports"
     },
     "mapMissingLink": "Set up accounting accounts before creating an export.",
     "details": "Show details",
@@ -1687,7 +1690,28 @@
       "preparedThrough": "Checked through",
       "catchingUp": "More days will be prepared on the next run"
     },
-    "openExport": "Open export"
+    "openExport": "Open export",
+    "amount": "Amount",
+    "groups": {
+      "basic": "Basic accounts",
+      "vat": "VAT breakdown",
+      "fees": "Monthly fees"
+    },
+    "ai": {
+      "busy": "Creating draft…",
+      "check": "Check draft",
+      "unavailable": "AI is unavailable for this store.",
+      "limit": "AI usage limit reached. Try later or check AI settings.",
+      "failed": "Unable to create a draft. Try again.",
+      "pending": "No reply yet. Check the same draft again.",
+      "retryUse": "Reply missing. Retry the same choice.",
+      "create": "Suggest accounts with AI",
+      "review": "AI suggestions – check the accounts before saving.",
+      "questions": "Also review",
+      "reason": "Reason",
+      "hint": "AI fills empty rows. Existing accounts are kept.",
+      "changed": "The account map or settings changed. Reload the page."
+    }
   },
   "communications": {
     "welcomeTitle": "Activation email",

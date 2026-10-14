@@ -896,7 +896,8 @@
       "settlePayouts": "Liquida i conferenti",
       "updateStoreProfile": "Aggiorna il profilo del negozio",
       "importSellers": "Importa conferenti",
-      "useAgreementDraft": "Bozza di contratto IA"
+      "useAgreementDraft": "Bozza di contratto IA",
+      "useAccountingDraft": "Proposte di conti da verificare"
     },
     "importRows": "righe",
     "openDays": "giorni aperti",
@@ -1606,7 +1607,7 @@
     "net": "netto",
     "gross": "lordo",
     "mapHeading": "Mappa dei conti",
-    "mapIntro": "Il tuo commercialista decide in quale conto e su quale lato va ciascun importo della chiusura giornaliera. Komisio non propone conti. Gli importi lasciati vuoti vengono riportati ma non esportati; un'esportazione viene rifiutata quando la registrazione non quadra.",
+    "mapIntro": "Associa gli importi ai conti e a dare o avere. Verifica le proposte IA con il commercialista. Le righe vuote non vengono esportate. L’esportazione deve essere in pareggio.",
     "account": "Conto",
     "side": "Lato",
     "debit": "Dare",
@@ -1628,10 +1629,10 @@
     },
     "netOf": "netto",
     "vatOf": "IVA",
-    "publishMap": "Pubblica mappa dei conti",
+    "publishMap": "Salva conti",
     "mapPublished": "Mappa dei conti pubblicata.",
     "mapVersion": "versione della mappa",
-    "noMap": "Nessuna mappa dei conti finora. Un proprietario o un amministratore la pubblica con i numeri di conto del commercialista.",
+    "noMap": "Nessun piano dei conti salvato.",
     "voucherHeading": "Registrazione contabile",
     "balanced": "In quadratura",
     "unbalanced": "Non in quadratura",
@@ -1649,8 +1650,10 @@
     "views": {
       "days": "Chiusure giornaliere",
       "reconciliation": "Riconciliazione",
-      "settings": "Conti e integrazioni",
-      "planning": "Pianifica trasferimenti"
+      "settings": "Impostazioni",
+      "planning": "Pianifica trasferimenti",
+      "accounts": "Mappa dei conti",
+      "exports": "Esportazioni"
     },
     "mapMissingLink": "Configura i conti contabili prima di creare un’esportazione.",
     "details": "Mostra dettagli",
@@ -1687,7 +1690,28 @@
       "preparedThrough": "Controllato fino al",
       "catchingUp": "Altri giorni saranno preparati alla prossima esecuzione"
     },
-    "openExport": "Apri documento"
+    "openExport": "Apri documento",
+    "amount": "Importo",
+    "groups": {
+      "basic": "Conti principali",
+      "vat": "Ripartizione IVA",
+      "fees": "Quote mensili"
+    },
+    "ai": {
+      "busy": "Creazione bozza…",
+      "check": "Controlla bozza",
+      "unavailable": "IA non disponibile per questo negozio.",
+      "limit": "Limite IA raggiunto. Riprova più tardi o controlla le impostazioni.",
+      "failed": "Impossibile creare la bozza. Riprova.",
+      "pending": "Nessuna risposta. Controlla di nuovo la stessa bozza.",
+      "retryUse": "Risposta mancante. Riprova la stessa scelta.",
+      "create": "Suggerisci conti con IA",
+      "review": "Proposte IA: verifica i conti prima di salvare.",
+      "questions": "Verifica anche",
+      "reason": "Motivazione",
+      "hint": "L’IA compila le righe vuote. I conti esistenti restano invariati.",
+      "changed": "I conti o le impostazioni sono cambiati. Ricarica la pagina."
+    }
   },
   "communications": {
     "welcomeTitle": "Email di attivazione",

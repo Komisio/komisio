@@ -896,7 +896,8 @@
       "settlePayouts": "Liquidar depositantes",
       "updateStoreProfile": "Actualizar el perfil de la tienda",
       "importSellers": "Importar depositantes",
-      "useAgreementDraft": "Borrador de acuerdo con IA"
+      "useAgreementDraft": "Borrador de acuerdo con IA",
+      "useAccountingDraft": "Propuestas de cuentas para revisar"
     },
     "importRows": "filas",
     "openDays": "días abiertos",
@@ -1606,7 +1607,7 @@
     "net": "neto",
     "gross": "bruto",
     "mapHeading": "Mapa de cuentas",
-    "mapIntro": "Tu contable decide a qué cuenta y a qué lado va cada importe del cierre del día. Komisio no propone cuentas. Los importes dejados vacíos se informan pero no se exportan; una exportación se rechaza cuando el asiento no cuadra.",
+    "mapIntro": "Asigna importes a cuentas y al debe o haber. Revisa las propuestas de IA con tu asesor contable. Las filas vacías no se exportan. La exportación debe cuadrar.",
     "account": "Cuenta",
     "side": "Lado",
     "debit": "Debe",
@@ -1628,10 +1629,10 @@
     },
     "netOf": "neto",
     "vatOf": "IVA",
-    "publishMap": "Publicar mapa de cuentas",
+    "publishMap": "Guardar cuentas",
     "mapPublished": "Mapa de cuentas publicado.",
     "mapVersion": "versión del mapa",
-    "noMap": "Aún no hay mapa de cuentas. Un propietario o administrador lo publica con los números de cuenta del contable.",
+    "noMap": "No hay un plan de cuentas guardado.",
     "voucherHeading": "Asiento",
     "balanced": "Cuadrado",
     "unbalanced": "No cuadrado",
@@ -1649,8 +1650,10 @@
     "views": {
       "days": "Cierres del día",
       "reconciliation": "Conciliación",
-      "settings": "Cuentas e integraciones",
-      "planning": "Planificar transferencias"
+      "settings": "Configuración",
+      "planning": "Planificar transferencias",
+      "accounts": "Mapa de cuentas",
+      "exports": "Exportaciones"
     },
     "mapMissingLink": "Configura las cuentas contables antes de crear una exportación.",
     "details": "Ver detalles",
@@ -1687,7 +1690,28 @@
       "preparedThrough": "Revisado hasta",
       "catchingUp": "Se prepararán más días en la próxima ejecución"
     },
-    "openExport": "Abrir documento"
+    "openExport": "Abrir documento",
+    "amount": "Importe",
+    "groups": {
+      "basic": "Cuentas básicas",
+      "vat": "Desglose de IVA",
+      "fees": "Cuotas mensuales"
+    },
+    "ai": {
+      "busy": "Creando borrador…",
+      "check": "Consultar borrador",
+      "unavailable": "La IA no está disponible para esta tienda.",
+      "limit": "Se ha alcanzado el límite de IA. Inténtalo más tarde o revisa la configuración.",
+      "failed": "No se pudo crear el borrador. Inténtalo de nuevo.",
+      "pending": "Aún sin respuesta. Consulta de nuevo el mismo borrador.",
+      "retryUse": "Falta la respuesta. Reintenta la misma opción.",
+      "create": "Sugerir cuentas con IA",
+      "review": "Propuestas de IA: revisa las cuentas antes de guardar.",
+      "questions": "Revisar también",
+      "reason": "Motivo",
+      "hint": "La IA completa filas vacías. Se conservan las cuentas existentes.",
+      "changed": "Han cambiado las cuentas o la configuración. Recarga la página."
+    }
   },
   "communications": {
     "welcomeTitle": "Correo de activación",

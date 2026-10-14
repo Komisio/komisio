@@ -38,6 +38,7 @@ export function ItemPhotoGallery({
     [message, setMessage] = useState(''),
     [reload, setReload] = useState(false)
   const [failed, setFailed] = useState<string[]>([])
+  const [fileName, setFileName] = useState('')
   const input = useRef<HTMLInputElement>(null),
     running = useRef(false)
   const router = useRouter()
@@ -104,6 +105,7 @@ export function ItemPhotoGallery({
       setPending(null)
       setMessage(d.saved)
       if (input.current) input.current.value = ''
+      setFileName('')
       router.refresh()
     } catch {
       setError(d.unconfirmed)
@@ -204,8 +206,22 @@ export function ItemPhotoGallery({
       </div>
       {write && (
         <div className="field">
-          <label htmlFor="item-photo-file">{d.add}</label>
+          <div className="item-photo-picker">
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={locked || state.photos.length >= 20}
+              onClick={() => input.current?.click()}
+            >
+              {d.add}
+            </Button>
+            <span>{fileName || d.noFile}</span>
+          </div>
           <input
+            className="sr-only"
+            aria-hidden="true"
+            tabIndex={-1}
+            aria-label={d.add}
             id="item-photo-file"
             ref={input}
             type="file"
@@ -214,9 +230,11 @@ export function ItemPhotoGallery({
             onChange={(e) => {
               const file = e.target.files?.[0]
               if (!file) return
+              setFileName(file.name)
               if (file.size > 3 * 1024 * 1024) {
                 setError(d.errors.IMAGE_TOO_LARGE)
                 e.target.value = ''
+                setFileName('')
                 return
               }
               change('add', crypto.randomUUID(), file)

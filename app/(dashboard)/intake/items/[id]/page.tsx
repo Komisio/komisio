@@ -1,8 +1,11 @@
 import { ItemPhotoGallery } from '@/components/intake/item-photo-gallery'
-import { ItemDescriptionEditor } from '@/components/intake/item-description-editor'
+import { ItemDetailWorkspace } from '@/components/intake/item-detail-workspace'
+import { readItemDirectory } from '@/lib/engine/item-directory'
+import { readAssortmentGroups } from '@/lib/engine/item-classification'
+import { readAttributeVocabulary, labelOf } from '@/lib/engine/attributes'
 import { readItemPhotos } from '@/lib/engine/item-photos'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from '@/components/platform/working-link'
+import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { ActorSignature } from '@/components/intake/actor-signature'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
@@ -35,12 +38,23 @@ export default async function Item({
   const result = await readItem(ctx.client, active.id, id.data)
   if (!result) notFound()
   const { item, prices, events } = result
-  const [printers, label, photos, sync] = await Promise.all([
-    readPrinters(ctx.client, active.id),
-    readItemLabel(ctx.client, active.id, item.id),
-    readItemPhotos(ctx.client, active.id, [item.id]),
-    readItemSyncStatus(ctx.client, active.id, [item.id]),
-  ])
+  const [printers, label, photos, sync, directory, groups, vocabulary] =
+    await Promise.all([
+      readPrinters(ctx.client, active.id),
+      readItemLabel(ctx.client, active.id, item.id),
+      readItemPhotos(ctx.client, active.id, [item.id]),
+      readItemSyncStatus(ctx.client, active.id, [item.id]),
+      readItemDirectory(
+        ctx.client,
+        active.id,
+        { q: item.id },
+        'title',
+        'asc',
+        1,
+      ),
+      readAssortmentGroups(ctx.client, active.id),
+      readAttributeVocabulary(ctx.client, active.id),
+    ])
   const currentPrice = label?.priceOre ?? prices[0]?.price_ore ?? null
   const reference = label?.reference ?? `I-${item.id.slice(0, 8).toUpperCase()}`
   // Transfer targets: other stores in the chain where this person is owner or admin,
@@ -59,61 +73,69 @@ export default async function Item({
       : item.origin_kind === 'inspection_draft'
         ? `/intake/bags/${String(t.origin.bagId ?? '')}/inspect?draft=${item.origin_id}`
         : `/intake/purchases/${item.origin_id}`
+  const snapshot = directory?.items.find((row) => row.id === item.id)
+  // Use one consistent directory snapshot for the optimistic edit preconditions.
+  if (!snapshot)
+    return (
+      <>
+        <Link href="/intake/items">{d.backToList}</Link>
+        <h1>{label?.title || d.item}</h1>
+        <p role="status">{all.itemWorkflow.reload}</p>
+      </>
+    )
   return (
     <>
       <Link className="text-link" href="/intake/items">
         {d.backToList}
       </Link>
-      <div className="page-heading item-detail-heading">
-        <h1>
-          {label?.title || `${d.item} ${d.originKinds[item.origin_kind]}`}
-        </h1>
-        {['owner', 'admin', 'staff'].includes(active.role) && (
-          <ItemDescriptionEditor
-            key={`${item.id}:${label?.title}`}
-            tenantId={active.id}
-            itemId={item.id}
-            title={label?.title ?? ''}
-            d={all.itemWorkflow}
-          />
-        )}
-        <p className="item-detail-reference">{reference}</p>
-        <span className="ownership-badge" data-ownership={item.ownership}>
-          {d.ownershipKinds[item.ownership]}
-        </span>
-        {currentPrice !== null && (
-          <p className="item-detail-price">
-            <span>{d.currentPrice}</span>
-            <strong>
-              {formatOre(currentPrice)} {label?.currency ?? currency}
-            </strong>
-          </p>
-        )}
-        <div className="item-actor-line">
-          <span>
-            {d.acceptedAt}:{' '}
-            <EventTime value={item.accepted_at} locale={ctx.locale} />
-          </span>
-          <ActorSignature actor={item.actor} unknown={d.unknownActor} />
-        </div>
-        <p>
-          <Link className="text-link" href={originHref}>
-            {d.openOrigin}
-          </Link>
-          {item.seller_id && (
-            <>
-              {' · '}
-              <Link
-                className="text-link"
-                href={`/intake/sellers/${item.seller_id}`}
-              >
-                {all.sellersList.title}
+      <ItemDetailWorkspace
+        item={snapshot}
+        tenantId={active.id}
+        write={['owner', 'admin', 'staff'].includes(active.role)}
+        types={vocabulary.types
+          .filter((type) => type.active)
+          .map((type) => ({
+            id: type.slug,
+            name: labelOf(type, ctx.locale),
+          }))}
+        groups={groups}
+        d={all}
+        locale={ctx.locale}
+        reference={reference}
+        saleHref={
+          '/intake/lifecycle?' +
+          new URLSearchParams({ q: reference }) +
+          '#lifecycle-' +
+          item.id
+        }
+        price={
+          currentPrice !== null ? (
+            <p className="item-detail-price">
+              <span>{d.currentPrice}</span>
+              <strong>
+                {formatOre(currentPrice)} {label?.currency ?? currency}
+              </strong>
+            </p>
+          ) : null
+        }
+        metadata={
+          <>
+            <div className="item-actor-line">
+              <span>
+                {d.acceptedAt}:{' '}
+                <EventTime value={item.accepted_at} locale={ctx.locale} />
+              </span>
+              <ActorSignature actor={item.actor} unknown={d.unknownActor} />
+            </div>
+            <p className="item-origin-link">
+              <Link className="text-link" href={originHref}>
+                {d.openOrigin}
               </Link>
-            </>
-          )}
-        </p>
-        {active.role !== 'readonly' && (
-          <div className="item-detail-shortcuts">
+            </p>
+          </>
+        }
+        printing={
+          <>
             <Link
               className="btn btn-secondary"
               href={`/intake/items/${item.id}/label`}
@@ -126,23 +148,6 @@ export default async function Item({
             >
               {all.labelSheets.title}
             </Link>
-            <Link
-              className="btn btn-secondary"
-              href={`/intake/items/classify?item=${item.id}`}
-            >
-              {all.itemWorkflow.classification}
-            </Link>
-            <Link
-              className="btn btn-secondary"
-              href={
-                '/intake/lifecycle?' +
-                new URLSearchParams({ q: reference }) +
-                '#lifecycle-' +
-                item.id
-              }
-            >
-              {d.manageSalePeriod}
-            </Link>
             <ItemPrintDialog
               tenantId={active.id}
               itemId={item.id}
@@ -152,133 +157,161 @@ export default async function Item({
               d={all.printing}
               intake={all.intake}
             />
-          </div>
-        )}
-      </div>
-      {photos[0] && (
-        <ItemPhotoGallery
-          key={item.id}
-          tenantId={active.id}
-          initial={photos[0]}
-          title={label?.title || d.item}
-          write={['owner', 'admin', 'staff'].includes(active.role)}
-          d={all.itemPhotos}
-        />
-      )}
-      {sync?.[0] && (
-        <div id="sync-status">
-          <ItemSyncStatus
-            connections={sync[0].connections}
-            tenantId={active.id}
-            manage={manages}
-            locale={ctx.locale}
-            d={all}
-          />
-        </div>
-      )}
-      <details className="card intake-form item-detail-section">
-        <summary>{d.terms}</summary>
-        <p>{d.termsHint}</p>
-        <dl className="item-detail-facts">
-          {item.ownership === 'consignment' ? (
-            <div>
-              <dt>{d.commission}</dt>
-              <dd>
-                {t.commissionRatePercent} % ·{' '}
-                {t.commissionBasis ? all.sellerTerms[t.commissionBasis] : ''}
-              </dd>
-            </div>
-          ) : (
-            <div>
-              <dt>{d.purchasePrice}</dt>
-              <dd>
-                {t.purchasePriceOre !== undefined
-                  ? `${formatOre(t.purchasePriceOre)} ${currency}`
-                  : '—'}{' '}
-                ·{' '}
-                {t.marginEligible
-                  ? all.purchases.marginYes
-                  : all.purchases.marginNo}
-              </dd>
-            </div>
-          )}
-          <div>
-            <dt>{d.salePeriod}</dt>
-            <dd>
-              {t.salePeriodDays} {d.days} ·{' '}
-              {all.storePolicy[t.endOfPeriodAction]}
-            </dd>
-          </div>
-          <div>
-            <dt>{d.evidence}</dt>
-            <dd>{d.evidenceKinds[t.evidenceKind]}</dd>
-          </div>
-          <div>
-            <dt>{d.custody}</dt>
-            <dd>
-              {item.custody_kind ? d.custodyKinds[item.custody_kind] : '—'}
-            </dd>
-          </div>
-          <div>
-            <dt>{all.storePolicy.version}</dt>
-            <dd>{t.storePolicyVersion}</dd>
-          </div>
-        </dl>
-      </details>
-      {transferTargets.length > 0 &&
-        item.ownership === 'consignment' &&
-        !ended && (
-          <section className="card intake-form">
-            <h2>{d.transferHeading}</h2>
-            <TransferItemForm
-              tenantId={active.id}
-              itemId={item.id}
-              stores={transferTargets}
-              d={d}
-              intake={all.intake}
-            />
-          </section>
-        )}
-      <details className="card intake-form item-detail-section">
-        <summary>
-          {d.prices} <span>({prices.length})</span>
-        </summary>
-        <ul className="item-detail-history">
-          {prices.map((p) => (
-            <li key={p.id}>
-              <div className="item-actor-line">
-                <strong>
-                  {formatOre(p.price_ore)} {currency}
-                </strong>
-                <ActorSignature actor={p.actor} unknown={d.unknownActor} />
+          </>
+        }
+        photos={
+          <>
+            {photos[0] && (
+              <ItemPhotoGallery
+                key={item.id}
+                tenantId={active.id}
+                initial={photos[0]}
+                title={label?.title || d.item}
+                write={['owner', 'admin', 'staff'].includes(active.role)}
+                d={all.itemPhotos}
+              />
+            )}
+          </>
+        }
+        sync={
+          <>
+            {sync?.[0] && (
+              <div id="sync-status">
+                <ItemSyncStatus
+                  connections={sync[0].connections}
+                  tenantId={active.id}
+                  manage={manages}
+                  locale={ctx.locale}
+                  d={all}
+                />
               </div>
-              <span>
-                {d.priceReasons[p.reason as keyof typeof d.priceReasons] ??
-                  p.reason}
-              </span>
-              <EventTime value={p.set_at} locale={ctx.locale} />
-            </li>
-          ))}
-        </ul>
-      </details>
-      <details className="card intake-form item-detail-section">
-        <summary>
-          {d.events} <span>({events.length})</span>
-        </summary>
-        <ul className="item-detail-history">
-          {events.map((e) => (
-            <li key={e.id}>
-              <div className="item-actor-line">
-                <strong>
-                  {d.eventKinds[e.kind as keyof typeof d.eventKinds] ?? e.kind}
-                </strong>
-                <ActorSignature actor={e.actor} unknown={d.unknownActor} />
-              </div>
-              <EventTime value={e.occurred_at} locale={ctx.locale} />
-            </li>
-          ))}
-        </ul>
-      </details>
+            )}
+          </>
+        }
+        terms={
+          <>
+            <details className="card intake-form item-detail-section">
+              <summary>{d.terms}</summary>
+              <p>{d.termsHint}</p>
+              <dl className="item-detail-facts">
+                {item.ownership === 'consignment' ? (
+                  <div>
+                    <dt>{d.commission}</dt>
+                    <dd>
+                      {t.commissionRatePercent} % ·{' '}
+                      {t.commissionBasis
+                        ? all.sellerTerms[t.commissionBasis]
+                        : ''}
+                    </dd>
+                  </div>
+                ) : (
+                  <div>
+                    <dt>{d.purchasePrice}</dt>
+                    <dd>
+                      {t.purchasePriceOre !== undefined
+                        ? `${formatOre(t.purchasePriceOre)} ${currency}`
+                        : '—'}{' '}
+                      ·{' '}
+                      {t.marginEligible
+                        ? all.purchases.marginYes
+                        : all.purchases.marginNo}
+                    </dd>
+                  </div>
+                )}
+                <div>
+                  <dt>{d.salePeriod}</dt>
+                  <dd>
+                    {t.salePeriodDays} {d.days} ·{' '}
+                    {all.storePolicy[t.endOfPeriodAction]}
+                  </dd>
+                </div>
+                <div>
+                  <dt>{d.evidence}</dt>
+                  <dd>{d.evidenceKinds[t.evidenceKind]}</dd>
+                </div>
+                <div>
+                  <dt>{d.custody}</dt>
+                  <dd>
+                    {item.custody_kind
+                      ? d.custodyKinds[item.custody_kind]
+                      : '—'}
+                  </dd>
+                </div>
+                <div>
+                  <dt>{all.storePolicy.version}</dt>
+                  <dd>{t.storePolicyVersion}</dd>
+                </div>
+              </dl>
+            </details>
+            {transferTargets.length > 0 &&
+              item.ownership === 'consignment' &&
+              !ended && (
+                <section className="card intake-form">
+                  <h2>{d.transferHeading}</h2>
+                  <TransferItemForm
+                    tenantId={active.id}
+                    itemId={item.id}
+                    stores={transferTargets}
+                    d={d}
+                    intake={all.intake}
+                  />
+                </section>
+              )}
+          </>
+        }
+        history={
+          <>
+            <details className="card intake-form item-detail-section">
+              <summary>
+                {d.prices} <span>({prices.length})</span>
+              </summary>
+              <ul className="item-detail-history">
+                {prices.map((p) => (
+                  <li key={p.id}>
+                    <div className="item-actor-line">
+                      <strong>
+                        {formatOre(p.price_ore)} {currency}
+                      </strong>
+                      <ActorSignature
+                        actor={p.actor}
+                        unknown={d.unknownActor}
+                      />
+                    </div>
+                    <span>
+                      {d.priceReasons[
+                        p.reason as keyof typeof d.priceReasons
+                      ] ?? p.reason}
+                    </span>
+                    <EventTime value={p.set_at} locale={ctx.locale} />
+                  </li>
+                ))}
+              </ul>
+            </details>
+            <details className="card intake-form item-detail-section">
+              <summary>
+                {d.events} <span>({events.length})</span>
+              </summary>
+              <ul className="item-detail-history">
+                {events.map((e) => (
+                  <li key={e.id}>
+                    <div className="item-actor-line">
+                      <strong>
+                        {d.eventKinds[e.kind as keyof typeof d.eventKinds] ??
+                          e.kind}
+                      </strong>
+                      <ActorSignature
+                        actor={e.actor}
+                        unknown={d.unknownActor}
+                      />
+                    </div>
+                    <EventTime value={e.occurred_at} locale={ctx.locale} />
+                  </li>
+                ))}
+              </ul>
+            </details>
+          </>
+        }
+      />
     </>
   )
 }

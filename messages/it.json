@@ -3550,7 +3550,8 @@
       "PHOTO_LIMIT": "Un articolo può avere fino a 20 foto.",
       "PHOTO_NOT_FOUND": "Foto o articolo non trovato.",
       "ITEM_NOT_FOUND": "Foto o articolo non trovato."
-    }
+    },
+    "noFile": "Nessuna immagine selezionata"
   },
   "submissions": {
     "title": "Invia foto al negozio",
@@ -4165,5 +4166,13 @@
     "cellHint": "Fai clic per modificare. Invio salva, Esc annulla.",
     "invalid": "Inserisci il nome dell’articolo. Esc annulla.",
     "selectedOne": "1 selezionato"
+  },
+  "itemDetail": {
+    "overview": "Panoramica",
+    "sync": "Sincronizzazione POS",
+    "history": "Cronologia",
+    "terms": "Condizioni",
+    "print": "Stampa",
+    "editHint": "Premi la matita per modificare. Le modifiche vengono salvate quando esci dal campo."
   }
 }

@@ -15,21 +15,21 @@ test('staff correct text, classify inventory and download private A4 price label
     await f.commit()
     await page.goto(`/intake/items/${item}`)
     await page
-      .locator('summary')
-      .filter({ hasText: d.itemWorkflow.edit })
+      .getByRole('button', {
+        name: `${d.itemWorkflow.editRow} ${d.items.item}: Synthetic blue coat`,
+        exact: true,
+      })
       .click()
     await page
-      .getByLabel(d.itemWorkflow.description, { exact: true })
+      .getByRole('textbox', { name: d.items.item, exact: true })
       .fill('Synthetic blue wool coat')
     await page
-      .getByRole('button', { name: d.itemWorkflow.save, exact: true })
-      .click()
+      .getByRole('textbox', { name: d.items.item, exact: true })
+      .press('Enter')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
       'Synthetic blue wool coat',
     )
-    await page
-      .getByRole('link', { name: d.itemWorkflow.classification, exact: true })
-      .click()
+    await page.goto(`/intake/items/classify?item=${item}`)
     await page
       .locator('summary')
       .filter({ hasText: d.itemWorkflow.newGroup })
@@ -61,7 +61,7 @@ test('staff correct text, classify inventory and download private A4 price label
           ).rows[0].v,
         ),
       )
-      .toBe(1)
+      .toBe(2)
     await page.goto('/intake/items')
     const row = page
       .getByRole('row')

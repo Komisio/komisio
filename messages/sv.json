@@ -3550,7 +3550,8 @@
       "PHOTO_LIMIT": "En vara kan ha högst 20 bilder.",
       "PHOTO_NOT_FOUND": "Bilden eller varan hittades inte.",
       "ITEM_NOT_FOUND": "Bilden eller varan hittades inte."
-    }
+    },
+    "noFile": "Ingen bild vald"
   },
   "submissions": {
     "title": "Skicka bilder till butiken",
@@ -4165,5 +4166,13 @@
     "cellHint": "Klicka för att ändra. Enter sparar, Escape återställer.",
     "invalid": "Ange ett varunamn. Escape återställer.",
     "selectedOne": "1 markerad"
+  },
+  "itemDetail": {
+    "overview": "Översikt",
+    "sync": "Kassasynkning",
+    "history": "Historik",
+    "terms": "Villkor",
+    "print": "Skriv ut",
+    "editHint": "Klicka på pennan för att ändra. Ändringen sparas när du lämnar fältet."
   }
 }

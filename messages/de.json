@@ -3556,7 +3556,8 @@
       "PHOTO_LIMIT": "Ein Artikel kann bis zu 20 Bilder haben.",
       "PHOTO_NOT_FOUND": "Bild oder Artikel nicht gefunden.",
       "ITEM_NOT_FOUND": "Bild oder Artikel nicht gefunden."
-    }
+    },
+    "noFile": "Kein Bild ausgewählt"
   },
   "submissions": {
     "title": "Fotos an den Laden senden",
@@ -4171,5 +4172,13 @@
     "cellHint": "Zum Bearbeiten klicken. Enter speichert, Escape verwirft.",
     "invalid": "Artikelnamen eingeben. Escape verwirft.",
     "selectedOne": "1 ausgewählt"
+  },
+  "itemDetail": {
+    "overview": "Übersicht",
+    "sync": "Kassensynchronisierung",
+    "history": "Verlauf",
+    "terms": "Bedingungen",
+    "print": "Drucken",
+    "editHint": "Zum Bearbeiten auf den Stift klicken. Änderungen werden beim Verlassen des Feldes gespeichert."
   }
 }

@@ -116,6 +116,16 @@ export const tokenSet = z.object({
 })
 export type TokenSet = z.infer<typeof tokenSet>
 
+/** Safe callback diagnostics; never retain response bodies or credentials. */
+export class ShopifyAuthFailure extends Error {
+  constructor(
+    public readonly step: 'token_exchange' | 'admin_api',
+    public readonly status: number,
+  ) {
+    super('SHOPIFY_AUTH_REQUIRED')
+  }
+}
+
 export async function exchangeCode(
   env: ShopifyEnvironment,
   shop: string,
@@ -137,6 +147,8 @@ export async function exchangeCode(
         client_id: env.SHOPIFY_CLIENT_ID ?? '',
         client_secret: env.SHOPIFY_CLIENT_SECRET ?? '',
         code,
+        // Required for new public apps; the engine already stores and renews the pair.
+        expiring: '1',
       }).toString(),
       cache: 'no-store',
       redirect: 'error',
@@ -146,7 +158,8 @@ export async function exchangeCode(
     throw new Error('SHOPIFY_CONNECTION_FAILED')
   }
   if (response.status === 429) throw new Error('SHOPIFY_RATE_LIMITED')
-  if (!response.ok) throw new Error('SHOPIFY_AUTH_REQUIRED')
+  if (!response.ok)
+    throw new ShopifyAuthFailure('token_exchange', response.status)
   const tokens = tokenSet.parse(await boundedJson(response, 65536))
   if (/[\r\n]/.test(tokens.access_token))
     throw new Error('SHOPIFY_AUTH_REQUIRED')
@@ -231,7 +244,7 @@ export async function graphql(
   }
   if (response.status === 429) throw new Error('SHOPIFY_RATE_LIMITED')
   if ([401, 403].includes(response.status))
-    throw new Error('SHOPIFY_AUTH_REQUIRED')
+    throw new ShopifyAuthFailure('admin_api', response.status)
   if (!response.ok) throw new Error('SHOPIFY_READ_FAILED')
   const body = z
     .object({

@@ -58,7 +58,19 @@ the frozen message, then adds Auth's secret button link and delivers via Resend.
 The hook is the sole Auth email transport when enabled, including confirmation,
 recovery and secure email change. No administrator client or metadata mutation
 is needed. Install the hook before enabling new v3 messages; SMTP/v2 remains
-available for staged rollout. Historic communication bodies remain immutable.
+available for staged rollout. Historic communication bodies remain immutable
+except for the owner-approved, transaction-bound contact-erasure operation.
+
+Seller privacy review is tenant-scoped and owner/admin-only. Its engine command
+blocks unsettled money, custody and pending delivery, rechecks the reviewed
+snapshot under the tenant lock, and records an immutable decision before erasing
+contact/profile copies and ordinary message content. Required legal/accounting
+evidence remains intact, with a reason and review date. Subsequent reviews append
+decisions; they do not delete retained evidence. Closed sellers cannot receive
+new goods or have erased contact data restored by an old editor. Shared Auth
+identities and other tenant relationships are preserved. Unstructured files,
+external copies and retention expiry require separate follow-up; this workflow
+does not claim complete GDPR erasure or automatic age-based cleanup.
 
 The database contains `tenants`, `tenant_members`, `user_profiles`,
 `tenant_invitations` and `access_events`, plus Supabase-managed auth identities.

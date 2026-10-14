@@ -89,12 +89,40 @@ export default async function Seller({
     d = all.sellerTerms
   const seller = await ctx.client
     .from('sellers')
-    .select('id,name,email,phone,created_at,profile,profile_revision')
+    .select(
+      'id,name,email,phone,created_at,profile,profile_revision,privacy_closed_at',
+    )
     .eq('tenant_id', tenant.id)
     .eq('id', id.data)
     .maybeSingle()
   if (seller.error) throw new Error('Unable to read seller')
   if (!seller.data) notFound()
+  if (seller.data.privacy_closed_at) {
+    const privacy = all.sellerPrivacy
+    return (
+      <div className="grid max-w-3xl gap-5">
+        <Link className="text-link" href="/intake/sellers">
+          {all.sellersList.title}
+        </Link>
+        <h1>{privacy.closedName}</h1>
+        <p>{privacy.closed}</p>
+        <p>{privacy.remaining}</p>
+        {['owner', 'admin'].includes(tenant.role) && (
+          <>
+            <Link
+              className="text-link"
+              href={`/intake/sellers/${id.data}/privacy`}
+            >
+              {privacy.title}
+            </Link>
+            <a className="text-link" href={`/api/sellers/${id.data}/export`}>
+              {all.intake.exportSellerData}
+            </a>
+          </>
+        )}
+      </div>
+    )
+  }
   const fees = await readConsignmentFees(
     ctx.client,
     tenant.id,
@@ -1069,14 +1097,20 @@ export default async function Seller({
                 </details>
               )}
               {['owner', 'admin'].includes(tenant.role) && (
-                <p>
+                <div className="grid gap-3">
+                  <Link
+                    className="text-link"
+                    href={`/intake/sellers/${id.data}/privacy`}
+                  >
+                    {all.sellerPrivacy.title}
+                  </Link>
                   <a
                     className="text-link"
                     href={`/api/sellers/${id.data}/export`}
                   >
                     {all.intake.exportSellerData}
                   </a>
-                </p>
+                </div>
               )}
             </>
           ),

@@ -29,7 +29,6 @@ for (const damage of [
       await page
         .locator('#purchase-evidence')
         .fill('Synthetic confirmation evidence')
-      await form.locator('input[type=checkbox][required]').check()
       const requests: Record<string, unknown>[] = []
       await page.route('**/api/intake', async (route) => {
         const command = route.request().postDataJSON()

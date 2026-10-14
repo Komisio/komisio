@@ -85,7 +85,13 @@ export function ItemDetailWorkspace({
             className="item-print-options"
             ref={menu}
             onKeyDown={(event) => {
-              if (event.key === 'Escape') {
+              if (
+                event.key === 'Escape' &&
+                !(
+                  event.target instanceof Element &&
+                  event.target.closest('dialog[open]')
+                )
+              ) {
                 menu.current!.open = false
                 menu.current?.querySelector('summary')?.focus()
               }

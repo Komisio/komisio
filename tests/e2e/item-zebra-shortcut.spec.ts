@@ -37,6 +37,8 @@ test('Zebra shortcuts queue the selected label from item and browser-label pages
         )
       }
       await page.goto(path)
+      if (index === 0)
+        await page.locator('.item-print-options > summary').click()
       const trigger = page.getByRole('button', {
         name: d.printing.zebraPrint,
         exact: true,

@@ -15,6 +15,7 @@ import de from '../../messages/de.json' with { type: 'json' }
 // is involved.
 test('controlled journey: receive, register, label, sell and approve a settlement through the UI', async ({
   page,
+  baseURL,
 }, testInfo) => {
   const email = `controlled-${randomUUID()}@example.test`
   await register(page, email, `K!${randomBytes(16).toString('hex')}`)
@@ -117,6 +118,7 @@ test('controlled journey: receive, register, label, sell and approve a settlemen
 
     // 3. Open the browser label; the print dialog is stubbed, nothing is sent anywhere.
     await page.goto(`/intake/items/${itemId}`)
+    await page.locator('.item-print-options > summary').click()
     await page
       .getByRole('link', { name: d.printing.browserOpen, exact: true })
       .click()
@@ -302,9 +304,7 @@ test('controlled journey: receive, register, label, sell and approve a settlemen
     // The saved-item confirmation must also fit a phone with the longest action text (German).
     await page
       .context()
-      .addCookies([
-        { name: 'komisio-locale', value: 'de', url: 'http://127.0.0.1:3000' },
-      ])
+      .addCookies([{ name: 'komisio-locale', value: 'de', url: baseURL! }])
     await page.goto(`/intake/bags/${bagId}/inspect`)
     // The description label comes from the store's attribute vocabulary, not from the UI
     // dictionary, so the first text field of the item form is used here.
@@ -330,9 +330,7 @@ test('controlled journey: receive, register, label, sell and approve a settlemen
     await noOverflow()
     await page
       .context()
-      .addCookies([
-        { name: 'komisio-locale', value: 'sv', url: 'http://127.0.0.1:3000' },
-      ])
+      .addCookies([{ name: 'komisio-locale', value: 'sv', url: baseURL! }])
 
     // Boundary of this journey: nothing paid, no statement, no communication, no print job.
     for (const table of [

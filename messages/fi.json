@@ -249,7 +249,7 @@
         "Tallenna tuote."
       ]
     },
-    "typeIntro": "Tuotetyyppi tallennetaan koko myymälälle ja valitaan tälle tuotteelle.",
+    "typeIntro": "Valitse tuotetyypille näytettävät kentät.",
     "typeFieldsHint": "Valitse samankaltainen tuotetyyppi, jos haluat samat kysymykset, kuten koon ja materiaalin.",
     "typeFieldsLegend": "Valitse kentät"
   },
@@ -448,7 +448,8 @@
     "store": "Kauppa ja tilaus",
     "printing": "Tulostimet ja etiketit",
     "connectors": "AI-avustajat",
-    "credits": "AI-krediitit"
+    "credits": "AI-krediitit",
+    "vocabulary": "Tuotetyypit ja ominaisuudet"
   },
   "tenantIdentity": "Kaupan identiteetti",
   "tenantId": "Kaupan tunnus",
@@ -4180,5 +4181,36 @@
     "terms": "Ehdot",
     "print": "Tulosta",
     "editHint": "Muokkaa napsauttamalla kynää. Muutos tallentuu, kun poistut kentästä."
+  },
+  "vocabularySettings": {
+    "title": "Tuotetyypit ja ominaisuudet",
+    "intro": "Tuotetyyppi määrittää vastaanotossa näytettävät kentät.",
+    "types": "Tuotetyypit",
+    "attributes": "Ominaisuudet",
+    "searchTypes": "Hae tuotetyyppiä",
+    "searchFields": "Hae ominaisuutta",
+    "name": "Nimi",
+    "fields": "Vastaanoton kentät",
+    "kind": "Vastauksen tyyppi",
+    "own": "Myymälän oma",
+    "standard": "Vakio",
+    "noMatches": "Ei tuloksia.",
+    "createType": "Luo tuotetyyppi",
+    "addAttribute": "Lisää ominaisuus",
+    "createAttribute": "Luo ominaisuus",
+    "unit": "Yksikkö (valinnainen)",
+    "options": "Vastausvaihtoehdot",
+    "optionsHint": "Yksi vaihtoehto riville.",
+    "invalid": "Anna nimi ja tarkista kentät. Vastausvaihtoehtojen on oltava erilaisia.",
+    "saved": "{name} on tallennettu.",
+    "leave": "Sinulla on tallentamattomia muutoksia. Haluatko poistua sivulta?",
+    "kinds": {
+      "text": "Teksti",
+      "number": "Luku",
+      "choice": "Valinta luettelosta",
+      "boolean": "Kyllä/ei"
+    },
+    "uncertain": "Tallennusta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla.",
+    "refused": "Tallennus epäonnistui. Peruuta ja tarkista myymälä ja käyttöoikeutesi."
   }
 }

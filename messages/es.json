@@ -249,7 +249,7 @@
         "Guarda el artículo."
       ]
     },
-    "typeIntro": "El tipo se guarda para toda la tienda y se selecciona para este artículo.",
+    "typeIntro": "Elige los campos que se mostrarán para este tipo de artículo.",
     "typeFieldsHint": "Elige un tipo de artículo similar para usar las mismas preguntas, como talla y material.",
     "typeFieldsLegend": "Elegir campos"
   },
@@ -448,7 +448,8 @@
     "store": "Tienda y plan",
     "printing": "Impresoras y etiquetas",
     "connectors": "Asistentes de IA",
-    "credits": "Créditos de IA"
+    "credits": "Créditos de IA",
+    "vocabulary": "Tipos de artículo y atributos"
   },
   "tenantIdentity": "Identidad de la tienda",
   "tenantId": "Id de la tienda",
@@ -4180,5 +4181,36 @@
     "terms": "Condiciones",
     "print": "Imprimir",
     "editHint": "Pulsa el lápiz para editar. Los cambios se guardan al salir del campo."
+  },
+  "vocabularySettings": {
+    "title": "Tipos de artículo y atributos",
+    "intro": "El tipo de artículo determina los campos que aparecen en la recepción.",
+    "types": "Tipos de artículo",
+    "attributes": "Atributos",
+    "searchTypes": "Buscar tipo de artículo",
+    "searchFields": "Buscar atributo",
+    "name": "Nombre",
+    "fields": "Campos de recepción",
+    "kind": "Tipo de respuesta",
+    "own": "De la tienda",
+    "standard": "Estándar",
+    "noMatches": "Sin resultados.",
+    "createType": "Crear tipo de artículo",
+    "addAttribute": "Añadir atributo",
+    "createAttribute": "Crear atributo",
+    "unit": "Unidad (opcional)",
+    "options": "Opciones de respuesta",
+    "optionsHint": "Una opción por línea.",
+    "invalid": "Introduce un nombre y revisa los campos. Las opciones deben ser distintas.",
+    "saved": "Se ha guardado {name}.",
+    "leave": "Tienes cambios sin guardar. ¿Quieres salir de la página?",
+    "kinds": {
+      "text": "Texto",
+      "number": "Número",
+      "choice": "Elegir de una lista",
+      "boolean": "Sí/no"
+    },
+    "uncertain": "No se pudo confirmar el guardado. Reintenta con los mismos datos.",
+    "refused": "No se pudo guardar. Cancela y revisa la tienda y tus permisos."
   }
 }

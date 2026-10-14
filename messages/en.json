@@ -249,7 +249,7 @@
         "Save the item."
       ]
     },
-    "typeIntro": "The item type is saved for the whole store and selected for this item.",
+    "typeIntro": "Choose the fields to show for this item type.",
     "typeFieldsHint": "Choose a similar item type to use the same questions, such as size and material.",
     "typeFieldsLegend": "Choose fields"
   },
@@ -448,7 +448,8 @@
     "store": "Store and plan",
     "printing": "Printers and labels",
     "connectors": "AI assistants",
-    "credits": "AI credits"
+    "credits": "AI credits",
+    "vocabulary": "Item types and attributes"
   },
   "tenantIdentity": "Store identity",
   "tenantId": "Store id",
@@ -4174,5 +4175,36 @@
     "terms": "Terms",
     "print": "Print",
     "editHint": "Click the pencil to edit. Changes are saved when you leave the field."
+  },
+  "vocabularySettings": {
+    "title": "Item types and attributes",
+    "intro": "The item type determines which fields appear when receiving goods.",
+    "types": "Item types",
+    "attributes": "Attributes",
+    "searchTypes": "Search item types",
+    "searchFields": "Search attributes",
+    "name": "Name",
+    "fields": "Receiving fields",
+    "kind": "Answer type",
+    "own": "Store-defined",
+    "standard": "Standard",
+    "noMatches": "No matches.",
+    "createType": "Create item type",
+    "addAttribute": "Add attribute",
+    "createAttribute": "Create attribute",
+    "unit": "Unit (optional)",
+    "options": "Answer options",
+    "optionsHint": "One option per line.",
+    "invalid": "Enter a name and check the fields. Answer options must be unique.",
+    "saved": "{name} has been saved.",
+    "leave": "You have unsaved changes. Leave this page?",
+    "kinds": {
+      "text": "Text",
+      "number": "Number",
+      "choice": "Choose from a list",
+      "boolean": "Yes/no"
+    },
+    "uncertain": "Saving could not be confirmed. Retry with the same details.",
+    "refused": "Could not save. Cancel and check the store and your permissions."
   }
 }

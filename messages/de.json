@@ -249,7 +249,7 @@
         "Speichern Sie den Artikel."
       ]
     },
-    "typeIntro": "Der Artikeltyp wird für das gesamte Geschäft gespeichert und für diesen Artikel ausgewählt.",
+    "typeIntro": "Wählen Sie die Felder für diesen Artikeltyp.",
     "typeFieldsHint": "Wählen Sie einen ähnlichen Artikeltyp, um dieselben Fragen zu verwenden, etwa zu Größe und Material.",
     "typeFieldsLegend": "Felder auswählen"
   },
@@ -448,7 +448,8 @@
     "store": "Store und Plan",
     "printing": "Drucker und Etiketten",
     "connectors": "KI-Assistenten",
-    "credits": "KI-Credits"
+    "credits": "KI-Credits",
+    "vocabulary": "Artikeltypen und Merkmale"
   },
   "tenantIdentity": "Store-Identität",
   "tenantId": "Store-ID",
@@ -4180,5 +4181,36 @@
     "terms": "Bedingungen",
     "print": "Drucken",
     "editHint": "Zum Bearbeiten auf den Stift klicken. Änderungen werden beim Verlassen des Feldes gespeichert."
+  },
+  "vocabularySettings": {
+    "title": "Artikeltypen und Merkmale",
+    "intro": "Der Artikeltyp bestimmt, welche Felder bei der Annahme erscheinen.",
+    "types": "Artikeltypen",
+    "attributes": "Merkmale",
+    "searchTypes": "Artikeltyp suchen",
+    "searchFields": "Merkmal suchen",
+    "name": "Name",
+    "fields": "Felder bei der Annahme",
+    "kind": "Antworttyp",
+    "own": "Ladeneigen",
+    "standard": "Standard",
+    "noMatches": "Keine Treffer.",
+    "createType": "Artikeltyp erstellen",
+    "addAttribute": "Merkmal hinzufügen",
+    "createAttribute": "Merkmal erstellen",
+    "unit": "Einheit (optional)",
+    "options": "Antwortoptionen",
+    "optionsHint": "Eine Option pro Zeile.",
+    "invalid": "Geben Sie einen Namen ein und prüfen Sie die Felder. Antwortoptionen müssen unterschiedlich sein.",
+    "saved": "{name} wurde gespeichert.",
+    "leave": "Sie haben ungespeicherte Änderungen. Seite verlassen?",
+    "kinds": {
+      "text": "Text",
+      "number": "Zahl",
+      "choice": "Aus Liste wählen",
+      "boolean": "Ja/nein"
+    },
+    "uncertain": "Das Speichern konnte nicht bestätigt werden. Versuchen Sie es mit denselben Angaben erneut.",
+    "refused": "Speichern nicht möglich. Brechen Sie ab und prüfen Sie Laden und Berechtigungen."
   }
 }

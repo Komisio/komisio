@@ -2,11 +2,12 @@ import { test, expect } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { createRequire } from 'node:module'
 import sharp from 'sharp'
+import { localTestUrl } from '../helpers/local-services'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 
-test('create a type in bag reception, replay a lost reply and retain the item', async ({
+test('create a type in settings, replay a lost reply and use it in reception', async ({
   page,
 }) => {
   const email = `create-type-${randomUUID()}@example.test`
@@ -23,33 +24,17 @@ test('create a type in bag reception, replay a lost reply and retain the item', 
     ])
     await f.commit()
     await page.setViewportSize({ width: 390, height: 844 })
-    await page.goto(`/intake/bags/${bag}/inspect`)
-    const photo = await sharp({
-      create: { width: 120, height: 120, channels: 3, background: '#cc3333' },
-    })
-      .png()
-      .toBuffer()
-    const photoInput = page.locator('#quick-photo')
-    // File selection does not wait for the input's hydration readiness.
-    await expect(photoInput).toBeEnabled()
-    await photoInput.setInputFiles({
-      name: 'synthetic.png',
-      mimeType: 'image/png',
-      buffer: photo,
-    })
-    await expect(
-      page.getByRole('img', { name: d.quickIntake.photo, exact: true }),
-    ).toBeVisible()
+    await page.goto('/settings?tab=vocabulary')
     const create = page.getByRole('button', {
       name: d.quickIntake.createType,
       exact: true,
     })
-    await expect(create).toBeEnabled()
-    const description = page.getByLabel(d.quickIntake.description, {
-      exact: true,
-    })
-    await description.fill('Synthetic red shirt')
-    await page.getByLabel(d.quickIntake.price, { exact: true }).fill('125')
+    await create.click()
+    const editor = page.getByRole('group', { name: d.quickIntake.createType })
+    await expect(page.getByLabel(d.quickIntake.typeName)).toBeFocused()
+    await expect(editor.getByRole('checkbox', { checked: true })).toHaveCount(1)
+    await page.getByLabel(d.quickIntake.typeName).fill('Synthetic shirt')
+    await page.getByLabel(d.quickIntake.typeFields).selectOption('sweater')
     const commands: Record<string, unknown>[] = []
     await page.route('**/api/item-types', async (route) => {
       commands.push(route.request().postDataJSON())
@@ -59,41 +44,19 @@ test('create a type in bag reception, replay a lost reply and retain the item', 
         return route.fulfill({ status: 503, json: { error: 'REQUEST_FAILED' } })
       return route.fulfill({ response })
     })
-    await create.click()
-    const editor = page.getByRole('group', { name: d.quickIntake.createType })
-    await expect(page.getByLabel(d.quickIntake.typeName)).toBeFocused()
-    await page.getByLabel(d.quickIntake.typeName).fill('Skjorta')
-    await page.getByLabel(d.quickIntake.typeFields).selectOption('sweater')
-    await page.screenshot({
-      path: 'private/create-item-type-mobile.png',
-      fullPage: true,
-    })
     await page.getByLabel(d.quickIntake.typeName).press('Enter')
     await expect(editor.getByRole('alert')).toHaveText(
-      d.quickIntake.typeUncertain,
+      d.vocabularySettings.uncertain,
     )
     await expect(page.getByLabel(d.quickIntake.typeName)).toBeDisabled()
-    expect(
-      (
-        await f.db.query(
-          'select count(*)::int n from items where tenant_id=$1',
-          [f.tenant],
-        )
-      ).rows[0].n,
-    ).toBe(0)
     await editor.getByRole('button', { name: d.quickIntake.typeRetry }).click()
     await expect(editor).toHaveCount(0)
-    await expect(page.locator('#quick-item-type')).toHaveValue('Skjorta')
-    await expect(page.locator('#quick-item-type')).toBeFocused()
-    await expect(description).toHaveValue('Synthetic red shirt')
-    await expect(
-      page.getByLabel(d.quickIntake.price, { exact: true }),
-    ).toHaveValue('125')
-    await expect(
-      page.getByRole('img', { name: d.quickIntake.photo, exact: true }),
-    ).toBeVisible()
+    await expect(create).toBeFocused()
     expect(commands).toHaveLength(2)
     expect(commands[1]).toEqual(commands[0])
+    await expect(
+      page.getByRole('row', { name: /Synthetic shirt/ }),
+    ).toBeVisible()
     expect(
       (
         await f.db.query(
@@ -103,10 +66,43 @@ test('create a type in bag reception, replay a lost reply and retain the item', 
       ).rows[0].n,
     ).toBe(1)
     expect(
+      (
+        await f.db.query(
+          'select count(*)::int n from items where tenant_id=$1',
+          [f.tenant],
+        )
+      ).rows[0].n,
+    ).toBe(0)
+    expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true)
+    await page.screenshot({
+      path: 'private/type-settings-mobile.png',
+      fullPage: true,
+    })
+    await page.goto(`/intake/bags/${bag}/inspect`)
+    await expect(create).toHaveCount(0)
+    await page.locator('#quick-item-type').fill('Synthetic shirt')
+    await page
+      .getByLabel(d.quickIntake.description, { exact: true })
+      .fill('Synthetic red shirt')
+    await page.getByLabel(d.quickIntake.price, { exact: true }).fill('125')
+    await expect(page.getByLabel('Storlek', { exact: true })).toBeVisible()
+    await expect(page.getByLabel('Sockel', { exact: true })).toHaveCount(0)
+    await expect(page.getByLabel('Max effekt', { exact: true })).toHaveCount(0)
+    const photo = await sharp({
+      create: { width: 120, height: 120, channels: 3, background: '#cc3333' },
+    })
+      .png()
+      .toBuffer()
+    await expect(page.locator('#quick-photo')).toBeEnabled()
+    await page.locator('#quick-photo').setInputFiles({
+      name: 'synthetic.png',
+      mimeType: 'image/png',
+      buffer: photo,
+    })
     await page
       .getByRole('button', { name: d.bagIntake.save, exact: true })
       .click()
@@ -119,14 +115,6 @@ test('create a type in bag reception, replay a lost reply and retain the item', 
         )
       ).rows[0].n,
     ).toBe(1)
-    await page.goto('/intake/quick')
-    await page
-      .getByLabel(d.quickIntake.searchSeller, { exact: true })
-      .fill('Synthetic')
-    await page.getByRole('button', { name: /Synthetic P2 seller/ }).click()
-    await expect(
-      page.locator('#quick-item-types option[value="Skjorta"]'),
-    ).toHaveCount(1)
   } finally {
     await f.close()
   }
@@ -142,12 +130,16 @@ test('type creation serializes concurrent replays and refuses stale-store and st
   const { Client } = createRequire(import.meta.url)('pg')
   const clients = [
     new Client({
-      connectionString:
+      connectionString: localTestUrl(
+        'TEST_DATABASE_URL',
         'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+      ),
     }),
     new Client({
-      connectionString:
+      connectionString: localTestUrl(
+        'TEST_DATABASE_URL',
         'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+      ),
     }),
   ]
   try {
@@ -195,7 +187,7 @@ test('type creation serializes concurrent replays and refuses stale-store and st
         ).rows[0].id,
     )
     const stale = await page.request.post('/api/item-types', {
-      headers: { Origin: 'http://127.0.0.1:3000' },
+      headers: { Origin: new URL(page.url()).origin },
       data: {
         tenantId: f.tenant,
         requestId: randomUUID(),
@@ -233,7 +225,7 @@ test('type creation serializes concurrent replays and refuses stale-store and st
         await f.db.query('select accept_invitation($1)', [invitation])
       })
       const forbidden = await staffPage.request.post('/api/item-types', {
-        headers: { Origin: 'http://127.0.0.1:3000' },
+        headers: { Origin: new URL(page.url()).origin },
         data: {
           tenantId: f.tenant,
           requestId: randomUUID(),
@@ -243,6 +235,38 @@ test('type creation serializes concurrent replays and refuses stale-store and st
         },
       })
       expect(forbidden.status()).toBe(403)
+      const forbiddenField = await staffPage.request.post('/api/attributes', {
+        headers: { Origin: new URL(page.url()).origin },
+        data: {
+          tenantId: f.tenant,
+          requestId: randomUUID(),
+          name: 'Denied field',
+          locale: 'en',
+          dataType: 'text',
+          unit: '',
+          choices: [],
+        },
+      })
+      expect(forbiddenField.status()).toBe(403)
+      await staffPage.goto('/settings?tab=vocabulary')
+      await expect(
+        staffPage.getByRole('button', {
+          name: d.quickIntake.createType,
+          exact: true,
+        }),
+      ).toHaveCount(0)
+      await staffPage
+        .getByRole('tab', {
+          name: d.vocabularySettings.attributes,
+          exact: true,
+        })
+        .click()
+      await expect(
+        staffPage.getByRole('button', {
+          name: d.vocabularySettings.addAttribute,
+          exact: true,
+        }),
+      ).toHaveCount(0)
       await staffPage.goto('/intake/quick')
       await staffPage
         .getByLabel(d.quickIntake.searchSeller, { exact: true })

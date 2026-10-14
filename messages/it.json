@@ -249,7 +249,7 @@
         "Salva l’articolo."
       ]
     },
-    "typeIntro": "Il tipo viene salvato per tutto il negozio e selezionato per questo articolo.",
+    "typeIntro": "Scegli i campi da visualizzare per questo tipo di articolo.",
     "typeFieldsHint": "Scegli un tipo di articolo simile per usare le stesse domande, come taglia e materiale.",
     "typeFieldsLegend": "Scegli campi"
   },
@@ -448,7 +448,8 @@
     "store": "Negozio e piano",
     "printing": "Stampanti ed etichette",
     "connectors": "Assistenti AI",
-    "credits": "Crediti AI"
+    "credits": "Crediti AI",
+    "vocabulary": "Tipi di articolo e attributi"
   },
   "tenantIdentity": "Identità del negozio",
   "tenantId": "ID del negozio",
@@ -4174,5 +4175,36 @@
     "terms": "Condizioni",
     "print": "Stampa",
     "editHint": "Premi la matita per modificare. Le modifiche vengono salvate quando esci dal campo."
+  },
+  "vocabularySettings": {
+    "title": "Tipi di articolo e attributi",
+    "intro": "Il tipo di articolo determina i campi visualizzati alla ricezione.",
+    "types": "Tipi di articolo",
+    "attributes": "Attributi",
+    "searchTypes": "Cerca tipo di articolo",
+    "searchFields": "Cerca attributo",
+    "name": "Nome",
+    "fields": "Campi di ricezione",
+    "kind": "Tipo di risposta",
+    "own": "Del negozio",
+    "standard": "Standard",
+    "noMatches": "Nessun risultato.",
+    "createType": "Crea tipo di articolo",
+    "addAttribute": "Aggiungi attributo",
+    "createAttribute": "Crea attributo",
+    "unit": "Unità (facoltativa)",
+    "options": "Opzioni di risposta",
+    "optionsHint": "Una opzione per riga.",
+    "invalid": "Inserisci un nome e controlla i campi. Le opzioni devono essere diverse.",
+    "saved": "{name} è stato salvato.",
+    "leave": "Hai modifiche non salvate. Vuoi lasciare la pagina?",
+    "kinds": {
+      "text": "Testo",
+      "number": "Numero",
+      "choice": "Scegli da un elenco",
+      "boolean": "Sì/no"
+    },
+    "uncertain": "Non è stato possibile confermare il salvataggio. Riprova con gli stessi dati.",
+    "refused": "Impossibile salvare. Annulla e controlla il negozio e i tuoi permessi."
   }
 }

@@ -249,7 +249,7 @@
         "Lagre varen."
       ]
     },
-    "typeIntro": "Varetypen lagres for hele butikken og velges for denne varen.",
+    "typeIntro": "Velg hvilke felt som skal vises for varetypen.",
     "typeFieldsHint": "Velg en lignende varetype for å få de samme spørsmålene, for eksempel størrelse og materiale.",
     "typeFieldsLegend": "Velg felt"
   },
@@ -448,7 +448,8 @@
     "store": "Butikk og abonnement",
     "printing": "Skrivere og etiketter",
     "connectors": "AI-assistenter",
-    "credits": "AI-kreditter"
+    "credits": "AI-kreditter",
+    "vocabulary": "Varetyper og attributter"
   },
   "tenantIdentity": "Butikkidentitet",
   "tenantId": "Butikk-ID",
@@ -4174,5 +4175,36 @@
     "terms": "Vilkår",
     "print": "Skriv ut",
     "editHint": "Klikk på blyanten for å redigere. Endringen lagres når du forlater feltet."
+  },
+  "vocabularySettings": {
+    "title": "Varetyper og attributter",
+    "intro": "Varetypen bestemmer hvilke felt som vises ved mottak.",
+    "types": "Varetyper",
+    "attributes": "Attributter",
+    "searchTypes": "Søk etter varetype",
+    "searchFields": "Søk etter attributt",
+    "name": "Navn",
+    "fields": "Felt ved mottak",
+    "kind": "Svartype",
+    "own": "Butikkens egen",
+    "standard": "Standard",
+    "noMatches": "Ingen treff.",
+    "createType": "Opprett varetype",
+    "addAttribute": "Legg til attributt",
+    "createAttribute": "Opprett attributt",
+    "unit": "Enhet (valgfritt)",
+    "options": "Svaralternativer",
+    "optionsHint": "Ett alternativ per linje.",
+    "invalid": "Angi et navn og kontroller feltene. Svaralternativene må være ulike.",
+    "saved": "{name} er lagret.",
+    "leave": "Du har ulagrede endringer. Vil du forlate siden?",
+    "kinds": {
+      "text": "Tekst",
+      "number": "Tall",
+      "choice": "Velg fra liste",
+      "boolean": "Ja/nei"
+    },
+    "uncertain": "Lagringen kunne ikke bekreftes. Prøv igjen med de samme opplysningene.",
+    "refused": "Kunne ikke lagre. Avbryt og kontroller butikk og tilgang."
   }
 }

@@ -103,7 +103,6 @@ export default async function InspectBag({
             : 1
         }
         readonly={ctx.active!.role === 'readonly'}
-        canManageTypes={['owner', 'admin'].includes(ctx.active!.role)}
       />
     )
   const processing = await readBagProcessing(ctx.client, tenantId, id)

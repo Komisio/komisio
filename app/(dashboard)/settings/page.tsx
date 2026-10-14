@@ -1,4 +1,6 @@
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
+import { VocabularySettings } from '@/components/intake/vocabulary-settings'
+import { readAttributeVocabulary } from '@/lib/engine/attributes'
 import { Button } from '@/components/ui/button'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { readStorePolicy } from '@/lib/engine/store-policy'
@@ -55,6 +57,7 @@ import {
 const tabs = [
   'policy',
   'profile',
+  'vocabulary',
   'store',
   'printing',
   'credits',
@@ -98,6 +101,10 @@ export default async function Settings({
           ? 'credits'
           : 'policy'
   const manages = ['owner', 'admin'].includes(active.role)
+  const vocabulary =
+    intake && tab === 'vocabulary'
+      ? await readAttributeVocabulary(ctx.client, active.id)
+      : null
   const policy =
     intake && tab === 'policy'
       ? await readStorePolicy(ctx.client, active.id)
@@ -192,6 +199,16 @@ export default async function Settings({
           key={`${active.id}-${policy.id ?? 'default'}`}
           tenantId={active.id}
           current={policy}
+          editable={manages}
+          d={d}
+        />
+      )}
+      {tab === 'vocabulary' && vocabulary && (
+        <VocabularySettings
+          key={active.id}
+          tenantId={active.id}
+          initial={vocabulary}
+          locale={ctx.locale}
           editable={manages}
           d={d}
         />

@@ -1,6 +1,6 @@
 'use client'
 import { useBusyState } from '@/components/platform/work-activity'
-import { useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { Plus } from 'lucide-react'
 import type { Dictionary } from '@/lib/i18n'
 import {
@@ -11,38 +11,31 @@ import {
 } from '@/lib/engine/attributes'
 import { createItemTypeInput } from '@/lib/engine/create-item-type'
 import { Button } from '@/components/ui/button'
+import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 
 export function CreateItemType({
   tenantId,
   vocabulary,
-  selected,
   lang,
   disabled,
   d,
+  settings,
   onSelect,
-  onOpenChange,
 }: {
   tenantId: string
   vocabulary: AttributeVocabulary
-  selected: string | null
   lang: string
   disabled: boolean
   d: Dictionary['quickIntake']
+  settings: Dictionary['vocabularySettings']
   onSelect: (profile: ItemTypeProfile) => void
-  onOpenChange: (open: boolean) => void
 }) {
   const editorId = useId()
   const [open, setOpen] = useState(false)
   const [name, setName] = useState('')
   const [base, setBase] = useState('')
-  const [fields, setFields] = useState<string[]>([
-    'description',
-    'size',
-    'color',
-    'brand',
-    'material',
-    'condition',
-  ])
+  const [fields, setFields] = useState<string[]>(['description'])
+  const [search, setSearch] = useState('')
   const [busy, setBusy] = useBusyState(false)
   const [locked, setLocked] = useState(false)
   const [refused, setRefused] = useState(false)
@@ -51,9 +44,19 @@ export function CreateItemType({
     null,
   )
   const running = useRef(false)
+  const wasOpen = useRef(false)
+  useEffect(() => {
+    if (wasOpen.current && !open)
+      document.getElementById(`${editorId}-trigger`)?.focus()
+    wasOpen.current = open
+  }, [open, editorId])
+  useUnsavedChanges(
+    open && (name !== '' || fields.length > 1 || locked)
+      ? settings.leave
+      : null,
+  )
   function close() {
     setOpen(false)
-    onOpenChange(false)
   }
   async function save() {
     if (disabled || running.current || refused) return
@@ -95,9 +98,9 @@ export function CreateItemType({
             setError(d.typeInvalid)
           } else {
             setRefused(true)
-            setError(d.typeRefused)
+            setError(settings.refused)
           }
-        } else setError(d.typeUncertain)
+        } else setError(settings.uncertain)
         return
       }
       const profile = itemTypeProfile.safeParse(result?.profile)
@@ -111,7 +114,7 @@ export function CreateItemType({
           `custom_${parsed.data.requestId.replaceAll('-', '')}` ||
         profile.data.labels[lang] !== parsed.data.name
       ) {
-        setError(d.typeUncertain)
+        setError(settings.uncertain)
         return
       }
       onSelect(profile.data)
@@ -120,7 +123,7 @@ export function CreateItemType({
       setName('')
       close()
     } catch {
-      setError(d.typeUncertain)
+      setError(settings.uncertain)
     } finally {
       running.current = false
       setBusy(false)
@@ -129,37 +132,19 @@ export function CreateItemType({
   if (!open)
     return (
       <Button
+        id={`${editorId}-trigger`}
         type="button"
         variant="secondary"
         className="create-type-trigger"
         aria-expanded={false}
         disabled={disabled}
         onClick={() => {
-          const initialBase =
-            selected ??
-            (vocabulary.types.some((t) => t.slug === 'sweater' && t.active)
-              ? 'sweater'
-              : '')
-          setBase(initialBase)
-          setFields(
-            vocabulary.types
-              .find((t) => t.slug === initialBase)
-              ?.attributes.map((a) => a.slug) ??
-              [
-                'description',
-                'size',
-                'color',
-                'brand',
-                'material',
-                'condition',
-              ].filter((slug) =>
-                vocabulary.definitions.some((d) => d.slug === slug && d.active),
-              ),
-          )
+          setBase('')
+          setFields(['description'])
+          setSearch('')
           setError('')
           setRefused(false)
           setOpen(true)
-          onOpenChange(true)
         }}
       >
         <Plus size={16} aria-hidden="true" />
@@ -231,9 +216,28 @@ export function CreateItemType({
       </div>
       <fieldset disabled={busy || locked || disabled}>
         <legend>{d.typeFieldsLegend}</legend>
-        <div className="row wrap">
+        <div className="field">
+          <label htmlFor={`${editorId}-search`}>{settings.searchFields}</label>
+          <input
+            id={`${editorId}-search`}
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        <div className="vocabulary-field-choices">
           {vocabulary.definitions
-            .filter((a) => a.active && a.slug !== 'category')
+            .filter(
+              (a) =>
+                a.active &&
+                a.slug !== 'category' &&
+                labelOf(a, lang)
+                  .toLocaleLowerCase(lang)
+                  .includes(search.toLocaleLowerCase(lang)),
+            )
+            .sort((a, b) =>
+              labelOf(a, lang).localeCompare(labelOf(b, lang), lang),
+            )
             .map((a) => (
               <label key={a.slug} className="checkbox-label">
                 <input
@@ -259,7 +263,7 @@ export function CreateItemType({
           disabled={busy || disabled || refused}
           onClick={() => void save()}
         >
-          {busy ? d.busy : locked ? d.typeRetry : d.typeCreateSelect}
+          {busy ? d.busy : locked ? d.typeRetry : settings.createType}
         </Button>
         <Button
           type="button"
@@ -269,9 +273,6 @@ export function CreateItemType({
             pending.current = null
             setLocked(false)
             close()
-            requestAnimationFrame(() =>
-              document.getElementById('quick-item-type')?.focus(),
-            )
           }}
         >
           {d.typeCancel}

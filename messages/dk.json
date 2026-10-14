@@ -249,7 +249,7 @@
         "Gem varen."
       ]
     },
-    "typeIntro": "Varetypen gemmes for hele butikken og vælges til denne vare.",
+    "typeIntro": "Vælg de felter, der skal vises for varetypen.",
     "typeFieldsHint": "Vælg en lignende varetype for at få de samme spørgsmål, for eksempel størrelse og materiale.",
     "typeFieldsLegend": "Vælg felter"
   },
@@ -448,7 +448,8 @@
     "store": "Butik og abonnement",
     "printing": "Printere og mærkater",
     "connectors": "AI-assistenter",
-    "credits": "AI-kreditter"
+    "credits": "AI-kreditter",
+    "vocabulary": "Varetyper og attributter"
   },
   "tenantIdentity": "Butikkens identitet",
   "tenantId": "Butiks-id",
@@ -4174,5 +4175,36 @@
     "terms": "Vilkår",
     "print": "Udskriv",
     "editHint": "Klik på blyanten for at redigere. Ændringen gemmes, når du forlader feltet."
+  },
+  "vocabularySettings": {
+    "title": "Varetyper og attributter",
+    "intro": "Varetypen bestemmer, hvilke felter der vises ved modtagelse.",
+    "types": "Varetyper",
+    "attributes": "Attributter",
+    "searchTypes": "Søg efter varetype",
+    "searchFields": "Søg efter attribut",
+    "name": "Navn",
+    "fields": "Felter ved modtagelse",
+    "kind": "Svartype",
+    "own": "Butikkens egen",
+    "standard": "Standard",
+    "noMatches": "Ingen resultater.",
+    "createType": "Opret varetype",
+    "addAttribute": "Tilføj attribut",
+    "createAttribute": "Opret attribut",
+    "unit": "Enhed (valgfri)",
+    "options": "Svarmuligheder",
+    "optionsHint": "Én mulighed pr. linje.",
+    "invalid": "Angiv et navn, og kontrollér felterne. Svarmulighederne skal være forskellige.",
+    "saved": "{name} er gemt.",
+    "leave": "Du har ugemte ændringer. Vil du forlade siden?",
+    "kinds": {
+      "text": "Tekst",
+      "number": "Tal",
+      "choice": "Vælg fra liste",
+      "boolean": "Ja/nej"
+    },
+    "uncertain": "Lagringen kunne ikke bekræftes. Prøv igen med de samme oplysninger.",
+    "refused": "Kunne ikke gemme. Annuller, og kontrollér butik og adgang."
   }
 }

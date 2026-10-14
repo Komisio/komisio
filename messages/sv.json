@@ -249,7 +249,7 @@
         "Spara varan."
       ]
     },
-    "typeIntro": "Varutypen sparas för hela butiken och väljs för den här varan.",
+    "typeIntro": "Välj vilka fält som ska visas för varutypen.",
     "typeFieldsHint": "Välj en liknande varutyp för att få samma frågor, till exempel storlek och material.",
     "typeFieldsLegend": "Välj fält"
   },
@@ -448,7 +448,8 @@
     "store": "Butik och plan",
     "printing": "Skrivare och etiketter",
     "connectors": "AI-assistenter",
-    "credits": "AI-krediter"
+    "credits": "AI-krediter",
+    "vocabulary": "Varutyper och attribut"
   },
   "tenantIdentity": "Butikens identitet",
   "tenantId": "Butiks-id",
@@ -4174,5 +4175,36 @@
     "terms": "Villkor",
     "print": "Skriv ut",
     "editHint": "Klicka på pennan för att ändra. Ändringen sparas när du lämnar fältet."
+  },
+  "vocabularySettings": {
+    "title": "Varutyper och attribut",
+    "intro": "Varutypen avgör vilka fält som visas vid mottagning.",
+    "types": "Varutyper",
+    "attributes": "Attribut",
+    "searchTypes": "Sök varutyp",
+    "searchFields": "Sök attribut",
+    "name": "Namn",
+    "fields": "Fält vid mottagning",
+    "kind": "Svarstyp",
+    "own": "Butikens egen",
+    "standard": "Standard",
+    "noMatches": "Inga träffar.",
+    "createType": "Skapa varutyp",
+    "addAttribute": "Lägg till attribut",
+    "createAttribute": "Skapa attribut",
+    "unit": "Enhet (valfri)",
+    "options": "Svarsalternativ",
+    "optionsHint": "Ett alternativ per rad.",
+    "invalid": "Ange ett namn och kontrollera fälten. Svarsalternativen måste vara olika.",
+    "saved": "{name} har sparats.",
+    "leave": "Du har osparade ändringar. Vill du lämna sidan?",
+    "kinds": {
+      "text": "Text",
+      "number": "Tal",
+      "choice": "Välj i lista",
+      "boolean": "Ja/nej"
+    },
+    "uncertain": "Sparandet kunde inte bekräftas. Försök igen med samma uppgifter.",
+    "refused": "Det gick inte att spara. Avbryt och kontrollera butik och behörighet."
   }
 }

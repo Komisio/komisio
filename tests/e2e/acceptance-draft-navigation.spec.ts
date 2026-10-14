@@ -21,8 +21,7 @@ test('purchase sale-price drafts warn before paging and survive task tabs', asyn
     await f.commit()
     await page.goto('/intake/purchases')
     const entry = page.locator('.purchase-entry').first()
-    await entry.locator('.purchase-accept summary').click()
-    const price = entry.getByLabel(d.items.price, { exact: true })
+    const price = entry.getByLabel(d.items.purchaseSalePrice, { exact: true })
     await price.fill('275')
     let warnings = 0
     page.on('dialog', async (dialog) => {

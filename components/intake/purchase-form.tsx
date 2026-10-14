@@ -136,17 +136,10 @@ export function PurchaseForm({
               maxLength={500}
             />
           </div>
-          <FormHelpHeading
-            title={d.taxHeading}
-            help={{ label: d.marginHelpLabel, steps: [d.marginHint] }}
-          />
+          <h2>{d.taxHeading}</h2>
           <label className="intake-confirm">
             <input type="checkbox" name="margin" />
             {d.marginEligible}
-          </label>
-          <label className="intake-confirm">
-            <input type="checkbox" required />
-            {d.confirm}
           </label>
         </fieldset>
         {action.error && <p role="alert">{action.error}</p>}

@@ -3,20 +3,22 @@ import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { NavigationLink } from '@/components/platform/navigation-warning'
 import { notFound, redirect } from 'next/navigation'
-import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary, intlLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { PurchaseForm } from '@/components/intake/purchase-form'
 import { AcceptItemForm } from '@/components/intake/accept-item-form'
-import { readItemsForOrigins } from '@/lib/engine/items'
-import { purchaseReceipt } from '@/lib/engine/purchases'
+import { PurchaseFilters } from '@/components/intake/purchase-filters'
+import {
+  readPurchasePage,
+  purchaseSort,
+  purchaseStatus,
+  type PurchaseSort,
+} from '@/lib/engine/purchases'
 
 function formatOre(value: number | string) {
   const ore = BigInt(value)
-  const kronor = ore / 100n,
-    rest = ore % 100n
-  return `${kronor}.${rest.toString().padStart(2, '0')}`
+  return `${ore / 100n}.${(ore % 100n).toString().padStart(2, '0')}`
 }
 
 export default async function Purchases({
@@ -27,79 +29,73 @@ export default async function Purchases({
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const ctx = await requirePlatform(),
     active = ctx.active!,
-    currency = await readStoreCurrency(ctx.client, active.id),
     all = dictionary(ctx.locale),
     d = all.purchases
   const params = await searchParams
+  const query =
+    typeof params.q === 'string' ? params.q.trim().slice(0, 120) : ''
+  const status = purchaseStatus.safeParse(params.status).data ?? 'all'
+  const sort = purchaseSort.safeParse(params.sort).data ?? 'date'
+  const direction = params.direction === 'asc' ? 'asc' : 'desc'
   const pageSize = 20
   const requestedPage =
     typeof params.page === 'string' && /^[1-9]\d{0,6}$/.test(params.page)
       ? Number(params.page)
       : 1
-  const href = (page: number) =>
-    '/intake/purchases' +
-    (page > 1 ? '?page=' + page : '') +
-    '#purchases-history'
-  // Count within the active store before reading a range, so an oversized
-  // page can be redirected without issuing an out-of-range database request.
-  const totals = await ctx.client
-    .from('purchase_receipts')
-    .select('id', { count: 'exact', head: true })
-    .eq('tenant_id', active.id)
-  if (totals.error || totals.count === null)
-    throw new Error('Unable to count purchases')
-  const pages = Math.max(1, Math.ceil(totals.count / pageSize))
+  const href = (
+    page: number,
+    order: PurchaseSort = sort,
+    dir: string = direction,
+  ) => {
+    const search = new URLSearchParams()
+    if (query) search.set('q', query)
+    if (status !== 'all') search.set('status', status)
+    if (order !== 'date') search.set('sort', order)
+    if (dir !== 'desc') search.set('direction', dir)
+    if (page > 1) search.set('page', String(page))
+    return `/intake/purchases${search.size ? '?' + search : ''}#purchases-history`
+  }
+  const [currency, result] = await Promise.all([
+    readStoreCurrency(ctx.client, active.id),
+    readPurchasePage(ctx.client, active.id, {
+      query,
+      status,
+      sort,
+      direction,
+      offset: (requestedPage - 1) * pageSize,
+      limit: pageSize,
+    }),
+  ])
+  const pages = Math.max(1, Math.ceil(result.total / pageSize))
   if (requestedPage > pages) redirect(href(pages))
-  const offset = (requestedPage - 1) * pageSize
-  const { data, error } = await ctx.client
-    .from('purchase_receipts')
-    .select(
-      'id,reference,supplier_note,purchase_price_ore,evidence_reference,margin_eligible,purchased_at',
-    )
-    .eq('tenant_id', active.id)
-    .order('purchased_at', { ascending: false })
-    .order('id')
-    .range(offset, offset + pageSize - 1)
-  if (error) throw new Error('Unable to load purchases')
-  const purchases = z
-    .array(purchaseReceipt)
-    .max(pageSize)
-    .parse(data ?? [])
-  const accepted = await readItemsForOrigins(
-    ctx.client,
-    active.id,
-    'purchase',
-    purchases.map((p) => p.id),
-  )
   const common = all.sellersList
-  const pager =
-    pages > 1 ? (
-      <nav className="seller-directory-pagination" aria-label={d.title}>
-        {requestedPage > 1 && (
-          <NavigationLink
-            warningScope="item-acceptance"
-            className="btn btn-secondary"
-            href={href(requestedPage - 1)}
-          >
-            {common.previousPage}
-          </NavigationLink>
+  const sortHeading = (key: PurchaseSort, label: string, numeric = false) => (
+    <th
+      scope="col"
+      className={numeric ? 'purchase-numeric' : undefined}
+      aria-sort={
+        sort === key
+          ? direction === 'asc'
+            ? 'ascending'
+            : 'descending'
+          : 'none'
+      }
+    >
+      <NavigationLink
+        warningScope="item-acceptance"
+        href={href(
+          1,
+          key,
+          sort === key && direction === 'asc' ? 'desc' : 'asc',
         )}
-        <span>
-          {common.pageOf
-            .replace('{page}', String(requestedPage))
-            .replace('{pages}', String(pages))}
+      >
+        {label}
+        <span aria-hidden="true">
+          {sort === key ? (direction === 'asc' ? ' ↑' : ' ↓') : ' ↕'}
         </span>
-        {requestedPage < pages && (
-          <NavigationLink
-            warningScope="item-acceptance"
-            className="btn btn-secondary"
-            href={href(requestedPage + 1)}
-          >
-            {common.nextPage}
-          </NavigationLink>
-        )}
-      </nav>
-    ) : null
+      </NavigationLink>
+    </th>
+  )
   return (
     <>
       <div className="page-heading workspace-heading">
@@ -111,12 +107,6 @@ export default async function Purchases({
             steps: [d.intro, d.notice.replace('{accept}', d.prepareItem)],
           }}
         />
-        <NavigationLink
-          className="text-link"
-          href="/intake/items?ownership=store"
-        >
-          {all.items.ownershipKinds.store} →
-        </NavigationLink>
       </div>
       <WorkspaceTabs
         id="purchases"
@@ -126,74 +116,168 @@ export default async function Purchases({
             id: 'history',
             label: d.history,
             content: (
-              <section className="card intake-form" id="purchase-list">
-                <h2>{d.recent}</h2>
-                {pager}
-                <ul className="intake-list">
-                  {purchases.map((p) => (
-                    <li
-                      key={p.id}
-                      id={`purchase-${p.id}`}
-                      className="intake-bag purchase-entry"
-                    >
-                      <div>
-                        <div className="purchase-entry-heading">
-                          <strong>
-                            {d.reference} P-{p.reference}
-                          </strong>
-                          <span>
-                            {formatOre(p.purchase_price_ore)} {currency}
-                          </span>
-                        </div>
-                        {p.supplier_note && <p>{p.supplier_note}</p>}
-                        <small>
-                          {new Date(p.purchased_at).toLocaleString(
-                            intlLocale(ctx.locale),
-                            {
-                              timeZone: 'Europe/Stockholm',
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                            },
-                          )}{' '}
-                        </small>
-                        <details className="purchase-evidence">
-                          <summary>{d.evidence}</summary>
-                          <p>{p.evidence_reference}</p>
-                          <p>{p.margin_eligible ? d.marginYes : d.marginNo}</p>
-                        </details>
-                        {accepted.has(p.id) ? (
-                          <p>
+              <section
+                className="card purchase-directory"
+                id="purchase-list"
+                aria-label={d.history}
+              >
+                <PurchaseFilters
+                  key={`${query}|${status}|${sort}|${direction}`}
+                  query={query}
+                  status={status}
+                  sort={sort}
+                  direction={direction}
+                  d={d}
+                />
+                <p className="purchase-count" role="status">
+                  {d.showing
+                    .replace(
+                      '{from}',
+                      String(
+                        result.total ? (requestedPage - 1) * pageSize + 1 : 0,
+                      ),
+                    )
+                    .replace(
+                      '{to}',
+                      String(Math.min(requestedPage * pageSize, result.total)),
+                    )
+                    .replace('{total}', String(result.total))}
+                </p>
+                <div
+                  className="purchase-table-scroll"
+                  role="region"
+                  aria-label={d.history}
+                  tabIndex={0}
+                >
+                  <table className="purchase-table">
+                    <caption className="sr-only">{d.history}</caption>
+                    <thead>
+                      <tr>
+                        {sortHeading('reference', d.reference)}
+                        {sortHeading('note', d.description)}
+                        {sortHeading('date', d.purchasedAt)}
+                        {sortHeading('cost', `${d.price} (${currency})`, true)}
+                        {sortHeading('status', d.status)}
+                        {sortHeading(
+                          'price',
+                          `${all.items.purchaseSalePrice} (${currency})`,
+                        )}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {result.rows.map((p) => (
+                        <tr
+                          key={p.id}
+                          id={`purchase-${p.id}`}
+                          className="purchase-entry"
+                        >
+                          <td>
                             <NavigationLink
-                              className="text-link"
-                              href={`/intake/items/${accepted.get(p.id)!.id}`}
+                              className="text-link purchase-reference"
+                              href={`/intake/purchases/${p.id}`}
                             >
-                              {d.itemRegistered} · {all.items.open}
+                              P-{p.reference}
                             </NavigationLink>
-                          </p>
-                        ) : active.role !== 'readonly' ? (
-                          <details
-                            className="purchase-accept"
-                            open={params.purchase === p.id || undefined}
+                          </td>
+                          <td
+                            className="purchase-description"
+                            title={p.supplier_note}
                           >
-                            <summary>{d.prepareItem}</summary>
-                            <AcceptItemForm
-                              tenantId={active.id}
-                              originKind="purchase"
-                              originId={p.id}
-                              originRevision={null}
-                              d={all.items}
-                              intake={all.intake}
-                              leaveUnsaved={all.leaveUnsaved}
-                            />
-                          </details>
-                        ) : null}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-                {!purchases.length && <p>{d.empty}</p>}
-                {pager}
+                            {p.supplier_note || '—'}
+                          </td>
+                          <td className="purchase-date">
+                            <time dateTime={p.purchased_at}>
+                              {new Date(p.purchased_at).toLocaleDateString(
+                                intlLocale(ctx.locale),
+                                {
+                                  timeZone: 'Europe/Stockholm',
+                                  year: 'numeric',
+                                  month: 'short',
+                                  day: 'numeric',
+                                },
+                              )}
+                            </time>
+                          </td>
+                          <td className="purchase-numeric">
+                            {formatOre(p.purchase_price_ore)}
+                          </td>
+                          <td>
+                            <span
+                              className={`purchase-status ${p.item_id ? 'is-registered' : 'is-pending'}`}
+                            >
+                              {p.item_id ? d.statusRegistered : d.statusPending}
+                            </span>
+                          </td>
+                          <td className="purchase-sale-cell">
+                            {p.item_id ? (
+                              <div className="purchase-item-link">
+                                <span>
+                                  {p.sale_price_ore === null
+                                    ? '—'
+                                    : formatOre(p.sale_price_ore)}
+                                </span>
+                                <NavigationLink
+                                  className="text-link"
+                                  href={`/intake/items/${p.item_id}`}
+                                >
+                                  {all.items.open}
+                                </NavigationLink>
+                              </div>
+                            ) : active.role !== 'readonly' ? (
+                              <AcceptItemForm
+                                compact
+                                tenantId={active.id}
+                                originKind="purchase"
+                                originId={p.id}
+                                originRevision={null}
+                                d={all.items}
+                                intake={all.intake}
+                                leaveUnsaved={all.leaveUnsaved}
+                              />
+                            ) : (
+                              '—'
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {!result.rows.length && (
+                  <p className="purchase-empty">
+                    {query || status !== 'all' ? d.noMatches : d.empty}
+                  </p>
+                )}
+                {pages > 1 && (
+                  <nav
+                    className="seller-directory-pagination"
+                    aria-label={d.history}
+                  >
+                    {requestedPage > 1 && (
+                      <NavigationLink
+                        warningScope="item-acceptance"
+                        className="btn btn-secondary"
+                        href={href(requestedPage - 1)}
+                      >
+                        {common.previousPage}
+                      </NavigationLink>
+                    )}
+                    <span>
+                      {common.pageOf
+                        .replace('{page}', String(requestedPage))
+                        .replace('{pages}', String(pages))}
+                    </span>
+                    {requestedPage < pages && (
+                      <NavigationLink
+                        warningScope="item-acceptance"
+                        className="btn btn-secondary"
+                        href={href(requestedPage + 1)}
+                      >
+                        {common.nextPage}
+                      </NavigationLink>
+                    )}
+                  </nav>
+                )}
               </section>
             ),
           },

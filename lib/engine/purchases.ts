@@ -11,6 +11,54 @@ export const purchaseReceipt = z.object({
   purchased_at: z.iso.datetime({ offset: true }),
 })
 
+export const purchaseSort = z.enum([
+  'reference',
+  'note',
+  'date',
+  'cost',
+  'price',
+  'status',
+])
+export const purchaseStatus = z.enum(['all', 'pending', 'registered'])
+export type PurchaseSort = z.infer<typeof purchaseSort>
+
+export async function readPurchasePage(
+  client: SupabaseClient,
+  tenant: string,
+  options: {
+    query: string
+    status: z.infer<typeof purchaseStatus>
+    sort: PurchaseSort
+    direction: 'asc' | 'desc'
+    offset: number
+    limit: number
+  },
+) {
+  const { data, error } = await client.rpc('purchase_search_page', {
+    p_tenant: z.uuid().parse(tenant),
+    p_query: z.string().max(120).parse(options.query),
+    p_status: purchaseStatus.parse(options.status),
+    p_sort: purchaseSort.parse(options.sort),
+    p_direction: z.enum(['asc', 'desc']).parse(options.direction),
+    p_limit: z.number().int().min(1).max(100).parse(options.limit),
+    p_offset: z.number().int().min(0).max(200000000).parse(options.offset),
+  })
+  if (error) throw new Error('Unable to load purchases')
+  return z
+    .object({
+      total: z.number().int().nonnegative(),
+      rows: z
+        .array(
+          purchaseReceipt.extend({
+            item_id: z.uuid().nullable(),
+            sale_price_ore: z.union([z.number().int(), z.string()]).nullable(),
+          }),
+        )
+        .max(options.limit),
+    })
+    .parse(data)
+}
+
 /** Exact immutable purchase evidence within the active tenant and existing RLS. */
 export async function readPurchaseReceipt(
   client: SupabaseClient,

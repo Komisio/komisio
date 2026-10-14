@@ -121,7 +121,7 @@ export function PosImport(props: Props) {
   ).length
   return (
     <section className="pos-import">
-      <div className="pos-import-toolbar">
+      <div className="pos-import-toolbar pos-import-source">
         <div className="field">
           <label htmlFor="pos-provider">{d.system}</label>
           <select

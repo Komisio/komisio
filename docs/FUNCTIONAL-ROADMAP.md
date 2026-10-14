@@ -10,6 +10,13 @@ This exclusion does not remove ordinary agreed return/donation workflows.
 
 ## Current delivery baseline (2026-09-28)
 
+Seller privacy now has a scoped owner/admin review and contact-erasure workflow.
+It checks unresolved goods, balances, fees, payouts and pending delivery; preserves
+justified legal/accounting evidence and the shared login; and records retention
+follow-up decisions. Automatic expiry, external/unstructured data cleanup and
+account-wide deletion remain separate work. Code availability does not mean this
+workflow has been deployed or that every GDPR request is fully resolved.
+
 PRs 270–322 are deployed to production. Subsequent improvements are delivered
 through staging and retain the production staging-observation gate.
 Staff item and seller lists, seller-owned items and announced handovers

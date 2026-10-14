@@ -6,6 +6,7 @@ import {
   shopifyErrorCode,
 } from '@/lib/engine/shopify-connection'
 import { STATE_COOKIE } from '../connect/route'
+import { ShopifyAuthFailure } from '@/extensions/shopify/auth'
 
 /** Shopify returns here with a code; the shop is verified before anything is stored. */
 export async function GET(request: Request) {
@@ -26,8 +27,15 @@ export async function GET(request: Request) {
   const ctx = await platformContext()
   if (!ctx || ctx.mfaRequired || !ctx.active) return back('AUTH_REQUIRED')
   const params = new URL(request.url).searchParams
-  if (params.get('error') || !params.get('code'))
+  if (params.get('error') || !params.get('code')) {
+    console.warn('Shopify connection refused', {
+      step: 'callback',
+      code: 'SHOPIFY_AUTH_REQUIRED',
+      hasCode: !!params.get('code'),
+      providerRejected: !!params.get('error'),
+    })
     return back('SHOPIFY_AUTH_REQUIRED')
+  }
   const cookieState =
     request.headers
       .get('cookie')
@@ -50,6 +58,12 @@ export async function GET(request: Request) {
     if (result.tenantId !== ctx.active.id) return back('TENANT_CHANGED')
     return back('connected')
   } catch (e) {
-    return back(shopifyErrorCode(e instanceof Error ? e.message : ''))
+    const code = shopifyErrorCode(e instanceof Error ? e.message : '')
+    console.warn('Shopify connection refused', {
+      step: e instanceof ShopifyAuthFailure ? e.step : 'validation_or_storage',
+      code,
+      ...(e instanceof ShopifyAuthFailure ? { status: e.status } : {}),
+    })
+    return back(code)
   }
 }

@@ -1,5 +1,11 @@
 # Decision Log
 
+- 2026-10-14: Shopify OAuth code exchange explicitly requests expiring offline tokens, using existing encrypted refresh handling. Callback diagnostics expose only stage, safe error code and HTTP status; never codes, tokens, query strings or provider response bodies.
+
+- 2026-10-14: Owner authorizes tenant-scoped seller closure: erase contact history and ordinary messages after review; retain justified legal/accounting evidence. Block unresolved goods, balances and payouts. Preserve shared Auth accounts. Narrow audited erasure exceptions supersede immutability.
+
+- 2026-10-14: Seller privacy review lists retained evidence and requires a reason and review date; contact erasure is not full GDPR completion. Owner/admin only, stale-preview and replay guards, no automated expiry deletion. Unstructured files and external copies require explicit follow-up.
+
 - 2026-10-13: Owner/admin item import registers new intakes under current store/seller terms after preview and custody confirmation. Existing agreement guards apply. Atomic batches retain source references in immutable audit events; retries skip identical imports and reject changed references.
 
 - 2026-10-13: Seller import preview has one Import confirmation that proposes and approves the exact rows via existing APIs. Stable proposal/decision IDs survive retries; only executed outcomes show success. No separate queue review or reason is required; authorization and audit remain unchanged.

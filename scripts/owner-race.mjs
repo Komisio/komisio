@@ -14,6 +14,7 @@ import { raceShopifySettings } from './shopify-settings-race.mjs'
 import { raceShopifyPrivacy } from './shopify-privacy-race.mjs'
 import { raceStoreCreation } from './store-creation-race.mjs'
 import { raceSellerProfile } from './seller-profile-race.mjs'
+import { raceSellerPrivacy } from './seller-privacy-race.mjs'
 import { raceSellerActivation } from './seller-activation-race.mjs'
 import { raceInventoryImport } from './inventory-import-race.mjs'
 import { racePosImport } from './pos-import-race.mjs'
@@ -136,6 +137,7 @@ try {
   await raceShopifySettings({ setup, sessions, tenant })
   await raceShopifyPrivacy({ setup, sessions, tenant })
   await raceSellerProfile({ setup, sessions, tenant })
+  await raceSellerPrivacy({ setup, sessions, tenant })
   await raceLabelPrintRule({ setup, sessions, tenant })
   await setup.query('begin')
   await setup.query('select id from tenants where id=$1 for update', [tenant])

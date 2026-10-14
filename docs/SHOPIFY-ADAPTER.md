@@ -111,10 +111,17 @@ Dev Dashboard, registered by Inority AB, with:
 - the client id and secret as `SHOPIFY_CLIENT_ID` and
   `SHOPIFY_CLIENT_SECRET` in Vercel, plus `KOMISIO_CREDENTIAL_KEY` for tenant token encryption. Existing installations must reconnect to grant publication scopes.
 
-New apps get expiring access tokens with a refresh token valid for 90 days.
-Step 1 stores both and reads an expired token as "reconnect needed"; token
-renewal is step 2 together with the first export, once a development store
-exists to verify it against.
+New connections explicitly request expiring offline access tokens using
+`expiring=1` during code exchange. Shopify requires these for new public apps
+created on or after April 1, 2026. Both tokens are stored encrypted; the existing
+revision-bound refresh operation renews access before expiry. Legacy stored
+non-expiring credentials are not silently migrated by this change.
+See [Shopify's requirement](https://shopify.dev/changelog/posts/expiring-offline-access-tokens-required-for-public-apps-april-1-2026).
+
+Callback failures log only the stage, safe error code and optional HTTP status.
+No OAuth codes, tokens, query strings or provider bodies are logged. The visible
+`SHOPIFY_AUTH_REQUIRED` message alone cannot distinguish a missing callback code,
+a token-exchange rejection and an Admin API authentication refusal.
 
 Owner actions: register the app and create a development store, then set
 the three variables. Until then the integrations page shows which

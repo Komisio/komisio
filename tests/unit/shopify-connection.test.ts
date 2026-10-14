@@ -4,6 +4,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { seal, signState } from '../../lib/platform/credentials'
 import {
   authorizeUrl,
+  ShopifyAuthFailure,
   exchangeCode,
   readShop,
   shopDomain,
@@ -114,6 +115,9 @@ describe('shopify auth', () => {
       const u = String(url)
       if (u.endsWith('/admin/oauth/access_token')) {
         expect(String(init?.body)).toContain('client_secret=synthetic-secret')
+        expect(new URLSearchParams(String(init?.body)).get('expiring')).toBe(
+          '1',
+        )
         return tokens()
       }
       expect(u).toBe(`https://${shop}/admin/api/2026-07/graphql.json`)
@@ -139,6 +143,26 @@ describe('shopify auth', () => {
         http as typeof fetch,
       ),
     ).rejects.toThrow('SHOPIFY_AUTH_REQUIRED')
+  })
+  it('distinguishes token exchange rejection from Admin API rejection without retaining provider secrets', async () => {
+    for (const step of ['token_exchange', 'admin_api'] as const) {
+      const http = vi
+        .fn()
+        .mockResolvedValue(
+          new Response('private code and token details', { status: 403 }),
+        )
+      const work =
+        step === 'token_exchange'
+          ? exchangeCode(env, shop, 'private-code', http)
+          : readShop(shop, 'private-token', http)
+      const error = await work.catch((e) => e)
+      expect(error).toBeInstanceOf(ShopifyAuthFailure)
+      expect(error.message).toBe('SHOPIFY_AUTH_REQUIRED')
+      expect(error.step).toBe(step)
+      expect(error.status).toBe(403)
+      expect(JSON.stringify(error)).not.toMatch(/private|secret|shpat/)
+      expect(http).toHaveBeenCalledTimes(1)
+    }
   })
 })
 

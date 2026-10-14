@@ -16,7 +16,7 @@ export const labelSheetQuery = z
       ctx.addIssue({ code: 'custom', message: 'Choose one source' })
     if (
       v.items &&
-      !z.array(z.uuid()).min(1).max(200).safeParse(v.items.split(',')).success
+      !z.array(z.guid()).min(1).max(200).safeParse(v.items.split(',')).success
     )
       ctx.addIssue({ code: 'custom', message: 'Invalid item selection' })
   })

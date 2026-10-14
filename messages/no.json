@@ -4130,7 +4130,11 @@
     "salesSync": "Vis salgssynkronisering",
     "historyHint": "Tidligere avtaler og salg endres ikke.",
     "storeShare": "Butikkens andel",
-    "sellerShare": "Selgerens andel"
+    "sellerShare": "Selgerens andel",
+    "editRow": "Rediger",
+    "cancel": "Avbryt",
+    "retry": "Prøv igjen",
+    "selectAll": "Velg alle tilgjengelige varer på denne siden"
   },
   "sellerBank": {
     "title": "Utbetalingskonto",

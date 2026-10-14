@@ -4130,7 +4130,11 @@
     "salesSync": "Visualizza sincronizzazione vendite",
     "historyHint": "Gli accordi e le vendite precedenti restano invariati.",
     "storeShare": "Quota del negozio",
-    "sellerShare": "Quota del venditore"
+    "sellerShare": "Quota del venditore",
+    "editRow": "Modifica",
+    "cancel": "Annulla",
+    "retry": "Riprova",
+    "selectAll": "Seleziona tutti gli articoli disponibili in questa pagina"
   },
   "sellerBank": {
     "title": "Conto per i pagamenti",

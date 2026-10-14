@@ -4136,7 +4136,11 @@
     "salesSync": "Näytä myyntien synkronointi",
     "historyHint": "Aiemmat sopimukset ja myynnit säilyvät ennallaan.",
     "storeShare": "Myymälän osuus",
-    "sellerShare": "Myyjän osuus"
+    "sellerShare": "Myyjän osuus",
+    "editRow": "Muokkaa",
+    "cancel": "Peruuta",
+    "retry": "Yritä uudelleen",
+    "selectAll": "Valitse kaikki valittavissa olevat tuotteet tällä sivulla"
   },
   "sellerBank": {
     "title": "Maksutili",

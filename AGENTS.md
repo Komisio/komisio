@@ -28,6 +28,12 @@ Work is specified in GitHub Issues, written and labelled by Kurre (the owner's
 assistant) or the owner. `CLAUDE.md` still governs *how* to implement; this
 section governs *which* work to take and how to deliver it.
 
+**GitHub communication**
+All text Astra writes on GitHub must be in English, including issues, issue
+comments, PR titles and descriptions, commit messages, review replies and labels,
+regardless of the language used in conversation. Code comments and documentation
+continue to follow `CLAUDE.md`; UI translations are unaffected.
+
 **Picking work**
 - Only pick open issues that are labelled `status:ready`, are **not** labelled
   `external`, and have no assignee.

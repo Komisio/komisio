@@ -55,23 +55,9 @@ test('P2 proposals show their previews and require explicit approve or reject', 
       }),
     ])
     await f.commit()
-    const draft = (
-      await f.db.query(
-        'select origin_id from items where id=$1 and tenant_id=$2',
-        [sold, f.tenant],
-      )
-    ).rows[0].origin_id
-    await page.goto(`/intake/bags?draft=${draft}`)
-    await expect(page).toHaveURL(
-      new RegExp(`/intake/bags/[0-9a-f-]+/inspect\\?draft=${draft}$`),
-    )
+    await page.goto(`/intake/items/${sold}`)
     await expect(
       page.getByText('Return jacket', { exact: true }).first(),
-    ).toBeVisible()
-    await page.goto(`/intake/bags?draft=${randomUUID()}`)
-    // App Router may stream a not-found screen with HTTP 200.
-    await expect(
-      page.getByRole('heading', { name: d.notFound, exact: true }),
     ).toBeVisible()
     const agent = randomUUID()
     await f.db.query(

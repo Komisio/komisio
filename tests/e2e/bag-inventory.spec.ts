@@ -60,6 +60,11 @@ test('handover shares inline edits, selection and print actions without losing r
         exact: true,
       })
       .click()
+    // The initial order may already start with the coat. Wait for the sorted
+    // table itself before editing, rather than matching its pre-navigation row.
+    await expect(table.locator('th[aria-sort="ascending"]')).toHaveText(
+      d.items.item,
+    )
     await expect(rows.first()).toContainText('Synthetic coat')
     await expect(description).toHaveValue('Synthetic unsaved next item')
     const row = rows.first()
@@ -83,8 +88,21 @@ test('handover shares inline edits, selection and print actions without losing r
       .getByRole('combobox', { name: d.quickIntake.category, exact: true })
       .selectOption('Home & décor')
     await page.keyboard.press('Tab')
-    await expect(row).toContainText('Hem och inredning')
+    // The selected option is present before the save has completed. Tab opens
+    // the next editor only after the category's command has been confirmed.
+    await expect(
+      row.getByRole('combobox', { name: d.quickIntake.itemType, exact: true }),
+    ).toBeFocused()
+    await expect(
+      row.getByRole('button', {
+        name: `${d.itemWorkflow.editRow} ${d.quickIntake.category}: Hem och inredning`,
+        exact: true,
+      }),
+    ).toBeVisible()
     await page.keyboard.press('Escape')
+    await expect(
+      row.getByRole('combobox', { name: d.quickIntake.itemType, exact: true }),
+    ).toHaveCount(0)
     // An uncertain inline save must warn before changing this table's page/sort,
     // while the independent reception draft does not block table navigation.
     let commands = 0

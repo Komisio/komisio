@@ -5,7 +5,7 @@ import { z } from 'zod'
 // fixed layout that scales to the store's label size, and plain-text
 // placeholders. Every dynamic value is stripped of ZPL control
 // characters so a store name or a note can never change the label program.
-export const LABEL_TEMPLATE_VERSION = 'zpl-v2'
+export const LABEL_TEMPLATE_VERSION = 'zpl-v3'
 export const labelKind = z.enum([
   'bag',
   'garment',
@@ -21,6 +21,7 @@ export const labelFacts = z.strictObject({
   reference: text(20),
   line1: text(60).default(''),
   line2: text(60).default(''),
+  attributes: z.array(text(1200)).max(4).optional(),
   price: z
     .string()
     .regex(/^\d+\.\d{2}$/)
@@ -75,6 +76,21 @@ function layout(format: LabelFormat) {
       ),
     fd: (x: number, y: number, size: number, value: string) =>
       `^FO${n(x)},${n(y)}^A0N,${n(size)},${n(size)}^FD${zplText(value)}^FS`,
+    field: (
+      x: number,
+      y: number,
+      size: number,
+      width: number,
+      value: string,
+    ) => {
+      const glyphs = Array.from(zplText(value).replace(/\s+/g, ' '))
+      const limit = Math.floor(width / (size / 2))
+      const line =
+        glyphs.length > limit
+          ? glyphs.slice(0, limit - 1).join('') + '…'
+          : glyphs.join('')
+      return `^FO${n(x)},${n(y)}^A0N,${n(size)},${n(size / 2)}^FB${n(width)},1,0,L,0^FD${line}^FS`
+    },
     barcode: (x: number, y: number, value: string) =>
       `^FO${n(x)},${n(y)}^BY${Math.min(4, n(2))},2,${n(60)}^BCN,${n(60)},Y,N,N^FD${zplText(value)}^FS`,
     qrcode: (x: number, y: number, value: string) =>
@@ -90,8 +106,24 @@ export function renderLabel(
 ) {
   const kind = labelKind.parse(kindInput)
   const f = labelFacts.parse(factsInput)
-  const { frame, fd, barcode, qrcode } = layout(labelFormat.parse(formatInput))
+  const { frame, fd, field, barcode, qrcode } = layout(
+    labelFormat.parse(formatInput),
+  )
   const price = f.price ? `${f.price} ${f.currency}` : ''
+  if ((kind === 'item' || kind === 'markdown') && f.attributes?.length) {
+    return frame([
+      field(20, 12, 22, 424, f.storeName),
+      field(20, 46, 24, 424, f.line1),
+      ...f.attributes.map((value, i) =>
+        field(20 + (i % 2) * 220, 84 + Math.floor(i / 2) * 26, 18, 204, value),
+      ),
+      fd(20, 146, 44, price),
+      ...(kind === 'markdown' && f.oldPrice
+        ? [fd(20, 194, 18, `${f.oldPrice} ${f.currency}`)]
+        : []),
+      barcode(20, 226, f.reference),
+    ])
+  }
   switch (kind) {
     case 'bag':
       return frame([

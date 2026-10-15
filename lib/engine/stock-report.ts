@@ -76,3 +76,29 @@ export async function readStockReport(
   }
   return stockReport.parse(r.data)
 }
+
+export async function readStockAssortments(
+  client: SupabaseClient,
+  tenantId: string,
+  ownership?: 'consignment' | 'store',
+) {
+  const result = await client.rpc('stock_assortment_report', {
+    p_tenant: z.uuid().parse(tenantId),
+    p_ownership: ownership ?? null,
+  })
+  if (result.error) throw new Error('Unable to read assortment stock')
+  return z
+    .object({
+      currency: z.string(),
+      groups: z.array(
+        z.object({
+          id: z.uuid().nullable(),
+          name: z.string().nullable(),
+          inStock: z.number().int().nonnegative(),
+          stockValueOre: ore,
+          averageAgeDays: z.number().int().nullable(),
+        }),
+      ),
+    })
+    .parse(result.data)
+}

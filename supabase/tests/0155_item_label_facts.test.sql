@@ -33,7 +33,7 @@ select is(current_setting('test.label')::jsonb->>'priceOre','12345','latest manu
 select is(jsonb_typeof(current_setting('test.label')::jsonb->'priceOre'),'string','money stays exact through JSON');
 select is(current_setting('test.label')::jsonb->>'currency','SEK','currency comes from store');
 select is(current_setting('test.label')::jsonb->>'reference','I-'||upper(left(current_setting('test.i2'),8)),'existing item reference is preserved');
-select is((select count(*)::int from jsonb_object_keys(current_setting('test.label')::jsonb)),5,'only label facts are returned');
+select is((select count(*)::int from jsonb_object_keys(current_setting('test.label')::jsonb)),6,'only label facts including attributes are returned');
 select is(item_label_facts(current_setting('test.tenant')::uuid,current_setting('test.i3')::uuid)->>'title','Vintage lamp','purchase labels also resolve their description');
 select is(item_label_facts(current_setting('test.tenant')::uuid,gen_random_uuid()),null::jsonb,'unknown item does not produce a label');
 select set_config('test.other',create_tenant('Other label store','other-label-store',gen_random_uuid())::text,true);

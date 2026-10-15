@@ -183,7 +183,13 @@ export function SellerBankEditor({
     </details>
   )
 }
-function Account({ bank, d }: { bank: BankVersion; d: Dictionary }) {
+export function SellerBankAccount({
+  bank,
+  d,
+}: {
+  bank: BankVersion
+  d: Dictionary
+}) {
   return (
     <dl>
       <dt>{d.sellerBank.holder}</dt>
@@ -228,7 +234,7 @@ export function PayoutBankReview({
         {t.title}
         {open && bank.needsReview ? ' · ' + t.review : ''}
       </summary>
-      {display ? <Account bank={display} d={d} /> : <p>{t.empty}</p>}
+      {display ? <SellerBankAccount bank={display} d={d} /> : <p>{t.empty}</p>}
       {open && bank.current && (
         <>
           {bank.needsReview ? (
@@ -260,7 +266,7 @@ export function PayoutBankReview({
       {open && bank.reviewed && bank.needsReview && (
         <details>
           <summary>{t.snapshot}</summary>
-          <Account bank={bank.reviewed} d={d} />
+          <SellerBankAccount bank={bank.reviewed} d={d} />
         </details>
       )}
       {state.message && <p role="status">{state.message}</p>}

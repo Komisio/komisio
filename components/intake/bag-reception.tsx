@@ -9,6 +9,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { dictionary, type Locale } from '@/lib/i18n'
 import { QuickReception } from './quick-reception'
 import { readPrinters } from '@/lib/engine/printing'
+import { readAssortmentGroups } from '@/lib/engine/item-classification'
 import { readAttributeVocabulary } from '@/lib/engine/attributes'
 import { resolveReceptionAssistance } from '@/lib/assistance/reception-config'
 
@@ -76,6 +77,7 @@ export async function BagReception({
   const href = (page: number, nextSort = sort, nextDirection = direction) =>
     `/intake/bags/${bagId}/inspect?itemSort=${nextSort}&itemDirection=${nextDirection}&itemPage=${page}#bag-registered`
   if (itemPage > pages) redirect(href(pages))
+  const groups = await readAssortmentGroups(client, tenantId)
   return (
     <div className="bag-reception-page">
       <Link className="text-link" href="/intake">
@@ -118,6 +120,7 @@ export async function BagReception({
             .filter((p) => p.active)
             .map((p) => ({ id: p.id, name: p.name }))}
           vocabulary={vocabulary}
+          groups={groups}
           lang={locale}
           assistance={assistance !== null}
           d={{

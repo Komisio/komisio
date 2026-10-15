@@ -251,7 +251,9 @@
     },
     "typeIntro": "Wählen Sie die Felder für diesen Artikeltyp.",
     "typeFieldsHint": "Wählen Sie einen ähnlichen Artikeltyp, um dieselben Fragen zu verwenden, etwa zu Größe und Material.",
-    "typeFieldsLegend": "Felder auswählen"
+    "typeFieldsLegend": "Felder auswählen",
+    "assortment": "Sortimentsgruppe",
+    "noAssortment": "Ohne Sortimentsgruppe"
   },
   "intake": {
     "quickLink": "Schnellannahme: ein Bildschirm pro Kleidungsstück",
@@ -1806,7 +1808,9 @@
       "overview": "Übersicht",
       "categories": "Kategorien",
       "sales": "Verkäufe"
-    }
+    },
+    "assortments": "Sortimentsgruppen",
+    "noAssortment": "Ohne Sortimentsgruppe"
   },
   "importer": {
     "title": "Einlieferer importieren",
@@ -4113,7 +4117,9 @@
     "skipped": "{count} Artikel werden ausgelassen, da sie nicht mehr zum Verkauf stehen.",
     "error": "Auswahl nicht lesbar. Höchstens 200 zum Verkauf stehende Artikel auswählen.",
     "back": "Zurück zu Artikeln",
-    "limit": "Höchstens 400 Etiketten pro PDF."
+    "limit": "Höchstens 400 Etiketten pro PDF.",
+    "yes": "Ja",
+    "no": "Nein"
   },
   "itemWorkflow": {
     "edit": "Artikeltext bearbeiten",
@@ -4160,7 +4166,8 @@
     "invalid": "Kontoinhaber, Land und Kontonummer prüfen.",
     "use": "Diese Bankdaten verwenden",
     "snapshot": "Geprüfte Angaben",
-    "manual": "Die Zahlung erfolgt manuell über Ihre Bank."
+    "manual": "Die Zahlung erfolgt manuell über Ihre Bank.",
+    "profileHint": "Die verkaufende Person ändert diese Angaben in ihrem Portal."
   },
   "inventoryWorkspace": {
     "selected": "{count} ausgewählt",

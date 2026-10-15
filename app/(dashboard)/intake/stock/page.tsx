@@ -7,7 +7,10 @@ import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { currentMonthPeriod, economyPeriod } from '@/lib/engine/economy'
-import { readStockReport } from '@/lib/engine/stock-report'
+import {
+  readStockReport,
+  readStockAssortments,
+} from '@/lib/engine/stock-report'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
 
 /** Margin, sell-through and stock age per category; the read model is SQL. */
@@ -37,6 +40,11 @@ export default async function Stock({
     ctx.client,
     active.id,
     period,
+    ownership || undefined,
+  )
+  const assortments = await readStockAssortments(
+    ctx.client,
+    active.id,
     ownership || undefined,
   )
   const money = (ore: number) =>
@@ -173,6 +181,52 @@ export default async function Stock({
                     </table>
                   </div>
                 )}
+              </section>
+            ),
+          },
+          {
+            id: 'assortments',
+            label: d.assortments,
+            content: (
+              <section className="card stock-panel" aria-label={d.assortments}>
+                <h2>{d.assortments}</h2>
+                <div className="stock-table-wrap">
+                  <table className="stock-table">
+                    <thead>
+                      <tr>
+                        <th>{all.itemWorkflow.group}</th>
+                        <th>{d.inStock}</th>
+                        <th>{d.stockValue}</th>
+                        <th>{d.averageAge}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {assortments.groups.map((g) => (
+                        <tr key={g.id ?? 'none'}>
+                          <th scope="row">
+                            {g.id ? (
+                              <Link
+                                className="text-link"
+                                href={`/intake/items?assortment=${g.id}`}
+                              >
+                                {g.name}
+                              </Link>
+                            ) : (
+                              d.noAssortment
+                            )}
+                          </th>
+                          <td data-label={d.inStock}>{g.inStock}</td>
+                          <td
+                            data-label={d.stockValue}
+                          >{`${formatSignedOre(g.stockValueOre)} ${assortments.currency}`}</td>
+                          <td data-label={d.averageAge}>
+                            {days(g.averageAgeDays)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </section>
             ),
           },

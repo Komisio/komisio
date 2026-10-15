@@ -67,6 +67,8 @@ class RequestFailure extends Error {
  */
 const DEFINITIVE = new Set([
   'INVALID_INPUT',
+  'GROUP_NOT_FOUND',
+  'ITEM_TYPE_UNDEFINED',
   'INTAKE_PROFILE_FULL',
   'RECEPTION_NOT_FOUND',
   'RECEPTION_CHANGED',
@@ -159,6 +161,7 @@ export function QuickReception({
   printers,
   assistance,
   vocabulary,
+  groups = [],
   lang,
   d,
   bagId,
@@ -171,6 +174,7 @@ export function QuickReception({
   printers: Printer[]
   assistance: boolean
   vocabulary: AttributeVocabulary
+  groups?: { id: string; name: string }[]
   lang: string
   d: Dictionary['quickIntake']
   bagId?: string
@@ -206,6 +210,7 @@ export function QuickReception({
     [printerId, setPrinterId] = useState(''),
     [facts, setFacts] = useState<Facts>(emptyFacts),
     [itemType, setItemType] = useState<string | null>(null),
+    [assortment, setAssortment] = useState(''),
     [typeQuery, setTypeQuery] = useState(''),
     [price, setPrice] = useState(''),
     [photoUrl, setPhotoUrl] = useState<string | null>(null),
@@ -266,6 +271,7 @@ export function QuickReception({
   const hasUnsavedItem =
     !done &&
     (Object.values(facts).some((value) => value.length > 0) ||
+      assortment.length > 0 ||
       price.length > 0 ||
       photoUrl !== null ||
       uncertain ||
@@ -571,6 +577,7 @@ export function QuickReception({
       expectedRevision: session?.revision ?? 0,
       facts: cleaned,
       itemType,
+      assortment: assortment || null,
       priceOre: ore,
     }
   }
@@ -993,6 +1000,22 @@ export function QuickReception({
               </div>
               <div className="quick-workspace">
                 <div className="quick-facts">
+                  <div className="field">
+                    <label htmlFor="quick-assortment">{d.assortment}</label>
+                    <select
+                      id="quick-assortment"
+                      value={assortment}
+                      disabled={busy || !!done || uncertain}
+                      onChange={(e) => setAssortment(e.target.value)}
+                    >
+                      <option value="">{d.noAssortment}</option>
+                      {groups.map((g) => (
+                        <option key={g.id} value={g.id}>
+                          {g.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                   <div className="field">
                     <label htmlFor="quick-item-type">{d.itemType}</label>
                     <input

@@ -251,7 +251,9 @@
     },
     "typeIntro": "Välj vilka fält som ska visas för varutypen.",
     "typeFieldsHint": "Välj en liknande varutyp för att få samma frågor, till exempel storlek och material.",
-    "typeFieldsLegend": "Välj fält"
+    "typeFieldsLegend": "Välj fält",
+    "assortment": "Sortimentsgrupp",
+    "noAssortment": "Utan sortimentsgrupp"
   },
   "intake": {
     "quickLink": "Snabb mottagning: en skärm per plagg",
@@ -1806,7 +1808,9 @@
       "overview": "Översikt",
       "categories": "Kategorier",
       "sales": "Försäljning"
-    }
+    },
+    "assortments": "Sortimentsgrupper",
+    "noAssortment": "Utan sortimentsgrupp"
   },
   "importer": {
     "title": "Importera säljare",
@@ -4107,7 +4111,9 @@
     "skipped": "{count} varor hoppas över eftersom de inte längre är till salu.",
     "error": "Urvalet kan inte läsas. Välj högst 200 varor som är till salu.",
     "back": "Tillbaka till varor",
-    "limit": "Högst 400 etiketter per PDF."
+    "limit": "Högst 400 etiketter per PDF.",
+    "yes": "Ja",
+    "no": "Nej"
   },
   "itemWorkflow": {
     "edit": "Redigera varutext",
@@ -4154,7 +4160,8 @@
     "invalid": "Kontrollera kontoinnehavare, land och kontonummer.",
     "use": "Använd dessa kontouppgifter",
     "snapshot": "Granskade uppgifter",
-    "manual": "Betalningen görs manuellt i banken."
+    "manual": "Betalningen görs manuellt i banken.",
+    "profileHint": "Uppgifterna ändras av säljaren på Mina sidor."
   },
   "inventoryWorkspace": {
     "selected": "{count} markerade",

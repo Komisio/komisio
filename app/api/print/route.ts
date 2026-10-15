@@ -33,7 +33,13 @@ export async function POST(request: Request) {
     if (ctx.active.role === 'readonly')
       return reply({ error: 'FORBIDDEN' }, 403)
     return reply(
-      await queueRenderedLabel(ctx.client, c, ctx.active.name, origin),
+      await queueRenderedLabel(
+        ctx.client,
+        c,
+        ctx.active.name,
+        origin,
+        ctx.locale,
+      ),
     )
   } catch (error) {
     const code = printErrorCodes.find(

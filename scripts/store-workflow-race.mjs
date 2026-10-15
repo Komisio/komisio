@@ -135,6 +135,66 @@ export async function raceStoreWorkflow({ setup, connectionString }) {
       ],
       'ITEM_CHANGED',
     )
+    await a.query(
+      `select publish_store_policy($1,$2,(current_store_policy($1)->>'id')::uuid,(current_store_policy($1)->'policy')||'{"vatModeConsignmentPrivate":"consignment_margin","agreementRequiredFor":[]}')`,
+      [tenant, randomUUID()],
+    )
+    await a.query(
+      "select publish_seller_agreement($1,$2,null,'Synthetic terms','Only a test','en',false)",
+      [tenant, randomUUID()],
+    )
+    const session = (
+      await a.query('select create_reception_session($1,$2,$3) id', [
+        tenant,
+        randomUUID(),
+        seller,
+      ])
+    ).rows[0].id
+    const group = (
+      await a.query(
+        "select create_assortment_group($1,$2,'Synthetic standard') id",
+        [tenant, randomUUID()],
+      )
+    ).rows[0].id
+    const request = randomUUID()
+    const receptionArgs = [
+      tenant,
+      request,
+      session,
+      seller,
+      0,
+      JSON.stringify({ description: 'Synthetic grouped item' }),
+      20000,
+      null,
+      'trousers',
+    ]
+    await race(
+      'select quick_receive_classified($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)',
+      [...receptionArgs, group],
+      [...receptionArgs, null],
+      'REQUEST_CONFLICT',
+    )
+    assert.equal(
+      (
+        await a.query(
+          'select count(*)::int n from items where tenant_id=$1 and origin_id=$2',
+          [tenant, session],
+        )
+      ).rows[0].n,
+      1,
+    )
+    assert.equal(
+      (
+        await a.query(
+          'select count(*)::int n from item_classification_versions v join items i on i.tenant_id=v.tenant_id and i.id=v.item_id where i.tenant_id=$1 and i.origin_id=$2',
+          [tenant, session],
+        )
+      ).rows[0].n,
+      1,
+    )
+    console.log(
+      'PASS: simultaneous reception choices create exactly one item and one atomic assortment version.',
+    )
     console.log(
       'PASS: concurrent bank, description and classification edits preserve the first committed version and reject stale writes.',
     )

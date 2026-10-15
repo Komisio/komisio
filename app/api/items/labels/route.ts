@@ -26,6 +26,7 @@ export async function GET(request: Request) {
       ...parsed.data,
       items: sheet.items,
       storeName: ctx.active.name,
+      locale: ctx.locale,
     })
     return new Response(Buffer.from(bytes), {
       headers: {

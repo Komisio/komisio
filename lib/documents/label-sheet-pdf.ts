@@ -1,4 +1,6 @@
 import PDFDocument from 'pdfkit'
+import { labelAttributeLines } from '../labels/item-attributes'
+import type { Locale } from '../i18n'
 import { join } from 'node:path'
 import { z } from 'zod'
 import { itemLabel } from '../engine/item-label'
@@ -47,6 +49,7 @@ export async function renderLabelSheetPdf(input: {
   items: z.infer<typeof itemLabel>[]
   size: keyof typeof sheetSizes
   copies: number
+  locale?: Locale
 }) {
   const items = z.array(itemLabel).min(1).max(200).parse(input.items)
   const copies = z.number().int().min(1).max(10).parse(input.copies)
@@ -103,32 +106,55 @@ export async function renderLabelSheetPdf(input: {
         ellipsis: true,
         align: 'center',
       })
+    const attributes = labelAttributeLines(item.attributes, input.locale)
+    const compact = size.height === 32 && attributes.length > 0
     doc
       .font('bold')
       .fontSize(size.height === 32 ? 7 : 8)
       .text(item.title || item.reference, x + inset, y + mm(5.5), {
         width: textWidth,
-        height: size.height === 32 ? 19 : 35,
+        height: compact ? 10 : size.height === 32 ? 19 : 25,
         ellipsis: true,
         align: 'center',
       })
+    attributes.forEach((line, index) => {
+      const cellWidth = (textWidth - mm(2)) / 2
+      doc.font('regular').fontSize(6)
+      let fitted = line.replace(/\s+/g, ' ')
+      if (doc.widthOfString(fitted) > cellWidth) {
+        const chars = Array.from(fitted)
+        while (
+          chars.length &&
+          doc.widthOfString(chars.join('') + '…') > cellWidth
+        )
+          chars.pop()
+        fitted = chars.join('') + '…'
+      }
+      doc.text(
+        fitted,
+        x + inset + (index % 2) * (cellWidth + mm(2)),
+        y + mm((compact ? 9 : 16) + Math.floor(index / 2) * (compact ? 3 : 4)),
+        { width: cellWidth, height: 9, ellipsis: true, lineBreak: false },
+      )
+    })
     doc
-      .fontSize(12)
+      .font('bold')
+      .fontSize(compact ? 10 : 12)
       .text(
         item.priceOre === null
           ? '—'
           : `${formatOre(item.priceOre)} ${item.currency}`,
         x + inset,
-        y + height - mm(20),
+        y + height - mm(compact ? 16.5 : 20),
         { width: textWidth, height: 18, align: 'center' },
       )
     barcode(
       doc,
       item.reference,
       x + inset,
-      y + height - mm(14),
+      y + height - mm(compact ? 11 : 14),
       textWidth,
-      mm(8),
+      mm(compact ? 6 : 8),
     )
     doc
       .font('regular')

@@ -251,7 +251,9 @@
     },
     "typeIntro": "Elige los campos que se mostrarán para este tipo de artículo.",
     "typeFieldsHint": "Elige un tipo de artículo similar para usar las mismas preguntas, como talla y material.",
-    "typeFieldsLegend": "Elegir campos"
+    "typeFieldsLegend": "Elegir campos",
+    "assortment": "Grupo de surtido",
+    "noAssortment": "Sin grupo de surtido"
   },
   "intake": {
     "quickLink": "Recepción rápida: una pantalla por prenda",
@@ -1806,7 +1808,9 @@
       "overview": "Resumen",
       "categories": "Categorías",
       "sales": "Ventas"
-    }
+    },
+    "assortments": "Grupos de surtido",
+    "noAssortment": "Sin grupo de surtido"
   },
   "importer": {
     "title": "Importar depositantes",
@@ -4113,7 +4117,9 @@
     "skipped": "Se omiten {count} artículos porque ya no están a la venta.",
     "error": "No se puede leer la selección. Selecciona hasta 200 artículos a la venta.",
     "back": "Volver a artículos",
-    "limit": "Hasta 400 etiquetas por PDF."
+    "limit": "Hasta 400 etiquetas por PDF.",
+    "yes": "Sí",
+    "no": "No"
   },
   "itemWorkflow": {
     "edit": "Editar texto del artículo",
@@ -4160,7 +4166,8 @@
     "invalid": "Comprueba el titular, el país y el número de cuenta.",
     "use": "Usar estos datos bancarios",
     "snapshot": "Datos revisados",
-    "manual": "Realiza el pago manualmente en tu banco."
+    "manual": "Realiza el pago manualmente en tu banco.",
+    "profileHint": "El vendedor actualiza estos datos en su portal."
   },
   "inventoryWorkspace": {
     "selected": "{count} seleccionados",

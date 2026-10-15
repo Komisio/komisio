@@ -251,7 +251,9 @@
     },
     "typeIntro": "Scegli i campi da visualizzare per questo tipo di articolo.",
     "typeFieldsHint": "Scegli un tipo di articolo simile per usare le stesse domande, come taglia e materiale.",
-    "typeFieldsLegend": "Scegli campi"
+    "typeFieldsLegend": "Scegli campi",
+    "assortment": "Gruppo di assortimento",
+    "noAssortment": "Nessun gruppo di assortimento"
   },
   "intake": {
     "quickLink": "Ricezione rapida: una schermata per capo",
@@ -1806,7 +1808,9 @@
       "overview": "Panoramica",
       "categories": "Categorie",
       "sales": "Vendite"
-    }
+    },
+    "assortments": "Gruppi di assortimento",
+    "noAssortment": "Nessun gruppo di assortimento"
   },
   "importer": {
     "title": "Importa conferenti",
@@ -4107,7 +4111,9 @@
     "skipped": "{count} articoli sono esclusi perché non sono più in vendita.",
     "error": "Impossibile leggere la selezione. Seleziona fino a 200 articoli in vendita.",
     "back": "Torna agli articoli",
-    "limit": "Fino a 400 etichette per PDF."
+    "limit": "Fino a 400 etichette per PDF.",
+    "yes": "Sì",
+    "no": "No"
   },
   "itemWorkflow": {
     "edit": "Modifica testo articolo",
@@ -4154,7 +4160,8 @@
     "invalid": "Controlla intestatario, paese e numero di conto.",
     "use": "Usa questi dati bancari",
     "snapshot": "Dati verificati",
-    "manual": "Effettua il pagamento manualmente tramite la banca."
+    "manual": "Effettua il pagamento manualmente tramite la banca.",
+    "profileHint": "Il venditore aggiorna questi dati nel proprio portale."
   },
   "inventoryWorkspace": {
     "selected": "{count} selezionati",

@@ -251,7 +251,9 @@
     },
     "typeIntro": "Choose the fields to show for this item type.",
     "typeFieldsHint": "Choose a similar item type to use the same questions, such as size and material.",
-    "typeFieldsLegend": "Choose fields"
+    "typeFieldsLegend": "Choose fields",
+    "assortment": "Assortment group",
+    "noAssortment": "No assortment group"
   },
   "intake": {
     "quickLink": "Quick reception: one screen per garment",
@@ -1806,7 +1808,9 @@
       "overview": "Overview",
       "categories": "Categories",
       "sales": "Sales"
-    }
+    },
+    "assortments": "Assortment groups",
+    "noAssortment": "No assortment group"
   },
   "importer": {
     "title": "Import sellers",
@@ -4107,7 +4111,9 @@
     "skipped": "{count} items are skipped because they are no longer for sale.",
     "error": "Cannot read this selection. Select up to 200 items that are for sale.",
     "back": "Back to items",
-    "limit": "Up to 400 labels per PDF."
+    "limit": "Up to 400 labels per PDF.",
+    "yes": "Yes",
+    "no": "No"
   },
   "itemWorkflow": {
     "edit": "Edit item text",
@@ -4154,7 +4160,8 @@
     "invalid": "Check the account holder, country and account number.",
     "use": "Use these bank details",
     "snapshot": "Reviewed details",
-    "manual": "Make the payment manually in your bank."
+    "manual": "Make the payment manually in your bank.",
+    "profileHint": "The seller updates these details in their portal."
   },
   "inventoryWorkspace": {
     "selected": "{count} selected",

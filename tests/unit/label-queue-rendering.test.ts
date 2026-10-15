@@ -39,6 +39,17 @@ function fixture(
     return query
   })
   const rpc = vi.fn(async (name: string, args: Record<string, unknown>) => {
+    if (name === 'item_label_facts')
+      return {
+        data: {
+          id: referenceId,
+          reference: 'I-20000000',
+          title: 'Synthetic current title',
+          priceOre: '10000',
+          currency: 'SEK',
+        },
+        error: null,
+      }
     if (name === 'store_currency') return { data: 'SEK', error: null }
     if (name === 'label_formats')
       return {
@@ -110,7 +121,7 @@ describe('shared label render and queue path', () => {
           p_reference_kind: referenceKind,
           p_reference_id: referenceId,
           p_copies: 2,
-          p_template_version: 'zpl-v2',
+          p_template_version: 'zpl-v3',
           p_payload: expect.stringContaining(reference),
         }),
       )

@@ -1,3 +1,6 @@
+import { readItemLabel } from './item-label'
+import { labelAttributeLines } from '../labels/item-attributes'
+import type { Locale } from '../i18n'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
@@ -234,6 +237,7 @@ export async function queueRenderedLabel(
   input: z.input<typeof queuePrintJobInput>,
   storeName: string,
   appOrigin: string,
+  locale: Locale = 'en',
 ) {
   const command = queuePrintJobInput.parse(input)
   const tenantId = command.tenantId
@@ -297,6 +301,11 @@ export async function queueRenderedLabel(
           ? `K-${origin.bagReference}`
           : ''
     facts.line2 = ''
+    const label = await readItemLabel(client, tenantId, command.referenceId)
+    if (label) {
+      facts.line1 = (label.title || String(facts.line1)).slice(0, 60)
+      facts.attributes = labelAttributeLines(label.attributes, locale)
+    }
   } else {
     const seller = await client
       .from('sellers')

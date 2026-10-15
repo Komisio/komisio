@@ -251,7 +251,9 @@
     },
     "typeIntro": "Velg hvilke felt som skal vises for varetypen.",
     "typeFieldsHint": "Velg en lignende varetype for å få de samme spørsmålene, for eksempel størrelse og materiale.",
-    "typeFieldsLegend": "Velg felt"
+    "typeFieldsLegend": "Velg felt",
+    "assortment": "Sortimentsgruppe",
+    "noAssortment": "Uten sortimentsgruppe"
   },
   "intake": {
     "quickLink": "Hurtigmottak: én skjerm per plagg",
@@ -1806,7 +1808,9 @@
       "overview": "Oversikt",
       "categories": "Kategorier",
       "sales": "Salg"
-    }
+    },
+    "assortments": "Sortimentsgrupper",
+    "noAssortment": "Uten sortimentsgruppe"
   },
   "importer": {
     "title": "Importer innleverere",
@@ -4107,7 +4111,9 @@
     "skipped": "{count} varer utelates fordi de ikke lenger er til salgs.",
     "error": "Kan ikke lese utvalget. Velg høyst 200 varer som er til salgs.",
     "back": "Tilbake til varer",
-    "limit": "Høyst 400 etiketter per PDF."
+    "limit": "Høyst 400 etiketter per PDF.",
+    "yes": "Ja",
+    "no": "Nei"
   },
   "itemWorkflow": {
     "edit": "Rediger varetekst",
@@ -4154,7 +4160,8 @@
     "invalid": "Kontroller kontoinnehaver, land og kontonummer.",
     "use": "Bruk disse kontoopplysningene",
     "snapshot": "Kontrollerte opplysninger",
-    "manual": "Betalingen gjøres manuelt i banken."
+    "manual": "Betalingen gjøres manuelt i banken.",
+    "profileHint": "Selgeren endrer opplysningene på Mine sider."
   },
   "inventoryWorkspace": {
     "selected": "{count} valgt",

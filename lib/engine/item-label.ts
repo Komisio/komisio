@@ -1,3 +1,4 @@
+import { labelAttribute } from '../labels/item-attributes'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
@@ -5,6 +6,7 @@ export const itemLabel = z.object({
   id: z.guid(),
   reference: z.string().regex(/^I-[0-9A-F]{8}$/),
   title: z.string().nullable(),
+  attributes: z.array(labelAttribute).max(4).optional(),
   priceOre: z.string().regex(/^\d+$/).nullable(),
   currency: z.string().regex(/^[A-Z]{3}$/),
 })

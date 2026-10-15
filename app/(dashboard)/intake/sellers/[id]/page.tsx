@@ -1,3 +1,5 @@
+import { readSellerBank } from '@/lib/engine/seller-bank'
+import { SellerBankAccount } from '@/components/seller/bank-details'
 import { SellerItemsTable } from '@/components/intake/seller-items-table'
 import { SellerAgreementPdf } from '@/components/intake/agreement-pdf-link'
 import { readConsignmentFees } from '@/lib/engine/consignment-fees'
@@ -124,6 +126,10 @@ export default async function Seller({
       </div>
     )
   }
+  const canReadBank = ['owner', 'admin'].includes(tenant.role)
+  const bank = canReadBank
+    ? await readSellerBank(ctx.client, tenant.id, id.data)
+    : null
   const fees = await readConsignmentFees(
     ctx.client,
     tenant.id,
@@ -1001,6 +1007,17 @@ export default async function Seller({
           ),
           details: (
             <>
+              {canReadBank && (
+                <section className="card seller-section" id="seller-bank">
+                  <h2>{all.sellerBank.title}</h2>
+                  {bank ? (
+                    <SellerBankAccount bank={bank} d={all} />
+                  ) : (
+                    <p>{all.sellerBank.empty}</p>
+                  )}
+                  <p className="muted">{all.sellerBank.profileHint}</p>
+                </section>
+              )}
               <section className="card intake-form">
                 {(profile.addressLine1 ||
                   profile.addressLine2 ||

@@ -251,7 +251,9 @@
     },
     "typeIntro": "Valitse tuotetyypille näytettävät kentät.",
     "typeFieldsHint": "Valitse samankaltainen tuotetyyppi, jos haluat samat kysymykset, kuten koon ja materiaalin.",
-    "typeFieldsLegend": "Valitse kentät"
+    "typeFieldsLegend": "Valitse kentät",
+    "assortment": "Valikoimaryhmä",
+    "noAssortment": "Ei valikoimaryhmää"
   },
   "intake": {
     "quickLink": "Pikavastaanotto: yksi näyttö per vaate",
@@ -1806,7 +1808,9 @@
       "overview": "Yleiskuva",
       "categories": "Kategoriat",
       "sales": "Myynti"
-    }
+    },
+    "assortments": "Valikoimaryhmät",
+    "noAssortment": "Ei valikoimaryhmää"
   },
   "importer": {
     "title": "Tuo tuojat",
@@ -4113,7 +4117,9 @@
     "skipped": "{count} tuotetta ohitetaan, koska ne eivät enää ole myynnissä.",
     "error": "Valintaa ei voi lukea. Valitse enintään 200 myynnissä olevaa tuotetta.",
     "back": "Takaisin tuotteisiin",
-    "limit": "Enintään 400 etikettiä PDF-tiedostossa."
+    "limit": "Enintään 400 etikettiä PDF-tiedostossa.",
+    "yes": "Kyllä",
+    "no": "Ei"
   },
   "itemWorkflow": {
     "edit": "Muokkaa tuotetekstiä",
@@ -4160,7 +4166,8 @@
     "invalid": "Tarkista tilinhaltija, maa ja tilinumero.",
     "use": "Käytä näitä tilitietoja",
     "snapshot": "Tarkistetut tiedot",
-    "manual": "Tee maksu itse pankissasi."
+    "manual": "Tee maksu itse pankissasi.",
+    "profileHint": "Myyjä muuttaa tietoja omassa portaalissaan."
   },
   "inventoryWorkspace": {
     "selected": "{count} valittu",

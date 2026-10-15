@@ -29,6 +29,10 @@ export const placeholders = [
   'category',
   'width',
   'height',
+  'attribute1',
+  'attribute2',
+  'attribute3',
+  'attribute4',
 ] as const
 export type Placeholder = (typeof placeholders)[number]
 
@@ -48,6 +52,10 @@ export function renderStoreTemplate(
   const f = labelFacts.parse(factsInput)
   const format = labelFormat.parse(formatInput)
   const values: Record<Placeholder, string> = {
+    attribute1: f.attributes?.[0] ?? '',
+    attribute2: f.attributes?.[1] ?? '',
+    attribute3: f.attributes?.[2] ?? '',
+    attribute4: f.attributes?.[3] ?? '',
     store: f.storeName,
     reference: f.reference,
     line1: f.line1,
@@ -83,6 +91,9 @@ export function builtinTemplate(
     reference: marker('reference'),
     line1: marker('line1'),
     line2: marker('line2'),
+    attributes: ['attribute1', 'attribute2', 'attribute3', 'attribute4'].map(
+      (name) => marker(name as Placeholder),
+    ),
     price: '0.01',
     oldPrice: '0.02',
     date: marker('date'),

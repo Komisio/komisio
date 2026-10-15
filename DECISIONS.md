@@ -1082,3 +1082,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-14: Item details use task tabs, shared optimistic quick editing and grouped print options. Existing item commands, frozen terms, financial workflows and tenant permissions remain unchanged.
 
 - 2026-10-14: Handover review reuses the inventory table without filters. Bag scope applies before sorting and paging across both intake origins; sold rows retain actual sale prices. Inline edits, selection actions and permissions remain shared; navigation preserves reception drafts.
+
+- 2026-10-15: Labels show four populated, localized descriptive attributes. Staff seller profiles expose bank details only to owners/admins. Reception can assign an assortment atomically; stock groups use current classification and existing stock rules.

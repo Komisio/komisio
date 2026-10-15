@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -14,9 +15,9 @@ select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random
 -- Consignment item from the bag path, store item from a purchase.
 select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
 select set_config('test.draft',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Synthetic jacket','Jackets','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Synthetic jacket','Jackets','Good');
 select set_config('test.item1',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,25000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'reception_review',current_setting('test.draft')::uuid,1,25000);
 select set_config('test.purchase',register_purchase(current_setting('test.tenant')::uuid,gen_random_uuid(),'Flea market',15000,'Receipt 7',true)::text,true);
 select set_config('test.item2',gen_random_uuid()::text,true);
 select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item2')::uuid,'purchase',current_setting('test.purchase')::uuid,null,25000);
@@ -60,9 +61,9 @@ select is((select vat_mode from sale_lines where sale_id=current_setting('test.s
 -- Exclusive basis: commission invoiced plus VAT, business mode, full VAT on the sale.
 select publish_seller_terms(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,null,'exclusive',null,'VAT-registered seller');
 select set_config('test.draft2',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft2')::uuid,0,'Synthetic bag','Bags','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft2')::uuid,0,'Synthetic bag','Bags','Good');
 select set_config('test.item3',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item3')::uuid,'inspection_draft',current_setting('test.draft2')::uuid,1,25000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item3')::uuid,'reception_review',current_setting('test.draft2')::uuid,1,25000);
 select set_config('test.sim2',simulate_sale(current_setting('test.tenant')::uuid,jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item3'),'priceOre',25000)))::text,true);
 select is((current_setting('test.sim2')::jsonb->'lines'->0->>'commissionOre')::bigint,15000::bigint,'commission ex VAT');
 select is((current_setting('test.sim2')::jsonb->'lines'->0->>'commissionVatOre')::bigint,3750::bigint,'VAT on the commission invoice');

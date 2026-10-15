@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values ('d1640000-0000-4000-8000-000000009901','handover-stage@example.test',now());
@@ -9,9 +10,9 @@ select set_config('test.seller',register_seller(current_setting('test.tenant')::
 select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}'::jsonb);
 select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'Synthetic',null)::text,true);
 select set_config('test.draft',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Synthetic chair','','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Synthetic chair','','Good');
 select set_config('test.item',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,20000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid,'reception_review',current_setting('test.draft')::uuid,1,20000);
 select set_config('test.row',(bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0)->'items'->0)::text,true);
 select is(current_setting('test.row')::jsonb->>'stage','on_sale','fresh draft item is on sale');
 select is(current_setting('test.row')::jsonb->>'sold_price_ore',null,'unsold item has no sale proceeds');

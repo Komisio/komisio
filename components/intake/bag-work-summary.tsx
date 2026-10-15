@@ -35,7 +35,7 @@ export async function BagWorkSummary({
         tenantId={tenantId}
         bagId={bagId}
         current={state}
-        pending={progress.drafts + progress.receptions > 0}
+        pending={progress.receptions > 0}
         readonly={readonly}
         d={dictionary(locale)}
         locale={locale}
@@ -50,26 +50,14 @@ export async function BagWorkSummary({
             </dd>
           </div>
           <div>
-            <dt>{d.drafts}</dt>
-            <dd data-bag-count="drafts">{number.format(progress.drafts)}</dd>
-          </div>
-          <div>
             <dt>{d.receptions}</dt>
             <dd data-bag-count="receptions">
               {number.format(progress.receptions)}
             </dd>
           </div>
         </dl>
-        {(progress.nextDraft || progress.nextReception) && (
+        {progress.nextReception && (
           <nav className="row wrap" aria-label={d.title}>
-            {progress.nextDraft && (
-              <Link
-                className="text-link"
-                href={`/intake/bags/${bagId}/inspect?view=drafts&draft=${progress.nextDraft}`}
-              >
-                {d.resumeDraft} →
-              </Link>
-            )}
             {progress.nextReception && (
               <Link
                 className="text-link"

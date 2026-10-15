@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -15,20 +16,20 @@ select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid
  || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full","salePeriodDays":42,"markdownSteps":[{"afterDays":0,"percent":10},{"afterDays":1,"percent":25},{"afterDays":60,"percent":50}]}'::jsonb);
 select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
 select set_config('test.d1',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d1')::uuid,0,'Blue wool jacket','Jackets','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d1')::uuid,0,'Blue wool jacket','Jackets','Good');
 select set_config('test.i1',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i1')::uuid,'inspection_draft',current_setting('test.d1')::uuid,1,20000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i1')::uuid,'reception_review',current_setting('test.d1')::uuid,1,20000);
 select set_config('test.d2',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Red coat','Coats','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Red coat','Coats','Good');
 select set_config('test.i2',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i2')::uuid,'inspection_draft',current_setting('test.d2')::uuid,1,30000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i2')::uuid,'reception_review',current_setting('test.d2')::uuid,1,30000);
 select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','K-1','2026-09-10T10:00:00Z','SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.i1'),'priceOre',18000)));
 
 -- Create enough facts through the engine to cross the legacy200 cap.
 do $$ declare n integer; draft uuid; begin for n in 1..201 loop
  draft:=gen_random_uuid();
- perform public.save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,draft,0,'Extra item '||n,'Other','Private staff detail');
- perform public.accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'inspection_draft',draft,1,10000);
+ perform pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,draft,0,'Extra item '||n,'Other','Private staff detail');
+ perform public.accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'reception_review',draft,1,10000);
 end loop; end $$;
 select set_config('test.other',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Other seller','other-page@example.test','')::text,true);
 select throws_ok(format('select public.my_items_page(%L,%L)',current_setting('test.tenant'),current_setting('test.seller')),'42501','FORBIDDEN','store membership does not grant seller identity');

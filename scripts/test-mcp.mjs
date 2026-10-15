@@ -1,6 +1,5 @@
 import { testSellerEconomyMCP } from './test-seller-economy-mcp.mjs'
 import { testOperationDiscovery } from './test-operation-discovery.mjs'
-import { testInspectionMCP } from './test-inspection-mcp.mjs'
 import { testItemsMCP } from './test-items-mcp.mjs'
 import { testProposalsMCP } from './test-proposals-mcp.mjs'
 import { Client as MCPClient } from '@modelcontextprotocol/client'
@@ -117,15 +116,6 @@ try {
   }
   await testSellerEconomyMCP({ connect, rpc, db, uid })
   const both = await connect('reception:read,reception:preview')
-  const inspection = await testInspectionMCP({
-    connect,
-    rpc,
-    db,
-    tenant,
-    seller,
-    token,
-    receptionClient: both,
-  })
   const items = await testItemsMCP({ connect, rpc, db, tenant, token, uid })
   await testProposalsMCP({
     connect,
@@ -560,14 +550,6 @@ try {
       })
     ).isError,
   )
-  assert(
-    (
-      await inspection.client.callTool({
-        name: 'komisio_read_inspection_operation',
-        arguments: { operationId: proposalId },
-      })
-    ).isError,
-  )
   const replayed = await proposer.callTool({
     name: 'komisio_propose_reception_review',
     arguments: proposal,
@@ -694,46 +676,6 @@ try {
   for (const { client, name } of discovery)
     assert((await client.callTool({ name, arguments: {} })).isError)
 
-  assert(
-    (
-      await inspection.previewer.callTool({
-        name: 'komisio_prepare_inspection_reception',
-        arguments: inspection.preparationInput,
-      })
-    ).isError,
-  )
-  assert(
-    (
-      await inspection.stager.callTool({
-        name: 'komisio_propose_inspection_edit',
-        arguments: inspection.stagedInput,
-      })
-    ).isError,
-  )
-  assert(
-    (
-      await inspection.previewer.callTool({
-        name: 'komisio_preview_inspection',
-        arguments: inspection.previewInput,
-      })
-    ).isError,
-  )
-  assert(
-    (
-      await inspection.client.callTool({
-        name: 'komisio_list_bags',
-        arguments: {},
-      })
-    ).isError,
-  )
-  assert(
-    (
-      await inspection.client.callTool({
-        name: 'komisio_read_inspection',
-        arguments: { bagId: inspection.bag },
-      })
-    ).isError,
-  )
   assert(
     (
       await both.callTool({

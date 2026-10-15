@@ -349,9 +349,7 @@ export default async function Intake({
                   <p>
                     {filters.state === 'unstarted'
                       ? all.storeFlow.live.dropoffHelp
-                      : filters.state === 'drafts'
-                        ? all.storeFlow.live.draftHelp
-                        : d.queueHint}
+                      : d.queueHint}
                   </p>
                 )}
                 {filters.state && (
@@ -359,9 +357,7 @@ export default async function Intake({
                     <strong>
                       {filters.state === 'unstarted'
                         ? all.storeFlow.live.dropoffs
-                        : filters.state === 'drafts'
-                          ? all.storeFlow.live.drafts
-                          : all.bagProcessing[filters.state]}
+                        : all.bagProcessing[filters.state]}
                     </strong>{' '}
                     · <Link href={bagQueueHref({})}>{d.showAllBags}</Link>
                   </p>

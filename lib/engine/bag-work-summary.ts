@@ -2,10 +2,8 @@ import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 const summary = z.object({
   accepted: z.number().int().nonnegative(),
-  drafts: z.number().int().nonnegative(),
   receptions: z.number().int().nonnegative(),
   // Existing row ids: readers accept any GUID shape, as the other bag readers do.
-  nextDraft: z.guid().nullable(),
   nextReception: z.guid().nullable(),
 })
 

@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -30,8 +31,8 @@ select is((select count(*) from seller_agreement_evidence where seller_id=curren
 select lives_ok($$select receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'TEST receipt',current_setting('test.v1')::uuid)$$,'portal evidence satisfies existing receipt gate');
 select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'TEST provenance',current_setting('test.v1')::uuid)::text,true);
 select set_config('test.draft',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'TEST jacket','','');
-select set_config('test.item',accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'inspection_draft',current_setting('test.draft')::uuid,1,10000)::text,true);
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'TEST jacket','','');
+select set_config('test.item',accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'reception_review',current_setting('test.draft')::uuid,1,10000)::text,true);
 select is((select terms->>'evidenceKind' from items where id=current_setting('test.item')::uuid),'seller_portal','item preserves seller-portal provenance');
 select publish_seller_agreement(current_setting('test.tenant')::uuid,current_setting('test.v2')::uuid,current_setting('test.v1')::uuid,'New TEST terms','New fictional agreement','sv',true);
 set local "request.jwt.claims"='{"sub":"28600000-0000-4000-8000-000000000002","role":"authenticated"}';

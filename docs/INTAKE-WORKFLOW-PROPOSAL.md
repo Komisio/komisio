@@ -1,3 +1,5 @@
+> Inspection update (#458, 2026-10-15): bag inspection now registers items directly through reception. References below to inspection drafts describe the former workflow; its storage, tools and source text have been retired without migration.
+
 # Intake: keep the useful ideas, simplify the journey
 
 Proposal for owner review, 11 September 2026. **Not an implemented feature or an

@@ -8,16 +8,6 @@ export async function testOperationDiscovery({ connect, rpc, db, uid, token }) {
     p_slug: `discovery-${randomUUID()}`,
     p_request_id: randomUUID(),
   })
-  const inspectionPayload = {
-    bagId: randomUUID(),
-    draftId: randomUUID(),
-    expectedRevision: 1,
-    fields: {
-      description: 'PRIVATE descriptive payload',
-      category: '',
-      condition: '',
-    },
-  }
   const receptionPayload = {
     sessionId: randomUUID(),
     sourceRevision: 1,
@@ -45,12 +35,6 @@ export async function testOperationDiscovery({ connect, rpc, db, uid, token }) {
   }
   for (const [kind, payload, count, base] of [
     [
-      'saveInspectionDraft',
-      inspectionPayload,
-      55,
-      '2026-09-01T12:00:00.123456Z',
-    ],
-    [
       'publishReceptionReview',
       receptionPayload,
       60,
@@ -66,12 +50,6 @@ export async function testOperationDiscovery({ connect, rpc, db, uid, token }) {
     )
   const summaries = []
   for (const [scope, name, kind, count] of [
-    [
-      'inspection:read',
-      'komisio_list_inspection_operations',
-      'saveInspectionDraft',
-      55,
-    ],
     [
       'reception:read',
       'komisio_list_reception_operations',
@@ -168,7 +146,7 @@ export async function testOperationDiscovery({ connect, rpc, db, uid, token }) {
         [tenant],
       )
     ).rows[0].n,
-    115,
+    60,
   )
   assert.equal(
     (

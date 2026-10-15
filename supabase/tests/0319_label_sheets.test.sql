@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -14,13 +15,13 @@ select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random
 select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}'::jsonb);
 select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.s1')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
 select set_config('test.d1',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d1')::uuid,0,'Blue wool jacket','Jackets','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d1')::uuid,0,'Blue wool jacket','Jackets','Good');
 select set_config('test.i1',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i1')::uuid,'inspection_draft',current_setting('test.d1')::uuid,1,20000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i1')::uuid,'reception_review',current_setting('test.d1')::uuid,1,20000);
 select set_config('test.d2',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Red coat','Coats','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Red coat','Coats','Good');
 select set_config('test.i2',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i2')::uuid,'inspection_draft',current_setting('test.d2')::uuid,1,30000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i2')::uuid,'reception_review',current_setting('test.d2')::uuid,1,30000);
 select set_config('test.p',gen_random_uuid()::text,true);
 select register_purchase(current_setting('test.tenant')::uuid,current_setting('test.p')::uuid,'Vintage lamp',15000,'Auction receipt 7',false);
 select set_config('test.i3',gen_random_uuid()::text,true);
@@ -32,8 +33,8 @@ select is(jsonb_array_length(current_setting('test.sheet')::jsonb->'items'),2,'a
 do $$ declare draft uuid; begin
  for n in 1..28 loop
   draft:=gen_random_uuid();
-  perform save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,draft,0,'Synthetic extra item '||n,'Clothing','Good');
-  perform accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'inspection_draft',draft,1,10000);
+  perform pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,draft,0,'Synthetic extra item '||n,'Clothing','Good');
+  perform accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'reception_review',draft,1,10000);
  end loop;
 end $$;
 select is(jsonb_array_length(item_label_sheet_facts(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,null)->'items'),30,'intake labels are not cut off at the list page boundary');

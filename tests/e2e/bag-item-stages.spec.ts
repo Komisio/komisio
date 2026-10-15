@@ -37,17 +37,12 @@ test('handover item stages and actual sale price remain clear on mobile in every
     ]) {
       const draft = randomUUID(),
         item = randomUUID()
-      await f.db.query('select save_inspection_draft($1,$2,$3,$4,0,$5,$6,$7)', [
-        f.tenant,
-        randomUUID(),
-        bag,
-        draft,
-        title,
-        'Chairs',
-        'Good',
-      ])
       await f.db.query(
-        "select accept_item($1,$2,'inspection_draft',$3,1,20000)",
+        'select pg_temp.prepare_bag_reception($1,$2,$3,$4,0,$5,$6,$7)',
+        [f.tenant, randomUUID(), bag, draft, title, 'Chairs', 'Good'],
+      )
+      await f.db.query(
+        "select accept_item($1,$2,'reception_review',$3,1,20000)",
         [f.tenant, item, draft],
       )
       ids.push(item)

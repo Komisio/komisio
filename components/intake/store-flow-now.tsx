@@ -159,17 +159,7 @@ export function StoreFlowNow({
             </section>
             <section className="flow-live-column">
               <h2>2 · {d.registration}</h2>
-              {card(
-                'drafts',
-                d.drafts,
-                snapshot.drafts,
-                '/intake?state=drafts#bag-queue',
-                d.started,
-                d.items,
-                d.draftHelp,
-              )}
               {!showEmpty &&
-                !snapshot.drafts.count &&
                 !registration.some(
                   (stage) => snapshot.reception[stage]?.count,
                 ) && <p>{d.empty}</p>}

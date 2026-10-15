@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -19,9 +20,9 @@ select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid
 -- A sweater received as size M.
 select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
 select set_config('test.draft',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Blue wool sweater','Tröjor','Good, size M');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Blue wool sweater','Tröjor','Good, size M');
 select set_config('test.item',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,25000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid,'reception_review',current_setting('test.draft')::uuid,1,25000);
 select set_config('test.origin',(select origin_revision from items where id=current_setting('test.item')::uuid)::text,true);
 
 -- Before any correction, every value is what was accepted.
@@ -37,7 +38,7 @@ select is((select a->>'reason' from jsonb_array_elements(current_setting('test.r
 
 -- The evidence is untouched: the item still points at what the seller approved.
 select is((select origin_revision from items where id=current_setting('test.item')::uuid)::text,current_setting('test.origin'),'a correction never moves the item to another revision');
-select is((select description from inspection_draft_revisions where draft_id=current_setting('test.draft')::uuid and revision=1),'Blue wool sweater','and never edits the evidence it was accepted on');
+select is((select a->>'value' from reception_reviews r cross join lateral jsonb_array_elements(r.suggestions->'attributes') a where r.session_id=current_setting('test.draft')::uuid and r.version=1 and a->>'slug'='description'),'Blue wool sweater','and never edits the evidence it was accepted on');
 
 -- Correcting something the reception recorded keeps the accepted value beside it.
 select set_config('test.c2',gen_random_uuid()::text,true);

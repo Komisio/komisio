@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -13,9 +14,9 @@ select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random
 select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}');
 select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
 select set_config('test.d1',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d1')::uuid,0,'Synthetic jacket','Jackets','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d1')::uuid,0,'Synthetic jacket','Jackets','Good');
 select set_config('test.item',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid,'inspection_draft',current_setting('test.d1')::uuid,1,20000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid,'reception_review',current_setting('test.d1')::uuid,1,20000);
 -- Fresh item: on sale, nothing due (pilot steps at day 14, 28, 42).
 select is((select stage from lifecycle_queue(current_setting('test.tenant')::uuid) where item_id=current_setting('test.item')::uuid),'on_sale','fresh item is on sale');
 select is((select period_end from lifecycle_queue(current_setting('test.tenant')::uuid) where item_id=current_setting('test.item')::uuid),(select accepted_at+interval '42 days' from items where id=current_setting('test.item')::uuid),'period end from the frozen sale period');
@@ -69,9 +70,9 @@ select throws_like($$select record_sale(current_setting('test.tenant')::uuid,gen
 select is((select count(*) from item_events where item_id=current_setting('test.item')::uuid and kind in ('markdown_applied','period_extended','period_ended')),5::bigint,'three markdowns, one extension, one end as events');
 -- A sold item leaves the work list as sold.
 select set_config('test.d2',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Synthetic scarf','Accessories','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Synthetic scarf','Accessories','Good');
 select set_config('test.item2',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item2')::uuid,'inspection_draft',current_setting('test.d2')::uuid,1,10000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item2')::uuid,'reception_review',current_setting('test.d2')::uuid,1,10000);
 select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','L-2',now(),'SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item2'),'priceOre',10000)));
 select is((select stage from lifecycle_queue(current_setting('test.tenant')::uuid) where item_id=current_setting('test.item2')::uuid),'sold','sold item shows as sold');
 select throws_like($$select extend_sale_period(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item2')::uuid,7,'No')$$,'%ITEM_NOT_ON_SALE%','a sold item has no period to extend');

@@ -57,7 +57,6 @@ import { receiveHandoverCommand } from './handovers'
 import { z } from 'zod'
 import { agreementApproval } from './agreement-workspace'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { saveInspectionCommand, archiveInspectionCommand } from './inspection'
 import {
   createReceptionCommand,
   saveReceptionSourcesCommand,
@@ -107,8 +106,6 @@ export const intakeCommand = z.discriminatedUnion('action', [
   publishReceptionReviewCommand,
   createReceptionCommand,
   saveReceptionSourcesCommand,
-  saveInspectionCommand,
-  archiveInspectionCommand,
   z
     .object({
       action: z.literal('registerSeller'),
@@ -515,27 +512,6 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_session: c.sessionId,
         p_expected: c.expectedRevision,
         p_sources: c.sources,
-      })
-    case 'archiveInspection':
-      return client.rpc('set_inspection_archived', {
-        p_tenant: c.tenantId,
-        p_request: c.requestId,
-        p_bag: c.bagId,
-        p_draft: c.draftId,
-        p_expected: c.expectedRevision,
-        p_archived: c.archived,
-        p_reason: c.reason,
-      })
-    case 'saveInspection':
-      return client.rpc('save_inspection_draft', {
-        p_tenant: c.tenantId,
-        p_request: c.requestId,
-        p_bag: c.bagId,
-        p_draft: c.draftId,
-        p_expected: c.expectedRevision,
-        p_description: c.fields.description,
-        p_category: c.fields.category,
-        p_condition: c.fields.condition,
       })
     case 'saveSellerProfile':
       if (c.agreementApproval)

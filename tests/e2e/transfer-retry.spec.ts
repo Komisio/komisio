@@ -114,7 +114,7 @@ for (const error of ['REQUEST_FAILED', 'ITEM_ENDED'])
       expect(
         (
           await f.db.query(
-            'select count(*)::integer n from inspection_draft_revisions where tenant_id=$1 and bag_id=$2',
+            'select count(*)::integer n from reception_sessions where tenant_id=$1 and bag_id=$2',
             [target, bagId],
           )
         ).rows[0].n,

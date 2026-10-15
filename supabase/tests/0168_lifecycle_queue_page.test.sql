@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 -- Owner A (941), owner B (942), admin/staff/readonly members of A (943-945), a non-member (946).
@@ -25,8 +26,8 @@ begin
  for n in 1..25 loop
   draft:=gen_random_uuid();
   title:=case n when 24 then 'Literal% item' when 25 then 'Under_score item' else 'Blue lamp '||lpad(n::text,2,'0') end;
-  perform save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,draft,0,title,'Lamps','Good');
-  perform accept_item(current_setting('test.tenant')::uuid,('a1680000-0000-4000-8000-0000000000'||lpad(n::text,2,'0'))::uuid,'inspection_draft',draft,1,10000+n*100);
+  perform pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,draft,0,title,'Lamps','Good');
+  perform accept_item(current_setting('test.tenant')::uuid,('a1680000-0000-4000-8000-0000000000'||lpad(n::text,2,'0'))::uuid,'reception_review',draft,1,10000+n*100);
  end loop;
 end $$;
 -- Store B with one item of its own.
@@ -38,8 +39,8 @@ select record_agreement_evidence(current_setting('test.other')::uuid,gen_random_
 select publish_store_policy(current_setting('test.other')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.other')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}');
 select set_config('test.other_bag',receive_bag_with_agreement(current_setting('test.other')::uuid,gen_random_uuid(),current_setting('test.other_seller')::uuid,'',current_setting('test.other_agreement')::uuid)::text,true);
 select set_config('test.other_draft',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.other')::uuid,gen_random_uuid(),current_setting('test.other_bag')::uuid,current_setting('test.other_draft')::uuid,0,'Blue lamp other','Lamps','Good');
-select accept_item(current_setting('test.other')::uuid,'b1680000-0000-4000-8000-000000000001','inspection_draft',current_setting('test.other_draft')::uuid,1,9900);
+select pg_temp.prepare_bag_reception(current_setting('test.other')::uuid,gen_random_uuid(),current_setting('test.other_bag')::uuid,current_setting('test.other_draft')::uuid,0,'Blue lamp other','Lamps','Good');
+select accept_item(current_setting('test.other')::uuid,'b1680000-0000-4000-8000-000000000001','reception_review',current_setting('test.other_draft')::uuid,1,9900);
 -- Three items of store A are past step one; the rest are on sale. Members of A.
 reset role;
 alter table public.items disable trigger items_immutable;

@@ -28,7 +28,6 @@ import { raceStorePolicy } from './store-policy-race.mjs'
 import { raceStoreGuide } from './store-guide-race.mjs'
 import { racePayPalCredentials } from './paypal-credentials-race.mjs'
 import { raceLabelPrintRule } from './label-print-rule-race.mjs'
-import { raceInspectionApproval } from './inspection-operation-race.mjs'
 import { raceAcceptance, raceStagedAcceptance } from './acceptance-race.mjs'
 import pg from 'pg'
 import { randomUUID } from 'node:crypto'
@@ -312,112 +311,6 @@ try {
   console.log(
     'PASS: publication and receipt serialize; concurrent publishers cannot silently replace each other.',
   )
-  const inspectionDraft = randomUUID()
-  const raceInspection = await Promise.all(
-    sessions.map(({ c }) =>
-      c
-        .query(
-          "select save_inspection_draft($1,$2,$3,$4,0,'Test jacket','','') as id",
-          [tenant, randomUUID(), bag, inspectionDraft],
-        )
-        .then(
-          () => 'saved',
-          (e) => {
-            if (e.message.includes('INSPECTION_DRAFT_CHANGED')) return 'stale'
-            throw e
-          },
-        ),
-    ),
-  )
-  if (
-    raceInspection.filter((r) => r === 'saved').length !== 1 ||
-    raceInspection.filter((r) => r === 'stale').length !== 1
-  )
-    throw new Error('Concurrent inspection edits did not reject stale revision')
-  const replayId = randomUUID()
-  const replayInspection = await Promise.all(
-    sessions.map(({ c }) =>
-      c.query(
-        "select save_inspection_draft($1,$2,$3,$4,1,'Updated jacket','Clothes','') as id",
-        [tenant, replayId, bag, inspectionDraft],
-      ),
-    ),
-  )
-  const revisions = await setup.query(
-    'select count(*)::int as count from inspection_draft_revisions where draft_id=$1',
-    [inspectionDraft],
-  )
-  if (
-    replayInspection.some((r) => r.rows[0].id !== replayId) ||
-    revisions.rows[0].count !== 2
-  )
-    throw new Error('Concurrent inspection retry duplicated revision')
-  console.log(
-    'PASS: concurrent inspection edits reject stale revisions; identical retries persist once.',
-  )
-
-  const raceStatus = await Promise.all(
-    [
-      sessions[0].c.query(
-        "select set_inspection_archived($1,$2,$3,$4,2,true,'Duplicate draft')",
-        [tenant, randomUUID(), bag, inspectionDraft],
-      ),
-      sessions[1].c.query(
-        "select save_inspection_draft($1,$2,$3,$4,2,'Competing description','','')",
-        [tenant, randomUUID(), bag, inspectionDraft],
-      ),
-    ].map((p) =>
-      p.then(
-        () => 'saved',
-        (e) => {
-          if (e.message.includes('INSPECTION_DRAFT_CHANGED')) return 'stale'
-          throw e
-        },
-      ),
-    ),
-  )
-  if (
-    raceStatus.filter((r) => r === 'saved').length !== 1 ||
-    raceStatus.filter((r) => r === 'stale').length !== 1
-  )
-    throw new Error('Status/edit race did not reject stale operation')
-  const currentStatus = (
-    await setup.query(
-      'select archived,revision from inspection_current where draft_id=$1',
-      [inspectionDraft],
-    )
-  ).rows[0]
-  const statusRequest = randomUUID()
-  const statusRetries = await Promise.all(
-    sessions.map(({ c }) =>
-      c.query(
-        "select set_inspection_archived($1,$2,$3,$4,$5,$6,'Concurrent status retry') as id",
-        [
-          tenant,
-          statusRequest,
-          bag,
-          inspectionDraft,
-          currentStatus.revision,
-          !currentStatus.archived,
-        ],
-      ),
-    ),
-  )
-  const statusCount = (
-    await setup.query(
-      'select count(*)::int as count from inspection_draft_revisions where draft_id=$1',
-      [inspectionDraft],
-    )
-  ).rows[0].count
-  if (
-    statusCount !== 4 ||
-    statusRetries.some((r) => r.rows[0].id !== statusRequest)
-  )
-    throw new Error('Status retry duplicated revisions')
-  console.log(
-    'PASS: archive/edit race rejects stale operations; concurrent status retries persist once.',
-  )
-
   const receptionId = randomUUID()
   await sessions[0].c.query('select create_reception_session($1,$2,$3)', [
     tenant,
@@ -747,7 +640,6 @@ try {
   console.log(
     'PASS: concurrent approvals of one staged proposal execute once; identical decision retries resolve the original.',
   )
-  await raceInspectionApproval({ setup, sessions, tenant, bag })
   await raceAcceptance({ setup, sessions, tenant, actor: publishingActor })
   await raceStagedAcceptance({
     setup,

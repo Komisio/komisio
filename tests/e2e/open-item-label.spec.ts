@@ -15,16 +15,11 @@ async function accept(f: Fixture, id: string, title: string) {
     ])
   ).rows[0].id
   const draft = randomUUID()
-  await f.db.query('select save_inspection_draft($1,$2,$3,$4,0,$5,$6,$7)', [
-    f.tenant,
-    randomUUID(),
-    bag,
-    draft,
-    title,
-    'Jackets',
-    'Good',
-  ])
-  await f.db.query("select accept_item($1,$2,'inspection_draft',$3,1,20000)", [
+  await f.db.query(
+    'select pg_temp.prepare_bag_reception($1,$2,$3,$4,0,$5,$6,$7)',
+    [f.tenant, randomUUID(), bag, draft, title, 'Jackets', 'Good'],
+  )
+  await f.db.query("select accept_item($1,$2,'reception_review',$3,1,20000)", [
     f.tenant,
     id,
     draft,

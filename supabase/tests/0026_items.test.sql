@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -9,32 +10,32 @@ set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000041","role":"authenticated"}';
 select set_config('test.tenant',create_tenant('Items test','items-test',gen_random_uuid())::text,true);
 -- Explicit opt-in: this fixture exercises agreement enforcement.
-select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"agreementRequiredFor":["review_publication","acceptance"]}'::jsonb);
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"agreementRequiredFor":["acceptance"]}'::jsonb);
 select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Synthetic seller','seller@items.test','')::text,true);
 -- Bag path: receipt, then a draft.
 select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',null)::text,true);
 select set_config('test.draft',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Synthetic jacket','Jackets','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Synthetic jacket','Jackets','Good');
 select set_config('test.item1',gen_random_uuid()::text,true);
-select throws_like($$select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,25000)$$,'%AGREEMENT_REQUIRED%','opt-in policy requires agreement evidence at acceptance');
+select throws_like($$select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'reception_review',current_setting('test.draft')::uuid,1,25000)$$,'%AGREEMENT_REQUIRED%','opt-in policy requires agreement evidence at acceptance');
 select set_config('test.agreement',publish_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'Synthetic terms','Only a test','en',false)::text,true);
-select throws_like($$select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,25000)$$,'%AGREEMENT_REQUIRED%','a published agreement without evidence is not consent');
+select throws_like($$select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'reception_review',current_setting('test.draft')::uuid,1,25000)$$,'%AGREEMENT_REQUIRED%','a published agreement without evidence is not consent');
 select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,'Signed paper 1');
-select throws_like($$select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'inspection_draft',current_setting('test.draft')::uuid,2,25000)$$,'%INSPECTION_DRAFT_CHANGED%','wrong revision rejected');
-select throws_like($$select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'inspection_draft',gen_random_uuid(),1,25000)$$,'%ORIGIN_NOT_FOUND%','unknown draft rejected');
-select throws_like($$select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,0)$$,'%INVALID_INPUT%','zero price rejected');
-select throws_like($$select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'inspection_draft',current_setting('test.draft')::uuid,null,25000)$$,'%INVALID_INPUT%','draft origin needs a revision');
-select is(accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,25000),current_setting('test.item1')::uuid,'bag-path item accepted with staff-recorded evidence');
-select is(accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,25000),current_setting('test.item1')::uuid,'exact replay returns the item');
-select throws_like($$select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,26000)$$,'%REQUEST_CONFLICT%','replay with another price rejected');
-select throws_like($$select accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'inspection_draft',current_setting('test.draft')::uuid,1,25000)$$,'%ITEM_EXISTS%','one item per origin');
+select throws_like($$select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'reception_review',current_setting('test.draft')::uuid,2,25000)$$,'%RECEPTION_REVIEW_CHANGED%','wrong revision rejected');
+select throws_like($$select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'reception_review',gen_random_uuid(),1,25000)$$,'%ORIGIN_NOT_FOUND%','unknown draft rejected');
+select throws_like($$select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'reception_review',current_setting('test.draft')::uuid,1,0)$$,'%INVALID_INPUT%','zero price rejected');
+select throws_like($$select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'reception_review',current_setting('test.draft')::uuid,null,25000)$$,'%INVALID_INPUT%','draft origin needs a revision');
+select is(accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'reception_review',current_setting('test.draft')::uuid,1,25000),current_setting('test.item1')::uuid,'bag-path item accepted with staff-recorded evidence');
+select is(accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'reception_review',current_setting('test.draft')::uuid,1,25000),current_setting('test.item1')::uuid,'exact replay returns the item');
+select throws_like($$select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'reception_review',current_setting('test.draft')::uuid,1,26000)$$,'%REQUEST_CONFLICT%','replay with another price rejected');
+select throws_like($$select accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'reception_review',current_setting('test.draft')::uuid,1,25000)$$,'%ITEM_EXISTS%','one item per origin');
 select set_config('test.terms',(select terms::text from items where id=current_setting('test.item1')::uuid),true);
 select is(current_setting('test.terms')::jsonb->>'evidenceKind','staff_recorded','evidence kind frozen');
 select is(current_setting('test.terms')::jsonb->>'agreementVersionId',current_setting('test.agreement'),'agreement version frozen');
 select is((current_setting('test.terms')::jsonb->>'commissionRatePercent')::numeric,60::numeric,'commission from policy frozen');
 select is(current_setting('test.terms')::jsonb->>'ownership','consignment','consignment ownership');
 select is((current_setting('test.terms')::jsonb->>'salePeriodDays')::int,42,'sale period frozen');
-select is((select custody_kind from items where id=current_setting('test.item1')::uuid),'bag','bag custody referenced');
+select is((select custody_kind from items where id=current_setting('test.item1')::uuid),'garment','garment custody referenced');
 select is((select seller_id from items where id=current_setting('test.item1')::uuid),current_setting('test.seller')::uuid,'seller referenced');
 select is((select price_ore from item_prices where item_id=current_setting('test.item1')::uuid),25000::bigint,'first price row is the accepted price');
 select is((select count(*) from item_events where item_id=current_setting('test.item1')::uuid),3::bigint,'accepted, price_set and provenance events');
@@ -45,9 +46,9 @@ select publish_seller_terms(current_setting('test.tenant')::uuid,gen_random_uuid
 select is((select (terms->>'commissionRatePercent')::numeric from items where id=current_setting('test.item1')::uuid),60::numeric,'frozen commission survives policy and seller changes');
 -- A second draft on the same bag freezes the new effective terms.
 select set_config('test.draft2',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft2')::uuid,0,'Synthetic scarf','Accessories','Fair');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft2')::uuid,0,'Synthetic scarf','Accessories','Fair');
 select set_config('test.item2',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item2')::uuid,'inspection_draft',current_setting('test.draft2')::uuid,1,9900);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item2')::uuid,'reception_review',current_setting('test.draft2')::uuid,1,9900);
 select is((select (terms->>'commissionRatePercent')::numeric from items where id=current_setting('test.item2')::uuid),30::numeric,'seller override frozen on the new item');
 select is((select terms->>'sellerTermsVersion' from items where id=current_setting('test.item2')::uuid),'1','seller terms version recorded');
 -- Garment path: review without custody, then custody.

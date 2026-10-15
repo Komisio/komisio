@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -20,9 +21,9 @@ select receive_bag(current_setting('test.tenant')::uuid,gen_random_uuid(),curren
 select is((select count(*) from consignment_fees where tenant_id=current_setting('test.tenant')::uuid),1::bigint,'two handovers in one seller month have one fee');
 select is((select count(*) from seller_consignment_periods),1::bigint,'period belongs to seller across handovers');
 select set_config('test.draft',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Fee coat','Coats','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Fee coat','Coats','Good');
 select set_config('test.item',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,50000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid,'reception_review',current_setting('test.draft')::uuid,1,50000);
 reset role;
 select komisio_private.accrue_consignment_fees(current_setting('test.period')::uuid,now()+interval '2 months 1 hour','f0000000-0000-4000-8000-000000002931');
 select is((select count(*) from consignment_fees where tenant_id=current_setting('test.tenant')::uuid),3::bigint,'active item renews second and third full months');

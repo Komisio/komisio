@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values ('d1740000-0000-4000-8000-000000000001','workspace-sale@example.test',now());
@@ -9,8 +10,8 @@ select register_seller(:'tenant',gen_random_uuid(),'Synthetic seller','','123') 
 select publish_store_policy(:'tenant',gen_random_uuid(),null,(current_store_policy(:'tenant')->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}'::jsonb);
 select receive_bag_with_agreement(:'tenant',gen_random_uuid(),:'seller','Synthetic',null) as bag \gset
 select gen_random_uuid() as draft, gen_random_uuid() as item \gset
-select save_inspection_draft(:'tenant',gen_random_uuid(),:'bag',:'draft',0,'Synthetic chair','','Good');
-select accept_item(:'tenant',:'item','inspection_draft',:'draft',1,20000);
+select pg_temp.prepare_bag_reception(:'tenant',gen_random_uuid(),:'bag',:'draft',0,'Synthetic chair','','Good');
+select accept_item(:'tenant',:'item','reception_review',:'draft',1,20000);
 select is(seller_workspace_items(:'tenant',:'seller')->'items'->0->>'stage','on_sale','unsold item keeps lifecycle stage');
 select is(seller_workspace_items(:'tenant',:'seller')->'items'->0->>'priceOre','20000','unsold current price remains');
 select ok((seller_workspace_items(:'tenant',:'seller')->'items'->0) ? 'soldPriceOre','sale field exists during full rollout');

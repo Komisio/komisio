@@ -30,17 +30,12 @@ it('rejects partial, repeated, unknown and malformed navigation inputs', () => {
 it('the probe row is not displayed or used as the next cursor', async () => {
   const rows = Array.from({ length: 21 }, (_, i) => ({
     id: `10000000-0000-4000-8000-${String(i + 1).padStart(12, '0')}`,
-    kind: 'saveInspectionDraft',
+    kind: 'sendMessage',
     risk_level: 'low',
     actor_kind: 'agent',
     actor_label: 'fixture',
     proposed_by: id,
-    payload: {
-      bagId: id,
-      draftId: id,
-      expectedRevision: 1,
-      fields: { description: 'Fixture', category: '', condition: '' },
-    },
+    payload: { sellerId: id, locale: 'en', freeText: 'Fixture' },
     expires_at: stamp,
     created_at: stamp,
     status: 'open',

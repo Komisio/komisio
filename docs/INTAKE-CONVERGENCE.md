@@ -1,3 +1,5 @@
+> Inspection update (#458, 2026-10-15): bag inspection now registers items directly through reception. References below to inspection drafts describe the former workflow; its storage, tools and source text have been retired without migration.
+
 # ADR: where the two intake paths meet
 
 Status: accepted with owner answers on 2026-09-12 (see the assumptions table

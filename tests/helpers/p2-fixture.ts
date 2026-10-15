@@ -1,4 +1,5 @@
 import { createRequire } from 'node:module'
+import { readFileSync } from 'node:fs'
 import { randomUUID } from 'node:crypto'
 import { localTestUrl } from './local-services'
 // Loopback-only fixtures. All domain writes run as an identified store owner.
@@ -11,6 +12,15 @@ export async function p2Fixture(email: string) {
     ),
   })
   await db.connect()
+  await db.query(
+    readFileSync(
+      new URL(
+        '../../supabase/tests/bag-reception-fixture.inc',
+        import.meta.url,
+      ),
+      'utf8',
+    ),
+  )
   const actor = (
     await db.query('select id from auth.users where email=$1', [email])
   ).rows[0].id
@@ -71,16 +81,11 @@ export async function p2Fixture(email: string) {
       ])
     ).rows[0].id
     const draft = randomUUID()
-    await db.query('select save_inspection_draft($1,$2,$3,$4,0,$5,$6,$7)', [
-      tenant,
-      randomUUID(),
-      bag,
-      draft,
-      title,
-      'Jackets',
-      'Good',
-    ])
-    await db.query("select accept_item($1,$2,'inspection_draft',$3,1,20000)", [
+    await db.query(
+      'select pg_temp.prepare_bag_reception($1,$2,$3,$4,0,$5,$6,$7)',
+      [tenant, randomUUID(), bag, draft, title, 'Jackets', 'Good'],
+    )
+    await db.query("select accept_item($1,$2,'reception_review',$3,1,20000)", [
       tenant,
       id,
       draft,

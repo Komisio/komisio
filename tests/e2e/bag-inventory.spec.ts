@@ -23,17 +23,12 @@ test('handover shares inline edits, selection and print actions without losing r
     ).rows[0].id
     for (const title of ['Synthetic coat', 'Synthetic jacket']) {
       const draft = randomUUID()
-      await f.db.query('select save_inspection_draft($1,$2,$3,$4,0,$5,$6,$7)', [
-        f.tenant,
-        randomUUID(),
-        bag,
-        draft,
-        title,
-        'Clothing',
-        'Good',
-      ])
       await f.db.query(
-        "select accept_item($1,$2,'inspection_draft',$3,1,20000)",
+        'select pg_temp.prepare_bag_reception($1,$2,$3,$4,0,$5,$6,$7)',
+        [f.tenant, randomUUID(), bag, draft, title, 'Clothing', 'Good'],
+      )
+      await f.db.query(
+        "select accept_item($1,$2,'reception_review',$3,1,20000)",
         [f.tenant, randomUUID(), draft],
       )
     }

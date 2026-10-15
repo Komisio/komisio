@@ -15,7 +15,7 @@ const transfer = z.object({
   toTenant: uuid,
   sellerId: uuid,
   bagId: uuid,
-  draftId: uuid,
+  sessionId: uuid.nullable(),
 })
 const markdown = z.object({
   runId: uuid,

@@ -39,7 +39,7 @@ it('stages acceptance with an integer öre price and the origin revision rule', 
     proposeAcceptanceInput.parse({
       requestId: base.requestId,
       expiresAt: base.expiresAt,
-      originKind: 'inspection_draft',
+      originKind: 'reception_review',
       originId: origin,
       originRevision: 2,
       priceOre: 9900,
@@ -55,31 +55,31 @@ it('rejects float prices, mismatched revisions and unknown keys', () => {
       priceOre: 1,
     },
     {
-      originKind: 'inspection_draft',
+      originKind: 'reception_review',
       originId: origin,
       originRevision: null,
       priceOre: 1,
     },
     {
-      originKind: 'inspection_draft',
+      originKind: 'reception_review',
       originId: origin,
       originRevision: 1,
       priceOre: 0,
     },
     {
-      originKind: 'inspection_draft',
+      originKind: 'reception_review',
       originId: origin,
       originRevision: 1,
       priceOre: 12.5,
     },
     {
-      originKind: 'inspection_draft',
+      originKind: 'reception_review',
       originId: origin,
       originRevision: 1,
       priceOre: '12500',
     },
     {
-      originKind: 'inspection_draft',
+      originKind: 'reception_review',
       originId: origin,
       originRevision: 1,
       priceOre: 100,
@@ -101,4 +101,15 @@ it('maps acceptance error codes for hosts', () => {
     'ORIGIN_NOT_FOUND',
   ])
     expect(operationErrorCode(`boom ${code} here`)).toBe(code)
+})
+
+it('rejects retired inspection acceptance', () => {
+  expect(
+    acceptItemPayload.safeParse({
+      originKind: 'inspection_draft',
+      originId: origin,
+      originRevision: 1,
+      priceOre: 100,
+    }).success,
+  ).toBe(false)
 })

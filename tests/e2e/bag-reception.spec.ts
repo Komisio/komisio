@@ -23,9 +23,16 @@ test('bag reception saves one item at a time with optional photo and inherited s
         f.agreement,
       ])
     ).rows[0].id
+    await f.db.query(
+      "select publish_store_policy($1,$2,(current_store_policy($1)->>'id')::uuid,(current_store_policy($1)->'policy') || '{\"intakeProfile\":\"full\"}')",
+      [f.tenant, randomUUID()],
+    )
     await f.commit()
     await page.setViewportSize({ width: 320, height: 720 })
-    await page.goto(`/intake/bags/${bag}/inspect`)
+    await page.goto(`/intake/bags/${bag}/inspect?view=drafts`)
+    await expect(
+      page.getByText('Äldre utkast och historik', { exact: true }),
+    ).toHaveCount(0)
     await expect(page.locator('.quick-item h2')).not.toBeFocused()
     await expect(
       page.getByText('Synthetic P2 seller', { exact: false }).first(),
@@ -36,11 +43,31 @@ test('bag reception saves one item at a time with optional photo and inherited s
     await page
       .getByLabel(d.quickIntake.description, { exact: true })
       .fill('Synthetic lamp')
+    await page.locator('#quick-category').fill('Synthetic lighting')
+    await page.locator('#quick-condition').fill('Synthetic minor wear')
     await page.getByLabel(d.quickIntake.price, { exact: true }).fill('150')
     await page
       .getByRole('button', { name: d.bagIntake.save, exact: true })
       .click()
     await expect(page.locator('.bag-inventory .inventory-row')).toHaveCount(1)
+    const facts = (
+      await f.db.query(
+        'select komisio_private.item_attributes(tenant_id,id) attributes from items where tenant_id=$1',
+        [f.tenant],
+      )
+    ).rows[0].attributes as { slug: string; value: string }[]
+    expect(facts).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          slug: 'category',
+          value: 'Synthetic lighting',
+        }),
+        expect.objectContaining({
+          slug: 'condition',
+          value: 'Synthetic minor wear',
+        }),
+      ]),
+    )
     await page
       .getByRole('button', { name: d.bagIntake.next, exact: true })
       .click()
@@ -104,8 +131,6 @@ test('bag reception saves one item at a time with optional photo and inherited s
       path: 'private/bag-reception-mobile.png',
       fullPage: true,
     })
-    await page.getByRole('link', { name: d.bagIntake.drafts }).click()
-    await expect(page.getByLabel('Beskrivning av varan')).toBeVisible()
   } finally {
     await f.close()
   }

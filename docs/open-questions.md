@@ -652,3 +652,5 @@ AI accounting drafts (resolved 2026-10-14): owner requests optional Swedish BAS 
 
 Seller bank details (resolved 2026-10-14): owner approves country-aware bank-transfer details per seller and tenant, readable only by the linked seller and owner/admin. Approved payouts retain reviewed details; changes require renewed review before payment. Bank execution remains manual.
 Current item presentation (resolved 2026-10-14): owner approves append-only text and classification corrections and tenant-defined assortment groups. Original agreements and financial records remain unchanged. The owner also approves a tenant category registry with translated names; existing item category text and history are preserved.
+
+Inspection drafts (resolved 2026-10-15, #458): the owner explicitly permits deleting all inspection revisions, including accepted source descriptions, without snapshots or conversion to items. Existing items keep IDs, prices, terms and later corrections. New bag items use direct reception.

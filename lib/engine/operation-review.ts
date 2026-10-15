@@ -6,7 +6,6 @@ import {
   operationRow,
   operationKind,
   publishReceptionReviewPayload,
-  saveInspectionDraftPayload,
   acceptItemPayload,
   recordReturnPayload,
   adjustLedgerPayload,
@@ -18,7 +17,6 @@ import {
   type PendingOperation,
 } from './operations'
 import { readSellerBalance } from './seller-ledger'
-import { inspectionFields } from './inspection'
 import { receptionSession } from './reception'
 
 export const operationReviewInput = z.strictObject({ operationId: z.uuid() })
@@ -51,23 +49,17 @@ export async function readOperationReview(
     throw new Error('OPERATION_NOT_FOUND')
   if (allowedKind && pending.data.kind !== allowedKind)
     throw new Error('OPERATION_NOT_FOUND')
-  if (pending.data.kind === 'saveInspectionDraft') {
-    const p = saveInspectionDraftPayload.parse(pending.data.payload)
-    const [base, current, decision] = await Promise.all([
+  if (pending.data.kind === 'acceptItem') {
+    const payload = acceptItemPayload.safeParse(pending.data.payload)
+    if (!payload.success) throw new Error('OPERATION_NOT_FOUND')
+    const p = payload.data
+    const [existing, decision, currentReview] = await Promise.all([
       client
-        .from('inspection_draft_revisions')
-        .select('description,category,condition')
+        .from('items')
+        .select('id')
         .eq('tenant_id', tenantId)
-        .eq('bag_id', p.bagId)
-        .eq('draft_id', p.draftId)
-        .eq('revision', p.expectedRevision)
-        .single(),
-      client
-        .from('inspection_current')
-        .select('revision,archived')
-        .eq('tenant_id', tenantId)
-        .eq('bag_id', p.bagId)
-        .eq('draft_id', p.draftId)
+        .eq('origin_kind', p.originKind)
+        .eq('origin_id', p.originId)
         .maybeSingle(),
       client
         .from('operation_decisions')
@@ -75,91 +67,16 @@ export async function readOperationReview(
         .eq('tenant_id', tenantId)
         .eq('operation_id', operationId)
         .maybeSingle(),
+      p.originKind === 'reception_review'
+        ? client
+            .from('reception_reviews_current')
+            .select('version')
+            .eq('tenant_id', tenantId)
+            .eq('session_id', p.originId)
+            .maybeSingle()
+        : Promise.resolve({ data: null, error: null }),
     ])
-    if (base.error || current.error || decision.error)
-      throw new Error('OPERATION_NOT_FOUND')
-    const d = decision.data,
-      expired = Date.parse(pending.data.expires_at) <= Date.now()
-    const operation = operationRow.parse({
-      ...pending.data,
-      status: d?.outcome ?? (expired ? 'expired' : 'open'),
-      decision_id: d?.id ?? null,
-      outcome: d?.outcome ?? null,
-      result_id: d?.result_id ?? null,
-      error_code: d?.error_code ?? null,
-      reason: d?.reason ?? null,
-      decided_by: d?.decided_by ?? null,
-      decided_at: d?.created_at ?? null,
-    })
-    const before = inspectionFields.parse(base.data),
-      after = p.fields
-    const fields = ['description', 'category', 'condition'] as const
-    const stale =
-      current.data?.revision !== p.expectedRevision || !!current.data?.archived
-    return {
-      readOnly: true as const,
-      evidenceIsUntrusted: true as const,
-      operation,
-      context: {
-        kind: 'inspection' as const,
-        before,
-        after,
-        changes: fields
-          .filter((f) => before[f] !== after[f])
-          .map((field) => ({
-            field,
-            before: before[field],
-            after: after[field],
-          })),
-        stale,
-        canApprove: !d && !expired && !stale,
-        guidanceOnly: true as const,
-      },
-    }
-  }
-  if (pending.data.kind === 'acceptItem') {
-    const p = acceptItemPayload.parse(pending.data.payload)
-    const [existing, decision, currentDraft, currentReview] = await Promise.all(
-      [
-        client
-          .from('items')
-          .select('id')
-          .eq('tenant_id', tenantId)
-          .eq('origin_kind', p.originKind)
-          .eq('origin_id', p.originId)
-          .maybeSingle(),
-        client
-          .from('operation_decisions')
-          .select(
-            'id,outcome,result_id,error_code,reason,decided_by,created_at',
-          )
-          .eq('tenant_id', tenantId)
-          .eq('operation_id', operationId)
-          .maybeSingle(),
-        p.originKind === 'inspection_draft'
-          ? client
-              .from('inspection_current')
-              .select('revision,archived')
-              .eq('tenant_id', tenantId)
-              .eq('draft_id', p.originId)
-              .maybeSingle()
-          : Promise.resolve({ data: null, error: null }),
-        p.originKind === 'reception_review'
-          ? client
-              .from('reception_reviews_current')
-              .select('version')
-              .eq('tenant_id', tenantId)
-              .eq('session_id', p.originId)
-              .maybeSingle()
-          : Promise.resolve({ data: null, error: null }),
-      ],
-    )
-    if (
-      existing.error ||
-      decision.error ||
-      currentDraft.error ||
-      currentReview.error
-    )
+    if (existing.error || decision.error || currentReview.error)
       throw new Error('OPERATION_NOT_FOUND')
     const d = decision.data,
       expired = Date.parse(pending.data.expires_at) <= Date.now()
@@ -175,12 +92,9 @@ export async function readOperationReview(
       decided_at: d?.created_at ?? null,
     })
     const originCurrent =
-      p.originKind === 'inspection_draft'
-        ? currentDraft.data?.revision === p.originRevision &&
-          !currentDraft.data?.archived
-        : p.originKind === 'reception_review'
-          ? currentReview.data?.version === p.originRevision
-          : true
+      p.originKind === 'reception_review'
+        ? currentReview.data?.version === p.originRevision
+        : true
     // Already accepted by anyone else, or the origin moved on: the proposal is stale.
     const stale = (!!existing.data && !d) || !originCurrent
     return {

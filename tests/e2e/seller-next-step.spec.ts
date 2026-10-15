@@ -66,10 +66,10 @@ test('seller sees the next price step, days left and what happens at period end'
     ).rows[0].id
     const draft = randomUUID()
     await db.query(
-      "select save_inspection_draft($1,$2,$3,$4,0,'Blå ullkappa','Kappor','Bra')",
+      "select pg_temp.prepare_bag_reception($1,$2,$3,$4,0,'Blå ullkappa','Kappor','Bra')",
       [tenant, randomUUID(), bag, draft],
     )
-    await db.query("select accept_item($1,$2,'inspection_draft',$3,1,30000)", [
+    await db.query("select accept_item($1,$2,'reception_review',$3,1,30000)", [
       tenant,
       randomUUID(),
       draft,

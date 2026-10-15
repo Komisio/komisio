@@ -38,17 +38,20 @@ test('seller finds old owned items and pages without losing the account on mobil
     async function item(title: string) {
       const draft = randomUUID(),
         id = randomUUID()
-      await f.db.query('select save_inspection_draft($1,$2,$3,$4,0,$5,$6,$7)', [
-        f.tenant,
-        randomUUID(),
-        bag,
-        draft,
-        title,
-        'Furniture',
-        'Private condition',
-      ])
       await f.db.query(
-        "select accept_item($1,$2,'inspection_draft',$3,1,20000)",
+        'select pg_temp.prepare_bag_reception($1,$2,$3,$4,0,$5,$6,$7)',
+        [
+          f.tenant,
+          randomUUID(),
+          bag,
+          draft,
+          title,
+          'Furniture',
+          'Private condition',
+        ],
+      )
+      await f.db.query(
+        "select accept_item($1,$2,'reception_review',$3,1,20000)",
         [f.tenant, id, draft],
       )
       return id

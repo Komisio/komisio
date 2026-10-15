@@ -13,8 +13,8 @@ reset role;
 insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.tenant')::uuid,'e0000000-0000-4000-8000-000000000002','readonly');
 -- Synthetic history fixtures exercise reads, not the proposal command's preflight.
 insert into pending_operations(id,tenant_id,kind,risk_level,payload,actor_kind,actor_label,proposed_by,expires_at,created_at)
-select ('e1000000-0000-4000-8000-'||lpad(g::text,12,'0'))::uuid,current_setting('test.tenant')::uuid,'saveInspectionDraft','low',
- jsonb_build_object('bagId',gen_random_uuid(),'draftId',gen_random_uuid(),'expectedRevision',1,'fields',jsonb_build_object('description','Fixture '||g,'category','','condition','')),
+select ('e1000000-0000-4000-8000-'||lpad(g::text,12,'0'))::uuid,current_setting('test.tenant')::uuid,'sendMessage','low',
+ jsonb_build_object('sellerId',gen_random_uuid(),'locale','en','freeText','Fixture '||g),
  'agent','page-fixture','e0000000-0000-4000-8000-000000000001',case when g=1 then now()-interval '1 hour' else now()+interval '1 day' end,
  '2026-09-01 12:00:00.123456+00'::timestamptz+(g/5)*interval '1 microsecond'
 from generate_series(1,55) g;
@@ -22,7 +22,7 @@ insert into operation_decisions(id,tenant_id,operation_id,decision,outcome,resul
 select gen_random_uuid(),current_setting('test.tenant')::uuid,('e1000000-0000-4000-8000-'||lpad(g::text,12,'0'))::uuid,
  case when g=2 then 'rejected' else 'approved' end,
  case when g=2 then 'rejected' when g=3 then 'failed' else 'executed' end,
- case when g=4 then gen_random_uuid() end,case when g=3 then 'INSPECTION_DRAFT_CHANGED' else '' end,'fixture','e0000000-0000-4000-8000-000000000001'
+ case when g=4 then gen_random_uuid() end,case when g=3 then 'SELLER_NOT_FOUND' else '' end,'fixture','e0000000-0000-4000-8000-000000000001'
 from generate_series(2,4) g;
 set local role authenticated;
 select is((select count(*) from operation_queue(current_setting('test.tenant')::uuid)),50::bigint,'legacy RPC remains newest 50');

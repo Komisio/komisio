@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -14,13 +15,13 @@ select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random
 select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}'::jsonb);
 select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.s1')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
 select set_config('test.d1',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d1')::uuid,0,'Blue wool jacket','Jackets','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d1')::uuid,0,'Blue wool jacket','Jackets','Good');
 select set_config('test.i1',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i1')::uuid,'inspection_draft',current_setting('test.d1')::uuid,1,20000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i1')::uuid,'reception_review',current_setting('test.d1')::uuid,1,20000);
 select set_config('test.d2',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Red coat','Coats','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Red coat','Coats','Good');
 select set_config('test.i2',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i2')::uuid,'inspection_draft',current_setting('test.d2')::uuid,1,30000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i2')::uuid,'reception_review',current_setting('test.d2')::uuid,1,30000);
 select set_config('test.p',gen_random_uuid()::text,true);
 select register_purchase(current_setting('test.tenant')::uuid,current_setting('test.p')::uuid,'Vintage lamp',15000,'Auction receipt 7',false);
 select set_config('test.i3',gen_random_uuid()::text,true);
@@ -32,6 +33,6 @@ select lives_ok($$select edit_item_description(current_setting('test.tenant')::u
 select is(item_label_facts(current_setting('test.tenant')::uuid,current_setting('test.i2')::uuid)->>'title','Red wool coat','current labels use correction');
 select lives_ok($$select edit_item_description(current_setting('test.tenant')::uuid,current_setting('test.edit')::uuid,current_setting('test.i2')::uuid,'Red coat','Red wool coat')$$,'exact retry remains safe');
 select throws_ok($$select edit_item_description(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.i2')::uuid,'Red coat','Overwrite')$$,'P0001','ITEM_CHANGED','stale edits do not overwrite');
-select is((select description from inspection_draft_revisions where tenant_id=current_setting('test.tenant')::uuid and draft_id=current_setting('test.d2')::uuid),'Red coat','accepted evidence is untouched');
+select is((select a->>'value' from reception_reviews r cross join lateral jsonb_array_elements(r.suggestions->'attributes') a where r.session_id=current_setting('test.d2')::uuid and r.version=1 and a->>'slug'='description'),'Red coat','accepted evidence is untouched');
 select * from finish();
 rollback;

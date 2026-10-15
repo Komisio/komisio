@@ -11,7 +11,6 @@ export type FlowMetric = z.infer<typeof metric>
 export const flowSnapshot = z.object({
   asOf: z.iso.datetime({ offset: true }),
   dropoffs: metric,
-  drafts: metric,
   reception: z.partialRecord(receptionStage, metric),
   inventory: z.partialRecord(itemStage, metric),
 })

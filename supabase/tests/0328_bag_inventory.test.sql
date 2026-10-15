@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -14,8 +15,8 @@ select set_config('test.otherbag',receive_bag_with_agreement(current_setting('te
 do $$ declare draft uuid; session uuid; begin
  for n in 1..27 loop
   draft:=gen_random_uuid();
-  perform save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),case when n=27 then current_setting('test.otherbag')::uuid else current_setting('test.bag')::uuid end,draft,0,'Synthetic item '||lpad(n::text,2,'0'),'Clothing','Good');
-  perform accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'inspection_draft',draft,1,20000);
+  perform pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),case when n=27 then current_setting('test.otherbag')::uuid else current_setting('test.bag')::uuid end,draft,0,'Synthetic item '||lpad(n::text,2,'0'),'Clothing','Good');
+  perform accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'reception_review',draft,1,20000);
  end loop;
  session:=gen_random_uuid();
  perform create_bag_reception(current_setting('test.tenant')::uuid,session,current_setting('test.seller')::uuid,current_setting('test.bag')::uuid);

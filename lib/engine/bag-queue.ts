@@ -9,7 +9,7 @@ const reference = z
 export const bagQueueNavigation = z
   .object({
     seller: z.uuid().optional(),
-    state: z.enum(['unstarted', 'drafts', 'open', 'completed']).optional(),
+    state: z.enum(['unstarted', 'open', 'completed']).optional(),
     bag: z
       .string()
       .trim()

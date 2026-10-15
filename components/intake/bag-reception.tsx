@@ -147,9 +147,6 @@ export async function BagReception({
         <Link className="text-link" href={`/intake/bags/${bagId}`}>
           {d.inspection.bag}
         </Link>
-        <Link className="text-link" href="?view=drafts">
-          {b.drafts}
-        </Link>
       </nav>
     </div>
   )

@@ -4,9 +4,6 @@ const scope = z.enum([
   'reception:preview',
   'reception:photos',
   'reception:propose',
-  'inspection:read',
-  'inspection:preview',
-  'inspection:propose',
   'items:read',
   'items:propose',
   'economy:read',
@@ -52,11 +49,7 @@ export const mcpConfig = z.strictObject({
  * until those reads become SQL functions (docs/HOSTED-MCP.md).
  */
 export const hostedExcludedTools = new Set([
-  'komisio_read_inspection_operation',
   'komisio_read_reception_operation',
-  'komisio_preview_inspection',
-  'komisio_prepare_inspection_reception',
-  'komisio_read_inspection',
   'komisio_read_reception_history',
   'komisio_read_reception_photo',
 ])

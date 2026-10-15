@@ -1,3 +1,5 @@
+> Inspection update (#458, 2026-10-15): bag inspection now registers items directly through reception. References below to inspection drafts describe the former workflow; its storage, tools and source text have been retired without migration.
+
 # Roadmap status at the production launch, 2026-09-16
 
 Written by Fable on the day production opened (`app.komisio.com`), at the

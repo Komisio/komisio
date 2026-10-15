@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -15,13 +16,13 @@ select record_agreement_evidence(current_setting('test.a')::uuid,gen_random_uuid
 select publish_store_policy(current_setting('test.a')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.a')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}'::jsonb);
 select set_config('test.bag',receive_bag_with_agreement(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.s1')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
 select set_config('test.d1',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d1')::uuid,0,'Blue wool jacket','Jackets','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d1')::uuid,0,'Blue wool jacket','Jackets','Good');
 select set_config('test.i1',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.a')::uuid,current_setting('test.i1')::uuid,'inspection_draft',current_setting('test.d1')::uuid,1,20000);
+select accept_item(current_setting('test.a')::uuid,current_setting('test.i1')::uuid,'reception_review',current_setting('test.d1')::uuid,1,20000);
 select set_config('test.d2',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Red coat','Coats','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Red coat','Coats','Good');
 select set_config('test.i2',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.a')::uuid,current_setting('test.i2')::uuid,'inspection_draft',current_setting('test.d2')::uuid,1,30000);
+select accept_item(current_setting('test.a')::uuid,current_setting('test.i2')::uuid,'reception_review',current_setting('test.d2')::uuid,1,30000);
 select record_sale(current_setting('test.a')::uuid,gen_random_uuid(),'manual','K-1','2026-09-10T10:00:00Z','SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.i2'),'priceOre',30000)));
 select set_config('test.p',gen_random_uuid()::text,true);
 select register_purchase(current_setting('test.a')::uuid,current_setting('test.p')::uuid,'Vintage lamp',15000,'Auction receipt 7',false);
@@ -44,11 +45,11 @@ select is((select stage from lifecycle_queue(current_setting('test.a')::uuid,nul
 select is((select count(*) from sellers where tenant_id=current_setting('test.b')::uuid and email='anna@tr.test'),1::bigint,'seller copied to the target store');
 select is((select seller_id::text from bag_receipts where id=(current_setting('test.r')::jsonb->>'bagId')::uuid),current_setting('test.r')::jsonb->>'sellerId','bag belongs to the copied seller');
 select ok((select note from bag_receipts where id=(current_setting('test.r')::jsonb->>'bagId')::uuid) like 'Transfer from Transfer store A%Moved for the autumn window','bag note names the source and the note');
-select is((select description from inspection_draft_revisions where tenant_id=current_setting('test.b')::uuid and draft_id=(current_setting('test.r')::jsonb->>'draftId')::uuid and revision=1),'Blue wool jacket','draft carries the description');
-select is((select category from inspection_draft_revisions where tenant_id=current_setting('test.b')::uuid and draft_id=(current_setting('test.r')::jsonb->>'draftId')::uuid and revision=1),'Jackets','draft carries the category');
+select is((select a->>'observation' from reception_source_revisions r cross join lateral jsonb_array_elements(r.sources) a where r.session_id=(current_setting('test.r')::jsonb->>'sessionId')::uuid and r.revision=1 and a->>'reference'='description'),'Blue wool jacket','draft carries the description');
+select is((select a->>'observation' from reception_source_revisions r cross join lateral jsonb_array_elements(r.sources) a where r.session_id=(current_setting('test.r')::jsonb->>'sessionId')::uuid and r.revision=1 and a->>'reference'='category'),'Jackets','draft carries the category');
 -- The condition travels with the garment: the receiving staff must see "small
 -- tear at the cuff" without re-inspecting a garment somebody already inspected.
-select is((select condition from inspection_draft_revisions where tenant_id=current_setting('test.b')::uuid and draft_id=(current_setting('test.r')::jsonb->>'draftId')::uuid and revision=1),'Good','draft carries the condition');
+select is((select a->>'observation' from reception_source_revisions r cross join lateral jsonb_array_elements(r.sources) a where r.session_id=(current_setting('test.r')::jsonb->>'sessionId')::uuid and r.revision=1 and a->>'reference'='condition'),'Good','draft carries the condition');
 select is(transfer_item(current_setting('test.a')::uuid,current_setting('test.i1')::uuid,current_setting('test.b')::uuid,current_setting('test.t')::uuid,'Moved for the autumn window')->>'bagId',current_setting('test.r')::jsonb->>'bagId','replay by id returns the same bag');
 select throws_ok($$select transfer_item(current_setting('test.a')::uuid,current_setting('test.i1')::uuid,current_setting('test.b')::uuid,gen_random_uuid())$$,'ITEM_ENDED','a second transfer of an ended item is refused');
 -- The seller's balance stays where the sale happened.
@@ -58,9 +59,10 @@ select is((seller_balance(current_setting('test.b')::uuid,(current_setting('test
 select publish_store_policy(current_setting('test.b')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.b')::uuid)->'policy') || '{"agreementRequiredFor":["review_publication","acceptance"],"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}'::jsonb);
 select set_config('test.agreement_b',publish_seller_agreement(current_setting('test.b')::uuid,gen_random_uuid(),null,'Store B terms','Only a test','en',false)::text,true);
 select set_config('test.i4',gen_random_uuid()::text,true);
-select throws_ok($$select accept_item(current_setting('test.b')::uuid,current_setting('test.i4')::uuid,'inspection_draft',(current_setting('test.r')::jsonb->>'draftId')::uuid,1,18000)$$,'AGREEMENT_REQUIRED','target store needs its own agreement evidence');
+select throws_ok($$select quick_receive_from_bag(current_setting('test.b')::uuid,current_setting('test.i4')::uuid,(current_setting('test.r')::jsonb->>'sessionId')::uuid,(current_setting('test.r')::jsonb->>'sellerId')::uuid,1,'{"description":"Blue wool jacket"}',18000,(current_setting('test.r')::jsonb->>'bagId')::uuid)$$,'AGREEMENT_REQUIRED','target store needs its own agreement evidence');
 select record_agreement_evidence(current_setting('test.b')::uuid,gen_random_uuid(),(current_setting('test.r')::jsonb->>'sellerId')::uuid,current_setting('test.agreement_b')::uuid,'Signed at store B');
-select lives_ok($$select accept_item(current_setting('test.b')::uuid,current_setting('test.i4')::uuid,'inspection_draft',(current_setting('test.r')::jsonb->>'draftId')::uuid,1,18000)$$,'target store accepts the transferred item under its own terms');
+select set_config('test.target_result',quick_receive_from_bag(current_setting('test.b')::uuid,current_setting('test.i4')::uuid,(current_setting('test.r')::jsonb->>'sessionId')::uuid,(current_setting('test.r')::jsonb->>'sellerId')::uuid,1,'{"description":"Blue wool jacket"}',18000,(current_setting('test.r')::jsonb->>'bagId')::uuid)::text,true);
+select set_config('test.i4',current_setting('test.target_result')::jsonb->>'itemId',true);
 select is((select seller_id::text from items where id=current_setting('test.i4')::uuid),current_setting('test.r')::jsonb->>'sellerId','item in the target store belongs to the copied seller');
 reset role;
 insert into tenant_members(tenant_id,user_id,role) values (current_setting('test.a')::uuid,'f0000000-0000-4000-8000-000000000972','staff'),(current_setting('test.b')::uuid,'f0000000-0000-4000-8000-000000000972','staff');
@@ -78,9 +80,9 @@ select quick_receive(current_setting('test.a')::uuid,gen_random_uuid(),current_s
 select set_config('test.lampitem',(select id from items where tenant_id=current_setting('test.a')::uuid and origin_kind='reception_review' and origin_id=current_setting('test.lampsession')::uuid)::text,true);
 select set_config('test.lampmove',gen_random_uuid()::text,true);
 select set_config('test.lampresult',transfer_item(current_setting('test.a')::uuid,current_setting('test.lampitem')::uuid,current_setting('test.b')::uuid,current_setting('test.lampmove')::uuid,'Moved to the sister store')::text,true);
-select set_config('test.lampdraft',(select attributes from inspection_draft_revisions where tenant_id=current_setting('test.b')::uuid and draft_id=(current_setting('test.lampresult')::jsonb->>'draftId')::uuid and revision=1)::text,true);
-select is((select a->>'value' from jsonb_array_elements(current_setting('test.lampdraft')::jsonb) a where a->>'slug'='socket'),'e27','the socket travels with the lamp');
-select is((select a->>'value' from jsonb_array_elements(current_setting('test.lampdraft')::jsonb) a where a->>'slug'='height_cm'),'45','and so does the height');
-select is((select a->>'value' from jsonb_array_elements(current_setting('test.lampdraft')::jsonb) a where a->>'slug'='description'),'Brass table lamp','and the description');
+select set_config('test.lampdraft',(select sources from reception_source_revisions where tenant_id=current_setting('test.b')::uuid and session_id=(current_setting('test.lampresult')::jsonb->>'sessionId')::uuid and revision=1)::text,true);
+select is((select a->>'observation' from jsonb_array_elements(current_setting('test.lampdraft')::jsonb) a where a->>'reference'='socket'),'e27','the socket travels with the lamp');
+select is((select a->>'observation' from jsonb_array_elements(current_setting('test.lampdraft')::jsonb) a where a->>'reference'='height_cm'),'45','and so does the height');
+select is((select a->>'observation' from jsonb_array_elements(current_setting('test.lampdraft')::jsonb) a where a->>'reference'='description'),'Brass table lamp','and the description');
 
 select * from finish();

@@ -101,21 +101,9 @@ reads use table access instead of SQL functions are not registered for hosted
 grants; they stay available in the local adapter until their reads move to
 SQL:
 
-`komisio_read_inspection_operation`, `komisio_read_reception_operation`,
-`komisio_preview_inspection`, `komisio_prepare_inspection_reception`,
-`komisio_read_inspection`, `komisio_read_reception_history`,
-`komisio_read_reception_photo`.
-
-The four inspection reads share one read of a bag's drafts and their history;
-the reception history reads three tables of its own. The photo read takes
-bytes from storage, which a connector cannot do at all and never will. The
-first six stay local until their reads become SQL functions.
-
-Listing the bags a store has received became `bag_queue_page` on 2026-09-16,
-registered under `reception:read`, so `komisio_list_bags` left the list with
-it. It returns the same twenty-one rows in the same order with the seller name
-embedded; which page exists is still decided by the caller from the
-twenty-first row, which is cheaper than a count.
+`komisio_read_reception_operation`, `komisio_read_reception_history` and
+`komisio_read_reception_photo` remain local-only. Inspection tools and scopes
+were removed in #458. Existing grants do not restore retired tools.
 
 Reading one reception became `reception_session_detail` on 2026-09-16, which
 returns the session, its seller, the current revision and that revision's

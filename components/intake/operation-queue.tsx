@@ -175,11 +175,7 @@ function Decision({
           disabled={!!attempted || reload}
           onChange={(e) => setConfirmed(e.target.checked)}
         />
-        {operation.kind === 'saveInspectionDraft'
-          ? d.confirmInspection
-          : operation.kind === 'acceptItem'
-            ? d.confirmAcceptance
-            : d.confirm}
+        {operation.kind === 'acceptItem' ? d.confirmAcceptance : d.confirm}
       </label>
       {error && <p role="alert">{error}</p>}
       {reload ? (
@@ -196,11 +192,9 @@ function Decision({
             {d.lockedDecision}:{' '}
             {attempted === 'reject'
               ? d.reject
-              : operation.kind === 'saveInspectionDraft'
-                ? d.saveDraft
-                : operation.kind === 'acceptItem'
-                  ? d.acceptItem
-                  : d.approve}
+              : operation.kind === 'acceptItem'
+                ? d.acceptItem
+                : d.approve}
           </p>
           <Button type="button" disabled={busy} onClick={() => void send()}>
             {busy ? d.busy : d.retrySame}
@@ -211,11 +205,9 @@ function Decision({
           <Button type="submit" value="approve" disabled={busy || !canApprove}>
             {busy
               ? d.busy
-              : operation.kind === 'saveInspectionDraft'
-                ? d.saveDraft
-                : operation.kind === 'acceptItem'
-                  ? d.acceptItem
-                  : d.approve}
+              : operation.kind === 'acceptItem'
+                ? d.acceptItem
+                : d.approve}
           </Button>
           <Button
             type="submit"
@@ -347,16 +339,14 @@ export function OperationQueue({
                   href={
                     o.payload.originKind === 'reception_review'
                       ? `/intake/reception/${o.payload.originId}`
-                      : o.payload.originKind === 'purchase'
-                        ? '/intake/purchases'
-                        : `/intake/bags?draft=${o.payload.originId}`
+                      : '/intake/purchases'
                   }
                 >
                   {d.openOrigin}
                 </Link>{' '}
                 · {d.originKinds[o.payload.originKind]}
                 {o.payload.originRevision !== null
-                  ? ` · ${d.draftVersion} ${o.payload.originRevision}`
+                  ? ` · ${d.reviewVersion} ${o.payload.originRevision}`
                   : ''}
               </p>
               <p>
@@ -469,20 +459,7 @@ export function OperationQueue({
                 {o.payload.profile.accepts}
               </p>
             </div>
-          ) : (
-            <>
-              <p>
-                <Link
-                  className="text-link"
-                  href={`/intake/bags/${o.payload.bagId}/inspect?draft=${o.payload.draftId}`}
-                >
-                  {d.openInspection}
-                </Link>{' '}
-                · {d.draftVersion} {o.payload.expectedRevision}
-              </p>
-              <p>{o.payload.fields.description}</p>
-            </>
-          )}
+          ) : null}
           {!reviewContext && (
             <Link className="text-link" href={`/intake/operations/${o.id}`}>
               {d.reviewProposal}
@@ -530,25 +507,6 @@ export function OperationQueue({
               )}
               {!o.outcome && reviewContext.stale && (
                 <p role="alert">{d.staleContext}</p>
-              )}
-            </section>
-          )}
-          {reviewContext?.kind === 'inspection' && (
-            <section aria-label={d.inspectionChanges}>
-              <h3>{d.inspectionChanges}</h3>
-              {reviewContext.changes.map((change) => (
-                <div className="intake-notice" key={change.field}>
-                  <strong>{d.fields[change.field]}</strong>
-                  <p>
-                    {d.before}: {change.before || d.emptyField}
-                  </p>
-                  <p>
-                    {d.after}: {change.after || d.emptyField}
-                  </p>
-                </div>
-              ))}
-              {!o.outcome && reviewContext.stale && (
-                <p role="alert">{d.staleInspection}</p>
               )}
             </section>
           )}
@@ -689,11 +647,9 @@ export function OperationQueue({
                 operation={o}
                 canApprove={reviewContext.canApprove}
                 fieldsToConfirm={
-                  reviewContext.kind === 'inspection'
-                    ? reviewContext.changes.map((c) => c.field)
-                    : o.kind === 'publishReceptionReview'
-                      ? receptionReviewFields(o.payload.suggestions)
-                      : []
+                  o.kind === 'publishReceptionReview'
+                    ? receptionReviewFields(o.payload.suggestions)
+                    : []
                 }
                 d={d}
               />

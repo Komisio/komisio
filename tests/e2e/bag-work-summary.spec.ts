@@ -5,7 +5,7 @@ import { p2Fixture } from '../helpers/p2-fixture'
 import { readFileSync } from 'node:fs'
 import d from '../../messages/sv.json' with { type: 'json' }
 
-test('handover progress includes both intake paths and opens unfinished work', async ({
+test('handover progress includes registered items and opens unfinished work', async ({
   page,
 }, info) => {
   const email = `bag-progress-${randomUUID()}@example.test`
@@ -21,22 +21,16 @@ test('handover progress includes both intake paths and opens unfinished work', a
         f.agreement,
       ])
     ).rows[0].id
-    const draft = randomUUID(),
-      acceptedDraft = randomUUID(),
+    const acceptedDraft = randomUUID(),
       pending = randomUUID(),
       received = randomUUID()
-    for (const id of [draft, acceptedDraft])
-      await f.db.query('select save_inspection_draft($1,$2,$3,$4,0,$5,$6,$7)', [
-        f.tenant,
-        randomUUID(),
-        bag,
-        id,
-        'Synthetic draft',
-        'Jackets',
-        'Good',
-      ])
+    for (const id of [acceptedDraft])
+      await f.db.query(
+        'select pg_temp.prepare_bag_reception($1,$2,$3,$4,0,$5,$6,$7)',
+        [f.tenant, randomUUID(), bag, id, 'Synthetic draft', 'Jackets', 'Good'],
+      )
     await f.db.query(
-      "select accept_item($1,$2,'inspection_draft',$3,1,20000)",
+      "select accept_item($1,$2,'reception_review',$3,1,20000)",
       [f.tenant, randomUUID(), acceptedDraft],
     )
     for (const id of [pending, received])
@@ -62,7 +56,6 @@ test('handover progress includes both intake paths and opens unfinished work', a
     await page.goto(`/intake/bags/${bag}/inspect`)
     const summary = page.getByRole('region', { name: d.bagProgress.title })
     await expect(summary.locator('[data-bag-count=accepted]')).toHaveText('2')
-    await expect(summary.locator('[data-bag-count=drafts]')).toHaveText('1')
     await expect(summary.locator('[data-bag-count=receptions]')).toHaveText('1')
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
@@ -87,7 +80,7 @@ test('handover progress includes both intake paths and opens unfinished work', a
       await expect(translated.locator('[data-bag-count=accepted]')).toHaveText(
         '2',
       )
-      await expect(translated.getByRole('link')).toHaveCount(2)
+      await expect(translated.getByRole('link')).toHaveCount(1)
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth),
       ).toBeLessThanOrEqual(320)
@@ -105,21 +98,10 @@ test('handover progress includes both intake paths and opens unfinished work', a
       caret: 'initial',
     })
     await summary
-      .getByRole('link', { name: d.bagProgress.resumeDraft, exact: false })
-      .click()
-    await expect(page).toHaveURL(new RegExp(`draft=${draft}`))
-    await expect(
-      page.getByLabel(d.inspection.description, { exact: true }),
-    ).toHaveValue('Synthetic draft')
-    await summary
       .getByRole('link', { name: d.bagProgress.resumeReception, exact: false })
       .click()
     await expect(page).toHaveURL(new RegExp(`/intake/reception/${pending}$`))
     await f.asActor(f.actor, async () => {
-      await f.db.query(
-        'select set_inspection_archived($1,$2,$3,$4,1,true,$5)',
-        [f.tenant, randomUUID(), bag, draft, 'Synthetic archive'],
-      )
       await f.db.query(
         'select quick_receive_from_bag($1,$2,$3,$4,0,$5,10000,$6)',
         [
@@ -134,7 +116,6 @@ test('handover progress includes both intake paths and opens unfinished work', a
     })
     await page.goto(`/intake/bags/${bag}/inspect`)
     await expect(summary.locator('[data-bag-count=accepted]')).toHaveText('3')
-    await expect(summary.locator('[data-bag-count=drafts]')).toHaveText('0')
     await expect(summary.locator('[data-bag-count=receptions]')).toHaveText('0')
     await expect(summary.getByRole('link')).toHaveCount(0)
     await expect(

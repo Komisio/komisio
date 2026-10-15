@@ -13,7 +13,7 @@ it('accepts each origin with the revision rule that matches it', () => {
   expect(
     intakeCommand.parse({
       ...base,
-      originKind: 'inspection_draft',
+      originKind: 'reception_review',
       originRevision: 3,
       price: '250.00',
     }).action,
@@ -38,15 +38,42 @@ it('accepts each origin with the revision rule that matches it', () => {
 it('rejects mismatched revisions, float-shaped prices and unknown origins', () => {
   for (const patch of [
     { originKind: 'purchase', originRevision: 1, price: '1.00' },
-    { originKind: 'inspection_draft', originRevision: null, price: '1.00' },
-    { originKind: 'inspection_draft', originRevision: 0, price: '1.00' },
-    { originKind: 'inspection_draft', originRevision: 1, price: '1' },
-    { originKind: 'inspection_draft', originRevision: 1, price: '1.5' },
-    { originKind: 'inspection_draft', originRevision: 1, price: 1.5 },
+    { originKind: 'reception_review', originRevision: null, price: '1.00' },
+    { originKind: 'reception_review', originRevision: 0, price: '1.00' },
+    { originKind: 'reception_review', originRevision: 1, price: '1' },
+    { originKind: 'reception_review', originRevision: 1, price: '1.5' },
+    { originKind: 'reception_review', originRevision: 1, price: 1.5 },
     { originKind: 'sale', originRevision: 1, price: '1.00' },
   ])
     expect(
       acceptItemCommand.safeParse({ ...base, ...patch }).success,
       JSON.stringify(patch),
+    ).toBe(false)
+})
+
+it('rejects retired inspection acceptance', () => {
+  expect(
+    acceptItemCommand.safeParse({
+      ...base,
+      originKind: 'inspection_draft',
+      originRevision: 1,
+      price: '1.00',
+    }).success,
+  ).toBe(false)
+})
+
+it('rejects retired inspection API actions', () => {
+  for (const action of ['saveInspectionDraft', 'archiveInspection'])
+    expect(
+      intakeCommand.safeParse({
+        ...base,
+        action,
+        bagId: base.originId,
+        draftId: base.originId,
+        expectedRevision: 1,
+        description: 'Test',
+        category: '',
+        condition: '',
+      }).success,
     ).toBe(false)
 })

@@ -16,7 +16,7 @@ export const acceptItemCommand = z
     action: z.literal('acceptItem'),
     tenantId: z.uuid(),
     requestId: z.uuid(),
-    originKind,
+    originKind: z.enum(['reception_review', 'purchase']),
     originId: z.guid(),
     originRevision: z.number().int().min(1).max(2147483646).nullable(),
     // Exact decimal text at the boundary; öre in the database, never float.

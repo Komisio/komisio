@@ -1088,3 +1088,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-15: Owner-directed work uses ready, unassigned GitHub issues ordered by priority then age, with one branch and PR per issue. Unclear tasks are blocked with a concrete question; external contributions remain owner-managed. Add the task template and owner CODEOWNERS entry.
 
 - 2026-10-15: Astra writes all GitHub communication in English, including issues, comments, PRs, commits, review replies and labels. Conversation language does not change this rule; UI translations remain unaffected.
+
+- 2026-10-15: Owner retires inspection drafts in #458, including accepted source text without snapshots. Keep existing item IDs, prices, terms and corrections; missing source reads stay safe. Bag inspection uses direct reception; draft storage, APIs and MCP tools are removed.

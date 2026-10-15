@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import pg from 'pg'
 import assert from 'node:assert/strict'
 import { randomUUID } from 'node:crypto'
@@ -22,6 +23,12 @@ export async function raceConsignmentFees({ setup, connectionString }) {
       ])
     }
     const [a, b] = clients
+    await a.query(
+      readFileSync(
+        new URL('../supabase/tests/bag-reception-fixture.inc', import.meta.url),
+        'utf8',
+      ),
+    )
     const tenant = (
       await a.query('select create_tenant($1,$2,$3) id', [
         'Fee race',
@@ -87,10 +94,10 @@ export async function raceConsignmentFees({ setup, connectionString }) {
     const draft = randomUUID(),
       item = randomUUID()
     await a.query(
-      "select save_inspection_draft($1,$2,$3,$4,0,'Coat','Coats','Good')",
+      "select pg_temp.prepare_bag_reception($1,$2,$3,$4,0,'Coat','Coats','Good')",
       [tenant, randomUUID(), bag, draft],
     )
-    await a.query("select accept_item($1,$2,'inspection_draft',$3,1,50000)", [
+    await a.query("select accept_item($1,$2,'reception_review',$3,1,50000)", [
       tenant,
       item,
       draft,

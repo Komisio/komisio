@@ -6,13 +6,10 @@ It exposes narrow tools through the same intake engine:
 
 | Tool                                   | Scope                  | Effect                                                                                                         |
 | -------------------------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------- |
-| komisio_list_inspection_operations     | inspection:read        | Page through inspection operation status summaries; no payload, people or decisions                            |
-| komisio_list_reception_operations      | reception:read         | Page through reception operation status summaries; no inspection access                                        |
 | komisio_find_items                     | items:read             | Accepted items by text in title or category and by lifecycle stage, with current price in öre; no names        |
 | komisio_read_item_summary              | items:read             | One item: origin, frozen terms, price series and event kinds; free-text reasons and details omitted            |
 | komisio_find_receipts                  | sales:read             | Recorded sales, newest first, by provider, exact external id or status; totals in öre, no lines, no names      |
 | komisio_read_receipt                   | sales:read             | One sale with its frozen lines: price, commission, seller credit and VAT per line in öre; seller ids only      |
-| komisio_propose_inspection_edit        | inspection:propose     | Stage a complete descriptive edit against an exact saved revision; staff approval required                     |
 | komisio_read_seller_balance            | economy:read           | Engine-computed balance for one seller, in ore; no writes                                                      |
 | komisio_read_seller_ledger             | economy:read           | At most 50 recent events, without private reasons or contacts                                                  |
 | komisio_read_economy_summary           | economy:read           | Store totals for a period of at most one year, per VAT mode and day, liability and open payouts; no writes     |
@@ -35,11 +32,6 @@ It exposes narrow tools through the same intake engine:
 | komisio_propose_day_close_export       | accounting:propose     | Stage the SIE 4 export of one day close; refused without a map or unbalanced; a different person approves      |
 | komisio_read_store_profile             | store:read             | The current public store profile with its version id; untrusted text, no writes                                |
 | komisio_propose_store_profile          | store:propose          | Stage the next profile version naming the current one; publishes only for an owner or admin approver           |
-| komisio_read_inspection_operation      | inspection:read        | Read exact staged inspection before/after and decision; no reception access                                    |
-| komisio_prepare_inspection_reception   | inspection:preview     | Compare a saved draft with reception requirements; unsourced candidates and unassessed next steps only         |
-| komisio_preview_inspection             | inspection:preview     | Return unsaved descriptive before/after at the exact saved base revision; no approval or write                 |
-| komisio_list_bags                      | inspection:read        | Find a printed bag number or page through bag IDs; no seller data or notes                                     |
-| komisio_read_inspection                | inspection:read        | Read bounded saved bag drafts and exact history; no notes, contacts or writes                                  |
 | komisio_read_reception_operation       | reception:read         | Read exact staged proposal sources and agreement terms; no decision                                            |
 | komisio_list_receptions                | reception:read         | Read a bounded queue with shared next-step guidance, not commercial acceptance                                 |
 | komisio_read_reception_history         | reception:read         | Read bounded version summaries, with separate source/review cursors; no images or links                        |
@@ -77,8 +69,8 @@ environment variables to the child process:
   a service-role key, password or refresh token
 - `KOMISIO_MCP_TENANT_ID`: exactly one store UUID
 - `KOMISIO_MCP_SCOPES`: an explicit comma-separated subset of `reception:read`,
-  `reception:preview`, `reception:photos`, `reception:propose`, `inspection:read`, `inspection:preview`, `inspection:propose`, `items:read`, `items:propose`, `economy:read`, `sales:read`, `sales:propose`, `ledger:propose`, `lifecycle:propose`, `communications:propose`, `payouts:propose`, `accounting:read`, `accounting:propose`, `store:read`, `store:propose`.
-  Bag inspection, photo access and staging are separately opt-in.
+  `reception:preview`, `reception:photos`, `reception:propose`, `items:read`, `items:propose`, `economy:read`, `sales:read`, `sales:propose`, `ledger:propose`, `lifecycle:propose`, `communications:propose`, `payouts:propose`, `accounting:read`, `accounting:propose`, `store:read`, `store:propose`.
+  Photo access and staging are separately opt-in.
 
 Have the host launch `node --import tsx mcp/stdio.ts` with the repository as its
 working directory. Use the direct command, not a shell that prints banners to
@@ -138,18 +130,6 @@ stages a complete, source-cited review as a pending operation. The response says
 cannot approve, cannot raise the risk level and cannot skip the preflight checks.
 See [staged operations](../docs/STAGED-OPERATIONS.md) for the contract.
 
-With `inspection:propose`, `komisio_propose_inspection_edit` stages description,
-category and condition for an existing active saved draft. Pass an explicit stable
-request ID, expiry and expected revision; identical retries return the original
-proposal. Staff compare the immutable before/after at the same operation queue,
-confirm changed fields and approve saving, or reject without confirmation.
-A stale or archived draft is never overwritten. There is no price, custody or
-seller acceptance in this operation, and no MCP approval tool.
-See [staged inspection contract](../docs/STAGED-INSPECTION.md).
-
-Future hosted MCP needs audience-bound OAuth, discovery and scoped delegation;
-ordinary Supabase user tokens must not become pass-through HTTP MCP credentials.
-
 ## Tool contract and validation
 
 The tool contract is deliberately strict: closed input schemas, an explicit scope
@@ -174,53 +154,16 @@ names (untrusted data), version references, response and link state, but no cont
 details, capability links or images. A seller-approved review is not a sellable
 item. Cursor paging is read-time, not a snapshot across subsequent calls.
 
-## Saved bag inspection
-
-`komisio_read_inspection` accepts a bag ID, optional selected draft/version,
-archive status and list/history cursors. Each list is bounded to20 rows. The
-response includes explicit continuation IDs, current selected draft and an exact
-historical version when requested. Historical data does not authorize a write;
-engine commands recheck revisions. No source or certainty is invented from draft
-text. Bag notes and contact lookup are excluded; descriptions and change reasons
-remain untrusted staff-entered text. See [shared inspection read](../docs/INSPECTION-READ.md).
-
-Use `komisio_list_bags` with `{ "bag": "K-123" }` to find the bag's ID, then pass
-that ID to `komisio_read_inspection`. An empty argument object lists the newest20
-receipts. Pass the returned `older` or `newer` string to page in one direction.
-Exact number lookup and paging reuse the staff bag queue engine. Results contain
-only bag ID, printed reference and received time; no seller names, contacts or
-bag notes. The tool does not record a new receipt or confirm an individual item.
-
-## Unsaved inspection changes
-
-With explicit `inspection:preview`, call `komisio_preview_inspection` with bag ID,
-draft ID, expected saved revision and proposed description/category/condition
-fields. The shared engine rejects stale or archived drafts and returns exact
-before/after values and a change list. It saves nothing and grants no approval.
-Unchanged suggestions produce an empty change list. Clearing category/condition
-is explicit; description cannot become empty. The result uses the actual saved
-base revision, not a fabricated persisted next version. See
-[inspection preview](../docs/INSPECTION-PREVIEW.md). No model is called by this tool.
-
-## Preparing an inspection draft for reception
-
-`komisio_prepare_inspection_reception` accepts only bag ID, draft ID and the exact
-expected saved revision. It returns candidate description/category/condition,
-actual draft provenance and steps to check. It does not read other receptions,
-prices or agreements, does not assert they are missing, and does not create source
-IDs or a publishable review. The staff inspection page shows the same comparison
-under an expandable preparation section. See [contract](../docs/INSPECTION-RECEPTION-PREVIEW.md).
-
 ## Find pending operations
 
-The two operation list tools accept status (all/open/expired/executed/failed/rejected)
+The reception operation list tool accepts status (all/open/expired/executed/failed/rejected)
 and optional paired beforeCreated/beforeId from nextBefore. Each returns at most20
 summary rows; reuse the cursor exactly without rounding timestamps. Kind is fixed
 by the tool and tenant by the host before database limiting. The list is live;
 return to the first page for current status. Use the corresponding exact operation
 read for details. No payload, identity, actor label or decision reason is listed.
-See [discovery contract](../docs/MCP-OPERATION-DISCOVERY.md). These are local stdio
-tools, not a new hosted AI assistant or delegated credential.
+See [discovery contract](../docs/MCP-OPERATION-DISCOVERY.md). This is a local stdio
+tool, not a new hosted AI assistant or delegated credential.
 
 ### Effective store policy
 

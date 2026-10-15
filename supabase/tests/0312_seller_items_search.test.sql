@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -15,13 +16,13 @@ select set_config('test.tenant',:'tenant',true),set_config('test.bag',:'bag',tru
 do $$ declare d uuid; begin
  for n in 1..27 loop
  d:=gen_random_uuid();
- perform public.save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,d,0,'Seller one item '||n,'Chair','');
- perform public.accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'inspection_draft',d,1,12000);
+ perform pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,d,0,'Seller one item '||n,'Chair','');
+ perform public.accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'reception_review',d,1,12000);
  end loop;
  for n in 1..55 loop
  d:=gen_random_uuid();
- perform public.save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.otherbag')::uuid,d,0,'Seller two item '||n,'Table','');
- perform public.accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'inspection_draft',d,1,15000);
+ perform pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.otherbag')::uuid,d,0,'Seller two item '||n,'Table','');
+ perform public.accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'reception_review',d,1,15000);
  end loop;
 end $$;
 select is(seller_workspace_items_search(:'tenant',:'seller')->>'total','27','counts only this seller beyond page limit');

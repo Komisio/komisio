@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values ('f2490000-0000-4000-8000-000000000001','global-owner@example.test',now());
@@ -20,8 +21,8 @@ begin
  agreement:=public.publish_seller_agreement(t,gen_random_uuid(),null,'Synthetic terms','Only a test','en',false);
  perform public.record_agreement_evidence(t,gen_random_uuid(),seller,agreement,'Synthetic paper');
  bag:=public.receive_bag_with_agreement(t,gen_random_uuid(),seller,'',agreement);
- perform public.save_inspection_draft(t,gen_random_uuid(),bag,draft,0,'Synthetic jacket','Jackets','Good');
- perform public.accept_item(t,i,'inspection_draft',draft,1,2500);
+ perform pg_temp.prepare_bag_reception(t,gen_random_uuid(),bag,draft,0,'Synthetic jacket','Jackets','Good');
+ perform public.accept_item(t,i,'reception_review',draft,1,2500);
  exp:=public.prepare_zettle_product(t,i);
  return next is((select payload->'variants'->0->'price'->>'currencyId' from public.zettle_product_exports where id=exp),cur,'PayPal POS export uses '||cur);
  data:=jsonb_build_array(jsonb_build_object('externalId',receipt,'occurredAt',now(),'currency',cur,'amountOre',2500,'blockedReason',null,'lines',jsonb_build_array(jsonb_build_object('lineNo',1,'reference','I-'||upper(left(i::text,8)),'labelConflict',false,'description','Synthetic','priceOre',2500))));

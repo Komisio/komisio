@@ -99,7 +99,9 @@ export function StocktakeStart({
   const action = useIntakeAction(d.intake),
     router = useRouter()
   const [saved, setSaved] = useState(false)
-  useUnsavedChanges(!saved && action.locked ? d.inspection.leaveDraft : null)
+  useUnsavedChanges(
+    !saved && action.locked ? d.inspection.leaveUnconfirmed : null,
+  )
   return (
     <form
       onSubmit={async (e) => {
@@ -147,7 +149,9 @@ export function StocktakeScan({
     }
   }, [last, action.busy])
   useUnsavedChanges(
-    reference.length > 0 || action.locked ? d.inspection.leaveDraft : null,
+    reference.length > 0 || action.locked
+      ? d.inspection.leaveUnconfirmed
+      : null,
   )
   return (
     <form
@@ -219,7 +223,7 @@ export function StocktakeFinding({
     [saved, setSaved] = useState(false)
   useUnsavedChanges(
     !saved && (reason.length > 0 || action.locked)
-      ? d.inspection.leaveDraft
+      ? d.inspection.leaveUnconfirmed
       : null,
   )
   return (
@@ -295,7 +299,9 @@ export function StocktakeFinish({
 }) {
   const action = useStocktakeAction(d),
     [saved, setSaved] = useState(false)
-  useUnsavedChanges(!saved && action.locked ? d.inspection.leaveDraft : null)
+  useUnsavedChanges(
+    !saved && action.locked ? d.inspection.leaveUnconfirmed : null,
+  )
   return (
     <form
       onSubmit={async (e) => {

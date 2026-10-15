@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { receptionSuggestions } from './reception'
-import { inspectionFields } from './inspection'
 import { storeProfileBody } from './store-profile'
 import { locales } from '../i18n'
 
@@ -11,7 +10,6 @@ export const useAgreementDraftPayload = z.strictObject({ draftId: z.uuid() })
 
 export const operationKind = z.enum([
   'publishReceptionReview',
-  'saveInspectionDraft',
   'acceptItem',
   'recordReturn',
   'adjustLedger',
@@ -41,18 +39,10 @@ export const publishReceptionReviewPayload = z.strictObject({
       s.attributes.every((a) => a.certainty === 'observed'),
   ),
 })
-export const saveInspectionDraftPayload = z.strictObject({
-  bagId: z.uuid(),
-  draftId: z.uuid(),
-  expectedRevision: z.number().int().min(1).max(2147483646),
-  fields: inspectionFields.extend({
-    description: z.string().trim().min(1).max(1000),
-  }),
-})
 // Commercial acceptance (P1 S4): medium risk, so a different person must approve.
 export const acceptItemPayload = z
   .strictObject({
-    originKind: z.enum(['inspection_draft', 'reception_review', 'purchase']),
+    originKind: z.enum(['reception_review', 'purchase']),
     originId: z.guid(),
     originRevision: z.number().int().min(1).max(2147483646).nullable(),
     priceOre: z.number().int().min(1).max(99_999_999_999),
@@ -196,10 +186,6 @@ export const proposeOperationCommand = z.discriminatedUnion('kind', [
     payload: publishReceptionReviewPayload,
   }),
   proposeBase.extend({
-    kind: z.literal('saveInspectionDraft'),
-    payload: saveInspectionDraftPayload,
-  }),
-  proposeBase.extend({
     kind: z.literal('acceptItem'),
     payload: acceptItemPayload,
   }),
@@ -293,10 +279,6 @@ export const operationRow = z.discriminatedUnion('kind', [
     payload: publishReceptionReviewPayload,
   }),
   operationBaseRow.extend({
-    kind: z.literal('saveInspectionDraft'),
-    payload: saveInspectionDraftPayload,
-  }),
-  operationBaseRow.extend({
     kind: z.literal('acceptItem'),
     payload: acceptItemPayload,
   }),
@@ -369,10 +351,6 @@ export const operationErrorCodes = [
   'OPERATION_NOT_FOUND',
   'OPERATION_DECIDED',
   'OPERATION_EXPIRED',
-  'INSPECTION_NOT_FOUND',
-  'INSPECTION_DRAFT_CHANGED',
-  'INSPECTION_ARCHIVED',
-  'INSPECTION_UNCHANGED',
   'ORIGIN_NOT_FOUND',
   'ITEM_EXISTS',
   'CUSTODY_REQUIRED',

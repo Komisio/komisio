@@ -1,3 +1,5 @@
+> Inspection update (#458, 2026-10-15): bag inspection now registers items directly through reception. References below to inspection drafts describe the former workflow; its storage, tools and source text have been retired without migration.
+
 # Functional roadmap: capabilities and proposed delivery order
 
 Status: owner-selected evolving development baseline, 2026-09-12.
@@ -28,11 +30,10 @@ lookup. Disabled handover settings have a direct owner/admin activation link.
 The store flow combines editable internal instructions with a live work view,
 including pending announcements separately from goods received. The selected
 live view can be bookmarked. Receiving now pages through registered items
-from both quick reception and inspected drafts, with current lifecycle state
-and actual sold price where recorded. Saved draft summaries are compact;
-editing and history remain available. Registered items and existing drafts
-are observable facts. Staff can explicitly mark a whole drop-off as processed
-when no drafts or receptions remain, and reopen it with a reason. This does not
+through the shared reception path, with current lifecycle state and actual sold
+price where recorded. Inspection drafts were retired in #458. Staff can mark a
+whole drop-off as processed when no receptions remain, and reopen it with a
+reason. Registered items are observable facts; their presence does not
 establish a reliable count of physically unregistered goods; never infer that
 count from an estimate or the first registered item. Instructions do not execute
 store policy.
@@ -324,7 +325,7 @@ not every legacy capability in that row or readiness for an external pilot.
 
 | Earlier capability                                                                                                                                                                         | New Komisio                                                                                                                                                                                                                                                           | Form                | Phase                                      |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------ |
-| Seller submission (bag) with forecast and verified item counts, statuses Draft→Submitted→Verified→Completed, calendar with daily capacity, intake workspace                                | Bag receipt (done), inspection drafts (done), reception queue (done); capacity and calendar as a policy plus a queue view; "verify with seller" and "complete intake" as engine facts                                                                                 | Engine, UI          | Partial → P1                               |
+| Seller submission (bag) with forecast and verified item counts, statuses Draft→Submitted→Verified→Completed, calendar with daily capacity, intake workspace                                | Bag receipt (done), direct bag registration (done), reception queue (done); capacity and calendar as a policy plus a queue view; "verify with seller" and "complete intake" as engine facts                                                                                 | Engine, UI          | Partial → P1                               |
 | Seller creates a box in the app: size, estimated items, unsold choice (100 hours / charity / return), note, QR to open a locker compartment                                                | Self drop-off: seller creates a handover in the app, gets a QR, staff or a locker records custody by scanning it. Locker hardware is an integration                                                                                                                   | Engine, Integration | P3                                         |
 | Staff item registration on mobile: photos, vision analysis, title, description, price, category, product, dimensions, status, print label; barcode scanner to open an item                 | Single-garment reception baseline: photos, evidence, model proposal, staff review; per-item seller approval is an opt-in tenant policy, by default the store sets the price under the seller's delegated consent (decided 2026-09-12). Mobile staff surface reuses it | Engine, UI          | Implemented baseline (mobile staff UI: P1) |
 | Smart intake (staff web and seller mobile): images → draft item with name, description, price, matched product, dimensions, duplicates, confidence, "why" explanation; edit; submit        | Reception with optional assistance adapter (live provider unverified) plus per-fact confirmation (future slice) and duplicate check (see 3.4)                                                                                                                         | Engine, UI          | Partial → P1                               |

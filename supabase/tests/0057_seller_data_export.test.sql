@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -16,9 +17,9 @@ select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random
 select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}');
 select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
 select set_config('test.draft',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Jacket','Jackets','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Jacket','Jackets','Good');
 select set_config('test.item',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,50000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid,'reception_review',current_setting('test.draft')::uuid,1,50000);
 select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','K-1','2026-09-10T10:00:00Z','SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item'),'priceOre',50000)));
 select set_config('test.payout',gen_random_uuid()::text,true);
 select request_payout(current_setting('test.tenant')::uuid,current_setting('test.payout')::uuid,current_setting('test.seller')::uuid,10000);
@@ -33,7 +34,7 @@ select is(jsonb_array_length(current_setting('test.export')::jsonb->'terms'),1,'
 select is(current_setting('test.export')::jsonb->'terms'->0->>'notes','Private note','terms notes are the seller''s data and included');
 select is(jsonb_array_length(current_setting('test.export')::jsonb->'agreementEvidence'),1,'only this seller''s evidence');
 select is(jsonb_array_length(current_setting('test.export')::jsonb->'bags'),1,'only this seller''s bag');
-select is(jsonb_array_length(current_setting('test.export')::jsonb->'inspectionDrafts'),1,'draft revisions through the bag');
+select ok(not (current_setting('test.export')::jsonb ? 'inspectionDrafts'),'export omits retired inspection data');
 select is(jsonb_array_length(current_setting('test.export')::jsonb->'items'),1,'items');
 select cmp_ok(jsonb_array_length(current_setting('test.export')::jsonb->'itemEvents'),'>=',2,'item events through the items');
 select cmp_ok(jsonb_array_length(current_setting('test.export')::jsonb->'itemPrices'),'>=',1,'item prices through the items');

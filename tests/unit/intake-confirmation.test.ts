@@ -76,7 +76,7 @@ describe('intake result confirmation', () => {
       toTenant: otherId,
       sellerId: requestId,
       bagId: requestId,
-      draftId: requestId,
+      sessionId: requestId,
     }
     expect(confirmsIntakeResult(input, reply(saved))).toBe(true)
     expect(
@@ -86,7 +86,7 @@ describe('intake result confirmation', () => {
       { transferred: false },
       { toTenant: tenantId },
       { bagId: null },
-      { draftId: 'missing' },
+      { sessionId: 'missing' },
       { sellerId: '' },
       { replayed: null },
     ])

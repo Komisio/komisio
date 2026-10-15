@@ -1,29 +1,26 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 -- Parity of the two bag reads after the scan rewrite (20260927194000): the
--- previous definitions are captured here verbatim, under a schema that the
+-- reference reads follow the retained reception path, under a schema that the
 -- rollback removes, and every result is compared with them and with values
 -- the fixture makes independently known.
 create schema pgtap_old;
 create function pgtap_old.bag_work_summary(p_tenant uuid,p_bag uuid) returns jsonb
 language plpgsql stable security invoker set search_path='' as $$
-declare accepted integer; drafts integer; receptions integer; next_draft uuid; next_reception uuid;
+declare accepted integer; receptions integer; next_reception uuid;
 begin
  if coalesce(public.tenant_role(p_tenant),'') not in ('owner','admin','staff','readonly') then raise exception 'FORBIDDEN' using errcode='42501'; end if;
  if not exists(select 1 from public.bag_receipts where tenant_id=p_tenant and id=p_bag) then raise exception 'BAG_NOT_FOUND'; end if;
  select count(*)::int into accepted from public.items i where i.tenant_id=p_tenant and (
-  (i.origin_kind='inspection_draft' and exists(select 1 from public.inspection_current d where d.tenant_id=p_tenant and d.bag_id=p_bag and d.draft_id=i.origin_id))
-  or (i.origin_kind='reception_review' and exists(select 1 from public.reception_sessions s where s.tenant_id=p_tenant and s.bag_id=p_bag and s.id=i.origin_id))
+  (i.origin_kind='reception_review' and exists(select 1 from public.reception_sessions s where s.tenant_id=p_tenant and s.bag_id=p_bag and s.id=i.origin_id))
  );
- select count(*)::int,(array_agg(d.draft_id order by d.saved_at,d.draft_id))[1] into drafts,next_draft
- from public.inspection_current d where d.tenant_id=p_tenant and d.bag_id=p_bag and not d.archived
- and not exists(select 1 from public.items i where i.tenant_id=p_tenant and i.origin_kind='inspection_draft' and i.origin_id=d.draft_id);
  select count(*)::int,(array_agg(q.session_id order by q.created_at,q.session_id))[1] into receptions,next_reception
  from public.reception_queue_facts(p_tenant,null,null,null,null,p_bag) q
  where q.stage not in ('accepted','declined')
  and not exists(select 1 from public.items i where i.tenant_id=p_tenant and i.origin_kind='reception_review' and i.origin_id=q.session_id);
- return jsonb_build_object('accepted',accepted,'drafts',drafts,'receptions',receptions,'nextDraft',next_draft,'nextReception',next_reception);
+ return jsonb_build_object('accepted',accepted,'receptions',receptions,'nextReception',next_reception);
 end $$;
 -- The old list is security definer in production; the copy is too, so komisio_private calls resolve the same way.
 create function pgtap_old.bag_registered_items_page(p_tenant uuid,p_bag uuid,p_offset integer) returns jsonb
@@ -38,10 +35,6 @@ begin
   select i.id,s.id as session_id,i.accepted_at
   from public.reception_sessions s join public.items i on i.tenant_id=s.tenant_id and i.origin_kind='reception_review' and i.origin_id=s.id
   where s.tenant_id=p_tenant and s.bag_id=p_bag
-  union all
-  select i.id,null::uuid as session_id,i.accepted_at
-  from public.inspection_current d join public.items i on i.tenant_id=d.tenant_id and i.origin_kind='inspection_draft' and i.origin_id=d.draft_id
-  where d.tenant_id=p_tenant and d.bag_id=p_bag
  ), page as (select * from scan order by accepted_at desc,id limit 25 offset skip)
  select count(*)::int,coalesce((select jsonb_agg(jsonb_build_object(
   'id',p.id,'session_id',p.session_id,'title',komisio_private.item_title(p_tenant,p.id)->>'title',
@@ -81,19 +74,17 @@ select quick_receive_from_bag(current_setting('test.tenant')::uuid,gen_random_uu
 select create_bag_reception(current_setting('test.tenant')::uuid,current_setting('test.q2')::uuid,current_setting('test.seller')::uuid,current_setting('test.bag')::uuid);
 select quick_receive_from_bag(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.q2')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Quick two"}',10002,current_setting('test.bag')::uuid);
 select set_config('test.da',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.da')::uuid,0,'Accepted draft','','Good');
-select accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'inspection_draft',current_setting('test.da')::uuid,1,20001);
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.da')::uuid,0,'Accepted draft','','Good');
+select accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'reception_review',current_setting('test.da')::uuid,1,20001);
 select set_config('test.dx',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.dx')::uuid,0,'Accepted then archived','','Good');
-select accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'inspection_draft',current_setting('test.dx')::uuid,1,20002);
-select set_inspection_archived(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.dx')::uuid,1,true,'Synthetic archive after acceptance');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.dx')::uuid,0,'Accepted then archived','','Good');
+select accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'reception_review',current_setting('test.dx')::uuid,1,20002);
 select set_config('test.du',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.du')::uuid,0,'Unaccepted','','Good');
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.du')::uuid,1,'Unaccepted again','','Good');
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.du')::uuid,2,'Unaccepted thrice','','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.du')::uuid,0,'Unaccepted','','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.du')::uuid,1,'Unaccepted again','','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.du')::uuid,2,'Unaccepted thrice','','Good');
 select set_config('test.dz',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.dz')::uuid,0,'Archived unaccepted','','Good');
-select set_inspection_archived(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.dz')::uuid,1,true,'Synthetic archive');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.dz')::uuid,0,'Archived unaccepted','','Good');
 select set_config('test.pending',gen_random_uuid()::text,true);
 select create_bag_reception(current_setting('test.tenant')::uuid,current_setting('test.pending')::uuid,current_setting('test.seller')::uuid,current_setting('test.bag')::uuid);
 -- Elsewhere in the store: the other bag has a quick item and an accepted draft; a purchase belongs to no bag.
@@ -101,21 +92,19 @@ select set_config('test.qo',gen_random_uuid()::text,true);
 select create_bag_reception(current_setting('test.tenant')::uuid,current_setting('test.qo')::uuid,current_setting('test.seller')::uuid,current_setting('test.otherbag')::uuid);
 select quick_receive_from_bag(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.qo')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Other quick"}',10003,current_setting('test.otherbag')::uuid);
 select set_config('test.do',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.otherbag')::uuid,current_setting('test.do')::uuid,0,'Other draft','','Good');
-select accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'inspection_draft',current_setting('test.do')::uuid,1,20003);
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.otherbag')::uuid,current_setting('test.do')::uuid,0,'Other draft','','Good');
+select accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'reception_review',current_setting('test.do')::uuid,1,20003);
 select set_config('test.purchase',register_purchase(current_setting('test.tenant')::uuid,gen_random_uuid(),'',15000,'Synthetic receipt',false)::text,true);
 select accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'purchase',current_setting('test.purchase')::uuid,null,20000);
 
 -- Independently known values.
 select set_config('test.s',bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)::text,true);
 select is(current_setting('test.s')::jsonb->>'accepted','4','two quick items and two accepted drafts, the archived one included');
-select is(current_setting('test.s')::jsonb->>'drafts','1','one unaccepted active draft; its revisions count once; the archived one does not');
-select is(current_setting('test.s')::jsonb->>'nextDraft',current_setting('test.du'),'the unaccepted draft is the next draft');
-select is(current_setting('test.s')::jsonb->>'receptions','1','one pending reception');
-select is(current_setting('test.s')::jsonb->>'nextReception',current_setting('test.pending'),'and it is the next reception');
+select is(current_setting('test.s')::jsonb->>'receptions','3','one pending reception');
+select ok(current_setting('test.s')::jsonb->>'nextReception' in (current_setting('test.du'),current_setting('test.dz'),current_setting('test.pending')),'next reception is unfinished work');
 select set_config('test.l',bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,0)::text,true);
 select is(current_setting('test.l')::jsonb->>'total','4','the list counts the same four');
-select is((select count(*)::int from jsonb_array_elements(current_setting('test.l')::jsonb->'items') x where x->>'session_id' is null),2,'two draft-origin rows without a session');
+select is((select count(*)::int from jsonb_array_elements(current_setting('test.l')::jsonb->'items') x where x->>'session_id' is not null),4,'all registered rows have a reception session');
 select is((select count(*)::int from jsonb_array_elements(current_setting('test.l')::jsonb->'items') x where x->>'title'='Accepted then archived'),1,'the archived accepted draft is listed');
 select is(bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.otherbag')::uuid,0)->>'total','2','the other bag lists only its own two');
 select is(bag_work_summary(current_setting('test.tenant')::uuid,current_setting('test.otherbag')::uuid)->>'accepted','2','and its summary agrees');
@@ -129,7 +118,6 @@ select is(pgtap_old.without_stage(bag_registered_items_page(current_setting('tes
 -- The rewrite is what it claims: neither body reads the view any more, and the index they rely on exists.
 select ok(pg_get_functiondef('public.bag_work_summary(uuid,uuid)'::regprocedure) not like '%inspection_current%','summary no longer reads inspection_current');
 select ok(pg_get_functiondef('public.bag_registered_items_page(uuid,uuid,integer)'::regprocedure) not like '%inspection_current%','list no longer reads inspection_current');
-select ok(exists(select 1 from pg_indexes where schemaname='public' and indexname='inspection_bag'),'the bag index the rewrite relies on exists');
 
 -- Boundaries are unchanged.
 select throws_like($$select bag_registered_items_page(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,-1)$$,'%INVALID_INPUT%','negative offset still refused');

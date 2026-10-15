@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -20,9 +21,9 @@ select receive_bag(current_setting('test.tenant')::uuid,gen_random_uuid(),curren
 select is((select count(*) from consignment_fees),1::bigint,'two handovers in one seller month have one fee');
 select is((select count(*) from seller_consignment_periods),1::bigint,'period belongs to seller across handovers');
 select set_config('test.draft',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Fee coat','Coats','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Fee coat','Coats','Good');
 select set_config('test.item',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,50000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid,'reception_review',current_setting('test.draft')::uuid,1,50000);
 select set_config('test.sale',record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','synthetic-fee-sale',now(),'SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item'),'priceOre',50000)))::text,true);
 select is((seller_balance(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid)->>'availableOre')::bigint,10000::bigint,'future sales first cover the monthly fee debt');
 reset role;

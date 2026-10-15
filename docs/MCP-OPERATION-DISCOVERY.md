@@ -1,9 +1,8 @@
 # Scoped discovery of staged operations
 
-An agent can currently read a known operation but cannot discover pending IDs.
-Add komisio_list_reception_operations (reception:read) and
-komisio_list_inspection_operations (inspection:read) through the shared paged
-engine. Tool names pin publishReceptionReview / saveInspectionDraft respectively;
+An agent can discover pending reception IDs with
+`komisio_list_reception_operations` (`reception:read`) through the shared paged
+engine. The tool pins `publishReceptionReview`;
 inputs cannot override kind or tenant. Existing identity, role, MFA and RLS checks
 apply per call. These local scopes restrict tools, not the underlying user token.
 
@@ -19,7 +18,7 @@ No proposal payload, contact, actor identity/label, source reference, decision
 reason or image is returned. readOnly/evidenceIsUntrusted/guidanceOnly are explicit.
 Use the existing scoped exact read for details; no agent decision tool is added.
 
-Tests must interleave more than50 proposals of different kinds, prove filtering
+Tests cover more than50 proposals, prove kind filtering
 before limiting and page continuity, keep the old UI RPC compatible, and deny
 unknown kind/status, unpaired cursors, wrong tenant, missing scope and MFA.
 Exercise the real stdio MCP transport with synthetic local data, and rerun the

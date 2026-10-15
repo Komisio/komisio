@@ -52,10 +52,8 @@ describe('handover progress boundary', () => {
       read({
         data: {
           accepted: 1,
-          drafts: -1,
-          receptions: 0,
-          nextDraft: 'not-an-id',
-          nextReception: null,
+          receptions: -1,
+          nextReception: 'not-an-id',
         },
       }),
     ).rejects.toThrow()
@@ -64,12 +62,10 @@ describe('handover progress boundary', () => {
     const result = await read({
       data: {
         accepted: 0,
-        drafts: 1,
         receptions: 0,
-        nextDraft: '30000000-0000-0000-0000-000000000001',
-        nextReception: null,
+        nextReception: '30000000-0000-0000-0000-000000000001',
       },
     })
-    expect(result?.nextDraft).toBe('30000000-0000-0000-0000-000000000001')
+    expect(result?.nextReception).toBe('30000000-0000-0000-0000-000000000001')
   })
 })

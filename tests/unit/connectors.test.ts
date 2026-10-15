@@ -41,7 +41,23 @@ describe('hosted MCP connector', () => {
     expect(resource.resource).toBe('https://app.example.test/api/mcp')
     expect(resource.authorization_servers).toEqual(['https://app.example.test'])
     expect(resource.scopes_supported).not.toContain('reception:photos')
-    expect(connectorScopes).toHaveLength(19)
+    expect(connectorScopes).toHaveLength(16)
+    for (const scope of [
+      'inspection:read',
+      'inspection:preview',
+      'inspection:propose',
+    ]) {
+      expect(resource.scopes_supported).not.toContain(scope)
+      expect(
+        mcpConfig.safeParse({
+          url: 'http://127.0.0.1:54321',
+          key: 'synthetic',
+          token: 'synthetic',
+          tenantId: '11111111-1111-4111-8111-111111111111',
+          scopes: [scope],
+        }).success,
+      ).toBe(false)
+    }
   })
   it('lets login return to the consent page and nowhere else new', () => {
     expect(
@@ -219,6 +235,6 @@ describe('hosted MCP connector', () => {
     expect(hostedToolAllowed('komisio_list_bags')).toBe(true)
     // A photo lives in a storage bucket, which no connector token reaches.
     expect(hostedToolAllowed('komisio_read_reception_photo')).toBe(false)
-    expect(hostedExcludedTools.size).toBe(7)
+    expect(hostedExcludedTools.size).toBe(3)
   })
 })

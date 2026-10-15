@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values ('f0000000-0000-4000-8000-000000000391','evidence-owner@example.test',now());
@@ -13,8 +14,8 @@ select set_config('test.bag',receive_bag_with_agreement(current_setting('test.te
 -- Three jackets and one coat accepted; two jackets sold, one returned, the coat sold.
 create temp table fx(id uuid, draft uuid, title text, category text, price bigint);
 insert into fx values (gen_random_uuid(),gen_random_uuid(),'Blue wool jacket','Jackets',50000),(gen_random_uuid(),gen_random_uuid(),'Red jacket','Jackets',30000),(gen_random_uuid(),gen_random_uuid(),'Green jacket','Jackets',40000),(gen_random_uuid(),gen_random_uuid(),'Long coat','Coats',80000);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,draft,0,title,category,'Good') from fx;
-select accept_item(current_setting('test.tenant')::uuid,id,'inspection_draft',draft,1,price) from fx;
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,draft,0,title,category,'Good') from fx;
+select accept_item(current_setting('test.tenant')::uuid,id,'reception_review',draft,1,price) from fx;
 select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','E-1','2026-09-10T10:00:00Z','SEK',jsonb_build_array(jsonb_build_object('itemId',(select id from fx where title='Blue wool jacket'),'priceOre',45000)));
 select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','E-2','2026-09-11T10:00:00Z','SEK',jsonb_build_array(jsonb_build_object('itemId',(select id from fx where title='Red jacket'),'priceOre',30000)));
 select set_config('test.s3',record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','E-3','2026-09-12T10:00:00Z','SEK',jsonb_build_array(jsonb_build_object('itemId',(select id from fx where title='Green jacket'),'priceOre',40000)))::text,true);

@@ -74,7 +74,7 @@ export default async function Item({
     item.origin_kind === 'reception_review'
       ? `/intake/reception/${item.origin_id}`
       : item.origin_kind === 'inspection_draft'
-        ? `/intake/bags/${String(t.origin.bagId ?? '')}/inspect?draft=${item.origin_id}`
+        ? `/intake/bags/${String(t.origin.bagId ?? '')}/inspect`
         : `/intake/purchases/${item.origin_id}`
   const snapshot = directory?.items.find((row) => row.id === item.id)
   // Use one consistent directory snapshot for the optimistic edit preconditions.

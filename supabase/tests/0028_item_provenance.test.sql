@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -38,20 +39,20 @@ select ok(not(current_setting('test.prov')::jsonb ? 'value') and current_setting
 -- Bag path: a draft saved by an agent proposal cites the staged operation and its approver.
 select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
 select set_config('test.draft',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Synthetic scarf','Accessories','Fair');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Synthetic scarf','Accessories','Fair');
 -- Agents may only edit an existing draft: the proposal produces revision 2.
 select set_config('test.op',gen_random_uuid()::text,true);
-select propose_operation(current_setting('test.tenant')::uuid,current_setting('test.op')::uuid,'saveInspectionDraft',
- jsonb_build_object('bagId',current_setting('test.bag'),'draftId',current_setting('test.draft'),'expectedRevision',1,'fields',jsonb_build_object('description','Synthetic scarf, silk','category','Accessories','condition','Fair')),'prov-agent',now()+interval '1 day');
+select propose_operation(current_setting('test.tenant')::uuid,current_setting('test.op')::uuid,'publishReceptionReview',
+ (select jsonb_build_object('sessionId',session_id,'sourceRevision',source_revision,'previousReviewId',id,'agreementId',agreement_id,'expiresAt',now()+interval '1 day','suggestions',suggestions) from reception_reviews where session_id=current_setting('test.draft')::uuid order by version desc limit 1),'prov-agent',now()+interval '1 day');
 select decide_operation(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.op')::uuid,'approved','');
 select is((select outcome from operation_decisions where operation_id=current_setting('test.op')::uuid),'executed','fixture draft was created by the staged proposal');
 select set_config('test.item2',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item2')::uuid,'inspection_draft',current_setting('test.draft')::uuid,2,9900);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item2')::uuid,'reception_review',current_setting('test.draft')::uuid,2,9900);
 select set_config('test.prov2',(select detail::text from item_events where item_id=current_setting('test.item2')::uuid and kind='provenance'),true);
 select is(current_setting('test.prov2')::jsonb->'stagedOperation'->>'operationId',current_setting('test.op'),'agent proposal cited');
 select is(current_setting('test.prov2')::jsonb->'stagedOperation'->>'actorLabel','prov-agent','agent label cited');
 select is(current_setting('test.prov2')::jsonb->'stagedOperation'->>'decidedBy','f0000000-0000-4000-8000-000000000081','approver cited');
-select is((current_setting('test.prov2')::jsonb->>'revision')::int,2,'draft revision cited');
+select is((current_setting('test.prov2')::jsonb->>'version')::int,2,'review version cited');
 -- Purchases carry no origin provenance.
 select set_config('test.purchase',register_purchase(current_setting('test.tenant')::uuid,gen_random_uuid(),'',15000,'Receipt 9',false)::text,true);
 select set_config('test.item3',gen_random_uuid()::text,true);

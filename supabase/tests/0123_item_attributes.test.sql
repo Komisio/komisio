@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -84,9 +85,9 @@ select is((select a->>'value' from jsonb_array_elements(item_attribute_list(curr
 -- An inspected item answers the same call with its three columns.
 select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
 select set_config('test.draft',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Red coat','Coats','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Red coat','Coats','Good');
 select set_config('test.item2',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item2')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,30000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item2')::uuid,'reception_review',current_setting('test.draft')::uuid,1,30000);
 select is(jsonb_array_length(item_attribute_list(current_setting('test.tenant')::uuid,current_setting('test.item2')::uuid)),3,'an inspected item answers the same call');
 select is((select a->>'value' from jsonb_array_elements(item_attribute_list(current_setting('test.tenant')::uuid,current_setting('test.item2')::uuid)) a where a->>'slug'='condition'),'Good','with its own columns mapped onto the same slugs');
 select is(item_attribute_list(current_setting('test.tenant')::uuid,gen_random_uuid()),null,'an unknown item is null, not an error');

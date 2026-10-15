@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -14,19 +15,19 @@ select set_config('test.bag',receive_bag_with_agreement(current_setting('test.te
 select is(bag_processing(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid)->>'state','open','new receipt is open');
 select set_config('test.request',gen_random_uuid()::text,true);
 select set_config('test.draft',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Lamp','','Good');
-select throws_like($$select set_bag_processing(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.bag')::uuid,0,'completed','')$$,'%BAG_PENDING_WORK%','open drafts prevent completion');
-select set_inspection_archived(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,1,true,'Not proceeding');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Lamp','','Good');
+select throws_like($$select set_bag_processing(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.bag')::uuid,0,'completed','')$$,'%BAG_PENDING_WORK%','unfinished reception prevents completion');
+select accept_item(current_setting('test.tenant')::uuid,gen_random_uuid(),'reception_review',current_setting('test.draft')::uuid,1,25000);
 select is(set_bag_processing(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.bag')::uuid,0,'completed',''),current_setting('test.request')::uuid,'explicit completion');
 select is(set_bag_processing(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.bag')::uuid,0,'completed',''),current_setting('test.request')::uuid,'idempotent retry');
 select is((select count(*) from bag_processing_events where tenant_id=current_setting('test.tenant')::uuid),1::bigint,'one event');
 select is((bag_queue_page(current_setting('test.tenant')::uuid,null,null,null,null)->0)->>'processing_state','completed','queue reports explicit completion');
 select is((select count(*) from flow_dropoffs(current_setting('test.tenant')::uuid,'completed')),1::bigint,'completed filter includes receipt');
-select is((select count(*) from flow_dropoffs(current_setting('test.tenant')::uuid,'drafts')),0::bigint,'completed receipts are absent from unfinished work');
+select is((select count(*) from flow_dropoffs(current_setting('test.tenant')::uuid,'open')),0::bigint,'completed receipts are absent from unfinished work');
 select throws_like($$select set_bag_processing(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.bag')::uuid,0,'completed','Different payload')$$,'%REQUEST_CONFLICT%','request content is frozen');
 select throws_like($$select set_bag_processing(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,0,'open','Correction')$$,'%BAG_PROCESSING_CHANGED%','stale state rejected');
 select throws_like($$select set_bag_processing(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,1,'open','')$$,'%INVALID_INPUT%','reopen requires reason');
-select throws_like($$select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,gen_random_uuid(),0,'New item','','')$$,'%BAG_COMPLETED%','closed bag rejects drafts');
+select throws_like($$select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,gen_random_uuid(),0,'New item','','')$$,'%BAG_COMPLETED%','closed bag rejects prepared receptions');
 select throws_like($$select create_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.bag')::uuid)$$,'%BAG_COMPLETED%','closed bag rejects receptions');
 select lives_ok($$select set_bag_processing(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,1,'open','Another item found')$$,'reopen records correction');
 select is(set_bag_processing(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.bag')::uuid,0,'completed',''),current_setting('test.request')::uuid,'old retry stays idempotent after reopen');

@@ -3,7 +3,7 @@ import { randomUUID, randomBytes } from 'node:crypto'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
-test('both intake origins remain reachable in both handover views on mobile', async ({
+test('registered items remain reachable on mobile, including old inspection URLs', async ({
   page,
 }) => {
   const email = `bag-pages-${randomUUID()}@example.test`
@@ -23,7 +23,7 @@ test('both intake origins remain reachable in both handover views on mobile', as
       if (n % 2 === 1) {
         const draft = randomUUID()
         await f.db.query(
-          'select save_inspection_draft($1,$2,$3,$4,0,$5,$6,$7)',
+          'select pg_temp.prepare_bag_reception($1,$2,$3,$4,0,$5,$6,$7)',
           [
             f.tenant,
             randomUUID(),
@@ -35,7 +35,7 @@ test('both intake origins remain reachable in both handover views on mobile', as
           ],
         )
         await f.db.query(
-          "select accept_item($1,$2,'inspection_draft',$3,1,$4)",
+          "select accept_item($1,$2,'reception_review',$3,1,$4)",
           [f.tenant, randomUUID(), draft, 10000 + n],
         )
         continue
@@ -119,11 +119,6 @@ test('both intake origins remain reachable in both handover views on mobile', as
       )
       await expect(page).toHaveURL(new RegExp(`itemPage=3#bag-registered$`))
       await expect(rows).toHaveCount(3)
-      if (view) {
-        await page.locator('a[href*="draft="]').first().click()
-        await expect(page).toHaveURL(/itemPage=3/)
-        await expect(rows).toHaveCount(3)
-      }
       await links.first().click()
       await expect(page).toHaveURL(/\/intake\/items\//)
     }

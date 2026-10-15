@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -17,13 +18,13 @@ select is(current_store_policy(current_setting('test.tenant')::uuid)->'policy'->
 -- Two accepted items, one aged past step one, one fresh.
 select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
 select set_config('test.d1',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d1')::uuid,0,'Old jacket','Jackets','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d1')::uuid,0,'Old jacket','Jackets','Good');
 select set_config('test.old',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.old')::uuid,'inspection_draft',current_setting('test.d1')::uuid,1,40000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.old')::uuid,'reception_review',current_setting('test.d1')::uuid,1,40000);
 select set_config('test.d2',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Fresh coat','Coats','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Fresh coat','Coats','Good');
 select set_config('test.fresh',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.fresh')::uuid,'inspection_draft',current_setting('test.d2')::uuid,1,30000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.fresh')::uuid,'reception_review',current_setting('test.d2')::uuid,1,30000);
 -- Another store has the switch on with one aged item: the agent runs for it,
 -- which must not change what is asserted about the store under test. The
 -- assertions below therefore read the run entry of one store, never the
@@ -36,9 +37,9 @@ select record_agreement_evidence(current_setting('test.other')::uuid,gen_random_
 select publish_store_policy(current_setting('test.other')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.other')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full","automaticMarkdowns":true}');
 select set_config('test.other_bag',receive_bag_with_agreement(current_setting('test.other')::uuid,gen_random_uuid(),current_setting('test.other_seller')::uuid,'',current_setting('test.other_agreement')::uuid)::text,true);
 select set_config('test.other_d',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.other')::uuid,gen_random_uuid(),current_setting('test.other_bag')::uuid,current_setting('test.other_d')::uuid,0,'Other jacket','Jackets','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.other')::uuid,gen_random_uuid(),current_setting('test.other_bag')::uuid,current_setting('test.other_d')::uuid,0,'Other jacket','Jackets','Good');
 select set_config('test.other_item',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.other')::uuid,current_setting('test.other_item')::uuid,'inspection_draft',current_setting('test.other_d')::uuid,1,10000);
+select accept_item(current_setting('test.other')::uuid,current_setting('test.other_item')::uuid,'reception_review',current_setting('test.other_d')::uuid,1,10000);
 reset role;
 alter table public.items disable trigger items_immutable;
 update public.items set accepted_at=accepted_at-interval '15 days' where id in (current_setting('test.old')::uuid,current_setting('test.other_item')::uuid);

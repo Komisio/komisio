@@ -43,7 +43,7 @@ export function BagProcessing({
     completed = current.state === 'completed'
   useUnsavedChanges(
     !saved && (reason.length > 0 || action.locked)
-      ? d.inspection.leaveDraft
+      ? d.inspection.leaveUnconfirmed
       : null,
   )
   async function submit(event: React.FormEvent) {

@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at) values
@@ -24,19 +25,15 @@ select is((select count(*) from reception_queue(:'tenant','preparing')),21::bigi
 select is((store_flow_snapshot(:'tenant')->'reception'->'preparing'->>'count')::bigint,(select count(*) from reception_queue_facts(:'tenant','preparing')),'summary and queue share facts');
 select receive_bag_with_agreement(:'tenant',gen_random_uuid(),:'seller','Draft delivery',null) as draftbag \gset
 select gen_random_uuid() as draft \gset
-select save_inspection_draft(:'tenant',gen_random_uuid(),:'draftbag',:'draft',0,'Chair','','');
-select save_inspection_draft(:'tenant',gen_random_uuid(),:'draftbag',:'draft',1,'Chair updated','','');
-select is(store_flow_snapshot(:'tenant')->'drafts'->>'count','1','revisions do not multiply drafts');
+select pg_temp.prepare_bag_reception(:'tenant',gen_random_uuid(),:'draftbag',:'draft',0,'Chair','','');
+select pg_temp.prepare_bag_reception(:'tenant',gen_random_uuid(),:'draftbag',:'draft',1,'Chair updated','','');
 select is(store_flow_snapshot(:'tenant')->'dropoffs'->>'count','24','draft also starts a drop-off');
-select is(jsonb_array_length(flow_dropoff_page(:'tenant','drafts',null,null,null,null)),1,'draft link selects affected drop-off');
 select gen_random_uuid() as item \gset
-select accept_item(:'tenant',:'item','inspection_draft',:'draft',2,15000);
-select is(store_flow_snapshot(:'tenant')->'drafts'->>'count','0','accepted draft leaves pending work');
+select accept_item(:'tenant',:'item','reception_review',:'draft',2,15000);
 select is(store_flow_snapshot(:'tenant')->'inventory'->'on_sale'->>'count','1','accepted item appears in inventory');
 select is(store_flow_snapshot(:'tenant')->'inventory'->'on_sale'->>'count',items_overview(:'tenant',null,'on_sale',1)->>'total','inventory uses existing lifecycle');
 select is(store_flow_snapshot(:'tenant')->'dropoffs'->>'count','24','acceptance does not put delivery back in unstarted queue');
-select save_inspection_draft(:'tenant',gen_random_uuid(),:'draftbag',gen_random_uuid(),0,'Second chair','','');
-select is(store_flow_snapshot(:'tenant')->'drafts'->>'count','1','partially registered delivery still has pending item');
+select pg_temp.prepare_bag_reception(:'tenant',gen_random_uuid(),:'draftbag',gen_random_uuid(),0,'Second chair','','');
 select publish_store_policy(:'tenant',gen_random_uuid(),null,(current_store_policy(:'tenant')->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin"}');
 -- Sale validation uses frozen VAT-independent terms and current store VAT policy.
 select record_sale(:'tenant',gen_random_uuid(),'manual','Snapshot sale',now(),'SEK',jsonb_build_array(jsonb_build_object('itemId',:'item','priceOre',15000)));
@@ -58,5 +55,9 @@ select throws_ok(format('select * from flow_dropoffs(%L,%L)',:'other','unstarted
 set local role anon;
 select throws_ok(format('select store_flow_snapshot(%L)',:'tenant'),'42501',null,'anonymous snapshot denied');
 select throws_ok(format('select * from reception_queue_facts(%L)',:'tenant'),'42501',null,'anonymous facts denied');
+reset role;
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f2510000-0000-4000-8000-000000000001","role":"authenticated"}';
+select ok(not (store_flow_snapshot(:'tenant') ? 'drafts'),'snapshot omits retired draft count');
 select * from finish();
 rollback;

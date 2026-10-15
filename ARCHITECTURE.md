@@ -164,21 +164,18 @@ publication and receiving serialize with membership changes. See
    cash-register law live in `skills/` as readable knowledge for agents and
    people, and are codified only when a decision requires it.
 
-## Inspection preparation
+## Direct drop-off registration
 
-`lib/engine/inspection.ts` implements a pure, versioned descriptive draft and
-suggestion contract. It can be used by manual and future model adapters without
-network access or persistence. Explicit field selection and revision matching
-protect human edits from stale suggestions. This is not a permission boundary,
-saved item or live AI feature. See [the inspection ADR](docs/AI-FIRST-INSPECTION.md)
-for the database/skill split and next implementation steps.
+Bag inspection registers items through the shared reception engine. Staff enter
+facts and a selling price; one transaction publishes the review, records custody
+and accepts the item under current policy. Required agreement evidence and seller
+approval remain enforced. The full intake profile also permits this bag-bound
+path; standalone quick reception keeps its profile restriction.
 
-The staff GUI now saves descriptive drafts through the shared intake engine and
-`save_inspection_draft` RPC. One append-only `inspection_draft_revisions` table
-preserves revisions; the caller-secured `inspection_current` view presents the
-latest state. Persisted revisions protect concurrent staff edits and are separate
-from the pure contract's in-memory proposal counter. See
-[saved inspection](docs/SAVED-INSPECTION.md) for retries, roles and activation.
+Inspection draft storage, tools and operation kind were retired in #458. Existing
+items keep identity, prices, terms and later corrections. Removed source text is
+not copied elsewhere; reads use existing reference fallbacks when details are
+absent. Transfers create a reception in the destination store for staff review.
 
 ## Single-garment reception
 

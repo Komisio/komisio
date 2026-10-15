@@ -1,3 +1,5 @@
+> Inspection update (#458, 2026-10-15): bag inspection now registers items directly through reception. References below to inspection drafts describe the former workflow; its storage, tools and source text have been retired without migration.
+
 # Phase P2: sell and settle, as bounded slices
 
 Status: lead-architect specification, 2026-09-12, after the owner answered

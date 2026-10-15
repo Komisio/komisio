@@ -232,9 +232,22 @@ export function QuickReception({
   // The description leads the form; other questions follow profile order. Changing the type
   // changes the questions; answers to questions the new type does not ask are
   // dropped rather than sent for an item they do not describe.
-  const questions = questionsFor(vocabulary, itemType).filter(
-    (q) => q.definition.slug !== 'category',
-  )
+  const typeQuestions = questionsFor(vocabulary, itemType)
+  // Drop-offs keep the former inspection's basic facts available even without a type.
+  // Definitions and labels still belong to the store's vocabulary.
+  const questions = bagId
+    ? [
+        ...vocabulary.definitions
+          .filter(
+            (d) =>
+              d.active &&
+              ['category', 'condition'].includes(d.slug) &&
+              !typeQuestions.some((q) => q.definition.slug === d.slug),
+          )
+          .map((definition) => ({ definition, expected: false })),
+        ...typeQuestions,
+      ]
+    : typeQuestions.filter((q) => q.definition.slug !== 'category')
   const activeTypes = vocabulary.types.filter((t) => t.active)
   const running = useRef(false)
   const itemTypeEnter = useRef(false)
@@ -557,14 +570,15 @@ export function QuickReception({
         .map(([k, v]) => [k, v.trim()] as const)
         .filter(
           ([k, v]) =>
-            k !== 'category' &&
+            (k !== 'category' || !!bagId) &&
             (k === 'description' || (v !== '' && (asked.has(k) || !itemType))),
         ),
     )
     const suggestedCategory = vocabulary.types.find(
       (t) => t.slug === itemType,
     )?.suggested_category
-    if (suggestedCategory?.trim()) cleaned.category = suggestedCategory.trim()
+    if (!cleaned.category && suggestedCategory?.trim())
+      cleaned.category = suggestedCategory.trim()
     requestId.current ??= crypto.randomUUID()
     return {
       ...(bagId ? { bagId } : {}),

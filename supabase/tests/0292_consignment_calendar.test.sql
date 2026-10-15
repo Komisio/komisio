@@ -1,4 +1,5 @@
 begin;
+\ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 select is(komisio_private.consignment_month_end('2024-01-31 11:00+01',1), '2024-02-29 11:00+01'::timestamptz,'leap month clamps to its last day');
@@ -30,9 +31,9 @@ select is((select count(*) from consignment_receipt_periods),1::bigint,'receivin
 select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.policy')::uuid,
  (current_store_policy(current_setting('test.tenant')::uuid)->'policy')-'consignmentPeriod');
 select set_config('test.draft',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Synthetic coat','Coats','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Synthetic coat','Coats','Good');
 select set_config('test.item',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid,'inspection_draft',current_setting('test.draft')::uuid,1,15000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid,'reception_review',current_setting('test.draft')::uuid,1,15000);
 select is((select terms->'consignmentPeriod'->>'receiptId' from items where id=current_setting('test.item')::uuid),current_setting('test.bag'),'acceptance inherits frozen receipt after policy is disabled');
 select is((lifecycle_queue_page(current_setting('test.tenant')::uuid)->'rows'->0->>'collection_deadline')::timestamptz,
  (select collection_ends_at from consignment_receipt_periods where bag_id=current_setting('test.bag')::uuid),'staff queue exposes collection deadline');
@@ -49,9 +50,9 @@ insert into consignment_receipt_periods(tenant_id,seller_id,bag_id,policy_id,rec
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000001751","role":"authenticated"}';
 select set_config('test.oldDraft',gen_random_uuid()::text,true);
-select save_inspection_draft(current_setting('test.tenant')::uuid,gen_random_uuid(),'f0000000-0000-4000-8000-000000001759',current_setting('test.oldDraft')::uuid,0,'Old coat','Coats','Good');
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),'f0000000-0000-4000-8000-000000001759',current_setting('test.oldDraft')::uuid,0,'Old coat','Coats','Good');
 select set_config('test.oldItem',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.oldItem')::uuid,'inspection_draft',current_setting('test.oldDraft')::uuid,1,15000);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.oldItem')::uuid,'reception_review',current_setting('test.oldDraft')::uuid,1,15000);
 select is((lifecycle_queue_page(current_setting('test.tenant')::uuid,current_setting('test.oldItem'))->'rows'->0->>'stage'),'period_ended','late registration does not restart the sale period');
 select set_config('test.recycling',gen_random_uuid()::text,true);
 select is(end_sale_period(current_setting('test.tenant')::uuid,current_setting('test.recycling')::uuid,current_setting('test.oldItem')::uuid,'recycle','Physically recycled'),current_setting('test.recycling')::uuid,'staff records recycling');

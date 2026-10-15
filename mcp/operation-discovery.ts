@@ -7,13 +7,10 @@ export async function listScopedOperations(
   client: SupabaseClient,
   config: MCPConfig,
   input: unknown,
-  scope: 'reception:read' | 'inspection:read',
+  scope: 'reception:read',
 ) {
   await requireMCPIdentity(client, config, scope)
-  const kind =
-    scope === 'reception:read'
-      ? 'publishReceptionReview'
-      : 'saveInspectionDraft'
+  const kind = 'publishReceptionReview'
   const page = await readOperationPage(client, config.tenantId, input, kind)
   return {
     readOnly: true,

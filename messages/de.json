@@ -2934,6 +2934,28 @@
       "working": "Wird genehmigt…",
       "invalid": "Die Anfrage des Assistenten ist unvollständig oder unbekannt. Beginnen Sie erneut im Assistenten.",
       "notMember": "Sie sind kein Mitglied eines Stores, der verbunden werden kann."
+    },
+    "activity": "Aktivität",
+    "showPermissions": "Berechtigungen anzeigen",
+    "hidePermissions": "Berechtigungen ausblenden",
+    "accessLevels": {
+      "read": "Lesen",
+      "preview": "Vorschau",
+      "propose": "Vorschlagen",
+      "other": "Sonstige"
+    },
+    "areas": {
+      "reception": "Annahme",
+      "items": "Artikel",
+      "economy": "Finanzen und Bestand",
+      "sales": "Verkäufe",
+      "ledger": "Verkäuferguthaben",
+      "lifecycle": "Preisreduzierungen",
+      "communications": "Nachrichten an Verkäufer",
+      "payouts": "Auszahlungen",
+      "accounting": "Buchhaltung",
+      "store": "Shopprofil",
+      "other": "Sonstige"
     }
   },
   "credits": {

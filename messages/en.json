@@ -2934,6 +2934,28 @@
       "working": "Approving…",
       "invalid": "The assistant's request is incomplete or unknown. Start again from the assistant.",
       "notMember": "You are not a member of a store that can be connected."
+    },
+    "activity": "Activity",
+    "showPermissions": "Show permissions",
+    "hidePermissions": "Hide permissions",
+    "accessLevels": {
+      "read": "Read",
+      "preview": "Preview",
+      "propose": "Propose",
+      "other": "Other"
+    },
+    "areas": {
+      "reception": "Reception",
+      "items": "Items",
+      "economy": "Economy and stock",
+      "sales": "Sales",
+      "ledger": "Seller balances",
+      "lifecycle": "Markdowns",
+      "communications": "Seller messages",
+      "payouts": "Payouts",
+      "accounting": "Accounting",
+      "store": "Store profile",
+      "other": "Other"
     }
   },
   "credits": {

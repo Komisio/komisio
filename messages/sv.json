@@ -2934,6 +2934,28 @@
       "working": "Godkänner…",
       "invalid": "Begäran från assistenten är ofullständig eller okänd. Börja om från assistenten.",
       "notMember": "Du är inte medlem i någon butik som kan kopplas."
+    },
+    "activity": "Aktivitet",
+    "showPermissions": "Visa behörigheter",
+    "hidePermissions": "Dölj behörigheter",
+    "accessLevels": {
+      "read": "Läsa",
+      "preview": "Förhandsgranska",
+      "propose": "Föreslå",
+      "other": "Övrigt"
+    },
+    "areas": {
+      "reception": "Mottagning",
+      "items": "Varor",
+      "economy": "Ekonomi och lager",
+      "sales": "Försäljning",
+      "ledger": "Säljarsaldon",
+      "lifecycle": "Prissänkningar",
+      "communications": "Säljarmeddelanden",
+      "payouts": "Utbetalningar",
+      "accounting": "Bokföring",
+      "store": "Butiksprofil",
+      "other": "Övrigt"
     }
   },
   "credits": {

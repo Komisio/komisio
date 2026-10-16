@@ -2934,6 +2934,28 @@
       "working": "Approvazione…",
       "invalid": "La richiesta dell'assistente è incompleta o sconosciuta. Ricomincia dall'assistente.",
       "notMember": "Non sei membro di un negozio che può essere collegato."
+    },
+    "activity": "Attività",
+    "showPermissions": "Mostra permessi",
+    "hidePermissions": "Nascondi permessi",
+    "accessLevels": {
+      "read": "Leggere",
+      "preview": "Anteprima",
+      "propose": "Proporre",
+      "other": "Altro"
+    },
+    "areas": {
+      "reception": "Ricezione",
+      "items": "Articoli",
+      "economy": "Finanze e magazzino",
+      "sales": "Vendite",
+      "ledger": "Saldi venditori",
+      "lifecycle": "Ribassi",
+      "communications": "Messaggi ai venditori",
+      "payouts": "Pagamenti",
+      "accounting": "Contabilità",
+      "store": "Profilo negozio",
+      "other": "Altro"
     }
   },
   "credits": {

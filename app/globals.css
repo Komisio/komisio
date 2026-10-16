@@ -6923,6 +6923,200 @@ button.text-link:hover:not(:disabled) {
   }
 }
 
+.connectors-panel code {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+.connectors-list {
+  container: connectors / inline-size;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.connectors-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+.connectors-table th,
+.connectors-table td {
+  padding: 16px;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--line);
+}
+.connectors-table thead th {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+  background: var(--mint);
+}
+.connectors-table thead th:nth-child(1) {
+  width: 23%;
+}
+.connectors-table thead th:nth-child(2) {
+  width: 31%;
+}
+.connectors-table thead th:nth-child(3) {
+  width: 31%;
+}
+.connectors-table thead th:nth-child(4) {
+  width: 15%;
+}
+.connectors-table .connector-identity {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.connector-identity > strong {
+  display: block;
+  font-size: 16px;
+}
+.connector-approver {
+  display: block;
+  margin-top: 8px;
+}
+.connector-approver > span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+.connector-permission-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.connector-permission-badges .badge {
+  white-space: normal;
+  gap: 6px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.connector-permissions-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-top: 4px;
+  font-size: 14px;
+}
+.connector-permissions-toggle svg {
+  flex-shrink: 0;
+}
+.connector-permissions-toggle[aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+.connector-activity {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  font-size: 13px;
+}
+.connector-activity > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 12px;
+}
+.connector-activity dt {
+  color: var(--muted);
+}
+.connector-activity dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.connector-actions .btn {
+  min-height: 44px;
+  padding: 10px 12px;
+  font-size: 13px;
+  white-space: normal;
+}
+.connector-row[data-expanded='true'] > * {
+  border-bottom: 0;
+}
+.connector-details-row {
+  background: var(--paper);
+}
+.connector-details-row[hidden] {
+  display: none;
+}
+.connector-permission-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 20px 24px;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+}
+.connector-permission-groups > li {
+  min-width: 0;
+}
+.connector-permission-groups > li > strong {
+  display: block;
+  margin-bottom: 6px;
+}
+.connector-permission-groups ul {
+  margin: 0;
+  padding-left: 18px;
+  list-style: disc;
+}
+.connector-permission-groups ul li {
+  margin: 4px 0;
+}
+@container connectors (max-width: 760px) {
+  .connectors-table,
+  .connectors-table tbody {
+    display: block;
+  }
+  .connectors-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .connectors-table .connector-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    padding: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .connectors-table .connector-row > * {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+  .connectors-table .connector-row[data-expanded='true'] {
+    border-bottom: 0;
+  }
+  .connector-activity {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .connector-activity > div {
+    display: block;
+  }
+  .connector-activity dt {
+    margin-bottom: 3px;
+  }
+  .connector-actions {
+    text-align: right;
+  }
+  .connector-actions .btn {
+    width: 100%;
+  }
+  .connectors-table .connector-details-row:not([hidden]),
+  .connectors-table .connector-details-row > td {
+    display: block;
+  }
+  .connectors-table .connector-details-row > td {
+    padding: 20px;
+  }
+}
+
 /* Keep consent text readable while the whole scope label remains tappable. */
 .connector-consent > p {
   margin: 12px 0;

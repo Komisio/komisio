@@ -65,6 +65,7 @@ continue to follow `CLAUDE.md`; UI translations are unaffected.
   reviews external contributions; see Repository merge policy in `CLAUDE.md`.
 - Change `CODEOWNERS`, branch protection/rulesets, or this file without an
   issue explicitly asking for it.
+- **Issues are anonymous:** an issue must never name which agent or person should take it. Write every issue so anyone can pick it up. Describe the work, context and acceptance criteria, not the assignee.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

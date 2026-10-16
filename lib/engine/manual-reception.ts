@@ -7,7 +7,8 @@ import {
   type ReceptionSession,
 } from './reception'
 const descriptionRef = 'komisio:manual-description:v1',
-  appraisalRef = 'komisio:manual-appraisal:v1'
+  appraisalRef = 'komisio:manual-appraisal:v1',
+  typeRef = 'komisio:manual-item-type:v1'
 const appraisal = z.strictObject({
   amount: suggestedPrice.shape.amount,
   reference: z.string().trim().min(1).max(200),
@@ -24,17 +25,22 @@ export function exactPrice(input: string) {
 }
 export const manualReceptionInput = appraisal.extend({
   description: z.string().trim().min(1).max(1000),
+  itemType: receptionSuggestions.shape.itemType,
 })
 export function manualReceptionSources(
   previous: ReceptionSession['sources'],
   input: unknown,
   descriptionId: string,
   appraisalId: string,
+  typeId?: string,
 ) {
   const c = manualReceptionInput.parse(input)
   return receptionSession.shape.sources.parse([
     ...previous.filter(
-      (s) => s.reference !== descriptionRef && s.reference !== appraisalRef,
+      (s) =>
+        s.reference !== descriptionRef &&
+        s.reference !== appraisalRef &&
+        s.reference !== typeRef,
     ),
     {
       id: descriptionId,
@@ -52,6 +58,16 @@ export function manualReceptionSources(
         rationale: c.rationale,
       }),
     },
+    ...(c.itemType
+      ? [
+          {
+            id: z.uuid().parse(typeId),
+            kind: 'observation' as const,
+            reference: typeRef,
+            observation: c.itemType,
+          },
+        ]
+      : []),
   ])
 }
 /** Decode only this manual adapter's format. Arbitrary observations are not inferred prices. */
@@ -65,16 +81,22 @@ export function readManualReception(
   const appraisals = sources.filter(
     (s) => s.kind === 'price-evidence' && s.reference === appraisalRef,
   )
-  if (descriptions.length !== 1 || appraisals.length !== 1) return null
+  const types = sources.filter(
+    (s) => s.kind === 'observation' && s.reference === typeRef,
+  )
+  if (descriptions.length !== 1 || appraisals.length !== 1 || types.length > 1)
+    return null
   try {
     const a = appraisal.parse(JSON.parse(appraisals[0].observation))
     const input = manualReceptionInput.parse({
       ...a,
       description: descriptions[0].observation,
+      itemType: types[0]?.observation,
     })
     return {
       input,
       suggestions: receptionSuggestions.parse({
+        ...(input.itemType ? { itemType: input.itemType } : {}),
         // description is a platform definition at version one, seeded with the
         // vocabulary, so a manual reception can name it without a lookup.
         attributes: [

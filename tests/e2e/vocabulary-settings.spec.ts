@@ -98,7 +98,7 @@ test('a new store starts with translated clothing types and five base attributes
     )
     await page.goto('/intake/quick')
     await page.getByRole('button', { name: /Synthetic P2 seller/ }).click()
-    await page.locator('#quick-item-type').fill('Jacket')
+    await page.locator('#quick-item-type').selectOption({ label: 'Jacket' })
     for (const field of ['Size', 'Colour', 'Brand', 'Material', 'Condition'])
       await expect(page.getByLabel(field, { exact: true })).toBeVisible()
     await expect(page.getByLabel('Socket', { exact: true })).toHaveCount(0)
@@ -224,15 +224,19 @@ test('settings creates an attribute safely and reception renders only the select
     await expect(
       page.getByRole('button', { name: d.quickIntake.createType, exact: true }),
     ).toHaveCount(0)
-    await page.locator('#quick-item-type').fill('Synthetic bench')
+    await page
+      .locator('#quick-item-type')
+      .selectOption({ label: 'Synthetic bench' })
     await page.getByLabel('Synthetic width (cm)', { exact: true }).fill('80')
     await expect(page.getByLabel('Sockel', { exact: true })).toHaveCount(0)
-    await page.locator('#quick-item-type').fill('Jacka')
+    await page.locator('#quick-item-type').selectOption({ label: 'Jacka' })
     await expect(page.getByLabel('Storlek', { exact: true })).toBeVisible()
     await expect(
       page.getByLabel('Synthetic width (cm)', { exact: true }),
     ).toHaveCount(0)
-    await page.locator('#quick-item-type').fill('Synthetic bench')
+    await page
+      .locator('#quick-item-type')
+      .selectOption({ label: 'Synthetic bench' })
     await page.getByLabel('Synthetic width (cm)', { exact: true }).fill('80')
     await page
       .getByLabel(d.quickIntake.description, { exact: true })

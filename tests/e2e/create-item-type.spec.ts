@@ -84,7 +84,9 @@ test('create a type in settings, replay a lost reply and use it in reception', a
     })
     await page.goto(`/intake/bags/${bag}/inspect`)
     await expect(create).toHaveCount(0)
-    await page.locator('#quick-item-type').fill('Synthetic shirt')
+    await page
+      .locator('#quick-item-type')
+      .selectOption({ label: 'Synthetic shirt' })
     await page
       .getByLabel(d.quickIntake.description, { exact: true })
       .fill('Synthetic red shirt')

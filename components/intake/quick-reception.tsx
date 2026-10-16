@@ -211,7 +211,6 @@ export function QuickReception({
     [facts, setFacts] = useState<Facts>(emptyFacts),
     [itemType, setItemType] = useState<string | null>(null),
     [assortment, setAssortment] = useState(''),
-    [typeQuery, setTypeQuery] = useState(''),
     [price, setPrice] = useState(''),
     [photoUrl, setPhotoUrl] = useState<string | null>(null),
     [session, setSession] = useState<{ id: string; revision: number } | null>(
@@ -519,10 +518,6 @@ export function QuickReception({
             const filled = quickAiProposal(s)
             setFacts(filled.facts)
             setItemType(filled.itemType)
-            const suggestedType = activeTypes.find(
-              (t) => t.slug === filled.itemType,
-            )
-            setTypeQuery(suggestedType ? labelOf(suggestedType, lang) : '')
             setPrice(filled.price)
             setMessage(d.aiDone)
           } else setMessage(d.aiUnavailable)
@@ -1032,23 +1027,11 @@ export function QuickReception({
                   </div>
                   <div className="field">
                     <label htmlFor="quick-item-type">{d.itemType}</label>
-                    <input
+                    <select
                       id="quick-item-type"
-                      list="quick-item-types"
-                      autoComplete="off"
-                      placeholder={d.itemTypeNone}
-                      value={typeQuery}
+                      value={itemType ?? ''}
                       disabled={busy || !!done || uncertain}
-                      onChange={(e) => {
-                        const value = e.target.value
-                        setTypeQuery(value)
-                        const match = activeTypes.find(
-                          (t) =>
-                            labelOf(t, lang).toLocaleLowerCase(lang) ===
-                            value.trim().toLocaleLowerCase(lang),
-                        )
-                        setItemType(match?.slug ?? null)
-                      }}
+                      onChange={(e) => setItemType(e.target.value || null)}
                       onKeyDown={(event) => {
                         itemTypeEnter.current = event.key === 'Enter'
                       }}
@@ -1057,17 +1040,15 @@ export function QuickReception({
                       }}
                       onBlur={() => {
                         itemTypeEnter.current = false
-                        const selected = activeTypes.find(
-                          (t) => t.slug === itemType,
-                        )
-                        setTypeQuery(selected ? labelOf(selected, lang) : '')
                       }}
-                    />
-                    <datalist id="quick-item-types">
+                    >
+                      <option value="">{d.itemTypeNone}</option>
                       {activeTypes.map((t) => (
-                        <option key={t.slug} value={labelOf(t, lang)} />
+                        <option key={t.slug} value={t.slug}>
+                          {labelOf(t, lang)}
+                        </option>
                       ))}
-                    </datalist>
+                    </select>
                   </div>
                   <div className="quick-fields">
                     {questions

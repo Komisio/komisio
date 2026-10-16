@@ -13,7 +13,7 @@ test('reception photos can be cleared or detached without losing unsaved text', 
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
   const post = async (data: object) => {
     const response = await page.request.post('/api/intake', {
-      headers: { Origin: 'http://127.0.0.1:3000' },
+      headers: { Origin: new URL(page.url()).origin },
       data: { ...data, tenantId, requestId: crypto.randomUUID() },
     })
     expect(response.status()).toBe(200)

@@ -110,17 +110,17 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
       .fill('Snabb jacka')
     const typeInput = page.getByLabel(d.quickIntake.itemType, { exact: true })
     const typeLabel = await page
-      .locator('#quick-item-types option')
+      .locator('#quick-item-type option:not([value=""])')
       .first()
       .getAttribute('value')
     expect(typeLabel).toBeTruthy()
-    await typeInput.fill(typeLabel!)
+    await typeInput.selectOption(typeLabel!)
     await typeInput.press('Tab')
     await expect(typeInput).toHaveValue(typeLabel!)
     await expect(
       page.getByLabel(d.quickIntake.category, { exact: true }),
     ).toHaveCount(0)
-    await typeInput.fill('')
+    await typeInput.selectOption('')
     await typeInput.press('Tab')
     await expect(typeInput).toHaveValue('')
     await page.getByLabel(d.quickIntake.price, { exact: true }).fill('250')

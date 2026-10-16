@@ -103,7 +103,7 @@ test('standard item questions and choices use every UI language on a phone', asy
           page.getByLabel(d.operations.fields.description, { exact: true }),
         ).toBeVisible()
         const type = page.getByLabel(d.quickIntake.itemType, { exact: true })
-        await type.fill(lamp)
+        await type.selectOption({ label: lamp })
         const socketInput = page.getByLabel(socket, { exact: true })
         await expect(socketInput).toBeVisible()
         await expect(
@@ -122,7 +122,7 @@ test('standard item questions and choices use every UI language on a phone', asy
             fullPage: true,
             caret: 'initial',
           })
-        await type.fill(sweater)
+        await type.selectOption({ label: sweater })
         const fitInput = page.getByLabel(fit, { exact: true })
         await expect(fitInput).toBeVisible()
         await expect(fitInput.locator('option[value="childrens"]')).toHaveText(

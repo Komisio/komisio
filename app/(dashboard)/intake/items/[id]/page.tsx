@@ -1,5 +1,7 @@
 import { ItemPhotoGallery } from '@/components/intake/item-photo-gallery'
 import { ItemDetailWorkspace } from '@/components/intake/item-detail-workspace'
+import { ArrowLeft } from 'lucide-react'
+import { itemReturnHref } from '@/lib/intake/item-return'
 import { readItemDirectory } from '@/lib/engine/item-directory'
 import { readAssortmentGroups } from '@/lib/engine/item-classification'
 import { readAttributeVocabulary, labelOf } from '@/lib/engine/attributes'
@@ -25,8 +27,10 @@ import { ItemSyncStatus } from '@/components/intake/item-sync-status'
 
 export default async function Item({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const id = z.guid().safeParse((await params).id)
@@ -38,6 +42,13 @@ export default async function Item({
     d = all.items
   const result = await readItem(ctx.client, active.id, id.data)
   if (!result) notFound()
+  const backHref = itemReturnHref((await searchParams).returnTo)
+  const backLink = (
+    <Link className="btn btn-secondary item-back-link" href={backHref}>
+      <ArrowLeft size={18} aria-hidden="true" />
+      {d.backToList}
+    </Link>
+  )
   const { item, prices, events } = result
   const [
     printers,
@@ -81,16 +92,14 @@ export default async function Item({
   if (!snapshot)
     return (
       <>
-        <Link href="/intake/items">{d.backToList}</Link>
+        {backLink}
         <h1>{label?.title || d.item}</h1>
         <p role="status">{all.itemWorkflow.reload}</p>
       </>
     )
   return (
     <>
-      <Link className="text-link" href="/intake/items">
-        {d.backToList}
-      </Link>
+      {backLink}
       <ItemDetailWorkspace
         item={snapshot}
         tenantId={active.id}

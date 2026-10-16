@@ -1102,3 +1102,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-16: Connected assistants show compact counts by permission level and expandable area-grouped scopes. Identity, approver, activity and disconnect remain visible, including on mobile. Unknown scopes stay visible; authorization and grant data are unchanged (#469).
 
 - 2026-10-16: Economy separates detailed amounts into a tab, uses locale-aware presentation and labelled counts, and distinguishes current seller balances from period figures. Existing read models, monetary facts, VAT rules and report periods remain unchanged (#474).
+
+- 2026-10-16: Item links carry an allowlisted listing return URL with filters, page and row anchor. A visible back control restores that context; direct visits fall back to Items. Existing navigation guards, tenant checks and item operations remain unchanged (#476).

@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, type ReactNode } from 'react'
 import { ArrowUpRight, Check, LoaderCircle } from 'lucide-react'
-import { NavigationLink as Link } from '@/components/platform/navigation-warning'
+import { InventoryItemLink } from './inventory-item-link'
 import type { DirectoryItem } from '@/lib/engine/item-directory'
 import type { Dictionary } from '@/lib/i18n'
 import { useItemQuickEdit } from './use-item-quick-edit'
@@ -62,6 +62,7 @@ export function InventoryEditableRow({
   ])
   return (
     <tr
+      id={`inventory-item-${item.id}`}
       className={`inventory-row inventory-row-open${edit ? ' inventory-row-editing' : ''}`}
       data-selected={selected.includes(item.id) || undefined}
       aria-busy={busy || undefined}
@@ -98,14 +99,14 @@ export function InventoryEditableRow({
       <th scope="row">
         <div className="inventory-item-heading">
           {cell('title', d.items.item)}
-          <Link
+          <InventoryItemLink
             className="inventory-open-item"
-            href={`/intake/items/${item.id}`}
+            itemId={item.id}
             aria-label={`${w.open}: ${current.title || d.items.item}`}
             title={w.open}
           >
             <ArrowUpRight size={15} aria-hidden="true" />
-          </Link>
+          </InventoryItemLink>
           {(busy || state === 'saved') && (
             <span className="inventory-save-indicator" title={message}>
               {busy ? (

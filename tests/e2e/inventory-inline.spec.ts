@@ -35,7 +35,9 @@ test('blank row space opens the item while row controls keep their own actions',
     await page.keyboard.press('Escape')
     // This is the empty photo/indicator cell between the title and category.
     await row.locator('td').nth(1).click()
-    await expect(page).toHaveURL(new RegExp(`/intake/items/${item}$`))
+    await expect(page).toHaveURL(
+      new RegExp(`/intake/items/${item}\\?returnTo=`),
+    )
     await page.goBack()
     const seller = row.locator('.inventory-seller')
     const sellerHref = await seller.getAttribute('href')
@@ -44,7 +46,9 @@ test('blank row space opens the item while row controls keep their own actions',
     await page.goBack()
     await row.locator('.inventory-open-item').focus()
     await page.keyboard.press('Enter')
-    await expect(page).toHaveURL(new RegExp(`/intake/items/${item}$`))
+    await expect(page).toHaveURL(
+      new RegExp(`/intake/items/${item}\\?returnTo=`),
+    )
   } finally {
     await f.close()
   }

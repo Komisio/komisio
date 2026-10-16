@@ -1,6 +1,7 @@
 import type { ComponentProps, ReactNode } from 'react'
 import { InventoryActions } from './inventory-actions'
 import { InventoryEditableRow } from './inventory-editable-row'
+import { InventoryItemLink } from './inventory-item-link'
 import { InventorySelection, InventorySelectAll } from './inventory-selection'
 import './inventory-edit.css'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
@@ -223,15 +224,16 @@ export function InventoryTable({
                 <td>
                   {i.sync?.length
                     ? i.sync.map((connection) => (
-                        <Link
+                        <InventoryItemLink
                           key={connection.connectionId}
                           className="item-sync-state inventory-sync-link"
                           data-state={connection.status}
-                          href={`/intake/items/${i.id}#sync-status`}
+                          itemId={i.id}
+                          hash="#sync-status"
                         >
                           {all.itemSync.providers[connection.provider]} ·{' '}
                           {all.itemSync.states[connection.status]}
-                        </Link>
+                        </InventoryItemLink>
                       ))
                     : '—'}
                 </td>

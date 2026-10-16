@@ -28,6 +28,7 @@ import { raceStorePolicy } from './store-policy-race.mjs'
 import { raceStoreGuide } from './store-guide-race.mjs'
 import { racePayPalCredentials } from './paypal-credentials-race.mjs'
 import { raceLabelPrintRule } from './label-print-rule-race.mjs'
+import { raceCatalogueDeletion } from './catalogue-deletion-race.mjs'
 import { raceAcceptance, raceStagedAcceptance } from './acceptance-race.mjs'
 import pg from 'pg'
 import { randomUUID } from 'node:crypto'
@@ -140,6 +141,7 @@ try {
   await raceSellerProfile({ setup, sessions, tenant })
   await raceSellerPrivacy({ setup, sessions, tenant })
   await raceLabelPrintRule({ setup, sessions, tenant })
+  await raceCatalogueDeletion({ setup, sessions, tenant })
   await setup.query('begin')
   await setup.query('select id from tenants where id=$1 for update', [tenant])
   const attempts = sessions.map(async ({ c, uid }) => {

@@ -4207,5 +4207,25 @@
       "Eine Gruppe kann verschiedene Artikeltypen enthalten. Eine Vintagejacke kann zur Kategorie Kleidung, zum Typ Jacke und zur Sortimentsgruppe Vintage gehören.",
       "Erstellen Sie die Gruppe hier und wählen Sie sie bei einem oder mehreren Artikeln. Preise und Bedingungen ändern sich dadurch nicht automatisch."
     ]
+  },
+  "catalogueDeletion": {
+    "remove": "Löschen",
+    "confirm": "„{name}“ löschen? Dies kann nicht rückgängig gemacht werden.",
+    "confirmAction": "Ja, löschen",
+    "cancel": "Abbrechen",
+    "removing": "Wird gelöscht…",
+    "failed": "Löschung konnte nicht bestätigt werden. Erneut versuchen oder die Seite neu laden.",
+    "inUse": "Löschen nicht möglich, da der Eintrag verwendet wird. Frühere Erfassungen zählen ebenfalls.",
+    "actions": "Aktionen",
+    "deleted": "Gelöscht: {name}",
+    "shared": "Gemeinsamer Standard",
+    "usage": {
+      "items": "Artikel",
+      "profiles": "Verknüpfte Artikeltypen",
+      "history": "Frühere Zuordnungen",
+      "receptions": "Erfassungen",
+      "proposals": "Vorschläge",
+      "settings": "Einstellungen"
+    }
   }
 }

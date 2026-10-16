@@ -4201,5 +4201,25 @@
       "En gruppe kan inneholde ulike varetyper. En vintagejakke kan ha kategorien Klær, varetypen Jakke og sortimentsgruppen Vintage.",
       "Opprett gruppen her, og velg den på én eller flere varer. Gruppen endrer ikke priser eller vilkår automatisk."
     ]
+  },
+  "catalogueDeletion": {
+    "remove": "Slett",
+    "confirm": "Slette «{name}»? Dette kan ikke angres.",
+    "confirmAction": "Ja, slett",
+    "cancel": "Avbryt",
+    "removing": "Sletter…",
+    "failed": "Kunne ikke bekrefte slettingen. Prøv igjen eller last siden på nytt.",
+    "inUse": "Kan ikke slettes fordi posten er i bruk. Tidligere registreringer teller også.",
+    "actions": "Handlinger",
+    "deleted": "Slettet: {name}",
+    "shared": "Felles standard",
+    "usage": {
+      "items": "Varer",
+      "profiles": "Tilknyttede varetyper",
+      "history": "Historiske klassifiseringer",
+      "receptions": "Registreringer",
+      "proposals": "Forslag",
+      "settings": "Innstillinger"
+    }
   }
 }

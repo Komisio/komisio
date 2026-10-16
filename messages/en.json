@@ -4201,5 +4201,25 @@
       "A group can contain different item types. A vintage jacket can have category Clothing, type Jacket and assortment group Vintage.",
       "Create the group here, then select it on one or more items. Groups do not change prices or terms automatically."
     ]
+  },
+  "catalogueDeletion": {
+    "remove": "Delete",
+    "confirm": "Delete “{name}”? This cannot be undone.",
+    "confirmAction": "Yes, delete",
+    "cancel": "Cancel",
+    "removing": "Deleting…",
+    "failed": "Could not confirm deletion. Retry or reload the page.",
+    "inUse": "Cannot delete because this record is in use. Previous registrations also count.",
+    "actions": "Actions",
+    "deleted": "Deleted: {name}",
+    "shared": "Shared default",
+    "usage": {
+      "items": "Items",
+      "profiles": "Linked item types",
+      "history": "Historical classifications",
+      "receptions": "Registrations",
+      "proposals": "Proposals",
+      "settings": "Settings"
+    }
   }
 }

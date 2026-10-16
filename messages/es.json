@@ -4207,5 +4207,25 @@
       "Un grupo puede contener varios tipos. Una chaqueta vintage puede tener la categoría Ropa, el tipo Chaqueta y el grupo Vintage.",
       "Crea el grupo aquí y selecciónalo en uno o varios artículos. El grupo no cambia precios ni condiciones automáticamente."
     ]
+  },
+  "catalogueDeletion": {
+    "remove": "Eliminar",
+    "confirm": "¿Eliminar «{name}»? Esta acción no se puede deshacer.",
+    "confirmAction": "Sí, eliminar",
+    "cancel": "Cancelar",
+    "removing": "Eliminando…",
+    "failed": "No se pudo confirmar la eliminación. Vuelve a intentarlo o recarga la página.",
+    "inUse": "No se puede eliminar porque el registro está en uso. También cuentan los registros anteriores.",
+    "actions": "Acciones",
+    "deleted": "Eliminado: {name}",
+    "shared": "Estándar compartido",
+    "usage": {
+      "items": "Artículos",
+      "profiles": "Tipos de artículo vinculados",
+      "history": "Clasificaciones anteriores",
+      "receptions": "Registros",
+      "proposals": "Propuestas",
+      "settings": "Configuración"
+    }
   }
 }

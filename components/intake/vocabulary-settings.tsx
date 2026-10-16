@@ -1,4 +1,5 @@
 'use client'
+import { DeleteCatalogueRecord } from './delete-catalogue-record'
 
 import { useState } from 'react'
 import type { Dictionary } from '@/lib/i18n'
@@ -124,6 +125,9 @@ export function VocabularySettings({
                     <tr>
                       <th scope="col">{t.name}</th>
                       <th scope="col">{t.fields}</th>
+                      {editable && (
+                        <th scope="col">{d.catalogueDeletion.actions}</th>
+                      )}
                     </tr>
                   </thead>
                   <tbody>
@@ -141,6 +145,35 @@ export function VocabularySettings({
                             })
                             .join(' · ') || '—'}
                         </td>
+                        {editable && (
+                          <td className="catalogue-actions">
+                            {type.own ? (
+                              <DeleteCatalogueRecord
+                                tenantId={tenantId}
+                                kind="type"
+                                recordKey={type.slug}
+                                name={labelOf(type, locale)}
+                                d={d}
+                                onDeleted={() => {
+                                  setVocabulary((v) => ({
+                                    ...v,
+                                    types: v.types.filter(
+                                      (row) => row.slug !== type.slug,
+                                    ),
+                                  }))
+                                  setSavedType(
+                                    d.catalogueDeletion.deleted.replace(
+                                      '{name}',
+                                      labelOf(type, locale),
+                                    ),
+                                  )
+                                }}
+                              />
+                            ) : (
+                              <small>{d.catalogueDeletion.shared}</small>
+                            )}
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
@@ -198,6 +231,9 @@ export function VocabularySettings({
                     <tr>
                       <th scope="col">{t.name}</th>
                       <th scope="col">{t.kind}</th>
+                      {editable && (
+                        <th scope="col">{d.catalogueDeletion.actions}</th>
+                      )}
                     </tr>
                   </thead>
                   <tbody>
@@ -223,6 +259,35 @@ export function VocabularySettings({
                             </small>
                           )}
                         </td>
+                        {editable && (
+                          <td className="catalogue-actions">
+                            {a.own ? (
+                              <DeleteCatalogueRecord
+                                tenantId={tenantId}
+                                kind="attribute"
+                                recordKey={a.slug}
+                                name={labelOf(a, locale)}
+                                d={d}
+                                onDeleted={() => {
+                                  setVocabulary((v) => ({
+                                    ...v,
+                                    definitions: v.definitions.filter(
+                                      (row) => row.slug !== a.slug,
+                                    ),
+                                  }))
+                                  setSavedAttribute(
+                                    d.catalogueDeletion.deleted.replace(
+                                      '{name}',
+                                      labelOf(a, locale),
+                                    ),
+                                  )
+                                }}
+                              />
+                            ) : (
+                              <small>{d.catalogueDeletion.shared}</small>
+                            )}
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>

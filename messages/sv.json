@@ -4201,5 +4201,25 @@
       "Samma grupp kan innehålla olika varutyper. En vintagejacka kan ha kategorin Kläder, varutypen Jacka och sortimentsgruppen Vintage.",
       "Skapa gruppen här och välj den sedan på en eller flera varor. Gruppen ändrar inte pris eller villkor automatiskt."
     ]
+  },
+  "catalogueDeletion": {
+    "remove": "Ta bort",
+    "confirm": "Ta bort ”{name}”? Detta går inte att ångra.",
+    "confirmAction": "Ja, ta bort",
+    "cancel": "Avbryt",
+    "removing": "Tar bort…",
+    "failed": "Kunde inte bekräfta raderingen. Försök igen eller ladda om sidan.",
+    "inUse": "Kan inte tas bort eftersom posten används. Även tidigare registreringar räknas.",
+    "actions": "Åtgärder",
+    "deleted": "Borttagen: {name}",
+    "shared": "Gemensam standard",
+    "usage": {
+      "items": "Varor",
+      "profiles": "Kopplade varutyper",
+      "history": "Klassificeringar i historiken",
+      "receptions": "Registreringar",
+      "proposals": "Förslag",
+      "settings": "Inställningar"
+    }
   }
 }

@@ -59,3 +59,41 @@ it('does not invent a price from arbitrary appraisal prose', () => {
     ]),
   ).toBeNull()
 })
+
+it('round-trips optional manual type evidence without changing historical sources', () => {
+  const input = {
+    description: 'Coat',
+    amount: '250.00',
+    reference: 'Appraisal',
+    rationale: 'Condition',
+  }
+  const make = (
+    previous: Parameters<typeof manualReceptionSources>[0],
+    itemType?: string,
+  ) =>
+    manualReceptionSources(
+      previous,
+      { ...input, itemType },
+      crypto.randomUUID(),
+      crypto.randomUUID(),
+      crypto.randomUUID(),
+    )
+  const original = make([], 'jacket')
+  const changed = make(original, 'trousers')
+  expect(readManualReception(original)?.suggestions.itemType).toBe('jacket')
+  expect(readManualReception(changed)?.suggestions.itemType).toBe('trousers')
+  expect(original.at(-1)?.id).not.toBe(changed.at(-1)?.id)
+  expect(
+    readManualReception(make(changed))?.suggestions.itemType,
+  ).toBeUndefined()
+  expect(readManualReception(make([]))?.suggestions.price?.amount).toBe(
+    '250.00',
+  )
+  expect(() => make([], 'not a slug')).toThrow()
+  expect(
+    readManualReception([
+      ...original,
+      { ...original.at(-1)!, id: crypto.randomUUID() },
+    ]),
+  ).toBeNull()
+})

@@ -27,7 +27,9 @@ test('receive with an assortment, print four attributes and find the group in st
     await page
       .getByLabel(d.quickIntake.assortment, { exact: true })
       .selectOption(group)
-    await page.getByLabel(d.quickIntake.itemType, { exact: true }).fill('Byxor')
+    await page
+      .getByLabel(d.quickIntake.itemType, { exact: true })
+      .selectOption({ label: 'Byxor' })
     for (const [label, value] of [
       ['Märke', 'Example'],
       ['Färg', 'Blå'],

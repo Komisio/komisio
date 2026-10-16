@@ -13,7 +13,7 @@ test('reception guides the operator through three steps and preserves manual inp
   await expect(page.getByLabel('Aktiv butik').first()).toBeVisible()
   const tenant = await page.getByLabel('Aktiv butik').first().inputValue()
   const sellerResponse = await page.request.post('/api/intake', {
-    headers: { origin: 'http://127.0.0.1:3000' },
+    headers: { origin: new URL(page.url()).origin },
     data: {
       action: 'registerSeller',
       tenantId: tenant,
@@ -26,7 +26,7 @@ test('reception guides the operator through three steps and preserves manual inp
   expect(sellerResponse.status()).toBe(200)
   const seller = await sellerResponse.json()
   const response = await page.request.post('/api/intake', {
-    headers: { origin: 'http://127.0.0.1:3000' },
+    headers: { origin: new URL(page.url()).origin },
     data: {
       action: 'createReception',
       tenantId: tenant,

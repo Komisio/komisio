@@ -110,11 +110,11 @@ test('choosing an item type with Enter does not register the item', async ({
     await page.getByLabel(d.quickIntake.price, { exact: true }).fill('120')
     const type = page.getByLabel(d.quickIntake.itemType, { exact: true })
     const label = await page
-      .locator('#quick-item-types option')
+      .locator('#quick-item-type option:not([value=""])')
       .first()
       .getAttribute('value')
     expect(label).toBeTruthy()
-    await type.fill(label!)
+    await type.focus()
     await type.press('ArrowDown')
     await type.press('Enter')
     await type.press('Tab')

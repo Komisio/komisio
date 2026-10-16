@@ -164,18 +164,23 @@ export function ReceptionObservation({
   initial,
   d,
   leaveUnsaved,
+  types,
+  typeLabels,
 }: {
   tenantId: string
   sessionId: string
   revision: number
   sources: ReceptionSession['sources']
   initial: {
+    itemType?: string
     description: string
     amount: string
     reference: string
     rationale: string
   } | null
   d: D
+  types: { slug: string; label: string }[]
+  typeLabels: Pick<Dictionary['quickIntake'], 'itemType' | 'itemTypeNone'>
   leaveUnsaved: string
 }) {
   const action = useWrite(d),
@@ -210,10 +215,12 @@ export function ReceptionObservation({
             sources,
             {
               description: form.get('description'),
+              itemType: form.get('itemType') || undefined,
               amount: exactPrice(String(form.get('amount'))),
               reference: form.get('reference'),
               rationale: form.get('rationale'),
             },
+            crypto.randomUUID(),
             crypto.randomUUID(),
             crypto.randomUUID(),
           )
@@ -247,6 +254,21 @@ export function ReceptionObservation({
             required
             defaultValue={initial?.description ?? ''}
           />
+        </div>
+        <div className="field">
+          <label htmlFor="garment-type">{typeLabels.itemType}</label>
+          <select
+            id="garment-type"
+            name="itemType"
+            defaultValue={initial?.itemType ?? ''}
+          >
+            <option value="">{typeLabels.itemTypeNone}</option>
+            {types.map((type) => (
+              <option key={type.slug} value={type.slug}>
+                {type.label}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="field">
           <label htmlFor="garment-price">{d.price}</label>

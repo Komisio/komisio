@@ -1,3 +1,4 @@
+import { readAttributeVocabulary, labelOf } from '@/lib/engine/attributes'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { EventTime } from '@/components/ui/event-time'
 import { readStorePolicy } from '@/lib/engine/store-policy'
@@ -100,6 +101,7 @@ export default async function Reception({
       policy.policy.currency ?? 'SEK',
     ),
     write = tenant.role !== 'readonly'
+  const vocabulary = await readAttributeVocabulary(ctx.client, tenant.id)
   const current = review?.sourceRevision === state.revision,
     expired = review?.expired ?? false
   const canPublish =
@@ -155,6 +157,15 @@ export default async function Reception({
           revision={state.revision}
           sources={sources}
           initial={prepared?.input ?? null}
+          types={vocabulary.types
+            .filter(
+              (type) => type.active || type.slug === prepared?.input.itemType,
+            )
+            .map((type) => ({
+              slug: type.slug,
+              label: labelOf(type, ctx.locale),
+            }))}
+          typeLabels={all.quickIntake}
           d={d}
           leaveUnsaved={all.leaveUnsaved}
         />
@@ -338,6 +349,20 @@ export default async function Reception({
                     {d.price}: {prepared.input.amount}{' '}
                     {policy.policy.currency ?? 'SEK'}
                   </h3>
+                  {prepared.input.itemType && (
+                    <p>
+                      {all.quickIntake.itemType}:{' '}
+                      {labelOf(
+                        vocabulary.types.find(
+                          (type) => type.slug === prepared.input.itemType,
+                        ) ?? {
+                          slug: prepared.input.itemType,
+                          labels: { en: prepared.input.itemType },
+                        },
+                        ctx.locale,
+                      )}
+                    </p>
+                  )}
                   <p>{prepared.suggestions.price?.rationale}</p>
                 </>
               )}

@@ -9,8 +9,10 @@ const input = {
   requestId: '10000000-0000-4000-8000-000000000001',
   locale: 'sv',
 }
+const tenant = '10000000-0000-4000-8000-000000000002'
+const created = { data: { tenant_id: tenant, created: true }, error: null }
 it('passes explicit USD through the platform boundary and engine independently of locale', async () => {
-  const rpc = vi.fn().mockResolvedValue({ data: 'tenant', error: null })
+  const rpc = vi.fn().mockResolvedValue(created)
   const command = commandSchema.parse({
     action: 'create',
     ...input,
@@ -20,21 +22,25 @@ it('passes explicit USD through the platform boundary and engine independently o
     ...command,
     locale: input.locale,
   })
-  expect(rpc).toHaveBeenCalledWith('create_tenant_with_currency', {
+  expect(rpc).toHaveBeenCalledWith('create_tenant_with_result', {
     p_name: input.name,
     p_slug: input.slug,
     p_request_id: input.requestId,
     p_currency: 'USD',
+    p_locale: 'sv',
   })
 })
 it('keeps the existing creation contract for clients without currency', async () => {
-  const rpc = vi.fn().mockResolvedValue({ data: 'tenant', error: null })
-  await createStore({ rpc } as unknown as SupabaseClient, input)
-  expect(rpc).toHaveBeenCalledWith('create_tenant_with_locale', {
+  const rpc = vi.fn().mockResolvedValue(created)
+  expect(
+    await createStore({ rpc } as unknown as SupabaseClient, input),
+  ).toEqual({ data: tenant, error: null, created: true })
+  expect(rpc).toHaveBeenCalledWith('create_tenant_with_result', {
     p_name: input.name,
     p_slug: input.slug,
     p_request_id: input.requestId,
     p_locale: 'sv',
+    p_currency: null,
   })
 })
 it.each(['JPY', 'GBP', 'usd', ''])(

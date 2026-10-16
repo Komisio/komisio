@@ -176,6 +176,87 @@ closes and require their six explicit accounting map keys before export.
 Separate POS payments are excluded from this export to avoid duplicate booking.
 The store currency is frozen once a fee exists.
 
+## Outbound event webhooks
+
+Operators can connect shop creation to their own onboarding or notification tools.
+This is **off by default**. Configure these server-only environment variables:
+
+| Variable | Meaning |
+| --- | --- |
+| `KOMISIO_EVENTS_WEBHOOK_URL` | Optional HTTPS receiver. Unset means no request or background work. |
+| `KOMISIO_EVENTS_WEBHOOK_SECRET` | Required when a URL is set. Use a long random shared secret. |
+| `KOMISIO_EVENTS_WEBHOOK_TIMEOUT_MS` | Optional timeout in milliseconds; default `3000`, integer from `1` to `30000`. |
+
+Invalid configuration (including a missing secret, non-HTTPS URL, embedded URL
+credentials or invalid timeout) disables delivery and produces one non-personal
+configuration warning per server process. Redirects are not followed.
+
+After `/api/platform` successfully creates a new shop, Next.js `after()` schedules
+one POST after the response. A retry of the same creation request does not send
+another event. Existing creation permissions, membership and currency rules apply.
+Database errors do not schedule events. Direct SQL/RPC creation does not dispatch
+HTTP events. This is **best-effort, at-most-once**, with no retries or durable outbox:
+a server interruption can lose a notification. Webhook errors never change the
+successful creation response. Configure a serverless duration longer than the
+chosen timeout; self-hosted Next.js also runs the callback after responding.
+
+The JSON payload is:
+
+```json
+{
+  "event": "tenant.created",
+  "event_id": "10000000-0000-4000-8000-000000000001",
+  "created_at": "2026-10-16T10:00:00.000Z",
+  "data": {
+    "tenant_id": "10000000-0000-4000-8000-000000000002",
+    "shop_name": "Example shop",
+    "owner_email": "owner@example.test",
+    "owner_display_name": "Example owner",
+    "locale": "en"
+  }
+}
+```
+
+`event_id` is a new UUID for the delivery; `created_at` is the UTC event timestamp.
+`locale` is the request's resolved locale (`sv`, `en`, `no`, `dk`, `fi`, `de`, `es`,
+`it`). Missing owner display names are empty strings. Marketing-email consent is
+not inferred from signup or cookie preferences and is not included (follow-up #466).
+
+Headers: `Content-Type: application/json`, `X-Komisio-Event: tenant.created`,
+`X-Komisio-Delivery: <event_id>`, `X-Komisio-Timestamp: <Unix seconds>` and
+`X-Komisio-Signature: sha256=<hex HMAC-SHA256>`.
+The signed bytes are the ASCII timestamp, a dot, and the **unaltered raw body**.
+Verify before parsing or processing; do not reserialize JSON. A Node.js receiver
+can use this verification function (return an error response when false):
+
+```js
+import { createHmac, timingSafeEqual } from 'node:crypto'
+
+function verify(rawBody, timestamp, signature, secret) {
+  if (!/^\d{1,12}$/.test(timestamp ?? '')) return false
+  if (!/^sha256=[a-f0-9]{64}$/.test(signature ?? '')) return false
+  if (Math.abs(Date.now() / 1000 - Number(timestamp)) > 300) return false
+  const expected = createHmac('sha256', secret)
+    .update(`${timestamp}.`)
+    .update(rawBody)
+    .digest()
+  const supplied = Buffer.from(signature.slice(7), 'hex')
+  return supplied.length === expected.length && timingSafeEqual(supplied, expected)
+}
+```
+
+Reject timestamps more than five minutes in the past **or future**, compare the
+signature in constant time, validate the event schema, and check that the event
+and delivery headers match the signed body. Atomically record processed delivery
+IDs before side effects to reject duplicates. Return a successful status promptly;
+the sender discards the response body and never retries non-2xx responses.
+
+**Privacy:** payloads contain personal data. Use only an endpoint you control,
+with suitable access restrictions and retention. Do not treat receipt of this
+event as permission to send marketing email. Komisio logs neither the payload nor
+receiver URL, secret, response body or exception details. Enabling the environment
+variables is an operator decision; deployment alone leaves the feature disabled.
+
 ## Local verification
 
 ```sh

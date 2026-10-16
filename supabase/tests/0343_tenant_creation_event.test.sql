@@ -1,0 +1,35 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000003431','creation-event@example.test',now()),
+ ('f0000000-0000-4000-8000-000000003432','creation-event-other@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000003431","role":"authenticated"}';
+select set_config('test.request',gen_random_uuid()::text,true);
+select set_config('test.result',create_tenant_with_result('Event test','event-test',current_setting('test.request')::uuid,'no',null)::text,true);
+select is(current_setting('test.result')::jsonb->>'created','true','first committed creation permits an event');
+select set_config('test.tenant',current_setting('test.result')::jsonb->>'tenant_id',true);
+select is(store_currency(current_setting('test.tenant')::uuid),'NOK','locale still initializes currency');
+select is(tenant_role(current_setting('test.tenant')::uuid),'owner','creator retains existing owner membership');
+select is(create_tenant_with_result('Event test','event-test',current_setting('test.request')::uuid,'sv','USD')->>'created','false','replay cannot emit another event');
+select is(create_tenant_with_result('Event test','event-test',current_setting('test.request')::uuid,'sv',null)->>'tenant_id',current_setting('test.tenant'),'replay returns original tenant');
+select is(store_currency(current_setting('test.tenant')::uuid),'NOK','retry cannot change currency');
+select set_config('test.explicit',create_tenant_with_result('Explicit','event-explicit',gen_random_uuid(),'sv','USD')->>'tenant_id',true);
+select is(store_currency(current_setting('test.explicit')::uuid),'USD','explicit currency is preserved');
+select set_config('test.legacy_request',gen_random_uuid()::text,true);
+select create_tenant('Legacy','event-legacy',current_setting('test.legacy_request')::uuid);
+select is(create_tenant_with_result('Legacy','event-legacy',current_setting('test.legacy_request')::uuid,'sv',null)->>'created','false','old RPC creation is not announced again');
+select throws_like($$select create_tenant_with_result('Invalid','event-invalid',gen_random_uuid(),'xx',null)$$,'%INVALID_INPUT%','invalid locale rejected');
+select throws_like($$select create_tenant_with_result('Invalid','event-invalid',gen_random_uuid(),'sv','JPY')$$,'%INVALID_INPUT%','unsupported currency rejected');
+select throws_like($$select create_tenant_with_result('Duplicate','event-test',gen_random_uuid(),'sv',null)$$,'%duplicate key%','failed creation cannot return a successful event result');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000003432','owner');
+set local role authenticated;
+select change_member(current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000003431',null);
+select throws_like($$select create_tenant_with_result('Event test','event-test',current_setting('test.request')::uuid,'no',null)$$,'%FORBIDDEN%','removed creator cannot regain access on retry');
+set local role anon;
+select throws_ok($$select create_tenant_with_result('Anonymous','event-anon',gen_random_uuid(),'sv',null)$$,'42501',null,'anonymous creation is still denied');
+reset role;
+select * from finish();
+rollback;

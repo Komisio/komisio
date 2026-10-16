@@ -1,4 +1,10 @@
 {
+  "marketingConsentSave": "Lagre e-postvalg",
+  "marketingConsentHeading": "Nyheter på e-post",
+  "marketingConsentLabel": "Ja takk, jeg vil motta produktnyheter fra Komisio på e-post.",
+  "marketingConsentHelp": "Valgfritt. Du kan endre valget under Konto når som helst. Dette påvirker ikke viktige meldinger om kontoen din.",
+  "marketingConsentDisabled": "Nye abonnementer er slått av. Du kan fortsatt trekke tilbake ditt tidligere samtykke.",
+  "marketingConsentWithdraw": "Avslutt abonnement",
   "agreements": {
     "title": "Innlevereravtaler",
     "intro": "Butikkens vilkår, versjoner og bevis på godkjenning.",

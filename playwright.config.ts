@@ -39,6 +39,7 @@ export default defineConfig({
         KOMISIO_ZETTLE_FIXTURES: 'true',
         KOMISIO_SELLER_SUBMISSIONS_ENABLED: 'true',
         KOMISIO_CONNECTORS_ENABLED: 'true',
+        KOMISIO_MARKETING_CONSENT_ENABLED: 'true',
         KOMISIO_CREDENTIAL_KEY: 'ab'.repeat(32),
         PAYPAL_POS_CLIENT_ID: 'synthetic-paypal-public-app',
         PAYPAL_POS_CLIENT_SECRET: 'synthetic-paypal-client-secret',

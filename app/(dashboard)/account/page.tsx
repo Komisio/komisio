@@ -5,10 +5,15 @@ import { AccountForm, PasswordForm } from '@/components/platform/account-form'
 import { MfaForm } from '@/components/auth/mfa-form'
 import { SignOut } from '@/components/platform/sign-out'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
+import { readMarketingConsent } from '@/lib/engine/marketing-consent'
+import { marketingConsentEnabled } from '@/lib/platform/marketing-consent'
+import { MarketingConsentForm } from '@/components/platform/marketing-consent-form'
 export default async function Account() {
   const ctx = await requirePlatform(false)
   const d = dictionary(ctx.locale)
   const { data } = await ctx.client.auth.mfa.listFactors()
+  const marketing = await readMarketingConsent(ctx.client)
+  const marketingEnabled = marketingConsentEnabled()
   return (
     <>
       <div className="page-heading">
@@ -26,6 +31,17 @@ export default async function Account() {
           />
         </section>
         <div className="stack">
+          {(marketingEnabled || marketing.consented) && (
+            <section className="card">
+              <h2>{d.marketingConsentHeading}</h2>
+              <MarketingConsentForm
+                key={String(marketing.consented)}
+                d={d}
+                consented={marketing.consented}
+                enabled={marketingEnabled}
+              />
+            </section>
+          )}
           <section className="card">
             <h2>{d.passwordChange}</h2>
             <PasswordForm d={d} />

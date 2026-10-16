@@ -1,4 +1,10 @@
 {
+  "marketingConsentSave": "Tallenna sähköpostivalinta",
+  "marketingConsentHeading": "Uutiset sähköpostitse",
+  "marketingConsentLabel": "Kyllä, haluan saada Komision tuoteuutisia sähköpostitse.",
+  "marketingConsentHelp": "Vapaaehtoinen. Voit muuttaa valintaasi milloin tahansa tilisi asetuksissa. Tämä ei vaikuta tärkeisiin tiliäsi koskeviin viesteihin.",
+  "marketingConsentDisabled": "Uusia tilauksia ei voi tehdä. Voit silti peruuttaa aiemman suostumuksesi.",
+  "marketingConsentWithdraw": "Peruuta tilaus",
   "agreements": {
     "title": "Tuojasopimukset",
     "intro": "Kaupan ehdot, versiot ja todisteet hyväksynnästä.",

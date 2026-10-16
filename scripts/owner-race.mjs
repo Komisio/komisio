@@ -13,6 +13,7 @@ import { raceBagProcessing } from './bag-processing-race.mjs'
 import { raceShopifySettings } from './shopify-settings-race.mjs'
 import { raceShopifyPrivacy } from './shopify-privacy-race.mjs'
 import { raceStoreCreation } from './store-creation-race.mjs'
+import { raceMarketingConsent } from './marketing-consent-race.mjs'
 import { raceSellerProfile } from './seller-profile-race.mjs'
 import { raceSellerPrivacy } from './seller-privacy-race.mjs'
 import { raceStoreWorkflow } from './store-workflow-race.mjs'
@@ -131,6 +132,7 @@ try {
     }),
   )
   await raceStoreCreation({ setup, sessions })
+  await raceMarketingConsent({ setup, sessions })
   await raceStorePolicy({ setup, sessions, tenant })
   await raceStoreGuide({ setup, sessions, tenant })
   await raceSellerSubmission({ setup, sessions, tenant })

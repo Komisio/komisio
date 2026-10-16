@@ -1,4 +1,10 @@
 {
+  "marketingConsentSave": "Spara e-postval",
+  "marketingConsentHeading": "Nyheter via e-post",
+  "marketingConsentLabel": "Ja tack, jag vill få produktnyheter från Komisio via e-post.",
+  "marketingConsentHelp": "Valfritt. Du kan ändra ditt val under Konto när som helst. Detta påverkar inte viktiga meddelanden om ditt konto.",
+  "marketingConsentDisabled": "Nya prenumerationer är avstängda. Du kan fortfarande ta tillbaka ditt tidigare samtycke.",
+  "marketingConsentWithdraw": "Sluta prenumerera",
   "agreements": {
     "title": "Säljaravtal",
     "intro": "Butikens villkor, versioner och underlag för godkännande.",

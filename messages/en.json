@@ -1,4 +1,10 @@
 {
+  "marketingConsentSave": "Save email preference",
+  "marketingConsentHeading": "Email updates",
+  "marketingConsentLabel": "Yes, I would like to receive product news from Komisio by email.",
+  "marketingConsentHelp": "Optional. You can change your choice under Account at any time. This does not affect important messages about your account.",
+  "marketingConsentDisabled": "New subscriptions are disabled. You can still withdraw your previous consent.",
+  "marketingConsentWithdraw": "Unsubscribe",
   "agreements": {
     "title": "Seller agreements",
     "intro": "Store terms, versions and evidence of approval.",

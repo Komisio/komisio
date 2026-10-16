@@ -184,3 +184,42 @@
     padding: 14px;
   }
 }
+
+.catalogue-delete {
+  max-width: 25rem;
+}
+.catalogue-delete p {
+  font-size: 14px;
+  margin: 0 0 8px;
+}
+.catalogue-delete-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+@media (max-width: 600px) {
+  .vocabulary-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .vocabulary-table tbody {
+    display: block;
+  }
+  .vocabulary-table tbody tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--line);
+    padding: 8px 0;
+  }
+  .vocabulary-table tbody th,
+  .vocabulary-table tbody td {
+    width: auto;
+    border: 0;
+  }
+  .vocabulary-table .catalogue-actions {
+    grid-column: 1 / -1;
+  }
+}

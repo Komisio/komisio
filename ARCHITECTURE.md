@@ -25,6 +25,18 @@ testable and safe to operate by people and agents alike.
 
 ## Implemented platform
 
+Store catalogue deletion is an owner/admin engine operation. Under the tenant
+write lock, `delete_catalogue_record` checks categories (including translated
+names), item types, attribute versions and assortment groups against every item
+stage, historical corrections/classifications, receptions, proposals and
+structured settings. Used records return usage counts; immutable evidence is
+never removed to make deletion possible. Unused store-created defaults follow
+the same rule as custom records. Shared platform definitions remain protected.
+Table delete triggers repeat the check, direct client deletion stays forbidden,
+and successful deletion records an audit event. In Settings → Item settings,
+each store-owned row has a confirmation action and explains blocked deletion.
+These catalogue mutations are not currently exposed through MCP.
+
 `app/` contains public authentication routes, onboarding and protected pages.
 `lib/supabase/` handles browser/server sessions. The request proxy refreshes
 cookies; server context independently validates the identity and MFA assurance.

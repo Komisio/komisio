@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-16: Owner #460 permits owner/admin deletion of unused store catalogue records, including defaults. Database checks include historical item facts and linked settings; shared platform vocabulary and immutable evidence remain protected.
+
 - 2026-10-14: Owner approves a tenant category registry with translated names, preserving item category text and history. Category, type, attribute and assortment setup live in store settings. New stores get Clothing and Home & décor categories; assortment groups remain optional and store-defined.
 
 - 2026-10-14: New stores start with Jacket and Trousers and the size, colour, brand, material and condition attributes, translated into all eight UI languages. Description/category remain core fields. Legacy examples are hidden only in new stores; creation retries never reset vocabulary.

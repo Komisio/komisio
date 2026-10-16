@@ -1,4 +1,5 @@
 'use client'
+import { DeleteCatalogueRecord } from './delete-catalogue-record'
 import { SettingsSectionHelp } from './settings-section-help'
 
 import { useRef, useState } from 'react'
@@ -159,12 +160,30 @@ export function AssortmentSettings({
         <thead>
           <tr>
             <th scope="col">{t.name}</th>
+            {editable && <th scope="col">{d.catalogueDeletion.actions}</th>}
           </tr>
         </thead>
         <tbody>
           {rows.map((g) => (
             <tr key={g.id}>
               <th scope="row">{g.name}</th>
+              {editable && (
+                <td className="catalogue-actions">
+                  <DeleteCatalogueRecord
+                    tenantId={tenantId}
+                    kind="group"
+                    recordKey={g.id}
+                    name={g.name}
+                    d={d}
+                    onDeleted={() => {
+                      setGroups((v) => v.filter((row) => row.id !== g.id))
+                      setSaved(
+                        d.catalogueDeletion.deleted.replace('{name}', g.name),
+                      )
+                    }}
+                  />
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

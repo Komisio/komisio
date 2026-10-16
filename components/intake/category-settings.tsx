@@ -1,4 +1,5 @@
 'use client'
+import { DeleteCatalogueRecord } from './delete-catalogue-record'
 import { useRef, useState } from 'react'
 import { locales, localeNames, type Dictionary } from '@/lib/i18n'
 import {
@@ -216,6 +217,7 @@ export function CategorySettings({
           <tr>
             <th scope="col">{t.name}</th>
             <th scope="col">{t.languages}</th>
+            {editable && <th scope="col">{d.catalogueDeletion.actions}</th>}
           </tr>
         </thead>
         <tbody>
@@ -228,6 +230,26 @@ export function CategorySettings({
                   .map((l) => localeNames[l])
                   .join(', ')}
               </td>
+              {editable && (
+                <td className="catalogue-actions">
+                  <DeleteCatalogueRecord
+                    tenantId={tenantId}
+                    kind="category"
+                    recordKey={c.id}
+                    name={categoryName(c, locale)}
+                    d={d}
+                    onDeleted={() => {
+                      setCategories((v) => v.filter((row) => row.id !== c.id))
+                      setSaved(
+                        d.catalogueDeletion.deleted.replace(
+                          '{name}',
+                          categoryName(c, locale),
+                        ),
+                      )
+                    }}
+                  />
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

@@ -4207,5 +4207,25 @@
       "Ryhmään voi kuulua eri tuotetyyppejä. Vintagetakin kategoria voi olla Vaatteet, tuotetyyppi Takki ja valikoimaryhmä Vintage.",
       "Luo ryhmä täällä ja valitse se yhdelle tai useammalle tuotteelle. Ryhmä ei muuta hintoja tai ehtoja automaattisesti."
     ]
+  },
+  "catalogueDeletion": {
+    "remove": "Poista",
+    "confirm": "Poistetaanko ”{name}”? Tätä ei voi kumota.",
+    "confirmAction": "Kyllä, poista",
+    "cancel": "Peruuta",
+    "removing": "Poistetaan…",
+    "failed": "Poistoa ei voitu vahvistaa. Yritä uudelleen tai lataa sivu uudelleen.",
+    "inUse": "Ei voi poistaa, koska tietue on käytössä. Myös aiemmat kirjaukset huomioidaan.",
+    "actions": "Toiminnot",
+    "deleted": "Poistettu: {name}",
+    "shared": "Yhteinen oletus",
+    "usage": {
+      "items": "Tuotteet",
+      "profiles": "Liitetyt tuotetyypit",
+      "history": "Aiemmat luokitukset",
+      "receptions": "Kirjaukset",
+      "proposals": "Ehdotukset",
+      "settings": "Asetukset"
+    }
   }
 }

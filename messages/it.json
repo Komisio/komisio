@@ -4201,5 +4201,25 @@
       "Un gruppo può contenere tipi diversi. Una giacca vintage può avere categoria Abbigliamento, tipo Giacca e gruppo Vintage.",
       "Crea il gruppo qui e selezionalo su uno o più articoli. Il gruppo non modifica automaticamente prezzi o condizioni."
     ]
+  },
+  "catalogueDeletion": {
+    "remove": "Elimina",
+    "confirm": "Eliminare «{name}»? Questa azione non può essere annullata.",
+    "confirmAction": "Sì, elimina",
+    "cancel": "Annulla",
+    "removing": "Eliminazione…",
+    "failed": "Impossibile confermare la cancellazione. Riprova o ricarica la pagina.",
+    "inUse": "Impossibile eliminare perché il record è in uso. Sono incluse anche le registrazioni precedenti.",
+    "actions": "Azioni",
+    "deleted": "Eliminato: {name}",
+    "shared": "Standard condiviso",
+    "usage": {
+      "items": "Articoli",
+      "profiles": "Tipi di articolo collegati",
+      "history": "Classificazioni precedenti",
+      "receptions": "Registrazioni",
+      "proposals": "Proposte",
+      "settings": "Impostazioni"
+    }
   }
 }

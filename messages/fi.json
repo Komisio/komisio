@@ -2934,6 +2934,28 @@
       "working": "Hyväksytään…",
       "invalid": "Avustajan pyyntö on puutteellinen tai tuntematon. Aloita alusta avustajasta.",
       "notMember": "Et ole jäsen kaupassa, jonka voi yhdistää."
+    },
+    "activity": "Toiminta",
+    "showPermissions": "Näytä käyttöoikeudet",
+    "hidePermissions": "Piilota käyttöoikeudet",
+    "accessLevels": {
+      "read": "Luku",
+      "preview": "Esikatselu",
+      "propose": "Ehdotukset",
+      "other": "Muut"
+    },
+    "areas": {
+      "reception": "Vastaanotto",
+      "items": "Tuotteet",
+      "economy": "Talous ja varasto",
+      "sales": "Myynti",
+      "ledger": "Myyjien saldot",
+      "lifecycle": "Hinnanalennukset",
+      "communications": "Viestit myyjille",
+      "payouts": "Tilitykset",
+      "accounting": "Kirjanpito",
+      "store": "Liikkeen profiili",
+      "other": "Muut"
     }
   },
   "credits": {

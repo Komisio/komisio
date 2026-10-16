@@ -2934,6 +2934,28 @@
       "working": "Aprobando…",
       "invalid": "La solicitud del asistente está incompleta o es desconocida. Empieza de nuevo desde el asistente.",
       "notMember": "No eres miembro de ninguna tienda que se pueda conectar."
+    },
+    "activity": "Actividad",
+    "showPermissions": "Ver permisos",
+    "hidePermissions": "Ocultar permisos",
+    "accessLevels": {
+      "read": "Leer",
+      "preview": "Previsualizar",
+      "propose": "Proponer",
+      "other": "Otros"
+    },
+    "areas": {
+      "reception": "Recepción",
+      "items": "Artículos",
+      "economy": "Finanzas e inventario",
+      "sales": "Ventas",
+      "ledger": "Saldos de vendedores",
+      "lifecycle": "Rebajas",
+      "communications": "Mensajes a vendedores",
+      "payouts": "Pagos",
+      "accounting": "Contabilidad",
+      "store": "Perfil de la tienda",
+      "other": "Otros"
     }
   },
   "credits": {

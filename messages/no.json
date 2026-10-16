@@ -2934,6 +2934,28 @@
       "working": "Godkjenner …",
       "invalid": "Assistentens forespørsel er ufullstendig eller ukjent. Start på nytt fra assistenten.",
       "notMember": "Du er ikke medlem av en butikk som kan kobles til."
+    },
+    "activity": "Aktivitet",
+    "showPermissions": "Vis tillatelser",
+    "hidePermissions": "Skjul tillatelser",
+    "accessLevels": {
+      "read": "Lese",
+      "preview": "Forhåndsvise",
+      "propose": "Foreslå",
+      "other": "Annet"
+    },
+    "areas": {
+      "reception": "Mottak",
+      "items": "Varer",
+      "economy": "Økonomi og lager",
+      "sales": "Salg",
+      "ledger": "Selgersaldoer",
+      "lifecycle": "Prisreduksjoner",
+      "communications": "Selgermeldinger",
+      "payouts": "Utbetalinger",
+      "accounting": "Regnskap",
+      "store": "Butikkprofil",
+      "other": "Annet"
     }
   },
   "credits": {

@@ -2934,6 +2934,28 @@
       "working": "Godkender…",
       "invalid": "Assistentens forespørgsel er ufuldstændig eller ukendt. Start forfra fra assistenten.",
       "notMember": "Du er ikke medlem af en butik, der kan forbindes."
+    },
+    "activity": "Aktivitet",
+    "showPermissions": "Vis tilladelser",
+    "hidePermissions": "Skjul tilladelser",
+    "accessLevels": {
+      "read": "Læse",
+      "preview": "Forhåndsvise",
+      "propose": "Foreslå",
+      "other": "Øvrige"
+    },
+    "areas": {
+      "reception": "Modtagelse",
+      "items": "Varer",
+      "economy": "Økonomi og lager",
+      "sales": "Salg",
+      "ledger": "Sælgersaldi",
+      "lifecycle": "Prisnedsættelser",
+      "communications": "Beskeder til sælgere",
+      "payouts": "Udbetalinger",
+      "accounting": "Bogføring",
+      "store": "Butiksprofil",
+      "other": "Øvrige"
     }
   },
   "credits": {

@@ -1,4 +1,5 @@
-import { WorkingForm } from '@/components/platform/working-form'
+import { EconomyPeriodForm } from '@/components/intake/economy-period-form'
+import { economyFormat } from '@/lib/intake/economy-format'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
@@ -11,7 +12,6 @@ import {
   economyPeriod,
   readEconomySummary,
 } from '@/lib/engine/economy'
-import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { readEconomyBrief, renderBrief } from '@/lib/engine/brief'
 import { automationIdentity, readAutomation } from '@/lib/engine/automation'
 import { AutomationSwitch } from '@/components/intake/automation-switch'
@@ -45,7 +45,8 @@ export default async function Economy({
   const briefRead = await readEconomyBrief(ctx.client, active.id, {
     kind: briefKind,
   })
-  const brief = briefRead ? renderBrief(briefRead, all.brief) : null
+  const format = economyFormat(ctx.locale)
+  const brief = briefRead ? renderBrief(briefRead, all.brief, format) : null
   const grants =
     active.role === 'owner' ? await readAutomation(ctx.client, active.id) : null
   // The chain view needs owner or admin in every store; a refusal is shown, not thrown.
@@ -61,20 +62,23 @@ export default async function Economy({
     } catch {
       chainRefused = true
     }
-  const money = (ore: number) => `${formatSignedOre(ore)} ${summary.currency}`
+  const money = (ore: number) => format.money(ore, summary.currency)
   const t = summary.totals
-  const vatModes = all.sales.vatModes as Record<string, string>
+  const vatModes = d.vatModes as Record<string, string>
   const rows: [string, string][] = [
-    [d.sales, `${t.salesCount} · ${t.linesCount} ${d.lines}`],
+    [d.sales, format.number(t.salesCount)],
+    [d.lines, format.number(t.linesCount)],
     [d.gross, money(t.grossOre)],
     [d.vat, money(t.vatOre)],
     [d.net, money(t.netOre)],
     [d.commission, money(t.commissionOre)],
     [d.commissionVat, money(t.commissionVatOre)],
     [d.sellerCredit, money(t.sellerCreditOre)],
-    [d.returns, `${t.returnsCount} · ${money(t.refundsOre)}`],
+    [d.returns, format.number(t.returnsCount)],
+    [d.refunds, money(t.refundsOre)],
     [d.creditReversed, money(t.creditReversedOre)],
-    [d.payoutsPaid, `${t.payoutsPaidCount} · ${money(t.payoutsPaidOre)}`],
+    [d.payoutCount, format.number(t.payoutsPaidCount)],
+    [d.payoutsPaid, money(t.payoutsPaidOre)],
   ]
   return (
     <div className="economy-page">
@@ -88,7 +92,7 @@ export default async function Economy({
       <WorkspaceTabs
         id="economy"
         label={d.title}
-        toolbarTabs={['overview', 'days']}
+        toolbarTabs={['overview', 'amounts', 'days']}
         toolbar={
           <div className="economy-layout">
             <section
@@ -96,37 +100,24 @@ export default async function Economy({
               aria-label={d.periodHeading}
             >
               <h2>{d.periodHeading}</h2>
-              <WorkingForm className="economy-period-form">
-                {params.brief === 'week' || params.brief === 'month' ? (
-                  <input type="hidden" name="brief" value={briefKind} />
-                ) : null}
-                {!requested.success && (params.from || params.to) && (
-                  <p role="alert">{d.periodInvalid}</p>
-                )}
-                <div className="field">
-                  <label htmlFor="economy-from">{d.from}</label>
-                  <input
-                    id="economy-from"
-                    name="from"
-                    type="date"
-                    defaultValue={period.from}
-                    required
-                  />
-                </div>
-                <div className="field">
-                  <label htmlFor="economy-to">{d.to}</label>
-                  <input
-                    id="economy-to"
-                    name="to"
-                    type="date"
-                    defaultValue={period.to}
-                    required
-                  />
-                </div>
-                <button className="btn btn-primary">{d.show}</button>
-              </WorkingForm>
+              <EconomyPeriodForm
+                key={`${ctx.locale}-${period.from}-${period.to}-${briefKind}`}
+                from={period.from}
+                to={period.to}
+                locale={ctx.locale}
+                brief={
+                  params.brief === 'week' || params.brief === 'month'
+                    ? briefKind
+                    : undefined
+                }
+                invalid={
+                  !requested.success && Boolean(params.from || params.to)
+                }
+                t={d}
+              />
               <p className="muted economy-period-caption">
-                {d.showing} {summary.from} – {summary.to}
+                {d.showing} {format.date(summary.from)} –{' '}
+                {format.date(summary.to)}
               </p>
             </section>
           </div>
@@ -138,7 +129,6 @@ export default async function Economy({
             label: d.tabs.overview,
             content: (
               <div className="economy-layout">
-                {' '}
                 <section
                   className="economy-overview"
                   aria-label={d.totalsHeading}
@@ -160,84 +150,27 @@ export default async function Economy({
                     <div className="card economy-metric">
                       <dt>{d.payoutsPaid}</dt>
                       <dd>{money(t.payoutsPaidOre)}</dd>
-                      <dd className="economy-metric-hint">
-                        <Link className="text-link" href="/intake/payouts">
-                          {all.payouts.title}
-                        </Link>
-                      </dd>
                     </div>
                   </dl>
                   <div className="economy-activity">
                     <span>
-                      {d.sales}: <strong>{t.salesCount}</strong>
+                      {d.sales}: <strong>{format.number(t.salesCount)}</strong>
                     </span>
                     <span>
                       {d.returns}:{' '}
-                      <strong>
-                        {t.returnsCount} · {money(t.refundsOre)}
-                      </strong>
+                      <strong>{format.number(t.returnsCount)}</strong>
+                    </span>
+                    <span>
+                      {d.refunds}: <strong>{money(t.refundsOre)}</strong>
                     </span>
                   </div>
-                  <details
-                    className="card economy-details"
-                    data-testid="economy-details"
-                  >
-                    <summary>{d.details}</summary>
-                    <p className="muted">{d.notice}</p>
-                    <div className="economy-scroll">
-                      <table className="economy-table economy-values">
-                        <tbody>
-                          {rows.map(([label, value]) => (
-                            <tr key={label}>
-                              <th scope="row">{label}</th>
-                              <td>{value}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                    {Object.keys(t.perMode).length > 0 && (
-                      <>
-                        <h3>{d.perMode}</h3>
-                        <div
-                          className="economy-scroll"
-                          role="group"
-                          tabIndex={0}
-                          aria-label={d.perMode}
-                        >
-                          <table className="economy-table">
-                            <thead>
-                              <tr>
-                                <th>{d.mode}</th>
-                                <th>{d.lines}</th>
-                                <th>{d.gross}</th>
-                                <th>{d.vat}</th>
-                                <th>{d.net}</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {Object.entries(t.perMode).map(([mode, m]) => (
-                                <tr key={mode}>
-                                  <td>{vatModes[mode] ?? mode}</td>
-                                  <td>{m.lines}</td>
-                                  <td>{money(m.grossOre)}</td>
-                                  <td>{money(m.vatOre)}</td>
-                                  <td>{money(m.netOre)}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      </>
-                    )}
-                  </details>
                 </section>
                 <section
                   className="card intake-form economy-liability"
                   aria-label={d.liabilityHeading}
                 >
                   <h2>{d.liabilityHeading}</h2>
-                  <p>{d.liabilityHint}</p>
+                  <p className="economy-current-note">{d.liabilityHint}</p>
                   <dl className="economy-balances">
                     <div>
                       <dt>{d.owed}</dt>
@@ -255,7 +188,8 @@ export default async function Economy({
                   <div className="economy-payout-status">
                     <p>
                       <strong>
-                        {d.openPayouts}: {summary.openPayouts.count}
+                        {d.openPayouts}:{' '}
+                        {format.number(summary.openPayouts.count)}
                       </strong>
                       <span>{money(summary.openPayouts.amountOre)}</span>
                     </p>
@@ -271,7 +205,8 @@ export default async function Economy({
                   >
                     <h2>{d.chain.heading}</h2>
                     <p>
-                      {chain.name} · {period.from} – {period.to}
+                      {chain.name}: {format.date(period.from)} –{' '}
+                      {format.date(period.to)}
                     </p>
                     {chainRefused && <p>{d.chain.refused}</p>}
                     {chainSummary && (
@@ -296,21 +231,60 @@ export default async function Economy({
                             {chainSummary.stores.map((s) => (
                               <tr key={s.id}>
                                 <td>{s.name}</td>
-                                <td>{s.totals.salesCount}</td>
-                                <td>{`${formatSignedOre(s.totals.grossOre)} ${s.currency}`}</td>
-                                <td>{`${formatSignedOre(s.totals.sellerCreditOre)} ${s.currency}`}</td>
-                                <td>{`${formatSignedOre(s.totals.payoutsPaidOre)} ${s.currency}`}</td>
-                                <td>{`${formatSignedOre(s.liability.owedOre)} ${s.currency}`}</td>
+                                <td>{format.number(s.totals.salesCount)}</td>
+                                <td>
+                                  {format.money(s.totals.grossOre, s.currency)}
+                                </td>
+                                <td>
+                                  {format.money(
+                                    s.totals.sellerCreditOre,
+                                    s.currency,
+                                  )}
+                                </td>
+                                <td>
+                                  {format.money(
+                                    s.totals.payoutsPaidOre,
+                                    s.currency,
+                                  )}
+                                </td>
+                                <td>
+                                  {format.money(
+                                    s.liability.owedOre,
+                                    s.currency,
+                                  )}
+                                </td>
                               </tr>
                             ))}
                             {chainSummary.total && chainSummary.currency && (
                               <tr>
                                 <th scope="row">{d.chain.total}</th>
-                                <td>{chainSummary.total.salesCount}</td>
-                                <td>{`${formatSignedOre(chainSummary.total.grossOre)} ${chainSummary.currency}`}</td>
-                                <td>{`${formatSignedOre(chainSummary.total.sellerCreditOre)} ${chainSummary.currency}`}</td>
-                                <td>{`${formatSignedOre(chainSummary.total.payoutsPaidOre)} ${chainSummary.currency}`}</td>
-                                <td>{`${formatSignedOre(chainSummary.total.owedOre)} ${chainSummary.currency}`}</td>
+                                <td>
+                                  {format.number(chainSummary.total.salesCount)}
+                                </td>
+                                <td>
+                                  {format.money(
+                                    chainSummary.total.grossOre,
+                                    chainSummary.currency,
+                                  )}
+                                </td>
+                                <td>
+                                  {format.money(
+                                    chainSummary.total.sellerCreditOre,
+                                    chainSummary.currency,
+                                  )}
+                                </td>
+                                <td>
+                                  {format.money(
+                                    chainSummary.total.payoutsPaidOre,
+                                    chainSummary.currency,
+                                  )}
+                                </td>
+                                <td>
+                                  {format.money(
+                                    chainSummary.total.owedOre,
+                                    chainSummary.currency,
+                                  )}
+                                </td>
                               </tr>
                             )}
                           </tbody>
@@ -321,6 +295,67 @@ export default async function Economy({
                   </section>
                 )}
               </div>
+            ),
+          },
+          {
+            id: 'amounts',
+            label: d.details,
+            content: (
+              <section
+                className="card intake-form economy-details"
+                aria-label={d.details}
+                data-testid="economy-details"
+              >
+                <h2>{d.details}</h2>
+                <p className="muted">{d.notice}</p>
+                <div className="economy-scroll">
+                  <table className="economy-table economy-values">
+                    <tbody>
+                      {rows.map(([label, value]) => (
+                        <tr key={label}>
+                          <th scope="row">{label}</th>
+                          <td>{value}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {Object.keys(t.perMode).length > 0 && (
+                  <>
+                    <h3>{d.perMode}</h3>
+                    <p className="muted">{d.vatHint}</p>
+                    <div
+                      className="economy-scroll"
+                      role="group"
+                      tabIndex={0}
+                      aria-label={d.perMode}
+                    >
+                      <table className="economy-table">
+                        <thead>
+                          <tr>
+                            <th>{d.mode}</th>
+                            <th>{d.lines}</th>
+                            <th>{d.gross}</th>
+                            <th>{d.vat}</th>
+                            <th>{d.net}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {Object.entries(t.perMode).map(([mode, m]) => (
+                            <tr key={mode}>
+                              <td>{vatModes[mode] ?? mode}</td>
+                              <td>{format.number(m.lines)}</td>
+                              <td>{money(m.grossOre)}</td>
+                              <td>{money(m.vatOre)}</td>
+                              <td>{money(m.netOre)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </>
+                )}
+              </section>
             ),
           },
           {
@@ -349,8 +384,8 @@ export default async function Economy({
                       <tbody>
                         {summary.days.map((day) => (
                           <tr key={day.date}>
-                            <td>{day.date}</td>
-                            <td>{day.salesCount}</td>
+                            <td>{format.date(day.date)}</td>
+                            <td>{format.number(day.salesCount)}</td>
                             <td>{money(day.grossOre)}</td>
                             <td>{money(day.sellerCreditOre)}</td>
                           </tr>
@@ -374,23 +409,28 @@ export default async function Economy({
               >
                 <h2>{d.reports}</h2>
                 <p className="muted">{d.reportsHint}</p>
-                <p>
-                  <Link
-                    className="text-link"
-                    href={briefHref('week')}
-                    aria-current={briefKind === 'week' ? 'page' : undefined}
-                  >
-                    {all.brief.week}
-                  </Link>{' '}
-                  ·{' '}
-                  <Link
-                    className="text-link"
-                    href={briefHref('month')}
-                    aria-current={briefKind === 'month' ? 'page' : undefined}
-                  >
-                    {all.brief.month}
-                  </Link>
-                </p>
+                <ul className="economy-report-options">
+                  <li>
+                    <Link
+                      className="text-link"
+                      href={briefHref('week')}
+                      aria-current={briefKind === 'week' ? 'page' : undefined}
+                    >
+                      {all.brief.week}
+                    </Link>
+                    <p>{d.weekHint}</p>
+                  </li>
+                  <li>
+                    <Link
+                      className="text-link"
+                      href={briefHref('month')}
+                      aria-current={briefKind === 'month' ? 'page' : undefined}
+                    >
+                      {all.brief.month}
+                    </Link>
+                    <p>{d.monthHint}</p>
+                  </li>
+                </ul>
                 {brief && (
                   <>
                     <h3>{brief.title}</h3>

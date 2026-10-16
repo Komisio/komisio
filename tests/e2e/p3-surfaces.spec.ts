@@ -75,13 +75,15 @@ test('settlement batch reserves every candidate and the economy page shows the p
       name: d.economy.totalsHeading,
       exact: true,
     })
-    await expect(totals.getByText(/400\.00 SEK/).first()).toBeVisible()
+    await expect(
+      totals.getByText('400,00 kr', { exact: true }).first(),
+    ).toBeVisible()
     await expect(
       page.getByRole('region', {
         name: d.economy.liabilityHeading,
         exact: true,
       }),
-    ).toContainText('160.00 SEK')
+    ).toContainText('160,00 kr')
   } finally {
     await f.close()
   }

@@ -143,20 +143,42 @@ function fill(template: string, values: Record<string, string | number>) {
 }
 
 /** The brief as ordered sentences; the same numbers render the same text every time. */
-export function renderBrief(b: EconomyBrief, t: BriefTexts) {
+export function renderBrief(
+  b: EconomyBrief,
+  t: BriefTexts,
+  format?: {
+    money: (ore: number, currency: string) => string
+    date: (iso: string) => string
+    number: (value: number) => string
+  },
+) {
   const f = briefFacts(b)
-  const money = (v: number) => `${formatSignedOre(v)} ${b.currency}`
+  const money = (v: number) =>
+    format ? format.money(v, b.currency) : `${formatSignedOre(v)} ${b.currency}`
+  const date = (iso: string) => (format ? format.date(iso) : iso)
+  const render = (template: string, values: Record<string, string | number>) =>
+    fill(
+      template,
+      Object.fromEntries(
+        Object.entries(values).map(([key, value]) => [
+          key,
+          typeof value === 'number' && format ? format.number(value) : value,
+        ]),
+      ),
+    )
   const c = b.current
-  const title = fill(b.kind === 'week' ? t.weekTitle : t.monthTitle, {
-    from: b.period.from,
-    to: b.period.to,
+  const title = render(b.kind === 'week' ? t.weekTitle : t.monthTitle, {
+    from: date(b.period.from),
+    to: date(b.period.to),
   })
   const lines: string[] = []
   if (c.salesCount === 0) {
-    lines.push(fill(t.noSales, { from: b.period.from, to: b.period.to }))
+    lines.push(
+      render(t.noSales, { from: date(b.period.from), to: date(b.period.to) }),
+    )
   } else {
     lines.push(
-      fill(t.salesLine, {
+      render(t.salesLine, {
         sales: c.salesCount,
         gross: money(c.grossOre),
         average: money(f.averageSaleOre ?? 0),
@@ -171,33 +193,33 @@ export function renderBrief(b: EconomyBrief, t: BriefTexts) {
             ? t.comparedDown
             : t.comparedSame
     lines.push(
-      fill(compared, {
+      render(compared, {
         percent: Math.abs(f.grossChange ?? 0),
         previousGross: money(b.previous.grossOre),
-        previousFrom: b.previousPeriod.from,
-        previousTo: b.previousPeriod.to,
+        previousFrom: date(b.previousPeriod.from),
+        previousTo: date(b.previousPeriod.to),
       }),
     )
     if (b.bestDay)
       lines.push(
-        fill(t.bestDay, {
-          date: b.bestDay.date,
+        render(t.bestDay, {
+          date: date(b.bestDay.date),
           gross: money(b.bestDay.grossOre),
           sales: b.bestDay.salesCount,
         }),
       )
-    lines.push(fill(t.sellDays, { days: f.sellDaysCount }))
+    lines.push(render(t.sellDays, { days: f.sellDaysCount }))
     lines.push(
       c.returnsCount === 0
         ? t.noReturns
-        : fill(t.returnsLine, {
+        : render(t.returnsLine, {
             returns: c.returnsCount,
             refunds: money(c.refundsOre),
             rate: f.returnRatePercent ?? 0,
           }),
     )
     lines.push(
-      fill(t.creditLine, {
+      render(t.creditLine, {
         credit: money(c.sellerCreditOre),
         commission: money(c.commissionOre),
       }),
@@ -206,26 +228,26 @@ export function renderBrief(b: EconomyBrief, t: BriefTexts) {
   lines.push(
     c.payoutsPaidCount === 0
       ? t.noPayouts
-      : fill(t.payoutsLine, {
+      : render(t.payoutsLine, {
           count: c.payoutsPaidCount,
           amount: money(c.payoutsPaidOre),
         }),
   )
   lines.push(
-    fill(t.acceptedLine, {
+    render(t.acceptedLine, {
       accepted: b.itemsAccepted,
       previousAccepted: b.previousItemsAccepted,
     }),
   )
   lines.push(
-    fill(t.liabilityLine, {
+    render(t.liabilityLine, {
       owed: money(b.liability.owedOre),
       sellers: b.liability.sellersWithEntries,
     }),
   )
   if (b.openPayouts.count > 0)
     lines.push(
-      fill(t.openPayoutsLine, {
+      render(t.openPayoutsLine, {
         count: b.openPayouts.count,
         amount: money(b.openPayouts.amountOre),
       }),

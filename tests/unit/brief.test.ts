@@ -6,6 +6,7 @@ import {
   type EconomyBrief,
 } from '../../lib/engine/brief'
 import { dictionary } from '../../lib/i18n'
+import { economyFormat } from '../../lib/intake/economy-format'
 
 const zero = {
   salesCount: 0,
@@ -108,4 +109,26 @@ describe('brief facts', () => {
     expect(quiet.lines.some((l) => l.includes('%'))).toBe(false)
     expect(quiet.lines.some((l) => l.includes('{'))).toBe(false)
   })
+})
+
+it('localizes the page report without changing its facts or default external rendering', () => {
+  const original = renderBrief(brief, dictionary('en').brief)
+  const localized = renderBrief(
+    brief,
+    dictionary('en').brief,
+    economyFormat('en'),
+  )
+  expect(localized.facts).toEqual(original.facts)
+  expect(localized.title).toContain('07/09/2026')
+  expect(localized.lines.join(' ').replace(/\s/g, ' ')).toContain(
+    'SEK 1,200.00',
+  )
+  expect(localized.lines.join(' ')).not.toContain('2026-09-11')
+  const empty = renderBrief(
+    { ...brief, current: { ...brief.current, salesCount: 0 } },
+    dictionary('en').brief,
+    economyFormat('en'),
+  )
+  expect(empty.lines[0]).toContain('13/09/2026')
+  expect(original.title).toContain('2026-09-07')
 })

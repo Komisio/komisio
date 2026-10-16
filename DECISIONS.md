@@ -1100,3 +1100,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-16: Opt-in tenant.created webhooks run after the create response, signed and time-bounded, without retries or personal-data logs. A creation-lock RPC reports first creation only; existing tenancy rules remain. Marketing consent is separate (#466).
 
 - 2026-10-16: Connected assistants show compact counts by permission level and expandable area-grouped scopes. Identity, approver, activity and disconnect remain visible, including on mobile. Unknown scopes stay visible; authorization and grant data are unchanged (#469).
+
+- 2026-10-16: Economy separates detailed amounts into a tab, uses locale-aware presentation and labelled counts, and distinguishes current seller balances from period figures. Existing read models, monetary facts, VAT rules and report periods remain unchanged (#474).

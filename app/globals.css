@@ -6539,8 +6539,35 @@ button.text-link:hover:not(:disabled) {
   min-width: 0;
 }
 .economy-period,
-.economy-overview {
+.economy-overview,
+.economy-liability,
+.economy-layout > section {
   grid-column: 1 / -1;
+}
+.economy-date-hint {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 14px;
+}
+.economy-current-note {
+  background: var(--mint);
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: var(--ink);
+}
+.economy-page #economy-brief > ul {
+  list-style: disc;
+  padding-inline-start: 24px;
+}
+.economy-page #economy-brief > ul > li {
+  padding-inline-start: 4px;
+  margin-block: 8px;
+}
+.economy-report-options li + li {
+  margin-top: 16px;
+}
+.economy-report-options p {
+  margin: 0;
 }
 .economy-period {
   padding: 20px 24px;
@@ -6607,17 +6634,7 @@ button.text-link:hover:not(:disabled) {
   padding: 16px 0;
 }
 .economy-details {
-  padding: 8px 24px;
-}
-.economy-details > summary,
-#economy-brief > summary {
-  min-height: 44px;
-  align-content: center;
-  font-weight: 600;
-  cursor: pointer;
-}
-.economy-details[open] {
-  padding-bottom: 24px;
+  padding: 24px;
 }
 .economy-details .economy-scroll {
   margin-top: 16px;

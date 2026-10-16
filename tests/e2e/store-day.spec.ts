@@ -209,7 +209,7 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
       .locator('.inventory-open-item')
       .click()
     await expect(page).toHaveURL(
-      new RegExp(`/intake/items/${accepted[15].id}$`),
+      (url) => url.pathname === `/intake/items/${accepted[15].id}`,
     )
 
     // Synthetic engine events only: no actual checkout, transfer or provider call.

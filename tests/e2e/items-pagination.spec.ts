@@ -29,7 +29,12 @@ test('staff can reach all matching items and retain filters on a phone', async (
     const seen = new Set(
       await rows
         .locator('.inventory-open-item')
-        .evaluateAll((links) => links.map((link) => link.getAttribute('href'))),
+        .evaluateAll((links) =>
+          links.map(
+            (link) =>
+              new URL(link.getAttribute('href')!, location.href).pathname,
+          ),
+        ),
     )
     const next = () =>
       page.getByRole('link', { name: d.items.nextPage, exact: true })
@@ -55,7 +60,10 @@ test('staff can reach all matching items and retain filters on a phone', async (
       for (const href of await rows
         .locator('.inventory-open-item')
         .evaluateAll((links) =>
-          links.map((link) => link.getAttribute('href')),
+          links.map(
+            (link) =>
+              new URL(link.getAttribute('href')!, location.href).pathname,
+          ),
         )) {
         expect(seen.has(href)).toBe(false)
         seen.add(href)

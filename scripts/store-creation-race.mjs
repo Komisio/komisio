@@ -16,7 +16,7 @@ export async function raceStoreCreation({ setup, sessions }) {
       uid + request,
     ])
     const attempts = sessions.map(({ c }, i) =>
-      c.query('select create_tenant_with_locale($1,$2,$3,$4) id', [
+      c.query('select create_tenant_with_result($1,$2,$3,$4,null) result', [
         'Creation race',
         `creation-${request}`,
         request,
@@ -36,8 +36,9 @@ export async function raceStoreCreation({ setup, sessions }) {
     await setup.query('commit')
     const results = await Promise.all(attempts)
     assert.equal(waiting, 2)
-    const tenant = results[0].rows[0].id
-    assert.equal(results[1].rows[0].id, tenant)
+    const tenant = results[0].rows[0].result.tenant_id
+    assert.equal(results[1].rows[0].result.tenant_id, tenant)
+    assert.equal(results.filter((r) => r.rows[0].result.created).length, 1)
     const policies = (
       await setup.query(
         'select policy from store_policy_versions where tenant_id=$1',
@@ -47,7 +48,7 @@ export async function raceStoreCreation({ setup, sessions }) {
     assert.equal(policies.length, 1)
     assert.ok(['NOK', 'DKK'].includes(policies[0].policy.currency))
     console.log(
-      'PASS: concurrent store creation persists one tenant and one initial currency policy.',
+      'PASS: concurrent store creation persists one tenant and one initial currency policy, with one event-eligible result.',
     )
   } finally {
     await sessions[1].c.query(

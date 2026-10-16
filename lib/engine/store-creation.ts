@@ -14,17 +14,17 @@ const creation = z.object({
 // SQL creates membership and the initial currency policy atomically.
 export async function createStore(client: SupabaseClient, input: unknown) {
   const command = creation.parse(input)
-  if (command.currency)
-    return client.rpc('create_tenant_with_currency', {
-      p_name: command.name,
-      p_slug: command.slug,
-      p_request_id: command.requestId,
-      p_currency: command.currency,
-    })
-  return client.rpc('create_tenant_with_locale', {
+  const result = await client.rpc('create_tenant_with_result', {
     p_name: command.name,
     p_slug: command.slug,
     p_request_id: command.requestId,
     p_locale: command.locale,
+    p_currency: command.currency ?? null,
   })
+  if (result.error) return { data: null, error: result.error, created: false }
+  const data = z
+    .object({ tenant_id: z.uuid(), created: z.boolean() })
+    .parse(result.data)
+  // Preserve the platform API's UUID response while exposing the atomic first-create flag.
+  return { data: data.tenant_id, error: null, created: data.created }
 }

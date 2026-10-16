@@ -50,6 +50,13 @@ the user's session. RLS and function authorization independently enforce access.
 There is no application service-role credential. Domain and staged-operation
 routes use the engine boundary; agent proposals do not bypass staff review.
 
+Optional outbound events use `lib/events/webhook.ts`. The platform create route
+schedules `tenant.created` through Next.js `after()` only after a successful
+first creation. `create_tenant_with_result` shares the existing creation lock to
+distinguish retries without changing membership rules. Delivery is signed,
+time-bounded and best-effort, with no outbox or retries; it is disabled unless
+the operator configures an HTTPS endpoint and secret. See `docs/SELF-HOSTING.md`.
+
 Staff seller registration requests account activation through the public Auth
 passwordless API after the seller is saved. The capped communication queue grants
 one durable send attempt. Auth creates or reuses the identity and emails a secret

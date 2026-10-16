@@ -1,10 +1,11 @@
 import { createHash, randomBytes, randomUUID } from 'node:crypto'
-import { NextResponse } from 'next/server'
+import { after, NextResponse } from 'next/server'
 import { createStore } from '@/lib/engine/store-creation'
 import { platformContext } from '@/lib/platform/context'
 import { commandSchema, errorCode } from '@/lib/platform/validation'
 import { can } from '@/lib/platform/permissions'
 import { sendInvitationEmail } from '@/lib/platform/invitation-email'
+import { scheduleEvent } from '@/lib/events/webhook'
 
 export async function POST(request: Request) {
   const requestId = randomUUID()
@@ -44,12 +45,21 @@ export async function POST(request: Request) {
     let result
     let inviteUrl: string | undefined
     switch (command.action) {
-      case 'create':
+      case 'create': {
         result = await createStore(context.client, {
           ...command,
           locale: context.locale,
         })
+        if (!result.error && result.created)
+          scheduleEvent(after, 'tenant.created', {
+            tenant_id: result.data,
+            shop_name: command.name,
+            owner_email: context.user.email ?? '',
+            owner_display_name: context.profile?.display_name ?? '',
+            locale: context.locale,
+          })
         break
+      }
       case 'select':
         result = await context.client.rpc('set_active_tenant', {
           p_tenant: command.tenantId,

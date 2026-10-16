@@ -1092,3 +1092,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-15: Astra writes all GitHub communication in English, including issues, comments, PRs, commits, review replies and labels. Conversation language does not change this rule; UI translations remain unaffected.
 
 - 2026-10-15: Owner retires inspection drafts in #458, including accepted source text without snapshots. Keep existing item IDs, prices, terms and corrections; missing source reads stay safe. Bag inspection uses direct reception; draft storage, APIs and MCP tools are removed.
+
+- 2026-10-16: Opt-in tenant.created webhooks run after the create response, signed and time-bounded, without retries or personal-data logs. A creation-lock RPC reports first creation only; existing tenancy rules remain. Marketing consent is separate (#466).

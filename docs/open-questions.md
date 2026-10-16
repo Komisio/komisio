@@ -4,6 +4,12 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+Outbound shop-created events (resolved 2026-10-16, #463): the owner requests an
+optional signed, best-effort webhook after successful creation, with no retries
+or personal-data logs. It remains disabled without operator configuration.
+Explicit marketing-email consent is not currently stored; adding it and exposing
+it in the event is tracked separately in #466. No consent is inferred here.
+
 Seller account activation (resolved 2026-10-13): the owner requests automatic
 account creation when staff register a seller with email. Public Auth passwordless
 signup reuses existing identities and requires email verification before access.

@@ -1,4 +1,10 @@
 {
+  "marketingConsentSave": "E-Mail-Einstellung speichern",
+  "marketingConsentHeading": "Neuigkeiten per E-Mail",
+  "marketingConsentLabel": "Ja, ich möchte Produktneuigkeiten von Komisio per E-Mail erhalten.",
+  "marketingConsentHelp": "Freiwillig. Du kannst deine Wahl jederzeit unter Konto ändern. Wichtige Mitteilungen zu deinem Konto sind davon nicht betroffen.",
+  "marketingConsentDisabled": "Neue Anmeldungen sind deaktiviert. Du kannst deine bisherige Einwilligung weiterhin widerrufen.",
+  "marketingConsentWithdraw": "Abmelden",
   "agreements": {
     "title": "Einlieferervereinbarungen",
     "intro": "Bedingungen des Stores, Versionen und Nachweise der Zustimmung.",

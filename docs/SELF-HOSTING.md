@@ -259,6 +259,31 @@ variables is an operator decision; deployment alone leaves the feature disabled.
 
 ## Local verification
 
+### Optional product-news email preference
+
+After applying the marketing-consent migration, set
+`KOMISIO_MARKETING_CONSENT_ENABLED=true` to offer an optional, unchecked signup
+checkbox and a preference under Account. It is disabled by default and independent
+of advertising cookies. Signup captures only explicit boolean choices with wording
+version `product-news-v1`; later Auth metadata edits cannot rewrite that choice.
+Existing users are not opted in. The protected register records server timestamps
+and retains opt-ins and withdrawals as separate rows. Only the verified account
+holder can read or change their preference; MFA requirements still apply.
+
+When enabled, `tenant.created.data.marketing_consent` contains the owner's current
+boolean preference read from this register. When disabled the field is omitted;
+missing consent must never be treated as opt-in. Lookup failure skips that delivery
+without failing store creation. Account holders with existing consent can still
+withdraw when the feature is disabled.
+
+This feature does not send newsletters or implement a mailing-list integration.
+The creation event is a snapshot, not a subscription feed: later account changes
+do not emit events. Do not use an old creation payload as ongoing permission to send;
+an email integration must honor current withdrawals before any campaign. Configure
+that integration and operator privacy information separately before sending mail.
+
+### Checks
+
 ```sh
 npm run lint
 npm run format:check

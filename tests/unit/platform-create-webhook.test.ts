@@ -34,6 +34,7 @@ beforeEach(() => {
   vi.stubEnv('KOMISIO_EVENTS_WEBHOOK_URL', 'https://events.example.test')
   vi.stubEnv('KOMISIO_EVENTS_WEBHOOK_SECRET', 'synthetic-secret')
   vi.stubEnv('KOMISIO_EVENTS_WEBHOOK_TIMEOUT_MS', '25')
+  vi.stubEnv('KOMISIO_MARKETING_CONSENT_ENABLED', 'false')
   fetcher = vi.fn().mockResolvedValue(new Response(null, { status: 204 }))
   vi.stubGlobal('fetch', fetcher)
   vi.spyOn(console, 'warn').mockImplementation(() => {})
@@ -124,4 +125,57 @@ it('does not schedule an event for a replay or failed creation', async () => {
   expect((await POST(request())).status).toBe(403)
   expect(mocks.after).not.toHaveBeenCalled()
   expect(fetcher).not.toHaveBeenCalled()
+})
+
+it.each([true, false])(
+  'webhook uses the protected current preference: %s',
+  async (consented) => {
+    vi.stubEnv('KOMISIO_MARKETING_CONSENT_ENABLED', 'true')
+    mocks.rpc
+      .mockResolvedValueOnce({
+        data: { tenant_id: tenant, created: true },
+        error: null,
+      })
+      .mockResolvedValueOnce({
+        data: {
+          consented,
+          recorded_at: '2026-10-16T12:00:00Z',
+          text_version: 'product-news-v1',
+        },
+        error: null,
+      })
+    expect((await POST(request())).status).toBe(200)
+    await callbacks[0]()
+    expect(mocks.rpc).toHaveBeenLastCalledWith('my_marketing_consent')
+    expect(
+      JSON.parse(fetcher.mock.calls[0][1].body).data.marketing_consent,
+    ).toBe(consented)
+  },
+)
+it('does not invent consent or fail creation if the preference lookup fails', async () => {
+  vi.stubEnv('KOMISIO_MARKETING_CONSENT_ENABLED', 'true')
+  mocks.rpc
+    .mockResolvedValueOnce({
+      data: { tenant_id: tenant, created: true },
+      error: null,
+    })
+    .mockResolvedValueOnce({ data: null, error: { message: 'private error' } })
+  expect((await POST(request())).status).toBe(200)
+  await callbacks[0]()
+  expect(fetcher).not.toHaveBeenCalled()
+  expect(console.warn).toHaveBeenCalledWith(
+    'events-webhook: payload unavailable; delivery skipped',
+  )
+})
+it('allows withdrawal but refuses new opt-ins while the feature is disabled', async () => {
+  const preference = (consented: boolean) =>
+    new Request(request(), {
+      body: JSON.stringify({ action: 'marketingConsent', consented }),
+    })
+  expect((await POST(preference(true))).status).toBe(403)
+  expect(mocks.rpc).not.toHaveBeenCalled()
+  expect((await POST(preference(false))).status).toBe(200)
+  expect(mocks.rpc).toHaveBeenCalledWith('set_marketing_consent', {
+    p_consented: false,
+  })
 })

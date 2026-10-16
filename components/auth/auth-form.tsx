@@ -18,6 +18,8 @@ import { Button } from '@/components/ui/button'
 import { Feedback } from '@/components/platform/feedback'
 import { Brand } from '@/components/platform/brand'
 import { AdsConsentControl } from '@/components/platform/ads-consent'
+import { MarketingConsentField } from '@/components/platform/marketing-consent-field'
+import { signupMarketingMetadata } from '@/lib/platform/marketing-consent'
 const subscribe = () => () => {}
 const clientReady = () => true
 const serverReady = () => false
@@ -26,11 +28,13 @@ export function AuthForm({
   next = '/',
   callbackError = false,
   initialLocale = 'sv',
+  marketingConsent = false,
 }: {
   mode: 'login' | 'register' | 'reset' | 'password'
   next?: string
   callbackError?: boolean
   initialLocale?: Locale
+  marketingConsent?: boolean
 }) {
   const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const [locale, setLocale] = useState<Locale>(initialLocale)
@@ -84,7 +88,13 @@ export function AuthForm({
           email,
           password,
           options: {
-            data: { locale },
+            data: {
+              locale,
+              ...signupMarketingMetadata(
+                marketingConsent,
+                fields.get('marketingConsent') === 'on',
+              ),
+            },
             emailRedirectTo: `${base}/auth/callback?next=${encodeURIComponent(destination)}`,
           },
         })
@@ -248,6 +258,9 @@ export function AuthForm({
                     {d.forgot}
                   </Link>
                 </p>
+              )}
+              {mode === 'register' && marketingConsent && (
+                <MarketingConsentField d={d} disabled={busy || !ready} />
               )}
               <Button disabled={busy || !ready} className="full">
                 {busy

@@ -6,6 +6,11 @@ import { commandSchema, errorCode } from '@/lib/platform/validation'
 import { can } from '@/lib/platform/permissions'
 import { sendInvitationEmail } from '@/lib/platform/invitation-email'
 import { scheduleEvent } from '@/lib/events/webhook'
+import {
+  readMarketingConsent,
+  saveMarketingConsent,
+} from '@/lib/engine/marketing-consent'
+import { marketingConsentEnabled } from '@/lib/platform/marketing-consent'
 
 export async function POST(request: Request) {
   const requestId = randomUUID()
@@ -46,18 +51,27 @@ export async function POST(request: Request) {
     let inviteUrl: string | undefined
     switch (command.action) {
       case 'create': {
-        result = await createStore(context.client, {
+        const created = await createStore(context.client, {
           ...command,
           locale: context.locale,
         })
-        if (!result.error && result.created)
-          scheduleEvent(after, 'tenant.created', {
-            tenant_id: result.data,
+        result = created
+        const tenantId = created.data
+        if (!created.error && created.created && tenantId)
+          scheduleEvent(after, 'tenant.created', async () => ({
+            tenant_id: tenantId,
             shop_name: command.name,
             owner_email: context.user.email ?? '',
             owner_display_name: context.profile?.display_name ?? '',
             locale: context.locale,
-          })
+            ...(marketingConsentEnabled()
+              ? {
+                  marketing_consent: (
+                    await readMarketingConsent(context.client)
+                  ).consented,
+                }
+              : {}),
+          }))
         break
       }
       case 'select':
@@ -70,6 +84,11 @@ export async function POST(request: Request) {
           p_name: command.name,
           p_locale: command.locale,
         })
+        break
+      case 'marketingConsent':
+        if (command.consented && !marketingConsentEnabled())
+          return reply({ error: 'FORBIDDEN' }, 403)
+        result = await saveMarketingConsent(context.client, command.consented)
         break
       case 'rename':
         result = await context.client.rpc('rename_tenant', {

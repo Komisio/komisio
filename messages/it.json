@@ -1,4 +1,10 @@
 {
+  "marketingConsentSave": "Salva preferenza email",
+  "marketingConsentHeading": "Novità via email",
+  "marketingConsentLabel": "Sì, desidero ricevere novità sui prodotti Komisio via email.",
+  "marketingConsentHelp": "Facoltativo. Puoi modificare la tua scelta in Account in qualsiasi momento. Questo non influisce sui messaggi importanti relativi al tuo account.",
+  "marketingConsentDisabled": "Le nuove iscrizioni sono disattivate. Puoi comunque revocare il consenso precedente.",
+  "marketingConsentWithdraw": "Annulla iscrizione",
   "agreements": {
     "title": "Accordi con i conferenti",
     "intro": "Condizioni del negozio, versioni e prove di approvazione.",

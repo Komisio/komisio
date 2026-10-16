@@ -8,6 +8,7 @@ type Events = {
     owner_email: string
     owner_display_name: string
     locale: Locale
+    marketing_consent?: boolean
   }
 }
 
@@ -95,11 +96,18 @@ export async function emitEvent<E extends keyof Events>(
 export function scheduleEvent<E extends keyof Events>(
   afterResponse: (callback: () => Promise<void>) => void,
   event: E,
-  data: Events[E],
+  data: Events[E] | (() => Promise<Events[E]>),
 ) {
   if (!process.env.KOMISIO_EVENTS_WEBHOOK_URL?.trim()) return
   try {
-    afterResponse(() => emitEvent(event, data))
+    afterResponse(async () => {
+      try {
+        await emitEvent(event, typeof data === 'function' ? await data() : data)
+      } catch {
+        // A preference lookup failure must never invent consent or fail creation.
+        console.warn('events-webhook: payload unavailable; delivery skipped')
+      }
+    })
   } catch {
     console.warn('events-webhook: scheduling failed')
   }

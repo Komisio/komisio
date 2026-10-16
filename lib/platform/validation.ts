@@ -12,6 +12,7 @@ export const commandSchema = z.discriminatedUnion('action', [
     currency: z.enum(storeCurrencies).optional(),
   }),
   z.object({ action: z.literal('select'), tenantId }),
+  z.object({ action: z.literal('marketingConsent'), consented: z.boolean() }),
   z.object({
     action: z.literal('profile'),
     name: z.string().trim().max(100),

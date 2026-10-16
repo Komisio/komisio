@@ -2,6 +2,7 @@ import { publicPageMetadata } from '@/lib/platform/page-metadata'
 import { cookies } from 'next/headers'
 import { AuthForm } from '@/components/auth/auth-form'
 import { resolveLocale, isLocale } from '@/lib/i18n'
+import { marketingConsentEnabled } from '@/lib/platform/marketing-consent'
 export default async function Register({
   searchParams,
 }: {
@@ -11,6 +12,7 @@ export default async function Register({
   return (
     <AuthForm
       mode="register"
+      marketingConsent={marketingConsentEnabled()}
       next={query.next}
       initialLocale={
         isLocale(query.locale)

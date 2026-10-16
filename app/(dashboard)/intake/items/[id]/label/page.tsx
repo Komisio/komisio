@@ -74,14 +74,15 @@ export default async function ItemLabel({
           <p className="item-browser-label-price">
             {formatOre(label.priceOre!)} {label.currency}
           </p>
+          {/* Scale 3 SVG: whole CSS-pixel modules avoid fractional bar widths. */}
           <Image
             unoptimized
             src={
               'data:image/svg+xml;base64,' + Buffer.from(svg).toString('base64')
             }
             alt={label.reference}
-            width={Number(dimensions[1])}
-            height={Number(dimensions[2])}
+            width={Number(dimensions[1]) / 3}
+            height={Number(dimensions[2]) / 3}
           />
           <p className="item-browser-label-reference">{label.reference}</p>
         </article>

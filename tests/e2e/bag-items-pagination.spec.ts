@@ -80,7 +80,9 @@ test('registered items remain reachable on mobile, including old inspection URLs
         )
         await expect(rows).toHaveCount(n === 3 ? 3 : 25)
         for (const href of await links.evaluateAll((nodes) =>
-          nodes.map((n) => n.getAttribute('href')!),
+          nodes.map(
+            (n) => new URL(n.getAttribute('href')!, location.href).pathname,
+          ),
         )) {
           expect(seen.has(href)).toBe(false)
           seen.add(href)

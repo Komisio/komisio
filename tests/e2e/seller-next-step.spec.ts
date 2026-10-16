@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { createRequire } from 'node:module'
+import { readFileSync } from 'node:fs'
 import { register } from '../helpers/account'
+import { localTestUrl } from '../helpers/local-services'
 test('seller sees the next price step, days left and what happens at period end', async ({
   page,
 }) => {
@@ -10,10 +12,22 @@ test('seller sees the next price step, days left and what happens at period end'
   await expect(page).toHaveURL(/\/seller$/)
   const { Client } = createRequire(import.meta.url)('pg')
   const db = new Client({
-    connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    connectionString: localTestUrl(
+      'TEST_DATABASE_URL',
+      'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    ),
   })
   await db.connect()
   try {
+    await db.query(
+      readFileSync(
+        new URL(
+          '../../supabase/tests/bag-reception-fixture.inc',
+          import.meta.url,
+        ),
+        'utf8',
+      ),
+    )
     const owner = randomUUID()
     await db.query(
       'insert into auth.users(id,email,email_confirmed_at) values($1,$2,now())',
@@ -64,15 +78,15 @@ test('seller sees the next price step, days left and what happens at period end'
         agreement,
       ])
     ).rows[0].id
-    const draft = randomUUID()
+    const reception = randomUUID()
     await db.query(
       "select pg_temp.prepare_bag_reception($1,$2,$3,$4,0,'Blå ullkappa','Kappor','Bra')",
-      [tenant, randomUUID(), bag, draft],
+      [tenant, randomUUID(), bag, reception],
     )
     await db.query("select accept_item($1,$2,'reception_review',$3,1,30000)", [
       tenant,
       randomUUID(),
-      draft,
+      reception,
     ])
     await db.query('commit')
     await page.goto(`/seller?seller=${sellerId}`)

@@ -18,7 +18,10 @@ test('staff print an item label with the current price without configuring a pri
   await register(page, email, 'K!' + randomBytes(16).toString('hex'))
   const f = await p2Fixture(email)
   try {
-    const item = await f.item('Vintage oak chair — comfortable and restored')
+    const item = await f.item(
+      'Vintage oak chair — comfortable and restored',
+      '7149a04b' + randomUUID().slice(8),
+    )
     await f.db.query('select set_item_price($1,$2,$3,12345,$4)', [
       f.tenant,
       randomUUID(),
@@ -190,6 +193,60 @@ test('staff print an item label with the current price without configuring a pri
     } finally {
       await other.close()
       await otherContext.close()
+    }
+  } finally {
+    await f.close()
+  }
+})
+
+test('numeric, alphabetic and mixed browser labels retain decodable modules on screen and in print', async ({
+  page,
+}) => {
+  const email = 'barcode-patterns-' + randomUUID() + '@example.test'
+  await register(page, email, 'K!' + randomBytes(16).toString('hex'))
+  const f = await p2Fixture(email)
+  try {
+    const prefixes = [
+      '7149a04b',
+      'ffffffff',
+      '00000000',
+      '12345678',
+      'abc123ef',
+    ]
+    const items = []
+    for (const prefix of prefixes)
+      items.push(
+        await f.item(
+          'Synthetic barcode pattern',
+          prefix + randomUUID().slice(8),
+        ),
+      )
+    await f.commit()
+    for (const item of items) {
+      const reference = 'I-' + item.slice(0, 8).toUpperCase()
+      await page.goto('/intake/items/' + item + '/label')
+      const img = page.locator('.item-browser-label img')
+      for (const width of [320, 375]) {
+        await page.setViewportSize({ width, height: 800 })
+        await expect(img).toBeVisible()
+        expect((await decodeRenderedCode128(await img.screenshot())).text).toBe(
+          reference,
+        )
+        expect(
+          await page.evaluate(
+            () => document.documentElement.scrollWidth <= innerWidth,
+          ),
+        ).toBe(true)
+      }
+      await page.setViewportSize({ width: 1280, height: 900 })
+      await page.emulateMedia({ media: 'print' })
+      expect(
+        (await page.locator('.item-browser-label').boundingBox())!.width,
+      ).toBeCloseTo((80 * 96) / 25.4, 0)
+      expect((await decodeRenderedCode128(await img.screenshot())).text).toBe(
+        reference,
+      )
+      await page.emulateMedia({ media: 'screen' })
     }
   } finally {
     await f.close()

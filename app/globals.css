@@ -4374,7 +4374,8 @@ button.text-link:hover:not(:disabled) {
 }
 .item-browser-label img {
   display: block;
-  width: 100%;
+  max-width: 100%;
+  margin-inline: auto;
   height: auto;
 }
 .item-browser-label-reference {

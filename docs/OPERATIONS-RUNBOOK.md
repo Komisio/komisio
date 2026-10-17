@@ -20,8 +20,14 @@ shape with its own project, secrets and domain
 
 Daily day-close preparation runs at 06:45 UTC on
 `/api/automation/day-closes`, using the ordinary automation identity and an
-owner-enabled `day_close` grant. Existing Fortnox sending runs separately at
-07:00 UTC on `/api/automation/fortnox-send` with its own `fortnox_send` grant.
+owner-enabled `day_close` grant. Fortnox sending runs separately through a
+once-per-minute tick on `/api/automation/fortnox-send` with its own `fortnox_send`
+grant. The store owner chooses the daily time in Accounting → Settings
+(Europe/Stockholm; default 07:00 local, 1–2 hours earlier than the former UTC
+schedule). Completed/failed days do not restart; partial batches retain the first
+cutoff. An interrupted claim stays held that day. Pending or uncertain voucher
+sends are never retried automatically. See `FORTNOX-CONNECTION.md` for DST and
+cutoff semantics. This setting neither creates exports nor changes day closing.
 Both require `CRON_SECRET` and the configured automation credentials.
 
 Cron routes reject missing configuration and invalid bearer authorization;

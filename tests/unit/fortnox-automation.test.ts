@@ -38,6 +38,57 @@ function fixture() {
   return { client, rpc, signInWithPassword, signOut, makeClient, run }
 }
 describe('Fortnox automatic sending', () => {
+  it('does not read exports or send when another tick already claimed the day', async () => {
+    const rpc = vi.fn().mockResolvedValue({ data: false, error: null })
+    const send = vi.fn()
+    await runAutomaticFortnoxSend(
+      { rpc } as unknown as SupabaseClient,
+      tenantId,
+      env,
+      send as unknown as typeof sendExportToFortnox,
+    )
+    expect(rpc).toHaveBeenCalledTimes(1)
+    expect(rpc).toHaveBeenCalledWith(
+      'begin_fortnox_automatic_run',
+      expect.objectContaining({ p_tenant: tenantId }),
+    )
+    expect(send).not.toHaveBeenCalled()
+  })
+  it.each([null, 'true', { ok: true }])(
+    'rejects an unverified claim response %j',
+    async (data) => {
+      const rpc = vi.fn().mockResolvedValue({ data, error: null })
+      const send = vi.fn()
+      await expect(
+        runAutomaticFortnoxSend(
+          { rpc } as unknown as SupabaseClient,
+          tenantId,
+          env,
+          send as unknown as typeof sendExportToFortnox,
+        ),
+      ).rejects.toThrow('FORTNOX_AUTOMATION_FAILED')
+      expect(send).not.toHaveBeenCalled()
+    },
+  )
+  it('continues other stores after one store fails', async () => {
+    const setup = fixture()
+    setup.rpc
+      .mockResolvedValueOnce({ data: [], error: null })
+      .mockResolvedValueOnce({
+        data: [{ tenantId }, { tenantId: exportId }],
+        error: null,
+      })
+    setup.run.mockRejectedValueOnce(new Error('private provider body'))
+    const response = await handleFortnoxCron(
+      request(),
+      env,
+      setup.makeClient as unknown as typeof createClient,
+      setup.run,
+    )
+    expect(response.status).toBe(500)
+    expect(setup.run).toHaveBeenCalledTimes(2)
+    expect(setup.run.mock.calls[1][1]).toBe(exportId)
+  })
   it('rejects missing configuration and bad cron secrets before signing in', async () => {
     const setup = fixture()
     const factory = setup.makeClient as unknown as typeof createClient
@@ -112,6 +163,7 @@ describe('Fortnox automatic sending', () => {
     const rpc = vi
       .fn()
       .mockResolvedValue({ data: null, error: null })
+      .mockResolvedValueOnce({ data: true, error: null })
       .mockResolvedValueOnce({
         data: [{ exportId }, { exportId: tenantId }, { exportId }],
         error: null,
@@ -143,6 +195,7 @@ describe('Fortnox automatic sending', () => {
     const rpc = vi
       .fn()
       .mockResolvedValue({ data: null, error: null })
+      .mockResolvedValueOnce({ data: true, error: null })
       .mockResolvedValueOnce({ data: [{ exportId }], error: null })
     const send = vi.fn()
     const now = vi.fn().mockReturnValueOnce(0).mockReturnValue(200000)
@@ -163,6 +216,7 @@ describe('Fortnox automatic sending', () => {
     const rpc = vi
       .fn()
       .mockResolvedValue({ data: null, error: null })
+      .mockResolvedValueOnce({ data: true, error: null })
       .mockResolvedValueOnce({ data: [], error: null })
     const send = vi.fn()
     await runAutomaticFortnoxSend(

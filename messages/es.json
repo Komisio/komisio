@@ -2521,7 +2521,12 @@
     "reconnect": "Renovar la conexión con Fortnox",
     "automation": {
       "heading": "Enviar asientos automáticamente",
-      "hint": "Se ejecuta a diario a las 07:00 UTC para las exportaciones registradas. Los envíos pendientes o inciertos quedan retenidos; los cierres del día siguen siendo manuales.",
+      "hint": "Envía las exportaciones registradas cada día a partir de las {time} (Europe/Stockholm). Las más recientes esperan al día siguiente. Los envíos en curso o inciertos no se reenvían. Esto no crea cierres diarios ni exportaciones.",
+      "timeLabel": "Hora de envío (Europe/Stockholm)",
+      "saveTime": "Guardar hora",
+      "timeSaved": "Hora guardada. Si la ejecución de hoy ya ha comenzado, el cambio se aplica a partir del día siguiente.",
+      "timeChanged": "No se pudo guardar el ajuste. Recarga la página y comprueba la hora actual.",
+      "timeUncertain": "No se pudo confirmar que se guardara. Vuelve a intentarlo con los mismos datos.",
       "enable": "Activar el envío automático",
       "disable": "Desactivar el envío automático",
       "enabled": "Envío automático activado",

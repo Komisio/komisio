@@ -176,6 +176,24 @@ closes and require their six explicit accounting map keys before export.
 Separate POS payments are excluded from this export to avoid duplicate booking.
 The store currency is frozen once a fee exists.
 
+## Automatic Fortnox scheduling
+
+If automatic Fortnox sending is configured, schedule an authenticated request to
+`/api/automation/fortnox-send` every minute with the configured `CRON_SECRET`.
+Use the existing ordinary automation identity and owner-enabled `fortnox_send`
+grant; never an administrator database credential. See `FORTNOX-CONNECTION.md`
+for provider and worker configuration. Vercel uses the checked-in cron entry;
+self-hosted operators must configure their own scheduler.
+
+Owners choose any `HH:MM` under Accounting → Settings in Europe/Stockholm.
+The default is 07:00 local, intentionally 1–2 hours earlier than the old 07:00 UTC.
+The database enforces local-day claims, DST handling and same-day delayed ticks;
+the scheduler's own timezone does not change the store's time. Completed days
+cannot repeat, partial batches retain their cutoff, and later exports wait until
+the next day. Interrupted claims and uncertain sends remain held. The setting
+persists when the grant is disabled and re-enabled. This does not create exports
+or change the independent day-close automation.
+
 ## Outbound event webhooks
 
 Operators can connect shop creation to their own onboarding or notification tools.

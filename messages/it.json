@@ -2521,7 +2521,12 @@
     "reconnect": "Rinnova la connessione Fortnox",
     "automation": {
       "heading": "Invia le registrazioni automaticamente",
-      "hint": "Viene eseguito ogni giorno alle 07:00 UTC per le esportazioni registrate. Gli invii in sospeso o incerti restano trattenuti; le chiusure giornaliere restano manuali.",
+      "hint": "Invia le esportazioni registrate ogni giorno dalle {time} (Europe/Stockholm). Le esportazioni più recenti attendono il giorno successivo. Gli invii in corso o incerti non vengono ripetuti. Non vengono create chiusure giornaliere o esportazioni.",
+      "timeLabel": "Ora di invio (Europe/Stockholm)",
+      "saveTime": "Salva ora",
+      "timeSaved": "Ora salvata. Se l'esecuzione di oggi è già iniziata, la modifica si applica dal giorno successivo.",
+      "timeChanged": "Impossibile salvare l'impostazione. Ricarica la pagina e controlla l'ora attuale.",
+      "timeUncertain": "Impossibile confermare il salvataggio. Riprova con gli stessi dati.",
       "enable": "Attiva l'invio automatico",
       "disable": "Disattiva l'invio automatico",
       "enabled": "Invio automatico attivo",

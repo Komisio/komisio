@@ -2521,7 +2521,12 @@
     "reconnect": "Renew the Fortnox connection",
     "automation": {
       "heading": "Send vouchers automatically",
-      "hint": "Runs daily at 07:00 UTC for recorded exports. Pending or uncertain sends stay held; day closes remain manual.",
+      "hint": "Sends recorded exports daily from {time} (Europe/Stockholm). Newer exports wait until the next day. Pending or uncertain sends are not resent. This creates no day closes or exports.",
+      "timeLabel": "Send time (Europe/Stockholm)",
+      "saveTime": "Save time",
+      "timeSaved": "Time saved. If today's run has already started, the change applies from the next day.",
+      "timeChanged": "The setting could not be saved. Reload the page and check the current time.",
+      "timeUncertain": "Saving could not be confirmed. Retry with the same details.",
       "enable": "Enable automatic sending",
       "disable": "Disable automatic sending",
       "enabled": "Automatic sending enabled",

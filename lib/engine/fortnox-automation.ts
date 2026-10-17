@@ -32,6 +32,13 @@ export async function runAutomaticFortnoxSend(
   z.uuid().parse(tenantId)
   const runId = randomUUID()
   const deadline = now() + 200000
+  const claim = await client.rpc('begin_fortnox_automatic_run', {
+    p_tenant: tenantId,
+    p_id: runId,
+  })
+  if (claim.error || typeof claim.data !== 'boolean')
+    throw new Error('FORTNOX_AUTOMATION_FAILED')
+  if (!claim.data) return
   let sent = 0
   let outcome: 'complete' | 'partial' | 'failed' = 'complete'
   try {

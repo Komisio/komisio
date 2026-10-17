@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-17: Owner #488 chooses per-store Fortnox send times in Europe/Stockholm, default 07:00. Daily claims serialize; partial batches retain their first cutoff. Later exports wait for the next day. Schedule revisions survive grant renewal; pending or uncertain sends stay held.
+
 - 2026-10-16: #472 displays browser Code 128 labels at whole CSS-pixel module width, preserving identity and the 80mm paper label. Deterministic pixel-decoding tests cover mixed, numeric and alphabetic references on narrow screens and in print layout; no physical-scanner claim is made.
 
 - 2026-10-16: #466 authorizes append-only user-level marketing consent with server timestamp and wording version. Only the verified account holder reads/changes it. Signup opt-in is optional and disabled by default; tenant.created may include the current preference when enabled.

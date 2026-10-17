@@ -4,6 +4,7 @@ import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import type { OriginKind } from '@/lib/engine/items'
 import { exactPrice } from '@/lib/engine/manual-reception'
+import { itemFromListHref } from '@/lib/intake/item-return'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
 import { useFormDirty } from '@/components/platform/use-form-dirty'
@@ -23,6 +24,7 @@ export function AcceptItemForm({
   intake,
   leaveUnsaved,
   compact = false,
+  returnTo,
 }: {
   tenantId: string
   originKind: OriginKind
@@ -33,6 +35,7 @@ export function AcceptItemForm({
   intake: Dictionary['intake']
   leaveUnsaved: string
   compact?: boolean
+  returnTo?: string
 }) {
   const action = useIntakeAction(intake)
   const router = useRouter()
@@ -160,7 +163,14 @@ export function AcceptItemForm({
       {saved && (
         <p role="status">
           {d.accepted}{' '}
-          <NavigationLink className="text-link" href={`/intake/items/${saved}`}>
+          <NavigationLink
+            className="text-link"
+            href={
+              returnTo
+                ? itemFromListHref(saved, returnTo)
+                : `/intake/items/${saved}`
+            }
+          >
             {d.open}
           </NavigationLink>
         </p>

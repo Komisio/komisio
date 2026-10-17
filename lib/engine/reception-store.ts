@@ -34,6 +34,23 @@ export const createReceptionCommand = z.strictObject({
 })
 
 /** Staff read only. Seller review access has a separate authorization boundary. */
+export async function readReceptionBagId(
+  client: SupabaseClient,
+  tenantInput: string,
+  sessionInput: string,
+) {
+  const { data, error } = await client
+    .from('reception_sessions')
+    .select('bag_id')
+    .eq('tenant_id', z.uuid().parse(tenantInput))
+    .eq('id', z.guid().parse(sessionInput))
+    .maybeSingle()
+  if (error) throw new Error('Unable to read reception intake')
+  return data
+    ? z.object({ bag_id: z.guid().nullable() }).parse(data).bag_id
+    : null
+}
+
 export async function readReceptionReview(
   client: SupabaseClient,
   tenantInput: string,

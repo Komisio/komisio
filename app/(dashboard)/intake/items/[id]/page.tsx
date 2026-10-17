@@ -1,7 +1,8 @@
 import { ItemPhotoGallery } from '@/components/intake/item-photo-gallery'
 import { ItemDetailWorkspace } from '@/components/intake/item-detail-workspace'
 import { ArrowLeft } from 'lucide-react'
-import { itemReturnHref } from '@/lib/intake/item-return'
+import { itemReturnHref, isIntakeReturn } from '@/lib/intake/item-return'
+import { readReceptionBagId } from '@/lib/engine/reception-store'
 import { readItemDirectory } from '@/lib/engine/item-directory'
 import { readAssortmentGroups } from '@/lib/engine/item-classification'
 import { readAttributeVocabulary, labelOf } from '@/lib/engine/attributes'
@@ -42,14 +43,33 @@ export default async function Item({
     d = all.items
   const result = await readItem(ctx.client, active.id, id.data)
   if (!result) notFound()
-  const backHref = itemReturnHref((await searchParams).returnTo)
-  const backLink = (
-    <Link className="btn btn-secondary item-back-link" href={backHref}>
-      <ArrowLeft size={18} aria-hidden="true" />
-      {d.backToList}
-    </Link>
-  )
   const { item, prices, events } = result
+  const bagId =
+    item.origin_kind === 'reception_review'
+      ? await readReceptionBagId(ctx.client, active.id, item.origin_id)
+      : item.custody_kind === 'bag'
+        ? item.custody_id
+        : null
+  const intakeHref = bagId
+    ? `/intake/bags/${bagId}/inspect`
+    : item.origin_kind === 'reception_review'
+      ? `/intake/reception/${item.origin_id}`
+      : null
+  const backHref = itemReturnHref((await searchParams).returnTo)
+  const backToIntake = isIntakeReturn(backHref)
+  const backLink = (
+    <div className="row wrap item-return-links">
+      <Link className="btn btn-secondary item-back-link" href={backHref}>
+        <ArrowLeft size={18} aria-hidden="true" />
+        {backToIntake ? d.backToIntake : d.backToList}
+      </Link>
+      {intakeHref && !backToIntake && (
+        <Link className="text-link item-back-link" href={intakeHref}>
+          {d.backToIntake}
+        </Link>
+      )}
+    </div>
+  )
   const [
     printers,
     label,

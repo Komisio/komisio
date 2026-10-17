@@ -10,7 +10,9 @@ import { dictionary, intlLocale } from '@/lib/i18n'
 import {
   readReceptionSession,
   readReceptionReview,
+  readReceptionBagId,
 } from '@/lib/engine/reception-store'
+import { itemFromListHref } from '@/lib/intake/item-return'
 import { readManualReception } from '@/lib/engine/manual-reception'
 import { readPriceEvidence } from '@/lib/engine/price-evidence'
 import { readPhotoDuplicates } from '@/lib/engine/photo-duplicates'
@@ -45,6 +47,10 @@ export default async function Reception({
     all = dictionary(ctx.locale)
   const reception = await readReceptionSession(ctx.client, tenant.id, id.data)
   if (!reception) notFound()
+  const bagId = await readReceptionBagId(ctx.client, tenant.id, id.data)
+  const intakeHref = bagId
+    ? `/intake/bags/${bagId}/inspect`
+    : `/intake/reception/${id.data}`
   const state = reception.status === 'ready' ? reception.session : reception
   const sources = reception.status === 'ready' ? reception.session.sources : []
   const duplicates = await readPhotoDuplicates(ctx.client, tenant.id, id.data)
@@ -240,8 +246,11 @@ export default async function Reception({
   )
   return (
     <div className="reception-workspace">
-      <Link className="text-link" href="/intake/reception">
-        {d.back}
+      <Link
+        className="text-link item-back-link"
+        href={bagId ? intakeHref : '/intake/reception'}
+      >
+        {bagId ? all.items.backToIntake : d.back}
       </Link>
       <div className="page-heading">
         <h1>{accepted ? d.storeReview.registered : d.workspace.title}</h1>
@@ -260,7 +269,10 @@ export default async function Reception({
       </div>
       {accepted ? (
         <p role="status">
-          <Link className="text-link" href={'/intake/items/' + accepted.id}>
+          <Link
+            className="text-link"
+            href={itemFromListHref(accepted.id, intakeHref)}
+          >
             {all.items.open}
           </Link>
         </p>
@@ -516,7 +528,7 @@ export default async function Reception({
                   {all.items.alreadyAccepted}{' '}
                   <Link
                     className="text-link"
-                    href={`/intake/items/${accepted.id}`}
+                    href={itemFromListHref(accepted.id, intakeHref)}
                   >
                     {all.items.open}
                   </Link>
@@ -525,6 +537,7 @@ export default async function Reception({
                 <p role="status">{all.items.acceptBlocked}</p>
               ) : write ? (
                 <AcceptItemForm
+                  returnTo={intakeHref}
                   key={`${tenant.id}:${id.data}`}
                   tenantId={tenant.id}
                   originKind="reception_review"

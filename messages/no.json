@@ -136,6 +136,8 @@
     }
   },
   "quickIntake": {
+    "typeInlineIntro": "Varetypen lagres for hele butikken.",
+    "typeNameExists": "Det finnes allerede en varetype med dette navnet. Velg den fra listen eller bruk et annet navn.",
     "workspace": {
       "refreshAgreement": "Hent gjeldende avtale",
       "sellerTab": "Selger og avtale",

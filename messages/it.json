@@ -136,6 +136,8 @@
     }
   },
   "quickIntake": {
+    "typeInlineIntro": "Il tipo di articolo viene salvato per tutto il negozio.",
+    "typeNameExists": "Esiste già un tipo di articolo con questo nome. Selezionalo dall’elenco o usa un altro nome.",
     "workspace": {
       "refreshAgreement": "Carica il contratto attuale",
       "sellerTab": "Venditore e contratto",

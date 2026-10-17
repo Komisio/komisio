@@ -177,6 +177,31 @@ test('type creation serializes concurrent replays and refuses stale-store and st
         )
       ).rows[0].n,
     ).toBe(1)
+    // Different request IDs racing for the same name must leave one type.
+    const race = await Promise.all(
+      clients.map(async (c, index) => {
+        await c.query('begin')
+        await c.query('set local role authenticated')
+        await c.query("select set_config('request.jwt.claims',$1,true)", [
+          JSON.stringify({ sub: f.actor, role: 'authenticated' }),
+        ])
+        try {
+          await c.query('select create_item_type($1,$2,$3,$4,$5)', [
+            f.tenant,
+            randomUUID(),
+            index ? ' RACING VESSEL ' : 'Racing vessel',
+            'en',
+            JSON.stringify(attributes),
+          ])
+          await c.query('commit')
+          return 'created'
+        } catch (error) {
+          await c.query('rollback')
+          return (error as Error).message
+        }
+      }),
+    )
+    expect(race.sort()).toEqual(['ITEM_TYPE_NAME_EXISTS', 'created'])
     await f.asActor(
       f.actor,
       async () =>
@@ -281,6 +306,9 @@ test('type creation serializes concurrent replays and refuses stale-store and st
           name: d.quickIntake.createType,
           exact: true,
         }),
+      ).toHaveCount(0)
+      await expect(
+        staffPage.locator('#quick-item-type option[value="__create__"]'),
       ).toHaveCount(0)
     } finally {
       await context.close()

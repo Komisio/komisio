@@ -37,6 +37,7 @@ export async function POST(request: Request) {
         'FORBIDDEN',
         'AUTH_REQUIRED',
         'REQUEST_CONFLICT',
+        'ITEM_TYPE_NAME_EXISTS',
         'INVALID_INPUT',
       ].includes(code)
     )
@@ -46,7 +47,7 @@ export async function POST(request: Request) {
           ? 403
           : code === 'AUTH_REQUIRED'
             ? 401
-            : code === 'REQUEST_CONFLICT'
+            : code === 'REQUEST_CONFLICT' || code === 'ITEM_TYPE_NAME_EXISTS'
               ? 409
               : 400,
       )

@@ -120,6 +120,8 @@ export async function BagReception({
             .filter((p) => p.active)
             .map((p) => ({ id: p.id, name: p.name }))}
           vocabulary={vocabulary}
+          typeSettings={d.vocabularySettings}
+          canManageTypes={['owner', 'admin'].includes(role)}
           groups={groups}
           lang={locale}
           assistance={assistance !== null}

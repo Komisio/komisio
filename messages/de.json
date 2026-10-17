@@ -136,6 +136,8 @@
     }
   },
   "quickIntake": {
+    "typeInlineIntro": "Der Warentyp wird für das gesamte Geschäft gespeichert.",
+    "typeNameExists": "Ein Warentyp mit diesem Namen ist bereits vorhanden. Wählen Sie ihn aus der Liste oder verwenden Sie einen anderen Namen.",
     "workspace": {
       "refreshAgreement": "Aktuellen Vertrag laden",
       "sellerTab": "Verkäufer & Vertrag",

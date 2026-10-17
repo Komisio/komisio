@@ -16,7 +16,7 @@
     "language": "Sopimuksen kieli",
     "languageHint": "Teksti näytetään tällä kielellä ilman automaattista käännöstä. Enintään 12 000 merkkiä.",
     "publishHeading": "Julkaise sopimusversio",
-    "publishHint": "Käytä kaupan omia ehtoja. Komisio ei tarkista niiden oikeudellista sisältöä. Julkaistut versiot säilytetään, eikä niitä voi muokata.",
+    "publishHint": "Käytä kaupan omia ehtoja. Komisio ei tarkista niiden oikeudellista sisältöä. Julkaistua tekstiä ei voi muokata. Käyttämättömän version, johon ei liity myyjiä tai tietueita, voi poistaa.",
     "requireEvidence": "Vaadi kirjattu hyväksyntätodiste ennen tuontierien vastaanottoa",
     "confirmPublish": "Olen tarkistanut tekstin ja vastaanottovaatimuksen. Tämän version tulee koskea tulevia toimituksia.",
     "publish": "Julkaise versio",
@@ -111,7 +111,24 @@
       "next": "Seuraava",
       "status": "Sopimuksen tila",
       "manageLanguages": "Näytä kielet",
-      "languagePublished": "Julkaistu"
+      "languagePublished": "Julkaistu",
+      "deletion": {
+        "remove": "Poista",
+        "confirm": "Poistetaanko ”{name}”? Tätä ei voi kumota.",
+        "confirmAction": "Kyllä, poista",
+        "cancel": "Peruuta",
+        "removing": "Poistetaan…",
+        "failed": "Poistoa ei voitu vahvistaa. Yritä uudelleen tai lataa sivu uudelleen.",
+        "linked": "Sopimusta ei voi poistaa, koska siihen on liitetty myyjiä tai kaupan tietueita.",
+        "actions": "Toiminnot",
+        "usage": {
+          "sellers": "Myyjät",
+          "receipts": "Vastaanotot",
+          "reviews": "Arviot",
+          "items": "Tuotteet",
+          "sales": "Myynnit"
+        }
+      }
     },
     "translations": {
       "add": "Lisää kieli",

@@ -16,7 +16,7 @@
     "language": "Avtalets språk",
     "languageHint": "Texten visas på detta språk och översätts inte automatiskt. Högst 12 000 tecken.",
     "publishHeading": "Publicera en avtalsversion",
-    "publishHint": "Använd butikens egna villkor. Komisio granskar inte deras juridiska innehåll. En publicerad version bevaras och kan inte redigeras.",
+    "publishHint": "Använd butikens egna villkor. Komisio granskar inte deras juridiska innehåll. Publicerad text kan inte redigeras. En oanvänd version utan kopplade säljare eller poster kan tas bort.",
     "requireEvidence": "Kräv registrerat underlag för godkännande före påsmottagning",
     "confirmPublish": "Jag har granskat texten och mottagningskravet. Den nya versionen ska gälla för kommande inlämningar.",
     "publish": "Publicera version",
@@ -111,7 +111,24 @@
       "next": "Nästa",
       "status": "Avtalsstatus",
       "manageLanguages": "Visa språk",
-      "languagePublished": "Publicerad"
+      "languagePublished": "Publicerad",
+      "deletion": {
+        "remove": "Ta bort",
+        "confirm": "Ta bort ”{name}”? Detta går inte att ångra.",
+        "confirmAction": "Ja, ta bort",
+        "cancel": "Avbryt",
+        "removing": "Tar bort…",
+        "failed": "Kunde inte bekräfta borttagningen. Försök igen eller ladda om sidan.",
+        "linked": "Avtalet kan inte tas bort eftersom säljare eller butiksposter är kopplade till det.",
+        "actions": "Åtgärder",
+        "usage": {
+          "sellers": "Säljare",
+          "receipts": "Påsmottagningar",
+          "reviews": "Granskningar",
+          "items": "Varor",
+          "sales": "Försäljningar"
+        }
+      }
     },
     "translations": {
       "add": "Lägg till språk",

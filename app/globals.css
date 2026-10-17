@@ -3574,6 +3574,17 @@ button.text-link:hover:not(:disabled) {
 .agreement-history a[aria-current='page'] {
   font-weight: 700;
 }
+.agreement-delete {
+  max-width: 22rem;
+}
+.agreement-delete p {
+  margin: 0 0 8px;
+}
+.agreement-delete-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 .payouts-overview,
 .payouts-workspace {
   display: grid;

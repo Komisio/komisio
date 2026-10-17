@@ -57,7 +57,14 @@ in their own store; readonly cannot record or publish.
 ## Version and retry contract
 
 Publications and evidence are append-only, with actor identity and an audit
-event. Updating/deleting published text or evidence is rejected in PostgreSQL.
+event. Updating published text or evidence is rejected in PostgreSQL. An owner
+or admin may delete one version only when no acceptance, bag receipt, reception
+review, item or sale line references it. Translations of that version are removed
+with it; a direct translation delete is still rejected. The deletion is audited
+without keeping a second copy of the body, and the version number is not reused.
+Deleting the latest unused version makes the previous version current again.
+Deleting the only version leaves no current agreement. A linked version cannot
+be deleted, including by a direct database request.
 An admin's draft keeps its reviewed base version until deliberately reloaded or
 the next version is prepared. A concurrent publication causes a visible conflict,
 not a silent overwrite. Drafts are not persisted across a browser reload.
@@ -117,9 +124,11 @@ around an authorization failure.
 
 ## Verification and next boundaries
 
-The agreement database tests are `supabase/tests/0005_agreements.test.sql` and
-`supabase/tests/0286_seller_agreement_portal.test.sql`. They cover scoped reads,
-actor-bound evidence, immutability, required evidence and version/retry rules.
+The agreement database tests are `supabase/tests/0005_agreements.test.sql`,
+`supabase/tests/0286_seller_agreement_portal.test.sql` and
+`supabase/tests/0347_delete_unused_seller_agreement.test.sql`. They cover scoped
+reads, actor-bound evidence, immutability, required evidence, version/retry rules
+and deletion of an unused version.
 `scripts/seller-agreement-race.mjs`, included in the concurrency suite, checks
 competing acceptance requests. `tests/e2e/seller-agreement.spec.ts` covers portal
 acceptance, uncertain-response retry, reload, new-version conflicts and mobile

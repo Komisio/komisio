@@ -16,7 +16,7 @@
     "language": "Avtalespråk",
     "languageHint": "Teksten vises på dette språket uten automatisk oversettelse. Maks 12 000 tegn.",
     "publishHeading": "Publiser en avtaleversjon",
-    "publishHint": "Bruk butikkens egne vilkår. Komisio vurderer ikke det juridiske innholdet. Publiserte versjoner bevares og kan ikke redigeres.",
+    "publishHint": "Bruk butikkens egne vilkår. Komisio vurderer ikke det juridiske innholdet. Publisert tekst kan ikke redigeres. En ubrukt versjon uten tilknyttede selgere eller poster kan slettes.",
     "requireEvidence": "Krev registrert bevis på godkjenning før innleveringer tas imot",
     "confirmPublish": "Jeg har gjennomgått teksten og kravet ved mottak. Denne versjonen skal gjelde for fremtidige innleveringer.",
     "publish": "Publiser versjon",
@@ -111,7 +111,24 @@
       "next": "Neste",
       "status": "Avtalestatus",
       "manageLanguages": "Vis språk",
-      "languagePublished": "Publisert"
+      "languagePublished": "Publisert",
+      "deletion": {
+        "remove": "Slett",
+        "confirm": "Slette «{name}»? Dette kan ikke angres.",
+        "confirmAction": "Ja, slett",
+        "cancel": "Avbryt",
+        "removing": "Sletter…",
+        "failed": "Kunne ikke bekrefte slettingen. Prøv igjen eller last siden på nytt.",
+        "linked": "Avtalen kan ikke slettes fordi selgere eller butikkposter er knyttet til den.",
+        "actions": "Handlinger",
+        "usage": {
+          "sellers": "Selgere",
+          "receipts": "Innleveringer",
+          "reviews": "Vurderinger",
+          "items": "Varer",
+          "sales": "Salg"
+        }
+      }
     },
     "translations": {
       "add": "Legg til språk",

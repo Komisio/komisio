@@ -12,6 +12,11 @@ import { readStorePolicy } from '@/lib/engine/store-policy'
 import type { SellerAgreement } from '@/lib/engine/intake'
 import { readAgreementDraft } from '@/lib/engine/agreement-assistance'
 import { readAgreementSellers } from '@/lib/engine/agreement-workspace'
+import {
+  agreementLinkSummary,
+  readSellerAgreementLinks,
+} from '@/lib/engine/agreement-deletion'
+import { DeleteSellerAgreement } from '@/components/intake/delete-seller-agreement'
 import { AgreementTranslationPublisher } from '@/components/intake/agreement-translation-publisher'
 import { AgreementPublisher } from '@/components/intake/agreement-forms'
 import {
@@ -76,6 +81,14 @@ export default async function Agreements({
   ])
   if (latest.error || history.error || requested.error)
     throw new Error('Unable to load agreements')
+  const links =
+    manage && history.data?.length
+      ? await readSellerAgreementLinks(
+          ctx.client,
+          active.id,
+          history.data.map((v) => v.id),
+        )
+      : {}
   if (params.version && !requested.data) notFound()
   const current = latest.data as SellerAgreement | null
   const shown = (requested.data ?? current) as SellerAgreement | null
@@ -176,6 +189,7 @@ export default async function Agreements({
                           <th>{w.publishedAt}</th>
                           <th>{w.status}</th>
                           <th>{w.manageLanguages}</th>
+                          {manage && <th>{w.deletion.actions}</th>}
                         </tr>
                       </thead>
                       <tbody>
@@ -233,6 +247,26 @@ export default async function Agreements({
                                 {w.manageLanguages}
                               </AgreementWorkspaceLink>
                             </td>
+                            {manage && (
+                              <td data-label={w.deletion.actions}>
+                                {links[v.id] ? (
+                                  <p>
+                                    {w.deletion.linked}{' '}
+                                    {agreementLinkSummary(
+                                      links[v.id] ?? {},
+                                      w.deletion.usage,
+                                    )}
+                                  </p>
+                                ) : (
+                                  <DeleteSellerAgreement
+                                    tenantId={active.id}
+                                    agreementId={v.id}
+                                    name={`${a.version} ${v.version} · ${v.title}`}
+                                    d={w.deletion}
+                                  />
+                                )}
+                              </td>
+                            )}
                           </tr>
                         ))}
                       </tbody>

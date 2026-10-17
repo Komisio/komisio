@@ -16,7 +16,7 @@
     "language": "Sprache der Vereinbarung",
     "languageHint": "Der Text wird in dieser Sprache ohne automatische Übersetzung angezeigt. Maximal 12.000 Zeichen.",
     "publishHeading": "Eine Vereinbarungsversion veröffentlichen",
-    "publishHint": "Verwenden Sie die eigenen Bedingungen des Stores. Komisio prüft deren rechtlichen Inhalt nicht. Veröffentlichte Versionen bleiben erhalten und können nicht bearbeitet werden.",
+    "publishHint": "Verwenden Sie die eigenen Bedingungen des Stores. Komisio prüft deren rechtlichen Inhalt nicht. Veröffentlichter Text kann nicht bearbeitet werden. Eine ungenutzte Version ohne verknüpfte Verkäufer oder Einträge kann gelöscht werden.",
     "requireEvidence": "Dokumentierten Zustimmungsnachweis vor der Annahme von Einlieferungen verlangen",
     "confirmPublish": "Ich habe den Text und die Annahmeanforderung geprüft. Diese Version soll für künftige Einlieferungen gelten.",
     "publish": "Version veröffentlichen",
@@ -111,7 +111,24 @@
       "next": "Weiter",
       "status": "Vertragsstatus",
       "manageLanguages": "Sprachen anzeigen",
-      "languagePublished": "Veröffentlicht"
+      "languagePublished": "Veröffentlicht",
+      "deletion": {
+        "remove": "Löschen",
+        "confirm": "„{name}“ löschen? Dies kann nicht rückgängig gemacht werden.",
+        "confirmAction": "Ja, löschen",
+        "cancel": "Abbrechen",
+        "removing": "Wird gelöscht…",
+        "failed": "Löschung konnte nicht bestätigt werden. Erneut versuchen oder die Seite neu laden.",
+        "linked": "Diese Vereinbarung kann nicht gelöscht werden, weil Verkäufer oder Geschäftseinträge damit verknüpft sind.",
+        "actions": "Aktionen",
+        "usage": {
+          "sellers": "Verkäufer",
+          "receipts": "Einlieferungen",
+          "reviews": "Prüfungen",
+          "items": "Artikel",
+          "sales": "Verkäufe"
+        }
+      }
     },
     "translations": {
       "add": "Sprache hinzufügen",

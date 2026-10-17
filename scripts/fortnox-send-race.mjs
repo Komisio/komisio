@@ -62,23 +62,40 @@ export async function raceFortnoxSend({
       `select publish_accounting_map($1,$2,null,'{"grossOre":{"account":"1930","side":"debit"},"mode:store_full:netOre":{"account":"3010","side":"credit"},"mode:store_full:vatOre":{"account":"2610","side":"credit"}}')`,
       [tenant, randomUUID()],
     )
-    const exportId = (
-      await sessions[0].query('select export_day_close($1,$2,$3) id', [
-        tenant,
-        randomUUID(),
-        close,
-      ])
-    ).rows[0].id
+    // Automatic sends only consume exports recorded by the daily cutoff.
+    // Insert backdated synthetic evidence once; never update immutable exports.
+    const exportId = automation
+      ? (
+          await setup.query(
+            `insert into public.accounting_exports(id,tenant_id,day_close_id,map_id,voucher,debit_ore,credit_ore,created_by,created_at)
+             select $1,c.tenant_id,c.id,m.id,v->'lines',(v->>'debitOre')::bigint,(v->>'creditOre')::bigint,$2,now()-interval '1 day'
+             from public.day_closes c join public.accounting_maps m on m.tenant_id=c.tenant_id
+             cross join lateral komisio_private.voucher_for(c,m.map) v where c.id=$3 returning id`,
+            [randomUUID(), actor, close],
+          )
+        ).rows[0].id
+      : (
+          await sessions[0].query('select export_day_close($1,$2,$3) id', [
+            tenant,
+            randomUUID(),
+            close,
+          ])
+        ).rows[0].id
     await sessions[0].query(
       `select store_fortnox_connection($1,'synthetic','Synthetic','','{"iv":"a","tag":"b","data":"c"}','bookkeeping',now()+interval '1 hour')`,
       [tenant],
     )
+    let dailyRun
     if (automation) {
       const worker = randomUUID()
       const email = `worker-${worker}@example.test`
       await setup.query(
         'insert into auth.users(id,email,email_confirmed_at) values($1,$2,now())',
         [worker, email],
+      )
+      await sessions[0].query(
+        "select save_fortnox_send_schedule($1,$2,null,'00:00')",
+        [tenant, randomUUID()],
       )
       await sessions[0].query(
         "select enable_automation($1,$2,'fortnox_send',$3)",
@@ -90,6 +107,25 @@ export async function raceFortnoxSend({
           [JSON.stringify({ sub: worker, role: 'authenticated' })],
         )
       await sessions[0].query('select accept_automation_grants()')
+      await assert.rejects(
+        sessions[0].query('select begin_fortnox_send($1,$2,$3)', [
+          tenant,
+          randomUUID(),
+          exportId,
+        ]),
+        /FORTNOX_RUN_NOT_ACTIVE/,
+      )
+      const claims = [randomUUID(), randomUUID()]
+      const claimed = await Promise.all(
+        sessions.map((session, index) =>
+          session.query('select begin_fortnox_automatic_run($1,$2) claimed', [
+            tenant,
+            claims[index],
+          ]),
+        ),
+      )
+      assert.equal(claimed.filter((result) => result.rows[0].claimed).length, 1)
+      dailyRun = claims[claimed.findIndex((result) => result.rows[0].claimed)]
     }
     const request = randomUUID()
     const results = await Promise.all(
@@ -126,6 +162,19 @@ export async function raceFortnoxSend({
       /FORTNOX_OUTCOME_UNKNOWN/,
     )
     if (automation) {
+      await sessions[0].query(
+        "select finish_fortnox_automatic_run($1,$2,'failed',0)",
+        [tenant, dailyRun],
+      )
+      assert.equal(
+        (
+          await sessions[1].query(
+            'select begin_fortnox_automatic_run($1,$2) claimed',
+            [tenant, randomUUID()],
+          )
+        ).rows[0].claimed,
+        false,
+      )
       await assert.rejects(
         sessions[0].query(
           "select reconcile_fortnox_send($1,$2,'confirmed_sent','A',42,2026,'Synthetic')",

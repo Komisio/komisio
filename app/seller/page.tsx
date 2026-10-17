@@ -1,3 +1,5 @@
+import { SellerItems } from '@/components/seller/items'
+import { economyFormat } from '@/lib/intake/economy-format'
 import { WorkingForm } from '@/components/platform/working-form'
 import { LedgerItemSummary } from '@/components/intake/ledger-item-summary'
 import { readSellerBank } from '@/lib/engine/seller-bank'
@@ -20,13 +22,7 @@ import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { SellerEconomyForms } from '@/components/seller/economy-forms'
 import { SellerHandovers } from '@/components/seller/handover-forms'
 import { readMyHandovers } from '@/lib/engine/handovers'
-import {
-  readMyItems,
-  readMyItemsPage,
-  sellerItemDaysLeft,
-  sellerItemNextStep,
-  sellerItemState,
-} from '@/lib/engine/seller-items'
+import { readMyItems, readMyItemsPage } from '@/lib/engine/seller-items'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { SignOut } from '@/components/platform/sign-out'
 import { SellerHeader } from '@/components/seller/header'
@@ -66,10 +62,7 @@ export default async function SellerPortal({
     new Date(date).toLocaleString(intlLocale(ctx.locale), {
       timeZone: 'Europe/Stockholm',
     })
-  const day = (date: string) =>
-    new Date(date).toLocaleDateString(intlLocale(ctx.locale), {
-      timeZone: 'Europe/Stockholm',
-    })
+  const numbers = economyFormat(ctx.locale)
   const amount = (ore: number) => `${formatSignedOre(ore)} ${currency}`
   if (!account)
     return (
@@ -219,8 +212,8 @@ export default async function SellerPortal({
       )}
       <span>
         {all.items.pageOf
-          .replace('{page}', String(requestedPage))
-          .replace('{pages}', String(pageCount))}
+          .replace('{page}', numbers.number(requestedPage))
+          .replace('{pages}', numbers.number(pageCount))}
       </span>
       {requestedPage < pageCount && (
         <Link className="btn btn-secondary" href={pageHref(requestedPage + 1)}>
@@ -372,12 +365,12 @@ export default async function SellerPortal({
                 <small>
                   {paged.total > 0
                     ? all.items.showingRange
-                        .replace('{from}', String(paged.offset + 1))
+                        .replace('{from}', numbers.number(paged.offset + 1))
                         .replace(
                           '{to}',
-                          String(paged.offset + paged.items.length),
+                          numbers.number(paged.offset + paged.items.length),
                         )
-                        .replace('{total}', String(paged.total))
+                        .replace('{total}', numbers.number(paged.total))
                     : all.items.showing
                         .replace('{shown}', '0')
                         .replace('{total}', '0')}
@@ -392,119 +385,7 @@ export default async function SellerPortal({
           )}
           {itemPagination}
           {mine.items.length > 0 && (
-            <div style={{ overflowX: 'auto' }}>
-              <table className="seller-items">
-                <thead>
-                  <tr>
-                    <th>{d.item}</th>
-                    <th>{d.price}</th>
-                    <th>{d.status}</th>
-                    <th>{d.itemDate}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {mine.items.map((i) => {
-                    const state = sellerItemState(i)
-                    return (
-                      <tr key={i.id}>
-                        <td data-label={d.item}>
-                          {i.title ?? i.reference}
-                          {i.category ? ` · ${i.category}` : ''}
-                          <br />
-                          <small>{i.reference}</small>
-                        </td>
-                        <td data-label={d.price}>
-                          {state === 'sold' && i.soldPriceOre !== null
-                            ? amount(i.soldPriceOre)
-                            : i.currentPriceOre === null
-                              ? '—'
-                              : amount(i.currentPriceOre)}
-                          {state !== 'sold' &&
-                          i.acceptedPriceOre !== null &&
-                          i.currentPriceOre !== null &&
-                          i.currentPriceOre < i.acceptedPriceOre
-                            ? ` (${d.wasPrice} ${amount(i.acceptedPriceOre)})`
-                            : ''}
-                        </td>
-                        <td data-label={d.status}>
-                          {d.itemStates[state]}
-                          {state === 'ended' && i.endedAs
-                            ? ` · ${label(d.endedAs, i.endedAs)}`
-                            : ''}
-                          {(state === 'periodEnding' ||
-                            state === 'periodEnded') &&
-                          i.endOfPeriodAction
-                            ? ` · ${d.then} ${d.endActions[i.endOfPeriodAction]}`
-                            : ''}
-                          {(state === 'forSale' || state === 'periodEnding') &&
-                            (() => {
-                              const next = sellerItemNextStep(i)
-                              const days = sellerItemDaysLeft(i)
-                              // Undefined: the read predates the next-step fields; say nothing about steps.
-                              const text =
-                                next === undefined
-                                  ? ''
-                                  : next
-                                    ? (mine.automaticMarkdowns
-                                        ? d.nextPriceScheduled
-                                        : d.nextPriceManual
-                                      )
-                                        .replace(
-                                          '{price}',
-                                          amount(next.priceOre),
-                                        )
-                                        .replace('{date}', day(next.at))
-                                    : d.lastPrice
-                              const left = d.daysLeft.replace(
-                                '{days}',
-                                String(days),
-                              )
-                              const then =
-                                state === 'forSale' && i.endOfPeriodAction
-                                  ? `, ${d.then} ${d.endActions[i.endOfPeriodAction]}`
-                                  : ''
-                              return (
-                                <>
-                                  <br />
-                                  <small>
-                                    {text} {left}
-                                    {then}
-                                  </small>
-                                </>
-                              )
-                            })()}
-                        </td>
-                        <td data-label={d.itemDate}>
-                          {state === 'sold' && i.soldAt ? (
-                            <EventTime value={i.soldAt} locale={ctx.locale} />
-                          ) : state === 'ended' ? (
-                            '—'
-                          ) : (
-                            <>
-                              {d.until}{' '}
-                              <EventTime
-                                value={i.periodEnd}
-                                locale={ctx.locale}
-                              />
-                              {i.collectionDeadline && (
-                                <>
-                                  <br />
-                                  {d.collectionDeadline}{' '}
-                                  <EventTime
-                                    value={i.collectionDeadline}
-                                    locale={ctx.locale}
-                                  />
-                                </>
-                              )}
-                            </>
-                          )}
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <SellerItems mine={mine} locale={ctx.locale} d={d} />
           )}
           {itemPagination}
         </section>

@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
+import { readFileSync } from 'node:fs'
+import type { Dictionary } from '../../lib/i18n'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
@@ -152,6 +154,111 @@ test('seller finds old owned items and pages without losing the account on mobil
     await expect(page).toHaveURL(/page=9#portal-items$/)
     await expect(rows).toHaveCount(3)
     await expect(section.getByText('Visar 201–203 av 203 varor')).toBeVisible()
+    const tags = {
+      sv: 'sv-SE',
+      en: 'en-GB',
+      no: 'nb-NO',
+      dk: 'da-DK',
+      fi: 'fi-FI',
+      de: 'de-DE',
+      es: 'es-ES',
+      it: 'it-IT',
+    }
+    for (const [locale, tag] of Object.entries(tags)) {
+      await test.step(`Readable item in ${locale}`, async () => {
+        const labels: Dictionary = JSON.parse(
+          readFileSync(
+            new URL(`../../messages/${locale}.json`, import.meta.url),
+            'utf8',
+          ),
+        )
+        await page.context().addCookies([
+          {
+            name: 'komisio-locale',
+            value: locale,
+            url: new URL(page.url()).origin,
+          },
+        ])
+        await page.goto(`/seller?seller=${seller}&q=old+armchair#portal-items`)
+        // The same URL with a fragment can be a same-document navigation.
+        await page.reload()
+        const table = page.getByRole('table', {
+          name: labels.sellerPortal.items,
+          exact: true,
+        })
+        await expect(table.locator('tbody tr')).toHaveCount(1)
+        await expect(
+          table.getByText('Distinctive old armchair', { exact: true }),
+        ).toBeVisible()
+        await expect(
+          table.getByText('I-' + old.slice(0, 8).toUpperCase(), {
+            exact: true,
+          }),
+        ).toBeVisible()
+        await expect(table.locator('.seller-item-price strong')).toHaveText(
+          new Intl.NumberFormat(tag, {
+            style: 'currency',
+            currency: 'SEK',
+          }).format(200),
+        )
+        await expect(table.locator('.seller-item-badge')).toHaveText(
+          labels.sellerPortal.itemStates.forSale,
+        )
+        const date = table.locator('time').first()
+        await expect(date).toHaveText(
+          new Intl.DateTimeFormat(tag, {
+            timeZone: 'Europe/Stockholm',
+            dateStyle: 'medium',
+          }).format(new Date((await date.getAttribute('datetime'))!)),
+        )
+        for (const width of [320, 700, 1000]) {
+          await page.setViewportSize({ width, height: 900 })
+          expect(
+            await page.evaluate(
+              () => document.documentElement.scrollWidth <= innerWidth,
+            ),
+          ).toBe(true)
+          await expect(table.locator('.seller-item-price')).toBeVisible()
+          if (locale === 'sv')
+            await table.screenshot({
+              path: test.info().outputPath(`seller-item-${width}.png`),
+            })
+        }
+        const summary = table.getByText(labels.sellerPortal.itemDetails, {
+          exact: true,
+        })
+        await summary.focus()
+        await page.keyboard.press('Enter')
+        await expect(table.locator('details')).toHaveAttribute('open', '')
+      })
+    }
+    // The sold row must show the actual checkout amount, not its former asking price.
+    await f.asActor(f.actor, async () => {
+      await f.db.query(
+        "select record_sale($1,$2,'manual','synthetic-seller-layout',now(),'SEK',$3::jsonb)",
+        [
+          f.tenant,
+          randomUUID(),
+          JSON.stringify([{ itemId: old, priceOre: 15000 }]),
+        ],
+      )
+    })
+    await page.context().addCookies([
+      {
+        name: 'komisio-locale',
+        value: 'sv',
+        url: new URL(page.url()).origin,
+      },
+    ])
+    await page.reload()
+    await expect(rows.locator('.seller-item-badge')).toHaveText(
+      d.sellerPortal.itemStates.sold,
+    )
+    await expect(rows.locator('.seller-item-price strong')).toHaveText(
+      /150,00\s+kr/,
+    )
+    await expect(rows.locator('details')).toHaveCount(0)
+    await expect(rows.locator('time')).toBeVisible()
     expect(writes).toEqual([])
   } finally {
     await f.close()

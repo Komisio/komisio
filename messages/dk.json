@@ -2061,6 +2061,7 @@
     "noMatches": "Ingen indkøb matcher søgningen."
   },
   "sellerPortal": {
+    "itemDetails": "Pris og salgsperiode",
     "handovers": "Anmeld en indlevering",
     "handoverIntro": "Anmeld en indlevering før du kommer. Vis referencen ved disken; butikken registrerer modtagelsen, og du ser indleveringsnummeret her.",
     "handoverDisabled": "Butikken modtager endnu ikke forhåndsanmeldelser. Aflever dine varer ved kassen.",

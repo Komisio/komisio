@@ -2061,6 +2061,7 @@
     "noMatches": "Keine Einkäufe entsprechen der Suche."
   },
   "sellerPortal": {
+    "itemDetails": "Preis und Verkaufszeitraum",
     "handovers": "Abgabe ankündigen",
     "handoverIntro": "Kündigen Sie eine Einlieferung vor Ihrem Besuch an. Zeigen Sie die Referenz an der Theke; der Laden erfasst die Annahme und Sie sehen hier die Einlieferungsnummer.",
     "handoverDisabled": "Das Geschäft nimmt noch keine Voranmeldungen an. Bringen Sie Ihre Artikel zur Kasse.",

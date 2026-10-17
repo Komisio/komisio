@@ -1106,3 +1106,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-16: Item links carry an allowlisted listing return URL with filters, page and row anchor. A visible back control restores that context; direct visits fall back to Items. Existing navigation guards, tenant checks and item operations remain unchanged (#476).
 
 - 2026-10-16: Receiving uses visible, optional store-type selectors. Stepwise manual reception records the chosen type as a new source observation carried into the review. Existing engine checks, translated profiles and historical items remain unchanged (#478).
+- 2026-10-16: Seller-owned items prioritize title, label reference, localized price and status. Price plans fold on demand; dates and collection deadlines stay visible. Search, pagination and seller-only read boundaries remain unchanged (#479).

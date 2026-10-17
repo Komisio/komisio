@@ -51,7 +51,7 @@ test('optional agreement and delegated pricing show staff review and completed r
     ).rows[0].id
     await f.commit()
     const selected = await page.request.post('/api/platform', {
-      headers: { Origin: 'http://127.0.0.1:3000' },
+      headers: { Origin: new URL(page.url()).origin },
       data: { action: 'select', tenantId: tenant },
     })
     expect(selected.ok()).toBe(true)
@@ -93,7 +93,7 @@ test('optional agreement and delegated pricing show staff review and completed r
       0,
     )
     const received = await page.request.post('/api/intake/quick', {
-      headers: { Origin: 'http://127.0.0.1:3000' },
+      headers: { Origin: new URL(page.url()).origin },
       data: {
         tenantId: tenant,
         requestId: randomUUID(),
@@ -130,7 +130,10 @@ test('optional agreement and delegated pricing show staff review and completed r
     )
     await expect(
       page.getByRole('link', { name: d.items.open, exact: true }).first(),
-    ).toHaveAttribute('href', '/intake/items/' + result.itemId)
+    ).toHaveAttribute(
+      'href',
+      `/intake/items/${result.itemId}?${new URLSearchParams({ returnTo: `/intake/reception/${result.sessionId}` })}`,
+    )
     await page.screenshot({
       path: 'private/reception-policy-desktop.png',
       fullPage: true,

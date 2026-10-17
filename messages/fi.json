@@ -2521,7 +2521,12 @@
     "reconnect": "Uusi Fortnox-yhteys",
     "automation": {
       "heading": "Lähetä tositteet automaattisesti",
-      "hint": "Ajetaan päivittäin klo 07:00 UTC kirjatuille vienneille. Odottavat tai epävarmat lähetykset pysyvät pidätettyinä; päivän päätökset pysyvät manuaalisina.",
+      "hint": "Lähettää kirjatut viennit päivittäin klo {time} alkaen (Europe/Stockholm). Uudemmat viennit odottavat seuraavaan päivään. Keskeneräisiä tai epävarmoja lähetyksiä ei lähetetä uudelleen. Tämä ei luo päivän päätöksiä tai vientejä.",
+      "timeLabel": "Lähetysaika (Europe/Stockholm)",
+      "saveTime": "Tallenna aika",
+      "timeSaved": "Aika tallennettu. Jos päivän ajo on jo alkanut, muutos tulee voimaan seuraavana päivänä.",
+      "timeChanged": "Asetusta ei voitu tallentaa. Lataa sivu uudelleen ja tarkista nykyinen aika.",
+      "timeUncertain": "Tallennusta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla.",
       "enable": "Ota automaattinen lähetys käyttöön",
       "disable": "Poista automaattinen lähetys käytöstä",
       "enabled": "Automaattinen lähetys käytössä",

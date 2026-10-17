@@ -9,7 +9,7 @@
     },
     {
       "path": "/api/automation/fortnox-send",
-      "schedule": "0 7 * * *"
+      "schedule": "* * * * *"
     },
     {
       "path": "/api/automation/zettle-pull",

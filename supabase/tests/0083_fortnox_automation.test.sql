@@ -22,7 +22,15 @@ select set_config('test.close',gen_random_uuid()::text,true);
 select generate_day_close(current_setting('test.tenant')::uuid,current_setting('test.close')::uuid,'2026-09-10');
 select publish_accounting_map(current_setting('test.tenant')::uuid,gen_random_uuid(),null,
  '{"grossOre":{"account":"1930","side":"debit"},"sellerCreditOre":{"account":"2890","side":"credit"},"commissionOre":{"account":"3010","side":"credit"},"commissionVatOre":{"account":"2610","side":"credit"}}');
-select set_config('test.export',export_day_close(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.close')::uuid)::text,true);
+-- Backdated synthetic export inserted once; immutable export rows are never edited.
+reset role;
+select set_config('test.export',gen_random_uuid()::text,true);
+insert into public.accounting_exports(id,tenant_id,day_close_id,map_id,voucher,debit_ore,credit_ore,created_by,created_at)
+ select current_setting('test.export')::uuid,c.tenant_id,c.id,m.id,v->'lines',(v->>'debitOre')::bigint,(v->>'creditOre')::bigint,
+ 'f0000000-0000-4000-8000-000000000411',now()-interval '1 day'
+ from public.day_closes c join public.accounting_maps m on m.tenant_id=c.tenant_id
+ cross join lateral komisio_private.voucher_for(c,m.map) v where c.id=current_setting('test.close')::uuid;
+set local role authenticated;
 select set_config('test.cipher','{"iv":"aWl2","tag":"dGFn","data":"ZGF0YQ=="}',true);
 
 select store_fortnox_connection(current_setting('test.tenant')::uuid,'1751085','Komisio Test','',current_setting('test.cipher')::jsonb,'bookkeeping',now()+interval '1 hour');
@@ -38,11 +46,19 @@ select throws_ok($$select begin_fortnox_send(current_setting('test.tenant')::uui
 select throws_ok($$select complete_fortnox_send(current_setting('test.tenant')::uuid,gen_random_uuid(),'failed','',null,null,'FORTNOX_PREFLIGHT_FAILED','')$$,'42501',null,'wrong scope cannot complete');
 select throws_ok($$select record_fortnox_check(current_setting('test.tenant')::uuid,'checked','{}')$$,'42501',null,'wrong scope cannot record check');
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000411","role":"authenticated"}';
+select save_fortnox_send_schedule(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'00:00');
+select publish_accounting_map(current_setting('test.tenant')::uuid,gen_random_uuid(),
+ (current_accounting_map(current_setting('test.tenant')::uuid)->>'id')::uuid,
+ current_accounting_map(current_setting('test.tenant')::uuid)->'map');
+select set_config('test.late_export',export_day_close(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.close')::uuid)::text,true);
 select enable_automation(current_setting('test.tenant')::uuid,gen_random_uuid(),'fortnox_send','fortnox-worker@example.test');
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000831","role":"authenticated"}';
 select accept_automation_grants();
 select is(jsonb_array_length(fortnox_automation_tenants()),1,'accepted scope lists its store');
-select is(jsonb_array_length(fortnox_automatic_exports(current_setting('test.tenant')::uuid)),1,'fresh export eligible');
+select set_config('test.run',gen_random_uuid()::text,true);
+select ok(begin_fortnox_automatic_run(current_setting('test.tenant')::uuid,current_setting('test.run')::uuid),'daily run claimed');
+select is(jsonb_array_length(fortnox_automatic_exports(current_setting('test.tenant')::uuid)),1,'export recorded before cutoff eligible');
+select throws_like($$select begin_fortnox_send(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.late_export')::uuid)$$,'%FORTNOX_RUN_NOT_ACTIVE%','fresh export after cutoff cannot be dispatched directly');
 select record_fortnox_check(current_setting('test.tenant')::uuid,'refused','{"reason":"save_failed"}');
 select set_config('test.send',gen_random_uuid()::text,true);
 select is((begin_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.send')::uuid,current_setting('test.export')::uuid)->>'dispatchAllowed')::boolean,true,'worker obtains fresh dispatch');
@@ -59,7 +75,6 @@ select throws_ok($$select store_fortnox_connection(current_setting('test.tenant'
 select throws_ok($$select disconnect_fortnox(current_setting('test.tenant')::uuid)$$,'42501',null,'worker cannot disconnect');
 select throws_ok($$select fortnox_connection_status(current_setting('test.tenant')::uuid)$$,'42501',null,'worker cannot read connection status');
 select throws_ok($$select fortnox_automatic_exports(gen_random_uuid())$$,'42501',null,'other tenant refused');
-select set_config('test.run',gen_random_uuid()::text,true);
 select finish_fortnox_automatic_run(current_setting('test.tenant')::uuid,current_setting('test.run')::uuid,'failed',0);
 select finish_fortnox_automatic_run(current_setting('test.tenant')::uuid,current_setting('test.run')::uuid,'failed',0);
 select throws_like($$select finish_fortnox_automatic_run(current_setting('test.tenant')::uuid,current_setting('test.run')::uuid,'complete',1)$$,'%REQUEST_CONFLICT%','run replay cannot alter outcome');

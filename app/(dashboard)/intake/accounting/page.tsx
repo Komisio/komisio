@@ -28,6 +28,8 @@ import { FortnoxVoucherSend } from '@/components/intake/fortnox-voucher-send'
 import { FortnoxReconcile } from '@/components/intake/fortnox-reconcile'
 import { readFortnoxSends } from '@/lib/engine/fortnox-vouchers'
 import { readAutomaticFortnoxStatus } from '@/lib/engine/fortnox-automation'
+import { readFortnoxSchedule } from '@/lib/engine/fortnox-schedule'
+import { FortnoxSendTime } from '@/components/intake/fortnox-send-time'
 import { readAutomaticDayCloseStatus } from '@/lib/engine/day-close-automation'
 import { automationIdentity, readAutomation } from '@/lib/engine/automation'
 import { AutomationSwitch } from '@/components/intake/automation-switch'
@@ -82,6 +84,10 @@ export default async function Accounting({
   const automaticCloses =
     view === 'settings' && ['owner', 'admin'].includes(active.role)
       ? await readAutomaticDayCloseStatus(ctx.client, active.id)
+      : null
+  const fortnoxSchedule =
+    view === 'settings'
+      ? await readFortnoxSchedule(ctx.client, active.id)
       : null
   const grants =
     view === 'settings' && ['owner', 'admin'].includes(active.role)
@@ -590,11 +596,28 @@ export default async function Accounting({
                         configured={
                           !!automationIdentity() &&
                           automatic?.available === true &&
+                          fortnoxSchedule !== null &&
                           grants !== null
                         }
                         canEdit={active.role === 'owner'}
-                        t={all.fortnox.automation}
-                      />
+                        t={{
+                          ...all.fortnox.automation,
+                          hint: all.fortnox.automation.hint.replace(
+                            '{time}',
+                            fortnoxSchedule?.time ?? '07:00',
+                          ),
+                        }}
+                      >
+                        {fortnoxSchedule && (
+                          <FortnoxSendTime
+                            key={fortnoxSchedule.id ?? 'default'}
+                            tenantId={active.id}
+                            initial={fortnoxSchedule}
+                            canEdit={active.role === 'owner'}
+                            d={all}
+                          />
+                        )}
+                      </AutomationSwitch>
                     )}
                     <p>
                       {all.fortnox.automation.lastRun}:{' '}

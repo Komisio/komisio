@@ -2521,7 +2521,12 @@
     "reconnect": "Förnya Fortnox-kopplingen",
     "automation": {
       "heading": "Skicka verifikationer automatiskt",
-      "hint": "Körs dagligen 07:00 UTC för registrerade exporter. Pågående eller osäkra sändningar hålls kvar; dagsavslut görs manuellt.",
+      "hint": "Skickar registrerade underlag dagligen från {time} (Europe/Stockholm). Nyare underlag väntar till nästa dag. Pågående eller osäkra sändningar skickas inte igen. Detta skapar inga dagsavslut eller exporter.",
+      "timeLabel": "Tid för sändning (Europe/Stockholm)",
+      "saveTime": "Spara tid",
+      "timeSaved": "Tiden är sparad. Om dagens körning redan har börjat gäller ändringen från nästa dag.",
+      "timeChanged": "Inställningen kunde inte sparas. Ladda om sidan och kontrollera den aktuella tiden.",
+      "timeUncertain": "Det gick inte att bekräfta att tiden sparades. Försök igen med samma uppgifter.",
       "enable": "Aktivera automatisk sändning",
       "disable": "Stäng av automatisk sändning",
       "enabled": "Automatisk sändning aktiverad",

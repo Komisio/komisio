@@ -1,3 +1,4 @@
+import { localTestUrl } from '../tests/helpers/local-services.ts'
 import { openAccountingSettings } from '../tests/helpers/accounting-settings.ts'
 import { spawn } from 'node:child_process'
 import { randomUUID, randomBytes } from 'node:crypto'
@@ -10,9 +11,17 @@ import { p2Fixture } from '../tests/helpers/p2-fixture.ts'
 import dictionary from '../messages/sv.json' with { type: 'json' }
 
 if (existsSync('.env.local')) process.loadEnvFile('.env.local')
-if (process.env.NEXT_PUBLIC_SUPABASE_URL !== 'http://127.0.0.1:54321')
+if (
+  process.env.NEXT_PUBLIC_SUPABASE_URL !==
+  localTestUrl('TEST_SUPABASE_URL', 'http://127.0.0.1:54321')
+)
   throw new Error('Fortnox automation browser fixture is local only')
-const origin = 'http://127.0.0.1:3000'
+const origin = new URL(localTestUrl('TEST_APP_URL', 'http://127.0.0.1:3000'))
+  .origin
+const databaseUrl = localTestUrl(
+  'TEST_DATABASE_URL',
+  'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+)
 try {
   await fetch(`${origin}/login`, { signal: AbortSignal.timeout(1000) })
   throw new Error('Stop the existing local app before running this fixture')
@@ -24,7 +33,7 @@ const ownerEmail = `fortnox-owner-${randomUUID()}@example.test`
 const staffEmail = `fortnox-staff-${randomUUID()}@example.test`
 const workerEmail = `fortnox-worker-${randomUUID()}@example.test`
 const setup = new pg.Client({
-  connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+  connectionString: databaseUrl,
 })
 await setup.connect()
 let fixture, server, browser
@@ -59,6 +68,7 @@ try {
     ...process.env,
     KOMISIO_INTAKE_ENABLED: 'true',
     NEXT_PUBLIC_APP_URL: origin,
+    PORT: new URL(origin).port,
     FORTNOX_PILOT_TENANT_ID: fixture.tenant,
     KOMISIO_AUTOMATION_EMAIL: workerEmail,
     KOMISIO_AUTOMATION_PASSWORD: password,
@@ -116,6 +126,49 @@ try {
     exact: true,
   })
   await expect(panel.getByText(text.off, { exact: true })).toBeVisible()
+  const time = panel.getByLabel(text.timeLabel, { exact: true })
+  await expect(time).toHaveValue('07:00')
+  await time.fill('')
+  await expect(
+    panel.getByRole('button', { name: text.saveTime, exact: true }),
+  ).toBeDisabled()
+  const invalid = await ownerPage.request.post(
+    `${origin}/api/fortnox-schedule`,
+    {
+      headers: { origin },
+      data: {
+        tenantId: fixture.tenant,
+        requestId: randomUUID(),
+        previousId: null,
+        time: '24:00',
+      },
+    },
+  )
+  expect(invalid.status()).toBe(400)
+  await time.fill('11:37')
+  let lost = false
+  await ownerPage.route('**/api/fortnox-schedule', async (route) => {
+    if (lost) return route.continue()
+    const response = await route.fetch()
+    expect(response.ok()).toBe(true)
+    lost = true
+    await route.abort()
+  })
+  await panel.getByRole('button', { name: text.saveTime, exact: true }).click()
+  await expect(
+    panel.getByText(text.timeUncertain, { exact: true }),
+  ).toBeVisible()
+  await panel
+    .getByRole('button', { name: dictionary.intake.retry, exact: true })
+    .click()
+  await expect(time).toBeEnabled()
+  await expect(panel).toContainText(text.hint.replace('{time}', '11:37'))
+  await ownerPage.reload()
+  await openAccountingSettings(ownerPage)
+  await expect(time).toHaveValue('11:37')
+  await time.fill('00:00')
+  await panel.getByRole('button', { name: text.saveTime, exact: true }).click()
+  await expect(panel).toContainText(text.hint.replace('{time}', '00:00'))
   const enabledResponse = ownerPage.waitForResponse(
     (response) =>
       response.url().endsWith('/api/automation-grants') &&
@@ -143,12 +196,47 @@ try {
   await ownerPage.reload()
   await openAccountingSettings(ownerPage)
   await expect(panel.getByText(text.enabled, { exact: true })).toBeVisible()
+  // Independent connections race for the same local day. Exactly one may dispatch.
+  const contenders = [0, 1].map(
+    () => new pg.Client({ connectionString: databaseUrl }),
+  )
+  const requests = [randomUUID(), randomUUID()]
+  let claimed
+  try {
+    await Promise.all(contenders.map((c) => c.connect()))
+    claimed = await Promise.all(
+      contenders.map(async (c, index) => {
+        await c.query('begin')
+        await c.query('set local role authenticated')
+        await c.query("select set_config('request.jwt.claims',$1,true)", [
+          JSON.stringify({ sub: worker, role: 'authenticated' }),
+        ])
+        const result = await c.query(
+          'select begin_fortnox_automatic_run($1,$2) claimed',
+          [fixture.tenant, requests[index]],
+        )
+        await c.query('commit')
+        return result.rows[0].claimed
+      }),
+    )
+  } finally {
+    await Promise.all(contenders.map((c) => c.end()))
+  }
+  expect(claimed.filter(Boolean)).toHaveLength(1)
+  const winner = requests[claimed.indexOf(true)]
   await fixture.asActor(worker, () =>
     fixture.db.query(
       "select finish_fortnox_automatic_run($1,$2,'complete',0)",
-      [fixture.tenant, randomUUID()],
+      [fixture.tenant, winner],
     ),
   )
+  const repeated = await fixture.asActor(worker, () =>
+    fixture.db.query('select begin_fortnox_automatic_run($1,$2) claimed', [
+      fixture.tenant,
+      randomUUID(),
+    ]),
+  )
+  expect(repeated.rows[0].claimed).toBe(false)
   await ownerPage.reload()
   await openAccountingSettings(ownerPage)
   await expect(ownerPage.getByText(new RegExp(text.complete))).toBeVisible()
@@ -159,6 +247,19 @@ try {
   await expect(
     staffPage.getByRole('button', { name: text.disable, exact: true }),
   ).toHaveCount(0)
+  const refusedTime = await staffPage.request.post(
+    `${origin}/api/fortnox-schedule`,
+    {
+      headers: { origin },
+      data: {
+        tenantId: fixture.tenant,
+        requestId: randomUUID(),
+        previousId: null,
+        time: '11:37',
+      },
+    },
+  )
+  expect(refusedTime.status()).toBe(403)
   for (const action of ['enable', 'disable']) {
     const response = await staffPage.request.post(
       `${origin}/api/automation-grants`,
@@ -179,8 +280,18 @@ try {
       )
     ).rows[0].count,
   ).toBe(0)
+  await ownerPage.reload()
+  await openAccountingSettings(ownerPage)
+  await expect(time).toHaveValue('00:00')
+  await ownerPage.setViewportSize({ width: 320, height: 800 })
+  expect(
+    await ownerPage.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true)
+  await panel.screenshot({ path: 'private/fortnox-send-time-mobile.png' })
   console.log(
-    'PASS: owner enables, worker accepts, last outcome appears, staff cannot toggle, owner revokes. No provider HTTP.',
+    'PASS: owner saves time, lost response retries safely, renewal retains time, concurrent claims serialize, staff changes are denied, mobile fits. No provider HTTP.',
   )
 } finally {
   await browser?.close()

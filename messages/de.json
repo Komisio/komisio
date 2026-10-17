@@ -2521,7 +2521,12 @@
     "reconnect": "Fortnox-Verbindung erneuern",
     "automation": {
       "heading": "Buchungsbelege automatisch senden",
-      "hint": "Läuft täglich um 07:00 UTC für erfasste Exporte. Ausstehende oder unsichere Sendungen bleiben zurückgehalten; Tagesabschlüsse bleiben manuell.",
+      "hint": "Sendet erfasste Exporte täglich ab {time} (Europe/Stockholm). Neuere Exporte warten bis zum nächsten Tag. Laufende oder unklare Sendungen werden nicht erneut gesendet. Tagesabschlüsse oder Exporte werden dabei nicht erstellt.",
+      "timeLabel": "Sendezeit (Europe/Stockholm)",
+      "saveTime": "Zeit speichern",
+      "timeSaved": "Zeit gespeichert. Wenn der heutige Lauf bereits begonnen hat, gilt die Änderung ab dem nächsten Tag.",
+      "timeChanged": "Die Einstellung konnte nicht gespeichert werden. Laden Sie die Seite neu und prüfen Sie die aktuelle Zeit.",
+      "timeUncertain": "Das Speichern konnte nicht bestätigt werden. Versuchen Sie es mit denselben Angaben erneut.",
       "enable": "Automatischen Versand aktivieren",
       "disable": "Automatischen Versand deaktivieren",
       "enabled": "Automatischer Versand aktiviert",

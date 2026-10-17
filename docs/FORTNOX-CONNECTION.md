@@ -58,7 +58,22 @@ all cases. No service-role client or borrowed owner session is involved.
 An owner enables or disables the existing grant on accounting settings. The
 panel shows pending acceptance and the last recorded run. Staff can see the run
 summary but cannot toggle the grant. Cron calls `/api/automation/fortnox-send`
-daily at 07:00 UTC using `CRON_SECRET`. Deployment does not enable a grant.
+every minute using `CRON_SECRET`. Each store's owner chooses any `HH:MM` in
+Europe/Stockholm under Accounting → Settings, beside the automation switch.
+The default is 07:00 local time, intentionally 1–2 hours earlier than the former
+07:00 UTC schedule. The saved time survives disabling and re-enabling the grant.
+Deployment does not enable a grant.
+
+The database claims each local day under the tenant lock before sending. A delayed
+tick catches up that same day. A nonexistent spring-forward time uses the first
+valid minute after it; an autumn repeated hour does not create a second run.
+An every-minute tick supports all valid times, including 23:59. Completed and
+failed runs do not restart that day. Partial batches may continue with the first
+claim's frozen cutoff; later setting changes apply on the next day. Only exports
+recorded by that cutoff are eligible; later exports wait for the next day.
+An interrupted claim without a completion remains held for the rest of that day.
+Claims expire after ten minutes or local midnight, whichever comes first; expiry
+does not authorize a same-day retry. Existing uncertain voucher sends remain held.
 First connect the intended company, record the day close/export, and explicitly
 enable the switch. The next cron accepts it. Do not trigger the live route as a
 test: it can create real vouchers for eligible exports.

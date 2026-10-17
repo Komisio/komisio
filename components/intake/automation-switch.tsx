@@ -15,6 +15,7 @@ export function AutomationSwitch({
   t,
   help,
   lastRun,
+  children,
 }: {
   tenantId: string
   scope: AutomationScope
@@ -23,6 +24,7 @@ export function AutomationSwitch({
   canEdit: boolean
   help?: { label: string; steps: string[] }
   lastRun?: { grantId: string; text: string } | null
+  children?: React.ReactNode
   t: {
     heading: string
     hint: string
@@ -78,6 +80,7 @@ export function AutomationSwitch({
         <h2>{t.heading}</h2>
       )}
       <p>{t.hint}</p>
+      {children}
       <p role="status">
         {current ? (current.accepted ? t.enabled : t.waiting) : t.off}
       </p>

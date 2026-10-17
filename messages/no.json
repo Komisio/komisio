@@ -2521,7 +2521,12 @@
     "reconnect": "Forny Fortnox-tilkoblingen",
     "automation": {
       "heading": "Send bilag automatisk",
-      "hint": "Kjører daglig kl. 07:00 UTC for registrerte eksporter. Ventende eller usikre sendinger forblir holdt tilbake; dagsoppgjør forblir manuelle.",
+      "hint": "Sender registrerte eksporter daglig fra {time} (Europe/Stockholm). Nyere eksporter venter til neste dag. Pågående eller usikre sendinger sendes ikke på nytt. Dette oppretter ingen dagsoppgjør eller eksporter.",
+      "timeLabel": "Sendetid (Europe/Stockholm)",
+      "saveTime": "Lagre tid",
+      "timeSaved": "Tiden er lagret. Hvis dagens kjøring har startet, gjelder endringen fra neste dag.",
+      "timeChanged": "Innstillingen kunne ikke lagres. Last inn siden på nytt og kontroller gjeldende tid.",
+      "timeUncertain": "Lagringen kunne ikke bekreftes. Prøv igjen med de samme opplysningene.",
       "enable": "Aktiver automatisk sending",
       "disable": "Deaktiver automatisk sending",
       "enabled": "Automatisk sending aktivert",

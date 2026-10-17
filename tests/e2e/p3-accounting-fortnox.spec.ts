@@ -155,7 +155,7 @@ test('accounting page shows the Fortnox connection state and records a refused s
       financialYear: 2026,
       evidence: 'Synthetic owner compared company, date and all voucher lines',
     }
-    const command = (data: object, origin = 'http://127.0.0.1:3000') =>
+    const command = (data: object, origin = new URL(page.url()).origin) =>
       page.request.post('/api/integrations/fortnox', {
         headers: { origin },
         data,

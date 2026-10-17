@@ -36,6 +36,7 @@ export async function createItemType(
       'FORBIDDEN',
       'AUTH_REQUIRED',
       'REQUEST_CONFLICT',
+      'ITEM_TYPE_NAME_EXISTS',
       'INVALID_INPUT',
     ].find((c) => result.error!.message === c)
     throw new Error(code ?? 'REQUEST_FAILED')

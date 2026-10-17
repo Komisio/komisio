@@ -136,6 +136,8 @@
     }
   },
   "quickIntake": {
+    "typeInlineIntro": "El tipo de artículo se guarda para toda la tienda.",
+    "typeNameExists": "Ya existe un tipo de artículo con ese nombre. Selecciónalo de la lista o utiliza otro nombre.",
     "workspace": {
       "refreshAgreement": "Cargar contrato actual",
       "sellerTab": "Vendedor y contrato",

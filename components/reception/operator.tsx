@@ -1,9 +1,11 @@
 'use client'
+import { CreateItemType } from '@/components/intake/create-item-type'
+import { labelOf, type AttributeVocabulary } from '@/lib/engine/attributes'
 import {
   useBusyState,
   useBusyTransition as useTransition,
 } from '@/components/platform/work-activity'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import type {
@@ -164,8 +166,11 @@ export function ReceptionObservation({
   initial,
   d,
   leaveUnsaved,
-  types,
+  vocabulary: initialVocabulary,
   typeLabels,
+  typeSettings,
+  canManageTypes,
+  locale,
 }: {
   tenantId: string
   sessionId: string
@@ -179,15 +184,29 @@ export function ReceptionObservation({
     rationale: string
   } | null
   d: D
-  types: { slug: string; label: string }[]
-  typeLabels: Pick<Dictionary['quickIntake'], 'itemType' | 'itemTypeNone'>
+  vocabulary: AttributeVocabulary
+  typeLabels: Dictionary['quickIntake']
+  typeSettings: Dictionary['vocabularySettings']
+  canManageTypes: boolean
+  locale: string
   leaveUnsaved: string
 }) {
   const action = useWrite(d),
     [invalid, setInvalid] = useState('')
   const formRef = useRef<HTMLFormElement>(null)
+  const [vocabulary, setVocabulary] = useState(initialVocabulary)
+  const [itemType, setItemType] = useState(initial?.itemType ?? '')
+  const [creatingType, setCreatingType] = useState(false)
   const submittedFields = useRef<FormData | null>(null)
   const { ready, dirty, checkDirty, resetDirty } = useFormDirty(formRef)
+  const wasCreatingType = useRef(false)
+  useEffect(() => {
+    if (wasCreatingType.current && !creatingType) {
+      document.getElementById('garment-type')?.focus()
+      checkDirty()
+    }
+    wasCreatingType.current = creatingType
+  }, [creatingType, checkDirty])
   const [refreshing, refresh] = useTransition()
   useUnsavedChanges(dirty || action.locked ? leaveUnsaved : null)
   function saved() {
@@ -201,7 +220,7 @@ export function ReceptionObservation({
       className="intake-form"
       onSubmit={async (e) => {
         e.preventDefault()
-        if (refreshing || action.busy || action.reload) return
+        if (refreshing || action.busy || action.reload || creatingType) return
         setInvalid('')
         if (action.locked) {
           const result = await action.run('/api/intake', {})
@@ -260,16 +279,52 @@ export function ReceptionObservation({
           <select
             id="garment-type"
             name="itemType"
-            defaultValue={initial?.itemType ?? ''}
+            value={itemType}
+            disabled={creatingType}
+            onChange={(e) => {
+              if (e.target.value === '__create__') setCreatingType(true)
+              else setItemType(e.target.value)
+            }}
           >
             <option value="">{typeLabels.itemTypeNone}</option>
-            {types.map((type) => (
-              <option key={type.slug} value={type.slug}>
-                {type.label}
-              </option>
-            ))}
+            {vocabulary.types
+              .filter((t) => t.active || t.slug === itemType)
+              .map((type) => (
+                <option key={type.slug} value={type.slug}>
+                  {labelOf(type, locale)}
+                </option>
+              ))}
+            {canManageTypes && (
+              <option value="__create__">{typeLabels.createType}</option>
+            )}
           </select>
         </div>
+        {creatingType && canManageTypes && (
+          <CreateItemType
+            compact
+            initiallyOpen
+            initialFields={vocabulary.types
+              .find((t) => t.slug === itemType)
+              ?.attributes.map((a) => a.slug)}
+            tenantId={tenantId}
+            vocabulary={vocabulary}
+            lang={locale}
+            disabled={!ready || action.locked || refreshing}
+            d={typeLabels}
+            settings={typeSettings}
+            onClose={() => setCreatingType(false)}
+            onSelect={(profile) => {
+              setVocabulary((v) => ({
+                ...v,
+                types: [
+                  ...v.types.filter((t) => t.slug !== profile.slug),
+                  profile,
+                ],
+              }))
+              setItemType(profile.slug)
+            }}
+          />
+        )}
         <div className="field">
           <label htmlFor="garment-price">{d.price}</label>
           <input
@@ -304,7 +359,11 @@ export function ReceptionObservation({
         </div>
       </fieldset>
       <p>{d.sourceNotice}</p>
-      <Button disabled={!ready || action.busy || action.reload || refreshing}>
+      <Button
+        disabled={
+          !ready || action.busy || action.reload || refreshing || creatingType
+        }
+      >
         {action.locked ? d.retryButton : d.saveSources}
       </Button>
       {invalid && <p role="alert">{invalid}</p>}

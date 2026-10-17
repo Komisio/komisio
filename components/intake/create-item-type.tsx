@@ -21,6 +21,10 @@ export function CreateItemType({
   d,
   settings,
   onSelect,
+  compact = false,
+  initiallyOpen = false,
+  initialFields = ['description'],
+  onClose,
 }: {
   tenantId: string
   vocabulary: AttributeVocabulary
@@ -28,13 +32,19 @@ export function CreateItemType({
   disabled: boolean
   d: Dictionary['quickIntake']
   settings: Dictionary['vocabularySettings']
+  compact?: boolean
+  initiallyOpen?: boolean
+  initialFields?: string[]
+  onClose?: () => void
   onSelect: (profile: ItemTypeProfile) => void
 }) {
   const editorId = useId()
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(initiallyOpen)
   const [name, setName] = useState('')
   const [base, setBase] = useState('')
-  const [fields, setFields] = useState<string[]>(['description'])
+  const [fields, setFields] = useState<string[]>(() => [
+    ...new Set(['description', ...initialFields]),
+  ])
   const [search, setSearch] = useState('')
   const [busy, setBusy] = useBusyState(false)
   const [locked, setLocked] = useState(false)
@@ -57,6 +67,7 @@ export function CreateItemType({
   )
   function close() {
     setOpen(false)
+    onClose?.()
   }
   async function save() {
     if (disabled || running.current || refused) return
@@ -92,10 +103,17 @@ export function CreateItemType({
       const result = await response.json()
       if (!response.ok) {
         if (response.status >= 400 && response.status < 500) {
-          if (result?.error === 'INVALID_INPUT') {
+          if (
+            result?.error === 'INVALID_INPUT' ||
+            result?.error === 'ITEM_TYPE_NAME_EXISTS'
+          ) {
             pending.current = null
             setLocked(false)
-            setError(d.typeInvalid)
+            setError(
+              result.error === 'ITEM_TYPE_NAME_EXISTS'
+                ? d.typeNameExists
+                : d.typeInvalid,
+            )
           } else {
             setRefused(true)
             setError(settings.refused)
@@ -171,7 +189,9 @@ export function CreateItemType({
     >
       <div className="create-type-heading">
         <h3 id={`${editorId}-title`}>{d.createType}</h3>
-        <p id={`${editorId}-intro`}>{d.typeIntro}</p>
+        <p id={`${editorId}-intro`}>
+          {compact ? d.typeInlineIntro : d.typeIntro}
+        </p>
       </div>
       <div className="field">
         <label htmlFor="new-type-name">{d.typeName}</label>
@@ -181,82 +201,92 @@ export function CreateItemType({
           maxLength={120}
           value={name}
           disabled={busy || locked || disabled}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => {
+            setName(e.target.value)
+            setError('')
+          }}
         />
       </div>
-      <div className="field">
-        <label htmlFor="new-type-base">{d.typeFields}</label>
-        <select
-          id="new-type-base"
-          aria-describedby={`${editorId}-fields-hint`}
-          value={base}
-          disabled={busy || locked || disabled}
-          onChange={(e) => {
-            setBase(e.target.value)
-            setFields(
-              vocabulary.types
-                .find((t) => t.slug === e.target.value)
-                ?.attributes.map((a) => a.slug) ?? ['description'],
-            )
-          }}
-        >
-          <option value="">{d.typeBasic}</option>
-          {vocabulary.types
-            .filter(
-              (t) =>
-                t.active && t.attributes.some((a) => a.slug === 'description'),
-            )
-            .map((t) => (
-              <option key={t.slug} value={t.slug}>
-                {labelOf(t, lang)}
-              </option>
-            ))}
-        </select>
-        <small id={`${editorId}-fields-hint`}>{d.typeFieldsHint}</small>
-      </div>
-      <fieldset disabled={busy || locked || disabled}>
-        <legend>{d.typeFieldsLegend}</legend>
-        <div className="field">
-          <label htmlFor={`${editorId}-search`}>{settings.searchFields}</label>
-          <input
-            id={`${editorId}-search`}
-            type="search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-        <div className="vocabulary-field-choices">
-          {vocabulary.definitions
-            .filter(
-              (a) =>
-                a.active &&
-                a.slug !== 'category' &&
-                labelOf(a, lang)
-                  .toLocaleLowerCase(lang)
-                  .includes(search.toLocaleLowerCase(lang)),
-            )
-            .sort((a, b) =>
-              labelOf(a, lang).localeCompare(labelOf(b, lang), lang),
-            )
-            .map((a) => (
-              <label key={a.slug} className="checkbox-label">
-                <input
-                  type="checkbox"
-                  checked={fields.includes(a.slug)}
-                  disabled={a.slug === 'description'}
-                  onChange={(e) =>
-                    setFields((current) =>
-                      e.target.checked
-                        ? [...current, a.slug]
-                        : current.filter((s) => s !== a.slug),
-                    )
-                  }
-                />
-                {labelOf(a, lang)}
+      {!compact && (
+        <>
+          <div className="field">
+            <label htmlFor="new-type-base">{d.typeFields}</label>
+            <select
+              id="new-type-base"
+              aria-describedby={`${editorId}-fields-hint`}
+              value={base}
+              disabled={busy || locked || disabled}
+              onChange={(e) => {
+                setBase(e.target.value)
+                setFields(
+                  vocabulary.types
+                    .find((t) => t.slug === e.target.value)
+                    ?.attributes.map((a) => a.slug) ?? ['description'],
+                )
+              }}
+            >
+              <option value="">{d.typeBasic}</option>
+              {vocabulary.types
+                .filter(
+                  (t) =>
+                    t.active &&
+                    t.attributes.some((a) => a.slug === 'description'),
+                )
+                .map((t) => (
+                  <option key={t.slug} value={t.slug}>
+                    {labelOf(t, lang)}
+                  </option>
+                ))}
+            </select>
+            <small id={`${editorId}-fields-hint`}>{d.typeFieldsHint}</small>
+          </div>
+          <fieldset disabled={busy || locked || disabled}>
+            <legend>{d.typeFieldsLegend}</legend>
+            <div className="field">
+              <label htmlFor={`${editorId}-search`}>
+                {settings.searchFields}
               </label>
-            ))}
-        </div>
-      </fieldset>
+              <input
+                id={`${editorId}-search`}
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <div className="vocabulary-field-choices">
+              {vocabulary.definitions
+                .filter(
+                  (a) =>
+                    a.active &&
+                    a.slug !== 'category' &&
+                    labelOf(a, lang)
+                      .toLocaleLowerCase(lang)
+                      .includes(search.toLocaleLowerCase(lang)),
+                )
+                .sort((a, b) =>
+                  labelOf(a, lang).localeCompare(labelOf(b, lang), lang),
+                )
+                .map((a) => (
+                  <label key={a.slug} className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={fields.includes(a.slug)}
+                      disabled={a.slug === 'description'}
+                      onChange={(e) =>
+                        setFields((current) =>
+                          e.target.checked
+                            ? [...current, a.slug]
+                            : current.filter((s) => s !== a.slug),
+                        )
+                      }
+                    />
+                    {labelOf(a, lang)}
+                  </label>
+                ))}
+            </div>
+          </fieldset>
+        </>
+      )}
       <div className="row wrap">
         <Button
           type="button"

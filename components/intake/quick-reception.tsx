@@ -1,4 +1,5 @@
 'use client'
+import { CreateItemType } from './create-item-type'
 import { useWorkActivity } from '@/components/platform/work-activity'
 import { ReceivingPanel } from './receiving-panel'
 import { QuickSellerAgreement } from './quick-seller-agreement'
@@ -160,7 +161,9 @@ export function QuickReception({
   sellersTotal = sellers.length,
   printers,
   assistance,
-  vocabulary,
+  vocabulary: initialVocabulary,
+  typeSettings,
+  canManageTypes = false,
   groups = [],
   lang,
   d,
@@ -174,6 +177,8 @@ export function QuickReception({
   printers: Printer[]
   assistance: boolean
   vocabulary: AttributeVocabulary
+  typeSettings: Dictionary['vocabularySettings']
+  canManageTypes?: boolean
   groups?: { id: string; name: string }[]
   lang: string
   d: Dictionary['quickIntake']
@@ -185,6 +190,17 @@ export function QuickReception({
   }
   agreement?: AgreementSummary | null
 }) {
+  const [vocabulary, setVocabulary] = useState(initialVocabulary)
+  const [creatingType, setCreatingType] = useState(false)
+  const wasCreatingType = useRef(false)
+  useEffect(() => {
+    if (wasCreatingType.current && !creatingType)
+      document.getElementById('quick-item-type')?.focus()
+    wasCreatingType.current = creatingType
+  }, [creatingType])
+  function closeType() {
+    setCreatingType(false)
+  }
   const router = useRouter()
   const confirmNavigation = useConfirmNavigation()
   const [registering, setRegistering] = useState(false)
@@ -979,6 +995,7 @@ export function QuickReception({
               noValidate
               onSubmit={(event) => {
                 event.preventDefault()
+                if (creatingType) return
                 void submit()
               }}
             >
@@ -1030,8 +1047,12 @@ export function QuickReception({
                     <select
                       id="quick-item-type"
                       value={itemType ?? ''}
-                      disabled={busy || !!done || uncertain}
-                      onChange={(e) => setItemType(e.target.value || null)}
+                      disabled={busy || !!done || uncertain || creatingType}
+                      onChange={(e) => {
+                        if (e.target.value === '__create__')
+                          setCreatingType(true)
+                        else setItemType(e.target.value || null)
+                      }}
                       onKeyDown={(event) => {
                         itemTypeEnter.current = event.key === 'Enter'
                       }}
@@ -1048,8 +1069,37 @@ export function QuickReception({
                           {labelOf(t, lang)}
                         </option>
                       ))}
+                      {canManageTypes && (
+                        <option value="__create__">{d.createType}</option>
+                      )}
                     </select>
                   </div>
+                  {creatingType && canManageTypes && (
+                    <CreateItemType
+                      compact
+                      initiallyOpen
+                      initialFields={vocabulary.types
+                        .find((t) => t.slug === itemType)
+                        ?.attributes.map((a) => a.slug)}
+                      tenantId={tenantId}
+                      vocabulary={vocabulary}
+                      lang={lang}
+                      disabled={busy || uncertain}
+                      d={d}
+                      settings={typeSettings}
+                      onClose={closeType}
+                      onSelect={(profile) => {
+                        setVocabulary((v) => ({
+                          ...v,
+                          types: [
+                            ...v.types.filter((t) => t.slug !== profile.slug),
+                            profile,
+                          ],
+                        }))
+                        setItemType(profile.slug)
+                      }}
+                    />
+                  )}
                   <div className="quick-fields">
                     {questions
                       .filter((q) => q.definition.slug !== 'description')
@@ -1159,7 +1209,7 @@ export function QuickReception({
                 <Button
                   // A visible photo whose save is unresolved must not become a
                   // photoless item.
-                  disabled={busy || photoUnresolved}
+                  disabled={busy || photoUnresolved || creatingType}
                   type="submit"
                   onClick={(event) => {
                     // Suppress only the implicit click from Enter in the type

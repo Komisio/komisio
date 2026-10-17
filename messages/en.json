@@ -136,6 +136,8 @@
     }
   },
   "quickIntake": {
+    "typeInlineIntro": "The product type is saved for the whole store.",
+    "typeNameExists": "A product type with that name already exists. Choose it from the list or use another name.",
     "workspace": {
       "refreshAgreement": "Load current agreement",
       "sellerTab": "Seller & agreement",

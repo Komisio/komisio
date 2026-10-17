@@ -157,15 +157,11 @@ export default async function Reception({
           revision={state.revision}
           sources={sources}
           initial={prepared?.input ?? null}
-          types={vocabulary.types
-            .filter(
-              (type) => type.active || type.slug === prepared?.input.itemType,
-            )
-            .map((type) => ({
-              slug: type.slug,
-              label: labelOf(type, ctx.locale),
-            }))}
+          vocabulary={vocabulary}
           typeLabels={all.quickIntake}
+          typeSettings={all.vocabularySettings}
+          canManageTypes={['owner', 'admin'].includes(tenant.role)}
+          locale={ctx.locale}
           d={d}
           leaveUnsaved={all.leaveUnsaved}
         />

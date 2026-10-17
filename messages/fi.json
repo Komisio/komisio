@@ -136,6 +136,8 @@
     }
   },
   "quickIntake": {
+    "typeInlineIntro": "Tuotetyyppi tallennetaan koko myymälälle.",
+    "typeNameExists": "Samanniminen tuotetyyppi on jo olemassa. Valitse se luettelosta tai käytä toista nimeä.",
     "workspace": {
       "refreshAgreement": "Lataa nykyinen sopimus",
       "sellerTab": "Myyjä ja sopimus",

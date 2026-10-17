@@ -16,7 +16,7 @@
     "language": "Aftalens sprog",
     "languageHint": "Teksten vises på dette sprog uden automatisk oversættelse. Højst 12.000 tegn.",
     "publishHeading": "Udgiv en aftaleversion",
-    "publishHint": "Brug butikkens egne vilkår. Komisio gennemgår ikke deres juridiske indhold. Udgivne versioner bevares og kan ikke redigeres.",
+    "publishHint": "Brug butikkens egne vilkår. Komisio gennemgår ikke deres juridiske indhold. Udgivet tekst kan ikke redigeres. En ubrugt version uden tilknyttede sælgere eller poster kan slettes.",
     "requireEvidence": "Kræv registreret dokumentation for godkendelse, før indleveringer modtages",
     "confirmPublish": "Jeg har gennemgået teksten og kravet ved modtagelse. Denne version skal gælde for fremtidige indleveringer.",
     "publish": "Udgiv version",
@@ -111,7 +111,24 @@
       "next": "Næste",
       "status": "Aftalestatus",
       "manageLanguages": "Vis sprog",
-      "languagePublished": "Udgivet"
+      "languagePublished": "Udgivet",
+      "deletion": {
+        "remove": "Slet",
+        "confirm": "Slet “{name}”? Dette kan ikke fortrydes.",
+        "confirmAction": "Ja, slet",
+        "cancel": "Annuller",
+        "removing": "Sletter…",
+        "failed": "Kunne ikke bekræfte sletningen. Prøv igen, eller genindlæs siden.",
+        "linked": "Aftalen kan ikke slettes, fordi sælgere eller butiksposter er knyttet til den.",
+        "actions": "Handlinger",
+        "usage": {
+          "sellers": "Sælgere",
+          "receipts": "Indleveringer",
+          "reviews": "Gennemgange",
+          "items": "Varer",
+          "sales": "Salg"
+        }
+      }
     },
     "translations": {
       "add": "Tilføj sprog",

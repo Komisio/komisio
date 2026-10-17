@@ -16,7 +16,7 @@
     "language": "Idioma del acuerdo",
     "languageHint": "El texto se muestra en este idioma sin traducción automática. Máximo 12.000 caracteres.",
     "publishHeading": "Publicar una versión del acuerdo",
-    "publishHint": "Usa las condiciones propias de la tienda. Komisio no revisa su contenido legal. Las versiones publicadas se conservan y no se pueden editar.",
+    "publishHint": "Usa las condiciones propias de la tienda. Komisio no revisa su contenido legal. El texto publicado no se puede editar. Una versión no usada, sin vendedores ni registros vinculados, se puede eliminar.",
     "requireEvidence": "Exigir evidencia de aprobación registrada antes de recibir entregas",
     "confirmPublish": "He revisado el texto y el requisito de recepción. Esta versión debe aplicarse a las entregas futuras.",
     "publish": "Publicar versión",
@@ -111,7 +111,24 @@
       "next": "Siguiente",
       "status": "Estado del contrato",
       "manageLanguages": "Ver idiomas",
-      "languagePublished": "Publicado"
+      "languagePublished": "Publicado",
+      "deletion": {
+        "remove": "Eliminar",
+        "confirm": "¿Eliminar «{name}»? Esta acción no se puede deshacer.",
+        "confirmAction": "Sí, eliminar",
+        "cancel": "Cancelar",
+        "removing": "Eliminando…",
+        "failed": "No se pudo confirmar la eliminación. Vuelve a intentarlo o recarga la página.",
+        "linked": "Este acuerdo no se puede eliminar porque hay vendedores o registros de la tienda vinculados a él.",
+        "actions": "Acciones",
+        "usage": {
+          "sellers": "Vendedores",
+          "receipts": "Entregas",
+          "reviews": "Revisiones",
+          "items": "Artículos",
+          "sales": "Ventas"
+        }
+      }
     },
     "translations": {
       "add": "Añadir idioma",

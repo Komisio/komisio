@@ -16,7 +16,7 @@
     "language": "Agreement language",
     "languageHint": "Text is shown in this language without automatic translation. Maximum 12,000 characters.",
     "publishHeading": "Publish an agreement version",
-    "publishHint": "Use the store's own terms. Komisio does not review their legal content. Published versions are preserved and cannot be edited.",
+    "publishHint": "Use the store's own terms. Komisio does not review their legal content. Published text cannot be edited. An unused version with no linked sellers or records can be deleted.",
     "requireEvidence": "Require recorded approval evidence before receiving drop-offs",
     "confirmPublish": "I reviewed the text and receiving requirement. This version should apply to future submissions.",
     "publish": "Publish version",
@@ -111,7 +111,24 @@
       "next": "Next",
       "status": "Agreement status",
       "manageLanguages": "View languages",
-      "languagePublished": "Published"
+      "languagePublished": "Published",
+      "deletion": {
+        "remove": "Delete",
+        "confirm": "Delete “{name}”? This cannot be undone.",
+        "confirmAction": "Yes, delete",
+        "cancel": "Cancel",
+        "removing": "Deleting…",
+        "failed": "Could not confirm deletion. Retry or reload the page.",
+        "linked": "This agreement cannot be deleted because sellers or store records are linked to it.",
+        "actions": "Actions",
+        "usage": {
+          "sellers": "Sellers",
+          "receipts": "Drop-offs",
+          "reviews": "Reviews",
+          "items": "Items",
+          "sales": "Sales"
+        }
+      }
     },
     "translations": {
       "add": "Add language",

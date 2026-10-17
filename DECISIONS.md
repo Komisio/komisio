@@ -1109,3 +1109,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-16: Seller-owned items prioritize title, label reference, localized price and status. Price plans fold on demand; dates and collection deadlines stay visible. Search, pagination and seller-only read boundaries remain unchanged (#479).
 
 - 2026-10-17: Owners/admins may create a store type inline during receiving, retaining current questions and item input. Creation refuses names matching any effective type label, ignoring case and outer whitespace; exact request replays remain valid (#484).
+
+- 2026-10-17: #490 lets an owner or admin delete an unused seller-agreement version. Evidence, receipts, reviews, items and sale lines block it. Its translations go with it. Version numbers are not reused. Linked text stays immutable.

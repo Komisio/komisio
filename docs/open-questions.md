@@ -661,6 +661,13 @@ AI accounting drafts (resolved 2026-10-14): owner requests optional Swedish BAS 
 Seller bank details (resolved 2026-10-14): owner approves country-aware bank-transfer details per seller and tenant, readable only by the linked seller and owner/admin. Approved payouts retain reviewed details; changes require renewed review before payment. Bank execution remains manual.
 Current item presentation (resolved 2026-10-14): owner approves append-only text and classification corrections and tenant-defined assortment groups. Original agreements and financial records remain unchanged. The owner also approves a tenant category registry with translated names; existing item category text and history are preserved.
 
+Category editing (#485, pending): existing items store category text rather than
+registry IDs. Approval is requested for protected category versions and item
+links, matching old text only to one unambiguous current name or translation.
+Unmatched text would remain unchanged for manual selection; current displays
+would follow later renames while source and financial evidence stay frozen.
+See the question in issue #485 before implementing this migration.
+
 Unused store catalogue deletion (resolved in owner issue #460): owner/admin may
 permanently remove unused categories, item types, attributes and assortment
 groups, including store-created defaults. Any current or historical reference

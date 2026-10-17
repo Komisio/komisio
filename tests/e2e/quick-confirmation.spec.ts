@@ -111,7 +111,9 @@ test('confirmed acceptance without readable price stays confirmed and links to t
     await done
       .getByRole('link', { name: d.quickIntake.openItem, exact: true })
       .click()
-    await expect(page).toHaveURL(new RegExp(`/intake/items/${item}$`))
+    await expect(page).toHaveURL(
+      (url) => url.pathname === `/intake/items/${item}`,
+    )
     expect(requests).toBe(1)
   } finally {
     await f.close()

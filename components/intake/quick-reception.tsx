@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
 import { quickAiProposal } from '@/lib/intake/quick-ai-proposal'
 import { quickPriceOre } from '@/lib/intake/quick-price'
+import { itemFromListHref } from '@/lib/intake/item-return'
 import {
   quickReceiveResult,
   type QuickReceiveResult,
@@ -241,6 +242,7 @@ export function QuickReception({
     [done, setDone] = useState<{
       reference: string
       itemId: string
+      sessionId: string
       printJobId: string | null
       price: QuickReceiveResult['price']
     } | null>(null)
@@ -647,6 +649,7 @@ export function QuickReception({
       setDone({
         reference: result.reference,
         itemId: result.itemId,
+        sessionId: result.sessionId,
         printJobId,
         price: result.price,
       })
@@ -1337,7 +1340,12 @@ export function QuickReception({
               </Button>
               <Link
                 className="btn btn-secondary"
-                href={`/intake/items/${done.itemId}`}
+                href={itemFromListHref(
+                  done.itemId,
+                  bagId
+                    ? `/intake/bags/${bagId}/inspect`
+                    : `/intake/reception/${done.sessionId}`,
+                )}
               >
                 {d.openItem}
               </Link>

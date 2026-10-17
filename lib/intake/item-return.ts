@@ -1,7 +1,7 @@
 const fallback = '/intake/items'
 const base = 'https://komisio.invalid'
 
-/** Only item-list destinations; never turn a query parameter into an open redirect. */
+/** Only inventory and intake destinations; never turn a query parameter into an open redirect. */
 export function itemReturnHref(input: unknown): string {
   if (
     typeof input !== 'string' ||
@@ -15,7 +15,9 @@ export function itemReturnHref(input: unknown): string {
     const url = new URL(input, base)
     if (
       url.origin !== base ||
-      !/^\/intake\/(items|bags\/[0-9a-f-]{36}\/inspect)$/.test(url.pathname)
+      !/^\/intake\/(items|bags\/[0-9a-f-]{36}\/inspect|reception\/[0-9a-f-]{36})$/.test(
+        url.pathname,
+      )
     )
       return fallback
     const hash = /^#inventory-item-[0-9a-f-]{36}$/.test(url.hash)
@@ -27,7 +29,14 @@ export function itemReturnHref(input: unknown): string {
   }
 }
 
+export function isIntakeReturn(href: string) {
+  return /^\/intake\/(bags|reception)\//.test(itemReturnHref(href))
+}
+
 export function itemFromListHref(itemId: string, listing: string, hash = '') {
-  const returnTo = itemReturnHref(listing + '#inventory-item-' + itemId)
+  const destination = itemReturnHref(listing)
+  const returnTo = destination.startsWith('/intake/reception/')
+    ? destination
+    : itemReturnHref(destination + '#inventory-item-' + itemId)
   return `/intake/items/${itemId}?${new URLSearchParams({ returnTo })}${hash}`
 }

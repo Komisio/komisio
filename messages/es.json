@@ -2061,6 +2061,7 @@
     "noMatches": "No hay compras que coincidan con la búsqueda."
   },
   "sellerPortal": {
+    "itemDetails": "Precio y periodo de venta",
     "handovers": "Anunciar una entrega",
     "handoverIntro": "Anuncia una entrega antes de venir. Muestra la referencia en el mostrador; la tienda registra la recepción y aquí ves el número de entrega.",
     "handoverDisabled": "La tienda aún no acepta avisos previos. Lleva tus artículos al mostrador.",

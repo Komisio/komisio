@@ -2061,6 +2061,7 @@
     "noMatches": "Hakua vastaavia ostoja ei löytynyt."
   },
   "sellerPortal": {
+    "itemDetails": "Hinta ja myyntiaika",
     "handovers": "Ilmoita tavaroiden tuonnista",
     "handoverIntro": "Ilmoita tuontierä ennen saapumista. Näytä viite tiskillä; myymälä kirjaa vastaanoton ja näet tuontierän numeron täällä.",
     "handoverDisabled": "Myymälä ei vielä ota vastaan ennakkoilmoituksia. Tuo tavarasi kassalle.",

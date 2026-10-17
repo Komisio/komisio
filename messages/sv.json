@@ -2061,6 +2061,7 @@
     "noMatches": "Inga inköp matchar sökningen."
   },
   "sellerPortal": {
+    "itemDetails": "Pris och säljperiod",
     "items": "Mina varor",
     "itemsIntro": "Det butiken har för dig: aktuellt pris, om varan är till salu eller såld, och när säljperioden tar slut. Priserna följer butikens nedsättningsschema.",
     "noItems": "Inga varor ännu.",

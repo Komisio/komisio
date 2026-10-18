@@ -191,9 +191,31 @@ export function useItemQuickEdit({
   function cell(
     field: Field,
     label: string,
-    options?: { id: string; name: string; label?: string }[],
+    options?: {
+      id: string
+      name: string
+      label?: string
+      active?: boolean
+      aliases?: string[]
+    }[],
   ) {
     const active = edit?.field === field
+    // Translate current presentation without changing the optimistic snapshot
+    // sent to the engine. Ambiguous legacy text must remain unchanged.
+    const matches =
+      field === 'category'
+        ? options?.filter((o) =>
+            o.aliases?.some(
+              (a) =>
+                a.trim().toLocaleLowerCase() ===
+                current.category.trim().toLocaleLowerCase(),
+            ),
+          )
+        : undefined
+    const categoryLabel =
+      matches?.length === 1 ? matches[0].name : current.category
+    if (field === 'category')
+      options = options?.filter((o) => o.active !== false)
     // Keep unmatched text available; an explicit registry choice carries its ID.
     if (
       field === 'category' &&
@@ -201,10 +223,13 @@ export function useItemQuickEdit({
       current.category &&
       !options.some((o) => o.id === current.category)
     )
-      options = [{ id: current.category, name: current.category }, ...options]
+      options = [
+        { id: current.category, name: current.category, label: categoryLabel },
+        ...options,
+      ]
     const shown =
       field === 'category'
-        ? current.category || '—'
+        ? categoryLabel || '—'
         : options
           ? (options.find((option) => option.id === current[field])?.name ??
             '—')

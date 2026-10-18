@@ -45,11 +45,12 @@ export async function readItemCategories(
 
 /** The ID is the selection; names stay readable even when translations overlap. */
 export function categoryChoices(categories: ItemCategory[], locale: string) {
-  const active = categories.filter((c) => c.active)
-  const names = active.map((c) => categoryName(c, locale))
-  return active.map((c, index) => ({
+  const names = categories.map((c) => categoryName(c, locale))
+  return categories.map((c, index) => ({
     id: c.id,
     name: names[index],
+    active: c.active,
+    aliases: [...new Set([c.name, ...Object.values(c.labels)])],
     label:
       names.filter((n) => n === names[index]).length > 1
         ? `${names[index]} (${c.name})`

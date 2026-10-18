@@ -53,6 +53,31 @@ it('keeps the complete total even when a page is empty', async () => {
     p_tenant: tenant,
     p_seller: seller,
     p_query: 'Coat',
+    p_status: 'all',
     p_offset: 250,
+  })
+})
+
+it('validates status before the RPC and forwards the selected group', async () => {
+  const rpc = vi.fn().mockResolvedValue({
+    data: { currency: 'SEK', items: [], total: 0, offset: 0 },
+    error: null,
+  })
+  const client = { rpc } as unknown as SupabaseClient
+  await expect(
+    readMyItemsPage(client, tenant, seller, { status: 'invalid' as 'active' }),
+  ).rejects.toThrow()
+  expect(rpc).not.toHaveBeenCalled()
+  await readMyItemsPage(client, tenant, seller, {
+    status: 'sold',
+    query: 'Chair',
+    offset: 25,
+  })
+  expect(rpc).toHaveBeenCalledWith('my_items_page', {
+    p_tenant: tenant,
+    p_seller: seller,
+    p_query: 'Chair',
+    p_offset: 25,
+    p_status: 'sold',
   })
 })

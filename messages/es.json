@@ -2101,7 +2101,6 @@
       "cancelled": "cancelada"
     },
     "items": "Mis artículos",
-    "itemsIntro": "Lo que la tienda guarda para ti: el precio actual, si está en venta o vendido, y cuándo termina su periodo de venta. Los precios siguen el calendario de rebajas de la tienda.",
     "noItems": "Aún no hay artículos.",
     "item": "Artículo",
     "price": "Precio",
@@ -2180,7 +2179,21 @@
       "PAYOUT_BELOW_THRESHOLD": "El importe es inferior al mínimo de la tienda.",
       "PAYOUT_EXCEEDS_BALANCE": "El importe supera tu saldo disponible. Comprueba el saldo de arriba."
     },
-    "collectionDeadline": "Recoger antes de"
+    "collectionDeadline": "Recoger antes de",
+    "handoverHistory": "Entregas anteriores",
+    "itemsStatus": "Estado",
+    "itemFilters": {
+      "active": "Activos",
+      "sold": "Vendidos",
+      "ended": "Finalizados",
+      "all": "Todos"
+    },
+    "itemFilterEmpty": {
+      "active": "No hay artículos activos en este momento.",
+      "sold": "Aún no hay artículos vendidos.",
+      "ended": "Aún no hay artículos finalizados.",
+      "all": "Aún no hay artículos."
+    }
   },
   "plans": {
     "heading": "Plan",

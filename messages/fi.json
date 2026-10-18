@@ -2101,7 +2101,6 @@
       "cancelled": "peruutettu"
     },
     "items": "Omat tuotteeni",
-    "itemsIntro": "Mitä kauppa pitää hallussaan puolestasi: nykyinen hinta, onko tuote myynnissä vai myyty ja milloin sen myyntijakso päättyy. Hinnat noudattavat kaupan alennusaikataulua.",
     "noItems": "Ei vielä tuotteita.",
     "item": "Tuote",
     "price": "Hinta",
@@ -2180,7 +2179,21 @@
       "PAYOUT_BELOW_THRESHOLD": "Summa alittaa kaupan vähimmäissumman.",
       "PAYOUT_EXCEEDS_BALANCE": "Summa ylittää käytettävissä olevan saldosi. Tarkista yllä oleva saldo."
     },
-    "collectionDeadline": "Noudettava viimeistään"
+    "collectionDeadline": "Noudettava viimeistään",
+    "handoverHistory": "Aiemmat tuonnit",
+    "itemsStatus": "Tila",
+    "itemFilters": {
+      "active": "Aktiiviset",
+      "sold": "Myydyt",
+      "ended": "Päättyneet",
+      "all": "Kaikki"
+    },
+    "itemFilterEmpty": {
+      "active": "Ei aktiivisia tuotteita juuri nyt.",
+      "sold": "Ei vielä myytyjä tuotteita.",
+      "ended": "Ei vielä päättyneitä tuotteita.",
+      "all": "Ei vielä tuotteita."
+    }
   },
   "plans": {
     "heading": "Tilaus",

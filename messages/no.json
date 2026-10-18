@@ -2101,7 +2101,6 @@
       "cancelled": "avbrutt"
     },
     "items": "Mine varer",
-    "itemsIntro": "Det butikken har for deg: gjeldende pris, om den er til salgs eller solgt, og når salgsperioden slutter. Prisene følger butikkens plan for prisnedsettelser.",
     "noItems": "Ingen varer ennå.",
     "item": "Vare",
     "price": "Pris",
@@ -2180,7 +2179,21 @@
       "PAYOUT_BELOW_THRESHOLD": "Beløpet er lavere enn butikkens minstebeløp.",
       "PAYOUT_EXCEEDS_BALANCE": "Beløpet overstiger tilgjengelig saldo. Kontroller saldoen ovenfor."
     },
-    "collectionDeadline": "Hentes senest"
+    "collectionDeadline": "Hentes senest",
+    "handoverHistory": "Tidligere innleveringer",
+    "itemsStatus": "Status",
+    "itemFilters": {
+      "active": "Aktive",
+      "sold": "Solgte",
+      "ended": "Avsluttede",
+      "all": "Alle"
+    },
+    "itemFilterEmpty": {
+      "active": "Ingen aktive varer akkurat nå.",
+      "sold": "Ingen solgte varer ennå.",
+      "ended": "Ingen avsluttede varer ennå.",
+      "all": "Ingen varer ennå."
+    }
   },
   "plans": {
     "heading": "Abonnement",

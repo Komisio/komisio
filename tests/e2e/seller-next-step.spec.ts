@@ -114,7 +114,6 @@ test('seller sees the next price step, days left and what happens at period end'
     const shortcuts = page.locator('.seller-portal-shortcuts')
     for (const target of [
       'portal-items',
-      'portal-handovers',
       'portal-payout-request',
       'portal-statements',
     ]) {

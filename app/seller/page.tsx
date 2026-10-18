@@ -26,7 +26,11 @@ import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { SellerEconomyForms } from '@/components/seller/economy-forms'
 import { SellerHandovers } from '@/components/seller/handover-forms'
 import { readMyHandovers } from '@/lib/engine/handovers'
-import { readMyItems, readMyItemsPage } from '@/lib/engine/seller-items'
+import {
+  readMyItems,
+  readMyItemsPage,
+  sellerItemFilter,
+} from '@/lib/engine/seller-items'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { SignOut } from '@/components/platform/sign-out'
 import { SellerHeader } from '@/components/seller/header'
@@ -44,6 +48,7 @@ export default async function SellerPortal({
     seller?: string
     statement?: string
     q?: string
+    status?: string
     page?: string
     feePage?: string
   }>
@@ -193,12 +198,14 @@ export default async function SellerPortal({
   )
   const query =
     typeof params.q === 'string' ? params.q.trim().slice(0, 120) : ''
+  const parsedStatus = sellerItemFilter.safeParse(params.status ?? 'active')
+  const status = parsedStatus.success ? parsedStatus.data : 'active'
   const requestedPage =
     typeof params.page === 'string' && /^[1-9]\d{0,6}$/.test(params.page)
       ? Number(params.page)
       : 1
   const pageHref = (page: number) => {
-    const search = new URLSearchParams({ seller: account.sellerId })
+    const search = new URLSearchParams({ seller: account.sellerId, status })
     if (query) search.set('q', query)
     if (page > 1) search.set('page', String(page))
     return '/seller?' + search.toString() + '#portal-items'
@@ -208,6 +215,7 @@ export default async function SellerPortal({
     readMyHandovers(ctx.client, account.tenantId, account.sellerId),
     readMyItemsPage(ctx.client, account.tenantId, account.sellerId, {
       query,
+      status,
       offset: (requestedPage - 1) * 25,
     }),
   ])
@@ -279,9 +287,11 @@ export default async function SellerPortal({
             {d.items}
           </a>
         )}
-        <a className="btn btn-secondary" href="#portal-handovers">
-          {d.handovers}
-        </a>
+        {(handovers.enabled || handovers.handovers.length > 0) && (
+          <a className="btn btn-secondary" href="#portal-handovers">
+            {handovers.enabled ? d.handovers : d.handoverHistory}
+          </a>
+        )}
         <a className="btn btn-secondary" href="#portal-payout-request">
           {d.request}
         </a>
@@ -352,11 +362,10 @@ export default async function SellerPortal({
           tabIndex={-1}
         >
           <h2>{d.items}</h2>
-          <p>{d.itemsIntro}</p>
           {paged ? (
             <>
               <WorkingForm
-                key={query}
+                key={`${query}:${status}`}
                 action="/seller#portal-items"
                 role="search"
                 className="seller-items-search"
@@ -372,10 +381,24 @@ export default async function SellerPortal({
                     placeholder={d.itemsSearchHint}
                   />
                 </div>
+                <div className="field seller-items-status">
+                  <label htmlFor="seller-items-status">{d.itemsStatus}</label>
+                  <select
+                    id="seller-items-status"
+                    name="status"
+                    defaultValue={status}
+                  >
+                    {sellerItemFilter.options.map((value) => (
+                      <option key={value} value={value}>
+                        {d.itemFilters[value]}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <button className="btn btn-primary">
                   {all.items.searchButton}
                 </button>
-                {query && (
+                {(query || status !== 'active') && (
                   <Link
                     className="btn btn-secondary"
                     href={base + '#portal-items'}
@@ -404,7 +427,13 @@ export default async function SellerPortal({
             <p role="status">{d.itemsLimited}</p>
           )}
           {mine.items.length === 0 && (
-            <p>{query && paged ? all.items.noMatches : d.noItems}</p>
+            <p>
+              {query && paged
+                ? all.items.noMatches
+                : paged
+                  ? d.itemFilterEmpty[status]
+                  : d.noItems}
+            </p>
           )}
           {itemPagination}
           {mine.items.length > 0 && (

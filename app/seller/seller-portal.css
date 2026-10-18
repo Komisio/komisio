@@ -125,6 +125,10 @@
   flex: 1 1 240px;
   min-width: 0;
 }
+.seller-items-search .seller-items-status {
+  flex: 0 1 180px;
+}
+.seller-items-search select,
 .seller-items-search input {
   width: 100%;
 }

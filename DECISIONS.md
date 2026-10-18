@@ -1121,3 +1121,5 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-10-18: #502 permits default-off store registration links/QRs, owner/admin enablement and staff disable/rotation. Verified sellers accept the current agreement into a pending application; staff approval alone creates or connects a seller. No membership or email subscription is granted.
 - 2026-10-18: #502 matches only normalized verified account email under the tenant lock. One match reuses the seller; ambiguous matches require staff resolution. Applications retain accepted text/version and append-only decisions; contact erasure also redacts application contact fields.
+
+- 2026-10-18: #504 defaults seller items to active (on sale, markdown due, period ending); sold, ended and all groups filter before counting/paging. Disabled handovers hide unless history exists. Seller identity and lifecycle facts remain unchanged.

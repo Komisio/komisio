@@ -92,6 +92,8 @@ export function sellerItemDaysLeft(
   return Math.max(0, Math.ceil((end - now) / 86_400_000))
 }
 
+export const sellerItemFilter = z.enum(['active', 'sold', 'ended', 'all'])
+
 const myItemsPage = myItems
   .extend({
     total: z.number().int().nonnegative(),
@@ -104,9 +106,14 @@ export async function readMyItemsPage(
   client: SupabaseClient,
   tenant: string,
   seller: string,
-  options: { query?: string; offset?: number } = {},
+  options: {
+    query?: string
+    offset?: number
+    status?: z.infer<typeof sellerItemFilter>
+  } = {},
 ) {
   const r = await client.rpc('my_items_page', {
+    p_status: sellerItemFilter.parse(options.status ?? 'all'),
     p_tenant: z.uuid().parse(tenant),
     p_seller: z.uuid().parse(seller),
     p_query: z

@@ -18,7 +18,7 @@ test('stock links and removable filter chips retain context across pages and qui
     await page.goto('/intake/stock?ownership=consignment')
     await page
       .getByRole('link', {
-        name: d.sellerPortal.itemFilters.active,
+        name: `${d.sellerPortal.itemFilters.active}: 27`,
         exact: true,
       })
       .click()

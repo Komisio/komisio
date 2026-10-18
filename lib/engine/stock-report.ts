@@ -102,3 +102,41 @@ export async function readStockAssortments(
     })
     .parse(result.data)
 }
+
+const stockOwnershipTotal = z.object({
+  inStock: z.number().int().nonnegative(),
+  stockValueOre: ore,
+})
+export const stockLifecycleReport = z.object({
+  currency: z.string(),
+  asOf: z.string(),
+  stages: z.object({
+    active: z.number().int().nonnegative(),
+    on_sale: z.number().int().nonnegative(),
+    markdown_due: z.number().int().nonnegative(),
+    period_ending: z.number().int().nonnegative(),
+    period_ended: z.number().int().nonnegative(),
+  }),
+  nearingPeriodEnd: z.number().int().nonnegative(),
+  ownership: z.object({
+    consignment: stockOwnershipTotal,
+    store: stockOwnershipTotal,
+  }),
+})
+
+/** Additional current-stock read; the existing period report contract is unchanged. */
+export async function readStockLifecycle(
+  client: SupabaseClient,
+  tenantId: string,
+  ownership?: 'consignment' | 'store',
+) {
+  const result = await client.rpc('stock_lifecycle_report', {
+    p_tenant: z.uuid().parse(tenantId),
+    p_ownership: ownership
+      ? z.enum(['consignment', 'store']).parse(ownership)
+      : null,
+  })
+  if (result.error?.code === 'PGRST202') return null
+  if (result.error) throw new Error('Unable to read stock lifecycle')
+  return stockLifecycleReport.parse(result.data)
+}

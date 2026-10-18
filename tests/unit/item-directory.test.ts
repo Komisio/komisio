@@ -83,3 +83,13 @@ it('uses seven Stockholm calendar days across midnight, DST and year end', () =>
   expect(itemWeekCutoff(new Date('2026-10-24T22:30:00Z'))).toBe('2026-11-01')
   expect(itemWeekCutoff(new Date('2026-12-31T23:30:00Z'))).toBe('2027-01-08')
 })
+
+it('accepts only the supported upcoming stock period window', () => {
+  expect(
+    itemFilters.safeParse({ periodWindow: 'next7days', stage: 'markdown_due' })
+      .success,
+  ).toBe(true)
+  expect(itemFilters.safeParse({ periodWindow: 'last7days' }).success).toBe(
+    false,
+  )
+})

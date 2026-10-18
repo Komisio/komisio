@@ -1149,7 +1149,8 @@
       "activeFilters": "Filtros activos",
       "removeFilter": "Quitar {filter}",
       "quickFilters": "Filtros rápidos",
-      "endsWithinWeek": "Periodo finaliza como máximo en 7 días"
+      "endsWithinWeek": "Periodo finaliza como máximo en 7 días",
+      "periodWindow": "Periodo de venta"
     },
     "title": "Artículos",
     "item": "Artículo",
@@ -1782,7 +1783,11 @@
       "sales": "Ventas"
     },
     "assortments": "Grupos de surtido",
-    "noAssortment": "Sin grupo de surtido"
+    "noAssortment": "Sin grupo de surtido",
+    "stageHeading": "Artículos por estado",
+    "nearingEnd": "Todos los que finalizan en 7 días",
+    "nearingHint": "Artículos en stock cuyo periodo no ha finalizado, incluidos los que tienen rebajas pendientes.",
+    "ownershipValue": "Valor del stock por propiedad"
   },
   "importer": {
     "title": "Importar depositantes",

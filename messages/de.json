@@ -1149,7 +1149,8 @@
       "activeFilters": "Aktive Filter",
       "removeFilter": "{filter} entfernen",
       "quickFilters": "Schnellfilter",
-      "endsWithinWeek": "Verkaufszeitraum endet spätestens in 7 Tagen"
+      "endsWithinWeek": "Verkaufszeitraum endet spätestens in 7 Tagen",
+      "periodWindow": "Verkaufszeitraum"
     },
     "title": "Artikel",
     "item": "Artikel",
@@ -1782,7 +1783,11 @@
       "sales": "Verkäufe"
     },
     "assortments": "Sortimentsgruppen",
-    "noAssortment": "Ohne Sortimentsgruppe"
+    "noAssortment": "Ohne Sortimentsgruppe",
+    "stageHeading": "Artikel nach Status",
+    "nearingEnd": "Alle mit Ende innerhalb von 7 Tagen",
+    "nearingHint": "Lagerartikel mit noch laufendem Verkaufszeitraum, auch bei ausstehender Preisreduzierung.",
+    "ownershipValue": "Lagerwert nach Eigentum"
   },
   "importer": {
     "title": "Einlieferer importieren",

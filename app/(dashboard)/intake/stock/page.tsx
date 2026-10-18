@@ -1,5 +1,4 @@
 import { itemFilterHref } from '@/lib/engine/item-filter-navigation'
-import { itemFilterStage } from '@/lib/engine/item-directory'
 import { WorkingForm } from '@/components/platform/working-form'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
@@ -12,6 +11,7 @@ import { currentMonthPeriod, economyPeriod } from '@/lib/engine/economy'
 import {
   readStockReport,
   readStockAssortments,
+  readStockLifecycle,
 } from '@/lib/engine/stock-report'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
 
@@ -51,6 +51,24 @@ export default async function Stock({
     active.id,
     ownership || undefined,
   )
+  const lifecycle = await readStockLifecycle(
+    ctx.client,
+    active.id,
+    ownership || undefined,
+  )
+  const stockStages = [
+    'active',
+    'on_sale',
+    'markdown_due',
+    'period_ending',
+    'period_ended',
+  ] as const
+  const stageLabel = (stage: (typeof stockStages)[number]) =>
+    stage === 'active'
+      ? all.sellerPortal.itemFilters.active
+      : stage === 'markdown_due'
+        ? all.items.markdownWaiting
+        : all.lifecycle.stages[stage]
   const money = (ore: number) =>
     `${formatSignedOre(ore)} ${report?.currency ?? ''}`
   const pct = (value: number | null) => (value === null ? '—' : `${value} %`)
@@ -113,24 +131,6 @@ export default async function Stock({
               <div className="stock-current-grid">
                 <section aria-label={d.current}>
                   <h2>{d.current}</h2>
-                  <nav
-                    className="inventory-filter-links stock-stage-links"
-                    aria-label={all.items.stage}
-                  >
-                    {itemFilterStage.options.map((stage) => (
-                      <Link
-                        className="inventory-filter-chip"
-                        key={stage}
-                        href={itemsHref({ stage })}
-                      >
-                        {stage === 'active'
-                          ? all.sellerPortal.itemFilters.active
-                          : stage === 'markdown_due'
-                            ? all.items.markdownWaiting
-                            : all.lifecycle.stages[stage]}
-                      </Link>
-                    ))}
-                  </nav>
                   <dl className="stock-metrics">
                     <div className="card">
                       <dt>{d.inStock}</dt>
@@ -142,6 +142,83 @@ export default async function Stock({
                     </div>
                   </dl>
                 </section>
+                {lifecycle ? (
+                  <>
+                    <section
+                      className="stock-stages"
+                      aria-label={d.stageHeading}
+                    >
+                      <h2>{d.stageHeading}</h2>
+                      <div className="stock-stage-grid">
+                        {stockStages.map((stage) => (
+                          <article
+                            className="card stock-stage-card"
+                            key={stage}
+                          >
+                            <Link
+                              className="stock-stage-count"
+                              href={itemsHref({ stage })}
+                              aria-label={`${stageLabel(stage)}: ${lifecycle.stages[stage]}`}
+                            >
+                              <span>{stageLabel(stage)}</span>
+                              <strong>{lifecycle.stages[stage]}</strong>
+                            </Link>
+                            {(stage === 'markdown_due' ||
+                              stage === 'period_ended') && (
+                              <Link
+                                className="text-link"
+                                href={`/intake/lifecycle?stage=${stage}`}
+                                aria-label={`${all.lifecycle.title}: ${stageLabel(stage)}`}
+                              >
+                                {all.lifecycle.title} →
+                              </Link>
+                            )}
+                          </article>
+                        ))}
+                        <article className="card stock-stage-card stock-stage-nearing">
+                          <Link
+                            className="stock-stage-count"
+                            href={itemsHref({ periodWindow: 'next7days' })}
+                            aria-label={`${d.nearingEnd}: ${lifecycle.nearingPeriodEnd}`}
+                          >
+                            <span>{d.nearingEnd}</span>
+                            <strong>{lifecycle.nearingPeriodEnd}</strong>
+                          </Link>
+                          <p className="muted">{d.nearingHint}</p>
+                        </article>
+                      </div>
+                      <nav
+                        className="inventory-filter-links stock-stage-links"
+                        aria-label={all.items.stage}
+                      >
+                        {(['ended', 'sold'] as const).map((stage) => (
+                          <Link
+                            className="inventory-filter-chip"
+                            key={stage}
+                            href={itemsHref({ stage })}
+                          >
+                            {all.lifecycle.stages[stage]}
+                          </Link>
+                        ))}
+                      </nav>
+                    </section>
+                    <section aria-label={d.ownershipValue}>
+                      <h2>{d.ownershipValue}</h2>
+                      <dl className="stock-metrics">
+                        {(['consignment', 'store'] as const).map((kind) => (
+                          <div className="card" key={kind}>
+                            <dt>{all.items.ownershipKinds[kind]}</dt>
+                            <dd>
+                              {money(lifecycle.ownership[kind].stockValueOre)}
+                            </dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </section>
+                  </>
+                ) : (
+                  <p role="status">{d.notAvailable}</p>
+                )}
                 <section className="card stock-panel" aria-label={d.age}>
                   <h2>{d.age}</h2>
                   <dl className="stock-age">

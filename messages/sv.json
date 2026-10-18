@@ -1149,7 +1149,8 @@
       "activeFilters": "Aktiva filter",
       "removeFilter": "Ta bort {filter}",
       "quickFilters": "Snabbfilter",
-      "endsWithinWeek": "Säljperiod slutar senast om 7 dagar"
+      "endsWithinWeek": "Säljperiod slutar senast om 7 dagar",
+      "periodWindow": "Säljperiod"
     },
     "title": "Varor",
     "item": "Vara",
@@ -1782,7 +1783,11 @@
       "sales": "Försäljning"
     },
     "assortments": "Sortimentsgrupper",
-    "noAssortment": "Utan sortimentsgrupp"
+    "noAssortment": "Utan sortimentsgrupp",
+    "stageHeading": "Varor efter status",
+    "nearingEnd": "Alla som slutar inom 7 dagar",
+    "nearingHint": "Varor i lager med säljperiod kvar, även när en prissänkning väntar.",
+    "ownershipValue": "Lagervärde efter ägande"
   },
   "importer": {
     "title": "Importera säljare",

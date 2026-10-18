@@ -687,3 +687,5 @@ Seller self-registration (resolved 2026-10-18, owner #502): enablement is owner/
 Store mail auto-subscription (resolved 2026-10-18, owner #499): default-off owner/admin setting; only newly created self-registered sellers accepting the approved localized notice qualify. Staff/import/transfer/existing sellers are excluded. Disabling stops new enrollment only. Exact accepted text and agreement version retain a distinct automatic source; sellers can unsubscribe through email or portal.
 
 Staff Active filter (resolved 2026-10-18, owner #510): a small additive item-directory RPC and validation extension may combine on-sale, markdown-due and period-ending stages before counting and pagination. The remaining filter-navigation scope is unchanged.
+
+Stock lifecycle overview (resolved 2026-10-18, owner #511): an additional read RPC may return stock stage counts and ownership values. The item-directory filter may also express the same upcoming seven-day stock window, including pending markdowns and excluding sold, ended and expired periods. No lifecycle action or stock-membership rule changes.

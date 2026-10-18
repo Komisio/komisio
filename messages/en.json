@@ -1149,7 +1149,8 @@
       "activeFilters": "Active filters",
       "removeFilter": "Remove {filter}",
       "quickFilters": "Quick filters",
-      "endsWithinWeek": "Period ends by 7 days from today"
+      "endsWithinWeek": "Period ends by 7 days from today",
+      "periodWindow": "Sale period"
     },
     "title": "Items",
     "item": "Item",
@@ -1782,7 +1783,11 @@
       "sales": "Sales"
     },
     "assortments": "Assortment groups",
-    "noAssortment": "No assortment group"
+    "noAssortment": "No assortment group",
+    "stageHeading": "Items by status",
+    "nearingEnd": "All ending within 7 days",
+    "nearingHint": "In-stock items whose period has not ended, including pending markdowns.",
+    "ownershipValue": "Stock value by ownership"
   },
   "importer": {
     "title": "Import sellers",

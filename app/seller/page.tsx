@@ -320,6 +320,7 @@ export default async function SellerPortal({
         recovery={all.intake}
       />
       <StoreMailConsent
+        locale={ctx.locale}
         key={`store-mail:${account.sellerId}:${mailConsent.id}`}
         tenantId={account.tenantId}
         sellerId={account.sellerId}

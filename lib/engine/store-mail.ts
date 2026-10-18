@@ -32,13 +32,30 @@ export const unsubscribeCommand = z.strictObject({
   messageId: z.uuid(),
   token: z.string().regex(/^[a-f0-9]{64}$/),
 })
+export const mailStatus = z.enum([
+  'own',
+  'automatic',
+  'unsubscribed',
+  'none',
+  'noEmail',
+])
+export const autoMailSettings = z.object({
+  id: z.uuid().nullable(),
+  enabled: z.boolean(),
+})
 export const consentState = z.object({
+  status: mailStatus,
+  source: z.string().nullable(),
+  date: z.string().nullable(),
+  agreementId: z.uuid().nullable(),
   id: z.uuid().nullable(),
   enabled: z.boolean(),
 })
 export type ConsentState = z.infer<typeof consentState>
 export const mailPreview = z.object({
   eligible: z.number().int(),
+  own: z.number().int(),
+  automatic: z.number().int(),
   missingEmail: z.number().int(),
   withoutConsent: z.number().int(),
   revision: z.string(),
@@ -56,6 +73,8 @@ export const mailHistory = z.array(
     createdAt: z.string(),
     createdBy: z.string(),
     total: z.number().int(),
+    own: z.number().int(),
+    automatic: z.number().int(),
     missingEmail: z.number().int(),
     withoutConsent: z.number().int(),
     skipped: z.number().int(),
@@ -120,4 +139,27 @@ export async function executeStoreMail(
       p_enabled: c.enabled,
     })
   throw new Error('INVALID_INPUT')
+}
+
+export async function readAutoMailSettings(
+  client: SupabaseClient,
+  tenant: string,
+) {
+  const r = await client.rpc('store_mail_auto_settings', {
+    p_tenant: z.uuid().parse(tenant),
+  })
+  if (r.error) throw new Error('REQUEST_FAILED')
+  return autoMailSettings.parse(r.data)
+}
+export async function readStaffMailStatus(
+  client: SupabaseClient,
+  tenant: string,
+  seller: string,
+) {
+  const r = await client.rpc('store_seller_mail_status', {
+    p_tenant: z.uuid().parse(tenant),
+    p_seller: z.uuid().parse(seller),
+  })
+  if (r.error) throw new Error('REQUEST_FAILED')
+  return consentState.parse(r.data)
 }

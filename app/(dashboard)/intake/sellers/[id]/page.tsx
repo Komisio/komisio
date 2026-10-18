@@ -1,3 +1,5 @@
+import { readStaffMailStatus } from '@/lib/engine/store-mail'
+import { StoreMailStatus } from '@/components/seller/store-mail-status'
 import { readSellerBank } from '@/lib/engine/seller-bank'
 import { SellerBankAccount } from '@/components/seller/bank-details'
 import { SellerItemsTable } from '@/components/intake/seller-items-table'
@@ -126,6 +128,9 @@ export default async function Seller({
       </div>
     )
   }
+  const mailStatus = ['owner', 'admin', 'staff'].includes(tenant.role)
+    ? await readStaffMailStatus(ctx.client, tenant.id, id.data)
+    : null
   const canReadBank = ['owner', 'admin'].includes(tenant.role)
   const bank = canReadBank
     ? await readSellerBank(ctx.client, tenant.id, id.data)
@@ -1055,6 +1060,13 @@ export default async function Seller({
                     <br />
                     {profile.notes}
                   </p>
+                )}
+                {mailStatus && (
+                  <StoreMailStatus
+                    current={mailStatus}
+                    d={all.storeMail}
+                    locale={ctx.locale}
+                  />
                 )}
                 {write && (
                   <details className="seller-disclosure">

@@ -1,3 +1,5 @@
+import { AutoMailSettings } from '@/components/seller-registration/auto-mail-settings'
+import { readAutoMailSettings } from '@/lib/engine/store-mail'
 import { notFound } from 'next/navigation'
 import { toSVG } from '@bwip-js/generic'
 import Link from '@/components/platform/working-link'
@@ -16,6 +18,7 @@ export default async function RegistrationSettingsPage() {
   if (!['owner', 'admin', 'staff'].includes(active.role)) notFound()
   const d = dictionary(ctx.locale).selfRegistration
   const current = await readRegistrationSettings(ctx.client, active.id)
+  const mailSettings = await readAutoMailSettings(ctx.client, active.id)
   const origin = process.env.NEXT_PUBLIC_APP_URL
   const url =
     current.token && origin
@@ -37,6 +40,13 @@ export default async function RegistrationSettingsPage() {
     <div className="registration-page">
       <Link href="/settings">{d.back}</Link>
       <h1>{d.title}</h1>
+      <AutoMailSettings
+        key={mailSettings.id ?? 'default'}
+        tenantId={active.id}
+        current={mailSettings}
+        canEdit={active.role !== 'staff'}
+        d={dictionary(ctx.locale)}
+      />
       <RegistrationSettingsForm
         key={current.id ?? 'default'}
         tenantId={active.id}

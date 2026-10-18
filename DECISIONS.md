@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-18: #499 allows default-off, owner/admin store-mail auto-subscription only for newly approved self-registrations that accepted the localized notice while enabled. History retains distinct source and exact agreement; disabling never ends existing subscriptions. Unsubscribe always wins.
+
 - 2026-10-18: #485 permits owner/admin catalogue editing. Category versions and item links are protected; only unique name/translation matches link automatically. Current displays follow renames; source evidence stays intact. Used entries may be deactivated, never deleted.
 
 - 2026-10-17: Owner #488 chooses per-store Fortnox send times in Europe/Stockholm, default 07:00. Daily claims serialize; partial batches retain their first cutoff. Later exports wait for the next day. Schedule revisions survive grant renewal; pending or uncertain sends stay held.

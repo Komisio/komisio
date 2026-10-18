@@ -5,6 +5,13 @@ import type { Locale } from '@/lib/i18n'
 export const registrationToken = z.string().regex(/^[a-f0-9]{64}$/)
 export const registrationCommand = z.discriminatedUnion('action', [
   z.strictObject({
+    action: z.literal('mailSettings'),
+    tenantId: z.uuid(),
+    requestId: z.uuid(),
+    expected: z.uuid().nullable(),
+    enabled: z.boolean(),
+  }),
+  z.strictObject({
     action: z.literal('settings'),
     tenantId: z.uuid(),
     requestId: z.uuid(),
@@ -20,6 +27,7 @@ export const registrationCommand = z.discriminatedUnion('action', [
     agreementId: z.uuid(),
     translationId: z.uuid().nullable(),
     accepted: z.literal(true),
+    mailSettingId: z.uuid().nullable().default(null),
   }),
   z.strictObject({
     action: z.literal('review'),
@@ -64,6 +72,7 @@ export const registrationEntry = z.discriminatedUnion('state', [
   }),
   z.object({
     state: z.literal('form'),
+    mailSettingId: z.uuid().nullable().default(null),
     tenantId: z.uuid(),
     storeName: z.string(),
     email: z.string(),
@@ -141,6 +150,13 @@ export async function executeRegistration(
   input: RegistrationCommand,
 ) {
   const c = registrationCommand.parse(input)
+  if (c.action === 'mailSettings')
+    return client.rpc('set_store_mail_auto', {
+      p_tenant: c.tenantId,
+      p_id: c.requestId,
+      p_expected: c.expected,
+      p_enabled: c.enabled,
+    })
   if (c.action === 'settings')
     return client.rpc('set_seller_registration', {
       p_tenant: c.tenantId,
@@ -157,6 +173,7 @@ export async function executeRegistration(
       p_agreement: c.agreementId,
       p_translation: c.translationId,
       p_accepted: c.accepted,
+      p_mail_setting: c.mailSettingId,
     })
   return client.rpc('review_seller_registration', {
     p_tenant: c.tenantId,

@@ -4,6 +4,7 @@ import { cache } from 'react'
 import { resolveLocale } from '@/lib/i18n'
 import { serverClient } from '@/lib/supabase/server'
 import { readMySellerAccounts } from '@/lib/engine/seller-portal'
+import { readMyRegistrations } from '@/lib/engine/seller-registration'
 import type { Tenant } from './types'
 import type { Role } from './permissions'
 export async function platformContext() {
@@ -69,7 +70,10 @@ export const isSellerOnly = cache(
       process.env.KOMISIO_INTAKE_ENABLED !== 'true'
     )
       return false
-    return (await readMySellerAccounts(context.client)).length > 0
+    return (
+      (await readMySellerAccounts(context.client)).length > 0 ||
+      (await readMyRegistrations(context.client)).length > 0
+    )
   },
 )
 

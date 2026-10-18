@@ -209,6 +209,13 @@ export default async function Settings({
           ))}
         </nav>
       )}
+      {tab === 'policy' && policy && active.role !== 'readonly' && (
+        <p>
+          <Link href="/settings/seller-registration">
+            {d.selfRegistration.title}
+          </Link>
+        </p>
+      )}
       {tab === 'policy' && policy && (
         <StorePolicyForm
           key={`${active.id}-${policy.id ?? 'default'}`}

@@ -1,0 +1,177 @@
+import { test, expect } from '@playwright/test'
+import { randomUUID } from 'node:crypto'
+import { register } from '../helpers/account'
+import { p2Fixture } from '../helpers/p2-fixture'
+import all from '../../messages/sv.json' with { type: 'json' }
+import en from '../../messages/en.json' with { type: 'json' }
+const d = all.selfRegistration
+
+test('store link, verified seller application, safe retry and staff approval', async ({
+  page,
+  browser,
+}, testInfo) => {
+  const ownerEmail = `registration-owner-${randomUUID()}@example.test`
+  await register(page, ownerEmail, `K!${randomUUID()}`)
+  const f = await p2Fixture(ownerEmail)
+  const sellerContext = await browser.newContext({
+    baseURL: testInfo.project.use.baseURL,
+  })
+  const sellerPage = await sellerContext.newPage()
+  try {
+    await f.db.query(
+      'select publish_agreement_translation($1,$2,$3,$4,$5,$6)',
+      [
+        f.tenant,
+        randomUUID(),
+        f.agreement,
+        'Synthetic translated terms',
+        'Synthetic translated text',
+        'sv',
+      ],
+    )
+    await f.commit()
+    await page.goto('/settings/seller-registration')
+    await expect(
+      page.getByRole('heading', { name: d.disabled, exact: true }),
+    ).toBeVisible()
+    await expect(page.getByLabel(d.link, { exact: true })).toHaveCount(0)
+    await page.getByRole('button', { name: d.enable, exact: true }).click()
+    const linkField = page.getByLabel(d.link, { exact: true })
+    await expect(linkField).toBeVisible()
+    const link = await linkField.inputValue()
+    const destination = new URL(link).pathname
+    await expect(
+      page.getByRole('img', { name: d.qr, exact: true }),
+    ).toBeVisible()
+    await page.screenshot({
+      path: testInfo.outputPath('registration-settings.png'),
+      fullPage: true,
+    })
+    await sellerPage.goto(destination)
+    await expect(sellerPage).toHaveURL(/\/login\?next=/)
+    expect(new URL(sellerPage.url()).searchParams.get('next')).toBe(destination)
+    const sellerEmail = `registration-applicant-${randomUUID()}@example.test`
+    await register(sellerPage, sellerEmail, `K!${randomUUID()}`, destination)
+    await expect(
+      sellerPage.getByRole('heading', { name: d.applyTitle, exact: true }),
+    ).toBeVisible()
+    await expect(sellerPage.getByLabel(d.email, { exact: true })).toHaveValue(
+      sellerEmail,
+    )
+    await expect(
+      sellerPage.getByRole('button', { name: d.submit, exact: true }),
+    ).toBeDisabled()
+    await sellerPage
+      .getByLabel(d.name, { exact: true })
+      .fill('Synthetic applicant')
+    await sellerPage.getByLabel(d.phone, { exact: true }).fill('0700000000')
+    await expect(
+      sellerPage.getByText('Synthetic translated text', { exact: true }),
+    ).toBeVisible()
+    await sellerPage.getByLabel(d.accept, { exact: true }).check()
+    await sellerPage.getByLabel('Språk: Svenska', { exact: true }).click()
+    await sellerPage
+      .getByRole('button', { name: 'English', exact: true })
+      .click()
+    await expect(
+      sellerPage.getByText('Only a test', { exact: true }),
+    ).toBeVisible()
+    await expect(
+      sellerPage.getByLabel(en.selfRegistration.accept, { exact: true }),
+    ).not.toBeChecked()
+    await sellerPage.getByLabel('Language: English', { exact: true }).click()
+    await sellerPage
+      .getByRole('button', { name: 'Svenska', exact: true })
+      .click()
+    await sellerPage
+      .getByLabel(d.name, { exact: true })
+      .fill('Synthetic applicant')
+    await sellerPage.getByLabel(d.phone, { exact: true }).fill('0700000000')
+    await sellerPage.getByLabel(d.accept, { exact: true }).check()
+    await sellerPage.setViewportSize({ width: 360, height: 800 })
+    expect(
+      await sellerPage.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+    await sellerPage.screenshot({
+      path: testInfo.outputPath('registration-form-mobile.png'),
+      fullPage: true,
+    })
+    const attempts: unknown[] = []
+    await sellerPage.route('**/api/seller-registration', async (route) => {
+      if (attempts.length >= 2) return route.continue()
+      attempts.push(route.request().postDataJSON())
+      const response = await route.fetch()
+      expect(response.status()).toBe(200)
+      await route.fulfill(
+        attempts.length === 1 ? { status: 503, json: {} } : { response },
+      )
+    })
+    await sellerPage
+      .getByRole('button', { name: d.submit, exact: true })
+      .click()
+    await expect(sellerPage.locator('form').getByRole('alert')).toHaveText(
+      d.uncertain,
+    )
+    await expect(sellerPage.getByLabel(d.name, { exact: true })).toBeDisabled()
+    await sellerPage.getByRole('button', { name: d.retry, exact: true }).click()
+    await expect(sellerPage).toHaveURL(/\/seller$/)
+    expect(attempts).toHaveLength(2)
+    expect(attempts[1]).toEqual(attempts[0])
+    await expect(sellerPage.getByText(d.pending, { exact: true })).toBeVisible()
+    await expect(
+      sellerPage.getByText(all.sellerPortal.empty, { exact: true }),
+    ).toHaveCount(0)
+    await page.goto('/intake/sellers/registrations')
+    const application = page.getByRole('article', {
+      name: 'Synthetic applicant',
+      exact: true,
+    })
+    await expect(application).toBeVisible()
+    await page.screenshot({
+      path: testInfo.outputPath('registration-review.png'),
+      fullPage: true,
+    })
+    await application.getByText(d.reviewTerms, { exact: true }).click()
+    await expect(
+      application.getByText('Synthetic translated text', { exact: true }),
+    ).toBeVisible()
+    await application
+      .getByRole('button', { name: d.approve, exact: true })
+      .click()
+    await expect(page.getByText(d.empty, { exact: true })).toBeVisible()
+    const rows = await f.db.query(
+      'select id from sellers where tenant_id=$1 and email=$2',
+      [f.tenant, sellerEmail],
+    )
+    expect(rows.rows).toHaveLength(1)
+    await sellerPage.goto(destination)
+    await expect(sellerPage).toHaveURL(
+      new RegExp(`/seller\\?seller=${rows.rows[0].id}`),
+    )
+    const consent = await f.db.query(
+      'select count(*)::int n from seller_store_mail_consents where tenant_id=$1 and seller_id=$2',
+      [f.tenant, rows.rows[0].id],
+    )
+    expect(consent.rows[0].n).toBe(0)
+    // Revoked links show a clear message rather than inviting a second registration.
+    await page.goto('/settings/seller-registration')
+    page.once('dialog', (dialog) => dialog.accept())
+    await page.getByRole('button', { name: d.rotate, exact: true }).click()
+    await expect(page.getByLabel(d.link, { exact: true })).not.toHaveValue(link)
+    await sellerPage.goto(destination)
+    await expect(
+      sellerPage.getByText(d.unavailable, { exact: true }),
+    ).toBeVisible()
+    await sellerPage.setViewportSize({ width: 360, height: 800 })
+    expect(
+      await sellerPage.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+  } finally {
+    await sellerContext.close()
+    await f.close()
+  }
+})

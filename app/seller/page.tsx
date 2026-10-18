@@ -1,4 +1,6 @@
 import { SellerItems } from '@/components/seller/items'
+import { MyRegistrations } from '@/components/seller-registration/pending'
+import { readMyRegistrations } from '@/lib/engine/seller-registration'
 import { StoreMailConsent } from '@/components/seller/store-mail-consent'
 import { readMailConsent } from '@/lib/engine/store-mail'
 import { economyFormat } from '@/lib/intake/economy-format'
@@ -56,6 +58,9 @@ export default async function SellerPortal({
     labels[key] ?? d.kind
   const params = await searchParams
   const accounts = await readMySellerAccounts(ctx.client)
+  const registrations = !params.seller
+    ? await readMyRegistrations(ctx.client)
+    : []
   const account = params.seller
     ? accounts.find((a) => a.sellerId === params.seller)
     : null
@@ -74,13 +79,16 @@ export default async function SellerPortal({
         <section className="card">
           <h1>{d.title}</h1>
           <p>{ctx.user.email}</p>
-          {accounts.length === 0 && <p>{d.empty}</p>}
+          {accounts.length === 0 && registrations.length === 0 && (
+            <p>{d.empty}</p>
+          )}
           {accounts.map((a) => (
             <p key={a.sellerId}>
               <Link href={`/seller?seller=${a.sellerId}`}>{a.storeName}</Link>
             </p>
           ))}
         </section>
+        <MyRegistrations rows={registrations} d={all.selfRegistration} />
       </main>
     )
   const mailConsent = await readMailConsent(

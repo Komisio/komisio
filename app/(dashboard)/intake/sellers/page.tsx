@@ -54,6 +54,14 @@ export default async function Sellers({
     <div className="seller-directory-page">
       <div className="page-heading seller-directory-heading">
         <h1>{d.title}</h1>
+        {active.role !== 'readonly' && (
+          <Link
+            className="btn btn-secondary"
+            href="/intake/sellers/registrations"
+          >
+            {all.selfRegistration.queue}
+          </Link>
+        )}
         {['owner', 'admin'].includes(active.role) && (
           <Link className="btn btn-secondary" href="/intake/sellers/email">
             {all.storeMail.title}

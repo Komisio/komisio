@@ -8575,3 +8575,38 @@ button.text-link:hover:not(:disabled) {
   min-height: 44px;
   padding-block: 8px;
 }
+
+/* Read-only filter navigation stays visible outside the advanced form. */
+.inventory-filter-links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem 1.5rem;
+}
+.inventory-filter-links:last-of-type {
+  padding-bottom: 1rem;
+}
+.inventory-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 44px;
+  max-width: 100%;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 1.5rem;
+  font-size: 0.875rem;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.inventory-filter-chip svg {
+  flex-shrink: 0;
+}
+.inventory-filter-chip-active {
+  background: var(--paper);
+}
+.stock-stage-links {
+  padding-inline: 0;
+}

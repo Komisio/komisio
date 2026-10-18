@@ -1145,7 +1145,11 @@
       "invalid": "Filter und Bereiche prüfen. Der Anfang darf nicht nach dem Ende liegen.",
       "markdownOn": "Preissenkung ausstehend seit {date} ({percent} %).",
       "sortAsc": "Aufsteigend sortieren",
-      "sortDesc": "Absteigend sortieren"
+      "sortDesc": "Absteigend sortieren",
+      "activeFilters": "Aktive Filter",
+      "removeFilter": "{filter} entfernen",
+      "quickFilters": "Schnellfilter",
+      "endsWithinWeek": "Verkaufszeitraum endet spätestens in 7 Tagen"
     },
     "title": "Artikel",
     "item": "Artikel",

@@ -1,3 +1,5 @@
+import { itemFilterHref } from '@/lib/engine/item-filter-navigation'
+import { itemFilterStage } from '@/lib/engine/item-directory'
 import { WorkingForm } from '@/components/platform/working-form'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
@@ -36,6 +38,8 @@ export default async function Stock({
     params.ownership === 'store' || params.ownership === 'consignment'
       ? params.ownership
       : ''
+  const itemsHref = (filter: Record<string, string>) =>
+    itemFilterHref(ownership ? { ownership } : {}, filter)
   const report = await readStockReport(
     ctx.client,
     active.id,
@@ -109,6 +113,24 @@ export default async function Stock({
               <div className="stock-current-grid">
                 <section aria-label={d.current}>
                   <h2>{d.current}</h2>
+                  <nav
+                    className="inventory-filter-links stock-stage-links"
+                    aria-label={all.items.stage}
+                  >
+                    {itemFilterStage.options.map((stage) => (
+                      <Link
+                        className="inventory-filter-chip"
+                        key={stage}
+                        href={itemsHref({ stage })}
+                      >
+                        {stage === 'active'
+                          ? all.sellerPortal.itemFilters.active
+                          : stage === 'markdown_due'
+                            ? all.items.markdownWaiting
+                            : all.lifecycle.stages[stage]}
+                      </Link>
+                    ))}
+                  </nav>
                   <dl className="stock-metrics">
                     <div className="card">
                       <dt>{d.inStock}</dt>
@@ -167,7 +189,18 @@ export default async function Stock({
                       <tbody>
                         {report.categories.map((c) => (
                           <tr key={c.category || '-'}>
-                            <th scope="row">{c.category || d.uncategorised}</th>
+                            <th scope="row">
+                              {c.category ? (
+                                <Link
+                                  className="text-link"
+                                  href={itemsHref({ category: c.category })}
+                                >
+                                  {c.category}
+                                </Link>
+                              ) : (
+                                d.uncategorised
+                              )}
+                            </th>
                             <td data-label={d.inStock}>{c.inStock}</td>
                             <td data-label={d.stockValue}>
                               {money(c.stockValueOre)}
@@ -207,7 +240,7 @@ export default async function Stock({
                             {g.id ? (
                               <Link
                                 className="text-link"
-                                href={`/intake/items?assortment=${g.id}`}
+                                href={itemsHref({ assortment: g.id })}
                               >
                                 {g.name}
                               </Link>

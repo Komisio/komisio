@@ -1145,7 +1145,11 @@
       "invalid": "Revisa los filtros y rangos. El inicio no debe superar el final.",
       "markdownOn": "Rebaja pendiente desde {date} ({percent} %).",
       "sortAsc": "Orden ascendente",
-      "sortDesc": "Orden descendente"
+      "sortDesc": "Orden descendente",
+      "activeFilters": "Filtros activos",
+      "removeFilter": "Quitar {filter}",
+      "quickFilters": "Filtros rápidos",
+      "endsWithinWeek": "Periodo finaliza como máximo en 7 días"
     },
     "title": "Artículos",
     "item": "Artículo",

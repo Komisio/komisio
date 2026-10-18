@@ -17,11 +17,12 @@ export const itemSort = z.enum([
 const text = z.string().trim().max(120)
 const money = z.string().regex(/^(0|[1-9]\d{0,8})(\.\d{1,2})?$/)
 const date = z.iso.date().refine((value) => !value.startsWith('0000-'))
+export const itemFilterStage = z.enum(['active', ...itemStage.options])
 export const itemFilters = z
   .strictObject({
     bag: z.uuid().optional(),
     q: text.optional(),
-    stage: itemStage.optional(),
+    stage: itemFilterStage.optional(),
     ownership: z.enum(['consignment', 'store']).optional(),
     seller: text.optional(),
     category: text.optional(),

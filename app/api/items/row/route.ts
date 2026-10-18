@@ -34,6 +34,8 @@ export async function POST(request: Request) {
       'ITEM_NOT_FOUND',
       'GROUP_NOT_FOUND',
       'ITEM_TYPE_UNDEFINED',
+      'CATEGORY_NOT_FOUND',
+      'CATALOGUE_CHANGED',
     ].includes(code)
       ? reply({ error: code }, 409)
       : reply({}, 503)

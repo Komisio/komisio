@@ -11,6 +11,7 @@ export const inventoryRowCommand = z.strictObject({
   }),
   title: z.string().trim().min(1).max(1000),
   category: z.string().trim().max(1000),
+  categoryId: z.uuid().optional(),
   itemType: z
     .string()
     .regex(/^[a-z][a-z0-9_]{0,39}$/)
@@ -19,13 +20,14 @@ export const inventoryRowCommand = z.strictObject({
 })
 export async function editInventoryRow(client: SupabaseClient, input: unknown) {
   const c = inventoryRowCommand.parse(input)
-  const r = await client.rpc('edit_inventory_row', {
+  const r = await client.rpc('edit_inventory_row_with_category', {
     p_tenant: c.tenantId,
     p_id: c.requestId,
     p_item: c.itemId,
     p_expected: c.expected,
     p_title: c.title,
     p_category: c.category,
+    p_category_id: c.categoryId ?? null,
     p_type: c.itemType,
     p_group: c.assortment,
   })
@@ -39,6 +41,8 @@ export async function editInventoryRow(client: SupabaseClient, input: unknown) {
         'ITEM_NOT_FOUND',
         'GROUP_NOT_FOUND',
         'ITEM_TYPE_UNDEFINED',
+        'CATEGORY_NOT_FOUND',
+        'CATALOGUE_CHANGED',
       ].find((code) => r.error!.message === code) ?? 'REQUEST_FAILED',
     )
   if (r.data !== c.requestId) throw new Error('REQUEST_FAILED')

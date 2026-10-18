@@ -81,7 +81,7 @@ test('handover shares inline edits, selection and print actions without losing r
       .click()
     await row
       .getByRole('combobox', { name: d.quickIntake.category, exact: true })
-      .selectOption('Home & décor')
+      .selectOption({ label: 'Hem och inredning' })
     await page.keyboard.press('Tab')
     // The selected option is present before the save has completed. Tab opens
     // the next editor only after the category's command has been confirmed.

@@ -9,6 +9,8 @@ export const itemCategory = z.object({
   id: z.uuid(),
   name: z.string().min(1).max(120),
   labels,
+  version: z.number().int().nonnegative().default(0),
+  active: z.boolean().default(true),
 })
 export type ItemCategory = z.infer<typeof itemCategory>
 export const createCategoryInput = z
@@ -20,7 +22,10 @@ export const createCategoryInput = z
   })
   .refine((c) => Object.keys(c.labels).length > 0)
 
-export function categoryName(category: ItemCategory, locale: string) {
+export function categoryName(
+  category: Pick<ItemCategory, 'name' | 'labels'>,
+  locale: string,
+) {
   return (
     category.labels[locale as keyof typeof category.labels] ??
     category.labels.en ??
@@ -31,14 +36,25 @@ export async function readItemCategories(
   client: SupabaseClient,
   tenantId: string,
 ): Promise<ItemCategory[]> {
-  const { data, error } = await client
-    .from('item_categories')
-    .select('id,name,labels')
-    .eq('tenant_id', z.uuid().parse(tenantId))
-    .order('name')
-    .limit(1000)
+  const { data, error } = await client.rpc('item_category_catalogue', {
+    p_tenant: z.uuid().parse(tenantId),
+  })
   if (error) throw new Error('Unable to read item categories')
   return z.array(itemCategory).parse(data)
+}
+
+/** The ID is the selection; names stay readable even when translations overlap. */
+export function categoryChoices(categories: ItemCategory[], locale: string) {
+  const active = categories.filter((c) => c.active)
+  const names = active.map((c) => categoryName(c, locale))
+  return active.map((c, index) => ({
+    id: c.id,
+    name: names[index],
+    label:
+      names.filter((n) => n === names[index]).length > 1
+        ? `${names[index]} (${c.name})`
+        : names[index],
+  }))
 }
 export async function createItemCategory(
   client: SupabaseClient,

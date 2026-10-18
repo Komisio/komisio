@@ -12,6 +12,7 @@ import { useBusyState } from '@/components/platform/work-activity'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 import { Button } from '@/components/ui/button'
 import { SettingsSectionHelp } from './settings-section-help'
+import { EditCatalogue } from './edit-catalogue'
 
 export function CategorySettings({
   tenantId,
@@ -28,6 +29,7 @@ export function CategorySettings({
 }) {
   const t = d.vocabularySettings
   const [categories, setCategories] = useState(initial)
+  const [editing, setEditing] = useState<ItemCategory | null>(null)
   const [query, setQuery] = useState('')
   const [name, setName] = useState('')
   const [translations, setTranslations] = useState<Record<string, string>>({})
@@ -211,6 +213,23 @@ export function CategorySettings({
       )}
       {error && <p role="alert">{error}</p>}
       {saved && <p role="status">{saved}</p>}
+      {editable && editing && (
+        <EditCatalogue
+          key={editing.id}
+          kind="category"
+          record={editing}
+          tenantId={tenantId}
+          locale={locale}
+          d={d}
+          onClose={() => setEditing(null)}
+          onSaved={(category) => {
+            setCategories((current) =>
+              current.map((c) => (c.id === category.id ? category : c)),
+            )
+            setSaved(t.saved.replace('{name}', categoryName(category, locale)))
+          }}
+        />
+      )}
       <table className="vocabulary-table">
         <caption className="sr-only">{t.categories}</caption>
         <thead>
@@ -223,7 +242,10 @@ export function CategorySettings({
         <tbody>
           {rows.map((c) => (
             <tr key={c.id}>
-              <th scope="row">{categoryName(c, locale)}</th>
+              <th scope="row">
+                {categoryName(c, locale)}
+                {!c.active && <small>{d.catalogueEditing.inactive}</small>}
+              </th>
               <td>
                 {locales
                   .filter((l) => c.labels[l])
@@ -232,6 +254,14 @@ export function CategorySettings({
               </td>
               {editable && (
                 <td className="catalogue-actions">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    disabled={!!editing}
+                    onClick={() => setEditing(c)}
+                  >
+                    {d.catalogueEditing.edit}
+                  </Button>
                   <DeleteCatalogueRecord
                     tenantId={tenantId}
                     kind="category"

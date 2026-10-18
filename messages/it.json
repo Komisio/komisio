@@ -4328,5 +4328,16 @@
     "remaining": "Da elaborare",
     "recent": "Gli ultimi 50 invii",
     "reviewHint": "Controlla il messaggio e il numero di destinatari. Ogni email includerà un link per annullare l’iscrizione."
+  },
+  "catalogueEditing": {
+    "edit": "Modifica",
+    "save": "Salva modifiche",
+    "active": "Disponibile per nuovi articoli",
+    "inactive": "Inattivo",
+    "activeHint": "Deseleziona per nascondere questa opzione durante la registrazione. Gli articoli esistenti mantengono la categoria o il tipo di prodotto.",
+    "changed": "I dati sono cambiati. Chiudi la modifica e ricarica la pagina prima di riprovare.",
+    "duplicate": "Questo nome è già in uso. Scegli un altro nome.",
+    "suggestedCategory": "Categoria suggerita",
+    "showInactive": "Mostra i tipi di prodotto inattivi"
   }
 }

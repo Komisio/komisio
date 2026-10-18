@@ -19,7 +19,10 @@ import type { DirectoryItem, ItemSort } from '@/lib/engine/item-directory'
 import { ItemPhotoPreview } from './item-photo-preview'
 import { ItemIndicator } from './item-indicator'
 import { labelOf, type ItemTypeProfile } from '@/lib/engine/attributes'
-import { categoryName, type ItemCategory } from '@/lib/engine/item-categories'
+import {
+  categoryChoices,
+  type ItemCategory,
+} from '@/lib/engine/item-categories'
 
 export function InventoryTable({
   items,
@@ -156,16 +159,16 @@ export function InventoryTable({
                 tenantId={tenantId}
                 write={write}
                 types={types
-                  .filter((type) => type.active)
+                  .filter(
+                    (type) =>
+                      type.active || type.slug === i.classification?.itemType,
+                  )
                   .map((type) => ({
                     id: type.slug,
                     name: labelOf(type, locale),
                   }))}
                 groups={groups}
-                categories={categories.map((c) => ({
-                  id: c.name,
-                  name: categoryName(c, locale),
-                }))}
+                categories={categoryChoices(categories, locale)}
                 d={all}
                 indicators={
                   <div className="inventory-indicators">

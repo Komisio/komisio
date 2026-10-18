@@ -188,6 +188,16 @@
 .catalogue-delete {
   max-width: 25rem;
 }
+.catalogue-actions > .btn {
+  margin-bottom: 8px;
+}
+.vocabulary-editor details {
+  margin: 16px 0;
+}
+.vocabulary-editor summary {
+  min-height: 44px;
+  cursor: pointer;
+}
 .catalogue-delete p {
   font-size: 14px;
   margin: 0 0 8px;
@@ -221,5 +231,8 @@
   }
   .vocabulary-table .catalogue-actions {
     grid-column: 1 / -1;
+  }
+  .vocabulary-table tbody th:first-child {
+    width: auto;
   }
 }

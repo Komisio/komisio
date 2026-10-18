@@ -4334,5 +4334,16 @@
     "remaining": "Käsittelemättä",
     "recent": "50 viimeisintä lähetystä",
     "reviewHint": "Tarkista viesti ja vastaanottajien määrä. Jokaiseen viestiin lisätään peruutuslinkki."
+  },
+  "catalogueEditing": {
+    "edit": "Muokkaa",
+    "save": "Tallenna muutokset",
+    "active": "Valittavissa uusille tuotteille",
+    "inactive": "Ei käytössä",
+    "activeHint": "Poista valinta piilottaaksesi vaihtoehdon uusia tuotteita lisättäessä. Nykyiset tuotteet säilyttävät luokkansa tai tuotetyyppinsä.",
+    "changed": "Tiedot ovat muuttuneet. Sulje muokkaus ja lataa sivu uudelleen ennen uutta yritystä.",
+    "duplicate": "Nimi on jo käytössä. Valitse toinen nimi.",
+    "suggestedCategory": "Ehdotettu luokka",
+    "showInactive": "Näytä käytöstä poistetut tuotetyypit"
   }
 }

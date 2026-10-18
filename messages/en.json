@@ -2101,7 +2101,6 @@
       "cancelled": "cancelled"
     },
     "items": "My items",
-    "itemsIntro": "What the store holds for you: the current price, whether it is for sale or sold, and when its sale period ends. Prices follow the store's markdown schedule.",
     "noItems": "No items yet.",
     "item": "Item",
     "price": "Price",
@@ -2180,7 +2179,21 @@
       "PAYOUT_BELOW_THRESHOLD": "The amount is below the store’s minimum.",
       "PAYOUT_EXCEEDS_BALANCE": "The amount exceeds your available balance. Check the balance above."
     },
-    "collectionDeadline": "Collect by"
+    "collectionDeadline": "Collect by",
+    "handoverHistory": "Previous handovers",
+    "itemsStatus": "Status",
+    "itemFilters": {
+      "active": "Active",
+      "sold": "Sold",
+      "ended": "Ended",
+      "all": "All"
+    },
+    "itemFilterEmpty": {
+      "active": "No active items right now.",
+      "sold": "No sold items yet.",
+      "ended": "No ended items yet.",
+      "all": "No items yet."
+    }
   },
   "plans": {
     "heading": "Plan",

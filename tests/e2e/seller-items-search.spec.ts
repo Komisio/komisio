@@ -250,7 +250,9 @@ test('seller finds old owned items and pages without losing the account on mobil
         url: new URL(page.url()).origin,
       },
     ])
-    await page.reload()
+    await page.goto(
+      `/seller?seller=${seller}&q=old+armchair&status=sold#portal-items`,
+    )
     await expect(rows.locator('.seller-item-badge')).toHaveText(
       d.sellerPortal.itemStates.sold,
     )

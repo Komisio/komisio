@@ -2083,7 +2083,6 @@
   "sellerPortal": {
     "itemDetails": "Pris och säljperiod",
     "items": "Mina varor",
-    "itemsIntro": "Det butiken har för dig: aktuellt pris, om varan är till salu eller såld, och när säljperioden tar slut. Priserna följer butikens nedsättningsschema.",
     "noItems": "Inga varor ännu.",
     "item": "Vara",
     "price": "Pris",
@@ -2180,7 +2179,21 @@
       "PAYOUT_BELOW_THRESHOLD": "Beloppet är lägre än butikens minimibelopp.",
       "PAYOUT_EXCEEDS_BALANCE": "Beloppet överstiger ditt tillgängliga saldo. Kontrollera saldot ovan."
     },
-    "collectionDeadline": "Hämtas senast"
+    "collectionDeadline": "Hämtas senast",
+    "handoverHistory": "Tidigare inlämningar",
+    "itemsStatus": "Status",
+    "itemFilters": {
+      "active": "Aktiva",
+      "sold": "Sålda",
+      "ended": "Avslutade",
+      "all": "Alla"
+    },
+    "itemFilterEmpty": {
+      "active": "Inga aktiva varor just nu.",
+      "sold": "Inga sålda varor ännu.",
+      "ended": "Inga avslutade varor ännu.",
+      "all": "Inga varor ännu."
+    }
   },
   "plans": {
     "heading": "Plan",

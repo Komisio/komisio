@@ -154,15 +154,18 @@ export function SellerHandovers({
       setBusy(false)
     }
   }
+  // Keep an unresolved command mounted until it can be reconciled.
+  if (!handovers.enabled && handovers.handovers.length === 0 && !creationLocked)
+    return null
   return (
     <section
       id="portal-handovers"
       className="card intake-form"
-      aria-label={d.handovers}
+      aria-label={handovers.enabled ? d.handovers : d.handoverHistory}
       tabIndex={-1}
     >
-      <h2>{d.handovers}</h2>
-      <p>{d.handoverIntro}</p>
+      <h2>{handovers.enabled ? d.handovers : d.handoverHistory}</h2>
+      {handovers.enabled && <p>{d.handoverIntro}</p>}
       {handovers.enabled || creationLocked ? (
         <form
           ref={form}
@@ -224,10 +227,8 @@ export function SellerHandovers({
             </Button>
           )}
         </form>
-      ) : (
-        <p>{d.handoverDisabled}</p>
-      )}
-      {handovers.handovers.length === 0 && <p>{d.none}</p>}
+      ) : null}
+      {handovers.enabled && handovers.handovers.length === 0 && <p>{d.none}</p>}
       {handovers.handovers.map((h) => (
         <div
           key={h.id}
@@ -256,7 +257,7 @@ export function SellerHandovers({
               : ''}
             {h.note ? ` · ${h.note}` : ''}
           </p>
-          {h.status === 'open' && (
+          {handovers.enabled && h.status === 'open' && (
             <>
               <p>{d.showReference}</p>
               <HandoverCode
@@ -268,7 +269,8 @@ export function SellerHandovers({
             </>
           )}
           {feedback(h.id)}
-          {(h.status === 'open' || outcomes[h.id]?.phase === 'uncertain') && (
+          {((handovers.enabled && h.status === 'open') ||
+            outcomes[h.id]?.phase === 'uncertain') && (
             <Button
               type="button"
               variant="secondary"

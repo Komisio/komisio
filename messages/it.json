@@ -2101,7 +2101,6 @@
       "cancelled": "annullato"
     },
     "items": "I miei articoli",
-    "itemsIntro": "Ciò che il negozio tiene per te: il prezzo attuale, se è in vendita o venduto, e quando termina il suo periodo di vendita. I prezzi seguono il calendario di ribasso del negozio.",
     "noItems": "Nessun articolo finora.",
     "item": "Articolo",
     "price": "Prezzo",
@@ -2180,7 +2179,21 @@
       "PAYOUT_BELOW_THRESHOLD": "L’importo è inferiore al minimo del negozio.",
       "PAYOUT_EXCEEDS_BALANCE": "L’importo supera il saldo disponibile. Controlla il saldo indicato sopra."
     },
-    "collectionDeadline": "Ritirare entro"
+    "collectionDeadline": "Ritirare entro",
+    "handoverHistory": "Consegne precedenti",
+    "itemsStatus": "Stato",
+    "itemFilters": {
+      "active": "Attivi",
+      "sold": "Venduti",
+      "ended": "Conclusi",
+      "all": "Tutti"
+    },
+    "itemFilterEmpty": {
+      "active": "Nessun articolo attivo al momento.",
+      "sold": "Nessun articolo venduto per ora.",
+      "ended": "Nessun articolo concluso per ora.",
+      "all": "Nessun articolo per ora."
+    }
   },
   "plans": {
     "heading": "Piano",

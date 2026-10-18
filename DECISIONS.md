@@ -1116,3 +1116,6 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-10-17: #490 lets an owner or admin delete an unused seller-agreement version. Evidence, receipts, reviews, items and sale lines block it. Its translations go with it. Version numbers are not reused. Linked text stays immutable.
 - 2026-10-18: #477 approves store-specific seller opt-in history and confirmed bulk sends. Only sellers or unsubscribe links change consent; no inferred enrollment. Owners/admins send individually, recheck consent and retain delivery outcomes; uncertain sends are not retried.
+
+- 2026-10-18: #502 permits default-off store registration links/QRs, owner/admin enablement and staff disable/rotation. Verified sellers accept the current agreement into a pending application; staff approval alone creates or connects a seller. No membership or email subscription is granted.
+- 2026-10-18: #502 matches only normalized verified account email under the tenant lock. One match reuses the seller; ambiguous matches require staff resolution. Applications retain accepted text/version and append-only decisions; contact erasure also redacts application contact fields.

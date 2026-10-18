@@ -6,6 +6,7 @@ import { raceConsignmentFees } from './consignment-fee-race.mjs'
 import { raceAccountingAssistance } from './accounting-assistance-race.mjs'
 import { raceAgreementAssistance } from './agreement-assistance-race.mjs'
 import { raceSellerAgreement } from './seller-agreement-race.mjs'
+import { raceSellerRegistration } from './seller-registration-race.mjs'
 import { raceStocktake } from './stocktake-race.mjs'
 import { raceDayCloseAutomation } from './day-close-automation-race.mjs'
 import { racePayoutConfirmation } from './payout-confirmation-race.mjs'
@@ -96,6 +97,7 @@ try {
   await raceAgreementAssistance({ setup, connectionString: parsed.toString() })
   await raceAccountingAssistance({ setup, connectionString: parsed.toString() })
   await raceSellerAgreement({ setup, connectionString: parsed.toString() })
+  await raceSellerRegistration({ setup, connectionString: parsed.toString() })
   await raceSellerActivation({ setup, connectionString: parsed.toString() })
   await raceInventoryImport({ setup, connectionString: parsed.toString() })
   await racePosImport({ setup, connectionString: parsed.toString() })

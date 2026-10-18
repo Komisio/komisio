@@ -67,6 +67,7 @@ export function safeNext(value: string | null | undefined) {
     return value
   if (value && /^\/invite\/[a-f0-9]{64}$/.test(value)) return value
   if (value && /^\/review\/[a-f0-9]{64}$/.test(value)) return value
+  if (value && /^\/join\/[a-f0-9]{64}$/.test(value)) return value
   // The connector consent page keeps its OAuth query through login and MFA.
   if (value && /^\/oauth\/authorize\?[A-Za-z0-9%._~=&+-]{1,4000}$/.test(value))
     return value

@@ -15,6 +15,7 @@ import { raceShopifySettings } from './shopify-settings-race.mjs'
 import { raceShopifyPrivacy } from './shopify-privacy-race.mjs'
 import { raceStoreCreation } from './store-creation-race.mjs'
 import { raceMarketingConsent } from './marketing-consent-race.mjs'
+import { raceStoreMailAuto } from './store-mail-auto-race.mjs'
 import { raceStoreMail } from './store-mail-race.mjs'
 import { raceSellerProfile } from './seller-profile-race.mjs'
 import { raceSellerPrivacy } from './seller-privacy-race.mjs'
@@ -97,6 +98,7 @@ try {
   await raceAgreementAssistance({ setup, connectionString: parsed.toString() })
   await raceAccountingAssistance({ setup, connectionString: parsed.toString() })
   await raceSellerAgreement({ setup, connectionString: parsed.toString() })
+  await raceStoreMailAuto({ setup, connectionString: parsed.toString() })
   await raceSellerRegistration({ setup, connectionString: parsed.toString() })
   await raceSellerActivation({ setup, connectionString: parsed.toString() })
   await raceInventoryImport({ setup, connectionString: parsed.toString() })

@@ -30,6 +30,11 @@ export async function POST(request: Request) {
         !['owner', 'admin', 'staff'].includes(ctx.active.role))
     )
       return reply({ error: 'FORBIDDEN' }, 403)
+    if (
+      c.action === 'mailSettings' &&
+      !['owner', 'admin'].includes(ctx.active?.role ?? '')
+    )
+      return reply({ error: 'FORBIDDEN' }, 403)
     const result = await executeRegistration(ctx.client, c)
     if (result.error) throw new Error(result.error.message)
     return reply({ data: result.data })
@@ -38,6 +43,7 @@ export async function POST(request: Request) {
     const error =
       [
         'REGISTRATION_CHANGED',
+        'CONSENT_CHANGED',
         'REGISTRATION_DISABLED',
         'REGISTRATION_REVIEWED',
         'REGISTRATION_EMAIL_CHANGED',

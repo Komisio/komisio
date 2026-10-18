@@ -35,6 +35,7 @@ export function RegistrationApplication({
             agreementId: entry.agreement.id,
             translationId: entry.agreement.translationId,
             accepted: true,
+            mailSettingId: entry.mailSettingId,
           })
         ) {
           router.replace('/seller')

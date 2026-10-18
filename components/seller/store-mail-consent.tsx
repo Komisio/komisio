@@ -1,4 +1,5 @@
 'use client'
+import { StoreMailStatus } from './store-mail-status'
 import { useRef, useState } from 'react'
 import { useBusyState } from '@/components/platform/work-activity'
 import { useRouter } from '@/components/platform/use-working-router'
@@ -8,10 +9,12 @@ export function StoreMailConsent({
   tenantId,
   sellerId,
   current,
+  locale,
   d,
 }: {
   tenantId: string
   sellerId: string
+  locale: string
   current: ConsentState
   d: Dictionary['storeMail']
 }) {
@@ -25,6 +28,7 @@ export function StoreMailConsent({
   return (
     <details className="card" id="store-mail-consent">
       <summary>{d.consentTitle}</summary>
+      <StoreMailStatus current={current} d={d} locale={locale} />
       <p id="store-mail-hint">{d.consentHint}</p>
       <form
         onSubmit={async (e) => {

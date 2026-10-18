@@ -65,3 +65,29 @@ describe('registration HTTP boundary', () => {
     expect(rpc).not.toHaveBeenCalled()
   })
 })
+
+it.each(['staff', 'viewer'])(
+  'blocks %s from the automatic subscription setting',
+  async (role) => {
+    vi.mocked(platformContext).mockResolvedValue({
+      client: { rpc },
+      mfaRequired: false,
+      active: { id, role },
+    } as unknown as NonNullable<Awaited<ReturnType<typeof platformContext>>>)
+    const r = await POST(
+      new Request('https://app.example.test/api/seller-registration', {
+        method: 'POST',
+        headers: { origin: 'https://app.example.test' },
+        body: JSON.stringify({
+          action: 'mailSettings',
+          tenantId: id,
+          requestId: id,
+          expected: null,
+          enabled: true,
+        }),
+      }),
+    )
+    expect(r.status).toBe(403)
+    expect(rpc).not.toHaveBeenCalled()
+  },
+)

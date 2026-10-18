@@ -34,6 +34,7 @@ export function useRegistrationCommand(d: Dictionary['selfRegistration']) {
           AGREEMENT_REQUIRED: d.agreementRequired,
           AGREEMENT_CHANGED: d.changed,
           REGISTRATION_CHANGED: d.changed,
+          CONSENT_CHANGED: d.changed,
           REGISTRATION_REVIEWED: d.changed,
           REQUEST_CONFLICT: d.changed,
         }

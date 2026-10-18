@@ -164,6 +164,14 @@ export function StoreMail({
                 <dd>{number(preview.eligible)}</dd>
               </div>
               <div>
+                <dt>{t.ownCount}</dt>
+                <dd>{number(preview.own)}</dd>
+              </div>
+              <div>
+                <dt>{t.automaticCount}</dt>
+                <dd>{number(preview.automatic)}</dd>
+              </div>
+              <div>
                 <dt>{t.missingEmail}</dt>
                 <dd>{number(preview.missingEmail)}</dd>
               </div>
@@ -227,6 +235,14 @@ export function StoreMail({
               <div>
                 <dt>{t.recipients}</dt>
                 <dd>{number(send.total)}</dd>
+              </div>
+              <div>
+                <dt>{t.ownCount}</dt>
+                <dd>{number(send.own)}</dd>
+              </div>
+              <div>
+                <dt>{t.automaticCount}</dt>
+                <dd>{number(send.automatic)}</dd>
               </div>
               <div>
                 <dt>{t.remaining}</dt>

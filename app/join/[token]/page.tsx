@@ -53,7 +53,7 @@ export default async function JoinStore({
               </>
             ) : (
               <RegistrationApplication
-                key={`${entry.agreement.id}-${entry.agreement.translationId ?? 'base'}`}
+                key={`${entry.agreement.id}-${entry.agreement.translationId ?? 'base'}-${entry.mailSettingId ?? 'off'}`}
                 entry={entry}
                 token={token}
                 d={d}

@@ -4367,6 +4367,7 @@
     "showInactive": "Mostra i tipi di prodotto inattivi"
   },
   "selfRegistration": {
+    "joinLogin": "Vuoi vendere tramite il negozio? Crea un account personale oppure accedi se ne hai già uno. Poi tornerai qui per leggere le condizioni del negozio e inviare la tua richiesta.",
     "reviewTerms": "L'accordo accettato dal venditore",
     "title": "Registrazione venditori",
     "intro": "I venditori possono fare richiesta tramite il link o il codice QR del negozio. Esaminate ogni richiesta prima che possano consegnare articoli.",

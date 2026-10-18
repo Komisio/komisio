@@ -4367,6 +4367,7 @@
     "showInactive": "Show inactive product types"
   },
   "selfRegistration": {
+    "joinLogin": "Would you like to sell through the store? Create a personal account, or log in if you already have one. You will then return here to read the store’s terms and submit your application.",
     "reviewTerms": "The agreement accepted by the seller",
     "title": "Seller registration",
     "intro": "Let sellers apply through your store link or QR code. You review each application before the seller can hand in items.",

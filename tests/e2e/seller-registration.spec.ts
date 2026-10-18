@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
-import { register } from '../helpers/account'
+import { register, confirmEmail } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import all from '../../messages/sv.json' with { type: 'json' }
 import en from '../../messages/en.json' with { type: 'json' }
@@ -58,12 +58,78 @@ for (const automatic of [false, true])
         fullPage: true,
       })
       await sellerPage.goto(destination)
+      await expect(sellerPage).toHaveURL(destination)
+      await expect(
+        sellerPage.getByRole('heading', { name: d.applyTitle, exact: true }),
+      ).toBeVisible()
+      await expect(
+        sellerPage.getByText(d.joinLogin, { exact: true }),
+      ).toBeVisible()
+      await expect(
+        sellerPage.getByText('P2 browser store', { exact: true }),
+      ).toHaveCount(0)
+      await expect(
+        sellerPage.getByText(/^Synthetic translated text/),
+      ).toHaveCount(0)
+      await expect(sellerPage.getByLabel(d.email, { exact: true })).toHaveCount(
+        0,
+      )
+      await sellerPage.setViewportSize({ width: 360, height: 800 })
+      expect(
+        await sellerPage.evaluate(
+          () => document.documentElement.scrollWidth <= window.innerWidth,
+        ),
+      ).toBe(true)
+      await sellerPage.screenshot({
+        path: testInfo.outputPath('registration-landing-mobile.png'),
+        fullPage: true,
+      })
+      await expect(
+        sellerPage.getByRole('link', { name: all.register, exact: true }),
+      ).toHaveAttribute(
+        'href',
+        `/register?next=${encodeURIComponent(destination)}`,
+      )
+      await sellerPage
+        .getByRole('link', { name: all.login, exact: true })
+        .click()
       await expect(sellerPage).toHaveURL(/\/login\?next=/)
       expect(new URL(sellerPage.url()).searchParams.get('next')).toBe(
         destination,
       )
+      await expect(
+        sellerPage.getByText(d.joinLogin, { exact: true }),
+      ).toBeVisible()
+      await expect(
+        sellerPage.getByText(all.loginIntro, { exact: true }),
+      ).toHaveCount(0)
+      await sellerPage
+        .getByRole('link', { name: all.register, exact: true })
+        .click()
+      await expect(sellerPage).toHaveURL(/\/register\?next=/)
+      expect(new URL(sellerPage.url()).searchParams.get('next')).toBe(
+        destination,
+      )
+      await expect(
+        sellerPage.getByText(d.joinLogin, { exact: true }),
+      ).toBeVisible()
+      await expect(
+        sellerPage.getByText(all.registerIntro, { exact: true }),
+      ).toHaveCount(0)
       const sellerEmail = `registration-applicant-${randomUUID()}@example.test`
-      await register(sellerPage, sellerEmail, `K!${randomUUID()}`, destination)
+      const sellerPassword = `K!${randomUUID()}`
+      await sellerPage.getByLabel(all.email, { exact: true }).fill(sellerEmail)
+      await sellerPage
+        .getByLabel(all.password, { exact: true })
+        .fill(sellerPassword)
+      await sellerPage
+        .getByRole('button', { name: all.register, exact: true })
+        .click()
+      await expect(
+        sellerPage.getByText(all.verifySent, { exact: true }),
+      ).toBeVisible()
+      await confirmEmail(sellerPage, sellerEmail)
+      await expect(sellerPage).toHaveURL(destination)
       await expect(
         sellerPage.getByRole('heading', { name: d.applyTitle, exact: true }),
       ).toBeVisible()
@@ -162,7 +228,18 @@ for (const automatic of [false, true])
         [f.tenant, sellerEmail],
       )
       expect(rows.rows).toHaveLength(1)
+      await sellerContext.clearCookies()
       await sellerPage.goto(destination)
+      await sellerPage
+        .getByRole('link', { name: all.login, exact: true })
+        .click()
+      await sellerPage.getByLabel(all.email, { exact: true }).fill(sellerEmail)
+      await sellerPage
+        .getByLabel(all.password, { exact: true })
+        .fill(sellerPassword)
+      await sellerPage
+        .getByRole('button', { name: all.login, exact: true })
+        .click()
       await expect(sellerPage).toHaveURL(
         new RegExp(`/seller\\?seller=${rows.rows[0].id}`),
       )
@@ -235,3 +312,37 @@ for (const automatic of [false, true])
       await f.close()
     }
   })
+
+test('signed-out registration shell is localized and does not disclose token validity', async ({
+  page,
+}, testInfo) => {
+  await page.context().addCookies([
+    {
+      name: 'komisio-locale',
+      value: 'en',
+      url: testInfo.project.use.baseURL!,
+    },
+  ])
+  const destination = `/join/${'0'.repeat(64)}`
+  await page.goto(destination)
+  await expect(
+    page.getByRole('heading', {
+      name: en.selfRegistration.applyTitle,
+      exact: true,
+    }),
+  ).toBeVisible()
+  await expect(
+    page.getByText(en.selfRegistration.joinLogin, { exact: true }),
+  ).toBeVisible()
+  await expect(
+    page.getByText(en.selfRegistration.unavailable, { exact: true }),
+  ).toHaveCount(0)
+  await page.getByRole('link', { name: en.register, exact: true }).click()
+  await expect(page).toHaveURL(/\/register\?next=/)
+  expect(new URL(page.url()).searchParams.get('next')).toBe(destination)
+  await expect(
+    page.getByText(en.selfRegistration.joinLogin, { exact: true }),
+  ).toBeVisible()
+  const response = await page.goto('/join/not-a-token')
+  expect(response?.status()).toBe(404)
+})

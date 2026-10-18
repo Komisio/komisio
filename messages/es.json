@@ -4373,6 +4373,7 @@
     "showInactive": "Mostrar tipos de producto inactivos"
   },
   "selfRegistration": {
+    "joinLogin": "¿Quieres vender a través de la tienda? Crea una cuenta personal o inicia sesión si ya tienes una. Después volverás aquí para leer las condiciones de la tienda y enviar tu solicitud.",
     "reviewTerms": "El acuerdo aceptado por el vendedor",
     "title": "Registro de vendedores",
     "intro": "Los vendedores pueden solicitar el registro mediante el enlace o código QR de la tienda. Revisáis cada solicitud antes de que puedan entregar artículos.",

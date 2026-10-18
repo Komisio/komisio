@@ -1,11 +1,13 @@
 import { notFound, redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import Link from '@/components/platform/working-link'
+import { Button } from '@/components/ui/button'
 import { SellerHeader } from '@/components/seller/header'
 import { SignOut } from '@/components/platform/sign-out'
 import { RegistrationApplication } from '@/components/seller-registration/apply'
 import { renderPlatformContext } from '@/lib/platform/context'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import { dictionary, intlLocale } from '@/lib/i18n'
+import { dictionary, intlLocale, resolveLocale } from '@/lib/i18n'
 import {
   registrationToken,
   readRegistrationEntry,
@@ -26,7 +28,27 @@ export default async function JoinStore({
   if (!registrationToken.safeParse(token).success) notFound()
   const next = encodeURIComponent(`/join/${token}`)
   const ctx = await renderPlatformContext()
-  if (!ctx) redirect(`/login?next=${next}`)
+  if (!ctx) {
+    const locale = resolveLocale((await cookies()).get('komisio-locale')?.value)
+    const all = dictionary(locale)
+    return (
+      <main className="onboarding" lang={intlLocale(locale)}>
+        <SellerHeader locale={locale} />
+        <section className="card">
+          <h1>{all.selfRegistration.applyTitle}</h1>
+          <p>{all.selfRegistration.joinLogin}</p>
+          <div className="row wrap">
+            <Button asChild>
+              <Link href={`/register?next=${next}`}>{all.register}</Link>
+            </Button>
+            <Button variant="secondary" asChild>
+              <Link href={`/login?next=${next}`}>{all.login}</Link>
+            </Button>
+          </div>
+        </section>
+      </main>
+    )
+  }
   if (ctx.mfaRequired) redirect(`/mfa?next=${next}`)
   const all = dictionary(ctx.locale),
     d = all.selfRegistration

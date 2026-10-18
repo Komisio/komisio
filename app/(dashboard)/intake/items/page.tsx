@@ -1,3 +1,8 @@
+import { X } from 'lucide-react'
+import {
+  itemFilterHref,
+  itemWeekCutoff,
+} from '@/lib/engine/item-filter-navigation'
 import { InventoryTable } from '@/components/intake/inventory-table'
 import {
   InventoryFilters,
@@ -8,10 +13,11 @@ import { NavigationLink as Link } from '@/components/platform/navigation-warning
 import { notFound, redirect } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
-import { itemStage, originKind } from '@/lib/engine/items'
+import { originKind } from '@/lib/engine/items'
 import {
   filterKeys,
   itemFilters,
+  itemFilterStage,
   itemSort,
   readItemDirectory,
   type ItemSort,
@@ -81,8 +87,50 @@ export default async function Items({
   const advancedCount = Object.keys(raw).filter(
     (k) => k !== 'q' && k !== 'stage',
   ).length
-  const stageLabel = (s: keyof typeof all.lifecycle.stages) =>
-    s === 'markdown_due' ? d.markdownWaiting : all.lifecycle.stages[s]
+  const stageLabel = (s: (typeof itemFilterStage.options)[number]) =>
+    s === 'active'
+      ? all.sellerPortal.itemFilters.active
+      : s === 'markdown_due'
+        ? d.markdownWaiting
+        : all.lifecycle.stages[s]
+  const filterHref = (changes: Record<string, string | null>) =>
+    itemFilterHref({ ...raw, sort, direction }, changes)
+  const filterLabels: Record<string, string> = {
+    q: d.search,
+    stage: d.stage,
+    ownership: d.ownership,
+    seller: all.quickIntake.seller,
+    category: all.quickIntake.category,
+    itemType: all.quickIntake.itemType,
+    assortment: all.itemWorkflow.group,
+    minPrice: t.minPrice,
+    maxPrice: t.maxPrice,
+    acceptedFrom: t.acceptedFrom,
+    acceptedTo: t.acceptedTo,
+    endsBefore: t.endsBefore,
+    photo: t.photo,
+    origin: t.origin,
+    syncProvider: all.itemSync.system,
+    syncStatus: all.itemSync.title,
+  }
+  const filterValue = (key: string, value: string) => {
+    if (key === 'stage' && itemFilterStage.safeParse(value).success)
+      return stageLabel(value as (typeof itemFilterStage.options)[number])
+    const labels: Record<string, Record<string, string>> = {
+      ownership: d.ownershipKinds,
+      origin: d.originKinds,
+      syncProvider: all.itemSync.providers,
+      syncStatus: all.itemSync.states,
+      photo: { yes: t.withPhoto, no: t.withoutPhoto },
+    }
+    if (key === 'itemType') {
+      const type = vocabulary.types.find((type) => type.slug === value)
+      return type ? labelOf(type, ctx.locale) : value
+    }
+    if (key === 'assortment')
+      return groups.find((g) => g.id === value)?.name ?? value
+    return labels[key]?.[value] ?? value
+  }
   const input = (key: string, label: string, type = 'text') => (
     <div className="field">
       <label htmlFor={'items-' + key}>{label}</label>
@@ -150,18 +198,13 @@ export default async function Items({
                 defaultValue={raw.stage ?? ''}
               >
                 <option value="">{d.allStages}</option>
-                {itemStage.options.map((s) => (
+                {itemFilterStage.options.map((s) => (
                   <option key={s} value={s}>
                     {stageLabel(s)}
                   </option>
                 ))}
               </select>
             </div>
-            {!!Object.keys(raw).length && (
-              <Link className="text-link" href="/intake/items">
-                {d.clearFilters}
-              </Link>
-            )}
           </div>
           <InventoryAdvanced
             initialOpen={advancedCount > 0}
@@ -225,6 +268,43 @@ export default async function Items({
             </div>
           </InventoryAdvanced>
         </InventoryFilters>
+        <nav className="inventory-filter-links" aria-label={t.quickFilters}>
+          <span className="muted">{t.quickFilters}</span>
+          <Link
+            className="inventory-filter-chip"
+            href={filterHref({ stage: 'markdown_due' })}
+          >
+            {d.markdownWaiting}
+          </Link>
+          <Link
+            className="inventory-filter-chip"
+            href={filterHref({ endsBefore: itemWeekCutoff() })}
+          >
+            {t.endsWithinWeek}
+          </Link>
+        </nav>
+        {!!Object.keys(raw).length && (
+          <nav className="inventory-filter-links" aria-label={t.activeFilters}>
+            <span className="muted">{t.activeFilters}</span>
+            {Object.entries(raw).map(([key, value]) => {
+              const label = `${filterLabels[key] ?? key}: ${filterValue(key, value)}`
+              return (
+                <Link
+                  key={key}
+                  className="inventory-filter-chip inventory-filter-chip-active"
+                  href={filterHref({ [key]: null })}
+                  aria-label={t.removeFilter.replace('{filter}', label)}
+                >
+                  <span>{label}</span>
+                  <X size={16} aria-hidden="true" />
+                </Link>
+              )
+            })}
+            <Link className="text-link" href="/intake/items">
+              {d.clearFilters}
+            </Link>
+          </nav>
+        )}
         {!parsed.success && (
           <p role="alert" className="inventory-message">
             {t.invalid}

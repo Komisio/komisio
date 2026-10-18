@@ -1145,7 +1145,11 @@
       "invalid": "Kontroller filtre og intervaller. Fra-verdien må ikke være større enn til-verdien.",
       "markdownOn": "Prisreduksjon venter siden {date} ({percent} %).",
       "sortAsc": "Sorter stigende",
-      "sortDesc": "Sorter synkende"
+      "sortDesc": "Sorter synkende",
+      "activeFilters": "Aktive filtre",
+      "removeFilter": "Fjern {filter}",
+      "quickFilters": "Hurtigfiltre",
+      "endsWithinWeek": "Salgsperioden slutter senest om 7 dager"
     },
     "title": "Varer",
     "item": "Vare",

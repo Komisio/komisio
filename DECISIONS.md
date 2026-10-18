@@ -1125,3 +1125,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-18: #502 matches only normalized verified account email under the tenant lock. One match reuses the seller; ambiguous matches require staff resolution. Applications retain accepted text/version and append-only decisions; contact erasure also redacts application contact fields.
 
 - 2026-10-18: #504 defaults seller items to active (on sale, markdown due, period ending); sold, ended and all groups filter before counting/paging. Disabled handovers hide unless history exists. Seller identity and lifecycle facts remain unchanged.
+
+- 2026-10-18: #510 adds a staff Active filter combining on_sale, markdown_due and period_ending before counting/paging. Filter chips preserve other criteria and sorting; the seven-day shortcut uses the existing inclusive Stockholm endsBefore cutoff. Lifecycle facts are unchanged.

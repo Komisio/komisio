@@ -1145,7 +1145,11 @@
       "invalid": "Kontrollera filter och intervall. Från-värdet får inte vara större än till-värdet.",
       "markdownOn": "Prissänkning väntar sedan {date} ({percent} %).",
       "sortAsc": "Sortera stigande",
-      "sortDesc": "Sortera fallande"
+      "sortDesc": "Sortera fallande",
+      "activeFilters": "Aktiva filter",
+      "removeFilter": "Ta bort {filter}",
+      "quickFilters": "Snabbfilter",
+      "endsWithinWeek": "Säljperiod slutar senast om 7 dagar"
     },
     "title": "Varor",
     "item": "Vara",

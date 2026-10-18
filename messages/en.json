@@ -1145,7 +1145,11 @@
       "invalid": "Check filters and ranges. The start must not exceed the end.",
       "markdownOn": "Markdown pending since {date} ({percent}%).",
       "sortAsc": "Sort ascending",
-      "sortDesc": "Sort descending"
+      "sortDesc": "Sort descending",
+      "activeFilters": "Active filters",
+      "removeFilter": "Remove {filter}",
+      "quickFilters": "Quick filters",
+      "endsWithinWeek": "Period ends by 7 days from today"
     },
     "title": "Items",
     "item": "Item",

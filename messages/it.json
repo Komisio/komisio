@@ -1145,7 +1145,11 @@
       "invalid": "Controlla filtri e intervalli. Il valore iniziale non deve superare quello finale.",
       "markdownOn": "Ribasso in attesa dal {date} ({percent}%).",
       "sortAsc": "Ordine crescente",
-      "sortDesc": "Ordine decrescente"
+      "sortDesc": "Ordine decrescente",
+      "activeFilters": "Filtri attivi",
+      "removeFilter": "Rimuovi {filter}",
+      "quickFilters": "Filtri rapidi",
+      "endsWithinWeek": "Periodo termina entro 7 giorni da oggi"
     },
     "title": "Articoli",
     "item": "Articolo",

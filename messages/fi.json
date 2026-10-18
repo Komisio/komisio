@@ -1145,7 +1145,11 @@
       "invalid": "Tarkista suodattimet ja aikavälit. Alkuarvo ei saa ylittää loppuarvoa.",
       "markdownOn": "Hinnanalennus odottaa {date} alkaen ({percent} %).",
       "sortAsc": "Lajittele nousevasti",
-      "sortDesc": "Lajittele laskevasti"
+      "sortDesc": "Lajittele laskevasti",
+      "activeFilters": "Käytössä olevat suodattimet",
+      "removeFilter": "Poista {filter}",
+      "quickFilters": "Pikasuodattimet",
+      "endsWithinWeek": "Myyntiaika päättyy viimeistään 7 päivän kuluttua"
     },
     "title": "Tuotteet",
     "item": "Tuote",

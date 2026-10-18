@@ -8610,3 +8610,55 @@ button.text-link:hover:not(:disabled) {
 .stock-stage-links {
   padding-inline: 0;
 }
+
+.stock-stages {
+  grid-column: 1 / -1;
+}
+.stock-stage-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+.stock-stage-card {
+  padding: 1rem;
+  min-width: 0;
+}
+.stock-stage-count {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 44px;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.stock-stage-count strong {
+  font-size: 2rem;
+  font-weight: 600;
+}
+.stock-stage-card .text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 0.5rem;
+}
+.stock-stage-card p {
+  font-size: 0.875rem;
+  margin: 0.75rem 0 0;
+}
+.stock-stage-nearing {
+  background: var(--mint);
+}
+@media (max-width: 1000px) {
+  .stock-stage-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .stock-stage-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stock-current-grid > section:first-child {
+  grid-column: 1 / -1;
+}

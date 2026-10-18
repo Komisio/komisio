@@ -1149,7 +1149,8 @@
       "activeFilters": "Käytössä olevat suodattimet",
       "removeFilter": "Poista {filter}",
       "quickFilters": "Pikasuodattimet",
-      "endsWithinWeek": "Myyntiaika päättyy viimeistään 7 päivän kuluttua"
+      "endsWithinWeek": "Myyntiaika päättyy viimeistään 7 päivän kuluttua",
+      "periodWindow": "Myyntiaika"
     },
     "title": "Tuotteet",
     "item": "Tuote",
@@ -1782,7 +1783,11 @@
       "sales": "Myynti"
     },
     "assortments": "Valikoimaryhmät",
-    "noAssortment": "Ei valikoimaryhmää"
+    "noAssortment": "Ei valikoimaryhmää",
+    "stageHeading": "Tuotteet tilan mukaan",
+    "nearingEnd": "Kaikki 7 päivän kuluessa päättyvät",
+    "nearingHint": "Varastossa olevat tuotteet, joiden myyntiaika ei ole päättynyt, myös hinnanalennusta odottavat.",
+    "ownershipValue": "Varaston arvo omistuksen mukaan"
   },
   "importer": {
     "title": "Tuo tuojat",

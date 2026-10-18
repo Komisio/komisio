@@ -34,3 +34,32 @@ agent tool and, later, the chain view. Read only; nothing is forecast.
 `supabase/tests/0098_stock_report.test.sql`: totals, buckets, per-category
 rows including consignment and store-owned margin, sell-through, empty
 category, period bounds, no names, outsider refused.
+
+## Current lifecycle overview
+
+`stock_lifecycle_report(tenant, ownership?)` is a separate member-authorized,
+MFA-enforced read. The existing period-report and MCP response remain unchanged.
+It returns `currency`, `asOf`, `stages` (active, on_sale, markdown_due,
+period_ending, period_ended), `nearingPeriodEnd`, and `ownership` totals
+(consignment/store, each with `inStock` and `stockValueOre`). The optional
+ownership filter applies to every count and value; the other ownership is zero.
+
+All numbers use the existing in-stock definition above. Expired periods remain
+in stock until an ending event is recorded. Returns restore eligible stock.
+Active combines on-sale, markdown-due and period-ending lifecycle stages;
+those stage counts overlap Active and must not be summed with it.
+
+The upcoming-period count is separate from the derived `period_ending` stage:
+it includes all in-stock items with `periodEnd > now()` and
+`periodEnd <= now() + interval '7 days'`, including pending markdowns. Sold,
+ended and already-expired items are excluded. `/intake/items?periodWindow=next7days`
+uses the same SQL predicate before counting and pagination. Other filters
+intersect it; removing its chip removes only that window. Existing `endsBefore`
+remains an inclusive Stockholm calendar-day upper bound without a lower bound.
+Counts describe their read time and may change when a period expires or an item
+is sold between requests. Stage actions link to the existing lifecycle queue;
+these reads execute no lifecycle action or financial write.
+
+`supabase/tests/0358_stock_lifecycle.test.sql` verifies lifecycle/ownership counts,
+current-price values, boundary instants, returns, matching paginated lists and
+tenant/MFA restrictions.

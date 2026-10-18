@@ -108,6 +108,7 @@ export default async function Items({
     acceptedFrom: t.acceptedFrom,
     acceptedTo: t.acceptedTo,
     endsBefore: t.endsBefore,
+    periodWindow: t.periodWindow,
     photo: t.photo,
     origin: t.origin,
     syncProvider: all.itemSync.system,
@@ -122,6 +123,7 @@ export default async function Items({
       syncProvider: all.itemSync.providers,
       syncStatus: all.itemSync.states,
       photo: { yes: t.withPhoto, no: t.withoutPhoto },
+      periodWindow: { next7days: all.stock.nearingEnd },
     }
     if (key === 'itemType') {
       const type = vocabulary.types.find((type) => type.slug === value)
@@ -260,6 +262,9 @@ export default async function Items({
               {input('acceptedFrom', t.acceptedFrom, 'date')}
               {input('acceptedTo', t.acceptedTo, 'date')}
               {input('endsBefore', t.endsBefore, 'date')}
+              {select('periodWindow', t.periodWindow, [
+                ['next7days', all.stock.nearingEnd],
+              ])}
               {select(
                 'origin',
                 t.origin,

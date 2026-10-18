@@ -1149,7 +1149,8 @@
       "activeFilters": "Aktive filtre",
       "removeFilter": "Fjern {filter}",
       "quickFilters": "Hurtigfiltre",
-      "endsWithinWeek": "Salgsperioden slutter senest om 7 dager"
+      "endsWithinWeek": "Salgsperioden slutter senest om 7 dager",
+      "periodWindow": "Salgsperiode"
     },
     "title": "Varer",
     "item": "Vare",
@@ -1782,7 +1783,11 @@
       "sales": "Salg"
     },
     "assortments": "Sortimentsgrupper",
-    "noAssortment": "Uten sortimentsgruppe"
+    "noAssortment": "Uten sortimentsgruppe",
+    "stageHeading": "Varer etter status",
+    "nearingEnd": "Alle som slutter innen 7 dager",
+    "nearingHint": "Varer på lager med salgstid igjen, også når prisreduksjon venter.",
+    "ownershipValue": "Lagerverdi etter eierskap"
   },
   "importer": {
     "title": "Importer innleverere",

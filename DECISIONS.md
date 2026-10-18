@@ -1127,3 +1127,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-18: #504 defaults seller items to active (on sale, markdown due, period ending); sold, ended and all groups filter before counting/paging. Disabled handovers hide unless history exists. Seller identity and lifecycle facts remain unchanged.
 
 - 2026-10-18: #510 adds a staff Active filter combining on_sale, markdown_due and period_ending before counting/paging. Filter chips preserve other criteria and sorting; the seven-day shortcut uses the existing inclusive Stockholm endsBefore cutoff. Lifecycle facts are unchanged.
+
+- 2026-10-19: #511 reports current stock by lifecycle and ownership without changing stock membership. The next7days item filter and stock count share an unexpired rolling seven-day window, including markdown-due stock and excluding sold, ended and expired items.

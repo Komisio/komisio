@@ -1,6 +1,13 @@
 'use client'
 import { storeCurrencies } from '@/lib/platform/currencies'
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react'
 import { useRouter } from '@/components/platform/use-working-router'
 import { locales, localeNames, type Dictionary } from '@/lib/i18n'
 import type { StorePolicyBody } from '@/lib/engine/store-policy'
@@ -61,19 +68,31 @@ export function StorePolicyForm({
   )
   const [saved, setSaved] = useState(false)
   const form = useRef<HTMLFormElement>(null)
+  const pendingHashTarget = useRef<Element | null>(null)
   const [activeSection, setActiveSection] = useState('receiving')
   const revealPolicyTarget = useCallback((target: Element | null) => {
     const section = target?.closest('.policy-section')
     if (section) setActiveSection(section.id.replace('policy-section-', ''))
   }, [])
+  useLayoutEffect(() => {
+    // A frame can run before React commits the section's hidden attribute.
+    // Scroll only after the requested section has actually been revealed.
+    pendingHashTarget.current?.scrollIntoView({ block: 'start' })
+    pendingHashTarget.current = null
+  }, [activeSection])
   useEffect(() => {
     function revealHash() {
       const id = window.location.hash.slice(1)
       if (!id.startsWith('policy-')) return
       const target = document.getElementById(id)
       if (!target || !form.current?.contains(target)) return
-      revealPolicyTarget(target)
-      requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }))
+      const section = target.closest<HTMLElement>('.policy-section')
+      if (section?.hidden) {
+        pendingHashTarget.current = target
+        revealPolicyTarget(target)
+      } else {
+        target.scrollIntoView({ block: 'start' })
+      }
     }
     revealHash()
     window.addEventListener('hashchange', revealHash)

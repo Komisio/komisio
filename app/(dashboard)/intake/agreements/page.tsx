@@ -189,7 +189,11 @@ export default async function Agreements({
                           <th>{w.publishedAt}</th>
                           <th>{w.status}</th>
                           <th>{w.manageLanguages}</th>
-                          {manage && <th>{w.deletion.actions}</th>}
+                          {manage && (
+                            <th className="agreement-history-actions">
+                              {w.deletion.actions}
+                            </th>
+                          )}
                         </tr>
                       </thead>
                       <tbody>
@@ -248,7 +252,10 @@ export default async function Agreements({
                               </AgreementWorkspaceLink>
                             </td>
                             {manage && (
-                              <td data-label={w.deletion.actions}>
+                              <td
+                                className="agreement-history-actions"
+                                data-label={w.deletion.actions}
+                              >
                                 {links[v.id] ? (
                                   <p>
                                     {w.deletion.linked}{' '}

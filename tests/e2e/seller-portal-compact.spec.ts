@@ -4,6 +4,7 @@ import { createRequire } from 'node:module'
 import { readFileSync } from 'node:fs'
 import type { Dictionary } from '../../lib/i18n'
 import { register } from '../helpers/account'
+import { localTestUrl } from '../helpers/local-services'
 import sv from '../../messages/sv.json' with { type: 'json' }
 
 // The seller portal on a phone with a small but realistic history: one
@@ -18,7 +19,10 @@ test('compact seller portal keeps money facts visible and folds only secondary h
   await register(page, email, `K!${randomBytes(16).toString('hex')}`, '/seller')
   const { Client } = createRequire(import.meta.url)('pg')
   const db = new Client({
-    connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    connectionString: localTestUrl(
+      'TEST_DATABASE_URL',
+      'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    ),
   })
   await db.connect()
   try {

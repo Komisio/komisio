@@ -3585,7 +3585,7 @@ button.text-link:hover:not(:disabled) {
   }
 }
 .agreement-delete {
-  max-width: 22rem;
+  max-width: min(22rem, 100%);
 }
 .agreement-delete p {
   margin: 0 0 8px;
@@ -3594,6 +3594,50 @@ button.text-link:hover:not(:disabled) {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+/* Seller-directory rows keep short figures on one line from 1200px.
+   Agreement rows reuse that table and put sentences in later columns, so
+   those cells wrap inside the row instead of widening the page. */
+@media (min-width: 1200px) {
+  .agreements-page .seller-directory-results {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .agreements-page .seller-directory-table th:nth-child(n + 4),
+  .agreements-page .seller-directory-table td:nth-child(n + 4) {
+    white-space: normal;
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+  .agreements-page .seller-directory-table td a {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .agreement-history .seller-directory-table th:nth-child(2),
+  .agreement-history .seller-directory-table th:nth-child(3) {
+    width: 14%;
+  }
+  .agreement-history .seller-directory-table th:nth-child(4),
+  .agreement-history .seller-directory-table th:nth-child(5) {
+    width: 12%;
+  }
+  .agreement-history .seller-directory-table th:nth-child(6) {
+    width: 26%;
+  }
+  .agreement-acceptances .seller-directory-table th:first-child {
+    width: 28%;
+  }
+  .agreement-acceptances .seller-directory-table th:nth-child(2) {
+    width: 16%;
+  }
+  .agreement-acceptances .seller-directory-table th:nth-child(3),
+  .agreement-acceptances .seller-directory-table th:nth-child(4) {
+    width: 18%;
+  }
+  .agreement-acceptances .seller-directory-table th:nth-child(5) {
+    width: 20%;
+  }
 }
 .payouts-overview,
 .payouts-workspace {

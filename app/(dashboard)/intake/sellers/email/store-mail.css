@@ -1,0 +1,33 @@
+.store-mail-workspace {
+  max-width: 52rem;
+}
+.store-mail-fields {
+  border: 0;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: grid;
+  gap: 1.25rem;
+}
+.store-mail-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.store-mail-counts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.store-mail-counts dd {
+  margin: 0.25rem 0 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.store-mail-entry {
+  padding: 1rem 0;
+  border-top: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+.store-mail-entry summary {
+  cursor: pointer;
+}

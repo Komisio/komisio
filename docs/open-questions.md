@@ -7,6 +7,11 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 Outbound shop-created events (resolved 2026-10-16, #463): the owner requests an
 optional signed, best-effort webhook after successful creation, with no retries
 or personal-data logs. It remains disabled without operator configuration.
+Store email (#477, resolved 2026-10-18): the owner approves separate per-store
+seller opt-in history and confirmed bulk-send records. Sellers or unsubscribe
+links alone change consent; no existing seller is enrolled. Delivery uses the
+existing communication log and leaves account/transactional notices unchanged.
+
 Marketing consent (#466, resolved 2026-10-16): the owner approves a protected,
 append-only user-level register containing the choice, server timestamp and text
 version. Only the account holder changes it under Account. The optional event

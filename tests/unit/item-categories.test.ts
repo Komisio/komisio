@@ -5,7 +5,7 @@ import {
   categoryChoices,
 } from '../../lib/engine/item-categories'
 describe('category names', () => {
-  it('keeps ambiguous translations distinguishable and omits inactive choices', () => {
+  it('keeps aliases for localized display and marks inactive entries for exclusion from new choices', () => {
     const categories = [
       {
         id: 'one',
@@ -30,8 +30,27 @@ describe('category names', () => {
       },
     ]
     expect(categoryChoices(categories, 'sv')).toEqual([
-      { id: 'one', name: 'Samma', label: 'Samma (Books)' },
-      { id: 'two', name: 'Samma', label: 'Samma (Media)' },
+      {
+        id: 'one',
+        name: 'Samma',
+        label: 'Samma (Books)',
+        active: true,
+        aliases: ['Books', 'Samma'],
+      },
+      {
+        id: 'two',
+        name: 'Samma',
+        label: 'Samma (Media)',
+        active: true,
+        aliases: ['Media', 'Samma'],
+      },
+      {
+        id: 'three',
+        name: 'Retired',
+        label: 'Retired',
+        active: false,
+        aliases: ['Retired'],
+      },
     ])
   })
   it('uses translated presentation without changing the stored category', () => {

@@ -134,8 +134,15 @@ test('policy sections retain fields and reveal invalid controls before publishin
     await expect(
       page.getByLabel(d.storePolicy.itemLanguage, { exact: true }),
     ).toHaveValue('no')
-    // A bookmarked nested field opens its section after a full document load.
+    // Same-document hash navigation reveals the nested field.
     await page.goto('/settings#policy-item-language')
+    await expect(
+      page.getByLabel(d.storePolicy.itemLanguage, { exact: true }),
+    ).toBeInViewport()
+    await expect(page.locator('#policy-section-ai')).toBeVisible()
+    // A full document load starts with the receiving section rendered. The
+    // bookmarked field must scroll into view after its section is revealed.
+    await page.reload()
     await expect(
       page.getByLabel(d.storePolicy.itemLanguage, { exact: true }),
     ).toBeInViewport()

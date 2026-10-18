@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { createRequire } from 'node:module'
 import { register } from '../helpers/account'
+import { localTestUrl } from '../helpers/local-services'
+import d from '../../messages/sv.json' with { type: 'json' }
 test('seller reads own economy, requests payout and opts out without becoming staff', async ({
   page,
 }) => {
@@ -20,7 +22,10 @@ test('seller reads own economy, requests payout and opts out without becoming st
   await expect(page.locator('main')).toHaveAttribute('lang', 'sv-SE')
   const { Client } = createRequire(import.meta.url)('pg')
   const db = new Client({
-    connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    connectionString: localTestUrl(
+      'TEST_DATABASE_URL',
+      'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    ),
   })
   await db.connect()
   let sellerId = ''
@@ -68,10 +73,15 @@ test('seller reads own economy, requests payout and opts out without becoming st
       page.getByRole('heading', { name: /Tillg.*200/ }),
     ).toBeVisible()
     await expect(page.getByText('PRIVATE staff reason')).toHaveCount(0)
+    const items = page.getByRole('region', {
+      name: d.sellerPortal.items,
+      exact: true,
+    })
     await expect(
-      page
-        .getByRole('region', { name: 'Mina varor', exact: true })
-        .getByText('Inga varor ännu.', { exact: true }),
+      items.getByRole('combobox', { name: d.sellerPortal.itemsStatus }),
+    ).toHaveValue('active')
+    await expect(
+      items.getByText(d.sellerPortal.itemFilterEmpty.active, { exact: true }),
     ).toBeVisible()
     await page.screenshot({
       path: test.info().outputPath('seller-portal.png'),

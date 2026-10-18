@@ -189,11 +189,14 @@ export function AuthForm({
             <AdsConsentControl d={d} locale={locale} />
           )}
           <p>
-            {mode === 'register'
-              ? d.registerIntro
-              : mode === 'login'
-                ? d.loginIntro
-                : d.passwordHint}
+            {(mode === 'register' || mode === 'login') &&
+            destination.startsWith('/join/')
+              ? d.selfRegistration.joinLogin
+              : mode === 'register'
+                ? d.registerIntro
+                : mode === 'login'
+                  ? d.loginIntro
+                  : d.passwordHint}
           </p>
           {destination.startsWith('/invite/') &&
             (mode === 'register' || mode === 'login') && (

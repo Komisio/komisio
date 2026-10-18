@@ -4367,6 +4367,7 @@
     "showInactive": "Vis inaktive varetyper"
   },
   "selfRegistration": {
+    "joinLogin": "Vil du sælge gennem butikken? Opret en personlig konto, eller log ind, hvis du allerede har en. Derefter kommer du tilbage hertil for at læse butikkens vilkår og sende din ansøgning.",
     "reviewTerms": "Aftalen sælgeren accepterede",
     "title": "Sælgerregistrering",
     "intro": "Lad sælgere ansøge via butikkens link eller QR-kode. I gennemgår hver ansøgning, før sælgeren kan indlevere varer.",

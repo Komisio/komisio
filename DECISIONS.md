@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-18: #508 gives signed-out seller registration links a localized public introduction and account actions retaining the return path. No store or agreement is read before login; verified identity, MFA, application and staff approval checks remain unchanged.
+
 - 2026-10-18: #499 allows default-off, owner/admin store-mail auto-subscription only for newly approved self-registrations that accepted the localized notice while enabled. History retains distinct source and exact agreement; disabling never ends existing subscriptions. Unsubscribe always wins.
 
 - 2026-10-18: #485 permits owner/admin catalogue editing. Category versions and item links are protected; only unique name/translation matches link automatically. Current displays follow renames; source evidence stays intact. Used entries may be deactivated, never deleted.

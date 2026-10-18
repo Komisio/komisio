@@ -4367,6 +4367,7 @@
     "showInactive": "Visa inaktiva varutyper"
   },
   "selfRegistration": {
+    "joinLogin": "Vill du sälja genom butiken? Skapa ett personligt konto eller logga in om du redan har ett. Därefter kommer du tillbaka hit för att läsa butikens villkor och skicka din ansökan.",
     "reviewTerms": "Avtalet säljaren godkände",
     "title": "Säljarregistrering",
     "intro": "Låt säljare ansöka via butikens länk eller QR-kod. Ni granskar varje ansökan innan säljaren kan lämna in varor.",

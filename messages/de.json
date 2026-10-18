@@ -4373,6 +4373,7 @@
     "showInactive": "Inaktive Produkttypen anzeigen"
   },
   "selfRegistration": {
+    "joinLogin": "Möchtest du über das Geschäft verkaufen? Erstelle ein persönliches Konto oder melde dich an, wenn du bereits eines hast. Danach kehrst du hierher zurück, um die Bedingungen des Geschäfts zu lesen und deinen Antrag zu senden.",
     "reviewTerms": "Die vom Verkäufer akzeptierte Vereinbarung",
     "title": "Verkäuferregistrierung",
     "intro": "Verkäufer können sich über Ihren Shop-Link oder QR-Code anmelden. Sie prüfen jeden Antrag, bevor Waren abgegeben werden können.",

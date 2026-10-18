@@ -4373,6 +4373,7 @@
     "showInactive": "Näytä käytöstä poistetut tuotetyypit"
   },
   "selfRegistration": {
+    "joinLogin": "Haluatko myydä liikkeen kautta? Luo henkilökohtainen tili tai kirjaudu sisään, jos sinulla on jo tili. Sen jälkeen palaat tänne lukemaan liikkeen ehdot ja lähettämään hakemuksesi.",
     "reviewTerms": "Myyjän hyväksymä sopimus",
     "title": "Myyjäksi rekisteröityminen",
     "intro": "Myyjät voivat hakea mukaan myymälän linkillä tai QR-koodilla. Tarkistatte jokaisen hakemuksen ennen kuin myyjä voi tuoda tavaroita.",

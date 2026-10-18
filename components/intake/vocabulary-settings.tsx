@@ -10,6 +10,9 @@ import { CreateAttribute } from './create-attribute'
 import { AssortmentSettings } from './assortment-settings'
 import { CategorySettings } from './category-settings'
 import { SettingsSectionHelp } from './settings-section-help'
+import { EditCatalogue } from './edit-catalogue'
+import { Button } from '@/components/ui/button'
+import type { ItemTypeProfile } from '@/lib/engine/attributes'
 import type { ItemCategory } from '@/lib/engine/item-categories'
 import './vocabulary-settings.css'
 
@@ -33,16 +36,22 @@ export function VocabularySettings({
   const t = d.vocabularySettings
   const [vocabulary, setVocabulary] = useState(initial)
   const [typeSearch, setTypeSearch] = useState('')
+  const [showInactiveTypes, setShowInactiveTypes] = useState(false)
   const [attributeSearch, setAttributeSearch] = useState('')
   const [savedType, setSavedType] = useState('')
   const [savedAttribute, setSavedAttribute] = useState('')
+  const [editingType, setEditingType] = useState<ItemTypeProfile | null>(null)
   const definitions = new Map(vocabulary.definitions.map((a) => [a.slug, a]))
   const matches = (label: string, query: string) =>
     label
       .toLocaleLowerCase(locale)
       .includes(query.trim().toLocaleLowerCase(locale))
   const types = vocabulary.types
-    .filter((v) => v.active && matches(labelOf(v, locale), typeSearch))
+    .filter(
+      (v) =>
+        (v.active || showInactiveTypes) &&
+        matches(labelOf(v, locale), typeSearch),
+    )
     .sort((a, b) =>
       labelOf(a, locale).localeCompare(labelOf(b, locale), locale),
     )
@@ -119,6 +128,39 @@ export function VocabularySettings({
                   />
                 )}
                 <p role="status">{savedType}</p>
+                <div className="vocabulary-field-choices">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={showInactiveTypes}
+                      onChange={(e) => setShowInactiveTypes(e.target.checked)}
+                    />
+                    {d.catalogueEditing.showInactive}
+                  </label>
+                </div>
+                {editable && editingType && (
+                  <EditCatalogue
+                    key={editingType.slug}
+                    kind="type"
+                    record={editingType}
+                    definitions={vocabulary.definitions}
+                    tenantId={tenantId}
+                    locale={locale}
+                    d={d}
+                    onClose={() => setEditingType(null)}
+                    onSaved={(profile) => {
+                      setVocabulary((v) => ({
+                        ...v,
+                        types: v.types.map((t) =>
+                          t.slug === profile.slug ? profile : t,
+                        ),
+                      }))
+                      setSavedType(
+                        t.saved.replace('{name}', labelOf(profile, locale)),
+                      )
+                    }}
+                  />
+                )}
                 <table className="vocabulary-table">
                   <caption className="sr-only">{t.types}</caption>
                   <thead>
@@ -136,6 +178,9 @@ export function VocabularySettings({
                         <th scope="row">
                           {labelOf(type, locale)}
                           <small>{type.own ? t.own : t.standard}</small>
+                          {!type.active && (
+                            <small>{d.catalogueEditing.inactive}</small>
+                          )}
                         </th>
                         <td>
                           {type.attributes
@@ -147,6 +192,14 @@ export function VocabularySettings({
                         </td>
                         {editable && (
                           <td className="catalogue-actions">
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              disabled={!!editingType}
+                              onClick={() => setEditingType(type)}
+                            >
+                              {d.catalogueEditing.edit}
+                            </Button>
                             {type.own ? (
                               <DeleteCatalogueRecord
                                 tenantId={tenantId}

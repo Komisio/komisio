@@ -2,8 +2,38 @@ import { describe, expect, it } from 'vitest'
 import {
   categoryName,
   createCategoryInput,
+  categoryChoices,
 } from '../../lib/engine/item-categories'
 describe('category names', () => {
+  it('keeps ambiguous translations distinguishable and omits inactive choices', () => {
+    const categories = [
+      {
+        id: 'one',
+        name: 'Books',
+        labels: { sv: 'Samma' },
+        active: true,
+        version: 1,
+      },
+      {
+        id: 'two',
+        name: 'Media',
+        labels: { sv: 'Samma' },
+        active: true,
+        version: 0,
+      },
+      {
+        id: 'three',
+        name: 'Retired',
+        labels: { sv: 'Retired' },
+        active: false,
+        version: 2,
+      },
+    ]
+    expect(categoryChoices(categories, 'sv')).toEqual([
+      { id: 'one', name: 'Samma', label: 'Samma (Books)' },
+      { id: 'two', name: 'Samma', label: 'Samma (Media)' },
+    ])
+  })
   it('uses translated presentation without changing the stored category', () => {
     const category = {
       id: 'f0000000-0000-4000-8000-000000003280',

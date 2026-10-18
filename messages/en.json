@@ -4328,5 +4328,16 @@
     "remaining": "Still to process",
     "recent": "The 50 most recent sends",
     "reviewHint": "Check the message and recipient count. An unsubscribe link is added to each email."
+  },
+  "catalogueEditing": {
+    "edit": "Edit",
+    "save": "Save changes",
+    "active": "Available for new items",
+    "inactive": "Inactive",
+    "activeHint": "Clear to hide this choice when registering items. Existing items keep their category or product type.",
+    "changed": "These details have changed. Close the editor and reload the page before trying again.",
+    "duplicate": "This name is already used. Choose another name.",
+    "suggestedCategory": "Suggested category",
+    "showInactive": "Show inactive product types"
   }
 }

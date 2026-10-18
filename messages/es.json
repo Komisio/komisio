@@ -4334,5 +4334,16 @@
     "remaining": "Pendientes",
     "recent": "Los últimos 50 envíos",
     "reviewHint": "Revisa el mensaje y el número de destinatarios. Cada correo incluirá un enlace para cancelar la suscripción."
+  },
+  "catalogueEditing": {
+    "edit": "Editar",
+    "save": "Guardar cambios",
+    "active": "Disponible para nuevos artículos",
+    "inactive": "Inactivo",
+    "activeHint": "Desmarca para ocultar esta opción al registrar artículos. Los artículos existentes conservan su categoría o tipo de producto.",
+    "changed": "Los datos han cambiado. Cierra el editor y recarga la página antes de volver a intentarlo.",
+    "duplicate": "Este nombre ya está en uso. Elige otro nombre.",
+    "suggestedCategory": "Categoría sugerida",
+    "showInactive": "Mostrar tipos de producto inactivos"
   }
 }

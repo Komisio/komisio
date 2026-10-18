@@ -4328,5 +4328,16 @@
     "remaining": "Kvar att behandla",
     "recent": "De 50 senaste utskicken",
     "reviewHint": "Kontrollera meddelandet och antalet mottagare. En avregistreringslänk läggs till i varje mejl."
+  },
+  "catalogueEditing": {
+    "edit": "Redigera",
+    "save": "Spara ändringar",
+    "active": "Kan väljas för nya varor",
+    "inactive": "Inaktiv",
+    "activeHint": "Avmarkera för att dölja valet vid registrering. Befintliga varor behåller sin kategori eller varutyp.",
+    "changed": "Uppgifterna har ändrats. Stäng redigeringen och ladda om sidan innan du försöker igen.",
+    "duplicate": "Namnet används redan. Välj ett annat namn.",
+    "suggestedCategory": "Föreslagen kategori",
+    "showInactive": "Visa inaktiva varutyper"
   }
 }

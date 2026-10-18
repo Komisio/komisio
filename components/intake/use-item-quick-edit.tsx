@@ -9,7 +9,7 @@ import type { DirectoryItem } from '@/lib/engine/item-directory'
 import type { Dictionary } from '@/lib/i18n'
 type Field = 'title' | 'category' | 'itemType' | 'assortment'
 type Snapshot = Record<Field, string> & { version: number }
-type Edit = { field: Field; value: string; base: Snapshot }
+type Edit = { field: Field; value: string; base: Snapshot; categoryId?: string }
 export function useItemQuickEdit({
   item,
   tenantId,
@@ -80,7 +80,11 @@ export function useItemQuickEdit({
   async function save(value = edit?.value, focus = false) {
     if (!edit || running.current || cancelled.current || state === 'refused')
       return
-    if (!pending.current && value?.trim() === edit.base[edit.field]) {
+    if (
+      !pending.current &&
+      !edit.categoryId &&
+      value?.trim() === edit.base[edit.field]
+    ) {
       const field = queued.current
       queued.current = null
       setEdit(field ? { field, value: current[field], base: current } : null)
@@ -102,6 +106,7 @@ export function useItemQuickEdit({
         },
         title: next.title,
         category: next.category,
+        ...(edit.categoryId ? { categoryId: edit.categoryId } : {}),
         itemType: next.itemType || null,
         assortment: next.assortment || null,
       },
@@ -186,11 +191,10 @@ export function useItemQuickEdit({
   function cell(
     field: Field,
     label: string,
-    options?: { id: string; name: string }[],
+    options?: { id: string; name: string; label?: string }[],
   ) {
     const active = edit?.field === field
-    // Existing free-text categories remain selectable even if the store has
-    // not registered them. Translated labels never replace the stored value.
+    // Keep unmatched text available; an explicit registry choice carries its ID.
     if (
       field === 'category' &&
       options &&
@@ -198,9 +202,13 @@ export function useItemQuickEdit({
       !options.some((o) => o.id === current.category)
     )
       options = [{ id: current.category, name: current.category }, ...options]
-    const shown = options
-      ? (options.find((option) => option.id === current[field])?.name ?? '—')
-      : current[field] || '—'
+    const shown =
+      field === 'category'
+        ? current.category || '—'
+        : options
+          ? (options.find((option) => option.id === current[field])?.name ??
+            '—')
+          : current[field] || '—'
     if (!write) return <span className="inventory-cell-text">{shown}</span>
     return (
       <div className="inventory-cell-editor">
@@ -226,11 +234,21 @@ export function useItemQuickEdit({
             <select
               autoFocus
               aria-label={label}
-              value={edit.value}
+              value={edit.categoryId ?? edit.value}
               disabled={busy || state === 'uncertain' || state === 'refused'}
               onChange={(e) => {
                 const value = e.target.value
-                setEdit({ ...edit, value })
+                const choice =
+                  field === 'category'
+                    ? options?.find(
+                        (o) => o.id === value && o.id !== current.category,
+                      )
+                    : undefined
+                setEdit({
+                  ...edit,
+                  value: choice?.name ?? value,
+                  categoryId: choice?.id,
+                })
                 setState('idle')
               }}
               onBlur={() => {
@@ -246,7 +264,7 @@ export function useItemQuickEdit({
               <option value="">{t.none}</option>
               {options.map((option) => (
                 <option key={option.id} value={option.id}>
-                  {option.name}
+                  {option.label ?? option.name}
                 </option>
               ))}
             </select>

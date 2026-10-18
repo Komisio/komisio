@@ -196,7 +196,7 @@ test('inventory workspace selects page items and saves cells with safe retry and
       .click()
     await row
       .getByRole('combobox', { name: d.quickIntake.category, exact: true })
-      .selectOption('Clothing')
+      .selectOption({ label: 'Kläder' })
     // Clicking the next cell while blur saves queues that editor, preserving the new snapshot.
     await row
       .getByRole('button', {

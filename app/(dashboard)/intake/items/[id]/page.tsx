@@ -6,7 +6,10 @@ import { readReceptionBagId } from '@/lib/engine/reception-store'
 import { readItemDirectory } from '@/lib/engine/item-directory'
 import { readAssortmentGroups } from '@/lib/engine/item-classification'
 import { readAttributeVocabulary, labelOf } from '@/lib/engine/attributes'
-import { readItemCategories, categoryName } from '@/lib/engine/item-categories'
+import {
+  readItemCategories,
+  categoryChoices,
+} from '@/lib/engine/item-categories'
 import { readItemPhotos } from '@/lib/engine/item-photos'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
@@ -125,16 +128,16 @@ export default async function Item({
         tenantId={active.id}
         write={['owner', 'admin', 'staff'].includes(active.role)}
         types={vocabulary.types
-          .filter((type) => type.active)
+          .filter(
+            (type) =>
+              type.active || type.slug === snapshot.classification?.itemType,
+          )
           .map((type) => ({
             id: type.slug,
             name: labelOf(type, ctx.locale),
           }))}
         groups={groups}
-        categories={categories.map((c) => ({
-          id: c.name,
-          name: categoryName(c, ctx.locale),
-        }))}
+        categories={categoryChoices(categories, ctx.locale)}
         d={all}
         locale={ctx.locale}
         reference={reference}

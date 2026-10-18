@@ -31,6 +31,11 @@ import { raceStoreGuide } from './store-guide-race.mjs'
 import { racePayPalCredentials } from './paypal-credentials-race.mjs'
 import { raceLabelPrintRule } from './label-print-rule-race.mjs'
 import { raceCatalogueDeletion } from './catalogue-deletion-race.mjs'
+import { raceCatalogueEditing } from './catalogue-editing-race.mjs'
+import {
+  prepareCategoryBackfill,
+  verifyCategoryBackfill,
+} from './catalogue-backfill-fixture.mjs'
 import { raceAcceptance, raceStagedAcceptance } from './acceptance-race.mjs'
 import pg from 'pg'
 import { randomUUID } from 'node:crypto'
@@ -73,13 +78,19 @@ try {
  grant select on storage.buckets to authenticated;`)
   for (const file of (
     await readdir(new URL('../supabase/migrations/', import.meta.url))
-  ).sort())
+  ).sort()) {
+    const backfill =
+      file === '20261018120000_edit_item_catalogue.sql'
+        ? await prepareCategoryBackfill(setup)
+        : null
     await setup.query(
       await readFile(
         new URL(`../supabase/migrations/${file}`, import.meta.url),
         'utf8',
       ),
     )
+    if (backfill) await verifyCategoryBackfill(setup, backfill)
+  }
   await raceConsignmentFees({ setup, connectionString: parsed.toString() })
   await raceStoreWorkflow({ setup, connectionString: parsed.toString() })
   await raceAgreementAssistance({ setup, connectionString: parsed.toString() })
@@ -146,6 +157,7 @@ try {
   await raceSellerPrivacy({ setup, sessions, tenant })
   await raceLabelPrintRule({ setup, sessions, tenant })
   await raceCatalogueDeletion({ setup, sessions, tenant })
+  await raceCatalogueEditing({ setup, sessions, tenant })
   await setup.query('begin')
   await setup.query('select id from tenants where id=$1 for update', [tenant])
   const attempts = sessions.map(async ({ c, uid }) => {

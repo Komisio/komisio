@@ -4328,5 +4328,16 @@
     "remaining": "Gjenstår",
     "recent": "De 50 siste utsendelsene",
     "reviewHint": "Kontroller meldingen og antall mottakere. Hver e-post får en avmeldingslenke."
+  },
+  "catalogueEditing": {
+    "edit": "Rediger",
+    "save": "Lagre endringer",
+    "active": "Kan velges for nye varer",
+    "inactive": "Inaktiv",
+    "activeHint": "Fjern avkrysningen for å skjule valget ved registrering. Eksisterende varer beholder kategorien eller varetypen.",
+    "changed": "Opplysningene er endret. Lukk redigeringen og last inn siden på nytt før du prøver igjen.",
+    "duplicate": "Navnet er allerede i bruk. Velg et annet navn.",
+    "suggestedCategory": "Foreslått kategori",
+    "showInactive": "Vis inaktive varetyper"
   }
 }

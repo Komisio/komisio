@@ -4334,5 +4334,16 @@
     "remaining": "Noch zu verarbeiten",
     "recent": "Die letzten 50 Sendungen",
     "reviewHint": "Prüfen Sie Nachricht und Empfängerzahl. Jede E-Mail erhält einen Abmeldelink."
+  },
+  "catalogueEditing": {
+    "edit": "Bearbeiten",
+    "save": "Änderungen speichern",
+    "active": "Für neue Artikel verfügbar",
+    "inactive": "Inaktiv",
+    "activeHint": "Deaktivieren, um diese Auswahl bei der Erfassung auszublenden. Bestehende Artikel behalten ihre Kategorie oder ihren Produkttyp.",
+    "changed": "Die Angaben wurden geändert. Schließen Sie die Bearbeitung und laden Sie die Seite neu, bevor Sie es erneut versuchen.",
+    "duplicate": "Dieser Name wird bereits verwendet. Wählen Sie einen anderen Namen.",
+    "suggestedCategory": "Vorgeschlagene Kategorie",
+    "showInactive": "Inaktive Produkttypen anzeigen"
   }
 }

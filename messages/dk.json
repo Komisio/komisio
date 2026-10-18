@@ -4328,5 +4328,16 @@
     "remaining": "Mangler at blive behandlet",
     "recent": "De 50 seneste udsendelser",
     "reviewHint": "Kontrollér beskeden og antallet af modtagere. Hver e-mail får et afmeldingslink."
+  },
+  "catalogueEditing": {
+    "edit": "Rediger",
+    "save": "Gem ændringer",
+    "active": "Kan vælges til nye varer",
+    "inactive": "Inaktiv",
+    "activeHint": "Fjern markeringen for at skjule valget ved registrering. Eksisterende varer beholder deres kategori eller varetype.",
+    "changed": "Oplysningerne er ændret. Luk redigeringen og genindlæs siden, før du prøver igen.",
+    "duplicate": "Navnet bruges allerede. Vælg et andet navn.",
+    "suggestedCategory": "Foreslået kategori",
+    "showInactive": "Vis inaktive varetyper"
   }
 }

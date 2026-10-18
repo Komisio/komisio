@@ -1,4 +1,6 @@
 import { SellerItems } from '@/components/seller/items'
+import { StoreMailConsent } from '@/components/seller/store-mail-consent'
+import { readMailConsent } from '@/lib/engine/store-mail'
 import { economyFormat } from '@/lib/intake/economy-format'
 import { WorkingForm } from '@/components/platform/working-form'
 import { LedgerItemSummary } from '@/components/intake/ledger-item-summary'
@@ -81,6 +83,11 @@ export default async function SellerPortal({
         </section>
       </main>
     )
+  const mailConsent = await readMailConsent(
+    ctx.client,
+    account.tenantId,
+    account.sellerId,
+  )
   const submissionSettings = await readSubmissionSettings(
     ctx.client,
     account.tenantId,
@@ -303,6 +310,13 @@ export default async function SellerPortal({
         enabled={economy.automaticEmails}
         d={d}
         recovery={all.intake}
+      />
+      <StoreMailConsent
+        key={`store-mail:${account.sellerId}:${mailConsent.id}`}
+        tenantId={account.tenantId}
+        sellerId={account.sellerId}
+        current={mailConsent}
+        d={all.storeMail}
       />
       <SellerBankEditor
         key={`bank:${account.sellerId}:${bank?.id}`}

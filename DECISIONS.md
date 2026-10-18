@@ -1113,3 +1113,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-17: Owners/admins may create a store type inline during receiving, retaining current questions and item input. Creation refuses names matching any effective type label, ignoring case and outer whitespace; exact request replays remain valid (#484).
 
 - 2026-10-17: #490 lets an owner or admin delete an unused seller-agreement version. Evidence, receipts, reviews, items and sale lines block it. Its translations go with it. Version numbers are not reused. Linked text stays immutable.
+- 2026-10-18: #477 approves store-specific seller opt-in history and confirmed bulk sends. Only sellers or unsubscribe links change consent; no inferred enrollment. Owners/admins send individually, recheck consent and retain delivery outcomes; uncertain sends are not retried.

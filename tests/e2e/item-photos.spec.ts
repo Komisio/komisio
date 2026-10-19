@@ -81,9 +81,12 @@ test('item gallery keeps retries and concurrent defaults safe; compact list prev
     expect(state.photos).toHaveLength(2)
     await page.goto('/intake/lifecycle')
     const row = page.locator(`#lifecycle-${item}`)
-    const summary = row.locator('summary').first()
-    await expect(summary).toBeVisible()
-    expect((await summary.boundingBox())!.height).toBeLessThanOrEqual(48)
+    const expand = row.getByRole('button', {
+      name: 'Photo test jacket',
+      exact: true,
+    })
+    await expect(expand).toBeVisible()
+    expect((await expand.boundingBox())!.height).toBeLessThanOrEqual(48)
     const icon = row.getByRole('button', {
       name: d.itemPhotos.preview.replace('{count}', '2'),
     })
@@ -113,7 +116,7 @@ test('item gallery keeps retries and concurrent defaults safe; compact list prev
     await page.setViewportSize({ width: 375, height: 812 })
     await icon.click()
     await expect(preview).toBeVisible()
-    await expect(row).not.toHaveAttribute('open', '')
+    await expect(row).toHaveAttribute('data-open', 'false')
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,

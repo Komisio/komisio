@@ -11,7 +11,7 @@ test('lifecycle search preserves paging and batch scope, and item shortcuts open
   await register(page, email, 'K!' + randomBytes(16).toString('hex'))
   const f = await p2Fixture(email)
   try {
-    for (let i = 0; i < 21; i++)
+    for (let i = 0; i < 26; i++)
       await f.item('Search coat ' + String(i).padStart(2, '0'))
     const target = await f.item('Target chair')
     await f.item('Literal% item')
@@ -23,13 +23,13 @@ test('lifecycle search preserves paging and batch scope, and item shortcuts open
     await automation.locator('summary').click()
     await expect(
       automation.getByRole('button', {
-        name: d.lifecycle.applyAllDue.replace('{count}', '23'),
+        name: d.lifecycle.applyAllDue.replace('{count}', '28'),
         exact: true,
       }),
     ).toBeVisible()
     await expect(automation).toContainText(d.lifecycle.searchScopeHint)
     await page.goto('/intake/lifecycle?stage=markdown_due&page=99')
-    await expect(page).toHaveURL(/stage=markdown_due&page=2$/)
+    await expect(page).toHaveURL(/stage=markdown_due&page=2&/)
     const rows = page.locator('.lifecycle-row')
     const search = page.getByLabel(d.lifecycle.search, { exact: true })
     const submit = page.getByRole('button', {
@@ -39,12 +39,12 @@ test('lifecycle search preserves paging and batch scope, and item shortcuts open
     await expect(rows).toHaveCount(3)
     await search.fill('SEARCH coat')
     await submit.click()
-    await expect(rows).toHaveCount(20)
+    await expect(rows).toHaveCount(25)
     await expect
       .poll(() => new URL(page.url()).searchParams.has('page'))
       .toBe(false)
     await page
-      .getByRole('link', { name: d.lifecycle.next, exact: true })
+      .getByRole('link', { name: d.items.nextPage, exact: true })
       .click()
     await expect(rows).toHaveCount(1)
     await expect
@@ -53,11 +53,13 @@ test('lifecycle search preserves paging and batch scope, and item shortcuts open
     await expect
       .poll(() => new URL(page.url()).searchParams.get('stage'))
       .toBe('markdown_due')
-    await expect(page.locator('.lifecycle-row[open]')).toHaveCount(0)
+    await expect(page.locator('.lifecycle-row[data-open="true"]')).toHaveCount(
+      0,
+    )
     await search.fill('Target chair')
     await submit.click()
     await expect(rows).toHaveCount(1)
-    await expect(rows).toHaveAttribute('open', '')
+    await expect(rows).toHaveAttribute('data-open', 'true')
     await expect(
       page.getByLabel(d.lifecycle.price, { exact: true }),
     ).toBeVisible()
@@ -65,7 +67,7 @@ test('lifecycle search preserves paging and batch scope, and item shortcuts open
     await batch.locator('summary').click()
     await expect(
       batch.getByRole('button', {
-        name: d.lifecycle.applyAllDue.replace('{count}', '23'),
+        name: d.lifecycle.applyAllDue.replace('{count}', '28'),
         exact: true,
       }),
     ).toBeVisible()
@@ -77,7 +79,7 @@ test('lifecycle search preserves paging and batch scope, and item shortcuts open
       .getByRole('link', { name: d.items.manageSalePeriod, exact: true })
       .click()
     await expect(rows).toHaveCount(1)
-    await expect(rows).toHaveAttribute('open', '')
+    await expect(rows).toHaveAttribute('data-open', 'true')
     await expect(search).toHaveValue('I-' + target.slice(0, 8).toUpperCase())
     await expect
       .poll(async () => (await rows.boundingBox())?.y ?? 9999)
@@ -94,9 +96,9 @@ test('lifecycle search preserves paging and batch scope, and item shortcuts open
       ),
     ).toBe(true)
     await page
-      .getByRole('link', { name: d.lifecycle.clearSearch, exact: true })
+      .getByRole('link', { name: d.items.clearFilters, exact: true })
       .click()
-    await expect(rows).toHaveCount(20)
+    await expect(rows).toHaveCount(25)
     await expect(search).toHaveValue('')
     await search.fill('%')
     await submit.click()

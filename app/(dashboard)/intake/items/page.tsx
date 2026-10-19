@@ -1,3 +1,4 @@
+import { InventoryFooter } from '@/components/intake/inventory-table-shell'
 import { X } from 'lucide-react'
 import {
   itemFilterHref,
@@ -343,50 +344,15 @@ export default async function Items({
                 {Object.keys(raw).length ? d.noMatches : d.empty}
               </p>
             )}
-            <footer className="inventory-footer">
-              <span>
-                {d.showingRange
-                  .replace(
-                    '{from}',
-                    String(result.total ? result.offset + 1 : 0),
-                  )
-                  .replace('{to}', String(result.offset + result.items.length))
-                  .replace('{total}', String(result.total))}
-              </span>
-              {pages > 1 && (
-                <nav className="inventory-pagination" aria-label={d.pagination}>
-                  {requestedPage > 1 ? (
-                    <Link
-                      className="btn btn-secondary"
-                      href={href(requestedPage - 1)}
-                    >
-                      {d.previousPage}
-                    </Link>
-                  ) : (
-                    <span className="btn btn-secondary" aria-disabled="true">
-                      {d.previousPage}
-                    </span>
-                  )}
-                  <span>
-                    {d.pageOf
-                      .replace('{page}', String(requestedPage))
-                      .replace('{pages}', String(pages))}
-                  </span>
-                  {requestedPage < pages ? (
-                    <Link
-                      className="btn btn-secondary"
-                      href={href(requestedPage + 1)}
-                    >
-                      {d.nextPage}
-                    </Link>
-                  ) : (
-                    <span className="btn btn-secondary" aria-disabled="true">
-                      {d.nextPage}
-                    </span>
-                  )}
-                </nav>
-              )}
-            </footer>
+            <InventoryFooter
+              total={result.total}
+              offset={result.offset}
+              count={result.items.length}
+              page={requestedPage}
+              pages={pages}
+              href={href}
+              d={d}
+            />
           </InventoryTable>
         )}
       </section>

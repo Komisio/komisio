@@ -104,14 +104,16 @@ test('printed item references open within the active store and collisions requir
       .getByRole('link', { name: d.openByReference.chooseMatch, exact: true })
       .click()
     await expect(page.locator('.lifecycle-row')).toHaveCount(2)
-    await expect(page.locator('.lifecycle-row[open]')).toHaveCount(0)
-    await expect(page.locator('.lifecycle-list')).toContainText(
+    await expect(page.locator('.lifecycle-row[data-open="true"]')).toHaveCount(
+      0,
+    )
+    await expect(page.locator('.lifecycle-table-panel')).toContainText(
       'First scanning item',
     )
-    await expect(page.locator('.lifecycle-list')).toContainText(
+    await expect(page.locator('.lifecycle-table-panel')).toContainText(
       'Second scanning item',
     )
-    await expect(page.locator('.lifecycle-list')).not.toContainText(
+    await expect(page.locator('.lifecycle-table-panel')).not.toContainText(
       'Other store collision',
     )
   } finally {

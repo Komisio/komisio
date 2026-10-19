@@ -1129,3 +1129,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-18: #510 adds a staff Active filter combining on_sale, markdown_due and period_ending before counting/paging. Filter chips preserve other criteria and sorting; the seven-day shortcut uses the existing inclusive Stockholm endsBefore cutoff. Lifecycle facts are unchanged.
 
 - 2026-10-19: #511 reports current stock by lifecycle and ownership without changing stock membership. The next7days item filter and stock count share an unexpired rolling seven-day window, including markdown-due stock and excluding sold, ended and expired items.
+
+- 2026-10-19: Lifecycle uses shared inventory table chrome and a sorted 25-row read contract, oldest acceptance first with item-ID ties. Search/stage filter rows only; the batch due count stays store-wide. Existing lifecycle actions and permissions are unchanged (#513).

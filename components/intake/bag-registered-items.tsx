@@ -1,5 +1,5 @@
+import { InventoryFooter } from './inventory-table-shell'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { NavigationLink as PageLink } from '@/components/platform/navigation-warning'
 import { dictionary, type Locale } from '@/lib/i18n'
 import type { BagInventoryPage } from '@/lib/engine/bag-inventory'
 import type { ItemSort } from '@/lib/engine/item-directory'
@@ -66,41 +66,18 @@ export async function BagRegisteredItems({
         {!items.length && (
           <p className="inventory-message">{d.bagIntake.empty}</p>
         )}
-        <footer className="inventory-footer">
-          <span>
-            {d.items.showingRange
-              .replace('{from}', String(total ? offset + 1 : 0))
-              .replace('{to}', String(offset + items.length))
-              .replace('{total}', String(total))}
-          </span>
-          {pages > 1 && (
-            <nav className="inventory-pagination" aria-label={title}>
-              {itemPage > 1 && (
-                <PageLink
-                  warningScope="inventory-table"
-                  className="btn btn-secondary"
-                  href={href(itemPage - 1)}
-                >
-                  {d.items.previousPage}
-                </PageLink>
-              )}
-              <span>
-                {d.items.pageOf
-                  .replace('{page}', String(itemPage))
-                  .replace('{pages}', String(pages))}
-              </span>
-              {itemPage < pages && (
-                <PageLink
-                  warningScope="inventory-table"
-                  className="btn btn-secondary"
-                  href={href(itemPage + 1)}
-                >
-                  {d.items.nextPage}
-                </PageLink>
-              )}
-            </nav>
-          )}
-        </footer>
+        <InventoryFooter
+          total={total}
+          offset={offset}
+          count={items.length}
+          page={itemPage}
+          pages={pages}
+          href={href}
+          d={d.items}
+          label={title}
+          preserveDraft
+          showDisabled={false}
+        />
       </InventoryTable>
     </section>
   )

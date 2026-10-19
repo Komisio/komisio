@@ -1150,7 +1150,8 @@
       "removeFilter": "Remove {filter}",
       "quickFilters": "Quick filters",
       "endsWithinWeek": "Period ends by 7 days from today",
-      "periodWindow": "Sale period"
+      "periodWindow": "Sale period",
+      "categoryChoiceHint": "Choose a category or type another."
     },
     "title": "Items",
     "item": "Item",

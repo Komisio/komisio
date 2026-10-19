@@ -1131,3 +1131,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-19: #511 reports current stock by lifecycle and ownership without changing stock membership. The next7days item filter and stock count share an unexpired rolling seven-day window, including markdown-due stock and excluding sold, ended and expired items.
 
 - 2026-10-19: Lifecycle uses shared inventory table chrome and a sorted 25-row read contract, oldest acceptance first with item-ID ties. Search/stage filter rows only; the batch due count stays store-wide. Existing lifecycle actions and permissions are unchanged (#513).
+
+- 2026-10-19: #512 offers tenant-scoped seller-ID choices and editable category suggestions using existing reads and URL filters. Stock metrics share one card style with mobile scrolling stage cards; no lifecycle, stock-count or access rules change.

@@ -1150,7 +1150,8 @@
       "removeFilter": "Fjern {filter}",
       "quickFilters": "Hurtigfiltre",
       "endsWithinWeek": "Salgsperioden slutter senest om 7 dager",
-      "periodWindow": "Salgsperiode"
+      "periodWindow": "Salgsperiode",
+      "categoryChoiceHint": "Velg en kategori eller skriv en annen."
     },
     "title": "Varer",
     "item": "Vare",

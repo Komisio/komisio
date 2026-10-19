@@ -1150,7 +1150,8 @@
       "removeFilter": "{filter} entfernen",
       "quickFilters": "Schnellfilter",
       "endsWithinWeek": "Verkaufszeitraum endet spätestens in 7 Tagen",
-      "periodWindow": "Verkaufszeitraum"
+      "periodWindow": "Verkaufszeitraum",
+      "categoryChoiceHint": "Wähle eine Kategorie oder gib eine andere ein."
     },
     "title": "Artikel",
     "item": "Artikel",

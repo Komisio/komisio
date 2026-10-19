@@ -31,6 +31,13 @@ test('stock overview separates current inventory from period sales on desktop an
       fullPage: true,
     })
     await page.setViewportSize({ width: 390, height: 844 })
+    const stageCards = page.locator('.stock-stage-grid')
+    expect(
+      await stageCards.evaluate((el) => el.scrollWidth > el.clientWidth),
+    ).toBe(true)
+    await stageCards.locator('article').last().scrollIntoViewIfNeeded()
+    await expect(stageCards.locator('article').last()).toBeInViewport()
+    await stageCards.locator('article').first().scrollIntoViewIfNeeded()
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
@@ -40,6 +47,20 @@ test('stock overview separates current inventory from period sales on desktop an
       path: 'private/stock-overview-mobile.png',
       fullPage: true,
     })
+    await page
+      .getByRole('tab', { name: d.stock.tabs.categories, exact: true })
+      .click()
+    const categoryTable = page.getByRole('region', {
+      name: d.stock.categoriesHeading,
+    })
+    await expect(categoryTable).toContainText('Jackets')
+    await expect(categoryTable.locator('td').first()).toHaveAttribute(
+      'data-label',
+      d.stock.inStock,
+    )
+    expect(
+      await categoryTable.evaluate((el) => el.getBoundingClientRect().right),
+    ).toBeLessThanOrEqual(390)
     await page
       .getByRole('tab', { name: d.stock.tabs.sales, exact: true })
       .click()
@@ -71,6 +92,23 @@ test('stock overview separates current inventory from period sales on desktop an
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true)
+  } finally {
+    await f.close()
+  }
+})
+
+test('an empty stock overview offers quick intake', async ({ page }) => {
+  const email = `stock-empty-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomUUID()}`)
+  const f = await p2Fixture(email)
+  try {
+    await f.commit()
+    await page.goto('/intake/stock')
+    const empty = page.locator('.stock-empty')
+    await expect(empty).toContainText(d.stock.empty)
+    await expect(
+      empty.getByRole('link', { name: d.quickIntake.title, exact: true }),
+    ).toHaveAttribute('href', '/intake/quick')
   } finally {
     await f.close()
   }

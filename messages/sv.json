@@ -1150,7 +1150,8 @@
       "removeFilter": "Ta bort {filter}",
       "quickFilters": "Snabbfilter",
       "endsWithinWeek": "Säljperiod slutar senast om 7 dagar",
-      "periodWindow": "Säljperiod"
+      "periodWindow": "Säljperiod",
+      "categoryChoiceHint": "Välj en kategori eller skriv en annan."
     },
     "title": "Varor",
     "item": "Vara",

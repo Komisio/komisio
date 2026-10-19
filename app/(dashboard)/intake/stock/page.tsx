@@ -94,6 +94,20 @@ export default async function Stock({
         </div>
       </div>
       {!report && <p>{d.notAvailable}</p>}
+      {report &&
+        report.total.inStock === 0 &&
+        report.total.soldCount === 0 &&
+        report.categories.length === 0 && (
+          <section
+            className="card stock-panel stock-empty"
+            aria-label={d.empty}
+          >
+            <p>{d.empty}</p>
+            <Link className="btn btn-primary" href="/intake/quick">
+              {all.quickIntake.title}
+            </Link>
+          </section>
+        )}
       <WorkspaceTabs
         id="stock"
         label={d.title}

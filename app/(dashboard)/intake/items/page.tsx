@@ -27,6 +27,7 @@ import { itemSyncStatus, syncProvider } from '@/lib/engine/item-sync'
 import { readAssortmentGroups } from '@/lib/engine/item-classification'
 import { readAttributeVocabulary, labelOf } from '@/lib/engine/attributes'
 import { readItemCategories } from '@/lib/engine/item-categories'
+import { readItemSellerChoices } from '@/lib/engine/item-filter-options'
 
 export default async function Items({
   searchParams,
@@ -40,10 +41,11 @@ export default async function Items({
     d = all.items,
     t = d.directory,
     params = await searchParams
-  const [groups, vocabulary, categories] = await Promise.all([
+  const [groups, vocabulary, categories, sellers] = await Promise.all([
     readAssortmentGroups(ctx.client, active.id),
     readAttributeVocabulary(ctx.client, active.id),
     readItemCategories(ctx.client, active.id),
+    readItemSellerChoices(ctx.client, active.id),
   ])
   const raw: Record<string, string> = {}
   for (const key of filterKeys) {
@@ -116,6 +118,8 @@ export default async function Items({
     syncStatus: all.itemSync.title,
   }
   const filterValue = (key: string, value: string) => {
+    if (key === 'seller')
+      return sellers.find((seller) => seller.id === value)?.name ?? value
     if (key === 'stage' && itemFilterStage.safeParse(value).success)
       return stageLabel(value as (typeof itemFilterStage.options)[number])
     const labels: Record<string, Record<string, string>> = {
@@ -240,8 +244,47 @@ export default async function Items({
                 all.itemSync.title,
                 itemSyncStatus.options.map((s) => [s, all.itemSync.states[s]]),
               )}
-              {input('seller', all.quickIntake.seller)}
-              {input('category', all.quickIntake.category)}
+              {select('seller', all.quickIntake.seller, [
+                ...(raw.seller && !sellers.some((s) => s.id === raw.seller)
+                  ? [[raw.seller, raw.seller] as [string, string]]
+                  : []),
+                ...sellers.map((s): [string, string] => [
+                  s.id,
+                  sellers.some(
+                    (other) => other.id !== s.id && other.name === s.name,
+                  )
+                    ? `${s.name} (${s.id.slice(0, 8).toUpperCase()})`
+                    : s.name,
+                ]),
+              ])}
+              <div className="field">
+                <label htmlFor="items-category">
+                  {all.quickIntake.category}
+                </label>
+                <input
+                  id="items-category"
+                  name="category"
+                  list="items-category-choices"
+                  defaultValue={raw.category ?? ''}
+                  maxLength={120}
+                  aria-describedby="items-category-hint"
+                />
+                <datalist id="items-category-choices">
+                  {[
+                    ...new Set(
+                      categories.flatMap((c) => [
+                        c.name,
+                        ...Object.values(c.labels),
+                      ]),
+                    ),
+                  ]
+                    .sort((a, b) => a.localeCompare(b, ctx.locale))
+                    .map((name) => (
+                      <option key={name} value={name} />
+                    ))}
+                </datalist>
+                <small id="items-category-hint">{t.categoryChoiceHint}</small>
+              </div>
               {select(
                 'itemType',
                 all.quickIntake.itemType,

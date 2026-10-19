@@ -224,7 +224,7 @@ test('inventory sorts all results, combines advanced filters and previews defaul
       .fill('35')
     await page
       .getByLabel(d.quickIntake.seller, { exact: true })
-      .fill('Synthetic P2')
+      .selectOption(f.seller)
     await page
       .getByLabel(d.quickIntake.category, { exact: true })
       .fill('Jackets')

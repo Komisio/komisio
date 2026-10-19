@@ -10,6 +10,10 @@ test('seller IDs and editable category choices stay tenant-scoped and compose ac
   const email = `choice-filters-${randomUUID()}@example.test`
   await register(page, email, `K!${randomUUID()}`)
   const f = await p2Fixture(email)
+  let release!: () => void
+  const scripts = new Promise<void>((resolve) => {
+    release = resolve
+  })
   try {
     for (let n = 0; n < 27; n++) await f.item(`Coat ${n}`)
     await f.db.query("select register_seller($1,$2,$3,$4,'')", [
@@ -45,13 +49,24 @@ test('seller IDs and editable category choices stay tenant-scoped and compose ac
     ])
     await f.db.query('select set_active_tenant($1)', [f.tenant])
     await f.commit()
-    await page.goto('/intake/items?stage=active&q=Coat&ownership=consignment')
+    await page.route(/\/_next\/.*\.js(?:\?.*)?$/, async (route) => {
+      await scripts
+      await route.continue()
+    })
+    await page.goto('/intake/items?stage=active&q=Coat&ownership=consignment', {
+      waitUntil: 'commit',
+    })
     await expect(page.locator('.inventory-advanced')).toHaveAttribute(
       'open',
       '',
     )
     const seller = page.getByLabel(d.quickIntake.seller, { exact: true })
     const category = page.getByLabel(d.quickIntake.category, { exact: true })
+    await expect(seller).toBeDisabled()
+    await expect(category).toBeDisabled()
+    release()
+    await expect(seller).toBeEnabled()
+    await expect(category).toBeEnabled()
     await expect(seller.locator('option')).toHaveCount(3)
     await expect(seller).not.toContainText('Other store seller')
     await seller.selectOption(f.seller)
@@ -89,6 +104,7 @@ test('seller IDs and editable category choices stay tenant-scoped and compose ac
     await page.reload()
     await expect(category).toHaveValue('Jacket')
   } finally {
+    release()
     await f.close()
   }
 })

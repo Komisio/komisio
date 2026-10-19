@@ -5,14 +5,20 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   type ReactNode,
 } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from '@/components/platform/use-working-router'
 import { useConfirmNavigation } from '@/components/platform/navigation-warning'
 
+const subscribe = () => () => {}
+const clientReady = () => true
+const serverReady = () => false
+
 /** Keep the form mounted while server results change, including during typing. */
 export function InventoryFilters({ children }: { children: ReactNode }) {
+  const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const router = useRouter()
   const confirm = useConfirmNavigation()
   const params = useSearchParams()
@@ -117,7 +123,9 @@ export function InventoryFilters({ children }: { children: ReactNode }) {
         schedule()
       }}
     >
-      {children}
+      <fieldset className="inventory-filter-fields" disabled={!ready}>
+        {children}
+      </fieldset>
     </form>
   )
 }

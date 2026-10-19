@@ -8,6 +8,8 @@ const item = '20000000-0000-4000-8000-000000000001'
 const row = {
   item_id: item,
   title: 'Blue lamp',
+  category: 'Lamps',
+  seller_name: 'Seller',
   seller_id: '30000000-0000-4000-8000-000000000001',
   ownership: 'consignment',
   stage: 'markdown_due',
@@ -25,33 +27,38 @@ function client(answer: unknown) {
 }
 
 describe('readLifecycleQueuePage', () => {
-  it('passes validated arguments and parses the twenty-row page shape', async () => {
+  it('passes validated arguments and parses the twenty-five-row page shape', async () => {
     const { client: c, rpc } = client({
-      data: { rows: [row], total: 41, dueCount: 3, offset: 20, limit: 20 },
+      data: { rows: [row], total: 41, dueCount: 3, offset: 25, limit: 25 },
       error: null,
     })
     const page = await readLifecycleQueuePage(c, tenant, {
       query: '  Blue LAMP ',
       stage: 'markdown_due',
-      offset: 20,
+      sort: 'title',
+      direction: 'desc',
+      offset: 25,
     })
     expect(rpc).toHaveBeenCalledWith('lifecycle_queue_page', {
       p_tenant: tenant,
       p_query: 'Blue LAMP',
       p_stage: 'markdown_due',
-      p_offset: 20,
+      p_sort: 'title',
+      p_direction: 'desc',
+      p_limit: 25,
+      p_offset: 25,
     })
     expect(page).toEqual({
       rows: [{ ...row, current_price_ore: 25000, due_percent: '10' }],
       total: 41,
       dueCount: 3,
-      offset: 20,
-      limit: 20,
+      offset: 25,
+      limit: 25,
     })
   })
   it('defaults to an empty query, no stage and offset zero', async () => {
     const { client: c, rpc } = client({
-      data: { rows: [], total: 0, dueCount: 0, offset: 0, limit: 20 },
+      data: { rows: [], total: 0, dueCount: 0, offset: 0, limit: 25 },
       error: null,
     })
     await readLifecycleQueuePage(c, tenant)
@@ -59,6 +66,9 @@ describe('readLifecycleQueuePage', () => {
       p_tenant: tenant,
       p_query: '',
       p_stage: null,
+      p_sort: 'accepted',
+      p_direction: 'asc',
+      p_limit: 25,
       p_offset: 0,
     })
   })
@@ -78,6 +88,8 @@ describe('readLifecycleQueuePage', () => {
   it.each([
     [{ query: 'x'.repeat(121) }],
     [{ stage: 'bogus' }],
+    [{ sort: 'category' }],
+    [{ direction: 'sideways' }],
     [{ offset: -1 }],
     [{ offset: 1.5 }],
     [{ offset: 2147483648 }],
@@ -88,9 +100,9 @@ describe('readLifecycleQueuePage', () => {
     ).rejects.toThrow()
     expect(rpc).not.toHaveBeenCalled()
   })
-  it('rejects a malformed tenant and a page that is not twenty rows', async () => {
+  it('rejects a malformed tenant and a page that is not twenty-five rows', async () => {
     const { client: c, rpc } = client({
-      data: { rows: [], total: 0, dueCount: 0, offset: 0, limit: 25 },
+      data: { rows: [], total: 0, dueCount: 0, offset: 0, limit: 20 },
       error: null,
     })
     await expect(readLifecycleQueuePage(c, 'not-a-tenant')).rejects.toThrow()

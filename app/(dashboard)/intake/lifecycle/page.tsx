@@ -1,3 +1,10 @@
+import {
+  InventoryTableShell,
+  InventorySortHeader,
+  InventoryFooter,
+} from '@/components/intake/inventory-table-shell'
+import { LifecycleTableRow } from '@/components/intake/lifecycle-table-row'
+import { Handshake, Store } from 'lucide-react'
 import { WorkingForm } from '@/components/platform/working-form'
 import { ItemPhotoPreview } from '@/components/intake/item-photo-preview'
 import { readItemPhotos } from '@/lib/engine/item-photos'
@@ -12,6 +19,8 @@ import {
   readLifecycleQueuePage,
   readMarkdownRuns,
   lifecycleStage,
+  lifecycleSort,
+  type LifecycleSort,
 } from '@/lib/engine/lifecycle'
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import { ApplyDueMarkdowns } from '@/components/intake/apply-due-markdowns'
@@ -31,6 +40,9 @@ export default async function Lifecycle({
     d = all.lifecycle
   const p = await searchParams
   const stage = lifecycleStage.safeParse(p.stage)
+  const parsedSort = lifecycleSort.safeParse(p.sort)
+  const sort = parsedSort.success ? parsedSort.data : 'accepted'
+  const direction = p.direction === 'desc' ? 'desc' : 'asc'
   const query = typeof p.q === 'string' ? p.q.trim().slice(0, 120) : ''
   const candidatePage =
     typeof p.page === 'string' && /^\d+$/.test(p.page) ? Number(p.page) : 1
@@ -38,14 +50,16 @@ export default async function Lifecycle({
   const requestedPage =
     Number.isSafeInteger(candidatePage) &&
     candidatePage > 0 &&
-    (candidatePage - 1) * 20 <= 2_147_483_647
+    (candidatePage - 1) * 25 <= 2_147_483_647
       ? candidatePage
       : 1
   const [paged, runs, policy] = await Promise.all([
     readLifecycleQueuePage(ctx.client, active.id, {
       query,
+      sort,
+      direction,
       stage: stage.success ? stage.data : undefined,
-      offset: (requestedPage - 1) * 20,
+      offset: (requestedPage - 1) * 25,
     }),
     readMarkdownRuns(ctx.client, active.id),
     readStorePolicy(ctx.client, active.id),
@@ -65,24 +79,61 @@ export default async function Lifecycle({
         row.item_id.toLowerCase().includes(needle)),
   )
   const total = paged?.total ?? filtered.length
-  const pages = Math.max(1, Math.ceil(total / 20))
+  const pages = Math.max(1, Math.ceil(total / 25))
   const page = Math.min(pages, requestedPage)
-  const pageHref = (number: number) =>
-    `/intake/lifecycle?${new URLSearchParams({ q: query, stage: stage.success ? stage.data : '', page: String(number) })}`
+  const pageHref = (
+    number: number,
+    key: LifecycleSort = sort,
+    dir: 'asc' | 'desc' = direction,
+  ) =>
+    `/intake/lifecycle?${new URLSearchParams({ q: query, stage: stage.success ? stage.data : '', page: String(number), sort: key, direction: dir })}`
   if (requestedPage > pages) redirect(pageHref(pages))
-  const visible = paged?.rows ?? filtered.slice((page - 1) * 20, page * 20)
+  // Legacy rollout fallback: retain the same deterministic order for facts
+  // available before the new overload is installed.
+  const field = {
+    title: 'title',
+    seller: 'seller_name',
+    price: 'current_price_ore',
+    stage: 'stage',
+    accepted: 'accepted_at',
+    periodEnd: 'period_end',
+  } as const
+  filtered.sort((a, b) => {
+    const av = a[field[sort]],
+      bv = b[field[sort]]
+    const compared =
+      av == null
+        ? bv == null
+          ? 0
+          : 1
+        : bv == null
+          ? -1
+          : (typeof av === 'number' && typeof bv === 'number'
+              ? av - bv
+              : String(av)
+                  .toLowerCase()
+                  .localeCompare(String(bv).toLowerCase())) *
+            (direction === 'asc' ? 1 : -1)
+    return compared || a.item_id.localeCompare(b.item_id)
+  })
+  const visible = paged?.rows ?? filtered.slice((page - 1) * 25, page * 25)
   const photos = new Map(
     (
-      await readItemPhotos(
-        ctx.client,
-        active.id,
-        visible.map((r) => r.item_id),
+      await Promise.all(
+        [0, 20].map((offset) =>
+          readItemPhotos(
+            ctx.client,
+            active.id,
+            visible.slice(offset, offset + 20).map((r) => r.item_id),
+          ),
+        ),
       )
-    ).map((p) => [p.itemId, p]),
+    )
+      .flat()
+      .map((p) => [p.itemId, p]),
   )
   const clearHref =
-    '/intake/lifecycle?' +
-    new URLSearchParams({ stage: stage.success ? stage.data : '' })
+    '/intake/lifecycle?' + new URLSearchParams({ sort, direction })
   // Both search and stage filters affect the list, never the batch command.
   const dueCount =
     paged?.dueCount ??
@@ -94,6 +145,20 @@ export default async function Lifecycle({
     })
   const stageLabel = (value: keyof typeof d.stages) =>
     value === 'markdown_due' ? all.items.markdownWaiting : d.stages[value]
+  const header = (key: LifecycleSort, label: string, numeric = false) => (
+    <InventorySortHeader
+      selected={sort === key}
+      direction={direction}
+      href={pageHref(
+        1,
+        key,
+        sort === key && direction === 'asc' ? 'desc' : 'asc',
+      )}
+      label={label}
+      d={all.items.directory}
+      numeric={numeric}
+    />
+  )
   return (
     <div className="lifecycle-page">
       <div className="page-heading">
@@ -130,60 +195,71 @@ export default async function Lifecycle({
           </ul>
         )}
       </details>
-      <div className="card lifecycle-workspace">
-        <WorkingForm action="/intake/lifecycle" className="lifecycle-filter">
-          <div className="field">
-            <label htmlFor="lifecycle-query">{d.search}</label>
-            <input
-              key={query}
-              id="lifecycle-query"
-              type="search"
-              name="q"
-              maxLength={120}
-              defaultValue={query}
-              placeholder={d.searchHint}
-            />
+      <div className="inventory-panel lifecycle-table-panel">
+        <WorkingForm action="/intake/lifecycle" className="inventory-filters">
+          <input type="hidden" name="sort" value={sort} />
+          <input type="hidden" name="direction" value={direction} />
+          <div className="inventory-basic">
+            <div className="field">
+              <label htmlFor="lifecycle-query">{d.search}</label>
+              <input
+                key={query}
+                id="lifecycle-query"
+                type="search"
+                name="q"
+                maxLength={120}
+                defaultValue={query}
+                placeholder={d.searchHint}
+              />
+            </div>
+            <div className="field">
+              <label htmlFor="lifecycle-stage">{d.filter}</label>
+              <select
+                id="lifecycle-stage"
+                name="stage"
+                defaultValue={stage.success ? stage.data : ''}
+              >
+                <option value="">{d.all}</option>
+                {lifecycleStage.options.map((s) => (
+                  <option key={s} value={s}>
+                    {stageLabel(s)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <button className="btn btn-secondary">
+              {all.items.searchButton}
+            </button>
+            {(query || stage.success) && (
+              <Link className="text-link" href={clearHref}>
+                {all.items.clearFilters}
+              </Link>
+            )}
           </div>
-          <div className="field">
-            <label htmlFor="lifecycle-stage">{d.filter}</label>
-            <select
-              id="lifecycle-stage"
-              name="stage"
-              defaultValue={stage.success ? stage.data : ''}
-            >
-              <option value="">{d.all}</option>
-              {lifecycleStage.options.map((s) => (
-                <option key={s} value={s}>
-                  {stageLabel(s)}
-                </option>
-              ))}
-            </select>
-          </div>
-          <button className="btn btn-secondary">
-            {all.items.searchButton}
-          </button>
-          {query && (
-            <Link className="text-link" href={clearHref}>
-              {d.clearSearch}
-            </Link>
-          )}
         </WorkingForm>
-        <p>{d.matches.replace('{count}', String(total))}</p>
-        <section className="lifecycle-list" aria-label={d.title}>
-          {total === 0 && <p>{query ? d.noMatches : d.empty}</p>}
-          {visible.map((r) => (
-            <details
-              id={'lifecycle-' + r.item_id}
-              key={r.item_id}
-              className="lifecycle-row"
-              open={query !== '' && total === 1}
-            >
-              <summary>
-                <span className="lifecycle-item">
-                  {r.title || all.items.item}
-                  {photos.get(r.item_id)?.defaultPhotoId && (
+        <InventoryTableShell label={d.title}>
+          <thead>
+            <tr>
+              {header('title', all.items.item)}
+              <th scope="col">{all.quickIntake.category}</th>
+              {header('seller', all.quickIntake.seller)}
+              {header('price', all.quickIntake.price, true)}
+              {header('stage', all.items.stage)}
+              {header('accepted', all.items.directory.registered)}
+              {header('periodEnd', all.items.directory.periodEnd)}
+              <th scope="col">{all.items.ownership}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {visible.map((r) => (
+              <LifecycleTableRow
+                id={r.item_id}
+                key={`${r.item_id}-${query}-${page}-${sort}-${direction}`}
+                title={r.title || all.items.item}
+                initiallyOpen={query !== '' && total === 1}
+                photo={
+                  photos.get(r.item_id)?.defaultPhotoId ? (
                     <ItemPhotoPreview
-                      key={photos.get(r.item_id)!.defaultPhotoId}
                       tenantId={active.id}
                       itemId={r.item_id}
                       photoId={photos.get(r.item_id)!.defaultPhotoId!}
@@ -191,25 +267,63 @@ export default async function Lifecycle({
                       title={r.title || all.items.item}
                       d={all.itemPhotos}
                     />
-                  )}
-                </span>
-                <span
-                  className={`lifecycle-status lifecycle-status-${r.stage}`}
-                >
-                  {stageLabel(r.stage)}
-                </span>
-                <strong className="lifecycle-price">
-                  {r.current_price_ore === null
-                    ? '—'
-                    : `${formatSignedOre(r.current_price_ore)} ${currency}`}
-                </strong>
-                {!['sold', 'ended'].includes(r.stage) && (
-                  <span className="lifecycle-end">
-                    {d.periodEnd} {when(r.period_end)}
-                  </span>
-                )}
-              </summary>
-              <div className="lifecycle-detail">
+                  ) : null
+                }
+                cells={
+                  <>
+                    <td>
+                      <span
+                        className="inventory-cell-text"
+                        title={r.category ?? undefined}
+                      >
+                        {r.category || '—'}
+                      </span>
+                    </td>
+                    <td>
+                      {r.seller_id ? (
+                        <Link
+                          className="inventory-seller"
+                          href={`/intake/sellers/${r.seller_id}`}
+                          title={r.seller_name ?? undefined}
+                        >
+                          {r.seller_name || '—'}
+                        </Link>
+                      ) : (
+                        '—'
+                      )}
+                    </td>
+                    <td className="inventory-number inventory-price">
+                      {r.current_price_ore === null
+                        ? '—'
+                        : `${formatSignedOre(r.current_price_ore)} ${currency}`}
+                    </td>
+                    <td className="inventory-state">
+                      <span
+                        className={`lifecycle-status lifecycle-status-${r.stage}`}
+                      >
+                        {stageLabel(r.stage)}
+                      </span>
+                    </td>
+                    <td className="inventory-date">{when(r.accepted_at)}</td>
+                    <td className="inventory-date">{when(r.period_end)}</td>
+                    <td>
+                      <span
+                        className="lifecycle-ownership"
+                        title={all.items.ownershipKinds[r.ownership]}
+                      >
+                        {r.ownership === 'store' ? (
+                          <Store size={16} aria-hidden="true" />
+                        ) : (
+                          <Handshake size={16} aria-hidden="true" />
+                        )}
+                        <span className="sr-only">
+                          {all.items.ownershipKinds[r.ownership]}
+                        </span>
+                      </span>
+                    </td>
+                  </>
+                }
+              >
                 <small className="lifecycle-reference">
                   {'I-' + r.item_id.slice(0, 8).toUpperCase()}
                 </small>
@@ -241,27 +355,22 @@ export default async function Lifecycle({
                     intake={all.intake}
                   />
                 )}
-              </div>
-            </details>
-          ))}
-          {pages > 1 && (
-            <nav className="lifecycle-pagination" aria-label={d.title}>
-              {page > 1 && (
-                <Link className="btn btn-secondary" href={pageHref(page - 1)}>
-                  {d.previous}
-                </Link>
-              )}
-              <span>
-                {page} / {pages}
-              </span>
-              {page < pages && (
-                <Link className="btn btn-secondary" href={pageHref(page + 1)}>
-                  {d.next}
-                </Link>
-              )}
-            </nav>
-          )}
-        </section>
+              </LifecycleTableRow>
+            ))}
+          </tbody>
+        </InventoryTableShell>
+        {total === 0 && (
+          <p className="inventory-message">{query ? d.noMatches : d.empty}</p>
+        )}
+        <InventoryFooter
+          total={total}
+          offset={(page - 1) * 25}
+          count={visible.length}
+          page={page}
+          pages={pages}
+          href={pageHref}
+          d={all.items}
+        />
       </div>
     </div>
   )

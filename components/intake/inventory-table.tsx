@@ -5,14 +5,11 @@ import { InventoryItemLink } from './inventory-item-link'
 import { InventorySelection, InventorySelectAll } from './inventory-selection'
 import './inventory-edit.css'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
+import { Handshake, Store, TrendingDown } from 'lucide-react'
 import {
-  ArrowDown,
-  ArrowUp,
-  ArrowUpDown,
-  Handshake,
-  Store,
-  TrendingDown,
-} from 'lucide-react'
+  InventoryTableShell,
+  InventorySortHeader,
+} from './inventory-table-shell'
 import { dictionary, intlLocale, type Locale } from '@/lib/i18n'
 import { formatOre } from '@/lib/engine/items'
 import type { DirectoryItem, ItemSort } from '@/lib/engine/item-directory'
@@ -74,30 +71,15 @@ export function InventoryTable({
     const selected = sort === key
     const next = selected && direction === 'asc' ? 'desc' : 'asc'
     return (
-      <th
-        scope="col"
-        className={numeric ? 'inventory-number' : undefined}
-        aria-sort={
-          selected ? (direction === 'asc' ? 'ascending' : 'descending') : 'none'
-        }
-      >
-        <Link
-          warningScope={preserveDraft ? 'inventory-table' : undefined}
-          href={sortHref(key, next)}
-          aria-label={`${label}: ${next === 'asc' ? t.sortAsc : t.sortDesc}`}
-        >
-          {label}
-          {selected ? (
-            direction === 'asc' ? (
-              <ArrowUp size={13} aria-hidden="true" />
-            ) : (
-              <ArrowDown size={13} aria-hidden="true" />
-            )
-          ) : (
-            <ArrowUpDown size={13} aria-hidden="true" />
-          )}
-        </Link>
-      </th>
+      <InventorySortHeader
+        selected={selected}
+        direction={direction}
+        href={sortHref(key, next)}
+        label={label}
+        d={t}
+        numeric={numeric}
+        preserveDraft={preserveDraft}
+      />
     )
   }
 
@@ -110,156 +92,148 @@ export function InventoryTable({
         )
         .map((i) => i.id)}
     >
-      <div
-        className="inventory-table-scroll"
-        role="region"
-        aria-label={d.list}
-        tabIndex={0}
-      >
-        <table className="inventory-table">
-          <caption className="sr-only">{d.list}</caption>
-          <thead>
-            <InventoryActions
-              items={items}
+      <InventoryTableShell label={d.list}>
+        <thead>
+          <InventoryActions
+            items={items}
+            tenantId={tenantId}
+            groups={groups}
+            types={types}
+            locale={locale}
+            write={write}
+            manage={manage}
+            d={all}
+          />
+          <tr>
+            <th scope="col">
+              <InventorySelectAll label={all.itemWorkflow.selectAll} />
+            </th>
+            {header('title', d.item)}
+            <th scope="col">
+              <span className="sr-only">{t.details}</span>
+            </th>
+            {header('category', all.quickIntake.category)}
+            <th scope="col">{all.quickIntake.itemType}</th>
+            <th scope="col">{all.itemWorkflow.group}</th>
+            {header('seller', all.quickIntake.seller)}
+            {header('price', all.quickIntake.price, true)}
+            {header('stage', d.stage)}
+            <th scope="col">{all.itemSync.title}</th>
+            {header('accepted', t.registered)}
+            {header('periodEnd', t.periodEnd)}
+            <th scope="col">
+              <span className="sr-only">{d.ownership}</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((i) => (
+            <InventoryEditableRow
+              key={i.id}
+              item={i}
               tenantId={tenantId}
-              groups={groups}
-              types={types}
-              locale={locale}
               write={write}
-              manage={manage}
+              types={types
+                .filter(
+                  (type) =>
+                    type.active || type.slug === i.classification?.itemType,
+                )
+                .map((type) => ({
+                  id: type.slug,
+                  name: labelOf(type, locale),
+                }))}
+              groups={groups}
+              categories={categoryChoices(categories, locale)}
               d={all}
-            />
-            <tr>
-              <th scope="col">
-                <InventorySelectAll label={all.itemWorkflow.selectAll} />
-              </th>
-              {header('title', d.item)}
-              <th scope="col">
-                <span className="sr-only">{t.details}</span>
-              </th>
-              {header('category', all.quickIntake.category)}
-              <th scope="col">{all.quickIntake.itemType}</th>
-              <th scope="col">{all.itemWorkflow.group}</th>
-              {header('seller', all.quickIntake.seller)}
-              {header('price', all.quickIntake.price, true)}
-              {header('stage', d.stage)}
-              <th scope="col">{all.itemSync.title}</th>
-              {header('accepted', t.registered)}
-              {header('periodEnd', t.periodEnd)}
-              <th scope="col">
-                <span className="sr-only">{d.ownership}</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((i) => (
-              <InventoryEditableRow
-                key={i.id}
-                item={i}
-                tenantId={tenantId}
-                write={write}
-                types={types
-                  .filter(
-                    (type) =>
-                      type.active || type.slug === i.classification?.itemType,
-                  )
-                  .map((type) => ({
-                    id: type.slug,
-                    name: labelOf(type, locale),
-                  }))}
-                groups={groups}
-                categories={categoryChoices(categories, locale)}
-                d={all}
-                indicators={
-                  <div className="inventory-indicators">
-                    {i.defaultPhotoId && (
-                      <ItemPhotoPreview
-                        tenantId={tenantId}
-                        itemId={i.id}
-                        photoId={i.defaultPhotoId}
-                        count={i.photoCount}
-                        title={i.title || d.item}
-                        d={all.itemPhotos}
-                      />
-                    )}
-                  </div>
-                }
-              >
-                <td>
-                  {i.sellerId ? (
-                    <Link
-                      className="inventory-seller"
-                      href={`/intake/sellers/${i.sellerId}`}
-                      title={i.sellerName || undefined}
-                    >
-                      {i.sellerName || '—'}
-                    </Link>
-                  ) : (
-                    '—'
+              indicators={
+                <div className="inventory-indicators">
+                  {i.defaultPhotoId && (
+                    <ItemPhotoPreview
+                      tenantId={tenantId}
+                      itemId={i.id}
+                      photoId={i.defaultPhotoId}
+                      count={i.photoCount}
+                      title={i.title || d.item}
+                      d={all.itemPhotos}
+                    />
                   )}
-                </td>
-                <td className="inventory-number inventory-price">
-                  {i.currentPriceOre === null
-                    ? '—'
-                    : `${formatOre(i.currentPriceOre)} ${currency}`}
-                </td>
-                <td className="inventory-state" data-stage={i.stage}>
-                  {i.stage === 'markdown_due' ? (
-                    <ItemIndicator
-                      warning
-                      label={
-                        i.nextMarkdownAt
-                          ? t.markdownOn
-                              .replace('{date}', date(i.nextMarkdownAt))
-                              .replace(
-                                '{percent}',
-                                String(i.nextMarkdownPercent ?? ''),
-                              )
-                          : d.markdownWaiting
-                      }
-                    >
-                      <TrendingDown size={17} aria-hidden="true" />
-                    </ItemIndicator>
-                  ) : (
-                    stageLabel(i.stage)
-                  )}
-                </td>
-                <td>
-                  {i.sync?.length
-                    ? i.sync.map((connection) => (
-                        <InventoryItemLink
-                          key={connection.connectionId}
-                          className="item-sync-state inventory-sync-link"
-                          data-state={connection.status}
-                          itemId={i.id}
-                          hash="#sync-status"
-                        >
-                          {all.itemSync.providers[connection.provider]} ·{' '}
-                          {all.itemSync.states[connection.status]}
-                        </InventoryItemLink>
-                      ))
-                    : '—'}
-                </td>
-                <td className="inventory-date">
-                  <time dateTime={i.acceptedAt}>{date(i.acceptedAt)}</time>
-                </td>
-                <td className="inventory-date">
-                  <time dateTime={i.periodEnd}>{date(i.periodEnd)}</time>
-                </td>
-                <td>
-                  <ItemIndicator label={d.ownershipKinds[i.ownership]}>
-                    {i.ownership === 'store' ? (
-                      <Store size={16} aria-hidden="true" />
-                    ) : (
-                      <Handshake size={16} aria-hidden="true" />
-                    )}
+                </div>
+              }
+            >
+              <td>
+                {i.sellerId ? (
+                  <Link
+                    className="inventory-seller"
+                    href={`/intake/sellers/${i.sellerId}`}
+                    title={i.sellerName || undefined}
+                  >
+                    {i.sellerName || '—'}
+                  </Link>
+                ) : (
+                  '—'
+                )}
+              </td>
+              <td className="inventory-number inventory-price">
+                {i.currentPriceOre === null
+                  ? '—'
+                  : `${formatOre(i.currentPriceOre)} ${currency}`}
+              </td>
+              <td className="inventory-state" data-stage={i.stage}>
+                {i.stage === 'markdown_due' ? (
+                  <ItemIndicator
+                    warning
+                    label={
+                      i.nextMarkdownAt
+                        ? t.markdownOn
+                            .replace('{date}', date(i.nextMarkdownAt))
+                            .replace(
+                              '{percent}',
+                              String(i.nextMarkdownPercent ?? ''),
+                            )
+                        : d.markdownWaiting
+                    }
+                  >
+                    <TrendingDown size={17} aria-hidden="true" />
                   </ItemIndicator>
-                </td>
-              </InventoryEditableRow>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                ) : (
+                  stageLabel(i.stage)
+                )}
+              </td>
+              <td>
+                {i.sync?.length
+                  ? i.sync.map((connection) => (
+                      <InventoryItemLink
+                        key={connection.connectionId}
+                        className="item-sync-state inventory-sync-link"
+                        data-state={connection.status}
+                        itemId={i.id}
+                        hash="#sync-status"
+                      >
+                        {all.itemSync.providers[connection.provider]} ·{' '}
+                        {all.itemSync.states[connection.status]}
+                      </InventoryItemLink>
+                    ))
+                  : '—'}
+              </td>
+              <td className="inventory-date">
+                <time dateTime={i.acceptedAt}>{date(i.acceptedAt)}</time>
+              </td>
+              <td className="inventory-date">
+                <time dateTime={i.periodEnd}>{date(i.periodEnd)}</time>
+              </td>
+              <td>
+                <ItemIndicator label={d.ownershipKinds[i.ownership]}>
+                  {i.ownership === 'store' ? (
+                    <Store size={16} aria-hidden="true" />
+                  ) : (
+                    <Handshake size={16} aria-hidden="true" />
+                  )}
+                </ItemIndicator>
+              </td>
+            </InventoryEditableRow>
+          ))}
+        </tbody>
+      </InventoryTableShell>
 
       {children}
     </InventorySelection>

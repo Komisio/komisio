@@ -6161,6 +6161,7 @@ button.text-link:hover:not(:disabled) {
   margin-bottom: 16px;
 }
 .inventory-table-scroll {
+  position: relative;
   overflow: auto;
   max-width: 100%;
   border-top: 1px solid var(--line);
@@ -6349,6 +6350,52 @@ button.text-link:hover:not(:disabled) {
 }
 .inventory-pagination [aria-disabled] {
   opacity: 0.45;
+}
+.lifecycle-table-panel > .inventory-filters {
+  padding-bottom: 16px;
+}
+.lifecycle-table-title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.lifecycle-expand {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.lifecycle-expand svg {
+  flex-shrink: 0;
+}
+.lifecycle-expand span {
+  overflow-wrap: anywhere;
+}
+.lifecycle-ownership {
+  display: inline-flex;
+  color: var(--muted);
+}
+.lifecycle-table-panel .lifecycle-detail-row > td {
+  padding: 0;
+}
+.lifecycle-table-panel .lifecycle-detail {
+  position: sticky;
+  left: 0;
+  width: min(100%, calc(100vw - 80px));
+  max-width: 1000px;
+  box-sizing: border-box;
+  padding: 16px;
+  white-space: normal;
+}
+.lifecycle-table-panel .lifecycle-status {
+  margin: 0;
 }
 @media (max-width: 900px) {
   .inventory-advanced-grid {

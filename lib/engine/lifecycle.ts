@@ -81,10 +81,21 @@ export const lifecycleStage = z.enum([
   'ended',
   'sold',
 ])
+export const lifecycleSort = z.enum([
+  'title',
+  'seller',
+  'price',
+  'stage',
+  'accepted',
+  'periodEnd',
+])
+export type LifecycleSort = z.infer<typeof lifecycleSort>
 const ore = z.union([z.number().int(), z.string()]).transform(Number)
 const row = z.object({
   item_id: z.guid(),
   title: z.string().nullable().optional(),
+  category: z.string().nullable().optional(),
+  seller_name: z.string().nullable().optional(),
   seller_id: z.guid().nullable(),
   ownership: z.enum(['consignment', 'store']),
   stage: lifecycleStage,
@@ -121,7 +132,7 @@ const lifecyclePage = z.object({
   total: z.number().int().nonnegative(),
   dueCount: z.number().int().nonnegative(),
   offset: z.number().int().nonnegative(),
-  limit: z.literal(20),
+  limit: z.literal(25),
 })
 export type LifecyclePage = z.infer<typeof lifecyclePage>
 
@@ -129,7 +140,13 @@ export type LifecyclePage = z.infer<typeof lifecyclePage>
 export async function readLifecycleQueuePage(
   client: SupabaseClient,
   tenantInput: string,
-  options: { query?: string; stage?: string; offset?: number } = {},
+  options: {
+    query?: string
+    stage?: string
+    offset?: number
+    sort?: LifecycleSort
+    direction?: 'asc' | 'desc'
+  } = {},
 ): Promise<LifecyclePage | null> {
   const r = await client.rpc('lifecycle_queue_page', {
     p_tenant: z.uuid().parse(tenantInput),
@@ -139,6 +156,9 @@ export async function readLifecycleQueuePage(
       .max(120)
       .parse(options.query ?? ''),
     p_stage: options.stage ? lifecycleStage.parse(options.stage) : null,
+    p_sort: lifecycleSort.parse(options.sort ?? 'accepted'),
+    p_direction: z.enum(['asc', 'desc']).parse(options.direction ?? 'asc'),
+    p_limit: 25,
     p_offset: z
       .number()
       .int()

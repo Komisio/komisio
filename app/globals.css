@@ -6091,6 +6091,12 @@ button.text-link:hover:not(:disabled) {
 .inventory-filters {
   padding: 16px 20px 0;
 }
+.inventory-filter-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
 .inventory-basic {
   display: flex;
   align-items: end;

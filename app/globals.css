@@ -4053,7 +4053,7 @@ button.text-link:hover:not(:disabled) {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
   }
-  .stock-table-wrap {
+  .stock-table-wrap:not(.import-preview) {
     overflow: visible;
   }
   .stock-table,
@@ -8737,7 +8737,7 @@ button.text-link:hover:not(:disabled) {
 .stock-overview .stock-sales-metrics {
   gap: 1rem;
 }
-.stock-table-wrap {
+.stock-overview .stock-table-wrap {
   position: relative;
 }
 .stock-empty {
@@ -8761,17 +8761,17 @@ button.text-link:hover:not(:disabled) {
   .stock-stage-links > a {
     flex-shrink: 0;
   }
-  .stock-table td {
+  .stock-overview .stock-table td {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 0.75rem;
     overflow-wrap: anywhere;
   }
-  .stock-table td::before {
+  .stock-overview .stock-table td::before {
     float: none;
     text-align: left;
   }
-  .stock-table th {
+  .stock-overview .stock-table th {
     overflow-wrap: anywhere;
   }
 }

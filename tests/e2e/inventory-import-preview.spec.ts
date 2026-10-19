@@ -105,7 +105,7 @@ test('owner checks a stock file without creating stock and can correct and retry
       ).rows[0].n,
     ).toBe(0)
     const response = await page.request.post('/api/import/items/preview', {
-      headers: { origin: 'http://127.0.0.1:3000' },
+      headers: { origin: new URL(page.url()).origin },
       data: {
         tenantId: randomUUID(),
         file: {

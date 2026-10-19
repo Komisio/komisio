@@ -107,6 +107,13 @@ test('preview, confirm custody, import and recover a lost response without dupli
     await page
       .getByRole('button', { name: d.inventoryImport.check, exact: true })
       .click()
+    const mobilePreview = page.locator('.stock-table-wrap.import-preview')
+    await expect(mobilePreview).toHaveCSS('overflow-y', 'auto')
+    await expect
+      .poll(() =>
+        mobilePreview.evaluate((node) => node.scrollHeight > node.clientHeight),
+      )
+      .toBe(true)
     await page
       .getByRole('checkbox', { name: d.inventoryImport.received })
       .check()
@@ -139,7 +146,7 @@ test('preview, confirm custody, import and recover a lost response without dupli
     })
     expect(denied.status()).toBe(403)
     const foreign = await page.request.post('/api/import/items', {
-      headers: { origin: 'http://127.0.0.1:3000' },
+      headers: { origin: new URL(page.url()).origin },
       data: { ...(requests[0] as object), tenantId: randomUUID() },
     })
     expect(foreign.status()).toBe(409)

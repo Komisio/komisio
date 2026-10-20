@@ -1,6 +1,6 @@
 'use client'
 import { useBusyState } from '@/components/platform/work-activity'
-import { useRef, useState } from 'react'
+import { useRef, useState, type ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
 import {
@@ -18,6 +18,7 @@ export function AiCreditsPanel({
   price,
   locale,
   d,
+  purchaseLinks,
 }: {
   tenantId: string
   state: AiCredits
@@ -26,6 +27,7 @@ export function AiCreditsPanel({
   price: CreditPrice
   locale: string
   d: Dictionary['credits']
+  purchaseLinks?: ReactNode
 }) {
   const running = useRef(false)
   const [current, setCurrent] = useState(state)
@@ -131,10 +133,13 @@ export function AiCreditsPanel({
       )}
       {current.ownKey && <p role="status">{fill(d.ownKeyActive)}</p>}
       {current.enabled && canBuy && !current.ownKey && (
-        <div className="row">
-          <Button disabled={busy !== ''} onClick={buy}>
-            {busy === 'buy' ? d.working : fill(d.buy)}
-          </Button>
+        <div>
+          <div className="row">
+            <Button disabled={busy !== ''} onClick={buy}>
+              {busy === 'buy' ? d.working : fill(d.buy)}
+            </Button>
+          </div>
+          {purchaseLinks}
         </div>
       )}
       {canManage && (

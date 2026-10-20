@@ -697,3 +697,5 @@ Staff Active filter (resolved 2026-10-18, owner #510): a small additive item-dir
 Stock lifecycle overview (resolved 2026-10-18, owner #511): an additional read RPC may return stock stage counts and ownership values. The item-directory filter may also express the same upcoming seven-day stock window, including pending markdowns and excluding sold, ended and expired periods. No lifecycle action or stock-membership rule changes.
 
 Invitation language (resolved 2026-10-20, owner #522): staff explicitly select the invitation language, defaulting to the store profile language then English. Do not infer it through recipient-profile lookups or the staff session. No membership or access-control rules change.
+
+Service legal links (#527): localized navigation is implemented without acceptance statements or tracking. Any acceptance wording, checkbox or terms-version storage still requires company-approved text and an explicit decision; website document translations and pricing discrepancies remain outside this repository.

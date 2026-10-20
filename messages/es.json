@@ -4541,5 +4541,14 @@
       "subject": "Se ha eliminado un método de verificación de tu cuenta",
       "note": "Si no has realizado este cambio, contacta con soporte de inmediato."
     }
+  },
+  "legal": {
+    "title": "Términos y privacidad",
+    "terms": "Condiciones de uso",
+    "privacy": "Política de privacidad",
+    "dpa": "Acuerdo de tratamiento de datos",
+    "pricing": "Precios",
+    "purchase": "Precios y condiciones",
+    "newTab": "se abre en una pestaña nueva"
   }
 }

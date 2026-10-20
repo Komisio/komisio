@@ -4541,5 +4541,14 @@
       "subject": "Tililtäsi on poistettu vahvistustapa",
       "note": "Jos et tehnyt tätä muutosta, ota heti yhteyttä tukeen."
     }
+  },
+  "legal": {
+    "title": "Sopimukset ja tietosuoja",
+    "terms": "Käyttöehdot",
+    "privacy": "Tietosuojaseloste",
+    "dpa": "Henkilötietojen käsittelysopimus",
+    "pricing": "Hinnat",
+    "purchase": "Hinnat ja ehdot",
+    "newTab": "avautuu uuteen välilehteen"
   }
 }

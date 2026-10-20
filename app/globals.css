@@ -8775,3 +8775,18 @@ button.text-link:hover:not(:disabled) {
     overflow-wrap: anywhere;
   }
 }
+
+.legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1rem;
+  margin-top: 1rem;
+}
+.legal-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}

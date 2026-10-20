@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button'
 import { Feedback } from '@/components/platform/feedback'
 import { Brand } from '@/components/platform/brand'
 import { AdsConsentControl } from '@/components/platform/ads-consent'
+import { LegalLinks } from '@/components/platform/legal-links'
 import { MarketingConsentField } from '@/components/platform/marketing-consent-field'
 import { signupMarketingMetadata } from '@/lib/platform/marketing-consent'
 const subscribe = () => () => {}
@@ -29,12 +30,14 @@ export function AuthForm({
   callbackError = false,
   initialLocale = 'sv',
   marketingConsent = false,
+  legalBaseUrl,
 }: {
   mode: 'login' | 'register' | 'reset' | 'password'
   next?: string
   callbackError?: boolean
   initialLocale?: Locale
   marketingConsent?: boolean
+  legalBaseUrl?: string
 }) {
   const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const [locale, setLocale] = useState<Locale>(initialLocale)
@@ -186,7 +189,11 @@ export function AuthForm({
           </div>
           <h1>{title}</h1>
           {mode === 'register' && destination === '/' && (
-            <AdsConsentControl d={d} locale={locale} />
+            <AdsConsentControl
+              d={d}
+              locale={locale}
+              legalBaseUrl={legalBaseUrl}
+            />
           )}
           <p>
             {(mode === 'register' || mode === 'login') &&
@@ -285,6 +292,9 @@ export function AuthForm({
             <Button variant="ghost" onClick={resend} disabled={busy}>
               {d.resend}
             </Button>
+          )}
+          {mode === 'register' && (
+            <LegalLinks locale={locale} baseUrl={legalBaseUrl} d={d.legal} />
           )}
           <p className="auth-footer">
             {mode === 'login' ? (

@@ -3,6 +3,7 @@
 import { useState, useSyncExternalStore } from 'react'
 import type { Dictionary } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
+import { legalUrl } from '@/lib/platform/legal'
 import {
   adsConfiguration,
   adsConsentValue,
@@ -32,12 +33,15 @@ const serverSnapshot = () => null
 export function AdsConsentControl({
   d,
   locale,
+  legalBaseUrl,
 }: {
   d: Dictionary
   locale: string
+  legalBaseUrl?: string
 }) {
   const consent = useSyncExternalStore(subscribe, snapshot, serverSnapshot)
   const [editing, setEditing] = useState(false)
+  const privacyUrl = legalUrl(locale, 'privacy', legalBaseUrl)
   if (!config) return null
 
   function choose(value: Exclude<AdsConsent, null>) {
@@ -56,13 +60,16 @@ export function AdsConsentControl({
         <>
           <p>
             {d.adsMeasurement.intro}{' '}
-            <a
-              href={`https://komisio.com/${locale === 'sv' ? 'sv' : 'en'}/privacy/`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {d.adsMeasurement.details}
-            </a>
+            {privacyUrl && (
+              <a
+                href={privacyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${d.adsMeasurement.details} (${d.legal.newTab})`}
+              >
+                {d.adsMeasurement.details}
+              </a>
+            )}
           </p>
           <div className="row">
             <Button

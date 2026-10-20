@@ -4535,5 +4535,14 @@
       "subject": "En bekreftelsesmetode er fjernet fra kontoen din",
       "note": "Kontakt kundestøtte umiddelbart hvis du ikke gjorde denne endringen."
     }
+  },
+  "legal": {
+    "title": "Vilkår og personvern",
+    "terms": "Brukervilkår",
+    "privacy": "Personvernerklæring",
+    "dpa": "Databehandleravtale",
+    "pricing": "Priser",
+    "purchase": "Priser og vilkår",
+    "newTab": "åpnes i en ny fane"
   }
 }

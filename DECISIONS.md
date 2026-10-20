@@ -1139,3 +1139,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-20: #524 tests existing PayPal POS currency/VAT behavior without changing it. Workspace percentages and receipt amounts retain fixed decimals and ISO currency codes; surrounding labels follow locale. Emoji receipt truncation is tracked separately in #528.
 
 - 2026-10-20: #522 seller mail uses seller language, then store language, then English, with whole-template fallback and exact localized amounts. Staff invitations have an explicit language choice, defaulting to store language then English. Existing message history is unchanged.
+
+- 2026-10-20: Operator-configured legal links follow all eight product locales. Unset or invalid base URLs hide links. Document navigation adds no acceptance statement, checkbox or terms-version record; those require separately approved wording and decisions (#527).

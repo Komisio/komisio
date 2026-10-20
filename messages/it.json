@@ -4535,5 +4535,14 @@
       "subject": "È stato rimosso un metodo di verifica dal tuo account",
       "note": "Se non hai effettuato questa modifica, contatta subito il supporto."
     }
+  },
+  "legal": {
+    "title": "Termini e privacy",
+    "terms": "Termini di servizio",
+    "privacy": "Informativa sulla privacy",
+    "dpa": "Accordo sul trattamento dei dati",
+    "pricing": "Prezzi",
+    "purchase": "Prezzi e condizioni",
+    "newTab": "si apre in una nuova scheda"
   }
 }

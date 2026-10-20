@@ -4541,5 +4541,14 @@
       "subject": "Eine Bestätigungsmethode wurde aus deinem Konto entfernt",
       "note": "Wenn du diese Änderung nicht vorgenommen hast, kontaktiere sofort den Support."
     }
+  },
+  "legal": {
+    "title": "Verträge und Datenschutz",
+    "terms": "Nutzungsbedingungen",
+    "privacy": "Datenschutzerklärung",
+    "dpa": "Auftragsverarbeitungsvertrag",
+    "pricing": "Preise",
+    "purchase": "Preise und Bedingungen",
+    "newTab": "öffnet in einem neuen Tab"
   }
 }

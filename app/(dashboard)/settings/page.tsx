@@ -1,4 +1,6 @@
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
+import { LegalLinks } from '@/components/platform/legal-links'
+import { legalBaseUrl as configuredLegalBaseUrl } from '@/lib/platform/legal'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { VocabularySettings } from '@/components/intake/vocabulary-settings'
 import { readAttributeVocabulary } from '@/lib/engine/attributes'
@@ -80,6 +82,18 @@ export default async function Settings({
   const query = await searchParams
   const ctx = await requirePlatform()
   const d = dictionary(ctx.locale)
+  const legalBaseUrl = configuredLegalBaseUrl(
+    process.env.KOMISIO_LEGAL_BASE_URL,
+  )
+  const hasLegal = Boolean(legalBaseUrl)
+  const purchaseLinks = (
+    <LegalLinks
+      locale={ctx.locale}
+      baseUrl={legalBaseUrl}
+      d={d.legal}
+      pricing
+    />
+  )
   const countryNames = new Intl.DisplayNames([intlLocale(ctx.locale)], {
     type: 'region',
   })
@@ -194,6 +208,7 @@ export default async function Settings({
             steps: d.settingsHelp[tab],
           }}
         />
+        {hasLegal && <a href="#settings-legal">{d.legal.title}</a>}
       </div>
       {visible.length > 1 && (
         <nav className="view-tabs" aria-label={d.settingsTabsLabel}>
@@ -261,6 +276,7 @@ export default async function Settings({
           price={creditPrice}
           locale={ctx.locale}
           d={d.credits}
+          purchaseLinks={purchaseLinks}
         />
       )}
       {tab === 'connectors' && connectorsEnabled() && (
@@ -513,6 +529,7 @@ export default async function Settings({
                         : null
                     }
                     d={d.plans}
+                    purchaseLinks={purchaseLinks}
                   />
                 ) : null
               }
@@ -559,6 +576,16 @@ export default async function Settings({
             </section>
           )}
         </div>
+      )}
+      {hasLegal && (
+        <section
+          className="card"
+          id="settings-legal"
+          aria-labelledby="settings-legal-title"
+        >
+          <h2 id="settings-legal-title">{d.legal.title}</h2>
+          <LegalLinks locale={ctx.locale} baseUrl={legalBaseUrl} d={d.legal} />
+        </section>
       )}
     </div>
   )

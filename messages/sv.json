@@ -4535,5 +4535,14 @@
       "subject": "En verifieringsmetod har tagits bort från ditt konto",
       "note": "Kontakta supporten omedelbart om du inte gjorde den här ändringen."
     }
+  },
+  "legal": {
+    "title": "Villkor och integritet",
+    "terms": "Användarvillkor",
+    "privacy": "Integritetspolicy",
+    "dpa": "Personuppgiftsbiträdesavtal",
+    "pricing": "Priser",
+    "purchase": "Priser och villkor",
+    "newTab": "öppnas i ny flik"
   }
 }

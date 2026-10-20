@@ -1,6 +1,6 @@
 'use client'
 import { useBusyState } from '@/components/platform/work-activity'
-import { useRef, useState } from 'react'
+import { useRef, useState, type ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
 import type { PlanStatus } from '@/lib/engine/plans'
@@ -12,12 +12,14 @@ export function BillingActions({
   configured,
   outcome,
   d,
+  purchaseLinks,
 }: {
   tenantId: string
   status: PlanStatus
   configured: boolean
   outcome: string | null
   d: Dictionary['plans']
+  purchaseLinks?: ReactNode
 }) {
   const running = useRef(false)
   const [busy, setBusy] = useBusyState(false)
@@ -81,6 +83,7 @@ export function BillingActions({
           )}
         </div>
       )}
+      {purchaseLinks}
       {error && <p role="alert">{error}</p>}
     </div>
   )

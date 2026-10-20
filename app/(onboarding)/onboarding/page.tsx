@@ -7,10 +7,13 @@ import { SignOut } from '@/components/platform/sign-out'
 import { Brand } from '@/components/platform/brand'
 import { TenantForm, OpenTenant } from '@/components/platform/tenant-form'
 import { AdsConsentControl } from '@/components/platform/ads-consent'
+import { LegalLinks } from '@/components/platform/legal-links'
+import { legalBaseUrl } from '@/lib/platform/legal'
 export default async function Onboarding() {
   const ctx = await requirePlatform(false)
   if (await isSellerOnly(ctx)) redirect('/seller')
   const d = dictionary(ctx.locale)
+  const documentBase = legalBaseUrl(process.env.KOMISIO_LEGAL_BASE_URL)
   return (
     <main className="onboarding" lang={intlLocale(ctx.locale)}>
       <Brand />
@@ -20,8 +23,13 @@ export default async function Onboarding() {
         <p>{d.onboardingIntro}</p>
       </div>
       <section className="card">
-        <AdsConsentControl d={d} locale={ctx.locale} />
+        <AdsConsentControl
+          d={d}
+          locale={ctx.locale}
+          legalBaseUrl={documentBase}
+        />
         <TenantForm d={d} locale={ctx.locale} />
+        <LegalLinks locale={ctx.locale} baseUrl={documentBase} d={d.legal} />
       </section>
       {ctx.tenants.length > 0 && (
         <section className="card">

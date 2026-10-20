@@ -331,3 +331,23 @@ stop` (normal backup behavior), then run `npm run db:start` to apply the service
 version. No database reset or JWT validation relaxation is needed. This is a
 local service pin; validate the provider's deployed version separately for a
 hosted environment.
+
+## Legal document links
+
+Set the server variable KOMISIO_LEGAL_BASE_URL to the operator's document base
+URL, for example https://operator.example/legal. Pages must use
+{base}/{locale}/{page}/, with locales sv, en, no, dk, fi, de, es, it and pages
+terms, privacy, dpa, pricing. Danish uses dk, not da. The Komisio-hosted service
+can explicitly set https://komisio.com; there is no implicit hosted default.
+Unset, empty or invalid configuration hides the links, including the advertising
+privacy link. Configure the advertising notice and its documents together before
+enabling that optional feature. HTTP(S) URLs may contain a path, but no credentials,
+query or fragment. Configuration is read on the server and the public document
+base is passed to the relevant UI; it is not a secret.
+
+Registration, store creation and settings show document links. Billing and AI
+credit purchase link to pricing and terms. Links open in a new tab, preserving
+form entries. Changing the registration language updates links immediately.
+This navigation does not collect consent, record accepted terms versions, change
+prices or supply legal wording. The operator must publish and approve its own
+documents and translations; a locale URL alone does not establish translated text.

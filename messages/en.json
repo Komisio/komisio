@@ -4535,5 +4535,14 @@
       "subject": "A verification method was removed from your account",
       "note": "If you did not make this change, contact support immediately."
     }
+  },
+  "legal": {
+    "title": "Legal",
+    "terms": "Terms of service",
+    "privacy": "Privacy notice",
+    "dpa": "Data processing agreement",
+    "pricing": "Pricing",
+    "purchase": "Pricing and terms",
+    "newTab": "opens in a new tab"
   }
 }

@@ -3,6 +3,7 @@ import { cookies } from 'next/headers'
 import { AuthForm } from '@/components/auth/auth-form'
 import { resolveLocale, isLocale } from '@/lib/i18n'
 import { marketingConsentEnabled } from '@/lib/platform/marketing-consent'
+import { legalBaseUrl } from '@/lib/platform/legal'
 export default async function Register({
   searchParams,
 }: {
@@ -12,6 +13,7 @@ export default async function Register({
   return (
     <AuthForm
       mode="register"
+      legalBaseUrl={legalBaseUrl(process.env.KOMISIO_LEGAL_BASE_URL)}
       marketingConsent={marketingConsentEnabled()}
       next={query.next}
       initialLocale={

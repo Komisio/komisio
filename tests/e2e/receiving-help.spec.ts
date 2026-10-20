@@ -1,3 +1,4 @@
+import legacyHelp from '../fixtures/help-legacy.json' with { type: 'json' }
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -33,7 +34,7 @@ test('label help waits for client readiness and opens on the first click', async
     await open.click()
     const dialog = page.getByRole('dialog')
     await expect(dialog.getByRole('heading', { level: 2 })).toHaveText(
-      d.helpCenter.articles.labels.title,
+      legacyHelp.sv.articles.labels.title,
     )
     await expect(dialog.getByRole('heading', { level: 2 })).toBeFocused()
     await page.keyboard.press('Escape')
@@ -94,7 +95,7 @@ test('receiving and label help preserve drafts and follow the current task witho
     await open.click()
     const dialog = page.getByRole('dialog')
     await expect(dialog.getByRole('heading', { level: 2 })).toHaveText(
-      d.helpCenter.articles.receiving.title,
+      legacyHelp.sv.articles.receiving.title,
     )
     await expect(dialog.getByRole('heading', { level: 2 })).toBeFocused()
     await expect(dialog.locator('a[href^="/intake/accounting"]')).toHaveCount(0)
@@ -113,7 +114,7 @@ test('receiving and label help preserve drafts and follow the current task witho
     const article = await popup
     await expect(article).toHaveURL('/help/receiving')
     await expect(article.getByRole('heading', { level: 1 })).toHaveText(
-      d.helpCenter.articles.receiving.title,
+      legacyHelp.sv.articles.receiving.title,
     )
     await article.close()
     expect(
@@ -153,9 +154,9 @@ test('receiving and label help preserve drafts and follow the current task witho
     await page.goto(`/intake/items/${item}/label`)
     await open.click()
     await expect(dialog.getByRole('heading', { level: 2 })).toHaveText(
-      d.helpCenter.articles.labels.title,
+      legacyHelp.sv.articles.labels.title,
     )
-    await expect(dialog).toContainText(d.helpCenter.articles.labels.notice)
+    await expect(dialog).toContainText(legacyHelp.sv.articles.labels.notice)
     await expect(dialog.locator('a[href^="/intake/accounting"]')).toHaveCount(0)
     await page.screenshot({
       path: testInfo.outputPath('label-help-mobile.png'),
@@ -171,19 +172,19 @@ test('receiving and label help preserve drafts and follow the current task witho
     await expect(dialog).toHaveCount(0)
     await open.click()
     await expect(dialog.getByRole('heading', { level: 2 })).toHaveText(
-      d.helpCenter.articles.labels.title,
+      legacyHelp.sv.articles.labels.title,
     )
     await page.keyboard.press('Escape')
     await page.goto('/help')
     await page
       .getByRole('link', {
-        name: d.helpCenter.articles.labels.title,
+        name: legacyHelp.sv.articles.labels.title,
         exact: true,
       })
       .click()
     await expect(page).toHaveURL('/help/labels')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      d.helpCenter.articles.labels.title,
+      legacyHelp.sv.articles.labels.title,
     )
     expect(writes).toBe(0)
     const anonymous = await browser.newContext()

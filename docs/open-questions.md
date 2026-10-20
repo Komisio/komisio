@@ -725,3 +725,14 @@ The provider bulk schema does not guarantee one shared voucher number. The owner
 approved delivery with complete read-back and a held outcome unless exactly one
 voucher is verified. Guaranteed grouping remains a follow-up investigation;
 multiple vouchers must never be marked sent or automatically retried.
+
+## Help content and feedback (#532)
+
+Resolved by the owner on 2026-10-20: feedback uses the same route placeholders
+and recognized view/tab values as support context (#531), with no real record
+identifiers. The approved table has no user ID; comments remain optional free
+text with a privacy hint. Direct product reads are unavailable.
+
+The owner also approved updating the two existing mapping assertions for
+`/members` and `/account` to their new articles, while keeping generic help
+coverage on an unmapped route and preserving all other mapping cases.

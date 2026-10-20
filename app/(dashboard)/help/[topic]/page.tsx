@@ -1,3 +1,4 @@
+import { helpArticle } from '@/lib/help/content'
 import { ContactSupport } from '@/components/help/contact-support'
 import Link from '@/components/platform/working-link'
 import { notFound } from 'next/navigation'
@@ -13,10 +14,8 @@ export async function generateMetadata({
   params: Promise<{ topic: string }>
 }) {
   const { topic } = await params
-  return platformPageMetadata((d) =>
-    isHelpTopic(topic)
-      ? d.helpCenter.articles[topic].title
-      : d.helpCenter.title,
+  return platformPageMetadata((d, locale) =>
+    isHelpTopic(topic) ? helpArticle(locale, topic)!.title : d.helpCenter.title,
   )
 }
 
@@ -36,7 +35,7 @@ export default async function HelpPage({
         <Link className="text-link" href="/help">
           {d.title}
         </Link>
-        <h1>{d.articles[topic].title}</h1>
+        <h1>{helpArticle(ctx.locale, topic)!.title}</h1>
       </div>
       <article className="card help-page">
         <HelpArticle topic={topic} d={d} />

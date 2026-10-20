@@ -240,6 +240,38 @@
 .help-page {
   max-width: 780px;
 }
+.help-article ul {
+  padding-left: 24px;
+  list-style: disc;
+}
+.help-article h2,
+.help-article h3 {
+  margin-block: 24px 12px;
+}
+.help-article p + p {
+  margin-top: 12px;
+}
+.help-article blockquote {
+  margin-inline: 0;
+}
+.help-feedback {
+  border-top: 1px solid var(--line);
+  margin-top: 24px;
+  padding-top: 20px;
+}
+.help-feedback fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.help-feedback textarea {
+  min-height: 96px;
+  width: 100%;
+  resize: vertical;
+}
+.help-feedback button {
+  justify-self: start;
+}
 .help-index {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));

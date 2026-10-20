@@ -1,3 +1,4 @@
+import { helpArticle } from '@/lib/help/content'
 import { EconomicWorkspace } from '@/components/intake/economic-workspace'
 import { z } from 'zod'
 import { economicCopy } from '@/lib/accounting/economic-copy'
@@ -696,7 +697,7 @@ export default async function Accounting({
                       topic="fortnox-automation"
                       d={all.helpCenter}
                       label={
-                        all.helpCenter.articles['fortnox-automation'].title
+                        helpArticle(ctx.locale, 'fortnox-automation')!.title
                       }
                     />
                   </div>

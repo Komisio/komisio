@@ -3415,85 +3415,6 @@
         "unknown": "Kunne ikke kontrolleres – last siden på nytt"
       }
     },
-    "articles": {
-      "fortnox-connect": {
-        "title": "Koble til Fortnox",
-        "intro": "Koble til butikkens selskap og klargjør kontoplanen. Ingen regnskapsdata sendes ved tilkobling.",
-        "steps": [
-          "Du må være eier eller administrator i Komisio og kunne godkjenne tilgang til riktig Fortnox-selskap. Kontroller aktuelle integrasjons- og programlisenser i Fortnox-veiledningen.",
-          "Åpne Kontoer og integrasjoner. Skriv selskapsnavnet slik det står i Fortnox, og koble til. Logg inn hos Fortnox, kontroller selskapet og godkjenn tillatelsene.",
-          "Kontroller selskapsnavnet når du kommer tilbake. Bruk tilkoblingskontrollen for en aktuell kontroll. Velg samme selskap ved ny tilkobling.",
-          "Lagre kontonumre og debet-/kreditvalg avtalt med regnskapsføreren. Komisio velger ikke kontoer for dere."
-        ],
-        "notice": "Tilkoblet betyr ikke at et grunnlag er sendt. Komisio ber om tilgang til selskapsinformasjon og bokføring, inkludert opprettelse av bilag når sending brukes."
-      },
-      "fortnox-first-export": {
-        "title": "Klargjør og send første grunnlag",
-        "intro": "Arbeid med én dag av gangen og kontroller selskap, dato og beløp før sending.",
-        "steps": [
-          "Åpne Dagsoppgjør og eksporter og opprett oppgjøret for riktig dato. Dette registrerer en oppsummering i Komisio, ikke et bilag i Fortnox.",
-          "Gransk forhåndsvisningen: kontoer, debet, kredit og beløp uten konto. Avklar kontoplanen med regnskapsføreren. Balanse alene beviser ikke riktig bokføring.",
-          "Velg eksport som SIE 4 for å lagre grunnlaget. Last deretter ned filen eller send til Fortnox som eier/administrator. Unngå både filimport og direkte sending av samme grunnlag.",
-          "En virkelig sending oppretter et bilag i Fortnox. Referansen vises når sendingen er bekreftet. Ved usikkert resultat: åpne hjelpen for sendingsproblemer og ikke send igjen."
-        ],
-        "notice": "Automatisk sending er et eget valg for eieren og gjelder klargjorte eksporter. Dagsoppgjør opprettes fortsatt manuelt. Tilkobling og hjelp aktiverer ikke automatikken."
-      },
-      "fortnox-recovery": {
-        "title": "Kontroller et sendingsproblem",
-        "intro": "Skill mellom en stoppet sending og et manglende svar. Bilaget kan allerede finnes selv om svaret mangler.",
-        "steps": [
-          "Hvis Komisio uttrykkelig sier at sendingen ble stoppet før registrering, rett årsaken og bruk tilbudt handling for nytt forsøk.",
-          "Hvis sendingen venter eller utfallet er usikkert, ikke send igjen. Be eieren sammenligne grunnlaget med bilag i Fortnox-selskapsdatabasen som hører til sendingen.",
-          "Sammenlign dato, beløp og alle linjer. Ved et samsvarende bilag kan eieren registrere serie, nummer, regnskapsår og dokumentasjon via bekreftelsen på eksportraden.",
-          "Hvis bilaget ikke finnes, be driftsansvarlig hjelpe med undersøkelsen. Manglende treff åpner ikke for ny sending. Ikke slett eller opprett grunnlag på nytt for å omgå sperren."
-        ],
-        "notice": "Avstemming registrerer eierens kontroll, ikke automatisk bekreftelse fra Fortnox. Personale og administratorer kan lese hjelpen; bare eieren kan registrere denne bekreftelsen."
-      },
-      "fortnox-automation": {
-        "title": "Slik fungerer automatisk sending",
-        "intro": "Automatikken sender klargjorte eksporter til det tilkoblede Fortnox-foretaket. Den oppretter ikke dagsoppgjør og velger ikke kontoer.",
-        "steps": [
-          "Kontroller foretaket og kontokoblingene. Gå gjennom eksisterende eksporter før aktivering: også eldre underlag som kan sendes, kan bli tatt med. Unngå å både importere SIE-filen og sende samme underlag direkte.",
-          "Butikkens eier aktiverer automatisk sending under Kontoer og integrasjoner. Venter betyr at bakgrunnstjenesten ennå ikke har akseptert aktiveringen. Hvis funksjonen ikke er klargjort, kontakt den som drifter Komisio-installasjonen.",
-          "Fortsett å opprette og kontrollere dagsoppgjør og klargjøre eksporter manuelt. Se Siste kjøring for tidspunkt, resultat og antall sendt. Aktivert betyr ikke at noe er sendt, og en fullført kjøring betyr ikke at alle dager er avstemt.",
-          "Etter en delvis eller mislykket kjøring: åpne Avstemming og kontroller de aktuelle eksportene. Ved ventende eller usikker sending, følg hjelpen for sendeproblemer og be eieren kontrollere resultatet. Å slå automatikken av og på løser ikke en sperret sending."
-        ],
-        "notice": "Å lese hjelpen aktiverer eller sender ingenting. Automatiske kjøringer sender ikke på nytt ved bekreftet, ventende eller usikkert resultat. Deaktivering trekker ikke tilbake bilag som allerede er opprettet."
-      },
-      "receiving": {
-        "title": "Ta imot og registrer varer",
-        "intro": "Start med riktig butikk og innleverer. Registrer det som faktisk har kommet inn, og fortsett deretter med varene.",
-        "steps": [
-          "Kontroller valgt butikk og søk etter eksisterende innleverer før du oppretter en ny. Følg butikkens avtalekrav og lokale rutiner.",
-          "En forhåndsmelding betyr ikke at varene er mottatt. Bekreft mottaket først når varene er hos dere. Bruk den eksisterende innleveringen når du fortsetter arbeidet.",
-          "Åpne innleveringen og registrer én vare om gangen. Kontroller beskrivelse, pris og selger før du lagrer.",
-          "Kontroller bekreftelsen og listen over registrerte varer før merking. Hvis svaret på en lagring mangler, hold skjemaet åpent og bruk funksjonen for nytt forsøk. Ikke opprett samme vare igjen for å få en bekreftelse."
-        ],
-        "notice": "Antall registrerte varer viser lagrede opplysninger, ikke at hele innleveringen er ferdigbehandlet. Kontroller også de fysiske varene. Hjelpen endrer ingenting; be autorisert personale utføre handlinger du ikke har tilgang til."
-      },
-      "labels": {
-        "title": "Merk riktig innlevering eller vare",
-        "intro": "En mottaksetikett holder varene samlet under arbeidet. En vareetikett identifiserer den registrerte varen og viser prisen.",
-        "steps": [
-          "Åpne eksisterende innlevering eller vare og kontroller butikk og referanse. En mottaksetikett betyr ikke at varene er kontrollert eller godkjent for salg.",
-          "For en vareetikett: finn den registrerte varen, åpne etiketten og kontroller beskrivelse, pris og valuta. Hvis etiketten ikke kan vises, gå tilbake til varen og kontroller opplysningene.",
-          "Bruk sidens utskriftsalternativer. Velg riktig skriver og antall kopier for en tilkoblet skriver, eller kontroller nettleserens utskriftsdialog. En jobb i kø eller åpen dialog beviser ikke utskrift: kontroller den fysiske etiketten før den festes.",
-          "Hvis svar om utskriftskøen mangler, bruk nytt forsøk i samme åpne skjema. Ikke opprett nye jobber gjentatte ganger. Kontroller jobben under Skrivere og utskriftsjobber og be skriveransvarlig om hjelp ved problemer. Etikettsøket åpner en eksisterende referanse."
-        ],
-        "notice": "Å åpne hjelpen skriver ikke ut noe og registrerer ingen ny vare. Ikke opprett en kopi av varen for å erstatte etiketten. Fysisk utskrift og skanning må kontrolleres med butikkens utstyr."
-      },
-      "integrations": {
-        "title": "Koble til butikkens andre systemer",
-        "intro": "Start med systemet du vil koble til Komisio. Åpne avsnittet for status og innstillinger.",
-        "steps": [
-          "Velg kassasystem, nettbutikk eller regnskap ut fra hva du vil koble sammen.",
-          "Les tilkoblingsstatusen og følg trinnene i avsnittet. Noen handlinger krever en eier eller administrator.",
-          "Kontroller hvilke opplysninger som overføres og i hvilken retning før du aktiverer en automatisk funksjon.",
-          "Følg statusen for produkter, kvitteringer, ordrer eller regnskapsbilag i hver integrasjon. Åpne detaljene hvis noe må følges opp."
-        ],
-        "notice": "En tilkobling betyr ikke at alle automatiske funksjoner er aktivert. Kontroller dem enkeltvis i integrasjonens innstillinger."
-      }
-    },
     "receiving": "Åpne mottaket",
     "storeFlow": "Butikkens arbeidsflyt",
     "items": "Finn en registrert vare",
@@ -3519,6 +3440,20 @@
       "placeholder": "For eksempel etiketter eller regnskap",
       "count": "Hjelpeartikler: {count}",
       "empty": "Ingen treff i hjelpen"
+    },
+    "fallbackNote": "Denne artikkelen er ennå ikke tilgjengelig på ditt språk.",
+    "machineTranslationNote": "Denne artikkelen er oversatt automatisk.",
+    "feedback": {
+      "title": "Var dette nyttig?",
+      "thanks": "Takk for tilbakemeldingen!",
+      "yes": "Ja",
+      "no": "Nei",
+      "comment": "Kommentar (valgfritt)",
+      "privacy": "Ikke ta med personopplysninger om deg selv, selgere eller kunder.",
+      "send": "Send",
+      "rateLimited": "Butikken har nådd dagens grense for tilbakemeldinger. Prøv igjen senere.",
+      "error": "Svaret kunne ikke lagres. Prøv igjen.",
+      "unknown": "Vi kunne ikke bekrefte om svaret ble lagret. Vent før du prøver igjen."
     }
   },
   "dashboard": {

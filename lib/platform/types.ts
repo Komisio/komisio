@@ -2,7 +2,7 @@ import type { Role } from './permissions'
 export type Tenant = { id: string; name: string; slug: string; role: Role }
 export type Member = {
   user_id: string
-  display_name: string
+  display_name: string | null
   email: string | null
   role: Role
   created_at: string

@@ -4,6 +4,8 @@ import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 import { readFileSync } from 'node:fs'
+import { localTestUrl } from '../helpers/local-services'
+const mailUrl = localTestUrl('TEST_MAIL_URL', 'http://127.0.0.1:54324')
 
 async function activationMail(
   page: Page,
@@ -14,16 +16,14 @@ async function activationMail(
   await expect
     .poll(async () => {
       const inbox = await (
-        await page.request.get('http://127.0.0.1:54324/api/v1/messages')
+        await page.request.get(`${mailUrl}/api/v1/messages`)
       ).json()
       const message = inbox.messages?.find((m: { To: { Address: string }[] }) =>
         m.To.some((to) => to.Address === email),
       )
       if (!message) return false
       const detail = await (
-        await page.request.get(
-          `http://127.0.0.1:54324/api/v1/message/${message.ID}`,
-        )
+        await page.request.get(`${mailUrl}/api/v1/message/${message.ID}`)
       ).json()
       if (frozen) {
         expect(message.Subject).toBe(frozen.subject)
@@ -47,6 +47,7 @@ async function activationMail(
 test('registration creates an unconfirmed account, activation works in another browser and preserves staff identity', async ({
   page,
   browser,
+  baseURL,
 }, testInfo) => {
   const owner = `activation-owner-${randomUUID()}@example.test`
   const email = `activation-seller-${randomUUID()}@example.test`
@@ -56,6 +57,26 @@ test('registration creates an unconfirmed account, activation works in another b
   const sellerContext = await browser.newContext()
   try {
     await f.commit()
+    // The Swedish journey explicitly selects its store language. Staff UI
+    // language must not determine seller mail (#522); no profile means English.
+    const profile = await page.request.post('/api/intake', {
+      headers: { origin: new URL(baseURL!).origin },
+      data: {
+        action: 'publishStoreProfile',
+        tenantId: f.tenant,
+        requestId: randomUUID(),
+        expectedCurrentId: null,
+        profile: {
+          address: { street: '', postalCode: '', city: '' },
+          contact: { email: '', phone: '', website: '' },
+          openingHours: [],
+          accepts: '',
+          concept: '',
+          language: 'sv',
+        },
+      },
+    })
+    expect(profile.ok()).toBe(true)
     const command = {
       action: 'registerSeller',
       tenantId: f.tenant,
@@ -66,7 +87,7 @@ test('registration creates an unconfirmed account, activation works in another b
     }
     const save = () =>
       page.request.post('/api/intake', {
-        headers: { origin: 'http://127.0.0.1:3000' },
+        headers: { origin: new URL(page.url()).origin },
         data: command,
       })
     const reply = await save()
@@ -94,11 +115,12 @@ test('registration creates an unconfirmed account, activation works in another b
     expect(await authCount()).toBe(1)
     const firstCopy = (
       await f.db.query(
-        'select subject,body from seller_communications where seller_id=$1 order by queued_at desc limit 1',
+        'select subject,body,locale from seller_communications where seller_id=$1 order by queued_at desc limit 1',
         [command.requestId],
       )
     ).rows[0]
     expect(firstCopy.subject).toBe('Välkommen till P2 browser store')
+    expect(firstCopy.locale).toBe('sv')
     expect(firstCopy.body).toContain('Activation seller')
     const getLink = await activationMail(page, email, firstCopy)
     const replays = await Promise.all([save(), save()])
@@ -106,7 +128,7 @@ test('registration creates an unconfirmed account, activation works in another b
       expect((await replay.json()).welcome.delivery).toBe('sent')
     expect(await authCount()).toBe(1)
     const messages = await (
-      await page.request.get('http://127.0.0.1:54324/api/v1/messages')
+      await page.request.get(`${mailUrl}/api/v1/messages`)
     ).json()
     expect(
       messages.messages.filter((m: { To: { Address: string }[] }) =>
@@ -204,7 +226,7 @@ test('registration creates an unconfirmed account, activation works in another b
     expect(passwordHash).toBeTruthy()
     // An explicit resend reuses Auth identity without changing its password.
     const resend = await page.request.post('/api/communications', {
-      headers: { origin: 'http://127.0.0.1:3000' },
+      headers: { origin: new URL(page.url()).origin },
       data: {
         tenantId: f.tenant,
         sellerId: command.requestId,
@@ -278,7 +300,7 @@ test('registration creates an unconfirmed account, activation works in another b
       await passwordContext.close()
     }
     const phoneOnly = await page.request.post('/api/intake', {
-      headers: { origin: 'http://127.0.0.1:3000' },
+      headers: { origin: new URL(page.url()).origin },
       data: {
         ...command,
         requestId: randomUUID(),
@@ -327,7 +349,7 @@ test('an existing account gets the current store copy and seller language across
       await f.commit()
       const send = (path: string, data: object) =>
         page.request.post(path, {
-          headers: { origin: 'http://127.0.0.1:3000' },
+          headers: { origin: new URL(page.url()).origin },
           data,
         })
       expect(

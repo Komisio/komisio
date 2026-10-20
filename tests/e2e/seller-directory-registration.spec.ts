@@ -87,7 +87,7 @@ test('directory registration and duplicate selection stay in the seller workspac
       ).rows[0].n
     expect(await countWelcome()).toBe(1)
     const replay = await page.request.post('/api/intake', {
-      headers: { Origin: 'http://127.0.0.1:3000' },
+      headers: { Origin: new URL(page.url()).origin },
       data: registration,
     })
     expect(replay.ok()).toBe(true)
@@ -113,13 +113,16 @@ test('directory registration and duplicate selection stay in the seller workspac
     expect(outcome.ok).toBe(true)
     await expect.poll(countWelcome).toBe(2)
     const welcome = await f.db.query(
-      "select body,status,template_version from seller_communications where seller_id=$1 and id=$2 and template_key='seller.welcome'",
+      "select body,status,template_version,locale from seller_communications where seller_id=$1 and id=$2 and template_key='seller.welcome'",
       [sellerId, outcome.id],
     )
     expect(welcome.rows).toHaveLength(1)
     expect(welcome.rows[0].status).toBe(outcome.delivery)
     expect(welcome.rows[0].template_version).toBe('v3')
-    expect(welcome.rows[0].body).toContain('/login?next=%2Fseller&locale=sv')
+    // With neither seller nor store language, mail uses English, not the
+    // Swedish staff session. The frozen log must record that actual language.
+    expect(welcome.rows[0].locale).toBe('en')
+    expect(welcome.rows[0].body).toContain('/login?next=%2Fseller&locale=en')
     expect(welcome.rows[0].body).not.toContain('token_hash')
     expect(welcome.rows[0].status).not.toBe('queued')
   } finally {

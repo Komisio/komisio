@@ -1150,3 +1150,5 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-10-20: #550 renders missing member names using localized device/automation labels, an already-visible email or an unnamed-user label. Stored identities, email visibility and membership permissions are unchanged. Release checks include authenticated member directories.
 - 2026-10-20: Staff seller account events use a responsive table over the existing paged ledger read. Signs and payout references remain visible. Running balances await a snapshot-consistent read; no ledger, payout, schema or portal behavior changes (#554).
+
+- 2026-10-20: #546 proposal prioritizes direct MobilePay with store-owned accounts and self-service setup. Reserve before payment; finalize sale/credit only after verified capture. Unknown payment/refund outcomes retain holds. Tables and live activation require separate approval.

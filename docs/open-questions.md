@@ -715,14 +715,18 @@ operator actions; no live setting has been changed by this implementation.
 
 ## Payment links for remote sales (#546, 2026-10-20)
 
-Spike only: `docs/PAYMENT-LINKS-SPIKE.md`. Open before implementation: provider
-order (Stripe Connect first vs. Vipps MobilePay direct), Inority as a Stripe
-Connect platform, default hold length and late payments, POS sale vs. held
-item, Swish via Stripe as merchant of record vs. the certificate route,
-cash-register and receipt rules per market, shipping VAT under the margin
-scheme, clearing accounts per channel, whether buyer addresses are ever
-stored, and whether to offer the store's own Shopify as a parallel route. The
-spike's §5.4 lists them.
+Spike only: `docs/PAYMENT-LINKS-SPIKE.md`. On 2026-10-20 the owner selected
+direct MobilePay with a store-owned account and self-service connection, and
+approved reservation before payment, completed sale/credit only after verified
+capture, and retained holds for unknown payment/refund outcomes. These decisions
+approve the proposal only, not new tables or live payment activation.
+
+Still open: exact core facts/scopes, link duration and late payments,
+POS-vs-capture priority, frozen policy/terms during reservation, provider approval
+for store-entered keys at multi-store scale, capture/fulfilment rules, settlement
+and dispute contracts, receipt/legal identity/cash-register rules per market,
+clearing maps, and shipping VAT/refunds/privacy. Optional Stripe/Swish/Shopify
+routes need their own scope. See §5.4 for implementation gates.
 
 ## e-conomic delivery scope (#523)
 

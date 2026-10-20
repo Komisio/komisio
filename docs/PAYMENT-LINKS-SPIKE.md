@@ -11,32 +11,28 @@ them. The payment must land in the store's own account. The item must not be
 sold twice. The paid link must become an ordinary Komisio sale, with seller
 credit, settlement, day close and accounting export working as they do today.
 
-**Recommendation in one paragraph.** Komisio issues its own short-lived,
-unguessable link for one or more held items. When the customer opens it,
-Komisio creates the provider payment and redirects to the provider's hosted
-page. In DK, FI and NO, and as a card fallback everywhere, the provider is
-**Stripe Connect with direct charges on the store's own Stripe account**
-(Stripe handles pricing; the store is merchant of record). MobilePay, and
-Vipps once it leaves private preview, are enabled on the store's account.
-Payments use **manual capture**: Komisio records the sale through `record_sale`
-first and captures only if the engine accepted it, so a double sell cancels an
-authorization instead of needing a refund. In SE, Swish via Stripe is possible,
-but Stripe is then merchant of record (factoring), so it needs the owner's and
-an accountant's OK. Swish Handel directly waits for the certificate decision in
-`docs/SWISH-PAYOUTS.md`. A direct Vipps MobilePay ePayment adapter is a strong
-second provider for stores that already have a Vipps MobilePay agreement. It
-should come after the provider-neutral core is in place. For the Danish store
-**today**, with no development, Vipps MobilePay's own portal payment links
-(1.49 % + 1 DKK) plus a manual sale in Komisio work, with known gaps (see
-[Interim](#interim-for-the-danish-store-no-development)).
+**Owner-selected direction (2026-10-20).** Start with **Vipps MobilePay
+ePayment directly**, initially DK/MobilePay in DKK. The store registers and
+owns its merchant agreement and sales unit and configures its connection in
+Komisio. Customer funds belong to the store and settle under its provider
+agreement; Komisio does not collect them in a shared account. FI/MobilePay in
+EUR and NO/Vipps in NOK can follow after country-specific verification.
+Stripe Connect and the store's own Shopify remain alternatives, not pilot
+dependencies. A private MobilePay phone number is not an API connection.
 
-Store onboarding (§6) supports this choice: Stripe's embedded onboarding takes
-the store about 15–25 minutes inside Komisio, with no keys to copy. Vipps
-MobilePay direct is close to plug-and-play only if Komisio becomes a Vipps
-MobilePay partner. A store's own Shopify (§7) is a good parallel route for
-stores that run or want a web shop (MobilePay is native on Shopify Payments in
-DK/FI). It needs de-list and sync work before it is safe next to a PayPal POS
-till. A central Komisio-operated Shopify is rejected.
+**Approved basis for the revised proposal.** Reserve items during payment;
+record a completed sale and seller credit **only after verified capture**.
+An unknown capture, cancellation or refund outcome retains the reservation
+for reconciliation. Authorization, a browser redirect, a timed-out request
+and a request accepted for processing are not completed payment evidence.
+This approval is for the proposal, not new tables, production activation or
+provider registration. Those require follow-up scope and decisions.
+
+The customer receives a Komisio link, reviews the fixed items and amount,
+then explicitly starts a provider-hosted payment. Durable attempts prevent
+concurrent opens from creating multiple payable requests. A captured payment
+is finalized idempotently through the engine. Cash-register, receipt,
+shipping and cross-channel conflict details remain implementation gates below.
 
 ---
 
@@ -48,26 +44,26 @@ such. See [References](#references) for the URLs.
 
 ### 1.1 Comparison table
 
-|                                       | Stripe Connect + MobilePay / card                                                                                                                 | Vipps MobilePay ePayment (direct)                                                                                                                                                                                              | Swish Handel (Commerce API, direct)                                                                                  | Swish via Stripe                                                                     | Vipps via Stripe                              | Shopify draft order                                                 |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | --------------------------------------------- | ------------------------------------------------------------------- |
-| DK                                    | Yes: MobilePay for customers in DK/FI; cards                                                                                                      | Yes (MobilePay app)                                                                                                                                                                                                            | No                                                                                                                   | No (SE customers only)                                                               | Customers in NO only                          | Where Shopify Payments or an app offers MobilePay                   |
-| FI                                    | Yes: MobilePay in EUR; cards                                                                                                                      | Yes (MobilePay app, EUR)                                                                                                                                                                                                       | No                                                                                                                   | No                                                                                   | No                                            | as above                                                            |
-| NO                                    | Cards; MobilePay only for DK/FI customers                                                                                                         | Yes (Vipps app, NOK)                                                                                                                                                                                                           | No                                                                                                                   | No                                                                                   | Yes, **private preview**                      | as above                                                            |
-| SE                                    | Cards; MobilePay only for DK/FI customers                                                                                                         | Swedish users can pay a Nordic merchant through the Vipps app; no SE sales-unit currency listed                                                                                                                                | Yes (SEK)                                                                                                            | Yes, SEK                                                                             | No                                            | as above                                                            |
-| EUR stores outside FI                 | Cards; MobilePay for DK/FI customers (EUR is a MobilePay presentment currency)                                                                    | FI sales units only                                                                                                                                                                                                            | No                                                                                                                   | No                                                                                   | No                                            | as above                                                            |
-| USD stores                            | Cards only (MobilePay presentment: DKK, EUR, NOK, SEK)                                                                                            | No                                                                                                                                                                                                                             | No                                                                                                                   | No                                                                                   | No                                            | as above                                                            |
-| Currencies vs. our five               | MobilePay: DKK, EUR, NOK, SEK. Cards: all five                                                                                                    | WALLET currency must match the sales unit region: DK→DKK, FI→EUR, NO→NOK                                                                                                                                                       | SEK only                                                                                                             | SEK only                                                                             | NOK only                                      | Shop currency (Komisio already refuses a mismatch)                  |
-| Published fee                         | DK page: EEA standard card 1.5 % + 1.80 kr, premium 2.8 % + 1.80 kr. MobilePay 1.5 % + 2.80 kr, + 35 DKK/month for Danish businesses (see note 1) | DK: payment links 1.49 % + 1 DKK; integration price not legible on the DK page. NO: integration 2.99 % + 1 NOK, links 2.49 % + 1 NOK. FI: integration 2.49 % + €0.20, links 2.39 % + €0.20. No monthly fee listed for payments | Set by the store's bank. Third-party report: about 2 SEK per transaction and 500 SEK per year                        | SE page: 1 % + 3.00 kr, capped at 7.00 kr. DK page: 1 % + 2.50 kr, capped at 6.00 kr | Not published (preview); card fee + Vipps fee | Shopify Payments or the app's rates (not checked)                   |
-| Connect / platform fee                | "Stripe handles pricing": no platform fee. "You handle pricing" (SE page): 15 kr per active account per month + 0.25 % + 5 kr per payout          | None published for partners                                                                                                                                                                                                    | Technical-supplier terms vary by bank                                                                                | as Stripe                                                                            | as Stripe                                     | —                                                                   |
-| Store onboarding                      | Create or connect a Stripe account (KYC by Stripe), enable MobilePay in payment-method settings, connect to Komisio by OAuth or Account Link      | Merchant agreement and sales unit with Vipps MobilePay (KYC by Vipps MobilePay); give Komisio API keys, or consent to Komisio as a partner                                                                                     | Swish Handel agreement with the store's bank, a certificate per Swish number (or a technical supplier), Swish number | Stripe account + access request (the docs show an access form)                       | Stripe account + preview access               | Existing Shopify connection                                         |
-| Store's own merchant account required | Yes (direct charge on the connected account)                                                                                                      | Yes                                                                                                                                                                                                                            | Yes                                                                                                                  | Yes, but **Stripe is merchant of record** for Swish (factoring addendum)             | Yes                                           | Yes (the shop)                                                      |
-| Payout to the store                   | Standard Stripe payout schedule of the store's country                                                                                            | Settlement by Vipps MobilePay to the store's bank (timing not checked; third-party: next business day)                                                                                                                         | Instant to the store's bank account                                                                                  | Standard Stripe payout schedule                                                      | Standard Stripe payout schedule               | Shopify Payments schedule                                           |
-| Refund via API                        | Yes, full and partial; MobilePay supports multiple partial refunds                                                                                | Yes, refund all or part of a captured amount                                                                                                                                                                                   | Yes (Commerce API refund, assumed; docs not readable by our tooling)                                                 | Yes, up to 365 days, asynchronous                                                    | Yes, full and partial                         | Through Shopify; Komisio already turns Shopify refunds into returns |
-| Manual capture (authorize first)      | Yes, MobilePay and cards                                                                                                                          | Yes (authorize, then capture or cancel)                                                                                                                                                                                        | No                                                                                                                   | No                                                                                   | Yes                                           | —                                                                   |
-| Webhooks                              | Signed (`Stripe-Signature`, HMAC-SHA256, timestamp). Connect endpoint carries `account`                                                           | Signed (HMAC-SHA256 over method, path, `x-ms-date`, host, `x-ms-content-sha256`). No documented replay window                                                                                                                  | Callback URL. Authentication assumed to be TLS-based; not verified                                                   | Stripe events                                                                        | Stripe events                                 | Order pull already exists (`docs/SHOPIFY-ADAPTER.md`)               |
-| KYC/AML                               | Stripe, on the store's account                                                                                                                    | Vipps MobilePay                                                                                                                                                                                                                | The store's bank                                                                                                     | Stripe                                                                               | Stripe                                        | Shopify                                                             |
-| Disputes / chargebacks                | Store's account; card disputes apply to MobilePay. Dispute fee 200 kr (DK and SE pages)                                                           | Vipps MobilePay rules (card-backed; not checked)                                                                                                                                                                               | No chargeback scheme; the customer contacts the store                                                                | No disputes; the customer contacts the merchant                                      | As cards                                      | Shopify                                                             |
-| Link lifetime                         | Checkout Session: 30 minutes to 24 hours. Payment Link: reusable until deactivated                                                                | Default 10 minutes. "Long-living" 10 min to 60 days needs special approval: DK on request, FI only for former MobilePay Invoice merchants, NO at most 24 h                                                                     | About 3 minutes to approve in the app (third-party docs)                                                             | Approve within 3 minutes                                                             | as Stripe                                     | `reserveInventoryUntil` on the draft order                          |
+|                                       | Stripe Connect + MobilePay / card                                                                                                                               | Vipps MobilePay ePayment (direct)                                                                                                                                                                                              | Swish Handel (Commerce API, direct)                                                                                  | Swish via Stripe                                                                     | Vipps via Stripe                              | Shopify draft order                                                 |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | --------------------------------------------- | ------------------------------------------------------------------- |
+| DK                                    | Yes: MobilePay for customers in DK/FI; cards                                                                                                                    | Yes (MobilePay app)                                                                                                                                                                                                            | No                                                                                                                   | No (SE customers only)                                                               | Customers in NO only                          | Where Shopify Payments or an app offers MobilePay                   |
+| FI                                    | Yes: MobilePay in EUR; cards                                                                                                                                    | Yes (MobilePay app, EUR)                                                                                                                                                                                                       | No                                                                                                                   | No                                                                                   | No                                            | as above                                                            |
+| NO                                    | Cards; MobilePay only for DK/FI customers                                                                                                                       | Yes (Vipps app, NOK)                                                                                                                                                                                                           | No                                                                                                                   | No                                                                                   | Yes, **private preview**                      | as above                                                            |
+| SE                                    | Cards; MobilePay only for DK/FI customers                                                                                                                       | Swedish users can pay a Nordic merchant through the Vipps app; no SE sales-unit currency listed                                                                                                                                | Yes (SEK)                                                                                                            | Yes, SEK                                                                             | No                                            | as above                                                            |
+| EUR stores outside FI                 | Cards; MobilePay for DK/FI customers (EUR is a MobilePay presentment currency)                                                                                  | FI sales units only                                                                                                                                                                                                            | No                                                                                                                   | No                                                                                   | No                                            | as above                                                            |
+| USD stores                            | Cards only (MobilePay presentment: DKK, EUR, NOK, SEK)                                                                                                          | No                                                                                                                                                                                                                             | No                                                                                                                   | No                                                                                   | No                                            | as above                                                            |
+| Currencies vs. our five               | MobilePay: DKK, EUR, NOK, SEK. Cards: all five                                                                                                                  | WALLET currency must match the sales unit region: DK→DKK, FI→EUR, NO→NOK                                                                                                                                                       | SEK only                                                                                                             | SEK only                                                                             | NOK only                                      | Shop currency (Komisio already refuses a mismatch)                  |
+| Published fee                         | DK page: EEA standard card 1.5 % + 1.80 kr, premium 2.8 % + 1.80 kr. MobilePay 1.5 % + 2.80 kr, + 35 DKK/month for Danish businesses (see note 1)               | DK: payment links 1.49 % + 1 DKK; integration price not legible on the DK page. NO: integration 2.99 % + 1 NOK, links 2.49 % + 1 NOK. FI: integration 2.49 % + €0.20, links 2.39 % + €0.20. No monthly fee listed for payments | Set by the store's bank. No verified price in this investigation                                                     | SE page: 1 % + 3.00 kr, capped at 7.00 kr. DK page: 1 % + 2.50 kr, capped at 6.00 kr | Not published (preview); card fee + Vipps fee | Shopify Payments or the app's rates (not checked)                   |
+| Connect / platform fee                | "Stripe handles pricing": no platform fee. "You handle pricing" (SE page): 15 kr per active account per month + 0.25 % + 5 kr per payout                        | None published for partners                                                                                                                                                                                                    | Technical-supplier terms vary by bank                                                                                | as Stripe                                                                            | as Stripe                                     | —                                                                   |
+| Store onboarding                      | Create or connect a Stripe account (KYC by Stripe), enable MobilePay in payment-method settings, connect through proposed embedded onboarding/Account Link (§6) | Merchant agreement and sales unit with Vipps MobilePay (KYC by Vipps MobilePay); give Komisio API keys, or consent to Komisio as a partner                                                                                     | Swish Handel agreement with the store's bank, a certificate per Swish number (or a technical supplier), Swish number | Stripe account + access request (the docs show an access form)                       | Stripe account + preview access               | Existing Shopify connection                                         |
+| Store's own merchant account required | Yes (direct charge on the connected account)                                                                                                                    | Yes                                                                                                                                                                                                                            | Yes                                                                                                                  | Yes, but **Stripe is merchant of record** for Swish (factoring addendum)             | Yes                                           | Yes (the shop)                                                      |
+| Payout to the store                   | Account-specific Stripe schedule; exact delay not verified                                                                                                      | Settlement to the store's bank; contractual schedule not verified                                                                                                                                                              | Instant to the store's bank account                                                                                  | Standard Stripe payout schedule                                                      | Standard Stripe payout schedule               | Shopify Payments schedule                                           |
+| Refund via API                        | Yes, full and partial; MobilePay supports multiple partial refunds                                                                                              | Yes, refund all or part of a captured amount                                                                                                                                                                                   | Yes (Commerce API refund, assumed; docs not readable by our tooling)                                                 | Yes, up to 365 days, asynchronous                                                    | Yes, full and partial                         | Through Shopify; Komisio already turns Shopify refunds into returns |
+| Manual capture (authorize first)      | Yes, MobilePay and cards                                                                                                                                        | Yes (authorize, then capture or cancel)                                                                                                                                                                                        | No                                                                                                                   | No                                                                                   | Yes                                           | —                                                                   |
+| Webhooks                              | Signed (`Stripe-Signature`, HMAC-SHA256, timestamp). Connect endpoint carries `account`                                                                         | Signed (HMAC-SHA256 over method, path, `x-ms-date`, host, `x-ms-content-sha256`). Freshness/deduplication policy to validate with provider retries                                                                             | Callback URL. Authentication assumed to be TLS-based; not verified                                                   | Stripe events                                                                        | Stripe events                                 | Order pull already exists (`docs/SHOPIFY-ADAPTER.md`)               |
+| KYC/AML                               | Stripe, on the store's account                                                                                                                                  | Vipps MobilePay                                                                                                                                                                                                                | The store's bank                                                                                                     | Stripe                                                                               | Stripe                                        | Shopify                                                             |
+| Disputes / chargebacks                | Store's account; card disputes apply to MobilePay. Dispute fee 200 kr (DK and SE pages)                                                                         | Vipps MobilePay rules (card-backed; not checked)                                                                                                                                                                               | No chargeback scheme; the customer contacts the store                                                                | No disputes; the customer contacts the merchant                                      | As cards                                      | Shopify                                                             |
+| Link lifetime                         | Checkout Session: 30 minutes to 24 hours. Payment Link: reusable until deactivated                                                                              | Default 10 minutes. "Long-living" 10 min to 60 days needs special approval: DK on request, FI only for former MobilePay Invoice merchants, NO at most 24 h                                                                     | About 3 minutes to approve in the app (third-party docs)                                                             | Approve within 3 minutes                                                             | as Stripe                                     | `reserveInventoryUntil` on the draft order                          |
 
 Note 1. Stripe's MobilePay documentation lists, per payment, "Stripe processing
 fees associated with the card transaction" **and** the "MobilePay transaction
@@ -85,16 +81,15 @@ Ask Stripe before quoting a price to a store.
   accounts with access to the full Stripe Dashboard. In Stripe's older terms
   that is a **Standard** account; current docs describe it through account
   configuration, with Stripe handling pricing and the account using the full
-  Dashboard. Express accounts and destination charges (`transfer_data`, with or
-  without `on_behalf_of`) put the charge on Komisio's platform balance. Without
-  `on_behalf_of`, the platform is the merchant of record. Both are rejected:
-  money must not pass through Komisio, and Komisio must not carry negative
-  balances, disputes or store-level KYC.
+  Dashboard. Account configuration and charge type are separate: Express
+  accounts do not inherently imply destination charges. Direct charges place
+  the charge on the connected account; destination/separate-transfer models
+  use the platform and are not selected. Liability depends on the configured
+  account and provider terms, not the account nickname alone.
 - **Payment Links vs. Checkout Sessions.** Payment Links support direct charges
   (created while authenticated as the connected account). They are reusable
   objects, though, with no per-link expiry, and they need a Product and a Price
-  per item. That conflicts with "one item, one buyer, held until expiry". A
-  **Checkout Session per link opening** fits better: line items with
+  per item. That conflicts with "one item, one buyer, held until expiry". **One active Checkout Session per durable link attempt** fits better: line items with
   `price_data` (amount fixed server-side), `expires_at` from 30 minutes to 24
   hours, an `expire` endpoint for cancel, `payment_intent_data.capture_method=manual`,
   and `payment_method_types` limited to what the store enabled. Vipps via
@@ -131,19 +126,22 @@ Ask Stripe before quoting a price to a store.
   (client id, client secret, subscription key, merchant serial number), sealed
   with `lib/platform/credentials.ts`, or partner keys for Komisio after a
   partner application, used with the `Merchant-Serial-Number` header. Vipps
-  MobilePay warns that keys must never be shown to merchants in readable form.
+  MobilePay distinguishes store-owned sales-unit keys from partner-wide keys.
+  The latter must never be exposed to stores; Komisio must not return saved
+  sales-unit secrets through its UI either.
   Partner keys work only in production; the test environment uses test
   sales-unit keys.
 - **Lifetime.** A payment request expires after **10 minutes** by default.
   Longer lifetimes need case-by-case approval and differ per market. A DM link
   must therefore not be the provider payment itself. Komisio's link creates the
-  ePayment when opened (`userFlow: WEB_REDIRECT`, which returns a
+  ePayment after an explicit payment-start action (`userFlow: WEB_REDIRECT`, which returns a
   `redirectUrl`). The same design works for Stripe.
 - **Capture.** Authorize first, then capture or cancel. This fits the manual
   capture pattern below.
 - **Webhooks.** HMAC-SHA256 with a per-webhook secret over the method, path,
   `x-ms-date`, host and body hash. Vipps MobilePay documents no replay window,
-  so Komisio must check `x-ms-date` freshness itself and deduplicate by event.
+  so the adapter must validate freshness against the provider retry contract
+  and deduplicate events. Polling remains authoritative for recovery.
 - **Portal payment links.** A separate product: created by hand in the business
   portal, e-mail notification, no API and no webhook documented. Useful as the
   interim, not for integration.
@@ -187,645 +185,441 @@ Ask Stripe before quoting a price to a store.
 
 ---
 
-## 2. Flow
+## 2. Proposed payment and reservation flow
 
-### 2.0 Overview (MobilePay through Stripe Connect)
+### 2.1 Roles, creation and customer experience
 
-The recommended flow from the store's and the buyer's point of view. The
-sections below give the details and the code each step touches.
+Owner/admin connects the store's provider account. Proposed creation,
+cancellation and refund roles are owner/admin/staff, matching current sale
+permissions; readonly/device cannot operate payments. These extensions need
+explicit follow-up authorization tests, not a broad grant.
+
+The item page and selected-item table action create a bounded link (maximum
+50 items). The engine validates tenant, custody, saleability, current price,
+currency and connection revision and freezes the gross item prices. A later
+markdown must not silently change an open payment. Staff may add a bounded
+note, visible to the buyer, with no seller data. The output is an unguessable
+`/pay/<token>` URL that staff can paste into a DM. Komisio sends no message.
+
+Proposed first delivery is **pickup only, no shipping fee**. Shipping stays
+unavailable until §2.7 is decided and implemented. The page shows items,
+inclusive total, store identity and pickup/consumer information, then a
+provider-branded payment button. A GET, crawler or link preview must not create
+a payment request. The button starts or resumes a durable attempt.
 
 ```mermaid
 sequenceDiagram
-    autonumber
+    actor Staff
     actor Buyer
-    actor Store as Store staff
-    participant K as Komisio
-    participant S as Stripe and MobilePay
-    Buyer->>Store: Sees the item on Instagram, asks in a DM
-    Store->>K: Creates a payment link on the item page
-    K->>K: Holds the item (default 24 h), blocks counter sales
-    K-->>Store: Link /pay/token
-    Store->>Buyer: Pastes the link into the DM
-    Buyer->>K: Opens the link, sees item and price
-    K->>S: Checkout Session on the store's account, fixed amount, manual capture
-    K-->>Buyer: Redirect to Stripe Checkout
-    Buyer->>S: Pays with MobilePay, approves in the app
-    S->>K: Signed webhook, payment authorized
-    K->>K: record_sale (provider payment_link), seller credit frozen
-    K->>S: Capture, money is taken only now
-    S-->>Buyer: Receipt
-    K-->>Store: Item shown as sold, pack or prepare pickup
-    S-->>Store: Payout to the store's bank on Stripe's schedule
-    K-->>Store: Sale in settlement, day close and accounting export
+    participant K as Komisio engine
+    participant P as Store MobilePay sales unit
+    Staff->>K: Freeze amount and reserve items
+    K-->>Staff: Shareable link
+    Buyer->>K: Review link and explicitly start payment
+    K->>K: Commit one attempt and write intent
+    K->>P: Create with stable reference and idempotency key
+    P-->>Buyer: Hosted payment approval
+    P->>K: Authenticated notification
+    K->>P: Read authoritative payment evidence
+    K->>K: Validate amount and exclusive capture claim
+    K->>P: Capture when fulfilment permits, using persisted key
+    K->>P: Verify successfully captured amount
+    K->>K: Finalize sale, seller credit and consumed link atomically
+    K-->>Staff: Paid and recorded
+    P-->>Staff: Settle to store bank under its agreement
 ```
 
-When something goes wrong:
+The capture trigger must satisfy provider fulfilment rules and market consumer
+rules. Immediate capture on authorization is not assumed permissible for every
+pickup/shipping arrangement. Verify that trigger before live payments.
 
-```mermaid
-flowchart LR
-    A[Sold at the till first, while the link is open] --> A2[Link closed, authorization voided, no money taken]
-    B[Link expires or staff cancel it] --> B2[Hold released, item can be sold again]
-    C[Buyer returns a paid item] --> C2[Refund through Stripe, then a return in Komisio, seller credit reversed]
-```
+### 2.2 Durable model and reservation invariants
 
-### 2.1 Roles and creation
+**Proposed new core facts, not approved tables:** immutable links, item
+reservations, provider attempts, write intents/outcomes and verified payment
+and refund evidence. Follow-up migrations must define schemas, RLS, grants,
+uniqueness and append-only transitions with pgTAP. Two unstructured event tables
+alone are not a sufficient concurrency contract.
 
-- **Connect the provider:** owner or admin (as with Fortnox, Shopify and PayPal
-  POS connections).
-- **Create, cancel or resend a link:** owner, admin or staff, the same roles
-  that may call `record_sale` (`20260916340000_shopify_automation.sql`,
-  `record_sale_core`). `readonly` and `device` cannot.
-- **Where:** the item page `app/(dashboard)/intake/items/[id]/page.tsx`, with a
-  "send payment link" action, plus a multi-select from the items list for more
-  than one item (at most 50 lines, the `valid_sale_lines` bound).
-- **Input:** items (price = the current `item_prices` row at creation, frozen
-  on the link; a later markdown does not change an open link), store currency
-  (`komisio_private.store_currency`), optional note to the customer (bounded
-  text, shown on Komisio's pay page, not sent to the provider), and fulfilment:
-  `pickup` or `shipping` with a fee in the store currency.
-- **Output:** a URL `https://<host>/pay/<token>` for the staff member to paste
-  into the DM. Komisio sends nothing to the customer itself, so it needs no
-  customer contact data.
+A link pins token digest, tenant, actual provider, merchant/sales unit,
+connection revision, environment, currency, frozen lines, note, creator and
+expiry. Each attempt pins its reference and operation identities.
 
-### 2.2 Reservation (hold)
+- One active payable attempt per link, enforced under the engine's tenant/item
+  locking and database uniqueness. Concurrent payment starts reuse it.
+- A completed link is permanently consumed. A return never reopens it; resale
+  requires a new link and identity.
+- Link expiry, provider request expiry and authorization/capture expiry are
+  distinct. Local time disables new starts, but does not prove a previously
+  submitted payment cannot succeed.
+- Release requires authoritative evidence that no outstanding attempt can
+  collect money, or completion of the chosen verified refund recovery.
+  Unknown create/capture/cancel/refund outcomes retain the reservation.
+- Uncertain writes block new attempts. Retry with the same operation key and
+  exact payload. Changed payloads need a new explicitly authorized operation
+  after the previous one is terminal.
+- Capture success plus finalizer failure is `paid_unrecorded`: keep held,
+  expose it to staff and retry finalization without another capture.
+- Hold release is not restocking authority for an ended, returned or sold item.
 
-Proposal: the **link is the hold**. Two new append-only tables (migration):
+Proposed default expiry is 24 hours, configurable 1–72, **still for owner
+decision**. Provider requests start only on explicit payment action, avoiding
+a dependency on extended provider request expiry. Capture must finish before
+the actual authorization deadline. A missed deadline needs verified terminal
+evidence, not assumed payment or automatic stock release.
 
-- `payment_links`: id, tenant, token hash, provider, connection revision,
-  currency, lines (item id + frozen price öre), fulfilment kind, shipping öre,
-  note, `expires_at`, created by, created at. Immutable.
-- `payment_link_events`: `opened` (provider session id), `authorized`,
-  `recorded` (sale id), `captured`, `cancelled` (by whom), `expired`,
-  `refused` (engine code), `voided` (authorization cancelled), `refunded`.
-  Each is a new row. State is derived (rule 4: corrections are new rows).
+Keep `itemStage` unchanged. Add a reservation flag with link, expiry and
+recovery status to item/lifecycle reads. Manual sales reject `ITEM_RESERVED`
+and overlapping reservations are refused. This requires additive changes to
+`sale_line_facts` and `record_sale_core`; a badge alone does not enforce it.
 
-An item is **held** while a link containing it is not yet recorded, cancelled
-or expired, and `now() < expires_at`. If a provider session is still open
-(`opened` without a final provider state), the hold lasts until that session's
-provider expiry, so a customer in the middle of paying is never cut off.
+### 2.3 Write contract and completed sale
 
-- **Default expiry: 24 hours**, chosen by staff from 1 to 72 hours. This is a
-  proposal for the owner: DMs are answered within a day, and a longer hold
-  blocks the till.
-- **Stage.** The hold does **not** become a new `itemStage` value. It is an
-  orthogonal `reserved` flag (with the link id and expiry) on the overview and
-  lifecycle reads, because a held item can still be `markdown_due` or
-  `period_ending`. Adding a stage would change `itemStage` in
-  `lib/engine/items.ts`, the stage check in `lifecycle_queue_page`
-  (`20261019020000_lifecycle_table_page.sql`), filters and 8 locales. A flag
-  only adds a badge, a filter and their strings. `sold` still comes from
-  `komisio_private.item_lifecycle` as today.
-- **Effect on other sales.** `komisio_private.sale_line_facts` (last defined
-  in `20260914070000_lifecycle.sql`) gets one more refusal: `ITEM_RESERVED` for
-  provider `manual` when another link holds the item. Staff cancel the link
-  first, which is one click and leaves an audit row. PayPal POS and Shopify
-  receipts are **not** refused: they are completed external payments. They
-  record as today, and Komisio then cancels the link (see §3).
-- **Migration:** yes (two tables, RLS, grants, the `sale_line_facts` change,
-  pgTAP).
+Before each network create/capture/cancel/refund, commit an immutable intent:
+payload digest, operation ID, provider reference, merchant binding and stable
+idempotency key. Append a verified outcome or explicit unknown state afterward.
+Never hold a database lock across a network call. Evidence is bounded and
+personal fields filtered; it is never an arbitrary ledger command.
 
-### 2.3 Paid
+For Vipps MobilePay, read payment and event history and validate captured/refunded
+aggregates and the operation outcome; `AUTHORIZED` alone is not capture proof.
+Honor documented error/retry rules. For optional Stripe support, Checkout
+`complete` is also insufficient: verify PaymentIntent/captured amount. Its
+idempotency retention is bounded; after the safe retry window, reconcile rather
+than inventing a new key.
 
-1. The customer opens `/pay/<token>`. Komisio checks the token (by hash), the
-   hold and the connection, then creates a provider payment for the frozen
-   amount with manual capture where the method supports it. It records
-   `opened` with the provider id and redirects to the hosted page.
-2. The provider's signed webhook arrives (`checkout.session.completed` with an
-   uncaptured PaymentIntent for Stripe; `AUTHORIZED` for Vipps MobilePay).
-3. Komisio calls the engine. A new private core function records the sale with
-   `record_sale_core(p_tenant, <derived id>, 'payment_link', <provider payment
-id>, <authorized at>, <currency>, <lines>, <reference>)`.
-   - **New provider value** `payment_link` (one value for all link providers;
-     the link row says which provider). This needs a migration: the
-     `sales.provider` check in `20260914000000_sales.sql` (`manual`, `zettle`,
-     `shopify`), the same list inside `record_sale_core`, and `saleProvider`
-     in `lib/engine/sales.ts`. The UI label for the provider needs 8 locales.
-   - `external_id` = the provider payment id (`pi_…` or the ePayment
-     reference). The existing `(tenant, provider, external_id)` uniqueness makes
-     webhook retries no-ops, and `SALE_CONFLICT` catches a mismatched replay.
-   - `provider_reference` = `{ paymentLinkId, provider, account }` only. No
-     buyer data.
-   - **Actor.** `record_sale_core` requires an identity. The webhook has none,
-     so it follows `docs/AUTOMATION-ACTOR.md`: an automation grant with a new
-     scope (for example `payment_link_capture`) that opens exactly this core,
-     like `zettle_pull` and `shopify_pull` do in `record_sale_core` today. This
-     needs a migration.
-4. If the engine accepted it: **capture**, then record `captured`. If the
-   engine refused (`ITEM_ALREADY_SOLD`, `ITEM_ENDED`, `CURRENCY_MISMATCH`, …):
-   **cancel the authorization** and record `refused` plus `voided`. No money
-   moves, so nothing needs a refund. If capture fails after the sale is
-   recorded: record a full return through `record_return` (reason
-   `capture_failed`) and show it to staff.
-5. Without manual capture (Swish), a refusal leads to an automatic provider
-   refund plus a `refunded` event, shown to staff.
+A finalizer requires exact tenant, provider, merchant, environment, reference,
+currency and expected captured amount, with a unique claim on the evidence.
+Under the sales tenant lock, consume the capture evidence and link and record
+one completed sale. Proposed provider `payment_link` requires changes to
+`sales.provider`, the guard in `record_sale_core`, `saleProvider` in
+`lib/engine/sales.ts` and eight translated labels.
 
-The item becomes `sold` through the existing `sold` item event. Seller credit
-is frozen per line by `sale_line_facts` and booked as `credit_sale` in
-`seller_ledger_entries`, so settlement (`docs/SETTLEMENT.md`) needs no change.
-The sale appears in day close (`komisio_private.day_close_totals`) and the
-accounting export (`voucher_for`, Fortnox `lib/engine/fortnox-vouchers.ts`,
-e-conomic #523) like any other sale.
+Use a collision-safe external ID including actual provider, merchant binding
+and payment reference. A raw reference may collide across adapters/accounts.
+`provider_reference` contains link/connection IDs, no buyer data. Different
+money/line facts on replay cause conflict; identical replay is a no-op.
+The finalizer enters `record_sale_core` through a new narrow evidence-bound
+automation scope following `docs/AUTOMATION-ACTOR.md`. An expired/revoked grant
+must stop writes and surface recovery, never release stock.
 
-**Reconcile fallback.** A scheduled job (Vercel cron, same pattern as
-`/api/automation/zettle-pull`) lists links with `opened` and no final state.
-It retrieves the provider payment and feeds the same engine path. Missed
-webhooks therefore converge, and duplicates converge on `external_id`.
+Current sale-line calculation freezes commission, seller credit and VAT when
+verified payment becomes a sale. Price is frozen at link creation. The policy
+and terms versions used during finalization, and protection against changes
+while reserved, require a follow-up rule **before capture**. Do not receive
+money and silently change seller entitlement. No completed sale, seller credit
+or settlement eligibility exists merely because payment was authorized.
 
-**Clearing account (migration).** The voucher today has a single `grossOre`
-key (`komisio_private.accounting_keys`, `20260914160000_accounting_export.sql`,
-extended in `20261010140000_consignment_fee_accounting.sql`). Money from PayPal
-POS, Shopify, the counter and a link all debit one account. Link money arrives
-at Stripe or Vipps MobilePay, not at the till. Proposal: split gross per
-channel in `day_close_totals` (`perProvider`) and add keys such as
-`provider:payment_link:grossOre`. Each store maps them to its own clearing
-account (in Sweden typically a 15xx receivable; no account is assumed, see
-#523's "no Danish chart is assumed"). Provider fees are booked from the
-provider's payout report, as they are for PayPal POS today. Komisio does not
-book fees.
+Reconciliation reads unfinished and unknown attempts, including paid-unrecorded
+and pending refunds, through the same evidence path as webhooks. Staff see the
+provider reference and action needed. Retry, verify payment and release stock
+are separate actions. A missing webhook is not grounds to resend payment.
 
-### 2.4 Customer receipt
+**Accounting:** completed sales enter ledger, settlement and day close through
+the engine. However, current `grossOre` cannot distinguish provider receivables.
+Before exporting link sales, add frozen per-channel totals and explicit
+store-selected clearing maps to `day_close_totals`, `accounting_keys`/
+`voucher_for`, Fortnox and e-conomic. Later multiple adapters need actual
+provider/merchant separation, not just `payment_link`. Fees and settlement
+reconciliation use provider reports, never inferred advertised rates. No chart
+of accounts is assumed.
 
-- Stripe sends an e-mail receipt if the store enables it (the customer gives
-  their e-mail on Stripe's page, and Komisio never sees it). Vipps MobilePay
-  shows the payment in the app with the store name.
-- Komisio's `/pay/<token>/done` page shows what was bought, the amount, the
-  VAT amount and the store's name and VAT number from the store profile. If the
-  accountant requires a seller-issued receipt, that page (printable) is it.
-  This is a new UI surface and needs strings in 8 locales.
-- **Cash register questions for the accountant** (Komisio does not decide;
-  `skills/consignment-sweden/SKILL.md` "Cash register" and `docs/open-questions.md`
-  item 13 delegate the cash register to the POS provider):
-  - **SE:** Is a payment-link sale, agreed in a DM and paid remotely, a
-    distance contract (distansavtal) and therefore outside the kassaregister
-    requirement? A secondary source lists distance contracts as an exemption,
-    and Skatteverket treats Swish like card payment. If the customer pays the
-    link while standing in the shop, is it then a till sale that must go
-    through the certified register?
-  - **NO:** Does the kassasystemlova exemption for remote sales (fjernsalg)
-    cover a link sent in a DM? Which receipt content is required?
-  - **DK:** What do bogføringsloven and the receipt rules require for a remote
-    MobilePay sale? Is the provider's record plus Komisio's receipt page
-    enough?
-  - **FI:** Is the obligation to provide a receipt on request met by the
-    provider's record plus Komisio's receipt page?
-  - **All:** Does the 14-day right of withdrawal for distance sales apply, and
-    what must the store tell the buyer before payment? This affects the pay
-    page text.
+### 2.4 Customer document and receipt
 
-### 2.5 Expiry, cancel, failure
+Provider payment confirmation is not automatically a compliant store receipt
+or invoice. The done page can show status, items and gross total; it must not
+claim Komisio is a certified cash register.
 
-- **Expiry** at `expires_at` (and after any open provider session ends): the
-  hold is released, and the reconcile job writes `expired`. The token stops
-  working.
-- **Cancel** by staff: Komisio first expires or cancels the provider session
-  (Stripe `checkout/sessions/:id/expire`, Vipps MobilePay `cancel`). If the
-  provider says the payment already completed, the cancel fails and the
-  payment path wins. Otherwise Komisio records `cancelled` and releases the
-  hold.
-- **Failure** (customer aborts, payment declined): the provider session ends.
-  The link stays usable until its expiry, so the customer can try again and a
-  new session is created.
-- **Payment after expiry:** with manual capture, an authorization arriving
-  after the hold ended is recorded if the item is still available (the engine
-  decides), otherwise voided. With Swish, it is recorded if available,
-  otherwise refunded. Proposal: **accept when available**. The customer did
-  what the store asked.
+| Mode                   | Customer document constraint                                                    | Internal accounting                  |
+| ---------------------- | ------------------------------------------------------------------------------- | ------------------------------------ |
+| `consignment_margin`   | No automatic separate margin VAT/basis; verify scheme wording and country rules | Preserve selected mode's VAT         |
+| `store_margin`         | Same separation of customer document and margin calculation                     | Preserve selected mode's VAT         |
+| `consignment_full`     | Verify required full-VAT receipt/invoice fields per market                      | Full-price VAT as today              |
+| `consignment_business` | Customer receipt is distinct from consignor commission invoice                  | Keep goods/commission facts separate |
+| `store_full`           | Verify required full-VAT receipt/invoice fields per market                      | Full-price VAT as today              |
 
-### 2.6 Refunds
+Skatteverket's VMB invoice guidance prohibits separately stating VAT or its
+calculation basis. That does not decide eligibility or equivalent DK/FI/NO rules.
+Do not label a margin-taxed sale zero-tax just to suppress a line. Store profile
+currently lacks a VAT number and distinct legal-entity identifiers: obtaining,
+validating and freezing required document identity is additional work. Mixed-mode
+receipts need per-line handling.
 
-Staff press "refund" on a link sale. Komisio calls the provider refund for the
-full line amount, then `record_return` (`lib/engine/returns.ts`,
-`20260914030000_sale_returns.sql`) with `refund = line price`. The return
-reverses the seller credit, frees the item and flags the return if the credit
-was already reserved or paid out, exactly as today. The order matters: provider
-refund first, return after confirmation. A failed refund records no return.
-Partial refunds stay out of scope (`PARTIAL_REFUND_UNSUPPORTED`). A shipping
-refund follows the shipping line (§2.7).
+Accountant/legal-review gates: SE remote-DM versus in-store cash-register rules;
+DK remote MobilePay documentation/digital bookkeeping; NO remote-sale exceptions
+and receipt requirements; FI receipt delivery/content. Every market needs seller
+identity, scheme wording, consumer/withdrawal terms and capture/fulfilment timing
+verified. These are questions, not claims of compliance. See
+`skills/consignment-sweden/SKILL.md`, `docs/VAT-CASES.md` and open question 13.
 
-### 2.7 VAT, including shipping
+### 2.5 Expiry, cancellation and failure
 
-No VAT logic moves to the provider. The amount sent to the provider is the
-tax-inclusive total of the frozen lines. Stripe Tax is **not** enabled on store
-payments (#539 concerns Komisio's own billing only). VAT per line is what
-`sale_line_facts` computes from the item's frozen ownership and terms and the
-store policy at that moment (`docs/VAT-CASES.md`, `lib/engine/vat.ts`):
+| Observation                                    | Proposed action                                                              |
+| ---------------------------------------------- | ---------------------------------------------------------------------------- |
+| No attempt submitted; link expires             | Atomically stop starts and release its reservation                           |
+| Lost create response                           | Hold; query stable reference/retry identical intent within provider contract |
+| Authorized only                                | Keep reserved; validate capture eligibility/deadline                         |
+| Capture timeout/5xx                            | Unknown; reconcile; no sale or synthetic return                              |
+| Capture verified; finalizer fails              | Hold paid-unrecorded; retry same finalization, escalate conflict             |
+| Cancel races with capture                      | Serialize intents; retain hold until authoritative outcome                   |
+| Definitive decline/cancel/expiry without funds | Close attempt; another allowed only while link and inventory remain eligible |
+| Refund accepted/pending                        | Retain recovery hold; no successful return yet                               |
+| Late authorization/capture                     | Reconcile; never blindly release or capture outside agreed policy            |
 
-| Mode                   | Item line                                               | Seller credit | Note                   |
-| ---------------------- | ------------------------------------------------------- | ------------- | ---------------------- |
-| `consignment_margin`   | VAT on margin (price − seller credit)                   | Unchanged     | Same as a counter sale |
-| `consignment_full`     | VAT on the whole price                                  | Unchanged     | —                      |
-| `consignment_business` | VAT on the whole price; commission invoice VAT as today | Unchanged     | —                      |
-| `store_margin`         | VAT on max(price − purchase price, 0)                   | n/a           | —                      |
-| `store_full`           | VAT on the whole price                                  | n/a           | —                      |
+The earlier proposal to accept any late payment if stock seems available is
+withdrawn pending owner policy. Safe proposal: no new capture after local expiry,
+verified void where possible, and manual resolution for already captured late
+payments. Concurrent expiry/capture tests must prove the agreed contract.
 
-The rate is the single `vatRatePercent` policy value (FI 25.5 % fits the
-basis-point column). The Swedish skill is the only verified VAT source.
-DK/FI/NO margin-scheme equivalence is **not verified**, and the store's
-accountant decides the mode, as for any sale.
+### 2.6 Refunds and actor authority
 
-**Shipping.** `valid_sale_lines` accepts only item lines (`itemId`,
-`priceOre`), so shipping cannot be a sale line today. Proposal:
+Staff request a full-line refund bound to a recorded sale and original captured
+payment. A scoped worker uses the persisted operation key. Only verified refund
+success enters `komisio_private.record_return_core` through a new narrow wrapper.
+A sale scope grants no generic automation right to public `record_return`.
+Wrappers, grants and cross-tenant tests need migrations.
 
-- Shipping is **store revenue**. It never enters commission, seller credit or
-  the item price.
-- A new line kind `shipping` on the sale, or a `sale_charges` fact referencing
-  the sale, recorded in the same transaction as the sale. Migration plus
-  pgTAP.
-- Its VAT treatment is a store policy choice, made with the accountant like
-  `vatModeConsignmentPrivate`, with no default: `standard` (VAT at the policy
-  rate on the fee) or `follow_principal` (shipping follows the goods' VAT
-  treatment). Margin-scheme goods are the hard case. Whether the shipping fee
-  joins the margin-scheme price is a question for the accountant. Until a store
-  has chosen, links offer pickup only.
-- Day close and voucher get `shipping:netOre` and `shipping:vatOre` keys
-  (the same migration as the clearing split).
-- A refund of a shipped line refunds shipping only if the whole sale is
-  returned (proposal). Otherwise shipping stays.
+Pending, failed or unknown refunds do not free stock or reverse credit as if
+funds were returned. Reconcile lost responses against the same operation. After
+provider success/database failure, retry only the same return. Existing handling
+of reserved/paid seller credit stays unchanged once a return is valid. Partial
+line refunds remain unsupported: external partial refunds are held for staff,
+never rounded up. A refund of captured-but-unrecorded money needs a separate
+recovery fact, not a return against a nonexistent sale. Such money stays visible
+for provider-funds reconciliation even when it cannot be an ordinary sale.
 
-Pickup only (no shipping) needs none of this. A first slice can be pickup only.
+### 2.7 VAT and shipping
 
----
+VAT stays in the engine. Send frozen inclusive amounts, with no provider tax
+recalculation. Existing cases remain the baseline, without asserting eligibility:
 
-## 3. Relation to PayPal POS and Shopify sales
+| Mode                   | Existing item VAT basis                       | Seller credit             |
+| ---------------------- | --------------------------------------------- | ------------------------- |
+| `consignment_margin`   | Price less seller credit                      | Existing commission terms |
+| `consignment_full`     | Whole item price                              | Existing commission terms |
+| `consignment_business` | Whole price; commission facts as in VAT-CASES | Existing business terms   |
+| `store_margin`         | Positive price less purchase cost             | None                      |
+| `store_full`           | Whole price                                   | None                      |
 
-**Chosen prevention: both, with the engine as the guarantee.**
+Rates/rounding stay in decimal/integer minor units. Nordic applicability remains
+the store's accountant decision. `valid_sale_lines` supports items only today.
+Shipping needs a separate immutable line/charge, revenue allocation, mixed/margin
+VAT basis, refund policy and day-close keys. A universal standard/follow-principal
+switch is not a decided tax rule. Until resolved, pickup only, no shipping
+amount/address and no shipping deduction from seller credit.
 
-1. **Engine guarantee (already exists).** `sale_line_facts` refuses a second
-   completed sale of an item (`ITEM_ALREADY_SOLD`), and record_sale_core takes
-   the tenant row lock (`for update`), so two sales of one item serialize. With
-   manual capture, the link side always loses cleanly (void, no refund) if it
-   comes second.
-2. **Hold in the catalogs (best effort).** While held, the item's PayPal POS
-   stock is moved from STORE to another inventory and back on release.
-   Shopify's `available` quantity goes to 0 and back. The exporters today can
-   only initialize stock 0→1 (`extensions/zettle/inventory.ts`
-   `initialize`/`mayInitialize`; Shopify product updates "never replenish
-   existing inventory", `docs/SHOPIFY-ADAPTER.md`). A hold therefore needs new
-   adapter writes and intent/outcome rows like the existing ones (migration).
-   This is advisory: the PayPal POS pull runs every ten minutes, and
-   `docs/SHOPIFY-ADAPTER.md` says Shopify inventory policy "alone is not a
-   verified guarantee against overselling across disconnected tills". It is a
-   separate, later follow-up.
-3. **POS sale of a held item.** The receipt is recorded as today: completed
-   money beats a promised payment. Komisio then cancels the link (provider
-   expire or cancel). If the customer paid in the same window, the
-   authorization is refused and voided (or refunded for Swish), and staff see
-   one line explaining it.
-4. **Link paid first, then a POS sale.** The PayPal POS receipt or Shopify
-   order is held with `ITEM_ALREADY_SOLD`, as today. The staff recovery path
-   follows (§3.1).
+## 3. PayPal POS and Shopify: duplicates and races
 
-### 3.1 Staff recovery when both happened
+Combine **local engine reservations** with **best-effort remote stock suppression**
+and explicit recovery. A disconnected till can still collect a second payment.
+The guarantee is at most one active completed Komisio sale and seller credit for
+the item, not an atomic transaction across independent payment networks.
 
-Both payments really took place (for example, Swish was paid and the till sold
-the item, or the till sold it before the hold reached the POS).
+Current tenant locking and `ITEM_ALREADY_SOLD` prevent duplicate recorded sales,
+not capture races. Add a durable capture claim before the request. Proposed
+priority: a verified POS sale before the claim may win and cancel the link;
+while capture is in flight/unknown, hold competing POS evidence for staff. This
+priority **still requires approval**. Never discard evidence of a real payment
+or release inventory simply to resolve a race.
 
-- The engine has recorded exactly one sale. The other is held: a PayPal POS
-  receipt outcome or Shopify order outcome with `ITEM_ALREADY_SOLD`, or a link
-  event `refused` with a voided authorization (nothing to do) or with a refund
-  (Swish, automatic).
-- For a held PayPal POS or Shopify receipt, staff refund that customer in the
-  POS. The held receipt never became a sale, so no return is recorded. How the
-  existing refund reconciliation shows a refund of an unrecorded receipt was
-  not checked and belongs to slice 14.
-- To keep the POS sale and refund the link instead: staff refund the link sale
-  (§2.6). This records a return, which frees the item. Then they retry the
-  held receipt (`reconcile_zettle_receipt` / `reconcile_shopify_order`), which
-  now records.
-- Counted once in all paths: day close counts only `completed` sales minus
-  returns.
+Both exporters need audited suppression/recovery writes. Zettle currently only
+initializes stock 0-to-1; Shopify updates never replenish existing stock. A hold
+badge cannot zero either. Record intents/outcomes, respect source-managed stock
+and restore only if no other sale, custody, lifecycle or stock action prevents
+it. Offline/manual overrides remain a risk.
 
-**A paid link is never also recorded from a PayPal POS receipt.** A link sale
-has provider `payment_link` with the provider payment id. A POS receipt has
-provider `zettle` or `shopify` with its own id. The link money never passes
-through the POS, so no receipt exists for it. If staff also ring up the item at
-the till "for the record", the engine refuses it as `ITEM_ALREADY_SOLD`. The
-help text must say not to do that.
+Staff recovery shows both references and which sale was recorded:
 
----
+- Uncaptured competing link: verify cancellation before releasing its hold.
+- Recorded link then held POS payment: refund the duplicate in POS and reconcile
+  evidence. An unrecorded receipt must not reverse another sale's seller credit.
+- Keep POS instead: verify link refund/return, then explicitly retry the held POS
+  receipt via its existing reconciliation path.
+- Captured but unrecordable link: retain paid-unrecorded hold until finalization
+  or verified orphan refund recovery (§2.6).
+
+Direct MobilePay is recorded as `payment_link` only. A future Shopify checkout
+is `shopify`, via existing evidence, not also a link sale. Do not ring up a link
+payment at the till merely for another receipt. Where a legal cash-register
+process is needed, agree a supported reporting path without manufacturing a
+second payment/sale.
 
 ## 4. Security and privacy
 
-- **Webhooks.** Verify the signature against the raw body before parsing,
-  with the size bound used by `app/api/billing/webhook/route.ts`. Stripe:
-  reuse `verifyStripeSignature` (`extensions/stripe/api.ts`: HMAC-SHA256,
-  timing-safe compare, 300-second tolerance) with the Connect endpoint secret.
-  Vipps MobilePay: a new verifier for its HMAC scheme, plus our own
-  `x-ms-date` window (5 minutes) because none is documented. Replay: the event
-  id is stored once (unique), and the money fact is idempotent by
-  `(tenant, 'payment_link', external_id)`. The handler never trusts amounts
-  from the event. It re-reads the provider payment by id with our credentials
-  and compares the amount, currency and account with the frozen link.
-- **Tenant binding.** The webhook resolves the tenant from the link (found by
-  the provider id we stored), never from metadata alone. Stripe's
-  `event.account` must equal the connected account bound to that tenant's
-  connection revision.
-- **No card or wallet data.** Hosted provider pages only. Komisio stores
-  provider ids and statuses, never card numbers, wallet ids or phone numbers.
-- **Buyer data.** None by default. Komisio does not ask for or store the
-  buyer's name, e-mail or phone. The store knows the buyer from the DM. If
-  shipping is offered, the address is collected by the store in the DM, or by
-  the provider (Stripe `shipping_address_collection`, Vipps Express), and
-  stays in the provider's account. Komisio does not copy it. With that rule,
-  the privacy notice and DPA need only one sentence that payment links are
-  processed by the store's chosen provider, which the store controls. If a
-  later slice stores addresses, it needs a retention period (proposal: until
-  the return window ends plus the accounting retention of the sale reference
-  only), an erasure path like seller closure, and a DPA update. That decision
-  belongs to the owner.
-- **Credentials.** Stripe: no per-store secret. The platform key stays in the
-  environment, and only `acct_…` is stored, bound by OAuth. Vipps MobilePay
-  sales-unit keys: sealed with `seal()` in `lib/platform/credentials.ts`
-  (AES-256-GCM, `KOMISIO_CREDENTIAL_KEY`), opened only server-side for a call,
-  never returned to members, never logged. Error logs carry codes only.
-- **Links.** The token is 32 random bytes (base64url), and only its SHA-256 is
-  stored. It expires. The amount and currency are fixed server-side from the
-  frozen link. The pay page accepts no amount, price or item input. Rate-limit
-  token lookups. The pay page shows only the item title, price, store name and
-  note, never seller data. Unknown or expired tokens return one generic page,
-  with no difference between "never existed" and "expired".
-- **Server flag.** The whole feature sits behind a server environment flag
-  (default off) until pilot acceptance, like `SHOPIFY_ACCEPT_TEST_ORDERS`.
+- Authenticate raw-body webhooks before parsing. Vipps uses a per-webhook secret
+  and HMAC over method, path/query, date, host and content hash. Validate the
+  expected host/path through trusted proxy configuration, constant-time signature
+  comparison, body bounds and durable deduplication. Check the proposed freshness
+  window against provider retries; stale delivery can trigger reconciliation,
+  never unauthenticated writes.
+- Re-read evidence with the bound sales-unit credentials. Check tenant, provider,
+  merchant, environment, reference, currency and expected amount. Browser success
+  and metadata confer no authority. Event deduplication is not write idempotency.
+- Optional Stripe support uses a separate Connect endpoint/secret from Komisio
+  billing, checks `event.account` and follows its signature tolerance. Proposed
+  onboarding is embedded/Account Link; this proposal does not use OAuth binding.
+- Seal store credentials with `lib/platform/credentials.ts`. Owner/admin enters
+  them through a protected same-origin form. After saving, show only status and
+  non-secret identity; never return or log secrets. Rotation versions credentials
+  without silently changing the merchant. Partner-wide keys stay server-only.
+- Payments pin the merchant/connection revision. Reconnection cannot redirect old
+  payments/refunds. Keep authorized recovery access for outstanding payments;
+  disconnect stops new links and surfaces unresolved work. Environments never
+  share credentials or reference namespaces. Revoked grants require intervention.
+- Use 32-byte random public tokens, digest-only storage, redacted URL logs,
+  no-referrer headers and no third-party assets on payment pages. Rate-limit
+  payment starts and reads. Public input cannot choose tenant, merchant, price
+  or arbitrary redirect URL. The token page never displays consignor information.
+- Provider-hosted pages keep card/wallet credentials outside Komisio. Persist
+  minimized IDs, amount/status/operation evidence, not complete payloads that
+  may contain personal data. Pickup pilot collects no buyer contact/address.
+  Optional notes have a privacy hint and length bound.
+- Review privacy notice/DPA, processor roles and retention before launch; a
+  one-sentence update is not assumed sufficient. Public-link visibility and
+  financial-evidence retention are separate. No broad service-role writes.
+- New scopes, RLS, key rotation/revocation and webhook replay/spoof tests are
+  mandatory. Feature flag defaults off until provider and pilot acceptance.
 
----
+## 5. Recommendation and delivery plan
 
-## 5. Recommendation and plan
+### 5.1 Market order
 
-### 5.1 Per market
+| Market                  | Direction                                             | Limitation                                               |
+| ----------------------- | ----------------------------------------------------- | -------------------------------------------------------- |
+| DK / DKK                | Direct MobilePay, store-owned account and setup first | API product and production verification required         |
+| FI / EUR                | Same ePayment adapter after country verification      | Local documentation/capture rules and merchant agreement |
+| NO / NOK                | Direct Vipps after country verification               | Branding and local rules differ                          |
+| SE / SEK                | Investigate Swish separately                          | Certificate/operator and cash-register decisions open    |
+| Other EUR / USD stores  | Optional future Stripe direct-charge cards            | No conversion or silently substituted method             |
+| Existing Shopify stores | Optional own-Shopify draft checkout (§7)              | De-listing and conflict recovery required                |
 
-| Market             | Recommendation                                                                                                                                                                                                                               | Trade-offs we accept                                                                                                                                                          |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **DK**             | Stripe Connect, direct charges, MobilePay + card, manual capture                                                                                                                                                                             | Stripe fees are higher than Vipps MobilePay's own (1.49 % + 1 DKK for portal links), plus 35 DKK/month. Stores must open a Stripe account even if they already have MobilePay |
-| **FI**             | Same, MobilePay in EUR + card                                                                                                                                                                                                                | As DK, without the monthly fee                                                                                                                                                |
-| **NO**             | Stripe Connect with cards now. Vipps when it leaves Stripe's private preview, or the direct ePayment adapter (slice 9)                                                                                                                       | Norwegian customers expect Vipps. Card-only links are a weak first offer in NO                                                                                                |
-| **SE**             | Card via Stripe Connect now. Swish follows the owner's decision: (a) Swish via Stripe if the accountant accepts Stripe as merchant of record, or (b) Swish Handel direct once the certificate question in `docs/SWISH-PAYOUTS.md` is settled | Swedish customers expect Swish. Card first is a weak offer, but there is no store request from SE yet                                                                         |
-| **EUR elsewhere**  | Card via Stripe Connect. MobilePay shows for DK/FI customers                                                                                                                                                                                 | —                                                                                                                                                                             |
-| **USD**            | Card via Stripe Connect                                                                                                                                                                                                                      | —                                                                                                                                                                             |
-| **Shopify stores** | The store's own Shopify (§7): draft order + `invoiceUrl` through the existing adapter (slice 10), MobilePay native on Shopify Payments in DK/FI                                                                                              | Needs the de-list/sync work (slice 15) before it is safe next to a PayPal POS till. Swish only on Shopify Plus; Vipps only through an app                                     |
+This accepts narrower initial coverage to follow the owner's account model.
+Store ownership does not remove Komisio's provider approval requirements.
 
-Why Stripe first: one adapter covers all five currencies (cards) and MobilePay
-in DK/FI. It has manual capture, so a double sell is solved without refunds.
-The store is merchant of record, and Komisio already has the Stripe signature
-code and webhook pattern. Why not Vipps MobilePay direct first: every store
-needs its own merchant agreement and keys (or Komisio a partner agreement),
-there is no SE or USD coverage, and the 10-minute lifetime means the same
-Komisio pay page anyway. Both share the provider-neutral core (slices 1–4), so
-the order can flip if the Danish store prefers its existing MobilePay
-agreement. That is a question for the owner.
+### 5.2 Interim before integration
 
-### 5.2 Interim for the Danish store (no development)
+A store may investigate the provider's portal payment-link product independently.
+It does not provide Komisio reservation, automatic seller credit, receipt matching
+or provider-specific clearing. Staff need verified payment and agreed manual
+stock/accounting/document procedures. Do not present it as this integration or
+promise existing-product eligibility without checking the merchant agreement.
 
-The store creates a payment link per item in the Vipps MobilePay business
-portal (1.49 % + 1 DKK, published) and pastes it into the DM. When paid, staff
-record a counter sale in Komisio (provider `manual`). Known gaps: no hold (staff
-must avoid selling the item at the till meanwhile), the voucher books that sale
-to the same gross account as the till, and a portal link is reusable ("everyone
-who clicks on the link can pay you"), so staff must deactivate it after
-payment. This can start today.
+### 5.3 Proposed follow-up slices (not created)
 
-### 5.3 Proposed follow-up issues (not created)
+Focused developer-day estimates include relevant tests and translations. They
+exclude provider/accountant waiting and are not delivery commitments. Every
+new core table or money rule needs its own explicit decision before coding.
 
-Rough effort in focused developer days, including pgTAP, unit tests and 8
-locales where UI is involved.
+1. **Provider/sandbox contract** (1–2 d plus waiting): confirm sales-unit-key
+   onboarding at multi-store scale, partner requirements, ePayment checklist,
+   capture timing and idempotency evidence. Operator supplies approved test setup.
+2. **Store MobilePay connection** (3–5 d): self-service owner/admin form,
+   sealed revisions, sales-unit/environment/currency validation, webhook
+   registration, status, rotation and safe disconnect. Migration + RLS tests.
+3. **Reservations and durable attempts** (5–8 d): links, holds, write intents,
+   outcomes/evidence, single active attempt, capture claim, expiry/cancel races
+   and inventory protection. Migration + multi-connection tests.
+4. **Verified sale finalizer** (3–5 d): provider enum, scoped core wrapper,
+   frozen policy inputs, capture-evidence consumption, paid-unrecorded recovery,
+   no credit before capture. Migration + settlement/day-close assertions.
+5. **ePayment adapter/reconciliation** (4–6 d): create/read/capture/cancel,
+   HMAC, stable keys, polling, unknown-state operator UI and sandbox journeys.
+6. **Refunds/return authority** (3–4 d): full-line intent/outcome, scoped return
+   wrapper, pending/failed recovery, orphan-payment refund. Migration + permission
+   tests, not impersonation of the public member wrapper.
+7. **Item actions/pay page** (3–4 d): selection, expiry/note, pickup, copy link,
+   explicit payment start, eight locales/accessibility. Consumed links stay closed.
+8. **Accounting/receipt readiness** (3–5 d plus advice): clearing by actual
+   payment channel, frozen voucher maps, provider settlement evidence, required
+   legal identity and mode/market-specific documents. Additive migrations.
+9. **Cross-channel stock/recovery** (3–5 d): audited suppression/restoration,
+   competing-payment UI, offline/capture/cancel races and unrecorded-receipt refunds.
+10. **Help and controlled pilot** (1–2 d plus observation): store setup,
+    lost-response recovery, no duplicate till sale, alerts and provider acceptance.
+11. **Shipping** (later, 2–4 d after decisions): immutable charges, VAT/revenue/
+    refund and accounting rules; not silently deducted from seller commission.
+12. **Optional channels** (separate scope): Stripe Connect onboarding/adapter
+    (6–9 d), own-Shopify draft links (2–3 d) plus de-list sync (4–5 d), or Swish
+    (5+ d plus certificate/legal decisions). None is a MobilePay dependency.
 
-1. **Reservation model (holds)** (3–4 d). `payment_links` and
-   `payment_link_events` tables, the derived hold, a `reserved` flag on the
-   items overview, lifecycle and item page, `ITEM_RESERVED` in `sale_line_facts`
-   for manual sales, cancel, and the expiry job. Migration + pgTAP. No provider.
-2. **New sale provider `payment_link`** (1–2 d). The `sales.provider` check,
-   `record_sale_core` list, `saleProvider`, sale search filter and label, and a
-   private core entry with automation scope `payment_link_capture`. Migration +
-   pgTAP.
-3. **Accounting split per channel and shipping keys** (2–3 d). `perProvider`
-   gross in `day_close_totals`, new keys in `accounting_keys`/`voucher_for`,
-   Fortnox and e-conomic mapping UI, and reconciliation. Migration + pgTAP.
-   This also fixes the existing single gross account for PayPal POS vs.
-   Shopify vs. counter.
-4. **Public pay page and token** (2–3 d). `/pay/<token>`, the done/receipt
-   page, rate limit, generic errors, buyer-facing strings in 8 locales, and
-   withdrawal-right text once the accountant answers.
-5. **Stripe Connect connection per store** (3–4 d). Embedded onboarding
-   (Account onboarding component; Stripe-hosted Account Link as fallback; no
-   OAuth, see §6.1) with prefill from the store profile, binding `acct_…` per
-   tenant with a revision, a capability check (`mobilepay_payments` active),
-   an "action needed" banner from `account.updated`, disconnect, and the
-   Connect webhook endpoint and secret. Platform activation is owner/operator
-   work.
-6. **Stripe link adapter: session, webhook, capture, reconcile** (3–4 d).
-   Checkout Session on open with manual capture, a signed Connect webhook,
-   amount re-read, record → capture/void, the reconcile cron and test-mode e2e.
-7. **Refunds for link sales** (1–2 d). Provider refund, then `record_return`,
-   failure handling and the item page action.
-8. **Link creation UI** (2–3 d). Item page action, multi-select, expiry
-   choice, note, pickup/shipping, copy link, open links list with cancel.
-9. **Vipps MobilePay ePayment adapter** (4–5 d). Sealed sales-unit keys or a
-   partner model, ePayment create/capture/cancel/refund, the HMAC webhook
-   verifier with a date window, a currency check against the sales-unit region,
-   and reconcile.
-10. **Shopify draft-order links** (2 d). `draftOrderCreate` with
-    `reserveInventoryUntil`, return `invoiceUrl`, link it to the hold, and the
-    paid order arrives through the existing pull.
-11. **Shipping as store revenue** (2–3 d, after the accountant). Shipping
-    line/charge fact, a `shippingVatMode` policy key with no default, day
-    close and voucher keys. Migration + pgTAP.
-12. **PayPal POS / Shopify stock hold** (3 d). Stock decrement and restore
-    for held items, with intent/outcome rows. Best effort, after 1–8.
-13. **Swish** (2 d via Stripe, or 5+ d direct). After the owner's decision.
-14. **Help and docs** (1 d). A help page for links, recovery steps (§3.1),
-    "do not ring up a link sale at the till", and the integration doc.
-15. **Shopify as a remote-sales channel: selection and de-list sync**
-    (4–5 d). A per-item "show online" choice, automatic Shopify export under
-    `catalog_export`, setting inventory to 0 (or unpublishing) when an item
-    sells elsewhere, ends or is held, an audited restock after a return, and
-    optionally a signed `orders/paid` webhook to shorten the 15-minute pull.
-    Migration + pgTAP. Needed before §7 is safe next to a PayPal POS till.
-16. **Company number and legal name in the store profile** (1 d). Prefills
-    Stripe (and Vipps MobilePay) onboarding (§6.1). Migration (profile schema)
-    - 8 locales.
+Pickup pilot: approximately **26–41 developer days** for slices 1–8 and 10,
+plus **3–5 days** for cross-channel work if connected POS/online stock is in
+scope. External lead times are additional. Re-estimate after the sandbox contract.
+Do not omit payment/refund reconciliation or accounting/receipt readiness to
+send the first live link.
 
-The minimum useful pilot for the Danish store is slices 1, 2, 4, 5, 6, 7 and 8
-with pickup only, **about 15–22 days**. Slice 3 should land before a store
-exports vouchers with link sales.
+### 5.4 Decisions and remaining gates
 
-### 5.4 Open questions for the owner or an accountant
+Resolved by the owner on 2026-10-20: MobilePay direct first with store-owned
+account/self-service connection; reserve before payment and finalize sale/credit
+after verified capture; unknown payment/refund outcomes retain reservations.
 
-1. **Owner:** Stripe Connect first, or Vipps MobilePay direct first because the
-   Danish store already has MobilePay? Does Inority accept becoming a Stripe
-   Connect platform (terms, platform profile)?
-2. **Owner:** Default hold of 24 hours (1–72 selectable)? Accept a payment that
-   arrives after expiry when the item is still available?
-3. **Owner:** Should a POS sale of a held item win and cancel the link (the
-   proposal), or should the hold refuse the POS receipt?
-4. **Owner/accountant (SE):** Swish via Stripe with Stripe as merchant of
-   record (factoring): acceptable for bookkeeping and for the customer seeing
-   Stripe as recipient? Otherwise, the certificate route in
-   `docs/SWISH-PAYOUTS.md` question 1 decides Swish Handel.
-5. **Accountant, per market:** the cash-register and receipt questions in
-   §2.4, and the withdrawal-right text.
-6. **Accountant:** shipping VAT for margin-scheme goods (`follow_principal`
-   vs. `standard`). Is shipping revenue ever part of the margin?
-7. **Accountant:** which clearing account per store and channel. Provider
-   fees booked from payout reports (as for PayPal POS)?
-8. **Owner:** does Komisio ever store buyer shipping addresses, or always
-   leave them in the DM or the provider? This decides the DPA change.
-9. **Stripe (support):** is the MobilePay fee additive to the card fee (note 1)?
-   Will connected accounts registered in NO get Vipps after the preview? Is
-   the 35 DKK MobilePay monthly fee per account or per company?
-10. **Owner:** offer the store's own Shopify (§7) as a parallel route, and in
-    which order relative to Stripe payment links (slice 15 vs. slices 5–6)?
-11. **Owner:** if Vipps MobilePay direct is ever wanted, apply to its partner
-    program first (§6.2)?
+Open before the relevant implementation:
 
-### 5.5 Observed outside the scope
+- Exact core facts/scopes, retained evidence and connection-binding policy.
+- Default link expiry, late-payment recovery, POS-vs-capture priority and frozen
+  policy/commission inputs during reservation.
+- Provider approval for store-entered keys at multi-store scale, capture/
+  fulfilment timing, settlement/disputes, recovery and contract fees.
+- Receipt/legal identity/cash-register/consumer requirements per country and
+  clearing maps verified with the store's accountant. No launch on guessed rules.
+- Shipping fees/addresses/refund allocation/retention, outside pickup scope.
+- Swish certificate choice and optional Stripe platform/Shopify rollout.
 
-- `day_close_totals` uses a fixed `Europe/Stockholm` day boundary
-  (`20260914050000_day_closes.sql`, `20261010140000_consignment_fee_accounting.sql`).
-  For FI stores (UTC+2/+3), the local day is shifted by one hour. Payment links
-  make late-evening remote sales more likely, so this deserves its own issue.
+### 5.5 Existing limitation
 
----
+`day_close_totals` uses Europe/Stockholm. A Finnish store's local day differs.
+FI rollout needs an explicit timezone/accounting decision and tests.
 
-## 6. Store onboarding, from the store's point of view
+## 6. Store onboarding
 
-Owner request on #552. Sources checked 2026-10-20 (see [References](#references)).
-Times are **assumptions** unless stated: no provider publishes a review time we
-could rely on, and we created no accounts to measure one.
+### 6.1 Selected: the store's own MobilePay account
 
-### 6.1 Recommended: Stripe Connect, direct charges, Stripe liable for losses
+| Step | Store action                                                                                          | Komisio responsibility                                                                                    |
+| ---- | ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| 1    | Register/sign a business merchant agreement with Vipps MobilePay, or use an eligible existing account | Provider guidance; never sign/create the merchant agreement for the store                                 |
+| 2    | Obtain an API-enabled online-payment product/sales unit; register settlement bank with provider       | Explain that a private wallet, Box or portal-only links product may be insufficient                       |
+| 3    | Retrieve test/production credentials in business portal using the required portal role                | Clearly separate environments                                                                             |
+| 4    | In Komisio Integrations → MobilePay, enter MSN, client ID, client secret and one subscription key     | Owner/admin, MFA/tenant checks, seal secrets, do not return saved values                                  |
+| 5    | Check connection and confirm provider-verified sales unit/currency                                    | Read-only validation first; an access token alone proves neither merchant identity nor product capability |
+| 6    | Complete provider verification and pilot prerequisites                                                | Register/verify webhook with durable outcome; honest Test / Needs action / Connected status               |
+| 7    | Create item links after activation                                                                    | Use only pinned merchant and verified capability                                                          |
 
-The configuration is a connected account with the full Stripe Dashboard,
-`controller.requirement_collection = stripe`, `controller.losses.payments = stripe`
-and `controller.fees.payer = account` ("Stripe handles pricing"). Stripe
-collects KYC and carries negative balances. Komisio never sees ID documents or
-bank details.
+MSN identifies the sales unit; it is not a secret key. Primary and secondary
+subscription keys are interchangeable. The store retrieves its own keys in the
+portal and submits them only in the protected connection form, never support
+chat/GitHub. Partner-wide keys, if later chosen, remain server-only.
 
-| #   | Step                                                                           | Where                                                                                                                                 | What the store provides                                                                                                                                                                   | Time (assumed)                                |
-| --- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| 1   | Owner or admin presses "Connect payments" on Komisio's integrations page       | Komisio                                                                                                                               | Choice of country (prefilled from the store)                                                                                                                                              | < 1 min                                       |
-| 2   | Komisio creates the connected account with prefilled data and opens onboarding | Embedded in Komisio (Account onboarding component), or a Stripe-hosted page (Account Link)                                            | —                                                                                                                                                                                         | —                                             |
-| 3   | Sign in to Stripe, or create a Stripe login                                    | Stripe pop-up inside the embedded component (Stripe user authentication is on by default; full-Dashboard accounts cannot turn it off) | E-mail, phone for SMS codes                                                                                                                                                               | 2 min                                         |
-| 4   | Business details                                                               | Stripe form                                                                                                                           | Company name, company registration number (DK: CVR, the `dk_cvr` id), address, phone, website or product description, MCC (prefilled), support phone                                      | 3–5 min                                       |
-| 5   | Representative                                                                 | Stripe form                                                                                                                           | Name, date of birth, home address, e-mail, phone, job title, nationality. Stripe may ask for an ID document or selfie if registry checks fail (`supports_stripe_identity`)                | 3–5 min (+5 min if an ID upload is asked for) |
-| 6   | Owners and directors                                                           | Stripe form                                                                                                                           | Each beneficial owner and director: name, date of birth, address, e-mail. Attestation "owners provided". Possibly proof of registration or beneficial ownership documents as alternatives | 2–5 min                                       |
-| 7   | Payout account                                                                 | Stripe form                                                                                                                           | Bank account (IBAN) in the company's name                                                                                                                                                 | 1 min                                         |
-| 8   | Accept Stripe's service agreement                                              | Last screen of the form                                                                                                               | —                                                                                                                                                                                         | < 1 min                                       |
-| 9   | Verification                                                                   | Stripe, in the background                                                                                                             | Nothing, unless Stripe asks again                                                                                                                                                         | Minutes to a few business days                |
-| 10  | MobilePay capability becomes `active`                                          | Stripe; Komisio shows the status                                                                                                      | Nothing (Komisio requests `mobilepay_payments` at creation)                                                                                                                               | Unknown; not documented                       |
-| 11  | First link: staff send a link from the item page; the customer pays            | Komisio, then Stripe Checkout                                                                                                         | —                                                                                                                                                                                         | —                                             |
+Provider docs permit acting for a merchant using that merchant's sales-unit keys,
+but describe partner keys for multi-merchant partners. Confirm the arrangement
+before broad rollout. An approved partner-consent flow may simplify setup while
+preserving store ownership; it does not authorize us to register merchants or
+change settlement banks.
 
-The requirement list above is Stripe's own list for an SE platform and a DK
-company with card payments, transfers and MobilePay (Stripe's
-"required verification information" endpoint, queried 2026-10-20). Stripe uses
-no MitID or BankID; identity is checked against registries, with an ID document
-or selfie as fallback. **Realistic total: 15–25 minutes of the store's time**
-when the person onboarding has the owners' details at hand. Activation follows
-Stripe's review. Payouts can be held until verification completes, so the
-first link can go out before money reaches the bank.
+An eligible existing sales unit should be reusable; the store is not forced to
+open Stripe. If another integrator controls its partner relationship, follow the
+provider's change process, not an implicit takeover. No timed onboarding promise
+was verified. Rotation/disconnect must preserve authorized recovery for outstanding
+payments. Settlement bank changes happen at MobilePay, not in Komisio.
 
-**Already has a Stripe account.** The account itself cannot be reused as is.
-OAuth to connect an existing account is "not recommended for new Connect
-platforms", and since June 2021 a `read_write` platform cannot connect a
-Standard account that another platform controls. The store gets a new
-connected account under Komisio's platform instead. Networked onboarding is on
-by default: when the store signs in with the same Stripe user, it can reuse the
-verified legal entity. Company and person data are then copied and kept in
-sync; bank account, business profile and branding are copied once. This needs
-`requirement_collection = stripe` and authenticated onboarding, which is the
-recommended configuration. The new account has its own balance and payouts,
-and MobilePay must be enabled on it. Whether the 35 DKK MobilePay monthly fee
-is charged per Stripe account or per company was **not verified**.
+### 6.2 Alternative: Stripe Connect
 
-**Already has a MobilePay agreement.** It is not reused by Stripe. Stripe's
-MobilePay runs on Stripe's own acquiring (Stripe "performs a card transaction
-using the card data we receive from MobilePay"). The store's own Vipps
-MobilePay agreement stays separate and is not needed for Stripe (assumed from
-the docs; not confirmed with Stripe).
+If later selected, propose direct charges with a full Dashboard and Stripe-handled
+requirement/loss configuration, subject to account/contract support. Embedded
+onboarding or hosted Account Link creates a new connected account; networked
+onboarding can reuse verified legal-entity details. The account still has a
+separate balance/capabilities. Komisio must activate a Connect platform first.
 
-**What Komisio can prefill or remove.**
+An existing Stripe account is **not universally prohibited** from connection.
+Stripe discourages OAuth for new platforms and restricts read-write access to
+Standard accounts controlled by another platform. Choosing new-account onboarding
+is a design choice, not proof every existing account is unusable. Express/Standard
+configuration is distinct from direct/destination charge type. Provider terms
+determine actual KYC, liability and pricing.
 
-| Can prefill                     | Source in Komisio                                                              | Note                                                                                                        |
-| ------------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| Country                         | Store currency and signup country                                              | Prefilling the country fixes it, and networked onboarding then only offers legal entities from that country |
-| Business type `company`         | —                                                                              | Komisio stores are companies (assumed)                                                                      |
-| E-mail, phone, address, website | Store profile (`docs/STORE-PROFILE.md`: address, e-mail, phone, https website) | The store confirms or edits before accepting the agreement                                                  |
-| Product description             | Fixed text, e.g. "Second-hand consignment store"                               | Used when the store has no website                                                                          |
-| MCC                             | 5931 (used merchandise and second-hand stores, assumed to fit)                 | The store can change it                                                                                     |
-| Capabilities                    | `card_payments`, `transfers`, `mobilepay_payments`                             | Requesting only what is needed shortens the form                                                            |
-| Branding                        | Store name and logo, if held                                                   | Shown on Checkout and in the MobilePay app                                                                  |
-
-What cannot be removed: the Stripe sign-in, representative identity, owners
-and directors, the bank account, and acceptance of the agreement. Komisio holds
-**no company registration number or legal company name** in its schema (none
-found in `supabase/migrations`; assumed not held), so the store types these.
-A later profile field could prefill them. API-only onboarding (Accounts v2)
-would let Komisio build the whole form itself. Stripe advises against it
-("requires integration changes" when rules change), and it rules out networked
-onboarding, so it is rejected.
-
-**What can block or delay activation, and how the store sees it.**
-
-- Verification asks for more (`requirements.currently_due`, `past_due`).
-  Komisio listens to `account.updated` and shows "Stripe needs more
-  information" with a button that reopens the same onboarding component.
-  Stripe's component knows which fields are missing.
-- Restricted business checks on the MCC or website. They show in the same
-  requirements. Second-hand clothing is not on Stripe's MobilePay or Swish
-  prohibited lists (pawn shops, MCC 5933, are prohibited for Swish).
-- The MobilePay capability stays `pending` or becomes `inactive`. Komisio
-  offers card-only links meanwhile and shows the capability state.
-- Payouts are paused until the bank account is verified. Links still work;
-  the money waits on the store's Stripe balance.
-
-### 6.2 For comparison: Vipps MobilePay ePayment direct
-
-| #   | Step                                             | Where                                                                                                                                                                                                         | What the store provides                                                                                                              | Time (assumed)                          |
-| --- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- |
-| 1   | Merchant Agreement, if the store has none        | Vipps MobilePay business portal, signed with BankID (NO) or MitID (DK) by someone with signing rights                                                                                                         | Company number, signatory, KYC questions, beneficial owners (assumed; not listed on the partner pages)                               | 15–30 min                               |
-| 2   | Product order for "payment integration" (online) | Business portal. Prefilled from a Komisio link if Komisio is a partner with API keys (`POST /management/v1/product-orders` returns a `prefillUrl`, valid 14 days); otherwise a template link or a manual form | Sales-unit name, website (the company number must be visible on it), MCC, settlement bank account, price package, use case, turnover | 10 min                                  |
-| 3   | Review by Vipps MobilePay                        | Vipps MobilePay                                                                                                                                                                                               | Nothing; corrections by e-mail if incomplete                                                                                         | "May take a few days" (Vipps MobilePay) |
-| 4   | Connect to Komisio                               | Partner model: automatic once the sales unit is approved (Komisio receives the merchant serial number). Without the partner model: the store copies four API keys from the portal into Komisio                | Keys (non-partner model only)                                                                                                        | 5–10 min                                |
-| 5   | Long-living payments, if wanted                  | Request to Vipps MobilePay                                                                                                                                                                                    | Justification. DK on request, FI only for former MobilePay Invoice merchants, NO at most 24 h                                        | Unknown                                 |
-| 6   | First link                                       | Komisio pay page creates a 10-minute ePayment when opened                                                                                                                                                     | —                                                                                                                                    | —                                       |
-
-**Realistic total:** 30–60 minutes of the store's time, plus a review of a few
-days. The Management API runs only in production and partner keys work only
-in production, so Komisio cannot rehearse onboarding in a test environment.
-
-**Already has a MobilePay agreement** (as the Danish store does): step 1 is
-skipped, but the store still needs a product order for the online
-payment-integration product, unless it already has one. A MobilePay Box or
-portal payment-links product is a different product. Vipps MobilePay
-documents a separate "change a merchant's partner" path for a sales unit
-already run by another integrator.
-
-**What Komisio can prefill:** company number, sales-unit name and logo,
-website, MCC, settlement account (if the store gives it to Komisio), and price
-package (locked; only the partner can change it). This needs Komisio to be an
-approved Vipps MobilePay partner with partner keys. Rejection reasons are not
-shared with partners, so Komisio can only tell the store to check its portal
-and e-mail.
-
-**What can block it:** an incomplete product order, a website that does not
-show the company number or meet the "regional regulatory terms", the review
-queue, and a signatory without signing rights. Without partner keys, the store
-must copy keys correctly. Copied keys also give anyone who sees them full
-access to that sales unit, which Vipps MobilePay itself warns about.
-
-### 6.3 Conclusion on plug-and-play
-
-- **Stripe Connect** comes close to plug-and-play: one embedded form inside
-  Komisio, about 15–25 minutes, no keys to copy, and nothing to rehearse
-  outside test mode. The parts Komisio cannot remove are legal KYC (people,
-  owners, bank account). Komisio can cut a few minutes by adding a company
-  number and legal-name field to the store profile.
-- **Vipps MobilePay direct** is not plug-and-play without a partner agreement
-  (the store copies four keys). With one, it is "fill in a prefilled order and
-  wait a few days". It suits stores that already have a Merchant Agreement,
-  but still needs a product order and review.
-- **The recommendation stands.** Onboarding effort strengthens Stripe as the
-  first provider. If the owner later wants Vipps MobilePay direct, apply for
-  the partner program first. Without it, the onboarding is the weakest part of
-  that option.
+Komisio currently uses Stripe only for subscriptions/credits. Any future store
+payment adapter must have separate handlers and webhook secrets; billing Checkout
+cannot be treated as the store's merchant account.
 
 ## 7. The store's own Shopify as the remote-sales channel
 
@@ -866,16 +660,16 @@ Vipps MobilePay fee (§1.1) **plus** Shopify's third-party fee (2 % on Basic).
   it. It also lacks collections, staff accounts and POS Pro.
 - **Store setup (assumed times):** create the shop and choose a plan (15 min);
   activate Shopify Payments, which is its own KYC with company, representative
-  and bank details, similar to §6.1 (15–25 min plus review); turn on MobilePay
+  and bank details, similar to §6.2 (15–25 min plus review); turn on MobilePay
   under local payment methods; set shipping zones and rates, returns policy,
   terms and the legal pages a web shop needs (1–3 hours); connect the shop in
   Komisio and choose location and publications (`docs/SHOPIFY-ADAPTER.md`
   "Online store and Shopify POS"; 10 min). Optional: the Facebook & Instagram
   channel for product tags, which brings Meta's own commerce review.
-- **Against Stripe Connect (§6):** Shopify needs the same KYC (inside Shopify
+- **Compared with a payment-link-only setup:** Shopify needs the same KYC (inside Shopify
   Payments) **plus** a running shop: a monthly fee, shipping, terms and pages
-  to maintain. Stripe needs only the KYC form and costs nothing per month (apart
-  from the 35 DKK MobilePay fee in DK). For a store that wants only "pay for
+  to maintain. A direct MobilePay connection needs the merchant agreement, eligible sales
+  unit and API setup in §6.1; its provider fees still apply. For a store that wants only "pay for
   this item in a DM", Shopify is the heavier setup. For a store that wants a
   web shop anyway, the extra work buys a full channel.
 
@@ -918,12 +712,12 @@ What is missing:
 | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | Choose which items go to Shopify | One-by-one manual export; no automatic Shopify export ("no Shopify automatic-export control is offered before its adapter is implemented", `docs/ZETTLE-AUTOMATION.md`) | A per-item "show online" choice, or a rule (category, price), plus automatic export under `catalog_export`                                                                                                                                | Yes: a selection fact per item, and the Shopify adapter in the catalog-automation contract |
 | Price and status in sync         | Price updates on markdown; sold and ended items are no longer candidates                                                                                                | When an item **sells at the till, ends or is returned to the seller**, set Shopify inventory to 0 or unpublish or archive the product. Nothing does this today; the adapter "never unpublishes" and has no inventory write after creation | Yes: intent/outcome rows for the de-list write                                             |
-| Hold while reserved              | None                                                                                                                                                                    | Inventory 0 (or draft-order `reserveInventoryUntil`) while a Komisio hold exists (§2.2)                                                                                                                                                   | Yes, with slice 1                                                                          |
+| Hold while reserved              | None                                                                                                                                                                    | Inventory 0 (or draft-order `reserveInventoryUntil`) while a Komisio hold exists (§2.2)                                                                                                                                                   | Yes, with reservation slice                                                                |
 | Back in stock after a return     | Updates "never replenish" inventory                                                                                                                                     | A deliberate, audited restock after a return of a Shopify-sold or till-sold item                                                                                                                                                          | Yes                                                                                        |
 | Double-sell window               | Shopify blocks a second online sale (one unit, DENY). The till does not know about it until the 15-minute pull; PayPal POS learns nothing                               | De-list on till sale (above) narrows the window. A Shopify `orders/paid` webhook would cut the pull latency                                                                                                                               | Webhook evidence table: yes                                                                |
 | Recovery                         | `ITEM_ALREADY_SOLD` is held and visible; staff refund in Shopify; the refund becomes a return only if a Komisio sale exists                                             | The same staff path as §3.1                                                                                                                                                                                                               | No                                                                                         |
-| Shipping                         | Order totals include shipping; Komisio records item lines only                                                                                                          | Same shipping question as §2.7: record Shopify shipping as store revenue                                                                                                                                                                  | Yes (slice 11)                                                                             |
-| Day close                        | Shopify sales go to the single `grossOre` key                                                                                                                           | The channel split in slice 3                                                                                                                                                                                                              | Yes (slice 3)                                                                              |
+| Shipping                         | Order totals include shipping; Komisio records item lines only                                                                                                          | Separate shipping revenue/tax/refund design required (§2.7); not an item line                                                                                                                                                             | Yes (shipping slice)                                                                       |
+| Day close                        | Shopify sales go to the single `grossOre` key                                                                                                                           | The channel split in accounting slice                                                                                                                                                                                                     | Yes (accounting slice)                                                                     |
 
 What already works: the paid order becomes a normal Komisio sale with frozen
 commission, seller credit and VAT. VAT stays in Komisio; Shopify's tax setting
@@ -933,36 +727,27 @@ for POS.
 
 ### 7.5 Central marketplace variant (rejected)
 
-One Komisio-operated Shopify store selling every store's items is **not
-recommended** (assumptions to confirm, not legal advice):
-
-- **Merchant of record and funds.** The buyer would pay Komisio (Inority),
-  which would then pass the money on to each store. Collecting and forwarding
-  funds for others is likely a payment service under PSD2 and the Nordic
-  payment acts, unless a narrow exemption such as the commercial-agent
-  exemption applies. Shopify's payment terms bar processing "on behalf of any
-  affiliate or other third party".
-- **Liability.** Komisio would be the seller to consumers: VAT on the sales
-  (and the margin-scheme position of each store's goods would not carry over
-  automatically), consumer and withdrawal rights, returns, disputes and
-  chargebacks.
-- **Bookkeeping.** Every sale would be Inority's revenue and a liability to a
-  store, which turns Komisio's "sales are the store's facts" model upside down.
+A Komisio-operated Shopify store collecting all stores' payments is outside
+this proposal. It conflicts with the owner's choice that each store owns
+its merchant agreement and receives its own customer payments. Such a model
+would require a separate review of payment-services permissions, merchant
+responsibility, tax, consumer rights and bookkeeping. This investigation
+makes no determination of that model's legal or accounting treatment.
 
 ### 7.6 Conclusion
 
 - **Prefer the store's own Shopify** when the store already runs Shopify, or
   wants a web shop anyway. It then gets MobilePay natively (DK/FI) without
   Stripe, shipping and receipts handled by Shopify, and an order path that
-  already exists in Komisio. The draft-order invoice (slice 10) is the closest
+  already exists in Komisio. The draft-order invoice (optional channel slice) is the closest
   match to a "pay for this item" link, and it can hold the unit.
 - **Prefer the Komisio payment link** for stores that only want to answer DMs:
-  no monthly fee, no web shop to maintain, and the Komisio hold and manual
-  capture give stronger double-sell protection than a 15-minute order pull.
-- **Offer both. The recommendation does not change.** Stripe Connect payment
-  links stay first for remote sales. Shopify becomes a parallel route that needs
-  the de-list/sync work (new follow-up slice 15) before it is safe next to a
-  PayPal POS till.
+  no Shopify subscription or web shop to maintain. Provider contract fees still apply.
+  A durable reservation narrows the local race window. Remote tills can
+  still collect competing payments, so §3 recovery remains necessary.
+- **Optional parallel route.** Direct MobilePay is the selected first route.
+  Own-Shopify needs de-list/sync and explicit conflict handling before a
+  connected-till pilot; it is not part of the first adapter.
 
 ---
 
@@ -973,12 +758,12 @@ the risky parts are the hold and engine changes, which need a migration (not
 allowed here), and the provider sandbox, which needs a Stripe test-mode Connect
 platform and test connected accounts, or Vipps MobilePay test sales-unit keys.
 Creating those is creating provider accounts, which is out of scope. The
-existing billing test mode cannot exercise Connect direct charges. Slice 6
-includes the test-mode end-to-end check.
+existing billing test mode cannot exercise Connect direct charges. The ePayment adapter slice includes sandbox checks; no sandbox request
+was made in this investigation.
 
 ## Verified vs. assumed
 
-**Verified in the repository (origin/main `ab209a7a`, 2026-10-20):**
+**Verified in the repository (origin/main `0053bac1`, 2026-10-20):**
 
 - the `sales.provider` check and the provider list in `record_sale_core` (last
   definition in `20260916340000_shopify_automation.sql`), and `saleProvider`
@@ -1000,10 +785,11 @@ includes the test-mode end-to-end check.
   Shopify product (`extensions/shopify/`, `prepare_shopify_product`,
   `shopify_product_candidates`);
 - the store profile holds address, e-mail, phone and website; no company
-  registration number or legal name was found in the migrations.
+  registration number, distinct legal name or VAT number exists in the current
+  store-profile schema.
 
-**Verified on provider pages (2026-10-20):** all fees in §1.1 except those
-marked third-party; Stripe MobilePay, Swish and Vipps properties; Payment
+**Verified on provider pages (2026-10-20):** the published fee figures in
+§1.1, subject to the explicit unknowns and fee-additivity caveat; Stripe MobilePay, Swish and Vipps properties; Payment
 Links with Connect; direct-charge behaviour; Checkout Session expiry limits
 (Stripe API reference via search result); Vipps MobilePay currencies per
 region, the 10-minute default, long-living payment restrictions, partner keys,
@@ -1020,15 +806,15 @@ rendering); the Starter plan restriction; cart permalinks.
 - whether Stripe's MobilePay fee is additive to the card fee (note 1);
 - Vipps MobilePay DK integration price (the page layout was not legible),
   settlement timing and dispute handling;
-- Swish Handel prices (a third-party figure), the Commerce API's 3-minute
+- Swish Handel prices, the Commerce API's 3-minute
   window, callback authentication and refund API (Swish developer docs did not
   render for our tools);
 - Stripe Connect platform obligations and cross-border connected accounts for
   an SE platform;
-- all legal statements in §2.4 and §7.5 and the shipping-VAT question: these
+- country-specific receipt/cash-register obligations and shipping VAT: these
   are questions, not answers;
-- MCC classification of second-hand clothing stores (5931 assumed);
-- all onboarding and review times in §6 and §7.2; MobilePay capability
+- MCC classification of a particular second-hand store;
+- onboarding time estimates in §7.2; MobilePay capability
   activation time on Stripe; whether the 35 DKK fee is per account;
 - that Stripe's MobilePay does not use the store's own MobilePay agreement;
 - Vipps MobilePay Merchant Agreement content (KYC questions, owners) and MitID
@@ -1087,3 +873,15 @@ All checked 2026-10-20.
 - Shopify Payments, payment methods SE: https://help.shopify.com/en/manual/payments/shopify-payments/supported-countries/sweden/payment-methods
 - Shopify, cart permalinks: https://help.shopify.com/en/manual/checkout-settings/cart-permalink
 - Shopify, Payment Facilitator terms: https://www.shopify.com/legal/terms-payfac
+
+### Additional references checked in the revision, 2026-10-20
+
+- Vipps MobilePay, sales-unit and partner keys: https://developer.vippsmobilepay.com/docs/knowledge-base/api-keys/
+- Vipps MobilePay, integration prerequisites: https://developer.vippsmobilepay.com/docs/getting-started/
+- Vipps MobilePay, error/retry handling: https://developer.vippsmobilepay.com/docs/APIs/epayment-api/api-guide/errors/
+- Stripe, charge/account models: https://docs.stripe.com/connect/charges
+- Stripe, capture/authorization expiry: https://docs.stripe.com/payments/place-a-hold-on-a-payment-method
+- Stripe, unknown responses and idempotent retries: https://docs.stripe.com/error-low-level
+- Stripe, Checkout status: https://docs.stripe.com/api/checkout/sessions/object
+- Stripe, refund lifecycle: https://docs.stripe.com/refunds
+- Skatteverket, VMB invoice constraints: https://www.skatteverket.se/foretag/moms/sarskildamomsregler/vinstmarginalbeskattningavbegagnadevarormedmera

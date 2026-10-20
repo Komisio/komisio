@@ -366,6 +366,7 @@
   "workspace": "Sinun kauppasi, yhdessä.",
   "home": "Yleiskatsaus",
   "members": "Henkilöt",
+  "unnamedMember": "Nimetön käyttäjä",
   "tenant": "Kaupan asetukset",
   "account": "Oma tili",
   "logout": "Kirjaudu ulos",
@@ -3420,85 +3421,6 @@
         "unknown": "Tarkistus ei onnistunut – lataa sivu uudelleen"
       }
     },
-    "articles": {
-      "fortnox-connect": {
-        "title": "Yhdistä Fortnox",
-        "intro": "Yhdistä myymälän yritys ja valmistele tilikartta. Yhdistäminen ei lähetä kirjanpitotietoja.",
-        "steps": [
-          "Sinun on oltava Komision omistaja tai järjestelmänvalvoja ja voitava hyväksyä oikean Fortnox-yrityksen käyttöoikeus. Tarkista tarvittavat integraatio- ja ohjelmalisenssit Fortnoxin ohjeista.",
-          "Avaa Tilit ja integraatiot. Anna yrityksen nimi sellaisena kuin se on Fortnoxissa ja yhdistä. Kirjaudu Fortnoxiin, tarkista yritys ja hyväksy pyydetyt oikeudet.",
-          "Tarkista yrityksen nimi palattuasi. Tarkista nykyinen yhteys yhteyden tarkistustoiminnolla. Valitse sama yritys yhdistäessäsi uudelleen.",
-          "Tallenna kirjanpitäjän kanssa sovitut tilit ja debet-/kredit-valinnat. Komisio ei valitse tilejä puolestasi."
-        ],
-        "notice": "Yhdistetty tila ei tarkoita, että aineisto on lähetetty. Komisio pyytää yritystietojen ja kirjanpidon käyttöoikeutta, mukaan lukien tositteiden luonti lähetystoimintoa käytettäessä."
-      },
-      "fortnox-first-export": {
-        "title": "Valmistele ja lähetä ensimmäinen aineisto",
-        "intro": "Käsittele päivä kerrallaan ja tarkista yritys, päivämäärä ja summat ennen lähettämistä.",
-        "steps": [
-          "Avaa Päivän päätökset ja viennit ja luo päätös oikealle päivälle. Tämä tallentaa yhteenvedon Komisioon, ei tositetta Fortnoxiin.",
-          "Tarkista esikatselun tilit, debet, kredit ja summat, joilta puuttuu tili. Tarkista tilikartta kirjanpitäjän kanssa. Tasapaino yksin ei osoita kirjanpidon oikeellisuutta.",
-          "Tallenna aineisto valitsemalla SIE 4 -vienti. Lataa sitten tiedosto tai lähetä Fortnoxiin omistajana/järjestelmänvalvojana. Älä sekä tuo tiedostoa että lähetä samaa aineistoa suoraan.",
-          "Todellinen lähetys luo tositteen Fortnoxiin. Viite näkyy vahvistuksen jälkeen. Jos tulos on epävarma, avaa lähetysongelmien ohje äläkä lähetä uudelleen."
-        ],
-        "notice": "Automaattinen lähetys on omistajan erillinen valinta valmistelluille vienneille. Päivän päätökset luodaan edelleen käsin. Yhdistäminen tai ohjeen lukeminen ei käynnistä automaatiota."
-      },
-      "fortnox-recovery": {
-        "title": "Tarkista lähetysongelma",
-        "intro": "Erota pysäytetty lähetys puuttuvasta vastauksesta. Tosite saattaa jo olla olemassa, vaikka vastaus puuttuu.",
-        "steps": [
-          "Jos Komisio ilmoittaa nimenomaisesti lähetyksen pysähtyneen ennen kirjaamista, korjaa syy ja käytä tarjottua uudelleenyritystoimintoa.",
-          "Jos lähetys odottaa tai tulos on epävarma, älä lähetä uudelleen. Pyydä omistajaa vertaamaan aineistoa lähetykseen sidotun Fortnox-yritystietokannan tositteisiin.",
-          "Vertaa päivämäärää, summia ja kaikkia rivejä. Jos vastaava tosite löytyy, omistaja voi kirjata sarjan, numeron, tilikauden ja tarkistustiedot vientirivin vahvistustoiminnolla.",
-          "Jos tositetta ei löydy, pyydä asennuksen ylläpitäjää auttamaan selvityksessä. Puuttuva tulos ei vapauta uutta lähetystä. Älä poista tai luo aineistoja uudelleen eston kiertämiseksi."
-        ],
-        "notice": "Täsmäytys tallentaa omistajan tarkistuksen, ei Fortnoxin automaattista vahvistusta. Henkilökunta ja järjestelmänvalvojat voivat lukea ohjeen; vain omistaja voi kirjata tämän vahvistuksen."
-      },
-      "fortnox-automation": {
-        "title": "Automaattisen lähetyksen toiminta",
-        "intro": "Automaatio lähettää valmistellut viennit yhdistettyyn Fortnox-yritykseen. Se ei luo päivän päätöksiä eikä valitse tilejä.",
-        "steps": [
-          "Tarkista yritys ja tilikohdistukset. Tarkista olemassa olevat viennit ennen käyttöönottoa: myös vanhemmat lähetyskelpoiset viennit voivat tulla mukaan. Älä sekä tuo SIE-tiedostoa että lähetä samaa aineistoa suoraan.",
-          "Myymälän omistaja ottaa automaattisen lähetyksen käyttöön tilikartan ja Fortnoxin asetuksissa. Odottaa tarkoittaa, ettei taustapalvelu ole vielä hyväksynyt käyttöönottoa. Jos toimintoa ei ole määritetty, ota yhteyttä Komisio-asennuksesta vastaavaan henkilöön.",
-          "Luo ja tarkista päivän päätökset sekä valmistele viennit edelleen käsin. Viimeisin ajo näyttää ajan, tuloksen ja lähetettyjen määrän. Käytössä ei tarkoita, että mitään olisi lähetetty, eikä valmis ajo tarkoita, että kaikki päivät olisi täsmäytetty.",
-          "Osittaisen tai epäonnistuneen ajon jälkeen avaa täsmäytys ja tarkista kyseiset viennit. Jos lähetys odottaa tai tulos on epävarma, noudata lähetysongelmien ohjetta ja pyydä omistajaa tarkistamaan tulos. Automaation poistaminen käytöstä ja uudelleen käyttöönotto ei vapauta estettyä lähetystä."
-        ],
-        "notice": "Ohjeen lukeminen ei ota mitään käyttöön eikä lähetä mitään. Automaattiset ajot eivät lähetä uudelleen vientiä, jonka tulos on vahvistettu, odottava tai epävarma. Käytöstä poistaminen ei peru jo luotuja tositteita."
-      },
-      "receiving": {
-        "title": "Vastaanota ja rekisteröi tuotteet",
-        "intro": "Aloita oikeasta myymälästä ja tavaran toimittajasta. Kirjaa fyysisesti saapuneet tavarat ja käsittele sitten tuotteet.",
-        "steps": [
-          "Tarkista valittu myymälä ja etsi olemassa oleva tavaran toimittaja ennen uuden luomista. Noudata myymälän sopimusvaatimuksia ja paikallisia käytäntöjä.",
-          "Ennakkoilmoitus ei tarkoita, että tavarat on vastaanotettu. Vahvista vastaanotto vasta, kun tavarat ovat teillä. Jatka työtä olemassa olevasta toimituksesta.",
-          "Avaa tuontierä ja rekisteröi yksi tuote kerrallaan. Tarkista kuvaus, hinta ja myyjä ennen tallennusta.",
-          "Tarkista vahvistus ja rekisteröityjen tuotteiden luettelo ennen merkintää. Jos tallennuksen vastaus puuttuu, pidä lomake auki ja käytä sen uudelleenyritystä. Älä luo samaa tuotetta uudelleen saadaksesi vahvistuksen."
-        ],
-        "notice": "Rekisteröityjen tuotteiden määrä kertoo tallennetuista tiedoista, ei koko toimituksen käsittelyn valmistumisesta. Tarkista myös fyysiset tavarat. Ohje ei muuta tietoja; pyydä valtuutettua henkilökuntaa tekemään toimet, joihin sinulla ei ole pääsyä."
-      },
-      "labels": {
-        "title": "Merkitse oikea toimitus tai tuote",
-        "intro": "Vastaanottoetiketti pitää tavarat yhdessä käsittelyn aikana. Tuote-etiketti yksilöi rekisteröidyn tuotteen ja näyttää sen hinnan.",
-        "steps": [
-          "Avaa olemassa oleva toimitus tai tuote ja tarkista myymälä sekä viite. Vastaanottoetiketti ei tarkoita, että tavarat on tarkastettu tai hyväksytty myyntiin.",
-          "Tuote-etikettiä varten etsi rekisteröity tuote, avaa etiketti ja tarkista kuvaus, hinta ja valuutta. Jos etikettiä ei voi näyttää, palaa tuotteeseen ja tarkista sen tiedot.",
-          "Käytä sivun tulostusvaihtoehtoja. Valitse oikea tulostin ja kopiomäärä yhdistetylle tulostimelle tai tarkista selaimen tulostusikkuna. Jonossa oleva työ tai avoin ikkuna ei todista tulostusta: tarkista fyysinen etiketti ennen kiinnittämistä.",
-          "Jos tulostusjonoon lisäämisen vastaus puuttuu, yritä uudelleen samassa avoimessa lomakkeessa. Älä luo jatkuvasti uusia töitä. Tarkista työ tulostimien ja tulostustöiden asetuksista ja pyydä tarvittaessa apua tulostimesta vastaavalta henkilöltä. Etikettihaulla voi avata olemassa olevan viitteen."
-        ],
-        "notice": "Ohjeen avaaminen ei tulosta mitään eikä rekisteröi uutta tuotetta. Älä luo tuotteesta kopiota etiketin korvaamiseksi. Fyysinen tulostus ja skannaus on tarkistettava myymälän laitteilla."
-      },
-      "integrations": {
-        "title": "Yhdistä myymälän muut järjestelmät",
-        "intro": "Aloita järjestelmästä, jonka haluat yhdistää Komisioon. Avaa sen osio nähdäksesi tilan ja asetukset.",
-        "steps": [
-          "Valitse kassajärjestelmä, verkkokauppa tai kirjanpito sen mukaan, mitä haluat yhdistää.",
-          "Lue yhteyden tila ja noudata osion vaiheita. Jotkin toiminnot vaativat omistajan tai ylläpitäjän oikeudet.",
-          "Tarkista siirrettävät tiedot ja siirtosuunta ennen automaattisen toiminnon käyttöönottoa.",
-          "Seuraa tuotteiden, kuittien, tilausten tai kirjanpitoaineiston tilaa kussakin integraatiossa. Avaa tiedot, jos jokin vaatii huomiota."
-        ],
-        "notice": "Yhteys ei tarkoita, että kaikki automaattiset toiminnot ovat käytössä. Tarkista ne erikseen integraation asetuksista."
-      }
-    },
     "receiving": "Avaa vastaanotto",
     "storeFlow": "Myymälän työnkulku",
     "items": "Etsi rekisteröity tuote",
@@ -3524,6 +3446,20 @@
       "placeholder": "Esimerkiksi etiketit tai kirjanpito",
       "count": "Ohjeartikkeleita: {count}",
       "empty": "Ohjeita ei löytynyt"
+    },
+    "fallbackNote": "Tämä artikkeli ei ole vielä saatavilla kielelläsi.",
+    "machineTranslationNote": "Tämä artikkeli on käännetty automaattisesti.",
+    "feedback": {
+      "title": "Oliko tästä apua?",
+      "thanks": "Kiitos palautteestasi!",
+      "yes": "Kyllä",
+      "no": "Ei",
+      "comment": "Kommentti (valinnainen)",
+      "privacy": "Älä sisällytä henkilötietoja itsestäsi, myyjistä tai asiakkaista.",
+      "send": "Lähetä",
+      "rateLimited": "Kaupan päivittäinen palauteraja on täyttynyt. Yritä myöhemmin uudelleen.",
+      "error": "Vastausta ei voitu tallentaa. Yritä uudelleen.",
+      "unknown": "Emme voineet vahvistaa vastauksen tallentumista. Odota ennen kuin yrität uudelleen."
     }
   },
   "dashboard": {

@@ -7,6 +7,7 @@ import { NavigationLink as Link } from '@/components/platform/navigation-warning
 import type { Dictionary } from '@/lib/i18n'
 import type { HelpTopic } from '@/lib/help/topics'
 import { HelpArticle } from './article'
+import { useHelpContent } from './content-provider'
 
 const subscribe = () => () => {}
 const clientReady = () => true
@@ -23,6 +24,7 @@ export function ContextHelp({
   label?: string
 }) {
   const dialog = useRef<HTMLDialogElement>(null)
+  const article = useHelpContent()?.articles[topic ?? '']
   const trigger = useRef<HTMLButtonElement>(null)
   const heading = useRef<HTMLHeadingElement>(null)
   const id = useId()
@@ -69,7 +71,7 @@ export function ContextHelp({
       >
         <div className="help-dialog-heading">
           <h2 ref={heading} tabIndex={-1} id={`${id}-title`}>
-            {topic ? d.articles[topic].title : d.title}
+            {article?.title ?? d.title}
           </h2>
           <Button
             type="button"

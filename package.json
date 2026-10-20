@@ -29,7 +29,9 @@
     "test:concurrency": "node scripts/owner-race.mjs",
     "backup:exercise": "node scripts/backup-exercise.mjs",
     "test:seller-photos": "node --import tsx scripts/test-seller-photos.mjs",
-    "test:seller-submissions": "node --import tsx scripts/test-seller-submissions.mjs"
+    "test:seller-submissions": "node --import tsx scripts/test-seller-submissions.mjs",
+    "help:build": "node scripts/build-help-content.mjs",
+    "prebuild": "node scripts/build-help-content.mjs --check"
   },
   "dependencies": {
     "@bwip-js/generic": "4.11.4",
@@ -62,8 +64,11 @@
     "eslint-config-next": "16.3.4",
     "pg": "^8.0.0",
     "prettier": "^3.9.6",
+    "remark-parse": "^11.0.0",
     "tailwindcss": "4.3.3",
     "typescript": "~5.9.3",
-    "vitest": "5.0.0"
+    "unified": "^11.0.5",
+    "vitest": "5.0.0",
+    "yaml": "^2.9.1"
   }
 }

@@ -146,7 +146,9 @@ repair`; fix forward with a new migration.
   soak period (C6, one working day), then GitHub, Actions, Production
   database, Run workflow on `main`, and approve the environment. The step
   summary lists the applied versions; the deploy hook releases the
-  application afterwards. See PRODUCTION-CHECKLIST.md.
+  application afterwards. Complete the authenticated route and runtime-error
+  checks in PRODUCTION-CHECKLIST.md before reporting the release as verified;
+  a green deploy and reachable login page are insufficient.
 - **Staging test data**: reversible state changes for a test go through
   the engine functions or, when none exists, through
   `komisio.plan_transition='engine'` in one transaction; restore afterwards

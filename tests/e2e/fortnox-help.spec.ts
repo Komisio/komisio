@@ -1,3 +1,4 @@
+import legacyHelp from '../fixtures/help-legacy.json' with { type: 'json' }
 import { openAccountingSettings } from '../helpers/accounting-settings'
 import { test, expect } from '@playwright/test'
 import { randomBytes, randomUUID } from 'node:crypto'
@@ -75,7 +76,7 @@ test('context help preserves edits, traps focus on mobile and has a protected ar
     const article = await articlePromise
     await expect(article).toHaveURL(/\/help\/fortnox-first-export$/)
     await expect(article.getByRole('heading', { level: 1 })).toHaveText(
-      d.helpCenter.articles['fortnox-first-export'].title,
+      legacyHelp.sv.articles['fortnox-first-export'].title,
     )
     await article.close()
     await expect(account).toHaveValue('1930')
@@ -92,15 +93,15 @@ test('context help preserves edits, traps focus on mobile and has a protected ar
         automationWrites++
     })
     const automationHelp = page.getByRole('button', {
-      name: d.helpCenter.articles['fortnox-automation'].title,
+      name: legacyHelp.sv.articles['fortnox-automation'].title,
       exact: true,
     })
     await automationHelp.click()
     await expect(dialog.getByRole('heading', { level: 2 })).toHaveText(
-      d.helpCenter.articles['fortnox-automation'].title,
+      legacyHelp.sv.articles['fortnox-automation'].title,
     )
     await expect(dialog).toContainText(
-      d.helpCenter.articles['fortnox-automation'].notice,
+      legacyHelp.sv.articles['fortnox-automation'].notice,
     )
     await expect(
       dialog.getByRole('link', { name: d.helpCenter.settings, exact: true }),
@@ -110,7 +111,7 @@ test('context help preserves edits, traps focus on mobile and has a protected ar
     )
     await expect(
       dialog.getByRole('link', {
-        name: d.helpCenter.articles['fortnox-recovery'].title,
+        name: legacyHelp.sv.articles['fortnox-recovery'].title,
         exact: true,
       }),
     ).toHaveAttribute('href', '/help/fortnox-recovery')
@@ -123,13 +124,13 @@ test('context help preserves edits, traps focus on mobile and has a protected ar
     await page.goto('/help')
     await page
       .getByRole('link', {
-        name: d.helpCenter.articles['fortnox-automation'].title,
+        name: legacyHelp.sv.articles['fortnox-automation'].title,
         exact: true,
       })
       .click()
     await expect(page).toHaveURL(/\/help\/fortnox-automation$/)
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      d.helpCenter.articles['fortnox-automation'].title,
+      legacyHelp.sv.articles['fortnox-automation'].title,
     )
     // Next returns 200 for streamed notFound responses; assert the actual fallback.
     await page.goto('/help/not-a-topic')
@@ -224,7 +225,7 @@ test('a lost send response offers reconciliation help without another send', asy
     ).toHaveCount(0)
     await exports.getByRole('link', { name: d.fortnox.recoveryHelp }).click()
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      d.helpCenter.articles['fortnox-recovery'].title,
+      legacyHelp.sv.articles['fortnox-recovery'].title,
     )
     expect(sends).toBe(1)
     await page.goto('/intake/accounting?view=exports')

@@ -366,6 +366,7 @@
   "workspace": "Your store, together.",
   "home": "Overview",
   "members": "People",
+  "unnamedMember": "Unnamed user",
   "tenant": "Store settings",
   "account": "My account",
   "logout": "Sign out",
@@ -3414,85 +3415,6 @@
         "unknown": "Could not check – reload the page"
       }
     },
-    "articles": {
-      "fortnox-connect": {
-        "title": "Connect Fortnox",
-        "intro": "Connect the store’s company and prepare the account mapping. Connecting sends no accounting data.",
-        "steps": [
-          "You must be an owner or administrator in Komisio and able to authorize access to the correct Fortnox company. Check applicable integration and program licences using Fortnox guidance.",
-          "Open Accounts and integrations. Enter the company name as shown in Fortnox and connect. Sign in to Fortnox, check the company and approve the requested permissions.",
-          "On return, check the company name. Use Check connection for a current check. Choose the same company when reconnecting.",
-          "Save the accounts and debit/credit choices agreed with your accountant. Komisio does not choose accounts for you."
-        ],
-        "notice": "Connected does not mean an export has been sent. Komisio requests company information and bookkeeping access; the permission includes voucher creation when sending is used."
-      },
-      "fortnox-first-export": {
-        "title": "Prepare and send the first export",
-        "intro": "Work with one day at a time and check the company, date and amounts before sending.",
-        "steps": [
-          "Open Day closes and exports and generate the close for the correct date. This records a summary in Komisio, not a Fortnox voucher.",
-          "Review the preview: accounts, debit, credit and unmapped amounts. Review the mapping with your accountant. Balanced debit and credit do not by themselves establish correct accounting.",
-          "Choose Create accounting documents to save the accounting basis. You can then download the file or, as owner/administrator, use Send to Fortnox. Avoid both importing the file and sending the same export directly.",
-          "A real send creates a Fortnox voucher. Its reference appears once confirmed. If the outcome is uncertain, open the send recovery help and do not send again."
-        ],
-        "notice": "Automatic sending is a separate owner choice for prepared exports. Day closes remain manual. Connecting or reading help does not enable automation."
-      },
-      "fortnox-recovery": {
-        "title": "Check a sending issue",
-        "intro": "Distinguish a stopped send from a missing response. A missing response may mean the voucher already exists.",
-        "steps": [
-          "If Komisio explicitly says the send stopped before registration, fix the cause and use the retry action offered.",
-          "If the send is pending or uncertain, do not send again. Ask the store owner to compare the export with vouchers in the Fortnox company database bound to that send.",
-          "Compare the date, amounts and every line. If a matching voucher exists, the owner can record its series, number, financial year and evidence using the confirmation form on the export row.",
-          "If no matching voucher can be found, ask the installation operator to help investigate. Absence does not unlock another send. Do not delete or recreate exports to bypass the hold."
-        ],
-        "notice": "Reconciliation records the owner’s check, not automatic verification by Fortnox. Staff and administrators may read the help; only the owner may record this confirmation."
-      },
-      "fortnox-automation": {
-        "title": "How automatic sending works",
-        "intro": "Automation sends prepared exports to the connected Fortnox company. It does not create day closes or choose accounts.",
-        "steps": [
-          "Check the company and account mapping. Review existing exports before enabling: older eligible exports may also be included. Avoid importing a SIE file and sending the same export directly.",
-          "The store owner enables automatic sending under Accounts and integrations. Waiting means the background service has not accepted activation yet. If the feature is not configured, contact the person responsible for the Komisio installation.",
-          "Continue creating and reviewing day closes and preparing exports manually. Read Last run for the time, outcome and number sent. Enabled does not mean anything has been sent, and a completed run does not mean every day is reconciled.",
-          "After a partial or failed run, open Reconciliation and review the affected exports. For a pending or uncertain send, follow the sending-problem guidance and ask the owner to check the outcome. Switching automation off and on does not resolve a held send."
-        ],
-        "notice": "Reading help enables or sends nothing. Automatic runs do not resend exports with confirmed, pending or uncertain outcomes. Disabling automation does not withdraw vouchers already created."
-      },
-      "receiving": {
-        "title": "Receive and register goods",
-        "intro": "Start with the correct store and consignor. Record what has physically arrived, then work through the items.",
-        "steps": [
-          "Check the selected store and search for the existing consignor before creating another. Follow the store’s agreement requirements and local routines.",
-          "An announcement does not mean goods have been received. Confirm receiving only once the goods are with you. Reuse the existing drop-off when continuing the work.",
-          "Open the drop-off and register one item at a time. Check the description, price and seller before saving.",
-          "Check the confirmation and registered-item list before labelling. If a save response is missing, keep the form open and use its retry action. Do not create the same item again to obtain confirmation."
-        ],
-        "notice": "Registered-item counts describe saved records, not completion of the entire drop-off. Check the physical goods too. Help changes no records; ask authorized staff to perform actions you cannot access."
-      },
-      "labels": {
-        "title": "Label the correct drop-off or item",
-        "intro": "A receiving label keeps goods together during processing. An item label identifies a registered item and shows its price.",
-        "steps": [
-          "Open the existing drop-off or item and check the store and reference. A receiving label does not mean goods have been inspected or accepted for sale.",
-          "For an item label, find the registered item, open its label and check description, price and currency. If the label is unavailable, return to the item and check its details.",
-          "Use the page’s print options. Choose the correct printer and copy count for a connected printer, or review the browser print dialog. A queued job or open dialog does not prove printing: check the physical label before attaching it.",
-          "If a queueing response is missing, use retry in the same open form. Do not repeatedly create new jobs. Check the job under Printers and print jobs and ask the printer operator for help when needed. Use label lookup to open an existing reference."
-        ],
-        "notice": "Opening help prints nothing and registers no new item. Do not duplicate an item to replace its label. Physical printing and scanning need checking with the store’s equipment."
-      },
-      "integrations": {
-        "title": "Connect your other store systems",
-        "intro": "Start with the system you want to connect to Komisio. Open its section for status and settings.",
-        "steps": [
-          "Choose point of sale, online store or accounting according to what you want to connect.",
-          "Read the connection status and follow the steps in that section. Some actions require an owner or administrator.",
-          "Check which information is transferred and in which direction before enabling an automatic feature.",
-          "Follow the status of products, receipts, orders or accounting documents within each integration. Open the details if anything needs attention."
-        ],
-        "notice": "A connection does not mean every automatic feature is enabled. Check them individually in the integration settings."
-      }
-    },
     "receiving": "Open receiving",
     "storeFlow": "Store workflow",
     "items": "Find a registered item",
@@ -3518,6 +3440,20 @@
       "placeholder": "For example labels or accounting",
       "count": "Help articles: {count}",
       "empty": "No matching help"
+    },
+    "fallbackNote": "This article is not yet available in your language.",
+    "machineTranslationNote": "This article was translated automatically.",
+    "feedback": {
+      "title": "Was this helpful?",
+      "thanks": "Thank you for your feedback!",
+      "yes": "Yes",
+      "no": "No",
+      "comment": "Comment (optional)",
+      "privacy": "Do not include personal data about yourself, sellers or customers.",
+      "send": "Send",
+      "rateLimited": "Your store has reached its daily feedback limit. Try again later.",
+      "error": "Your response could not be saved. Please try again.",
+      "unknown": "We could not confirm whether your response was saved. Please wait before trying again."
     }
   },
   "dashboard": {

@@ -1,3 +1,4 @@
+import legacyHelp from '../fixtures/help-legacy.json' with { type: 'json' }
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -94,7 +95,7 @@ test('store tab titles follow navigation, language and profile fallback without 
       for (const [path, title] of [
         ['/intake/items', d.items.title],
         ['/settings', d.tenant],
-        ['/help/labels', d.helpCenter.articles.labels.title],
+        ['/help/labels', legacyHelp[locale].articles.labels.title],
       ]) {
         await page.goto(path)
         await expect(page).toHaveTitle(`${title} · Komisio`)

@@ -366,6 +366,7 @@
   "workspace": "Tu tienda, en equipo.",
   "home": "Resumen",
   "members": "Personas",
+  "unnamedMember": "Usuario sin nombre",
   "tenant": "Ajustes de la tienda",
   "account": "Mi cuenta",
   "logout": "Cerrar sesión",
@@ -3420,85 +3421,6 @@
         "unknown": "No se pudo comprobar: recarga la página"
       }
     },
-    "articles": {
-      "fortnox-connect": {
-        "title": "Conectar Fortnox",
-        "intro": "Conecta la empresa de la tienda y prepara las cuentas. La conexión no envía datos contables.",
-        "steps": [
-          "Debes ser propietario o administrador en Komisio y poder autorizar el acceso a la empresa correcta de Fortnox. Comprueba las licencias de integración y de programa aplicables en la documentación de Fortnox.",
-          "Abre Cuentas e integraciones. Introduce el nombre de la empresa tal como aparece en Fortnox y conecta. Inicia sesión en Fortnox, comprueba la empresa y aprueba los permisos solicitados.",
-          "Al volver, comprueba el nombre de la empresa. Utiliza la comprobación de conexión para conocer su estado actual. Elige la misma empresa al reconectar.",
-          "Guarda las cuentas y las opciones de debe/haber acordadas con tu asesor contable. Komisio no elige las cuentas por ti."
-        ],
-        "notice": "Conectado no significa que se haya enviado un documento. Komisio solicita acceso a información de empresa y contabilidad, incluida la creación de asientos al utilizar el envío."
-      },
-      "fortnox-first-export": {
-        "title": "Preparar y enviar el primer documento",
-        "intro": "Trabaja con un día cada vez y comprueba empresa, fecha e importes antes de enviar.",
-        "steps": [
-          "Abre Cierres diarios y exportaciones y genera el cierre para la fecha correcta. Esto guarda un resumen en Komisio, no un asiento en Fortnox.",
-          "Revisa las cuentas, debe, haber e importes sin cuenta de la vista previa. Consulta la configuración con tu asesor. Que los totales cuadren no demuestra por sí solo una contabilidad correcta.",
-          "Elige exportar como SIE 4 para guardar el documento. Después descarga el archivo o envía a Fortnox como propietario/administrador. Evita importar el archivo y enviar directamente el mismo documento.",
-          "Un envío real crea un asiento en Fortnox. La referencia aparece al confirmarse. Si el resultado es incierto, abre la ayuda sobre problemas de envío y no vuelvas a enviar."
-        ],
-        "notice": "El envío automático es una elección independiente del propietario para exportaciones preparadas. Los cierres diarios siguen siendo manuales. Conectar o leer la ayuda no activa la automatización."
-      },
-      "fortnox-recovery": {
-        "title": "Comprobar un problema de envío",
-        "intro": "Distingue un envío detenido de una respuesta ausente. El asiento podría existir aunque falte la respuesta.",
-        "steps": [
-          "Si Komisio indica expresamente que el envío se detuvo antes del registro, corrige la causa y utiliza la acción de reintento ofrecida.",
-          "Si el envío está pendiente o el resultado es incierto, no vuelvas a enviar. Pide al propietario que compare el documento con los asientos de la base de datos de empresa de Fortnox vinculada al envío.",
-          "Compara fecha, importes y todas las líneas. Si existe un asiento coincidente, el propietario puede registrar serie, número, ejercicio y pruebas mediante la confirmación de la fila de exportación.",
-          "Si no se encuentra el asiento, pide ayuda al responsable de la instalación para investigarlo. La ausencia no permite otro envío. No borres ni recrees documentos para eludir el bloqueo."
-        ],
-        "notice": "La conciliación registra la comprobación del propietario, no una verificación automática de Fortnox. Personal y administradores pueden leer la ayuda; solo el propietario puede registrar esta confirmación."
-      },
-      "fortnox-automation": {
-        "title": "Cómo funciona el envío automático",
-        "intro": "La automatización envía exportaciones preparadas a la empresa de Fortnox conectada. No crea cierres diarios ni elige cuentas.",
-        "steps": [
-          "Comprueba la empresa y la asignación de cuentas. Revisa las exportaciones existentes antes de activar: también pueden incluirse exportaciones antiguas aptas para el envío. Evita importar el archivo SIE y enviar directamente la misma exportación.",
-          "El propietario de la tienda activa el envío automático en Plan de cuentas y Fortnox. Pendiente significa que el servicio en segundo plano aún no ha aceptado la activación. Si la función no está configurada, contacta con la persona responsable de la instalación de Komisio.",
-          "Sigue creando y revisando cierres diarios y preparando exportaciones manualmente. Última ejecución muestra la hora, el resultado y el número de envíos. Activado no significa que se haya enviado algo, y una ejecución completada no significa que todos los días estén conciliados.",
-          "Tras una ejecución parcial o fallida, abre Conciliación y revisa las exportaciones afectadas. Si el envío está pendiente o su resultado es incierto, sigue la ayuda sobre problemas de envío y pide al propietario que compruebe el resultado. Desactivar y reactivar la automatización no desbloquea un envío retenido."
-        ],
-        "notice": "Leer la ayuda no activa ni envía nada. Las ejecuciones automáticas no reenvían exportaciones con resultado confirmado, pendiente o incierto. Desactivar la automatización no anula los asientos ya creados."
-      },
-      "receiving": {
-        "title": "Recibir y registrar artículos",
-        "intro": "Empieza con la tienda y el consignante correctos. Registra lo que ha llegado físicamente y después procesa los artículos.",
-        "steps": [
-          "Comprueba la tienda seleccionada y busca al consignante existente antes de crear uno nuevo. Sigue los requisitos de acuerdos y las rutinas de la tienda.",
-          "Un aviso previo no significa que los artículos se hayan recibido. Confirma la recepción solo cuando estén en la tienda. Continúa el trabajo desde la entrega existente.",
-          "Abre la entrega y registra un artículo a la vez. Comprueba la descripción, el precio y el vendedor antes de guardar.",
-          "Comprueba la confirmación y la lista de artículos registrados antes de etiquetar. Si falta la respuesta al guardar, mantén abierto el formulario y usa su opción de reintento. No crees el mismo artículo de nuevo para obtener una confirmación."
-        ],
-        "notice": "El número de artículos registrados describe datos guardados, no la finalización de toda la entrega. Comprueba también los artículos físicos. La ayuda no modifica datos; pide al personal autorizado que realice las acciones a las que no tienes acceso."
-      },
-      "labels": {
-        "title": "Etiquetar la entrega o el artículo correcto",
-        "intro": "Una etiqueta de recepción mantiene juntos los artículos durante el proceso. Una etiqueta de artículo identifica el artículo registrado y muestra su precio.",
-        "steps": [
-          "Abre la entrega o el artículo existente y comprueba la tienda y la referencia. Una etiqueta de recepción no significa que los artículos se hayan revisado o aceptado para la venta.",
-          "Para una etiqueta de artículo, busca el artículo registrado, abre la etiqueta y comprueba descripción, precio y moneda. Si la etiqueta no está disponible, vuelve al artículo y revisa sus datos.",
-          "Usa las opciones de impresión de la página. Elige la impresora y el número de copias correctos para una impresora conectada o revisa el diálogo de impresión del navegador. Un trabajo en cola o un diálogo abierto no demuestra que se haya impreso: comprueba la etiqueta física antes de colocarla.",
-          "Si falta la respuesta al poner el trabajo en cola, reintenta en el mismo formulario abierto. No crees trabajos nuevos repetidamente. Comprueba el trabajo en Impresoras y trabajos de impresión y pide ayuda al responsable de la impresora si es necesario. La búsqueda de etiquetas permite abrir una referencia existente."
-        ],
-        "notice": "Abrir la ayuda no imprime nada ni registra un artículo nuevo. No dupliques un artículo para sustituir su etiqueta. La impresión física y el escaneo deben comprobarse con el equipo de la tienda."
-      },
-      "integrations": {
-        "title": "Conecta los demás sistemas de tu tienda",
-        "intro": "Empieza por el sistema que quieras conectar con Komisio. Abre su sección para ver el estado y los ajustes.",
-        "steps": [
-          "Elige punto de venta, tienda online o contabilidad según lo que quieras conectar.",
-          "Lee el estado de la conexión y sigue los pasos de esa sección. Algunas acciones requieren un propietario o administrador.",
-          "Comprueba qué información se transfiere y en qué dirección antes de activar una función automática.",
-          "Consulta el estado de productos, recibos, pedidos o documentos contables en cada integración. Abre los detalles si algo requiere atención."
-        ],
-        "notice": "Una conexión no significa que todas las funciones automáticas estén activadas. Compruébalas por separado en los ajustes de la integración."
-      }
-    },
     "receiving": "Abrir recepción",
     "storeFlow": "Flujo de trabajo de la tienda",
     "items": "Buscar un artículo registrado",
@@ -3524,6 +3446,20 @@
       "placeholder": "Por ejemplo, etiquetas o contabilidad",
       "count": "Artículos de ayuda: {count}",
       "empty": "No se encontró ayuda relacionada"
+    },
+    "fallbackNote": "Este artículo aún no está disponible en tu idioma.",
+    "machineTranslationNote": "Este artículo se ha traducido automáticamente.",
+    "feedback": {
+      "title": "¿Te ha resultado útil?",
+      "thanks": "¡Gracias por tus comentarios!",
+      "yes": "Sí",
+      "no": "No",
+      "comment": "Comentario (opcional)",
+      "privacy": "No incluyas datos personales tuyos, de vendedores ni de clientes.",
+      "send": "Enviar",
+      "rateLimited": "La tienda ha alcanzado el límite diario de comentarios. Inténtalo más tarde.",
+      "error": "No se pudo guardar tu respuesta. Inténtalo de nuevo.",
+      "unknown": "No pudimos confirmar si se guardó tu respuesta. Espera antes de intentarlo de nuevo."
     }
   },
   "dashboard": {

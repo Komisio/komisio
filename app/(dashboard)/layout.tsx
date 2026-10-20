@@ -1,4 +1,6 @@
 import { HelpSupportProvider } from '@/components/help/contact-support'
+import { HelpContentProvider } from '@/components/help/content-provider'
+import { helpCatalog } from '@/lib/help/content'
 import { supportConfig, supportVersion } from '@/lib/help/support'
 import { version } from '../../package.json'
 import { LoadingMessageProvider } from '@/components/platform/loading-message'
@@ -59,23 +61,34 @@ export default async function DashboardLayout({
             version: supportVersion(version, process.env.VERCEL_GIT_COMMIT_SHA),
           }}
         >
-          <Shell
-            intakeEnabled={process.env.KOMISIO_INTAKE_ENABLED === 'true'}
-            host={host}
-            d={d}
-            locale={ctx.locale}
-            tenants={ctx.tenants}
-            active={ctx.active!}
-            email={ctx.user.email ?? ''}
-            name={ctx.profile?.display_name ?? ''}
+          <HelpContentProvider
+            value={{
+              tenantId: ctx.active.id,
+              locale: ctx.locale,
+              articles:
+                process.env.KOMISIO_INTAKE_ENABLED === 'true'
+                  ? helpCatalog(ctx.locale)
+                  : {},
+            }}
           >
-            <PlanBanner
-              status={plan}
-              isOwner={ctx.active.role === 'owner'}
-              d={d.plans}
-            />
-            {children}
-          </Shell>
+            <Shell
+              intakeEnabled={process.env.KOMISIO_INTAKE_ENABLED === 'true'}
+              host={host}
+              d={d}
+              locale={ctx.locale}
+              tenants={ctx.tenants}
+              active={ctx.active!}
+              email={ctx.user.email ?? ''}
+              name={ctx.profile?.display_name ?? ''}
+            >
+              <PlanBanner
+                status={plan}
+                isOwner={ctx.active.role === 'owner'}
+                d={d.plans}
+              />
+              {children}
+            </Shell>
+          </HelpContentProvider>
         </HelpSupportProvider>
       </NavigationWarningProvider>
     </LoadingMessageProvider>

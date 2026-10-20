@@ -96,6 +96,35 @@ Still owner-only, none of it blocking a store from working:
 Every later release follows the same path: merge to main, staging soak,
 dispatch `Production database`, approve.
 
+## Verification for every release
+
+A successful workflow and public login page are not a completed release check.
+Before reporting production as verified:
+
+- Confirm the exact Git SHA passed the staging release checks and is serving
+  the production domain. Record the workflow and deployment identifiers privately.
+- In an authenticated browser, load `/members`, `/intake/items`,
+  `/intake/sellers`, `/intake/payouts`, `/account` and `/help`, plus every changed
+  workflow. Verify the expected content, not just HTTP 200 or the page title:
+  streamed pages can return 200 and still show an error boundary.
+- Include an existing store with a paired print device when checking `/members`.
+  Both ordinary member identities and nameless device identities must render;
+  device rows must not offer ordinary membership-management actions. Do not
+  create production identities or send invitations merely for a smoke check.
+  Local browser regression coverage pairs a synthetic device through the engine.
+- Check runtime errors for these requests. If authentication or a required
+  fixture is unavailable, report that verification as incomplete.
+- On failure, stop release completion, record the affected route and error
+  digest privately, and compare with the previous release. Roll back only to a
+  compatible version known to avoid the failure; otherwise fix forward through
+  the normal reviewed PR and release checks. Do not repair customer data to
+  conceal a rendering fault.
+
+Incident #550 exposed this gap: a valid print-device identity had neither a
+profile name nor email, while the directory assumed every name was a string.
+The previous release shared the same fault. Regression coverage must include
+the actual RPC result for such identities, not only named human accounts.
+
 ## What stays different between staging and production
 
 | Setting                         | Staging                      | Production                       |

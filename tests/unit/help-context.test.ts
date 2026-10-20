@@ -3,8 +3,9 @@ import { helpTopicForPage } from '../../lib/help/topics'
 
 describe('task-specific help routing', () => {
   it('leaves unmapped pages available to the generic support modal', () => {
-    expect(helpTopicForPage('/members', null, null)).toBeNull()
-    expect(helpTopicForPage('/account', null, null)).toBeNull()
+    expect(helpTopicForPage('/members', null, null)).toBe('members-roles')
+    expect(helpTopicForPage('/account', null, null)).toBe('sign-in-mfa')
+    expect(helpTopicForPage('/host', null, null)).toBeNull()
   })
   it('offers general integration help when no provider is selected', () => {
     expect(helpTopicForPage('/intake/integrations', null, null)).toBe(

@@ -546,7 +546,8 @@
     "CHAIN_NOT_FOUND": "Ketjua ei enää ole.",
     "TENANT_CHANGED": "Aktiivinen kauppa on vaihtunut. Lataa sivu uudelleen ennen kuin jatkat.",
     "REQUEST_FAILED": "Muutoksiasi ei voitu tallentaa. Yritä uudelleen.",
-    "INVITE_DAILY_CAP": "Kaupan vuorokausiraja kutsuille on täynnä. Yritä huomenna uudelleen."
+    "INVITE_DAILY_CAP": "Kaupan vuorokausiraja kutsuille on täynnä. Yritä huomenna uudelleen.",
+    "PROFILE_EMAIL_LANGUAGE_FAILED": "Profiilisi tallennettiin, mutta tilin sähköpostien kieltä ei voitu päivittää. Yritä uudelleen tallentamalla vielä kerran."
   },
   "inspection": {
     "title": "Tarkasta tuontierä",
@@ -4475,5 +4476,70 @@
     "next": "Seuraava",
     "saved": "Tallennettu"
   },
-  "inviteLanguage": "Kutsun kieli"
+  "inviteLanguage": "Kutsun kieli",
+  "authEmail": {
+    "signup": {
+      "subject": "Komisio – Vahvista sähköpostiosoitteesi",
+      "intro": "Tervetuloa Komisioon! Vahvista sähköpostiosoitteesi viimeistelläksesi tilin luomisen.",
+      "button": "Vahvista sähköpostiosoite",
+      "note": "Jos et luonut tätä tiliä, voit jättää tämän viestin huomiotta."
+    },
+    "magiclink": {
+      "subject": "Komisio – Aktivoi tilisi",
+      "intro": "Vahvista sähköpostiosoitteesi avataksesi myyjätilisi.",
+      "button": "Vahvista ja jatka",
+      "note": "Jos et odottanut tätä viestiä, voit jättää sen huomiotta."
+    },
+    "recovery": {
+      "subject": "Vaihda salasanasi",
+      "intro": "Valitse uusi salasana alla olevasta linkistä.",
+      "button": "Vaihda salasana",
+      "note": "Jos et pyytänyt tätä, voit jättää tämän viestin huomiotta."
+    },
+    "invite": {
+      "subject": "Sinut on kutsuttu",
+      "intro": "Hyväksy kutsu ja luo tilisi alla olevasta linkistä.",
+      "button": "Hyväksy kutsu",
+      "note": "Jos et pyytänyt tätä, voit jättää tämän viestin huomiotta."
+    },
+    "email_change": {
+      "subject": "Vahvista sähköpostiosoitteen muutos",
+      "intro": "Vahvista, että haluat vaihtaa sähköpostiosoitteesi.",
+      "button": "Vahvista sähköpostiosoite",
+      "note": "Jos et pyytänyt tätä muutosta, ota yhteyttä tukeen."
+    },
+    "reauthentication": {
+      "subject": "Vahvistuskoodisi",
+      "intro": "Vahvista henkilöllisyytesi tällä koodilla:",
+      "note": "Jos et pyytänyt tätä, ota yhteyttä tukeen."
+    },
+    "password_changed_notification": {
+      "subject": "Salasanasi on vaihdettu",
+      "note": "Jos et tehnyt tätä muutosta, ota heti yhteyttä tukeen."
+    },
+    "email_changed_notification": {
+      "subject": "Sähköpostiosoitteesi on vaihdettu",
+      "note": "Jos et tehnyt tätä muutosta, ota heti yhteyttä tukeen."
+    },
+    "phone_changed_notification": {
+      "subject": "Puhelinnumerosi on vaihdettu",
+      "note": "Jos et tehnyt tätä muutosta, ota heti yhteyttä tukeen."
+    },
+    "identity_linked_notification": {
+      "subject": "Tilillesi on lisätty kirjautumistapa",
+      "note": "Jos et tehnyt tätä muutosta, ota heti yhteyttä tukeen."
+    },
+    "identity_unlinked_notification": {
+      "subject": "Tililtäsi on poistettu kirjautumistapa",
+      "note": "Jos et tehnyt tätä muutosta, ota heti yhteyttä tukeen."
+    },
+    "mfa_factor_enrolled_notification": {
+      "subject": "Tilillesi on lisätty vahvistustapa",
+      "note": "Jos et tehnyt tätä muutosta, ota heti yhteyttä tukeen."
+    },
+    "mfa_factor_unenrolled_notification": {
+      "subject": "Tililtäsi on poistettu vahvistustapa",
+      "note": "Jos et tehnyt tätä muutosta, ota heti yhteyttä tukeen."
+    }
+  }
 }

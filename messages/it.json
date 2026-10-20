@@ -546,7 +546,8 @@
     "CHAIN_NOT_FOUND": "La catena non esiste più.",
     "TENANT_CHANGED": "Il negozio attivo è cambiato. Ricarica la pagina prima di continuare.",
     "REQUEST_FAILED": "Impossibile salvare le modifiche. Riprova.",
-    "INVITE_DAILY_CAP": "Il limite giornaliero di inviti del negozio è stato raggiunto. Riprova domani."
+    "INVITE_DAILY_CAP": "Il limite giornaliero di inviti del negozio è stato raggiunto. Riprova domani.",
+    "PROFILE_EMAIL_LANGUAGE_FAILED": "Il profilo è stato salvato, ma non è stato possibile aggiornare la lingua delle email dell'account. Salva di nuovo per riprovare."
   },
   "inspection": {
     "title": "Ispeziona la consegna",
@@ -4469,5 +4470,70 @@
     "next": "Successiva",
     "saved": "Salvato"
   },
-  "inviteLanguage": "Lingua dell’invito"
+  "inviteLanguage": "Lingua dell’invito",
+  "authEmail": {
+    "signup": {
+      "subject": "Komisio – Conferma il tuo indirizzo email",
+      "intro": "Ti diamo il benvenuto su Komisio! Conferma il tuo indirizzo email per completare la registrazione.",
+      "button": "Conferma indirizzo email",
+      "note": "Se non hai creato questo account, puoi ignorare questa email."
+    },
+    "magiclink": {
+      "subject": "Komisio – Attiva il tuo account",
+      "intro": "Conferma il tuo indirizzo email per aprire il tuo account venditore.",
+      "button": "Conferma e continua",
+      "note": "Se non aspettavi questa email, puoi ignorarla."
+    },
+    "recovery": {
+      "subject": "Reimposta la tua password",
+      "intro": "Segui il link qui sotto per scegliere una nuova password.",
+      "button": "Reimposta password",
+      "note": "Se non hai richiesto questa operazione, puoi ignorare questa email."
+    },
+    "invite": {
+      "subject": "Hai ricevuto un invito",
+      "intro": "Segui il link qui sotto per accettare l'invito e creare il tuo account.",
+      "button": "Accetta invito",
+      "note": "Se non hai richiesto questa operazione, puoi ignorare questa email."
+    },
+    "email_change": {
+      "subject": "Conferma la modifica dell'indirizzo email",
+      "intro": "Conferma che vuoi modificare il tuo indirizzo email.",
+      "button": "Conferma indirizzo email",
+      "note": "Se non hai richiesto questa modifica, contatta il supporto."
+    },
+    "reauthentication": {
+      "subject": "Il tuo codice di verifica",
+      "intro": "Usa questo codice per verificare la tua identità:",
+      "note": "Se non hai richiesto questa operazione, contatta il supporto."
+    },
+    "password_changed_notification": {
+      "subject": "La tua password è stata modificata",
+      "note": "Se non hai effettuato questa modifica, contatta subito il supporto."
+    },
+    "email_changed_notification": {
+      "subject": "Il tuo indirizzo email è stato modificato",
+      "note": "Se non hai effettuato questa modifica, contatta subito il supporto."
+    },
+    "phone_changed_notification": {
+      "subject": "Il tuo numero di telefono è stato modificato",
+      "note": "Se non hai effettuato questa modifica, contatta subito il supporto."
+    },
+    "identity_linked_notification": {
+      "subject": "È stato aggiunto un metodo di accesso al tuo account",
+      "note": "Se non hai effettuato questa modifica, contatta subito il supporto."
+    },
+    "identity_unlinked_notification": {
+      "subject": "È stato rimosso un metodo di accesso dal tuo account",
+      "note": "Se non hai effettuato questa modifica, contatta subito il supporto."
+    },
+    "mfa_factor_enrolled_notification": {
+      "subject": "È stato aggiunto un metodo di verifica al tuo account",
+      "note": "Se non hai effettuato questa modifica, contatta subito il supporto."
+    },
+    "mfa_factor_unenrolled_notification": {
+      "subject": "È stato rimosso un metodo di verifica dal tuo account",
+      "note": "Se non hai effettuato questa modifica, contatta subito il supporto."
+    }
+  }
 }

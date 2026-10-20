@@ -546,7 +546,8 @@
     "CHAIN_NOT_FOUND": "Kjeden finnes ikke lenger.",
     "TENANT_CHANGED": "Den aktive butikken er endret. Last inn siden på nytt før du fortsetter.",
     "REQUEST_FAILED": "Endringene dine kunne ikke lagres. Prøv igjen.",
-    "INVITE_DAILY_CAP": "Butikkens grense for invitasjoner per døgn er nådd. Prøv igjen i morgen."
+    "INVITE_DAILY_CAP": "Butikkens grense for invitasjoner per døgn er nådd. Prøv igjen i morgen.",
+    "PROFILE_EMAIL_LANGUAGE_FAILED": "Profilen din ble lagret, men språket for kontoens e-poster kunne ikke oppdateres. Lagre på nytt for å prøve igjen."
   },
   "inspection": {
     "title": "Gå gjennom innleveringen",
@@ -4469,5 +4470,70 @@
     "next": "Neste",
     "saved": "Lagret"
   },
-  "inviteLanguage": "Språk i invitasjonen"
+  "inviteLanguage": "Språk i invitasjonen",
+  "authEmail": {
+    "signup": {
+      "subject": "Komisio – Bekreft e-postadressen din",
+      "intro": "Velkommen til Komisio! Bekreft e-postadressen din for å fullføre registreringen.",
+      "button": "Bekreft e-postadresse",
+      "note": "Hvis du ikke har opprettet kontoen, kan du se bort fra denne e-posten."
+    },
+    "magiclink": {
+      "subject": "Komisio – Aktiver kontoen din",
+      "intro": "Bekreft e-postadressen din for å åpne selgerkontoen.",
+      "button": "Bekreft og fortsett",
+      "note": "Hvis du ikke ventet denne e-posten, kan du se bort fra den."
+    },
+    "recovery": {
+      "subject": "Tilbakestill passordet ditt",
+      "intro": "Følg lenken nedenfor for å velge et nytt passord.",
+      "button": "Tilbakestill passord",
+      "note": "Hvis du ikke ba om dette, kan du se bort fra denne e-posten."
+    },
+    "invite": {
+      "subject": "Du har blitt invitert",
+      "intro": "Følg lenken nedenfor for å godta invitasjonen og opprette kontoen din.",
+      "button": "Godta invitasjon",
+      "note": "Hvis du ikke ba om dette, kan du se bort fra denne e-posten."
+    },
+    "email_change": {
+      "subject": "Bekreft endring av e-postadresse",
+      "intro": "Bekreft at du vil endre e-postadressen din.",
+      "button": "Bekreft e-postadresse",
+      "note": "Kontakt kundestøtte hvis du ikke ba om denne endringen."
+    },
+    "reauthentication": {
+      "subject": "Din bekreftelseskode",
+      "intro": "Bruk denne koden for å bekrefte identiteten din:",
+      "note": "Kontakt kundestøtte hvis du ikke ba om dette."
+    },
+    "password_changed_notification": {
+      "subject": "Passordet ditt er endret",
+      "note": "Kontakt kundestøtte umiddelbart hvis du ikke gjorde denne endringen."
+    },
+    "email_changed_notification": {
+      "subject": "E-postadressen din er endret",
+      "note": "Kontakt kundestøtte umiddelbart hvis du ikke gjorde denne endringen."
+    },
+    "phone_changed_notification": {
+      "subject": "Telefonnummeret ditt er endret",
+      "note": "Kontakt kundestøtte umiddelbart hvis du ikke gjorde denne endringen."
+    },
+    "identity_linked_notification": {
+      "subject": "En innloggingsmetode er lagt til på kontoen din",
+      "note": "Kontakt kundestøtte umiddelbart hvis du ikke gjorde denne endringen."
+    },
+    "identity_unlinked_notification": {
+      "subject": "En innloggingsmetode er fjernet fra kontoen din",
+      "note": "Kontakt kundestøtte umiddelbart hvis du ikke gjorde denne endringen."
+    },
+    "mfa_factor_enrolled_notification": {
+      "subject": "En bekreftelsesmetode er lagt til på kontoen din",
+      "note": "Kontakt kundestøtte umiddelbart hvis du ikke gjorde denne endringen."
+    },
+    "mfa_factor_unenrolled_notification": {
+      "subject": "En bekreftelsesmetode er fjernet fra kontoen din",
+      "note": "Kontakt kundestøtte umiddelbart hvis du ikke gjorde denne endringen."
+    }
+  }
 }

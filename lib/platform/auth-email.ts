@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
 import { z } from 'zod'
 import { dictionary, isLocale, type Locale } from '../i18n'
-import confirmationCopy from './confirmation-copy.json'
+import { authEmailCopy, authEmailLocale } from './auth-email-copy'
 
 type Env = Record<string, string | undefined>
 const escape = (text: string) =>
@@ -124,9 +124,7 @@ export async function handleAuthEmail(
       return 200
     const { user, email_data: e } = eventSchema.parse(payload)
     const origin = new URL(env.NEXT_PUBLIC_APP_URL).origin
-    let locale: Locale = isLocale(user.user_metadata?.locale)
-      ? user.user_metadata.locale
-      : 'en'
+    let locale: Locale = authEmailLocale(user.user_metadata)
     const destination = new URL(e.redirect_to || origin)
     const activation =
       destination.origin === origin && destination.pathname === '/auth/activate'
@@ -175,6 +173,15 @@ export async function handleAuthEmail(
         }),
       )
     } else {
+      const selected = authEmailCopy(
+        locale,
+        activation && e.email_action_type === 'signup'
+          ? 'magiclink'
+          : e.email_action_type,
+      )
+      if (!selected) return 400
+      locale = selected.locale
+      const copy = selected.copy
       const verify = (
         token: string | undefined,
         type = e.email_action_type,
@@ -190,60 +197,52 @@ export async function handleAuthEmail(
         (activation && e.email_action_type === 'signup') ||
         e.email_action_type === 'magiclink'
       ) {
-        const d = dictionary(locale).sellerActivation
         const url = new URL('/auth/activate', origin)
         url.searchParams.set('token_hash', hash.parse(e.token_hash))
         url.searchParams.set('locale', locale)
         mails.push(
           render(
             user.email,
-            `Komisio – ${d.title}`,
-            `${d.intro}\n\n${d.confirm}\n\n${d.emailNote}`,
-            { label: d.confirm, url: url.href },
+            copy.subject,
+            `${copy.intro}\n\n${copy.button}\n\n${copy.note}`,
+            { label: copy.button, url: url.href },
           ),
         )
       } else if (e.email_action_type === 'signup') {
-        const [title, intro, button, note] = confirmationCopy[locale]
         mails.push(
           render(
             user.email,
-            `Komisio – ${title}`,
-            `${intro}\n\n${button}\n\n${note}`,
-            { label: button, url: verify(e.token_hash) },
+            copy.subject,
+            `${copy.intro}\n\n${copy.button}\n\n${copy.note}`,
+            { label: copy.button, url: verify(e.token_hash) },
           ),
         )
       } else if (
         e.email_action_type === 'recovery' ||
         e.email_action_type === 'invite'
       ) {
-        const recovery = e.email_action_type === 'recovery'
-        const title = recovery ? 'Reset your password' : "You've been invited"
-        const label = recovery ? 'Reset password' : 'Accept invitation'
-        const intro = recovery
-          ? 'Follow the link below to choose a new password.'
-          : 'Follow the link below to accept the invitation and create your account.'
         mails.push(
           render(
             user.email,
-            title,
-            `${intro}\n\n${label}\n\nIf you did not request this, you can ignore this email.`,
-            { label, url: verify(e.token_hash) },
+            copy.subject,
+            `${copy.intro}\n\n${copy.button}\n\n${copy.note}`,
+            { label: copy.button, url: verify(e.token_hash) },
           ),
         )
       } else if (e.email_action_type === 'email_change') {
         const newEmail = z.email().parse(user.new_email)
-        const label = 'Confirm email address'
-        const body = `Confirm the change of your email address.\n\n${label}\n\nIf you did not request this change, contact support.`
+        const label = copy.button
+        const body = `${copy.intro}\n\n${label}\n\n${copy.note}`
         // Supabase's hash_new belongs to the CURRENT address (documented API).
         if (e.token_hash_new)
           mails.push(
-            render(user.email, 'Confirm email change', body, {
+            render(user.email, copy.subject, body, {
               label,
               url: verify(e.token_hash_new),
             }),
           )
         mails.push(
-          render(newEmail, 'Confirm email change', body, {
+          render(newEmail, copy.subject, body, {
             label,
             url: verify(e.token_hash),
           }),
@@ -256,26 +255,11 @@ export async function handleAuthEmail(
         mails.push(
           render(
             user.email,
-            'Your verification code',
-            `Use this code to verify your identity:\n\n${token}\n\nIf you did not request this, contact support.`,
+            copy.subject,
+            `${copy.intro}\n\n${token}\n\n${copy.note}`,
           ),
         )
       } else {
-        const notifications: Record<string, string> = {
-          password_changed_notification: 'Your password was changed',
-          email_changed_notification: 'Your email address was changed',
-          phone_changed_notification: 'Your phone number was changed',
-          identity_linked_notification:
-            'A sign-in method was added to your account',
-          identity_unlinked_notification:
-            'A sign-in method was removed from your account',
-          mfa_factor_enrolled_notification:
-            'A verification method was added to your account',
-          mfa_factor_unenrolled_notification:
-            'A verification method was removed from your account',
-        }
-        const title = notifications[e.email_action_type]
-        if (!title) return 400
         // After an email change, Auth's user.email is already the new address.
         // Preserve the security notification to the previous account owner.
         const recipient =
@@ -283,11 +267,7 @@ export async function handleAuthEmail(
             ? z.email().parse(e.old_email)
             : user.email
         mails.push(
-          render(
-            recipient,
-            title,
-            `${title}.\n\nIf you did not make this change, contact support immediately.`,
-          ),
+          render(recipient, copy.subject, `${copy.subject}.\n\n${copy.note}`),
         )
       }
     }

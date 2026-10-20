@@ -366,6 +366,7 @@
   "workspace": "Il tuo negozio, insieme.",
   "home": "Panoramica",
   "members": "Persone",
+  "unnamedMember": "Utente senza nome",
   "tenant": "Impostazioni del negozio",
   "account": "Il mio account",
   "logout": "Esci",

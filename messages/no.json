@@ -366,6 +366,7 @@
   "workspace": "Butikken din, sammen.",
   "home": "Oversikt",
   "members": "Personer",
+  "unnamedMember": "Bruker uten navn",
   "tenant": "Butikkinnstillinger",
   "account": "Min konto",
   "logout": "Logg ut",

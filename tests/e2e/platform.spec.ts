@@ -815,6 +815,7 @@ function totp(secret: string) {
 }
 test('password recovery and MFA protect the authenticated platform', async ({
   page,
+  baseURL,
 }) => {
   const run = Date.now().toString(36),
     email = `security-${run}@example.test`
@@ -833,7 +834,7 @@ test('password recovery and MFA protect the authenticated platform', async ({
   await expect(
     page.getByText('Om kontot finns har en återställningslänk skickats.'),
   ).toBeVisible()
-  await confirmEmail(page, email, 'Reset')
+  await confirmEmail(page, email, d.authEmail.recovery.subject)
   await expect(page).toHaveURL(/\/account/)
   await page.getByLabel('Nytt lösenord', { exact: true }).fill(newPassword)
   await page.getByRole('button', { name: d.showPassword, exact: true }).click()
@@ -876,10 +877,11 @@ test('password recovery and MFA protect the authenticated platform', async ({
   await page.getByRole('button', { name: 'Logga in', exact: true }).click()
   await expect(page).toHaveURL(/\/mfa/)
   const blocked = await page.request.post('/api/platform', {
-    headers: { Origin: 'http://127.0.0.1:3000' },
+    headers: { Origin: new URL(baseURL!).origin },
     data: { action: 'profile', name: 'Should fail', locale: 'sv' },
   })
   expect(blocked.status()).toBe(403)
+  expect(await blocked.json()).toMatchObject({ error: 'AUTH_REQUIRED' })
   await page.goto('/scan?ref=H-999999999999')
   await expect(page).toHaveURL(/\/mfa\?next=/)
   await expect
@@ -898,9 +900,7 @@ test('password recovery and MFA protect the authenticated platform', async ({
   for (const locale of locales) {
     await page
       .context()
-      .addCookies([
-        { name: 'komisio-locale', value: locale, url: 'http://127.0.0.1:3000' },
-      ])
+      .addCookies([{ name: 'komisio-locale', value: locale, url: baseURL! }])
     await page.reload()
     const translated = dictionary(locale)
     await expect(page).toHaveTitle(`${translated.mfaLogin} · Komisio`)
@@ -913,15 +913,11 @@ test('password recovery and MFA protect the authenticated platform', async ({
   }
   await page
     .context()
-    .addCookies([
-      { name: 'komisio-locale', value: 'sv', url: 'http://127.0.0.1:3000' },
-    ])
+    .addCookies([{ name: 'komisio-locale', value: 'sv', url: baseURL! }])
   await page.reload()
   await page.getByLabel('Sexsiffrig kod').fill(totp(factor.totp.secret))
   await page.getByRole('button', { name: 'Verifiera kod' }).click()
-  await expect(page).toHaveURL(
-    'http://127.0.0.1:3000/intake/open?ref=H-999999999999',
-  )
+  await expect(page).toHaveURL(`${baseURL}/intake/open?ref=H-999999999999`)
   await page.goto('/')
   await expect(
     page.getByRole('heading', { name: d.home, exact: true }),

@@ -1,5 +1,35 @@
 # PayPal POS connection
 
+## Automated coverage
+
+The synthetic currency matrix covers SEK, NOK, DKK, EUR and USD:
+
+| Layer | Verified behavior |
+|---|---|
+| Unit (`zettle`, `zettle-http`, `pos-catalog`) | Exact minor-unit export/read/import prices; matching sales and refunds; every other supported currency held; non-ASCII titles; conditional image association/replay |
+| pgTAP (`0360_zettle_currency_matrix`) | Current currency validators/constraints; exports; foreign receipts create no sale, credit or pending operation; one sale/refund on replay; credit reversal |
+| Browser (`zettle`, `zettle-matrix`) | Five-currency checkout/credit/refund journeys, NOK export with 25.5% mapping, EUR receipt held without financial writes, eight-language workspace at 320px |
+
+VAT coverage includes 0, 13.5, 19, 21, 22, 24, 25 and 25.5 percent through
+publication, export, decimal-string readback and comparison. A 25/25.5 mismatch
+stays a mismatch; none of these tests establishes legal tax treatment.
+
+For this coverage-only slice, the existing workspace display contract is retained:
+percentages use two fixed decimals and `%`; receipt amounts use two fixed decimals
+and the ISO currency code in every language. Labels and comparison explanations
+come from the selected dictionary. Receipt detail still exposes a technical
+reason such as `currency` alongside localized held guidance. This is a baseline,
+not a claim that all receipt diagnostics are translated. Translation of these
+reason codes and obsolete generic refund guidance is tracked in
+[#529](https://github.com/Komisio/komisio/issues/529).
+
+SQL and the installed Zod schema accept 120-code-point product titles including
+emoji. Receipt description truncation can still split an emoji at its UTF-16
+boundary; [#528](https://github.com/Komisio/komisio/issues/528) tracks the expected
+failure regression separately. Fixtures are synthetic documented wire shapes,
+not recordings or proof of real-till behavior. The live checklist is in
+[ZETTLE-LIVE-PULL.md](ZETTLE-LIVE-PULL.md).
+
 ## Item status and recovery
 
 The items table has a shared **Synchronization** column. Each connected system

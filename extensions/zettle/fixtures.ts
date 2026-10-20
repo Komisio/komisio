@@ -1,5 +1,35 @@
 import { zettleHttpClient } from './http'
 import { fixtureZettleTransport } from './transport'
+import { storeCurrencies } from '../../lib/platform/currencies'
+
+/** Synthetic Purchase API v2 fields; VAT is provider evidence, never engine input. */
+export function matrixPurchase(
+  currency: (typeof storeCurrencies)[number],
+  refundOf?: string,
+) {
+  return {
+    purchaseUUID1: refundOf
+      ? 'e17e0000-0000-4000-8000-000000000003'
+      : 'e17e0000-0000-4000-8000-000000000002',
+    timestamp: '2026-09-10T10:00:00.000+0000',
+    currency,
+    source: 'POS',
+    amount: refundOf ? -12345 : 12345,
+    ...(refundOf ? { refund: true, refundsPurchaseUUID1: refundOf } : {}),
+    products: [
+      {
+        productUuid: 'e17e0000-0000-4000-8000-000000000004',
+        variantUuid: 'e17e0000-0000-4000-8000-000000000005',
+        type: 'PRODUCT',
+        quantity: refundOf ? '-1' : '1',
+        unitPrice: 12345,
+        vatPercentage: '25.50',
+        name: 'Läderjacka – blå æøåäöÆØÅÄÖ ß é ñ ł 🧥',
+        sku: 'I-AABBCCDD',
+      },
+    ],
+  }
+}
 /** Synthetic, documented wire shape. No merchant/customer/card data. */
 export function demoTransport() {
   return fixtureZettleTransport([

@@ -16,11 +16,31 @@ type Product = {
     price: { amount: number; currencyId: string }
   }[]
 }
+type Purchase = {
+  purchaseUUID1: string
+  timestamp: string
+  currency: string
+  source: string
+  amount: number
+  products: {
+    productUuid: string
+    variantUuid: string
+    name: string
+    type: string
+    quantity: string
+    unitPrice: number
+    vatPercentage: string
+    sku: string
+    barcode: string
+  }[]
+  refund?: boolean
+  refundsPurchaseUUID1?: string
+}
 const stores = new Map<
   string,
   {
     products: Map<string, { body: Product; etag: number }>
-    purchases: unknown[]
+    purchases: Purchase[]
     currency: string
   }
 >()
@@ -72,6 +92,9 @@ const server = createServer(async (req, res) => {
       )
     if (url.pathname === '/_test/sell' && req.method === 'POST') {
       const ids = (body as { ids: string[] }).ids
+      const currency =
+        (body as { currency?: string }).currency ?? store.currency
+      if (!storeCurrencies.some((c) => c === currency)) return reply(400)
       if (!Array.isArray(ids) || !ids.length || ids.length > 50)
         return reply(400)
       const products = ids.map((id) => store!.products.get(id)?.body)
@@ -79,7 +102,7 @@ const server = createServer(async (req, res) => {
       const purchase = {
         purchaseUUID1: randomUUID(),
         timestamp: '2026-09-13T10:00:00.000+0000',
-        currency: store.currency,
+        currency,
         source: 'POS',
         amount: products.reduce((n, p) => n + p!.variants[0].price.amount, 0),
         products: products.map((p) => ({
@@ -89,12 +112,32 @@ const server = createServer(async (req, res) => {
           type: 'PRODUCT',
           quantity: '1',
           unitPrice: p!.variants[0].price.amount,
+          vatPercentage: String(p!.vatPercentage),
           sku: p!.variants[0].sku,
           barcode: p!.variants[0].barcode,
         })),
       }
       store.purchases.push(purchase)
       return reply(201, purchase)
+    }
+    if (url.pathname === '/_test/refund' && req.method === 'POST') {
+      const original = store.purchases.find(
+        (p) =>
+          p.purchaseUUID1 === (body as { purchaseId?: string }).purchaseId &&
+          !p.refund,
+      )
+      if (!original) return reply(400)
+      const refund: Purchase = {
+        ...original,
+        purchaseUUID1: randomUUID(),
+        timestamp: '2026-09-14T10:00:00.000+0000',
+        refund: true,
+        refundsPurchaseUUID1: original.purchaseUUID1,
+        amount: -original.amount,
+        products: original.products.map((p) => ({ ...p, quantity: '-1' })),
+      }
+      store.purchases.push(refund)
+      return reply(201, refund)
     }
     if (
       url.pathname === '/purchase.izettle.com/purchases/v2' &&
@@ -127,7 +170,7 @@ const server = createServer(async (req, res) => {
       if (
         !p.uuid ||
         !p.name ||
-        p.name.length > 256 ||
+        Array.from(p.name).length > 120 ||
         typeof p.vatPercentage !== 'number' ||
         !Array.isArray(p.variants) ||
         p.variants.length !== 1 ||
@@ -161,7 +204,12 @@ const server = createServer(async (req, res) => {
       if (!record) return reply(404)
       if (req.headers['if-match'] !== `"${record.etag}"`) return reply(412)
       const p = body as Product
-      if (p.uuid !== id || p.variants[0].uuid !== record.body.variants[0].uuid)
+      if (
+        !p.name ||
+        Array.from(p.name).length > 120 ||
+        p.uuid !== id ||
+        p.variants[0].uuid !== record.body.variants[0].uuid
+      )
         return reply(400)
       store.products.set(id, { body: p, etag: record.etag + 1 })
       return reply(204)

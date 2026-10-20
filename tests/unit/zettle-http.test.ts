@@ -1,6 +1,12 @@
 import { expect, it, vi } from 'vitest'
 import { zettleHttpClient } from '../../extensions/zettle/http'
-import { type CatalogProduct } from '../../extensions/zettle/catalog'
+import {
+  catalogProduct,
+  type CatalogProduct,
+} from '../../extensions/zettle/catalog'
+import { storeCurrencies } from '../../lib/platform/currencies'
+import { mapZettlePurchase } from '../../extensions/zettle/purchase'
+import { matrixPurchase } from '../../extensions/zettle/fixtures'
 const org = '10000000-0000-4000-8000-000000000001'
 const imageUrl = 'https://image.izettle.com/product/synthetic.jpg'
 const product: CatalogProduct = {
@@ -22,6 +28,77 @@ const json = (
   status = 200,
   headers: Record<string, string> = {},
 ) => new Response(JSON.stringify(body), { status, headers })
+
+it.each([0, 13.5, 19, 21, 22, 24, 25, 25.5])(
+  'exports and verifies %s VAT with decimal-string readback',
+  async (rate) => {
+    const expected = { ...product, vatPercentage: rate }
+    const remote = {
+      ...expected,
+      vatPercentage: rate.toFixed(2),
+      variants: [{ ...product.variants[0], vatPercentage: rate.toFixed(2) }],
+    }
+    const { client, http } = setup([
+      json({ organizationUuid: org }),
+      new Response(null, { status: 404 }),
+      new Response(null, { status: 201 }),
+      json(remote),
+      json(remote),
+    ])
+    await client.putProduct(expected, null)
+    await client.putProduct(expected, null)
+    const writes = http.mock.calls.filter(([, r]) => r?.method === 'POST')
+    expect(writes).toHaveLength(1)
+    expect(JSON.parse(String(writes[0][1]?.body))).toMatchObject({
+      vatPercentage: rate,
+    })
+  },
+)
+
+it.each([
+  'Läderjacka – blå',
+  'Strikket genser i ull, størrelse M',
+  'Pörröinen villapaita',
+  'Größe 38 Mantel',
+  'Chaqueta de piel española',
+  'Giacca in velluto più',
+  'æøåäöÆØÅÄÖ ß é ñ ł 🧥',
+])('round-trips %s through HTTP and purchase mapping', async (name) => {
+  const expected = { ...product, name }
+  const { client, http } = setup([
+    json({ organizationUuid: org }),
+    new Response(null, { status: 404 }),
+    new Response(null, { status: 201 }),
+    json(expected),
+  ])
+  await client.putProduct(expected, null)
+  expect(
+    JSON.parse(
+      String(http.mock.calls.find(([, r]) => r?.method === 'POST')?.[1]?.body),
+    ).name,
+  ).toBe(name)
+  const purchase = matrixPurchase('NOK')
+  purchase.products[0].name = name
+  expect(mapZettlePurchase(purchase, 'NOK').lines[0].description).toBe(name)
+})
+
+// Export validation already counts code points; receipt truncation is tracked in #528.
+it('accepts a SQL-produced title of 120 code points ending in emoji', () => {
+  expect(
+    catalogProduct.safeParse({ ...product, name: 'a'.repeat(119) + '🧥' })
+      .success,
+  ).toBe(true)
+})
+it.fails(
+  'does not split a receipt description surrogate pair at the boundary',
+  () => {
+    const purchase = matrixPurchase('NOK')
+    purchase.products[0].name = 'a'.repeat(119) + '🧥'
+    expect(mapZettlePurchase(purchase, 'NOK').lines[0].description).toBe(
+      purchase.products[0].name,
+    )
+  },
+)
 function setup(responses: Response[]) {
   const http = vi.fn<typeof fetch>().mockImplementation(async () => {
     const r = responses.shift()
@@ -38,30 +115,47 @@ function setup(responses: Response[]) {
   return { client, http }
 }
 
-it('replaces only the previous managed image and reconciles a lost successful replacement', async () => {
-  const previousImage = 'https://image.izettle.com/product/previous.jpg'
-  const after = { ...product, presentation: { imageUrl } }
-  const { client, http } = setup([
-    json({ organizationUuid: org }),
-    json({ ...product, presentation: { imageUrl: previousImage } }, 200, {
-      ETag: '"image-replacement"',
-    }),
-    new Response(null, { status: 204 }),
-    json(after),
-    json(after),
-  ])
-  await client.putProduct(product, product, imageUrl, previousImage)
-  await client.putProduct(product, product, imageUrl, previousImage)
-  const writes = http.mock.calls.filter(([, r]) => r?.method === 'PUT')
-  expect(writes).toHaveLength(1)
-  expect(writes[0][1]?.headers).toMatchObject({
-    'If-Match': '"image-replacement"',
-  })
-  expect(JSON.parse(String(writes[0][1]?.body))).toEqual({
-    ...after,
-    variants: [{ ...product.variants[0], vatPercentage: '0' }],
-  })
-})
+it.each(storeCurrencies)(
+  'replaces only the previous managed image and reconciles a lost successful replacement in %s',
+  async (currency) => {
+    const product: CatalogProduct = {
+      uuid: '20000000-0000-4000-8000-000000000001',
+      name: 'Synthetic jacket',
+      externalReference: 'komisio:30000000-0000-4000-8000-000000000001',
+      vatPercentage: 0,
+      variants: [
+        {
+          uuid: '40000000-0000-4000-8000-000000000001',
+          sku: 'K-item',
+          barcode: 'I-12345678',
+          price: { amount: 25000, currencyId: currency },
+        },
+      ],
+    }
+    const previousImage = 'https://image.izettle.com/product/previous.jpg'
+    const after = { ...product, presentation: { imageUrl } }
+    const { client, http } = setup([
+      json({ organizationUuid: org }),
+      json({ ...product, presentation: { imageUrl: previousImage } }, 200, {
+        ETag: '"image-replacement"',
+      }),
+      new Response(null, { status: 204 }),
+      json(after),
+      json(after),
+    ])
+    await client.putProduct(product, product, imageUrl, previousImage)
+    await client.putProduct(product, product, imageUrl, previousImage)
+    const writes = http.mock.calls.filter(([, r]) => r?.method === 'PUT')
+    expect(writes).toHaveLength(1)
+    expect(writes[0][1]?.headers).toMatchObject({
+      'If-Match': '"image-replacement"',
+    })
+    expect(JSON.parse(String(writes[0][1]?.body))).toEqual({
+      ...after,
+      variants: [{ ...product.variants[0], vatPercentage: '0' }],
+    })
+  },
+)
 
 it.each(['https://image.izettle.com/product/external.jpg', null])(
   'refuses replacement after an external image edit or removal: %s',
@@ -484,7 +578,7 @@ it('normalizes a valid nonzero decimal VAT without changing the expected percent
   expect(http.mock.calls).toHaveLength(2)
 })
 
-it.each(['EUR', 'USD'] as const)(
+it.each(storeCurrencies)(
   'exports exact %s prices over HTTP',
   async (currency) => {
     const foreign = structuredClone(product)

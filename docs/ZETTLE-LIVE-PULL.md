@@ -122,3 +122,15 @@ reconciliation. Synthetic database and browser tests cover replay, original-sale
 ordering, atomic rollback, worker revocation and concurrent delivery. Real merchant
 refund verification is still required. Seller-balance checkout remains deferred
 by the owner until a supported POS payment flow is verified.
+
+## Manual live-till follow-up
+
+Automated currency/VAT/locale matrices use synthetic loopback fixtures. Record
+merchant verification separately; these checks are not completed by CI:
+
+- [ ] Export one item per configured VAT rate; confirm till price, currency and VAT.
+- [ ] Sell the item and pull receipts; confirm one matched sale and seller credit.
+- [ ] Refund the receipt on the till; confirm reconciliation exactly once.
+- [ ] Upload a product image and confirm it on the till.
+- [ ] Confirm a title with non-ASCII characters displays correctly.
+- [ ] Where available, repeat using a non-SEK merchant account (NOK, DKK or EUR).

@@ -1133,3 +1133,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-19: Lifecycle uses shared inventory table chrome and a sorted 25-row read contract, oldest acceptance first with item-ID ties. Search/stage filter rows only; the batch due count stays store-wide. Existing lifecycle actions and permissions are unchanged (#513).
 
 - 2026-10-19: #512 offers tenant-scoped seller-ID choices and editable category suggestions using existing reads and URL filters. Stock metrics share one card style with mobile scrolling stage cards; no lifecycle, stock-count or access rules change.
+
+- 2026-10-20: #524 tests existing PayPal POS currency/VAT behavior without changing it. Workspace percentages and receipt amounts retain fixed decimals and ISO currency codes; surrounding labels follow locale. Emoji receipt truncation is tracked separately in #528.

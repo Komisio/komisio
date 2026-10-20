@@ -6,6 +6,7 @@ import {
   shopifyCatalogItem,
 } from '../../extensions/pos-catalog'
 import { canImportPosProduct } from '../../lib/pos-import'
+import { storeCurrencies } from '../../lib/platform/currencies'
 
 const merchant = '10000000-0000-4000-8000-000000000001'
 const product = {
@@ -39,6 +40,29 @@ function response(data: unknown, headers = {}) {
 }
 
 describe('POS catalog reads', () => {
+  it.each(storeCurrencies)(
+    'preserves exact %s catalog prices and refuses foreign-store import',
+    async (currency) => {
+      const p = structuredClone(product)
+      p.variants[0].price.currencyId = currency
+      const http = vi.fn<typeof fetch>().mockResolvedValue(response(p))
+      const row = await paypalCatalogItem(
+        merchant,
+        'synthetic',
+        p.uuid,
+        p.variants[0].uuid,
+        http,
+      )
+      expect(row).toMatchObject({
+        priceOre: 12525,
+        currency,
+        barcode: '0012345678901',
+      })
+      expect(canImportPosProduct(row!, currency)).toBe(true)
+      for (const other of storeCurrencies.filter((c) => c !== currency))
+        expect(canImportPosProduct(row!, other)).toBe(false)
+    },
+  )
   it('pins the merchant, preserves barcode zeros and consumes numeric pagination only', async () => {
     const http = vi
       .fn<typeof fetch>()

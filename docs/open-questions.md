@@ -712,3 +712,16 @@ values or addresses. Customer reuse is flag-gated; an existing shipping address
 blocks Checkout until an operator resolves it in Stripe. Renewals retain Stripe's
 address hierarchy. Dashboard configuration and real staging verification remain
 operator actions; no live setting has been changed by this implementation.
+
+## e-conomic delivery scope (#523)
+
+Owner decisions on 2026-10-20 approve separate connection/map/export/send facts,
+DKK daily summaries as drafts in an existing journal, explicit frozen VAT lines
+with mandatory zero-rate codes, and a stored exclusion reason for every nonzero
+unposted key. Consignment-fee keys cannot be excluded. No Danish chart is assumed.
+Real app registration and accountant verification remain operator work.
+
+The provider bulk schema does not guarantee one shared voucher number. The owner
+approved delivery with complete read-back and a held outcome unless exactly one
+voucher is verified. Guaranteed grouping remains a follow-up investigation;
+multiple vouchers must never be marked sent or automatically retried.

@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
+import { readFileSync } from 'node:fs'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
-import { dictionary } from '../../lib/i18n'
 
 test('Danish credits use Danish number formatting without purchasing', async ({
   page,
@@ -58,10 +58,26 @@ test('credit purchase shows tax-exclusive copy and a localized configuration err
         .context()
         .addCookies([{ name: 'komisio-locale', value: locale, url: baseURL! }])
       await page.goto('/settings?tab=credits')
-      const d = dictionary(locale).credits
+      const d = JSON.parse(
+        readFileSync(
+          new URL(`../../messages/${locale}.json`, import.meta.url),
+          'utf8',
+        ),
+      ).credits as {
+        title: string
+        buy: string
+        taxMisconfigured: string
+      }
       const panel = page.getByRole('region', { name: d.title, exact: true })
-      const prefix = d.buy.split('{')[0]
-      const buy = panel.getByRole('button').filter({ hasText: prefix })
+      const name = new RegExp(
+        '^' +
+          d.buy
+            .split(/\{(?:pack|price)\}/)
+            .map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+            .join('.+') +
+          '$',
+      )
+      const buy = panel.getByRole('button', { name })
       await expect(buy).toBeVisible()
       await expect(buy).toContainText(d.buy.slice(d.buy.lastIndexOf('}') + 1))
       await buy.click()

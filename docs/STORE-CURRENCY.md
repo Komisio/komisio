@@ -35,6 +35,14 @@ of another, the freeze after the first sale, other policy changes still
 publishing, Zettle structural validity, the seller read and the anonymous
 refusal. `0031_sales` asserts the store-currency rule instead of "only SEK".
 
+`0149_global_currencies.test.sql` exercises EUR/USD purchases, payouts and
+PayPal POS/Shopify sales. Migration `20260924150000` added USD; later validator
+definitions must preserve all five codes. `0360_zettle_currency_matrix.test.sql`
+checks current policy/review/receipt validators and money-table constraints
+against SEK/NOK/DKK/EUR/USD and rejects JPY. A unit guard ties that matrix to
+`storeCurrencies`. It also exercises PayPal exports, foreign-currency holds,
+sale/refund replay and exact seller-credit reversal in every supported currency.
+
 Since 2026-09-24, onboarding offers an explicit currency choice independent of
 UI language and profile country. Legacy callers retain locale-based defaults.
 Shopify connection/reconnection refuses a different shop currency with a durable

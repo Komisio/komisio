@@ -3,11 +3,14 @@ import { randomUUID, randomBytes } from 'node:crypto'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
-for (const currency of ['SEK', 'EUR', 'USD']) {
+import { storeCurrencies } from '../../lib/platform/currencies'
+for (const currency of storeCurrencies) {
   test(`PayPal POS ${currency} export, price update, checkout, automatic credit and concurrent replay`, async ({
     page,
+    baseURL,
   }) => {
     test.setTimeout(180000)
+    const origin = new URL(baseURL!).origin
     const email = `zettle-${randomUUID()}@example.test`
     await register(page, email, `K!${randomBytes(16).toString('hex')}`)
     const f = await p2Fixture(email)
@@ -57,7 +60,7 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
       if (currency === 'SEK') {
         const connectPath = `/api/integrations/paypal/connect?tenant=${f.tenant}`
         const started = await page.request.post(connectPath, {
-          headers: { origin: 'http://127.0.0.1:3000' },
+          headers: { origin },
           maxRedirects: 0,
         })
         expect(started.status()).toBe(303)
@@ -69,7 +72,7 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
         )
         expect(authorization.searchParams.has('client_secret')).toBe(false)
         expect(authorization.searchParams.get('redirect_uri')).toBe(
-          'http://127.0.0.1:3000/api/integrations/paypal/callback',
+          `${origin}/api/integrations/paypal/callback`,
         )
         expect(started.headers()['set-cookie']).toContain('HttpOnly')
         expect(started.headers()['set-cookie']).toContain('SameSite=lax')
@@ -89,7 +92,7 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
         expect(foreign.status()).toBe(403)
         const stale = await page.request.post(
           `/api/integrations/paypal/connect?tenant=${randomUUID()}`,
-          { headers: { origin: 'http://127.0.0.1:3000' }, maxRedirects: 0 },
+          { headers: { origin }, maxRedirects: 0 },
         )
         expect(stale.headers().location).toContain('TENANT_CHANGED')
         await page.goto(
@@ -117,7 +120,7 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
       }
       for (const action of ['enablePull', 'pull', 'export', 'exportImage']) {
         const denied = await page.request.post('/api/integrations/zettle', {
-          headers: { origin: 'http://127.0.0.1:3000' },
+          headers: { origin },
           data: {
             action,
             tenantId: f.tenant,
@@ -131,7 +134,7 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
         expect(await denied.json()).toEqual({ error: 'ZETTLE_NOT_CONNECTED' })
       }
       const connectionPath = '/api/integrations/zettle/connection'
-      const connectionHeaders = { origin: 'http://127.0.0.1:3000' }
+      const connectionHeaders = { origin }
       const unavailable = await page.request.post(connectionPath, {
         headers: connectionHeaders,
         data: { tenantId: f.tenant },
@@ -299,7 +302,7 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
         { headers: fixtureHeaders, data: { ids: exported.map((p) => p.uuid) } },
       )
       expect(checkout.status()).toBe(201)
-      const headers = { origin: 'http://127.0.0.1:3000' }
+      const headers = { origin }
       // Independent requests exercise database locking and immutable replay, with one owner only.
       const command = {
         action: 'sync',
@@ -356,6 +359,37 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
           () => document.documentElement.scrollWidth <= window.innerWidth,
         ),
       ).toBe(true)
+      const originalPurchase = await checkout.json()
+      const refund = await page.request.post(
+        'http://127.0.0.1:3456/_test/refund',
+        {
+          headers: fixtureHeaders,
+          data: { purchaseId: originalPurchase.purchaseUUID1 },
+        },
+      )
+      expect(refund.status()).toBe(201)
+      const refundCommand = {
+        ...command,
+        requestId: randomUUID(),
+        previous: '1',
+      }
+      for (const replay of [1, 2]) {
+        const result = await page.request.post('/api/integrations/zettle', {
+          headers,
+          data: refundCommand,
+        })
+        expect(
+          result.status(),
+          'refund replay ' + replay + ': ' + (await result.text()),
+        ).toBe(200)
+      }
+      const returned = (
+        await f.db.query(
+          'select (select count(*) from sale_returns where tenant_id=$1) returns,(select sum(amount_ore) from seller_ledger_entries where tenant_id=$1) credit',
+          [f.tenant],
+        )
+      ).rows[0]
+      expect(returned).toEqual({ returns: '2', credit: '0' })
       // Keyset pagination keeps old unresolved imports reachable, with the same RLS.
       const more = Array.from({ length: 51 }, () => ({
         externalId: randomUUID(),
@@ -377,7 +411,7 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
         f.db.query('select record_zettle_page($1,$2,$3,$4,$5::jsonb)', [
           f.tenant,
           randomUUID(),
-          '1',
+          '2',
           'synthetic-many',
           JSON.stringify(more),
         ]),
@@ -397,7 +431,7 @@ for (const currency of ['SEK', 'EUR', 'USD']) {
         .click()
       await expect(
         page.getByRole('link', { name: new RegExp(d.zettle.open) }),
-      ).toHaveCount(2)
+      ).toHaveCount(3)
       await expect(
         page.getByRole('link', { name: d.zettle.newest, exact: true }),
       ).toBeVisible()

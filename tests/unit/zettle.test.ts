@@ -4,6 +4,35 @@ import {
   mapZettlePage,
 } from '../../extensions/zettle/purchase'
 import { fixtureZettleTransport } from '../../extensions/zettle/transport'
+import { matrixPurchase } from '../../extensions/zettle/fixtures'
+import { storeCurrencies } from '../../lib/platform/currencies'
+
+it.each(storeCurrencies)(
+  'preserves exact %s sale/refund facts and holds every foreign currency',
+  (currency) => {
+    const sale = matrixPurchase(currency)
+    expect(mapZettlePurchase(sale, currency)).toMatchObject({
+      amountOre: 12345,
+      currency,
+      blockedReason: null,
+      lines: [{ priceOre: 12345, description: sale.products[0].name }],
+    })
+    const refund = matrixPurchase(currency, sale.purchaseUUID1)
+    expect(mapZettlePurchase(refund, currency)).toMatchObject({
+      amountOre: -12345,
+      currency,
+      blockedReason: 'refund',
+      refundOf: sale.purchaseUUID1,
+      lines: [{ priceOre: 12345 }],
+    })
+    for (const other of storeCurrencies.filter((c) => c !== currency)) {
+      expect(mapZettlePurchase(sale, other).blockedReason).toBe('currency')
+      const held = mapZettlePurchase(refund, other)
+      expect(held.blockedReason).not.toBeNull()
+      expect(held.refundOf).toBeUndefined()
+    }
+  },
+)
 const base = {
   purchaseUUID1: '11111111-1111-4111-8111-111111111111',
   timestamp: '2026-09-10T10:00:00.000+0000',

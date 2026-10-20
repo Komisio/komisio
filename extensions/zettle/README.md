@@ -15,7 +15,10 @@ site specifications govern this adapter. No third-party source code is copied.
 timeouts, no redirects, merchant identity verification and conditional ETag PUT.
 A retry GET reconciles a lost create/update acknowledgement using stable UUIDs.
 401/403,429 and5xx are surfaced without blindly replaying mutations. The app only
-wires this adapter to the loopback HTTP simulator today; OAuth activation is pending.
+wires this adapter to the partner-hosted OAuth connection as well as a guarded
+loopback HTTP simulator. Owners/admins connect through PayPal POS; server-only
+app credentials and sealed tenant-bound tokens are required. Connecting alone
+does not enable imports or exports. See [connection setup](../../docs/ZETTLE-CONNECTION.md).
 
 `catalog.ts` describes the managed one-variant product. `purchase.ts` minimizes
 receipts; purchaseUUID1 is the external receipt identity, monetary amounts are

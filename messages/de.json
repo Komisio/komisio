@@ -1738,7 +1738,51 @@
     "latest": "Neueste Nachrichten",
     "showingRange": "Nachrichten {from}–{to} von {total}",
     "pageEmpty": "Keine Nachrichten auf dieser Seite.",
-    "activationBody": "Hallo {seller},\n\nDu bist als Verkäufer bei {store} registriert. Bestätige deine E-Mail-Adresse mit der Schaltfläche unten. Wenn dein Konto neu ist, kannst du anschließend ein Passwort wählen.\n\n{activation}\n\nWenn du bereits ein Konto hast, bleibt dein Passwort unverändert. Anmelden:\n{url}"
+    "activationBody": "Hallo {seller},\n\nDu bist als Verkäufer bei {store} registriert. Bestätige deine E-Mail-Adresse mit der Schaltfläche unten. Wenn dein Konto neu ist, kannst du anschließend ein Passwort wählen.\n\n{activation}\n\nWenn du bereits ein Konto hast, bleibt dein Passwort unverändert. Anmelden:\n{url}",
+    "templates": {
+      "footer": "Diese Nachricht wurde von {store} über Komisio gesendet. Wende dich für eine Antwort an das Geschäft; Antworten an diese Adresse werden nicht gelesen.",
+      "item_accepted": {
+        "subject": "{store}: dein Artikel wurde angenommen",
+        "body": "Hallo {seller},\n\n{store} hat deinen Artikel zum Verkauf angenommen.",
+        "bodyItem": "Hallo {seller},\n\n{store} hat deinen Artikel ({item}) zum Verkauf angenommen.",
+        "amount": "Verkaufspreis: {amount}."
+      },
+      "item_sold": {
+        "subject": "{store}: dein Artikel wurde verkauft",
+        "body": "Hallo {seller},\n\nDein Artikel wurde bei {store} verkauft.",
+        "bodyItem": "Hallo {seller},\n\nDein Artikel ({item}) wurde bei {store} verkauft.",
+        "amount": "Dein Guthaben aus dem Verkauf beträgt {amount}.",
+        "date": "Verkaufsdatum: {date}."
+      },
+      "payout_approved": {
+        "subject": "{store}: Auszahlung genehmigt",
+        "body": "Hallo {seller},\n\n{store} hat eine Auszahlung an dich genehmigt.",
+        "amount": "Auszahlungsbetrag: {amount}.",
+        "note": "Das Geschäft zahlt den Betrag manuell aus."
+      },
+      "payout_paid": {
+        "subject": "{store}: Auszahlung erfolgt",
+        "body": "Hallo {seller},\n\n{store} hat eine Auszahlung an dich vorgenommen.",
+        "amount": "Auszahlungsbetrag: {amount}.",
+        "date": "Auszahlungsdatum: {date}."
+      },
+      "statement_issued": {
+        "subject": "{store}: Abrechnung",
+        "subjectNumber": "{store}: Abrechnung {number}",
+        "body": "Hallo {seller},\n\n{store} hat eine Abrechnung erstellt.",
+        "bodyNumber": "Hallo {seller},\n\n{store} hat die Abrechnung Nummer {number} erstellt.",
+        "amount": "Endsaldo: {amount}.",
+        "note": "Bitte das Geschäft um einen Ausdruck, wenn du die einzelnen Posten sehen möchtest."
+      },
+      "message": {
+        "subject": "Nachricht von {store}",
+        "body": "Hallo {seller},"
+      }
+    },
+    "invitation": {
+      "subject": "Einladung zu Komisio",
+      "body": "Du wurdest zu einem Geschäft in Komisio eingeladen.\n\nMelde dich an oder erstelle mit dieser E-Mail-Adresse ein Konto, um die Einladung zu prüfen und anzunehmen:\n{url}\n\nDer Link ist sieben Tage gültig. Wenn du diese Einladung nicht erwartet hast, kannst du diese E-Mail ignorieren."
+    }
   },
   "stock": {
     "title": "Bestand",
@@ -4430,5 +4474,6 @@
     "previous": "Vorherige",
     "next": "Nächste",
     "saved": "Gespeichert"
-  }
+  },
+  "inviteLanguage": "Sprache der Einladung"
 }

@@ -9,9 +9,8 @@ import it from '../messages/it.json'
 
 // The product speaks the same eight languages as komisio.com. Swedish is the
 // source of truth for the dictionary shape; every other file carries the same
-// keys (tests/unit/platform.test.ts). Seller e-mail templates and the
-// invitation mail exist in Swedish and English only; other locales get English
-// there (messageLocale).
+// keys (tests/unit/platform.test.ts). Fixed seller and staff-invitation emails
+// use all eight dictionaries, with whole-template English fallback.
 export type Dictionary = typeof sv
 export const locales = ['sv', 'en', 'no', 'dk', 'fi', 'de', 'es', 'it'] as const
 export type Locale = (typeof locales)[number]
@@ -64,8 +63,4 @@ export function dictionary(locale: string = 'sv'): Dictionary {
 /** BCP 47 tag for HTML language declarations and Intl formatting. */
 export function intlLocale(locale?: string | null) {
   return intlTags[isLocale(locale) ? locale : 'sv']
-}
-/** The language a fixed e-mail template exists in. */
-export function messageLocale(locale?: string | null): 'sv' | 'en' {
-  return locale === 'sv' ? 'sv' : 'en'
 }

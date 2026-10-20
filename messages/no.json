@@ -1738,7 +1738,51 @@
     "latest": "Siste meldinger",
     "showingRange": "Meldinger {from}–{to} av {total}",
     "pageEmpty": "Ingen meldinger på denne siden.",
-    "activationBody": "Hei {seller},\n\nDu er registrert som selger hos {store}. Bekreft e-postadressen din med knappen nedenfor. Hvis kontoen er ny, kan du deretter velge et passord.\n\n{activation}\n\nHar du allerede en konto, beholder du passordet ditt. Logg inn:\n{url}"
+    "activationBody": "Hei {seller},\n\nDu er registrert som selger hos {store}. Bekreft e-postadressen din med knappen nedenfor. Hvis kontoen er ny, kan du deretter velge et passord.\n\n{activation}\n\nHar du allerede en konto, beholder du passordet ditt. Logg inn:\n{url}",
+    "templates": {
+      "footer": "Denne meldingen ble sendt av {store} via Komisio. Kontakt butikken hvis du vil svare; svar til denne adressen blir ikke lest.",
+      "item_accepted": {
+        "subject": "{store}: varen din er mottatt",
+        "body": "Hei {seller},\n\n{store} har tatt imot varen din for salg.",
+        "bodyItem": "Hei {seller},\n\n{store} har tatt imot varen din ({item}) for salg.",
+        "amount": "Salgspris: {amount}."
+      },
+      "item_sold": {
+        "subject": "{store}: varen din er solgt",
+        "body": "Hei {seller},\n\nVaren din er solgt hos {store}.",
+        "bodyItem": "Hei {seller},\n\nVaren din ({item}) er solgt hos {store}.",
+        "amount": "Din andel av salget er {amount}.",
+        "date": "Salgsdato: {date}."
+      },
+      "payout_approved": {
+        "subject": "{store}: utbetaling godkjent",
+        "body": "Hei {seller},\n\n{store} har godkjent en utbetaling til deg.",
+        "amount": "Utbetalingsbeløp: {amount}.",
+        "note": "Butikken utbetaler pengene manuelt."
+      },
+      "payout_paid": {
+        "subject": "{store}: utbetaling utført",
+        "body": "Hei {seller},\n\n{store} har gjort en utbetaling til deg.",
+        "amount": "Utbetalingsbeløp: {amount}.",
+        "date": "Utbetalingsdato: {date}."
+      },
+      "statement_issued": {
+        "subject": "{store}: oppgjørsoversikt",
+        "subjectNumber": "{store}: oppgjørsoversikt {number}",
+        "body": "Hei {seller},\n\n{store} har utstedt en oppgjørsoversikt.",
+        "bodyNumber": "Hei {seller},\n\n{store} har utstedt oppgjørsoversikt nummer {number}.",
+        "amount": "Utgående saldo: {amount}.",
+        "note": "Be butikken om en utskrift hvis du vil se postene."
+      },
+      "message": {
+        "subject": "Melding fra {store}",
+        "body": "Hei {seller},"
+      }
+    },
+    "invitation": {
+      "subject": "Invitasjon til Komisio",
+      "body": "Du har blitt invitert til en butikk i Komisio.\n\nLogg inn eller opprett en konto med denne e-postadressen for å se og godta invitasjonen:\n{url}\n\nLenken er gyldig i sju dager. Hvis du ikke ventet denne invitasjonen, kan du se bort fra e-posten."
+    }
   },
   "stock": {
     "title": "Lager",
@@ -4424,5 +4468,6 @@
     "previous": "Forrige",
     "next": "Neste",
     "saved": "Lagret"
-  }
+  },
+  "inviteLanguage": "Språk i invitasjonen"
 }

@@ -1,7 +1,13 @@
 'use client'
 import { useRef, useState, useEffect, useId } from 'react'
 import { UserPlus, X, Copy } from 'lucide-react'
-import { intlLocale, type Dictionary, type Locale } from '@/lib/i18n'
+import {
+  intlLocale,
+  locales,
+  localeNames,
+  type Dictionary,
+  type Locale,
+} from '@/lib/i18n'
 import {
   can,
   canChangeMember,
@@ -15,6 +21,7 @@ import { Feedback } from './feedback'
 export function MembersPanel({
   d,
   locale,
+  invitationLocale,
   tenant,
   members,
   invitations,
@@ -22,6 +29,7 @@ export function MembersPanel({
 }: {
   d: Dictionary
   locale: Locale
+  invitationLocale: Locale
   tenant: Tenant
   members: Member[]
   invitations: Invitation[]
@@ -58,6 +66,7 @@ export function MembersPanel({
       tenantId: tenant.id,
       email: form.get('email'),
       role: form.get('role'),
+      locale: form.get('locale'),
     })
     if (result?.inviteUrl) {
       setInviteUrl(result.inviteUrl)
@@ -105,6 +114,21 @@ export function MembersPanel({
                       {d.roles[r]}
                     </option>
                   ))}
+              </select>
+            </div>
+            <div className="field">
+              <label htmlFor="invite-locale">{d.inviteLanguage}</label>
+              <select
+                id="invite-locale"
+                name="locale"
+                defaultValue={invitationLocale}
+                disabled={action.busy}
+              >
+                {locales.map((language) => (
+                  <option key={language} value={language}>
+                    {localeNames[language]}
+                  </option>
+                ))}
               </select>
             </div>
             <Button disabled={action.busy}>

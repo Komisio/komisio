@@ -1135,3 +1135,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-19: #512 offers tenant-scoped seller-ID choices and editable category suggestions using existing reads and URL filters. Stock metrics share one card style with mobile scrolling stage cards; no lifecycle, stock-count or access rules change.
 
 - 2026-10-20: #524 tests existing PayPal POS currency/VAT behavior without changing it. Workspace percentages and receipt amounts retain fixed decimals and ISO currency codes; surrounding labels follow locale. Emoji receipt truncation is tracked separately in #528.
+
+- 2026-10-20: #522 seller mail uses seller language, then store language, then English, with whole-template fallback and exact localized amounts. Staff invitations have an explicit language choice, defaulting to store language then English. Existing message history is unchanged.

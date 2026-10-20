@@ -1738,7 +1738,51 @@
     "latest": "Latest messages",
     "showingRange": "Messages {from}–{to} of {total}",
     "pageEmpty": "No messages on this page.",
-    "activationBody": "Hello {seller},\n\nYou are registered as a seller at {store}. Confirm your email address using the button below. If your account is new, you can then choose a password.\n\n{activation}\n\nIf you already have an account, your password stays the same. Sign in:\n{url}"
+    "activationBody": "Hello {seller},\n\nYou are registered as a seller at {store}. Confirm your email address using the button below. If your account is new, you can then choose a password.\n\n{activation}\n\nIf you already have an account, your password stays the same. Sign in:\n{url}",
+    "templates": {
+      "footer": "This message was sent by {store} through Komisio. Contact the store to reply; replies to this address are not read.",
+      "item_accepted": {
+        "subject": "{store}: your item is received",
+        "body": "Hello {seller},\n\n{store} has accepted your item for sale.",
+        "bodyItem": "Hello {seller},\n\n{store} has accepted your item ({item}) for sale.",
+        "amount": "Selling price: {amount}."
+      },
+      "item_sold": {
+        "subject": "{store}: your item is sold",
+        "body": "Hello {seller},\n\nYour item has sold at {store}.",
+        "bodyItem": "Hello {seller},\n\nYour item ({item}) has sold at {store}.",
+        "amount": "Your credit from the sale is {amount}.",
+        "date": "Sale date: {date}."
+      },
+      "payout_approved": {
+        "subject": "{store}: payout approved",
+        "body": "Hello {seller},\n\n{store} has approved a payout to you.",
+        "amount": "Payout amount: {amount}.",
+        "note": "The store pays it out manually."
+      },
+      "payout_paid": {
+        "subject": "{store}: payout made",
+        "body": "Hello {seller},\n\n{store} has made a payout to you.",
+        "amount": "Payout amount: {amount}.",
+        "date": "Payment date: {date}."
+      },
+      "statement_issued": {
+        "subject": "{store}: settlement statement",
+        "subjectNumber": "{store}: settlement statement {number}",
+        "body": "Hello {seller},\n\n{store} has issued a settlement statement.",
+        "bodyNumber": "Hello {seller},\n\n{store} has issued settlement statement number {number}.",
+        "amount": "Closing balance: {amount}.",
+        "note": "Ask the store for a printout to see the lines."
+      },
+      "message": {
+        "subject": "Message from {store}",
+        "body": "Hello {seller},"
+      }
+    },
+    "invitation": {
+      "subject": "Invitation to Komisio",
+      "body": "You have been invited to a store in Komisio.\n\nSign in or create an account with this email address to review and accept the invitation:\n{url}\n\nThe link expires in seven days. If you did not expect this invitation, you can ignore this email."
+    }
   },
   "stock": {
     "title": "Stock",
@@ -4424,5 +4468,6 @@
     "previous": "Previous",
     "next": "Next",
     "saved": "Saved"
-  }
+  },
+  "inviteLanguage": "Invitation language"
 }

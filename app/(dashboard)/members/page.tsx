@@ -4,6 +4,8 @@ import { dictionary } from '@/lib/i18n'
 import { can } from '@/lib/platform/permissions'
 import type { Member, Invitation } from '@/lib/platform/types'
 import { MembersPanel } from '@/components/platform/members-panel'
+import { readStoreProfile } from '@/lib/engine/store-profile'
+import { emailLocale } from '@/lib/communications/locale'
 export default async function Members() {
   const ctx = await requirePlatform()
   const d = dictionary(ctx.locale)
@@ -21,6 +23,12 @@ export default async function Members() {
         .order('created_at', { ascending: false })
     : { data: [], error: null }
   if (invites.error) throw invites.error
+  const invitationLocale = can(active.role, 'members.manage')
+    ? emailLocale(
+        undefined,
+        (await readStoreProfile(ctx.client, active.id)).profile?.language,
+      )
+    : 'en'
   return (
     <>
       <div className="page-heading">
@@ -30,6 +38,7 @@ export default async function Members() {
       <MembersPanel
         d={d}
         locale={ctx.locale}
+        invitationLocale={invitationLocale}
         tenant={active}
         members={members as Member[]}
         invitations={invites.data as Invitation[]}

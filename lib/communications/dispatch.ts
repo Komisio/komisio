@@ -10,9 +10,10 @@ import { renderSellerMessage, type CommunicationKind } from './templates'
 import { referenceKindFor } from '../engine/communications'
 import { sendSellerEmailWithId } from '../platform/seller-email'
 import { sendSellerActivation } from '../platform/seller-activation'
-import { formatSignedOre } from '../engine/seller-ledger'
+import { emailDecimalAmount } from './amount'
+import { emailLocale } from './locale'
 import { readStoreCurrency } from '../engine/money'
-import { intlLocale, isLocale } from '../i18n'
+import { isLocale } from '../i18n'
 
 // One path for every seller message (P2 S18): render the versioned template
 // from authenticated reads of the referenced fact, queue the exact text in
@@ -21,7 +22,6 @@ import { intlLocale, isLocale } from '../i18n'
 // asked and in a request id derived from the fact, so a fact notifies once.
 // Activation is the exception to exact-body history: Auth keeps the secret link,
 // while the communication row records a token-free notice and one send attempt.
-const ore = z.union([z.number().int(), z.string()]).transform(Number)
 import type { Locale } from '../i18n'
 export type { Locale }
 export const communicationErrorCodes = [
@@ -66,14 +66,12 @@ export async function sendSellerCommunication(
   if (seller.error || !seller.data)
     return { ok: false, error: 'SELLER_NOT_FOUND' }
   const preferred = seller.data.profile?.language
-  const locale = isLocale(preferred)
-    ? preferred
-    : ((await readStoreProfile(client, c.tenantId)).profile?.language ??
-      c.locale)
-  const when = (iso: string) =>
-    new Date(iso).toLocaleDateString(intlLocale(locale), {
-      timeZone: 'Europe/Stockholm',
-    })
+  const locale = emailLocale(
+    preferred,
+    isLocale(preferred)
+      ? undefined
+      : (await readStoreProfile(client, c.tenantId)).profile?.language,
+  )
   // Facts for the template come from authenticated reads of the referenced row.
   const facts: Record<string, unknown> = {
     storeName: c.storeName,
@@ -90,8 +88,7 @@ export async function sendSellerCommunication(
       .order('seq')
       .limit(1)
       .maybeSingle()
-    if (price.data)
-      facts.amount = formatSignedOre(ore.parse(price.data.price_ore))
+    if (price.data) facts.amount = emailDecimalAmount(price.data.price_ore)
   } else if (c.kind === 'item_sold' && c.referenceId) {
     const line = await client
       .from('sale_lines')
@@ -100,14 +97,14 @@ export async function sendSellerCommunication(
       .eq('id', c.referenceId)
       .maybeSingle()
     if (line.data) {
-      facts.amount = formatSignedOre(ore.parse(line.data.seller_credit_ore))
+      facts.amount = emailDecimalAmount(line.data.seller_credit_ore)
       const sale = await client
         .from('sales')
         .select('occurred_at')
         .eq('tenant_id', c.tenantId)
         .eq('id', line.data.sale_id)
         .maybeSingle()
-      if (sale.data) facts.date = when(sale.data.occurred_at)
+      if (sale.data) facts.date = sale.data.occurred_at
     }
   } else if (
     (c.kind === 'payout_approved' || c.kind === 'payout_paid') &&
@@ -120,8 +117,8 @@ export async function sendSellerCommunication(
       .eq('id', c.referenceId)
       .maybeSingle()
     if (payout.data) {
-      facts.amount = formatSignedOre(ore.parse(payout.data.amount_ore))
-      if (payout.data.paid_at) facts.date = when(payout.data.paid_at)
+      facts.amount = emailDecimalAmount(payout.data.amount_ore)
+      if (payout.data.paid_at) facts.date = payout.data.paid_at
     }
   } else if (c.kind === 'statement_issued' && c.referenceId) {
     const statement = await client
@@ -132,7 +129,7 @@ export async function sendSellerCommunication(
       .maybeSingle()
     if (statement.data) {
       facts.number = statement.data.number
-      facts.amount = formatSignedOre(ore.parse(statement.data.closing_ore))
+      facts.amount = emailDecimalAmount(statement.data.closing_ore)
     }
   }
   if (c.submissionReviewId) {
@@ -162,32 +159,40 @@ export async function sendSellerCommunication(
       return { ok: false, error: 'REFERENCE_NOT_FOUND' }
   }
   let rendered = c.submissionReviewId
-    ? renderSubmissionReply(
+    ? {
         locale,
-        c.storeName,
-        c.sellerId,
-        process.env.NEXT_PUBLIC_APP_URL ?? '',
-      )
-    : c.welcome
-      ? renderSellerWelcome(
+        ...renderSubmissionReply(
           locale,
           c.storeName,
-          seller.data.name,
+          c.sellerId,
           process.env.NEXT_PUBLIC_APP_URL ?? '',
-          process.env.KOMISIO_AUTH_EMAIL_HOOK_ENABLED === 'true',
-        )
+        ),
+      }
+    : c.welcome
+      ? {
+          locale,
+          ...renderSellerWelcome(
+            locale,
+            c.storeName,
+            seller.data.name,
+            process.env.NEXT_PUBLIC_APP_URL ?? '',
+            process.env.KOMISIO_AUTH_EMAIL_HOOK_ENABLED === 'true',
+          ),
+        }
       : renderSellerMessage(c.kind, locale, facts)
   if (c.welcome || c.submissionReviewId) {
     if (c.kind !== 'message' || c.referenceId !== null || c.freeText !== '')
       return { ok: false, error: 'INVALID_INPUT' }
     const prior = await client
       .from('seller_communications')
-      .select('seller_id,template_key,template_version,subject,body')
+      .select('seller_id,template_key,template_version,subject,body,locale')
       .eq('tenant_id', c.tenantId)
       .eq('id', c.requestId)
       .maybeSingle()
     if (prior.error) return { ok: false, error: 'REQUEST_FAILED' }
     if (prior.data) {
+      if (!isLocale(prior.data.locale))
+        return { ok: false, error: 'REQUEST_FAILED' }
       if (
         prior.data.seller_id !== c.sellerId ||
         prior.data.template_key !==
@@ -199,6 +204,7 @@ export async function sendSellerCommunication(
         templateVersion: prior.data.template_version,
         subject: prior.data.subject,
         body: prior.data.body,
+        locale: prior.data.locale,
       }
     }
   }
@@ -209,7 +215,7 @@ export async function sendSellerCommunication(
     p_kind: c.kind,
     p_template_key: rendered.templateKey,
     p_template_version: rendered.templateVersion,
-    p_locale: locale,
+    p_locale: rendered.locale,
     p_subject: rendered.subject,
     p_body: rendered.body,
     p_reference_kind: referenceKindFor[c.kind],
@@ -251,7 +257,11 @@ export async function sendSellerCommunication(
     if (branded) ticket = claimed.data
   }
   const outcome = activation
-    ? await sendSellerActivation(existing.data.recipient, locale, ticket)
+    ? await sendSellerActivation(
+        existing.data.recipient,
+        rendered.locale,
+        ticket,
+      )
     : await sendSellerEmailWithId({
         communicationId: c.requestId,
         to: existing.data.recipient,

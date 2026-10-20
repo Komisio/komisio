@@ -1738,7 +1738,51 @@
     "latest": "Ultimi messaggi",
     "showingRange": "Messaggi {from}–{to} di {total}",
     "pageEmpty": "Nessun messaggio in questa pagina.",
-    "activationBody": "Ciao {seller},\n\nSei registrato come venditore presso {store}. Conferma il tuo indirizzo email con il pulsante qui sotto. Se il tuo account è nuovo, potrai poi scegliere una password.\n\n{activation}\n\nSe hai già un account, la tua password rimane invariata. Accedi:\n{url}"
+    "activationBody": "Ciao {seller},\n\nSei registrato come venditore presso {store}. Conferma il tuo indirizzo email con il pulsante qui sotto. Se il tuo account è nuovo, potrai poi scegliere una password.\n\n{activation}\n\nSe hai già un account, la tua password rimane invariata. Accedi:\n{url}",
+    "templates": {
+      "footer": "Questo messaggio è stato inviato da {store} tramite Komisio. Contatta il negozio per rispondere; le risposte a questo indirizzo non vengono lette.",
+      "item_accepted": {
+        "subject": "{store}: il tuo articolo è stato ricevuto",
+        "body": "Ciao {seller},\n\n{store} ha accettato il tuo articolo per la vendita.",
+        "bodyItem": "Ciao {seller},\n\n{store} ha accettato il tuo articolo ({item}) per la vendita.",
+        "amount": "Prezzo di vendita: {amount}."
+      },
+      "item_sold": {
+        "subject": "{store}: il tuo articolo è stato venduto",
+        "body": "Ciao {seller},\n\nIl tuo articolo è stato venduto presso {store}.",
+        "bodyItem": "Ciao {seller},\n\nIl tuo articolo ({item}) è stato venduto presso {store}.",
+        "amount": "Il tuo credito dalla vendita è di {amount}.",
+        "date": "Data di vendita: {date}."
+      },
+      "payout_approved": {
+        "subject": "{store}: pagamento approvato",
+        "body": "Ciao {seller},\n\n{store} ha approvato un pagamento a tuo favore.",
+        "amount": "Importo del pagamento: {amount}.",
+        "note": "Il negozio effettua il pagamento manualmente."
+      },
+      "payout_paid": {
+        "subject": "{store}: pagamento effettuato",
+        "body": "Ciao {seller},\n\n{store} ha effettuato un pagamento a tuo favore.",
+        "amount": "Importo del pagamento: {amount}.",
+        "date": "Data del pagamento: {date}."
+      },
+      "statement_issued": {
+        "subject": "{store}: rendiconto",
+        "subjectNumber": "{store}: rendiconto {number}",
+        "body": "Ciao {seller},\n\n{store} ha emesso un rendiconto.",
+        "bodyNumber": "Ciao {seller},\n\n{store} ha emesso il rendiconto numero {number}.",
+        "amount": "Saldo finale: {amount}.",
+        "note": "Chiedi al negozio una copia stampata se vuoi vedere il dettaglio."
+      },
+      "message": {
+        "subject": "Messaggio da {store}",
+        "body": "Ciao {seller},"
+      }
+    },
+    "invitation": {
+      "subject": "Invito a Komisio",
+      "body": "Hai ricevuto un invito a un negozio su Komisio.\n\nAccedi o crea un account con questo indirizzo e-mail per controllare e accettare l’invito:\n{url}\n\nIl link è valido per sette giorni. Se non aspettavi questo invito, puoi ignorare questa e-mail."
+    }
   },
   "stock": {
     "title": "Magazzino",
@@ -4424,5 +4468,6 @@
     "previous": "Precedente",
     "next": "Successiva",
     "saved": "Salvato"
-  }
+  },
+  "inviteLanguage": "Lingua dell’invito"
 }

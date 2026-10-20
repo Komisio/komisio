@@ -79,3 +79,18 @@ immutability. `tests/unit/staged-kinds.test.ts` covers the payload shape and
 `tests/unit/communications-dispatch.test.ts` the derived payout ids and the
 notifications. `scripts/test-proposals-mcp.mjs` exercises both tools through
 the real MCP boundary.
+
+## Seller notification languages
+
+Settlement and payout notices use the seller profile language, then the store
+profile language, then English. The staff session language never selects the mail
+language. The six transactional templates and their footer are versioned (`v2`)
+in `messages/{locale}.json` under `communications.templates`, for all eight product
+languages. A missing or incompatible translation falls back to the whole English
+template, and that actual language is recorded with the rendered text. Existing
+communication history stays unchanged; store-written free text is not translated.
+
+Amounts use the store currency and exact minor units with locale-aware formatting.
+Dates use the resolved language and Europe/Stockholm time. Staff invitations use
+`communications.invitation`; their explicit language selector defaults to the store
+language, then English, without looking up the recipient account.

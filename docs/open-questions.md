@@ -689,3 +689,5 @@ Store mail auto-subscription (resolved 2026-10-18, owner #499): default-off owne
 Staff Active filter (resolved 2026-10-18, owner #510): a small additive item-directory RPC and validation extension may combine on-sale, markdown-due and period-ending stages before counting and pagination. The remaining filter-navigation scope is unchanged.
 
 Stock lifecycle overview (resolved 2026-10-18, owner #511): an additional read RPC may return stock stage counts and ownership values. The item-directory filter may also express the same upcoming seven-day stock window, including pending markdowns and excluding sold, ended and expired periods. No lifecycle action or stock-membership rule changes.
+
+Invitation language (resolved 2026-10-20, owner #522): staff explicitly select the invitation language, defaulting to the store profile language then English. Do not infer it through recipient-profile lookups or the staff session. No membership or access-control rules change.

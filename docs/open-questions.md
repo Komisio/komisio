@@ -709,10 +709,11 @@ separate work in #532.
 Printing without Windows (#525, owner decision 2026-10-20): local prototypes
 and desk research may be reviewed independently. ZD420/iPad physical testing
 belongs to the owner; AirPrint, macOS and Linux arm64 hardware validation are
-follow-ups. No hosted bridge, DNS or certificate may be created until the
-owner approves the concrete EU hosting proposal in the issue. Authenticated
-printer reconnects, durable uncertain-output recovery and physical sign-off
-remain open; the loopback prototype does not activate a new transport.
+follow-ups. The owner approved an isolated service on the existing Hostinger
+VPS at print-spike.z.komisio.com, with public TLS and no new costs. Private
+host access, DNS, authenticated printer reconnects, durable uncertain-output
+recovery and physical sign-off remain open; the loopback prototype does not
+activate a new transport. Do not alter other server workloads.
 
 Stripe Tax (#539, 2026-10-20): owner approved exclusive subscription/credit prices,
 a default-off automatic-tax flag and bounded provider tax facts without VAT ID

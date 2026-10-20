@@ -246,14 +246,19 @@ macOS/Linux arm64 execution. PDF previews must be visually inspected as well.
 
 ### Hosted bridge design: not yet deployed
 
-Use a separate persistent service, not a Vercel function. Proposed staging:
-Hetzner Cloud CX23, Nuremberg (Germany), 2 vCPU / 4 GB RAM / 40 GB disk.
-The published June 2026 price adjustment lists EUR 5.49/month excluding IPv4
-and VAT. Budget up to EUR 10/month for the short spike including IPv4;
-confirm availability and checkout total before purchase. No server or domain
-has been ordered. The owner must approve the issue proposal before deployment.
+Use a separate persistent service, not a Vercel function. The owner approved
+an existing Hostinger VPS for this spike, replacing the earlier Hetzner
+proposal. No new server, plan upgrade or paid service is authorized. The
+server IP and agreed access method must be supplied privately before work
+starts; never put credentials in the issue or repository. Its actual region
+and existing proxy/port use remain to be confirmed with the owner.
 
-Use a dedicated non-wildcard name such as `print-spike.z.komisio.com`.
+Run an isolated service under its own system user or container, on its own
+port behind the TLS proxy. Do not read, change or restart other applications
+on the server. If ports 80/443 or the proxy configuration conflict with the
+spike, stop and ask rather than reconfiguring the existing service.
+
+Use only the approved non-wildcard name `print-spike.z.komisio.com`.
 Prefer a publicly trusted SHA-256 certificate with its required trust chain
 installed on the printer. Validate TLS 1.2 with modern ciphers against the
 actual firmware; the old application note's SHA-1-era advice is superseded by
@@ -294,18 +299,20 @@ Do not mark physical printing verified merely because a socket write succeeded.
 Any `weblink` transport successor migration and durable hold changes belong to
 the reviewed implementation follow-up, not this local spike.
 
-Staging isolation: a separate cloud project, synthetic store and device
+Staging isolation: the dedicated VPS service, synthetic store and device
 credentials, no production keys/data, no public administration endpoint.
 Restrict management access to the approved operator. Self-hosters need an
 equivalent long-lived TLS service and durable encrypted state. On teardown,
 revoke the test device, clear its Weblink URL and temporary trust material,
-delete the spike host/disk/IPv4, remove DNS, revoke its scoped credentials,
-and verify billing has stopped. Preserve only sanitized test results.
+remove only the spike service and its added files/DNS, and revoke its scoped
+credentials. Do not delete the existing VPS or alter its other workloads.
+Preserve only sanitized test results.
 
 ### Owner's ZD420 and iPad test script
 
-Do not begin until hosting is approved and the real TLS/pairing adapter is
-ready. The loopback experiment above cannot connect a physical printer.
+The host approach is approved, but private access, DNS and the real
+TLS/pairing adapter must be ready before testing. The loopback experiment
+above cannot connect a physical printer.
 Use a synthetic store/item and record pass/fail plus observations for each
 step on #525. Keep tokens, full URLs with capabilities and credentials private.
 
@@ -359,7 +366,6 @@ Checked 2026-10-20:
 - [WebKit's unsupported hardware APIs](https://webkit.org/tracking-prevention/).
 - [Brother QL-820NWB AirPrint manuals](https://support.brother.com/g/b/manualtop.aspx?c=se&lang=sv&pfs=1&prod=lpql820nwbeuk).
 - [PrintNode prices](https://www.printnode.com/en/pricing).
-- [Hetzner server price adjustment](https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/), [CX23 specification](https://www.hetzner.com/de/news/new-cloud-plans/).
 
 Follow-ups must separately cover: authenticated hosted Weblink/queue recovery
 and device migration; production PDF route and AirPrint hardware calibration

@@ -2253,7 +2253,7 @@
   },
   "plans": {
     "heading": "Plan",
-    "priceNote": "Komisio is open source with no licence fee. All features are included, with no limits on items, printers or integrations. Host it yourself or choose a hosting partner. Hosting by Inority includes three months free with no lock-in period. Stripe shows the price and currency before you subscribe. For an existing subscription, choose Manage subscription to view its details. AI credits are purchased separately.",
+    "priceNote": "Komisio is open source with no licence fee. All features are included, with no limits on items, printers or integrations. Host it yourself or choose a hosting partner. Hosting by Inority includes three months free with no lock-in period. Stripe shows the price and currency before you subscribe. For an existing subscription, choose Manage subscription to view its details. AI credits are purchased separately. All prices exclude VAT. Stripe shows any tax before you pay.",
     "trialEndsAt": "trial ends",
     "graceEndsAt": "grace ends",
     "activeUntil": "active until",
@@ -2304,7 +2304,9 @@
       "REQUEST_FAILED": "The request failed. Retry later.",
       "STRIPE_NOT_CONFIGURED": "Online payment is not configured.",
       "STRIPE_REQUEST_FAILED": "Stripe could not be reached. Retry later.",
-      "NO_CUSTOMER": "There is no subscription to manage yet."
+      "NO_CUSTOMER": "There is no subscription to manage yet.",
+      "STRIPE_TAX_MISCONFIGURED": "Payment cannot start because the price tax setting needs correcting. Contact support.",
+      "STRIPE_CUSTOMER_ADDRESS_CONFLICT": "Payment cannot start because a saved shipping address in Stripe needs review. Contact support and retry once the address is corrected."
     },
     "subscribe": "Activate the subscription",
     "manageSubscription": "Manage subscription and invoices",
@@ -3082,7 +3084,7 @@
     "purchasedLeft": "Purchased credits",
     "usedThisMonth": "Used this month",
     "capReached": "Komisio's shared AI budget for the month is used up. Purchased credits and an own key still work.",
-    "buy": "Buy {pack} credits for {price}",
+    "buy": "Buy {pack} credits for {price} (excl. VAT)",
     "buyUnavailable": "Purchases are not available in this environment yet.",
     "working": "Working…",
     "ownKeyHeading": "Own model key",
@@ -3124,7 +3126,8 @@
       "limitsHeading": "Request and message limits",
       "adminHeading": "Platform administration",
       "adminIntro": "These settings apply to every store in this environment."
-    }
+    },
+    "taxMisconfigured": "Payment cannot start because the price tax setting needs correcting. Contact support."
   },
   "sellerProfile": {
     "balance": "Balance",

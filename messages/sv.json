@@ -2253,7 +2253,7 @@
   },
   "plans": {
     "heading": "Plan",
-    "priceNote": "Komisio är öppen källkod utan licensavgift. Alla funktioner ingår, utan gränser för varor, skrivare eller integrationer. Kör programvaran själv eller välj en driftpartner. Hos Inority ingår tre kostnadsfria månader utan bindningstid. Pris och valuta visas i Stripe innan du tecknar abonnemanget. Har du redan ett abonnemang ser du uppgifterna under Hantera abonnemang. AI-krediter köps separat.",
+    "priceNote": "Komisio är öppen källkod utan licensavgift. Alla funktioner ingår, utan gränser för varor, skrivare eller integrationer. Kör programvaran själv eller välj en driftpartner. Hos Inority ingår tre kostnadsfria månader utan bindningstid. Pris och valuta visas i Stripe innan du tecknar abonnemanget. Har du redan ett abonnemang ser du uppgifterna under Hantera abonnemang. AI-krediter köps separat. Alla priser anges exklusive moms. Eventuell moms visas i Stripe innan du betalar.",
     "trialEndsAt": "provperioden slutar",
     "graceEndsAt": "fristen slutar",
     "activeUntil": "aktiv till",
@@ -2304,7 +2304,9 @@
       "REQUEST_FAILED": "Anropet misslyckades. Försök senare.",
       "STRIPE_NOT_CONFIGURED": "Betalning online är inte konfigurerad.",
       "STRIPE_REQUEST_FAILED": "Stripe kunde inte nås. Försök senare.",
-      "NO_CUSTOMER": "Det finns ingen prenumeration att hantera ännu."
+      "NO_CUSTOMER": "Det finns ingen prenumeration att hantera ännu.",
+      "STRIPE_TAX_MISCONFIGURED": "Betalningen kan inte startas eftersom prisets momsinställning behöver rättas. Kontakta support.",
+      "STRIPE_CUSTOMER_ADDRESS_CONFLICT": "Betalningen kan inte startas eftersom en sparad leveransadress i Stripe behöver ses över. Kontakta support och försök igen när adressen är rättad."
     },
     "subscribe": "Aktivera prenumerationen",
     "manageSubscription": "Hantera prenumeration och fakturor",
@@ -3082,7 +3084,7 @@
     "purchasedLeft": "Köpta krediter",
     "usedThisMonth": "Använt den här månaden",
     "capReached": "Komisios gemensamma AI-pott för månaden är slut. Köpta krediter och egen nyckel fungerar fortfarande.",
-    "buy": "Köp {pack} krediter för {price}",
+    "buy": "Köp {pack} krediter för {price} (exkl. moms)",
     "buyUnavailable": "Köp är inte tillgängligt i den här miljön ännu.",
     "working": "Arbetar…",
     "ownKeyHeading": "Egen modellnyckel",
@@ -3124,7 +3126,8 @@
       "limitsHeading": "Anrops- och meddelandegränser",
       "adminHeading": "Plattformsadministration",
       "adminIntro": "Inställningarna gäller alla butiker i den här driftmiljön."
-    }
+    },
+    "taxMisconfigured": "Betalningen kan inte startas eftersom prisets momsinställning behöver rättas. Kontakta support."
   },
   "sellerProfile": {
     "balance": "Saldo",

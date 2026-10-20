@@ -9,6 +9,7 @@ import {
   createCreditsCheckoutSession,
   stripeCreditsConfigured,
   creditsPurchase,
+  formEncode,
 } from '../../extensions/stripe/api'
 import { startCreditsCheckout } from '../../lib/engine/ai-credits'
 import {
@@ -183,4 +184,105 @@ describe('fixed credit currencies', () => {
       })?.amountOre,
     ).toBe(10000)
   })
+})
+
+describe('credit pack tax parameters', () => {
+  it.each([undefined, 'false', 'TRUE', 'true'])(
+    'keeps currencies and grants fixed with flag %s',
+    async (flag) => {
+      for (const currency of ['SEK', 'NOK', 'DKK', 'EUR', 'USD'] as const) {
+        const price = creditPrices[currency]
+        const http = vi
+          .fn<typeof fetch>()
+          .mockImplementation(async (_url, init) => {
+            if (!init?.method)
+              return Response.json({
+                active: true,
+                type: 'one_time',
+                currency: currency.toLowerCase(),
+                unit_amount: price.amountMinor,
+                tax_behavior: 'exclusive',
+              })
+            const expected = {
+              mode: 'payment',
+              line_items: [
+                {
+                  price: `price_${currency.toLowerCase()}12345678`,
+                  quantity: 1,
+                },
+              ],
+              client_reference_id: tenant,
+              customer_email: input.email,
+              success_url: input.successUrl,
+              cancel_url: input.cancelUrl,
+              locale: 'da',
+              currency: currency.toLowerCase(),
+              billing_address_collection: 'required',
+              tax_id_collection: { enabled: true },
+              metadata: {
+                tenant_id: tenant,
+                kind: 'ai_credits',
+                amount_ore: '10000',
+                payment_currency: currency,
+                payment_amount_minor: String(price.amountMinor),
+              },
+              ...(flag === 'true'
+                ? {
+                    automatic_tax: { enabled: true },
+                    customer_creation: 'always',
+                    invoice_creation: { enabled: true },
+                  }
+                : {}),
+            }
+            expect(init.body).toBe(formEncode(expected).toString())
+            return Response.json({
+              id: 'cs_test',
+              url: 'https://checkout.stripe.com/test',
+            })
+          })
+        await createCreditsCheckoutSession(
+          { ...env, KOMISIO_STRIPE_AUTOMATIC_TAX: flag },
+          { ...input, currency, locale: 'dk' },
+          http,
+        )
+        expect(http).toHaveBeenCalledTimes(2)
+      }
+    },
+  )
+  it.each([undefined, null, 'inclusive', 'unspecified'])(
+    'rejects %s only with automatic tax enabled',
+    async (tax_behavior) => {
+      for (const enabled of [false, true]) {
+        const http = vi
+          .fn<typeof fetch>()
+          .mockResolvedValueOnce(
+            Response.json({
+              active: true,
+              type: 'one_time',
+              currency: 'sek',
+              unit_amount: 10000,
+              tax_behavior,
+            }),
+          )
+          .mockResolvedValueOnce(
+            Response.json({
+              id: 'cs_test',
+              url: 'https://checkout.stripe.com/test',
+            }),
+          )
+        const call = createCreditsCheckoutSession(
+          { ...env, KOMISIO_STRIPE_AUTOMATIC_TAX: String(enabled) },
+          input,
+          http,
+        )
+        if (enabled) {
+          await expect(call).rejects.toThrow('STRIPE_TAX_MISCONFIGURED')
+          expect(http).toHaveBeenCalledTimes(1)
+        } else {
+          await expect(call).resolves.toMatchObject({ id: 'cs_test' })
+          expect(http).toHaveBeenCalledTimes(2)
+        }
+      }
+    },
+  )
 })

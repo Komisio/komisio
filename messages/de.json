@@ -2253,7 +2253,7 @@
   },
   "plans": {
     "heading": "Plan",
-    "priceNote": "Komisio ist Open Source und ohne Lizenzgebühr nutzbar. Alle Funktionen sind enthalten, ohne Begrenzung von Artikeln, Druckern oder Integrationen. Betreiben Sie die Software selbst oder wählen Sie einen Hosting-Partner. Das Hosting bei Inority umfasst drei kostenlose Monate ohne Vertragsbindung. Stripe zeigt Preis und Währung an, bevor Sie das Abonnement abschließen. Die Angaben zu einem bestehenden Abonnement finden Sie unter Abonnement verwalten. KI-Guthaben wird separat gekauft.",
+    "priceNote": "Komisio ist Open Source und ohne Lizenzgebühr nutzbar. Alle Funktionen sind enthalten, ohne Begrenzung von Artikeln, Druckern oder Integrationen. Betreiben Sie die Software selbst oder wählen Sie einen Hosting-Partner. Das Hosting bei Inority umfasst drei kostenlose Monate ohne Vertragsbindung. Stripe zeigt Preis und Währung an, bevor Sie das Abonnement abschließen. Die Angaben zu einem bestehenden Abonnement finden Sie unter Abonnement verwalten. KI-Guthaben wird separat gekauft. Alle Preise verstehen sich ohne Mehrwertsteuer. Stripe zeigt anfallende Steuern vor der Zahlung an.",
     "trialEndsAt": "Testphase endet",
     "graceEndsAt": "Nachfrist endet",
     "activeUntil": "aktiv bis",
@@ -2304,7 +2304,9 @@
       "REQUEST_FAILED": "Die Anfrage ist fehlgeschlagen. Versuchen Sie es später erneut.",
       "STRIPE_NOT_CONFIGURED": "Online-Zahlung ist nicht konfiguriert.",
       "STRIPE_REQUEST_FAILED": "Stripe konnte nicht erreicht werden. Versuchen Sie es später erneut.",
-      "NO_CUSTOMER": "Es gibt noch kein Abonnement zu verwalten."
+      "NO_CUSTOMER": "Es gibt noch kein Abonnement zu verwalten.",
+      "STRIPE_TAX_MISCONFIGURED": "Die Zahlung kann nicht gestartet werden, weil die Steuereinstellung des Preises korrigiert werden muss. Kontaktiere den Support.",
+      "STRIPE_CUSTOMER_ADDRESS_CONFLICT": "Die Zahlung kann nicht gestartet werden, weil eine gespeicherte Lieferadresse in Stripe überprüft werden muss. Kontaktiere den Support und versuche es erneut, sobald die Adresse korrigiert wurde."
     },
     "subscribe": "Abonnement aktivieren",
     "manageSubscription": "Abonnement und Rechnungen verwalten",
@@ -3082,7 +3084,7 @@
     "purchasedLeft": "Gekaufte Credits",
     "usedThisMonth": "Diesen Monat verbraucht",
     "capReached": "Das gemeinsame KI-Budget von Komisio für diesen Monat ist aufgebraucht. Gekaufte Credits und ein eigener Schlüssel funktionieren weiterhin.",
-    "buy": "{pack} Credits für {price} kaufen",
+    "buy": "{pack} Credits für {price} kaufen (zzgl. MwSt.)",
     "buyUnavailable": "Käufe sind in dieser Umgebung noch nicht verfügbar.",
     "working": "Wird bearbeitet…",
     "ownKeyHeading": "Eigener Modellschlüssel",
@@ -3124,7 +3126,8 @@
       "limitsHeading": "Anfrage- und Nachrichtenlimits",
       "adminHeading": "Plattformverwaltung",
       "adminIntro": "Diese Einstellungen gelten für alle Geschäfte in dieser Umgebung."
-    }
+    },
+    "taxMisconfigured": "Die Zahlung kann nicht gestartet werden, weil die Steuereinstellung des Preises korrigiert werden muss. Kontaktiere den Support."
   },
   "sellerProfile": {
     "balance": "Guthaben",

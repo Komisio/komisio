@@ -2253,7 +2253,7 @@
   },
   "plans": {
     "heading": "Piano",
-    "priceNote": "Komisio è open source e non prevede costi di licenza. Tutte le funzioni sono incluse, senza limiti di articoli, stampanti o integrazioni. Puoi gestire l’hosting autonomamente o scegliere un fornitore. L’hosting di Inority include tre mesi gratuiti, senza vincoli di durata. Stripe mostra prezzo e valuta prima della sottoscrizione. Per un abbonamento esistente, seleziona Gestisci abbonamento per consultarne i dettagli. I crediti IA si acquistano separatamente.",
+    "priceNote": "Komisio è open source e non prevede costi di licenza. Tutte le funzioni sono incluse, senza limiti di articoli, stampanti o integrazioni. Puoi gestire l’hosting autonomamente o scegliere un fornitore. L’hosting di Inority include tre mesi gratuiti, senza vincoli di durata. Stripe mostra prezzo e valuta prima della sottoscrizione. Per un abbonamento esistente, seleziona Gestisci abbonamento per consultarne i dettagli. I crediti IA si acquistano separatamente. Tutti i prezzi sono IVA esclusa. Stripe mostra le eventuali imposte prima del pagamento.",
     "trialEndsAt": "la prova termina",
     "graceEndsAt": "il periodo di tolleranza termina",
     "activeUntil": "attivo fino al",
@@ -2304,7 +2304,9 @@
       "REQUEST_FAILED": "La richiesta non è riuscita. Riprova più tardi.",
       "STRIPE_NOT_CONFIGURED": "Il pagamento online non è configurato.",
       "STRIPE_REQUEST_FAILED": "Impossibile raggiungere Stripe. Riprova più tardi.",
-      "NO_CUSTOMER": "Non c'è ancora un abbonamento da gestire."
+      "NO_CUSTOMER": "Non c'è ancora un abbonamento da gestire.",
+      "STRIPE_TAX_MISCONFIGURED": "Impossibile avviare il pagamento: occorre correggere le impostazioni fiscali del prezzo. Contatta il supporto.",
+      "STRIPE_CUSTOMER_ADDRESS_CONFLICT": "Impossibile avviare il pagamento: occorre verificare un indirizzo di spedizione salvato in Stripe. Contatta il supporto e riprova dopo la correzione."
     },
     "subscribe": "Attiva l'abbonamento",
     "manageSubscription": "Gestisci abbonamento e fatture",
@@ -3082,7 +3084,7 @@
     "purchasedLeft": "Crediti acquistati",
     "usedThisMonth": "Usati questo mese",
     "capReached": "Il budget AI condiviso di Komisio per il mese è esaurito. I crediti acquistati e una chiave propria funzionano ancora.",
-    "buy": "Acquista {pack} crediti per {price}",
+    "buy": "Acquista {pack} crediti per {price} (IVA esclusa)",
     "buyUnavailable": "Gli acquisti non sono ancora disponibili in questo ambiente.",
     "working": "Elaborazione…",
     "ownKeyHeading": "Chiave del modello propria",
@@ -3124,7 +3126,8 @@
       "limitsHeading": "Limiti di richieste e messaggi",
       "adminHeading": "Amministrazione della piattaforma",
       "adminIntro": "Queste impostazioni si applicano a tutti i negozi di questo ambiente."
-    }
+    },
+    "taxMisconfigured": "Impossibile avviare il pagamento: occorre correggere le impostazioni fiscali del prezzo. Contatta il supporto."
   },
   "sellerProfile": {
     "balance": "Saldo",

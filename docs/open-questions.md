@@ -705,3 +705,10 @@ with route placeholders and retain only recognized view/tab values. Store name,
 tenant ID, locale and app version remain in the bounded email draft. No record
 identifiers or unknown query values are included. Help feedback storage is
 separate work in #532.
+
+Stripe Tax (#539, 2026-10-20): owner approved exclusive subscription/credit prices,
+a default-off automatic-tax flag and bounded provider tax facts without VAT ID
+values or addresses. Customer reuse is flag-gated; an existing shipping address
+blocks Checkout until an operator resolves it in Stripe. Renewals retain Stripe's
+address hierarchy. Dashboard configuration and real staging verification remain
+operator actions; no live setting has been changed by this implementation.

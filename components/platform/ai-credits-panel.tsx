@@ -64,9 +64,11 @@ export function AiCreditsPanel({
         setMessage(
           data.error === 'STRIPE_NOT_CONFIGURED'
             ? d.buyUnavailable
-            : data.error === 'INVALID_INPUT'
-              ? d.keyInvalid
-              : d.failed,
+            : data.error === 'STRIPE_TAX_MISCONFIGURED'
+              ? d.taxMisconfigured
+              : data.error === 'INVALID_INPUT'
+                ? d.keyInvalid
+                : d.failed,
         )
         return null
       }

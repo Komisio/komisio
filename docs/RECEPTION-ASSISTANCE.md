@@ -19,7 +19,7 @@ Supply these server-only settings in the intended deployment:
 Missing/invalid configuration or an unlisted store is unavailable. A generic
 `OPENAI_API_KEY` is never inherited. Configure provider-side spend limits and
 evaluate representative garment/label/defect examples before enabling a real
-pilot. The 199 SEK product tier has no decided model allowance or billing mapping.
+pilot. The historical paid product tier (current pricing: PRICING.md) has no decided model allowance or billing mapping.
 
 ## Store item language
 

@@ -1143,3 +1143,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-20: Operator-configured legal links follow all eight product locales. Unset or invalid base URLs hide links. Document navigation adds no acceptance statement, checkbox or terms-version record; those require separately approved wording and decisions (#527).
 
 - 2026-10-20: #531 adds operator-configured support links and browser-only help search. Support drafts contain store identity, locale/version and route templates with recognized view/tab values; dynamic record IDs and unknown queries are omitted. No message is sent automatically.
+- 2026-10-20: #539 gates Stripe Tax behind an exact true server flag. Subscription and credit prices are exclusive; Stripe determines tax. Reused customers with shipping addresses are refused. Payment details retain bounded tax facts, never VAT IDs or addresses; locale follows the app.

@@ -2253,7 +2253,7 @@
   },
   "plans": {
     "heading": "Plan",
-    "priceNote": "Komisio es de código abierto y no tiene coste de licencia. Todas las funciones están incluidas, sin límites de artículos, impresoras o integraciones. Puedes alojarlo por tu cuenta o elegir un proveedor. El alojamiento de Inority incluye tres meses gratis, sin permanencia. Stripe muestra el precio y la moneda antes de contratar la suscripción. Para consultar una suscripción existente, selecciona Gestionar suscripción. Los créditos de IA se compran por separado.",
+    "priceNote": "Komisio es de código abierto y no tiene coste de licencia. Todas las funciones están incluidas, sin límites de artículos, impresoras o integraciones. Puedes alojarlo por tu cuenta o elegir un proveedor. El alojamiento de Inority incluye tres meses gratis, sin permanencia. Stripe muestra el precio y la moneda antes de contratar la suscripción. Para consultar una suscripción existente, selecciona Gestionar suscripción. Los créditos de IA se compran por separado. Todos los precios excluyen el IVA. Stripe muestra los impuestos aplicables antes de pagar.",
     "trialEndsAt": "la prueba termina",
     "graceEndsAt": "el periodo de gracia termina",
     "activeUntil": "activo hasta",
@@ -2304,7 +2304,9 @@
       "REQUEST_FAILED": "La solicitud falló. Vuelve a intentarlo más tarde.",
       "STRIPE_NOT_CONFIGURED": "El pago en línea no está configurado.",
       "STRIPE_REQUEST_FAILED": "No se pudo contactar con Stripe. Vuelve a intentarlo más tarde.",
-      "NO_CUSTOMER": "Aún no hay ninguna suscripción que gestionar."
+      "NO_CUSTOMER": "Aún no hay ninguna suscripción que gestionar.",
+      "STRIPE_TAX_MISCONFIGURED": "No se puede iniciar el pago porque hay que corregir la configuración fiscal del precio. Contacta con soporte.",
+      "STRIPE_CUSTOMER_ADDRESS_CONFLICT": "No se puede iniciar el pago porque hay que revisar una dirección de envío guardada en Stripe. Contacta con soporte e inténtalo de nuevo cuando se haya corregido."
     },
     "subscribe": "Activar la suscripción",
     "manageSubscription": "Gestionar suscripción y facturas",
@@ -3082,7 +3084,7 @@
     "purchasedLeft": "Créditos comprados",
     "usedThisMonth": "Usados este mes",
     "capReached": "El presupuesto de IA compartido de Komisio para este mes se ha agotado. Los créditos comprados y una clave propia siguen funcionando.",
-    "buy": "Comprar {pack} créditos por {price}",
+    "buy": "Comprar {pack} créditos por {price} (sin IVA)",
     "buyUnavailable": "Las compras aún no están disponibles en este entorno.",
     "working": "Procesando…",
     "ownKeyHeading": "Clave de modelo propia",
@@ -3124,7 +3126,8 @@
       "limitsHeading": "Límites de solicitudes y mensajes",
       "adminHeading": "Administración de la plataforma",
       "adminIntro": "Estos ajustes se aplican a todas las tiendas de este entorno."
-    }
+    },
+    "taxMisconfigured": "No se puede iniciar el pago porque hay que corregir la configuración fiscal del precio. Contacta con soporte."
   },
   "sellerProfile": {
     "balance": "Saldo",

@@ -6,6 +6,8 @@ import {
   creditsPurchase,
   mapStripeEvent,
   stripeConfigured,
+  stripeAutomaticTax,
+  taxSummary,
   type StripeEnvironment,
   type StripeEvent,
 } from '../../extensions/stripe/api'
@@ -28,15 +30,26 @@ export async function startCheckout(
   origin: string,
   env: StripeEnvironment,
   http?: typeof fetch,
+  locale?: string,
 ) {
   const tenantId = z.uuid().parse(tenantInput)
   await requireOwner(client, tenantId)
   if (!stripeConfigured(env)) throw new Error('STRIPE_NOT_CONFIGURED')
+  let customerId: string | null = null
+  if (stripeAutomaticTax(env)) {
+    const r = await client.rpc('billing_customer', { p_tenant: tenantId })
+    if (r.error) throw new Error('FORBIDDEN')
+    customerId =
+      z.object({ customerId: z.string().nullable() }).nullable().parse(r.data)
+        ?.customerId ?? null
+  }
   const session = await createCheckoutSession(
     env,
     {
       tenantId,
       email,
+      customerId,
+      locale,
       successUrl: `${origin}/settings?billing=success`,
       cancelUrl: `${origin}/settings?billing=cancelled`,
       idempotencyKey: `checkout:${tenantId}:${Math.floor(Date.now() / 60000)}`,
@@ -100,7 +113,10 @@ export async function applyStripeEvent(
       p_event_id: purchase.eventId,
       p_tenant: purchase.tenantId,
       p_amount_ore: purchase.amountOre,
-      p_detail: { status: event.data.object.status ?? null },
+      p_detail: {
+        status: event.data.object.status ?? null,
+        ...taxSummary(event),
+      },
     })
     if (p.error) throw new Error(p.error.message)
     return outcome.parse(p.data)
@@ -114,7 +130,10 @@ export async function applyStripeEvent(
     p_subscription: mapped.subscriptionId,
     p_outcome: mapped.outcome,
     p_period_end: mapped.periodEnd,
-    p_detail: { status: event.data.object.status ?? null },
+    p_detail: {
+      status: event.data.object.status ?? null,
+      ...taxSummary(event),
+    },
   })
   if (r.error) throw new Error(r.error.message)
   return outcome.parse(r.data)
@@ -129,6 +148,8 @@ export const billingErrorCodes = [
   'FORBIDDEN',
   'STRIPE_NOT_CONFIGURED',
   'STRIPE_REQUEST_FAILED',
+  'STRIPE_TAX_MISCONFIGURED',
+  'STRIPE_CUSTOMER_ADDRESS_CONFLICT',
   'NO_CUSTOMER',
   'BILLING_DISABLED',
   'BILLING_ACTOR_UNAVAILABLE',

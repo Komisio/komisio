@@ -713,6 +713,16 @@ blocks Checkout until an operator resolves it in Stripe. Renewals retain Stripe'
 address hierarchy. Dashboard configuration and real staging verification remain
 operator actions; no live setting has been changed by this implementation.
 
+## Payment links for remote sales (#546, 2026-10-20)
+
+Spike only: `docs/PAYMENT-LINKS-SPIKE.md`. Open before implementation: provider
+order (Stripe Connect first vs. Vipps MobilePay direct), Inority as a Stripe
+Connect platform, default hold length and late payments, POS sale vs. held
+item, Swish via Stripe as merchant of record vs. the certificate route,
+cash-register and receipt rules per market, shipping VAT under the margin
+scheme, clearing accounts per channel, and whether buyer addresses are ever
+stored. The spike's §5.4 lists them.
+
 ## e-conomic delivery scope (#523)
 
 Owner decisions on 2026-10-20 approve separate connection/map/export/send facts,

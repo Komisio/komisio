@@ -87,85 +87,98 @@ export async function renderLabelSheetPdf(input: {
     const slot = index % perPage
     const x = left + mm((slot % size.columns) * size.width)
     const y = top + mm(Math.floor(slot / size.columns) * size.height)
-    const width = mm(size.width),
-      height = mm(size.height),
-      inset = mm(2)
-    doc.rect(x, y, width, height).lineWidth(0.2).stroke('#bbbbbb')
-    doc
-      .save()
-      .rect(x + inset, y + inset, width - 2 * inset, height - 2 * inset)
-      .clip()
-    const textWidth = width - 2 * inset
-    doc
-      .font('regular')
-      .fontSize(6.5)
-      .fillColor('#000000')
-      .text(input.storeName, x + inset, y + inset, {
-        width: textWidth,
-        height: 10,
-        ellipsis: true,
-        align: 'center',
-      })
-    const attributes = labelAttributeLines(item.attributes, input.locale)
-    const compact = size.height === 32 && attributes.length > 0
-    doc
-      .font('bold')
-      .fontSize(size.height === 32 ? 7 : 8)
-      .text(item.title || item.reference, x + inset, y + mm(5.5), {
-        width: textWidth,
-        height: compact ? 10 : size.height === 32 ? 19 : 25,
-        ellipsis: true,
-        align: 'center',
-      })
-    attributes.forEach((line, index) => {
-      const cellWidth = (textWidth - mm(2)) / 2
-      doc.font('regular').fontSize(6)
-      let fitted = line.replace(/\s+/g, ' ')
-      if (doc.widthOfString(fitted) > cellWidth) {
-        const chars = Array.from(fitted)
-        while (
-          chars.length &&
-          doc.widthOfString(chars.join('') + '…') > cellWidth
-        )
-          chars.pop()
-        fitted = chars.join('') + '…'
-      }
-      doc.text(
-        fitted,
-        x + inset + (index % 2) * (cellWidth + mm(2)),
-        y + mm((compact ? 9 : 16) + Math.floor(index / 2) * (compact ? 3 : 4)),
-        { width: cellWidth, height: 9, ellipsis: true, lineBreak: false },
-      )
-    })
-    doc
-      .font('bold')
-      .fontSize(compact ? 10 : 12)
-      .text(
-        item.priceOre === null
-          ? '—'
-          : `${formatOre(item.priceOre)} ${item.currency}`,
-        x + inset,
-        y + height - mm(compact ? 16.5 : 20),
-        { width: textWidth, height: 18, align: 'center' },
-      )
-    barcode(
-      doc,
-      item.reference,
-      x + inset,
-      y + height - mm(compact ? 11 : 14),
-      textWidth,
-      mm(compact ? 6 : 8),
-    )
-    doc
-      .font('regular')
-      .fontSize(6.5)
-      .text(item.reference, x + inset, y + height - mm(5), {
-        width: textWidth,
-        height: 9,
-        align: 'center',
-      })
-    doc.restore()
+    drawItemLabel(doc, item, input.storeName, x, y, size, input.locale)
   })
   doc.end()
   return completed
+}
+
+/** Shared vector drawing; the caller selects the PDF page geometry. */
+export function drawItemLabel(
+  doc: PDFKit.PDFDocument,
+  item: z.infer<typeof itemLabel>,
+  storeName: string,
+  x: number,
+  y: number,
+  size: { width: number; height: number },
+  locale?: Locale,
+) {
+  const width = mm(size.width),
+    height = mm(size.height),
+    inset = mm(2)
+  doc.rect(x, y, width, height).lineWidth(0.2).stroke('#bbbbbb')
+  doc
+    .save()
+    .rect(x + inset, y + inset, width - 2 * inset, height - 2 * inset)
+    .clip()
+  const textWidth = width - 2 * inset
+  doc
+    .font('regular')
+    .fontSize(6.5)
+    .fillColor('#000000')
+    .text(storeName, x + inset, y + inset, {
+      width: textWidth,
+      height: 10,
+      ellipsis: true,
+      align: 'center',
+    })
+  const attributes = labelAttributeLines(item.attributes, locale)
+  const compact = size.height === 32 && attributes.length > 0
+  doc
+    .font('bold')
+    .fontSize(size.height === 32 ? 7 : 8)
+    .text(item.title || item.reference, x + inset, y + mm(5.5), {
+      width: textWidth,
+      height: compact ? 10 : size.height === 32 ? 19 : 25,
+      ellipsis: true,
+      align: 'center',
+    })
+  attributes.forEach((line, index) => {
+    const cellWidth = (textWidth - mm(2)) / 2
+    doc.font('regular').fontSize(6)
+    let fitted = line.replace(/\s+/g, ' ')
+    if (doc.widthOfString(fitted) > cellWidth) {
+      const chars = Array.from(fitted)
+      while (
+        chars.length &&
+        doc.widthOfString(chars.join('') + '…') > cellWidth
+      )
+        chars.pop()
+      fitted = chars.join('') + '…'
+    }
+    doc.text(
+      fitted,
+      x + inset + (index % 2) * (cellWidth + mm(2)),
+      y + mm((compact ? 9 : 16) + Math.floor(index / 2) * (compact ? 3 : 4)),
+      { width: cellWidth, height: 9, ellipsis: true, lineBreak: false },
+    )
+  })
+  doc
+    .font('bold')
+    .fontSize(compact ? 10 : 12)
+    .text(
+      item.priceOre === null
+        ? '—'
+        : `${formatOre(item.priceOre)} ${item.currency}`,
+      x + inset,
+      y + height - mm(compact ? 16.5 : 20),
+      { width: textWidth, height: 18, align: 'center' },
+    )
+  barcode(
+    doc,
+    item.reference,
+    x + inset,
+    y + height - mm(compact ? 11 : 14),
+    textWidth,
+    mm(compact ? 6 : 8),
+  )
+  doc
+    .font('regular')
+    .fontSize(6.5)
+    .text(item.reference, x + inset, y + height - mm(5), {
+      width: textWidth,
+      height: 9,
+      align: 'center',
+    })
+  doc.restore()
 }

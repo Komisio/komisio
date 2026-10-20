@@ -168,3 +168,212 @@ the existing manual queue journey; physical printing still needs pilot hardware.
 If a regression affects manual printing, revert the application PR through the
 normal green-CI path and retain the unused table. Correct database defects with
 a successor migration, never by editing an applied migration or deleting audit.
+
+## Printing without Windows (experimental)
+
+This is the #525 spike, not a supported cloud-print release. The store-facing
+Windows instructions above remain the supported path. No transport, database
+permission, website promise or hosted endpoint is activated by this experiment.
+The owner has a ZD420 and iPad for later physical verification. AirPrint,
+macOS and Linux arm64 physical checks are follow-ups, not completed tests.
+
+### Recommendation and alternatives
+
+Evaluate direct Weblink first for network Link-OS printers; keep exact-size PDF
+as an independent AirPrint path and a small Linux bridge as the inexpensive
+network-ZPL fallback. Do not promise iPad-only installation until certificate
+loading and URL setup are demonstrated on the actual printer.
+
+| Option | Store equipment and iPad workflow | Cost basis and limitation |
+| --- | --- | --- |
+| A: own Weblink service | Network Link-OS Zebra; iPad queues through Komisio, printer connects outbound | No extra local computer if the printer is already suitable. Shared hosting and certificate operations; hardware sign-off pending. |
+| B: Zebra Cloud Print API | Compatible Zebra enrolled in the store's Nucleus tenant | Per-printer annual Nucleus/API licensing; obtain a vendor quote. An unlicensed tenant has 50 calls/day for testing. |
+| C: exact-page PDF / AirPrint | AirPrint label printer such as Brother QL-820NWB; iPad Share → Print | Existing compatible printer: no bridge. Otherwise budget a separate printer and rolls; confirm a current supplier quote before purchase. |
+| D: macOS/Linux agent | Existing Mac or network Raspberry Pi; iPad queues through Komisio | Existing computer: no new hardware. Planning allowance EUR 100–180 for a complete Pi kit, not a supplier quote. Physical verification pending. |
+| E: Browser Print | Installed Zebra client on Windows/macOS/Android | Existing supported device can be reused; does not solve iPad Safari. |
+| F: browser USB/Bluetooth/Serial | Browser-specific hardware APIs | Rejected as the iPad baseline; no supported Safari path has been established. |
+| G: native iOS companion | Separate iOS application plus supported network/MFi printer | App distribution and ongoing native maintenance; defer. |
+| H: PrintNode | Mac/Linux/Windows/Pi client plus printer; iPad submits remotely | Adds a processor and still needs a local computer. Published free tier: 50 requests/month; Essential EUR 7.20/month for 5,000 requests, subject to current terms. |
+
+The Pi allowance is an engineering budget estimate, excluding printer, media,
+electricity and taxes. We have no verified Zebra/Brother purchase quote and no
+Cloud Print API licence price. Obtain those before recommending a purchase.
+
+Zebra's current Cloud Print onboarding requires a Nucleus tenant, device
+enrolment, both relevant licences and tenant-scoped API tokens. Its documented
+commands include print, job status and cancellation. Export the tenant's API
+definition before choosing a client protocol. EU-only processing, retention,
+subprocessors and pricing were not established by the public guide: obtain a
+written answer before selecting this processor. Option A avoids that dependency
+but makes Komisio responsible for bridge availability, credentials and upgrades.
+
+### Protocol experiment and verification
+
+Run from the repository root after installing development dependencies:
+
+```bash
+npx vitest run tests/unit/weblink-spike.test.ts tests/unit/print-spike-pdf.test.ts tests/unit/print-agent-network.test.ts tests/unit/label-sheets.test.ts
+node --import tsx scripts/print-spike/demo.ts
+```
+
+`scripts/print-spike/weblink.mjs` starts an ephemeral loopback-only server with
+synthetic fixture capabilities. Tests open real local WebSockets using Zebra's
+main/raw subprotocols, binary messages and the required zero-length upgrade
+header. Discovery requests the raw channel; its initial identity is checked
+against the fixture. A `~HS` reply establishes only transport reachability.
+Rendered ZPL is transmitted unchanged, once per requested copy. Submitted jobs
+are never silently replayed, and channel loss leaves their outcome unknown.
+
+This is not a production authentication or spool implementation. It does not
+decode the discovery packet into a trusted identity, establish printer mTLS,
+consume real pairing codes, persist sessions, or call Supabase. A serial number
+or `unique_id` alone is not proof of printer ownership. The loopback capability
+exists only to isolate the synthetic channels. Do not expose this HTTP server
+to a LAN, reverse proxy or the internet.
+
+The PDF prototype uses the configured page dimensions, one label per page,
+zero PDF page margins, embedded fonts and the existing vector label drawing.
+The content stays 57 × 32 mm at 1:1 and is centred on larger media; it is not
+stretched to fill the page. Formats smaller than that return
+`LABEL_LAYOUT_TOO_SMALL` and need a dedicated readable layout. The 62 mm option
+is a 62 × 32 mm cut from continuous media, not an infinite-height page.
+Generated examples are in ignored `private/print-spike/`.
+
+Automated checks verify page geometry, copies, input bounds and a real local
+TCP listener using the unchanged agent transport. They do not demonstrate
+AirPrint scaling, printable hardware margins, a physical barcode scan, or
+macOS/Linux arm64 execution. PDF previews must be visually inspected as well.
+
+### Hosted bridge design: not yet deployed
+
+Use a separate persistent service, not a Vercel function. The owner approved
+an existing Hostinger VPS for this spike, replacing the earlier Hetzner
+proposal. No new server, plan upgrade or paid service is authorized. The
+server IP and agreed access method must be supplied privately before work
+starts; never put credentials in the issue or repository. Its actual region
+and existing proxy/port use remain to be confirmed with the owner.
+
+Run an isolated service under its own system user or container, on its own
+port behind the TLS proxy. Do not read, change or restart other applications
+on the server. If ports 80/443 or the proxy configuration conflict with the
+spike, stop and ask rather than reconfiguring the existing service.
+
+Use only the approved non-wildcard name `print-spike.z.komisio.com`.
+Prefer a publicly trusted SHA-256 certificate with its required trust chain
+installed on the printer. Validate TLS 1.2 with modern ciphers against the
+actual firmware; the old application note's SHA-1-era advice is superseded by
+the current SDK certificate guide. Public certificate renewal should be
+automated and monitored; chain changes require a printer rollout check.
+Do not disable certificate or hostname verification.
+
+Alternative: Zebra-signed SHA-256 certificate, with a documented 7–10 day
+issuance window and three-year renewal deadline. A wildcard requires the
+specified `z`, `zebra` or `zserver` name component. This adds operational steps
+and is not necessary merely because the printer is a Zebra.
+
+The public SDK example makes client-certificate verification optional.
+Do not assume authenticated mTLS is available on the test ZD420: record the
+actual certificate and firmware behavior during the handshake. The bridge
+design still needs explicit application pairing and authenticated reconnects.
+
+In the real prototype, one printer gets its own existing Supabase anonymous
+device identity and refresh token. A single-use fifteen-minute pairing code
+selects that device/printer relationship through `pair_print_device`; no
+service-role credential, tenant-wide session or expanded RLS is needed.
+Validate device context before each claim and heartbeat, and close both
+channels immediately on revocation. Keep credentials encrypted outside logs.
+Do not log pairing or reconnect capabilities in URLs.
+
+The remaining design gate is authenticated reconnection after the pairing code
+has been consumed: verify whether the actual firmware can retain and return a
+rotated reconnect capability, or provides a verifiable client certificate.
+Do not substitute a serial-number allowlist. Test theft/replay and binding of
+the main/raw channels before real queue access.
+
+Start with a bounded three-second queue poll and one in-flight job per device;
+push notifications can follow. Reuse claim/complete/report RPCs only with that
+device session. Existing stale-claim re-offering after ten minutes is not an
+exactly-once guarantee: a durable bridge dispatch journal and explicit
+unknown-outcome hold/recovery must prevent an uncertain print being sent twice.
+Do not mark physical printing verified merely because a socket write succeeded.
+Any `weblink` transport successor migration and durable hold changes belong to
+the reviewed implementation follow-up, not this local spike.
+
+Staging isolation: the dedicated VPS service, synthetic store and device
+credentials, no production keys/data, no public administration endpoint.
+Restrict management access to the approved operator. Self-hosters need an
+equivalent long-lived TLS service and durable encrypted state. On teardown,
+revoke the test device, clear its Weblink URL and temporary trust material,
+remove only the spike service and its added files/DNS, and revoke its scoped
+credentials. Do not delete the existing VPS or alter its other workloads.
+Preserve only sanitized test results.
+
+### Owner's ZD420 and iPad test script
+
+The host approach is approved, but private access, DNS and the real
+TLS/pairing adapter must be ready before testing. The loopback experiment
+above cannot connect a physical printer.
+Use a synthetic store/item and record pass/fail plus observations for each
+step on #525. Keep tokens, full URLs with capabilities and credentials private.
+
+| Step | Action | Expected result and record |
+| --- | --- | --- |
+| 1 | Record ZD420 model suffix, firmware, dpi, label size, network option, iPad/iPadOS and available BLE. Save the original printer settings. | Hardware is identified; network Link-OS is available. Do not assume every ZD420 has BLE. |
+| 2 | From the iPad, try Printer Setup Utility on a BLE-equipped model. Otherwise open the printer's network administration page in Safari. | Record which path can set Weblink and load the required trust chain. If neither works, stop: iPad-only setup has failed. |
+| 3 | Set correct printer time, install the approved trust chain, then set the approved HTTPS Weblink URL, including its required trailing slash. | TLS validates the hostname and chain. Record sanitized firmware/TLS errors; never accept an insecure fallback. |
+| 4 | Start pairing from the synthetic store and use its one-time code through the approved secure setup flow. | Device appears bound to exactly that printer/store. Reuse and expired-code attempts fail; no code in logs. |
+| 5 | Queue one synthetic item label on the iPad. | Exactly one physical label, correct text/price/reference and readable barcode. Record job ID, photo without personal data and scan result; compare queue/device status. |
+| 6 | Request two copies. | Exactly two labels, not two times a conflicting template copy count. Record counts. |
+| 7 | Disconnect the printer network while idle, then reconnect. | Reachability becomes false, then true after an authenticated reconnect; no extra label. Record timing. |
+| 8 | Power-cycle the printer. | Secure reconnect succeeds without reusing the consumed pairing code. Device remains in the same store. |
+| 9 | Interrupt network/power after a job starts; inspect actual output before recovery. | Uncertain outcome is held; no automatic duplicate. Record queue state and actual count. Stop if stale-claim replay prints again. |
+| 10 | Revoke the device while connected, then reboot it and queue a test job. | Both channels close; old credentials cannot claim, report or print new work. Record errors and zero new output. |
+| 11 | Restore original printer settings and revoke temporary test credentials. | Existing printer setup works again; no residual spike connection. |
+
+Candidate Weblink families include network-equipped ZD420/ZD421/ZD620/ZD621
+and supported Link-OS industrial models. This is an evaluation list, not a
+Komisio-verified compatibility list. Exclude Link-OS Basic models such as
+ZD220/ZD230/ZT111 unless the manufacturer establishes otherwise. Brother
+QL-820NWB/QL-1110NWB and Zebra ZSB are separate AirPrint candidates;
+Link-OS Weblink support does not imply AirPrint.
+
+### macOS/Linux packaging outline
+
+Keep the existing network agent unchanged initially. Test a platform matrix
+on macOS arm64 and Linux arm64 with a fake TCP 9100 listener before packaging;
+Windows-only execution of the same code is not proof of those platforms.
+Use Node SEA builds on matching target runners, not a renamed Windows binary.
+Package `pair`, `status`, `unpair` wrappers with a per-user writable
+`~/.komisio-print` directory, private device files and controlled log rotation.
+Provide a launchd plist on macOS and a systemd unit on Linux with an
+unprivileged dedicated identity, restart policy and network-online ordering.
+
+Sign/notarize the macOS artifact before a public download, verify update
+preserves pairing, and test revoke/unpair with the installed service.
+Linux arm64 must run on Raspberry Pi OS 64-bit. USB via CUPS is separate:
+detect supported raw queues, invoke `lp` with argument arrays/stdin rather
+than shell strings, and test uncertain spool acceptance. Do not claim a
+current Windows USB helper works on macOS/Linux.
+
+### Sources and follow-up gates
+
+Checked 2026-10-20:
+
+- [Zebra Weblink protocol application note](https://www.zebra.com/content/dam/support-dam/en/documentation/unrestricted/application-notes/appnotes-creating-weblink-endpoint-rev1-english.pdf), protocol only; use the current TLS guide below.
+- [Current Zebra Webservices certificate guidance](https://techdocs.zebra.com/link-os/latest/webservices/).
+- [Zebra Cloud Print transition and licensing](https://support.zebra.com/article/000036120).
+- [Zebra Browser Print platforms](https://www.zebra.com/us/en/support-downloads/software/printer-software/browser-print.html).
+- [WebKit's unsupported hardware APIs](https://webkit.org/tracking-prevention/).
+- [Brother QL-820NWB AirPrint manuals](https://support.brother.com/g/b/manualtop.aspx?c=se&lang=sv&pfs=1&prod=lpql820nwbeuk).
+- [PrintNode prices](https://www.printnode.com/en/pricing).
+
+Follow-ups must separately cover: authenticated hosted Weblink/queue recovery
+and device migration; production PDF route and AirPrint hardware calibration
+(including small media layouts); macOS/Linux packaging and hardware validation;
+all-eight-language printing UI; and website wording only after a supported
+path passes its acceptance checks. None is activated by the spike.
+
+Tracked in [#542](https://github.com/Komisio/komisio/issues/542),
+[#543](https://github.com/Komisio/komisio/issues/543),
+[#544](https://github.com/Komisio/komisio/issues/544) and
+[#545](https://github.com/Komisio/komisio/issues/545), respectively.

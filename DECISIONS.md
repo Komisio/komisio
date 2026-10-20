@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-20: Owner #525 separates local printing prototypes from hardware sign-off. Weblink hosting needs written approval. The loopback-only spike uses ws as a development dependency; it does not activate a transport, alter device grants or claim physical output.
+
 - 2026-10-20: Account mail uses frozen activation language, then saved product language, signup language or English. Profile saves mirror language through the user's Auth session; failed mirroring is reported for retry. Auth templates fall back as whole messages.
 
 - 2026-10-18: #508 gives signed-out seller registration links a localized public introduction and account actions retaining the return path. No store or agreement is read before login; verified identity, MFA, application and staff approval checks remain unchanged.
@@ -1146,3 +1148,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-20: #539 gates Stripe Tax behind an exact true server flag. Subscription and credit prices are exclusive; Stripe determines tax. Reused customers with shipping addresses are refused. Payment details retain bounded tax facts, never VAT IDs or addresses; locale follows the app.
 - 2026-10-20: e-conomic uses a separate, versioned DKK map and frozen daily exports. Every nonzero key is posted or explicitly excluded with a reason; fee keys cannot be excluded. Explicit zero-rate VAT codes prevent recalculation. SIE/Fortnox behavior stays unchanged.
 - 2026-10-20: e-conomic credentials are sealed and agreement-bound; owner/admin connects, maps and sends drafts. One live send per export; any attempted POST with an unverified outcome is held. One verified voucher number is required; only the owner may confirm a held send with evidence.
+- 2026-10-20: #525 uses an isolated service on the existing Hostinger VPS and print-spike.z.komisio.com with public TLS; no new costs or changes to other workloads. Private access, authenticated reconnects and owner hardware sign-off remain prerequisites.

@@ -1343,7 +1343,14 @@
     "showingRange": "Viser {from}–{to} av {total} kontobevegelser.",
     "older": "Eldre poster",
     "newer": "Nyere poster",
-    "recentOnly": "Denne visningen viser opptil de 50 siste kontobevegelsene."
+    "recentOnly": "Denne visningen viser opptil de 50 siste kontobevegelsene.",
+    "table": {
+      "date": "Dato",
+      "event": "Hendelse",
+      "item": "Vare",
+      "amount": "Beløp",
+      "payoutReference": "Utbetalingsreferanse"
+    }
   },
   "payouts": {
     "title": "Utbetalinger",

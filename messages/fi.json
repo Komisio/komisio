@@ -1343,7 +1343,14 @@
     "showingRange": "Näytetään tilitapahtumat {from}–{to}/{total}.",
     "older": "Vanhemmat tapahtumat",
     "newer": "Uudemmat tapahtumat",
-    "recentOnly": "Tässä näkymässä näytetään enintään 50 viimeisintä tilitapahtumaa."
+    "recentOnly": "Tässä näkymässä näytetään enintään 50 viimeisintä tilitapahtumaa.",
+    "table": {
+      "date": "Päivämäärä",
+      "event": "Tapahtuma",
+      "item": "Tuote",
+      "amount": "Summa",
+      "payoutReference": "Maksun viite"
+    }
   },
   "payouts": {
     "title": "Tilitykset",

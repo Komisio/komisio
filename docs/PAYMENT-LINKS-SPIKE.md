@@ -189,6 +189,45 @@ Ask Stripe before quoting a price to a store.
 
 ## 2. Flow
 
+### 2.0 Overview (MobilePay through Stripe Connect)
+
+The recommended flow from the store's and the buyer's point of view. The
+sections below give the details and the code each step touches.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Buyer
+    actor Store as Store staff
+    participant K as Komisio
+    participant S as Stripe and MobilePay
+    Buyer->>Store: Sees the item on Instagram, asks in a DM
+    Store->>K: Creates a payment link on the item page
+    K->>K: Holds the item (default 24 h), blocks counter sales
+    K-->>Store: Link /pay/token
+    Store->>Buyer: Pastes the link into the DM
+    Buyer->>K: Opens the link, sees item and price
+    K->>S: Checkout Session on the store's account, fixed amount, manual capture
+    K-->>Buyer: Redirect to Stripe Checkout
+    Buyer->>S: Pays with MobilePay, approves in the app
+    S->>K: Signed webhook, payment authorized
+    K->>K: record_sale (provider payment_link), seller credit frozen
+    K->>S: Capture, money is taken only now
+    S-->>Buyer: Receipt
+    K-->>Store: Item shown as sold, pack or prepare pickup
+    S-->>Store: Payout to the store's bank on Stripe's schedule
+    K-->>Store: Sale in settlement, day close and accounting export
+```
+
+When something goes wrong:
+
+```mermaid
+flowchart LR
+    A[Sold at the till first, while the link is open] --> A2[Link closed, authorization voided, no money taken]
+    B[Link expires or staff cancel it] --> B2[Hold released, item can be sold again]
+    C[Buyer returns a paid item] --> C2[Refund through Stripe, then a return in Komisio, seller credit reversed]
+```
+
 ### 2.1 Roles and creation
 
 - **Connect the provider:** owner or admin (as with Fortnox, Shopify and PayPal

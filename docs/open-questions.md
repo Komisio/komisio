@@ -699,3 +699,9 @@ Stock lifecycle overview (resolved 2026-10-18, owner #511): an additional read R
 Invitation language (resolved 2026-10-20, owner #522): staff explicitly select the invitation language, defaulting to the store profile language then English. Do not infer it through recipient-profile lookups or the staff session. No membership or access-control rules change.
 
 Service legal links (#527): localized navigation is implemented without acceptance statements or tracking. Any acceptance wording, checkbox or terms-version storage still requires company-approved text and an explicit decision; website document translations and pricing discrepancies remain outside this repository.
+
+Support context (resolved 2026-10-20, owner #531): replace dynamic path segments
+with route placeholders and retain only recognized view/tab values. Store name,
+tenant ID, locale and app version remain in the bounded email draft. No record
+identifiers or unknown query values are included. Help feedback storage is
+separate work in #532.

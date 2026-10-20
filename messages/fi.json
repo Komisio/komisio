@@ -547,7 +547,8 @@
     "TENANT_CHANGED": "Aktiivinen kauppa on vaihtunut. Lataa sivu uudelleen ennen kuin jatkat.",
     "REQUEST_FAILED": "Muutoksiasi ei voitu tallentaa. Yritä uudelleen.",
     "INVITE_DAILY_CAP": "Kaupan vuorokausiraja kutsuille on täynnä. Yritä huomenna uudelleen.",
-    "PROFILE_EMAIL_LANGUAGE_FAILED": "Profiilisi tallennettiin, mutta tilin sähköpostien kieltä ei voitu päivittää. Yritä uudelleen tallentamalla vielä kerran."
+    "PROFILE_EMAIL_LANGUAGE_FAILED": "Profiilisi tallennettiin, mutta tilin sähköpostien kieltä ei voitu päivittää. Yritä uudelleen tallentamalla vielä kerran.",
+    "signupBlocked": "Komisio ei ole avoinna uusille kaupoille maassasi. Jos tämä on virhe, ota yhteyttä: {email}."
   },
   "inspection": {
     "title": "Tarkasta tuontierä",
@@ -3500,7 +3501,27 @@
     "items": "Etsi rekisteröity tuote",
     "openReference": "Avaa etiketin viite",
     "printing": "Tulostimet ja tulostustyöt",
-    "integrations": "Avaa integraatiot"
+    "integrations": "Avaa integraatiot",
+    "support": {
+      "title": "Tarvitsetko lisää apua?",
+      "email": "Ota yhteyttä tukeen",
+      "website": "Tukisivu",
+      "newTab": "Avautuu uuteen välilehteen",
+      "browse": "Selaa ohjeita",
+      "subject": "Komisio – tuki",
+      "store": "Kauppa: {store}",
+      "tenant": "Kaupan tunnus: {id}",
+      "page": "Sivu: {page}",
+      "locale": "Kieli: {locale}",
+      "version": "Versio: {version}",
+      "prompt": "Kuvaile, mitä yritit tehdä ja mitä tapahtui."
+    },
+    "search": {
+      "label": "Hae ohjeista",
+      "placeholder": "Esimerkiksi etiketit tai kirjanpito",
+      "count": "Ohjeartikkeleita: {count}",
+      "empty": "Ohjeita ei löytynyt"
+    }
   },
   "dashboard": {
     "intro": "Työpäiväsi tärkeimmät asiat yhdellä silmäyksellä.",

@@ -1,4 +1,5 @@
 'use client'
+import { ContactSupport } from './contact-support'
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from 'react'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
@@ -17,7 +18,7 @@ export function ContextHelp({
   d,
   label,
 }: {
-  topic: HelpTopic
+  topic?: HelpTopic | null
   d: Dictionary['helpCenter']
   label?: string
 }) {
@@ -68,7 +69,7 @@ export function ContextHelp({
       >
         <div className="help-dialog-heading">
           <h2 ref={heading} tabIndex={-1} id={`${id}-title`}>
-            {d.articles[topic].title}
+            {topic ? d.articles[topic].title : d.title}
           </h2>
           <Button
             type="button"
@@ -78,21 +79,36 @@ export function ContextHelp({
             {d.close}
           </Button>
         </div>
-        <HelpArticle
-          topic={topic}
-          d={d}
-          onNavigate={() => dialog.current?.close()}
-        />
-        <p>
-          <Link
-            className="text-link"
-            href={`/help/${topic}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {d.fullArticle}
-          </Link>
-        </p>
+        {topic ? (
+          <>
+            <HelpArticle
+              topic={topic}
+              d={d}
+              onNavigate={() => dialog.current?.close()}
+            />
+            <p>
+              <Link
+                className="text-link"
+                href={`/help/${topic}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {d.fullArticle}
+              </Link>
+            </p>
+          </>
+        ) : (
+          <p>
+            <Link
+              className="text-link"
+              href="/help"
+              onNavigate={() => dialog.current?.close()}
+            >
+              {d.support.browse}
+            </Link>
+          </p>
+        )}
+        <ContactSupport d={d.support} inDialog />
       </dialog>
     </>
   )

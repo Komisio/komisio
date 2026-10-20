@@ -547,7 +547,8 @@
     "TENANT_CHANGED": "La tienda activa ha cambiado. Recarga la página antes de continuar.",
     "REQUEST_FAILED": "No se pudieron guardar tus cambios. Inténtalo de nuevo.",
     "INVITE_DAILY_CAP": "Se alcanzó el límite diario de invitaciones de la tienda. Inténtalo mañana.",
-    "PROFILE_EMAIL_LANGUAGE_FAILED": "Tu perfil se ha guardado, pero no se ha podido actualizar el idioma de los correos de la cuenta. Vuelve a guardar para intentarlo de nuevo."
+    "PROFILE_EMAIL_LANGUAGE_FAILED": "Tu perfil se ha guardado, pero no se ha podido actualizar el idioma de los correos de la cuenta. Vuelve a guardar para intentarlo de nuevo.",
+    "signupBlocked": "Komisio no está disponible para nuevas tiendas en tu país. Si esto es un error, contacta con {email}."
   },
   "inspection": {
     "title": "Inspeccionar la entrega",
@@ -3500,7 +3501,27 @@
     "items": "Buscar un artículo registrado",
     "openReference": "Abrir una referencia de etiqueta",
     "printing": "Impresoras y trabajos de impresión",
-    "integrations": "Abrir integraciones"
+    "integrations": "Abrir integraciones",
+    "support": {
+      "title": "¿Necesitas más ayuda?",
+      "email": "Contactar con soporte",
+      "website": "Página de soporte",
+      "newTab": "Se abre en una pestaña nueva",
+      "browse": "Ver la ayuda",
+      "subject": "Komisio – soporte",
+      "store": "Tienda: {store}",
+      "tenant": "ID de tienda: {id}",
+      "page": "Página: {page}",
+      "locale": "Idioma: {locale}",
+      "version": "Versión: {version}",
+      "prompt": "Describe qué intentabas hacer y qué ocurrió."
+    },
+    "search": {
+      "label": "Buscar en la ayuda",
+      "placeholder": "Por ejemplo, etiquetas o contabilidad",
+      "count": "Artículos de ayuda: {count}",
+      "empty": "No se encontró ayuda relacionada"
+    }
   },
   "dashboard": {
     "intro": "Lo más importante de tu jornada, en un solo lugar.",

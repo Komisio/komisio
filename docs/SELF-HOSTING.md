@@ -351,3 +351,17 @@ form entries. Changing the registration language updates links immediately.
 This navigation does not collect consent, record accepted terms versions, change
 prices or supply legal wording. The operator must publish and approve its own
 documents and translations; a locale URL alone does not establish translated text.
+
+## Support contact
+
+Set `KOMISIO_SUPPORT_EMAIL` to your operator support address and optionally
+`KOMISIO_SUPPORT_URL` to your own support page. The email must be one valid
+address; unset, empty or invalid values use `support@komisio.com`. The page URL
+must be absolute HTTPS without credentials; invalid values hide the page link.
+These are server settings, not `NEXT_PUBLIC_` variables.
+
+Help pages and dialogs offer an email draft with store name/id, language, app
+version and a redacted page reference. Dynamic record identifiers and unknown
+query values are omitted; only recognized `view`/`tab` values are retained.
+Opening the draft sends nothing automatically. Search runs in the browser only.
+The country-blocked signup response uses the same configured support email.

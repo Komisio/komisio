@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-20: Owner #525 separates local printing prototypes from hardware sign-off. Weblink hosting needs written approval. The loopback-only spike uses ws as a development dependency; it does not activate a transport, alter device grants or claim physical output.
+
 - 2026-10-20: Account mail uses frozen activation language, then saved product language, signup language or English. Profile saves mirror language through the user's Auth session; failed mirroring is reported for retry. Auth templates fall back as whole messages.
 
 - 2026-10-18: #508 gives signed-out seller registration links a localized public introduction and account actions retaining the return path. No store or agreement is read before login; verified identity, MFA, application and staff approval checks remain unchanged.

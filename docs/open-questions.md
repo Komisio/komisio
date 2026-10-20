@@ -705,3 +705,11 @@ with route placeholders and retain only recognized view/tab values. Store name,
 tenant ID, locale and app version remain in the bounded email draft. No record
 identifiers or unknown query values are included. Help feedback storage is
 separate work in #532.
+
+Printing without Windows (#525, owner decision 2026-10-20): local prototypes
+and desk research may be reviewed independently. ZD420/iPad physical testing
+belongs to the owner; AirPrint, macOS and Linux arm64 hardware validation are
+follow-ups. No hosted bridge, DNS or certificate may be created until the
+owner approves the concrete EU hosting proposal in the issue. Authenticated
+printer reconnects, durable uncertain-output recovery and physical sign-off
+remain open; the loopback prototype does not activate a new transport.

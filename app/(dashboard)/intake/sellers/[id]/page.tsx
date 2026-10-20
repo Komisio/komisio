@@ -35,7 +35,7 @@ import {
 } from '@/lib/engine/seller-terms'
 import { SellerTermsForm } from '@/components/intake/seller-terms-form'
 import { LedgerAdjustForm } from '@/components/intake/ledger-adjust-form'
-import { LedgerItemSummary } from '@/components/intake/ledger-item-summary'
+import { SellerLedgerTable } from '@/components/intake/seller-ledger-table'
 import {
   PayoutRequestForm,
   PayoutDecision,
@@ -618,33 +618,14 @@ export default async function Seller({
                       )
                     )}
                     {ledger.items.length === 0 && <p>{l.empty}</p>}
-                    {ledger.items.map((e) => (
-                      <p key={e.id}>
-                        <EventTime value={e.occurred_at} locale={ctx.locale} />{' '}
-                        · {l.kinds[e.kind]} · {formatSignedOre(e.amount_ore)}{' '}
-                        {currency}
-                        {e.reason ? ` · ${e.reason}` : ''}
-                        {e.kind === 'credit_sale' && e.itemDetails && (
-                          <LedgerItemSummary
-                            details={e.itemDetails}
-                            currency={currency}
-                            d={all}
-                          />
-                        )}
-                        {e.itemDetails && (
-                          <>
-                            {' '}
-                            ·{' '}
-                            <Link
-                              href={`/intake/items/${e.itemDetails.itemId}`}
-                            >
-                              {e.itemDetails.title || e.itemDetails.reference} ·{' '}
-                              {e.itemDetails.reference}
-                            </Link>
-                          </>
-                        )}
-                      </p>
-                    ))}
+                    {ledger.items.length > 0 && (
+                      <SellerLedgerTable
+                        entries={ledger.items}
+                        currency={currency}
+                        locale={ctx.locale}
+                        d={all}
+                      />
+                    )}
                     {!ledger.legacy && ledger.total > ledger.limit && (
                       <nav
                         className="row wrap"

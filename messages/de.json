@@ -1343,7 +1343,14 @@
     "showingRange": "Einträge {from}–{to} von {total} Kontobewegungen.",
     "older": "Ältere Einträge",
     "newer": "Neuere Einträge",
-    "recentOnly": "Diese Ansicht zeigt höchstens die 50 neuesten Kontobewegungen."
+    "recentOnly": "Diese Ansicht zeigt höchstens die 50 neuesten Kontobewegungen.",
+    "table": {
+      "date": "Datum",
+      "event": "Ereignis",
+      "item": "Artikel",
+      "amount": "Betrag",
+      "payoutReference": "Auszahlungsreferenz"
+    }
   },
   "payouts": {
     "title": "Auszahlungen",

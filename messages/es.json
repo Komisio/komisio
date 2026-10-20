@@ -1343,7 +1343,14 @@
     "showingRange": "Mostrando {from}–{to} de {total} movimientos de cuenta.",
     "older": "Movimientos anteriores",
     "newer": "Movimientos más recientes",
-    "recentOnly": "Esta vista muestra como máximo los 50 movimientos de cuenta más recientes."
+    "recentOnly": "Esta vista muestra como máximo los 50 movimientos de cuenta más recientes.",
+    "table": {
+      "date": "Fecha",
+      "event": "Movimiento",
+      "item": "Artículo",
+      "amount": "Importe",
+      "payoutReference": "Referencia del pago"
+    }
   },
   "payouts": {
     "title": "Pagos",

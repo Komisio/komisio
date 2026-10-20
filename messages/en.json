@@ -1343,7 +1343,14 @@
     "showingRange": "Showing {from}–{to} of {total} ledger entries.",
     "older": "Older entries",
     "newer": "Newer entries",
-    "recentOnly": "This view shows up to the 50 most recent ledger entries."
+    "recentOnly": "This view shows up to the 50 most recent ledger entries.",
+    "table": {
+      "date": "Date",
+      "event": "Event",
+      "item": "Item",
+      "amount": "Amount",
+      "payoutReference": "Payout reference"
+    }
   },
   "payouts": {
     "title": "Payouts",

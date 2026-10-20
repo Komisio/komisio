@@ -8854,3 +8854,110 @@ button.text-link:hover:not(:disabled) {
 .help-support-address {
   overflow-wrap: anywhere;
 }
+.seller-ledger-table-wrap {
+  container-type: inline-size;
+  min-width: 0;
+}
+.seller-ledger-table {
+  width: 100%;
+  table-layout: fixed;
+  font-size: 0.875rem;
+}
+.seller-ledger-table th,
+.seller-ledger-table td {
+  vertical-align: top;
+  padding: 0.75rem 0.5rem;
+  overflow-wrap: anywhere;
+}
+.seller-ledger-table th {
+  text-align: left;
+  background: var(--paper);
+}
+.seller-ledger-table tbody tr {
+  border-bottom: 1px solid var(--line);
+}
+.seller-ledger-table th:nth-child(2) {
+  width: 18%;
+}
+.seller-ledger-table th:nth-child(3) {
+  width: 18%;
+}
+.seller-ledger-table th:nth-child(4) {
+  width: 14%;
+}
+.seller-ledger-table .ledger-number {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.ledger-event-kind {
+  font-weight: 600;
+}
+.seller-ledger-table .ledger-event-note {
+  margin: 0.375rem 0 0;
+  color: var(--muted);
+}
+.ledger-payout-reference {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--muted);
+}
+.ledger-payout-reference code {
+  display: block;
+  font-size: 0.75rem;
+}
+.ledger-item-link {
+  display: block;
+}
+.ledger-item-title {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ledger-item-link small {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--muted);
+}
+.ledger-mobile-label {
+  display: none;
+}
+@container (max-width: 48rem) {
+  .seller-ledger-table,
+  .seller-ledger-table tbody {
+    display: block;
+  }
+  .seller-ledger-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .seller-ledger-table tr {
+    display: block;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+    background: var(--white);
+  }
+  .seller-ledger-table td {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 0.5rem;
+    border: 0;
+    padding: 0.375rem 0;
+  }
+  .seller-ledger-table .ledger-empty {
+    display: none;
+  }
+  .ledger-mobile-label {
+    display: block;
+    text-align: left;
+    color: var(--muted);
+  }
+  .ledger-cell-value {
+    min-width: 0;
+  }
+}

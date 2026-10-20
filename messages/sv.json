@@ -1343,7 +1343,14 @@
     "showingRange": "Visar {from}–{to} av {total} kontohändelser.",
     "older": "Äldre poster",
     "newer": "Nyare poster",
-    "recentOnly": "Den här vyn visar högst de 50 senaste kontohändelserna."
+    "recentOnly": "Den här vyn visar högst de 50 senaste kontohändelserna.",
+    "table": {
+      "date": "Datum",
+      "event": "Händelse",
+      "item": "Vara",
+      "amount": "Belopp",
+      "payoutReference": "Utbetalningsreferens"
+    }
   },
   "payouts": {
     "title": "Utbetalningar",

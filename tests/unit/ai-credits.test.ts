@@ -13,7 +13,9 @@ import {
   readOwnKeyConfig,
   settleAssistance,
   storeOwnKey,
+  startCreditsCheckout,
 } from '../../lib/engine/ai-credits'
+import { emptyStoreProfile } from '../../lib/engine/store-profile'
 import { openAIReception } from '../../lib/assistance/openai-reception'
 
 const env = {
@@ -25,6 +27,114 @@ const env = {
 const tenant = '0b6c4f1e-2c2e-4b5e-9a1f-1234567890ab'
 
 describe('AI credits', () => {
+  it('records provider tax beside the fixed credit grant with the same replay key', async () => {
+    const rpc = vi.fn(async () => ({
+      error: null,
+      data: { replayed: false, matched: true },
+    }))
+    const event = {
+      id: 'evt_taxed_credits',
+      type: 'checkout.session.completed',
+      data: {
+        object: {
+          mode: 'payment',
+          status: 'complete',
+          amount_total: 12500,
+          currency: 'sek',
+          total_details: { amount_tax: 2500 },
+          customer_details: {
+            address: { country: 'SE', line1: 'PRIVATE' },
+            tax_ids: [{ type: 'eu_vat', value: 'PRIVATE' }],
+            tax_exempt: 'none',
+          },
+          automatic_tax: { status: 'complete' },
+          metadata: {
+            tenant_id: tenant,
+            kind: 'ai_credits',
+            amount_ore: '10000',
+          },
+        },
+      },
+    } as StripeEvent
+    await applyStripeEvent({ rpc } as unknown as SupabaseClient, event)
+    await applyStripeEvent({ rpc } as unknown as SupabaseClient, event)
+    expect(rpc.mock.calls[0]).toEqual(rpc.mock.calls[1])
+    expect(rpc).toHaveBeenCalledWith('record_ai_credit_purchase', {
+      p_event_id: 'evt_taxed_credits',
+      p_tenant: tenant,
+      p_amount_ore: 10000,
+      p_detail: {
+        status: 'complete',
+        taxMinor: 2500,
+        totalMinor: 12500,
+        currency: 'SEK',
+        customerCountry: 'SE',
+        reverseCharge: false,
+        taxIdType: 'eu_vat',
+        automaticTax: 'complete',
+      },
+    })
+    expect(JSON.stringify(rpc.mock.calls)).not.toContain('PRIVATE')
+  })
+  it('passes app locale through for an admin without reading the stored customer', async () => {
+    const rpc = vi.fn(async (fn: string) => ({
+      error: null,
+      data:
+        fn === 'tenant_role'
+          ? 'admin'
+          : fn === 'current_store_profile'
+            ? {
+                id: null,
+                version: 0,
+                publishedAt: null,
+                profile: emptyStoreProfile('sv'),
+              }
+            : {
+                enabled: true,
+                period: '2026-10',
+                includedOre: 10000,
+                includedLeftOre: 10000,
+                purchasedLeftOre: 0,
+                usedThisPeriodOre: 0,
+                packOre: 10000,
+                ownKey: false,
+                ownModel: null,
+                capReached: false,
+                estimatedItemsPerMonth: 500,
+              },
+    }))
+    const http = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(
+        Response.json({
+          active: true,
+          type: 'one_time',
+          currency: 'sek',
+          unit_amount: 10000,
+          tax_behavior: 'exclusive',
+        }),
+      )
+      .mockResolvedValueOnce(
+        Response.json({
+          id: 'cs_test',
+          url: 'https://checkout.stripe.com/test',
+        }),
+      )
+    await startCreditsCheckout(
+      { rpc } as unknown as SupabaseClient,
+      tenant,
+      'admin@example.test',
+      'https://app.test',
+      { ...env, KOMISIO_STRIPE_AUTOMATIC_TAX: 'true' },
+      http,
+      'fi',
+    )
+    const body = new URLSearchParams(String(http.mock.calls[1][1]?.body))
+    expect(body.get('locale')).toBe('fi')
+    expect(body.get('customer_email')).toBe('admin@example.test')
+    expect(body.has('customer')).toBe(false)
+    expect(rpc.mock.calls.map((c) => c[0])).not.toContain('billing_customer')
+  })
   it('never exposes legacy store examples while preserving pricing', () => {
     const result = publicPricing.parse({
       includedOre: 10000,
@@ -116,7 +226,16 @@ describe('AI credits', () => {
         p_event_id: 'evt_9',
         p_tenant: tenant,
         p_amount_ore: 10000,
-        p_detail: { status: 'complete' },
+        p_detail: {
+          status: 'complete',
+          taxMinor: null,
+          totalMinor: null,
+          currency: null,
+          customerCountry: null,
+          reverseCharge: null,
+          taxIdType: null,
+          automaticTax: null,
+        },
       })
       return { data: { replayed: false, matched: true }, error: null }
     })

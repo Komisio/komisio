@@ -121,6 +121,7 @@ export async function startCreditsCheckout(
   origin: string,
   env: StripeEnvironment,
   http?: typeof fetch,
+  locale?: string,
 ) {
   const tenantId = z.uuid().parse(tenantInput)
   const role = await client.rpc('tenant_role', { p_tenant: tenantId })
@@ -138,6 +139,7 @@ export async function startCreditsCheckout(
     {
       tenantId,
       email,
+      locale,
       amountOre: creditPackOre,
       currency: price.currency,
       successUrl: `${origin}/settings?tab=credits&credits=success`,

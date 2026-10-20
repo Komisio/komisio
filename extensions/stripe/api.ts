@@ -6,12 +6,90 @@ import {
   type CreditCurrency,
 } from '../../lib/platform/credit-prices'
 import { boundedJson } from '../../lib/http/bounded-json'
+import { storeCountries } from '../../lib/platform/countries'
 
 // Stripe over plain fetch: hosted Checkout for the subscription, the
 // customer portal for everything after, and signed webhooks for the
 // outcomes. Prices and tax live in Stripe; Komisio holds three settings.
 export type StripeEnvironment = Record<string, string | undefined>
 const API = 'https://api.stripe.com/v1'
+
+export function stripeAutomaticTax(env: StripeEnvironment) {
+  return env.KOMISIO_STRIPE_AUTOMATIC_TAX === 'true'
+}
+
+export function stripeLocale(locale?: string) {
+  const mapping: Record<string, string> = {
+    sv: 'sv',
+    no: 'nb',
+    dk: 'da',
+    fi: 'fi',
+    de: 'de',
+    es: 'es',
+    it: 'it',
+    en: 'en',
+  }
+  return locale && Object.hasOwn(mapping, locale) ? mapping[locale] : 'auto'
+}
+
+async function stripeGet(
+  env: StripeEnvironment,
+  path: string,
+  http: typeof fetch,
+) {
+  let response: Response
+  try {
+    response = await http(`${API}${path}`, {
+      headers: {
+        Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+        'Stripe-Version': '2024-06-20',
+      },
+      cache: 'no-store',
+      redirect: 'error',
+      signal: AbortSignal.timeout(15000),
+    })
+  } catch {
+    throw new Error('STRIPE_REQUEST_FAILED')
+  }
+  if (!response.ok) throw new Error('STRIPE_REQUEST_FAILED')
+  return boundedJson(response, 262144)
+}
+
+const priceSchema = z.object({
+  active: z.boolean(),
+  type: z.string(),
+  currency: z.string(),
+  unit_amount: z.number().int().nullable(),
+  tax_behavior: z.unknown().optional(),
+})
+
+async function checkTaxSubscription(
+  env: StripeEnvironment,
+  customerId: string | null | undefined,
+  http: typeof fetch,
+) {
+  const price = priceSchema.parse(
+    await stripeGet(env, `/prices/${env.STRIPE_PRICE_ID}`, http),
+  )
+  if (price.tax_behavior !== 'exclusive')
+    throw new Error('STRIPE_TAX_MISCONFIGURED')
+  if (!price.active || price.type !== 'recurring')
+    throw new Error('STRIPE_NOT_CONFIGURED')
+  if (!customerId) return
+  if (!/^cus_[A-Za-z0-9]+$/.test(customerId))
+    throw new Error('STRIPE_REQUEST_FAILED')
+  const customer = z
+    .object({
+      id: z.literal(customerId),
+      deleted: z.literal(false).optional(),
+      shipping: z
+        .object({ address: z.record(z.string(), z.unknown()).nullable() })
+        .nullable(),
+    })
+    .parse(await stripeGet(env, `/customers/${customerId}`, http))
+  if (customer.shipping?.address)
+    throw new Error('STRIPE_CUSTOMER_ADDRESS_CONFLICT')
+}
 
 /** Configured, and a live key only where the deployment is production. */
 export function stripeConfigured(env: StripeEnvironment) {
@@ -110,10 +188,14 @@ export async function createCheckoutSession(
     successUrl: string
     cancelUrl: string
     idempotencyKey: string
+    locale?: string
+    customerId?: string | null
   },
   http: typeof fetch = globalThis.fetch,
 ) {
   if (!stripeConfigured(env)) throw new Error('STRIPE_NOT_CONFIGURED')
+  const automaticTax = stripeAutomaticTax(env)
+  if (automaticTax) await checkTaxSubscription(env, input.customerId, http)
   const data = await stripePost(
     env,
     '/checkout/sessions',
@@ -121,14 +203,20 @@ export async function createCheckoutSession(
       mode: 'subscription',
       line_items: [{ price: env.STRIPE_PRICE_ID, quantity: 1 }],
       client_reference_id: input.tenantId,
-      customer_email: input.email,
+      ...(automaticTax && input.customerId
+        ? {
+            customer: input.customerId,
+            customer_update: { address: 'auto', name: 'auto' },
+          }
+        : { customer_email: input.email }),
       success_url: input.successUrl,
       cancel_url: input.cancelUrl,
-      locale: 'sv',
+      locale: stripeLocale(input.locale),
       billing_address_collection: 'required',
       tax_id_collection: { enabled: true },
       subscription_data: { metadata: { tenant_id: input.tenantId } },
       metadata: { tenant_id: input.tenantId },
+      ...(automaticTax ? { automatic_tax: { enabled: true } } : {}),
     },
     input.idempotencyKey,
     http,
@@ -147,6 +235,7 @@ export async function createCreditsCheckoutSession(
     successUrl: string
     cancelUrl: string
     idempotencyKey: string
+    locale?: string
   },
   http: typeof fetch = globalThis.fetch,
 ) {
@@ -156,29 +245,12 @@ export async function createCreditsCheckoutSession(
   if (input.amountOre !== creditPackOre) throw new Error('INVALID_INPUT')
   const priceId = creditsPriceId(env, currency)!
   const expected = creditPrices[currency]
-  let priceResponse: Response
-  try {
-    priceResponse = await http(`${API}/prices/${priceId}`, {
-      headers: {
-        Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
-        'Stripe-Version': '2024-06-20',
-      },
-      cache: 'no-store',
-      redirect: 'error',
-      signal: AbortSignal.timeout(15000),
-    })
-  } catch {
-    throw new Error('STRIPE_REQUEST_FAILED')
-  }
-  if (!priceResponse.ok) throw new Error('STRIPE_REQUEST_FAILED')
-  const price = z
-    .object({
-      active: z.boolean(),
-      type: z.string(),
-      currency: z.string(),
-      unit_amount: z.number().int().nullable(),
-    })
-    .parse(await boundedJson(priceResponse, 262144))
+  const price = priceSchema.parse(
+    await stripeGet(env, `/prices/${priceId}`, http),
+  )
+  const automaticTax = stripeAutomaticTax(env)
+  if (automaticTax && price.tax_behavior !== 'exclusive')
+    throw new Error('STRIPE_TAX_MISCONFIGURED')
   if (
     !price.active ||
     price.type !== 'one_time' ||
@@ -196,7 +268,7 @@ export async function createCreditsCheckoutSession(
       customer_email: input.email,
       success_url: input.successUrl,
       cancel_url: input.cancelUrl,
-      locale: 'auto',
+      locale: stripeLocale(input.locale),
       currency: currency.toLowerCase(),
       billing_address_collection: 'required',
       tax_id_collection: { enabled: true },
@@ -207,6 +279,13 @@ export async function createCreditsCheckoutSession(
         payment_currency: currency,
         payment_amount_minor: String(expected.amountMinor),
       },
+      ...(automaticTax
+        ? {
+            automatic_tax: { enabled: true },
+            customer_creation: 'always',
+            invoice_creation: { enabled: true },
+          }
+        : {}),
     },
     input.idempotencyKey,
     http,
@@ -284,6 +363,13 @@ const idOrObject = z
   .transform((v) => (typeof v === 'string' ? v : v.id))
   .nullable()
   .optional()
+const customerOrId = z
+  .union([
+    z.string(),
+    z.object({ id: z.string(), tax_exempt: z.string().nullable().optional() }),
+  ])
+  .nullable()
+  .optional()
 export const stripeEvent = z.object({
   id: z.string().min(1).max(100),
   type: z.string().min(1).max(100),
@@ -292,7 +378,7 @@ export const stripeEvent = z.object({
       .object({
         id: z.string().optional(),
         object: z.string().optional(),
-        customer: idOrObject,
+        customer: customerOrId,
         subscription: idOrObject,
         client_reference_id: z.string().nullable().optional(),
         status: z.string().nullable().optional(),
@@ -306,6 +392,140 @@ export const stripeEvent = z.object({
 })
 export type StripeEvent = z.infer<typeof stripeEvent>
 
+const minorUnits = z
+  .number()
+  .int()
+  .min(-Number.MAX_SAFE_INTEGER)
+  .max(Number.MAX_SAFE_INTEGER)
+  .nullish()
+  .catch(null)
+const taxStatus = z.enum(['none', 'exempt', 'reverse']).nullish().catch(null)
+const taxCountry = z
+  .string()
+  .regex(/^[a-zA-Z]{2}$/)
+  .transform((v) => v.toUpperCase())
+  .pipe(z.enum(storeCountries))
+  .nullish()
+  .catch(null)
+const taxIds = z
+  .array(
+    z
+      .object({
+        type: z.string().regex(/^[a-z][a-z0-9_]{0,49}$/),
+      })
+      .passthrough(),
+  )
+  .nullish()
+  .catch(null)
+const taxAmounts = z
+  .array(
+    z
+      .object({
+        amount: minorUnits,
+        taxability_reason: z.string().max(80).nullish().catch(null),
+      })
+      .passthrough(),
+  )
+  .nullish()
+  .catch(null)
+const taxFields = z
+  .object({
+    amount_total: minorUnits,
+    total: minorUnits,
+    tax: minorUnits,
+    currency: z
+      .string()
+      .regex(/^[a-zA-Z]{3}$/)
+      .transform((v) => v.toUpperCase())
+      .nullish()
+      .catch(null),
+    customer_tax_exempt: taxStatus,
+    customer: z
+      .union([z.string(), z.object({ tax_exempt: taxStatus }).passthrough()])
+      .nullish()
+      .catch(null),
+    customer_address: z
+      .object({ country: taxCountry })
+      .passthrough()
+      .nullish()
+      .catch(null),
+    customer_tax_ids: taxIds,
+    customer_details: z
+      .object({
+        address: z
+          .object({ country: taxCountry })
+          .passthrough()
+          .nullish()
+          .catch(null),
+        tax_exempt: taxStatus,
+        tax_ids: taxIds,
+      })
+      .passthrough()
+      .nullish()
+      .catch(null),
+    automatic_tax: z
+      .object({ status: z.string().max(80).nullish().catch(null) })
+      .passthrough()
+      .nullish()
+      .catch(null),
+    total_details: z
+      .object({
+        amount_tax: minorUnits,
+        breakdown: z
+          .object({ taxes: taxAmounts })
+          .passthrough()
+          .nullish()
+          .catch(null),
+      })
+      .passthrough()
+      .nullish()
+      .catch(null),
+    total_tax_amounts: taxAmounts,
+  })
+  .passthrough()
+
+/** Only provider facts, never a rate calculation or an inference from country/VAT ID. */
+export function taxSummary(event: StripeEvent) {
+  if (!['checkout.session.completed', 'invoice.paid'].includes(event.type))
+    return {}
+  const o = taxFields.parse(event.data.object)
+  const checkout = event.type === 'checkout.session.completed'
+  const amounts = checkout
+    ? o.total_details?.breakdown?.taxes
+    : o.total_tax_amounts
+  const exempt =
+    (checkout ? o.customer_details?.tax_exempt : o.customer_tax_exempt) ??
+    (typeof o.customer === 'object' ? o.customer?.tax_exempt : null)
+  const reasons =
+    amounts?.map((a) => a.taxability_reason).filter((r) => r != null) ?? []
+  const totalTax =
+    amounts?.length && amounts.every((a) => a.amount != null)
+      ? amounts.reduce((sum, a) => sum + a.amount!, 0)
+      : null
+  return {
+    taxMinor: checkout
+      ? (o.total_details?.amount_tax ?? null)
+      : (o.tax ??
+        (totalTax != null && Number.isSafeInteger(totalTax) ? totalTax : null)),
+    totalMinor: (checkout ? o.amount_total : o.total) ?? null,
+    currency: o.currency ?? null,
+    customerCountry:
+      (checkout
+        ? o.customer_details?.address?.country
+        : o.customer_address?.country) ?? null,
+    reverseCharge:
+      exempt === 'reverse' || reasons.includes('reverse_charge')
+        ? true
+        : exempt != null || reasons.length > 0
+          ? false
+          : null,
+    taxIdType:
+      (checkout ? o.customer_details?.tax_ids : o.customer_tax_ids)?.[0]
+        ?.type ?? null,
+    automaticTax: o.automatic_tax?.status ?? null,
+  }
+}
+
 export type BillingOutcome =
   'active' | 'past_due' | 'read_only' | 'cancel_at_period_end' | 'none'
 
@@ -317,7 +537,10 @@ export function mapStripeEvent(event: StripeEvent) {
     eventId: event.id,
     type: event.type,
     tenantId: tenantId && /^[0-9a-f-]{36}$/.test(tenantId) ? tenantId : null,
-    customerId: o.customer ?? null,
+    customerId:
+      typeof o.customer === 'object'
+        ? (o.customer?.id ?? null)
+        : (o.customer ?? null),
     subscriptionId: event.type.startsWith('customer.subscription.')
       ? (o.id ?? null)
       : (o.subscription ?? null),

@@ -32,6 +32,12 @@ export default defineConfig({
       // CI already builds the application; exercise that artifact without recompiling pages.
       command: process.env.CI ? 'npm run start' : 'npm run dev',
       env: {
+        // Display billing actions in browser tests. Their requests are intercepted;
+        // these synthetic values cannot authenticate to Stripe.
+        STRIPE_SECRET_KEY: 'sk_test_syntheticbrowserfixture',
+        STRIPE_PRICE_ID: 'price_syntheticbrowserplan',
+        STRIPE_CREDITS_PRICE_ID: 'price_syntheticbrowsercredits',
+        KOMISIO_STRIPE_AUTOMATIC_TAX: '',
         SELLER_ACCOUNT_DELIVERY: 'auth',
         KOMISIO_AUTH_EMAIL_HOOK_ENABLED: 'true',
         KOMISIO_AUTH_EMAIL_HOOK_SECRET: `v1,whsec_${Buffer.alloc(32, 7).toString('base64')}`,

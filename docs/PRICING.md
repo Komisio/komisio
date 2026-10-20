@@ -115,7 +115,7 @@ host switch and `STRIPE_CREDITS_PRICE_ID`, owner action A16).
 
 Each one-time purchase adds exactly 100 credits (10,000 internal ore):
 
-| Store country                           | Payment | Vercel configuration          |
+| Store country                           | Payment (excl. VAT) | Vercel configuration          |
 | --------------------------------------- | ------- | ----------------------------- |
 | Sweden / legacy profile without country | 100 SEK | `STRIPE_CREDITS_PRICE_ID`     |
 | Norway                                  | 100 NOK | `STRIPE_CREDITS_PRICE_ID_NOK` |
@@ -130,7 +130,8 @@ profile versions stay unchanged. The server reads the current profile itself;
 the browser cannot supply a currency, price ID or credit amount to checkout.
 Missing price configuration blocks that currency instead of falling back to SEK.
 The configured Stripe price must be active, one-time, and match the displayed
-currency and amount. Checkout locale follows the customer's browser. The
+currency and amount. When automatic tax is enabled it must also explicitly use
+`tax_behavior=exclusive`. Checkout locale follows the user's app language. The
 100-credit pack requires platform `packOre=10000`; changing it disables checkout
 until matching pack pricing is implemented. Internal usage and purchased credit
 balances remain SEK-denominated. Store sales currency is unaffected.
@@ -146,3 +147,23 @@ Keep support for the optional country field: old strict parsers cannot read newl
 published profiles. Any code rollback must retain that compatibility and use the
 normal checked PR flow. Keep the additive validator and immutable profile versions;
 do not edit granted credit events.
+
+## Stripe Tax rollout (2026-10-20)
+
+All published subscription and credit-pack amounts exclude VAT. The subscription
+amounts remain 299 SEK / 299 NOK / 198 DKK / 26 EUR / 31 USD; this integration
+still uses one configured subscription Price, not per-market subscription prices.
+Credit packs retain the amounts in the table above and add exactly 100 credits
+regardless of the tax Stripe collects.
+
+`KOMISIO_STRIPE_AUTOMATIC_TAX=true` enables Stripe Tax on both Checkout modes.
+Any other value leaves automatic tax off; deploying code alone does not turn it
+on. Stripe determines tax from billing information, product classification and
+the operator's registrations, never from the store profile or app language.
+The profile selects the credit currency only. Customers see tax before payment.
+
+A configured price must explicitly be tax-exclusive when the flag is on. A reused
+subscription customer's saved shipping address blocks Checkout until the operator
+resolves it in Stripe; Komisio does not change that address. Subsequent renewals
+follow Stripe's address hierarchy. Follow [the operator checklist](STRIPE-TAX.md)
+in test mode on staging before enabling production.

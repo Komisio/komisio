@@ -2253,7 +2253,7 @@
   },
   "plans": {
     "heading": "Abonnement",
-    "priceNote": "Komisio er åpen kildekode uten lisensavgift. Alle funksjoner er inkludert, uten grenser for varer, skrivere eller integrasjoner. Drift løsningen selv eller velg en driftspartner. Hos Inority er tre måneder gratis, uten bindingstid. Stripe viser pris og valuta før du tegner abonnementet. Velg Administrer abonnement for å se opplysningene for et eksisterende abonnement. AI-kreditter kjøpes separat.",
+    "priceNote": "Komisio er åpen kildekode uten lisensavgift. Alle funksjoner er inkludert, uten grenser for varer, skrivere eller integrasjoner. Drift løsningen selv eller velg en driftspartner. Hos Inority er tre måneder gratis, uten bindingstid. Stripe viser pris og valuta før du tegner abonnementet. Velg Administrer abonnement for å se opplysningene for et eksisterende abonnement. AI-kreditter kjøpes separat. Alle priser er uten merverdiavgift. Stripe viser eventuell avgift før du betaler.",
     "trialEndsAt": "prøveperioden slutter",
     "graceEndsAt": "henstandsperioden slutter",
     "activeUntil": "aktiv til",
@@ -2304,7 +2304,9 @@
       "REQUEST_FAILED": "Forespørselen mislyktes. Prøv igjen senere.",
       "STRIPE_NOT_CONFIGURED": "Nettbetaling er ikke konfigurert.",
       "STRIPE_REQUEST_FAILED": "Stripe kunne ikke nås. Prøv igjen senere.",
-      "NO_CUSTOMER": "Det finnes ikke noe abonnement å administrere ennå."
+      "NO_CUSTOMER": "Det finnes ikke noe abonnement å administrere ennå.",
+      "STRIPE_TAX_MISCONFIGURED": "Betalingen kan ikke startes fordi prisens avgiftsinnstilling må rettes. Kontakt kundestøtte.",
+      "STRIPE_CUSTOMER_ADDRESS_CONFLICT": "Betalingen kan ikke startes fordi en lagret leveringsadresse i Stripe må gjennomgås. Kontakt kundestøtte og prøv igjen når adressen er rettet."
     },
     "subscribe": "Aktiver abonnementet",
     "manageSubscription": "Administrer abonnement og fakturaer",
@@ -3082,7 +3084,7 @@
     "purchasedLeft": "Kjøpte kreditter",
     "usedThisMonth": "Brukt denne måneden",
     "capReached": "Komisios delte AI-budsjett for måneden er brukt opp. Kjøpte kreditter og en egen nøkkel fungerer fortsatt.",
-    "buy": "Kjøp {pack} kreditter for {price}",
+    "buy": "Kjøp {pack} kreditter for {price} (ekskl. mva.)",
     "buyUnavailable": "Kjøp er ikke tilgjengelig i dette miljøet ennå.",
     "working": "Arbeider …",
     "ownKeyHeading": "Egen modellnøkkel",
@@ -3124,7 +3126,8 @@
       "limitsHeading": "Grenser for anrop og meldinger",
       "adminHeading": "Plattformadministrasjon",
       "adminIntro": "Innstillingene gjelder alle butikker i dette driftsmiljøet."
-    }
+    },
+    "taxMisconfigured": "Betalingen kan ikke startes fordi prisens avgiftsinnstilling må rettes. Kontakt kundestøtte."
   },
   "sellerProfile": {
     "balance": "Saldo",

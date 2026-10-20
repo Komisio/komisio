@@ -45,7 +45,7 @@ inventory publication, a general seller-portal account or a payout request.
 ## If something does not work
 
 - **AI unavailable:** manual mode works; do not paste model keys into the browser
-  or assume the intended 199 SEK plan includes unlimited inference.
+  or assume the intended historical paid plan (current pricing: PRICING.md) includes unlimited inference.
 - **Review unavailable:** check the account, current link, source/review version
   and expiry. Reopen the link after signing in or recovering the account.
 - **Image missing:** reload first. Check the included photo count and whether the

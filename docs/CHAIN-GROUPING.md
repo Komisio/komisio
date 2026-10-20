@@ -64,7 +64,7 @@ which goes beyond access only. The questions below decide how far.
 4. Who may move items: owner or admin in both stores (proposed), or staff
    in the source store with approval in the target?
 5. Does a chain need its own plan and invoice (one subscription for all
-   stores), or does each store keep its own 199 kr plan for now? Proposed:
+   stores), or does each store keep its own hosted plan (current price: PRICING.md) for now? Proposed:
    each store keeps its own plan until Stripe supports the grouping.
 
 ## Not in this proposal

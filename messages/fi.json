@@ -2253,7 +2253,7 @@
   },
   "plans": {
     "heading": "Tilaus",
-    "priceNote": "Komisio on avointa lähdekoodia ilman lisenssimaksua. Kaikki toiminnot sisältyvät ilman tuote-, tulostin- tai integraatiorajoja. Voit ylläpitää ohjelmistoa itse tai valita ylläpitokumppanin. Inorityn ylläpitoon sisältyy kolme maksutonta kuukautta ilman sitoutumisaikaa. Stripe näyttää hinnan ja valuutan ennen tilauksen tekemistä. Nykyisen tilauksen tiedot näet kohdasta Hallitse tilausta. AI-krediitit ostetaan erikseen.",
+    "priceNote": "Komisio on avointa lähdekoodia ilman lisenssimaksua. Kaikki toiminnot sisältyvät ilman tuote-, tulostin- tai integraatiorajoja. Voit ylläpitää ohjelmistoa itse tai valita ylläpitokumppanin. Inorityn ylläpitoon sisältyy kolme maksutonta kuukautta ilman sitoutumisaikaa. Stripe näyttää hinnan ja valuutan ennen tilauksen tekemistä. Nykyisen tilauksen tiedot näet kohdasta Hallitse tilausta. AI-krediitit ostetaan erikseen. Hinnat eivät sisällä arvonlisäveroa. Stripe näyttää mahdollisen veron ennen maksamista.",
     "trialEndsAt": "kokeilu päättyy",
     "graceEndsAt": "lisäaika päättyy",
     "activeUntil": "aktiivinen asti",
@@ -2304,7 +2304,9 @@
       "REQUEST_FAILED": "Pyyntö epäonnistui. Yritä myöhemmin uudelleen.",
       "STRIPE_NOT_CONFIGURED": "Verkkomaksua ei ole määritetty.",
       "STRIPE_REQUEST_FAILED": "Stripeen ei saatu yhteyttä. Yritä myöhemmin uudelleen.",
-      "NO_CUSTOMER": "Hallittavaa tilausta ei vielä ole."
+      "NO_CUSTOMER": "Hallittavaa tilausta ei vielä ole.",
+      "STRIPE_TAX_MISCONFIGURED": "Maksua ei voi aloittaa, koska hinnan veroasetus on korjattava. Ota yhteyttä tukeen.",
+      "STRIPE_CUSTOMER_ADDRESS_CONFLICT": "Maksua ei voi aloittaa, koska Stripeen tallennettu toimitusosoite on tarkistettava. Ota yhteyttä tukeen ja yritä uudelleen, kun osoite on korjattu."
     },
     "subscribe": "Aktivoi tilaus",
     "manageSubscription": "Hallitse tilausta ja laskuja",
@@ -3082,7 +3084,7 @@
     "purchasedLeft": "Ostetut krediitit",
     "usedThisMonth": "Käytetty tässä kuussa",
     "capReached": "Komision jaettu AI-budjetti tälle kuukaudelle on käytetty. Ostetut krediitit ja oma avain toimivat edelleen.",
-    "buy": "Osta {pack} krediittiä hintaan {price}",
+    "buy": "Osta {pack} krediittiä hintaan {price} (ilman ALV:tä)",
     "buyUnavailable": "Ostot eivät ole vielä saatavilla tässä ympäristössä.",
     "working": "Käsitellään…",
     "ownKeyHeading": "Oma malliavain",
@@ -3124,7 +3126,8 @@
       "limitsHeading": "Kutsu- ja viestirajat",
       "adminHeading": "Alustan hallinta",
       "adminIntro": "Asetukset koskevat kaikkia tämän ympäristön myymälöitä."
-    }
+    },
+    "taxMisconfigured": "Maksua ei voi aloittaa, koska hinnan veroasetus on korjattava. Ota yhteyttä tukeen."
   },
   "sellerProfile": {
     "balance": "Saldo",

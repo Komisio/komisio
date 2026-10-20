@@ -366,6 +366,7 @@
   "workspace": "Ihr Store, gemeinsam.",
   "home": "Übersicht",
   "members": "Personen",
+  "unnamedMember": "Benutzer ohne Namen",
   "tenant": "Store-Einstellungen",
   "account": "Mein Konto",
   "logout": "Abmelden",

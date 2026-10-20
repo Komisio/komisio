@@ -366,6 +366,7 @@
   "workspace": "Din butik, tillsammans.",
   "home": "Översikt",
   "members": "Användare",
+  "unnamedMember": "Användare utan namn",
   "tenant": "Butiksinställningar",
   "account": "Mitt konto",
   "logout": "Logga ut",

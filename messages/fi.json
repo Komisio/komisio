@@ -366,6 +366,7 @@
   "workspace": "Sinun kauppasi, yhdessä.",
   "home": "Yleiskatsaus",
   "members": "Henkilöt",
+  "unnamedMember": "Nimetön käyttäjä",
   "tenant": "Kaupan asetukset",
   "account": "Oma tili",
   "logout": "Kirjaudu ulos",

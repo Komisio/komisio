@@ -366,6 +366,7 @@
   "workspace": "Tu tienda, en equipo.",
   "home": "Resumen",
   "members": "Personas",
+  "unnamedMember": "Usuario sin nombre",
   "tenant": "Ajustes de la tienda",
   "account": "Mi cuenta",
   "logout": "Cerrar sesión",

@@ -18,6 +18,15 @@ import type { Tenant, Member, Invitation } from '@/lib/platform/types'
 import { Button } from '@/components/ui/button'
 import { useCommand } from './use-command'
 import { Feedback } from './feedback'
+
+function memberName(member: Member, d: Dictionary) {
+  if (member.display_name?.trim()) return member.display_name
+  // Paired devices and automation may legitimately have no profile or email.
+  const role: string = member.role
+  if (role === 'device' || role === 'automation') return d.roles[role]
+  return member.email?.trim() || d.unnamedMember
+}
+
 export function MembersPanel({
   d,
   locale,
@@ -50,6 +59,7 @@ export function MembersPanel({
   const changedMember = members.find(
     (member) => member.user_id === change?.userId,
   )
+  const changedMemberName = changedMember ? memberName(changedMember, d) : ''
   useEffect(() => {
     if (change) dialog.current?.showModal()
     else dialog.current?.close()
@@ -199,94 +209,97 @@ export function MembersPanel({
               </tr>
             </thead>
             <tbody>
-              {members.map((member) => (
-                <tr key={member.user_id}>
-                  <td className="member-identity">
-                    <div className="row">
-                      <span className="avatar">
-                        {member.display_name.slice(0, 2).toUpperCase()}
-                      </span>
-                      <span className="person">
-                        <strong style={{ fontWeight: 500 }}>
-                          {member.display_name}
-                          {member.user_id === userId ? ` (${d.you})` : ''}
-                        </strong>
-                        {member.email && <small>{member.email}</small>}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="member-role">
-                    <span
-                      className={`badge ${member.role === 'readonly' ? 'badge-neutral' : ''}`}
-                    >
-                      {d.roles[member.role] ?? d.roles.automation}
-                    </span>
-                  </td>
-                  <td className="joined">
-                    <small>
-                      {new Date(member.created_at).toLocaleDateString(
-                        intlLocale(locale),
-                        { timeZone: 'Europe/Stockholm' },
-                      )}
-                    </small>
-                  </td>
-                  {manage && (
-                    <td className="member-actions">
-                      <div className="table-actions">
-                        {!['automation', 'device'].includes(
-                          member.role as string,
-                        ) &&
-                          canChangeMember(
-                            tenant.role,
-                            member.role,
-                            'staff',
-                          ) && (
-                            <>
-                              <select
-                                aria-label={`${d.changeRole}: ${member.display_name}`}
-                                value={member.role}
-                                disabled={action.busy}
-                                onChange={(e) =>
-                                  setChange({
-                                    userId: member.user_id,
-                                    role: e.target.value as Role,
-                                  })
-                                }
-                              >
-                                {roles
-                                  .filter((r) =>
-                                    canChangeMember(
-                                      tenant.role,
-                                      member.role,
-                                      r,
-                                    ),
-                                  )
-                                  .map((r) => (
-                                    <option key={r} value={r}>
-                                      {d.roles[r]}
-                                    </option>
-                                  ))}
-                              </select>
-                              <Button
-                                variant="ghost"
-                                aria-label={`${d.remove}: ${member.display_name}`}
-                                disabled={action.busy}
-                                onClick={() =>
-                                  setChange({
-                                    userId: member.user_id,
-                                    role: null,
-                                  })
-                                }
-                              >
-                                <X size={14} />
-                              </Button>
-                            </>
-                          )}
+              {members.map((member) => {
+                const name = memberName(member, d)
+                return (
+                  <tr key={member.user_id}>
+                    <td className="member-identity">
+                      <div className="row">
+                        <span className="avatar">
+                          {Array.from(name).slice(0, 2).join('').toUpperCase()}
+                        </span>
+                        <span className="person">
+                          <strong style={{ fontWeight: 500 }}>
+                            {name}
+                            {member.user_id === userId ? ` (${d.you})` : ''}
+                          </strong>
+                          {member.email && <small>{member.email}</small>}
+                        </span>
                       </div>
                     </td>
-                  )}
-                </tr>
-              ))}
+                    <td className="member-role">
+                      <span
+                        className={`badge ${member.role === 'readonly' ? 'badge-neutral' : ''}`}
+                      >
+                        {d.roles[member.role] ?? d.roles.automation}
+                      </span>
+                    </td>
+                    <td className="joined">
+                      <small>
+                        {new Date(member.created_at).toLocaleDateString(
+                          intlLocale(locale),
+                          { timeZone: 'Europe/Stockholm' },
+                        )}
+                      </small>
+                    </td>
+                    {manage && (
+                      <td className="member-actions">
+                        <div className="table-actions">
+                          {!['automation', 'device'].includes(
+                            member.role as string,
+                          ) &&
+                            canChangeMember(
+                              tenant.role,
+                              member.role,
+                              'staff',
+                            ) && (
+                              <>
+                                <select
+                                  aria-label={`${d.changeRole}: ${name}`}
+                                  value={member.role}
+                                  disabled={action.busy}
+                                  onChange={(e) =>
+                                    setChange({
+                                      userId: member.user_id,
+                                      role: e.target.value as Role,
+                                    })
+                                  }
+                                >
+                                  {roles
+                                    .filter((r) =>
+                                      canChangeMember(
+                                        tenant.role,
+                                        member.role,
+                                        r,
+                                      ),
+                                    )
+                                    .map((r) => (
+                                      <option key={r} value={r}>
+                                        {d.roles[r]}
+                                      </option>
+                                    ))}
+                                </select>
+                                <Button
+                                  variant="ghost"
+                                  aria-label={`${d.remove}: ${name}`}
+                                  disabled={action.busy}
+                                  onClick={() =>
+                                    setChange({
+                                      userId: member.user_id,
+                                      role: null,
+                                    })
+                                  }
+                                >
+                                  <X size={14} />
+                                </Button>
+                              </>
+                            )}
+                        </div>
+                      </td>
+                    )}
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
@@ -366,9 +379,9 @@ export function MembersPanel({
           {change?.role === null ? d.remove : d.changeRole}
         </h2>
         <p id={`${dialogId}-person`} className="member-confirm-person">
-          <strong>{changedMember?.display_name}</strong>
+          <strong>{changedMemberName}</strong>
           {changedMember?.email &&
-            changedMember.email !== changedMember.display_name && (
+            changedMember.email !== changedMemberName && (
               <span>{changedMember.email}</span>
             )}
           <span>{tenant.name}</span>

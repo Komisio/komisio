@@ -1,3 +1,4 @@
+import { ContactSupport } from '@/components/help/contact-support'
 import Link from '@/components/platform/working-link'
 import { notFound } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
@@ -40,6 +41,7 @@ export default async function HelpPage({
       <article className="card help-page">
         <HelpArticle topic={topic} d={d} />
       </article>
+      <ContactSupport d={d.support} />
     </>
   )
 }

@@ -8790,3 +8790,35 @@ button.text-link:hover:not(:disabled) {
   max-width: 100%;
   overflow-wrap: anywhere;
 }
+
+.help-search {
+  max-width: 42rem;
+  margin-bottom: 1.5rem;
+}
+.help-search label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.help-search input {
+  width: 100%;
+}
+.help-support {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+.help-support-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+.help-support-actions a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.help-support-address {
+  overflow-wrap: anywhere;
+}

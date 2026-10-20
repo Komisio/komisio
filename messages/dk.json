@@ -547,7 +547,8 @@
     "TENANT_CHANGED": "Den aktive butik er ændret. Genindlæs siden, før du fortsætter.",
     "REQUEST_FAILED": "Dine ændringer kunne ikke gemmes. Prøv igen.",
     "INVITE_DAILY_CAP": "Butikkens grænse for invitationer pr. døgn er nået. Prøv igen i morgen.",
-    "PROFILE_EMAIL_LANGUAGE_FAILED": "Din profil blev gemt, men sproget for kontoens e-mails kunne ikke opdateres. Gem igen for at prøve på ny."
+    "PROFILE_EMAIL_LANGUAGE_FAILED": "Din profil blev gemt, men sproget for kontoens e-mails kunne ikke opdateres. Gem igen for at prøve på ny.",
+    "signupBlocked": "Komisio er ikke åbent for nye butikker i dit land. Hvis dette er forkert, kontakt {email}."
   },
   "inspection": {
     "title": "Gennemgå indleveringen",
@@ -3494,7 +3495,27 @@
     "items": "Find en registreret vare",
     "openReference": "Åbn en etiketreference",
     "printing": "Printere og udskriftsjob",
-    "integrations": "Åbn integrationer"
+    "integrations": "Åbn integrationer",
+    "support": {
+      "title": "Har du brug for mere hjælp?",
+      "email": "Kontakt support",
+      "website": "Supportside",
+      "newTab": "Åbner i en ny fane",
+      "browse": "Se hjælpen",
+      "subject": "Komisio – support",
+      "store": "Butik: {store}",
+      "tenant": "Butiks-ID: {id}",
+      "page": "Side: {page}",
+      "locale": "Sprog: {locale}",
+      "version": "Version: {version}",
+      "prompt": "Beskriv, hvad du prøvede at gøre, og hvad der skete."
+    },
+    "search": {
+      "label": "Søg i hjælpen",
+      "placeholder": "For eksempel etiketter eller bogføring",
+      "count": "Hjælpeartikler: {count}",
+      "empty": "Ingen matchende hjælp"
+    }
   },
   "dashboard": {
     "intro": "Det vigtigste for arbejdsdagen, samlet ét sted.",

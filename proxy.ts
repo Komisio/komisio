@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { isLocale } from './lib/i18n'
+import { signupBlockedMessage } from './lib/platform/signup-message'
 import { signupBlocked, signupPath } from './lib/platform/signup-countries'
 export async function proxy(request: NextRequest) {
   // Opening a new store can be closed to named countries; everything else,
@@ -14,7 +15,14 @@ export async function proxy(request: NextRequest) {
     )
   )
     return new NextResponse(
-      'Komisio is not open for new stores in your country. If this is wrong, write to support@komisio.com.',
+      signupBlockedMessage(
+        {
+          cookie: request.cookies.get('komisio-locale')?.value,
+          lang: request.nextUrl.searchParams.get('lang'),
+          acceptLanguage: request.headers.get('accept-language'),
+        },
+        process.env,
+      ),
       {
         status: 403,
         headers: {

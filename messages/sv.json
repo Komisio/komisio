@@ -547,7 +547,8 @@
     "TENANT_CHANGED": "Den aktiva butiken har ändrats. Ladda om sidan innan du fortsätter.",
     "REQUEST_FAILED": "Det gick inte att spara. Försök igen.",
     "INVITE_DAILY_CAP": "Butikens gräns för inbjudningar per dygn är nådd. Försök igen i morgon.",
-    "PROFILE_EMAIL_LANGUAGE_FAILED": "Din profil sparades, men språket för kontomejl kunde inte uppdateras. Spara igen för att försöka på nytt."
+    "PROFILE_EMAIL_LANGUAGE_FAILED": "Din profil sparades, men språket för kontomejl kunde inte uppdateras. Spara igen för att försöka på nytt.",
+    "signupBlocked": "Komisio är inte öppet för nya butiker i ditt land. Om detta inte stämmer, kontakta {email}."
   },
   "inspection": {
     "title": "Gå igenom inlämningen",
@@ -3494,7 +3495,27 @@
     "items": "Hitta en registrerad vara",
     "openReference": "Öppna en etikettreferens",
     "printing": "Skrivare och utskrifter",
-    "integrations": "Öppna integrationer"
+    "integrations": "Öppna integrationer",
+    "support": {
+      "title": "Behöver du mer hjälp?",
+      "email": "Kontakta support",
+      "website": "Supportsida",
+      "newTab": "Öppnas i ny flik",
+      "browse": "Bläddra i hjälpen",
+      "subject": "Komisio – support",
+      "store": "Butik: {store}",
+      "tenant": "Butiks-ID: {id}",
+      "page": "Sida: {page}",
+      "locale": "Språk: {locale}",
+      "version": "Version: {version}",
+      "prompt": "Beskriv vad du försökte göra och vad som hände."
+    },
+    "search": {
+      "label": "Sök i hjälpen",
+      "placeholder": "Till exempel etiketter eller bokföring",
+      "count": "Hjälpartiklar: {count}",
+      "empty": "Ingen matchande hjälp"
+    }
   },
   "dashboard": {
     "intro": "Det viktigaste för din arbetsdag, samlat på ett ställe.",

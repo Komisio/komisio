@@ -1141,3 +1141,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-20: #522 seller mail uses seller language, then store language, then English, with whole-template fallback and exact localized amounts. Staff invitations have an explicit language choice, defaulting to store language then English. Existing message history is unchanged.
 
 - 2026-10-20: Operator-configured legal links follow all eight product locales. Unset or invalid base URLs hide links. Document navigation adds no acceptance statement, checkbox or terms-version record; those require separately approved wording and decisions (#527).
+
+- 2026-10-20: #531 adds operator-configured support links and browser-only help search. Support drafts contain store identity, locale/version and route templates with recognized view/tab values; dynamic record IDs and unknown queries are omitted. No message is sent automatically.

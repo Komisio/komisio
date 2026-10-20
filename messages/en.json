@@ -547,7 +547,8 @@
     "TENANT_CHANGED": "The active store has changed. Reload the page before continuing.",
     "REQUEST_FAILED": "Your changes could not be saved. Please try again.",
     "INVITE_DAILY_CAP": "The store's daily limit for invitations is reached. Try again tomorrow.",
-    "PROFILE_EMAIL_LANGUAGE_FAILED": "Your profile was saved, but the email language could not be updated. Save again to retry."
+    "PROFILE_EMAIL_LANGUAGE_FAILED": "Your profile was saved, but the email language could not be updated. Save again to retry.",
+    "signupBlocked": "Komisio is not open for new stores in your country. If this is wrong, contact {email}."
   },
   "inspection": {
     "title": "Inspect the drop-off",
@@ -3494,7 +3495,27 @@
     "items": "Find a registered item",
     "openReference": "Open a label reference",
     "printing": "Printers and print jobs",
-    "integrations": "Open integrations"
+    "integrations": "Open integrations",
+    "support": {
+      "title": "Still need help?",
+      "email": "Contact support",
+      "website": "Support page",
+      "newTab": "Opens in a new tab",
+      "browse": "Browse help",
+      "subject": "Komisio – support",
+      "store": "Store: {store}",
+      "tenant": "Store ID: {id}",
+      "page": "Page: {page}",
+      "locale": "Language: {locale}",
+      "version": "Version: {version}",
+      "prompt": "Describe what you were trying to do and what happened."
+    },
+    "search": {
+      "label": "Search help",
+      "placeholder": "For example labels or accounting",
+      "count": "Help articles: {count}",
+      "empty": "No matching help"
+    }
   },
   "dashboard": {
     "intro": "Your working day, at a glance.",

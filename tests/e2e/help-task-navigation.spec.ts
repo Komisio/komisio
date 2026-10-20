@@ -5,6 +5,87 @@ import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 
+test('unmapped pages offer keyboard support and help search stays in the browser', async ({
+  page,
+}, testInfo) => {
+  const email = `help-support-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomUUID()}`)
+  const f = await p2Fixture(email)
+  try {
+    await f.commit()
+    await page.setViewportSize({ width: 375, height: 812 })
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.goto('/members?token=private-test-token#private-hash')
+    const trigger = page.getByRole('button', {
+      name: d.helpCenter.title,
+      exact: true,
+    })
+    await trigger.focus()
+    await page.keyboard.press('Enter')
+    const dialog = page.getByRole('dialog')
+    await expect(
+      dialog.getByRole('heading', { name: d.helpCenter.title, exact: true }),
+    ).toBeFocused()
+    const contact = dialog.getByRole('link', {
+      name: d.helpCenter.support.email,
+      exact: true,
+    })
+    const href = await contact.getAttribute('href')
+    const body = new URL(href!).searchParams.get('body')!
+    expect(body).toContain('/members')
+    expect(body).not.toContain('private-test-token')
+    expect(body).not.toContain('private-hash')
+    expect(body).not.toContain(email)
+    await contact.focus()
+    await expect(contact).toBeFocused()
+    await expect(
+      dialog.getByText('support@komisio.com', { exact: true }),
+    ).toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(trigger).toBeFocused()
+    await trigger.press('Enter')
+    await dialog
+      .getByRole('link', { name: d.helpCenter.support.browse, exact: true })
+      .click()
+    await expect(page).toHaveURL('/help')
+    await expect(dialog).toHaveCount(0)
+    const search = page.getByRole('searchbox', {
+      name: d.helpCenter.search.label,
+    })
+    await expect(search).toBeVisible()
+    await page.waitForLoadState('networkidle')
+    const requests: string[] = []
+    const capture = (request: { url(): string }) => requests.push(request.url())
+    page.on('request', capture)
+    await search.fill('zz-synthetic-search-no-match')
+    await expect(page.getByRole('status')).toHaveText(d.helpCenter.search.empty)
+    await expect(page.locator('.help-topic')).toHaveCount(0)
+    await expect(
+      page.getByRole('link', { name: d.helpCenter.support.email, exact: true }),
+    ).toBeVisible()
+    await search.fill(d.helpCenter.articles.labels.title.toUpperCase())
+    await expect(page.locator('.help-topic')).toHaveCount(1)
+    expect(requests).toEqual([])
+    page.off('request', capture)
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+    await page.screenshot({
+      path: testInfo.outputPath('help-search-mobile.png'),
+      fullPage: true,
+    })
+    await page.locator('.help-topic').click()
+    await expect(page).toHaveURL('/help/labels')
+    await expect(
+      page.getByRole('link', { name: d.helpCenter.support.email, exact: true }),
+    ).toBeVisible()
+  } finally {
+    await f.close()
+  }
+})
+
 test('help task links reveal the current section while cancelled navigation keeps help and edits', async ({
   page,
 }) => {

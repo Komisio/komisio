@@ -546,7 +546,8 @@
     "CHAIN_NOT_FOUND": "Die Kette existiert nicht mehr.",
     "TENANT_CHANGED": "Der aktive Store hat sich geändert. Laden Sie die Seite neu, bevor Sie fortfahren.",
     "REQUEST_FAILED": "Ihre Änderungen konnten nicht gespeichert werden. Bitte versuchen Sie es erneut.",
-    "INVITE_DAILY_CAP": "Das Tageslimit des Stores für Einladungen ist erreicht. Versuchen Sie es morgen erneut."
+    "INVITE_DAILY_CAP": "Das Tageslimit des Stores für Einladungen ist erreicht. Versuchen Sie es morgen erneut.",
+    "PROFILE_EMAIL_LANGUAGE_FAILED": "Dein Profil wurde gespeichert, aber die Sprache für Konto-E-Mails konnte nicht aktualisiert werden. Speichere erneut, um es noch einmal zu versuchen."
   },
   "inspection": {
     "title": "Einlieferung prüfen",
@@ -4475,5 +4476,70 @@
     "next": "Nächste",
     "saved": "Gespeichert"
   },
-  "inviteLanguage": "Sprache der Einladung"
+  "inviteLanguage": "Sprache der Einladung",
+  "authEmail": {
+    "signup": {
+      "subject": "Komisio – Bestätige deine E-Mail-Adresse",
+      "intro": "Willkommen bei Komisio! Bestätige deine E-Mail-Adresse, um die Registrierung abzuschließen.",
+      "button": "E-Mail-Adresse bestätigen",
+      "note": "Wenn du dieses Konto nicht erstellt hast, kannst du diese E-Mail ignorieren."
+    },
+    "magiclink": {
+      "subject": "Komisio – Konto aktivieren",
+      "intro": "Bestätige deine E-Mail-Adresse, um dein Verkäuferkonto zu öffnen.",
+      "button": "Bestätigen und weiter",
+      "note": "Wenn du diese E-Mail nicht erwartet hast, kannst du sie ignorieren."
+    },
+    "recovery": {
+      "subject": "Setze dein Passwort zurück",
+      "intro": "Folge dem Link unten, um ein neues Passwort zu wählen.",
+      "button": "Passwort zurücksetzen",
+      "note": "Wenn du dies nicht angefordert hast, kannst du diese E-Mail ignorieren."
+    },
+    "invite": {
+      "subject": "Du wurdest eingeladen",
+      "intro": "Folge dem Link unten, um die Einladung anzunehmen und dein Konto zu erstellen.",
+      "button": "Einladung annehmen",
+      "note": "Wenn du dies nicht angefordert hast, kannst du diese E-Mail ignorieren."
+    },
+    "email_change": {
+      "subject": "Änderung der E-Mail-Adresse bestätigen",
+      "intro": "Bestätige, dass du deine E-Mail-Adresse ändern möchtest.",
+      "button": "E-Mail-Adresse bestätigen",
+      "note": "Wenn du diese Änderung nicht angefordert hast, kontaktiere den Support."
+    },
+    "reauthentication": {
+      "subject": "Dein Bestätigungscode",
+      "intro": "Verwende diesen Code, um deine Identität zu bestätigen:",
+      "note": "Wenn du dies nicht angefordert hast, kontaktiere den Support."
+    },
+    "password_changed_notification": {
+      "subject": "Dein Passwort wurde geändert",
+      "note": "Wenn du diese Änderung nicht vorgenommen hast, kontaktiere sofort den Support."
+    },
+    "email_changed_notification": {
+      "subject": "Deine E-Mail-Adresse wurde geändert",
+      "note": "Wenn du diese Änderung nicht vorgenommen hast, kontaktiere sofort den Support."
+    },
+    "phone_changed_notification": {
+      "subject": "Deine Telefonnummer wurde geändert",
+      "note": "Wenn du diese Änderung nicht vorgenommen hast, kontaktiere sofort den Support."
+    },
+    "identity_linked_notification": {
+      "subject": "Deinem Konto wurde eine Anmeldemethode hinzugefügt",
+      "note": "Wenn du diese Änderung nicht vorgenommen hast, kontaktiere sofort den Support."
+    },
+    "identity_unlinked_notification": {
+      "subject": "Eine Anmeldemethode wurde aus deinem Konto entfernt",
+      "note": "Wenn du diese Änderung nicht vorgenommen hast, kontaktiere sofort den Support."
+    },
+    "mfa_factor_enrolled_notification": {
+      "subject": "Deinem Konto wurde eine Bestätigungsmethode hinzugefügt",
+      "note": "Wenn du diese Änderung nicht vorgenommen hast, kontaktiere sofort den Support."
+    },
+    "mfa_factor_unenrolled_notification": {
+      "subject": "Eine Bestätigungsmethode wurde aus deinem Konto entfernt",
+      "note": "Wenn du diese Änderung nicht vorgenommen hast, kontaktiere sofort den Support."
+    }
+  }
 }

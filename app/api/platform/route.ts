@@ -86,6 +86,20 @@ export async function POST(request: Request) {
           p_name: command.name,
           p_locale: command.locale,
         })
+        if (!result.error) {
+          // Same authenticated user; no administrative Auth client. Keep an
+          // explicit preference separate from signup/activation metadata.
+          try {
+            const updated = await context.client.auth.updateUser({
+              data: { locale: command.locale, product_locale: command.locale },
+            })
+            if (updated.error) throw updated.error
+          } catch {
+            // The profile may already be saved. Repeating this same choice is
+            // safe; do not report complete success while email language lags.
+            return reply({ error: 'PROFILE_EMAIL_LANGUAGE_FAILED' }, 503)
+          }
+        }
         break
       case 'marketingConsent':
         if (command.consented && !marketingConsentEnabled())

@@ -546,7 +546,8 @@
     "CHAIN_NOT_FOUND": "Kedjan finns inte längre.",
     "TENANT_CHANGED": "Den aktiva butiken har ändrats. Ladda om sidan innan du fortsätter.",
     "REQUEST_FAILED": "Det gick inte att spara. Försök igen.",
-    "INVITE_DAILY_CAP": "Butikens gräns för inbjudningar per dygn är nådd. Försök igen i morgon."
+    "INVITE_DAILY_CAP": "Butikens gräns för inbjudningar per dygn är nådd. Försök igen i morgon.",
+    "PROFILE_EMAIL_LANGUAGE_FAILED": "Din profil sparades, men språket för kontomejl kunde inte uppdateras. Spara igen för att försöka på nytt."
   },
   "inspection": {
     "title": "Gå igenom inlämningen",
@@ -4469,5 +4470,70 @@
     "next": "Nästa",
     "saved": "Sparat"
   },
-  "inviteLanguage": "Språk i inbjudan"
+  "inviteLanguage": "Språk i inbjudan",
+  "authEmail": {
+    "signup": {
+      "subject": "Komisio – Verifiera din e-postadress",
+      "intro": "Välkommen till Komisio! Verifiera din e-postadress för att slutföra registreringen.",
+      "button": "Verifiera e-postadress",
+      "note": "Om du inte har skapat kontot kan du bortse från det här mailet."
+    },
+    "magiclink": {
+      "subject": "Komisio – Aktivera ditt konto",
+      "intro": "Bekräfta din e-postadress för att öppna ditt säljarkonto.",
+      "button": "Bekräfta och fortsätt",
+      "note": "Om du inte väntade dig det här mejlet kan du bortse från det."
+    },
+    "recovery": {
+      "subject": "Återställ ditt lösenord",
+      "intro": "Följ länken nedan för att välja ett nytt lösenord.",
+      "button": "Återställ lösenord",
+      "note": "Om du inte begärde detta kan du bortse från mejlet."
+    },
+    "invite": {
+      "subject": "Du har blivit inbjuden",
+      "intro": "Följ länken nedan för att acceptera inbjudan och skapa ditt konto.",
+      "button": "Acceptera inbjudan",
+      "note": "Om du inte begärde detta kan du bortse från mejlet."
+    },
+    "email_change": {
+      "subject": "Bekräfta ändring av e-postadress",
+      "intro": "Bekräfta att du vill ändra din e-postadress.",
+      "button": "Bekräfta e-postadress",
+      "note": "Kontakta supporten om du inte begärde den här ändringen."
+    },
+    "reauthentication": {
+      "subject": "Din verifieringskod",
+      "intro": "Använd den här koden för att bekräfta din identitet:",
+      "note": "Kontakta supporten om du inte begärde detta."
+    },
+    "password_changed_notification": {
+      "subject": "Ditt lösenord har ändrats",
+      "note": "Kontakta supporten omedelbart om du inte gjorde den här ändringen."
+    },
+    "email_changed_notification": {
+      "subject": "Din e-postadress har ändrats",
+      "note": "Kontakta supporten omedelbart om du inte gjorde den här ändringen."
+    },
+    "phone_changed_notification": {
+      "subject": "Ditt telefonnummer har ändrats",
+      "note": "Kontakta supporten omedelbart om du inte gjorde den här ändringen."
+    },
+    "identity_linked_notification": {
+      "subject": "Ett inloggningssätt har lagts till på ditt konto",
+      "note": "Kontakta supporten omedelbart om du inte gjorde den här ändringen."
+    },
+    "identity_unlinked_notification": {
+      "subject": "Ett inloggningssätt har tagits bort från ditt konto",
+      "note": "Kontakta supporten omedelbart om du inte gjorde den här ändringen."
+    },
+    "mfa_factor_enrolled_notification": {
+      "subject": "En verifieringsmetod har lagts till på ditt konto",
+      "note": "Kontakta supporten omedelbart om du inte gjorde den här ändringen."
+    },
+    "mfa_factor_unenrolled_notification": {
+      "subject": "En verifieringsmetod har tagits bort från ditt konto",
+      "note": "Kontakta supporten omedelbart om du inte gjorde den här ändringen."
+    }
+  }
 }

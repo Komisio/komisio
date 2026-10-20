@@ -4,6 +4,12 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+Account email language (#526, resolved 2026-10-20): the owner specifies all eight
+languages and a user-session Auth metadata mirror when account language is saved.
+Frozen activation snapshots take priority; otherwise saved product language,
+signup language and English apply in that order. A mirror failure must be visible
+and retryable; no privileged lookup, store-language inference or user backfill.
+
 Outbound shop-created events (resolved 2026-10-16, #463): the owner requests an
 optional signed, best-effort webhook after successful creation, with no retries
 or personal-data logs. It remains disabled without operator configuration.

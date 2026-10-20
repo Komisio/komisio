@@ -1,5 +1,34 @@
 # Operations runbook (hosted)
 
+## Account email language
+
+The signed Send Email hook renders account messages from
+`messages/{locale}.json` under `authEmail` in all eight product languages.
+Recovery, Auth invitations, both email-change recipients, verification codes
+and the seven security notices use complete templates; a missing/empty key or
+inconsistent placeholder falls back to the entire English message. Unknown
+actions remain rejected. Rendering, signature verification, activation
+capability consumption and provider idempotency keys are unchanged.
+
+Frozen seller-activation snapshots retain their recorded language. Other account
+mail uses `user_metadata.product_locale`, then `user_metadata.locale`, then
+English. These are presentation preferences, never authorization claims.
+The account profile action saves the profile through `save_profile`, then mirrors
+the chosen language to both metadata fields with the same user's
+`auth.updateUser` session. No service-role key or hook database read is added.
+If mirroring fails, the form reports that the profile was saved and asks the user
+to save again; retrying the same preference is safe. Existing profiles acquire
+the mirror on their next account save; this release does not backfill Auth users.
+
+Store language and the language of a staff member initiating an action never
+select account mail. Seller transactional mail and staff invitations have their
+separate recipient/store-language rule from #522 (see
+[settlement communications](SETTLEMENT.md)). The existing hosted signup/magic-link
+fallback templates remain unchanged and are checked against the same wording.
+Other actions require the signed hook; no new hosted templates are installed.
+
+## Operations overview
+
 What runs on its own, which secrets it needs, how to tell it is working and
 what to do when it is not. Staging today; production follows the same
 shape with its own project, secrets and domain

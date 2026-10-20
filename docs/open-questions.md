@@ -720,8 +720,9 @@ order (Stripe Connect first vs. Vipps MobilePay direct), Inority as a Stripe
 Connect platform, default hold length and late payments, POS sale vs. held
 item, Swish via Stripe as merchant of record vs. the certificate route,
 cash-register and receipt rules per market, shipping VAT under the margin
-scheme, clearing accounts per channel, and whether buyer addresses are ever
-stored. The spike's §5.4 lists them.
+scheme, clearing accounts per channel, whether buyer addresses are ever
+stored, and whether to offer the store's own Shopify as a parallel route. The
+spike's §5.4 lists them.
 
 ## e-conomic delivery scope (#523)
 

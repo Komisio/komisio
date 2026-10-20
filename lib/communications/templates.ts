@@ -1,6 +1,7 @@
 import { storeCurrencies } from '../platform/currencies'
 import { z } from 'zod'
-import { messageLocale } from '../i18n'
+import { intlLocale } from '../i18n'
+import { emailTemplate } from './locale'
 
 // Seller messages (P2 S18): versioned templates as code with fixed wording and
 // placeholders. Plain text only, so a store name, an item label or the free
@@ -15,7 +16,7 @@ export const communicationKind = z.enum([
   'message',
 ])
 export type CommunicationKind = z.infer<typeof communicationKind>
-export const TEMPLATE_VERSION = 'v1'
+export const TEMPLATE_VERSION = 'v2'
 
 export const messageFacts = z.strictObject({
   storeName: z.string().trim().min(1).max(120),
@@ -26,7 +27,7 @@ export const messageFacts = z.strictObject({
     .optional(),
   currency: z.enum(storeCurrencies).optional(),
   number: z.number().int().positive().optional(),
-  date: z.string().max(40).optional(),
+  date: z.union([z.iso.date(), z.iso.datetime({ offset: true })]).optional(),
   itemLabel: z.string().trim().max(120).optional(),
   freeText: z.string().max(1000).default(''),
 })
@@ -41,104 +42,70 @@ export function plainText(input: string) {
     .trim()
 }
 
-const sv = {
-  item_accepted: {
-    subject: (f: MessageFacts) => `${f.storeName}: din vara är mottagen`,
-    body: (f: MessageFacts) =>
-      `Hej ${f.sellerName},\n\n${f.storeName} har tagit emot din vara${f.itemLabel ? ` (${f.itemLabel})` : ''} till försäljning${f.amount ? ` med priset ${f.amount} ${f.currency ?? 'SEK'}` : ''}.`,
-  },
-  item_sold: {
-    subject: (f: MessageFacts) => `${f.storeName}: din vara är såld`,
-    body: (f: MessageFacts) =>
-      `Hej ${f.sellerName},\n\nDin vara${f.itemLabel ? ` (${f.itemLabel})` : ''} har sålts hos ${f.storeName}${f.date ? ` ${f.date}` : ''}${f.amount ? `. Ditt tillgodohavande från försäljningen är ${f.amount} ${f.currency ?? 'SEK'}` : ''}.`,
-  },
-  payout_approved: {
-    subject: (f: MessageFacts) => `${f.storeName}: utbetalning godkänd`,
-    body: (f: MessageFacts) =>
-      `Hej ${f.sellerName},\n\n${f.storeName} har godkänt en utbetalning${f.amount ? ` på ${f.amount} ${f.currency ?? 'SEK'}` : ''}. Pengarna betalas ut manuellt av butiken.`,
-  },
-  payout_paid: {
-    subject: (f: MessageFacts) => `${f.storeName}: utbetalning gjord`,
-    body: (f: MessageFacts) =>
-      `Hej ${f.sellerName},\n\n${f.storeName} har betalat ut${f.amount ? ` ${f.amount} ${f.currency ?? 'SEK'}` : ''}${f.date ? ` ${f.date}` : ''}.`,
-  },
-  statement_issued: {
-    subject: (f: MessageFacts) =>
-      `${f.storeName}: avräkning${f.number ? ` ${f.number}` : ''}`,
-    body: (f: MessageFacts) =>
-      `Hej ${f.sellerName},\n\n${f.storeName} har utfärdat avräkning${f.number ? ` nummer ${f.number}` : ''}${f.amount ? `. Utgående saldo: ${f.amount} ${f.currency ?? 'SEK'}` : ''}. Be butiken om en utskrift om du vill se raderna.`,
-  },
-  message: {
-    subject: (f: MessageFacts) => `Meddelande från ${f.storeName}`,
-    body: (f: MessageFacts) => `Hej ${f.sellerName},`,
-  },
-}
-const en = {
-  item_accepted: {
-    subject: (f: MessageFacts) => `${f.storeName}: your item is received`,
-    body: (f: MessageFacts) =>
-      `Hello ${f.sellerName},\n\n${f.storeName} has accepted your item${f.itemLabel ? ` (${f.itemLabel})` : ''} for sale${f.amount ? ` at ${f.amount} ${f.currency ?? 'SEK'}` : ''}.`,
-  },
-  item_sold: {
-    subject: (f: MessageFacts) => `${f.storeName}: your item is sold`,
-    body: (f: MessageFacts) =>
-      `Hello ${f.sellerName},\n\nYour item${f.itemLabel ? ` (${f.itemLabel})` : ''} sold at ${f.storeName}${f.date ? ` on ${f.date}` : ''}${f.amount ? `. Your credit from the sale is ${f.amount} ${f.currency ?? 'SEK'}` : ''}.`,
-  },
-  payout_approved: {
-    subject: (f: MessageFacts) => `${f.storeName}: payout approved`,
-    body: (f: MessageFacts) =>
-      `Hello ${f.sellerName},\n\n${f.storeName} has approved a payout${f.amount ? ` of ${f.amount} ${f.currency ?? 'SEK'}` : ''}. The store pays it out manually.`,
-  },
-  payout_paid: {
-    subject: (f: MessageFacts) => `${f.storeName}: payout made`,
-    body: (f: MessageFacts) =>
-      `Hello ${f.sellerName},\n\n${f.storeName} has paid out${f.amount ? ` ${f.amount} ${f.currency ?? 'SEK'}` : ''}${f.date ? ` on ${f.date}` : ''}.`,
-  },
-  statement_issued: {
-    subject: (f: MessageFacts) =>
-      `${f.storeName}: settlement statement${f.number ? ` ${f.number}` : ''}`,
-    body: (f: MessageFacts) =>
-      `Hello ${f.sellerName},\n\n${f.storeName} has issued settlement statement${f.number ? ` number ${f.number}` : ''}${f.amount ? `. Closing balance: ${f.amount} ${f.currency ?? 'SEK'}` : ''}. Ask the store for a printout to see the lines.`,
-  },
-  message: {
-    subject: (f: MessageFacts) => `Message from ${f.storeName}`,
-    body: (f: MessageFacts) => `Hello ${f.sellerName},`,
-  },
-}
-const footer = {
-  sv: (store: string) =>
-    `\n\nDetta meddelande skickades av ${store} via Komisio. Svara till butiken, inte till denna adress.`,
-  en: (store: string) =>
-    `\n\nThis message was sent by ${store} through Komisio. Reply to the store, not to this address.`,
-}
-
-/** Renders one message. Every dynamic value is plain text inside fixed wording. */
+/** All optional parts are complete translated sentences, never sentence fragments. */
 export function renderSellerMessage(
   kindInput: unknown,
   localeInput: string,
   factsInput: unknown,
 ) {
   const kind = communicationKind.parse(kindInput)
-  const raw = messageFacts.parse(factsInput)
-  const f: MessageFacts = {
-    ...raw,
-    storeName: plainText(raw.storeName).replace(/\n/g, ' '),
-    sellerName: plainText(raw.sellerName).replace(/\n/g, ' '),
-    itemLabel: raw.itemLabel
-      ? plainText(raw.itemLabel).replace(/\n/g, ' ')
-      : undefined,
-    freeText: plainText(raw.freeText),
-  }
-  const locale = messageLocale(localeInput)
-  const t = (locale === 'sv' ? sv : en)[kind]
+  const facts = messageFacts.parse(factsInput)
+  const { locale, copy } = emailTemplate(localeInput, (d) => ({
+    ...d.communications.templates?.[kind],
+    footer: d.communications.templates?.footer,
+  }))
+  const amount =
+    facts.amount === undefined
+      ? ''
+      : (
+          new Intl.NumberFormat(intlLocale(locale), {
+            style: 'currency',
+            currency: facts.currency ?? 'SEK',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }).format as (value: string) => string
+        )(facts.amount)
+  const date = facts.date
+    ? new Date(facts.date).toLocaleDateString(intlLocale(locale), {
+        timeZone: 'Europe/Stockholm',
+      })
+    : ''
+  const values: Record<string, string> = Object.fromEntries(
+    Object.entries({
+      store: facts.storeName,
+      seller: facts.sellerName,
+      item: facts.itemLabel ?? '',
+      amount,
+      date,
+      number: String(facts.number ?? ''),
+    }).map(([key, value]) => [key, plainText(value).replace(/\n/g, ' ')]),
+  )
+  const fill = (text: string) =>
+    text.replace(/\{(\w+)\}/g, (_, key: string) => {
+      if (!(key in values)) throw new Error('EMAIL_PLACEHOLDER_UNKNOWN')
+      return values[key]
+    })
   const body =
-    t.body(f) +
-    (f.freeText ? `\n\n${f.freeText}` : '') +
-    footer[locale](f.storeName)
+    facts.itemLabel && copy.bodyItem
+      ? copy.bodyItem
+      : facts.number && copy.bodyNumber
+        ? copy.bodyNumber
+        : copy.body
+  const subject =
+    facts.number && copy.subjectNumber ? copy.subjectNumber : copy.subject
+  const paragraphs = [fill(body)]
+  if (facts.amount !== undefined && copy.amount)
+    paragraphs.push(fill(copy.amount))
+  if (facts.date && copy.date) paragraphs.push(fill(copy.date))
+  if (copy.note) paragraphs.push(fill(copy.note))
+  const freeText = plainText(facts.freeText)
+  if (freeText) paragraphs.push(freeText)
+  paragraphs.push(fill(copy.footer))
   return {
     templateKey: kind,
     templateVersion: TEMPLATE_VERSION,
-    subject: t.subject(f).slice(0, 200),
-    body,
+    locale,
+    subject: plainText(fill(subject).slice(0, 200)),
+    body: paragraphs.join('\n\n'),
   }
 }

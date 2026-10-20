@@ -1738,7 +1738,51 @@
     "latest": "Últimos mensajes",
     "showingRange": "Mensajes {from}–{to} de {total}",
     "pageEmpty": "No hay mensajes en esta página.",
-    "activationBody": "Hola {seller}:\n\nEstás registrado como vendedor en {store}. Confirma tu dirección de correo electrónico con el botón de abajo. Si tu cuenta es nueva, después podrás elegir una contraseña.\n\n{activation}\n\nSi ya tienes una cuenta, conservarás tu contraseña. Inicia sesión:\n{url}"
+    "activationBody": "Hola {seller}:\n\nEstás registrado como vendedor en {store}. Confirma tu dirección de correo electrónico con el botón de abajo. Si tu cuenta es nueva, después podrás elegir una contraseña.\n\n{activation}\n\nSi ya tienes una cuenta, conservarás tu contraseña. Inicia sesión:\n{url}",
+    "templates": {
+      "footer": "{store} ha enviado este mensaje a través de Komisio. Contacta con la tienda para responder; las respuestas a esta dirección no se leen.",
+      "item_accepted": {
+        "subject": "{store}: tu artículo ha sido recibido",
+        "body": "Hola {seller}:\n\n{store} ha aceptado tu artículo para la venta.",
+        "bodyItem": "Hola {seller}:\n\n{store} ha aceptado tu artículo ({item}) para la venta.",
+        "amount": "Precio de venta: {amount}."
+      },
+      "item_sold": {
+        "subject": "{store}: tu artículo se ha vendido",
+        "body": "Hola {seller}:\n\nTu artículo se ha vendido en {store}.",
+        "bodyItem": "Hola {seller}:\n\nTu artículo ({item}) se ha vendido en {store}.",
+        "amount": "El importe a tu favor por la venta es de {amount}.",
+        "date": "Fecha de venta: {date}."
+      },
+      "payout_approved": {
+        "subject": "{store}: pago aprobado",
+        "body": "Hola {seller}:\n\n{store} ha aprobado un pago a tu favor.",
+        "amount": "Importe del pago: {amount}.",
+        "note": "La tienda realiza el pago manualmente."
+      },
+      "payout_paid": {
+        "subject": "{store}: pago realizado",
+        "body": "Hola {seller}:\n\n{store} ha realizado un pago a tu favor.",
+        "amount": "Importe del pago: {amount}.",
+        "date": "Fecha de pago: {date}."
+      },
+      "statement_issued": {
+        "subject": "{store}: liquidación",
+        "subjectNumber": "{store}: liquidación {number}",
+        "body": "Hola {seller}:\n\n{store} ha emitido una liquidación.",
+        "bodyNumber": "Hola {seller}:\n\n{store} ha emitido la liquidación número {number}.",
+        "amount": "Saldo final: {amount}.",
+        "note": "Pide una copia impresa a la tienda si quieres ver el detalle."
+      },
+      "message": {
+        "subject": "Mensaje de {store}",
+        "body": "Hola {seller}:"
+      }
+    },
+    "invitation": {
+      "subject": "Invitación a Komisio",
+      "body": "Has recibido una invitación para unirte a una tienda en Komisio.\n\nInicia sesión o crea una cuenta con esta dirección de correo electrónico para revisar y aceptar la invitación:\n{url}\n\nEl enlace caduca en siete días. Si no esperabas esta invitación, puedes ignorar este correo."
+    }
   },
   "stock": {
     "title": "Existencias",
@@ -4430,5 +4474,6 @@
     "previous": "Anterior",
     "next": "Siguiente",
     "saved": "Guardado"
-  }
+  },
+  "inviteLanguage": "Idioma de la invitación"
 }

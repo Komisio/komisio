@@ -1617,7 +1617,7 @@ button.text-link:hover:not(:disabled) {
 }
 .invite-grid {
   display: grid;
-  grid-template-columns: 1fr 170px auto;
+  grid-template-columns: minmax(0, 1fr) 150px 150px auto;
   gap: 14px;
   align-items: end;
 }

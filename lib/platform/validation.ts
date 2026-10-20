@@ -28,6 +28,7 @@ export const commandSchema = z.discriminatedUnion('action', [
     tenantId,
     email: z.email().max(254),
     role: z.enum(['admin', 'staff', 'readonly']),
+    locale: z.enum(locales).optional(),
   }),
   z.object({ action: z.literal('revoke'), tenantId, invitationId: z.uuid() }),
   z.object({

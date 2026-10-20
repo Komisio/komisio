@@ -1,4 +1,17 @@
 import { allowsRecipient } from './email-allowlist'
+import { emailTemplate } from '../communications/locale'
+import { plainText } from '../communications/templates'
+
+export function renderInvitationEmail(locale: string, inviteUrl: string) {
+  const resolved = emailTemplate(locale, (d) => d.communications.invitation)
+  return {
+    locale: resolved.locale,
+    subject: plainText(resolved.copy.subject.slice(0, 200)),
+    text: resolved.copy.body.replace(/\{url\}/g, () =>
+      plainText(inviteUrl).replace(/\n/g, ''),
+    ),
+  }
+}
 
 export type InvitationDelivery =
   'accepted' | 'manual' | 'restricted' | 'unconfirmed'
@@ -18,11 +31,7 @@ export async function sendInvitationEmail(input: {
   const key = process.env.RESEND_API_KEY
   const from = process.env.INVITATION_EMAIL_FROM
   if (!key || !from) return 'unconfirmed'
-  const swedish = input.locale === 'sv'
-  // Plain text and fixed wording prevent store-name HTML/link injection.
-  const text = swedish
-    ? `Du har blivit inbjuden till en butik i Komisio.\n\nLogga in eller skapa ett konto med denna e-postadress för att granska och acceptera inbjudan:\n${input.inviteUrl}\n\nLänken gäller i sju dagar. Om du inte väntade dig denna inbjudan kan du ignorera mejlet.`
-    : `You have been invited to a store in Komisio.\n\nSign in or create an account with this email address to review and accept the invitation:\n${input.inviteUrl}\n\nThe link expires in seven days. If you did not expect this invitation, you can ignore this email.`
+  const { subject, text } = renderInvitationEmail(input.locale, input.inviteUrl)
   try {
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -34,7 +43,7 @@ export async function sendInvitationEmail(input: {
       body: JSON.stringify({
         from,
         to: [input.email.trim().toLowerCase()],
-        subject: swedish ? 'Inbjudan till Komisio' : 'Invitation to Komisio',
+        subject,
         text,
       }),
       signal: AbortSignal.timeout(8000),

@@ -237,6 +237,9 @@ Purpose: bookkeeping data per day, exported.
 
 ## S18. Notifications and communication log
 
+All eight seller-mail languages, template locations and fallback rules are
+documented in [Settlement](SETTLEMENT.md#seller-notification-languages).
+
 Purpose: the e-mail-first seller communication decided in P1 answers.
 
 - Table `seller_communications` (tenant, seller, kind, channel `email`,

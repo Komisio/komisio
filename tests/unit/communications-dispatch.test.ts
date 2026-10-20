@@ -1,14 +1,134 @@
 import { createHash } from 'node:crypto'
-import { expect, it } from 'vitest'
+import { expect, it, vi } from 'vitest'
 import {
   factCommunicationId,
   notificationsForOperation,
   notifyAfterFacts,
   settlementPayoutIds,
+  sendSellerCommunication,
 } from '../../lib/communications/dispatch'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { dictionary, type Locale } from '../../lib/i18n'
+import { emptyStoreProfile } from '../../lib/engine/store-profile'
 
 const item = '11111111-1111-4111-8111-111111111111'
+
+function messageClient(sellerLanguage: unknown, storeLanguage?: Locale) {
+  let queued: Record<string, unknown> = {}
+  const rpc = vi.fn(async (name: string, args: Record<string, unknown>) => {
+    if (name === 'current_store_profile')
+      return {
+        data: {
+          id: null,
+          version: 0,
+          publishedAt: null,
+          profile: storeLanguage ? emptyStoreProfile(storeLanguage) : null,
+        },
+        error: null,
+      }
+    if (name === 'store_currency') return { data: 'DKK', error: null }
+    if (name === 'queue_seller_communication') queued = args
+    return { data: item, error: null }
+  })
+  const client = {
+    rpc,
+    from(table: string) {
+      const data =
+        table === 'sellers'
+          ? {
+              name: 'Synthetic Seller',
+              email: 'synthetic@example.test',
+              profile: { language: sellerLanguage },
+            }
+          : table === 'payouts'
+            ? { amount_ore: '123457', paid_at: '2026-10-20T22:30:00Z' }
+            : table === 'settlement_statements'
+              ? { number: 3, closing_ore: '123457' }
+              : {
+                  status: 'manual',
+                  recipient: 'synthetic@example.test',
+                  subject: 'Historical subject',
+                  body: 'Historical body',
+                }
+      return {
+        select() {
+          return this
+        },
+        eq() {
+          return this
+        },
+        maybeSingle: async () => ({ data, error: null }),
+        single: async () => ({ data, error: null }),
+      }
+    },
+  } as unknown as SupabaseClient
+  return { client, rpc, queued: () => queued }
+}
+
+it.each([
+  ['fi', 'dk', 'fi'],
+  [undefined, 'dk', 'dk'],
+  ['unsupported', 'no', 'no'],
+  [undefined, undefined, 'en'],
+] as const)(
+  'queues the actual language: seller %s, store %s → %s',
+  async (seller, store, expected) => {
+    for (const kind of ['payout_paid', 'statement_issued'] as const) {
+      const f = messageClient(seller, store)
+      expect(
+        await sendSellerCommunication(f.client, {
+          tenantId: item,
+          storeName: 'Synthetic Store',
+          locale: 'it',
+          requestId: item,
+          sellerId: item,
+          kind,
+          referenceId: item,
+          freeText: '',
+        }),
+      ).toMatchObject({ ok: true, delivery: 'manual' })
+      expect(f.queued().p_locale).toBe(expected)
+      expect(f.queued().p_template_version).toBe('v2')
+      expect(f.queued().p_subject).toContain('Synthetic Store')
+      expect(f.queued().p_body).toContain(
+        dictionary(expected).communications.templates.footer.replace(
+          '{store}',
+          'Synthetic Store',
+        ),
+      )
+      expect(
+        f.rpc.mock.calls.filter(
+          ([name]) => name === 'record_communication_delivery',
+        ),
+      ).toHaveLength(0)
+    }
+  },
+)
+
+it('records English when an entire requested template falls back', async () => {
+  const copy = dictionary('fi').communications.templates.payout_paid
+  const previous = copy.body
+  copy.body = ''
+  try {
+    const f = messageClient('fi', 'dk')
+    await sendSellerCommunication(f.client, {
+      tenantId: item,
+      storeName: 'Synthetic Store',
+      locale: 'sv',
+      requestId: item,
+      sellerId: item,
+      kind: 'payout_paid',
+      referenceId: item,
+      freeText: 'Store-written text',
+    })
+    expect(f.queued().p_locale).toBe('en')
+    expect(f.queued().p_body).toContain('Hello Synthetic Seller')
+    expect(f.queued().p_body).toContain('DKK\u00a01,234.57')
+    expect(f.queued().p_body).toContain('Store-written text')
+  } finally {
+    copy.body = previous
+  }
+})
 
 it('derives one stable UUID-shaped id per fact and kind', () => {
   const a = factCommunicationId('item_accepted', item)

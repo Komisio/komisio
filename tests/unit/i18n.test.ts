@@ -5,7 +5,6 @@ import {
   isLocale,
   localeNames,
   locales,
-  messageLocale,
   resolveLocale,
 } from '../../lib/i18n'
 import { renderSellerMessage } from '../../lib/communications/templates'
@@ -39,15 +38,13 @@ describe('eight product languages', () => {
     expect(dictionary('es').login).not.toBe(dictionary('sv').login)
     expect(dictionary('nope')).toBe(dictionary('sv'))
   })
-  it('sends the fixed e-mail templates in Swedish or English only', () => {
-    expect(messageLocale('sv')).toBe('sv')
-    expect(messageLocale('de')).toBe('en')
+  it('sends fixed e-mail templates in the requested supported language', () => {
     const facts = {
       storeName: 'Laden',
       sellerName: 'Anna',
       freeText: '',
     }
-    expect(renderSellerMessage('message', 'de', facts).body).toEqual(
+    expect(renderSellerMessage('message', 'de', facts).body).not.toEqual(
       renderSellerMessage('message', 'en', facts).body,
     )
   })

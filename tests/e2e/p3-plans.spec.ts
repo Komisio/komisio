@@ -34,6 +34,27 @@ test('trial banner, host activation and read-only state', async ({
       panel.getByText(d.plans.states.active, { exact: true }),
     ).toBeVisible()
     await expect(
+      panel.getByText(d.plans.priceNote, { exact: true }),
+    ).toBeVisible()
+    // Exercise error presentation without contacting Stripe.
+    for (const error of [
+      'STRIPE_TAX_MISCONFIGURED',
+      'STRIPE_CUSTOMER_ADDRESS_CONFLICT',
+    ] as const) {
+      await page.route('**/api/billing', (route) =>
+        route.fulfill({
+          status: 409,
+          contentType: 'application/json',
+          body: JSON.stringify({ error }),
+        }),
+      )
+      await panel
+        .getByRole('button', { name: d.plans.subscribe, exact: true })
+        .click()
+      await expect(panel.getByRole('alert')).toHaveText(d.plans.errors[error])
+      await page.unroute('**/api/billing')
+    }
+    await expect(
       page.getByRole('link', { name: d.hostLink, exact: true }).first(),
     ).toBeVisible()
 

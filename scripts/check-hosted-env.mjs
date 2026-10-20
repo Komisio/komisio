@@ -62,6 +62,14 @@ if (delivery === 'resend') {
   }
 }
 if (environment === 'production') {
+  if (
+    process.env.STRIPE_SECRET_KEY &&
+    process.env.STRIPE_PRICE_ID &&
+    process.env.KOMISIO_STRIPE_AUTOMATIC_TAX !== 'true'
+  )
+    console.warn(
+      'Stripe is configured but automatic tax is off. Complete docs/STRIPE-TAX.md before enabling KOMISIO_STRIPE_AUTOMATIC_TAX=true.',
+    )
   // Production is the only environment customers see: an own domain, real
   // e-mail, own secrets for the jobs, no staging-only switches.
   let host = ''

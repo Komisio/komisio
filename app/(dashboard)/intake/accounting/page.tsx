@@ -1,3 +1,9 @@
+import { EconomicWorkspace } from '@/components/intake/economic-workspace'
+import { z } from 'zod'
+import { economicCopy } from '@/lib/accounting/economic-copy'
+import { EconomicConnection } from '@/components/intake/economic-connection'
+import { readEconomicStatus } from '@/lib/engine/economic'
+import { economicIssue } from '@/extensions/economic/api'
 import { readAccountingDraft } from '@/lib/engine/accounting-assistance'
 import { AccountingLegacyMapLink } from '@/components/intake/accounting-legacy-map-link'
 import { WorkingForm } from '@/components/platform/working-form'
@@ -61,6 +67,7 @@ export default async function Accounting({
   const view: View = views.includes(query.view as View)
     ? (query.view as View)
     : 'days'
+  const isEconomic = query.destination === 'economic'
   const ctx = await requirePlatform(),
     active = ctx.active!,
     currency = await readStoreCurrency(ctx.client, active.id),
@@ -73,6 +80,8 @@ export default async function Accounting({
     readFortnoxStatus(ctx.client, active.id),
     readFortnoxSends(ctx.client, active.id),
   ])
+  const economic =
+    view === 'settings' ? await readEconomicStatus(ctx.client, active.id) : null
   const requestedPeriod = economyPeriod.safeParse({
     from: query.from,
     to: query.to,
@@ -98,7 +107,12 @@ export default async function Accounting({
     : currentMonthPeriod()
   const recon =
     view === 'reconciliation'
-      ? await readReconciliation(ctx.client, active.id, period)
+      ? await readReconciliation(
+          ctx.client,
+          active.id,
+          period,
+          isEconomic ? 'economic' : 'fortnox',
+        )
       : null
   const attention = recon ? openDays(recon) : []
   const fortnoxOutcome =
@@ -107,7 +121,7 @@ export default async function Accounting({
       : null
   // Preview the newest closes only; older ones are reachable through their exports.
   const previews = new Map(
-    view === 'days' || view === 'planning'
+    (!isEconomic && view === 'days') || view === 'planning'
       ? (
           await Promise.all(
             closes
@@ -130,7 +144,7 @@ export default async function Accounting({
   const canEditMap = ['owner', 'admin'].includes(active.role)
   const attentionCount = recon ? attention.length : null
   const aiDraft =
-    view === 'accounts' && canEditMap
+    view === 'accounts' && !isEconomic && canEditMap
       ? await readAccountingDraft(
           ctx.client,
           active.id,
@@ -152,11 +166,7 @@ export default async function Accounting({
           .map((v) => (
             <Link
               key={v}
-              href={
-                v === 'days'
-                  ? '/intake/accounting'
-                  : `/intake/accounting?view=${v}`
-              }
+              href={`/intake/accounting?view=${v}${isEconomic ? '&destination=economic' : ''}`}
               className={`view-tab ${view === v || (view === 'planning' && v === 'settings') ? 'active' : ''}`}
               aria-current={
                 view === v
@@ -175,6 +185,40 @@ export default async function Accounting({
             </Link>
           ))}
       </nav>
+      {['days', 'accounts', 'exports', 'reconciliation'].includes(view) && (
+        <nav className="view-tabs" aria-label={d.systems}>
+          <Link
+            className={`view-tab ${!isEconomic ? 'active' : ''}`}
+            aria-current={!isEconomic ? 'page' : undefined}
+            href={`/intake/accounting?view=${view}`}
+          >
+            SIE / Fortnox
+          </Link>
+          <Link
+            className={`view-tab ${isEconomic ? 'active' : ''}`}
+            aria-current={isEconomic ? 'page' : undefined}
+            href={`/intake/accounting?view=${view}&destination=economic`}
+          >
+            e-conomic
+          </Link>
+        </nav>
+      )}
+      {isEconomic && ['days', 'accounts', 'exports'].includes(view) && (
+        <EconomicWorkspace
+          client={ctx.client}
+          tenantId={active.id}
+          role={active.role}
+          view={view}
+          closes={closes}
+          d={all}
+          selected={
+            typeof query.export === 'string' &&
+            z.uuid().safeParse(query.export).success
+              ? query.export
+              : undefined
+          }
+        />
+      )}
       {view === 'planning' && (
         <AccountingRoutingPreview
           key={active.id}
@@ -185,7 +229,7 @@ export default async function Accounting({
           currencyWarning={all.helpCenter.guide.currency}
         />
       )}
-      {view === 'days' && (
+      {view === 'days' && !isEconomic && (
         <>
           <div className="accounting-workspace">
             <section className="card intake-form accounting-create">
@@ -274,7 +318,7 @@ export default async function Accounting({
           </div>
         </>
       )}
-      {view === 'exports' && (
+      {view === 'exports' && !isEconomic && (
         <section
           className="card intake-form accounting-exports"
           aria-label={d.exportsHeading}
@@ -374,6 +418,9 @@ export default async function Accounting({
             />
             <WorkingForm className="economy-period-form">
               <input type="hidden" name="view" value="reconciliation" />
+              {isEconomic && (
+                <input type="hidden" name="destination" value="economic" />
+              )}
               {!requestedPeriod.success && (query.from || query.to) && (
                 <p role="alert">{all.reconciliation.periodInvalid}</p>
               )}
@@ -437,14 +484,18 @@ export default async function Accounting({
                             <span>
                               {all.reconciliation.statuses[day.status]}
                               {day.send?.errorCode
-                                ? ` · ${(all.fortnox.errors as Record<string, string>)[day.send.errorCode] ?? day.send.errorCode}`
+                                ? ` · ${((isEconomic ? all.economic.errors : all.fortnox.errors) as Record<string, string>)[day.send.errorCode] ?? day.send.errorCode}`
                                 : ''}
                             </span>
                             {day.export && (
                               <p>
                                 <Link
                                   className="text-link"
-                                  href={`/intake/accounting/exports/${day.export.id}`}
+                                  href={
+                                    isEconomic
+                                      ? `/intake/accounting?view=exports&destination=economic&export=${day.export.id}`
+                                      : `/intake/accounting/exports/${day.export.id}`
+                                  }
                                 >
                                   {d.openExport}
                                 </Link>
@@ -461,7 +512,7 @@ export default async function Accounting({
           </section>
         </div>
       )}
-      {view === 'accounts' && (
+      {view === 'accounts' && !isEconomic && (
         <section
           id="account-map"
           className="card intake-form"
@@ -543,6 +594,21 @@ export default async function Accounting({
                   {d.exportsHeading}
                 </Link>
               </div>
+              <EconomicConnection
+                tenantId={active.id}
+                status={economic}
+                configured={
+                  economicIssue(process.env) === null &&
+                  credentialKeyConfigured(process.env)
+                }
+                editable={canEditMap}
+                outcome={
+                  typeof query.economic === 'string'
+                    ? query.economic
+                    : undefined
+                }
+                d={economicCopy(all)}
+              />
               <details
                 className="card accounting-setting-disclosure accounting-provider-disclosure"
                 open={!!fortnoxOutcome}

@@ -128,7 +128,8 @@ owner's own account or documented operator procedures.
 - Terms of service, privacy notice and data processing agreement published
   (the store is the controller of its sellers' data; Komisio the processor).
 - Stripe account in the operating company's name, SEK, invoices with VAT;
-  Stripe Tax if selling outside Sweden later.
+  Stripe Tax for both subscriptions and credit packs after completing
+  [STRIPE-TAX.md](STRIPE-TAX.md), including domestic sales.
 - Support address and incident procedure; the pilot gate items in
   [PILOT-GATES.md](PILOT-GATES.md) closed.
 
@@ -208,13 +209,20 @@ production migrations (the owner).
   subscription metadata) and redirects; "Manage subscription and invoices"
   opens Stripe's customer portal for the stored customer. Owner only; both
   need `STRIPE_SECRET_KEY` and `STRIPE_PRICE_ID`, otherwise the panel says
-  online payment is not configured.
+  online payment is not configured. Checkout now follows the app locale. With
+  `KOMISIO_STRIPE_AUTOMATIC_TAX=true`, it checks an exclusive Price, requests
+  automatic tax, and reuses the owner-readable customer with address/name updates.
+  An existing shipping address blocks the session pending operator correction.
+  Credit packs create a customer and invoice when the flag is on. The flag is
+  off by default; operator configuration and staging tests are required.
 - `POST /api/billing/webhook`: the signature (`Stripe-Signature`, five-minute
   tolerance) is checked against the raw body; the event is mapped
   (`mapStripeEvent`) to one of active, past_due, read_only,
   cancel_at_period_end or none and recorded by the billing actor through
   `record_billing_event`, once per event id (`billing_events`). The tenant
-  comes from the event or is found by subscription or customer id. Grace on
+  comes from the event or is found by subscription or customer id. Completed
+  Checkout and paid invoice events also retain bounded Stripe tax facts, without
+  VAT ID values or addresses; see [STRIPE-TAX.md](STRIPE-TAX.md). Grace on
   a failed payment is 14 days from the first failure; cancel at period end
   keeps the store active until the date, then the daily run closes it; a
   store closed by its owner records events without changing state.

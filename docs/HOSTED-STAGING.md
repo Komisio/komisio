@@ -191,5 +191,5 @@ alerts; avoid hard cost stops that silently interrupt financial workflows.
 
 The next delivery is hosted identity/team verification, followed by one complete
 store workflow and its first operated integration. Free core access and a
-SEK 199/month tier are the accepted product direction. Billing, quotas, payment
+the earlier monthly-price proposal (superseded; see PRICING.md) tier are the accepted product direction. Billing, quotas, payment
 webhooks and domain tables are not part of this staging preparation.

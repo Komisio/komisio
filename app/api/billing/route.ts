@@ -48,6 +48,8 @@ export async function POST(request: Request) {
           ctx.user.email ?? '',
           base,
           process.env,
+          undefined,
+          ctx.locale,
         ),
       )
     if (ctx.active.role !== 'owner') return reply({ error: 'FORBIDDEN' }, 403)
@@ -59,6 +61,8 @@ export async function POST(request: Request) {
             ctx.user.email ?? '',
             base,
             process.env,
+            undefined,
+            ctx.locale,
           )
         : await openPortal(ctx.client, ctx.active.id, base, process.env),
     )

@@ -64,13 +64,19 @@ export async function readReconciliation(
   client: SupabaseClient,
   tenantInput: string,
   periodInput: unknown,
+  destination: 'fortnox' | 'economic' = 'fortnox',
 ) {
   const period = economyPeriod.parse(periodInput)
-  const result = await client.rpc('accounting_reconciliation', {
-    p_tenant: z.uuid().parse(tenantInput),
-    p_from: period.from,
-    p_to: period.to,
-  })
+  const result = await client.rpc(
+    destination === 'economic'
+      ? 'economic_reconciliation'
+      : 'accounting_reconciliation',
+    {
+      p_tenant: z.uuid().parse(tenantInput),
+      p_from: period.from,
+      p_to: period.to,
+    },
+  )
   if (result.error) {
     if (result.error.message.includes('INVALID_INPUT'))
       throw new Error('INVALID_INPUT')

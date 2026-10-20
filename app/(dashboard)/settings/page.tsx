@@ -1,3 +1,4 @@
+import { helpArticle } from '@/lib/help/content'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { LegalLinks } from '@/components/platform/legal-links'
 import { legalBaseUrl as configuredLegalBaseUrl } from '@/lib/platform/legal'
@@ -397,7 +398,7 @@ export default async function Settings({
                     <p className="printing-hint">
                       {pr.paperHint}{' '}
                       <Link className="text-link" href="/help/labels">
-                        {d.helpCenter.articles.labels.title}
+                        {helpArticle(ctx.locale, 'labels')!.title}
                       </Link>
                     </p>
                     {formats && (

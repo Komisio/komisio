@@ -1,3 +1,4 @@
+import legacyHelp from '../fixtures/help-legacy.json' with { type: 'json' }
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { readFileSync } from 'node:fs'
@@ -22,7 +23,16 @@ test('general integration help stays relevant and preserves the selected provide
         integrationWrites++
     })
     await page.setViewportSize({ width: 320, height: 800 })
-    for (const locale of ['sv', 'en', 'no', 'dk', 'fi', 'de', 'es', 'it']) {
+    for (const locale of [
+      'sv',
+      'en',
+      'no',
+      'dk',
+      'fi',
+      'de',
+      'es',
+      'it',
+    ] as const) {
       const d: Dictionary = JSON.parse(
         readFileSync(
           new URL(`../../messages/${locale}.json`, import.meta.url),
@@ -45,7 +55,7 @@ test('general integration help stays relevant and preserves the selected provide
       })
       await help.click()
       const dialog = page.getByRole('dialog', {
-        name: d.helpCenter.articles.integrations.title,
+        name: legacyHelp[locale].articles.integrations.title,
         exact: true,
       })
       await expect(dialog).toBeVisible()
@@ -61,14 +71,14 @@ test('general integration help stays relevant and preserves the selected provide
       await expect(page).toHaveURL(/provider=paypal$/)
       await page.goto('/help')
       const card = page.getByRole('link', {
-        name: d.helpCenter.articles.integrations.title,
+        name: legacyHelp[locale].articles.integrations.title,
         exact: true,
       })
       // The description is part of the same generous click target as the heading.
       await card.locator('p').click()
       await expect(page).toHaveURL(/\/help\/integrations$/)
       await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-        d.helpCenter.articles.integrations.title,
+        legacyHelp[locale].articles.integrations.title,
       )
       await expect(
         page.getByRole('link', {

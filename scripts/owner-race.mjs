@@ -31,6 +31,7 @@ import { raceZettlePull } from './zettle-pull-race.mjs'
 import { raceSellerPayout } from './seller-payout-race.mjs'
 import { raceStorePolicy } from './store-policy-race.mjs'
 import { raceStoreGuide } from './store-guide-race.mjs'
+import { raceHelpFeedback } from './help-feedback-race.mjs'
 import { racePayPalCredentials } from './paypal-credentials-race.mjs'
 import { raceLabelPrintRule } from './label-print-rule-race.mjs'
 import { raceCatalogueDeletion } from './catalogue-deletion-race.mjs'
@@ -154,6 +155,7 @@ try {
   await raceStoreMail({ setup, sessions, tenant })
   await raceStorePolicy({ setup, sessions, tenant })
   await raceStoreGuide({ setup, sessions, tenant })
+  await raceHelpFeedback({ setup, sessions, tenant })
   await raceSellerSubmission({ setup, sessions, tenant })
   await raceSellerAI({ setup, sessions, tenant })
   await racePayPalCredentials({ setup, sessions, tenant })

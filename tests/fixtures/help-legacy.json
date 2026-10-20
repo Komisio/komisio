@@ -1,0 +1,1458 @@
+{
+  "sv": {
+    "articles": {
+      "fortnox-connect": {
+        "title": "Anslut Fortnox",
+        "intro": "Anslut butikens företag och förbered kontoplanen. Ingen bokföring skickas när du ansluter.",
+        "steps": [
+          "Du behöver vara ägare eller administratör i Komisio och kunna godkänna anslutningen till rätt företag i Fortnox. Kontrollera tillämpliga integrations- och programlicenser enligt Fortnox instruktioner.",
+          "Öppna Konton och integrationer. Ange företagsnamnet som det står i Fortnox och välj att ansluta. Logga in hos Fortnox, kontrollera företaget och godkänn de efterfrågade behörigheterna.",
+          "När du kommer tillbaka: kontrollera företagsnamnet. Använd Kontrollera Fortnox-kopplingen för en aktuell kontroll. Vid förnyad anslutning ska du välja samma företag.",
+          "Spara kontoplanen med de konton och debet-/kreditval ni bestämt med redovisningskonsulten. Komisio väljer inte konton åt er."
+        ],
+        "notice": "Ansluten betyder inte att ett underlag har skickats. Komisio begär tillgång till företagsinformation och bokföring; behörigheten omfattar sändning av verifikationer när funktionen används."
+      },
+      "fortnox-first-export": {
+        "title": "Förbered och skicka första underlaget",
+        "intro": "Arbeta med en dag i taget och kontrollera företag, datum och belopp innan du skickar.",
+        "steps": [
+          "Öppna Dagsavslut och exporter och generera dagsavslutet för rätt datum. Detta registrerar en sammanställning i Komisio, inte en verifikation i Fortnox.",
+          "Granska förhandsvisningen: konton, debet, kredit och belopp som saknar konto. Stäm av kontoplanen med redovisningskonsulten. Att debet och kredit balanserar är inte i sig ett godkännande av bokföringen.",
+          "Välj Skapa bokföringsunderlag för att spara underlaget. Du kan därefter ladda ned filen eller, som ägare/administratör, använda Skicka till Fortnox. Undvik att både importera filen och skicka samma underlag direkt.",
+          "En riktig sändning skapar en verifikation i Fortnox. När den bekräftats visas referensen. Vid osäkert resultat: öppna hjälpen för sändningsproblem och skicka inte igen."
+        ],
+        "notice": "Automatisk sändning är ett separat val för ägaren och gäller förberedda exporter. Dagsavslut skapas fortfarande manuellt. Anslutning eller läsning av hjälpen aktiverar inte automatiken."
+      },
+      "fortnox-recovery": {
+        "title": "Kontrollera ett sändningsproblem",
+        "intro": "Skilj på en stoppad sändning och ett svar som saknas. Ett uteblivet svar kan betyda att verifikationen redan finns.",
+        "steps": [
+          "Om Komisio uttryckligen anger att sändningen stoppades före registrering: rätta orsaken och använd den återförsöksåtgärd som erbjuds.",
+          "Om sändningen väntar eller resultatet är osäkert: skicka inte igen. Be butikens ägare jämföra underlaget med verifikationerna i den Fortnox-företagsdatabas som hör till sändningen.",
+          "Jämför datum, belopp och samtliga rader. Om en matchande verifikation finns kan ägaren registrera serie, nummer, räkenskapsår och vad som kontrollerats via bekräftelseformuläret på exportraden.",
+          "Om verifikationen inte går att hitta: be ansvarig för installationen om hjälp med utredningen. Frånvaro av en träff öppnar inte för en ny sändning. Radera eller återskapa inte underlag för att kringgå stoppet."
+        ],
+        "notice": "Avstämningen registrerar ägarens kontroll. Den är inte en automatisk verifiering hos Fortnox. Personal och administratörer kan läsa hjälpen; bara ägaren kan registrera denna bekräftelse."
+      },
+      "fortnox-automation": {
+        "title": "Så fungerar automatisk sändning",
+        "intro": "Automatiken skickar redan förberedda exporter till det anslutna Fortnox-företaget. Den skapar inga dagsavslut och väljer inga konton.",
+        "steps": [
+          "Kontrollera företaget och kontoplanen. Granska tidigare exporter innan du aktiverar: även äldre underlag som får skickas kan tas med. Undvik att både importera SIE-filen och skicka samma underlag direkt.",
+          "Butikens ägare aktiverar automatisk sändning under Konton och integrationer. Väntar betyder att bakgrundstjänsten ännu inte har accepterat aktiveringen. Om funktionen inte är förberedd, kontakta den som sköter Komisio-installationen.",
+          "Fortsätt skapa och granska dagsavslut samt förbereda exporter manuellt. Läs Senaste körning för tid, resultat och antal skickade underlag. Aktiverad betyder inte att något har skickats, och en slutförd körning betyder inte att alla dagar är avstämda.",
+          "Vid delvis genomförd eller misslyckad körning: öppna Avstämning och granska berörda exporter. Vid väntande eller osäker sändning, följ hjälpen för sändningsproblem och be ägaren kontrollera resultatet. Att slå av och på automatiken löser inte en spärrad sändning."
+        ],
+        "notice": "Läsning av hjälpen aktiverar eller skickar ingenting. Automatiska körningar skickar inte om underlag med bekräftat, väntande eller osäkert resultat. Att stänga av automatiken återtar inte verifikationer som redan skapats."
+      },
+      "receiving": {
+        "title": "Ta emot och registrera varor",
+        "intro": "Börja med rätt butik och inlämnare. Registrera det som faktiskt har kommit in och fortsätt sedan med varorna.",
+        "steps": [
+          "Kontrollera vald butik och sök efter den befintliga inlämnaren innan du skapar en ny. Följ butikens avtalskrav och lokala rutiner.",
+          "En föranmälan betyder inte att varorna är mottagna. Bekräfta mottagningen först när varorna finns hos er. Använd den befintliga inlämningen när du fortsätter arbetet.",
+          "Öppna inlämningen och registrera en vara i taget. Kontrollera beskrivning, pris och säljare innan du sparar.",
+          "Kontrollera bekräftelsen och listan med registrerade varor innan du går vidare till märkning. Om svaret på en sparning saknas, håll formuläret öppet och använd dess återförsök. Skapa inte samma vara på nytt för att få en bekräftelse."
+        ],
+        "notice": "Antalet registrerade varor visar sparade uppgifter, inte att hela inlämningen är färdigbehandlad. Kontrollera även de fysiska varorna. Hjälpen ändrar inga uppgifter; be behörig personal utföra åtgärder som du saknar tillgång till."
+      },
+      "labels": {
+        "title": "Märk rätt inlämning eller vara",
+        "intro": "En mottagningsetikett håller ihop varorna under arbetet. En varuetikett identifierar den registrerade varan och visar dess pris.",
+        "steps": [
+          "Öppna den befintliga inlämningen eller varan och kontrollera butik och referens. En mottagningsetikett betyder inte att varorna har granskats eller godkänts för försäljning.",
+          "För en varuetikett: hitta den registrerade varan, öppna etiketten och kontrollera beskrivning, pris och valuta. Om etiketten inte kan visas, gå tillbaka till varan och kontrollera dess uppgifter.",
+          "Använd sidans utskriftsalternativ. Välj rätt skrivare och antal när en ansluten skrivare används, eller granska webbläsarens utskriftsdialog. En köad utskrift eller öppnad dialog bevisar inte att etiketten har skrivits ut: kontrollera etiketten innan den fästs på varan.",
+          "Om ett svar om köad utskrift saknas, använd återförsöket i samma öppna formulär. Skapa inte nya jobb upprepade gånger. Kontrollera utskriftsjobbet under Skrivare och utskrifter och be den som sköter skrivaren om hjälp vid problem. En befintlig referens kan öppnas via etikettsökningen."
+        ],
+        "notice": "Att öppna hjälpen skriver inte ut något och registrerar ingen ny vara. Skapa inte en dubblett av varan för att ersätta en etikett. Fysisk utskrift och skanning behöver kontrolleras med butikens utrustning."
+      },
+      "integrations": {
+        "title": "Anslut butikens andra system",
+        "intro": "Börja med det system du vill koppla till Komisio. Öppna dess avsnitt för status och inställningar.",
+        "steps": [
+          "Välj kassasystem, webbshop eller bokföring utifrån vad du vill koppla ihop.",
+          "Läs anslutningsstatusen och följ stegen i det valda avsnittet. Vissa åtgärder kräver en ägare eller administratör.",
+          "Kontrollera vilka uppgifter som förs över och i vilken riktning innan du aktiverar en automatisk funktion.",
+          "Följ statusen för produkter, kvitton, order eller bokföringsunderlag i respektive integration. Öppna detaljerna om något behöver åtgärdas."
+        ],
+        "notice": "En anslutning betyder inte att alla automatiska funktioner är påslagna. Kontrollera dem var för sig i integrationens inställningar."
+      }
+    },
+    "taskLinks": {
+      "receiving": [
+        {
+          "href": "/intake",
+          "label": "Öppna mottagningen"
+        },
+        {
+          "href": "/intake/flow",
+          "label": "Butikens arbetsflöde"
+        },
+        {
+          "href": "/help/labels",
+          "label": "Märk rätt inlämning eller vara"
+        }
+      ],
+      "labels": [
+        {
+          "href": "/intake/items",
+          "label": "Hitta en registrerad vara"
+        },
+        {
+          "href": "/intake/open",
+          "label": "Öppna en etikettreferens"
+        },
+        {
+          "href": "/settings?tab=printing",
+          "label": "Skrivare och utskrifter"
+        },
+        {
+          "href": "/help/receiving",
+          "label": "Ta emot och registrera varor"
+        }
+      ],
+      "integrations": [
+        {
+          "href": "/intake/integrations",
+          "label": "Öppna integrationer"
+        }
+      ],
+      "fortnox-connect": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Konton och integrationer"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Dagsavslut och exporter"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Avstämning"
+        }
+      ],
+      "fortnox-first-export": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Konton och integrationer"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Dagsavslut och exporter"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Avstämning"
+        }
+      ],
+      "fortnox-automation": [
+        {
+          "href": "/intake/accounting?view=settings#fortnox-automation",
+          "label": "Konton och integrationer"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Dagsavslut och exporter"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Avstämning"
+        },
+        {
+          "href": "/help/fortnox-recovery",
+          "label": "Kontrollera ett sändningsproblem"
+        }
+      ],
+      "fortnox-recovery": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Konton och integrationer"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Dagsavslut och exporter"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Avstämning"
+        }
+      ]
+    },
+    "providerHelp": "Fortnox: aktivering och licenser (öppnas i ny flik)"
+  },
+  "en": {
+    "articles": {
+      "fortnox-connect": {
+        "title": "Connect Fortnox",
+        "intro": "Connect the store’s company and prepare the account mapping. Connecting sends no accounting data.",
+        "steps": [
+          "You must be an owner or administrator in Komisio and able to authorize access to the correct Fortnox company. Check applicable integration and program licences using Fortnox guidance.",
+          "Open Accounts and integrations. Enter the company name as shown in Fortnox and connect. Sign in to Fortnox, check the company and approve the requested permissions.",
+          "On return, check the company name. Use Check connection for a current check. Choose the same company when reconnecting.",
+          "Save the accounts and debit/credit choices agreed with your accountant. Komisio does not choose accounts for you."
+        ],
+        "notice": "Connected does not mean an export has been sent. Komisio requests company information and bookkeeping access; the permission includes voucher creation when sending is used."
+      },
+      "fortnox-first-export": {
+        "title": "Prepare and send the first export",
+        "intro": "Work with one day at a time and check the company, date and amounts before sending.",
+        "steps": [
+          "Open Day closes and exports and generate the close for the correct date. This records a summary in Komisio, not a Fortnox voucher.",
+          "Review the preview: accounts, debit, credit and unmapped amounts. Review the mapping with your accountant. Balanced debit and credit do not by themselves establish correct accounting.",
+          "Choose Create accounting documents to save the accounting basis. You can then download the file or, as owner/administrator, use Send to Fortnox. Avoid both importing the file and sending the same export directly.",
+          "A real send creates a Fortnox voucher. Its reference appears once confirmed. If the outcome is uncertain, open the send recovery help and do not send again."
+        ],
+        "notice": "Automatic sending is a separate owner choice for prepared exports. Day closes remain manual. Connecting or reading help does not enable automation."
+      },
+      "fortnox-recovery": {
+        "title": "Check a sending issue",
+        "intro": "Distinguish a stopped send from a missing response. A missing response may mean the voucher already exists.",
+        "steps": [
+          "If Komisio explicitly says the send stopped before registration, fix the cause and use the retry action offered.",
+          "If the send is pending or uncertain, do not send again. Ask the store owner to compare the export with vouchers in the Fortnox company database bound to that send.",
+          "Compare the date, amounts and every line. If a matching voucher exists, the owner can record its series, number, financial year and evidence using the confirmation form on the export row.",
+          "If no matching voucher can be found, ask the installation operator to help investigate. Absence does not unlock another send. Do not delete or recreate exports to bypass the hold."
+        ],
+        "notice": "Reconciliation records the owner’s check, not automatic verification by Fortnox. Staff and administrators may read the help; only the owner may record this confirmation."
+      },
+      "fortnox-automation": {
+        "title": "How automatic sending works",
+        "intro": "Automation sends prepared exports to the connected Fortnox company. It does not create day closes or choose accounts.",
+        "steps": [
+          "Check the company and account mapping. Review existing exports before enabling: older eligible exports may also be included. Avoid importing a SIE file and sending the same export directly.",
+          "The store owner enables automatic sending under Accounts and integrations. Waiting means the background service has not accepted activation yet. If the feature is not configured, contact the person responsible for the Komisio installation.",
+          "Continue creating and reviewing day closes and preparing exports manually. Read Last run for the time, outcome and number sent. Enabled does not mean anything has been sent, and a completed run does not mean every day is reconciled.",
+          "After a partial or failed run, open Reconciliation and review the affected exports. For a pending or uncertain send, follow the sending-problem guidance and ask the owner to check the outcome. Switching automation off and on does not resolve a held send."
+        ],
+        "notice": "Reading help enables or sends nothing. Automatic runs do not resend exports with confirmed, pending or uncertain outcomes. Disabling automation does not withdraw vouchers already created."
+      },
+      "receiving": {
+        "title": "Receive and register goods",
+        "intro": "Start with the correct store and consignor. Record what has physically arrived, then work through the items.",
+        "steps": [
+          "Check the selected store and search for the existing consignor before creating another. Follow the store’s agreement requirements and local routines.",
+          "An announcement does not mean goods have been received. Confirm receiving only once the goods are with you. Reuse the existing drop-off when continuing the work.",
+          "Open the drop-off and register one item at a time. Check the description, price and seller before saving.",
+          "Check the confirmation and registered-item list before labelling. If a save response is missing, keep the form open and use its retry action. Do not create the same item again to obtain confirmation."
+        ],
+        "notice": "Registered-item counts describe saved records, not completion of the entire drop-off. Check the physical goods too. Help changes no records; ask authorized staff to perform actions you cannot access."
+      },
+      "labels": {
+        "title": "Label the correct drop-off or item",
+        "intro": "A receiving label keeps goods together during processing. An item label identifies a registered item and shows its price.",
+        "steps": [
+          "Open the existing drop-off or item and check the store and reference. A receiving label does not mean goods have been inspected or accepted for sale.",
+          "For an item label, find the registered item, open its label and check description, price and currency. If the label is unavailable, return to the item and check its details.",
+          "Use the page’s print options. Choose the correct printer and copy count for a connected printer, or review the browser print dialog. A queued job or open dialog does not prove printing: check the physical label before attaching it.",
+          "If a queueing response is missing, use retry in the same open form. Do not repeatedly create new jobs. Check the job under Printers and print jobs and ask the printer operator for help when needed. Use label lookup to open an existing reference."
+        ],
+        "notice": "Opening help prints nothing and registers no new item. Do not duplicate an item to replace its label. Physical printing and scanning need checking with the store’s equipment."
+      },
+      "integrations": {
+        "title": "Connect your other store systems",
+        "intro": "Start with the system you want to connect to Komisio. Open its section for status and settings.",
+        "steps": [
+          "Choose point of sale, online store or accounting according to what you want to connect.",
+          "Read the connection status and follow the steps in that section. Some actions require an owner or administrator.",
+          "Check which information is transferred and in which direction before enabling an automatic feature.",
+          "Follow the status of products, receipts, orders or accounting documents within each integration. Open the details if anything needs attention."
+        ],
+        "notice": "A connection does not mean every automatic feature is enabled. Check them individually in the integration settings."
+      }
+    },
+    "taskLinks": {
+      "receiving": [
+        {
+          "href": "/intake",
+          "label": "Open receiving"
+        },
+        {
+          "href": "/intake/flow",
+          "label": "Store workflow"
+        },
+        {
+          "href": "/help/labels",
+          "label": "Label the correct drop-off or item"
+        }
+      ],
+      "labels": [
+        {
+          "href": "/intake/items",
+          "label": "Find a registered item"
+        },
+        {
+          "href": "/intake/open",
+          "label": "Open a label reference"
+        },
+        {
+          "href": "/settings?tab=printing",
+          "label": "Printers and print jobs"
+        },
+        {
+          "href": "/help/receiving",
+          "label": "Receive and register goods"
+        }
+      ],
+      "integrations": [
+        {
+          "href": "/intake/integrations",
+          "label": "Open integrations"
+        }
+      ],
+      "fortnox-connect": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Accounts and integrations"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Day closes and exports"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Reconciliation"
+        }
+      ],
+      "fortnox-first-export": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Accounts and integrations"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Day closes and exports"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Reconciliation"
+        }
+      ],
+      "fortnox-automation": [
+        {
+          "href": "/intake/accounting?view=settings#fortnox-automation",
+          "label": "Accounts and integrations"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Day closes and exports"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Reconciliation"
+        },
+        {
+          "href": "/help/fortnox-recovery",
+          "label": "Check a sending issue"
+        }
+      ],
+      "fortnox-recovery": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Accounts and integrations"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Day closes and exports"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Reconciliation"
+        }
+      ]
+    },
+    "providerHelp": "Fortnox: activation and licences (opens a new tab)"
+  },
+  "no": {
+    "articles": {
+      "fortnox-connect": {
+        "title": "Koble til Fortnox",
+        "intro": "Koble til butikkens selskap og klargjør kontoplanen. Ingen regnskapsdata sendes ved tilkobling.",
+        "steps": [
+          "Du må være eier eller administrator i Komisio og kunne godkjenne tilgang til riktig Fortnox-selskap. Kontroller aktuelle integrasjons- og programlisenser i Fortnox-veiledningen.",
+          "Åpne Kontoer og integrasjoner. Skriv selskapsnavnet slik det står i Fortnox, og koble til. Logg inn hos Fortnox, kontroller selskapet og godkjenn tillatelsene.",
+          "Kontroller selskapsnavnet når du kommer tilbake. Bruk tilkoblingskontrollen for en aktuell kontroll. Velg samme selskap ved ny tilkobling.",
+          "Lagre kontonumre og debet-/kreditvalg avtalt med regnskapsføreren. Komisio velger ikke kontoer for dere."
+        ],
+        "notice": "Tilkoblet betyr ikke at et grunnlag er sendt. Komisio ber om tilgang til selskapsinformasjon og bokføring, inkludert opprettelse av bilag når sending brukes."
+      },
+      "fortnox-first-export": {
+        "title": "Klargjør og send første grunnlag",
+        "intro": "Arbeid med én dag av gangen og kontroller selskap, dato og beløp før sending.",
+        "steps": [
+          "Åpne Dagsoppgjør og eksporter og opprett oppgjøret for riktig dato. Dette registrerer en oppsummering i Komisio, ikke et bilag i Fortnox.",
+          "Gransk forhåndsvisningen: kontoer, debet, kredit og beløp uten konto. Avklar kontoplanen med regnskapsføreren. Balanse alene beviser ikke riktig bokføring.",
+          "Velg eksport som SIE 4 for å lagre grunnlaget. Last deretter ned filen eller send til Fortnox som eier/administrator. Unngå både filimport og direkte sending av samme grunnlag.",
+          "En virkelig sending oppretter et bilag i Fortnox. Referansen vises når sendingen er bekreftet. Ved usikkert resultat: åpne hjelpen for sendingsproblemer og ikke send igjen."
+        ],
+        "notice": "Automatisk sending er et eget valg for eieren og gjelder klargjorte eksporter. Dagsoppgjør opprettes fortsatt manuelt. Tilkobling og hjelp aktiverer ikke automatikken."
+      },
+      "fortnox-recovery": {
+        "title": "Kontroller et sendingsproblem",
+        "intro": "Skill mellom en stoppet sending og et manglende svar. Bilaget kan allerede finnes selv om svaret mangler.",
+        "steps": [
+          "Hvis Komisio uttrykkelig sier at sendingen ble stoppet før registrering, rett årsaken og bruk tilbudt handling for nytt forsøk.",
+          "Hvis sendingen venter eller utfallet er usikkert, ikke send igjen. Be eieren sammenligne grunnlaget med bilag i Fortnox-selskapsdatabasen som hører til sendingen.",
+          "Sammenlign dato, beløp og alle linjer. Ved et samsvarende bilag kan eieren registrere serie, nummer, regnskapsår og dokumentasjon via bekreftelsen på eksportraden.",
+          "Hvis bilaget ikke finnes, be driftsansvarlig hjelpe med undersøkelsen. Manglende treff åpner ikke for ny sending. Ikke slett eller opprett grunnlag på nytt for å omgå sperren."
+        ],
+        "notice": "Avstemming registrerer eierens kontroll, ikke automatisk bekreftelse fra Fortnox. Personale og administratorer kan lese hjelpen; bare eieren kan registrere denne bekreftelsen."
+      },
+      "fortnox-automation": {
+        "title": "Slik fungerer automatisk sending",
+        "intro": "Automatikken sender klargjorte eksporter til det tilkoblede Fortnox-foretaket. Den oppretter ikke dagsoppgjør og velger ikke kontoer.",
+        "steps": [
+          "Kontroller foretaket og kontokoblingene. Gå gjennom eksisterende eksporter før aktivering: også eldre underlag som kan sendes, kan bli tatt med. Unngå å både importere SIE-filen og sende samme underlag direkte.",
+          "Butikkens eier aktiverer automatisk sending under Kontoer og integrasjoner. Venter betyr at bakgrunnstjenesten ennå ikke har akseptert aktiveringen. Hvis funksjonen ikke er klargjort, kontakt den som drifter Komisio-installasjonen.",
+          "Fortsett å opprette og kontrollere dagsoppgjør og klargjøre eksporter manuelt. Se Siste kjøring for tidspunkt, resultat og antall sendt. Aktivert betyr ikke at noe er sendt, og en fullført kjøring betyr ikke at alle dager er avstemt.",
+          "Etter en delvis eller mislykket kjøring: åpne Avstemming og kontroller de aktuelle eksportene. Ved ventende eller usikker sending, følg hjelpen for sendeproblemer og be eieren kontrollere resultatet. Å slå automatikken av og på løser ikke en sperret sending."
+        ],
+        "notice": "Å lese hjelpen aktiverer eller sender ingenting. Automatiske kjøringer sender ikke på nytt ved bekreftet, ventende eller usikkert resultat. Deaktivering trekker ikke tilbake bilag som allerede er opprettet."
+      },
+      "receiving": {
+        "title": "Ta imot og registrer varer",
+        "intro": "Start med riktig butikk og innleverer. Registrer det som faktisk har kommet inn, og fortsett deretter med varene.",
+        "steps": [
+          "Kontroller valgt butikk og søk etter eksisterende innleverer før du oppretter en ny. Følg butikkens avtalekrav og lokale rutiner.",
+          "En forhåndsmelding betyr ikke at varene er mottatt. Bekreft mottaket først når varene er hos dere. Bruk den eksisterende innleveringen når du fortsetter arbeidet.",
+          "Åpne innleveringen og registrer én vare om gangen. Kontroller beskrivelse, pris og selger før du lagrer.",
+          "Kontroller bekreftelsen og listen over registrerte varer før merking. Hvis svaret på en lagring mangler, hold skjemaet åpent og bruk funksjonen for nytt forsøk. Ikke opprett samme vare igjen for å få en bekreftelse."
+        ],
+        "notice": "Antall registrerte varer viser lagrede opplysninger, ikke at hele innleveringen er ferdigbehandlet. Kontroller også de fysiske varene. Hjelpen endrer ingenting; be autorisert personale utføre handlinger du ikke har tilgang til."
+      },
+      "labels": {
+        "title": "Merk riktig innlevering eller vare",
+        "intro": "En mottaksetikett holder varene samlet under arbeidet. En vareetikett identifiserer den registrerte varen og viser prisen.",
+        "steps": [
+          "Åpne eksisterende innlevering eller vare og kontroller butikk og referanse. En mottaksetikett betyr ikke at varene er kontrollert eller godkjent for salg.",
+          "For en vareetikett: finn den registrerte varen, åpne etiketten og kontroller beskrivelse, pris og valuta. Hvis etiketten ikke kan vises, gå tilbake til varen og kontroller opplysningene.",
+          "Bruk sidens utskriftsalternativer. Velg riktig skriver og antall kopier for en tilkoblet skriver, eller kontroller nettleserens utskriftsdialog. En jobb i kø eller åpen dialog beviser ikke utskrift: kontroller den fysiske etiketten før den festes.",
+          "Hvis svar om utskriftskøen mangler, bruk nytt forsøk i samme åpne skjema. Ikke opprett nye jobber gjentatte ganger. Kontroller jobben under Skrivere og utskriftsjobber og be skriveransvarlig om hjelp ved problemer. Etikettsøket åpner en eksisterende referanse."
+        ],
+        "notice": "Å åpne hjelpen skriver ikke ut noe og registrerer ingen ny vare. Ikke opprett en kopi av varen for å erstatte etiketten. Fysisk utskrift og skanning må kontrolleres med butikkens utstyr."
+      },
+      "integrations": {
+        "title": "Koble til butikkens andre systemer",
+        "intro": "Start med systemet du vil koble til Komisio. Åpne avsnittet for status og innstillinger.",
+        "steps": [
+          "Velg kassasystem, nettbutikk eller regnskap ut fra hva du vil koble sammen.",
+          "Les tilkoblingsstatusen og følg trinnene i avsnittet. Noen handlinger krever en eier eller administrator.",
+          "Kontroller hvilke opplysninger som overføres og i hvilken retning før du aktiverer en automatisk funksjon.",
+          "Følg statusen for produkter, kvitteringer, ordrer eller regnskapsbilag i hver integrasjon. Åpne detaljene hvis noe må følges opp."
+        ],
+        "notice": "En tilkobling betyr ikke at alle automatiske funksjoner er aktivert. Kontroller dem enkeltvis i integrasjonens innstillinger."
+      }
+    },
+    "taskLinks": {
+      "receiving": [
+        {
+          "href": "/intake",
+          "label": "Åpne mottaket"
+        },
+        {
+          "href": "/intake/flow",
+          "label": "Butikkens arbeidsflyt"
+        },
+        {
+          "href": "/help/labels",
+          "label": "Merk riktig innlevering eller vare"
+        }
+      ],
+      "labels": [
+        {
+          "href": "/intake/items",
+          "label": "Finn en registrert vare"
+        },
+        {
+          "href": "/intake/open",
+          "label": "Åpne en etikettreferanse"
+        },
+        {
+          "href": "/settings?tab=printing",
+          "label": "Skrivere og utskriftsjobber"
+        },
+        {
+          "href": "/help/receiving",
+          "label": "Ta imot og registrer varer"
+        }
+      ],
+      "integrations": [
+        {
+          "href": "/intake/integrations",
+          "label": "Åpne integrasjoner"
+        }
+      ],
+      "fortnox-connect": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Kontoer og integrasjoner"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Dagsoppgjør og eksporter"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Avstemming"
+        }
+      ],
+      "fortnox-first-export": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Kontoer og integrasjoner"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Dagsoppgjør og eksporter"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Avstemming"
+        }
+      ],
+      "fortnox-automation": [
+        {
+          "href": "/intake/accounting?view=settings#fortnox-automation",
+          "label": "Kontoer og integrasjoner"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Dagsoppgjør og eksporter"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Avstemming"
+        },
+        {
+          "href": "/help/fortnox-recovery",
+          "label": "Kontroller et sendingsproblem"
+        }
+      ],
+      "fortnox-recovery": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Kontoer og integrasjoner"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Dagsoppgjør og eksporter"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Avstemming"
+        }
+      ]
+    },
+    "providerHelp": "Fortnox: aktivering og lisenser (åpnes i ny fane)"
+  },
+  "dk": {
+    "articles": {
+      "fortnox-connect": {
+        "title": "Tilslut Fortnox",
+        "intro": "Tilslut butikkens virksomhed og klargør kontoplanen. Tilslutning sender ingen bogføringsdata.",
+        "steps": [
+          "Du skal være ejer eller administrator i Komisio og kunne godkende adgang til den rigtige Fortnox-virksomhed. Kontrollér relevante integrations- og programlicenser i Fortnox-vejledningen.",
+          "Åbn Konti og integrationer. Indtast virksomhedsnavnet som i Fortnox, og tilslut. Log ind hos Fortnox, kontrollér virksomheden og godkend tilladelserne.",
+          "Kontrollér virksomhedsnavnet ved tilbagevenden. Brug forbindelseskontrollen for en aktuel kontrol. Vælg samme virksomhed ved gentilslutning.",
+          "Gem de konti og debet-/kreditvalg, I har aftalt med jeres bogholder. Komisio vælger ikke konti for jer."
+        ],
+        "notice": "Tilsluttet betyder ikke, at et grundlag er sendt. Komisio anmoder om adgang til virksomhedsoplysninger og bogføring, herunder oprettelse af bilag ved afsendelse."
+      },
+      "fortnox-first-export": {
+        "title": "Klargør og send det første grundlag",
+        "intro": "Arbejd med én dag ad gangen, og kontrollér virksomhed, dato og beløb før afsendelse.",
+        "steps": [
+          "Åbn Dagsafslutninger og eksporter, og opret afslutningen for den rigtige dato. Dette registrerer en oversigt i Komisio, ikke et bilag i Fortnox.",
+          "Gennemgå forhåndsvisningen: konti, debet, kredit og beløb uden konto. Afklar kontoplanen med bogholderen. Balance alene beviser ikke korrekt bogføring.",
+          "Vælg eksport som SIE 4 for at gemme grundlaget. Download derefter filen, eller send til Fortnox som ejer/administrator. Undgå både filimport og direkte afsendelse af samme grundlag.",
+          "En rigtig afsendelse opretter et bilag i Fortnox. Referencen vises ved bekræftelse. Ved usikkert resultat: åbn hjælpen om afsendelsesproblemer, og send ikke igen."
+        ],
+        "notice": "Automatisk afsendelse er et særskilt valg for ejeren og gælder klargjorte eksporter. Dagsafslutninger oprettes fortsat manuelt. Tilslutning og hjælp aktiverer ikke automatikken."
+      },
+      "fortnox-recovery": {
+        "title": "Kontrollér et afsendelsesproblem",
+        "intro": "Skeln mellem en stoppet afsendelse og et manglende svar. Bilaget kan allerede findes, selv om svaret mangler.",
+        "steps": [
+          "Hvis Komisio udtrykkeligt siger, at afsendelsen blev stoppet før registrering, ret årsagen og brug den tilbudte handling til et nyt forsøg.",
+          "Hvis afsendelsen afventer eller resultatet er usikkert, send ikke igen. Bed ejeren sammenligne grundlaget med bilag i den Fortnox-virksomhedsdatabase, der hører til afsendelsen.",
+          "Sammenlign dato, beløb og alle linjer. Ved et matchende bilag kan ejeren registrere serie, nummer, regnskabsår og dokumentation via bekræftelsen på eksportrækken.",
+          "Hvis bilaget ikke findes, bed den driftsansvarlige hjælpe med undersøgelsen. Et manglende resultat åbner ikke for en ny afsendelse. Slet eller genskab ikke grundlag for at omgå spærringen."
+        ],
+        "notice": "Afstemning registrerer ejerens kontrol, ikke automatisk bekræftelse fra Fortnox. Personale og administratorer kan læse hjælpen; kun ejeren kan registrere denne bekræftelse."
+      },
+      "fortnox-automation": {
+        "title": "Sådan fungerer automatisk afsendelse",
+        "intro": "Automatikken sender klargjorte eksporter til den tilsluttede Fortnox-virksomhed. Den opretter ikke dagsafslutninger og vælger ikke konti.",
+        "steps": [
+          "Kontrollér virksomheden og kontotilknytningen. Gennemgå eksisterende eksporter før aktivering: også ældre bilagsgrundlag, der kan sendes, kan blive medtaget. Undgå både at importere SIE-filen og sende samme grundlag direkte.",
+          "Butikkens ejer aktiverer automatisk afsendelse under Konti og integrationer. Afventer betyder, at baggrundstjenesten endnu ikke har accepteret aktiveringen. Hvis funktionen ikke er klargjort, kontakt den ansvarlige for Komisio-installationen.",
+          "Fortsæt med at oprette og gennemgå dagsafslutninger og klargøre eksporter manuelt. Se Seneste kørsel for tidspunkt, resultat og antal sendt. Aktiveret betyder ikke, at noget er sendt, og en fuldført kørsel betyder ikke, at alle dage er afstemt.",
+          "Efter en delvis eller mislykket kørsel: åbn Afstemning og gennemgå de berørte eksporter. Ved afventende eller usikker afsendelse, følg hjælpen til afsendelsesproblemer og bed ejeren kontrollere resultatet. At slå automatikken fra og til løser ikke en blokeret afsendelse."
+        ],
+        "notice": "Læsning af hjælpen aktiverer eller sender intet. Automatiske kørsler gensender ikke ved bekræftet, afventende eller usikkert resultat. Deaktivering tilbagekalder ikke bilag, der allerede er oprettet."
+      },
+      "receiving": {
+        "title": "Modtag og registrér varer",
+        "intro": "Start med den rigtige butik og indleverer. Registrér det, der fysisk er ankommet, og fortsæt derefter med varerne.",
+        "steps": [
+          "Kontrollér den valgte butik, og søg efter den eksisterende indleverer, før du opretter en ny. Følg butikkens aftalekrav og lokale rutiner.",
+          "En forhåndsanmeldelse betyder ikke, at varerne er modtaget. Bekræft først modtagelsen, når varerne er hos jer. Brug den eksisterende indlevering, når arbejdet fortsættes.",
+          "Åbn indleveringen og registrer én vare ad gangen. Kontrollér beskrivelse, pris og sælger, før du gemmer.",
+          "Kontrollér bekræftelsen og listen over registrerede varer før mærkning. Hvis svaret på en lagring mangler, hold formularen åben og brug dens mulighed for at prøve igen. Opret ikke samme vare igen for at få en bekræftelse."
+        ],
+        "notice": "Antallet af registrerede varer viser gemte oplysninger, ikke at hele indleveringen er færdigbehandlet. Kontrollér også de fysiske varer. Hjælpen ændrer ingen oplysninger; bed autoriseret personale udføre handlinger, du ikke har adgang til."
+      },
+      "labels": {
+        "title": "Mærk den rigtige indlevering eller vare",
+        "intro": "En modtagelsesetiket holder varerne samlet under arbejdet. En vareetiket identificerer den registrerede vare og viser prisen.",
+        "steps": [
+          "Åbn den eksisterende indlevering eller vare, og kontrollér butik og reference. En modtagelsesetiket betyder ikke, at varerne er kontrolleret eller godkendt til salg.",
+          "For en vareetiket: find den registrerede vare, åbn etiketten, og kontrollér beskrivelse, pris og valuta. Hvis etiketten ikke kan vises, gå tilbage til varen og kontrollér oplysningerne.",
+          "Brug sidens udskriftsmuligheder. Vælg den rigtige printer og antal kopier for en tilsluttet printer, eller gennemgå browserens udskriftsdialog. Et job i kø eller en åben dialog beviser ikke udskrivning: kontrollér den fysiske etiket, før den sættes på.",
+          "Hvis svaret om udskriftskøen mangler, prøv igen i samme åbne formular. Opret ikke nye job gentagne gange. Kontrollér jobbet under Printere og udskriftsjob, og bed den printeransvarlige om hjælp ved problemer. Etiketsøgningen åbner en eksisterende reference."
+        ],
+        "notice": "At åbne hjælpen udskriver intet og registrerer ingen ny vare. Opret ikke en dublet af varen for at erstatte etiketten. Fysisk udskrivning og scanning skal kontrolleres med butikkens udstyr."
+      },
+      "integrations": {
+        "title": "Tilslut butikkens andre systemer",
+        "intro": "Start med det system, du vil forbinde med Komisio. Åbn afsnittet for status og indstillinger.",
+        "steps": [
+          "Vælg kassesystem, webshop eller regnskab efter, hvad du vil forbinde.",
+          "Læs forbindelsesstatussen, og følg trinnene i afsnittet. Nogle handlinger kræver en ejer eller administrator.",
+          "Kontrollér, hvilke oplysninger der overføres og i hvilken retning, før du aktiverer en automatisk funktion.",
+          "Følg status for produkter, kvitteringer, ordrer eller regnskabsbilag i hver integration. Åbn detaljerne, hvis noget kræver handling."
+        ],
+        "notice": "En forbindelse betyder ikke, at alle automatiske funktioner er slået til. Kontrollér dem enkeltvis i integrationens indstillinger."
+      }
+    },
+    "taskLinks": {
+      "receiving": [
+        {
+          "href": "/intake",
+          "label": "Åbn modtagelsen"
+        },
+        {
+          "href": "/intake/flow",
+          "label": "Butikkens arbejdsgang"
+        },
+        {
+          "href": "/help/labels",
+          "label": "Mærk den rigtige indlevering eller vare"
+        }
+      ],
+      "labels": [
+        {
+          "href": "/intake/items",
+          "label": "Find en registreret vare"
+        },
+        {
+          "href": "/intake/open",
+          "label": "Åbn en etiketreference"
+        },
+        {
+          "href": "/settings?tab=printing",
+          "label": "Printere og udskriftsjob"
+        },
+        {
+          "href": "/help/receiving",
+          "label": "Modtag og registrér varer"
+        }
+      ],
+      "integrations": [
+        {
+          "href": "/intake/integrations",
+          "label": "Åbn integrationer"
+        }
+      ],
+      "fortnox-connect": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Konti og integrationer"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Dagsafslutninger og eksporter"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Afstemning"
+        }
+      ],
+      "fortnox-first-export": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Konti og integrationer"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Dagsafslutninger og eksporter"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Afstemning"
+        }
+      ],
+      "fortnox-automation": [
+        {
+          "href": "/intake/accounting?view=settings#fortnox-automation",
+          "label": "Konti og integrationer"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Dagsafslutninger og eksporter"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Afstemning"
+        },
+        {
+          "href": "/help/fortnox-recovery",
+          "label": "Kontrollér et afsendelsesproblem"
+        }
+      ],
+      "fortnox-recovery": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Konti og integrationer"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Dagsafslutninger og eksporter"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Afstemning"
+        }
+      ]
+    },
+    "providerHelp": "Fortnox: aktivering og licenser (åbner en ny fane)"
+  },
+  "fi": {
+    "articles": {
+      "fortnox-connect": {
+        "title": "Yhdistä Fortnox",
+        "intro": "Yhdistä myymälän yritys ja valmistele tilikartta. Yhdistäminen ei lähetä kirjanpitotietoja.",
+        "steps": [
+          "Sinun on oltava Komision omistaja tai järjestelmänvalvoja ja voitava hyväksyä oikean Fortnox-yrityksen käyttöoikeus. Tarkista tarvittavat integraatio- ja ohjelmalisenssit Fortnoxin ohjeista.",
+          "Avaa Tilit ja integraatiot. Anna yrityksen nimi sellaisena kuin se on Fortnoxissa ja yhdistä. Kirjaudu Fortnoxiin, tarkista yritys ja hyväksy pyydetyt oikeudet.",
+          "Tarkista yrityksen nimi palattuasi. Tarkista nykyinen yhteys yhteyden tarkistustoiminnolla. Valitse sama yritys yhdistäessäsi uudelleen.",
+          "Tallenna kirjanpitäjän kanssa sovitut tilit ja debet-/kredit-valinnat. Komisio ei valitse tilejä puolestasi."
+        ],
+        "notice": "Yhdistetty tila ei tarkoita, että aineisto on lähetetty. Komisio pyytää yritystietojen ja kirjanpidon käyttöoikeutta, mukaan lukien tositteiden luonti lähetystoimintoa käytettäessä."
+      },
+      "fortnox-first-export": {
+        "title": "Valmistele ja lähetä ensimmäinen aineisto",
+        "intro": "Käsittele päivä kerrallaan ja tarkista yritys, päivämäärä ja summat ennen lähettämistä.",
+        "steps": [
+          "Avaa Päivän päätökset ja viennit ja luo päätös oikealle päivälle. Tämä tallentaa yhteenvedon Komisioon, ei tositetta Fortnoxiin.",
+          "Tarkista esikatselun tilit, debet, kredit ja summat, joilta puuttuu tili. Tarkista tilikartta kirjanpitäjän kanssa. Tasapaino yksin ei osoita kirjanpidon oikeellisuutta.",
+          "Tallenna aineisto valitsemalla SIE 4 -vienti. Lataa sitten tiedosto tai lähetä Fortnoxiin omistajana/järjestelmänvalvojana. Älä sekä tuo tiedostoa että lähetä samaa aineistoa suoraan.",
+          "Todellinen lähetys luo tositteen Fortnoxiin. Viite näkyy vahvistuksen jälkeen. Jos tulos on epävarma, avaa lähetysongelmien ohje äläkä lähetä uudelleen."
+        ],
+        "notice": "Automaattinen lähetys on omistajan erillinen valinta valmistelluille vienneille. Päivän päätökset luodaan edelleen käsin. Yhdistäminen tai ohjeen lukeminen ei käynnistä automaatiota."
+      },
+      "fortnox-recovery": {
+        "title": "Tarkista lähetysongelma",
+        "intro": "Erota pysäytetty lähetys puuttuvasta vastauksesta. Tosite saattaa jo olla olemassa, vaikka vastaus puuttuu.",
+        "steps": [
+          "Jos Komisio ilmoittaa nimenomaisesti lähetyksen pysähtyneen ennen kirjaamista, korjaa syy ja käytä tarjottua uudelleenyritystoimintoa.",
+          "Jos lähetys odottaa tai tulos on epävarma, älä lähetä uudelleen. Pyydä omistajaa vertaamaan aineistoa lähetykseen sidotun Fortnox-yritystietokannan tositteisiin.",
+          "Vertaa päivämäärää, summia ja kaikkia rivejä. Jos vastaava tosite löytyy, omistaja voi kirjata sarjan, numeron, tilikauden ja tarkistustiedot vientirivin vahvistustoiminnolla.",
+          "Jos tositetta ei löydy, pyydä asennuksen ylläpitäjää auttamaan selvityksessä. Puuttuva tulos ei vapauta uutta lähetystä. Älä poista tai luo aineistoja uudelleen eston kiertämiseksi."
+        ],
+        "notice": "Täsmäytys tallentaa omistajan tarkistuksen, ei Fortnoxin automaattista vahvistusta. Henkilökunta ja järjestelmänvalvojat voivat lukea ohjeen; vain omistaja voi kirjata tämän vahvistuksen."
+      },
+      "fortnox-automation": {
+        "title": "Automaattisen lähetyksen toiminta",
+        "intro": "Automaatio lähettää valmistellut viennit yhdistettyyn Fortnox-yritykseen. Se ei luo päivän päätöksiä eikä valitse tilejä.",
+        "steps": [
+          "Tarkista yritys ja tilikohdistukset. Tarkista olemassa olevat viennit ennen käyttöönottoa: myös vanhemmat lähetyskelpoiset viennit voivat tulla mukaan. Älä sekä tuo SIE-tiedostoa että lähetä samaa aineistoa suoraan.",
+          "Myymälän omistaja ottaa automaattisen lähetyksen käyttöön tilikartan ja Fortnoxin asetuksissa. Odottaa tarkoittaa, ettei taustapalvelu ole vielä hyväksynyt käyttöönottoa. Jos toimintoa ei ole määritetty, ota yhteyttä Komisio-asennuksesta vastaavaan henkilöön.",
+          "Luo ja tarkista päivän päätökset sekä valmistele viennit edelleen käsin. Viimeisin ajo näyttää ajan, tuloksen ja lähetettyjen määrän. Käytössä ei tarkoita, että mitään olisi lähetetty, eikä valmis ajo tarkoita, että kaikki päivät olisi täsmäytetty.",
+          "Osittaisen tai epäonnistuneen ajon jälkeen avaa täsmäytys ja tarkista kyseiset viennit. Jos lähetys odottaa tai tulos on epävarma, noudata lähetysongelmien ohjetta ja pyydä omistajaa tarkistamaan tulos. Automaation poistaminen käytöstä ja uudelleen käyttöönotto ei vapauta estettyä lähetystä."
+        ],
+        "notice": "Ohjeen lukeminen ei ota mitään käyttöön eikä lähetä mitään. Automaattiset ajot eivät lähetä uudelleen vientiä, jonka tulos on vahvistettu, odottava tai epävarma. Käytöstä poistaminen ei peru jo luotuja tositteita."
+      },
+      "receiving": {
+        "title": "Vastaanota ja rekisteröi tuotteet",
+        "intro": "Aloita oikeasta myymälästä ja tavaran toimittajasta. Kirjaa fyysisesti saapuneet tavarat ja käsittele sitten tuotteet.",
+        "steps": [
+          "Tarkista valittu myymälä ja etsi olemassa oleva tavaran toimittaja ennen uuden luomista. Noudata myymälän sopimusvaatimuksia ja paikallisia käytäntöjä.",
+          "Ennakkoilmoitus ei tarkoita, että tavarat on vastaanotettu. Vahvista vastaanotto vasta, kun tavarat ovat teillä. Jatka työtä olemassa olevasta toimituksesta.",
+          "Avaa tuontierä ja rekisteröi yksi tuote kerrallaan. Tarkista kuvaus, hinta ja myyjä ennen tallennusta.",
+          "Tarkista vahvistus ja rekisteröityjen tuotteiden luettelo ennen merkintää. Jos tallennuksen vastaus puuttuu, pidä lomake auki ja käytä sen uudelleenyritystä. Älä luo samaa tuotetta uudelleen saadaksesi vahvistuksen."
+        ],
+        "notice": "Rekisteröityjen tuotteiden määrä kertoo tallennetuista tiedoista, ei koko toimituksen käsittelyn valmistumisesta. Tarkista myös fyysiset tavarat. Ohje ei muuta tietoja; pyydä valtuutettua henkilökuntaa tekemään toimet, joihin sinulla ei ole pääsyä."
+      },
+      "labels": {
+        "title": "Merkitse oikea toimitus tai tuote",
+        "intro": "Vastaanottoetiketti pitää tavarat yhdessä käsittelyn aikana. Tuote-etiketti yksilöi rekisteröidyn tuotteen ja näyttää sen hinnan.",
+        "steps": [
+          "Avaa olemassa oleva toimitus tai tuote ja tarkista myymälä sekä viite. Vastaanottoetiketti ei tarkoita, että tavarat on tarkastettu tai hyväksytty myyntiin.",
+          "Tuote-etikettiä varten etsi rekisteröity tuote, avaa etiketti ja tarkista kuvaus, hinta ja valuutta. Jos etikettiä ei voi näyttää, palaa tuotteeseen ja tarkista sen tiedot.",
+          "Käytä sivun tulostusvaihtoehtoja. Valitse oikea tulostin ja kopiomäärä yhdistetylle tulostimelle tai tarkista selaimen tulostusikkuna. Jonossa oleva työ tai avoin ikkuna ei todista tulostusta: tarkista fyysinen etiketti ennen kiinnittämistä.",
+          "Jos tulostusjonoon lisäämisen vastaus puuttuu, yritä uudelleen samassa avoimessa lomakkeessa. Älä luo jatkuvasti uusia töitä. Tarkista työ tulostimien ja tulostustöiden asetuksista ja pyydä tarvittaessa apua tulostimesta vastaavalta henkilöltä. Etikettihaulla voi avata olemassa olevan viitteen."
+        ],
+        "notice": "Ohjeen avaaminen ei tulosta mitään eikä rekisteröi uutta tuotetta. Älä luo tuotteesta kopiota etiketin korvaamiseksi. Fyysinen tulostus ja skannaus on tarkistettava myymälän laitteilla."
+      },
+      "integrations": {
+        "title": "Yhdistä myymälän muut järjestelmät",
+        "intro": "Aloita järjestelmästä, jonka haluat yhdistää Komisioon. Avaa sen osio nähdäksesi tilan ja asetukset.",
+        "steps": [
+          "Valitse kassajärjestelmä, verkkokauppa tai kirjanpito sen mukaan, mitä haluat yhdistää.",
+          "Lue yhteyden tila ja noudata osion vaiheita. Jotkin toiminnot vaativat omistajan tai ylläpitäjän oikeudet.",
+          "Tarkista siirrettävät tiedot ja siirtosuunta ennen automaattisen toiminnon käyttöönottoa.",
+          "Seuraa tuotteiden, kuittien, tilausten tai kirjanpitoaineiston tilaa kussakin integraatiossa. Avaa tiedot, jos jokin vaatii huomiota."
+        ],
+        "notice": "Yhteys ei tarkoita, että kaikki automaattiset toiminnot ovat käytössä. Tarkista ne erikseen integraation asetuksista."
+      }
+    },
+    "taskLinks": {
+      "receiving": [
+        {
+          "href": "/intake",
+          "label": "Avaa vastaanotto"
+        },
+        {
+          "href": "/intake/flow",
+          "label": "Myymälän työnkulku"
+        },
+        {
+          "href": "/help/labels",
+          "label": "Merkitse oikea toimitus tai tuote"
+        }
+      ],
+      "labels": [
+        {
+          "href": "/intake/items",
+          "label": "Etsi rekisteröity tuote"
+        },
+        {
+          "href": "/intake/open",
+          "label": "Avaa etiketin viite"
+        },
+        {
+          "href": "/settings?tab=printing",
+          "label": "Tulostimet ja tulostustyöt"
+        },
+        {
+          "href": "/help/receiving",
+          "label": "Vastaanota ja rekisteröi tuotteet"
+        }
+      ],
+      "integrations": [
+        {
+          "href": "/intake/integrations",
+          "label": "Avaa integraatiot"
+        }
+      ],
+      "fortnox-connect": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Tilit ja integraatiot"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Päivän päätökset ja viennit"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Täsmäytys"
+        }
+      ],
+      "fortnox-first-export": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Tilit ja integraatiot"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Päivän päätökset ja viennit"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Täsmäytys"
+        }
+      ],
+      "fortnox-automation": [
+        {
+          "href": "/intake/accounting?view=settings#fortnox-automation",
+          "label": "Tilit ja integraatiot"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Päivän päätökset ja viennit"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Täsmäytys"
+        },
+        {
+          "href": "/help/fortnox-recovery",
+          "label": "Tarkista lähetysongelma"
+        }
+      ],
+      "fortnox-recovery": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Tilit ja integraatiot"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Päivän päätökset ja viennit"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Täsmäytys"
+        }
+      ]
+    },
+    "providerHelp": "Fortnox: käyttöönotto ja lisenssit (avautuu uuteen välilehteen)"
+  },
+  "de": {
+    "articles": {
+      "fortnox-connect": {
+        "title": "Fortnox verbinden",
+        "intro": "Verbinden Sie das Unternehmen des Geschäfts und bereiten Sie die Kontenzuordnung vor. Dabei werden keine Buchungsdaten gesendet.",
+        "steps": [
+          "Sie müssen Eigentümer oder Administrator in Komisio sein und den Zugriff auf das richtige Fortnox-Unternehmen genehmigen können. Prüfen Sie nötige Integrations- und Programmlizenzen anhand der Fortnox-Anleitung.",
+          "Öffnen Sie Konten und Integrationen. Geben Sie den Unternehmensnamen wie in Fortnox ein und verbinden Sie sich. Melden Sie sich bei Fortnox an, prüfen Sie das Unternehmen und genehmigen Sie die angeforderten Rechte.",
+          "Prüfen Sie nach der Rückkehr den Unternehmensnamen. Nutzen Sie die Verbindungsprüfung für einen aktuellen Stand. Wählen Sie beim erneuten Verbinden dasselbe Unternehmen.",
+          "Speichern Sie die mit Ihrer Buchhaltung vereinbarten Konten und Soll-/Haben-Zuordnungen. Komisio wählt keine Konten für Sie aus."
+        ],
+        "notice": "Verbunden bedeutet nicht, dass ein Export gesendet wurde. Komisio fordert Zugriff auf Unternehmensdaten und Buchführung an, einschließlich Belegerstellung bei Nutzung der Sendefunktion."
+      },
+      "fortnox-first-export": {
+        "title": "Ersten Export vorbereiten und senden",
+        "intro": "Bearbeiten Sie einen Tag nach dem anderen und prüfen Sie Unternehmen, Datum und Beträge vor dem Senden.",
+        "steps": [
+          "Öffnen Sie Tagesabschlüsse und Exporte und erstellen Sie den Abschluss für das richtige Datum. Dies speichert eine Zusammenfassung in Komisio, keinen Beleg in Fortnox.",
+          "Prüfen Sie Konten, Soll, Haben und nicht zugeordnete Beträge in der Vorschau. Stimmen Sie die Zuordnung mit Ihrer Buchhaltung ab. Ausgeglichene Summen allein belegen keine korrekte Buchführung.",
+          "Wählen Sie den Export als SIE 4, um die Grundlage zu speichern. Laden Sie dann die Datei herunter oder senden Sie als Eigentümer/Administrator an Fortnox. Importieren und senden Sie nicht denselben Export doppelt.",
+          "Eine echte Sendung erstellt einen Beleg in Fortnox. Nach Bestätigung erscheint die Referenz. Bei ungewissem Ergebnis öffnen Sie die Hilfe zu Sendeproblemen und senden Sie nicht erneut."
+        ],
+        "notice": "Automatisches Senden ist eine separate Entscheidung des Eigentümers für vorbereitete Exporte. Tagesabschlüsse bleiben manuell. Verbindung oder Hilfe aktivieren keine Automatik."
+      },
+      "fortnox-recovery": {
+        "title": "Sendeproblem prüfen",
+        "intro": "Unterscheiden Sie eine gestoppte Sendung von einer fehlenden Antwort. Der Beleg kann trotz fehlender Antwort bereits existieren.",
+        "steps": [
+          "Wenn Komisio ausdrücklich einen Stopp vor der Registrierung meldet, beheben Sie die Ursache und nutzen Sie die angebotene Wiederholung.",
+          "Bei ausstehender Sendung oder ungewissem Ergebnis nicht erneut senden. Bitten Sie den Eigentümer, den Export mit Belegen in der an die Sendung gebundenen Fortnox-Unternehmensdatenbank zu vergleichen.",
+          "Vergleichen Sie Datum, Beträge und alle Zeilen. Bei einem passenden Beleg kann der Eigentümer Serie, Nummer, Geschäftsjahr und Prüfnachweis über die Bestätigung in der Exportzeile erfassen.",
+          "Wenn kein Beleg gefunden wird, bitten Sie den Installationsbetreiber um Untersuchung. Ein fehlender Treffer erlaubt keine neue Sendung. Löschen oder erstellen Sie keine Exporte neu, um die Sperre zu umgehen."
+        ],
+        "notice": "Der Abgleich erfasst die Prüfung des Eigentümers, keine automatische Fortnox-Verifikation. Personal und Administratoren können die Hilfe lesen; nur der Eigentümer kann diese Bestätigung erfassen."
+      },
+      "fortnox-automation": {
+        "title": "So funktioniert der automatische Versand",
+        "intro": "Die Automatik sendet vorbereitete Exporte an das verbundene Fortnox-Unternehmen. Sie erstellt keine Tagesabschlüsse und wählt keine Konten aus.",
+        "steps": [
+          "Prüfen Sie Unternehmen und Kontenzuordnung. Prüfen Sie vorhandene Exporte vor der Aktivierung: Auch ältere versandfähige Exporte können einbezogen werden. Importieren Sie nicht die SIE-Datei und senden denselben Export zusätzlich direkt.",
+          "Der Ladeninhaber aktiviert den automatischen Versand unter Kontenplan und Fortnox. Wartend bedeutet, dass der Hintergrunddienst die Aktivierung noch nicht angenommen hat. Ist die Funktion nicht eingerichtet, wenden Sie sich an die zuständige Person für die Komisio-Installation.",
+          "Erstellen und prüfen Sie Tagesabschlüsse und bereiten Sie Exporte weiterhin manuell vor. Letzter Lauf zeigt Zeitpunkt, Ergebnis und Anzahl der Sendungen. Aktiviert bedeutet nicht, dass etwas gesendet wurde. Ein abgeschlossener Lauf bedeutet nicht, dass alle Tage abgestimmt sind.",
+          "Öffnen Sie nach einem teilweise abgeschlossenen oder fehlgeschlagenen Lauf die Abstimmung und prüfen Sie betroffene Exporte. Bei wartendem oder ungewissem Versand folgen Sie der Hilfe zu Versandproblemen und bitten den Inhaber um Prüfung. Aus- und Einschalten der Automatik hebt keine Versandsperre auf."
+        ],
+        "notice": "Das Lesen der Hilfe aktiviert und sendet nichts. Automatische Läufe senden Exporte mit bestätigtem, wartendem oder ungewissem Ergebnis nicht erneut. Das Deaktivieren nimmt bereits erstellte Buchungsbelege nicht zurück."
+      },
+      "receiving": {
+        "title": "Waren annehmen und erfassen",
+        "intro": "Beginnen Sie mit dem richtigen Laden und Einlieferer. Erfassen Sie tatsächlich eingetroffene Waren und bearbeiten Sie dann die Artikel.",
+        "steps": [
+          "Prüfen Sie den ausgewählten Laden und suchen Sie nach dem vorhandenen Einlieferer, bevor Sie einen neuen anlegen. Beachten Sie die Vertragsanforderungen und lokalen Abläufe des Ladens.",
+          "Eine Voranmeldung bedeutet nicht, dass Waren angenommen wurden. Bestätigen Sie die Annahme erst, wenn die Waren bei Ihnen sind. Setzen Sie die Arbeit mit der vorhandenen Einlieferung fort.",
+          "Öffnen Sie die Abgabe und erfassen Sie jeweils einen Artikel. Prüfen Sie Beschreibung, Preis und Verkäufer vor dem Speichern.",
+          "Prüfen Sie die Bestätigung und die Liste erfasster Artikel vor dem Etikettieren. Fehlt die Antwort auf eine Speicherung, lassen Sie das Formular geöffnet und nutzen dessen Wiederholungsfunktion. Legen Sie denselben Artikel nicht erneut an, um eine Bestätigung zu erhalten."
+        ],
+        "notice": "Artikelzahlen beschreiben gespeicherte Daten, nicht den Abschluss der gesamten Einlieferung. Prüfen Sie auch die physischen Waren. Die Hilfe ändert keine Daten; bitten Sie berechtigtes Personal um Aktionen, auf die Sie keinen Zugriff haben."
+      },
+      "labels": {
+        "title": "Die richtige Einlieferung oder den Artikel etikettieren",
+        "intro": "Ein Annahmeetikett hält Waren während der Bearbeitung zusammen. Ein Artikeletikett identifiziert den erfassten Artikel und zeigt seinen Preis.",
+        "steps": [
+          "Öffnen Sie die vorhandene Einlieferung oder den Artikel und prüfen Sie Laden und Referenz. Ein Annahmeetikett bedeutet nicht, dass Waren geprüft oder zum Verkauf freigegeben wurden.",
+          "Suchen Sie für ein Artikeletikett den erfassten Artikel, öffnen Sie sein Etikett und prüfen Sie Beschreibung, Preis und Währung. Ist das Etikett nicht verfügbar, kehren Sie zum Artikel zurück und prüfen seine Angaben.",
+          "Nutzen Sie die Druckoptionen der Seite. Wählen Sie für einen verbundenen Drucker den richtigen Drucker und die Kopienzahl oder prüfen Sie den Druckdialog des Browsers. Ein eingereihter Auftrag oder geöffneter Dialog beweist keinen Druck: Prüfen Sie das physische Etikett vor dem Anbringen.",
+          "Fehlt die Antwort auf das Einreihen, wiederholen Sie den Versuch im selben geöffneten Formular. Erstellen Sie nicht immer neue Aufträge. Prüfen Sie den Auftrag unter Drucker und Druckaufträge und bitten Sie bei Problemen die zuständige Person um Hilfe. Die Etikettensuche öffnet eine vorhandene Referenz."
+        ],
+        "notice": "Das Öffnen der Hilfe druckt nichts und erfasst keinen neuen Artikel. Legen Sie kein Artikelduplikat an, um ein Etikett zu ersetzen. Physischer Druck und Scannen müssen mit den Geräten des Ladens geprüft werden."
+      },
+      "integrations": {
+        "title": "Weitere Systeme Ihres Geschäfts verbinden",
+        "intro": "Beginnen Sie mit dem System, das Sie mit Komisio verbinden möchten. Öffnen Sie dessen Bereich für Status und Einstellungen.",
+        "steps": [
+          "Wählen Sie Kassensystem, Onlineshop oder Buchhaltung entsprechend der gewünschten Verbindung.",
+          "Lesen Sie den Verbindungsstatus und folgen Sie den Schritten im Bereich. Manche Aktionen erfordern Inhaber- oder Administratorrechte.",
+          "Prüfen Sie vor dem Aktivieren einer automatischen Funktion, welche Daten in welche Richtung übertragen werden.",
+          "Verfolgen Sie den Status von Produkten, Belegen, Bestellungen oder Buchhaltungsunterlagen in der jeweiligen Integration. Öffnen Sie die Details, wenn Handlungsbedarf besteht."
+        ],
+        "notice": "Eine Verbindung bedeutet nicht, dass alle automatischen Funktionen aktiviert sind. Prüfen Sie diese einzeln in den Integrationseinstellungen."
+      }
+    },
+    "taskLinks": {
+      "receiving": [
+        {
+          "href": "/intake",
+          "label": "Warenannahme öffnen"
+        },
+        {
+          "href": "/intake/flow",
+          "label": "Arbeitsablauf im Laden"
+        },
+        {
+          "href": "/help/labels",
+          "label": "Die richtige Einlieferung oder den Artikel etikettieren"
+        }
+      ],
+      "labels": [
+        {
+          "href": "/intake/items",
+          "label": "Erfassten Artikel finden"
+        },
+        {
+          "href": "/intake/open",
+          "label": "Etikettenreferenz öffnen"
+        },
+        {
+          "href": "/settings?tab=printing",
+          "label": "Drucker und Druckaufträge"
+        },
+        {
+          "href": "/help/receiving",
+          "label": "Waren annehmen und erfassen"
+        }
+      ],
+      "integrations": [
+        {
+          "href": "/intake/integrations",
+          "label": "Integrationen öffnen"
+        }
+      ],
+      "fortnox-connect": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Konten und Integrationen"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Tagesabschlüsse und Exporte"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Abgleich"
+        }
+      ],
+      "fortnox-first-export": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Konten und Integrationen"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Tagesabschlüsse und Exporte"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Abgleich"
+        }
+      ],
+      "fortnox-automation": [
+        {
+          "href": "/intake/accounting?view=settings#fortnox-automation",
+          "label": "Konten und Integrationen"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Tagesabschlüsse und Exporte"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Abgleich"
+        },
+        {
+          "href": "/help/fortnox-recovery",
+          "label": "Sendeproblem prüfen"
+        }
+      ],
+      "fortnox-recovery": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Konten und Integrationen"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Tagesabschlüsse und Exporte"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Abgleich"
+        }
+      ]
+    },
+    "providerHelp": "Fortnox: Aktivierung und Lizenzen (neuer Tab)"
+  },
+  "es": {
+    "articles": {
+      "fortnox-connect": {
+        "title": "Conectar Fortnox",
+        "intro": "Conecta la empresa de la tienda y prepara las cuentas. La conexión no envía datos contables.",
+        "steps": [
+          "Debes ser propietario o administrador en Komisio y poder autorizar el acceso a la empresa correcta de Fortnox. Comprueba las licencias de integración y de programa aplicables en la documentación de Fortnox.",
+          "Abre Cuentas e integraciones. Introduce el nombre de la empresa tal como aparece en Fortnox y conecta. Inicia sesión en Fortnox, comprueba la empresa y aprueba los permisos solicitados.",
+          "Al volver, comprueba el nombre de la empresa. Utiliza la comprobación de conexión para conocer su estado actual. Elige la misma empresa al reconectar.",
+          "Guarda las cuentas y las opciones de debe/haber acordadas con tu asesor contable. Komisio no elige las cuentas por ti."
+        ],
+        "notice": "Conectado no significa que se haya enviado un documento. Komisio solicita acceso a información de empresa y contabilidad, incluida la creación de asientos al utilizar el envío."
+      },
+      "fortnox-first-export": {
+        "title": "Preparar y enviar el primer documento",
+        "intro": "Trabaja con un día cada vez y comprueba empresa, fecha e importes antes de enviar.",
+        "steps": [
+          "Abre Cierres diarios y exportaciones y genera el cierre para la fecha correcta. Esto guarda un resumen en Komisio, no un asiento en Fortnox.",
+          "Revisa las cuentas, debe, haber e importes sin cuenta de la vista previa. Consulta la configuración con tu asesor. Que los totales cuadren no demuestra por sí solo una contabilidad correcta.",
+          "Elige exportar como SIE 4 para guardar el documento. Después descarga el archivo o envía a Fortnox como propietario/administrador. Evita importar el archivo y enviar directamente el mismo documento.",
+          "Un envío real crea un asiento en Fortnox. La referencia aparece al confirmarse. Si el resultado es incierto, abre la ayuda sobre problemas de envío y no vuelvas a enviar."
+        ],
+        "notice": "El envío automático es una elección independiente del propietario para exportaciones preparadas. Los cierres diarios siguen siendo manuales. Conectar o leer la ayuda no activa la automatización."
+      },
+      "fortnox-recovery": {
+        "title": "Comprobar un problema de envío",
+        "intro": "Distingue un envío detenido de una respuesta ausente. El asiento podría existir aunque falte la respuesta.",
+        "steps": [
+          "Si Komisio indica expresamente que el envío se detuvo antes del registro, corrige la causa y utiliza la acción de reintento ofrecida.",
+          "Si el envío está pendiente o el resultado es incierto, no vuelvas a enviar. Pide al propietario que compare el documento con los asientos de la base de datos de empresa de Fortnox vinculada al envío.",
+          "Compara fecha, importes y todas las líneas. Si existe un asiento coincidente, el propietario puede registrar serie, número, ejercicio y pruebas mediante la confirmación de la fila de exportación.",
+          "Si no se encuentra el asiento, pide ayuda al responsable de la instalación para investigarlo. La ausencia no permite otro envío. No borres ni recrees documentos para eludir el bloqueo."
+        ],
+        "notice": "La conciliación registra la comprobación del propietario, no una verificación automática de Fortnox. Personal y administradores pueden leer la ayuda; solo el propietario puede registrar esta confirmación."
+      },
+      "fortnox-automation": {
+        "title": "Cómo funciona el envío automático",
+        "intro": "La automatización envía exportaciones preparadas a la empresa de Fortnox conectada. No crea cierres diarios ni elige cuentas.",
+        "steps": [
+          "Comprueba la empresa y la asignación de cuentas. Revisa las exportaciones existentes antes de activar: también pueden incluirse exportaciones antiguas aptas para el envío. Evita importar el archivo SIE y enviar directamente la misma exportación.",
+          "El propietario de la tienda activa el envío automático en Plan de cuentas y Fortnox. Pendiente significa que el servicio en segundo plano aún no ha aceptado la activación. Si la función no está configurada, contacta con la persona responsable de la instalación de Komisio.",
+          "Sigue creando y revisando cierres diarios y preparando exportaciones manualmente. Última ejecución muestra la hora, el resultado y el número de envíos. Activado no significa que se haya enviado algo, y una ejecución completada no significa que todos los días estén conciliados.",
+          "Tras una ejecución parcial o fallida, abre Conciliación y revisa las exportaciones afectadas. Si el envío está pendiente o su resultado es incierto, sigue la ayuda sobre problemas de envío y pide al propietario que compruebe el resultado. Desactivar y reactivar la automatización no desbloquea un envío retenido."
+        ],
+        "notice": "Leer la ayuda no activa ni envía nada. Las ejecuciones automáticas no reenvían exportaciones con resultado confirmado, pendiente o incierto. Desactivar la automatización no anula los asientos ya creados."
+      },
+      "receiving": {
+        "title": "Recibir y registrar artículos",
+        "intro": "Empieza con la tienda y el consignante correctos. Registra lo que ha llegado físicamente y después procesa los artículos.",
+        "steps": [
+          "Comprueba la tienda seleccionada y busca al consignante existente antes de crear uno nuevo. Sigue los requisitos de acuerdos y las rutinas de la tienda.",
+          "Un aviso previo no significa que los artículos se hayan recibido. Confirma la recepción solo cuando estén en la tienda. Continúa el trabajo desde la entrega existente.",
+          "Abre la entrega y registra un artículo a la vez. Comprueba la descripción, el precio y el vendedor antes de guardar.",
+          "Comprueba la confirmación y la lista de artículos registrados antes de etiquetar. Si falta la respuesta al guardar, mantén abierto el formulario y usa su opción de reintento. No crees el mismo artículo de nuevo para obtener una confirmación."
+        ],
+        "notice": "El número de artículos registrados describe datos guardados, no la finalización de toda la entrega. Comprueba también los artículos físicos. La ayuda no modifica datos; pide al personal autorizado que realice las acciones a las que no tienes acceso."
+      },
+      "labels": {
+        "title": "Etiquetar la entrega o el artículo correcto",
+        "intro": "Una etiqueta de recepción mantiene juntos los artículos durante el proceso. Una etiqueta de artículo identifica el artículo registrado y muestra su precio.",
+        "steps": [
+          "Abre la entrega o el artículo existente y comprueba la tienda y la referencia. Una etiqueta de recepción no significa que los artículos se hayan revisado o aceptado para la venta.",
+          "Para una etiqueta de artículo, busca el artículo registrado, abre la etiqueta y comprueba descripción, precio y moneda. Si la etiqueta no está disponible, vuelve al artículo y revisa sus datos.",
+          "Usa las opciones de impresión de la página. Elige la impresora y el número de copias correctos para una impresora conectada o revisa el diálogo de impresión del navegador. Un trabajo en cola o un diálogo abierto no demuestra que se haya impreso: comprueba la etiqueta física antes de colocarla.",
+          "Si falta la respuesta al poner el trabajo en cola, reintenta en el mismo formulario abierto. No crees trabajos nuevos repetidamente. Comprueba el trabajo en Impresoras y trabajos de impresión y pide ayuda al responsable de la impresora si es necesario. La búsqueda de etiquetas permite abrir una referencia existente."
+        ],
+        "notice": "Abrir la ayuda no imprime nada ni registra un artículo nuevo. No dupliques un artículo para sustituir su etiqueta. La impresión física y el escaneo deben comprobarse con el equipo de la tienda."
+      },
+      "integrations": {
+        "title": "Conecta los demás sistemas de tu tienda",
+        "intro": "Empieza por el sistema que quieras conectar con Komisio. Abre su sección para ver el estado y los ajustes.",
+        "steps": [
+          "Elige punto de venta, tienda online o contabilidad según lo que quieras conectar.",
+          "Lee el estado de la conexión y sigue los pasos de esa sección. Algunas acciones requieren un propietario o administrador.",
+          "Comprueba qué información se transfiere y en qué dirección antes de activar una función automática.",
+          "Consulta el estado de productos, recibos, pedidos o documentos contables en cada integración. Abre los detalles si algo requiere atención."
+        ],
+        "notice": "Una conexión no significa que todas las funciones automáticas estén activadas. Compruébalas por separado en los ajustes de la integración."
+      }
+    },
+    "taskLinks": {
+      "receiving": [
+        {
+          "href": "/intake",
+          "label": "Abrir recepción"
+        },
+        {
+          "href": "/intake/flow",
+          "label": "Flujo de trabajo de la tienda"
+        },
+        {
+          "href": "/help/labels",
+          "label": "Etiquetar la entrega o el artículo correcto"
+        }
+      ],
+      "labels": [
+        {
+          "href": "/intake/items",
+          "label": "Buscar un artículo registrado"
+        },
+        {
+          "href": "/intake/open",
+          "label": "Abrir una referencia de etiqueta"
+        },
+        {
+          "href": "/settings?tab=printing",
+          "label": "Impresoras y trabajos de impresión"
+        },
+        {
+          "href": "/help/receiving",
+          "label": "Recibir y registrar artículos"
+        }
+      ],
+      "integrations": [
+        {
+          "href": "/intake/integrations",
+          "label": "Abrir integraciones"
+        }
+      ],
+      "fortnox-connect": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Cuentas e integraciones"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Cierres diarios y exportaciones"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Conciliación"
+        }
+      ],
+      "fortnox-first-export": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Cuentas e integraciones"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Cierres diarios y exportaciones"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Conciliación"
+        }
+      ],
+      "fortnox-automation": [
+        {
+          "href": "/intake/accounting?view=settings#fortnox-automation",
+          "label": "Cuentas e integraciones"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Cierres diarios y exportaciones"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Conciliación"
+        },
+        {
+          "href": "/help/fortnox-recovery",
+          "label": "Comprobar un problema de envío"
+        }
+      ],
+      "fortnox-recovery": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Cuentas e integraciones"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Cierres diarios y exportaciones"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Conciliación"
+        }
+      ]
+    },
+    "providerHelp": "Fortnox: activación y licencias (nueva pestaña)"
+  },
+  "it": {
+    "articles": {
+      "fortnox-connect": {
+        "title": "Collega Fortnox",
+        "intro": "Collega l’azienda del negozio e prepara i conti. Il collegamento non invia dati contabili.",
+        "steps": [
+          "Devi essere proprietario o amministratore in Komisio e poter autorizzare l’accesso all’azienda Fortnox corretta. Controlla le licenze di integrazione e di programma applicabili nella guida Fortnox.",
+          "Apri Conti e integrazioni. Inserisci il nome dell’azienda come appare in Fortnox e collegati. Accedi a Fortnox, verifica l’azienda e approva i permessi richiesti.",
+          "Al ritorno, verifica il nome dell’azienda. Usa il controllo del collegamento per verificarne lo stato attuale. Scegli la stessa azienda quando ti ricolleghi.",
+          "Salva i conti e le scelte dare/avere concordate con il commercialista. Komisio non sceglie i conti per te."
+        ],
+        "notice": "Collegato non significa che un documento sia stato inviato. Komisio richiede accesso ai dati aziendali e alla contabilità, inclusa la creazione di registrazioni quando si usa l’invio."
+      },
+      "fortnox-first-export": {
+        "title": "Prepara e invia il primo documento",
+        "intro": "Lavora su un giorno alla volta e verifica azienda, data e importi prima di inviare.",
+        "steps": [
+          "Apri Chiusure giornaliere ed esportazioni e genera la chiusura per la data corretta. Questo salva un riepilogo in Komisio, non una registrazione in Fortnox.",
+          "Esamina conti, dare, avere e importi senza conto nell’anteprima. Verifica la mappatura con il commercialista. Il bilanciamento dei totali non prova da solo la correttezza contabile.",
+          "Scegli l’esportazione SIE 4 per salvare il documento. Poi scarica il file oppure invia a Fortnox come proprietario/amministratore. Evita di importare il file e inviare direttamente lo stesso documento.",
+          "Un invio reale crea una registrazione in Fortnox. Il riferimento appare dopo la conferma. Se l’esito è incerto, apri la guida ai problemi di invio e non inviare di nuovo."
+        ],
+        "notice": "L’invio automatico è una scelta separata del proprietario per le esportazioni preparate. Le chiusure giornaliere restano manuali. Il collegamento o la lettura dell’aiuto non attivano l’automazione."
+      },
+      "fortnox-recovery": {
+        "title": "Controlla un problema di invio",
+        "intro": "Distingui un invio fermato da una risposta mancante. La registrazione potrebbe già esistere anche senza risposta.",
+        "steps": [
+          "Se Komisio indica esplicitamente che l’invio si è fermato prima della registrazione, correggi la causa e usa il tentativo proposto.",
+          "Se l’invio è in attesa o l’esito è incerto, non inviare di nuovo. Chiedi al proprietario di confrontare il documento con le registrazioni nel database aziendale Fortnox associato all’invio.",
+          "Confronta data, importi e tutte le righe. Se esiste una registrazione corrispondente, il proprietario può registrare serie, numero, esercizio e prove tramite la conferma sulla riga dell’esportazione.",
+          "Se la registrazione non si trova, chiedi al gestore dell’installazione di aiutare nell’indagine. L’assenza non autorizza un altro invio. Non cancellare o ricreare documenti per aggirare il blocco."
+        ],
+        "notice": "La riconciliazione registra il controllo del proprietario, non una verifica automatica di Fortnox. Personale e amministratori possono leggere l’aiuto; solo il proprietario può registrare questa conferma."
+      },
+      "fortnox-automation": {
+        "title": "Come funziona l’invio automatico",
+        "intro": "L’automazione invia le esportazioni preparate all’azienda Fortnox collegata. Non crea chiusure giornaliere e non sceglie i conti.",
+        "steps": [
+          "Controlla l’azienda e l’associazione dei conti. Esamina le esportazioni esistenti prima di attivare: possono essere incluse anche esportazioni precedenti idonee all’invio. Evita di importare il file SIE e inviare direttamente la stessa esportazione.",
+          "Il proprietario del negozio attiva l’invio automatico in Piano dei conti e Fortnox. In attesa significa che il servizio in background non ha ancora accettato l’attivazione. Se la funzione non è configurata, contatta il responsabile dell’installazione di Komisio.",
+          "Continua a creare e verificare le chiusure giornaliere e a preparare le esportazioni manualmente. Ultima esecuzione mostra ora, risultato e numero di invii. Attivato non significa che sia stato inviato qualcosa e un’esecuzione completata non significa che tutti i giorni siano riconciliati.",
+          "Dopo un’esecuzione parziale o non riuscita, apri Riconciliazione e controlla le esportazioni interessate. Se l’invio è in attesa o incerto, segui la guida ai problemi di invio e chiedi al proprietario di verificare il risultato. Disattivare e riattivare l’automazione non sblocca un invio sospeso."
+        ],
+        "notice": "Leggere la guida non attiva né invia nulla. Le esecuzioni automatiche non reinviano esportazioni con esito confermato, in attesa o incerto. La disattivazione non annulla le registrazioni contabili già create."
+      },
+      "receiving": {
+        "title": "Ricevere e registrare gli articoli",
+        "intro": "Inizia dal negozio e dal conferente corretti. Registra ciò che è arrivato fisicamente, poi elabora gli articoli.",
+        "steps": [
+          "Controlla il negozio selezionato e cerca il conferente esistente prima di crearne uno nuovo. Segui i requisiti contrattuali e le procedure locali del negozio.",
+          "Un preavviso non significa che gli articoli siano stati ricevuti. Conferma la ricezione solo quando sono presso di voi. Continua il lavoro dalla consegna esistente.",
+          "Apri la consegna e registra un articolo alla volta. Controlla descrizione, prezzo e venditore prima di salvare.",
+          "Controlla la conferma e l’elenco degli articoli registrati prima di etichettare. Se manca la risposta al salvataggio, tieni aperto il modulo e usa il suo nuovo tentativo. Non creare di nuovo lo stesso articolo per ottenere una conferma."
+        ],
+        "notice": "Il numero di articoli registrati descrive dati salvati, non il completamento dell’intera consegna. Controlla anche gli articoli fisici. La guida non modifica dati; chiedi al personale autorizzato di eseguire le azioni a cui non hai accesso."
+      },
+      "labels": {
+        "title": "Etichettare la consegna o l’articolo corretto",
+        "intro": "Un’etichetta di ricezione mantiene insieme gli articoli durante la lavorazione. Un’etichetta articolo identifica l’articolo registrato e ne mostra il prezzo.",
+        "steps": [
+          "Apri la consegna o l’articolo esistente e controlla negozio e riferimento. Un’etichetta di ricezione non significa che gli articoli siano stati verificati o accettati per la vendita.",
+          "Per un’etichetta articolo, trova l’articolo registrato, apri l’etichetta e controlla descrizione, prezzo e valuta. Se l’etichetta non è disponibile, torna all’articolo e verificane i dati.",
+          "Usa le opzioni di stampa della pagina. Scegli stampante e numero di copie corretti per una stampante collegata oppure controlla la finestra di stampa del browser. Un lavoro in coda o una finestra aperta non dimostrano la stampa: controlla l’etichetta fisica prima di applicarla.",
+          "Se manca la risposta all’inserimento in coda, riprova nello stesso modulo aperto. Non creare ripetutamente nuovi lavori. Controlla il lavoro in Stampanti e lavori di stampa e chiedi aiuto al responsabile della stampante se necessario. La ricerca etichette apre un riferimento esistente."
+        ],
+        "notice": "Aprire la guida non stampa nulla e non registra nuovi articoli. Non duplicare un articolo per sostituirne l’etichetta. Stampa fisica e scansione devono essere verificate con le attrezzature del negozio."
+      },
+      "integrations": {
+        "title": "Collega gli altri sistemi del negozio",
+        "intro": "Inizia dal sistema che vuoi collegare a Komisio. Apri la relativa sezione per stato e impostazioni.",
+        "steps": [
+          "Scegli cassa, negozio online o contabilità in base a ciò che vuoi collegare.",
+          "Leggi lo stato della connessione e segui i passaggi della sezione. Alcune azioni richiedono un proprietario o amministratore.",
+          "Controlla quali informazioni vengono trasferite e in quale direzione prima di attivare una funzione automatica.",
+          "Segui lo stato di prodotti, ricevute, ordini o documenti contabili in ogni integrazione. Apri i dettagli se qualcosa richiede attenzione."
+        ],
+        "notice": "Una connessione non significa che tutte le funzioni automatiche siano attive. Controllale singolarmente nelle impostazioni dell’integrazione."
+      }
+    },
+    "taskLinks": {
+      "receiving": [
+        {
+          "href": "/intake",
+          "label": "Apri ricezione"
+        },
+        {
+          "href": "/intake/flow",
+          "label": "Flusso di lavoro del negozio"
+        },
+        {
+          "href": "/help/labels",
+          "label": "Etichettare la consegna o l’articolo corretto"
+        }
+      ],
+      "labels": [
+        {
+          "href": "/intake/items",
+          "label": "Trova un articolo registrato"
+        },
+        {
+          "href": "/intake/open",
+          "label": "Apri un riferimento etichetta"
+        },
+        {
+          "href": "/settings?tab=printing",
+          "label": "Stampanti e lavori di stampa"
+        },
+        {
+          "href": "/help/receiving",
+          "label": "Ricevere e registrare gli articoli"
+        }
+      ],
+      "integrations": [
+        {
+          "href": "/intake/integrations",
+          "label": "Apri integrazioni"
+        }
+      ],
+      "fortnox-connect": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Conti e integrazioni"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Chiusure giornaliere ed esportazioni"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Riconciliazione"
+        }
+      ],
+      "fortnox-first-export": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Conti e integrazioni"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Chiusure giornaliere ed esportazioni"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Riconciliazione"
+        }
+      ],
+      "fortnox-automation": [
+        {
+          "href": "/intake/accounting?view=settings#fortnox-automation",
+          "label": "Conti e integrazioni"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Chiusure giornaliere ed esportazioni"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Riconciliazione"
+        },
+        {
+          "href": "/help/fortnox-recovery",
+          "label": "Controlla un problema di invio"
+        }
+      ],
+      "fortnox-recovery": [
+        {
+          "href": "/intake/accounting?view=settings",
+          "label": "Conti e integrazioni"
+        },
+        {
+          "href": "/intake/accounting",
+          "label": "Chiusure giornaliere ed esportazioni"
+        },
+        {
+          "href": "/intake/accounting?view=reconciliation",
+          "label": "Riconciliazione"
+        }
+      ]
+    },
+    "providerHelp": "Fortnox: attivazione e licenze (nuova scheda)"
+  }
+}

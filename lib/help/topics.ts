@@ -1,49 +1,36 @@
-export const helpTopics = [
-  'receiving',
-  'labels',
-  'integrations',
-  'fortnox-connect',
-  'fortnox-first-export',
-  'fortnox-automation',
-  'fortnox-recovery',
-] as const
+import { helpTopics, helpRouteClaims } from './content.generated'
+export { helpTopics }
 export type HelpTopic = (typeof helpTopics)[number]
 export function isHelpTopic(value: string): value is HelpTopic {
   return (helpTopics as readonly string[]).includes(value)
 }
 
-/** Match only supported task routes; integration detail pages own their help. */
+/** Query-specific claims win; dynamic segments match exactly one nonempty part. */
 export function helpTopicForPage(
   path: string,
   view: string | null,
   tab: string | null,
 ): HelpTopic | null {
-  if (path === '/intake/accounting') {
-    return view === 'settings'
-      ? 'fortnox-connect'
-      : view === 'reconciliation'
-        ? 'fortnox-recovery'
-        : 'fortnox-first-export'
-  }
-  if (path === '/intake/integrations') return 'integrations'
-  if (
-    (path === '/settings' && tab === 'printing') ||
-    path === '/intake/open' ||
-    /^\/intake\/bags\/[^/]+$/.test(path) ||
-    /^\/intake\/(items|reception)\/[^/]+\/label$/.test(path)
+  const parts = path.split('/')
+  const matches = helpRouteClaims.filter((route) => {
+    const template = route.path.split('/')
+    return (
+      template.length === parts.length &&
+      template.every((part, index) =>
+        /^\[[a-zA-Z0-9_]+\]$/.test(part)
+          ? !!parts[index]
+          : part === parts[index],
+      ) &&
+      (route.view === undefined || route.view === view) &&
+      (route.tab === undefined || route.tab === tab)
+    )
+  })
+  const score = (route: (typeof helpRouteClaims)[number]) =>
+    (route.view !== undefined ? 2 : 0) + (route.tab !== undefined ? 1 : 0)
+  matches.sort(
+    (a, b) =>
+      score(b) - score(a) ||
+      Number(a.path.includes('[')) - Number(b.path.includes('[')),
   )
-    return 'labels'
-  if (
-    [
-      '/intake',
-      '/intake/quick',
-      '/intake/handovers',
-      '/intake/flow',
-      '/intake/reception',
-    ].includes(path) ||
-    /^\/intake\/bags\/[^/]+\/inspect$/.test(path) ||
-    /^\/intake\/reception\/[^/]+$/.test(path)
-  )
-    return 'receiving'
-  return null
+  return matches[0]?.topic ?? null
 }

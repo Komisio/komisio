@@ -1,9 +1,12 @@
+import legacyHelp from '../fixtures/help-legacy.json' with { type: 'json' }
 import { openAccountingSettings } from '../helpers/accounting-settings'
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
+import fi from '../../messages/fi.json' with { type: 'json' }
+import { helpArticle } from '../../lib/help/content'
 
 test('unmapped pages offer keyboard support and help search stays in the browser', async ({
   page,
@@ -15,7 +18,9 @@ test('unmapped pages offer keyboard support and help search stays in the browser
     await f.commit()
     await page.setViewportSize({ width: 375, height: 812 })
     await page.emulateMedia({ reducedMotion: 'reduce' })
-    await page.goto('/members?token=private-test-token#private-hash')
+    await page.goto(
+      '/settings?tab=profile&token=private-test-token#private-hash',
+    )
     const trigger = page.getByRole('button', {
       name: d.helpCenter.title,
       exact: true,
@@ -32,7 +37,7 @@ test('unmapped pages offer keyboard support and help search stays in the browser
     })
     const href = await contact.getAttribute('href')
     const body = new URL(href!).searchParams.get('body')!
-    expect(body).toContain('/members')
+    expect(body).toContain('/settings?tab=profile')
     expect(body).not.toContain('private-test-token')
     expect(body).not.toContain('private-hash')
     expect(body).not.toContain(email)
@@ -63,7 +68,7 @@ test('unmapped pages offer keyboard support and help search stays in the browser
     await expect(
       page.getByRole('link', { name: d.helpCenter.support.email, exact: true }),
     ).toBeVisible()
-    await search.fill(d.helpCenter.articles.labels.title.toUpperCase())
+    await search.fill(legacyHelp.sv.articles.labels.title.toUpperCase())
     await expect(page.locator('.help-topic')).toHaveCount(1)
     expect(requests).toEqual([])
     page.off('request', capture)
@@ -112,7 +117,7 @@ test('help task links reveal the current section while cancelled navigation keep
     )
 
     const automation = page.getByRole('button', {
-      name: d.helpCenter.articles['fortnox-automation'].title,
+      name: legacyHelp.sv.articles['fortnox-automation'].title,
       exact: true,
     })
     await automation.click()
@@ -159,6 +164,120 @@ test('help task links reveal the current section while cancelled navigation keep
     expect(await page.evaluate(() => document.body.style.overflow)).not.toBe(
       'hidden',
     )
+  } finally {
+    await f.close()
+  }
+})
+
+test('new help is keyboard accessible, falls back to English and shares submitted feedback across modal and article', async ({
+  page,
+  baseURL,
+}, info) => {
+  const email = `help-feedback-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomUUID()}`)
+  const f = await p2Fixture(email)
+  try {
+    await f.commit()
+    await page
+      .context()
+      .addCookies([{ name: 'komisio-locale', value: 'fi', url: baseURL! }])
+    await page.goto('/members?token=private-test-token')
+    const trigger = page.getByRole('button', {
+      name: fi.helpCenter.title,
+      exact: true,
+    })
+    await trigger.press('Enter')
+    const dialog = page.getByRole('dialog')
+    await expect(
+      dialog.getByRole('heading', {
+        name: helpArticle('en', 'members-roles')!.title,
+        exact: true,
+      }),
+    ).toBeFocused()
+    await expect(dialog.getByText(fi.helpCenter.fallbackNote)).toBeVisible()
+    const yes = dialog.getByRole('radio', {
+      name: fi.helpCenter.feedback.yes,
+      exact: true,
+    })
+    await yes.focus()
+    await page.keyboard.press('Space')
+    const comment = dialog.getByLabel(fi.helpCenter.feedback.comment, {
+      exact: true,
+    })
+    await comment.fill('Synthetic helpful guidance')
+    await expect(comment).toHaveAttribute('maxlength', '1000')
+    await expect(dialog.getByText(fi.helpCenter.feedback.privacy)).toBeVisible()
+    const response = page.waitForResponse(
+      (r) =>
+        r.url().endsWith('/api/help/feedback') &&
+        r.request().method() === 'POST',
+    )
+    await dialog
+      .getByRole('button', { name: fi.helpCenter.feedback.send, exact: true })
+      .press('Enter')
+    expect((await response).status()).toBe(200)
+    await expect(dialog.getByRole('status')).toHaveText(
+      fi.helpCenter.feedback.thanks,
+    )
+    await expect(dialog.getByRole('radio')).toHaveCount(0)
+    const rows = (
+      await f.db.query('select * from help_feedback where tenant_id=$1', [
+        f.tenant,
+      ])
+    ).rows
+    expect(rows).toHaveLength(1)
+    expect(rows[0]).toMatchObject({
+      slug: 'members-roles',
+      locale: 'fi',
+      page: '/members',
+      helpful: true,
+      comment: 'Synthetic helpful guidance',
+    })
+    expect(Object.keys(rows[0]).sort()).toEqual(
+      [
+        'id',
+        'tenant_id',
+        'slug',
+        'locale',
+        'page',
+        'helpful',
+        'comment',
+        'created_at',
+      ].sort(),
+    )
+    await page.keyboard.press('Escape')
+    await page.goto('/help/members-roles')
+    await expect(page.getByRole('status')).toHaveText(
+      fi.helpCenter.feedback.thanks,
+    )
+    await expect(page.getByRole('radio')).toHaveCount(0)
+    await page.reload()
+    await expect(page.getByRole('status')).toHaveText(
+      fi.helpCenter.feedback.thanks,
+    )
+    await page.screenshot({
+      path: info.outputPath('help-fallback-feedback.png'),
+      fullPage: true,
+    })
+    // Another article remains answerable; empty optional comments become NULL.
+    await page.goto('/help/sign-in-mfa')
+    await page
+      .getByRole('radio', { name: fi.helpCenter.feedback.no, exact: true })
+      .check()
+    await page
+      .getByRole('button', { name: fi.helpCenter.feedback.send, exact: true })
+      .click()
+    await expect(page.getByRole('status')).toHaveText(
+      fi.helpCenter.feedback.thanks,
+    )
+    expect(
+      (
+        await f.db.query(
+          "select page,comment,helpful from help_feedback where tenant_id=$1 and slug='sign-in-mfa'",
+          [f.tenant],
+        )
+      ).rows,
+    ).toEqual([{ page: '/help/[topic]', comment: null, helpful: false }])
   } finally {
     await f.close()
   }

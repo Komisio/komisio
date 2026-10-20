@@ -3414,85 +3414,6 @@
         "unknown": "Controllo non riuscito: ricarica la pagina"
       }
     },
-    "articles": {
-      "fortnox-connect": {
-        "title": "Collega Fortnox",
-        "intro": "Collega l’azienda del negozio e prepara i conti. Il collegamento non invia dati contabili.",
-        "steps": [
-          "Devi essere proprietario o amministratore in Komisio e poter autorizzare l’accesso all’azienda Fortnox corretta. Controlla le licenze di integrazione e di programma applicabili nella guida Fortnox.",
-          "Apri Conti e integrazioni. Inserisci il nome dell’azienda come appare in Fortnox e collegati. Accedi a Fortnox, verifica l’azienda e approva i permessi richiesti.",
-          "Al ritorno, verifica il nome dell’azienda. Usa il controllo del collegamento per verificarne lo stato attuale. Scegli la stessa azienda quando ti ricolleghi.",
-          "Salva i conti e le scelte dare/avere concordate con il commercialista. Komisio non sceglie i conti per te."
-        ],
-        "notice": "Collegato non significa che un documento sia stato inviato. Komisio richiede accesso ai dati aziendali e alla contabilità, inclusa la creazione di registrazioni quando si usa l’invio."
-      },
-      "fortnox-first-export": {
-        "title": "Prepara e invia il primo documento",
-        "intro": "Lavora su un giorno alla volta e verifica azienda, data e importi prima di inviare.",
-        "steps": [
-          "Apri Chiusure giornaliere ed esportazioni e genera la chiusura per la data corretta. Questo salva un riepilogo in Komisio, non una registrazione in Fortnox.",
-          "Esamina conti, dare, avere e importi senza conto nell’anteprima. Verifica la mappatura con il commercialista. Il bilanciamento dei totali non prova da solo la correttezza contabile.",
-          "Scegli l’esportazione SIE 4 per salvare il documento. Poi scarica il file oppure invia a Fortnox come proprietario/amministratore. Evita di importare il file e inviare direttamente lo stesso documento.",
-          "Un invio reale crea una registrazione in Fortnox. Il riferimento appare dopo la conferma. Se l’esito è incerto, apri la guida ai problemi di invio e non inviare di nuovo."
-        ],
-        "notice": "L’invio automatico è una scelta separata del proprietario per le esportazioni preparate. Le chiusure giornaliere restano manuali. Il collegamento o la lettura dell’aiuto non attivano l’automazione."
-      },
-      "fortnox-recovery": {
-        "title": "Controlla un problema di invio",
-        "intro": "Distingui un invio fermato da una risposta mancante. La registrazione potrebbe già esistere anche senza risposta.",
-        "steps": [
-          "Se Komisio indica esplicitamente che l’invio si è fermato prima della registrazione, correggi la causa e usa il tentativo proposto.",
-          "Se l’invio è in attesa o l’esito è incerto, non inviare di nuovo. Chiedi al proprietario di confrontare il documento con le registrazioni nel database aziendale Fortnox associato all’invio.",
-          "Confronta data, importi e tutte le righe. Se esiste una registrazione corrispondente, il proprietario può registrare serie, numero, esercizio e prove tramite la conferma sulla riga dell’esportazione.",
-          "Se la registrazione non si trova, chiedi al gestore dell’installazione di aiutare nell’indagine. L’assenza non autorizza un altro invio. Non cancellare o ricreare documenti per aggirare il blocco."
-        ],
-        "notice": "La riconciliazione registra il controllo del proprietario, non una verifica automatica di Fortnox. Personale e amministratori possono leggere l’aiuto; solo il proprietario può registrare questa conferma."
-      },
-      "fortnox-automation": {
-        "title": "Come funziona l’invio automatico",
-        "intro": "L’automazione invia le esportazioni preparate all’azienda Fortnox collegata. Non crea chiusure giornaliere e non sceglie i conti.",
-        "steps": [
-          "Controlla l’azienda e l’associazione dei conti. Esamina le esportazioni esistenti prima di attivare: possono essere incluse anche esportazioni precedenti idonee all’invio. Evita di importare il file SIE e inviare direttamente la stessa esportazione.",
-          "Il proprietario del negozio attiva l’invio automatico in Piano dei conti e Fortnox. In attesa significa che il servizio in background non ha ancora accettato l’attivazione. Se la funzione non è configurata, contatta il responsabile dell’installazione di Komisio.",
-          "Continua a creare e verificare le chiusure giornaliere e a preparare le esportazioni manualmente. Ultima esecuzione mostra ora, risultato e numero di invii. Attivato non significa che sia stato inviato qualcosa e un’esecuzione completata non significa che tutti i giorni siano riconciliati.",
-          "Dopo un’esecuzione parziale o non riuscita, apri Riconciliazione e controlla le esportazioni interessate. Se l’invio è in attesa o incerto, segui la guida ai problemi di invio e chiedi al proprietario di verificare il risultato. Disattivare e riattivare l’automazione non sblocca un invio sospeso."
-        ],
-        "notice": "Leggere la guida non attiva né invia nulla. Le esecuzioni automatiche non reinviano esportazioni con esito confermato, in attesa o incerto. La disattivazione non annulla le registrazioni contabili già create."
-      },
-      "receiving": {
-        "title": "Ricevere e registrare gli articoli",
-        "intro": "Inizia dal negozio e dal conferente corretti. Registra ciò che è arrivato fisicamente, poi elabora gli articoli.",
-        "steps": [
-          "Controlla il negozio selezionato e cerca il conferente esistente prima di crearne uno nuovo. Segui i requisiti contrattuali e le procedure locali del negozio.",
-          "Un preavviso non significa che gli articoli siano stati ricevuti. Conferma la ricezione solo quando sono presso di voi. Continua il lavoro dalla consegna esistente.",
-          "Apri la consegna e registra un articolo alla volta. Controlla descrizione, prezzo e venditore prima di salvare.",
-          "Controlla la conferma e l’elenco degli articoli registrati prima di etichettare. Se manca la risposta al salvataggio, tieni aperto il modulo e usa il suo nuovo tentativo. Non creare di nuovo lo stesso articolo per ottenere una conferma."
-        ],
-        "notice": "Il numero di articoli registrati descrive dati salvati, non il completamento dell’intera consegna. Controlla anche gli articoli fisici. La guida non modifica dati; chiedi al personale autorizzato di eseguire le azioni a cui non hai accesso."
-      },
-      "labels": {
-        "title": "Etichettare la consegna o l’articolo corretto",
-        "intro": "Un’etichetta di ricezione mantiene insieme gli articoli durante la lavorazione. Un’etichetta articolo identifica l’articolo registrato e ne mostra il prezzo.",
-        "steps": [
-          "Apri la consegna o l’articolo esistente e controlla negozio e riferimento. Un’etichetta di ricezione non significa che gli articoli siano stati verificati o accettati per la vendita.",
-          "Per un’etichetta articolo, trova l’articolo registrato, apri l’etichetta e controlla descrizione, prezzo e valuta. Se l’etichetta non è disponibile, torna all’articolo e verificane i dati.",
-          "Usa le opzioni di stampa della pagina. Scegli stampante e numero di copie corretti per una stampante collegata oppure controlla la finestra di stampa del browser. Un lavoro in coda o una finestra aperta non dimostrano la stampa: controlla l’etichetta fisica prima di applicarla.",
-          "Se manca la risposta all’inserimento in coda, riprova nello stesso modulo aperto. Non creare ripetutamente nuovi lavori. Controlla il lavoro in Stampanti e lavori di stampa e chiedi aiuto al responsabile della stampante se necessario. La ricerca etichette apre un riferimento esistente."
-        ],
-        "notice": "Aprire la guida non stampa nulla e non registra nuovi articoli. Non duplicare un articolo per sostituirne l’etichetta. Stampa fisica e scansione devono essere verificate con le attrezzature del negozio."
-      },
-      "integrations": {
-        "title": "Collega gli altri sistemi del negozio",
-        "intro": "Inizia dal sistema che vuoi collegare a Komisio. Apri la relativa sezione per stato e impostazioni.",
-        "steps": [
-          "Scegli cassa, negozio online o contabilità in base a ciò che vuoi collegare.",
-          "Leggi lo stato della connessione e segui i passaggi della sezione. Alcune azioni richiedono un proprietario o amministratore.",
-          "Controlla quali informazioni vengono trasferite e in quale direzione prima di attivare una funzione automatica.",
-          "Segui lo stato di prodotti, ricevute, ordini o documenti contabili in ogni integrazione. Apri i dettagli se qualcosa richiede attenzione."
-        ],
-        "notice": "Una connessione non significa che tutte le funzioni automatiche siano attive. Controllale singolarmente nelle impostazioni dell’integrazione."
-      }
-    },
     "receiving": "Apri ricezione",
     "storeFlow": "Flusso di lavoro del negozio",
     "items": "Trova un articolo registrato",
@@ -3518,6 +3439,20 @@
       "placeholder": "Ad esempio etichette o contabilità",
       "count": "Articoli di aiuto: {count}",
       "empty": "Nessun aiuto corrispondente"
+    },
+    "fallbackNote": "Questo articolo non è ancora disponibile nella tua lingua.",
+    "machineTranslationNote": "Questo articolo è stato tradotto automaticamente.",
+    "feedback": {
+      "title": "È stato utile?",
+      "thanks": "Grazie per il tuo feedback!",
+      "yes": "Sì",
+      "no": "No",
+      "comment": "Commento (facoltativo)",
+      "privacy": "Non includere dati personali tuoi, dei venditori o dei clienti.",
+      "send": "Invia",
+      "rateLimited": "Il negozio ha raggiunto il limite giornaliero di feedback. Riprova più tardi.",
+      "error": "Non è stato possibile salvare la risposta. Riprova.",
+      "unknown": "Non siamo riusciti a confermare il salvataggio della risposta. Attendi prima di riprovare."
     }
   },
   "dashboard": {

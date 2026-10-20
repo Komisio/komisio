@@ -5,11 +5,13 @@ import Link from '@/components/platform/working-link'
 import type { Dictionary } from '@/lib/i18n'
 import { searchHelp } from '@/lib/help/search'
 import { ContactSupport } from './contact-support'
+import { useHelpContent } from './content-provider'
 
 export function HelpSearch({ d }: { d: Dictionary['helpCenter'] }) {
   const [query, setQuery] = useState('')
   const id = useId()
-  const topics = searchHelp(d, query)
+  const articles = useHelpContent()?.articles ?? {}
+  const topics = searchHelp(articles, query)
   return (
     <>
       <div className="help-search">
@@ -37,10 +39,10 @@ export function HelpSearch({ d }: { d: Dictionary['helpCenter'] }) {
             aria-labelledby={`help-${topic}`}
           >
             <h2 id={`help-${topic}`}>
-              {d.articles[topic].title}
+              {articles[topic].title}
               <ArrowUpRight size={20} aria-hidden="true" />
             </h2>
-            <p>{d.articles[topic].intro}</p>
+            <p>{articles[topic].summary}</p>
           </Link>
         ))}
       </div>

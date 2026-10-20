@@ -3,7 +3,7 @@ import { cookies } from 'next/headers'
 import { dictionary, resolveLocale, type Dictionary } from '@/lib/i18n'
 import { renderPlatformContext } from './context'
 
-type Title = (d: Dictionary) => string
+type Title = (d: Dictionary, locale: string) => string
 
 /** Static page labels only: names, amounts and private references stay out of tabs. */
 export async function platformPageMetadata(
@@ -13,11 +13,11 @@ export async function platformPageMetadata(
   const ctx = await renderPlatformContext()
   const locale =
     ctx?.locale ?? resolveLocale((await cookies()).get('komisio-locale')?.value)
-  return { ...extra, title: title(dictionary(locale)) }
+  return { ...extra, title: title(dictionary(locale), locale) }
 }
 
 /** Authentication forms use the browser language before a profile is available. */
 export async function publicPageMetadata(title: Title): Promise<Metadata> {
   const locale = resolveLocale((await cookies()).get('komisio-locale')?.value)
-  return { title: title(dictionary(locale)) }
+  return { title: title(dictionary(locale), locale) }
 }

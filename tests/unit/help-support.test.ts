@@ -1,3 +1,4 @@
+import { helpCatalog } from '../../lib/help/content'
 import { describe, expect, it, vi } from 'vitest'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
@@ -161,20 +162,19 @@ describe('support configuration and privacy', () => {
 })
 
 describe('browser-only help search', () => {
-  it.each(['title', 'intro', 'steps', 'notice'] as const)(
+  it.each(['title', 'summary', 'text'] as const)(
     'searches %s without case or diacritics',
     (field) => {
-      const d = structuredClone(dictionary('sv').helpCenter)
-      const article = d.articles.receiving
-      if (field === 'steps') article.steps = ['Unik SÄKERHET']
-      else article[field] = 'Unik SÄKERHET'
+      const d = structuredClone(helpCatalog('sv'))
+      const article = d.receiving
+      article[field] = 'Unik SÄKERHET'
       expect(searchHelp(d, 'unik sakerhet')).toEqual(['receiving'])
     },
   )
   it('uses only supplied locale articles and handles empty queries and no matches', () => {
-    const d = dictionary('en').helpCenter
-    expect(searchHelp(d, '   ')).toHaveLength(7)
+    const d = helpCatalog('en')
+    expect(searchHelp(d, '   ')).toHaveLength(14)
     expect(searchHelp(d, 'nonexistent-article-phrase')).toEqual([])
-    expect(searchHelp(d, d.articles.labels.title)).toContain('labels')
+    expect(searchHelp(d, d.labels.title)).toContain('labels')
   })
 })

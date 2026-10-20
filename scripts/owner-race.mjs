@@ -25,6 +25,7 @@ import { raceInventoryImport } from './inventory-import-race.mjs'
 import { racePosImport } from './pos-import-race.mjs'
 import { raceZettleStock } from './zettle-stock-race.mjs'
 import { raceFortnoxSend } from './fortnox-send-race.mjs'
+import { raceEconomicSend } from './economic-send-race.mjs'
 import { raceZettleImage } from './zettle-image-race.mjs'
 import { raceZettlePull } from './zettle-pull-race.mjs'
 import { raceSellerPayout } from './seller-payout-race.mjs'
@@ -111,6 +112,7 @@ try {
   await raceZettleImage({ setup, connectionString: parsed.toString() })
   await raceZettlePull({ setup, connectionString: parsed.toString() })
   await raceFortnoxSend({ setup, connectionString: parsed.toString() })
+  await raceEconomicSend({ setup, connectionString: parsed.toString() })
   await raceFortnoxSend({
     setup,
     connectionString: parsed.toString(),

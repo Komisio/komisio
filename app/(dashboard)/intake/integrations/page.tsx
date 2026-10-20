@@ -814,6 +814,16 @@ export default async function Integrations({
             <h2 id="integration-accounting">
               {all.integrationPage.accounting}
             </h2>
+            <section className="card intake-form">
+              <h2>e-conomic</h2>
+              <p>{all.economic.intro}</p>
+              <Link
+                className="text-link"
+                href="/intake/accounting?view=settings#economic-connection"
+              >
+                {all.economic.connect}
+              </Link>
+            </section>
             <FortnoxConnection
               key={`fortnox-${a.id}-${fortnoxStatus.refreshedAt ?? 'none'}`}
               tenantId={a.id}

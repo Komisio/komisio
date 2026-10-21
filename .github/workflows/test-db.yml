@@ -24,7 +24,9 @@ jobs:
     env:
       KOMISIO_INTAKE_ENABLED: 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 50
+    # The complete serial browser suite can exceed 50 minutes with setup.
+    # Keep every release check while allowing slower hosted runners to finish.
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

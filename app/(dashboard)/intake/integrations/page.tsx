@@ -6,6 +6,7 @@ import { readCatalogAutomation } from '@/lib/engine/catalog-automation'
 import { readSyncPreferences } from '@/lib/engine/sync-preferences'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { FortnoxConnection } from '@/components/intake/fortnox-connection'
+import { readEconomicStatus } from '@/lib/engine/economic'
 import { FortnoxGuide } from '@/components/help/fortnox-guide'
 import {
   readPayPalStatus,
@@ -121,6 +122,7 @@ export default async function Integrations({
     ]),
   ]
   const fortnoxStatus = await readFortnoxStatus(ctx.client, a.id)
+  const economicStatus = await readEconomicStatus(ctx.client, a.id)
   const shopifyStatus = await readShopifyStatus(ctx.client, a.id)
   const shopifySettings = shopifyStatus.connected
     ? await readShopifySettings(ctx.client, a.id)
@@ -814,16 +816,6 @@ export default async function Integrations({
             <h2 id="integration-accounting">
               {all.integrationPage.accounting}
             </h2>
-            <section className="card intake-form">
-              <h2>e-conomic</h2>
-              <p>{all.economic.intro}</p>
-              <Link
-                className="text-link"
-                href="/intake/accounting?view=settings#economic-connection"
-              >
-                {all.economic.connect}
-              </Link>
-            </section>
             <FortnoxConnection
               key={`fortnox-${a.id}-${fortnoxStatus.refreshedAt ?? 'none'}`}
               tenantId={a.id}
@@ -855,6 +847,38 @@ export default async function Integrations({
                 {all.integrationPage.accountingSettings}
               </Link>
             </p>
+          </section>
+        </details>
+        <details
+          className="card integration-provider"
+          data-testid="integration-economic"
+          open={params.provider === 'economic'}
+        >
+          <summary>
+            <span className="integration-provider-copy">
+              <strong>e-conomic</strong>
+              <span>{all.economic.intro}</span>
+            </span>
+            <span className="integration-status">
+              {economicStatus?.connected
+                ? all.integrationPage.connectionSaved
+                : all.integrationPage.notConnected}
+            </span>
+            <span className="integration-provider-toggle">
+              {all.integrationPage.setupAction}
+            </span>
+          </summary>
+          <section
+            className="integration-group"
+            aria-labelledby="integration-economic-heading"
+          >
+            <h2 id="integration-economic-heading">e-conomic</h2>
+            <Link
+              className="text-link"
+              href="/intake/accounting?view=settings#economic-connection"
+            >
+              {all.integrationPage.accountingSettings}
+            </Link>
           </section>
         </details>
       </div>

@@ -15,7 +15,7 @@ test('connections overview shows simple setup guidance before detailed controls'
     await expect(
       page.getByRole('heading', { name: d.nav.integrations, exact: true }),
     ).toBeVisible()
-    for (const provider of ['paypal', 'shopify', 'fortnox']) {
+    for (const provider of ['paypal', 'shopify', 'fortnox', 'economic']) {
       await expect(
         page.getByTestId(`integration-${provider}`),
       ).not.toHaveAttribute('open', '')
@@ -29,6 +29,18 @@ test('connections overview shows simple setup guidance before detailed controls'
     await expect(
       page.getByText(d.integrationPage.fortnoxPurpose, { exact: true }),
     ).toBeVisible()
+    const economic = page.getByTestId('integration-economic')
+    await expect(
+      economic.getByText('e-conomic', { exact: true }).first(),
+    ).toBeVisible()
+    await expect(
+      economic.getByText(d.economic.intro, { exact: true }),
+    ).toBeVisible()
+    await expect(
+      page
+        .getByTestId('integration-fortnox')
+        .getByText('e-conomic', { exact: true }),
+    ).toHaveCount(0)
     await page.screenshot({
       path: 'private/integrations-overview-desktop.png',
       fullPage: true,
@@ -82,7 +94,9 @@ test('connections overview shows simple setup guidance before detailed controls'
         .getByRole('heading', { name: d.shopify.title, exact: true }),
     ).toBeVisible()
     await expect(
-      page.getByRole('link', { name: d.integrationPage.accountingSettings }),
+      page
+        .getByTestId('integration-fortnox')
+        .getByRole('link', { name: d.integrationPage.accountingSettings }),
     ).toHaveAttribute('href', '/intake/accounting?view=settings')
     expect(await page.locator('main').first().innerText()).not.toContain(
       'Zettle',
@@ -106,6 +120,23 @@ test('connections overview shows simple setup guidance before detailed controls'
       page
         .getByRole('region', { name: d.fortnox.title, exact: true })
         .getByRole('alert'),
+    ).toBeVisible()
+    await page.goto('/intake/integrations?provider=economic')
+    await expect(economic).toHaveAttribute('open', '')
+    await expect(page.getByTestId('integration-fortnox')).not.toHaveAttribute(
+      'open',
+      '',
+    )
+    await economic
+      .getByRole('link', { name: d.integrationPage.accountingSettings })
+      .click()
+    await expect(page).toHaveURL(
+      /\/intake\/accounting\?view=settings#economic-connection$/,
+    )
+    await expect(
+      page
+        .locator('#economic-connection')
+        .getByRole('heading', { name: 'e-conomic', exact: true }),
     ).toBeVisible()
   } finally {
     await f.close()

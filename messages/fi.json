@@ -4575,6 +4575,7 @@
       "ECONOMIC_ACCESS_DENIED": "e-conomic vaatii kirjanpidon kirjoitusoikeuden ja avoimen API:n sisältävän tilauksen (Plus, Smart tai Komplet). Pyydä ylläpitäjää tarkistamaan.",
       "ECONOMIC_ACCOUNT_INVALID": "Tili puuttuu tai ei salli suoria kirjauksia. Hae tilit uudelleen ja valitse kelvollinen tili.",
       "ECONOMIC_JOURNAL_INVALID": "Valitse tavallinen päiväkirja, joka sallii kirjanpitotositteet. Toistuvia päiväkirjoja ei tueta.",
+      "ECONOMIC_ACCOUNTING_YEAR_INVALID": "Päivän päätöksen päivämäärälle ei löydy yhtä yksiselitteistä avointa tilikautta e-conomicista. Tarkista tilikaudet ennen uutta yritystä.",
       "ECONOMIC_ZERO_VAT_REQUIRED": "Valitse jokaiselle kirjattavalle riville sallittu ALV-koodi, jonka automaattinen verokanta on 0 %.",
       "ECONOMIC_MAP_INCOMPLETE": "Jokainen summa tarvitsee tilin tai perustelun poisjättämiselle. Vastaanottomaksuja ei voi jättää pois.",
       "ECONOMIC_MULTIPLE_VOUCHERS": "e-conomic palautti useita tositenumeroita. Lähetys on estetty; omistajan on tarkistettava koko vienti.",

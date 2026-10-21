@@ -264,7 +264,15 @@ test('e-conomic connects, maps, sends drafts once, holds an uncertain send and r
       page.getByRole('button', { name: d.economic.send }),
     ).toHaveCount(0)
     const counts = await page.request.get('http://127.0.0.1:3468/control')
-    expect((await counts.json()).posts).toBe(1)
+    const delivery = await counts.json()
+    expect(delivery.posts).toBe(1)
+    expect(delivery.entries).toHaveLength(2)
+    expect(
+      delivery.entries.map(
+        (row: { voucher: { voucherNumber: number } }) =>
+          row.voucher.voucherNumber,
+      ),
+    ).toEqual([42, 42])
 
     await page.request.post('http://127.0.0.1:3468/control?mode=lost')
     await page.goto('/intake/accounting?destination=economic')

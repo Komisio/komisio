@@ -726,10 +726,13 @@ Use the connected agreement's eligible accounts, preserve existing rows and
 exclusions, and leave journal, VAT codes and publication to explicit human review.
 No Danish chart or new accounting treatment is assumed.
 
-The provider bulk schema does not guarantee one shared voucher number. The owner
-approved delivery with complete read-back and a held outcome unless exactly one
-voucher is verified. Guaranteed grouping remains a follow-up investigation;
-multiple vouchers must never be marked sent or automatically retried.
+Grouping correction (2026-10-21): the owner's real test exposed per-entry voucher
+allocation in the Journals bulk endpoint. Use the documented REST journal-voucher
+creation endpoint with all finance entries in one voucher and the date's verified
+open accounting year. Complete read-back and held-outcome safeguards remain.
+Automated regression coverage must model per-entry allocation on the old endpoint.
+Real-provider verification of the corrected endpoint remains a release follow-up;
+earlier split exports remain held and require a separate accounting resolution.
 
 ## Help content and feedback (#532)
 

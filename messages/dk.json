@@ -4569,6 +4569,7 @@
       "ECONOMIC_ACCESS_DENIED": "e-conomic kræver skriverettigheder til bogføring og en pakke med åbent API (Plus, Smart eller Komplet). Bed administratoren kontrollere det.",
       "ECONOMIC_ACCOUNT_INVALID": "Kontoen mangler eller tillader ikke direkte postering. Hent kontiene igen, og vælg en gyldig konto.",
       "ECONOMIC_JOURNAL_INVALID": "Vælg en almindelig kassekladde, der tillader finansbilag. Stående kassekladder understøttes ikke.",
+      "ECONOMIC_ACCOUNTING_YEAR_INVALID": "Intet entydigt åbent regnskabsår i e-conomic omfatter dagsafslutningens dato. Kontrollér regnskabsårene, før du prøver igen.",
       "ECONOMIC_ZERO_VAT_REQUIRED": "Vælg en tilladt momskode med 0 % automatisk moms for hver posteret linje.",
       "ECONOMIC_MAP_INCOMPLETE": "Hvert beløb skal have en konto eller en begrundelse for udeladelse. Indleveringsgebyrer må ikke udelades.",
       "ECONOMIC_MULTIPLE_VOUCHERS": "e-conomic returnerede flere bilagsnumre. Afsendelsen er spærret; ejeren skal kontrollere hele eksporten.",

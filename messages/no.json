@@ -4569,6 +4569,7 @@
       "ECONOMIC_ACCESS_DENIED": "e-conomic krever skrivetilgang til regnskap og en pakke med åpent API (Plus, Smart eller Komplet). Be administratoren kontrollere dette.",
       "ECONOMIC_ACCOUNT_INVALID": "Kontoen mangler eller tillater ikke direkte bokføring. Hent kontoene på nytt og velg en gyldig konto.",
       "ECONOMIC_JOURNAL_INVALID": "Velg en vanlig kladd som tillater regnskapsbilag. Stående kladder støttes ikke.",
+      "ECONOMIC_ACCOUNTING_YEAR_INVALID": "Fant ikke ett entydig åpent regnskapsår i e-conomic som omfatter datoen for dagsoppgjøret. Kontroller regnskapsårene før du prøver igjen.",
       "ECONOMIC_ZERO_VAT_REQUIRED": "Velg en tillatt mva-kode med 0 % automatisk mva for hver bokført linje.",
       "ECONOMIC_MAP_INCOMPLETE": "Hvert beløp trenger en konto eller begrunnelse for utelatelse. Innleveringsgebyrer kan ikke utelates.",
       "ECONOMIC_MULTIPLE_VOUCHERS": "e-conomic returnerte flere bilagsnumre. Sendingen er sperret; eieren må kontrollere hele eksporten.",

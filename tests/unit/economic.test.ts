@@ -110,6 +110,7 @@ function fakeClient(
     begin?: object
     completionFailure?: boolean
     userId?: string
+    connectionRevision?: () => string
   } = {},
 ) {
   const rpc = vi.fn(async (name: string, args: Record<string, unknown>) => {
@@ -128,7 +129,7 @@ function fakeClient(
     if (name === 'read_economic_connection')
       data = {
         agreementNumber: 123456,
-        revision,
+        revision: options.connectionRevision?.() ?? revision,
         cipher: seal(
           `economic-connection:${tenant}`,
           { grant: credentials.grant },
@@ -170,9 +171,19 @@ function provider(
     alteredAmount?: boolean
     zeroRate?: number
     readStatus?: number
+    years?: object[]
+    missingLine?: boolean
+    extraLine?: boolean
+    foreignEntry?: boolean
+    wrongYear?: boolean
+    lostReply?: boolean
+    readBackStatus?: number
+    automaticVat?: boolean
+    contraAccount?: boolean
   } = {},
 ) {
   let entries = body.entries
+  let voucher: Record<string, unknown>
   return vi.fn<typeof fetch>(async (input, init) => {
     const url = String(input)
     if (url.endsWith('/self')) return json(self, options.readStatus ?? 200)
@@ -188,6 +199,43 @@ function provider(
         ],
       })
     if (url.endsWith('/journals')) return json({ items: catalogue.journals })
+    if (url.includes('/accounting-years?'))
+      return json({
+        collection: options.years ?? [
+          { year: '2026', fromDate: '2026-01-01', toDate: '2026-12-31' },
+        ],
+      })
+    if (url.endsWith('/journals/1/vouchers') && init?.method === 'POST') {
+      const sent = JSON.parse(String(init.body))
+      const rows = sent.entries.financeVouchers.map(
+        (row: object, i: number) => ({
+          ...row,
+          voucher: { voucherNumber: options.differentVoucher ? 42 + i : 42 },
+          ...(options.alteredAmount ? { amount: 1 } : {}),
+          ...(options.automaticVat ? { vatAmount: 30 } : {}),
+          ...(options.contraAccount
+            ? { contraAccount: { accountNumber: 99999 } }
+            : {}),
+        }),
+      )
+      if (options.missingLine) rows.pop()
+      if (options.extraLine) rows.push(rows[0])
+      voucher = {
+        ...sent,
+        voucherNumber: 42,
+        accountingYear: options.wrongYear
+          ? { year: 'wrong' }
+          : sent.accountingYear,
+        entries: {
+          financeVouchers: rows,
+          ...(options.foreignEntry ? { supplierPayments: [{}] } : {}),
+        },
+      }
+      if (options.lostReply) throw new Error('lost response after creation')
+      return json({ ...sent, voucherNumber: 42 }, options.postStatus ?? 201)
+    }
+    if (/\/journals\/1\/vouchers\/[^/]+-42$/.test(url))
+      return json(voucher, options.readBackStatus ?? 200)
     if (url.endsWith('/bulk')) {
       entries = JSON.parse(String(init?.body)).entries
       return json({ entryNumbers: [10, 11] }, options.postStatus ?? 201)
@@ -196,7 +244,8 @@ function provider(
     return json({
       ...entries[id - 10],
       entryNumber: id,
-      voucherNumber: options.differentVoucher ? id : 42,
+      // The Journals bulk API allocates a number PER entry when omitted.
+      voucherNumber: id,
       ...(options.alteredAmount ? { amount: 1 } : {}),
     })
   })
@@ -226,8 +275,12 @@ describe('e-conomic adapter and sending', () => {
         amountOre: Number.MAX_SAFE_INTEGER,
       })),
     })
-    expect(serializeDraftBody(large)).toContain('"amount":90071992547409.91')
-    expect(serializeDraftBody(large)).toContain('"amount":-90071992547409.91')
+    expect(serializeDraftBody(large, '2026')).toContain(
+      '"amount":90071992547409.91',
+    )
+    expect(serializeDraftBody(large, '2026')).toContain(
+      '"amount":-90071992547409.91',
+    )
   })
   it('rejects automatic contra accounts before the external attempt', () => {
     expect(() =>
@@ -267,16 +320,21 @@ describe('e-conomic adapter and sending', () => {
     expect(attempted).toHaveBeenCalledOnce()
     const post = http.mock.calls.filter(([, init]) => init?.method === 'POST')
     expect(post).toHaveLength(1)
-    expect(post[0][0]).toBe(
-      'https://apis.e-conomic.com/journalsapi/v16.0.1/draft-entries/bulk',
-    )
+    expect(post[0][0]).toBe('https://restapi.e-conomic.com/journals/1/vouchers')
     expect(post[0][1]?.headers).toMatchObject({
       'Idempotency-Key': `komisio-${send}`,
     })
     expect(post[0][1]).toMatchObject({ redirect: 'error', cache: 'no-store' })
+    expect(JSON.parse(String(post[0][1]?.body))).toMatchObject({
+      accountingYear: { year: '2026' },
+      journal: { journalNumber: 1 },
+    })
+    expect(JSON.parse(String(post[0][1]?.body))).not.toHaveProperty(
+      'voucherNumber',
+    )
     expect(body.entries.map((e) => e.amount)).toEqual(['123.45', '-123.45'])
     expect(
-      JSON.parse(String(post[0][1]?.body)).entries.map(
+      JSON.parse(String(post[0][1]?.body)).entries.financeVouchers.map(
         (e: { amount: number }) => e.amount,
       ),
     ).toEqual([123.45, -123.45])
@@ -376,22 +434,98 @@ describe('e-conomic adapter and sending', () => {
       ).toHaveLength(1)
     },
   )
-  it.each([{ differentVoucher: true }, { alteredAmount: true }])(
-    'holds an unverified created set %j',
+  it.each([
+    { differentVoucher: true },
+    { alteredAmount: true },
+    { missingLine: true },
+    { extraLine: true },
+    { foreignEntry: true },
+    { wrongYear: true },
+    { lostReply: true },
+    { readBackStatus: 500 },
+    { automaticVat: true },
+    { contraAccount: true },
+  ])('holds an unverified created set %j', async (options) => {
+    const c = fakeClient()
+    expect(
+      (
+        await sendEconomicExport(
+          c.client,
+          tenant,
+          exportId,
+          send,
+          env,
+          provider(options),
+        )
+      ).errorCode,
+    ).toBe('ECONOMIC_OUTCOME_UNKNOWN')
+  })
+  it('groups a four-line close in the provider fiscal year without allocating a number locally', async () => {
+    const http = provider({
+      years: [
+        { year: '2026/27', fromDate: '2026-07-01', toDate: '2027-06-30' },
+      ],
+    })
+    const four = draftBody({
+      journalNumber: 1,
+      date: '2026-10-21',
+      description: 'Synthetic four-line close',
+      lines: [
+        { ...lines[0], amountOre: 15000 },
+        { ...lines[0], amountOre: 10000 },
+        { ...lines[1], amountOre: 22000 },
+        { ...lines[1], amountOre: 3000 },
+      ],
+    })
+    await expect(
+      createDrafts(credentials, four, send, vi.fn(), http),
+    ).resolves.toEqual({ voucherNumber: 42 })
+    const posts = http.mock.calls.filter(([, init]) => init?.method === 'POST')
+    expect(posts).toHaveLength(1)
+    const payload = JSON.parse(String(posts[0][1]?.body))
+    expect(payload.accountingYear.year).toBe('2026/27')
+    expect(
+      payload.entries.financeVouchers.map(
+        (row: { amount: number }) => row.amount,
+      ),
+    ).toEqual([150, 100, -220, -30])
+    expect(http.mock.calls.at(-1)?.[0]).toBe(
+      'https://restapi.e-conomic.com/journals/1/vouchers/2026%2F27-42',
+    )
+  })
+  it.each([
+    { years: [] },
+    { years: [{ year: '2025', fromDate: '2025-01-01', toDate: '2025-12-31' }] },
+    {
+      years: [
+        {
+          year: '2026',
+          fromDate: '2026-01-01',
+          toDate: '2026-12-31',
+          closed: true,
+        },
+      ],
+    },
+    {
+      years: [
+        { year: '2026', fromDate: '2026-01-01', toDate: '2026-12-31' },
+        { year: 'overlap', fromDate: '2026-07-01', toDate: '2027-06-30' },
+      ],
+    },
+  ])(
+    'refuses absent, closed or ambiguous accounting years before dispatch: %j',
     async (options) => {
+      const http = provider(options)
       const c = fakeClient()
       expect(
-        (
-          await sendEconomicExport(
-            c.client,
-            tenant,
-            exportId,
-            send,
-            env,
-            provider(options),
-          )
-        ).errorCode,
-      ).toBe('ECONOMIC_OUTCOME_UNKNOWN')
+        await sendEconomicExport(c.client, tenant, exportId, send, env, http),
+      ).toMatchObject({
+        errorCode: 'ECONOMIC_PREFLIGHT_FAILED',
+        reason: 'ECONOMIC_ACCOUNTING_YEAR_INVALID',
+      })
+      expect(http.mock.calls.some(([, init]) => init?.method === 'POST')).toBe(
+        false,
+      )
     },
   )
   it('permits retry only after a proven preflight failure and sends no POST', async () => {
@@ -408,6 +542,27 @@ describe('e-conomic adapter and sending', () => {
     expect(result).toMatchObject({
       errorCode: 'ECONOMIC_PREFLIGHT_FAILED',
       reason: 'ECONOMIC_ZERO_VAT_REQUIRED',
+    })
+    expect(http.mock.calls.some(([, init]) => init?.method === 'POST')).toBe(
+      false,
+    )
+  })
+  it('does not send an old grant when the connection changes during accounting-year lookup', async () => {
+    let changed = false
+    const c = fakeClient({
+      connectionRevision: () => (changed ? exportId : revision),
+    })
+    const delegate = provider()
+    const http = vi.fn<typeof fetch>(async (url, init) => {
+      const response = await delegate(url, init)
+      if (String(url).includes('/accounting-years?')) changed = true
+      return response
+    })
+    expect(
+      await sendEconomicExport(c.client, tenant, exportId, send, env, http),
+    ).toMatchObject({
+      errorCode: 'ECONOMIC_PREFLIGHT_FAILED',
+      reason: 'ECONOMIC_WRONG_AGREEMENT',
     })
     expect(http.mock.calls.some(([, init]) => init?.method === 'POST')).toBe(
       false,

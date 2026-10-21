@@ -4569,6 +4569,7 @@
       "ECONOMIC_ACCESS_DENIED": "e-conomic requires accounting write permission and a plan with the open API (Plus, Smart or Komplet). Ask the administrator to check.",
       "ECONOMIC_ACCOUNT_INVALID": "The account is missing or does not allow direct posting. Reload accounts and select a valid account.",
       "ECONOMIC_JOURNAL_INVALID": "Choose a regular journal that allows finance vouchers. Standing journals are not supported.",
+      "ECONOMIC_ACCOUNTING_YEAR_INVALID": "No unique open accounting year in e-conomic covers the day-close date. Check the accounting years before trying again.",
       "ECONOMIC_ZERO_VAT_REQUIRED": "Choose an allowed VAT code with a 0% automatic rate for every posted line.",
       "ECONOMIC_MAP_INCOMPLETE": "Every amount needs an account or a reason for exclusion. Consignment fees cannot be excluded.",
       "ECONOMIC_MULTIPLE_VOUCHERS": "e-conomic returned multiple voucher numbers. The send is held; the owner must review the entire export.",

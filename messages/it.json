@@ -4569,6 +4569,7 @@
       "ECONOMIC_ACCESS_DENIED": "e-conomic richiede permessi di scrittura contabile e un piano con API aperta (Plus, Smart o Komplet). Chiedi all’amministratore di verificare.",
       "ECONOMIC_ACCOUNT_INVALID": "Il conto manca o non consente registrazioni dirette. Ricarica i conti e scegli un conto valido.",
       "ECONOMIC_JOURNAL_INVALID": "Scegli un giornale normale che consenta registrazioni contabili. I giornali ricorrenti non sono supportati.",
+      "ECONOMIC_ACCOUNTING_YEAR_INVALID": "Nessun esercizio contabile aperto univoco in e-conomic comprende la data della chiusura giornaliera. Controlla gli esercizi prima di riprovare.",
       "ECONOMIC_ZERO_VAT_REQUIRED": "Scegli un codice IVA consentito con calcolo automatico dello 0% per ogni riga contabilizzata.",
       "ECONOMIC_MAP_INCOMPLETE": "Ogni importo richiede un conto o un motivo di esclusione. Le commissioni di consegna non possono essere escluse.",
       "ECONOMIC_MULTIPLE_VOUCHERS": "e-conomic ha restituito più numeri di registrazione. L’invio è bloccato; il titolare deve controllare l’intera esportazione.",

@@ -65,18 +65,22 @@ identity, transactions or amounts. Review the suggestions before saving.
 ## Delivery and uncertain outcomes
 
 One export has at most one live send claim. Concurrent requests and request-ID
-replays cannot dispatch another POST. The bulk request uses Finance Voucher
-entries, the day-close date, DKK and exact decimal formatting of integer øre.
+replays cannot dispatch another POST. One REST journal-voucher request contains
+all Finance Voucher entries, the day-close date, DKK and exact decimal formatting
+of integer øre. Komisio reads the provider's accounting years and requires exactly
+one open year covering the date; it does not assume a calendar year. The provider
+allocates the voucher number for the complete voucher.
 Its text includes `Dagsafslutning <date> v<version>` and `K-<send-id>`.
-The provider Idempotency-Key is supplementary; its one-hour cache is not our
-duplicate-safety boundary.
+The Idempotency-Key header is supplementary; no provider retry/cache guarantee
+is assumed. The durable engine claim is the duplicate-safety boundary.
 
-After the POST, Komisio reads each returned entry and checks the journal, date,
-account, VAT code, currency, amount, description and absence of a contra entry.
-All lines must match the export and share **one voucher number** before the send
-is marked sent. The provider's current schema does not document guaranteed
-grouping into one voucher. Multiple voucher numbers remain held, never reported
-as delivered. Guaranteed grouping is a follow-up provider investigation.
+After the POST, Komisio reads the whole voucher using its returned number and the
+pinned journal/year. It checks every date, account, VAT code, currency, amount,
+description and absence of a contra entry or additional automatic VAT. Missing,
+extra or foreign entries are rejected. All lines must match the export and share
+**one voucher number** before the send is marked sent. The former Journals bulk
+endpoint allocated separate voucher numbers per line; existing split exports
+remain held and are never automatically resent or renumbered.
 
 A proven failure before POST can be retried after correcting the cause. A
 provider `Retry-After` delay is stored and enforced. An interrupted request,

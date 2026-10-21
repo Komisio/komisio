@@ -1,6 +1,7 @@
 import { createServer } from 'node:http'
 // A loopback simulator of the pinned provider contract, never a real agreement.
 let entries = [],
+  voucher,
   posts = 0,
   mode = 'normal'
 const server = createServer(async (req, res) => {
@@ -45,6 +46,12 @@ const server = createServer(async (req, res) => {
         { vatCode: 'U25', name: 'Automatic VAT', ratePercentage: 25 },
       ],
     })
+  if (url.pathname === '/accounting-years')
+    return json({
+      collection: [
+        { year: '2020', fromDate: '2020-01-01', toDate: '2020-12-31' },
+      ],
+    })
   if (url.pathname === '/journalsapi/v16.0.1/journals')
     return json({
       items: [
@@ -56,10 +63,7 @@ const server = createServer(async (req, res) => {
         },
       ],
     })
-  if (
-    url.pathname === '/journalsapi/v16.0.1/draft-entries/bulk' &&
-    req.method === 'POST'
-  ) {
+  if (url.pathname === '/journals/1/vouchers' && req.method === 'POST') {
     const chunks = []
     let size = 0
     for await (const chunk of req) {
@@ -69,35 +73,37 @@ const server = createServer(async (req, res) => {
     }
     const body = JSON.parse(Buffer.concat(chunks).toString())
     if (
-      !Array.isArray(body.entries) ||
-      body.entries.some(
+      body.accountingYear?.year !== '2020' ||
+      body.journal?.journalNumber !== 1 ||
+      body.voucherNumber !== undefined ||
+      !Array.isArray(body.entries?.financeVouchers) ||
+      body.entries.financeVouchers.some(
         (row) =>
-          row.entryTypeNumber !== 5 ||
-          row.currency !== 'DKK' ||
-          row.vatCode !== 'Z0',
+          row.entryType !== 'financeVoucher' ||
+          row.currency?.code !== 'DKK' ||
+          row.vatAccount?.vatCode !== 'Z0' ||
+          row.voucher !== undefined,
       )
     )
       return json({}, 400)
     posts++
-    entries = body.entries.map((row, index) => ({
+    entries = body.entries.financeVouchers.map((row, index) => ({
       ...row,
-      entryNumber: index + 1,
-      voucherNumber: mode === 'multiple' ? 42 + index : 42,
+      voucher: { voucherNumber: mode === 'multiple' ? 42 + index : 42 },
     }))
+    voucher = {
+      ...body,
+      voucherNumber: 42,
+      entries: { financeVouchers: entries },
+    }
     if (mode === 'lost') {
       req.socket.destroy()
       return
     }
-    return json({ entryNumbers: entries.map((row) => row.entryNumber) }, 201)
+    return json(voucher, 201)
   }
-  const match = /^\/journalsapi\/v16.0.1\/draft-entries\/(\d+)$/.exec(
-    url.pathname,
-  )
-  if (match && req.method === 'GET')
-    return json(
-      entries.find((row) => row.entryNumber === Number(match[1])) ?? {},
-      200,
-    )
+  if (url.pathname === '/journals/1/vouchers/2020-42' && req.method === 'GET')
+    return json(voucher)
   return json({ error: 'Unimplemented simulator endpoint' }, 404)
 })
 server.listen(3468, '127.0.0.1')

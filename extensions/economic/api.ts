@@ -61,7 +61,7 @@ async function request(
   credentials: Credentials,
   url: string,
   http: typeof fetch,
-  body?: { entries: DraftInput[] },
+  body?: string,
   requestId?: string,
 ) {
   const headers: Record<string, string> = {
@@ -77,7 +77,7 @@ async function request(
     response = await http(url, {
       method: body ? 'POST' : 'GET',
       headers,
-      ...(body ? { body: serializeDraftBody(body) } : {}),
+      ...(body ? { body } : {}),
       cache: 'no-store',
       redirect: 'error',
       signal: AbortSignal.timeout(15000),
@@ -150,7 +150,7 @@ export type Catalogue = {
 
 async function collection<T>(
   credentials: Credentials,
-  path: 'accounts' | 'vat-accounts',
+  path: 'accounts' | 'vat-accounts' | 'accounting-years',
   schema: z.ZodType<T>,
   http: typeof fetch,
 ) {
@@ -269,14 +269,29 @@ function returnedKroner(value: number) {
   if (!parts) return null
   return `${parts[1]}${parts[2]}.${(parts[3] ?? '').padEnd(2, '0')}`
 }
-export function serializeDraftBody(body: { entries: DraftInput[] }) {
-  return `{"entries":[${body.entries
+export function serializeDraftBody(
+  body: { entries: DraftInput[] },
+  year: string,
+) {
+  const header = JSON.stringify({
+    accountingYear: { year },
+    journal: { journalNumber: body.entries[0].journalNumber },
+  }).slice(0, -1)
+  return `${header},"entries":{"financeVouchers":[${body.entries
     .map(({ amount, ...entry }) => {
       if (!/^-?\d+\.\d{2}$/.test(amount))
         throw new EconomicError('INVALID_INPUT')
-      return `${JSON.stringify(entry).slice(0, -1)},"amount":${amount}}`
+      const row = {
+        date: entry.date.slice(0, 10),
+        account: { accountNumber: entry.accountNumber },
+        vatAccount: { vatCode: entry.vatCode },
+        currency: { code: entry.currency },
+        entryType: 'financeVoucher',
+        text: entry.text,
+      }
+      return `${JSON.stringify(row).slice(0, -1)},"amount":${amount}}`
     })
-    .join(',')}]}`
+    .join(',')}]}}`
 }
 export function draftBody(input: {
   journalNumber: number
@@ -309,69 +324,121 @@ export function draftBody(input: {
     })),
   }
 }
+const voucherNumber = z.number().int().positive().max(999999999)
+const voucherIdentity = z.object({
+  voucherNumber,
+  accountingYear: z.object({ year: z.string().min(1).max(100) }),
+  journal: z.object({ journalNumber: integer }),
+})
 const returnedEntry = z.object({
-  entryNumber: integer,
-  voucherNumber: z.number().int().min(0).max(999999999),
-  journalNumber: integer,
-  entryTypeNumber: z.literal(5),
-  currency: z.literal('DKK'),
-  date: z.string(),
-  accountNumber: integer,
-  vatCode,
+  voucher: z.object({ voucherNumber }),
+  entryType: z.literal('financeVoucher'),
+  currency: z.object({ code: z.literal('DKK') }),
+  date: z.iso.date(),
+  account: z.object({ accountNumber: integer }),
+  vatAccount: z.object({ vatCode }),
   amount: z.number(),
   text: z.string(),
-  contraAccountNumber: z.number().nullable().optional(),
+  contraAccount: z.unknown().optional(),
+  vatAmount: z.number().optional(),
+  vatAmountBaseCurrency: z.number().optional(),
 })
-/** A single POST followed only by reads of the exact returned entry identifiers. */
+/** Create ONE voucher, not a bulk set of independently numbered draft entries. */
 export async function createDrafts(
   credentials: Credentials,
   body: { entries: DraftInput[] },
   requestId: string,
-  onAttempt: () => void,
+  onAttempt: () => void | Promise<void>,
   http: typeof fetch = fetch,
 ) {
   // Validate all local parameters before granting the one external attempt.
   token.parse(credentials.appSecret)
   token.parse(credentials.grant)
   z.uuid().parse(requestId)
-  onAttempt()
-  const result = z
-    .object({ entryNumbers: z.array(integer).max(100) })
+  const first = body.entries[0]
+  const date = z.iso.date().parse(first.date.slice(0, 10))
+  const journalNumber = integer.parse(first.journalNumber)
+  const years = await collection(
+    credentials,
+    'accounting-years',
+    z.object({
+      year: z.string().min(1).max(100),
+      fromDate: z.iso.date(),
+      toDate: z.iso.date(),
+      closed: z.boolean().optional().default(false),
+    }),
+    http,
+  )
+  const matching = years.filter(
+    (year) => year.fromDate <= date && date <= year.toDate,
+  )
+  if (matching.length !== 1 || matching[0].closed)
+    throw new EconomicError('ECONOMIC_ACCOUNTING_YEAR_INVALID')
+  const year = matching[0].year
+  const serialized = serializeDraftBody(body, year)
+  await onAttempt()
+  const result = voucherIdentity.parse(
+    await request(
+      credentials,
+      `${REST}/journals/${journalNumber}/vouchers`,
+      http,
+      serialized,
+      requestId,
+    ),
+  )
+  if (
+    result.journal.journalNumber !== journalNumber ||
+    result.accountingYear.year !== year
+  )
+    throw new EconomicError('ECONOMIC_UNVERIFIED_ENTRIES')
+  // Reconstruct the pinned URL; never follow a provider-supplied self link.
+  const voucher = voucherIdentity
+    .extend({
+      entries: z.record(z.string(), z.array(z.unknown()).max(100)),
+    })
     .parse(
       await request(
         credentials,
-        `${JOURNALS}/draft-entries/bulk`,
+        `${REST}/journals/${journalNumber}/vouchers/${encodeURIComponent(year)}-${result.voucherNumber}`,
         http,
-        body,
-        requestId,
       ),
     )
   if (
-    result.entryNumbers.length !== body.entries.length ||
-    new Set(result.entryNumbers).size !== result.entryNumbers.length
+    voucher.voucherNumber !== result.voucherNumber ||
+    voucher.journal.journalNumber !== journalNumber ||
+    voucher.accountingYear.year !== year ||
+    Object.entries(voucher.entries).some(
+      ([type, rows]) => type !== 'financeVouchers' && rows.length > 0,
+    )
   )
     throw new EconomicError('ECONOMIC_UNVERIFIED_ENTRIES')
+  const rows = z
+    .array(returnedEntry)
+    .min(2)
+    .max(100)
+    .parse(voucher.entries.financeVouchers)
+  if (rows.length !== body.entries.length)
+    throw new EconomicError('ECONOMIC_UNVERIFIED_ENTRIES')
   const remaining = [...body.entries]
-  const vouchers = new Set<number>()
-  for (const id of result.entryNumbers) {
-    const row = returnedEntry.parse(
-      await request(credentials, `${JOURNALS}/draft-entries/${id}`, http),
+  for (const row of rows) {
+    if (row.voucher.voucherNumber !== result.voucherNumber)
+      throw new EconomicError('ECONOMIC_MULTIPLE_VOUCHERS')
+    if (
+      row.contraAccount != null ||
+      (row.vatAmount ?? 0) !== 0 ||
+      (row.vatAmountBaseCurrency ?? 0) !== 0
     )
-    if (row.entryNumber !== id || row.contraAccountNumber != null)
       throw new EconomicError('ECONOMIC_UNVERIFIED_ENTRIES')
     const index = remaining.findIndex(
       (expected) =>
-        row.journalNumber === expected.journalNumber &&
         row.date.slice(0, 10) === expected.date.slice(0, 10) &&
-        row.accountNumber === expected.accountNumber &&
-        row.vatCode === expected.vatCode &&
+        row.account.accountNumber === expected.accountNumber &&
+        row.vatAccount.vatCode === expected.vatCode &&
         returnedKroner(row.amount) === expected.amount &&
         row.text === expected.text,
     )
     if (index < 0) throw new EconomicError('ECONOMIC_UNVERIFIED_ENTRIES')
     remaining.splice(index, 1)
-    vouchers.add(row.voucherNumber)
   }
-  if (vouchers.size !== 1) throw new EconomicError('ECONOMIC_MULTIPLE_VOUCHERS')
-  return { voucherNumber: [...vouchers][0] }
+  return { voucherNumber: result.voucherNumber }
 }

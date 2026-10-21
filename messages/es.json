@@ -4575,6 +4575,7 @@
       "ECONOMIC_ACCESS_DENIED": "e-conomic requiere permiso de escritura contable y un plan con API abierta (Plus, Smart o Komplet). Pide al administrador que lo revise.",
       "ECONOMIC_ACCOUNT_INVALID": "La cuenta no existe o no permite contabilización directa. Recarga las cuentas y selecciona una válida.",
       "ECONOMIC_JOURNAL_INVALID": "Elige un diario normal que permita asientos contables. No se admiten diarios recurrentes.",
+      "ECONOMIC_ACCOUNTING_YEAR_INVALID": "No hay un único ejercicio contable abierto en e-conomic que incluya la fecha del cierre diario. Revisa los ejercicios antes de intentarlo de nuevo.",
       "ECONOMIC_ZERO_VAT_REQUIRED": "Elige un código de IVA permitido con cálculo automático del 0 % para cada línea contabilizada.",
       "ECONOMIC_MAP_INCOMPLETE": "Cada importe necesita una cuenta o un motivo de exclusión. Las tarifas de recepción no pueden excluirse.",
       "ECONOMIC_MULTIPLE_VOUCHERS": "e-conomic devolvió varios números de asiento. El envío queda bloqueado; el propietario debe revisar toda la exportación.",

@@ -137,6 +137,7 @@ export const economicErrors = [
   'ECONOMIC_CONNECTION_FAILED',
   'ECONOMIC_CATALOGUE_TOO_LARGE',
   'ECONOMIC_JOURNAL_INVALID',
+  'ECONOMIC_ACCOUNTING_YEAR_INVALID',
   'ECONOMIC_ACCOUNT_INVALID',
   'ECONOMIC_ZERO_VAT_REQUIRED',
   'ECONOMIC_MAP_INCOMPLETE',
@@ -496,15 +497,15 @@ export async function sendEconomicExport(
       description: `Dagsafslutning ${opened.closeDate} v${opened.closeVersion} K-${opened.sendId}`,
       lines: opened.lines,
     })
-    // A disconnect/reconnect during preflight must not dispatch the earlier grant.
-    const latest = await credentials(client, tenant, source)
-    if (latest.revision !== verified.revision)
-      throw new Error('ECONOMIC_WRONG_AGREEMENT')
     const created = await createDrafts(
       verified.credentials,
       body,
       opened.sendId,
-      () => {
+      async () => {
+        // Recheck after ALL preflight reads, including the accounting year.
+        const latest = await credentials(client, tenant, source)
+        if (latest.revision !== verified.revision)
+          throw new Error('ECONOMIC_WRONG_AGREEMENT')
         attempted = true
       },
       http,

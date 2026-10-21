@@ -4569,6 +4569,7 @@
       "ECONOMIC_ACCESS_DENIED": "e-conomic kräver rättigheter för bokföring och ett abonnemang med öppet API (Plus, Smart eller Komplet). Be administratören kontrollera detta.",
       "ECONOMIC_ACCOUNT_INVALID": "Kontot saknas eller tillåter inte direkt bokföring. Hämta kontona på nytt och välj ett giltigt konto.",
       "ECONOMIC_JOURNAL_INVALID": "Välj en vanlig kassabok som tillåter verifikationer. Stående kassaböcker stöds inte.",
+      "ECONOMIC_ACCOUNTING_YEAR_INVALID": "Inget entydigt öppet räkenskapsår i e-conomic omfattar dagsavslutets datum. Kontrollera räkenskapsåren innan du försöker igen.",
       "ECONOMIC_ZERO_VAT_REQUIRED": "Välj en tillåten momskod med 0 % automatisk moms för varje bokförd rad.",
       "ECONOMIC_MAP_INCOMPLETE": "Alla belopp måste ha konto eller motivering. Inlämningsavgifter får inte undantas.",
       "ECONOMIC_MULTIPLE_VOUCHERS": "e-conomic gav flera verifikationsnummer. Skickningen är spärrad; ägaren behöver kontrollera hela exporten.",

@@ -4575,6 +4575,7 @@
       "ECONOMIC_ACCESS_DENIED": "e-conomic benötigt Schreibrechte für die Buchhaltung und einen Tarif mit offener API (Plus, Smart oder Komplet). Bitten Sie den Administrator um Prüfung.",
       "ECONOMIC_ACCOUNT_INVALID": "Das Konto fehlt oder erlaubt keine direkten Buchungen. Laden Sie die Konten neu und wählen Sie ein gültiges Konto.",
       "ECONOMIC_JOURNAL_INVALID": "Wählen Sie ein normales Journal für Finanzbelege. Wiederkehrende Journale werden nicht unterstützt.",
+      "ECONOMIC_ACCOUNTING_YEAR_INVALID": "Für das Datum des Tagesabschlusses gibt es in e-conomic kein eindeutiges offenes Geschäftsjahr. Prüfen Sie die Geschäftsjahre vor einem erneuten Versuch.",
       "ECONOMIC_ZERO_VAT_REQUIRED": "Wählen Sie für jede gebuchte Zeile einen zulässigen Steuercode mit 0 % automatischer Steuer.",
       "ECONOMIC_MAP_INCOMPLETE": "Jeder Betrag braucht ein Konto oder eine Ausschlussbegründung. Annahmegebühren dürfen nicht ausgeschlossen werden.",
       "ECONOMIC_MULTIPLE_VOUCHERS": "e-conomic hat mehrere Belegnummern zurückgegeben. Die Sendung bleibt gesperrt; der Inhaber muss den gesamten Export prüfen.",

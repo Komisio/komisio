@@ -1150,3 +1150,4 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-10-20: #550 renders missing member names using localized device/automation labels, an already-visible email or an unnamed-user label. Stored identities, email visibility and membership permissions are unchanged. Release checks include authenticated member directories.
 - 2026-10-20: Staff seller account events use a responsive table over the existing paged ledger read. Signs and payout references remain visible. Running balances await a snapshot-consistent read; no ledger, payout, schema or portal behavior changes (#554).
+- 2026-10-21: e-conomic has its own integration card and provider link; it is not nested under Fortnox. Setup continues through accounting settings with existing readiness, role and currency checks.

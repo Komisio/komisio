@@ -359,7 +359,8 @@
     "stocktakePending": "Tarkista jäljellä olevat tuotteet ennen päättämistä.",
     "collectionNotDue": "Noutoaika ei ole vielä päättynyt.",
     "overviewHelpLabel": "Tietoa vastaanotosta",
-    "payoutBankReviewRequired": "Omistajan tai ylläpitäjän on ensin tarkistettava myyjän tilitiedot Maksut-osiossa."
+    "payoutBankReviewRequired": "Omistajan tai ylläpitäjän on ensin tarkistettava myyjän tilitiedot Maksut-osiossa.",
+    "saleVatRequired": "Myyntiä ei kirjattu, koska myymälän ALV-käsittelyä ei ole valittu. Omistajan tai ylläpitäjän on valittava se myymälän asetuksissa ja julkaistava käytäntö ennen uutta yritystä."
   },
   "brand": "Komisio",
   "tagline": "Enemmän tilaa tavaroille elää uudelleen.",
@@ -1311,7 +1312,8 @@
     "noReceipts": "Vastaavia kuitteja ei löytynyt. Tarkista koko viite tai valitse toinen lähde.",
     "receiptsTab": "Kuitit",
     "manualTab": "Kirjaa käsin",
-    "helpLabel": "Tietoa myynnistä"
+    "helpLabel": "Tietoa myynnistä",
+    "configureVat": "Avaa ALV-asetukset"
   },
   "ledger": {
     "title": "Saldo ja tilikirja",
@@ -4521,6 +4523,8 @@
   "economic": {
     "intro": "Lähetä päiväpäätökset luonnoksina kirjanpitäjälle e-conomiciin.",
     "connect": "Yhdistä e-conomic",
+    "reconnect": "Uusi e-conomic-yhteys",
+    "aiHint": "Hae ensin tilikartta. Tekoäly ehdottaa e-conomic-sopimuksesi tilejä ja täyttää vain tyhjät rivit. Tarkista ehdotukset ja valitse päiväkirja sekä ALV-koodit itse ennen tallentamista.",
     "check": "Tarkista yhteys",
     "notConnected": "e-conomic-sopimusta ei ole yhdistetty.",
     "connected": "Yhteys tarkistettu.",

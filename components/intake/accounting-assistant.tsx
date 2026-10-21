@@ -8,6 +8,7 @@ import {
 } from '@/lib/accounting/account-suggestions'
 import { z } from 'zod'
 import type { RestoredAccountingDraft } from '@/lib/engine/accounting-assistance'
+import { economicSuggestion } from '@/lib/accounting/economic-suggestions'
 
 export function AccountingAssistant({
   tenantId,
@@ -18,9 +19,13 @@ export function AccountingAssistant({
   busyChanged,
   initial,
   disabled,
+  destination = 'sie',
+  agreementNumber,
 }: {
   initial: RestoredAccountingDraft | null
   disabled: boolean
+  destination?: 'sie' | 'economic'
+  agreementNumber?: number
   tenantId: string
   baseId: string | null
   language: () => Locale
@@ -72,7 +77,11 @@ export function AccountingAssistant({
         const r = await fetch('/api/accounting/assistance', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(pending.current),
+          body: JSON.stringify({
+            ...pending.current,
+            destination,
+            ...(destination === 'economic' ? { agreementNumber } : {}),
+          }),
         })
         const raw = await r.json()
         if (!r.ok) {
@@ -113,7 +122,10 @@ export function AccountingAssistant({
           .object({
             id: z.uuid(),
             status: z.enum(['pending', 'ready', 'failed']),
-            output: accountSuggestion.nullable(),
+            output: (destination === 'economic'
+              ? economicSuggestion
+              : accountSuggestion
+            ).nullable(),
           })
           .parse(raw)
         if (result.id !== pending.current.requestId)

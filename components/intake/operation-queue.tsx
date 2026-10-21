@@ -267,7 +267,7 @@ export function OperationQueue({
           {o.kind === 'useAccountingDraft' ? (
             <Link
               className="text-link"
-              href={`/intake/accounting?view=accounts&draft=${o.payload.draftId}`}
+              href={`/intake/accounting?view=accounts&draft=${o.payload.draftId}${o.payload.destination === 'economic' ? '&destination=economic' : ''}`}
             >
               {d.openOrigin}
             </Link>

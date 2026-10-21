@@ -53,6 +53,15 @@ Reading the catalogue cannot prove permission to write drafts.
 There is no default Danish chart and no scheduled sending in this version.
 The SIE/Fortnox map, exports and send lifecycle remain separate.
 
+After loading the catalogue, owners and administrators can request AI account
+suggestions from the connected agreement's eligible accounts. Suggestions fill
+only untouched rows and include reasons and review questions. They do not select
+a journal, VAT codes or exclusions, publish a map or send an export. Existing AI
+enablement, credits and quotas apply. Drafts are actor-owned and pin the policy,
+map and connection; changes require a fresh draft. Account names are sent to the
+configured AI provider as untrusted reference data, without credentials, company
+identity, transactions or amounts. Review the suggestions before saving.
+
 ## Delivery and uncertain outcomes
 
 One export has at most one live send claim. Concurrent requests and request-ID

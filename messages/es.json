@@ -359,7 +359,8 @@
     "stocktakePending": "Comprueba los artículos restantes antes de finalizar.",
     "collectionNotDue": "El plazo de recogida aún no ha vencido.",
     "overviewHelpLabel": "Sobre la recepción",
-    "payoutBankReviewRequired": "Un propietario o administrador debe revisar primero los datos bancarios del vendedor en Pagos."
+    "payoutBankReviewRequired": "Un propietario o administrador debe revisar primero los datos bancarios del vendedor en Pagos.",
+    "saleVatRequired": "La venta no se registró porque no se ha elegido el tratamiento del IVA de la tienda. Un propietario o administrador debe elegirlo en los ajustes de la tienda y publicar la política antes de volver a intentarlo."
   },
   "brand": "Komisio",
   "tagline": "Más espacio para que las cosas vuelvan a vivir.",
@@ -1311,7 +1312,8 @@
     "noReceipts": "No hay recibos coincidentes. Comprueba la referencia completa o elige otro origen.",
     "receiptsTab": "Recibos",
     "manualTab": "Registrar manualmente",
-    "helpLabel": "Sobre las ventas"
+    "helpLabel": "Sobre las ventas",
+    "configureVat": "Abrir ajustes del IVA"
   },
   "ledger": {
     "title": "Saldo y libro",
@@ -4521,6 +4523,8 @@
   "economic": {
     "intro": "Envía los cierres diarios como borradores a tu asesoría en e-conomic.",
     "connect": "Conectar e-conomic",
+    "reconnect": "Renovar la conexión con e-conomic",
+    "aiHint": "Carga primero el plan de cuentas. La IA propone cuentas de tu contrato de e-conomic y solo rellena filas vacías. Revisa las propuestas y elige el diario y los códigos de IVA antes de guardar.",
     "check": "Comprobar conexión",
     "notConnected": "No hay ningún acuerdo de e-conomic conectado.",
     "connected": "Conexión verificada.",

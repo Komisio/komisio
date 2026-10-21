@@ -165,6 +165,9 @@ export default async function Sales({
                         d={d}
                         intake={all.intake}
                         leaveUnsaved={all.leaveUnsaved}
+                        canConfigureVat={['owner', 'admin'].includes(
+                          active.role,
+                        )}
                       />
                     </div>
                   ),

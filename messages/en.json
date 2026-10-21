@@ -359,7 +359,8 @@
     "stocktakePending": "Check the remaining items before finishing.",
     "collectionNotDue": "The collection deadline has not passed.",
     "overviewHelpLabel": "About receiving",
-    "payoutBankReviewRequired": "An owner or administrator must review the seller’s bank details under Payouts first."
+    "payoutBankReviewRequired": "An owner or administrator must review the seller’s bank details under Payouts first.",
+    "saleVatRequired": "The sale was not recorded because the store’s VAT treatment has not been selected. An owner or administrator must choose it in Store settings and publish the policy before you try again."
   },
   "brand": "Komisio",
   "tagline": "More room for things to live again.",
@@ -1311,7 +1312,8 @@
     "noReceipts": "No receipts match. Check the full reference or choose another source.",
     "receiptsTab": "Receipts",
     "manualTab": "Record manually",
-    "helpLabel": "About sales"
+    "helpLabel": "About sales",
+    "configureVat": "Open VAT settings"
   },
   "ledger": {
     "title": "Balance and ledger",
@@ -4515,6 +4517,8 @@
   "economic": {
     "intro": "Send daily closes as drafts for your accountant in e-conomic.",
     "connect": "Connect e-conomic",
+    "reconnect": "Renew the e-conomic connection",
+    "aiHint": "Load the chart of accounts first. AI suggests accounts from your e-conomic agreement and fills only empty rows. Review the suggestions and choose the journal and VAT codes yourself before saving.",
     "check": "Check connection",
     "notConnected": "No e-conomic agreement is connected.",
     "connected": "Connection verified.",

@@ -15,6 +15,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
   const [error, setError] = useState('')
   const [needsReload, setNeedsReload] = useState(false)
   const [returnUnavailable, setReturnUnavailable] = useState(false)
+  const [saleVatRequired, setSaleVatRequired] = useState(false)
   async function run(input: unknown): Promise<string | null> {
     if (running.current || needsReload) return null
     const command = intakeCommand.safeParse(pending.current ?? input)
@@ -27,6 +28,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
     setLocked(true)
     setBusy(true)
     setError('')
+    setSaleVatRequired(false)
     try {
       const response = await fetch('/api/intake', {
         method: 'POST',
@@ -39,6 +41,18 @@ export function useIntakeAction(d: Dictionary['intake']) {
         // rejected, even if it carries a familiar validation or stale-state code.
         if (response.status < 400 || response.status >= 500) {
           setError(d.failed)
+          return null
+        }
+        // Only an answered refusal confirms that no sale was recorded. A lost
+        // or 5xx response keeps the exact pending command for safe replay.
+        if (
+          command.data.action === 'recordSale' &&
+          result.error === 'VAT_MODE_NOT_SET'
+        ) {
+          pending.current = null
+          setLocked(false)
+          setSaleVatRequired(true)
+          setError(d.saleVatRequired)
           return null
         }
         // A confirmed return refusal means the displayed sale is stale.
@@ -198,5 +212,13 @@ export function useIntakeAction(d: Dictionary['intake']) {
       setBusy(false)
     }
   }
-  return { run, busy, locked, error, needsReload, returnUnavailable }
+  return {
+    run,
+    busy,
+    locked,
+    error,
+    needsReload,
+    returnUnavailable,
+    saleVatRequired,
+  }
 }

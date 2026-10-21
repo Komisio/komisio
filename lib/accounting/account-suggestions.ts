@@ -52,4 +52,9 @@ export const accountSuggestion = accountSuggestionShape.refine(
     new Set(value.rows.map((row) => row.key)).size === value.rows.length,
   'Each amount may appear only once',
 )
-export type AccountSuggestion = z.infer<typeof accountSuggestion>
+// Shared editor shape; each destination validates accounts with its own schema.
+type SuggestedRow = z.infer<typeof accountSuggestionShape>['rows'][number]
+export type AccountSuggestion = {
+  rows: (Omit<SuggestedRow, 'account'> & { account: string })[]
+  warnings: string[]
+}

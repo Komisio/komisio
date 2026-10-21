@@ -359,7 +359,8 @@
     "stocktakePending": "Prüfen Sie die übrigen Artikel vor dem Abschluss.",
     "collectionNotDue": "Die Abholfrist ist noch nicht abgelaufen.",
     "overviewHelpLabel": "Über die Annahme",
-    "payoutBankReviewRequired": "Ein Inhaber oder Administrator muss zuerst die Bankdaten des Verkäufers unter Auszahlungen prüfen."
+    "payoutBankReviewRequired": "Ein Inhaber oder Administrator muss zuerst die Bankdaten des Verkäufers unter Auszahlungen prüfen.",
+    "saleVatRequired": "Der Verkauf wurde nicht erfasst, da die Umsatzsteuerbehandlung des Geschäfts noch nicht ausgewählt wurde. Ein Inhaber oder Administrator muss sie in den Geschäftseinstellungen auswählen und die Richtlinie veröffentlichen, bevor du es erneut versuchst."
   },
   "brand": "Komisio",
   "tagline": "Mehr Raum für Dinge, die weiterleben.",
@@ -1311,7 +1312,8 @@
     "noReceipts": "Keine passenden Belege. Prüfen Sie die vollständige Referenz oder wählen Sie eine andere Quelle.",
     "receiptsTab": "Belege",
     "manualTab": "Manuell erfassen",
-    "helpLabel": "Über Verkäufe"
+    "helpLabel": "Über Verkäufe",
+    "configureVat": "Umsatzsteuereinstellungen öffnen"
   },
   "ledger": {
     "title": "Guthaben und Konto",
@@ -4521,6 +4523,8 @@
   "economic": {
     "intro": "Senden Sie Tagesabschlüsse als Entwürfe an Ihre Buchhaltung in e-conomic.",
     "connect": "e-conomic verbinden",
+    "reconnect": "e-conomic-Verbindung erneuern",
+    "aiHint": "Laden Sie zuerst den Kontenplan. Die KI schlägt Konten aus Ihrem e-conomic-Vertrag vor und füllt nur leere Zeilen. Prüfen Sie die Vorschläge und wählen Sie Journal und Umsatzsteuercodes vor dem Speichern selbst aus.",
     "check": "Verbindung prüfen",
     "notConnected": "Keine e-conomic-Vereinbarung verbunden.",
     "connected": "Verbindung geprüft.",

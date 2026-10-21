@@ -721,6 +721,11 @@ with mandatory zero-rate codes, and a stored exclusion reason for every nonzero
 unposted key. Consignment-fee keys cannot be excluded. No Danish chart is assumed.
 Real app registration and accountant verification remain operator work.
 
+Resolved 2026-10-21: the owner requests AI account suggestions for e-conomic.
+Use the connected agreement's eligible accounts, preserve existing rows and
+exclusions, and leave journal, VAT codes and publication to explicit human review.
+No Danish chart or new accounting treatment is assumed.
+
 The provider bulk schema does not guarantee one shared voucher number. The owner
 approved delivery with complete read-back and a held outcome unless exactly one
 voucher is verified. Guaranteed grouping remains a follow-up investigation;

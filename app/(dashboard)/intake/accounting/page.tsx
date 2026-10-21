@@ -207,6 +207,14 @@ export default async function Accounting({
       {isEconomic && ['days', 'accounts', 'exports'].includes(view) && (
         <EconomicWorkspace
           client={ctx.client}
+          userId={ctx.user.id}
+          locale={ctx.locale}
+          draftId={
+            typeof query.draft === 'string' &&
+            z.uuid().safeParse(query.draft).success
+              ? query.draft
+              : undefined
+          }
           tenantId={active.id}
           role={active.role}
           view={view}

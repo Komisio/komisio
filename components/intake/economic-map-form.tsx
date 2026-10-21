@@ -10,6 +10,10 @@ import { useRouter } from '@/components/platform/use-working-router'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 import { Button } from '@/components/ui/button'
 import { useEconomicAction } from './use-economic-action'
+import { AccountingAssistant } from './accounting-assistant'
+import type { AccountSuggestion } from '@/lib/accounting/account-suggestions'
+import type { RestoredAccountingDraft } from '@/lib/engine/accounting-assistance'
+import type { Locale } from '@/lib/i18n'
 
 export function economicAmountLabel(key: string, d: EconomicCopy) {
   if (key in d.accounting.amountKeys)
@@ -26,11 +30,15 @@ export function EconomicMapForm({
   current,
   editable,
   d,
+  locale,
+  aiDraft,
 }: {
   tenantId: string
   current: z.infer<typeof economicMap>
   editable: boolean
   d: EconomicCopy
+  locale: Locale
+  aiDraft: RestoredAccountingDraft | null
 }) {
   const t = d.economic,
     a = d.accounting,
@@ -45,8 +53,15 @@ export function EconomicMapForm({
   >(null)
   const [dirty, setDirty] = useState(false),
     [saved, setSaved] = useState(false)
-  useUnsavedChanges(dirty && !saved ? d.leaveUnsaved : null)
+  const [aiBusy, setAiBusy] = useState(false)
+  const [suggestion, setSuggestion] = useState<AccountSuggestion | null>(null)
+  useUnsavedChanges((dirty || aiBusy) && !saved ? d.leaveUnsaved : null)
   const update = (key: string, value?: EconomicMapBody[string]) => {
+    setSuggestion((previous) =>
+      previous
+        ? { ...previous, rows: previous.rows.filter((row) => row.key !== key) }
+        : null,
+    )
     setMap((previous) => {
       const next = { ...previous }
       if (value) next[key] = value
@@ -62,7 +77,8 @@ export function EconomicMapForm({
       aria-label={t.saveMap}
       onSubmit={async (event) => {
         event.preventDefault()
-        if (!catalogue) return
+        if (!catalogue || aiBusy || !editable || action.busy || action.locked)
+          return
         const result = await action.run({
           action: 'publishMap',
           requestId: crypto.randomUUID(),
@@ -88,7 +104,7 @@ export function EconomicMapForm({
         <Button
           type="button"
           variant="secondary"
-          disabled={action.busy || action.locked}
+          disabled={action.busy || action.locked || aiBusy}
           onClick={async () => {
             const value = await action.run({ action: 'catalogue' })
             if (
@@ -104,11 +120,76 @@ export function EconomicMapForm({
           {t.loadCatalogue}
         </Button>
       )}
+      {editable && (
+        <>
+          <p className="muted">{t.aiHint}</p>
+          <AccountingAssistant
+            tenantId={tenantId}
+            baseId={current.id}
+            destination="economic"
+            agreementNumber={catalogue?.agreementNumber}
+            language={() => locale}
+            d={a.ai}
+            initial={aiDraft}
+            disabled={!catalogue || action.busy || action.locked || saved}
+            busyChanged={setAiBusy}
+            apply={(value) => {
+              const rows = value.rows.filter(
+                (row) =>
+                  !map[row.key] &&
+                  catalogue?.accounts.some(
+                    (account) =>
+                      String(account.accountNumber) === row.account &&
+                      !account.barred &&
+                      !account.blockDirectEntries &&
+                      !account.contraAccount &&
+                      ['profitAndLoss', 'status'].includes(account.accountType),
+                  ),
+              )
+              setMap((previous) => {
+                const next = { ...previous }
+                for (const row of rows)
+                  if (!next[row.key])
+                    next[row.key] = {
+                      account: row.account,
+                      side: row.side,
+                      vatCode: '',
+                    }
+                return next
+              })
+              setSuggestion({ ...value, rows })
+              if (rows.length) {
+                setDirty(true)
+                setSaved(false)
+              }
+            }}
+          />
+        </>
+      )}
+      {suggestion && (
+        <div className="accounting-ai-review" role="status">
+          <p>{a.ai.review}</p>
+          {suggestion.warnings.length > 0 && (
+            <details>
+              <summary>
+                {a.ai.questions} ({suggestion.warnings.length})
+              </summary>
+              <ul>
+                {suggestion.warnings.map((warning, i) => (
+                  <li key={i}>{warning}</li>
+                ))}
+              </ul>
+            </details>
+          )}
+        </div>
+      )}
       <label>
         {t.journal}
         <select
           value={journal}
-          disabled={!editable || !catalogue || action.busy || action.locked}
+          disabled={
+            !editable || !catalogue || action.busy || action.locked || aiBusy
+          }
           required
           onChange={(event) => {
             setJournal(event.target.value)
@@ -162,10 +243,27 @@ export function EconomicMapForm({
                 posted = entry && 'account' in entry ? entry : null
               const label = economicAmountLabel(key, d),
                 disabled =
-                  !editable || !catalogue || action.busy || action.locked
+                  !editable ||
+                  !catalogue ||
+                  action.busy ||
+                  action.locked ||
+                  aiBusy
               return (
                 <tr key={key}>
-                  <th scope="row">{label}</th>
+                  <th scope="row">
+                    {label}
+                    {suggestion?.rows.some((row) => row.key === key) && (
+                      <details>
+                        <summary>{a.ai.reason}</summary>
+                        <p>
+                          {
+                            suggestion.rows.find((row) => row.key === key)
+                              ?.reason
+                          }
+                        </p>
+                      </details>
+                    )}
+                  </th>
                   <td>
                     <select
                       aria-label={`${label} · ${t.post}`}
@@ -308,7 +406,11 @@ export function EconomicMapForm({
       {action.locked && <ReloadAction label={d.reload} />}
       {saved && <p role="status">{t.saved}</p>}
       {editable && (
-        <Button disabled={!catalogue || !dirty || action.busy || action.locked}>
+        <Button
+          disabled={
+            !catalogue || !dirty || action.busy || action.locked || aiBusy
+          }
+        >
           {t.saveMap}
         </Button>
       )}

@@ -51,7 +51,7 @@ export function EconomicConnection({
               className="btn btn-secondary"
               href={`/api/integrations/economic/connect?tenant=${tenantId}`}
             >
-              {status.connected ? d.fortnox.reconnect : t.connect}
+              {status.connected ? t.reconnect : t.connect}
             </a>
             {status.connected && (
               <>

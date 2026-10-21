@@ -79,12 +79,138 @@ test('e-conomic connects, maps, sends drafts once, holds an uncertain send and r
     await expect(
       connection.getByText(d.economic.connected, { exact: true }),
     ).toBeVisible()
+    await expect(
+      connection.getByRole('link', { name: d.economic.reconnect, exact: true }),
+    ).toBeVisible()
     await expect(page).not.toHaveURL(/token=/)
     await page.goto('/intake/accounting?view=accounts&destination=economic')
     await page.getByRole('button', { name: d.economic.loadCatalogue }).click()
     await page
       .getByRole('combobox', { name: d.economic.journal, exact: true })
       .selectOption('1')
+    // Existing local edits survive suggestions; a lost reply recovers the same
+    // metered attempt and goes through the real staged-operation approval route.
+    await page
+      .getByRole('combobox', {
+        name: `${d.accounting.amountKeys.grossOre} · ${d.economic.post}`,
+        exact: true,
+      })
+      .selectOption('post')
+    await page
+      .getByRole('combobox', {
+        name: `${d.accounting.amountKeys.grossOre} · ${d.accounting.account}`,
+        exact: true,
+      })
+      .selectOption('10000')
+    let aiRequest = ''
+    let aiCalls = 0
+    await page.route('**/api/accounting/assistance', async (route) => {
+      const c = route.request().postDataJSON()
+      expect(c.destination).toBe('economic')
+      expect(c.tenantId).toBe(tenant)
+      expect(c.agreementNumber).toBe(123456)
+      if (aiRequest) expect(c.requestId).toBe(aiRequest)
+      aiRequest = c.requestId
+      await db.query('begin')
+      await db.query('set local role authenticated')
+      await db.query("select set_config('request.jwt.claims',$1,true)", [
+        JSON.stringify({ sub: actor, role: 'authenticated' }),
+      ])
+      const revision = (
+        await db.query('select read_economic_connection($1) value', [tenant])
+      ).rows[0].value.revision
+      const started = (
+        await db.query(
+          'select begin_economic_accounting_assistance($1,$2,$3,$4,$5,$6,$7,$8) value',
+          [
+            tenant,
+            c.requestId,
+            c.baseId,
+            c.language,
+            'fixture',
+            c.agreementNumber,
+            revision,
+            JSON.stringify([
+              { account: '10000', name: 'Bank', type: 'status' },
+              { account: '30000', name: 'Sales', type: 'profitAndLoss' },
+            ]),
+          ],
+        )
+      ).rows[0].value
+      const output = {
+        rows: [
+          {
+            key: 'grossOre',
+            account: '30000',
+            side: 'credit',
+            reason: 'Synthetic suggestion, preserve local edit',
+          },
+          {
+            key: 'commissionOre',
+            account: '30000',
+            side: 'credit',
+            reason: 'Review income account',
+          },
+        ],
+        warnings: ['Synthetic accounting review'],
+      }
+      if (started.reserved)
+        await db.query(
+          'select complete_accounting_assistance($1,$2,$3,100,50)',
+          [tenant, c.requestId, output],
+        )
+      await db.query('commit')
+      if (++aiCalls === 1) return route.abort()
+      await route.fulfill({
+        json: { id: c.requestId, status: 'ready', output },
+      })
+    })
+    await page
+      .getByRole('button', { name: d.accounting.ai.create, exact: true })
+      .click()
+    await expect(
+      page.getByText(d.accounting.ai.pending, { exact: true }),
+    ).toBeVisible()
+    await page
+      .getByRole('button', { name: d.accounting.ai.check, exact: true })
+      .click()
+    await expect(
+      page.getByText(d.accounting.ai.review, { exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole('combobox', {
+        name: `${d.accounting.amountKeys.grossOre} · ${d.accounting.account}`,
+        exact: true,
+      }),
+    ).toHaveValue('10000')
+    await expect(
+      page.getByRole('combobox', {
+        name: `${d.accounting.amountKeys.commissionOre} · ${d.accounting.account}`,
+        exact: true,
+      }),
+    ).toHaveValue('30000')
+    await expect(
+      page.getByRole('combobox', {
+        name: `${d.accounting.amountKeys.commissionOre} · ${d.economic.vatCode}`,
+        exact: true,
+      }),
+    ).toHaveValue('')
+    expect(
+      (
+        await db.query(
+          'select count(*)::int n from economic_maps where tenant_id=$1',
+          [tenant],
+        )
+      ).rows[0].n,
+    ).toBe(0)
+    expect(
+      (
+        await db.query(
+          'select count(*)::int n from accounting_ai_attempts where tenant_id=$1',
+          [tenant],
+        )
+      ).rows[0].n,
+    ).toBe(1)
     for (const [key, account, side] of [
       ['grossOre', '10000', 'debit'],
       ['commissionOre', '30000', 'credit'],

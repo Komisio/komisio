@@ -359,7 +359,8 @@
     "stocktakePending": "Kontrollera återstående varor innan du avslutar.",
     "collectionNotDue": "Hämtningsfristen har inte gått ut.",
     "overviewHelpLabel": "Om inlämning",
-    "payoutBankReviewRequired": "En ägare eller administratör behöver granska säljarens kontouppgifter under Utbetalningar först."
+    "payoutBankReviewRequired": "En ägare eller administratör behöver granska säljarens kontouppgifter under Utbetalningar först.",
+    "saleVatRequired": "Försäljningen registrerades inte eftersom butikens momshantering inte har valts. En ägare eller administratör behöver välja momshantering i Butiksinställningar och publicera policyn innan du försöker igen."
   },
   "brand": "Komisio",
   "tagline": "Mer utrymme för det som får nytt liv.",
@@ -1311,7 +1312,8 @@
     "noReceipts": "Inga kvitton matchar. Kontrollera hela referensen eller välj en annan källa.",
     "receiptsTab": "Kvitton",
     "manualTab": "Registrera manuellt",
-    "helpLabel": "Om försäljning"
+    "helpLabel": "Om försäljning",
+    "configureVat": "Öppna momshantering"
   },
   "ledger": {
     "title": "Saldo",
@@ -4515,6 +4517,8 @@
   "economic": {
     "intro": "Skicka dagsavslut som utkast till din redovisningskonsult i e-conomic.",
     "connect": "Anslut e-conomic",
+    "reconnect": "Förnya e-conomic-kopplingen",
+    "aiHint": "Hämta kontoplanen först. AI föreslår konton från ditt e-conomic-avtal och fyller bara tomma rader. Granska förslagen och välj journal och momskoder själv innan du sparar.",
     "check": "Kontrollera anslutningen",
     "notConnected": "Ingen e-conomic-anslutning finns.",
     "connected": "Anslutningen är kontrollerad.",

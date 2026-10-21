@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-import type { Dictionary } from '@/lib/i18n'
+import type { Dictionary, Locale } from '@/lib/i18n'
+import { readAccountingDraft } from '@/lib/engine/accounting-assistance'
 import type { DayClose } from '@/lib/engine/day-closes'
 import { economicCopy } from '@/lib/accounting/economic-copy'
 import {
@@ -25,6 +26,9 @@ export async function EconomicWorkspace({
   selected,
   closes,
   d,
+  userId,
+  locale,
+  draftId,
 }: {
   client: SupabaseClient
   tenantId: string
@@ -33,6 +37,9 @@ export async function EconomicWorkspace({
   selected?: string
   closes: DayClose[]
   d: Dictionary
+  userId: string
+  locale: Locale
+  draftId?: string
 }) {
   const status = await readEconomicStatus(client, tenantId)
   const copy = economicCopy(d)
@@ -40,6 +47,16 @@ export async function EconomicWorkspace({
   const editable = ['owner', 'admin'].includes(role)
   if (view === 'accounts') {
     const map = await readEconomicMap(client, tenantId)
+    const aiDraft = editable
+      ? await readAccountingDraft(
+          client,
+          tenantId,
+          userId,
+          map.id,
+          draftId,
+          'economic',
+        )
+      : null
     return (
       <section className="card intake-form">
         <h2>{d.accounting.mapHeading} · e-conomic</h2>
@@ -49,6 +66,8 @@ export async function EconomicWorkspace({
           current={map}
           editable={editable && status.connected}
           d={copy}
+          locale={locale}
+          aiDraft={aiDraft}
         />
       </section>
     )

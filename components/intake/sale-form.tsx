@@ -21,12 +21,14 @@ export function SaleForm({
   d,
   intake,
   leaveUnsaved,
+  canConfigureVat = false,
 }: {
   tenantId: string
   currency: string
   d: Dictionary['sales']
   intake: Dictionary['intake']
   leaveUnsaved: string
+  canConfigureVat?: boolean
 }) {
   const action = useIntakeAction(intake),
     router = useRouter()
@@ -257,6 +259,13 @@ export function SaleForm({
         </fieldset>
         {error && <p role="alert">{error}</p>}
         {action.error && <p role="alert">{action.error}</p>}
+        {action.saleVatRequired && canConfigureVat && (
+          <p>
+            <Link className="text-link" href="/settings#policy-section-vat">
+              {d.configureVat}
+            </Link>
+          </p>
+        )}
         {action.needsReload && <ReloadAction label={intake.reload} />}
         {cart.length > 0 && (
           <Button type="submit" disabled={action.busy || action.needsReload}>

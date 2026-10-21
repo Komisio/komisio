@@ -397,6 +397,7 @@ export async function economicCatalogue(
   const stored = await verifiedCredentials(client, tenant, source, http)
   return {
     agreementNumber: stored.agreementNumber,
+    connectionRevision: stored.revision,
     ...(await readCatalogue(stored.credentials, http)),
   }
 }

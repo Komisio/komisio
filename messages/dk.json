@@ -359,7 +359,8 @@
     "stocktakePending": "Kontrollér de resterende varer, før du afslutter.",
     "collectionNotDue": "Afhentningsfristen er ikke udløbet.",
     "overviewHelpLabel": "Om indlevering",
-    "payoutBankReviewRequired": "En ejer eller administrator skal først kontrollere sælgerens kontooplysninger under Udbetalinger."
+    "payoutBankReviewRequired": "En ejer eller administrator skal først kontrollere sælgerens kontooplysninger under Udbetalinger.",
+    "saleVatRequired": "Salget blev ikke registreret, fordi butikkens momsbehandling ikke er valgt. En ejer eller administrator skal vælge den i Butiksindstillinger og offentliggøre politikken, før du prøver igen."
   },
   "brand": "Komisio",
   "tagline": "Mere plads til ting, der får nyt liv.",
@@ -1311,7 +1312,8 @@
     "noReceipts": "Ingen kvitteringer matcher. Kontrollér hele referencen, eller vælg en anden kilde.",
     "receiptsTab": "Kvitteringer",
     "manualTab": "Registrer manuelt",
-    "helpLabel": "Om salg"
+    "helpLabel": "Om salg",
+    "configureVat": "Åbn momsindstillinger"
   },
   "ledger": {
     "title": "Saldo og konto",
@@ -4515,6 +4517,8 @@
   "economic": {
     "intro": "Send dagsafslutninger som kladder til din bogholder i e-conomic.",
     "connect": "Tilslut e-conomic",
+    "reconnect": "Forny e-conomic-forbindelsen",
+    "aiHint": "Hent kontoplanen først. AI foreslår konti fra din e-conomic-aftale og udfylder kun tomme rækker. Gennemgå forslagene, og vælg selv kassekladde og momskoder, før du gemmer.",
     "check": "Kontrollér forbindelsen",
     "notConnected": "Ingen e-conomic-aftale er tilsluttet.",
     "connected": "Forbindelsen er kontrolleret.",

@@ -4573,14 +4573,21 @@
       "ECONOMIC_ZERO_VAT_REQUIRED": "Velg en tillatt mva-kode med 0 % automatisk mva for hver bokført linje.",
       "ECONOMIC_MAP_INCOMPLETE": "Hvert beløp trenger en konto eller begrunnelse for utelatelse. Innleveringsgebyrer kan ikke utelates.",
       "ECONOMIC_MULTIPLE_VOUCHERS": "e-conomic returnerte flere bilagsnumre. Sendingen er sperret; eieren må kontrollere hele eksporten.",
-      "ECONOMIC_UNVERIFIED_ENTRIES": "De opprettede linjene kunne ikke avstemmes. Ikke send på nytt; eieren må kontrollere eksporten.",
+      "ECONOMIC_UNVERIFIED_ENTRIES": "Svaret fra e-conomic kunne ikke bekreftes. Bilaget kan allerede finnes der. Kontroller posteringene i e-conomic; ikke send på nytt.",
       "ECONOMIC_CATALOGUE_TOO_LARGE": "Kontolisten er for stor til å leses sikkert. Kontakt brukerstøtte.",
       "ECONOMIC_WRONG_AGREEMENT": "e-conomic-avtalen samsvarer ikke med den lagrede tilkoblingen. Kontroller tilkoblingen.",
       "ECONOMIC_NOT_CONFIGURED": "Komisio må først aktivere e-conomic-koblingen. Kontakt brukerstøtte.",
       "MAP_CHANGED": "Svaret kunne ikke bekreftes. Last inn siden på nytt og kontroller status før du fortsetter.",
       "ACCOUNTING_MAP_REQUIRED": "Velg konto for hvert beløp eller forklar hvorfor det ikke bokføres. Overlappende summer skal ikke bokføres to ganger. Alle mva-koder må ha 0 % automatisk mva fordi avgiften allerede er beregnet.",
       "DAY_CLOSE_NOT_FOUND": "Eksporten ble ikke funnet.",
-      "VOUCHER_UNBALANCED": "Velg konto for hvert beløp eller forklar hvorfor det ikke bokføres. Overlappende summer skal ikke bokføres to ganger. Alle mva-koder må ha 0 % automatisk mva fordi avgiften allerede er beregnet."
-    }
+      "VOUCHER_UNBALANCED": "Velg konto for hvert beløp eller forklar hvorfor det ikke bokføres. Overlappende summer skal ikke bokføres to ganger. Alle mva-koder må ha 0 % automatisk mva fordi avgiften allerede er beregnet.",
+      "ECONOMIC_DAY_UNRESOLVED": "En tidligere sending for denne datoen er ikke bekreftet. Avstem den i e-conomic før du sender mer.",
+      "ECONOMIC_DAY_HISTORY_REVIEW": "Flere tidligere eksporter for denne datoen må avstemmes. Kontakt kundestøtte før du sender mer.",
+      "ECONOMIC_DAY_CONTEXT_CHANGED": "Konto-, mva- eller journalinnstillingene avviker fra forrige eksport. Avstem endringen før du fortsetter.",
+      "ECONOMIC_BASELINE_CHANGED": "En annen eksport for denne datoen er bekreftet. Åpne dagsoppgjøret igjen og klargjør et nytt bilag med den gjenstående endringen.",
+      "ECONOMIC_NO_CHANGES": "Ingen nye beløp gjenstår å sende for dette dagsoppgjøret."
+    },
+    "deltaHint": "Bare endringen siden forrige bekreftede eksport er inkludert.",
+    "baselineLink": "Vis forrige eksport"
   }
 }

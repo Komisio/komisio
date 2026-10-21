@@ -89,6 +89,17 @@ export async function EconomicWorkspace({
               {d.economic.journal} {row.journal_number} ·{' '}
               {d.accounting.mapVersion} {row.economic_maps.version}
             </p>
+            {row.baseline_export_id && (
+              <p>
+                {d.economic.deltaHint}{' '}
+                <Link
+                  className="text-link"
+                  href={`/intake/accounting?view=exports&destination=economic&export=${row.baseline_export_id}`}
+                >
+                  {d.economic.baselineLink}
+                </Link>
+              </p>
+            )}
             <Link
               className="text-link"
               href={`/intake/accounting?view=exports&destination=economic&export=${row.id}`}

@@ -4579,14 +4579,21 @@
       "ECONOMIC_ZERO_VAT_REQUIRED": "Wählen Sie für jede gebuchte Zeile einen zulässigen Steuercode mit 0 % automatischer Steuer.",
       "ECONOMIC_MAP_INCOMPLETE": "Jeder Betrag braucht ein Konto oder eine Ausschlussbegründung. Annahmegebühren dürfen nicht ausgeschlossen werden.",
       "ECONOMIC_MULTIPLE_VOUCHERS": "e-conomic hat mehrere Belegnummern zurückgegeben. Die Sendung bleibt gesperrt; der Inhaber muss den gesamten Export prüfen.",
-      "ECONOMIC_UNVERIFIED_ENTRIES": "Die erstellten Zeilen konnten nicht abgeglichen werden. Nicht erneut senden; der Inhaber muss den Export prüfen.",
+      "ECONOMIC_UNVERIFIED_ENTRIES": "Die Antwort von e-conomic konnte nicht überprüft werden. Der Beleg kann dort bereits vorhanden sein. Prüfen Sie die Buchungszeilen in e-conomic; senden Sie nicht erneut.",
       "ECONOMIC_CATALOGUE_TOO_LARGE": "Die Kontenliste ist zu groß für einen sicheren Abruf. Kontaktieren Sie den Support.",
       "ECONOMIC_WRONG_AGREEMENT": "Die e-conomic-Vereinbarung stimmt nicht mit der gespeicherten Verbindung überein. Prüfen Sie die Verbindung.",
       "ECONOMIC_NOT_CONFIGURED": "Komisio muss zuerst die e-conomic-Anbindung aktivieren. Kontaktieren Sie den Support.",
       "MAP_CHANGED": "Die Antwort konnte nicht bestätigt werden. Laden Sie die Seite neu und prüfen Sie den Status, bevor Sie fortfahren.",
       "ACCOUNTING_MAP_REQUIRED": "Wählen Sie für jeden Betrag ein Konto oder begründen Sie den Ausschluss. Überlappende Summen dürfen nicht doppelt gebucht werden. Alle Steuercodes müssen automatisch 0 % berechnen, da die Steuer bereits berechnet wurde.",
       "DAY_CLOSE_NOT_FOUND": "Der Export wurde nicht gefunden.",
-      "VOUCHER_UNBALANCED": "Wählen Sie für jeden Betrag ein Konto oder begründen Sie den Ausschluss. Überlappende Summen dürfen nicht doppelt gebucht werden. Alle Steuercodes müssen automatisch 0 % berechnen, da die Steuer bereits berechnet wurde."
-    }
+      "VOUCHER_UNBALANCED": "Wählen Sie für jeden Betrag ein Konto oder begründen Sie den Ausschluss. Überlappende Summen dürfen nicht doppelt gebucht werden. Alle Steuercodes müssen automatisch 0 % berechnen, da die Steuer bereits berechnet wurde.",
+      "ECONOMIC_DAY_UNRESOLVED": "Eine frühere Übertragung für dieses Datum ist unbestätigt. Gleichen Sie sie in e-conomic ab, bevor Sie weitere Daten senden.",
+      "ECONOMIC_DAY_HISTORY_REVIEW": "Mehrere frühere Exporte für dieses Datum müssen abgeglichen werden. Kontaktieren Sie vor weiteren Übertragungen den Support.",
+      "ECONOMIC_DAY_CONTEXT_CHANGED": "Konto-, Steuer- oder Journaleinstellungen weichen vom vorherigen Export ab. Klären Sie die Änderung, bevor Sie fortfahren.",
+      "ECONOMIC_BASELINE_CHANGED": "Ein anderer Export für dieses Datum wurde bestätigt. Öffnen Sie den Tagesabschluss erneut und erstellen Sie einen neuen Export für die verbleibende Änderung.",
+      "ECONOMIC_NO_CHANGES": "Für diesen Tagesabschluss sind keine neuen Beträge zu übertragen."
+    },
+    "deltaHint": "Enthalten ist nur die Änderung seit dem letzten bestätigten Export.",
+    "baselineLink": "Vorherigen Export anzeigen"
   }
 }

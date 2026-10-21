@@ -91,6 +91,9 @@ export const economicPreview = z.object({
   debitOre: z.number().int(),
   creditOre: z.number().int(),
   balanced: z.boolean(),
+  baselineExportId: z.uuid().nullable().optional(),
+  baselineCloseVersion: z.number().int().nonnegative().optional(),
+  blockedReason: z.string().optional(),
 })
 export const economicSend = z.object({
   sendId: z.uuid(),
@@ -147,6 +150,11 @@ export const economicErrors = [
   'ECONOMIC_PREFLIGHT_FAILED',
   'ECONOMIC_UNVERIFIED_ENTRIES',
   'ECONOMIC_MULTIPLE_VOUCHERS',
+  'ECONOMIC_DAY_UNRESOLVED',
+  'ECONOMIC_DAY_HISTORY_REVIEW',
+  'ECONOMIC_DAY_CONTEXT_CHANGED',
+  'ECONOMIC_BASELINE_CHANGED',
+  'ECONOMIC_NO_CHANGES',
   'REQUEST_FAILED',
 ] as const
 export function economicErrorCode(error: unknown) {
@@ -533,7 +541,10 @@ export async function sendEconomicExport(
           p_status: 'failed',
           p_number: null,
           p_error: outcome,
-          p_reason: economicErrorCode(error),
+          p_reason:
+            attempted && error instanceof z.ZodError
+              ? 'ECONOMIC_UNVERIFIED_ENTRIES'
+              : economicErrorCode(error),
           p_retry_seconds:
             error instanceof EconomicError
               ? (error.retrySeconds ?? null)
@@ -570,6 +581,7 @@ const exportRow = z.object({
   id: z.uuid(),
   day_close_id: z.uuid(),
   map_id: z.uuid(),
+  baseline_export_id: z.uuid().nullable().optional(),
   agreement_number: integer,
   journal_number: integer,
   voucher: z.array(exportLine),

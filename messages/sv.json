@@ -4573,14 +4573,21 @@
       "ECONOMIC_ZERO_VAT_REQUIRED": "Välj en tillåten momskod med 0 % automatisk moms för varje bokförd rad.",
       "ECONOMIC_MAP_INCOMPLETE": "Alla belopp måste ha konto eller motivering. Inlämningsavgifter får inte undantas.",
       "ECONOMIC_MULTIPLE_VOUCHERS": "e-conomic gav flera verifikationsnummer. Skickningen är spärrad; ägaren behöver kontrollera hela exporten.",
-      "ECONOMIC_UNVERIFIED_ENTRIES": "De skapade raderna kunde inte stämmas av. Skicka inte igen; ägaren behöver kontrollera exporten.",
+      "ECONOMIC_UNVERIFIED_ENTRIES": "Svaret från e-conomic kunde inte verifieras. Underlaget kan redan finnas där. Kontrollera raderna i e-conomic; skicka inte igen.",
       "ECONOMIC_CATALOGUE_TOO_LARGE": "Kontolistan är för stor för att läsas säkert. Kontakta supporten.",
       "ECONOMIC_WRONG_AGREEMENT": "e-conomic-avtalet stämmer inte med den sparade kopplingen. Kontrollera anslutningen.",
       "ECONOMIC_NOT_CONFIGURED": "Komisio behöver först aktivera e-conomic-kopplingen. Kontakta supporten.",
       "MAP_CHANGED": "Svaret kunde inte bekräftas. Ladda om sidan och kontrollera status innan du fortsätter.",
       "ACCOUNTING_MAP_REQUIRED": "Välj konto för varje belopp eller förklara varför det inte ska bokföras. Överlappande totalsummor ska inte bokföras dubbelt. Alla momskoder måste ha 0 % automatisk moms eftersom momsen redan är beräknad.",
       "DAY_CLOSE_NOT_FOUND": "Exporten hittades inte.",
-      "VOUCHER_UNBALANCED": "Välj konto för varje belopp eller förklara varför det inte ska bokföras. Överlappande totalsummor ska inte bokföras dubbelt. Alla momskoder måste ha 0 % automatisk moms eftersom momsen redan är beräknad."
-    }
+      "VOUCHER_UNBALANCED": "Välj konto för varje belopp eller förklara varför det inte ska bokföras. Överlappande totalsummor ska inte bokföras dubbelt. Alla momskoder måste ha 0 % automatisk moms eftersom momsen redan är beräknad.",
+      "ECONOMIC_DAY_UNRESOLVED": "En tidigare sändning för samma datum är inte bekräftad. Stäm av den i e-conomic innan du skickar mer.",
+      "ECONOMIC_DAY_HISTORY_REVIEW": "Flera tidigare exporter för samma datum behöver stämmas av. Kontakta supporten innan du skickar mer.",
+      "ECONOMIC_DAY_CONTEXT_CHANGED": "Konto-, moms- eller kassaboksinställningarna skiljer sig från föregående export. Stäm av ändringen innan du fortsätter.",
+      "ECONOMIC_BASELINE_CHANGED": "En annan export för samma datum har bekräftats. Öppna dagsavslutet igen och förbered ett nytt underlag med återstående förändring.",
+      "ECONOMIC_NO_CHANGES": "Inga nya belopp återstår att skicka för detta dagsavslut."
+    },
+    "deltaHint": "Endast förändringen sedan föregående bekräftade export ingår.",
+    "baselineLink": "Visa föregående export"
   }
 }

@@ -33,7 +33,7 @@ test('e-conomic connects, maps, sends drafts once, holds an uncertain send and r
     await db.query('select id from auth.users where email=$1', [email])
   ).rows[0].id
   let tenant = ''
-  const closes = [randomUUID(), randomUUID()]
+  const closes = [randomUUID(), randomUUID(), randomUUID(), randomUUID()]
   try {
     await db.query('begin')
     await db.query('set local role authenticated')
@@ -274,6 +274,125 @@ test('e-conomic connects, maps, sends drafts once, holds an uncertain send and r
       ),
     ).toEqual([42, 42])
 
+    await db.query(
+      "insert into day_closes(id,tenant_id,close_date,version,gross_ore,commission_ore,generated_by) values($1,$3,'2020-03-02',2,22345,22345,$4),($2,$3,'2020-03-02',3,32345,32345,$4)",
+      [closes[2], closes[3], tenant, actor],
+    )
+    await page.goto('/intake/accounting?destination=economic')
+    const delta = page
+      .locator('details.accounting-record')
+      .filter({ hasText: '2020-03-02' })
+      .filter({ hasText: `${d.accounting.version} 2` })
+    await delta.locator('summary').click()
+    await expect(delta.getByText(d.economic.deltaHint)).toBeVisible()
+    await expect(
+      delta.getByRole('cell', { name: '100.00 DKK', exact: true }),
+    ).toHaveCount(2)
+    await delta.getByRole('button', { name: d.economic.prepare }).click()
+    await delta.getByRole('link', { name: d.accounting.openExport }).click()
+    await expect(
+      page.getByRole('link', { name: d.economic.baselineLink }),
+    ).toBeVisible()
+    await page.getByRole('button', { name: d.economic.send }).click()
+    await expect(
+      page.getByText(`${d.economic.sent} 42`, { exact: true }),
+    ).toBeVisible()
+    const deltaDelivery = await (
+      await page.request.get('http://127.0.0.1:3468/control')
+    ).json()
+    expect(deltaDelivery.posts).toBe(2)
+    expect(
+      deltaDelivery.entries
+        .map((r: { amount: number }) => r.amount)
+        .sort((a: number, b: number) => a - b),
+    ).toEqual([-100, 100])
+
+    await page.request.post('http://127.0.0.1:3468/control?mode=malformed')
+    await page.goto('/intake/accounting?destination=economic')
+    const uncertain = page
+      .locator('details.accounting-record')
+      .filter({ hasText: '2020-03-02' })
+      .filter({ hasText: `${d.accounting.version} 3` })
+    await uncertain.locator('summary').click()
+    await uncertain.getByRole('button', { name: d.economic.prepare }).click()
+    await uncertain.getByRole('link', { name: d.accounting.openExport }).click()
+    await page.getByRole('button', { name: d.economic.send }).click()
+    await expect(
+      page.getByText(d.economic.errors.ECONOMIC_UNVERIFIED_ENTRIES, {
+        exact: false,
+      }),
+    ).toBeVisible()
+    await expect(
+      page.getByText(d.economic.errors.INVALID_INPUT, { exact: false }),
+    ).toHaveCount(0)
+    await expect(
+      page.getByRole('button', { name: d.economic.send }),
+    ).toHaveCount(0)
+    await page.screenshot({
+      path: testInfo.outputPath('economic-held-response.png'),
+    })
+    await page.goto('/intake/accounting?destination=economic')
+    const blocked = page
+      .locator('details.accounting-record')
+      .filter({ hasText: '2020-03-02' })
+      .filter({ hasText: `${d.accounting.version} 3` })
+    await blocked.locator('summary').click()
+    await expect(
+      blocked.getByText(d.economic.errors.ECONOMIC_DAY_UNRESOLVED),
+    ).toBeVisible()
+
+    // Historical responses stored INVALID_INPUT; presentation must clarify them
+    // without changing the original evidence or releasing the hold.
+    const historicalClose = randomUUID()
+    await db.query(
+      "insert into day_closes(id,tenant_id,close_date,version,gross_ore,commission_ore,generated_by) values($1,$2,'2020-03-04',1,10000,10000,$3)",
+      [historicalClose, tenant, actor],
+    )
+    await db.query('begin')
+    await db.query('set local role authenticated')
+    await db.query("select set_config('request.jwt.claims',$1,true)", [
+      JSON.stringify({ sub: actor, role: 'authenticated' }),
+    ])
+    const historicalExport = (
+      await db.query('select export_economic_day_close($1,$2,$3) id', [
+        tenant,
+        randomUUID(),
+        historicalClose,
+      ])
+    ).rows[0].id
+    const historicalSend = randomUUID()
+    await db.query('select begin_economic_send($1,$2,$3)', [
+      tenant,
+      historicalSend,
+      historicalExport,
+    ])
+    await db.query(
+      "select complete_economic_send($1,$2,'failed',null,'ECONOMIC_OUTCOME_UNKNOWN','INVALID_INPUT',null)",
+      [tenant, historicalSend],
+    )
+    await db.query('commit')
+    await page.goto(
+      `/intake/accounting?view=exports&destination=economic&export=${historicalExport}`,
+    )
+    await expect(
+      page.getByText(d.economic.errors.ECONOMIC_UNVERIFIED_ENTRIES, {
+        exact: false,
+      }),
+    ).toBeVisible()
+    await expect(
+      page.getByText(d.economic.errors.INVALID_INPUT, { exact: false }),
+    ).toHaveCount(0)
+    await expect(
+      page.getByRole('button', { name: d.economic.send }),
+    ).toHaveCount(0)
+    expect(
+      (
+        await db.query('select reason from economic_sends where id=$1', [
+          historicalSend,
+        ])
+      ).rows[0].reason,
+    ).toBe('INVALID_INPUT')
+
     await page.request.post('http://127.0.0.1:3468/control?mode=lost')
     await page.goto('/intake/accounting?destination=economic')
     const second = page
@@ -284,7 +403,9 @@ test('e-conomic connects, maps, sends drafts once, holds an uncertain send and r
     await second.getByRole('link', { name: d.accounting.openExport }).click()
     await page.getByRole('button', { name: d.economic.send }).click()
     await expect(
-      page.getByText(d.economic.pending, { exact: false }),
+      page.getByText(d.economic.errors.ECONOMIC_OUTCOME_UNKNOWN, {
+        exact: true,
+      }),
     ).toBeVisible()
     await expect(
       page.getByRole('button', { name: d.economic.send }),
@@ -302,7 +423,7 @@ test('e-conomic connects, maps, sends drafts once, holds an uncertain send and r
     expect(
       (await (await page.request.get('http://127.0.0.1:3468/control')).json())
         .posts,
-    ).toBe(2)
+    ).toBe(4)
     await page.request.post('http://127.0.0.1:3468/control?mode=normal')
     await page.goto('/intake/accounting?view=settings')
     await connection

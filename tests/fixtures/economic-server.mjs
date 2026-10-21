@@ -100,6 +100,7 @@ const server = createServer(async (req, res) => {
       req.socket.destroy()
       return
     }
+    if (mode === 'malformed') return json({}, 201)
     return json(voucher, 201)
   }
   if (url.pathname === '/journals/1/vouchers/2020-42' && req.method === 'GET')

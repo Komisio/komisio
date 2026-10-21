@@ -4579,14 +4579,21 @@
       "ECONOMIC_ZERO_VAT_REQUIRED": "Valitse jokaiselle kirjattavalle riville sallittu ALV-koodi, jonka automaattinen verokanta on 0 %.",
       "ECONOMIC_MAP_INCOMPLETE": "Jokainen summa tarvitsee tilin tai perustelun poisjättämiselle. Vastaanottomaksuja ei voi jättää pois.",
       "ECONOMIC_MULTIPLE_VOUCHERS": "e-conomic palautti useita tositenumeroita. Lähetys on estetty; omistajan on tarkistettava koko vienti.",
-      "ECONOMIC_UNVERIFIED_ENTRIES": "Luotuja rivejä ei voitu täsmäyttää. Älä lähetä uudelleen; omistajan on tarkistettava vienti.",
+      "ECONOMIC_UNVERIFIED_ENTRIES": "e-conomicin vastausta ei voitu varmentaa. Tosite saattaa jo olla siellä. Tarkista kirjaukset e-conomicissa; älä lähetä uudelleen.",
       "ECONOMIC_CATALOGUE_TOO_LARGE": "Tililuettelo on liian suuri turvalliseen lukemiseen. Ota yhteyttä tukeen.",
       "ECONOMIC_WRONG_AGREEMENT": "e-conomic-sopimus ei vastaa tallennettua yhteyttä. Tarkista yhteys.",
       "ECONOMIC_NOT_CONFIGURED": "Komision on ensin otettava e-conomic-yhteys käyttöön. Ota yhteyttä tukeen.",
       "MAP_CHANGED": "Vastausta ei voitu vahvistaa. Lataa sivu uudelleen ja tarkista tila ennen jatkamista.",
       "ACCOUNTING_MAP_REQUIRED": "Valitse tili jokaiselle summalle tai perustele, miksi sitä ei kirjata. Älä kirjaa päällekkäisiä summia kahdesti. Kaikkien ALV-koodien automaattisen verokannan on oltava 0 %, koska vero on jo laskettu.",
       "DAY_CLOSE_NOT_FOUND": "Vientiä ei löytynyt.",
-      "VOUCHER_UNBALANCED": "Valitse tili jokaiselle summalle tai perustele, miksi sitä ei kirjata. Älä kirjaa päällekkäisiä summia kahdesti. Kaikkien ALV-koodien automaattisen verokannan on oltava 0 %, koska vero on jo laskettu."
-    }
+      "VOUCHER_UNBALANCED": "Valitse tili jokaiselle summalle tai perustele, miksi sitä ei kirjata. Älä kirjaa päällekkäisiä summia kahdesti. Kaikkien ALV-koodien automaattisen verokannan on oltava 0 %, koska vero on jo laskettu.",
+      "ECONOMIC_DAY_UNRESOLVED": "Aikaisempaa lähetystä tälle päivälle ei ole vahvistettu. Täsmäytä se e-conomicissa ennen uusia lähetyksiä.",
+      "ECONOMIC_DAY_HISTORY_REVIEW": "Useita aikaisempia vientejä tälle päivälle on täsmäytettävä. Ota yhteyttä tukeen ennen uusia lähetyksiä.",
+      "ECONOMIC_DAY_CONTEXT_CHANGED": "Tili-, alv- tai päiväkirja-asetukset eroavat edellisestä viennistä. Selvitä muutos ennen jatkamista.",
+      "ECONOMIC_BASELINE_CHANGED": "Toinen vienti tälle päivälle on vahvistettu. Avaa päivän päätös uudelleen ja valmistele uusi vienti jäljellä olevasta muutoksesta.",
+      "ECONOMIC_NO_CHANGES": "Tälle päivän päätökselle ei ole uusia lähetettäviä summia."
+    },
+    "deltaHint": "Mukana on vain muutos edellisen vahvistetun viennin jälkeen.",
+    "baselineLink": "Näytä edellinen vienti"
   }
 }

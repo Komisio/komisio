@@ -4579,14 +4579,21 @@
       "ECONOMIC_ZERO_VAT_REQUIRED": "Elige un código de IVA permitido con cálculo automático del 0 % para cada línea contabilizada.",
       "ECONOMIC_MAP_INCOMPLETE": "Cada importe necesita una cuenta o un motivo de exclusión. Las tarifas de recepción no pueden excluirse.",
       "ECONOMIC_MULTIPLE_VOUCHERS": "e-conomic devolvió varios números de asiento. El envío queda bloqueado; el propietario debe revisar toda la exportación.",
-      "ECONOMIC_UNVERIFIED_ENTRIES": "No se pudieron conciliar las líneas creadas. No reenvíes; el propietario debe revisar la exportación.",
+      "ECONOMIC_UNVERIFIED_ENTRIES": "No se pudo verificar la respuesta de e-conomic. El asiento puede existir ya allí. Comprueba sus líneas en e-conomic; no lo envíes de nuevo.",
       "ECONOMIC_CATALOGUE_TOO_LARGE": "La lista de cuentas es demasiado grande para leerla con seguridad. Contacta con soporte.",
       "ECONOMIC_WRONG_AGREEMENT": "El acuerdo de e-conomic no coincide con la conexión guardada. Comprueba la conexión.",
       "ECONOMIC_NOT_CONFIGURED": "Komisio debe activar primero la integración con e-conomic. Contacta con soporte.",
       "MAP_CHANGED": "No se pudo confirmar la respuesta. Recarga y comprueba el estado antes de continuar.",
       "ACCOUNTING_MAP_REQUIRED": "Elige una cuenta para cada importe o explica por qué no se contabiliza. No contabilices dos veces totales que se solapen. Todos los códigos de IVA deben calcular automáticamente el 0 %, porque el IVA ya está calculado.",
       "DAY_CLOSE_NOT_FOUND": "No se encontró la exportación.",
-      "VOUCHER_UNBALANCED": "Elige una cuenta para cada importe o explica por qué no se contabiliza. No contabilices dos veces totales que se solapen. Todos los códigos de IVA deben calcular automáticamente el 0 %, porque el IVA ya está calculado."
-    }
+      "VOUCHER_UNBALANCED": "Elige una cuenta para cada importe o explica por qué no se contabiliza. No contabilices dos veces totales que se solapen. Todos los códigos de IVA deben calcular automáticamente el 0 %, porque el IVA ya está calculado.",
+      "ECONOMIC_DAY_UNRESOLVED": "Un envío anterior de esta fecha no está confirmado. Concílialo en e-conomic antes de enviar más.",
+      "ECONOMIC_DAY_HISTORY_REVIEW": "Varias exportaciones anteriores de esta fecha necesitan conciliación. Contacta con soporte antes de enviar más.",
+      "ECONOMIC_DAY_CONTEXT_CHANGED": "La configuración de cuentas, IVA o diario difiere de la exportación anterior. Revisa el cambio antes de continuar.",
+      "ECONOMIC_BASELINE_CHANGED": "Se ha confirmado otra exportación de esta fecha. Abre de nuevo el cierre diario y prepara una nueva exportación con el cambio restante.",
+      "ECONOMIC_NO_CHANGES": "No hay nuevos importes que enviar para este cierre diario."
+    },
+    "deltaHint": "Solo se incluye el cambio desde la exportación confirmada anterior.",
+    "baselineLink": "Ver exportación anterior"
   }
 }

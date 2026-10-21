@@ -251,6 +251,27 @@ function provider(
   })
 }
 describe('e-conomic adapter and sending', () => {
+  it('describes a malformed provider read-back as unverified, not invalid user input', async () => {
+    const c = fakeClient()
+    const transport = provider()
+    const http: typeof fetch = async (input, init) =>
+      /\/vouchers\/2026-42$/.test(String(input))
+        ? json({})
+        : transport(input, init)
+    const result = await sendEconomicExport(
+      c.client,
+      tenant,
+      exportId,
+      send,
+      env,
+      http,
+    )
+    expect(result.errorCode).toBe('ECONOMIC_OUTCOME_UNKNOWN')
+    expect(result.reason).toBe('ECONOMIC_UNVERIFIED_ENTRIES')
+    expect(
+      transport.mock.calls.filter(([, init]) => init?.method === 'POST'),
+    ).toHaveLength(1)
+  })
   it('does not treat empty or malformed successful HTTP bodies as confirmed writes', () => {
     expect(confirmsEconomicResult('export', {})).toBe(false)
     expect(confirmsEconomicResult('send', { ...opened, status: 'sent' })).toBe(

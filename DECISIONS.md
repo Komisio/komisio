@@ -1,5 +1,8 @@
 # Decision Log
 
+- 2026-10-21: e-conomic sends only the signed change from the last confirmed export for a store/date. Freeze its baseline and full target; serialize across versions. Unknown sends, ambiguous legacy history, stale baselines and changed posting context block sending. Existing records stay immutable.
+- 2026-10-21: An unverified e-conomic response after dispatch is a held provider outcome, never invalid user input. Show explicit verification guidance for new and historical holds; do not resend or infer success from a visible voucher number alone.
+
 - 2026-10-20: Account mail uses frozen activation language, then saved product language, signup language or English. Profile saves mirror language through the user's Auth session; failed mirroring is reported for retry. Auth templates fall back as whole messages.
 
 - 2026-10-18: #508 gives signed-out seller registration links a localized public introduction and account actions retaining the return path. No store or agreement is read before login; verified identity, MFA, application and staff approval checks remain unchanged.

@@ -4573,14 +4573,21 @@
       "ECONOMIC_ZERO_VAT_REQUIRED": "Choose an allowed VAT code with a 0% automatic rate for every posted line.",
       "ECONOMIC_MAP_INCOMPLETE": "Every amount needs an account or a reason for exclusion. Consignment fees cannot be excluded.",
       "ECONOMIC_MULTIPLE_VOUCHERS": "e-conomic returned multiple voucher numbers. The send is held; the owner must review the entire export.",
-      "ECONOMIC_UNVERIFIED_ENTRIES": "The created lines could not be reconciled. Do not resend; the owner must review the export.",
+      "ECONOMIC_UNVERIFIED_ENTRIES": "The response from e-conomic could not be verified. The voucher may already exist there. Check its entries in e-conomic; do not send again.",
       "ECONOMIC_CATALOGUE_TOO_LARGE": "The account list is too large to read safely. Contact support.",
       "ECONOMIC_WRONG_AGREEMENT": "The e-conomic agreement does not match the saved connection. Check the connection.",
       "ECONOMIC_NOT_CONFIGURED": "Komisio must enable the e-conomic integration first. Contact support.",
       "MAP_CHANGED": "The response could not be confirmed. Reload and check the status before continuing.",
       "ACCOUNTING_MAP_REQUIRED": "Choose an account for each amount or explain why it is not posted. Do not post overlapping totals twice. All VAT codes must have a 0% automatic rate because VAT is already calculated.",
       "DAY_CLOSE_NOT_FOUND": "The export was not found.",
-      "VOUCHER_UNBALANCED": "Choose an account for each amount or explain why it is not posted. Do not post overlapping totals twice. All VAT codes must have a 0% automatic rate because VAT is already calculated."
-    }
+      "VOUCHER_UNBALANCED": "Choose an account for each amount or explain why it is not posted. Do not post overlapping totals twice. All VAT codes must have a 0% automatic rate because VAT is already calculated.",
+      "ECONOMIC_DAY_UNRESOLVED": "An earlier send for this date is unconfirmed. Reconcile it in e-conomic before sending more.",
+      "ECONOMIC_DAY_HISTORY_REVIEW": "Multiple earlier exports for this date need reconciliation. Contact support before sending more.",
+      "ECONOMIC_DAY_CONTEXT_CHANGED": "Account, VAT or journal settings differ from the previous export. Reconcile the change before continuing.",
+      "ECONOMIC_BASELINE_CHANGED": "Another export for this date has been confirmed. Reopen the day close and prepare a new export for the remaining change.",
+      "ECONOMIC_NO_CHANGES": "There are no new amounts to send for this day close."
+    },
+    "deltaHint": "Only the change since the previous confirmed export is included.",
+    "baselineLink": "View previous export"
   }
 }

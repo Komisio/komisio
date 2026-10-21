@@ -715,6 +715,15 @@ operator actions; no live setting has been changed by this implementation.
 
 ## e-conomic delivery scope (#523)
 
+Owner approved daily delta exports on 2026-10-21 after a later full-day version
+repeated earlier amounts. Freeze and recheck the confirmed baseline; unresolved
+sends and ambiguous historical full exports block the whole date. No automatic
+repair of existing provider entries or changed posting contexts is authorized.
+The reported grouped voucher still requires separate reconciliation: its response
+could not be verified. Response-shape failures must not be described as invalid
+user input. The exact real-provider response mismatch remains unconfirmed until
+read-only provider evidence is available; do not weaken verification to clear it.
+
 Owner decisions on 2026-10-20 approve separate connection/map/export/send facts,
 DKK daily summaries as drafts in an existing journal, explicit frozen VAT lines
 with mandatory zero-rate codes, and a stored exclusion reason for every nonzero

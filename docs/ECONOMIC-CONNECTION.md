@@ -64,6 +64,22 @@ identity, transactions or amounts. Review the suggestions before saving.
 
 ## Delivery and uncertain outcomes
 
+Each day close is still a full-day snapshot. A new export freezes only the signed
+change from the last confirmed export for that store and date, plus the full target
+and the previous export ID. A decrease reverses the posting side. An unchanged
+target creates no export. The preview and export show when only a change is sent.
+
+Pending or uncertain sends block every other export for the date, including a new
+close or map version. Preparing and sending serialize on the tenant lock; a
+prepared export whose baseline has advanced must be prepared again as a new row.
+The old row stays readable. Account/VAT mappings, agreement and journal must match
+the previous confirmed export; changing that context requires reconciliation.
+
+One confirmed legacy full export can provide the initial baseline. Multiple
+legacy full exports for a date require manual reconciliation, not an inferred
+reversal. Existing split or unverified sends remain held. A newly deployed parser
+or clearer message neither confirms them nor sends them again.
+
 One export has at most one live send claim. Concurrent requests and request-ID
 replays cannot dispatch another POST. One REST journal-voucher request contains
 all Finance Voucher entries, the day-close date, DKK and exact decimal formatting

@@ -4573,14 +4573,21 @@
       "ECONOMIC_ZERO_VAT_REQUIRED": "Scegli un codice IVA consentito con calcolo automatico dello 0% per ogni riga contabilizzata.",
       "ECONOMIC_MAP_INCOMPLETE": "Ogni importo richiede un conto o un motivo di esclusione. Le commissioni di consegna non possono essere escluse.",
       "ECONOMIC_MULTIPLE_VOUCHERS": "e-conomic ha restituito più numeri di registrazione. L’invio è bloccato; il titolare deve controllare l’intera esportazione.",
-      "ECONOMIC_UNVERIFIED_ENTRIES": "Non è stato possibile riconciliare le righe create. Non inviare di nuovo; il titolare deve controllare l’esportazione.",
+      "ECONOMIC_UNVERIFIED_ENTRIES": "Impossibile verificare la risposta di e-conomic. La registrazione potrebbe essere già presente. Controlla le righe in e-conomic; non inviare di nuovo.",
       "ECONOMIC_CATALOGUE_TOO_LARGE": "L’elenco dei conti è troppo grande per essere letto in sicurezza. Contatta l’assistenza.",
       "ECONOMIC_WRONG_AGREEMENT": "L’accordo e-conomic non corrisponde al collegamento salvato. Verifica il collegamento.",
       "ECONOMIC_NOT_CONFIGURED": "Komisio deve prima attivare il collegamento a e-conomic. Contatta l’assistenza.",
       "MAP_CHANGED": "La risposta non è stata confermata. Ricarica e controlla lo stato prima di continuare.",
       "ACCOUNTING_MAP_REQUIRED": "Scegli un conto per ogni importo oppure spiega perché non viene contabilizzato. Non contabilizzare due volte totali sovrapposti. Tutti i codici IVA devono calcolare automaticamente lo 0%, perché l’IVA è già stata calcolata.",
       "DAY_CLOSE_NOT_FOUND": "L'esportazione non è stata trovata.",
-      "VOUCHER_UNBALANCED": "Scegli un conto per ogni importo oppure spiega perché non viene contabilizzato. Non contabilizzare due volte totali sovrapposti. Tutti i codici IVA devono calcolare automaticamente lo 0%, perché l’IVA è già stata calcolata."
-    }
+      "VOUCHER_UNBALANCED": "Scegli un conto per ogni importo oppure spiega perché non viene contabilizzato. Non contabilizzare due volte totali sovrapposti. Tutti i codici IVA devono calcolare automaticamente lo 0%, perché l’IVA è già stata calcolata.",
+      "ECONOMIC_DAY_UNRESOLVED": "Un invio precedente per questa data non è confermato. Riconcilialo in e-conomic prima di inviare altro.",
+      "ECONOMIC_DAY_HISTORY_REVIEW": "Più esportazioni precedenti per questa data richiedono una riconciliazione. Contatta il supporto prima di inviare altro.",
+      "ECONOMIC_DAY_CONTEXT_CHANGED": "Le impostazioni di conti, IVA o giornale differiscono dalla precedente esportazione. Verifica la modifica prima di continuare.",
+      "ECONOMIC_BASELINE_CHANGED": "È stata confermata un’altra esportazione per questa data. Riapri la chiusura giornaliera e prepara una nuova esportazione con la variazione restante.",
+      "ECONOMIC_NO_CHANGES": "Non ci sono nuovi importi da inviare per questa chiusura giornaliera."
+    },
+    "deltaHint": "È inclusa solo la variazione rispetto alla precedente esportazione confermata.",
+    "baselineLink": "Visualizza esportazione precedente"
   }
 }

@@ -110,6 +110,49 @@ export async function raceEconomicSend({ setup, connectionString }) {
       ]),
       /ECONOMIC_ALREADY_SENT/,
     )
+    // Different export IDs for later versions still share one daily send lock.
+    const nextCloses = [randomUUID(), randomUUID()]
+    await setup.query(
+      "insert into day_closes(id,tenant_id,close_date,version,gross_ore,commission_ore,generated_by) values($1,$3,'2026-10-01',2,15000,15000,$4),($2,$3,'2026-10-01',3,18000,18000,$4)",
+      [...nextCloses, tenant, actor],
+    )
+    const nextExports = await Promise.all(
+      sessions.map((session, index) =>
+        session.query('select export_economic_day_close($1,$2,$3) id', [
+          tenant,
+          randomUUID(),
+          nextCloses[index],
+        ]),
+      ),
+    )
+    const attempts = [randomUUID(), randomUUID()]
+    const competing = await Promise.allSettled(
+      sessions.map((session, index) =>
+        session.query('select begin_economic_send($1,$2,$3) result', [
+          tenant,
+          attempts[index],
+          nextExports[index].rows[0].id,
+        ]),
+      ),
+    )
+    assert.equal(competing.filter((r) => r.status === 'fulfilled').length, 1)
+    assert.match(
+      competing.find((r) => r.status === 'rejected').reason.message,
+      /ECONOMIC_DAY_UNRESOLVED/,
+    )
+    const winner = competing.findIndex((r) => r.status === 'fulfilled')
+    await sessions[winner].query(
+      "select complete_economic_send($1,$2,'sent',45,'','',null)",
+      [tenant, attempts[winner]],
+    )
+    await assert.rejects(
+      sessions[1 - winner].query('select begin_economic_send($1,$2,$3)', [
+        tenant,
+        randomUUID(),
+        nextExports[1 - winner].rows[0].id,
+      ]),
+      /ECONOMIC_BASELINE_CHANGED/,
+    )
     console.log(
       'PASS: e-conomic has one export, one dispatch and one confirmation under concurrent requests; unknown outcomes stay held.',
     )

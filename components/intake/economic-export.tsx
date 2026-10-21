@@ -102,6 +102,14 @@ export function EconomicPrepare({
         {preview.agreementNumber ?? '—'} · {d.economic.journal}{' '}
         {preview.journalNumber ?? '—'}
       </p>
+      {preview.baselineExportId && <p>{d.economic.deltaHint}</p>}
+      {preview.blockedReason && (
+        <p role="status">
+          {(d.economic.errors as Record<string, string>)[
+            preview.blockedReason
+          ] ?? d.economic.unknown}
+        </p>
+      )}
       <EconomicLines lines={preview.lines} excluded={preview.excluded} d={d} />
       {preview.unmapped.length > 0 && (
         <p role="status">
@@ -131,6 +139,7 @@ export function EconomicPrepare({
             disabled={
               action.busy ||
               action.locked ||
+              !!preview.blockedReason ||
               !preview.mapId ||
               !preview.balanced ||
               preview.unmapped.length > 0 ||
@@ -193,6 +202,12 @@ export function EconomicDelivery({
   const retryBlocked = !!retryAfter && readyAfter !== retryAfter
   const message = (code: string) =>
     (t.errors as Record<string, string>)[code] ?? t.unknown
+  // Old sends also stored response-schema failures as INVALID_INPUT. This is
+  // presentation only: their immutable outcome and hold stay unchanged.
+  const reason =
+    held && send?.reason === 'INVALID_INPUT'
+      ? 'ECONOMIC_UNVERIFIED_ENTRIES'
+      : send?.reason
   return (
     <div className="stack">
       {send && (
@@ -200,9 +215,14 @@ export function EconomicDelivery({
           {send.status === 'sent'
             ? `${t.sent} ${send.voucherNumber}`
             : held
-              ? t.pending
+              ? send.status === 'pending'
+                ? t.pending
+                : reason === 'ECONOMIC_UNVERIFIED_ENTRIES' ||
+                    reason === 'ECONOMIC_MULTIPLE_VOUCHERS'
+                  ? message(reason)
+                  : message('ECONOMIC_OUTCOME_UNKNOWN')
               : message(send.errorCode)}
-          {send.reason && ` · ${message(send.reason)}`}
+          {!held && send.status !== 'sent' && reason && ` · ${message(reason)}`}
         </p>
       )}
       {send && (

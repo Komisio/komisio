@@ -2,7 +2,7 @@
 
 This is an operator-managed Linux pilot, not generally available printing.
 Physical TLS trust, authentication, reconnect, exact copies and revocation must
-be verified for each supported printer/firmware before store activation. A local
+be verified for each supported printer/firmware before routine store use. A local
 Printer Setup Utility label does not establish Weblink compatibility.
 
 The bridge uses an existing anonymous device identity and the scoped queue RPCs.
@@ -88,6 +88,15 @@ checking pending local output. See Zebra's [Weblink SDK certificate guidance](ht
 and [configuration guide](https://techdocs.zebra.com/link-os/2-13/webservices/content/link-os-pg-addendum-en.pdf).
 
 ## TLS proxy and service
+
+In the owner's printing settings, create a Weblink printer and its one-use code,
+enroll the service, and refresh the device list. Select the paired device and
+acknowledge supervision to **enable the pilot test**. This permits queued and
+new jobs; it does not mark hardware acceptance complete. The default-off setup
+flag gates enabling. Pausing remains available even when that flag is off.
+An unresolved dispatch prevents reactivation. Pause cannot recall labels already
+sent; an attempt racing a pause may be held and need the recovery below. Do not
+use pause/reactivation to clear an uncertain attempt.
 
 The listener binds only to `127.0.0.1`. The TLS proxy must **overwrite** Host,
 `X-Forwarded-Proto` and `X-Komisio-Bridge`; forwarding client-supplied versions

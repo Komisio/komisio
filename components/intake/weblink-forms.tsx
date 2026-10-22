@@ -7,6 +7,7 @@ import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
 import { weblinkCommand } from '@/lib/engine/weblink-printers'
+import type { PrintDevice } from '@/lib/engine/print-devices'
 
 type Copy = Dictionary['printing']
 function useWeblinkWrite() {
@@ -77,6 +78,93 @@ type Common = {
   d: Copy
   reload: string
   leaveUnsaved: string
+}
+
+export function WeblinkPilot({
+  tenantId,
+  printerId,
+  active,
+  devices,
+  enabled,
+  d,
+  reload,
+}: Omit<Common, 'leaveUnsaved'> & {
+  printerId: string
+  active: boolean
+  devices: PrintDevice[]
+  enabled: boolean
+}) {
+  const field = useId()
+  const action = useWeblinkWrite()
+  const router = useRouter()
+  const available = devices.filter((device) => !device.revokedAt)
+  return (
+    <div className="weblink-pilot">
+      <p>{active ? d.weblink.pauseHint : d.weblink.pilotHint}</p>
+      {active ? (
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={action.busy || action.held || action.done}
+          onClick={() =>
+            action.send({ action: 'pausePilot', tenantId, id: printerId })
+          }
+        >
+          {d.weblink.pause}
+        </Button>
+      ) : (
+        enabled && (
+          <>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => router.refresh()}
+            >
+              {d.weblink.refreshDevices}
+            </Button>
+            {available.length > 0 && (
+              <form
+                className="printer-form"
+                onSubmit={async (event) => {
+                  event.preventDefault()
+                  const f = new FormData(event.currentTarget)
+                  await action.send({
+                    action: 'enablePilot',
+                    tenantId,
+                    id: printerId,
+                    deviceId: String(f.get('deviceId')),
+                    acknowledged: f.get('acknowledged') === 'on',
+                  })
+                }}
+              >
+                <fieldset
+                  className="intake-fields"
+                  disabled={action.busy || action.held || action.done}
+                >
+                  <div className="field">
+                    <label htmlFor={`${field}-device`}>{d.devicesTitle}</label>
+                    <select id={`${field}-device`} name="deviceId" required>
+                      {available.map((device) => (
+                        <option key={device.id} value={device.id}>
+                          {device.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <label className="intake-confirm">
+                    <input type="checkbox" name="acknowledged" required />
+                    {d.weblink.pilotAcknowledged}
+                  </label>
+                  <Button type="submit">{d.weblink.enable}</Button>
+                </fieldset>
+              </form>
+            )}
+          </>
+        )
+      )}
+      <Outcome {...action} d={d} reload={reload} />
+    </div>
+  )
 }
 
 export function WeblinkSetup({ tenantId, d, reload, leaveUnsaved }: Common) {

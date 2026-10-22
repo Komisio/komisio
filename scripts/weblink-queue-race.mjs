@@ -121,7 +121,50 @@ export async function raceWeblinkQueue({ setup, connectionString }) {
       ])
     ).rows[0].value.code
     const device = await session(deviceUser, true)
-    await device.query("select pair_print_device($1,'Bridge','test')", [code])
+    const paired = (
+      await device.query("select pair_print_device($1,'Bridge','test') value", [
+        code,
+      ])
+    ).rows[0].value.deviceId
+    // A pause and a claim contend on the same tenant row. Once the pause
+    // commits, the queued claim must observe inactive state and send no permit.
+    await admin.query('begin')
+    await admin.query('select set_weblink_pilot($1,$2,false,null,false)', [
+      tenant,
+      printer,
+    ])
+    const pausedClaim = device
+      .query('select claim_weblink_print_job($1,$2,$3)', [
+        tenant,
+        printer,
+        randomUUID(),
+      ])
+      .then(
+        () => {
+          throw new Error('paused printer granted a claim')
+        },
+        (error) => error.message,
+      )
+    let blocked = false
+    for (let i = 0; i < 100; i++) {
+      blocked = (
+        await setup.query(
+          "select exists(select 1 from pg_stat_activity where application_name=$1 and wait_event_type='Lock') blocked",
+          [device.connectionParameters.application_name],
+        )
+      ).rows[0].blocked
+      if (blocked) break
+      await pause(20)
+    }
+    await admin.query('commit')
+    assert.equal(blocked, true)
+    assert.equal(await pausedClaim, 'PRINTER_INACTIVE')
+    await admin.query('select set_weblink_pilot($1,$2,true,$3,true)', [
+      tenant,
+      printer,
+      paired,
+    ])
+    console.log('PASS: committed pilot pause fences a concurrent queue claim.')
     const otherConnection = await session(deviceUser, true)
     const workers = [device, otherConnection]
     async function queue() {

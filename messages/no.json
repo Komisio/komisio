@@ -2137,7 +2137,24 @@
       "printed": "Alle kopier skrevet ut og fysisk kontrollert",
       "cancelled": "Avslutt jobben uten å bekrefte utskrift",
       "resolve": "Lagre kontrollen",
-      "acceptanceHint": "Mottatt overføring er ikke bevis på fysisk utskrift. Jobben sendes ikke automatisk på nytt."
+      "acceptanceHint": "Mottatt overføring er ikke bevis på fysisk utskrift. Jobben sendes ikke automatisk på nytt.",
+      "managed": {
+        "title": "Koble til Zebra",
+        "hint": "Klargjør tilkoblingen her, og installer deretter filen på Zebra-skriveren med Zebra Printer Setup Utility.",
+        "working": "Arbeider…",
+        "check": "Kontroller klargjort tilkobling",
+        "prepare": "Klargjør tilkobling",
+        "download": "Last ned installasjonsfil",
+        "prepared": "Tilkoblingen er klargjort. Installer filen på Zebra-skriveren før du aktiverer utskrift.",
+        "downloaded": "Installasjonsfilen er lastet ned. Følg trinnene nedenfor.",
+        "pauseFirst": "Sett skriveren på pause før du klargjør en ny tilkobling.",
+        "conflict": "Skriveren har en annen paret enhet. Kontroller enhetene før du fortsetter.",
+        "unknown": "Resultatet må kontrolleres. Velg Kontroller klargjort tilkobling for å fortsette samme installasjon; ikke opprett en ny skriver.",
+        "step1": "Last ned installasjonsfilen på en enhet på samme wifi som Zebra-skriveren.",
+        "step2": "Velg riktig skriver i Zebra Printer Setup Utility, og send den nedlastede filen via Available Files. Start skriveren på nytt når overføringen er ferdig.",
+        "step3": "Gå tilbake hit og aktiver skriveren når du er klar til å skrive ut. Oppdater siden for å kontrollere at den er tilkoblet, og send deretter én testetikett.",
+        "private": "Filen inneholder skriverens påloggingsopplysninger. Hold den privat og slett den etter installasjonen."
+      }
     }
   },
   "purchases": {

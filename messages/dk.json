@@ -2137,7 +2137,24 @@
       "printed": "Alle kopier udskrevet og fysisk kontrolleret",
       "cancelled": "Afslut jobbet uden at bekræfte udskrift",
       "resolve": "Gem kontrollen",
-      "acceptanceHint": "Modtaget overførsel er ikke bevis på fysisk udskrift. Jobbet sendes ikke automatisk igen."
+      "acceptanceHint": "Modtaget overførsel er ikke bevis på fysisk udskrift. Jobbet sendes ikke automatisk igen.",
+      "managed": {
+        "title": "Tilslut Zebra",
+        "hint": "Forbered forbindelsen her, og installer derefter filen på Zebra-printeren med Zebra Printer Setup Utility.",
+        "working": "Arbejder…",
+        "check": "Kontrollér forberedt forbindelse",
+        "prepare": "Forbered forbindelse",
+        "download": "Hent installationsfil",
+        "prepared": "Forbindelsen er forberedt. Installer filen på Zebra-printeren, før du aktiverer udskrivning.",
+        "downloaded": "Installationsfilen er hentet. Følg trinnene nedenfor.",
+        "pauseFirst": "Sæt printeren på pause, før du forbereder en ny forbindelse.",
+        "conflict": "Printeren har en anden parret enhed. Kontrollér enhederne, før du fortsætter.",
+        "unknown": "Resultatet skal kontrolleres. Vælg Kontrollér forberedt forbindelse for at fortsætte samme installation; opret ikke en ny printer.",
+        "step1": "Hent installationsfilen på en enhed på samme wi-fi som Zebra-printeren.",
+        "step2": "Vælg den rigtige printer i Zebra Printer Setup Utility, og send den hentede fil via Available Files. Genstart printeren, når overførslen er færdig.",
+        "step3": "Vend tilbage hertil, og aktivér printeren, når du er klar til at udskrive. Opdatér siden for at kontrollere, at den er tilsluttet, og send derefter én testetiket.",
+        "private": "Filen indeholder printerens loginoplysninger. Hold den privat, og slet den efter installationen."
+      }
     }
   },
   "purchases": {

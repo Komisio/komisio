@@ -3,6 +3,7 @@ import {
   WeblinkRecovery,
   WeblinkPilot,
 } from '@/components/intake/weblink-forms'
+import { managedWeblinkConfigured } from '@/lib/engine/managed-weblink'
 import { helpArticle } from '@/lib/help/content'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { LegalLinks } from '@/components/platform/legal-links'
@@ -400,6 +401,10 @@ export default async function Settings({
                               locale={ctx.locale}
                               d={pr}
                               transport={p.transport}
+                              managed={
+                                process.env.KOMISIO_WEBLINK_SETUP_ENABLED ===
+                                  'true' && managedWeblinkConfigured()
+                              }
                             />
                           )}
                       </details>

@@ -578,6 +578,15 @@ HTTP fixtures test the product/purchase loop without a real merchant account.
 
 ## USB print verification, 2026-10-13
 
+Managed Weblink setup (2026-10-22): the owner selected preparation and private
+installation-file download from Komisio, with no per-printer server installation.
+Each environment has its own gateway/keys and each printer keeps a separate
+identity and queue. Existing owner/admin/MFA checks, explicit activation and
+uncertain-output recovery remain. Platform deployment must not enroll a
+production store or physical printer. Shared gateway rollout and the new file
+installation path remain to be verified; the existing staging hardware pilot
+does not by itself verify this new flow.
+
 Weblink software preparation (2026-10-22, #542): the owner requests locally
 testable implementation before the ZD420/iPad test. A separate dispatch journal
 can be developed without changing queue schemas or device grants. Before hosted

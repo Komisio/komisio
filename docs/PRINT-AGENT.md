@@ -1,5 +1,38 @@
 # Komisio Print (the local print agent)
 
+## Weblink dispatch journal (development only)
+
+The owner requested software implementation before the physical printer test
+(#542). `scripts/print-bridge/dispatch.mjs` supplies an inactive building block:
+it exclusively reserves a job ID and syncs its intent to disk before handing
+the original ZPL to a transport. Concurrent processes sharing the directory and
+restarted processes refuse an already reserved job. A failed write, torn journal
+or incomplete copy sequence cannot trigger an automatic resend. The journal
+stores IDs, copy count and a payload digest, never label text or credentials.
+
+`dispatch` requires an authorization adapter that revalidates the device before
+reservation and before each copy. A successful transport callback records
+`transport_accepted`, not physical printing. An exception leaves
+`outcome_unknown`; peer error text is not persisted. `inspect` reads local
+evidence and is not a tenant-facing authorization boundary. Neither method
+claims jobs, updates Supabase, exposes an endpoint or grants permissions.
+
+Run `npm run test:print-bridge` for the dependency-free process/crash tests.
+The Linux service requires a private directory owned by its service user on a
+local persistent filesystem. Its parent must already exist. All bridge workers
+must share that directory; NFS, ephemeral storage and separate replicas are not
+supported. Linux syncs the file and directory before transport. Windows runs
+development tests only; it does not establish Linux filesystem durability.
+
+Do not delete, prune or restore journal files to retry work. Missing restored
+evidence could allow duplicate output. Hosted activation still requires reviewed
+queue fencing/recovery, authenticated printer main/raw channels and reconnects,
+device-scoped queue integration, and physical TLS/copy/revocation tests. The
+database's existing stale-claim handling and the Windows agent are unchanged.
+This component alone does not make Weblink printing available in Komisio.
+
+## Existing Windows agent
+
 Status: delivered with P2 S19 (queue and templates, migration
 `20260914080000`), label sizes (`20260916370000`) and the paired device
 (`20260916390000`, 2026-09-15). The core keeps a queue of label jobs per

@@ -578,6 +578,14 @@ HTTP fixtures test the product/purchase loop without a real merchant account.
 
 ## USB print verification, 2026-10-13
 
+Weblink software preparation (2026-10-22, #542): the owner requests locally
+testable implementation before the ZD420/iPad test. A separate dispatch journal
+can be developed without changing queue schemas or device grants. Before hosted
+activation, decide and review queue fencing and explicit uncertain-output
+recovery, prove main/raw channel binding and authenticated reconnects, and verify
+the actual printer's TLS chain and output. Local journal tests do not settle
+those integration and hardware questions or authorize a new core table.
+
 The owner requested native ZPL output to a USB Zebra and has hardware for a
 later pilot. Komisio Print 1.1 uses local Windows RAW queues and retains the
 existing device binding and label templates. Native fake-spooler tests and

@@ -58,6 +58,7 @@ export function createPrinterSessions({ lookupCredential, authorizeDevice }) {
   const current = new Map()
   const mainHandles = new WeakMap()
   const rawHandles = new WeakMap()
+  const pendingHandles = new WeakMap()
 
   async function validate(deviceId, secretDigest, expectedScope) {
     try {
@@ -85,15 +86,51 @@ export function createPrinterSessions({ lookupCredential, authorizeDevice }) {
     return session && current.get(session.scope.deviceId) === session
   }
 
-  async function openMain(header, signal) {
+  async function openPending(header, signal) {
     const supplied = parseBasic(header)
     const scope = await validate(supplied.deviceId, supplied.secretDigest)
     if (signal?.aborted) throw denied()
-    const session = { scope, secretDigest: supplied.secretDigest, raw: null }
     const handle = Object.freeze({})
+    pendingHandles.set(handle, {
+      scope,
+      secretDigest: supplied.secretDigest,
+      signal,
+    })
+    return handle
+  }
+
+  function consumePending(handle) {
+    const pending = pendingHandles.get(handle)
+    pendingHandles.delete(handle)
+    if (!pending || pending.signal?.aborted) throw denied()
+    return pending
+  }
+
+  function bindMain(handle) {
+    const { scope, secretDigest } = consumePending(handle)
+    const session = { scope, secretDigest, raw: null }
     mainHandles.set(handle, session)
     current.set(scope.deviceId, session)
     return handle
+  }
+
+  function bindRaw(handle, mainHandle) {
+    const pending = consumePending(handle)
+    const session = mainHandles.get(mainHandle)
+    if (
+      !isCurrent(session) ||
+      session.raw ||
+      !sameScope(pending.scope, session.scope) ||
+      pending.secretDigest !== session.secretDigest
+    )
+      throw denied()
+    session.raw = handle
+    rawHandles.set(handle, session)
+    return handle
+  }
+
+  async function openMain(header, signal) {
+    return bindMain(await openPending(header, signal))
   }
 
   async function openRaw(mainHandle, header, signal) {
@@ -105,18 +142,7 @@ export function createPrinterSessions({ lookupCredential, authorizeDevice }) {
       supplied.deviceId !== session.scope.deviceId
     )
       throw denied()
-    await validate(supplied.deviceId, supplied.secretDigest, session.scope)
-    if (
-      !isCurrent(session) ||
-      session.raw ||
-      signal?.aborted ||
-      supplied.secretDigest !== session.secretDigest
-    )
-      throw denied()
-    const handle = Object.freeze({})
-    session.raw = handle
-    rawHandles.set(handle, session)
-    return handle
+    return bindRaw(await openPending(header, signal), mainHandle)
   }
 
   async function authorize(rawHandle, input) {
@@ -144,9 +170,18 @@ export function createPrinterSessions({ lookupCredential, authorizeDevice }) {
     if (raw?.raw === handle) raw.raw = null
     mainHandles.delete(handle)
     rawHandles.delete(handle)
+    pendingHandles.delete(handle)
   }
 
-  return Object.freeze({ openMain, openRaw, authorize, close })
+  return Object.freeze({
+    openPending,
+    bindMain,
+    bindRaw,
+    openMain,
+    openRaw,
+    authorize,
+    close,
+  })
 }
 
 /** Uses only the existing device-context RPC; no queue writes or admin client. */

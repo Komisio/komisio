@@ -586,6 +586,16 @@ recovery, prove main/raw channel binding and authenticated reconnects, and verif
 the actual printer's TLS chain and output. Local journal tests do not settle
 those integration and hardware questions or authorize a new core table.
 
+Authentication preparation now includes per-device secret verification, local
+main/raw session generation checks, encrypted credential storage, device token
+renewal and fresh authorization through the existing context RPC. These are
+inactive components with local fixtures, not verified printer handshakes. Secure
+provisioning and actual TLS upgrade/channel association remain open. Queue
+fencing must also prevent old consumers from reclaiming a job after uncertain
+output; the current ten-minute stale-claim rule cannot be used unchanged for an
+active Weblink bridge. Review that additive transport/state contract before
+implementation; no new core table or device-role change is authorized here.
+
 The owner requested native ZPL output to a USB Zebra and has hardware for a
 later pilot. Komisio Print 1.1 uses local Windows RAW queues and retains the
 existing device binding and label templates. Native fake-spooler tests and

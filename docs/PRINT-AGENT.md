@@ -31,6 +31,58 @@ device-scoped queue integration, and physical TLS/copy/revocation tests. The
 database's existing stale-claim handling and the Windows agent are unchanged.
 This component alone does not make Weblink printing available in Komisio.
 
+## Weblink authentication components (development only)
+
+`scripts/print-bridge/auth.mjs` and `credentials.mjs` provide inactive components
+for the future bridge. They open no listener, pair no devices and consume no jobs.
+They use the existing paired device identity and `print_device_context` RPC;
+there are no schema, membership or Windows-agent changes.
+
+Each printer receives a random 256-bit password once through a future trusted
+provisioning flow. Its username is the paired device ID, not the printer serial.
+Only the password digest is retained. Both main and raw HTTP upgrade requests
+must authenticate, over TLS, against the same device binding. The service owns
+opaque session handles: they must never be taken from printer-supplied channel
+IDs. A new authenticated main connection invalidates the previous generation.
+Raw authorization rechecks the credential and active device context before each
+dispatch copy. Closing a stale connection cannot invalidate a newer connection.
+Already buffered output cannot be recalled by revocation or disconnect.
+
+The token provider is fixed to one device and reuses short-lived access tokens
+only while its saved credential revision matches. Refresh calls are coalesced
+within that provider. Replacement refresh tokens must be durably saved before
+their access tokens are returned. The authorizer checks current device context
+on every call, even while the access token is cached. HTTP requests have a
+five-second timeout, bounded responses and no redirects. Configuration accepts
+public Supabase keys; service-role/secret keys are rejected. Remote endpoints
+require HTTPS; HTTP is allowed only for numeric loopback test endpoints.
+
+The credential store uses AES-256-GCM with random nonces and authenticates the
+device ID, format version and record revision. Its 32-byte encryption key must
+be provisioned separately from the credential directory and its backups; the
+module does not generate, persist or log that key. Linux requires a private,
+service-owned directory on a local persistent filesystem with a trusted parent.
+Files are written at mode 0600, synced, atomically replaced and directory-synced.
+Exclusive writer locks and expected revisions reject concurrent/stale updates
+across processes. Existing device identities cannot be rebound to another store
+or printer through this store. Wrong keys and damaged records fail closed.
+
+One service process and token provider must own a device's connections and token
+renewal. Cross-process credential locks do not provide distributed connection
+ownership or serialize remote refresh calls. After a crashed writer, stop all
+writers and review any remaining lock before removing it. Never overwrite a
+damaged credential or restore an old backup as an automatic recovery. Lost keys
+or unrecoverable refresh sessions require a reviewed re-pairing procedure.
+Windows tests establish development behavior, not production file protection.
+
+Zebra documents server credentials in `weblink.ip.conn[1|2].authentication.add`
+in its [Programming Guide](https://cpws.zebra.com/cpws/docs/zpl/zpl-zbi2-pm-en.pdf).
+Actual ZD420 firmware challenge handling on both channels remains unverified.
+The TLS upgrade handler, rate limits, discovery/channel association, secure
+provisioning, queue fencing and uncertain-output recovery are still required
+before hosted activation. These components and local fixtures do not establish
+printer compatibility or a complete Weblink service.
+
 ## Existing Windows agent
 
 Status: delivered with P2 S19 (queue and templates, migration

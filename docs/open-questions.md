@@ -599,8 +599,15 @@ and retains device roles. Local SQL and worker tests exercise the contract.
 Weblink preparation now registers inactive printers behind a default-off server
 flag. Read models/status UI and owner/admin recovery controls retain unknown
 outcomes, require revocation and documented inspection, and never resend a job.
-Secure provisioning, service wiring and physical acceptance remain required
+Secure provisioning, service deployment and physical acceptance remain required
 before activation; legacy public registration still supports only TCP/USB.
+
+The local service now composes encrypted device sessions, independently
+authenticated main/raw WebSockets and the queue worker. It binds to loopback
+behind an authenticated TLS proxy and requires an already-provisioned identity.
+A durable attempt store halts on uncertain outcomes across restart. Automated
+fixtures verify these boundaries; secure enrollment, deployment/polling, reviewed
+recovery of a halted service and physical TLS/reconnect acceptance remain open.
 No new core table, device-role change or hosted activation is authorized here.
 
 The owner requested native ZPL output to a USB Zebra and has hardware for a

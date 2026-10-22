@@ -1615,6 +1615,7 @@
       "sellerCreditOre": "Crédito del depositante (pasivo con los depositantes)",
       "creditReversedOre": "Crédito del depositante anulado",
       "payoutsPaidOre": "Pagos pagados",
+      "payoutsPaidCounterpartOre": "Pagos realizados · contrapartida",
       "mode:consignment_fee:grossOre": "Cuotas mensuales · Cuota en la moneda de la tienda",
       "mode:consignment_fee:netOre": "Cuotas mensuales · Sin IVA",
       "mode:consignment_fee:vatOre": "Cuotas mensuales · IVA",

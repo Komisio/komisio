@@ -1615,6 +1615,7 @@
       "sellerCreditOre": "Accredito ai conferenti (debito verso i conferenti)",
       "creditReversedOre": "Accredito ai conferenti stornato",
       "payoutsPaidOre": "Pagamenti effettuati",
+      "payoutsPaidCounterpartOre": "Pagamenti effettuati · contropartita",
       "mode:consignment_fee:grossOre": "Quote mensili · Quota nella valuta del negozio",
       "mode:consignment_fee:netOre": "Quote mensili · IVA esclusa",
       "mode:consignment_fee:vatOre": "Quote mensili · IVA",

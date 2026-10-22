@@ -1615,6 +1615,7 @@
       "sellerCreditOre": "Tuojan hyvitys (velka tuojille)",
       "creditReversedOre": "Tuojan hyvitys peruttu",
       "payoutsPaidOre": "Maksetut tilitykset",
+      "payoutsPaidCounterpartOre": "Maksetut tilitykset · vastakirjaus",
       "mode:consignment_fee:grossOre": "Kuukausimaksut · Maksu liikkeen valuutassa",
       "mode:consignment_fee:netOre": "Kuukausimaksut · Ilman ALV:tä",
       "mode:consignment_fee:vatOre": "Kuukausimaksut · ALV",

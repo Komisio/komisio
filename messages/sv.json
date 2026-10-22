@@ -1615,6 +1615,7 @@
       "sellerCreditOre": "Säljartillgodo (skuld till säljare)",
       "creditReversedOre": "Återfört säljartillgodo",
       "payoutsPaidOre": "Utbetalt",
+      "payoutsPaidCounterpartOre": "Utbetalningar · motpost",
       "mode:consignment_fee:grossOre": "Månadsavgifter · Avgift i butikens valuta",
       "mode:consignment_fee:netOre": "Månadsavgifter · Exklusive moms",
       "mode:consignment_fee:vatOre": "Månadsavgifter · Moms",

@@ -70,6 +70,27 @@ map or policy prevents applying a draft; lost responses reuse the same attempt
 and decision IDs. Unknown outcomes cannot trigger a second generation silently.
 The existing export balance check and absolute-amount/fixed-side arithmetic remain.
 
+## Paid-payout counterpart
+
+`payoutsPaidCounterpartOre` exposes the same paid amount as `payoutsPaidOre`.
+The store explicitly maps both keys to distinct accounts on opposite sides;
+neither account is inferred. A nonzero paid payout requires the complete pair,
+even when the mapped sales subset would otherwise balance. Days without paid
+payouts retain their existing mapping behavior. Requested or approved payouts
+do not enter the paid total; the existing payment confirmation date is unchanged.
+
+Legacy single-key maps remain readable and immutable but need a new reviewed
+map before exporting a day with paid payouts. Frozen exports remain unchanged.
+The e-conomic map may explicitly exclude both payout keys when the complete
+payment is posted elsewhere; excluding just one leg is refused. Existing
+zero-rate VAT-code validation still applies to every posted e-conomic line.
+
+This projection is the first implementation slice of #561, not a completed
+automatic payout-accounting workflow. Release still requires Fortnox safeguards
+across revised daily exports and an explicit transition for historical exports.
+Paid-payout traceability and operator guidance remain in scope. No bank transfer,
+bank-statement match or new automatic export/send permission is introduced.
+
 Reference: [BAS 2026, version 1.1](https://www.bas.se/wp-content/uploads/2026/04/BAS_kontoplan_2026_v2.pdf),
 account identities checked 2026-10-14. AI suggestions are not accountant approval.
 

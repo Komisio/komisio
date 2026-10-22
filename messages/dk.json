@@ -1615,6 +1615,7 @@
       "sellerCreditOre": "Indlevereres tilgodehavende (gæld til indleverere)",
       "creditReversedOre": "Indlevereres tilgodehavende tilbageført",
       "payoutsPaidOre": "Udbetalinger betalt",
+      "payoutsPaidCounterpartOre": "Udbetalinger · modpost",
       "mode:consignment_fee:grossOre": "Månedsgebyrer · Gebyr i butikkens valuta",
       "mode:consignment_fee:netOre": "Månedsgebyrer · Eksklusive moms",
       "mode:consignment_fee:vatOre": "Månedsgebyrer · Moms",

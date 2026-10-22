@@ -22,7 +22,7 @@ import {
   signState,
   verifyState,
 } from '../platform/credentials'
-import { accountingKeys } from './accounting'
+import { accountingKeys, payoutMappingComplete } from './accounting'
 import { readStoreCurrency } from './money'
 
 const PURPOSE = 'economic-connection'
@@ -47,6 +47,10 @@ export const economicMapBody = z
         (accountingKeys as readonly string[]).includes(key) &&
         !(key.startsWith('mode:consignment_fee') && 'excludeReason' in value),
     ),
+  )
+  .refine(
+    (map) => !map.payoutsPaidCounterpartOre || payoutMappingComplete(map, true),
+    'Payout postings need a complete pair or two explicit exclusions',
   )
 export type EconomicMapBody = z.infer<typeof economicMapBody>
 export const economicMap = z.object({

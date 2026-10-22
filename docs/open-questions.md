@@ -753,3 +753,17 @@ text with a privacy hint. Direct product reads are unavailable.
 The owner also approved updating the two existing mapping assertions for
 `/members` and `/account` to their new articles, while keeping generic help
 coverage on an unmapped route and preserving all other mapping cases.
+
+## Seller payout accounting (#561, 2026-10-22)
+
+The owner requests implementation of complete seller payout postings for
+Fortnox and e-conomic. The first slice adds an explicitly mapped counterpart
+to the existing paid daily amount, with complete-pair validation. It does not
+choose accounts or change payment approval, execution, timing or VAT policy.
+
+Before release, complete the Fortnox duplicate-send safeguards across revised
+day closes, historical export/cutover handling and payout-reference traceability.
+An existing one-sided or already externally booked payout must not be silently
+repaired or exported again. Real-store mapping and reconciliation evidence remain
+required. Bank-statement matching and external POS posting ownership are not
+resolved by this implementation request.

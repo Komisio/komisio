@@ -19,6 +19,7 @@ export const accountingKeys = [
   'sellerCreditOre',
   'creditReversedOre',
   'payoutsPaidOre',
+  'payoutsPaidCounterpartOre',
   'mode:consignment_margin:netOre',
   'mode:consignment_margin:vatOre',
   'mode:consignment_full:netOre',
@@ -31,6 +32,31 @@ export const accountingKeys = [
   'mode:store_full:vatOre',
 ] as const
 export type AccountingKey = (typeof accountingKeys)[number]
+type PayoutMapping = {
+  account?: string
+  side?: string
+  excludeReason?: string
+}
+
+/** Both explicitly selected accounts represent the same paid payout amount. */
+export function payoutMappingComplete(
+  map: Record<string, PayoutMapping>,
+  allowExclusion = false,
+) {
+  const payment = map.payoutsPaidOre
+  const counterpart = map.payoutsPaidCounterpartOre
+  if (!payment || !counterpart) return false
+  if (allowExclusion && payment.excludeReason && counterpart.excludeReason)
+    return true
+  return Boolean(
+    payment.account &&
+    counterpart.account &&
+    payment.account !== counterpart.account &&
+    ['debit', 'credit'].includes(payment.side ?? '') &&
+    ['debit', 'credit'].includes(counterpart.side ?? '') &&
+    payment.side !== counterpart.side,
+  )
+}
 export const accountMapping = z.strictObject({
   account: z.string().regex(/^[1-9]\d{3}$/),
   side: z.enum(['debit', 'credit']),
@@ -43,6 +69,10 @@ export const accountingMapBody = z
         (accountingKeys as readonly string[]).includes(k),
       ),
     'Unknown amount key',
+  )
+  .refine(
+    (m) => !m.payoutsPaidCounterpartOre || payoutMappingComplete(m),
+    'Payout postings need different accounts and opposite sides',
   )
 export type AccountingMapBody = z.infer<typeof accountingMapBody>
 

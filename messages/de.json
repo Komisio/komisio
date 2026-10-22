@@ -1615,6 +1615,7 @@
       "sellerCreditOre": "Einlieferer-Gutschrift (Verbindlichkeit gegenüber Einlieferern)",
       "creditReversedOre": "Einlieferer-Gutschrift storniert",
       "payoutsPaidOre": "Auszahlungen bezahlt",
+      "payoutsPaidCounterpartOre": "Auszahlungen · Gegenbuchung",
       "mode:consignment_fee:grossOre": "Monatsgebühren · Gebühr in Geschäftswährung",
       "mode:consignment_fee:netOre": "Monatsgebühren · Ohne Umsatzsteuer",
       "mode:consignment_fee:vatOre": "Monatsgebühren · Umsatzsteuer",

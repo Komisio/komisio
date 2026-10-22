@@ -1615,6 +1615,7 @@
       "sellerCreditOre": "Seller credit (liability to sellers)",
       "creditReversedOre": "Seller credit reversed",
       "payoutsPaidOre": "Payouts paid",
+      "payoutsPaidCounterpartOre": "Payouts paid · counterpart",
       "mode:consignment_fee:grossOre": "Monthly fees · Fee in store currency",
       "mode:consignment_fee:netOre": "Monthly fees · Excluding VAT",
       "mode:consignment_fee:vatOre": "Monthly fees · VAT",

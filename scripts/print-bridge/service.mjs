@@ -141,11 +141,17 @@ export async function createWeblinkService({
           if (main !== entry || entry.requested || !binary) throw denied()
           const message = JSON.parse(bytes.toString('utf8'))
           const discovery = message?.discovery_b64
+          // Link-OS 6.2 appends :hhhh to discovery metadata. This is not an
+          // identity or integrity credential; both channels authenticate apart.
+          const encoded =
+            typeof discovery === 'string'
+              ? discovery.replace(/:[0-9a-fA-F]{4}$/, '')
+              : ''
           if (
             typeof discovery !== 'string' ||
-            !discovery.length ||
+            !encoded.length ||
             discovery.length > 16000 ||
-            Buffer.from(discovery, 'base64').toString('base64') !== discovery
+            Buffer.from(encoded, 'base64').toString('base64') !== encoded
           )
             throw denied()
           // Discovery/serial are untrusted metadata, never an authentication key.

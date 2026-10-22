@@ -1,4 +1,4 @@
-import { constants } from 'node:fs'
+import { constants, realpathSync } from 'node:fs'
 import { open } from 'node:fs/promises'
 import { dirname, isAbsolute, join } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -194,7 +194,7 @@ export async function main(args = process.argv.slice(2)) {
 }
 if (
   process.argv[1] &&
-  import.meta.url === pathToFileURL(process.argv[1]).href
+  import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href
 ) {
   main().catch((error) => {
     const code = /^PRINT_[A-Z_]+$/.test(error.message ?? '')

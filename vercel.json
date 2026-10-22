@@ -1,5 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "git": {
+    "deploymentEnabled": {
+      "**": false,
+      "main": true,
+      "preview/**": true
+    }
+  },
   "regions": ["arn1"],
   "crons": [
     { "path": "/api/automation/catalog-export", "schedule": "*/5 * * * *" },

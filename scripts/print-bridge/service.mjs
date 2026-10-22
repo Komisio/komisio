@@ -130,63 +130,78 @@ export async function createWeblinkService({
     ws.on('pong', () => {
       ws.alive = true
     })
-    if (protocol === MAIN_PROTOCOL) {
-      closeMain(main)
-      const entry = { ws, handle, raw: null, requested: false, timer: null }
-      main = entry
-      arm(entry, handshakeTimeoutMs)
-      ws.on('close', () => closeMain(entry))
-      ws.on('message', (bytes, binary) => {
-        try {
-          if (main !== entry || entry.requested || !binary) throw denied()
-          const message = JSON.parse(bytes.toString('utf8'))
-          const discovery = message?.discovery_b64
+    // Link-OS may negotiate the main subprotocol for its raw connection too.
+    // Authenticate before upgrade, then bind the role only after its greeting.
+    let entry = null
+    let raw = null
+    const timer = setTimeout(() => ws.terminate(), handshakeTimeoutMs)
+    ws.on('close', () => {
+      clearTimeout(timer)
+      sessions.close(handle)
+      if (entry) closeMain(entry)
+    })
+    ws.on('message', (bytes, binary) => {
+      try {
+        if (!binary || closing) throw denied()
+        if (entry) {
+          if (raw && main === entry && entry.raw === raw) return
+          throw denied()
+        }
+        const message = JSON.parse(bytes.toString('utf8'))
+        if (
+          protocol === MAIN_PROTOCOL &&
+          message?.discovery_b64 !== undefined
+        ) {
+          const discovery = message.discovery_b64
+          // This firmware suffix is metadata, never an identity credential.
+          const encoded =
+            typeof discovery === 'string'
+              ? discovery.replace(/:[0-9a-fA-F]{4}$/, '')
+              : ''
           if (
+            message.channel_name !== undefined ||
             typeof discovery !== 'string' ||
-            !discovery.length ||
+            !encoded.length ||
             discovery.length > 16000 ||
-            Buffer.from(discovery, 'base64').toString('base64') !== discovery
+            Buffer.from(encoded, 'base64').toString('base64') !== encoded
           )
             throw denied()
-          // Discovery/serial are untrusted metadata, never an authentication key.
-          entry.requested = true
+          sessions.bindMain(handle)
+          closeMain(main)
+          entry = { ws, handle, raw: null, requested: true, timer: null }
+          main = entry
+          clearTimeout(timer)
           arm(entry, handshakeTimeoutMs)
           void send(
             ws,
             Buffer.from(JSON.stringify({ open: RAW_PROTOCOL })),
           ).catch(() => closeMain(entry))
-        } catch {
-          closeMain(entry)
+          return
         }
-      })
-    } else {
-      const raw = { ws, handle, ready: false, timer: null }
-      parent.raw = raw
-      raw.timer = setTimeout(() => closeMain(parent), handshakeTimeoutMs)
-      ws.on('close', () => closeMain(parent))
-      ws.on('message', (bytes, binary) => {
-        try {
-          if (main !== parent || parent.raw !== raw || !binary) throw denied()
-          // Subsequent binary data is printer output, not proof a label printed.
-          if (raw.ready) return
-          const message = JSON.parse(bytes.toString('utf8'))
-          if (
-            message?.channel_name !== RAW_PROTOCOL ||
-            typeof message.unique_id !== 'string' ||
-            message.unique_id.length < 1 ||
-            message.unique_id.length > 128 ||
-            typeof message.channel_id !== 'string' ||
-            !/^\d{1,20}$/.test(message.channel_id)
-          )
-            throw denied()
-          raw.ready = true
-          clearTimeout(raw.timer)
-          clearTimeout(parent.timer)
-        } catch {
-          closeMain(parent)
-        }
-      })
-    }
+        if (
+          main !== parent ||
+          !parent?.requested ||
+          parent.raw ||
+          message?.discovery_b64 !== undefined ||
+          message?.channel_name !== RAW_PROTOCOL ||
+          typeof message.unique_id !== 'string' ||
+          message.unique_id.length < 1 ||
+          message.unique_id.length > 128 ||
+          typeof message.channel_id !== 'string' ||
+          !/^\d{1,20}$/.test(message.channel_id)
+        )
+          throw denied()
+        sessions.bindRaw(handle, parent.handle)
+        entry = parent
+        raw = { ws, handle, ready: true, timer: null }
+        parent.raw = raw
+        clearTimeout(timer)
+        clearTimeout(parent.timer)
+      } catch {
+        if (entry) closeMain(entry)
+        else ws.terminate()
+      }
+    })
   }
 
   function trusted(req) {
@@ -269,13 +284,7 @@ export async function createWeblinkService({
         if (protocol === RAW_PROTOCOL && (!parent?.requested || parent.raw))
           throw denied()
         handle = await authenticate((signal) =>
-          protocol === MAIN_PROTOCOL
-            ? sessions.openMain(req.headers.authorization, signal)
-            : sessions.openRaw(
-                parent.handle,
-                req.headers.authorization,
-                signal,
-              ),
+          sessions.openPending(req.headers.authorization, signal),
         )
         if (
           closing ||

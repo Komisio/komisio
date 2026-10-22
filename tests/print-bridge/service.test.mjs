@@ -99,13 +99,15 @@ async function fixture(t, options = {}) {
       ws.once('error', reject)
     })
   }
-  async function mainChannel() {
+  async function mainChannel(discoverySuffix = '') {
     const ws = await connect(MAIN_PROTOCOL)
     const request = once(ws, 'message')
     ws.send(
       Buffer.from(
         JSON.stringify({
-          discovery_b64: Buffer.from('fixture metadata').toString('base64'),
+          discovery_b64:
+            Buffer.from('fixture metadata').toString('base64') +
+            discoverySuffix,
         }),
       ),
     )
@@ -114,9 +116,9 @@ async function fixture(t, options = {}) {
     assert.deepEqual(JSON.parse(bytes), { open: RAW_PROTOCOL })
     return ws
   }
-  async function pair() {
+  async function pair(rawProtocol = RAW_PROTOCOL) {
     const main = await mainChannel()
-    const raw = await connect(RAW_PROTOCOL)
+    const raw = await connect(rawProtocol)
     raw.send(
       Buffer.from(
         JSON.stringify({
@@ -147,6 +149,88 @@ async function fixture(t, options = {}) {
     },
   }
 }
+
+test(
+  'firmware raw greeting on the main subprotocol preserves the main channel and delivers exact copies',
+  { timeout: 5000 },
+  async (t) => {
+    const f = await fixture(t)
+    const { main, raw } = await f.pair(MAIN_PROTOCOL)
+    assert.equal(f.service.status().connected, true)
+    assert.equal(main.readyState, WebSocket.OPEN)
+    let count = 0
+    const delivered = gate()
+    raw.on('message', () => {
+      if (++count === 2) delivered.resolve()
+    })
+    assert.equal((await f.service.runOnce()).state, 'transport_accepted')
+    await delivered.promise
+    assert.equal(count, 2)
+  },
+)
+
+test(
+  'firmware discovery accepts a four-hex suffix without granting queue access',
+  { timeout: 3000 },
+  async (t) => {
+    const f = await fixture(t)
+    await f.mainChannel(':d767')
+    assert.equal(f.service.status().connected, false)
+    await assert.rejects(f.service.runOnce(), /PRINT_CHANNEL_UNAVAILABLE/)
+    assert.equal(f.calls.length, 0)
+  },
+)
+
+test(
+  'aliased raw greetings reject orphan, duplicate and stale-parent channels',
+  { timeout: 5000 },
+  async (t) => {
+    const f = await fixture(t)
+    const greet = (ws) =>
+      ws.send(
+        Buffer.from(
+          JSON.stringify({
+            channel_name: RAW_PROTOCOL,
+            channel_id: '2',
+            unique_id: 'untrusted',
+          }),
+        ),
+      )
+    const orphan = await f.connect(MAIN_PROTOCOL)
+    let closed = once(orphan, 'close')
+    greet(orphan)
+    await closed
+    await f.mainChannel()
+    const stale = await f.connect(MAIN_PROTOCOL)
+    const current = await f.pair(MAIN_PROTOCOL)
+    closed = once(stale, 'close')
+    greet(stale)
+    await closed
+    const duplicate = await f.connect(MAIN_PROTOCOL)
+    closed = once(duplicate, 'close')
+    greet(duplicate)
+    await closed
+    assert.equal(current.main.readyState, WebSocket.OPEN)
+    assert.equal(current.raw.readyState, WebSocket.OPEN)
+    assert.equal(f.service.status().connected, true)
+    assert.equal(f.calls.length, 0)
+  },
+)
+
+test(
+  'a pending main-protocol handshake times out without replacing a working pair',
+  { timeout: 5000 },
+  async (t) => {
+    const f = await fixture(t, { config: { handshakeTimeoutMs: 250 } })
+    const pair = await f.pair(MAIN_PROTOCOL)
+    const pending = await f.connect(MAIN_PROTOCOL)
+    await once(pending, 'close')
+    assert.equal(f.service.status().connected, true)
+    assert.equal(pair.main.readyState, WebSocket.OPEN)
+    assert.equal(pair.raw.readyState, WebSocket.OPEN)
+    assert.equal(f.calls.length, 0)
+  },
+)
 
 test(
   'real binary WebSocket frames reach the durable queue worker as exact copies',
@@ -202,6 +286,11 @@ test(
     const main = await f.mainChannel()
     await assert.rejects(
       f.connect(RAW_PROTOCOL, {
+        Authorization: basic(issuePrinterCredential().password),
+      }),
+    )
+    await assert.rejects(
+      f.connect(MAIN_PROTOCOL, {
         Authorization: basic(issuePrinterCredential().password),
       }),
     )
@@ -322,6 +411,9 @@ test(
     for (const frame of [
       '{}',
       Buffer.from('{"discovery_b64":"?"}'),
+      ...[':abcd:1234', ':abc', ':abcde', ':xyz1', ':', '\\n'].map((suffix) =>
+        Buffer.from(JSON.stringify({ discovery_b64: 'Zm9v' + suffix })),
+      ),
       Buffer.alloc(65537),
     ]) {
       const ws = await f.connect(MAIN_PROTOCOL)

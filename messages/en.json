@@ -2079,7 +2079,10 @@
       "claimed": "printing",
       "printed": "Sent to printer",
       "failed": "failed",
-      "cancelled": "cancelled"
+      "cancelled": "cancelled",
+      "dispatching": "Send attempt reserved",
+      "transport_accepted": "Transport accepted – output unverified",
+      "outcome_unknown": "Print outcome unknown"
     },
     "zebraPrint": "Print on Zebra",
     "close": "Close",
@@ -2112,7 +2115,23 @@
     "usbHint": "Requires Komisio Print 1.1 or later and the Zebra Windows driver.",
     "usbQueueName": "Windows printer name",
     "usbQueueHint": "Enter the exact name in Windows. Run list-usb-printers.cmd in the Komisio Print folder to list USB printers.",
-    "usbQueueInvalid": "Enter a local Windows USB printer name without backslashes or line breaks."
+    "usbQueueInvalid": "Enter a local Windows USB printer name without backslashes or line breaks.",
+    "weblink": {
+      "register": "Prepare Weblink printer",
+      "preparation": "The printer is registered as inactive. Secure connection and a printer test are required before printing can be activated.",
+      "saved": "The change is confirmed.",
+      "unconfirmed": "The change could not be confirmed. Reload and check the current status before taking further action.",
+      "recovery": "Inspect print outcome",
+      "recoveryHint": "First revoke the device that sent the job. Then stop its connection and inspect the printer, buffered jobs and all requested copies. Revocation cannot recall data already sent.",
+      "revoke": "Revoke the sending device",
+      "inspected": "I have stopped the connection and inspected the printer, buffered jobs and all copies.",
+      "note": "Describe the inspection and result",
+      "result": "Inspected result",
+      "printed": "All copies printed and physically verified",
+      "cancelled": "Close job without confirming output",
+      "resolve": "Save inspection",
+      "acceptanceHint": "Transport acceptance is not proof of physical output. This job is not sent again automatically."
+    }
   },
   "purchases": {
     "title": "Own purchases",

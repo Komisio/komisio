@@ -26,7 +26,7 @@ test('print history identifies its item and printer and can inspect a job beyond
     async function queue(index: number) {
       const requestId = randomUUID()
       const response = await page.request.post('/api/print', {
-        headers: { Origin: 'http://127.0.0.1:3000' },
+        headers: { Origin: new URL(page.url()).origin },
         data: {
           tenantId: f.tenant,
           requestId,

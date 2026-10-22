@@ -596,8 +596,11 @@ output. The owner approved the additive transport/state contract on 2026-10-22:
 one send permit per Weblink job, no stale-claim replay, and owner/admin inspection
 after revoking the old device. The backend extends existing printer/job records
 and retains device roles. Local SQL and worker tests exercise the contract.
-Weblink registration, read models/status UI and recovery controls remain required
-before activation; the current public registration flow still supports TCP/USB.
+Weblink preparation now registers inactive printers behind a default-off server
+flag. Read models/status UI and owner/admin recovery controls retain unknown
+outcomes, require revocation and documented inspection, and never resend a job.
+Secure provisioning, service wiring and physical acceptance remain required
+before activation; legacy public registration still supports only TCP/USB.
 No new core table, device-role change or hosted activation is authorized here.
 
 The owner requested native ZPL output to a USB Zebra and has hardware for a

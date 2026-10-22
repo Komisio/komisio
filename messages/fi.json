@@ -2137,7 +2137,24 @@
       "printed": "Kaikki kopiot tulostettu ja tarkistettu fyysisesti",
       "cancelled": "Sulje työ vahvistamatta tulostusta",
       "resolve": "Tallenna tarkistus",
-      "acceptanceHint": "Siirron vastaanotto ei todista fyysistä tulostusta. Työtä ei lähetetä automaattisesti uudelleen."
+      "acceptanceHint": "Siirron vastaanotto ei todista fyysistä tulostusta. Työtä ei lähetetä automaattisesti uudelleen.",
+      "managed": {
+        "title": "Yhdistä Zebra",
+        "hint": "Valmistele yhteys tässä ja asenna sitten tiedosto Zebra-tulostimeen Zebra Printer Setup Utility -sovelluksella.",
+        "working": "Käsitellään…",
+        "check": "Tarkista valmisteltu yhteys",
+        "prepare": "Valmistele yhteys",
+        "download": "Lataa asennustiedosto",
+        "prepared": "Yhteys on valmisteltu. Asenna tiedosto Zebra-tulostimeen ennen tulostuksen käyttöönottoa.",
+        "downloaded": "Asennustiedosto on ladattu. Noudata alla olevia vaiheita.",
+        "pauseFirst": "Keskeytä tulostimen käyttö ennen uuden yhteyden valmistelua.",
+        "conflict": "Tulostimeen on liitetty toinen laite. Tarkista laitteet ennen jatkamista.",
+        "unknown": "Tulos on tarkistettava. Jatka samaa asennusta valitsemalla Tarkista valmisteltu yhteys; älä luo uutta tulostinta.",
+        "step1": "Lataa asennustiedosto laitteelle, joka on samassa Wi-Fi-verkossa kuin Zebra.",
+        "step2": "Valitse oikea tulostin Zebra Printer Setup Utility -sovelluksessa ja lähetä ladattu tiedosto Available Files -toiminnolla. Käynnistä tulostin uudelleen, kun siirto on valmis.",
+        "step3": "Palaa tänne ja ota tulostin käyttöön, kun olet valmis tulostamaan. Päivitä sivu, tarkista yhteys ja lähetä sitten yksi testietiketti.",
+        "private": "Tiedosto sisältää tulostimen tunnistetiedot. Säilytä se yksityisenä ja poista se asennuksen jälkeen."
+      }
     }
   },
   "purchases": {

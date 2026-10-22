@@ -581,8 +581,8 @@ HTTP fixtures test the product/purchase loop without a real merchant account.
 Weblink software preparation (2026-10-22, #542): the owner requests locally
 testable implementation before the ZD420/iPad test. A separate dispatch journal
 can be developed without changing queue schemas or device grants. Before hosted
-activation, decide and review queue fencing and explicit uncertain-output
-recovery, prove main/raw channel binding and authenticated reconnects, and verify
+activation, deliver the reviewed queue recovery UI, prove main/raw channel binding
+and authenticated reconnects, and verify
 the actual printer's TLS chain and output. Local journal tests do not settle
 those integration and hardware questions or authorize a new core table.
 
@@ -592,9 +592,13 @@ renewal and fresh authorization through the existing context RPC. These are
 inactive components with local fixtures, not verified printer handshakes. Secure
 provisioning and actual TLS upgrade/channel association remain open. Queue
 fencing must also prevent old consumers from reclaiming a job after uncertain
-output; the current ten-minute stale-claim rule cannot be used unchanged for an
-active Weblink bridge. Review that additive transport/state contract before
-implementation; no new core table or device-role change is authorized here.
+output. The owner approved the additive transport/state contract on 2026-10-22:
+one send permit per Weblink job, no stale-claim replay, and owner/admin inspection
+after revoking the old device. The backend extends existing printer/job records
+and retains device roles. Local SQL and worker tests exercise the contract.
+Weblink registration, read models/status UI and recovery controls remain required
+before activation; the current public registration flow still supports TCP/USB.
+No new core table, device-role change or hosted activation is authorized here.
 
 The owner requested native ZPL output to a USB Zebra and has hardware for a
 later pilot. Komisio Print 1.1 uses local Windows RAW queues and retains the

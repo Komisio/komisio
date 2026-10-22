@@ -26,9 +26,10 @@ development tests only; it does not establish Linux filesystem durability.
 
 Do not delete, prune or restore journal files to retry work. Missing restored
 evidence could allow duplicate output. Hosted activation still requires reviewed
-queue fencing/recovery, authenticated printer main/raw channels and reconnects,
-device-scoped queue integration, and physical TLS/copy/revocation tests. The
-database's existing stale-claim handling and the Windows agent are unchanged.
+recovery controls, authenticated printer main/raw channels and reconnects,
+service integration, and physical TLS/copy/revocation tests. The database now
+fences Weblink separately; legacy TCP/USB stale claims and Windows printing are
+unchanged.
 This component alone does not make Weblink printing available in Komisio.
 
 ## Weblink authentication components (development only)
@@ -79,9 +80,57 @@ Zebra documents server credentials in `weblink.ip.conn[1|2].authentication.add`
 in its [Programming Guide](https://cpws.zebra.com/cpws/docs/zpl/zpl-zbi2-pm-en.pdf).
 Actual ZD420 firmware challenge handling on both channels remains unverified.
 The TLS upgrade handler, rate limits, discovery/channel association, secure
-provisioning, queue fencing and uncertain-output recovery are still required
+provisioning, queue service wiring and uncertain-output recovery controls remain required
 before hosted activation. These components and local fixtures do not establish
 printer compatibility or a complete Weblink service.
+
+## Weblink queue backend (inactive)
+
+The owner approved the one-attempt model on 2026-10-22. Migration
+`20261022150000` extends the existing printer/job records; it creates no new core
+tables or roles and converts no existing printers. The public registration
+flow still accepts only TCP/USB. Do not manually insert or convert printers to
+activate Weblink: its onboarding, read models/status display and recovery UI
+must be delivered before activation. Local tests seed synthetic Weblink printers
+only in isolated databases.
+
+`claim_weblink_print_job` requires a paired, active device bound to that printer.
+The first response reserves the job permanently and returns `canSend: true`, the
+exact ZPL and copy count. The caller supplies an attempt UUID and must retain it
+before requesting a claim. Repeating that attempt returns status with
+`canSend: false` and no payload. A new attempt does not release the old job, even
+after ten minutes, a process restart or loss of the local journal. Legacy claim
+and completion RPCs refuse Weblink printers. A printer cannot switch between
+Weblink and the legacy transports, so outstanding jobs cannot cross that fence.
+
+The initial state is `dispatching`, which remains held if the worker disappears.
+The original device can record `transport_accepted` or `outcome_unknown` through
+`finish_weblink_print_job`; it cannot assert physical output. The same outcome
+can be acknowledged repeatedly, but a conflicting outcome cannot replace it.
+Revoked devices and replacement devices cannot complete the old attempt.
+
+`resolve_weblink_print_job` is owner/admin-only and requires the original device
+to have been revoked, an inspection note, and either `printed` (physically
+observed) or `cancelled` (abandoned). Stop the old bridge connection and inspect
+the printer's buffered work first: revocation cannot recall already buffered
+output. Resolution retains the attempt/device/claim provenance and appends an
+audit event. It never resets the job to queued or creates a new print. Any
+deliberate replacement is a separately requested job after that inspection.
+
+`scripts/print-bridge/queue.mjs` connects these RPCs to the authenticated dispatch
+journal for one bounded pass. It has no polling loop or automatic retry. A lost
+claim response returns `claim_unknown`; recover using the same attempt UUID.
+A lost completion response remains uncertain even if the local transport write
+succeeded. `createWeblinkRpc` uses the existing device token provider, permits
+only claim/finish calls, pins store/printer scope and bounds HTTP responses.
+Service startup, durable scheduling of attempt IDs, the actual WebSocket write
+adapter and hardware acceptance are not implemented by this module.
+
+Run `npm run test:print-bridge`, the pgTAP suite and `npm run test:concurrency`.
+The concurrency harness creates an isolated database, verifies competing claims
+and completions, and runs the real worker against a committed claim with a lost
+response and fresh local journal. These tests do not establish hosted deployment,
+physical output or recovery after losing/restoring the authoritative database.
 
 ## Existing Windows agent
 

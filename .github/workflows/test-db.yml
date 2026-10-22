@@ -58,7 +58,23 @@ jobs:
       - run: npm run test:concurrency
       - run: npm run test:mcp
       - run: npm run test:seller-photos
+      - name: Configure bounded browser dependency downloads
+        run: |
+          # The runner's Azure mirror can stall each package for minutes before
+          # falling back. Use its official Ubuntu HTTPS fallbacks directly.
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            printf '%s\t%s\n' \
+              'https://archive.ubuntu.com/ubuntu/' 'priority:1' \
+              'https://security.ubuntu.com/ubuntu/' 'priority:2' \
+              | sudo tee /etc/apt/apt-mirrors.txt > /dev/null
+          fi
+          printf '%s\n' \
+            'Acquire::Retries "1";' \
+            'Acquire::http::Timeout "30";' \
+            'Acquire::https::Timeout "30";' \
+            | sudo tee /etc/apt/apt.conf.d/99-komisio-downloads > /dev/null
       - run: npx playwright install --with-deps chromium
+        timeout-minutes: 10
       - run: npm run test:e2e -- --reporter=list
       - run: npx playwright test --config=economic.playwright.config.ts --reporter=list
       - run: npm run test:assistance

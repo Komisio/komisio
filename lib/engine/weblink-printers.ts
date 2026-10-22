@@ -3,6 +3,18 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 
 export const weblinkCommand = z.discriminatedUnion('action', [
   z.strictObject({
+    action: z.literal('enablePilot'),
+    tenantId: z.uuid(),
+    id: z.uuid(),
+    deviceId: z.uuid(),
+    acknowledged: z.literal(true),
+  }),
+  z.strictObject({
+    action: z.literal('pausePilot'),
+    tenantId: z.uuid(),
+    id: z.uuid(),
+  }),
+  z.strictObject({
     action: z.literal('register'),
     tenantId: z.uuid(),
     id: z.uuid(),
@@ -34,6 +46,8 @@ export const weblinkErrors = [
   'PRINT_JOB_DECIDED',
   'PRINT_DEVICE_STILL_ACTIVE',
   'DEVICE_NOT_FOUND',
+  'PRINTER_NOT_FOUND',
+  'PRINT_OUTCOME_HELD',
 ] as const
 
 /** Use the member's session; SQL independently enforces tenant, role and fencing. */
@@ -43,25 +57,33 @@ export async function manageWeblink(
 ) {
   const c = weblinkCommand.parse(input)
   const result =
-    c.action === 'register'
-      ? await client.rpc('register_weblink_printer', {
+    c.action === 'enablePilot' || c.action === 'pausePilot'
+      ? await client.rpc('set_weblink_pilot', {
           p_tenant: c.tenantId,
-          p_id: c.id,
-          p_name: c.name,
-          p_model: c.model,
-          p_dpi: c.dpi,
+          p_printer: c.id,
+          p_active: c.action === 'enablePilot',
+          p_device: c.action === 'enablePilot' ? c.deviceId : null,
+          p_acknowledged: c.action === 'enablePilot',
         })
-      : c.action === 'resolve'
-        ? await client.rpc('resolve_weblink_print_job', {
+      : c.action === 'register'
+        ? await client.rpc('register_weblink_printer', {
             p_tenant: c.tenantId,
-            p_job: c.id,
-            p_resolution: c.resolution,
-            p_note: c.note,
+            p_id: c.id,
+            p_name: c.name,
+            p_model: c.model,
+            p_dpi: c.dpi,
           })
-        : await client.rpc('revoke_print_device', {
-            p_tenant: c.tenantId,
-            p_device: c.id,
-          })
+        : c.action === 'resolve'
+          ? await client.rpc('resolve_weblink_print_job', {
+              p_tenant: c.tenantId,
+              p_job: c.id,
+              p_resolution: c.resolution,
+              p_note: c.note,
+            })
+          : await client.rpc('revoke_print_device', {
+              p_tenant: c.tenantId,
+              p_device: c.id,
+            })
   if (result.error)
     throw new Error(
       weblinkErrors.find((code) => result.error!.message === code) ??

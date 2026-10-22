@@ -614,6 +614,13 @@ installation and physical TLS/reconnect acceptance remain to be verified. Recove
 retains uncertain evidence and requires reviewed revocation/new enrollment.
 No new core table or device-role change is authorized here.
 
+The pilot controls now use the existing paired device and an explicit owner/admin
+test acknowledgement. Enabling is gated by the default-off setup flag; pausing
+preserves jobs and evidence and cannot recall buffered output. Unresolved
+dispatches block activation. Local end-to-end tests must include real anonymous
+Auth enrollment and queue delivery, plus lost UI responses. Hardware acceptance
+remains separate from pilot enablement; the target store is selected privately.
+
 The owner requested native ZPL output to a USB Zebra and has hardware for a
 later pilot. Komisio Print 1.1 uses local Windows RAW queues and retains the
 existing device binding and label templates. Native fake-spooler tests and

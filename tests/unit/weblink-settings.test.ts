@@ -131,3 +131,43 @@ it('requires a true revocation confirmation', async () => {
     p_device: other,
   })
 })
+const pilot = {
+  action: 'enablePilot',
+  tenantId: id,
+  id: other,
+  deviceId: id,
+  acknowledged: true,
+}
+it('pins the selected device and requires a deliberate pilot acknowledgement', async () => {
+  expect((await POST(request({ ...pilot, acknowledged: false }))).status).toBe(
+    400,
+  )
+  expect((await POST(request({ ...pilot, deviceId: undefined }))).status).toBe(
+    400,
+  )
+  expect(rpc).not.toHaveBeenCalled()
+  expect((await POST(request(pilot))).status).toBe(200)
+  expect(rpc).toHaveBeenCalledWith('set_weblink_pilot', {
+    p_tenant: id,
+    p_printer: other,
+    p_active: true,
+    p_device: id,
+    p_acknowledged: true,
+  })
+})
+it('disabling setup blocks pilot enablement but always permits pausing', async () => {
+  vi.stubEnv('KOMISIO_WEBLINK_SETUP_ENABLED', 'false')
+  expect((await POST(request(pilot))).status).toBe(404)
+  expect(rpc).not.toHaveBeenCalled()
+  expect(
+    (await POST(request({ action: 'pausePilot', tenantId: id, id: other })))
+      .status,
+  ).toBe(200)
+  expect(rpc).toHaveBeenCalledWith('set_weblink_pilot', {
+    p_tenant: id,
+    p_printer: other,
+    p_active: false,
+    p_device: null,
+    p_acknowledged: false,
+  })
+})

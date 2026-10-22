@@ -1,6 +1,7 @@
 import {
   WeblinkSetup,
   WeblinkRecovery,
+  WeblinkPilot,
 } from '@/components/intake/weblink-forms'
 import { helpArticle } from '@/lib/help/content'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
@@ -363,19 +364,44 @@ export default async function Settings({
                             leaveUnsaved={d.leaveUnsaved}
                           />
                         )}
-                        {p.transport === 'tcp' && devices && (
-                          <PrintDevices
-                            key={`devices-${p.id}`}
+                        {p.transport === 'weblink' && manages && devices && (
+                          <WeblinkPilot
+                            key={`pilot-${p.id}-${p.active}-${devices.map((x) => `${x.id}:${x.revokedAt}`).join(',')}`}
                             tenantId={active.id}
                             printerId={p.id}
+                            active={p.active}
                             devices={devices.filter(
                               (x) => x.printerId === p.id,
                             )}
-                            canManage={manages}
-                            locale={ctx.locale}
+                            enabled={
+                              process.env.KOMISIO_WEBLINK_SETUP_ENABLED ===
+                              'true'
+                            }
                             d={pr}
+                            reload={d.intake.reload}
                           />
                         )}
+                        {(p.transport === 'tcp' || p.transport === 'weblink') &&
+                          devices && (
+                            <PrintDevices
+                              key={`devices-${p.id}-${devices
+                                .filter((x) => x.printerId === p.id)
+                                .map(
+                                  (x) =>
+                                    `${x.id}:${x.revokedAt}:${x.lastSeenAt}`,
+                                )
+                                .join(',')}`}
+                              tenantId={active.id}
+                              printerId={p.id}
+                              devices={devices.filter(
+                                (x) => x.printerId === p.id,
+                              )}
+                              canManage={manages}
+                              locale={ctx.locale}
+                              d={pr}
+                              transport={p.transport}
+                            />
+                          )}
                       </details>
                     ))}
                     {manages && (

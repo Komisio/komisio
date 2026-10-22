@@ -12,7 +12,11 @@ export function deviceScope(value) {
     keys.some((key) => typeof value[key] !== 'string' || !UUID.test(value[key]))
   )
     throw denied()
-  return Object.freeze(Object.fromEntries(keys.map((key) => [key, value[key]])))
+  return Object.freeze({
+    tenantId: value.tenantId,
+    printerId: value.printerId,
+    deviceId: value.deviceId,
+  })
 }
 
 function sameScope(left, right) {

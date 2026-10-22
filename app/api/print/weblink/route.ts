@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     if (parsed.data.tenantId !== ctx.active.id)
       return reply({ error: 'TENANT_CHANGED' }, 409)
     if (
-      parsed.data.action === 'register' &&
+      ['register', 'enablePilot'].includes(parsed.data.action) &&
       process.env.KOMISIO_WEBLINK_SETUP_ENABLED !== 'true'
     )
       return reply({ error: 'NOT_FOUND' }, 404)

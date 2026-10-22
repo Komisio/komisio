@@ -4,7 +4,7 @@ import { createServer } from 'node:http'
 import { once } from 'node:events'
 import { randomBytes } from 'node:crypto'
 import { spawn } from 'node:child_process'
-import { mkdtemp, writeFile, readFile, rm } from 'node:fs/promises'
+import { mkdtemp, writeFile, readFile, rm, symlink } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve, dirname, basename } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -59,6 +59,20 @@ async function temporary(t) {
   })
   return root
 }
+
+test('CLI runs through the current release directory link', async (t) => {
+  const root = await temporary(t)
+  const current = join(root, 'current')
+  await symlink(resolve('scripts/print-bridge'), current, 'junction')
+  const child = spawn(process.execPath, [join(current, 'cli.mjs'), 'invalid'], {
+    stdio: ['ignore', 'pipe', 'pipe'],
+  })
+  let stderr = ''
+  child.stderr.on('data', (chunk) => (stderr += chunk))
+  const [code] = await once(child, 'close')
+  assert.equal(code, 1)
+  assert.match(stderr, /PRINT_OPERATOR_INPUT_INVALID/)
+})
 
 test('printer setup uses only the host/device credential and cannot inject SGD commands', () => {
   const password = issuePrinterCredential().password

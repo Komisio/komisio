@@ -99,13 +99,15 @@ async function fixture(t, options = {}) {
       ws.once('error', reject)
     })
   }
-  async function mainChannel() {
+  async function mainChannel(discoverySuffix = '') {
     const ws = await connect(MAIN_PROTOCOL)
     const request = once(ws, 'message')
     ws.send(
       Buffer.from(
         JSON.stringify({
-          discovery_b64: Buffer.from('fixture metadata').toString('base64'),
+          discovery_b64:
+            Buffer.from('fixture metadata').toString('base64') +
+            discoverySuffix,
         }),
       ),
     )
@@ -147,6 +149,18 @@ async function fixture(t, options = {}) {
     },
   }
 }
+
+test(
+  'firmware discovery accepts a four-hex suffix without granting queue access',
+  { timeout: 3000 },
+  async (t) => {
+    const f = await fixture(t)
+    await f.mainChannel(':d767')
+    assert.equal(f.service.status().connected, false)
+    await assert.rejects(f.service.runOnce(), /PRINT_CHANNEL_UNAVAILABLE/)
+    assert.equal(f.calls.length, 0)
+  },
+)
 
 test(
   'real binary WebSocket frames reach the durable queue worker as exact copies',
@@ -322,6 +336,9 @@ test(
     for (const frame of [
       '{}',
       Buffer.from('{"discovery_b64":"?"}'),
+      ...[':abcd:1234', ':abc', ':abcde', ':xyz1', ':', '\\n'].map((suffix) =>
+        Buffer.from(JSON.stringify({ discovery_b64: 'Zm9v' + suffix })),
+      ),
       Buffer.alloc(65537),
     ]) {
       const ws = await f.connect(MAIN_PROTOCOL)

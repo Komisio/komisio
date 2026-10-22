@@ -2970,7 +2970,10 @@
     "integrations": "Integrazioni",
     "store": "Negozio",
     "more": "Altro",
-    "sellersList": "Conferenti"
+    "sellersList": "Conferenti",
+    "collapseMenu": "Comprimi il menu",
+    "expandMenu": "Espandi il menu",
+    "menuShortcut": "Ctrl+B o Cmd+B"
   },
   "planNotices": {
     "trial_week": {

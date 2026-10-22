@@ -2970,7 +2970,10 @@
     "integrations": "Integraatiot",
     "store": "Kauppa",
     "more": "Lisää",
-    "sellersList": "Tuojat"
+    "sellersList": "Tuojat",
+    "collapseMenu": "Pienennä valikko",
+    "expandMenu": "Laajenna valikko",
+    "menuShortcut": "Ctrl+B tai Cmd+B"
   },
   "planNotices": {
     "trial_week": {

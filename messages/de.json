@@ -2970,7 +2970,10 @@
     "integrations": "Integrationen",
     "store": "Store",
     "more": "Mehr",
-    "sellersList": "Einlieferer"
+    "sellersList": "Einlieferer",
+    "collapseMenu": "Menü einklappen",
+    "expandMenu": "Menü ausklappen",
+    "menuShortcut": "Strg+B oder Cmd+B"
   },
   "planNotices": {
     "trial_week": {

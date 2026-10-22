@@ -2970,7 +2970,10 @@
     "integrations": "Integrationer",
     "store": "Butik",
     "more": "Mer",
-    "sellersList": "Säljare"
+    "sellersList": "Säljare",
+    "collapseMenu": "Dölj menyn",
+    "expandMenu": "Visa menyn",
+    "menuShortcut": "Ctrl+B eller Cmd+B"
   },
   "planNotices": {
     "trial_week": {

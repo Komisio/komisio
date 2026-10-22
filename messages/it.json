@@ -2137,7 +2137,24 @@
       "printed": "Tutte le copie stampate e verificate fisicamente",
       "cancelled": "Chiudi senza confermare la stampa",
       "resolve": "Salva verifica",
-      "acceptanceHint": "La ricezione dei dati non prova la stampa fisica. Il lavoro non viene reinviato automaticamente."
+      "acceptanceHint": "La ricezione dei dati non prova la stampa fisica. Il lavoro non viene reinviato automaticamente.",
+      "managed": {
+        "title": "Collega Zebra",
+        "hint": "Prepara qui la connessione, poi installa il file sulla Zebra con Zebra Printer Setup Utility.",
+        "working": "Operazione in corso…",
+        "check": "Verifica connessione preparata",
+        "prepare": "Prepara connessione",
+        "download": "Scarica file di installazione",
+        "prepared": "Connessione preparata. Installa il file sulla Zebra prima di attivare la stampa.",
+        "downloaded": "File di installazione scaricato. Segui i passaggi seguenti.",
+        "pauseFirst": "Metti in pausa la stampante prima di preparare una nuova connessione.",
+        "conflict": "Questa stampante ha un altro dispositivo associato. Controlla i dispositivi prima di continuare.",
+        "unknown": "Il risultato va verificato. Usa Verifica connessione preparata per riprendere la stessa installazione; non creare un’altra stampante.",
+        "step1": "Scarica il file di installazione su un dispositivo connesso alla stessa rete Wi-Fi della Zebra.",
+        "step2": "Seleziona la stampante corretta in Zebra Printer Setup Utility e invia il file scaricato tramite Available Files. Riavvia la stampante al termine del trasferimento.",
+        "step3": "Torna qui e attiva la stampante quando sei pronto a stampare. Aggiorna la pagina per verificare la connessione, poi invia un’etichetta di prova.",
+        "private": "Il file contiene le credenziali di questa stampante. Conservalo in modo riservato ed eliminalo dopo l’installazione."
+      }
     }
   },
   "purchases": {

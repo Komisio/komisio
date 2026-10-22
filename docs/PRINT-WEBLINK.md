@@ -1,6 +1,8 @@
-# Weblink pilot operations
+# Weblink operations
 
-This is an operator-managed Linux pilot, not generally available printing.
+The original operator-managed pilot and the managed gateway share the same
+per-device authentication and queue fencing. The managed gateway supports
+owner/admin provisioning from Komisio without server installation per printer.
 Physical TLS trust, authentication, reconnect, exact copies and revocation must
 be verified for each supported printer/firmware before routine store use. A local
 Printer Setup Utility label does not establish Weblink compatibility.
@@ -9,6 +11,88 @@ The bridge uses an existing anonymous device identity and the scoped queue RPCs.
 No service-role key or extra store membership is needed. The Weblink schema and
 owner/admin setup must be available in the target environment. Keep deployment
 separate from activation; installing this package cannot activate a printer.
+
+## Managed setup from Komisio
+
+Run one gateway per environment with a distinct Unix user, state directory,
+host, encryption key, proxy secret and management secret. Never share device
+state between staging and production. Multiple printers in a store have separate
+identities, connections and queues. The gateway defaults to 32 printers across
+stores, with a configurable maximum of 64; measure resource use before raising
+capacity. Each accepted printer owns a separate worker and durable journal.
+
+Use the same reviewed runtime package described below. The managed CLI accepts
+one service-owned 0600 configuration file:
+
+```json
+{
+  "url": "https://PROJECT.supabase.co",
+  "publishableKey": "sb_publishable_REPLACE",
+  "host": "print.example.com",
+  "port": 18655,
+  "capacity": 32,
+  "directory": "/var/lib/komisio-weblink/production/registry",
+  "encryptionKeyFile": "/etc/komisio-weblink/production/key",
+  "proxySecretFile": "/etc/komisio-weblink/production/proxy-secret",
+  "managementSecretFile": "/etc/komisio-weblink/production/management-secret",
+  "caBundleFile": "/etc/komisio-weblink/production/ca.pem"
+}
+```
+
+Use a random 32-byte binary encryption key and **different** random 43-character
+base64url proxy/management secrets. All configuration files must belong to that
+environment's service user with mode 0600; state directories use 0700. The
+registry is encrypted and locked for the gateway's lifetime. Its stored host
+and Supabase endpoint/key binding must match configuration on restart.
+
+Install `komisio-weblink@.service`, an immutable reviewed release and the
+environment-specific `current` symlink. The template expects users named
+`komisio-weblink-staging` / `komisio-weblink-production` and matching paths.
+Keep the original pilot's service and paths separate when adding a gateway.
+
+The TLS proxy must forward `/manage/*`, `/weblink/*` and `/healthz` to the
+environment's loopback port and overwrite the three proxy headers as in the
+pilot example below. `/manage/*` additionally requires the application's private
+Bearer management secret; browser Origin requests are refused. Never log those
+headers. Use a valid automatically renewed certificate, RSA 2048 and TLS 1.2+
+for the verified older Link-OS firmware. The service cannot validate the external
+proxy's certificate itself: verify the hostname and actual chain before enabling
+setup. `ca.pem` must contain only current CA certificates trusted to validate
+that chain. The installer includes these as `WEBLINK1_CA.NRD`, followed by the
+printer's scoped authentication and HTTPS location. It does not disable TLS or
+restart a printer. Monitor expiry/chain changes and test a renewed chain before
+replacing printer trust files.
+
+Configure these **server-only** application variables in the matching environment:
+
+- `KOMISIO_WEBLINK_MANAGEMENT_URL=https://print.example.com`
+- `KOMISIO_WEBLINK_MANAGEMENT_SECRET` matching that gateway's management secret
+- `KOMISIO_WEBLINK_SETUP_ENABLED=true` after gateway and database verification
+
+The owner/admin creates an inactive Weblink printer under printing settings,
+chooses **Prepare connection**, then **Download installation file**. The server
+checks identity/MFA, active tenant and database ownership before enrollment and
+again before returning credentials. It uses existing one-use pairing and device
+RPCs, not a service-role key. A retry resumes the same encrypted enrollment;
+unknown results never create another gateway generation automatically.
+
+On the printer's local network, send the downloaded file to the intended printer
+using Zebra Printer Setup Utility's **Available Files**; see the official
+[iOS guide](https://www.zebra.com/content/dam/support-dam/en/documentation/unrestricted/guide/software/psu-iOS-ug-en.pdf).
+Finish the transfer before restarting. Delete downloaded credential files after
+installation. Then explicitly enable printing in Komisio, refresh device status
+and send one supervised test label. An inactive printer cannot authenticate its
+printing channels. A download or a device heartbeat is not physical acceptance.
+
+Replacement requires pausing the printer and revoking its prior identity; the
+gateway keeps the old generation and its evidence. Held results and crash locks
+require the recovery procedure below. Deployment creates no device, enrolls no
+store and activates no printer. To roll back enrollment availability, disable
+the setup flag while preserving recovery controls and all device state. Stop a
+gateway to stop dispatch, retain its state and restore a compatible reviewed
+runtime only after reviewing any uncertain in-flight work.
+
+The following sections describe the original single-device operator workflow.
 
 ## Install the reviewed runtime
 

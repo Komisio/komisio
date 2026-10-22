@@ -2137,7 +2137,24 @@
       "printed": "Alle Kopien gedruckt und physisch geprüft",
       "cancelled": "Auftrag ohne Druckbestätigung schließen",
       "resolve": "Prüfung speichern",
-      "acceptanceHint": "Eine bestätigte Übertragung beweist keinen physischen Ausdruck. Der Auftrag wird nicht automatisch erneut gesendet."
+      "acceptanceHint": "Eine bestätigte Übertragung beweist keinen physischen Ausdruck. Der Auftrag wird nicht automatisch erneut gesendet.",
+      "managed": {
+        "title": "Zebra verbinden",
+        "hint": "Bereiten Sie hier die Verbindung vor und installieren Sie die Datei anschließend mit Zebra Printer Setup Utility auf dem Zebra-Drucker.",
+        "working": "Wird bearbeitet…",
+        "check": "Vorbereitete Verbindung prüfen",
+        "prepare": "Verbindung vorbereiten",
+        "download": "Installationsdatei herunterladen",
+        "prepared": "Verbindung vorbereitet. Installieren Sie die Datei auf dem Zebra-Drucker, bevor Sie den Druck aktivieren.",
+        "downloaded": "Installationsdatei heruntergeladen. Folgen Sie den Schritten unten.",
+        "pauseFirst": "Pausieren Sie den Drucker, bevor Sie eine neue Verbindung vorbereiten.",
+        "conflict": "Dieser Drucker hat ein anderes gekoppeltes Gerät. Prüfen Sie die Geräte, bevor Sie fortfahren.",
+        "unknown": "Das Ergebnis muss geprüft werden. Wählen Sie Vorbereitete Verbindung prüfen, um dieselbe Einrichtung fortzusetzen; erstellen Sie keinen neuen Drucker.",
+        "step1": "Laden Sie die Installationsdatei auf einem Gerät im selben WLAN wie der Zebra-Drucker herunter.",
+        "step2": "Wählen Sie in Zebra Printer Setup Utility den richtigen Drucker und senden Sie die heruntergeladene Datei über Available Files. Starten Sie den Drucker nach Abschluss der Übertragung neu.",
+        "step3": "Kehren Sie hierher zurück und aktivieren Sie den Drucker, wenn Sie drucken möchten. Aktualisieren Sie die Seite, prüfen Sie die Verbindung und senden Sie dann ein Testetikett.",
+        "private": "Die Datei enthält die Zugangsdaten dieses Druckers. Behandeln Sie sie vertraulich und löschen Sie sie nach der Installation."
+      }
     }
   },
   "purchases": {

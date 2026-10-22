@@ -64,6 +64,9 @@ export async function packageRuntime(destination) {
     'auth.mjs',
     'attempts.mjs',
     'cli.mjs',
+    'managed.mjs',
+    'managed-cli.mjs',
+    'setup-bundle.mjs',
     'credentials.mjs',
     'dispatch.mjs',
     'enrollment.mjs',
@@ -73,6 +76,7 @@ export async function packageRuntime(destination) {
     'runtime.mjs',
     'service.mjs',
     'komisio-print.service',
+    'komisio-weblink@.service',
   ])
     await copyFile(
       join(source, file),

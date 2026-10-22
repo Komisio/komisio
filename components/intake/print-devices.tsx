@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
 import type { PrintDevice } from '@/lib/engine/print-devices'
 import { useRouter } from '@/components/platform/use-working-router'
+import { ManagedWeblink } from './managed-weblink'
 
 /** Pair the computer at a printer with a one-time code; see and disconnect devices. */
 export function PrintDevices({
@@ -15,6 +16,7 @@ export function PrintDevices({
   locale,
   d,
   transport = 'tcp',
+  managed = false,
 }: {
   tenantId: string
   printerId: string
@@ -23,6 +25,7 @@ export function PrintDevices({
   locale: string
   d: Dictionary['printing']
   transport?: 'tcp' | 'weblink'
+  managed?: boolean
 }) {
   const router = useRouter()
   const running = useRef(false)
@@ -66,7 +69,14 @@ export function PrintDevices({
   return (
     <div className="print-devices">
       <h4>{d.devicesTitle}</h4>
-      {transport === 'weblink' ? (
+      {transport === 'weblink' && managed && canManage ? (
+        <ManagedWeblink
+          tenantId={tenantId}
+          printerId={printerId}
+          paired={list.some((device) => !device.revokedAt)}
+          d={d.weblink.managed}
+        />
+      ) : transport === 'weblink' ? (
         <p>{d.weblink.pairHint}</p>
       ) : (
         <p>
@@ -76,7 +86,7 @@ export function PrintDevices({
           </a>
         </p>
       )}
-      {canManage && (
+      {canManage && !(transport === 'weblink' && managed) && (
         <div className="row">
           <Button
             variant="secondary"
